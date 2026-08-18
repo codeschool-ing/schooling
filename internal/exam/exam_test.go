@@ -510,7 +510,7 @@ func TestAPassIsNotUndoneByALaterFailure(t *testing.T) {
 	sit(true)
 	sit(false)
 
-	passed, err := store.Passed(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	attempt, passed, err := store.Passed(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
 	if err != nil {
 		t.Fatalf("asking: %v", err)
 	}
@@ -518,12 +518,18 @@ func TestAPassIsNotUndoneByALaterFailure(t *testing.T) {
 		t.Error("a later failure unmade an earlier pass, and a certificate would go with it")
 	}
 
+	// And it names the paper that earned it, which is the FIRST pass — a
+	// certificate points at the moment the student qualified, not at the last
+	// time they happened to sit it.
 	history, err := store.History(ctx, school, student)
 	if err != nil {
 		t.Fatalf("reading the history: %v", err)
 	}
 	if len(history) != 2 {
 		t.Fatalf("the history has %d attempts, want 2", len(history))
+	}
+	if attempt != history[1].AttemptID {
+		t.Errorf("the pass names attempt %s, want the earlier one %s", attempt, history[1].AttemptID)
 	}
 }
 

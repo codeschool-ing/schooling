@@ -46,6 +46,10 @@ var crossSchool = map[string]string{
 		"question about one school",
 	"practice_review_by_exercise": "item analysis is per exercise — the exercise id already " +
 		"narrows to the school that owns it",
+	"certificates_by_code": "a verification code is the whole handle, typed by a stranger who has " +
+		"no account and no school in mind, and its uniqueness has to be platform-wide: a code " +
+		"that meant two certificates would make verification ambiguous to the one person it " +
+		"exists for",
 	"audit_log_by_time":    "the audit is read as one history by whoever is holding a pager",
 	"audit_log_by_actor":   "the question is what a person did, and staff are not school-scoped",
 	"audit_log_by_subject": "the subject is looked up by what it is, before its school is known",

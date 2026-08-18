@@ -335,6 +335,43 @@ lesson to put it in. The price of the convention is that `tracks/<x>-exam.json` 
 
 ---
 
+## The certificate, and the page anybody can check it on
+
+**The pass is the fact; the certificate is the document.** Passing is on the attempt and nothing
+in `internal/certificate` can change it. What that package writes down is what the pass entitles
+somebody to say about themselves.
+
+**Everything it says is captured at issue** — the name, the title, the school. Nothing is read
+live, because the catalogue moves: a course is renamed, and the load job prunes whatever the
+files no longer carry. A certificate that read its title live would one day name something else,
+or nothing. Same decision as `audit_log.actor_label`, for the same reason.
+
+**A certificate with no name asserts nothing**, so there is no such thing. An account with no
+name has still passed — that is on the attempt — and collects the document from the claim route
+the moment it has one. `ErrNoName` is deliberately a distinct error and not a refusal.
+
+**The code is the whole handle, so it is eighty bits from `crypto/rand`.** Verification takes no
+account and no session: the code is the only thing between a stranger and the fact that a named
+person studied a named subject, and enumeration is the attack. The alphabet is Crockford's
+base32 — no `I`, `L`, `O` or `U` — because the code is read off a document and typed by a person,
+and `I` against `1` is a support conversation with somebody who has concluded a candidate's
+certificate is fake.
+
+**Verification returns no score.** The page asserts that the person passed; the mark they passed
+by is between them and the school, and a verification page that published it would be a page that
+ranks people.
+
+**It goes when the person goes.** A certificate carries a name and is readable by anybody holding
+its code, so keeping one after an erasure request would mean publishing the name of somebody who
+asked to be forgotten. It cascades with the account, and **an erased certificate verifies exactly
+like a code that never existed** — answering differently would say one had been there, which is
+the fact being erased.
+
+**A certificate is never edited**, by trigger. Something that needs to change is a new
+certificate, or none.
+
+---
+
 ## Multi-tenancy, in practice
 
 The school comes from the `Host` and is resolved once, in middleware. Business code does not

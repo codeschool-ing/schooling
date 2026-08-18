@@ -26,15 +26,31 @@ type (
 // the one that owns them.
 type Emit func(ctx context.Context, name string, payload map[string]any)
 
+// Awarded is called once, when a paper is marked and passed.
+//
+// IT IS HOW A CERTIFICATE COMES TO EXIST AT THE MOMENT IT IS EARNED. Certifying
+// is another module's job and this one may not reach into it; what this module
+// knows, and nothing else does, is the instant a pass happens. It must not fail
+// the request: the student passed, and that is recorded on the attempt whatever
+// happens next — a document that could not be written is worth strictly less
+// than an exam result that was lost writing it.
+type Awarded func(ctx context.Context, scope Scope, id string)
+
 type Handler struct {
 	store     *Store
 	schoolOf  SchoolOf
 	studentOf StudentOf
 	emit      Emit
+	awarded   Awarded
 }
 
-func NewHandler(store *Store, schoolOf SchoolOf, studentOf StudentOf, emit Emit) *Handler {
-	return &Handler{store: store, schoolOf: schoolOf, studentOf: studentOf, emit: emit}
+func NewHandler(store *Store, schoolOf SchoolOf, studentOf StudentOf,
+	emit Emit, awarded Awarded) *Handler {
+
+	return &Handler{
+		store: store, schoolOf: schoolOf, studentOf: studentOf,
+		emit: emit, awarded: awarded,
+	}
 }
 
 // Routes mounts the exam routes.
@@ -180,6 +196,10 @@ func (h *Handler) handIn(w http.ResponseWriter, r *http.Request) {
 				"exercise": q.ExerciseID, "version": q.Version, "type": q.Type,
 				"correct": *q.Correct,
 			})
+		}
+
+		if paper.Result.Passed && h.awarded != nil {
+			h.awarded(r.Context(), paper.Scope, paper.ScopeID)
 		}
 	}
 

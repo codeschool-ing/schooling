@@ -310,6 +310,10 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 		{"exam_answers", `
 			SELECT count(*) FROM exam_answers q
 			JOIN exam_attempts a ON a.id = q.attempt_id WHERE a.account_id = $1`, account},
+		// A certificate carries a name and is readable by anybody with its
+		// code. Keeping one would mean publishing the name of somebody who
+		// asked to be forgotten.
+		{"certificates", `SELECT count(*) FROM certificates WHERE account_id = $1`, account},
 	} {
 		var count int
 		if err := pool.QueryRow(ctx, q.sql, q.arg).Scan(&count); err != nil {
@@ -402,7 +406,9 @@ func seedSchool(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
 }
 
 // seedAttempt is one handed-in exam with one question on it, answer key and
-// all — because what this proves is that the key does not come back out.
+// all — because what this proves is that the key does not come back out. It
+// also issues the certificate that exam earned, which is the row carrying a
+// person's NAME where anybody with a code can read it.
 func seedAttempt(t *testing.T, pool *pgxpool.Pool, tenant, account uuid.UUID) {
 	t.Helper()
 	ctx := context.Background()
@@ -427,6 +433,17 @@ func seedAttempt(t *testing.T, pool *pgxpool.Pool, tenant, account uuid.UUID) {
 			'{"chose":[0]}', now(), true)
 	`, attempt); err != nil {
 		t.Fatalf("seeding an answer: %v", err)
+	}
+
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO certificates
+			(tenant_id, account_id, code, scope, scope_id, attempt_id,
+			 student_name, title, school_name)
+		VALUES ($1, $2, $3, 'course', 'web-fundamentals', $4,
+			'A Student', 'Web Fundamentals', 'Programming')
+	`, tenant, account, strings.ToUpper(strings.ReplaceAll(uuid.NewString(), "-", ""))[:16],
+		attempt); err != nil {
+		t.Fatalf("seeding a certificate: %v", err)
 	}
 }
 
