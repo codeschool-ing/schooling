@@ -87,6 +87,9 @@ func checkKeys(school string, s *catalog.School) []error {
 		}
 		check(course.ID+"/exam", course.Exam)
 	}
+	for _, track := range s.Tracks {
+		check(track.ID+"/exam", track.Exam)
+	}
 	return problems
 }
 

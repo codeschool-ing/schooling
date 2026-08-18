@@ -228,6 +228,49 @@ func TestTheExportNeverCarriesAPasswordHash(t *testing.T) {
 	}
 }
 
+// And the other thing in this database that must not leave it: the answer keys.
+//
+// An exam attempt keeps the questions it asked, WITH their answers, because a
+// paper is marked against what the student was actually asked rather than
+// against a catalogue that moves underneath them. That makes `exam_answers` the
+// second table where an export written with `SELECT *` would hand somebody
+// something they should not have — and here it would be handed to a student
+// who is one HTTP request away from sitting the exam again.
+func TestTheExportNeverCarriesAnAnswerKey(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+
+	account, tenant := seedAccount(t, pool), seedSchool(t, pool)
+	seedAttempt(t, pool, tenant, account)
+
+	export, err := privacy.NewStore(pool).Export(ctx, account)
+	if err != nil {
+		t.Fatalf("exporting: %v", err)
+	}
+
+	rows := export["exam_answers"]
+	if len(rows) == 0 {
+		t.Fatal("the export carries no exam answer at all, so this proves nothing")
+	}
+	for _, row := range rows {
+		for _, column := range []string{"sealed", "shown"} {
+			if _, leaked := row[column]; leaked {
+				t.Errorf("the export carries %q — the questions and their answer keys, handed to "+
+					"somebody who can sit the exam again in one request", column)
+			}
+		}
+		if _, ok := row["correct"]; !ok {
+			t.Error("the export does not say whether the answer was right, which is the part the " +
+				"person actually asked about")
+		}
+	}
+
+	// And the attempt itself is there, since that is what they asked for.
+	if len(export["exam_attempts"]) != 1 {
+		t.Errorf("the export has %d exam attempts, want 1", len(export["exam_attempts"]))
+	}
+}
+
 // THE SECOND ONE THAT MATTERS.
 //
 // Erasure works by deleting what gives the identifiers a meaning, not by
@@ -242,6 +285,7 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 	visitorID := seedVisitor(t, pool, account)
 	seedEvent(t, pool, tenant, account, visitorID)
 	seedReview(t, pool, tenant, account)
+	seedAttempt(t, pool, tenant, account)
 
 	if err := privacy.NewStore(pool).Erase(ctx, account); err != nil {
 		t.Fatalf("erasing: %v", err)
@@ -258,6 +302,14 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 		{"sessions", `SELECT count(*) FROM sessions WHERE account_id = $1`, account},
 		{"visitors", `SELECT count(*) FROM visitors WHERE id = $1`, visitorID},
 		{"account_visitors", `SELECT count(*) FROM account_visitors WHERE account_id = $1`, account},
+		// An exam attempt answers "what has this person done" and goes with
+		// them. What survives is one event per question, which is what item
+		// analysis reads — so erasing somebody does not take the evidence about
+		// a bad question along with them.
+		{"exam_attempts", `SELECT count(*) FROM exam_attempts WHERE account_id = $1`, account},
+		{"exam_answers", `
+			SELECT count(*) FROM exam_answers q
+			JOIN exam_attempts a ON a.id = q.attempt_id WHERE a.account_id = $1`, account},
 	} {
 		var count int
 		if err := pool.QueryRow(ctx, q.sql, q.arg).Scan(&count); err != nil {
@@ -347,6 +399,35 @@ func seedSchool(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
 		t.Fatalf("seeding a school: %v", err)
 	}
 	return id
+}
+
+// seedAttempt is one handed-in exam with one question on it, answer key and
+// all — because what this proves is that the key does not come back out.
+func seedAttempt(t *testing.T, pool *pgxpool.Pool, tenant, account uuid.UUID) {
+	t.Helper()
+	ctx := context.Background()
+
+	var attempt uuid.UUID
+	if err := pool.QueryRow(ctx, `
+		INSERT INTO exam_attempts
+			(tenant_id, account_id, scope, scope_id, submitted_at, score, of, pass_mark, passed)
+		VALUES ($1, $2, 'course', 'web-fundamentals', now(), 1, 1, 70, true)
+		RETURNING id
+	`, tenant, account).Scan(&attempt); err != nil {
+		t.Fatalf("seeding an attempt: %v", err)
+	}
+
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO exam_answers
+			(attempt_id, position, exercise_id, exercise_version, type, shown, perm, sealed,
+			 answer, answered_at, correct)
+		VALUES ($1, 0, 'wf-roles-quiz', 1, 'quiz',
+			'{"choices":[{"text":"one"},{"text":"two"}]}', '{0,1}',
+			'{"choices":[{"text":"one","correct":true},{"text":"two","correct":false}]}',
+			'{"chose":[0]}', now(), true)
+	`, attempt); err != nil {
+		t.Fatalf("seeding an answer: %v", err)
+	}
 }
 
 func seedVisitor(t *testing.T, pool *pgxpool.Pool, account uuid.UUID) uuid.UUID {

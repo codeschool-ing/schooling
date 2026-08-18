@@ -55,6 +55,12 @@ func loadTracks(dir fs.FS) ([]*Track, []error) {
 		if isTranslation(name) {
 			continue
 		}
+		// Neither is an exam. It sits beside its track rather than inside it
+		// because a track has no lessons to put it in — and it is read below, by
+		// the track it belongs to, rather than found here as a track of its own.
+		if isTrackExam(name) {
+			continue
+		}
 
 		var track Track
 		if err := readJSON(dir, name, &track); err != nil {
@@ -66,9 +72,49 @@ func loadTracks(dir fs.FS) ([]*Track, []error) {
 				"%s: the track calls itself %q, and a file name is a fact that links do not follow — "+
 					"an id that disagrees with its file is a rename half-done", name, track.ID))
 		}
+
+		// The final, which is optional while a track is being written.
+		if exam, err := readExercises(dir, path.Join("tracks", track.ID+examSuffix)); err != nil {
+			problems = append(problems, err)
+		} else {
+			track.Exam = exam
+		}
+
 		tracks = append(tracks, &track)
 	}
+
+	problems = append(problems, orphanedFinals(names, tracks)...)
 	return tracks, problems
+}
+
+// orphanedFinals catches `tracks/<x>-exam.json` where there is no track `<x>`.
+//
+// IT IS THE ONLY WAY THAT MISTAKE IS EVER SEEN. Such a file is skipped as a
+// track and read by no track, so it is a file full of questions that nothing in
+// the system will ever mention — content that was generated and forgotten
+// (C-13), which is precisely the failure this catalogue's format exists to make
+// impossible. It also catches the other spelling of it: somebody who meant to
+// add a track and called it `backend-exam`.
+func orphanedFinals(names []string, tracks []*Track) []error {
+	known := map[string]bool{}
+	for _, t := range tracks {
+		known[t.ID] = true
+	}
+
+	var problems []error
+	for _, name := range names {
+		if !isTrackExam(name) {
+			continue
+		}
+		of := strings.TrimSuffix(path.Base(name), examSuffix)
+		if !known[of] {
+			problems = append(problems, fmt.Errorf(
+				"%s is the final of a track %q that does not exist — nothing will ever read it, so "+
+					"either the track is missing or this is a track that was named like an exam",
+				name, of))
+		}
+	}
+	return problems
 }
 
 func loadCourses(dir fs.FS) ([]*Course, []error) {
@@ -221,6 +267,17 @@ func frontMatter(body string) (title, rest string) {
 	}
 	return title, strings.TrimSpace(after)
 }
+
+// examSuffix is what makes `tracks/frontend-exam.json` the exam of `frontend`
+// rather than a track called `frontend-exam`.
+//
+// THE PRICE OF THE CONVENTION IS THAT A TRACK MAY NOT BE NAMED `<x>-exam`, and
+// `Validate` says so rather than leaving it to be discovered: without that
+// check, such a track would be silently skipped here and its own file read as
+// somebody else's questions.
+const examSuffix = "-exam.json"
+
+func isTrackExam(name string) bool { return strings.HasSuffix(path.Base(name), examSuffix) }
 
 func isTranslation(name string) bool {
 	base := strings.TrimSuffix(path.Base(name), ".json")

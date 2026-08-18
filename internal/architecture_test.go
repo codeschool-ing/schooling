@@ -22,6 +22,22 @@
 // import: it is an interface where it is used, satisfied by the other and
 // passed in from `cmd/`. That is the whole discipline, and it is the reason a
 // binary this small can be split later without archaeology.
+//
+// # AND WHAT A MODULE ACTUALLY IS
+//
+// A MODULE OWNS TABLES AND ROUTES. Not everything under `internal/` does:
+// `grade` is the rules of grading, expressed as functions over JSON values,
+// with no database, no handler and no state. Splitting `exam` into its own
+// service would take `grade` with it AND leave a copy behind for the content
+// checker, which is what a library is rather than a module two things happen
+// to need.
+//
+// Those are named in `libraries` below, and the exception is checked rather
+// than trusted: a package declared a library that touches a database, serves
+// HTTP or reaches into a module fails, and a name with no package behind it
+// fails too. The mechanism is deliberately the one the tenancy rules already
+// use, because the alternative is a list of names that grows whenever the rule
+// is inconvenient.
 package internal_test
 
 import (
@@ -68,6 +84,24 @@ func TestPlatformImportsNothingFromThisRepository(t *testing.T) {
 	})
 }
 
+// libraries are the packages under internal/ that are not modules: rules over
+// values, with no tables and no routes. Any module may depend on one.
+//
+// Adding a name here is adding an exception, and the test below is what makes
+// it an expensive one to add wrongly — the property has to actually hold.
+var libraries = map[string]string{
+	"grade": "the rules of grading, as functions over JSON values. It owns no table and serves " +
+		"no route; `exam` marks with it and so does the content checker, which is what a " +
+		"library is rather than a module two things happen to need",
+}
+
+func isLibrary(imp string) bool {
+	rest := strings.TrimPrefix(imp, module+"/internal/")
+	name, _, _ := strings.Cut(rest, "/")
+	_, ok := libraries[name]
+	return ok
+}
+
 func TestNoModuleImportsAnotherModule(t *testing.T) {
 	root := repoRoot(t)
 	internal := filepath.Join(root, "internal")
@@ -87,10 +121,60 @@ func TestNoModuleImportsAnotherModule(t *testing.T) {
 					continue // the shared floor, which is what it is for
 				case strings.HasPrefix(imp, self):
 					continue // itself
+				case isLibrary(imp):
+					continue // rules over values; see libraries above
 				}
 				rel, _ := filepath.Rel(root, pkgDir)
 				t.Errorf("%s imports %s — modules talk through an interface the consumer defines, "+
 					"wired together in cmd/, never by reaching into each other", rel, imp)
+			}
+		})
+	}
+}
+
+// A DECLARED LIBRARY HAS TO ACTUALLY BE ONE.
+//
+// Without this, `libraries` is a list of packages somebody wanted to import and
+// the rule above is a comment. What makes a library a library is that it holds
+// nothing anything else could disagree with: no database, no HTTP surface, and
+// no reach into a module. Each of those is visible in its imports, so each of
+// them is checked here.
+func TestALibraryIsActuallyOne(t *testing.T) {
+	root := repoRoot(t)
+	internal := filepath.Join(root, "internal")
+
+	// What a library may not touch, and why in each case.
+	forbidden := map[string]string{
+		"github.com/jackc/pgx": "it would own rows, and a library owns no state",
+		"database/sql":         "the same",
+		"net/http":             "it would own a route, and a route belongs to a module",
+	}
+
+	for name, why := range libraries {
+		dir := filepath.Join(internal, name)
+		if _, err := os.Stat(dir); err != nil {
+			t.Errorf("libraries names %q and there is no such package — an exception outlived the "+
+				"thing it excused, and a stale one reads as current", name)
+			continue
+		}
+
+		walk(t, dir, func(pkgDir string, imports []string) {
+			rel, _ := filepath.Rel(root, pkgDir)
+			for _, imp := range imports {
+				for prefix, reason := range forbidden {
+					if strings.HasPrefix(imp, prefix) {
+						t.Errorf("%s is declared a library — %s — and it imports %s: %s",
+							rel, why, imp, reason)
+					}
+				}
+
+				if strings.HasPrefix(imp, module+"/internal/") &&
+					!strings.HasPrefix(imp, module+"/internal/platform") &&
+					!strings.HasPrefix(imp, module+"/internal/"+name) &&
+					!isLibrary(imp) {
+					t.Errorf("%s is declared a library and it imports %s — a library that reaches "+
+						"into a module is a module with the label filed off", rel, imp)
+				}
 			}
 		})
 	}
