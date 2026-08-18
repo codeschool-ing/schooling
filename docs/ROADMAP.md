@@ -20,11 +20,11 @@ audit with a name against it.*
 
 ### The five
 
-- [ ] Events carry their dimensions denormalised — plan, school, country, locale, copied at emission
-- [ ] `practice_review` exists and is append-only, before any practice screen does
-- [ ] Every administrative write records the actor
-- [ ] Every table holding personal data is reachable by the export and the erase path
-- [ ] A visitor has an identity before the account exists, and signup links the two
+- [x] Events carry their dimensions denormalised — plan, school, country, locale, copied at emission
+- [x] `practice_review` exists and is append-only, before any practice screen does
+- [x] Every administrative write records the actor — the audit path refuses an entry without one, and it is the only path there is
+- [x] Every table holding personal data is reachable by the export and the erase path, with a test that fails on a table nobody classified
+- [x] A visitor has an identity before the account exists, and signup links the two
 
 ### Shape
 

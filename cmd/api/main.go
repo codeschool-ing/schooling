@@ -18,12 +18,14 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/tenant"
+	"github.com/codeschool-ing/schooling/internal/visitor"
 )
 
 // version is stamped at build time. Unstamped, it says so rather than claiming
@@ -62,7 +64,7 @@ func run(log *slog.Logger) error {
 
 	srv := &http.Server{
 		Addr:              ":" + cfg.Port,
-		Handler:           router(pool, log),
+		Handler:           router(pool, log, cfg),
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       30 * time.Second,
 		WriteTimeout:      60 * time.Second,
@@ -103,7 +105,7 @@ func run(log *slog.Logger) error {
 // The webhooks the payment gateway will call are the second member of the
 // first class, and they arrive at a fixed address the gateway knows. Keeping
 // the split from the first day is what stops that from being a surprise.
-func router(pool *pgxpool.Pool, log *slog.Logger) http.Handler {
+func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
@@ -131,9 +133,22 @@ func router(pool *pgxpool.Pool, log *slog.Logger) http.Handler {
 	// The school-scoped half. Its own mux, so that mounting a route outside
 	// the middleware has to be deliberate rather than a line in the wrong
 	// place.
+	//
+	// THE ORDER OF THE TWO MIDDLEWARES IS THE POINT. The school is resolved
+	// first, so that a visitor being issued an identity can have the school
+	// they arrived at recorded as their first touch — which is the question
+	// the funnel exists to answer and the one that cannot be reconstructed.
 	scoped := http.NewServeMux()
 	tenant.NewHandler().Routes(scoped)
-	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))
+	mux.Handle("/api/v1/", web.Chain(scoped,
+		tenant.Resolve(tenant.NewStore(pool)),
+		visitor.Identify(visitor.NewStore(pool), schoolOf, visitor.Settings{
+			// The parent domain, so somebody who reads about the platform and
+			// then opens a school is one visitor rather than two.
+			Domain: cfg.PlatformDomain,
+			Secure: cfg.Environment == config.Production,
+		}),
+	))
 
 	return web.Chain(mux,
 		web.RequestID,
@@ -141,4 +156,20 @@ func router(pool *pgxpool.Pool, log *slog.Logger) http.Handler {
 		web.Recover,
 		web.NoStore,
 	)
+}
+
+// schoolOf is the wiring the module boundary asks for, and it is four lines
+// rather than an import.
+//
+// `visitor` needs to know which school a request arrived at, and may not reach
+// into `tenant` to find out — modules talk through what the consumer defines,
+// joined together here in cmd/. This is what that discipline looks like in
+// practice: the consumer names a function shape, the producer already satisfies
+// it, and the only place that knows about both is this one.
+func schoolOf(ctx context.Context) (uuid.UUID, string, bool) {
+	s, ok := tenant.FromContext(ctx)
+	if !ok {
+		return uuid.Nil, "", false
+	}
+	return s.ID, s.Slug, true
 }

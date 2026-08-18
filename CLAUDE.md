@@ -70,6 +70,29 @@ reconstructed and an action already taken cannot grow a column retroactively.
 5. **The visitor has an identity before the account exists**, and signup links the two. Without
    it the first step of the funnel is unanswerable for every earlier period. (K-10)
 
+All five are in the schema and in code — `internal/event`, `internal/audit`, `internal/visitor`,
+`internal/privacy` and `migrations/0002` — and three of them are guarantees rather than habits:
+
+- **A dimension cannot be omitted, because the type will not let it.** `event.Dimensions` has no
+  exported fields; the only way to build one is `ForSchool` or `ForPlatform`, which take every
+  dimension as an argument. A dimension added later breaks every call site, which is the point.
+- **`events`, `practice_review` and `audit_log` refuse UPDATE and DELETE by trigger.** Append-only
+  as an arrangement is a comment; as a trigger it is a guarantee, and the difference shows up on
+  the day somebody corrects data by hand.
+- **A new table that nobody classified fails CI.** Every table carries a
+  `COMMENT ON TABLE … 'personal-data: …'`, and a test compares the live schema against
+  `privacy.Registry`. Adding one without deciding what it holds is not possible rather than
+  discouraged.
+
+**How erasure works, because everything else rests on it.** None of these tables holds a name —
+they hold uuids. Erasing a person deletes the rows that give those uuids a meaning (`visitors`
+and `account_visitors`), which leaves the event and review rows pointing at nothing and joinable
+to nobody. The statistics survive; the person is not in them. That is also *why* the append-only
+triggers can be absolute: the erase path never needs to update or delete one of those rows. It
+is also why `events.visitor_id` is **not** a foreign key — `ON DELETE SET NULL` would try to
+update an append-only row, and the legal obligation and the immutability guarantee could not
+both hold.
+
 ---
 
 ## The vocabulary, which is a contract
