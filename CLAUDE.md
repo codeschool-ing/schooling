@@ -380,6 +380,48 @@ says somebody decided, where an absence says nobody looked.
 key, so they can be translated by adding an entry. The checker cannot see them —
 they are written in Go — and that is the known edge of what a static check reaches.
 
+## The track graph
+
+**Ported from the predecessor rather than reinvented.** The hard parts were paid for
+once: the ordering that minimises crossings, and the router that takes a line around a
+card instead of through it. What changed is the data and the comments.
+
+**Nothing is pinned per track.** The order inside each column is measured — the drawing
+that comes out is scored — so a track added tomorrow lays out as well as one added
+today. Sugiyama's method in three pieces, and the third is the one people leave out:
+barycentre, then transposition **accepting the tied swaps** (that is what unlocks the
+arrangements which only improve by moving two columns at once), then several starting
+orders because the first two are greedy. The shuffle is seeded, so a track does not
+change shape between visits.
+
+**The cost is three numbers compared in order, never summed** — crossings, then upward
+bias, then the curriculum's order. Summing would let a lesser criterion buy an extra
+crossing.
+
+**A fork is one node.** It is a decision, and drawing three boxes where the student
+takes one would say the track is three times as wide as it is.
+
+**The router runs in one axis and serves both.** Everything in it thinks the graph goes
+left to right; flowing downwards, the boxes go in with x and y swapped and every point
+comes back swapped. So "the lane above the cards" is the margin to their left, and not
+one line of the routing is written twice. Under 900px the track flows down, because
+seven levels laid out sideways on a phone is a drawing you read by dragging.
+
+**Whether a line is blocked is geometry, not a count of skipped levels.** Counting
+missed the case where a column splits and a neighbouring card sits in the corridor —
+with the edge joining *adjacent* columns, so no count would have flagged it.
+
+**The edges are measured off the boxes the browser produced**, not from positions this
+code guessed — which is why the drawing survives a different font, a longer name and a
+narrower window. It also means nothing in the graph may be positioned with a transform:
+a transform moves what is drawn without moving what `getBoundingClientRect` reports.
+
+**`tools/graph-test` checks the drawing, not the code that made it**: every track, six
+window sizes, each line walked point by point through the SVG the router produced. It
+does **not** check whether two lines cross each other — the ordering minimises those and
+a graph can be non-planar, so demanding zero would be demanding the impossible. A line
+through a *card* is always avoidable, which is why that is the one it fails on.
+
 **Editing anything in `ui/` needs the server restarted.** `//go:embed` bakes the files
 into the binary at build time, so a running process serves the interface it was built
 with. It cost twenty minutes once: a fix was in the file, the browser had the old one,

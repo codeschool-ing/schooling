@@ -31,7 +31,7 @@ audit with a name against it.*
 - [ ] Monorepo, with CI filtered by path
 - [x] School resolved by the full `Host`; an unknown host is a 404 and never falls into a default school
 - [x] Reserved subdomains refused at creation — `www`, `api`, `admin`, `app`, `auth`, `cdn`, `mail`, `static`, `status`, `docs` — by a database constraint as well as by the application, with a test that proves the two agree
-- [ ] One Go binary serving the API and the embedded frontend on one origin
+- [x] One Go binary serving the API and the embedded frontend on one origin
 - [ ] A domain mapping per school
 - [x] `tenant_id` on every school-scoped table, with an index leading with it, and every index that crosses schools declared with its reason
 - [x] The module dependency graph enforced by a test
@@ -74,9 +74,9 @@ audit with a name against it.*
 
 - [x] The interface served from the same binary and the same origin, with no build step — fragment routes, so the offline bundle is a packaging job and not a second router
 - [x] `track → course → lesson → section`, with `requires` and `links` distinct
-- [ ] The track graph, with edge routing that avoids the cards
-- [ ] The graph test — every track, six viewport sizes, four landscape and two portrait, zero crossings
-- [x] Sidebar, search, dashboard, catalogue — the track map waits on the graph
+- [x] The track graph, with edge routing that avoids the cards — Sugiyama's ordering, and a router that takes a line around a card when it can see one in the way
+- [x] The graph test — every track, six viewport sizes, four landscape and two portrait, no line through a card
+- [x] Sidebar, search, dashboard, catalogue, track map
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
 - [x] Sitting an exam on a screen — the paper, an answer saved as it is made and put back on a reload, and a hand-in that says what it came to
 - [ ] The modal test — every course, one height, neither column scrolling

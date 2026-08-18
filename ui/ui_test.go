@@ -156,7 +156,7 @@ func TestEveryAssetTheShellAsksForIsThere(t *testing.T) {
 	for _, asset := range []string{
 		"/assets/app.css", "/assets/app.js", "/assets/api.js",
 		"/assets/i18n.js", "/assets/i18n-pt.js", "/assets/markdown.js",
-		"/assets/favicon.svg",
+		"/assets/question.js", "/assets/graph.js", "/assets/favicon.svg",
 	} {
 		got := httptest.NewRecorder()
 		handler.ServeHTTP(got, httptest.NewRequest(http.MethodGet, asset, nil))

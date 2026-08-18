@@ -51,6 +51,16 @@ window.I18N.pt = {
     'Carry on where you left off': 'Continue de onde parou',
     'You have not started anything yet.': 'Você ainda não começou nada.',
 
+    /* ---------- a track, drawn ---------- */
+    'Track': 'Trilha',
+    'See the whole track': 'Ver a trilha inteira',
+    'Leads to': 'Leva a',
+    'Choose one': 'Escolha uma',
+    'Finish': 'Fim',
+    'The final': 'A prova final',
+    'The exam for the whole track.': 'A prova da trilha inteira.',
+    'Sit the final': 'Fazer a final',
+
     /* ---------- sitting an exam ---------- */
     'Exam': 'Prova',
     'The exam': 'A prova',
