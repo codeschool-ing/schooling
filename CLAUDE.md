@@ -380,6 +380,28 @@ says somebody decided, where an absence says nobody looked.
 key, so they can be translated by adding an entry. The checker cannot see them —
 they are written in Go — and that is the known edge of what a static check reaches.
 
+**Editing anything in `ui/` needs the server restarted.** `//go:embed` bakes the files
+into the binary at build time, so a running process serves the interface it was built
+with. It cost twenty minutes once: a fix was in the file, the browser had the old one,
+and everything else looked right.
+
+**Sitting an exam: the paper is the server's.** The screen draws what it was given,
+records each answer as it is made, and hands in. It keeps no copy of the questions,
+computes no mark, and cannot know which answer is right — that is the whole point of a
+question being *presented* rather than sent.
+
+**Every answer is sent as it is made**, not collected and posted at the end. A closed
+tab, a lost connection or a flat battery costs the questions that were not answered,
+not the ones that were — and it is what makes resuming real. Reopening a paper puts the
+answers back into the controls, because a paper that came back blank would tell somebody
+their work was gone when it was not, and they would do it again on a clock.
+
+**Ordering is buttons and matching is a select, and that is the accessible choice rather
+than the cheap one.** Dragging is what everybody builds and it is operable by exactly one
+kind of person. Two buttons per row and a native select are operable by everyone, are
+already announced correctly, and are less code. A button fires no `change` event, so
+`ordering` dispatches one — without it the arrangement saved nothing as it went.
+
 **Focus is moved on navigation and not on the first render.** After a navigation,
 moving focus into the content is what tells a keyboard user the page changed. On
 the first render there has been no navigation, and moving focus puts the skip link

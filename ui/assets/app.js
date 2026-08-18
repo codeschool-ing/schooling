@@ -15,14 +15,13 @@
    NOTHING HERE KNOWS A TOKEN. The session is an HttpOnly cookie on the same
    origin (P-03); this file cannot read it and does not try.
 
-   WHAT IS NOT HERE YET: sitting an exam, and the track graph. Both have their
-   server halves and neither has a screen. They are the next two pieces rather
-   than an omission — a screen that half-renders an exam would be worse than a
-   link that says the exam is next.
+   WHAT IS NOT HERE YET: the track graph. It has its server half and no screen,
+   which is the next piece rather than an omission.
    ========================================================================== */
 
 import { api, ApiError } from './api.js';
 import { render as markdown } from './markdown.js';
+import { build, answerable } from './question.js';
 import {
   txt, contentLocale, mapTexts, applyTexts, buildLanguagePicker, missingTranslations,
 } from './i18n.js';
@@ -215,6 +214,23 @@ async function coursePage(id) {
       })]),
       el('p', { class: 'dim', text: `${lesson.sections.length} ${txt('sections')}` }),
     ]))),
+
+    /* The exam, and only when there is one — the catalogue says so, rather
+       than this screen offering a button that sometimes answers 404. Not
+       gated on finishing the course: the exam is what asserts that somebody
+       knows the material, and insisting they click through every section
+       first would be asserting that they sat through it. */
+    course.exam && !course.locked ? el('div', { class: 'exam-invite' }, [
+      el('h2', { text: txt('The exam') }),
+      el('p', { class: 'dim', text: txt('Pass it and the certificate is yours.') }),
+      state.me
+        ? el('a', {
+          class: 'button',
+          href: `#/exam/course/${encodeURIComponent(course.id)}`,
+          text: txt('Sit the exam'),
+        })
+        : el('a', { class: 'button', href: '#/sign-in', text: txt('Sign in to sit it') }),
+    ]) : null,
   );
 }
 
@@ -270,6 +286,192 @@ async function lessonPage(courseID, lessonID) {
   if (state.me && first) api.visit(courseID, lessonID, first.id).catch(() => {});
 }
 
+/* ---------- sitting an exam ----------
+
+   THE PAPER IS THE SERVER'S. This screen draws what it was given, records each
+   answer as it is made, and hands in. It keeps no copy of the questions, works
+   out no marks, and has no idea which answer is right — the whole point of the
+   server presenting a question rather than sending it is that the client
+   cannot know, so a client that tried to be clever here would be a client that
+   had been given the key.
+
+   EVERY ANSWER IS SENT AS IT IS MADE, not collected and posted at the end. A
+   student who closes the tab, loses the connection or runs out of battery has
+   answered the questions they answered; a paper that only existed in a
+   JavaScript variable would lose all of them. It is also what makes resuming
+   real: starting again returns the same attempt with the same answers on it. */
+
+async function examPage(scope, id) {
+  if (!state.me) { go('#/sign-in'); return; }
+
+  show(pageTitle(txt('Exam')));
+
+  let paper;
+  try {
+    const answer = await api.startExam(scope, id);
+    paper = answer.paper;
+  } catch (e) {
+    show(pageTitle(txt('Exam')), trouble(e));
+    return;
+  }
+
+  drawPaper(paper);
+}
+
+function drawPaper(paper) {
+  /* A paper that is already marked is a result, not a form. Reaching this by
+     starting an exam cannot produce one — the server would have drawn a fresh
+     attempt — but reaching it by opening an attempt directly can. */
+  if (paper.result) { drawResult(paper); return; }
+
+  const controls = [];
+  const unanswerable = paper.questions.filter((q) => !answerable(q.type));
+
+  const form = el('form', {
+    class: 'paper',
+    onsubmit: (event) => event.preventDefault(),
+  }, paper.questions.map((question, index) => {
+    const name = `q-${paper.attempt}-${question.position}`;
+    const built = build(question.type, question.question, name, question.answer);
+    controls.push({ question, built, saved: null });
+
+    const saved = el('span', { class: 'saved dim', 'aria-live': 'polite' });
+
+    /* Recorded on the way past: changing a control sends it. The reply says
+       nothing about whether it was right — the paper is not marked until it is
+       handed in — so all this can report is that it was written down. */
+    built.node.addEventListener('change', async () => {
+      const answer = built.read();
+      if (!answer) return;
+      saved.textContent = txt('Saving…');
+      try {
+        await api.answer(paper.attempt, question.position, answer);
+        saved.textContent = txt('Saved');
+      } catch (e) {
+        saved.textContent = (e instanceof ApiError && e.message) ? txt(e.message) : txt('Not saved');
+      }
+    });
+
+    return el('section', { class: 'question' }, [
+      el('div', { class: 'question-head' }, [
+        el('span', { class: 'dim mono', text: `${index + 1} / ${paper.questions.length}` }),
+        saved,
+      ]),
+      /* No heading here: the prompt is the fieldset's legend, which is what
+         ties it to the controls. A heading saying the same sentence would be
+         that sentence read out twice. */
+      built.node,
+    ]);
+  }));
+
+  const handIn = el('button', {
+    class: 'button', type: 'button', text: txt('Hand in'),
+    onclick: async (event) => {
+      const button = event.currentTarget;
+
+      /* ONCE, AND SAID OUT LOUD FIRST. Handing in is the end of the attempt:
+         the answers freeze, the paper is marked, and there is no way back to
+         it. A confirmation is not friction here, it is the difference between
+         an exam and a form. */
+      if (!window.confirm(txt('Hand in this exam? You cannot change your answers afterwards.'))) {
+        return;
+      }
+      button.disabled = true;
+
+      /* Whatever is on screen and not yet sent — a text box somebody typed in
+         and never left. Without this, the last answer of a paper is the one
+         most likely to be lost. */
+      for (const { question, built } of controls) {
+        const answer = built.read();
+        if (!answer) continue;
+        try {
+          await api.answer(paper.attempt, question.position, answer);
+        } catch (e) { /* it will be marked as whatever did reach the server */ }
+      }
+
+      try {
+        const answer = await api.handIn(paper.attempt);
+        drawResult(answer.paper);
+      } catch (e) {
+        button.disabled = false;
+        button.after(trouble(e));
+      }
+    },
+  });
+
+  show(
+    pageTitle(examTitle(paper), txt('Answers are saved as you make them.')),
+    unanswerable.length ? el('div', { class: 'notice bad', role: 'note' }, [
+      el('p', {
+        text: `${unanswerable.length} ${txt('questions on this paper cannot be answered here yet.')}`,
+      }),
+    ]) : null,
+    form,
+    el('div', { class: 'hand-in' }, [handIn]),
+  );
+}
+
+function drawResult(paper) {
+  const result = paper.result || { score: 0, of: 0, pass_mark: 0, passed: false };
+  const share = result.of ? Math.round((result.score / result.of) * 100) : 0;
+
+  show(
+    pageTitle(examTitle(paper)),
+    el('div', { class: `result ${result.passed ? 'passed' : 'failed'}` }, [
+      el('p', { class: 'verdict', text: result.passed ? txt('Passed') : txt('Not passed') }),
+      el('p', { class: 'score mono', text: `${result.score} / ${result.of}` }),
+      /* The threshold is shown beside the number it produced (K-16). A score
+         with no mark beside it is a number somebody has to be told the meaning
+         of, and "70%" answers the only question they have. */
+      el('p', { class: 'dim', text: `${share}% · ${txt('pass mark')} ${result.pass_mark}%` }),
+    ]),
+
+    result.passed
+      ? el('p', {}, [el('a', { class: 'button', href: '#/certificates', text: txt('Your certificates') })])
+      : el('p', { class: 'dim', text: txt('You can sit this exam again.') }),
+
+    el('h2', { text: txt('Your answers') }),
+    el('ol', { class: 'marked' }, paper.questions.map((question) => el('li', {
+      class: question.correct ? 'right' : 'wrong',
+    }, [
+      el('span', { class: 'mark', 'aria-hidden': 'true', text: question.correct ? '✓' : '✗' }),
+      /* The word as well as the glyph: a tick is a picture, and the result of
+         an exam is not something to say only in pictures. */
+      el('span', { class: 'visually-hidden', text: question.correct ? txt('Right') : txt('Wrong') }),
+      el('span', { text: (question.question && question.question.prompt) || '' }),
+    ]))),
+  );
+}
+
+/* An attempt read by its own address: what a paper looks like after it was
+   handed in, and how somebody gets back to one they left open. */
+async function attemptPage(id) {
+  if (!state.me) { go('#/sign-in'); return; }
+
+  show(pageTitle(txt('Exam')));
+  try {
+    const answer = await api.attempt(id);
+    drawPaper(answer.paper);
+  } catch (e) {
+    show(pageTitle(txt('Exam')), trouble(e));
+  }
+}
+
+/* An address nobody wrote. It says so rather than showing an empty screen,
+   which is what a router with a silent default produces. */
+function notFound() {
+  show(
+    pageTitle(txt('Not found')),
+    el('p', { class: 'dim', text: txt('There is nothing at that address.') }),
+    el('p', {}, [el('a', { class: 'button', href: '#/', text: txt('Back to the courses') })]),
+  );
+}
+
+function examTitle(paper) {
+  const course = state.courses.find((c) => c.id === paper.exam);
+  return `${txt('Exam')}: ${course ? course.name : paper.exam}`;
+}
+
 async function dashboard() {
   if (!state.me) { go('#/sign-in'); return; }
 
@@ -277,10 +479,12 @@ async function dashboard() {
 
   let resume = [];
   let certificates = [];
+  let attempts = [];
   try {
-    const [r, c] = await Promise.all([api.resume(), api.certificates()]);
+    const [r, c, a] = await Promise.all([api.resume(), api.certificates(), api.attempts()]);
     resume = (r && r.resume) || [];
     certificates = (c && c.certificates) || [];
+    attempts = (a && a.attempts) || [];
   } catch (e) {
     show(pageTitle(txt('Your study')), trouble(e));
     return;
@@ -299,6 +503,27 @@ async function dashboard() {
         el('p', { class: 'dim', text: where.section }),
       ]);
     })) : el('p', { class: 'empty', text: txt('You have not started anything yet.') }),
+
+    /* An open attempt first, because it is the only thing on this screen with
+       a deadline attached to it — the paper is drawn and waiting. */
+    attempts.length ? el('div', {}, [
+      el('h2', { text: txt('Your exams') }),
+      el('ul', { class: 'attempts' }, attempts.map((attempt) => {
+        const course = state.courses.find((c) => c.id === attempt.exam);
+        const name = course ? course.name : attempt.exam;
+        return el('li', {}, [
+          el('a', { href: `#/attempt/${encodeURIComponent(attempt.attempt)}`, text: name }),
+          attempt.result
+            ? el('span', {
+              class: attempt.result.passed ? 'tag free' : 'tag locked',
+              text: attempt.result.passed
+                ? `${txt('Passed')} · ${attempt.result.score}/${attempt.result.of}`
+                : `${txt('Not passed')} · ${attempt.result.score}/${attempt.result.of}`,
+            })
+            : el('span', { class: 'tag', text: txt('Still open') }),
+        ]);
+      })),
+    ]) : null,
 
     el('h2', { text: txt('Your certificates') }),
     certificates.length
@@ -498,16 +723,26 @@ async function route() {
       else if (parts[1]) await coursePage(parts[1]);
       else await catalogue();
       break;
+    case 'exam':
+      /* The scope is one of two words and it comes from the address, so it is
+         checked here rather than passed through: an invented one would reach
+         the API as a path segment nobody wrote. */
+      if ((parts[1] === 'course' || parts[1] === 'track') && parts[2]) {
+        await examPage(parts[1], parts[2]);
+      } else {
+        await notFound();
+      }
+      break;
+    case 'attempt':
+      if (parts[1]) await attemptPage(parts[1]);
+      else await notFound();
+      break;
     case 'dashboard':          await dashboard(); break;
     case 'certificates':       await certificates(); break;
     case 'sign-in':            signIn(); break;
     case 'sign-up':            signUp(); break;
     default:
-      /* An address nobody wrote. It says so rather than showing an empty
-         screen, which is what a router with a silent default produces. */
-      show(pageTitle(txt('Not found')), el('p', {
-        class: 'dim', text: txt('There is nothing at that address.'),
-      }), el('p', {}, [el('a', { class: 'button', href: '#/', text: txt('Back to the courses') })]));
+      await notFound();
   }
 
   drawSidebar(parts[0] === 'course' ? parts[1] : null);

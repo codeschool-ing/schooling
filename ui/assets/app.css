@@ -57,6 +57,12 @@ html[data-theme="light"]{
 
 *{margin:0;padding:0;box-sizing:border-box}
 
+/* `hidden` MEANS HIDDEN. The attribute's own rule is `display:none` at the
+   lowest possible specificity, so any class that sets a display beats it —
+   `.button{display:inline-flex}` did, and the sign-in link stayed on screen
+   beside the name of the person who had just signed in. */
+[hidden]{display:none !important}
+
 body{
   background:var(--ink);
   color:var(--paper);
@@ -277,6 +283,107 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
    the field takes focus rather than sitting there being red at somebody who
    cannot see it. */
 .field .why{font-size:.82rem;color:var(--amber)}
+
+/* ---------- sitting an exam ---------- */
+
+.paper{max-width:68ch;display:flex;flex-direction:column;gap:8px}
+
+.question{
+  background:var(--panel);border:1px solid var(--wire);border-radius:12px;
+  padding:18px 20px;margin:0 0 4px;
+}
+.question-head{display:flex;justify-content:space-between;align-items:baseline;font-size:.78rem}
+/* The fieldset is here for the legend, which is what makes a radio group mean
+   something when it is read out. Its own border would be a second box inside
+   the card. */
+.question-body{border:0;padding:0;margin:0}
+/* The legend IS the question, so it looks like one. `float:left` then clearing
+   is the old trick that makes a legend take the full width and wrap properly,
+   which the element does not do on its own. */
+.question-prompt{
+  float:left;width:100%;margin:0 0 12px;
+  font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.05rem;
+  font-weight:600;line-height:1.4;
+}
+.question-prompt + *{clear:both}
+.saved{font-size:.78rem}
+
+.option{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:8px 10px;border-radius:8px;cursor:pointer;
+}
+.option:hover{background:var(--scan)}
+.option input{margin-top:.35em;accent-color:var(--phosphor);flex:none}
+/* The ring goes on the row, not on the radio: the target a person is aiming at
+   is the whole option, and a two-pixel ring around a two-pixel circle is not a
+   focus indicator anybody can see. */
+.option:has(input:focus-visible){outline:2px solid var(--phosphor);outline-offset:2px}
+
+.ordering{margin:0;padding:0;list-style:none;counter-reset:step}
+.ordering li{
+  display:flex;align-items:center;gap:10px;
+  background:var(--scan);border-radius:8px;padding:8px 10px;margin:0 0 6px;
+}
+.ordering li::before{
+  counter-increment:step;content:counter(step);
+  font-family:'IBM Plex Mono',ui-monospace,monospace;color:var(--paper-dim);
+  min-width:1.5em;
+}
+.ordering-text{flex:1}
+.ordering-buttons{display:flex;gap:4px}
+.ordering-buttons .icon-button{min-width:34px;padding:4px 8px}
+
+.matching-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;
+  margin:0 0 8px;
+}
+.matching-row select,.numeric select{
+  background:var(--panel);color:var(--paper);
+  border:1px solid var(--wire);border-radius:8px;padding:8px 10px;font:inherit;
+}
+
+.cloze{line-height:2.2}
+.blank,.numeric input{
+  background:var(--scan);color:var(--paper);
+  border:0;border-bottom:2px solid var(--phosphor-dim);border-radius:4px 4px 0 0;
+  padding:4px 8px;font:inherit;
+}
+.blank{width:10ch}
+.numeric{display:flex;gap:10px;align-items:center}
+.numeric input{width:14ch;font-family:'IBM Plex Mono',ui-monospace,monospace}
+
+/* The one control that ends the attempt, kept away from the last question so
+   it cannot be hit by somebody reaching for an answer. */
+.hand-in{margin:28px 0 0;padding-top:20px;border-top:1px solid var(--wire)}
+
+.result{
+  background:var(--panel);border:1px solid var(--wire);border-left:4px solid var(--paper-dim);
+  border-radius:12px;padding:20px 24px;max-width:68ch;
+}
+.result.passed{border-left-color:var(--phosphor)}
+.result.failed{border-left-color:var(--amber)}
+.result .verdict{font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.4rem;font-weight:600}
+.result .score{font-size:1.1rem}
+
+.marked{margin:0;padding:0;list-style:none;max-width:68ch}
+.marked li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--wire)}
+/* Colour is never the only carrier: the glyph and the hidden word say it too,
+   which is the difference between a result and a result somebody can read.
+   (WCAG 1.4.1) */
+.marked .mark{font-family:'IBM Plex Mono',ui-monospace,monospace;flex:none}
+.marked.right .mark,.marked li.right .mark{color:var(--phosphor)}
+.marked li.wrong .mark{color:var(--amber)}
+
+.exam-invite{
+  margin-top:32px;padding-top:24px;border-top:1px solid var(--wire);
+}
+.exam-invite .button{margin-top:8px}
+
+.attempts{list-style:none;margin:0;padding:0;max-width:68ch}
+.attempts li{
+  display:flex;justify-content:space-between;gap:12px;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--wire);
+}
 
 /* ---------- the certificate ---------- */
 
