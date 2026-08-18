@@ -1,0 +1,55 @@
+# The first check, and for now the only one, because there is no code yet.
+#
+# It exists because the four documents cross-reference each other by relative
+# path — the README points at the plan, the plan points back at CLAUDE.md — and
+# a link that stops resolving is the quietest kind of rot: it renders fine on
+# GitHub as a link, and only fails when somebody clicks it.
+#
+# The moment a Go file lands, this workflow gains company. It does not gain
+# ceremony before then: a workflow that checks nothing would be theatre, and
+# a green tick that means nothing is worse than no tick.
+
+name: Documents
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  Links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Every relative link resolves to a file that exists
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+
+          # [text](target) where the target is not a URL and not an anchor
+          LINK = re.compile(r'\[[^\]]*\]\(([^)#][^)]*)\)')
+          broken = []
+
+          for md in pathlib.Path('.').rglob('*.md'):
+              for line, text in enumerate(md.read_text().splitlines(), 1):
+                  for target in LINK.findall(text):
+                      if '://' in target or target.startswith('mailto:'):
+                          continue
+                      path = target.split('#', 1)[0]
+                      if not path:
+                          continue
+                      if not (md.parent / path).resolve().exists():
+                          broken.append(f'{md}:{line}  ->  {target}')
+
+          if broken:
+              print('broken relative links:')
+              print('\n'.join('  ' + b for b in broken))
+              sys.exit(1)
+          print('OK — every relative link resolves')
+          PY

@@ -1,0 +1,162 @@
+# schooling
+
+One platform, several schools — one per subject, all of them ours. The material is written and
+checked by machine; no person reviews it before a student reads it.
+
+`docs/PLAN.md` argues the decisions and carries the roadmap. This file states the rules and
+cites the decision by id. If the two ever disagree, this file is what the code has to obey and
+`PLAN.md` is what needs correcting.
+
+---
+
+## The rules
+
+**English is the source language** — code, comments, documentation, ids, the catalogue. The `en`
+dictionaries do not exist: a missing entry falls back to the key, and the key is already the
+string to show. (N-06)
+
+**Silent failure is forbidden.** If a path can fail without a symptom, either it says so, or a
+test exercises the failure and demands that it says so. A swallowed error needs a comment saying
+why the silence is right, and "not fatal" is not a reason on its own. (X-03)
+
+**No module reads another module's tables.** Ask through an interface. `internal/architecture_test.go`
+enforces the graph — if it fails, the fix is the dependency, not the test. (X-02)
+
+**Coverage is not a target.** Do not add tests to raise a percentage. Add the test that would
+have caught the failure you just found, and the one for the failure mode you can name. (X-04)
+
+**Nothing joins to anything by prose or by position — only by a stable id.** Not by a title,
+not by an array index. The predecessor joined exercises to lessons by the title text and keyed
+translations by position; both detach silently on an edit, and one of them shipped. Ids are
+slugs and never derive from a title, so renaming a title breaks nothing. (C-09)
+
+**Order is declared, never inferred from the filesystem.** No numeric prefixes on directories.
+`course.json` names its lessons in order; `lesson.json` names its sections. (C-10)
+
+**Every catalogue write goes through the load job.** The file in `content/` is the source of
+truth; the database is a derived mirror. Nothing else writes catalogue rows — the console reads
+them and never writes. (C-01, C-07)
+
+**Money is integer cents.** Never a float. And a price is **effective-dated, never overwritten** —
+whoever subscribed keeps the price they bought at, so history stays explicable. (K-14)
+
+**The paywall is not configurable.** No parameter, flag or console switch may widen who gets
+access. Granting one named student access is an audited action; a global switch is not. (K-15)
+
+**Only something without a right answer becomes a parameter.** If there is a correct value, it
+lives in code where a test holds it. Every knob multiplies the state two people have to
+test. (K-13)
+
+**Every screen is operable by keyboard and legible to a screen reader**, at WCAG 2.2 AA. The
+hard part is not contrast — it is the question types: `matching` and `ordering` by drag and drop,
+and `labelling` by clicking a point on an image, are unusable without a keyboard path designed
+in. Building one later is rewriting every one of them. (X-05, X-06)
+
+---
+
+## Anything that touches these five is Fase 0 work, wherever it appears
+
+They cost almost nothing now and are **impossible** later, because history cannot be
+reconstructed and an action already taken cannot grow a column retroactively.
+
+1. **Events carry their dimensions denormalised** — plan, school, country, locale copied at the
+   moment the event happens, never joined later. A new event type without them is a hole in
+   every future report. (K-04)
+2. **The review log is append-only** and written from the first practice answer, even though
+   SM-2 does not read it. A better scheduler needs history to fit its parameters. (A-03)
+3. **Every administrative write records the actor.** Two people operate this. (K-01)
+4. **Every table holding personal data is reachable by the export and erase paths.** Adding one
+   without wiring it there is a legal defect, not a backlog item. (Fase 0)
+5. **The visitor has an identity before the account exists**, and signup links the two. Without
+   it the first step of the funnel is unanswerable for every earlier period. (K-10)
+
+---
+
+## The vocabulary, which is a contract
+
+**`track → course → lesson → section`.** Do not rename these, and do not introduce `topic` as a
+fifth word: in the predecessor *topic* already meant lesson, and reviving it with a new meaning
+guarantees a misunderstanding. In Portuguese the interface says *etapa* — the model still says
+`section`, and that is a translation choice rather than a model change.
+
+An exercise names its `section` by **id**. It does not name a title, and it never did so safely:
+joining by title text is how the predecessor lost exercises whenever a lesson was renamed.
+
+**`requires` is knowledge; `links` is sequence.** `requires` names only what the student has to
+know first. If the reason is "in this track it comes after that one", it belongs to the track's
+`links`, which draws the same arrow in that track and nowhere else. Conflating the two cost 18
+false edges once. `tools/validate-catalog` fails on the symptom that catches it — a prerequisite
+absent from a track that shows the course.
+
+**A section is `drillable` or it is not.** The same question serves as an exam item and a drill
+card; the difference is in the state, not the content. (A-01)
+
+**`section_progress` is completion; `practice_state` is mastery.** Completion is set-true and
+never toggled. Mastery decays. **Decayed strength never feeds a progress bar** — a bar that moves
+backwards for someone who did nothing wrong is the worst thing this product can do. (A-05)
+
+---
+
+## Content
+
+`content/` is the source of truth; `docs/CONTENT.md` is its specification. The material is
+written by a person working with an agent, on demand — **the system automates the checking, not
+the writing** (C-14). What CI verifies is therefore not a formality: it runs the answer keys
+through the same machinery that grades a student, because a schema check alone would pass a
+question whose key is wrong, and that is the one failure this system cannot absorb (C-12).
+
+An exercise carries a `version`, and a student's answer records the version it answered. A
+question the statistics flag is **quarantined by threshold, never by decision** — and nothing
+fires below a minimum sample, because three wrong out of three is chance. (C-15, C-16, C-17)
+
+## Two implementations of one rule
+
+The client grades for immediate feedback and the server grades exams. They **must** agree, or the
+same answer scores differently in a course exam and a track exam. Adding a question type means
+adding it to both and to the conformance fixtures. (A-09)
+
+Question types: `quiz`, `multiple-choice`, `ordering`, `matching`, `code`, `expected-output`,
+`expression-answer`, `numeric`, `cloze`, `labelling`. Every type has a machine grader — that is
+the entry requirement, not a nice-to-have. Free-text essays are out.
+
+---
+
+## Multi-tenancy, in practice
+
+The school comes from the `Host` and is resolved once, in middleware. Business code does not
+mention it. (P-01)
+
+Every school-scoped table carries `tenant_id`, and every index on one leads with it. Row-level
+security is deliberately **not** in place — the privacy boundary that matters is between
+students, and that is `account_id`. Do not rely on the database to scope a query for you. (P-05)
+
+Identity is global: one account for the whole platform, one subscription covering every school.
+`subscription(account_id, scope)` exists so the scope can narrow later without a billing
+migration. (N-01, N-02, N-03)
+
+---
+
+## Versioning
+
+Semantic versioning, in one place, checked by the release workflow against the tag. A wrong
+version is worse than none, because it answers with confidence. (P-09)
+
+The API is versioned at `/api/v1/`. This is not ceremony: the **offline bundle** is a client that
+may be months old and that nobody can update. (P-10)
+
+---
+
+## Before pushing
+
+Run the suites. They exist because each one caught something that a diff did not show:
+
+- the catalogue validator — broken prerequisites, cycles, track order
+- the dictionaries against the catalogue
+- the graph, rendered at six viewport sizes, checked for an edge crossing a card
+- the modal, opened for every course
+- the session suite, which answers the API itself and is the only place the client and the
+  server can be seen to disagree
+- the single-file bundle, **opened** and not merely built
+
+And read the output. A suite that reports success through a pipe may be reporting the exit code
+of the pipe.
