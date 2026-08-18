@@ -100,6 +100,22 @@ var Registry = []Table{
 		Why: "the addresses schools answer at",
 	},
 	{
+		Name: "accounts", Holds: HoldsIdentifying, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "the e-mail and the name. It is the row that makes every account_id in the database " +
+			"mean a person, so deleting it is what the whole erase path is for",
+	},
+	{
+		Name: "account_credentials", Holds: HoldsIdentifying, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "a password hash is derived from something the person chose and reused elsewhere. " +
+			"It goes with the account, by cascade",
+	},
+	{
+		Name: "sessions", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "a token hash and a user agent. It goes with the account, by cascade — and a live " +
+			"session outliving an erasure would be somebody still signed in as a person who asked " +
+			"to be forgotten",
+	},
+	{
 		Name: "visitors", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "the identity that precedes the account. Deleting it is what makes every " +
 			"event and review carrying its id stop meaning a person",
@@ -160,6 +176,11 @@ func NewStore(pool *pgxpool.Pool) *Store { return &Store{pool: pool} }
 // Keyed by table name, and it carries a key for every table the registry says
 // reaches an account — including the empty ones. An export that silently omits
 // a table it has no rows for is indistinguishable from one that forgot it.
+//
+// THE COLUMNS ARE NAMED RATHER THAN SELECTED WITH *. An export is handed to the
+// person it is about, so a column added later must be a decision to include it
+// rather than something that arrives on its own — `account_credentials.secret`
+// is the case that makes the point, and a test holds it out.
 func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]map[string]any, error) {
 	out := map[string][]map[string]any{}
 	for _, name := range AccountTables() {
@@ -170,6 +191,15 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		table string
 		sql   string
 	}{
+		{"accounts", `
+			SELECT id, email, name, locale, country, created_at, email_verified_at
+			FROM accounts WHERE id = $1`},
+		{"account_credentials", `
+			SELECT kind, created_at, updated_at
+			FROM account_credentials WHERE account_id = $1 ORDER BY kind`},
+		{"sessions", `
+			SELECT id, created_at, last_seen_at, expires_at, revoked_at, user_agent
+			FROM sessions WHERE account_id = $1 ORDER BY created_at`},
 		{"account_visitors", `
 			SELECT account_id, visitor_id, linked_at
 			FROM account_visitors WHERE account_id = $1 ORDER BY linked_at`},
@@ -236,6 +266,14 @@ func (s *Store) Erase(ctx context.Context, accountID uuid.UUID) error {
 	if _, err := tx.Exec(ctx,
 		`DELETE FROM account_visitors WHERE account_id = $1`, accountID); err != nil {
 		return fmt.Errorf("privacy: erasing the links of an account: %w", err)
+	}
+
+	// And the account, which is the row that made every account_id in the
+	// database mean somebody. Credentials and sessions go with it by cascade;
+	// a live session outliving an erasure would be a person still signed in as
+	// somebody who asked to be forgotten.
+	if _, err := tx.Exec(ctx, `DELETE FROM accounts WHERE id = $1`, accountID); err != nil {
+		return fmt.Errorf("privacy: erasing an account: %w", err)
 	}
 
 	if err := tx.Commit(ctx); err != nil {

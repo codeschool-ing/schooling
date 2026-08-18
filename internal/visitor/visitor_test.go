@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
@@ -30,6 +31,21 @@ func testPool(t *testing.T) *pgxpool.Pool {
 // NO TRUNCATE ANYWHERE IN THIS FILE. `go test` runs packages in parallel
 // against one database, so clearing a shared table deletes another package's
 // rows mid-run. Every assertion below is about the ids this test made.
+
+// seedAccount makes a real account row, by SQL rather than through
+// internal/identity: a module may not import another module, and a test that
+// reaches across the boundary is the same coupling with a different file name.
+func seedAccount(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
+	t.Helper()
+	email := strings.ReplaceAll(uuid.NewString(), "-", "")[:16] + "@example.tld"
+
+	var id uuid.UUID
+	if err := pool.QueryRow(context.Background(),
+		`INSERT INTO accounts (email) VALUES ($1) RETURNING id`, email).Scan(&id); err != nil {
+		t.Fatalf("seeding an account: %v", err)
+	}
+	return id
+}
 
 // handler records the visitor the middleware resolved, so a test can check
 // that the request underneath actually saw one.
@@ -212,7 +228,7 @@ func TestAnAccountCanBeLinkedToEveryDeviceItArrivedOn(t *testing.T) {
 		t.Fatalf("issuing: %v", err)
 	}
 
-	account := uuid.New()
+	account := seedAccount(t, pool)
 	for _, id := range []uuid.UUID{phone, laptop} {
 		if err := store.Link(ctx, account, id); err != nil {
 			t.Fatalf("linking: %v", err)

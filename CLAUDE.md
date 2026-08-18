@@ -95,6 +95,38 @@ both hold.
 
 ---
 
+## Identity
+
+**One account for the whole platform** (N-01). Nothing in `internal/identity` mentions a school
+and no table it owns carries `tenant_id`: what is school-scoped is what somebody DID, not who
+they are.
+
+**The sign-in method is a row, not a column.** `account_credentials` has a `kind`, so adding a
+second way in — an identity provider, a passkey — is a new kind of row rather than a migration
+of `accounts` with a nullable password column left behind. E-mail and password is what shipped
+because it is the only method that can be built and tested with no cloud project and no domain:
+the other two candidates need exactly the infrastructure that is still undecided.
+
+Four rules that are cheap now and are incidents later:
+
+1. **The session token is stored as its SHA-256, never as itself.** A backup that leaks then
+   costs a rotation rather than every live session.
+2. **Sign-in answers identically for a wrong password and an address nobody has** — and costs the
+   same, by verifying against a decoy hash. Otherwise the form is a way to ask whether a
+   particular person studies here, and on an education platform that is a question about
+   somebody's private life.
+3. **Changing a password revokes every other session.** Without that, the person who changed it
+   believes they locked somebody out and did not.
+4. **Argon2id parameters are stored beside each hash**, in the standard PHC string. A constant in
+   the code means raising the cost invalidates every password ever stored, which means nobody
+   raises it.
+
+`Authenticate` never refuses; `Require` does. Half the API is legitimately anonymous, so a
+middleware that refused would need a list of exceptions — and a list of exceptions is where the
+one nobody added lives.
+
+---
+
 ## The vocabulary, which is a contract
 
 **`track → course → lesson → section`.** Do not rename these, and do not introduce `topic` as a
