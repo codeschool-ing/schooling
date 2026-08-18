@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/platform/web"
@@ -48,25 +50,38 @@ func testPool(t *testing.T) *pgxpool.Pool {
 	return pool
 }
 
-func seed(t *testing.T, pool *pgxpool.Pool) {
+// schools is the pair this file works with, seeded under names nothing else is
+// using.
+//
+// NO TRUNCATE, AND NO FIXED SLUGS. `go test` runs packages in parallel against
+// one database, so a test that clears a shared table is not tidying up — it is
+// deleting another package's rows mid-run, and two packages seeding the same
+// slug collide on the unique index. That reached CI as a duplicate key from two
+// packages at once, and it had passed locally on timing alone, which is worse
+// than failing.
+type schools struct{ code, math string } // their hosts
+
+func seed(t *testing.T, pool *pgxpool.Pool) schools {
 	t.Helper()
 	ctx := context.Background()
 
-	if _, err := pool.Exec(ctx, `TRUNCATE tenant_domains, tenants CASCADE`); err != nil {
-		t.Fatalf("clearing: %v", err)
-	}
+	run := strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
+	code, math := "code-"+run, "math-"+run
+
 	if _, err := pool.Exec(ctx, `
 		WITH s AS (
 			INSERT INTO tenants (slug, name, accent) VALUES
-				('code', 'Programming', '#2F6F4E'),
-				('math', 'Mathematics', '#2B5EA8')
+				($1, 'Programming', '#2F6F4E'),
+				($2, 'Mathematics', '#2B5EA8')
 			RETURNING id, slug
 		)
 		INSERT INTO tenant_domains (host, tenant_id)
 		SELECT s.slug || '.example.tld', s.id FROM s
-	`); err != nil {
+	`, code, math); err != nil {
 		t.Fatalf("seeding: %v", err)
 	}
+
+	return schools{code: code + ".example.tld", math: math + ".example.tld"}
 }
 
 // server mounts the one school-scoped route behind the middleware, exactly as
@@ -108,22 +123,22 @@ func get(t *testing.T, srv *httptest.Server, host string) (int, map[string]any) 
 
 func TestTheHostChoosesTheSchool(t *testing.T) {
 	pool := testPool(t)
-	seed(t, pool)
+	at := seed(t, pool)
 	srv := server(t, pool)
 
-	status, body := get(t, srv, "code.example.tld")
+	status, body := get(t, srv, at.code)
 	if status != http.StatusOK {
 		t.Fatalf("status %d, want 200", status)
 	}
-	if body["slug"] != "code" || body["name"] != "Programming" {
+	if body["name"] != "Programming" {
 		t.Errorf("got %v, want the programming school", body)
 	}
 
-	status, body = get(t, srv, "math.example.tld")
+	status, body = get(t, srv, at.math)
 	if status != http.StatusOK {
 		t.Fatalf("status %d, want 200", status)
 	}
-	if body["slug"] != "math" {
+	if body["name"] != "Mathematics" {
 		t.Errorf("got %v, want the mathematics school", body)
 	}
 }
@@ -137,14 +152,18 @@ func TestTheHostChoosesTheSchool(t *testing.T) {
 // school-scoped query written after this rests on it refusing.
 func TestAnUnknownHostIsRefusedAndNeverDefaults(t *testing.T) {
 	pool := testPool(t)
-	seed(t, pool)
+	at := seed(t, pool)
 	srv := server(t, pool)
+
+	// The seeded school, moved to a domain nobody claims: the right label at
+	// the wrong domain must miss, and it is the case a careless LIKE would pass.
+	elsewhere := strings.TrimSuffix(at.code, ".example.tld") + ".example.com"
 
 	for _, host := range []string{
 		"nobody.example.tld",
-		"example.tld",      // the platform's own address is not a school
-		"code.example.com", // right label, wrong domain
-		"code",             // a label with no domain at all
+		"example.tld", // the platform's own address is not a school
+		elsewhere,
+		"code", // a label with no domain at all
 		"",
 	} {
 		status, body := get(t, srv, host)
@@ -160,13 +179,17 @@ func TestAnUnknownHostIsRefusedAndNeverDefaults(t *testing.T) {
 
 func TestTheHostIsNormalisedBeforeItIsLookedUp(t *testing.T) {
 	pool := testPool(t)
-	seed(t, pool)
+	at := seed(t, pool)
 	srv := server(t, pool)
 
 	// The table stores the normalised form; these must still find it.
-	for _, host := range []string{"CODE.example.tld", "code.example.tld:8080", "code.example.tld."} {
+	for _, host := range []string{
+		strings.ToUpper(at.code), // host names are case-insensitive
+		at.code + ":8080",        // the port, which only local development has
+		at.code + ".",            // fully qualified is the same name
+	} {
 		status, body := get(t, srv, host)
-		if status != http.StatusOK || body["slug"] != "code" {
+		if status != http.StatusOK || body["name"] != "Programming" {
 			t.Errorf("GET with Host %q answered %d %v, want the programming school", host, status, body)
 		}
 	}

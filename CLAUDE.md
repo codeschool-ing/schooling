@@ -70,6 +70,29 @@ reconstructed and an action already taken cannot grow a column retroactively.
 5. **The visitor has an identity before the account exists**, and signup links the two. Without
    it the first step of the funnel is unanswerable for every earlier period. (K-10)
 
+All five are in the schema and in code — `internal/event`, `internal/audit`, `internal/visitor`,
+`internal/privacy` and `migrations/0002` — and three of them are guarantees rather than habits:
+
+- **A dimension cannot be omitted, because the type will not let it.** `event.Dimensions` has no
+  exported fields; the only way to build one is `ForSchool` or `ForPlatform`, which take every
+  dimension as an argument. A dimension added later breaks every call site, which is the point.
+- **`events`, `practice_review` and `audit_log` refuse UPDATE and DELETE by trigger.** Append-only
+  as an arrangement is a comment; as a trigger it is a guarantee, and the difference shows up on
+  the day somebody corrects data by hand.
+- **A new table that nobody classified fails CI.** Every table carries a
+  `COMMENT ON TABLE … 'personal-data: …'`, and a test compares the live schema against
+  `privacy.Registry`. Adding one without deciding what it holds is not possible rather than
+  discouraged.
+
+**How erasure works, because everything else rests on it.** None of these tables holds a name —
+they hold uuids. Erasing a person deletes the rows that give those uuids a meaning (`visitors`
+and `account_visitors`), which leaves the event and review rows pointing at nothing and joinable
+to nobody. The statistics survive; the person is not in them. That is also *why* the append-only
+triggers can be absolute: the erase path never needs to update or delete one of those rows. It
+is also why `events.visitor_id` is **not** a foreign key — `ON DELETE SET NULL` would try to
+update an append-only row, and the legal obligation and the immutability guarantee could not
+both hold.
+
 ---
 
 ## The vocabulary, which is a contract
@@ -212,4 +235,22 @@ here because it caught something a diff did not show:
 - the single-file bundle, **opened** and not merely built
 
 And read the output. A suite that reports success through a pipe may be reporting the exit code
-of the pipe.
+of the pipe. `gofmt -l` is the same trap in a different shape: it prints the files it would
+change and **exits 0**, so the check is `[ -n "$(gofmt -l .)" ] && exit 1`, never `gofmt -l .`
+on its own.
+
+## A test does not own the database
+
+`go test` runs packages **in parallel** against one database. So:
+
+- **Never `TRUNCATE` a shared table.** It is not tidying up, it is deleting another package's
+  rows halfway through its run.
+- **Never seed a fixed unique value.** Two packages inserting the school `code` collide on the
+  unique index, and which one loses is a matter of timing.
+- **Scope every assertion to the rows the test wrote** — `WHERE tenant_id = $1`, not
+  `count(*)`.
+
+This reached CI as a duplicate key raised in two packages at once, after passing locally on
+timing alone — which is worse than failing, because it means the suite was green by luck. The
+third rule is the one that pays for itself anyway: a test asserting about its own rows is
+saying something, and one asserting about the whole table is guessing.
