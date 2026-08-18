@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"math/rand/v2"
 	"strings"
 )
 
@@ -212,4 +213,70 @@ func (labelling) key(payload json.RawMessage) (json.RawMessage, error) {
 		}{X: label.X, Y: label.Y})
 	}
 	return json.Marshal(answer)
+}
+
+// The unit, and nothing else. The unit is not a secret — the prompt says "in
+// metres per second squared" — and the client needs it to label the box. The
+// value and the tolerance are the answer and both go.
+type numericShown struct {
+	common
+
+	Unit        string   `json:"unit"`
+	AcceptUnits []string `json:"accept_units,omitempty"`
+}
+
+func (numeric) present(payload json.RawMessage, _ *rand.Rand) (Presented, error) {
+	var p numericPayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Presented{}, err
+	}
+
+	body, err := json.Marshal(numericShown{
+		common: p.common, Unit: p.Unit, AcceptUnits: p.AcceptUnits,
+	})
+	if err != nil {
+		return Presented{}, fmt.Errorf("grade: presenting a numeric question: %w", err)
+	}
+	return Presented{Shown: body}, nil
+}
+
+func (numeric) restore(answer json.RawMessage, _ []int) (json.RawMessage, error) {
+	return answer, nil
+}
+
+// The image and the words to place. Where they go is the answer, so the
+// coordinates and the radius are absent — which also means a client cannot draw
+// the target regions, and a student who could see them would be answering a
+// different question.
+type labellingShown struct {
+	common
+
+	Image  string `json:"image"`
+	Labels []struct {
+		Text string `json:"text"`
+	} `json:"labels"`
+}
+
+func (labelling) present(payload json.RawMessage, _ *rand.Rand) (Presented, error) {
+	var p labellingPayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Presented{}, err
+	}
+
+	shown := labellingShown{common: p.common, Image: p.Image}
+	for _, label := range p.Labels {
+		shown.Labels = append(shown.Labels, struct {
+			Text string `json:"text"`
+		}{Text: label.Text})
+	}
+
+	body, err := json.Marshal(shown)
+	if err != nil {
+		return Presented{}, fmt.Errorf("grade: presenting a labelling question: %w", err)
+	}
+	return Presented{Shown: body}, nil
+}
+
+func (labelling) restore(answer json.RawMessage, _ []int) (json.RawMessage, error) {
+	return answer, nil
 }

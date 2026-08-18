@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand/v2"
 	"sort"
 )
 
@@ -127,4 +128,56 @@ func (c choice) key(payload json.RawMessage) (json.RawMessage, error) {
 
 	sort.Ints(correct)
 	return json.Marshal(choiceAnswer{Chose: correct})
+}
+
+// What a student sees: the choices, shuffled, with nothing saying which is
+// right. `correct` and `why` are ABSENT rather than false and empty — a field
+// that is always false in a presented question is a field somebody will one day
+// forget to blank, and absence cannot be forgotten.
+type choiceShown struct {
+	common
+
+	Choices []struct {
+		Text string `json:"text"`
+	} `json:"choices"`
+}
+
+func (c choice) present(payload json.RawMessage, rnd *rand.Rand) (Presented, error) {
+	var p choicePayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Presented{}, err
+	}
+
+	perm := shuffle(len(p.Choices), rnd)
+
+	shown := choiceShown{common: p.common}
+	for _, at := range perm {
+		shown.Choices = append(shown.Choices, struct {
+			Text string `json:"text"`
+		}{Text: p.Choices[at].Text})
+	}
+
+	body, err := json.Marshal(shown)
+	if err != nil {
+		return Presented{}, fmt.Errorf("grade: presenting a choice question: %w", err)
+	}
+	return Presented{Shown: body, Perm: perm}, nil
+}
+
+func (c choice) restore(answer json.RawMessage, perm []int) (json.RawMessage, error) {
+	var a choiceAnswer
+	if err := decode(answer, &a, ErrBadAnswer); err != nil {
+		return nil, err
+	}
+
+	var out choiceAnswer
+	for _, at := range a.Chose {
+		original, err := through(perm, at)
+		if err != nil {
+			return nil, err
+		}
+		out.Chose = append(out.Chose, original)
+	}
+	sort.Ints(out.Chose)
+	return json.Marshal(out)
 }
