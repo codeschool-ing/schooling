@@ -216,6 +216,13 @@ var Registry = []Table{
 			"column the export deliberately does not name",
 	},
 	{
+		Name: "certificates", Holds: HoldsIdentifying, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "it carries a person's NAME and is readable by anybody holding its code, which is the " +
+			"whole point of it. Keeping one after an erasure request would mean publishing the " +
+			"name of somebody who asked to be forgotten, so it goes — and the verification page " +
+			"then answers exactly as it does for a code that never existed",
+	},
+	{
 		Name: "audit_log", Holds: HoldsIdentifying, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "holds a staff member's name on purpose, so an entry still reads as an answer " +
 			"after they have left. An audit a person can erase is not an audit — a staff " +
@@ -321,6 +328,9 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 			FROM exam_answers q
 			JOIN exam_attempts a ON a.id = q.attempt_id
 			WHERE a.account_id = $1 ORDER BY q.attempt_id, q.position`},
+		{"certificates", `
+			SELECT code, scope, scope_id, title, student_name, school_name, issued_at
+			FROM certificates WHERE account_id = $1 ORDER BY issued_at`},
 		{"practice_review", `
 			SELECT id, reviewed_at, exercise_id, exercise_version, section_id,
 			       correct, quality, elapsed_ms, scheduler

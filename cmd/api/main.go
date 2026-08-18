@@ -23,6 +23,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
+	"github.com/codeschool-ing/schooling/internal/certificate"
 	"github.com/codeschool-ing/schooling/internal/event"
 	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
@@ -184,9 +185,21 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// it of every course the track contains. A track final that a student could
 	// sit while half the track was locked would be a way to earn the
 	// certificate without the material.
+	exams := exam.NewStore(pool, maySit(courses))
+
+	// A CERTIFICATE IS THREE FACTS THIS MODULE MAY NOT GO AND READ: whether the
+	// exam was passed, which is `exam`; what to write as the student's name,
+	// which is `identity`; and what the course is called, which is `catalog`.
+	// Three closures, joined here, and none of the three packages knows the
+	// others exist.
+	certificates := certificate.NewStore(pool,
+		passedExam(exams), nameOf(accounts), titleOf(courses))
+	certificate.NewHandler(certificates, schoolNamed, identity.AccountID).Routes(scoped)
+
 	exam.NewHandler(
-		exam.NewStore(pool, maySit(courses)),
-		schoolID, identity.AccountID, exam.Emit(studentEvents(events, log)),
+		exams, schoolID, identity.AccountID, exam.Emit(studentEvents(events, log)),
+		// Passing is what issues the document, at the moment it is earned.
+		awarded(certificates, log),
 	).Routes(scoped)
 	people := identity.NewHandler(accounts, identity.Settings{
 		Domain: cfg.PlatformDomain,
@@ -236,6 +249,14 @@ func schoolOf(ctx context.Context) (uuid.UUID, string, bool) {
 func schoolID(ctx context.Context) (uuid.UUID, bool) {
 	s, ok := tenant.FromContext(ctx)
 	return s.ID, ok
+}
+
+// schoolNamed is the third shape, and the name is not decoration: a certificate
+// says which school issued it, and it says so in the words the school used on
+// the day rather than by holding a reference to a row that can be edited.
+func schoolNamed(ctx context.Context) (uuid.UUID, string, bool) {
+	s, ok := tenant.FromContext(ctx)
+	return s.ID, s.Name, ok
 }
 
 // planOf is what somebody is paying for, and today it is always nothing.
@@ -344,6 +365,106 @@ func maySit(courses *catalog.Store) exam.MaySit {
 			}
 		}
 		return true, nil
+	}
+}
+
+/* ---------- what a certificate has to be told ---------- */
+
+// passedExam is `exam`'s answer, in the shape `certificate` asked for.
+//
+// The two Scope types are deliberately separate: each module names its own,
+// because a shared one would be an import between them. Converting is one line
+// and it is this one.
+func passedExam(exams *exam.Store) certificate.Passed {
+	return func(ctx context.Context, scope certificate.Scope, id string) (uuid.UUID, bool, error) {
+		school, ok := schoolID(ctx)
+		if !ok {
+			return uuid.Nil, false, nil
+		}
+		student, ok := identity.AccountID(ctx)
+		if !ok {
+			return uuid.Nil, false, nil
+		}
+		return exams.Passed(ctx, school, student, exam.Scope(scope), id)
+	}
+}
+
+// nameOf is what goes on the document.
+//
+// BY ID AND NOT FROM THE REQUEST'S OWN ACCOUNT, even though today's only caller
+// passes the requester. A closure that ignored the id and read the session
+// would answer the wrong name the first time anything issues a certificate on
+// somebody else's behalf, and it would be right until then.
+func nameOf(accounts *identity.Store) certificate.NameOf {
+	return func(ctx context.Context, accountID uuid.UUID) (string, error) {
+		account, err := accounts.ByID(ctx, accountID)
+		if err != nil {
+			return "", err
+		}
+		return account.Name, nil
+	}
+}
+
+// titleOf is what the course or track is called, today. The certificate keeps a
+// copy, because the catalogue is a mirror and the load job prunes it.
+func titleOf(courses *catalog.Store) certificate.TitleOf {
+	return func(ctx context.Context, scope certificate.Scope, id string) (string, error) {
+		school, ok := schoolID(ctx)
+		if !ok {
+			return "", nil
+		}
+
+		if scope == certificate.ScopeTrack {
+			track, err := courses.Track(ctx, school, id)
+			if errors.Is(err, catalog.ErrNotFound) {
+				return "", nil
+			}
+			if err != nil {
+				return "", err
+			}
+			return track.Name, nil
+		}
+
+		// The plan a course is read under does not change its name, and a
+		// certificate is issued for a course the student has already sat the
+		// exam of — so this asks for the name and nothing else.
+		course, err := courses.Course(ctx, school, id, planOf(ctx))
+		if errors.Is(err, catalog.ErrNotFound) {
+			return "", nil
+		}
+		if err != nil {
+			return "", err
+		}
+		return course.Name, nil
+	}
+}
+
+// awarded issues the certificate the moment an exam is passed.
+//
+// IT NEVER FAILS THE REQUEST, and the two reasons it can decline are different
+// in kind. A student with no name on their account cannot have a document yet —
+// that is expected, not an error, and they collect it from the claim route once
+// they have given one. Anything else is logged: the pass is on the attempt
+// either way, and losing an exam result while writing a certificate would be
+// the worse trade by a long way.
+func awarded(certificates *certificate.Store, log *slog.Logger) exam.Awarded {
+	return func(ctx context.Context, scope exam.Scope, id string) {
+		school, name, ok := schoolNamed(ctx)
+		if !ok {
+			return
+		}
+		student, ok := identity.AccountID(ctx)
+		if !ok {
+			return
+		}
+
+		_, err := certificates.Issue(ctx, school, student, name, certificate.Scope(scope), id)
+		switch {
+		case err == nil, errors.Is(err, certificate.ErrNoName):
+		default:
+			log.Error("issuing a certificate for a passed exam",
+				"error", err, "scope", scope, "exam", id)
+		}
 	}
 }
 

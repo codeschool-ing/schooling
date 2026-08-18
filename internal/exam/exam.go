@@ -703,25 +703,32 @@ func (s *Store) History(ctx context.Context, tenantID, accountID uuid.UUID) ([]S
 	return out, rows.Err()
 }
 
-// Passed answers whether this student has ever passed this exam.
+// Passed answers whether this student has ever passed this exam, and on which
+// paper.
 //
 // EVER, not most recently. A pass is a fact about a day somebody knew the
 // material, and an exam sat again out of curiosity and failed does not unmake
 // it — the same reason a finished section never un-finishes (A-05). It is the
 // question a certificate asks.
+//
+// THE PAPER IT ANSWERS WITH IS THE FIRST ONE. A certificate points at the
+// attempt that earned it, and the earliest pass is the one that did — a later
+// one is a student sitting it again, not the moment they qualified.
 func (s *Store) Passed(ctx context.Context, tenantID, accountID uuid.UUID,
-	scope Scope, scopeID string) (bool, error) {
+	scope Scope, scopeID string) (attempt uuid.UUID, passed bool, err error) {
 
-	var ok bool
-	err := s.pool.QueryRow(ctx, `
-		SELECT EXISTS (
-			SELECT 1 FROM exam_attempts
-			WHERE tenant_id = $1 AND account_id = $2 AND scope = $3 AND scope_id = $4
-			  AND passed
-		)
-	`, tenantID, accountID, scope, scopeID).Scan(&ok)
-	if err != nil {
-		return false, fmt.Errorf("exam: asking whether %s %q was passed: %w", scope, scopeID, err)
+	err = s.pool.QueryRow(ctx, `
+		SELECT id FROM exam_attempts
+		WHERE tenant_id = $1 AND account_id = $2 AND scope = $3 AND scope_id = $4 AND passed
+		ORDER BY submitted_at LIMIT 1
+	`, tenantID, accountID, scope, scopeID).Scan(&attempt)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return uuid.Nil, false, nil
 	}
-	return ok, nil
+	if err != nil {
+		return uuid.Nil, false, fmt.Errorf("exam: asking whether %s %q was passed: %w",
+			scope, scopeID, err)
+	}
+	return attempt, true, nil
 }
