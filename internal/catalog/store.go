@@ -141,6 +141,10 @@ type CourseView struct {
 	Listing
 	Prerequisites string       `json:"prerequisites"`
 	Lessons       []LessonView `json:"lessons"`
+
+	// Exam is whether there is one to sit. See hasExam for why a screen needs
+	// to be told rather than to find out by being refused.
+	Exam bool `json:"exam"`
 }
 
 type LessonView struct {
@@ -208,7 +212,48 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID, id string, plan 
 	if view.Lessons, err = s.lessons(ctx, tenantID, id); err != nil {
 		return nil, err
 	}
+	if view.Exam, err = s.hasExam(ctx, tenantID, ScopeCourse, id); err != nil {
+		return nil, err
+	}
 	return view, nil
+}
+
+// The two things an exam can belong to. They are named here rather than passed
+// as a column name, so no caller can reach a string this file did not write.
+const (
+	ScopeCourse = "course"
+	ScopeTrack  = "track"
+)
+
+// hasExam answers whether there is an exam to sit.
+//
+// IT IS ON THE VIEW BECAUSE A SCREEN HAS TO DECIDE WHETHER TO OFFER THE BUTTON.
+// Starting an exam that does not exist is a 404, so an interface with no way to
+// ask would either show a button that sometimes fails or hide one that should
+// be there. Both are worse than a boolean.
+//
+// It counts questions rather than reading a flag: a course whose pool is empty
+// has no exam, because there is no such thing as a paper of zero questions —
+// everybody would pass it at once.
+func (s *Store) hasExam(ctx context.Context, tenantID uuid.UUID, scope, id string) (bool, error) {
+	// The column is chosen from a closed set two lines above, never from an
+	// argument that reached here from outside this package.
+	column := "course_id"
+	if scope == ScopeTrack {
+		column = "track_id"
+	}
+
+	var yes bool
+	err := s.pool.QueryRow(ctx, `
+		SELECT EXISTS (
+			SELECT 1 FROM catalog_exercises
+			WHERE tenant_id = $1 AND exam AND `+column+` = $2
+		)
+	`, tenantID, id).Scan(&yes)
+	if err != nil {
+		return false, fmt.Errorf("catalog: asking whether %s %q has an exam: %w", scope, id, err)
+	}
+	return yes, nil
 }
 
 func (s *Store) requires(ctx context.Context, tenantID uuid.UUID, courseID string) ([]string, error) {
@@ -417,6 +462,9 @@ type TrackView struct {
 
 	Continues string     `json:"continues,omitempty"`
 	Steps     []StepView `json:"steps"`
+
+	// Whether the track has a final. Empty on the list, which does not ask.
+	Exam bool `json:"exam"`
 }
 
 // StepView is one position in a track. A step with options is a fork; a step
@@ -478,6 +526,9 @@ func (s *Store) Track(ctx context.Context, tenantID uuid.UUID, id string) (*Trac
 	}
 
 	if t.Steps, err = s.steps(ctx, tenantID, id); err != nil {
+		return nil, err
+	}
+	if t.Exam, err = s.hasExam(ctx, tenantID, ScopeTrack, id); err != nil {
 		return nil, err
 	}
 	return &t, nil

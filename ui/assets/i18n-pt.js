@@ -51,6 +51,42 @@ window.I18N.pt = {
     'Carry on where you left off': 'Continue de onde parou',
     'You have not started anything yet.': 'Você ainda não começou nada.',
 
+    /* ---------- sitting an exam ---------- */
+    'Exam': 'Prova',
+    'The exam': 'A prova',
+    'Sit the exam': 'Fazer a prova',
+    'Sign in to sit it': 'Entre para fazê-la',
+    'Pass it and the certificate is yours.': 'Seja aprovado e o certificado é seu.',
+    'Answers are saved as you make them.': 'As respostas são salvas conforme você responde.',
+    'Saving…': 'Salvando…',
+    'Saved': 'Salva',
+    'Not saved': 'Não salva',
+    'Hand in': 'Entregar',
+    'Hand in this exam? You cannot change your answers afterwards.':
+      'Entregar esta prova? Depois não dá para mudar as respostas.',
+    'questions on this paper cannot be answered here yet.':
+      'questões desta prova ainda não podem ser respondidas aqui.',
+    'This kind of question cannot be answered here yet.':
+      'Este tipo de questão ainda não pode ser respondido aqui.',
+    'Put these in order, using the arrows.': 'Coloque em ordem, usando as setas.',
+    'Move up': 'Subir',
+    'Move down': 'Descer',
+    'choose': 'escolha',
+    'Blank': 'Lacuna',
+    'Your answer': 'Sua resposta',
+    'Unit': 'Unidade',
+
+    /* ---------- and what it came to ---------- */
+    'Passed': 'Aprovado',
+    'Not passed': 'Não aprovado',
+    'pass mark': 'nota de corte',
+    'You can sit this exam again.': 'Você pode fazer esta prova de novo.',
+    'Your answers': 'Suas respostas',
+    'Right': 'Certa',
+    'Wrong': 'Errada',
+    'Your exams': 'Suas provas',
+    'Still open': 'Em aberto',
+
     /* ---------- certificates ---------- */
     'Your certificates': 'Seus certificados',
     'A certificate arrives when you pass an exam.': 'O certificado chega quando você é aprovado em uma prova.',
