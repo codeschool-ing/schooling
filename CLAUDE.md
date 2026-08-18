@@ -422,6 +422,34 @@ does **not** check whether two lines cross each other — the ordering minimises
 a graph can be non-planar, so demanding zero would be demanding the impossible. A line
 through a *card* is always avoidable, which is why that is the one it fails on.
 
+## Every screen goes through axe
+
+**WCAG 2.2 AA, checked by a machine on every run** (X-05). Cheap now and a rewrite of
+every screen later — and here the aggravation is particular: this is an education
+product, so a screen a reader cannot operate is not a degraded experience, it is a
+student who cannot study.
+
+**In both themes.** Contrast is the most common failure and the light theme is a
+different set of colours entirely; a palette that passes in the dark and fails in the
+light is one `data-theme` away from shipping. It found exactly that on its first run:
+`opacity` on a locked card took its own text to **4.09:1** dark and **3.32:1** light,
+where AA asks for 4.5. Fading something to say "you cannot have this" makes it harder
+to read for everybody and hardest for the people already struggling — locked is a word
+and a dashed border now, never a fade.
+
+**What it cannot check is still somebody's job.** axe finds what is decidable from the
+document: contrast, a missing label, a heading that skips, an absent landmark. It does
+not find whether the focus order makes sense, whether an error is announced when it
+appears, whether a name describes what a control does. Saying so is the difference
+between a check and a claim of compliance — which is why the interface also carries
+what axe cannot see: the skip link, focus moved on navigation and not on first render,
+Escape closing a picker, `ordering` on buttons rather than a drag.
+
+**There is no modal test, because there is no modal.** The predecessor showed a course
+in one, on a marketing page; here a course is a screen. An inherited suite applies
+where its subject exists, and inventing a modal to have something to test would be the
+tail wagging the dog.
+
 **Editing anything in `ui/` needs the server restarted.** `//go:embed` bakes the files
 into the binary at build time, so a running process serves the interface it was built
 with. It cost twenty minutes once: a fix was in the file, the browser had the old one,
@@ -557,6 +585,17 @@ go run ./tools/check-interface    # every string the interface says, in every la
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
 ```
 
+The two browser suites need a server and a school to look at, which is what
+`tools/graph-test/fixture.sql` is for until `content/` has one:
+
+```sh
+npm ci && npx playwright install chromium
+go run ./cmd/migrate && psql "$SCHOOLING_DATABASE_URL" -f tools/graph-test/fixture.sql
+go run ./cmd/api &
+node tools/graph-test/graph-test.mjs    # no line through a card, six window sizes
+node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes
+```
+
 And for anything in `ui/`, open it. `go run ./cmd/api` with a seeded school, then look at it in
 a browser at more than one width, in both themes and both languages — three of the defects in
 that directory were invisible to every check above and obvious in a screenshot.
@@ -578,7 +617,6 @@ here because it caught something a diff did not show:
 - the catalogue validator — broken prerequisites, cycles, track order
 - the dictionaries against the catalogue
 - the graph, rendered at six viewport sizes, checked for an edge crossing a card
-- the modal, opened for every course
 - the session suite, which answers the API itself and is the only place the client and the
   server can be seen to disagree
 - the single-file bundle, **opened** and not merely built
