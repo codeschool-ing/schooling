@@ -29,6 +29,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/migrations"
@@ -55,6 +56,12 @@ func run(log *slog.Logger) error {
 	if err != nil {
 		return err
 	}
+
+	// Which build changed the schema. The migration job leaves the ledger
+	// behind but nothing that says who applied it, and "which release did this"
+	// is the first question asked about a schema nobody expected.
+	info := build.Current()
+	log.Info("migrating", "version", info.Version, "commit", info.Commit)
 
 	pool, err := database.Open(ctx, cfg.DatabaseURL)
 	if err != nil {

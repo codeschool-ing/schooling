@@ -11,6 +11,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -20,18 +21,26 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/tenant"
 )
 
-// version is stamped at build time. Unstamped, it says so rather than claiming
-// a number nobody released — a wrong version answers with confidence, which is
-// worse than answering nothing.
-var version = "dev"
-
 func main() {
+	// `--version` and nothing else. It is not a command-line interface and is
+	// not becoming one — configuration arrives through the environment, which
+	// is what the platform sets. This exists because the release workflow asks
+	// the binary what it is, rather than trusting that a string in a build
+	// command ended up where it was aimed. It costs four lines and turns a
+	// stamp that silently missed into a failed release instead of a wrong
+	// answer during an incident.
+	if len(os.Args) > 1 && os.Args[1] == "--version" {
+		fmt.Println(build.Version)
+		return
+	}
+
 	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 	if err := run(log); err != nil {
@@ -48,8 +57,10 @@ func run(log *slog.Logger) error {
 	if err != nil {
 		return err
 	}
+	info := build.Current()
 	log.Info("starting",
-		"version", version,
+		"version", info.Version,
+		"commit", info.Commit,
 		"environment", cfg.Environment,
 		"platform_domain", cfg.PlatformDomain,
 	)
@@ -120,12 +131,10 @@ func router(pool *pgxpool.Pool, log *slog.Logger) http.Handler {
 	/* Which build is answering. It is an operational question, not a
 	   student's, and it is the one nobody can answer during an incident
 	   without shelling into the machine. No database, so that it replies even
-	   when everything else is down — which is when it is asked. */
+	   when everything else is down — which is when it is asked. A test holds
+	   that property, because it is one line of a handler away from being lost. */
 	mux.HandleFunc("GET /version", func(w http.ResponseWriter, _ *http.Request) {
-		web.JSON(w, http.StatusOK, map[string]any{
-			"version":  version,
-			"released": version != "dev",
-		})
+		web.JSON(w, http.StatusOK, build.Current())
 	})
 
 	// The school-scoped half. Its own mux, so that mounting a route outside

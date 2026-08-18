@@ -138,8 +138,41 @@ migration. (N-01, N-02, N-03)
 
 ## Versioning
 
-Semantic versioning, in one place, checked by the release workflow against the tag. A wrong
+Semantic versioning, and **the tag is the one place a version is written**. Not a file, not a
+constant — the git tag, stamped into the binary at link time by the release workflow. A wrong
 version is worse than none, because it answers with confidence. (P-09)
+
+*The predecessor kept the number in `index.html` and had the release workflow check the tag
+against it. That was right there and is wrong here: Pages served the branch as it was, so there
+was no build to stamp anything during, and the file was the only thing that could carry a
+number. There is a build here. Keeping the file anyway would leave two places naming one
+version — which is the shape of the mistake that failed this repository's first CI run, where
+three places named a Go version and two agreed.*
+
+So there is nothing to keep in sync. What `tools/release` checks is the tag against three
+things that are not copies of it:
+
+- **the shape** — `vMAJOR.MINOR.PATCH`, with no pre-release form, because `dev` is already
+  every build that is not a release and `v1.2.0-rc.1` would be a third state meaning one of the
+  two that exist;
+- **the last release** — a tag that does not increase sorts wrongly for as long as the
+  repository exists, and `v1.10.0` typed as `v1.1.0` is the way that happens;
+- **main** — a release nobody merged cannot be reproduced from main, and the checks that gate
+  main never ran on it.
+
+`dev` is every build that is not a release, and it still reports its commit: during an incident
+the question is which code is running, and a tag only answers it on the days there is one.
+
+### Cutting one
+
+```sh
+git tag v1.2.0 && git push origin v1.2.0
+```
+
+That is all of it — there is no file to edit first, and editing one would be editing nothing.
+The workflow refuses the tag, runs the same checks main is gated by (it *calls* `ci.yml`,
+rather than repeating its steps), stamps the binaries, **asks the binary what version it is**
+and compares that with the tag, and only then creates the release.
 
 The API is versioned at `/api/v1/`. This is not ceremony: the **offline bundle** is a client that
 may be months old and that nobody can update. (P-10)

@@ -1,0 +1,111 @@
+# Cutting a release, which is the one thing here that cannot be undone quietly.
+#
+# A tag can be deleted, but not from the machine of somebody who already fetched
+# it, and not from a deployment that went out with the number stamped inside it.
+# So the refusals happen first, before anything is built, and the checks that
+# gate main run again on the tagged commit rather than being assumed from the
+# pull request that merged it.
+#
+# THERE IS NO IMAGE PUSH HERE YET, and its absence is deliberate rather than
+# forgotten: there is no registry, because there is no cloud project. It arrives
+# with Terraform, as a job appended to this workflow — the deploy pipeline owns
+# which revision runs, and this is where that decision will be made (P-07).
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  # First, and alone, so that a malformed tag costs twenty seconds rather than
+  # a full test run.
+  Tag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # The whole history and every tag: the check compares this tag with
+          # all the others, and asks whether its commit is on main. A shallow
+          # clone can answer neither.
+          fetch-depth: 0
+
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        with:
+          go-version-file: go.mod
+        env:
+          GOTOOLCHAIN: local
+
+      # checkout leaves the repository at the tag, with no branches. The check
+      # asks whether the tagged commit is on main, so main has to exist locally.
+      - name: Fetch main, which the tag is checked against
+        run: git fetch --no-tags origin main:refs/remotes/origin/main
+
+      - name: The tag is well formed, ahead of every release before it, and on main
+        run: go run ./tools/release "${GITHUB_REF_NAME}"
+        env:
+          GOTOOLCHAIN: local
+
+  # The same checks main is gated by — called, not copied.
+  Checks:
+    needs: Tag
+    uses: ./.github/workflows/ci.yml
+
+  Publish:
+    needs: Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # creating the release
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        with:
+          go-version-file: go.mod
+        env:
+          GOTOOLCHAIN: local
+
+      # THE ONLY PLACE A VERSION IS WRITTEN IS THE TAG, and this is where it
+      # enters the binary. Nothing in the repository carries the number, so
+      # nothing in the repository can disagree with it.
+      - name: The binaries, stamped with the tag they were cut from
+        run: |
+          set -euo pipefail
+          stamp="github.com/codeschool-ing/schooling/internal/platform/build"
+          built="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          for command in api migrate; do
+            CGO_ENABLED=0 go build \
+              -trimpath \
+              -ldflags "-s -w
+                -X ${stamp}.Version=${GITHUB_REF_NAME}
+                -X ${stamp}.Commit=${GITHUB_SHA}
+                -X ${stamp}.Built=${built}" \
+              -o "dist/${command}" "./cmd/${command}"
+          done
+        env:
+          GOTOOLCHAIN: local
+
+      # The binary agrees with the tag, asked of the binary itself. Stamping is
+      # a string in a build command, which is to say the kind of thing that goes
+      # wrong silently and is discovered during an incident.
+      - name: The build says what the tag says
+        run: |
+          set -euo pipefail
+          reported="$(./dist/api --version 2>/dev/null || true)"
+          if [ "$reported" != "${GITHUB_REF_NAME}" ]; then
+            echo "the binary reports '${reported}' and the tag is '${GITHUB_REF_NAME}'"
+            exit 1
+          fi
+          echo "the binary reports ${reported}"
+
+      - name: The release
+        run: gh release create "${GITHUB_REF_NAME}" --generate-notes --verify-tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
