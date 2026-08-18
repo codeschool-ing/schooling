@@ -165,6 +165,15 @@ func otherTags(releasing string) ([]string, error) {
 // no local main branch — and a local one could be behind whatever the release
 // is being cut from.
 func onMain(tag string) error {
+	// Resolve the tag first, and separately. Asked about a tag that does not
+	// exist, `merge-base --is-ancestor` fails exactly as it does for a commit
+	// that is not on main — so without this, running the tool on a tag nobody
+	// has created yet answers with a confident sentence about the wrong thing.
+	if _, err := runQuietly("git", "rev-parse", "--verify", "--quiet", tag+"^{commit}"); err != nil {
+		return fmt.Errorf("there is no tag %s here — create it first, or fetch it: "+
+			"this checks a tag that exists, and says nothing about one that does not", tag)
+	}
+
 	if _, err := run("git", "merge-base", "--is-ancestor", tag+"^{commit}", "origin/main"); err != nil {
 		var exit *exec.ExitError
 		if errors.As(err, &exit) {
@@ -180,5 +189,13 @@ func run(name string, args ...string) (string, error) {
 	cmd := exec.Command(name, args...)
 	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
+	return string(out), err
+}
+
+// runQuietly is run for the cases where a failure is an answer rather than a
+// fault, and git's own complaint on the way past would be noise above the
+// sentence that explains it.
+func runQuietly(name string, args ...string) (string, error) {
+	out, err := exec.Command(name, args...).Output()
 	return string(out), err
 }
