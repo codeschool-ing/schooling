@@ -1,4 +1,4 @@
--- A track for the graph test to draw, until there is content to draw instead.
+-- A school for the browser suites to look at, until there is content instead.
 --
 -- THE TEST NEEDS SOMETHING NON-TRIVIAL OR IT PROVES NOTHING. A straight line of
 -- courses is routed correctly by a version of the router with the detour ripped
@@ -10,8 +10,14 @@
 -- not the same either way, which was checked by removing the detour and
 -- watching eight lines run through cards.
 --
--- It goes away when `content/` has a school in it: the test reads whatever
--- tracks the API offers, and real ones are strictly better than this.
+-- It goes away when `content/` has a school in it: the suites read whatever the
+-- API offers, and real content is strictly better than this.
+--
+-- THE ACCESSIBILITY PASS NEEDS MORE THAN THE GRAPH DOES. It opens a lesson and
+-- an exam paper, and a screen with nothing on it is a screen that passes
+-- without being checked — so the lesson prose and one question of every
+-- answerable type are here too. The exam is the densest screen in the
+-- interface: six questions, every one of them a control with a label.
 
 INSERT INTO tenants (slug, name, accent)
 VALUES ('graphtest', 'Programming', '#5b8cff')
@@ -75,5 +81,58 @@ SELECT t.id, 'frontend', 3, v.o, v.op, 0, v.c FROM tenants t, (VALUES
   ('React + TypeScript', 0, 'react-ts'),
   ('Angular',            1, 'angular')
 ) AS v(o, op, c)
+WHERE t.slug = 'graphtest'
+ON CONFLICT DO NOTHING;
+
+/* ---------- a lesson to read ---------- */
+
+INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
+SELECT id, 'web-fundamentals', 'client-and-server', 'Client and server', 0
+FROM tenants WHERE slug = 'graphtest'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, kind, position)
+SELECT id, 'web-fundamentals', 'client-and-server', 'roles', 'reading', 0
+FROM tenants WHERE slug = 'graphtest'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
+SELECT id, 'web-fundamentals', 'client-and-server', 'roles', 'en', 'The two roles',
+$prose$The words **client** and **server** name a moment, not a machine.
+
+Whoever asks is the client. Whoever answers is the server.
+
+- the browser asks
+- the server answers
+
+```
+browser -> server -> database
+```
+$prose$
+FROM tenants WHERE slug = 'graphtest'
+ON CONFLICT DO NOTHING;
+
+/* ---------- an exam to sit ----------
+
+   One question of every type the interface can render, because the exam screen
+   is where the controls are and a paper of three quizzes would leave the
+   ordering buttons, the matching selects and the cloze inputs unchecked. */
+
+INSERT INTO catalog_exercises (tenant_id, id, course_id, exam, version, type, prompt, payload)
+SELECT t.id, q.eid, 'web-fundamentals', true, 1, q.kind, q.prompt, q.payload::jsonb
+FROM tenants t, (VALUES
+  ('fx-quiz', 'quiz', 'A web server queries a database. At that instant, what is it?',
+   '{"id":"fx-quiz","version":1,"type":"quiz","prompt":"A web server queries a database. At that instant, what is it?","choices":[{"text":"The database''s client","correct":true},{"text":"Still only a server"},{"text":"Neither, until the query finishes"}]}'),
+  ('fx-multi', 'multiple-choice', 'Which of these are things a client does?',
+   '{"id":"fx-multi","version":1,"type":"multiple-choice","prompt":"Which of these are things a client does?","choices":[{"text":"Asks for a resource","correct":true},{"text":"Opens the connection","correct":true},{"text":"Listens on a port"}]}'),
+  ('fx-order', 'ordering', 'Put the steps of a request in order.',
+   '{"id":"fx-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}'),
+  ('fx-match', 'matching', 'Match each status code to what it means.',
+   '{"id":"fx-match","version":1,"type":"matching","prompt":"Match each status code to what it means.","pairs":[{"left":"200","right":"Here it is"},{"left":"404","right":"No such thing"},{"left":"500","right":"I broke"}]}'),
+  ('fx-cloze', 'cloze', 'Complete the sentence.',
+   '{"id":"fx-cloze","version":1,"type":"cloze","prompt":"Whoever asks is the ___ and whoever answers is the ___.","blanks":[{"accept":["client"],"ignore_case":true,"ignore_accents":false},{"accept":["server"],"ignore_case":true,"ignore_accents":false}]}'),
+  ('fx-numeric', 'numeric', 'How many milliseconds are there in a second?',
+   '{"id":"fx-numeric","version":1,"type":"numeric","prompt":"How many milliseconds are there in a second?","value":1000,"tolerance":0,"unit":"ms"}')
+) AS q(eid, kind, prompt, payload)
 WHERE t.slug = 'graphtest'
 ON CONFLICT DO NOTHING;

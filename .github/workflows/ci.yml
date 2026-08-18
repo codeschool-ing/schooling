@@ -132,11 +132,15 @@ jobs:
       - name: The module boundaries hold
         run: go test -run 'TestPlatformImportsNothing|TestNoModuleImportsAnotherModule' -v ./internal/
 
-  # THE DRAWING, IN A REAL BROWSER, and its own job for two reasons: it needs a
-  # browser, which is a minute of setup the Go job should not pay for; and when
-  # it fails it fails on its own, so "the graph is wrong" and "the server is
-  # wrong" are two red marks rather than one.
-  Graph:
+  # WHAT ONLY A REAL BROWSER CAN ANSWER, and its own job for two reasons: it
+  # needs one, which is a minute of setup the Go job should not pay for; and
+  # when it fails it fails on its own, so "the interface is wrong" and "the
+  # server is wrong" are two red marks rather than one.
+  #
+  # Two suites share the job because they share the setup exactly: a schema, a
+  # school to look at, and a server. Splitting them would be paying for that
+  # twice to learn the same thing.
+  Browser:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -198,23 +202,30 @@ jobs:
       - name: The schema
         run: go run ./cmd/migrate
 
-      # Until `content/` has a school in it there is nothing to draw, and the
-      # test would pass by having no work to do. The fixture is the smallest
-      # track where a broken router and a working one produce different
-      # drawings — see the file.
-      - name: Something to draw
+      # Until `content/` has a school in it there is nothing to look at, and
+      # both suites would pass by having no work to do. The fixture is the
+      # smallest track where a broken router and a working one produce
+      # different drawings, and it carries the lesson and the exam the
+      # accessibility pass needs a screen of — see the file.
+      - name: Something to look at
         run: psql "$SCHOOLING_DATABASE_URL" -v ON_ERROR_STOP=1 -f tools/graph-test/fixture.sql
 
-      # Every track, six window sizes, and no line through a card. Two lines
-      # crossing each OTHER is not checked: the ordering minimises those and a
-      # graph can be non-planar, so demanding zero would be demanding the
+      # BOTH SUITES, AGAINST ONE SERVER.
+      #
+      # The graph: every track, six window sizes, no line through a card. Two
+      # lines crossing each OTHER is not checked — the ordering minimises those
+      # and a graph can be non-planar, so demanding zero would be demanding the
       # impossible. A line through a card is always avoidable.
+      #
+      # Then axe, over every screen in both themes. It found a real defect on
+      # its first run: `opacity` on a locked card took its text to 4.09:1 in the
+      # dark theme and 3.32:1 in the light one, where AA asks for 4.5.
       #
       # The server is started HERE rather than in a step of its own, because a
       # background process belongs to the shell that started it and each step
-      # gets a new one. Started beside the thing that needs it, there is no
+      # gets a new one. Started beside the things that need it, there is no
       # question about whether it is still running.
-      - name: No line runs through a card
+      - name: The interface, in a browser
         run: |
           go run ./cmd/api &
           server=$!
@@ -228,3 +239,4 @@ jobs:
             echo "the server never became ready"; exit 1; }
 
           node tools/graph-test/graph-test.mjs
+          node tools/a11y-test/a11y-test.mjs

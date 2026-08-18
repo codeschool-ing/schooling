@@ -79,9 +79,9 @@ audit with a name against it.*
 - [x] Sidebar, search, dashboard, catalogue, track map
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
 - [x] Sitting an exam on a screen — the paper, an answer saved as it is made and put back on a reload, and a hand-in that says what it came to
-- [ ] The modal test — every course, one height, neither column scrolling
+- [x] ~~The modal test — every course, one height, neither column scrolling~~ — **there is no modal here.** The predecessor showed a course in one, on a marketing page; a course is a screen of its own in this interface, so the test has no subject. Its actual concern — a layout that holds for every course — is covered by the accessibility pass, which opens the course and lesson screens, and by the graph test, which measures a real drawing rather than trusting one
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
-- [ ] WCAG 2.2 AA on every screen, with an automated check in the browser suites
+- [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over twenty-four screens, both themes, signed out and signed in, the exam paper included
 - [ ] Every question type operable by keyboard and legible to a screen reader — six of them are, with `ordering` on buttons and `matching` on a select; `labelling` waits on somewhere for a content image to be served from
 - [ ] The offline bundle, built **and opened** in CI
 
