@@ -155,10 +155,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 
 	scoped := http.NewServeMux()
 	tenant.NewHandler().Routes(scoped)
-	identity.NewHandler(accounts, identity.Settings{
+	people := identity.NewHandler(accounts, identity.Settings{
 		Domain: cfg.PlatformDomain,
 		Secure: cfg.Environment == config.Production,
-	}, signedUp(visitors, events, log)).Routes(scoped)
+	}, signedUp(visitors, events, log))
+	people.Routes(scoped)
+	people.SecondFactorRoutes(scoped)
 
 	mux.Handle("/api/v1/", web.Chain(scoped,
 		tenant.Resolve(tenant.NewStore(pool)),

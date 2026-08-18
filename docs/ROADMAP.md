@@ -39,8 +39,8 @@ audit with a name against it.*
 ### Identity and access
 
 - [x] One account for the whole platform; session cookie on the parent domain, `HttpOnly`, storing the token's hash and never the token
-- [ ] Staff accounts, invitations and roles — owner, operator, read-only
-- [ ] Mandatory MFA for staff, and staff session revocation
+- [x] Staff roles — owner, operator, read-only, as a row on an account rather than a second account. *Invitations wait on e-mail, which waits on the domain.*
+- [x] Mandatory MFA for staff, enforced on the session rather than on the account, and revoking a role ends every session that held it
 - [ ] Personal-data export and erasure, reachable from the console
 
 ### Operations

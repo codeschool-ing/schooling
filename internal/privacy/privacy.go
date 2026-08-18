@@ -110,6 +110,13 @@ var Registry = []Table{
 			"It goes with the account, by cascade",
 	},
 	{
+		Name: "staff", Holds: HoldsPseudonymous, Subject: SubjectStaff, OnErase: EraseKeep,
+		Why: "who was allowed to operate the platform, and who let them in. It is the row the " +
+			"audit's actor is checked against months later, so it survives — and it goes by " +
+			"cascade if the account itself is ever erased, which is a staff departure rather " +
+			"than a student's request",
+	},
+	{
 		Name: "sessions", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "a token hash and a user agent. It goes with the account, by cascade — and a live " +
 			"session outliving an erasure would be somebody still signed in as a person who asked " +
