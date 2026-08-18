@@ -1,0 +1,524 @@
+package catalog
+
+import (
+	"context"
+	"errors"
+	"fmt"
+
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+// Reading the mirror.
+//
+// EVERY QUERY LEADS WITH tenant_id, and the tenancy test holds every index to
+// matching. Nothing here takes a school from anywhere but its caller, which
+// takes it from the middleware, which takes it from the Host — the chain that
+// makes "a school is whichever one the address names" true all the way down.
+//
+// NOTHING HERE WRITES. The files are the truth and these tables are derived;
+// an architecture test scans the source to keep it that way.
+
+// ErrNotFound is a course, track or lesson this school does not have. It is a
+// state rather than a failure — somebody followed an old link.
+var ErrNotFound = errors.New("catalog: no such thing in this school")
+
+type Store struct {
+	pool *pgxpool.Pool
+}
+
+func NewStore(pool *pgxpool.Pool) *Store { return &Store{pool: pool} }
+
+/* ---------- what a catalogue screen shows ---------- */
+
+// Listing is one course as the catalogue lists it, with the door already
+// decided.
+type Listing struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Category string `json:"category"`
+	Level    string `json:"level"`
+	Hours    int    `json:"hours"`
+	Summary  string `json:"summary"`
+
+	Requires []string `json:"requires"`
+
+	Free   bool   `json:"free"`
+	Locked bool   `json:"locked"`
+	Reason string `json:"reason,omitempty"`
+}
+
+// Courses lists what a student may see, with each door decided for this plan.
+//
+// DRAFTS NEVER APPEAR. Not locked, not greyed — absent. A course being written
+// is not a product, and the difference between "not for you" and "not yet"
+// belongs to the console rather than to a catalogue screen.
+func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID, plan Plan) ([]Listing, error) {
+	free, err := s.freeCourses(ctx, tenantID)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := s.pool.Query(ctx, `
+		SELECT c.id, c.name, c.category, c.level, c.hours, c.summary,
+		       coalesce(array_agg(r.requires_id ORDER BY r.requires_id)
+		                FILTER (WHERE r.requires_id IS NOT NULL), '{}')
+		FROM catalog_courses c
+		LEFT JOIN catalog_course_requires r
+		       ON r.tenant_id = c.tenant_id AND r.course_id = c.id
+		WHERE c.tenant_id = $1 AND NOT c.draft
+		GROUP BY c.id, c.name, c.category, c.level, c.hours, c.summary
+		ORDER BY c.id
+	`, tenantID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: listing the courses: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Listing
+	for rows.Next() {
+		var l Listing
+		if err := rows.Scan(&l.ID, &l.Name, &l.Category, &l.Level, &l.Hours,
+			&l.Summary, &l.Requires); err != nil {
+			return nil, fmt.Errorf("catalog: listing the courses: %w", err)
+		}
+
+		l.Free = free[l.ID]
+		access := MayOpen(plan, &Course{ID: l.ID}, l.Free)
+		l.Locked = !access.Allowed
+		if l.Locked {
+			l.Reason = access.Reason
+		}
+		out = append(out, l)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("catalog: listing the courses: %w", err)
+	}
+	return out, nil
+}
+
+// freeCourses answers which courses are the first of some track.
+//
+// THE SHOP WINDOW MUST BE OPEN AT EVERY DOOR (N-04): the first course of every
+// track, in every school. It is computed from the catalogue's shape rather than
+// flagged on a course, because a flag is a second place to say what position 0
+// already says — and the two would disagree the first time a track is
+// reordered.
+func (s *Store) freeCourses(ctx context.Context, tenantID uuid.UUID) (map[string]bool, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT tc.course_id
+		FROM catalog_track_courses tc
+		WHERE tc.tenant_id = $1
+		  AND tc.position = (
+		      SELECT min(position) FROM catalog_track_courses
+		      WHERE tenant_id = tc.tenant_id AND track_id = tc.track_id
+		  )
+	`, tenantID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the free tier: %w", err)
+	}
+	defer rows.Close()
+
+	free := map[string]bool{}
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return nil, fmt.Errorf("catalog: reading the free tier: %w", err)
+		}
+		free[id] = true
+	}
+	return free, rows.Err()
+}
+
+/* ---------- a course, and what is inside it ---------- */
+
+// CourseView is one course with its lessons. A locked course still shows its
+// shape — the names of its lessons and how many steps each has — because that
+// is what somebody deciding whether to subscribe is looking at. What it does
+// not show is a single word of the material.
+type CourseView struct {
+	Listing
+	Prerequisites string       `json:"prerequisites"`
+	Lessons       []LessonView `json:"lessons"`
+}
+
+type LessonView struct {
+	ID       string        `json:"id"`
+	Title    string        `json:"title"`
+	Sections []SectionView `json:"sections"`
+}
+
+type SectionView struct {
+	ID        string `json:"id"`
+	Kind      string `json:"kind"`
+	Duration  string `json:"duration,omitempty"`
+	Countable bool   `json:"countable"`
+
+	// Empty on a locked course, and on a section whose prose is not being
+	// asked for. Absent rather than blank, so a client can tell "no words yet"
+	// from "not for you".
+	Title string `json:"title,omitempty"`
+	Body  string `json:"body,omitempty"`
+}
+
+func (s *Store) Course(ctx context.Context, tenantID uuid.UUID, id string, plan Plan) (*CourseView, error) {
+	free, err := s.freeCourses(ctx, tenantID)
+	if err != nil {
+		return nil, err
+	}
+
+	var course Course
+	err = s.pool.QueryRow(ctx, `
+		SELECT id, name, category, level, hours, summary, prerequisites, draft
+		FROM catalog_courses WHERE tenant_id = $1 AND id = $2
+	`, tenantID, id).Scan(&course.ID, &course.Name, &course.Category, &course.Level,
+		&course.Hours, &course.Summary, &course.Prerequisites, &course.Draft)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the course %q: %w", id, err)
+	}
+
+	// A draft answers exactly as a course that does not exist. Anything else
+	// tells a stranger what is being written.
+	if course.Draft {
+		return nil, ErrNotFound
+	}
+
+	access := MayOpen(plan, &course, free[course.ID])
+
+	view := &CourseView{
+		Listing: Listing{
+			ID: course.ID, Name: course.Name, Category: course.Category,
+			Level: course.Level, Hours: course.Hours, Summary: course.Summary,
+			Free: free[course.ID], Locked: !access.Allowed,
+		},
+		Prerequisites: course.Prerequisites,
+	}
+	if view.Locked {
+		view.Reason = access.Reason
+	}
+
+	if view.Requires, err = s.requires(ctx, tenantID, id); err != nil {
+		return nil, err
+	}
+	if view.Lessons, err = s.lessons(ctx, tenantID, id); err != nil {
+		return nil, err
+	}
+	return view, nil
+}
+
+func (s *Store) requires(ctx context.Context, tenantID uuid.UUID, courseID string) ([]string, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT requires_id FROM catalog_course_requires
+		WHERE tenant_id = $1 AND course_id = $2 ORDER BY requires_id
+	`, tenantID, courseID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading what %q requires: %w", courseID, err)
+	}
+	defer rows.Close()
+
+	out := []string{}
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return nil, fmt.Errorf("catalog: reading what %q requires: %w", courseID, err)
+		}
+		out = append(out, id)
+	}
+	return out, rows.Err()
+}
+
+func (s *Store) lessons(ctx context.Context, tenantID uuid.UUID, courseID string) ([]LessonView, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT l.id, l.title, s.id, s.kind, s.duration, s.countable
+		FROM catalog_lessons l
+		LEFT JOIN catalog_sections s
+		       ON s.tenant_id = l.tenant_id AND s.course_id = l.course_id AND s.lesson_id = l.id
+		WHERE l.tenant_id = $1 AND l.course_id = $2
+		ORDER BY l.position, s.position
+	`, tenantID, courseID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the lessons of %q: %w", courseID, err)
+	}
+	defer rows.Close()
+
+	var out []LessonView
+	at := map[string]int{}
+
+	for rows.Next() {
+		var lessonID, title string
+		var section, kind, duration *string
+		var countable *bool
+
+		if err := rows.Scan(&lessonID, &title, &section, &kind, &duration, &countable); err != nil {
+			return nil, fmt.Errorf("catalog: reading the lessons of %q: %w", courseID, err)
+		}
+
+		i, seen := at[lessonID]
+		if !seen {
+			out = append(out, LessonView{ID: lessonID, Title: title})
+			i = len(out) - 1
+			at[lessonID] = i
+		}
+		if section == nil {
+			continue // a lesson with no sections, which the validator refuses
+		}
+		out[i].Sections = append(out[i].Sections, SectionView{
+			ID: *section, Kind: *kind, Duration: *duration, Countable: *countable,
+		})
+	}
+	return out, rows.Err()
+}
+
+/* ---------- the words ---------- */
+
+// Lesson answers one lesson with its prose, in the locale asked for.
+//
+// IT REFUSES ON A LOCKED COURSE rather than returning the shape with the words
+// removed. The shape is already on the course screen; a lesson request is a
+// request to read, and answering it with an empty body would be a paywall that
+// looks like a bug.
+func (s *Store) Lesson(ctx context.Context, tenantID uuid.UUID,
+	courseID, lessonID string, locale string, plan Plan) (*LessonView, error) {
+
+	course, err := s.Course(ctx, tenantID, courseID, plan)
+	if err != nil {
+		return nil, err
+	}
+	if course.Locked {
+		return nil, ErrLocked
+	}
+
+	var found *LessonView
+	for i := range course.Lessons {
+		if course.Lessons[i].ID == lessonID {
+			found = &course.Lessons[i]
+			break
+		}
+	}
+	if found == nil {
+		return nil, ErrNotFound
+	}
+
+	prose, err := s.prose(ctx, tenantID, courseID, lessonID, locale)
+	if err != nil {
+		return nil, err
+	}
+	for i := range found.Sections {
+		if p, ok := prose[found.Sections[i].ID]; ok {
+			found.Sections[i].Title = p.Title
+			found.Sections[i].Body = p.Body
+		}
+	}
+	return found, nil
+}
+
+// ErrLocked is a course this plan does not open.
+var ErrLocked = errors.New("catalog: this course is not open to this plan")
+
+// prose reads a lesson's words, falling back FIELD BY FIELD.
+//
+// A section translated in its title but not its body keeps the English body
+// rather than losing the title too (C-11). That only works because a missing
+// translation is a missing ROW rather than an empty one — the two are different
+// things all the way down, and this is where the difference is spent.
+func (s *Store) prose(ctx context.Context, tenantID uuid.UUID,
+	courseID, lessonID, locale string) (map[string]Prose, error) {
+
+	rows, err := s.pool.Query(ctx, `
+		SELECT section_id, locale, title, body
+		FROM catalog_prose
+		WHERE tenant_id = $1 AND course_id = $2 AND lesson_id = $3 AND locale IN ($4, 'en')
+	`, tenantID, courseID, lessonID, locale)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the prose of %q: %w", lessonID, err)
+	}
+	defer rows.Close()
+
+	english := map[string]Prose{}
+	wanted := map[string]Prose{}
+
+	for rows.Next() {
+		var p Prose
+		if err := rows.Scan(&p.SectionID, &p.Locale, &p.Title, &p.Body); err != nil {
+			return nil, fmt.Errorf("catalog: reading the prose of %q: %w", lessonID, err)
+		}
+		if p.Locale == locale {
+			wanted[p.SectionID] = p
+		} else {
+			english[p.SectionID] = p
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("catalog: reading the prose of %q: %w", lessonID, err)
+	}
+
+	out := map[string]Prose{}
+	for id, source := range english {
+		out[id] = source
+	}
+	for id, translated := range wanted {
+		merged := out[id]
+		merged.SectionID = id
+		merged.Locale = translated.Locale
+		if translated.Title != "" {
+			merged.Title = translated.Title
+		}
+		if translated.Body != "" {
+			merged.Body = translated.Body
+		}
+		out[id] = merged
+	}
+	return out, nil
+}
+
+/* ---------- tracks ---------- */
+
+// TrackView is a track with its order and its forks intact.
+type TrackView struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Goal    string `json:"goal,omitempty"`
+	Outcome string `json:"outcome,omitempty"`
+
+	Continues string     `json:"continues,omitempty"`
+	Steps     []StepView `json:"steps"`
+}
+
+// StepView is one position in a track. A step with options is a fork; a step
+// with one course and no options is not.
+type StepView struct {
+	Choice  string       `json:"choice,omitempty"`
+	Note    string       `json:"note,omitempty"`
+	Course  string       `json:"course,omitempty"`
+	Options []OptionView `json:"options,omitempty"`
+}
+
+type OptionView struct {
+	Name    string   `json:"name"`
+	Courses []string `json:"courses"`
+}
+
+func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID) ([]TrackView, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, name, goal, outcome, continues
+		FROM catalog_tracks WHERE tenant_id = $1 ORDER BY position
+	`, tenantID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: listing the tracks: %w", err)
+	}
+	defer rows.Close()
+
+	var out []TrackView
+	for rows.Next() {
+		var t TrackView
+		if err := rows.Scan(&t.ID, &t.Name, &t.Goal, &t.Outcome, &t.Continues); err != nil {
+			return nil, fmt.Errorf("catalog: listing the tracks: %w", err)
+		}
+		out = append(out, t)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("catalog: listing the tracks: %w", err)
+	}
+
+	for i := range out {
+		if out[i].Steps, err = s.steps(ctx, tenantID, out[i].ID); err != nil {
+			return nil, err
+		}
+	}
+	return out, nil
+}
+
+func (s *Store) Track(ctx context.Context, tenantID uuid.UUID, id string) (*TrackView, error) {
+	var t TrackView
+	err := s.pool.QueryRow(ctx, `
+		SELECT id, name, goal, outcome, continues
+		FROM catalog_tracks WHERE tenant_id = $1 AND id = $2
+	`, tenantID, id).Scan(&t.ID, &t.Name, &t.Goal, &t.Outcome, &t.Continues)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the track %q: %w", id, err)
+	}
+
+	if t.Steps, err = s.steps(ctx, tenantID, id); err != nil {
+		return nil, err
+	}
+	return &t, nil
+}
+
+// steps rebuilds a track's order from the flat rows the load job wrote.
+func (s *Store) steps(ctx context.Context, tenantID uuid.UUID, trackID string) ([]StepView, error) {
+	forks := map[int]StepView{}
+	rows, err := s.pool.Query(ctx, `
+		SELECT position, choice, note FROM catalog_track_forks
+		WHERE tenant_id = $1 AND track_id = $2
+	`, tenantID, trackID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the forks of %q: %w", trackID, err)
+	}
+	for rows.Next() {
+		var at int
+		var step StepView
+		if err := rows.Scan(&at, &step.Choice, &step.Note); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("catalog: reading the forks of %q: %w", trackID, err)
+		}
+		forks[at] = step
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("catalog: reading the forks of %q: %w", trackID, err)
+	}
+
+	rows, err = s.pool.Query(ctx, `
+		SELECT position, option_name, option_position, course_id
+		FROM catalog_track_courses
+		WHERE tenant_id = $1 AND track_id = $2
+		ORDER BY position, option_position, course_position
+	`, tenantID, trackID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the order of %q: %w", trackID, err)
+	}
+	defer rows.Close()
+
+	var out []StepView
+	at := map[int]int{}
+	option := map[string]int{}
+
+	for rows.Next() {
+		var position, optionAt int
+		var name, courseID string
+		if err := rows.Scan(&position, &name, &optionAt, &courseID); err != nil {
+			return nil, fmt.Errorf("catalog: reading the order of %q: %w", trackID, err)
+		}
+
+		i, seen := at[position]
+		if !seen {
+			out = append(out, forks[position])
+			i = len(out) - 1
+			at[position] = i
+		}
+
+		if name == "" {
+			out[i].Course = courseID
+			continue
+		}
+
+		key := fmt.Sprint(position, "/", optionAt)
+		j, known := option[key]
+		if !known {
+			out[i].Options = append(out[i].Options, OptionView{Name: name})
+			j = len(out[i].Options) - 1
+			option[key] = j
+		}
+		out[i].Options[j].Courses = append(out[i].Options[j].Courses, courseID)
+	}
+	return out, rows.Err()
+}
