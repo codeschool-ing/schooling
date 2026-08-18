@@ -67,7 +67,7 @@ audit with a name against it.*
 - [x] Nothing else writes catalogue rows; the console reads and never writes — enforced by a test that scans the source
 - [x] Draft and published state per course
 - [x] Ids are slugs that never derive from a title; order declared, never inferred from filenames
-- [ ] The content check runs the **answer keys**, not only the schema — `code` executed, `expression-answer` through the CAS, `numeric` units parsed
+- [x] The content check runs the **answer keys**, not only the schema, for every type that has a grader — `code` executed and `expression-answer` through the CAS still to come, and reported rather than skipped until then
 - [x] An orphaned `.md` that no `lesson.json` references fails the build
 
 ### What the student sees
@@ -85,8 +85,8 @@ audit with a name against it.*
 
 ### Assessment
 
-- [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching`, `code`, `expected-output`, `expression-answer`
-- [ ] Conformance fixtures proving the client grader and the server grader agree, per type
+- [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching` **done**; `code`, `expected-output` need a sandbox, `expression-answer` needs the CAS
+- [x] Conformance fixtures proving the client grader and the server grader agree, per type — the server's half runs them, and a gradable type with no fixture fails the build
 - [ ] Course exams and track exams
 - [ ] Certificates, with a public verification page
 - [x] Free tier: the first course of every track, in every school — computed from the track's order rather than flagged on a course
@@ -102,9 +102,9 @@ Everything the other subjects will demand, built before a subject demands it.
 back today.*
 
 - [ ] `expression-answer` graded by a computer algebra system
-- [ ] `numeric` — a number with a unit and a tolerance
-- [ ] `cloze` — a blank with accepted answers and normalisation
-- [ ] `labelling` — a label on a point of an image
+- [x] `numeric` — a number with a unit and a tolerance
+- [x] `cloze` — a blank with accepted answers and normalisation
+- [x] `labelling` — a label on a point of an image, in fractions of it rather than pixels
 - [ ] All four in the conformance fixtures
 - [ ] `drillable` on exercises
 - [ ] `practice_state` — strength, due date, lapses

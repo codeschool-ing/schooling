@@ -231,6 +231,25 @@ Question types: `quiz`, `multiple-choice`, `ordering`, `matching`, `code`, `expe
 `expression-answer`, `numeric`, `cloze`, `labelling`. Every type has a machine grader — that is
 the entry requirement, not a nice-to-have. Free-text essays are out.
 
+**`internal/grade` is the server's half, and `testdata/conformance` is the contract.** Both
+graders run every fixture; a gradable type with no fixture fails the build, because "I will add
+the fixture afterwards" is the door the disagreement walks through.
+
+Three rules inside it:
+
+- **`Key` exists so the content check can feed a question its own answer.** A quiz with two
+  correct choices, an ordering of one item, a cloze whose accepted set is empty once normalised —
+  each passes a shape check and cannot be answered by anybody. This caught a stub in this
+  repository's own fixture on its first run.
+- **An unknown type is an error, never a pass.** "Give them the mark" is the direction a lenient
+  default always goes, and it turns a typo in a content file into a question everybody gets right.
+- **Grading is binary.** Partial credit is a decision about assessment that has to be made once,
+  for every type; a grader that invented its own would make two exams incomparable, quietly.
+
+Normalisation is **declared per question**, never chosen by the grader: whether case matters is a
+property of what is being asked, and in a question about naming conventions it is the entire
+point.
+
 ---
 
 ## Multi-tenancy, in practice
