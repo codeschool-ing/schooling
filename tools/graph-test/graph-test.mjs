@@ -48,10 +48,20 @@ const SIZES = [
    would make the test fail on the antialiasing of a border radius. */
 const BITE = 3;
 
-const browser = await chromium.launch({
-  executablePath: process.env.CHROMIUM || '/opt/pw-browsers/chromium',
-  args: ['--host-resolver-rules=MAP code.example.tld 127.0.0.1'],
-});
+/* PLAYWRIGHT FINDS ITS OWN BROWSER, and this must not tell it where to look.
+   `npx playwright install` puts one under the home directory and the driver
+   resolves it; a path written here is a path that is right on exactly one
+   machine. This defaulted to the one in the development sandbox — a local
+   detail that leaked into the repository — and CI failed on the first run with
+   "executable doesn't exist", having just downloaded a perfectly good browser
+   somewhere else.
+
+   The override stays for a machine that already has one and does not want a
+   second copy, and it stays OPT-IN. */
+const launch = { args: ['--host-resolver-rules=MAP code.example.tld 127.0.0.1'] };
+if (process.env.CHROMIUM) launch.executablePath = process.env.CHROMIUM;
+
+const browser = await chromium.launch(launch);
 
 let failures = 0;
 let drawings = 0;
