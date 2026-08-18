@@ -24,6 +24,7 @@ import (
 	"sort"
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
+	"github.com/codeschool-ing/schooling/internal/grade"
 )
 
 func main() {
@@ -54,6 +55,39 @@ func main() {
 	default:
 		fmt.Printf("%d school(s), nothing to report\n", schools)
 	}
+}
+
+// checkKeys runs every exercise's own answer key back through the grader that
+// will judge a student's.
+//
+// A QUESTION THAT CANNOT BE ANSWERED CORRECTLY passes every shape check there
+// is: a quiz with two correct choices, an ordering with one item, a cloze whose
+// accepted set is empty once normalised. It reaches a student as a question
+// they cannot get right however well they know the material — and with no human
+// reviewer, this is the only thing between the two.
+//
+// A type with no grader yet is reported rather than skipped. `code`,
+// `expected-output` and `expression-answer` need a sandbox and a computer
+// algebra system; until those exist, a question of that type cannot be checked,
+// and saying so on every run is the point. Silence would read as a pass.
+func checkKeys(school string, s *catalog.School) []error {
+	var problems []error
+
+	check := func(where string, exercises []catalog.Exercise) {
+		for _, e := range exercises {
+			if err := grade.CheckKey(e.Type, e.Raw); err != nil {
+				problems = append(problems, fmt.Errorf("%s: %s/%s: %w", school, where, e.ID, err))
+			}
+		}
+	}
+
+	for _, course := range s.Courses {
+		for _, lesson := range course.Loaded {
+			check(course.ID+"/"+lesson.ID, lesson.Exercises)
+		}
+		check(course.ID+"/exam", course.Exam)
+	}
+	return problems
 }
 
 func check(root string) (problems []error, schools int, err error) {
@@ -90,6 +124,14 @@ func check(root string) (problems []error, schools int, err error) {
 		for _, p := range catalog.Validate(school) {
 			problems = append(problems, fmt.Errorf("%s: %w", entry.Name(), p))
 		}
+
+		// AND THE ANSWER KEYS, which is the half a schema cannot do (C-12).
+		//
+		// `catalog` may not import `grade` — they are two modules — so the
+		// joining happens here, which is what cmd/ and tools/ are for. It is
+		// also the honest place: reading files and judging answers are two
+		// jobs, and the only thing that needs both is the checker.
+		problems = append(problems, checkKeys(entry.Name(), school)...)
 	}
 
 	sort.Slice(problems, func(i, j int) bool { return problems[i].Error() < problems[j].Error() })
