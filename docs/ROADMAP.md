@@ -48,7 +48,7 @@ audit with a name against it.*
 - [x] Migration as a job with an advisory lock, run before traffic reaches the new revision
 - [ ] Terraform owns the project services, registry, service accounts, IAM, Cloud SQL, secret *containers*, the identity federation and the alert policies
 - [ ] The deploy pipeline owns which revision runs; Terraform never manages the image
-- [ ] Semantic version in one place, with the release workflow refusing a tag that disagrees
+- [x] Semantic version in one place — the tag — with the release workflow refusing a tag that is malformed, does not increase, or is not on main
 - [x] `/api/v1/` from the very first route
 - [ ] Uptime check and alert policy reaching a phone
 - [ ] A backup **restored** — to a cloned instance, verified, then destroyed. Never over the live one. No staging environment

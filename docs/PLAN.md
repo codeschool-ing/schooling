@@ -66,7 +66,7 @@ column retroactively. Everything else in this document can wait.
 | P-06 | Terraform in the monorepo, credentials isolated per environment | The thousand-line prose runbook it replaces has already failed expensively. Isolation comes from the workflow and a required approval, not from a repository boundary. |
 | P-07 | Terraform owns what exists; the deploy pipeline owns which version runs | If Terraform manages the service image, every deploy fights it. It owns the database, IAM, secret *containers* (never values), alerts and domain mappings. |
 | P-08 | Migration as a job before traffic is released | Migrating at start-up with several instances coming up together is a race. If it fails, the deploy stops and the previous revision keeps serving. |
-| P-09 | Semantic versioning, tags and releases from the start | See [`../CLAUDE.md`](../CLAUDE.md). |
+| P-09 | Semantic versioning, tags and releases from the start; the tag is the only place a version is written | See [`../CLAUDE.md`](../CLAUDE.md). The predecessor's file existed because Pages had no build to stamp during; here a second copy would only be a second thing to disagree. |
 | P-10 | API versioned at `/api/v1/` | See [`../CLAUDE.md`](../CLAUDE.md). |
 
 ### Product
