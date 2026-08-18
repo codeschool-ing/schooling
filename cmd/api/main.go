@@ -22,6 +22,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/codeschool-ing/schooling/internal/event"
+	"github.com/codeschool-ing/schooling/internal/identity"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
@@ -147,16 +149,26 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// first, so that a visitor being issued an identity can have the school
 	// they arrived at recorded as their first touch — which is the question
 	// the funnel exists to answer and the one that cannot be reconstructed.
+	visitors := visitor.NewStore(pool)
+	accounts := identity.NewStore(pool)
+	events := event.NewStore(pool)
+
 	scoped := http.NewServeMux()
 	tenant.NewHandler().Routes(scoped)
+	identity.NewHandler(accounts, identity.Settings{
+		Domain: cfg.PlatformDomain,
+		Secure: cfg.Environment == config.Production,
+	}, signedUp(visitors, events, log)).Routes(scoped)
+
 	mux.Handle("/api/v1/", web.Chain(scoped,
 		tenant.Resolve(tenant.NewStore(pool)),
-		visitor.Identify(visitor.NewStore(pool), schoolOf, visitor.Settings{
+		visitor.Identify(visitors, schoolOf, visitor.Settings{
 			// The parent domain, so somebody who reads about the platform and
 			// then opens a school is one visitor rather than two.
 			Domain: cfg.PlatformDomain,
 			Secure: cfg.Environment == config.Production,
 		}),
+		identity.Authenticate(accounts),
 	))
 
 	return web.Chain(mux,
@@ -181,4 +193,44 @@ func schoolOf(ctx context.Context) (uuid.UUID, string, bool) {
 		return uuid.Nil, "", false
 	}
 	return s.ID, s.Slug, true
+}
+
+// signedUp is the moment the visitor who arrived becomes a student.
+//
+// IT IS THE JOIN THE WHOLE FUNNEL RESTS ON (K-10), and it is the second place
+// the module boundary shows its shape: `identity` may not import `visitor` or
+// `event`, so it names a callback and this is what fills it in — the only
+// function in the repository that knows about all three.
+//
+// NEITHER FAILURE STOPS A SIGN-UP. A funnel that cannot record somebody
+// arriving must not be able to stop them arriving; both are logged and the
+// student carries on. That is the opposite of the rule for a student's own
+// data, and the difference is who pays for the failure.
+func signedUp(visitors *visitor.Store, events *event.Store, log *slog.Logger) identity.SignedUp {
+	return func(ctx context.Context, account identity.Account) {
+		if id, ok := visitor.FromContext(ctx); ok {
+			if err := visitors.Link(ctx, account.ID, id); err != nil {
+				log.Error("linking a visitor to a new account", "error", err, "account", account.ID)
+			}
+		}
+
+		dimensions := event.ForPlatform(event.PlanNone, account.Country, account.Locale)
+		if id, slug, ok := schoolOf(ctx); ok {
+			dimensions = event.ForSchool(id, slug, event.PlanNone, account.Country, account.Locale)
+		}
+
+		e := event.Event{
+			Name:       "account.created",
+			Dimensions: dimensions,
+			AccountID:  &account.ID,
+			RequestID:  web.RequestIDFrom(ctx),
+		}
+		if id, ok := visitor.FromContext(ctx); ok {
+			e.VisitorID = &id
+		}
+
+		if err := events.Emit(ctx, e); err != nil {
+			log.Error("counting a sign-up", "error", err, "account", account.ID)
+		}
+	}
 }

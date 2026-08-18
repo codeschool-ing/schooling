@@ -173,7 +173,7 @@ func TestTheExportCarriesWhatIsActuallyThere(t *testing.T) {
 	pool := testPool(t)
 	ctx := context.Background()
 
-	account, tenant := uuid.New(), seedSchool(t, pool)
+	account, tenant := seedAccount(t, pool), seedSchool(t, pool)
 	visitor := seedVisitor(t, pool, account)
 	seedEvent(t, pool, tenant, account, visitor)
 	seedReview(t, pool, tenant, account)
@@ -192,6 +192,42 @@ func TestTheExportCarriesWhatIsActuallyThere(t *testing.T) {
 	}
 }
 
+// An export is handed to the person it is about, and one of the tables it
+// covers holds a password hash.
+//
+// THE HASH MUST NOT BE IN IT. Not because the person may not have their own
+// hash — because an export is a file that gets forwarded, stored in a downloads
+// folder and attached to a support thread, and a hash of a password somebody
+// reuses elsewhere is the one thing in this database worth stealing. The export
+// names its columns for exactly this, and this is what holds it to that.
+func TestTheExportNeverCarriesAPasswordHash(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+
+	account := seedAccount(t, pool)
+
+	export, err := privacy.NewStore(pool).Export(ctx, account)
+	if err != nil {
+		t.Fatalf("exporting: %v", err)
+	}
+
+	rows := export["account_credentials"]
+	if len(rows) == 0 {
+		t.Fatal("the export carries no credential row at all, so this proves nothing")
+	}
+	for _, row := range rows {
+		if _, leaked := row["secret"]; leaked {
+			t.Error("the export carries the password hash — a file that gets forwarded, left in " +
+				"a downloads folder and attached to a support thread now carries the one thing " +
+				"in this database worth stealing")
+		}
+		if _, ok := row["kind"]; !ok {
+			t.Error("the export does not say which kind of credential it is, which is the part " +
+				"the person actually asked about")
+		}
+	}
+}
+
 // THE SECOND ONE THAT MATTERS.
 //
 // Erasure works by deleting what gives the identifiers a meaning, not by
@@ -202,7 +238,7 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 	pool := testPool(t)
 	ctx := context.Background()
 
-	account, tenant := uuid.New(), seedSchool(t, pool)
+	account, tenant := seedAccount(t, pool), seedSchool(t, pool)
 	visitorID := seedVisitor(t, pool, account)
 	seedEvent(t, pool, tenant, account, visitorID)
 	seedReview(t, pool, tenant, account)
@@ -217,6 +253,9 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 		sql  string
 		arg  any
 	}{
+		{"accounts", `SELECT count(*) FROM accounts WHERE id = $1`, account},
+		{"account_credentials", `SELECT count(*) FROM account_credentials WHERE account_id = $1`, account},
+		{"sessions", `SELECT count(*) FROM sessions WHERE account_id = $1`, account},
 		{"visitors", `SELECT count(*) FROM visitors WHERE id = $1`, visitorID},
 		{"account_visitors", `SELECT count(*) FROM account_visitors WHERE account_id = $1`, account},
 	} {
@@ -275,6 +314,30 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 // fixed slug collides on the unique index. Everything below is scoped to the
 // account and school it made — which is what these tests meant all along, since
 // the subject of every one of them is one person.
+// seedAccount makes a real account row.
+//
+// BY SQL AND NOT BY internal/identity, because a module may not import another
+// module and a test that reaches across the boundary is the same coupling with
+// a different file name. What this needs is the schema, which is shared.
+func seedAccount(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
+	t.Helper()
+	email := strings.ReplaceAll(uuid.NewString(), "-", "")[:16] + "@example.tld"
+
+	var id uuid.UUID
+	if err := pool.QueryRow(context.Background(), `
+		INSERT INTO accounts (email, name) VALUES ($1, 'A student') RETURNING id
+	`, email).Scan(&id); err != nil {
+		t.Fatalf("seeding an account: %v", err)
+	}
+	if _, err := pool.Exec(context.Background(), `
+		INSERT INTO account_credentials (account_id, kind, secret)
+		VALUES ($1, 'password', '$argon2id$v=19$m=19456,t=2,p=1$c2FsdHlzYWx0eXNhbHQ$aGFzaGhhc2hoYXNoaGFzaGhhc2hoYXNoaGFzaGhhcw')
+	`, id); err != nil {
+		t.Fatalf("seeding a credential: %v", err)
+	}
+	return id
+}
+
 func seedSchool(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
 	t.Helper()
 	slug := "code-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
