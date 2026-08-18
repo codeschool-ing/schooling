@@ -334,7 +334,19 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
    already drawing, since it takes the boxes with x and y swapped. */
 .graph.flows-down{overflow-x:hidden}
 .graph.flows-down .graph-canvas{
-  flex-direction:column;align-items:center;gap:48px;
+  /* STRETCHED, NOT CENTRED, and the reason is the `min(260px,100%)` below. A
+     centred row is shrink-to-fit: its width comes from its own contents, so
+     the percentage inside it has nothing definite to resolve against and the
+     browser falls back to each card's max-content. The cards came out ragged —
+     sized by how wide their names happened to render — and a level wrapped or
+     did not depending on the font. Two of the six drawings were laid out one
+     way on a machine that reaches the font CDN and another way on a machine
+     that does not, and the router met a shape it never meets here.
+
+     A stretched row has a definite width. The percentage resolves against it,
+     every card is the same 260, and the only thing a font still moves is how
+     tall they are. */
+  flex-direction:column;align-items:stretch;gap:48px;
   width:100%;min-width:0;
 }
 .graph.flows-down .graph-column{

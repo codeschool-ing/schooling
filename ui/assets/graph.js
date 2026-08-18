@@ -336,6 +336,13 @@ const CLEARANCE = 16;
    drawing. */
 const CORRIDOR = 14;
 
+/* What a curve leaves between itself and the card it stops short of. Without
+   it the rise ended EXACTLY on the neighbour's edge: `clearance / 2` doubled
+   back into `out * 2`, so every detour was tangent to the next card and correct
+   only by rounding. Four pixels is the difference between a drawing that is
+   right and one that is right on this machine. */
+const BREATH = 4;
+
 export function routeEdges(container, graph, down) {
   const svg = container.querySelector('.graph-edges');
   if (!svg) return;
@@ -426,6 +433,36 @@ export function routeEdges(container, graph, down) {
     return limit;
   };
 
+  /* Where the rise may begin. A card that STRADDLES the x the edge leaves from
+     is invisible to `clearance`, which measures a distance and drops the
+     negative one — so the curve swept from the card's centre out to the lane
+     while still inside that neighbour, drawn by the very code that exists to
+     avoid it. It happens when two cards share a level and are not the same
+     height: one's edge is past the other's, in the band the rise crosses.
+
+     The answer is not a smaller rise, which starts inside the card either way.
+     It is to run straight along the line's own height until the card is behind,
+     and rise there.
+
+     A card lying ACROSS that height is left alone: the straight run would cross
+     it, and nothing this function can return avoids a card sitting on top of
+     the line's own y. */
+  const beyond = (x, home, lane, ignore, rightwards) => {
+    let at = x;
+    const ya = Math.min(home, lane), yb = Math.max(home, lane);
+    boxes.forEach((c) => {
+      if (ignore.indexOf(c.id) >= 0) return;
+      if (c.y >= yb || c.y + c.h <= ya) return;
+      if (c.y < home + 3 && c.y + c.h > home - 3) return;
+      if (rightwards) {
+        if (c.x <= x && c.x + c.w > x) at = Math.max(at, c.x + c.w + BREATH);
+      } else if (c.x < x && c.x + c.w >= x) {
+        at = Math.min(at, c.x - BREATH);
+      }
+    });
+    return at;
+  };
+
   const drawn = [];
   graph.nodes.forEach((node) => {
     const b = boxOf(node.id);
@@ -471,17 +508,33 @@ export function routeEdges(container, graph, down) {
           if (!inTheWay(x1 + 2, x2 - 2, other - 3, other + 3, ignore).length) lane = other;
         }
 
-        // Each end uses the room it actually has.
+        /* Past whatever straddles the ends, and only then out to the lane. */
+        let riseAt = beyond(x1, y1, lane, ignore, true);
+        let dropAt = beyond(x2, y2, lane, ignore, false);
+        if (riseAt >= dropAt) { riseAt = x1; dropAt = x2; }
+
+        // Each end uses the room it actually has, less the breath it leaves.
         const width = (x, rightwards) => {
           const ya = Math.min(rightwards ? y1 : y2, lane), yb = Math.max(rightwards ? y1 : y2, lane);
-          return Math.max(5, Math.min(26, clearance(x, ya, yb, ignore, rightwards) / 2));
+          const room = clearance(x, ya, yb, ignore, rightwards);
+          return Math.max(1, Math.min(26, (room - BREATH) / 2));
         };
-        const out = width(x1, true), into = width(x2, false);
+        let out = width(riseAt, true), into = width(dropAt, false);
+
+        /* The rise and the drop have to fit between them, or one runs into the
+           other and the lane is never reached. */
+        const span = dropAt - riseAt;
+        if ((out + into) * 2 > span) {
+          const shrink = span / ((out + into) * 2);
+          out *= shrink; into *= shrink;
+        }
 
         d = `M${P(x1, y1)}`
-          + ` C${P(x1 + out, y1)} ${P(x1 + out, lane)} ${P(x1 + out * 2, lane)}`
-          + ` L${P(x2 - into * 2, lane)}`
-          + ` C${P(x2 - into, lane)} ${P(x2 - into, y2)} ${P(x2, y2)}`;
+          + (riseAt > x1 ? ` L${P(riseAt, y1)}` : '')
+          + ` C${P(riseAt + out, y1)} ${P(riseAt + out, lane)} ${P(riseAt + out * 2, lane)}`
+          + ` L${P(dropAt - into * 2, lane)}`
+          + ` C${P(dropAt - into, lane)} ${P(dropAt - into, y2)} ${P(dropAt, y2)}`
+          + (dropAt < x2 ? ` L${P(x2, y2)}` : '');
       } else {
         const dx = Math.max(18, (x2 - x1) / 2);
         d = `M${P(x1, y1)} C${P(x1 + dx, y1)} ${P(x2 - dx, y2)} ${P(x2, y2)}`;

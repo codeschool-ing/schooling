@@ -351,6 +351,16 @@ async function trackPage(id) {
        shape in the wrong place. The frame after is when they are real. */
     routeEdges(canvas, graph, down);
     requestAnimationFrame(() => routeEdges(canvas, graph, down));
+
+    /* AND AGAIN WHEN THE FONTS LAND. They are asked for with `display=swap`, so
+       the first layout is the fallback's and the second is the real one — a
+       card that was one line becomes two and everything below it moves. The
+       cards move with it because the browser lays them out again; the lines do
+       not, because nothing re-runs the router. Until this, a visitor on a slow
+       connection got arrows pointing at where the cards had been. */
+    document.fonts.ready.then(() => {
+      if (canvas.isConnected) routeEdges(canvas, graph, down);
+    });
   }
 
   function nodeCard(node) {
