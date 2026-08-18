@@ -15,13 +15,14 @@
    NOTHING HERE KNOWS A TOKEN. The session is an HttpOnly cookie on the same
    origin (P-03); this file cannot read it and does not try.
 
-   WHAT IS NOT HERE YET: the track graph. It has its server half and no screen,
-   which is the next piece rather than an omission.
+   WHAT IS NOT HERE YET: the offline bundle, and an automated accessibility
+   pass over every screen. Both are checks rather than screens.
    ========================================================================== */
 
 import { api, ApiError } from './api.js';
 import { render as markdown } from './markdown.js';
 import { build, answerable } from './question.js';
+import { buildGraph, routeEdges } from './graph.js';
 import {
   txt, contentLocale, mapTexts, applyTexts, buildLanguagePicker, missingTranslations,
 } from './i18n.js';
@@ -117,8 +118,14 @@ async function catalogue() {
 
   if (!state.query) {
     tracks.forEach((track) => {
-      body.append(el('h2', { text: track.name }));
+      body.append(el('h2', {}, [el('a', {
+        href: `#/track/${encodeURIComponent(track.id)}`, text: track.name,
+      })]));
       if (track.goal) body.append(el('p', { class: 'dim', text: track.goal }));
+      body.append(el('p', {}, [el('a', {
+        class: 'dim', href: `#/track/${encodeURIComponent(track.id)}`,
+        text: `${txt('See the whole track')} →`,
+      })]));
       body.append(courseGrid(coursesOfTrack(track)));
     });
   }
@@ -284,6 +291,133 @@ async function lessonPage(courseID, lessonID) {
      is not finishing — that is what makes this a visit and not a completion. */
   const first = (lesson.sections || [])[0];
   if (state.me && first) api.visit(courseID, lessonID, first.id).catch(() => {});
+}
+
+/* ---------- a track, drawn ----------
+
+   THE LAYOUT IS CSS AND THE EDGES ARE MEASURED FROM IT. The cards go into a
+   grid of columns, the browser lays them out, and only then are the lines
+   drawn — from the boxes the browser produced rather than from positions this
+   file guessed. It is why the drawing survives a different font, a longer
+   course name and a narrower window: none of those are things the router has
+   to be told about, because it reads them off the result.
+
+   Which also means the edges are redrawn on a resize, and that they cannot be
+   drawn before the cards are on the page. */
+
+let redrawGraph = null;
+
+async function trackPage(id) {
+  let track;
+  try {
+    track = await api.track(id);
+  } catch (e) {
+    show(pageTitle(txt('Track')), trouble(e));
+    return;
+  }
+
+  const chosen = {};   // fork index -> which option the student is looking at
+  const board = el('div', { class: 'graph' }, [
+    // The lines go behind the cards, and take no pointer events: an edge is a
+    // picture of a relationship, not something to click.
+    el('div', { class: 'graph-canvas' }, [svgLayer()]),
+  ]);
+
+  function draw() {
+    const graph = buildGraph(track, state.courses, chosen);
+    const canvas = board.querySelector('.graph-canvas');
+
+    /* WHICH WAY THE TRACK RUNS IS DECIDED BY THE ROOM THERE IS. A track of
+       seven levels laid out left to right needs about eighteen hundred pixels;
+       on a phone held upright there are four hundred, and what you get is a
+       drawing you read by dragging sideways, one card at a time, which is not
+       reading it at all. Flowing downwards it is a column, which is the shape a
+       phone has.
+
+       The router serves both from one axis — see graph.js — so this is a class
+       and a boolean rather than a second implementation. */
+    const down = window.innerWidth < 900;
+    board.classList.toggle('flows-down', down);
+
+    canvas.textContent = '';
+    canvas.append(svgLayer());
+
+    graph.columns.forEach((column) => {
+      canvas.append(el('div', { class: 'graph-column' }, column.map((node) => nodeCard(node))));
+    });
+
+    /* Twice, and the second is not paranoia: the first pass runs before the
+       browser has settled the layout, so the boxes it measures are the right
+       shape in the wrong place. The frame after is when they are real. */
+    routeEdges(canvas, graph, down);
+    requestAnimationFrame(() => routeEdges(canvas, graph, down));
+  }
+
+  function nodeCard(node) {
+    if (node.kind === 'finish') {
+      return el('div', { class: 'node finish', 'data-node': node.id }, [
+        el('span', { text: txt('Finish') }),
+      ]);
+    }
+
+    if (node.kind === 'fork') {
+      const options = node.step.options || [];
+      return el('div', { class: 'node fork', 'data-node': node.id }, [
+        el('p', { class: 'fork-choice', text: node.step.choice || txt('Choose one') }),
+        node.step.note ? el('p', { class: 'dim', text: node.step.note }) : null,
+        el('div', { class: 'fork-options' }, options.map((option, i) => el('button', {
+          type: 'button',
+          class: 'fork-option' + ((chosen[node.index] || 0) === i ? ' on' : ''),
+          'aria-pressed': String((chosen[node.index] || 0) === i),
+          text: option.name,
+          /* Choosing a branch redraws the whole track, because which courses
+             are on it changes what the graph IS — not merely which card is
+             highlighted. */
+          onclick: () => { chosen[node.index] = i; draw(); },
+        }))),
+      ]);
+    }
+
+    const course = state.courses.find((c) => c.id === node.id);
+    return el('a', {
+      class: 'node course' + (course && course.locked ? ' is-locked' : ''),
+      'data-node': node.id,
+      href: `#/course/${encodeURIComponent(node.id)}`,
+    }, [
+      el('span', { class: 'node-name', text: course ? course.name : node.id }),
+      course && course.hours ? el('span', { class: 'dim node-hours', text: `${course.hours} h` }) : null,
+    ]);
+  }
+
+  show(
+    pageTitle(track.name, track.goal),
+    track.outcome ? el('p', { class: 'dim', text: `${txt('Leads to')}: ${track.outcome}` }) : null,
+    board,
+    track.exam ? el('div', { class: 'exam-invite' }, [
+      el('h2', { text: txt('The final') }),
+      el('p', { class: 'dim', text: txt('The exam for the whole track.') }),
+      state.me
+        ? el('a', {
+          class: 'button', href: `#/exam/track/${encodeURIComponent(track.id)}`,
+          text: txt('Sit the final'),
+        })
+        : el('a', { class: 'button', href: '#/sign-in', text: txt('Sign in to sit it') }),
+    ]) : null,
+  );
+
+  draw();
+
+  /* Redrawn when the window changes size, because the columns rewrap and every
+     box the router measured has moved. One listener, replaced on each
+     navigation rather than accumulated. */
+  redrawGraph = draw;
+}
+
+function svgLayer() {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'graph-edges');
+  svg.setAttribute('aria-hidden', 'true');
+  return svg;
 }
 
 /* ---------- sitting an exam ----------
@@ -716,6 +850,9 @@ async function route() {
 
   const parts = (location.hash.replace(/^#\/?/, '') || '').split('/').filter(Boolean).map(decodeURIComponent);
 
+  // Whatever screen comes next, it is not the graph until it says so.
+  redrawGraph = null;
+
   switch (parts[0]) {
     case undefined:            await catalogue(); break;
     case 'course':
@@ -737,6 +874,10 @@ async function route() {
       if (parts[1]) await attemptPage(parts[1]);
       else await notFound();
       break;
+    case 'track':
+      if (parts[1]) await trackPage(parts[1]);
+      else await catalogue();
+      break;
     case 'dashboard':          await dashboard(); break;
     case 'certificates':       await certificates(); break;
     case 'sign-in':            signIn(); break;
@@ -749,6 +890,14 @@ async function route() {
   closeSidebar();
   focusScreen();
 }
+
+/* The graph is the one screen that has to be redrawn when the window changes
+   size: its lines are measured off boxes the browser placed, and every one of
+   them moves. Cleared on every navigation, so a resize on the catalogue does
+   not run a redraw against a track that is no longer on the page. */
+window.addEventListener('resize', () => {
+  if (redrawGraph) redrawGraph();
+});
 
 /* A fragment router changes the page without a page load, so nothing moves
    focus and nothing is announced. Both are done here — but NOT ON THE FIRST

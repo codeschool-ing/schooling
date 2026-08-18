@@ -284,6 +284,83 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
    cannot see it. */
 .field .why{font-size:.82rem;color:var(--amber)}
 
+/* ---------- a track, drawn ----------
+
+   The columns are a grid and the lines are an SVG behind them, sized to the
+   grid rather than to the viewport. The router measures the boxes the browser
+   produced, so nothing here may position a card with a transform: a transform
+   moves what is drawn without moving what `getBoundingClientRect` reports, and
+   every line would land somewhere else. */
+
+.graph{
+  margin:20px 0 32px;
+  overflow-x:auto;
+  /* The scroll container is what the lines are measured against, so its
+     padding is part of their coordinate space. */
+  padding:8px 4px 16px;
+}
+
+.graph-canvas{
+  position:relative;
+  display:flex;align-items:center;gap:64px;
+  width:max-content;min-width:100%;
+}
+
+.graph-edges{
+  position:absolute;left:0;top:0;
+  /* Behind the cards, and untouchable: an edge is a picture of a relationship,
+     not a control. */
+  z-index:0;pointer-events:none;
+}
+.graph-edges .row{fill:none;stroke:var(--wire);stroke-width:1.5}
+.graph-edges .tip{fill:var(--wire)}
+
+.graph-column{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;gap:24px;
+  justify-content:center;
+}
+
+/* Flowing downwards: the whole thing turns ninety degrees. Levels become rows
+   and the cards inside one sit side by side — which is what the router is
+   already drawing, since it takes the boxes with x and y swapped. */
+.graph.flows-down{overflow-x:hidden}
+.graph.flows-down .graph-canvas{
+  flex-direction:column;align-items:center;gap:48px;
+  width:100%;min-width:0;
+}
+.graph.flows-down .graph-column{
+  flex-direction:row;gap:16px;flex-wrap:wrap;justify-content:center;
+}
+.graph.flows-down .node{width:min(260px,100%)}
+
+.node{
+  background:var(--panel);border:1px solid var(--wire);border-radius:10px;
+  padding:10px 14px;width:190px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.node.course:hover{border-color:var(--phosphor-dim)}
+.node.is-locked{opacity:.72}
+.node-name{font-weight:500;line-height:1.35}
+.node-hours{font-size:.78rem}
+
+.node.finish{
+  width:auto;min-width:96px;text-align:center;
+  border-style:dashed;color:var(--phosphor);
+}
+
+.node.fork{width:210px;border-style:dashed}
+.fork-choice{font-size:.86rem;font-weight:600}
+.fork-options{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.fork-option{
+  background:var(--scan);color:var(--paper);border:1px solid transparent;
+  border-radius:6px;padding:5px 8px;font:inherit;font-size:.84rem;
+  text-align:left;cursor:pointer;
+}
+/* The chosen branch is marked by more than colour: it is what `aria-pressed`
+   says, and it carries a border as well as a tint. (WCAG 1.4.1) */
+.fork-option.on{border-color:var(--phosphor);color:var(--phosphor)}
+
 /* ---------- sitting an exam ---------- */
 
 .paper{max-width:68ch;display:flex;flex-direction:column;gap:8px}
