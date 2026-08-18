@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand/v2"
 )
 
 /* ---------- ordering ---------- */
@@ -173,4 +174,99 @@ func (matching) key(payload json.RawMessage) (json.RawMessage, error) {
 		matched[i] = i
 	}
 	return json.Marshal(matchingAnswer{Matched: matched})
+}
+
+// The items, shuffled. There is nothing to redact — the shuffle IS the
+// redaction, because in this type the declared order is the answer.
+type orderingShown struct {
+	common
+
+	Items []string `json:"items"`
+}
+
+func (ordering) present(payload json.RawMessage, rnd *rand.Rand) (Presented, error) {
+	var p orderingPayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Presented{}, err
+	}
+
+	perm := shuffle(len(p.Items), rnd)
+
+	shown := orderingShown{common: p.common}
+	for _, at := range perm {
+		shown.Items = append(shown.Items, p.Items[at])
+	}
+
+	body, err := json.Marshal(shown)
+	if err != nil {
+		return Presented{}, fmt.Errorf("grade: presenting an ordering: %w", err)
+	}
+	return Presented{Shown: body, Perm: perm}, nil
+}
+
+func (ordering) restore(answer json.RawMessage, perm []int) (json.RawMessage, error) {
+	var a orderingAnswer
+	if err := decode(answer, &a, ErrBadAnswer); err != nil {
+		return nil, err
+	}
+
+	var out orderingAnswer
+	for _, at := range a.Order {
+		original, err := through(perm, at)
+		if err != nil {
+			return nil, err
+		}
+		out.Order = append(out.Order, original)
+	}
+	return json.Marshal(out)
+}
+
+// The left-hand items in the order they were written, and the right-hand ones
+// shuffled. Only one side needs shuffling: pairing i with i is the answer, and
+// breaking that on either side is enough.
+type matchingShown struct {
+	common
+
+	Left  []string `json:"left"`
+	Right []string `json:"right"`
+}
+
+func (matching) present(payload json.RawMessage, rnd *rand.Rand) (Presented, error) {
+	var p matchingPayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Presented{}, err
+	}
+
+	perm := shuffle(len(p.Pairs), rnd)
+
+	shown := matchingShown{common: p.common}
+	for _, pair := range p.Pairs {
+		shown.Left = append(shown.Left, pair.Left)
+	}
+	for _, at := range perm {
+		shown.Right = append(shown.Right, p.Pairs[at].Right)
+	}
+
+	body, err := json.Marshal(shown)
+	if err != nil {
+		return Presented{}, fmt.Errorf("grade: presenting a matching: %w", err)
+	}
+	return Presented{Shown: body, Perm: perm}, nil
+}
+
+func (matching) restore(answer json.RawMessage, perm []int) (json.RawMessage, error) {
+	var a matchingAnswer
+	if err := decode(answer, &a, ErrBadAnswer); err != nil {
+		return nil, err
+	}
+
+	var out matchingAnswer
+	for _, at := range a.Matched {
+		original, err := through(perm, at)
+		if err != nil {
+			return nil, err
+		}
+		out.Matched = append(out.Matched, original)
+	}
+	return json.Marshal(out)
 }

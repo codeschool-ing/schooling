@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand/v2"
 	"strings"
 	"unicode"
 
@@ -138,4 +139,45 @@ func (cloze) key(payload json.RawMessage) (json.RawMessage, error) {
 		filled[i] = blank.Accept[0]
 	}
 	return json.Marshal(clozeAnswer{Filled: filled})
+}
+
+// The blanks, with what they accept removed. The count is what the client needs
+// to draw the right number of boxes; the answers are what it must not have.
+//
+// The normalisation flags stay: they tell the client whether to bother
+// case-correcting as somebody types, and knowing that case is forgiven gives
+// away nothing about what the word is.
+type clozeShown struct {
+	common
+
+	Blanks []struct {
+		IgnoreCase    bool `json:"ignore_case"`
+		IgnoreAccents bool `json:"ignore_accents"`
+	} `json:"blanks"`
+}
+
+func (cloze) present(payload json.RawMessage, _ *rand.Rand) (Presented, error) {
+	var p clozePayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Presented{}, err
+	}
+
+	shown := clozeShown{common: p.common}
+	for _, blank := range p.Blanks {
+		shown.Blanks = append(shown.Blanks, struct {
+			IgnoreCase    bool `json:"ignore_case"`
+			IgnoreAccents bool `json:"ignore_accents"`
+		}{IgnoreCase: blank.IgnoreCase, IgnoreAccents: blank.IgnoreAccents})
+	}
+
+	body, err := json.Marshal(shown)
+	if err != nil {
+		return Presented{}, fmt.Errorf("grade: presenting a cloze: %w", err)
+	}
+	return Presented{Shown: body}, nil
+}
+
+// Nothing was shuffled, so the answer already speaks the original's language.
+func (cloze) restore(answer json.RawMessage, _ []int) (json.RawMessage, error) {
+	return answer, nil
 }
