@@ -121,6 +121,23 @@ Four rules that are cheap now and are incidents later:
    the code means raising the cost invalidates every password ever stored, which means nobody
    raises it.
 
+**Staff is a role on an account, not a second account.** Both people who run this are also
+students of it; one account with a role beside it makes "am I looking at this as staff or as
+myself" one question rather than a habit of remembering which browser you are in. Three roles,
+totally ordered — `owner` > `operator` > `read-only` — because a permission matrix is a screen
+nobody can hold in their head.
+
+**Mandatory MFA is enforced on the SESSION, not on the account.** `sessions.mfa_at` is null until
+a code is presented, and `RequireStaff` checks it every time. A role without the factor is
+exactly the state "mandatory" is supposed to make impossible, and it is reachable the moment
+somebody signs in with a password — so the refusal lives at the door rather than in a rule about
+how accounts are set up. **Revoking a role ends every session that held it**, because otherwise
+removing access is only scheduling it.
+
+TOTP is written out rather than imported, and that is defensible for one reason: RFC 6238
+publishes test vectors, so the implementation is **proved against the specification**. Do not
+replace that test.
+
 `Authenticate` never refuses; `Require` does. Half the API is legitimately anonymous, so a
 middleware that refused would need a list of exceptions — and a list of exceptions is where the
 one nobody added lives.

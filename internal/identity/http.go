@@ -276,3 +276,103 @@ func Require(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+/* ---------- the second factor, over HTTP ---------- */
+
+// SecondFactorRoutes are how somebody enrols and presents one.
+//
+// THEY ARE NOT UNDER RequireStaff. A person enrolling has a role and no factor,
+// which is precisely the state the staff door refuses — so putting enrolment
+// behind that door would lock out everybody who has not already been through
+// it. They need a session and nothing more.
+func (h *Handler) SecondFactorRoutes(mux *http.ServeMux) {
+	mux.Handle("POST /api/v1/second-factor/start", Require(http.HandlerFunc(h.startFactor)))
+	mux.Handle("POST /api/v1/second-factor/enrol", Require(http.HandlerFunc(h.enrolFactor)))
+	mux.Handle("POST /api/v1/second-factor/present", Require(http.HandlerFunc(h.presentFactor)))
+}
+
+// startFactor answers a fresh secret and the URI an authenticator app scans.
+//
+// THE SECRET IS NOT STORED YET. Keeping it server-side between the two calls
+// would mean pending state with a lifetime, an expiry and a cleanup; handing it
+// back and taking it again costs nothing, because the person has it in their
+// app by then anyway. Nothing is written until a code proves that.
+func (h *Handler) startFactor(w http.ResponseWriter, r *http.Request) {
+	account, _ := FromContext(r.Context())
+
+	secret, err := NewTOTPSecret()
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+
+	issuer := h.settings.Domain
+	if issuer == "" {
+		issuer = "schooling"
+	}
+
+	web.JSON(w, http.StatusOK, map[string]string{
+		"secret": secret,
+		"uri":    TOTPURI(secret, issuer, account.Email),
+	})
+}
+
+type secondFactor struct {
+	Secret string `json:"secret"`
+	Code   string `json:"code"`
+}
+
+func (h *Handler) enrolFactor(w http.ResponseWriter, r *http.Request) {
+	var in secondFactor
+	if !decode(w, r, &in) {
+		return
+	}
+	account, _ := FromContext(r.Context())
+
+	if err := h.store.EnrolSecondFactor(r.Context(), account.ID, in.Secret, in.Code); err != nil {
+		if errors.Is(err, ErrWrongCode) {
+			web.Fail(w, http.StatusBadRequest, "wrong_code",
+				"that code does not come from that secret — check the clock on the device")
+			return
+		}
+		h.refuse(w, r, err)
+		return
+	}
+
+	// The session that enrolled has just proved it holds the factor, so it is
+	// marked. Asking for a second code straight afterwards teaches people that
+	// this system asks for codes twice for no reason.
+	if c, err := r.Cookie(CookieName); err == nil {
+		if err := h.store.PresentSecondFactor(r.Context(), c.Value, in.Code); err != nil {
+			web.LoggerFrom(r.Context()).Error("marking the enrolling session", "error", err)
+		}
+	}
+
+	web.JSON(w, http.StatusOK, map[string]string{"status": "enrolled"})
+}
+
+func (h *Handler) presentFactor(w http.ResponseWriter, r *http.Request) {
+	var in secondFactor
+	if !decode(w, r, &in) {
+		return
+	}
+
+	c, err := r.Cookie(CookieName)
+	if err != nil {
+		web.Fail(w, http.StatusUnauthorized, web.CodeUnauthorized, "sign in first")
+		return
+	}
+
+	switch err := h.store.PresentSecondFactor(r.Context(), c.Value, in.Code); {
+	case errors.Is(err, ErrWrongCode), errors.Is(err, ErrNoSecondFactor):
+		// One answer for both: which of them it is tells somebody holding a
+		// stolen session whether the account has a factor at all.
+		web.Fail(w, http.StatusUnauthorized, "wrong_code", "that code is not right")
+		return
+	case err != nil:
+		h.refuse(w, r, err)
+		return
+	}
+
+	web.JSON(w, http.StatusOK, map[string]string{"status": "accepted"})
+}
