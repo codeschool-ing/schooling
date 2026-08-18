@@ -223,6 +223,13 @@ func checkExercises(s *School) []error {
 		check(c.ID+"/exam", nil, c.Exam)
 	}
 
+	// The finals. A track exam is drawn from the same pool machinery and checked
+	// by the same rules — an exam that belongs to a track rather than a course is
+	// a different place to look for it, not a different kind of question (A-08).
+	for _, t := range s.Tracks {
+		check(t.ID+"/exam", nil, t.Exam)
+	}
+
 	return problems
 }
 

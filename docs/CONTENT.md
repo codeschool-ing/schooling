@@ -201,6 +201,11 @@ Exams do not belong to a lesson, so they do not live in one: the course exam is
 `courses/<id>/exam.json` and the track exam is `tracks/<id>-exam.json`. Same exercise shape,
 drawn from a sealed pool that never reaches the practice globals.
 
+The price of naming a track's final after its track is that a track may not itself be called
+`<x>-exam`: such a file is read as the final of `<x>` and never as a track of its own. That would
+be silent, so it is not — a `tracks/<x>-exam.json` with no track `<x>` is refused, which catches
+both the typo and the track somebody happened to name that way (C-13).
+
 ---
 
 ## What CI checks, because CI is the reviewer

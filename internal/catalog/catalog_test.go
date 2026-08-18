@@ -180,6 +180,54 @@ func TestATrackNamingACourseThatIsNotThereIsRefused(t *testing.T) {
 	}
 }
 
+// A track's final lives beside it rather than inside it, because a track has no
+// lessons to put it in (A-08, C-11). It is loaded, checked by the same rules as
+// any other question, and it is NOT a track of its own.
+func TestATracksFinalIsLoadedAndIsNotATrack(t *testing.T) {
+	loaded, problems := catalog.Load(os.DirFS("testdata/good"))
+	if loaded == nil {
+		t.Fatalf("the good fixture would not load: %v", problems)
+	}
+
+	var frontend *catalog.Track
+	for _, track := range loaded.Tracks {
+		if track.ID == "frontend-exam" {
+			t.Fatal("tracks/frontend-exam.json was read as a track, so the final is a track " +
+				"nobody can take and the track it belongs to has no final")
+		}
+		if track.ID == "frontend" {
+			frontend = track
+		}
+	}
+	if frontend == nil {
+		t.Fatal("the frontend track was not loaded at all")
+	}
+	if len(frontend.Exam) != 2 {
+		t.Fatalf("the frontend final has %d questions, want 2", len(frontend.Exam))
+	}
+	if frontend.Exam[0].Raw == nil {
+		t.Error("a final's question reached the loader with no payload, so the mirror would get " +
+			"a question with no answers in it")
+	}
+}
+
+// And the price of the convention, caught rather than discovered.
+//
+// `tracks/<x>-exam.json` is skipped as a track and read only by the track `<x>`
+// — so if there is no such track, it is a file full of questions that nothing in
+// the system will ever mention. That is content generated and forgotten (C-13),
+// and it is also what a track somebody happened to call `backend-exam` becomes.
+func TestAFinalWithNoTrackIsRefused(t *testing.T) {
+	problems := school(t, write("tracks/backend-exam.json", `[
+		{"id": "orphan", "version": 1, "type": "quiz", "prompt": "Anybody?",
+		 "choices": [{"text": "yes", "correct": true}, {"text": "no"}]}
+	]`))
+
+	if !says(problems, "does not exist") {
+		t.Errorf("a final belonging to no track was accepted:\n%s", report(t, problems))
+	}
+}
+
 func TestATrackThatContinuesItselfIsRefused(t *testing.T) {
 	problems := school(t, patchJSON("tracks/frontend.json",
 		func(d map[string]any) { d["continues"] = "frontend" }))

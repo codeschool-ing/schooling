@@ -204,6 +204,18 @@ var Registry = []Table{
 			"this registry to assume, which is why it is identifying rather than pseudonymous",
 	},
 	{
+		Name: "exam_attempts", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "which exams one person sat and what they scored. The evidence about whether a " +
+			"QUESTION is any good is not here — that is one event per answer, and events survive " +
+			"orphaned, so erasing a person does not take the item analysis with them",
+	},
+	{
+		Name: "exam_answers", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "the paper: what was asked, what was given, what it scored. It goes with the attempt " +
+			"by cascade. It also holds the answer keys of the questions that were asked, in a " +
+			"column the export deliberately does not name",
+	},
+	{
 		Name: "audit_log", Holds: HoldsIdentifying, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "holds a staff member's name on purpose, so an entry still reads as an answer " +
 			"after they have left. An audit a person can erase is not an audit — a staff " +
@@ -294,6 +306,21 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		{"notes", `
 			SELECT course_id, lesson_id, section_id, body, updated_at
 			FROM notes WHERE account_id = $1 ORDER BY course_id, lesson_id, section_id`},
+		{"exam_attempts", `
+			SELECT id, scope, scope_id, started_at, submitted_at, score, of, pass_mark, passed
+			FROM exam_attempts WHERE account_id = $1 ORDER BY started_at`},
+		// NEITHER `sealed` NOR `shown` IS NAMED HERE, and the two omissions have
+		// different reasons. `sealed` is the answer key — it must not leave the
+		// database at all, and a test holds that. `shown` is the question text,
+		// which is our content rather than a fact about the person: an export is
+		// what the platform holds ABOUT SOMEBODY, and shipping them a copy of the
+		// question bank would be a strange way to answer that.
+		{"exam_answers", `
+			SELECT q.attempt_id, q.position, q.exercise_id, q.exercise_version, q.type,
+			       q.answer, q.answered_at, q.correct
+			FROM exam_answers q
+			JOIN exam_attempts a ON a.id = q.attempt_id
+			WHERE a.account_id = $1 ORDER BY q.attempt_id, q.position`},
 		{"practice_review", `
 			SELECT id, reviewed_at, exercise_id, exercise_version, section_id,
 			       correct, quality, elapsed_ms, scheduler

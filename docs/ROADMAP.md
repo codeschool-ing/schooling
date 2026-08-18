@@ -87,7 +87,8 @@ audit with a name against it.*
 
 - [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching` **done**; `code`, `expected-output` need a sandbox, `expression-answer` needs the CAS
 - [x] Conformance fixtures proving the client grader and the server grader agree, per type — the server's half runs them, and a gradable type with no fixture fails the build
-- [ ] Course exams and track exams
+- [x] A question is **presented** rather than sent — the answer removed, the order shuffled where the order is the answer, and the permutation kept here
+- [x] Course exams and track exams — a sealed paper per attempt, one open attempt at a time, marked once on hand-in against the questions as they were actually asked
 - [ ] Certificates, with a public verification page
 - [x] Free tier: the first course of every track, in every school — computed from the track's order rather than flagged on a course
 - [x] Access computed fail-closed — an unrecognised plan is a guest, an unreadable catalogue refuses
