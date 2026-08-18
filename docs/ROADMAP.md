@@ -29,12 +29,12 @@ audit with a name against it.*
 ### Shape
 
 - [ ] Monorepo, with CI filtered by path
-- [ ] School resolved by the full `Host`; an unknown host is a 404 and never falls into a default school
+- [x] School resolved by the full `Host`; an unknown host is a 404 and never falls into a default school
 - [ ] Reserved subdomains refused at creation — `www`, `api`, `admin`, `app`, `auth`, `cdn`, `mail`, `static`, `status`, `docs`
 - [ ] One Go binary serving the API and the embedded frontend on one origin
 - [ ] A domain mapping per school
 - [ ] `tenant_id` on every school-scoped table, with every index on one leading with it
-- [ ] The module dependency graph enforced by a test
+- [x] The module dependency graph enforced by a test
 
 ### Identity and access
 
@@ -45,11 +45,11 @@ audit with a name against it.*
 
 ### Operations
 
-- [ ] Migration as a job with an advisory lock, run before traffic reaches the new revision
+- [x] Migration as a job with an advisory lock, run before traffic reaches the new revision
 - [ ] Terraform owns the project services, registry, service accounts, IAM, Cloud SQL, secret *containers*, the identity federation and the alert policies
 - [ ] The deploy pipeline owns which revision runs; Terraform never manages the image
 - [ ] Semantic version in one place, with the release workflow refusing a tag that disagrees
-- [ ] `/api/v1/` from the very first route
+- [x] `/api/v1/` from the very first route
 - [ ] Uptime check and alert policy reaching a phone
 - [ ] A backup **restored** — to a cloned instance, verified, then destroyed. Never over the live one. No staging environment
 

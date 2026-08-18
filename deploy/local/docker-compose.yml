@@ -1,0 +1,99 @@
+# The whole system on a laptop, with no cloud account and no domain.
+#
+# TWO SCHOOLS, NOT ONE. A single school hides every multi-tenancy mistake,
+# because with one row every lookup finds the right answer by accident. The
+# seed below creates `code` and `math` so that the thing which actually has to
+# work — the wrong school never answering — can be seen locally rather than
+# discovered in production.
+#
+# The addresses are `code.localhost` and `math.localhost`, which modern
+# browsers and curl resolve to the loopback without touching /etc/hosts. That
+# is why the local domain is `localhost` and not `example.tld`: the point is to
+# open it in a browser without editing a system file first.
+#
+#     docker compose -f deploy/local/docker-compose.yml up --build
+#     curl -H 'Host: code.localhost' localhost:8080/api/v1/school
+#     open http://code.localhost:8080/api/v1/school
+
+name: schooling
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: schooling
+      POSTGRES_PASSWORD: schooling
+      POSTGRES_DB: schooling
+    ports:
+      # Exposed so the tests can reach it from outside the compose network:
+      #     SCHOOLING_TEST_DATABASE_URL=postgres://schooling:schooling@localhost:5432/schooling?sslmode=disable
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U schooling -d schooling"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  # The schema, as a job — the same shape it has in production, where migrating
+  # at start-up would race several instances of a new revision against each
+  # other. It has to finish before the server is allowed to start.
+  migrate:
+    build:
+      context: ../..
+      dockerfile: deploy/local/Dockerfile
+      args:
+        COMMAND: migrate
+    environment:
+      SCHOOLING_DATABASE_URL: postgres://schooling:schooling@db:5432/schooling?sslmode=disable
+      SCHOOLING_PLATFORM_DOMAIN: localhost
+      SCHOOLING_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # The two schools. Local only, and deliberately part of the compose file
+  # rather than a migration: a migration that inserts rows would put them in
+  # production too, and production's schools are created by a person.
+  seed:
+    image: postgres:16-alpine
+    entrypoint:
+      - sh
+      - -c
+      - |
+        psql "$$SCHOOLING_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          INSERT INTO tenants (slug, name, accent) VALUES
+            ('code', 'Programming', '#2F6F4E'),
+            ('math', 'Mathematics', '#2B5EA8')
+          ON CONFLICT (slug) DO NOTHING;
+
+          INSERT INTO tenant_domains (host, tenant_id)
+          SELECT slug || '.localhost', id FROM tenants
+          ON CONFLICT (host) DO NOTHING;
+        SQL
+    environment:
+      SCHOOLING_DATABASE_URL: postgres://schooling:schooling@db:5432/schooling?sslmode=disable
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/local/Dockerfile
+      args:
+        COMMAND: api
+    environment:
+      SCHOOLING_DATABASE_URL: postgres://schooling:schooling@db:5432/schooling?sslmode=disable
+      SCHOOLING_PLATFORM_DOMAIN: localhost
+      SCHOOLING_ENV: development
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+
+volumes:
+  db:
