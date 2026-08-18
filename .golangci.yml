@@ -1,0 +1,35 @@
+# The linters, and one of them is here for a specific reason.
+#
+# `errcheck` is the point of this file. On the predecessor, a pull request
+# passed `go build` and `go vet` locally and failed CI on two unchecked
+# `defer resp.Body.Close()` calls — because build and vet do not look for an
+# ignored error and errcheck does. An error dropped on the floor is the exact
+# failure mode this project has decided against, so the linter that finds them
+# runs before the tests do.
+
+version: "2"
+
+linters:
+  enable:
+    - errcheck      # an ignored error is a silent failure with a shorter name
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - bodyclose     # an unclosed response body leaks a connection, quietly
+    - errorlint     # comparing errors with == breaks the moment one is wrapped
+    - gosec
+    - misspell
+    - unconvert
+    - unparam
+
+  settings:
+    errcheck:
+      # Deliberate discards are written as `_ =` and carry a comment saying
+      # why. That is a decision on a line, which is reviewable; a package-wide
+      # exclusion list is a decision nobody sees again.
+      check-blank: false
+
+formatters:
+  enable:
+    - gofmt
