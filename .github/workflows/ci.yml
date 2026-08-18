@@ -176,10 +176,24 @@ jobs:
       # `npm ci` and not `npm install`: the lock file is the version that was
       # tested, and a browser suite that silently upgraded its driver would fail
       # on a day nobody changed anything.
+      #
+      # AND NOT `--with-deps`. That flag runs `apt-get update && apt-get
+      # install` on every run, and the runner image already has every library
+      # it asks for — the first run's log said "is already the newest version"
+      # for all of them, and the only new packages were fonts this test does
+      # not depend on. The second run then hung on that step for twenty
+      # minutes, having taken seventy-five seconds on the first. A minute of
+      # network for packages that are already there is not worth the class of
+      # failure it brings with it.
+      #
+      # The timeout is the other half: if this ever hangs again it should say
+      # so in three minutes rather than eat the job's whole budget and time out
+      # somewhere less obvious.
       - name: The browser
+        timeout-minutes: 5
         run: |
           npm ci
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
 
       - name: The schema
         run: go run ./cmd/migrate
