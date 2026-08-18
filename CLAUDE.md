@@ -202,4 +202,22 @@ here because it caught something a diff did not show:
 - the single-file bundle, **opened** and not merely built
 
 And read the output. A suite that reports success through a pipe may be reporting the exit code
-of the pipe.
+of the pipe. `gofmt -l` is the same trap in a different shape: it prints the files it would
+change and **exits 0**, so the check is `[ -n "$(gofmt -l .)" ] && exit 1`, never `gofmt -l .`
+on its own.
+
+## A test does not own the database
+
+`go test` runs packages **in parallel** against one database. So:
+
+- **Never `TRUNCATE` a shared table.** It is not tidying up, it is deleting another package's
+  rows halfway through its run.
+- **Never seed a fixed unique value.** Two packages inserting the school `code` collide on the
+  unique index, and which one loses is a matter of timing.
+- **Scope every assertion to the rows the test wrote** — `WHERE tenant_id = $1`, not
+  `count(*)`.
+
+This reached CI as a duplicate key raised in two packages at once, after passing locally on
+timing alone — which is worse than failing, because it means the suite was green by luck. The
+third rule is the one that pays for itself anyway: a test asserting about its own rows is
+saying something, and one asserting about the whole table is guessing.

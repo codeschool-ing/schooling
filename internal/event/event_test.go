@@ -26,21 +26,23 @@ func testPool(t *testing.T) *pgxpool.Pool {
 	return pool
 }
 
-// school clears the tables and returns one school to emit against.
+// school returns one school to emit against, under a name nothing else uses.
+//
+// NO TRUNCATE. `go test` runs packages in parallel against one database, so
+// clearing a shared table deletes another package's rows mid-run, and a fixed
+// slug collides on the unique index. Every assertion below is therefore scoped
+// to what this test wrote — which is a better assertion anyway.
 func school(t *testing.T, pool *pgxpool.Pool) (uuid.UUID, string) {
 	t.Helper()
-	ctx := context.Background()
 
-	if _, err := pool.Exec(ctx, `TRUNCATE events, tenant_domains, tenants CASCADE`); err != nil {
-		t.Fatalf("clearing: %v", err)
-	}
+	slug := "code-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
 	var id uuid.UUID
-	if err := pool.QueryRow(ctx,
-		`INSERT INTO tenants (slug, name) VALUES ('code', 'Programming') RETURNING id`,
+	if err := pool.QueryRow(context.Background(),
+		`INSERT INTO tenants (slug, name) VALUES ($1, 'Programming') RETURNING id`, slug,
 	).Scan(&id); err != nil {
 		t.Fatalf("seeding a school: %v", err)
 	}
-	return id, "code"
+	return id, slug
 }
 
 // THE ONE THAT MATTERS.
@@ -67,13 +69,14 @@ func TestAnEventCarriesItsDimensions(t *testing.T) {
 
 	// The plan then changes, which is the entire point: the row must not.
 	var plan, country, locale, school string
-	if err := pool.QueryRow(ctx,
-		`SELECT plan, country, locale, school_slug FROM events WHERE name = 'course.finished'`,
-	).Scan(&plan, &country, &locale, &school); err != nil {
+	if err := pool.QueryRow(ctx, `
+		SELECT plan, country, locale, school_slug FROM events
+		WHERE name = 'course.finished' AND tenant_id = $1
+	`, id).Scan(&plan, &country, &locale, &school); err != nil {
 		t.Fatalf("reading it back: %v", err)
 	}
 
-	if plan != "annual" || country != "BR" || locale != "pt-br" || school != "code" {
+	if plan != "annual" || country != "BR" || locale != "pt-br" || school != slug {
 		t.Errorf("the dimensions did not survive: plan=%q country=%q locale=%q school=%q",
 			plan, country, locale, school)
 	}
@@ -111,7 +114,8 @@ func TestADimensionThatIsEmptyIsRefused(t *testing.T) {
 
 	// And nothing was written by any of them.
 	var count int
-	if err := pool.QueryRow(ctx, `SELECT count(*) FROM events`).Scan(&count); err != nil {
+	if err := pool.QueryRow(ctx,
+		`SELECT count(*) FROM events WHERE tenant_id = $1`, id).Scan(&count); err != nil {
 		t.Fatalf("counting: %v", err)
 	}
 	if count != 0 {
@@ -143,11 +147,14 @@ func TestEveryEmptyDimensionIsReportedTogether(t *testing.T) {
 // A platform event belongs to no school, and says so rather than guessing one.
 func TestAPlatformEventNamesNoSchool(t *testing.T) {
 	pool := testPool(t)
-	school(t, pool)
 	ctx := context.Background()
 
+	// A platform event has no school to scope the assertion by, so the name is
+	// what makes it this test's row.
+	name := "visitor.arrived." + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
+
 	err := event.NewStore(pool).Emit(ctx, event.Event{
-		Name:       "visitor.arrived",
+		Name:       name,
 		Dimensions: event.ForPlatform(event.PlanNone, event.Unknown, "en"),
 	})
 	if err != nil {
@@ -157,7 +164,7 @@ func TestAPlatformEventNamesNoSchool(t *testing.T) {
 	var tenant *uuid.UUID
 	var slug string
 	if err := pool.QueryRow(ctx,
-		`SELECT tenant_id, school_slug FROM events WHERE name = 'visitor.arrived'`,
+		`SELECT tenant_id, school_slug FROM events WHERE name = $1`, name,
 	).Scan(&tenant, &slug); err != nil {
 		t.Fatalf("reading it back: %v", err)
 	}
@@ -180,16 +187,19 @@ func TestTheEventStreamRefusesToBeEdited(t *testing.T) {
 		t.Fatalf("emitting: %v", err)
 	}
 
-	if _, err := pool.Exec(ctx, `UPDATE events SET plan = 'free'`); err == nil {
+	if _, err := pool.Exec(ctx,
+		`UPDATE events SET plan = 'free' WHERE tenant_id = $1`, id); err == nil {
 		t.Error("an event was rewritten — history is editable, and every report drawn from " +
 			"it is now a claim rather than a record")
 	}
-	if _, err := pool.Exec(ctx, `DELETE FROM events`); err == nil {
+	if _, err := pool.Exec(ctx,
+		`DELETE FROM events WHERE tenant_id = $1`, id); err == nil {
 		t.Error("an event was deleted")
 	}
 
 	var count int
-	if err := pool.QueryRow(ctx, `SELECT count(*) FROM events`).Scan(&count); err != nil {
+	if err := pool.QueryRow(ctx,
+		`SELECT count(*) FROM events WHERE tenant_id = $1`, id).Scan(&count); err != nil {
 		t.Fatalf("counting: %v", err)
 	}
 	if count != 1 {

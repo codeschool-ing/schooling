@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
@@ -141,8 +142,9 @@ func TestTheSchemaAndTheRegistryAgreeOnWhatEachTableHolds(t *testing.T) {
 // cannot be told from one that forgot it.
 func TestTheExportCoversEveryTableThatReachesAStudent(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 
+	// An account nothing has ever written a row for: the export must still name
+	// every table, with nothing in it.
 	export, err := privacy.NewStore(pool).Export(context.Background(), uuid.New())
 	if err != nil {
 		t.Fatalf("exporting: %v", err)
@@ -169,7 +171,6 @@ func TestTheExportCoversEveryTableThatReachesAStudent(t *testing.T) {
 
 func TestTheExportCarriesWhatIsActuallyThere(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 	ctx := context.Background()
 
 	account, tenant := uuid.New(), seedSchool(t, pool)
@@ -199,7 +200,6 @@ func TestTheExportCarriesWhatIsActuallyThere(t *testing.T) {
 // to nobody.
 func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 	ctx := context.Background()
 
 	account, tenant := uuid.New(), seedSchool(t, pool)
@@ -215,12 +215,13 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 	for _, q := range []struct {
 		what string
 		sql  string
+		arg  any
 	}{
-		{"visitors", `SELECT count(*) FROM visitors`},
-		{"account_visitors", `SELECT count(*) FROM account_visitors`},
+		{"visitors", `SELECT count(*) FROM visitors WHERE id = $1`, visitorID},
+		{"account_visitors", `SELECT count(*) FROM account_visitors WHERE account_id = $1`, account},
 	} {
 		var count int
-		if err := pool.QueryRow(ctx, q.sql).Scan(&count); err != nil {
+		if err := pool.QueryRow(ctx, q.sql, q.arg).Scan(&count); err != nil {
 			t.Fatalf("counting %s: %v", q.what, err)
 		}
 		if count != 0 {
@@ -233,11 +234,11 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 		what string
 		sql  string
 	}{
-		{"events", `SELECT count(*) FROM events`},
-		{"practice_review", `SELECT count(*) FROM practice_review`},
+		{"events", `SELECT count(*) FROM events WHERE account_id = $1`},
+		{"practice_review", `SELECT count(*) FROM practice_review WHERE account_id = $1`},
 	} {
 		var count int
-		if err := pool.QueryRow(ctx, q.sql).Scan(&count); err != nil {
+		if err := pool.QueryRow(ctx, q.sql, account).Scan(&count); err != nil {
 			t.Fatalf("counting %s: %v", q.what, err)
 		}
 		if count != 1 {
@@ -268,20 +269,18 @@ func TestErasureSeversThePersonAndLeavesTheStatistics(t *testing.T) {
 
 /* ---------- seeding ---------- */
 
-func clear(t *testing.T, pool *pgxpool.Pool) {
-	t.Helper()
-	if _, err := pool.Exec(context.Background(),
-		`TRUNCATE events, practice_review, account_visitors, visitors, tenant_domains, tenants CASCADE`,
-	); err != nil {
-		t.Fatalf("clearing: %v", err)
-	}
-}
-
+// NO TRUNCATE ANYWHERE IN THIS FILE, and that is what the CI failure this
+// replaces was about: `go test` runs packages in parallel against one database,
+// so clearing a shared table deletes another package's rows mid-run, and a
+// fixed slug collides on the unique index. Everything below is scoped to the
+// account and school it made — which is what these tests meant all along, since
+// the subject of every one of them is one person.
 func seedSchool(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
 	t.Helper()
+	slug := "code-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
 	var id uuid.UUID
 	if err := pool.QueryRow(context.Background(),
-		`INSERT INTO tenants (slug, name) VALUES ('code', 'Programming') RETURNING id`).Scan(&id); err != nil {
+		`INSERT INTO tenants (slug, name) VALUES ($1, 'Programming') RETURNING id`, slug).Scan(&id); err != nil {
 		t.Fatalf("seeding a school: %v", err)
 	}
 	return id

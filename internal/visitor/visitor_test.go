@@ -27,13 +27,9 @@ func testPool(t *testing.T) *pgxpool.Pool {
 	return pool
 }
 
-func clear(t *testing.T, pool *pgxpool.Pool) {
-	t.Helper()
-	if _, err := pool.Exec(context.Background(),
-		`TRUNCATE account_visitors, visitors CASCADE`); err != nil {
-		t.Fatalf("clearing: %v", err)
-	}
-}
+// NO TRUNCATE ANYWHERE IN THIS FILE. `go test` runs packages in parallel
+// against one database, so clearing a shared table deletes another package's
+// rows mid-run. Every assertion below is about the ids this test made.
 
 // handler records the visitor the middleware resolved, so a test can check
 // that the request underneath actually saw one.
@@ -55,7 +51,6 @@ func handler(seen *uuid.UUID) http.Handler {
 // visits already happened anonymously.
 func TestAVisitorHasAnIdentityBeforeAnyAccountExists(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 
 	var seen uuid.UUID
 	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{})
@@ -114,7 +109,6 @@ func TestAVisitorHasAnIdentityBeforeAnyAccountExists(t *testing.T) {
 // makes every funnel number too good.
 func TestTheSameBrowserKeepsItsIdentity(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 
 	var first, second uuid.UUID
 	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{})
@@ -134,12 +128,13 @@ func TestTheSameBrowserKeepsItsIdentity(t *testing.T) {
 		t.Errorf("the second request was a different visitor: %v then %v", first, second)
 	}
 
-	var count int
-	if err := pool.QueryRow(context.Background(), `SELECT count(*) FROM visitors`).Scan(&count); err != nil {
-		t.Fatalf("counting: %v", err)
-	}
-	if count != 1 {
-		t.Errorf("%d visitors for one browser making two requests", count)
+	// And no second identity was issued: a browser that is handed a new cookie
+	// on every request is counted as a new person on every request, which makes
+	// every funnel number too good.
+	for _, c := range rec2.Result().Cookies() {
+		if c.Name == visitor.CookieName {
+			t.Errorf("a second identity was issued to a browser that already had one: %s", c.Value)
+		}
 	}
 }
 
@@ -147,7 +142,6 @@ func TestTheSameBrowserKeepsItsIdentity(t *testing.T) {
 // a new identity rather than an id that joins to nothing.
 func TestACookieThatOutlivedItsRowGetsANewIdentity(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 
 	var seen uuid.UUID
 	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{})
@@ -173,8 +167,7 @@ func TestACookieThatOutlivedItsRowGetsANewIdentity(t *testing.T) {
 // Analytics being down is not a reason to refuse somebody the catalogue. The
 // funnel must never become the thing that breaks what it measures.
 func TestARequestIsServedEvenWhenNoIdentityCanBeIssued(t *testing.T) {
-	pool := testPool(t)
-	clear(t, pool)
+	testPool(t) // only to skip when there is no database configured
 
 	// A pool pointed at a database that is not there.
 	broken, err := pgxpool.New(context.Background(),
@@ -207,7 +200,6 @@ func TestARequestIsServedEvenWhenNoIdentityCanBeIssued(t *testing.T) {
 // One account, several devices, all of them them.
 func TestAnAccountCanBeLinkedToEveryDeviceItArrivedOn(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 	ctx := context.Background()
 	store := visitor.NewStore(pool)
 

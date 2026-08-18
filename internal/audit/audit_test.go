@@ -25,12 +25,10 @@ func testPool(t *testing.T) *pgxpool.Pool {
 	return pool
 }
 
-func clear(t *testing.T, pool *pgxpool.Pool) {
-	t.Helper()
-	if _, err := pool.Exec(context.Background(), `TRUNCATE audit_log`); err != nil {
-		t.Fatalf("clearing: %v", err)
-	}
-}
+// NO TRUNCATE ANYWHERE IN THIS FILE. `go test` runs packages in parallel
+// against one database, so clearing a shared table deletes another package's
+// rows mid-run. Each test invents its own actor and subject instead, and every
+// assertion is scoped to them — which is what it meant to assert in any case.
 
 // THE ONE THAT MATTERS.
 //
@@ -44,22 +42,23 @@ func clear(t *testing.T, pool *pgxpool.Pool) {
 // than one with rows missing: the missing rows get noticed.
 func TestAnActionWithNoActorIsRefused(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 	ctx := context.Background()
 	store := audit.NewStore(pool)
+	subject := uuid.New().String()
 
 	// The zero Actor is what a caller who forgot ends up with.
 	err := store.Record(ctx, audit.Entry{
 		Action:      "account.plan.changed",
 		SubjectKind: "account",
-		SubjectID:   uuid.New().String(),
+		SubjectID:   subject,
 	})
 	if err == nil {
 		t.Fatal("an administrative action was recorded with nobody against it")
 	}
 
 	var count int
-	if err := pool.QueryRow(ctx, `SELECT count(*) FROM audit_log`).Scan(&count); err != nil {
+	if err := pool.QueryRow(ctx,
+		`SELECT count(*) FROM audit_log WHERE subject_id = $1`, subject).Scan(&count); err != nil {
 		t.Fatalf("counting: %v", err)
 	}
 	if count != 0 {
@@ -69,7 +68,6 @@ func TestAnActionWithNoActorIsRefused(t *testing.T) {
 
 func TestAnActionRecordsWhoTookIt(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 	ctx := context.Background()
 
 	staff := uuid.New()
@@ -92,7 +90,8 @@ func TestAnActionRecordsWhoTookIt(t *testing.T) {
 	var before, after map[string]any
 	if err := pool.QueryRow(ctx, `
 		SELECT actor_id, actor_kind, actor_label, action, before, after FROM audit_log
-	`).Scan(&actorID, &kind, &label, &action, &before, &after); err != nil {
+		WHERE actor_id = $1
+	`, staff).Scan(&actorID, &kind, &label, &action, &before, &after); err != nil {
 		t.Fatalf("reading it back: %v", err)
 	}
 
@@ -113,14 +112,14 @@ func TestAnActionRecordsWhoTookIt(t *testing.T) {
 // a name of its own is what keeps "nobody" available to mean nobody.
 func TestTheSystemIsAnActorWithAName(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 	ctx := context.Background()
+	subject := uuid.New().String()
 
 	if err := audit.NewStore(pool).Record(ctx, audit.Entry{
 		Actor:       audit.System("dunning"),
 		Action:      "subscription.suspended",
 		SubjectKind: "subscription",
-		SubjectID:   uuid.New().String(),
+		SubjectID:   subject,
 	}); err != nil {
 		t.Fatalf("recording: %v", err)
 	}
@@ -128,7 +127,8 @@ func TestTheSystemIsAnActorWithAName(t *testing.T) {
 	var kind, label string
 	var actorID uuid.UUID
 	if err := pool.QueryRow(ctx,
-		`SELECT actor_kind, actor_label, actor_id FROM audit_log`).Scan(&kind, &label, &actorID); err != nil {
+		`SELECT actor_kind, actor_label, actor_id FROM audit_log WHERE subject_id = $1`,
+		subject).Scan(&kind, &label, &actorID); err != nil {
 		t.Fatalf("reading it back: %v", err)
 	}
 	if kind != audit.KindSystem || label != "dunning" {
@@ -143,21 +143,23 @@ func TestTheSystemIsAnActorWithAName(t *testing.T) {
 // An audit that can be edited is a document, not a record.
 func TestTheAuditRefusesToBeEdited(t *testing.T) {
 	pool := testPool(t)
-	clear(t, pool)
 	ctx := context.Background()
+	actor := uuid.New()
 
 	if err := audit.NewStore(pool).Record(ctx, audit.Entry{
-		Actor:       audit.Staff(uuid.New(), "Alexandre"),
+		Actor:       audit.Staff(actor, "Alexandre"),
 		Action:      "account.deleted",
 		SubjectKind: "account",
 	}); err != nil {
 		t.Fatalf("recording: %v", err)
 	}
 
-	if _, err := pool.Exec(ctx, `UPDATE audit_log SET actor_label = 'somebody else'`); err == nil {
+	if _, err := pool.Exec(ctx,
+		`UPDATE audit_log SET actor_label = 'somebody else' WHERE actor_id = $1`, actor); err == nil {
 		t.Error("an audit entry was rewritten to name a different person")
 	}
-	if _, err := pool.Exec(ctx, `DELETE FROM audit_log`); err == nil {
+	if _, err := pool.Exec(ctx,
+		`DELETE FROM audit_log WHERE actor_id = $1`, actor); err == nil {
 		t.Error("an audit entry was deleted")
 	}
 }
