@@ -30,10 +30,10 @@ audit with a name against it.*
 
 - [ ] Monorepo, with CI filtered by path
 - [x] School resolved by the full `Host`; an unknown host is a 404 and never falls into a default school
-- [ ] Reserved subdomains refused at creation — `www`, `api`, `admin`, `app`, `auth`, `cdn`, `mail`, `static`, `status`, `docs`
+- [x] Reserved subdomains refused at creation — `www`, `api`, `admin`, `app`, `auth`, `cdn`, `mail`, `static`, `status`, `docs` — by a database constraint as well as by the application, with a test that proves the two agree
 - [ ] One Go binary serving the API and the embedded frontend on one origin
 - [ ] A domain mapping per school
-- [ ] `tenant_id` on every school-scoped table, with every index on one leading with it
+- [x] `tenant_id` on every school-scoped table, with an index leading with it, and every index that crosses schools declared with its reason
 - [x] The module dependency graph enforced by a test
 
 ### Identity and access
