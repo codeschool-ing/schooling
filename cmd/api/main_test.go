@@ -7,7 +7,20 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/codeschool-ing/schooling/internal/platform/config"
 )
+
+// testRouter builds the whole handler the way cmd/api does, with no database
+// and no configuration worth the name.
+//
+// A NIL POOL IS THE POINT of both tests below, so it is passed here rather
+// than hidden: the routes under test must answer when the database is the
+// thing that is broken, and a query of any kind panics rather than passing.
+func testRouter(t *testing.T) http.Handler {
+	t.Helper()
+	return router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)), config.Config{})
+}
 
 // `/version` answers with no database, and that is the whole point of it.
 //
@@ -17,7 +30,7 @@ import (
 // the pool here is nil, and a query of any kind panics the test rather than
 // passing it.
 func TestVersionAnswersWithoutADatabase(t *testing.T) {
-	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	srv := testRouter(t)
 
 	rec := httptest.NewRecorder()
 	srv.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/version", nil))
@@ -50,7 +63,7 @@ func TestVersionAnswersWithoutADatabase(t *testing.T) {
 // depending on a row in the database — and answering 404 at any address a
 // school has not claimed, which includes the one the platform probes.
 func TestTheOperationalRoutesBelongToNoSchool(t *testing.T) {
-	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	srv := testRouter(t)
 
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/version", nil)
