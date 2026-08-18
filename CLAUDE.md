@@ -22,6 +22,12 @@ why the silence is right, and "not fatal" is not a reason on its own. (X-03)
 **No module reads another module's tables.** Ask through an interface. `internal/architecture_test.go`
 enforces the graph — if it fails, the fix is the dependency, not the test. (X-02)
 
+**A module owns tables and routes; a library owns neither.** `internal/grade` is rules over JSON
+values, so any module may import it — it is named in `libraries` in that same test, and a package
+declared one that touches a database, serves HTTP or reaches into a module fails. The exception
+is checked rather than trusted, because a list of names is how a rule gets weakened one import at
+a time.
+
 **Coverage is not a target.** Do not add tests to raise a percentage. Add the test that would
 have caught the failure you just found, and the one for the failure mode you can name. (X-04)
 
@@ -264,6 +270,68 @@ Three rules inside it:
 Normalisation is **declared per question**, never chosen by the grader: whether case matters is a
 property of what is being asked, and in a question about naming conventions it is the entire
 point.
+
+---
+
+## Sitting an exam
+
+Without a human reviewer, the exam is the only moment the system asserts that a student knows
+something — everything else it measures is effort. A certificate rests on it (A-08), so it is
+built to be defensible rather than convenient.
+
+**The answer must not leave the server.** A `quiz` payload carries `correct: true`; an `ordering`
+carries the correct order as the array itself. So a question is **presented** rather than sent —
+the answer removed and, where the order IS the answer, shuffled — and the permutation stays here.
+`grade.Present` and `grade.Restore` are that, and the answer fields are **absent rather than
+blanked**, because a field that is always `false` in a presented question is a field somebody
+will one day forget to blank.
+
+The test is a property rather than a list of field names, so it covers a type somebody adds
+later: *what can be derived from what the student was sent must not pass*. It is deliberately not
+"asking for the key must fail" — for `ordering` and `numeric` the derivation succeeds and
+produces something wrong, which is just as safe, and stating it the other way failed on two
+fixtures that were fine.
+
+**The paper is sealed when it is drawn.** Every question is copied into the attempt: what was
+shown, the permutation, and the question as written with its key. Nothing is read back out of the
+catalogue afterwards — the load job rewrites the whole mirror on every content deploy, and
+without the copy a student who started ten minutes earlier is marked against questions they never
+saw. `exam_answers.sealed` is read by exactly one query, the one that marks the paper.
+
+**One open attempt at a time**, enforced by a partial unique index rather than by a handler. If a
+second start drew a second paper, the way to pass would be to start, read, abandon and start
+again until the questions were ones you liked — and every draw is an ordinary-looking row that no
+report would flag. Starting again resumes.
+
+**Nothing knows the result until the paper is handed in.** Answers may be replaced until then and
+`correct` stays null throughout; marking happens once, at submission. So there is no endpoint
+that could leak the result of a question the student is still looking at, and the reply to an
+answer is `recorded` and nothing else.
+
+**An unanswered question is wrong**, never excluded — a paper marked out of the questions
+somebody chose to attempt would let a student answer the one they were sure of and score a
+hundred percent.
+
+**The pass mark is in code with a test on it** (K-13), and every attempt records the mark it was
+judged by, so moving the constant changes what a new attempt must reach and nothing about an old
+one. The comparison is `score * 100 >= PassMark * of` — integers, because a student sitting
+exactly on the mark must not pass or fail depending on how a ratio rounded.
+
+**A pass is never undone.** Sitting it again and failing does not unmake the day somebody knew
+the material, for the same reason a finished section never un-finishes (A-05).
+
+**Item analysis comes from the event stream, not from the attempts.** One `exam.item.answered`
+per question at submission, because events survive an erasure orphaned — so a student asking to
+be forgotten does not take the evidence about a bad question with them, while their attempts go
+with them, as their own data should.
+
+**A course exam is the course's door; a track final is every door in the track** — except at a
+fork, where any one option being open is enough, since a student takes one branch and not the
+others.
+
+**A track's final lives beside the track**, in `tracks/<id>-exam.json`, because a track has no
+lesson to put it in. The price of the convention is that `tracks/<x>-exam.json` with no track
+`<x>` is a file nothing will ever read, so the loader refuses it (C-13).
 
 ---
 

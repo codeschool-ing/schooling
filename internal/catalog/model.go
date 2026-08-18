@@ -56,6 +56,10 @@ type Track struct {
 	// student has taken. It is what lets `data-platform` require `python`
 	// without listing the entry track's hours again.
 	Continues string `json:"continues"`
+
+	// The track exam — the final. Filled by Load from `tracks/<id>-exam.json`,
+	// because an exam belongs to no lesson and a track has none to put it in.
+	Exam []Exercise `json:"-"`
 }
 
 // Step is one position in a track: either a single course or a fork.

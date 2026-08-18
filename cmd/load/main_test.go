@@ -84,11 +84,27 @@ func TestLoadingWritesTheWholeCatalogue(t *testing.T) {
 		"catalog_courses":       4,
 		"catalog_lessons":       4,
 		"catalog_sections":      6,
-		"catalog_exercises":     1,
+		// One in a lesson, and two in the track's final — which belongs to a
+		// track and to no course.
+		"catalog_exercises": 3,
 	} {
 		if got := count(t, pool, table, id); got != want {
 			t.Errorf("%s has %d rows, want %d", table, got, want)
 		}
+	}
+
+	// A final reaches the mirror hung off its track. Written the other way round
+	// it would land as the exam of a course that does not exist, and no screen
+	// would ever show it.
+	var finals int
+	if err := pool.QueryRow(context.Background(), `
+		SELECT count(*) FROM catalog_exercises
+		WHERE tenant_id = $1 AND track_id = 'frontend' AND course_id = '' AND exam
+	`, id).Scan(&finals); err != nil {
+		t.Fatalf("counting the final: %v", err)
+	}
+	if finals != 2 {
+		t.Errorf("the frontend final has %d questions in the mirror, want 2", finals)
 	}
 
 	// The payload survives whole. A loader that decoded the fields it
@@ -96,7 +112,8 @@ func TestLoadingWritesTheWholeCatalogue(t *testing.T) {
 	// it, and every screen above it would look right.
 	var payload []byte
 	if err := pool.QueryRow(context.Background(),
-		`SELECT payload FROM catalog_exercises WHERE tenant_id = $1`, id).Scan(&payload); err != nil {
+		`SELECT payload FROM catalog_exercises WHERE tenant_id = $1 AND id = 'wf-roles-quiz'`,
+		id).Scan(&payload); err != nil {
 		t.Fatalf("reading the payload: %v", err)
 	}
 	var decoded map[string]any

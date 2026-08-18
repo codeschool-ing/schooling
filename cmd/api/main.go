@@ -24,6 +24,7 @@ import (
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/event"
+	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
@@ -167,20 +168,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// that knows about both modules.
 	progress.NewHandler(
 		progress.NewStore(pool,
-			func(ctx context.Context, courseID string) (bool, error) {
-				school, ok := schoolID(ctx)
-				if !ok {
-					return false, nil
-				}
-				course, err := courses.Course(ctx, school, courseID, planOf(ctx))
-				if errors.Is(err, catalog.ErrNotFound) {
-					return false, nil
-				}
-				if err != nil {
-					return false, err
-				}
-				return !course.Locked, nil
-			},
+			courseOpen(courses),
 			func(ctx context.Context, courseID string) (map[string][]string, error) {
 				school, ok := schoolID(ctx)
 				if !ok {
@@ -190,6 +178,15 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			},
 		),
 		schoolID, identity.AccountID, studentEvents(events, log),
+	).Routes(scoped)
+
+	// AN EXAM ASKS THE SAME DOOR QUESTION AS A LESSON, and for a track it asks
+	// it of every course the track contains. A track final that a student could
+	// sit while half the track was locked would be a way to earn the
+	// certificate without the material.
+	exam.NewHandler(
+		exam.NewStore(pool, maySit(courses)),
+		schoolID, identity.AccountID, exam.Emit(studentEvents(events, log)),
 	).Routes(scoped)
 	people := identity.NewHandler(accounts, identity.Settings{
 		Domain: cfg.PlatformDomain,
@@ -256,6 +253,98 @@ func planOf(ctx context.Context) catalog.Plan {
 	// the fail-closed direction: they see the free tier, which is what an
 	// account with no subscription is entitled to.
 	return catalog.PlanNone
+}
+
+// courseOpen is the paywall, asked as a question two other modules can hold.
+//
+// It is here rather than in either of them because the answer belongs to the
+// catalogue and neither `progress` nor `exam` may import it. A course the
+// catalogue does not have is closed rather than an error: from the outside,
+// "there is no such course" and "you may not open it" are the same door.
+func courseOpen(courses *catalog.Store) func(context.Context, string) (bool, error) {
+	return func(ctx context.Context, courseID string) (bool, error) {
+		school, ok := schoolID(ctx)
+		if !ok {
+			return false, nil
+		}
+		course, err := courses.Course(ctx, school, courseID, planOf(ctx))
+		if errors.Is(err, catalog.ErrNotFound) {
+			return false, nil
+		}
+		if err != nil {
+			return false, err
+		}
+		return !course.Locked, nil
+	}
+}
+
+// maySit is the same door, asked of an exam.
+//
+// A COURSE EXAM IS THE COURSE'S DOOR. A TRACK FINAL IS EVERY DOOR IN THE TRACK
+// — otherwise the certificate the final issues could be earned while half the
+// material was still behind the paywall, which is the shape of hole somebody
+// finds rather than reports.
+//
+// A fork is the one place it is not simply "all of them": a student takes one
+// branch and not the others, so a fork is open when ANY of its options is open
+// end to end. Requiring every branch would lock the final for everybody in a
+// track that offers a choice.
+func maySit(courses *catalog.Store) exam.MaySit {
+	open := courseOpen(courses)
+
+	return func(ctx context.Context, scope exam.Scope, id string) (bool, error) {
+		if scope == exam.ScopeCourse {
+			return open(ctx, id)
+		}
+
+		school, ok := schoolID(ctx)
+		if !ok {
+			return false, nil
+		}
+		track, err := courses.Track(ctx, school, id)
+		if errors.Is(err, catalog.ErrNotFound) {
+			return false, nil
+		}
+		if err != nil {
+			return false, err
+		}
+
+		all := func(ids []string) (bool, error) {
+			for _, courseID := range ids {
+				ok, err := open(ctx, courseID)
+				if err != nil || !ok {
+					return false, err
+				}
+			}
+			return true, nil
+		}
+
+		for _, step := range track.Steps {
+			if len(step.Options) == 0 {
+				ok, err := all([]string{step.Course})
+				if err != nil || !ok {
+					return false, err
+				}
+				continue
+			}
+
+			any := false
+			for _, option := range step.Options {
+				ok, err := all(option.Courses)
+				if err != nil {
+					return false, err
+				}
+				if ok {
+					any = true
+					break
+				}
+			}
+			if !any {
+				return false, nil
+			}
+		}
+		return true, nil
+	}
 }
 
 // studentEvents emits what a student did, with the dimensions every event

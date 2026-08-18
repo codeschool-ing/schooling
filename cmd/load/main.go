@@ -261,12 +261,25 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 				}
 			}
 
-			if err := writeExercises(ctx, tx, tenantID, course.ID, lesson.ID, false, lesson.Exercises); err != nil {
+			if err := writeExercises(ctx, tx, tenantID,
+				owner{courseID: course.ID, lessonID: lesson.ID}, lesson.Exercises); err != nil {
 				return err
 			}
 		}
 
-		if err := writeExercises(ctx, tx, tenantID, course.ID, "", true, course.Exam); err != nil {
+		if err := writeExercises(ctx, tx, tenantID,
+			owner{courseID: course.ID, exam: true}, course.Exam); err != nil {
+			return err
+		}
+	}
+
+	// The finals. They are written after the courses rather than beside their
+	// track for no reason other than that the tracks were already walked; the
+	// order of inserts is not a constraint, because `continues` and the rest are
+	// checked before anything is written.
+	for _, track := range school.Tracks {
+		if err := writeExercises(ctx, tx, tenantID,
+			owner{trackID: track.ID, exam: true}, track.Exam); err != nil {
 			return err
 		}
 	}
@@ -274,8 +287,19 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 	return nil
 }
 
+// owner is where a question hangs: in a lesson, in a course's exam, or in a
+// track's final. EXACTLY ONE OF courseID AND trackID IS SET, which the schema
+// also states as a check — a struct rather than five positional arguments,
+// because the two that mattered were adjacent strings.
+type owner struct {
+	courseID string
+	lessonID string
+	trackID  string
+	exam     bool
+}
+
 func writeExercises(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID,
-	courseID, lessonID string, exam bool, exercises []catalog.Exercise) error {
+	at owner, exercises []catalog.Exercise) error {
 
 	for _, e := range exercises {
 		payload := e.Raw
@@ -285,10 +309,10 @@ func writeExercises(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID,
 
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO catalog_exercises
-				(tenant_id, id, course_id, lesson_id, section_id, exam,
+				(tenant_id, id, course_id, track_id, lesson_id, section_id, exam,
 				 version, type, difficulty, drillable, prompt, hint, payload)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-		`, tenantID, e.ID, courseID, lessonID, e.Section, exam,
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+		`, tenantID, e.ID, at.courseID, at.trackID, at.lessonID, e.Section, at.exam,
 			e.Version, e.Type, e.Difficulty, e.Drillable, e.Prompt, e.Hint, payload); err != nil {
 			return fmt.Errorf("writing the exercise %s: %w", e.ID, err)
 		}
