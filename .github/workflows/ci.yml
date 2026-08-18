@@ -131,3 +131,86 @@ jobs:
       # crossed" rather than as a test somewhere in a list.
       - name: The module boundaries hold
         run: go test -run 'TestPlatformImportsNothing|TestNoModuleImportsAnotherModule' -v ./internal/
+
+  # THE DRAWING, IN A REAL BROWSER, and its own job for two reasons: it needs a
+  # browser, which is a minute of setup the Go job should not pay for; and when
+  # it fails it fails on its own, so "the graph is wrong" and "the server is
+  # wrong" are two red marks rather than one.
+  Graph:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: schooling
+          POSTGRES_PASSWORD: schooling
+          POSTGRES_DB: schooling_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U schooling -d schooling_test"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+
+    env:
+      GOTOOLCHAIN: local
+      SCHOOLING_DATABASE_URL: postgres://schooling:schooling@localhost:5432/schooling_test?sslmode=disable
+      SCHOOLING_PLATFORM_DOMAIN: example.tld
+      SCHOOLING_ENV: development
+      PORT: "8099"
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 22
+
+      # `npm ci` and not `npm install`: the lock file is the version that was
+      # tested, and a browser suite that silently upgraded its driver would fail
+      # on a day nobody changed anything.
+      - name: The browser
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: The schema
+        run: go run ./cmd/migrate
+
+      # Until `content/` has a school in it there is nothing to draw, and the
+      # test would pass by having no work to do. The fixture is the smallest
+      # track where a broken router and a working one produce different
+      # drawings — see the file.
+      - name: Something to draw
+        run: psql "$SCHOOLING_DATABASE_URL" -v ON_ERROR_STOP=1 -f tools/graph-test/fixture.sql
+
+      # Every track, six window sizes, and no line through a card. Two lines
+      # crossing each OTHER is not checked: the ordering minimises those and a
+      # graph can be non-planar, so demanding zero would be demanding the
+      # impossible. A line through a card is always avoidable.
+      #
+      # The server is started HERE rather than in a step of its own, because a
+      # background process belongs to the shell that started it and each step
+      # gets a new one. Started beside the thing that needs it, there is no
+      # question about whether it is still running.
+      - name: No line runs through a card
+        run: |
+          go run ./cmd/api &
+          server=$!
+          trap 'kill $server 2>/dev/null || true' EXIT
+
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null "http://localhost:$PORT/readyz" && break
+            sleep 1
+          done
+          curl -sf -o /dev/null "http://localhost:$PORT/readyz" || {
+            echo "the server never became ready"; exit 1; }
+
+          node tools/graph-test/graph-test.mjs
