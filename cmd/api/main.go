@@ -34,6 +34,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/progress"
 	"github.com/codeschool-ing/schooling/internal/tenant"
 	"github.com/codeschool-ing/schooling/internal/visitor"
+	"github.com/codeschool-ing/schooling/ui"
 )
 
 func main() {
@@ -218,6 +219,26 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 		}),
 		identity.Authenticate(accounts),
 	))
+
+	// THE INTERFACE, FROM THE SAME BINARY AND THE SAME ORIGIN (P-03). It is
+	// mounted last and at the root, so it catches what nothing above it claimed
+	// — and `/api/v1/` is above it, which is what keeps an API typo answering as
+	// an API rather than as a page. A test holds that, because the two are one
+	// registration order apart.
+	//
+	// No school is resolved for it: the shell is the same bytes for every
+	// school and asks the API which one it is showing. That is also what makes
+	// it cacheable at all.
+	//
+	// A build that is not a release passes no version, and therefore offers no
+	// ETag: every unstamped build calls itself `dev`, so caching against that
+	// string means a browser keeps the first stylesheet it ever saw and
+	// revalidates it happily against every later one.
+	interfaceVersion := ""
+	if info := build.Current(); info.Released {
+		interfaceVersion = info.Version
+	}
+	mux.Handle("/", ui.Handler(interfaceVersion))
 
 	return web.Chain(mux,
 		web.RequestID,

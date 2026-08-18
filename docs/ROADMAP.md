@@ -72,13 +72,15 @@ audit with a name against it.*
 
 ### What the student sees
 
-- [ ] `track → course → lesson → section`, with `requires` and `links` distinct
+- [x] The interface served from the same binary and the same origin, with no build step — fragment routes, so the offline bundle is a packaging job and not a second router
+- [x] `track → course → lesson → section`, with `requires` and `links` distinct
 - [ ] The track graph, with edge routing that avoids the cards
 - [ ] The graph test — every track, six viewport sizes, four landscape and two portrait, zero crossings
-- [ ] Sidebar, search, dashboard, catalogue, track map
+- [x] Sidebar, search, dashboard, catalogue — the track map waits on the graph
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
+- [ ] Sitting an exam on a screen — the server half is done; this is the paper, the answers and the hand-in
 - [ ] The modal test — every course, one height, neither column scrolling
-- [ ] Portuguese and English, with the interface-string checker
+- [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
 - [ ] WCAG 2.2 AA on every screen, with an automated check in the browser suites
 - [ ] Every question type operable by keyboard and legible to a screen reader — `matching`, `ordering` and `labelling` are the hard ones
 - [ ] The offline bundle, built **and opened** in CI
