@@ -202,6 +202,23 @@ A directory in `content/` **does not create a school**. A school is also an addr
 mapping, so a typo in a directory name would otherwise become a school answering at no address
 and appearing in every count.
 
+**Access is computed, never stored, and it fails closed.** Something recognised opens a course;
+**anything else closes it** — an unknown plan, an empty plan, a plan somebody misspells in a
+migration two years from now. A paywall that opens on an unrecognised input is a paywall with a
+list of ways around it that nobody has finished writing. The free tier is the first course of
+every track, computed from the track's order rather than flagged on a course, because a flag is a
+second place to say what position 0 already says.
+
+Three refusals that look like details and are not:
+
+- **A draft is absent, not locked.** Even to a subscriber. Asking for one directly answers exactly
+  as a course that does not exist, because anything else tells a stranger what is being written.
+- **A locked course shows its shape and not one word** — the lesson route refuses with **402**
+  rather than serving an empty body, which would be a paywall that looks like a bug.
+- **An unreadable catalogue refuses; it never answers empty.** A 200 with no courses cannot be
+  told from a school that has none, so a database that is down would look like a catalogue that
+  was deleted, on every screen.
+
 ---
 
 ## Two implementations of one rule

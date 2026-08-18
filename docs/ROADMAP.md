@@ -89,8 +89,8 @@ audit with a name against it.*
 - [ ] Conformance fixtures proving the client grader and the server grader agree, per type
 - [ ] Course exams and track exams
 - [ ] Certificates, with a public verification page
-- [ ] Free tier: the first course of every track, in every school
-- [ ] Access computed fail-closed — an unrecognised plan is a guest, an unreadable catalogue refuses
+- [x] Free tier: the first course of every track, in every school — computed from the track's order rather than flagged on a course
+- [x] Access computed fail-closed — an unrecognised plan is a guest, an unreadable catalogue refuses
 
 ---
 

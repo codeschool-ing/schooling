@@ -22,6 +22,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/event"
 	"github.com/codeschool-ing/schooling/internal/identity"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
@@ -155,6 +156,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 
 	scoped := http.NewServeMux()
 	tenant.NewHandler().Routes(scoped)
+	catalog.NewHandler(catalog.NewStore(pool), schoolID, planOf).Routes(scoped)
 	people := identity.NewHandler(accounts, identity.Settings{
 		Domain: cfg.PlatformDomain,
 		Secure: cfg.Environment == config.Production,
@@ -195,6 +197,31 @@ func schoolOf(ctx context.Context) (uuid.UUID, string, bool) {
 		return uuid.Nil, "", false
 	}
 	return s.ID, s.Slug, true
+}
+
+// schoolID is schoolOf with the parts `catalog` does not need. Two shapes
+// rather than one that covers both: a consumer defines what it uses, and a
+// package that took a slug it never reads would have to be given one.
+func schoolID(ctx context.Context) (uuid.UUID, bool) {
+	s, ok := tenant.FromContext(ctx)
+	return s.ID, ok
+}
+
+// planOf is what somebody is paying for, and today it is always nothing.
+//
+// IT IS WIRED IN ANYWAY, and that is the point of it existing before billing
+// does: the paywall is computed from a plan on every request from the first
+// day, so the day subscriptions arrive the change is this function and nothing
+// above it. A paywall added later is a paywall added to code that was written
+// as though there was not one.
+func planOf(ctx context.Context) catalog.Plan {
+	if _, ok := identity.FromContext(ctx); !ok {
+		return catalog.PlanNone
+	}
+	// Billing does not exist yet. Answering "none" for a signed-in student is
+	// the fail-closed direction: they see the free tier, which is what an
+	// account with no subscription is entitled to.
+	return catalog.PlanNone
 }
 
 // signedUp is the moment the visitor who arrived becomes a student.

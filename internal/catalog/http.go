@@ -1,0 +1,179 @@
+package catalog
+
+import (
+	"context"
+	"errors"
+	"net/http"
+	"strings"
+
+	"github.com/google/uuid"
+
+	"github.com/codeschool-ing/schooling/internal/platform/web"
+)
+
+// The catalogue over HTTP.
+//
+// SchoolOf and PlanOf are functions rather than imports, for the reason the
+// module graph exists: this package may not reach into the one that resolves
+// schools, nor into the one that will decide what somebody is paying for.
+// `cmd/api` knows about all three and joins them.
+type (
+	SchoolOf func(ctx context.Context) (uuid.UUID, bool)
+	PlanOf   func(ctx context.Context) Plan
+)
+
+type Handler struct {
+	store    *Store
+	schoolOf SchoolOf
+	planOf   PlanOf
+}
+
+func NewHandler(store *Store, schoolOf SchoolOf, planOf PlanOf) *Handler {
+	return &Handler{store: store, schoolOf: schoolOf, planOf: planOf}
+}
+
+func (h *Handler) Routes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/v1/courses", h.courses)
+	mux.HandleFunc("GET /api/v1/courses/{course}", h.course)
+	mux.HandleFunc("GET /api/v1/courses/{course}/lessons/{lesson}", h.lesson)
+	mux.HandleFunc("GET /api/v1/tracks", h.tracks)
+	mux.HandleFunc("GET /api/v1/tracks/{track}", h.track)
+}
+
+func (h *Handler) courses(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.school(w, r)
+	if !ok {
+		return
+	}
+
+	listing, err := h.store.Courses(r.Context(), school, h.plan(r))
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	if listing == nil {
+		listing = []Listing{}
+	}
+	web.JSON(w, http.StatusOK, map[string]any{"courses": listing})
+}
+
+func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.school(w, r)
+	if !ok {
+		return
+	}
+
+	course, err := h.store.Course(r.Context(), school, r.PathValue("course"), h.plan(r))
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, course)
+}
+
+func (h *Handler) lesson(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.school(w, r)
+	if !ok {
+		return
+	}
+
+	lesson, err := h.store.Lesson(r.Context(), school,
+		r.PathValue("course"), r.PathValue("lesson"), locale(r), h.plan(r))
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, lesson)
+}
+
+func (h *Handler) tracks(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.school(w, r)
+	if !ok {
+		return
+	}
+
+	tracks, err := h.store.Tracks(r.Context(), school)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	if tracks == nil {
+		tracks = []TrackView{}
+	}
+	web.JSON(w, http.StatusOK, map[string]any{"tracks": tracks})
+}
+
+func (h *Handler) track(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.school(w, r)
+	if !ok {
+		return
+	}
+
+	track, err := h.store.Track(r.Context(), school, r.PathValue("track"))
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, track)
+}
+
+// school answers which school this request is for, or refuses.
+//
+// A ROUTE THAT REACHES HERE WITHOUT ONE IS MOUNTED IN THE WRONG PLACE. Every
+// catalogue route sits behind the tenant middleware, so the absence is a
+// programming mistake rather than a request somebody made — and answering with
+// an empty catalogue would hide it behind a screen that merely looks bare.
+func (h *Handler) school(w http.ResponseWriter, r *http.Request) (uuid.UUID, bool) {
+	id, ok := h.schoolOf(r.Context())
+	if !ok {
+		web.LoggerFrom(r.Context()).Error("a catalogue route ran with no school resolved",
+			"path", r.URL.Path)
+		web.Fail(w, http.StatusInternalServerError, web.CodeInternal, "something went wrong")
+		return uuid.Nil, false
+	}
+	return id, true
+}
+
+// plan answers what this request is paying for, and defaults CLOSED.
+func (h *Handler) plan(r *http.Request) Plan {
+	if h.planOf == nil {
+		return PlanNone
+	}
+	return h.planOf(r.Context())
+}
+
+// refuse maps the store's answers onto statuses.
+//
+// AN UNREADABLE CATALOGUE REFUSES; IT DOES NOT ANSWER EMPTY. A 200 with no
+// courses is indistinguishable from a school that has none — so a database that
+// is down would look like a catalogue that was deleted, on every screen, with
+// nothing in the logs that a student could quote.
+func (h *Handler) refuse(w http.ResponseWriter, r *http.Request, err error) {
+	switch {
+	case errors.Is(err, ErrNotFound):
+		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such thing in this school")
+	case errors.Is(err, ErrLocked):
+		// 402 rather than 403: this is not a permission, it is a purchase, and
+		// the client shows a different screen for each.
+		web.Fail(w, http.StatusPaymentRequired, "locked",
+			"this course is not open on the current plan")
+	default:
+		web.LoggerFrom(r.Context()).Error("reading the catalogue", "error", err)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
+			"the catalogue cannot be read just now")
+	}
+}
+
+// locale takes the language off the query string, falling back to English.
+//
+// A QUERY PARAMETER AND NOT Accept-Language. The language a student chose is a
+// setting they can change, not a property of the browser they happen to be
+// using — and a page that reads differently depending on which machine opened
+// it is the kind of thing nobody reports because nobody believes it.
+func locale(r *http.Request) string {
+	l := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("lang")))
+	if l == "" || len(l) > 8 || strings.ContainsAny(l, " /?&") {
+		return "en"
+	}
+	return l
+}
