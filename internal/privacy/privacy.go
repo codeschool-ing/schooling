@@ -141,6 +141,49 @@ var Registry = []Table{
 		Name: "practice_review", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,
 		Why: "the same: append-only, ids only, and the record a later scheduler is fitted against",
 	},
+	// THE CATALOGUE HOLDS NOTHING ABOUT ANYBODY. It is a mirror of files in the
+	// repository — courses, lessons, the words of a lesson, the questions. It
+	// is listed here in full rather than waved past as a group, because the
+	// registry's whole value is that a table cannot be in the database and
+	// absent from this list: a group would be the one exception, and the next
+	// table would be added inside it.
+	{
+		Name: "catalog_tracks", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "a mirror of tracks/*.json",
+	},
+	{
+		Name: "catalog_track_forks", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the prose of a fork in a track",
+	},
+	{
+		Name: "catalog_track_courses", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "which courses a track contains, flattened",
+	},
+	{
+		Name: "catalog_courses", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "a mirror of courses/*/course.json",
+	},
+	{
+		Name: "catalog_course_requires", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "what a student must know before a course — knowledge, not sequence",
+	},
+	{
+		Name: "catalog_lessons", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "a mirror of lessons/*/lesson.json",
+	},
+	{
+		Name: "catalog_sections", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the steps of a lesson",
+	},
+	{
+		Name: "catalog_prose", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the words of a section, per locale — written by us, about nobody",
+	},
+	{
+		Name: "catalog_exercises", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the questions and their answer keys. What a STUDENT answered is practice_review, " +
+			"which is a different table for exactly this reason",
+	},
 	{
 		Name: "audit_log", Holds: HoldsIdentifying, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "holds a staff member's name on purpose, so an entry still reads as an answer " +

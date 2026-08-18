@@ -156,7 +156,19 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 			continue
 		}
 		lesson.Files = append(lesson.Files, f.Name())
-		lesson.Prose[sectionOfProse(f.Name())] = true
+
+		section, locale := sectionAndLocale(f.Name())
+		lesson.Prose[section] = true
+
+		body, err := fs.ReadFile(dir, path.Join(base, f.Name()))
+		if err != nil {
+			problems = append(problems, fmt.Errorf("%s/%s: %w", base, f.Name(), err))
+			continue
+		}
+		title, text := frontMatter(string(body))
+		lesson.Text = append(lesson.Text, Prose{
+			SectionID: section, Locale: locale, Title: title, Body: text,
+		})
 	}
 
 	return &lesson, problems
@@ -168,11 +180,46 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 // language is a suffix on the name rather than a directory, so a missing
 // translation shows up in `ls` — the cheapest review there is (C-11).
 func sectionOfProse(file string) string {
+	section, _ := sectionAndLocale(file)
+	return section
+}
+
+func sectionAndLocale(file string) (section, locale string) {
 	name := strings.TrimSuffix(file, ".md")
 	if i := strings.LastIndex(name, "."); i > 0 {
-		return name[:i]
+		return name[:i], name[i+1:]
 	}
-	return name
+	// No suffix means the source language, which is English everywhere.
+	return name, "en"
+}
+
+// frontMatter takes the leading `---` block off a Markdown file.
+//
+// IT IS NOT YAML AND WILL NOT BECOME YAML. The block carries what belongs to
+// the prose and nothing the JSON already knows, which today is one line. A
+// parser for the general case would invite the second line, and the second line
+// is where a catalogue starts having two places that declare the same thing.
+func frontMatter(body string) (title, rest string) {
+	body = strings.ReplaceAll(body, "\r\n", "\n")
+	if !strings.HasPrefix(body, "---\n") {
+		return "", strings.TrimSpace(body)
+	}
+
+	block, after, found := strings.Cut(body[len("---\n"):], "\n---")
+	if !found {
+		// An opening fence with no closing one: the whole file is front matter
+		// as far as any parser can tell, so it is left as prose rather than
+		// swallowed.
+		return "", strings.TrimSpace(body)
+	}
+
+	for _, line := range strings.Split(block, "\n") {
+		key, value, ok := strings.Cut(line, ":")
+		if ok && strings.TrimSpace(key) == "title" {
+			title = strings.Trim(strings.TrimSpace(value), `"'`)
+		}
+	}
+	return title, strings.TrimSpace(after)
 }
 
 func isTranslation(name string) bool {
@@ -186,9 +233,21 @@ func readExercises(dir fs.FS, name string) ([]Exercise, error) {
 		return nil, nil // optional: a lesson may have no exercises yet
 	}
 
+	// Decoded twice on purpose: once into the fields this package checks, and
+	// once as raw objects so the payload reaches the mirror whole. A single
+	// pass would mean either knowing every type's shape here — which is the
+	// executable half's job — or dropping the answers.
 	var exercises []Exercise
 	if err := json.Unmarshal(body, &exercises); err != nil {
 		return nil, fmt.Errorf("%s: %w", name, err)
+	}
+
+	var raw []json.RawMessage
+	if err := json.Unmarshal(body, &raw); err != nil {
+		return nil, fmt.Errorf("%s: %w", name, err)
+	}
+	for i := range exercises {
+		exercises[i].Raw = raw[i]
 	}
 	return exercises, nil
 }
