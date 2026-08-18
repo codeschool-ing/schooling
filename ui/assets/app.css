@@ -1,0 +1,295 @@
+/* ==========================================================================
+   Schooling — the study interface
+
+   ON LANGUAGE: English throughout — comments, class names, ids and custom
+   properties. The markup and the script share those names, so they are a
+   contract rather than prose.
+
+   WHAT IS SHARED AND WHAT IS NOT
+
+   The block of custom properties below is the platform's identity, and it is
+   byte-for-byte what `codeschool-ing.github.io/assets/style.css` declares. A
+   student who learns one school recognises the next (N-07), and that is what
+   the recognition is made of: the palette, the two type families, the way the
+   light theme is a set of redefinitions rather than a second stylesheet.
+
+   EVERYTHING BELOW IT IS THIS APPLICATION'S OWN, and deliberately not a copy of
+   that file. The showcase is a marketing page — full-height scroll-snapped
+   screens, a hero, a terminal. This is a sidebar, a reading column and a set of
+   exercises. Shipping the marketing layout here so that a single file could be
+   called shared would mean a thousand lines nothing uses, and a shared file
+   that nobody dares edit because they cannot tell which of four applications
+   depends on the rule they are looking at.
+
+   So the identity is shared and the layout is not, and a change to the palette
+   is a change to be copied. It is the small half.
+
+   ON THE FONTS: every family has a real fallback. The webfont link is the first
+   thing the offline bundle drops, and the interface has to be legible without
+   it rather than merely still working.
+   ========================================================================== */
+
+:root{
+  --ink:#0a0e14;
+  --panel:#111721;
+  --scan:#1b2431;
+  --phosphor:#5b8cff;     /* the brand's blue */
+  --phosphor-dim:#33549e;
+  --amber:#ff4d5e;        /* the brand's red */
+  --paper:#e8e6df;
+  --paper-dim:#9aa0a8;
+  --wire:#233043;
+}
+
+html[data-theme="light"]{
+  --ink:#f2f4f9;
+  --panel:#ffffff;
+  --scan:#e7ebf4;
+  --phosphor:#2b52c9;
+  --phosphor-dim:#6c86c9;
+  --amber:#d40f28;
+  --paper:#20263c;
+  --paper-dim:#5a6274;
+  --wire:#ccd4e3;
+}
+
+/* ---------- the floor ---------- */
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  line-height:1.6;
+  min-height:100vh;
+}
+
+::selection{background:var(--phosphor);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.25;font-weight:600}
+code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospace}
+.dim{color:var(--paper-dim)}
+
+/* EVERY interactive thing gets the same ring, and it is never removed. The
+   default outline is the one accessibility affordance browsers ship for free,
+   and `outline:none` is the single most common way a site loses keyboard
+   operability without anybody noticing. (WCAG 2.4.7) */
+:focus-visible{
+  outline:2px solid var(--phosphor);
+  outline-offset:2px;
+  border-radius:2px;
+}
+
+/* Available to a screen reader and to nobody else. The clip-path pair rather
+   than `display:none`, because a hidden element is not read at all. */
+.visually-hidden{
+  position:absolute;width:1px;height:1px;
+  padding:0;margin:-1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0;
+}
+
+.skip{
+  position:absolute;left:8px;top:-64px;z-index:100;
+  background:var(--phosphor);color:var(--ink);
+  padding:10px 16px;border-radius:6px;font-weight:600;
+  transition:top .15s ease;
+}
+.skip:focus{top:8px}
+
+/* ---------- the chrome ---------- */
+
+.chrome{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;gap:16px;
+  padding:10px 16px;
+  background:color-mix(in srgb,var(--ink) 88%,transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--wire);
+}
+
+.brand{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600}
+.brand-mark{color:var(--phosphor)}
+.brand-name{white-space:nowrap}
+
+.search{flex:1;max-width:520px}
+.search input{
+  width:100%;
+  background:var(--panel);color:var(--paper);
+  border:1px solid var(--wire);border-radius:8px;
+  padding:8px 12px;font:inherit;
+}
+.search input::placeholder{color:var(--paper-dim)}
+
+.chrome-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+
+.icon-button,.picker-button,.button{
+  background:var(--panel);color:var(--paper);
+  border:1px solid var(--wire);border-radius:8px;
+  padding:8px 12px;font:inherit;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  /* A control that wraps is a control that grows taller than the bar it is in
+     and then hangs off the edge of a phone. It was doing exactly that. */
+  white-space:nowrap;flex:none;
+}
+.icon-button{min-width:40px;justify-content:center}
+.button{background:var(--phosphor);color:var(--ink);border-color:transparent;font-weight:600}
+.button.quiet{background:var(--panel);color:var(--paper);border-color:var(--wire);font-weight:400}
+.button[disabled],.icon-button[disabled]{opacity:.5;cursor:not-allowed}
+
+.picker{position:relative}
+.picker-menu{
+  position:absolute;right:0;top:calc(100% + 6px);
+  min-width:180px;display:none;flex-direction:column;
+  background:var(--panel);border:1px solid var(--wire);border-radius:10px;
+  padding:6px;z-index:50;
+}
+.picker.is-open .picker-menu{display:flex}
+.picker-menu a,.picker-menu button{
+  text-align:left;background:none;border:0;color:var(--paper);
+  font:inherit;padding:8px 10px;border-radius:6px;cursor:pointer;
+}
+.picker-menu a:hover,.picker-menu button:hover{background:var(--scan)}
+.picker-menu .on{color:var(--phosphor)}
+
+/* ---------- the layout ---------- */
+
+.layout{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);align-items:start}
+
+.sidebar{
+  position:sticky;top:57px;
+  height:calc(100vh - 57px);overflow-y:auto;
+  border-right:1px solid var(--wire);
+  padding:16px 12px;
+}
+
+#screen{
+  padding:24px clamp(16px,4vw,48px) 96px;
+  max-width:1100px;
+}
+#screen:focus{outline:none}
+
+/* Headings inside a screen breathe. It is a rule on the element rather than a
+   class, so a screen cannot forget to apply it — and the screens are built by
+   script, where a forgotten class is invisible until somebody looks. */
+#screen h2{margin-top:2rem}
+#screen h1 + p{margin-bottom:.5rem}
+
+/* THE READING COLUMN IS CAPPED IN CHARACTERS, not pixels. A line of prose that
+   runs the width of a desktop screen is measurably harder to read, and the unit
+   that says so is the character rather than the device. */
+.prose{max-width:68ch}
+.prose p{margin:0 0 1em}
+.prose h2{margin:1.6em 0 .5em}
+.prose h3{margin:1.4em 0 .4em}
+.prose ul,.prose ol{margin:0 0 1em 1.4em}
+.prose code{background:var(--scan);padding:.1em .35em;border-radius:4px;font-size:.92em}
+.prose pre{background:var(--panel);border:1px solid var(--wire);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 1em}
+.prose pre code{background:none;padding:0}
+
+/* On a phone the chrome has more in it than fits, and the thing to drop is the
+   word beside the mark: the school's name is the page's own heading two
+   centimetres below, so losing it from the bar costs nothing and buying room
+   for the controls costs nothing either way. */
+@media (max-width:520px){
+  .brand-name{display:none}
+}
+
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar{
+    position:fixed;left:0;top:57px;z-index:30;
+    width:min(300px,86vw);
+    background:var(--ink);
+    transform:translateX(-102%);transition:transform .2s ease;
+  }
+  .sidebar.is-open{transform:translateX(0)}
+  .search{display:none}
+}
+@media (min-width:861px){
+  #menu-button{display:none}
+}
+
+/* ---------- the sidebar's contents ---------- */
+
+.side-group{margin:0 0 18px}
+.side-title{
+  font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--paper-dim);margin:0 8px 6px;
+}
+.side-link{
+  display:flex;justify-content:space-between;gap:8px;
+  padding:7px 8px;border-radius:6px;font-size:.94rem;
+}
+.side-link:hover{background:var(--scan)}
+.side-link[aria-current="page"]{background:var(--scan);color:var(--phosphor)}
+.side-lock{
+  flex:none;align-self:center;
+  font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--paper-dim);
+}
+
+/* ---------- cards ---------- */
+
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));margin:20px 0}
+
+.card{
+  background:var(--panel);border:1px solid var(--wire);border-radius:12px;
+  padding:16px;display:flex;flex-direction:column;gap:8px;
+}
+.card h3{font-size:1.05rem}
+.card .meta{font-size:.82rem;color:var(--paper-dim);display:flex;gap:10px;flex-wrap:wrap}
+.card.is-locked{opacity:.72}
+
+.tag{
+  display:inline-block;font-size:.72rem;letter-spacing:.04em;
+  border:1px solid var(--wire);border-radius:999px;padding:2px 8px;color:var(--paper-dim);
+}
+.tag.free{border-color:var(--phosphor-dim);color:var(--phosphor)}
+.tag.locked{border-color:var(--amber);color:var(--amber)}
+
+/* ---------- progress ---------- */
+
+/* IT ONLY EVER GOES FORWARD. Completion is set-true and never toggled (A-05),
+   so there is no state in this file for a bar that has moved backwards. */
+.bar{height:6px;background:var(--scan);border-radius:999px;overflow:hidden}
+.bar > i{display:block;height:100%;background:var(--phosphor);border-radius:999px}
+
+/* ---------- messages ---------- */
+
+.notice{
+  border:1px solid var(--wire);border-left:3px solid var(--phosphor);
+  background:var(--panel);border-radius:8px;padding:12px 14px;margin:16px 0;
+}
+.notice.bad{border-left-color:var(--amber)}
+.empty{color:var(--paper-dim);padding:32px 0}
+
+/* ---------- forms ---------- */
+
+.form{max-width:420px;display:flex;flex-direction:column;gap:14px;margin:24px 0}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.86rem;color:var(--paper-dim)}
+.field input{
+  background:var(--panel);color:var(--paper);
+  border:1px solid var(--wire);border-radius:8px;padding:10px 12px;font:inherit;
+}
+/* The message is tied to its field by aria-describedby, so it is read out when
+   the field takes focus rather than sitting there being red at somebody who
+   cannot see it. */
+.field .why{font-size:.82rem;color:var(--amber)}
+
+/* ---------- the certificate ---------- */
+
+.certificate{
+  background:var(--panel);border:1px solid var(--wire);border-radius:14px;
+  padding:28px;max-width:640px;text-align:center;
+}
+.certificate .who{font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.6rem;margin:6px 0}
+.certificate .code{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.12em;color:var(--paper-dim);margin-top:14px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}

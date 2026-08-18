@@ -335,6 +335,57 @@ lesson to put it in. The price of the convention is that `tracks/<x>-exam.json` 
 
 ---
 
+## The interface
+
+`ui/` is plain HTML, CSS and JavaScript with no build step, embedded with
+`//go:embed` and served by the same binary as the API (P-03). One origin removes
+CORS, keeps the session cookie `HttpOnly`, and removes the static host — and with
+it the edge cache that handed the predecessor one module from before a deploy and
+another from after.
+
+**The routes are fragments**, `#/course/web-fundamentals`. Not a preference: the
+offline bundle is one file opened from `file://`, where there is no server to fall
+back to and the History API does not work. Choosing fragments now makes the bundle
+a packaging job rather than a second router. The one real path is `/verify/<code>`,
+because that address is printed on a certificate and typed by somebody checking a
+claim.
+
+**There is no catch-all.** An unknown path is a 404. A shell that rendered itself
+at any address leaves somebody looking at an empty screen wondering what they
+typed. `ui/ui_test.go` also holds the line that matters: the shell never answers
+for `/api/v1/` — the two are one registration order away from swapping, and a
+client asking for JSON and getting a page debugs the wrong thing all afternoon.
+
+**Caching is the build, and an unstamped build offers nothing.** With no build step
+there are no hashed filenames, so every file revalidates and every file's validator
+is the release — one deploy invalidates all of them together. A build that cannot
+say which build it is has no honest validator, so it sends `no-store`. Without that
+rule every unstamped build shares the string `dev`, and a browser keeps the first
+stylesheet it ever saw; that is not hypothetical, it is what happened on the first
+run and it made an edit invisible.
+
+**The palette is shared; the layout is not.** The custom properties at the top of
+`app.css` are byte-for-byte the showcase's, because a student who learns one school
+should recognise the next (N-07). The rest is this application's own — copying a
+marketing page's thousand lines so that one file could be called shared would give
+us a shared file nobody dares edit.
+
+**The key is the English string**, so there is no `en` dictionary — it would be an
+identity map. `tools/check-interface` fails on a string with no translation **and on
+a translation nothing says any more**, because a stale entry reads as current. A
+string that is the same in both languages gets an entry mapping to itself: that
+says somebody decided, where an absence says nobody looked.
+
+**Server messages go through `txt()` too.** They arrive in English, English is the
+key, so they can be translated by adding an entry. The checker cannot see them —
+they are written in Go — and that is the known edge of what a static check reaches.
+
+**Focus is moved on navigation and not on the first render.** After a navigation,
+moving focus into the content is what tells a keyboard user the page changed. On
+the first render there has been no navigation, and moving focus puts the skip link
+and the whole chrome *behind* the user — the skip link then cannot be reached going
+forwards at all, which is the exact thing it exists to fix. Found by pressing Tab.
+
 ## The certificate, and the page anybody can check it on
 
 **The pass is the fact; the certificate is the document.** Passing is on the attempt and nothing
@@ -437,8 +488,14 @@ export GOTOOLCHAIN=local     # never let go download a compiler nobody chose
 gofmt -l .                   # silence is the pass
 go build ./...
 golangci-lint run            # before the tests: it is what build and vet do not do
+go run ./tools/validate-content   # the answer keys, not only the schema
+go run ./tools/check-interface    # every string the interface says, in every language it claims
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
 ```
+
+And for anything in `ui/`, open it. `go run ./cmd/api` with a seeded school, then look at it in
+a browser at more than one width, in both themes and both languages — three of the defects in
+that directory were invisible to every check above and obvious in a screenshot.
 
 **`GOTOOLCHAIN=local`, and it is the first line for a reason.** Left at its default, Go silently
 downloads whatever version `go.mod` asks for, so a `go mod tidy` on a newer machine can raise the

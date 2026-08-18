@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Schooling</title>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+<!-- The saved theme, applied before the first paint so it does not flash.
+     It runs here rather than in app.js because app.js is a module and modules
+     are deferred: by the time one runs, the page has been painted in whatever
+     theme the markup said. It reads the pre-rename key too — the one read a
+     returning student gets, and missing it shows them a frame of the theme they
+     turned off. app.js does the writing back. -->
+<script>
+try {
+  var t = localStorage.getItem('codeschool-theme')
+       || { claro: 'light', escuro: 'dark' }[localStorage.getItem('codeschool-tema')];
+  document.documentElement.dataset.theme = (t === 'light') ? 'light' : 'dark';
+} catch (e) { /* private mode: the markup's default stands */ }
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Every family has a real fallback in the stylesheet. This link is the first
+     thing the offline bundle drops, and the interface has to survive that. -->
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" />
+<link rel="stylesheet" href="/assets/app.css" />
+</head>
+
+<body>
+
+<!-- The first thing in the tab order and the first thing a screen reader
+     reaches. It is not decoration: every screen here puts a sidebar of the same
+     twenty links before the content, and without this a keyboard user tabs
+     through all of them on every navigation. (WCAG 2.4.1) -->
+<a class="skip" href="#screen">Skip to content</a>
+
+<header class="chrome">
+  <button class="icon-button" id="menu-button" type="button"
+          aria-label="Menu" aria-expanded="false" aria-controls="sidebar">☰</button>
+
+  <a class="brand" href="#/">
+    <span class="brand-mark" aria-hidden="true">◆</span>
+    <span class="brand-name" id="school-name">Schooling</span>
+  </a>
+
+  <form class="search" id="search" role="search">
+    <label class="visually-hidden" for="search-input">Search</label>
+    <input id="search-input" type="search" autocomplete="off"
+           placeholder="Search courses and lessons" />
+  </form>
+
+  <div class="chrome-right">
+    <div class="picker" id="lang">
+      <button class="picker-button" type="button" aria-haspopup="true" aria-expanded="false"
+              aria-label="Language"><span id="lang-short">EN</span></button>
+      <div class="picker-menu" id="lang-menu"></div>
+    </div>
+
+    <button class="icon-button" id="theme-button" type="button" aria-label="Theme">◐</button>
+
+    <a class="button" id="sign-in-link" href="#/sign-in">Sign in</a>
+    <div class="picker" id="account" hidden>
+      <button class="picker-button" type="button" aria-haspopup="true" aria-expanded="false">
+        <span id="account-name">You</span>
+      </button>
+      <div class="picker-menu">
+        <a href="#/dashboard">Your study</a>
+        <a href="#/certificates">Your certificates</a>
+        <button type="button" id="sign-out">Sign out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Courses">
+    <div id="sidebar-body"></div>
+  </nav>
+
+  <!-- One element, filled by the router. `tabindex="-1"` so that the skip link
+       and the router can move focus here — which is also what announces a new
+       screen, since a fragment router changes the page without a page load and
+       nothing announces that on its own.
+
+       DELIBERATELY NOT `aria-live`. A live region announces its changes, and
+       this element's change is the entire page: a screen reader would read the
+       whole thing out on every navigation, on top of the heading it has just
+       been moved to. Moving focus says "you are somewhere new" in one line
+       instead of in fifty. -->
+  <main id="screen" tabindex="-1"></main>
+</div>
+
+<script src="/assets/i18n-pt.js"></script>
+<script type="module" src="/assets/app.js"></script>
+</body>
+</html>
