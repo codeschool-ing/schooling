@@ -78,11 +78,11 @@ audit with a name against it.*
 - [ ] The graph test — every track, six viewport sizes, four landscape and two portrait, zero crossings
 - [x] Sidebar, search, dashboard, catalogue — the track map waits on the graph
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
-- [ ] Sitting an exam on a screen — the server half is done; this is the paper, the answers and the hand-in
+- [x] Sitting an exam on a screen — the paper, an answer saved as it is made and put back on a reload, and a hand-in that says what it came to
 - [ ] The modal test — every course, one height, neither column scrolling
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
 - [ ] WCAG 2.2 AA on every screen, with an automated check in the browser suites
-- [ ] Every question type operable by keyboard and legible to a screen reader — `matching`, `ordering` and `labelling` are the hard ones
+- [ ] Every question type operable by keyboard and legible to a screen reader — six of them are, with `ordering` on buttons and `matching` on a select; `labelling` waits on somewhere for a content image to be served from
 - [ ] The offline bundle, built **and opened** in CI
 
 ### Assessment

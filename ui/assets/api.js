@@ -90,6 +90,16 @@ export const api = {
       + `/${encodeURIComponent(section)}/visit`),
   resume: () => api.get('/api/v1/resume'),
 
+  /* ---------- exams ---------- */
+  startExam: (scope, id) =>
+    api.post(`/api/v1/exams/${encodeURIComponent(scope)}/${encodeURIComponent(id)}/start`),
+  attempt: (id) => api.get(`/api/v1/exams/attempts/${encodeURIComponent(id)}`),
+  answer: (attempt, position, answer) =>
+    api.put(`/api/v1/exams/attempts/${encodeURIComponent(attempt)}/answers/${position}`, { answer }),
+  handIn: (attempt) =>
+    api.post(`/api/v1/exams/attempts/${encodeURIComponent(attempt)}/hand-in`),
+  attempts: () => api.get('/api/v1/exams/attempts'),
+
   /* ---------- certificates ---------- */
   certificates: () => api.get('/api/v1/certificates'),
   verify: (code) => api.get(`/api/v1/verify/${encodeURIComponent(code)}`),
