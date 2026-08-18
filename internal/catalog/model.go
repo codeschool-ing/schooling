@@ -27,6 +27,8 @@
 //     shows as deletions. (C-10)
 package catalog
 
+import "encoding/json"
+
 // School is one school's whole catalogue, as it is on disk.
 type School struct {
 	ID      string   `json:"id"`
@@ -126,6 +128,26 @@ type Lesson struct {
 	// difference between them.
 	Prose map[string]bool `json:"-"`
 	Files []string        `json:"-"`
+
+	// Text is what those files say, one entry per section per locale.
+	Text []Prose `json:"-"`
+}
+
+// Prose is one section's words in one language.
+//
+// A MISSING TRANSLATION IS A MISSING ENTRY, never an empty one. The server
+// falls back field by field, so a section translated in its title but not its
+// body keeps the English body rather than losing the title too (C-11) — and
+// that only works if "absent" and "blank" are different things all the way
+// down.
+type Prose struct {
+	SectionID string
+	Locale    string
+
+	// Title comes from the front matter, which carries only what belongs to the
+	// prose itself. Everything the JSON already knows stays in the JSON.
+	Title string
+	Body  string
 }
 
 // Section is one step of a lesson.
@@ -159,10 +181,18 @@ var sectionKinds = map[string]bool{
 	KindAssessment: true,
 }
 
-// Exercise is one question. Its payload varies by type and is kept raw here:
-// checking that a `code` exercise has test cases belongs to the executable half
-// of the checks, which runs the answer keys.
+// Exercise is one question.
+//
+// ITS PAYLOAD IS KEPT WHOLE AND UNREAD. A `quiz` has choices, a `code` has test
+// cases, a `numeric` has a unit and a tolerance — and this package deliberately
+// does not know the difference, because checking a `code` key means EXECUTING
+// it, which is the other half of the checks. What it must not do is drop the
+// payload on the way past: a loader that decodes the fields it recognises and
+// silently discards the rest would write a mirror with no answers in it.
 type Exercise struct {
+	// Raw is the whole object as it was written, including everything above.
+	Raw json.RawMessage `json:"-"`
+
 	ID         string `json:"id"`
 	Version    int    `json:"version"`
 	Section    string `json:"section"`

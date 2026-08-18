@@ -96,6 +96,54 @@ func TestNoModuleImportsAnotherModule(t *testing.T) {
 	}
 }
 
+// THE THIRD RULE: only the load job writes the catalogue.
+//
+// The files in `content/` are the source of truth and the tables are a derived
+// mirror (C-01); the console reads and never writes (C-07). That holds for
+// exactly as long as nobody adds a screen that fixes a typo directly — and the
+// first time somebody does, the files silently stop being the truth and the
+// next load quietly undoes their fix.
+//
+// So it is checked rather than agreed. Test files are exempt: a test may seed a
+// mirror to exercise a reader, and that is not a console editing a course.
+func TestOnlyTheLoadJobWritesTheCatalogue(t *testing.T) {
+	root := repoRoot(t)
+
+	err := filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
+		switch {
+		case err != nil:
+			return err
+		case d.IsDir() && (d.Name() == ".git" || d.Name() == "testdata"):
+			return filepath.SkipDir
+		case d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go"):
+			return nil
+		}
+
+		rel, _ := filepath.Rel(root, path)
+		if strings.HasPrefix(filepath.ToSlash(rel), "cmd/load/") {
+			return nil
+		}
+
+		body, err := os.ReadFile(path) //nolint:gosec // a path this walk produced from the repository
+		if err != nil {
+			return err
+		}
+		text := string(body)
+
+		for _, verb := range []string{"INSERT INTO catalog_", "UPDATE catalog_", "DELETE FROM catalog_"} {
+			if strings.Contains(text, verb) {
+				t.Errorf("%s contains %q — the catalogue is a mirror of the files, and the "+
+					"moment a second thing writes it the files stop being the truth: the next "+
+					"load undoes whatever was written here, silently", rel, verb)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking the repository: %v", err)
+	}
+}
+
 // walk visits every package under dir and hands over its imports, test files
 // included: a test that reaches across a boundary the code may not cross is the
 // same coupling with a different file name.

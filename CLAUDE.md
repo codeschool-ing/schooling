@@ -181,6 +181,29 @@ An exercise carries a `version`, and a student's answer records the version it a
 question the statistics flag is **quarantined by threshold, never by decision** — and nothing
 fires below a minimum sample, because three wrong out of three is chance. (C-15, C-16, C-17)
 
+## The catalogue is a mirror, and only one thing writes it
+
+`content/` is the truth; the `catalog_*` tables are derived (C-01). **A test scans the source for
+anybody but `cmd/load` writing to one**, because the first console screen that fixes a typo
+directly is the moment the files stop being the truth — and the next load undoes that fix,
+silently.
+
+`cmd/load` **validates first and writes nothing if anything is wrong.** The gap between "CI was
+green on that commit" and "this is what is being loaded now" is exactly where a half-written
+catalogue reaches students. It is one transaction including the prune: a load that failed halfway
+would leave a catalogue that is neither the old one nor the new one.
+
+Pruning is deletion, and it is safe because nothing a student did points at those rows —
+`practice_review.exercise_id` is text and deliberately unkeyed. A question that leaves the
+catalogue leaves the history intact and orphaned, which is the same decision, for the same
+reason, as erasure.
+
+A directory in `content/` **does not create a school**. A school is also an address and a domain
+mapping, so a typo in a directory name would otherwise become a school answering at no address
+and appearing in every count.
+
+---
+
 ## Two implementations of one rule
 
 The client grades for immediate feedback and the server grades exams. They **must** agree, or the
