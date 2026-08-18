@@ -106,6 +106,15 @@ jobs:
           SCHOOLING_PLATFORM_DOMAIN: example.tld
           SCHOOLING_ENV: development
 
+      # THE REVIEWER, over the files, before anything reaches a database.
+      #
+      # There is no human one: the material is written by a machine, and this is
+      # what stands between a wrong answer key and a student. It is early in the
+      # list on purpose — it needs no database and it is the check whose absence
+      # costs the most.
+      - name: The catalogue is coherent
+        run: go run ./tools/validate-content
+
       - name: The tests, with a database behind them
         run: go test -race ./...
 

@@ -61,14 +61,14 @@ audit with a name against it.*
 
 ### The catalogue
 
-- [ ] `content/` holds prose in Markdown and structure and exercises in JSON
-- [ ] The validator runs in CI — broken prerequisites, cycles, track order, `requires` that no track containing the course satisfies
+- [x] `content/` holds prose in Markdown and structure and exercises in JSON
+- [x] The validator runs in CI — broken prerequisites, cycles, track order, `requires` that no track containing the course satisfies, checked **per branch** of every fork
 - [ ] The load job writes the mirror from the files and prunes what the files no longer carry
 - [ ] Nothing else writes catalogue rows; the console reads and never writes
 - [ ] Draft and published state per course
-- [ ] Ids are slugs that never derive from a title; order declared, never inferred from filenames
+- [x] Ids are slugs that never derive from a title; order declared, never inferred from filenames
 - [ ] The content check runs the **answer keys**, not only the schema — `code` executed, `expression-answer` through the CAS, `numeric` units parsed
-- [ ] An orphaned `.md` that no `lesson.json` references fails the build
+- [x] An orphaned `.md` that no `lesson.json` references fails the build
 
 ### What the student sees
 
