@@ -163,6 +163,21 @@ absent from a track that shows the course.
 **A section is `drillable` or it is not.** The same question serves as an exam item and a drill
 card; the difference is in the state, not the content. (A-01)
 
+**The paywall is checked on the way IN, not only on the way out.** A student may not record
+progress, move a resume pointer or write a note in a course they cannot open — otherwise the
+paywall is a decoration on the reading path, a client that never asks for the lesson marks it
+done anyway, and a certificate rests on sections nobody was entitled to. Same 402, same reason.
+
+**A section id from a client is checked against the catalogue**, never trusted. Otherwise a
+three-section course is finished by sending thirty ids, and the progress bar, the certificate and
+the cohort are all built on rows naming nothing.
+
+**Completing twice emits ONE event.** Statistics come from the event stream (K-03), so a handler
+that emitted on every call would inflate "sections completed this month" by every double tap and
+every retry — quietly, and in the direction that flatters. `Complete` answers whether it was the
+first time and the caller emits only then. This was found by running the thing by hand and
+looking at the rows, not by a test.
+
 **`section_progress` is completion; `practice_state` is mastery.** Completion is set-true and
 never toggled. Mastery decays. **Decayed strength never feeds a progress bar** — a bar that moves
 backwards for someone who did nothing wrong is the worst thing this product can do. (A-05)

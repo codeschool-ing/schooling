@@ -274,6 +274,36 @@ func (s *Store) lessons(ctx context.Context, tenantID uuid.UUID, courseID string
 	return out, rows.Err()
 }
 
+// SectionsOf answers which sections each lesson of a course has.
+//
+// IT EXISTS FOR THE MODULE THAT RECORDS PROGRESS, which may not import this one
+// and must not take a client's word for what a section is. A client that
+// invented ids could otherwise finish a three-section course by sending thirty,
+// and every count above it would rest on rows naming nothing.
+func (s *Store) SectionsOf(ctx context.Context, tenantID uuid.UUID,
+	courseID string) (map[string][]string, error) {
+
+	rows, err := s.pool.Query(ctx, `
+		SELECT lesson_id, id FROM catalog_sections
+		WHERE tenant_id = $1 AND course_id = $2
+		ORDER BY lesson_id, position
+	`, tenantID, courseID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the sections of %q: %w", courseID, err)
+	}
+	defer rows.Close()
+
+	out := map[string][]string{}
+	for rows.Next() {
+		var lesson, section string
+		if err := rows.Scan(&lesson, &section); err != nil {
+			return nil, fmt.Errorf("catalog: reading the sections of %q: %w", courseID, err)
+		}
+		out[lesson] = append(out[lesson], section)
+	}
+	return out, rows.Err()
+}
+
 /* ---------- the words ---------- */
 
 // Lesson answers one lesson with its prose, in the locale asked for.

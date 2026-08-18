@@ -76,7 +76,7 @@ audit with a name against it.*
 - [ ] The track graph, with edge routing that avoids the cards
 - [ ] The graph test — every track, six viewport sizes, four landscape and two portrait, zero crossings
 - [ ] Sidebar, search, dashboard, catalogue, track map
-- [ ] Section progress, resume pointer, notes
+- [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
 - [ ] The modal test — every course, one height, neither column scrolling
 - [ ] Portuguese and English, with the interface-string checker
 - [ ] WCAG 2.2 AA on every screen, with an automated check in the browser suites

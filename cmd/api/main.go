@@ -29,6 +29,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
+	"github.com/codeschool-ing/schooling/internal/progress"
 	"github.com/codeschool-ing/schooling/internal/tenant"
 	"github.com/codeschool-ing/schooling/internal/visitor"
 )
@@ -156,7 +157,40 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 
 	scoped := http.NewServeMux()
 	tenant.NewHandler().Routes(scoped)
-	catalog.NewHandler(catalog.NewStore(pool), schoolID, planOf).Routes(scoped)
+	courses := catalog.NewStore(pool)
+	catalog.NewHandler(courses, schoolID, planOf).Routes(scoped)
+
+	// PROGRESS ASKS THE CATALOGUE TWO QUESTIONS and imports neither answer.
+	// Whether a course is open, so the paywall is not a decoration on the
+	// reading path; and which sections it has, so a client cannot complete a
+	// course by inventing ids. Both are closures here, which is the only place
+	// that knows about both modules.
+	progress.NewHandler(
+		progress.NewStore(pool,
+			func(ctx context.Context, courseID string) (bool, error) {
+				school, ok := schoolID(ctx)
+				if !ok {
+					return false, nil
+				}
+				course, err := courses.Course(ctx, school, courseID, planOf(ctx))
+				if errors.Is(err, catalog.ErrNotFound) {
+					return false, nil
+				}
+				if err != nil {
+					return false, err
+				}
+				return !course.Locked, nil
+			},
+			func(ctx context.Context, courseID string) (map[string][]string, error) {
+				school, ok := schoolID(ctx)
+				if !ok {
+					return nil, nil
+				}
+				return courses.SectionsOf(ctx, school, courseID)
+			},
+		),
+		schoolID, identity.AccountID, studentEvents(events, log),
+	).Routes(scoped)
 	people := identity.NewHandler(accounts, identity.Settings{
 		Domain: cfg.PlatformDomain,
 		Secure: cfg.Environment == config.Production,
@@ -222,6 +256,43 @@ func planOf(ctx context.Context) catalog.Plan {
 	// the fail-closed direction: they see the free tier, which is what an
 	// account with no subscription is entitled to.
 	return catalog.PlanNone
+}
+
+// studentEvents emits what a student did, with the dimensions every event
+// carries (K-04).
+//
+// IT NEVER FAILS THE REQUEST. Counting something is not the thing the student
+// asked for, and a section that was completed and not counted is a hole in a
+// report; a section that was not completed because counting failed is a person
+// doing the work twice.
+func studentEvents(events *event.Store, log *slog.Logger) progress.Emit {
+	return func(ctx context.Context, name string, payload map[string]any) {
+		school, slug, ok := schoolOf(ctx)
+		if !ok {
+			return
+		}
+
+		account, signedIn := identity.FromContext(ctx)
+		if !signedIn {
+			return
+		}
+
+		e := event.Event{
+			Name: name,
+			Dimensions: event.ForSchool(school, slug,
+				event.PlanNone, account.Country, account.Locale),
+			AccountID: &account.ID,
+			Payload:   payload,
+			RequestID: web.RequestIDFrom(ctx),
+		}
+		if id, ok := visitor.FromContext(ctx); ok {
+			e.VisitorID = &id
+		}
+
+		if err := events.Emit(ctx, e); err != nil {
+			log.Error("counting what a student did", "error", err, "event", name)
+		}
+	}
 }
 
 // signedUp is the moment the visitor who arrived becomes a student.

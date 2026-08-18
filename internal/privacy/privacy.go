@@ -184,6 +184,25 @@ var Registry = []Table{
 		Why: "the questions and their answer keys. What a STUDENT answered is practice_review, " +
 			"which is a different table for exactly this reason",
 	},
+	// WHAT A STUDENT DID, AND IT GOES WHEN THEY DO. Unlike events and reviews,
+	// which survive an erasure orphaned so the statistics stay whole, these
+	// answer only "what has this person done" — nothing aggregate is computed
+	// from them, because statistics come from the event stream (K-03). So they
+	// have real foreign keys and cascade with the account.
+	{
+		Name: "section_progress", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "which sections one person finished. It answers nothing about anybody else, so " +
+			"there is no aggregate to protect by keeping it",
+	},
+	{
+		Name: "resume_pointer", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "where one person was in a course",
+	},
+	{
+		Name: "notes", Holds: HoldsIdentifying, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "free text a person wrote in their own margin. What somebody puts there is not for " +
+			"this registry to assume, which is why it is identifying rather than pseudonymous",
+	},
 	{
 		Name: "audit_log", Holds: HoldsIdentifying, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "holds a staff member's name on purpose, so an entry still reads as an answer " +
@@ -266,6 +285,15 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 			WHERE account_id = $1
 			   OR visitor_id IN (SELECT visitor_id FROM account_visitors WHERE account_id = $1)
 			ORDER BY occurred_at`},
+		{"section_progress", `
+			SELECT course_id, lesson_id, section_id, completed_at
+			FROM section_progress WHERE account_id = $1 ORDER BY completed_at`},
+		{"resume_pointer", `
+			SELECT course_id, lesson_id, section_id, at
+			FROM resume_pointer WHERE account_id = $1 ORDER BY at`},
+		{"notes", `
+			SELECT course_id, lesson_id, section_id, body, updated_at
+			FROM notes WHERE account_id = $1 ORDER BY course_id, lesson_id, section_id`},
 		{"practice_review", `
 			SELECT id, reviewed_at, exercise_id, exercise_version, section_id,
 			       correct, quality, elapsed_ms, scheduler
