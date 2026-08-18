@@ -6,7 +6,10 @@
 # deploy pipeline and will differ in two ways that matter: the version stamped
 # into the binary, and a base with no shell in it.
 
-FROM golang:1.24-alpine AS build
+# The tag tracks go.mod's directive. Alpine's Go images carry no toolchain
+# downloader worth relying on, so a base older than the directive fails the
+# build here rather than in production.
+FROM golang:1.25-alpine AS build
 
 ARG COMMAND=api
 

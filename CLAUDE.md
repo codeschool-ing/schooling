@@ -148,7 +148,27 @@ may be months old and that nobody can update. (P-10)
 
 ## Before pushing
 
-Run the suites. They exist because each one caught something that a diff did not show:
+```sh
+export GOTOOLCHAIN=local     # never let go download a compiler nobody chose
+gofmt -l .                   # silence is the pass
+go build ./...
+golangci-lint run            # before the tests: it is what build and vet do not do
+go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
+```
+
+**`GOTOOLCHAIN=local`, and it is the first line for a reason.** Left at its default, Go silently
+downloads whatever version `go.mod` asks for, so a `go mod tidy` on a newer machine can raise the
+directive and every local command keeps passing on a compiler that CI does not have. That
+happened on the first pull request: the directive moved to 1.25, CI installed the 1.24 written
+in the workflow, and the failure arrived as a linter complaining about a config file. The
+version now comes from `go.mod` in every place that needs one — the workflow, the Dockerfile —
+and `local` is what makes a mismatch say so on the first build instead of the last step.
+
+`golangci-lint` refuses to run when the Go it was built with is older than the directive, so its
+version is not free to lag behind either. Raising `go.mod` means raising it on the same commit.
+
+The suites inherited from the predecessor still apply where their subject exists. Each one is
+here because it caught something a diff did not show:
 
 - the catalogue validator — broken prerequisites, cycles, track order
 - the dictionaries against the catalogue
