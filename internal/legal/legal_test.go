@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -158,32 +159,67 @@ func TestTheTableNamesAreNotSentToAnybody(t *testing.T) {
 	}
 }
 
-// THE PLACEHOLDERS ARE FINDABLE. What is still somebody else's decision is
-// marked, so that the day it is answered, finding every place it belongs is a
-// search rather than a re-read.
+// WHAT IS NOT FILLED IN IS FINDABLE, AND IS THE SAME IN EVERY LANGUAGE.
 //
-// One thing is left: the company itself — its name, its registration number,
-// its address, and the address to write to. A privacy policy with no controller
-// named on it is not one anybody could act against, which is why this is the
-// last thing to go in rather than the first thing to invent.
+// One thing is left: the company itself — name, registration number, address,
+// and where to write. It is written as `{{company.name}}` and friends rather
+// than as a sentence saying it is missing, so that filling it in is a search and
+// replace rather than a re-read of four files.
 //
-// This test asserts they are still there. When they are filled in, it is the
-// test that has to be deleted deliberately, which is the point: a placeholder
-// that quietly survives publication is how a policy goes out with a blank in it.
-func TestWhatIsStillUndecidedIsMarkedInEveryVersion(t *testing.T) {
+// The failure this catches is the one that search and replace actually has: it
+// is done in English, the tests pass, and Portuguese still carries the token —
+// which is a policy published with a blank in it, in the language half the
+// students read. So the token SET has to match across languages, not merely be
+// non-empty.
+func TestWhatIsNotFilledInIsTheSameInEveryLanguage(t *testing.T) {
 	for _, name := range legal.Names() {
+		want := legal.Placeholders(mustRead(t, name, legal.Fallback).Body)
+
 		for _, locale := range legal.Locales(name) {
-			doc, err := legal.Read(name, locale)
-			if err != nil {
-				t.Fatal(err)
+			if locale == legal.Fallback {
+				continue
 			}
-			if !strings.Contains(doc.Body, "\n> **") && !strings.HasPrefix(doc.Body, "> **") {
-				t.Errorf("%s in %s carries no `> **…**` block. Every version of a document "+
-					"has to mark the same open questions, or one language publishes a "+
-					"decision the other still calls undecided — and when they are all "+
-					"answered, this test is deleted on purpose rather than left to pass "+
-					"on a stray quote", name, locale)
+			got := legal.Placeholders(mustRead(t, name, locale).Body)
+
+			if !slices.Equal(got, want) {
+				t.Errorf("%s carries %v in %s and %v in %s — a placeholder filled in one "+
+					"language and left in another is a document published with a blank in "+
+					"it, in the version half the students read",
+					name, got, locale, want, legal.Fallback)
 			}
 		}
 	}
+}
+
+// AND THERE IS STILL SOMETHING TO FILL IN, said out loud.
+//
+// This test asserts the CURRENT state: the company is not known. When it is,
+// this test is deleted deliberately — which is the point. A placeholder that
+// quietly survives publication is how a policy goes out with a `{{…}}` in it,
+// and the moment nobody is asserting that one exists is the moment nobody
+// notices one does.
+func TestTheCompanyIsStillAPlaceholder(t *testing.T) {
+	for _, name := range legal.Names() {
+		found := legal.Placeholders(mustRead(t, name, legal.Fallback).Body)
+		if len(found) == 0 {
+			t.Errorf("%s has no placeholders left. If the company details are real now, "+
+				"delete this test on purpose and check that no `{{` survives anywhere", name)
+			continue
+		}
+		for _, token := range found {
+			if !strings.HasPrefix(token, "{{company.") {
+				t.Errorf("%s carries %s, which is not one of the company details this is "+
+					"waiting on — a new placeholder needs a reason somebody can read", name, token)
+			}
+		}
+	}
+}
+
+func mustRead(t *testing.T, name, locale string) legal.Document {
+	t.Helper()
+	doc, err := legal.Read(name, locale)
+	if err != nil {
+		t.Fatalf("reading %s in %s: %v", name, locale, err)
+	}
+	return doc
 }

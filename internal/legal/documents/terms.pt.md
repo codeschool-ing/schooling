@@ -6,9 +6,16 @@ effective: 2026-08-19
 Estes são os termos sob os quais você estuda aqui. Dizem o que devemos a você, o
 que não devemos, e como uma assinatura começa e termina.
 
-> **Ainda falta preencher antes de publicar.** O nome e o CNPJ da empresa por
-> trás da plataforma, seu endereço e o endereço para onde escrever. O resto está
-> decidido, e cada cláusula abaixo descreve algo que o sistema já faz.
+## Com quem você está contratando
+
+> **Ainda não preenchido.** Os quatro `{{…}}` abaixo são espaços reservados,
+> escritos assim para que ninguém confunda um deles com um nome. Todo o resto
+> deste documento está decidido, e cada cláusula descreve algo que o sistema já
+> faz.
+
+- **{{company.name}}**, CNPJ {{company.registration}}
+- {{company.address}}
+- **{{company.contact}}** — para onde escrever, e onde uma pessoa responde.
 
 ## O material é escrito por máquina
 

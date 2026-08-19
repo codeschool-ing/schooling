@@ -9,11 +9,21 @@ para parar. Descreve o sistema como ele é de fato, e não a coisa mais ampla qu
 um dia poderíamos ter o direito de fazer — onde os dois divergirem, este
 documento é o que nos obriga.
 
-> **Ainda falta preencher antes de publicar.** O nome e o CNPJ da empresa por
-> trás da plataforma, seu endereço, e o endereço para onde escrever sobre
-> qualquer coisa abaixo. Até isso estar aqui, trate este texto como uma
-> descrição do sistema e não como uma política publicada — uma política sem
-> controlador identificado não é uma contra a qual você possa agir.
+## Quem responde por isto
+
+> **Ainda não preenchido.** Os quatro `{{…}}` abaixo são espaços reservados, e
+> estão escritos assim para que ninguém confunda um deles com um nome. Até serem
+> reais, este texto é uma descrição do sistema e não uma política publicada: uma
+> política sem controlador identificado não é uma contra a qual você possa agir.
+
+A empresa responsável pelo que está descrito aqui — o **controlador**, nas
+palavras da lei — é:
+
+- **{{company.name}}**, CNPJ {{company.registration}}
+- {{company.address}}
+
+Escreva para **{{company.contact}}** sobre qualquer coisa abaixo: para pedir uma
+cópia do que temos, corrigir algo, ser apagado, ou reclamar.
 
 ## A versão curta
 

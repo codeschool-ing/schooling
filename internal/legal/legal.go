@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"io/fs"
 	"path"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -73,6 +74,39 @@ type Document struct {
 	// uses. One renderer, so a heading looks the same in a policy as in a
 	// lesson and there is one place for it to be wrong.
 	Body string `json:"body"`
+}
+
+/* ---------- what is not filled in yet ---------- */
+
+// unfilled finds `{{a.token}}` in a document.
+//
+// # WHY A TOKEN IN THE FILE AND NOT A SETTING
+//
+// The company's name, its registration number and its address are facts with a
+// right answer that simply is not known here yet. Only something WITHOUT a right
+// answer becomes a parameter (K-13) — a setting for this would be a knob whose
+// only correct position is one value, configurable in an environment where
+// getting it wrong means publishing a policy attributed to the wrong company.
+//
+// So it stays in the document, as a token nobody could mistake for prose.
+// Filling it in is a search and replace across four files, and the test below
+// is what stops that happening in three of them.
+var unfilled = regexp.MustCompile(`\{\{[a-z0-9._-]+\}\}`)
+
+// Placeholders answers the tokens in a document that nobody has filled in yet,
+// sorted and without repeats.
+func Placeholders(body string) []string {
+	seen := map[string]bool{}
+	for _, token := range unfilled.FindAllString(body, -1) {
+		seen[token] = true
+	}
+
+	out := make([]string, 0, len(seen))
+	for token := range seen {
+		out = append(out, token)
+	}
+	sort.Strings(out)
+	return out
 }
 
 // Fallback is the language a document is served in when it has no version in

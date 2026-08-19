@@ -6,10 +6,15 @@ effective: 2026-08-19
 These are the terms you study under. They describe what we owe you, what we do
 not, and how a subscription starts and ends.
 
-> **Still to be filled in before this is published.** The name and registration
-> number of the company behind the platform, its address, and the address to
-> write to. Everything else here is decided, and every clause below describes
-> something the system already does.
+## Who you are agreeing with
+
+> **Not filled in yet.** The four `{{…}}` below are placeholders, written that
+> way so nobody can mistake one for a name. Everything else in this document is
+> decided, and every clause describes something the system already does.
+
+- **{{company.name}}**, registered under CNPJ {{company.registration}}
+- {{company.address}}
+- **{{company.contact}}** — where to write, and where a person will reply.
 
 ## The material is written by a machine
 

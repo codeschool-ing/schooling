@@ -679,10 +679,19 @@ Two more rules about the documents:
   address. They are baked into the offline bundle for the same reason, and the bundle test
   asserts they do *not* say "this needs the school" — the one deliberate exception to everything
   else in that file.
-- **What is still undecided is marked, in every language, and a test says so.** One thing is
-  left: the company itself — name, CNPJ, address, and the address to write to. It sits in a
-  `> **…**` block in each document. When it is filled in, that test is deleted on purpose; a
-  placeholder that quietly survives publication is how a policy goes out with a blank in it.
+- **What is not filled in is a `{{token}}`, not a sentence saying it is missing.** One thing is
+  left: the company itself — `{{company.name}}`, `{{company.registration}}`, `{{company.address}}`
+  and `{{company.contact}}`, in all four files. Filling it in is a search and replace, and the
+  test checks the token **set matches across languages** — because the way search and replace
+  actually fails is that it is done in English, the tests pass, and Portuguese still carries the
+  token. A second test asserts a placeholder still exists at all; when the company is real, that
+  one is deleted on purpose. The moment nobody asserts a `{{…}}` exists is the moment nobody
+  notices one does.
+
+  It is a token in the file rather than a setting because the company's name is a fact with a
+  right answer that simply is not known yet, and **only something without a right answer becomes
+  a parameter** (K-13). A setting here would be a knob whose one correct position is a value that
+  a wrong environment variable publishes a policy against the wrong company with.
 
 **The decided half is Brazilian.** The terms are governed by the Consumer Protection Code and a
 dispute is heard where the student lives; the refund window is the statutory seven days and

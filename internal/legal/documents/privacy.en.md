@@ -9,11 +9,21 @@ stop. It describes the system as it is actually built rather than the widest
 thing we might one day be entitled to do — where those two differ, this document
 is the one that binds us.
 
-> **Still to be filled in before this is published.** The name and registration
-> number of the company behind the platform, its address, and the address to
-> write to about anything below. Until those are here, treat this as a
-> description of the system rather than as a published policy — a policy with no
-> controller named on it is not one you could act against.
+## Who holds this
+
+> **Not filled in yet.** The four `{{…}}` below are placeholders, and they are
+> written that way so nobody can mistake one for a name. Until they are real,
+> this is a description of the system rather than a published policy: a policy
+> with no controller named on it is not one you could act against.
+
+The company responsible for what is described here — the **controller**, in the
+words of the law — is:
+
+- **{{company.name}}**, registered under CNPJ {{company.registration}}
+- {{company.address}}
+
+Write to **{{company.contact}}** about anything below: to ask for a copy of what
+we hold, to have something corrected, to be erased, or to complain.
 
 ## The short version
 
