@@ -159,8 +159,16 @@ func (s *Store) freeCourses(ctx context.Context, tenantID uuid.UUID) (map[string
 // not show is a single word of the material.
 type CourseView struct {
 	Listing
-	Prerequisites string       `json:"prerequisites"`
-	Lessons       []LessonView `json:"lessons"`
+	Prerequisites string `json:"prerequisites"`
+
+	// What is in the course, at two depths. Empty lists are omitted rather than
+	// sent as `[]`, so a screen asks "is there a syllabus" instead of "is the
+	// syllabus empty" — and a course that is announced and not yet written
+	// answers the first honestly.
+	Syllabus []string `json:"syllabus,omitempty"`
+	Topics   []string `json:"topics,omitempty"`
+
+	Lessons []LessonView `json:"lessons"`
 
 	// The names of this course's pictures. A client builds an address from each
 	// — see the picture endpoint — and it is a list rather than something to be
@@ -201,10 +209,12 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID, id string, plan 
 
 	var course Course
 	err = s.pool.QueryRow(ctx, `
-		SELECT id, name, category, level, hours, summary, prerequisites, draft
+		SELECT id, name, category, level, hours, summary, prerequisites,
+		       syllabus, topics, draft
 		FROM catalog_courses WHERE tenant_id = $1 AND id = $2
 	`, tenantID, id).Scan(&course.ID, &course.Name, &course.Category, &course.Level,
-		&course.Hours, &course.Summary, &course.Prerequisites, &course.Draft)
+		&course.Hours, &course.Summary, &course.Prerequisites,
+		&course.Syllabus, &course.Topics, &course.Draft)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound
@@ -228,6 +238,14 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID, id string, plan 
 			Free: free[course.ID], Locked: !access.Allowed,
 		},
 		Prerequisites: course.Prerequisites,
+
+		/* BOTH LISTS ARE SHOWN ON A LOCKED COURSE, and that is the point of
+		   them. What is behind the paywall is the MATERIAL; what a course
+		   contains is the shop window, and hiding it would be asking somebody
+		   to buy a title. The lessons below are already handled that way — their
+		   names show and their words do not. */
+		Syllabus: course.Syllabus,
+		Topics:   course.Topics,
 	}
 	if view.Locked {
 		view.Reason = access.Reason

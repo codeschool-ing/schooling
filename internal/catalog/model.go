@@ -106,6 +106,23 @@ type Course struct {
 	// Prerequisites is prose, for a person. It is not the graph.
 	Prerequisites string `json:"prerequisites"`
 
+	// TWO LISTS THAT SAY WHAT IS IN THE COURSE, at two depths, for two readers.
+	//
+	// Syllabus is five to seven lines and is the commercial read: what somebody
+	// deciding whether to take the course takes away from it. Topics is the
+	// complete technical list, for somebody who already decided.
+	//
+	// They are declared rather than derived from the lessons, and the reason is
+	// the state most of a catalogue is in: a course is ANNOUNCED long before it
+	// is written, and these two lists are the whole of what can honestly be said
+	// about it until then. Derived, an unwritten course would have nothing to
+	// show — the same failure as refusing to carry it at all.
+	//
+	// Both are optional. A course with no `topics` shows no technical list
+	// rather than an empty heading.
+	Syllabus []string `json:"syllabus"`
+	Topics   []string `json:"topics"`
+
 	Lessons []string `json:"lessons"`
 
 	// Draft keeps a course out of what a student sees while it is being

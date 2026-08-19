@@ -36,7 +36,8 @@ const state = {
   me: null,          // the signed-in account, or null
   school: null,      // { slug, name, accent }
   courses: [],       // the catalogue, as this student may see it
-  tracks: [],        // the tracks, for the sidebar and the chip in the bar
+  tracks: [],        // the tracks, for the rail and the context in the bar
+  track: null,       // which track the rail and the bar are about — see trackInView
   done: {},          // course id -> countable sections finished
   query: '',         // what is in the search box
 };
@@ -518,6 +519,11 @@ async function lessonPage(courseID, lessonID) {
 let redrawGraph = null;
 
 async function trackPage(id) {
+  /* Set BEFORE the request, so a track that fails to load still moves the rail
+     to it — otherwise the failure screen sits under a rail naming a different
+     track, which reads as the wrong page having loaded. */
+  state.track = id;
+
   let track;
   try {
     track = await api.track(id);
@@ -1554,8 +1560,22 @@ function credentialsForm({ submit, withName, action, otherHref, otherText }) {
 
    A key that reaches the translator through a variable is a key nothing can
    check. */
+/* WHICH TRACK THE RAIL AND THE BAR ARE ABOUT.
+   With one track it was whichever one existed. With nineteen it has to be the
+   one on screen, or a student reading Back-end gets a rail listing AI
+   Engineering — which is what shipped the first time the real catalogue was
+   loaded, and is invisible in a school with a single track.
+
+   The portal answers this from the student's ENROLMENT. Nothing here records
+   one, so it is answered from the address instead: the track being looked at,
+   remembered for the screens that are not about a track, and the first one
+   until somebody has looked at any. */
+function trackInView() {
+  return state.tracks.find((t) => t.id === state.track) || state.tracks[0] || null;
+}
+
 function places() {
-  const track = state.tracks[0];
+  const track = trackInView();
   return [
     { hash: '#/dashboard', label: txt('Your study'), account: true },
     /* "Your track" is a link to A track, and which one is a fact about the
@@ -1591,7 +1611,15 @@ function drawSidebar(current, where) {
         'aria-current': place.hash === where ? 'page' : null,
       }))));
 
-  const courses = filtered(state.courses);
+  /* THE RAIL IS THE PATH, NOT THE SCHOOL. A hundred and twenty-two courses in
+     a column is a list nobody scrolls; the track's own twenty-five are the ones
+     a student on it is navigating between. Searching widens it back to the
+     whole school, because that is what searching is for. */
+  const onTrack = trackInView();
+  const courses = state.query
+    ? filtered(state.courses)
+    : (onTrack ? coursesOfTrack(onTrack) : state.courses);
+
   if (!courses.length) {
     rail.append(el('p', { class: 'dim', text: txt('Nothing here yet.') }));
     return;
@@ -1601,7 +1629,7 @@ function drawSidebar(current, where) {
      word "Courses" when there is not. A student is on one path through the
      school and the list under it is that path; naming it is what turns a
      column of twelve courses into a shape somebody recognises. */
-  const track = state.tracks[0];
+  const track = trackInView();
 
   rail.append(el('div', { class: 'rail-sec' }, [
     el('span', { class: 'rail-tit', text: track ? track.name : txt('Courses') }),
@@ -1698,6 +1726,11 @@ async function route() {
      what is marked there — `#/course/x/y` and `#/course/x` are the same place
      as far as somebody looking at the list is concerned. */
   drawSidebar(parts[0] === 'course' ? parts[1] : null, placeOf(parts));
+  /* The bar carries the same track the rail does, so it is redrawn on the same
+     schedule. Drawn only at start-up it kept naming whichever track came first
+     alphabetically while the rail beside it had already moved — two pieces of
+     chrome disagreeing about where the reader is. */
+  drawNavContext();
   closeSidebar();
   focusScreen();
 }
@@ -1919,7 +1952,7 @@ function drawNavContext() {
   const box = document.querySelector('#nav-context');
   box.textContent = '';
 
-  const track = state.tracks[0];
+  const track = trackInView();
   if (!state.me || !track) return;
 
   const courses = coursesOfTrack(track);
