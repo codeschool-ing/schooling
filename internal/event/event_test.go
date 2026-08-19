@@ -60,7 +60,7 @@ func TestAnEventCarriesItsDimensions(t *testing.T) {
 	account := uuid.New()
 	err := event.NewStore(pool).Emit(ctx, event.Event{
 		Name:       "course.finished",
-		Dimensions: event.ForSchool(id, slug, "annual", "BR", "pt-br"),
+		Dimensions: event.ForSchool(id, slug, "annual", "BR", "pt-br", event.Real),
 		AccountID:  &account,
 		Payload:    map[string]any{"course": "python"},
 	})
@@ -98,10 +98,10 @@ func TestADimensionThatIsEmptyIsRefused(t *testing.T) {
 		what string
 		dims event.Dimensions
 	}{
-		{"no plan", event.ForSchool(id, slug, "", "BR", "pt-br")},
-		{"no country", event.ForSchool(id, slug, "annual", "", "pt-br")},
-		{"no locale", event.ForSchool(id, slug, "annual", "BR", "")},
-		{"no slug beside the id", event.ForSchool(id, "", "annual", "BR", "pt-br")},
+		{"no plan", event.ForSchool(id, slug, "", "BR", "pt-br", event.Real)},
+		{"no country", event.ForSchool(id, slug, "annual", "", "pt-br", event.Real)},
+		{"no locale", event.ForSchool(id, slug, "annual", "BR", "", event.Real)},
+		{"no slug beside the id", event.ForSchool(id, "", "annual", "BR", "pt-br", event.Real)},
 	} {
 		err := store.Emit(ctx, event.Event{Name: "test", Dimensions: c.dims})
 		if err == nil {
@@ -133,7 +133,7 @@ func TestEveryEmptyDimensionIsReportedTogether(t *testing.T) {
 
 	err := event.NewStore(pool).Emit(context.Background(), event.Event{
 		Name:       "test",
-		Dimensions: event.ForSchool(id, slug, "", "", ""),
+		Dimensions: event.ForSchool(id, slug, "", "", "", event.Real),
 	})
 	if err == nil {
 		t.Fatal("an event with three empty dimensions was accepted")
@@ -156,7 +156,7 @@ func TestAPlatformEventNamesNoSchool(t *testing.T) {
 
 	err := event.NewStore(pool).Emit(ctx, event.Event{
 		Name:       name,
-		Dimensions: event.ForPlatform(event.PlanNone, event.Unknown, "en"),
+		Dimensions: event.ForPlatform(event.PlanNone, event.Unknown, "en", event.Real),
 	})
 	if err != nil {
 		t.Fatalf("emitting a platform event: %v", err)
@@ -183,7 +183,7 @@ func TestTheEventStreamRefusesToBeEdited(t *testing.T) {
 
 	if err := event.NewStore(pool).Emit(ctx, event.Event{
 		Name:       "course.finished",
-		Dimensions: event.ForSchool(id, slug, "annual", "BR", "pt-br"),
+		Dimensions: event.ForSchool(id, slug, "annual", "BR", "pt-br", event.Real),
 	}); err != nil {
 		t.Fatalf("emitting: %v", err)
 	}
@@ -224,7 +224,7 @@ func TestTheAnswersToExamQuestionsCanBeReadBack(t *testing.T) {
 		t.Helper()
 		if err := store.Emit(context.Background(), event.Event{
 			Name:       event.ItemAnswered,
-			Dimensions: event.ForSchool(id, slug, "full", "BR", "pt"),
+			Dimensions: event.ForSchool(id, slug, "full", "BR", "pt", event.Real),
 			Payload: map[string]any{
 				"exercise": exercise, "version": version, "type": "quiz",
 				"correct": correct, "attempt": attempt, "score": score, "of": of,
@@ -288,7 +288,7 @@ func TestReadingTheAnswersIsScopedToOneSchoolAndOneWindow(t *testing.T) {
 	}{{mine, mySlug}, {theirs, theirSlug}} {
 		if err := store.Emit(context.Background(), event.Event{
 			Name:       event.ItemAnswered,
-			Dimensions: event.ForSchool(s.id, s.slug, "full", "BR", "pt"),
+			Dimensions: event.ForSchool(s.id, s.slug, "full", "BR", "pt", event.Real),
 			Payload:    payload,
 		}); err != nil {
 			t.Fatal(err)
@@ -322,7 +322,7 @@ func TestOnlyAnswersComeBackFromTheAnswerReader(t *testing.T) {
 
 	if err := store.Emit(context.Background(), event.Event{
 		Name:       "exam.submitted",
-		Dimensions: event.ForSchool(id, slug, "full", "BR", "pt"),
+		Dimensions: event.ForSchool(id, slug, "full", "BR", "pt", event.Real),
 		Payload:    map[string]any{"exercise": "not-an-answer", "version": 1, "correct": true},
 	}); err != nil {
 		t.Fatal(err)
@@ -346,7 +346,7 @@ func TestEverySchoolWithHistoryIsListed(t *testing.T) {
 
 	if err := store.Emit(context.Background(), event.Event{
 		Name:       "account.created",
-		Dimensions: event.ForSchool(id, slug, "none", "BR", "pt"),
+		Dimensions: event.ForSchool(id, slug, "none", "BR", "pt", event.Real),
 	}); err != nil {
 		t.Fatal(err)
 	}
@@ -363,5 +363,85 @@ func TestEverySchoolWithHistoryIsListed(t *testing.T) {
 	}
 	if !found {
 		t.Error("a school with an event in the stream was not listed")
+	}
+}
+
+// A DIMENSION THAT DOES NOT SAY IS REFUSED, like every other one.
+//
+// The whole point of Dimensions having no exported fields is that a dimension
+// cannot be omitted — and a population left blank would be an event that a
+// report has to guess about, which is the guess that hides a seeded student
+// inside a number about people.
+func TestAnEventThatDoesNotSayWhichPopulationIsRefused(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	store := event.NewStore(pool)
+
+	err := store.Emit(context.Background(), event.Event{
+		Name:       "account.created",
+		Dimensions: event.ForSchool(id, slug, "none", "BR", "pt", event.Population("")),
+	})
+	if err == nil {
+		t.Fatal("an event with no population was written")
+	}
+	if !strings.Contains(err.Error(), "population") {
+		t.Errorf("the refusal does not name the dimension: %v", err)
+	}
+}
+
+// SYNTHETIC STUDENTS ARE OUT OF EVERY AGGREGATE BY DEFAULT (K-11).
+//
+// They exist so a cohort screen can be built before there is a population to
+// make it legible (K-09). Counted into a report they would be the population —
+// and a first real cohort born polluted has no way to be cleaned afterwards.
+func TestASeededStudentIsNotInTheReports(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	store := event.NewStore(pool)
+
+	real, seeded := uuid.New(), uuid.New()
+	emit := func(name string, who event.Population, account uuid.UUID, payload map[string]any) {
+		t.Helper()
+		if err := store.Emit(context.Background(), event.Event{
+			Name:       name,
+			Dimensions: event.ForSchool(id, slug, "full", "BR", "pt", who),
+			AccountID:  &account,
+			Payload:    payload,
+		}); err != nil {
+			t.Fatalf("emitting %s: %v", name, err)
+		}
+	}
+
+	answer := map[string]any{
+		"exercise": "shared", "version": 1, "type": "quiz",
+		"correct": true, "attempt": "a", "score": 5, "of": 10,
+	}
+	emit(event.ItemAnswered, event.Real, real, answer)
+	emit(event.ItemAnswered, event.Synthetic, seeded, answer)
+	emit("account.created", event.Real, real, nil)
+	emit("account.created", event.Synthetic, seeded, nil)
+
+	// Item analysis: a seeded student answers at random, and counted in they
+	// would drag a real question towards being quarantined.
+	answers, err := store.ItemAnswers(context.Background(), id, time.Time{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(answers) != 1 {
+		t.Errorf("item analysis read %d answers; only the real student's counts", len(answers))
+	}
+
+	// The funnel: counting seeded students would make it a funnel about the
+	// seeder.
+	reached, err := store.Reached(context.Background(), id, []string{"account.created"}, time.Time{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(reached) != 1 {
+		t.Errorf("the funnel saw %d people at `account.created`; only the real one counts",
+			len(reached))
+	}
+	if len(reached) == 1 && (reached[0].AccountID == nil || *reached[0].AccountID != real) {
+		t.Errorf("the one counted is not the real student")
 	}
 }

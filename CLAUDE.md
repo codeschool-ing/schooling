@@ -81,7 +81,16 @@ All five are in the schema and in code — `internal/event`, `internal/audit`, `
 
 - **A dimension cannot be omitted, because the type will not let it.** `event.Dimensions` has no
   exported fields; the only way to build one is `ForSchool` or `ForPlatform`, which take every
-  dimension as an argument. A dimension added later breaks every call site, which is the point.
+  dimension as an argument. A dimension added later breaks every call site, which is the point —
+  and `population` is the proof it works: adding it broke seven call sites, and each one had to
+  decide what it actually knew rather than inherit a default.
+- **`population` says whether the person is real or seeded**, and it is a dimension rather than
+  a join for two reasons that each stand alone. Half the funnel is visitors with no account, so
+  there would be nothing to join to; and erasing a person deletes the account row on purpose,
+  which would turn every event they left behind from "a real student" into "unknown"
+  retroactively. **A report that changes when somebody asks to be forgotten is not a report.**
+  It is a word (`event.Real`, `event.Synthetic`) rather than a boolean, because
+  `ForSchool(id, slug, plan, country, locale, false)` is a call site nobody can read.
 - **`events`, `practice_review` and `audit_log` refuse UPDATE and DELETE by trigger.** Append-only
   as an arrangement is a comment; as a trigger it is a guarantee, and the difference shows up on
   the day somebody corrects data by hand.

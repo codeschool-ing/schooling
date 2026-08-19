@@ -38,6 +38,24 @@ const (
 	Unknown  = "unknown" // genuinely not known: Cloud Run passes no country header
 )
 
+// Population says whether the person this event is about is a real one.
+//
+// IT IS A WORD AND NOT A BOOLEAN, because `ForSchool(id, slug, plan, country,
+// locale, false)` is a call site nobody can read — and the one thing worse than
+// forgetting this dimension is passing the wrong value for it silently.
+type Population string
+
+const (
+	// Real is somebody who came here on their own.
+	Real Population = "real"
+
+	// Synthetic is a seeded student. They exist so that a cohort screen can be
+	// built and checked before there is a population to make it legible (K-09),
+	// and they are excluded from every aggregate by default (K-11) — because a
+	// first real cohort born polluted has no way to be cleaned afterwards.
+	Synthetic Population = "synthetic"
+)
+
 // Dimensions are what every event carries about the world at the moment it
 // happened. The fields are unexported on purpose: see the package comment.
 type Dimensions struct {
@@ -46,25 +64,34 @@ type Dimensions struct {
 	plan       string
 	country    string
 	locale     string
+	population Population
 }
 
 // ForSchool is the usual case: something happened inside one school.
-func ForSchool(tenantID uuid.UUID, schoolSlug, plan, country, locale string) Dimensions {
+func ForSchool(tenantID uuid.UUID, schoolSlug, plan, country, locale string,
+	who Population) Dimensions {
+
 	return Dimensions{
 		tenantID:   &tenantID,
 		schoolSlug: schoolSlug,
 		plan:       plan,
 		country:    country,
 		locale:     locale,
+		population: who,
 	}
 }
 
 // ForPlatform is the other case, and it is real rather than a fallback: a visit
 // to the platform's own address, or a subscription, belongs to no school. It
 // takes no slug, so "which school" cannot be answered with a guess.
-func ForPlatform(plan, country, locale string) Dimensions {
-	return Dimensions{plan: plan, country: country, locale: locale}
+func ForPlatform(plan, country, locale string, who Population) Dimensions {
+	return Dimensions{plan: plan, country: country, locale: locale, population: who}
 }
+
+// synthetic is the column's value. A population this does not recognise is
+// counted as real, which is the direction that cannot hide a seeded student
+// inside a report about people.
+func (d Dimensions) synthetic() bool { return d.population == Synthetic }
 
 func (d Dimensions) validate() error {
 	var problems []error
@@ -73,6 +100,11 @@ func (d Dimensions) validate() error {
 	}
 	if d.tenantID == nil && d.schoolSlug != "" {
 		problems = append(problems, errors.New("a platform event names no school"))
+	}
+	if d.population != Real && d.population != Synthetic {
+		problems = append(problems, fmt.Errorf(
+			"population is %q — say %q or %q, because an event that does not say which "+
+				"is one a report has to guess about", d.population, Real, Synthetic))
 	}
 	for _, f := range []struct{ name, value string }{
 		{"plan", d.plan}, {"country", d.country}, {"locale", d.locale},
@@ -134,12 +166,13 @@ func (s *Store) Emit(ctx context.Context, e Event) error {
 
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO events
-			(name, visitor_id, account_id, tenant_id, school_slug, plan, country, locale, payload, request_id)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+			(name, visitor_id, account_id, tenant_id, school_slug, plan, country, locale,
+			 synthetic, payload, request_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	`, e.Name, e.VisitorID, e.AccountID,
 		e.Dimensions.tenantID, e.Dimensions.schoolSlug,
 		e.Dimensions.plan, e.Dimensions.country, e.Dimensions.locale,
-		payload, e.RequestID)
+		e.Dimensions.synthetic(), payload, e.RequestID)
 	if err != nil {
 		return fmt.Errorf("event %q: writing it: %w", e.Name, err)
 	}
@@ -173,6 +206,13 @@ type ItemAnswer struct {
 // ItemAnswers reads every answer to an exam question in one school since a
 // moment.
 //
+// # SYNTHETIC STUDENTS ARE LEFT OUT, AND THAT ONE IS NOT A PREFERENCE
+//
+// A seeded student answers at random. Counted into item analysis they would
+// drag every question towards no discrimination at all, and the questions they
+// happened to get backwards would be quarantined — real questions, removed from
+// real courses, because of a population that was invented to test a screen.
+//
 // # WHY THIS IS HERE AND NOT IN THE MODULE THAT INTERPRETS IT
 //
 // This package is the stream everything is counted from, and reading rows out
@@ -200,6 +240,7 @@ func (s *Store) ItemAnswers(ctx context.Context, tenantID uuid.UUID, since time.
 		       occurred_at
 		FROM events
 		WHERE name = $1 AND tenant_id = $2 AND occurred_at >= $3
+		  AND NOT synthetic
 		  AND payload ? 'exercise' AND payload ? 'version' AND payload ? 'correct'
 		ORDER BY occurred_at
 	`, ItemAnswered, tenantID, since)
@@ -252,7 +293,9 @@ type Reach struct {
 }
 
 // Reached answers, for each named step, which identities reached it in one
-// school since a moment.
+// school since a moment. Synthetic students are excluded (K-11): they exist so
+// a cohort screen can be built before there is a population, and a funnel that
+// counted them would be a funnel about the seeder.
 //
 // # BOTH IDENTITIES COME BACK, AND NEITHER IS RESOLVED HERE
 //
@@ -278,6 +321,7 @@ func (s *Store) Reached(ctx context.Context, tenantID uuid.UUID,
 		SELECT DISTINCT name, visitor_id, account_id
 		FROM events
 		WHERE name = ANY($1) AND tenant_id = $2 AND occurred_at >= $3
+		  AND NOT synthetic
 	`, names, tenantID, since)
 	if err != nil {
 		return nil, fmt.Errorf("event: reading who reached each step: %w", err)

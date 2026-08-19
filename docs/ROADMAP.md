@@ -168,7 +168,7 @@ a drop at a step nobody suspected.*
 - [ ] The closed list of system parameters, each change audited with actor, old and new value
 - [ ] Prices effective-dated — a subscriber keeps the price they bought at
 - [ ] Every threshold displayed beside the number it produced
-- [ ] Synthetic students flagged, excluded from every aggregate by default, with a visible switch and a banner when included
+- [ ] Synthetic students flagged, excluded from every aggregate by default, with a visible switch and a banner when included — **the flag is now a dimension on the event, which is the half that could not be added later.** `accounts.synthetic` had existed since phase 0 and never reached the stream, so item analysis and the funnel had no way to tell a seeded student from a real one; joining to `accounts` would have failed twice over, because half the funnel is visitors with no account and because erasing a person would retroactively turn their events from real to unknown. Both reads now exclude synthetic by default. The switch and the banner are console work
 - [ ] A seeder that generates **history** — months of backdated events, with abandonment, returns, duplicate signups and refunds
 
 ---
