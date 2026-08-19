@@ -647,6 +647,32 @@ certificate, or none.
 
 ---
 
+## The funnel counts people, not identities
+
+The top of the funnel is browsers and the bottom is accounts. **Counting each step by whichever
+identity its event happened to carry would make somebody who arrived on Monday and subscribed on
+Friday two people**, and the conversion rate a ratio between two different populations — falling
+as the product gets better.
+
+So a person is defined once, in `personOf`: **an account where the identity is linked to one, and
+the visitor otherwise.** That is what `account_visitors` is for, and it is why the visitor has an
+identity before the account exists at all (K-10). One person on two browsers is one person; forty
+lessons opened is one lesson step.
+
+**A step with no event is not a step with nobody.** Two of the eight cannot be emitted —
+verifying an address has no feature, subscribing has no gateway — and `Measured` is a field of
+its own rather than `People == 0`, so a screen cannot show a missing feature as a total
+drop-off. It is the same rule as `insufficient` in item analysis, and for the same reason.
+
+The order of the steps is written down rather than derived from what the stream contains: a
+funnel that hid its empty steps would hide exactly the drop somebody is looking for.
+
+Three modules meet in `cmd/analyse` to produce it — `event` reports who reached what, `visitor`
+says which browsers belong to which account, `analysis` decides who is who. None of them reaches
+into another's tables.
+
+---
+
 ## Item analysis, and what a number is not allowed to say
 
 There is no human reviewer. Two things stand between a wrong answer key and a student: the

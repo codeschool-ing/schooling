@@ -241,3 +241,56 @@ func (s *Store) Schools(ctx context.Context) ([]uuid.UUID, error) {
 	}
 	return out, rows.Err()
 }
+
+// Reach is one person having reached one step, once. The stream is deduplicated
+// here rather than in the reader: a funnel asks how many people got this far,
+// and somebody who opened forty lessons is one of them.
+type Reach struct {
+	Name      string
+	VisitorID *uuid.UUID
+	AccountID *uuid.UUID
+}
+
+// Reached answers, for each named step, which identities reached it in one
+// school since a moment.
+//
+// # BOTH IDENTITIES COME BACK, AND NEITHER IS RESOLVED HERE
+//
+// An arrival has only a visitor; a completion has an account and usually a
+// visitor too. Folding those into one person is what makes the top and the
+// bottom of a funnel count the same thing — and it needs the link between a
+// visitor and an account, which belongs to another module. So this hands over
+// what the stream says and the caller decides who is who.
+//
+// # THE STEP NAMES ARE THE CALLER'S
+//
+// This package does not know what a funnel is or which events are in one. It is
+// given the names and counts them, which is the same split as everywhere else
+// here: the stream reports and something else interprets.
+func (s *Store) Reached(ctx context.Context, tenantID uuid.UUID,
+	names []string, since time.Time) ([]Reach, error) {
+
+	if len(names) == 0 {
+		return nil, nil
+	}
+
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT name, visitor_id, account_id
+		FROM events
+		WHERE name = ANY($1) AND tenant_id = $2 AND occurred_at >= $3
+	`, names, tenantID, since)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading who reached each step: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Reach
+	for rows.Next() {
+		var r Reach
+		if err := rows.Scan(&r.Name, &r.VisitorID, &r.AccountID); err != nil {
+			return nil, fmt.Errorf("event: reading who reached each step: %w", err)
+		}
+		out = append(out, r)
+	}
+	return out, rows.Err()
+}
