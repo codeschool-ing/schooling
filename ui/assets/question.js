@@ -271,6 +271,43 @@ function numeric(shown, name, given) {
   };
 }
 
+function expressionAnswer(shown, name, given) {
+  /* WHAT THE STUDENT IS TOLD, AND WHY IT HAS TO BE SAID. The grader accepts any
+     expression equal to the key, so there is no single right spelling — but the
+     letters are fixed: an answer written in `y` to a question about `x` is an
+     answer about something else, and is refused. Nothing on the screen would
+     otherwise say which letter this question is in.
+
+     It is said in visible text rather than a placeholder, because a placeholder
+     disappears the moment somebody starts typing — exactly when they need it. */
+  const letters = (shown.variables || []).join(', ');
+  const help = el('p', {
+    class: 'dim', id: `${name}-help`,
+    text: letters
+      ? `${txt('Write it in terms of')} ${letters}. ${txt('You may write it any way you like.')}`
+      : txt('You may write it any way you like.'),
+  });
+
+  /* Text and not a number input, and no validation here. A student who mistypes
+     a bracket gets their own words back with a sentence saying so — the grader
+     answers a typo with `bad-answer` rather than with a mark, so guessing at
+     what they meant in this file could only make the message worse. */
+  const input = el('input', {
+    type: 'text', class: 'mono', id: `${name}-expression`,
+    autocomplete: 'off', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false',
+    'aria-label': txt('Your answer'), 'aria-describedby': `${name}-help`,
+    value: (given && given.expression) || '',
+  });
+
+  return {
+    node: group(shown.prompt, [help, el('div', { class: 'expression' }, input)]),
+    read: () => {
+      const written = input.value.trim();
+      return written === '' ? null : { expression: written };
+    },
+  };
+}
+
 /* `labelling` — putting names on the parts of a picture.
 
    # WHY IT IS NOT DRAG AND DROP
@@ -454,6 +491,7 @@ const renderers = {
   'matching': matching,
   'cloze': cloze,
   'numeric': numeric,
+  'expression-answer': expressionAnswer,
 };
 
 /* Build the controls for one question.

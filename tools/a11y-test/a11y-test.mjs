@@ -157,6 +157,20 @@ try {
     await student.goto(`${BASE}/#/exam/course/web-fundamentals`, { waitUntil: 'load' });
     await student.waitForTimeout(1500);
     if (await student.locator('.question').count()) {
+      /* AND EVERY ONE OF THEM A CONTROL, checked rather than assumed. A type
+         the interface cannot draw falls back to a notice saying so, and that
+         notice is perfectly accessible — so axe would pass a paper on which a
+         question had quietly stopped being answerable. The fixture carries one
+         question of every renderable type precisely so that this line can say
+         a renderer went missing. */
+      const cannot = await student.locator('.notice.bad').allInnerTexts();
+      if (cannot.length) {
+        violations += cannot.length;
+        console.error(`✗ ${theme} · sitting an exam — ${cannot.length} question(s) the ` +
+          'interface cannot draw, which is a missing renderer rather than a bad fixture:');
+        for (const text of cannot) console.error(`      ${text}`);
+      }
+
       const result = await new AxeBuilder({ page: student }).withTags(STANDARD).analyze();
       screens += 1;
       if (result.violations.length) {
