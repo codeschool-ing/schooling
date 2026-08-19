@@ -242,6 +242,12 @@ var Registry = []Table{
 			"then answers exactly as it does for a code that never existed",
 	},
 	{
+		Name: "question_quarantine", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "which questions are out of circulation, and the numbers that decided it. About " +
+			"a QUESTION and never a person — it is here because a table cannot be in the " +
+			"database and absent from this list, not because it holds anything",
+	},
+	{
 		Name: "item_statistics", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "what the answers came to, per QUESTION. Counts and ratios over an item, with no " +
 			"account id and no room for one — the moment a row here could be traced to a " +

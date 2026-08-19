@@ -679,6 +679,33 @@ Four rules, each a test:
 when it is read, or a verdict computed under a minimum of thirty would explain itself with
 whatever the constant says today.
 
+**A flagged question goes out of circulation on its own**, and that is the strongest thing this
+system does without a person: it removes a question from a course while nobody is looking.
+Waiting for somebody to read a list is the same as not acting — the list is read on the days
+somebody remembers — so the safety is in the threshold rather than in a person:
+
+- **Only `inverted` triggers it.** Never difficulty, never a verdict below the sample.
+  `Quarantine` refuses anything else, so the one caller that could widen it cannot.
+- **It leaves the exam draw and the drill queue, and comes out of the denominator** of a paper
+  already in progress. Still marked, because the paper is a record of what was asked; not
+  counted, because nobody should fail on a question we have admitted is broken. Two students
+  with the same paper can be scored out of different totals when a quarantine lands between
+  their submissions — that is right, and the alternative is marking the second one on a question
+  we had already withdrawn.
+- **An exam whose whole pool is withdrawn refuses to start.** A paper of nothing would be passed
+  — the score is out of what was asked — and a certificate would follow.
+- **The quarantine is keyed by version**, so a new version is not under the old one. Fixing the
+  question is the ordinary way out and nobody has to remember to release anything. Releasing is
+  the override, needs a reason, and a later sweep puts it back out if the numbers still say so.
+- **It lives in its own table, never on `catalog_exercises`.** That is a mirror the load job
+  owns (C-01); a flag there would be overwritten by the next load, and it would put a fact about
+  our observation inside a copy of what somebody wrote.
+
+Every transition is audited with the numbers that decided it, actor `system: item analysis`. **A
+quarantine whose audit entry fails to write is an error, not a silence** — the row is already
+there by then, and swallowing it would leave a question gone from a course with nothing saying
+why.
+
 **The stream is the truth and the rollup is a cache.** `cmd/analyse` recomputes from `events`
 rather than resuming, because a resumable job merges new answers into stored counts and a merge
 is where a double-counted event lands — the one failure that would condemn a question nobody

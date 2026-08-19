@@ -22,6 +22,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/codeschool-ing/schooling/internal/analysis"
 	"github.com/codeschool-ing/schooling/internal/billing"
 	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/certificate"
@@ -180,6 +181,16 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	subscriptions := billing.NewStore(pool)
 	plan := planOf(subscriptions)
 
+	// WHAT IS OUT OF CIRCULATION, ASKED BY BOTH PLACES A QUESTION IS SERVED.
+	// `analysis` decides it from how people answered; `exam` and `practice`
+	// only need the set, and neither may import the module that knows. This is
+	// the closure that joins them, and the mapping is here rather than in
+	// either of them so that neither has to name the other's type.
+	items := analysis.NewStore(pool, nil, nil)
+	withdrawn := func(ctx context.Context, school uuid.UUID) (map[analysis.Question]bool, error) {
+		return items.InForce(ctx, school)
+	}
+
 	catalog.NewHandler(courses, schoolID, plan).Routes(scoped)
 
 	// PROGRESS ASKS THE CATALOGUE TWO QUESTIONS and imports neither answer.
@@ -206,7 +217,18 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// answerable — a queue that offered one and then refused it would be a
 	// paywall discovered one question at a time.
 	practice.NewHandler(
-		practice.NewStore(pool, courseOpen(courses, plan)),
+		practice.NewStore(pool, courseOpen(courses, plan),
+			func(ctx context.Context, school uuid.UUID) (map[practice.Item]bool, error) {
+				out, err := withdrawn(ctx, school)
+				if err != nil {
+					return nil, err
+				}
+				set := make(map[practice.Item]bool, len(out))
+				for q := range out {
+					set[practice.Item{ExerciseID: q.ExerciseID, Version: q.Version}] = true
+				}
+				return set, nil
+			}),
 		schoolID, identity.AccountID, practice.Emit(studentEvents(events, log, plan)),
 	).Routes(scoped)
 
@@ -214,7 +236,18 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// it of every course the track contains. A track final that a student could
 	// sit while half the track was locked would be a way to earn the
 	// certificate without the material.
-	exams := exam.NewStore(pool, maySit(courses, plan))
+	exams := exam.NewStore(pool, maySit(courses, plan),
+		func(ctx context.Context, school uuid.UUID) (map[exam.Item]bool, error) {
+			out, err := withdrawn(ctx, school)
+			if err != nil {
+				return nil, err
+			}
+			set := make(map[exam.Item]bool, len(out))
+			for q := range out {
+				set[exam.Item{ExerciseID: q.ExerciseID, Version: q.Version}] = true
+			}
+			return set, nil
+		})
 
 	// A CERTIFICATE IS THREE FACTS THIS MODULE MAY NOT GO AND READ: whether the
 	// exam was passed, which is `exam`; what to write as the student's name,

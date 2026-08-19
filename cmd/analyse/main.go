@@ -37,6 +37,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/codeschool-ing/schooling/internal/analysis"
+	"github.com/codeschool-ing/schooling/internal/audit"
 	"github.com/codeschool-ing/schooling/internal/event"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
@@ -102,7 +103,7 @@ func run(log *slog.Logger) error {
 			return out, nil
 		},
 		events.Schools,
-	)
+	).WithAudit(recordedBy(audit.NewStore(pool)))
 
 	now := time.Now().UTC()
 	since := time.Time{}
@@ -140,13 +141,59 @@ func run(log *slog.Logger) error {
 		}
 	}
 
+	// AND THEN IT ACTS. Left in the pool, a question we already know is broken
+	// keeps being asked, and every student who meets it is marked on our
+	// mistake. Waiting for somebody to read a list is the same as not acting:
+	// the list is read on the days somebody remembers to read it, and two
+	// people run this.
+	//
+	// The sweep is idempotent, so this reports what CHANGED tonight rather than
+	// everything that is out of circulation.
+	took := 0
+	for _, school := range schools {
+		taken, err := items.Sweep(ctx, school, now)
+		if err != nil {
+			return err
+		}
+		for _, q := range taken {
+			took++
+			log.Warn("taken out of circulation",
+				"school", school, "exercise", q.ExerciseID, "version", q.Version)
+		}
+	}
+
 	switch {
 	case written == 0:
 		fmt.Println("no exam has been sat yet, so there is nothing to say about any question")
 	case flagged == 0:
 		fmt.Printf("%d question(s) measured, none of them inverted\n", written)
 	default:
-		fmt.Printf("%d question(s) measured, %d inverted — see the warnings above\n", written, flagged)
+		fmt.Printf("%d question(s) measured, %d inverted, %d newly out of circulation\n",
+			written, flagged, took)
 	}
 	return nil
+}
+
+// recordedBy turns this module's idea of an administrative action into the
+// audit log's.
+//
+// THE ACTOR IS THE SYSTEM AND IT IS NAMED. A job acting on its own is a real
+// actor rather than an absent one — an audit entry with a blank where the actor
+// goes is the entry somebody finds a year later and cannot use.
+func recordedBy(log *audit.Store) analysis.Audit {
+	return func(ctx context.Context, action string, tenantID uuid.UUID,
+		exerciseID string, version int, before, after any, reason string) error {
+
+		school := tenantID
+		return log.Record(ctx, audit.Entry{
+			Actor:       audit.System("item analysis"),
+			Action:      action,
+			SubjectKind: "question",
+			SubjectID:   fmt.Sprintf("%s@%d", exerciseID, version),
+			Before:      before,
+			After:       after,
+			TenantID:    &school,
+			Reason:      reason,
+		})
+	}
 }

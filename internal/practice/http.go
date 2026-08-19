@@ -176,6 +176,13 @@ func (h *Handler) refuse(w http.ResponseWriter, r *http.Request, err error) {
 			"this course is not open on the current plan")
 	case errors.Is(err, ErrNoSuchExercise):
 		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such exercise in this school")
+	case errors.Is(err, ErrWithdrawn):
+		// 410 and not 404: the question was there, and it is gone on purpose.
+		// The distinction is worth the status code — a student who saw a card
+		// in their queue a minute ago is owed "we withdrew it" rather than
+		// "there is no such thing", which reads as their mistake.
+		web.Fail(w, http.StatusGone, "withdrawn",
+			"that question has been withdrawn while it is looked at")
 	case errors.Is(err, ErrNotDrawn):
 		// 409 and not 404: the question exists and this student has not been
 		// shown it, which is a different fact and a different thing to do next
