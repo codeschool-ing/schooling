@@ -87,6 +87,16 @@ window.I18N.pt = {
     'Your answer': 'Sua resposta',
     'Unit': 'Unidade',
 
+    /* ---------- putting labels on a picture ----------
+       "63% à direita, 41% abaixo". As duas palavras aparecem sozinhas numa
+       lista que um leitor de tela percorre, então cada uma tem de fazer
+       sentido sem o número ao lado. */
+    'Choose a label, then click the picture or use the arrow keys.':
+      'Escolha um rótulo e clique na figura, ou use as setas.',
+    'across': 'à direita',
+    'down': 'abaixo',
+    'not placed yet': 'ainda não colocado',
+
     /* ---------- and what it came to ---------- */
     'Passed': 'Aprovado',
     'Not passed': 'Não aprovado',

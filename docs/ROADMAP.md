@@ -61,7 +61,7 @@ audit with a name against it.*
 
 ### The catalogue
 
-- [x] `content/` holds prose in Markdown and structure and exercises in JSON
+- [x] `content/` holds prose in Markdown, structure and exercises in JSON, and a course's pictures in its `images/` — a picture no question labels fails the build, exactly as an orphaned `.md` does
 - [x] The validator runs in CI — broken prerequisites, cycles, track order, `requires` that no track containing the course satisfies, checked **per branch** of every fork
 - [x] The load job writes the mirror from the files and prunes what the files no longer carry, in one transaction, and writes nothing at all if the catalogue does not pass
 - [x] Nothing else writes catalogue rows; the console reads and never writes — enforced by a test that scans the source
@@ -83,12 +83,12 @@ audit with a name against it.*
 - [x] ~~The modal test — every course, one height, neither column scrolling~~ — **there is no modal here.** The predecessor showed a course in one, on a marketing page; a course is a screen of its own in this interface, so the test has no subject. Its actual concern — a layout that holds for every course — is covered by the accessibility pass, which opens the course and lesson screens, and by the graph test, which measures a real drawing rather than trusting one
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
 - [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over twenty-four screens, both themes, signed out and signed in, the exam paper included
-- [ ] Every question type operable by keyboard and legible to a screen reader — six of them are, with `ordering` on buttons and `matching` on a select; `labelling` waits on somewhere for a content image to be served from
+- [x] Every question type operable by keyboard and legible to a screen reader — `ordering` on buttons, `matching` on a select, and `labelling` by choosing a label and then placing it with a click **or the arrow keys**, its position said in words ("63% across, 41% down") so somebody who cannot see the diagram can still be told where they put a thing and move it
 - [x] The offline bundle, built **and opened** in CI — one file, one school; opened from `file://` it reads the whole catalogue and asks nobody for anything, served from the school's origin it is the application again; signing in, progress and exams are refused with a sentence rather than a form that does nothing
 
 ### Assessment
 
-- [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching` **done**; `code`, `expected-output` need a sandbox, `expression-answer` needs the CAS
+- [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching`, `labelling` **done**; `code`, `expected-output` need a sandbox, `expression-answer` needs the CAS
 - [x] Conformance fixtures proving the client grader and the server grader agree, per type — the server's half runs them, and a gradable type with no fixture fails the build
 - [x] A question is **presented** rather than sent — the answer removed, the order shuffled where the order is the answer, and the permutation kept here
 - [x] Course exams and track exams — a sealed paper per attempt, one open attempt at a time, marked once on hand-in against the questions as they were actually asked

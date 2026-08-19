@@ -184,6 +184,12 @@ var Registry = []Table{
 		Why: "the questions and their answer keys. What a STUDENT answered is practice_review, " +
 			"which is a different table for exactly this reason",
 	},
+	{
+		Name: "catalog_images", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the diagrams a question is asked about. Bytes we wrote and published, about " +
+			"nobody — and a picture of a person would be a content review problem rather " +
+			"than something this classification could rescue",
+	},
 	// WHAT A STUDENT DID, AND IT GOES WHEN THEY DO. Unlike events and reviews,
 	// which survive an erasure orphaned so the statistics stay whole, these
 	// answer only "what has this person done" — nothing aggregate is computed

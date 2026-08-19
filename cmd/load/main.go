@@ -155,7 +155,8 @@ func tenantOf(ctx context.Context, pool *pgxpool.Pool, slug string) (uuid.UUID, 
 // the simplest thing that is obviously right wins.
 func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.School) error {
 	for _, table := range []string{
-		"catalog_exercises", "catalog_prose", "catalog_sections", "catalog_lessons",
+		"catalog_exercises", "catalog_images", "catalog_prose", "catalog_sections",
+		"catalog_lessons",
 		"catalog_course_requires", "catalog_courses",
 		"catalog_track_courses", "catalog_track_forks", "catalog_tracks",
 	} {
@@ -264,6 +265,15 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			if err := writeExercises(ctx, tx, tenantID,
 				owner{courseID: course.ID, lessonID: lesson.ID}, lesson.Exercises); err != nil {
 				return err
+			}
+		}
+
+		for _, image := range course.Images {
+			if _, err := tx.Exec(ctx, `
+				INSERT INTO catalog_images (tenant_id, course_id, name, media_type, bytes)
+				VALUES ($1, $2, $3, $4, $5)
+			`, tenantID, course.ID, image.Name, image.MediaType, image.Bytes); err != nil {
+				return fmt.Errorf("writing the picture %s: %w", image.Name, err)
 			}
 		}
 

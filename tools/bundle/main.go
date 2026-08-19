@@ -129,12 +129,12 @@ func build(base, host, out string) (int, error) {
 		return 0, fmt.Errorf("the shell: %w", err)
 	}
 
-	answers, err := gather(s)
+	answers, pictures, err := gather(s)
 	if err != nil {
 		return 0, err
 	}
 
-	page, err := inline(s, shell, answers)
+	page, err := inline(s, shell, answers, pictures)
 	if err != nil {
 		return 0, err
 	}
@@ -147,8 +147,14 @@ func build(base, host, out string) (int, error) {
 // character. That is the whole trick: the offline half of `api.js` is a map
 // lookup, so nothing in the browser has to know a second shape of the API, and
 // an endpoint that changes shape changes in one place.
-func gather(s server) (map[string]json.RawMessage, error) {
+func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 	answers := map[string]json.RawMessage{}
+
+	// The pictures, as data URIs, keyed by the address the interface builds for
+	// them. A labelling question whose diagram never loads is one a student
+	// cannot answer however well they know the material — see `asset` in api.js
+	// for the other half.
+	pictures := map[string]string{}
 
 	ask := func(path string) (json.RawMessage, error) {
 		body, _, err := s.get(path)
@@ -163,16 +169,16 @@ func gather(s server) (map[string]json.RawMessage, error) {
 	}
 
 	if _, err := ask("/api/v1/school"); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	courses, err := ask("/api/v1/courses")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	tracks, err := ask("/api/v1/tracks")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var trackList struct {
@@ -181,11 +187,11 @@ func gather(s server) (map[string]json.RawMessage, error) {
 		} `json:"tracks"`
 	}
 	if err := json.Unmarshal(tracks, &trackList); err != nil {
-		return nil, fmt.Errorf("the track list: %w", err)
+		return nil, nil, fmt.Errorf("the track list: %w", err)
 	}
 	for _, t := range trackList.Tracks {
 		if _, err := ask("/api/v1/tracks/" + url.PathEscape(t.ID)); err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 	}
 
@@ -195,13 +201,13 @@ func gather(s server) (map[string]json.RawMessage, error) {
 		} `json:"courses"`
 	}
 	if err := json.Unmarshal(courses, &courseList); err != nil {
-		return nil, fmt.Errorf("the course list: %w", err)
+		return nil, nil, fmt.Errorf("the course list: %w", err)
 	}
 
 	for _, c := range courseList.Courses {
 		one, err := ask("/api/v1/courses/" + url.PathEscape(c.ID))
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		// A course's lessons are named on the course, so the tool asks for what
@@ -210,9 +216,26 @@ func gather(s server) (map[string]json.RawMessage, error) {
 			Lessons []struct {
 				ID string `json:"id"`
 			} `json:"lessons"`
+			Images []string `json:"images"`
 		}
 		if err := json.Unmarshal(one, &course); err != nil {
-			return nil, fmt.Errorf("course %s: %w", c.ID, err)
+			return nil, nil, fmt.Errorf("course %s: %w", c.ID, err)
+		}
+
+		// THE COURSE LISTS ITS OWN PICTURES, which is why that field is on the
+		// view at all: there is nobody else to ask. This tool fetches as a
+		// stranger and never sits an exam, so it cannot see the questions that
+		// name them.
+		for _, name := range course.Images {
+			path := "/api/v1/courses/" + url.PathEscape(c.ID) + "/images/" + url.PathEscape(name)
+			body, kind, err := s.get(path)
+			if err != nil {
+				return nil, nil, fmt.Errorf("the picture %s of %s: %w", name, c.ID, err)
+			}
+			if kind == "" {
+				kind = "application/octet-stream"
+			}
+			pictures[path] = dataURI(kind, body)
 		}
 
 		for _, lesson := range course.Lessons {
@@ -224,13 +247,13 @@ func gather(s server) (map[string]json.RawMessage, error) {
 					"/lessons/" + url.PathEscape(lesson.ID) +
 					"?lang=" + url.QueryEscape(locale)
 				if _, err := ask(path); err != nil {
-					return nil, fmt.Errorf("%s in %s: %w", lesson.ID, locale, err)
+					return nil, nil, fmt.Errorf("%s in %s: %w", lesson.ID, locale, err)
 				}
 			}
 		}
 	}
 
-	return answers, nil
+	return answers, pictures, nil
 }
 
 /* ---------- the page ---------- */
@@ -241,7 +264,8 @@ var (
 	cssURLOf = regexp.MustCompile(`url\('([^']+\.woff2)'\)`)
 )
 
-func inline(s server, shell string, answers map[string]json.RawMessage) (string, error) {
+func inline(s server, shell string, answers map[string]json.RawMessage,
+	pictures map[string]string) (string, error) {
 	var trouble error
 	fail := func(err error) string {
 		if trouble == nil {
@@ -290,7 +314,7 @@ func inline(s server, shell string, answers map[string]json.RawMessage) (string,
 		if err != nil {
 			return fail(err)
 		}
-		baked, err := bake(answers)
+		baked, err := bake(answers, pictures)
 		if err != nil {
 			return fail(err)
 		}
@@ -324,15 +348,7 @@ func inlineFonts(s server, sheet, body string) (string, error) {
 	return body, trouble
 }
 
-func bake(answers map[string]json.RawMessage) (string, error) {
-	// Sorted, so that building the same school twice gives the same file and a
-	// diff between two bundles is a difference in the school.
-	paths := make([]string, 0, len(answers))
-	for path := range answers {
-		paths = append(paths, path)
-	}
-	sort.Strings(paths)
-
+func bake(answers map[string]json.RawMessage, pictures map[string]string) (string, error) {
 	var b strings.Builder
 	b.WriteString(`/* THE SCHOOL, AS IT WAS ON THE DAY THIS FILE WAS WRITTEN.
 
@@ -341,7 +357,7 @@ func bake(answers map[string]json.RawMessage) (string, error) {
    from, and nothing that is not in here can be answered at all. */
 window.SCHOOLING_BAKED = { answers: {`)
 
-	for i, path := range paths {
+	for i, path := range sorted(answers) {
 		key, err := json.Marshal(path)
 		if err != nil {
 			return "", err
@@ -351,8 +367,40 @@ window.SCHOOLING_BAKED = { answers: {`)
 		}
 		b.WriteString("\n" + string(key) + ": " + string(answers[path]))
 	}
+	b.WriteString("\n},\n")
+
+	/* AND THE PICTURES, as data URIs, keyed by the address the interface builds
+	   for them. `asset()` in api.js is the lookup. A diagram that failed to load
+	   is a labelling question a student cannot answer however well they know the
+	   material, so it travels in the file rather than being fetched. */
+	b.WriteString("pictures: {")
+	for i, path := range sorted(pictures) {
+		key, err := json.Marshal(path)
+		if err != nil {
+			return "", err
+		}
+		value, err := json.Marshal(pictures[path])
+		if err != nil {
+			return "", err
+		}
+		if i > 0 {
+			b.WriteString(",")
+		}
+		b.WriteString("\n" + string(key) + ": " + string(value))
+	}
 	b.WriteString("\n} };")
 	return b.String(), nil
+}
+
+// The keys of a map, in order, so that building the same school twice gives the
+// same file and a diff between two bundles is a difference in the school.
+func sorted[V any](m map[string]V) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 /* ---------- the module graph, linked ----------

@@ -333,6 +333,23 @@ others.
 lesson to put it in. The price of the convention is that `tracks/<x>-exam.json` with no track
 `<x>` is a file nothing will ever read, so the loader refuses it (C-13).
 
+**A course's pictures live in its `images/`, and belong to the COURSE rather than the lesson.**
+That is not where a file naturally wants to sit — a diagram belongs beside the words it
+illustrates — and the reason is who renders a question: today, only the exam paper. A lesson's
+exercises are in the model and in the mirror and on no screen at all, so a picture scoped to a
+lesson would have been a picture no student could ever reach, and `labelling` would have shipped
+unreachable. An exam question belongs to a course and to no lesson; scoping the picture to the
+course covers both, and lets two lessons share a diagram.
+
+The bytes go into `catalog_images` and out again as a response body, because the deployed image
+is a `scratch` container with no content directory beside it — and because the offline bundle has
+no network, where a picture that fails to load is a question nobody can answer. A **track** final
+still cannot carry one: a track is a single JSON file with no directory, and the checker says so
+by name rather than letting the question reach a screen.
+
+The orphan rule runs in both directions here as it does for prose: a question naming a picture
+that is not there fails, and a picture no question labels fails (C-13).
+
 ---
 
 ## The interface

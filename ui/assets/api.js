@@ -52,6 +52,24 @@ const reading = Boolean(baked) && globalThis.location.protocol === 'file:';
    the same as saying so at the first. */
 export const offline = reading;
 
+/* Where a picture actually lives.
+ *
+ * Online this hands back the path it was given. In the bundle it hands back a
+ * data URI, because a file opened from a disk has no server to ask — and a
+ * labelling question whose diagram never loads is one a student cannot answer
+ * however well they know the material.
+ *
+ * It takes a PATH rather than a file name, so the one place that knows the
+ * bundle exists is this file and the callers keep building the addresses they
+ * already build. A path with nothing baked for it is returned unchanged: online
+ * that is the answer, and offline it is a picture that will visibly fail, which
+ * is better than a silent empty frame.
+ */
+export function asset(path) {
+  if (baked && baked.pictures && Object.hasOwn(baked.pictures, path)) return baked.pictures[path];
+  return path;
+}
+
 export class ApiError extends Error {
   constructor(status, code, message) {
     super(message || 'that did not work');

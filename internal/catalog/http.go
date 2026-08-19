@@ -36,6 +36,7 @@ func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/courses", h.courses)
 	mux.HandleFunc("GET /api/v1/courses/{course}", h.course)
 	mux.HandleFunc("GET /api/v1/courses/{course}/lessons/{lesson}", h.lesson)
+	mux.HandleFunc("GET /api/v1/courses/{course}/images/{name}", h.picture)
 	mux.HandleFunc("GET /api/v1/tracks", h.tracks)
 	mux.HandleFunc("GET /api/v1/tracks/{track}", h.track)
 }
@@ -84,6 +85,41 @@ func (h *Handler) lesson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	web.JSON(w, http.StatusOK, lesson)
+}
+
+// picture serves a course's image.
+//
+// IT IS THE ONE ENDPOINT HERE THAT DOES NOT ANSWER JSON, and everything odd
+// about it follows from that. The bytes go out with the type the load job
+// recorded rather than a sniffed one, `nosniff` so a browser cannot be talked
+// into treating an SVG as a document, and a content policy of nothing at all so
+// that even if one were opened directly it could reach for no script, no font
+// and no other origin.
+//
+// The store decides whether it may be read, by asking for the course — see
+// `Store.Picture`. A locked course's diagram is as locked as its words.
+func (h *Handler) picture(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.school(w, r)
+	if !ok {
+		return
+	}
+
+	kind, body, err := h.store.Picture(r.Context(), school,
+		r.PathValue("course"), r.PathValue("name"), h.plan(r))
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", kind)
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.Header().Set("Content-Security-Policy", "default-src 'none'; sandbox")
+	/* The catalogue changes when the load job runs, which is a deploy. Ten
+	   minutes is short enough that a corrected diagram reaches a student the
+	   same morning and long enough that a lesson full of them is not refetched
+	   on every visit. */
+	w.Header().Set("Cache-Control", "private, max-age=600")
+	_, _ = w.Write(body)
 }
 
 func (h *Handler) tracks(w http.ResponseWriter, r *http.Request) {
