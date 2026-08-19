@@ -266,3 +266,99 @@ func repoRoot(t *testing.T) string {
 	// This file lives in internal/, so the repository is its parent.
 	return filepath.Dir(wd)
 }
+
+// DECAYED STRENGTH NEVER REACHES A PROGRESS BAR.
+//
+// `section_progress` answers "what have I done" and is set-true and never
+// toggled (A-05). `practice_state` answers "how well do I still know this" and
+// DECAYS. They are two questions, and the whole reason they are two tables is
+// that one number made of both would fall for a student who did nothing wrong —
+// which is the most demoralising thing a study platform can do.
+//
+// The module graph already stops the packages importing each other. This is the
+// other half: neither may reach the other's TABLE, which no import graph can
+// see because SQL is a string. Written as a scan for exactly that reason.
+//
+// It is not hypothetical. The obvious feature request is "show mastery on the
+// course page", and the obvious implementation is one query in the progress
+// store that joins the two. It would be a one-line change and nothing else in
+// this repository would object.
+func TestMasteryAndProgressNeverMeetInOneQuery(t *testing.T) {
+	forbidden := map[string]string{
+		"internal/progress": "practice_state",
+		"internal/practice": "section_progress",
+	}
+
+	for dir, table := range forbidden {
+		for _, path := range goFilesUnder(t, filepath.Join(repoRoot(t), dir)) {
+			body, err := os.ReadFile(path) //nolint:gosec // a path this test produced
+			if err != nil {
+				t.Fatalf("reading %s: %v", path, err)
+			}
+			if strings.Contains(string(body), table) {
+				rel, _ := filepath.Rel(repoRoot(t), path)
+				t.Errorf("%s mentions %q.\n"+
+					"Progress is what a student has done and never goes down; mastery decays. "+
+					"A bar built from both falls for somebody who did nothing wrong — see A-05 "+
+					"and the comments at the top of both migrations.", rel, table)
+			}
+		}
+	}
+}
+
+// PRACTICE EARNS NOTHING.
+//
+// A certificate says somebody passed an exam on a day. Drilling is not an exam:
+// nothing is sealed, the client says whether it was right, and the whole point
+// is to answer the same question many times until it sticks. If practice could
+// contribute to eligibility, the document would mean "answered this enough
+// times", which is not what it says on it.
+//
+// So neither the module that issues certificates nor the one that decides an
+// exam was passed may read anything of practice's. Again a scan and not an
+// import check: the coupling that would do the damage is a query.
+func TestNothingAboutPracticeReachesACertificate(t *testing.T) {
+	for _, dir := range []string{"internal/certificate", "internal/exam"} {
+		for _, path := range goFilesUnder(t, filepath.Join(repoRoot(t), dir)) {
+			body, err := os.ReadFile(path) //nolint:gosec // a path this test produced
+			if err != nil {
+				t.Fatalf("reading %s: %v", path, err)
+			}
+
+			for _, table := range []string{"practice_state", "practice_review"} {
+				if strings.Contains(string(body), table) {
+					rel, _ := filepath.Rel(repoRoot(t), path)
+					t.Errorf("%s mentions %q — a certificate says an exam was passed on a day, "+
+						"and drilling is not an exam", rel, table)
+				}
+			}
+		}
+	}
+}
+
+// Every .go file under a directory, tests included: a test that crosses a
+// boundary the code may not cross is the same coupling with a different file
+// name.
+func goFilesUnder(t *testing.T, dir string) []string {
+	t.Helper()
+
+	var found []string
+	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
+		switch {
+		case err != nil:
+			return err
+		case d.IsDir() && d.Name() == "testdata":
+			return filepath.SkipDir
+		case !d.IsDir() && strings.HasSuffix(path, ".go"):
+			found = append(found, path)
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking %s: %v", dir, err)
+	}
+	if len(found) == 0 {
+		t.Fatalf("no Go files under %s — this test is checking nothing", dir)
+	}
+	return found
+}

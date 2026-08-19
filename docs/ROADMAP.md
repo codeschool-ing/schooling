@@ -110,12 +110,12 @@ back today.*
 - [x] `cloze` — a blank with accepted answers and normalisation
 - [x] `labelling` — a label on a point of an image, in fractions of it rather than pixels
 - [ ] All four in the conformance fixtures
-- [ ] `drillable` on exercises
-- [ ] `practice_state` — strength, due date, lapses
-- [ ] SM-2, with the quality score derived from correctness and time rather than asked
-- [ ] A review queue that crosses schools, scoped by what the subscription covers
-- [ ] A test proving decayed strength never reaches a progress bar
-- [ ] Practice excluded from certificate eligibility
+- [x] `drillable` on exercises — checked rather than trusted, so an exam-only question cannot be drilled into telling a student what is on the paper
+- [x] `practice_state` — strength, due date, lapses; overwritten in place beside the append-only log it can be recomputed from
+- [x] SM-2, with the quality score derived from correctness and time rather than asked — the thresholds are a first guess, and `practice_review` carries the before-values so they can be fitted rather than argued about
+- [ ] A review queue that crosses schools, scoped by what the subscription covers — **the queue exists, within one school.** Crossing them needs the platform's own address, because a request arrives on a school's host and is scoped to it before any module sees it; that waits on the domain. The change will be a second entry point over the same rows, not a second scheduler
+- [x] A test proving decayed strength never reaches a progress bar — a source scan, because the coupling that would do the damage is a SQL string and no import graph can see one
+- [x] Practice excluded from certificate eligibility — held the same way, over `certificate` and `exam`
 
 ---
 

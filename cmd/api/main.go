@@ -31,6 +31,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
+	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/progress"
 	"github.com/codeschool-ing/schooling/internal/tenant"
 	"github.com/codeschool-ing/schooling/internal/visitor"
@@ -180,6 +181,15 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			},
 		),
 		schoolID, identity.AccountID, studentEvents(events, log),
+	).Routes(scoped)
+
+	// PRACTICE ASKS THE SAME DOOR QUESTION, with the same closure. A card in a
+	// course this student cannot open is not in their queue and is not
+	// answerable — a queue that offered one and then refused it would be a
+	// paywall discovered one question at a time.
+	practice.NewHandler(
+		practice.NewStore(pool, courseOpen(courses)),
+		schoolID, identity.AccountID, practice.Emit(studentEvents(events, log)),
 	).Routes(scoped)
 
 	// AN EXAM ASKS THE SAME DOOR QUESTION AS A LESSON, and for a track it asks

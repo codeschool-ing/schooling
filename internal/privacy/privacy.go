@@ -201,6 +201,13 @@ var Registry = []Table{
 			"there is no aggregate to protect by keeping it",
 	},
 	{
+		Name: "practice_state", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "where one person is on each card they drill. It is DELETED rather than orphaned, " +
+			"unlike practice_review beside it: the log is what a later scheduler is fitted " +
+			"against and is worth keeping without a person attached, and this is only ever " +
+			"read to build one person's queue",
+	},
+	{
 		Name: "resume_pointer", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "where one person was in a course",
 	},
@@ -316,6 +323,9 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		{"resume_pointer", `
 			SELECT course_id, lesson_id, section_id, at
 			FROM resume_pointer WHERE account_id = $1 ORDER BY at`},
+		{"practice_state", `
+			SELECT exercise_id, interval_days, ease, repetition, lapses, due_on, last_reviewed_at
+			FROM practice_state WHERE account_id = $1 ORDER BY exercise_id`},
 		{"notes", `
 			SELECT course_id, lesson_id, section_id, body, updated_at
 			FROM notes WHERE account_id = $1 ORDER BY course_id, lesson_id, section_id`},
