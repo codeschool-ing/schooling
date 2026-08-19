@@ -66,6 +66,7 @@ window.I18N.pt = {
     'The exam': 'A prova',
     'Sit the exam': 'Fazer a prova',
     'Sign in to sit it': 'Entre para fazê-la',
+    'The exam needs the school': 'A prova precisa da escola',
     'Pass it and the certificate is yours.': 'Seja aprovado e o certificado é seu.',
     'Answers are saved as you make them.': 'As respostas são salvas conforme você responde.',
     'Saving…': 'Salvando…',
@@ -121,5 +122,11 @@ window.I18N.pt = {
     'Back to the courses': 'Voltar aos cursos',
     'Something went wrong': 'Algo deu errado',
     'Check your connection and try again.': 'Verifique sua conexão e tente de novo.',
+
+    /* ---------- the offline copy ---------- */
+    'This is the offline copy of this school.':
+      'Esta é a cópia offline desta escola.',
+    'Courses, tracks and lessons are all here and need no connection. Signing in, your progress and exams live with the school, so they are not.':
+      'Os cursos, as trilhas e as aulas estão todos aqui e não precisam de conexão. Entrar, o seu progresso e as provas ficam com a escola, então não estão.',
   },
 };

@@ -4,8 +4,9 @@
    THE ROUTES ARE FRAGMENTS. `#/course/web-fundamentals`, never
    `/course/web-fundamentals`, and that is not a preference: the offline bundle
    is one file opened from `file://`, where there is no server to fall back to
-   and the History API simply does not work. Choosing fragments now makes the
-   bundle a packaging job later instead of a second router.
+   and the History API simply does not work. That bet has been collected —
+   `tools/bundle` writes the file and this is the client that runs inside it,
+   unchanged, rather than a second one written to read it.
 
    The one exception is `/verify/<code>`, which is PRINTED ON A CERTIFICATE and
    typed by somebody checking a stranger's claim. A `#` in an address that is
@@ -15,11 +16,13 @@
    NOTHING HERE KNOWS A TOKEN. The session is an HttpOnly cookie on the same
    origin (P-03); this file cannot read it and does not try.
 
-   WHAT IS NOT HERE YET: the offline bundle, and an automated accessibility
-   pass over every screen. Both are checks rather than screens.
+   `offline` COMES FROM api.js AND IS NOT A NETWORK STATE. It is true only in a
+   bundle opened from `file://`, and the screens branch on it BEFORE they act:
+   a form that cannot be sent is not shown at all, because refusing at the last
+   moment is not the same as saying so at the first.
    ========================================================================== */
 
-import { api, ApiError } from './api.js';
+import { api, ApiError, offline } from './api.js';
 import { render as markdown } from './markdown.js';
 import { build, answerable } from './question.js';
 import { buildGraph, routeEdges } from './graph.js';
@@ -78,6 +81,12 @@ function show(...nodes) {
    than swallowed. The interface-string checker cannot see these, because they
    are written in Go; that is the known edge of what a static check reaches. */
 function trouble(error) {
+  /* `no-server` is what the offline copy answers for everything the school
+     owns. It is not a fault to report — nothing went wrong and retrying will
+     not help — so it gets the explanation rather than a red box, and every
+     screen gets it without each one having to know. */
+  if (error instanceof ApiError && error.code === 'no-server') return onlyTheSchoolCanDoThat();
+
   const message = (error instanceof ApiError && error.message)
     ? txt(error.message) : txt('Something went wrong');
   return el('div', { class: 'notice bad', role: 'alert' }, [
@@ -236,7 +245,8 @@ async function coursePage(id) {
           href: `#/exam/course/${encodeURIComponent(course.id)}`,
           text: txt('Sit the exam'),
         })
-        : el('a', { class: 'button', href: '#/sign-in', text: txt('Sign in to sit it') }),
+        : el('a', { class: 'button quiet', href: '#/sign-in',
+          text: offline ? txt('The exam needs the school') : txt('Sign in to sit it') }),
     ]) : null,
   );
 }
@@ -411,7 +421,8 @@ async function trackPage(id) {
           class: 'button', href: `#/exam/track/${encodeURIComponent(track.id)}`,
           text: txt('Sit the final'),
         })
-        : el('a', { class: 'button', href: '#/sign-in', text: txt('Sign in to sit it') }),
+        : el('a', { class: 'button quiet', href: '#/sign-in',
+          text: offline ? txt('The exam needs the school') : txt('Sign in to sit it') }),
     ]) : null,
   );
 
@@ -745,7 +756,22 @@ async function verify(code) {
   }
 }
 
+/* WHAT THE OFFLINE COPY SAYS INSTEAD OF A FORM IT CANNOT SEND.
+   Everything that needs the school arrives here: signing in, the dashboard,
+   certificates — the screens that are a record of a student, which a copy of a
+   file does not have. It names what DOES work, because "unavailable" on its own
+   reads as broken and this is not broken. */
+function onlyTheSchoolCanDoThat() {
+  return el('div', { class: 'notice', role: 'status' }, [
+    el('p', { text: txt('This is the offline copy of this school.') }),
+    el('p', { class: 'dim', text: txt('Courses, tracks and lessons are all here and need no connection. Signing in, your progress and exams live with the school, so they are not.') }),
+    el('p', {}, [el('a', { class: 'button quiet', href: '#/', text: txt('Back to the courses') })]),
+  ]);
+}
+
 function signIn() {
+  if (offline) { show(pageTitle(txt('Sign in')), onlyTheSchoolCanDoThat()); return; }
+
   show(pageTitle(txt('Sign in')), credentialsForm({
     submit: txt('Sign in'),
     withName: false,
@@ -756,6 +782,8 @@ function signIn() {
 }
 
 function signUp() {
+  if (offline) { show(pageTitle(txt('Create an account')), onlyTheSchoolCanDoThat()); return; }
+
   show(pageTitle(txt('Create an account')), credentialsForm({
     submit: txt('Create an account'),
     withName: true,
@@ -1000,6 +1028,16 @@ function wireChrome() {
 function drawAccount() {
   const link = document.querySelector('#sign-in-link');
   const account = document.querySelector('#account');
+
+  /* No door where there is no room behind it. The offline copy keeps the
+     sign-in SCREEN — a bookmark or an old link still lands there and gets an
+     explanation — but it does not put a button in the chrome inviting somebody
+     to try. */
+  if (offline) {
+    link.hidden = true;
+    account.hidden = true;
+    return;
+  }
 
   if (state.me) {
     link.hidden = true;
