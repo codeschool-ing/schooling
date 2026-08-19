@@ -2,7 +2,9 @@ package practice_test
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -71,12 +73,19 @@ func questions(t *testing.T, pool *pgxpool.Pool, tenant uuid.UUID) {
 		{"exam-only", "free-course", "one", false},
 		{"behind-the-till", "paid-course", "one", true},
 	} {
+		// A REAL PAYLOAD, because the server marks the answer now. A stub
+		// would make every one of these tests pass against a grader that
+		// refused everything.
+		payload := `{"id":"` + q.id + `","version":1,"type":"quiz",` +
+			`"prompt":"Which one?","choices":[` +
+			`{"text":"The right one","correct":true},{"text":"The other one"}]}`
+
 		if _, err := pool.Exec(context.Background(), `
 			INSERT INTO catalog_exercises
 				(tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
 				 drillable, prompt, payload)
-			VALUES ($1, $2, $3, $4, 'roles', false, 1, 'quiz', $5, 'A question', '{}'::jsonb)
-		`, tenant, q.id, q.course, q.lesson, q.drillable); err != nil {
+			VALUES ($1, $2, $3, $4, 'roles', false, 1, 'quiz', $5, 'Which one?', $6::jsonb)
+		`, tenant, q.id, q.course, q.lesson, q.drillable, payload); err != nil {
 			t.Fatalf("seeding %s: %v", q.id, err)
 		}
 	}
@@ -85,6 +94,43 @@ func questions(t *testing.T, pool *pgxpool.Pool, tenant uuid.UUID) {
 func store(t *testing.T, pool *pgxpool.Pool) *practice.Store {
 	t.Helper()
 	return practice.NewStore(pool, mayOpen)
+}
+
+// answer draws a card and answers it in the frame it was shown, which is the
+// only way an answer can be marked. `right` picks the choice the payload says
+// is correct — found by asking the presented question which position it is in,
+// because the whole point of presenting is that the position moves.
+func answer(t *testing.T, s *practice.Store, tenant, me uuid.UUID,
+	id string, right bool, elapsed time.Duration) (practice.Marked, error) {
+	t.Helper()
+
+	card, err := s.Draw(context.Background(), tenant, me, id)
+	if err != nil {
+		return practice.Marked{}, err
+	}
+
+	var shown struct {
+		Choices []struct {
+			Text string `json:"text"`
+		} `json:"choices"`
+	}
+	if err := json.Unmarshal(card.Shown, &shown); err != nil {
+		t.Fatalf("reading the presented question: %v", err)
+	}
+
+	chose := -1
+	for i, c := range shown.Choices {
+		if (c.Text == "The right one") == right {
+			chose = i
+			break
+		}
+	}
+	if chose < 0 {
+		t.Fatalf("the presented question has no choice to pick: %s", card.Shown)
+	}
+
+	return s.Answered(context.Background(), tenant, me, id,
+		json.RawMessage(fmt.Sprintf(`{"chose":[%d]}`, chose)), elapsed)
 }
 
 func has(cards []practice.Card, id string) bool {
@@ -113,7 +159,7 @@ func TestAnAnsweredCardLeavesTheQueueAndComesBackWhenItIsDue(t *testing.T) {
 		t.Fatalf("a question nobody has answered is not in the queue: %v", before)
 	}
 
-	if _, err := s.Answered(ctx, tenant, me, "free-1", true, 2*time.Second); err != nil {
+	if _, err := answer(t, s, tenant, me, "free-1", true, 2*time.Second); err != nil {
 		t.Fatalf("answering: %v", err)
 	}
 
@@ -153,7 +199,7 @@ func TestAnsweringWritesTheStateAndTheLogTogether(t *testing.T) {
 	ctx := context.Background()
 	questions(t, pool, tenant)
 
-	if _, err := s.Answered(ctx, tenant, me, "free-1", false, 90*time.Second); err != nil {
+	if _, err := answer(t, s, tenant, me, "free-1", false, 90*time.Second); err != nil {
 		t.Fatalf("answering: %v", err)
 	}
 
@@ -201,7 +247,7 @@ func TestACardInALockedCourseIsNeitherOfferedNorAnswerable(t *testing.T) {
 		t.Error("a question from a course this student cannot open is in their queue")
 	}
 
-	if _, err := s.Answered(ctx, tenant, me, "behind-the-till", true, time.Second); !errors.Is(err, practice.ErrLocked) {
+	if _, err := answer(t, s, tenant, me, "behind-the-till", true, time.Second); !errors.Is(err, practice.ErrLocked) {
 		t.Errorf("answering a locked course's card gave %v, want ErrLocked", err)
 	}
 }
@@ -222,7 +268,7 @@ func TestAQuestionThatIsNotForDrillingIsRefused(t *testing.T) {
 		t.Error("a question that is not drillable is in the drill queue")
 	}
 
-	if _, err := s.Answered(ctx, tenant, me, "exam-only", true, time.Second); !errors.Is(err, practice.ErrNotDrillable) {
+	if _, err := answer(t, s, tenant, me, "exam-only", true, time.Second); !errors.Is(err, practice.ErrNotDrillable) {
 		t.Errorf("drilling an exam-only question gave %v, want ErrNotDrillable", err)
 	}
 }
@@ -236,7 +282,7 @@ func TestAnExerciseThatDoesNotExistIsRefused(t *testing.T) {
 	ctx := context.Background()
 	questions(t, pool, tenant)
 
-	_, err := s.Answered(ctx, tenant, me, "invented-by-a-client", true, time.Second)
+	_, err := answer(t, s, tenant, me, "invented-by-a-client", true, time.Second)
 	if !errors.Is(err, practice.ErrNoSuchExercise) {
 		t.Fatalf("answering an exercise that does not exist gave %v, want ErrNoSuchExercise", err)
 	}
@@ -262,7 +308,7 @@ func TestOneStudentsScheduleIsNotAnothers(t *testing.T) {
 	ctx := context.Background()
 	questions(t, pool, tenant)
 
-	if _, err := s.Answered(ctx, tenant, me, "free-1", true, time.Second); err != nil {
+	if _, err := answer(t, s, tenant, me, "free-1", true, time.Second); err != nil {
 		t.Fatalf("answering: %v", err)
 	}
 
@@ -301,5 +347,154 @@ func TestOneSchoolsCardsAreNotAnothers(t *testing.T) {
 	if len(queue) != 0 {
 		t.Errorf("a school with no questions of its own offered %d cards from another school",
 			len(queue))
+	}
+}
+
+// THE SERVER DECIDES WHETHER IT WAS RIGHT. For one commit the client said so,
+// which could only ever have been an assertion nothing checked: the question a
+// client is given has no key in it, so it has nothing to check against.
+func TestTheServerMarksTheAnswerRatherThanBeingTold(t *testing.T) {
+	pool := testPool(t)
+	s, tenant, me := store(t, pool), school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+
+	right, err := answer(t, s, tenant, me, "free-1", true, time.Second)
+	if err != nil {
+		t.Fatalf("answering: %v", err)
+	}
+	if !right.Correct {
+		t.Error("the right choice was marked wrong")
+	}
+
+	wrong, err := answer(t, s, tenant, me, "free-2", false, time.Second)
+	if err != nil {
+		t.Fatalf("answering: %v", err)
+	}
+	if wrong.Correct {
+		t.Error("the wrong choice was marked right")
+	}
+}
+
+// THE SHUFFLE HAS TO SURVIVE THE ROUND TRIP, and this is the test that says so.
+// An `ordering` question is the case that bites: the order IS the answer, so it
+// is shuffled on the way out, and an answer marked without mapping it back
+// through the permutation tells a student who put four steps in perfect order
+// that they are wrong.
+//
+// It answers with the shown positions in the order the payload says is right,
+// which is what a student who knows the material would do.
+func TestAnOrderingAnswerIsMarkedInTheFrameTheStudentSaw(t *testing.T) {
+	pool := testPool(t)
+	s, tenant, me := store(t, pool), school(t, pool), student(t, pool)
+	ctx := context.Background()
+
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO catalog_exercises
+			(tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
+			 drillable, prompt, payload)
+		VALUES ($1, 'steps', 'free-course', 'one', 'roles', false, 1, 'ordering', true,
+		        'In order', $2::jsonb)
+	`, tenant, `{"id":"steps","version":1,"type":"ordering","prompt":"In order",`+
+		`"items":["first","second","third","fourth"]}`); err != nil {
+		t.Fatalf("seeding: %v", err)
+	}
+
+	card, err := s.Draw(ctx, tenant, me, "steps")
+	if err != nil {
+		t.Fatalf("drawing: %v", err)
+	}
+
+	var shown struct {
+		Items []string `json:"items"`
+	}
+	if err := json.Unmarshal(card.Shown, &shown); err != nil {
+		t.Fatalf("reading the presented question: %v", err)
+	}
+
+	// The right answer, expressed as the shown positions: for each item of the
+	// original order, where it now is.
+	want := []string{"first", "second", "third", "fourth"}
+	order := make([]int, 0, len(want))
+	for _, item := range want {
+		for at, s := range shown.Items {
+			if s == item {
+				order = append(order, at)
+				break
+			}
+		}
+	}
+	if len(order) != len(want) {
+		t.Fatalf("the presented question is missing items: %s", card.Shown)
+	}
+
+	body, err := json.Marshal(map[string]any{"order": order})
+	if err != nil {
+		t.Fatalf("building the answer: %v", err)
+	}
+
+	marked, err := s.Answered(ctx, tenant, me, "steps", body, 3*time.Second)
+	if err != nil {
+		t.Fatalf("answering: %v", err)
+	}
+	if !marked.Correct {
+		t.Errorf("a perfect ordering answer was marked wrong.\nshown: %s\nanswer: %s\n"+
+			"The permutation is not being read back, so the answer is being compared "+
+			"against an arrangement the student never saw.", card.Shown, body)
+	}
+}
+
+// An answer to a card nobody drew cannot be marked, because there is no
+// permutation to map it through. It is refused rather than guessed at: guessing
+// would mean assuming no shuffle, which for an ordering question is assuming
+// the answer.
+func TestAnAnswerToACardThatWasNeverDrawnIsRefused(t *testing.T) {
+	pool := testPool(t)
+	s, tenant, me := store(t, pool), school(t, pool), student(t, pool)
+	ctx := context.Background()
+	questions(t, pool, tenant)
+
+	_, err := s.Answered(ctx, tenant, me, "free-1", json.RawMessage(`{"chose":[0]}`), time.Second)
+	if !errors.Is(err, practice.ErrNotDrawn) {
+		t.Fatalf("answering an undrawn card gave %v, want ErrNotDrawn", err)
+	}
+
+	var logged int
+	if err := pool.QueryRow(ctx,
+		`SELECT count(*) FROM practice_review WHERE tenant_id = $1`, tenant).Scan(&logged); err != nil {
+		t.Fatalf("counting the log: %v", err)
+	}
+	if logged != 0 {
+		t.Errorf("%d rows reached the review log for a card nobody was shown", logged)
+	}
+}
+
+// A MALFORMED ANSWER IS NOT A WRONG ONE. Recording it as wrong would move a
+// schedule on the strength of a client's bug: a card the student never failed
+// would come back tomorrow, and the log would carry a failure that never
+// happened.
+func TestAnAnswerThatDoesNotFitTheQuestionIsNotAWrongAnswer(t *testing.T) {
+	pool := testPool(t)
+	s, tenant, me := store(t, pool), school(t, pool), student(t, pool)
+	ctx := context.Background()
+	questions(t, pool, tenant)
+
+	if _, err := s.Draw(ctx, tenant, me, "free-1"); err != nil {
+		t.Fatalf("drawing: %v", err)
+	}
+
+	_, err := s.Answered(ctx, tenant, me, "free-1", json.RawMessage(`{"order":[9,9,9]}`), time.Second)
+	if !errors.Is(err, practice.ErrBadAnswer) {
+		t.Fatalf("a malformed answer gave %v, want ErrBadAnswer", err)
+	}
+
+	var scheduled int
+	if err := pool.QueryRow(ctx,
+		`SELECT count(*) FROM practice_state WHERE tenant_id = $1 AND account_id = $2`,
+		tenant, me).Scan(&scheduled); err != nil {
+		t.Fatalf("counting the schedule: %v", err)
+	}
+	if scheduled != 0 {
+		t.Error("a malformed answer moved the schedule — the student would find a card " +
+			"they never failed coming back tomorrow")
 	}
 }

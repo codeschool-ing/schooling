@@ -208,6 +208,12 @@ var Registry = []Table{
 			"read to build one person's queue",
 	},
 	{
+		Name: "practice_drawn", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "how the card in front of one person was shuffled. It is a draft rather than a " +
+			"record — nothing reads it once the answer is marked, and the worst a deletion " +
+			"costs is drawing the card again",
+	},
+	{
 		Name: "resume_pointer", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "where one person was in a course",
 	},
@@ -326,6 +332,14 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		{"practice_state", `
 			SELECT exercise_id, interval_days, ease, repetition, lapses, due_on, last_reviewed_at
 			FROM practice_state WHERE account_id = $1 ORDER BY exercise_id`},
+		// `perm` IS NOT EXPORTED. It is how one card was shuffled for this
+		// person and says nothing about them — but it is half of an answer key
+		// for a question they may be asked again, and an export is a file they
+		// can be asked to hand over. The row is named so the export is honest
+		// about what is held; what it holds is not.
+		{"practice_drawn", `
+			SELECT exercise_id, exercise_version, drawn_at
+			FROM practice_drawn WHERE account_id = $1 ORDER BY exercise_id`},
 		{"notes", `
 			SELECT course_id, lesson_id, section_id, body, updated_at
 			FROM notes WHERE account_id = $1 ORDER BY course_id, lesson_id, section_id`},

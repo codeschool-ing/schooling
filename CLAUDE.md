@@ -377,6 +377,23 @@ been written since Fase 0 carrying the values from BEFORE each answer: a better 
 fitted by replaying what was known at each point, and that needs history that only exists if it
 was being recorded all along. Changing them changes `scheduler` in that log too.
 
+**A practice answer is marked by the server, like an exam.** It was the client's word for one
+commit and that was wrong twice over: a client cannot know — the question it is given has no key
+in it — so `correct` over the wire could only ever be an assertion nothing checked, and it put
+the one piece of grading in this system outside `internal/grade`.
+
+Which means the SHUFFLE HAS TO SURVIVE THE ROUND TRIP. A question is presented rather than sent,
+and for `ordering` the permutation IS the answer; an answer marked without mapping it back tells
+a student who put four steps in perfect order that they are wrong. An exam keeps the permutation
+on the attempt. Practice has no attempt, so `practice_drawn` holds it — one row per card, replaced
+on every draw, read once and never again. Deriving it from a seed instead does not work: anything
+the server can derive from the account, the exercise and the day, the client can derive too, and
+making it safe needs a per-deployment secret to avoid one table.
+
+**A malformed answer is not a wrong answer.** Recording one as wrong moves a schedule on the
+strength of a client's bug: a card the student never failed comes back tomorrow, and the review
+log carries a failure that never happened.
+
 **The queue does not cross schools yet.** A request arrives on a school's host and is scoped to
 it by the middleware before any module sees it, so a cross-school queue needs the platform's own
 address — which needs the domain. Writing it as a query that ignored the tenant would be
