@@ -1,0 +1,72 @@
+/* ==========================================================================
+   `quiz` and `multiple-choice`.
+
+   One module for both: the difference between them is the input type and the
+   grading rule — everything else (order, reveal, feedback) is identical. Two
+   files calling into each other would not separate anything.
+
+   TWO SCHOOL RULES THE UI HAS TO RESPECT:
+
+   1. `why` is POST-ANSWER feedback, not a visible hint. `RULES.md` writes it
+      down as a convention, and the critic is told to know it. If the
+      justification shows up first, the whole exercise loses its point.
+   2. The order of the choices in the JSON is not neutral — in the existing
+      material the correct one tends to come first. Shuffling is mandatory, and
+      it needs a seed, or the order changes on every render.
+   ========================================================================== */
+
+import { formatted, shuffleWith } from '../text.js';
+
+export default {
+  types: ['quiz', 'multiple-choice'],
+
+  body(ex, uid) {
+    const many = ex.type === 'multiple-choice';
+    const order = shuffleWith(uid, ex.choices.map((_, i) => i));
+
+    const options = order.map((ix) => {
+      const a = ex.choices[ix];
+      return (
+        '<label class="choice" data-ix="' + ix + '">' +
+          '<input type="' + (many ? 'checkbox' : 'radio') + '" name="alt-' + uid + '" value="' + ix + '" />' +
+          '<span class="choice-mark" aria-hidden="true"></span>' +
+          '<span class="choice-text">' + formatted(a.text) + '</span>' +
+          '<span class="choice-why" hidden>' + formatted(a.why || '') + '</span>' +
+        '</label>'
+      );
+    }).join('');
+
+    return (
+      (many ? '<p class="ex-instruction">' + txt('Select all that apply.') + '</p>' : '') +
+      '<div class="choices">' + options + '</div>'
+    );
+  },
+
+  collect(root) {
+    const ticked = [...root.querySelectorAll('.choice input:checked')].map((i) => Number(i.value));
+    if (!ticked.length) return null;
+    return root.querySelector('.choice input[type="checkbox"]') ? ticked : ticked[0];
+  },
+
+  reveal(root, ex, v) {
+    root.querySelectorAll('.choice').forEach((el) => {
+      const ix = Number(el.dataset.ix);
+      const a = ex.choices[ix];
+      const ticked = el.querySelector('input').checked;
+      el.classList.toggle('choice-right', Boolean(a.correct));
+      el.classList.toggle('choice-missed', Boolean(a.correct) && !ticked);
+      el.classList.toggle('choice-wrong', !a.correct && ticked);
+      el.querySelector('input').disabled = true;
+      /* Only now: the justification is feedback, not a hint.
+
+         It may also ARRIVE only now. A server-drawn exam has no `why` in the
+         paper — that is the point of the paper — so the span was rendered
+         empty and the text comes back with the verdict. Written here rather
+         than at build time, because that is when it exists. */
+      const p = el.querySelector('.choice-why');
+      if (!p.textContent.trim() && a.why) p.innerHTML = formatted(a.why);
+      if (p.textContent.trim()) p.hidden = false;
+    });
+    void v;
+  },
+};

@@ -41,6 +41,10 @@ func NewHandler(store *Store, schoolOf SchoolOf, planOf PlanOf, emit Emit) *Hand
 
 func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/courses", h.courses)
+
+	// The shape of every course at once — lessons and sections, no prose. What
+	// a rail is drawn from; see Store.Structure for why it is one read.
+	mux.HandleFunc("GET /api/v1/lessons", h.structure)
 	mux.HandleFunc("GET /api/v1/courses/{course}", h.course)
 	mux.HandleFunc("GET /api/v1/courses/{course}/lessons/{lesson}", h.lesson)
 	mux.HandleFunc("GET /api/v1/courses/{course}/images/{name}", h.picture)
@@ -63,6 +67,20 @@ func (h *Handler) courses(w http.ResponseWriter, r *http.Request) {
 		listing = []Listing{}
 	}
 	web.JSON(w, http.StatusOK, map[string]any{"courses": listing})
+}
+
+func (h *Handler) structure(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.school(w, r)
+	if !ok {
+		return
+	}
+
+	shape, err := h.store.Structure(r.Context(), school)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, map[string]any{"lessons": shape})
 }
 
 func (h *Handler) course(w http.ResponseWriter, r *http.Request) {

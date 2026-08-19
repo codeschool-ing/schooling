@@ -55,6 +55,13 @@ type Listing struct {
 	Lessons  int `json:"lessons"`
 	Sections int `json:"sections"`
 
+	// What is in the course, at two depths. On the LISTING and not only on the
+	// course view, because the interface derives a course's lessons from
+	// `topics` — a catalogue answered without them is a school where every
+	// course has nothing in it.
+	Syllabus []string `json:"syllabus,omitempty"`
+	Topics   []string `json:"topics,omitempty"`
+
 	Free   bool   `json:"free"`
 	Locked bool   `json:"locked"`
 	Reason string `json:"reason,omitempty"`
@@ -83,12 +90,14 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID, plan Plan) ([]L
 		       (SELECT count(*) FROM catalog_lessons l
 		         WHERE l.tenant_id = c.tenant_id AND l.course_id = c.id),
 		       (SELECT count(*) FROM catalog_sections s
-		         WHERE s.tenant_id = c.tenant_id AND s.course_id = c.id AND s.countable)
+		         WHERE s.tenant_id = c.tenant_id AND s.course_id = c.id AND s.countable),
+		       c.syllabus, c.topics
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_requires r
 		       ON r.tenant_id = c.tenant_id AND r.course_id = c.id
 		WHERE c.tenant_id = $1 AND NOT c.draft
-		GROUP BY c.id, c.tenant_id, c.name, c.category, c.level, c.hours, c.summary
+		GROUP BY c.id, c.tenant_id, c.name, c.category, c.level, c.hours, c.summary,
+		         c.syllabus, c.topics
 		ORDER BY c.id
 	`, tenantID)
 	if err != nil {
@@ -100,7 +109,8 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID, plan Plan) ([]L
 	for rows.Next() {
 		var l Listing
 		if err := rows.Scan(&l.ID, &l.Name, &l.Category, &l.Level, &l.Hours,
-			&l.Summary, &l.Requires, &l.Lessons, &l.Sections); err != nil {
+			&l.Summary, &l.Requires, &l.Lessons, &l.Sections,
+			&l.Syllabus, &l.Topics); err != nil {
 			return nil, fmt.Errorf("catalog: listing the courses: %w", err)
 		}
 
@@ -160,13 +170,6 @@ func (s *Store) freeCourses(ctx context.Context, tenantID uuid.UUID) (map[string
 type CourseView struct {
 	Listing
 	Prerequisites string `json:"prerequisites"`
-
-	// What is in the course, at two depths. Empty lists are omitted rather than
-	// sent as `[]`, so a screen asks "is there a syllabus" instead of "is the
-	// syllabus empty" — and a course that is announced and not yet written
-	// answers the first honestly.
-	Syllabus []string `json:"syllabus,omitempty"`
-	Topics   []string `json:"topics,omitempty"`
 
 	Lessons []LessonView `json:"lessons"`
 
@@ -238,15 +241,13 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID, id string, plan 
 			Free: free[course.ID], Locked: !access.Allowed,
 		},
 		Prerequisites: course.Prerequisites,
-
-		/* BOTH LISTS ARE SHOWN ON A LOCKED COURSE, and that is the point of
-		   them. What is behind the paywall is the MATERIAL; what a course
-		   contains is the shop window, and hiding it would be asking somebody
-		   to buy a title. The lessons below are already handled that way — their
-		   names show and their words do not. */
-		Syllabus: course.Syllabus,
-		Topics:   course.Topics,
 	}
+	/* BOTH LISTS ARE SHOWN ON A LOCKED COURSE, and that is the point of them.
+	   What is behind the paywall is the MATERIAL; what a course contains is the
+	   shop window, and hiding it would be asking somebody to buy a title. The
+	   lessons below are already handled that way — their names show and their
+	   words do not. */
+	view.Syllabus, view.Topics = course.Syllabus, course.Topics
 	if view.Locked {
 		view.Reason = access.Reason
 	}
@@ -348,6 +349,61 @@ func (s *Store) requires(ctx context.Context, tenantID uuid.UUID, courseID strin
 			return nil, fmt.Errorf("catalog: reading what %q requires: %w", courseID, err)
 		}
 		out = append(out, id)
+	}
+	return out, rows.Err()
+}
+
+// Structure is every course's lessons and sections, for the whole school, with
+// not a word of the material in it.
+//
+// ONE READ, BECAUSE THE RAIL NEEDS ALL OF IT. An interface that draws a lesson
+// list beside every course would otherwise ask course by course — a hundred and
+// twenty-two requests to paint a sidebar, most of them for courses nobody is
+// looking at.
+//
+// IT IS NOT GATED, and that is the same decision the course view already makes:
+// a locked course shows its shape and none of its words, because the shape is
+// what somebody deciding whether to subscribe is reading. There is no prose in
+// this answer at all, which is what makes it safe to serve whole.
+func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID) (map[string][]LessonView, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT l.course_id, l.id, l.title, s.id, s.kind, s.duration, s.countable
+		FROM catalog_lessons l
+		JOIN catalog_courses c
+		  ON c.tenant_id = l.tenant_id AND c.id = l.course_id AND NOT c.draft
+		LEFT JOIN catalog_sections s
+		       ON s.tenant_id = l.tenant_id AND s.course_id = l.course_id AND s.lesson_id = l.id
+		WHERE l.tenant_id = $1
+		ORDER BY l.course_id, l.position, s.position
+	`, tenantID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the shape of every course: %w", err)
+	}
+	defer rows.Close()
+
+	out := map[string][]LessonView{}
+	for rows.Next() {
+		var courseID, lessonID, title string
+		var section, kind, duration *string
+		var countable *bool
+		if err := rows.Scan(&courseID, &lessonID, &title,
+			&section, &kind, &duration, &countable); err != nil {
+			return nil, fmt.Errorf("catalog: reading the shape of every course: %w", err)
+		}
+
+		list := out[courseID]
+		if len(list) == 0 || list[len(list)-1].ID != lessonID {
+			list = append(list, LessonView{ID: lessonID, Title: title, Sections: []SectionView{}})
+		}
+		// A lesson with no sections joins as one row with nulls, which is a
+		// lesson and not a section — the LEFT JOIN is what keeps it visible.
+		if section != nil {
+			last := &list[len(list)-1]
+			last.Sections = append(last.Sections, SectionView{
+				ID: *section, Kind: *kind, Duration: *duration, Countable: *countable,
+			})
+		}
+		out[courseID] = list
 	}
 	return out, rows.Err()
 }

@@ -40,7 +40,7 @@ import (
 	"strings"
 )
 
-//go:embed index.html assets
+//go:embed index.html assets app
 var files embed.FS
 
 // `.woff2` IS NOT IN GO'S BUILT-IN TABLE. On a developer's machine it resolves
@@ -111,7 +111,12 @@ func Handler(version string) http.Handler {
 		path := strings.TrimPrefix(r.URL.Path, "/")
 
 		switch {
-		case strings.HasPrefix(path, "assets/"):
+		// `app/` IS SERVED THE SAME WAY AS `assets/`. It is the client itself —
+		// the screens, the rail, the graph and the router — copied from
+		// `portal-frontend` and loaded as ES modules, which means the browser
+		// fetches each one by its own path. A single bundle would need a build
+		// step, and there is none here on purpose.
+		case strings.HasPrefix(path, "assets/"), strings.HasPrefix(path, "app/"):
 			if stamp(w, r) {
 				return
 			}

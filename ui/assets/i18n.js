@@ -1,174 +1,1662 @@
 /* ==========================================================================
-   Schooling — internationalisation of the INTERFACE
+   codeschool.ing — the dictionaries (es · fr · it)
 
-   THE KEY IS THE ENGLISH STRING. English is the source language, so it needs no
-   dictionary and has none: any string with no entry falls back to the key, and
-   the key is already what to show. That is why there is no `en` object anywhere
-   in this repository — it would be an identity map, and an identity map is a
-   file that goes stale without ever being wrong enough to notice.
+   THE KEY IS THE ENGLISH TEXT. English is the product's source language, so it
+   needs no dictionary of its own: an entry that is missing anywhere falls back
+   to the key, which is already the string to show. Portuguese used to hold that
+   role and now sits in assets/i18n-pt.js, one translation among the others.
 
-   WHAT THIS FILE DELIBERATELY DOES NOT DO, and how it differs from
-   codeschool-ing.github.io's assets/i18n-runtime.js, which it is otherwise the
-   same idea as:
+   The catalogue — names, summaries, syllabus, topics and prerequisites of
+   every course — is split into assets/i18n-courses-*.js: it is more text than
+   everything else on the site put together. The lesson and exercise content has
+   its own files too, and today only Portuguese has them: the other three fall
+   back to the English source, which is what a missing translation should do.
 
-   That file translates the CATALOGUE as well — it keeps a base copy of every
-   course name and summary in the browser and rewrites them on a language
-   switch, because the showcase ships its catalogue as a JavaScript file. Here
-   the catalogue comes from the API, and its translations live in
-   `catalog_prose`, one row per section per locale, chosen by the server. So the
-   half of that runtime which reads COURSES and TRACKS is not merely unused
-   here — it would throw on load.
+   Every key here is a string the portal actually renders. The vitrine's own
+   dictionary used to be inlined alongside them and was 152 entries of dead
+   weight after the split — hero, FAQ, plans, footer — none of which this
+   repository has any markup for.
 
-   Copying it anyway and calling the two files "syncable" would be a claim that
-   is checked by nobody and false on the first read. The shared thing is the
-   CONTRACT, and it is: the key is the English string, the stored key is
-   `codeschool-language`, and the pre-rename key is read once.
+   What is deliberately NOT translated: the brand ("codeschool.ing"), the social
+   network names, the e-mail address and the phone number. Those are proper
+   nouns and contact details — translating them would break the identity or the
+   datum itself.
    ========================================================================== */
 
-const LANGUAGES = [
-  { code: 'en', html: 'en',    label: 'English',   short: 'EN' },
-  { code: 'pt', html: 'pt-BR', label: 'Português', short: 'PT' },
-];
-
-const LANG_KEY = 'codeschool-language';
-const LANG_KEY_LEGACY = 'codeschool-idioma';   // what the key was called before the rename
-
-function browserLanguage() {
-  const list = (navigator.languages && navigator.languages.length)
-    ? navigator.languages : [navigator.language || 'en'];
-  for (const l of list) {
-    const base = String(l).toLowerCase().split('-')[0];
-    if (LANGUAGES.some((i) => i.code === base)) return base;
-  }
-  return 'en';
-}
-
-/* A student who had already picked a language stored it under the old key.
-   Read it, move it, and forget the old name — a rename without this read
-   silently resets everybody to browser detection, which for most of them means
-   a different language than the one they chose. */
-let LANG = (() => {
-  try {
-    let saved = localStorage.getItem(LANG_KEY);
-    if (!saved) {
-      saved = localStorage.getItem(LANG_KEY_LEGACY);
-      if (saved) {
-        localStorage.setItem(LANG_KEY, saved);
-        localStorage.removeItem(LANG_KEY_LEGACY);
+window.I18N = {
+  es: {
+    plans: {
+      "guest": {
+        "name": "Visitante",
+        "summary": "El primer curso de cada itinerario, para ver cómo funciona la escuela.",
+        "cycle": "para siempre"
+      },
+      "student": {
+        "name": "Alumno",
+        "summary": "La escuela entera, por un año.",
+        "cycle": "/año"
       }
-    }
-    if (saved && LANGUAGES.some((i) => i.code === saved)) return saved;
-  } catch (e) { /* private mode: fall back to detection */ }
-  return browserLanguage();
-})();
-
-export function language() { return LANG; }
-
-/* The locale to ask the API for its CONTENT in, which is the language code the
-   Markdown files are named with — `roles.pt.md` is locale `pt`. It is the plain
-   code rather than the BCP 47 tag because the file names are the contract, and
-   `document.documentElement.lang` is the tag for the same language: two
-   different jobs that would be one confusing string if they shared a function.
-
-   The server falls back field by field, so a section translated in its title
-   and not its body keeps the English body rather than losing the title too
-   (C-11). */
-export function contentLocale() { return LANG; }
-
-/* One interface string. With no entry it answers the key, which is already
-   English — so a missing translation is a sentence in the wrong language,
-   never a blank or a bracketed identifier. */
-export function txt(s) {
-  const d = window.I18N && window.I18N[LANG] && window.I18N[LANG].ui;
-  return (d && d[s]) || s;
-}
-
-/* ---------- the page's static text ----------
-
-   A single walk of the TEXT NODES, not of the elements: that is what brings in
-   a sentence broken by a <strong> in the middle. The original is stored once,
-   and switching language is rewriting those same nodes.
-
-   Everything the router builds is left out — it rebuilds itself from the data
-   and calls txt() as it goes. */
-const DYNAMIC = ['#content', '#rail', '#nav-context', '#lang-menu', '#account-menu'];
-const originals = [];
-
-function outside(el) {
-  return !el || el.closest('script,style') || DYNAMIC.some((sel) => el.closest(sel));
-}
-
-export function mapTexts() {
-  originals.length = 0;
-
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  while (walker.nextNode()) {
-    const n = walker.currentNode;
-    if (outside(n.parentElement)) continue;
-    const s = n.nodeValue.trim();
-    if (s.length > 2 && /[A-Za-zÀ-ÿ]/.test(s)) {
-      originals.push({ el: n, kind: 'node', original: s, raw: n.nodeValue });
-    }
-  }
-
-  for (const attr of ['placeholder', 'aria-label', 'title']) {
-    document.querySelectorAll(`[${attr}]`).forEach((el) => {
-      if (!outside(el)) originals.push({ el, kind: attr, original: el.getAttribute(attr) });
-    });
-  }
-
-  const pageTitle = document.querySelector('title');
-  if (pageTitle) originals.push({ el: pageTitle, kind: 'page-title', original: pageTitle.textContent.trim() });
-}
-
-export function applyTexts() {
-  originals.forEach((r) => {
-    if (!r.el) return;
-    const v = txt(r.original);
-    if (r.kind === 'node') r.el.nodeValue = r.raw.replace(r.original, v);
-    else if (r.kind === 'page-title') r.el.textContent = v;
-    else r.el.setAttribute(r.kind, v);
-  });
-}
-
-/* The sentences with no translation in the current language. It is what the
-   interface-string checker reads, and it is exported from here rather than
-   reimplemented there so that the checker cannot disagree with the runtime
-   about what counts as a string. */
-export function missingTranslations() {
-  const d = (window.I18N && window.I18N[LANG] && window.I18N[LANG].ui) || {};
-  return [...new Set(originals.map((r) => r.original))].filter((s) => !d[s]);
-}
-
-/* ---------- the picker ---------- */
-
-export function buildLanguagePicker(onSwitch) {
-  const box = document.querySelector('#lang-menu');
-  if (!box) return;
-
-  box.textContent = '';
-  LANGUAGES.forEach((i) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    /* `lang-op` is what base.css styles these with — the portal's stylesheet is
-       copied byte for byte, so the class names it expects are the contract. */
-    b.className = 'lang-op' + (i.code === LANG ? ' on' : '');
-    b.lang = i.html;
-    b.textContent = i.label;
-    b.addEventListener('click', () => switchLanguage(i.code, onSwitch));
-    box.appendChild(b);
-  });
-
-  const active = LANGUAGES.find((i) => i.code === LANG);
-  document.querySelector('#lang-short').textContent = active.short;
-  document.documentElement.lang = active.html;
-}
-
-export function switchLanguage(code, onSwitch) {
-  if (code === LANG) return;
-  LANG = code;
-  try { localStorage.setItem(LANG_KEY, code); } catch (e) { /* private mode */ }
-  applyTexts();
-  buildLanguagePicker(onSwitch);
-  if (onSwitch) onSwitch();
-}
+    },
+    features: {
+      "entry": "El primer curso de cada itinerario, completo",
+      "catalog": "Los {courses} cursos y los {tracks} itinerarios",
+      "track": "Itinerario guiado con mapa de progreso",
+      "exercises": "Ejercicios que se corrigen solos, en todas las clases",
+      "exams": "Exámenes finales de curso y de itinerario",
+      "certificate": "Certificados de curso y de itinerario, con código de validación",
+      "material": "Material de apoyo para descargar",
+      "offline": "Clases para ver sin conexión"
+    },
+    ui: {
+      "Two-factor authentication": "Autenticación en dos factores",
+      "Add a second step at sign-in with an authenticator app.": "Añade un segundo paso al iniciar sesión con una app de autenticación.",
+      "Enable two-factor": "Activar doble factor",
+      "Two-factor is on.": "El doble factor está activado.",
+      "Two-factor is on now.": "El doble factor ya está activado.",
+      "Turn off two-factor": "Desactivar doble factor",
+      "confirm your password to turn it off": "confirma tu contraseña para desactivarlo",
+      "Add this account to your authenticator app, then enter the code it shows.": "Añade esta cuenta a tu app de autenticación y escribe el código que muestre.",
+      "setup key": "clave de configuración",
+      "Open in your authenticator app": "Abrir en tu app de autenticación",
+      "authentication code": "código de autenticación",
+      "Confirm": "Confirmar",
+      "Save these recovery codes. Each works once — they are the way back in if you lose your phone.": "Guarda estos códigos de recuperación. Cada uno funciona una vez: son la forma de volver a entrar si pierdes el teléfono.",
+      "Done": "Listo",
+      "Enter the code from your authenticator app, or a recovery code.": "Escribe el código de tu app de autenticación, o un código de recuperación.",
+      "Verify": "Verificar",
+      "type your password": "escribe tu contraseña",
+      "type the code from your app": "escribe el código de tu app",
+      "Tap an item on the left, then its pair on the right. Tap a pair again to undo it.": "Toca un elemento de la izquierda y después su par a la derecha. Toca un par otra vez para deshacerlo.",
+      "That answer did not reach the server. Try again.": "Esa respuesta no llegó al servidor. Inténtalo de nuevo.",
+      "The exam could not be submitted.": "No se pudo enviar el examen.",
+      " of the track": " del itinerario",
+      "1 pair was tried wrong before it closed.": "1 par se intentó mal antes de cerrarse.",
+      "1 section": "1 sección",
+      "Account": "Cuenta",
+      "Add to LinkedIn profile": "Agregar al perfil de LinkedIn",
+      "After": "Después",
+      "All courses": "Todos los cursos",
+      "Answer": "Responder",
+      "Answer before checking.": "Responde antes de comprobar.",
+      "Any equivalent form counts.": "Cualquier forma equivalente vale.",
+      "Are you sure?": "¿Estás seguro?",
+      "part of the subscription": "forma parte de la suscripción",
+      "The first course of every track is free, in full. This one is part of the subscription, which opens every course, the final exams, the certificates and the material to download.": "El primer curso de cada itinerario es gratuito, completo. Este forma parte de la suscripción, que abre todos los cursos, los exámenes finales, los certificados y el material para descargar.",
+      "Write to us and we will open it for your account.": "Escríbenos y lo abrimos para tu cuenta.",
+      "Ask for the subscription": "Quiero suscribirme",
+      "I would like the subscription": "Quiero suscribirme a codeschool.ing",
+      "The first course of every track is free, in full. Everything past it is the subscription.": "El primer curso de cada itinerario es gratuito, completo. Todo lo demás es la suscripción.",
+      "Assessment": "Evaluación",
+      "By course": "Por curso",
+      "By exercise type": "Por tipo de ejercicio",
+      "Cancel": "Cancelar",
+      "Catalog": "Catálogo",
+      "Certificate": "Certificado",
+      "Certificates": "Certificados",
+      "Change e-mail": "Cambiar el correo",
+      "Change password": "Cambiar la contraseña",
+      "Choose a language": "Elegir idioma",
+      "Close": "Cerrar",
+      "Content": "Contenido",
+      "Continue": "Continuar",
+      "Copy the code": "Copiar el código",
+      "Course": "Curso",
+      "Course material": "Material del curso",
+      "Course not found.": "Curso no encontrado.",
+      "Create an account": "Crear una cuenta",
+      "Create an account to start.": "Crea una cuenta para empezar.",
+      "Dashboard": "Panel",
+      "Domain assumptions": "Supuestos del dominio",
+      "Download as PNG": "Descargar en PNG",
+      "E-mail": "Correo",
+      "Each question's result appears only at the end — here the exam measures, it does not teach.": "El resultado de cada pregunta aparece solo al final — aquí el examen mide, no enseña.",
+      "Erase everything": "Borrar todo",
+      "Erase my progress": "Borrar mi progreso",
+      "Exam": "Examen",
+      "Final course exam": "Examen final del curso",
+      "Final exam": "Examen final",
+      "Go to the site": "Ir al sitio",
+      "Hello": "Hola",
+      "How you are doing": "Cómo vas",
+      "In Stage 2 the change only takes effect once confirmed at the new address — otherwise changing the e-mail would be the easiest way to take over an account.": "En la Etapa 2 el cambio solo surte efecto tras confirmarlo en la dirección nueva — si no, cambiar el correo sería la forma más fácil de tomar una cuenta.",
+      "Lesson": "Clase",
+      "Lesson not found.": "Clase no encontrada.",
+      "Lessons": "Clases",
+      "Minimum to pass:": "Mínimo para aprobar:",
+      "Move down": "Bajar",
+      "Move up": "Subir",
+      "My account": "Mi cuenta",
+      "Confirm your e-mail.": "Confirma tu correo electrónico.",
+      "We sent a link to": "Enviamos un enlace a",
+      "Resend": "Reenviar",
+      "Sent — check your inbox.": "Enviado — revisa tu bandeja de entrada.",
+      "Dismiss": "Descartar",
+      "My plan": "Mi plan",
+      "My track": "Mi itinerario",
+      "Navigation": "Navegación",
+      "Next categories": "Categorías siguientes",
+      "Next steps": "Próximos pasos",
+      "No mistakes pending. Good work.": "No quedan errores pendientes. Buen trabajo.",
+      "No password is stored here: there is no authentication in the portal yet, and writing one to the browser would give the opposite impression.": "Aquí no se guarda ninguna contraseña: el portal todavía no tiene autenticación, y escribir una en el navegador daría la impresión contraria.",
+      "No plan configured.": "Ningún plan configurado.",
+      "No portal content is locked by plan today — locking requires a server, and with the state in the browser any lock would be theatre.": "Hoy ningún contenido del portal está bloqueado por plan — bloquear exige un servidor, y con el estado en el navegador cualquier bloqueo sería teatro.",
+      "Notes": "Notas",
+      "Nothing found for": "Nada encontrado para",
+      "One per course completed with a passed exam, and one per whole track.": "Uno por curso terminado con examen aprobado, y uno por itinerario completo.",
+      "Only the exam is left": "Solo falta el examen",
+      "Open navigation": "Abrir la navegación",
+      "Opens the way to": "Abre camino a",
+      "Password": "Contraseña",
+      "Performance": "Desempeño",
+      "Plan": "Plan",
+      "Prerequisites": "Requisitos previos",
+      "Previous categories": "Categorías anteriores",
+      "Record answer": "Registrar respuesta",
+      "Redo": "Rehacer",
+      "Redo it whenever you like: the next exam is drawn again.": "Rehazlo cuando quieras: el próximo examen se sortea de nuevo.",
+      "Redo the": "Rehacer los",
+      "Redo the exam": "Repetir el examen",
+      "Redo what you got wrong": "Rehacer lo que erraste",
+      "Redoing draws a different exam. The best result stands.": "Rehacer sortea un examen distinto. Queda el mejor resultado.",
+      "Removes completed lessons, answers and the enrolment. There is no undo.": "Elimina las clases terminadas, las respuestas y la inscripción. No hay vuelta atrás.",
+      "Review the exam question by question": "Repasar el examen pregunta por pregunta",
+      "Review the questions": "Repasar las preguntas",
+      "Search": "Buscar",
+      "Search courses": "Buscar curso",
+      "Sections of this lesson": "Secciones de esta clase",
+      "See next levels": "Ver niveles siguientes",
+      "See previous levels": "Ver niveles anteriores",
+      "Select all that apply.": "Marca todas las que correspondan.",
+      "Share": "Compartir",
+      "Show sections": "Mostrar las secciones",
+      "Sign in": "Entrar",
+      "Sign in to pick up where you left off.": "Entra para seguir donde lo dejaste.",
+      "Sign out": "Salir",
+      "Student": "Alumno",
+      "Student area": "Área del alumno",
+      "Submit the exam": "Entregar el examen",
+      "Submit with": "Entregar con",
+      "Supporting material": "Material de apoyo",
+      "Switch to the dark theme": "Cambiar al tema oscuro",
+      "Switch to the light theme": "Cambiar al tema claro",
+      "Switch to this one": "Cambiar a este",
+      "Switching track erases nothing: progress is per course, and a shared course keeps counting.": "Cambiar de itinerario no borra nada: el progreso es por curso, y un curso compartido sigue contando.",
+      "Syllabus": "Contenido",
+      "Take the exam": "Hacer el examen",
+      "Tap an item on the left, then its pair on the right.": "Toca un elemento de la izquierda y luego su par de la derecha.",
+      "The certificate appears on the Certificates screen.": "El certificado aparece en la pantalla de Certificados.",
+      "The comparison is exact: spaces and line breaks count.": "La comparación es exacta: los espacios y los saltos de línea cuentan.",
+      "The ones you got wrong": "Los que erraste",
+      "The types that need execution are not checked yet, so they stay out of the rate.": "Los tipos que necesitan ejecución todavía no se comprueban, así que quedan fuera del porcentaje.",
+      "There is nothing wrong to redo.": "No hay nada errado para rehacer.",
+      "This exercise declares no recomputation — nobody checked the answer key.": "Este ejercicio no declara recálculo — nadie comprobó la respuesta correcta.",
+      "Track": "Itinerario",
+      "Track exam": "Examen del itinerario",
+      "Try again": "Intentar de nuevo",
+      "Type at least two letters.": "Escribe al menos dos letras.",
+      "Upgrade": "Mejorar el plan",
+      "View the certificate at full size": "Ver el certificado en tamaño completo",
+      "Watch": "Ver",
+      "What each plan includes": "Qué incluye cada plan",
+      "What you got wrong": "Lo que erraste",
+      "What you subscribed to, what it includes and what changes if you switch.": "A qué te suscribiste, qué incluye y qué cambia si lo cambias.",
+      "What yours will look like": "Cómo será el tuyo",
+      "Yes, erase": "Sí, borrar",
+      "You have already passed this exam.": "Ya aprobaste este examen.",
+      "You have completed": "Has terminado",
+      "You have not answered any exercises yet. Take an assessment and come back.": "Todavía no respondiste ningún ejercicio. Haz una evaluación y vuelve.",
+      "You have not chosen a track yet.": "Todavía no elegiste un itinerario.",
+      "You have not written any notes yet. They live at the end of each section.": "Todavía no escribiste ninguna nota. Viven al final de cada sección.",
+      "Your account": "Tu cuenta",
+      "Your best score so far:": "Tu mejor resultado hasta ahora:",
+      "Your certificates": "Tus certificados",
+      "Your certificates could not be loaded — the server did not answer.": "No se pudieron cargar tus certificados — el servidor no respondió.",
+      "Your notes": "Tus notas",
+      "Your track": "Tu itinerario",
+      "[assessment in preparation — this topic's exercises have not been produced yet]": "[evaluación en preparación — los ejercicios de este tema todavía no se produjeron]",
+      "[exam in preparation — not enough exercises have been produced yet]": "[examen en preparación — todavía no hay suficientes ejercicios producidos]",
+      "[lesson content — the real material lands in Stage 2]": "[contenido de la clase — el material real llega en la Etapa 2]",
+      "[skeleton — there is no authentication: any name gets in]": "[esqueleto — no hay autenticación: cualquier nombre entra]",
+      "advanced": "avanzado",
+      "ai": "ia",
+      "all": "todas",
+      "already solved": "ya resuelto",
+      "answer recorded": "respuesta registrada",
+      "architecture": "arquitectura",
+      "career": "carrera",
+      "are waiting to be checked on the server.": "esperan comprobación en el servidor.",
+      "area": "área",
+      "attempt": "intento",
+      "attempts": "intentos",
+      "available": "disponible",
+      "backend": "backend",
+      "beginner": "principiante",
+      "best score:": "mejor resultado:",
+      "blank": "en blanco",
+      "certifies that": "certifica que",
+      "checking…": "comprobando…",
+      "close": "cerrar",
+      "code": "código",
+      "code copied": "código copiado",
+      "complete and go to the next section": "completar e ir a la siguiente sección",
+      "coming soon": "muy pronto",
+      "completed": "completado",
+      "completed the course": "completó el curso",
+      "completed the track": "completó el itinerario",
+      "content completed": "contenido terminado",
+      "correct": "correcta",
+      "could not copy": "no se pudo copiar",
+      "course": "curso",
+      "course completed": "curso completado",
+      "course introduction": "presentación del curso",
+      "course.": "curso.",
+      "courses": "cursos",
+      "courses completed": "cursos terminados",
+      "courses on the path": "cursos en el camino",
+      "current password": "contraseña actual",
+      "current plan": "plan actual",
+      "current track": "itinerario actual",
+      "data": "datos",
+      "derivative": "derivada",
+      "e-mail updated": "correo actualizado",
+      "easy": "fácil",
+      "end of the course": "fin del curso",
+      "end of the track": "fin del itinerario",
+      "exam submitted": "examen entregado",
+      "examples": "ejemplos",
+      "exercise, from the course you answered it in.": "ejercicio, del curso en que lo respondiste.",
+      "exercises": "ejercicios",
+      "exercises checked": "ejercicios comprobados",
+      "exercises, from every course you answered in.": "ejercicios, de todos los cursos en que respondiste.",
+      "expected-output": "salida esperada",
+      "expression": "expresión",
+      "expression-answer": "expresión",
+      "feature": "beneficio",
+      "features": "beneficios",
+      "file": "archivo",
+      "files": "archivos",
+      "final exam": "examen final",
+      "final exam:": "examen final:",
+      "finish": "meta",
+      "forever": "para siempre",
+      "foundations": "fundamentos",
+      "free": "gratis",
+      "frontend": "frontend",
+      "fundamentals": "fundamentos",
+      "further ahead": "más adelante",
+      "hard": "difícil",
+      "hint": "pista",
+      "in": "en",
+      "in preparation — not enough exercises yet": "en preparación — todavía no hay suficientes ejercicios",
+      "in progress": "en curso",
+      "included": "incluido",
+      "infra": "infra",
+      "input": "entrada",
+      "integral": "integral",
+      "intermediate": "intermedio",
+      "leave the whole screen": "salir de la pantalla completa",
+      "lesson": "clase",
+      "lessons": "clases",
+      "level": "nivel",
+      "make a note on this section": "anotar algo sobre esta sección",
+      "management": "gestión",
+      "mobile": "móvil",
+      "matching": "asociación",
+      "medium": "medio",
+      "minimum": "mínimo",
+      "multiple-choice": "opción múltiple",
+      "my track": "mi itinerario",
+      "name": "nombre",
+      "navigate": "navegar",
+      "new password": "contraseña nueva",
+      "next": "siguiente",
+      "no code has been issued": "no se emitió ningún código",
+      "no code has been issued, so there is nothing to check": "no se emitió ningún código, así que no hay nada que comprobar",
+      "no course found — try another term.": "ningún curso encontrado — prueba otro término.",
+      "not checked": "sin comprobar",
+      "not every pair was closed.": "no se cerraron todos los pares.",
+      "not included": "no incluido",
+      "not yet": "todavía no",
+      "note saved": "nota guardada",
+      "notes": "notas",
+      "of": "de",
+      "of the content. The exam does not lock — but it covers the whole material.": "del contenido. El examen no bloquea — pero cubre todo el material.",
+      "on this path": "en este camino",
+      "open": "abrir",
+      "open the course": "abrir el curso",
+      "options are left out.": "sobran opciones.",
+      "ordering": "ordenación",
+      "output": "salida",
+      "page not found": "página no encontrada",
+      "pairs": "pares",
+      "pairs were tried wrong before closing.": "pares se intentaron mal antes de cerrarse.",
+      "passed": "aprobado",
+      "passed with": "aprobado con",
+      "password": "contraseña",
+      "password changed": "contraseña cambiada",
+      "Check the new address for a link to confirm the change.": "Revisa la nueva dirección — enviamos un enlace para confirmar el cambio.",
+      "Your password goes to the server, which keeps only a hash of it — it never stays in the browser. Changing it signs out your other devices.": "Tu contraseña va al servidor, que guarda solo un hash de ella — nunca queda en el navegador. Cambiarla cierra la sesión en tus otros dispositivos.",
+      "Name": "Nombre",
+      "Change name": "Cambiar nombre",
+      "type your name": "escribe tu nombre",
+      "name updated": "nombre actualizado",
+      "Your data": "Tus datos",
+      "Download a copy of everything the portal holds about you — profile, progress, exam results and certificates — as a file.": "Descarga una copia de todo lo que el portal guarda sobre ti — perfil, progreso, resultados de exámenes y certificados — en un archivo.",
+      "Download my data": "Descargar mis datos",
+      "Preparing…": "Preparando…",
+      "downloaded": "descargado",
+      "Delete my account": "Eliminar mi cuenta",
+      "This erases your account and everything in it — progress, notes, exam results and certificates. It cannot be undone.": "Esto borra tu cuenta y todo lo que hay en ella — progreso, notas, resultados de exámenes y certificados. No se puede deshacer.",
+      "confirm your password to delete": "confirma tu contraseña para eliminar",
+      "Devices": "Dispositivos",
+      "Where your account is signed in. End any session you do not recognise.": "Dónde tu cuenta tiene la sesión abierta. Cierra cualquiera que no reconozcas.",
+      "this device": "este dispositivo",
+      "last active": "última actividad",
+      "unknown location": "ubicación desconocida",
+      "End session": "Cerrar sesión",
+      "Sign out other devices": "Cerrar sesión en los otros dispositivos",
+      "an unknown device": "un dispositivo desconocido",
+      "Loading…": "Cargando…",
+      "per year": "por año",
+      "per month": "al mes",
+      "pick up where you left off": "seguir donde lo dejaste",
+      "plan": "plan",
+      "previous": "anterior",
+      "previous section": "sección anterior",
+      "programming": "programación",
+      "quality": "calidad",
+      "question": "pregunta",
+      "questions drawn": "preguntas sorteadas",
+      "questions graded": "preguntas corregidas",
+      "questions, drawn from the bank of the": "preguntas, sorteadas del banco del",
+      "quiz": "cuestionario",
+      "recommended after": "recomendado después de",
+      "repeat the new password": "repite la contraseña nueva",
+      "result": "resultado",
+      "result only at the end": "resultado solo al final",
+      "revoked": "revocado",
+      "sample": "muestra",
+      "sample — no code has been issued": "muestra — no se emitió ningún código",
+      "sample — there is no certificate to add": "muestra — no hay certificado para agregar",
+      "sample — there is nothing to download": "ejemplo — no hay nada que descargar",
+      "samples — they do not count as a certificate": "muestras — no valen como certificado",
+      "score": "puntaje",
+      "search courses, lessons, sections and exercises…": "buscar cursos, clases, secciones y ejercicios…",
+      "search courses...": "buscar curso...",
+      "section": "sección",
+      "sections": "secciones",
+      "sections completed": "secciones terminadas",
+      "security": "seguridad",
+      "see plan details": "ver los detalles del plan",
+      "see the graph on the whole screen": "ver el grafo en toda la pantalla",
+      "see the map": "ver el mapa",
+      "see the result": "ver el resultado",
+      "see the track map": "ver el mapa del itinerario",
+      "sign-in e-mail": "correo de acceso",
+      "simplification": "simplificación",
+      "since": "desde",
+      "student": "alumno",
+      "test cases stay hidden.": "los casos de prueba quedan ocultos.",
+      "that address does not look like an e-mail": "esa dirección no parece un correo",
+      "that did not work — try again": "no funcionó — inténtalo de nuevo",
+      "the new password is the same as the current": "la nueva contraseña es igual a la actual",
+      "the new password needs at least 8 characters": "la nueva contraseña necesita al menos 8 caracteres",
+      "the result comes at the end of the exam.": "el resultado llega al final del examen.",
+      "the track's set of courses.": "el conjunto de cursos del itinerario.",
+      "the two new passwords do not match": "las dos contraseñas nuevas no coinciden",
+      "this browser cannot generate the image": "este navegador no puede generar la imagen",
+      "this certificate was revoked": "este certificado fue revocado",
+      "to": "a",
+      "too short": "demasiado corta",
+      "total": "de carga",
+      "track": "itinerario",
+      "track completed": "itinerario completado",
+      "track exam": "examen del itinerario",
+      "track exam:": "examen del itinerario:",
+      "tracks": "itinerarios",
+      "type the exact output": "escribe la salida exacta",
+      "type your current password": "escribe tu contraseña actual",
+      "typing…": "escribiendo…",
+      "unanswered.": "sin responder.",
+      "unknown exercise type": "tipo de ejercicio desconocido",
+      "variables": "variables",
+      "video coming soon": "video muy pronto",
+      "waiting for the server": "esperando al servidor",
+      "watch the course introduction": "ver la presentación del curso",
+      "what appears on screen": "lo que aparece en pantalla",
+      "what you want to remember from this section…": "lo que quieres recordar de esta sección…",
+      "with": "con",
+      "with an assessment": "con evaluación",
+      "wrong ones": "erradas",
+      "you choose": "tú eliges",
+      "you@example.com": "tu@ejemplo.com",
+      "your answer": "tu respuesta",
+      "your name": "tu nombre",
+      "your note": "tu nota",
+      "your notes": "tus notas",
+      "your plan": "tu plan",
+      "your solution": "tu solución",
+      "your track": "tu itinerario",
+      "yours": "el tuyo",
+    },
+    tracks: {
+      "frontend": {
+        "goal": "La formación completa de quien construye lo que el usuario ve: de la primera página estática a la aplicación publicada. Secuencia basada en el roadmap público de Front-end de la comunidad roadmap.sh, adaptada a nuestra metodología.",
+        "name": "Desarrollo Front-end",
+        "outcome": "Front-end Developer júnior"
+      },
+      "backend": {
+        "goal": "La formación de quien construye lo que sostiene la aplicación: datos, APIs, servidores y escala. Basada en el roadmap público de Back-end de la comunidad roadmap.sh — el lenguaje del servidor lo eliges tú, y el camino vuelve a unirse después.",
+        "name": "Desarrollo Back-end",
+        "outcome": "Back-end Developer júnior",
+        "steps": {
+          "3": {
+            "choice": "el lenguaje del servidor",
+            "note": "Domina uno bien antes de saltar a otro. El resto del itinerario es igual en cualquier camino.",
+            "options": [
+              "JavaScript / Node.js",
+              "Python",
+              "Java",
+              "Go"
+            ]
+          }
+        }
+      },
+      "devops": {
+        "goal": "La formación de quien sostiene la operación: sistemas, redes, nube, automatización y observabilidad. Secuencia basada en el roadmap público de DevOps de la comunidad roadmap.sh. La mitad de los cursos viene de itinerarios anteriores — quien ya hizo Front-end o Back-end entra con medio camino hecho.",
+        "name": "DevOps y SRE",
+        "outcome": "DevOps Engineer / SRE júnior"
+      },
+      "data": {
+        "goal": "La formación de quien construye la infraestructura que sostiene las decisiones: modelado, pipelines, big data y gobernanza. Secuencia basada en el roadmap público de Data Engineer de la comunidad roadmap.sh, que recomienda Python y SQL como requisitos previos. La mitad de los cursos viene de itinerarios anteriores.",
+        "name": "Ingeniería de Datos",
+        "outcome": "Data Engineer júnior"
+      },
+      "networks-infra": {
+        "goal": "La formación de quien hace que el paquete llegue: direccionamiento, enrutamiento, wi-fi, seguridad y automatización. Secuencia basada en el roadmap público de Network Engineer de la comunidad roadmap.sh — siete de los once cursos vienen de itinerarios anteriores.",
+        "name": "Redes e Infraestructura",
+        "outcome": "Network Engineer júnior"
+      },
+      "prompt": {
+        "goal": "El itinerario más corto del catálogo y el único que no exige saber programar: quien escribe, atiende, enseña o decide también lo necesita. Cubre entero el roadmap público de Prompt Engineering de la comunidad roadmap.sh, incluido el de AI Red Teaming que referencia.",
+        "name": "Ingeniería de Prompt",
+        "outcome": "Especialista en Ingeniería de Prompt"
+      },
+      "ai": {
+        "goal": "La formación de quien construye productos con IA: elección de modelo, embeddings, RAG, agentes, MCP, evaluación y multimodal. Secuencia basada en el roadmap público de AI Engineer de la comunidad roadmap.sh — la base de programación viene de Python.",
+        "name": "Ingeniería de IA",
+        "outcome": "AI Engineer júnior"
+      },
+      "software-architecture": {
+        "goal": "El único itinerario del catálogo que exige otro antes: es continuación de carrera, no puerta de entrada. Para quien ya desarrolla y va a pasar a decidir — patrones, modelado, integración corporativa, gestión y comunicación. Secuencia basada en el roadmap público de Software Architect de la comunidad roadmap.sh, que pide Back-end como requisito previo.",
+        "name": "Arquitectura de Software",
+        "outcome": "Arquitecto(a) de Software"
+      },
+      "it-support": {
+        "goal": "La puerta de entrada de la escuela y el primer itinerario que no exige nada: empieza con la torre abierta y termina contigo atendiendo, diagnosticando y documentando. Cubre los bloques Fundamental IT Skills y Operating Systems y la base de red del roadmap público de Cyber Security de la comunidad roadmap.sh.",
+        "name": "Fundamentos de TI y Soporte",
+        "outcome": "Técnico(a) de Soporte / Help Desk"
+      },
+      "security": {
+        "goal": "Ataque y defensa en el mismo camino: fundamentos, criptografía, amenazas, hardening, SOC, test de intrusión y nube. Es la mitad grande del roadmap público de Cyber Security de la comunidad roadmap.sh — la otra mitad se convirtió en el itinerario de Fundamentos de TI y Soporte, que le sirve de base.",
+        "name": "Seguridad Informática",
+        "outcome": "Analista de Seguridad de la Información"
+      },
+      "devsecops": {
+        "goal": "El itinerario más barato del catálogo: está en la intersección de DevOps y Seguridad, y el 80% ya existe. Seguridad que corre en cada commit — código seguro, modelado de amenazas, escaneo en la cadena de montaje, imagen endurecida y cadena de suministro bajo control. Secuencia basada en el roadmap público de DevSecOps de la comunidad roadmap.sh.",
+        "name": "DevSecOps",
+        "outcome": "Ingeniero(a) DevSecOps"
+      },
+      "bi": {
+        "goal": "El itinerario para quien quiere trabajar con datos sin volverse programador: estadística, Excel de verdad, SQL, visualización y la conversación con el negocio. Secuencia basada en el roadmap público de BI Analyst de la comunidad roadmap.sh. Es el itinerario que trajo la estadística que le faltaba a todo el catálogo.",
+        "name": "Business Intelligence",
+        "outcome": "Analista de BI / Analista de Datos"
+      },
+      "qa": {
+        "goal": "La formación de quien garantiza que el software hace lo que promete — y aguanta lo que prometieron por él. Secuencia basada en el roadmap público de QA Engineer de la comunidad roadmap.sh. Como en BI, nadie necesita programar para empezar: son 330h hasta el primer curso de programación, y es la segunda puerta de entrada del catálogo para quien cambia de carrera.",
+        "name": "Calidad y Pruebas de Software",
+        "outcome": "QA Engineer júnior"
+      },
+      "python-tech": {
+        "goal": "Para quien quiere dominar el lenguaje, no un puesto. El tronco es igual para todos — el lenguaje bien aprendido, con control de versiones — y al final eliges dónde aplicarlo: en el servidor, en datos o en IA. Basada en el roadmap público de Python de la comunidad roadmap.sh.",
+        "name": "Python",
+        "outcome": "Dominio de Python",
+        "steps": {
+          "3": {
+            "choice": "dónde aplicar Python",
+            "note": "Aquí el itinerario no vuelve a unirse: cada camino es una aplicación distinta del mismo lenguaje.",
+            "options": [
+              "Servidor y APIs",
+              "Datos",
+              "IA"
+            ]
+          }
+        }
+      },
+      "go-tech": {
+        "goal": "El lenguaje en el que se escribieron Docker, Kubernetes y Terraform. El tronco va de la sintaxis a la concurrencia — la parte de Go que no existe en otros lenguajes — y al final eliges el lado: construir servicios o la herramienta que los opera. Basada en el roadmap público de Go de roadmap.sh.",
+        "name": "Go",
+        "outcome": "Dominio de Go",
+        "steps": {
+          "3": {
+            "choice": "el lado de Go",
+            "note": "Los dos parten de la misma concurrencia: uno construye el servicio, el otro la herramienta que lo opera.",
+            "options": [
+              "Servicios y APIs",
+              "Herramientas e Infraestructura"
+            ]
+          }
+        }
+      },
+      "sql-tech": {
+        "goal": "La tecnología que más emplea y menos exige: SQL se aprende sin saber programar. Es el itinerario de quien viene de administración, contabilidad o gestión y se cansó de pedirle el informe a alguien. Después de la base de datos, eliges qué hacer con el dato. Basada en los roadmaps públicos de SQL y PostgreSQL de la comunidad roadmap.sh.",
+        "name": "SQL y Bases de Datos",
+        "outcome": "Dominio de SQL y bases de datos",
+        "steps": {
+          "2": {
+            "choice": "qué hacer con el dato",
+            "note": "Los dos caminos parten de la misma base: uno mira a la decisión, el otro al volumen.",
+            "options": [
+              "Análisis y BI",
+              "Ingeniería de Datos"
+            ]
+          }
+        }
+      }
+    },
+  },
+  fr: {
+    plans: {
+      "student": {
+        "name": "Étudiant",
+        "summary": "Pour essayer toute l’école avant de décider.",
+        "cycle": "pour toujours"
+      },
+      "pro": {
+        "name": "Pro",
+        "summary": "L’offre de qui étudie pour en faire son métier.",
+        "cycle": "par mois"
+      },
+      "team": {
+        "name": "Équipes",
+        "summary": "Pour les équipes et les écoles, avec suivi de groupe.",
+        "cycle": "par élève/mois"
+      }
+    },
+    features: {
+      "catalog": "Tout le catalogue : {courses} cours et {tracks} parcours",
+      "track": "Un parcours guidé, avec carte de progression",
+      "exercises": "Exercices et évaluations à chaque leçon",
+      "exams": "Examens finaux de cours et de parcours",
+      "certificate": "Certificats de cours et de parcours",
+      "material": "Matériel de soutien à télécharger",
+      "offline": "Leçons à regarder hors connexion",
+      "reports": "Rapports de groupe et export",
+      "invoicing": "Facturation et paiement au nom d’une société"
+    },
+    ui: {
+      "Two-factor authentication": "Authentification à deux facteurs",
+      "Add a second step at sign-in with an authenticator app.": "Ajoutez une deuxième étape à la connexion avec une application d’authentification.",
+      "Enable two-factor": "Activer la double authentification",
+      "Two-factor is on.": "La double authentification est active.",
+      "Two-factor is on now.": "La double authentification est maintenant active.",
+      "Turn off two-factor": "Désactiver la double authentification",
+      "confirm your password to turn it off": "confirmez votre mot de passe pour la désactiver",
+      "Add this account to your authenticator app, then enter the code it shows.": "Ajoutez ce compte à votre application d’authentification, puis saisissez le code affiché.",
+      "setup key": "clé de configuration",
+      "Open in your authenticator app": "Ouvrir dans votre application d’authentification",
+      "authentication code": "code d’authentification",
+      "Confirm": "Confirmer",
+      "Save these recovery codes. Each works once — they are the way back in if you lose your phone.": "Conservez ces codes de récupération. Chacun ne fonctionne qu’une fois — ils permettent de vous reconnecter si vous perdez votre téléphone.",
+      "Done": "Terminé",
+      "Enter the code from your authenticator app, or a recovery code.": "Saisissez le code de votre application d’authentification, ou un code de récupération.",
+      "Verify": "Vérifier",
+      "type your password": "saisissez votre mot de passe",
+      "type the code from your app": "saisissez le code de votre application",
+      "Tap an item on the left, then its pair on the right. Tap a pair again to undo it.": "Touchez un élément à gauche, puis son pendant à droite. Touchez une paire à nouveau pour la défaire.",
+      "That answer did not reach the server. Try again.": "Cette réponse n’est pas arrivée au serveur. Réessayez.",
+      "The exam could not be submitted.": "L’examen n’a pas pu être envoyé.",
+      " of the track": " du parcours",
+      "1 pair was tried wrong before it closed.": "1 paire a été tentée à tort avant de se fermer.",
+      "1 section": "1 section",
+      "Account": "Compte",
+      "Add to LinkedIn profile": "Ajouter au profil LinkedIn",
+      "After": "Ensuite",
+      "All courses": "Tous les cours",
+      "Answer": "Répondre",
+      "Answer before checking.": "Répondez avant de vérifier.",
+      "Any equivalent form counts.": "Toute forme équivalente convient.",
+      "Are you sure?": "Vous confirmez ?",
+      "part of the subscription": "fait partie de l’abonnement",
+      "The first course of every track is free, in full. This one is part of the subscription, which opens every course, the final exams, the certificates and the material to download.": "Le premier cours de chaque parcours est gratuit, en entier. Celui-ci fait partie de l’abonnement, qui ouvre tous les cours, les examens finaux, les certificats et le matériel à télécharger.",
+      "Write to us and we will open it for your account.": "Écrivez-nous et nous l’ouvrirons pour votre compte.",
+      "Ask for the subscription": "Je veux m’abonner",
+      "I would like the subscription": "Je veux m’abonner à codeschool.ing",
+      "The first course of every track is free, in full. Everything past it is the subscription.": "Le premier cours de chaque parcours est gratuit, en entier. Tout le reste, c’est l’abonnement.",
+      "Assessment": "Évaluation",
+      "By course": "Par cours",
+      "By exercise type": "Par type d’exercice",
+      "Cancel": "Annuler",
+      "Catalog": "Catalogue",
+      "Certificate": "Certificat",
+      "Certificates": "Certificats",
+      "Change e-mail": "Changer l’e-mail",
+      "Change password": "Changer le mot de passe",
+      "Choose a language": "Choisir la langue",
+      "Close": "Fermer",
+      "Content": "Contenu",
+      "Continue": "Continuer",
+      "Copy the code": "Copier le code",
+      "Course": "Cours",
+      "Course material": "Support de cours",
+      "Course not found.": "Cours introuvable.",
+      "Create an account": "Créer un compte",
+      "Create an account to start.": "Créez un compte pour commencer.",
+      "Dashboard": "Tableau de bord",
+      "Domain assumptions": "Hypothèses du domaine",
+      "Download as PNG": "Télécharger en PNG",
+      "E-mail": "E-mail",
+      "Each question's result appears only at the end — here the exam measures, it does not teach.": "Le résultat de chaque question n’apparaît qu’à la fin — ici l’examen mesure, il n’enseigne pas.",
+      "Erase everything": "Tout effacer",
+      "Erase my progress": "Effacer ma progression",
+      "Exam": "Examen",
+      "Final course exam": "Examen final du cours",
+      "Final exam": "Examen final",
+      "Go to the site": "Aller au site",
+      "Hello": "Bonjour",
+      "How you are doing": "Où vous en êtes",
+      "In Stage 2 the change only takes effect once confirmed at the new address — otherwise changing the e-mail would be the easiest way to take over an account.": "À l’Étape 2, le changement ne prend effet qu’après confirmation à la nouvelle adresse — sinon changer l’e-mail serait le moyen le plus simple de s’emparer d’un compte.",
+      "Lesson": "Leçon",
+      "Lesson not found.": "Leçon introuvable.",
+      "Lessons": "Leçons",
+      "Minimum to pass:": "Minimum pour réussir :",
+      "Move down": "Descendre",
+      "Move up": "Monter",
+      "My account": "Mon compte",
+      "Confirm your e-mail.": "Confirmez votre e-mail.",
+      "We sent a link to": "Nous avons envoyé un lien à",
+      "Resend": "Renvoyer",
+      "Sent — check your inbox.": "Envoyé — vérifiez votre boîte de réception.",
+      "Dismiss": "Ignorer",
+      "My plan": "Mon offre",
+      "My track": "Mon parcours",
+      "Navigation": "Navigation",
+      "Next categories": "Catégories suivantes",
+      "Next steps": "Prochaines étapes",
+      "No mistakes pending. Good work.": "Plus aucune erreur en attente. Beau travail.",
+      "No password is stored here: there is no authentication in the portal yet, and writing one to the browser would give the opposite impression.": "Aucun mot de passe n’est conservé ici : le portail n’a pas encore d’authentification, et en écrire un dans le navigateur donnerait l’impression inverse.",
+      "No plan configured.": "Aucune offre configurée.",
+      "No portal content is locked by plan today — locking requires a server, and with the state in the browser any lock would be theatre.": "Aujourd’hui aucun contenu du portail n’est verrouillé par l’offre — verrouiller exige un serveur, et avec l’état dans le navigateur tout verrou serait du théâtre.",
+      "Notes": "Notes",
+      "Nothing found for": "Rien trouvé pour",
+      "One per course completed with a passed exam, and one per whole track.": "Un par cours terminé avec examen réussi, et un par parcours complet.",
+      "Only the exam is left": "Il ne reste que l’examen",
+      "Open navigation": "Ouvrir la navigation",
+      "Opens the way to": "Ouvre la voie à",
+      "Password": "Mot de passe",
+      "Performance": "Progression",
+      "Plan": "Offre",
+      "Prerequisites": "Prérequis",
+      "Previous categories": "Catégories précédentes",
+      "Record answer": "Enregistrer la réponse",
+      "Redo": "Refaire",
+      "Redo it whenever you like: the next exam is drawn again.": "Refaites-le quand vous voulez : l’examen suivant est retiré au sort.",
+      "Redo the": "Refaire les",
+      "Redo the exam": "Refaire l’examen",
+      "Redo what you got wrong": "Refaire ce que vous avez raté",
+      "Redoing draws a different exam. The best result stands.": "Refaire tire un autre examen. Le meilleur résultat est conservé.",
+      "Removes completed lessons, answers and the enrolment. There is no undo.": "Supprime les leçons terminées, les réponses et l’inscription. Sans retour possible.",
+      "Review the exam question by question": "Revoir l’examen question par question",
+      "Review the questions": "Revoir les questions",
+      "Search": "Rechercher",
+      "Search courses": "Rechercher un cours",
+      "Sections of this lesson": "Sections de cette leçon",
+      "See next levels": "Voir les niveaux suivants",
+      "See previous levels": "Voir les niveaux précédents",
+      "Select all that apply.": "Cochez tout ce qui s’applique.",
+      "Share": "Partager",
+      "Show sections": "Afficher les sections",
+      "Sign in": "Se connecter",
+      "Sign in to pick up where you left off.": "Connectez-vous pour reprendre où vous en étiez.",
+      "Sign out": "Se déconnecter",
+      "Student": "Élève",
+      "Student area": "Espace élève",
+      "Submit the exam": "Rendre l’examen",
+      "Submit with": "Rendre avec",
+      "Supporting material": "Support de cours",
+      "Switch to the dark theme": "Passer au thème sombre",
+      "Switch to the light theme": "Passer au thème clair",
+      "Switch to this one": "Passer à celui-ci",
+      "Switching track erases nothing: progress is per course, and a shared course keeps counting.": "Changer de parcours n’efface rien : la progression est par cours, et un cours partagé continue de compter.",
+      "Syllabus": "Programme",
+      "Take the exam": "Passer l’examen",
+      "Tap an item on the left, then its pair on the right.": "Touchez un élément à gauche, puis sa paire à droite.",
+      "The certificate appears on the Certificates screen.": "Le certificat apparaît sur l’écran Certificats.",
+      "The comparison is exact: spaces and line breaks count.": "La comparaison est exacte : les espaces et les sauts de ligne comptent.",
+      "The ones you got wrong": "Ceux que vous avez ratés",
+      "The types that need execution are not checked yet, so they stay out of the rate.": "Les types qui exigent une exécution ne sont pas encore vérifiés, ils restent donc hors du pourcentage.",
+      "There is nothing wrong to redo.": "Il n’y a rien de raté à refaire.",
+      "This exercise declares no recomputation — nobody checked the answer key.": "Cet exercice ne déclare aucun recalcul — personne n’a vérifié le corrigé.",
+      "Track": "Parcours",
+      "Track exam": "Examen du parcours",
+      "Try again": "Réessayer",
+      "Type at least two letters.": "Saisissez au moins deux lettres.",
+      "Upgrade": "Passer au plan supérieur",
+      "View the certificate at full size": "Voir le certificat en taille réelle",
+      "Watch": "Regarder",
+      "What each plan includes": "Ce que comprend chaque offre",
+      "What you got wrong": "Ce que vous avez raté",
+      "What you subscribed to, what it includes and what changes if you switch.": "Ce à quoi vous avez souscrit, ce que cela comprend et ce qui change si vous changez.",
+      "What yours will look like": "À quoi ressemblera le vôtre",
+      "Yes, erase": "Oui, effacer",
+      "You have already passed this exam.": "Vous avez déjà réussi cet examen.",
+      "You have completed": "Vous avez terminé",
+      "You have not answered any exercises yet. Take an assessment and come back.": "Vous n’avez encore répondu à aucun exercice. Faites une évaluation et revenez.",
+      "You have not chosen a track yet.": "Vous n’avez pas encore choisi de parcours.",
+      "You have not written any notes yet. They live at the end of each section.": "Vous n’avez encore écrit aucune note. Elles se trouvent à la fin de chaque section.",
+      "Your account": "Votre compte",
+      "Your best score so far:": "Votre meilleur résultat jusqu’ici :",
+      "Your certificates": "Vos certificats",
+      "Your certificates could not be loaded — the server did not answer.": "Vos certificats n’ont pas pu être chargés — le serveur n’a pas répondu.",
+      "Your notes": "Vos notes",
+      "Your track": "Votre parcours",
+      "[assessment in preparation — this topic's exercises have not been produced yet]": "[évaluation en préparation — les exercices de ce sujet n’ont pas encore été produits]",
+      "[exam in preparation — not enough exercises have been produced yet]": "[examen en préparation — il n’y a pas encore assez d’exercices produits]",
+      "[lesson content — the real material lands in Stage 2]": "[contenu de la leçon — le vrai matériel arrive à l’Étape 2]",
+      "[skeleton — there is no authentication: any name gets in]": "[squelette — il n’y a pas d’authentification : n’importe quel nom entre]",
+      "advanced": "avancé",
+      "ai": "ia",
+      "all": "toutes",
+      "already solved": "déjà résolu",
+      "answer recorded": "réponse enregistrée",
+      "architecture": "architecture",
+      "career": "carrière",
+      "are waiting to be checked on the server.": "attendent d’être vérifiés sur le serveur.",
+      "area": "domaine",
+      "attempt": "tentative",
+      "attempts": "tentatives",
+      "available": "disponible",
+      "backend": "backend",
+      "beginner": "débutant",
+      "best score:": "meilleur résultat :",
+      "blank": "vide",
+      "certifies that": "certifie que",
+      "checking…": "vérification…",
+      "close": "fermer",
+      "code": "code",
+      "code copied": "code copié",
+      "complete and go to the next section": "terminer et passer à la section suivante",
+      "coming soon": "bientôt",
+      "completed": "terminé",
+      "completed the course": "a terminé le cours",
+      "completed the track": "a terminé le parcours",
+      "content completed": "contenu terminé",
+      "correct": "correcte",
+      "could not copy": "copie impossible",
+      "course": "cours",
+      "course completed": "cours terminé",
+      "course introduction": "présentation du cours",
+      "course.": "cours.",
+      "courses": "cours",
+      "courses completed": "cours terminés",
+      "courses on the path": "cours sur le chemin",
+      "current password": "mot de passe actuel",
+      "current plan": "offre actuelle",
+      "current track": "parcours actuel",
+      "data": "données",
+      "derivative": "dérivée",
+      "e-mail updated": "e-mail mis à jour",
+      "easy": "facile",
+      "end of the course": "fin du cours",
+      "end of the track": "fin du parcours",
+      "exam submitted": "examen rendu",
+      "examples": "exemples",
+      "exercise, from the course you answered it in.": "exercice, du cours où vous y avez répondu.",
+      "exercises": "exercices",
+      "exercises checked": "exercices vérifiés",
+      "exercises, from every course you answered in.": "exercices, de tous les cours où vous avez répondu.",
+      "expected-output": "sortie attendue",
+      "expression": "expression",
+      "expression-answer": "expression",
+      "feature": "avantage",
+      "features": "avantages",
+      "file": "fichier",
+      "files": "fichiers",
+      "final exam": "examen final",
+      "final exam:": "examen final :",
+      "finish": "arrivée",
+      "forever": "pour toujours",
+      "foundations": "fondamentaux",
+      "free": "gratuit",
+      "frontend": "frontend",
+      "fundamentals": "fondamentaux",
+      "further ahead": "plus loin",
+      "hard": "difficile",
+      "hint": "indice",
+      "in": "en",
+      "in preparation — not enough exercises yet": "en préparation — pas encore assez d’exercices",
+      "in progress": "en cours",
+      "included": "inclus",
+      "infra": "infra",
+      "input": "entrée",
+      "integral": "intégrale",
+      "intermediate": "intermédiaire",
+      "leave the whole screen": "quitter le plein écran",
+      "lesson": "leçon",
+      "lessons": "leçons",
+      "level": "niveau",
+      "make a note on this section": "prendre une note sur cette section",
+      "management": "gestion",
+      "mobile": "mobile",
+      "matching": "association",
+      "medium": "moyen",
+      "minimum": "minimum",
+      "multiple-choice": "choix multiple",
+      "my track": "mon parcours",
+      "name": "nom",
+      "navigate": "naviguer",
+      "new password": "nouveau mot de passe",
+      "next": "suivant",
+      "no code has been issued": "aucun code n’a été émis",
+      "no code has been issued, so there is nothing to check": "aucun code n’a été émis, il n’y a donc rien à vérifier",
+      "no course found — try another term.": "aucun cours trouvé — essayez un autre terme.",
+      "not checked": "non vérifié",
+      "not every pair was closed.": "toutes les paires n’ont pas été fermées.",
+      "not included": "non inclus",
+      "not yet": "pas encore",
+      "note saved": "note enregistrée",
+      "notes": "notes",
+      "of": "sur",
+      "of the content. The exam does not lock — but it covers the whole material.": "du contenu. L’examen ne verrouille pas — mais il couvre tout le matériel.",
+      "on this path": "sur ce chemin",
+      "open": "ouvrir",
+      "open the course": "ouvrir le cours",
+      "options are left out.": "options restent de côté.",
+      "ordering": "mise en ordre",
+      "output": "sortie",
+      "page not found": "page introuvable",
+      "pairs": "paires",
+      "pairs were tried wrong before closing.": "paires ont été tentées à tort avant de se fermer.",
+      "passed": "réussi",
+      "passed with": "réussi avec",
+      "password": "mot de passe",
+      "password changed": "mot de passe modifié",
+      "Check the new address for a link to confirm the change.": "Vérifiez la nouvelle adresse — nous avons envoyé un lien pour confirmer le changement.",
+      "Your password goes to the server, which keeps only a hash of it — it never stays in the browser. Changing it signs out your other devices.": "Votre mot de passe part vers le serveur, qui n'en garde qu'une empreinte (hash) — il ne reste jamais dans le navigateur. Le changer déconnecte vos autres appareils.",
+      "Name": "Nom",
+      "Change name": "Modifier le nom",
+      "type your name": "saisissez votre nom",
+      "name updated": "nom mis à jour",
+      "Your data": "Vos données",
+      "Download a copy of everything the portal holds about you — profile, progress, exam results and certificates — as a file.": "Téléchargez une copie de tout ce que le portail conserve à votre sujet — profil, progression, résultats d'examens et certificats — dans un fichier.",
+      "Download my data": "Télécharger mes données",
+      "Preparing…": "Préparation…",
+      "downloaded": "téléchargé",
+      "Delete my account": "Supprimer mon compte",
+      "This erases your account and everything in it — progress, notes, exam results and certificates. It cannot be undone.": "Ceci supprime votre compte et tout ce qu'il contient — progression, notes, résultats d'examens et certificats. C'est irréversible.",
+      "confirm your password to delete": "confirmez votre mot de passe pour supprimer",
+      "Devices": "Appareils",
+      "Where your account is signed in. End any session you do not recognise.": "Où votre compte est connecté. Fermez toute session que vous ne reconnaissez pas.",
+      "this device": "cet appareil",
+      "last active": "dernière activité",
+      "unknown location": "emplacement inconnu",
+      "End session": "Fermer la session",
+      "Sign out other devices": "Déconnecter les autres appareils",
+      "an unknown device": "un appareil inconnu",
+      "Loading…": "Chargement…",
+      "per year": "par an",
+      "per month": "par mois",
+      "pick up where you left off": "reprendre où vous en étiez",
+      "plan": "offre",
+      "previous": "précédent",
+      "previous section": "section précédente",
+      "programming": "programmation",
+      "quality": "qualité",
+      "question": "question",
+      "questions drawn": "questions tirées",
+      "questions graded": "questions corrigées",
+      "questions, drawn from the bank of the": "questions, tirées de la banque du",
+      "quiz": "questionnaire",
+      "recommended after": "recommandé après",
+      "repeat the new password": "répétez le nouveau mot de passe",
+      "result": "résultat",
+      "result only at the end": "résultat seulement à la fin",
+      "revoked": "révoqué",
+      "sample": "échantillon",
+      "sample — no code has been issued": "échantillon — aucun code n’a été émis",
+      "sample — there is no certificate to add": "échantillon — il n’y a pas de certificat à ajouter",
+      "sample — there is nothing to download": "exemple — il n’y a rien à télécharger",
+      "samples — they do not count as a certificate": "échantillons — ils ne valent pas comme certificat",
+      "score": "score",
+      "search courses, lessons, sections and exercises…": "rechercher cours, leçons, sections et exercices…",
+      "search courses...": "rechercher un cours...",
+      "section": "section",
+      "sections": "sections",
+      "sections completed": "sections terminées",
+      "security": "sécurité",
+      "see plan details": "voir le détail de l’offre",
+      "see the graph on the whole screen": "voir le graphe en plein écran",
+      "see the map": "voir la carte",
+      "see the result": "voir le résultat",
+      "see the track map": "voir la carte du parcours",
+      "sign-in e-mail": "e-mail de connexion",
+      "simplification": "simplification",
+      "since": "depuis",
+      "student": "élève",
+      "test cases stay hidden.": "les cas de test restent cachés.",
+      "that address does not look like an e-mail": "cette adresse ne ressemble pas à un e-mail",
+      "that did not work — try again": "cela n’a pas marché — réessayez",
+      "the new password is the same as the current": "le nouveau mot de passe est identique à l’actuel",
+      "the new password needs at least 8 characters": "le nouveau mot de passe doit faire au moins 8 caractères",
+      "the result comes at the end of the exam.": "le résultat arrive à la fin de l’examen.",
+      "the track's set of courses.": "l’ensemble des cours du parcours.",
+      "the two new passwords do not match": "les deux nouveaux mots de passe ne correspondent pas",
+      "this browser cannot generate the image": "ce navigateur ne peut pas générer l’image",
+      "this certificate was revoked": "ce certificat a été révoqué",
+      "to": "à",
+      "too short": "trop courte",
+      "total": "au total",
+      "track": "parcours",
+      "track completed": "parcours terminé",
+      "track exam": "examen du parcours",
+      "track exam:": "examen du parcours :",
+      "tracks": "parcours",
+      "type the exact output": "saisissez la sortie exacte",
+      "type your current password": "saisissez votre mot de passe actuel",
+      "typing…": "saisie…",
+      "unanswered.": "sans réponse.",
+      "unknown exercise type": "type d’exercice inconnu",
+      "variables": "variables",
+      "video coming soon": "vidéo très bientôt",
+      "waiting for the server": "en attente du serveur",
+      "watch the course introduction": "regarder la présentation du cours",
+      "what appears on screen": "ce qui apparaît à l’écran",
+      "what you want to remember from this section…": "ce que vous voulez retenir de cette section…",
+      "with": "avec",
+      "with an assessment": "avec évaluation",
+      "wrong ones": "ratées",
+      "you choose": "vous choisissez",
+      "you@example.com": "vous@exemple.com",
+      "your answer": "votre réponse",
+      "your name": "votre nom",
+      "your note": "votre note",
+      "your notes": "vos notes",
+      "your plan": "votre offre",
+      "your solution": "votre solution",
+      "your track": "votre parcours",
+      "yours": "le vôtre",
+    },
+    tracks: {
+      "frontend": {
+        "name": "Développement Front-end",
+        "goal": "La formation complète de celui qui construit ce que l’utilisateur voit : de la première page statique à l’application publiée. Séquence fondée sur la feuille de route Front-end publique de la communauté roadmap.sh, adaptée à notre méthode.",
+        "outcome": "Développeur Front-end junior"
+      },
+      "backend": {
+        "name": "Développement Back-end",
+        "goal": "La formation de celui qui construit ce qui soutient l’application : données, API, serveurs et montée en charge. Fondée sur la feuille de route Back-end publique de roadmap.sh — le langage du serveur est votre choix, et le chemin se rejoint ensuite.",
+        "outcome": "Développeur Back-end junior",
+        "steps": {
+          "3": {
+            "choice": "le langage du serveur",
+            "note": "Maîtrisez-en un correctement avant d’en essayer un autre. Le reste du parcours est identique quel que soit le chemin.",
+            "options": [
+              "JavaScript / Node.js",
+              "Python",
+              "Java",
+              "Go"
+            ]
+          }
+        }
+      },
+      "devops": {
+        "name": "DevOps et SRE",
+        "goal": "La formation de celui qui fait tourner l’exploitation : systèmes, réseaux, cloud, automatisation et observabilité. Séquence fondée sur la feuille de route DevOps publique de roadmap.sh. La moitié des cours vient des parcours précédents — qui a fait Front-end ou Back-end démarre à mi-chemin.",
+        "outcome": "Ingénieur DevOps / SRE junior"
+      },
+      "data": {
+        "name": "Ingénierie des Données",
+        "goal": "La formation de celui qui construit l’infrastructure des décisions : modélisation, pipelines, big data et gouvernance. Séquence fondée sur la feuille de route Data Engineer publique de roadmap.sh, qui recommande Python et SQL comme prérequis. La moitié des cours vient des parcours précédents.",
+        "outcome": "Ingénieur Données junior"
+      },
+      "networks-infra": {
+        "name": "Réseaux et Infrastructure",
+        "goal": "La formation de celui qui fait arriver le paquet : adressage, routage, wi-fi, sécurité et automatisation. Séquence fondée sur la feuille de route Network Engineer publique de roadmap.sh — sept des onze cours viennent des parcours précédents.",
+        "outcome": "Ingénieur Réseaux junior"
+      },
+      "prompt": {
+        "name": "Ingénierie de Prompt",
+        "goal": "Le parcours le plus court du catalogue et le seul qui n’exige pas de savoir programmer : qui écrit, conseille, enseigne ou décide en a besoin aussi. Il couvre entièrement la feuille de route Prompt Engineering publique de roadmap.sh, y compris celle d’AI Red Teaming qu’elle référence.",
+        "outcome": "Spécialiste en ingénierie de prompt"
+      },
+      "ai": {
+        "name": "Ingénierie de l’IA",
+        "goal": "La formation de celui qui construit des produits avec l’IA : choix du modèle, embeddings, RAG, agents, MCP, évaluation et multimodal. Séquence fondée sur la feuille de route AI Engineer publique de roadmap.sh — la base de programmation vient de Python.",
+        "outcome": "Ingénieur IA junior"
+      },
+      "software-architecture": {
+        "name": "Architecture Logicielle",
+        "goal": "Le seul parcours du catalogue qui en exige un autre avant : c’est une suite de carrière, pas une porte d’entrée. Pour qui développe déjà et va se mettre à décider — patrons, modélisation, intégration en entreprise, gestion et communication. Séquence fondée sur la feuille de route Software Architect publique de roadmap.sh, qui demande le Back-end comme prérequis.",
+        "outcome": "Architecte logiciel"
+      },
+      "it-support": {
+        "name": "Fondamentaux de l’Informatique et Support",
+        "goal": "La porte d’entrée de l’école et le premier parcours qui n’exige rien : il commence par le boîtier ouvert et se termine avec vous en train d’assister, de diagnostiquer et de documenter. Il couvre les blocs Fundamental IT Skills, Operating Systems et la base réseau de la feuille de route Cyber Security publique de roadmap.sh.",
+        "outcome": "Technicien support / Help Desk"
+      },
+      "security": {
+        "name": "Cybersécurité",
+        "goal": "Attaque et défense sur le même chemin : fondamentaux, cryptographie, menaces, durcissement, SOC, test d’intrusion et cloud. C’est la grande moitié de la feuille de route Cyber Security publique de roadmap.sh — l’autre moitié est devenue le parcours Fondamentaux de l’Informatique, qui sert de base à celui-ci.",
+        "outcome": "Analyste en sécurité de l’information"
+      },
+      "devsecops": {
+        "name": "DevSecOps",
+        "goal": "Le parcours le moins coûteux du catalogue : il se situe à l’intersection de DevOps et de la Sécurité, et 80 % existe déjà. De la sécurité qui tourne à chaque commit — code sûr, modélisation des menaces, analyse dans la chaîne, image durcie et chaîne d’approvisionnement sous contrôle. Séquence fondée sur la feuille de route DevSecOps publique de roadmap.sh.",
+        "outcome": "Ingénieur DevSecOps"
+      },
+      "bi": {
+        "name": "Business Intelligence",
+        "goal": "Le parcours pour qui veut travailler avec les données sans devenir développeur : statistiques, Excel pour de vrai, SQL, visualisation et la conversation avec le métier. Séquence fondée sur la feuille de route BI Analyst publique de roadmap.sh. C’est le parcours qui apporte les statistiques qui manquaient à tout le catalogue.",
+        "outcome": "Analyste BI / Analyste de données"
+      },
+      "qa": {
+        "name": "Qualité et Tests Logiciels",
+        "goal": "La formation de celui qui garantit que le logiciel fait ce qu’il promet — et tient ce qu’on a promis pour lui. Séquence fondée sur la feuille de route QA Engineer publique de roadmap.sh. Comme en BI, nul besoin de programmer pour commencer : 330 h séparent du premier cours de programmation, et c’est la deuxième porte d’entrée du catalogue pour qui change de métier.",
+        "outcome": "Ingénieur QA junior"
+      },
+      "python-tech": {
+        "name": "Python",
+        "goal": "Pour qui veut maîtriser le langage, pas un poste. Le tronc est le même pour tous — le langage bien appris, avec la gestion de versions — et à la fin vous choisissez où l’appliquer : au serveur, aux données ou à l’IA. Fondé sur la feuille de route Python publique de roadmap.sh.",
+        "outcome": "Maîtrise de Python",
+        "steps": {
+          "3": {
+            "choice": "où appliquer Python",
+            "note": "Ici le parcours ne se rejoint plus : chaque chemin est une application différente du même langage.",
+            "options": [
+              "Serveur et API",
+              "Données",
+              "IA"
+            ]
+          }
+        }
+      },
+      "go-tech": {
+        "name": "Go",
+        "goal": "Le langage dans lequel Docker, Kubernetes et Terraform ont été écrits. Le tronc va de la syntaxe à la concurrence — la partie de Go qui n’existe pas ailleurs — et à la fin vous choisissez votre camp : construire des services ou l’outil d’infrastructure. Fondé sur la feuille de route Go publique de roadmap.sh.",
+        "outcome": "Maîtrise de Go",
+        "steps": {
+          "3": {
+            "choice": "le camp de Go",
+            "note": "Les deux partent de la même concurrence : l’un construit le service, l’autre construit l’outil qui exploite le service.",
+            "options": [
+              "Services et API",
+              "Outils et Infrastructure"
+            ]
+          }
+        }
+      },
+      "sql-tech": {
+        "name": "SQL et Bases de Données",
+        "goal": "La technologie qui emploie le plus et exige le moins : SQL s’apprend sans savoir programmer. C’est le parcours de qui vient de l’administratif, de la comptabilité ou de la gestion et en a assez de demander un rapport à quelqu’un. Après la base, vous choisissez quoi faire de la donnée. Fondé sur les feuilles de route SQL et PostgreSQL publiques de roadmap.sh.",
+        "outcome": "Maîtrise de SQL et des bases de données",
+        "steps": {
+          "2": {
+            "choice": "quoi faire de la donnée",
+            "note": "Les deux chemins partent de la même base : l’un regarde la décision, l’autre le volume.",
+            "options": [
+              "Analyse et BI",
+              "Ingénierie des Données"
+            ]
+          }
+        }
+      }
+    },
+  },
+  it: {
+    plans: {
+      "student": {
+        "name": "Studente",
+        "summary": "Per provare tutta la scuola prima di decidere.",
+        "cycle": "per sempre"
+      },
+      "pro": {
+        "name": "Pro",
+        "summary": "Il piano di chi studia per lavorarci.",
+        "cycle": "al mese"
+      },
+      "team": {
+        "name": "Team",
+        "summary": "Per team e scuole, con monitoraggio della classe.",
+        "cycle": "per studente/mese"
+      }
+    },
+    features: {
+      "catalog": "Tutto il catalogo: {courses} corsi e {tracks} percorsi",
+      "track": "Un percorso guidato, con mappa dei progressi",
+      "exercises": "Esercizi e valutazioni in ogni lezione",
+      "exams": "Esami finali di corso e di percorso",
+      "certificate": "Certificati di corso e di percorso",
+      "material": "Materiale di supporto da scaricare",
+      "offline": "Lezioni da guardare senza connessione",
+      "reports": "Report di classe ed esportazione",
+      "invoicing": "Fattura e pagamento con partita IVA"
+    },
+    ui: {
+      "Two-factor authentication": "Autenticazione a due fattori",
+      "Add a second step at sign-in with an authenticator app.": "Aggiungi un secondo passaggio all’accesso con un’app di autenticazione.",
+      "Enable two-factor": "Attiva la verifica in due passaggi",
+      "Two-factor is on.": "La verifica in due passaggi è attiva.",
+      "Two-factor is on now.": "La verifica in due passaggi è ora attiva.",
+      "Turn off two-factor": "Disattiva la verifica in due passaggi",
+      "confirm your password to turn it off": "conferma la password per disattivarla",
+      "Add this account to your authenticator app, then enter the code it shows.": "Aggiungi questo account alla tua app di autenticazione, poi inserisci il codice mostrato.",
+      "setup key": "chiave di configurazione",
+      "Open in your authenticator app": "Apri nella tua app di autenticazione",
+      "authentication code": "codice di autenticazione",
+      "Confirm": "Conferma",
+      "Save these recovery codes. Each works once — they are the way back in if you lose your phone.": "Conserva questi codici di recupero. Ognuno funziona una volta — sono il modo per rientrare se perdi il telefono.",
+      "Done": "Fatto",
+      "Enter the code from your authenticator app, or a recovery code.": "Inserisci il codice della tua app di autenticazione, o un codice di recupero.",
+      "Verify": "Verifica",
+      "type your password": "inserisci la tua password",
+      "type the code from your app": "inserisci il codice della tua app",
+      "Tap an item on the left, then its pair on the right. Tap a pair again to undo it.": "Tocca un elemento a sinistra e poi il suo pari a destra. Tocca di nuovo una coppia per annullarla.",
+      "That answer did not reach the server. Try again.": "Questa risposta non è arrivata al server. Riprova.",
+      "The exam could not be submitted.": "Non è stato possibile inviare l’esame.",
+      " of the track": " del percorso",
+      "1 pair was tried wrong before it closed.": "1 coppia è stata tentata sbagliata prima di chiudersi.",
+      "1 section": "1 sezione",
+      "Account": "Account",
+      "Add to LinkedIn profile": "Aggiungi al profilo LinkedIn",
+      "After": "Dopo",
+      "All courses": "Tutti i corsi",
+      "Answer": "Rispondi",
+      "Answer before checking.": "Rispondi prima di verificare.",
+      "Any equivalent form counts.": "Va bene qualsiasi forma equivalente.",
+      "Are you sure?": "Sei sicuro?",
+      "part of the subscription": "fa parte dell’abbonamento",
+      "The first course of every track is free, in full. This one is part of the subscription, which opens every course, the final exams, the certificates and the material to download.": "Il primo corso di ogni percorso è gratuito, per intero. Questo fa parte dell’abbonamento, che apre tutti i corsi, gli esami finali, i certificati e il materiale da scaricare.",
+      "Write to us and we will open it for your account.": "Scrivici e lo apriamo per il tuo account.",
+      "Ask for the subscription": "Voglio abbonarmi",
+      "I would like the subscription": "Voglio abbonarmi a codeschool.ing",
+      "The first course of every track is free, in full. Everything past it is the subscription.": "Il primo corso di ogni percorso è gratuito, per intero. Tutto il resto è l’abbonamento.",
+      "Assessment": "Valutazione",
+      "By course": "Per corso",
+      "By exercise type": "Per tipo di esercizio",
+      "Cancel": "Annulla",
+      "Catalog": "Catalogo",
+      "Certificate": "Certificato",
+      "Certificates": "Certificati",
+      "Change e-mail": "Cambia l’e-mail",
+      "Change password": "Cambia la password",
+      "Choose a language": "Scegli la lingua",
+      "Close": "Chiudi",
+      "Content": "Contenuto",
+      "Continue": "Continua",
+      "Copy the code": "Copia il codice",
+      "Course": "Corso",
+      "Course material": "Materiale del corso",
+      "Course not found.": "Corso non trovato.",
+      "Create an account": "Crea un account",
+      "Create an account to start.": "Crea un account per iniziare.",
+      "Dashboard": "Pannello",
+      "Domain assumptions": "Ipotesi del dominio",
+      "Download as PNG": "Scarica in PNG",
+      "E-mail": "E-mail",
+      "Each question's result appears only at the end — here the exam measures, it does not teach.": "Il risultato di ogni domanda compare solo alla fine — qui l’esame misura, non insegna.",
+      "Erase everything": "Cancella tutto",
+      "Erase my progress": "Cancella i miei progressi",
+      "Exam": "Esame",
+      "Final course exam": "Esame finale del corso",
+      "Final exam": "Esame finale",
+      "Go to the site": "Vai al sito",
+      "Hello": "Ciao",
+      "How you are doing": "A che punto sei",
+      "In Stage 2 the change only takes effect once confirmed at the new address — otherwise changing the e-mail would be the easiest way to take over an account.": "Nella Fase 2 il cambio ha effetto solo dopo la conferma al nuovo indirizzo — altrimenti cambiare l’e-mail sarebbe il modo più facile per impossessarsi di un account.",
+      "Lesson": "Lezione",
+      "Lesson not found.": "Lezione non trovata.",
+      "Lessons": "Lezioni",
+      "Minimum to pass:": "Minimo per superarlo:",
+      "Move down": "Sposta giù",
+      "Move up": "Sposta su",
+      "My account": "Il mio account",
+      "Confirm your e-mail.": "Conferma la tua e-mail.",
+      "We sent a link to": "Abbiamo inviato un link a",
+      "Resend": "Invia di nuovo",
+      "Sent — check your inbox.": "Inviato — controlla la tua casella di posta.",
+      "Dismiss": "Ignora",
+      "My plan": "Il mio piano",
+      "My track": "Il mio percorso",
+      "Navigation": "Navigazione",
+      "Next categories": "Categorie successive",
+      "Next steps": "Prossimi passi",
+      "No mistakes pending. Good work.": "Nessun errore in sospeso. Ottimo lavoro.",
+      "No password is stored here: there is no authentication in the portal yet, and writing one to the browser would give the opposite impression.": "Qui non viene salvata nessuna password: il portale non ha ancora autenticazione, e scriverne una nel browser darebbe l’impressione opposta.",
+      "No plan configured.": "Nessun piano configurato.",
+      "No portal content is locked by plan today — locking requires a server, and with the state in the browser any lock would be theatre.": "Oggi nessun contenuto del portale è bloccato dal piano — bloccare richiede un server, e con lo stato nel browser qualsiasi blocco sarebbe teatro.",
+      "Notes": "Note",
+      "Nothing found for": "Nessun risultato per",
+      "One per course completed with a passed exam, and one per whole track.": "Uno per corso concluso con esame superato, e uno per percorso intero.",
+      "Only the exam is left": "Manca solo l’esame",
+      "Open navigation": "Apri la navigazione",
+      "Opens the way to": "Apre la strada a",
+      "Password": "Password",
+      "Performance": "Andamento",
+      "Plan": "Piano",
+      "Prerequisites": "Prerequisiti",
+      "Previous categories": "Categorie precedenti",
+      "Record answer": "Registra la risposta",
+      "Redo": "Rifare",
+      "Redo it whenever you like: the next exam is drawn again.": "Rifallo quando vuoi: il prossimo esame viene estratto di nuovo.",
+      "Redo the": "Rifare i",
+      "Redo the exam": "Rifai l’esame",
+      "Redo what you got wrong": "Rifare quello che hai sbagliato",
+      "Redoing draws a different exam. The best result stands.": "Rifarlo estrae un esame diverso. Resta il risultato migliore.",
+      "Removes completed lessons, answers and the enrolment. There is no undo.": "Elimina le lezioni concluse, le risposte e l’iscrizione. Non si torna indietro.",
+      "Review the exam question by question": "Rivedi l’esame domanda per domanda",
+      "Review the questions": "Rivedi le domande",
+      "Search": "Cerca",
+      "Search courses": "Cerca un corso",
+      "Sections of this lesson": "Sezioni di questa lezione",
+      "See next levels": "Vedi i livelli successivi",
+      "See previous levels": "Vedi i livelli precedenti",
+      "Select all that apply.": "Seleziona tutte quelle che valgono.",
+      "Share": "Condividi",
+      "Show sections": "Mostra le sezioni",
+      "Sign in": "Entra",
+      "Sign in to pick up where you left off.": "Entra per riprendere da dove eri rimasto.",
+      "Sign out": "Esci",
+      "Student": "Studente",
+      "Student area": "Area studente",
+      "Submit the exam": "Consegna l’esame",
+      "Submit with": "Consegna con",
+      "Supporting material": "Materiale di supporto",
+      "Switch to the dark theme": "Passa al tema scuro",
+      "Switch to the light theme": "Passa al tema chiaro",
+      "Switch to this one": "Passa a questo",
+      "Switching track erases nothing: progress is per course, and a shared course keeps counting.": "Cambiare percorso non cancella nulla: i progressi sono per corso, e un corso condiviso continua a contare.",
+      "Syllabus": "Programma",
+      "Take the exam": "Fai l’esame",
+      "Tap an item on the left, then its pair on the right.": "Tocca un elemento a sinistra e poi la sua coppia a destra.",
+      "The certificate appears on the Certificates screen.": "Il certificato compare nella schermata Certificati.",
+      "The comparison is exact: spaces and line breaks count.": "Il confronto è esatto: spazi e a capo contano.",
+      "The ones you got wrong": "Quelli che hai sbagliato",
+      "The types that need execution are not checked yet, so they stay out of the rate.": "I tipi che richiedono esecuzione non sono ancora verificati, quindi restano fuori dalla percentuale.",
+      "There is nothing wrong to redo.": "Non c’è niente di sbagliato da rifare.",
+      "This exercise declares no recomputation — nobody checked the answer key.": "Questo esercizio non dichiara alcun ricalcolo — nessuno ha verificato la soluzione.",
+      "Track": "Percorso",
+      "Track exam": "Esame del percorso",
+      "Try again": "Riprova",
+      "Type at least two letters.": "Scrivi almeno due lettere.",
+      "Upgrade": "Passa al piano superiore",
+      "View the certificate at full size": "Vedi il certificato a grandezza intera",
+      "Watch": "Guarda",
+      "What each plan includes": "Cosa include ogni piano",
+      "What you got wrong": "Quello che hai sbagliato",
+      "What you subscribed to, what it includes and what changes if you switch.": "A cosa ti sei iscritto, cosa include e cosa cambia se lo cambi.",
+      "What yours will look like": "Come sarà il tuo",
+      "Yes, erase": "Sì, cancella",
+      "You have already passed this exam.": "Hai già superato questo esame.",
+      "You have completed": "Hai concluso",
+      "You have not answered any exercises yet. Take an assessment and come back.": "Non hai ancora risposto a nessun esercizio. Fai una valutazione e torna qui.",
+      "You have not chosen a track yet.": "Non hai ancora scelto un percorso.",
+      "You have not written any notes yet. They live at the end of each section.": "Non hai ancora scritto nessuna nota. Stanno alla fine di ogni sezione.",
+      "Your account": "Il tuo account",
+      "Your best score so far:": "Il tuo miglior risultato finora:",
+      "Your certificates": "I tuoi certificati",
+      "Your certificates could not be loaded — the server did not answer.": "Non è stato possibile caricare i tuoi certificati — il server non ha risposto.",
+      "Your notes": "Le tue note",
+      "Your track": "Il tuo percorso",
+      "[assessment in preparation — this topic's exercises have not been produced yet]": "[valutazione in preparazione — gli esercizi di questo argomento non sono ancora stati prodotti]",
+      "[exam in preparation — not enough exercises have been produced yet]": "[esame in preparazione — non ci sono ancora abbastanza esercizi prodotti]",
+      "[lesson content — the real material lands in Stage 2]": "[contenuto della lezione — il materiale vero arriva nella Fase 2]",
+      "[skeleton — there is no authentication: any name gets in]": "[scheletro — non c’è autenticazione: entra qualsiasi nome]",
+      "advanced": "avanzato",
+      "ai": "ia",
+      "all": "tutte",
+      "already solved": "già risolto",
+      "answer recorded": "risposta registrata",
+      "architecture": "architettura",
+      "career": "carriera",
+      "are waiting to be checked on the server.": "aspettano la verifica sul server.",
+      "area": "area",
+      "attempt": "tentativo",
+      "attempts": "tentativi",
+      "available": "disponibile",
+      "backend": "backend",
+      "beginner": "principiante",
+      "best score:": "miglior risultato:",
+      "blank": "in bianco",
+      "certifies that": "certifica che",
+      "checking…": "verifica…",
+      "close": "chiudi",
+      "code": "codice",
+      "code copied": "codice copiato",
+      "complete and go to the next section": "completa e vai alla sezione successiva",
+      "coming soon": "presto",
+      "completed": "completato",
+      "completed the course": "ha completato il corso",
+      "completed the track": "ha completato il percorso",
+      "content completed": "contenuto concluso",
+      "correct": "corretta",
+      "could not copy": "copia non riuscita",
+      "course": "corso",
+      "course completed": "corso completato",
+      "course introduction": "presentazione del corso",
+      "course.": "corso.",
+      "courses": "corsi",
+      "courses completed": "corsi conclusi",
+      "courses on the path": "corsi sul percorso",
+      "current password": "password attuale",
+      "current plan": "piano attuale",
+      "current track": "percorso attuale",
+      "data": "dati",
+      "derivative": "derivata",
+      "e-mail updated": "e-mail aggiornata",
+      "easy": "facile",
+      "end of the course": "fine del corso",
+      "end of the track": "fine del percorso",
+      "exam submitted": "esame consegnato",
+      "examples": "esempi",
+      "exercise, from the course you answered it in.": "esercizio, del corso in cui hai risposto.",
+      "exercises": "esercizi",
+      "exercises checked": "esercizi verificati",
+      "exercises, from every course you answered in.": "esercizi, di tutti i corsi in cui hai risposto.",
+      "expected-output": "output atteso",
+      "expression": "espressione",
+      "expression-answer": "espressione",
+      "feature": "vantaggio",
+      "features": "vantaggi",
+      "file": "file",
+      "files": "file",
+      "final exam": "esame finale",
+      "final exam:": "esame finale:",
+      "finish": "arrivo",
+      "forever": "per sempre",
+      "foundations": "fondamenti",
+      "free": "gratuito",
+      "frontend": "frontend",
+      "fundamentals": "fondamenti",
+      "further ahead": "più avanti",
+      "hard": "difficile",
+      "hint": "indizio",
+      "in": "in",
+      "in preparation — not enough exercises yet": "in preparazione — non ci sono ancora abbastanza esercizi",
+      "in progress": "in corso",
+      "included": "incluso",
+      "infra": "infra",
+      "input": "ingresso",
+      "integral": "integrale",
+      "intermediate": "intermedio",
+      "leave the whole screen": "uscire dallo schermo intero",
+      "lesson": "lezione",
+      "lessons": "lezioni",
+      "level": "livello",
+      "make a note on this section": "prendi una nota su questa sezione",
+      "management": "gestione",
+      "mobile": "mobile",
+      "matching": "abbinamento",
+      "medium": "medio",
+      "minimum": "minimo",
+      "multiple-choice": "scelta multipla",
+      "my track": "il mio percorso",
+      "name": "nome",
+      "navigate": "naviga",
+      "new password": "password nuova",
+      "next": "successivo",
+      "no code has been issued": "non è stato emesso alcun codice",
+      "no code has been issued, so there is nothing to check": "non è stato emesso alcun codice, quindi non c’è nulla da verificare",
+      "no course found — try another term.": "nessun corso trovato — prova un altro termine.",
+      "not checked": "non verificato",
+      "not every pair was closed.": "non tutte le coppie sono state chiuse.",
+      "not included": "non incluso",
+      "not yet": "non ancora",
+      "note saved": "nota salvata",
+      "notes": "note",
+      "of": "di",
+      "of the content. The exam does not lock — but it covers the whole material.": "del contenuto. L’esame non blocca — ma copre tutto il materiale.",
+      "on this path": "su questo percorso",
+      "open": "apri",
+      "open the course": "apri il corso",
+      "options are left out.": "opzioni restano fuori.",
+      "ordering": "ordinamento",
+      "output": "uscita",
+      "page not found": "pagina non trovata",
+      "pairs": "coppie",
+      "pairs were tried wrong before closing.": "coppie sono state tentate sbagliate prima di chiudersi.",
+      "passed": "superato",
+      "passed with": "superato con",
+      "password": "password",
+      "password changed": "password modificata",
+      "Check the new address for a link to confirm the change.": "Controlla il nuovo indirizzo — abbiamo inviato un link per confermare la modifica.",
+      "Your password goes to the server, which keeps only a hash of it — it never stays in the browser. Changing it signs out your other devices.": "La tua password va al server, che ne conserva solo un hash — non resta mai nel browser. Cambiarla disconnette gli altri dispositivi.",
+      "Name": "Nome",
+      "Change name": "Cambia nome",
+      "type your name": "inserisci il tuo nome",
+      "name updated": "nome aggiornato",
+      "Your data": "I tuoi dati",
+      "Download a copy of everything the portal holds about you — profile, progress, exam results and certificates — as a file.": "Scarica una copia di tutto ciò che il portale conserva su di te — profilo, progressi, risultati degli esami e certificati — in un file.",
+      "Download my data": "Scarica i miei dati",
+      "Preparing…": "Preparazione…",
+      "downloaded": "scaricato",
+      "Delete my account": "Elimina il mio account",
+      "This erases your account and everything in it — progress, notes, exam results and certificates. It cannot be undone.": "Questo cancella il tuo account e tutto ciò che contiene — progressi, note, risultati degli esami e certificati. Non è reversibile.",
+      "confirm your password to delete": "conferma la tua password per eliminare",
+      "Devices": "Dispositivi",
+      "Where your account is signed in. End any session you do not recognise.": "Dove il tuo account ha una sessione aperta. Chiudi qualsiasi sessione che non riconosci.",
+      "this device": "questo dispositivo",
+      "last active": "ultima attività",
+      "unknown location": "posizione sconosciuta",
+      "End session": "Chiudi sessione",
+      "Sign out other devices": "Disconnetti gli altri dispositivi",
+      "an unknown device": "un dispositivo sconosciuto",
+      "Loading…": "Caricamento…",
+      "per year": "all'anno",
+      "per month": "al mese",
+      "pick up where you left off": "riprendi da dove eri rimasto",
+      "plan": "piano",
+      "previous": "precedente",
+      "previous section": "sezione precedente",
+      "programming": "programmazione",
+      "quality": "qualità",
+      "question": "domanda",
+      "questions drawn": "domande estratte",
+      "questions graded": "domande corrette",
+      "questions, drawn from the bank of the": "domande, estratte dalla banca del",
+      "quiz": "questionario",
+      "recommended after": "consigliato dopo",
+      "repeat the new password": "ripeti la password nuova",
+      "result": "risultato",
+      "result only at the end": "risultato solo alla fine",
+      "revoked": "revocato",
+      "sample": "campione",
+      "sample — no code has been issued": "campione — non è stato emesso alcun codice",
+      "sample — there is no certificate to add": "campione — non c’è nessun certificato da aggiungere",
+      "sample — there is nothing to download": "esempio — non c’è nulla da scaricare",
+      "samples — they do not count as a certificate": "campioni — non valgono come certificato",
+      "score": "punteggio",
+      "search courses, lessons, sections and exercises…": "cerca corsi, lezioni, sezioni ed esercizi…",
+      "search courses...": "cerca un corso...",
+      "section": "sezione",
+      "sections": "sezioni",
+      "sections completed": "sezioni concluse",
+      "security": "sicurezza",
+      "see plan details": "vedi i dettagli del piano",
+      "see the graph on the whole screen": "vedere il grafo a schermo intero",
+      "see the map": "vedi la mappa",
+      "see the result": "vedi il risultato",
+      "see the track map": "vedi la mappa del percorso",
+      "sign-in e-mail": "e-mail di accesso",
+      "simplification": "semplificazione",
+      "since": "dal",
+      "student": "studente",
+      "test cases stay hidden.": "i casi di test restano nascosti.",
+      "that address does not look like an e-mail": "quell’indirizzo non sembra un’e-mail",
+      "that did not work — try again": "non ha funzionato — riprova",
+      "the new password is the same as the current": "la nuova password è uguale a quella attuale",
+      "the new password needs at least 8 characters": "la nuova password deve avere almeno 8 caratteri",
+      "the result comes at the end of the exam.": "il risultato arriva alla fine dell’esame.",
+      "the track's set of courses.": "l’insieme dei corsi del percorso.",
+      "the two new passwords do not match": "le due nuove password non coincidono",
+      "this browser cannot generate the image": "questo browser non può generare l’immagine",
+      "this certificate was revoked": "questo certificato è stato revocato",
+      "to": "a",
+      "too short": "troppo corta",
+      "total": "in tutto",
+      "track": "percorso",
+      "track completed": "percorso completato",
+      "track exam": "esame del percorso",
+      "track exam:": "esame del percorso:",
+      "tracks": "percorsi",
+      "type the exact output": "scrivi l’uscita esatta",
+      "type your current password": "inserisci la password attuale",
+      "typing…": "scrittura…",
+      "unanswered.": "senza risposta.",
+      "unknown exercise type": "tipo di esercizio sconosciuto",
+      "variables": "variabili",
+      "video coming soon": "video molto presto",
+      "waiting for the server": "in attesa del server",
+      "watch the course introduction": "guarda la presentazione del corso",
+      "what appears on screen": "quello che compare a schermo",
+      "what you want to remember from this section…": "quello che vuoi ricordare di questa sezione…",
+      "with": "con",
+      "with an assessment": "con valutazione",
+      "wrong ones": "sbagliate",
+      "you choose": "scegli tu",
+      "you@example.com": "tu@esempio.com",
+      "your answer": "la tua risposta",
+      "your name": "il tuo nome",
+      "your note": "la tua nota",
+      "your notes": "le tue note",
+      "your plan": "il tuo piano",
+      "your solution": "la tua soluzione",
+      "your track": "il tuo percorso",
+      "yours": "il tuo",
+    },
+    tracks: {
+      "frontend": {
+        "name": "Sviluppo Front-end",
+        "goal": "La formazione completa di chi costruisce ciò che l’utente vede: dalla prima pagina statica all’applicazione pubblicata. Sequenza basata sulla roadmap pubblica Front-end della comunità roadmap.sh, adattata al nostro metodo.",
+        "outcome": "Sviluppatore Front-end junior"
+      },
+      "backend": {
+        "name": "Sviluppo Back-end",
+        "goal": "La formazione di chi costruisce ciò che regge l’applicazione: dati, API, server e scalabilità. Basata sulla roadmap pubblica Back-end di roadmap.sh — il linguaggio del server lo scegli tu, e poi il percorso torna a unirsi.",
+        "outcome": "Sviluppatore Back-end junior",
+        "steps": {
+          "3": {
+            "choice": "il linguaggio del server",
+            "note": "Impara bene uno prima di passare a un altro. Il resto del percorso è identico su qualsiasi strada.",
+            "options": [
+              "JavaScript / Node.js",
+              "Python",
+              "Java",
+              "Go"
+            ]
+          }
+        }
+      },
+      "devops": {
+        "name": "DevOps e SRE",
+        "goal": "La formazione di chi tiene in piedi l’esercizio: sistemi, reti, cloud, automazione e osservabilità. Sequenza basata sulla roadmap pubblica DevOps di roadmap.sh. Metà dei corsi viene dai percorsi precedenti — chi ha fatto Front-end o Back-end parte già a metà strada.",
+        "outcome": "Ingegnere DevOps / SRE junior"
+      },
+      "data": {
+        "name": "Ingegneria dei Dati",
+        "goal": "La formazione di chi costruisce l’infrastruttura che sostiene le decisioni: modellazione, pipeline, big data e governance. Sequenza basata sulla roadmap pubblica Data Engineer di roadmap.sh, che raccomanda Python e SQL come prerequisiti. Metà dei corsi viene dai percorsi precedenti.",
+        "outcome": "Ingegnere dei Dati junior"
+      },
+      "networks-infra": {
+        "name": "Reti e Infrastruttura",
+        "goal": "La formazione di chi fa arrivare il pacchetto: indirizzamento, instradamento, wi-fi, sicurezza e automazione. Sequenza basata sulla roadmap pubblica Network Engineer di roadmap.sh — sette degli undici corsi vengono dai percorsi precedenti.",
+        "outcome": "Ingegnere di Rete junior"
+      },
+      "prompt": {
+        "name": "Ingegneria del Prompt",
+        "goal": "Il percorso più breve del catalogo e l’unico che non richiede di saper programmare: serve anche a chi scrive, assiste, insegna o decide. Copre per intero la roadmap pubblica Prompt Engineering di roadmap.sh, inclusa quella di AI Red Teaming a cui rimanda.",
+        "outcome": "Specialista in ingegneria del prompt"
+      },
+      "ai": {
+        "name": "Ingegneria dell’IA",
+        "goal": "La formazione di chi costruisce prodotti con l’IA: scelta del modello, embedding, RAG, agenti, MCP, valutazione e multimodale. Sequenza basata sulla roadmap pubblica AI Engineer di roadmap.sh — la base di programmazione viene da Python.",
+        "outcome": "Ingegnere IA junior"
+      },
+      "software-architecture": {
+        "name": "Architettura del Software",
+        "goal": "L’unico percorso del catalogo che ne richiede un altro prima: è un seguito di carriera, non una porta d’ingresso. Per chi già sviluppa e passerà a decidere — pattern, modellazione, integrazione aziendale, gestione e comunicazione. Sequenza basata sulla roadmap pubblica Software Architect di roadmap.sh, che chiede il Back-end come prerequisito.",
+        "outcome": "Architetto del software"
+      },
+      "it-support": {
+        "name": "Fondamenti di Informatica e Supporto",
+        "goal": "La porta d’ingresso della scuola e il primo percorso che non richiede nulla: inizia dal case aperto e finisce con te che assisti, diagnostichi e documenti. Copre i blocchi Fundamental IT Skills, Operating Systems e la base di rete della roadmap pubblica Cyber Security di roadmap.sh.",
+        "outcome": "Tecnico di supporto / Help Desk"
+      },
+      "security": {
+        "name": "Sicurezza Informatica",
+        "goal": "Attacco e difesa sullo stesso cammino: fondamenti, crittografia, minacce, hardening, SOC, penetration test e cloud. È la metà grande della roadmap pubblica Cyber Security di roadmap.sh — l’altra metà è diventata il percorso Fondamenti di Informatica, che fa da base a questo.",
+        "outcome": "Analista di sicurezza informatica"
+      },
+      "devsecops": {
+        "name": "DevSecOps",
+        "goal": "Il percorso più economico del catalogo: sta all’incrocio tra DevOps e Sicurezza, e l’80% esiste già. Sicurezza che gira a ogni commit — codice sicuro, modellazione delle minacce, scansione nella pipeline, immagine irrobustita e catena di fornitura sotto controllo. Sequenza basata sulla roadmap pubblica DevSecOps di roadmap.sh.",
+        "outcome": "Ingegnere DevSecOps"
+      },
+      "bi": {
+        "name": "Business Intelligence",
+        "goal": "Il percorso per chi vuole lavorare con i dati senza diventare programmatore: statistica, Excel per davvero, SQL, visualizzazione e il dialogo con il business. Sequenza basata sulla roadmap pubblica BI Analyst di roadmap.sh. È il percorso che porta la statistica che mancava a tutto il catalogo.",
+        "outcome": "Analista BI / Analista dei dati"
+      },
+      "qa": {
+        "name": "Qualità e Test del Software",
+        "goal": "La formazione di chi garantisce che il software faccia ciò che promette — e regga ciò che è stato promesso al posto suo. Sequenza basata sulla roadmap pubblica QA Engineer di roadmap.sh. Come in BI, non serve programmare per iniziare: ci sono 330 ore prima del primo corso di programmazione, ed è la seconda porta d’ingresso del catalogo per chi cambia carriera.",
+        "outcome": "Ingegnere QA junior"
+      },
+      "python-tech": {
+        "name": "Python",
+        "goal": "Per chi vuole padroneggiare il linguaggio, non un ruolo. Il tronco è uguale per tutti — il linguaggio imparato bene, con il versionamento — e alla fine scegli dove applicarlo: al server, ai dati o all’IA. Basato sulla roadmap pubblica Python di roadmap.sh.",
+        "outcome": "Padronanza di Python",
+        "steps": {
+          "3": {
+            "choice": "dove applicare Python",
+            "note": "Qui il percorso non torna a unirsi: ogni strada è un’applicazione diversa dello stesso linguaggio.",
+            "options": [
+              "Server e API",
+              "Dati",
+              "IA"
+            ]
+          }
+        }
+      },
+      "go-tech": {
+        "name": "Go",
+        "goal": "Il linguaggio in cui sono scritti Docker, Kubernetes e Terraform. Il tronco va dalla sintassi alla concorrenza — la parte di Go che non esiste altrove — e alla fine scegli il lato: costruire servizi o lo strumento di infrastruttura. Basato sulla roadmap pubblica Go di roadmap.sh.",
+        "outcome": "Padronanza di Go",
+        "steps": {
+          "3": {
+            "choice": "il lato di Go",
+            "note": "I due partono dalla stessa concorrenza: uno costruisce il servizio, l’altro costruisce lo strumento che lo gestisce.",
+            "options": [
+              "Servizi e API",
+              "Strumenti e Infrastruttura"
+            ]
+          }
+        }
+      },
+      "sql-tech": {
+        "name": "SQL e Basi di Dati",
+        "goal": "La tecnologia che impiega di più e richiede di meno: SQL si impara senza saper programmare. È il percorso di chi viene dall’amministrazione, dalla contabilità o dalla gestione ed è stanco di chiedere un report a qualcun altro. Dopo la base di dati, scegli cosa farne del dato. Basato sulle roadmap pubbliche SQL e PostgreSQL di roadmap.sh.",
+        "outcome": "Padronanza di SQL e basi di dati",
+        "steps": {
+          "2": {
+            "choice": "cosa fare del dato",
+            "note": "Le due strade partono dalla stessa base: una guarda alla decisione, l’altra al volume.",
+            "options": [
+              "Analisi e BI",
+              "Ingegneria dei Dati"
+            ]
+          }
+        }
+      }
+    },
+  },
+};

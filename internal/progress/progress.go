@@ -75,7 +75,13 @@ type Where struct {
 }
 
 // Completed is a section somebody finished.
+//
+// `CourseID` is empty when the answer is already about one course — the caller
+// asked for it and repeating it on every row would be noise. It is filled by
+// the read that goes across all of them, where it is the only thing saying
+// which course a row belongs to.
 type Completed struct {
+	CourseID    string    `json:"course,omitempty"`
 	LessonID    string    `json:"lesson"`
 	SectionID   string    `json:"section"`
 	CompletedAt time.Time `json:"completed_at"`
@@ -417,6 +423,40 @@ func scanNotes(rows pgx.Rows) ([]Note, error) {
 }
 
 /* ---------- how far along, everywhere at once ---------- */
+
+// Everything one student has finished, in every course, in one read.
+//
+// IT IS THE ROWS AND NOT THE COUNTS. `Summary` answers "how many" per course,
+// which is what a list of courses needs; an interface that draws a tick beside
+// each SECTION needs to know which ones, and asking course by course is a
+// hundred and twenty-two requests to open a page.
+//
+// The two are separate reads rather than one with a flag, because they are
+// asked at different moments and the expensive one should not be paid for the
+// cheap question: a rail needs the counts on every navigation, and the ticks
+// only when a course is open.
+func (s *Store) Completions(ctx context.Context, tenantID, accountID uuid.UUID) ([]Completed, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT course_id, lesson_id, section_id, completed_at
+		FROM section_progress
+		WHERE tenant_id = $1 AND account_id = $2
+		ORDER BY completed_at
+	`, tenantID, accountID)
+	if err != nil {
+		return nil, fmt.Errorf("progress: reading everything a student has finished: %w", err)
+	}
+	defer rows.Close()
+
+	out := []Completed{}
+	for rows.Next() {
+		var c Completed
+		if err := rows.Scan(&c.CourseID, &c.LessonID, &c.SectionID, &c.CompletedAt); err != nil {
+			return nil, fmt.Errorf("progress: reading everything a student has finished: %w", err)
+		}
+		out = append(out, c)
+	}
+	return out, rows.Err()
+}
 
 // Done is how many countable sections a student has finished in one course.
 //
