@@ -679,11 +679,17 @@ Two more rules about the documents:
   address. They are baked into the offline bundle for the same reason, and the bundle test
   asserts they do *not* say "this needs the school" — the one deliberate exception to everything
   else in that file.
-- **What is still undecided is marked, in every language, and a test says so.** Four things are
-  somebody else's call — the company, the jurisdiction, the refund window, the notice before a
-  price change. They sit in `> **…**` blocks. When they are answered, that test is deleted on
-  purpose; a placeholder that quietly survives publication is how a policy goes out with a blank
-  in it.
+- **What is still undecided is marked, in every language, and a test says so.** One thing is
+  left: the company itself — name, CNPJ, address, and the address to write to. It sits in a
+  `> **…**` block in each document. When it is filled in, that test is deleted on purpose; a
+  placeholder that quietly survives publication is how a policy goes out with a blank in it.
+
+**The decided half is Brazilian.** The terms are governed by the Consumer Protection Code and a
+dispute is heard where the student lives; the refund window is the statutory seven days and
+nothing beyond it, said out loud rather than left to be discovered; a price change carries 30
+days' notice and happens at most once in twelve months. The privacy policy names the LGPD and
+the ANPD. None of that is a placeholder — it is the answer, and changing it means changing a
+policy rather than filling in a blank.
 
 ---
 

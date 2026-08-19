@@ -10,9 +10,10 @@ um dia poderíamos ter o direito de fazer — onde os dois divergirem, este
 documento é o que nos obriga.
 
 > **Ainda falta preencher antes de publicar.** O nome e o CNPJ da empresa por
-> trás da plataforma, seu endereço, o endereço para onde escrever sobre qualquer
-> coisa abaixo, e a lei que rege tudo isto. Até isso estar aqui, trate este
-> texto como uma descrição do sistema e não como uma política publicada.
+> trás da plataforma, seu endereço, e o endereço para onde escrever sobre
+> qualquer coisa abaixo. Até isso estar aqui, trate este texto como uma
+> descrição do sistema e não como uma política publicada — uma política sem
+> controlador identificado não é uma contra a qual você possa agir.
 
 ## A versão curta
 
@@ -122,6 +123,17 @@ Três coisas, e nenhuma delas é para publicidade:
 - **Seu idioma e seu tema**, guardados no armazenamento do seu próprio
   navegador. Eles nunca chegam até nós.
 
+## Qual lei, e para quem reclamar
+
+Isto é regido pela **lei brasileira**, e especificamente pela Lei Geral de
+Proteção de Dados (Lei 13.709/2018). Os direitos que ela dá a você são os
+descritos aqui: saber o que temos, obter uma cópia, corrigir um erro, pedir o
+apagamento, e saber com quem compartilhamos — que, como diz a seção acima, é
+ninguém.
+
+Se errarmos e você não ficar satisfeito com nossa resposta, você pode reclamar à
+**ANPD**, a Autoridade Nacional de Proteção de Dados.
+
 ## Pedir uma cópia
 
 Você pode pedir tudo o que temos sobre você e entregamos o conjunto inteiro,
@@ -162,7 +174,8 @@ justamente o fato sendo apagado.
 ## Por quanto tempo
 
 Guardamos o que você estudou enquanto você tiver conta, porque isso é a conta.
-Registros de pagamento são guardados pelo tempo que a lei exigir, e não mais.
+Registros de pagamento são guardados pelo tempo que a legislação fiscal
+brasileira exigir, e não mais.
 
 ## Mudanças neste documento
 

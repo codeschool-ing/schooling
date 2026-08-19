@@ -10,10 +10,10 @@ thing we might one day be entitled to do — where those two differ, this docume
 is the one that binds us.
 
 > **Still to be filled in before this is published.** The name and registration
-> number of the company behind the platform, its address, the address to write
-> to about anything below, and the country whose law governs it. Until those are
-> here, treat this as a description of the system rather than as a published
-> policy.
+> number of the company behind the platform, its address, and the address to
+> write to about anything below. Until those are here, treat this as a
+> description of the system rather than as a published policy — a policy with no
+> controller named on it is not one you could act against.
 
 ## The short version
 
@@ -121,6 +121,17 @@ Three things, and none of them is for advertising:
 - **Your language and theme**, kept in your own browser's storage. They never
   reach us.
 
+## Which law, and who to complain to
+
+This is governed by **Brazilian law**, and specifically by the General Data
+Protection Law (Law 13.709/2018). The rights it gives you are the ones described
+here: to know what we hold, to get a copy of it, to have a mistake corrected, to
+have it erased, and to know who we have shared it with — which, as the section
+above says, is nobody.
+
+If we get something wrong and you are not satisfied with our answer, you can
+complain to the **ANPD**, the national data protection authority.
+
 ## Getting a copy
 
 You can ask for everything we hold about you and we will give you the lot, as
@@ -161,8 +172,8 @@ differently would say that one had been there, which is the fact being erased.
 ## Keeping
 
 We keep what you have studied for as long as you have an account, because that
-is the account. Payment records are kept as long as the law requires them, and
-then no longer.
+is the account. Payment records are kept as long as Brazilian tax law requires
+them, and then no longer.
 
 ## Changes to this document
 

@@ -6,13 +6,10 @@ effective: 2026-08-19
 These are the terms you study under. They describe what we owe you, what we do
 not, and how a subscription starts and ends.
 
-> **Still to be decided before this is published.** The company behind the
-> platform and its registration details; the country whose law governs these
-> terms and where a dispute is heard; the refund window we offer beyond the
-> statutory minimum; and how much notice we give before a price change. Every
-> other clause below is a decision that is already made and already implemented
-> — those four are not, and inventing them here would be worse than leaving them
-> visible.
+> **Still to be filled in before this is published.** The name and registration
+> number of the company behind the platform, its address, and the address to
+> write to. Everything else here is decided, and every clause below describes
+> something the system already does.
 
 ## The material is written by a machine
 
@@ -59,6 +56,10 @@ applies.
 **The price you subscribe at is the price you keep.** A price change applies to
 new subscriptions and to renewals, never retroactively to one that is running.
 
+If we do change a price, we will tell you **at least 30 days before it takes
+effect**, and you can cancel before it does. We will not raise a price more than
+once in any twelve months.
+
 Where subscriptions are sold in card instalments, **the instalments are one
 purchase**, split by your card issuer. The arrangement between you and your bank
 is theirs; from our side the subscription is paid for the whole term at the
@@ -79,14 +80,18 @@ does.
 
 ## Refunds
 
-If we refund you, access ends at that moment rather than at the end of the
+**You have seven days to change your mind**, counted from the day you subscribe,
+because that is what the Consumer Protection Code gives you for a purchase made
+at a distance. Ask within those seven days and you get your money back in full,
+with no reason required.
+
+We do not offer a longer window than that, and we say so here rather than
+leaving you to find out: seven days is the whole of it.
+
+After that, a refund is something we may agree to and are not obliged to.
+
+If we do refund you, access ends at that moment rather than at the end of the
 period, because the period is what was refunded.
-
-The statutory right to withdraw from a distance purchase applies and we do not
-limit it.
-
-> The refund window we offer **beyond** that statutory minimum is one of the
-> four things listed at the top as still to be decided.
 
 ## If you stop paying
 
@@ -130,6 +135,15 @@ used to extract the material wholesale, or that is being used to attack the
 platform. If we do, we will say which and you can reply to a person.
 
 We will not close an account because of what somebody studies.
+
+## Which law, and where
+
+These terms are governed by **Brazilian law**, and your relationship with us is a
+consumer relationship under the Consumer Protection Code (Law 8.078/1990).
+
+If it comes to a dispute, **it is heard where you live.** That is what the law
+gives a consumer, and we are not going to try to move it somewhere less
+convenient for you.
 
 ## Changes to these terms
 

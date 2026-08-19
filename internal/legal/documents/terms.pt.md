@@ -6,12 +6,9 @@ effective: 2026-08-19
 Estes são os termos sob os quais você estuda aqui. Dizem o que devemos a você, o
 que não devemos, e como uma assinatura começa e termina.
 
-> **Ainda falta decidir antes de publicar.** A empresa por trás da plataforma e
-> seus dados de registro; a lei que rege estes termos e onde uma disputa é
-> julgada; o prazo de arrependimento que oferecemos além do mínimo legal; e
-> quanta antecedência damos antes de uma mudança de preço. Toda cláusula abaixo
-> é uma decisão já tomada e já implementada — essas quatro não são, e inventá-las
-> aqui seria pior do que deixá-las à vista.
+> **Ainda falta preencher antes de publicar.** O nome e o CNPJ da empresa por
+> trás da plataforma, seu endereço e o endereço para onde escrever. O resto está
+> decidido, e cada cláusula abaixo descreve algo que o sistema já faz.
 
 ## O material é escrito por máquina
 
@@ -60,6 +57,10 @@ onde houver imposto.
 vale para assinaturas novas e para renovações, nunca retroativamente para uma
 que está correndo.
 
+Se mudarmos um preço, avisaremos **com pelo menos 30 dias de antecedência**, e
+você pode cancelar antes de ele passar a valer. Não reajustamos um preço mais de
+uma vez a cada doze meses.
+
 Onde a assinatura é vendida parcelada no cartão, **as parcelas são uma compra
 só**, dividida pelo emissor do seu cartão. O acerto entre você e o seu banco é
 de vocês; do nosso lado a assinatura está paga pelo período inteiro no momento
@@ -79,13 +80,18 @@ peça o apagamento — a política de privacidade diz exatamente o que ele faz.
 
 ## Estornos
 
-Se estornarmos seu pagamento, o acesso termina naquele momento e não no fim do
-período, porque o período é o que foi estornado.
+**Você tem sete dias para desistir**, contados do dia em que assina, porque é o
+que o Código de Defesa do Consumidor dá para uma compra feita a distância. Peça
+dentro desses sete dias e devolvemos o valor integral, sem precisar de motivo.
 
-O direito de arrependimento em compra a distância se aplica e não o limitamos.
+Não oferecemos prazo maior que esse, e dizemos isso aqui em vez de deixar você
+descobrir: sete dias é tudo.
 
-> O prazo que oferecemos **além** desse mínimo legal é uma das quatro coisas
-> listadas no topo como ainda por decidir.
+Depois disso, um estorno é algo com que podemos concordar e não algo a que somos
+obrigados.
+
+Se estornarmos, o acesso termina naquele momento e não no fim do período, porque
+o período é o que foi estornado.
 
 ## Se você parar de pagar
 
@@ -131,6 +137,15 @@ esteja sendo usada para atacar a plataforma. Se fizermos isso, diremos qual dos
 casos é e você poderá responder a uma pessoa.
 
 Não encerraremos uma conta por causa do que alguém estuda.
+
+## Qual lei, e onde
+
+Estes termos são regidos pela **lei brasileira**, e sua relação conosco é uma
+relação de consumo, sob o Código de Defesa do Consumidor (Lei 8.078/1990).
+
+Se der em disputa, **ela é julgada onde você mora.** É o que a lei dá ao
+consumidor, e não vamos tentar levar isso para um lugar menos conveniente para
+você.
 
 ## Mudanças nestes termos
 
