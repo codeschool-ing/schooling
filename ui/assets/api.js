@@ -166,6 +166,17 @@ export const api = {
       + `/${encodeURIComponent(section)}/visit`),
   resume: () => api.get('/api/v1/resume'),
 
+  /* ---------- drilling ----------
+
+     DRAWING IS A POST because it writes: the server records how the card was
+     shuffled, and the answer is marked against that. A GET would be re-dealt by
+     a prefetch under somebody halfway through it. */
+  practice: (limit) => api.get(`/api/v1/practice${limit ? `?limit=${limit}` : ''}`),
+  drawCard: (exercise) => api.post(`/api/v1/practice/${encodeURIComponent(exercise)}/draw`),
+  answerCard: (exercise, answer, elapsedMs) =>
+    api.post(`/api/v1/practice/${encodeURIComponent(exercise)}/answered`,
+      { answer, elapsed_ms: elapsedMs }),
+
   /* ---------- exams ---------- */
   startExam: (scope, id) =>
     api.post(`/api/v1/exams/${encodeURIComponent(scope)}/${encodeURIComponent(id)}/start`),

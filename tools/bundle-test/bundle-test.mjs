@@ -129,7 +129,7 @@ try {
      they use it — which is worse than saying so, because they will try twice
      and then assume it is their fault. */
 
-  for (const where of ['#/sign-in', '#/dashboard', '#/certificates']) {
+  for (const where of ['#/sign-in', '#/dashboard', '#/certificates', '#/practice']) {
     await open(where);
     const said = ((await page.textContent('#screen').catch(() => '')) || '').toLowerCase();
     if (said.includes('offline copy')) right(`${where} says it is the offline copy`);

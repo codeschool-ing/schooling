@@ -633,6 +633,159 @@ function examTitle(paper) {
   return `${txt('Exam')}: ${course ? course.name : paper.exam}`;
 }
 
+/* ---------- drilling ----------
+
+   ONE CARD AT A TIME, and the queue is fetched once. A screen that re-asked
+   after every answer would put a round trip between a student and the next
+   question, which for a drill — the thing you do twenty of in five minutes —
+   is the difference between a habit and a chore.
+
+   THE CLOCK STARTS WHEN THE QUESTION APPEARS AND STOPS WHEN IT IS SENT. It
+   decides the quality (A-04), so it has to measure thinking about the question
+   rather than the round trip that fetched it.
+
+   AND IT SAYS WHAT IT IS FOR. A queue with a number on it and no explanation is
+   a chore somebody is being set; the point is that these are the things they
+   are about to forget. */
+async function practice() {
+  if (!state.me) { go('#/sign-in'); return; }
+  if (offline) { show(pageTitle(txt('Practice')), onlyTheSchoolCanDoThat()); return; }
+
+  show(pageTitle(txt('Practice'), txt('The questions you are closest to forgetting.')));
+
+  let queue = [];
+  try {
+    const answer = await api.practice();
+    queue = (answer && answer.cards) || [];
+  } catch (e) {
+    show(pageTitle(txt('Practice')), trouble(e));
+    return;
+  }
+
+  if (!queue.length) {
+    show(
+      pageTitle(txt('Practice'), txt('The questions you are closest to forgetting.')),
+      el('div', { class: 'notice', role: 'status' }, [
+        el('p', { text: txt('Nothing is due. Come back tomorrow.') }),
+        el('p', { class: 'dim', text: txt('A question comes back when you are about to forget it, not on a timetable.') }),
+      ]),
+    );
+    return;
+  }
+
+  let at = 0;
+  const board = el('div', {});
+
+  /* The count is drawn once and updated in place rather than being part of the
+     card, so that moving to the next question does not rebuild the heading —
+     which would move focus and lose the place of somebody using a screen
+     reader. */
+  const counter = el('p', { class: 'dim', 'aria-live': 'polite' });
+  const say = () => { counter.textContent = `${at + 1} / ${queue.length}`; };
+
+  show(
+    pageTitle(txt('Practice'), txt('The questions you are closest to forgetting.')),
+    counter, board,
+  );
+
+  async function draw() {
+    say();
+    board.textContent = '';
+    board.append(el('p', { class: 'dim', text: txt('Loading…') }));
+
+    let card;
+    try {
+      card = await api.drawCard(queue[at].exercise);
+    } catch (e) {
+      board.textContent = '';
+      board.append(trouble(e));
+      return;
+    }
+
+    if (!answerable(card.type)) {
+      /* A type this interface cannot draw is skipped rather than shown as an
+         error: the student did nothing, and a queue that stopped at one would
+         be a queue nobody could finish. */
+      next();
+      return;
+    }
+
+    const name = `drill-${card.exercise}`;
+    const built = build(card.type, card.question, name, null,
+      (file) => asset(`/api/v1/courses/${encodeURIComponent(card.course)}/images/${encodeURIComponent(file)}`));
+
+    const started = Date.now();
+    const why = el('p', { class: 'why', role: 'alert' });
+    const verdict = el('div', {});
+
+    const send = el('button', {
+      class: 'button', type: 'submit', text: txt('Answer'),
+    });
+
+    const form = el('form', { class: 'paper' }, [built.node, why, el('div', {}, [send]), verdict]);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      why.textContent = '';
+
+      const answer = built.read();
+      if (!answer) {
+        why.textContent = txt('Answer it first.');
+        return;
+      }
+
+      send.disabled = true;
+      let marked;
+      try {
+        marked = await api.answerCard(card.exercise, answer, Date.now() - started);
+      } catch (e) {
+        send.disabled = false;
+        why.textContent = (e instanceof ApiError && e.message) ? txt(e.message) : txt('That did not work.');
+        return;
+      }
+
+      send.hidden = true;
+      verdict.append(el('div', { class: `notice ${marked.correct ? '' : 'bad'}`, role: 'status' }, [
+        el('p', { class: 'verdict', text: marked.correct ? txt('Right') : txt('Wrong') }),
+        /* The question's own words for why, never this file's: a client that
+           wrote its own feedback would be writing content. */
+        marked.why ? el('p', { text: marked.why }) : null,
+        el('p', {
+          class: 'dim',
+          text: `${txt('Back in')} ${marked.interval_days} ${marked.interval_days === 1 ? txt('day') : txt('days')}`,
+        }),
+      ]));
+
+      const onwards = el('button', {
+        class: 'button', type: 'button',
+        text: at + 1 < queue.length ? txt('Next question') : txt('Done'),
+        onclick: () => next(),
+      });
+      verdict.append(el('div', {}, [onwards]));
+      onwards.focus();
+    });
+
+    board.textContent = '';
+    board.append(form);
+  }
+
+  function next() {
+    at += 1;
+    if (at >= queue.length) {
+      board.textContent = '';
+      counter.textContent = '';
+      board.append(el('div', { class: 'notice', role: 'status' }, [
+        el('p', { text: txt('That is everything due today.') }),
+        el('p', {}, [el('a', { class: 'button quiet', href: '#/', text: txt('Back to the courses') })]),
+      ]));
+      return;
+    }
+    draw();
+  }
+
+  await draw();
+}
+
 async function dashboard() {
   if (!state.me) { go('#/sign-in'); return; }
 
@@ -922,6 +1075,7 @@ async function route() {
       if (parts[1]) await trackPage(parts[1]);
       else await catalogue();
       break;
+    case 'practice':           await practice(); break;
     case 'dashboard':          await dashboard(); break;
     case 'certificates':       await certificates(); break;
     case 'sign-in':            signIn(); break;
