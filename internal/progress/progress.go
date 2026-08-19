@@ -314,7 +314,13 @@ func (s *Store) Recent(ctx context.Context, tenantID, accountID uuid.UUID, limit
 const noteLimit = 8000
 
 // Note is what a student wrote beside a section.
+//
+// IT CARRIES ITS COURSE even though the per-course reader was told which course
+// it asked about. The screen that lists everything somebody wrote is a list
+// across courses, and a note that did not say where it came from would be a
+// paragraph with no way back to the page it belongs to.
 type Note struct {
+	CourseID  string    `json:"course"`
 	LessonID  string    `json:"lesson"`
 	SectionID string    `json:"section"`
 	Body      string    `json:"body"`
@@ -367,7 +373,7 @@ func (s *Store) Notes(ctx context.Context, tenantID, accountID uuid.UUID,
 	courseID string) ([]Note, error) {
 
 	rows, err := s.pool.Query(ctx, `
-		SELECT lesson_id, section_id, body, updated_at FROM notes
+		SELECT course_id, lesson_id, section_id, body, updated_at FROM notes
 		WHERE tenant_id = $1 AND account_id = $2 AND course_id = $3
 		ORDER BY lesson_id, section_id
 	`, tenantID, accountID, courseID)
@@ -375,14 +381,81 @@ func (s *Store) Notes(ctx context.Context, tenantID, accountID uuid.UUID,
 		return nil, fmt.Errorf("progress: reading a student's notes: %w", err)
 	}
 	defer rows.Close()
+	return scanNotes(rows)
+}
 
+// AllNotes answers everything a student wrote, in every course, newest first.
+//
+// NEWEST FIRST AND NOT BY COURSE. A margin is written while reading and read
+// back while remembering, and what somebody is looking for is almost always the
+// thing they wrote last — a list in catalogue order buries it under whichever
+// course happens to sort first.
+func (s *Store) AllNotes(ctx context.Context, tenantID, accountID uuid.UUID) ([]Note, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT course_id, lesson_id, section_id, body, updated_at FROM notes
+		WHERE tenant_id = $1 AND account_id = $2
+		ORDER BY updated_at DESC, course_id, lesson_id, section_id
+	`, tenantID, accountID)
+	if err != nil {
+		return nil, fmt.Errorf("progress: reading a student's notes: %w", err)
+	}
+	defer rows.Close()
+	return scanNotes(rows)
+}
+
+func scanNotes(rows pgx.Rows) ([]Note, error) {
 	out := []Note{}
 	for rows.Next() {
 		var n Note
-		if err := rows.Scan(&n.LessonID, &n.SectionID, &n.Body, &n.UpdatedAt); err != nil {
+		if err := rows.Scan(&n.CourseID, &n.LessonID, &n.SectionID,
+			&n.Body, &n.UpdatedAt); err != nil {
 			return nil, fmt.Errorf("progress: reading a student's notes: %w", err)
 		}
 		out = append(out, n)
+	}
+	return out, rows.Err()
+}
+
+/* ---------- how far along, everywhere at once ---------- */
+
+// Done is how many countable sections a student has finished in one course.
+//
+// IT IS A NUMERATOR AND NOT A FRACTION. How many sections a course HAS belongs
+// to the catalogue, which is another module (X-02) — this one records what was
+// done and does not get to say how much there was to do. The screen divides the
+// two, which is also why a course somebody has not started is absent here
+// rather than present as a zero: nothing was done, and there is nothing to say.
+type Done struct {
+	CourseID string `json:"course"`
+	Sections int    `json:"sections"`
+}
+
+// Summary answers, in one query, how far along a student is in every course
+// they have touched.
+//
+// ONE QUERY IS THE WHOLE POINT. The sidebar shows a count beside every course
+// in the school, and asking per course is a screen that fires twenty requests
+// to draw a list — slow on a laptop, and a small denial of service against our
+// own API from a phone on a train.
+func (s *Store) Summary(ctx context.Context, tenantID, accountID uuid.UUID) ([]Done, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT course_id, count(*) FROM section_progress
+		WHERE tenant_id = $1 AND account_id = $2
+		GROUP BY course_id
+		ORDER BY course_id
+	`, tenantID, accountID)
+	if err != nil {
+		return nil, fmt.Errorf("progress: counting what a student has done: %w", err)
+	}
+	defer rows.Close()
+
+	out := []Done{}
+	for rows.Next() {
+		var d Done
+		if err := rows.Scan(&d.CourseID, &d.Sections); err != nil {
+			return nil, fmt.Errorf("progress: counting what a student has done: %w", err)
+		}
+		out = append(out, d)
 	}
 	return out, rows.Err()
 }

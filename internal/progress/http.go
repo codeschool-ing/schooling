@@ -45,6 +45,19 @@ func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/resume", h.recent)
 	mux.HandleFunc("PUT /api/v1/notes/{course}/{lesson}/{section}", h.setNote)
 	mux.HandleFunc("GET /api/v1/notes/{course}", h.notes)
+
+	// The two the interface reads to draw a list rather than a page. Both are
+	// the whole of something — every course a student has touched, every note
+	// they have written — because a sidebar with a count beside twenty courses
+	// is twenty requests otherwise, and a list of notes across courses cannot
+	// be assembled from a route that takes one course at a time.
+	//
+	// They sit AFTER the more specific patterns above and that is not luck:
+	// `GET /api/v1/notes/{course}` and `GET /api/v1/notes` are different
+	// patterns to ServeMux, which prefers the more specific one whatever the
+	// registration order. Written adjacently so that nobody has to know that.
+	mux.HandleFunc("GET /api/v1/progress", h.summary)
+	mux.HandleFunc("GET /api/v1/notes", h.allNotes)
 }
 
 func (h *Handler) ofCourse(w http.ResponseWriter, r *http.Request) {
@@ -183,6 +196,34 @@ func (h *Handler) notes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	notes, err := h.store.Notes(r.Context(), school, student, r.PathValue("course"))
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, map[string]any{"notes": notes})
+}
+
+func (h *Handler) summary(w http.ResponseWriter, r *http.Request) {
+	school, student, ok := h.who(w, r)
+	if !ok {
+		return
+	}
+
+	done, err := h.store.Summary(r.Context(), school, student)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, map[string]any{"progress": done})
+}
+
+func (h *Handler) allNotes(w http.ResponseWriter, r *http.Request) {
+	school, student, ok := h.who(w, r)
+	if !ok {
+		return
+	}
+
+	notes, err := h.store.AllNotes(r.Context(), school, student)
 	if err != nil {
 		h.refuse(w, r, err)
 		return

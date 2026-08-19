@@ -391,3 +391,178 @@ func TestFinishingSomeSectionsDoesNotFinishTheCourse(t *testing.T) {
 		t.Error("one section of three finished the course")
 	}
 }
+
+/* ---------- what the sidebar and the notes screen read ---------- */
+
+// A catalogue with two open courses, which the shared fixture does not have:
+// what `Summary` is for is answering about SEVERAL courses at once, and a
+// fixture with one open course cannot fail the way this is meant to catch.
+func twoOpenCourses(t *testing.T, pool *pgxpool.Pool) *progress.Store {
+	t.Helper()
+	c := catalogue{
+		open: map[string]bool{"web-fundamentals": true, "html-css": true},
+		sections: map[string]map[string][]string{
+			"web-fundamentals": {"client-and-server": {"roles", "intro", "drill"}},
+			"html-css":         {"boxes": {"overview", "padding"}},
+		},
+	}
+	return progress.NewStore(pool, c.mayOpen, c.sectionsOf)
+}
+
+// ONE QUERY, ONE ROW PER COURSE TOUCHED. The sidebar puts a count beside every
+// course in the school; asking course by course is twenty requests to draw a
+// list, which is why this exists at all.
+func TestSummaryCountsEachCourseSeparately(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := school(t, pool), student(t, pool)
+	s := twoOpenCourses(t, pool)
+
+	for _, section := range []string{"roles", "intro"} {
+		if _, _, err := s.Complete(ctx, school, student,
+			"web-fundamentals", "client-and-server", section); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, _, err := s.Complete(ctx, school, student, "html-css", "boxes", "overview"); err != nil {
+		t.Fatal(err)
+	}
+
+	done, err := s.Summary(ctx, school, student)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	counted := map[string]int{}
+	for _, d := range done {
+		counted[d.CourseID] = d.Sections
+	}
+	if counted["web-fundamentals"] != 2 {
+		t.Errorf("two sections of web-fundamentals counted as %d", counted["web-fundamentals"])
+	}
+	if counted["html-css"] != 1 {
+		t.Errorf("one section of html-css counted as %d", counted["html-css"])
+	}
+}
+
+// A COURSE NOBODY STARTED IS ABSENT, NOT ZERO. This module records what was
+// done and does not know how many sections a course has — a row saying "zero of
+// something" would be this module answering a question the catalogue owns.
+func TestSummarySaysNothingAboutACourseNobodyStarted(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := school(t, pool), student(t, pool)
+	s := twoOpenCourses(t, pool)
+
+	if _, _, err := s.Complete(ctx, school, student,
+		"web-fundamentals", "client-and-server", "roles"); err != nil {
+		t.Fatal(err)
+	}
+
+	done, err := s.Summary(ctx, school, student)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, d := range done {
+		if d.CourseID == "html-css" {
+			t.Errorf("a course nobody has started is in the summary, as %d sections", d.Sections)
+		}
+	}
+}
+
+// AND ONE STUDENT'S COUNTS ARE ONE STUDENT'S. The same rule the rest of this
+// module obeys, checked on the read that goes across every course at once —
+// which is the one where a forgotten `account_id` would leak the most.
+func TestSummaryNeverCountsAnotherStudent(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school := school(t, pool)
+	mine, theirs := student(t, pool), student(t, pool)
+	s := twoOpenCourses(t, pool)
+
+	if _, _, err := s.Complete(ctx, school, theirs,
+		"web-fundamentals", "client-and-server", "roles"); err != nil {
+		t.Fatal(err)
+	}
+
+	done, err := s.Summary(ctx, school, mine)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(done) != 0 {
+		t.Errorf("a student who has done nothing has %d courses in their summary", len(done))
+	}
+}
+
+// A NOTE SAYS WHICH COURSE IT CAME FROM. The screen that lists everything
+// somebody wrote is a list across courses, and without this each entry is a
+// paragraph with no way back to the page it belongs to.
+func TestEveryNoteCarriesItsCourse(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := school(t, pool), student(t, pool)
+	s := twoOpenCourses(t, pool)
+
+	if err := s.SetNote(ctx, school, student,
+		"web-fundamentals", "client-and-server", "roles", "the two roles"); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.SetNote(ctx, school, student, "html-css", "boxes", "overview", "margins"); err != nil {
+		t.Fatal(err)
+	}
+
+	notes, err := s.AllNotes(ctx, school, student)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(notes) != 2 {
+		t.Fatalf("two notes in two courses came back as %d", len(notes))
+	}
+
+	from := map[string]string{}
+	for _, n := range notes {
+		if n.CourseID == "" {
+			t.Errorf("a note came back naming no course: %q", n.Body)
+		}
+		from[n.CourseID] = n.Body
+	}
+	if from["html-css"] != "margins" {
+		t.Errorf("the note on html-css came back as %q", from["html-css"])
+	}
+}
+
+// NEWEST FIRST. A margin is read back while remembering, and what somebody is
+// looking for is almost always what they wrote last — a list in catalogue order
+// buries it under whichever course happens to sort first.
+func TestNotesComeBackNewestFirst(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := school(t, pool), student(t, pool)
+	s := twoOpenCourses(t, pool)
+
+	// `html-css` sorts after `web-fundamentals` on neither field this orders by,
+	// so a list that came back in catalogue order would put it second.
+	if err := s.SetNote(ctx, school, student,
+		"web-fundamentals", "client-and-server", "roles", "written first"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := pool.Exec(ctx,
+		`UPDATE notes SET updated_at = now() - interval '1 day' WHERE course_id = 'web-fundamentals'`,
+	); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.SetNote(ctx, school, student, "html-css", "boxes", "overview", "written last"); err != nil {
+		t.Fatal(err)
+	}
+
+	notes, err := s.AllNotes(ctx, school, student)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(notes) != 2 {
+		t.Fatalf("two notes came back as %d", len(notes))
+	}
+	if notes[0].Body != "written last" {
+		t.Errorf("the first note is %q, want the one written last", notes[0].Body)
+	}
+}

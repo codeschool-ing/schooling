@@ -44,6 +44,17 @@ type Listing struct {
 
 	Requires []string `json:"requires"`
 
+	// How much there is, which is what a screen puts under a course's name and
+	// what every "4 of 50" on the interface divides by.
+	//
+	// SECTIONS COUNTS ONLY THE COUNTABLE ONES. It is the denominator of a
+	// progress bar, and a denominator that includes steps nobody can complete
+	// is a bar that stops short of full for a student who finished the course.
+	// `countable` is a column precisely so this is not inferred from what a
+	// section happens to be (see `catalog_sections`).
+	Lessons  int `json:"lessons"`
+	Sections int `json:"sections"`
+
 	Free   bool   `json:"free"`
 	Locked bool   `json:"locked"`
 	Reason string `json:"reason,omitempty"`
@@ -60,15 +71,24 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID, plan Plan) ([]L
 		return nil, err
 	}
 
+	// THE TWO COUNTS ARE SUBQUERIES AND NOT MORE JOINS. Joined in beside
+	// `catalog_course_requires` they would multiply against it — three
+	// prerequisites and fifty sections is a hundred and fifty rows, and
+	// `count(*)` over that answers neither question. A scalar subquery per
+	// course is the shape that cannot be wrong by accident.
 	rows, err := s.pool.Query(ctx, `
 		SELECT c.id, c.name, c.category, c.level, c.hours, c.summary,
 		       coalesce(array_agg(r.requires_id ORDER BY r.requires_id)
-		                FILTER (WHERE r.requires_id IS NOT NULL), '{}')
+		                FILTER (WHERE r.requires_id IS NOT NULL), '{}'),
+		       (SELECT count(*) FROM catalog_lessons l
+		         WHERE l.tenant_id = c.tenant_id AND l.course_id = c.id),
+		       (SELECT count(*) FROM catalog_sections s
+		         WHERE s.tenant_id = c.tenant_id AND s.course_id = c.id AND s.countable)
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_requires r
 		       ON r.tenant_id = c.tenant_id AND r.course_id = c.id
 		WHERE c.tenant_id = $1 AND NOT c.draft
-		GROUP BY c.id, c.name, c.category, c.level, c.hours, c.summary
+		GROUP BY c.id, c.tenant_id, c.name, c.category, c.level, c.hours, c.summary
 		ORDER BY c.id
 	`, tenantID)
 	if err != nil {
@@ -80,7 +100,7 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID, plan Plan) ([]L
 	for rows.Next() {
 		var l Listing
 		if err := rows.Scan(&l.ID, &l.Name, &l.Category, &l.Level, &l.Hours,
-			&l.Summary, &l.Requires); err != nil {
+			&l.Summary, &l.Requires, &l.Lessons, &l.Sections); err != nil {
 			return nil, fmt.Errorf("catalog: listing the courses: %w", err)
 		}
 

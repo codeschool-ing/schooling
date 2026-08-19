@@ -355,3 +355,73 @@ func TestALockedLessonAnswers402(t *testing.T) {
 		t.Errorf("a locked lesson answered %d, want 402: %s", rec.Code, rec.Body.String())
 	}
 }
+
+// HOW MUCH THERE IS, AND ONLY WHAT CAN BE FINISHED.
+//
+// `sections` is the denominator of every progress bar the interface draws, so
+// it counts countable sections and not all of them. The fixture's first course
+// is three sections of which one is a video, and a bar that said "2 of 3" for a
+// student who had finished everything there is to finish would be wrong in the
+// direction that makes somebody go looking for work that does not exist.
+func TestACourseSaysHowManyLessonsAndFinishableSectionsItHas(t *testing.T) {
+	pool := testPool(t)
+	school := loaded(t, pool)
+
+	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var found *catalog.Listing
+	for i := range courses {
+		if courses[i].ID == "web-fundamentals" {
+			found = &courses[i]
+		}
+	}
+	if found == nil {
+		t.Fatal("the fixture's first course is not in the catalogue")
+	}
+
+	if found.Lessons != 1 {
+		t.Errorf("a course with one lesson says it has %d", found.Lessons)
+	}
+	if found.Sections != 2 {
+		t.Errorf("three sections of which one is a video counted as %d finishable; want 2",
+			found.Sections)
+	}
+}
+
+// AND THE COUNTS DO NOT MULTIPLY AGAINST THE PREREQUISITES.
+//
+// Both counts are scalar subqueries rather than two more joins beside
+// `catalog_course_requires`. Joined in, a course with two prerequisites and one
+// section would report two — the rows multiply, and `count(*)` over the product
+// answers neither question. It is invisible in a fixture where every course has
+// exactly one prerequisite, which is why this test gives one course two.
+func TestTheCountsDoNotMultiplyAgainstThePrerequisites(t *testing.T) {
+	pool := testPool(t)
+	school := loaded(t, pool, patchJSON("courses/react-ts/course.json", func(d map[string]any) {
+		d["requires"] = []any{"html-css", "web-fundamentals"}
+	}))
+
+	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, c := range courses {
+		if c.ID != "react-ts" {
+			continue
+		}
+		if len(c.Requires) != 2 {
+			t.Fatalf("the course under test has %d prerequisites, want the two this test set",
+				len(c.Requires))
+		}
+		if c.Lessons != 1 || c.Sections != 1 {
+			t.Errorf("one lesson and one section, behind two prerequisites, counted as %d and %d",
+				c.Lessons, c.Sections)
+		}
+		return
+	}
+	t.Fatal("react-ts is not in the catalogue")
+}

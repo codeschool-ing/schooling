@@ -1,92 +1,26 @@
 /* ==========================================================================
-   Schooling — the study interface
+   Schooling — what the portal's stylesheets do not carry.
 
-   ON LANGUAGE: English throughout — comments, class names, ids and custom
-   properties. The markup and the script share those names, so they are a
-   contract rather than prose.
+   THE LAYOUT IS NOT HERE ANY MORE. `base.css` and `portal.css` are copies of
+   `portal-frontend`'s, byte for byte, and they are loaded before this file: the
+   bar, the rail, the blocks, the cards, the bars, the certificate and the
+   course columns all come from there. This file used to hold a layout of its
+   own written to the same palette, and the two drifted in every direction a
+   person cannot see from a screenshot.
 
-   WHAT IS SHARED AND WHAT IS NOT
+   WHAT IS LEFT IS WHAT THIS APPLICATION HAS AND THE PORTAL DOES NOT:
 
-   The block of custom properties below is the platform's identity, and it is
-   byte-for-byte what `codeschool-ing.github.io/assets/style.css` declares. A
-   student who learns one school recognises the next (N-07), and that is what
-   the recognition is made of: the palette, the two type families, the way the
-   light theme is a set of redefinitions rather than a second stylesheet.
+   - the skip link and `.visually-hidden`, which the portal has no equivalent of
+   - `.notice`, `.prose` and the legal footer, which are this side's screens
+   - the track graph, because the two repositories draw it with two different
+     routers and two different sets of class names — see below
+   - the exam paper and the labelling question, which are this side's own
 
-   EVERYTHING BELOW IT IS THIS APPLICATION'S OWN, and deliberately not a copy of
-   that file. The showcase is a marketing page — full-height scroll-snapped
-   screens, a hero, a terminal. This is a sidebar, a reading column and a set of
-   exercises. Shipping the marketing layout here so that a single file could be
-   called shared would mean a thousand lines nothing uses, and a shared file
-   that nobody dares edit because they cannot tell which of four applications
-   depends on the rule they are looking at.
-
-   So the identity is shared and the layout is not, and a change to the palette
-   is a change to be copied. It is the small half.
-
-   ON THE FONTS: the faces are served from this origin — see `fonts/fonts.css`,
-   which `tools/fonts` writes — and every family still names a real fallback
-   after it. The fallback is not decoration: a face can fail to load, and the
-   interface has to be legible then rather than merely still working.
+   It is loaded LAST so that it can only add. A rule here that overrode one of
+   theirs would be the drift starting again, one selector at a time.
    ========================================================================== */
 
-:root{
-  --ink:#0a0e14;
-  --panel:#111721;
-  --scan:#1b2431;
-  --phosphor:#5b8cff;     /* the brand's blue */
-  --phosphor-dim:#33549e;
-  --amber:#ff4d5e;        /* the brand's red */
-  --paper:#e8e6df;
-  --paper-dim:#9aa0a8;
-  --wire:#233043;
-}
-
-html[data-theme="light"]{
-  --ink:#f2f4f9;
-  --panel:#ffffff;
-  --scan:#e7ebf4;
-  --phosphor:#2b52c9;
-  --phosphor-dim:#6c86c9;
-  --amber:#d40f28;
-  --paper:#20263c;
-  --paper-dim:#5a6274;
-  --wire:#ccd4e3;
-}
-
-/* ---------- the floor ---------- */
-
-*{margin:0;padding:0;box-sizing:border-box}
-
-/* `hidden` MEANS HIDDEN. The attribute's own rule is `display:none` at the
-   lowest possible specificity, so any class that sets a display beats it —
-   `.button{display:inline-flex}` did, and the sign-in link stayed on screen
-   beside the name of the person who had just signed in. */
-[hidden]{display:none !important}
-
-body{
-  background:var(--ink);
-  color:var(--paper);
-  font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
-  line-height:1.6;
-  min-height:100vh;
-}
-
-::selection{background:var(--phosphor);color:var(--ink)}
-a{color:inherit;text-decoration:none}
-h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.25;font-weight:600}
-code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospace}
-.dim{color:var(--paper-dim)}
-
-/* EVERY interactive thing gets the same ring, and it is never removed. The
-   default outline is the one accessibility affordance browsers ship for free,
-   and `outline:none` is the single most common way a site loses keyboard
-   operability without anybody noticing. (WCAG 2.4.7) */
-:focus-visible{
-  outline:2px solid var(--phosphor);
-  outline-offset:2px;
-  border-radius:2px;
-}
+/* ---------- the floor the copies do not lay ---------- */
 
 /* Available to a screen reader and to nobody else. The clip-path pair rather
    than `display:none`, because a hidden element is not read at all. */
@@ -96,6 +30,8 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
   clip-path:inset(50%);white-space:nowrap;border:0;
 }
 
+/* The first thing in the tab order. It is not decoration: every screen puts a
+   rail of twenty links before the content. (WCAG 2.4.1) */
 .skip{
   position:absolute;left:8px;top:-64px;z-index:100;
   background:var(--phosphor);color:var(--ink);
@@ -104,102 +40,56 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
 }
 .skip:focus{top:8px}
 
-/* ---------- the chrome ---------- */
+/* EVERY interactive thing gets the same ring, and it is never removed. The
+   default outline is the one accessibility affordance browsers ship for free,
+   and `outline:none` is the single most common way a site loses keyboard
+   operability without anybody noticing. (WCAG 2.4.7) */
+:focus-visible{outline:2px solid var(--phosphor);outline-offset:2px;border-radius:2px}
+.content:focus{outline:none}
 
-.chrome{
-  position:sticky;top:0;z-index:40;
-  display:flex;align-items:center;gap:16px;
-  padding:10px 16px;
-  background:color-mix(in srgb,var(--ink) 88%,transparent);
-  backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--wire);
-}
+/* `hidden` MEANS HIDDEN. The attribute's own rule is `display:none` at the
+   lowest possible specificity, so any class that sets a display beats it —
+   `.btn{display:inline-flex}` does, and the sign-in link stayed on screen
+   beside the name of the person who had just signed in. */
+[hidden]{display:none !important}
 
-.brand{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600}
-.brand-mark{color:var(--phosphor)}
-.brand-name{white-space:nowrap}
+/* ---------- the search field ----------
 
-.search{flex:1;max-width:520px}
+   The portal opens a ⌘K panel here and this opens a field in the bar. Hidden
+   until the button asks for it: a permanent input is most of the width of a
+   phone spent on something people use rarely. */
+.search{display:none;flex:none}
+body.search-open .search{display:block}
 .search input{
-  width:100%;
+  width:min(320px,44vw);
   background:var(--panel);color:var(--paper);
-  border:1px solid var(--wire);border-radius:8px;
-  padding:8px 12px;font:inherit;
+  border:1px solid var(--wire);border-radius:6px;
+  padding:7px 11px;font:inherit;font-size:.9rem;
 }
 .search input::placeholder{color:var(--paper-dim)}
 
-.chrome-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+/* ---------- messages ---------- */
 
-.icon-button,.picker-button,.button{
-  background:var(--panel);color:var(--paper);
-  border:1px solid var(--wire);border-radius:8px;
-  padding:8px 12px;font:inherit;cursor:pointer;
-  display:inline-flex;align-items:center;gap:6px;
-  /* A control that wraps is a control that grows taller than the bar it is in
-     and then hangs off the edge of a phone. It was doing exactly that. */
-  white-space:nowrap;flex:none;
+.notice{
+  border:1px solid var(--wire);border-left:3px solid var(--phosphor);
+  background:var(--panel);border-radius:8px;padding:12px 14px;
 }
-.icon-button{min-width:40px;justify-content:center}
-.button{background:var(--phosphor);color:var(--ink);border-color:transparent;font-weight:600}
-.button.quiet{background:var(--panel);color:var(--paper);border-color:var(--wire);font-weight:400}
-.button[disabled],.icon-button[disabled]{opacity:.5;cursor:not-allowed}
+.notice.bad{border-left-color:var(--amber)}
 
-.picker{position:relative}
-.picker-menu{
-  position:absolute;right:0;top:calc(100% + 6px);
-  min-width:180px;display:none;flex-direction:column;
-  background:var(--panel);border:1px solid var(--wire);border-radius:10px;
-  padding:6px;z-index:50;
-}
-.picker.is-open .picker-menu{display:flex}
-.picker-menu a,.picker-menu button{
-  text-align:left;background:none;border:0;color:var(--paper);
-  font:inherit;padding:8px 10px;border-radius:6px;cursor:pointer;
-}
-.picker-menu a:hover,.picker-menu button:hover{background:var(--scan)}
-.picker-menu .on{color:var(--phosphor)}
+/* ---------- the two documents ----------
 
-/* ---------- the layout ---------- */
-
-.layout{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);align-items:start}
-
-.sidebar{
-  position:sticky;top:57px;
-  height:calc(100vh - 57px);overflow-y:auto;
-  border-right:1px solid var(--wire);
-  padding:16px 12px;
-}
-
-#screen{
-  padding:24px clamp(16px,4vw,48px) 96px;
-  max-width:1100px;
-}
-#screen:focus{outline:none}
-
-/* The two documents, at the bottom of every screen. Quiet on purpose — it is a
-   place people look rather than a thing that asks to be read — but `--paper-dim`
-   rather than a lower opacity, because opacity on text is how a contrast ratio
-   ends up at 4.09 against a 4.5 requirement, which is a defect the accessibility
-   pass has already caught once here. */
+   Quiet on purpose — it is a place people look rather than a thing that asks to
+   be read — but `--paper-dim` rather than a lower opacity, because opacity on
+   text is how a contrast ratio ends up at 4.09 against a 4.5 requirement, which
+   is a defect the accessibility pass has already caught here once. */
 .page-footer{
   border-top:1px solid var(--wire);
   padding:20px clamp(16px,4vw,48px);
   font-size:.9rem;
 }
-.page-footer nav{display:flex;flex-wrap:wrap;gap:20px}
+.page-footer nav{display:flex;flex-wrap:wrap;gap:20px;position:static;height:auto;background:none;border:0;padding:0}
 .page-footer a{color:var(--paper-dim)}
 .page-footer a:hover,.page-footer a:focus-visible{color:var(--paper)}
-
-/* A policy is one column of prose and reads badly at the full width of a
-   catalogue, so it is narrower than the screen it sits in. */
-.prose{max-width:70ch}
-.legal-other{margin-top:28px}
-
-/* Headings inside a screen breathe. It is a rule on the element rather than a
-   class, so a screen cannot forget to apply it — and the screens are built by
-   script, where a forgotten class is invisible until somebody looks. */
-#screen h2{margin-top:2rem}
-#screen h1 + p{margin-bottom:.5rem}
 
 /* THE READING COLUMN IS CAPPED IN CHARACTERS, not pixels. A line of prose that
    runs the width of a desktop screen is measurably harder to read, and the unit
@@ -212,107 +102,22 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
 .prose code{background:var(--scan);padding:.1em .35em;border-radius:4px;font-size:.92em}
 .prose pre{background:var(--panel);border:1px solid var(--wire);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 1em}
 .prose pre code{background:none;padding:0}
-
-/* On a phone the chrome has more in it than fits, and the thing to drop is the
-   word beside the mark: the school's name is the page's own heading two
-   centimetres below, so losing it from the bar costs nothing and buying room
-   for the controls costs nothing either way. */
-@media (max-width:520px){
-  .brand-name{display:none}
-}
-
-@media (max-width:860px){
-  .layout{grid-template-columns:minmax(0,1fr)}
-  .sidebar{
-    position:fixed;left:0;top:57px;z-index:30;
-    width:min(300px,86vw);
-    background:var(--ink);
-    transform:translateX(-102%);transition:transform .2s ease;
-  }
-  .sidebar.is-open{transform:translateX(0)}
-  .search{display:none}
-}
-@media (min-width:861px){
-  #menu-button{display:none}
-}
-
-/* ---------- the sidebar's contents ---------- */
-
-.side-group{margin:0 0 18px}
-.side-title{
-  font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--paper-dim);margin:0 8px 6px;
-}
-.side-link{
-  display:flex;justify-content:space-between;gap:8px;
-  padding:7px 8px;border-radius:6px;font-size:.94rem;
-}
-.side-link:hover{background:var(--scan)}
-.side-link[aria-current="page"]{background:var(--scan);color:var(--phosphor)}
-.side-lock{
-  flex:none;align-self:center;
-  font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--paper-dim);
-}
-
-/* ---------- cards ---------- */
-
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));margin:20px 0}
-
-.card{
-  background:var(--panel);border:1px solid var(--wire);border-radius:12px;
-  padding:16px;display:flex;flex-direction:column;gap:8px;
-}
-.card h3{font-size:1.05rem}
-.card .meta{font-size:.82rem;color:var(--paper-dim);display:flex;gap:10px;flex-wrap:wrap}
-/* LOCKED IS NOT DIMMED, and this is a defect axe caught rather than a
-   preference. `opacity: .72` on the card multiplied every colour inside it
-   against the background: the summary and the metadata, already the dim
-   colour, came out at 4.09:1 where AA asks for 4.5. Fading something to say
-   "you cannot have this" makes it harder to read for everybody, and hardest
-   for the people who were already struggling.
-
-   What says it instead is the tag, which is a word, and the border. */
-.card.is-locked{border-style:dashed}
-
-.tag{
-  display:inline-block;font-size:.72rem;letter-spacing:.04em;
-  border:1px solid var(--wire);border-radius:999px;padding:2px 8px;color:var(--paper-dim);
-}
-.tag.free{border-color:var(--phosphor-dim);color:var(--phosphor)}
-.tag.locked{border-color:var(--amber);color:var(--amber)}
-
-/* ---------- progress ---------- */
-
-/* IT ONLY EVER GOES FORWARD. Completion is set-true and never toggled (A-05),
-   so there is no state in this file for a bar that has moved backwards. */
-.bar{height:6px;background:var(--scan);border-radius:999px;overflow:hidden}
-.bar > i{display:block;height:100%;background:var(--phosphor);border-radius:999px}
-
-/* ---------- messages ---------- */
-
-.notice{
-  border:1px solid var(--wire);border-left:3px solid var(--phosphor);
-  background:var(--panel);border-radius:8px;padding:12px 14px;margin:16px 0;
-}
-.notice.bad{border-left-color:var(--amber)}
-.empty{color:var(--paper-dim);padding:32px 0}
-
-/* ---------- forms ---------- */
-
-.form{max-width:420px;display:flex;flex-direction:column;gap:14px;margin:24px 0}
-.field{display:flex;flex-direction:column;gap:6px}
-.field label{font-size:.86rem;color:var(--paper-dim)}
-.field input{
-  background:var(--panel);color:var(--paper);
-  border:1px solid var(--wire);border-radius:8px;padding:10px 12px;font:inherit;
-}
-/* The message is tied to its field by aria-describedby, so it is read out when
-   the field takes focus rather than sitting there being red at somebody who
-   cannot see it. */
-.field .why{font-size:.82rem;color:var(--amber)}
+.legal-other{margin-top:28px}
 
 /* ---------- a track, drawn ----------
+
+   THIS IS THE ONE PLACE THE COPY STOPS, and it is worth saying why rather than
+   leaving somebody to find out. `portal.css` styles `.course-node`, `.level`,
+   `.subcol` and `.edge`; this repository's router emits `.node`,
+   `.graph-column` and `.graph-edges .row`. They are two implementations of the
+   same picture, and the one here is the one `tools/graph-test` drives — the
+   check that no edge is drawn through a card.
+
+   Swapping the router would mean swapping that test for the portal's, which is
+   a separate piece of work with its own risk. The cards inside the graph are
+   drawn in the portal's vocabulary, so what differs is the geometry rather than
+   the look.
+
 
    The columns are a grid and the lines are an SVG behind them, sized to the
    grid rather than to the viewport. The router measures the boxes the browser
@@ -340,6 +145,21 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
      not a control. */
   z-index:0;pointer-events:none;
 }
+/* THE COPY HIDES THESE BELOW 860px AND HERE THEY MUST NOT BE HIDDEN.
+   `base.css` carries `@media(max-width:860px){.graph-edges{display:none}}`,
+   which is right for the drawing it was written for: over there the narrow
+   layout is a plain column with no lines at all. Here the narrow layout is the
+   same graph turned ninety degrees, and its edges are the whole point of it.
+
+   It cost an afternoon to find, and the symptom is worth writing down because
+   it points away from the cause: `tools/graph-test` reported EIGHT lines
+   through a card, the same eight after the cards were made shorter, after the
+   flex was neutralised, after the lanes were widened and after the card was put
+   back exactly as it had been. A number that does not move when the geometry
+   moves is not a geometry problem. The paths were being drawn correctly into an
+   element with no box, so every coordinate the test read back came out at the
+   origin — on top of the first card. */
+.graph .graph-edges{display:block}
 .graph-edges .row{fill:none;stroke:var(--wire);stroke-width:1.5}
 .graph-edges .tip{fill:var(--wire)}
 
@@ -374,18 +194,84 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
 }
 .graph.flows-down .node{width:min(260px,100%)}
 
+/* A CARD ON THE MAP IS THE SAME CARD AS IN A LIST, narrower. It carries which
+   level it is, what state it is in, its name, how long it takes and how far
+   along the student is — the same five facts a course card carries anywhere
+   else, because a student reading the map is deciding the same thing.
+
+   The width is fixed rather than content-sized: the edge router measures these
+   boxes, and a column of cards that are each as wide as their longest word is a
+   drawing whose shape changes with the language it is read in. */
+/* THE PORTAL'S CARD, INSIDE THIS REPOSITORY'S GRAPH.
+
+   `base.css` gives `.course-node` `flex:1 0 195px` and a `transform` on hover.
+   Both are right where they were written and wrong here, and each cost a real
+   failure:
+
+   - `flex-grow:1` stretched every card to the width of the canvas. This graph
+     lays its cards out in flex columns, so a card that grows fills the column:
+     260px became 759px, the lanes the edge router reserves stopped fitting, and
+     `tools/graph-test` reported eight lines drawn through a card.
+
+   - a `transform` moves what is DRAWN without moving what
+     `getBoundingClientRect` REPORTS, and every line here is drawn from those
+     rectangles. Hovering a card would slide it three pixels out from under its
+     own edges.
+
+   Neutralised here rather than in the copy, which has to stay a copy. */
+.graph .node.course-node{flex:0 0 auto}
+.graph .node.course-node:hover{transform:none}
+
 .node{
   background:var(--panel);border:1px solid var(--wire);border-radius:10px;
-  padding:10px 14px;width:190px;
-  display:flex;flex-direction:column;gap:2px;
+  padding:16px 18px;width:220px;
+  display:flex;flex-direction:column;gap:0;
 }
 .node.course:hover{border-color:var(--phosphor-dim)}
 /* The same, for the same reason. A node on the graph is small and its hours
    are already the dim colour; taking a third of the contrast off that is how a
    track map becomes unreadable for the people it is meant to orient. */
 .node.is-locked{border-style:dashed}
-.node-name{font-weight:500;line-height:1.35}
-.node-hours{font-size:.78rem}
+
+/* WHERE THE STUDENT IS, marked on the border. It is never the only marker —
+   the eyebrow above the name says the state in words, which is what a screen
+   reader reads and what somebody who cannot separate these two colours
+   sees. (WCAG 1.4.1) */
+.node.started{border-color:var(--amber)}
+.node.done{border-color:var(--phosphor-dim)}
+
+.node-level{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--paper-dim);margin:0 0 4px;
+}
+.node .eyebrow{font-size:.68rem;margin:0 0 6px}
+.node-name{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;line-height:1.28}
+.node .chip{margin:8px 0 0;align-self:flex-start}
+.node-hours{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:.76rem;margin-top:10px;
+}
+.node .meter{margin:10px 0 6px}
+.node .side-count{align-self:flex-start;margin:0}
+
+/* What the four states look like, said in words once at the bottom of the map.
+   A key is what turns a colour into information — without it the borders are a
+   pattern somebody has to guess at. */
+.graph-key{
+  display:flex;flex-wrap:wrap;gap:22px;margin:6px 0 0;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:.76rem;color:var(--paper-dim);
+}
+.graph-key span{display:inline-flex;align-items:center;gap:8px}
+.graph-key i{
+  width:9px;height:9px;border-radius:2px;display:inline-block;
+  border:1px solid var(--paper-dim);
+}
+.graph-key .done i{background:var(--phosphor);border-color:var(--phosphor)}
+.graph-key .started i{border-color:var(--amber)}
+.graph-key .open i{border-color:var(--paper-dim)}
+.graph-key .later i{border-color:var(--wire)}
 
 .node.finish{
   width:auto;min-width:96px;text-align:center;
@@ -539,10 +425,44 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
 .marked.right .mark,.marked li.right .mark{color:var(--phosphor)}
 .marked li.wrong .mark{color:var(--amber)}
 
+/* THE END OF THE THING, as a panel and not as a paragraph with a link under it.
+   It is the last card on a course and on a track, it says what the exam is in
+   one monospaced line of facts, and the action sits on the right where the eye
+   ends up. */
 .exam-invite{
-  margin-top:32px;padding-top:24px;border-top:1px solid var(--wire);
+  background:var(--panel);border:1px solid var(--wire);border-radius:10px;
+  padding:24px 26px;margin:28px 0 0;
+  display:flex;align-items:center;justify-content:space-between;gap:28px;
+  flex-wrap:wrap;
 }
-.exam-invite .button{margin-top:8px}
+/* `flex:1 1 260px` and not a min-width: the text block's own min-content is
+   whatever its longest word happens to be, and a min-width alone left the
+   button wrapping onto its own line in a panel that had room for it. */
+.exam-invite > div{flex:1 1 260px;min-width:0}
+.exam-invite h2{margin:0 0 6px}
+.exam-invite .button{flex:none}
+
+/* The lessons of a course. Numbered in the margin rather than by the list's own
+   marker: the number is monospaced and dim, which a `list-style` cannot be, and
+   it is what makes eleven rows scannable as a sequence. */
+.lessons{list-style:none;margin:0;padding:0}
+.lessons li{
+  display:flex;align-items:flex-start;gap:18px;
+  padding:14px 0;border-bottom:1px solid var(--wire);
+}
+.lessons li:last-child{border-bottom:0;padding-bottom:0}
+.lesson-number{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:.8rem;color:var(--paper-dim);flex:none;margin-top:.25em;
+}
+.lesson-body{flex:1;min-width:0}
+.lesson-body h3{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:1rem;font-weight:600}
+.lesson-body h3 a:hover{color:var(--phosphor)}
+.lessons .side-count{margin-top:.25em}
+
+/* A note is the student's own words and is set as prose rather than as a
+   fact — it is the one thing on these screens that a person wrote. */
+.note-body{margin-top:10px;white-space:pre-wrap}
 
 .attempts{list-style:none;margin:0;padding:0;max-width:68ch}
 .attempts li{
@@ -550,18 +470,52 @@ code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'Cascadia Code',monospac
   padding:10px 0;border-bottom:1px solid var(--wire);
 }
 
-/* ---------- the certificate ---------- */
-
-.certificate{
-  background:var(--panel);border:1px solid var(--wire);border-radius:14px;
-  padding:28px;max-width:640px;text-align:center;
-}
-.certificate .who{font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.6rem;margin:6px 0}
-.certificate .code{
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-  letter-spacing:.12em;color:var(--paper-dim);margin-top:14px;
-}
-
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
+
+/* ---------- ONE PLACE THE COPY IS OVERRIDDEN, AND IT IS A DEFECT ----------
+
+   `portal.css` sets a dozen pieces of small text in `--phosphor-dim` (#33549e)
+   on `--ink` (#0a0e14). That is 2.67:1, where WCAG AA asks 4.5:1 for text this
+   size, and axe reports every one of them: the rail's track heading, the count
+   beside each course, the lesson numbers, the level on a map card, a course's
+   meta line.
+
+   IT IS A REAL DEFECT AND IT IS THE PORTAL'S — copying the file brought it
+   here, which is the argument for copying rather than against it: two
+   interfaces sharing a stylesheet share the finding, and this one was found by
+   a check the other side does not run. It is worth taking back to
+   `portal-frontend` rather than only fixed here.
+
+   `--paper-dim` (#9aa0a8 on dark, #5a6274 on light) is the palette's colour for
+   exactly this — secondary text — and clears the threshold in both themes. The
+   accent stays where it carries meaning: a state, a link, a filled bar.
+
+   Every accessibility rule in this repository is a rule and not a preference
+   (X-05), so this override is not optional and the copy is not "byte for byte"
+   in effect. It is the one divergence, it is listed here, and it is small
+   enough to re-apply if the file is copied again. */
+.rail-tit,
+.tc-count,
+.ta-num,
+.ta-count,
+.ts-dur,
+.ctx-arrow,
+.card-cat,
+.course-meta,
+.lesson-num,
+.lesson-sections,
+.step-n,
+.node-count,
+.course-node .order,
+.course-node .meta,
+.eyebrow,
+.field label{color:var(--paper-dim)}
+
+/* The same defect, in the light theme, on the word that says a course is open
+   to you. `--phosphor-dim` is #6c86c9 there against a #f2f4f9 page — 3.23:1.
+   `available` is the NEUTRAL state, so the neutral colour is also the right one
+   for it; `current` (amber) and `done` (phosphor) both clear the threshold and
+   keep their accent, which is where the colour is carrying meaning. */
+.node-state[data-state="available"]{color:var(--paper-dim)}

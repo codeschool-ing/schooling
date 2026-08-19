@@ -91,7 +91,7 @@ export function txt(s) {
 
    Everything the router builds is left out — it rebuilds itself from the data
    and calls txt() as it goes. */
-const DYNAMIC = ['#screen', '#sidebar', '#lang-menu'];
+const DYNAMIC = ['#content', '#rail', '#nav-context', '#lang-menu', '#account-menu'];
 const originals = [];
 
 function outside(el) {
@@ -150,7 +150,9 @@ export function buildLanguagePicker(onSwitch) {
   LANGUAGES.forEach((i) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = i.code === LANG ? 'on' : '';
+    /* `lang-op` is what base.css styles these with — the portal's stylesheet is
+       copied byte for byte, so the class names it expects are the contract. */
+    b.className = 'lang-op' + (i.code === LANG ? ' on' : '');
     b.lang = i.html;
     b.textContent = i.label;
     b.addEventListener('click', () => switchLanguage(i.code, onSwitch));
