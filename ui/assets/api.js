@@ -190,4 +190,15 @@ export const api = {
   /* ---------- certificates ---------- */
   certificates: () => api.get('/api/v1/certificates'),
   verify: (code) => api.get(`/api/v1/verify/${encodeURIComponent(code)}`),
+
+  /* ---------- the two documents ----------
+
+     Baked into the offline copy like a lesson, and for a stronger reason: a
+     policy that answered "this needs the school" would be a document somebody
+     cannot read at the moment they are deciding whether to trust us with an
+     e-mail address. `lang` is the content locale, the same one a lesson is
+     asked in. */
+  legal: (document, lang) =>
+    api.get(`/api/v1/legal/${encodeURIComponent(document)}`
+      + `?lang=${encodeURIComponent(lang || 'en')}`),
 };

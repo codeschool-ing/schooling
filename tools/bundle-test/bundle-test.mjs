@@ -122,6 +122,25 @@ try {
   }
   if (!read) wrong('not one lesson in the bundle could be read');
 
+  /* ---------- the two documents, which must NOT refuse ----------
+
+     They are the deliberate exception to the section below. A policy that
+     answered "this needs the school" would be unpublished for whoever is
+     reading the offline copy — and a file on a laptop is exactly what gets
+     handed to somebody else. */
+
+  for (const where of ['#/terms', '#/privacy']) {
+    await open(where);
+    const said = ((await page.textContent('#screen').catch(() => '')) || '').trim();
+    if (said.toLowerCase().includes('offline copy')) {
+      wrong(`${where} needs the school — the document is not baked into the bundle`);
+    } else if (said.length > 400) {
+      right(`${where} reads — ${said.length} characters of it`);
+    } else {
+      wrong(`${where} opened with ${said.length} characters in it`);
+    }
+  }
+
   /* ---------- and it refuses the rest, out loud ----------
 
      The failure this catches is not a crash. It is a bundle that shows a

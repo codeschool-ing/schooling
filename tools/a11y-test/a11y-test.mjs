@@ -121,6 +121,12 @@ try {
     await check(out, `${theme} · sign in`, '/#/sign-in');
     await check(out, `${theme} · sign up`, '/#/sign-up');
     await check(out, `${theme} · nothing there`, '/#/nowhere-at-all');
+    /* The two documents, signed out, because signed out is when they are read:
+       somebody deciding whether to hand over an e-mail address. They are also
+       the longest prose the interface renders outside a lesson, which is where
+       a heading level skipped by the Markdown renderer would show up. */
+    await check(out, `${theme} · terms of use`, '/#/terms');
+    await check(out, `${theme} · privacy policy`, '/#/privacy');
     await check(out, `${theme} · a code that certifies nothing`, '/verify/0000-0000-0000-0000');
     await done(out);
 
@@ -129,6 +135,7 @@ try {
        running the whole list twice would be paying for the same answer. */
     const pt = await open(theme, 'pt');
     await check(pt, `${theme} · catalogue, in Portuguese`, '/');
+    await check(pt, `${theme} · privacy policy, in Portuguese`, '/#/privacy');
     await done(pt);
 
     /* Signed in: the screens that do not exist without an account. */
