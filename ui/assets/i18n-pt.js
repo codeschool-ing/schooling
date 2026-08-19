@@ -34,12 +34,30 @@ window.I18N.pt = {
     'Nothing here yet.': 'Ainda não há nada aqui.',
     'Nothing here matches that.': 'Nada aqui corresponde a isso.',
     'Free': 'Grátis',
+
+    /* The levels a course card carries. They are catalogue values rather than
+       interface words, and they are translated anyway: a Portuguese card
+       reading `40h · beginner` is half a sentence in each language. */
+    'beginner': 'iniciante',
+    'intermediate': 'intermediário',
+    'advanced': 'avançado',
     'Subscription': 'Assinatura',
 
     /* ---------- a course, a lesson ---------- */
     'Course': 'Curso',
     'Lesson': 'Aula',
+    'Lessons': 'Aulas',
+    'What you need first': 'O que você precisa antes',
+
+    /* BOTH FORMS, because a count and a plural word concatenated is wrong on
+       every "1". English needs the pair and so does Portuguese. */
+    'lesson': 'aula',
+    'lessons': 'aulas',
+    'section': 'seção',
     'sections': 'seções',
+    'note': 'anotação',
+    'notes': 'anotações',
+
     'complete': 'concluído',
     'This course is part of the subscription.': 'Este curso faz parte da assinatura.',
     'Back to the course': 'Voltar ao curso',
@@ -48,13 +66,38 @@ window.I18N.pt = {
 
     /* ---------- what a student has done ---------- */
     'Your study': 'Seus estudos',
+    'Hello': 'Olá',
     'Carry on where you left off': 'Continue de onde parou',
+    'Carry on': 'Continuar',
     'You have not started anything yet.': 'Você ainda não começou nada.',
+    'Start here': 'Comece por aqui',
+    'Next steps': 'Próximos passos',
+    'Catalogue': 'Catálogo',
+    'Sections': 'Seções',
+
+    /* The three states a course can be in. They are read as a label above a
+       course's name — `EM ANDAMENTO`, over `JavaScript` — so they are
+       adjectives about the course and not about the student. */
+    'Finished': 'Concluído',
+    'In progress': 'Em andamento',
+    'Not started': 'Não iniciado',
+
+    'of the track': 'da trilha',
+    'courses finished': 'cursos concluídos',
+    'on this path': 'neste caminho',
+
+    /* ---------- notes ---------- */
+    'Your notes': 'Suas anotações',
+    'Open the course': 'abrir o curso',
+    'You have not written anything yet.': 'Você ainda não escreveu nada.',
 
     /* ---------- a track, drawn ---------- */
     'Track': 'Trilha',
+    'Your track': 'Sua trilha',
+    'Level': 'nível',
+    'End of the course': 'fim do curso',
+    'End of the track': 'fim da trilha',
     'See the whole track': 'Ver a trilha inteira',
-    'Leads to': 'Leva a',
     'Choose one': 'Escolha uma',
     'Finish': 'Fim',
     'The final': 'A prova final',
@@ -140,9 +183,11 @@ window.I18N.pt = {
 
     /* ---------- certificates ---------- */
     'Your certificates': 'Seus certificados',
+    'Genuine': 'autêntico',
+    'certifies that': 'certifica que',
+    'completed': 'concluiu',
     'A certificate arrives when you pass an exam.': 'O certificado chega quando você é aprovado em uma prova.',
     'Verify a certificate': 'Verificar um certificado',
-    'This certificate is genuine.': 'Este certificado é autêntico.',
     'No certificate has that code.': 'Nenhum certificado tem esse código.',
 
     /* ---------- signing in ---------- */

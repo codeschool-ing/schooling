@@ -44,33 +44,72 @@ try {
           aria-label="Menu" aria-expanded="false" aria-controls="sidebar">☰</button>
 
   <a class="brand" href="#/">
-    <span class="brand-mark" aria-hidden="true">◆</span>
+    <span class="brand-mark" aria-hidden="true"></span>
     <span class="brand-name" id="school-name">Schooling</span>
   </a>
 
-  <form class="search" id="search" role="search">
-    <label class="visually-hidden" for="search-input">Search</label>
-    <input id="search-input" type="search" autocomplete="off"
-           placeholder="Search courses and lessons" />
-  </form>
+  <!-- What the student is in the middle of, carried on every screen. Filled by
+       app.js and hidden until there is a track to name — an empty chip with a
+       0% bar beside it would say "you have done nothing" to somebody who has
+       simply not chosen a track yet. -->
+  <a class="track-chip" id="track-chip" href="#/dashboard" hidden>
+    <span class="track-chip-name" id="track-chip-name"></span>
+    <span class="meter" id="track-chip-meter"><i></i></span>
+    <span class="track-chip-share" id="track-chip-share"></span>
+  </a>
 
   <div class="chrome-right">
+    <!-- THE ICONS CARRY A TITLE AS WELL AS A LABEL. `aria-label` names the
+         button for a screen reader; `<title>` inside the SVG is what a
+         pointer hovers over. Neither is decoration: an icon-only bar with
+         nothing but pictures in it is a bar that can only be learnt by
+         clicking things. -->
+    <button class="icon-button" id="search-button" type="button"
+            aria-label="Search" aria-expanded="false" aria-controls="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+      </svg>
+    </button>
+
+    <form class="search" id="search" role="search">
+      <label class="visually-hidden" for="search-input">Search</label>
+      <input id="search-input" type="search" autocomplete="off"
+             placeholder="Search courses and lessons" />
+    </form>
+
+    <button class="icon-button" id="theme-button" type="button" aria-label="Theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 13.5A8.5 8.5 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5z" />
+      </svg>
+    </button>
+
     <div class="picker" id="lang">
       <button class="picker-button" type="button" aria-haspopup="true" aria-expanded="false"
-              aria-label="Language"><span id="lang-short">EN</span></button>
+              aria-label="Language">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             aria-hidden="true">
+          <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18" />
+        </svg>
+        <span class="picker-code" id="lang-short">EN</span>
+      </button>
       <div class="picker-menu" id="lang-menu"></div>
     </div>
-
-    <button class="icon-button" id="theme-button" type="button" aria-label="Theme">◐</button>
 
     <a class="button" id="sign-in-link" href="#/sign-in">Sign in</a>
     <div class="picker" id="account" hidden>
       <button class="picker-button" type="button" aria-haspopup="true" aria-expanded="false">
-        <span id="account-name">You</span>
+        <!-- The circle is what is drawn; the name is what is read out. The
+             initial is `aria-hidden` because a screen reader announcing "A"
+             before the person's own name is noise. -->
+        <span class="avatar" id="account-initial" aria-hidden="true"></span>
+        <span class="visually-hidden" id="account-name">You</span>
       </button>
       <div class="picker-menu">
         <a href="#/dashboard">Your study</a>
         <a href="#/practice">Practice</a>
+        <a href="#/notes">Your notes</a>
         <a href="#/certificates">Your certificates</a>
         <button type="button" id="sign-out">Sign out</button>
       </div>

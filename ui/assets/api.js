@@ -166,6 +166,14 @@ export const api = {
       + `/${encodeURIComponent(section)}/visit`),
   resume: () => api.get('/api/v1/resume'),
 
+  /* How far along in EVERY course, in one request. The sidebar shows a count
+     beside every course in the school; asking course by course is a list that
+     costs twenty requests to draw. */
+  summary: () => api.get('/api/v1/progress'),
+
+  /* Everything a student has written, across courses, newest first. */
+  allNotes: () => api.get('/api/v1/notes'),
+
   /* ---------- drilling ----------
 
      DRAWING IS A POST because it writes: the server records how the card was

@@ -36,8 +36,107 @@ const state = {
   me: null,          // the signed-in account, or null
   school: null,      // { slug, name, accent }
   courses: [],       // the catalogue, as this student may see it
+  tracks: [],        // the tracks, for the sidebar and the chip in the bar
+  done: {},          // course id -> countable sections finished
   query: '',         // what is in the search box
 };
+
+/* ---------- how far along ----------
+
+   Two numbers, kept apart because two different modules own them: the
+   catalogue says how many sections a course HAS, and progress says how many
+   this student has FINISHED. Nothing on the server divides one by the other,
+   which is why the division is here. */
+
+function doneIn(course) {
+  return state.done[course.id] || 0;
+}
+
+/* The share of a course that is finished, 0 to 100.
+   A course with no countable sections is 0 and not NaN — which is what
+   `0 / 0` produces, and what a progress bar then sets its width to. */
+function shareOf(course) {
+  const of = course.sections || 0;
+  if (!of) return 0;
+  return Math.min(100, Math.round((doneIn(course) / of) * 100));
+}
+
+/* THE THREE STATES A COURSE CAN BE IN, decided in one place. Every screen shows
+   this — the dot in the sidebar, the border on the map, the eyebrow on a card —
+   and three screens each deciding it from the same two numbers is three chances
+   to disagree about what "started" means. */
+function stateOf(course) {
+  const done = doneIn(course);
+  if (course.sections && done >= course.sections) return 'done';
+  if (done > 0) return 'started';
+  return 'open';
+}
+
+function stateWord(which) {
+  if (which === 'done') return txt('Finished');
+  if (which === 'started') return txt('In progress');
+  return txt('Not started');
+}
+
+/* A COURSE'S LEVEL, IN THE READER'S LANGUAGE. `level` is a free string in the
+   catalogue rather than a closed set, so this is a map with a fallback and not
+   a switch: a level nobody wrote a word for is shown as it was written, which
+   is a course card reading `beginner` in a Portuguese sidebar — visible, and
+   far better than an empty space where the level was.
+
+   The three keys are literal for the reason `counted` takes translated words:
+   `txt(course.level)` translates a variable, which works at runtime and is
+   invisible to `tools/check-interface`. It was written that way first, and the
+   checker passed on three words that had no Portuguese at all. */
+function levelWord(level) {
+  return {
+    beginner: txt('beginner'),
+    intermediate: txt('intermediate'),
+    advanced: txt('advanced'),
+  }[level] || level;
+}
+
+/* A COUNT AND THE THING IT COUNTS, WITH THE RIGHT ENDING ON IT. "1 lessons"
+   was on the screen the first time these were drawn, because a number and a
+   plural word concatenated is right eleven times out of twelve and wrong on the
+   one that says a course has a single lesson.
+
+   IT TAKES THE TWO WORDS ALREADY TRANSLATED, and that is not a style choice.
+   `tools/check-interface` finds the strings this interface says by reading the
+   source for calls to the translate function — a helper that took the KEYS and
+   translated them itself would hide both words from the one check that notices
+   a missing translation, and hiding strings from it is how that check quietly
+   stops covering whatever somebody added last.
+
+   This paragraph describes the call rather than writing one out, for the same
+   reason: a specimen in a comment is indistinguishable from the real thing to a
+   tool reading text, and the first draft of this comment added a phantom string
+   the checker then demanded a translation for.
+
+   So it is called `counted(n, txt('lesson'), txt('lessons'))`: both keys are
+   literal, both are found, and translating both is enforced. Both are needed in
+   Portuguese too — `1 seção`, `5 seções`. */
+function counted(n, one, many) {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+/* `4/50 sections`, the phrase that appears on nearly every screen here. It is
+   one function so that the numerator and the denominator can never come from
+   different places, which is the way this particular string goes wrong. */
+function tally(course) {
+  return `${doneIn(course)}/${course.sections || 0} ${txt('sections')}`;
+}
+
+/* A meter, with the number it draws said in words for anything that cannot see
+   it. A bar with no accessible name is a decoration to a screen reader, and
+   this one is carrying the answer to "how far along am I". */
+function meter(share, extra = '') {
+  return el('div', {
+    class: `meter${extra ? ` ${extra}` : ''}`,
+    role: 'img',
+    'aria-label': `${share}% ${txt('complete')}`,
+  }, [el('i', { style: `width:${share}%` })]);
+}
 
 /* ---------- building blocks ----------
 
@@ -172,22 +271,49 @@ function filtered(courses) {
 
 function courseGrid(courses) {
   if (!courses.length) return el('p', { class: 'empty', text: txt('Nothing here yet.') });
+  return el('div', { class: 'grid' }, courses.map(courseCard));
+}
 
-  return el('div', { class: 'grid' }, courses.map((course) => el('a', {
-    class: 'card' + (course.locked ? ' is-locked' : ''),
+/* ONE COURSE CARD, EVERYWHERE. The catalogue, the dashboard's next steps and a
+   track's summary all show the same five facts about a course, so they show
+   them through the same function — three copies of this is three screens that
+   drift until one of them is the only one still saying whether a course is
+   locked. */
+function courseCard(course) {
+  const which = stateOf(course);
+  const started = which !== 'open';
+
+  return el('a', {
+    class: `card tall${course.locked ? ' is-locked' : ''}`,
     href: `#/course/${encodeURIComponent(course.id)}`,
   }, [
+    /* The state, in words, above the name. It is the eyebrow rather than a
+       badge in the corner because it is read FIRST — "in progress" changes
+       what the name underneath means. */
+    el('p', {
+      class: `eyebrow${which === 'started' ? ' warm' : ''}${which === 'open' ? ' quiet' : ''}`,
+      text: course.locked ? txt('Subscription') : stateWord(which),
+    }),
     el('h3', { text: course.name }),
     course.summary ? el('p', { class: 'dim', text: course.summary }) : null,
-    el('div', { class: 'meta' }, [
-      course.hours ? el('span', { text: `${course.hours} h` }) : null,
-      course.level ? el('span', { text: course.level }) : null,
+
+    el('div', { class: 'spacer' }),
+
+    el('div', { class: 'facts' }, [
+      course.hours ? el('span', { text: `${course.hours}h` }) : null,
+      course.level ? el('span', { text: levelWord(course.level) }) : null,
       /* The free tier is the shop window and is open at every door (N-04), so
          it is said on the card rather than discovered at the paywall. */
-      course.free ? el('span', { class: 'tag free', text: txt('Free') }) : null,
-      course.locked ? el('span', { class: 'tag locked', text: txt('Subscription') }) : null,
+      course.free ? el('span', { class: 'on', text: txt('Free') }) : null,
     ]),
-  ])));
+
+    /* A bar for somebody who has started, and nothing for somebody who has
+       not. An empty meter under every card in a catalogue is twelve reminders
+       that you have done none of it. */
+    started ? meter(shareOf(course), which === 'started' ? 'warm' : '') : null,
+    started ? el('p', { class: 'side-count', text: tally(course) })
+      : el('p', { class: 'side-count', text: counted(course.sections || 0, txt('section'), txt('sections')) }),
+  ]);
 }
 
 async function coursePage(id) {
@@ -214,40 +340,73 @@ async function coursePage(id) {
   const sections = (course.lessons || []).flatMap((l) => l.sections.map((s) => `${l.id}/${s.id}`));
   const share = sections.length ? Math.round((finished.size / sections.length) * 100) : 0;
 
+  const listed = state.courses.find((c) => c.id === course.id);
+  const which = listed ? stateOf(listed) : 'open';
+
   show(
-    pageTitle(course.name, course.summary),
+    /* The same eyebrow-heading-facts-meter opening every screen here has, so
+       that arriving at a course from the map and from the catalogue lands on
+       something recognisable either way. */
+    el('p', {
+      class: `eyebrow${which === 'started' ? ' warm' : ''}${which === 'open' ? ' quiet' : ''}`,
+      text: course.locked ? txt('Subscription') : stateWord(which),
+    }),
+    el('h1', { text: course.name }),
+    course.summary ? el('p', { class: 'prose', text: course.summary }) : null,
+    el('div', { class: 'facts' }, [
+      course.hours ? el('span', { text: `${course.hours}h` }) : null,
+      course.level ? el('span', { text: levelWord(course.level) }) : null,
+      el('span', { text: counted((course.lessons || []).length, txt('lesson'), txt('lessons')) }),
+    ]),
+
     course.locked ? el('div', { class: 'notice', role: 'note' }, [
       el('p', { text: txt('This course is part of the subscription.') }),
     ]) : null,
     state.me && sections.length ? el('div', {}, [
-      el('div', { class: 'bar' }, [el('i', { style: `width:${share}%` })]),
-      el('p', { class: 'dim', text: `${share}% ${txt('complete')}` }),
+      meter(share),
+      el('p', { class: 'side-count', text: `${finished.size}/${sections.length} ${txt('sections')}` }),
     ]) : null,
-    el('ol', { class: 'lessons' }, (course.lessons || []).map((lesson) => el('li', {}, [
-      el('h3', {}, [el('a', {
-        href: `#/course/${encodeURIComponent(course.id)}/${encodeURIComponent(lesson.id)}`,
-        text: lesson.title,
-      })]),
-      el('p', { class: 'dim', text: `${lesson.sections.length} ${txt('sections')}` }),
-    ]))),
+
+    course.prerequisites ? el('div', { class: 'panel' }, [
+      el('h3', { text: txt('What you need first') }),
+      el('p', { class: 'dim', text: course.prerequisites }),
+    ]) : null,
+
+    el('div', { class: 'panel' }, [
+      el('h2', { text: txt('Lessons') }),
+      el('ol', { class: 'lessons' }, (course.lessons || []).map((lesson, i) => {
+        const of = lesson.sections.filter((s) => s.countable !== false).length;
+        const did = lesson.sections.filter((s) => finished.has(`${lesson.id}/${s.id}`)).length;
+        return el('li', {}, [
+          el('span', { class: 'lesson-number', text: String(i + 1).padStart(2, '0') }),
+          el('div', { class: 'lesson-body' }, [
+            el('h3', {}, [el('a', {
+              href: `#/course/${encodeURIComponent(course.id)}/${encodeURIComponent(lesson.id)}`,
+              text: lesson.title,
+            })]),
+            el('p', { class: 'facts' }, [
+              el('span', { class: 'on', text: counted(lesson.sections.length, txt('section'), txt('sections')) }),
+            ]),
+          ]),
+          state.me && of
+            ? el('span', { class: 'side-count', text: `${did}/${of}` })
+            : null,
+        ]);
+      })),
+    ]),
 
     /* The exam, and only when there is one — the catalogue says so, rather
        than this screen offering a button that sometimes answers 404. Not
        gated on finishing the course: the exam is what asserts that somebody
        knows the material, and insisting they click through every section
        first would be asserting that they sat through it. */
-    course.exam && !course.locked ? el('div', { class: 'exam-invite' }, [
-      el('h2', { text: txt('The exam') }),
-      el('p', { class: 'dim', text: txt('Pass it and the certificate is yours.') }),
-      state.me
-        ? el('a', {
-          class: 'button',
-          href: `#/exam/course/${encodeURIComponent(course.id)}`,
-          text: txt('Sit the exam'),
-        })
-        : el('a', { class: 'button quiet', href: '#/sign-in',
-          text: offline ? txt('The exam needs the school') : txt('Sign in to sit it') }),
-    ]) : null,
+    course.exam && !course.locked ? examInvite({
+      eyebrow: txt('End of the course'),
+      title: txt('The exam'),
+      facts: txt('Pass it and the certificate is yours.'),
+      href: `#/exam/course/${encodeURIComponent(course.id)}`,
+      action: txt('Sit the exam'),
+    }) : null,
   );
 }
 
@@ -280,6 +439,19 @@ async function lessonPage(courseID, lessonID) {
           try {
             await api.complete(courseID, lessonID, section.id);
             button.replaceWith(el('p', { class: 'dim', text: txt('Done') }));
+
+            /* THE COUNT IN THE SIDEBAR IS PART OF THE SAME FACT. Nothing here
+               reloads the page — this is a fragment router — so a count read
+               once at start-up stays at what it was until somebody presses
+               refresh. Marking a section done and watching "4/50" sit there is
+               the interface telling somebody their work did not register.
+
+               Counted here rather than re-read from the server: the answer is
+               one more than it was, and a request to be told that is a request
+               that can fail and leave the number wrong anyway. */
+            state.done[courseID] = (state.done[courseID] || 0) + 1;
+            drawSidebar(courseID, null);
+            drawTrackChip();
           } catch (e) {
             button.disabled = false;
             button.after(trouble(e));
@@ -399,31 +571,88 @@ async function trackPage(id) {
     }
 
     const course = state.courses.find((c) => c.id === node.id);
+    if (!course) {
+      return el('a', {
+        class: 'node course', 'data-node': node.id,
+        href: `#/course/${encodeURIComponent(node.id)}`,
+      }, [el('span', { class: 'node-name', text: node.id })]);
+    }
+
+    const which = stateOf(course);
+    const started = which !== 'open';
+
     return el('a', {
-      class: 'node course' + (course && course.locked ? ' is-locked' : ''),
+      class: `node course ${which}${course.locked ? ' is-locked' : ''}`,
       'data-node': node.id,
       href: `#/course/${encodeURIComponent(node.id)}`,
     }, [
-      el('span', { class: 'node-name', text: course ? course.name : node.id }),
-      course && course.hours ? el('span', { class: 'dim node-hours', text: `${course.hours} h` }) : null,
+      /* WHICH LEVEL IT IS, counted from the map and not from the catalogue.
+         The number is the student's answer to "how far in is this" and it only
+         means anything in the context of this track — the same course is level
+         two of one track and level five of another. */
+      el('span', { class: 'node-level', text: `${txt('Level')} ${String(node.level + 1).padStart(2, '0')}` }),
+      el('span', {
+        class: `eyebrow${which === 'started' ? ' warm' : ''}${which === 'open' ? ' quiet' : ''}`,
+        text: course.locked ? txt('Subscription') : stateWord(which),
+      }),
+      el('span', { class: 'node-name', text: course.name }),
+      el('span', { class: 'dim node-hours' }, [
+        course.hours ? el('span', { text: `${course.hours}h` }) : null,
+        course.level ? el('span', { text: ` · ${levelWord(course.level)}` }) : null,
+      ]),
+      started ? meter(shareOf(course), which === 'started' ? 'warm' : '') : null,
+      started ? el('span', { class: 'side-count', text: tally(course) }) : null,
     ]);
   }
 
+  /* WHAT THE BORDERS MEAN, said in words under the map. Without it the colours
+     are a pattern somebody has to guess at, and a guess about which course they
+     have finished is the wrong thing to make somebody guess. (WCAG 1.4.1) */
+  function key() {
+    return el('p', { class: 'graph-key' }, [
+      el('span', { class: 'done' }, [el('i', {}), el('span', { text: txt('Finished') })]),
+      el('span', { class: 'started' }, [el('i', {}), el('span', { text: txt('In progress') })]),
+      el('span', { class: 'open' }, [el('i', {}), el('span', { text: txt('Not started') })]),
+    ]);
+  }
+
+  const onIt = coursesOfTrack(track);
+  const totalSections = onIt.reduce((n, c) => n + (c.sections || 0), 0);
+  const doneSections = onIt.reduce((n, c) => n + doneIn(c), 0);
+  const hours = onIt.reduce((n, c) => n + (c.hours || 0), 0);
+
   show(
-    pageTitle(track.name, track.goal),
-    track.outcome ? el('p', { class: 'dim', text: `${txt('Leads to')}: ${track.outcome}` }) : null,
+    el('h1', { text: track.name }),
+    track.goal ? el('p', { class: 'prose', text: track.goal }) : null,
+
+    el('div', { class: 'stats' }, [
+      el('div', { class: 'stat lead' }, [
+        el('b', { text: `${onIt.filter((c) => stateOf(c) === 'done').length}/${onIt.length}` }),
+        el('span', { text: txt('courses finished') }),
+      ]),
+      hours ? el('div', { class: 'stat' }, [
+        el('b', { text: `${hours}h` }),
+        el('span', { text: txt('on this path') }),
+      ]) : null,
+      state.me && totalSections ? el('div', { class: 'stat' }, [
+        el('b', { text: `${doneSections}/${totalSections}` }),
+        el('span', { text: txt('sections') }),
+      ]) : null,
+      track.outcome ? el('div', { class: 'stat' }, [
+        el('b', { text: '→' }),
+        el('span', { text: track.outcome }),
+      ]) : null,
+    ]),
+
     board,
-    track.exam ? el('div', { class: 'exam-invite' }, [
-      el('h2', { text: txt('The final') }),
-      el('p', { class: 'dim', text: txt('The exam for the whole track.') }),
-      state.me
-        ? el('a', {
-          class: 'button', href: `#/exam/track/${encodeURIComponent(track.id)}`,
-          text: txt('Sit the final'),
-        })
-        : el('a', { class: 'button quiet', href: '#/sign-in',
-          text: offline ? txt('The exam needs the school') : txt('Sign in to sit it') }),
-    ]) : null,
+    key(),
+    track.exam ? examInvite({
+      eyebrow: txt('End of the track'),
+      title: txt('The final'),
+      facts: txt('The exam for the whole track.'),
+      href: `#/exam/track/${encodeURIComponent(track.id)}`,
+      action: txt('Sit the final'),
+    }) : null,
   );
 
   draw();
@@ -844,23 +1073,30 @@ async function dashboard() {
     return;
   }
 
+  const track = state.tracks[0];
+
   show(
-    pageTitle(txt('Your study')),
-    el('h2', { text: txt('Carry on where you left off') }),
-    resume.length ? el('div', { class: 'grid' }, resume.map((where) => {
-      const course = state.courses.find((c) => c.id === where.course);
-      return el('a', {
-        class: 'card',
-        href: `#/course/${encodeURIComponent(where.course)}/${encodeURIComponent(where.lesson)}`,
-      }, [
-        el('h3', { text: course ? course.name : where.course }),
-        el('p', { class: 'dim', text: where.section }),
-      ]);
-    })) : el('p', { class: 'empty', text: txt('You have not started anything yet.') }),
+    /* THE GREETING IS THE HEADING. It is the one screen that is about the
+       person rather than about the school, and "Your study" over somebody's own
+       dashboard is a filing-cabinet label. */
+    el('h1', { text: state.me.name ? `${txt('Hello')}, ${state.me.name}` : txt('Your study') }),
+
+    /* ONE PLACE TO CARRY ON FROM, AND NOT A GRID OF THEM. A dashboard whose
+       first element is a choice of six is a dashboard that asks a question
+       instead of answering one — the most recent is what "carry on" means. */
+    resume.length ? carryOn(resume[0]) : el('div', { class: 'panel' }, [
+      el('p', { class: 'eyebrow', text: txt('Start here') }),
+      el('h2', { text: txt('You have not started anything yet.') }),
+      el('p', { class: 'dim', text: txt('What there is to learn here.') }),
+      el('p', {}, [el('a', { class: 'button', href: '#/', text: `${txt('Catalogue')} →` })]),
+    ]),
+
+    track ? trackSummary(track) : null,
+    nextSteps(),
 
     /* An open attempt first, because it is the only thing on this screen with
        a deadline attached to it — the paper is drawn and waiting. */
-    attempts.length ? el('div', {}, [
+    attempts.length ? el('div', { class: 'panel' }, [
       el('h2', { text: txt('Your exams') }),
       el('ul', { class: 'attempts' }, attempts.map((attempt) => {
         const course = state.courses.find((c) => c.id === attempt.exam);
@@ -883,6 +1119,193 @@ async function dashboard() {
     certificates.length
       ? el('div', { class: 'grid' }, certificates.map(certificateCard))
       : el('p', { class: 'empty', text: txt('A certificate arrives when you pass an exam.') }),
+  );
+}
+
+/* The last card on a course and on a track. One shape, because they are the
+   same offer made about different amounts of material — and a signed-out
+   visitor gets the same card with the door named rather than no card at all,
+   since "there is an exam and you need an account for it" is information and a
+   missing element is not. */
+function examInvite({ eyebrow, title, facts, href, action }) {
+  return el('div', { class: 'exam-invite' }, [
+    el('div', {}, [
+      el('p', { class: 'eyebrow quiet', text: eyebrow }),
+      el('h2', { text: title }),
+      el('p', { class: 'facts' }, [el('span', { text: facts })]),
+    ]),
+    state.me
+      ? el('a', { class: 'button', href, text: `${action} →` })
+      : el('a', {
+        class: 'button quiet',
+        href: '#/sign-in',
+        text: offline ? txt('The exam needs the school') : txt('Sign in to sit it'),
+      }),
+  ]);
+}
+
+/* The one thing this screen exists to offer: the way back in.
+   The course and the lesson are named because "carry on" with nothing after it
+   asks somebody to remember what they were doing. */
+function carryOn(where) {
+  const course = state.courses.find((c) => c.id === where.course);
+
+  return el('div', { class: 'panel' }, [
+    el('p', { class: 'eyebrow', text: txt('Carry on where you left off') }),
+    el('h2', { text: course ? course.name : where.course }),
+    el('p', { class: 'facts' }, [
+      el('span', { text: where.lesson }),
+      where.section ? el('span', { text: where.section }) : null,
+    ]),
+    course ? meter(shareOf(course)) : null,
+    course ? el('p', { class: 'side-count', text: tally(course) }) : null,
+    el('p', {}, [el('a', {
+      class: 'button',
+      href: `#/course/${encodeURIComponent(where.course)}/${encodeURIComponent(where.lesson)}`,
+      text: `${txt('Carry on')} →`,
+    })]),
+  ]);
+}
+
+/* The track, counted. Four numbers and a bar: how much of it is done, how many
+   sections that is, how many courses are on it and what it leads to. */
+function trackSummary(track) {
+  const courses = coursesOfTrack(track);
+  const of = courses.reduce((n, c) => n + (c.sections || 0), 0);
+  const done = courses.reduce((n, c) => n + doneIn(c), 0);
+  const share = of ? Math.round((done / of) * 100) : 0;
+  const finished = courses.filter((c) => stateOf(c) === 'done').length;
+
+  return el('div', { class: 'panel' }, [
+    el('div', { class: 'panel-head' }, [
+      el('h2', { text: track.name }),
+      el('a', {
+        href: `#/track/${encodeURIComponent(track.id)}`,
+        text: `${txt('See the whole track')} →`,
+      }),
+    ]),
+    el('div', { class: 'stats' }, [
+      el('div', { class: 'stat lead' }, [
+        el('b', { text: `${share}%` }),
+        el('span', { text: txt('of the track') }),
+      ]),
+      el('div', { class: 'stat' }, [
+        el('b', { text: `${done}/${of}` }),
+        el('span', { text: txt('sections') }),
+      ]),
+      el('div', { class: 'stat' }, [
+        el('b', { text: `${finished}/${courses.length}` }),
+        el('span', { text: txt('courses finished') }),
+      ]),
+      track.outcome ? el('div', { class: 'stat' }, [
+        el('b', { text: '→' }),
+        el('span', { text: track.outcome }),
+      ]) : null,
+    ]),
+    meter(share),
+  ]);
+}
+
+/* WHAT TO DO NEXT, which is a different question from what is unfinished.
+   Something already started comes before something not started — finishing a
+   course is worth more than opening a fifth one — and a locked course is not
+   here at all, because a list of next steps that leads to a paywall is an
+   advert wearing a checklist's clothes. */
+function nextSteps() {
+  const open = state.courses.filter((c) => !c.locked);
+  const started = open.filter((c) => stateOf(c) === 'started');
+  const fresh = open.filter((c) => stateOf(c) === 'open');
+  const next = [...started, ...fresh].slice(0, 4);
+  if (!next.length) return null;
+
+  return el('div', { class: 'panel' }, [
+    el('h2', { text: txt('Next steps') }),
+    el('div', { class: 'grid' }, next.map(courseCard)),
+  ]);
+}
+
+/* EVERYTHING SOMEBODY WROTE, IN ONE PLACE. A margin note is written inside one
+   section and read back weeks later with no memory of which section that was,
+   so each one carries the way back to the page it belongs to. */
+/* The lesson and section titles of some courses, keyed by id.
+   A course that fails to load is simply absent from the answer — the caller
+   falls back to the id, and one course being unreachable must not take a whole
+   screen of somebody's notes down with it. */
+async function titlesFor(courseIDs) {
+  const pairs = await Promise.all(courseIDs.map(async (id) => {
+    try {
+      const course = await api.course(id);
+      const lessons = {};
+      const sections = {};
+      (course.lessons || []).forEach((lesson) => {
+        lessons[lesson.id] = lesson.title || lesson.id;
+        (lesson.sections || []).forEach((section) => {
+          /* Keyed by BOTH ids: section ids are unique within a lesson and not
+             within a course, so `roles` in two lessons is two sections and a
+             map keyed on the section alone would show one of them under the
+             other's title. */
+          sections[`${lesson.id}/${section.id}`] = section.title || section.id;
+        });
+      });
+      return [id, { lessons, sections }];
+    } catch (e) {
+      return null;
+    }
+  }));
+
+  return Object.fromEntries(pairs.filter(Boolean));
+}
+
+async function notesPage() {
+  if (!state.me) { go('#/sign-in'); return; }
+
+  let notes = [];
+  try {
+    const answer = await api.allNotes();
+    notes = (answer && answer.notes) || [];
+  } catch (e) {
+    show(pageTitle(txt('Your notes')), trouble(e));
+    return;
+  }
+
+  /* WHERE THE NOTE WAS WRITTEN, IN WORDS. The rows carry ids — `roles`,
+     `client-and-server` — because that is what a note is keyed by, and a screen
+     showing somebody their own writing under two slugs asks them to remember
+     what those slugs meant.
+
+     One request per COURSE that has a note in it, asked for together, rather
+     than one per note. A course whose titles cannot be fetched falls back to
+     the ids: a slug is worse than a title and much better than a blank. */
+  const titles = await titlesFor([...new Set(notes.map((n) => n.course))]);
+
+  show(
+    el('h1', { text: txt('Your notes') }),
+    el('p', { class: 'side-count', text: counted(notes.length, txt('note'), txt('notes')) }),
+
+    notes.length ? el('div', {}, notes.map((note) => {
+      const course = state.courses.find((c) => c.id === note.course);
+      const named = titles[note.course] || { lessons: {}, sections: {} };
+      return el('div', { class: 'panel' }, [
+        el('div', { class: 'panel-head' }, [
+          el('h3', { text: course ? course.name : note.course }),
+          el('a', {
+            href: `#/course/${encodeURIComponent(note.course)}/${encodeURIComponent(note.lesson)}`,
+            text: `${txt('Open the course')} →`,
+          }),
+        ]),
+        el('p', { class: 'facts' }, [
+          el('span', { class: 'on', text: named.lessons[note.lesson] || note.lesson }),
+          el('span', {
+            class: 'on',
+            text: named.sections[`${note.lesson}/${note.section}`] || note.section,
+          }),
+        ]),
+        /* The note itself is the student's own words and is never Markdown:
+           it goes in as text, which is also why nothing here touches
+           innerHTML. */
+        el('p', { class: 'note-body', text: note.body }),
+      ]);
+    })) : el('p', { class: 'empty', text: txt('You have not written anything yet.') }),
   );
 }
 
@@ -929,11 +1352,21 @@ async function verify(code) {
     show(
       pageTitle(txt('Verify a certificate')),
       el('div', { class: 'certificate' }, [
-        el('p', { class: 'dim', text: txt('This certificate is genuine.') }),
+        el('div', { class: 'certificate-head' }, [
+          el('span', { class: 'brand' }, [
+            el('span', { class: 'brand-mark', 'aria-hidden': 'true' }),
+            el('span', { class: 'brand-name', text: c.school }),
+          ]),
+          el('span', { class: 'chip on', text: txt('Genuine') }),
+        ]),
+        el('p', { class: 'said', text: txt('certifies that') }),
         el('p', { class: 'who', text: c.name }),
-        el('p', { text: c.title }),
-        el('p', { class: 'dim', text: `${c.school} · ${new Date(c.issued_at).toLocaleDateString()}` }),
-        el('p', { class: 'code', text: answer.code_as_printed || grouped(c.code) }),
+        el('p', { class: 'said', text: txt('completed') }),
+        el('p', { class: 'what', text: c.title }),
+        el('div', { class: 'foot' }, [
+          el('span', { class: 'said', text: new Date(c.issued_at).toLocaleDateString() }),
+          el('span', { class: 'code', text: answer.code_as_printed || grouped(c.code) }),
+        ]),
       ]),
     );
   } catch (e) {
@@ -1009,6 +1442,11 @@ function credentialsForm({ submit, withName, action, otherHref, otherText }) {
       try {
         await action(email.value, password.value, withName ? name.value : undefined);
         await loadMe();
+        /* Their counts arrive with them, so the dashboard behind this form is
+           drawn with the progress it is about rather than filling in a beat
+           later under the cursor. */
+        await loadProgress();
+        drawTrackChip();
         go('#/dashboard');
       } catch (e) {
         why.textContent = (e instanceof ApiError && e.message) ? txt(e.message) : txt('That did not work.');
@@ -1037,9 +1475,52 @@ function credentialsForm({ submit, withName, action, otherHref, otherText }) {
 
 /* ---------- the sidebar ---------- */
 
-function drawSidebar(current) {
+/* WHERE YOU CAN GO, on every screen. Six entries, the same six always, and
+   written here rather than derived from the router: the router knows thirteen
+   routes and most of them are somewhere you arrive rather than somewhere you
+   choose to go — a lesson, an exam paper, a result.
+
+   The ones that need an account are marked, because a sidebar offering "Your
+   certificates" to somebody who is not signed in is a list of disappointments.
+   The catalogue is not marked, and that is the point of it. */
+/* THE LABELS ARE TRANSLATED HERE, AT THE LITERAL. Writing them as data —
+   `label: 'Your track'` — and translating the variable later works, and it
+   hides all six from `tools/check-interface`, which reads the source for calls
+   to the translator rather than running the page. The first draft did exactly
+   that and put `Your track` in the middle of an otherwise Portuguese sidebar;
+   the checker reported nothing, because as far as it could see nobody said it.
+
+   A key that reaches the translator through a variable is a key nothing can
+   check. */
+function places() {
+  const track = state.tracks[0];
+  return [
+    { hash: '#/dashboard', label: txt('Your study'), account: true },
+    /* "Your track" is a link to A track, and which one is a fact about the
+       school rather than about the student until there is a choice to record.
+       Absent when the school has none, rather than pointing at nothing. */
+    track
+      ? { hash: `#/track/${encodeURIComponent(track.id)}`, label: txt('Your track') }
+      : null,
+    { hash: '#/', label: txt('Catalogue') },
+    { hash: '#/practice', label: txt('Practice'), account: true },
+    { hash: '#/notes', label: txt('Your notes'), account: true },
+    { hash: '#/certificates', label: txt('Your certificates'), account: true },
+  ].filter(Boolean);
+}
+
+function drawSidebar(current, where) {
   const body = document.querySelector('#sidebar-body');
   body.textContent = '';
+
+  body.append(el('nav', { class: 'side-nav', 'aria-label': txt('Sections') },
+    places()
+      .filter((place) => state.me || !place.account)
+      .map((place) => el('a', {
+        href: place.hash,
+        text: place.label,
+        'aria-current': place.hash === where ? 'page' : null,
+      }))));
 
   const courses = filtered(state.courses);
   if (!courses.length) {
@@ -1047,23 +1528,37 @@ function drawSidebar(current) {
     return;
   }
 
+  /* The heading over the list is the TRACK's name when there is one, and the
+     word "Courses" when there is not. A student is on one path through the
+     school and the list under it is that path; naming it is what turns a
+     column of twelve courses into a shape somebody recognises. */
+  const track = state.tracks[0];
   const group = el('div', { class: 'side-group' }, [
-    el('p', { class: 'side-title', text: txt('Courses') }),
+    el('p', { class: 'side-title', text: track ? track.name : txt('Courses') }),
   ]);
 
   courses.forEach((course) => {
+    const which = stateOf(course);
+
     group.append(el('a', {
       class: 'side-link',
       href: `#/course/${encodeURIComponent(course.id)}`,
       'aria-current': current === course.id ? 'page' : null,
     }, [
-      el('span', { text: course.name }),
+      /* The dot is a picture of what the count beside it already says, so it
+         is hidden from anything that reads the page rather than announced
+         twice. What a screen reader gets is the name and the tally. */
+      el('span', { class: `side-dot ${which}`, 'aria-hidden': 'true' }),
+      el('span', { class: 'side-name', text: course.name }),
+
       /* Said here as well as on the card, because this is the list somebody
          navigates from: a link that leads to a paywall should look like one
          BEFORE it is clicked. The word rather than a glyph — a padlock is a
          picture a screen reader has to be told the meaning of, and the meaning
          is one short word. */
-      course.locked ? el('span', { class: 'side-lock', text: txt('Subscription') }) : null,
+      course.locked
+        ? el('span', { class: 'side-lock', text: txt('Subscription') })
+        : el('span', { class: 'side-count', text: `${doneIn(course)}/${course.sections || 0}` }),
     ]));
   });
 
@@ -1117,6 +1612,7 @@ async function route() {
       break;
     case 'practice':           await practice(); break;
     case 'dashboard':          await dashboard(); break;
+    case 'notes':              await notesPage(); break;
     case 'certificates':       await certificates(); break;
     case 'sign-in':            signIn(); break;
     case 'sign-up':            signUp(); break;
@@ -1126,9 +1622,25 @@ async function route() {
       await notFound();
   }
 
-  drawSidebar(parts[0] === 'course' ? parts[1] : null);
+  /* The sidebar is told BOTH which course is open and which of the six places
+     this is, because they mark different lists and a screen is usually in one
+     of them and not the other. A lesson is inside a course, so the course is
+     what is marked there — `#/course/x/y` and `#/course/x` are the same place
+     as far as somebody looking at the list is concerned. */
+  drawSidebar(parts[0] === 'course' ? parts[1] : null, placeOf(parts));
   closeSidebar();
   focusScreen();
+}
+
+/* Which of the sidebar's six the address is on, or null for a screen that is
+   none of them — a lesson, an exam, a result. Built from the parts rather than
+   compared against `location.hash`, so that a track reached from the catalogue
+   and the same track reached from the sidebar mark the same entry. */
+function placeOf(parts) {
+  if (!parts.length) return '#/';
+  if (parts[0] === 'track' && parts[1]) return `#/track/${encodeURIComponent(parts[1])}`;
+  if (['dashboard', 'practice', 'notes', 'certificates'].includes(parts[0])) return `#/${parts[0]}`;
+  return null;
 }
 
 /* The graph is the one screen that has to be redrawn when the window changes
@@ -1210,8 +1722,29 @@ function wireChrome() {
     closeSidebar();
   });
 
+  /* The search field appears when it is asked for, and takes focus when it
+     does. A control that opens and leaves the cursor where it was is a control
+     somebody has to click twice. */
   const search = document.querySelector('#search');
   const input = document.querySelector('#search-input');
+  const searchButton = document.querySelector('#search-button');
+
+  searchButton.addEventListener('click', () => {
+    const open = search.classList.toggle('is-open');
+    searchButton.setAttribute('aria-expanded', String(open));
+    if (open) {
+      input.focus();
+      return;
+    }
+    /* Closing it clears the query, because a hidden field that is still
+       filtering the catalogue is a school that has lost half its courses with
+       nothing on screen saying why. */
+    input.value = '';
+    state.query = '';
+    drawSidebar();
+    route();
+  });
+
   search.addEventListener('submit', (event) => event.preventDefault());
   input.addEventListener('input', () => {
     state.query = input.value;
@@ -1223,6 +1756,11 @@ function wireChrome() {
     try { await api.signOut(); } catch (e) { /* the cookie may already be gone */ }
     state.me = null;
     drawAccount();
+    /* Their counts go with them. A sidebar still showing "12/50" after
+       somebody signed out is one person's progress shown to whoever is at the
+       machine next. */
+    await loadProgress();
+    drawTrackChip();
     go('#/');
   });
 }
@@ -1242,9 +1780,16 @@ function drawAccount() {
   }
 
   if (state.me) {
+    const who = state.me.name || state.me.email;
     link.hidden = true;
     account.hidden = false;
-    document.querySelector('#account-name').textContent = state.me.name || state.me.email;
+    document.querySelector('#account-name').textContent = who;
+    /* The circle carries one letter and the name is beside it in the
+       accessible name, so this is decoration and is marked as such in the
+       markup. `[...who][0]` and not `who[0]`: a name beginning with an emoji
+       or an astral character is one code point and two code units, and
+       indexing by code unit cuts it in half. */
+    document.querySelector('#account-initial').textContent = who ? [...who][0] : '';
   } else {
     link.hidden = false;
     account.hidden = true;
@@ -1258,6 +1803,48 @@ async function loadMe() {
     state.me = null;   // not signed in, which is half of this platform's traffic
   }
   drawAccount();
+}
+
+/* How far along, in every course, in one request.
+   A visitor has no progress and is not asked for any — the endpoint would
+   refuse, and a 401 on every page load is noise in a log that somebody will
+   one day be reading to find a real one. */
+async function loadProgress() {
+  state.done = {};
+  if (!state.me) return;
+
+  try {
+    const answer = await api.summary();
+    ((answer && answer.progress) || []).forEach((row) => {
+      state.done[row.course] = row.sections;
+    });
+  } catch (e) { /* the counts are missing; every screen still works without them */ }
+}
+
+/* What the student is in the middle of, in the bar, on every screen.
+   Hidden rather than zeroed when there is no track or nobody signed in: a chip
+   reading 0% is a statement about somebody's effort, and "we do not know yet"
+   is not that statement. */
+function drawTrackChip() {
+  const chip = document.querySelector('#track-chip');
+  const track = state.tracks[0];
+
+  if (!state.me || !track) {
+    chip.hidden = true;
+    return;
+  }
+
+  const courses = coursesOfTrack(track);
+  const of = courses.reduce((n, c) => n + (c.sections || 0), 0);
+  const done = courses.reduce((n, c) => n + doneIn(c), 0);
+  const share = of ? Math.round((done / of) * 100) : 0;
+
+  chip.hidden = false;
+  chip.href = `#/track/${encodeURIComponent(track.id)}`;
+  chip.setAttribute('aria-label', `${track.name} — ${share}% ${txt('complete')}`);
+  document.querySelector('#track-chip-name').textContent = track.name;
+  document.querySelector('#track-chip-share').textContent = `${share}%`;
+  document.querySelector('#track-chip-meter').firstElementChild.style.width = `${share}%`;
 }
 
 /* ---------- start ---------- */
@@ -1279,10 +1866,23 @@ async function start() {
 
   await loadMe();
 
-  try {
-    const answer = await api.courses();
-    state.courses = (answer && answer.courses) || [];
-  } catch (e) { /* every screen below reports its own trouble */ }
+  /* THE CATALOGUE AND THE TRACKS TOGETHER, before the first screen. Both are
+     read by the sidebar, which is drawn on every navigation — fetching them
+     per screen would be the same two requests over and over, and a sidebar
+     that filled in a beat late on each one.
+
+     Neither takes the screen down: every screen below reports its own trouble,
+     and a sidebar with nothing in it is a worse day rather than a broken
+     page. */
+  await Promise.all([
+    api.courses().then((answer) => { state.courses = (answer && answer.courses) || []; })
+      .catch(() => {}),
+    api.tracks().then((answer) => { state.tracks = (answer && answer.tracks) || []; })
+      .catch(() => {}),
+  ]);
+
+  await loadProgress();
+  drawTrackChip();
 
   window.addEventListener('hashchange', route);
   await route();
