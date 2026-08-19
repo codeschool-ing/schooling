@@ -350,6 +350,17 @@ a packaging job rather than a second router. The one real path is `/verify/<code
 because that address is printed on a certificate and typed by somebody checking a
 claim.
 
+**Nothing in the shell comes from another origin**, and the type is why that rule
+exists. Three families used to be fetched from a font CDN on every page load —
+which told a third party which school a student was reading before anything had
+rendered, left the offline bundle with no way to look like the site, and made two
+machines measure different cards: the graph test failed on the build machine at
+two window sizes and on none in the sandbox, because one could reach the CDN and
+the other could not. `go run ./tools/fonts` brings the faces in; it is run by
+hand and it is the only thing here that touches the network. A test over the
+shell fails on any absolute or scheme-relative address, because the way this gets
+undone is one convenient `<link>` in a hurry.
+
 **There is no catch-all.** An unknown path is a 404. A shell that rendered itself
 at any address leaves somebody looking at an empty screen wondering what they
 typed. `ui/ui_test.go` also holds the line that matters: the shell never answers

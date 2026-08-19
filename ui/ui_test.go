@@ -174,3 +174,78 @@ func TestEveryAssetTheShellAsksForIsThere(t *testing.T) {
 		}
 	}
 }
+
+// THE SHELL ASKS NOBODY ELSE FOR ANYTHING.
+//
+// It used to ask fonts.googleapis.com for three families, which told a third
+// party which school a student was reading before the page had rendered, left
+// the offline bundle with no way to look like the site, and made two machines
+// measure different cards — the graph test failed on the build machine at two
+// window sizes and on none in the sandbox, because one of them could reach the
+// CDN and the other could not.
+//
+// The faces are served from this origin now. This is the check that keeps them
+// there, because the way that decision gets undone is one convenient `<link>`
+// in a hurry, and nothing else in the repository would notice.
+func TestTheShellAsksNobodyElseForAnything(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	ui.Handler("v1.2.3").ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
+
+	// Every scheme-relative or absolute address in an attribute. Deliberately
+	// blunt: it reads the whole document rather than the attributes it expects
+	// to find, so a `<script src>` somebody adds next year is caught by the
+	// same line as today's `<link href>`.
+	for _, prefix := range []string{`="http://`, `="https://`, `="//`} {
+		if at := strings.Index(recorder.Body.String(), prefix); at >= 0 {
+			t.Errorf("the shell loads something from another origin: %q\n"+
+				"Serve it from here instead — see tools/fonts for how the type got here.",
+				excerpt(recorder.Body.String(), at))
+		}
+	}
+}
+
+// THE TYPE IS ACTUALLY THERE. `fonts.css` is generated, so the list of files it
+// names is not one anybody maintains — which is exactly why nobody would notice
+// it going stale. This asks the handler for each face the stylesheet asks a
+// browser for.
+func TestEveryFaceTheStylesheetNamesIsServed(t *testing.T) {
+	handler := ui.Handler("v1.2.3")
+
+	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/assets/fonts/fonts.css", nil))
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("the font stylesheet answered %d — run `go run ./tools/fonts`", recorder.Code)
+	}
+
+	faces := 0
+	for _, line := range strings.Split(recorder.Body.String(), "\n") {
+		_, after, found := strings.Cut(line, "src: url('")
+		if !found {
+			continue
+		}
+		name, _, _ := strings.Cut(after, "'")
+		faces++
+
+		got := httptest.NewRecorder()
+		handler.ServeHTTP(got, httptest.NewRequest(http.MethodGet, "/assets/fonts/"+name, nil))
+		if got.Code != http.StatusOK {
+			t.Errorf("%s answered %d — the stylesheet names a file that is not here", name, got.Code)
+			continue
+		}
+		// woff2 begins "wOF2". A truncated or html-error-page download would
+		// otherwise pass as a two hundred with a body.
+		if !strings.HasPrefix(got.Body.String(), "wOF2") {
+			t.Errorf("%s is served but is not a woff2", name)
+		}
+	}
+
+	if faces == 0 {
+		t.Error("the font stylesheet names no face at all")
+	}
+}
+
+func excerpt(document string, at int) string {
+	start := max(at-60, 0)
+	end := min(at+60, len(document))
+	return document[start:end]
+}

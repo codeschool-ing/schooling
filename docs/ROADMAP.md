@@ -73,6 +73,7 @@ audit with a name against it.*
 ### What the student sees
 
 - [x] The interface served from the same binary and the same origin, with no build step — fragment routes, so the offline bundle is a packaging job and not a second router
+- [x] Nothing loaded from another origin, the type included — a student's browser tells no third party which school they are reading, and the two machines that render this interface finally measure the same cards
 - [x] `track → course → lesson → section`, with `requires` and `links` distinct
 - [x] The track graph, with edge routing that avoids the cards — Sugiyama's ordering, and a router that takes a line around a card when it can see one in the way
 - [x] The graph test — every track, six viewport sizes, four landscape and two portrait, no line through a card
