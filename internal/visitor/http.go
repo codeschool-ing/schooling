@@ -52,13 +52,32 @@ func FromContext(ctx context.Context) (uuid.UUID, bool) {
 	return id, ok
 }
 
+// Arrived is emitted the first time a browser is seen, and is the first step of
+// the funnel.
+//
+// IT IS A CALLBACK BECAUSE THIS MODULE MAY NOT IMPORT THE ONE THAT COUNTS, and
+// it takes the visitor explicitly because at this moment there is not yet one on
+// the request — this middleware is what puts it there.
+type Arrived func(ctx context.Context, visitorID uuid.UUID)
+
 // Identify puts a visitor on every request, issuing one where there is none.
 //
 // IT NEVER FAILS A REQUEST. A database that cannot issue an identity is a
 // reason to serve the page anyway and count nothing — refusing to show a
 // prospective student the catalogue because analytics is down would be the
 // funnel destroying the thing it exists to measure.
-func Identify(store *Store, schoolOf SchoolOf, settings Settings) func(http.Handler) http.Handler {
+//
+// # THE ARRIVAL IS EMITTED HERE OR NOWHERE
+//
+// "Of the people who arrived, how many signed up" is the question the visitor
+// identity exists for (K-10), and the arrival is the one step of the funnel
+// that CANNOT BE RECONSTRUCTED AFTERWARDS. By the time somebody signs up, the
+// visit that brought them is over; by the time anybody notices the event is
+// missing, every earlier period is permanently unanswerable.
+//
+// It fires on the request that issues the identity and on no other, which is
+// what makes it "arrived" rather than "came back".
+func Identify(store *Store, schoolOf SchoolOf, settings Settings, arrived Arrived) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			id, issued := resolve(r, store, schoolOf)
@@ -66,10 +85,17 @@ func Identify(store *Store, schoolOf SchoolOf, settings Settings) func(http.Hand
 				next.ServeHTTP(w, r) // counted nothing; still serving
 				return
 			}
+
+			ctx := context.WithValue(r.Context(), ctxVisitor, id)
 			if issued {
 				http.SetCookie(w, cookie(id, settings))
+				if arrived != nil {
+					// With the visitor already in the context, so the event
+					// carries it the same way every other event does.
+					arrived(ctx, id)
+				}
 			}
-			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxVisitor, id)))
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }

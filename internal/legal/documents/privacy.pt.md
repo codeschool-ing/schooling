@@ -50,9 +50,13 @@ cadastra a visita que o trouxe já acabou. Se você criar uma conta mais tarde,
 registramos a ligação entre esse identificador e a conta, que é o que torna a
 resposta possível.
 
-O que registramos junto dele são as páginas que você pediu e o país de onde veio
-o pedido. **Não armazenamos seu endereço IP.** O país é derivado do pedido e o
-endereço em si é descartado.
+O que registramos junto dele é **uma lista curta de coisas nomeadas que você
+fez** — que você chegou, que abriu uma trilha, que abriu uma aula — e o país de
+onde veio o pedido. Não todas as páginas que você olhou: não há registro da sua
+navegação aqui, só dos poucos momentos de que o funil acima é feito.
+
+**Não armazenamos seu endereço IP.** O país é derivado do pedido e o endereço em
+si é descartado.
 
 ## Depois que você tem conta
 

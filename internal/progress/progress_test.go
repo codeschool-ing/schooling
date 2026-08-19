@@ -94,7 +94,7 @@ func TestALockedCourseCannotBeCompleted(t *testing.T) {
 	s, school, student := store(t, pool), school(t, pool), student(t, pool)
 	ctx := context.Background()
 
-	_, err := s.Complete(ctx, school, student, "html-css", "boxes", "overview")
+	_, _, err := s.Complete(ctx, school, student, "html-css", "boxes", "overview")
 	if !errors.Is(err, progress.ErrLocked) {
 		t.Fatalf("completing a locked course gave %v, want ErrLocked", err)
 	}
@@ -125,7 +125,7 @@ func TestASectionThatDoesNotExistIsRefused(t *testing.T) {
 	pool := testPool(t)
 	s, school, student := store(t, pool), school(t, pool), student(t, pool)
 
-	_, err := s.Complete(context.Background(), school, student,
+	_, _, err := s.Complete(context.Background(), school, student,
 		"web-fundamentals", "client-and-server", "invented")
 	if !errors.Is(err, progress.ErrNoSuchSection) {
 		t.Errorf("an invented section gave %v, want ErrNoSuchSection", err)
@@ -146,7 +146,7 @@ func TestCompletingTwiceIsCompletingOnce(t *testing.T) {
 	s, school, student := store(t, pool), school(t, pool), student(t, pool)
 	ctx := context.Background()
 
-	first, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", "roles")
+	first, _, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", "roles")
 	if err != nil {
 		t.Fatalf("the first completion: %v", err)
 	}
@@ -162,7 +162,7 @@ func TestCompletingTwiceIsCompletingOnce(t *testing.T) {
 	}
 	when := done[0].CompletedAt
 
-	again, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", "roles")
+	again, _, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", "roles")
 	if err != nil {
 		t.Fatalf("the second completion: %v", err)
 	}
@@ -195,7 +195,7 @@ func TestProgressOnlyEverGrows(t *testing.T) {
 
 	seen := 0
 	for _, section := range []string{"roles", "intro", "drill"} {
-		if _, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", section); err != nil {
+		if _, _, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", section); err != nil {
 			t.Fatalf("completing %s: %v", section, err)
 		}
 		done, _, err := s.OfCourse(ctx, school, student, "web-fundamentals")
@@ -223,7 +223,7 @@ func TestOneStudentNeverSeesAnother(t *testing.T) {
 	ana, bruno := student(t, pool), student(t, pool)
 	ctx := context.Background()
 
-	if _, err := s.Complete(ctx, school, ana, "web-fundamentals", "client-and-server", "roles"); err != nil {
+	if _, _, err := s.Complete(ctx, school, ana, "web-fundamentals", "client-and-server", "roles"); err != nil {
 		t.Fatalf("completing: %v", err)
 	}
 	if err := s.SetNote(ctx, school, ana, "web-fundamentals", "client-and-server", "roles",
@@ -282,7 +282,7 @@ func TestTheResumePointerFollowsTheMostRecentSection(t *testing.T) {
 	ctx := context.Background()
 
 	for _, section := range []string{"roles", "intro", "drill"} {
-		if _, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", section); err != nil {
+		if _, _, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", section); err != nil {
 			t.Fatalf("completing %s: %v", section, err)
 		}
 	}
@@ -331,5 +331,63 @@ func TestEmptyingANoteRemovesIt(t *testing.T) {
 	}
 	if len(notes) != 0 {
 		t.Errorf("%d notes after emptying it, want none: %+v", len(notes), notes)
+	}
+}
+
+// FINISHING THE LAST SECTION FINISHES THE COURSE, and it is announced exactly
+// once.
+//
+// "Finished the free course" is a step of the funnel and nobody clicks it — it
+// becomes true when the last section turns. A step that fired again on a repeat
+// completion would be a funnel saying more people finished than ever started.
+func TestFinishingTheLastSectionFinishesTheCourseOnce(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := school(t, pool), student(t, pool)
+	s := store(t, pool)
+
+	sections := []string{"roles", "intro", "drill"}
+	finishes := 0
+
+	for _, section := range sections {
+		_, finished, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", section)
+		if err != nil {
+			t.Fatalf("completing %s: %v", section, err)
+		}
+		if finished {
+			finishes++
+		}
+	}
+
+	if finishes != 1 {
+		t.Fatalf("finishing a course of %d sections was announced %d times",
+			len(sections), finishes)
+	}
+
+	// And completing one of them again does not announce it a second time.
+	_, finished, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", sections[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	if finished {
+		t.Error("re-completing a section announced the course as finished again")
+	}
+}
+
+// AND FINISHING PART OF IT FINISHES NOTHING. The denominator is what the course
+// contains, not what the student has done — counting their own rows would
+// answer "have they finished what they finished", which is true of everybody.
+func TestFinishingSomeSectionsDoesNotFinishTheCourse(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := school(t, pool), student(t, pool)
+	s := store(t, pool)
+
+	_, finished, err := s.Complete(ctx, school, student, "web-fundamentals", "client-and-server", "roles")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if finished {
+		t.Error("one section of three finished the course")
 	}
 }

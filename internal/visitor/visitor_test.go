@@ -69,7 +69,7 @@ func TestAVisitorHasAnIdentityBeforeAnyAccountExists(t *testing.T) {
 	pool := testPool(t)
 
 	var seen uuid.UUID
-	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{})
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
 
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/?utm_source=newsletter&utm_campaign=launch", nil)
@@ -127,7 +127,7 @@ func TestTheSameBrowserKeepsItsIdentity(t *testing.T) {
 	pool := testPool(t)
 
 	var first, second uuid.UUID
-	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{})
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
 
 	rec := httptest.NewRecorder()
 	mw(handler(&first)).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
@@ -160,7 +160,7 @@ func TestACookieThatOutlivedItsRowGetsANewIdentity(t *testing.T) {
 	pool := testPool(t)
 
 	var seen uuid.UUID
-	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{})
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.AddCookie(&http.Cookie{Name: visitor.CookieName, Value: uuid.New().String()})
@@ -194,7 +194,7 @@ func TestARequestIsServedEvenWhenNoIdentityCanBeIssued(t *testing.T) {
 	defer broken.Close()
 
 	served := false
-	mw := visitor.Identify(visitor.NewStore(broken), nil, visitor.Settings{})
+	mw := visitor.Identify(visitor.NewStore(broken), nil, visitor.Settings{}, nil)
 	rec := httptest.NewRecorder()
 	mw(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		served = true
@@ -245,5 +245,72 @@ func TestAnAccountCanBeLinkedToEveryDeviceItArrivedOn(t *testing.T) {
 	}
 	if len(of) != 2 {
 		t.Errorf("%d visitors linked, want both devices: %v", len(of), of)
+	}
+}
+
+// THE ARRIVAL IS EMITTED ONCE, AND ONLY WHEN AN IDENTITY IS ISSUED.
+//
+// It is the first step of the funnel and the only one that cannot be
+// reconstructed afterwards: by the time somebody signs up, the visit that
+// brought them is over. Emitted on every request it would count returns as
+// arrivals, and "how many of those who arrived became students" would answer
+// with a denominator that grows every time somebody comes back.
+func TestArrivingIsCountedOnceAndNotOnEveryVisit(t *testing.T) {
+	pool := testPool(t)
+
+	var arrivals []uuid.UUID
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{},
+		func(_ context.Context, id uuid.UUID) { arrivals = append(arrivals, id) })
+
+	served := mw(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
+
+	first := httptest.NewRecorder()
+	served.ServeHTTP(first, httptest.NewRequest(http.MethodGet, "/", nil))
+
+	if len(arrivals) != 1 {
+		t.Fatalf("a browser arriving was counted %d times", len(arrivals))
+	}
+
+	// The same browser, coming back with the cookie it was given.
+	var cookie *http.Cookie
+	for _, c := range first.Result().Cookies() {
+		if c.Name == visitor.CookieName {
+			cookie = c
+		}
+	}
+	if cookie == nil {
+		t.Fatal("no identity cookie was set")
+	}
+
+	for range 3 {
+		again := httptest.NewRequest(http.MethodGet, "/", nil)
+		again.AddCookie(cookie)
+		served.ServeHTTP(httptest.NewRecorder(), again)
+	}
+
+	if len(arrivals) != 1 {
+		t.Errorf("coming back was counted as arriving: %d arrivals for one browser", len(arrivals))
+	}
+	if arrivals[0].String() != cookie.Value {
+		t.Errorf("the arrival names %s and the cookie says %s", arrivals[0], cookie.Value)
+	}
+}
+
+// AND A FUNNEL THAT CANNOT COUNT MUST NOT BE ABLE TO STOP ANYBODY. The visitor
+// is already being served by the time the arrival is recorded; a recorder that
+// panicked or a store that was down cannot turn a prospective student away.
+func TestAnArrivalThatCannotBeCountedStillServesThePage(t *testing.T) {
+	pool := testPool(t)
+
+	served := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusTeapot)
+		}))
+
+	rec := httptest.NewRecorder()
+	served.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+
+	if rec.Code != http.StatusTeapot {
+		t.Errorf("the page answered %d with nobody counting arrivals", rec.Code)
 	}
 }

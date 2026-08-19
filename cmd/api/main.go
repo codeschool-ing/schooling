@@ -191,7 +191,11 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 		return items.InForce(ctx, school)
 	}
 
-	catalog.NewHandler(courses, schoolID, plan).Routes(scoped)
+	// THE CATALOGUE COUNTS ONE THING: opening a track, which is the funnel's
+	// "chose a track". It uses the visitor recorder rather than the student one
+	// because somebody choosing a track usually has no account yet — that is
+	// the whole point of the step.
+	catalog.NewHandler(courses, schoolID, plan, visitorEvents(events, log, plan)).Routes(scoped)
 
 	// PROGRESS ASKS THE CATALOGUE TWO QUESTIONS and imports neither answer.
 	// Whether a course is open, so the paywall is not a decoration on the
@@ -277,7 +281,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			// then opens a school is one visitor rather than two.
 			Domain: cfg.PlatformDomain,
 			Secure: cfg.Environment == config.Production,
-		}),
+		}, arrived(events, log)),
 		identity.Authenticate(accounts),
 	))
 
@@ -611,6 +615,78 @@ func studentEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) p
 
 		if err := events.Emit(ctx, e); err != nil {
 			log.Error("counting what a student did", "error", err, "event", name)
+		}
+	}
+}
+
+// visitorEvents counts something somebody did before they are a student, or
+// while signed in — either way.
+//
+// IT CARRIES WHICHEVER IDENTITY IS THERE. A funnel step reached by a signed-out
+// visitor and one reached by a student are the same step, and an emitter that
+// needed an account would drop exactly the half the funnel is about.
+func visitorEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) catalog.Emit {
+	return func(ctx context.Context, name string, payload map[string]any) {
+		school, slug, ok := schoolOf(ctx)
+		if !ok {
+			return
+		}
+
+		e := event.Event{
+			Name:      name,
+			Payload:   payload,
+			RequestID: web.RequestIDFrom(ctx),
+		}
+
+		// The plan and the person's own dimensions come from the account when
+		// there is one, and are the honest "we do not know" when there is not.
+		if account, signedIn := identity.FromContext(ctx); signedIn {
+			e.Dimensions = event.ForSchool(school, slug,
+				string(plan(ctx)), account.Country, account.Locale)
+			e.AccountID = &account.ID
+		} else {
+			e.Dimensions = event.ForSchool(school, slug,
+				event.PlanNone, event.Unknown, event.Unknown)
+		}
+		if id, ok := visitor.FromContext(ctx); ok {
+			e.VisitorID = &id
+		}
+
+		if err := events.Emit(ctx, e); err != nil {
+			log.Error("counting what a visitor did", "error", err, "event", name)
+		}
+	}
+}
+
+// arrived is the first step of the funnel, and the only one that cannot be
+// reconstructed afterwards (K-10).
+//
+// IT IS THE THIRD PLACE THE MODULE BOUNDARY SHOWS ITS SHAPE. `visitor` may not
+// import `event`, so it names a callback and this fills it in — the same
+// arrangement as `signedUp` below, for the same reason.
+//
+// NO SCHOOL IS A REAL ANSWER HERE. Somebody reaching the platform's own address
+// arrived at the platform and not at a school, and forcing a school onto the
+// event would put every one of those into whichever school the code guessed.
+//
+// A FAILURE TO COUNT NEVER REACHES THE VISITOR. They are already being served
+// by the time this runs; the whole point of the middleware is that a funnel
+// which cannot record an arrival must not be able to prevent one.
+func arrived(events *event.Store, log *slog.Logger) visitor.Arrived {
+	return func(ctx context.Context, visitorID uuid.UUID) {
+		dimensions := event.ForPlatform(event.PlanNone, event.Unknown, event.Unknown)
+		if id, slug, ok := schoolOf(ctx); ok {
+			dimensions = event.ForSchool(id, slug, event.PlanNone, event.Unknown, event.Unknown)
+		}
+
+		e := event.Event{
+			Name:       "visitor.arrived",
+			Dimensions: dimensions,
+			VisitorID:  &visitorID,
+			RequestID:  web.RequestIDFrom(ctx),
+		}
+		if err := events.Emit(ctx, e); err != nil {
+			log.Error("counting an arrival", "error", err, "visitor", visitorID)
 		}
 	}
 }
