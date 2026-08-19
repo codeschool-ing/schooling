@@ -242,6 +242,13 @@ var Registry = []Table{
 			"then answers exactly as it does for a code that never existed",
 	},
 	{
+		Name: "item_statistics", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "what the answers came to, per QUESTION. Counts and ratios over an item, with no " +
+			"account id and no room for one — the moment a row here could be traced to a " +
+			"person it would be a second copy of what somebody answered, in a table nobody " +
+			"would think to erase. It is a rollup of `events` and can be dropped and rebuilt",
+	},
+	{
 		Name: "subscriptions", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "what one person is paying for, and it means nothing once there is nobody. It is " +
 			"the state and not the history — the record that money changed hands is " +

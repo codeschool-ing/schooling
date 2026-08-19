@@ -138,6 +138,21 @@ jobs:
       - name: The tests, with a database behind them
         run: go test -race ./...
 
+      # THE ANALYSIS JOB, RUN AGAINST AN EMPTY STREAM. It does almost nothing
+      # here and that is the point: a job that only ever runs on a schedule is
+      # a job whose first failure is at three in the morning, in production, on
+      # the day somebody changed a column it reads. This is the cheapest place
+      # to find out that it still starts, connects and finishes.
+      #
+      # It is exercised for real by the tests above, which hand it answers and
+      # check the verdicts.
+      - name: The item analysis still runs
+        run: go run ./cmd/analyse
+        env:
+          SCHOOLING_DATABASE_URL: ${{ env.SCHOOLING_TEST_DATABASE_URL }}
+          SCHOOLING_PLATFORM_DOMAIN: example.tld
+          SCHOOLING_ENV: development
+
       # The dependency graph between modules is a rule the code has to obey,
       # not an agreement — and it is in the run above. This step exists to
       # report it by name, so that a failure here reads as "a boundary was

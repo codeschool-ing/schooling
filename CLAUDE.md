@@ -647,6 +647,49 @@ certificate, or none.
 
 ---
 
+## Item analysis, and what a number is not allowed to say
+
+There is no human reviewer. Two things stand between a wrong answer key and a student: the
+content check, which runs every key back through the grader before publication, and
+`internal/analysis`, which reads how people actually answered.
+
+**The discrimination index is the one that earns its place.** Difficulty tells you a question is
+hard; it cannot tell you whether it is hard or wrong. The index asks whether the students who did
+well on the paper got THIS question right more often than the students who did badly — and a
+question the strong students fail is not difficult, it is a wrong key or an ambiguous prompt.
+That is the only failure this system can find without a person.
+
+Four rules, each a test:
+
+- **Nothing is decided below the minimum sample**, and `insufficient` is a member of the verdict
+  list rather than the absence of one — a screen cannot show an unmeasured question as though it
+  had passed. The index is not even computed below the sample: a number on a screen is read as a
+  finding whatever the label beside it says.
+- **An index of zero is not always a measurement.** When the paper separated nobody there are no
+  two groups to compare, so the answer is `insufficient` rather than `weak`. Reading it as weak
+  blames the question for the paper — and getting this wrong was the first mistake here, caught
+  by working the edges by hand after every test passed.
+- **A tie at the group boundary takes everybody on it.** The boundary is a score, not a position,
+  so the same answers give the same verdict whatever order they arrive in. A question quarantined
+  by a `sort` is not a finding.
+- **Two versions of a question are two questions.** Folding them would average a wrong key with
+  the fix that corrected it, hiding the fix behind the answers given before it.
+
+**The threshold travels with the number it produced** (K-16) — stored on the row, not looked up
+when it is read, or a verdict computed under a minimum of thirty would explain itself with
+whatever the constant says today.
+
+**The stream is the truth and the rollup is a cache.** `cmd/analyse` recomputes from `events`
+rather than resuming, because a resumable job merges new answers into stored counts and a merge
+is where a double-counted event lands — the one failure that would condemn a question nobody
+complained about.
+
+`internal/event` reads the rows and `internal/analysis` decides what they mean; the two meet in
+`cmd/analyse` and neither touches the other's tables. The same split as the catalogue's: it
+answers which door a plan opens and does not decide which plan somebody has.
+
+---
+
 ## The privacy policy is checked against the registry
 
 `internal/privacy` already guarantees that no table exists without somebody having decided what
