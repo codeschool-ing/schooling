@@ -92,11 +92,18 @@ type Completed struct {
 // from the event stream (K-03), so a caller that emitted on every call would
 // inflate "sections completed this month" by every double tap — quietly, and in
 // a direction that flatters. The caller emits only when this says yes.
+// IT ALSO ANSWERS WHETHER THAT FINISHED THE COURSE, for the same reason and
+// with the same care: "finished the free course" is a step of the funnel, and a
+// step that fired every time somebody re-completed a section would be a funnel
+// that says more people finish than ever started.
+//
+// `finished` is true on the completion that turned the last section, and on no
+// other — including a later one, when the course is already done.
 func (s *Store) Complete(ctx context.Context, tenantID, accountID uuid.UUID,
-	courseID, lessonID, sectionID string) (first bool, err error) {
+	courseID, lessonID, sectionID string) (first, finished bool, err error) {
 
 	if err := s.allowed(ctx, courseID, lessonID, sectionID); err != nil {
-		return false, err
+		return false, false, err
 	}
 
 	err = pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
@@ -125,7 +132,50 @@ func (s *Store) Complete(ctx context.Context, tenantID, accountID uuid.UUID,
 		}
 		return nil
 	})
-	return first, err
+	if err != nil || !first {
+		// Only a completion that changed something can have finished a course.
+		// Asking on a repeat would emit the step again for every double tap.
+		return first, false, err
+	}
+
+	finished, err = s.finishes(ctx, tenantID, accountID, courseID)
+	return first, finished, err
+}
+
+// finishes answers whether every section of a course is now behind this
+// student.
+//
+// THE DENOMINATOR IS THE CATALOGUE AND NOT THE PROGRESS TABLE. Counting the
+// rows somebody has would answer "have they finished what they finished", which
+// is true of everybody. It asks the course what it contains, which is also what
+// makes a section added to a course un-finish it for the people who were done —
+// correctly, because there is now something they have not read.
+func (s *Store) finishes(ctx context.Context, tenantID, accountID uuid.UUID,
+	courseID string) (bool, error) {
+
+	sections, err := s.sections(ctx, courseID)
+	if err != nil {
+		return false, fmt.Errorf("progress: reading the sections of %q: %w", courseID, err)
+	}
+
+	wanted := 0
+	for _, ids := range sections {
+		wanted += len(ids)
+	}
+	if wanted == 0 {
+		// A course with no sections is not one anybody can finish, and saying
+		// they did would put a step in the funnel that nothing corresponds to.
+		return false, nil
+	}
+
+	var done int
+	if err := s.pool.QueryRow(ctx, `
+		SELECT count(*) FROM section_progress
+		WHERE tenant_id = $1 AND account_id = $2 AND course_id = $3
+	`, tenantID, accountID, courseID).Scan(&done); err != nil {
+		return false, fmt.Errorf("progress: counting what is finished in %q: %w", courseID, err)
+	}
+	return done >= wanted, nil
 }
 
 // Visit moves the resume pointer without completing anything.

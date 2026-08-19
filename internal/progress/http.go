@@ -79,7 +79,7 @@ func (h *Handler) complete(w http.ResponseWriter, r *http.Request) {
 	}
 	course, lesson, section := r.PathValue("course"), r.PathValue("lesson"), r.PathValue("section")
 
-	first, err := h.store.Complete(r.Context(), school, student, course, lesson, section)
+	first, finished, err := h.store.Complete(r.Context(), school, student, course, lesson, section)
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -94,6 +94,15 @@ func (h *Handler) complete(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	// AND THE STEP OF THE FUNNEL THAT ONLY THIS PLACE CAN SEE. Finishing a
+	// course is not a thing a student does; it is a thing that becomes true
+	// when they finish the last section of it, and nobody clicks it. Derived
+	// afterwards it would be a query over the catalogue as it is TODAY, which
+	// answers with the wrong number the first time a section is added.
+	if finished && h.emit != nil {
+		h.emit(r.Context(), "course.completed", map[string]any{"course": course})
+	}
+
 	web.JSON(w, http.StatusOK, map[string]any{"status": "completed", "first": first})
 }
 
@@ -103,11 +112,30 @@ func (h *Handler) visit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	course, lesson := r.PathValue("course"), r.PathValue("lesson")
+
 	if err := h.store.Visit(r.Context(), school, student,
-		r.PathValue("course"), r.PathValue("lesson"), r.PathValue("section")); err != nil {
+		course, lesson, r.PathValue("section")); err != nil {
 		h.refuse(w, r, err)
 		return
 	}
+
+	// EVERY TIME, UNLIKE A COMPLETION, and the difference is what the two
+	// words mean. Completing is a STATE: it can be re-asserted, and counting
+	// the second tap would say somebody finished a section twice. Opening is a
+	// MOMENT: it genuinely recurs, and a student who comes back to a lesson has
+	// opened it again.
+	//
+	// The funnel takes the first per person, which is what "opened the first
+	// lesson" asks — and having the repeats is what lets a later question be
+	// asked at all, like whether the people who came back are the ones who
+	// subscribed.
+	if h.emit != nil {
+		h.emit(r.Context(), "lesson.opened", map[string]any{
+			"course": course, "lesson": lesson, "section": r.PathValue("section"),
+		})
+	}
+
 	web.JSON(w, http.StatusOK, map[string]string{"status": "noted"})
 }
 

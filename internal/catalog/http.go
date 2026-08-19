@@ -20,16 +20,23 @@ import (
 type (
 	SchoolOf func(ctx context.Context) (uuid.UUID, bool)
 	PlanOf   func(ctx context.Context) Plan
+
+	// Emit counts something a visitor did. A callback for the same reason the
+	// other two are, and nil-able: the catalogue answers just as well with
+	// nobody counting, and a reader must never fail because a report cannot be
+	// written.
+	Emit func(ctx context.Context, name string, payload map[string]any)
 )
 
 type Handler struct {
 	store    *Store
 	schoolOf SchoolOf
 	planOf   PlanOf
+	emit     Emit
 }
 
-func NewHandler(store *Store, schoolOf SchoolOf, planOf PlanOf) *Handler {
-	return &Handler{store: store, schoolOf: schoolOf, planOf: planOf}
+func NewHandler(store *Store, schoolOf SchoolOf, planOf PlanOf, emit Emit) *Handler {
+	return &Handler{store: store, schoolOf: schoolOf, planOf: planOf, emit: emit}
 }
 
 func (h *Handler) Routes(mux *http.ServeMux) {
@@ -150,6 +157,18 @@ func (h *Handler) track(w http.ResponseWriter, r *http.Request) {
 		h.refuse(w, r, err)
 		return
 	}
+
+	// "CHOSE A TRACK" IS A STEP OF THE FUNNEL AND NOBODY CLICKS IT. There is no
+	// enrolment here — a student does not sign up to a track, they open one and
+	// start reading — so the honest signal is that they looked at it. The
+	// funnel takes the first per person.
+	//
+	// It is emitted AFTER the read succeeded, so a track that does not exist
+	// does not count as one somebody chose.
+	if h.emit != nil {
+		h.emit(r.Context(), "track.opened", map[string]any{"track": track.ID})
+	}
+
 	web.JSON(w, http.StatusOK, track)
 }
 

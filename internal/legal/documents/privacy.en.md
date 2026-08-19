@@ -48,9 +48,13 @@ the visit that brought them is over. If you later create an account, we record
 the link between that identifier and the account, which is what makes the answer
 possible at all.
 
-What we record against it is the pages you asked for and the country the request
-came from. **We do not store your IP address.** The country is derived from the
-request and the address itself is discarded.
+What we record against it is **a short list of named things you did** — that you
+arrived, that you opened a track, that you opened a lesson — and the country the
+request came from. Not every page you looked at: there is no record of your
+browsing here, only of the handful of moments the funnel above is made of.
+
+**We do not store your IP address.** The country is derived from the request and
+the address itself is discarded.
 
 ## Once you have an account
 

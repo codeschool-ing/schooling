@@ -311,7 +311,8 @@ func TestAnUnreadableCatalogueRefusesRatherThanAnsweringEmpty(t *testing.T) {
 	school := uuid.New()
 	handler := catalog.NewHandler(catalog.NewStore(broken),
 		func(context.Context) (uuid.UUID, bool) { return school, true },
-		func(context.Context) catalog.Plan { return catalog.PlanNone })
+		func(context.Context) catalog.Plan { return catalog.PlanNone },
+		nil)
 
 	mux := http.NewServeMux()
 	handler.Routes(mux)
@@ -340,7 +341,8 @@ func TestALockedLessonAnswers402(t *testing.T) {
 
 	handler := catalog.NewHandler(catalog.NewStore(pool),
 		func(context.Context) (uuid.UUID, bool) { return id, true },
-		func(context.Context) catalog.Plan { return catalog.PlanNone })
+		func(context.Context) catalog.Plan { return catalog.PlanNone },
+		nil)
 
 	mux := http.NewServeMux()
 	handler.Routes(mux)
