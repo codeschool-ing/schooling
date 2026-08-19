@@ -604,7 +604,7 @@ func studentEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) p
 		e := event.Event{
 			Name: name,
 			Dimensions: event.ForSchool(school, slug,
-				string(plan(ctx)), account.Country, account.Locale),
+				string(plan(ctx)), account.Country, account.Locale, who(account)),
 			AccountID: &account.ID,
 			Payload:   payload,
 			RequestID: web.RequestIDFrom(ctx),
@@ -642,11 +642,14 @@ func visitorEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) c
 		// there is one, and are the honest "we do not know" when there is not.
 		if account, signedIn := identity.FromContext(ctx); signedIn {
 			e.Dimensions = event.ForSchool(school, slug,
-				string(plan(ctx)), account.Country, account.Locale)
+				string(plan(ctx)), account.Country, account.Locale, who(account))
 			e.AccountID = &account.ID
 		} else {
+			// A SIGNED-OUT BROWSER IS A REAL ONE. Nothing seeded reaches this
+			// code path: a synthetic population is written by the seeder, with
+			// the flag on every row it writes.
 			e.Dimensions = event.ForSchool(school, slug,
-				event.PlanNone, event.Unknown, event.Unknown)
+				event.PlanNone, event.Unknown, event.Unknown, event.Real)
 		}
 		if id, ok := visitor.FromContext(ctx); ok {
 			e.VisitorID = &id
@@ -656,6 +659,19 @@ func visitorEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) c
 			log.Error("counting what a visitor did", "error", err, "event", name)
 		}
 	}
+}
+
+// who says whether an account is a real student or a seeded one.
+//
+// IT IS ONE FUNCTION BECAUSE THE ANSWER HAS TO BE THE SAME EVERYWHERE. A
+// seeded student counted as real in one event and synthetic in another would
+// appear in half of every report — and a report that is half wrong is worse
+// than one that is wrong, because the number still looks plausible.
+func who(account identity.Account) event.Population {
+	if account.Synthetic {
+		return event.Synthetic
+	}
+	return event.Real
 }
 
 // arrived is the first step of the funnel, and the only one that cannot be
@@ -674,9 +690,12 @@ func visitorEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) c
 // which cannot record an arrival must not be able to prevent one.
 func arrived(events *event.Store, log *slog.Logger) visitor.Arrived {
 	return func(ctx context.Context, visitorID uuid.UUID) {
-		dimensions := event.ForPlatform(event.PlanNone, event.Unknown, event.Unknown)
+		// REAL, because there is no account yet to be synthetic. A browser
+		// reaching this middleware came here on its own.
+		dimensions := event.ForPlatform(event.PlanNone, event.Unknown, event.Unknown, event.Real)
 		if id, slug, ok := schoolOf(ctx); ok {
-			dimensions = event.ForSchool(id, slug, event.PlanNone, event.Unknown, event.Unknown)
+			dimensions = event.ForSchool(id, slug,
+				event.PlanNone, event.Unknown, event.Unknown, event.Real)
 		}
 
 		e := event.Event{
@@ -710,9 +729,11 @@ func signedUp(visitors *visitor.Store, events *event.Store, log *slog.Logger) id
 			}
 		}
 
-		dimensions := event.ForPlatform(event.PlanNone, account.Country, account.Locale)
+		dimensions := event.ForPlatform(event.PlanNone,
+			account.Country, account.Locale, who(account))
 		if id, slug, ok := schoolOf(ctx); ok {
-			dimensions = event.ForSchool(id, slug, event.PlanNone, account.Country, account.Locale)
+			dimensions = event.ForSchool(id, slug, event.PlanNone,
+				account.Country, account.Locale, who(account))
 		}
 
 		e := event.Event{
