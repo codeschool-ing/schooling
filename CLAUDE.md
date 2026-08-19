@@ -647,6 +647,50 @@ certificate, or none.
 
 ---
 
+## Money
+
+**Every amount is an integer number of cents, and `billing.Money` is the only way to hold one.**
+Its fields are unexported, so there is no `amount.Cents * 1.1` to write anywhere here; its zero
+value is invalid, so an uninitialised total cannot add cleanly to a bill in any currency. Parsing
+a price never goes through a float — `strconv.ParseFloat("1199.90")` × 100 truncates to a cent
+below what the page says.
+
+Two operations can lose a cent, and both have their rule written down where they are:
+
+- **`Split`** distributes the remainder instead of dropping it, so twelve instalments add back up
+  to the year. The odd cent goes on the EARLY instalments, which is what a card issuer does and
+  keeps the final one from being the number a customer compares against their quote.
+- **`Percent`** takes basis points, not a float, and rounds half away from zero — the rule a
+  person checking the invoice by hand uses.
+
+**The ledger records money that MOVED, and never what somebody owes.** Access is computed from
+the subscription; a ledger that also answered "may they study" would be a second place the
+paywall could be read from, and one of the two would be wrong first. It is not double entry,
+because the second side would be a constant: splits, payouts and school-to-platform billing were
+all cut from this system before it was built.
+
+Three things hold it together, and each is a test:
+
+- The table refuses UPDATE and DELETE by trigger. **A correction is a new row**, pointing at what
+  it reverses, in the opposite sign and the same currency, never for more than is left
+  un-reversed — checked inside the writing transaction with the original row locked, because two
+  refunds arriving together would otherwise each see the payment as untouched.
+- **Idempotency is a unique index on the row the money is on**, not a table checked first. A
+  gateway retries a webhook whenever it does not hear back in time, so a duplicate delivery is
+  the normal case; check-then-insert is a race, and a constraint is not.
+- **`ledger_entries` has no foreign key to `accounts`**, like `events` and `practice_review`.
+  It is the only arrangement that meets both obligations: the record that money changed hands is
+  a tax obligation and cannot go on request, and the identity that makes it somebody's can. After
+  an erasure the row is still there and joins to nobody. CASCADE would destroy accounting
+  records; RESTRICT would make erasure impossible for everybody who ever paid.
+
+The payment gateway is still an open decision (it has to cover international recurrence,
+Brazilian instalments and Pix at once). Nothing above depends on the answer, which is why it
+could be built first — and building it first is the only way it gets built properly, rather than
+as a refactor of every call site performed under the pressure of a number that came out wrong.
+
+---
+
 ## Multi-tenancy, in practice
 
 The school comes from the `Host` and is resolved once, in middleware. Business code does not
