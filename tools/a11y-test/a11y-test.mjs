@@ -86,7 +86,7 @@ async function check(page, name, where) {
   await page.goto(BASE + where, { waitUntil: 'load' });
   /* The screens are built by script after the document loads, so waiting for
      the document would be checking an empty page and calling it clean. */
-  await page.waitForSelector('#screen h1, #screen .notice', { timeout: 8000 }).catch(() => {});
+  await page.waitForSelector('#content h1, #content .notice', { timeout: 8000 }).catch(() => {});
   await page.waitForTimeout(400);
 
   const result = await new AxeBuilder({ page }).withTags(STANDARD).analyze();

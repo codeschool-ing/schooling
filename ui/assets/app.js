@@ -68,14 +68,18 @@ function shareOf(course) {
 function stateOf(course) {
   const done = doneIn(course);
   if (course.sections && done >= course.sections) return 'done';
-  if (done > 0) return 'started';
-  return 'open';
+  if (done > 0) return 'current';
+  return 'available';
 }
 
+/* THE WORDS ARE THE PORTAL'S AND SO ARE THE STATE NAMES. `done`, `current` and
+   `available` are what `portal.css` selects on — `.no-current`,
+   `[data-state="current"]` — so they are not free to be renamed to something
+   this file would have chosen. */
 function stateWord(which) {
-  if (which === 'done') return txt('Finished');
-  if (which === 'started') return txt('In progress');
-  return txt('Not started');
+  if (which === 'done') return txt('completed');
+  if (which === 'current') return txt('in progress');
+  return txt('available');
 }
 
 /* A COURSE'S LEVEL, IN THE READER'S LANGUAGE. `level` is a free string in the
@@ -127,15 +131,20 @@ function tally(course) {
   return `${doneIn(course)}/${course.sections || 0} ${txt('sections')}`;
 }
 
-/* A meter, with the number it draws said in words for anything that cannot see
+/* A bar, with the number it draws said in words for anything that cannot see
    it. A bar with no accessible name is a decoration to a screen reader, and
-   this one is carrying the answer to "how far along am I". */
-function meter(share, extra = '') {
-  return el('div', {
-    class: `meter${extra ? ` ${extra}` : ''}`,
+   this one is carrying the answer to "how far along am I".
+
+   `.bar` / `.bar-fill` and a `<span>`, because that is what the copied
+   stylesheet paints and what the portal's own `bar()` emits. This is the piece
+   that appears on the most screens, so its shape is the one most worth being
+   identical rather than equivalent. */
+function bar(share, label) {
+  return el('span', {
+    class: 'bar',
     role: 'img',
-    'aria-label': `${share}% ${txt('complete')}`,
-  }, [el('i', { style: `width:${share}%` })]);
+    'aria-label': label || `${share}%`,
+  }, [el('span', { class: 'bar-fill', style: `width:${share}%` })]);
 }
 
 /* ---------- building blocks ----------
@@ -163,12 +172,24 @@ function el(tag, props = {}, children = []) {
   return node;
 }
 
-const screen = () => document.querySelector('#screen');
+const screen = () => document.querySelector('#content');
 
+/* EVERY SCREEN IS WRAPPED IN `.view`, and that wrapper is not decoration: it
+   carries the reading width and the gap between blocks that the copied
+   stylesheet puts there. A screen appended straight into `#content` gets
+   neither, which reads as that screen having lost its rhythm rather than as a
+   missing element.
+
+   A leading string is the screen's own extra class — `screen-course`,
+   `view-track` — which is how the portal tells its screens apart. */
 function show(...nodes) {
+  const extra = typeof nodes[0] === 'string' ? nodes.shift() : '';
   const main = screen();
   main.textContent = '';
-  nodes.filter(Boolean).forEach((n) => main.append(n));
+
+  const view = el('div', { class: `view${extra ? ` ${extra}` : ''}` });
+  nodes.filter(Boolean).forEach((n) => view.append(n));
+  main.append(view);
 }
 
 /* A message a person can act on, and never a status code. `offline` is the one
@@ -271,48 +292,42 @@ function filtered(courses) {
 
 function courseGrid(courses) {
   if (!courses.length) return el('p', { class: 'empty', text: txt('Nothing here yet.') });
-  return el('div', { class: 'grid' }, courses.map(courseCard));
+  return el('div', { class: 'cards' }, courses.map(courseCard));
 }
 
-/* ONE COURSE CARD, EVERYWHERE. The catalogue, the dashboard's next steps and a
-   track's summary all show the same five facts about a course, so they show
-   them through the same function — three copies of this is three screens that
-   drift until one of them is the only one still saying whether a course is
-   locked. */
+/* ONE COURSE CARD, EVERYWHERE, and it is the portal's card down to the order of
+   the five lines: state, name, `40h · beginner`, bar, tally. The catalogue, the
+   dashboard's next steps and a track's summary all draw it, so three copies
+   would be three screens that drift until one of them is the only one still
+   saying whether a course is locked. */
 function courseCard(course) {
   const which = stateOf(course);
-  const started = which !== 'open';
 
   return el('a', {
-    class: `card tall${course.locked ? ' is-locked' : ''}`,
+    class: `card no-${which}`,
     href: `#/course/${encodeURIComponent(course.id)}`,
   }, [
-    /* The state, in words, above the name. It is the eyebrow rather than a
-       badge in the corner because it is read FIRST — "in progress" changes
-       what the name underneath means. */
-    el('p', {
-      class: `eyebrow${which === 'started' ? ' warm' : ''}${which === 'open' ? ' quiet' : ''}`,
-      text: course.locked ? txt('Subscription') : stateWord(which),
+    /* The state, in words, above the name — read FIRST, because "in progress"
+       changes what the name underneath means. `data-state` rather than a class
+       of its own: it is what the copied stylesheet colours it by. */
+    el('span', {
+      class: 'node-state',
+      'data-state': which,
+      text: course.locked ? txt('subscription') : stateWord(which),
     }),
-    el('h3', { text: course.name }),
-    course.summary ? el('p', { class: 'dim', text: course.summary }) : null,
-
-    el('div', { class: 'spacer' }),
-
-    el('div', { class: 'facts' }, [
-      course.hours ? el('span', { text: `${course.hours}h` }) : null,
-      course.level ? el('span', { text: levelWord(course.level) }) : null,
-      /* The free tier is the shop window and is open at every door (N-04), so
-         it is said on the card rather than discovered at the paywall. */
-      course.free ? el('span', { class: 'on', text: txt('Free') }) : null,
-    ]),
-
-    /* A bar for somebody who has started, and nothing for somebody who has
-       not. An empty meter under every card in a catalogue is twelve reminders
-       that you have done none of it. */
-    started ? meter(shareOf(course), which === 'started' ? 'warm' : '') : null,
-    started ? el('p', { class: 'side-count', text: tally(course) })
-      : el('p', { class: 'side-count', text: counted(course.sections || 0, txt('section'), txt('sections')) }),
+    el('span', { class: 'card-name', text: course.name }),
+    el('span', {
+      class: 'card-meta',
+      text: [
+        course.hours ? `${course.hours}h` : null,
+        course.level ? levelWord(course.level) : null,
+        /* The free tier is the shop window and is open at every door (N-04), so
+           it is said on the card rather than discovered at the paywall. */
+        course.free ? txt('free') : null,
+      ].filter(Boolean).join(' · '),
+    }),
+    bar(shareOf(course), `${doneIn(course)} ${txt('of')} ${course.sections || 0}`),
+    el('span', { class: 'card-count', text: tally(course) }),
   ]);
 }
 
@@ -341,72 +356,85 @@ async function coursePage(id) {
   const share = sections.length ? Math.round((finished.size / sections.length) * 100) : 0;
 
   const listed = state.courses.find((c) => c.id === course.id);
-  const which = listed ? stateOf(listed) : 'open';
+  const which = listed ? stateOf(listed) : 'available';
 
-  show(
-    /* The same eyebrow-heading-facts-meter opening every screen here has, so
-       that arriving at a course from the map and from the catalogue lands on
-       something recognisable either way. */
-    el('p', {
-      class: `eyebrow${which === 'started' ? ' warm' : ''}${which === 'open' ? ' quiet' : ''}`,
-      text: course.locked ? txt('Subscription') : stateWord(which),
-    }),
-    el('h1', { text: course.name }),
-    course.summary ? el('p', { class: 'prose', text: course.summary }) : null,
-    el('div', { class: 'facts' }, [
-      course.hours ? el('span', { text: `${course.hours}h` }) : null,
-      course.level ? el('span', { text: levelWord(course.level) }) : null,
-      el('span', { text: counted((course.lessons || []).length, txt('lesson'), txt('lessons')) }),
+  show('screen-course',
+    el('header', { class: 'course-head' }, [
+      el('span', {
+        class: 'node-state',
+        'data-state': which,
+        text: course.locked ? txt('subscription') : stateWord(which),
+      }),
+      el('h1', { text: course.name }),
+      course.summary ? el('p', { class: 'course-summary', text: course.summary }) : null,
+      el('div', { class: 'course-meta' }, [
+        course.hours ? el('span', { text: `${course.hours}h` }) : null,
+        course.level ? el('span', { text: levelWord(course.level) }) : null,
+        el('span', { text: counted((course.lessons || []).length, txt('lesson'), txt('lessons')) }),
+      ]),
+      state.me && sections.length ? bar(share, `${finished.size} ${txt('of')} ${sections.length}`) : null,
+      state.me && sections.length
+        ? el('p', {
+          class: 'course-count',
+          text: `${finished.size}/${sections.length} ${txt('sections completed')}`,
+        })
+        : null,
     ]),
 
     course.locked ? el('div', { class: 'notice', role: 'note' }, [
       el('p', { text: txt('This course is part of the subscription.') }),
     ]) : null,
-    state.me && sections.length ? el('div', {}, [
-      meter(share),
-      el('p', { class: 'side-count', text: `${finished.size}/${sections.length} ${txt('sections')}` }),
-    ]) : null,
 
-    course.prerequisites ? el('div', { class: 'panel' }, [
-      el('h3', { text: txt('What you need first') }),
-      el('p', { class: 'dim', text: course.prerequisites }),
-    ]) : null,
-
-    el('div', { class: 'panel' }, [
-      el('h2', { text: txt('Lessons') }),
-      el('ol', { class: 'lessons' }, (course.lessons || []).map((lesson, i) => {
-        const of = lesson.sections.filter((s) => s.countable !== false).length;
-        const did = lesson.sections.filter((s) => finished.has(`${lesson.id}/${s.id}`)).length;
-        return el('li', {}, [
-          el('span', { class: 'lesson-number', text: String(i + 1).padStart(2, '0') }),
-          el('div', { class: 'lesson-body' }, [
-            el('h3', {}, [el('a', {
+    el('div', { class: 'course-cols' }, [
+      el('div', { class: 'course-main' }, [
+        el('section', { class: 'block' }, [
+          el('div', { class: 'block-top' }, [el('h2', { text: txt('Lessons') })]),
+          el('ol', { class: 'lessons' }, (course.lessons || []).map((lesson, i) => {
+            const of = lesson.sections.filter((x) => x.countable !== false).length;
+            const did = lesson.sections.filter((x) => finished.has(`${lesson.id}/${x.id}`)).length;
+            return el('li', {}, [el('a', {
+              class: 'lesson-row' + (of && did >= of ? ' done' : ''),
               href: `#/course/${encodeURIComponent(course.id)}/${encodeURIComponent(lesson.id)}`,
-              text: lesson.title,
-            })]),
-            el('p', { class: 'facts' }, [
-              el('span', { class: 'on', text: counted(lesson.sections.length, txt('section'), txt('sections')) }),
-            ]),
-          ]),
-          state.me && of
-            ? el('span', { class: 'side-count', text: `${did}/${of}` })
-            : null,
-        ]);
-      })),
-    ]),
+            }, [
+              el('span', { class: 'lesson-mark', 'aria-hidden': 'true', text: of && did >= of ? '\u2713' : '' }),
+              el('span', { class: 'lesson-num', text: String(i + 1).padStart(2, '0') }),
+              el('span', { class: 'lesson-tit', text: lesson.title }),
+              el('span', {
+                class: 'lesson-sections',
+                text: counted(lesson.sections.length, txt('section'), txt('sections')),
+              }),
+              state.me && of ? el('span', { class: 'lesson-prog', text: `${did}/${of}` }) : null,
+            ])]);
+          })),
+        ]),
 
-    /* The exam, and only when there is one — the catalogue says so, rather
-       than this screen offering a button that sometimes answers 404. Not
-       gated on finishing the course: the exam is what asserts that somebody
-       knows the material, and insisting they click through every section
-       first would be asserting that they sat through it. */
-    course.exam && !course.locked ? examInvite({
-      eyebrow: txt('End of the course'),
-      title: txt('The exam'),
-      facts: txt('Pass it and the certificate is yours.'),
-      href: `#/exam/course/${encodeURIComponent(course.id)}`,
-      action: txt('Sit the exam'),
-    }) : null,
+        course.exam && !course.locked ? examInvite({
+          eyebrow: txt('End of the course'),
+          title: txt('The exam'),
+          facts: txt('Pass it and the certificate is yours.'),
+          href: `#/exam/course/${encodeURIComponent(course.id)}`,
+          action: txt('Sit the exam'),
+        }) : null,
+      ]),
+
+      el('aside', { class: 'course-side' }, [
+        course.prerequisites ? el('section', { class: 'block' }, [
+          el('div', { class: 'block-top' }, [el('h2', { text: txt('Prerequisites') })]),
+          el('p', { class: 'prerequisites', text: course.prerequisites }),
+        ]) : null,
+        (course.requires || []).length ? el('section', { class: 'block' }, [
+          el('div', { class: 'block-top' }, [el('h2', { text: txt('After') })]),
+          el('div', { class: 'related' }, course.requires.map((need) => {
+            const before = state.courses.find((c) => c.id === need);
+            return el('a', {
+              class: 'link-chip link-before',
+              href: `#/course/${encodeURIComponent(need)}`,
+              text: before ? before.name : need,
+            });
+          })),
+        ]) : null,
+      ]),
+    ]),
   );
 }
 
@@ -451,7 +479,7 @@ async function lessonPage(courseID, lessonID) {
                that can fail and leave the number wrong anyway. */
             state.done[courseID] = (state.done[courseID] || 0) + 1;
             drawSidebar(courseID, null);
-            drawTrackChip();
+            drawNavContext();
           } catch (e) {
             button.disabled = false;
             button.after(trouble(e));
@@ -573,35 +601,47 @@ async function trackPage(id) {
     const course = state.courses.find((c) => c.id === node.id);
     if (!course) {
       return el('a', {
-        class: 'node course', 'data-node': node.id,
+        class: 'node course-node', 'data-node': node.id,
         href: `#/course/${encodeURIComponent(node.id)}`,
-      }, [el('span', { class: 'node-name', text: node.id })]);
+      }, [el('span', { class: 'name', text: node.id })]);
     }
 
     const which = stateOf(course);
-    const started = which !== 'open';
+    const of = course.sections || 0;
 
+    /* THE CARD ON THE MAP IS THE PORTAL'S, down to the order of its lines:
+       level, state, name, `40h · beginner`, bar, tally. The element around it
+       is this repository's — an anchor carrying `.node`, which is what its edge
+       router measures and what `tools/graph-test` looks for. */
     return el('a', {
-      class: `node course ${which}${course.locked ? ' is-locked' : ''}`,
+      class: `node course-node node-${which}${course.locked ? ' is-locked' : ''}`,
       'data-node': node.id,
+      'data-course': node.id,
       href: `#/course/${encodeURIComponent(node.id)}`,
     }, [
-      /* WHICH LEVEL IT IS, counted from the map and not from the catalogue.
-         The number is the student's answer to "how far in is this" and it only
-         means anything in the context of this track — the same course is level
-         two of one track and level five of another. */
-      el('span', { class: 'node-level', text: `${txt('Level')} ${String(node.level + 1).padStart(2, '0')}` }),
+      /* WHICH LEVEL IT IS, counted from the map and not from the catalogue: it
+         only means anything in the context of this track, since the same course
+         is level two of one and level five of another. */
+      el('span', { class: 'order', text: `${txt('level')} ${String(node.level + 1).padStart(2, '0')}` }),
       el('span', {
-        class: `eyebrow${which === 'started' ? ' warm' : ''}${which === 'open' ? ' quiet' : ''}`,
-        text: course.locked ? txt('Subscription') : stateWord(which),
+        class: 'node-state',
+        'data-state': which,
+        text: course.locked ? txt('subscription') : stateWord(which),
       }),
-      el('span', { class: 'node-name', text: course.name }),
-      el('span', { class: 'dim node-hours' }, [
-        course.hours ? el('span', { text: `${course.hours}h` }) : null,
-        course.level ? el('span', { text: ` · ${levelWord(course.level)}` }) : null,
-      ]),
-      started ? meter(shareOf(course), which === 'started' ? 'warm' : '') : null,
-      started ? el('span', { class: 'side-count', text: tally(course) }) : null,
+      el('span', { class: 'name', text: course.name }),
+      el('span', {
+        class: 'meta',
+        text: [
+          course.hours ? `${course.hours}h` : null,
+          course.level ? levelWord(course.level) : null,
+        ].filter(Boolean).join(' · '),
+      }),
+      of ? el('span', {
+        class: 'node-bar',
+        role: 'img',
+        'aria-label': `${doneIn(course)} ${txt('of')} ${of}`,
+      }, [el('span', { class: 'node-bar-fill', style: `width:${shareOf(course)}%` })]) : null,
+      of ? el('span', { class: 'node-count', text: tally(course) }) : null,
     ]);
   }
 
@@ -609,11 +649,10 @@ async function trackPage(id) {
      are a pattern somebody has to guess at, and a guess about which course they
      have finished is the wrong thing to make somebody guess. (WCAG 1.4.1) */
   function key() {
-    return el('p', { class: 'graph-key' }, [
-      el('span', { class: 'done' }, [el('i', {}), el('span', { text: txt('Finished') })]),
-      el('span', { class: 'started' }, [el('i', {}), el('span', { text: txt('In progress') })]),
-      el('span', { class: 'open' }, [el('i', {}), el('span', { text: txt('Not started') })]),
-    ]);
+    return el('p', { class: 'graph-legend' }, ['done', 'current', 'available'].map((which) =>
+      el('span', { class: `legend-${which}` }, [
+        el('span', { class: 'node-state', 'data-state': which, text: stateWord(which) }),
+      ])));
   }
 
   const onIt = coursesOfTrack(track);
@@ -625,23 +664,31 @@ async function trackPage(id) {
     el('h1', { text: track.name }),
     track.goal ? el('p', { class: 'prose', text: track.goal }) : null,
 
-    el('div', { class: 'stats' }, [
-      el('div', { class: 'stat lead' }, [
-        el('b', { text: `${onIt.filter((c) => stateOf(c) === 'done').length}/${onIt.length}` }),
-        el('span', { text: txt('courses finished') }),
+    /* The same block, the same numbers and the same shape as the dashboard's
+       summary — `.track-numbers` inside a `.block`, which is what the copied
+       stylesheet lays out. Written as its own markup here rather than reusing
+       `trackSummary` because this screen shows the hours and the dashboard
+       shows the percentage: the reader has already chosen the track, so what is
+       worth saying is how much of it there is. */
+    el('section', { class: 'block' }, [
+      el('div', { class: 'track-numbers' }, [
+        el('span', {}, [
+          el('b', { text: `${onIt.filter((c) => stateOf(c) === 'done').length}/${onIt.length}` }),
+          document.createTextNode(txt('courses on the path')),
+        ]),
+        hours ? el('span', {}, [
+          el('b', { text: `${hours}h` }),
+          document.createTextNode(txt('on this path')),
+        ]) : null,
+        state.me && totalSections ? el('span', {}, [
+          el('b', { text: `${doneSections}/${totalSections}` }),
+          document.createTextNode(txt('sections')),
+        ]) : null,
+        track.outcome ? el('span', {}, [
+          el('b', { text: '→' }),
+          document.createTextNode(track.outcome),
+        ]) : null,
       ]),
-      hours ? el('div', { class: 'stat' }, [
-        el('b', { text: `${hours}h` }),
-        el('span', { text: txt('on this path') }),
-      ]) : null,
-      state.me && totalSections ? el('div', { class: 'stat' }, [
-        el('b', { text: `${doneSections}/${totalSections}` }),
-        el('span', { text: txt('sections') }),
-      ]) : null,
-      track.outcome ? el('div', { class: 'stat' }, [
-        el('b', { text: '→' }),
-        el('span', { text: track.outcome }),
-      ]) : null,
     ]),
 
     board,
@@ -1073,6 +1120,10 @@ async function dashboard() {
     return;
   }
 
+  /* The pointer carries ids and the card shows words. One request, for the one
+     course it points at — see `titlesFor`, which the notes screen uses for the
+     same reason. */
+  const resumeTitles = resume.length ? await titlesFor([resume[0].course]) : {};
   const track = state.tracks[0];
 
   show(
@@ -1084,7 +1135,7 @@ async function dashboard() {
     /* ONE PLACE TO CARRY ON FROM, AND NOT A GRID OF THEM. A dashboard whose
        first element is a choice of six is a dashboard that asks a question
        instead of answering one — the most recent is what "carry on" means. */
-    resume.length ? carryOn(resume[0]) : el('div', { class: 'panel' }, [
+    resume.length ? carryOn(resume[0], resumeTitles[resume[0].course]) : el('div', { class: 'panel' }, [
       el('p', { class: 'eyebrow', text: txt('Start here') }),
       el('h2', { text: txt('You have not started anything yet.') }),
       el('p', { class: 'dim', text: txt('What there is to learn here.') }),
@@ -1147,23 +1198,27 @@ function examInvite({ eyebrow, title, facts, href, action }) {
 /* The one thing this screen exists to offer: the way back in.
    The course and the lesson are named because "carry on" with nothing after it
    asks somebody to remember what they were doing. */
-function carryOn(where) {
+function carryOn(where, named = { lessons: {}, sections: {} }) {
   const course = state.courses.find((c) => c.id === where.course);
+  const share = course ? shareOf(course) : 0;
+  const lesson = named.lessons[where.lesson] || where.lesson;
+  const section = named.sections[`${where.lesson}/${where.section}`] || where.section;
 
-  return el('div', { class: 'panel' }, [
-    el('p', { class: 'eyebrow', text: txt('Carry on where you left off') }),
-    el('h2', { text: course ? course.name : where.course }),
-    el('p', { class: 'facts' }, [
-      el('span', { text: where.lesson }),
-      where.section ? el('span', { text: where.section }) : null,
-    ]),
-    course ? meter(shareOf(course)) : null,
-    course ? el('p', { class: 'side-count', text: tally(course) }) : null,
-    el('p', {}, [el('a', {
-      class: 'button',
-      href: `#/course/${encodeURIComponent(where.course)}/${encodeURIComponent(where.lesson)}`,
-      text: `${txt('Carry on')} →`,
-    })]),
+  return el('a', {
+    class: 'resume',
+    href: `#/course/${encodeURIComponent(where.course)}/${encodeURIComponent(where.lesson)}`,
+  }, [
+    el('span', { class: 'resume-label', text: txt('pick up where you left off') }),
+    /* THE BIG LINE IS THE SECTION AND THE SMALL ONE IS WHERE IT SITS. Sending
+       somebody back to the top of a four-hour course is sending them back to
+       scrolling; the section is the place they actually stopped. */
+    el('span', { class: 'resume-lesson', text: section || lesson }),
+    el('span', {
+      class: 'resume-course',
+      text: `${course ? course.name : where.course} · ${lesson}`,
+    }),
+    course ? bar(share, `${doneIn(course)} ${txt('of')} ${course.sections || 0}`) : null,
+    el('span', { class: 'resume-btn btn btn-primary', text: `${txt('Continue')} →` }),
   ]);
 }
 
@@ -1174,35 +1229,28 @@ function trackSummary(track) {
   const of = courses.reduce((n, c) => n + (c.sections || 0), 0);
   const done = courses.reduce((n, c) => n + doneIn(c), 0);
   const share = of ? Math.round((done / of) * 100) : 0;
-  const finished = courses.filter((c) => stateOf(c) === 'done').length;
 
-  return el('div', { class: 'panel' }, [
-    el('div', { class: 'panel-head' }, [
+  return el('section', { class: 'block' }, [
+    el('div', { class: 'block-top' }, [
       el('h2', { text: track.name }),
       el('a', {
+        class: 'block-link',
         href: `#/track/${encodeURIComponent(track.id)}`,
-        text: `${txt('See the whole track')} →`,
+        text: `${txt('see the map')} →`,
       }),
     ]),
-    el('div', { class: 'stats' }, [
-      el('div', { class: 'stat lead' }, [
-        el('b', { text: `${share}%` }),
-        el('span', { text: txt('of the track') }),
+    el('div', { class: 'track-numbers' }, [
+      el('span', {}, [el('b', { text: `${share}%` }), document.createTextNode(txt(' of the track'))]),
+      el('span', {}, [el('b', { text: `${done}/${of}` }), document.createTextNode(txt('sections'))]),
+      el('span', {}, [
+        el('b', { text: String(courses.length) }),
+        document.createTextNode(txt('courses on the path')),
       ]),
-      el('div', { class: 'stat' }, [
-        el('b', { text: `${done}/${of}` }),
-        el('span', { text: txt('sections') }),
-      ]),
-      el('div', { class: 'stat' }, [
-        el('b', { text: `${finished}/${courses.length}` }),
-        el('span', { text: txt('courses finished') }),
-      ]),
-      track.outcome ? el('div', { class: 'stat' }, [
-        el('b', { text: '→' }),
-        el('span', { text: track.outcome }),
-      ]) : null,
+      track.outcome
+        ? el('span', {}, [el('b', { text: '→' }), document.createTextNode(track.outcome)])
+        : null,
     ]),
-    meter(share),
+    bar(share, `${share}%`),
   ]);
 }
 
@@ -1213,14 +1261,14 @@ function trackSummary(track) {
    advert wearing a checklist's clothes. */
 function nextSteps() {
   const open = state.courses.filter((c) => !c.locked);
-  const started = open.filter((c) => stateOf(c) === 'started');
-  const fresh = open.filter((c) => stateOf(c) === 'open');
-  const next = [...started, ...fresh].slice(0, 4);
+  const current = open.filter((c) => stateOf(c) === 'current');
+  const fresh = open.filter((c) => stateOf(c) === 'available');
+  const next = [...current, ...fresh].slice(0, 4);
   if (!next.length) return null;
 
-  return el('div', { class: 'panel' }, [
-    el('h2', { text: txt('Next steps') }),
-    el('div', { class: 'grid' }, next.map(courseCard)),
+  return el('section', { class: 'block' }, [
+    el('div', { class: 'block-top' }, [el('h2', { text: txt('Next steps') })]),
+    el('div', { class: 'cards' }, next.map(courseCard)),
   ]);
 }
 
@@ -1278,34 +1326,48 @@ async function notesPage() {
      the ids: a slug is worse than a title and much better than a blank. */
   const titles = await titlesFor([...new Set(notes.map((n) => n.course))]);
 
-  show(
-    el('h1', { text: txt('Your notes') }),
-    el('p', { class: 'side-count', text: counted(notes.length, txt('note'), txt('notes')) }),
+  /* GROUPED BY COURSE, which is how somebody looks for a note — "the thing I
+     wrote in HTML and CSS" — rather than by the day they wrote it. The stream
+     arrives newest first and the grouping keeps that order between the groups,
+     so the course somebody wrote in last is the one at the top. */
+  const byCourse = new Map();
+  notes.forEach((note) => {
+    if (!byCourse.has(note.course)) byCourse.set(note.course, []);
+    byCourse.get(note.course).push(note);
+  });
 
-    notes.length ? el('div', {}, notes.map((note) => {
-      const course = state.courses.find((c) => c.id === note.course);
-      const named = titles[note.course] || { lessons: {}, sections: {} };
-      return el('div', { class: 'panel' }, [
-        el('div', { class: 'panel-head' }, [
-          el('h3', { text: course ? course.name : note.course }),
+  show('screen-notes',
+    el('header', { class: 'view-head' }, [
+      el('h1', { text: txt('Your notes') }),
+      el('p', { text: counted(notes.length, txt('note'), txt('notes')) }),
+    ]),
+
+    ...[...byCourse.entries()].map(([courseID, ofCourse]) => {
+      const course = state.courses.find((c) => c.id === courseID);
+      const named = titles[courseID] || { lessons: {}, sections: {} };
+
+      return el('section', { class: 'block' }, [
+        el('div', { class: 'block-top' }, [
+          el('h2', { text: course ? course.name : courseID }),
           el('a', {
-            href: `#/course/${encodeURIComponent(note.course)}/${encodeURIComponent(note.lesson)}`,
-            text: `${txt('Open the course')} →`,
+            class: 'block-link',
+            href: `#/course/${encodeURIComponent(courseID)}`,
+            text: `${txt('open the course')} →`,
           }),
         ]),
-        el('p', { class: 'facts' }, [
-          el('span', { class: 'on', text: named.lessons[note.lesson] || note.lesson }),
-          el('span', {
-            class: 'on',
-            text: named.sections[`${note.lesson}/${note.section}`] || note.section,
+        ...ofCourse.map((note) => el('article', { class: 'note-item' }, [
+          el('a', {
+            class: 'note-where',
+            href: `#/course/${encodeURIComponent(courseID)}/${encodeURIComponent(note.lesson)}`,
+            text: `${named.lessons[note.lesson] || note.lesson} · `
+              + `${named.sections[`${note.lesson}/${note.section}`] || note.section} →`,
           }),
-        ]),
-        /* The note itself is the student's own words and is never Markdown:
-           it goes in as text, which is also why nothing here touches
-           innerHTML. */
-        el('p', { class: 'note-body', text: note.body }),
+          /* The note is the student's own words and is never Markdown: it goes
+             in as text, which is also why nothing here touches innerHTML. */
+          el('p', { class: 'note-text', text: note.body }),
+        ])),
       ]);
-    })) : el('p', { class: 'empty', text: txt('You have not written anything yet.') }),
+    }),
   );
 }
 
@@ -1446,7 +1508,7 @@ function credentialsForm({ submit, withName, action, otherHref, otherText }) {
            drawn with the progress it is about rather than filling in a beat
            later under the cursor. */
         await loadProgress();
-        drawTrackChip();
+        drawNavContext();
         go('#/dashboard');
       } catch (e) {
         why.textContent = (e instanceof ApiError && e.message) ? txt(e.message) : txt('That did not work.');
@@ -1510,21 +1572,28 @@ function places() {
 }
 
 function drawSidebar(current, where) {
-  const body = document.querySelector('#sidebar-body');
-  body.textContent = '';
+  const rail = document.querySelector('#rail');
+  rail.textContent = '';
+  rail.setAttribute('aria-label', txt('Navigation'));
 
-  body.append(el('nav', { class: 'side-nav', 'aria-label': txt('Sections') },
+  rail.append(el('nav', { class: 'rail-nav' },
     places()
       .filter((place) => state.me || !place.account)
       .map((place) => el('a', {
+        class: 'rail-link' + (place.hash === where ? ' on' : ''),
         href: place.hash,
         text: place.label,
+        /* THE CLASS IS THE PAINT AND `aria-current` IS THE FACT. `.on` is what
+           the copied stylesheet colours; a screen reader is told which link is
+           the current page by the attribute, which no stylesheet can express.
+           The portal's rail sets only the class, and that is the one thing here
+           that deliberately does more than the copy. */
         'aria-current': place.hash === where ? 'page' : null,
       }))));
 
   const courses = filtered(state.courses);
   if (!courses.length) {
-    body.append(el('p', { class: 'dim', text: txt('Nothing here yet.') }));
+    rail.append(el('p', { class: 'dim', text: txt('Nothing here yet.') }));
     return;
   }
 
@@ -1533,36 +1602,37 @@ function drawSidebar(current, where) {
      school and the list under it is that path; naming it is what turns a
      column of twelve courses into a shape somebody recognises. */
   const track = state.tracks[0];
-  const group = el('div', { class: 'side-group' }, [
-    el('p', { class: 'side-title', text: track ? track.name : txt('Courses') }),
-  ]);
 
-  courses.forEach((course) => {
-    const which = stateOf(course);
+  rail.append(el('div', { class: 'rail-sec' }, [
+    el('span', { class: 'rail-tit', text: track ? track.name : txt('Courses') }),
+    el('div', { class: 'rail-courses' }, courses.map((course) => {
+      const which = stateOf(course);
 
-    group.append(el('a', {
-      class: 'side-link',
-      href: `#/course/${encodeURIComponent(course.id)}`,
-      'aria-current': current === course.id ? 'page' : null,
-    }, [
-      /* The dot is a picture of what the count beside it already says, so it
-         is hidden from anything that reads the page rather than announced
-         twice. What a screen reader gets is the name and the tally. */
-      el('span', { class: `side-dot ${which}`, 'aria-hidden': 'true' }),
-      el('span', { class: 'side-name', text: course.name }),
+      return el('a', {
+        class: `rail-course no-${which}`,
+        href: `#/course/${encodeURIComponent(course.id)}`,
+        'aria-current': current === course.id ? 'page' : null,
+      }, [
+        /* The mark is a picture of what the count beside it already says, so it
+           is hidden from anything that reads the page rather than announced
+           twice. What a screen reader gets is the name and the tally.
 
-      /* Said here as well as on the card, because this is the list somebody
-         navigates from: a link that leads to a paywall should look like one
-         BEFORE it is clicked. The word rather than a glyph — a padlock is a
-         picture a screen reader has to be told the meaning of, and the meaning
-         is one short word. */
-      course.locked
-        ? el('span', { class: 'side-lock', text: txt('Subscription') })
-        : el('span', { class: 'side-count', text: `${doneIn(course)}/${course.sections || 0}` }),
-    ]));
-  });
+           `data-state` and not a class, because that is what the copied
+           stylesheet selects on. */
+        el('span', { class: 'tc-mark', 'data-state': which, 'aria-hidden': 'true' }),
+        el('span', { class: 'tc-name', text: course.name }),
 
-  body.append(group);
+        /* Said here as well as on the card, because this is the list somebody
+           navigates from: a link that leads to a paywall should look like one
+           BEFORE it is clicked. The word rather than a glyph — a padlock is a
+           picture a screen reader has to be told the meaning of, and the meaning
+           is one short word. */
+        course.locked
+          ? el('span', { class: 'tc-count', text: txt('Subscription') })
+          : el('span', { class: 'tc-count', text: `${doneIn(course)}/${course.sections || 0}` }),
+      ]);
+    })),
+  ]));
 }
 
 /* ---------- the router ---------- */
@@ -1675,99 +1745,124 @@ function focusScreen() {
 /* ---------- the chrome ---------- */
 
 function closeSidebar() {
-  document.querySelector('#sidebar').classList.remove('is-open');
-  document.querySelector('#menu-button').setAttribute('aria-expanded', 'false');
+  /* Defined in wireChrome, where the veil and the button it belongs to are.
+     Guarded because the router runs once before the chrome is wired — the first
+     screen is drawn as part of start(), and a drawer nobody has opened yet does
+     not need closing. */
+  if (window.__closeRail) window.__closeRail();
 }
 
 function wireChrome() {
-  document.querySelector('#menu-button').addEventListener('click', (event) => {
-    const sidebar = document.querySelector('#sidebar');
-    const open = sidebar.classList.toggle('is-open');
-    event.currentTarget.setAttribute('aria-expanded', String(open));
-  });
+  /* The rail becomes a drawer below the cut, and the veil behind it is both the
+     dimming and the way out: a drawer that can only be closed by the same small
+     button that opened it is a drawer people leave open. */
+  const rail = document.querySelector('#rail');
+  const veil = document.querySelector('#rail-veil');
+  const railButton = document.querySelector('#rail-btn');
 
-  document.querySelector('#theme-button').addEventListener('click', () => {
+  const closeRail = () => {
+    document.body.classList.remove('rail-open');
+    veil.hidden = true;
+    railButton.setAttribute('aria-expanded', 'false');
+  };
+  window.__closeRail = closeRail;
+
+  railButton.addEventListener('click', () => {
+    const open = document.body.classList.toggle('rail-open');
+    veil.hidden = !open;
+    railButton.setAttribute('aria-expanded', String(open));
+  });
+  veil.addEventListener('click', closeRail);
+  rail.addEventListener('click', (event) => { if (event.target.closest('a')) closeRail(); });
+
+  document.querySelector('#theme-btn').addEventListener('click', () => {
     const root = document.documentElement;
     const next = root.dataset.theme === 'light' ? 'dark' : 'light';
     root.dataset.theme = next;
     try { localStorage.setItem('codeschool-theme', next); } catch (e) { /* private mode */ }
   });
 
-  /* Both pickers, one behaviour: a click opens, a click anywhere else closes,
+  /* The two menus, one behaviour: a click opens, a click anywhere else closes,
      and Escape closes — the last of which is the one everybody forgets and the
      one a keyboard user needs to get out without tabbing through the menu. */
-  document.querySelectorAll('.picker').forEach((picker) => {
-    const button = picker.querySelector('.picker-button');
-    button.addEventListener('click', () => {
-      const open = !picker.classList.contains('is-open');
-      document.querySelectorAll('.picker').forEach((p) => p.classList.remove('is-open'));
-      picker.classList.toggle('is-open', open);
-      button.setAttribute('aria-expanded', String(open));
-    });
+  const menus = () => [...document.querySelectorAll('#lang, #account, .ctx-box')];
+  const closeMenus = () => menus().forEach((m) => {
+    m.classList.remove('is-open');
+    m.querySelector('button[aria-haspopup]')?.setAttribute('aria-expanded', 'false');
   });
+
   document.addEventListener('click', (event) => {
-    if (event.target.closest('.picker')) return;
-    document.querySelectorAll('.picker').forEach((p) => {
-      p.classList.remove('is-open');
-      p.querySelector('.picker-button').setAttribute('aria-expanded', 'false');
-    });
+    const trigger = event.target.closest('.lang-btn, .account-btn, .ctx');
+    if (trigger) {
+      const box = trigger.closest('#lang, #account, .ctx-box');
+      const open = !box.classList.contains('is-open');
+      closeMenus();
+      box.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+      if (open) closeRail();
+      return;
+    }
+    /* A click on something INSIDE a menu closes it and lets the click through —
+       every entry is a link or a button that does its own work. */
+    closeMenus();
   });
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
-    document.querySelectorAll('.picker.is-open').forEach((p) => {
-      p.classList.remove('is-open');
-      p.querySelector('.picker-button').setAttribute('aria-expanded', 'false');
-      p.querySelector('.picker-button').focus();
-    });
-    closeSidebar();
+    document.querySelectorAll('.is-open button[aria-haspopup]').forEach((b) => b.focus());
+    closeMenus();
+    closeRail();
   });
 
-  /* The search field appears when it is asked for, and takes focus when it
-     does. A control that opens and leaves the cursor where it was is a control
-     somebody has to click twice. */
-  const search = document.querySelector('#search');
-  const input = document.querySelector('#search-input');
-  const searchButton = document.querySelector('#search-button');
-
+  /* Search is a field that is not there until it is asked for. A permanent
+     input is most of the width of a phone spent on something people use
+     rarely — and the icon is a real button with a real name on it, so nothing
+     is hidden from anybody navigating by keyboard or by screen reader. */
+  const searchButton = document.querySelector('#search-btn');
   searchButton.addEventListener('click', () => {
-    const open = search.classList.toggle('is-open');
+    const open = !document.body.classList.contains('search-open');
+    document.body.classList.toggle('search-open', open);
     searchButton.setAttribute('aria-expanded', String(open));
+
     if (open) {
-      input.focus();
+      document.querySelector('#search-input').focus();
       return;
     }
     /* Closing it clears the query, because a hidden field that is still
        filtering the catalogue is a school that has lost half its courses with
        nothing on screen saying why. */
-    input.value = '';
+    document.querySelector('#search-input').value = '';
     state.query = '';
     drawSidebar();
     route();
   });
 
-  search.addEventListener('submit', (event) => event.preventDefault());
-  input.addEventListener('input', () => {
-    state.query = input.value;
+  document.querySelector('#search').addEventListener('submit', (e) => e.preventDefault());
+  document.querySelector('#search-input').addEventListener('input', (event) => {
+    state.query = event.target.value;
     drawSidebar();
     if (!location.hash || location.hash === '#/' || location.hash === '#') catalogue();
   });
 
-  document.querySelector('#sign-out').addEventListener('click', async () => {
+  document.querySelector('#account-menu').addEventListener('click', async (event) => {
+    if (!event.target.closest('#account-signout')) return;
     try { await api.signOut(); } catch (e) { /* the cookie may already be gone */ }
     state.me = null;
     drawAccount();
-    /* Their counts go with them. A sidebar still showing "12/50" after
-       somebody signed out is one person's progress shown to whoever is at the
-       machine next. */
+    /* Their counts go with them. A rail still showing "12/50" after somebody
+       signed out is one person's progress shown to whoever is at the machine
+       next. */
     await loadProgress();
-    drawTrackChip();
+    drawNavContext();
     go('#/');
   });
 }
 
+
 function drawAccount() {
   const link = document.querySelector('#sign-in-link');
   const account = document.querySelector('#account');
+  const menu = document.querySelector('#account-menu');
 
   /* No door where there is no room behind it. The offline copy keeps the
      sign-in SCREEN — a bookmark or an old link still lands there and gets an
@@ -1779,21 +1874,79 @@ function drawAccount() {
     return;
   }
 
-  if (state.me) {
-    const who = state.me.name || state.me.email;
-    link.hidden = true;
-    account.hidden = false;
-    document.querySelector('#account-name').textContent = who;
-    /* The circle carries one letter and the name is beside it in the
-       accessible name, so this is decoration and is marked as such in the
-       markup. `[...who][0]` and not `who[0]`: a name beginning with an emoji
-       or an astral character is one code point and two code units, and
-       indexing by code unit cuts it in half. */
-    document.querySelector('#account-initial').textContent = who ? [...who][0] : '';
-  } else {
+  if (!state.me) {
     link.hidden = false;
     account.hidden = true;
+    return;
   }
+
+  const who = state.me.name || state.me.email;
+  link.hidden = true;
+  account.hidden = false;
+
+  /* The circle carries one letter and the name is beside it in the accessible
+     name. `[...who][0]` and not `who[0]`: a name beginning with an emoji or an
+     astral character is one code point and two code units, and indexing by code
+     unit cuts it in half. */
+  document.querySelector('#account-avatar').textContent = who ? [...who][0].toUpperCase() : '·';
+  document.querySelector('#account-name').textContent = who;
+
+  menu.textContent = '';
+  menu.append(
+    el('a', { class: 'account-op', href: '#/dashboard', text: txt('Your study') }),
+    el('a', { class: 'account-op', href: '#/certificates', text: txt('Your certificates') }),
+    el('button', {
+      type: 'button', class: 'account-op account-op-btn', id: 'account-signout',
+      text: txt('Sign out'),
+    }),
+  );
+}
+
+/* WHAT THE STUDENT IS IN THE MIDDLE OF, in the bar, on every screen. It is the
+   one piece of state worth carrying everywhere: a track is months long, and a
+   platform that only shows how far along somebody is on the screen about it
+   asks them to go and look.
+
+   IN THE PORTAL THIS IS A SELECTOR and here it is a list of links. Over there
+   the student is enrolled in one track and the menu switches which; nothing
+   here records an enrolment, so a control that looked like it changed something
+   would be a promise this side cannot keep. The menu goes to the maps instead.
+
+   Empty rather than zeroed when nobody is signed in: a chip reading 0% is a
+   statement about somebody's effort, and "we do not know yet" is not that
+   statement. */
+function drawNavContext() {
+  const box = document.querySelector('#nav-context');
+  box.textContent = '';
+
+  const track = state.tracks[0];
+  if (!state.me || !track) return;
+
+  const courses = coursesOfTrack(track);
+  const of = courses.reduce((n, c) => n + (c.sections || 0), 0);
+  const done = courses.reduce((n, c) => n + doneIn(c), 0);
+  const share = of ? Math.round((done / of) * 100) : 0;
+
+  box.append(el('div', { class: 'ctx-box' }, [
+    el('button', { type: 'button', class: 'ctx', 'aria-haspopup': 'true', 'aria-expanded': 'false' }, [
+      el('span', { class: 'ctx-name', text: track.name }),
+      el('span', { class: 'ctx-bar' }, [el('span', { style: `width:${share}%` })]),
+      el('span', { class: 'ctx-pct', text: `${share}%` }),
+      el('span', { class: 'ctx-arrow', 'aria-hidden': 'true', text: '▾' }),
+    ]),
+    el('div', { class: 'ctx-menu', role: 'menu' }, [
+      el('a', {
+        class: 'ctx-op ctx-map',
+        href: `#/track/${encodeURIComponent(track.id)}`,
+        text: `${txt('see the track map')} →`,
+      }),
+      ...state.tracks.map((other) => el('a', {
+        class: `ctx-op${other.id === track.id ? ' on' : ''}`,
+        href: `#/track/${encodeURIComponent(other.id)}`,
+        text: other.name,
+      })),
+    ]),
+  ]));
 }
 
 async function loadMe() {
@@ -1824,28 +1977,6 @@ async function loadProgress() {
 /* What the student is in the middle of, in the bar, on every screen.
    Hidden rather than zeroed when there is no track or nobody signed in: a chip
    reading 0% is a statement about somebody's effort, and "we do not know yet"
-   is not that statement. */
-function drawTrackChip() {
-  const chip = document.querySelector('#track-chip');
-  const track = state.tracks[0];
-
-  if (!state.me || !track) {
-    chip.hidden = true;
-    return;
-  }
-
-  const courses = coursesOfTrack(track);
-  const of = courses.reduce((n, c) => n + (c.sections || 0), 0);
-  const done = courses.reduce((n, c) => n + doneIn(c), 0);
-  const share = of ? Math.round((done / of) * 100) : 0;
-
-  chip.hidden = false;
-  chip.href = `#/track/${encodeURIComponent(track.id)}`;
-  chip.setAttribute('aria-label', `${track.name} — ${share}% ${txt('complete')}`);
-  document.querySelector('#track-chip-name').textContent = track.name;
-  document.querySelector('#track-chip-share').textContent = `${share}%`;
-  document.querySelector('#track-chip-meter').firstElementChild.style.width = `${share}%`;
-}
 
 /* ---------- start ---------- */
 
@@ -1882,7 +2013,7 @@ async function start() {
   ]);
 
   await loadProgress();
-  drawTrackChip();
+  drawNavContext();
 
   window.addEventListener('hashchange', route);
   await route();

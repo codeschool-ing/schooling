@@ -63,7 +63,7 @@ try {
 
   const open = async (fragment = '') => {
     await page.goto(BUNDLE + fragment, { waitUntil: 'load' });
-    await page.waitForSelector('#screen h1, #screen .notice', { timeout: 8000 }).catch(() => {});
+    await page.waitForSelector('#content h1, #content .notice', { timeout: 8000 }).catch(() => {});
     await page.evaluate(() => document.fonts.ready).catch(() => {});
     await page.waitForTimeout(400);
   };
@@ -76,12 +76,12 @@ try {
   if (school && school.trim()) right(`the school is "${school.trim()}"`);
   else wrong('the school has no name — the shell rendered without its catalogue');
 
-  const courses = await page.$$eval('#screen .card',
+  const courses = await page.$$eval('#content .card',
     (cards) => cards.map((c) => c.getAttribute('href')).filter(Boolean));
   if (courses.length) right(`${courses.length} courses on the catalogue`);
   else wrong('the catalogue is empty — nothing was baked, or nothing can be read back');
 
-  const tracks = await page.$$eval('#screen a[href^="#/track/"]',
+  const tracks = await page.$$eval('#content a[href^="#/track/"]',
     (links) => [...new Set(links.map((a) => a.getAttribute('href')))]);
   if (tracks.length) right(`${tracks.length} tracks`);
   else wrong('no track on the catalogue');
@@ -102,7 +102,7 @@ try {
   for (const where of courses) {
     await open(where);
 
-    const lessons = await page.$$eval('#screen a[href^="#/course/"]',
+    const lessons = await page.$$eval('#content a[href^="#/course/"]',
       (links, here) => links
         .map((a) => a.getAttribute('href'))
         .filter((href) => href !== here && href.split('/').length > 3),
@@ -111,7 +111,7 @@ try {
     if (!lessons.length) continue;
 
     await open(lessons[0]);
-    const prose = (await page.textContent('#screen .prose').catch(() => '')) || '';
+    const prose = (await page.textContent('#content .prose').catch(() => '')) || '';
     if (prose.trim().length > 40) {
       right(`${lessons[0]} reads — ${prose.trim().length} characters of it`);
       read += 1;
@@ -131,7 +131,7 @@ try {
 
   for (const where of ['#/terms', '#/privacy']) {
     await open(where);
-    const said = ((await page.textContent('#screen').catch(() => '')) || '').trim();
+    const said = ((await page.textContent('#content').catch(() => '')) || '').trim();
     if (said.toLowerCase().includes('offline copy')) {
       wrong(`${where} needs the school — the document is not baked into the bundle`);
     } else if (said.length > 400) {
@@ -150,7 +150,7 @@ try {
 
   for (const where of ['#/sign-in', '#/dashboard', '#/certificates', '#/practice']) {
     await open(where);
-    const said = ((await page.textContent('#screen').catch(() => '')) || '').toLowerCase();
+    const said = ((await page.textContent('#content').catch(() => '')) || '').toLowerCase();
     if (said.includes('offline copy')) right(`${where} says it is the offline copy`);
     else wrong(`${where} does not say a server is needed — it shows: ${said.slice(0, 70).trim()}`);
   }

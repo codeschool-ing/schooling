@@ -16,10 +16,46 @@
 window.I18N = window.I18N || {};
 window.I18N.pt = {
   ui: {
+
+    /* ---------- the words the portal already had ----------
+       Taken from `portal-frontend/assets/i18n-pt.js` rather than written here.
+       The two interfaces say the same things and should say them with the same
+       words; two translations of one sentence is how two products stop looking
+       like one. */
+    ' of the track': 'da trilha',
+    'After': 'Depois de',
+    'Continue': 'Continuar',
+    'Navigation': 'Navegação',
+    'Open navigation': 'Abrir a navegação',
+    'Prerequisites': 'Pré-requisitos',
+    'Search courses': 'Buscar curso',
+    'Your account': 'Sua conta',
+    'available': 'disponível',
+    'courses on the path': 'cursos no caminho',
+    'free': 'grátis',
+    'in progress': 'em andamento',
+    'level': 'nível',
+    'of': 'de',
+    'open the course': 'abrir o curso',
+    'pick up where you left off': 'continuar de onde parou',
+    'sections completed': 'seções concluídas',
+    'see the map': 'ver o mapa',
+    'see the track map': 'ver o mapa da trilha',
+    'completed': 'concluído',
+    'subscription': 'assinatura',
+
+    /* This side's own, because this side has screens the portal does not: an
+       exam it invites you to at the end of a course and of a track, a
+       certificate somebody can verify from the printed code, and a dashboard
+       for a student who has not begun. */
+    'End of the course': 'fim do curso',
+    'End of the track': 'fim da trilha',
+    'Genuine': 'autêntico',
+    'Start here': 'comece por aqui',
+
     /* ---------- the chrome ---------- */
     'Schooling': 'Schooling',
     'Skip to content': 'Ir para o conteúdo',
-    'Menu': 'Menu',
     'Search': 'Buscar',
     'Search courses and lessons': 'Buscar cursos e aulas',
     'Language': 'Idioma',
@@ -33,7 +69,6 @@ window.I18N.pt = {
     'Everything else': 'Todo o resto',
     'Nothing here yet.': 'Ainda não há nada aqui.',
     'Nothing here matches that.': 'Nada aqui corresponde a isso.',
-    'Free': 'Grátis',
 
     /* The levels a course card carries. They are catalogue values rather than
        interface words, and they are translated anyway: a Portuguese card
@@ -47,7 +82,6 @@ window.I18N.pt = {
     'Course': 'Curso',
     'Lesson': 'Aula',
     'Lessons': 'Aulas',
-    'What you need first': 'O que você precisa antes',
 
     /* BOTH FORMS, because a count and a plural word concatenated is wrong on
        every "1". English needs the pair and so does Portuguese. */
@@ -58,7 +92,6 @@ window.I18N.pt = {
     'note': 'anotação',
     'notes': 'anotações',
 
-    'complete': 'concluído',
     'This course is part of the subscription.': 'Este curso faz parte da assinatura.',
     'Back to the course': 'Voltar ao curso',
     'Mark as done': 'Marcar como concluída',
@@ -67,36 +100,22 @@ window.I18N.pt = {
     /* ---------- what a student has done ---------- */
     'Your study': 'Seus estudos',
     'Hello': 'Olá',
-    'Carry on where you left off': 'Continue de onde parou',
-    'Carry on': 'Continuar',
     'You have not started anything yet.': 'Você ainda não começou nada.',
-    'Start here': 'Comece por aqui',
     'Next steps': 'Próximos passos',
     'Catalogue': 'Catálogo',
-    'Sections': 'Seções',
 
     /* The three states a course can be in. They are read as a label above a
        course's name — `EM ANDAMENTO`, over `JavaScript` — so they are
        adjectives about the course and not about the student. */
-    'Finished': 'Concluído',
-    'In progress': 'Em andamento',
-    'Not started': 'Não iniciado',
 
-    'of the track': 'da trilha',
-    'courses finished': 'cursos concluídos',
     'on this path': 'neste caminho',
 
     /* ---------- notes ---------- */
     'Your notes': 'Suas anotações',
-    'Open the course': 'abrir o curso',
-    'You have not written anything yet.': 'Você ainda não escreveu nada.',
 
     /* ---------- a track, drawn ---------- */
     'Track': 'Trilha',
     'Your track': 'Sua trilha',
-    'Level': 'nível',
-    'End of the course': 'fim do curso',
-    'End of the track': 'fim da trilha',
     'See the whole track': 'Ver a trilha inteira',
     'Choose one': 'Escolha uma',
     'Finish': 'Fim',
@@ -183,7 +202,6 @@ window.I18N.pt = {
 
     /* ---------- certificates ---------- */
     'Your certificates': 'Seus certificados',
-    'Genuine': 'autêntico',
     'certifies that': 'certifica que',
     'completed': 'concluiu',
     'A certificate arrives when you pass an exam.': 'O certificado chega quando você é aprovado em uma prova.',
