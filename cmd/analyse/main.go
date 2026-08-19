@@ -47,6 +47,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
+	"github.com/codeschool-ing/schooling/internal/visitor"
 )
 
 func main() {
@@ -108,7 +109,29 @@ func run(log *slog.Logger) error {
 			return out, nil
 		},
 		events.Schools,
-	).WithAudit(recordedBy(audit.NewStore(pool)))
+	).WithAudit(recordedBy(audit.NewStore(pool))).
+		// AND THE THIRD MODULE THE FUNNEL NEEDS. The top of it is browsers and
+		// the bottom is accounts, so folding the two into one person needs the
+		// link between them — which `visitor` owns and neither of the others
+		// may reach for.
+		WithStream(
+			func(ctx context.Context, school uuid.UUID, names []string,
+				since time.Time) ([]analysis.Reach, error) {
+
+				reaches, err := events.Reached(ctx, school, names, since)
+				if err != nil {
+					return nil, err
+				}
+				out := make([]analysis.Reach, 0, len(reaches))
+				for _, r := range reaches {
+					out = append(out, analysis.Reach{
+						Name: r.Name, VisitorID: r.VisitorID, AccountID: r.AccountID,
+					})
+				}
+				return out, nil
+			},
+			visitor.NewStore(pool).Links,
+		)
 
 	now := time.Now().UTC()
 	since := time.Time{}
@@ -167,6 +190,40 @@ func run(log *slog.Logger) error {
 		}
 	}
 
+	// THE FUNNEL, PRINTED WHERE SOMEBODY WILL SEE IT. There is no console yet,
+	// and a report nobody can read is a report nobody acts on — so the job that
+	// reads the stream says what the stream says.
+	quiet := 0
+	for _, school := range schools {
+		funnel, err := items.Funnel(ctx, school, since)
+		if err != nil {
+			return err
+		}
+
+		// A SCHOOL WHERE NOBODY DID ANYTHING HAS NO FUNNEL TO SHOW, and
+		// printing eight zeroes for each of them is how the one school with
+		// numbers in it gets scrolled past.
+		if reached(funnel) == 0 {
+			quiet++
+			continue
+		}
+
+		fmt.Printf("\nthe funnel, school %s, since %s\n", school, sinceSaid(since))
+		for _, step := range funnel {
+			if !step.Measured {
+				// NOT A ZERO. A zero here reads as everybody dropping out, and
+				// what is true is that nothing counts this step yet.
+				fmt.Printf("  %-28s  no event yet — %s\n", step.Label, step.Why)
+				continue
+			}
+			fmt.Printf("  %-28s  %d\n", step.Label, step.People)
+		}
+	}
+
+	if quiet > 0 {
+		fmt.Printf("\n%d school(s) had nobody reach any step in this window\n", quiet)
+	}
+
 	switch {
 	case written == 0:
 		fmt.Println("no exam has been sat yet, so there is nothing to say about any question")
@@ -177,6 +234,28 @@ func run(log *slog.Logger) error {
 			written, flagged, took)
 	}
 	return nil
+}
+
+// reached is how many people got to the widest step, which is what "did
+// anything happen here" means for a funnel.
+func reached(funnel []analysis.Step) int {
+	most := 0
+	for _, step := range funnel {
+		if step.Measured && step.People > most {
+			most = step.People
+		}
+	}
+	return most
+}
+
+// sinceSaid is the window as a person reads it. The zero time means everything,
+// and printing "0001-01-01" would be a report explaining itself in a way nobody
+// can use.
+func sinceSaid(since time.Time) string {
+	if since.IsZero() {
+		return "the beginning"
+	}
+	return since.Format(time.DateOnly)
 }
 
 // recordedBy turns this module's idea of an administrative action into the

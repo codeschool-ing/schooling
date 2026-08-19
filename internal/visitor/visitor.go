@@ -146,3 +146,38 @@ func (s *Store) Of(ctx context.Context, accountID uuid.UUID) ([]uuid.UUID, error
 	}
 	return out, rows.Err()
 }
+
+// Links answers which account each visitor belongs to, for every visitor that
+// belongs to one.
+//
+// # WHY THE WHOLE TABLE AND NOT ONE LOOKUP
+//
+// It exists for the funnel, which asks "of the people who arrived, how many
+// signed up" — and that question is broken by exactly this: somebody arrives as
+// a browser and signs up as an account, so the two halves of the funnel count
+// different things unless the two identities are folded into one person.
+//
+// A lookup per row would be one query per event; this is one query per report.
+// The table is one row per browser per person, so it is bounded by the number
+// of people rather than by what they did — and when that stops being true, the
+// answer is the nightly rollup rather than a smarter join here.
+//
+// A VISITOR WITH NO ACCOUNT IS ABSENT RATHER THAN NULL. They are their own
+// person for counting purposes, which is what the caller does with a miss.
+func (s *Store) Links(ctx context.Context) (map[uuid.UUID]uuid.UUID, error) {
+	rows, err := s.pool.Query(ctx, `SELECT visitor_id, account_id FROM account_visitors`)
+	if err != nil {
+		return nil, fmt.Errorf("visitor: reading which visitors belong to an account: %w", err)
+	}
+	defer rows.Close()
+
+	out := map[uuid.UUID]uuid.UUID{}
+	for rows.Next() {
+		var visitorID, accountID uuid.UUID
+		if err := rows.Scan(&visitorID, &accountID); err != nil {
+			return nil, fmt.Errorf("visitor: reading which visitors belong to an account: %w", err)
+		}
+		out[visitorID] = accountID
+	}
+	return out, rows.Err()
+}

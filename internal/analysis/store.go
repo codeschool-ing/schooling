@@ -45,6 +45,22 @@ type Store struct {
 	// quarantine path refuses rather than proceeding without one — see the
 	// comment on `record`.
 	audit Audit
+
+	// The funnel's two readers. Nil until WithStream, and the funnel refuses
+	// rather than answering a report built from nothing.
+	reached Reached
+	links   Links
+}
+
+// WithStream is the store with the funnel's two readers.
+//
+// A separate call rather than constructor arguments, for the reason WithAudit
+// is one: item analysis needs neither, and a constructor that demanded all four
+// would be a constructor somebody passes nil to.
+func (s *Store) WithStream(reached Reached, links Links) *Store {
+	out := *s
+	out.reached, out.links = reached, links
+	return &out
 }
 
 func NewStore(pool *pgxpool.Pool, answers Answers, schools Schools) *Store {
