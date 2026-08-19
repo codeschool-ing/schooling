@@ -174,6 +174,10 @@ export const api = {
   /* Everything a student has written, across courses, newest first. */
   allNotes: () => api.get('/api/v1/notes'),
 
+  /* Every answer the student has given, newest first. The report reads this;
+     the queue above is a different question. */
+  history: () => api.get('/api/v1/practice/history'),
+
   /* ---------- drilling ----------
 
      DRAWING IS A POST because it writes: the server records how the card was

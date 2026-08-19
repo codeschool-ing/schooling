@@ -577,3 +577,59 @@ func (s *Store) today() time.Time {
 	n := s.now().UTC()
 	return time.Date(n.Year(), n.Month(), n.Day(), 0, 0, 0, 0, time.UTC)
 }
+
+/* ---------- what the student has answered ---------- */
+
+// Answer is one review, as a report on the student's own work reads it.
+//
+// IT IS THE LOG AND NOT THE SCHEDULER'S STATE. `practice_state` says when a
+// card comes back; this says what happened, every time, and it is append-only
+// (A-03) — which is what makes a rate over it a fact rather than a snapshot
+// that moves when somebody answers again.
+type Answer struct {
+	ExerciseID string    `json:"exercise"`
+	CourseID   string    `json:"course"`
+	SectionID  string    `json:"section,omitempty"`
+	Type       string    `json:"type"`
+	Correct    bool      `json:"correct"`
+	ReviewedAt time.Time `json:"reviewed_at"`
+}
+
+// History answers everything one student has answered in one school, newest
+// first.
+//
+// THE TYPE AND THE COURSE COME FROM THE CATALOGUE, joined here rather than
+// carried on the log. They are facts about the QUESTION and not about the
+// answer: an exercise moved to another lesson is still the same exercise, and a
+// report grouped by a course id copied at answer time would be grouping by
+// where the question used to live. The log keeps what it alone knows — that
+// this person got this version right at this moment.
+//
+// An exercise the catalogue no longer has drops out of the report rather than
+// appearing under a blank heading. The row stays in the log, which is the point
+// of an append-only log; what cannot be shown is which course it belonged to.
+func (s *Store) History(ctx context.Context, tenantID, accountID uuid.UUID) ([]Answer, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT r.exercise_id, e.course_id, r.section_id, e.type, r.correct, r.reviewed_at
+		FROM practice_review r
+		JOIN catalog_exercises e
+		  ON e.tenant_id = r.tenant_id AND e.id = r.exercise_id
+		WHERE r.tenant_id = $1 AND r.account_id = $2
+		ORDER BY r.reviewed_at DESC
+	`, tenantID, accountID)
+	if err != nil {
+		return nil, fmt.Errorf("practice: reading what a student has answered: %w", err)
+	}
+	defer rows.Close()
+
+	out := []Answer{}
+	for rows.Next() {
+		var a Answer
+		if err := rows.Scan(&a.ExerciseID, &a.CourseID, &a.SectionID,
+			&a.Type, &a.Correct, &a.ReviewedAt); err != nil {
+			return nil, fmt.Errorf("practice: reading what a student has answered: %w", err)
+		}
+		out = append(out, a)
+	}
+	return out, rows.Err()
+}

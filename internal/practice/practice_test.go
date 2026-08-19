@@ -566,3 +566,109 @@ func TestAWithdrawnCardCannotBeDrawnOrAnswered(t *testing.T) {
 		t.Errorf("answering a withdrawn card gave %v, want ErrWithdrawn", err)
 	}
 }
+
+/* ---------- the report on what a student has answered ---------- */
+
+// It reads the LOG, so every answer is in it — including two answers to the
+// same question. A report built from the scheduler's state instead would show
+// one row per card and call it a history.
+func TestTheHistoryCarriesEveryAnswerAndNotOneRowPerCard(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	tenant, me := school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+	s := store(t, pool)
+
+	if _, err := answer(t, s, tenant, me, "free-1", false, time.Second); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := answer(t, s, tenant, me, "free-1", true, time.Second); err != nil {
+		t.Fatal(err)
+	}
+
+	history, err := s.History(ctx, tenant, me)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(history) != 2 {
+		t.Fatalf("two answers to one question came back as %d rows", len(history))
+	}
+	if !history[0].ReviewedAt.After(history[1].ReviewedAt) &&
+		!history[0].ReviewedAt.Equal(history[1].ReviewedAt) {
+		t.Error("the history is not newest first")
+	}
+	for _, a := range history {
+		if a.CourseID != "free-course" {
+			t.Errorf("an answer came back under the course %q", a.CourseID)
+		}
+		if a.Type != "quiz" {
+			t.Errorf("an answer came back as the type %q", a.Type)
+		}
+	}
+}
+
+// THE COURSE AND THE TYPE ARE JOINED FROM THE CATALOGUE, not copied onto the
+// log. They are facts about the QUESTION: an exercise moved to another lesson
+// is the same exercise, and a report grouped by an id copied at answer time
+// would group by where the question used to live.
+//
+// The cost of joining is this: an exercise the catalogue no longer has drops
+// out of the report. The row stays in the log — that is what append-only means
+// — and what cannot be shown is which course it belonged to.
+func TestAnAnswerToAQuestionTheCatalogueLostDropsOutOfTheReport(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	tenant, me := school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+	s := store(t, pool)
+
+	if _, err := answer(t, s, tenant, me, "free-1", true, time.Second); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := pool.Exec(ctx,
+		`DELETE FROM catalog_exercises WHERE tenant_id = $1 AND id = 'free-1'`, tenant); err != nil {
+		t.Fatal(err)
+	}
+
+	history, err := s.History(ctx, tenant, me)
+	if err != nil {
+		t.Fatalf("the report failed rather than dropping the row: %v", err)
+	}
+	if len(history) != 0 {
+		t.Errorf("an answer to a question the catalogue lost is still in the report: %+v", history)
+	}
+
+	// And the log itself still has it, which is the half that must not change.
+	var kept int
+	if err := pool.QueryRow(ctx,
+		`SELECT count(*) FROM practice_review WHERE tenant_id = $1 AND account_id = $2`,
+		tenant, me).Scan(&kept); err != nil {
+		t.Fatal(err)
+	}
+	if kept != 1 {
+		t.Errorf("the append-only log holds %d rows; the answer was given and cannot un-happen", kept)
+	}
+}
+
+// One student's report is one student's — the rule the rest of this module
+// obeys, checked on the read that goes across everything they have ever done.
+func TestTheHistoryNeverCarriesAnotherStudentsAnswers(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	tenant := school(t, pool)
+	mine, theirs := student(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+	s := store(t, pool)
+
+	if _, err := answer(t, s, tenant, theirs, "free-1", true, time.Second); err != nil {
+		t.Fatal(err)
+	}
+
+	history, err := s.History(ctx, tenant, mine)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(history) != 0 {
+		t.Errorf("a student who has answered nothing has %d answers", len(history))
+	}
+}

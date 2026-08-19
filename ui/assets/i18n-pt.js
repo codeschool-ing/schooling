@@ -188,6 +188,18 @@ window.I18N.pt = {
        "Volta em 6 dias" — o número entra entre as duas, então "Back in" e
        "days" aparecem separados e cada um tem de funcionar sozinho. */
     'Practice': 'Praticar',
+
+    /* ---------- how you are doing ---------- */
+    'Performance': 'Desempenho',
+    'How you are doing': 'Como você está indo',
+    'You have not answered anything yet.': 'Você ainda não respondeu nada.',
+    'correct': 'de acerto',
+    'answers': 'respostas',
+    'questions met': 'questões vistas',
+    'By course': 'Por curso',
+    'By question type': 'Por tipo de questão',
+    'The rate counts every answer; the two lists below count the most recent answer to each question.':
+      'A taxa conta todas as respostas; as duas listas abaixo contam a resposta mais recente de cada questão.',
     'The questions you are closest to forgetting.': 'As questões que você está mais perto de esquecer.',
     'Nothing is due. Come back tomorrow.': 'Nada vence hoje. Volte amanhã.',
     'A question comes back when you are about to forget it, not on a timetable.':

@@ -1310,6 +1310,107 @@ async function titlesFor(courseIDs) {
   return Object.fromEntries(pairs.filter(Boolean));
 }
 
+/* ---------- how you are doing ----------
+
+   THE DATA WAS ALREADY THERE AND NOTHING SHOWED IT. Every practice answer goes
+   into an append-only log from the first one (A-03), and until this screen the
+   student answered, saw the verdict once and never met it again.
+
+   THE RATE IS OVER WHAT WAS CHECKED. Nothing here counts an unanswered question
+   as a mistake — it is the funnel's rule from the other side: there, unjudged
+   never becomes passed; here, unjudged never becomes failed. */
+async function performancePage() {
+  if (!state.me) { go('#/sign-in'); return; }
+
+  let answers = [];
+  try {
+    const got = await api.history();
+    answers = (got && got.answers) || [];
+  } catch (e) {
+    show(el('h1', { text: txt('How you are doing') }), trouble(e));
+    return;
+  }
+
+  if (!answers.length) {
+    show(
+      el('h1', { text: txt('How you are doing') }),
+      el('p', { class: 'empty', text: txt('You have not answered anything yet.') }),
+    );
+    return;
+  }
+
+  const right = answers.filter((a) => a.correct).length;
+  const share = Math.round((right / answers.length) * 100);
+
+  /* Grouped by the LAST answer to each question rather than by every answer.
+     Counted over the log, somebody who got a question wrong four times and
+     then right would read as 20% on it, which describes the practising rather
+     than what they now know — and practising until it sticks is the feature. */
+  const latest = new Map();
+  for (const a of answers) {
+    if (!latest.has(a.exercise)) latest.set(a.exercise, a);   // newest first
+  }
+  const now = [...latest.values()];
+
+  const group = (of) => {
+    const m = new Map();
+    now.forEach((a) => {
+      const k = of(a);
+      const seen = m.get(k) || { total: 0, right: 0 };
+      seen.total += 1;
+      if (a.correct) seen.right += 1;
+      m.set(k, seen);
+    });
+    return [...m.entries()].sort((x, y) => y[1].total - x[1].total);
+  };
+
+  const row = ([label, d]) => el('div', { class: 'perf-row' }, [
+    el('span', { class: 'perf-label', text: label }),
+    meter(Math.round((d.right / d.total) * 100)),
+    el('span', { class: 'perf-num', text: `${d.right}/${d.total}` }),
+  ]);
+
+  const nameOf = (id) => {
+    const course = state.courses.find((c) => c.id === id);
+    return course ? course.name : id;
+  };
+
+  show(
+    el('h1', { text: txt('How you are doing') }),
+
+    el('section', { class: 'block' }, [
+      el('div', { class: 'stats' }, [
+        el('div', { class: 'stat lead' }, [
+          el('b', { text: `${share}%` }),
+          el('span', { text: txt('correct') }),
+        ]),
+        el('div', { class: 'stat' }, [
+          el('b', { text: `${right}/${answers.length}` }),
+          el('span', { text: txt('answers') }),
+        ]),
+        el('div', { class: 'stat' }, [
+          el('b', { text: String(latest.size) }),
+          el('span', { text: txt('questions met') }),
+        ]),
+      ]),
+      meter(share),
+      /* Said plainly, because the two numbers above differ and somebody will
+         wonder why. */
+      el('p', { class: 'side-count', text: txt('The rate counts every answer; the two lists below count the most recent answer to each question.') }),
+    ]),
+
+    el('section', { class: 'block' }, [
+      el('div', { class: 'panel-head' }, [el('h2', { text: txt('By course') })]),
+      ...group((a) => a.course).map(([id, d]) => row([nameOf(id), d])),
+    ]),
+
+    el('section', { class: 'block' }, [
+      el('div', { class: 'panel-head' }, [el('h2', { text: txt('By question type') })]),
+      ...group((a) => a.type).map(([kind, d]) => row([txt(kind), d])),
+    ]),
+  );
+}
+
 async function notesPage() {
   if (!state.me) { go('#/sign-in'); return; }
 
@@ -1574,10 +1675,28 @@ function trackInView() {
   return state.tracks.find((t) => t.id === state.track) || state.tracks[0] || null;
 }
 
+/* THE SIX PLACES, AND ALL SIX ALWAYS.
+ 
+   They used to be filtered by whether somebody was signed in, so a visitor saw
+   two entries and a student saw six. That is the rail rearranging itself under
+   the person using it, and it was worst exactly where it mattered most: the
+   offline copy, where nobody is ever signed in, showed a two-item rail for a
+   school with nineteen tracks in it.
+
+   A link to a screen that needs an account is not a dead end. The screen says
+   so — it sends somebody to sign in, and in the offline copy sign-in explains
+   that this is a copy. "You need an account for this" is information; a menu
+   item that was never there is not.
+
+   THE ORDER IS THE PORTAL'S, and so are the six. `Practice` sits where the
+   portal has `Performance`: over there it is a report on answers already given,
+   here it is the spaced-repetition queue. They are different screens with
+   different jobs, and giving this one the other's name would be the more
+   confusing of the two options. */
 function places() {
   const track = trackInView();
   return [
-    { hash: '#/dashboard', label: txt('Your study'), account: true },
+    { hash: '#/dashboard', label: txt('Your study') },
     /* "Your track" is a link to A track, and which one is a fact about the
        school rather than about the student until there is a choice to record.
        Absent when the school has none, rather than pointing at nothing. */
@@ -1585,9 +1704,10 @@ function places() {
       ? { hash: `#/track/${encodeURIComponent(track.id)}`, label: txt('Your track') }
       : null,
     { hash: '#/', label: txt('Catalogue') },
-    { hash: '#/practice', label: txt('Practice'), account: true },
-    { hash: '#/notes', label: txt('Your notes'), account: true },
-    { hash: '#/certificates', label: txt('Your certificates'), account: true },
+    { hash: '#/performance', label: txt('Performance') },
+    { hash: '#/practice', label: txt('Practice') },
+    { hash: '#/notes', label: txt('Your notes') },
+    { hash: '#/certificates', label: txt('Your certificates') },
   ].filter(Boolean);
 }
 
@@ -1598,7 +1718,6 @@ function drawSidebar(current, where) {
 
   rail.append(el('nav', { class: 'rail-nav' },
     places()
-      .filter((place) => state.me || !place.account)
       .map((place) => el('a', {
         class: 'rail-link' + (place.hash === where ? ' on' : ''),
         href: place.hash,
@@ -1711,6 +1830,7 @@ async function route() {
     case 'practice':           await practice(); break;
     case 'dashboard':          await dashboard(); break;
     case 'notes':              await notesPage(); break;
+    case 'performance':        await performancePage(); break;
     case 'certificates':       await certificates(); break;
     case 'sign-in':            signIn(); break;
     case 'sign-up':            signUp(); break;
@@ -1742,7 +1862,9 @@ async function route() {
 function placeOf(parts) {
   if (!parts.length) return '#/';
   if (parts[0] === 'track' && parts[1]) return `#/track/${encodeURIComponent(parts[1])}`;
-  if (['dashboard', 'practice', 'notes', 'certificates'].includes(parts[0])) return `#/${parts[0]}`;
+  if (['dashboard', 'practice', 'performance', 'notes', 'certificates'].includes(parts[0])) {
+    return `#/${parts[0]}`;
+  }
   return null;
 }
 
