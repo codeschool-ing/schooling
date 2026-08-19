@@ -75,6 +75,25 @@ try {
     const answer = await (await fetch('/api/v1/tracks')).json();
     return (answer.tracks || []).map((t) => ({ id: t.id, name: t.name }));
   });
+
+  /* WHICH FONTS THE RUN GOT, said out loud. The interface asks a CDN for
+     three, and a machine that cannot reach it renders in the fallback — a
+     different set of measurements, and therefore a different drawing. A run
+     that passes says nothing about the other one, and the first time that
+     mattered it cost three rounds of guessing at a failure that reproduced
+     nowhere. */
+  const faces = await page.evaluate(async () => {
+    await document.fonts.ready;
+    /* NOT `document.fonts.check`, which answers a different question: it says
+       whether the text can be rendered in the family LIST it is given, and a
+       family nobody ever loaded still renders — in the fallback — so it comes
+       back true either way. What settles it is whether a face was registered
+       at all. */
+    return [...document.fonts].filter((f) => f.status === 'loaded').length;
+  });
+  console.log(faces
+    ? `measured with the webfonts (${faces} faces)`
+    : 'measured with the FALLBACK fonts — no webfont loaded');
   await page.close();
 
   if (!tracks.length) {
@@ -91,15 +110,23 @@ try {
       /* The second routing pass runs on the next animation frame, so the test
          has to wait for the drawing rather than for the document. */
       await page.waitForSelector('.graph-edges .row', { timeout: 5000 }).catch(() => {});
+      /* THE WEBFONTS DECIDE HOW BIG A CARD IS, and they arrive with
+         `display=swap`: the first layout is the fallback's, the second is the
+         real one, and a timeout measures whichever it happened to catch. The
+         router runs again on resize, so the drawing is right either way — but a
+         test that reads it mid-swap reports a drawing nobody ever saw. */
+      await page.evaluate(() => document.fonts.ready).catch(() => {});
       await page.waitForTimeout(400);
 
       const through = await page.evaluate((bite) => {
+        const round = (v) => Math.round(v * 10) / 10;
         const cards = [...document.querySelectorAll('.node')].map((el) => {
           const r = el.getBoundingClientRect();
           return {
             id: el.dataset.node,
             left: r.left + bite, right: r.right - bite,
             top: r.top + bite, bottom: r.bottom - bite,
+            box: [round(r.left), round(r.top), round(r.width), round(r.height)],
           };
         });
 
@@ -124,7 +151,19 @@ try {
               // Its own endpoints, which it is supposed to touch.
               if (card.id === from || card.id === to) continue;
               if (x > card.left && x < card.right && y > card.top && y < card.bottom) {
-                hits.push({ from, to, card: card.id });
+                /* WITH ENOUGH GEOMETRY TO DIAGNOSE IT WITHOUT REPRODUCING IT.
+                   This test failed on the build machine and on no window size
+                   here, because the fonts it downloads and the fonts a sandbox
+                   without a network can reach are different fonts, and the
+                   router measures boxes that text sizes. Three rounds of
+                   guessing later: the report carries the boxes, the point and
+                   the path, and the failure is arithmetic on the way back. */
+                hits.push({
+                  from, to, card: card.id,
+                  at: [round(x), round(y)],
+                  cards: cards.map((c) => `${c.id} ${c.box.join(',')}`),
+                  d: path.getAttribute('d'),
+                });
                 return;   // one report per edge is enough to fix it
               }
             }
@@ -137,8 +176,12 @@ try {
       if (through.length) {
         failures += through.length;
         console.error(`✗ ${size.name} · ${track.name}`);
-        through.forEach((h) => console.error(
-          `    ${h.from} → ${h.to} passes through ${h.card}`));
+        through.forEach((h) => {
+          console.error(`    ${h.from} → ${h.to} passes through ${h.card}, at ${h.at.join(',')}`);
+          console.error('      cards (left,top,width,height):');
+          h.cards.forEach((c) => console.error(`        ${c}`));
+          console.error(`      d: ${h.d}`);
+        });
       }
     }
 
