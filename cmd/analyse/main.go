@@ -17,11 +17,16 @@
 // about. Counting the stream from scratch cannot double-count, because the
 // stream is what it counts.
 //
-// # WHAT IT DOES NOT DO
+// # AND THEN IT ACTS
 //
-// It does not quarantine anything. Writing the verdict and acting on it are
-// separate on purpose: the numbers had to exist and be looked at before
-// anything was allowed to remove a question from a course on their say-so.
+// A question the strong students fail goes out of circulation, audited, with
+// the numbers that decided it. Left in the pool it keeps being asked, and every
+// student who meets it is marked on our mistake — and waiting for somebody to
+// read a list is the same as not acting, because the list is read on the days
+// somebody remembers to read it.
+//
+// The sweep is idempotent, so the count this prints is what CHANGED tonight
+// rather than everything that is out of circulation.
 package main
 
 import (
