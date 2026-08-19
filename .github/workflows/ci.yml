@@ -253,3 +253,18 @@ jobs:
 
           node tools/graph-test/graph-test.mjs
           node tools/a11y-test/a11y-test.mjs
+
+          # BUILT AND OPENED, and the second half is the half that finds
+          # things. Every way the bundler can fail produces a file: an
+          # unescaped `</script` that ends the page halfway, a module linked in
+          # the wrong order, a font whose relative URL means nothing once the
+          # stylesheet is inline, a lesson whose key differs from the one the
+          # client asks for by a single `?lang=`. All of them exit zero and all
+          # of them open to a blank screen.
+          #
+          # It also counts the requests. The property the whole design rests on
+          # is that a bundle opened from a file asks nobody for anything, and
+          # that is invisible in the markup and in a screenshot — it is visible
+          # in the network log.
+          go run ./tools/bundle -host code.example.tld -out bundle.html
+          node tools/bundle-test/bundle-test.mjs bundle.html

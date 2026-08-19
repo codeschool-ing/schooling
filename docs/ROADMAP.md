@@ -84,7 +84,7 @@ audit with a name against it.*
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
 - [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over twenty-four screens, both themes, signed out and signed in, the exam paper included
 - [ ] Every question type operable by keyboard and legible to a screen reader — six of them are, with `ordering` on buttons and `matching` on a select; `labelling` waits on somewhere for a content image to be served from
-- [ ] The offline bundle, built **and opened** in CI
+- [x] The offline bundle, built **and opened** in CI — one file, one school; opened from `file://` it reads the whole catalogue and asks nobody for anything, served from the school's origin it is the application again; signing in, progress and exams are refused with a sentence rather than a form that does nothing
 
 ### Assessment
 

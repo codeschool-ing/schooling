@@ -345,10 +345,26 @@ another from after.
 
 **The routes are fragments**, `#/course/web-fundamentals`. Not a preference: the
 offline bundle is one file opened from `file://`, where there is no server to fall
-back to and the History API does not work. Choosing fragments now makes the bundle
-a packaging job rather than a second router. The one real path is `/verify/<code>`,
+back to and the History API does not work. The one real path is `/verify/<code>`,
 because that address is printed on a certificate and typed by somebody checking a
 claim.
+
+**The bundle collected on that bet.** `go run ./tools/bundle -host <school host>`
+asks a running server for the interface, the stylesheets, the fonts and the whole
+catalogue and writes one HTML file. Opened from `file://` it reads everything and
+asks nobody for anything; served from the school's own address it is the
+application again, signed in, because then it IS on that origin. **One client, not
+a reader and an application that drift apart** — that is what the fragments bought.
+
+Three things it does not do, and does not pretend to: signing in, progress and
+exams. They are the school's record of a student and a copy of a file has neither;
+`api.js` answers `no-server`, and `offline` is exported so a screen refuses BEFORE
+it shows a form rather than after somebody has typed a password into it.
+
+`tools/bundle-test` opens it. Built is not the claim — every way the bundler can
+fail produces a file that exits zero and opens to a blank screen — and it counts
+the requests, because "asks nobody for anything" is invisible in the markup and
+visible in the network log.
 
 **Nothing in the shell comes from another origin**, and the type is why that rule
 exists. Three families used to be fetched from a font CDN on every page load —
@@ -596,7 +612,7 @@ go run ./tools/check-interface    # every string the interface says, in every la
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
 ```
 
-The two browser suites need a server and a school to look at, which is what
+The three browser suites need a server and a school to look at, which is what
 `tools/graph-test/fixture.sql` is for until `content/` has one:
 
 ```sh
@@ -605,6 +621,9 @@ go run ./cmd/migrate && psql "$SCHOOLING_DATABASE_URL" -f tools/graph-test/fixtu
 go run ./cmd/api &
 node tools/graph-test/graph-test.mjs    # no line through a card, six window sizes
 node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes
+
+go run ./tools/bundle -host code.example.tld -out bundle.html
+node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built
 ```
 
 And for anything in `ui/`, open it. `go run ./cmd/api` with a seeded school, then look at it in
