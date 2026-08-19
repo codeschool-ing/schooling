@@ -170,3 +170,26 @@ SELECT t.id, 'fx-label', 'web-fundamentals', true, 1, 'labelling',
        '{"text":"The database","x":0.5,"y":0.83,"radius":0.14}]}'::jsonb
 FROM tenants t WHERE t.slug = 'graphtest'
 ON CONFLICT DO NOTHING;
+
+/* ---------- something to drill ----------
+
+   The exam questions above are `exam = true` and are NOT drillable: an
+   exam-only question that could be drilled would tell a student what is on the
+   paper. So the practice screen needs its own, and these are it — the same
+   shapes, in a lesson rather than on an exam.
+
+   Two, because a queue of one never exercises "next question". */
+
+INSERT INTO catalog_exercises
+  (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
+   drillable, prompt, payload)
+SELECT t.id, q.eid, 'web-fundamentals', 'client-and-server', 'roles', false, 1, q.kind,
+       true, q.prompt, q.payload::jsonb
+FROM tenants t, (VALUES
+  ('dr-quiz', 'quiz', 'Who is the client in an exchange?',
+   '{"id":"dr-quiz","version":1,"type":"quiz","prompt":"Who is the client in an exchange?","choices":[{"text":"Whoever asks","correct":true,"why":"The roles belong to the moment, not the machine."},{"text":"Whoever answers"},{"text":"Whichever machine is smaller"}]}'),
+  ('dr-order', 'ordering', 'Put the steps of a request in order.',
+   '{"id":"dr-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}')
+) AS q(eid, kind, prompt, payload)
+WHERE t.slug = 'graphtest'
+ON CONFLICT DO NOTHING;

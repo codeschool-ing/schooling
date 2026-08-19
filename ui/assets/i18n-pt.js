@@ -108,6 +108,23 @@ window.I18N.pt = {
     'Your exams': 'Suas provas',
     'Still open': 'Em aberto',
 
+    /* ---------- drilling ----------
+       "Volta em 6 dias" — o número entra entre as duas, então "Back in" e
+       "days" aparecem separados e cada um tem de funcionar sozinho. */
+    'Practice': 'Praticar',
+    'The questions you are closest to forgetting.': 'As questões que você está mais perto de esquecer.',
+    'Nothing is due. Come back tomorrow.': 'Nada vence hoje. Volte amanhã.',
+    'A question comes back when you are about to forget it, not on a timetable.':
+      'Uma questão volta quando você está prestes a esquecê-la, não por calendário.',
+    'Loading…': 'Carregando…',
+    'Answer': 'Responder',
+    'Answer it first.': 'Responda antes.',
+    'Back in': 'Volta em',
+    'day': 'dia',
+    'days': 'dias',
+    'Next question': 'Próxima questão',
+    'That is everything due today.': 'Isso é tudo que vencia hoje.',
+
     /* ---------- certificates ---------- */
     'Your certificates': 'Seus certificados',
     'A certificate arrives when you pass an exam.': 'O certificado chega quando você é aprovado em uma prova.',

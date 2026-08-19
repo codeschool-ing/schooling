@@ -145,6 +145,13 @@ try {
     await check(student, `${theme} · certificates`, '/#/certificates');
     await check(student, `${theme} · a lesson`, '/#/course/web-fundamentals/client-and-server');
 
+    /* THE DRILL, WHICH IS A QUESTION AND A VERDICT ON ONE SCREEN. It is worth
+       checking separately from the exam paper: the exam shows every question at
+       once and never marks one, this shows one at a time and then puts a result
+       beside it — which is a live region, a disabled button and a moved focus
+       that the exam never has. */
+    await check(student, `${theme} · the drill`, '/#/practice');
+
     /* THE DENSEST SCREEN THERE IS, and the one worth the trouble of getting
        into: every question type on one page, every one of them a control. */
     await student.goto(`${BASE}/#/exam/course/web-fundamentals`, { waitUntil: 'load' });
