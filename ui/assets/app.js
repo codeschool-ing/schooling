@@ -1940,20 +1940,26 @@ function drawAccount() {
    platform that only shows how far along somebody is on the screen about it
    asks them to go and look.
 
-   IN THE PORTAL THIS IS A SELECTOR and here it is a list of links. Over there
-   the student is enrolled in one track and the menu switches which; nothing
-   here records an enrolment, so a control that looked like it changed something
-   would be a promise this side cannot keep. The menu goes to the maps instead.
+IN THE PORTAL THIS IS A SELECTOR that changes the student's enrolment.
+   Nothing here records one, so the menu navigates to the maps instead — the
+   same control, doing the one thing this side can honestly do with it.
 
-   Empty rather than zeroed when nobody is signed in: a chip reading 0% is a
-   statement about somebody's effort, and "we do not know yet" is not that
-   statement. */
+   IT IS SHOWN SIGNED OUT, and that is a correction. It used to be hidden along
+   with the percentage, on the reasoning that a chip reading 0% is a statement
+   about somebody's effort that we have no right to make. That reasoning is
+   sound and it covers the BAR, not the SELECTOR: moving between nineteen maps
+   is navigation, it works perfectly with no account, and the offline copy —
+   where nobody is ever signed in — is exactly where a reader most needs it.
+   Hidden there, the bundle had no way to reach eighteen of its own tracks.
+
+   So the selector is always there and the progress is not: a visitor gets the
+   name and the menu, a student gets the bar and the number as well. */
 function drawNavContext() {
   const box = document.querySelector('#nav-context');
   box.textContent = '';
 
   const track = trackInView();
-  if (!state.me || !track) return;
+  if (!track) return;
 
   const courses = coursesOfTrack(track);
   const of = courses.reduce((n, c) => n + (c.sections || 0), 0);
@@ -1961,10 +1967,16 @@ function drawNavContext() {
   const share = of ? Math.round((done / of) * 100) : 0;
 
   box.append(el('div', { class: 'ctx-box' }, [
-    el('button', { type: 'button', class: 'ctx', 'aria-haspopup': 'true', 'aria-expanded': 'false' }, [
+    el('button', {
+      type: 'button', class: 'ctx', 'aria-haspopup': 'true', 'aria-expanded': 'false',
+      /* The button's own name says what it does, because its contents are a
+         track name and a percentage — which read as a label rather than as a
+         control to anything that cannot see the arrow. */
+      'aria-label': `${txt('Choose a track')}: ${track.name}`,
+    }, [
       el('span', { class: 'ctx-name', text: track.name }),
-      el('span', { class: 'ctx-bar' }, [el('span', { style: `width:${share}%` })]),
-      el('span', { class: 'ctx-pct', text: `${share}%` }),
+      state.me ? el('span', { class: 'ctx-bar' }, [el('span', { style: `width:${share}%` })]) : null,
+      state.me ? el('span', { class: 'ctx-pct', text: `${share}%` }) : null,
       el('span', { class: 'ctx-arrow', 'aria-hidden': 'true', text: '▾' }),
     ]),
     el('div', { class: 'ctx-menu', role: 'menu' }, [

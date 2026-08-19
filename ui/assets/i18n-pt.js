@@ -116,6 +116,7 @@ window.I18N.pt = {
     /* ---------- a track, drawn ---------- */
     'Track': 'Trilha',
     'Your track': 'Sua trilha',
+    'Choose a track': 'Escolher a trilha',
     'See the whole track': 'Ver a trilha inteira',
     'Choose one': 'Escolha uma',
     'Finish': 'Fim',
