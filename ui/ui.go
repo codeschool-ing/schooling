@@ -35,13 +35,24 @@ package ui
 
 import (
 	"embed"
-
+	"mime"
 	"net/http"
 	"strings"
 )
 
 //go:embed index.html assets
 var files embed.FS
+
+// `.woff2` IS NOT IN GO'S BUILT-IN TABLE. On a developer's machine it resolves
+// anyway, out of /etc/mime.types — and the deployed image is a scratch
+// container that has no such file, so the fonts would go out as
+// application/octet-stream in the one place it matters and nowhere a person
+// would notice. Registering it is cheaper than the afternoon that costs.
+func init() {
+	if err := mime.AddExtensionType(".woff2", "font/woff2"); err != nil {
+		panic("ui: the woff2 media type is not a media type: " + err.Error())
+	}
+}
 
 // Handler serves the interface.
 //

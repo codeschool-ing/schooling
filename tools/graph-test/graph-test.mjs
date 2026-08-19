@@ -76,12 +76,17 @@ try {
     return (answer.tracks || []).map((t) => ({ id: t.id, name: t.name }));
   });
 
-  /* WHICH FONTS THE RUN GOT, said out loud. The interface asks a CDN for
-     three, and a machine that cannot reach it renders in the fallback — a
-     different set of measurements, and therefore a different drawing. A run
-     that passes says nothing about the other one, and the first time that
-     mattered it cost three rounds of guessing at a failure that reproduced
-     nowhere. */
+  /* WHICH FONTS THE RUN GOT, said out loud. This line was added when the
+     faces came from a CDN, which the build machine could reach and the
+     development sandbox could not: the cards were measured in one set of
+     fonts here and another there, and it cost three rounds of guessing at a
+     failure that reproduced nowhere.
+
+     They are served from this origin now, so the answer should be the same
+     everywhere — which is exactly why it is still printed. A run that says
+     FALLBACK after that change is a run that could not load a file the server
+     is holding, and it should say so on line one rather than four hundred
+     pixels later. */
   const faces = await page.evaluate(async () => {
     await document.fonts.ready;
     /* NOT `document.fonts.check`, which answers a different question: it says
