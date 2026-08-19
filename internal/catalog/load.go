@@ -160,6 +160,10 @@ func loadCourse(dir fs.FS, name string) (*Course, []error) {
 		course.Exam = exam
 	}
 
+	images, found := loadImages(dir, path.Join(base, "images"))
+	course.Images = images
+	problems = append(problems, found...)
+
 	for _, id := range course.Lessons {
 		lesson, found := loadLesson(dir, path.Join(base, "lessons", id), id)
 		problems = append(problems, found...)
@@ -169,6 +173,48 @@ func loadCourse(dir fs.FS, name string) (*Course, []error) {
 	}
 
 	return &course, problems
+}
+
+// loadImages reads a course's `images/` directory.
+//
+// AN ABSENT DIRECTORY IS NOT A PROBLEM. Most courses have no picture in them,
+// and a checker that complained would be a checker somebody adds an empty
+// folder to satisfy. A file in there that is not a picture IS a problem: it is
+// either a mistake or a format nothing can serve, and it would sit in the
+// repository looking like work that was done.
+func loadImages(dir fs.FS, base string) ([]Image, []error) {
+	files, err := fs.ReadDir(dir, base)
+	if err != nil {
+		return nil, nil
+	}
+
+	var images []Image
+	var problems []error
+	for _, f := range files {
+		if f.IsDir() {
+			problems = append(problems, fmt.Errorf(
+				"%s/%s is a directory — pictures sit directly in images/, because a question "+
+					"names a file and not a path", base, f.Name()))
+			continue
+		}
+
+		kind := pictureType(f.Name())
+		if kind == "" {
+			problems = append(problems, fmt.Errorf(
+				"%s/%s is not a picture this can serve — png, jpeg, webp and svg are the list, "+
+					"and it is a list rather than a sniff so that the type a browser is told "+
+					"cannot change under it", base, f.Name()))
+			continue
+		}
+
+		body, err := fs.ReadFile(dir, path.Join(base, f.Name()))
+		if err != nil {
+			problems = append(problems, fmt.Errorf("%s/%s: %w", base, f.Name(), err))
+			continue
+		}
+		images = append(images, Image{Name: f.Name(), MediaType: kind, Bytes: body})
+	}
+	return images, problems
 }
 
 func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
@@ -218,6 +264,35 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 	}
 
 	return &lesson, problems
+}
+
+// pictureType answers what a file is, or "" for something that is not a
+// picture at all.
+//
+// A LIST AND NOT A SNIFF. What comes back is served verbatim as the response's
+// content type, and a sniffed type is one that changes when the sniffer does —
+// which would mean a picture that renders on one release and downloads on the
+// next. Four formats cover a diagram; a fifth is one line here and a
+// conversation about why.
+//
+// SVG IS ON THE LIST and that is a considered answer rather than an oversight.
+// An SVG can carry script, but it is shown in an `<img>`, where a browser runs
+// none of it — and the response says `nosniff` so it cannot be talked into
+// being a document. What is NOT allowed is linking to one, which nothing here
+// does.
+func pictureType(file string) string {
+	switch strings.ToLower(path.Ext(file)) {
+	case ".png":
+		return "image/png"
+	case ".jpg", ".jpeg":
+		return "image/jpeg"
+	case ".webp":
+		return "image/webp"
+	case ".svg":
+		return "image/svg+xml"
+	default:
+		return ""
+	}
 }
 
 // sectionOfProse answers which section a Markdown file belongs to.

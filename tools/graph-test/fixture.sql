@@ -136,3 +136,37 @@ FROM tenants t, (VALUES
 ) AS q(eid, kind, prompt, payload)
 WHERE t.slug = 'graphtest'
 ON CONFLICT DO NOTHING;
+
+/* ---------- a picture to label ----------
+
+   The exam paper is the only screen that renders a question, so this is what
+   makes `labelling` reachable at all — and what gives the accessibility pass a
+   radio group with a picture behind it to look at.
+
+   THE BYTES ARE HERE RATHER THAN A PATH. There is no content directory beside
+   a `scratch` container, the offline bundle has no network, and a diagram that
+   fails to load is a question nobody can answer. Three bands, 240x120, in the
+   brand's colours: small enough to read in a diff as base64, real enough to be
+   a picture a browser draws. */
+
+INSERT INTO catalog_images (tenant_id, course_id, name, media_type, bytes)
+SELECT id, 'web-fundamentals', 'request.png', 'image/png', decode(
+  'iVBORw0KGgoAAAANSUhEUgAAAPAAAAB4CAIAAABD1OhwAAAA/klEQVR42u3SAQ0AMAzDsHEZ'
+  'hME5fx7n0doQosyDICMBhgZDg6HB0BgaDA2GBkODoTE0GBoMDYYGQ2NoMDQYGgwNhsbQYGgw'
+  'NBgaDI2hwdBgaDA0GBpDg6HB0GBoMDSGBkODocHQlA99EMTQGBoMDYYGQ2NoMDQYGgwNhsbQ'
+  'YGgwNBgaDI2hwdBgaDA0GBpDg6HB0GBoMDSGBkODocHQYGgMDYYGQ4OhwdAYGgwNhgZD0z70'
+  'QhBDY2gwNBgaDI2hwdBgaDA0GBpDg6HB0GBoMDSGBkODocHQYGgMDYYGQ4OhwdAYGgwNhgZD'
+  'g6ExNBgaDA2GBkNjaDA0GBoMTbkP4tfNBGrZdKcAAAAASUVORK5CYII=', 'base64')
+FROM tenants WHERE slug = 'graphtest'
+ON CONFLICT (tenant_id, course_id, name) DO UPDATE SET bytes = EXCLUDED.bytes;
+
+INSERT INTO catalog_exercises (tenant_id, id, course_id, exam, version, type, prompt, payload)
+SELECT t.id, 'fx-label', 'web-fundamentals', true, 1, 'labelling',
+       'Put each name on the band that plays that part.',
+       '{"id":"fx-label","version":1,"type":"labelling","image":"request.png",'
+       '"prompt":"Put each name on the band that plays that part.","labels":['
+       '{"text":"The browser","x":0.5,"y":0.17,"radius":0.14},'
+       '{"text":"The server","x":0.5,"y":0.5,"radius":0.14},'
+       '{"text":"The database","x":0.5,"y":0.83,"radius":0.14}]}'::jsonb
+FROM tenants t WHERE t.slug = 'graphtest'
+ON CONFLICT DO NOTHING;

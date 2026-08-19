@@ -22,7 +22,7 @@
    moment is not the same as saying so at the first.
    ========================================================================== */
 
-import { api, ApiError, offline } from './api.js';
+import { api, ApiError, offline, asset } from './api.js';
 import { render as markdown } from './markdown.js';
 import { build, answerable } from './question.js';
 import { buildGraph, routeEdges } from './graph.js';
@@ -487,7 +487,13 @@ function drawPaper(paper) {
     onsubmit: (event) => event.preventDefault(),
   }, paper.questions.map((question, index) => {
     const name = `q-${paper.attempt}-${question.position}`;
-    const built = build(question.type, question.question, name, question.answer);
+    /* Where this course's pictures live. Only `labelling` asks, and it asks for
+       a file name rather than building a path — see question.js. */
+    const pictures = (file) => (paper.scope === 'course' && paper.exam
+      ? asset(`/api/v1/courses/${encodeURIComponent(paper.exam)}/images/${encodeURIComponent(file)}`)
+      : '');
+
+    const built = build(question.type, question.question, name, question.answer, pictures);
     controls.push({ question, built, saved: null });
 
     const saved = el('span', { class: 'saved dim', 'aria-live': 'polite' });

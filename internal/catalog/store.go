@@ -142,6 +142,13 @@ type CourseView struct {
 	Prerequisites string       `json:"prerequisites"`
 	Lessons       []LessonView `json:"lessons"`
 
+	// The names of this course's pictures. A client builds an address from each
+	// — see the picture endpoint — and it is a list rather than something to be
+	// discovered because there is nobody to ask: the offline bundle fetches as a
+	// stranger and never sits an exam, so without this it could not know which
+	// files a question is going to want.
+	Images []string `json:"images,omitempty"`
+
 	// Exam is whether there is one to sit. See hasExam for why a screen needs
 	// to be told rather than to find out by being refused.
 	Exam bool `json:"exam"`
@@ -215,7 +222,37 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID, id string, plan 
 	if view.Exam, err = s.hasExam(ctx, tenantID, ScopeCourse, id); err != nil {
 		return nil, err
 	}
+
+	// A locked course lists no pictures, for the same reason it carries no
+	// prose: the shape of a course is the shop window, its material is not.
+	if !view.Locked {
+		if view.Images, err = s.pictures(ctx, tenantID, id); err != nil {
+			return nil, err
+		}
+	}
 	return view, nil
+}
+
+func (s *Store) pictures(ctx context.Context, tenantID uuid.UUID, courseID string) ([]string, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT name FROM catalog_images
+		WHERE tenant_id = $1 AND course_id = $2
+		ORDER BY name
+	`, tenantID, courseID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: listing the pictures of %q: %w", courseID, err)
+	}
+	defer rows.Close()
+
+	var names []string
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return nil, fmt.Errorf("catalog: listing the pictures of %q: %w", courseID, err)
+		}
+		names = append(names, name)
+	}
+	return names, rows.Err()
 }
 
 // The two things an exam can belong to. They are named here rather than passed
@@ -394,6 +431,43 @@ func (s *Store) Lesson(ctx context.Context, tenantID uuid.UUID,
 
 // ErrLocked is a course this plan does not open.
 var ErrLocked = errors.New("catalog: this course is not open to this plan")
+
+// Picture reads one of a course's images.
+//
+// IT ASKS `Course` FIRST RATHER THAN QUERYING THE TABLE, and that is the whole
+// security of it: a picture belongs to a course, so it is exactly as readable
+// as the course is — the same plan, the same draft rule, the same paywall.
+//
+// Going straight to `catalog_images` would have been three lines shorter and
+// would have served every diagram in a paid course to anybody who could guess a
+// file name. A test that only ever asked for the JSON would never have noticed:
+// the paywall would be on the endpoint beside the picture rather than on the
+// picture.
+func (s *Store) Picture(ctx context.Context, tenantID uuid.UUID,
+	courseID, name string, plan Plan) (mediaType string, body []byte, err error) {
+
+	course, err := s.Course(ctx, tenantID, courseID, plan)
+	if err != nil {
+		return "", nil, err
+	}
+	if course.Locked {
+		return "", nil, ErrLocked
+	}
+
+	row := s.pool.QueryRow(ctx, `
+		SELECT media_type, bytes
+		FROM catalog_images
+		WHERE tenant_id = $1 AND course_id = $2 AND name = $3
+	`, tenantID, courseID, name)
+
+	if err := row.Scan(&mediaType, &body); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return "", nil, ErrNotFound
+		}
+		return "", nil, fmt.Errorf("catalog: reading the picture %q: %w", name, err)
+	}
+	return mediaType, body, nil
+}
 
 // prose reads a lesson's words, falling back FIELD BY FIELD.
 //

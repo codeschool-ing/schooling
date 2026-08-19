@@ -130,7 +130,7 @@ func TestAnExerciseNamingAMissingSectionIsRefused(t *testing.T) {
 }
 
 func TestAnExerciseWithoutAVersionIsRefused(t *testing.T) {
-	problems := school(t, patchExercises("web-fundamentals", "client-and-server",
+	problems := school(t, patchExercises(
 		func(e []map[string]any) { delete(e[0], "version") }))
 
 	if !says(problems, "has version 0", "December's apple with March's orange") {
@@ -139,7 +139,7 @@ func TestAnExerciseWithoutAVersionIsRefused(t *testing.T) {
 }
 
 func TestATypeWithNoGraderIsRefused(t *testing.T) {
-	problems := school(t, patchExercises("web-fundamentals", "client-and-server",
+	problems := school(t, patchExercises(
 		func(e []map[string]any) { e[0]["type"] = "essay" }))
 
 	if !says(problems, `is of type "essay"`, "machine grader") {
@@ -316,7 +316,7 @@ func requireOf(courseID, needed string) func(string) {
 }
 
 func sectionOf(exerciseID, section string) func(string) {
-	return patchExercises("web-fundamentals", "client-and-server", func(e []map[string]any) {
+	return patchExercises(func(e []map[string]any) {
 		for _, one := range e {
 			if one["id"] == exerciseID {
 				one["section"] = section
@@ -325,8 +325,11 @@ func sectionOf(exerciseID, section string) func(string) {
 	})
 }
 
-func patchExercises(courseID, lessonID string, change func([]map[string]any)) func(string) {
-	name := "courses/" + courseID + "/lessons/" + lessonID + "/exercises.json"
+// One lesson in the fixture has exercises, so neither the course nor the lesson
+// is a parameter. A parameter that only ever receives one value reads as a
+// choice somebody made, and there is no choice here to make.
+func patchExercises(change func([]map[string]any)) func(string) {
+	const name = "courses/web-fundamentals/lessons/client-and-server/exercises.json"
 	return func(dir string) {
 		path := filepath.Join(dir, filepath.FromSlash(name))
 
@@ -396,5 +399,63 @@ func copyTree(t *testing.T, from, to string) {
 	})
 	if err != nil {
 		t.Fatalf("copying the fixture: %v", err)
+	}
+}
+
+/* ---------- the pictures a question is asked about ---------- */
+
+// A QUESTION ABOUT A PICTURE NOBODY WROTE cannot be answered however well the
+// student knows the material, and this is the only place it can be seen. The
+// grader compares coordinates and never opens the file; the interface asks the
+// server and gets a 404; the student gets a question with a hole in it.
+func TestALabellingQuestionNamingAPictureThatIsNotThereIsRefused(t *testing.T) {
+	problems := school(t, patchExercises(
+		func(e []map[string]any) {
+			for _, one := range e {
+				if one["id"] == "wf-roles-diagram" {
+					one["image"] = "a-diagram-nobody-drew.png"
+				}
+			}
+		}))
+
+	if !says(problems, "a-diagram-nobody-drew.png", "no such file in that course's images/") {
+		t.Errorf("a question about a missing picture was accepted:\n%s", report(t, problems))
+	}
+}
+
+// AND THE OTHER DIRECTION, exactly as for a forgotten `.md`. A picture nothing
+// asks about sits in the repository looking like work that was done, goes into
+// the mirror, and no screen misses it (C-13).
+func TestAPictureNoQuestionLabelsIsRefused(t *testing.T) {
+	problems := school(t, write(
+		"courses/web-fundamentals/images/nobody-asks.png", "\x89PNG\r\n\x1a\nand the rest"))
+
+	if !says(problems, "nobody-asks.png", "no question labels") {
+		t.Errorf("an orphaned picture was accepted:\n%s", report(t, problems))
+	}
+}
+
+// A file in `images/` that nothing can serve is either a mistake or a format
+// with no media type — and the type is a list rather than a sniff, so that what
+// a browser is told cannot change under it between releases.
+func TestSomethingThatIsNotAPictureInImagesIsRefused(t *testing.T) {
+	problems := school(t, write("courses/web-fundamentals/images/notes.txt", "not a picture"))
+
+	if !says(problems, "notes.txt", "not a picture this can serve") {
+		t.Errorf("a non-picture in images/ was accepted:\n%s", report(t, problems))
+	}
+}
+
+// A TRACK HAS NO DIRECTORY, so a labelling question in a final has nowhere for
+// its picture to live. It is refused by name rather than let through to fail on
+// a screen — and the message says which exams CAN carry one.
+func TestALabellingQuestionInATrackFinalIsRefused(t *testing.T) {
+	problems := school(t, write("tracks/frontend-exam.json",
+		`[{"id":"fe-final-diagram","version":1,"type":"labelling",`+
+			`"prompt":"Where is the browser?","image":"request.png",`+
+			`"labels":[{"text":"The browser","x":0.5,"y":0.2,"radius":0.1}]}]`))
+
+	if !says(problems, "fe-final-diagram", "TRACK final") {
+		t.Errorf("a labelling question in a final was accepted:\n%s", report(t, problems))
 	}
 }

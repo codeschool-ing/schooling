@@ -271,15 +271,168 @@ function numeric(shown, name, given) {
   };
 }
 
-/* `labelling` is not answerable here yet, and it says so rather than rendering
-   something that cannot work.
+/* `labelling` — putting names on the parts of a picture.
 
-   THE REASON IS THE IMAGE. A labelling question names one, and there is nowhere
-   for a content image to be served from — no asset path in the catalogue, none
-   in the mirror, none in this binary. A canvas over an image that never loads
-   is a question a student cannot answer however well they know the material,
-   which is the exact failure the content checks exist to prevent; producing it
-   in the interface instead would be the same defect one layer up. */
+   # WHY IT IS NOT DRAG AND DROP
+
+   The same argument as `ordering`, and it lands harder here. Dragging is what
+   everybody builds for this question and it is operable by exactly one kind of
+   person: it needs a pointer, a steady hand, and sight of where the pointer is.
+   An exam that cannot be sat with a keyboard cannot be sat by everybody.
+
+   So a label is CHOSEN and then PLACED — two steps that each work by any means.
+   Choosing is a radio button. Placing is a click on the picture, or the arrow
+   keys, and both do the same thing to the same number.
+
+   # THE POSITION IS A FRACTION, AND IT IS ALSO SAID IN WORDS
+
+   The grader compares fractions of the image and never pixels, because the same
+   question is answered on a phone and on a monitor. So the interface has a
+   number to show, and it shows it: "63% across, 41% down", inside the radio
+   button's own label. That is what makes this legible to somebody who cannot
+   see the picture — they can be told where they have put a thing, and move it.
+
+   It is not a substitute for seeing the diagram and nothing here pretends it
+   is. It is the difference between a question that is hard and one that is
+   impossible.
+
+   # THE PICTURE'S ADDRESS COMES FROM THE CALLER
+
+   `shown.image` is a bare file name; where it lives is the course's business,
+   which this file does not know and should not. Without a resolver there is no
+   picture, and the question says so rather than drawing a frame around
+   nothing. */
+function labelling(shown, name, given, pictures) {
+  const labels = shown.labels || [];
+  const src = pictures && shown.image ? pictures(shown.image) : '';
+  if (!src) return unsupported(shown, 'labelling');
+
+  /* Where each label is, as fractions, or null for one not placed yet. An
+     unplaced label is not a label at (0, 0): the corner is somewhere a student
+     could mean. */
+  const at = labels.map((_, i) => {
+    const placed = given && Array.isArray(given.placed) ? given.placed[i] : null;
+    return placed && Number.isFinite(placed.x) && Number.isFinite(placed.y)
+      ? { x: placed.x, y: placed.y } : null;
+  });
+
+  const percent = (v) => `${Math.round(v * 100)}%`;
+  const said = (i) => (at[i]
+    ? `${labels[i].text} — ${percent(at[i].x)} ${txt('across')}, ${percent(at[i].y)} ${txt('down')}`
+    : `${labels[i].text} — ${txt('not placed yet')}`);
+
+  const picture = el('img', {
+    src, alt: shown.prompt, class: 'labelling-picture', draggable: 'false',
+  });
+
+  const markers = labels.map((_, i) => el('span', {
+    class: 'labelling-marker', 'aria-hidden': 'true', hidden: true,
+  }, [el('span', { text: String(i + 1) })]));
+
+  const board = el('div', { class: 'labelling-board' }, [picture, ...markers]);
+
+  const radios = [];
+  const words = [];
+
+  const refresh = () => labels.forEach((_, i) => {
+    words[i].textContent = said(i);
+    markers[i].hidden = !at[i];
+    if (at[i]) {
+      markers[i].style.left = percent(at[i].x);
+      markers[i].style.top = percent(at[i].y);
+    }
+  });
+
+  /* `change` is dispatched by hand because nothing here is a form control being
+     edited. The exam screen listens for it to save the answer, and a placement
+     that stayed silent is one the server never hears about — which is exactly
+     the defect the ordering buttons had. */
+  const place = (i, x, y) => {
+    at[i] = { x: Math.min(1, Math.max(0, x)), y: Math.min(1, Math.max(0, y)) };
+    refresh();
+    board.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  /* THE BOX IS MEASURED AT THE MOMENT OF THE CLICK rather than kept. The
+     picture is responsive, and a width remembered from before a window resize
+     puts the label somewhere nobody pointed at. */
+  picture.addEventListener('click', (event) => {
+    const i = radios.findIndex((r) => r.checked);
+    if (i < 0) return;
+    const box = picture.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    place(i, (event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
+  });
+
+  const list = el('div', { class: 'labelling-labels' }, labels.map((label, i) => {
+    const radio = el('input', {
+      type: 'radio', name: `${name}-label`, id: `${name}-label-${i}`, value: String(i),
+    });
+    radios.push(radio);
+
+    const spoken = el('span', { text: said(i) });
+    words.push(spoken);
+
+    /* THE ARROW KEYS ARE HANDLED ON THE RADIO, not on the picture. The picture
+       is not focusable — making it so would put a control in the tab order that
+       a screen reader has nothing to say about — and the label the student has
+       just chosen is the thing their keyboard should be driving.
+
+       A step is a hundredth of the picture, or a twentieth with shift. The fine
+       one is what makes a small region reachable; the coarse one is what stops
+       crossing a diagram taking ninety presses. */
+    radio.addEventListener('keydown', (event) => {
+      const step = event.shiftKey ? 0.05 : 0.01;
+      const from = at[i] || { x: 0.5, y: 0.5 };
+      let { x, y } = from;
+
+      switch (event.key) {
+        case 'ArrowLeft': x -= step; break;
+        case 'ArrowRight': x += step; break;
+        case 'ArrowUp': y -= step; break;
+        case 'ArrowDown': y += step; break;
+        default: return;
+      }
+      /* A radio group's own arrow-key behaviour is to move to the next radio,
+         which would change which label is being placed on every press. */
+      event.preventDefault();
+      radio.checked = true;
+      place(i, x, y);
+    });
+
+    return el('label', { class: 'option labelling-label', for: radio.id }, [
+      radio,
+      el('span', { class: 'labelling-number', 'aria-hidden': 'true', text: String(i + 1) }),
+      spoken,
+    ]);
+  }));
+
+  refresh();
+
+  return {
+    node: group(shown.prompt, [
+      board,
+      el('p', {
+        class: 'dim',
+        text: txt('Choose a label, then click the picture or use the arrow keys.'),
+      }),
+      list,
+    ]),
+    /* EVERY LABEL OR NONE. The grader compares the list position by position, so
+       a partly-placed answer has no meaning to it — and sending one would record
+       an answer the student had not finished making. */
+    read: () => (at.every(Boolean) ? { placed: at.map((p) => ({ x: p.x, y: p.y })) } : null),
+  };
+}
+
+/* A type this interface cannot draw, saying so rather than rendering something
+   that cannot work.
+
+   It is also what `labelling` falls back to when nothing told it where the
+   pictures live. A frame around an image that never loads is a question a
+   student cannot answer however well they know the material — the exact failure
+   the content checks exist to prevent, and producing it here would be the same
+   defect one layer up. */
 function unsupported(shown, type) {
   return {
     node: group(shown.prompt, [
@@ -297,6 +450,7 @@ const renderers = {
   'quiz': (shown, name, given) => choice(shown, true, name, given),
   'multiple-choice': (shown, name, given) => choice(shown, false, name, given),
   'ordering': ordering,
+  'labelling': labelling,
   'matching': matching,
   'cloze': cloze,
   'numeric': numeric,
@@ -307,6 +461,11 @@ const renderers = {
  * `name` groups the radio buttons and ties every label to its input, so it has
  * to be unique on the page — the attempt and the position make it so.
  *
+ * `pictures` turns a file name into an address, and only `labelling` uses it.
+ * It is a function passed in rather than a base path built here, because where
+ * a course's images live is the caller's business — and in the offline bundle
+ * the answer is a data URI rather than a path at all.
+ *
  * `given` IS THE ANSWER THE STUDENT ALREADY MADE, and putting it back is not a
  * nicety. Answers are saved as they are made, so the server has them; a paper
  * reopened after a reload that came back blank would tell somebody their work
@@ -314,10 +473,10 @@ const renderers = {
  * exam. It arrives in the frame they were shown, which is the frame these
  * controls are in, so the indices go straight back where they came from.
  */
-export function build(type, shown, name, given) {
+export function build(type, shown, name, given, pictures) {
   const make = renderers[type];
   if (!make) return unsupported(shown, type);
-  return make(shown, name, given);
+  return make(shown, name, given, pictures);
 }
 
 /* Whether this type can be answered at all. The exam screen asks so it can say

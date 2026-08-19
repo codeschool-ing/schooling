@@ -176,7 +176,15 @@ func checkExercises(s *School) []error {
 	// is not part of the key.
 	seen := map[string]string{}
 
-	check := func(where string, sections map[string]bool, exercises []Exercise) {
+	// `used` is filled as the questions are read and compared against what the
+	// courses hold, so a picture nobody asks about fails the same way a
+	// forgotten `.md` does. It is keyed by file name within the course being
+	// checked, which is the same scope the pictures themselves have.
+	used := map[string]bool{}
+
+	// `pictures` is nil only for a TRACK final: a track is one JSON file with
+	// nowhere to keep an image. A course exam has its course's.
+	check := func(where string, sections, pictures map[string]bool, exercises []Exercise) {
 		for _, e := range exercises {
 			problems = append(problems, checkSlug(e.ID, "the exercise")...)
 
@@ -209,29 +217,86 @@ func checkExercises(s *School) []error {
 						"join that the predecessor made by title text and lost on every rename",
 					where, e.ID, e.Section))
 			}
+
+			// THE PICTURE HAS TO EXIST, and this is the only place that can see
+			// whether it does. The grader checks an answer against coordinates
+			// and never opens the file; the interface asks the server and gets a
+			// 404; the student gets a question they cannot answer however well
+			// they know the material. It fails here, on a pull request.
+			if e.Type == "labelling" {
+				switch {
+				case pictures == nil:
+					problems = append(problems, fmt.Errorf(
+						"%s/%s is a labelling question in a TRACK final, and a track is one JSON "+
+							"file with no directory to keep a picture in. A course exam can carry "+
+							"one; this cannot, until a track has somewhere of its own", where, e.ID))
+				case e.Image == "":
+					problems = append(problems, fmt.Errorf(
+						"%s/%s is a labelling question and names no image", where, e.ID))
+				case !pictures[e.Image]:
+					problems = append(problems, fmt.Errorf(
+						"%s/%s labels %q and there is no such file in that course's images/ — a "+
+							"question about a picture nobody wrote cannot be answered at all",
+						where, e.ID, e.Image))
+				default:
+					used[e.Image] = true
+				}
+			}
 		}
 	}
 
 	for _, c := range s.Courses {
+		pictures := map[string]bool{}
+		for _, img := range c.Images {
+			pictures[img.Name] = true
+		}
+
+		// A course at a time, so `used` answers about this course's files and
+		// a picture in one course does not excuse the same name in another.
+		clear(used)
+
 		for _, l := range c.Loaded {
 			sections := map[string]bool{}
 			for _, sec := range l.Sections {
 				sections[sec.ID] = true
 			}
-			check(c.ID+"/"+l.ID, sections, l.Exercises)
+			check(c.ID+"/"+l.ID, sections, pictures, l.Exercises)
 		}
-		check(c.ID+"/exam", nil, c.Exam)
+		check(c.ID+"/exam", nil, pictures, c.Exam)
+
+		// AND THE OTHER DIRECTION, for pictures as it already is for prose. A
+		// file nothing asks about is work that was done and forgotten: it sits
+		// in the repository looking finished, it goes into the mirror, and no
+		// screen misses it (C-13). This is the only place it can be seen.
+		for _, img := range c.Images {
+			if !used[img.Name] {
+				problems = append(problems, fmt.Errorf(
+					"%s/images/%s is a picture no question labels — it was added and forgotten, "+
+						"and nothing else in the system would ever mention it", c.ID, img.Name))
+			}
+			if len(img.Bytes) > maxPictureBytes {
+				problems = append(problems, fmt.Errorf(
+					"%s/images/%s is %d kB and the limit is %d — a picture that size is a "+
+						"photograph rather than a diagram, and it travels into the offline "+
+						"bundle whole", c.ID, img.Name, len(img.Bytes)/1000, maxPictureBytes/1000))
+			}
+		}
 	}
 
 	// The finals. A track exam is drawn from the same pool machinery and checked
 	// by the same rules — an exam that belongs to a track rather than a course is
 	// a different place to look for it, not a different kind of question (A-08).
 	for _, t := range s.Tracks {
-		check(t.ID+"/exam", nil, t.Exam)
+		check(t.ID+"/exam", nil, nil, t.Exam)
 	}
 
 	return problems
 }
+
+// What a diagram costs, with room to spare. The database restates it as a CHECK
+// — this runs on a pull request, that runs on every write, and the two agreeing
+// is the point rather than a duplication to remove.
+const maxPictureBytes = 512 * 1024
 
 func checkTracks(s *School) []error {
 	var problems []error

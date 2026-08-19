@@ -116,6 +116,12 @@ type Course struct {
 	// Filled by Load.
 	Loaded []*Lesson `json:"-"`
 	Exam   []Exercise
+
+	// Images is every picture in `images/`, which is where a course keeps the
+	// diagrams its questions are asked about. They get the same treatment as
+	// the prose, in both directions: a question naming one that is not here
+	// fails, and one here that no question names fails too.
+	Images []Image `json:"-"`
 }
 
 // Lesson is a lesson as `lesson.json` declares it.
@@ -135,6 +141,27 @@ type Lesson struct {
 
 	// Text is what those files say, one entry per section per locale.
 	Text []Prose `json:"-"`
+}
+
+// Image is a picture a course is written around — today, the one a `labelling`
+// question asks a student to place labels on.
+//
+// THE BYTES TRAVEL WITH IT. They go into the mirror, back out as a response
+// body, and into the offline bundle as a data URI. A path or a URL would be a
+// second thing to deploy and a fourth way for a question to be unanswerable.
+//
+// IT BELONGS TO THE COURSE AND NOT THE LESSON, which is not where the file
+// naturally wants to sit. The reason is who renders a question: today, only the
+// exam paper, and an exam question belongs to a course and to no lesson. Scoped
+// to a lesson this would have shipped a question type no student could reach.
+type Image struct {
+	// The file name and nothing else — no path, no directory. A question names
+	// it exactly as it appears in the course's `images/` folder, because a path
+	// in a payload is a path somebody eventually escapes.
+	Name string
+
+	MediaType string
+	Bytes     []byte
 }
 
 // Prose is one section's words in one language.
@@ -205,6 +232,13 @@ type Exercise struct {
 	Drillable  bool   `json:"drillable"`
 	Prompt     string `json:"prompt"`
 	Hint       string `json:"hint"`
+
+	// Image is the picture a `labelling` question is asked about, named as the
+	// file appears in the lesson's directory. It is read here as well as by the
+	// grader because the checker has to see it: a question naming a file nobody
+	// wrote is one a student cannot answer however well they know the material,
+	// and that has to fail on a pull request rather than on a screen.
+	Image string `json:"image"`
 }
 
 // The question types. EVERY TYPE HAS A MACHINE GRADER — that is the entry
