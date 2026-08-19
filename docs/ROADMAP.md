@@ -132,9 +132,9 @@ restores access with progress intact.*
 - [ ] Renewal as a **new sale** for the instalment model, with notice before expiry
 - [ ] Grace with retries before suspension
 - [ ] Cancellation at the end of the paid period; refund and chargeback cutting immediately
-- [ ] Webhooks idempotent by event id
-- [ ] An append-only ledger — no update, no delete; a reversal is a new entry
-- [ ] Every amount an integer number of cents
+- [ ] Webhooks idempotent by event id — **the guarantee is in place; the endpoint waits on the gateway.** It is a unique index on the ledger row itself rather than a table somebody checks first: read as check-then-insert it is a race, and a retry arriving while the first delivery is still running is the normal case rather than the exception. Both are pinned by a test, one of them concurrent
+- [x] An append-only ledger — no update, no delete; a reversal is a new entry. Not double entry, and the reason is written in the migration: the second side would be a constant, because splits, payouts and school-to-platform billing were all removed from this system before it was built. A refund points at the payment it refunds, and cannot take off more than is left — checked in the transaction that writes it, with the row locked, because it is an aggregate over siblings rather than a property of one row
+- [x] Every amount an integer number of cents — a `Money` whose fields are unexported, so there is no float arithmetic on an amount to write anywhere in this repository, and whose zero value is deliberately invalid, so an uninitialised total cannot add cleanly to a bill in any currency. Instalments are split so the parts sum back to the whole, with the odd cent on the early ones; a percentage rounds half away from zero, which is what a person checking the invoice by hand does
 - [ ] Access always computed from the subscription, never from an enrolment record
 - [ ] Terms of use and privacy policy published, covering the visitor identity
 

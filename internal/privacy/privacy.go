@@ -242,6 +242,14 @@ var Registry = []Table{
 			"then answers exactly as it does for a code that never existed",
 	},
 	{
+		Name: "ledger_entries", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,
+		Why: "every movement of money, append-only by trigger and holding only ids. It is " +
+			"ORPHANED rather than deleted, and that is the only arrangement meeting both " +
+			"obligations at once: a record that money changed hands is a tax obligation and " +
+			"the other half of a bank statement, so it cannot go on request — but the " +
+			"identity that makes it somebody's can, and does, which leaves it joinable to nobody",
+	},
+	{
 		Name: "audit_log", Holds: HoldsIdentifying, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "holds a staff member's name on purpose, so an entry still reads as an answer " +
 			"after they have left. An audit a person can erase is not an audit — a staff " +
@@ -365,6 +373,15 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 			SELECT id, reviewed_at, exercise_id, exercise_version, section_id,
 			       correct, quality, elapsed_ms, scheduler
 			FROM practice_review WHERE account_id = $1 ORDER BY reviewed_at`},
+		// EXPORTED IN FULL, INCLUDING THE PROVIDER'S REFERENCE. What somebody
+		// paid, when, and what was refunded is exactly the kind of thing an
+		// export exists to answer — and the reference is what lets them match a
+		// row here against a line on their own card statement, which is the
+		// only way they can check that this file is telling the truth.
+		{"ledger_entries", `
+			SELECT id, occurred_at, kind, amount_cents, currency, reverses,
+			       source, source_ref, memo
+			FROM ledger_entries WHERE account_id = $1 ORDER BY occurred_at`},
 	}
 
 	for _, q := range queries {
