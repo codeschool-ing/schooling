@@ -968,7 +968,9 @@ The three browser suites need a server and a school to look at, which is what
 
 ```sh
 npm ci && npx playwright install chromium
-go run ./cmd/migrate && psql "$SCHOOLING_DATABASE_URL" -f tools/graph-test/fixture.sql
+go run ./cmd/migrate
+psql "$SCHOOLING_DATABASE_URL" -v slug=graphtest -v host=code.example.tld \
+  -f tools/graph-test/fixture.sql        # it takes its school as a parameter
 go run ./cmd/api &
 node tools/graph-test/graph-test.mjs    # no line through a card, six window sizes
 node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes
@@ -977,9 +979,17 @@ go run ./tools/bundle -host code.example.tld -out bundle.html
 node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built
 ```
 
-And for anything in `ui/`, open it. `go run ./cmd/api` with a seeded school, then look at it in
-a browser at more than one width, in both themes and both languages — three of the defects in
-that directory were invisible to every check above and obvious in a screenshot.
+And for anything in `ui/`, open it. The shortest way is the local stack, which migrates, creates
+two schools and seeds the same fixture into `code`:
+
+```sh
+docker compose -f deploy/local/docker-compose.yml up --build   # http://code.localhost:8080
+```
+
+`math.localhost:8080` is left empty on purpose — it is the control that makes a lookup answering
+with the wrong school visible. Then look at more than one width, in both themes and both
+languages: three of the defects in `ui/` were invisible to every check above and obvious in a
+screenshot.
 
 **`GOTOOLCHAIN=local`, and it is the first line for a reason.** Left at its default, Go silently
 downloads whatever version `go.mod` asks for, so a `go mod tidy` on a newer machine can raise the
