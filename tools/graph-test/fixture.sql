@@ -132,7 +132,12 @@ FROM tenants t, (VALUES
   ('fx-cloze', 'cloze', 'Complete the sentence.',
    '{"id":"fx-cloze","version":1,"type":"cloze","prompt":"Whoever asks is the ___ and whoever answers is the ___.","blanks":[{"accept":["client"],"ignore_case":true,"ignore_accents":false},{"accept":["server"],"ignore_case":true,"ignore_accents":false}]}'),
   ('fx-numeric', 'numeric', 'How many milliseconds are there in a second?',
-   '{"id":"fx-numeric","version":1,"type":"numeric","prompt":"How many milliseconds are there in a second?","value":1000,"tolerance":0,"unit":"ms"}')
+   '{"id":"fx-numeric","version":1,"type":"numeric","prompt":"How many milliseconds are there in a second?","value":1000,"tolerance":0,"unit":"ms"}'),
+  /* Out of place in a course about the web, and it is here anyway: the exam
+     screen is the only place this control is drawn, and a control axe never
+     opens is a control nothing checks. */
+  ('fx-expression', 'expression-answer', 'A request takes t milliseconds each way. Write the round trip.',
+   '{"id":"fx-expression","version":1,"type":"expression-answer","prompt":"A request takes t milliseconds each way. Write the round trip.","accept":"2*t","variables":[{"name":"t","from":1,"to":500}]}')
 ) AS q(eid, kind, prompt, payload)
 WHERE t.slug = 'graphtest'
 ON CONFLICT DO NOTHING;

@@ -67,7 +67,7 @@ audit with a name against it.*
 - [x] Nothing else writes catalogue rows; the console reads and never writes — enforced by a test that scans the source
 - [x] Draft and published state per course
 - [x] Ids are slugs that never derive from a title; order declared, never inferred from filenames
-- [x] The content check runs the **answer keys**, not only the schema, for every type that has a grader — `code` executed and `expression-answer` through the CAS still to come, and reported rather than skipped until then
+- [x] The content check runs the **answer keys**, not only the schema, for every type that has a grader — `expression-answer` now goes through its grader too, so a question whose own accepted expression does not parse fails on a pull request rather than on a screen; `code` executed is still to come, and reported rather than skipped until then
 - [x] An orphaned `.md` that no `lesson.json` references fails the build
 
 ### What the student sees
@@ -89,7 +89,7 @@ audit with a name against it.*
 
 ### Assessment
 
-- [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching`, `labelling` **done**; `code`, `expected-output` need a sandbox, `expression-answer` needs the CAS
+- [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching`, `labelling`, `expression-answer` **done**; `code` and `expected-output` need a sandbox
 - [x] Conformance fixtures, per type — no longer between two graders (A-09 is retired: a client that could mark an answer would be a client holding the key) but between the grader and the questions, so a change that alters a verdict has to change a file somebody wrote. A gradable type with no fixture fails the build
 - [x] A question is **presented** rather than sent — the answer removed, the order shuffled where the order is the answer, and the permutation kept here
 - [x] Course exams and track exams — a sealed paper per attempt, one open attempt at a time, marked once on hand-in against the questions as they were actually asked
@@ -106,11 +106,11 @@ Everything the other subjects will demand, built before a subject demands it.
 *Done when: an algebraic answer written differently is accepted, and yesterday's review comes
 back today.*
 
-- [ ] `expression-answer` graded by a computer algebra system
+- [x] `expression-answer` graded by a computer algebra system — **by sampling rather than by rearranging symbols.** Two expressions over the reals are the same if they agree everywhere, and everywhere can be sampled: a parser for school algebra (implicit multiplication included, because that is how people write it), then both sides evaluated at two dozen chosen points. It cannot simplify or factor and does not need to — the question is always "are these equal", never "what is this" — and what it cannot see is a difference at a single point, written down in the package and pinned by a test
 - [x] `numeric` — a number with a unit and a tolerance
 - [x] `cloze` — a blank with accepted answers and normalisation
 - [x] `labelling` — a label on a point of an image, in fractions of it rather than pixels
-- [ ] All four in the conformance fixtures — three are (`numeric`, `cloze`, `labelling`); the fourth is `expression-answer`, which has no grader yet, so this is the CAS item wearing a second hat
+- [x] All four in the conformance fixtures — `numeric`, `cloze`, `labelling` and now `expression-answer`, whose fixture carries the two verdicts that matter either way: `(x+1)^2` accepted against an expanded key, and a typo returned as a bad answer rather than a wrong one
 - [x] `drillable` on exercises — checked rather than trusted, so an exam-only question cannot be drilled into telling a student what is on the paper
 - [x] `practice_state` — strength, due date, lapses; overwritten in place beside the append-only log it can be recomputed from
 - [x] SM-2, with the quality score derived from correctness and time rather than asked — the thresholds are a first guess, and `practice_review` carries the before-values so they can be fitted rather than argued about

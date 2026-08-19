@@ -231,7 +231,7 @@ func intoShownFrame(questionType string, key json.RawMessage, perm []int) (json.
 // is the only safe direction — the alternative is a question whose answer is in
 // the response body.
 func TestAnUnknownTypeCannotBePresented(t *testing.T) {
-	for _, questionType := range []string{"", "code", "expression-answer", "essay"} {
+	for _, questionType := range []string{"", "code", "essay"} {
 		if _, err := grade.Present(questionType, json.RawMessage(`{}`), rng()); err == nil {
 			t.Errorf("%q was presented, and nothing knows how to hide its answer", questionType)
 		}

@@ -66,10 +66,10 @@ func main() {
 // they cannot get right however well they know the material — and with no human
 // reviewer, this is the only thing between the two.
 //
-// A type with no grader yet is reported rather than skipped. `code`,
-// `expected-output` and `expression-answer` need a sandbox and a computer
-// algebra system; until those exist, a question of that type cannot be checked,
-// and saying so on every run is the point. Silence would read as a pass.
+// A type with no grader yet is reported rather than skipped. `code` and
+// `expected-output` need a sandbox; until there is one, a question of either
+// type cannot be checked, and saying so on every run is the point. Silence
+// would read as a pass.
 func checkKeys(school string, s *catalog.School) []error {
 	var problems []error
 

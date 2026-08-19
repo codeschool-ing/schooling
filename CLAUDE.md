@@ -282,6 +282,34 @@ Normalisation is **declared per question**, never chosen by the grader: whether 
 property of what is being asked, and in a question about naming conventions it is the entire
 point.
 
+### `expression-answer` samples, it does not rearrange
+
+The computer algebra system the plan asked for is `expr.go` and `expression.go`, and it is
+neither large nor a dependency. Two expressions over the reals are equal if they agree
+everywhere, and everywhere can be sampled: parse both, evaluate them at two dozen chosen points,
+compare. Two different polynomials of degree n agree at most at n points, so a wrong answer would
+have to agree with the right one at every sample to be accepted.
+
+Four things about it are decisions rather than details:
+
+- **It refuses what it does not understand.** A parser that skipped an unknown character would
+  mark `x + y` and `x @ y` the same. `wibble(x)` and `sin x` are errors with their own sentences,
+  the second because implicit multiplication would otherwise read it as `sin * x` and complain
+  about the wrong thing.
+- **A typo is `ErrBadAnswer`, not a wrong answer.** An unparseable answer is a slip the student
+  can see on their own screen; recording it as a failure would put it in their history and, in a
+  drill, move a schedule.
+- **A disagreement needs one point; an agreement needs many.** One sample where the two differ
+  settles it. Agreement is only trusted after `usablePoints` of them — otherwise a question whose
+  range is undefined nearly everywhere would accept anything, having compared almost nothing.
+- **The sampling is fixed, never random.** A student told they were right on Tuesday and wrong on
+  Thursday cannot find out which was the mistake. Two variables get different offsets, or every
+  question about two letters would be a question about one.
+
+What it cannot see is **a difference at a single point** — `x` and `x + 0*(1/x)` differ only at
+zero, and no finite set of samples lands there. That is written down in the package and pinned by
+a test, so it is a trade somebody chose rather than a surprise somebody finds.
+
 ---
 
 ## Sitting an exam

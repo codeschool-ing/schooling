@@ -89,9 +89,8 @@ type grader interface {
 
 // The types this build can grade.
 //
-// `code`, `expected-output` and `expression-answer` are absent on purpose: the
-// first two need a sandbox that runs a student's program, and the third needs a
-// computer algebra system. Each is its own piece of work, and a stub that
+// `code` and `expected-output` are absent on purpose: both need a sandbox that
+// runs a student's program. That is its own piece of work, and a stub that
 // guessed would be worse than the honest refusal ErrUnknownType gives.
 var graders = map[string]grader{
 	"quiz":            choice{single: true},
@@ -101,6 +100,11 @@ var graders = map[string]grader{
 	"cloze":           cloze{},
 	"numeric":         numeric{},
 	"labelling":       labelling{},
+
+	// SAMPLING RATHER THAN A COMPUTER ALGEBRA SYSTEM. Two expressions are the
+	// same thing if they agree everywhere, and everywhere can be sampled — see
+	// expression.go for why that is enough and where it stops.
+	"expression-answer": expressionAnswer{},
 }
 
 // Types answers every type this build can grade, sorted.

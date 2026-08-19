@@ -232,11 +232,15 @@ keys through the same machinery that grades a student.
 **The answers** (C-12)
 
 - `code` — the answer key is executed against its test cases
-- `expression-answer` — the key goes through the computer algebra system
+- `expression-answer` — the accepted expression is parsed and graded against itself, so a key
+  that does not parse, a question with no variables, or a variable named after a constant fails
+  on a pull request rather than on a screen
 - `numeric` — the unit parses and the tolerance is a number
 - `cloze` — the accepted set is non-empty after normalisation
 - every exercise's payload matches the shape its `type` requires
-- the same fixtures run through the client grader and the server grader, which must agree (A-09)
+- the conformance fixtures run against the grader — no longer between two graders (A-09 is
+  retired; a client that could mark an answer would be a client holding the key) but between the
+  grader and the questions, so a change that alters a verdict has to change a file somebody wrote
 
 A schema check alone would pass a question whose answer key is wrong, which is the one failure
 this system cannot absorb.

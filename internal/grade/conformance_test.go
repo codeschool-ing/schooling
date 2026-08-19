@@ -173,7 +173,7 @@ func TestEveryGradableTypeHasAConformanceFixture(t *testing.T) {
 // student gets right.
 func TestATypeWithNoGraderIsRefusedRatherThanPassed(t *testing.T) {
 	for _, questionType := range []string{
-		"", "essay", "code", "expected-output", "expression-answer", "Quiz",
+		"", "essay", "code", "expected-output", "Quiz",
 	} {
 		result, err := grade.Grade(questionType, json.RawMessage(`{}`), json.RawMessage(`{}`))
 		if !errors.Is(err, grade.ErrUnknownType) {

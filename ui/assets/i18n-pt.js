@@ -87,6 +87,13 @@ window.I18N.pt = {
     'Your answer': 'Sua resposta',
     'Unit': 'Unidade',
 
+    /* ---------- uma resposta algébrica ----------
+       "Escreva em função de x, y." — as letras entram depois, montadas pelo
+       chamador, por isso a frase termina onde termina. */
+    'Write it in terms of': 'Escreva em função de',
+    'You may write it any way you like.':
+      'Pode escrever da maneira que preferir.',
+
     /* ---------- putting labels on a picture ----------
        "63% à direita, 41% abaixo". As duas palavras aparecem sozinhas numa
        lista que um leitor de tela percorre, então cada uma tem de fazer
