@@ -22,6 +22,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/codeschool-ing/schooling/internal/billing"
 	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/certificate"
 	"github.com/codeschool-ing/schooling/internal/event"
@@ -162,7 +163,16 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	scoped := http.NewServeMux()
 	tenant.NewHandler().Routes(scoped)
 	courses := catalog.NewStore(pool)
-	catalog.NewHandler(courses, schoolID, planOf).Routes(scoped)
+
+	// THE PAYWALL, IN ONE PLACE. `plan` is the only thing that turns a
+	// subscription into a door, and every question below that depends on money
+	// goes through it — the catalogue's locks, the exam a student may sit, and
+	// the dimension an event carries so the funnel can tell somebody who never
+	// subscribed from somebody who did and stopped coming.
+	subscriptions := billing.NewStore(pool)
+	plan := planOf(subscriptions)
+
+	catalog.NewHandler(courses, schoolID, plan).Routes(scoped)
 
 	// PROGRESS ASKS THE CATALOGUE TWO QUESTIONS and imports neither answer.
 	// Whether a course is open, so the paywall is not a decoration on the
@@ -171,7 +181,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// that knows about both modules.
 	progress.NewHandler(
 		progress.NewStore(pool,
-			courseOpen(courses),
+			courseOpen(courses, plan),
 			func(ctx context.Context, courseID string) (map[string][]string, error) {
 				school, ok := schoolID(ctx)
 				if !ok {
@@ -180,7 +190,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 				return courses.SectionsOf(ctx, school, courseID)
 			},
 		),
-		schoolID, identity.AccountID, studentEvents(events, log),
+		schoolID, identity.AccountID, studentEvents(events, log, plan),
 	).Routes(scoped)
 
 	// PRACTICE ASKS THE SAME DOOR QUESTION, with the same closure. A card in a
@@ -188,15 +198,15 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// answerable — a queue that offered one and then refused it would be a
 	// paywall discovered one question at a time.
 	practice.NewHandler(
-		practice.NewStore(pool, courseOpen(courses)),
-		schoolID, identity.AccountID, practice.Emit(studentEvents(events, log)),
+		practice.NewStore(pool, courseOpen(courses, plan)),
+		schoolID, identity.AccountID, practice.Emit(studentEvents(events, log, plan)),
 	).Routes(scoped)
 
 	// AN EXAM ASKS THE SAME DOOR QUESTION AS A LESSON, and for a track it asks
 	// it of every course the track contains. A track final that a student could
 	// sit while half the track was locked would be a way to earn the
 	// certificate without the material.
-	exams := exam.NewStore(pool, maySit(courses))
+	exams := exam.NewStore(pool, maySit(courses, plan))
 
 	// A CERTIFICATE IS THREE FACTS THIS MODULE MAY NOT GO AND READ: whether the
 	// exam was passed, which is `exam`; what to write as the student's name,
@@ -204,11 +214,11 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// Three closures, joined here, and none of the three packages knows the
 	// others exist.
 	certificates := certificate.NewStore(pool,
-		passedExam(exams), nameOf(accounts), titleOf(courses))
+		passedExam(exams), nameOf(accounts), titleOf(courses, plan))
 	certificate.NewHandler(certificates, schoolNamed, identity.AccountID).Routes(scoped)
 
 	exam.NewHandler(
-		exams, schoolID, identity.AccountID, exam.Emit(studentEvents(events, log)),
+		exams, schoolID, identity.AccountID, exam.Emit(studentEvents(events, log, plan)),
 		// Passing is what issues the document, at the moment it is earned.
 		awarded(certificates, log),
 	).Routes(scoped)
@@ -290,21 +300,43 @@ func schoolNamed(ctx context.Context) (uuid.UUID, string, bool) {
 	return s.ID, s.Name, ok
 }
 
-// planOf is what somebody is paying for, and today it is always nothing.
+// planOf is what somebody is paying for, and it is now the subscription that
+// says so.
 //
-// IT IS WIRED IN ANYWAY, and that is the point of it existing before billing
-// does: the paywall is computed from a plan on every request from the first
-// day, so the day subscriptions arrive the change is this function and nothing
-// above it. A paywall added later is a paywall added to code that was written
-// as though there was not one.
-func planOf(ctx context.Context) catalog.Plan {
-	if _, ok := identity.FromContext(ctx); !ok {
+// IT WAS WIRED IN BEFORE THERE WAS ANYTHING TO WIRE, and that turned out to be
+// the whole point: the paywall has been computed from a plan on every request
+// since the first day, so arriving at billing meant changing this function and
+// nothing above it. A paywall added later is a paywall added to code that was
+// written as though there was not one.
+//
+// This is the only place `catalog` and `billing` meet, which is the rule (X-02)
+// and also why neither ever had to know about the other: the catalogue decides
+// which door a plan opens, and billing decides which plan somebody has.
+//
+// # IT FAILS CLOSED, INCLUDING ON AN OUTAGE
+//
+// A database that cannot be read answers "no plan". The alternative is an
+// outage that quietly makes every paid course free — and unlike an unreadable
+// catalogue, which shows a student an error they will report, this one shows
+// them something that works.
+func planOf(subscriptions *billing.Store) func(context.Context) catalog.Plan {
+	return func(ctx context.Context) catalog.Plan {
+		account, ok := identity.FromContext(ctx)
+		if !ok {
+			return catalog.PlanNone
+		}
+
+		open, err := subscriptions.Opens(ctx, account.ID, time.Now())
+		if err != nil {
+			web.LoggerFrom(ctx).Error("reading a subscription for the paywall",
+				"error", err, "answering", "no plan, which is the closed direction")
+			return catalog.PlanNone
+		}
+		if open {
+			return catalog.PlanFull
+		}
 		return catalog.PlanNone
 	}
-	// Billing does not exist yet. Answering "none" for a signed-in student is
-	// the fail-closed direction: they see the free tier, which is what an
-	// account with no subscription is entitled to.
-	return catalog.PlanNone
 }
 
 // courseOpen is the paywall, asked as a question two other modules can hold.
@@ -313,13 +345,13 @@ func planOf(ctx context.Context) catalog.Plan {
 // catalogue and neither `progress` nor `exam` may import it. A course the
 // catalogue does not have is closed rather than an error: from the outside,
 // "there is no such course" and "you may not open it" are the same door.
-func courseOpen(courses *catalog.Store) func(context.Context, string) (bool, error) {
+func courseOpen(courses *catalog.Store, plan catalog.PlanOf) func(context.Context, string) (bool, error) {
 	return func(ctx context.Context, courseID string) (bool, error) {
 		school, ok := schoolID(ctx)
 		if !ok {
 			return false, nil
 		}
-		course, err := courses.Course(ctx, school, courseID, planOf(ctx))
+		course, err := courses.Course(ctx, school, courseID, plan(ctx))
 		if errors.Is(err, catalog.ErrNotFound) {
 			return false, nil
 		}
@@ -341,8 +373,8 @@ func courseOpen(courses *catalog.Store) func(context.Context, string) (bool, err
 // branch and not the others, so a fork is open when ANY of its options is open
 // end to end. Requiring every branch would lock the final for everybody in a
 // track that offers a choice.
-func maySit(courses *catalog.Store) exam.MaySit {
-	open := courseOpen(courses)
+func maySit(courses *catalog.Store, plan catalog.PlanOf) exam.MaySit {
+	open := courseOpen(courses, plan)
 
 	return func(ctx context.Context, scope exam.Scope, id string) (bool, error) {
 		if scope == exam.ScopeCourse {
@@ -438,7 +470,7 @@ func nameOf(accounts *identity.Store) certificate.NameOf {
 
 // titleOf is what the course or track is called, today. The certificate keeps a
 // copy, because the catalogue is a mirror and the load job prunes it.
-func titleOf(courses *catalog.Store) certificate.TitleOf {
+func titleOf(courses *catalog.Store, plan catalog.PlanOf) certificate.TitleOf {
 	return func(ctx context.Context, scope certificate.Scope, id string) (string, error) {
 		school, ok := schoolID(ctx)
 		if !ok {
@@ -459,7 +491,7 @@ func titleOf(courses *catalog.Store) certificate.TitleOf {
 		// The plan a course is read under does not change its name, and a
 		// certificate is issued for a course the student has already sat the
 		// exam of — so this asks for the name and nothing else.
-		course, err := courses.Course(ctx, school, id, planOf(ctx))
+		course, err := courses.Course(ctx, school, id, plan(ctx))
 		if errors.Is(err, catalog.ErrNotFound) {
 			return "", nil
 		}
@@ -506,7 +538,13 @@ func awarded(certificates *certificate.Store, log *slog.Logger) exam.Awarded {
 // asked for, and a section that was completed and not counted is a hole in a
 // report; a section that was not completed because counting failed is a person
 // doing the work twice.
-func studentEvents(events *event.Store, log *slog.Logger) progress.Emit {
+//
+// THE PLAN IS THE REAL ONE, and that is what the dimension is for: "did not
+// subscribe" and "subscribed and stopped coming" are different answers, and an
+// event stream that recorded everybody as unsubscribed could not tell them
+// apart afterwards. It goes through the same `plan` as the paywall, so a
+// student who could open a course is never counted as somebody who could not.
+func studentEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) progress.Emit {
 	return func(ctx context.Context, name string, payload map[string]any) {
 		school, slug, ok := schoolOf(ctx)
 		if !ok {
@@ -521,7 +559,7 @@ func studentEvents(events *event.Store, log *slog.Logger) progress.Emit {
 		e := event.Event{
 			Name: name,
 			Dimensions: event.ForSchool(school, slug,
-				event.PlanNone, account.Country, account.Locale),
+				string(plan(ctx)), account.Country, account.Locale),
 			AccountID: &account.ID,
 			Payload:   payload,
 			RequestID: web.RequestIDFrom(ctx),

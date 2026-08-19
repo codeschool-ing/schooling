@@ -691,6 +691,48 @@ as a refactor of every call site performed under the pressure of a number that c
 
 ---
 
+## Two subscription state machines, and why not one with a flag
+
+**A card instalment plan is one authorisation, split by the issuer.** We are paid once. What the
+customer sees as twelve monthly lines is an arrangement between them and their bank, and we never
+learn whether any individual line was collected. So there is no monthly payment to fail, nothing
+to retry, and **nothing to suspend** — and `Advance` REFUSES `payment-failed` and
+`retries-exhausted` on an instalment plan rather than ignoring them.
+
+That refusal is the whole design. Written as one machine with a flag, the instalment plan
+inherits a grace period and a suspension path its payments cannot trigger: dead states on one
+model, waiting for somebody to wire an event into them.
+
+Real recurrence is the opposite — a charge is attempted every period, it can fail, it is retried,
+and access is eventually cut. **Grace and suspension exist only there.**
+
+Four rules that are each a test:
+
+- **Grace still opens the door.** Most declines are a bank flagging a routine transaction, and
+  the retry schedule exists because most recover. Access is cut when the retries run out.
+- **A recurring subscription never expires by time alone.** One that lapsed because a webhook was
+  late would be a paying student cut off for our own outage.
+- **Cancelling honours the paid period.** Cutting on the day is taking money for a period and not
+  delivering it. A refund or a chargeback does cut immediately, and those two are separate events
+  even though the access outcome is identical: one is an agreement, one is a dispute.
+- **`Opens` never reads a clock.** A cancelled subscription past its period opens nothing because
+  `Settle` moved it, not because `Opens` compared a date. Two places that both decide access from
+  the calendar are two places that can disagree.
+
+**Reading settles in memory; the job settles the row.** That split is deliberate: the paywall
+must be right at the instant it is asked, with no window every night in which somebody keeps
+access they stopped paying for — and the row still has to match eventually, or a report counts
+cancellations that ended weeks ago.
+
+`planOf` in `cmd/api/main.go` is **the only place `catalog` and `billing` meet**, which is the
+module rule (X-02) and also why neither ever had to know about the other: the catalogue decides
+which door a plan opens, billing decides which plan somebody has. It fails closed on an
+unreadable database — an outage that quietly makes every paid course free is the one failure a
+paywall cannot have, and unlike an unreadable catalogue it shows the student something that
+works.
+
+---
+
 ## Multi-tenancy, in practice
 
 The school comes from the `Host` and is resolved once, in middleware. Business code does not

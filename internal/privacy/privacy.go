@@ -242,6 +242,19 @@ var Registry = []Table{
 			"then answers exactly as it does for a code that never existed",
 	},
 	{
+		Name: "subscriptions", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "what one person is paying for, and it means nothing once there is nobody. It is " +
+			"the state and not the history — the record that money changed hands is " +
+			"ledger_entries, which is a different table for exactly this reason",
+	},
+	{
+		Name: "subscription_events", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,
+		Why: "how a subscription got to where it is, append-only by trigger and holding only " +
+			"ids. Orphaned rather than deleted for the same reason as the ledger it sits " +
+			"beside: it is what lets a dispute about a payment be reconstructed a year " +
+			"later, and a cascade would make erasure fail on everybody who ever subscribed",
+	},
+	{
 		Name: "ledger_entries", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,
 		Why: "every movement of money, append-only by trigger and holding only ids. It is " +
 			"ORPHANED rather than deleted, and that is the only arrangement meeting both " +
@@ -382,6 +395,15 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 			SELECT id, occurred_at, kind, amount_cents, currency, reverses,
 			       source, source_ref, memo
 			FROM ledger_entries WHERE account_id = $1 ORDER BY occurred_at`},
+		{"subscriptions", `
+			SELECT scope, model, state, paid_through, started_at, updated_at
+			FROM subscriptions WHERE account_id = $1 ORDER BY started_at`},
+		// BOTH SIDES OF EVERY TRANSITION. "It became suspended" is not an
+		// answer to somebody asking why they were locked out while paying;
+		// what it came from, and which ledger row caused it, is.
+		{"subscription_events", `
+			SELECT occurred_at, event, from_state, to_state, ledger_entry_id
+			FROM subscription_events WHERE account_id = $1 ORDER BY occurred_at`},
 	}
 
 	for _, q := range queries {
