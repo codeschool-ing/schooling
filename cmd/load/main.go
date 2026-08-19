@@ -40,6 +40,19 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 )
 
+// A list of lines as the mirror wants it: never nil.
+//
+// A nil slice in Go marshals to SQL NULL, and both columns are NOT NULL — a
+// course.json that simply omits `topics` would fail the insert rather than
+// store nothing. Absent and empty are the same fact about a course, so they
+// become the same row here rather than one being an error.
+func lines(v []string) []string {
+	if v == nil {
+		return []string{}
+	}
+	return v
+}
+
 func main() {
 	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
@@ -212,10 +225,12 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 	for _, course := range school.Courses {
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO catalog_courses
-				(tenant_id, id, name, category, level, hours, summary, prerequisites, draft)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+				(tenant_id, id, name, category, level, hours, summary, prerequisites,
+				 syllabus, topics, draft)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 		`, tenantID, course.ID, course.Name, course.Category, course.Level, course.Hours,
-			course.Summary, course.Prerequisites, course.Draft); err != nil {
+			course.Summary, course.Prerequisites, lines(course.Syllabus), lines(course.Topics),
+			course.Draft); err != nil {
 			return fmt.Errorf("writing the course %s: %w", course.ID, err)
 		}
 

@@ -459,3 +459,36 @@ func TestALabellingQuestionInATrackFinalIsRefused(t *testing.T) {
 		t.Errorf("a labelling question in a final was accepted:\n%s", report(t, problems))
 	}
 }
+
+// A COURSE THAT IS ANNOUNCED AND NOT YET WRITTEN IS ALLOWED, and it is the
+// state most of a 122-course catalogue is in for most of its life.
+//
+// It was an error once. The rule was right that a course a student can OPEN and
+// find nothing in is a broken promise, and wrong that the same row is only
+// that: it is what a track is drawn from, what a career path's hours are summed
+// from, and what somebody deciding whether to subscribe is reading. Refusing it
+// meant no track could exist until every course on it was written.
+func TestACourseWithNoLessonsIsAnnouncedRatherThanRefused(t *testing.T) {
+	problems := school(t, patchJSON("courses/angular/course.json", func(d map[string]any) {
+		d["lessons"] = []any{}
+	}))
+
+	if len(problems) != 0 {
+		t.Errorf("a course that is announced and not yet written was refused:\n%s",
+			report(t, problems))
+	}
+}
+
+// AND AN EMPTY LESSON IS STILL REFUSED. The line is between "not written yet"
+// and "written wrongly": a course may be announced with nothing in it, and a
+// lesson that exists and holds no sections is a step a student opens to find
+// nothing.
+func TestALessonWithNoSectionsIsStillRefused(t *testing.T) {
+	problems := school(t, patchJSON(
+		"courses/web-fundamentals/lessons/client-and-server/lesson.json",
+		func(d map[string]any) { d["sections"] = []any{} }))
+
+	if !says(problems, "has no sections") {
+		t.Errorf("a lesson with no sections was accepted:\n%s", report(t, problems))
+	}
+}

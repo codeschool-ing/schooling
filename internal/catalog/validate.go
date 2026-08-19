@@ -103,9 +103,23 @@ func checkLessons(s *School) []error {
 	var problems []error
 
 	for _, c := range s.Courses {
-		if len(c.Lessons) == 0 {
-			problems = append(problems, fmt.Errorf("the course %q has no lessons", c.ID))
-		}
+		/* A COURSE WITH NO LESSONS IS ANNOUNCED, NOT WRITTEN, and that is a
+		   state a catalogue of 122 courses is in for most of its life.
+
+		   This used to be an error, and the rule it encoded was right about one
+		   thing and wrong about another. Right: a course a student can OPEN and
+		   find nothing in is a broken promise. Wrong: the same row is what a
+		   track is drawn from, what the hours on a career path are summed from,
+		   and what somebody deciding whether to subscribe is reading. Refusing
+		   it means a track cannot exist until every course on it is written,
+		   which is nineteen tracks that cannot be shown for a year.
+
+		   So the catalogue carries it and the course screen says the material is
+		   not written yet — see `CourseView.Lessons` being empty, which the
+		   interface already has to handle for a locked course. What is NOT
+		   allowed is a lesson that is empty, or a section with no prose, and
+		   those checks are below and unchanged: the line is between "not written
+		   yet" and "written wrongly". */
 
 		for _, l := range c.Loaded {
 			where := c.ID + "/" + l.ID
