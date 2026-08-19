@@ -172,6 +172,24 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 		return nil, nil, err
 	}
 
+	// THE TWO DOCUMENTS, IN EVERY LANGUAGE. A bundle whose privacy policy said
+	// "this needs the school" would be a policy that is unpublished for whoever
+	// is reading the offline copy — and that reader is the one most likely to
+	// want it, since a file on a laptop is what gets handed to somebody else.
+	//
+	// The names are the closed list the server publishes. A third document
+	// added there and not here is a link in the footer that opens a sentence
+	// about needing the school.
+	for _, document := range []string{"terms", "privacy"} {
+		for _, locale := range locales {
+			path := "/api/v1/legal/" + url.PathEscape(document) +
+				"?lang=" + url.QueryEscape(locale)
+			if _, err := ask(path); err != nil {
+				return nil, nil, fmt.Errorf("the %s document in %s: %w", document, locale, err)
+			}
+		}
+	}
+
 	courses, err := ask("/api/v1/courses")
 	if err != nil {
 		return nil, nil, err

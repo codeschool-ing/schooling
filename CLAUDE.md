@@ -647,6 +647,61 @@ certificate, or none.
 
 ---
 
+## The privacy policy is checked against the registry
+
+`internal/privacy` already guarantees that no table exists without somebody having decided what
+it holds. **`internal/legal` is the layer above: no table holding personal data exists without
+the published policy accounting for it.**
+
+Each document carries a `covers:` line in its front matter naming its tables, and
+`TestThePrivacyPolicyAccountsForEveryTableThatHoldsPersonalData` compares that against
+`privacy.Registry`. Every language must cover exactly the same set — compared against English
+rather than against the union, because a union lets one language carry a table the other omits
+and still pass.
+
+It is the same failure shape as an unclassified table, one layer up and worse. A table nobody
+classified fails CI. A table nobody wrote into the policy fails **nothing**: the document keeps
+rendering, keeps looking finished, and is quietly wrong from the day the migration lands. Nobody
+rereads a privacy policy against a schema.
+
+The list is in the front matter and not in the prose, because a person reading a privacy policy
+does not want a table name. The check is exact; the reading is human. The `covers:` field is
+`json:"-"` and there is a test that it never reaches a browser.
+
+**The test lives in `internal/architecture_test.go`**, because `legal` and `privacy` are both
+modules and modules do not import each other — including in tests, since the graph check reads
+`TestImports` too. That file is not in a module and is the one place both can be seen at once.
+
+Two more rules about the documents:
+
+- **They are readable with no session and no school.** A privacy policy only a signed-in student
+  can read is one nobody can read at the moment they are deciding whether to hand over an e-mail
+  address. They are baked into the offline bundle for the same reason, and the bundle test
+  asserts they do *not* say "this needs the school" — the one deliberate exception to everything
+  else in that file.
+- **What is not filled in is a `{{token}}`, not a sentence saying it is missing.** One thing is
+  left: the company itself — `{{company.name}}`, `{{company.registration}}`, `{{company.address}}`
+  and `{{company.contact}}`, in all four files. Filling it in is a search and replace, and the
+  test checks the token **set matches across languages** — because the way search and replace
+  actually fails is that it is done in English, the tests pass, and Portuguese still carries the
+  token. A second test asserts a placeholder still exists at all; when the company is real, that
+  one is deleted on purpose. The moment nobody asserts a `{{…}}` exists is the moment nobody
+  notices one does.
+
+  It is a token in the file rather than a setting because the company's name is a fact with a
+  right answer that simply is not known yet, and **only something without a right answer becomes
+  a parameter** (K-13). A setting here would be a knob whose one correct position is a value that
+  a wrong environment variable publishes a policy against the wrong company with.
+
+**The decided half is Brazilian.** The terms are governed by the Consumer Protection Code and a
+dispute is heard where the student lives; the refund window is the statutory seven days and
+nothing beyond it, said out loud rather than left to be discovered; a price change carries 30
+days' notice and happens at most once in twelve months. The privacy policy names the LGPD and
+the ANPD. None of that is a placeholder — it is the answer, and changing it means changing a
+policy rather than filling in a blank.
+
+---
+
 ## Money
 
 **Every amount is an integer number of cents, and `billing.Money` is the only way to hold one.**

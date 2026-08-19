@@ -104,6 +104,12 @@ window.I18N.pt = {
     'down': 'abaixo',
     'not placed yet': 'ainda não colocado',
 
+    /* ---------- os dois documentos ---------- */
+    'Terms of use': 'Termos de uso',
+    'Privacy policy': 'Política de privacidade',
+    'Legal': 'Jurídico',
+    'In effect since': 'Em vigor desde',
+
     /* ---------- and what it came to ---------- */
     'Passed': 'Aprovado',
     'Not passed': 'Não aprovado',

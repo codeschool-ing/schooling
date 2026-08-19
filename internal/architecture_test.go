@@ -47,6 +47,9 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/codeschool-ing/schooling/internal/legal"
+	"github.com/codeschool-ing/schooling/internal/privacy"
 )
 
 const module = "github.com/codeschool-ing/schooling"
@@ -361,4 +364,94 @@ func goFilesUnder(t *testing.T, dir string) []string {
 		t.Fatalf("no Go files under %s — this test is checking nothing", dir)
 	}
 	return found
+}
+
+// THE PRIVACY POLICY IS CHECKED AGAINST THE REGISTRY.
+//
+// The registry already guarantees that no table exists without somebody having
+// decided what it holds. This is the layer above: that no table holding
+// personal data exists without the published policy accounting for it.
+//
+// It is the same failure shape one level up, and it is worse. A table nobody
+// classified fails CI; a table nobody wrote into the policy fails nothing at
+// all — the document keeps rendering, keeps looking finished, and is quietly
+// wrong from the day the migration lands until somebody happens to reread it
+// against the schema. Nobody rereads a privacy policy against a schema.
+//
+// The policy names its tables in a `covers:` line in the front matter rather
+// than in the prose, because a person reading a privacy policy does not want a
+// table name. The check is exact and the reading is human.
+//
+// IT LIVES HERE because `legal` and `privacy` are both modules, and modules do
+// not import each other — including in tests. This file is not in a module and
+// is the one place both can be seen at once, which is the same reason `cmd/`
+// is where they would be wired together.
+func TestThePrivacyPolicyAccountsForEveryTableThatHoldsPersonalData(t *testing.T) {
+	// EVERY LANGUAGE COVERS EXACTLY THE SAME TABLES, and the comparison is
+	// against English rather than against the union of all of them. A union
+	// would let one language carry a table the other omits and still satisfy
+	// the registry below — a policy that is complete in English and incomplete
+	// in Portuguese, which is the version half the students read.
+	covered := map[string]bool{}
+	for _, table := range mustRead(t, legal.Fallback).Covers {
+		covered[table] = true
+	}
+
+	for _, locale := range legal.Locales(legal.Privacy) {
+		if locale == legal.Fallback {
+			continue
+		}
+
+		here := map[string]bool{}
+		for _, table := range mustRead(t, locale).Covers {
+			here[table] = true
+			if !covered[table] {
+				t.Errorf("the %s policy accounts for %q and the English one does not",
+					locale, table)
+			}
+		}
+		for table := range covered {
+			if !here[table] {
+				t.Errorf("the %s policy does not account for %q and the English one does",
+					locale, table)
+			}
+		}
+	}
+
+	for _, table := range privacy.Registry {
+		if table.Holds == privacy.HoldsNothing {
+			continue
+		}
+		if !covered[table.Name] {
+			t.Errorf("%q holds personal data (%s) and the privacy policy does not account "+
+				"for it. Open internal/legal/documents/privacy.*.md, say in plain words what "+
+				"is in it and what happens to it on an erasure, and add the table to the "+
+				"`covers:` line of every language",
+				table.Name, table.Holds)
+		}
+	}
+
+	// And the other direction: a name in `covers:` that is not a table is a
+	// paragraph describing something that no longer exists, which is the same
+	// document being wrong in the other direction.
+	inRegistry := map[string]bool{}
+	for _, table := range privacy.Registry {
+		inRegistry[table.Name] = true
+	}
+	for table := range covered {
+		if !inRegistry[table] {
+			t.Errorf("the privacy policy accounts for %q, which is not a table in the "+
+				"registry — either it was renamed or the policy describes something that "+
+				"is gone", table)
+		}
+	}
+}
+
+func mustRead(t *testing.T, locale string) legal.Document {
+	t.Helper()
+	doc, err := legal.Read(legal.Privacy, locale)
+	if err != nil {
+		t.Fatalf("reading the privacy policy in %s: %v", locale, err)
+	}
+	return doc
 }

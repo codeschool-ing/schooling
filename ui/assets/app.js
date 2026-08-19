@@ -618,6 +618,46 @@ async function attemptPage(id) {
   }
 }
 
+/* ---------- the two documents ----------
+
+   THEY ARE READABLE BEFORE THERE IS AN ACCOUNT, which is the point of where
+   they sit: somebody deciding whether to hand over an e-mail address is exactly
+   who needs to read what happens to it. No sign-in, no school, and in the
+   offline copy they are baked in like a lesson — a policy that answered "this
+   needs the school" would be unpublished for whoever is reading a bundle on a
+   train.
+
+   The Markdown goes through the same renderer a lesson uses, so a heading looks
+   the same in a policy as in a course and there is one place for it to be
+   wrong. */
+function legalTitle(document) {
+  return document === 'terms' ? txt('Terms of use') : txt('Privacy policy');
+}
+
+async function legalPage(document) {
+  show(pageTitle(legalTitle(document)));
+
+  let doc;
+  try {
+    doc = await api.legal(document, contentLocale());
+  } catch (e) {
+    show(pageTitle(legalTitle(document)), trouble(e));
+    return;
+  }
+
+  const other = document === 'terms' ? 'privacy' : 'terms';
+  show(
+    /* The date it took effect is beside the title rather than at the bottom:
+       which version somebody is reading is the first thing they need to know
+       about a document like this. */
+    pageTitle(doc.title, `${txt('In effect since')} ${doc.effective}`),
+    el('div', { class: 'prose', html: markdown(doc.body) }),
+    el('p', { class: 'legal-other' }, [
+      el('a', { class: 'button quiet', href: `#/${other}`, text: legalTitle(other) }),
+    ]),
+  );
+}
+
 /* An address nobody wrote. It says so rather than showing an empty screen,
    which is what a router with a silent default produces. */
 function notFound() {
@@ -1080,6 +1120,8 @@ async function route() {
     case 'certificates':       await certificates(); break;
     case 'sign-in':            signIn(); break;
     case 'sign-up':            signUp(); break;
+    case 'terms':              await legalPage('terms'); break;
+    case 'privacy':            await legalPage('privacy'); break;
     default:
       await notFound();
   }

@@ -28,6 +28,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/event"
 	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
+	"github.com/codeschool-ing/schooling/internal/legal"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
@@ -162,6 +163,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 
 	scoped := http.NewServeMux()
 	tenant.NewHandler().Routes(scoped)
+
+	// THE TWO DOCUMENTS, MOUNTED INSIDE THE SCHOOL-SCOPED MUX AND SCOPED TO NO
+	// SCHOOL. They are the platform's rather than a school's, and they are the
+	// same in every one — but a browser only ever reaches this server through a
+	// school's host, so the route has to be here to be reachable at all. It
+	// asks the request for nothing.
+	legal.NewHandler().Routes(scoped)
 	courses := catalog.NewStore(pool)
 
 	// THE PAYWALL, IN ONE PLACE. `plan` is the only thing that turns a
