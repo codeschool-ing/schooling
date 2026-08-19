@@ -352,6 +352,38 @@ that is not there fails, and a picture no question labels fails (C-13).
 
 ---
 
+## Drilling is not progress, and the two must never meet in one number
+
+`section_progress` answers **what have I done** — set-true, never toggled, and what a progress
+bar reads. `practice_state` answers **how well do I still know this**, and it DECAYS: a card
+strong in March is due again in June, because that is what remembering does.
+
+A bar built from both falls for a student who did nothing wrong, which is the most demoralising
+thing a study platform can do (A-05). The module graph stops the packages importing each other;
+a **source scan** stops either reaching the other's table, because the coupling that would do
+the damage is a SQL string and no import graph can see one. The same scan keeps practice out of
+`certificate` and `exam`: a certificate says an exam was passed on a day, and drilling is not an
+exam.
+
+**The quality score is derived, never asked** (A-04). SM-2 wants a 0..5 self-rating; a person
+rating their own recall rates their mood, so this uses what the platform observes — whether the
+answer was right, and how long it took. Only four of the six values are reachable, and that is
+honest rather than incomplete: the 0..2 band separates "no idea" from "recognised it once
+shown", which only the student can tell you.
+
+**The ten and forty-five second thresholds are a first guess.** They are roughly right for a
+quiz and roughly wrong for a `labelling` question. This is exactly why `practice_review` has
+been written since Fase 0 carrying the values from BEFORE each answer: a better scheduler is
+fitted by replaying what was known at each point, and that needs history that only exists if it
+was being recorded all along. Changing them changes `scheduler` in that log too.
+
+**The queue does not cross schools yet.** A request arrives on a school's host and is scoped to
+it by the middleware before any module sees it, so a cross-school queue needs the platform's own
+address — which needs the domain. Writing it as a query that ignored the tenant would be
+building the thing the tenancy test exists to make impossible.
+
+---
+
 ## The interface
 
 `ui/` is plain HTML, CSS and JavaScript with no build step, embedded with
