@@ -75,6 +75,17 @@ var subsets = []string{"latin", "latin-ext"}
 // The directory the files land in, relative to the repository root.
 const out = "ui/assets/fonts"
 
+// THE MODES ARE TIGHT AND IT COSTS NOTHING. A woff2 that every visitor
+// downloads is the opposite of a secret, so 0644 was the honest intent — but
+// the mode never travels: git records the executable bit and nothing else, and
+// a checkout takes the mode from the reader's umask. Since these are identical
+// everywhere it matters, they are the ones the linter asks every writer in this
+// repository for, rather than an exception that has to be explained twice.
+const (
+	dirMode  = 0o750
+	fileMode = 0o600
+)
+
 // A browser's user agent, because the CSS endpoint answers with woff2 for a
 // modern browser and with an older format for anything it does not recognise.
 // Asking as Go would fetch fonts twice the size that every browser we support
@@ -127,7 +138,7 @@ func run() error {
 	}
 
 	dir := filepath.Join(root, out)
-	if err := os.MkdirAll(dir, 0o755); err != nil {
+	if err := os.MkdirAll(dir, dirMode); err != nil {
 		return err
 	}
 
@@ -141,7 +152,7 @@ func run() error {
 		fmt.Printf("%-34s %6.1f kB\n", faces[i].local, float64(n)/1000)
 	}
 
-	if err := os.WriteFile(filepath.Join(dir, "fonts.css"), stylesheet(faces), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "fonts.css"), stylesheet(faces), fileMode); err != nil {
 		return err
 	}
 
@@ -287,7 +298,7 @@ func download(from, to string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	return len(body), os.WriteFile(to, body, 0o644)
+	return len(body), os.WriteFile(to, body, fileMode)
 }
 
 func stylesheet(faces []face) []byte {
