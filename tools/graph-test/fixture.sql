@@ -13,6 +13,15 @@
 -- It goes away when `content/` has a school in it: the suites read whatever the
 -- API offers, and real content is strictly better than this.
 --
+-- IT TAKES ITS SCHOOL AS A PARAMETER, because two callers want it under two
+-- names: the browser suites want `graphtest` at `code.example.tld`, and
+-- `docker compose` wants `code` at `code.localhost` so that somebody can open
+-- the thing in a browser. One fixture with a variable beats two files that
+-- drift apart, and a default would be a caller forgetting to pass it and
+-- seeding the wrong school silently.
+--
+--     psql ... -v slug=graphtest -v host=code.example.tld -f fixture.sql
+--
 -- THE ACCESSIBILITY PASS NEEDS MORE THAN THE GRAPH DOES. It opens a lesson and
 -- an exam paper, and a screen with nothing on it is a screen that passes
 -- without being checked — so the lesson prose and one question of every
@@ -20,11 +29,11 @@
 -- interface: six questions, every one of them a control with a label.
 
 INSERT INTO tenants (slug, name, accent)
-VALUES ('graphtest', 'Programming', '#5b8cff')
+VALUES (:'slug', 'Programming', '#5b8cff')
 ON CONFLICT (slug) DO NOTHING;
 
 INSERT INTO tenant_domains (host, tenant_id)
-SELECT 'code.example.tld', id FROM tenants WHERE slug = 'graphtest'
+SELECT :'host', id FROM tenants WHERE slug = :'slug'
 ON CONFLICT (host) DO UPDATE SET tenant_id = EXCLUDED.tenant_id;
 
 INSERT INTO catalog_courses (tenant_id, id, name, category, level, hours, summary)
@@ -38,7 +47,7 @@ FROM tenants t, (VALUES
   ('testing',          'Testing',            40, 'What to check.'),
   ('deploy',           'Shipping it',        30, 'From your machine to somebody else''s.')
 ) AS v(cid, name, hours, summary)
-WHERE t.slug = 'graphtest'
+WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_course_requires (tenant_id, course_id, requires_id)
@@ -53,26 +62,26 @@ SELECT t.id, v.c, v.r FROM tenants t, (VALUES
   ('testing',    'javascript'),
   ('deploy',     'testing')
 ) AS v(c, r)
-WHERE t.slug = 'graphtest'
+WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_tracks (tenant_id, id, name, goal, outcome, position)
 SELECT id, 'frontend', 'Front-end Development',
        'Build and ship an interface that other people use.',
        'Junior Front-end Developer', 0
-FROM tenants WHERE slug = 'graphtest'
+FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_track_forks (tenant_id, track_id, position, choice, note)
 SELECT id, 'frontend', 3, 'the framework', 'Either one; the ideas transfer.'
-FROM tenants WHERE slug = 'graphtest'
+FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_track_courses (tenant_id, track_id, position, course_id)
 SELECT t.id, 'frontend', v.p, v.c FROM tenants t, (VALUES
   (0, 'web-fundamentals'), (1, 'html-css'), (2, 'javascript'), (4, 'testing'), (5, 'deploy')
 ) AS v(p, c)
-WHERE t.slug = 'graphtest'
+WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_track_courses
@@ -81,19 +90,19 @@ SELECT t.id, 'frontend', 3, v.o, v.op, 0, v.c FROM tenants t, (VALUES
   ('React + TypeScript', 0, 'react-ts'),
   ('Angular',            1, 'angular')
 ) AS v(o, op, c)
-WHERE t.slug = 'graphtest'
+WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 /* ---------- a lesson to read ---------- */
 
 INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
 SELECT id, 'web-fundamentals', 'client-and-server', 'Client and server', 0
-FROM tenants WHERE slug = 'graphtest'
+FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, kind, position)
 SELECT id, 'web-fundamentals', 'client-and-server', 'roles', 'reading', 0
-FROM tenants WHERE slug = 'graphtest'
+FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
@@ -109,7 +118,7 @@ Whoever asks is the client. Whoever answers is the server.
 browser -> server -> database
 ```
 $prose$
-FROM tenants WHERE slug = 'graphtest'
+FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 /* ---------- an exam to sit ----------
@@ -139,7 +148,7 @@ FROM tenants t, (VALUES
   ('fx-expression', 'expression-answer', 'A request takes t milliseconds each way. Write the round trip.',
    '{"id":"fx-expression","version":1,"type":"expression-answer","prompt":"A request takes t milliseconds each way. Write the round trip.","accept":"2*t","variables":[{"name":"t","from":1,"to":500}]}')
 ) AS q(eid, kind, prompt, payload)
-WHERE t.slug = 'graphtest'
+WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 /* ---------- a picture to label ----------
@@ -162,7 +171,7 @@ SELECT id, 'web-fundamentals', 'request.png', 'image/png', decode(
   'YGgwNBgaDI2hwdBgaDA0GBpDg6HB0GBoMDSGBkODocHQYGgMDYYGQ4OhwdAYGgwNhgZD0z70'
   'QhBDY2gwNBgaDI2hwdBgaDA0GBpDg6HB0GBoMDSGBkODocHQYGgMDYYGQ4OhwdAYGgwNhgZD'
   'g6ExNBgaDA2GBkNjaDA0GBoMTbkP4tfNBGrZdKcAAAAASUVORK5CYII=', 'base64')
-FROM tenants WHERE slug = 'graphtest'
+FROM tenants WHERE slug = :'slug'
 ON CONFLICT (tenant_id, course_id, name) DO UPDATE SET bytes = EXCLUDED.bytes;
 
 INSERT INTO catalog_exercises (tenant_id, id, course_id, exam, version, type, prompt, payload)
@@ -173,7 +182,7 @@ SELECT t.id, 'fx-label', 'web-fundamentals', true, 1, 'labelling',
        '{"text":"The browser","x":0.5,"y":0.17,"radius":0.14},'
        '{"text":"The server","x":0.5,"y":0.5,"radius":0.14},'
        '{"text":"The database","x":0.5,"y":0.83,"radius":0.14}]}'::jsonb
-FROM tenants t WHERE t.slug = 'graphtest'
+FROM tenants t WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 /* ---------- something to drill ----------
@@ -196,5 +205,5 @@ FROM tenants t, (VALUES
   ('dr-order', 'ordering', 'Put the steps of a request in order.',
    '{"id":"dr-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}')
 ) AS q(eid, kind, prompt, payload)
-WHERE t.slug = 'graphtest'
+WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;

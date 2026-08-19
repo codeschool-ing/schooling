@@ -51,15 +51,37 @@ number of repositories, services and migrations is the same — a school is a ro
 
 ## Running it
 
-Not yet. The repository is at phase 0 and nothing here starts. This section is written from what
-actually runs, once something does — an instruction that does not work is worse than no
-instruction.
+The whole system on a laptop, with no cloud account and no domain:
+
+```sh
+docker compose -f deploy/local/docker-compose.yml up --build
+open http://code.localhost:8080
+```
+
+That brings up Postgres, migrates it, creates two schools and seeds one of them with the fixture
+the browser suites read — so the address opens a catalogue, a track graph, a lesson and an exam
+paper rather than an empty school. `math.localhost:8080` is the same platform with nothing in it,
+on purpose: two schools side by side are what make a lookup answering with the wrong one visible.
+
+`.localhost` resolves to the loopback in modern browsers and in curl, so there is no `/etc/hosts`
+to edit first.
+
+There is also a single-file copy of one school, for a laptop with no connection. It asks a
+running server for everything, including the interface itself, so the stack above has to be up:
+
+```sh
+go run ./tools/bundle -from http://localhost:8080 -host code.localhost -out bundle.html
+```
+
+Then open `bundle.html` from `file://`. It carries the catalogue, the graph and the lessons;
+signing in, progress and exams are the school's record of a student and a copy of a file has
+neither, so the interface says so where it would otherwise have shown a control.
 
 ---
 
 ## Where things stand
 
-Phase 0 of seven: the skeleton, plus the five things that cost nothing now and are impossible
-later — rich events, the review log, audit with an actor, personal-data export, and the visitor
-identity that precedes the account. The roadmap and what each phase is done by are in
-[`docs/PLAN.md`](docs/PLAN.md).
+Phase 4 of seven. Phases 0 to 3 are done — the skeleton and the five things that cost nothing
+now and are impossible later, the study platform, learning complete, and billing up to the point
+where it waits on a payment gateway nobody has chosen. The roadmap and what each phase is done
+by are in [`docs/PLAN.md`](docs/PLAN.md).

@@ -12,8 +12,13 @@
 # open it in a browser without editing a system file first.
 #
 #     docker compose -f deploy/local/docker-compose.yml up --build
+#     open http://code.localhost:8080
+#
+# `code` is seeded with the browser suites' fixture, so that address opens a
+# catalogue, a track graph, a lesson and an exam paper rather than an empty
+# school. `math` has no content on purpose — see `seed-content`.
+#
 #     curl -H 'Host: code.localhost' localhost:8080/api/v1/school
-#     open http://code.localhost:8080/api/v1/school
 
 name: schooling
 
@@ -78,6 +83,35 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  # SOMETHING TO LOOK AT IN `code`. Two empty schools prove multi-tenancy and
+  # show nothing: the catalogue, the graph, a lesson and an exam paper all open
+  # blank, and a screen with nothing on it is one where "it works" and "it
+  # renders nothing" look the same.
+  #
+  # It is the browser suites' fixture, seeded under this school's name rather
+  # than a second set of rows written here. A local stack showing something CI
+  # never looks at is a local stack that disagrees with the tests about what the
+  # interface does, and the disagreement is found by a person and not a check.
+  #
+  # `math` is deliberately left EMPTY. It is the control: two schools side by
+  # side are what makes a lookup answering with the wrong one visible, and that
+  # only works while their contents differ.
+  seed-content:
+    image: postgres:16-alpine
+    volumes:
+      - ../../tools/graph-test:/fixture:ro
+    entrypoint:
+      - sh
+      - -c
+      - |
+        psql "$$SCHOOLING_DATABASE_URL" -v ON_ERROR_STOP=1 \
+          -v slug=code -v host=code.localhost -f /fixture/fixture.sql
+    environment:
+      SCHOOLING_DATABASE_URL: postgres://schooling:schooling@db:5432/schooling?sslmode=disable
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+
   api:
     build:
       context: ../..
@@ -92,7 +126,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      seed:
+      seed-content:
         condition: service_completed_successfully
 
 volumes:

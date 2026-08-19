@@ -235,8 +235,15 @@ jobs:
       # smallest track where a broken router and a working one produce
       # different drawings, and it carries the lesson and the exam the
       # accessibility pass needs a screen of — see the file.
+      #
+      # The school it seeds is named on the command line, because the local
+      # stack seeds the same fixture under a different name. Both suites read
+      # `code.example.tld`, so that is what this one passes.
       - name: Something to look at
-        run: psql "$SCHOOLING_DATABASE_URL" -v ON_ERROR_STOP=1 -f tools/graph-test/fixture.sql
+        run: |
+          psql "$SCHOOLING_DATABASE_URL" -v ON_ERROR_STOP=1 \
+            -v slug=graphtest -v host=code.example.tld \
+            -f tools/graph-test/fixture.sql
 
       # BOTH SUITES, AGAINST ONE SERVER.
       #
