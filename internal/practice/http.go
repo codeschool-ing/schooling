@@ -40,6 +40,7 @@ func NewHandler(store *Store, schoolOf SchoolOf, studentOf StudentOf, emit Emit)
 
 func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/practice", h.queue)
+	mux.HandleFunc("POST /api/v1/practice/{exercise}/draw", h.draw)
 	mux.HandleFunc("POST /api/v1/practice/{exercise}/answered", h.answered)
 }
 
@@ -64,22 +65,38 @@ func (h *Handler) queue(w http.ResponseWriter, r *http.Request) {
 	web.JSON(w, http.StatusOK, map[string]any{"cards": cards})
 }
 
+// DRAWING IS A POST, not a GET, and that is not pedantry: it writes down how
+// the card was shuffled. A GET that changed the shuffle would be a GET that
+// changed the answer a subsequent POST is marked against, and every proxy,
+// prefetch and double-click would be a card silently re-dealt under a student
+// who was halfway through it.
+func (h *Handler) draw(w http.ResponseWriter, r *http.Request) {
+	school, student, ok := h.who(w, r)
+	if !ok {
+		return
+	}
+
+	card, err := h.store.Draw(r.Context(), school, student, r.PathValue("exercise"))
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, card)
+}
+
 // What the client sends when a card has been answered.
 //
-// IT SAYS WHETHER IT WAS RIGHT AND HOW LONG IT TOOK, and nothing about how well
-// the student felt they remembered. That is the whole point of A-04, and it is
-// visible here: there is no field for an opinion, so no client can send one and
-// no future version can start reading one by accident.
+// IT SENDS THE ANSWER AND IS TOLD. It said `correct` for one commit, which was
+// wrong twice over: a client cannot know — the question it was given has no key
+// in it — so the field could only ever be an assertion nothing checked, and it
+// put the one piece of grading in this system outside `internal/grade`.
 //
-// CORRECTNESS IS THE CLIENT'S WORD FOR NOW, and that is a real limitation
-// rather than an oversight. The grader lives in `internal/grade` and marks an
-// exam server-side; a drill is not an exam — nothing is awarded for it, it is
-// excluded from every certificate — so a student who lied would be moving their
-// own schedule and cheating nobody. When the practice screen exists it should
-// send the ANSWER and be told, which is the same shape the exam already uses.
+// AND NOTHING ABOUT HOW WELL THEY FELT THEY REMEMBERED. That is A-04, visible
+// in the shape: there is no field for an opinion, so no client can send one and
+// no later version can start reading one by accident.
 type answered struct {
-	Correct   bool `json:"correct"`
-	ElapsedMs int  `json:"elapsed_ms"`
+	Answer    json.RawMessage `json:"answer"`
+	ElapsedMs int             `json:"elapsed_ms"`
 }
 
 func (h *Handler) answered(w http.ResponseWriter, r *http.Request) {
@@ -106,8 +123,8 @@ func (h *Handler) answered(w http.ResponseWriter, r *http.Request) {
 		elapsed = time.Hour
 	}
 
-	state, err := h.store.Answered(r.Context(), school, student,
-		r.PathValue("exercise"), body.Correct, elapsed)
+	marked, err := h.store.Answered(r.Context(), school, student,
+		r.PathValue("exercise"), body.Answer, elapsed)
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -116,16 +133,20 @@ func (h *Handler) answered(w http.ResponseWriter, r *http.Request) {
 	if h.emit != nil {
 		h.emit(r.Context(), "practice_answered", map[string]any{
 			"exercise": r.PathValue("exercise"),
-			"correct":  body.Correct,
-			"interval": state.Interval,
-			"lapses":   state.Lapses,
+			"correct":  marked.Correct,
+			"interval": marked.State.Interval,
+			"lapses":   marked.State.Lapses,
 		})
 	}
 
 	web.JSON(w, http.StatusOK, map[string]any{
-		"interval_days": state.Interval,
-		"lapses":        state.Lapses,
-		"due_on":        Due(time.Now().UTC(), state).Format(time.DateOnly),
+		"correct": marked.Correct,
+		// The question's own words, not this code's: a grader that wrote its
+		// own feedback would be writing content.
+		"why":           marked.Why,
+		"interval_days": marked.State.Interval,
+		"lapses":        marked.State.Lapses,
+		"due_on":        Due(time.Now().UTC(), marked.State).Format(time.DateOnly),
 	})
 }
 
@@ -155,6 +176,15 @@ func (h *Handler) refuse(w http.ResponseWriter, r *http.Request, err error) {
 			"this course is not open on the current plan")
 	case errors.Is(err, ErrNoSuchExercise):
 		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such exercise in this school")
+	case errors.Is(err, ErrNotDrawn):
+		// 409 and not 404: the question exists and this student has not been
+		// shown it, which is a different fact and a different thing to do next
+		// — draw it.
+		web.Fail(w, http.StatusConflict, "not-drawn",
+			"draw that card before answering it")
+	case errors.Is(err, ErrBadAnswer):
+		web.Fail(w, http.StatusBadRequest, "invalid",
+			"that answer does not fit the question")
 	case errors.Is(err, ErrNotDrillable):
 		// 409 and not 404: the question exists and this is not a thing to do
 		// with it, which is a different fact and a different screen.

@@ -40,6 +40,7 @@ package practice
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -47,6 +48,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/codeschool-ing/schooling/internal/grade"
 )
 
 // ErrNotDrillable is an exercise that exists and is not for drilling.
@@ -184,45 +187,161 @@ func (s *Store) Due(ctx context.Context, tenantID, accountID uuid.UUID, limit in
 	return queue, nil
 }
 
+/* ---------- drawing one ---------- */
+
+// Drawn is a question as the student is about to see it: no key in it, and
+// shuffled where the order is the answer.
+type Drawn struct {
+	ExerciseID string          `json:"exercise"`
+	Version    int             `json:"version"`
+	Type       string          `json:"type"`
+	CourseID   string          `json:"course"`
+	Shown      json.RawMessage `json:"question"`
+}
+
+// Draw presents a card and remembers how it was presented.
+//
+// THE SHUFFLE HAS TO SURVIVE THE ROUND TRIP. The answer comes back expressed in
+// the frame the student saw, and mapping it back needs the permutation that
+// produced that frame — so it is written down here and read at grading time.
+// See the migration for why it is not derived from a seed.
+func (s *Store) Draw(ctx context.Context, tenantID, accountID uuid.UUID,
+	exerciseID string) (*Drawn, error) {
+
+	e, err := s.exercise(ctx, tenantID, exerciseID)
+	if err != nil {
+		return nil, err
+	}
+	if !e.drillable {
+		return nil, ErrNotDrillable
+	}
+
+	allowed, err := s.may(ctx, e.courseID)
+	if err != nil {
+		return nil, err
+	}
+	if !allowed {
+		return nil, ErrLocked
+	}
+
+	/* A FRESH DRAW EVERY TIME, so the same card is not shuffled the same way on
+	   every visit — which would let somebody learn the arrangement rather than
+	   the material.
+
+	   `NewShuffler` and not a rand of this package's own: the sequence is
+	   math/rand and the SEED is crypto/rand, which is the split that keeps a
+	   shuffle unguessable without pretending a shuffle needs a cryptographic
+	   generator. It was written for exams and this is the same need. */
+	presented, err := grade.Present(e.kind, e.payload, grade.NewShuffler())
+	if err != nil {
+		return nil, fmt.Errorf("practice: presenting %q: %w", exerciseID, err)
+	}
+
+	// `perm` is NOT NULL: nothing to shuffle is an empty array, which is a
+	// different thing from a card that was never drawn.
+	perm := presented.Perm
+	if perm == nil {
+		perm = []int{}
+	}
+
+	if _, err := s.pool.Exec(ctx, `
+		INSERT INTO practice_drawn
+			(tenant_id, account_id, exercise_id, exercise_version, perm, drawn_at)
+		VALUES ($1, $2, $3, $4, $5, now())
+		ON CONFLICT (tenant_id, account_id, exercise_id) DO UPDATE SET
+			exercise_version = EXCLUDED.exercise_version,
+			perm             = EXCLUDED.perm,
+			drawn_at         = EXCLUDED.drawn_at
+	`, tenantID, accountID, exerciseID, e.version, perm); err != nil {
+		return nil, fmt.Errorf("practice: recording the draw of %q: %w", exerciseID, err)
+	}
+
+	return &Drawn{
+		ExerciseID: exerciseID, Version: e.version, Type: e.kind,
+		CourseID: e.courseID, Shown: presented.Shown,
+	}, nil
+}
+
+// ErrNotDrawn is an answer to a card this student was never shown.
+//
+// It is not a security boundary — nothing is awarded for practice, so somebody
+// cheating at their own drill cheats nobody. It is what keeps the review log
+// interpretable: a row there is an answer to a question somebody actually saw,
+// and that log is what a later scheduler is fitted against.
+var ErrNotDrawn = errors.New("practice: that card has not been drawn")
+
 /* ---------- answering one ---------- */
 
-// Answered records an answer and schedules the card again.
+// Marked is what an answer came to: the verdict, and where the card goes next.
+type Marked struct {
+	grade.Result
+	State State
+}
+
+// Answered marks an answer and schedules the card again.
+//
+// THE SERVER DECIDES WHETHER IT WAS RIGHT. It was the client's word for one
+// commit and that was wrong: a client cannot know — the question it was given
+// has no key in it — so "correct" arriving over the wire could only ever have
+// been an assertion nothing checked. `internal/grade` marks it here, against
+// the payload, exactly as an exam is marked.
+//
+// THE ANSWER IS IN THE FRAME THE STUDENT SAW and is mapped back through the
+// permutation that produced it. Without that step every `ordering` answer is
+// marked against the wrong arrangement, and a student who put four steps in
+// perfect order is told they are wrong.
 //
 // BOTH WRITES OR NEITHER. The log and the state are one fact in two tables: a
 // state advanced without its log entry is a schedule that cannot be refitted
 // later, and a log entry without the state is a card that comes back tomorrow
 // having been answered today. One transaction.
-//
-// `elapsed` is how long the student took, which with correctness is the whole
-// input to the quality — see sm2.go.
 func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
-	exerciseID string, correct bool, elapsed time.Duration) (State, error) {
+	exerciseID string, answer json.RawMessage, elapsed time.Duration) (Marked, error) {
 
-	courseID, version, sectionID, drillable, err := s.exercise(ctx, tenantID, exerciseID)
+	e, err := s.exercise(ctx, tenantID, exerciseID)
 	if err != nil {
-		return State{}, err
+		return Marked{}, err
 	}
-	if !drillable {
-		return State{}, ErrNotDrillable
+	if !e.drillable {
+		return Marked{}, ErrNotDrillable
 	}
 
-	allowed, err := s.may(ctx, courseID)
+	allowed, err := s.may(ctx, e.courseID)
 	if err != nil {
-		return State{}, err
+		return Marked{}, err
 	}
 	if !allowed {
-		return State{}, ErrLocked
+		return Marked{}, ErrLocked
 	}
+
+	perm, version, err := s.drawn(ctx, tenantID, accountID, exerciseID)
+	if err != nil {
+		return Marked{}, err
+	}
+
+	original, err := grade.Restore(e.kind, answer, perm)
+	if err != nil {
+		return Marked{}, fmt.Errorf("%w: %w", ErrBadAnswer, err)
+	}
+
+	result, err := grade.Grade(e.kind, e.payload, original)
+	if err != nil {
+		/* A MALFORMED ANSWER IS NOT A WRONG ONE. Recording it as wrong would
+		   move a schedule on the strength of a client's bug, and the student
+		   would find a card they never failed coming back tomorrow. */
+		return Marked{}, fmt.Errorf("%w: %w", ErrBadAnswer, err)
+	}
+	correct := result.Correct
 
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
-		return State{}, fmt.Errorf("practice: recording an answer: %w", err)
+		return Marked{}, fmt.Errorf("practice: recording an answer: %w", err)
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
 
 	before, err := s.stateIn(ctx, tx, tenantID, accountID, exerciseID)
 	if err != nil {
-		return State{}, err
+		return Marked{}, err
 	}
 
 	quality := Quality(correct, elapsed)
@@ -243,7 +362,7 @@ func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
 			last_reviewed_at = EXCLUDED.last_reviewed_at
 	`, tenantID, accountID, exerciseID,
 		after.Interval, after.Ease, after.Repetition, after.Lapses, due); err != nil {
-		return State{}, fmt.Errorf("practice: writing the state of %q: %w", exerciseID, err)
+		return Marked{}, fmt.Errorf("practice: writing the state of %q: %w", exerciseID, err)
 	}
 
 	/* THE LOG CARRIES BOTH SIDES. The `before` columns are the ones nobody
@@ -258,17 +377,53 @@ func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
 			 interval_before, interval_after, ease_before, ease_after,
 			 repetition_before, repetition_after, scheduler)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
-	`, tenantID, accountID, exerciseID, version, sectionID,
+	`, tenantID, accountID, exerciseID, version, e.sectionID,
 		correct, quality, elapsed.Milliseconds(),
 		before.Interval, after.Interval, before.Ease, after.Ease,
 		before.Repetition, after.Repetition, Scheduler); err != nil {
-		return State{}, fmt.Errorf("practice: writing the review of %q: %w", exerciseID, err)
+		return Marked{}, fmt.Errorf("practice: writing the review of %q: %w", exerciseID, err)
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-		return State{}, fmt.Errorf("practice: recording an answer: %w", err)
+		return Marked{}, fmt.Errorf("practice: recording an answer: %w", err)
 	}
-	return after, nil
+	return Marked{Result: result, State: after}, nil
+}
+
+// ErrBadAnswer is an answer this question cannot be marked against — the wrong
+// shape, the wrong number of blanks, a list of a different length.
+//
+// IT IS NOT A WRONG ANSWER. Recording it as one would move a schedule on the
+// strength of a client's bug: a card the student never failed would come back
+// tomorrow, and the review log would carry a failure that never happened.
+var ErrBadAnswer = errors.New("practice: that answer cannot be marked")
+
+// drawn reads how this card was last put in front of this student.
+func (s *Store) drawn(ctx context.Context, tenantID, accountID uuid.UUID,
+	exerciseID string) ([]int, int, error) {
+
+	var perm []int
+	var version int
+	err := s.pool.QueryRow(ctx, `
+		SELECT perm, exercise_version FROM practice_drawn
+		WHERE tenant_id = $1 AND account_id = $2 AND exercise_id = $3
+	`, tenantID, accountID, exerciseID).Scan(&perm, &version)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, 0, ErrNotDrawn
+	}
+	if err != nil {
+		return nil, 0, fmt.Errorf("practice: reading the draw of %q: %w", exerciseID, err)
+	}
+
+	// An empty array is a question with nothing to shuffle. `Restore` wants nil
+	// for that, and the round trip through the database cannot preserve the
+	// difference — so it is restored here, once, rather than guessed at by
+	// every grader.
+	if len(perm) == 0 {
+		perm = nil
+	}
+	return perm, version, nil
 }
 
 // State reads where a student is on one card, or a new one if they have never
@@ -311,22 +466,33 @@ func (s *Store) stateIn(ctx context.Context, q rows, tenantID, accountID uuid.UU
 // fitted against.
 var ErrNoSuchExercise = errors.New("practice: no such exercise in this school")
 
-func (s *Store) exercise(ctx context.Context, tenantID uuid.UUID, exerciseID string) (
-	courseID string, version int, sectionID string, drillable bool, err error) {
+// One question as this package needs it. A struct rather than five return
+// values, which is what it was until the payload made it six.
+type question struct {
+	courseID  string
+	version   int
+	sectionID string
+	kind      string
+	drillable bool
+	payload   json.RawMessage
+}
 
-	err = s.pool.QueryRow(ctx, `
-		SELECT course_id, version, section_id, drillable
+func (s *Store) exercise(ctx context.Context, tenantID uuid.UUID, exerciseID string) (question, error) {
+	var q question
+	err := s.pool.QueryRow(ctx, `
+		SELECT course_id, version, section_id, type, drillable, payload
 		FROM catalog_exercises
 		WHERE tenant_id = $1 AND id = $2
-	`, tenantID, exerciseID).Scan(&courseID, &version, &sectionID, &drillable)
+	`, tenantID, exerciseID).Scan(&q.courseID, &q.version, &q.sectionID,
+		&q.kind, &q.drillable, &q.payload)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return "", 0, "", false, ErrNoSuchExercise
+		return question{}, ErrNoSuchExercise
 	}
 	if err != nil {
-		return "", 0, "", false, fmt.Errorf("practice: reading the exercise %q: %w", exerciseID, err)
+		return question{}, fmt.Errorf("practice: reading the exercise %q: %w", exerciseID, err)
 	}
-	return courseID, version, sectionID, drillable, nil
+	return q, nil
 }
 
 // today is the day the queue is asked about, in the platform's own reckoning.
