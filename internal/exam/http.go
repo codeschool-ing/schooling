@@ -191,10 +191,21 @@ func (h *Handler) handIn(w http.ResponseWriter, r *http.Request) {
 			if q.Correct == nil {
 				continue
 			}
+			// THE ATTEMPT'S OWN SCORE TRAVELS WITH EVERY ITEM, and it is
+			// carried rather than joined for the same reason the dimensions
+			// are. The discrimination index asks whether the students who did
+			// well on the paper got THIS question right more often than the
+			// students who did badly — which needs each answer beside the mark
+			// of the person who gave it. Joining an item event to the
+			// submission event afterwards would work until an event was
+			// emitted out of order, dropped, or emitted twice, and then it
+			// would answer with the wrong number rather than with an error.
 			h.emitted(r, "exam.item.answered", map[string]any{
 				"scope": string(paper.Scope), "exam": paper.ScopeID,
 				"exercise": q.ExerciseID, "version": q.Version, "type": q.Type,
 				"correct": *q.Correct,
+				"attempt": paper.AttemptID.String(),
+				"score":   paper.Result.Score, "of": paper.Result.Of,
 			})
 		}
 

@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -204,5 +205,163 @@ func TestTheEventStreamRefusesToBeEdited(t *testing.T) {
 	}
 	if count != 1 {
 		t.Errorf("%d events survived, want 1", count)
+	}
+}
+
+// READING THE STREAM BACK, which is the half that had no test until item
+// analysis needed one.
+//
+// The SQL digs the numbers out of a jsonb payload, and every one of those casts
+// is a place where a silent mistake lives: a version read as text sorts "10"
+// before "9", a missing key becomes a zero that looks like a score. So this
+// writes real events and reads them back rather than trusting the query.
+func TestTheAnswersToExamQuestionsCanBeReadBack(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	store := event.NewStore(pool)
+
+	answered := func(exercise string, version int, correct bool, score, of int, attempt string) {
+		t.Helper()
+		if err := store.Emit(context.Background(), event.Event{
+			Name:       event.ItemAnswered,
+			Dimensions: event.ForSchool(id, slug, "full", "BR", "pt"),
+			Payload: map[string]any{
+				"exercise": exercise, "version": version, "type": "quiz",
+				"correct": correct, "attempt": attempt, "score": score, "of": of,
+			},
+		}); err != nil {
+			t.Fatalf("emitting: %v", err)
+		}
+	}
+
+	answered("alpha", 2, true, 9, 10, "one")
+	answered("alpha", 2, false, 3, 10, "two")
+	answered("beta", 1, true, 9, 10, "one")
+
+	read, err := store.ItemAnswers(context.Background(), id, time.Time{})
+	if err != nil {
+		t.Fatalf("reading them back: %v", err)
+	}
+	if len(read) != 3 {
+		t.Fatalf("wrote 3 answers and read %d back", len(read))
+	}
+
+	first := read[0]
+	switch {
+	case first.ExerciseID != "alpha":
+		t.Errorf("the exercise came back as %q", first.ExerciseID)
+	case first.Version != 2:
+		t.Errorf("the version came back as %d, not as the number 2", first.Version)
+	case first.Type != "quiz":
+		t.Errorf("the type came back as %q", first.Type)
+	case first.AttemptID != "one":
+		t.Errorf("the attempt came back as %q", first.AttemptID)
+	case !first.Correct:
+		t.Error("a correct answer came back wrong")
+	case first.Score != 9 || first.Of != 10:
+		t.Errorf("the mark came back as %d/%d", first.Score, first.Of)
+	case first.AnsweredAt.IsZero():
+		t.Error("the answer came back with no time on it")
+	}
+	if read[1].Correct {
+		t.Error("a wrong answer came back correct")
+	}
+}
+
+// AN EVENT FROM ANOTHER SCHOOL IS NOT IN THE ANSWER, and neither is one from
+// before the window. Both are the same failure — a report counting rows nobody
+// asked about — and the second is what keeps a question from being judged
+// forever on answers to the version before it.
+func TestReadingTheAnswersIsScopedToOneSchoolAndOneWindow(t *testing.T) {
+	pool := testPool(t)
+	mine, mySlug := school(t, pool)
+	theirs, theirSlug := school(t, pool)
+	store := event.NewStore(pool)
+
+	payload := map[string]any{
+		"exercise": "shared", "version": 1, "type": "quiz",
+		"correct": true, "attempt": "a", "score": 5, "of": 10,
+	}
+	for _, s := range []struct {
+		id   uuid.UUID
+		slug string
+	}{{mine, mySlug}, {theirs, theirSlug}} {
+		if err := store.Emit(context.Background(), event.Event{
+			Name:       event.ItemAnswered,
+			Dimensions: event.ForSchool(s.id, s.slug, "full", "BR", "pt"),
+			Payload:    payload,
+		}); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	read, err := store.ItemAnswers(context.Background(), mine, time.Time{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(read) != 1 {
+		t.Errorf("one school's answers came back as %d rows; the other school's are in it", len(read))
+	}
+
+	// And nothing from before the window.
+	later, err := store.ItemAnswers(context.Background(), mine, time.Now().UTC().Add(time.Hour))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(later) != 0 {
+		t.Errorf("%d answers came back from before the window started", len(later))
+	}
+}
+
+// AN EVENT OF ANOTHER NAME IS NOT AN ANSWER. The stream carries everything, and
+// a reader that matched loosely would fold a sign-up into an item's statistics.
+func TestOnlyAnswersComeBackFromTheAnswerReader(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	store := event.NewStore(pool)
+
+	if err := store.Emit(context.Background(), event.Event{
+		Name:       "exam.submitted",
+		Dimensions: event.ForSchool(id, slug, "full", "BR", "pt"),
+		Payload:    map[string]any{"exercise": "not-an-answer", "version": 1, "correct": true},
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	read, err := store.ItemAnswers(context.Background(), id, time.Time{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(read) != 0 {
+		t.Errorf("%d rows came back from a stream holding no answers", len(read))
+	}
+}
+
+// A SCHOOL WITH HISTORY IS FINDABLE WITHOUT ASKING THE MODULE THAT OWNS
+// SCHOOLS. It is how a job that runs over all of them knows where to look.
+func TestEverySchoolWithHistoryIsListed(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	store := event.NewStore(pool)
+
+	if err := store.Emit(context.Background(), event.Event{
+		Name:       "account.created",
+		Dimensions: event.ForSchool(id, slug, "none", "BR", "pt"),
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	schools, err := store.Schools(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, s := range schools {
+		if s == id {
+			found = true
+		}
+	}
+	if !found {
+		t.Error("a school with an event in the stream was not listed")
 	}
 }

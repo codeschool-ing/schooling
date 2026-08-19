@@ -150,10 +150,10 @@ a drop at a step nobody suspected.*
 - [ ] Cohorts, by signup and by subscription start
 - [ ] The funnel, all eight steps from *arrived* to *subscribed*
 - [ ] "Active" defined in one place — completed a section or a review
-- [ ] Item analysis: attempts, percentage correct, mean time, discrimination index
-- [ ] Nothing fires below a minimum sample; the screen says *insufficient data* rather than a false red
+- [x] Item analysis: attempts, percentage correct, discrimination index — **mean time is not among them, and that is a decision rather than an omission.** The exam does not measure how long a question took: answers are saved as they are made, so the only timestamps available would measure how long a tab was left open. Practice does measure it, and practice is the same person answering the same card repeatedly, which answers a different question. Measuring it properly means the exam screen reporting elapsed time per question, and that is its own piece of work
+- [x] Nothing fires below a minimum sample; the screen says *insufficient data* rather than a false red — `insufficient` is a member of the verdict list rather than the absence of one, so a screen cannot show an unmeasured question as though it had passed. The discrimination index is not even computed below the sample: a number on a screen is read as a finding whatever the label beside it says. It is also the answer when the paper separated nobody — an index of zero because there were no two groups to compare is not a weak question, and calling it one blames the question for the paper
 - [ ] A flagged question is quarantined automatically, by threshold — it leaves the draw and stops counting. **The terms of use are waiting on this one.** They described it as already happening before it did; the sentence now says what is true instead — that answers are recorded against the question and the version shown, and that today a bad question is found because somebody says so. Whoever builds this puts that sentence back, in both languages, in the same pull request that makes it true
-- [ ] Exercises are versioned, and a student's answer records the version it answered
+- [x] Exercises are versioned, and a student's answer records the version it answered — and item analysis keeps them apart. Folding two versions together would average a wrong key with the fix that corrected it, so the fix would be hidden by the answers given before it, which is the exact failure this is for
 - [ ] Quarantine, replacement and reinstatement are audited events
 - [ ] Generation provenance: which run produced what, at which verification level
 - [ ] The nightly rollup, per school, country and event type

@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -143,4 +144,100 @@ func (s *Store) Emit(ctx context.Context, e Event) error {
 		return fmt.Errorf("event %q: writing it: %w", e.Name, err)
 	}
 	return nil
+}
+
+/* ---------- reading it back ---------- */
+
+// ItemAnswered is the name of the event this module reads back for item
+// analysis. It is a constant here and not a string in two places, because the
+// reader and the writer agreeing is the whole contract.
+const ItemAnswered = "exam.item.answered"
+
+// ItemAnswer is one answer to one exam question, as the stream recorded it.
+//
+// EVERYTHING HERE CAME OFF THE EVENT AND NOTHING IS JOINED. The mark of the
+// attempt is on the row because it was carried at emission — see where the
+// event is written for why, and note that it is the same argument as the
+// dimensions: a number joined afterwards answers with today's value.
+type ItemAnswer struct {
+	ExerciseID string
+	Version    int
+	Type       string
+	AttemptID  string
+	Correct    bool
+	Score      int
+	Of         int
+	AnsweredAt time.Time
+}
+
+// ItemAnswers reads every answer to an exam question in one school since a
+// moment.
+//
+// # WHY THIS IS HERE AND NOT IN THE MODULE THAT INTERPRETS IT
+//
+// This package is the stream everything is counted from, and reading rows out
+// of it is its business. What those rows MEAN — the minimum sample, the groups,
+// the thresholds, the word "inverted" — is a judgement, and it lives in
+// `internal/analysis`, which never touches this table. The split is the same one
+// the catalogue uses: it answers which door a plan opens and does not decide
+// which plan somebody has.
+//
+// # A ROW PER ANSWER, NOT AN AGGREGATE
+//
+// Aggregating here would mean the group split — the 27% — living in this
+// package, and then two places would have an opinion about what a strong
+// student is. The volume is one row per question per exam anybody sits, and the
+// caller is a job rather than a screen.
+func (s *Store) ItemAnswers(ctx context.Context, tenantID uuid.UUID, since time.Time) ([]ItemAnswer, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT payload->>'exercise',
+		       (payload->>'version')::int,
+		       coalesce(payload->>'type', ''),
+		       coalesce(payload->>'attempt', ''),
+		       (payload->>'correct')::boolean,
+		       coalesce((payload->>'score')::int, 0),
+		       coalesce((payload->>'of')::int, 0),
+		       occurred_at
+		FROM events
+		WHERE name = $1 AND tenant_id = $2 AND occurred_at >= $3
+		  AND payload ? 'exercise' AND payload ? 'version' AND payload ? 'correct'
+		ORDER BY occurred_at
+	`, ItemAnswered, tenantID, since)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading the answers to exam questions: %w", err)
+	}
+	defer rows.Close()
+
+	var out []ItemAnswer
+	for rows.Next() {
+		var a ItemAnswer
+		if err := rows.Scan(&a.ExerciseID, &a.Version, &a.Type, &a.AttemptID,
+			&a.Correct, &a.Score, &a.Of, &a.AnsweredAt); err != nil {
+			return nil, fmt.Errorf("event: reading the answers to exam questions: %w", err)
+		}
+		out = append(out, a)
+	}
+	return out, rows.Err()
+}
+
+// Schools answers every school that has any event at all, which is how a job
+// that runs over all of them knows where to look without importing the module
+// that owns schools.
+func (s *Store) Schools(ctx context.Context) ([]uuid.UUID, error) {
+	rows, err := s.pool.Query(ctx,
+		`SELECT DISTINCT tenant_id FROM events WHERE tenant_id IS NOT NULL ORDER BY tenant_id`)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading which schools have any history: %w", err)
+	}
+	defer rows.Close()
+
+	var out []uuid.UUID
+	for rows.Next() {
+		var id uuid.UUID
+		if err := rows.Scan(&id); err != nil {
+			return nil, fmt.Errorf("event: reading which schools have any history: %w", err)
+		}
+		out = append(out, id)
+	}
+	return out, rows.Err()
 }
