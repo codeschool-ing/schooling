@@ -90,7 +90,7 @@ audit with a name against it.*
 ### Assessment
 
 - [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching`, `labelling` **done**; `code`, `expected-output` need a sandbox, `expression-answer` needs the CAS
-- [x] Conformance fixtures proving the client grader and the server grader agree, per type — the server's half runs them, and a gradable type with no fixture fails the build
+- [x] Conformance fixtures, per type — no longer between two graders (A-09 is retired: a client that could mark an answer would be a client holding the key) but between the grader and the questions, so a change that alters a verdict has to change a file somebody wrote. A gradable type with no fixture fails the build
 - [x] A question is **presented** rather than sent — the answer removed, the order shuffled where the order is the answer, and the permutation kept here
 - [x] Course exams and track exams — a sealed paper per attempt, one open attempt at a time, marked once on hand-in against the questions as they were actually asked
 - [x] Certificates, with a public verification page — issued at the moment an exam is passed, saying what it said on the day, and verifiable by a stranger with no account
@@ -110,7 +110,7 @@ back today.*
 - [x] `numeric` — a number with a unit and a tolerance
 - [x] `cloze` — a blank with accepted answers and normalisation
 - [x] `labelling` — a label on a point of an image, in fractions of it rather than pixels
-- [ ] All four in the conformance fixtures
+- [ ] All four in the conformance fixtures — three are (`numeric`, `cloze`, `labelling`); the fourth is `expression-answer`, which has no grader yet, so this is the CAS item wearing a second hat
 - [x] `drillable` on exercises — checked rather than trusted, so an exam-only question cannot be drilled into telling a student what is on the paper
 - [x] `practice_state` — strength, due date, lapses; overwritten in place beside the append-only log it can be recomputed from
 - [x] SM-2, with the quality score derived from correctness and time rather than asked — the thresholds are a first guess, and `practice_review` carries the before-values so they can be fitted rather than argued about

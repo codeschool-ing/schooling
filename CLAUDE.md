@@ -242,19 +242,30 @@ Three refusals that look like details and are not:
 
 ---
 
-## Two implementations of one rule
+## One grader, and why there is not a second
 
-The client grades for immediate feedback and the server grades exams. They **must** agree, or the
-same answer scores differently in a course exam and a track exam. Adding a question type means
-adding it to both and to the conformance fixtures. (A-09)
+**Marking happens on the server. Always.** A-09 used to promise two implementations — the client
+grading for immediate feedback, the server grading exams, and a conformance test holding them to
+each other. That is retired, and the reason is a rule that came to matter more:
+
+**a question is PRESENTED rather than sent.** The key is removed and, where the order is the
+answer, shuffled. A client that could mark an answer is a client holding the key — so the second
+implementation could only have existed by undoing the thing that keeps an exam an exam.
+
+The last place it might have lived was immediate feedback on a drill, and that is now server-side
+too: the practice screen sends the answer and is told. The client never had a grader; what this
+section used to describe was a plan, and it read as a fact.
 
 Question types: `quiz`, `multiple-choice`, `ordering`, `matching`, `code`, `expected-output`,
 `expression-answer`, `numeric`, `cloze`, `labelling`. Every type has a machine grader — that is
 the entry requirement, not a nice-to-have. Free-text essays are out.
 
-**`internal/grade` is the server's half, and `testdata/conformance` is the contract.** Both
-graders run every fixture; a gradable type with no fixture fails the build, because "I will add
-the fixture afterwards" is the door the disagreement walks through.
+**`testdata/conformance` stays, and is now the contract between the grader and the questions.**
+It is worth as much as it ever was, for a different reason: each file is a question with the
+answers that should pass and the answers that should fail, so a change to a grader that alters a
+verdict has to change a file somebody wrote deliberately. A gradable type with no fixture fails
+the build — "I will add the fixture afterwards" is the door a silent behaviour change walks
+through.
 
 Three rules inside it:
 
