@@ -35,11 +35,16 @@ type Answers func(ctx context.Context, tenantID uuid.UUID, since time.Time) ([]A
 // not reach into the one that owns them.
 type Schools func(ctx context.Context) ([]uuid.UUID, error)
 
-// Store reads and writes the rollup.
+// Store reads and writes the rollup, and takes questions out of circulation.
 type Store struct {
 	pool    *pgxpool.Pool
 	answers Answers
 	schools Schools
+
+	// Where an administrative action is recorded. Nil until WithAudit, and the
+	// quarantine path refuses rather than proceeding without one — see the
+	// comment on `record`.
+	audit Audit
 }
 
 func NewStore(pool *pgxpool.Pool, answers Answers, schools Schools) *Store {

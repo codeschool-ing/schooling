@@ -22,6 +22,13 @@ import (
 // kind of red that passes locally and only appears in CI, which is exactly what
 // happened once.
 
+// Nothing is out of circulation, which is what a school looks like before
+// anything has been measured. The tests that care about a withdrawn question
+// pass their own.
+func nothingWithdrawn(context.Context, uuid.UUID) (map[exam.Item]bool, error) {
+	return nil, nil
+}
+
 func testPool(t *testing.T) *pgxpool.Pool {
 	t.Helper()
 	url := os.Getenv("SCHOOLING_TEST_DATABASE_URL")
@@ -181,7 +188,7 @@ func TestAPaperCarriesNoAnswers(t *testing.T) {
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 6)
 
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	paper, _, err := store.Start(context.Background(), school, student,
 		exam.ScopeCourse, "web-fundamentals")
 	if err != nil {
@@ -228,7 +235,7 @@ func TestStartingAgainResumesTheSamePaper(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 8)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	first, resumed, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
@@ -273,7 +280,7 @@ func TestNothingChangesAfterThePaperIsHandedIn(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
@@ -333,7 +340,7 @@ func TestAnExamNobodyMaySitCannotBeStarted(t *testing.T) {
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
 
-	store := exam.NewStore(db, shut)
+	store := exam.NewStore(db, shut, nothingWithdrawn)
 	_, _, err := store.Start(context.Background(), school, student,
 		exam.ScopeCourse, "web-fundamentals")
 	if !errors.Is(err, exam.ErrLocked) {
@@ -357,7 +364,7 @@ func TestAnExamWithNoQuestionsIsNotAnEmptyPaper(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	_, _, err := store.Start(context.Background(), school, student, exam.ScopeCourse, "nothing-here")
 	if !errors.Is(err, exam.ErrNoSuchExam) {
 		t.Fatalf("an exam with no questions gave %v, want ErrNoSuchExam", err)
@@ -372,7 +379,7 @@ func TestSomebodyElsesPaperIsNotFound(t *testing.T) {
 	school := school(t, db)
 	mine, theirs := student(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, mine, exam.ScopeCourse, "web-fundamentals")
@@ -401,7 +408,7 @@ func TestAnUnansweredQuestionIsWrong(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
@@ -444,7 +451,7 @@ func TestTheMarkIsExact(t *testing.T) {
 		db := testPool(t)
 		school, student := school(t, db), student(t, db)
 		questions(t, db, school, exam.ScopeCourse, "web-fundamentals", of)
-		store := exam.NewStore(db, open)
+		store := exam.NewStore(db, open, nothingWithdrawn)
 		ctx := context.Background()
 
 		paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
@@ -485,7 +492,7 @@ func TestAPassIsNotUndoneByALaterFailure(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	sit := func(correctly bool) {
@@ -543,7 +550,7 @@ func TestALongPoolIsDrawnFrom(t *testing.T) {
 	school := school(t, db)
 	first, second := student(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeTrack, "frontend", exam.QuestionsPerAttempt+8)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	papers := make([][]string, 2)
@@ -575,7 +582,7 @@ func TestAnAnswerThatIsNotAnAnswerIsRefused(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
@@ -611,7 +618,7 @@ func TestAnAnswerCanBeChangedUntilTheEnd(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
@@ -651,7 +658,7 @@ func TestAPaperOutlivesTheCatalogueItCameFrom(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open)
+	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
@@ -681,5 +688,118 @@ func TestAPaperOutlivesTheCatalogueItCameFrom(t *testing.T) {
 	if marked.Result.Score != 4 {
 		t.Errorf("a paper answered correctly scored %d of %d after the catalogue was rewritten "+
 			"underneath it", marked.Result.Score, marked.Result.Of)
+	}
+}
+
+// A withdrawn question never reaches a paper, said as a set the store is handed.
+func withdrawing(out ...exam.Item) exam.Quarantined {
+	set := map[exam.Item]bool{}
+	for _, q := range out {
+		set[q] = true
+	}
+	return func(context.Context, uuid.UUID) (map[exam.Item]bool, error) { return set, nil }
+}
+
+// WHAT IS OUT OF CIRCULATION IS NOT SET. A question the strong students fail is
+// one we already know is broken, and every student who meets it after that is
+// being marked on our mistake.
+func TestAWithdrawnQuestionIsNotDrawnOntoAPaper(t *testing.T) {
+	db := testPool(t)
+	school, student := school(t, db), student(t, db)
+	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 6)
+
+	store := exam.NewStore(db, open, withdrawing(
+		exam.Item{ExerciseID: "q00", Version: 1},
+		exam.Item{ExerciseID: "q03", Version: 1},
+	))
+
+	paper, _, err := store.Start(context.Background(), school, student,
+		exam.ScopeCourse, "web-fundamentals")
+	if err != nil {
+		t.Fatalf("starting: %v", err)
+	}
+	if len(paper.Questions) != 4 {
+		t.Fatalf("the paper has %d questions; two of the six were withdrawn", len(paper.Questions))
+	}
+	for _, q := range paper.Questions {
+		if q.ExerciseID == "q00" || q.ExerciseID == "q03" {
+			t.Errorf("%s is on the paper and it is out of circulation", q.ExerciseID)
+		}
+	}
+}
+
+// AND A POOL WITH NOTHING LEFT REFUSES RATHER THAN SETTING AN EMPTY PAPER. A
+// student handed a paper of nothing would pass it — the score is out of what
+// was asked — and a certificate would follow.
+func TestAnExamWhoseWholePoolIsWithdrawnRefusesToStart(t *testing.T) {
+	db := testPool(t)
+	school, student := school(t, db), student(t, db)
+	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 3)
+
+	var all []exam.Item
+	for i := range 3 {
+		all = append(all, exam.Item{ExerciseID: fmt.Sprintf("q%02d", i), Version: 1})
+	}
+	store := exam.NewStore(db, open, withdrawing(all...))
+
+	if _, _, err := store.Start(context.Background(), school, student,
+		exam.ScopeCourse, "web-fundamentals"); err == nil {
+		t.Error("an exam with every question withdrawn set a paper anyway")
+	}
+}
+
+// A QUESTION WITHDRAWN AFTER THE PAPER WAS SET IS MARKED AND DOES NOT COUNT.
+//
+// Marked, because the paper is a record of what was asked and what was
+// answered. Not counted, because nobody should fail on a question we have
+// admitted is broken — and dropping it from the denominator is the only remedy
+// that does not require guessing what they would have answered.
+func TestAQuestionWithdrawnMidAttemptComesOutOfTheDenominator(t *testing.T) {
+	db := testPool(t)
+	school, student := school(t, db), student(t, db)
+	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
+
+	// The paper is set while everything is in circulation.
+	setting := exam.NewStore(db, open, nothingWithdrawn)
+	paper, _, err := setting.Start(context.Background(), school, student,
+		exam.ScopeCourse, "web-fundamentals")
+	if err != nil {
+		t.Fatalf("starting: %v", err)
+	}
+	if len(paper.Questions) != 4 {
+		t.Fatalf("the paper has %d questions", len(paper.Questions))
+	}
+
+	// One of them is withdrawn before it is handed in.
+	withdrawn := paper.Questions[0].ExerciseID
+	marking := exam.NewStore(db, open, withdrawing(
+		exam.Item{ExerciseID: withdrawn, Version: paper.Questions[0].Version}))
+
+	marked, _, err := marking.Submit(context.Background(), school, student, paper.AttemptID)
+	if err != nil {
+		t.Fatalf("handing in: %v", err)
+	}
+	if marked.Result == nil {
+		t.Fatal("the paper came back unmarked")
+	}
+	if marked.Result.Of != 3 {
+		t.Errorf("it was scored out of %d; the withdrawn question should have come out of "+
+			"the denominator, leaving 3", marked.Result.Of)
+	}
+
+	// And it still carries a mark, so the paper reads as a record of what was
+	// asked rather than having a hole in it.
+	var found bool
+	for _, q := range marked.Questions {
+		if q.ExerciseID == withdrawn {
+			found = true
+			if q.Correct == nil {
+				t.Error("the withdrawn question came back unmarked; the paper is a record " +
+					"of what was asked and a blank makes it unreadable afterwards")
+			}
+		}
+	}
+	if !found {
+		t.Error("the withdrawn question is not on the handed-in paper at all")
 	}
 }

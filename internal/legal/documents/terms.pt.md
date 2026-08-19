@@ -32,14 +32,20 @@ pelo mesmo corretor que corrige você, antes de a questão ser publicada**. Uma
 questão que ninguém conseguiria acertar quebra a nossa build em vez de chegar à
 sua tela.
 
-Também registramos cada resposta junto da questão e da versão exata dela que
-você viu, que é o que vai permitir encontrar uma questão ruim pelo modo como as
-pessoas respondem, em vez de por alguém reparar. Essa análise ainda não está
-rodando: hoje uma questão ruim é encontrada porque alguém avisa.
+E quando uma questão se mostra ruim, a estatística a encontra. Cada resposta é
+registrada junto da questão e da versão exata dela que você viu, e uma questão
+que quem foi bem na prova acertou MENOS do que quem foi mal não é uma questão
+difícil — é uma questão errada. Essas **saem de circulação automaticamente**:
+param de ser sorteadas, param de ser treinadas, e param de contar para a nota de
+qualquer pessoa, inclusive numa prova já em andamento.
 
-**Então, se uma questão estiver errada, escreva para {{company.contact}}.** É o
-caminho mais rápido para ela ser corrigida para todo mundo, e no momento é o
-único.
+Nada é julgado com um punhado de respostas, e nada sai de circulação por ser
+difícil. Uma questão difícil que separa os alunos fortes dos fracos é uma boa
+questão e fica.
+
+**Se uma questão estiver errada, escreva para {{company.contact}} também.** A
+estatística precisa que gente suficiente tenha encontrado a questão antes; você
+não.
 
 ## O que você recebe
 

@@ -126,13 +126,50 @@ var (
 // open; for a track it is whether every course in it is.
 type MaySit func(ctx context.Context, scope Scope, id string) (bool, error)
 
+// Item is one exercise at one version, which is the unit a quarantine applies
+// to: a new version is a different question.
+//
+// It is `Item` and not `Question` because `Question` here is the thing a
+// student holds, with its prompt and its answer — and item analysis calls this
+// one an item, which is where the word comes from.
+type Item struct {
+	ExerciseID string
+	Version    int
+}
+
+// Quarantined answers which questions are out of circulation in this school.
+//
+// A callback for the same reason MaySit is: the answer belongs to the module
+// that reads how people answered, and this one may not import it. `cmd/` joins
+// them.
+//
+// IT ANSWERS A SET AND NOT ONE QUESTION. The draw already holds the whole pool
+// and the marking holds the whole paper, so asking once is both cheaper and
+// more correct — a lookup per question could include one and exclude the next
+// under a quarantine written in between.
+type Quarantined func(ctx context.Context, tenantID uuid.UUID) (map[Item]bool, error)
+
 type Store struct {
 	pool   *pgxpool.Pool
 	maySit MaySit
+
+	// Which questions are out of circulation. Nil is "none", which is what an
+	// exam looks like before anything has been measured — and it is the safe
+	// default, because the failure it produces is a question that keeps being
+	// asked rather than an exam that cannot be sat.
+	quarantined Quarantined
 }
 
-func NewStore(pool *pgxpool.Pool, maySit MaySit) *Store {
-	return &Store{pool: pool, maySit: maySit}
+func NewStore(pool *pgxpool.Pool, maySit MaySit, quarantined Quarantined) *Store {
+	return &Store{pool: pool, maySit: maySit, quarantined: quarantined}
+}
+
+// outOfCirculation is the set, or an empty one when nothing is wired in.
+func (s *Store) outOfCirculation(ctx context.Context, tenantID uuid.UUID) (map[Item]bool, error) {
+	if s.quarantined == nil {
+		return nil, nil
+	}
+	return s.quarantined(ctx, tenantID)
 }
 
 // Question is one question as the student holds it.
@@ -307,6 +344,33 @@ func (s *Store) draw(ctx context.Context, tenantID, accountID uuid.UUID,
 	}
 	if len(questions) == 0 {
 		return uuid.Nil, fmt.Errorf("%w: %s %q has no questions", ErrNoSuchExam, scope, scopeID)
+	}
+
+	// WHAT IS OUT OF CIRCULATION NEVER REACHES A PAPER. A question the strong
+	// students fail is one we already know is broken, and every student who
+	// meets it after that is being marked on our mistake.
+	out, err := s.outOfCirculation(ctx, tenantID)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("exam: reading what is out of circulation: %w", err)
+	}
+	if len(out) > 0 {
+		kept := questions[:0]
+		for _, q := range questions {
+			if !out[Item{ExerciseID: q.id, Version: q.version}] {
+				kept = append(kept, q)
+			}
+		}
+		questions = kept
+	}
+
+	// AND AN EXAM WITH NOTHING LEFT REFUSES RATHER THAN SETTING AN EMPTY PAPER.
+	// A student handed a paper of nothing would pass it — the score is out of
+	// what was asked — and a certificate would follow. It is a loud failure on
+	// purpose: it means a whole pool was quarantined, which is a content
+	// emergency and not a thing to absorb quietly.
+	if len(questions) == 0 {
+		return uuid.Nil, fmt.Errorf(
+			"%w: every question of %s %q is out of circulation", ErrNoSuchExam, scope, scopeID)
 	}
 
 	// ONE SOURCE OF RANDOMNESS FOR THE WHOLE PAPER: which questions are drawn
@@ -499,7 +563,15 @@ func (s *Store) Submit(ctx context.Context, tenantID, accountID, attemptID uuid.
 			return nil // already marked; `marked` stays false
 		}
 
-		score, of, err := mark(ctx, tx, attemptID)
+		// READ ONCE, OUTSIDE THE MARKING. The set is what it was at the moment
+		// this paper was handed in, so every question on it is judged against
+		// the same answer to "is this still asked".
+		out, err := s.outOfCirculation(ctx, tenantID)
+		if err != nil {
+			return fmt.Errorf("exam: reading what is out of circulation: %w", err)
+		}
+
+		score, of, err := mark(ctx, tx, attemptID, out)
 		if err != nil {
 			return err
 		}
@@ -531,10 +603,12 @@ func (s *Store) Submit(ctx context.Context, tenantID, accountID, attemptID uuid.
 // It is where `sealed` is read, and it is the only place in the repository that
 // reads it. A question is graded against the payload stored WITH THE ATTEMPT,
 // never against the catalogue — see the package comment.
-func mark(ctx context.Context, tx pgx.Tx, attemptID uuid.UUID) (score, of int, err error) {
+func mark(ctx context.Context, tx pgx.Tx, attemptID uuid.UUID,
+	out map[Item]bool) (score, of int, err error) {
+
 	rows, err := tx.Query(ctx, `
-		SELECT position, type, perm, sealed, answer FROM exam_answers
-		WHERE attempt_id = $1 ORDER BY position
+		SELECT position, exercise_id, exercise_version, type, perm, sealed, answer
+		FROM exam_answers WHERE attempt_id = $1 ORDER BY position
 	`, attemptID)
 	if err != nil {
 		return 0, 0, fmt.Errorf("exam: reading a paper to mark it: %w", err)
@@ -543,16 +617,20 @@ func mark(ctx context.Context, tx pgx.Tx, attemptID uuid.UUID) (score, of int, e
 	type judged struct {
 		position int
 		correct  bool
+
+		// counts is false for a question that was taken out of circulation
+		// between this paper being set and it being handed in.
+		counts bool
 	}
 	var results []judged
 
 	for rows.Next() {
-		var position int
-		var kind string
+		var position, version int
+		var exercise, kind string
 		var perm []int
 		var sealed, answer []byte
 
-		if err := rows.Scan(&position, &kind, &perm, &sealed, &answer); err != nil {
+		if err := rows.Scan(&position, &exercise, &version, &kind, &perm, &sealed, &answer); err != nil {
 			rows.Close()
 			return 0, 0, fmt.Errorf("exam: reading a paper to mark it: %w", err)
 		}
@@ -562,24 +640,53 @@ func mark(ctx context.Context, tx pgx.Tx, attemptID uuid.UUID) (score, of int, e
 			rows.Close()
 			return 0, 0, err
 		}
-		results = append(results, judged{position: position, correct: correct})
+		results = append(results, judged{
+			position: position,
+			correct:  correct,
+			counts:   !out[Item{ExerciseID: exercise, Version: version}],
+		})
 	}
 	rows.Close()
 	if err := rows.Err(); err != nil {
 		return 0, 0, fmt.Errorf("exam: reading a paper to mark it: %w", err)
 	}
 
+	// A QUARANTINED QUESTION IS STILL MARKED AND DOES NOT COUNT.
+	//
+	// Marked, because the paper is a record of what was asked and what was
+	// answered, and a blank where a mark should be would make an attempt
+	// unreadable afterwards. Not counted, because it comes out of the
+	// denominator: nobody should fail on a question we have admitted is broken,
+	// and dropping it from the score is the only remedy that does not require
+	// guessing what they would have answered.
+	//
+	// It leaves two students with the same paper scored out of different totals
+	// when a quarantine lands between their submissions. That is right: the
+	// second one was marked on a question we had already withdrawn, and the
+	// alternative is marking them on it anyway to keep a number tidy.
 	for _, r := range results {
 		if _, err := tx.Exec(ctx, `
 			UPDATE exam_answers SET correct = $3 WHERE attempt_id = $1 AND position = $2
 		`, attemptID, r.position, r.correct); err != nil {
 			return 0, 0, fmt.Errorf("exam: writing a mark: %w", err)
 		}
+		if !r.counts {
+			continue
+		}
+		of++
 		if r.correct {
 			score++
 		}
 	}
-	return score, len(results), nil
+
+	// EVERY QUESTION ON THE PAPER WITHDRAWN. Scoring out of zero is a division
+	// nobody can defend, and the paper cannot be marked — so it says so rather
+	// than answering nought out of nought, which reads as a fail.
+	if of == 0 {
+		return 0, 0, fmt.Errorf(
+			"exam: every question on this paper is out of circulation, so it cannot be marked")
+	}
+	return score, of, nil
 }
 
 // judge is one question.

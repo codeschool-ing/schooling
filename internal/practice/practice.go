@@ -64,6 +64,11 @@ var ErrNotDrillable = errors.New("practice: that exercise is not one to drill")
 // answerable for the same reason its lesson is not readable.
 var ErrLocked = errors.New("practice: that course is not open to this student")
 
+// ErrWithdrawn is a card that has been taken out of circulation. It is its own
+// error rather than a not-found, because it is a fact about the question and
+// not about the student — and the screen says something different for each.
+var ErrWithdrawn = errors.New("practice: that question has been withdrawn")
+
 // MayOpen answers whether this student may open the course an exercise belongs
 // to. It is a callback because the catalogue is another module and modules meet
 // in `cmd/` (X-02) — and it is the SAME shape progress uses, so `cmd/api` hands
@@ -74,9 +79,25 @@ var ErrLocked = errors.New("practice: that course is not open to this student")
 // having its own idea of which school a request is for.
 type MayOpen func(ctx context.Context, courseID string) (bool, error)
 
+// Item is one exercise at one version, which is the unit a quarantine applies
+// to: a new version is a different question.
+type Item struct {
+	ExerciseID string
+	Version    int
+}
+
+// Quarantined answers which questions are out of circulation in this school. A
+// callback for the same reason MayOpen is: the answer belongs to the module
+// that reads how people answered, and this one may not import it.
+type Quarantined func(ctx context.Context, tenantID uuid.UUID) (map[Item]bool, error)
+
 type Store struct {
 	pool *pgxpool.Pool
 	may  MayOpen
+
+	// Nil is "nothing is out of circulation", which is what a school looks
+	// like before anything has been measured.
+	quarantined Quarantined
 
 	// The clock, so a test can say what day it is. A queue is entirely about
 	// dates, and one that could only be tested by waiting until tomorrow would
@@ -84,8 +105,20 @@ type Store struct {
 	now func() time.Time
 }
 
-func NewStore(pool *pgxpool.Pool, may MayOpen) *Store {
-	return &Store{pool: pool, may: may, now: time.Now}
+func NewStore(pool *pgxpool.Pool, may MayOpen, quarantined Quarantined) *Store {
+	return &Store{pool: pool, may: may, quarantined: quarantined, now: time.Now}
+}
+
+// outOfCirculation is the set, or an empty one when nothing is wired in.
+func (s *Store) outOfCirculation(ctx context.Context, tenantID uuid.UUID) (map[Item]bool, error) {
+	if s.quarantined == nil {
+		return nil, nil
+	}
+	out, err := s.quarantined(ctx, tenantID)
+	if err != nil {
+		return nil, fmt.Errorf("practice: reading what is out of circulation: %w", err)
+	}
+	return out, nil
 }
 
 // Card is one question in the queue, with where the student is on it.
@@ -125,7 +158,7 @@ func (s *Store) Due(ctx context.Context, tenantID, accountID uuid.UUID, limit in
 	today := s.today()
 
 	rows, err := s.pool.Query(ctx, `
-		SELECT e.id, e.course_id, e.lesson_id, e.type,
+		SELECT e.id, e.version, e.course_id, e.lesson_id, e.type,
 		       coalesce(p.interval_days, 0), coalesce(p.lapses, 0),
 		       p.due_on
 		FROM catalog_exercises e
@@ -150,12 +183,26 @@ func (s *Store) Due(ctx context.Context, tenantID, accountID uuid.UUID, limit in
 	// student's queue is a handful of courses and hundreds of questions.
 	open := map[string]bool{}
 
+	// AND WHAT IS OUT OF CIRCULATION IS ASKED ONCE FOR THE WHOLE QUEUE. A card
+	// that has been withdrawn is not offered — a drill that asked a question we
+	// already know is broken would tell somebody they are wrong about something
+	// we got wrong, and then schedule it to come back.
+	out, err := s.outOfCirculation(ctx, tenantID)
+	if err != nil {
+		return nil, err
+	}
+
 	for rows.Next() {
 		var c Card
+		var version int
 		var due *time.Time
-		if err := rows.Scan(&c.ExerciseID, &c.CourseID, &c.LessonID, &c.Type,
+		if err := rows.Scan(&c.ExerciseID, &version, &c.CourseID, &c.LessonID, &c.Type,
 			&c.Interval, &c.Lapses, &due); err != nil {
 			return nil, fmt.Errorf("practice: reading the queue: %w", err)
+		}
+
+		if out[Item{ExerciseID: c.ExerciseID, Version: version}] {
+			continue
 		}
 
 		allowed, asked := open[c.CourseID]
@@ -222,6 +269,18 @@ func (s *Store) Draw(ctx context.Context, tenantID, accountID uuid.UUID,
 	}
 	if !allowed {
 		return nil, ErrLocked
+	}
+
+	// WITHDRAWN IS REFUSED HERE TOO, not only left out of the queue. A queue is
+	// fetched once and drilled through, so a student holding one from before a
+	// sweep would still reach this — and the queue being right is not the same
+	// guarantee as the card being answerable.
+	out, err := s.outOfCirculation(ctx, tenantID)
+	if err != nil {
+		return nil, err
+	}
+	if out[Item{ExerciseID: exerciseID, Version: e.version}] {
+		return nil, ErrWithdrawn
 	}
 
 	/* A FRESH DRAW EVERY TIME, so the same card is not shuffled the same way on
@@ -312,6 +371,18 @@ func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
 	}
 	if !allowed {
 		return Marked{}, ErrLocked
+	}
+
+	// WITHDRAWN IS REFUSED HERE TOO, not only left out of the queue. A queue is
+	// fetched once and drilled through, so a student holding one from before a
+	// sweep would still reach this — and the queue being right is not the same
+	// guarantee as the card being answerable.
+	out, err := s.outOfCirculation(ctx, tenantID)
+	if err != nil {
+		return Marked{}, err
+	}
+	if out[Item{ExerciseID: exerciseID, Version: e.version}] {
+		return Marked{}, ErrWithdrawn
 	}
 
 	perm, version, err := s.drawn(ctx, tenantID, accountID, exerciseID)

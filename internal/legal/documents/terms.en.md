@@ -31,13 +31,20 @@ back through the same grader that marks you, before the question is published**.
 A question nobody could get right fails our build rather than reaching your
 screen.
 
-We also record every answer against the question and the exact version of it you
-were shown, which is what will let a bad question be found from how people
-answer it rather than from somebody happening to notice. That analysis is not
-running yet: today a bad question is found because somebody says so.
+And when a question turns out to be bad, the statistics find it. Every answer
+is recorded against the question and the exact version of it you were shown, and
+a question the students who did well on the paper got right LESS often than the
+students who did badly is not a hard question — it is a wrong one. Those are
+**taken out of circulation automatically**: they stop being set, they stop being
+drilled, and they stop counting towards anybody's mark, including on a paper
+already in progress.
 
-**So if a question is wrong, write to {{company.contact}}.** It is the fastest
-route to it being fixed for everybody, and at the moment it is the only one.
+Nothing is judged on a handful of answers, and nothing is withdrawn for being
+difficult. A hard question that sorts the strong students from the weak ones is
+a good question and stays.
+
+**If a question is wrong, write to {{company.contact}} as well.** The statistics
+need enough people to have met it first; you do not.
 
 ## What you get
 

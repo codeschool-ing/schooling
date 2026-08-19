@@ -91,9 +91,14 @@ func questions(t *testing.T, pool *pgxpool.Pool, tenant uuid.UUID) {
 	}
 }
 
+// Nothing is out of circulation. The tests about a withdrawn card pass a set.
+func nothingWithdrawn(context.Context, uuid.UUID) (map[practice.Item]bool, error) {
+	return nil, nil
+}
+
 func store(t *testing.T, pool *pgxpool.Pool) *practice.Store {
 	t.Helper()
-	return practice.NewStore(pool, mayOpen)
+	return practice.NewStore(pool, mayOpen, nothingWithdrawn)
 }
 
 // answer draws a card and answers it in the frame it was shown, which is the
@@ -496,5 +501,68 @@ func TestAnAnswerThatDoesNotFitTheQuestionIsNotAWrongAnswer(t *testing.T) {
 	if scheduled != 0 {
 		t.Error("a malformed answer moved the schedule — the student would find a card " +
 			"they never failed coming back tomorrow")
+	}
+}
+
+func withdrawing(out ...practice.Item) practice.Quarantined {
+	set := map[practice.Item]bool{}
+	for _, q := range out {
+		set[q] = true
+	}
+	return func(context.Context, uuid.UUID) (map[practice.Item]bool, error) { return set, nil }
+}
+
+// A WITHDRAWN CARD IS NOT IN THE QUEUE. Drilling a question we already know is
+// broken would tell somebody they are wrong about something we got wrong — and
+// then schedule it to come back and do it again.
+func TestAWithdrawnCardIsNotInTheQueue(t *testing.T) {
+	pool := testPool(t)
+	tenant, account := school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+
+	drilling := practice.NewStore(pool, mayOpen,
+		withdrawing(practice.Item{ExerciseID: "free-1", Version: 1}))
+
+	queue, err := drilling.Due(context.Background(), tenant, account, 20)
+	if err != nil {
+		t.Fatalf("reading the queue: %v", err)
+	}
+	for _, card := range queue {
+		if card.ExerciseID == "free-1" {
+			t.Error("a withdrawn card is in the drill queue")
+		}
+	}
+	if len(queue) == 0 {
+		t.Error("the queue is empty; the other drillable card should still be in it")
+	}
+}
+
+// AND IT IS REFUSED IF SOMEBODY REACHES IT ANYWAY. A queue is fetched once and
+// drilled through, so a student holding one from before a sweep would still
+// reach the card — the queue being right is not the same guarantee as the card
+// being answerable.
+func TestAWithdrawnCardCannotBeDrawnOrAnswered(t *testing.T) {
+	pool := testPool(t)
+	tenant, account := school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+
+	// Drawn while it is still in circulation, which is the situation this is
+	// about: the student has the card in front of them.
+	before := store(t, pool)
+	if _, err := before.Draw(context.Background(), tenant, account, "free-1"); err != nil {
+		t.Fatalf("drawing: %v", err)
+	}
+
+	after := practice.NewStore(pool, mayOpen,
+		withdrawing(practice.Item{ExerciseID: "free-1", Version: 1}))
+
+	if _, err := after.Draw(context.Background(), tenant, account, "free-1"); !errors.Is(err, practice.ErrWithdrawn) {
+		t.Errorf("drawing a withdrawn card gave %v, want ErrWithdrawn", err)
+	}
+
+	answer := json.RawMessage(`{"chose":[0]}`)
+	if _, err := after.Answered(context.Background(), tenant, account, "free-1",
+		answer, time.Second); !errors.Is(err, practice.ErrWithdrawn) {
+		t.Errorf("answering a withdrawn card gave %v, want ErrWithdrawn", err)
 	}
 }
