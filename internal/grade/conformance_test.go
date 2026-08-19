@@ -10,18 +10,25 @@ import (
 	"github.com/codeschool-ing/schooling/internal/grade"
 )
 
-// The conformance fixtures, which are the contract between two graders.
+// The conformance fixtures: the contract between the grader and the questions.
 //
-// THE CLIENT GRADES FOR IMMEDIATE FEEDBACK AND THE SERVER GRADES EXAMS, and
-// they must agree (A-09). If they do not, the same answer scores differently in
-// a course exam and a track exam — a defect a student reports as "the site is
-// wrong", that nobody can reproduce, and that undermines every mark either of
-// them ever gave.
+// THEY WERE WRITTEN FOR A DIFFERENT REASON, and the old one is gone. A-09
+// promised two graders — the client marking for immediate feedback, the server
+// marking exams — which had to agree or the same answer would score differently
+// in two places. There is no client grader and there is not going to be one: a
+// question is PRESENTED rather than sent, so a client that could mark an answer
+// is a client holding the key, and the second implementation could only have
+// existed by undoing what keeps an exam an exam.
 //
-// These files are the shared truth. This test is the server's half of the
-// contract; the client runs the same files. Adding a question type means adding
-// it to both graders AND to these fixtures, and the last test in this file is
-// what makes the third part unforgettable.
+// THE FILES ARE WORTH AS MUCH AS THEY EVER WERE, for the reason that was always
+// underneath the other one. Each is a question with the answers that should
+// pass and the answers that should fail, written by somebody deliberately — so
+// a change in here that alters a verdict has to change one of them, in a diff
+// where a reviewer can see the verdict change.
+//
+// A gradable type with no fixture fails the build. "I will add the fixture
+// afterwards" is the door a silent behaviour change walks through, and the last
+// test in this file is what keeps it shut.
 
 type fixture struct {
 	Type    string          `json:"type"`
@@ -153,8 +160,8 @@ func TestEveryGradableTypeHasAConformanceFixture(t *testing.T) {
 
 	for _, questionType := range grade.Types() {
 		if !covered[questionType] {
-			t.Errorf("%q can be graded and has no conformance fixture — the client is free to "+
-				"disagree with this grader and nothing would notice", questionType)
+			t.Errorf("%q can be graded and has no conformance fixture — its verdicts can be "+
+				"changed by an edit in here and nothing would say so", questionType)
 		}
 	}
 }

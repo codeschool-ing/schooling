@@ -124,7 +124,7 @@ prerequisite that does not exist.
 | A-06 | The review queue crosses schools | "Review today" mixing derivatives and syntax is a differentiator that falls out of the single login and single subscription for free. |
 | A-07 | Practice does not count towards the certificate | A certificate that depended on decaying strength could be revoked by forgetting. Finishing is history; remembering is present tense. |
 | A-08 | Exams per course and per track, kept | Without a human reviewer, the exam is the only moment the system asserts that the student knows. The course issues a certificate; the track is the final. |
-| A-09 | A conformance test between the two graders | The client grades for immediate feedback and the server grades exams. Two implementations of one rule **must** agree, or the same answer scores differently in a course exam and a track exam. |
+| A-09 | ~~A conformance test between the two graders~~ → **one grader, on the server** | Retired. It assumed the client would grade for immediate feedback, which cannot be done without giving the client the key — and a question is *presented* rather than sent. The last candidate, feedback on a drill, is marked server-side. The conformance fixtures stay, as the contract between the grader and the questions rather than between two graders. |
 
 **Question types.** Seven exist and all stay: `quiz`, `multiple-choice`, `ordering`, `matching`,
 `code`, `expected-output`, `expression-answer`. Three join, each with a machine grader:

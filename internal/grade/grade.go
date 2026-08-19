@@ -1,15 +1,21 @@
 // Package grade judges an answer against a question, and answers what a
 // correct answer looks like.
 //
-// # TWO IMPLEMENTATIONS OF ONE RULE
+// # ONE IMPLEMENTATION, AND IT IS THIS ONE
 //
-// The client grades for immediate feedback and the server grades exams, and
-// they MUST agree (A-09) — or the same answer scores differently in a course
-// exam and a track exam, which is the kind of defect a student reports as
-// "the site is wrong" and nobody can reproduce. This is the server's half. The
-// fixtures in testdata/conformance are the contract between them: both run
-// every one, and adding a question type means adding it to both and to the
-// fixtures.
+// A-09 promised two — the client marking for immediate feedback, the server
+// marking exams, held to each other by a conformance test. It is retired, and
+// the reason is the rule beside it in this package: a question is PRESENTED
+// rather than sent. A client that could mark an answer is a client holding the
+// key, so the second implementation could only have existed by undoing what
+// keeps an exam an exam. The last place it might have lived — feedback on a
+// drill — is marked here too.
+//
+// The fixtures in testdata/conformance stay. They are the contract between this
+// grader and the questions rather than between two graders: each is a question
+// with the answers that should pass and the answers that should fail, so a
+// change here that alters a verdict has to change one of them where a reviewer
+// can see it. A gradable type with no fixture fails the build.
 //
 // # WHY Key EXISTS
 //
