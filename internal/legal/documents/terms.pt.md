@@ -27,15 +27,19 @@ O que isso compra para você é muito material, mantido atualizado, sobre assunt
 que ninguém teria escrito à mão. O que custa é que um erro chega até você sem que
 um humano o tenha pego antes.
 
-Então fazemos duas coisas. Toda questão tem resposta conferível por máquina, e
-todo gabarito passa pelo mesmo corretor que corrige você, antes de a questão ser
-publicada — uma questão que ninguém conseguiria acertar quebra a nossa build em
-vez de chegar à sua tela. E quando uma questão se mostra ruim, a estatística a
-encontra: aquela que todo mundo erra, ou que os melhores alunos erram, sai de
-circulação automaticamente.
+Então toda questão tem resposta conferível por máquina, e **todo gabarito passa
+pelo mesmo corretor que corrige você, antes de a questão ser publicada**. Uma
+questão que ninguém conseguiria acertar quebra a nossa build em vez de chegar à
+sua tela.
 
-**Se uma questão estiver errada, avise.** É o caminho mais rápido para ela ser
-corrigida para todo mundo, e o sistema foi construído contando com isso.
+Também registramos cada resposta junto da questão e da versão exata dela que
+você viu, que é o que vai permitir encontrar uma questão ruim pelo modo como as
+pessoas respondem, em vez de por alguém reparar. Essa análise ainda não está
+rodando: hoje uma questão ruim é encontrada porque alguém avisa.
+
+**Então, se uma questão estiver errada, escreva para {{company.contact}}.** É o
+caminho mais rápido para ela ser corrigida para todo mundo, e no momento é o
+único.
 
 ## O que você recebe
 

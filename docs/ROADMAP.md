@@ -152,7 +152,7 @@ a drop at a step nobody suspected.*
 - [ ] "Active" defined in one place — completed a section or a review
 - [ ] Item analysis: attempts, percentage correct, mean time, discrimination index
 - [ ] Nothing fires below a minimum sample; the screen says *insufficient data* rather than a false red
-- [ ] A flagged question is quarantined automatically, by threshold — it leaves the draw and stops counting
+- [ ] A flagged question is quarantined automatically, by threshold — it leaves the draw and stops counting. **The terms of use are waiting on this one.** They described it as already happening before it did; the sentence now says what is true instead — that answers are recorded against the question and the version shown, and that today a bad question is found because somebody says so. Whoever builds this puts that sentence back, in both languages, in the same pull request that makes it true
 - [ ] Exercises are versioned, and a student's answer records the version it answered
 - [ ] Quarantine, replacement and reinstatement are audited events
 - [ ] Generation provenance: which run produced what, at which verification level

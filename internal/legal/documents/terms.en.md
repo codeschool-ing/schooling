@@ -26,15 +26,18 @@ What that buys you is a lot of material, kept current, on subjects nobody would
 have written by hand. What it costs is that a mistake reaches you without a
 human having caught it first.
 
-So we do two things. Every question has a machine-checkable answer, and every
-answer key is run back through the same grader that marks you, before the
-question is published — a question nobody could get right fails our build rather
-than reaching your screen. And when a question turns out to be bad, the
-statistics find it: one that everybody gets wrong, or that the strongest
-students fail, is taken out of circulation automatically.
+So every question has a machine-checkable answer, and **every answer key is run
+back through the same grader that marks you, before the question is published**.
+A question nobody could get right fails our build rather than reaching your
+screen.
 
-**If a question is wrong, tell us.** It is the fastest route to it being fixed
-for everybody, and the system is built expecting you to.
+We also record every answer against the question and the exact version of it you
+were shown, which is what will let a bad question be found from how people
+answer it rather than from somebody happening to notice. That analysis is not
+running yet: today a bad question is found because somebody says so.
+
+**So if a question is wrong, write to {{company.contact}}.** It is the fastest
+route to it being fixed for everybody, and at the moment it is the only one.
 
 ## What you get
 
