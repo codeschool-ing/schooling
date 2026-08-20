@@ -160,6 +160,16 @@ func (h *Handler) answered(w http.ResponseWriter, r *http.Request) {
 
 	web.JSON(w, http.StatusOK, map[string]any{
 		"correct": marked.Correct,
+		/* THE ANSWER, NOW THAT THERE IS AN ANSWER TO COMPARE IT WITH. It is
+		   absent from the card and present here, and the two together are the
+		   rule: a drill shows what was right AFTER it has been told what you
+		   thought.
+
+		   A type with nothing to add sends `null`, which the renderers already
+		   read as "no key came back" — the same thing an exam sends while the
+		   paper is still open. */
+		"expected":     marked.Reveal.Expected,
+		"explanations": marked.Reveal.Explanations,
 		// The question's own words, not this code's: a grader that wrote its
 		// own feedback would be writing content.
 		"why":           marked.Why,

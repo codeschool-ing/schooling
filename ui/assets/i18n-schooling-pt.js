@@ -40,9 +40,13 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'Sign in to practise: the schedule is yours and it lives with the school.':
     'Entre para praticar: a agenda é sua e fica com a escola.',
   'The schedule could not be read.': 'Não foi possível ler a agenda.',
-  'The questions themselves are not in this school yet.':
-    'As questões em si ainda não estão nesta escola.',
   'due': 'a vencer',
+  'drawing…': 'sorteando…',
+  'That question could not be drawn.': 'Não foi possível sortear essa questão.',
+  'Done for today.': 'Por hoje é só.',
+  'Finish': 'Encerrar',
+  '{right} of {done} right. Each one comes back further away.':
+    '{right} de {done} certas. Cada uma volta mais adiante.',
 
   /* ---------- the offline copy ---------- */
   'This is the offline copy of this school.': 'Esta é a cópia offline desta escola.',

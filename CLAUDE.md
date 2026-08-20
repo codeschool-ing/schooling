@@ -502,6 +502,23 @@ making it safe needs a per-deployment secret to avoid one table.
 strength of a client's bug: a card the student never failed comes back tomorrow, and the review
 log carries a failure that never happened.
 
+**THE KEY COMES BACK WITH THE VERDICT, AND NEVER BEFORE IT.** A card is drawn without its answer,
+so the drill screen could not mark it if it wanted to; `grade.Expected` produces the key only
+inside the same call that marks the answer, in the frame the student was SHOWN — walking the same
+permutation the draw wrote down. Send the written frame instead and the tick lands on choice 2 of
+a list that is in a different order on their screen: a student who was right is shown their own
+answer marked wrong, and it looks like the grader rather than the arrangement.
+
+Four types need it — `quiz`, `multiple-choice`, `ordering`, `matching`. The rest are revealed by
+their own renderer out of what it already has, because nothing about them was shuffled, and
+`Expected` answers an empty reveal rather than an error: "nothing to add" is a real answer.
+`present_test.go` turns every reveal back into an answer and grades it, so a reveal that points at
+the wrong thing fails the build.
+
+**One answer per card.** No "try again" in a drill, unlike a lesson: the schedule moves the moment
+the answer lands, so a second attempt would be a second answer to a card already counted, and the
+interval it earned would be whichever try the student happened to stop on.
+
 **The queue does not cross schools yet.** A request arrives on a school's host and is scoped to
 it by the middleware before any module sees it, so a cross-school queue needs the platform's own
 address — which needs the domain. Writing it as a query that ignored the tenant would be

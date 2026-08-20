@@ -335,6 +335,16 @@ var ErrNotDrawn = errors.New("practice: that card has not been drawn")
 type Marked struct {
 	grade.Result
 	State State
+
+	// THE ANSWER, AND ONLY ONCE THERE IS AN ANSWER TO COMPARE IT WITH. A drill
+	// that said "wrong" and stopped would leave a student knowing they do not
+	// know, which is the half of the feedback that teaches nothing. This is the
+	// other half — and it is produced HERE rather than sent with the card,
+	// because a card carrying it would be a card whose answer is in the
+	// response body.
+	//
+	// It is in the frame the student saw. See internal/grade/reveal.go.
+	Reveal grade.Reveal
 }
 
 // Answered marks an answer and schedules the card again.
@@ -404,6 +414,15 @@ func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
 	}
 	correct := result.Correct
 
+	/* WHAT THE ANSWER WAS, for the screen to draw over what they gave. A type
+	   with nothing to add answers an empty reveal and the renderer needs
+	   nothing — see reveal.go — so this is not an error to be tolerated but a
+	   real answer, and only a failure to READ the question is one. */
+	revealed, err := grade.Expected(e.kind, e.payload, perm)
+	if err != nil {
+		return Marked{}, fmt.Errorf("practice: revealing %q: %w", exerciseID, err)
+	}
+
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return Marked{}, fmt.Errorf("practice: recording an answer: %w", err)
@@ -458,7 +477,7 @@ func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
 	if err := tx.Commit(ctx); err != nil {
 		return Marked{}, fmt.Errorf("practice: recording an answer: %w", err)
 	}
-	return Marked{Result: result, State: after}, nil
+	return Marked{Result: result, State: after, Reveal: revealed}, nil
 }
 
 // ErrBadAnswer is an answer this question cannot be marked against — the wrong
