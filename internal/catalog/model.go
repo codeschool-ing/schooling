@@ -30,7 +30,6 @@ package catalog
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 // School is one school's whole catalogue, as it is on disk.
@@ -344,10 +343,14 @@ type Topic struct {
 
 // UnmarshalJSON reads either form: `"Some title"` or `{"id":…, "title":…}`.
 //
-// The id is NOT filled in here when it is absent. A `Topic` that came from a
-// bare string carries an empty id and `TopicID` answers what to call it —
-// because deriving it here would make the two forms indistinguishable
-// afterwards, and the validator has to be able to say which is which.
+// THE BARE STRING IS STILL READ, AND IS NO LONGER VALID. Reading it is what
+// lets the validator say "this topic has no id, write one" instead of the
+// decoder saying a file is malformed — the first is a sentence somebody can
+// act on and the second sends them looking for a typo.
+//
+// Nothing fills the id in. There was a derivation once, and taking it out is
+// the whole of this change: an id worked out from a title is tied to the title,
+// and the plan for this material is that the titles get rewritten.
 func (t *Topic) UnmarshalJSON(data []byte) error {
 	var title string
 	if err := json.Unmarshal(data, &title); err == nil {
@@ -379,37 +382,21 @@ func (t Topic) MarshalJSON() ([]byte, error) {
 	}{t.ID, t.Title})
 }
 
-// TopicID is what this topic is called, declared or derived.
-//
-// The derivation is the one that was already happening — the title, lowercased,
-// with every run of anything else turned into a single hyphen. It is here so
-// that a course which has not been given ids behaves exactly as it did, and so
-// that there is one answer to "what is this lesson's id" rather than one per
-// caller.
-func TopicID(t Topic) string {
-	if t.ID != "" {
-		return t.ID
-	}
-	return slugOf(t.Title)
-}
+/* THERE IS NO `TopicID`, AND THERE IS NO `slugOf`.
 
-func slugOf(title string) string {
-	var b strings.Builder
-	dash := false
-	for _, r := range strings.ToLower(title) {
-		switch {
-		case (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9'):
-			if dash && b.Len() > 0 {
-				b.WriteByte('-')
-			}
-			dash = false
-			b.WriteRune(r)
-		default:
-			dash = true
-		}
-	}
-	return b.String()
-}
+   Both were here. `TopicID(t)` answered the declared id or, failing that, the
+   title lowercased with every run of anything else turned into a hyphen — the
+   derivation that had been happening implicitly all along, written down so
+   that a course without ids kept behaving as it did.
+
+   Keeping it would have kept the defect. An id worked out from a title is the
+   title, and the plan for this material is that a machine rewrites the titles
+   to a higher standard — so the derivation was a promise to move every
+   student's lessons, notes and progress on the day the words improved.
+
+   Callers read `topic.ID`. It is never empty in a catalogue that loaded,
+   because `validate.go` refuses a topic without one and the load job writes
+   nothing when validation fails. */
 
 // CourseText is a course in one other language.
 type CourseText struct {

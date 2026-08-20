@@ -150,22 +150,22 @@ ON CONFLICT DO NOTHING;
    the title text, so keeping it working meant keeping two sentences identical
    in two places by hand. It is an id now, and the title beside it is free. */
 INSERT INTO catalog_course_topics (tenant_id, course_id, position, topic_id, title)
-SELECT id, 'web-fundamentals', 0, 'client-and-server', 'Client and server'
+SELECT id, 'web-fundamentals', 0, 't-4mzk8p2r', 'Client and server'
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
-SELECT id, 'web-fundamentals', 'client-and-server', 'Client and server', 0
+SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'Client and server', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, kind, position)
-SELECT id, 'web-fundamentals', 'client-and-server', 'roles', 'reading', 0
+SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'roles', 'reading', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
-SELECT id, 'web-fundamentals', 'client-and-server', 'roles', 'en', 'The two roles',
+SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'roles', 'en', 'The two roles',
 $prose$The words **client** and **server** name a moment, not a machine.
 
 Whoever asks is the client. Whoever answers is the server.
@@ -256,7 +256,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO catalog_exercises
   (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
    drillable, prompt, payload)
-SELECT t.id, q.eid, 'web-fundamentals', 'client-and-server', 'roles', false, 1, q.kind,
+SELECT t.id, q.eid, 'web-fundamentals', 't-4mzk8p2r', 'roles', false, 1, q.kind,
        true, q.prompt, q.payload::jsonb
 FROM tenants t, (VALUES
   ('dr-quiz', 'quiz', 'Who is the client in an exchange?',

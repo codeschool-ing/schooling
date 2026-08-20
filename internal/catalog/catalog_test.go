@@ -645,7 +645,7 @@ func TestATopicKeepsTheIDItDeclaresWhateverItIsCalled(t *testing.T) {
 		t.Fatalf("%d topics, want the two the fixture declares", n)
 	}
 
-	if got := catalog.TopicID(course.Topics[0]); got != "client-and-server" {
+	if got := course.Topics[0].ID; got != "client-and-server" {
 		t.Errorf("a declared id came back as %q — the title is %q, and if that is where this "+
 			"came from then rewording a topic moves a student's work",
 			got, course.Topics[0].Title)
@@ -654,10 +654,30 @@ func TestATopicKeepsTheIDItDeclaresWhateverItIsCalled(t *testing.T) {
 		t.Errorf("the title came back as %q", course.Topics[0].Title)
 	}
 
-	// And a bare string is still a topic: it takes the slug of its own title,
-	// which is what happened implicitly before this existed.
-	if got := catalog.TopicID(course.Topics[1]); got != "something-nobody-has-written-yet" {
-		t.Errorf("a topic written as a plain string derived %q", got)
+	// AND THE SECOND TOPIC'S ID IS NOTHING LIKE ITS TITLE EITHER. It is the
+	// form every topic in `content/` now takes — `t-` and eight characters that
+	// mean nothing — and it is here so that this test would fail if anybody
+	// reintroduced a derivation for topics that "look like they need one".
+	if got := course.Topics[1].ID; got != "t-9x2mk4qv" {
+		t.Errorf("the second topic's id came back as %q", got)
+	}
+}
+
+// A TOPIC WITH NO ID IS REFUSED, and this is the check that replaced the
+// derivation rather than a check that was added beside it.
+//
+// The bare string used to be valid and took the slug of its own title. That is
+// exactly the tie this change exists to cut, and leaving the fallback in would
+// have left it intact for every school written from now on — none of which has
+// anybody to remind it. The message has to say what to write, because somebody
+// meeting this is looking at a file that used to be fine.
+func TestATopicWithNoIDIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("courses/web-fundamentals/course.json",
+		func(d map[string]any) {
+			d["topics"] = []any{"Who asks and who answers"}
+		}))
+	if !says(problems, "has no id", `{"id": "t-xxxxxxxx", "title":`) {
+		t.Errorf("a topic written as a plain string was accepted:\n%s", report(t, problems))
 	}
 }
 

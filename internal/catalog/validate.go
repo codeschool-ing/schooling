@@ -82,20 +82,33 @@ func checkIDs(s *School) []error {
 		seenCourse[c.ID] = true
 
 		/* EVERY TOPIC IS A THING WITH A NAME, and that name is what a lesson, a
-		   note and a progress row are all keyed by. A topic that has not been
-		   given one takes the slug of its title — which is what happened
-		   implicitly before, and is exactly why the title could not be edited
-		   afterwards without moving a student's work out from under them. */
+		   note and a progress row are all keyed by.
+
+		   THE ID IS WRITTEN DOWN, NEVER WORKED OUT. There was a fallback here
+		   that took the slug of the title when no id was given — which is what
+		   used to happen implicitly, and is exactly why the title could not be
+		   edited afterwards without moving a student's work out from under
+		   them. It is gone, and its absence is the point: a fallback that
+		   derives an id from prose keeps the hazard alive for whoever leaves
+		   the id out, and the schools that will be written next have nobody to
+		   remind them.
+
+		   So a topic with no id is refused, and the message says what to write
+		   instead. Refusing is louder than deriving, and it happens on a pull
+		   request rather than on the day somebody reworded a heading. */
 		topics := map[string]bool{}
 		for at, topic := range c.Topics {
-			id := TopicID(topic)
+			id := topic.ID
 			if strings.TrimSpace(topic.Title) == "" {
 				problems = append(problems, fmt.Errorf(
 					"topic %d of the course %q has no title", at, c.ID))
 			}
 			if id == "" {
 				problems = append(problems, fmt.Errorf(
-					"topic %d of the course %q has no id, and its title yields none", at, c.ID))
+					"topic %d of the course %q has no id — write one, as "+
+						`{"id": "t-xxxxxxxx", "title": %q}. It is never derived from the title: `+
+						"a machine rewrites titles, and every lesson, note and progress row "+
+						"keyed by this would follow the rewrite", at, c.ID, topic.Title))
 				continue
 			}
 			problems = append(problems, checkSlug(id, "the topic")...)

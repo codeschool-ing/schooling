@@ -298,17 +298,17 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			return fmt.Errorf("writing the course %s: %w", course.ID, err)
 		}
 
-		/* THE TOPICS, EACH WITH THE ID IT DECLARED. `catalog.TopicID` is the one
-		   answer to what a topic is called — the declared id, or the slug of the
-		   title for a course that has not been given ids yet. Deriving it here
-		   as well would be a second answer, and the two would differ on the day
-		   somebody changed one of them. */
+		/* THE TOPICS, EACH WITH THE ID IT DECLARED — and declared is the only way
+		   an id gets here. Nothing in this job works one out from a title,
+		   because nothing anywhere does any more: a catalogue that reached this
+		   line passed `Validate`, which refuses a topic with no id, and a
+		   catalogue that does not pass is never written. */
 		for at, topic := range course.Topics {
 			if _, err := tx.Exec(ctx, `
 				INSERT INTO catalog_course_topics
 					(tenant_id, course_id, position, topic_id, title)
 				VALUES ($1, $2, $3, $4, $5)
-			`, tenantID, course.ID, at, catalog.TopicID(topic), topic.Title); err != nil {
+			`, tenantID, course.ID, at, topic.ID, topic.Title); err != nil {
 				return fmt.Errorf("writing topic %d of the course %s: %w", at, course.ID, err)
 			}
 		}

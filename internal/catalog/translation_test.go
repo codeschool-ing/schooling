@@ -245,10 +245,11 @@ func TestATopicsIDIsTheSameInEveryLanguage(t *testing.T) {
 		t.Errorf("the title came back as %q", en.Topics[0].Title)
 	}
 
-	// The second is a bare string in the file and takes the slug of its title —
-	// so the mirror carries an id for it too, and no screen has to derive one.
-	if en.Topics[1].ID != "something-nobody-has-written-yet" {
-		t.Errorf("a topic written as a plain string reached the mirror as %q", en.Topics[1].ID)
+	// The second one's id says nothing about its title either, which is the form
+	// every topic in `content/` takes. Both reach the mirror as written, so no
+	// screen has to work one out.
+	if en.Topics[1].ID != "t-9x2mk4qv" {
+		t.Errorf("the second topic reached the mirror as %q", en.Topics[1].ID)
 	}
 }
 
@@ -299,48 +300,14 @@ func TestRewritingATopicsTitleDoesNotMoveItsID(t *testing.T) {
 	}
 }
 
-// AND THE COUNTERPART, which is what the old world did to every topic.
+// AND THE COUNTERPART IS NO LONGER A BEHAVIOUR, IT IS A REFUSAL.
 //
-// A topic written as a bare string has no declared id and takes the slug of its
-// own title — so rewriting the words DOES move it. That is not a defect in the
-// fallback; it is the fallback being honest about what it can offer, and it is
-// the exact behaviour that made rewording a topic unsafe before an id could be
-// written down.
+// There was a test here that rewrote a bare-string topic's title and watched
+// its id move with it. That was the fallback being honest about what it could
+// offer, and it was the reason the test above mattered: a reader who saw only
+// that one could conclude ids are magic, and this said what they cost.
 //
-// It is checked because it is the reason for the other test above. A reader who
-// sees only that one could conclude ids are magic; this says what they cost.
-func TestABareStringTopicMovesWithItsTitle(t *testing.T) {
-	pool := testPool(t)
-
-	// The fixture's SECOND topic is a bare string and backs no lesson, so its
-	// title can be rewritten without disturbing anything else.
-	retitled := func(title string) func(dir string) {
-		return patchJSON("courses/web-fundamentals/course.json", func(d map[string]any) {
-			topics, _ := d["topics"].([]any)
-			topics[1] = title
-			d["topics"] = topics
-		})
-	}
-
-	first := loaded(t, pool, retitled("Something nobody has written yet"))
-	second := loaded(t, pool, retitled("Something still unwritten"))
-	store := catalog.NewStore(pool)
-	ctx := context.Background()
-
-	was, err := store.Course(ctx, first, "web-fundamentals", "en", catalog.PlanFull)
-	if err != nil {
-		t.Fatalf("reading the course: %v", err)
-	}
-	now, err := store.Course(ctx, second, "web-fundamentals", "en", catalog.PlanFull)
-	if err != nil {
-		t.Fatalf("reading the rewritten course: %v", err)
-	}
-
-	if was.Topics[1].ID != "something-nobody-has-written-yet" {
-		t.Fatalf("a bare topic derived %q", was.Topics[1].ID)
-	}
-	if now.Topics[1].ID == was.Topics[1].ID {
-		t.Error("a topic with no declared id kept its id when the title changed — then the " +
-			"fallback is not deriving from the title, and the test above proves nothing")
-	}
-}
+// The fallback is gone. A topic with no id is refused before it can be loaded,
+// so there is nothing left to observe here — the cost is now paid at the pull
+// request instead of by a student. `TestATopicWithNoIDIsRefused`, in
+// `catalog_test.go`, is what that test became.
