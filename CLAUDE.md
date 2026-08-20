@@ -511,11 +511,52 @@ should recognise the next (N-07). The rest is this application's own — copying
 marketing page's thousand lines so that one file could be called shared would give
 us a shared file nobody dares edit.
 
+**Anything that differs between schools comes from the school, not from a file that
+ships with the application.** Its name, its accent, the address of its own site, what
+a subscription costs there. Each of those was a constant in a copied file first, and
+each looked correct on the school it was copied from — which is why they survived: an
+account menu linking every student to codeschool.ing and an invitation quoting `R$ 490`
+to a school that charges euros are not screens anybody reports as broken.
+
+**A colour somebody else chose still has to be readable** (X-05), and no colour is
+readable in both themes — that is arithmetic, not caution. The two page backgrounds are
+far enough apart that the best any colour manages against both is 4.17:1, where AA asks
+4.5. So a school's colour is its **hue**: `ui/app/accent.js` uses the accent where it
+reads and moves it along its own lightness where it does not, measured per theme
+against **every surface it lands on** — the page and the panel, because a card is
+lighter than the page behind it and half this text is on a card. It says in the console
+what it moved and why. The fixture the browser suites seed carries an accent that is
+not the palette's, so axe measures the applied colour rather than the one it replaced.
+
 **The key is the English string**, so there is no `en` dictionary — it would be an
 identity map. `tools/check-interface` fails on a string with no translation **and on
 a translation nothing says any more**, because a stale entry reads as current. A
 string that is the same in both languages gets an entry mapping to itself: that
 says somebody decided, where an absence says nobody looked.
+
+**A dictionary translates the INTERFACE and never the catalogue.** The dictionaries
+carry the words this application says — buttons, headings, the sentence above a form.
+A course's name, summary, syllabus and topics belong to a school, and they come from
+that school's own files: `courses/<id>/course.<locale>.json` beside `course.json`, and
+`tracks/<id>.<locale>.json` beside the track. The server answers them per request,
+which is why every catalogue route takes `?lang=`.
+
+It was a dictionary once, keyed by codeschool.ing's course ids — and for that school
+it looked right. For any other one, every course came out in English on a Portuguese
+page and **nothing looked broken**, because a missing key falls back to itself and the
+key is the English text. A school's content cannot live in a file that ships with the
+application.
+
+**A translation carries what somebody translated and no more** (C-11). Every field is
+optional and falls back on its own: a course translated in its name and not its
+summary keeps the English summary rather than losing it. Absent is not empty — in the
+JSON, and in the `COALESCE`/`NULLIF` that reads it back.
+
+**A fork's translation is keyed by POSITION, because a fork has no id.** It is the one
+join in the catalogue a reordering can break in silence: insert a step and every fork
+after it moves while the translations stay put, describing a different choice in
+perfect Portuguese. `validate-content` fails on the symptoms — a translated position
+that is not a fork, and a list of option names a different length from the fork's.
 
 **Server messages go through `txt()` too.** They arrive in English, English is the
 key, so they can be translated by adding an entry. The checker cannot see them —

@@ -160,6 +160,20 @@ export function subscribeHref(courseName) {
 // and a local run both reach here with an empty window.PLANS.
 const paidPlan = () => (window.PLANS || []).find((p) => p.id === 'student');
 
+/* An amount as the reader's language writes it, in the school's currency.
+   Falls back to the plain number when the currency is unknown, rather than
+   inventing a symbol for it. */
+function money(amount, currency) {
+  const lang = document.documentElement.lang || 'en';
+  try {
+    return currency
+      ? new Intl.NumberFormat(lang, { style: 'currency', currency }).format(amount)
+      : new Intl.NumberFormat(lang).format(amount);
+  } catch (e) {
+    return String(amount);
+  }
+}
+
 /* The block itself. `courseName` is optional: on the plan screen there is no
    course to name, and the invitation still stands. */
 export function subscribeInvite(courseName) {
@@ -179,8 +193,20 @@ export function subscribeInvite(courseName) {
         + opens.map((s) => '<li>' + esc(s) + '</li>').join('')
         + '</ul>'
       : '') +
-    (plan
-      ? '<p class="invite-price"><strong>R$ ' + esc(String(plan.price)) + '</strong>'
+    /* THE SCHOOL'S PRICE, IN THE SCHOOL'S CURRENCY, and one of the two
+       divergences in this file. `R$` was written here beside a number that
+       came from the portal's own `plans.js`, so every school on this platform
+       quoted codeschool.ing's subscription in Brazilian reais.
+
+       `Intl.NumberFormat` puts the symbol where that currency puts it and
+       groups the digits the way the reader's language does — which is not one
+       string with a prefix, in any of the five.
+
+       A school with no price set names none: the sentence above already says
+       what the subscription opens, and a made-up number is worse than no
+       number. */
+    (plan && plan.price
+      ? '<p class="invite-price"><strong>' + esc(money(plan.price, plan.currency)) + '</strong>'
         + '<span class="invite-cycle dim">' + esc(txt(plan?.cycle)) + '</span></p>'
       : '') +
     '<a class="btn btn-primary invite-cta" href="' + subscribeHref(courseName) + '">'

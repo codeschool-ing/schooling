@@ -72,7 +72,21 @@ type Listing struct {
 // DRAFTS NEVER APPEAR. Not locked, not greyed — absent. A course being written
 // is not a product, and the difference between "not for you" and "not yet"
 // belongs to the console rather than to a catalogue screen.
-func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID, plan Plan) ([]Listing, error) {
+//
+// AND IT IS ANSWERED IN A LANGUAGE. A course's name and syllabus used to be
+// translated by a dictionary that shipped with the interface, keyed by
+// codeschool.ing's course ids — so a second school's courses came out in the
+// language they were written in whatever the student picked, and nothing looked
+// broken, because a missing translation falls back to its key and the key is the
+// English text.
+//
+// `COALESCE` is the field-by-field fallback (C-11), said once per column: a
+// course translated in its name and not its syllabus keeps the English
+// syllabus. `NULLIF` on the arrays because an empty array is what a row carries
+// for a list nobody translated, and empty is not the same as "no syllabus".
+func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
+	plan Plan, locale string) ([]Listing, error) {
+
 	free, err := s.freeCourses(ctx, tenantID)
 	if err != nil {
 		return nil, err
@@ -84,22 +98,26 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID, plan Plan) ([]L
 	// `count(*)` over that answers neither question. A scalar subquery per
 	// course is the shape that cannot be wrong by accident.
 	rows, err := s.pool.Query(ctx, `
-		SELECT c.id, c.name, c.category, c.level, c.hours, c.summary,
+		SELECT c.id, coalesce(t.name, c.name), c.category, c.level, c.hours,
+		       coalesce(t.summary, c.summary),
 		       coalesce(array_agg(r.requires_id ORDER BY r.requires_id)
 		                FILTER (WHERE r.requires_id IS NOT NULL), '{}'),
 		       (SELECT count(*) FROM catalog_lessons l
 		         WHERE l.tenant_id = c.tenant_id AND l.course_id = c.id),
 		       (SELECT count(*) FROM catalog_sections s
 		         WHERE s.tenant_id = c.tenant_id AND s.course_id = c.id AND s.countable),
-		       c.syllabus, c.topics
+		       coalesce(nullif(t.syllabus, '{}'), c.syllabus),
+		       coalesce(nullif(t.topics, '{}'), c.topics)
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_requires r
 		       ON r.tenant_id = c.tenant_id AND r.course_id = c.id
+		LEFT JOIN catalog_course_text t
+		       ON t.tenant_id = c.tenant_id AND t.course_id = c.id AND t.locale = $2
 		WHERE c.tenant_id = $1 AND NOT c.draft
 		GROUP BY c.id, c.tenant_id, c.name, c.category, c.level, c.hours, c.summary,
-		         c.syllabus, c.topics
+		         c.syllabus, c.topics, t.name, t.summary, t.syllabus, t.topics
 		ORDER BY c.id
-	`, tenantID)
+	`, tenantID, locale)
 	if err != nil {
 		return nil, fmt.Errorf("catalog: listing the courses: %w", err)
 	}
@@ -204,18 +222,29 @@ type SectionView struct {
 	Body  string `json:"body,omitempty"`
 }
 
-func (s *Store) Course(ctx context.Context, tenantID uuid.UUID, id string, plan Plan) (*CourseView, error) {
+func (s *Store) Course(ctx context.Context, tenantID uuid.UUID,
+	id string, locale string, plan Plan) (*CourseView, error) {
+
 	free, err := s.freeCourses(ctx, tenantID)
 	if err != nil {
 		return nil, err
 	}
 
+	// In the language that was asked for, falling back column by column — see
+	// `Courses`, which does the same for the listing.
 	var course Course
 	err = s.pool.QueryRow(ctx, `
-		SELECT id, name, category, level, hours, summary, prerequisites,
-		       syllabus, topics, draft
-		FROM catalog_courses WHERE tenant_id = $1 AND id = $2
-	`, tenantID, id).Scan(&course.ID, &course.Name, &course.Category, &course.Level,
+		SELECT c.id, coalesce(t.name, c.name), c.category, c.level, c.hours,
+		       coalesce(t.summary, c.summary),
+		       coalesce(t.prerequisites, c.prerequisites),
+		       coalesce(nullif(t.syllabus, '{}'), c.syllabus),
+		       coalesce(nullif(t.topics, '{}'), c.topics),
+		       c.draft
+		FROM catalog_courses c
+		LEFT JOIN catalog_course_text t
+		       ON t.tenant_id = c.tenant_id AND t.course_id = c.id AND t.locale = $3
+		WHERE c.tenant_id = $1 AND c.id = $2
+	`, tenantID, id, locale).Scan(&course.ID, &course.Name, &course.Category, &course.Level,
 		&course.Hours, &course.Summary, &course.Prerequisites,
 		&course.Syllabus, &course.Topics, &course.Draft)
 
@@ -521,7 +550,7 @@ func (s *Store) SectionsOf(ctx context.Context, tenantID uuid.UUID,
 func (s *Store) Lesson(ctx context.Context, tenantID uuid.UUID,
 	courseID, lessonID string, locale string, plan Plan) (*LessonView, error) {
 
-	course, err := s.Course(ctx, tenantID, courseID, plan)
+	course, err := s.Course(ctx, tenantID, courseID, locale, plan)
 	if err != nil {
 		return nil, err
 	}
@@ -570,7 +599,11 @@ var ErrLocked = errors.New("catalog: this course is not open to this plan")
 func (s *Store) Picture(ctx context.Context, tenantID uuid.UUID,
 	courseID, name string, plan Plan) (mediaType string, body []byte, err error) {
 
-	course, err := s.Course(ctx, tenantID, courseID, plan)
+	// The LANGUAGE IS IRRELEVANT HERE and English is asked for on purpose: this
+	// call is the paywall and nothing else — it reads `Locked` and throws the
+	// rest away. Passing a locale would suggest the name of the course matters
+	// to a picture, which it does not.
+	course, err := s.Course(ctx, tenantID, courseID, "en", plan)
 	if err != nil {
 		return "", nil, err
 	}
@@ -684,11 +717,17 @@ type OptionView struct {
 	Courses []string `json:"courses"`
 }
 
-func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID) ([]TrackView, error) {
+func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID,
+	locale string) ([]TrackView, error) {
+
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, name, goal, outcome, continues
-		FROM catalog_tracks WHERE tenant_id = $1 ORDER BY position
-	`, tenantID)
+		SELECT c.id, coalesce(t.name, c.name), coalesce(t.goal, c.goal),
+		       coalesce(t.outcome, c.outcome), c.continues
+		FROM catalog_tracks c
+		LEFT JOIN catalog_track_text t
+		       ON t.tenant_id = c.tenant_id AND t.track_id = c.id AND t.locale = $2
+		WHERE c.tenant_id = $1 ORDER BY c.position
+	`, tenantID, locale)
 	if err != nil {
 		return nil, fmt.Errorf("catalog: listing the tracks: %w", err)
 	}
@@ -711,7 +750,7 @@ func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID) ([]TrackView, er
 	// it — there is no second request per track — so a field left out here is a
 	// field no screen ever sees.
 	for i := range out {
-		if out[i].Steps, err = s.steps(ctx, tenantID, out[i].ID); err != nil {
+		if out[i].Steps, err = s.steps(ctx, tenantID, out[i].ID, locale); err != nil {
 			return nil, err
 		}
 		if out[i].Links, err = s.links(ctx, tenantID, out[i].ID); err != nil {
@@ -721,12 +760,18 @@ func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID) ([]TrackView, er
 	return out, nil
 }
 
-func (s *Store) Track(ctx context.Context, tenantID uuid.UUID, id string) (*TrackView, error) {
+func (s *Store) Track(ctx context.Context, tenantID uuid.UUID,
+	id, locale string) (*TrackView, error) {
+
 	var t TrackView
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, name, goal, outcome, continues
-		FROM catalog_tracks WHERE tenant_id = $1 AND id = $2
-	`, tenantID, id).Scan(&t.ID, &t.Name, &t.Goal, &t.Outcome, &t.Continues)
+		SELECT c.id, coalesce(x.name, c.name), coalesce(x.goal, c.goal),
+		       coalesce(x.outcome, c.outcome), c.continues
+		FROM catalog_tracks c
+		LEFT JOIN catalog_track_text x
+		       ON x.tenant_id = c.tenant_id AND x.track_id = c.id AND x.locale = $3
+		WHERE c.tenant_id = $1 AND c.id = $2
+	`, tenantID, id, locale).Scan(&t.ID, &t.Name, &t.Goal, &t.Outcome, &t.Continues)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound
@@ -735,7 +780,7 @@ func (s *Store) Track(ctx context.Context, tenantID uuid.UUID, id string) (*Trac
 		return nil, fmt.Errorf("catalog: reading the track %q: %w", id, err)
 	}
 
-	if t.Steps, err = s.steps(ctx, tenantID, id); err != nil {
+	if t.Steps, err = s.steps(ctx, tenantID, id, locale); err != nil {
 		return nil, err
 	}
 	if t.Links, err = s.links(ctx, tenantID, id); err != nil {
@@ -789,23 +834,39 @@ func (s *Store) links(ctx context.Context, tenantID uuid.UUID,
 }
 
 // steps rebuilds a track's order from the flat rows the load job wrote.
-func (s *Store) steps(ctx context.Context, tenantID uuid.UUID, trackID string) ([]StepView, error) {
+func (s *Store) steps(ctx context.Context, tenantID uuid.UUID,
+	trackID, locale string) ([]StepView, error) {
+
+	// A FORK'S OPTION NAMES COME BACK AS AN ARRAY, matched to the options by
+	// POSITION — which is the one join in this catalogue that a reordering can
+	// break in silence, and why `validate.go` refuses a translation whose list
+	// is a different length from the fork's. Here it is applied defensively as
+	// well: an index past the end leaves the English name rather than reaching
+	// out of the slice.
+	optionNames := map[int][]string{}
 	forks := map[int]StepView{}
 	rows, err := s.pool.Query(ctx, `
-		SELECT position, choice, note FROM catalog_track_forks
-		WHERE tenant_id = $1 AND track_id = $2
-	`, tenantID, trackID)
+		SELECT f.position, coalesce(t.choice, f.choice), coalesce(t.note, f.note),
+		       t.options
+		FROM catalog_track_forks f
+		LEFT JOIN catalog_track_fork_text t
+		       ON t.tenant_id = f.tenant_id AND t.track_id = f.track_id
+		      AND t.position = f.position AND t.locale = $3
+		WHERE f.tenant_id = $1 AND f.track_id = $2
+	`, tenantID, trackID, locale)
 	if err != nil {
 		return nil, fmt.Errorf("catalog: reading the forks of %q: %w", trackID, err)
 	}
 	for rows.Next() {
 		var at int
 		var step StepView
-		if err := rows.Scan(&at, &step.Choice, &step.Note); err != nil {
+		var names []string
+		if err := rows.Scan(&at, &step.Choice, &step.Note, &names); err != nil {
 			rows.Close()
 			return nil, fmt.Errorf("catalog: reading the forks of %q: %w", trackID, err)
 		}
 		forks[at] = step
+		optionNames[at] = names
 	}
 	rows.Close()
 	if err := rows.Err(); err != nil {
@@ -849,7 +910,11 @@ func (s *Store) steps(ctx context.Context, tenantID uuid.UUID, trackID string) (
 		key := fmt.Sprint(position, "/", optionAt)
 		j, known := option[key]
 		if !known {
-			out[i].Options = append(out[i].Options, OptionView{Name: name})
+			shown := name
+			if names := optionNames[position]; optionAt < len(names) && names[optionAt] != "" {
+				shown = names[optionAt]
+			}
+			out[i].Options = append(out[i].Options, OptionView{Name: shown})
 			j = len(out[i].Options) - 1
 			option[key] = j
 		}

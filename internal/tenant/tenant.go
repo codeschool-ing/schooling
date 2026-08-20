@@ -32,6 +32,31 @@ type School struct {
 	Slug   string
 	Name   string
 	Accent string
+
+	// Site is the school's own site, if it has one. The interface links to it
+	// from the account menu and leaves the link out when it is empty — which
+	// is better than the link every school used to get, to codeschool.ing.
+	Site string
+
+	// What the subscription costs here, in cents, and in which currency. Zero
+	// means the school has not set a price, and the interface then describes
+	// what the subscription opens without naming a number.
+	PlanPriceCents int
+	PlanCurrency   string
+}
+
+// Price is the offer, or nothing.
+//
+// HALF OF ONE IS NOT SERVED. `plan_currency` carries a default so that a school
+// which sets a price cannot end up with an amount nothing can format — which
+// means a school that set NO price still has a currency in its row, and
+// answering that would put `BRL` on a school that never chose it. It is the
+// same mistake as the price written into the markup, one field smaller.
+func (s School) Price() (cents int, currency string) {
+	if s.PlanPriceCents <= 0 {
+		return 0, ""
+	}
+	return s.PlanPriceCents, s.PlanCurrency
 }
 
 type Store struct {
@@ -56,11 +81,13 @@ func (s *Store) ByHost(ctx context.Context, host string) (School, error) {
 
 	var out School
 	err := s.pool.QueryRow(ctx, `
-		SELECT t.id, t.slug, t.name, t.accent
+		SELECT t.id, t.slug, t.name, t.accent, t.site,
+		       t.plan_price_cents, t.plan_currency
 		FROM tenant_domains d
 		JOIN tenants t ON t.id = d.tenant_id
 		WHERE d.host = $1
-	`, h).Scan(&out.ID, &out.Slug, &out.Name, &out.Accent)
+	`, h).Scan(&out.ID, &out.Slug, &out.Name, &out.Accent, &out.Site,
+		&out.PlanPriceCents, &out.PlanCurrency)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return School{}, ErrUnknownHost
