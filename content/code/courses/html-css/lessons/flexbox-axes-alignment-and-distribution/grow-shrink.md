@@ -4,7 +4,11 @@ title: Growing, shrinking and the basis
 
 The `flex` property is a shorthand for three things: how much the item may grow, how much it may shrink, and what size it starts from.
 
-[object Object]
+```css
+.side   { flex: 0 0 240px; }  /* does not grow, does not shrink: a fixed 240px */
+.middle { flex: 1 1 auto; }   /* takes whatever is left */
+.equal  { flex: 1; }          /* shorthand for 1 1 0: all the same width */
+```
 
 The difference between `flex: 1` and `flex: 1 1 auto` trips a lot of people up: with a basis of `0`, the items all end up the same size; with a basis of `auto`, each one's content matters, and an item with a long text ends up larger than the others.
 

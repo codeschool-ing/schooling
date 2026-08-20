@@ -75,7 +75,11 @@ func (h *Handler) structure(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shape, err := h.store.Structure(r.Context(), school)
+	// IN A LANGUAGE, like the lesson beside it. The shape carries the section
+	// TITLES, and a title is a translated string here — the school's own rows,
+	// not a dictionary shipped with the interface. Answering it in English only
+	// would put "Introduction" on a Portuguese dashboard.
+	shape, err := h.store.Structure(r.Context(), school, locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return

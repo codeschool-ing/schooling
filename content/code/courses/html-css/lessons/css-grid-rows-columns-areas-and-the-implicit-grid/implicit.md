@@ -6,7 +6,13 @@ If you declare two columns and six items arrive, the grid creates new rows on it
 
 The most profitable combination in modern CSS makes a responsive grid **with no media query at all**:
 
-[object Object]
+```css
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+```
 
 It reads: as many columns as fit, each at least 220px and sharing the rest equally. The grid rearranges itself at any width.
 

@@ -4,7 +4,12 @@ title: Where the CSS and the JavaScript go
 
 The stylesheet goes in the `<head>`, and the script goes at the end of the `<body>` or with `defer`:
 
-[object Object]
+```html
+<head>
+  <link rel="stylesheet" href="style.css" />
+  <script src="app.js" defer></script>
+</head>
+```
 
 Both places come from the same reasoning, with opposite results. **CSS blocks rendering on purpose** — showing the page unstyled and restyling it afterwards would flash the whole screen — so the sooner it starts downloading, the better.
 

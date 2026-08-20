@@ -6,6 +6,11 @@ title: fixed and sticky
 
 `sticky` is the hybrid: the element scrolls normally until it reaches the declared limit, and sticks there.
 
-[object Object]
+```css
+.table-header {
+  position: sticky;
+  top: 0;
+}
+```
 
 Two gotchas with `sticky` explain almost every "it does not work" case: it **requires** a declared offset (`top`, `bottom`…), without which it does nothing; and it sticks inside its **parent**, not the window — if the parent has `overflow: hidden` or ends soon, the effect ends with it.

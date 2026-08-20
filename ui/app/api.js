@@ -22,8 +22,13 @@
    ========================================================================== */
 
 import * as state from './state.js';
-import { courseLessons } from './catalog.js';
-import { putStructure, putCourse, structureLoaded as structureIsLoaded } from './lessons.js';
+import { courseLessons, courseById, trackById } from './catalog.js';
+import {
+  lessonSections,
+  putStructure,
+  putCourse,
+  structureLoaded as structureIsLoaded,
+} from './lessons.js';
 
 const baked = globalThis.SCHOOLING_BAKED || null;
 
@@ -276,10 +281,38 @@ export function chooseOption(trackId, index, option) {
    a language switch and the paragraphs came from a request that named one, so
    the store has to be dropped when it moves — see `redrawAll` in main.js. */
 let loadedLocale = null;
-const wanted = () => (globalThis.contentLocale ? globalThis.contentLocale() : 'en');
+/* And the language the SHAPE was fetched in, which is a second answer and moves
+   on its own. The shape carries the section titles — what the rail, the section
+   strip and the "pick up where you left off" card call a place — and over there
+   those are in a file per language; here they are rows, asked for by locale
+   like everything else. Tracked separately because a student who has opened no
+   lesson has a shape and no prose, and the switch has to reach it anyway. */
+let structureLocale = null;
+/* WHICH LANGUAGE IS ON SCREEN, ASKED OF THE DOCUMENT.
+
+   `i18n-runtime.js` keeps its `LANG` to itself — it is a module-local `const`
+   with no accessor — and the one thing it does publish is
+   `document.documentElement.lang`, which it writes on load and rewrites on
+   every switch. So that is the source: it cannot drift from what the runtime
+   is showing, because it is what the runtime showed.
+
+   THE PREVIOUS LINE ASKED FOR `globalThis.contentLocale`, WHICH DOES NOT
+   EXIST — not here, and not in `portal-frontend` either; it was invented by
+   this adapter and nothing ever defined it. It failed the way a made-up global
+   fails: silently, always falling to the default, so every request for the
+   material asked for English and a student reading in Portuguese was served
+   English paragraphs with a Portuguese interface around them.
+
+   `pt-BR` is the document's tag and `pt` is the locale the school's rows are
+   keyed by, so the region is dropped. */
+const wanted = () => {
+  const tag = (document.documentElement.lang || 'en').toLowerCase();
+  return tag.split('-')[0];
+};
 
 export function languageChanged() {
-  return loadedLocale !== null && loadedLocale !== wanted();
+  return (loadedLocale !== null && loadedLocale !== wanted())
+    || (structureLocale !== null && structureLocale !== wanted());
 }
 
 export const structureLoaded = () => structureIsLoaded();
@@ -287,8 +320,10 @@ export const structureLoaded = () => structureIsLoaded();
 /* The shape of every course — lessons and sections, no prose — in one request.
    It is what the rail and every denominator are drawn from. */
 export async function loadLessonStructure() {
-  const answer = await get('/api/v1/lessons').catch(() => null);
+  const locale = wanted();
+  const answer = await get(`/api/v1/lessons?lang=${enc(locale)}`).catch(() => null);
   if (!answer) return false;
+  structureLocale = locale;
 
   /* The store is keyed by the lesson's TITLE, because that is what
      `courseLessons` produces as a key: over there a lesson is an entry of the
@@ -323,6 +358,83 @@ export async function loadLessonStructure() {
   return true;
 }
 
+/* ---------- THE MATERIAL ARRIVES AS TEXT AND IS DRAWN AS BLOCKS ----------
+
+   `text.js` renders a LIST: a string is a paragraph, an array is a bullet list,
+   `{ code, text }` is a code block, `{ image | svg, caption }` is a figure and
+   `{ example }` is the annotated, Go-By-Example column. It is not markdown, and
+   its own comment says why it is not — a dialect invented now is a migration
+   later.
+
+   This school stores a section's words as one text field, authored as markdown
+   in `content/`. So the two have to meet, and this is where.
+
+   IT BROKE LOUDLY AND LOOKED QUIET. `prose(body)` starts `body.map(...)`, and a
+   string has no `.map` — so the moment a section with words in it reached the
+   screen the render threw, the dispatch chain swallowed it, and the lesson
+   stayed on the placeholder it had been drawn with a moment earlier. Every
+   section that is a video rendered, because a video has no prose; every section
+   that is READING did not, in either language. That is what "the material lands
+   in Stage 2" was on screen for.
+
+   MARKDOWN SPELLS THREE OF THE FIVE — paragraph, bullet list, fenced code with
+   its language. The other two have no markdown of their own, so the content
+   files carry them as a fence whose info string names the block and whose body
+   is the block as JSON. It is a fence to every markdown reader, including the
+   ones nobody has written yet, and one `switch` here. `tools/…/reimport` wrote
+   them; this reads them. */
+function blocksOf(text) {
+  if (typeof text !== 'string') return text;   // already a list: the offline copy
+
+  const out = [];
+  const lines = text.split('\n');
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (line.startsWith('```')) {
+      const kind = line.slice(3).trim();
+      const body = [];
+      i += 1;
+      while (i < lines.length && !lines[i].startsWith('```')) { body.push(lines[i]); i += 1; }
+      i += 1;                                   // the closing fence
+      const inside = body.join('\n');
+      if (kind === 'schooling-example' || kind === 'schooling-figure' || kind === 'schooling-block') {
+        try {
+          const parsed = JSON.parse(inside);
+          out.push(kind === 'schooling-example' ? { example: parsed } : parsed);
+        } catch (e) {
+          out.push(inside);                     // unreadable: the words, at least
+        }
+      } else {
+        out.push({ code: kind, text: inside });
+      }
+      continue;
+    }
+
+    if (line.startsWith('- ')) {
+      const items = [];
+      while (i < lines.length && lines[i].startsWith('- ')) { items.push(lines[i].slice(2)); i += 1; }
+      out.push(items);
+      continue;
+    }
+
+    if (line.trim() === '') { i += 1; continue; }
+
+    // A paragraph, which the content files write on one line and a person
+    // editing one may well wrap. It ends at a blank line or at a fence.
+    const paragraph = [];
+    while (i < lines.length && lines[i].trim() !== ''
+           && !lines[i].startsWith('```') && !lines[i].startsWith('- ')) {
+      paragraph.push(lines[i]);
+      i += 1;
+    }
+    out.push(paragraph.join(' '));
+  }
+  return out;
+}
+
 /* One course's prose. It is the request the paywall refuses, which is why it is
    per course and not part of the structure above. */
 export async function loadCourseContent(courseId) {
@@ -347,7 +459,7 @@ export async function loadCourseContent(courseId) {
       sections: (lesson.sections || []).map((s) => ({
         id: s.id,
         title: s.title || s.id,
-        ...(s.body ? { body: s.body } : {}),
+        ...(s.body ? { body: blocksOf(s.body) } : {}),
         ...(s.kind === 'video' ? { video: true } : {}),
         ...(s.duration ? { duration: s.duration } : {}),
         countable: s.countable !== false,
@@ -398,10 +510,36 @@ export function saveNote(courseId, ix, sectionId, body) {
   return put(`/api/v1/notes/${enc(courseId)}/${enc(lesson)}/${enc(sectionId)}`, { body });
 }
 
-/* Where the student was, newest first, in the shape the dashboard reads. */
+/* Where the student stopped — and now with the SECTION, not just the lesson.
+   Returning the top of a four-hour lesson is returning the person to scrolling;
+   it is the difference between the feature being useful and being decorative.
+
+   It falls back to the first section of the track when there is no history yet,
+   instead of returning null and forcing every screen to invent a fallback.
+
+   THE PORTAL'S FUNCTION, RESTORED. This adapter first shortened it to "whatever
+   `last` says", which reads as correct and is not: `last` is empty until
+   somebody has opened a section, so the "pick up where you left off" card —
+   the first thing on the dashboard and the one that says what to do next —
+   never appeared for anybody who had not already started. It is not a server
+   question either; every value it reads is the catalogue and this browser's own
+   document, which is why it can be the portal's line for line. */
 export function resumeFrom() {
-  const last = state.now().last;
-  return echo(last);
+  const e = state.now();
+  const firstSection = (courseId, ix) => {
+    const a = courseLessons(courseId)[ix];
+    return a ? lessonSections(courseId, a.key)[0]?.id : undefined;
+  };
+
+  if (e.last && courseById(e.last.courseId)) {
+    const { courseId, lessonIx } = e.last;
+    return echo({ ...e.last, sectionId: e.last.sectionId || firstSection(courseId, lessonIx) });
+  }
+  const t = e.enrollment && trackById(e.enrollment.trackId);
+  if (!t) return echo(null);
+  const first = t.courses.find((i) => typeof i === 'string');
+  if (!first) return echo(null);
+  return echo({ courseId: first, lessonIx: 0, sectionId: firstSection(first, 0) });
 }
 
 /* ---------- exams ---------- */

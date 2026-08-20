@@ -365,17 +365,40 @@ func (s *Store) requires(ctx context.Context, tenantID uuid.UUID, courseID strin
 // a locked course shows its shape and none of its words, because the shape is
 // what somebody deciding whether to subscribe is reading. There is no prose in
 // this answer at all, which is what makes it safe to serve whole.
-func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID) (map[string][]LessonView, error) {
+//
+// A SECTION'S TITLE IS PART OF THE SHAPE AND NOT PART OF THE MATERIAL, which
+// this answer left out at first and should not have. The lesson's title is
+// already here for exactly that reason; a section's is the same kind of thing —
+// it is what the rail, the section strip and the "pick up where you left off"
+// card call the place a student is going. Without it every one of them fell
+// back to the id, and the dashboard offered to continue from "intro".
+//
+// IT IS ASKED FOR IN A LANGUAGE, because a title is a translated string and
+// this school keeps its translations in its own rows rather than in a
+// dictionary shipped with the interface. `COALESCE` is the field-by-field
+// fallback the prose reader spells out at length (C-11), in one line here
+// because there is one field: a section translated in its body but not its
+// title keeps the English title rather than losing it.
+func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
+	locale string) (map[string][]LessonView, error) {
+
 	rows, err := s.pool.Query(ctx, `
-		SELECT l.course_id, l.id, l.title, s.id, s.kind, s.duration, s.countable
+		SELECT l.course_id, l.id, l.title, s.id, s.kind, s.duration, s.countable,
+		       COALESCE(NULLIF(t.title, ''), e.title)
 		FROM catalog_lessons l
 		JOIN catalog_courses c
 		  ON c.tenant_id = l.tenant_id AND c.id = l.course_id AND NOT c.draft
 		LEFT JOIN catalog_sections s
 		       ON s.tenant_id = l.tenant_id AND s.course_id = l.course_id AND s.lesson_id = l.id
+		LEFT JOIN catalog_prose e
+		       ON e.tenant_id = s.tenant_id AND e.course_id = s.course_id
+		      AND e.lesson_id = s.lesson_id AND e.section_id = s.id AND e.locale = 'en'
+		LEFT JOIN catalog_prose t
+		       ON t.tenant_id = s.tenant_id AND t.course_id = s.course_id
+		      AND t.lesson_id = s.lesson_id AND t.section_id = s.id AND t.locale = $2
 		WHERE l.tenant_id = $1
 		ORDER BY l.course_id, l.position, s.position
-	`, tenantID)
+	`, tenantID, locale)
 	if err != nil {
 		return nil, fmt.Errorf("catalog: reading the shape of every course: %w", err)
 	}
@@ -384,10 +407,10 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID) (map[string][
 	out := map[string][]LessonView{}
 	for rows.Next() {
 		var courseID, lessonID, title string
-		var section, kind, duration *string
+		var section, kind, duration, sectionTitle *string
 		var countable *bool
 		if err := rows.Scan(&courseID, &lessonID, &title,
-			&section, &kind, &duration, &countable); err != nil {
+			&section, &kind, &duration, &countable, &sectionTitle); err != nil {
 			return nil, fmt.Errorf("catalog: reading the shape of every course: %w", err)
 		}
 
@@ -399,9 +422,16 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID) (map[string][
 		// lesson and not a section — the LEFT JOIN is what keeps it visible.
 		if section != nil {
 			last := &list[len(list)-1]
-			last.Sections = append(last.Sections, SectionView{
+			view := SectionView{
 				ID: *section, Kind: *kind, Duration: *duration, Countable: *countable,
-			})
+			}
+			// Absent rather than blank when nobody has written the section
+			// yet: the interface falls back to the id, and an empty string
+			// would give it a nameless row to draw instead.
+			if sectionTitle != nil {
+				view.Title = *sectionTitle
+			}
+			last.Sections = append(last.Sections, view)
 		}
 		out[courseID] = list
 	}

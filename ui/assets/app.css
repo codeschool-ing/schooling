@@ -1,507 +1,72 @@
 /* ==========================================================================
-   Schooling — what the portal's stylesheets do not carry.
+   Schooling — the only place the copied interface is overridden.
 
-   THE LAYOUT IS NOT HERE ANY MORE. `base.css` and `portal.css` are copies of
-   `portal-frontend`'s, byte for byte, and they are loaded before this file: the
-   bar, the rail, the blocks, the cards, the bars, the certificate and the
-   course columns all come from there. This file used to hold a layout of its
-   own written to the same palette, and the two drifted in every direction a
-   person cannot see from a screenshot.
+   THERE IS NO LAYOUT IN THIS FILE. `base.css` and `portal.css` are
+   `portal-frontend`'s, byte for byte, and they are loaded before this one: the
+   bar, the rail, the blocks, the cards, the meters, the graph, the lesson
+   list, the exam paper and the certificate all come from there, and the
+   instruction for this interface is that it looks EXACTLY like the portal.
 
-   WHAT IS LEFT IS WHAT THIS APPLICATION HAS AND THE PORTAL DOES NOT:
+   IT USED TO HOLD A WHOLE STYLESHEET. This application had screens of its own
+   before the portal's were copied in, written to the same palette and the same
+   vocabulary — `.lessons`, `.node`, `.graph`, `.option`, `.question`,
+   `.search`. Those screens are gone and the class names are not: the copied
+   markup uses the same words, so every one of those rules landed on the
+   portal's elements and won, because this file is loaded last. On the screen
+   that was a line drawn between lessons the portal does not draw, a hover that
+   stopped short of the edge of the panel, a graph laid out by two stylesheets
+   at once. None of it is visible in a diff of `portal.css`, which is identical;
+   all of it is visible side by side with app.codeschool.ing, which is how it
+   was found.
 
-   - the skip link and `.visually-hidden`, which the portal has no equivalent of
-   - `.notice`, `.prose` and the legal footer, which are this side's screens
-   - the track graph, because the two repositories draw it with two different
-     routers and two different sets of class names — see below
-   - the exam paper and the labelling question, which are this side's own
+   So the rule now is the one the header always claimed and the contents did
+   not keep: THIS FILE MAY ONLY OVERRIDE, AND EVERY OVERRIDE IS ARGUED FOR
+   BELOW. Anything that merely styles something is a change to `portal.css`,
+   made there and taken back to the portal.
 
-   It is loaded LAST so that it can only add. A rule here that overrode one of
-   theirs would be the drift starting again, one selector at a time.
+   What is left is one defect, in two shapes. Both are the portal's, both were
+   found by a check the portal does not run, and both are worth taking back.
    ========================================================================== */
 
-/* ---------- the floor the copies do not lay ---------- */
-
-/* Available to a screen reader and to nobody else. The clip-path pair rather
-   than `display:none`, because a hidden element is not read at all. */
-.visually-hidden{
-  position:absolute;width:1px;height:1px;
-  padding:0;margin:-1px;overflow:hidden;
-  clip-path:inset(50%);white-space:nowrap;border:0;
-}
-
-/* The first thing in the tab order. It is not decoration: every screen puts a
-   rail of twenty links before the content. (WCAG 2.4.1) */
-.skip{
-  position:absolute;left:8px;top:-64px;z-index:100;
-  background:var(--phosphor);color:var(--ink);
-  padding:10px 16px;border-radius:6px;font-weight:600;
-  transition:top .15s ease;
-}
-.skip:focus{top:8px}
-
-/* EVERY interactive thing gets the same ring, and it is never removed. The
-   default outline is the one accessibility affordance browsers ship for free,
-   and `outline:none` is the single most common way a site loses keyboard
-   operability without anybody noticing. (WCAG 2.4.7) */
-:focus-visible{outline:2px solid var(--phosphor);outline-offset:2px;border-radius:2px}
-.content:focus{outline:none}
-
-/* `hidden` MEANS HIDDEN. The attribute's own rule is `display:none` at the
-   lowest possible specificity, so any class that sets a display beats it —
-   `.btn{display:inline-flex}` does, and the sign-in link stayed on screen
-   beside the name of the person who had just signed in. */
-[hidden]{display:none !important}
-
-/* ---------- the search field ----------
-
-   The portal opens a ⌘K panel here and this opens a field in the bar. Hidden
-   until the button asks for it: a permanent input is most of the width of a
-   phone spent on something people use rarely. */
-.search{display:none;flex:none}
-body.search-open .search{display:block}
-.search input{
-  width:min(320px,44vw);
-  background:var(--panel);color:var(--paper);
-  border:1px solid var(--wire);border-radius:6px;
-  padding:7px 11px;font:inherit;font-size:.9rem;
-}
-.search input::placeholder{color:var(--paper-dim)}
-
-/* ---------- messages ---------- */
-
-.notice{
-  border:1px solid var(--wire);border-left:3px solid var(--phosphor);
-  background:var(--panel);border-radius:8px;padding:12px 14px;
-}
-.notice.bad{border-left-color:var(--amber)}
-
-/* ---------- the two documents ----------
-
-   Quiet on purpose — it is a place people look rather than a thing that asks to
-   be read — but `--paper-dim` rather than a lower opacity, because opacity on
-   text is how a contrast ratio ends up at 4.09 against a 4.5 requirement, which
-   is a defect the accessibility pass has already caught here once. */
-.page-footer{
-  border-top:1px solid var(--wire);
-  padding:20px clamp(16px,4vw,48px);
-  font-size:.9rem;
-}
-.page-footer nav{display:flex;flex-wrap:wrap;gap:20px;position:static;height:auto;background:none;border:0;padding:0}
-.page-footer a{color:var(--paper-dim)}
-.page-footer a:hover,.page-footer a:focus-visible{color:var(--paper)}
-
-/* THE READING COLUMN IS CAPPED IN CHARACTERS, not pixels. A line of prose that
-   runs the width of a desktop screen is measurably harder to read, and the unit
-   that says so is the character rather than the device. */
-.prose{max-width:68ch}
-.prose p{margin:0 0 1em}
-.prose h2{margin:1.6em 0 .5em}
-.prose h3{margin:1.4em 0 .4em}
-.prose ul,.prose ol{margin:0 0 1em 1.4em}
-.prose code{background:var(--scan);padding:.1em .35em;border-radius:4px;font-size:.92em}
-.prose pre{background:var(--panel);border:1px solid var(--wire);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 1em}
-.prose pre code{background:none;padding:0}
-.legal-other{margin-top:28px}
-
-/* ---------- a track, drawn ----------
-
-   THIS IS THE ONE PLACE THE COPY STOPS, and it is worth saying why rather than
-   leaving somebody to find out. `portal.css` styles `.course-node`, `.level`,
-   `.subcol` and `.edge`; this repository's router emits `.node`,
-   `.graph-column` and `.graph-edges .row`. They are two implementations of the
-   same picture, and the one here is the one `tools/graph-test` drives — the
-   check that no edge is drawn through a card.
-
-   Swapping the router would mean swapping that test for the portal's, which is
-   a separate piece of work with its own risk. The cards inside the graph are
-   drawn in the portal's vocabulary, so what differs is the geometry rather than
-   the look.
-
-
-   The columns are a grid and the lines are an SVG behind them, sized to the
-   grid rather than to the viewport. The router measures the boxes the browser
-   produced, so nothing here may position a card with a transform: a transform
-   moves what is drawn without moving what `getBoundingClientRect` reports, and
-   every line would land somewhere else. */
-
-.graph{
-  margin:20px 0 32px;
-  overflow-x:auto;
-  /* The scroll container is what the lines are measured against, so its
-     padding is part of their coordinate space. */
-  padding:8px 4px 16px;
-}
-
-.graph-canvas{
-  position:relative;
-  display:flex;align-items:center;gap:64px;
-  width:max-content;min-width:100%;
-}
-
-.graph-edges{
-  position:absolute;left:0;top:0;
-  /* Behind the cards, and untouchable: an edge is a picture of a relationship,
-     not a control. */
-  z-index:0;pointer-events:none;
-}
-/* THE COPY HIDES THESE BELOW 860px AND HERE THEY MUST NOT BE HIDDEN.
-   `base.css` carries `@media(max-width:860px){.graph-edges{display:none}}`,
-   which is right for the drawing it was written for: over there the narrow
-   layout is a plain column with no lines at all. Here the narrow layout is the
-   same graph turned ninety degrees, and its edges are the whole point of it.
-
-   It cost an afternoon to find, and the symptom is worth writing down because
-   it points away from the cause: `tools/graph-test` reported EIGHT lines
-   through a card, the same eight after the cards were made shorter, after the
-   flex was neutralised, after the lanes were widened and after the card was put
-   back exactly as it had been. A number that does not move when the geometry
-   moves is not a geometry problem. The paths were being drawn correctly into an
-   element with no box, so every coordinate the test read back came out at the
-   origin — on top of the first card. */
-.graph .graph-edges{display:block}
-.graph-edges .row{fill:none;stroke:var(--wire);stroke-width:1.5}
-.graph-edges .tip{fill:var(--wire)}
-
-.graph-column{
-  position:relative;z-index:1;
-  display:flex;flex-direction:column;gap:24px;
-  justify-content:center;
-}
-
-/* Flowing downwards: the whole thing turns ninety degrees. Levels become rows
-   and the cards inside one sit side by side — which is what the router is
-   already drawing, since it takes the boxes with x and y swapped. */
-.graph.flows-down{overflow-x:hidden}
-.graph.flows-down .graph-canvas{
-  /* STRETCHED, NOT CENTRED, and the reason is the `min(260px,100%)` below. A
-     centred row is shrink-to-fit: its width comes from its own contents, so
-     the percentage inside it has nothing definite to resolve against and the
-     browser falls back to each card's max-content. The cards came out ragged —
-     sized by how wide their names happened to render — and a level wrapped or
-     did not depending on the font. Two of the six drawings were laid out one
-     way on a machine that reaches the font CDN and another way on a machine
-     that does not, and the router met a shape it never meets here.
-
-     A stretched row has a definite width. The percentage resolves against it,
-     every card is the same 260, and the only thing a font still moves is how
-     tall they are. */
-  flex-direction:column;align-items:stretch;gap:48px;
-  width:100%;min-width:0;
-}
-.graph.flows-down .graph-column{
-  flex-direction:row;gap:16px;flex-wrap:wrap;justify-content:center;
-}
-.graph.flows-down .node{width:min(260px,100%)}
-
-/* A CARD ON THE MAP IS THE SAME CARD AS IN A LIST, narrower. It carries which
-   level it is, what state it is in, its name, how long it takes and how far
-   along the student is — the same five facts a course card carries anywhere
-   else, because a student reading the map is deciding the same thing.
-
-   The width is fixed rather than content-sized: the edge router measures these
-   boxes, and a column of cards that are each as wide as their longest word is a
-   drawing whose shape changes with the language it is read in. */
-/* THE PORTAL'S CARD, INSIDE THIS REPOSITORY'S GRAPH.
-
-   `base.css` gives `.course-node` `flex:1 0 195px` and a `transform` on hover.
-   Both are right where they were written and wrong here, and each cost a real
-   failure:
-
-   - `flex-grow:1` stretched every card to the width of the canvas. This graph
-     lays its cards out in flex columns, so a card that grows fills the column:
-     260px became 759px, the lanes the edge router reserves stopped fitting, and
-     `tools/graph-test` reported eight lines drawn through a card.
-
-   - a `transform` moves what is DRAWN without moving what
-     `getBoundingClientRect` REPORTS, and every line here is drawn from those
-     rectangles. Hovering a card would slide it three pixels out from under its
-     own edges.
-
-   Neutralised here rather than in the copy, which has to stay a copy. */
-.graph .node.course-node{flex:0 0 auto}
-.graph .node.course-node:hover{transform:none}
-
-.node{
-  background:var(--panel);border:1px solid var(--wire);border-radius:10px;
-  padding:16px 18px;width:220px;
-  display:flex;flex-direction:column;gap:0;
-}
-.node.course:hover{border-color:var(--phosphor-dim)}
-/* The same, for the same reason. A node on the graph is small and its hours
-   are already the dim colour; taking a third of the contrast off that is how a
-   track map becomes unreadable for the people it is meant to orient. */
-.node.is-locked{border-style:dashed}
-
-/* WHERE THE STUDENT IS, marked on the border. It is never the only marker —
-   the eyebrow above the name says the state in words, which is what a screen
-   reader reads and what somebody who cannot separate these two colours
-   sees. (WCAG 1.4.1) */
-.node.started{border-color:var(--amber)}
-.node.done{border-color:var(--phosphor-dim)}
-
-.node-level{
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--paper-dim);margin:0 0 4px;
-}
-.node .eyebrow{font-size:.68rem;margin:0 0 6px}
-.node-name{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;line-height:1.28}
-.node .chip{margin:8px 0 0;align-self:flex-start}
-.node-hours{
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:.76rem;margin-top:10px;
-}
-.node .meter{margin:10px 0 6px}
-.node .side-count{align-self:flex-start;margin:0}
-
-/* What the four states look like, said in words once at the bottom of the map.
-   A key is what turns a colour into information — without it the borders are a
-   pattern somebody has to guess at. */
-.graph-key{
-  display:flex;flex-wrap:wrap;gap:22px;margin:6px 0 0;
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:.76rem;color:var(--paper-dim);
-}
-.graph-key span{display:inline-flex;align-items:center;gap:8px}
-.graph-key i{
-  width:9px;height:9px;border-radius:2px;display:inline-block;
-  border:1px solid var(--paper-dim);
-}
-.graph-key .done i{background:var(--phosphor);border-color:var(--phosphor)}
-.graph-key .started i{border-color:var(--amber)}
-.graph-key .open i{border-color:var(--paper-dim)}
-.graph-key .later i{border-color:var(--wire)}
-
-.node.finish{
-  width:auto;min-width:96px;text-align:center;
-  border-style:dashed;color:var(--phosphor);
-}
-
-.node.fork{width:210px;border-style:dashed}
-.fork-choice{font-size:.86rem;font-weight:600}
-.fork-options{display:flex;flex-direction:column;gap:4px;margin-top:6px}
-.fork-option{
-  background:var(--scan);color:var(--paper);border:1px solid transparent;
-  border-radius:6px;padding:5px 8px;font:inherit;font-size:.84rem;
-  text-align:left;cursor:pointer;
-}
-/* The chosen branch is marked by more than colour: it is what `aria-pressed`
-   says, and it carries a border as well as a tint. (WCAG 1.4.1) */
-.fork-option.on{border-color:var(--phosphor);color:var(--phosphor)}
-
-/* ---------- sitting an exam ---------- */
-
-.paper{max-width:68ch;display:flex;flex-direction:column;gap:8px}
-
-.question{
-  background:var(--panel);border:1px solid var(--wire);border-radius:12px;
-  padding:18px 20px;margin:0 0 4px;
-}
-.question-head{display:flex;justify-content:space-between;align-items:baseline;font-size:.78rem}
-/* The fieldset is here for the legend, which is what makes a radio group mean
-   something when it is read out. Its own border would be a second box inside
-   the card. */
-.question-body{border:0;padding:0;margin:0}
-/* The legend IS the question, so it looks like one. `float:left` then clearing
-   is the old trick that makes a legend take the full width and wrap properly,
-   which the element does not do on its own. */
-.question-prompt{
-  float:left;width:100%;margin:0 0 12px;
-  font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.05rem;
-  font-weight:600;line-height:1.4;
-}
-.question-prompt + *{clear:both}
-.saved{font-size:.78rem}
-
-.option{
-  display:flex;gap:10px;align-items:flex-start;
-  padding:8px 10px;border-radius:8px;cursor:pointer;
-}
-.option:hover{background:var(--scan)}
-.option input{margin-top:.35em;accent-color:var(--phosphor);flex:none}
-/* The ring goes on the row, not on the radio: the target a person is aiming at
-   is the whole option, and a two-pixel ring around a two-pixel circle is not a
-   focus indicator anybody can see. */
-.option:has(input:focus-visible){outline:2px solid var(--phosphor);outline-offset:2px}
-
-.ordering{margin:0;padding:0;list-style:none;counter-reset:step}
-.ordering li{
-  display:flex;align-items:center;gap:10px;
-  background:var(--scan);border-radius:8px;padding:8px 10px;margin:0 0 6px;
-}
-.ordering li::before{
-  counter-increment:step;content:counter(step);
-  font-family:'IBM Plex Mono',ui-monospace,monospace;color:var(--paper-dim);
-  min-width:1.5em;
-}
-.ordering-text{flex:1}
-.ordering-buttons{display:flex;gap:4px}
-.ordering-buttons .icon-button{min-width:34px;padding:4px 8px}
-
-/* ---------- labelling ----------
-
-   The board is the picture with markers over it, and the markers are positioned
-   in PER CENT rather than pixels. That is the same decision the grader made and
-   for the same reason: the answer is a fraction of the image, so a marker
-   placed at 63% sits at 63% whatever size the picture is drawn at, and a window
-   resize moves nothing relative to the diagram. */
-.labelling-board{
-  position:relative;display:inline-block;max-width:100%;
-  border:1px solid var(--wire);border-radius:10px;overflow:hidden;
-  background:var(--panel);
-}
-.labelling-picture{display:block;max-width:100%;height:auto;cursor:crosshair}
-
-.labelling-marker{
-  position:absolute;transform:translate(-50%,-50%);
-  min-width:24px;height:24px;padding:0 4px;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--phosphor);color:var(--ink);
-  border-radius:12px;font-weight:600;font-size:.82rem;
-  /* A ring in the page's own background, so a marker stays legible on a
-     diagram of any colour without being told what colour the diagram is. */
-  box-shadow:0 0 0 2px var(--ink);
-  pointer-events:none;
-}
-
-.labelling-labels{display:flex;flex-direction:column;gap:4px;margin-top:10px}
-.labelling-label{display:flex;align-items:center;gap:8px}
-.labelling-number{
-  min-width:24px;height:24px;
-  display:inline-flex;align-items:center;justify-content:center;
-  background:var(--scan);border-radius:12px;
-  font-size:.82rem;font-weight:600;flex:none;
-}
-
-.matching-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;
-  margin:0 0 8px;
-}
-.matching-row select,.numeric select{
-  background:var(--panel);color:var(--paper);
-  border:1px solid var(--wire);border-radius:8px;padding:8px 10px;font:inherit;
-}
-
-.cloze{line-height:2.2}
-.blank,.numeric input,.expression input{
-  background:var(--scan);color:var(--paper);
-  border:0;border-bottom:2px solid var(--phosphor-dim);border-radius:4px 4px 0 0;
-  padding:4px 8px;font:inherit;
-}
-.blank{width:10ch}
-.numeric{display:flex;gap:10px;align-items:center}
-.numeric input{width:14ch;font-family:'IBM Plex Mono',ui-monospace,monospace}
-
-/* AN ALGEBRAIC ANSWER IS WIDER THAN A NUMBER AND NARROWER THAN A SENTENCE.
-   `(x^2 + 2x + 3) - 2` is a perfectly ordinary answer, so a box sized like the
-   numeric one would scroll while it was being written — and a student cannot
-   check a bracket they cannot see. It takes the column and stops there. */
-.expression{display:flex}
-.expression input{
-  flex:1;min-width:0;max-width:44ch;padding:8px 10px;
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-}
-
-/* The one control that ends the attempt, kept away from the last question so
-   it cannot be hit by somebody reaching for an answer. */
-.hand-in{margin:28px 0 0;padding-top:20px;border-top:1px solid var(--wire)}
-
-.result{
-  background:var(--panel);border:1px solid var(--wire);border-left:4px solid var(--paper-dim);
-  border-radius:12px;padding:20px 24px;max-width:68ch;
-}
-.result.passed{border-left-color:var(--phosphor)}
-.result.failed{border-left-color:var(--amber)}
-.result .verdict{font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.4rem;font-weight:600}
-.result .score{font-size:1.1rem}
-
-.marked{margin:0;padding:0;list-style:none;max-width:68ch}
-.marked li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--wire)}
-/* Colour is never the only carrier: the glyph and the hidden word say it too,
-   which is the difference between a result and a result somebody can read.
-   (WCAG 1.4.1) */
-.marked .mark{font-family:'IBM Plex Mono',ui-monospace,monospace;flex:none}
-.marked.right .mark,.marked li.right .mark{color:var(--phosphor)}
-.marked li.wrong .mark{color:var(--amber)}
-
-/* THE END OF THE THING, as a panel and not as a paragraph with a link under it.
-   It is the last card on a course and on a track, it says what the exam is in
-   one monospaced line of facts, and the action sits on the right where the eye
-   ends up. */
-.exam-invite{
-  background:var(--panel);border:1px solid var(--wire);border-radius:10px;
-  padding:24px 26px;margin:28px 0 0;
-  display:flex;align-items:center;justify-content:space-between;gap:28px;
-  flex-wrap:wrap;
-}
-/* `flex:1 1 260px` and not a min-width: the text block's own min-content is
-   whatever its longest word happens to be, and a min-width alone left the
-   button wrapping onto its own line in a panel that had room for it. */
-.exam-invite > div{flex:1 1 260px;min-width:0}
-.exam-invite h2{margin:0 0 6px}
-.exam-invite .button{flex:none}
-
-/* The lessons of a course. Numbered in the margin rather than by the list's own
-   marker: the number is monospaced and dim, which a `list-style` cannot be, and
-   it is what makes eleven rows scannable as a sequence. */
-.lessons{list-style:none;margin:0;padding:0}
-.lessons li{
-  display:flex;align-items:flex-start;gap:18px;
-  padding:14px 0;border-bottom:1px solid var(--wire);
-}
-.lessons li:last-child{border-bottom:0;padding-bottom:0}
-.lesson-number{
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:.8rem;color:var(--paper-dim);flex:none;margin-top:.25em;
-}
-.lesson-body{flex:1;min-width:0}
-.lesson-body h3{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:1rem;font-weight:600}
-.lesson-body h3 a:hover{color:var(--phosphor)}
-.lessons .side-count{margin-top:.25em}
-
-/* A note is the student's own words and is set as prose rather than as a
-   fact — it is the one thing on these screens that a person wrote. */
-.note-body{margin-top:10px;white-space:pre-wrap}
-
-.attempts{list-style:none;margin:0;padding:0;max-width:68ch}
-.attempts li{
-  display:flex;justify-content:space-between;gap:12px;align-items:center;
-  padding:10px 0;border-bottom:1px solid var(--wire);
-}
-
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
-}
-
-/* ---------- ONE PLACE THE COPY IS OVERRIDDEN, AND IT IS A DEFECT ----------
+/* ---------- A BLUE THAT PASSES, AND STAYS A BLUE ----------
 
    `portal.css` sets a dozen pieces of small text in `--phosphor-dim`. On the
    dark page that is #33549e on #0a0e14 — 2.67:1, where WCAG AA asks 4.5:1 for
    text this size — and on the light one #6c86c9 on #f2f4f9, which is 3.24:1.
    Axe reports every one: the rail's track heading, the count beside a course,
-   the lesson numbers, the level on a map card, a course's meta line.
+   the lesson numbers, the level on a map card, a course's meta line, the word
+   that says a course is open to you.
 
    IT IS A REAL DEFECT AND IT IS THE PORTAL'S. Copying the file brought it here,
    which is the argument FOR copying rather than against it: two interfaces
    sharing a stylesheet share the finding, and this one was found by a check the
-   other side does not run. It is worth taking back to `portal-frontend`.
+   other side does not run.
 
-   THE FIX IS A BLUER BLUE AND NOT A GREY, and that is a correction to the first
-   attempt at this. These were set to `--paper-dim` — accessible at 7.34:1 and
-   the palette's colour for secondary text — and the result read as a duller
+   THE FIX IS A BLUER BLUE AND NOT A GREY, and that is a correction to two
+   earlier attempts at it. The first set these to `--paper-dim` — accessible,
+   and the palette's colour for secondary text — and the result read as a duller
    interface than the portal's, because in the portal they are ACCENTS: the
-   track a student is on, how far through a lesson they are, which level a card
-   sits at. Taking the colour out took the meaning with it.
+   track a student is on, how far through a lesson they are, which course is
+   open to them next. Taking the colour out took the meaning with it. The second
+   used `--phosphor`, which is right about the colour and wrong about the
+   weight: `--phosphor` is what a FINISHED course is drawn in, and an available
+   one drawn in the same blue is a state that no longer says anything.
 
-   `--phosphor` is the same accent one step brighter: 6.12:1 on the dark page and
-   6.05:1 on the light one. It is bluer than what it replaces, not greyer, and it
-   clears the threshold in both themes with room to spare.
+   So: one step between them, defined here because it is a correction and not a
+   palette. It clears 4.5:1 in both themes, against the page and against the
+   certificate's own sheet, and it stays visibly below `--phosphor`, which keeps
+   done, current and available three different things.
+
+     dark  #4f7de0 — 4.92:1 on #0a0e14, 4.57:1 on the sheet
+     light #4468c4 — 4.74:1 on #f2f4f9, 5.22:1 on white
 
    Every accessibility rule here is a rule and not a preference (X-05), so this
-   override is not optional and the copy is not "byte for byte" in effect. It is
-   the one divergence, it is listed here, and it is small enough to re-apply if
-   the file is copied again. */
+   is not optional and the copy is not "byte for byte" in effect. It is the one
+   divergence, it is listed here, and it is small enough to re-apply if the file
+   is copied again. */
+:root{--phosphor-mid:#4f7de0}
+html[data-theme="light"]{--phosphor-mid:#4468c4}
+
 .rail-tit,
 .tc-count,
 .ta-num,
@@ -520,12 +85,12 @@ body.search-open .search{display:block}
 .track-summary i,
 .cert-meta,
 .cert-code,
-.field label{color:var(--phosphor)}
-/* The last two are on the certificate sheet, which paints its own background
-   (#111721 dark, #ffffff light), so they are measured against that and not the
-   page: 5.68:1 and 6.66:1. `.cert-void .cert-code` keeps its struck-through
-   grey — two classes beat one, and a revoked code should not read as an
-   accent. */
+.node-state[data-state="available"],
+.field label{color:var(--phosphor-mid)}
+/* `.cert-meta` and `.cert-code` are on the certificate sheet, which paints its
+   own background (#111721 dark, #ffffff light), so they are measured against
+   that and not the page. `.cert-void .cert-code` keeps its struck-through grey
+   — two classes beat one, and a revoked code should not read as an accent. */
 
 /* ---------- AND THE SAME DEFECT AGAIN, AS OPACITY ----------
 
@@ -536,8 +101,8 @@ body.search-open .search{display:block}
    OPACITY ON TEXT IS NOT A COLOUR. It multiplies every colour inside against
    whatever is behind, so the sample's own `--paper-dim` came out at 3.59:1 on
    the dark page and 2.94:1 on the light one. This repository has met that exact
-   failure before — the note on the legal footer in this file says so — and the
-   answer is the same: dim by naming the colour, never by fading the element.
+   failure before, and the answer is the same: dim by naming the colour, never
+   by fading the element.
 
    The frame and the seal still carry the meaning, which is what the portal's
    own comment says they are for. */
@@ -546,11 +111,3 @@ body.search-open .search{display:block}
 .cert-sample .cert-brand b,
 .cert-sample .cert-seal,
 .cert-sample .cert-line{color:var(--paper-dim)}
-
-/* The same defect, in the light theme, on the word that says a course is open
-   to you. `available` is the NEUTRAL state, so the neutral colour is the right
-   one for it — this is the one place where the answer really is the grey, and
-   not the accent: `current` (amber) and `done` (phosphor) both clear the
-   threshold already and keep their accent, which is where colour carries
-   meaning. */
-.node-state[data-state="available"]{color:var(--paper-dim)}

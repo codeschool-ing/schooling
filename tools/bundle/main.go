@@ -219,9 +219,16 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 	   nobody has written yet — one section called "Content" — and the bundle
 	   showed that for all 122 courses while the served page showed the real
 	   ones. It also carries the lesson IDS, which is what the prose is asked
-	   for by, so without it not one lesson could be read either. */
-	if _, err := ask("/api/v1/lessons"); err != nil {
-		return nil, nil, err
+	   for by, so without it not one lesson could be read either.
+
+	   IN EVERY LANGUAGE, because the section titles in it are translated rows
+	   here rather than a file per language, and the offline copy switches
+	   language with no server to ask. */
+	for _, locale := range locales {
+		path := "/api/v1/lessons?lang=" + url.QueryEscape(locale)
+		if _, err := ask(path); err != nil {
+			return nil, nil, fmt.Errorf("the shape of the school in %s: %w", locale, err)
+		}
 	}
 	tracks, err := ask("/api/v1/tracks")
 	if err != nil {
