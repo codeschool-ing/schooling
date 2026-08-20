@@ -195,8 +195,14 @@ FROM tenants t, (VALUES
    '{"id":"fx-multi","version":1,"type":"multiple-choice","prompt":"Which of these are things a client does?","choices":[{"text":"Asks for a resource","correct":true},{"text":"Opens the connection","correct":true},{"text":"Listens on a port"}]}'),
   ('fx-order', 'ordering', 'Put the steps of a request in order.',
    '{"id":"fx-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}'),
-  ('fx-match', 'matching', 'Match each status code to what it means.',
-   '{"id":"fx-match","version":1,"type":"matching","prompt":"Match each status code to what it means.","pairs":[{"left":"200","right":"Here it is"},{"left":"404","right":"No such thing"},{"left":"500","right":"I broke"}]}'),
+  /* WITH OPTIONS LEFT OVER, which is what a matching question looks like when
+     somebody writes one on purpose: equal columns make the last pair free, so
+     the leftovers are the difference between measuring three answers and
+     measuring two. They are here so the browser suites draw a right-hand column
+     longer than the left one — the case where the interface has to keep one
+     answer per LEFT-hand item while offering more than that to choose from. */
+  ('fx-match', 'matching', 'Match each status code to what it means. There are options left over.',
+   '{"id":"fx-match","version":1,"type":"matching","prompt":"Match each status code to what it means. There are options left over.","pairs":[{"left":"200","right":"Here it is"},{"left":"404","right":"No such thing"},{"left":"500","right":"I broke"}],"right_distractors":["Ask somewhere else","I will not, and I know who you are"]}'),
   ('fx-cloze', 'cloze', 'Complete the sentence.',
    '{"id":"fx-cloze","version":1,"type":"cloze","prompt":"Whoever asks is the ___ and whoever answers is the ___.","blanks":[{"accept":["client"],"ignore_case":true,"ignore_accents":false},{"accept":["server"],"ignore_case":true,"ignore_accents":false}]}'),
   ('fx-numeric', 'numeric', 'How many milliseconds are there in a second?',
