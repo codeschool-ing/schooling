@@ -80,7 +80,7 @@ audit with a name against it.*
 - [x] Sidebar, search, dashboard, catalogue, track map
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
 - [x] Sitting an exam on a screen — the paper, an answer saved as it is made and put back on a reload, and a hand-in that says what it came to
-- [x] Drilling on a screen — one card at a time, marked by the server, with the day it comes back said out loud
+- [x] Drilling on a screen — one card at a time, drawn without its answer, marked by the server, and the key revealed over what the student gave once it is in. **This tick preceded the screen by weeks**: it was set while the drill counted the queue and said the questions were not here yet. It is earned by this branch, and `docs/ROADMAP.md` now says a tick goes in the commit that earns it
 - [x] ~~The modal test — every course, one height, neither column scrolling~~ — **there is no modal here.** The predecessor showed a course in one, on a marketing page; a course is a screen of its own in this interface, so the test has no subject. Its actual concern — a layout that holds for every course — is covered by the accessibility pass, which opens the course and lesson screens, and by the graph test, which measures a real drawing rather than trusting one
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
 - [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over twenty-four screens, both themes, signed out and signed in, the exam paper included
