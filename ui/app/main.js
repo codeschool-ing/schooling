@@ -71,6 +71,24 @@ sync.start();
 route('/sign-in', signIn);
 route('/dashboard', dashboard);
 route('/track', trackScreen);
+
+/* ONE ADDRESS PER TRACK, which the portal does not need and this does.
+
+   Over there a student is enrolled in one track, so `/track` means "theirs"
+   and there is nothing else to address. Here a school has nineteen: the
+   selector in the bar links to each, a map is a thing somebody bookmarks and
+   sends to somebody else, and the browser suite opens every one of them by
+   name.
+
+   It is the same screen. The id only says which track it is about, which on
+   this side is what the enrolment says over there — so it is written into the
+   document and the screen reads it exactly as it always did. */
+route('/track/:id', async (params) => {
+  if (params.id && (!now().enrollment || now().enrollment.trackId !== params.id)) {
+    await api.enrol(params.id);
+  }
+  return trackScreen(params);
+});
 route('/course/:id', course);
 /* Two routes for the same screen: without the section, it lands on the first
    one. That is what keeps an old link (or the course button) working after the

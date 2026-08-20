@@ -125,7 +125,13 @@ try {
 
       const through = await page.evaluate((bite) => {
         const round = (v) => Math.round(v * 10) / 10;
-        const cards = [...document.querySelectorAll('.node')].map((el) => {
+        /* THE CARDS THE ROUTER PLACED. `[data-node]` and not a class name: the
+           interface is `portal-frontend`'s now, where a course card is
+           `.course-node` and a fork is `.fork`, and both carry the attribute
+           the edges are drawn between. Selecting on the attribute is selecting
+           on the thing the router actually knows about, which is why it
+           survived the change of interface and the class name did not. */
+        const cards = [...document.querySelectorAll('[data-node]')].map((el) => {
           const r = el.getBoundingClientRect();
           return {
             id: el.dataset.node,

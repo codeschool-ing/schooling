@@ -134,6 +134,13 @@ function lessonIdOf(courseId, ix) {
   return (lessonIDs[courseId] || {})[lesson.key] || null;
 }
 
+/* Where a lesson sits in the course, by its title. The store keys on the
+   position and the server answers with ids and titles; this is the same join as
+   `lessonIdOf`, read the other way. */
+function indexOfTitle(courseId, title) {
+  return courseLessons(courseId).findIndex((a) => a.key === title);
+}
+
 function indexOfLesson(courseId, lessonId) {
   const titles = lessonIDs[courseId] || {};
   const title = Object.keys(titles).find((t) => titles[t] === lessonId);
@@ -294,6 +301,12 @@ export async function loadLessonStructure() {
     lessonIDs[courseId] = {};
     lessons.forEach((l) => { lessonIDs[courseId][l.title] = l.id; });
     structure.push({ courseId, lessons: lessons.map((l) => ({
+      /* `lessonIx` IS WHAT THE STORE LOOKS A LESSON UP BY. `writtenSections`
+         finds a lesson with `source.find((x) => x.lessonIx === ix)`, and
+         without it every lookup missed and every lesson fell back to the
+         "one section called Content" placeholder — which is what put
+         "2 sections" on a course whose lessons have four. */
+      lessonIx: indexOfTitle(courseId, l.title),
       key: l.title,
       title: l.title,
       sections: (l.sections || []).map((s) => ({
@@ -328,6 +341,7 @@ export async function loadCourseContent(courseId) {
   fetched.forEach((lesson, ix) => {
     if (!lesson) return;
     out.push({
+      lessonIx: ix,
       key: lessons[ix].key,
       title: lesson.title || lessons[ix].title,
       sections: (lesson.sections || []).map((s) => ({
