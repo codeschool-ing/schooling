@@ -135,32 +135,37 @@ ON CONFLICT DO NOTHING;
 
 /* ---------- a lesson to read ---------- */
 
-/* A COURSE HAS TO NAME ITS LESSONS, and this is the join the interface makes.
-   Over there a lesson IS an entry of the course's `topics`, and the store every
-   screen reads is keyed by that text — so a lesson row whose title the course
-   does not list is a lesson no screen can reach, and it falls back to the
-   placeholder a course nobody has written yet is drawn with.
+/* A COURSE HAS TO NAME ITS TOPICS, and a lesson is a topic somebody wrote.
 
-   This fixture seeded the row and not the name. The bundle reported every
-   course as unwritten, and the screen the accessibility pass calls "a lesson"
-   was a placeholder that passed happily. The title here and the title on the
-   row below are the same string on purpose. */
-UPDATE catalog_courses SET topics = ARRAY['Client and server']
-WHERE id = 'web-fundamentals'
-  AND tenant_id = (SELECT id FROM tenants WHERE slug = :'slug');
+   The interface builds a course's lessons from its topics, so a lesson row the
+   course does not list is a lesson no screen can reach: it falls back to the
+   placeholder a course nobody has written yet is drawn with. This fixture
+   seeded the row and not the topic, and the bundle reported all seven courses
+   as unwritten while the screen the accessibility pass calls "a lesson" was a
+   placeholder that passed happily.
+
+   IT WAS PATCHED HERE BY MAKING TWO STRINGS EQUAL — an `UPDATE ... SET topics =
+   ARRAY['Client and server']` beside a lesson titled `Client and server` — and
+   that patch is the whole argument for `catalog_course_topics`. The join was
+   the title text, so keeping it working meant keeping two sentences identical
+   in two places by hand. It is an id now, and the title beside it is free. */
+INSERT INTO catalog_course_topics (tenant_id, course_id, position, topic_id, title)
+SELECT id, 'web-fundamentals', 0, 't-4mzk8p2r', 'Client and server'
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
-SELECT id, 'web-fundamentals', 'client-and-server', 'Client and server', 0
+SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'Client and server', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, kind, position)
-SELECT id, 'web-fundamentals', 'client-and-server', 'roles', 'reading', 0
+SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'roles', 'reading', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
-SELECT id, 'web-fundamentals', 'client-and-server', 'roles', 'en', 'The two roles',
+SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'roles', 'en', 'The two roles',
 $prose$The words **client** and **server** name a moment, not a machine.
 
 Whoever asks is the client. Whoever answers is the server.
@@ -257,7 +262,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO catalog_exercises
   (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
    drillable, prompt, payload)
-SELECT t.id, q.eid, 'web-fundamentals', 'client-and-server', 'roles', false, 1, q.kind,
+SELECT t.id, q.eid, 'web-fundamentals', 't-4mzk8p2r', 'roles', false, 1, q.kind,
        true, q.prompt, q.payload::jsonb
 FROM tenants t, (VALUES
   ('dr-quiz', 'quiz', 'Who is the client in an exchange?',

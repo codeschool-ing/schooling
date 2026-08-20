@@ -81,6 +81,55 @@ func checkIDs(s *School) []error {
 		}
 		seenCourse[c.ID] = true
 
+		/* EVERY TOPIC IS A THING WITH A NAME, and that name is what a lesson, a
+		   note and a progress row are all keyed by.
+
+		   THE ID IS WRITTEN DOWN, NEVER WORKED OUT. There was a fallback here
+		   that took the slug of the title when no id was given — which is what
+		   used to happen implicitly, and is exactly why the title could not be
+		   edited afterwards without moving a student's work out from under
+		   them. It is gone, and its absence is the point: a fallback that
+		   derives an id from prose keeps the hazard alive for whoever leaves
+		   the id out, and the schools that will be written next have nobody to
+		   remind them.
+
+		   So a topic with no id is refused, and the message says what to write
+		   instead. Refusing is louder than deriving, and it happens on a pull
+		   request rather than on the day somebody reworded a heading. */
+		topics := map[string]bool{}
+		for at, topic := range c.Topics {
+			id := topic.ID
+			if strings.TrimSpace(topic.Title) == "" {
+				problems = append(problems, fmt.Errorf(
+					"topic %d of the course %q has no title", at, c.ID))
+			}
+			if id == "" {
+				problems = append(problems, fmt.Errorf(
+					"topic %d of the course %q has no id — write one, as "+
+						`{"id": "t-xxxxxxxx", "title": %q}. It is never derived from the title: `+
+						"a machine rewrites titles, and every lesson, note and progress row "+
+						"keyed by this would follow the rewrite", at, c.ID, topic.Title))
+				continue
+			}
+			problems = append(problems, checkSlug(id, "the topic")...)
+			if topics[id] {
+				problems = append(problems, fmt.Errorf(
+					"the course %q has two topics called %q — one of them would take the "+
+						"other's lessons, notes and progress", c.ID, id))
+			}
+			topics[id] = true
+		}
+
+		/* AND `lessons` NAMES TOPICS.
+
+		   It is a subset of them — `javascript` declares twenty-two topics and
+		   has four written — and until now nothing tied one to the other except
+		   that a directory happened to be named `slug(title)` and the interface
+		   looked the lesson up by that title. A lesson whose title no topic
+		   lists is a lesson no screen can reach: it draws the placeholder for a
+		   course nobody has written, which is a state that looks deliberate.
+
+		   This is the only place that correspondence can be seen at all. */
 		seenLesson := map[string]bool{}
 		for _, id := range c.Lessons {
 			problems = append(problems, checkSlug(id, "the lesson")...)
@@ -89,6 +138,12 @@ func checkIDs(s *School) []error {
 					"the course %q names the lesson %q twice", c.ID, id))
 			}
 			seenLesson[id] = true
+
+			if len(c.Topics) > 0 && !topics[id] {
+				problems = append(problems, fmt.Errorf(
+					"the course %q has a lesson %q and no topic of that name — a lesson is a "+
+						"topic somebody has written, so this one is on no screen", c.ID, id))
+			}
 		}
 	}
 
@@ -540,6 +595,33 @@ func checkCourseText(s *School) []error {
 				problems = append(problems, fmt.Errorf(
 					"the course %q is translated into %q, which the school does not list in "+
 						"`locales` — so nothing would ever serve it", c.ID, locale))
+			}
+
+			/* THE TRANSLATED LISTS ARE MATCHED BY POSITION, and nothing was
+			   checking that they were the same length.
+
+			   One entry short and every translation from that point on
+			   describes the topic above it — in perfect Portuguese, on a screen
+			   that looks entirely normal. It is the fork-translation failure
+			   that shipped in the predecessor, one level down, and this is the
+			   only place it can be seen.
+
+			   A list that is ABSENT is not a problem: a translation carries
+			   what somebody translated (C-11), and a course translated in its
+			   name and not its contents keeps the English contents. It is a
+			   list that is present and the wrong length that means the two have
+			   come out of step. */
+			text := c.Text[locale]
+			if n := len(text.Topics); n > 0 && n != len(c.Topics) {
+				problems = append(problems, fmt.Errorf(
+					"the %s of the course %q lists %d topics and the course has %d — they are "+
+						"matched by position, so one of them is describing the wrong topic",
+					locale, c.ID, n, len(c.Topics)))
+			}
+			if n := len(text.Syllabus); n > 0 && n != len(c.Syllabus) {
+				problems = append(problems, fmt.Errorf(
+					"the %s of the course %q lists %d syllabus lines and the course has %d — "+
+						"they are matched by position", locale, c.ID, n, len(c.Syllabus)))
 			}
 		}
 	}

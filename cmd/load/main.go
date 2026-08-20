@@ -180,7 +180,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 	for _, table := range []string{
 		"catalog_exercises", "catalog_images", "catalog_prose", "catalog_sections",
 		"catalog_lessons",
-		"catalog_course_requires", "catalog_courses",
+		"catalog_course_topics", "catalog_course_requires", "catalog_courses",
 		"catalog_course_text", "catalog_track_fork_text", "catalog_track_text",
 		"catalog_track_links", "catalog_track_courses", "catalog_track_forks", "catalog_tracks",
 	} {
@@ -290,12 +290,27 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO catalog_courses
 				(tenant_id, id, name, category, level, hours, summary, prerequisites,
-				 syllabus, topics, draft)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+				 syllabus, draft)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 		`, tenantID, course.ID, course.Name, course.Category, course.Level, course.Hours,
-			course.Summary, course.Prerequisites, lines(course.Syllabus), lines(course.Topics),
+			course.Summary, course.Prerequisites, lines(course.Syllabus),
 			course.Draft); err != nil {
 			return fmt.Errorf("writing the course %s: %w", course.ID, err)
+		}
+
+		/* THE TOPICS, EACH WITH THE ID IT DECLARED — and declared is the only way
+		   an id gets here. Nothing in this job works one out from a title,
+		   because nothing anywhere does any more: a catalogue that reached this
+		   line passed `Validate`, which refuses a topic with no id, and a
+		   catalogue that does not pass is never written. */
+		for at, topic := range course.Topics {
+			if _, err := tx.Exec(ctx, `
+				INSERT INTO catalog_course_topics
+					(tenant_id, course_id, position, topic_id, title)
+				VALUES ($1, $2, $3, $4, $5)
+			`, tenantID, course.ID, at, topic.ID, topic.Title); err != nil {
+				return fmt.Errorf("writing topic %d of the course %s: %w", at, course.ID, err)
+			}
 		}
 
 		for _, locale := range sorted(course.Text) {

@@ -223,8 +223,11 @@ type Course struct {
 	// Both are optional. A course with no `topics` shows no technical list
 	// rather than an empty heading.
 	Syllabus []string `json:"syllabus"`
-	Topics   []string `json:"topics"`
+	Topics   []Topic  `json:"topics"`
 
+	// Lessons names the topics that have been WRITTEN, and each one is a
+	// directory under `lessons/`. It is a subset of `topics` by id — not a
+	// second ordered list, which is what it used to be.
 	Lessons []string `json:"lessons"`
 
 	// What this course is called in other languages, by locale. Filled by Load
@@ -304,6 +307,96 @@ type Prose struct {
 	Title string
 	Body  string
 }
+
+// Topic is one entry of a course's technical contents — which is also one
+// lesson, once somebody writes it.
+//
+// # WHY IT HAS AN ID AT ALL
+//
+// It did not, and the whole chain from a student's progress row back to the
+// catalogue was made of prose and array positions:
+//
+//	topics[ix]  (a sentence)  →  the lesson whose TITLE is that sentence
+//	                          →  that lesson's id  →  the rows recording work
+//
+// Both ends were the title text. Reword a topic and the lookup misses; the
+// lesson keeps a directory named after the OLD wording, and a regeneration that
+// re-slugs it orphans every progress row pointing at the old id. Nothing throws
+// — the screen simply shows a lesson nobody has started.
+//
+// That is rule 1 at the top of this file, broken in the one place it costs the
+// most, and it stopped being a hazard the moment the plan became "keep the
+// topics, write the content again to a higher standard". Rewriting the words IS
+// the plan. So the words are not the identity.
+//
+// # A BARE STRING IS STILL A TOPIC
+//
+// A course is announced long before it is written, and at that point nobody has
+// any reason to think about ids. So a plain string stays valid and takes the
+// slug of its own title — which is exactly what happened implicitly before,
+// said out loud. Writing the id down is what freezes it: from then on the title
+// is free to change and the id is not.
+type Topic struct {
+	ID    string
+	Title string
+}
+
+// UnmarshalJSON reads either form: `"Some title"` or `{"id":…, "title":…}`.
+//
+// THE BARE STRING IS STILL READ, AND IS NO LONGER VALID. Reading it is what
+// lets the validator say "this topic has no id, write one" instead of the
+// decoder saying a file is malformed — the first is a sentence somebody can
+// act on and the second sends them looking for a typo.
+//
+// Nothing fills the id in. There was a derivation once, and taking it out is
+// the whole of this change: an id worked out from a title is tied to the title,
+// and the plan for this material is that the titles get rewritten.
+func (t *Topic) UnmarshalJSON(data []byte) error {
+	var title string
+	if err := json.Unmarshal(data, &title); err == nil {
+		*t = Topic{Title: title}
+		return nil
+	}
+
+	var full struct {
+		ID    string `json:"id"`
+		Title string `json:"title"`
+	}
+	if err := json.Unmarshal(data, &full); err != nil {
+		return fmt.Errorf("a topic is a title, or an object with an id and a title, and %s "+
+			"is neither", data)
+	}
+	*t = Topic{ID: full.ID, Title: full.Title}
+	return nil
+}
+
+// MarshalJSON writes back the form it was read in, so a file that has not been
+// given ids is not rewritten with them by a round trip.
+func (t Topic) MarshalJSON() ([]byte, error) {
+	if t.ID == "" {
+		return json.Marshal(t.Title)
+	}
+	return json.Marshal(struct {
+		ID    string `json:"id"`
+		Title string `json:"title"`
+	}{t.ID, t.Title})
+}
+
+/* THERE IS NO `TopicID`, AND THERE IS NO `slugOf`.
+
+   Both were here. `TopicID(t)` answered the declared id or, failing that, the
+   title lowercased with every run of anything else turned into a hyphen — the
+   derivation that had been happening implicitly all along, written down so
+   that a course without ids kept behaving as it did.
+
+   Keeping it would have kept the defect. An id worked out from a title is the
+   title, and the plan for this material is that a machine rewrites the titles
+   to a higher standard — so the derivation was a promise to move every
+   student's lessons, notes and progress on the day the words improved.
+
+   Callers read `topic.ID`. It is never empty in a catalogue that loaded,
+   because `validate.go` refuses a topic without one and the load job writes
+   nothing when validation fails. */
 
 // CourseText is a course in one other language.
 type CourseText struct {

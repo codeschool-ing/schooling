@@ -18,6 +18,15 @@ import (
 // school loads testdata/good, optionally mutated, and answers every problem.
 func school(t *testing.T, changes ...func(dir string)) []error {
 	t.Helper()
+	_, problems := loadGood(t, changes...)
+	return problems
+}
+
+// loadGood is the same, and hands back what was loaded as well — for the few
+// checks that are about what the catalogue SAYS rather than what is wrong with
+// it.
+func loadGood(t *testing.T, changes ...func(dir string)) (*catalog.School, []error) {
+	t.Helper()
 
 	dir := t.TempDir()
 	copyTree(t, "testdata/good", dir)
@@ -29,7 +38,18 @@ func school(t *testing.T, changes ...func(dir string)) []error {
 	if loaded != nil {
 		problems = append(problems, catalog.Validate(loaded)...)
 	}
-	return problems
+	return loaded, problems
+}
+
+func courseNamed(t *testing.T, s *catalog.School, id string) *catalog.Course {
+	t.Helper()
+	for _, c := range s.Courses {
+		if c.ID == id {
+			return c
+		}
+	}
+	t.Fatalf("the fixture has no course %q", id)
+	return nil
 }
 
 // says answers whether any problem mentions each fragment.
@@ -603,5 +623,129 @@ func TestATranslationIntoALanguageTheSchoolDoesNotListIsRefused(t *testing.T) {
 	if !says(problems, `"de"`) {
 		t.Errorf("a course translated into an unlisted language was accepted:\n%s",
 			report(t, problems))
+	}
+}
+
+/* ---------- a topic is a thing, not a sentence ---------- */
+
+// A TOPIC'S ID IS DECLARED AND IS NOT ITS TITLE.
+//
+// This is the whole point, so it is checked the only way that proves it: the
+// fixture's first topic has an id that its title does not yield. If anything
+// derived the id from the title, this would come back as
+// `who-asks-and-who-answers` and the lesson it names would be unreachable.
+func TestATopicKeepsTheIDItDeclaresWhateverItIsCalled(t *testing.T) {
+	loaded, problems := loadGood(t)
+	if len(problems) != 0 {
+		t.Fatalf("the good fixture was refused:\n%s", report(t, problems))
+	}
+
+	course := courseNamed(t, loaded, "web-fundamentals")
+	if n := len(course.Topics); n != 2 {
+		t.Fatalf("%d topics, want the two the fixture declares", n)
+	}
+
+	if got := course.Topics[0].ID; got != "client-and-server" {
+		t.Errorf("a declared id came back as %q — the title is %q, and if that is where this "+
+			"came from then rewording a topic moves a student's work",
+			got, course.Topics[0].Title)
+	}
+	if course.Topics[0].Title != "Who asks and who answers" {
+		t.Errorf("the title came back as %q", course.Topics[0].Title)
+	}
+
+	// AND THE SECOND TOPIC'S ID IS NOTHING LIKE ITS TITLE EITHER. It is the
+	// form every topic in `content/` now takes — `t-` and eight characters that
+	// mean nothing — and it is here so that this test would fail if anybody
+	// reintroduced a derivation for topics that "look like they need one".
+	if got := course.Topics[1].ID; got != "t-9x2mk4qv" {
+		t.Errorf("the second topic's id came back as %q", got)
+	}
+}
+
+// A TOPIC WITH NO ID IS REFUSED, and this is the check that replaced the
+// derivation rather than a check that was added beside it.
+//
+// The bare string used to be valid and took the slug of its own title. That is
+// exactly the tie this change exists to cut, and leaving the fallback in would
+// have left it intact for every school written from now on — none of which has
+// anybody to remind it. The message has to say what to write, because somebody
+// meeting this is looking at a file that used to be fine.
+func TestATopicWithNoIDIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("courses/web-fundamentals/course.json",
+		func(d map[string]any) {
+			d["topics"] = []any{"Who asks and who answers"}
+		}))
+	if !says(problems, "has no id", `{"id": "t-xxxxxxxx", "title":`) {
+		t.Errorf("a topic written as a plain string was accepted:\n%s", report(t, problems))
+	}
+}
+
+// Two topics with one id is one topic taking the other's lessons, notes and
+// progress — the collision is silent everywhere else.
+func TestTwoTopicsWithTheSameIDAreRefused(t *testing.T) {
+	problems := school(t, patchJSON("courses/web-fundamentals/course.json",
+		func(d map[string]any) {
+			d["topics"] = []any{
+				map[string]any{"id": "client-and-server", "title": "Who asks"},
+				map[string]any{"id": "client-and-server", "title": "And who answers"},
+			}
+		}))
+	if !says(problems, `two topics called "client-and-server"`) {
+		t.Errorf("a course with two topics of one name was accepted:\n%s", report(t, problems))
+	}
+}
+
+// AND A LESSON IS A TOPIC SOMEBODY HAS WRITTEN.
+//
+// Nothing used to hold those two lists to each other. A lesson whose title no
+// topic listed was a lesson no screen could reach: the course drew the
+// placeholder for one nobody has written, which looks deliberate. That was met
+// once for real, in the browser fixture, and patched there by making two
+// strings equal to each other.
+func TestALessonThatIsNotATopicIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("courses/web-fundamentals/course.json",
+		func(d map[string]any) {
+			d["topics"] = []any{"Something else entirely"}
+		}))
+	if !says(problems, `has a lesson "client-and-server" and no topic of that name`) {
+		t.Errorf("a lesson no topic names was accepted:\n%s", report(t, problems))
+	}
+}
+
+// A topic id is a slug, for the reason every other id is: a machine rewrites
+// titles, and an id that followed one would take every link with it.
+func TestATopicIDThatIsNotASlugIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("courses/web-fundamentals/course.json",
+		func(d map[string]any) {
+			d["topics"] = []any{
+				map[string]any{"id": "Client And Server", "title": "Who asks and who answers"},
+			}
+		}))
+	if !says(problems, "is not a slug") {
+		t.Errorf("a topic id that is not a slug was accepted:\n%s", report(t, problems))
+	}
+}
+
+// THE TRANSLATED LISTS ARE MATCHED BY POSITION AND NOTHING CHECKED THE LENGTH.
+//
+// One entry short and every translation from that point on describes the topic
+// above it, in perfect Portuguese, on a screen that looks entirely normal. It is
+// the fork-translation failure that shipped in the predecessor, one level down.
+func TestATranslatedTopicListOfTheWrongLengthIsRefused(t *testing.T) {
+	problems := school(t, write("courses/web-fundamentals/course.pt.json",
+		`{"topics":["Quem pergunta e quem responde"]}`))
+	if !says(problems, "lists 1 topics and the course has 2") {
+		t.Errorf("a short translated topic list was accepted:\n%s", report(t, problems))
+	}
+}
+
+// And a translation that leaves the list out entirely is fine: a translation
+// carries what somebody translated (C-11), and the English contents survive.
+func TestATranslationWithNoTopicsAtAllIsAccepted(t *testing.T) {
+	problems := school(t, write("courses/web-fundamentals/course.pt.json",
+		`{"name":"Fundamentos da web"}`))
+	if len(problems) != 0 {
+		t.Errorf("a translation of the name alone was refused:\n%s", report(t, problems))
 	}
 }

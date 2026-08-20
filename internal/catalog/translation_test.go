@@ -220,3 +220,94 @@ func TestTheShapeOfTheCatalogueCarriesTranslatedTitles(t *testing.T) {
 		t.Errorf("the shape answered %q in English", title(en))
 	}
 }
+
+// THE ID SURVIVES THE MIRROR, which is the half of this that a file check
+// cannot see. `catalog_course_topics` is written by the load job and read back
+// as `{id, title}` — and the title is the one the language asked for while the
+// id is the same string in every language.
+func TestATopicsIDIsTheSameInEveryLanguage(t *testing.T) {
+	pool := testPool(t)
+	id := loaded(t, pool)
+	store := catalog.NewStore(pool)
+	ctx := context.Background()
+
+	en, err := store.Course(ctx, id, "web-fundamentals", "en", catalog.PlanFull)
+	if err != nil {
+		t.Fatalf("reading the course: %v", err)
+	}
+	if len(en.Topics) != 2 {
+		t.Fatalf("%d topics came back, want the two the fixture declares", len(en.Topics))
+	}
+	if en.Topics[0].ID != "client-and-server" {
+		t.Errorf("the declared id came back from the mirror as %q", en.Topics[0].ID)
+	}
+	if en.Topics[0].Title != "Who asks and who answers" {
+		t.Errorf("the title came back as %q", en.Topics[0].Title)
+	}
+
+	// The second one's id says nothing about its title either, which is the form
+	// every topic in `content/` takes. Both reach the mirror as written, so no
+	// screen has to work one out.
+	if en.Topics[1].ID != "t-9x2mk4qv" {
+		t.Errorf("the second topic reached the mirror as %q", en.Topics[1].ID)
+	}
+}
+
+// THE ONE THIS WHOLE CHANGE EXISTS FOR.
+//
+// Rewrite the words and the identity does not move. The plan for this catalogue
+// is that the tracks, courses and topics are settled while the lesson content
+// is scaffolding to be written again to a higher standard — so a title being
+// rewritten is not a hazard to guard against, it is the intention.
+//
+// Before this, the id WAS the title: `slug(title)` for twenty-seven of the
+// twenty-eight written lessons. Rewording one moved every progress row, note
+// and exam attempt out from under the student who earned them, with nothing
+// raised anywhere.
+func TestRewritingATopicsTitleDoesNotMoveItsID(t *testing.T) {
+	pool := testPool(t)
+
+	before := catalog.NewStore(pool)
+	id := loaded(t, pool)
+	was, err := before.Course(context.Background(), id, "web-fundamentals", "en", catalog.PlanFull)
+	if err != nil {
+		t.Fatalf("reading the course: %v", err)
+	}
+
+	// The same catalogue with every word of that topic rewritten, as a
+	// regeneration would deliver it.
+	rewritten := loaded(t, pool, patchJSON("courses/web-fundamentals/course.json",
+		func(d map[string]any) {
+			topics, _ := d["topics"].([]any)
+			first, _ := topics[0].(map[string]any)
+			first["title"] = "Which machine is asking, and which is answering"
+			d["topics"] = topics
+		}))
+
+	now, err := catalog.NewStore(pool).Course(context.Background(), rewritten,
+		"web-fundamentals", "en", catalog.PlanFull)
+	if err != nil {
+		t.Fatalf("reading the rewritten course: %v", err)
+	}
+
+	if now.Topics[0].Title == was.Topics[0].Title {
+		t.Fatal("the title did not change, so this proves nothing")
+	}
+	if now.Topics[0].ID != was.Topics[0].ID {
+		t.Errorf("the id moved with the words: %q became %q — every progress row, note and "+
+			"exam attempt filed under the old one is now orphaned",
+			was.Topics[0].ID, now.Topics[0].ID)
+	}
+}
+
+// AND THE COUNTERPART IS NO LONGER A BEHAVIOUR, IT IS A REFUSAL.
+//
+// There was a test here that rewrote a bare-string topic's title and watched
+// its id move with it. That was the fallback being honest about what it could
+// offer, and it was the reason the test above mattered: a reader who saw only
+// that one could conclude ids are magic, and this said what they cost.
+//
+// The fallback is gone. A topic with no id is refused before it can be loaded,
+// so there is nothing left to observe here — the cost is now paid at the pull
+// request instead of by a student. `TestATopicWithNoIDIsRefused`, in
+// `catalog_test.go`, is what that test became.
