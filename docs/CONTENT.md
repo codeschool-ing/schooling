@@ -172,7 +172,7 @@ Every exercise belongs to a lesson, joins by id, and declares the grader that ju
 ```json
 [
   {
-    "id": "wf-roles-quiz",
+    "id": "ex-spr8rdb4",
     "version": 1,
     "section": "roles",
     "type": "quiz",

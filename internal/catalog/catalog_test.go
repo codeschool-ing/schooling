@@ -33,6 +33,9 @@ const (
 	clientAndServer = "le-4xwdejgt" // the one lesson of web-fundamentals with prose
 	boxes           = "le-425dvkck" // html-css's lesson
 	rolesSection    = "se-65fm07ad" // a reading section of clientAndServer, roles.md
+
+	rolesQuiz    = "ex-spr8rdb4" // the quiz about the roles
+	rolesDiagram = "ex-q6xgt936" // the labelling question about request.png
 )
 
 // school loads testdata/good, optionally mutated, and answers every problem.
@@ -164,7 +167,7 @@ func TestAReadingSectionWithNoProseIsRefused(t *testing.T) {
 
 // THE JOIN THE PREDECESSOR MADE BY TITLE TEXT.
 func TestAnExerciseNamingAMissingSectionIsRefused(t *testing.T) {
-	problems := school(t, sectionOf("wf-roles-quiz", "the-roles"))
+	problems := school(t, sectionOf(rolesQuiz, "the-roles"))
 
 	if !says(problems, `names the section "the-roles"`, "title text") {
 		t.Errorf("an exercise joined to nothing was accepted:\n%s", report(t, problems))
@@ -476,7 +479,7 @@ func TestALabellingQuestionNamingAPictureThatIsNotThereIsRefused(t *testing.T) {
 	problems := school(t, patchExercises(
 		func(e []map[string]any) {
 			for _, one := range e {
-				if one["id"] == "wf-roles-diagram" {
+				if one["id"] == rolesDiagram {
 					one["image"] = "a-diagram-nobody-drew.png"
 				}
 			}

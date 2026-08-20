@@ -193,11 +193,18 @@ function showVerdict(el, ex, v) {
   let extra = '';
   if (v.partial) extra = ' ' + txt('not every pair was closed.');
   else if (typeof v.errors === 'number' && v.errors > 0) extra = '';
-  /* The `trap` of an ordering exercise is what the exercise measures:
-     which neighbouring pair gets swapped, and why. As feedback it is worth a
-     lot; any earlier, it would be the answer. */
-  if (ex.type === 'ordering' && ex.trap) {
-    extra += '<span class="v-trap">' + formatted(ex.trap) + '</span>';
+  /* WHY IT WAS WRONG, IN THE AUTHOR'S WORDS. Today that is the `trap` of an
+     ordering exercise — which neighbouring pair gets swapped, and why it is
+     tempting — and it arrives as `why` from whichever grader ran: the server's,
+     which returns it only once the answer is in, or `grade.js`, which reads it
+     off the question it is already holding.
+
+     It is READ FROM THE VERDICT AND NOT FROM THE QUESTION, and that is the
+     whole of it: on a paper the question a student was served has no `trap` in
+     it, because before the answer the trap IS the answer. This used to say
+     `ex.trap` and could therefore never fire on an exam. */
+  if (v.why) {
+    extra += '<span class="v-trap">' + formatted(v.why) + '</span>';
   }
   out.innerHTML = '<strong>' + txt('not yet') + '</strong>' + extra;
 }

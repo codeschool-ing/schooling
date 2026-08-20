@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-rqbd1fys",
+    "version": 1,
+    "section": "the-layers",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the layers in the order the data crosses them on the way **out** of your browser towards the network, from the highest to the lowest.",
+    "hint": "Each layer wraps the one above. Which of them produces the content all the others are going to wrap?",
+    "items": [
+      "Application: the browser builds the HTTP request",
+      "Transport: the request is cut into segments and gets the ports",
+      "Network: each segment becomes a packet and gets the IP addresses",
+      "Link: each packet becomes a frame and gets the next hop's MAC"
+    ],
+    "trap": "The transport–network pair. Anyone who memorised \"IP is the main one\" tends to put the network layer before transport, as if the address came before the cutting into segments. It does not: transport is what decides the size of each piece and which program it belongs to, and only then does each piece get a destination address. Swapping the two would have the packet addressed before it exists."
+  },
+  {
+    "id": "ex-hgfsbkn9",
+    "version": 1,
+    "section": "tcp-udp",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A live video call uses UDP instead of TCP. What is the reasoning?",
+    "hint": "Ask what happens to a video frame that arrives half a second late. Is it still good for anything?",
+    "choices": [
+      {
+        "text": "In a live video, late data is already useless, and waiting for the resend would freeze the picture — better to lose the piece.",
+        "correct": true,
+        "why": "The rule of thumb: if incomplete data is useless, TCP; if late data is useless, UDP."
+      },
+      {
+        "text": "UDP encrypts the content by default, and video calls require confidentiality.",
+        "correct": false,
+        "why": "UDP encrypts nothing; a call's encryption comes from another layer."
+      },
+      {
+        "text": "TCP does not work with continuous data, only with files of known size.",
+        "correct": false,
+        "why": "TCP carries a continuous stream without difficulty — it is what HTTP itself does."
+      },
+      {
+        "text": "UDP guarantees faster delivery because it acknowledges each packet with fewer bytes.",
+        "correct": false,
+        "why": "UDP acknowledges nothing: it is the absence of acknowledgement that makes it cheap."
+      }
+    ]
+  }
+]

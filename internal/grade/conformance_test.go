@@ -41,6 +41,12 @@ type fixture struct {
 		// "bad-answer" for an answer that is not an answer — a client sending
 		// nonsense, which is a different thing from a student being wrong.
 		Error string `json:"error"`
+
+		// What the student is told, where the question has something to say.
+		// Asserted only when a fixture writes it down: most wrong answers are
+		// answered with nothing, and insisting on that everywhere would be a
+		// page of assertions about silence.
+		Why string `json:"why"`
 	} `json:"cases"`
 }
 
@@ -95,6 +101,10 @@ func TestEveryConformanceCaseGradesAsItSays(t *testing.T) {
 			if result.Correct != c.Correct {
 				t.Errorf("%s / %q: graded correct=%v, the fixture says %v",
 					name, c.Name, result.Correct, c.Correct)
+			}
+			if c.Why != "" && result.Why != c.Why {
+				t.Errorf("%s / %q: the student is told %q, the fixture says %q",
+					name, c.Name, result.Why, c.Why)
 			}
 		}
 	}

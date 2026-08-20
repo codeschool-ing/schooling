@@ -427,7 +427,7 @@ func seedAttempt(t *testing.T, pool *pgxpool.Pool, tenant, account uuid.UUID) {
 		INSERT INTO exam_answers
 			(attempt_id, position, exercise_id, exercise_version, type, shown, perm, sealed,
 			 answer, answered_at, correct)
-		VALUES ($1, 0, 'wf-roles-quiz', 1, 'quiz',
+		VALUES ($1, 0, 'ex-spr8rdb4', 1, 'quiz',
 			'{"choices":[{"text":"one"},{"text":"two"}]}', '{0,1}',
 			'{"choices":[{"text":"one","correct":true},{"text":"two","correct":false}]}',
 			'{"chose":[0]}', now(), true)

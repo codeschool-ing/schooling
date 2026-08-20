@@ -390,12 +390,19 @@ func (p *parser) number() (node, error) {
 	return numberNode(value), nil
 }
 
+// A NAME IS FOLDED TO FIND A FUNCTION OR A CONSTANT, AND KEPT AS WRITTEN TO BE
+// A VARIABLE. `SIN(x)` and `Pi` are the same sine and the same pi as their
+// lowercase spellings — nobody means a different function by capitalising it.
+// `T` and `t` are two variables, and folding them would quietly make a question
+// about a period and a time a question about one letter, marking an answer that
+// confuses the two as correct. That is a wrong verdict a student cannot see.
 func (p *parser) name() (node, error) {
 	start := p.at
 	for !p.done() && (unicode.IsLetter(p.in[p.at]) || unicode.IsDigit(p.in[p.at]) || p.in[p.at] == '_') {
 		p.at++
 	}
-	name := strings.ToLower(string(p.in[start:p.at]))
+	written := string(p.in[start:p.at])
+	name := strings.ToLower(written)
 
 	p.spaces()
 	if p.peek() == '(' {
@@ -426,5 +433,5 @@ func (p *parser) name() (node, error) {
 		return nil, fmt.Errorf("%w: %s needs brackets round what it applies to, as %s(x)",
 			ErrBadExpression, name, name)
 	}
-	return varNode(name), nil
+	return varNode(written), nil
 }

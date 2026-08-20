@@ -1,0 +1,53 @@
+[
+  {
+    "id": "ex-gb2s6ajm",
+    "version": 1,
+    "section": "rendering",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the stages that lead from the HTML received to the pixels on screen in order.",
+    "hint": "Two trees are built before any position is computed. And position comes before colour.",
+    "items": [
+      "The HTML is interpreted and becomes the DOM tree of objects",
+      "The CSS is interpreted and becomes the CSSOM",
+      "The final style of each node is computed, resolving inheritance and specificity",
+      "Layout computes the position and size of each box",
+      "Paint draws the pixels of each box",
+      "Composition puts the layers together on screen"
+    ],
+    "trap": "The layout–paint pair. Anyone thinking of \"drawing the page\" tends to merge the two into one step, or to swap them, imagining that the browser draws and then arranges. The separation is exactly what distinguishes a smooth animation from a stuttering one: changing `width` redoes the layout of everything around it, changing `background-color` only repaints, and changing `transform` touches only composition."
+  },
+  {
+    "id": "ex-j06sdzny",
+    "version": 1,
+    "section": "rendering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sliding menu animation stutters on phones. It changes `left` on every frame. Which swap tends to fix it?",
+    "hint": "Each property triggers a different stage of rendering. Which of them does not force the browser to recompute where everything is?",
+    "choices": [
+      {
+        "text": "Animating `transform: translateX(...)`, which touches only composition and is handled by the graphics card.",
+        "correct": true,
+        "why": "`transform` and `opacity` are the two properties that skip layout and paint."
+      },
+      {
+        "text": "Animating `margin-left`, which is computed once and reused on the following frames.",
+        "correct": false,
+        "why": "`margin-left` affects layout just as much as `left`, and is recomputed on every frame."
+      },
+      {
+        "text": "Shortening the animation, since fewer frames mean less recomputation.",
+        "correct": false,
+        "why": "Shortening it hides the symptom; the cost per frame stays the same."
+      },
+      {
+        "text": "Moving the stylesheet to the end of the `<body>`, releasing rendering earlier.",
+        "correct": false,
+        "why": "That changes when the page first appears, not the cost of each frame of the animation."
+      }
+    ]
+  }
+]
