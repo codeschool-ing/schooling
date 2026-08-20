@@ -253,9 +253,9 @@ type Drawn struct {
 // produced that frame — so it is written down here and read at grading time.
 // See the migration for why it is not derived from a seed.
 func (s *Store) Draw(ctx context.Context, tenantID, accountID uuid.UUID,
-	exerciseID string) (*Drawn, error) {
+	exerciseID, locale string) (*Drawn, error) {
 
-	e, err := s.exercise(ctx, tenantID, exerciseID)
+	e, err := s.exercise(ctx, tenantID, exerciseID, locale)
 	if err != nil {
 		return nil, err
 	}
@@ -355,9 +355,10 @@ type Marked struct {
 // later, and a log entry without the state is a card that comes back tomorrow
 // having been answered today. One transaction.
 func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
-	exerciseID string, answer json.RawMessage, elapsed time.Duration) (Marked, error) {
+	exerciseID string, answer json.RawMessage, elapsed time.Duration,
+	locale string) (Marked, error) {
 
-	e, err := s.exercise(ctx, tenantID, exerciseID)
+	e, err := s.exercise(ctx, tenantID, exerciseID, locale)
 	if err != nil {
 		return Marked{}, err
 	}
@@ -548,13 +549,29 @@ type question struct {
 	payload   json.RawMessage
 }
 
-func (s *Store) exercise(ctx context.Context, tenantID uuid.UUID, exerciseID string) (question, error) {
+// exercise reads one question, in the language the student is reading in.
+//
+// THE TRANSLATION IS A WHOLE PAYLOAD AND `coalesce` PICKS IT. `cmd/load` writes
+// one complete question per locale — what nobody translated is already the
+// English in it — so there is nothing to merge here and no way for this to serve
+// half a translation. A language nobody wrote gives no row and the English
+// stands, which is the fallback stated as a join rather than as a branch.
+//
+// THE VERSION AND `drillable` COME FROM THE BASE ROW ONLY. They are facts about
+// the question and not about its wording; reading them from a translation would
+// let a `pt.json` make a question drillable in one language.
+func (s *Store) exercise(ctx context.Context, tenantID uuid.UUID,
+	exerciseID, locale string) (question, error) {
+
 	var q question
 	err := s.pool.QueryRow(ctx, `
-		SELECT course_id, version, section_id, type, drillable, payload
-		FROM catalog_exercises
-		WHERE tenant_id = $1 AND id = $2
-	`, tenantID, exerciseID).Scan(&q.courseID, &q.version, &q.sectionID,
+		SELECT e.course_id, e.version, e.section_id, e.type, e.drillable,
+		       coalesce(t.payload, e.payload)
+		FROM catalog_exercises e
+		LEFT JOIN catalog_exercise_text t
+		       ON t.tenant_id = e.tenant_id AND t.exercise_id = e.id AND t.locale = $3
+		WHERE e.tenant_id = $1 AND e.id = $2
+	`, tenantID, exerciseID, locale).Scan(&q.courseID, &q.version, &q.sectionID,
 		&q.kind, &q.drillable, &q.payload)
 
 	if errors.Is(err, pgx.ErrNoRows) {

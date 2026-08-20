@@ -630,6 +630,26 @@ after it moves while the translations stay put, describing a different choice in
 perfect Portuguese. `validate-content` fails on the symptoms — a translated position
 that is not a fork, and a list of option names a different length from the fork's.
 
+**A QUESTION IS TRANSLATED AND ITS ANSWER KEY IS NOT.** `exercises.<locale>.json`
+sits beside `exercises.json`, keyed by the question's id, and carries only what a
+student reads: `prompt`, `hint`, `trap`, the option texts and the reasons they are
+wrong, the items of an ordering, the two halves of a pair. `correct`, `accept`,
+`value`, `tolerance` and a label's coordinates are not nameable in it — a file that
+mentions one is refused, because a translation that could reach the key would mark
+the same answer differently in two languages and **nobody would find it**: both
+screens read perfectly well on their own.
+
+`cmd/load` merges each translation over the English and writes a COMPLETE payload
+per locale, so the grader, the presenter and the offline bundle each take one
+payload and never ask which language it is in. Merging in every reader instead
+would mean one of them forgetting, and a screen half translated.
+
+**Inside an exercise the lists join by POSITION**, which is forbidden almost
+everywhere here and right in this one place: the answer key is `choices[2]` and a
+student's answer records the index they chose, so position is already the identity
+and an exercise is immutable within its `version`. A translated list of a different
+length is the symptom of an insert, and `validate-content` fails on it.
+
 **Server messages go through `txt()` too.** They arrive in English, English is the
 key, so they can be translated by adding an entry. The checker cannot see them —
 they are written in Go — and that is the known edge of what a static check reaches.

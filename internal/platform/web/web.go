@@ -15,6 +15,7 @@ import (
 	"log/slog"
 	"net/http"
 	"runtime/debug"
+	"strings"
 	"time"
 )
 
@@ -70,6 +71,26 @@ func JSON(w http.ResponseWriter, status int, body any) {
 
 func Fail(w http.ResponseWriter, status int, code, message string) {
 	JSON(w, status, failure{failureBody{Code: code, Message: message}})
+}
+
+// Locale takes the language off the query string, falling back to English.
+//
+// A QUERY PARAMETER AND NOT Accept-Language. The language a student chose is a
+// setting they can change, not a property of the browser they happen to be
+// using — and a page that reads differently depending on which machine opened
+// it is the kind of thing nobody reports because nobody believes it.
+//
+// IT LIVES HERE BECAUSE TWO MODULES ASK. The catalogue serves prose per
+// language and practice serves the same question per language; two copies of
+// this would be two chances to disagree about what `lang=PT`, `lang=` or
+// `lang=pt-BR` means — and a disagreement would show as one screen translated
+// and the next one not.
+func Locale(r *http.Request) string {
+	l := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("lang")))
+	if l == "" || len(l) > 8 || strings.ContainsAny(l, " /?&") {
+		return "en"
+	}
+	return l
 }
 
 /* ---------- context ---------- */

@@ -101,6 +101,10 @@ type Track struct {
 	// because an exam belongs to no lesson and a track has none to put it in.
 	Exam []Exercise `json:"-"`
 
+	// The final in other languages, by locale and then by exercise id. From
+	// `tracks/<slug>-exam.<locale>.json`.
+	ExamText map[string]map[string]ExerciseText `json:"-"`
+
 	// What this track is called in other languages, by locale. Filled by Load
 	// from `tracks/<id>.<locale>.json`, which is read beside the file it
 	// translates so that a missing translation shows up in `ls`.
@@ -276,6 +280,10 @@ type Course struct {
 	Loaded []*Lesson `json:"-"`
 	Exam   []Exercise
 
+	// The exam in other languages, by locale and then by exercise id. From
+	// `exam.<locale>.json` beside `exam.json`.
+	ExamText map[string]map[string]ExerciseText `json:"-"`
+
 	// Images is every picture in `images/`, which is where a course keeps the
 	// diagrams its questions are asked about. They get the same treatment as
 	// the prose, in both directions: a question naming one that is not here
@@ -291,6 +299,10 @@ type Lesson struct {
 
 	// Filled by Load.
 	Exercises []Exercise `json:"-"`
+
+	// What those questions say in other languages, by locale and then by
+	// exercise id. From `exercises.<locale>.json` beside `exercises.json`.
+	ExerciseText map[string]map[string]ExerciseText `json:"-"`
 
 	// Prose is the section ids that have a Markdown file, and Files is every
 	// Markdown file found in the lesson directory. The orphan check is the
@@ -520,6 +532,59 @@ type Exercise struct {
 	// wrote is one a student cannot answer however well they know the material,
 	// and that has to fail on a pull request rather than on a screen.
 	Image string `json:"image"`
+}
+
+/*
+ExerciseText is one question in one other language.
+
+	WHAT DECIDES AN ANSWER IS NOT IN HERE, and the omission is the design.
+	`correct`, `accept`, `value`, `tolerance`, the coordinates of a label: a
+	translation that could reach any of them is a translation that can mark a
+	right answer wrong in one language and not in another — which nobody would
+	find, because the two screens read fine on their own. Only what a student
+	READS is translatable, and the fields below are the whole of it.
+
+	THE ARRAYS ARE MATCHED BY POSITION, which this repository forbids almost
+	everywhere and allows here for one reason: inside an exercise, position is
+	ALREADY the identity. The answer key is `choices[2]`, a student's answer
+	records the index they chose, and both are safe because an exercise is
+	immutable within a version (C-16). A translation joined by position is
+	exactly as sound as the key it sits beside — and where the two disagree in
+	LENGTH, `Validate` refuses the catalogue, which is the failure a reordering
+	would otherwise cause in silence.
+*/
+type ExerciseText struct {
+	Prompt *string `json:"prompt"`
+	Hint   *string `json:"hint"`
+
+	// What a student is told when their ordering is wrong. It has no English
+	// counterpart in the predecessor's dictionaries, so it is the one field
+	// here that was translated rather than copied.
+	Trap *string `json:"trap"`
+
+	Choices []ChoiceText `json:"choices"`
+	Items   []string     `json:"items"`
+	Pairs   []PairText   `json:"pairs"`
+	Labels  []string     `json:"labels"`
+
+	// The right-hand options no pair claims. Named as the payload names them,
+	// because a translation that renamed a field would be a second spelling to
+	// remember.
+	RightDistractors []string `json:"right_distractors"`
+}
+
+// ChoiceText is one option of a `quiz` or a `multiple-choice`, in one other
+// language. `correct` is deliberately absent — see ExerciseText.
+type ChoiceText struct {
+	Text *string `json:"text"`
+	Why  *string `json:"why"`
+}
+
+// PairText is one pair of a `matching`, in one other language. Which right goes
+// with which left is the answer and stays where the answer lives.
+type PairText struct {
+	Left  *string `json:"left"`
+	Right *string `json:"right"`
 }
 
 // The question types. EVERY TYPE HAS A MACHINE GRADER — that is the entry

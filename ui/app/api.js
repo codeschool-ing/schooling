@@ -638,8 +638,14 @@ export function asset(courseId, name) {
   return path;
 }
 
+/* THE LANGUAGE GOES WITH THE START AND NOWHERE ELSE. A paper is drawn once and
+   copied onto the attempt, so this is the only moment that can decide which
+   language it is in — and a student who changes language halfway through keeps
+   the paper they were given, which is what a paper is. Sending it on every
+   answer would suggest otherwise. */
 export async function startExam(scope, scopeId) {
-  const answer = await post(`/api/v1/exams/${enc(scope)}/${enc(scopeId)}/start`);
+  const answer = await post(
+    `/api/v1/exams/${enc(scope)}/${enc(scopeId)}/start?lang=${enc(wanted())}`);
   return attemptFrom(answer.paper);
 }
 

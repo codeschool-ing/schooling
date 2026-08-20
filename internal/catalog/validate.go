@@ -1,6 +1,7 @@
 package catalog
 
 import (
+	"encoding/json"
 	"fmt"
 	"maps"
 	"regexp"
@@ -27,6 +28,7 @@ func Validate(school *School) []error {
 	problems = append(problems, checkTracksAreOrdered(school)...)
 	problems = append(problems, checkRequires(school)...)
 	problems = append(problems, checkCourseText(school)...)
+	problems = append(problems, checkExerciseText(school)...)
 
 	sort.Slice(problems, func(i, j int) bool {
 		return problems[i].Error() < problems[j].Error()
@@ -475,6 +477,114 @@ func checkExercises(s *School) []error {
 // — this runs on a pull request, that runs on every write, and the two agreeing
 // is the point rather than a duplication to remove.
 const maxPictureBytes = 512 * 1024
+
+/*
+checkExerciseText holds a question's translations to the question.
+
+	A TRANSLATION IS JOINED BY ID AND ITS LISTS BY POSITION, and both ends can
+	come loose. The id end is the ordinary one: a question renamed or a file
+	copied from another lesson leaves a translation describing something that is
+	not there, which is silent — the English survives and nobody sees a gap.
+
+	The POSITION end is the one that matters. `choices[1]` in the translation is
+	`choices[1]` in the question, which is also the answer key: a translation
+	one option short does not shift the key, it shifts the WORDS OVER it, and a
+	Portuguese student reads the third option's text above the second option's
+	verdict. Perfect grammar, wrong meaning, and the English screen is fine.
+
+	So a list that disagrees in length is refused. It cannot be checked any
+	harder than that — nothing can tell whether two sentences mean the same
+	thing — but a length is exactly the symptom of an insert or a deletion.
+
+	IT COUNTS AND DOES NOT READ. The English payload is decoded into a struct of
+	raw messages, so this stays a count of how many there are rather than an
+	opinion about what a choice or a label IS. That knowledge belongs to
+	`internal/grade`, which is where the answer keys are checked.
+*/
+func checkExerciseText(s *School) []error {
+	var problems []error
+
+	known := map[string]bool{}
+	for _, l := range s.Locales {
+		known[l] = true
+	}
+
+	check := func(where string, exercises []Exercise, text map[string]map[string]ExerciseText) {
+		by := map[string]Exercise{}
+		for _, e := range exercises {
+			by[e.ID] = e
+		}
+
+		for _, locale := range slices.Sorted(maps.Keys(text)) {
+			if !known[locale] {
+				problems = append(problems, fmt.Errorf(
+					"the questions in %s are translated into %q, which the school does not list "+
+						"in `locales` — so nothing would ever serve it", where, locale))
+			}
+
+			for _, id := range slices.Sorted(maps.Keys(text[locale])) {
+				e, found := by[id]
+				if !found {
+					problems = append(problems, fmt.Errorf(
+						"the %s of %s translates the question %q, which is not there — the id was "+
+							"renamed, or the file was copied from another lesson", locale, where, id))
+					continue
+				}
+				problems = append(problems, checkOneExerciseText(
+					locale, where, e, text[locale][id])...)
+			}
+		}
+	}
+
+	for _, c := range s.Courses {
+		for _, l := range c.Loaded {
+			check(c.Slug+"/"+l.ID, l.Exercises, l.ExerciseText)
+		}
+		check(c.Slug+"/exam", c.Exam, c.ExamText)
+	}
+	for _, t := range s.Tracks {
+		check(t.Slug+"/exam", t.Exam, t.ExamText)
+	}
+	return problems
+}
+
+func checkOneExerciseText(locale, where string, e Exercise, text ExerciseText) []error {
+	// See the comment above: a count, never an opinion about the contents.
+	var counts struct {
+		Choices          []json.RawMessage `json:"choices"`
+		Items            []json.RawMessage `json:"items"`
+		Pairs            []json.RawMessage `json:"pairs"`
+		Labels           []json.RawMessage `json:"labels"`
+		RightDistractors []json.RawMessage `json:"right_distractors"`
+	}
+	if err := json.Unmarshal(e.Raw, &counts); err != nil {
+		return []error{fmt.Errorf("%s/%s: %w", where, e.ID, err)}
+	}
+
+	var problems []error
+	lengths := []struct {
+		what       string
+		translated int
+		original   int
+	}{
+		{"options", len(text.Choices), len(counts.Choices)},
+		{"items", len(text.Items), len(counts.Items)},
+		{"pairs", len(text.Pairs), len(counts.Pairs)},
+		{"labels", len(text.Labels), len(counts.Labels)},
+		{"leftover options", len(text.RightDistractors), len(counts.RightDistractors)},
+	}
+	for _, l := range lengths {
+		// Nothing translated is not a shortfall: a translation carries what
+		// somebody translated and the English survives the rest (C-11).
+		if l.translated > 0 && l.translated != l.original {
+			problems = append(problems, fmt.Errorf(
+				"the %s of %s/%s gives %d %s and the question has %d — they are matched by "+
+					"position, so one of them is written over the wrong one",
+				locale, where, e.ID, l.translated, l.what, l.original))
+		}
+	}
+	return problems
+}
 
 func checkTracks(s *School) []error {
 	var problems []error

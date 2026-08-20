@@ -1,0 +1,37 @@
+{
+  "ex-gb2s6ajm": {
+    "prompt": "Ponha em ordem as etapas que levam do HTML recebido aos pixels na tela.",
+    "hint": "Duas árvores são construídas antes de qualquer posição ser calculada. E posição vem antes de cor.",
+    "items": [
+      "O HTML é interpretado e vira a árvore de objetos do DOM",
+      "O CSS é interpretado e vira o CSSOM",
+      "O estilo final de cada nó é calculado, resolvendo herança e especificidade",
+      "O layout calcula a posição e o tamanho de cada caixa",
+      "A pintura desenha os pixels de cada caixa",
+      "A composição junta as camadas na tela"
+    ],
+    "trap": "O par layout–pintura. Quem pensa em \"desenhar a página\" tende a juntar os dois num passo só, ou a trocá-los, imaginando que o navegador desenha e depois arruma. A separação é exatamente o que distingue uma animação suave de uma que engasga: mudar `width` refaz o layout de tudo em volta, mudar `background-color` só repinta, e mudar `transform` mexe apenas na composição."
+  },
+  "ex-j06sdzny": {
+    "prompt": "Uma animação de menu deslizante está travada em celulares. Ela altera `left` a cada quadro. Qual troca tende a resolver?",
+    "hint": "Cada propriedade dispara uma etapa diferente da renderização. Qual delas não obriga o navegador a recalcular onde tudo está?",
+    "choices": [
+      {
+        "text": "Animar `transform: translateX(...)`, que mexe só na composição e é resolvida pela placa de vídeo.",
+        "why": "`transform` e `opacity` são as duas propriedades que pulam layout e pintura."
+      },
+      {
+        "text": "Animar `margin-left`, que é calculada uma vez e reaproveitada nos quadros seguintes.",
+        "why": "`margin-left` afeta o layout tanto quanto `left`, e é recalculada a cada quadro."
+      },
+      {
+        "text": "Reduzir a duração da animação, já que menos quadros significam menos recálculo.",
+        "why": "Encurtar esconde o sintoma; o custo por quadro continua o mesmo."
+      },
+      {
+        "text": "Mover a folha de estilo para o fim do `<body>`, liberando a renderização mais cedo.",
+        "why": "Isso muda quando a página aparece pela primeira vez, e não o custo de cada quadro da animação."
+      }
+    ]
+  }
+}
