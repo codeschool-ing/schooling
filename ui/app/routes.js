@@ -21,7 +21,11 @@ export function route(pattern, load) {
     names.push(n);
     return '([^/]+)';
   }) + '$');
-  routes.push({ re, names, load });
+  // The pattern is kept beside the regex so that whatever matched can say which
+  // route it was — `/course/:id`, not the address that was typed. The router
+  // writes it onto the content region; see the miss in main.js for why a screen
+  // has to be able to say it is the screen somebody asked for.
+  routes.push({ re, names, load, path: pattern });
 }
 
 /* GOING WHERE YOU ALREADY ARE STILL RENDERS. Assigning the hash it already has

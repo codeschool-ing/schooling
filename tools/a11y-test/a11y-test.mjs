@@ -82,12 +82,40 @@ async function done(page) {
   await page.owner.close();
 }
 
-async function check(page, name, where) {
+/* A SCREEN THAT WAS NEVER DRAWN IS THE EASIEST SCREEN IN THE WORLD TO PASS.
+
+   The router answers an address it does not recognise with a short, tidy,
+   perfectly accessible "page not found": one paragraph, good contrast, nothing
+   to trip over. Axe reads it and reports no violation, this counted a screen,
+   and the run went green.
+
+   That is not a hypothetical. When the interface here was replaced by the
+   portal's client the routes changed shape, and two of the lines below kept
+   asking for the old ones — `/#/course/<id>/<lesson>` and `/#/exam/course/<id>`.
+   The lesson screen and the exam paper, the two densest screens there are, had
+   not been measured since. Nothing said so, because there was nothing that
+   could: every check this file makes is a check on what is on the screen, and
+   what was on the screen was fine.
+
+   So the router now writes the route it matched onto the content region, and
+   this refuses a screen that is not the one it asked for. `expect` is the
+   pattern — `/course/:id`, not the address — and `expect: 'not-found'` is how
+   the one deliberate miss below says it means it. */
+async function check(page, name, where, expect) {
   await page.goto(BASE + where, { waitUntil: 'load' });
   /* The screens are built by script after the document loads, so waiting for
      the document would be checking an empty page and calling it clean. */
   await page.waitForSelector('#content h1, #content .notice', { timeout: 8000 }).catch(() => {});
   await page.waitForTimeout(400);
+
+  const drew = await page.locator('#content').getAttribute('data-screen');
+  if (expect && drew !== expect) {
+    violations += 1;
+    console.error(`✗ ${name} — the router drew ${drew ? `"${drew}"` : 'nothing'} and this asked `
+      + `for "${expect}". A screen that was never drawn passes every check there is, `
+      + `so this is a route that moved rather than a screen that is fine.`);
+    return;
+  }
 
   const result = await new AxeBuilder({ page }).withTags(STANDARD).analyze();
   screens += 1;
@@ -112,36 +140,49 @@ async function check(page, name, where) {
 
 try {
   for (const theme of ['dark', 'light']) {
-    /* Signed out: what a stranger sees, which includes the verification page
-       that somebody hiring will open and nothing else. */
+    /* Signed out: what a stranger sees.
+
+       `/` IS THE DASHBOARD AND NOT THE CATALOGUE. With no fragment the router
+       falls back to `/dashboard`, which signed out is the invitation to sign
+       in. That is worth checking and it is not the catalogue, so it is named
+       for what it is and the catalogue is asked for by its own address.
+
+       The certificate verification page used to be here too, as
+       `/verify/<code>`. There is no such route in this client — that address
+       has no fragment, so it drew the dashboard, under a name that said
+       otherwise. It is left out rather than renamed: a screen this suite cannot
+       reach should be absent from the list, where somebody will notice it, and
+       not present as a line that measures something else. */
     const out = await open(theme, 'en');
-    await check(out, `${theme} · catalogue`, '/');
-    await check(out, `${theme} · track`, '/#/track/frontend');
-    await check(out, `${theme} · course`, '/#/course/web-fundamentals');
-    await check(out, `${theme} · sign in`, '/#/sign-in');
-    await check(out, `${theme} · sign up`, '/#/sign-up');
-    await check(out, `${theme} · nothing there`, '/#/nowhere-at-all');
+    await check(out, `${theme} · the way in`, '/', '/dashboard');
+    await check(out, `${theme} · catalogue`, '/#/catalog', '/catalog');
+    await check(out, `${theme} · track`, '/#/track/frontend', '/track/:id');
+    await check(out, `${theme} · course`, '/#/course/web-fundamentals', '/course/:id');
+    await check(out, `${theme} · sign in`, '/#/sign-in', '/sign-in');
+    await check(out, `${theme} · nothing there`, '/#/nowhere-at-all', 'not-found');
     /* The two documents, signed out, because signed out is when they are read:
        somebody deciding whether to hand over an e-mail address. They are also
        the longest prose the interface renders outside a lesson, which is where
        a heading level skipped by the Markdown renderer would show up. */
-    await check(out, `${theme} · terms of use`, '/#/terms');
-    await check(out, `${theme} · privacy policy`, '/#/privacy');
-    await check(out, `${theme} · a code that certifies nothing`, '/verify/0000-0000-0000-0000');
+    await check(out, `${theme} · terms of use`, '/#/terms', '/terms');
+    await check(out, `${theme} · privacy policy`, '/#/privacy', '/privacy');
     await done(out);
 
     /* And in Portuguese, once. A translated string is a different length and
        the layout has to survive it; contrast and labelling do not change, so
        running the whole list twice would be paying for the same answer. */
     const pt = await open(theme, 'pt');
-    await check(pt, `${theme} · catalogue, in Portuguese`, '/');
-    await check(pt, `${theme} · privacy policy, in Portuguese`, '/#/privacy');
+    await check(pt, `${theme} · catalogue, in Portuguese`, '/#/catalog', '/catalog');
+    await check(pt, `${theme} · privacy policy, in Portuguese`, '/#/privacy', '/privacy');
     await done(pt);
 
     /* Signed in: the screens that do not exist without an account. */
-    /* ONE SCREEN, TWO MODES. There is no `#/sign-up` any more: the interface is
+    /* ONE SCREEN, TWO MODES. There is no `#/sign-up`: the interface is
        `portal-frontend`'s, where signing in and registering are the same screen
-       and `#e-toggle` swaps between them. The ids are that screen's too. */
+       and `#e-toggle` swaps between them. The ids are that screen's too.
+
+       This list used to ask for `/#/sign-up` all the same, and got the router's
+       "page not found" — a clean screen that passes every check there is. */
     const student = await open(theme, 'en');
     await student.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
     await student.waitForSelector('#e-toggle', { timeout: 8000 });
@@ -153,20 +194,38 @@ try {
     await student.click('#form-signin button[type=submit]');
     await student.waitForTimeout(1500);
 
-    await check(student, `${theme} · the dashboard`, '/#/dashboard');
-    await check(student, `${theme} · certificates`, '/#/certificates');
-    await check(student, `${theme} · a lesson`, '/#/course/web-fundamentals/client-and-server');
+    await check(student, `${theme} · the dashboard`, '/#/dashboard', '/dashboard');
+    await check(student, `${theme} · certificates`, '/#/certificates', '/certificates');
+    /* A LESSON IS `/course/:id/lesson/:ix` AND HAS BEEN SINCE THE INTERFACE WAS
+       REPLACED. This asked for `/#/course/<id>/<lesson-id>`, which is the shape
+       the retired client used and matches no route here — so what was measured
+       under the name "a lesson" was the router's miss. Two contrast defects had
+       been sitting on the real screen the whole time. */
+    await check(student, `${theme} · a lesson`,
+      '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix');
 
     /* THE DRILL, WHICH IS A QUESTION AND A VERDICT ON ONE SCREEN. It is worth
        checking separately from the exam paper: the exam shows every question at
        once and never marks one, this shows one at a time and then puts a result
        beside it — which is a live region, a disabled button and a moved focus
        that the exam never has. */
-    await check(student, `${theme} · the drill`, '/#/practice');
+    await check(student, `${theme} · the drill`, '/#/practice', '/practice');
 
     /* THE DENSEST SCREEN THERE IS, and the one worth the trouble of getting
-       into: every question type on one page, every one of them a control. */
-    await student.goto(`${BASE}/#/exam/course/web-fundamentals`, { waitUntil: 'load' });
+       into: every question type on one page, every one of them a control.
+
+       IT IS NOT CHECKED YET, AND THE REASON IS NOT "NO EXAM TO SIT". This asked
+       for `/#/exam/course/<id>`, the retired client's address, and got the
+       router's miss — which has no `.question` in it, so the line below said
+       there was no exam and the run went green. The address is right now and
+       the screen still does not draw: `api.startExam` hands the paper back in
+       the envelope the server sends it in (`{paper: …}`) and `exams.js` reads
+       it as an attempt, so the screen throws before it renders anything.
+
+       That is the exam screen not being wired to this API, which is its own
+       piece of work. What is fixed here is that this file no longer reports it
+       as a screen with nothing on it. */
+    await student.goto(`${BASE}/#/course/web-fundamentals/exam`, { waitUntil: 'load' });
     await student.waitForTimeout(1500);
     if (await student.locator('.question').count()) {
       /* AND EVERY ONE OF THEM A CONTROL, checked rather than assumed. A type
@@ -194,7 +253,8 @@ try {
         }
       }
     } else {
-      console.log(`  (no exam to sit in ${theme}; that screen was not checked)`);
+      console.log(`  (the exam paper did not draw in ${theme}, so it was not checked — the `
+        + 'screen is not wired to this API yet, not a school with no questions)');
     }
 
     await done(student);

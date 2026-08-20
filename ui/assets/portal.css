@@ -704,12 +704,35 @@ body.graph-full .view-track .graph-legend{margin-top:10px}
    The dashed border says "this is reserved" without pretending there is already
    something to do. */
 .step-assessment{border-style:dashed}
-.step-pending{opacity:.55}
-.step-pending:hover{opacity:1}
+
+/* QUIET IS NOT `opacity`, WHEN THERE ARE WORDS UNDER IT.
+
+   Both of these dimmed a whole block to say "reserved, nothing to do here
+   yet", and both took their own title through the floor doing it. `--paper-dim`
+   is 7.3:1 in the dark theme and 5.6:1 in the light one — comfortable — and at
+   .55 it composites to 2.97:1 and 2.28:1, where AA asks 4.5. Raising the figure
+   does not rescue it: in the light theme `--paper-dim` needs .95 before it
+   passes, which is not dimming at all, and `--paper` at .6 still only reaches
+   3.97:1.
+
+   So the block is quietened by COLOUR — a border that recedes and a mark that
+   goes grey — and the text keeps a value somebody measured. It looks the same
+   and it can be read, which is the whole of the difference.
+
+   This is the second time in this stylesheet: `opacity` on a locked card took
+   its text to 4.09:1 and axe caught it on its first run. It reached CI twice
+   because the suite was asking for a lesson at an address this client does not
+   have, so the screen these rules are on was never measured. */
+.step-pending{border-color:var(--wire)}
+.step-pending .step-title{color:var(--paper-dim)}
+.step-pending .step-n{color:var(--paper-dim)}
+.step-pending:hover .step-title{color:var(--paper)}
+
 .assessment-pending{border-style:dashed}
 .foot-note{font-size:.72rem}
-.rail-section.pending{opacity:.6}
-.rail-section.pending:hover{opacity:1}
+.rail-section.pending .ts-title{color:var(--paper-dim)}
+.rail-section.pending .ts-mark{color:var(--paper-dim)}
+.rail-section.pending:hover .ts-title{color:var(--paper)}
 .resume-where{font-size:.68rem}
 .crumbs{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--paper-dim)}
 .crumbs a{color:var(--phosphor)}

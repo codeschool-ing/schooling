@@ -168,6 +168,20 @@ whenChanged(async (path, found) => {
   if (!found) {
     content.innerHTML = '<div class="view"><p class="empty">' + txt('page not found') + '</p></div>';
     content.setAttribute('aria-label', txt('page not found'));
+    /* THE ROUTER SAYS WHICH SCREEN IT DREW, in one attribute, and this is the
+       only place that says "none of them".
+
+       A miss is a perfectly accessible screen: one heading, good contrast,
+       nothing to trip over. So a test that opens a route which no longer
+       exists checks a tidy little 404 and reports a pass — which is what
+       happened. Two of the screens the accessibility suite believed it was
+       measuring had not been drawn since the interface was replaced, and
+       nothing anywhere said so.
+
+       It is `data-screen` and not the `aria-label` beside it because that
+       label is translated: a check on its text would be a check that passes in
+       English and fails in Portuguese. */
+    content.dataset.screen = 'not-found';
     return;
   }
 
@@ -221,6 +235,9 @@ whenChanged(async (path, found) => {
      is how somebody with two open tells them apart. */
   document.title = (source.school && source.school.name) || 'codeschool.ing';
   content.setAttribute('aria-label', title);
+  // The route that matched, not the address that was typed: `/course/:id` for
+  // every course. See the miss above for what this is for.
+  content.dataset.screen = found.r.path;
   if (after) after();
   leaving = onLeave || null;
 
