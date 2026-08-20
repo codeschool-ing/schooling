@@ -561,6 +561,22 @@ export async function submitExam(attemptId) {
   return answer;
 }
 
+/* ---------- the drill ----------
+
+   The schedule is the server's: which question a student is closest to
+   forgetting is computed from their own history, so there is nothing to keep
+   in this browser and nothing to reconcile. */
+export const practiceQueue = () => get('/api/v1/practice');
+
+/* ---------- the two documents ----------
+
+   OUTSIDE EVERY GATE, and the only route here that is. No session, no plan, no
+   school of the reader's — see `screens/legal.js`. The offline copy answers
+   them from what was baked, which is why they are the one thing a bundle must
+   never say "this needs the school" about. */
+export const legal = (document, lang) =>
+  get(`/api/v1/legal/${enc(document)}?lang=${enc(lang || 'en')}`);
+
 /* ---------- certificates ---------- */
 
 export const certificatesOnServer = () => !reading;

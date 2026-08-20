@@ -160,6 +160,10 @@ var Registry = []Table{
 		Why: "which courses a track contains, flattened",
 	},
 	{
+		Name: "catalog_track_links", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "which course a track puts after which, and about nobody",
+	},
+	{
 		Name: "catalog_courses", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "a mirror of courses/*/course.json",
 	},

@@ -34,6 +34,8 @@ import performance from './screens/performance.js';
 import redo from './screens/redo.js';
 import notes from './screens/notes.js';
 import { courseExamScreen, trackExamScreen } from './screens/exam.js';
+import { terms, privacy } from './screens/legal.js';
+import practice from './screens/practice.js';
 import { openSearch, close as closeSearch, searchOpen } from './search-panel.js';
 import { closeModal, modalOpen } from './modal.js';
 import { wireCopy } from './copy.js';
@@ -103,6 +105,27 @@ route('/performance', performance);
 route('/redo', redo);
 route('/notes', notes);
 
+/* THE DRILL, which the portal has no route for because the schedule behind it
+   is this server's. */
+route('/practice', practice);
+
+/* THE TWO DOCUMENTS, which the portal has no route for because over there they
+   are the vitrine's pages. Here the interface is the whole of what a school
+   serves, so they live in it — and they are the only screens that ask nothing
+   of anybody: no session, no plan, and answered from what was baked when the
+   file is opened off a disk. */
+route('/terms', terms);
+route('/privacy', privacy);
+
+/* Which screens are the school's rather than the catalogue's. Everything that
+   reads or writes a student's own record: there is no student in a file on a
+   disk. The exams are matched by their ending because there is one per course
+   and one per track. */
+const OF_THE_SCHOOL = ['/sign-in', '/dashboard', '/certificates', '/performance',
+  '/redo', '/notes', '/practice'];
+const needsTheSchool = (path) =>
+  OF_THE_SCHOOL.includes(path) || path.endsWith('/exam');
+
 const $ = (s) => document.querySelector(s);
 const content = $('#content');
 const rail = $('#rail');
@@ -133,6 +156,36 @@ whenChanged(async (path, found) => {
   content.textContent = '';
   content.appendChild(el);
   content.scrollTop = 0;
+
+  /* ---------- AND IN THE OFFLINE COPY, THE SCREENS THAT CANNOT WORK SAY SO ----
+
+     The bundle is one file opened off a disk with no server anywhere near it.
+     The catalogue, the maps, the courses and every written lesson are in it and
+     need nothing; a session, progress, exams, certificates and the drill are
+     the school's and are not.
+
+     WITHOUT THIS THE FILE LIES QUIETLY. It draws the sign-in form, the student
+     types a password, presses the button and nothing happens — which is worse
+     than saying so, because they will try twice and then assume it is their
+     fault. Same for a dashboard that reports 0% for ever.
+
+     IT IS ON THE ROUTER AND NOT IN THE SCREENS, deliberately: those files are
+     `portal-frontend`'s and stay that way, and the portal has no offline copy
+     to know about. One list here beats a branch in eight files. */
+  if (api.offline && needsTheSchool(path)) {
+    const notice = document.createElement('div');
+    notice.className = 'notice';
+    notice.setAttribute('role', 'status');
+    notice.innerHTML =
+      '<p>' + txt('This is the offline copy of this school.') + '</p>' +
+      /* ONE LITERAL, however long the line. `tools/check-interface` reads what
+         the interface says by finding a `txt` call with one quoted string in
+         the source, and a string
+         built by concatenation is invisible to it — the sentence would go
+         untranslated and no check would ever say so. */
+      '<p class="dim">' + txt('Courses, tracks and lessons are all here and need no connection. Signing in, your progress and exams live with the school, so they are not.') + '</p>';
+    el.prepend(notice);
+  }
 
   /* THE TAB DOES NOT CHANGE ITS NAME. It used to say where the student was —
      "ES6+ syntax: let/const… · codeschool.ing" — and the effect was the opposite

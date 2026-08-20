@@ -37,6 +37,11 @@ CREATE TABLE catalog_track_links (
     )
 );
 
+-- What it holds about a person, said to somebody reading the schema with psql
+-- and no Go. It is a curriculum order and it is about nobody; the registry in
+-- internal/privacy says the same thing, and a test holds the two to each other.
+COMMENT ON TABLE catalog_track_links IS 'personal-data: none';
+
 -- +goose Down
 
 DROP TABLE catalog_track_links;

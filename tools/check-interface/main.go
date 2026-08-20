@@ -35,9 +35,11 @@ package main
 
 import (
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 
@@ -124,22 +126,40 @@ func check(dir string) (problems []string, checked int, err error) {
 			"speak more than one language and there is nothing to speak it with", dir)
 	}
 
+	/* MERGED BY LANGUAGE, because a language can have more than one file and
+	   here it does: `i18n-pt.js` is the portal's, copied and kept syncable, and
+	   `i18n-schooling-pt.js` adds the strings that exist only in this
+	   repository. The runtime sees one object; checking them one file at a time
+	   would report every entry of each as missing from the other. */
+	merged := map[string]map[string]bool{} // language -> keys
+	files := map[string][]string{}         // language -> which files carry it
 	for _, path := range candidates {
 		language, isDictionary := dictionaries[path]
 		if !isDictionary {
 			continue
 		}
-
 		entries, err := dictionaryKeys(path)
 		if err != nil {
 			return nil, 0, err
 		}
+		if merged[language] == nil {
+			merged[language] = map[string]bool{}
+		}
+		for key := range entries {
+			merged[language][key] = true
+		}
+		files[language] = append(files[language], filepath.Base(path))
+	}
+
+	for _, language := range slices.Sorted(maps.Keys(merged)) {
+		entries := merged[language]
+		where := strings.Join(files[language], " + ")
 
 		for _, s := range said {
 			if !entries[s] {
 				problems = append(problems, fmt.Sprintf(
 					"%s: no %s for %q — it will be shown in English to everybody reading in %s, "+
-						"and nothing else will look wrong", filepath.Base(path), language, s, language))
+						"and nothing else will look wrong", where, language, s, language))
 			}
 		}
 
@@ -177,8 +197,8 @@ func check(dir string) (problems []string, checked int, err error) {
 			}
 		}
 		if unsaid > 0 {
-			fmt.Printf("%s: %d entries this interface does not say — the file is the vitrine's, "+
-				"copied, and it translates that site's screens too\n", filepath.Base(path), unsaid)
+			fmt.Printf("%s: %d entries this interface does not say — the copied half is the "+
+				"vitrine's, and it translates that site's screens too\n", where, unsaid)
 		}
 	}
 
@@ -350,6 +370,12 @@ func translatable(s string) bool {
 // What a dictionary of the INTERFACE declares. `.ui` and not `.courses` or
 // `.tracks`: those translate the catalogue, which is content and is checked
 // against the content rather than against the strings the screens say.
+//
+// It matches whether the file ASSIGNS the object or ADDS to it. There are two,
+// and they are two on purpose: one is `portal-frontend`'s, copied and kept
+// syncable, and the other holds the strings that exist only here — see the
+// header of `i18n-schooling-pt.js`. Both are dictionaries of the same language
+// and both are read.
 var declaresUI = regexp.MustCompile(`(?m)^\s*window\.I18N\.([A-Za-z-]+)\.ui\s*=`)
 
 // languageOf answers which language a file is a dictionary of, or "" for a file
