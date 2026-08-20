@@ -318,8 +318,32 @@ export function drawEdges(root, t) {
   const svg = cont && cont.querySelector('.graph-edges');
   if (!svg) return;
   const g = trackGraph(t, activeOption);
+
+  /* THE CANVAS IS MEASURED WITHOUT THE DRAWING ON IT, and that is a fix rather
+     than a nicety.
+
+     The lines are an SVG sized to the scrollable area — and the SVG is INSIDE
+     that area, so its own width is part of what is being measured. Set it from
+     `cont.scrollWidth` and the number can only ever grow: one pass where the
+     columns have not laid out yet (a font still loading, the graph built while
+     hidden) writes a width bigger than the cards, and every pass after it reads
+     that width back and keeps it.
+
+     What it looks like: the track paged to its end and then kept going, into a
+     blank corridor the width of a screen. On the back-end map the canvas was
+     4846px for 3526px of cards — 1320 of nothing after the arrival flag, which
+     the right arrow will happily scroll into.
+
+     Zeroing it first costs one forced layout and makes the measurement what it
+     was always meant to be: the size of the CARDS. It is done before the
+     origin is read, because shrinking the canvas can clamp `scrollLeft`, and
+     every box below is measured against that origin. */
+  svg.setAttribute('width', 0);
+  svg.setAttribute('height', 0);
+
   const base = cont.getBoundingClientRect();
   const L = cont.scrollLeft, T = cont.scrollTop;
+  const canvasW = cont.scrollWidth, canvasH = cont.scrollHeight;
   /* THE ROUTER RUNS IN ONE AXIS AND SERVES BOTH. Everything below this line
      thinks the graph goes left to right: an edge leaves a card's right side,
      crosses a corridor and comes in on the next card's left. Flowing down, the
@@ -335,13 +359,13 @@ export function drawEdges(root, t) {
     return down ? { x: b.y, y: b.x, w: b.h, h: b.w } : b;
   };
   // the far edge of the drawing, in the same swapped coordinates
-  const far = down ? cont.scrollWidth : cont.scrollHeight;
+  const far = down ? canvasW : canvasH;
   // a point, written the way the SVG has to read it
   const P = (x, y) => (down ? y + ',' + x : x + ',' + y);
 
-  svg.setAttribute('width', cont.scrollWidth);
-  svg.setAttribute('height', cont.scrollHeight);
-  svg.setAttribute('viewBox', '0 0 ' + cont.scrollWidth + ' ' + cont.scrollHeight);
+  svg.setAttribute('width', canvasW);
+  svg.setAttribute('height', canvasH);
+  svg.setAttribute('viewBox', '0 0 ' + canvasW + ' ' + canvasH);
 
   /* The distance a detour line keeps from the card it goes around. */
   const CLEARANCE = 16;
