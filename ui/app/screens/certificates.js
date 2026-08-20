@@ -52,6 +52,12 @@ import { openModal } from '../modal.js';
 import { downloadCertificatePNG } from '../certificate-png.js';
 import { esc } from '../text.js';
 import * as api from '../api.js';
+/* THE SCHOOL'S OWN NAME ON THE CERTIFICATE, and one of the two divergences in
+   this file. The portal is one school and writes its brand into the markup;
+   this deployment serves many, and a certificate is the one thing here that
+   leaves the screen — a student hands it to an employer. Handing them somebody
+   else's brand is the defect. See `brand()` for why it splits at the last dot. */
+import { brand } from '../source.js';
 
 const DATE = (d) => new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
   day: '2-digit', month: 'long', year: 'numeric',
@@ -105,7 +111,9 @@ function card({ label, name, meta, who, when, key, sample, grade, code, revoked,
       'aria-label="' + txt('View the certificate at full size') + '">' +
     '<div class="cert-sheet">' +
       '<header class="cert-top">' +
-        '<span class="cert-brand"><span class="cert-led" aria-hidden="true"></span>codeschool<b>.ing</b></span>' +
+        '<span class="cert-brand"><span class="cert-led" aria-hidden="true"></span>' +
+          esc(brand().head) + (brand().tail ? '<b>' + esc(brand().tail) + '</b>' : '') +
+        '</span>' +
         (sample
           ? '<span class="cert-seal">' + txt('sample') + '</span>'
           : revoked

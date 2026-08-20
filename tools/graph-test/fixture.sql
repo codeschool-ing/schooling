@@ -28,9 +28,26 @@
 -- answerable type are here too. The exam is the densest screen in the
 -- interface: six questions, every one of them a control with a label.
 
-INSERT INTO tenants (slug, name, accent)
-VALUES (:'slug', 'Programming', '#5b8cff')
-ON CONFLICT (slug) DO NOTHING;
+/* A SCHOOL THAT IS NOT CODESCHOOL.ING IN ANY OF ITS DETAILS, deliberately.
+   Everything the interface used to have written into it is set here to
+   something else, so that a value which crept back in is visible rather than
+   correct by coincidence.
+
+   The accent is green and not the palette's blue, which is what puts
+   `ui/app/accent.js` under the accessibility pass: axe reads every screen in
+   both themes, so an accent applied unreadably fails there. It cannot pass at
+   this value on both pages — no colour can, see that file — so the light theme
+   exercises the correction and the dark one exercises the plain application.
+
+   The site and the price are set for the same reason: the account menu's link
+   and the invitation's amount were a competitor's address and one school's
+   `R$ 490` until they came from here. */
+INSERT INTO tenants (slug, name, accent, site, plan_price_cents, plan_currency)
+VALUES (:'slug', 'Programming', '#14a06a', 'https://example.tld', 32000, 'EUR')
+ON CONFLICT (slug) DO UPDATE SET
+  accent = EXCLUDED.accent, site = EXCLUDED.site,
+  plan_price_cents = EXCLUDED.plan_price_cents,
+  plan_currency = EXCLUDED.plan_currency;
 
 INSERT INTO tenant_domains (host, tenant_id)
 SELECT :'host', id FROM tenants WHERE slug = :'slug'
@@ -93,6 +110,29 @@ SELECT t.id, 'frontend', 3, v.o, v.op, 0, v.c FROM tenants t, (VALUES
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
+/* AND ONE EDGE THAT NO PREREQUISITE PRODUCES.
+
+   `deploy` requires `testing` and nothing else: what to check is knowledge, and
+   a course about shipping does not need React to be understood. In THIS track
+   it still comes after the fork — you ship the thing you built — and that is a
+   property of the track rather than of the course, which is the whole of why
+   `catalog_track_links` exists.
+
+   It is here rather than only in the unit tests because it is an edge that has
+   to be DRAWN: from the fork at level three, past the `testing` card, down to
+   `deploy`. A link that survives the database and then routes through a card is
+   still a bug, and this is the suite that can see it.
+
+   The other target shape — a course id rather than a step number — is covered
+   by `internal/catalog`'s own fixture; there is no honest place for one here,
+   and a redundant link written only to exercise a column would be a fixture
+   lying about what a track says. */
+INSERT INTO catalog_track_links
+  (tenant_id, track_id, course_id, position, target_step)
+SELECT id, 'frontend', 'deploy', 0, 3
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
+
 /* ---------- a lesson to read ---------- */
 
 /* A COURSE HAS TO NAME ITS LESSONS, and this is the join the interface makes.
@@ -107,7 +147,7 @@ ON CONFLICT DO NOTHING;
    row below are the same string on purpose. */
 UPDATE catalog_courses SET topics = ARRAY['Client and server']
 WHERE id = 'web-fundamentals'
-  AND tenant_id = (SELECT id FROM tenants WHERE slug = 'graphtest');
+  AND tenant_id = (SELECT id FROM tenants WHERE slug = :'slug');
 
 INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
 SELECT id, 'web-fundamentals', 'client-and-server', 'Client and server', 0

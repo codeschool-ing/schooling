@@ -122,7 +122,7 @@ func TestTheFirstCourseOfEveryTrackIsFree(t *testing.T) {
 	id := loaded(t, pool)
 	store := catalog.NewStore(pool)
 
-	listing, err := store.Courses(context.Background(), id, catalog.PlanNone)
+	listing, err := store.Courses(context.Background(), id, catalog.PlanNone, "en")
 	if err != nil {
 		t.Fatalf("listing: %v", err)
 	}
@@ -150,7 +150,7 @@ func TestADraftIsNotInTheCatalogueAtAll(t *testing.T) {
 	store := catalog.NewStore(pool)
 	ctx := context.Background()
 
-	listing, err := store.Courses(ctx, id, catalog.PlanFull)
+	listing, err := store.Courses(ctx, id, catalog.PlanFull, "en")
 	if err != nil {
 		t.Fatalf("listing: %v", err)
 	}
@@ -162,7 +162,7 @@ func TestADraftIsNotInTheCatalogueAtAll(t *testing.T) {
 	}
 
 	// And asking for it directly answers exactly as a course that is not there.
-	if _, err := store.Course(ctx, id, "html-css", catalog.PlanFull); !errors.Is(err, catalog.ErrNotFound) {
+	if _, err := store.Course(ctx, id, "html-css", "en", catalog.PlanFull); !errors.Is(err, catalog.ErrNotFound) {
 		t.Errorf("a draft answered %v, want ErrNotFound", err)
 	}
 }
@@ -175,7 +175,7 @@ func TestALockedCourseShowsItsShapeAndNoWords(t *testing.T) {
 	store := catalog.NewStore(pool)
 	ctx := context.Background()
 
-	course, err := store.Course(ctx, id, "html-css", catalog.PlanNone)
+	course, err := store.Course(ctx, id, "html-css", "en", catalog.PlanNone)
 	if err != nil {
 		t.Fatalf("reading a locked course: %v", err)
 	}
@@ -268,7 +268,7 @@ func TestATrackComesBackWithItsForkIntact(t *testing.T) {
 	pool := testPool(t)
 	id := loaded(t, pool)
 
-	track, err := catalog.NewStore(pool).Track(context.Background(), id, "frontend")
+	track, err := catalog.NewStore(pool).Track(context.Background(), id, "frontend", "en")
 	if err != nil {
 		t.Fatalf("reading the track: %v", err)
 	}
@@ -367,7 +367,7 @@ func TestACourseSaysHowManyLessonsAndFinishableSectionsItHas(t *testing.T) {
 	pool := testPool(t)
 	school := loaded(t, pool)
 
-	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull)
+	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull, "en")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -404,7 +404,7 @@ func TestTheCountsDoNotMultiplyAgainstThePrerequisites(t *testing.T) {
 		d["requires"] = []any{"html-css", "web-fundamentals"}
 	}))
 
-	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull)
+	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull, "en")
 	if err != nil {
 		t.Fatal(err)
 	}

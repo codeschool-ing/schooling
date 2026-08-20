@@ -134,10 +134,33 @@ try{if(localStorage.getItem('codeschool-theme')==='light')document.documentEleme
      equivalent of. Its header says why it is a second file rather than more
      lines in the first. -->
 <script src="/assets/i18n-schooling-pt.js"></script>
-<script src="/assets/i18n-courses-pt.js"></script>
+<!-- `i18n-courses-pt.js` USED TO BE HERE AND IS NOT ANY MORE.
+
+     It is `portal-frontend`'s dictionary of the CATALOGUE — course names,
+     summaries, syllabuses and track goals — keyed by codeschool.ing's course
+     ids. Copied here it translated one school's catalogue and no other's: a
+     second school's courses came out in the language they were written in
+     whatever the student picked, and nothing looked broken, because a missing
+     translation falls back to its key and the key is the English text.
+
+     A course's name is the school's content. It lives with the course now, in
+     `content/<school>/courses/<id>/course.pt.json`, and arrives already
+     translated from `/api/v1/courses?lang=` — the same way a section's prose
+     already did. -->
 <script src="/assets/i18n-runtime.js"></script>
 <script src="/assets/plans.js"></script>
-<script src="/assets/materials.js"></script>
+<!-- `materials.js` USED TO BE HERE AND IS NOT ANY MORE.
+
+     It is `portal-frontend`'s generated file: one school's supplementary PDFs,
+     inlined as `data:` URIs, twenty kilobytes of them. A section reaches one by
+     key — `materials: ['wf-dns-cheatsheet']` — and this deployment's sections
+     cannot: `Section.Materials` is declared in the content model and is written
+     to no table and served on no route, so the key never arrives and the record
+     was never read.
+
+     Which made it one school's material shipped to every other school, for
+     nothing. When a section here can carry a material, it will come from the
+     school that wrote it, over the API, like its prose and its pictures. -->
 
 <script type="module" src="/app/main.js"></script>
 </body>

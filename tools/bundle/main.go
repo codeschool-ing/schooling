@@ -183,6 +183,33 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 		return json.RawMessage(body), nil
 	}
 
+	/* One endpoint, once per language, keyed the way the client keys it.
+
+	   IT RETURNS THE SOURCE LANGUAGE'S ANSWER, because the tool reads the
+	   catalogue to find out what else to ask for — which tracks there are,
+	   which lessons a course has — and those are ids. An id is the same in
+	   every language, so any of the answers would do; the first is chosen so
+	   that the walk is deterministic rather than "whichever locale sorted
+	   last".
+
+	   The plain path with no `?lang=` is NOT baked. Nothing asks for it: the
+	   client always sends the language it is showing, and an unkeyed copy would
+	   be dead weight in a file measured in megabytes and a second answer that
+	   could disagree with the first. */
+	askEvery := func(ask func(string) (json.RawMessage, error), path string) (json.RawMessage, error) {
+		var first json.RawMessage
+		for _, locale := range locales {
+			body, err := ask(path + "?lang=" + url.QueryEscape(locale))
+			if err != nil {
+				return nil, fmt.Errorf("%s in %s: %w", path, locale, err)
+			}
+			if first == nil {
+				first = body
+			}
+		}
+		return first, nil
+	}
+
 	if _, err := ask("/api/v1/school"); err != nil {
 		return nil, nil, err
 	}
@@ -205,7 +232,22 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 		}
 	}
 
-	courses, err := ask("/api/v1/courses")
+	/* THE CATALOGUE, IN EVERY LANGUAGE — and it used to be baked in none.
+
+	   A course's name, summary, syllabus and topics were translated by a
+	   dictionary that shipped with the interface until the school started
+	   answering them itself, and the client now asks for them the way it asks
+	   for a lesson: with `?lang=`. Baked without one, the file holds a
+	   catalogue under a key nothing ever looks up. Not a WRONG catalogue — no
+	   catalogue: the bundle opened to an empty school, no track, and every
+	   course drawn with the placeholder for one nobody has written.
+
+	   Which is the failure the note above the lessons describes, and it is
+	   worth reading twice: a key that differs by one query parameter is content
+	   that is IN the file and cannot be found. `bundle-test` is the only thing
+	   that sees it — the tool exits zero and the page weighs the same either
+	   way. */
+	courses, err := askEvery(ask, "/api/v1/courses")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -230,7 +272,7 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 			return nil, nil, fmt.Errorf("the shape of the school in %s: %w", locale, err)
 		}
 	}
-	tracks, err := ask("/api/v1/tracks")
+	tracks, err := askEvery(ask, "/api/v1/tracks")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -244,7 +286,7 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 		return nil, nil, fmt.Errorf("the track list: %w", err)
 	}
 	for _, t := range trackList.Tracks {
-		if _, err := ask("/api/v1/tracks/" + url.PathEscape(t.ID)); err != nil {
+		if _, err := askEvery(ask, "/api/v1/tracks/"+url.PathEscape(t.ID)); err != nil {
 			return nil, nil, err
 		}
 	}
@@ -259,7 +301,7 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 	}
 
 	for _, c := range courseList.Courses {
-		one, err := ask("/api/v1/courses/" + url.PathEscape(c.ID))
+		one, err := askEvery(ask, "/api/v1/courses/"+url.PathEscape(c.ID))
 		if err != nil {
 			return nil, nil, err
 		}

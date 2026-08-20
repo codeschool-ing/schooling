@@ -31,6 +31,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -180,6 +181,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 		"catalog_exercises", "catalog_images", "catalog_prose", "catalog_sections",
 		"catalog_lessons",
 		"catalog_course_requires", "catalog_courses",
+		"catalog_course_text", "catalog_track_fork_text", "catalog_track_text",
 		"catalog_track_links", "catalog_track_courses", "catalog_track_forks", "catalog_tracks",
 	} {
 		// The table names come from this list and from nowhere else, so there
@@ -195,6 +197,38 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			VALUES ($1, $2, $3, $4, $5, $6, $7)
 		`, tenantID, track.ID, track.Name, track.Goal, track.Outcome, track.Continues, i); err != nil {
 			return fmt.Errorf("writing the track %s: %w", track.ID, err)
+		}
+
+		// The track in its other languages. Every field is a pointer and goes
+		// in as it came: NULL where nobody translated it, which is what lets
+		// the read fall back field by field (C-11) instead of losing a goal to
+		// an empty string.
+		for _, locale := range sorted(track.Text) {
+			text := track.Text[locale]
+			if _, err := tx.Exec(ctx, `
+				INSERT INTO catalog_track_text (tenant_id, track_id, locale, name, goal, outcome)
+				VALUES ($1, $2, $3, $4, $5, $6)
+			`, tenantID, track.ID, locale, text.Name, text.Goal, text.Outcome); err != nil {
+				return fmt.Errorf("writing the %s of the track %s: %w", locale, track.ID, err)
+			}
+
+			for _, at := range sorted(text.Steps) {
+				position, err := strconv.Atoi(at)
+				if err != nil {
+					// Refused by the validator; here it would be a silent skip.
+					return fmt.Errorf("the %s of the track %s translates a step called %q",
+						locale, track.ID, at)
+				}
+				fork := text.Steps[at]
+				if _, err := tx.Exec(ctx, `
+					INSERT INTO catalog_track_fork_text
+						(tenant_id, track_id, position, locale, choice, note, options)
+					VALUES ($1, $2, $3, $4, $5, $6, $7)
+				`, tenantID, track.ID, position, locale,
+					fork.Choice, fork.Note, fork.Options); err != nil {
+					return fmt.Errorf("writing the %s of a choice in %s: %w", locale, track.ID, err)
+				}
+			}
 		}
 
 		// The track's own sequence. Written in the order the file lists them,
@@ -262,6 +296,18 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			course.Summary, course.Prerequisites, lines(course.Syllabus), lines(course.Topics),
 			course.Draft); err != nil {
 			return fmt.Errorf("writing the course %s: %w", course.ID, err)
+		}
+
+		for _, locale := range sorted(course.Text) {
+			text := course.Text[locale]
+			if _, err := tx.Exec(ctx, `
+				INSERT INTO catalog_course_text
+					(tenant_id, course_id, locale, name, summary, prerequisites, syllabus, topics)
+				VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+			`, tenantID, course.ID, locale, text.Name, text.Summary, text.Prerequisites,
+				text.Syllabus, text.Topics); err != nil {
+				return fmt.Errorf("writing the %s of the course %s: %w", locale, course.ID, err)
+			}
 		}
 
 		for _, needed := range course.Requires {

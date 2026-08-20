@@ -23,6 +23,11 @@
 
 /* Logical pixels; the bitmap is this times SCALE. 2 is the smallest that still
    reads cleanly when someone drops it into a slide and it gets scaled up. */
+/* The school's own name, for the two places this file writes one: the brand
+   drawn on the sheet, when the card had none to scrape, and the name of the
+   file that lands in somebody's Downloads folder. */
+import { name as schoolName, fileBrand } from './source.js';
+
 const W = 1000;
 const H = 580;
 const SCALE = 2;
@@ -39,7 +44,7 @@ function readCard(art) {
   const lines = [...art.querySelectorAll('.cert-line')].map((n) => n.textContent.trim());
   const foot = [...art.querySelectorAll('.cert-foot > span')].map((n) => n.textContent.trim());
   return {
-    brand: text('.cert-brand') || 'codeschool.ing',
+    brand: text('.cert-brand') || schoolName(),
     type: text('.cert-type'),
     certifies: lines[0] || '',
     completed: lines[1] || '',
@@ -139,10 +144,14 @@ function draw(ctx, d, c, light) {
   ctx.fill();
 
   ctx.font = '500 21px ' + SANS;
-  // The brand is one word to the eye: "codeschool" in the text colour and
-  // ".ing" in the accent, exactly as .cert-brand b does it.
+  /* The brand is one word to the eye: the name in the text colour and whatever
+     follows its last dot in the accent, exactly as `.cert-brand b` does it.
+     SPLIT AT THE LAST DOT and not at `.ING`: this deployment serves many
+     schools, and one called `Programming` has no dot to find — it came out
+     whole, which is right, but only because the search failed. Now it is right
+     on purpose, and a school called `escola.dev` gets the same treatment. */
   const brand = d.brand.toUpperCase();
-  const cut = brand.lastIndexOf('.ING');
+  const cut = brand.lastIndexOf('.');
   const head = cut > 0 ? brand.slice(0, cut) : brand;
   const tail = cut > 0 ? brand.slice(cut) : '';
   ctx.fillStyle = c.paper;
@@ -277,7 +286,10 @@ export async function downloadCertificatePNG(art) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'codeschool-ing-' + (d.id || 'certificate').replace(/[^\w-]+/g, '') + '.png';
+  /* NAMED AFTER THE SCHOOL THAT ISSUED IT. It was `codeschool-ing-` for
+     everybody, which put one school's name on every other school's document
+     the moment it reached somebody's Downloads folder. */
+  a.download = fileBrand() + '-' + (d.id || 'certificate').replace(/[^\w-]+/g, '') + '.png';
   document.body.appendChild(a);
   a.click();
   a.remove();
