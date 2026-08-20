@@ -42,12 +42,14 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"regexp"
 	"sort"
 	"strings"
@@ -90,6 +92,10 @@ type server struct {
 	http *http.Client
 }
 
+// errLocked is the server refusing a stranger, which is the paywall doing its
+// job rather than anything going wrong.
+var errLocked = errors.New("that is behind the paywall")
+
 func (s server) get(path string) ([]byte, string, error) {
 	request, err := http.NewRequest(http.MethodGet, s.base+path, nil)
 	if err != nil {
@@ -109,6 +115,15 @@ func (s server) get(path string) ([]byte, string, error) {
 	body, err := io.ReadAll(answer.Body)
 	if err != nil {
 		return nil, "", err
+	}
+	/* A LOCKED COURSE'S PROSE IS NOT A FAILURE. This fetches as a stranger — no
+	   session, no cookie — so what lands in the file is what a visitor may see,
+	   and the server saying "that one is behind the paywall" is the paywall
+	   working. It is reported to the caller as a state rather than an error, and
+	   the caller skips the lesson: the course is still in the bundle, with its
+	   shape and without its words, which is exactly how it looks online. */
+	if answer.StatusCode == http.StatusPaymentRequired {
+		return nil, "", errLocked
 	}
 	if answer.StatusCode != http.StatusOK {
 		return nil, "", fmt.Errorf("%s answered %s", path, answer.Status)
@@ -194,6 +209,27 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+
+	/* THE SHAPE OF EVERY COURSE — which lessons, which sections, and no prose.
+	   One request, and every denominator on every screen comes out of it: how
+	   many sections a lesson has, which order they are in, which of them are
+	   video.
+
+	   Left out, the client falls back to the placeholder it draws for a course
+	   nobody has written yet — one section called "Content" — and the bundle
+	   showed that for all 122 courses while the served page showed the real
+	   ones. It also carries the lesson IDS, which is what the prose is asked
+	   for by, so without it not one lesson could be read either.
+
+	   IN EVERY LANGUAGE, because the section titles in it are translated rows
+	   here rather than a file per language, and the offline copy switches
+	   language with no server to ask. */
+	for _, locale := range locales {
+		path := "/api/v1/lessons?lang=" + url.QueryEscape(locale)
+		if _, err := ask(path); err != nil {
+			return nil, nil, fmt.Errorf("the shape of the school in %s: %w", locale, err)
+		}
+	}
 	tracks, err := ask("/api/v1/tracks")
 	if err != nil {
 		return nil, nil, err
@@ -265,6 +301,9 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 					"/lessons/" + url.PathEscape(lesson.ID) +
 					"?lang=" + url.QueryEscape(locale)
 				if _, err := ask(path); err != nil {
+					if errors.Is(err, errLocked) {
+						continue
+					}
 					return nil, nil, fmt.Errorf("%s in %s: %w", lesson.ID, locale, err)
 				}
 			}
@@ -277,8 +316,13 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 /* ---------- the page ---------- */
 
 var (
-	linkOf   = regexp.MustCompile(`<link[^>]*?href="(/assets/[^"]+)"[^>]*>`)
-	scriptOf = regexp.MustCompile(`<script[^>]*?src="(/assets/[^"]+)"[^>]*></script>`)
+	/* `/assets/` AND `/app/`. The interface used to be one directory; the client
+	   is now `portal-frontend`'s, which is a tree of its own under `/app/`, and
+	   a bundler that only knew about `/assets/` produced a file with the
+	   stylesheets inlined and the whole application still pointing at a server
+	   that is not there. */
+	linkOf   = regexp.MustCompile(`<link[^>]*?href="(/(?:assets|app)/[^"]+)"[^>]*>`)
+	scriptOf = regexp.MustCompile(`<script[^>]*?src="(/(?:assets|app)/[^"]+)"[^>]*></script>`)
 	cssURLOf = regexp.MustCompile(`url\('([^']+\.woff2)'\)`)
 )
 
@@ -438,17 +482,91 @@ func sorted[V any](m map[string]V) []string {
    name. A bundler that quietly mishandles `export default` is a bundler that
    ships a file which loads and then does the wrong thing on one screen. */
 
+/*
+THE THREE FORMS THE INTERFACE USES, and no others.
+
+	Named, namespace and default — `import { a, b as c }`, `import * as ns` and
+	`import thing`. Anything else is refused rather than guessed at: this is a
+	linker of about a hundred lines standing in for a build step, and the day it
+	silently mis-links a module is the day nobody can tell why the offline copy
+	behaves differently from the site.
+*/
 var (
-	importOf   = regexp.MustCompile(`(?m)^import\s*\{([^}]*)\}\s*from\s*'([^']+)';`)
-	exportOf   = regexp.MustCompile(`(?m)^export\s+(?:class|const|let|var|function)\s+([A-Za-z_$][\w$]*)`)
-	leftOverOf = regexp.MustCompile(`(?m)^\s*(import|export)\b.*$`)
+	importOf    = regexp.MustCompile(`(?m)^import\s*\{([^}]*)\}\s*from\s*'([^']+)';`)
+	importAllOf = regexp.MustCompile(`(?m)^import\s*\*\s*as\s+([A-Za-z_$][\w$]*)\s*from\s*'([^']+)';`)
+	importOneOf = regexp.MustCompile(`(?m)^import\s+([A-Za-z_$][\w$]*)\s*from\s*'([^']+)';`)
+	/* `[\s\S]` AND NOT `.`, because an import may span lines:
+
+	       import {
+	         courseLessons,
+	       } from './catalog.js';
+
+	   is how the copied `state.js` writes one, and `.` does not match a newline.
+	   With `.` here the dependency was never visited, so `catalog.js` was left
+	   out of the bundle entirely and the page failed on the first module that
+	   destructured it. */
+	anyImportOf = regexp.MustCompile(`(?m)^import\s[\s\S]*?from\s*'([^']+)';`)
+	exportOf    = regexp.MustCompile(`(?m)^export\s+(?:class|const|let|var|function|async\s+function)\s+([A-Za-z_$][\w$]*)`)
+	/* A BINDING THAT CAN BE REASSIGNED AFTER ITS MODULE HAS RUN, which is the
+	   one place where "hand the exports to whoever imported them" is not what a
+	   browser does.
+
+	   A real module exports a LIVE BINDING: `export let school = null` read by
+	   an importer after `load()` has assigned it gives the school, because the
+	   importer is looking at the variable. An object literal built when the
+	   module body finished holds the value it had THEN, and `null` is what
+	   every importer sees for ever.
+
+	   This is not hypothetical, it shipped: the offline copy said
+	   `codeschool.ing` in the bar where the served page said the school's name,
+	   with nothing thrown and nothing logged, because `source.school` is
+	   assigned by `load()` a moment after the copy was taken. These are emitted
+	   as getters below, which is the live binding written out. */
+	exportLetOf = regexp.MustCompile(`(?m)^export\s+(?:let|var)\s+([A-Za-z_$][\w$]*)`)
+	exportDefOf = regexp.MustCompile(`(?m)^export\s+default\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)`)
+	// A default export, whatever follows it on the line. Go's regexp has no
+	// negative lookahead, so the two cases are told apart by reading the rest of
+	// the line rather than by the pattern: a DECLARATION keeps its name, and an
+	// EXPRESSION becomes a binding. Stripping the keywords from
+	// `export default { … }` would leave `{ … };` at statement position, which
+	// JavaScript reads as a block — "Unexpected token '{'", which is what the
+	// offline copy threw the first time the graders were linked into it.
+	exportValOf = regexp.MustCompile(`(?m)^export\s+default\s+(.*)$`)
+	leftOverOf  = regexp.MustCompile(`(?m)^\s*(import|export)\b.*$`)
+	// `await` at the start of a line with no indentation: a statement of the
+	// module itself rather than one inside a function.
+	topLevelAwait = regexp.MustCompile(`(?m)^await\s`)
 )
+
+/*
+Where an import points, as a name in the module map.
+
+	IT IS RESOLVED AGAINST THE FILE THAT WROTE IT, which used to be unnecessary
+	and now is not: the interface was one flat directory, and `./x.js` from
+	anywhere meant the same file. It is a tree now — `./screens/course.js` from
+	the entry and `../catalog.js` from inside `screens/` — and a linker keyed on
+	the text of the import would give one file two entries and run it twice.
+*/
+// Whether what follows `export default` declares a name of its own.
+func declaresAName(rest string) bool {
+	rest = strings.TrimSpace(rest)
+	return strings.HasPrefix(rest, "function ") ||
+		strings.HasPrefix(rest, "async function ") ||
+		strings.HasPrefix(rest, "class ")
+}
+
+func resolve(from, spec string) string {
+	return path.Clean(path.Join(path.Dir(from), spec))
+}
 
 func link(s server, entry string) (string, error) {
 	dir := entry[:strings.LastIndex(entry, "/")+1]
 
 	sources := map[string]string{}
 	exports := map[string][]string{}
+	// Which of a module's exports may still change after it has run, by module
+	// and then by name. See exportLetOf.
+	live := map[string]map[string]bool{}
 	var order []string
 
 	var visit func(name string) error
@@ -460,21 +578,39 @@ func link(s server, entry string) (string, error) {
 		if err != nil {
 			return err
 		}
-		sources[name] = body
 
 		// Depth first, so a module is emitted after everything it needs.
 		sources[name] = "" // a placeholder, so a cycle is caught rather than looped
-		for _, m := range importOf.FindAllStringSubmatch(body, -1) {
-			dep := strings.TrimPrefix(m[2], "./")
-			if err := visit(dep); err != nil {
+		for _, m := range anyImportOf.FindAllStringSubmatch(body, -1) {
+			if err := visit(resolve(name, m[1])); err != nil {
 				return err
 			}
 		}
 		sources[name] = body
 
+		live[name] = map[string]bool{}
+		for _, m := range exportLetOf.FindAllStringSubmatch(body, -1) {
+			live[name][m[1]] = true
+		}
+
 		exports[name] = nil
 		for _, m := range exportOf.FindAllStringSubmatch(body, -1) {
+			if live[name][m[1]] {
+				// The live binding, written out: whoever holds this object
+				// reads the variable each time, which is what a module does.
+				exports[name] = append(exports[name],
+					fmt.Sprintf("get %s() { return %s; }", m[1], m[1]))
+				continue
+			}
 			exports[name] = append(exports[name], m[1])
+		}
+		for _, m := range exportDefOf.FindAllStringSubmatch(body, -1) {
+			exports[name] = append(exports[name], "default: "+m[1])
+		}
+		for _, m := range exportValOf.FindAllStringSubmatch(body, -1) {
+			if !declaresAName(m[1]) {
+				exports[name] = append(exports[name], "default: __default")
+			}
 		}
 		order = append(order, name)
 		return nil
@@ -493,11 +629,33 @@ func link(s server, entry string) (string, error) {
 	for _, name := range order {
 		body := sources[name]
 
+		/* AND THE ONE SHAPE THE GETTERS DO NOT SAVE. A named import destructures
+		   — `var { school } = __modules['source.js']` — which reads the getter
+		   once, at import time, and keeps the answer. The live binding is intact
+		   on the module object and lost on the way out of it.
+
+		   Refused rather than linked, because the failure is the silent one this
+		   linker exists to avoid. `import * as source` reads it through the
+		   object every time and is the shape that works. */
+		for _, m := range importOf.FindAllStringSubmatch(body, -1) {
+			dep := resolve(name, m[2])
+			for _, one := range strings.Split(m[1], ",") {
+				one = strings.TrimSpace(strings.SplitN(strings.TrimSpace(one), " as ", 2)[0])
+				if one != "" && live[dep][one] {
+					return "", fmt.Errorf("%s imports %q from %s by name, and %s exports it with "+
+						"`let` or `var` — a name that may still change. Destructuring reads it "+
+						"once and keeps the first answer, where a module would have followed it. "+
+						"Import the module (`import * as …`) and read it through that",
+						name, one, dep, dep)
+				}
+			}
+		}
+
 		// `import { a, b as c } from './x.js';` becomes the same names, taken
 		// from the module that has already run.
 		body = importOf.ReplaceAllStringFunc(body, func(statement string) string {
 			m := importOf.FindStringSubmatch(statement)
-			dep := strings.TrimPrefix(m[2], "./")
+			dep := resolve(name, m[2])
 
 			var taken []string
 			for _, one := range strings.Split(m[1], ",") {
@@ -514,7 +672,27 @@ func link(s server, entry string) (string, error) {
 			return fmt.Sprintf("var { %s } = __modules[%q];", strings.Join(taken, ", "), dep)
 		})
 
+		// `import * as ns from './x.js';` — the module object itself.
+		body = importAllOf.ReplaceAllStringFunc(body, func(statement string) string {
+			m := importAllOf.FindStringSubmatch(statement)
+			return fmt.Sprintf("var %s = __modules[%q];", m[1], resolve(name, m[2]))
+		})
+
+		// `import thing from './x.js';` — the default export, under whatever
+		// name the importer chose for it.
+		body = importOneOf.ReplaceAllStringFunc(body, func(statement string) string {
+			m := importOneOf.FindStringSubmatch(statement)
+			return fmt.Sprintf("var %s = __modules[%q].default;", m[1], resolve(name, m[2]))
+		})
+
 		body = exportOf.ReplaceAllString(body, "$0")
+		body = exportValOf.ReplaceAllStringFunc(body, func(line string) string {
+			rest := exportValOf.FindStringSubmatch(line)[1]
+			if declaresAName(rest) {
+				return rest // `function dashboard() {` keeps its name
+			}
+			return "const __default = " + rest
+		})
 		body = regexp.MustCompile(`(?m)^export\s+`).ReplaceAllString(body, "")
 
 		if left := leftOverOf.FindString(body); left != "" {
@@ -524,6 +702,30 @@ func link(s server, entry string) (string, error) {
 		}
 
 		fmt.Fprintf(&b, "\n/* ---------- %s ---------- */\n", name)
+
+		/* THE ENTRY IS WRAPPED IN AN ASYNC FUNCTION AND NOTHING ELSE IS.
+
+		   A module may use `await` at its top level — the boot does, to load the
+		   catalogue before the first screen renders — and that is legal in a
+		   module and not inside the plain function this linker wraps each body
+		   in. The entry is the one place it can be allowed: nothing imports it,
+		   so nobody is handed the promise the wrapper returns.
+
+		   Any other module that did it would have its exports replaced by a
+		   promise, silently, and every importer would read `undefined` off it.
+		   That is refused below rather than linked. */
+		if name == order[len(order)-1] {
+			fmt.Fprintf(&b, "__modules[%q] = (async function () {\n'use strict';\n%s\n})();\n",
+				name, body)
+			continue
+		}
+
+		if topLevelAwait.MatchString(body) {
+			return "", fmt.Errorf("%s awaits at its top level, and it is imported by something "+
+				"else — its exports would become a promise and every importer would read "+
+				"undefined off it. Only the entry may do that", name)
+		}
+
 		fmt.Fprintf(&b, "__modules[%q] = (function () {\n'use strict';\n%s\nreturn { %s };\n})();\n",
 			name, body, strings.Join(exports[name], ", "))
 	}

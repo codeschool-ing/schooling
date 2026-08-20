@@ -81,7 +81,7 @@ func TestTheVerificationAddressIsServedTheShell(t *testing.T) {
 func TestAReleasedBuildRevalidatesEverythingAgainstItself(t *testing.T) {
 	handler := ui.Handler("v1.2.3")
 
-	for _, path := range []string{"/", "/assets/app.css", "/assets/app.js"} {
+	for _, path := range []string{"/", "/assets/base.css", "/app/main.js"} {
 		recorder := httptest.NewRecorder()
 		handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, path, nil))
 
@@ -151,13 +151,24 @@ func TestEveryAssetTheShellAsksForIsThere(t *testing.T) {
 	handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
 	shell := recorder.Body.String()
 
-	// The shell names them; this asks for each one rather than for a list
-	// somebody has to keep up to date.
-	for _, asset := range []string{
-		"/assets/app.css", "/assets/app.js", "/assets/api.js",
-		"/assets/i18n.js", "/assets/i18n-pt.js", "/assets/markdown.js",
-		"/assets/question.js", "/assets/graph.js", "/assets/favicon.svg",
-	} {
+	/* THE LIST IS READ OUT OF THE DOCUMENT, and it used to be typed here.
+
+	   The comment above this test always said it asked for what the shell names
+	   "rather than for a list somebody has to keep up to date" — and underneath
+	   it was exactly such a list. It went stale the day the interface was
+	   replaced, and what it then reported was five files that no longer exist
+	   rather than anything wrong with the ones that do.
+
+	   Reading the document means the test cannot be out of date: a script added
+	   to the shell is checked from the moment it is added, and one removed stops
+	   being checked without anybody editing this file. */
+	wanted := localAssets(shell)
+	if len(wanted) < 5 {
+		t.Fatalf("the shell names %d local files, which cannot be right — it is a whole "+
+			"interface: %v", len(wanted), wanted)
+	}
+
+	for _, asset := range wanted {
 		got := httptest.NewRecorder()
 		handler.ServeHTTP(got, httptest.NewRequest(http.MethodGet, asset, nil))
 		if got.Code != http.StatusOK {
@@ -165,14 +176,43 @@ func TestEveryAssetTheShellAsksForIsThere(t *testing.T) {
 				"matching says nothing at all", asset, got.Code)
 		}
 	}
+}
 
-	// The two the document itself loads directly, so that a rename in the HTML
-	// with no matching file fails here rather than in a browser.
-	for _, named := range []string{"/assets/i18n-pt.js", "/assets/app.js", "/assets/app.css"} {
-		if !strings.Contains(shell, named) {
-			t.Errorf("the document no longer loads %s — either it moved, or this list is stale", named)
+// Every same-origin file the document loads: `src` and `href`, absolute paths
+// only. An address with a scheme belongs to somebody else and is the subject of
+// the test below rather than this one.
+func localAssets(shell string) []string {
+	var out []string
+	seen := map[string]bool{}
+
+	for _, attr := range []string{`src="`, `href="`} {
+		rest := shell
+		for {
+			i := strings.Index(rest, attr)
+			if i < 0 {
+				break
+			}
+			rest = rest[i+len(attr):]
+			end := strings.Index(rest, `"`)
+			if end < 0 {
+				break
+			}
+			path := rest[:end]
+			rest = rest[end:]
+
+			// A fragment route, a scheme, or the favicon's data — none of them
+			// is a file this server has to answer for.
+			if !strings.HasPrefix(path, "/") || strings.HasPrefix(path, "//") {
+				continue
+			}
+			if seen[path] {
+				continue
+			}
+			seen[path] = true
+			out = append(out, path)
 		}
 	}
+	return out
 }
 
 // THE SHELL ASKS NOBODY ELSE FOR ANYTHING.

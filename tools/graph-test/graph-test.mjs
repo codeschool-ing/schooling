@@ -65,6 +65,9 @@ const browser = await chromium.launch(launch);
 
 let failures = 0;
 let drawings = 0;
+// Sizes where the stylesheet shows the track as a list and draws no edges. See
+// the skip in the measurement below.
+const notDrawn = [];
 
 try {
   const page = await browser.newPage({ viewport: SIZES[0] });
@@ -125,7 +128,13 @@ try {
 
       const through = await page.evaluate((bite) => {
         const round = (v) => Math.round(v * 10) / 10;
-        const cards = [...document.querySelectorAll('.node')].map((el) => {
+        /* THE CARDS THE ROUTER PLACED. `[data-node]` and not a class name: the
+           interface is `portal-frontend`'s now, where a course card is
+           `.course-node` and a fork is `.fork`, and both carry the attribute
+           the edges are drawn between. Selecting on the attribute is selecting
+           on the thing the router actually knows about, which is why it
+           survived the change of interface and the class name did not. */
+        const cards = [...document.querySelectorAll('[data-node]')].map((el) => {
           const r = el.getBoundingClientRect();
           return {
             id: el.dataset.node,
@@ -137,6 +146,24 @@ try {
 
         const svg = document.querySelector('.graph-edges');
         if (!svg) return [];
+
+        /* A DRAWING NOBODY IS SHOWN IS NOT A DRAWING. Below 860px the
+           stylesheet collapses the map into ONE COLUMN and hides the edges —
+           that layout answers "what comes first" with `requires` written out
+           as text, which is the whole point of it on a phone.
+
+           The router keeps routing into the hidden SVG, in the left-to-right
+           coordinates the stacked column no longer has, so every line in it
+           runs the width of the screen and through every card under it. All
+           twelve crossings this suite reported were that, at the phone and the
+           tablet — and the vitrine's suite, the same router and the same
+           stylesheet, starts at 1080 and never reaches the layout at all.
+
+           Skipped rather than measured, and NAMED rather than skipped in
+           silence: a size that stopped drawing for some other reason would
+           otherwise read as a size that passed. */
+        if (getComputedStyle(svg).display === 'none') return 'not drawn';
+
         const origin = svg.getBoundingClientRect();
 
         const hits = [];
@@ -177,6 +204,11 @@ try {
         return hits;
       }, BITE);
 
+      if (through === 'not drawn') {
+        notDrawn.push(`${size.name} · ${track.name}`);
+        continue;
+      }
+
       drawings += 1;
       if (through.length) {
         failures += through.length;
@@ -196,11 +228,26 @@ try {
   await browser.close();
 }
 
+if (notDrawn.length) {
+  console.log(`${notDrawn.length} of them show the track as a list and draw no edges: `
+    + `${notDrawn[0]}, and ${notDrawn.length - 1} more`);
+}
+
 if (failures) {
   console.error(`\n${failures} lines run through a card, in ${drawings} drawings`);
   console.error('A line through a card is always avoidable: the router takes one around');
   console.error('the outside when it can see something in the way, so this is either a');
   console.error('box it could not see or a lane it decided was free and is not.');
+  process.exit(1);
+}
+
+/* AND A SUITE THAT MEASURED NOTHING IS A FAILURE. Every skip above is a size
+   where the check does not apply; all of them skipping would mean it applies
+   nowhere, and "no line through a card" would be true of a suite that never
+   looked at a line. */
+if (drawings === 0) {
+  console.error('\nnot one drawing was measured — every size showed the track as a list, '
+    + 'so this suite proved nothing');
   process.exit(1);
 }
 

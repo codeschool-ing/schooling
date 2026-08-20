@@ -27,8 +27,10 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"maps"
 	"os"
 	"path/filepath"
+	"slices"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -51,6 +53,13 @@ func lines(v []string) []string {
 		return []string{}
 	}
 	return v
+}
+
+// A map's keys in an order, because Go's is deliberately not one. Two loads of
+// the same file should write the same rows in the same order, so that a diff of
+// the mirror is a diff of the catalogue and not of a hash seed.
+func sorted[V any](m map[string]V) []string {
+	return slices.Sorted(maps.Keys(m))
 }
 
 func main() {
@@ -171,7 +180,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 		"catalog_exercises", "catalog_images", "catalog_prose", "catalog_sections",
 		"catalog_lessons",
 		"catalog_course_requires", "catalog_courses",
-		"catalog_track_courses", "catalog_track_forks", "catalog_tracks",
+		"catalog_track_links", "catalog_track_courses", "catalog_track_forks", "catalog_tracks",
 	} {
 		// The table names come from this list and from nowhere else, so there
 		// is no interpolation of anything a file could influence.
@@ -186,6 +195,27 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			VALUES ($1, $2, $3, $4, $5, $6, $7)
 		`, tenantID, track.ID, track.Name, track.Goal, track.Outcome, track.Continues, i); err != nil {
 			return fmt.Errorf("writing the track %s: %w", track.ID, err)
+		}
+
+		// The track's own sequence. Written in the order the file lists them,
+		// because the position is the primary key's tie-breaker and reading
+		// them back in a different order would draw the same edges in a
+		// different order — which the graph does not care about and a diff of
+		// two loads does.
+		for _, course := range sorted(track.Links) {
+			for position, target := range track.Links[course] {
+				var step *int
+				if target.Step != nil {
+					step = target.Step
+				}
+				if _, err := tx.Exec(ctx, `
+					INSERT INTO catalog_track_links
+						(tenant_id, track_id, course_id, position, target_course, target_step)
+					VALUES ($1, $2, $3, $4, $5, $6)
+				`, tenantID, track.ID, course, position, target.Course, step); err != nil {
+					return fmt.Errorf("writing a link of %s in %s: %w", course, track.ID, err)
+				}
+			}
 		}
 
 		for position, step := range track.Courses {

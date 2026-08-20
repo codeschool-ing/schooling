@@ -27,7 +27,10 @@
 //     shows as deletions. (C-10)
 package catalog
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // School is one school's whole catalogue, as it is on disk.
 type School struct {
@@ -35,6 +38,18 @@ type School struct {
 	Name    string   `json:"name"`
 	Accent  string   `json:"accent"`
 	Locales []string `json:"locales"`
+
+	// The tracks, in the order a student is offered them.
+	//
+	// DECLARED, NEVER INFERRED FROM THE FILESYSTEM (C-10) — the rule the rest of
+	// this format already obeys, and the one place it did not. The order used to
+	// come from sorting the file names, which is alphabetical by id: a school's
+	// nineteen career paths were presented in the order their slugs happen to
+	// fall in, and the first thing a student saw was whichever one starts with
+	// an `a`. Renaming a track's id would have silently reordered the menu.
+	//
+	// Every track file must be named here exactly once; `Validate` says so.
+	Order []string `json:"tracks"`
 
 	// Filled by Load, not by the file.
 	Tracks  []*Track  `json:"-"`
@@ -57,9 +72,65 @@ type Track struct {
 	// without listing the entry track's hours again.
 	Continues string `json:"continues"`
 
+	// Links is THIS TRACK'S OWN SEQUENCE, and it is the other half of the rule
+	// that `requires` is knowledge.
+	//
+	// A course's `requires` names only what a student has to know first, so
+	// that the course can be reused in another track without dragging five
+	// hundred hours behind it. What is left over — "in THIS track, this one
+	// comes after that one" — still has to be said, and this is where it is
+	// said. It draws an arrow in this track and nowhere else.
+	//
+	// Keyed by course id; each target is either the index of a step in
+	// `Courses` or another course's id. Both, because a fork has no id to point
+	// at and a course does.
+	//
+	// LEAVING IT OUT DOES NOT LEAVE OUT THE ARROW. The graph falls back to the
+	// previous step when a course has no prerequisite inside the track, so a
+	// missing link is not a missing edge — it is the WRONG edge, which is worse
+	// because nothing looks broken. Dropped at the import, the front-end track
+	// drew fourteen edges where the vitrine draws seventeen.
+	Links map[string][]LinkTarget `json:"links,omitempty"`
+
 	// The track exam — the final. Filled by Load from `tracks/<id>-exam.json`,
 	// because an exam belongs to no lesson and a track has none to put it in.
 	Exam []Exercise `json:"-"`
+}
+
+// LinkTarget is one end of a link: a step of this track, or a course of it.
+//
+// TWO SHAPES IN ONE JSON ARRAY, which is why this is decoded by hand like Step:
+// `{"testing-cicd": ["apis"], "front-quality": [5]}` is what the catalogue
+// writes, and both entries mean "comes after". A number is a position in
+// `Courses` — the only way to point at a fork, which has no id — and a string
+// is a course.
+type LinkTarget struct {
+	// Exactly one of these is set. Step is an index into Track.Courses.
+	Step   *int
+	Course string
+}
+
+func (l *LinkTarget) UnmarshalJSON(data []byte) error {
+	var course string
+	if err := json.Unmarshal(data, &course); err == nil {
+		*l = LinkTarget{Course: course}
+		return nil
+	}
+	var step int
+	if err := json.Unmarshal(data, &step); err != nil {
+		return fmt.Errorf("a link is either a step number or a course id, and %s is neither", data)
+	}
+	*l = LinkTarget{Step: &step}
+	return nil
+}
+
+// MarshalJSON writes back what was read, so that the interface receives the
+// catalogue's own shape and needs no translation for it.
+func (l LinkTarget) MarshalJSON() ([]byte, error) {
+	if l.Step != nil {
+		return json.Marshal(*l.Step)
+	}
+	return json.Marshal(l.Course)
 }
 
 // Step is one position in a track: either a single course or a fork.

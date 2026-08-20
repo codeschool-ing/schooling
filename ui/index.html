@@ -1,71 +1,74 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Schooling</title>
+<meta charset="UTF-8" />
+<!-- The released version, and the only place it is written. app/screens/account.js
+     renders it and the release workflow checks it against the tag, so the
+     portal and the GitHub release cannot disagree in silence. "dev" means "not
+     a release": the line is left out rather than link to a tag that does not
+     exist. Cut a release with tools/version/version.js. -->
+<meta name="version" content="dev" />
+
+<!-- Where the API is, and the only place it is written. EMPTY MEANS LOCAL: the
+     portal keeps everything in this browser, which is what the single-file
+     bundle needs — it is opened off a disk with no server anywhere near it —
+     and what every screen did before a backend existed.
+
+     IT SHIPS EMPTY ON PURPOSE. The bundle, `file://` and the browser suites all
+     drive this very file, and empty is the one shape that needs no server. The
+     deploy is what fills it: the Pages workflow injects the real origin as it
+     publishes (.github/workflows/pages.yml), so the served site talks to the API
+     while the source, the bundle and the tests stay local.
+
+     `same-origin` is one shape: one origin in front of both, the portal and the
+     API under /api, first-party cookie and SameSite=Lax with no CORS. It has to
+     be spelled out because the base URL it means is the empty string, and empty
+     is already taken by "no backend".
+
+     An absolute origin is the other, and the one the deploy injects:
+     api.codeschool.ing, a sibling of the portal's app.codeschool.ing — same
+     site, different origin. The cookie still travels SameSite=Lax under a cookie
+     Domain; what it costs is CORS, which the server has (web.CORS, turned on by
+     PORTAL_ALLOWED_ORIGINS). The same shape serves development, where the API is
+     another port. -->
+<meta name="backend" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>codeschool.ing</title>
+<meta name="description" content="codeschool.ing student area: your track, your courses and your exercises." />
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+<script>/* applies the saved theme before paint, avoiding the "flash" — same as the vitrine */
+try{if(localStorage.getItem('codeschool-theme')==='light')document.documentElement.dataset.theme='light'}catch(e){}</script>
 
-<!-- The saved theme, applied before the first paint so it does not flash.
-     It runs here rather than in app.js because app.js is a module and modules
-     are deferred: by the time one runs, the page has been painted in whatever
-     theme the markup said. It reads the pre-rename key too — the one read a
-     returning student gets, and missing it shows them a frame of the theme they
-     turned off. app.js does the writing back. -->
-<script>
-try {
-  var t = localStorage.getItem('codeschool-theme')
-       || { claro: 'light', escuro: 'dark' }[localStorage.getItem('codeschool-tema')];
-  document.documentElement.dataset.theme = (t === 'light') ? 'light' : 'dark';
-} catch (e) { /* private mode: the markup's default stands */ }
-</script>
+<!-- Containers the i18n must NOT map on load: they rebuild themselves from the
+     data, calling txt() at render time. In the vitrine this list is the
+     exception; here it is nearly the whole page, and that is why it moved out
+     of i18n-runtime.js and became configuration — the file stays identical to
+     the one over there. -->
+<script>window.I18N_DYNAMIC = ['#content', '#rail', '#nav-context', '#account-menu', '#verify-banner', '.drop-current'];</script>
 
-<!-- THE TYPE IS SERVED FROM HERE, not from a font CDN. A student should not have
-     to tell a third party which school they are reading before the page has
+
+<!-- The local stylesheets first, and the only ones that block the first paint.
+     They are same-origin, served from the same Pages edge as this HTML, so paint
+     waits on nothing we do not control. -->
+<!-- THE TYPE IS SERVED FROM HERE, not from a font CDN. A student should not
+     have to tell a third party which school they are reading before the page has
      rendered; the offline bundle is one file with no network to fetch a family
-     over; and two machines rendering different fonts measure different cards,
-     which is a graph test that fails on the build machine and nowhere else.
-     The faces and this stylesheet are written by `go run ./tools/fonts`.
-
-     The three families they provide — IBM Plex Sans, IBM Plex Mono and Space
-     Grotesk — are exactly the three the two stylesheets below ask for, which is
-     what let those be copied without touching a line. -->
+     over; and two machines rendering different fonts measure different cards.
+     `go run ./tools/fonts` writes these. -->
 <link rel="stylesheet" href="/assets/fonts/fonts.css" />
-
-<!-- THE TWO STYLESHEETS ARE THE STUDENT PORTAL'S, COPIED.
-     `base.css` is the shared identity — the same file as
-     `codeschool-ing.github.io/assets/style.css` and `portal-frontend`'s and
-     `console-frontend`'s `assets/base.css`, byte for byte.
-     `portal.css` is `portal-frontend/assets/portal.css`, also byte for byte:
-     the rail, the cards, the blocks, the graph, the certificate.
-
-     THEY ARE COPIES AND MUST STAY COPIES. This interface used to have a layout
-     of its own, written to the same palette, and the two drifted in every
-     direction a person cannot see from a screenshot — spacing, weights, the
-     size of a meter. Two files kept identical are a diff away from agreeing;
-     two files written to look alike are a conversation.
-
-     `app.css` is what is left: the handful of things this application has and
-     the portal does not. It is loaded last so it can only add. -->
 <link rel="stylesheet" href="/assets/base.css" />
 <link rel="stylesheet" href="/assets/portal.css" />
 <link rel="stylesheet" href="/assets/app.css" />
 </head>
-
 <body class="portal-body">
 
-<!-- The first thing in the tab order and the first thing a screen reader
-     reaches. It is not decoration: every screen here puts a rail of the same
-     twenty links before the content, and without this a keyboard user tabs
-     through all of them on every navigation. (WCAG 2.4.1)
-
-     THE PORTAL HAS NO SKIP LINK AND THIS ONE KEEPS IT. Copying a layout is not
-     a reason to drop an affordance the layout does not happen to include. -->
-<a class="skip" href="#content">Skip to content</a>
-
+<!-- THE SAME bar as the vitrine: a fixed 64px, brand with LED, theme and
+     language. What changed is the middle — the sales links gave way to the
+     student's context, and "Student area" stopped being a placeholder: it is
+     this page. -->
 <nav>
   <a href="#/dashboard" class="brand">
-    <span class="led"></span><span class="brand-name" id="school-name">Schooling</span>
+    <span class="led"></span><span class="brand-name">codeschool<span class="brand-sep">.</span>ing</span>
   </a>
 
   <button class="rail-btn" id="rail-btn" aria-label="Open navigation" aria-expanded="false">≡</button>
@@ -77,83 +80,65 @@ try {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
     </button>
 
-    <!-- THE PORTAL'S SEARCH IS A ⌘K PANEL and this is a field in the bar. It is
-         the one piece of the chrome that is not the copy: the panel is its own
-         component over there (`app/search-panel.js`) and porting it is a
-         separate piece of work. The button, its name and the way it opens are
-         the same; what appears is smaller. -->
-    <form class="search" id="search" role="search">
-      <label class="visually-hidden" for="search-input">Search</label>
-      <input id="search-input" type="search" autocomplete="off"
-             placeholder="Search courses and lessons" />
-    </form>
-
-    <button id="theme-btn" class="theme" aria-label="Theme">
+    <button id="theme-btn" class="theme" aria-label="Switch to the light theme">
       <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
       <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
     </button>
 
     <div class="lang" id="lang">
-      <button class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Language">
+      <button class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Choose a language">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>
         <span id="lang-short">EN</span>
       </button>
       <div class="lang-menu" id="lang-menu" role="menu"></div>
     </div>
 
-    <!-- The way in, for somebody who has not come in yet. The portal has no
-         equivalent because a signed-out visitor never reaches it; here the
-         catalogue is open to everybody (N-04), so this bar has to serve both. -->
-    <a class="btn btn-primary" id="sign-in-link" href="#/sign-in">Sign in</a>
-
-    <div class="account" id="account" hidden>
+    <div class="account" id="account">
       <button class="account-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Your account">
         <span class="account-avatar" id="account-avatar">·</span>
-        <span class="visually-hidden" id="account-name">You</span>
       </button>
       <div class="account-menu" id="account-menu" role="menu"></div>
     </div>
   </div>
 </nav>
 
+<!-- Soft nudge, not a gate: registering signs you in immediately (identity's
+     Register), and the confirmation link only sets email_verified_at — it blocks
+     nothing. This bar surfaces that unverified state and dismisses; it is painted
+     from JS (in window.I18N_DYNAMIC) and hidden whenever the address is verified
+     or there is no session. -->
+<div class="verify-banner" id="verify-banner" role="status" hidden></div>
+
 <div class="portal">
-  <!-- The rail answers "where am I" and "how much is left" without a click.
-       Outside a course it is the navigation with the track below it; inside
-       one, the lessons. Filled by app.js. -->
+  <!-- Rail: answers "where am I" and "how much is left" without a click. It
+       becomes a drawer below 1180px, the same cut at which the vitrine's bar
+       no longer fitted on one line. -->
   <aside class="rail" id="rail" aria-label="Navigation"></aside>
   <div class="rail-veil" id="rail-veil" hidden></div>
 
-  <!-- One element, filled by the router. `tabindex="-1"` so that the skip link
-       and the router can move focus here — which is also what announces a new
-       screen, since a fragment router changes the page without a page load and
-       nothing announces that on its own.
-
-       DELIBERATELY NOT `aria-live`. A live region announces its changes, and
-       this element's change is the entire page: a screen reader would read the
-       whole thing out on every navigation, on top of the heading it has just
-       been moved to. Moving focus says "you are somewhere new" in one line
-       instead of in fifty. -->
   <main class="content" id="content" tabindex="-1"></main>
 </div>
 
-<!-- THE TWO DOCUMENTS, ON EVERY SCREEN. A privacy policy nobody can find is not
-     published, and the bottom of the page is where people look for one.
+<!-- THE CATALOGUE IS NOT A FILE HERE. Over there `catalog.js` and the lesson
+     files ship with the portal, because the portal is one school. This
+     deployment serves many, so `app/source.js` fills the same globals from the
+     API of whichever school the address named — before anything renders.
 
-     It is OUTSIDE `#content`, so the router never clears it: a link that
-     disappeared on the sign-up form would be missing from the one screen where
-     somebody is about to hand over an e-mail address. That also means it is
-     translated by the same walk over the document as the bar, with no entry of
-     its own to keep in step.
-
-     The portal has no footer either — see the skip link. -->
-<footer class="page-footer">
-  <nav aria-label="Legal">
-    <a href="#/terms">Terms of use</a>
-    <a href="#/privacy">Privacy policy</a>
-  </nav>
-</footer>
-
+     What is still a file is the LANGUAGE: the runtime and the dictionaries are
+     the vitrine's, unchanged, and they translate the catalogue in place after
+     it lands. -->
+<script src="/assets/i18n.js"></script>
 <script src="/assets/i18n-pt.js"></script>
-<script type="module" src="/assets/app.js"></script>
+<!-- AFTER the file above, because it ADDS to what that one assigns: the
+     Portuguese of the screens this repository owns and the portal has no
+     equivalent of. Its header says why it is a second file rather than more
+     lines in the first. -->
+<script src="/assets/i18n-schooling-pt.js"></script>
+<script src="/assets/i18n-courses-pt.js"></script>
+<script src="/assets/i18n-runtime.js"></script>
+<script src="/assets/plans.js"></script>
+<script src="/assets/materials.js"></script>
+
+<script type="module" src="/app/main.js"></script>
 </body>
 </html>

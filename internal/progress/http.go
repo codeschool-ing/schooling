@@ -57,6 +57,11 @@ func (h *Handler) Routes(mux *http.ServeMux) {
 	// patterns to ServeMux, which prefers the more specific one whatever the
 	// registration order. Written adjacently so that nobody has to know that.
 	mux.HandleFunc("GET /api/v1/progress", h.summary)
+
+	// Which sections, not how many. Registered before the `{course}` pattern
+	// reads as a course called "sections" would — ServeMux prefers the literal
+	// whatever the order, and they are adjacent so nobody has to know that.
+	mux.HandleFunc("GET /api/v1/progress/sections", h.completions)
 	mux.HandleFunc("GET /api/v1/notes", h.allNotes)
 }
 
@@ -215,6 +220,20 @@ func (h *Handler) summary(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	web.JSON(w, http.StatusOK, map[string]any{"progress": done})
+}
+
+func (h *Handler) completions(w http.ResponseWriter, r *http.Request) {
+	school, student, ok := h.who(w, r)
+	if !ok {
+		return
+	}
+
+	done, err := h.store.Completions(r.Context(), school, student)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, map[string]any{"completed": done})
 }
 
 func (h *Handler) allNotes(w http.ResponseWriter, r *http.Request) {

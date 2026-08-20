@@ -42,6 +42,25 @@ func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/practice", h.queue)
 	mux.HandleFunc("POST /api/v1/practice/{exercise}/draw", h.draw)
 	mux.HandleFunc("POST /api/v1/practice/{exercise}/answered", h.answered)
+
+	// What the student has already answered, which is a REPORT and not a
+	// queue: the two are different screens and the second is the one somebody
+	// opens to find out how they are doing.
+	mux.HandleFunc("GET /api/v1/practice/history", h.history)
+}
+
+func (h *Handler) history(w http.ResponseWriter, r *http.Request) {
+	school, student, ok := h.who(w, r)
+	if !ok {
+		return
+	}
+
+	answers, err := h.store.History(r.Context(), school, student)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, map[string]any{"answers": answers})
 }
 
 func (h *Handler) queue(w http.ResponseWriter, r *http.Request) {

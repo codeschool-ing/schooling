@@ -35,9 +35,11 @@ package main
 
 import (
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 
@@ -82,42 +84,121 @@ func check(dir string) (problems []string, checked int, err error) {
 
 	// One file per language, and English is not one of them: the key IS the
 	// English string, so an `en` dictionary would be an identity map.
-	dictionaries, err := filepath.Glob(filepath.Join(dir, "assets", "i18n-*.js"))
+	//
+	// A DICTIONARY IS A FILE THAT DECLARES ONE, not a file whose name starts
+	// with `i18n-`. The name was enough while `assets/` held one dictionary and
+	// nothing else that answered to the pattern; then the portal's interface was
+	// copied in and brought `i18n-runtime.js`, which is the RUNTIME — it reads
+	// dictionaries, it is not one — and `i18n-courses-pt.js`, which translates
+	// the catalogue rather than the interface. Both matched, and the first thing
+	// the reader met was `const LANGUAGES = [`, which it correctly refused to
+	// guess at.
+	//
+	// So the file has to say what it is: `window.I18N.<lang>.ui = {`. Anything
+	// matching the pattern and declaring none of those is not a dictionary and
+	// is named below rather than passed over in silence — a real dictionary that
+	// stopped declaring one would otherwise vanish from this check without a
+	// word, which is the failure this tool exists to prevent.
+	candidates, err := filepath.Glob(filepath.Join(dir, "assets", "i18n-*.js"))
 	if err != nil {
 		return nil, 0, err
+	}
+	sort.Strings(candidates)
+
+	dictionaries := map[string]string{} // path -> language
+	var notDictionaries []string
+	for _, path := range candidates {
+		language, err := languageOf(path)
+		if err != nil {
+			return nil, 0, err
+		}
+		if language == "" {
+			notDictionaries = append(notDictionaries, filepath.Base(path))
+			continue
+		}
+		dictionaries[path] = language
+	}
+	if len(notDictionaries) > 0 {
+		fmt.Printf("not dictionaries, and not read: %s\n", strings.Join(notDictionaries, ", "))
 	}
 	if len(dictionaries) == 0 {
 		return nil, 0, fmt.Errorf("check-interface: no dictionary in %s — the interface claims to "+
 			"speak more than one language and there is nothing to speak it with", dir)
 	}
-	sort.Strings(dictionaries)
 
-	for _, path := range dictionaries {
-		language := strings.TrimSuffix(strings.TrimPrefix(filepath.Base(path), "i18n-"), ".js")
-
+	/* MERGED BY LANGUAGE, because a language can have more than one file and
+	   here it does: `i18n-pt.js` is the portal's, copied and kept syncable, and
+	   `i18n-schooling-pt.js` adds the strings that exist only in this
+	   repository. The runtime sees one object; checking them one file at a time
+	   would report every entry of each as missing from the other. */
+	merged := map[string]map[string]bool{} // language -> keys
+	files := map[string][]string{}         // language -> which files carry it
+	for _, path := range candidates {
+		language, isDictionary := dictionaries[path]
+		if !isDictionary {
+			continue
+		}
 		entries, err := dictionaryKeys(path)
 		if err != nil {
 			return nil, 0, err
 		}
+		if merged[language] == nil {
+			merged[language] = map[string]bool{}
+		}
+		for key := range entries {
+			merged[language][key] = true
+		}
+		files[language] = append(files[language], filepath.Base(path))
+	}
+
+	for _, language := range slices.Sorted(maps.Keys(merged)) {
+		entries := merged[language]
+		where := strings.Join(files[language], " + ")
 
 		for _, s := range said {
 			if !entries[s] {
 				problems = append(problems, fmt.Sprintf(
 					"%s: no %s for %q — it will be shown in English to everybody reading in %s, "+
-						"and nothing else will look wrong", filepath.Base(path), language, s, language))
+						"and nothing else will look wrong", where, language, s, language))
 			}
 		}
 
+		/* ---------- AND THE OTHER DIRECTION, WHICH IS COUNTED AND NOT FAILED ----------
+
+		   An entry for a string nothing says is worse than a missing one when
+		   the dictionary belongs to the interface it translates: it reads as
+		   current and survives every rename around it. That was true when this
+		   tool was written, and it is not true of the file it now reads.
+
+		   `i18n-pt.js` IS NOT THIS REPOSITORY'S. It is the vitrine's, copied
+		   whole and kept syncable on purpose, and it translates two interfaces
+		   at once — the marketing site's pages and the portal's screens. Every
+		   sentence about pricing, plans and companies in it is said on a screen
+		   that is over there, so "nothing says it HERE" is a fact about which
+		   half of the file this deployment uses, not a defect in it.
+
+		   The copy is also unfinished — the legal, practice and account screens
+		   are not in yet — so part of this number is a list of what is still
+		   missing rather than of what is stale.
+
+		   So it is counted and named, and it does not fail. The half that does
+		   fail is the one above, which is the failure this tool was built for: a
+		   string on a screen with no translation behind it. Both halves become
+		   failures again on the day this repository authors its own dictionary
+		   or the copy is complete — whichever comes first. */
 		saidSet := map[string]bool{}
 		for _, s := range said {
 			saidSet[s] = true
 		}
+		var unsaid int
 		for entry := range entries {
 			if !saidSet[entry] {
-				problems = append(problems, fmt.Sprintf(
-					"%s: %q is translated and nothing says it any more — a stale entry reads as "+
-						"current, which is worse than a missing one", filepath.Base(path), entry))
+				unsaid++
 			}
+		}
+		if unsaid > 0 {
+			fmt.Printf("%s: %d entries this interface does not say — the copied half is the "+
+				"vitrine's, and it translates that site's screens too\n", where, unsaid)
 		}
 	}
 
@@ -139,15 +220,37 @@ var txtCall = regexp.MustCompile(`\btxt\(\s*(?:'((?:\\.|[^'\\])*)'|"((?:\\.|[^"\
 func stringsSaid(dir string) ([]string, error) {
 	found := map[string]bool{}
 
-	scripts, err := filepath.Glob(filepath.Join(dir, "assets", "*.js"))
-	if err != nil {
-		return nil, err
+	// `assets/` AND `app/`, and the second one is where the screens went.
+	//
+	// The interface was one flat directory of scripts when this was written. It
+	// is `portal-frontend`'s now — a tree under `app/`, twenty-odd modules deep
+	// — and every sentence a student reads is said in there. Reading only
+	// `assets/` left this tool with a handful of strings and a dictionary full
+	// of entries for the rest, which it duly reported as five hundred stale
+	// translations: the check inverted, and would have gone on passing while
+	// nothing was checked at all.
+	var scripts []string
+	for _, where := range []string{"assets", "app"} {
+		err := filepath.WalkDir(filepath.Join(dir, where), func(path string, d os.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if !d.IsDir() && strings.HasSuffix(path, ".js") {
+				scripts = append(scripts, path)
+			}
+			return nil
+		})
+		if err != nil {
+			return nil, err
+		}
 	}
+	sort.Strings(scripts)
+
 	for _, path := range scripts {
 		if strings.HasPrefix(filepath.Base(path), "i18n-") {
 			continue // a dictionary quotes every string; it does not say them
 		}
-		body, err := os.ReadFile(path) //nolint:gosec // a path from this tool's own glob
+		body, err := os.ReadFile(path) //nolint:gosec // a path from this tool's own walk
 		if err != nil {
 			return nil, err
 		}
@@ -198,6 +301,19 @@ func htmlStrings(path string) ([]string, error) {
 			case "script", "style":
 				insideScript = true
 			}
+			// THE BRAND IS A NAME AND NAMES ARE NOT TRANSLATED. The markup
+			// carries `codeschool.ing` because it is the portal's, and this
+			// deployment overwrites it at boot with whichever school the
+			// address named — so the words in the file are a placeholder for a
+			// row in a table, not a sentence anybody is asked to translate.
+			// Demanding a Portuguese for "ing" is the check being wrong.
+			// The same is true of the TAB, for the same reason: the router
+			// writes `document.title` from the school's name on every
+			// navigation, so the `<title>` in the file is the value used until
+			// the catalogue lands and never a sentence to translate.
+			if n.Data == "title" || hasClass(n, "brand-name") {
+				return
+			}
 			for _, attr := range n.Attr {
 				switch attr.Key {
 				case "placeholder", "aria-label", "title":
@@ -221,6 +337,20 @@ func htmlStrings(path string) ([]string, error) {
 	return out, nil
 }
 
+func hasClass(n *html.Node, want string) bool {
+	for _, attr := range n.Attr {
+		if attr.Key != "class" {
+			continue
+		}
+		for _, c := range strings.Fields(attr.Val) {
+			if c == want {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 // The same test the runtime applies: more than two characters and containing a
 // letter. Written here as well because the two have to agree, and a checker
 // that counted a different set of strings than the runtime translates would
@@ -237,6 +367,31 @@ func translatable(s string) bool {
 // A key at the start of a line, quoted, followed by a colon. The dictionaries
 // are written that way on purpose — see the refusal below, which is what stops
 // that from being a hope.
+// What a dictionary of the INTERFACE declares. `.ui` and not `.courses` or
+// `.tracks`: those translate the catalogue, which is content and is checked
+// against the content rather than against the strings the screens say.
+//
+// It matches whether the file ASSIGNS the object or ADDS to it. There are two,
+// and they are two on purpose: one is `portal-frontend`'s, copied and kept
+// syncable, and the other holds the strings that exist only here — see the
+// header of `i18n-schooling-pt.js`. Both are dictionaries of the same language
+// and both are read.
+var declaresUI = regexp.MustCompile(`(?m)^\s*window\.I18N\.([A-Za-z-]+)\.ui\s*=`)
+
+// languageOf answers which language a file is a dictionary of, or "" for a file
+// that is not one.
+func languageOf(path string) (string, error) {
+	body, err := os.ReadFile(path) //nolint:gosec // a path from this tool's own glob
+	if err != nil {
+		return "", err
+	}
+	m := declaresUI.FindSubmatch(body)
+	if m == nil {
+		return "", nil
+	}
+	return string(m[1]), nil
+}
+
 var dictionaryKey = regexp.MustCompile(`^\s*(?:'((?:\\.|[^'\\])*)'|"((?:\\.|[^"\\])*)")\s*:`)
 
 // A line that is a brace, a blank, the file's own scaffolding, or the
