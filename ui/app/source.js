@@ -86,11 +86,16 @@ export async function load(api) {
     goal: t.goal || '',
     outcome: t.outcome || '',
     courses: stepsOf(t),
-    /* `links` DRAWS AN EXTRA EDGE INSIDE A TRACK over there, and this side has
-       no such field: what it says — "this follows that, here" — is what the
-       track's own order already says, and `requires` is knowledge only. The
-       copied graph reads it as an empty list and draws one edge fewer. */
-    links: [],
+    /* `links` IS THE TRACK'S OWN SEQUENCE — "here, this one comes after that
+       one" — and it is the other half of the rule that `requires` is knowledge
+       only. It draws an arrow in this track and nowhere else.
+
+       It was an empty list here for a while, on the reasoning that the track's
+       order already says it. The order says WHERE a course sits, not what it
+       follows: without the links the graph falls back to the previous step, so
+       what was lost was not an arrow but the RIGHT arrow — the front-end map
+       drew fourteen edges where the vitrine draws seventeen. */
+    links: t.links || {},
     continues: t.continues || null,
   }));
 

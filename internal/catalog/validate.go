@@ -2,7 +2,9 @@ package catalog
 
 import (
 	"fmt"
+	"maps"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -404,6 +406,8 @@ func checkTracks(s *School) []error {
 			}
 		}
 
+		problems = append(problems, checkLinks(t, seen)...)
+
 		// `continues` is followed to the end of the chain, so a loop in it is a
 		// loader that never returns rather than a wrong answer.
 		if t.Continues != "" {
@@ -413,6 +417,47 @@ func checkTracks(s *School) []error {
 		}
 	}
 
+	return problems
+}
+
+// checkLinks holds a track's own sequence to the track.
+//
+// BOTH ENDS HAVE TO BE IN THIS TRACK, and that is the whole rule. A link says
+// "here, this one comes after that one"; naming a course the track does not
+// contain says it about nothing, and the graph would quietly draw a different
+// edge instead — the same silent failure the `requires`/`links` split exists to
+// avoid, arriving from the other side.
+//
+// `seen` is the set of courses this track contains, which the loop above has
+// just finished collecting. It is passed rather than recomputed so that "in
+// this track" has one definition, forks included.
+func checkLinks(t *Track, seen map[string]bool) []error {
+	var problems []error
+
+	for _, course := range slices.Sorted(maps.Keys(t.Links)) {
+		if !seen[course] {
+			problems = append(problems, fmt.Errorf(
+				"the track %q gives an order for the course %q, which the track does not contain",
+				t.ID, course))
+		}
+		for _, target := range t.Links[course] {
+			switch {
+			case target.Step != nil:
+				if *target.Step < 0 || *target.Step >= len(t.Courses) {
+					problems = append(problems, fmt.Errorf(
+						"the track %q says %q comes after step %d, and the track has %d steps",
+						t.ID, course, *target.Step, len(t.Courses)))
+				}
+			case target.Course == course:
+				problems = append(problems, fmt.Errorf(
+					"the track %q says %q comes after itself", t.ID, course))
+			case !seen[target.Course]:
+				problems = append(problems, fmt.Errorf(
+					"the track %q says %q comes after %q, which the track does not contain",
+					t.ID, course, target.Course))
+			}
+		}
+	}
 	return problems
 }
 

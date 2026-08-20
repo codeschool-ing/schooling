@@ -661,6 +661,11 @@ type TrackView struct {
 	Continues string     `json:"continues,omitempty"`
 	Steps     []StepView `json:"steps"`
 
+	// The track's own sequence — see Track.Links. Served in the catalogue's own
+	// shape, a map from course id to a list of steps and course ids, so that
+	// the interface reads it with no translation.
+	Links map[string][]LinkTarget `json:"links,omitempty"`
+
 	// Whether the track has a final. Empty on the list, which does not ask.
 	Exam bool `json:"exam"`
 }
@@ -701,8 +706,15 @@ func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID) ([]TrackView, er
 		return nil, fmt.Errorf("catalog: listing the tracks: %w", err)
 	}
 
+	// THE LIST CARRIES THE SEQUENCE TOO, and that is not padding. The interface
+	// fills its whole catalogue from this one answer and draws every map from
+	// it — there is no second request per track — so a field left out here is a
+	// field no screen ever sees.
 	for i := range out {
 		if out[i].Steps, err = s.steps(ctx, tenantID, out[i].ID); err != nil {
+			return nil, err
+		}
+		if out[i].Links, err = s.links(ctx, tenantID, out[i].ID); err != nil {
 			return nil, err
 		}
 	}
@@ -726,10 +738,54 @@ func (s *Store) Track(ctx context.Context, tenantID uuid.UUID, id string) (*Trac
 	if t.Steps, err = s.steps(ctx, tenantID, id); err != nil {
 		return nil, err
 	}
+	if t.Links, err = s.links(ctx, tenantID, id); err != nil {
+		return nil, err
+	}
 	if t.Exam, err = s.hasExam(ctx, tenantID, ScopeTrack, id); err != nil {
 		return nil, err
 	}
 	return &t, nil
+}
+
+// links reads a track's own sequence back into the shape the catalogue writes.
+//
+// ONE TRACK AT A TIME, and not on the list: the list draws no graph, and this
+// is only read by the screen that does.
+func (s *Store) links(ctx context.Context, tenantID uuid.UUID,
+	trackID string) (map[string][]LinkTarget, error) {
+
+	rows, err := s.pool.Query(ctx, `
+		SELECT course_id, target_course, target_step
+		FROM catalog_track_links
+		WHERE tenant_id = $1 AND track_id = $2
+		ORDER BY course_id, position
+	`, tenantID, trackID)
+	if err != nil {
+		return nil, fmt.Errorf("catalog: reading the sequence of %q: %w", trackID, err)
+	}
+	defer rows.Close()
+
+	out := map[string][]LinkTarget{}
+	for rows.Next() {
+		var course, target string
+		var step *int
+		if err := rows.Scan(&course, &target, &step); err != nil {
+			return nil, fmt.Errorf("catalog: reading the sequence of %q: %w", trackID, err)
+		}
+		if step != nil {
+			at := *step
+			out[course] = append(out[course], LinkTarget{Step: &at})
+			continue
+		}
+		out[course] = append(out[course], LinkTarget{Course: target})
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("catalog: reading the sequence of %q: %w", trackID, err)
+	}
+	if len(out) == 0 {
+		return nil, nil // absent rather than an empty object
+	}
+	return out, nil
 }
 
 // steps rebuilds a track's order from the flat rows the load job wrote.
