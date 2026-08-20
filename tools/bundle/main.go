@@ -209,6 +209,20 @@ func gather(s server) (map[string]json.RawMessage, map[string]string, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+
+	/* THE SHAPE OF EVERY COURSE — which lessons, which sections, and no prose.
+	   One request, and every denominator on every screen comes out of it: how
+	   many sections a lesson has, which order they are in, which of them are
+	   video.
+
+	   Left out, the client falls back to the placeholder it draws for a course
+	   nobody has written yet — one section called "Content" — and the bundle
+	   showed that for all 122 courses while the served page showed the real
+	   ones. It also carries the lesson IDS, which is what the prose is asked
+	   for by, so without it not one lesson could be read either. */
+	if _, err := ask("/api/v1/lessons"); err != nil {
+		return nil, nil, err
+	}
 	tracks, err := ask("/api/v1/tracks")
 	if err != nil {
 		return nil, nil, err
@@ -486,6 +500,22 @@ var (
 	   destructured it. */
 	anyImportOf = regexp.MustCompile(`(?m)^import\s[\s\S]*?from\s*'([^']+)';`)
 	exportOf    = regexp.MustCompile(`(?m)^export\s+(?:class|const|let|var|function|async\s+function)\s+([A-Za-z_$][\w$]*)`)
+	/* A BINDING THAT CAN BE REASSIGNED AFTER ITS MODULE HAS RUN, which is the
+	   one place where "hand the exports to whoever imported them" is not what a
+	   browser does.
+
+	   A real module exports a LIVE BINDING: `export let school = null` read by
+	   an importer after `load()` has assigned it gives the school, because the
+	   importer is looking at the variable. An object literal built when the
+	   module body finished holds the value it had THEN, and `null` is what
+	   every importer sees for ever.
+
+	   This is not hypothetical, it shipped: the offline copy said
+	   `codeschool.ing` in the bar where the served page said the school's name,
+	   with nothing thrown and nothing logged, because `source.school` is
+	   assigned by `load()` a moment after the copy was taken. These are emitted
+	   as getters below, which is the live binding written out. */
+	exportLetOf = regexp.MustCompile(`(?m)^export\s+(?:let|var)\s+([A-Za-z_$][\w$]*)`)
 	exportDefOf = regexp.MustCompile(`(?m)^export\s+default\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)`)
 	// A default export, whatever follows it on the line. Go's regexp has no
 	// negative lookahead, so the two cases are told apart by reading the rest of
@@ -527,6 +557,9 @@ func link(s server, entry string) (string, error) {
 
 	sources := map[string]string{}
 	exports := map[string][]string{}
+	// Which of a module's exports may still change after it has run, by module
+	// and then by name. See exportLetOf.
+	live := map[string]map[string]bool{}
 	var order []string
 
 	var visit func(name string) error
@@ -548,8 +581,20 @@ func link(s server, entry string) (string, error) {
 		}
 		sources[name] = body
 
+		live[name] = map[string]bool{}
+		for _, m := range exportLetOf.FindAllStringSubmatch(body, -1) {
+			live[name][m[1]] = true
+		}
+
 		exports[name] = nil
 		for _, m := range exportOf.FindAllStringSubmatch(body, -1) {
+			if live[name][m[1]] {
+				// The live binding, written out: whoever holds this object
+				// reads the variable each time, which is what a module does.
+				exports[name] = append(exports[name],
+					fmt.Sprintf("get %s() { return %s; }", m[1], m[1]))
+				continue
+			}
 			exports[name] = append(exports[name], m[1])
 		}
 		for _, m := range exportDefOf.FindAllStringSubmatch(body, -1) {
@@ -576,6 +621,28 @@ func link(s server, entry string) (string, error) {
 
 	for _, name := range order {
 		body := sources[name]
+
+		/* AND THE ONE SHAPE THE GETTERS DO NOT SAVE. A named import destructures
+		   — `var { school } = __modules['source.js']` — which reads the getter
+		   once, at import time, and keeps the answer. The live binding is intact
+		   on the module object and lost on the way out of it.
+
+		   Refused rather than linked, because the failure is the silent one this
+		   linker exists to avoid. `import * as source` reads it through the
+		   object every time and is the shape that works. */
+		for _, m := range importOf.FindAllStringSubmatch(body, -1) {
+			dep := resolve(name, m[2])
+			for _, one := range strings.Split(m[1], ",") {
+				one = strings.TrimSpace(strings.SplitN(strings.TrimSpace(one), " as ", 2)[0])
+				if one != "" && live[dep][one] {
+					return "", fmt.Errorf("%s imports %q from %s by name, and %s exports it with "+
+						"`let` or `var` — a name that may still change. Destructuring reads it "+
+						"once and keeps the first answer, where a module would have followed it. "+
+						"Import the module (`import * as …`) and read it through that",
+						name, one, dep, dep)
+				}
+			}
+		}
 
 		// `import { a, b as c } from './x.js';` becomes the same names, taken
 		// from the module that has already run.

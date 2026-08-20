@@ -63,7 +63,8 @@ try {
 
   const open = async (fragment = '') => {
     await page.goto(BUNDLE + fragment, { waitUntil: 'load' });
-    await page.waitForSelector('#content h1, #content .notice', { timeout: 8000 }).catch(() => {});
+    await page.waitForSelector('#content h1, #content .notice, #content .view', { timeout: 8000 })
+      .catch(() => {});
     await page.evaluate(() => document.fonts.ready).catch(() => {});
     await page.waitForTimeout(400);
   };
@@ -72,32 +73,58 @@ try {
 
   await open();
 
-  const school = await page.textContent('#school-name').catch(() => '');
-  if (school && school.trim()) right(`the school is "${school.trim()}"`);
-  else wrong('the school has no name — the shell rendered without its catalogue');
+  /* AGAINST WHAT WAS BAKED, and not merely "there is something there". The
+     shell ships `codeschool.ing` in the bar because it is `portal-frontend`'s
+     markup, and the boot replaces it with the school's own name — so a check
+     for a non-empty string passes on the file that never read its catalogue.
+     That is not a hypothetical: a linker that handed out a copy of an export
+     instead of the binding shipped exactly that, silently. */
+  const named = await page.evaluate(() => {
+    const baked = window.SCHOOLING_BAKED && window.SCHOOLING_BAKED.answers['/api/v1/school'];
+    const shown = (document.querySelector('.brand-name') || {}).textContent || '';
+    return { want: (baked && baked.name) || '', got: shown.trim() };
+  });
+  if (named.want && named.got === named.want) right(`the school is "${named.got}"`);
+  else if (!named.want) wrong('no school was baked into the bundle at all');
+  else wrong(`the bar says "${named.got}" where the school is "${named.want}" — `
+    + 'the shell rendered without its catalogue');
 
-  const courses = await page.$$eval('#content .card',
-    (cards) => cards.map((c) => c.getAttribute('href')).filter(Boolean));
+  await open('#/catalog');
+  const courses = await page.$$eval('#content a[href^="#/course/"]',
+    (links) => [...new Set(links.map((a) => a.getAttribute('href')))]);
   if (courses.length) right(`${courses.length} courses on the catalogue`);
   else wrong('the catalogue is empty — nothing was baked, or nothing can be read back');
 
-  const tracks = await page.$$eval('#content a[href^="#/track/"]',
-    (links) => [...new Set(links.map((a) => a.getAttribute('href')))]);
+  /* THE TRACKS ARE ASKED OF THE PAGE and not read off a screen: the copied
+     interface reaches a track through the bar's selector, which is a menu and
+     not a list of links, so there is no screen with all nineteen on it. */
+  const tracks = await page.evaluate(
+    () => (window.TRACKS || []).map((t) => `#/track/${t.id}`));
   if (tracks.length) right(`${tracks.length} tracks`);
-  else wrong('no track on the catalogue');
+  else wrong('no track in the bundle');
 
   /* ---------- every track draws ---------- */
 
   for (const where of tracks) {
     await open(where);
     const edges = await page.locator('.graph-edges .row').count();
-    const nodes = await page.locator('.node').count();
+    const nodes = await page.locator('[data-node]').count();
     if (edges > 0 && nodes > 0) right(`${where} drew ${nodes} cards and ${edges} lines`);
     else wrong(`${where} drew ${nodes} cards and ${edges} lines — the graph did not render`);
   }
 
-  /* ---------- a course, and a lesson with words in it ---------- */
+  /* ---------- a course, and a lesson with its own sections ----------
 
+     THE SECTIONS ARE THE CHECK, not the length of the screen. A course nobody
+     has written yet draws one section called "Content", and so does a course
+     whose shape was never baked — the two are the same number of pixels and
+     the same number of characters. What tells them apart is the section strip:
+     the real lesson has the sections the school wrote, by name.
+
+     AND IT LOOKS PAST THE FIRST COURSE. Most of this school's courses are
+     announced and not yet written, so the placeholder is the honest answer for
+     them; what is being proved is that a course which HAS material carries it
+     into the file. One is the proof, and the search stops there. */
   let read = 0;
   for (const where of courses) {
     await open(where);
@@ -111,16 +138,20 @@ try {
     if (!lessons.length) continue;
 
     await open(lessons[0]);
-    const prose = (await page.textContent('#content .prose').catch(() => '')) || '';
-    if (prose.trim().length > 40) {
-      right(`${lessons[0]} reads — ${prose.trim().length} characters of it`);
+    /* `.step-assessment` is the exam at the end of every lesson and is drawn
+       whether or not anybody wrote a section, so it is not evidence. */
+    const sections = await page.$$eval('#content .steps .step:not(.step-assessment)',
+      (steps) => steps.map((s) => (s.querySelector('.step-title') || {}).textContent || ''));
+    if (sections.length && !(sections.length === 1 && /^content$/i.test(sections[0].trim()))) {
+      right(`${lessons[0]} has its sections — ${sections.length} of them`);
       read += 1;
-      break;   // one is the proof; the rest are the same code path
+      break;
     }
-    wrong(`${lessons[0]} opened with no prose in it`);
-    break;
   }
-  if (!read) wrong('not one lesson in the bundle could be read');
+  if (!read) {
+    wrong('not one lesson in the bundle carries the shape the school wrote — '
+      + 'every course opened with the placeholder section');
+  }
 
   /* ---------- the two documents, which must NOT refuse ----------
 
