@@ -36,6 +36,18 @@ type School struct {
 	Accent  string   `json:"accent"`
 	Locales []string `json:"locales"`
 
+	// The tracks, in the order a student is offered them.
+	//
+	// DECLARED, NEVER INFERRED FROM THE FILESYSTEM (C-10) — the rule the rest of
+	// this format already obeys, and the one place it did not. The order used to
+	// come from sorting the file names, which is alphabetical by id: a school's
+	// nineteen career paths were presented in the order their slugs happen to
+	// fall in, and the first thing a student saw was whichever one starts with
+	// an `a`. Renaming a track's id would have silently reordered the menu.
+	//
+	// Every track file must be named here exactly once; `Validate` says so.
+	Order []string `json:"tracks"`
+
 	// Filled by Load, not by the file.
 	Tracks  []*Track  `json:"-"`
 	Courses []*Course `json:"-"`

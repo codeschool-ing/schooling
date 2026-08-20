@@ -250,6 +250,10 @@ func TestATrackMayAssumeWhatTheTrackItContinuesTaught(t *testing.T) {
 			"continues": "frontend"
 		}`),
 		course("performance", "web-fundamentals"),
+		// A new track is offered somewhere, and the school says where (C-10).
+		patchJSON("school.json", func(d map[string]any) {
+			d["tracks"] = []any{"frontend", "advanced"}
+		}),
 	)
 
 	if len(problems) != 0 {
@@ -490,5 +494,33 @@ func TestALessonWithNoSectionsIsStillRefused(t *testing.T) {
 
 	if !says(problems, "has no sections") {
 		t.Errorf("a lesson with no sections was accepted:\n%s", report(t, problems))
+	}
+}
+
+// ORDER IS DECLARED, NEVER INFERRED FROM THE FILESYSTEM (C-10), and the tracks
+// were the one place this format still inferred it. Sorted by file name, a
+// school's nineteen career paths are offered in the order their slugs happen to
+// fall in — the first thing a student sees is whichever one starts with an `a`,
+// and renaming an id silently reorders the menu.
+func TestATrackMissingFromTheSchoolsOrderIsReported(t *testing.T) {
+	problems := school(t, patchJSON("school.json", func(d map[string]any) {
+		d["tracks"] = []any{}
+	}))
+
+	if !says(problems, `the track "frontend" is not in the school's order`) {
+		t.Errorf("a track left out of the declared order was accepted:\n%s", report(t, problems))
+	}
+}
+
+// And the other direction: an order naming a track that has no file is a
+// rename half-done, and it says so rather than quietly offering eighteen.
+func TestAnOrderNamingATrackThatIsNotThereIsReported(t *testing.T) {
+	problems := school(t, patchJSON("school.json", func(d map[string]any) {
+		d["tracks"] = []any{"frontend", "backend"}
+	}))
+
+	if !says(problems, `names "backend", and there is no tracks/backend.json`) {
+		t.Errorf("an order naming a track that does not exist was accepted:\n%s",
+			report(t, problems))
 	}
 }

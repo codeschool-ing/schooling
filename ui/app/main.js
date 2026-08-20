@@ -167,10 +167,23 @@ whenChanged(async (path, found) => {
    Shows the track and how much of it is done. It reads from the same computation
    the dashboard uses, because two computations of the same number diverge on the
    day one of them changes. */
+/* THE SELECTOR IS THERE WITHOUT A SESSION, and the progress is not.
+
+   The portal hides the whole control for a visitor, and over there that is
+   right: with no session there is no screen but sign-in, so there is nowhere to
+   switch to. Here a visitor has a catalogue and nineteen maps, and the offline
+   copy — where nobody is ever signed in — is the one place a reader most needs
+   to move between them. Hidden, the bundle carried eighteen tracks it could not
+   reach.
+
+   What stays hidden is the BAR AND THE PERCENTAGE. A chip reading 0% is a
+   statement about somebody's effort, and we have no right to make it about
+   somebody who has not started. */
 function paintContext() {
   const cx = $('#nav-context');
-  const t = now().session ? studentTrack() : null;
+  const t = studentTrack();
   if (!t) { cx.innerHTML = ''; return; }
+  const signedIn = Boolean(now().session);
   const p = trackProgress(t);
 
   /* The track in the bar is a SELECTOR, not a label. Switching tracks used to
@@ -181,12 +194,15 @@ function paintContext() {
     '<div class="ctx-box">' +
       '<button type="button" class="ctx" aria-haspopup="true" aria-expanded="false">' +
         '<span class="ctx-name">' + esc(t.name) + '</span>' +
-        '<span class="ctx-bar"><span style="width:' + p.pct + '%"></span></span>' +
-        '<span class="ctx-pct">' + p.pct + '%</span>' +
+        (signedIn
+          ? '<span class="ctx-bar"><span style="width:' + p.pct + '%"></span></span>' +
+            '<span class="ctx-pct">' + p.pct + '%</span>'
+          : '') +
         '<span class="ctx-arrow" aria-hidden="true">▾</span>' +
       '</button>' +
       '<div class="ctx-menu" role="menu">' +
-        '<a class="ctx-op ctx-map" href="#/track">' + txt('see the track map') + ' →</a>' +
+        '<a class="ctx-op ctx-map" href="#/track/' + esc(t.id) + '">' +
+          txt('see the track map') + ' →</a>' +
         TRACKS.map((x) => '<button type="button" class="ctx-op' + (x.id === t.id ? ' on' : '') + '" ' +
           'data-track="' + esc(x.id) + '">' + esc(x.name) + '</button>').join('') +
       '</div>' +
@@ -204,8 +220,11 @@ $('#nav-context').addEventListener('click', async (e) => {
   const op = e.target.closest('.ctx-op[data-track]');
   if (!op) return;
   box.classList.remove('is-open');
+  /* THE ADDRESS IS THE TRACK. `enrol` writes the document so the rail and the
+     bar move; going to the track's own path is what makes the map linkable and
+     what puts the choice in the history, so Back returns to the one before. */
   await api.enrol(op.dataset.track);
-  goTo('/track');
+  goTo('/track/' + op.dataset.track);
 });
 
 /* ---------- the account menu ---------- */

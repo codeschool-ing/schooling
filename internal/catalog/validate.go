@@ -21,6 +21,7 @@ func Validate(school *School) []error {
 	problems = append(problems, checkLessons(school)...)
 	problems = append(problems, checkExercises(school)...)
 	problems = append(problems, checkTracks(school)...)
+	problems = append(problems, checkTracksAreOrdered(school)...)
 	problems = append(problems, checkRequires(school)...)
 
 	sort.Slice(problems, func(i, j int) bool {
@@ -97,6 +98,47 @@ func checkSlug(id, what string) []error {
 	return []error{fmt.Errorf(
 		"%s id %q is not a slug — ids never derive from a title, because a machine rewrites "+
 			"titles and every link would follow", what, id)}
+}
+
+// The declared order names every track, exactly once, and nothing else.
+//
+// It is the same check `course.json`'s lesson list gets, for the same reason: a
+// list that says what order things come in is a second place the ids live, and
+// a second place drifts. A track missing from it is shown last rather than lost
+// — see inDeclaredOrder — and this is what says so out loud.
+func checkTracksAreOrdered(s *School) []error {
+	if len(s.Order) == 0 && len(s.Tracks) == 0 {
+		return nil
+	}
+
+	var problems []error
+
+	have := map[string]bool{}
+	for _, t := range s.Tracks {
+		have[t.ID] = true
+	}
+
+	seen := map[string]bool{}
+	for _, id := range s.Order {
+		if seen[id] {
+			problems = append(problems, fmt.Errorf(
+				"the school names the track %q twice in its order", id))
+		}
+		seen[id] = true
+		if !have[id] {
+			problems = append(problems, fmt.Errorf(
+				"the school's order names %q, and there is no tracks/%s.json", id, id))
+		}
+	}
+
+	for _, t := range s.Tracks {
+		if !seen[t.ID] {
+			problems = append(problems, fmt.Errorf(
+				"the track %q is not in the school's order, so it is offered last — "+
+					"order is declared, never inferred (C-10)", t.ID))
+		}
+	}
+	return problems
 }
 
 func checkLessons(s *School) []error {

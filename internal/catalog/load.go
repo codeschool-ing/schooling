@@ -30,7 +30,7 @@ func Load(dir fs.FS) (*School, []error) {
 	}
 
 	tracks, found := loadTracks(dir)
-	school.Tracks = tracks
+	school.Tracks = inDeclaredOrder(tracks, school.Order)
 	problems = append(problems, found...)
 
 	courses, found := loadCourses(dir)
@@ -40,11 +40,45 @@ func Load(dir fs.FS) (*School, []error) {
 	return &school, problems
 }
 
+// inDeclaredOrder puts the tracks in the order `school.json` names them.
+//
+// A track the file does not name keeps its place at the end rather than
+// vanishing: losing a whole career path from every screen because somebody
+// forgot a line is a far worse failure than showing it last, and `Validate`
+// reports the omission by name.
+func inDeclaredOrder(tracks []*Track, order []string) []*Track {
+	if len(order) == 0 {
+		return tracks
+	}
+
+	byID := map[string]*Track{}
+	for _, t := range tracks {
+		byID[t.ID] = t
+	}
+
+	out := make([]*Track, 0, len(tracks))
+	taken := map[string]bool{}
+	for _, id := range order {
+		if t, ok := byID[id]; ok && !taken[id] {
+			out = append(out, t)
+			taken[id] = true
+		}
+	}
+	for _, t := range tracks {
+		if !taken[t.ID] {
+			out = append(out, t)
+		}
+	}
+	return out
+}
+
 func loadTracks(dir fs.FS) ([]*Track, []error) {
 	names, err := fs.Glob(dir, "tracks/*.json")
 	if err != nil {
 		return nil, []error{fmt.Errorf("listing the tracks: %w", err)}
 	}
+	// Read in a stable order; the order they are OFFERED in is `school.json`'s
+	// and is applied by the caller, which is the only place that knows it.
 	sort.Strings(names)
 
 	var tracks []*Track
