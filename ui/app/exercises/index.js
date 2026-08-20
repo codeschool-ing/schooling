@@ -32,8 +32,17 @@ import matching from './matching.js';
 import expectedOutput from './expected-output.js';
 import code from './code.js';
 import expressionAnswer from './expression-answer.js';
+/* THE THREE THE COPY LEFT BEHIND. This client came from `portal-frontend`,
+   whose catalogue has no cloze, no numeric and no labelling; this school's
+   does, and every one of them landed on "unknown exercise type" — on the exam
+   paper, where a question nobody can answer is a mark nobody can earn. They are
+   ported from the interface this one replaced, keyboard paths and all. */
+import cloze from './cloze.js';
+import numeric from './numeric.js';
+import labelling from './labelling.js';
 
-const MODULES = [choices, ordering, matching, expectedOutput, code, expressionAnswer];
+const MODULES = [choices, ordering, matching, expectedOutput, code, expressionAnswer,
+  cloze, numeric, labelling];
 
 const REGISTRY = {};
 MODULES.forEach((m) => m.types.forEach((t) => { REGISTRY[t] = m; }));
@@ -66,7 +75,12 @@ export function buildExercise(ex, ctx, ix, options = {}) {
       '<span class="ex-type">' + txt(ex.type) + '</span>' +
       (ex.difficulty ? '<span class="ex-difficulty">' + txt(ex.difficulty) + '</span>' : '') +
     '</header>' +
-    '<p class="ex-prompt">' + formatted(ex.prompt) + '</p>' +
+    /* SOME PROMPTS ARE THE CONTROL. A cloze is a sentence with input boxes
+       standing in its holes, so printing it here as well would put the same
+       sentence on screen twice — once with the holes and once without. A module
+       that draws its own says so; every other type gets it from here and never
+       has to think about it. */
+    (mod.promptIsTheBody ? '' : '<p class="ex-prompt">' + formatted(ex.prompt) + '</p>') +
     '<div class="ex-body">' + mod.body(ex, uid, { exam }) + '</div>' +
     // the hint is scaffolding for someone learning; in an exam it is a cheat sheet
     (ex.socraticHint && !exam
@@ -280,7 +294,19 @@ export function buildAssessment(exercises, ctx, options = {}) {
   el.innerHTML =
     '<header class="wz-top">' +
       '<span class="wz-count"></span>' +
-      '<div class="wz-dots" role="tablist"></div>' +
+      /* A GROUP OF BUTTONS AND NOT A `tablist`.
+
+         It was one, and axe called it critical: a tablist may contain tabs, and
+         these are plain buttons. The fix is not to write `role="tab"` on them —
+         that role promises arrow-key movement between the tabs and a panel each
+         one controls, and this wizard implements neither. Claiming the
+         semantics without the behaviour leaves somebody pressing arrow keys
+         that do nothing, which is worse than not claiming them.
+
+         What it actually is: a labelled group of buttons that jump to a
+         question. Said that way it is accurate, and it is operable exactly as
+         it looks — Tab to reach them, Enter to use one. */
+      '<div class="wz-dots" role="group" aria-label="' + esc(txt('Questions on this paper')) + '"></div>' +
     '</header>' +
     '<div class="wz-stage"></div>' +
     '<footer class="wz-foot">' +

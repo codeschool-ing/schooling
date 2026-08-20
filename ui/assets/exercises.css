@@ -1,0 +1,83 @@
+/* ==========================================================================
+   `cloze`, `numeric` and `labelling` — the three question types the copied
+   interface does not have.
+
+   WHY THIS IS A FILE AND NOT A FEW LINES SOMEWHERE ELSE. `portal.css` is
+   `portal-frontend`'s byte for byte, and the reason that matters is not tidiness
+   — a diff of it being empty is what made the duplicated-stylesheet bug
+   findable at all. Adding rules there for elements the portal has never
+   rendered would put dead selectors in that file and end the invariant.
+   `app.css` is the other side of the same rule: overrides only, each one a
+   WCAG failure argued in place.
+
+   So: neither. These are this school's own question types, drawn by this
+   school's own modules (`ui/app/exercises/{cloze,numeric,labelling}.js`), and
+   they get a stylesheet of their own. Recovered, like the modules, from the
+   interface this one replaced.
+
+   The palette is the shared one and nothing here invents a colour.
+   ========================================================================== */
+
+/* ---------- cloze ----------
+
+   THE LINE HEIGHT IS THE WHOLE RULE. The inputs stand inside a sentence, in
+   place of its holes, and at the prose's own leading a box collides with the
+   line above it. 2.2 is what gives a wrapped sentence room to stay a sentence. */
+.cloze{line-height:2.2}
+
+.blank,
+.numeric-value{
+  background:var(--scan);color:var(--paper);
+  border:0;border-bottom:2px solid var(--phosphor);border-radius:4px 4px 0 0;
+  padding:4px 8px;font:inherit;
+}
+.blank{width:10ch}
+
+/* ---------- numeric ---------- */
+
+.numeric{display:flex;gap:10px;align-items:center}
+.numeric-value{width:14ch;font-family:'IBM Plex Mono',monospace}
+.numeric-unit{
+  background:var(--panel);color:var(--paper);
+  border:1px solid var(--wire);border-radius:8px;padding:8px 10px;font:inherit;
+}
+.numeric-unit-fixed{font-family:'IBM Plex Mono',monospace;font-size:.86rem}
+
+/* ---------- labelling ----------
+
+   THE BOARD IS THE PICTURE WITH MARKERS OVER IT, AND THE MARKERS ARE PLACED IN
+   PER CENT rather than pixels. That is the same decision the grader made and
+   for the same reason: the answer is a fraction of the image, so a marker put
+   at 63% sits at 63% whatever size the picture is drawn at, and a window resize
+   moves nothing relative to the diagram. */
+.labelling-board{
+  position:relative;display:inline-block;max-width:100%;
+  border:1px solid var(--wire);border-radius:10px;overflow:hidden;
+  background:var(--panel);
+}
+.labelling-picture{display:block;max-width:100%;height:auto;cursor:crosshair}
+
+.labelling-marker{
+  position:absolute;transform:translate(-50%,-50%);
+  min-width:24px;height:24px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--phosphor);color:var(--ink);
+  border-radius:12px;font-weight:600;font-size:.82rem;
+  /* A ring in the page's own background, so a marker stays legible on a diagram
+     of any colour without being told what colour the diagram is. */
+  box-shadow:0 0 0 2px var(--ink);
+  /* The picture takes the click, always. A marker under the pointer that ate it
+     would make the one place a student is most likely to aim — where they put
+     the last label — the one place that does nothing. */
+  pointer-events:none;
+}
+
+.labelling-how{font-size:.82rem;margin:10px 0 0}
+.labelling-labels{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.labelling-label{display:flex;align-items:center;gap:8px}
+.labelling-number{
+  min-width:24px;height:24px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--scan);border-radius:12px;
+  font-size:.82rem;font-weight:600;flex:none;
+}

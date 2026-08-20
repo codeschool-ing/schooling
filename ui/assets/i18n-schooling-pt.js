@@ -50,4 +50,28 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
      regular expression that starts at the quote and ends at the colon, and it
      refuses a line it cannot classify rather than half-reading the file. */
   'Courses, tracks and lessons are all here and need no connection. Signing in, your progress and exams live with the school, so they are not.': 'Os cursos, as trilhas e as aulas estão todos aqui e não precisam de conexão. Entrar, o seu progresso e as provas ficam com a escola, então não estão.',
+
+  /* ---------- the three question types the copied client did not have ----------
+
+     `cloze`, `numeric` and `labelling`. Every one of these is read aloud rather
+     than seen: the label on a blank inside a sentence, the unit beside a
+     number, and — on the labelling question — the sentence that says where a
+     student has just put a label. Left in English they would be the only words
+     on the exam paper a Portuguese reader could not follow, on the screen where
+     following the words is the whole task. */
+  'Blank': 'Lacuna',
+  'Your answer': 'Sua resposta',
+  'Unit': 'Unidade',
+  'Choose a label, then click the picture or use the arrow keys.':
+    'Escolha um rótulo e depois clique na imagem ou use as setas do teclado.',
+  'This question needs a picture that is not here.':
+    'Esta questão precisa de uma imagem que não está aqui.',
+  /* "63% across, 41% down" — said in words because it is what somebody who
+     cannot see the diagram is told about where their label is. */
+  'across': 'na horizontal',
+  'down': 'na vertical',
+  'not placed yet': 'ainda não colocado',
+
+  /* The name of the group of buttons that jump between questions. */
+  'Questions on this paper': 'Questões desta prova',
 });
