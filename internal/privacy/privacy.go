@@ -164,6 +164,18 @@ var Registry = []Table{
 		Why: "which course a track puts after which, and about nobody",
 	},
 	{
+		Name: "catalog_course_text", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "a course's name and syllabus in another language",
+	},
+	{
+		Name: "catalog_track_text", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "a track's name and goal in another language",
+	},
+	{
+		Name: "catalog_track_fork_text", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the words of a choice in a track, in another language",
+	},
+	{
 		Name: "catalog_courses", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "a mirror of courses/*/course.json",
 	},

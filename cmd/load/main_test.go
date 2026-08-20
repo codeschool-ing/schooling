@@ -188,8 +188,20 @@ func TestWhatTheFilesNoLongerCarryIsPruned(t *testing.T) {
 	}
 
 	// Take the fork out of the track and delete both of its courses.
+	//
+	// AND EVERYTHING ELSE THAT NAMED THEM. The track's `links` point at one of
+	// the deleted courses and at the fork's position, and the Portuguese file
+	// translates a step that is about to stop being a fork — so a deletion that
+	// only touched `courses` would be refused rather than pruned. That refusal
+	// is `validate.go` doing its job and it is checked on its own; here the
+	// deletion is done the way somebody deleting a course would have to do it,
+	// which is the only way to find out whether the mirror shrinks.
 	patch(t, filepath.Join(dir, "tracks/frontend.json"), func(d map[string]any) {
 		d["courses"] = []any{"web-fundamentals", "html-css"}
+		delete(d, "links")
+	})
+	patch(t, filepath.Join(dir, "tracks/frontend.pt.json"), func(d map[string]any) {
+		delete(d, "steps")
 	})
 	for _, gone := range []string{"react-ts", "angular"} {
 		if err := os.RemoveAll(filepath.Join(dir, "courses", gone)); err != nil {

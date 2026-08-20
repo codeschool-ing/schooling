@@ -396,7 +396,9 @@ func courseOpen(courses *catalog.Store, plan catalog.PlanOf) func(context.Contex
 		if !ok {
 			return false, nil
 		}
-		course, err := courses.Course(ctx, school, courseID, plan(ctx))
+		// English, and nothing here is read: this asks whether the course may be
+		// opened at all, which no translation changes.
+		course, err := courses.Course(ctx, school, courseID, "en", plan(ctx))
 		if errors.Is(err, catalog.ErrNotFound) {
 			return false, nil
 		}
@@ -430,7 +432,10 @@ func maySit(courses *catalog.Store, plan catalog.PlanOf) exam.MaySit {
 		if !ok {
 			return false, nil
 		}
-		track, err := courses.Track(ctx, school, id)
+		// English, and it does not matter: this reads the track's SHAPE — which
+		// courses are on it — to decide whether somebody may sit its exam. No
+		// word of what comes back is shown to anybody.
+		track, err := courses.Track(ctx, school, id, "en")
 		if errors.Is(err, catalog.ErrNotFound) {
 			return false, nil
 		}
@@ -523,7 +528,10 @@ func titleOf(courses *catalog.Store, plan catalog.PlanOf) certificate.TitleOf {
 		}
 
 		if scope == certificate.ScopeTrack {
-			track, err := courses.Track(ctx, school, id)
+			// English, and it does not matter: this reads the track's SHAPE — which
+			// courses are on it — to decide whether somebody may sit its exam. No
+			// word of what comes back is shown to anybody.
+			track, err := courses.Track(ctx, school, id, "en")
 			if errors.Is(err, catalog.ErrNotFound) {
 				return "", nil
 			}
@@ -536,7 +544,15 @@ func titleOf(courses *catalog.Store, plan catalog.PlanOf) certificate.TitleOf {
 		// The plan a course is read under does not change its name, and a
 		// certificate is issued for a course the student has already sat the
 		// exam of — so this asks for the name and nothing else.
-		course, err := courses.Course(ctx, school, id, plan(ctx))
+		//
+		// IN THE SOURCE LANGUAGE, AND THAT IS A LIMITATION WORTH NAMING. A
+		// certificate is a statement made on a day and the name is written into
+		// it, so it cannot follow the reader's language later — and this path
+		// does not carry the language the student was studying in. Somebody who
+		// read the whole course in Portuguese gets a certificate naming it in
+		// English. Fixing it means recording the locale with the issue, which
+		// is a change to what a certificate IS rather than to this line.
+		course, err := courses.Course(ctx, school, id, "en", plan(ctx))
 		if errors.Is(err, catalog.ErrNotFound) {
 			return "", nil
 		}

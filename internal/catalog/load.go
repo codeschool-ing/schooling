@@ -107,6 +107,11 @@ func loadTracks(dir fs.FS) ([]*Track, []error) {
 					"an id that disagrees with its file is a rename half-done", name, track.ID))
 		}
 
+		// The track in other languages, beside the file it translates.
+		text, found := readTranslations[TrackText](dir, "tracks", track.ID)
+		track.Text = text
+		problems = append(problems, found...)
+
 		// The final, which is optional while a track is being written.
 		if exam, err := readExercises(dir, path.Join("tracks", track.ID+examSuffix)); err != nil {
 			problems = append(problems, err)
@@ -186,6 +191,13 @@ func loadCourse(dir fs.FS, name string) (*Course, []error) {
 			"%s/course.json: the course calls itself %q and lives in %q — one of the two is a "+
 				"rename that stopped halfway, and every link points at the directory", base, course.ID, name))
 	}
+
+	// What the course is called in other languages, beside the file it
+	// translates. See `readTranslations` for why they are found by listing
+	// rather than by asking for each locale by name.
+	text, found := readTranslations[CourseText](dir, base, "course")
+	course.Text = text
+	problems = append(problems, found...)
 
 	// The exam, which is optional while a course is being written.
 	if exam, err := readExercises(dir, path.Join(base, "exam.json")); err != nil {
@@ -391,6 +403,50 @@ func isTrackExam(name string) bool { return strings.HasSuffix(path.Base(name), e
 func isTranslation(name string) bool {
 	base := strings.TrimSuffix(path.Base(name), ".json")
 	return strings.Contains(base, ".")
+}
+
+/*
+readTranslations reads every `<stem>.<locale>.json` in a directory.
+
+	BY LISTING RATHER THAN BY ASKING. The alternative is to take the school's
+	`locales` and open one file per language, which reads the same for the
+	languages somebody remembered and says nothing about the ones they did not —
+	a file named `course.ptbr.json` or `course.pt-BR.json` would sit there
+	untouched and untranslated, and the only symptom would be a screen in
+	English. Listing finds every file that looks like a translation and hands the
+	locale to `Validate`, which holds it to the school's list.
+
+	The stem is the file's own name — `course` for a course, the track's id for a
+	track — so `course.pt.json` and `frontend.pt.json` are found the same way and
+	`frontend-exam.json` is not.
+*/
+func readTranslations[T any](dir fs.FS, base, stem string) (map[string]T, []error) {
+	names, err := fs.Glob(dir, path.Join(base, stem+".*.json"))
+	if err != nil || len(names) == 0 {
+		return nil, nil
+	}
+	sort.Strings(names)
+
+	out := map[string]T{}
+	var problems []error
+	for _, name := range names {
+		locale := strings.TrimSuffix(strings.TrimPrefix(path.Base(name), stem+"."), ".json")
+		if locale == "" || strings.Contains(locale, ".") {
+			problems = append(problems, fmt.Errorf(
+				"%s: a translation is named `%s.<locale>.json` and this is not", name, stem))
+			continue
+		}
+		var text T
+		if err := readJSON(dir, name, &text); err != nil {
+			problems = append(problems, err)
+			continue
+		}
+		out[locale] = text
+	}
+	if len(out) == 0 {
+		return nil, problems
+	}
+	return out, problems
 }
 
 func readExercises(dir fs.FS, name string) ([]Exercise, error) {

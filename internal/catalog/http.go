@@ -58,7 +58,7 @@ func (h *Handler) courses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	listing, err := h.store.Courses(r.Context(), school, h.plan(r))
+	listing, err := h.store.Courses(r.Context(), school, h.plan(r), locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -93,7 +93,7 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	course, err := h.store.Course(r.Context(), school, r.PathValue("course"), h.plan(r))
+	course, err := h.store.Course(r.Context(), school, r.PathValue("course"), locale(r), h.plan(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -157,7 +157,7 @@ func (h *Handler) tracks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tracks, err := h.store.Tracks(r.Context(), school)
+	tracks, err := h.store.Tracks(r.Context(), school, locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -174,7 +174,7 @@ func (h *Handler) track(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	track, err := h.store.Track(r.Context(), school, r.PathValue("track"))
+	track, err := h.store.Track(r.Context(), school, r.PathValue("track"), locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return

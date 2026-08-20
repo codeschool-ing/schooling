@@ -39,6 +39,7 @@ import practice from './screens/practice.js';
 import { openSearch, close as closeSearch, searchOpen } from './search-panel.js';
 import { closeModal, modalOpen } from './modal.js';
 import { wireCopy } from './copy.js';
+import { applyAccent } from './accent.js';
 
 /* ---------- what the i18n runtime needs from us ---------- */
 globalThis.isChoice = isChoice;                  // used by applyContent()
@@ -59,6 +60,24 @@ let booted = false;
    re-read here and the screens re-ask for the course they are showing. */
 globalThis.redrawAll = () => {
   if (!booted) return null;
+
+  /* AND THE CATALOGUE ITSELF MOVED LANGUAGE TOO. A course's name and syllabus
+     used to be translated in place by the runtime, from a dictionary that
+     shipped with the interface; they are the school's own rows now and arrive
+     already in the language that was asked for.
+
+     Which means the runtime must not translate them a second time: `saveBase()`
+     is re-run over the catalogue that just landed, so the "English" it falls
+     back to IS the language on screen. Without that, `applyContent()` would put
+     the previous language's snapshot back on every switch. */
+  if (source.languageChanged()) {
+    source.load(api).then(() => {
+      saveBase();
+      return api.loadLessonStructure();
+    }).then(dispatch);
+    return dispatch();
+  }
+
   if (api.languageChanged()) {
     api.loadLessonStructure().then(dispatch);
   }
@@ -315,7 +334,15 @@ function paintAccount() {
     ? '<a class="account-op" href="#/account">' + txt('My account') + '</a>' +
       '<a class="account-op" href="#/plan">' + txt('My plan') + '</a>' +
       '<a class="account-op" href="#/certificates">' + txt('Certificates') + '</a>' +
-      '<a class="account-op" href="https://codeschool.ing">' + txt('Go to the site') + ' ↗</a>' +
+      /* THE SCHOOL'S OWN SITE, OR NO LINK AT ALL. This was
+         `https://codeschool.ing` for every student of every school — one
+         school's marketing site offered to all of them from inside another
+         school's portal. A school that has not told us where its site is now
+         gets no line here, which is the honest answer. */
+      (source.school && source.school.site
+        ? '<a class="account-op" href="' + esc(source.school.site) + '" rel="noopener">'
+          + txt('Go to the site') + ' ↗</a>'
+        : '') +
       '<button type="button" class="account-op account-op-btn" id="account-signout">' + txt('Sign out') + '</button>'
     : '<a class="account-op" href="#/sign-in">' + txt('Sign in') + '</a>';
 }
@@ -517,6 +544,12 @@ if (source.school && source.school.name) {
   const brand = document.querySelector('.brand-name');
   if (brand) brand.textContent = source.school.name;
 }
+
+/* AND ITS OWN COLOUR, which `tenants.accent` has held since the first
+   migration and nothing has ever applied. See `accent.js`: it is measured
+   against both page backgrounds before it is used, because `--phosphor` is
+   text and a colour somebody else chose still has to be readable. */
+applyAccent(source.school && source.school.accent);
 
 /* Which track the rail and the bar are about.
 

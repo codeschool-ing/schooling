@@ -177,6 +177,55 @@ func TestAnUnknownHostIsRefusedAndNeverDefaults(t *testing.T) {
 	}
 }
 
+// A SCHOOL IS MORE THAN A NAME AND A COLOUR, and the parts that were not served
+// were the parts written into the interface instead.
+//
+// The account menu linked to codeschool.ing and the plan screen quoted
+// R$ 490,00 for every school, because both were constants in files copied from
+// the vitrine. Neither looked wrong on the school they were copied from, which
+// is why they survived — so the school says what its address is and what it
+// charges, and the interface draws what it is told.
+//
+// EACH ONE IS ABSENT RATHER THAN EMPTY when it is not set. A school with no
+// site of its own must leave the link out, and a school with no price must say
+// nothing about one rather than offer zero.
+func TestASchoolCarriesItsOwnAddressAndItsOwnPrice(t *testing.T) {
+	pool := testPool(t)
+	at := seed(t, pool)
+	srv := server(t, pool)
+
+	if _, err := pool.Exec(context.Background(), `
+		UPDATE tenants SET site = $2, plan_price_cents = $3, plan_currency = $4
+		WHERE slug = $1
+	`, strings.TrimSuffix(at.code, ".example.tld"),
+		"https://codeschool.ing", 49000, "BRL"); err != nil {
+		t.Fatalf("giving the school an address and a price: %v", err)
+	}
+
+	status, body := get(t, srv, at.code)
+	if status != http.StatusOK {
+		t.Fatalf("status %d, want 200", status)
+	}
+	if body["site"] != "https://codeschool.ing" {
+		t.Errorf("the school's own address answered %v", body["site"])
+	}
+	if body["planPriceCents"] != float64(49000) || body["planCurrency"] != "BRL" {
+		t.Errorf("the price answered %v %v", body["planPriceCents"], body["planCurrency"])
+	}
+
+	// The other school was seeded with neither, and must say so by omission.
+	status, body = get(t, srv, at.math)
+	if status != http.StatusOK {
+		t.Fatalf("status %d, want 200", status)
+	}
+	for _, absent := range []string{"site", "planPriceCents", "planCurrency"} {
+		if v, present := body[absent]; present {
+			t.Errorf("a school that set no %s answered %v — the interface cannot tell "+
+				"\"none\" from \"zero\"", absent, v)
+		}
+	}
+}
+
 func TestTheHostIsNormalisedBeforeItIsLookedUp(t *testing.T) {
 	pool := testPool(t)
 	at := seed(t, pool)

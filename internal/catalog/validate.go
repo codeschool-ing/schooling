@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"slices"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -25,6 +26,7 @@ func Validate(school *School) []error {
 	problems = append(problems, checkTracks(school)...)
 	problems = append(problems, checkTracksAreOrdered(school)...)
 	problems = append(problems, checkRequires(school)...)
+	problems = append(problems, checkCourseText(school)...)
 
 	sort.Slice(problems, func(i, j int) bool {
 		return problems[i].Error() < problems[j].Error()
@@ -407,6 +409,7 @@ func checkTracks(s *School) []error {
 		}
 
 		problems = append(problems, checkLinks(t, seen)...)
+		problems = append(problems, checkTrackText(s, t)...)
 
 		// `continues` is followed to the end of the chain, so a loop in it is a
 		// loader that never returns rather than a wrong answer.
@@ -455,6 +458,88 @@ func checkLinks(t *Track, seen map[string]bool) []error {
 				problems = append(problems, fmt.Errorf(
 					"the track %q says %q comes after %q, which the track does not contain",
 					t.ID, course, target.Course))
+			}
+		}
+	}
+	return problems
+}
+
+// checkTrackText holds a track's translations to the track and to the school.
+//
+// THE FORKS ARE THE POINT. A fork has no id, so its translation is keyed by the
+// step's POSITION — the one join in this catalogue that a reordering can break
+// in silence. The predecessor shipped exactly that: a step was inserted, every
+// fork after it moved, and the translations stayed where they were, describing
+// a different choice in perfect Portuguese.
+//
+// It cannot be keyed on anything else, so it is checked instead. A position
+// that is not a fork is the symptom of the insert; a list of options a
+// different length from the fork's is the symptom of a fork gaining or losing
+// one. Both are what that failure looks like from outside, and both fail here.
+func checkTrackText(s *School, t *Track) []error {
+	var problems []error
+
+	known := map[string]bool{}
+	for _, l := range s.Locales {
+		known[l] = true
+	}
+
+	for _, locale := range slices.Sorted(maps.Keys(t.Text)) {
+		if !known[locale] {
+			problems = append(problems, fmt.Errorf(
+				"the track %q is translated into %q, which the school does not list in `locales` — "+
+					"so nothing would ever serve it", t.ID, locale))
+		}
+		text := t.Text[locale]
+
+		for _, at := range slices.Sorted(maps.Keys(text.Steps)) {
+			position, err := strconv.Atoi(at)
+			if err != nil {
+				problems = append(problems, fmt.Errorf(
+					"the %s of the track %q translates a step called %q, and a step is a position",
+					locale, t.ID, at))
+				continue
+			}
+			if position < 0 || position >= len(t.Courses) {
+				problems = append(problems, fmt.Errorf(
+					"the %s of the track %q translates step %d, and the track has %d steps",
+					locale, t.ID, position, len(t.Courses)))
+				continue
+			}
+			fork := t.Courses[position].Fork
+			if fork == nil {
+				problems = append(problems, fmt.Errorf(
+					"the %s of the track %q translates step %d as a choice, and that step is the "+
+						"course %q — a step was inserted or removed and the translation stayed behind",
+					locale, t.ID, position, t.Courses[position].Course))
+				continue
+			}
+			if n := len(text.Steps[at].Options); n > 0 && n != len(fork.Options) {
+				problems = append(problems, fmt.Errorf(
+					"the %s of the track %q gives step %d %d option names and the choice has %d — "+
+						"they are matched by position, so one of them is describing the wrong option",
+					locale, t.ID, position, n, len(fork.Options)))
+			}
+		}
+	}
+	return problems
+}
+
+// checkCourseText holds a course's translations to the school's languages.
+func checkCourseText(s *School) []error {
+	var problems []error
+
+	known := map[string]bool{}
+	for _, l := range s.Locales {
+		known[l] = true
+	}
+
+	for _, c := range s.Courses {
+		for _, locale := range slices.Sorted(maps.Keys(c.Text)) {
+			if !known[locale] {
+				problems = append(problems, fmt.Errorf(
+					"the course %q is translated into %q, which the school does not list in "+
+						"`locales` — so nothing would ever serve it", c.ID, locale))
 			}
 		}
 	}

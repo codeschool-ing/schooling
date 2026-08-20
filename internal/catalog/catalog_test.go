@@ -524,3 +524,84 @@ func TestAnOrderNamingATrackThatIsNotThereIsReported(t *testing.T) {
 			report(t, problems))
 	}
 }
+
+/* ---------- the track's own sequence, and the catalogue in other languages ---------- */
+
+// A LINK IS AN ARROW AND AN ARROW HAS TO POINT AT SOMETHING IN THIS TRACK.
+//
+// `links` says "in this track, that one comes after this one", so both ends
+// have to be in the track. A link naming a course the track does not contain
+// draws an arrow from nowhere — or, worse, draws nothing at all and leaves the
+// graph on its fallback, which is the previous step. That is a WRONG edge
+// rather than a missing one, and nothing about the screen says so.
+func TestALinkNamingSomethingTheTrackDoesNotContainIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("tracks/frontend.json", func(d map[string]any) {
+		d["links"] = map[string]any{"react-ts": []any{"docker"}}
+	}))
+	if !says(problems, `says "react-ts" comes after "docker", which the track does not contain`) {
+		t.Errorf("a link to a course outside the track was accepted:\n%s", report(t, problems))
+	}
+
+	problems = school(t, patchJSON("tracks/frontend.json", func(d map[string]any) {
+		d["links"] = map[string]any{"docker": []any{"html-css"}}
+	}))
+	if !says(problems, `gives an order for the course "docker", which the track does not contain`) {
+		t.Errorf("an order for a course outside the track was accepted:\n%s", report(t, problems))
+	}
+}
+
+// A step number is a position, and a position past the end of the track is a
+// link that survived a deletion.
+func TestALinkToAStepThatIsNotThereIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("tracks/frontend.json", func(d map[string]any) {
+		d["links"] = map[string]any{"react-ts": []any{9}}
+	}))
+	if !says(problems, `comes after step 9, and the track has 3 steps`) {
+		t.Errorf("a link to a step that is not there was accepted:\n%s", report(t, problems))
+	}
+}
+
+// THE ONE THE POSITION KEY EXISTS TO CATCH.
+//
+// A fork has no id, so its translation is keyed by where the fork sits. Insert
+// a step and every fork after it moves while the translations stay put,
+// describing a different choice in perfect Portuguese. It is invisible in
+// review — both files are well-formed and both read correctly on their own.
+func TestAForkTranslationLeftBehindByAReorderingIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("tracks/frontend.json", func(d map[string]any) {
+		// A step inserted at the front: the fork moves from 2 to 3, and
+		// `frontend.pt.json` still translates step 2.
+		d["courses"] = append([]any{"react-ts"}, d["courses"].([]any)...)
+	}))
+	if !says(problems, "translates step 2 as a choice, and that step is the course") {
+		t.Errorf("a fork translation describing the wrong step was accepted:\n%s",
+			report(t, problems))
+	}
+}
+
+// And a fork that gained or lost an option leaves its translation naming a
+// different number of them. They are matched by position, so the names slide
+// onto the wrong branches and a student picks the framework they did not want.
+func TestAForkTranslationWithTheWrongNumberOfOptionsIsRefused(t *testing.T) {
+	problems := school(t, patchJSON("tracks/frontend.pt.json", func(d map[string]any) {
+		d["steps"] = map[string]any{
+			"2": map[string]any{"options": []any{"React + TypeScript"}},
+		}
+	}))
+	if !says(problems, "1 option names and the choice has 2") {
+		t.Errorf("a fork translation with too few option names was accepted:\n%s",
+			report(t, problems))
+	}
+}
+
+// A TRANSLATION INTO A LANGUAGE THE SCHOOL DOES NOT SERVE IS WORK NOBODY WILL
+// EVER SEE. It is not harmful and it is still refused: somebody wrote it
+// expecting it to appear, and a file that is silently ignored is worse than one
+// that is rejected with a reason.
+func TestATranslationIntoALanguageTheSchoolDoesNotListIsRefused(t *testing.T) {
+	problems := school(t, write("courses/html-css/course.de.json", `{"name":"HTML und CSS"}`))
+	if !says(problems, `"de"`) {
+		t.Errorf("a course translated into an unlisted language was accepted:\n%s",
+			report(t, problems))
+	}
+}

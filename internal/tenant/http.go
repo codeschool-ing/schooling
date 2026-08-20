@@ -41,10 +41,10 @@ func Resolve(store *Store) web.Middleware {
 }
 
 // Handler serves what a school says about itself. It is the smallest possible
-//
 // school-scoped route, and it exists as much to prove the resolution end to
-// end as to be useful — though it is useful: the app reads its name and its
-// accent colour from here before it paints anything.
+// end as to be useful — though it is useful: the app reads its name, its accent
+// colour, its own address and what a subscription costs from here before it
+// paints anything.
 type Handler struct{}
 
 func NewHandler() *Handler { return &Handler{} }
@@ -57,6 +57,15 @@ type schoolBody struct {
 	Slug   string `json:"slug"`
 	Name   string `json:"name"`
 	Accent string `json:"accent"`
+	// Absent rather than empty: the interface draws the link only when there
+	// is one, and `omitempty` is that rule said once instead of on both sides.
+	Site string `json:"site,omitempty"`
+
+	// What the subscription costs here. `omitempty` again, and for the same
+	// reason: a school with no price set says nothing about one rather than
+	// offering zero.
+	PlanPriceCents int    `json:"planPriceCents,omitempty"`
+	PlanCurrency   string `json:"planCurrency,omitempty"`
 }
 
 func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
@@ -70,5 +79,9 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	web.JSON(w, http.StatusOK, schoolBody{Slug: school.Slug, Name: school.Name, Accent: school.Accent})
+	cents, currency := school.Price()
+	web.JSON(w, http.StatusOK, schoolBody{
+		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
+		PlanPriceCents: cents, PlanCurrency: currency,
+	})
 }

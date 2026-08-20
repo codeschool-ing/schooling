@@ -95,6 +95,37 @@ type Track struct {
 	// The track exam — the final. Filled by Load from `tracks/<id>-exam.json`,
 	// because an exam belongs to no lesson and a track has none to put it in.
 	Exam []Exercise `json:"-"`
+
+	// What this track is called in other languages, by locale. Filled by Load
+	// from `tracks/<id>.<locale>.json`, which is read beside the file it
+	// translates so that a missing translation shows up in `ls`.
+	Text map[string]TrackText `json:"-"`
+}
+
+// TrackText is a track in one other language.
+//
+// EVERY FIELD IS A POINTER, and that is the whole of the field-by-field
+// fallback (C-11): a translation carries what somebody translated and no more,
+// so a track translated in its name and not its goal keeps the English goal
+// rather than losing it. `nil` is "nobody wrote this", which an empty string
+// cannot say.
+type TrackText struct {
+	Name    *string `json:"name"`
+	Goal    *string `json:"goal"`
+	Outcome *string `json:"outcome"`
+
+	// KEYED BY THE STEP'S POSITION, because a fork has no id — its identity is
+	// where it sits. Which makes this the one join in the catalogue that a
+	// reordering can silently break, and `validate.go` is where that is caught:
+	// a position that is not a fork, or a list of options a different length
+	// from the fork's, is what the failure looks like from outside.
+	Steps map[string]ForkText `json:"steps"`
+}
+
+type ForkText struct {
+	Choice  *string  `json:"choice"`
+	Note    *string  `json:"note"`
+	Options []string `json:"options"`
 }
 
 // LinkTarget is one end of a link: a step of this track, or a course of it.
@@ -196,6 +227,11 @@ type Course struct {
 
 	Lessons []string `json:"lessons"`
 
+	// What this course is called in other languages, by locale. Filled by Load
+	// from `course.<locale>.json` beside `course.json`. See TrackText for why
+	// every field is a pointer.
+	Text map[string]CourseText `json:"-"`
+
 	// Draft keeps a course out of what a student sees while it is being
 	// written. It is a field rather than a directory, so publishing is a
 	// changed line rather than a move that loses the file's history.
@@ -267,6 +303,15 @@ type Prose struct {
 	// prose itself. Everything the JSON already knows stays in the JSON.
 	Title string
 	Body  string
+}
+
+// CourseText is a course in one other language.
+type CourseText struct {
+	Name          *string  `json:"name"`
+	Summary       *string  `json:"summary"`
+	Prerequisites *string  `json:"prerequisites"`
+	Syllabus      []string `json:"syllabus"`
+	Topics        []string `json:"topics"`
 }
 
 // Section is one step of a lesson.
