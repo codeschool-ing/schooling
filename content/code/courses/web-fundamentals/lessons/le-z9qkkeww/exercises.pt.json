@@ -1,0 +1,36 @@
+{
+  "ex-arqjt0y1": {
+    "prompt": "Você precisa apontar `exemplo.com`, sem `www`, para um serviço hospedado que só informa um nome (`app.provedor.net`) e nenhum IP. Por que um `CNAME` não resolve?",
+    "hint": "O `CNAME` tem uma restrição de posição no domínio. Onde exatamente ele não pode existir, e que registros já ocupam esse lugar?",
+    "choices": [
+      {
+        "text": "`CNAME` não pode existir na raiz do domínio, que precisa conviver com outros registros como o `MX`.",
+        "why": "A saída é `A` com IPs fixos, ou um `ALIAS`/`ANAME`, que é extensão fora do padrão oferecida por alguns provedores."
+      },
+      {
+        "text": "`CNAME` só funciona para subdomínios de terceiro nível ou mais profundos.",
+        "why": "Ele funciona em qualquer nome que não seja a raiz — `www.exemplo.com` é de segundo nível e aceita."
+      },
+      {
+        "text": "`CNAME` exige que o destino esteja no mesmo domínio de quem aponta.",
+        "why": "O destino pode ser qualquer nome, inclusive de outra organização."
+      },
+      {
+        "text": "`CNAME` foi descontinuado em favor do `ALIAS` e não é mais respeitado pelos resolvedores.",
+        "why": "Continua em pleno uso; o `ALIAS` é que é a extensão não padronizada."
+      }
+    ]
+  },
+  "ex-9trnz79p": {
+    "prompt": "Ponha em ordem os passos de uma migração de servidor sem que os visitantes caiam num endereço morto.",
+    "hint": "Um dos passos precisa acontecer bem antes dos outros para que os demais façam efeito rápido. Qual deles depende do tempo que os caches já guardaram?",
+    "items": [
+      "Baixar o TTL do registro para poucos minutos, um dia antes da troca",
+      "Subir a aplicação no servidor novo e conferir que ela responde pelo IP dele",
+      "Alterar o registro para apontar ao endereço novo",
+      "Confirmar que os acessos estão chegando ao servidor novo",
+      "Devolver o TTL para horas"
+    ],
+    "trap": "O par baixar-o-TTL–alterar-o-registro. É tentador baixar o TTL junto com a troca, ou depois dela, para \"acelerar a propagação\". Não funciona: o teto da espera é o TTL que já valia quando os caches guardaram a resposta antiga. Baixá-lo depois só afeta as consultas seguintes, e a troca ainda leva o TTL antigo inteiro."
+  }
+}

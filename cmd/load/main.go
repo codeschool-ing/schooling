@@ -178,7 +178,8 @@ func tenantOf(ctx context.Context, pool *pgxpool.Pool, slug string) (uuid.UUID, 
 // the simplest thing that is obviously right wins.
 func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.School) error {
 	for _, table := range []string{
-		"catalog_exercises", "catalog_images", "catalog_prose", "catalog_sections",
+		"catalog_exercise_text", "catalog_exercises",
+		"catalog_images", "catalog_prose", "catalog_sections",
 		"catalog_lessons",
 		"catalog_course_topics", "catalog_course_requires", "catalog_courses",
 		"catalog_course_topic_text", "catalog_course_text",
@@ -412,7 +413,8 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			}
 
 			if err := writeExercises(ctx, tx, tenantID,
-				owner{courseID: course.ID, lessonID: lesson.ID}, lesson.Exercises); err != nil {
+				owner{courseID: course.ID, lessonID: lesson.ID}, lesson.Exercises,
+				lesson.ExerciseText); err != nil {
 				return err
 			}
 		}
@@ -427,7 +429,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 		}
 
 		if err := writeExercises(ctx, tx, tenantID,
-			owner{courseID: course.ID, exam: true}, course.Exam); err != nil {
+			owner{courseID: course.ID, exam: true}, course.Exam, course.ExamText); err != nil {
 			return err
 		}
 	}
@@ -438,7 +440,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 	// checked before anything is written.
 	for _, track := range school.Tracks {
 		if err := writeExercises(ctx, tx, tenantID,
-			owner{trackID: track.ID, exam: true}, track.Exam); err != nil {
+			owner{trackID: track.ID, exam: true}, track.Exam, track.ExamText); err != nil {
 			return err
 		}
 	}
@@ -458,7 +460,8 @@ type owner struct {
 }
 
 func writeExercises(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID,
-	at owner, exercises []catalog.Exercise) error {
+	at owner, exercises []catalog.Exercise,
+	text map[string]map[string]catalog.ExerciseText) error {
 
 	for _, e := range exercises {
 		payload := e.Raw
@@ -474,6 +477,40 @@ func writeExercises(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID,
 		`, tenantID, e.ID, at.courseID, at.trackID, at.lessonID, e.Section, at.exam,
 			e.Version, e.Type, e.Difficulty, e.Drillable, e.Prompt, e.Hint, payload); err != nil {
 			return fmt.Errorf("writing the exercise %s: %w", e.ID, err)
+		}
+
+		/* AND THE SAME QUESTION IN EVERY LANGUAGE SOMEBODY WROTE IT IN.
+
+		   A COMPLETE PAYLOAD PER LOCALE, merged here and once: what nobody
+		   translated stays English, so a reader takes one payload and never has
+		   to ask which half of it came from where. `catalog.Translated` is the
+		   only thing that writes one, and it can only write the fields
+		   `ExerciseText` declares — none of which grading reads. */
+		for locale, questions := range text {
+			one, found := questions[e.ID]
+			if !found {
+				continue
+			}
+			translated, err := catalog.Translated(payload, one)
+			if err != nil {
+				return fmt.Errorf("translating the exercise %s into %s: %w", e.ID, locale, err)
+			}
+
+			prompt, hint := e.Prompt, e.Hint
+			if one.Prompt != nil {
+				prompt = *one.Prompt
+			}
+			if one.Hint != nil {
+				hint = *one.Hint
+			}
+
+			if _, err := tx.Exec(ctx, `
+				INSERT INTO catalog_exercise_text
+					(tenant_id, exercise_id, locale, prompt, hint, payload)
+				VALUES ($1, $2, $3, $4, $5, $6)
+			`, tenantID, e.ID, locale, prompt, hint, translated); err != nil {
+				return fmt.Errorf("writing the %s of the exercise %s: %w", locale, e.ID, err)
+			}
 		}
 	}
 	return nil

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"strings"
 
 	"github.com/google/uuid"
 
@@ -58,7 +57,7 @@ func (h *Handler) courses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	listing, err := h.store.Courses(r.Context(), school, h.plan(r), locale(r))
+	listing, err := h.store.Courses(r.Context(), school, h.plan(r), web.Locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -79,7 +78,7 @@ func (h *Handler) structure(w http.ResponseWriter, r *http.Request) {
 	// TITLES, and a title is a translated string here — the school's own rows,
 	// not a dictionary shipped with the interface. Answering it in English only
 	// would put "Introduction" on a Portuguese dashboard.
-	shape, err := h.store.Structure(r.Context(), school, locale(r))
+	shape, err := h.store.Structure(r.Context(), school, web.Locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -93,7 +92,7 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	course, err := h.store.Course(r.Context(), school, r.PathValue("course"), locale(r), h.plan(r))
+	course, err := h.store.Course(r.Context(), school, r.PathValue("course"), web.Locale(r), h.plan(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -108,7 +107,7 @@ func (h *Handler) lesson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	lesson, err := h.store.Lesson(r.Context(), school,
-		r.PathValue("course"), r.PathValue("lesson"), locale(r), h.plan(r))
+		r.PathValue("course"), r.PathValue("lesson"), web.Locale(r), h.plan(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -157,7 +156,7 @@ func (h *Handler) tracks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tracks, err := h.store.Tracks(r.Context(), school, locale(r))
+	tracks, err := h.store.Tracks(r.Context(), school, web.Locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -174,7 +173,7 @@ func (h *Handler) track(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	track, err := h.store.Track(r.Context(), school, r.PathValue("track"), locale(r))
+	track, err := h.store.Track(r.Context(), school, r.PathValue("track"), web.Locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -239,18 +238,4 @@ func (h *Handler) refuse(w http.ResponseWriter, r *http.Request, err error) {
 		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
 			"the catalogue cannot be read just now")
 	}
-}
-
-// locale takes the language off the query string, falling back to English.
-//
-// A QUERY PARAMETER AND NOT Accept-Language. The language a student chose is a
-// setting they can change, not a property of the browser they happen to be
-// using — and a page that reads differently depending on which machine opened
-// it is the kind of thing nobody reports because nobody believes it.
-func locale(r *http.Request) string {
-	l := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("lang")))
-	if l == "" || len(l) > 8 || strings.ContainsAny(l, " /?&") {
-		return "en"
-	}
-	return l
 }

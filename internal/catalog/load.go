@@ -118,12 +118,19 @@ func loadTracks(dir fs.FS) ([]*Track, []error) {
 		track.Text = text
 		problems = append(problems, found...)
 
-		// The final, which is optional while a track is being written.
+		// The final, which is optional while a track is being written. Its
+		// stem is `<slug>-exam`, so its translations are `<slug>-exam.pt.json`
+		// and the track's own are `<slug>.pt.json` — neither glob catches the
+		// other.
 		if exam, err := readExercises(dir, path.Join("tracks", track.Slug+examSuffix)); err != nil {
 			problems = append(problems, err)
 		} else {
 			track.Exam = exam
 		}
+		examText, found := readTranslations[map[string]ExerciseText](
+			dir, "tracks", strings.TrimSuffix(track.Slug+examSuffix, ".json"))
+		track.ExamText = examText
+		problems = append(problems, found...)
 
 		tracks = append(tracks, &track)
 	}
@@ -213,6 +220,9 @@ func loadCourse(dir fs.FS, name string) (*Course, []error) {
 	} else {
 		course.Exam = exam
 	}
+	examText, found := readTranslations[map[string]ExerciseText](dir, base, "exam")
+	course.ExamText = examText
+	problems = append(problems, found...)
 
 	images, found := loadImages(dir, path.Join(base, "images"))
 	course.Images = images
@@ -288,6 +298,9 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 	} else {
 		lesson.Exercises = exercises
 	}
+	text, found := readTranslations[map[string]ExerciseText](dir, base, "exercises")
+	lesson.ExerciseText = text
+	problems = append(problems, found...)
 
 	/* THE PROSE IS NAMED FOR THE SLUG AND FILED UNDER THE ID.
 

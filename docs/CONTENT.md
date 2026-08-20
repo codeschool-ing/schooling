@@ -43,15 +43,18 @@ content/
         exam.json                         the course exam
         exam.pt.json
         lessons/
-          client-and-server/
+          le-4xwdejgt/                    named for the lesson's id
             lesson.json                   section order and kind
-            lesson.pt.json
             roles.md                      the prose, in English
             roles.pt.md                   beside it, optional
             packets.md
             exercises.json
-            exercises.pt.json
+            exercises.pt.json             what a student READS, never the key
 ```
+
+A lesson has no `lesson.pt.json`. Its title is a topic of the course and is translated in
+`course.pt.json` under that topic's id; its sections carry their titles in the front matter of
+their own prose. Nothing is left in `lesson.json` for a person to read.
 
 **Every `.pt.` file is optional and partial.** The server falls back field by field, so a section
 translated in its title but not its body keeps the English body rather than losing the title too.
@@ -194,6 +197,37 @@ Types: `quiz`, `multiple-choice`, `ordering`, `matching`, `code`, `expected-outp
 `expression-answer`, `numeric`, `cloze`, `labelling`. **Every type has a machine grader; that is
 the entry requirement.** Free-text essays are out, because nothing can check them and this system
 has no reviewer.
+
+### `exercises.pt.json`
+
+Keyed by the question's id, and carrying **only what a student reads**.
+
+```json
+{
+  "ex-spr8rdb4": {
+    "prompt": "Um servidor web consulta um banco de dados…",
+    "hint": "Os papéis descrevem o momento, não o equipamento.",
+    "choices": [
+      { "text": "O cliente do banco de dados", "why": "…" },
+      { "text": "Ainda apenas um servidor",    "why": "…" }
+    ]
+  }
+}
+```
+
+The translatable fields are `prompt`, `hint`, `trap`, `choices[].{text,why}`, `items`,
+`pairs[].{left,right}`, `right_distractors` and `labels` — a list of texts, because a label's
+coordinates are not a translator's business.
+
+**Nothing that decides an answer is nameable here.** `correct`, `accept`, `value`, `tolerance`,
+the coordinates: a file that mentions one is refused on the pull request, because a translation
+that could reach the key would mark the same answer differently in two languages, and nobody
+would find it — both screens read perfectly well on their own.
+
+**The lists are matched by position**, which this project forbids almost everywhere. Inside an
+exercise a position is already the identity — the key is `choices[2]` and a student's answer
+records the index — and both are safe because a question is immutable within its `version`. A
+list of a different length is the symptom of an insert, and it fails the build.
 
 ### `exam.json`
 

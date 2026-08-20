@@ -237,7 +237,7 @@ type Summary struct {
 // `resumed` says which of the two happened, so the caller counts a start once
 // rather than once per reload.
 func (s *Store) Start(ctx context.Context, tenantID, accountID uuid.UUID,
-	scope Scope, scopeID string) (paper *Paper, resumed bool, err error) {
+	scope Scope, scopeID, locale string) (paper *Paper, resumed bool, err error) {
 
 	if scope != ScopeCourse && scope != ScopeTrack {
 		return nil, false, fmt.Errorf("%w: %q is not a kind of exam", ErrNoSuchExam, scope)
@@ -260,7 +260,7 @@ func (s *Store) Start(ctx context.Context, tenantID, accountID uuid.UUID,
 		return paper, true, err
 	}
 
-	id, err := s.draw(ctx, tenantID, accountID, scope, scopeID)
+	id, err := s.draw(ctx, tenantID, accountID, scope, scopeID, locale)
 	if errors.Is(err, errAlreadyOpen) {
 		// TWO TAPS AT ONCE, and the partial unique index caught the second. The
 		// first one's paper is the answer — which is the whole point of the
@@ -316,15 +316,24 @@ type pooled struct {
 }
 
 // draw builds a paper and writes it, in one transaction.
+// THE PAPER IS DRAWN IN ONE LANGUAGE AND STAYS IN IT. The questions are copied
+// onto the attempt, so a student who changes language halfway through keeps the
+// paper they were given — which is what a paper is. It is also what keeps the
+// mark honest: the answer is graded against the payload stored WITH the
+// attempt, and a paper that could change under a student mid-exam would be a
+// question rewritten between reading it and answering it.
 func (s *Store) draw(ctx context.Context, tenantID, accountID uuid.UUID,
-	scope Scope, scopeID string) (uuid.UUID, error) {
+	scope Scope, scopeID, locale string) (uuid.UUID, error) {
 
 	pool, err := s.pool.Query(ctx, `
-		SELECT id, version, type, payload FROM catalog_exercises
-		WHERE tenant_id = $1 AND exam
-		  AND course_id = $2 AND track_id = $3
-		ORDER BY id
-	`, tenantID, courseOf(scope, scopeID), trackOf(scope, scopeID))
+		SELECT e.id, e.version, e.type, coalesce(t.payload, e.payload)
+		FROM catalog_exercises e
+		LEFT JOIN catalog_exercise_text t
+		       ON t.tenant_id = e.tenant_id AND t.exercise_id = e.id AND t.locale = $4
+		WHERE e.tenant_id = $1 AND e.exam
+		  AND e.course_id = $2 AND e.track_id = $3
+		ORDER BY e.id
+	`, tenantID, courseOf(scope, scopeID), trackOf(scope, scopeID), locale)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("exam: reading the pool of %s %q: %w", scope, scopeID, err)
 	}
