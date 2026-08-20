@@ -211,34 +211,45 @@ try {
        that the exam never has. */
     await check(student, `${theme} · the drill`, '/#/practice', '/practice');
 
-    /* THE DENSEST SCREEN THERE IS, and the one worth the trouble of getting
-       into: every question type on one page, every one of them a control.
+    /* THE EXAM PAPER, QUESTION BY QUESTION — and it is walked rather than
+       glanced at, because this wizard shows ONE question at a time.
 
-       IT IS NOT CHECKED YET, AND THE REASON IS NOT "NO EXAM TO SIT". This asked
-       for `/#/exam/course/<id>`, the retired client's address, and got the
-       router's miss — which has no `.question` in it, so the line below said
-       there was no exam and the run went green. The address is right now and
-       the screen still does not draw: `api.startExam` hands the paper back in
-       the envelope the server sends it in (`{paper: …}`) and `exams.js` reads
-       it as an attempt, so the screen throws before it renders anything.
+       That is what makes the fixture worth its length. It carries one question
+       of every renderable type, and each of them is a different set of controls:
+       a radio group, a checkbox group, the ordering buttons, the matching tiles,
+       an input inside a sentence, a number with a unit, and a picture with a
+       radio per label and the arrow keys driving it. Axe run once on this screen
+       would measure whichever one happened to be first and report eight.
 
-       That is the exam screen not being wired to this API, which is its own
-       piece of work. What is fixed here is that this file no longer reports it
-       as a screen with nothing on it. */
+       IT ALSO CATCHES A RENDERER GOING MISSING. A type the interface cannot draw
+       falls back to `.ex-error`, which is a perfectly accessible paragraph — so
+       without this line axe would happily pass a paper on which a question had
+       quietly stopped being answerable. Three of them were in exactly that state
+       until the modules for them were ported. */
     await student.goto(`${BASE}/#/course/web-fundamentals/exam`, { waitUntil: 'load' });
-    await student.waitForTimeout(1500);
-    if (await student.locator('.question').count()) {
-      /* AND EVERY ONE OF THEM A CONTROL, checked rather than assumed. A type
-         the interface cannot draw falls back to a notice saying so, and that
-         notice is perfectly accessible — so axe would pass a paper on which a
-         question had quietly stopped being answerable. The fixture carries one
-         question of every renderable type precisely so that this line can say
-         a renderer went missing. */
-      const cannot = await student.locator('.notice.bad').allInnerTexts();
+    await student.waitForTimeout(1800);
+
+    const paper = await student.locator('.wz-dot').count();
+    if (!paper) {
+      violations += 1;
+      console.error(`✗ ${theme} · sitting an exam — the paper did not draw at all. `
+        + 'This is the densest screen in the interface and nothing here was measured.');
+    }
+
+    for (let q = 0; q < paper; q += 1) {
+      if (q) {
+        await student.locator('.wz-next').click();
+        await student.waitForTimeout(350);
+      }
+
+      const kind = (await student.locator('.ex').first().getAttribute('class') || '')
+        .replace(/(^| )ex( |$)/, ' ').replace(/ex-exam/, '').replace(/ex-/g, '').trim();
+
+      const cannot = await student.locator('.ex-error').allInnerTexts();
       if (cannot.length) {
         violations += cannot.length;
-        console.error(`✗ ${theme} · sitting an exam — ${cannot.length} question(s) the ` +
-          'interface cannot draw, which is a missing renderer rather than a bad fixture:');
+        console.error(`✗ ${theme} · exam question ${q + 1} (${kind}) — the interface cannot `
+          + 'draw it, which is a missing renderer rather than a bad fixture:');
         for (const text of cannot) console.error(`      ${text}`);
       }
 
@@ -246,15 +257,17 @@ try {
       screens += 1;
       if (result.violations.length) {
         violations += result.violations.length;
-        console.error(`✗ ${theme} · sitting an exam`);
+        console.error(`✗ ${theme} · exam question ${q + 1} (${kind})`);
         for (const v of result.violations) {
           console.error(`    ${v.id} (${v.impact}) — ${v.help}`);
-          for (const node of v.nodes.slice(0, 3)) console.error(`      ${node.target.join(' ')}`);
+          for (const node of v.nodes.slice(0, 3)) {
+            console.error(`      ${node.target.join(' ')}`);
+            if (node.failureSummary) {
+              console.error(`        ${node.failureSummary.split('\n').join('\n        ')}`);
+            }
+          }
         }
       }
-    } else {
-      console.log(`  (the exam paper did not draw in ${theme}, so it was not checked — the `
-        + 'screen is not wired to this API yet, not a school with no questions)');
     }
 
     await done(student);

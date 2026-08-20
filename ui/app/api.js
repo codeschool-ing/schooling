@@ -29,6 +29,11 @@ import {
   putCourse,
   structureLoaded as structureIsLoaded,
 } from './lessons.js';
+/* The four types that close on a comparison. Imported here rather than called
+   from the wizard, so that `grade` below is the ONE door — with a paper open it
+   is a request, without one it is this, and nothing that renders a question has
+   to know which. */
+import { gradeLocally } from './exercises/grade.js';
 
 const baked = globalThis.SCHOOLING_BAKED || null;
 
@@ -542,23 +547,216 @@ export function resumeFrom() {
   return echo({ courseId: first, lessonIx: 0, sectionId: firstSection(first, 0) });
 }
 
-/* ---------- exams ---------- */
+/* ---------- exams ----------
+
+   THIS IS WHERE THE PAPER IS TRANSLATED, AND IT WAS NOT BEING TRANSLATED.
+
+   `exams.js` is the portal's and speaks of an attempt: `{id, responses,
+   questions}`, where a question IS the exercise the wizard renders. This server
+   speaks of a paper: `{paper: {attempt, questions: [{position, exercise,
+   version, type, question}]}}`, where the exercise is one field inside a
+   wrapper that also says where it sits and what it is called.
+
+   The three functions below were the envelope handed straight through, so
+   `exams.js` read `attempt.questions` off an object whose only key was `paper`
+   and threw `Cannot read properties of undefined (reading 'map')` before the
+   screen rendered anything. The exam route was the one screen nobody could
+   open, and it stayed that way because the accessibility suite was asking for
+   the retired client's address and being told, accurately, that there was no
+   exam to sit.
+
+   Reconciling the two shapes belongs HERE and not in `exams.js`: that file is a
+   copy, and a copy that learns this server's field names is a copy that has to
+   be re-merged by hand for ever. */
 
 export const examOnServer = () => !reading;
 
+/* A paper as an attempt.
+
+   THE POSITION RIDES ON THE EXERCISE. Recording an answer is a PUT to
+   `.../answers/{position}`, and by then all the wizard is holding is the
+   exercise it rendered — so the position of the question on this paper is
+   carried on it. It is a property of this attempt rather than of the exercise,
+   which is why it is attached here and not expected from the catalogue.
+
+   `responses` is what the student already gave, echoed by the server so a
+   reopened paper shows their own work. Keyed by position, which is what the
+   answer route takes. */
+function attemptFrom(paper) {
+  const questions = paper.questions || [];
+  const responses = {};
+  questions.forEach((q) => {
+    if (q.answer !== undefined && q.answer !== null) responses[q.position] = q.answer;
+  });
+  return {
+    id: paper.attempt,
+    responses,
+    questions: questions.map((q) => ({
+      ...shownAsExercise(q.question || {}),
+      position: q.position,
+      /* The course the question came from, which the wrapper does not carry and
+         the renderers need: a labelling question's diagram is addressed under
+         its course. On a course exam that is the exam itself; on a track exam
+         the server does not say, and a diagram then cannot be found — which the
+         renderer reports rather than drawing a frame around nothing. */
+      course: paper.scope === 'course' ? paper.exam : (q.question || {}).course,
+    })),
+  };
+}
+
+/* One shown question, in the vocabulary the renderers speak.
+
+   ONLY `matching` DIFFERS, and it differs in a way that throws rather than
+   looking odd. This server presents one as two parallel arrays — `left` and
+   `right`, the second shuffled and the pairing gone — because the pairing IS
+   the answer. The portal's renderer reads `ex.pairs.map(p => p.left)` for the
+   left-hand column whatever mode it is in, and `ex.rights` for the shuffled
+   right-hand one, which is the shape ITS server sends.
+
+   So the columns are put where that renderer looks for them. It is done here,
+   in the adapter, for the same reason the envelope above is: `exercises/` is a
+   copy, and a copy that learns this server's field names is a copy somebody has
+   to re-merge by hand for ever. */
+function shownAsExercise(shown) {
+  if (shown.type !== 'matching' || !Array.isArray(shown.left)) return shown;
+  return {
+    ...shown,
+    pairs: shown.left.map((left) => ({ left })),
+    rights: shown.right || [],
+  };
+}
+
+/* Where a course's picture lives.
+
+   A BARE FILE NAME IS ALL A QUESTION CARRIES; which address it is under is the
+   course's business, and this is the one place that knows. Offline it is a data
+   URI baked into the page under the very same key — see the bundler, which
+   builds these addresses to key them by.
+
+   Empty when there is no course to hang it on, and the renderer says so rather
+   than drawing an image that will not load: a diagram that fails is a question
+   a student cannot answer however well they know the material. */
+export function asset(courseId, name) {
+  if (!courseId || !name) return '';
+  const path = `/api/v1/courses/${enc(courseId)}/images/${enc(name)}`;
+  if (reading) return (baked && baked.pictures && baked.pictures[path]) || '';
+  return path;
+}
+
 export async function startExam(scope, scopeId) {
   const answer = await post(`/api/v1/exams/${enc(scope)}/${enc(scopeId)}/start`);
-  return answer;
+  return attemptFrom(answer.paper);
+}
+
+/* One answer.
+
+   INSIDE AN EXAM NOTHING COMES BACK ABOUT WHETHER IT WAS RIGHT, and that is the
+   server's rule rather than an omission here: the paper is not marked until it
+   is handed in, and a reply that differed for a correct answer would be a
+   grader a client could run one question at a time. So this answers `correct:
+   null` — recorded, not judged — which is exactly what the wizard draws as
+   "recorded" and what `examScore` counts as pending.
+
+   WITH NO ATTEMPT IT GRADES HERE. That is the lesson assessment and the offline
+   copy, where there is no paper and no server: four of the seven types close on
+   a comparison and the other three say they cannot. Same function, because the
+   wizard must not know which one it is in. */
+export async function grade(ex, answer, attempt) {
+  if (!attempt) return gradeLocally(ex, answer);
+
+  await put(`/api/v1/exams/attempts/${enc(attempt)}/answers/${enc(ex.position)}`,
+    { answer: answerForServer(ex, answer) });
+  return { correct: null, recorded: true };
+}
+
+/* An answer in the shape this server grades.
+
+   THE RENDERERS SPEAK A DIFFERENT DIALECT AND THEY ARE NOT GOING TO STOP. Each
+   `collect` was written for the portal's own backend and returns what was
+   convenient there — a bare index for a quiz, the item TEXTS in order for an
+   ordering, the right-hand text per left-hand slot for a matching. This server
+   grades by position everywhere, because an exercise is immutable within a
+   version and a position cannot be mistyped.
+
+   Translating here keeps `exercises/` a copy. It also keeps the failure loud:
+   an ordering sent as a list of strings came back "That answer did not reach
+   the server", on the one screen where an answer that does not arrive is a mark
+   that cannot be earned.
+
+   POSITIONS ARE INTO WHAT WAS SHOWN, not into the original question. The server
+   shuffled the paper and remembers the permutation — `restore` maps them back —
+   so the honest index is the one the student was looking at.
+
+   A type not named here is already in the right shape and is passed through
+   whole. That is the default on purpose: a new type on the server arrives as a
+   payload this file has never seen, and guessing at it would be worse than
+   sending what the renderer built. */
+function answerForServer(ex, answer) {
+  switch (ex.type) {
+    case 'quiz':
+      return { chose: answer === null || answer === undefined ? [] : [answer] };
+
+    case 'multiple-choice':
+      return { chose: Array.isArray(answer) ? answer : [] };
+
+    case 'ordering': {
+      // The texts the student put in order, back to where each one was shown.
+      const shown = ex.items || [];
+      return { order: (answer || []).map((text) => shown.indexOf(text)) };
+    }
+
+    case 'matching': {
+      /* `collect` gives the right-hand TEXT chosen for each left-hand slot, in
+         the exercise's own left order. The server wants which of the shuffled
+         right-hand items that was. An empty slot is -1 rather than dropped: the
+         grader reads this position by position, and a shorter list would move
+         every answer after the gap onto the wrong pair. */
+      const rights = ex.rights || [];
+      return { matched: (answer || []).map((text) => (text ? rights.indexOf(text) : -1)) };
+    }
+
+    case 'expression-answer':
+      return { expression: String(answer ?? '') };
+
+    default:
+      return answer;
+  }
 }
 
 export async function submitExam(attemptId) {
   const answer = await post(`/api/v1/exams/attempts/${enc(attemptId)}/hand-in`);
+  const paper = answer.paper || {};
+  const result = paper.result || {};
+  const questions = paper.questions || [];
+
+  /* BY EXERCISE ID, because that is what the wizard holds. It replaces what
+     grading produced, which in a server-drawn exam was `null` for every
+     question — without this the dots stay grey and the score is a lie.
+
+     A question with no verdict is one the server has not marked, and it is left
+     out rather than defaulted to wrong: `pending` below is how the screen says
+     so, and a false zero would be worse than a blank. */
+  const verdicts = {};
+  questions.forEach((q) => {
+    if (q.correct === true || q.correct === false) verdicts[q.exercise] = { correct: q.correct };
+  });
+
+  const judged = result.of || 0;
+
   /* The result changes what the certificates screen may claim, so the document
      is refreshed rather than patched from the response — the server is the
      authority on whether an exam was passed. */
   const me = await get('/api/v1/me').catch(() => null);
   if (me) state.hydrate(documentFrom(await pull(), me));
-  return answer;
+
+  return {
+    pct: judged ? Math.round(((result.score || 0) / judged) * 100) : 0,
+    passed: !!result.passed,
+    correct: result.score || 0,
+    judged,
+    pending: Math.max(0, questions.length - judged),
+    verdicts,
+  };
 }
 
 /* ---------- the drill ----------

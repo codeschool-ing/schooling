@@ -24,8 +24,14 @@
    BELOW. Anything that merely styles something is a change to `portal.css`,
    made there and taken back to the portal.
 
-   What is left is one defect, in two shapes. Both are the portal's, both were
-   found by a check the portal does not run, and both are worth taking back.
+   What is left is accessibility, and nothing else. Every rule below is a WCAG
+   failure in the copied stylesheet — one colour used as text, three elements
+   dimmed with `opacity`, one control six pixels short of a target. All of them
+   are the portal's, all of them were found by a check the portal does not run,
+   and all of them are worth taking back.
+
+   THE STYLES FOR THE THREE QUESTION TYPES THE PORTAL DOES NOT HAVE are not
+   here: they are not overrides of anything, and they are in `exercises.css`.
    ========================================================================== */
 
 /* ---------- A BLUE THAT PASSES, AND STAYS A BLUE ----------
@@ -86,7 +92,20 @@ html[data-theme="light"]{--phosphor-mid:#4468c4}
 .cert-meta,
 .cert-code,
 .node-state[data-state="available"],
-.field label{color:var(--phosphor-mid)}
+.field label,
+/* THE EXAM PAPER'S OWN, and they are on this list for the reason the rest are:
+   small mono text in `--phosphor-dim`. They arrive late because that screen
+   could not be opened, and the first axe run that reached it reported them on
+   every question of the paper.
+
+   `.expr-label` is here without having been reported. It is the same colour at
+   the same size, on the same screen, and it only stayed quiet because it is
+   drawn for an expression question that names a `checkOperation` and the
+   fixture's does not. Waiting for a fixture to grow that field before fixing a
+   colour that is already wrong is how the other two got this far. */
+.wz-count,
+.ex-label,
+.expr-label{color:var(--phosphor-mid)}
 /* `.cert-meta` and `.cert-code` are on the certificate sheet, which paints its
    own background (#111721 dark, #ffffff light), so they are measured against
    that and not the page. `.cert-void .cert-code` keeps its struck-through grey
@@ -111,3 +130,54 @@ html[data-theme="light"]{--phosphor-mid:#4468c4}
 .cert-sample .cert-brand b,
 .cert-sample .cert-seal,
 .cert-sample .cert-line{color:var(--paper-dim)}
+
+/* ---------- AND THE SAME DEFECT TWICE MORE, ON SCREENS NOBODY COULD REACH ----
+
+   Everything below was found the week the accessibility suite stopped checking
+   the router's "page not found" and started checking the lesson and the exam.
+   None of it is new; all of it had been shipping.
+
+   `.step-pending` and `.rail-section.pending` dim a whole block to say
+   "reserved, nothing to do here yet" and take their own title through the floor
+   doing it. `--paper-dim` is 7.34:1 in the dark theme and 5.56:1 in the light
+   one — comfortable — and at .55 it composites to 2.97:1 and 2.28:1.
+
+   RAISING THE FIGURE DOES NOT RESCUE IT: in the light theme `--paper-dim` needs
+   .95 before it passes, which is not dimming at all, and `--paper` at .6 still
+   only reaches 3.97:1. So the block is quietened by colour — a border that
+   recedes, a mark that goes grey — and the text keeps a value somebody
+   measured. It looks the same and it can be read.
+
+   These lived in `portal.css` for one release, which was a mistake worth
+   naming: that file is the portal's byte for byte, and the whole reason the
+   duplicated-stylesheet bug was findable at all is that a diff of it is empty.
+   An accessibility divergence belongs on this list, where it is argued once and
+   can be re-applied after the next copy. */
+.step-pending{opacity:1;border-color:var(--wire)}
+.step-pending .step-title,
+.step-pending .step-n{color:var(--paper-dim)}
+.step-pending:hover .step-title{color:var(--paper)}
+
+.rail-section.pending{opacity:1}
+.rail-section.pending .ts-title,
+.rail-section.pending .ts-mark{color:var(--paper-dim)}
+.rail-section.pending:hover .ts-title{color:var(--paper)}
+
+/* THE THIRD SHAPE OF IT, on the matching question: a paired right-hand tile is
+   faded to .65 to say it has been used, which puts its own text at 4.4:1 on the
+   light theme. Same answer as the other two — the tile keeps its tint and its
+   border, and the words go to a colour. */
+.tile-right{opacity:1;color:var(--paper-dim)}
+
+/* ---------- A TARGET BIG ENOUGH TO HIT ----------
+
+   WCAG 2.2 adds 2.5.8: a control is at least 24 by 24, or has that much clear
+   space around it. The ordering question's move-up and move-down buttons are 24
+   by 18 and stacked against each other, so they fail on both counts — and they
+   are the KEYBOARD AND POINTER path for that question, the thing that exists so
+   ordering is not drag-and-drop. A control that only a steady hand can hit is
+   the defect this question type was designed to avoid, arriving by the back
+   door.
+
+   Six pixels, on the axis they were short. */
+.ord-arrow{height:24px}

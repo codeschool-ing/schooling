@@ -511,6 +511,18 @@ should recognise the next (N-07). The rest is this application's own — copying
 marketing page's thousand lines so that one file could be called shared would give
 us a shared file nobody dares edit.
 
+**Three stylesheets, and which one a rule goes in is not a matter of taste.**
+`base.css` and `portal.css` are `portal-frontend`'s **byte for byte** — a diff of
+either being empty is what made the duplicated-stylesheet bug findable at all, so
+nothing is added to them here, not even a fix. `app.css` may only **override**, and
+every override in it is a WCAG failure in the copied file, argued in place and small
+enough to re-apply after the next copy. Anything that is neither — the styles for a
+question type the portal does not have — gets a file of its own, which is what
+`exercises.css` is.
+
+An accessibility fix to a copied element went into `portal.css` once. It worked and it
+was still wrong: it ended the invariant that makes the next such bug visible.
+
 **Anything that differs between schools comes from the school, not from a file that
 ships with the application.** Its name, its accent, the address of its own site, what
 a subscription costs there. Each of those was a constant in a copied file first, and
