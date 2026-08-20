@@ -139,14 +139,19 @@ try {
     await done(pt);
 
     /* Signed in: the screens that do not exist without an account. */
+    /* ONE SCREEN, TWO MODES. There is no `#/sign-up` any more: the interface is
+       `portal-frontend`'s, where signing in and registering are the same screen
+       and `#e-toggle` swaps between them. The ids are that screen's too. */
     const student = await open(theme, 'en');
-    await student.goto(`${BASE}/#/sign-up`, { waitUntil: 'load' });
-    await student.waitForSelector('#email', { timeout: 8000 });
-    await student.fill('#email', `a11y-${Date.now()}-${theme}@example.tld`);
-    await student.fill('#password', 'a long enough password here');
-    await student.fill('#name', 'Ada Lovelace');
-    await student.click('button[type=submit]');
-    await student.waitForTimeout(1200);
+    await student.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
+    await student.waitForSelector('#e-toggle', { timeout: 8000 });
+    await student.click('#e-toggle');
+    await student.waitForSelector('#e-name', { timeout: 8000 });
+    await student.fill('#e-name', 'Ada Lovelace');
+    await student.fill('#e-email', `a11y-${Date.now()}-${theme}@example.tld`);
+    await student.fill('#e-password', 'a long enough password here');
+    await student.click('#form-signin button[type=submit]');
+    await student.waitForTimeout(1500);
 
     await check(student, `${theme} · the dashboard`, '/#/dashboard');
     await check(student, `${theme} · certificates`, '/#/certificates');

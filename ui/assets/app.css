@@ -476,26 +476,32 @@ body.search-open .search{display:block}
 
 /* ---------- ONE PLACE THE COPY IS OVERRIDDEN, AND IT IS A DEFECT ----------
 
-   `portal.css` sets a dozen pieces of small text in `--phosphor-dim` (#33549e)
-   on `--ink` (#0a0e14). That is 2.67:1, where WCAG AA asks 4.5:1 for text this
-   size, and axe reports every one of them: the rail's track heading, the count
-   beside each course, the lesson numbers, the level on a map card, a course's
-   meta line.
+   `portal.css` sets a dozen pieces of small text in `--phosphor-dim`. On the
+   dark page that is #33549e on #0a0e14 — 2.67:1, where WCAG AA asks 4.5:1 for
+   text this size — and on the light one #6c86c9 on #f2f4f9, which is 3.24:1.
+   Axe reports every one: the rail's track heading, the count beside a course,
+   the lesson numbers, the level on a map card, a course's meta line.
 
-   IT IS A REAL DEFECT AND IT IS THE PORTAL'S — copying the file brought it
-   here, which is the argument for copying rather than against it: two
-   interfaces sharing a stylesheet share the finding, and this one was found by
-   a check the other side does not run. It is worth taking back to
-   `portal-frontend` rather than only fixed here.
+   IT IS A REAL DEFECT AND IT IS THE PORTAL'S. Copying the file brought it here,
+   which is the argument FOR copying rather than against it: two interfaces
+   sharing a stylesheet share the finding, and this one was found by a check the
+   other side does not run. It is worth taking back to `portal-frontend`.
 
-   `--paper-dim` (#9aa0a8 on dark, #5a6274 on light) is the palette's colour for
-   exactly this — secondary text — and clears the threshold in both themes. The
-   accent stays where it carries meaning: a state, a link, a filled bar.
+   THE FIX IS A BLUER BLUE AND NOT A GREY, and that is a correction to the first
+   attempt at this. These were set to `--paper-dim` — accessible at 7.34:1 and
+   the palette's colour for secondary text — and the result read as a duller
+   interface than the portal's, because in the portal they are ACCENTS: the
+   track a student is on, how far through a lesson they are, which level a card
+   sits at. Taking the colour out took the meaning with it.
 
-   Every accessibility rule in this repository is a rule and not a preference
-   (X-05), so this override is not optional and the copy is not "byte for byte"
-   in effect. It is the one divergence, it is listed here, and it is small
-   enough to re-apply if the file is copied again. */
+   `--phosphor` is the same accent one step brighter: 6.12:1 on the dark page and
+   6.05:1 on the light one. It is bluer than what it replaces, not greyer, and it
+   clears the threshold in both themes with room to spare.
+
+   Every accessibility rule here is a rule and not a preference (X-05), so this
+   override is not optional and the copy is not "byte for byte" in effect. It is
+   the one divergence, it is listed here, and it is small enough to re-apply if
+   the file is copied again. */
 .rail-tit,
 .tc-count,
 .ta-num,
@@ -511,11 +517,40 @@ body.search-open .search{display:block}
 .course-node .order,
 .course-node .meta,
 .eyebrow,
-.field label{color:var(--paper-dim)}
+.track-summary i,
+.cert-meta,
+.cert-code,
+.field label{color:var(--phosphor)}
+/* The last two are on the certificate sheet, which paints its own background
+   (#111721 dark, #ffffff light), so they are measured against that and not the
+   page: 5.68:1 and 6.66:1. `.cert-void .cert-code` keeps its struck-through
+   grey — two classes beat one, and a revoked code should not read as an
+   accent. */
+
+/* ---------- AND THE SAME DEFECT AGAIN, AS OPACITY ----------
+
+   `.cert-sample{opacity:.66}` dims the example certificate so that a fake
+   cannot be mistaken for a real one — which is right, and is done three ways:
+   a dashed frame, a muted colour and a seal in place of the type.
+
+   OPACITY ON TEXT IS NOT A COLOUR. It multiplies every colour inside against
+   whatever is behind, so the sample's own `--paper-dim` came out at 3.59:1 on
+   the dark page and 2.94:1 on the light one. This repository has met that exact
+   failure before — the note on the legal footer in this file says so — and the
+   answer is the same: dim by naming the colour, never by fading the element.
+
+   The frame and the seal still carry the meaning, which is what the portal's
+   own comment says they are for. */
+.cert-sample{opacity:1}
+.cert-sample .cert-sheet,
+.cert-sample .cert-brand b,
+.cert-sample .cert-seal,
+.cert-sample .cert-line{color:var(--paper-dim)}
 
 /* The same defect, in the light theme, on the word that says a course is open
-   to you. `--phosphor-dim` is #6c86c9 there against a #f2f4f9 page — 3.23:1.
-   `available` is the NEUTRAL state, so the neutral colour is also the right one
-   for it; `current` (amber) and `done` (phosphor) both clear the threshold and
-   keep their accent, which is where the colour is carrying meaning. */
+   to you. `available` is the NEUTRAL state, so the neutral colour is the right
+   one for it — this is the one place where the answer really is the grey, and
+   not the accent: `current` (amber) and `done` (phosphor) both clear the
+   threshold already and keep their accent, which is where colour carries
+   meaning. */
 .node-state[data-state="available"]{color:var(--paper-dim)}

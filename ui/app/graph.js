@@ -112,8 +112,21 @@ export function buildTrack(t) {
       // a choice step: one single block, with the options as tabs
       const item = node.step;
       const sel = activeOption(t.id, node.idx);
+      /* THE ONE DIVERGENCE IN THIS FILE, and it is two attributes.
+
+         The container says `role="tablist"`, and ARIA requires a tablist to
+         contain tabs — axe reports it as a critical failure, because a screen
+         reader announces "tab list" and then finds buttons, which is a promise
+         about how the arrow keys behave that nothing keeps. `role="tab"` and
+         `aria-selected` are what the container was already claiming.
+
+         Kept here rather than dropped into `app.css`, because it is markup and
+         not paint; it is listed in this repository's copy notes for the same
+         reason the stylesheet's contrast override is. Worth taking back to
+         `portal-frontend`. */
       const tabs = item.options.map((o, j) =>
         '<button class="fork-tab' + (j === sel ? ' on' : '') + '" type="button" ' +
+        'role="tab" aria-selected="' + (j === sel) + '" ' +
         'data-fork="' + node.idx + '" data-option="' + j + '">' + esc(o.name) +
         '<span class="fork-h">' + hoursOf(o.courses) + 'h</span></button>').join('');
       const inside = item.options[sel].courses.map((id) => courseCard(id)).join('');

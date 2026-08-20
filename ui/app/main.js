@@ -158,7 +158,17 @@ whenChanged(async (path, found) => {
      and the track's courses — which is what a visitor came to look at. What a
      signed-out visitor does not get is the counts, because there are none. */
   document.body.classList.remove('no-rail');
-  buildRail(rail, path, found.params);
+  /* THE RAIL IS TOLD `/track`, WHATEVER TRACK IT IS.
+
+     `rail.js` marks its active link by `path === link.href`, and its link is
+     `#/track` because over there a student has one. Here the address carries
+     which one — `/track/frontend` — so the comparison never matched and no
+     entry in the menu was ever highlighted.
+
+     Normalised here rather than in `rail.js`, which is a verbatim copy: what
+     the rail is being asked is "which of the six places is this", and every
+     track is the same answer to that question. */
+  buildRail(rail, path.replace(/^\/track\/.*/, '/track'), found.params);
   closeRail();
   paintContext();
 });
