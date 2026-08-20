@@ -364,7 +364,7 @@ func checkExercises(s *School) []error {
 	// nowhere to keep an image. A course exam has its course's.
 	check := func(where string, sections, pictures map[string]bool, exercises []Exercise) {
 		for _, e := range exercises {
-			problems = append(problems, checkSlug(e.ID, "the exercise")...)
+			problems = append(problems, checkID(e.ID, "ex", "the exercise in "+where)...)
 
 			if at, taken := seen[e.ID]; taken {
 				problems = append(problems, fmt.Errorf(

@@ -21,6 +21,17 @@ type orderingPayload struct {
 	common
 
 	Items []string `json:"items"`
+
+	// Trap is what the question is actually measuring: which neighbouring pair
+	// students swap, and why that swap is tempting.
+	//
+	// IT IS FEEDBACK AND NOT A HINT, which is why it is here and not in the
+	// presented form. Shown before the answer it would BE the answer — "people
+	// put the network layer before transport" names the very placement being
+	// asked for. So it never leaves the server until a student has got it
+	// wrong, and then it leaves as `Why`, the same field a quiz's wrong choice
+	// speaks through.
+	Trap string `json:"trap"`
 }
 
 type orderingAnswer struct {
@@ -56,7 +67,7 @@ func (ordering) grade(payload, answer json.RawMessage) (Result, error) {
 
 	for i, at := range a.Order {
 		if i != at {
-			return Result{Correct: false}, nil
+			return Result{Correct: false, Why: p.Trap}, nil
 		}
 	}
 	return Result{Correct: true}, nil

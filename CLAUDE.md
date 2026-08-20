@@ -48,7 +48,7 @@ defect wearing a helpful face: it works, and it ties the identity back to the wo
 | course | `co-cbwm5kwa` | `statistics` |
 | lesson (= topic) | `le-5he7q8tg` | — |
 | section | `se-gy02rmmz` | `vps` |
-| exercise | `ex-…` | — |
+| exercise | `ex-6yyzbgfd` | — |
 
 Eight characters of Crockford's base32 (no `i`, `l`, `o` or `u`) behind a two-letter prefix.
 The prefix is **for people, not for code**: it is there so an id in a log says what it is, and
@@ -223,8 +223,11 @@ fifth word: in the predecessor *topic* already meant lesson, and reviving it wit
 guarantees a misunderstanding. In Portuguese the interface says *etapa* — the model still says
 `section`, and that is a translation choice rather than a model change.
 
-An exercise names its `section` by **id**. It does not name a title, and it never did so safely:
-joining by title text is how the predecessor lost exercises whenever a lesson was renamed.
+An exercise names its `section` by **slug**, as everything inside `content/` names everything
+else. It does not name a title, and it never did so safely: joining by title text is how the
+predecessor lost exercises whenever a lesson was renamed. Its own id is opaque like the rest —
+`ex-` and eight characters — because a student's answer records it, and a history has to survive
+every rewrite the question's wording ever gets.
 
 **`requires` is knowledge; `links` is sequence.** `requires` names only what the student has to
 know first. If the reason is "in this track it comes after that one", it belongs to the track's

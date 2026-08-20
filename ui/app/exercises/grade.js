@@ -40,8 +40,10 @@ export function gradeLocally(ex, answer) {
     }
 
     case 'ordering': {
-      // `items` in the JSON is already in the right order — it is the key
-      return verdict(sameSequence(answer || [], ex.items), { answer: ex.items });
+      // `items` in the JSON is already in the right order — it is the key.
+      // `trap` travels as `why`, the same name the server's verdict uses, so
+      // the screen showing it does not have to know which grader ran.
+      return verdict(sameSequence(answer || [], ex.items), { answer: ex.items, why: ex.trap });
     }
 
     case 'matching': {

@@ -96,7 +96,10 @@ func needsShuffling(questionType string) bool {
 // And the same thing said the blunt way, because the property above would still
 // hold if a payload carried the answer under a name the grader ignores.
 func TestNothingInAPresentedQuestionSaysWhichAnswerIsRight(t *testing.T) {
-	tells := []string{`"correct"`, `"why"`, `"accept"`, `"value"`, `"tolerance"`, `"radius"`}
+	// `"trap"` is on the list for the same reason as the rest: it names the
+	// neighbouring pair students swap, which is the placement the question is
+	// asking about. It is feedback once the answer is in, and the answer before.
+	tells := []string{`"correct"`, `"why"`, `"accept"`, `"value"`, `"tolerance"`, `"radius"`, `"trap"`}
 
 	for name, f := range fixtures(t) {
 		presented, err := grade.Present(f.Type, f.Payload, rng())

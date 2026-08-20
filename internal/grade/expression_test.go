@@ -104,6 +104,30 @@ func TestSomethingThatIsNotAnExpressionIsNotAWrongAnswer(t *testing.T) {
 	}
 }
 
+// A CAPITAL LETTER IS A DIFFERENT VARIABLE, AND A CAPITALISED FUNCTION IS NOT A
+// DIFFERENT FUNCTION.
+//
+// Every name used to be folded to lower case, which made a question written
+// with `T` unanswerable — nothing declared `t` — and would have made a question
+// about a period `T` and a time `t` a question about one letter, marking an
+// answer that confused the two as correct.
+func TestVariablesKeepTheirCaseAndFunctionsDoNot(t *testing.T) {
+	if !marks(t, "L + T/v", "T/v + L", "T", "v", "L").Correct {
+		t.Error("a question written with capital letters could not be answered with them")
+	}
+	if marks(t, "T + 1", "t + 1", "T", "t").Correct {
+		t.Error("`t` was accepted for `T` — two variables the question declares separately")
+	}
+
+	// The same sine, however it is spelt.
+	if !marks(t, "sin(x)", "SIN(x)", "x").Correct {
+		t.Error("`SIN(x)` was marked wrong against `sin(x)`")
+	}
+	if !marks(t, "2*pi*x", "2*Pi*x", "x").Correct {
+		t.Error("`Pi` was not read as the constant")
+	}
+}
+
 // FLOATING POINT MAKES EXACT EQUALITY THE WRONG TEST. `(x/3)*3` and `x` are the
 // same expression and differ in the last bit.
 func TestExpressionsThatDifferOnlyInTheLastBitAreTheSame(t *testing.T) {

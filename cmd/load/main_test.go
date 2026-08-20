@@ -21,6 +21,7 @@ const fixture = "../../internal/catalog/testdata/good"
 const (
 	frontend        = "tr-wrp2620n"
 	clientAndServer = "le-4xwdejgt"
+	rolesQuiz       = "ex-spr8rdb4"
 )
 
 func testPool(t *testing.T) *pgxpool.Pool {
@@ -123,8 +124,8 @@ func TestLoadingWritesTheWholeCatalogue(t *testing.T) {
 	// it, and every screen above it would look right.
 	var payload []byte
 	if err := pool.QueryRow(context.Background(),
-		`SELECT payload FROM catalog_exercises WHERE tenant_id = $1 AND id = 'wf-roles-quiz'`,
-		id).Scan(&payload); err != nil {
+		`SELECT payload FROM catalog_exercises WHERE tenant_id = $1 AND id = $2`,
+		id, rolesQuiz).Scan(&payload); err != nil {
 		t.Fatalf("reading the payload: %v", err)
 	}
 	var decoded map[string]any
