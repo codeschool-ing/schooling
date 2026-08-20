@@ -181,3 +181,49 @@ func (c choice) restore(answer json.RawMessage, perm []int) (json.RawMessage, er
 	sort.Ints(out.Chose)
 	return json.Marshal(out)
 }
+
+// The correct positions and every choice's reason, both in the shown frame.
+//
+// A `quiz` answers a bare number and a `multiple-choice` a list, because the
+// two renderers on the other side draw one tick and several. It is the one
+// place in this package where `single` changes the SHAPE of something rather
+// than only what counts as right.
+func (c choice) reveal(payload json.RawMessage, perm []int) (Reveal, error) {
+	var p choicePayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Reveal{}, err
+	}
+
+	// A card drawn before there was anything to shuffle, or a type that does
+	// not shuffle: the shown frame is the written one.
+	if len(perm) == 0 {
+		perm = shuffle(len(p.Choices), nil)
+	}
+
+	var correct []int
+	explanations := make([]string, len(perm))
+	for original, one := range p.Choices {
+		at := shownAt(perm, original)
+		if at < 0 {
+			return Reveal{}, fmt.Errorf(
+				"grade: revealing a choice question: choice %d is in no shown position", original)
+		}
+		explanations[at] = one.Why
+		if one.Correct {
+			correct = append(correct, at)
+		}
+	}
+	sort.Ints(correct)
+
+	out := Reveal{Explanations: explanations}
+	if c.single {
+		if len(correct) != 1 {
+			return Reveal{}, errors.New(
+				"a quiz with anything other than one correct choice cannot be revealed")
+		}
+		out.Expected = correct[0]
+	} else {
+		out.Expected = correct
+	}
+	return out, nil
+}

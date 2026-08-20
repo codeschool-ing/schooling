@@ -472,13 +472,21 @@ export async function loadCourseContent(courseId) {
   return true;
 }
 
-/* THE EXERCISES ARE NOT IMPORTED YET. The portal keys a question by the topic's
-   English text and carries a payload per type; this side keys by section id and
-   every type has to satisfy its own grader and the answer-key checker, which is
-   a translation per type rather than a copy.
+/* THE QUESTIONS ARE HERE AND THIS ROUTE IS NOT.
 
-   It answers an empty list, which is a state every screen here already handles:
-   119 of the 122 courses have no questions either. */
+   They were imported — 36 of them, across four courses — and they are reachable:
+   the drill draws one and marks it. What is missing is the route that answers
+   "the questions in THIS lesson", and it is missing for a reason worth writing
+   down rather than left as a stub nobody revisits.
+
+   A lesson's assessment cannot be served with the answers in it, because that is
+   an assessment you pass by reading the response. So it needs the same
+   present-then-mark pair the drill uses, scoped to a lesson — and the drill's
+   own two routes cannot be reused for it, because they check `drillable`, which
+   is precisely what keeps an exam-only question out of a student's reach.
+
+   It answers an empty list until then, which is a state every screen here
+   already handles: 118 of the 122 courses have no questions either. */
 export function lessonExercises() {
   return [];
 }
@@ -613,9 +621,16 @@ function attemptFrom(paper) {
    copy, and a copy that learns this server's field names is a copy somebody has
    to re-merge by hand for ever. */
 function shownAsExercise(shown) {
-  if (shown.type !== 'matching' || !Array.isArray(shown.left)) return shown;
+  /* `hint` on the wire, `socraticHint` in the renderers. One field, two names,
+     and the renderers keep theirs: they are the portal's files unchanged, and a
+     rename there to please this server is the edit that stops them being a
+     copy. The exam never shows it — a hint on a paper is a cheat sheet — so
+     this only ever reaches a screen through a drill or a lesson. */
+  const out = shown.hint ? { ...shown, socraticHint: shown.hint } : { ...shown };
+
+  if (shown.type !== 'matching' || !Array.isArray(shown.left)) return out;
   return {
-    ...shown,
+    ...out,
     pairs: shown.left.map((left) => ({ left })),
     rights: shown.right || [],
   };
@@ -766,6 +781,46 @@ export async function submitExam(attemptId) {
    forgetting is computed from their own history, so there is nothing to keep
    in this browser and nothing to reconcile. */
 export const practiceQueue = () => get('/api/v1/practice');
+
+/* One card, drawn now.
+
+   IT IS A POST BECAUSE IT WRITES. Drawing shuffles the question and the server
+   writes down the arrangement, so that the answer coming back can be mapped
+   onto the question as it was written. A GET that changed the shuffle on every
+   retry would be a card that moves under somebody who reloaded.
+
+   It comes back with no key in it — see the server — so there is nothing here
+   that can mark it, which is the point rather than a limitation. */
+export async function practiceDraw(exerciseId) {
+  const card = await post(`/api/v1/practice/${enc(exerciseId)}/draw?lang=${enc(wanted())}`);
+  return {
+    ...shownAsExercise(card.question || {}),
+    id: card.exercise,
+    type: card.type,
+    course: card.course,
+  };
+}
+
+/* The answer, and what comes back with the verdict.
+
+   THE ELAPSED TIME IS PART OF THE ANSWER. The schedule is derived from whether
+   it was right and how long it took — never from asking the student how well
+   they felt they remembered (A-04) — so a drill that did not measure would be
+   handing the scheduler half of what it needs. */
+export const practiceAnswered = (exerciseId, answer, elapsedMs) =>
+  post(`/api/v1/practice/${enc(exerciseId)}/answered?lang=${enc(wanted())}`,
+    { answer, elapsed_ms: Math.max(0, Math.round(elapsedMs)) });
+
+/* One drilled answer, in the renderers' dialect on the way in and the shape
+   `applyKey` reads on the way out.
+
+   IT IS `grade`'s THIRD CASE and lives beside it for that reason: the same
+   translation table serves the exam and the drill, because both are marked by
+   the same grader against the same payload. The difference is only WHEN the key
+   comes back — at submit for a paper, immediately here. */
+export async function drill(ex, answer, elapsedMs) {
+  return practiceAnswered(ex.id, answerForServer(ex, answer), elapsedMs);
+}
 
 /* ---------- the two documents ----------
 

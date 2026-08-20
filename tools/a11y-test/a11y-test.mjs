@@ -101,7 +101,7 @@ async function done(page) {
    this refuses a screen that is not the one it asked for. `expect` is the
    pattern — `/course/:id`, not the address — and `expect: 'not-found'` is how
    the one deliberate miss below says it means it. */
-async function check(page, name, where, expect) {
+async function check(page, name, where, expect, settled) {
   await page.goto(BASE + where, { waitUntil: 'load' });
   /* The screens are built by script after the document loads, so waiting for
      the document would be checking an empty page and calling it clean. */
@@ -115,6 +115,22 @@ async function check(page, name, where, expect) {
       + `for "${expect}". A screen that was never drawn passes every check there is, `
       + `so this is a route that moved rather than a screen that is fine.`);
     return;
+  }
+
+  /* AND A SCREEN THAT FILLS ITSELF AFTERWARDS IS WAITED FOR. `data-screen` is
+     written when the screen is BUILT, and the drill's card arrives one request
+     later — so without this, axe would measure the word "drawing…" on an
+     otherwise empty page and report it clean. Same failure the `expect` above
+     exists for, one step further in. */
+  if (settled) {
+    const there = await page.waitForSelector(settled, { timeout: 8000 }).catch(() => null);
+    if (!there) {
+      violations += 1;
+      console.error(`✗ ${name} — the screen drew but "${settled}" never arrived, so what `
+        + 'would have been measured is a placeholder. A screen that is still loading '
+        + 'passes every check there is.');
+      return;
+    }
   }
 
   const result = await new AxeBuilder({ page }).withTags(STANDARD).analyze();
@@ -209,7 +225,37 @@ try {
        once and never marks one, this shows one at a time and then puts a result
        beside it — which is a live region, a disabled button and a moved focus
        that the exam never has. */
-    await check(student, `${theme} · the drill`, '/#/practice', '/practice');
+    await check(student, `${theme} · the drill`, '/#/practice', '/practice', '.ex');
+
+    /* AND THE DRILL WITH A VERDICT ON IT, which is a different screen and the
+       one this feature is actually about: a live region that has just been
+       written into, controls that have gone disabled, the answer revealed over
+       what the student gave, and focus moved to "next". None of that exists on
+       the screen above, and an exam never reaches this state at all — it holds
+       every verdict until the paper closes. */
+    const card = await student.locator('.ex').count();
+    if (!card) {
+      violations += 1;
+      console.error(`✗ ${theme} · a drilled answer — no card was drawn, so the state after `
+        + 'answering one was never measured.');
+    } else {
+      const choices = student.locator('.choice');
+      if (await choices.count()) await choices.first().click();
+      await student.locator('.ex-answer').click();
+      await student.waitForSelector('.ex-verdict.v-right, .ex-verdict.v-wrong', { timeout: 8000 })
+        .catch(() => null);
+
+      const marked = await new AxeBuilder({ page: student }).withTags(STANDARD).analyze();
+      screens += 1;
+      if (marked.violations.length) {
+        violations += marked.violations.length;
+        console.error(`✗ ${theme} · a drilled answer`);
+        for (const v of marked.violations) {
+          console.error(`    ${v.id} (${v.impact}) — ${v.help}`);
+          for (const node of v.nodes.slice(0, 3)) console.error(`      ${node.target.join(' ')}`);
+        }
+      }
+    }
 
     /* THE EXAM PAPER, QUESTION BY QUESTION — and it is walked rather than
        glanced at, because this wizard shows ONE question at a time.

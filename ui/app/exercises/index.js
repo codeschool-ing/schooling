@@ -89,11 +89,20 @@ export function buildExercise(ex, ctx, ix, options = {}) {
     '<div class="ex-actions">' +
       (selfCompleting(mod, exam) ? '' : '<button type="button" class="btn btn-primary ex-answer">' +
         txt(exam ? 'Record answer' : 'Answer') + '</button>') +
-      (exam ? '' : '<button type="button" class="btn btn-ghost ex-retry" hidden>' + txt('Try again') + '</button>') +
+      (exam || options.drill
+        ? ''
+        : '<button type="button" class="btn btn-ghost ex-retry" hidden>' + txt('Try again') + '</button>') +
     '</div>' +
     '<div class="ex-verdict" aria-live="polite"></div>';
 
   const body = el.querySelector('.ex-body');
+
+  /* WHEN THE CARD APPEARED. In a drill the time to answer is half of what the
+     scheduler reads — the other half is whether it was right — because a
+     student is never asked how well they felt they remembered (A-04). It is
+     measured from the moment the question is on screen to the moment they
+     commit, which is the only span that means anything to them. */
+  const shownAt = performance.now();
 
   async function check(answer) {
     const out = el.querySelector('.ex-verdict');
@@ -109,7 +118,13 @@ export function buildExercise(ex, ctx, ix, options = {}) {
 
     let v;
     try {
-      v = await api.grade(ex, answer, options.attempt);
+      /* THREE PLACES AN ANSWER CAN BE MARKED, AND THEY ARE NOT THREE GRADERS.
+         A drill and an exam are both marked on the server, against a payload
+         this browser has never held; only the offline copy compares locally,
+         because it is a bundle with the answers baked in and no server to ask. */
+      v = options.drill
+        ? await api.drill(ex, answer, performance.now() - shownAt)
+        : await api.grade(ex, answer, options.attempt);
     } catch (e) {
       /* Only reachable inside a server-drawn exam, where the answer is a
          request and not a comparison. It has to be said rather than swallowed:
@@ -141,9 +156,21 @@ export function buildExercise(ex, ctx, ix, options = {}) {
         showVerdict(el, ex, shown);
       };
     } else {
+      /* THE KEY ARRIVES WITH THE VERDICT, OR IT WAS HERE ALL ALONG. A drill is
+         drawn without one and the server sends it back once the answer is in;
+         the offline copy has it in the question already, and `applyKey` sees
+         nothing to apply. Either way `reveal` is looking at a question that
+         knows which answer was right. */
+      applyKey(ex, v);
       mod.reveal(body, ex, v);
       showVerdict(el, ex, v);
-      el.querySelector('.ex-retry').hidden = false;
+
+      /* NOT IN A DRILL. The schedule moved the moment the answer landed, so a
+         second attempt would be a second answer to a card that has already been
+         counted — and the interval it earned would be the one for whichever try
+         the student stopped on. */
+      const again = el.querySelector('.ex-retry');
+      if (again) again.hidden = Boolean(options.drill);
     }
     el.dispatchEvent(new CustomEvent('exercise:answered', { bubbles: true, detail: { ex, v } }));
   }

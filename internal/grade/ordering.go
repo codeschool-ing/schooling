@@ -341,3 +341,37 @@ func (matching) restore(answer json.RawMessage, perm []int) (json.RawMessage, er
 	}
 	return json.Marshal(out)
 }
+
+// The items in the order that is right.
+//
+// TEXTS AND NOT POSITIONS, and that is what makes the permutation irrelevant
+// here: a position means one thing in the shown frame and another in the
+// written one, and a text means the same in both. The renderer compares the
+// item it is holding against the item that belongs where it sits, which is a
+// comparison neither side can get the wrong way round.
+func (ordering) reveal(payload json.RawMessage, _ []int) (Reveal, error) {
+	var p orderingPayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Reveal{}, err
+	}
+	return Reveal{Expected: p.Items}, nil
+}
+
+// The right-hand text belonging to each pair, in the order the pairs are shown.
+//
+// The left-hand column is never shuffled — `present` says why — so pair `i` is
+// pair `i` on both sides of the wire, and the leftovers are absent from this
+// entirely: a distractor belongs to no pair, and naming it here would be naming
+// it as an answer to something.
+func (matching) reveal(payload json.RawMessage, _ []int) (Reveal, error) {
+	var p matchingPayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Reveal{}, err
+	}
+
+	rights := make([]string, 0, len(p.Pairs))
+	for _, pair := range p.Pairs {
+		rights = append(rights, pair.Right)
+	}
+	return Reveal{Expected: rights}, nil
+}

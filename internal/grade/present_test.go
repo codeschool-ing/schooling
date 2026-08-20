@@ -2,6 +2,7 @@ package grade_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand/v2"
 	"strings"
 	"testing"
@@ -239,4 +240,141 @@ func TestAnUnknownTypeCannotBePresented(t *testing.T) {
 			t.Errorf("%q was presented, and nothing knows how to hide its answer", questionType)
 		}
 	}
+}
+
+/* ---------- and what is revealed afterwards ---------- */
+
+// THE KEY POINTS AT THE THING THE STUDENT IS LOOKING AT.
+//
+// A reveal is expressed in the frame the question was SHOWN in, and the payload
+// is written in the frame it was AUTHORED in. Get that backwards and the tick
+// lands on choice 2 of a list whose choices are in a different order on screen:
+// a student who answered correctly is shown their own answer marked wrong,
+// which is the worst way for this to fail — it looks like the grader, not like
+// the arrangement.
+//
+// So the reveal is turned back into an answer and graded. If what it points at
+// is right, that answer passes; if it is off by a permutation, it does not.
+func TestWhatIsRevealedIsTheAnswerInTheFrameTheStudentSaw(t *testing.T) {
+	for name, f := range fixtures(t) {
+		presented, err := grade.Present(f.Type, f.Payload, rng())
+		if err != nil {
+			t.Errorf("%s: presenting: %v", name, err)
+			continue
+		}
+
+		revealed, err := grade.Expected(f.Type, f.Payload, presented.Perm)
+		if err != nil {
+			t.Errorf("%s: revealing: %v", name, err)
+			continue
+		}
+		if revealed.Expected == nil {
+			// A type whose renderer needs nothing — see reveal.go. There is no
+			// arrangement to explain, so there is nothing here to check.
+			continue
+		}
+
+		answer, err := revealAsAnswer(f.Type, revealed, presented.Shown)
+		if err != nil {
+			t.Errorf("%s: %v", name, err)
+			continue
+		}
+
+		restored, err := grade.Restore(f.Type, answer, presented.Perm)
+		if err != nil {
+			t.Errorf("%s: restoring: %v", name, err)
+			continue
+		}
+		result, err := grade.Grade(f.Type, f.Payload, restored)
+		if err != nil {
+			t.Errorf("%s: grading what was revealed: %v", name, err)
+			continue
+		}
+		if !result.Correct {
+			t.Errorf("%s: what is revealed as the answer does not grade as correct — a "+
+				"student is being shown one thing and marked on another\n  perm: %v\n"+
+				"  shown: %s\n  revealed: %+v", name, presented.Perm, presented.Shown, revealed)
+		}
+	}
+}
+
+// revealAsAnswer writes a reveal back as the answer a student would have given
+// to earn it, in the shown frame — which is the only frame it is expressed in.
+func revealAsAnswer(questionType string, r grade.Reveal, shown json.RawMessage) (json.RawMessage, error) {
+	var seen struct {
+		Items []string `json:"items"`
+		Right []string `json:"right"`
+	}
+	if err := json.Unmarshal(shown, &seen); err != nil {
+		return nil, err
+	}
+
+	// The reveal has been through JSON on its way to a client, so it is read
+	// back the way a client reads it rather than as the Go types that built it.
+	body, err := json.Marshal(r.Expected)
+	if err != nil {
+		return nil, err
+	}
+
+	switch questionType {
+	case "quiz":
+		var at int
+		if err := json.Unmarshal(body, &at); err != nil {
+			return nil, err
+		}
+		return json.Marshal(map[string][]int{"chose": {at}})
+
+	case "multiple-choice":
+		var at []int
+		if err := json.Unmarshal(body, &at); err != nil {
+			return nil, err
+		}
+		return json.Marshal(map[string][]int{"chose": at})
+
+	case "ordering":
+		var want []string
+		if err := json.Unmarshal(body, &want); err != nil {
+			return nil, err
+		}
+		order, err := positionsOf(want, seen.Items)
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(map[string][]int{"order": order})
+
+	case "matching":
+		var want []string
+		if err := json.Unmarshal(body, &want); err != nil {
+			return nil, err
+		}
+		matched, err := positionsOf(want, seen.Right)
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(map[string][]int{"matched": matched})
+	}
+	return nil, fmt.Errorf("%s revealed %v and nothing here knows what to do with it",
+		questionType, r.Expected)
+}
+
+// Where each of `want` sits in `among`. A text that is not there at all is the
+// failure this whole test exists to catch, so it is an error rather than a -1
+// quietly graded as wrong.
+func positionsOf(want, among []string) ([]int, error) {
+	out := make([]int, 0, len(want))
+	for _, one := range want {
+		at := -1
+		for i, candidate := range among {
+			if candidate == one {
+				at = i
+				break
+			}
+		}
+		if at < 0 {
+			return nil, fmt.Errorf("the reveal names %q, which is not among what was shown: %v",
+				one, among)
+		}
+		out = append(out, at)
+	}
+	return out, nil
 }
