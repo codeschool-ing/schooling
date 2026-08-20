@@ -86,6 +86,20 @@ ON CONFLICT DO NOTHING;
 
 /* ---------- a lesson to read ---------- */
 
+/* A COURSE HAS TO NAME ITS LESSONS, and this is the join the interface makes.
+   Over there a lesson IS an entry of the course's `topics`, and the store every
+   screen reads is keyed by that text — so a lesson row whose title the course
+   does not list is a lesson no screen can reach, and it falls back to the
+   placeholder a course nobody has written yet is drawn with.
+
+   This fixture seeded the row and not the name. The bundle reported every
+   course as unwritten, and the screen the accessibility pass calls "a lesson"
+   was a placeholder that passed happily. The title here and the title on the
+   row below are the same string on purpose. */
+UPDATE catalog_courses SET topics = ARRAY['Client and server']
+WHERE id = 'web-fundamentals'
+  AND tenant_id = (SELECT id FROM tenants WHERE slug = 'graphtest');
+
 INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
 SELECT id, 'web-fundamentals', 'client-and-server', 'Client and server', 0
 FROM tenants WHERE slug = 'graphtest'
