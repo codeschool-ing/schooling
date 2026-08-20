@@ -180,7 +180,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 	for _, table := range []string{
 		"catalog_exercises", "catalog_images", "catalog_prose", "catalog_sections",
 		"catalog_lessons",
-		"catalog_course_requires", "catalog_courses",
+		"catalog_course_topics", "catalog_course_requires", "catalog_courses",
 		"catalog_course_text", "catalog_track_fork_text", "catalog_track_text",
 		"catalog_track_links", "catalog_track_courses", "catalog_track_forks", "catalog_tracks",
 	} {
@@ -290,12 +290,27 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO catalog_courses
 				(tenant_id, id, name, category, level, hours, summary, prerequisites,
-				 syllabus, topics, draft)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+				 syllabus, draft)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 		`, tenantID, course.ID, course.Name, course.Category, course.Level, course.Hours,
-			course.Summary, course.Prerequisites, lines(course.Syllabus), lines(course.Topics),
+			course.Summary, course.Prerequisites, lines(course.Syllabus),
 			course.Draft); err != nil {
 			return fmt.Errorf("writing the course %s: %w", course.ID, err)
+		}
+
+		/* THE TOPICS, EACH WITH THE ID IT DECLARED. `catalog.TopicID` is the one
+		   answer to what a topic is called — the declared id, or the slug of the
+		   title for a course that has not been given ids yet. Deriving it here
+		   as well would be a second answer, and the two would differ on the day
+		   somebody changed one of them. */
+		for at, topic := range course.Topics {
+			if _, err := tx.Exec(ctx, `
+				INSERT INTO catalog_course_topics
+					(tenant_id, course_id, position, topic_id, title)
+				VALUES ($1, $2, $3, $4, $5)
+			`, tenantID, course.ID, at, catalog.TopicID(topic), topic.Title); err != nil {
+				return fmt.Errorf("writing topic %d of the course %s: %w", at, course.ID, err)
+			}
 		}
 
 		for _, locale := range sorted(course.Text) {

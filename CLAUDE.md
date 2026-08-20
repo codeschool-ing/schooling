@@ -39,6 +39,20 @@ slugs and never derive from a title, so renaming a title breaks nothing. (C-09)
 **Order is declared, never inferred from the filesystem.** No numeric prefixes on directories.
 `course.json` names its lessons in order; `lesson.json` names its sections. (C-10)
 
+**A topic declares its id, and a lesson is a topic somebody wrote.** `topics` carries
+`{ id, title }`: the id is the lesson id, what a progress row records, and the same
+string in every language. The title is only what a person reads. A bare string is still
+a valid topic and takes the slug of its own title — which is what happened implicitly
+before, and is exactly why a title could not be edited afterwards.
+
+**For `code`, the tracks, courses and topics are settled and the lesson content and
+exercises are not.** The content is scaffolding: it will be deleted and written again to
+a higher standard, so rewriting a title is the intention rather than a hazard. That is
+the whole reason the id is written down — before it was, the id WAS the title
+(`slug(title)` for twenty-seven of twenty-eight written lessons), and rewording a topic
+moved every progress row, note and exam attempt out from under the student who earned
+them. The other schools have no structure yet, which is why the format changed now.
+
 **Every catalogue write goes through the load job.** The file in `content/` is the source of
 truth; the database is a derived mirror. Nothing else writes catalogue rows — the console reads
 them and never writes. (C-01, C-07)

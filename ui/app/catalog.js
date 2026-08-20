@@ -76,15 +76,28 @@ export function hoursRange(t) {
    the same decision as the vitrine's i18n — the translation key is the
    Portuguese text itself — applied to the join with the content. Hence each
    lesson carrying both: `title` to show, `key` to match on. */
+/* A TOPIC CARRIES ITS OWN ID NOW, and that is the key.
+
+   Everything above describes a join made of prose and the lengths it had to go
+   to in order to survive being translated — a snapshot of the source language,
+   taken at load, so that the match key did not move when the screen did. It was
+   the best available answer while a topic was a sentence and nothing else.
+
+   A topic is `{ id, title }` here. The id is declared in `course.json`, it is
+   the id of the lesson that topic becomes, and it is what a progress row
+   records — so it is the same string in every language and after every rewrite
+   of the words. `title` is still what a person reads.
+
+   The `BASE` snapshot is left out deliberately: falling back to it would put an
+   id back that the catalogue no longer has. */
 export function courseLessons(id) {
   const c = courseById(id);
   if (!c) return [];
-  const authored = (typeof BASE !== 'undefined' && BASE.courses?.[id]?.topics) || c.topics || [];
-  return (c.topics || []).map((title, ix) => ({
+  return (c.topics || []).map((topic, ix) => ({
     courseId: id,
     ix,
-    title,
-    key: authored[ix] ?? title,
+    title: topic.title,
+    key: topic.id,
   }));
 }
 

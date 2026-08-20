@@ -60,7 +60,11 @@ export default async function catalogue() {
       if (category !== 'all' && c.category !== category) return false;
       if (!term) return true;
       // searches name, summary, syllabus and topics — as on the vitrine
-      const target = [c.name, c.summary, ...(c.syllabus || []), ...(c.topics || [])].join(' ').toLowerCase();
+      /* A topic is `{ id, title }` now, so the searchable text is its title —
+         joined as objects it produced `[object Object]` and a course became
+         unfindable by anything it teaches. */
+      const target = [c.name, c.summary, ...(c.syllabus || []),
+        ...(c.topics || []).map((t) => t.title)].join(' ').toLowerCase();
       return target.includes(term);
     });
 

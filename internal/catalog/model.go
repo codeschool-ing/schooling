@@ -30,6 +30,7 @@ package catalog
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 // School is one school's whole catalogue, as it is on disk.
@@ -223,8 +224,11 @@ type Course struct {
 	// Both are optional. A course with no `topics` shows no technical list
 	// rather than an empty heading.
 	Syllabus []string `json:"syllabus"`
-	Topics   []string `json:"topics"`
+	Topics   []Topic  `json:"topics"`
 
+	// Lessons names the topics that have been WRITTEN, and each one is a
+	// directory under `lessons/`. It is a subset of `topics` by id — not a
+	// second ordered list, which is what it used to be.
 	Lessons []string `json:"lessons"`
 
 	// What this course is called in other languages, by locale. Filled by Load
@@ -303,6 +307,108 @@ type Prose struct {
 	// prose itself. Everything the JSON already knows stays in the JSON.
 	Title string
 	Body  string
+}
+
+// Topic is one entry of a course's technical contents — which is also one
+// lesson, once somebody writes it.
+//
+// # WHY IT HAS AN ID AT ALL
+//
+// It did not, and the whole chain from a student's progress row back to the
+// catalogue was made of prose and array positions:
+//
+//	topics[ix]  (a sentence)  →  the lesson whose TITLE is that sentence
+//	                          →  that lesson's id  →  the rows recording work
+//
+// Both ends were the title text. Reword a topic and the lookup misses; the
+// lesson keeps a directory named after the OLD wording, and a regeneration that
+// re-slugs it orphans every progress row pointing at the old id. Nothing throws
+// — the screen simply shows a lesson nobody has started.
+//
+// That is rule 1 at the top of this file, broken in the one place it costs the
+// most, and it stopped being a hazard the moment the plan became "keep the
+// topics, write the content again to a higher standard". Rewriting the words IS
+// the plan. So the words are not the identity.
+//
+// # A BARE STRING IS STILL A TOPIC
+//
+// A course is announced long before it is written, and at that point nobody has
+// any reason to think about ids. So a plain string stays valid and takes the
+// slug of its own title — which is exactly what happened implicitly before,
+// said out loud. Writing the id down is what freezes it: from then on the title
+// is free to change and the id is not.
+type Topic struct {
+	ID    string
+	Title string
+}
+
+// UnmarshalJSON reads either form: `"Some title"` or `{"id":…, "title":…}`.
+//
+// The id is NOT filled in here when it is absent. A `Topic` that came from a
+// bare string carries an empty id and `TopicID` answers what to call it —
+// because deriving it here would make the two forms indistinguishable
+// afterwards, and the validator has to be able to say which is which.
+func (t *Topic) UnmarshalJSON(data []byte) error {
+	var title string
+	if err := json.Unmarshal(data, &title); err == nil {
+		*t = Topic{Title: title}
+		return nil
+	}
+
+	var full struct {
+		ID    string `json:"id"`
+		Title string `json:"title"`
+	}
+	if err := json.Unmarshal(data, &full); err != nil {
+		return fmt.Errorf("a topic is a title, or an object with an id and a title, and %s "+
+			"is neither", data)
+	}
+	*t = Topic{ID: full.ID, Title: full.Title}
+	return nil
+}
+
+// MarshalJSON writes back the form it was read in, so a file that has not been
+// given ids is not rewritten with them by a round trip.
+func (t Topic) MarshalJSON() ([]byte, error) {
+	if t.ID == "" {
+		return json.Marshal(t.Title)
+	}
+	return json.Marshal(struct {
+		ID    string `json:"id"`
+		Title string `json:"title"`
+	}{t.ID, t.Title})
+}
+
+// TopicID is what this topic is called, declared or derived.
+//
+// The derivation is the one that was already happening — the title, lowercased,
+// with every run of anything else turned into a single hyphen. It is here so
+// that a course which has not been given ids behaves exactly as it did, and so
+// that there is one answer to "what is this lesson's id" rather than one per
+// caller.
+func TopicID(t Topic) string {
+	if t.ID != "" {
+		return t.ID
+	}
+	return slugOf(t.Title)
+}
+
+func slugOf(title string) string {
+	var b strings.Builder
+	dash := false
+	for _, r := range strings.ToLower(title) {
+		switch {
+		case (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9'):
+			if dash && b.Len() > 0 {
+				b.WriteByte('-')
+			}
+			dash = false
+			b.WriteRune(r)
+		default:
+			dash = true
+		}
+	}
+	return b.String()
 }
 
 // CourseText is a course in one other language.

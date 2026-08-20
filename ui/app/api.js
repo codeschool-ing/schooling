@@ -130,32 +130,25 @@ async function pull() {
    why the server has one; and over there a lesson IS a position in the course's
    `topics`, which is what the copied screens were written against.
 
-   THEY ARE JOINED BY THE TITLE, and that is safe here for a reason that would
-   not hold in general: both sides took their lessons from the same list — the
-   course's technical topics — so the title is the same string on both, and it
-   was the portal's own join key long before this. `app/catalog.js` is a
-   verbatim copy and stays one; the map lives here instead of a field being
-   added to it. */
-const lessonIDs = {};    // courseId -> { title: lessonId }
+   THEY USED TO BE JOINED BY THE TITLE. Both sides took their lessons from the
+   same list — the course's technical topics — so the title was the same string
+   on both, and it was the portal's own join key long before this. It held right
+   up until somebody edited a sentence.
+
+   A topic declares its id now, and that id IS the lesson id. There is nothing
+   left to look up: `courseLessons` hands back the key and the key is the
+   answer. The map that used to translate one into the other is gone, and with
+   it the two functions that searched it in either direction. */
 
 function lessonIdOf(courseId, ix) {
   const lesson = courseLessons(courseId)[ix];
-  if (!lesson) return null;
-  return (lessonIDs[courseId] || {})[lesson.key] || null;
+  return lesson ? lesson.key : null;
 }
 
-/* Where a lesson sits in the course, by its title. The store keys on the
-   position and the server answers with ids and titles; this is the same join as
-   `lessonIdOf`, read the other way. */
-function indexOfTitle(courseId, title) {
-  return courseLessons(courseId).findIndex((a) => a.key === title);
-}
-
+// Where a lesson sits in the course. The store keys on the position, and the
+// position is where the id appears in the course's declared topics.
 function indexOfLesson(courseId, lessonId) {
-  const titles = lessonIDs[courseId] || {};
-  const title = Object.keys(titles).find((t) => titles[t] === lessonId);
-  if (title === undefined) return -1;
-  return courseLessons(courseId).findIndex((a) => a.key === title);
+  return courseLessons(courseId).findIndex((a) => a.key === lessonId);
 }
 
 function documentFrom({ completed, notes, exams, resume }, me) {
@@ -330,24 +323,26 @@ export async function loadLessonStructure() {
   if (!answer) return false;
   structureLocale = locale;
 
-  /* The store is keyed by the lesson's TITLE, because that is what
-     `courseLessons` produces as a key: over there a lesson is an entry of the
-     course's `topics`, and both sides took their lessons from the same list. */
-  /* A LIST OF COURSES AND NOT A MAP OF THEM, because that is what
+  /* The store is keyed by the lesson's ID, because that is what `courseLessons`
+     produces as a key: a lesson is a topic of the course somebody has written,
+     and a topic declares its id.
+
+     IT USED TO BE THE TITLE, on both sides, and that is what made a lesson
+     unreachable the moment its wording changed anywhere.
+
+     A LIST OF COURSES AND NOT A MAP OF THEM, because that is what
      `putStructure` iterates. The server answers a map keyed by course, which is
      the cheaper shape over the wire; the store wants `{ courseId, lessons }`. */
   const structure = [];
   Object.entries(answer.lessons || {}).forEach(([courseId, lessons]) => {
-    lessonIDs[courseId] = {};
-    lessons.forEach((l) => { lessonIDs[courseId][l.title] = l.id; });
     structure.push({ courseId, lessons: lessons.map((l) => ({
       /* `lessonIx` IS WHAT THE STORE LOOKS A LESSON UP BY. `writtenSections`
          finds a lesson with `source.find((x) => x.lessonIx === ix)`, and
          without it every lookup missed and every lesson fell back to the
          "one section called Content" placeholder — which is what put
          "2 sections" on a course whose lessons have four. */
-      lessonIx: indexOfTitle(courseId, l.title),
-      key: l.title,
+      lessonIx: indexOfLesson(courseId, l.id),
+      key: l.id,
       title: l.title,
       sections: (l.sections || []).map((s) => ({
         id: s.id,

@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -60,7 +61,11 @@ type Listing struct {
 	// `topics` — a catalogue answered without them is a school where every
 	// course has nothing in it.
 	Syllabus []string `json:"syllabus,omitempty"`
-	Topics   []string `json:"topics,omitempty"`
+	/* THE TOPICS CARRY THEIR IDS, and that is what the interface joins a lesson
+	   by. It used to be a list of sentences and the client looked a lesson up by
+	   its title text — see the migration that made this a table for what that
+	   cost. The title is still here because it is what a person reads. */
+	Topics []Topic `json:"topics,omitempty"`
 
 	Free   bool   `json:"free"`
 	Locked bool   `json:"locked"`
@@ -107,7 +112,12 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 		       (SELECT count(*) FROM catalog_sections s
 		         WHERE s.tenant_id = c.tenant_id AND s.course_id = c.id AND s.countable),
 		       coalesce(nullif(t.syllabus, '{}'), c.syllabus),
-		       coalesce(nullif(t.topics, '{}'), c.topics)
+		       (SELECT coalesce(jsonb_agg(jsonb_build_object(
+		                 'id', tp.topic_id,
+		                 'title', coalesce(nullif(t.topics[tp.position + 1], ''), tp.title))
+		               ORDER BY tp.position), '[]'::jsonb)
+		          FROM catalog_course_topics tp
+		         WHERE tp.tenant_id = c.tenant_id AND tp.course_id = c.id)
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_requires r
 		       ON r.tenant_id = c.tenant_id AND r.course_id = c.id
@@ -115,7 +125,7 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 		       ON t.tenant_id = c.tenant_id AND t.course_id = c.id AND t.locale = $2
 		WHERE c.tenant_id = $1 AND NOT c.draft
 		GROUP BY c.id, c.tenant_id, c.name, c.category, c.level, c.hours, c.summary,
-		         c.syllabus, c.topics, t.name, t.summary, t.syllabus, t.topics
+		         c.syllabus, t.name, t.summary, t.syllabus, t.topics
 		ORDER BY c.id
 	`, tenantID, locale)
 	if err != nil {
@@ -126,10 +136,14 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 	var out []Listing
 	for rows.Next() {
 		var l Listing
+		var topics []byte
 		if err := rows.Scan(&l.ID, &l.Name, &l.Category, &l.Level, &l.Hours,
 			&l.Summary, &l.Requires, &l.Lessons, &l.Sections,
-			&l.Syllabus, &l.Topics); err != nil {
+			&l.Syllabus, &topics); err != nil {
 			return nil, fmt.Errorf("catalog: listing the courses: %w", err)
+		}
+		if err := json.Unmarshal(topics, &l.Topics); err != nil {
+			return nil, fmt.Errorf("catalog: the topics of %q: %w", l.ID, err)
 		}
 
 		l.Free = free[l.ID]
@@ -233,12 +247,18 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID,
 	// In the language that was asked for, falling back column by column — see
 	// `Courses`, which does the same for the listing.
 	var course Course
+	var topics []byte
 	err = s.pool.QueryRow(ctx, `
 		SELECT c.id, coalesce(t.name, c.name), c.category, c.level, c.hours,
 		       coalesce(t.summary, c.summary),
 		       coalesce(t.prerequisites, c.prerequisites),
 		       coalesce(nullif(t.syllabus, '{}'), c.syllabus),
-		       coalesce(nullif(t.topics, '{}'), c.topics),
+		       (SELECT coalesce(jsonb_agg(jsonb_build_object(
+		                 'id', tp.topic_id,
+		                 'title', coalesce(nullif(t.topics[tp.position + 1], ''), tp.title))
+		               ORDER BY tp.position), '[]'::jsonb)
+		          FROM catalog_course_topics tp
+		         WHERE tp.tenant_id = c.tenant_id AND tp.course_id = c.id),
 		       c.draft
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_text t
@@ -246,13 +266,16 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID,
 		WHERE c.tenant_id = $1 AND c.id = $2
 	`, tenantID, id, locale).Scan(&course.ID, &course.Name, &course.Category, &course.Level,
 		&course.Hours, &course.Summary, &course.Prerequisites,
-		&course.Syllabus, &course.Topics, &course.Draft)
+		&course.Syllabus, &topics, &course.Draft)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound
 	}
 	if err != nil {
 		return nil, fmt.Errorf("catalog: reading the course %q: %w", id, err)
+	}
+	if err := json.Unmarshal(topics, &course.Topics); err != nil {
+		return nil, fmt.Errorf("catalog: the topics of %q: %w", id, err)
 	}
 
 	// A draft answers exactly as a course that does not exist. Anything else
