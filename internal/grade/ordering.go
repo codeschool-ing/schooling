@@ -103,7 +103,45 @@ type matchingPayload struct {
 		Left  string `json:"left"`
 		Right string `json:"right"`
 	} `json:"pairs"`
+
+	// RightDistractors are right-hand items that match nothing.
+	//
+	// WITHOUT THEM A MATCHING PARTLY GRADES ITSELF. Equal columns make the last
+	// pair free — whatever is left over must go where the one remaining
+	// left-hand item is — and the one before it nearly so. Somebody who knows
+	// three of four scores four out of four, and the question stops measuring
+	// where it was meant to start.
+	//
+	// They also make the prompt true. The matching questions written for this
+	// platform say "there are options left over in the right-hand column",
+	// because that is how they were authored; imported without the leftovers,
+	// that sentence would be a lie printed above the question.
+	//
+	// THEY ARE NOT A THIRD COLUMN. The right-hand list a student sees is the
+	// pairs' own right sides followed by these, shuffled together — so a
+	// position past the last pair is a distractor, and choosing one is wrong in
+	// the ordinary way rather than a case anybody has to handle.
+	RightDistractors []string `json:"right_distractors"`
 }
+
+// rightAt is the right-hand item at a combined position: the pairs' own rights
+// first, the distractors after them. The one place that order is decided, so
+// `present`, `grade` and `key` cannot come to disagree about it.
+func (p matchingPayload) rightAt(at int) (string, bool) {
+	switch {
+	case at < 0:
+		return "", false
+	case at < len(p.Pairs):
+		return p.Pairs[at].Right, true
+	case at < p.rights():
+		return p.RightDistractors[at-len(p.Pairs)], true
+	default:
+		return "", false
+	}
+}
+
+// rights is how many items the right-hand column has.
+func (p matchingPayload) rights() int { return len(p.Pairs) + len(p.RightDistractors) }
 
 type matchingAnswer struct {
 	// Matched[i] is the right-hand item the student attached to left item i.
@@ -125,18 +163,18 @@ func (matching) grade(payload, answer json.RawMessage) (Result, error) {
 			ErrBadAnswer, len(a.Matched), len(p.Pairs))
 	}
 
-	for _, at := range a.Matched {
-		if at < 0 || at >= len(p.Pairs) {
-			return Result{}, fmt.Errorf("%w: it names right-hand item %d of %d",
-				ErrBadAnswer, at, len(p.Pairs))
-		}
-	}
-
 	for i, at := range a.Matched {
+		chosen, ok := p.rightAt(at)
+		if !ok {
+			return Result{}, fmt.Errorf("%w: it names right-hand item %d of %d",
+				ErrBadAnswer, at, p.rights())
+		}
 		// A right-hand item that reads identically to the one they should have
 		// picked counts: two identical labels are the question's fault, and the
-		// key check refuses those before anybody sees them.
-		if p.Pairs[at].Right != p.Pairs[i].Right {
+		// key check refuses those — distractors included — before anybody sees
+		// them. A distractor is simply not equal, so it is wrong here without
+		// being a case of its own.
+		if chosen != p.Pairs[i].Right {
 			return Result{Correct: false}, nil
 		}
 	}
@@ -167,6 +205,21 @@ func (matching) key(payload json.RawMessage) (json.RawMessage, error) {
 				"then have the same answer and the student cannot tell which is wanted", pair.Right)
 		}
 		left[pair.Left], right[pair.Right] = true, true
+	}
+
+	/* A DISTRACTOR THAT READS LIKE AN ANSWER IS NOT A DISTRACTOR, it is a second
+	   correct option that scores zero. It goes through the same column check as
+	   the pairs, because it stands in the same column and a student cannot tell
+	   the two kinds apart — which is the whole point of it. */
+	for _, d := range p.RightDistractors {
+		if d == "" {
+			return nil, errors.New("a right-hand distractor is empty")
+		}
+		if right[d] {
+			return nil, fmt.Errorf("the right-hand distractor %q also answers a pair — it is a "+
+				"correct option that is marked wrong wherever it is put", d)
+		}
+		right[d] = true
 	}
 
 	matched := make([]int, len(p.Pairs))
@@ -237,14 +290,21 @@ func (matching) present(payload json.RawMessage, rnd *rand.Rand) (Presented, err
 		return Presented{}, err
 	}
 
-	perm := shuffle(len(p.Pairs), rnd)
+	/* OVER THE WHOLE COLUMN, distractors included. Shuffling only the pairs and
+	   appending the leftovers would put every distractor at the bottom, which
+	   is a tell — and a tell is exactly what a distractor must not be. */
+	perm := shuffle(p.rights(), rnd)
 
 	shown := matchingShown{common: p.common}
 	for _, pair := range p.Pairs {
 		shown.Left = append(shown.Left, pair.Left)
 	}
 	for _, at := range perm {
-		shown.Right = append(shown.Right, p.Pairs[at].Right)
+		right, ok := p.rightAt(at)
+		if !ok {
+			return Presented{}, fmt.Errorf("grade: presenting a matching: no right-hand item %d", at)
+		}
+		shown.Right = append(shown.Right, right)
 	}
 
 	body, err := json.Marshal(shown)
