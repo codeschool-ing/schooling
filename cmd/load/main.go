@@ -181,7 +181,8 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 		"catalog_exercises", "catalog_images", "catalog_prose", "catalog_sections",
 		"catalog_lessons",
 		"catalog_course_topics", "catalog_course_requires", "catalog_courses",
-		"catalog_course_text", "catalog_track_fork_text", "catalog_track_text",
+		"catalog_course_topic_text", "catalog_course_text",
+		"catalog_track_fork_text", "catalog_track_text",
 		"catalog_track_links", "catalog_track_courses", "catalog_track_forks", "catalog_tracks",
 	} {
 		// The table names come from this list and from nowhere else, so there
@@ -191,11 +192,38 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 		}
 	}
 
+	/* THIS JOB IS THE ONE PLACE THAT TRANSLATES A NAME INTO AN IDENTITY.
+
+	   Inside `content/` everything refers to everything else by SLUG — a
+	   course's `requires`, a track's `courses`, its `links`, its `continues`,
+	   the school's order. That is what keeps a pull request readable: a
+	   reviewer can see that `"requires": ["python"]` is right, and could not
+	   see it of `["co-8k2p91xz"]`.
+
+	   Past this function nothing speaks slugs. The mirror, the API and every
+	   record of what a student did carry ids, so a slug is free to be rewritten
+	   without moving anybody's work. It is a compiler's arrangement: names go
+	   in, symbols come out.
+
+	   A slug that resolves to nothing cannot reach here — `Validate` refuses a
+	   reference to a course or track that is not there, and a catalogue that
+	   does not pass is never written. */
+	courseID := map[string]string{}
+	for _, c := range school.Courses {
+		courseID[c.Slug] = c.ID
+	}
+	trackID := map[string]string{}
+	for _, t := range school.Tracks {
+		trackID[t.Slug] = t.ID
+	}
+
 	for i, track := range school.Tracks {
 		if _, err := tx.Exec(ctx, `
-			INSERT INTO catalog_tracks (tenant_id, id, name, goal, outcome, continues, position)
-			VALUES ($1, $2, $3, $4, $5, $6, $7)
-		`, tenantID, track.ID, track.Name, track.Goal, track.Outcome, track.Continues, i); err != nil {
+			INSERT INTO catalog_tracks
+				(tenant_id, id, slug, name, goal, outcome, continues, position)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		`, tenantID, track.ID, track.Slug, track.Name, track.Goal, track.Outcome,
+			trackID[track.Continues], i); err != nil {
 			return fmt.Errorf("writing the track %s: %w", track.ID, err)
 		}
 
@@ -246,7 +274,8 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 					INSERT INTO catalog_track_links
 						(tenant_id, track_id, course_id, position, target_course, target_step)
 					VALUES ($1, $2, $3, $4, $5, $6)
-				`, tenantID, track.ID, course, position, target.Course, step); err != nil {
+				`, tenantID, track.ID, courseID[course], position,
+					courseID[target.Course], step); err != nil {
 					return fmt.Errorf("writing a link of %s in %s: %w", course, track.ID, err)
 				}
 			}
@@ -258,7 +287,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 					INSERT INTO catalog_track_courses
 						(tenant_id, track_id, position, course_id)
 					VALUES ($1, $2, $3, $4)
-				`, tenantID, track.ID, position, step.Course); err != nil {
+				`, tenantID, track.ID, position, courseID[step.Course]); err != nil {
 					return fmt.Errorf("writing %s/%s: %w", track.ID, step.Course, err)
 				}
 				continue
@@ -278,7 +307,8 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 							(tenant_id, track_id, position, option_name, option_position,
 							 course_position, course_id)
 						VALUES ($1, $2, $3, $4, $5, $6, $7)
-					`, tenantID, track.ID, position, branch.Name, option, course, id); err != nil {
+					`, tenantID, track.ID, position, branch.Name, option, course,
+						courseID[id]); err != nil {
 						return fmt.Errorf("writing %s/%s: %w", track.ID, id, err)
 					}
 				}
@@ -289,10 +319,10 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 	for _, course := range school.Courses {
 		if _, err := tx.Exec(ctx, `
 			INSERT INTO catalog_courses
-				(tenant_id, id, name, category, level, hours, summary, prerequisites,
+				(tenant_id, id, slug, name, category, level, hours, summary, prerequisites,
 				 syllabus, draft)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-		`, tenantID, course.ID, course.Name, course.Category, course.Level, course.Hours,
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+		`, tenantID, course.ID, course.Slug, course.Name, course.Category, course.Level, course.Hours,
 			course.Summary, course.Prerequisites, lines(course.Syllabus),
 			course.Draft); err != nil {
 			return fmt.Errorf("writing the course %s: %w", course.ID, err)
@@ -317,11 +347,23 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			text := course.Text[locale]
 			if _, err := tx.Exec(ctx, `
 				INSERT INTO catalog_course_text
-					(tenant_id, course_id, locale, name, summary, prerequisites, syllabus, topics)
-				VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+					(tenant_id, course_id, locale, name, summary, prerequisites, syllabus)
+				VALUES ($1, $2, $3, $4, $5, $6, $7)
 			`, tenantID, course.ID, locale, text.Name, text.Summary, text.Prerequisites,
-				text.Syllabus, text.Topics); err != nil {
+				text.Syllabus); err != nil {
 				return fmt.Errorf("writing the %s of the course %s: %w", locale, course.ID, err)
+			}
+
+			// BY THE TOPIC'S ID. It was an array beside the syllabus, matched to
+			// the English topics by position — see `CourseText.Topics`.
+			for _, id := range sorted(text.Topics) {
+				if _, err := tx.Exec(ctx, `
+					INSERT INTO catalog_course_topic_text
+						(tenant_id, course_id, topic_id, locale, title)
+					VALUES ($1, $2, $3, $4, $5)
+				`, tenantID, course.ID, id, locale, text.Topics[id]); err != nil {
+					return fmt.Errorf("writing the %s title of %s/%s: %w", locale, course.ID, id, err)
+				}
 			}
 		}
 
@@ -329,7 +371,7 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			if _, err := tx.Exec(ctx, `
 				INSERT INTO catalog_course_requires (tenant_id, course_id, requires_id)
 				VALUES ($1, $2, $3)
-			`, tenantID, course.ID, needed); err != nil {
+			`, tenantID, course.ID, courseID[needed]); err != nil {
 				return fmt.Errorf("writing what %s requires: %w", course.ID, err)
 			}
 		}
@@ -349,9 +391,10 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 				}
 				if _, err := tx.Exec(ctx, `
 					INSERT INTO catalog_sections
-						(tenant_id, course_id, lesson_id, id, kind, video, duration, countable, position)
-					VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-				`, tenantID, course.ID, lesson.ID, section.ID, section.Kind,
+						(tenant_id, course_id, lesson_id, id, slug, kind, video, duration,
+						 countable, position)
+					VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+				`, tenantID, course.ID, lesson.ID, section.ID, section.Slug, section.Kind,
 					section.Video, section.Duration, countable, j); err != nil {
 					return fmt.Errorf("writing the section %s: %w", section.ID, err)
 				}

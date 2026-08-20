@@ -30,7 +30,7 @@ func TestACourseIsTranslatedFieldByField(t *testing.T) {
 	store := catalog.NewStore(pool)
 	ctx := context.Background()
 
-	pt, err := store.Course(ctx, id, "html-css", "pt", catalog.PlanFull)
+	pt, err := store.Course(ctx, id, htmlCSS, "pt", catalog.PlanFull)
 	if err != nil {
 		t.Fatalf("reading the course in Portuguese: %v", err)
 	}
@@ -47,7 +47,7 @@ func TestACourseIsTranslatedFieldByField(t *testing.T) {
 
 	// And English is still English: a fallback that overwrote the source would
 	// be invisible in the test above.
-	en, err := store.Course(ctx, id, "html-css", "en", catalog.PlanFull)
+	en, err := store.Course(ctx, id, htmlCSS, "en", catalog.PlanFull)
 	if err != nil {
 		t.Fatalf("reading the course in English: %v", err)
 	}
@@ -64,7 +64,7 @@ func TestALanguageWithNoTranslationFallsBackWhole(t *testing.T) {
 	id := loaded(t, pool)
 
 	course, err := catalog.NewStore(pool).Course(context.Background(), id,
-		"html-css", "fr", catalog.PlanFull)
+		htmlCSS, "fr", catalog.PlanFull)
 	if err != nil {
 		t.Fatalf("reading the course in an untranslated language: %v", err)
 	}
@@ -85,7 +85,7 @@ func TestTheListingIsTranslatedAsWell(t *testing.T) {
 		t.Fatalf("listing in Portuguese: %v", err)
 	}
 	for _, c := range listing {
-		if c.ID != "html-css" {
+		if c.ID != htmlCSS {
 			continue
 		}
 		if c.Name != "HTML e CSS" {
@@ -104,7 +104,7 @@ func TestATracksForkIsTranslatedByPosition(t *testing.T) {
 	pool := testPool(t)
 	id := loaded(t, pool)
 
-	track, err := catalog.NewStore(pool).Track(context.Background(), id, "frontend", "pt")
+	track, err := catalog.NewStore(pool).Track(context.Background(), id, frontend, "pt")
 	if err != nil {
 		t.Fatalf("reading the track in Portuguese: %v", err)
 	}
@@ -132,10 +132,10 @@ func TestATracksForkIsTranslatedByPosition(t *testing.T) {
 	// The options are matched by their position in the list, and the courses
 	// behind each one must still be the courses that option offers — an option
 	// renamed onto the wrong branch sends a student to the other framework.
-	if fork.Options[0].Name != "React + TypeScript" || fork.Options[0].Courses[0] != "react-ts" {
+	if fork.Options[0].Name != "React + TypeScript" || fork.Options[0].Courses[0] != reactTS {
 		t.Errorf("the first option came back as %+v", fork.Options[0])
 	}
-	if fork.Options[1].Name != "Angular" || fork.Options[1].Courses[0] != "angular" {
+	if fork.Options[1].Name != "Angular" || fork.Options[1].Courses[0] != angular {
 		t.Errorf("the second option came back as %+v", fork.Options[1])
 	}
 }
@@ -149,7 +149,7 @@ func TestATracksLinksSurviveTheMirror(t *testing.T) {
 	pool := testPool(t)
 	id := loaded(t, pool)
 
-	track, err := catalog.NewStore(pool).Track(context.Background(), id, "frontend", "en")
+	track, err := catalog.NewStore(pool).Track(context.Background(), id, frontend, "en")
 	if err != nil {
 		t.Fatalf("reading the track: %v", err)
 	}
@@ -157,15 +157,15 @@ func TestATracksLinksSurviveTheMirror(t *testing.T) {
 		t.Fatalf("%d links, want the two the fixture declares: %+v", len(track.Links), track.Links)
 	}
 
-	after, ok := track.Links["angular"]
+	after, ok := track.Links[angular]
 	if !ok || len(after) != 1 {
 		t.Fatalf("angular's link came back as %+v", after)
 	}
-	if after[0].Course != "html-css" || after[0].Step != nil {
+	if after[0].Course != htmlCSS || after[0].Step != nil {
 		t.Errorf("a link to a course came back as %+v", after[0])
 	}
 
-	after, ok = track.Links["react-ts"]
+	after, ok = track.Links[reactTS]
 	if !ok || len(after) != 1 {
 		t.Fatalf("react-ts's link came back as %+v", after)
 	}
@@ -183,7 +183,7 @@ func TestTheShapeOfTheCatalogueCarriesTranslatedTitles(t *testing.T) {
 	// which is a fine thing for the tests that read its body and useless here,
 	// because two identical titles pass whether or not a locale was used.
 	id := loaded(t, pool, write(
-		"courses/web-fundamentals/lessons/client-and-server/roles.pt.md",
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/roles.pt.md",
 		"---\ntitle: As duas funções\n---\n"))
 	store := catalog.NewStore(pool)
 	ctx := context.Background()
@@ -199,12 +199,12 @@ func TestTheShapeOfTheCatalogueCarriesTranslatedTitles(t *testing.T) {
 
 	title := func(shape map[string][]catalog.LessonView) string {
 		t.Helper()
-		for _, section := range shape["web-fundamentals"] {
-			if section.ID != "client-and-server" {
+		for _, section := range shape[webFundamentals] {
+			if section.ID != clientAndServer {
 				continue
 			}
 			for _, s := range section.Sections {
-				if s.ID == "roles" {
+				if s.ID == rolesSection {
 					return s.Title
 				}
 			}
@@ -231,14 +231,14 @@ func TestATopicsIDIsTheSameInEveryLanguage(t *testing.T) {
 	store := catalog.NewStore(pool)
 	ctx := context.Background()
 
-	en, err := store.Course(ctx, id, "web-fundamentals", "en", catalog.PlanFull)
+	en, err := store.Course(ctx, id, webFundamentals, "en", catalog.PlanFull)
 	if err != nil {
 		t.Fatalf("reading the course: %v", err)
 	}
 	if len(en.Topics) != 2 {
 		t.Fatalf("%d topics came back, want the two the fixture declares", len(en.Topics))
 	}
-	if en.Topics[0].ID != "client-and-server" {
+	if en.Topics[0].ID != clientAndServer {
 		t.Errorf("the declared id came back from the mirror as %q", en.Topics[0].ID)
 	}
 	if en.Topics[0].Title != "Who asks and who answers" {
@@ -248,7 +248,7 @@ func TestATopicsIDIsTheSameInEveryLanguage(t *testing.T) {
 	// The second one's id says nothing about its title either, which is the form
 	// every topic in `content/` takes. Both reach the mirror as written, so no
 	// screen has to work one out.
-	if en.Topics[1].ID != "t-9x2mk4qv" {
+	if en.Topics[1].ID != "le-9x2mk4qv" {
 		t.Errorf("the second topic reached the mirror as %q", en.Topics[1].ID)
 	}
 }
@@ -269,7 +269,7 @@ func TestRewritingATopicsTitleDoesNotMoveItsID(t *testing.T) {
 
 	before := catalog.NewStore(pool)
 	id := loaded(t, pool)
-	was, err := before.Course(context.Background(), id, "web-fundamentals", "en", catalog.PlanFull)
+	was, err := before.Course(context.Background(), id, webFundamentals, "en", catalog.PlanFull)
 	if err != nil {
 		t.Fatalf("reading the course: %v", err)
 	}
@@ -285,7 +285,7 @@ func TestRewritingATopicsTitleDoesNotMoveItsID(t *testing.T) {
 		}))
 
 	now, err := catalog.NewStore(pool).Course(context.Background(), rewritten,
-		"web-fundamentals", "en", catalog.PlanFull)
+		webFundamentals, "en", catalog.PlanFull)
 	if err != nil {
 		t.Fatalf("reading the rewritten course: %v", err)
 	}

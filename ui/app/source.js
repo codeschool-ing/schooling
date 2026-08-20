@@ -81,7 +81,12 @@ function stepsOf(track) {
    course with no lessons on every screen. */
 function courseFrom(c) {
   return {
+    /* TWO NAMES. `id` is opaque and permanent — it is what `requires`, a
+       track's steps and every progress row point at. `slug` is readable and is
+       what an address shows. See `catalog.js` for the two lookups, and never
+       build a link out of an id. */
     id: c.id,
+    slug: c.slug || c.id,
     name: c.name,
     category: c.category,
     level: c.level,
@@ -125,6 +130,7 @@ export async function load(api) {
   TRACKS.length = 0;
   ((tracks && tracks.tracks) || []).forEach((t) => TRACKS.push({
     id: t.id,
+    slug: t.slug || t.id,
     name: t.name,
     goal: t.goal || '',
     outcome: t.outcome || '',

@@ -49,63 +49,78 @@ ON CONFLICT (slug) DO UPDATE SET
   plan_price_cents = EXCLUDED.plan_price_cents,
   plan_currency = EXCLUDED.plan_currency;
 
+/* THE IDS ARE OPAQUE AND THE SLUGS ARE READABLE, exactly as the loader writes
+   them — a fixture that used the slug as the id would exercise a shape the
+   application no longer has. They are declared here so that every reference
+   below still reads as the course it means. */
+\set wf  'co-wfaaaaa1'
+\set hc  'co-hcaaaaa2'
+\set js  'co-jsaaaaa3'
+\set rt  'co-rtaaaaa4'
+\set ng  'co-ngaaaaa5'
+\set tt  'co-ttaaaaa6'
+\set dp  'co-dpaaaaa7'
+\set trk 'tr-fraaaaa1'
+\set les 'le-4mzk8p2r'
+\set sec 'se-rlaaaaa1'
+
 INSERT INTO tenant_domains (host, tenant_id)
 SELECT :'host', id FROM tenants WHERE slug = :'slug'
 ON CONFLICT (host) DO UPDATE SET tenant_id = EXCLUDED.tenant_id;
 
-INSERT INTO catalog_courses (tenant_id, id, name, category, level, hours, summary)
-SELECT t.id, v.cid, v.name, 'Front-end', 'beginner', v.hours, v.summary
+INSERT INTO catalog_courses (tenant_id, id, slug, name, category, level, hours, summary)
+SELECT t.id, v.cid, v.slug, v.name, 'Front-end', 'beginner', v.hours, v.summary
 FROM tenants t, (VALUES
-  ('web-fundamentals', 'Web Fundamentals',   40, 'How a browser and a server talk.'),
-  ('html-css',         'HTML & CSS',         60, 'Structure and appearance.'),
-  ('javascript',       'JavaScript',         60, 'The language of the browser.'),
-  ('react-ts',         'React + TypeScript', 80, 'Components and the state between them.'),
-  ('angular',          'Angular',            80, 'The other one.'),
-  ('testing',          'Testing',            40, 'What to check.'),
-  ('deploy',           'Shipping it',        30, 'From your machine to somebody else''s.')
-) AS v(cid, name, hours, summary)
+  (:'wf', 'web-fundamentals', 'Web Fundamentals',   40, 'How a browser and a server talk.'),
+  (:'hc', 'html-css',         'HTML & CSS',         60, 'Structure and appearance.'),
+  (:'js', 'javascript',       'JavaScript',         60, 'The language of the browser.'),
+  (:'rt', 'react-ts',         'React + TypeScript', 80, 'Components and the state between them.'),
+  (:'ng', 'angular',          'Angular',            80, 'The other one.'),
+  (:'tt', 'testing',          'Testing',            40, 'What to check.'),
+  (:'dp', 'deploy',           'Shipping it',        30, 'From your machine to somebody else''s.')
+) AS v(cid, slug, name, hours, summary)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_course_requires (tenant_id, course_id, requires_id)
 SELECT t.id, v.c, v.r FROM tenants t, (VALUES
-  ('html-css',   'web-fundamentals'),
-  ('javascript', 'html-css'),
-  ('react-ts',   'javascript'),
-  ('angular',    'javascript'),
+  (:'hc', :'wf'),
+  (:'js', :'hc'),
+  (:'rt', :'js'),
+  (:'ng', :'js'),
   -- `testing` needs javascript and NOT the framework, so its arrow skips the
   -- fork's level and has to get past the fork block to arrive. That edge is the
   -- one this whole fixture exists for.
-  ('testing',    'javascript'),
-  ('deploy',     'testing')
+  (:'tt', :'js'),
+  (:'dp', :'tt')
 ) AS v(c, r)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
-INSERT INTO catalog_tracks (tenant_id, id, name, goal, outcome, position)
-SELECT id, 'frontend', 'Front-end Development',
+INSERT INTO catalog_tracks (tenant_id, id, slug, name, goal, outcome, position)
+SELECT id, :'trk', 'frontend', 'Front-end Development',
        'Build and ship an interface that other people use.',
        'Junior Front-end Developer', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_track_forks (tenant_id, track_id, position, choice, note)
-SELECT id, 'frontend', 3, 'the framework', 'Either one; the ideas transfer.'
+SELECT id, :'trk', 3, 'the framework', 'Either one; the ideas transfer.'
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_track_courses (tenant_id, track_id, position, course_id)
-SELECT t.id, 'frontend', v.p, v.c FROM tenants t, (VALUES
-  (0, 'web-fundamentals'), (1, 'html-css'), (2, 'javascript'), (4, 'testing'), (5, 'deploy')
+SELECT t.id, :'trk', v.p, v.c FROM tenants t, (VALUES
+  (0, :'wf'), (1, :'hc'), (2, :'js'), (4, :'tt'), (5, :'dp')
 ) AS v(p, c)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_track_courses
   (tenant_id, track_id, position, option_name, option_position, course_position, course_id)
-SELECT t.id, 'frontend', 3, v.o, v.op, 0, v.c FROM tenants t, (VALUES
-  ('React + TypeScript', 0, 'react-ts'),
-  ('Angular',            1, 'angular')
+SELECT t.id, :'trk', 3, v.o, v.op, 0, v.c FROM tenants t, (VALUES
+  ('React + TypeScript', 0, :'rt'),
+  ('Angular',            1, :'ng')
 ) AS v(o, op, c)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
@@ -129,7 +144,7 @@ ON CONFLICT DO NOTHING;
    lying about what a track says. */
 INSERT INTO catalog_track_links
   (tenant_id, track_id, course_id, position, target_step)
-SELECT id, 'frontend', 'deploy', 0, 3
+SELECT id, :'trk', :'dp', 0, 3
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
@@ -150,22 +165,22 @@ ON CONFLICT DO NOTHING;
    the title text, so keeping it working meant keeping two sentences identical
    in two places by hand. It is an id now, and the title beside it is free. */
 INSERT INTO catalog_course_topics (tenant_id, course_id, position, topic_id, title)
-SELECT id, 'web-fundamentals', 0, 't-4mzk8p2r', 'Client and server'
+SELECT id, :'wf', 0, :'les', 'Client and server'
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
-SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'Client and server', 0
+SELECT id, :'wf', :'les', 'Client and server', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
-INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, kind, position)
-SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'roles', 'reading', 0
+INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, slug, kind, position)
+SELECT id, :'wf', :'les', :'sec', 'roles', 'reading', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
-SELECT id, 'web-fundamentals', 't-4mzk8p2r', 'roles', 'en', 'The two roles',
+SELECT id, :'wf', :'les', :'sec', 'en', 'The two roles',
 $prose$The words **client** and **server** name a moment, not a machine.
 
 Whoever asks is the client. Whoever answers is the server.
@@ -187,7 +202,7 @@ ON CONFLICT DO NOTHING;
    ordering buttons, the matching selects and the cloze inputs unchecked. */
 
 INSERT INTO catalog_exercises (tenant_id, id, course_id, exam, version, type, prompt, payload)
-SELECT t.id, q.eid, 'web-fundamentals', true, 1, q.kind, q.prompt, q.payload::jsonb
+SELECT t.id, q.eid, :'wf', true, 1, q.kind, q.prompt, q.payload::jsonb
 FROM tenants t, (VALUES
   ('fx-quiz', 'quiz', 'A web server queries a database. At that instant, what is it?',
    '{"id":"fx-quiz","version":1,"type":"quiz","prompt":"A web server queries a database. At that instant, what is it?","choices":[{"text":"The database''s client","correct":true},{"text":"Still only a server"},{"text":"Neither, until the query finishes"}]}'),
@@ -229,7 +244,7 @@ ON CONFLICT DO NOTHING;
    a picture a browser draws. */
 
 INSERT INTO catalog_images (tenant_id, course_id, name, media_type, bytes)
-SELECT id, 'web-fundamentals', 'request.png', 'image/png', decode(
+SELECT id, :'wf', 'request.png', 'image/png', decode(
   'iVBORw0KGgoAAAANSUhEUgAAAPAAAAB4CAIAAABD1OhwAAAA/klEQVR42u3SAQ0AMAzDsHEZ'
   'hME5fx7n0doQosyDICMBhgZDg6HB0BgaDA2GBkODoTE0GBoMDYYGQ2NoMDQYGgwNhsbQYGgw'
   'NBgaDI2hwdBgaDA0GBpDg6HB0GBoMDSGBkODocHQlA99EMTQGBoMDYYGQ2NoMDQYGgwNhsbQ'
@@ -240,7 +255,7 @@ FROM tenants WHERE slug = :'slug'
 ON CONFLICT (tenant_id, course_id, name) DO UPDATE SET bytes = EXCLUDED.bytes;
 
 INSERT INTO catalog_exercises (tenant_id, id, course_id, exam, version, type, prompt, payload)
-SELECT t.id, 'fx-label', 'web-fundamentals', true, 1, 'labelling',
+SELECT t.id, 'fx-label', :'wf', true, 1, 'labelling',
        'Put each name on the band that plays that part.',
        '{"id":"fx-label","version":1,"type":"labelling","image":"request.png",'
        '"prompt":"Put each name on the band that plays that part.","labels":['
@@ -262,7 +277,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO catalog_exercises
   (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
    drillable, prompt, payload)
-SELECT t.id, q.eid, 'web-fundamentals', 't-4mzk8p2r', 'roles', false, 1, q.kind,
+SELECT t.id, q.eid, :'wf', :'les', :'sec', false, 1, q.kind,
        true, q.prompt, q.payload::jsonb
 FROM tenants t, (VALUES
   ('dr-quiz', 'quiz', 'Who is the client in an exchange?',

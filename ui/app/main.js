@@ -16,7 +16,7 @@
 import { route, whenChanged, start, currentPath, dispatch, goTo } from './routes.js';
 import * as sync from './sync.js';
 import * as source from './source.js';
-import { isChoice } from './catalog.js';
+import { isChoice, courseBySlug, trackBySlug, courseAddress } from './catalog.js';
 import { subscribe, now } from './state.js';
 import { buildRail, toggleLesson } from './rail.js';
 import { studentTrack, trackProgress } from './screens/common.js';
@@ -104,20 +104,37 @@ route('/track', trackScreen);
    It is the same screen. The id only says which track it is about, which on
    this side is what the enrolment says over there — so it is written into the
    document and the screen reads it exactly as it always did. */
-route('/track/:id', async (params) => {
+/* ---------- the address carries the slug; everything past here carries the id
+
+   `/course/statistics` is what somebody bookmarks and sends. `co-cbwm5kwa` is
+   what a progress row points at, and the two are not the same string any more.
+
+   THE ROUTER IS WHERE THEY MEET, and it is the only place: a screen resolving
+   its own parameter would be a second translator, and a second translator is
+   how one of them ends up disagreeing. Past `named`, every screen receives an
+   id exactly as it always did and none of them needed changing.
+
+   A slug nothing matches is left alone rather than blanked, so the screen
+   refuses a course that is not there instead of one that has no name. */
+const named = (find, screen) => (params) => {
+  const found = find(params.id);
+  return screen({ ...params, id: found ? found.id : params.id });
+};
+
+route('/track/:id', named(trackBySlug, async (params) => {
   if (params.id && (!now().enrollment || now().enrollment.trackId !== params.id)) {
     await api.enrol(params.id);
   }
   return trackScreen(params);
-});
-route('/course/:id', course);
+}));
+route('/course/:id', named(courseBySlug, course));
 /* Two routes for the same screen: without the section, it lands on the first
    one. That is what keeps an old link (or the course button) working after the
    lesson turned into several sections. */
-route('/course/:id/exam', courseExamScreen);
+route('/course/:id/exam', named(courseBySlug, courseExamScreen));
 route('/track/exam', trackExamScreen);
-route('/course/:id/lesson/:ix', lesson);
-route('/course/:id/lesson/:ix/:sec', lesson);
+route('/course/:id/lesson/:ix', named(courseBySlug, lesson));
+route('/course/:id/lesson/:ix/:sec', named(courseBySlug, lesson));
 route('/catalog', catalogue);
 route('/certificates', certificates);
 route('/performance', performance);

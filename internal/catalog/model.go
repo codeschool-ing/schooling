@@ -58,7 +58,12 @@ type School struct {
 
 // Track is an order of courses, with forks.
 type Track struct {
-	ID      string `json:"id"`
+	// ID is opaque and permanent; Slug is the readable name and the one that
+	// appears in an address. See the note above `Course` for why there are two,
+	// and which of them the rest of this format refers to.
+	ID   string `json:"id"`
+	Slug string `json:"slug"`
+
 	Name    string `json:"name"`
 	Goal    string `json:"goal"`
 	Outcome string `json:"outcome"`
@@ -188,8 +193,35 @@ type Option struct {
 }
 
 // Course is a course as `course.json` declares it.
+//
+// # TWO NAMES, AND WHICH IS WHICH
+//
+// `ID` is opaque, generated once and never touched: `co-8k2p91xz`. It is what
+// every durable record points at — a progress row, a note, the answer somebody
+// gave on an exam three years ago.
+//
+// `Slug` is the readable name: `statistics`. It is what a student sees in an
+// address and what a reviewer reads in a diff, and it is FREE TO CHANGE,
+// because nothing durable is pointing at it.
+//
+// # AND THE FILES REFER BY SLUG
+//
+// `requires`, a track's `courses`, its `links`, `continues`, the school's
+// `tracks` — every reference inside `content/` names a slug. That is the whole
+// point of having one: a pull request that says `"requires": ["python"]` can be
+// read, and one that says `"requires": ["co-8k2p91xz"]` cannot.
+//
+// The loader translates, once, on the way in. Everything past it — the mirror,
+// the API, the interface's joins — speaks ids. It is a compiler's arrangement:
+// the author writes names, the artefact carries symbols.
+//
+// WHAT THIS DOES NOT BUY is a link that survives a rename. The address carries
+// the slug, so changing a slug still breaks a bookmark, exactly as it did
+// before. What changes is that the student's WORK no longer moves with it.
 type Course struct {
-	ID       string `json:"id"`
+	ID   string `json:"id"`
+	Slug string `json:"slug"`
+
 	Name     string `json:"name"`
 	Category string `json:"category"`
 	Level    string `json:"level"`
@@ -404,12 +436,35 @@ type CourseText struct {
 	Summary       *string  `json:"summary"`
 	Prerequisites *string  `json:"prerequisites"`
 	Syllabus      []string `json:"syllabus"`
-	Topics        []string `json:"topics"`
+
+	/* THE TOPICS, KEYED BY THE TOPIC'S ID.
+
+	   This was an array, matched to the English topics BY POSITION — the join
+	   this repository forbids in the rule at the top of the file, sitting in
+	   the middle of the catalogue. Insert a topic and every translation after
+	   it names the one before, in perfect Portuguese: nothing is malformed,
+	   nothing throws, and a student reads the wrong heading over the right
+	   lesson.
+
+	   It is the same failure the fork translations have a validator for, and it
+	   had none, because until the topics had ids there was nothing to key it by
+	   instead. Now there is.
+
+	   `syllabus` stays an array. Its entries are bullet points with no identity
+	   of their own — nothing joins to them, so a position is all they are. */
+	Topics map[string]string `json:"topics"`
 }
 
 // Section is one step of a lesson.
+//
+// IT HAS BOTH NAMES FOR THE SAME REASON A COURSE DOES, and one more of its own:
+// the prose is a file named after the SLUG — `vps.md`, `vps.pt.md` — so the
+// slug is what a person types when they write a section, and the id is what the
+// progress row holds. A directory of `se-gy02rmmz.md` would be a directory
+// nobody can work in.
 type Section struct {
 	ID   string `json:"id"`
+	Slug string `json:"slug"`
 	Kind string `json:"kind"`
 
 	Video     bool     `json:"video"`

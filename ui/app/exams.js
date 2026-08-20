@@ -35,7 +35,7 @@
    unjudged becomes neither passed nor failed.
    ========================================================================== */
 
-import { courseLessons, courseById, trackPath } from './catalog.js';
+import { courseLessons, courseById, courseAddress, trackPath } from './catalog.js';
 import { lessonExercises } from './lessons.js';
 import { NEEDS_SERVER } from './exercises/grade.js';
 import { shuffleWith } from './text.js';
@@ -136,7 +136,7 @@ export function courseExam(courseId, attempt = 0) {
     scope: 'course',
     about: courseId,
     title: c ? c.name : courseId,
-    backTo: '#/course/' + courseId,
+    backTo: '#/course/' + courseAddress(courseId),
     items: draw(bank, COURSE_QUESTIONS, courseId + ':' + attempt),
     bankSize: bank.length,
   };
@@ -153,7 +153,7 @@ export async function openCourseExam(courseId, attempt = 0) {
     scope: 'course',
     about: courseId,
     title: c ? c.name : courseId,
-    backTo: '#/course/' + courseId,
+    backTo: '#/course/' + courseAddress(courseId),
   };
   if (api.examOnServer()) return drawnByServer('course', courseId, meta);
   return courseExam(courseId, attempt);

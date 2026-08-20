@@ -25,6 +25,23 @@
 export const courseById = (id) => COURSES.find((c) => c.id === id);
 export const trackById = (id) => TRACKS.find((t) => t.id === id);
 
+/* ---------- the two names, and which one goes where ----------
+
+   A course has an opaque id and a readable slug. Everything that JOINS uses the
+   id: `requires`, a track's steps, a progress row, a note. Everything ADDRESSED
+   uses the slug: what the router matches, what a link says, what somebody
+   copies out of the address bar and sends to a friend.
+
+   These four are the whole of the crossing between the two, so a screen never
+   has to decide. `addressOf` falling back to the id keeps a link working for a
+   catalogue served by an older build that has no slugs yet — a wrong-looking
+   address beats a dead one. */
+export const courseBySlug = (slug) => COURSES.find((c) => c.slug === slug);
+export const trackBySlug = (slug) => TRACKS.find((t) => t.slug === slug);
+
+export const courseAddress = (id) => (courseById(id) || {}).slug || id;
+export const trackAddress = (id) => (trackById(id) || {}).slug || id;
+
 /* ---------- tracks with a fork ----------
    An item of `courses` is either a course id (a string) or a choice step (an
    object with `options`). Hence three different readings of the same track: all

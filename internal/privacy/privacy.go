@@ -172,6 +172,10 @@ var Registry = []Table{
 		Why: "a course's name and syllabus in another language",
 	},
 	{
+		Name: "catalog_course_topic_text", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "a topic's title in another language, keyed by the topic's id and not its position",
+	},
+	{
 		Name: "catalog_track_text", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "a track's name and goal in another language",
 	},

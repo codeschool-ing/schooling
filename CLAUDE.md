@@ -40,12 +40,40 @@ loader, not in the validator, not as a fallback for a file that left one out. A 
 id is refused, and the message says what to write. A fallback that slugs the title is the
 defect wearing a helpful face: it works, and it ties the identity back to the words.
 
-**Which form an id takes depends on who sees it.** A **course** and a **track** id are in
-addresses — `/course/statistics`, `/track/frontend` — so they are readable slugs, because
-somebody bookmarks one and sends it to somebody else. A **topic** id is in no address: it is a
-join key, a directory name and a database column. So it is opaque — `t-` and eight characters
-from Crockford's alphabet (no `i`, `l`, `o` or `u`), carrying its title beside it in the same
-object.
+**Everything has an opaque id. What is addressed has a readable slug as well.**
+
+| | id | slug |
+| --- | --- | --- |
+| track | `tr-p00q6jw0` | `frontend` |
+| course | `co-cbwm5kwa` | `statistics` |
+| lesson (= topic) | `le-5he7q8tg` | — |
+| section | `se-gy02rmmz` | `vps` |
+| exercise | `ex-…` | — |
+
+Eight characters of Crockford's base32 (no `i`, `l`, `o` or `u`) behind a two-letter prefix.
+The prefix is **for people, not for code**: it is there so an id in a log says what it is, and
+nothing may branch on it — a `HasPrefix(id, "co-")` deciding behaviour is type information
+smuggled inside a string.
+
+A lesson and an exercise get no slug because neither is ever addressed: a lesson is reached by
+its position in a course and an exercise is never reached at all. A field nobody reads is cost
+without benefit.
+
+**Inside `content/`, everything refers to everything else by slug** — `requires`, a track's
+`courses`, its `links`, `continues`, the school's order. That is what keeps a pull request
+readable: `"requires": ["python"]` can be reviewed and `["co-8k2p91xz"]` cannot. **`cmd/load` is
+the one place that translates**, and past it nothing speaks slugs: the mirror, the API and every
+record of what a student did carry ids. Names go in, symbols come out.
+
+The consequence is the point: **a slug is free to change.** Renaming a course used to mean
+moving somebody's work, because the one string was the address, the reference and the identity
+at once. Now only the address moves.
+
+**What this does not buy is a link that survives a rename.** The address carries the slug, so
+changing one still breaks a bookmark exactly as before. What changes is that the student's WORK
+no longer moves with it — and that is the half that cannot be repaired afterwards, because a
+broken link is a 404 somebody reports and a detached progress row is a screen that looks fine
+and is wrong.
 
 Opaque is not decoration. A slug frozen from a title becomes false the moment the title is
 edited — it then asserts something untrue, and the next person believes it. A code cannot lie,
@@ -56,24 +84,17 @@ makes with the append-only triggers and with `event.Dimensions`.
 **The material is written by a machine and will be rewritten by one.** For the `code` school
 the tracks, courses and topics are settled; the lesson prose and the exercises are scaffolding
 and will be deleted and generated again to a higher standard. That plan is exactly why none of
-those three may be keyed by their words.
+them may be keyed by their words — rewriting a title is the intention here, not a hazard. The
+other schools have no structure yet, which is why the format changed now rather than later.
 
 **Order is declared, never inferred from the filesystem.** No numeric prefixes on directories.
 `course.json` names its lessons in order; `lesson.json` names its sections. (C-10)
 
 **A topic declares its id, and a lesson is a topic somebody wrote.** `topics` carries
-`{ id, title }`: the id is the lesson id, what a progress row records, and the same
-string in every language. The title is only what a person reads. A bare string is still
-a valid topic and takes the slug of its own title — which is what happened implicitly
-before, and is exactly why a title could not be edited afterwards.
-
-**For `code`, the tracks, courses and topics are settled and the lesson content and
-exercises are not.** The content is scaffolding: it will be deleted and written again to
-a higher standard, so rewriting a title is the intention rather than a hazard. That is
-the whole reason the id is written down — before it was, the id WAS the title
-(`slug(title)` for twenty-seven of twenty-eight written lessons), and rewording a topic
-moved every progress row, note and exam attempt out from under the student who earned
-them. The other schools have no structure yet, which is why the format changed now.
+`{ id, title }`: the id is the lesson id, what a progress row records, and the same string in
+every language. The title is only what a person reads, and it is the half that gets rewritten.
+A bare string is read — so the validator can say "this topic has no id, write one" instead of
+the decoder saying the file is malformed — and refused.
 
 **Every catalogue write goes through the load job.** The file in `content/` is the source of
 truth; the database is a derived mirror. Nothing else writes catalogue rows — the console reads

@@ -51,21 +51,23 @@ func inDeclaredOrder(tracks []*Track, order []string) []*Track {
 		return tracks
 	}
 
-	byID := map[string]*Track{}
+	// `school.json` names its tracks by slug, like every other reference in
+	// `content/`.
+	bySlug := map[string]*Track{}
 	for _, t := range tracks {
-		byID[t.ID] = t
+		bySlug[t.Slug] = t
 	}
 
 	out := make([]*Track, 0, len(tracks))
 	taken := map[string]bool{}
-	for _, id := range order {
-		if t, ok := byID[id]; ok && !taken[id] {
+	for _, slug := range order {
+		if t, ok := bySlug[slug]; ok && !taken[slug] {
 			out = append(out, t)
-			taken[id] = true
+			taken[slug] = true
 		}
 	}
 	for _, t := range tracks {
-		if !taken[t.ID] {
+		if !taken[t.Slug] {
 			out = append(out, t)
 		}
 	}
@@ -101,19 +103,23 @@ func loadTracks(dir fs.FS) ([]*Track, []error) {
 			problems = append(problems, err)
 			continue
 		}
-		if track.ID != strings.TrimSuffix(path.Base(name), ".json") {
+		/* THE FILE IS NAMED FOR THE SLUG, not for the id. The slug is the
+		   readable name and the one every reference in `content/` uses, so it
+		   is the one a file name has to agree with; the id is opaque and would
+		   make a directory nobody can work in. */
+		if track.Slug != strings.TrimSuffix(path.Base(name), ".json") {
 			problems = append(problems, fmt.Errorf(
 				"%s: the track calls itself %q, and a file name is a fact that links do not follow — "+
-					"an id that disagrees with its file is a rename half-done", name, track.ID))
+					"a slug that disagrees with its file is a rename half-done", name, track.Slug))
 		}
 
 		// The track in other languages, beside the file it translates.
-		text, found := readTranslations[TrackText](dir, "tracks", track.ID)
+		text, found := readTranslations[TrackText](dir, "tracks", track.Slug)
 		track.Text = text
 		problems = append(problems, found...)
 
 		// The final, which is optional while a track is being written.
-		if exam, err := readExercises(dir, path.Join("tracks", track.ID+examSuffix)); err != nil {
+		if exam, err := readExercises(dir, path.Join("tracks", track.Slug+examSuffix)); err != nil {
 			problems = append(problems, err)
 		} else {
 			track.Exam = exam
@@ -135,9 +141,10 @@ func loadTracks(dir fs.FS) ([]*Track, []error) {
 // impossible. It also catches the other spelling of it: somebody who meant to
 // add a track and called it `backend-exam`.
 func orphanedFinals(names []string, tracks []*Track) []error {
+	// BY SLUG: the file is `tracks/<slug>-exam.json`, beside `tracks/<slug>.json`.
 	known := map[string]bool{}
 	for _, t := range tracks {
-		known[t.ID] = true
+		known[t.Slug] = true
 	}
 
 	var problems []error
@@ -186,10 +193,11 @@ func loadCourse(dir fs.FS, name string) (*Course, []error) {
 	}
 
 	var problems []error
-	if course.ID != name {
+	// The directory is named for the slug; see the note in loadTracks.
+	if course.Slug != name {
 		problems = append(problems, fmt.Errorf(
 			"%s/course.json: the course calls itself %q and lives in %q — one of the two is a "+
-				"rename that stopped halfway, and every link points at the directory", base, course.ID, name))
+				"rename that stopped halfway, and every link points at the directory", base, course.Slug, name))
 	}
 
 	// What the course is called in other languages, beside the file it
@@ -281,6 +289,20 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 		lesson.Exercises = exercises
 	}
 
+	/* THE PROSE IS NAMED FOR THE SLUG AND FILED UNDER THE ID.
+
+	   `vps.md` is what somebody writing a section types, and `se-gy02rmmz` is
+	   what the row holding a student's progress through it points at. This is
+	   the seam between the two, and it is the only place in the loader that has
+	   to know both — every reader downstream gets ids.
+
+	   A file naming no section keeps its own stem, so the orphan check below
+	   can say `vps.md` rather than a code that resolves to nothing. */
+	bySlug := map[string]string{}
+	for _, sec := range lesson.Sections {
+		bySlug[sec.Slug] = sec.ID
+	}
+
 	// Every Markdown file in the directory, so the orphan check has both sides
 	// of the comparison. Content that was generated and forgotten shows up
 	// nowhere else (C-13) — this is the only place it can be seen.
@@ -295,8 +317,12 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 		}
 		lesson.Files = append(lesson.Files, f.Name())
 
-		section, locale := sectionAndLocale(f.Name())
-		lesson.Prose[section] = true
+		slug, locale := sectionAndLocale(f.Name())
+		lesson.Prose[slug] = true
+		section := slug
+		if id, ok := bySlug[slug]; ok {
+			section = id
+		}
 
 		body, err := fs.ReadFile(dir, path.Join(base, f.Name()))
 		if err != nil {
