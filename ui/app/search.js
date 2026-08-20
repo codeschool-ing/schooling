@@ -36,7 +36,7 @@
    i18n keys for the group labels, and the key is the Portuguese text by design.
    ========================================================================== */
 
-import { courseLessons, courseById } from './catalog.js';
+import { courseLessons, courseById, courseAddress } from './catalog.js';
 import { lessonSections, lessonExercises } from './lessons.js';
 import { allNotes } from './state.js';
 
@@ -82,7 +82,7 @@ function buildIndex() {
   };
 
   COURSES.forEach((c) => {
-    add('courses', c.name, c.category + ' · ' + c.hours + 'h', '#/course/' + c.id,
+    add('courses', c.name, c.category + ' · ' + c.hours + 'h', '#/course/' + courseAddress(c.id),
       c.summary, c.category, (c.syllabus || []).join(' '));
 
     const lessons = courseLessons(c.id);
@@ -90,7 +90,7 @@ function buildIndex() {
 
     lessons.forEach((a) => {
       const sections = lessonSections(c.id, a.key);
-      const first = '#/course/' + c.id + '/lesson/' + a.ix + '/' + sections[0].id;
+      const first = '#/course/' + courseAddress(c.id) + '/lesson/' + a.ix + '/' + sections[0].id;
       /* The translated title AND the join key: see the header of this file. In
          English — the source language — the two are the same string, and then
          the key stays out; repeated, it would become the result's excerpt. */
@@ -103,7 +103,7 @@ function buildIndex() {
         sections.forEach((s) => {
           if (s.type !== 'content') return;
           add('sections', s.title, c.name + ' · ' + a.title,
-            '#/course/' + c.id + '/lesson/' + a.ix + '/' + s.id,
+            '#/course/' + courseAddress(c.id) + '/lesson/' + a.ix + '/' + s.slug,
             plainText(s.body));
         });
       }
@@ -113,7 +113,7 @@ function buildIndex() {
          every exercise. */
       lessonExercises(c.id, a.key).forEach((ex) => {
         add('exercises', ex.prompt, c.name + ' · ' + a.title,
-          '#/course/' + c.id + '/lesson/' + a.ix + '/assessment');
+          '#/course/' + courseAddress(c.id) + '/lesson/' + a.ix + '/assessment');
       });
     });
   });
@@ -123,7 +123,7 @@ function buildIndex() {
     const a = courseLessons(note.courseId)[note.lessonIx];
     if (!c || !a) return;
     add('notes', note.text, c.name + ' · ' + a.title,
-      '#/course/' + note.courseId + '/lesson/' + note.lessonIx + '/' + note.sectionId);
+      '#/course/' + courseAddress(note.courseId) + '/lesson/' + note.lessonIx + '/' + note.sectionId);
   });
 
   return items;

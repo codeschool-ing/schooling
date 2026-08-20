@@ -34,9 +34,55 @@ func Validate(school *School) []error {
 	return problems
 }
 
-// An id is a slug and never derives from a title (C-09, C-10). A title is
-// rewritten by a machine; an id that followed it would take every link with it.
+// A slug is the readable name. It appears in an address and in a file name, it
+// is what every reference inside `content/` uses, and it is free to change.
 var slug = regexp.MustCompile(`^[a-z0-9]([a-z0-9-]*[a-z0-9])?$`)
+
+/*
+An id is opaque, and this is what makes it so.
+
+	`tr-p00q6jw0`, `co-cbwm5kwa`, `le-5he7q8tg`, `se-gy02rmmz`: two letters
+	saying what kind of thing it is, then eight characters of Crockford's base32
+	— no i, no l, no o, no u, so nothing is ambiguous when it is read off a
+	screen and typed into a query.
+
+	WHY A SHAPE AND NOT JUST "SOMETHING UNIQUE". A generated id nobody checks
+	drifts back towards being derived: the next person adding a course by hand
+	writes `co-statistics`, it is unique, everything works, and the property the
+	opaque id existed for is quietly gone. It is the same failure the topic ids
+	were made to end, arriving through the door marked convenience.
+
+	THE PREFIX IS FOR PEOPLE, NOT FOR CODE. It is there so `se-gy02rmmz` in a log
+	or an error identifies itself without a join. Nothing may branch on it: a
+	`strings.HasPrefix(id, "co-")` deciding behaviour is type information smuggled
+	inside a string, which is worse than the column it is standing in for.
+*/
+var opaqueID = regexp.MustCompile(`^(tr|co|le|se|ex)-[0-9a-hjkmnp-tv-z]{8}$`)
+
+// claim records that an id belongs to something, and reports the second thing
+// that says it owns the same one.
+func claim(taken map[string]string, id, what string) []error {
+	if id == "" {
+		return nil // already reported as missing, by whoever asked for it
+	}
+	if had, ok := taken[id]; ok {
+		return []error{fmt.Errorf(
+			"%s and %s have the same id %q — two things one student's records cannot tell apart",
+			had, what, id)}
+	}
+	taken[id] = what
+	return nil
+}
+
+func checkID(id, prefix, what string) []error {
+	if opaqueID.MatchString(id) && strings.HasPrefix(id, prefix+"-") {
+		return nil
+	}
+	return []error{fmt.Errorf(
+		"%s has the id %q, and an id is %q and eight characters of 0-9a-z without i, l, o or u "+
+			"— for example %s-4mzk8p2r. It is generated once and never derived from a name, "+
+			"because a name is a thing somebody rewrites", what, id, prefix+"-…", prefix)}
+}
 
 func checkSchool(s *School) []error {
 	var problems []error
@@ -64,22 +110,35 @@ func checkSchool(s *School) []error {
 func checkIDs(s *School) []error {
 	var problems []error
 
+	/* BOTH NAMES ARE CHECKED, AND BOTH HAVE TO BE UNIQUE.
+
+	   The slug because two courses sharing one would make an address ambiguous
+	   and a reference in `content/` resolve to whichever was read last. The id
+	   because two things sharing one is two things a student's records cannot
+	   tell apart — the failure the id exists to make impossible, arriving from
+	   a copy-pasted file. */
+	taken := map[string]string{} // id -> the slug that has it
+
 	seenTrack := map[string]bool{}
 	for _, t := range s.Tracks {
-		problems = append(problems, checkSlug(t.ID, "the track")...)
-		if seenTrack[t.ID] {
-			problems = append(problems, fmt.Errorf("two tracks are called %q", t.ID))
+		problems = append(problems, checkSlug(t.Slug, "the track")...)
+		problems = append(problems, checkID(t.ID, "tr", "the track "+t.Slug)...)
+		problems = append(problems, claim(taken, t.ID, t.Slug)...)
+		if seenTrack[t.Slug] {
+			problems = append(problems, fmt.Errorf("two tracks are called %q", t.Slug))
 		}
-		seenTrack[t.ID] = true
+		seenTrack[t.Slug] = true
 	}
 
 	seenCourse := map[string]bool{}
 	for _, c := range s.Courses {
-		problems = append(problems, checkSlug(c.ID, "the course")...)
-		if seenCourse[c.ID] {
-			problems = append(problems, fmt.Errorf("two courses are called %q", c.ID))
+		problems = append(problems, checkSlug(c.Slug, "the course")...)
+		problems = append(problems, checkID(c.ID, "co", "the course "+c.Slug)...)
+		problems = append(problems, claim(taken, c.ID, c.Slug)...)
+		if seenCourse[c.Slug] {
+			problems = append(problems, fmt.Errorf("two courses are called %q", c.Slug))
 		}
-		seenCourse[c.ID] = true
+		seenCourse[c.Slug] = true
 
 		/* EVERY TOPIC IS A THING WITH A NAME, and that name is what a lesson, a
 		   note and a progress row are all keyed by.
@@ -101,21 +160,22 @@ func checkIDs(s *School) []error {
 			id := topic.ID
 			if strings.TrimSpace(topic.Title) == "" {
 				problems = append(problems, fmt.Errorf(
-					"topic %d of the course %q has no title", at, c.ID))
+					"topic %d of the course %q has no title", at, c.Slug))
 			}
 			if id == "" {
 				problems = append(problems, fmt.Errorf(
 					"topic %d of the course %q has no id — write one, as "+
-						`{"id": "t-xxxxxxxx", "title": %q}. It is never derived from the title: `+
+						`{"id": "le-xxxxxxxx", "title": %q}. It is never derived from the title: `+
 						"a machine rewrites titles, and every lesson, note and progress row "+
-						"keyed by this would follow the rewrite", at, c.ID, topic.Title))
+						"keyed by this would follow the rewrite", at, c.Slug, topic.Title))
 				continue
 			}
-			problems = append(problems, checkSlug(id, "the topic")...)
+			problems = append(problems, checkID(id, "le", "the topic "+topic.Title)...)
+			problems = append(problems, claim(taken, id, c.Slug+"/"+topic.Title)...)
 			if topics[id] {
 				problems = append(problems, fmt.Errorf(
 					"the course %q has two topics called %q — one of them would take the "+
-						"other's lessons, notes and progress", c.ID, id))
+						"other's lessons, notes and progress", c.Slug, id))
 			}
 			topics[id] = true
 		}
@@ -132,17 +192,17 @@ func checkIDs(s *School) []error {
 		   This is the only place that correspondence can be seen at all. */
 		seenLesson := map[string]bool{}
 		for _, id := range c.Lessons {
-			problems = append(problems, checkSlug(id, "the lesson")...)
+			problems = append(problems, checkID(id, "le", "the lesson")...)
 			if seenLesson[id] {
 				problems = append(problems, fmt.Errorf(
-					"the course %q names the lesson %q twice", c.ID, id))
+					"the course %q names the lesson %q twice", c.Slug, id))
 			}
 			seenLesson[id] = true
 
 			if len(c.Topics) > 0 && !topics[id] {
 				problems = append(problems, fmt.Errorf(
 					"the course %q has a lesson %q and no topic of that name — a lesson is a "+
-						"topic somebody has written, so this one is on no screen", c.ID, id))
+						"topic somebody has written, so this one is on no screen", c.Slug, id))
 			}
 		}
 	}
@@ -174,7 +234,7 @@ func checkTracksAreOrdered(s *School) []error {
 
 	have := map[string]bool{}
 	for _, t := range s.Tracks {
-		have[t.ID] = true
+		have[t.Slug] = true
 	}
 
 	seen := map[string]bool{}
@@ -191,10 +251,10 @@ func checkTracksAreOrdered(s *School) []error {
 	}
 
 	for _, t := range s.Tracks {
-		if !seen[t.ID] {
+		if !seen[t.Slug] {
 			problems = append(problems, fmt.Errorf(
 				"the track %q is not in the school's order, so it is offered last — "+
-					"order is declared, never inferred (C-10)", t.ID))
+					"order is declared, never inferred (C-10)", t.Slug))
 		}
 	}
 	return problems
@@ -223,7 +283,7 @@ func checkLessons(s *School) []error {
 		   yet" and "written wrongly". */
 
 		for _, l := range c.Loaded {
-			where := c.ID + "/" + l.ID
+			where := c.Slug + "/" + l.ID
 
 			if strings.TrimSpace(l.Title) == "" {
 				problems = append(problems, fmt.Errorf("%s has no title", where))
@@ -234,35 +294,38 @@ func checkLessons(s *School) []error {
 
 			seen := map[string]bool{}
 			for _, sec := range l.Sections {
-				problems = append(problems, checkSlug(sec.ID, "the section")...)
-				if seen[sec.ID] {
+				problems = append(problems, checkSlug(sec.Slug, "the section")...)
+				problems = append(problems, checkID(sec.ID, "se", where+"/"+sec.Slug)...)
+				if seen[sec.Slug] {
 					problems = append(problems, fmt.Errorf(
 						"%s has two sections called %q, and an exercise naming it would join to "+
-							"whichever came first", where, sec.ID))
+							"whichever came first", where, sec.Slug))
 				}
-				seen[sec.ID] = true
+				seen[sec.Slug] = true
 
 				if !sectionKinds[sec.Kind] {
 					problems = append(problems, fmt.Errorf(
-						"%s/%s is of kind %q, which nothing knows how to show", where, sec.ID, sec.Kind))
+						"%s/%s is of kind %q, which nothing knows how to show", where, sec.Slug, sec.Kind))
 				}
 				if sec.Kind == KindAssessment {
 					problems = append(problems, fmt.Errorf(
 						"%s/%s is an assessment, and assessments are appended by the platform "+
-							"rather than written in a file", where, sec.ID))
+							"rather than written in a file", where, sec.Slug))
 				}
 
 				// A reading section with no prose is a step a student opens to
 				// find nothing. It is the failure that a schema check cannot
 				// see, because the schema is satisfied.
-				if sec.Kind == KindReading && !l.Prose[sec.ID] {
+				// BY SLUG, because that is what the file is called and what the
+				// person reading this has to go and write.
+				if sec.Kind == KindReading && !l.Prose[sec.Slug] {
 					problems = append(problems, fmt.Errorf(
 						"%s/%s is a reading section and there is no %s.md — a student opens it "+
-							"and finds nothing", where, sec.ID, sec.ID))
+							"and finds nothing", where, sec.Slug, sec.Slug))
 				}
-				if sec.Kind == KindVideo && !sec.Video && !l.Prose[sec.ID] {
+				if sec.Kind == KindVideo && !sec.Video && !l.Prose[sec.Slug] {
 					problems = append(problems, fmt.Errorf(
-						"%s/%s is a video section with neither a video nor prose", where, sec.ID))
+						"%s/%s is a video section with neither a video nor prose", where, sec.Slug))
 				}
 			}
 
@@ -373,11 +436,11 @@ func checkExercises(s *School) []error {
 		for _, l := range c.Loaded {
 			sections := map[string]bool{}
 			for _, sec := range l.Sections {
-				sections[sec.ID] = true
+				sections[sec.Slug] = true
 			}
-			check(c.ID+"/"+l.ID, sections, pictures, l.Exercises)
+			check(c.Slug+"/"+l.ID, sections, pictures, l.Exercises)
 		}
-		check(c.ID+"/exam", nil, pictures, c.Exam)
+		check(c.Slug+"/exam", nil, pictures, c.Exam)
 
 		// AND THE OTHER DIRECTION, for pictures as it already is for prose. A
 		// file nothing asks about is work that was done and forgotten: it sits
@@ -387,13 +450,13 @@ func checkExercises(s *School) []error {
 			if !used[img.Name] {
 				problems = append(problems, fmt.Errorf(
 					"%s/images/%s is a picture no question labels — it was added and forgotten, "+
-						"and nothing else in the system would ever mention it", c.ID, img.Name))
+						"and nothing else in the system would ever mention it", c.Slug, img.Name))
 			}
 			if len(img.Bytes) > maxPictureBytes {
 				problems = append(problems, fmt.Errorf(
 					"%s/images/%s is %d kB and the limit is %d — a picture that size is a "+
 						"photograph rather than a diagram, and it travels into the offline "+
-						"bundle whole", c.ID, img.Name, len(img.Bytes)/1000, maxPictureBytes/1000))
+						"bundle whole", c.Slug, img.Name, len(img.Bytes)/1000, maxPictureBytes/1000))
 			}
 		}
 	}
@@ -402,7 +465,7 @@ func checkExercises(s *School) []error {
 	// by the same rules — an exam that belongs to a track rather than a course is
 	// a different place to look for it, not a different kind of question (A-08).
 	for _, t := range s.Tracks {
-		check(t.ID+"/exam", nil, nil, t.Exam)
+		check(t.Slug+"/exam", nil, nil, t.Exam)
 	}
 
 	return problems
@@ -418,16 +481,16 @@ func checkTracks(s *School) []error {
 
 	courses := map[string]bool{}
 	for _, c := range s.Courses {
-		courses[c.ID] = true
+		courses[c.Slug] = true
 	}
 	tracks := map[string]*Track{}
 	for _, t := range s.Tracks {
-		tracks[t.ID] = t
+		tracks[t.Slug] = t
 	}
 
 	for _, t := range s.Tracks {
 		if len(t.Courses) == 0 {
-			problems = append(problems, fmt.Errorf("the track %q has no courses", t.ID))
+			problems = append(problems, fmt.Errorf("the track %q has no courses", t.Slug))
 		}
 
 		// A course may appear once in a track. Twice is either a mistake or an
@@ -439,27 +502,27 @@ func checkTracks(s *School) []error {
 				if len(step.Fork.Options) < 2 {
 					problems = append(problems, fmt.Errorf(
 						"the track %q has a fork at step %d with fewer than two options, which "+
-							"is not a choice", t.ID, i+1))
+							"is not a choice", t.Slug, i+1))
 				}
 				for _, option := range step.Fork.Options {
 					if strings.TrimSpace(option.Name) == "" {
 						problems = append(problems, fmt.Errorf(
-							"the track %q has an unnamed option at step %d", t.ID, i+1))
+							"the track %q has an unnamed option at step %d", t.Slug, i+1))
 					}
 					if len(option.Courses) == 0 {
 						problems = append(problems, fmt.Errorf(
 							"the track %q offers %q at step %d and it contains no courses",
-							t.ID, option.Name, i+1))
+							t.Slug, option.Name, i+1))
 					}
 					for _, id := range option.Courses {
-						problems = append(problems, checkTrackCourse(t.ID, id, courses, seen)...)
+						problems = append(problems, checkTrackCourse(t.Slug, id, courses, seen)...)
 					}
 				}
 			case step.Course != "":
-				problems = append(problems, checkTrackCourse(t.ID, step.Course, courses, seen)...)
+				problems = append(problems, checkTrackCourse(t.Slug, step.Course, courses, seen)...)
 			default:
 				problems = append(problems, fmt.Errorf(
-					"the track %q has an empty step at position %d", t.ID, i+1))
+					"the track %q has an empty step at position %d", t.Slug, i+1))
 			}
 		}
 
@@ -496,7 +559,7 @@ func checkLinks(t *Track, seen map[string]bool) []error {
 		if !seen[course] {
 			problems = append(problems, fmt.Errorf(
 				"the track %q gives an order for the course %q, which the track does not contain",
-				t.ID, course))
+				t.Slug, course))
 		}
 		for _, target := range t.Links[course] {
 			switch {
@@ -504,15 +567,15 @@ func checkLinks(t *Track, seen map[string]bool) []error {
 				if *target.Step < 0 || *target.Step >= len(t.Courses) {
 					problems = append(problems, fmt.Errorf(
 						"the track %q says %q comes after step %d, and the track has %d steps",
-						t.ID, course, *target.Step, len(t.Courses)))
+						t.Slug, course, *target.Step, len(t.Courses)))
 				}
 			case target.Course == course:
 				problems = append(problems, fmt.Errorf(
-					"the track %q says %q comes after itself", t.ID, course))
+					"the track %q says %q comes after itself", t.Slug, course))
 			case !seen[target.Course]:
 				problems = append(problems, fmt.Errorf(
 					"the track %q says %q comes after %q, which the track does not contain",
-					t.ID, course, target.Course))
+					t.Slug, course, target.Course))
 			}
 		}
 	}
@@ -543,7 +606,7 @@ func checkTrackText(s *School, t *Track) []error {
 		if !known[locale] {
 			problems = append(problems, fmt.Errorf(
 				"the track %q is translated into %q, which the school does not list in `locales` — "+
-					"so nothing would ever serve it", t.ID, locale))
+					"so nothing would ever serve it", t.Slug, locale))
 		}
 		text := t.Text[locale]
 
@@ -552,13 +615,13 @@ func checkTrackText(s *School, t *Track) []error {
 			if err != nil {
 				problems = append(problems, fmt.Errorf(
 					"the %s of the track %q translates a step called %q, and a step is a position",
-					locale, t.ID, at))
+					locale, t.Slug, at))
 				continue
 			}
 			if position < 0 || position >= len(t.Courses) {
 				problems = append(problems, fmt.Errorf(
 					"the %s of the track %q translates step %d, and the track has %d steps",
-					locale, t.ID, position, len(t.Courses)))
+					locale, t.Slug, position, len(t.Courses)))
 				continue
 			}
 			fork := t.Courses[position].Fork
@@ -566,14 +629,14 @@ func checkTrackText(s *School, t *Track) []error {
 				problems = append(problems, fmt.Errorf(
 					"the %s of the track %q translates step %d as a choice, and that step is the "+
 						"course %q — a step was inserted or removed and the translation stayed behind",
-					locale, t.ID, position, t.Courses[position].Course))
+					locale, t.Slug, position, t.Courses[position].Course))
 				continue
 			}
 			if n := len(text.Steps[at].Options); n > 0 && n != len(fork.Options) {
 				problems = append(problems, fmt.Errorf(
 					"the %s of the track %q gives step %d %d option names and the choice has %d — "+
 						"they are matched by position, so one of them is describing the wrong option",
-					locale, t.ID, position, n, len(fork.Options)))
+					locale, t.Slug, position, n, len(fork.Options)))
 			}
 		}
 	}
@@ -594,34 +657,39 @@ func checkCourseText(s *School) []error {
 			if !known[locale] {
 				problems = append(problems, fmt.Errorf(
 					"the course %q is translated into %q, which the school does not list in "+
-						"`locales` — so nothing would ever serve it", c.ID, locale))
+						"`locales` — so nothing would ever serve it", c.Slug, locale))
 			}
 
-			/* THE TRANSLATED LISTS ARE MATCHED BY POSITION, and nothing was
-			   checking that they were the same length.
+			/* THE TRANSLATED TOPICS ARE KEYED BY THE TOPIC'S ID, and every key
+			   has to name a topic this course actually has.
 
-			   One entry short and every translation from that point on
-			   describes the topic above it — in perfect Portuguese, on a screen
-			   that looks entirely normal. It is the fork-translation failure
-			   that shipped in the predecessor, one level down, and this is the
-			   only place it can be seen.
+			   They were an array matched by POSITION, and the check here was
+			   that the two lists were the same length — the best that could be
+			   done when a position was all there was to join on. It caught a
+			   translation one entry short and could not catch one that was the
+			   right length and shifted.
 
-			   A list that is ABSENT is not a problem: a translation carries
-			   what somebody translated (C-11), and a course translated in its
-			   name and not its contents keeps the English contents. It is a
-			   list that is present and the wrong length that means the two have
-			   come out of step. */
+			   Keyed by id, a translation that has come loose says so precisely:
+			   the key names a topic that is not there. A topic with NO
+			   translation is still fine — a translation carries what somebody
+			   translated (C-11) and the English title survives. */
 			text := c.Text[locale]
-			if n := len(text.Topics); n > 0 && n != len(c.Topics) {
-				problems = append(problems, fmt.Errorf(
-					"the %s of the course %q lists %d topics and the course has %d — they are "+
-						"matched by position, so one of them is describing the wrong topic",
-					locale, c.ID, n, len(c.Topics)))
+			mine := map[string]bool{}
+			for _, topic := range c.Topics {
+				mine[topic.ID] = true
+			}
+			for _, id := range slices.Sorted(maps.Keys(text.Topics)) {
+				if !mine[id] {
+					problems = append(problems, fmt.Errorf(
+						"the %s of the course %q translates the topic %q, which that course does "+
+							"not have — the id was renamed, or the translation was copied from "+
+							"another course", locale, c.Slug, id))
+				}
 			}
 			if n := len(text.Syllabus); n > 0 && n != len(c.Syllabus) {
 				problems = append(problems, fmt.Errorf(
 					"the %s of the course %q lists %d syllabus lines and the course has %d — "+
-						"they are matched by position", locale, c.ID, n, len(c.Syllabus)))
+						"they are matched by position", locale, c.Slug, n, len(c.Syllabus)))
 			}
 		}
 	}
@@ -643,23 +711,31 @@ func checkTrackCourse(track, id string, courses, seen map[string]bool) []error {
 	return problems
 }
 
+// checkContinues walks the chain and refuses a loop in it.
+//
+// EVERY COMPARISON HERE IS BY SLUG, and mixing the two names is not a tidiness
+// problem: `continues` names a track the way the rest of `content/` does, by
+// slug, and comparing it against the opaque id made the self-reference test
+// never fire. The walk then followed `frontend` to `frontend` for ever — a
+// validator that hangs instead of refusing, which the test caught by timing out
+// rather than by failing.
 func checkContinues(t *Track, tracks map[string]*Track) error {
-	visited := map[string]bool{t.ID: true}
+	visited := map[string]bool{t.Slug: true}
 
 	for at := t; at.Continues != ""; {
-		if at.Continues == at.ID {
-			return fmt.Errorf("the track %q continues itself", at.ID)
+		if at.Continues == at.Slug {
+			return fmt.Errorf("the track %q continues itself", at.Slug)
 		}
 		next, ok := tracks[at.Continues]
 		if !ok {
-			return fmt.Errorf("the track %q continues %q, which does not exist", at.ID, at.Continues)
+			return fmt.Errorf("the track %q continues %q, which does not exist", at.Slug, at.Continues)
 		}
-		if visited[next.ID] {
+		if visited[next.Slug] {
 			return fmt.Errorf(
 				"the tracks %q and %q continue each other, so following the chain never ends",
-				at.ID, next.ID)
+				at.Slug, next.Slug)
 		}
-		visited[next.ID] = true
+		visited[next.Slug] = true
 		at = next
 	}
 	return nil
@@ -685,14 +761,14 @@ func checkRequires(s *School) []error {
 
 	byID := map[string]*Course{}
 	for _, c := range s.Courses {
-		byID[c.ID] = c
+		byID[c.Slug] = c
 	}
 
 	for _, c := range s.Courses {
 		for _, id := range c.Requires {
 			if _, ok := byID[id]; !ok {
 				problems = append(problems, fmt.Errorf(
-					"the course %q requires %q, which does not exist", c.ID, id))
+					"the course %q requires %q, which does not exist", c.Slug, id))
 			}
 		}
 	}
@@ -706,7 +782,7 @@ func checkRequires(s *School) []error {
 
 	tracks := map[string]*Track{}
 	for _, t := range s.Tracks {
-		tracks[t.ID] = t
+		tracks[t.Slug] = t
 	}
 
 	for _, t := range s.Tracks {
@@ -759,7 +835,7 @@ func checkNoCycle(courses []*Course, byID map[string]*Course) error {
 	}
 
 	for _, c := range courses {
-		if err := walk(c.ID); err != nil {
+		if err := walk(c.Slug); err != nil {
 			return err
 		}
 	}
@@ -772,6 +848,11 @@ func checkTrackOrder(t *Track, tracks map[string]*Track, byID map[string]*Course
 	// course of those tracks, from every branch, because "a student on this
 	// track has taken that one" says nothing about which option they chose.
 	arriving := map[string]bool{}
+	/* THE LOOP GUARD IS A SET AND NOT A COMPARISON WITH THE START. Two other
+	   tracks continuing each other is a cycle this walk falls into without ever
+	   coming back to `t`, and `checkContinues` reports it — but only for the
+	   track it starts from, so this one still has to get out. */
+	walked := map[string]bool{t.Slug: true}
 	for at := t; at.Continues != ""; {
 		next, ok := tracks[at.Continues]
 		if !ok {
@@ -780,17 +861,18 @@ func checkTrackOrder(t *Track, tracks map[string]*Track, byID map[string]*Course
 		for _, id := range everyCourseIn(next) {
 			arriving[id] = true
 		}
-		at = next
-		if at.ID == t.ID {
+		if walked[next.Slug] {
 			return nil // a loop, already reported
 		}
+		walked[next.Slug] = true
+		at = next
 	}
 
 	branches, tooMany := branchesOf(t)
 	if tooMany {
 		return []error{fmt.Errorf(
 			"the track %q has so many forks that its branches cannot all be checked — which is "+
-				"itself the problem: a student cannot hold that many choices either", t.ID)}
+				"itself the problem: a student cannot hold that many choices either", t.Slug)}
 	}
 
 	var problems []error
@@ -815,7 +897,7 @@ func checkTrackOrder(t *Track, tracks map[string]*Track, byID map[string]*Course
 					continue // already reported
 				}
 
-				key := t.ID + "/" + id + "/" + needed
+				key := t.Slug + "/" + id + "/" + needed
 				if reported[key] {
 					continue
 				}
@@ -825,7 +907,7 @@ func checkTrackOrder(t *Track, tracks map[string]*Track, byID map[string]*Course
 					"the track %q reaches %q before %q, which it requires — either the track's "+
 						"order is wrong, or %q is sequence rather than knowledge and belongs to "+
 						"the track instead of to `requires`",
-					t.ID, id, needed, needed))
+					t.Slug, id, needed, needed))
 			}
 			taken[id] = true
 		}

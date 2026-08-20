@@ -16,6 +16,13 @@ import (
 
 const fixture = "../../internal/catalog/testdata/good"
 
+// The fixture's ids, named once — they are opaque on purpose, which makes them
+// unreadable in the middle of a query. See the same block in internal/catalog.
+const (
+	frontend        = "tr-wrp2620n"
+	clientAndServer = "le-4xwdejgt"
+)
+
 func testPool(t *testing.T) *pgxpool.Pool {
 	t.Helper()
 	url := os.Getenv("SCHOOLING_TEST_DATABASE_URL")
@@ -103,8 +110,8 @@ func TestLoadingWritesTheWholeCatalogue(t *testing.T) {
 	var finals int
 	if err := pool.QueryRow(context.Background(), `
 		SELECT count(*) FROM catalog_exercises
-		WHERE tenant_id = $1 AND track_id = 'frontend' AND course_id = '' AND exam
-	`, id).Scan(&finals); err != nil {
+		WHERE tenant_id = $1 AND track_id = $2 AND course_id = '' AND exam
+	`, id, frontend).Scan(&finals); err != nil {
 		t.Fatalf("counting the final: %v", err)
 	}
 	if finals != 2 {
@@ -149,10 +156,12 @@ func TestARefusedCatalogueLeavesThePreviousOneServing(t *testing.T) {
 
 	// Break it in a way only the validator can see: a section a student would
 	// open to find nothing.
-	patch(t, filepath.Join(dir, "courses/web-fundamentals/lessons/client-and-server/lesson.json"),
+	patch(t, filepath.Join(dir, "courses/web-fundamentals/lessons", clientAndServer, "lesson.json"),
 		func(d map[string]any) {
 			sections, _ := d["sections"].([]any)
-			d["sections"] = append(sections, map[string]any{"id": "packets", "kind": "reading"})
+			d["sections"] = append(sections, map[string]any{
+				"id": "se-4mzk8p2r", "slug": "packets", "kind": "reading",
+			})
 		})
 
 	err := load(t, pool, dir)

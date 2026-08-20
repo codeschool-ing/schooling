@@ -15,6 +15,26 @@ import (
 // references, a lesson directory whose name disagrees with the id inside it.
 // A map would let those cases be constructed impossibly.
 
+/*
+THE FIXTURE'S IDS, NAMED ONCE.
+
+	They are opaque on purpose — that is the property under test in half of this
+	file — which makes them unreadable in the middle of an assertion. So each one
+	is given a name here, and a test says `clientAndServer` where it means that
+	lesson.
+*/
+const (
+	webFundamentals = "co-rmk5x0wb"
+	htmlCSS         = "co-7gz7d3ck"
+	reactTS         = "co-y85g0g4a"
+	angular         = "co-gkyj1nnd"
+	frontend        = "tr-wrp2620n"
+
+	clientAndServer = "le-4xwdejgt" // the one lesson of web-fundamentals with prose
+	boxes           = "le-425dvkck" // html-css's lesson
+	rolesSection    = "se-65fm07ad" // a reading section of clientAndServer, roles.md
+)
+
 // school loads testdata/good, optionally mutated, and answers every problem.
 func school(t *testing.T, changes ...func(dir string)) []error {
 	t.Helper()
@@ -41,14 +61,16 @@ func loadGood(t *testing.T, changes ...func(dir string)) (*catalog.School, []err
 	return loaded, problems
 }
 
-func courseNamed(t *testing.T, s *catalog.School, id string) *catalog.Course {
+// By slug, which is how `content/` names a course and how a person says which
+// one they mean.
+func courseNamed(t *testing.T, s *catalog.School, slug string) *catalog.Course {
 	t.Helper()
 	for _, c := range s.Courses {
-		if c.ID == id {
+		if c.Slug == slug {
 			return c
 		}
 	}
-	t.Fatalf("the fixture has no course %q", id)
+	t.Fatalf("the fixture has no course %q", slug)
 	return nil
 }
 
@@ -121,7 +143,7 @@ func TestACycleInRequiresIsReportedOnceAndPlainly(t *testing.T) {
 // repository looking like work that was done.
 func TestProseNoSectionReferencesIsRefused(t *testing.T) {
 	problems := school(t, write(
-		"courses/web-fundamentals/lessons/client-and-server/packets.md",
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/packets.md",
 		"---\ntitle: Packets\n---\n\nWritten, and never linked to anything.\n"))
 
 	if !says(problems, "packets.md is not referenced by any section") {
@@ -132,8 +154,8 @@ func TestProseNoSectionReferencesIsRefused(t *testing.T) {
 // The other direction: a step a student opens to find nothing. A schema check
 // passes this, which is exactly why the schema is not the reviewer.
 func TestAReadingSectionWithNoProseIsRefused(t *testing.T) {
-	problems := school(t, addSection("web-fundamentals", "client-and-server",
-		catalog.Section{ID: "packets", Kind: catalog.KindReading}))
+	problems := school(t, addSection("web-fundamentals", clientAndServer,
+		catalog.Section{ID: "se-4mzk8p2r", Slug: "packets", Kind: catalog.KindReading}))
 
 	if !says(problems, "there is no packets.md", "opens it and finds nothing") {
 		t.Errorf("a reading section with no prose was accepted:\n%s", report(t, problems))
@@ -178,11 +200,15 @@ func TestAFieldNothingReadsIsRefused(t *testing.T) {
 	}
 }
 
-// An id that disagrees with its directory is a rename that stopped halfway, and
-// every link points at the directory.
-func TestAnIDThatDisagreesWithItsDirectoryIsRefused(t *testing.T) {
+// A SLUG that disagrees with its directory is a rename that stopped halfway, and
+// every reference in `content/` points at the directory.
+//
+// It is the slug and not the id, because the slug is the readable name and the
+// one a directory is named for — an opaque id would make a tree nobody can work
+// in.
+func TestASlugThatDisagreesWithItsDirectoryIsRefused(t *testing.T) {
 	problems := school(t, patchJSON("courses/html-css/course.json",
-		func(d map[string]any) { d["id"] = "html-and-css" }))
+		func(d map[string]any) { d["slug"] = "html-and-css" }))
 
 	if !says(problems, "rename that stopped halfway") {
 		t.Errorf("a course whose id and directory disagree was accepted:\n%s", report(t, problems))
@@ -215,7 +241,7 @@ func TestATracksFinalIsLoadedAndIsNotATrack(t *testing.T) {
 			t.Fatal("tracks/frontend-exam.json was read as a track, so the final is a track " +
 				"nobody can take and the track it belongs to has no final")
 		}
-		if track.ID == "frontend" {
+		if track.Slug == "frontend" {
 			frontend = track
 		}
 	}
@@ -262,14 +288,15 @@ func TestATrackThatContinuesItselfIsRefused(t *testing.T) {
 func TestATrackMayAssumeWhatTheTrackItContinuesTaught(t *testing.T) {
 	problems := school(t,
 		write("tracks/advanced.json", `{
-			"id": "advanced",
+			"id": "tr-4mzk8p2r",
+			"slug": "advanced",
 			"name": "Advanced Front-end",
 			"goal": "…",
 			"outcome": "…",
 			"courses": ["performance"],
 			"continues": "frontend"
 		}`),
-		course("performance", "web-fundamentals"),
+		course("performance", "co-4mzk8p2r", "le-4mzk8p2r", "se-4mzk8p2r", "web-fundamentals"),
 		// A new track is offered somewhere, and the school says where (C-10).
 		patchJSON("school.json", func(d map[string]any) {
 			d["tracks"] = []any{"frontend", "advanced"}
@@ -353,7 +380,7 @@ func sectionOf(exerciseID, section string) func(string) {
 // is a parameter. A parameter that only ever receives one value reads as a
 // choice somebody made, and there is no choice here to make.
 func patchExercises(change func([]map[string]any)) func(string) {
-	const name = "courses/web-fundamentals/lessons/client-and-server/exercises.json"
+	const name = "courses/web-fundamentals/lessons/" + clientAndServer + "/exercises.json"
 	return func(dir string) {
 		path := filepath.Join(dir, filepath.FromSlash(name))
 
@@ -375,32 +402,45 @@ func addSection(courseID, lessonID string, section catalog.Section) func(string)
 	return patchJSON("courses/"+courseID+"/lessons/"+lessonID+"/lesson.json",
 		func(d map[string]any) {
 			sections, _ := d["sections"].([]any)
+			// A section written by hand in a test gets both names, like one
+			// written by hand in a file: the id identifies and the slug is what
+			// the prose file is called.
 			d["sections"] = append(sections, map[string]any{
-				"id": section.ID, "kind": section.Kind,
+				"id": section.ID, "slug": section.Slug, "kind": section.Kind,
 			})
 		})
 }
 
 // course writes a whole small course, for the cases that need one more.
-func course(id, requires string) func(string) {
+// course writes a whole small course, for the cases that need one more.
+//
+// THE IDS ARE PASSED IN, NOT WORKED OUT FROM THE SLUG. Minting `co-`+slug here
+// would be the derivation the format exists to end, living in the test helper
+// that every future case reaches for — and a helper is exactly where that would
+// go unnoticed. They are opaque, they are this fixture's, and they are written
+// down.
+func course(slug, courseID, lessonID, sectionID, requires string) func(string) {
 	return func(dir string) {
-		write("courses/"+id+"/course.json", `{
-			"id": "`+id+`",
-			"name": "`+id+`",
+		write("courses/"+slug+"/course.json", `{
+			"id": "`+courseID+`",
+			"slug": "`+slug+`",
+			"name": "`+slug+`",
 			"category": "front-end",
 			"level": "advanced",
 			"hours": 20,
 			"summary": "A course.",
 			"requires": ["`+requires+`"],
 			"prerequisites": "…",
-			"lessons": ["only"]
+			"lessons": ["`+lessonID+`"],
+			"topics": [{ "id": "`+lessonID+`", "title": "The only lesson" }]
 		}`)(dir)
-		write("courses/"+id+"/lessons/only/lesson.json", `{
-			"id": "only",
+		write("courses/"+slug+"/lessons/"+lessonID+"/lesson.json", `{
+			"id": "`+lessonID+`",
 			"title": "The only lesson",
-			"sections": [{ "id": "overview", "kind": "reading" }]
+			"sections": [{ "id": "`+sectionID+`", "slug": "overview", "kind": "reading" }]
 		}`)(dir)
-		write("courses/"+id+"/lessons/only/overview.md", "---\ntitle: Overview\n---\n\nText.\n")(dir)
+		write("courses/"+slug+"/lessons/"+lessonID+"/overview.md",
+			"---\ntitle: Overview\n---\n\nText.\n")(dir)
 	}
 }
 
@@ -509,7 +549,7 @@ func TestACourseWithNoLessonsIsAnnouncedRatherThanRefused(t *testing.T) {
 // nothing.
 func TestALessonWithNoSectionsIsStillRefused(t *testing.T) {
 	problems := school(t, patchJSON(
-		"courses/web-fundamentals/lessons/client-and-server/lesson.json",
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/lesson.json",
 		func(d map[string]any) { d["sections"] = []any{} }))
 
 	if !says(problems, "has no sections") {
@@ -645,7 +685,7 @@ func TestATopicKeepsTheIDItDeclaresWhateverItIsCalled(t *testing.T) {
 		t.Fatalf("%d topics, want the two the fixture declares", n)
 	}
 
-	if got := course.Topics[0].ID; got != "client-and-server" {
+	if got := course.Topics[0].ID; got != clientAndServer {
 		t.Errorf("a declared id came back as %q — the title is %q, and if that is where this "+
 			"came from then rewording a topic moves a student's work",
 			got, course.Topics[0].Title)
@@ -655,10 +695,11 @@ func TestATopicKeepsTheIDItDeclaresWhateverItIsCalled(t *testing.T) {
 	}
 
 	// AND THE SECOND TOPIC'S ID IS NOTHING LIKE ITS TITLE EITHER. It is the
-	// form every topic in `content/` now takes — `t-` and eight characters that
-	// mean nothing — and it is here so that this test would fail if anybody
-	// reintroduced a derivation for topics that "look like they need one".
-	if got := course.Topics[1].ID; got != "t-9x2mk4qv" {
+	// form every topic in `content/` now takes — `le-` and eight characters
+	// that mean nothing — and it is here so that this test would fail if
+	// anybody reintroduced a derivation for topics that "look like they need
+	// one".
+	if got := course.Topics[1].ID; got != "le-9x2mk4qv" {
 		t.Errorf("the second topic's id came back as %q", got)
 	}
 }
@@ -676,7 +717,7 @@ func TestATopicWithNoIDIsRefused(t *testing.T) {
 		func(d map[string]any) {
 			d["topics"] = []any{"Who asks and who answers"}
 		}))
-	if !says(problems, "has no id", `{"id": "t-xxxxxxxx", "title":`) {
+	if !says(problems, "has no id", `{"id": "le-xxxxxxxx", "title":`) {
 		t.Errorf("a topic written as a plain string was accepted:\n%s", report(t, problems))
 	}
 }
@@ -687,11 +728,11 @@ func TestTwoTopicsWithTheSameIDAreRefused(t *testing.T) {
 	problems := school(t, patchJSON("courses/web-fundamentals/course.json",
 		func(d map[string]any) {
 			d["topics"] = []any{
-				map[string]any{"id": "client-and-server", "title": "Who asks"},
-				map[string]any{"id": "client-and-server", "title": "And who answers"},
+				map[string]any{"id": clientAndServer, "title": "Who asks"},
+				map[string]any{"id": clientAndServer, "title": "And who answers"},
 			}
 		}))
-	if !says(problems, `two topics called "client-and-server"`) {
+	if !says(problems, `two topics called "`+clientAndServer+`"`) {
 		t.Errorf("a course with two topics of one name was accepted:\n%s", report(t, problems))
 	}
 }
@@ -708,35 +749,50 @@ func TestALessonThatIsNotATopicIsRefused(t *testing.T) {
 		func(d map[string]any) {
 			d["topics"] = []any{"Something else entirely"}
 		}))
-	if !says(problems, `has a lesson "client-and-server" and no topic of that name`) {
+	if !says(problems, `has a lesson "`+clientAndServer+`" and no topic of that name`) {
 		t.Errorf("a lesson no topic names was accepted:\n%s", report(t, problems))
 	}
 }
 
-// A topic id is a slug, for the reason every other id is: a machine rewrites
-// titles, and an id that followed one would take every link with it.
-func TestATopicIDThatIsNotASlugIsRefused(t *testing.T) {
+// A topic id is opaque, for the reason every other id is: a machine rewrites
+// titles, and an id that could be read off one would be written to match.
+func TestATopicIDThatIsNotOpaqueIsRefused(t *testing.T) {
 	problems := school(t, patchJSON("courses/web-fundamentals/course.json",
 		func(d map[string]any) {
 			d["topics"] = []any{
-				map[string]any{"id": "Client And Server", "title": "Who asks and who answers"},
+				map[string]any{"id": "client-and-server", "title": "Who asks and who answers"},
 			}
 		}))
-	if !says(problems, "is not a slug") {
-		t.Errorf("a topic id that is not a slug was accepted:\n%s", report(t, problems))
+	if !says(problems, "and an id is") {
+		t.Errorf("a topic id derived from its title was accepted:\n%s", report(t, problems))
 	}
 }
 
-// THE TRANSLATED LISTS ARE MATCHED BY POSITION AND NOTHING CHECKED THE LENGTH.
+// A TRANSLATED TOPIC THAT NAMES NO TOPIC.
 //
-// One entry short and every translation from that point on describes the topic
-// above it, in perfect Portuguese, on a screen that looks entirely normal. It is
-// the fork-translation failure that shipped in the predecessor, one level down.
-func TestATranslatedTopicListOfTheWrongLengthIsRefused(t *testing.T) {
+// The translations were an array matched by position: one entry short and every
+// translation from there on described the topic above it, in perfect
+// Portuguese, on a screen that looked entirely normal. The length was the only
+// thing that could be checked, and a list of the right length that had shifted
+// passed.
+//
+// Keyed by the topic's id, a translation that has come loose says which one.
+func TestATranslatedTopicThatNamesNoTopicIsRefused(t *testing.T) {
 	problems := school(t, write("courses/web-fundamentals/course.pt.json",
-		`{"topics":["Quem pergunta e quem responde"]}`))
-	if !says(problems, "lists 1 topics and the course has 2") {
-		t.Errorf("a short translated topic list was accepted:\n%s", report(t, problems))
+		`{"topics":{"le-99999999":"Quem pergunta e quem responde"}}`))
+	if !says(problems, `translates the topic "le-99999999", which that course does not have`) {
+		t.Errorf("a translation naming a topic that is not there was accepted:\n%s",
+			report(t, problems))
+	}
+}
+
+// And a topic with no translation is fine: a translation carries what somebody
+// translated (C-11), and the English title survives.
+func TestATopicWithNoTranslationKeepsItsEnglishTitle(t *testing.T) {
+	problems := school(t, write("courses/web-fundamentals/course.pt.json",
+		`{"topics":{"`+clientAndServer+`":"Quem pergunta e quem responde"}}`))
+	if len(problems) != 0 {
+		t.Errorf("translating one topic of two was refused:\n%s", report(t, problems))
 	}
 }
 

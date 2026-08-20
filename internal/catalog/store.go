@@ -36,7 +36,11 @@ func NewStore(pool *pgxpool.Pool) *Store { return &Store{pool: pool} }
 // Listing is one course as the catalogue lists it, with the door already
 // decided.
 type Listing struct {
-	ID       string `json:"id"`
+	// The id is what every record points at; the slug is what an address shows
+	// and what a person reads. See `Course` in model.go for the argument.
+	ID   string `json:"id"`
+	Slug string `json:"slug"`
+
 	Name     string `json:"name"`
 	Category string `json:"category"`
 	Level    string `json:"level"`
@@ -103,7 +107,7 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 	// `count(*)` over that answers neither question. A scalar subquery per
 	// course is the shape that cannot be wrong by accident.
 	rows, err := s.pool.Query(ctx, `
-		SELECT c.id, coalesce(t.name, c.name), c.category, c.level, c.hours,
+		SELECT c.id, c.slug, coalesce(t.name, c.name), c.category, c.level, c.hours,
 		       coalesce(t.summary, c.summary),
 		       coalesce(array_agg(r.requires_id ORDER BY r.requires_id)
 		                FILTER (WHERE r.requires_id IS NOT NULL), '{}'),
@@ -112,11 +116,18 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 		       (SELECT count(*) FROM catalog_sections s
 		         WHERE s.tenant_id = c.tenant_id AND s.course_id = c.id AND s.countable),
 		       coalesce(nullif(t.syllabus, '{}'), c.syllabus),
+		       /* THE TRANSLATED TITLE COMES FROM A ROW KEYED BY THE TOPIC'S ID.
+		          It used to read the translation array at the topic's own
+		          position, so inserting a topic moved every title after it onto
+		          the wrong lesson. */
 		       (SELECT coalesce(jsonb_agg(jsonb_build_object(
 		                 'id', tp.topic_id,
-		                 'title', coalesce(nullif(t.topics[tp.position + 1], ''), tp.title))
+		                 'title', coalesce(nullif(tt.title, ''), tp.title))
 		               ORDER BY tp.position), '[]'::jsonb)
 		          FROM catalog_course_topics tp
+		          LEFT JOIN catalog_course_topic_text tt
+		                 ON tt.tenant_id = tp.tenant_id AND tt.course_id = tp.course_id
+		                AND tt.topic_id = tp.topic_id AND tt.locale = $2
 		         WHERE tp.tenant_id = c.tenant_id AND tp.course_id = c.id)
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_requires r
@@ -124,9 +135,12 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 		LEFT JOIN catalog_course_text t
 		       ON t.tenant_id = c.tenant_id AND t.course_id = c.id AND t.locale = $2
 		WHERE c.tenant_id = $1 AND NOT c.draft
-		GROUP BY c.id, c.tenant_id, c.name, c.category, c.level, c.hours, c.summary,
-		         c.syllabus, t.name, t.summary, t.syllabus, t.topics
-		ORDER BY c.id
+		GROUP BY c.id, c.slug, c.tenant_id, c.name, c.category, c.level, c.hours, c.summary,
+		         c.syllabus, t.name, t.summary, t.syllabus
+		/* BY THE SLUG, NOT BY THE ID. The id is eight random characters now, so
+		   ordering by it would offer the catalogue in an order nobody chose and
+		   that changes whenever a course is regenerated. */
+		ORDER BY c.slug
 	`, tenantID, locale)
 	if err != nil {
 		return nil, fmt.Errorf("catalog: listing the courses: %w", err)
@@ -137,7 +151,7 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 	for rows.Next() {
 		var l Listing
 		var topics []byte
-		if err := rows.Scan(&l.ID, &l.Name, &l.Category, &l.Level, &l.Hours,
+		if err := rows.Scan(&l.ID, &l.Slug, &l.Name, &l.Category, &l.Level, &l.Hours,
 			&l.Summary, &l.Requires, &l.Lessons, &l.Sections,
 			&l.Syllabus, &topics); err != nil {
 			return nil, fmt.Errorf("catalog: listing the courses: %w", err)
@@ -224,7 +238,9 @@ type LessonView struct {
 }
 
 type SectionView struct {
+	// The id identifies; the slug addresses and names the prose file.
 	ID        string `json:"id"`
+	Slug      string `json:"slug"`
 	Kind      string `json:"kind"`
 	Duration  string `json:"duration,omitempty"`
 	Countable bool   `json:"countable"`
@@ -249,22 +265,26 @@ func (s *Store) Course(ctx context.Context, tenantID uuid.UUID,
 	var course Course
 	var topics []byte
 	err = s.pool.QueryRow(ctx, `
-		SELECT c.id, coalesce(t.name, c.name), c.category, c.level, c.hours,
+		SELECT c.id, c.slug, coalesce(t.name, c.name), c.category, c.level, c.hours,
 		       coalesce(t.summary, c.summary),
 		       coalesce(t.prerequisites, c.prerequisites),
 		       coalesce(nullif(t.syllabus, '{}'), c.syllabus),
+		       -- Keyed by the topic's id; see the same read in Courses above.
 		       (SELECT coalesce(jsonb_agg(jsonb_build_object(
 		                 'id', tp.topic_id,
-		                 'title', coalesce(nullif(t.topics[tp.position + 1], ''), tp.title))
+		                 'title', coalesce(nullif(tt.title, ''), tp.title))
 		               ORDER BY tp.position), '[]'::jsonb)
 		          FROM catalog_course_topics tp
+		          LEFT JOIN catalog_course_topic_text tt
+		                 ON tt.tenant_id = tp.tenant_id AND tt.course_id = tp.course_id
+		                AND tt.topic_id = tp.topic_id AND tt.locale = $3
 		         WHERE tp.tenant_id = c.tenant_id AND tp.course_id = c.id),
 		       c.draft
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_text t
 		       ON t.tenant_id = c.tenant_id AND t.course_id = c.id AND t.locale = $3
 		WHERE c.tenant_id = $1 AND c.id = $2
-	`, tenantID, id, locale).Scan(&course.ID, &course.Name, &course.Category, &course.Level,
+	`, tenantID, id, locale).Scan(&course.ID, &course.Slug, &course.Name, &course.Category, &course.Level,
 		&course.Hours, &course.Summary, &course.Prerequisites,
 		&course.Syllabus, &topics, &course.Draft)
 
@@ -435,7 +455,7 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
 	locale string) (map[string][]LessonView, error) {
 
 	rows, err := s.pool.Query(ctx, `
-		SELECT l.course_id, l.id, l.title, s.id, s.kind, s.duration, s.countable,
+		SELECT l.course_id, l.id, l.title, s.id, s.slug, s.kind, s.duration, s.countable,
 		       COALESCE(NULLIF(t.title, ''), e.title)
 		FROM catalog_lessons l
 		JOIN catalog_courses c
@@ -459,10 +479,10 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
 	out := map[string][]LessonView{}
 	for rows.Next() {
 		var courseID, lessonID, title string
-		var section, kind, duration, sectionTitle *string
+		var section, sectionSlug, kind, duration, sectionTitle *string
 		var countable *bool
 		if err := rows.Scan(&courseID, &lessonID, &title,
-			&section, &kind, &duration, &countable, &sectionTitle); err != nil {
+			&section, &sectionSlug, &kind, &duration, &countable, &sectionTitle); err != nil {
 			return nil, fmt.Errorf("catalog: reading the shape of every course: %w", err)
 		}
 
@@ -475,7 +495,8 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
 		if section != nil {
 			last := &list[len(list)-1]
 			view := SectionView{
-				ID: *section, Kind: *kind, Duration: *duration, Countable: *countable,
+				ID: *section, Slug: *sectionSlug, Kind: *kind,
+				Duration: *duration, Countable: *countable,
 			}
 			// Absent rather than blank when nobody has written the section
 			// yet: the interface falls back to the id, and an empty string
@@ -492,7 +513,7 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
 
 func (s *Store) lessons(ctx context.Context, tenantID uuid.UUID, courseID string) ([]LessonView, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT l.id, l.title, s.id, s.kind, s.duration, s.countable
+		SELECT l.id, l.title, s.id, s.slug, s.kind, s.duration, s.countable
 		FROM catalog_lessons l
 		LEFT JOIN catalog_sections s
 		       ON s.tenant_id = l.tenant_id AND s.course_id = l.course_id AND s.lesson_id = l.id
@@ -509,10 +530,11 @@ func (s *Store) lessons(ctx context.Context, tenantID uuid.UUID, courseID string
 
 	for rows.Next() {
 		var lessonID, title string
-		var section, kind, duration *string
+		var section, sectionSlug, kind, duration *string
 		var countable *bool
 
-		if err := rows.Scan(&lessonID, &title, &section, &kind, &duration, &countable); err != nil {
+		if err := rows.Scan(&lessonID, &title, &section, &sectionSlug,
+			&kind, &duration, &countable); err != nil {
 			return nil, fmt.Errorf("catalog: reading the lessons of %q: %w", courseID, err)
 		}
 
@@ -526,7 +548,8 @@ func (s *Store) lessons(ctx context.Context, tenantID uuid.UUID, courseID string
 			continue // a lesson with no sections, which the validator refuses
 		}
 		out[i].Sections = append(out[i].Sections, SectionView{
-			ID: *section, Kind: *kind, Duration: *duration, Countable: *countable,
+			ID: *section, Slug: *sectionSlug, Kind: *kind,
+			Duration: *duration, Countable: *countable,
 		})
 	}
 	return out, rows.Err()
@@ -709,7 +732,10 @@ func (s *Store) prose(ctx context.Context, tenantID uuid.UUID,
 
 // TrackView is a track with its order and its forks intact.
 type TrackView struct {
-	ID      string `json:"id"`
+	// The id identifies; the slug addresses. See `Course` in model.go.
+	ID   string `json:"id"`
+	Slug string `json:"slug"`
+
 	Name    string `json:"name"`
 	Goal    string `json:"goal,omitempty"`
 	Outcome string `json:"outcome,omitempty"`
@@ -744,7 +770,7 @@ func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID,
 	locale string) ([]TrackView, error) {
 
 	rows, err := s.pool.Query(ctx, `
-		SELECT c.id, coalesce(t.name, c.name), coalesce(t.goal, c.goal),
+		SELECT c.id, c.slug, coalesce(t.name, c.name), coalesce(t.goal, c.goal),
 		       coalesce(t.outcome, c.outcome), c.continues
 		FROM catalog_tracks c
 		LEFT JOIN catalog_track_text t
@@ -759,7 +785,7 @@ func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID,
 	var out []TrackView
 	for rows.Next() {
 		var t TrackView
-		if err := rows.Scan(&t.ID, &t.Name, &t.Goal, &t.Outcome, &t.Continues); err != nil {
+		if err := rows.Scan(&t.ID, &t.Slug, &t.Name, &t.Goal, &t.Outcome, &t.Continues); err != nil {
 			return nil, fmt.Errorf("catalog: listing the tracks: %w", err)
 		}
 		out = append(out, t)
@@ -788,13 +814,13 @@ func (s *Store) Track(ctx context.Context, tenantID uuid.UUID,
 
 	var t TrackView
 	err := s.pool.QueryRow(ctx, `
-		SELECT c.id, coalesce(x.name, c.name), coalesce(x.goal, c.goal),
+		SELECT c.id, c.slug, coalesce(x.name, c.name), coalesce(x.goal, c.goal),
 		       coalesce(x.outcome, c.outcome), c.continues
 		FROM catalog_tracks c
 		LEFT JOIN catalog_track_text x
 		       ON x.tenant_id = c.tenant_id AND x.track_id = c.id AND x.locale = $3
 		WHERE c.tenant_id = $1 AND c.id = $2
-	`, tenantID, id, locale).Scan(&t.ID, &t.Name, &t.Goal, &t.Outcome, &t.Continues)
+	`, tenantID, id, locale).Scan(&t.ID, &t.Slug, &t.Name, &t.Goal, &t.Outcome, &t.Continues)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, ErrNotFound

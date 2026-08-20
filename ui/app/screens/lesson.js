@@ -27,7 +27,7 @@
    ========================================================================== */
 
 import * as api from '../api.js';
-import { courseLessons, courseById } from '../catalog.js';
+import { courseLessons, courseById, courseAddress } from '../catalog.js';
 import { lessonSections, sectionMaterials } from '../lessons.js';
 import { materialList } from '../materials.js';
 import { sectionDone, visitSection, noteFor, saveNote } from '../state.js';
@@ -47,17 +47,22 @@ const ARROW_RIGHT = ARROW('M9 5l7 7-7 7');
 function neighbours(courseId, ix, pos) {
   const lessons = courseLessons(courseId);
   const sections = lessonSections(courseId, lessons[ix].key);
+  /* A NEIGHBOUR CARRIES BOTH NAMES. The id is what the screen works with and
+     the slug is what goes in the address, and the section next door may belong
+     to another lesson — so it is read here, where that lesson's sections are in
+     hand, rather than looked up again by whoever builds the link. */
+  const at = (i, sec) => ({ ix: i, sectionId: sec.id, sectionSlug: sec.slug || sec.id });
   const lastOf = (i) => {
     const s = lessonSections(courseId, lessons[i].key);
-    return s[s.length - 1].id;
+    return s[s.length - 1];
   };
   const previous = pos > 0
-    ? { ix, sectionId: sections[pos - 1].id }
-    : (ix > 0 ? { ix: ix - 1, sectionId: lastOf(ix - 1) } : null);
+    ? at(ix, sections[pos - 1])
+    : (ix > 0 ? at(ix - 1, lastOf(ix - 1)) : null);
   const next = pos + 1 < sections.length
-    ? { ix, sectionId: sections[pos + 1].id }
+    ? at(ix, sections[pos + 1])
     : (ix + 1 < lessons.length
-      ? { ix: ix + 1, sectionId: lessonSections(courseId, lessons[ix + 1].key)[0].id }
+      ? at(ix + 1, lessonSections(courseId, lessons[ix + 1].key)[0])
       : null);
   return { previous, next };
 }
@@ -102,14 +107,18 @@ export default async function lesson({ id, ix, sec }) {
   }
 
   const sections = lessonSections(id, a.key);
-  const pos = Math.max(0, sections.findIndex((s) => s.id === sec));
+  /* THE ADDRESS CARRIES THE SLUG, and an id is still accepted. A link somebody
+     saved before the two were separated names the section by what was then its
+     only name; landing them on the first section instead would be a bookmark
+     that silently goes to the wrong place. */
+  const pos = Math.max(0, sections.findIndex((s) => (s.slug || s.id) === sec || s.id === sec));
   const section = sections[pos];
 
   visitSection(id, n, section.id);
 
   const { previous, next } = neighbours(id, n, pos);
   const note = noteFor(id, n, section.id);
-  const routeTo = (v) => '#/course/' + esc(id) + '/lesson/' + v.ix + '/' + esc(v.sectionId);
+  const routeTo = (v) => '#/course/' + esc(courseAddress(id)) + '/lesson/' + v.ix + '/' + esc(v.sectionSlug || v.sectionId);
 
   const el = document.createElement('div');
   const hasVideoHere = section.type === 'content' && section.video !== undefined;
@@ -127,7 +136,7 @@ export default async function lesson({ id, ix, sec }) {
   /* The forward arrow ALWAYS exists. On the course's last section it leads to
      the course page — if it disappeared there, that section would be the only
      one that could never be completed, because completing became moving on. */
-  const nextTarget = next ? routeTo(next) : '#/course/' + esc(id);
+  const nextTarget = next ? routeTo(next) : '#/course/' + esc(courseAddress(id));
   const sideArrow = (target, side, arrow, label, advances) => (target
     ? '<a class="side-arrow side-' + side + (advances ? ' advances' : '') + '" href="' + target +
       '" aria-label="' + label + '">' + arrow + '</a>'

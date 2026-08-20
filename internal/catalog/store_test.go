@@ -79,7 +79,7 @@ func loaded(t *testing.T, pool *pgxpool.Pool, changes ...func(dir string)) uuid.
 // migration two years from now. A paywall that opens on an unrecognised input
 // is a paywall with a list of ways around it that nobody has finished writing.
 func TestAnUnrecognisedPlanIsAGuest(t *testing.T) {
-	course := &catalog.Course{ID: "html-css"}
+	course := &catalog.Course{ID: htmlCSS}
 
 	for _, plan := range []catalog.Plan{
 		"", "full ", "FULL", "premium", "annual", "trial", "admin",
@@ -131,7 +131,7 @@ func TestTheFirstCourseOfEveryTrackIsFree(t *testing.T) {
 	}
 
 	for _, c := range listing {
-		free := c.ID == "web-fundamentals" // the first step of the only track
+		free := c.ID == webFundamentals // the first step of the only track
 		if c.Free != free {
 			t.Errorf("%s: free=%v, want %v", c.ID, c.Free, free)
 		}
@@ -155,14 +155,14 @@ func TestADraftIsNotInTheCatalogueAtAll(t *testing.T) {
 		t.Fatalf("listing: %v", err)
 	}
 	for _, c := range listing {
-		if c.ID == "html-css" {
+		if c.ID == htmlCSS {
 			t.Error("a draft is in the catalogue, even locked — a stranger now knows what is " +
 				"being written")
 		}
 	}
 
 	// And asking for it directly answers exactly as a course that is not there.
-	if _, err := store.Course(ctx, id, "html-css", "en", catalog.PlanFull); !errors.Is(err, catalog.ErrNotFound) {
+	if _, err := store.Course(ctx, id, htmlCSS, "en", catalog.PlanFull); !errors.Is(err, catalog.ErrNotFound) {
 		t.Errorf("a draft answered %v, want ErrNotFound", err)
 	}
 }
@@ -175,7 +175,7 @@ func TestALockedCourseShowsItsShapeAndNoWords(t *testing.T) {
 	store := catalog.NewStore(pool)
 	ctx := context.Background()
 
-	course, err := store.Course(ctx, id, "html-css", "en", catalog.PlanNone)
+	course, err := store.Course(ctx, id, htmlCSS, "en", catalog.PlanNone)
 	if err != nil {
 		t.Fatalf("reading a locked course: %v", err)
 	}
@@ -195,7 +195,7 @@ func TestALockedCourseShowsItsShapeAndNoWords(t *testing.T) {
 
 	// And the lesson route refuses rather than answering an empty body, which
 	// would be a paywall that looks like a bug.
-	if _, err := store.Lesson(ctx, id, "html-css", "boxes", "en", catalog.PlanNone); !errors.Is(err, catalog.ErrLocked) {
+	if _, err := store.Lesson(ctx, id, htmlCSS, boxes, "en", catalog.PlanNone); !errors.Is(err, catalog.ErrLocked) {
 		t.Errorf("a locked lesson answered %v, want ErrLocked", err)
 	}
 }
@@ -206,14 +206,14 @@ func TestAFreeLessonServesItsWords(t *testing.T) {
 	store := catalog.NewStore(pool)
 
 	lesson, err := store.Lesson(context.Background(), id,
-		"web-fundamentals", "client-and-server", "en", catalog.PlanNone)
+		webFundamentals, clientAndServer, "en", catalog.PlanNone)
 	if err != nil {
 		t.Fatalf("reading a free lesson: %v", err)
 	}
 
 	var roles *catalog.SectionView
 	for i := range lesson.Sections {
-		if lesson.Sections[i].ID == "roles" {
+		if lesson.Sections[i].ID == rolesSection {
 			roles = &lesson.Sections[i]
 		}
 	}
@@ -237,18 +237,18 @@ func TestAFreeLessonServesItsWords(t *testing.T) {
 func TestATranslationFallsBackFieldByField(t *testing.T) {
 	pool := testPool(t)
 	id := loaded(t, pool, write(
-		"courses/web-fundamentals/lessons/client-and-server/roles.pt.md",
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/roles.pt.md",
 		"---\ntitle: As duas funções\n---\n"))
 	store := catalog.NewStore(pool)
 
 	lesson, err := store.Lesson(context.Background(), id,
-		"web-fundamentals", "client-and-server", "pt", catalog.PlanNone)
+		webFundamentals, clientAndServer, "pt", catalog.PlanNone)
 	if err != nil {
 		t.Fatalf("reading: %v", err)
 	}
 
 	for _, s := range lesson.Sections {
-		if s.ID != "roles" {
+		if s.ID != rolesSection {
 			continue
 		}
 		if s.Title != "As duas funções" {
@@ -268,14 +268,14 @@ func TestATrackComesBackWithItsForkIntact(t *testing.T) {
 	pool := testPool(t)
 	id := loaded(t, pool)
 
-	track, err := catalog.NewStore(pool).Track(context.Background(), id, "frontend", "en")
+	track, err := catalog.NewStore(pool).Track(context.Background(), id, frontend, "en")
 	if err != nil {
 		t.Fatalf("reading the track: %v", err)
 	}
 	if len(track.Steps) != 3 {
 		t.Fatalf("%d steps, want 3", len(track.Steps))
 	}
-	if track.Steps[0].Course != "web-fundamentals" || track.Steps[1].Course != "html-css" {
+	if track.Steps[0].Course != webFundamentals || track.Steps[1].Course != htmlCSS {
 		t.Errorf("the plain steps came back wrong: %+v", track.Steps[:2])
 	}
 
@@ -286,10 +286,10 @@ func TestATrackComesBackWithItsForkIntact(t *testing.T) {
 	if len(fork.Options) != 2 {
 		t.Fatalf("%d options, want 2", len(fork.Options))
 	}
-	if fork.Options[0].Name != "React + TypeScript" || fork.Options[0].Courses[0] != "react-ts" {
+	if fork.Options[0].Name != "React + TypeScript" || fork.Options[0].Courses[0] != reactTS {
 		t.Errorf("the first option came back wrong: %+v", fork.Options[0])
 	}
-	if fork.Options[1].Name != "Angular" || fork.Options[1].Courses[0] != "angular" {
+	if fork.Options[1].Name != "Angular" || fork.Options[1].Courses[0] != angular {
 		t.Errorf("the second option came back wrong: %+v", fork.Options[1])
 	}
 }
@@ -349,7 +349,7 @@ func TestALockedLessonAnswers402(t *testing.T) {
 
 	rec := httptest.NewRecorder()
 	mux.ServeHTTP(rec, httptest.NewRequest(http.MethodGet,
-		"/api/v1/courses/html-css/lessons/boxes", nil))
+		"/api/v1/courses/"+htmlCSS+"/lessons/"+boxes, nil))
 
 	if rec.Code != http.StatusPaymentRequired {
 		t.Errorf("a locked lesson answered %d, want 402: %s", rec.Code, rec.Body.String())
@@ -374,7 +374,7 @@ func TestACourseSaysHowManyLessonsAndFinishableSectionsItHas(t *testing.T) {
 
 	var found *catalog.Listing
 	for i := range courses {
-		if courses[i].ID == "web-fundamentals" {
+		if courses[i].ID == webFundamentals {
 			found = &courses[i]
 		}
 	}
@@ -410,7 +410,7 @@ func TestTheCountsDoNotMultiplyAgainstThePrerequisites(t *testing.T) {
 	}
 
 	for _, c := range courses {
-		if c.ID != "react-ts" {
+		if c.ID != reactTS {
 			continue
 		}
 		if len(c.Requires) != 2 {

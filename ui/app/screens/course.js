@@ -7,7 +7,7 @@
    ends that already agree with each other.
    ========================================================================== */
 
-import { courseLessons, courseById, tracksWithCourse, unlockedBy } from '../catalog.js';
+import { courseLessons, courseById, courseAddress, tracksWithCourse, unlockedBy } from '../catalog.js';
 import { lessonSections, courseMaterials } from '../lessons.js';
 import { courseProgress, lessonProgress, lessonDone } from '../state.js';
 import { courseState } from '../graph.js';
@@ -81,7 +81,7 @@ export default async function course({ id }) {
          of the course, and its place is after the last lesson. It is rendered
          whether or not the exercises for it exist yet — see examCard. */
       examCard({
-        key: exam.key, href: '#/course/' + esc(id) + '/exam', scope: 'course',
+        key: exam.key, href: '#/course/' + esc(courseAddress(id)) + '/exam', scope: 'course',
         count: exam.items.length, progress: p.pct, ready: examReady(exam),
       }) +
       '</div>' +
