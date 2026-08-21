@@ -341,3 +341,19 @@ provider. `plan` in Cloud Shell is the first honest check, and the places most
 likely to argue are the artifact registry cleanup policy, the uptime alert's
 aggregation, and whether `db-f1-micro` is still offered for Postgres 16 in this
 region — `db-g1-small` is the next size if it is not.
+
+### And `plan` is not the last honest check either
+
+The uptime alert's aggregation did argue, and it is worth knowing HOW, because
+it is the failure mode this whole section underestimates. It did not fail the
+plan. It did not fail the apply. It was created, and then it **fired fourteen
+minutes later on a service answering 200** — because the comparison was written
+against the metric's name rather than against what the reducer had turned it
+into. See `monitoring.tf`, where the arithmetic is now written out.
+
+`terraform apply` proves that Google accepted the configuration. It proves
+nothing about whether the configuration says what somebody meant, and an alert
+policy is precisely the kind of object where those two are far apart: it is
+correct only in circumstances that have not happened yet, so the first honest
+check is the first time it should have spoken — or, as here, the first time it
+should have stayed quiet.
