@@ -61,7 +61,31 @@ resource "google_monitoring_uptime_check_config" "readyz" {
 /* TWO FAILURES BEFORE IT SAYS ANYTHING. One failed check is a network blip
    somewhere between a probe and a region; alerting on it produces a page a
    month that resolves itself before anybody reads it, which is how a real one
-   ends up unread. */
+   ends up unread.
+
+   # READ THE COMPARISON AGAINST THE REDUCER, NOT AGAINST THE NAME
+
+   `check_passed` is a boolean per probe, and `REDUCE_COUNT_FALSE` turns a
+   period's worth of them into ONE NUMBER: how many probes FAILED. Every reading
+   of the threshold has to start there, because the metric is called
+   `check_passed` and the number is a count of failures — so the intuition the
+   name gives you is exactly backwards.
+
+   Failures GREATER THAN one is the alert. `COMPARISON_LT` was written here
+   instead, and it says failures fewer than one — which is what a perfectly
+   healthy service produces, every five minutes, forever.
+
+   THAT IS NOT A THEORY. It fired fourteen minutes after it was created, on a
+   deployment answering 200, with the start time reading "less than 1 sec ago".
+   An alert that rings because nothing is wrong is worse than no alert: it is
+   the same silence, arrived at through a rule that everybody learns to delete.
+
+   The nearest thing to a test is arithmetic done out loud:
+
+     all probes pass  → count_false = 0 → 0 > 1 is false → quiet
+     one probe fails  → count_false = 1 → 1 > 1 is false → quiet, on purpose
+     two probes fail  → count_false = 2 → 2 > 1 is TRUE  → and it has to hold
+                                                           for `duration` */
 resource "google_monitoring_alert_policy" "down" {
   count = local.monitoring
 
@@ -78,7 +102,8 @@ resource "google_monitoring_alert_policy" "down" {
         "metric.label.check_id = \"${google_monitoring_uptime_check_config.readyz[0].uptime_check_id}\"",
       ])
 
-      comparison      = "COMPARISON_LT"
+      // More than one FAILED probe. See the arithmetic above.
+      comparison      = "COMPARISON_GT"
       threshold_value = 1
       duration        = "600s"
 
