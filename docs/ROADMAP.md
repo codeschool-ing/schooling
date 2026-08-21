@@ -45,7 +45,8 @@ verified from inside this repository.*
 turned out to be the difference between a claim and a fact twice over. The alert policy applied
 cleanly and was inverted; the restore drill passed its own tests and then failed a good backup on
 six rows of ordinary traffic. Neither would have been found by reading the file that declared it.
-The two left are a repository layout and a screen.*
+**One is left in phase 0**, and it is a screen: the export and the erasure exist and are held by
+four tests, and what is missing is the console page an operator opens.*
 
 ---
 
@@ -64,7 +65,7 @@ audit with a name against it.*
 
 ### Shape
 
-- [ ] Monorepo, with CI filtered by path
+- [x] Monorepo, with CI filtered by path — a `Changes` job diffs the pull request and answers which suites it can reach, and each suite carries an `if`. **`if` on the job and not `paths:` on the workflow**, because a skipped job reports as skipped and a required check accepts that, while a workflow filtered by `paths:` never reports at all and a required check that never reports blocks the merge forever. **And it fails open**: a push, a release, a diff that cannot be computed and an empty one all run everything. `docs.yml` is deliberately unfiltered, because its input is the whole tree — the file that breaks a relative link is usually not the `.md` holding it
 - [x] School resolved by the full `Host`; an unknown host is a 404 and never falls into a default school
 - [x] Reserved subdomains refused at creation — `www`, `api`, `admin`, `app`, `auth`, `cdn`, `mail`, `static`, `status`, `docs` — by a database constraint as well as by the application, with a test that proves the two agree
 - [x] One Go binary serving the API and the embedded frontend on one origin
