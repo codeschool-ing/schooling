@@ -262,7 +262,32 @@ gcloud beta run domain-mappings describe \
   --format="table(status.conditions[].type, status.conditions[].status, status.conditions[].reason)"
 ```
 
-`CertificatePending` for a few minutes is the normal path, not a fault.
+`CertificatePending` is the normal path and not a fault. **It took forty
+minutes here**, which is worth writing down because every page that mentions it
+says "a few minutes" and the gap between the two is spent wondering what is
+broken. Google admits up to 24 hours; the usual cause of a long one is negative
+DNS caching — a resolver asked for the name before the record existed, cached
+the absence, and nothing moves until that expires.
+
+While it is pending there is exactly one thing that can be wrong on this side,
+and it fails silently forever rather than reporting anything: a **CAA** record
+that does not name Google's certificate authority. CAA is inherited down the
+tree, so every level has to be checked, not just the host:
+
+```sh
+for n in code.schooling.lab.aleogr.dev schooling.lab.aleogr.dev lab.aleogr.dev aleogr.dev; do
+  echo "== $n"; dig +short CAA "$n"
+done
+```
+
+Nothing at any level means any authority may issue, which is the case here. If
+a level does answer, it has to include `pki.goog` — otherwise the request is
+refused and the only symptom is a pending certificate.
+
+`curl` against the name is the other useful reading: `SSL_ERROR_SYSCALL` with
+`ssl_verify_result=1` is the front end dropping the handshake because it has no
+certificate to present yet, which matches the status rather than contradicting
+it.
 
 `schooling.lab.aleogr.dev` itself is deliberately **not** mapped. Nothing serves
 it: there is no platform page, and the tenant resolver answers 404 for a host it
@@ -280,12 +305,25 @@ an unmapped host measures **Google's 404 page** — reporting the service down
 while it is perfectly healthy.
 
 Watch a school's host instead, where `/readyz` is reachable and answers only
-when the process can open its database:
+when the process can open its database. Both values go in `terraform.tfvars`,
+which is gitignored — copy `terraform.tfvars.example` and fill it in:
 
-```hcl
-alert_email = "…"
-uptime_host = "code.schooling.lab.aleogr.dev"
+```sh
+cp infra/terraform.tfvars.example infra/terraform.tfvars
+$EDITOR infra/terraform.tfvars
+terraform -chdir=infra apply
 ```
+
+**Not `-var` on the command line.** It works, and then the next apply — run by
+anybody who did not type the same flags — plans the monitoring away and removes
+it. Nothing fails and nothing warns; the alerting is just gone, and the way you
+find out is that it never fires. A `terraform.tfvars` beside the configuration
+is read by every apply from this directory, which is the behaviour that
+survives being forgotten.
+
+The e-mail is not in the repository because this one is public and a committed
+address is a scraped address. That is also the whole reason the file is
+gitignored rather than tracked with the rest of the configuration.
 
 ## What is checked, and what is not
 
