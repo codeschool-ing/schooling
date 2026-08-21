@@ -16,6 +16,11 @@ import (
 // A school called `api` does not fail at creation — it fails months later, at
 // the moment somebody adds the address the school already took.
 //
+// `console` and `admin` are both here and only one is used. The console lives
+// at `console.<platform domain>`; `admin` was reserved for it before it had a
+// name and stays reserved, because taking a label off this list is strictly
+// worse than leaving one on it.
+//
 // It is checked here AND by a constraint in the database, because this list is
 // the kind of rule that gets bypassed by a script somebody wrote to fix
 // something else. A test proves the database refuses every entry.
@@ -25,6 +30,7 @@ var Reserved = []string{
 	"app",
 	"auth",
 	"cdn",
+	"console",
 	"docs",
 	"mail",
 	"static",

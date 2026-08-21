@@ -26,6 +26,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/billing"
 	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/certificate"
+	"github.com/codeschool-ing/schooling/internal/console"
 	"github.com/codeschool-ing/schooling/internal/event"
 	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
@@ -305,12 +306,80 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	}
 	mux.Handle("/", ui.Handler(interfaceVersion))
 
-	return web.Chain(mux,
+	/* ---------- and the other address ----------
+
+	   A HOST IS A SCHOOL'S, OR THE CONSOLE'S, OR A 404 (K-17). Three cases, and
+	   this is where the second one is separated from the first — before any of
+	   the school routes above, because `tenant.Resolve` would answer the
+	   console's host with "no school answers at this address", correctly and
+	   uselessly.
+
+	   The split is by HOST and not by path, which is what makes it two gates
+	   rather than one long one: a console route cannot be reached at a school's
+	   address even if somebody registers it in the wrong mux, and a school route
+	   cannot be reached at the console's. Everything on the console side is then
+	   wrapped in `identity.RequireStaff`, which is the second gate and fails for
+	   a different reason than the first. */
+	staffAPI := http.NewServeMux()
+	console.NewHandler(
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) (string, bool) {
+			m, ok := identity.MemberFromContext(ctx)
+			return string(m.Role), ok
+		},
+	).Routes(staffAPI)
+
+	/* THE GATE IS ON THE API AND NOT ON THE WHOLE HOST, and the difference
+	   matters the moment this grows a screen: a console nobody can reach
+	   without a role also cannot show a sign-in page, and a sign-in page behind
+	   a sign-in check is a door locked from the inside.
+
+	   So the shape is the school side's, exactly: a prefix carries the chain,
+	   and the rest of the host is free to serve something a stranger may see.
+	   Today there is nothing else, and anything but the API answers 404. */
+	consoleMux := http.NewServeMux()
+	consoleMux.Handle("/console/api/v1/", web.Chain(staffAPI,
+		identity.Authenticate(accounts),
+		// READ-ONLY IS THE FLOOR AND NOT THE CEILING. Everything this will grow
+		// — an export, an erasure, a parameter change — asks for more at its own
+		// route. What this says is that nobody without a live role and a second
+		// factor already shown gets past the door at all.
+		identity.RequireStaff(accounts, identity.RoleReadOnly),
+	))
+
+	atConsole := console.Is(console.Settings{Host: console.HostOf(cfg.PlatformDomain)}, tenant.Normalise)
+
+	/* NO VISITOR IDENTITY HERE, and that is deliberate: the funnel counts
+	   people who might become students, and staff opening the console are not
+	   that. A visitor row per console request would put the two people who run
+	   this platform in the denominator of their own conversion rate. */
+	byHost := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if atConsole(r) {
+			consoleMux.ServeHTTP(w, r)
+			return
+		}
+		mux.ServeHTTP(w, r)
+	})
+
+	return web.Chain(byHost,
 		web.RequestID,
 		web.Logger(log),
 		web.Recover,
 		web.NoStore,
 	)
+}
+
+// labelOf is the wiring `console` asks for rather than an import: who somebody
+// is, for the screen and for the audit entry the console will write.
+func labelOf(accounts *identity.Store) console.Label {
+	return func(ctx context.Context, accountID uuid.UUID) (string, string, error) {
+		account, err := accounts.ByID(ctx, accountID)
+		if err != nil {
+			return "", "", err
+		}
+		return account.Name, account.Email, nil
+	}
 }
 
 // schoolOf is the wiring the module boundary asks for, and it is four lines
