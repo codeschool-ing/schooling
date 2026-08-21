@@ -51,6 +51,36 @@ export class ApiError extends Error {
   }
 }
 
+/* ---------- where this visit came from ----------
+
+   READ ONCE, AT LOAD, AND NEVER AGAIN. `document.referrer` names the site that
+   sent them and `location.href` still carries the campaign — but only until the
+   first fragment route rewrites the address, which happens within a second of
+   the app starting. Read here, at module load, both are still the landing.
+
+   IT IS SENT BECAUSE THE SERVER CANNOT SEE IT. The middleware that issues a
+   visitor identity is mounted on `/api/v1/`, and the page itself never passes
+   through it — so an API call's `Referer` is THIS page, its path is an API
+   route, and the campaign parameters were in the address bar and are on no
+   request at all. The three fields a first touch is made of came out as: the
+   site's own name, an API route, and nothing.
+
+   NOTHING HERE IS NEWLY TRUSTED. A `Referer` is a header the caller sets, a
+   path is what they asked for, a campaign is a query string; all three were
+   already theirs to choose. The server takes these only while it has no
+   visitor, and bounds them exactly as it bounds a query parameter. */
+const landing = (() => {
+  if (reading) return null;
+  try {
+    return {
+      href: String(globalThis.location.href).slice(0, 512),
+      referrer: String(globalThis.document.referrer || '').slice(0, 512),
+    };
+  } catch (e) {
+    return null; // no document at all: a worker, or a harness
+  }
+})();
+
 async function request(method, path, body) {
   if (reading) {
     if (method === 'GET' && Object.hasOwn(baked.answers, path)) return baked.answers[path];
@@ -59,12 +89,21 @@ async function request(method, path, body) {
       'This is the offline copy. Reading works; signing in, progress and exams need the school.');
   }
 
+  const headers = body === undefined ? {} : { 'Content-Type': 'application/json' };
+  if (landing) {
+    headers['X-Schooling-Landing'] = landing.href;
+    // Sent even when empty, because empty MEANS something: they typed the
+    // address or followed a bookmark. Left out, the server would fall back to
+    // this request's own `Referer`, which is this page.
+    headers['X-Schooling-Landing-Referrer'] = landing.referrer;
+  }
+
   let response;
   try {
     response = await fetch(path, {
       method,
       credentials: 'same-origin',
-      headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
+      headers,
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch (e) {

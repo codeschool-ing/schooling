@@ -96,8 +96,8 @@ jobs:
 
           # The browser suite renders the interface against a real schema, so
           # it wants everything that reaches a screen. `tools/` is narrowed to
-          # the four it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(graph-test|a11y-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
+          # the ones it actually runs.
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(graph-test|a11y-test|landing-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
 
           for name in go browser; do
             eval "pattern=\$$name"
@@ -388,6 +388,14 @@ jobs:
 
           node tools/graph-test/graph-test.mjs
           node tools/a11y-test/a11y-test.mjs
+
+          # AND THE ONE CLAIM NO GO TEST CAN REACH: that a real page, in a real
+          # browser, actually sends where it came from. The server is mounted on
+          # `/api/v1/` and never sees the arrival, so `ui/app/api.js` tells it —
+          # and a refactor of the request helper can stop that silently, leaving
+          # a site that works perfectly and a funnel that answers with this
+          # site's own name.
+          node tools/landing-test/landing-test.mjs
 
           # BUILT AND OPENED, and the second half is the half that finds
           # things. Every way the bundler can fail produces a file: an

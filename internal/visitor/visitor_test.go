@@ -523,3 +523,185 @@ func TestOneBrowserOpeningFourRequestsAtOnceIsOnePerson(t *testing.T) {
 		t.Errorf("one visit was counted as %d arrivals", n)
 	}
 }
+
+// WHAT THE PAGE SAYS, BECAUSE THE SERVER CANNOT SEE IT.
+//
+// This middleware sits on `/api/v1/` and the page never passes through it, so
+// the request that reaches here is an XHR: its referrer is this site, its path
+// is an API route, and the campaign that brought somebody was on the address
+// bar and is on no request at all. All three read as data and all three were
+// wrong.
+func TestTheFirstTouchIsTheLandingAndNotTheApiCall(t *testing.T) {
+	pool := testPool(t)
+
+	var seen uuid.UUID
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
+
+	// The XHR, exactly as a browser sends it: an API path, and a `Referer`
+	// naming this very site.
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/catalog", nil)
+	req.Header.Set("Referer", "https://code.example.tld/")
+	req.Header.Set(visitor.HeaderLanding,
+		"https://code.example.tld/plans?utm_source=newsletter&utm_medium=email&utm_campaign=launch")
+	req.Header.Set(visitor.HeaderLandingReferrer, "https://news.example.com/issue-4")
+	mw(handler(&seen)).ServeHTTP(rec, req)
+
+	offered := visitorCookie(rec)
+	if offered == nil {
+		t.Fatal("nothing was offered")
+	}
+	next := httptest.NewRequest(http.MethodGet, "/api/v1/me", nil)
+	next.AddCookie(offered)
+	mw(handler(&seen)).ServeHTTP(httptest.NewRecorder(), next)
+	if seen == uuid.Nil {
+		t.Fatal("the offer was handed back and nobody was identified")
+	}
+
+	var path, referrer, source, medium, campaign string
+	if err := pool.QueryRow(context.Background(), `
+		SELECT first_path, first_referrer, utm_source, utm_medium, utm_campaign
+		  FROM visitors WHERE id = $1
+	`, seen).Scan(&path, &referrer, &source, &medium, &campaign); err != nil {
+		t.Fatalf("reading the visitor: %v", err)
+	}
+
+	if path != "/plans" {
+		t.Errorf("first path %q, want the page they landed on", path)
+	}
+	if referrer != "https://news.example.com/issue-4" {
+		t.Errorf("referrer %q, want the site that sent them rather than this one", referrer)
+	}
+	if source != "newsletter" || medium != "email" || campaign != "launch" {
+		t.Errorf("the campaign was lost: source=%q medium=%q campaign=%q", source, medium, campaign)
+	}
+}
+
+// An empty landing referrer is an ANSWER — a typed address, or a bookmark — and
+// falling back to the request's own would answer with this site instead.
+func TestALandingWithNoReferrerIsNotThisSite(t *testing.T) {
+	pool := testPool(t)
+
+	var seen uuid.UUID
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/catalog", nil)
+	req.Header.Set("Referer", "https://code.example.tld/")
+	req.Header.Set(visitor.HeaderLanding, "https://code.example.tld/")
+	req.Header.Set(visitor.HeaderLandingReferrer, "")
+	mw(handler(&seen)).ServeHTTP(rec, req)
+
+	offered := visitorCookie(rec)
+	if offered == nil {
+		t.Fatal("nothing was offered")
+	}
+	next := httptest.NewRequest(http.MethodGet, "/api/v1/me", nil)
+	next.AddCookie(offered)
+	mw(handler(&seen)).ServeHTTP(httptest.NewRecorder(), next)
+
+	var referrer string
+	if err := pool.QueryRow(context.Background(),
+		`SELECT first_referrer FROM visitors WHERE id = $1`, seen).Scan(&referrer); err != nil {
+		t.Fatalf("reading the visitor: %v", err)
+	}
+	if referrer != "" {
+		t.Errorf("referrer %q, want nothing — they arrived without one", referrer)
+	}
+}
+
+// A header that is not a URL is a header to ignore. It must not fail a request
+// that was only ever going to serve a page.
+func TestARubbishLandingHeaderIsIgnoredRatherThanBelieved(t *testing.T) {
+	pool := testPool(t)
+
+	for _, rubbish := range []string{
+		"not a url",
+		"/relative/only",
+		"https://example.com", // absolute, but names no page
+		strings.Repeat("https://example.com/x", 100),
+		"://",
+	} {
+		var seen uuid.UUID
+		mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/catalog?utm_source=fallback", nil)
+		req.Header.Set(visitor.HeaderLanding, rubbish)
+		mw(handler(&seen)).ServeHTTP(rec, req)
+
+		offered := visitorCookie(rec)
+		if offered == nil {
+			t.Fatalf("%q: nothing was offered", rubbish)
+		}
+		next := httptest.NewRequest(http.MethodGet, "/api/v1/me", nil)
+		next.AddCookie(offered)
+		mw(handler(&seen)).ServeHTTP(httptest.NewRecorder(), next)
+		if seen == uuid.Nil {
+			t.Fatalf("%q: the request was not served an identity", rubbish)
+		}
+
+		var path, source string
+		if err := pool.QueryRow(context.Background(),
+			`SELECT first_path, utm_source FROM visitors WHERE id = $1`, seen).
+			Scan(&path, &source); err != nil {
+			t.Fatalf("%q: reading the visitor: %v", rubbish, err)
+		}
+		if path != "/api/v1/catalog" || source != "fallback" {
+			t.Errorf("%q was believed: path=%q source=%q", rubbish, path, source)
+		}
+	}
+}
+
+// THE PAGE IS IN THE FRAGMENT, because that is where this interface's routes
+// live. Reading only the path would record `/` for every visitor ever.
+func TestTheLandingPageIsTheFragmentRoute(t *testing.T) {
+	pool := testPool(t)
+
+	for _, c := range []struct {
+		name, landing, path, source string
+	}{
+		{"a link builder writes the query before the fragment",
+			"https://code.example.tld/?utm_source=newsletter#/plans", "/plans", "newsletter"},
+		{"a person writes it inside the fragment",
+			"https://code.example.tld/#/plans?utm_source=newsletter", "/plans", "newsletter"},
+		{"and where both say something, the one before the fragment wins",
+			"https://code.example.tld/?utm_source=outer#/plans?utm_source=inner", "/plans", "outer"},
+		{"no fragment at all is the page itself",
+			"https://code.example.tld/?utm_source=newsletter", "/", "newsletter"},
+		{"a fragment that is not a route leaves the path alone",
+			"https://code.example.tld/plans#somewhere", "/plans", ""},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			var seen uuid.UUID
+			mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
+
+			rec := httptest.NewRecorder()
+			req := httptest.NewRequest(http.MethodGet, "/api/v1/catalog", nil)
+			req.Header.Set(visitor.HeaderLanding, c.landing)
+			req.Header.Set(visitor.HeaderLandingReferrer, "")
+			mw(handler(&seen)).ServeHTTP(rec, req)
+
+			offered := visitorCookie(rec)
+			if offered == nil {
+				t.Fatal("nothing was offered")
+			}
+			next := httptest.NewRequest(http.MethodGet, "/api/v1/me", nil)
+			next.AddCookie(offered)
+			mw(handler(&seen)).ServeHTTP(httptest.NewRecorder(), next)
+
+			var path, source string
+			if err := pool.QueryRow(context.Background(),
+				`SELECT first_path, utm_source FROM visitors WHERE id = $1`, seen).
+				Scan(&path, &source); err != nil {
+				t.Fatalf("reading the visitor: %v", err)
+			}
+			if path != c.path {
+				t.Errorf("first path %q, want %q", path, c.path)
+			}
+			if source != c.source {
+				t.Errorf("utm_source %q, want %q", source, c.source)
+			}
+		})
+	}
+}
