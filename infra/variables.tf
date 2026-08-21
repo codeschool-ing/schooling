@@ -43,9 +43,13 @@ variable "github_repository" {
 
 /* The smallest instance there is. Cloud SQL does not scale to zero, so this is
    the standing cost of the project and the number to revisit first — before a
-   student exists it is the entire bill. */
+   student exists it is the entire bill.
+
+   IT ONLY EXISTS IN THE ENTERPRISE EDITION, which `database.tf` therefore
+   states rather than inherits. `db-g1-small` is the next size up if this one
+   is ever refused, and a `db-custom-<cpu>-<mb>` after that. */
 variable "database_tier" {
-  description = "The Cloud SQL machine type."
+  description = "The Cloud SQL machine type. Shared-core tiers need edition ENTERPRISE."
   type        = string
   default     = "db-f1-micro"
 }
