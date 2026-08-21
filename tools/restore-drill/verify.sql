@@ -20,6 +20,32 @@
 
 \set ON_ERROR_STOP on
 
+-- ONE SNAPSHOT AND NOT FORTY-TWO SEPARATE READS.
+--
+-- Without this, each statement below sees the database as it is at the instant
+-- it runs, so the report describes a live database at forty-two slightly
+-- different moments — a row inserted halfway through is in one count and not in
+-- the next, and the drill cannot tell that from a bad restore.
+--
+-- REPEATABLE READ takes one snapshot at the first statement and every later
+-- statement reads it. The report becomes a photograph rather than a sequence of
+-- glances.
+BEGIN ISOLATION LEVEL REPEATABLE READ;
+
+-- THE INSTANT OF THE PHOTOGRAPH, TAKEN FROM THE DATABASE'S OWN CLOCK, and the
+-- first statement so that it names the moment the snapshot was taken.
+--
+-- The drill restores the clone to exactly this timestamp, which is what lets it
+-- expect the two reports to be IDENTICAL — including the tables that grow with
+-- traffic. Before this line, live was read some forty minutes after the point
+-- the clone was restored to, and every visitor who arrived in between read as a
+-- difference the drill could not tell from a fault.
+--
+-- It is stripped out before the two reports are compared: it is the one line
+-- that is allowed to differ, because the clone answers with the moment IT was
+-- read rather than the moment it holds.
+SELECT 'snapshot|' || to_char(now() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"');
+
 -- The schema the restore brought back, column by column. A dropped column, a
 -- changed type, a column that moved — each is a different line.
 SELECT 'column|' || table_name || '|' || ordinal_position || '|' || column_name
@@ -80,3 +106,5 @@ SELECT 'domain|' || d.host || '|' || t.slug
   FROM tenant_domains d
   JOIN tenants t ON t.id = d.tenant_id
  ORDER BY d.host;
+
+COMMIT;
