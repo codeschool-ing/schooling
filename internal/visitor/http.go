@@ -199,6 +199,13 @@ func resolve(r *http.Request, store *Store, schoolOf SchoolOf, settings Settings
 	return outcome{id: id, accepted: true, inserted: inserted}
 }
 
+// The page saying where it came from. See `ui/app/api.js`, and the paragraph
+// below for why it has to.
+const (
+	HeaderLanding         = "X-Schooling-Landing"
+	HeaderLandingReferrer = "X-Schooling-Landing-Referrer"
+)
+
 func firstTouch(r *http.Request, schoolOf SchoolOf) FirstTouch {
 	first := FirstTouch{
 		// TRIMMED, LIKE THE REST. A path and a `Referer` header are as much the
@@ -210,6 +217,37 @@ func firstTouch(r *http.Request, schoolOf SchoolOf) FirstTouch {
 		Country:  "unknown", // Cloud Run passes no country header; see the plan
 		Locale:   locale(r.Header.Get("Accept-Language")),
 	}
+	q := r.URL.Query()
+
+	/* THE REQUEST IS NOT THE ARRIVAL, and taking the first touch off it was
+	   wrong in all three fields at once.
+
+	   This middleware is mounted on `/api/v1/`; the page is served from `/` and
+	   never reaches it. So what arrives here is an XHR the page fired, and:
+
+	     the referrer  is this site, because that is the page the call came from
+	     the path      is an API route, not the page anybody landed on
+	     the campaign  is absent, because `?utm_source=` was on the ADDRESS BAR
+
+	   Every one of those looked like data. `first_referrer` in particular read
+	   as a plausible answer — the site's own name, on every row, forever.
+
+	   So the page says. It reads `location.href` and `document.referrer` once,
+	   at load, before its own routing rewrites the address, and sends them.
+
+	   THE HEADER IS THE CALLER'S, AND SO WAS EVERYTHING IT REPLACES. A `Referer`
+	   is a header, a path is a request line, a campaign is a query string —
+	   there was never a version of this that a caller could not write. What
+	   changes is that the values are now the right ones. They are bounded here
+	   exactly as the query string was. */
+	if path, landed, ok := landingOf(r); ok {
+		first.Path = trim(path)
+		q = landed
+
+		// Read whether or not it is empty: empty is an answer — a typed address
+		// or a bookmark — and falling back would answer with this site instead.
+		first.Referrer = trim(r.Header.Get(HeaderLandingReferrer))
+	}
 
 	if schoolOf != nil {
 		if id, _, ok := schoolOf(r.Context()); ok {
@@ -217,12 +255,55 @@ func firstTouch(r *http.Request, schoolOf SchoolOf) FirstTouch {
 		}
 	}
 
-	q := r.URL.Query()
 	first.Source = trim(q.Get("utm_source"))
 	first.Medium = trim(q.Get("utm_medium"))
 	first.Campaign = trim(q.Get("utm_campaign"))
 
 	return first
+}
+
+// landingOf answers the page somebody landed on, and the query it carried.
+//
+// # THE PAGE IS IN THE FRAGMENT, BECAUSE THE ROUTES ARE
+//
+// This interface routes on the fragment, so `https://school/#/plans` is the
+// plans page and `/` is only the shell that every page shares. Reading
+// `URL.Path` alone would record `/` for every visitor ever — the same species
+// of plausible, useless answer this whole change exists to remove, arrived at
+// from the other direction.
+//
+// A campaign can be on either side of the `#`. `?utm_source=x#/plans` is what
+// a link builder writes and `#/plans?utm_source=x` is what somebody writes by
+// hand, and both are the same intention. The query before the fragment wins
+// where they disagree, and the fragment fills what it left empty.
+//
+// Bounded before it is parsed, and required to be absolute — a header that is
+// not a URL is a header to ignore, not a reason to fail a request that was
+// only ever going to serve a page.
+func landingOf(r *http.Request) (string, url.Values, bool) {
+	raw := r.Header.Get(HeaderLanding)
+	if raw == "" || len(raw) > 512 {
+		return "", nil, false
+	}
+	landing, err := url.Parse(raw)
+	if err != nil || !landing.IsAbs() || landing.Path == "" {
+		return "", nil, false
+	}
+
+	path, q := landing.Path, landing.Query()
+
+	// `#/plans?utm_source=x` — a route, and possibly a query of its own.
+	if route, rest, _ := strings.Cut(landing.Fragment, "?"); strings.HasPrefix(route, "/") {
+		path = route
+		if inner, err := url.ParseQuery(rest); err == nil {
+			for key, values := range inner {
+				if q.Get(key) == "" && len(values) > 0 {
+					q.Set(key, values[0])
+				}
+			}
+		}
+	}
+	return path, q, true
 }
 
 /* ---------- the offer ----------
