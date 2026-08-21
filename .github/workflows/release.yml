@@ -6,10 +6,11 @@
 # gate main run again on the tagged commit rather than being assumed from the
 # pull request that merged it.
 #
-# THERE IS NO IMAGE PUSH HERE YET, and its absence is deliberate rather than
-# forgotten: there is no registry, because there is no cloud project. It arrives
-# with Terraform, as a job appended to this workflow — the deploy pipeline owns
-# which revision runs, and this is where that decision will be made (P-07).
+# THE IMAGE PUSH AND THE DEPLOY ARE THE LAST JOB, which is what this file said
+# would happen once there was a project to push to. There is one now, and
+# `infra/` built it — so the division that was a sentence is now two mechanisms:
+# Terraform declares the service and ignores its image, and this decides which
+# revision runs (P-07).
 
 name: Release
 
@@ -109,3 +110,128 @@ jobs:
         run: gh release create "${GITHUB_REF_NAME}" --generate-notes --verify-tag
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # WHICH REVISION RUNS, WHICH IS THIS PIPELINE'S AND NOT TERRAFORM'S (P-07).
+  #
+  # `infra/` declares the service and then stops looking at its image —
+  # `lifecycle { ignore_changes }` on exactly that field — so the two never
+  # argue about it. Terraform owns what the service IS; this owns what it runs.
+  #
+  # ON A TAG AND NOT ON MAIN. A deploy is a release, and a release is a number
+  # somebody decided to cut. Continuous deployment from main would put a version
+  # of "dev" in front of students and leave the question "what is running" with
+  # no answer but a commit hash.
+  #
+  # THERE IS NO SERVICE ACCOUNT KEY HERE, AND THERE IS NOT MEANT TO BE. GitHub
+  # signs a token saying which repository is running; Google is configured to
+  # believe that issuer for THIS repository only and to hand back credentials
+  # that last an hour. Nothing durable exists to leak, so nothing has to be
+  # rotated. See `infra/federation.tf` for the condition that makes it "this
+  # repository" rather than "GitHub".
+  Deploy:
+    needs: Publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: read
+      # The OIDC token the exchange is built on. It is the only reason this job
+      # has any permission beyond reading the code.
+      id-token: write
+
+    # FACTS OF THE PROJECT, FROM `terraform output`. They are written here
+    # rather than kept as repository variables so that a change to the
+    # infrastructure and the change to this file appear in the same diff —
+    # hidden configuration is the thing nobody diffs.
+    env:
+      REGION: us-central1
+      SERVICE: schooling
+      MIGRATE_JOB: schooling-migrate
+      API_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/api
+      MIGRATE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/migrate
+      DEPLOY_ACCOUNT: schooling-deploy@aleogr-schooling.iam.gserviceaccount.com
+      WORKLOAD_IDENTITY_PROVIDER: projects/67869214453/locations/global/workloadIdentityPools/github/providers/github
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: An hour of credentials, in exchange for a token about this repository
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.DEPLOY_ACCOUNT }}
+
+      # NOT ASSUMED TO BE ON THE RUNNER. Whether the Google Cloud CLI ships in
+      # the hosted image has changed before and is not this workflow's to bet
+      # on; a deploy that fails with "gcloud: command not found" would fail
+      # AFTER the images were pushed, leaving the registry ahead of the service.
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: The registry, as somewhere docker may push
+        run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+
+      # THE GO VERSION COMES FROM go.mod, here as everywhere else. Passed into
+      # the build rather than written in the Dockerfile, so a directive that
+      # moves cannot leave an image behind on an older compiler.
+      - name: The two images, stamped with the tag they were cut from
+        run: |
+          set -euo pipefail
+          go_version="$(awk '/^go /{print $2}' go.mod)"
+          built="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          for command in api migrate; do
+            case "$command" in
+              api)     image="$API_IMAGE" ;;
+              migrate) image="$MIGRATE_IMAGE" ;;
+            esac
+
+            docker build \
+              --file deploy/Dockerfile \
+              --build-arg "GO_VERSION=${go_version}" \
+              --build-arg "COMMAND=${command}" \
+              --build-arg "VERSION=${GITHUB_REF_NAME}" \
+              --build-arg "COMMIT=${GITHUB_SHA}" \
+              --build-arg "BUILT=${built}" \
+              --tag "${image}:${GITHUB_REF_NAME}" \
+              .
+            docker push "${image}:${GITHUB_REF_NAME}"
+          done
+
+      # THE MIGRATION RUNS TO COMPLETION BEFORE ANY TRAFFIC REACHES THE NEW
+      # REVISION, which is the whole reason it is a job and not something the
+      # container does on the way up. `--wait` is what makes this a gate: it
+      # blocks until the execution finishes and exits non-zero if it failed, so
+      # a schema that did not apply stops the deploy instead of meeting it.
+      - name: The schema, applied and waited for
+        run: |
+          set -euo pipefail
+          gcloud run jobs update "$MIGRATE_JOB" \
+            --region="$REGION" \
+            --image="${MIGRATE_IMAGE}:${GITHUB_REF_NAME}" \
+            --quiet
+          gcloud run jobs execute "$MIGRATE_JOB" --region="$REGION" --wait
+
+      - name: The revision
+        run: |
+          set -euo pipefail
+          gcloud run deploy "$SERVICE" \
+            --region="$REGION" \
+            --image="${API_IMAGE}:${GITHUB_REF_NAME}" \
+            --quiet
+
+      # ASKED OF THE THING THAT IS RUNNING, not of the thing that was pushed.
+      # The Publish job proves a binary can be stamped; this proves the stamped
+      # one is the one answering on the address, which is a different claim and
+      # the one that matters during an incident.
+      - name: What is running says which release it is
+        run: |
+          set -euo pipefail
+          url="$(gcloud run services describe "$SERVICE" --region="$REGION" \
+            --format='value(status.url)')"
+
+          reported="$(curl -fsS "${url}/version" | jq -r .version)"
+          if [ "$reported" != "${GITHUB_REF_NAME}" ]; then
+            echo "the deployed revision reports '${reported}' and the tag is '${GITHUB_REF_NAME}'"
+            exit 1
+          fi
+          echo "${url} is serving ${reported}"
