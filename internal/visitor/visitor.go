@@ -48,8 +48,31 @@ type Store struct {
 
 func NewStore(pool *pgxpool.Pool) *Store { return &Store{pool: pool} }
 
-// Create issues a new identity.
-func (s *Store) Create(ctx context.Context, first FirstTouch) (uuid.UUID, error) {
+// Create issues a new identity. A nil id means "choose one".
+//
+// THE ID IS AN ARGUMENT BECAUSE A PAGE LOAD IS SEVERAL REQUESTS AT ONCE.
+//
+// The middleware offers an identity in a cookie and writes the row when that
+// cookie is handed back — and a browser hands it back on three or four
+// PARALLEL requests, not one. With the database choosing the id, every one of
+// those would insert its own row: one browser counted as four people, four
+// arrivals in the funnel, and three cookies overwriting each other on the way
+// out.
+//
+// So the offer carries the id, all of those requests insert THE SAME row, and
+// `ON CONFLICT DO NOTHING` makes every one after the first a no-op that still
+// answers with the id.
+//
+// A CALLER CHOOSING ITS OWN VISITOR ID IS NEITHER NEW NOR A HOLE. Any uuid in
+// the cookie is already accepted when a row for it exists — `Seen` is the whole
+// check. A visitor id is a bearer token for something that holds no authority:
+// signing in is `internal/identity`, and this decides nothing except which row
+// a funnel counts.
+func (s *Store) Create(ctx context.Context, id uuid.UUID, first FirstTouch) (uuid.UUID, bool, error) {
+	if id == uuid.Nil {
+		id = uuid.New()
+	}
+
 	country, locale := first.Country, first.Locale
 	if country == "" {
 		country = "unknown"
@@ -58,19 +81,22 @@ func (s *Store) Create(ctx context.Context, first FirstTouch) (uuid.UUID, error)
 		locale = "unknown"
 	}
 
-	var id uuid.UUID
-	err := s.pool.QueryRow(ctx, `
+	// No `RETURNING`: it gives nothing back on a conflict, and the id worth
+	// answering with is the one that went in rather than the one that came out.
+	// What the conflict IS worth knowing is whether this call wrote the row —
+	// the arrival is counted by whoever did, and by nobody else.
+	tag, err := s.pool.Exec(ctx, `
 		INSERT INTO visitors
-			(first_tenant_id, first_path, first_referrer, utm_source, utm_medium, utm_campaign,
-			 country, locale)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-		RETURNING id
-	`, first.TenantID, first.Path, first.Referrer,
-		first.Source, first.Medium, first.Campaign, country, locale).Scan(&id)
+			(id, first_tenant_id, first_path, first_referrer, utm_source, utm_medium,
+			 utm_campaign, country, locale)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		ON CONFLICT (id) DO NOTHING
+	`, id, first.TenantID, first.Path, first.Referrer,
+		first.Source, first.Medium, first.Campaign, country, locale)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("visitor: issuing an identity: %w", err)
+		return uuid.Nil, false, fmt.Errorf("visitor: issuing an identity: %w", err)
 	}
-	return id, nil
+	return id, tag.RowsAffected() == 1, nil
 }
 
 // Seen confirms a visitor exists, and moves last_seen_at along.
