@@ -162,13 +162,79 @@ cleanup() {
 trap cleanup EXIT
 
 # ---------- preflight ----------
+#
+# EVERYTHING CHEAP THAT CAN FAIL, FAILS HERE — before the fifteen minutes and
+# not after them. That ordering was learned: a run got all the way through
+# building a clone and then died because a port was busy, and the clone was
+# destroyed with nothing checked. None of the missing pieces needed the clone
+# to exist, and none of them took a second to find.
+#
+# The rule this leaves behind: if a step does not need the restored instance,
+# it belongs above the restore.
 
-for tool in gcloud psql diff; do
+for tool in gcloud psql diff curl; do
   command -v "$tool" >/dev/null || { echo "missing: $tool" >&2; exit 1; }
 done
 [ -n "$PROJECT" ] || { echo "no project set: gcloud config set project …" >&2; exit 1; }
 
 say "Drilling $SOURCE in $PROJECT ($REGION)"
+
+# A PORT THAT IS FREE, FOUND RATHER THAN ASSUMED. 5433 and 5434 were written in
+# as constants and one of them was already held — by a `cloud-sql-proxy` some
+# earlier session had left running, which is not an unusual thing to find on a
+# machine somebody works on. A tool that only runs on a tidy machine is a tool
+# that fails on the day it is needed.
+free_port() {
+  local port
+  for port in $(seq "$1" "$(($1 + 100))"); do
+    # A refused connection means nothing is listening, which is what free means.
+    if ! (exec 3<>"/dev/tcp/127.0.0.1/$port") 2>/dev/null; then
+      echo "$port"
+      return 0
+    fi
+  done
+  return 1
+}
+
+PORT_LIVE="$(free_port 5433)" || { echo "no free port near 5433" >&2; exit 1; }
+PORT_CLONE="$(free_port "$((PORT_LIVE + 1))")" || { echo "no second free port" >&2; exit 1; }
+
+# The proxy binary, and the password. Neither needs a clone, and discovering
+# that a secret cannot be read is worth discovering immediately.
+PROXY="$(command -v cloud-sql-proxy || true)"
+if [ -z "$PROXY" ]; then
+  ARCH="$(uname -m)"
+  case "$ARCH" in
+    x86_64) ARCH=amd64 ;;
+    aarch64) ARCH=arm64 ;;
+    *) echo "no proxy build for $ARCH; install cloud-sql-proxy yourself" >&2; exit 1 ;;
+  esac
+  say "Fetching the Cloud SQL Auth Proxy $PROXY_VERSION"
+  PROXY="$WORK/cloud-sql-proxy"
+  curl -sSL -o "$PROXY" \
+    "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/$PROXY_VERSION/cloud-sql-proxy.linux.$ARCH"
+  chmod +x "$PROXY"
+fi
+
+# The clone carries the source's roles and their passwords, so one secret opens
+# both. It is read into a variable and never printed: `set -x` on this script
+# would be a password in a terminal and in whatever keeps that terminal's
+# scrollback.
+URL="$(gcloud secrets versions access latest --secret="$SECRET")"
+PREFIX="postgres://${DBUSER}:"
+case "$URL" in
+  "$PREFIX"*) ;;
+  # A SILENT WRONG ANSWER IS THE FAILURE TO AVOID: `${URL#prefix}` leaves the
+  # string untouched when the prefix does not match, so an unrecognised URL
+  # would become a "password" that is really the whole connection string, and
+  # the drill would fail at the login prompt with no idea why.
+  *) echo "$SECRET does not start with $PREFIX — cannot read the password out of it" >&2; exit 1 ;;
+esac
+PASSWORD="${URL#"$PREFIX"}"
+PASSWORD="${PASSWORD%%@*}"
+unset URL
+[ -n "$PASSWORD" ] || { echo "no password between ':' and '@' in $SECRET" >&2; exit 1; }
+export PGPASSWORD="$PASSWORD"
 
 # ATTACHING TO A CLONE THAT ALREADY EXISTS. Building one costs fifteen minutes,
 # so a run that died after the clone was made should not have to pay for it
@@ -250,53 +316,19 @@ CLONE_CONN="$(gcloud sql instances describe "$CLONE" --format='value(connectionN
 
 # ---------- reaching both ----------
 
-PROXY="$(command -v cloud-sql-proxy || true)"
-if [ -z "$PROXY" ]; then
-  ARCH="$(uname -m)"
-  case "$ARCH" in
-    x86_64) ARCH=amd64 ;;
-    aarch64) ARCH=arm64 ;;
-    *) echo "no proxy build for $ARCH; install cloud-sql-proxy yourself" >&2; exit 1 ;;
-  esac
-  say "Fetching the Cloud SQL Auth Proxy $PROXY_VERSION"
-  PROXY="$WORK/cloud-sql-proxy"
-  curl -sSL -o "$PROXY" \
-    "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/$PROXY_VERSION/cloud-sql-proxy.linux.$ARCH"
-  chmod +x "$PROXY"
-fi
-
-# The clone carries the source's roles and their passwords, so one secret opens
-# both. It is read into a variable and never printed: `set -x` on this script
-# would be a password in a terminal and in whatever keeps that terminal's
-# scrollback.
-URL="$(gcloud secrets versions access latest --secret="$SECRET")"
-PREFIX="postgres://${DBUSER}:"
-case "$URL" in
-  "$PREFIX"*) ;;
-  # A SILENT WRONG ANSWER IS THE FAILURE TO AVOID: `${URL#prefix}` leaves the
-  # string untouched when the prefix does not match, so an unrecognised URL
-  # would become a "password" that is really the whole connection string, and
-  # the drill would fail at the login prompt with no idea why.
-  *) echo "$SECRET does not start with $PREFIX — cannot read the password out of it" >&2; exit 1 ;;
-esac
-PASSWORD="${URL#"$PREFIX"}"
-PASSWORD="${PASSWORD%%@*}"
-unset URL
-[ -n "$PASSWORD" ] || { echo "no password between ':' and '@' in $SECRET" >&2; exit 1; }
-export PGPASSWORD="$PASSWORD"
-
 # BOTH INSTANCES, ONE PROCESS, AND THE PORT SAID PER INSTANCE. The proxy also
 # takes `--port` as a global flag and then numbers the rest sequentially, which
 # works until somebody reorders the arguments and the drill quietly compares
 # the live instance against itself.
-say "Opening both instances through the proxy"
-"$PROXY" "${SOURCE_CONN}?port=5433" "${CLONE_CONN}?port=5434" >"$WORK/proxy.log" 2>&1 &
+say "Opening both instances through the proxy — live on $PORT_LIVE, clone on $PORT_CLONE"
+"$PROXY" "${SOURCE_CONN}?port=${PORT_LIVE}" "${CLONE_CONN}?port=${PORT_CLONE}" \
+  >"$WORK/proxy.log" 2>&1 &
 PROXY_PID=$!
 
 READY=0
 for _ in $(seq 1 60); do
-  if psql -h 127.0.0.1 -p 5433 -U "$DBUSER" -d "$DATABASE" -qtAXc 'SELECT 1' >/dev/null 2>&1 &&
-     psql -h 127.0.0.1 -p 5434 -U "$DBUSER" -d "$DATABASE" -qtAXc 'SELECT 1' >/dev/null 2>&1; then
+  if psql -h 127.0.0.1 -p "$PORT_LIVE" -U "$DBUSER" -d "$DATABASE" -qtAXc 'SELECT 1' >/dev/null 2>&1 &&
+     psql -h 127.0.0.1 -p "$PORT_CLONE" -U "$DBUSER" -d "$DATABASE" -qtAXc 'SELECT 1' >/dev/null 2>&1; then
     READY=1
     break
   fi
@@ -316,8 +348,8 @@ run() {
   psql -h 127.0.0.1 -p "$1" -U "$DBUSER" -d "$DATABASE" \
        -qtAX -v ON_ERROR_STOP=1 -f "$HERE/verify.sql"
 }
-run 5433 >"$WORK/live.txt"
-run 5434 >"$WORK/clone.txt"
+run "$PORT_LIVE"  >"$WORK/live.txt"
+run "$PORT_CLONE" >"$WORK/clone.txt"
 
 echo "live:  $(wc -l <"$WORK/live.txt") lines"
 echo "clone: $(wc -l <"$WORK/clone.txt") lines"
