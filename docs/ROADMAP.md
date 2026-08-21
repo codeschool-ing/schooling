@@ -37,8 +37,15 @@ gets rediscovered while a false tick stops the search.
 *Audited against the code on 2026-08-20. Every `[x]` in phases 0 to 3 was checked against a named
 test, a tool run or a screen opened. One tick was false, one item was done and unticked, and three
 descriptions had gone stale — an id format, a screen count and a list of types, each of which had
-been true when it was written. Phase 0's remaining items are infrastructure that cannot be
+been true when it was written. Phase 0's remaining items were infrastructure that could not be
 verified from inside this repository.*
+
+*The infrastructure ones are done, and each was ticked only after the thing had happened in
+`aleogr-schooling` rather than after the configuration was written to make it happen — which
+turned out to be the difference between a claim and a fact twice over. The alert policy applied
+cleanly and was inverted; the restore drill passed its own tests and then failed a good backup on
+six rows of ordinary traffic. Neither would have been found by reading the file that declared it.
+The two left are a repository layout and a screen.*
 
 ---
 
@@ -75,12 +82,12 @@ audit with a name against it.*
 ### Operations
 
 - [x] Migration as a job with an advisory lock, run before traffic reaches the new revision
-- [x] Terraform owns the project services, registry, service accounts, IAM, Cloud SQL, secret *containers*, the identity federation and the alert policies — `infra/`, applied against `aleogr-schooling`. The alert policies are declared and create nothing until `alert_email` is set, which waits on an address to watch
+- [x] Terraform owns the project services, registry, service accounts, IAM, Cloud SQL, secret *containers*, the identity federation and the alert policies — `infra/`, applied against `aleogr-schooling`, and `terraform plan` says `No changes`
 - [x] The deploy pipeline owns which revision runs; Terraform never manages the image — a tag builds three images, runs the migration to completion, loads the catalogue, replaces the revision, and then **asks the running service which release it is**. `lifecycle { ignore_changes }` on the image is what stops the two from arguing
 - [x] Semantic version in one place — the tag — with the release workflow refusing a tag that is malformed, does not increase, or is not on main
 - [x] `/api/v1/` from the very first route
-- [ ] Uptime check and alert policy reaching a phone
-- [ ] A backup **restored** — to a cloned instance, verified, then destroyed. Never over the live one. No staging environment
+- [x] Uptime check and alert policy reaching a phone — `/readyz` probed every five minutes against a school's own host, alerting after more than one failed probe sustained for ten minutes. **Delivery is proven rather than assumed**, because the policy went off by accident: `COMPARISON_LT` against a reducer that counts *failures* reads "fewer than one failure", so it fired fourteen minutes after creation on a service answering 200. The mail arrived. Whether the address reaches a phone is the address's job and not this repository's; the channel is e-mail
+- [x] A backup **restored** — to a cloned instance, verified, then destroyed. Never over the live one. No staging environment. `tools/restore-drill/restore-drill.sh`, run against `aleogr-schooling`: 663 lines identical across 42 tables, 6648 rows, 24 migrations, the school and both its hosts, and the clone deleted at the end. Live is read first in one `REPEATABLE READ` snapshot and the clone is restored to that same instant, which is what keeps *identical* the verdict now that visitors arrive between one reading and the next
 
 ---
 
