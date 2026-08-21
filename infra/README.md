@@ -31,7 +31,7 @@ follows the same rule.
 
 ## Defaults are stated, not inherited
 
-Four failures here have been the same failure: a field left out, the provider,
+Five failures here have been the same failure: a field left out, the provider,
 the API or the shell filling it in, and the answer being wrong in a way that
 costs data, money or an afternoon.
 
@@ -41,12 +41,19 @@ costs data, money or an afternoon.
 | `settings.edition` | `ENTERPRISE_PLUS` | the tier refused, and the error suggesting a machine several times the agreed bill |
 | `deletion_protection` on the Cloud Run pair | `true` | a failed create becoming a deadlock, cleared only by editing the configuration |
 | the provider's `billing_project` | whatever `gcloud config set project` last wrote | every call for this project charged to another project's quota, and refused |
+| the service-level `scaling` block | zeros the provider then wants to remove | every plan proposing a change nobody wrote, forever |
 
-None of them was a mistake in what was written. All four were things nobody
+None of them was a mistake in what was written. All five were things nobody
 wrote, and the defaults are not stable — the edition one changed under this
 project's feet between somebody learning `db-f1-micro` and using it, and the
-last one is not even a default: it is whatever the shell happened to hold, so
-it changed when a Cloud Shell session restarted.
+`billing_project` one is not even a default: it is whatever the shell happened
+to hold, so it changed when a Cloud Shell session restarted.
+
+The last row is the cheapest and the most instructive, because it costs
+nothing at all except noise. The apply succeeds, the field comes back, and the
+next plan proposes it again. A plan that always shows one change is a plan that
+stops being read — and the change it shows on the day it matters, a database
+being replaced or a service destroyed, arrives in the same shrug.
 
 That one is worth reading twice, because the error names two projects and puts
 the wrong one in the advice:
