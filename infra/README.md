@@ -49,6 +49,35 @@ project's feet between somebody learning `db-f1-micro` and using it.
 default is wrong today, but because a default is a decision made somewhere else
 by somebody who does not know what this project is.
 
+### Turning deletion protection off does not unblock a replacement
+
+Not in the same apply, and the reason is the order a replacement happens in: the
+destroy runs FIRST, against the object as it currently is, and the provider
+reads the flag from that. The new value only exists on the create half, which is
+never reached. So
+
+```
+Error: cannot destroy service without setting deletion_protection=false
+       and running `terraform apply`
+```
+
+survives the very apply that sets it to false, and says so in a way that reads
+like the change did not land.
+
+The way out, when the resource holds nothing and is going to be rebuilt anyway,
+is to delete it and let the next apply create it:
+
+```sh
+gcloud run services delete schooling --region=us-central1 --quiet
+gcloud run jobs delete schooling-migrate --region=us-central1 --quiet
+terraform -chdir=infra apply
+```
+
+That is not configuring by hand — no setting is chosen outside this directory,
+and the configuration rebuilds both immediately. The pure-Terraform route is
+`untaint` both, `apply` to flip the flag in place, `taint` both, `apply` again:
+four commands and two applies to arrive at the same place.
+
 ---
 
 ## The bootstrap, once
