@@ -18,9 +18,10 @@ The platform domain is provisional — see *The name* in [`docs/PLAN.md`](docs/P
 | | what it is for |
 |---|---|
 | [`CLAUDE.md`](CLAUDE.md) | the rules the code has to obey, in the imperative. Read this before writing a line. |
-| [`docs/PLAN.md`](docs/PLAN.md) | why each rule exists: 70 decisions with their reasoning, the open questions, the shape of the phases |
+| [`docs/PLAN.md`](docs/PLAN.md) | why each rule exists: 74 decisions with their reasoning, the open questions, the shape of the phases |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what each phase is made of, as capabilities to tick off |
 | [`docs/CONTENT.md`](docs/CONTENT.md) | the shape of `content/`, what CI checks, and what happens when a question turns out to be bad |
+| [`docs/CONSOLE.md`](docs/CONSOLE.md) | what the console is, whole, and the order it arrives in — the decisions it settled are K-17 to K-22 |
 | `docs/adr/` | one decision per file, dated, as each is implemented |
 | `docs/DEPLOY.md` | the runbook — arrives with phase 0 |
 
