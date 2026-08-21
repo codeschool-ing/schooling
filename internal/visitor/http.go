@@ -2,6 +2,7 @@ package visitor
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"net/http"
 	"net/url"
@@ -60,12 +61,39 @@ func FromContext(ctx context.Context) (uuid.UUID, bool) {
 // the request — this middleware is what puts it there.
 type Arrived func(ctx context.Context, visitorID uuid.UUID)
 
-// Identify puts a visitor on every request, issuing one where there is none.
+// Identify puts a visitor on every request that has proved it keeps cookies.
 //
 // IT NEVER FAILS A REQUEST. A database that cannot issue an identity is a
 // reason to serve the page anyway and count nothing — refusing to show a
 // prospective student the catalogue because analytics is down would be the
 // funnel destroying the thing it exists to measure.
+//
+// # A ROW IS FOR SOMEBODY WHO CAME BACK
+//
+// The first version wrote a row on any request that arrived without a cookie.
+// A browser does that once and then carries the cookie; ANYTHING THAT DOES NOT
+// KEEP COOKIES DOES IT ON EVERY REQUEST — a crawler, a scanner, `curl`. Within
+// a day of this site having a public address there were three hundred and
+// sixty-five of them, on a site nobody had been told about.
+//
+// Two things were wrong with that, and the first is the worse one:
+//
+//   - THE FUNNEL'S DENOMINATOR. This table exists to answer "how many of the
+//     people who arrived became students" (K-10). Crawlers in the denominator
+//     make that answer wrong in a way that looks entirely plausible, which is
+//     the kind of wrong nobody catches by reading the number.
+//   - A WRITE PER REQUEST, CHOSEN BY WHOEVER IS CALLING. `Seen` is coarse to an
+//     hour precisely so that a read path does not become a write path. `Create`
+//     had no such guard, and the disk it grows autoresizes and never shrinks.
+//
+// So the first request is OFFERED an identity and nothing is written. It
+// becomes a row on the request that hands the offer back — because handing a
+// cookie back is what a browser does and what a crawler does not.
+//
+// IT DOES NOT STOP A DETERMINED CALLER. Anybody willing to echo a cookie can
+// still have a row per request, and the answer to that is a rate limit rather
+// than this. What this stops is the unmalicious majority: everything that
+// ignores Set-Cookie because it was never a browser.
 //
 // # THE ARRIVAL IS EMITTED HERE OR NOWHERE
 //
@@ -75,59 +103,110 @@ type Arrived func(ctx context.Context, visitorID uuid.UUID)
 // visit that brought them is over; by the time anybody notices the event is
 // missing, every earlier period is permanently unanswerable.
 //
-// It fires on the request that issues the identity and on no other, which is
-// what makes it "arrived" rather than "came back".
+// It fires on the request that writes the row and on no other, which is what
+// makes it "arrived" rather than "came back".
 func Identify(store *Store, schoolOf SchoolOf, settings Settings, arrived Arrived) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			id, issued := resolve(r, store, schoolOf)
-			if id == uuid.Nil {
+			who := resolve(r, store, schoolOf, settings)
+
+			if who.offer != nil {
+				http.SetCookie(w, who.offer)
+			}
+			if who.id == uuid.Nil {
 				next.ServeHTTP(w, r) // counted nothing; still serving
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), ctxVisitor, id)
-			if issued {
-				http.SetCookie(w, cookie(id, settings))
-				if arrived != nil {
-					// With the visitor already in the context, so the event
-					// carries it the same way every other event does.
-					arrived(ctx, id)
-				}
+			ctx := context.WithValue(r.Context(), ctxVisitor, who.id)
+			if who.accepted {
+				http.SetCookie(w, cookie(who.id, settings))
+			}
+			if who.inserted && arrived != nil {
+				// With the visitor already in the context, so the event
+				// carries it the same way every other event does.
+				arrived(ctx, who.id)
 			}
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }
 
-// resolve answers the visitor for this request, and whether it is new.
-func resolve(r *http.Request, store *Store, schoolOf SchoolOf) (uuid.UUID, bool) {
-	if c, err := r.Cookie(CookieName); err == nil {
-		if id, err := uuid.Parse(c.Value); err == nil {
-			switch err := store.Seen(r.Context(), id); {
-			case err == nil:
-				return id, false
-			case errors.Is(err, ErrUnknown):
-				// A cookie that outlived its row: after an erasure, or after a
-				// restore. Issue a new identity rather than carrying an id
-				// that joins to nothing.
-			default:
-				return uuid.Nil, false
-			}
+// outcome is what one request turned out to be.
+//
+// ACCEPTED AND INSERTED ARE TWO THINGS. Four parallel requests can hand back
+// the same offer; all four are accepted and get the identity cookie, and
+// exactly one of them writes the row. The arrival belongs to that one, or a
+// single visit is counted four times.
+type outcome struct {
+	id       uuid.UUID
+	accepted bool         // the offer was taken up here: replace the cookie
+	inserted bool         // and this is the request that wrote the row
+	offer    *http.Cookie // or there is no identity yet, and here is one
+}
+
+// resolve answers what this request is.
+//
+//	a known visitor       → the id, nothing to write
+//	an offer handed back  → the id, the cookie replaced, maybe the row written
+//	anything else         → no id, and an offer
+func resolve(r *http.Request, store *Store, schoolOf SchoolOf, settings Settings) outcome {
+	c, err := r.Cookie(CookieName)
+	if err != nil {
+		return outcome{offer: offer(r, schoolOf, settings)}
+	}
+
+	if id, err := uuid.Parse(c.Value); err == nil {
+		switch err := store.Seen(r.Context(), id); {
+		case err == nil:
+			return outcome{id: id}
+		case errors.Is(err, ErrUnknown):
+			// A cookie that outlived its row: after an erasure, or after a
+			// restore. Offer a new identity rather than carrying an id that
+			// joins to nothing.
+			return outcome{offer: offer(r, schoolOf, settings)}
+		default:
+			// The database is unreachable. Serve, count nothing, and offer
+			// nothing — an offer taken up once it is back would be a second
+			// identity for somebody who already has a perfectly good one.
+			return outcome{}
 		}
 	}
 
-	id, err := store.Create(r.Context(), firstTouch(r, schoolOf))
-	if err != nil {
-		return uuid.Nil, false
+	offered, first, ok := decodeOffer(c.Value)
+	if !ok {
+		return outcome{offer: offer(r, schoolOf, settings)}
 	}
-	return id, true
+
+	// THE SCHOOL COMES FROM THE REQUEST AND NEVER FROM THE COOKIE.
+	//
+	// Everything else in a first touch was already the caller's to choose — a
+	// referrer is a header they set, a path is what they asked for, a campaign
+	// is a query string — so carrying those across in a cookie costs no trust
+	// that was ever held, and `decodeOffer` bounds them exactly as the query
+	// string was bounded. The school is resolved by the server from the host,
+	// and it stays that way.
+	if schoolOf != nil {
+		if id, _, ok := schoolOf(r.Context()); ok {
+			first.TenantID = &id
+		}
+	}
+
+	id, inserted, err := store.Create(r.Context(), offered, first)
+	if err != nil {
+		return outcome{}
+	}
+	return outcome{id: id, accepted: true, inserted: inserted}
 }
 
 func firstTouch(r *http.Request, schoolOf SchoolOf) FirstTouch {
 	first := FirstTouch{
-		Path:     r.URL.Path,
-		Referrer: r.Referer(),
+		// TRIMMED, LIKE THE REST. A path and a `Referer` header are as much the
+		// caller's to choose as a query parameter is, and these two were the
+		// only fields going into a column with no bound on them at all — a ten
+		// kilobyte referrer was a ten kilobyte row.
+		Path:     trim(r.URL.Path),
+		Referrer: trim(r.Referer()),
 		Country:  "unknown", // Cloud Run passes no country header; see the plan
 		Locale:   locale(r.Header.Get("Accept-Language")),
 	}
@@ -144,6 +223,84 @@ func firstTouch(r *http.Request, schoolOf SchoolOf) FirstTouch {
 	first.Campaign = trim(q.Get("utm_campaign"))
 
 	return first
+}
+
+/* ---------- the offer ----------
+
+   An identity a caller has not accepted yet. It is a cookie and nothing else:
+   no row, no id anybody could join to, nothing that survives the caller
+   throwing it away — which is exactly what most callers without a browser do.
+
+   IT CARRIES THE FIRST TOUCH, so that the row written on the next request
+   describes the FIRST request rather than the second one. Without that,
+   "where did they come from" would answer with wherever they were one click
+   later, which is usually this site. */
+
+// offerPrefix is what tells an offer from an accepted identity. An accepted one
+// is a bare uuid, so the prefix cannot collide with it: a uuid has no dot.
+const offerPrefix = "offer."
+
+// How long an offer is worth taking up. It only has to survive until the next
+// request of the same page load, and a short life keeps a stale first touch
+// from being attached to a visit that happened a week later.
+const offerLifetime = time.Hour
+
+func offer(r *http.Request, schoolOf SchoolOf, settings Settings) *http.Cookie {
+	c := cookie(uuid.Nil, settings)
+	c.Value = encodeOffer(uuid.New(), firstTouch(r, schoolOf))
+	c.Expires = time.Now().Add(offerLifetime)
+	c.MaxAge = int(offerLifetime.Seconds())
+	return c
+}
+
+func encodeOffer(id uuid.UUID, f FirstTouch) string {
+	v := url.Values{}
+	v.Set("i", id.String())
+	v.Set("p", f.Path)
+	v.Set("r", f.Referrer)
+	v.Set("s", f.Source)
+	v.Set("m", f.Medium)
+	v.Set("c", f.Campaign)
+	v.Set("l", f.Locale)
+	return offerPrefix + base64.RawURLEncoding.EncodeToString([]byte(v.Encode()))
+}
+
+// decodeOffer reads one back, and trusts none of it.
+//
+// A cookie is whatever the caller sends. Every field goes through `trim` again
+// on the way in — the same bound the query string got — because a value that
+// was bounded when this server wrote it is not the value that comes back.
+func decodeOffer(value string) (uuid.UUID, FirstTouch, bool) {
+	encoded, ok := strings.CutPrefix(value, offerPrefix)
+	if !ok {
+		return uuid.Nil, FirstTouch{}, false
+	}
+	decoded, err := base64.RawURLEncoding.DecodeString(encoded)
+	if err != nil || len(decoded) > 4096 {
+		return uuid.Nil, FirstTouch{}, false
+	}
+	v, err := url.ParseQuery(string(decoded))
+	if err != nil {
+		return uuid.Nil, FirstTouch{}, false
+	}
+	id, err := uuid.Parse(v.Get("i"))
+	if err != nil {
+		return uuid.Nil, FirstTouch{}, false
+	}
+
+	first := FirstTouch{
+		Path:     trim(v.Get("p")),
+		Referrer: trim(v.Get("r")),
+		Source:   trim(v.Get("s")),
+		Medium:   trim(v.Get("m")),
+		Campaign: trim(v.Get("c")),
+		Country:  "unknown",
+		Locale:   trim(v.Get("l")),
+	}
+	if first.Locale == "" {
+		first.Locale = "unknown"
+	}
+	return id, first, true
 }
 
 // locale takes the first language off an Accept-Language header.

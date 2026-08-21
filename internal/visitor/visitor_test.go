@@ -6,6 +6,8 @@ import (
 	"net/http/httptest"
 	"os"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"testing"
 
 	"github.com/google/uuid"
@@ -58,55 +60,84 @@ func handler(seen *uuid.UUID) http.Handler {
 	})
 }
 
+// visitorCookie answers the identity cookie a response set, if it set one.
+func visitorCookie(rec *httptest.ResponseRecorder) *http.Cookie {
+	var found *http.Cookie
+	for _, c := range rec.Result().Cookies() {
+		if c.Name == visitor.CookieName {
+			found = c
+		}
+	}
+	return found
+}
+
 // THE ONE THAT MATTERS.
 //
-// Somebody who has never signed up still has an identity, issued on the first
-// request, and the same browser keeps it on the next one. Without that, "how
-// many of the people who arrived became students" is unanswerable for every
-// period before the day it was added — not hard, unanswerable, because the
-// visits already happened anonymously.
+// Somebody who has never signed up still has an identity, and the first touch
+// recorded against it is the FIRST request's — where they came from, not where
+// they were one click later. Without that, "how many of the people who arrived
+// became students" is unanswerable for every period before the day it was
+// added: not hard, unanswerable, because the visits already happened
+// anonymously.
+//
+// IT TAKES TWO REQUESTS NOW, and that is the change. The first is offered an
+// identity and writes nothing; the second hands the offer back and becomes a
+// row. A page load is several requests, so a browser crosses that line without
+// noticing — and a crawler, which hands nothing back, never becomes a row.
 func TestAVisitorHasAnIdentityBeforeAnyAccountExists(t *testing.T) {
 	pool := testPool(t)
 
 	var seen uuid.UUID
 	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
 
+	// The arrival, carrying everything a first touch is made of.
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/?utm_source=newsletter&utm_campaign=launch", nil)
 	req.Header.Set("Referer", "https://example.com/post")
 	req.Header.Set("Accept-Language", "pt-BR,pt;q=0.9")
 	mw(handler(&seen)).ServeHTTP(rec, req)
 
-	if seen == uuid.Nil {
-		t.Fatal("the request was served with no visitor at all")
+	if seen != uuid.Nil {
+		t.Error("a visitor was reported on a request that had not yet proved it keeps cookies")
 	}
-
-	// The cookie is what carries it to the next request.
-	var issued *http.Cookie
-	for _, c := range rec.Result().Cookies() {
-		if c.Name == visitor.CookieName {
-			issued = c
-		}
+	offered := visitorCookie(rec)
+	if offered == nil {
+		t.Fatal("nothing was offered, so the next request is a stranger again")
 	}
-	if issued == nil {
-		t.Fatal("no visitor cookie was set, so the next request is a different person")
-	}
-	if issued.Value != seen.String() {
-		t.Errorf("the cookie says %q and the request saw %q", issued.Value, seen)
-	}
-	if !issued.HttpOnly {
+	if !offered.HttpOnly {
 		t.Error("the visitor cookie is readable by JavaScript, and therefore by an injected script")
 	}
-	if issued.SameSite != http.SameSiteLaxMode {
+	if offered.SameSite != http.SameSiteLaxMode {
 		t.Error("SameSite is not Lax — Strict withholds the cookie on an arrival from another " +
 			"site, which is precisely the visit this exists to record")
 	}
 
+	// The second request, handing it back. THE ONLY THING IT CARRIES IS THE
+	// COOKIE: no campaign, no referrer, a different path and another language —
+	// so whatever lands in the row can only have come from the first request.
+	next := httptest.NewRequest(http.MethodGet, "/courses", nil)
+	next.Header.Set("Accept-Language", "de")
+	next.AddCookie(offered)
+	rec2 := httptest.NewRecorder()
+	mw(handler(&seen)).ServeHTTP(rec2, next)
+
+	if seen == uuid.Nil {
+		t.Fatal("the cookie was handed back and still nobody was identified")
+	}
+	accepted := visitorCookie(rec2)
+	if accepted == nil {
+		t.Fatal("no identity cookie replaced the offer, so the offer would be taken up twice")
+	}
+	if accepted.Value != seen.String() {
+		t.Errorf("the cookie says %q and the request saw %q", accepted.Value, seen)
+	}
+
 	// The first touch was recorded, and it is the first one.
-	var source, campaign, referrer, locale string
+	var path, source, campaign, referrer, locale string
 	if err := pool.QueryRow(context.Background(), `
-		SELECT utm_source, utm_campaign, first_referrer, locale FROM visitors WHERE id = $1
-	`, seen).Scan(&source, &campaign, &referrer, &locale); err != nil {
+		SELECT first_path, utm_source, utm_campaign, first_referrer, locale
+		  FROM visitors WHERE id = $1
+	`, seen).Scan(&path, &source, &campaign, &referrer, &locale); err != nil {
 		t.Fatalf("reading the visitor: %v", err)
 	}
 	if source != "newsletter" || campaign != "launch" {
@@ -116,7 +147,93 @@ func TestAVisitorHasAnIdentityBeforeAnyAccountExists(t *testing.T) {
 		t.Errorf("referrer %q, want where they came from", referrer)
 	}
 	if locale != "pt-br" {
-		t.Errorf("locale %q, want pt-br", locale)
+		t.Errorf("locale %q, want pt-br — the second request said `de`, and the first is the "+
+			"one that counts", locale)
+	}
+	if path != "/" {
+		t.Errorf("first path %q, want the page they landed on rather than the next one", path)
+	}
+}
+
+// THE POINT OF THE WHOLE CHANGE.
+//
+// A caller that ignores Set-Cookie is offered an identity every time and never
+// becomes a row. That is every crawler, every scanner and every `curl` — three
+// hundred and sixty-five of which had written themselves into the funnel's
+// denominator within a day of this site having an address.
+func TestSomethingThatIgnoresCookiesNeverBecomesARow(t *testing.T) {
+	pool := testPool(t)
+
+	count := func() int {
+		var n int
+		if err := pool.QueryRow(context.Background(),
+			`SELECT count(*) FROM visitors`).Scan(&n); err != nil {
+			t.Fatalf("counting visitors: %v", err)
+		}
+		return n
+	}
+
+	// NO TRUNCATE AND NO ASSERTION ABOUT THE TOTAL: other packages write to
+	// this table in parallel. What is asserted is that ten cookie-less requests
+	// did not add ten rows.
+	before := count()
+
+	var seen uuid.UUID
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
+	for range 10 {
+		rec := httptest.NewRecorder()
+		mw(handler(&seen)).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+		if visitorCookie(rec) == nil {
+			t.Fatal("nothing was offered, so a browser would never be counted either")
+		}
+	}
+
+	if added := count() - before; added >= 10 {
+		t.Errorf("ten cookie-less requests wrote %d rows — a crawler is still a visitor", added)
+	}
+}
+
+// An offer is not an identity, and one handed back cannot bring its own school.
+// Every other field of a first touch was already the caller's to choose; the
+// school is the server's, resolved from the host.
+func TestAnOfferCannotChooseItsOwnSchool(t *testing.T) {
+	pool := testPool(t)
+
+	slug := "t" + strings.ReplaceAll(uuid.NewString(), "-", "")[:16]
+	var resolved uuid.UUID
+	if err := pool.QueryRow(context.Background(), `
+		INSERT INTO tenants (slug, name) VALUES ($1, 'Resolved') RETURNING id
+	`, slug).Scan(&resolved); err != nil {
+		t.Fatalf("seeding a school: %v", err)
+	}
+
+	school := func(context.Context) (uuid.UUID, string, bool) { return resolved, slug, true }
+
+	var seen uuid.UUID
+	mw := visitor.Identify(visitor.NewStore(pool), school, visitor.Settings{}, nil)
+
+	rec := httptest.NewRecorder()
+	mw(handler(&seen)).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+	offered := visitorCookie(rec)
+	if offered == nil {
+		t.Fatal("nothing was offered")
+	}
+
+	next := httptest.NewRequest(http.MethodGet, "/", nil)
+	next.AddCookie(offered)
+	mw(handler(&seen)).ServeHTTP(httptest.NewRecorder(), next)
+	if seen == uuid.Nil {
+		t.Fatal("the offer was handed back and nobody was identified")
+	}
+
+	var got uuid.UUID
+	if err := pool.QueryRow(context.Background(),
+		`SELECT first_tenant_id FROM visitors WHERE id = $1`, seen).Scan(&got); err != nil {
+		t.Fatalf("reading the visitor: %v", err)
+	}
+	if got != resolved {
+		t.Errorf("the school on the row is %s, want the one the request resolved to (%s)",
+			got, resolved)
 	}
 }
 
@@ -129,12 +246,22 @@ func TestTheSameBrowserKeepsItsIdentity(t *testing.T) {
 	var first, second uuid.UUID
 	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{}, nil)
 
+	// Two requests to get an identity at all: the first is offered one, the
+	// second takes it up. See TestAVisitorHasAnIdentityBeforeAnyAccountExists.
 	rec := httptest.NewRecorder()
 	mw(handler(&first)).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+	offered := visitorCookie(rec)
+	if offered == nil {
+		t.Fatal("no identity was offered")
+	}
+	accept := httptest.NewRequest(http.MethodGet, "/", nil)
+	accept.AddCookie(offered)
+	mw(handler(&first)).ServeHTTP(httptest.NewRecorder(), accept)
 	if first == uuid.Nil {
 		t.Fatal("no identity was issued")
 	}
 
+	// And now the browser that already has one.
 	next := httptest.NewRequest(http.MethodGet, "/courses", nil)
 	next.AddCookie(&http.Cookie{Name: visitor.CookieName, Value: first.String()})
 	rec2 := httptest.NewRecorder()
@@ -166,6 +293,21 @@ func TestACookieThatOutlivedItsRowGetsANewIdentity(t *testing.T) {
 	req.AddCookie(&http.Cookie{Name: visitor.CookieName, Value: uuid.New().String()})
 	rec := httptest.NewRecorder()
 	mw(handler(&seen)).ServeHTTP(rec, req)
+
+	// A fresh OFFER, not a fresh row: the browser that sent a dead id has to
+	// prove it still keeps cookies like any other caller, and it will, on the
+	// very next request of the same page load.
+	offered := visitorCookie(rec)
+	if offered == nil {
+		t.Fatal("a stale cookie left the browser with nothing to come back with")
+	}
+	if offered.Value == req.Cookies()[0].Value {
+		t.Fatal("the dead id was handed straight back")
+	}
+
+	accept := httptest.NewRequest(http.MethodGet, "/", nil)
+	accept.AddCookie(offered)
+	mw(handler(&seen)).ServeHTTP(httptest.NewRecorder(), accept)
 
 	if seen == uuid.Nil {
 		t.Fatal("a stale cookie left the request with no visitor")
@@ -219,11 +361,11 @@ func TestAnAccountCanBeLinkedToEveryDeviceItArrivedOn(t *testing.T) {
 	ctx := context.Background()
 	store := visitor.NewStore(pool)
 
-	phone, err := store.Create(ctx, visitor.FirstTouch{Path: "/"})
+	phone, _, err := store.Create(ctx, uuid.Nil, visitor.FirstTouch{Path: "/"})
 	if err != nil {
 		t.Fatalf("issuing: %v", err)
 	}
-	laptop, err := store.Create(ctx, visitor.FirstTouch{Path: "/plans"})
+	laptop, _, err := store.Create(ctx, uuid.Nil, visitor.FirstTouch{Path: "/plans"})
 	if err != nil {
 		t.Fatalf("issuing: %v", err)
 	}
@@ -267,17 +409,25 @@ func TestArrivingIsCountedOnceAndNotOnEveryVisit(t *testing.T) {
 	first := httptest.NewRecorder()
 	served.ServeHTTP(first, httptest.NewRequest(http.MethodGet, "/", nil))
 
+	if len(arrivals) != 0 {
+		t.Fatalf("an arrival was counted for a caller that had not kept a cookie yet")
+	}
+
+	offered := visitorCookie(first)
+	if offered == nil {
+		t.Fatal("no identity was offered")
+	}
+	accept := httptest.NewRequest(http.MethodGet, "/", nil)
+	accept.AddCookie(offered)
+	accepted := httptest.NewRecorder()
+	served.ServeHTTP(accepted, accept)
+
 	if len(arrivals) != 1 {
 		t.Fatalf("a browser arriving was counted %d times", len(arrivals))
 	}
 
 	// The same browser, coming back with the cookie it was given.
-	var cookie *http.Cookie
-	for _, c := range first.Result().Cookies() {
-		if c.Name == visitor.CookieName {
-			cookie = c
-		}
-	}
+	cookie := visitorCookie(accepted)
 	if cookie == nil {
 		t.Fatal("no identity cookie was set")
 	}
@@ -312,5 +462,64 @@ func TestAnArrivalThatCannotBeCountedStillServesThePage(t *testing.T) {
 
 	if rec.Code != http.StatusTeapot {
 		t.Errorf("the page answered %d with nobody counting arrivals", rec.Code)
+	}
+}
+
+// A PAGE LOAD IS SEVERAL REQUESTS AT ONCE, and they all hand back the same
+// offer. Each of them writes, and they have to write the SAME row — otherwise
+// one browser is four people, the funnel gets four arrivals for one visit, and
+// three identity cookies overwrite each other on the way out.
+//
+// The offer carries the id, so every one of those inserts is the same insert
+// and all but the first do nothing.
+func TestOneBrowserOpeningFourRequestsAtOnceIsOnePerson(t *testing.T) {
+	pool := testPool(t)
+
+	var arrivals atomic.Int64
+	mw := visitor.Identify(visitor.NewStore(pool), nil, visitor.Settings{},
+		func(context.Context, uuid.UUID) { arrivals.Add(1) })
+
+	// The page load that gets the offer.
+	rec := httptest.NewRecorder()
+	var ignored uuid.UUID
+	mw(handler(&ignored)).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+	offered := visitorCookie(rec)
+	if offered == nil {
+		t.Fatal("nothing was offered")
+	}
+
+	// And the four calls that page makes, together.
+	seen := make([]uuid.UUID, 4)
+	var wg sync.WaitGroup
+	for i := range seen {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			req := httptest.NewRequest(http.MethodGet, "/api", nil)
+			req.AddCookie(offered)
+			mw(handler(&seen[i])).ServeHTTP(httptest.NewRecorder(), req)
+		}()
+	}
+	wg.Wait()
+
+	for i, id := range seen {
+		if id == uuid.Nil {
+			t.Fatalf("request %d was not identified", i)
+		}
+		if id != seen[0] {
+			t.Errorf("one browser became two people: %s and %s", seen[0], id)
+		}
+	}
+
+	var rows int
+	if err := pool.QueryRow(context.Background(),
+		`SELECT count(*) FROM visitors WHERE id = $1`, seen[0]).Scan(&rows); err != nil {
+		t.Fatalf("counting: %v", err)
+	}
+	if rows != 1 {
+		t.Errorf("%d rows for one identity", rows)
+	}
+	if n := arrivals.Load(); n != 1 {
+		t.Errorf("one visit was counted as %d arrivals", n)
 	}
 }
