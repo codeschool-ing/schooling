@@ -1,8 +1,13 @@
-# The console — a proposal
+# The console
 
-**Nothing here is decided.** This is written to be disagreed with while it is still cheap:
-paragraphs cost less to argue about than screens, and everything below is one merge away from
-being a fact nobody revisits.
+**This was a proposal and is now the design.** It was written to be disagreed with while that was
+still cheap — paragraphs cost less to argue about than screens — and it was, twice: once for
+reading as though phase 4 were being pruned, and once for asking the naming question without
+having read the answer already sitting in a migration. Both are recorded below rather than
+tidied away.
+
+The decisions are in [`PLAN.md`](PLAN.md) as K-17 to K-22. This file is the working detail; that
+table is the register.
 
 It exists because phase 0 has one item left — *personal-data export and erasure, reachable from
 the console* — and it cannot be done without answering questions much bigger than the item. The
@@ -11,7 +16,7 @@ door needs a building.
 
 **Nothing in [`ROADMAP.md`](ROADMAP.md) is pruned by this document.** An earlier draft of it said
 phase 4's screens were "explicitly not this", meaning *not in the first slice*, and it read as
-*not ever*. That was the draft's fault. The console this proposes is the complete one; what is
+*not ever*. That was the draft's fault. The console described here is the complete one; what is
 staged is the order it arrives in, which is a different sentence and is now written as one.
 
 ---
@@ -253,24 +258,75 @@ console starts looking like a different company's software, and the shared file 
 
 ---
 
-## What this proposal still does not answer
+## The three that were open
 
-1. **Is a person found by e-mail only?** It is the only identifier a support request carries. It
-   is also enough to enumerate accounts if the search answers "no such account" differently from
-   "found" to somebody who is only read-only. Probably fine among two people; worth deciding
-   rather than inheriting.
+### A person is found by an exact address, and never listed *(K-22)*
 
-2. **Does view-as-student cross into a school the staff member is not a student of?** It has to,
-   to be useful, and `K-02`'s three restraints are written for exactly that. What is undecided is
-   whether the banner names the school as well as the student.
+E-mail, because it is the only identifier a support request carries — nobody writes in quoting a
+uuid, and a name is not unique.
 
-3. **How far back does the audit screen read before it needs the seam `K-07` describes?** Not a
-   question for the first version, and the wrong time to answer it is the first slow query.
+**The decision was never which field, though. It was exact or partial.** An exact match answers
+"this person who wrote to me, are they here?". A partial one — type `@gmail.com`, read the list —
+is a different power: it is browsing people. And browsing personal data is exactly what an audit
+trail cannot distinguish from working, because both look like a staff member opening records.
+
+Exact match also closes the smaller thing: a search that answers "no such account" differently
+from "found" is an oracle for whether any given address has an account here. Among two people
+with mandatory MFA that is a small worry, but not building it is free — and with an exact match,
+"not found" tells the asker only what they already typed in.
+
+### The banner names the school as well as the student, and so does the audit entry
+
+`K-02` gives view-as-student three restraints that ship together or not at all: audited,
+time-limited, visible banner. The open part was what the banner says.
+
+The console is one and crosses schools, while a student's view is served on a school's host. So a
+banner naming only the student is ambiguous with two tabs open — and "the address bar says which"
+is another way of saying the information lives somewhere nobody looks while concentrating.
+
+Honestly: this is clarity rather than safety. The danger the banner exists for is forgetting you
+are impersonating **somebody**; which school is the smaller confusion. It is worth the few words
+anyway, and the half that matters more is the other one — **the audit entry carries the school
+too**, which costs no migration because `audit_log.tenant_id` already exists and is null for a
+platform-wide action. The value shows up in the conversation that begins "why did you open that
+person's account": a screenshot and a log line telling the same story is an answer, and two
+partial versions is an argument.
+
+### A screen asks only what an index sustains *(K-21)*
+
+This one was asked wrongly, and reading the table answered it. `audit_log` already carries four
+indexes:
+
+```sql
+audit_log_by_time    (occurred_at DESC)
+audit_log_by_actor   (actor_id, occurred_at DESC)
+audit_log_by_subject (subject_kind, subject_id, occurred_at DESC)
+audit_log_by_school  (tenant_id, occurred_at DESC) WHERE tenant_id IS NOT NULL
+```
+
+So the question is not **how many rows**, it is **which query**. Recent-first paging, one actor's
+entries, everything that happened to one person — each has an index that already sorts it — cost
+the same at ten million rows as at ten. What gets expensive is what has no index: free text
+through `before`/`after`, totals, a filter on `action` with no time bound.
+
+So the first version asks only what those cover, and `K-07`'s layer goes in from the first day —
+not because anything will be slow, but because it is what stops the day something *is* from
+becoming a rewrite of screens. A query that does not fit becomes an index or a rollup, decided
+there and then.
 
 ---
 
-## If this is accepted
+## What made this document wrong twice
 
-`PLAN.md` gets the decisions and this file stops being a proposal. It is left alone until then on
-purpose: `PLAN.md` is where reasoning that has been agreed lives, and writing into it first would
-be the same failure as ticking a roadmap box ahead of the thing it claims.
+Kept because both are the same shape as failures this project has already written rules about.
+
+**It read as pruning phase 4.** An early draft said the phase-4 screens were "explicitly not
+this", meaning *not in the first slice*, and never said the other half anywhere. Scope and order
+are different sentences and had been written as one.
+
+**It asked a question a migration had already answered.** The open list included "should
+`console` be reserved?" — while `migrations/0003_reserved_labels.sql` had reserved `admin` years
+of decisions ago, with the comment *"the console, wherever it ends up living"*. The answer was in
+the repository and the question was asked anyway. That is the same failure as a roadmap tick
+nobody can disprove, pointed the other way: not a claim without evidence, but a question whose
+evidence was never looked for.
