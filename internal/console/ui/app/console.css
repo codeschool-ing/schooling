@@ -1,0 +1,134 @@
+/* ==========================================================================
+   The console's layout, on top of the study interface's identity.
+
+   `assets/base.css` is loaded first and is the SAME BYTES the vitrine and the
+   portal serve — colours, type, the custom properties below. It carries no
+   layout this screen can use, because its classes describe that site's markup
+   rather than a form and a table.
+
+   So this file is layout and nothing else. Every colour here is a token from
+   base.css, which is what keeps the console recognisably the same product
+   without a second design system: two of those is how a console starts looking
+   like a different company's software.
+
+   IT LIVES UNDER `app/` RATHER THAN `assets/`, and that is the routing telling
+   the truth: `assets/` is served out of the study interface's embed and is
+   shared; `app/` is the console's own tree, and this is the console's own.
+   ========================================================================== */
+
+#console {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--wire);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.panel h1,
+.panel h2,
+.panel h3,
+.panel h4 { margin: 0 0 .5rem }
+
+.panel h1 { font-size: 1.5rem }
+.panel h2 { font-size: 1.15rem }
+.panel h3 { font-size: 1.05rem }
+.panel h4 { font-size: .95rem; margin-top: 1.5rem }
+
+.panel p { margin: 0 0 .75rem; color: var(--paper-dim) }
+.panel > p:last-child { margin-bottom: 0 }
+
+/* The form. One field at a time, because there is one question on this screen
+   and stacking a second beside it would invite somebody to fill in both. */
+label {
+  display: block;
+  margin-bottom: .35rem;
+  color: var(--paper);
+  font-size: .9rem;
+}
+
+input[type="email"] {
+  display: block;
+  width: 100%;
+  padding: .6rem .75rem;
+  margin-bottom: .5rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--wire);
+  border-radius: 6px;
+  font: inherit;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+input[type="email"]:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  /* VISIBLE, AND NOT THE BROWSER'S DEFAULT ON A DARK BACKGROUND, where it
+     disappears. Everything on this screen is reachable by keyboard and the
+     erase control is one Tab from the export one. */
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+/* A LINK HAS TO LOOK LIKE ONE. base.css takes the underline off links, which
+   suits a page of prose and does not suit this: the export is a control that
+   hands over everything held about a person, and it was rendering as plain
+   text in the middle of a sentence. Somebody has to be able to see it without
+   hovering to find out. */
+#answer a[download] {
+  color: var(--phosphor);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+button {
+  padding: .55rem 1.1rem;
+  background: var(--phosphor);
+  color: var(--ink);
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* THE ERASE BUTTON IS THE ONLY RED THING HERE. It is the one control on this
+   screen that cannot be undone, and it should not look like the one beside it
+   that only reads. */
+#erase button { background: var(--amber); color: var(--paper) }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .875rem;
+}
+
+caption {
+  text-align: left;
+  color: var(--paper-dim);
+  padding-bottom: .5rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+th, td {
+  text-align: left;
+  padding: .3rem .5rem .3rem 0;
+  border-bottom: 1px solid var(--wire);
+  font-weight: 400;
+}
+
+td { text-align: right; color: var(--paper) }
+th { color: var(--paper-dim) }
+
+[role="alert"] { color: var(--amber) }
+[role="status"] { color: var(--paper) }
+
+#answer article { margin-top: 1.25rem }
