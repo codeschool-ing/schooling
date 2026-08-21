@@ -201,6 +201,35 @@ resource "google_cloud_run_v2_service" "api" {
      seconds. */
   deletion_protection = false
 
+  /* THE OTHER `scaling`, AND IT IS NOT THE ONE INSIDE `template`.
+
+     Two blocks with the same name at two levels, and they are different
+     features. The one below is the REVISION's autoscaler: how many instances
+     of the running revision, between none and four. This one is the SERVICE's,
+     added to the API later — a floor held across revisions, and a manual
+     instance count for services that opt out of autoscaling altogether.
+
+     IT IS WRITTEN HERE BECAUSE IT CAME BACK. Left out, the API filled it in
+     with zeros, the provider read those zeros into state, and every plan then
+     proposed removing a block nobody had written — `0 -> null`, applied
+     successfully, and present again on the very next plan. That is the fifth
+     entry in `infra/README.md`'s table of defaults nobody stated, and the
+     first one whose whole cost is noise.
+
+     Noise is the cost that matters here. A plan that always shows one change
+     is a plan that stops being read, and the next change it shows — a database
+     replacement, a service being destroyed — arrives in the same shrug.
+
+     The zeros are what the service already is, so this changes no behaviour.
+     `AUTOMATIC` and a floor of zero is what lets an idle deployment cost
+     nothing; `manual_instance_count` is meaningless while the mode is
+     automatic, and is stated because it is what the API reports and leaving it
+     out is what started this. */
+  scaling {
+    scaling_mode          = "AUTOMATIC"
+    min_instance_count    = 0
+    manual_instance_count = 0
+  }
 
   template {
     service_account = google_service_account.run.email
