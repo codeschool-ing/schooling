@@ -35,6 +35,20 @@ resource "google_cloud_run_v2_job" "migrate" {
   name     = "schooling-migrate"
   location = var.region
 
+  /* OFF, AND SAID OUT LOUD. The provider turns this on by default, and on
+     something stateless it protects nothing while blocking the one operation
+     that is routinely needed: replacing a resource whose creation failed.
+     Terraform marks such a resource tainted and replaces it on the next apply,
+     which this flag then refuses — so a failed create becomes a deadlock that
+     is cleared by editing the configuration.
+
+     What is worth protecting here is the database, and it is: the instance
+     carries `deletion_protection` and the database inside it is ABANDON. This
+     holds no data, keeps its URL across a replacement, and is rebuilt in
+     seconds. */
+  deletion_protection = false
+
+
   template {
     template {
       service_account = google_service_account.run.email
@@ -94,6 +108,20 @@ resource "google_cloud_run_v2_service" "api" {
   name     = "schooling"
   location = var.region
   ingress  = "INGRESS_TRAFFIC_ALL"
+
+  /* OFF, AND SAID OUT LOUD. The provider turns this on by default, and on
+     something stateless it protects nothing while blocking the one operation
+     that is routinely needed: replacing a resource whose creation failed.
+     Terraform marks such a resource tainted and replaces it on the next apply,
+     which this flag then refuses — so a failed create becomes a deadlock that
+     is cleared by editing the configuration.
+
+     What is worth protecting here is the database, and it is: the instance
+     carries `deletion_protection` and the database inside it is ABANDON. This
+     holds no data, keeps its URL across a replacement, and is rebuilt in
+     seconds. */
+  deletion_protection = false
+
 
   template {
     service_account = google_service_account.run.email
