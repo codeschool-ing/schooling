@@ -5,25 +5,94 @@ paragraphs cost less to argue about than screens, and everything below is one me
 being a fact nobody revisits.
 
 It exists because phase 0 has one item left — *personal-data export and erasure, reachable from
-the console* — and it cannot be done without answering questions that are much bigger than the
-item. The export and the erasure already work and are held by four tests. What is missing is a
-door, and a door needs a building.
+the console* — and it cannot be done without answering questions much bigger than the item. The
+export and the erasure already work and are held by four tests. What is missing is a door, and a
+door needs a building.
+
+**Nothing in [`ROADMAP.md`](ROADMAP.md) is pruned by this document.** An earlier draft of it said
+phase 4's screens were "explicitly not this", meaning *not in the first slice*, and it read as
+*not ever*. That was the draft's fault. The console this proposes is the complete one; what is
+staged is the order it arrives in, which is a different sentence and is now written as one.
 
 ---
 
-## What the first version is
+## What the console is, whole
 
-**Find a person. Show what is held about them. Export it. Erase them.** Four things, on one
-screen, and nothing else.
+`PLAN.md` splits it into four jobs that must not mix — **operate** (current tables, now),
+**understand** (aggregates, yesterday will do), **watch** (presence and alerts, seconds) and
+**audit** (immutable history) — because *serving all four from the same queries against production
+is how every console rots.* That division is the spine of everything below.
 
-That is the phase-0 item and its whole scope. Everything in [`ROADMAP.md`](ROADMAP.md)'s phase 4 —
-cohorts, the funnel, the world map, view-as-student, the parameter list, the reported-content
-queue — is explicitly **not** this. Phase 4 is a body of work; this is the door it will later be
-built around.
+### Operate
 
-The temptation is to build a dashboard because a console feels like it should have one. A
-dashboard with no students is a screen that teaches nobody anything, and the roadmap already says
-where those belong.
+- Find a person, show what is held about them, **export** it, **erase** them *(the phase-0 item)*
+- The student record — plan, subscription, progress, exams, certificates, sessions
+- **View-as-student**, audited, time-limited, with a visible banner. `K-02`: without all three it
+  does not ship
+- The reported-content queue, fed by the student
+- The closed list of system parameters, each change audited with actor, old value and new value
+- Prices effective-dated, so a subscriber keeps the price they bought at
+- Synthetic students flagged and excluded from every aggregate by default, with a visible switch
+  and a banner when they are included
+- Granting access to one student — a legitimate audited action, where a global paywall switch is
+  not (`K-15`)
+
+### Understand
+
+- The funnel, all eight steps from *arrived* to *subscribed*, counted per **person** *(already
+  built; the screen is what is missing)*
+- Cohorts, by signup and by subscription start
+- Item analysis: which questions discriminate, which are broken, what is quarantined — with
+  **every threshold displayed beside the number it produced** (`K-16`), and *insufficient data*
+  rather than a red that means nothing beneath the minimum sample (`C-17`)
+- The catalogue as it stands — draft and published per course. Read, never written: `C-07`, held
+  by a test that scans the source
+
+### Watch
+
+- Presence, from `last_seen_at`, written at most once a minute
+- A world map with per-country statistics, from an in-process GeoIP database — the country stored
+  on the event, the address never stored (`K-05`)
+- The failed job queue, with retry
+- E-mail deliverability: bounces and complaints
+
+**Operational alerts stay out**, and that is `K-08` rather than an omission: uptime checks and
+alert policies have to reach a phone *when the console is down*, which is exactly when you need
+to know. That machinery exists and is in `infra/monitoring.tf`.
+
+### Audit
+
+- The immutable history, searchable: who did what, to whom, when, and what the value was before
+- It is not a screen bolted on at the end. Every administrative write already records the actor
+  (`K-01`) and `cmd/staff` writes to it too, precisely so that "every path" is true rather than
+  "every path except one"
+
+### And what feeds it that is not a screen
+
+- A seeder that generates **history** — months of backdated events, with abandonment, returns,
+  duplicate signups and refunds. Without it every screen above is developed against three rows
+  and looks finished
+
+---
+
+## The order it arrives in
+
+Delivery order, not scope. Each of these is a body of work and each is on the roadmap already.
+
+1. **The door, and the phase-0 item.** The host, the two gates, the audit entry, and one screen:
+   find a person, show, export, erase. This unblocks the last box in phase 0.
+2. **Audit and the student record.** The two reads that make the first screen safe to use —
+   knowing what was done, and seeing the person you are about to act on.
+3. **Understand.** The funnel is built and unrendered; item analysis runs in `cmd/analyse` and
+   nobody can see it. Both are screens over machinery that already exists.
+4. **Watch, and the rest of operate.** Presence, the map, the queues, the parameters,
+   view-as-student.
+
+The seeder belongs before step 3, because a funnel with four events in it cannot be reviewed.
+
+**Why this order and not the reverse.** Phase 0 is a wall the rest of the project is meant to
+wait behind, and one item is holding it. Everything else in the console improves a system that
+is already running; the export and the erasure are an obligation to a person who asks.
 
 ---
 
@@ -42,30 +111,81 @@ stylesheet in three copies, one of them checked.
 
 So: the same binary that already serves the API and the embedded interface.
 
-### Its own host, and that is not cosmetic
+### One console, for every school, at `console.<platform domain>`
 
-`console.<platform domain>` — `console.schooling.lab.aleogr.dev` today, subject to the naming
-question at the end of this document, which turns out to have been half-answered already.
+`console.schooling.lab.aleogr.dev` today, and the domain is provisional in the way the README
+already says.
+
+**One and not one per school**, and that is settled by the schema rather than by preference.
+`migrations/0004_accounts_and_sessions.sql` opens with
+
+> ONE ACCOUNT FOR THE WHOLE PLATFORM (N-01). There is no tenant_id on any table
+
+A person therefore exists across schools, and exporting or erasing that person is by nature an
+operation that crosses all of them. A per-school console could not perform the phase-0 item at
+all.
 
 **Not a path under a school.** A school is resolved by `Host` and everything under it is that
-school's; the console operates *across* schools, so putting it under one would mean either a
-console that can only see the school whose address you typed, or a school address that can reach
-other schools' data. Neither is a thing to build.
+school's. Putting the console there would mean either a console that sees only the school whose
+address you typed, or a school address that reaches another school's data.
 
-**The resolver has to learn about it.** Today an unknown host is a 404 and never falls into a
-default school — that is `tenant.Resolve`, it is deliberate, and it is one of the ticked items. A
-console host is a host no school claims, so it would 404 like any other. It therefore needs to be
-recognised *before* school resolution, by name, from configuration — not by a guess about
-subdomains.
+**The resolver learns a third case.** Today an unknown host is a 404 and never falls into a
+default school — `tenant.Resolve`, deliberate, and one of the ticked items. The console's host is
+a host no school claims, so it would 404 like any other. It is recognised *before* school
+resolution, by name, from configuration, never by a guess about subdomains:
 
-That check is worth writing down as a rule: **a host is a school's, or the console's, or a 404.**
-Three cases, no fourth, and a test that says so.
+> **A host is a school's, or the console's, or a 404.** Three cases, no fourth, and a test.
+
+### The name is `console`, and it goes on the reserved list
+
+`migrations/0003_reserved_labels.sql` refuses ten slugs at school creation, by a database
+constraint and by the application, with a test proving the two agree. Its first entry is:
+
+```sql
+'admin',   -- the console, wherever it ends up living
+```
+
+So a name had already been reserved for this, and it was not the one every other document uses.
+`console` is the name; the migration adds it. **`admin` stays reserved** — taking a name off that
+list is strictly worse than leaving one on it, and the comment simply stops being a promise.
+
+Doing this before the console answers anywhere is the whole point. The migration's own header
+says what the alternative costs: renaming a school that students have bookmarked, *"the one kind
+of change this project has already decided it will not make quietly."*
 
 ### And a mapping, which is a runbook line
 
 `infra/README.md` already describes creating a school as two rows and a domain mapping. The
 console is one more `gcloud beta run domain-mappings create`, and the certificate takes the same
 forty minutes.
+
+---
+
+## What a number is scoped to, and why the screen says so
+
+With one school this changes nothing. With three it decides every screen ever built, which is why
+it is decided now rather than discovered later.
+
+The schema already sorts the console's subjects into three kinds:
+
+| kind | tables | what a total means |
+|---|---|---|
+| **per school** | `catalog_*`, `item_statistics`, `question_quarantine`, `certificates` | a sum across schools describes no school |
+| **platform-wide** | `accounts`, `sessions`, `subscriptions`, `ledger_entries`, `audit_log`, `staff` | a school breakdown is not available, because the row has no school |
+| **either** | `events` — `tenant_id` is nullable, with a `CHECK` that it is NULL exactly when `school_slug` is empty | both questions are real and they are different questions |
+
+Item analysis is the clearest case: "does this question discriminate" is asked of a question in a
+school's catalogue, and averaging its difficulty with another school's produces a number that
+describes neither.
+
+**So the scope is declared and never assumed.** A control in the chrome — *this school*, or *the
+platform* — and every screen states which one it is showing. A screen whose subject has no school
+says so instead of offering a filter that would do nothing; a screen whose subject cannot be
+summed across schools says *that* rather than summing anyway.
+
+This is the same rule as `K-16`, one level up: a threshold travels with the number it produced,
+and so does a scope. A dashboard whose numbers are right and whose scope is a guess is a
+dashboard that gets quoted in a meeting.
 
 ---
 
@@ -87,7 +207,7 @@ role. Either one alone is a single mistake away from a hole, and they fail diffe
 misconfigured host is a deployment error, a missing role check is a code error, and a system that
 needs both to be wrong is a system that survives one of them.
 
-**Read-only reads. Operator erases.** An export is a read of everything about a person and an
+**Read-only reads. Operator acts.** An export is a read of everything about a person and an
 erasure cannot be undone; the ranks already exist to say which is which.
 
 ---
@@ -133,42 +253,19 @@ console starts looking like a different company's software, and the shared file 
 
 ---
 
-## What this proposal does not answer
+## What this proposal still does not answer
 
-Left open on purpose, because they are decisions and not details:
-
-1. **Does the console show one school at a time, or all of them at once?** Everything phase 4 wants
-   — funnels, cohorts, item statistics — is per school. A school picker is a decision that reaches
-   every screen ever built, and it is cheaper to make it now than to retrofit it. The first
-   version does not need one, which is exactly why it will be made carelessly if nobody asks.
-
-2. **Is a person found by e-mail only?** It is the only identifier a support request carries. It
+1. **Is a person found by e-mail only?** It is the only identifier a support request carries. It
    is also enough to enumerate accounts if the search answers "no such account" differently from
    "found" to somebody who is only read-only. Probably fine among two people; worth deciding
    rather than inheriting.
 
-3. **`console.` or `admin.`?** The reserved-label list already has an opinion, and it is not the
-   one this document assumed. `migrations/0003_reserved_labels.sql` refuses ten slugs at school
-   creation, by a database constraint and by the application, with a test that proves the two
-   agree — and the first entry reads:
+2. **Does view-as-student cross into a school the staff member is not a student of?** It has to,
+   to be useful, and `K-02`'s three restraints are written for exactly that. What is undecided is
+   whether the banner names the school as well as the student.
 
-   ```sql
-   'admin',   -- the console, wherever it ends up living
-   ```
-
-   So somebody already reserved a name for this and it was not `console`. Two ways out, and they
-   are not equal:
-
-   - **`admin.<platform domain>`** — already reserved, no migration, and the comment stops being a
-     promise. Against it: `admin` says who may enter and `console` says what the thing is, and the
-     product calls it a console everywhere else including the phase in the roadmap.
-   - **`console.<platform domain>`** — the name the rest of the documents use, and a migration
-     adding it to the list.
-
-   What must NOT happen is the console answering at a name a school could also be created at. The
-   file's own header says what that costs: the fix becomes renaming a school students have
-   bookmarked, *"the one kind of change this project has already decided it will not make
-   quietly."* Whichever name wins, it is on the list before the console answers anywhere.
+3. **How far back does the audit screen read before it needs the seam `K-07` describes?** Not a
+   question for the first version, and the wrong time to answer it is the first slow query.
 
 ---
 
