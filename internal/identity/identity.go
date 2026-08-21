@@ -204,6 +204,39 @@ func (s *Store) ByID(ctx context.Context, id uuid.UUID) (Account, error) {
 	return out, nil
 }
 
+// ByEmail answers the account at exactly this address, and never a list.
+//
+// EXACT, AND THERE IS NO PARTIAL FORM OF IT (K-22). The console's one way of
+// reaching a person is this, and the reason it is not a search is that a search
+// is not a lookup: typing `@example.tld` and reading the result is BROWSING
+// PEOPLE, which is the one thing an audit trail cannot tell apart from working
+// — both look like a staff member opening records.
+//
+// The address is folded and trimmed the way one pasted out of a support message
+// arrives. A lookup that missed on a trailing space would be read as "this
+// person has no account", which is the wrong answer to give somebody who asked
+// to be forgotten.
+func (s *Store) ByEmail(ctx context.Context, email string) (Account, error) {
+	address := strings.ToLower(strings.TrimSpace(email))
+	if address == "" {
+		return Account{}, ErrNoAccount
+	}
+
+	var out Account
+	err := s.pool.QueryRow(ctx, `
+		SELECT id, email, name, locale, country, synthetic, created_at FROM accounts WHERE email = $1
+	`, address).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
+		&out.Synthetic, &out.CreatedAt)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return Account{}, ErrNoAccount
+	}
+	if err != nil {
+		return Account{}, fmt.Errorf("identity: reading an account by address: %w", err)
+	}
+	return out, nil
+}
+
 // SetPassword replaces the password and revokes every session but the one asking.
 //
 // REVOKING IS THE POINT, not the new password. Somebody changing their password
