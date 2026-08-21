@@ -56,20 +56,36 @@ gcloud storage buckets create gs://aleogr-schooling-tfstate \
 gcloud storage buckets update gs://aleogr-schooling-tfstate --versioning
 ```
 
-## The first apply
+## Applying takes two passes, and the reason is the secret
+
+**The first apply cannot finish, and that is the design working.** Cloud Run
+resolves `secretKeyRef … versions/latest` while it creates the service, and the
+secret this configuration makes is an empty container — Terraform never writes
+what goes in it. So the service and the job are refused with
+
+```
+Secret projects/…/schooling-database-url/versions/latest was not found
+```
+
+after everything they depend on has been built. That is the right failure: a
+service that came up pointing at a database it cannot reach would be a green
+apply and a broken deployment, and the readiness check would be the thing that
+told you, later.
+
+The alternative — a placeholder version written by Terraform — buys a
+single-pass apply and pays for it by putting a value in the state file and
+starting a service that cannot work. Not existing is a better state than
+existing and lying.
 
 ```sh
 terraform -chdir=infra init
 terraform -chdir=infra plan      # read it. It creates a database.
-terraform -chdir=infra apply
+terraform -chdir=infra apply     # stops at the two Cloud Run resources
 ```
 
-The service and the job come up on Google's placeholder container. They are
-supposed to: there is no image yet, and the first deploy replaces it.
+## Then the database role and the secret, once
 
-## The database role and the secret, once
-
-The instance and the database exist after the apply; the role does not.
+The instance and the database exist after that first pass; the role does not.
 
 ```sh
 # A password that was never typed and is not in a shell history.
@@ -91,9 +107,26 @@ printf 'postgres://schooling:%s@/schooling?host=/cloudsql/%s' \
 unset PASSWORD
 ```
 
-Rotating it later is the same two commands: `gcloud sql users set-password`,
-then a new secret version. The service reads `latest` and picks it up on the
-next revision.
+`terraform output` has nothing to give until an apply completes, so before the
+second pass take the connection name from the instance itself:
+
+```sh
+CONNECTION="$(gcloud sql instances describe schooling --format='value(connectionName)')"
+```
+
+## And the second pass
+
+```sh
+terraform -chdir=infra apply     # the service, the job, the invoker binding
+```
+
+The service and the job come up on Google's placeholder container. They are
+supposed to: there is no image yet, and the first deploy replaces it.
+
+Rotating the password later is the same two commands as above:
+`gcloud sql users set-password`, then a new secret version. The service reads
+`latest`, and a running revision keeps the value it resolved at creation — the
+new one is picked up by the next deploy.
 
 ## Monitoring
 
