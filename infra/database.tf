@@ -57,6 +57,19 @@ resource "google_sql_database_instance" "main" {
 resource "google_sql_database" "schooling" {
   name     = "schooling"
   instance = google_sql_database_instance.main.name
+
+  /* ABANDON, NOT DELETE — and the default is DELETE.
+
+     The INSTANCE is protected and the database inside it was not: removing
+     this block, or renaming it in a way Terraform reads as a replacement,
+     would drop the database and every row in it while leaving the instance
+     standing. The protection one level up does not reach here, because
+     dropping a database is not deleting the instance.
+
+     `ABANDON` makes Terraform stop managing it instead. Losing track of a
+     database is a bad afternoon; dropping one is the end of the project's
+     data, and the two are one attribute apart. */
+  deletion_policy = "ABANDON"
 }
 
 /* THERE IS NO `google_sql_user` HERE, AND THAT IS THE DESIGN.
