@@ -32,18 +32,26 @@
 # a row count per table, and the school. See that file for why it is written as
 # a report rather than as a list of expectations.
 #
-# A DIFFERENCE IS NOT AUTOMATICALLY A BROKEN BACKUP. The clone is the database
-# as it was at `--minutes` ago and the live one is as it is now, so anything
-# written in between shows up here as a difference — correctly. Today nothing
-# writes outside a deploy, which is what makes exact equality the honest check;
-# on the day students are writing every minute, this grows a quiescent window
-# or narrows to the catalogue, and it should be changed openly rather than
-# relaxed into a warning nobody reads.
+# BOTH SIDES ARE ONE MOMENT, and that is what makes "identical" an honest
+# demand rather than a wish. The live database is read FIRST, in a single
+# REPEATABLE READ snapshot; the instant of that snapshot comes from the
+# database's own clock; and the clone is restored to exactly it.
+#
+# The first version compared a clone from forty minutes ago against a live
+# database read now, and every visitor who arrived in between counted as a
+# difference. It failed a perfectly good restore over six rows of ordinary
+# traffic, which is the beginning of a tolerance, and a tolerance is the
+# beginning of a check nobody believes. This closes the window instead of
+# widening the threshold.
+#
+# ONE EXCEPTION SURVIVES, and it is named in the output: point-in-time recovery
+# resolves to the second and a snapshot does not, so a row written in the same
+# second as the snapshot can land on one side only. It shows as one or two rows
+# on a single table and it does not repeat — a real fault does.
 #
 # # RUNNING IT
 #
 #   tools/restore-drill/restore-drill.sh                    # clone, verify, destroy
-#   tools/restore-drill/restore-drill.sh --minutes 60       # further back
 #   tools/restore-drill/restore-drill.sh --keep             # leave the clone up
 #   tools/restore-drill/restore-drill.sh --attach <clone>   # one that already exists
 #
@@ -75,7 +83,6 @@ SOURCE="${SOURCE:-schooling}"
 SECRET="${SECRET:-schooling-database-url}"
 DATABASE="${DATABASE:-schooling}"
 DBUSER="${DBUSER:-schooling}"
-MINUTES=10
 KEEP=0
 ATTACH=""
 
@@ -85,12 +92,11 @@ PROXY_VERSION="v2.14.3"
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --minutes)  MINUTES="$2"; shift 2 ;;
     --instance) SOURCE="$2"; shift 2 ;;
     --region)   REGION="$2"; shift 2 ;;
     --keep)     KEEP=1; shift ;;
     --attach)   ATTACH="$2"; shift 2 ;;
-    -h|--help)  sed -n '3,64p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help)  sed -n '3,72p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
 done
@@ -98,7 +104,7 @@ done
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORK="$(mktemp -d)"
 CLONE=""
-PROXY_PID=""
+PROXY_PIDS=()
 
 say() { printf '\n\033[1m%s\033[0m\n' "$*"; }
 
@@ -111,7 +117,11 @@ cleanup() {
   local code=$?
   set +e
 
-  if [ -n "$PROXY_PID" ]; then kill "$PROXY_PID" 2>/dev/null; wait "$PROXY_PID" 2>/dev/null; fi
+  # Two of them now: one opened before the clone exists, one after.
+  for pid in ${PROXY_PIDS+"${PROXY_PIDS[@]}"}; do
+    kill "$pid" 2>/dev/null
+    wait "$pid" 2>/dev/null
+  done
 
   if [ -n "$CLONE" ]; then
     if [ "$KEEP" = "1" ]; then
@@ -270,11 +280,64 @@ EOF
   exit 1
 fi
 
+SOURCE_CONN="$(gcloud sql instances describe "$SOURCE" --format='value(connectionName)')"
+
+# A proxy, a wait, and a report. Used twice: once for the live instance before
+# the clone exists, once for the clone after it does.
+open_proxy() {
+  "$PROXY" "${1}?port=${2}" >>"$WORK/proxy.log" 2>&1 &
+  PROXY_PIDS+=($!)
+
+  for _ in $(seq 1 60); do
+    psql -h 127.0.0.1 -p "$2" -U "$DBUSER" -d "$DATABASE" -qtAXc 'SELECT 1' >/dev/null 2>&1 && return 0
+    sleep 2
+  done
+
+  echo "$1 did not answer through the proxy after two minutes." >&2
+  echo "the proxy said:" >&2
+  cat "$WORK/proxy.log" >&2
+  return 1
+}
+
+report() {
+  psql -h 127.0.0.1 -p "$1" -U "$DBUSER" -d "$DATABASE" \
+       -qtAX -v ON_ERROR_STOP=1 -f "$HERE/verify.sql"
+}
+
+# ---------- the live snapshot, and it comes first ----------
+#
+# THE TWO SIDES HAVE TO BE THE SAME MOMENT. They were not: live used to be read
+# at the END, some forty minutes after the point the clone was restored to, so
+# every visitor who arrived in between showed up as a difference — and the drill
+# could not tell that from a restore that had lost rows. The first real run
+# against production ended with `events` and `visitors` six rows apart and a
+# verdict of failure on a restore that was perfectly good.
+#
+# The fix is not a tolerance. It is reading the live database FIRST, in one
+# REPEATABLE READ snapshot, taking the instant of that snapshot from the
+# database's own clock, and restoring the clone to exactly it. Then identical is
+# the honest expectation again — with students writing, with crawlers arriving,
+# with anything happening — because the two reports describe one instant.
+say "Reading the live database, in one snapshot"
+open_proxy "$SOURCE_CONN" "$PORT_LIVE"
+report "$PORT_LIVE" >"$WORK/live.txt"
+
+SNAPSHOT="$(sed -n 's/^snapshot|//p' "$WORK/live.txt")"
+[ -n "$SNAPSHOT" ] || { echo "verify.sql did not report the snapshot instant" >&2; exit 1; }
+echo "the live database as it was at $SNAPSHOT"
+
 # ---------- the restore ----------
 
 if [ -z "$ATTACH" ]; then
-  WHEN="$(date -u -d "$MINUTES minutes ago" +%Y-%m-%dT%H:%M:%SZ)"
+  WHEN="$SNAPSHOT"
   CLONE="${SOURCE}-drill-$(date -u +%Y%m%d%H%M%S)"
+
+  # A POINT IN TIME HAS TO BE PAST, and "past" is the API's opinion rather than
+  # ours. The snapshot is seconds old when we get here, so wait until there is
+  # no argument to have.
+  while [ "$(( $(date -u +%s) - $(date -u -d "$SNAPSHOT" +%s) ))" -lt 120 ]; do
+    sleep 5
+  done
 
   say "Cloning to $CLONE, as of $WHEN"
   echo "This is the slow part: a new instance is built from the last backup and"
@@ -311,45 +374,17 @@ if [ -z "$ATTACH" ]; then
   [ -z "$FAILED" ] || { echo "the clone failed: $FAILED" >&2; exit 1; }
 fi
 
-SOURCE_CONN="$(gcloud sql instances describe "$SOURCE" --format='value(connectionName)')"
 CLONE_CONN="$(gcloud sql instances describe "$CLONE" --format='value(connectionName)')"
 
-# ---------- reaching both ----------
+# ---------- and the same question, of the clone ----------
 
-# BOTH INSTANCES, ONE PROCESS, AND THE PORT SAID PER INSTANCE. The proxy also
-# takes `--port` as a global flag and then numbers the rest sequentially, which
-# works until somebody reorders the arguments and the drill quietly compares
-# the live instance against itself.
-say "Opening both instances through the proxy — live on $PORT_LIVE, clone on $PORT_CLONE"
-"$PROXY" "${SOURCE_CONN}?port=${PORT_LIVE}" "${CLONE_CONN}?port=${PORT_CLONE}" \
-  >"$WORK/proxy.log" 2>&1 &
-PROXY_PID=$!
+say "Reading the clone"
+open_proxy "$CLONE_CONN" "$PORT_CLONE"
+report "$PORT_CLONE" >"$WORK/clone.txt"
 
-READY=0
-for _ in $(seq 1 60); do
-  if psql -h 127.0.0.1 -p "$PORT_LIVE" -U "$DBUSER" -d "$DATABASE" -qtAXc 'SELECT 1' >/dev/null 2>&1 &&
-     psql -h 127.0.0.1 -p "$PORT_CLONE" -U "$DBUSER" -d "$DATABASE" -qtAXc 'SELECT 1' >/dev/null 2>&1; then
-    READY=1
-    break
-  fi
-  sleep 2
-done
-if [ "$READY" = "0" ]; then
-  echo "neither instance answered through the proxy after two minutes." >&2
-  echo "the proxy said:" >&2
-  cat "$WORK/proxy.log" >&2
-  exit 1
-fi
-
-# ---------- the check ----------
-
-say "Reading both"
-run() {
-  psql -h 127.0.0.1 -p "$1" -U "$DBUSER" -d "$DATABASE" \
-       -qtAX -v ON_ERROR_STOP=1 -f "$HERE/verify.sql"
-}
-run "$PORT_LIVE"  >"$WORK/live.txt"
-run "$PORT_CLONE" >"$WORK/clone.txt"
+# THE ONE LINE THAT IS ALLOWED TO DIFFER. The clone answers with the moment IT
+# was read, which is now, rather than the moment it holds.
+sed -i '/^snapshot|/d' "$WORK/live.txt" "$WORK/clone.txt"
 
 echo "live:  $(wc -l <"$WORK/live.txt") lines"
 echo "clone: $(wc -l <"$WORK/clone.txt") lines"
@@ -368,10 +403,25 @@ else
   say "THE CLONE IS NOT THE SAME DATABASE"
   cat "$WORK/diff.txt"
   echo
-  echo "Left is live, right is the clone as of $WHEN."
-  echo "Rows written since then read as differences and are not a failed"
-  echo "restore. Anything under 'column', 'index', 'constraint' or 'migration'"
-  echo "is, and so is a school that did not come back."
+  echo "Left is the live database at $SNAPSHOT."
+  echo
+  if [ -n "$ATTACH" ]; then
+    echo "Right is a clone an earlier run built, and NOTHING HERE KNOWS WHAT"
+    echo "INSTANT IT HOLDS — so the row counts are not comparable and only the"
+    echo "structural lines are a verdict. For a whole answer, run the drill"
+    echo "without --attach."
+  else
+    echo "Right is a clone restored to that same instant, so every line above is"
+    echo "a difference between two readings of one moment — there is no window"
+    echo "for a visitor to have arrived in."
+    echo
+    echo "The one honest exception is a row written in the same SECOND the"
+    echo "snapshot was taken — point-in-time recovery resolves to the second,"
+    echo "and the snapshot does not. That shows as one or two rows on a single"
+    echo "table and it does not repeat. Anything else, and anything under"
+    echo "'column', 'index', 'constraint', 'migration' or a school that did not"
+    echo "come back, is the restore."
+  fi
   RESULT=1
 fi
 
