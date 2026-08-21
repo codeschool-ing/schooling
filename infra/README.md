@@ -221,28 +221,71 @@ of how a request finds its school. A host nobody mapped is a 404 and never falls
 into a default, so until this row exists the deployment answers `/version` and
 nothing else. That is the design and not an outage.
 
-## Monitoring
-
-`alert_email` is empty by default and nothing watches anything. That is
-deliberate while `schooling.lab.aleogr.dev` does not resolve: a check against a
-name nobody has published fails on its first run and every run after, and all it
-teaches anybody is to ignore the alert.
-
-Set the address once the DNS record exists, and apply again.
-
 ## The address
 
-The service answers on its own `run.app` URL as soon as it is deployed. Pointing
-`schooling.lab.aleogr.dev` at it — and `*.schooling.lab.aleogr.dev`, because a
-school is a subdomain — is the piece that decides between a Cloud Run domain
-mapping and a load balancer in front. **A wildcard is the requirement**, and
-support for one differs between those two paths; it is the first thing to check
-rather than the thing to discover after building one of them.
+The service answers on its own `run.app` URL as soon as it is deployed. A school
+answers on a name a student types, and that is a **Cloud Run domain mapping**:
+one per school, no load balancer, nothing charged by the hour.
 
-Whichever it is, the certificate needs **both** names: a wildcard covers
-`code.schooling.lab.aleogr.dev` and does not cover
-`schooling.lab.aleogr.dev` itself. That gap presents as "every school works and
-the platform's own page does not".
+The load balancer was the other candidate, and the argument for it was a
+wildcard — `*.schooling.lab.aleogr.dev`, one certificate covering every school
+that will ever exist. Domain mappings do not do wildcards; each host is mapped
+by name. **That is the right trade while creating a school is a runbook anyway.**
+A school is already two rows written by hand and a directory in `content/`;
+adding one line to that runbook costs nothing, and a managed certificate per
+name costs nothing either. The load balancer's forwarding rule is billed per
+hour whether anybody visits or not. When schools become self-serve the wildcard
+becomes worth paying for — and not before.
+
+The domain has to be verified once for the account, which for a domain on
+Cloudflare is Domain Connect and takes a minute:
+
+```sh
+gcloud domains verify aleogr.dev            # opens the browser flow
+gcloud domains list-user-verified           # aleogr.dev should be listed
+
+gcloud beta run domain-mappings create \
+  --service=schooling \
+  --domain=code.schooling.lab.aleogr.dev \
+  --region=us-central1
+```
+
+It answers with the DNS record to create — a `CNAME` to `ghs.googlehosted.com.`.
+**At Cloudflare that record is DNS only, the grey cloud.** Proxying it hides the
+name Cloud Run needs to see, and the certificate never issues.
+
+Then it is a wait, and the wait is visible:
+
+```sh
+gcloud beta run domain-mappings describe \
+  --domain=code.schooling.lab.aleogr.dev --region=us-central1 \
+  --format="table(status.conditions[].type, status.conditions[].status, status.conditions[].reason)"
+```
+
+`CertificatePending` for a few minutes is the normal path, not a fault.
+
+`schooling.lab.aleogr.dev` itself is deliberately **not** mapped. Nothing serves
+it: there is no platform page, and the tenant resolver answers 404 for a host it
+does not know rather than falling into a default. A name that resolves to a 404
+is worse than a name that does not resolve, because it looks like a broken
+deployment.
+
+## Monitoring
+
+`alert_email` and `uptime_host` are both empty by default and nothing watches
+anything. Both are needed, and the second one is the lesson: the check used to
+point at `platform_domain`, which is the unmapped name above. Cloud Run's front
+end routes by hostname before anything reaches the container, so a check against
+an unmapped host measures **Google's 404 page** — reporting the service down
+while it is perfectly healthy.
+
+Watch a school's host instead, where `/readyz` is reachable and answers only
+when the process can open its database:
+
+```hcl
+alert_email = "…"
+uptime_host = "code.schooling.lab.aleogr.dev"
+```
 
 ## What is checked, and what is not
 

@@ -1,16 +1,21 @@
 /* Whether it is up, and who finds out.
 
-   IT IS OFF UNTIL THERE IS AN ADDRESS. `alert_email` empty creates none of
-   this, and that is the honest default while the DNS record does not exist: a
-   check against a name nobody has published fails on its first run and every
-   run after, and the only thing it teaches anybody is to ignore the alert. An
-   alarm that is always ringing is worse than no alarm — it is an alarm plus the
-   habit of not looking.
+   IT IS OFF UNTIL THERE IS SOMEWHERE TO WATCH AND SOMEBODY TO TELL. Either
+   variable empty creates none of this, which is the honest default while the
+   DNS does not exist: a check against a name nobody has published fails on its
+   first run and every run after, and the only thing it teaches anybody is to
+   ignore the alert. An alarm that is always ringing is worse than no alarm — it
+   is an alarm plus the habit of not looking.
 
-   Set the address, apply again, and it starts watching. */
+   THE HOST IS A SCHOOL'S AND NOT THE PLATFORM'S, and that distinction was
+   bought by deploying: an unmapped host never reaches the container, because
+   Google's front end routes by name and answers its own 404 first. A check
+   against one measures an error page nobody here wrote. See `uptime_host`.
+
+   Set both, apply again, and it starts watching. */
 
 locals {
-  monitoring = var.alert_email == "" ? 0 : 1
+  monitoring = (var.alert_email == "" || var.uptime_host == "") ? 0 : 1
 }
 
 resource "google_monitoring_notification_channel" "email" {
@@ -48,7 +53,7 @@ resource "google_monitoring_uptime_check_config" "readyz" {
     type = "uptime_url"
     labels = {
       project_id = var.project
-      host       = var.platform_domain
+      host       = var.uptime_host
     }
   }
 }
