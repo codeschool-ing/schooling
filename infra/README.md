@@ -31,8 +31,8 @@ follows the same rule.
 
 ## Defaults are stated, not inherited
 
-Three of the first four failures here were the same failure: a field left out,
-the provider or the API filling it in, and the answer being wrong in a way that
+Four failures here have been the same failure: a field left out, the provider,
+the API or the shell filling it in, and the answer being wrong in a way that
 costs data, money or an afternoon.
 
 | left out | filled in as | what it would have cost |
@@ -40,10 +40,26 @@ costs data, money or an afternoon.
 | `google_sql_database.deletion_policy` | `DELETE` | dropping the database and every row, while the protected instance stood |
 | `settings.edition` | `ENTERPRISE_PLUS` | the tier refused, and the error suggesting a machine several times the agreed bill |
 | `deletion_protection` on the Cloud Run pair | `true` | a failed create becoming a deadlock, cleared only by editing the configuration |
+| the provider's `billing_project` | whatever `gcloud config set project` last wrote | every call for this project charged to another project's quota, and refused |
 
-None of them was a mistake in what was written. All three were things nobody
+None of them was a mistake in what was written. All four were things nobody
 wrote, and the defaults are not stable — the edition one changed under this
-project's feet between somebody learning `db-f1-micro` and using it.
+project's feet between somebody learning `db-f1-micro` and using it, and the
+last one is not even a default: it is whatever the shell happened to hold, so
+it changed when a Cloud Shell session restarted.
+
+That one is worth reading twice, because the error names two projects and puts
+the wrong one in the advice:
+
+```
+Error when reading or editing Project "aleogr-schooling": Cloud Resource
+Manager API has not been used in project codeschool-ing before or it is
+disabled. Enable it by visiting …?project=codeschool-ing
+```
+
+Following it would have enabled an API on a project with no business in this
+configuration, and it would have worked — which is how a wrong fix becomes
+permanent.
 
 **So: if behaviour is being relied on, it is in the file.** Not because the
 default is wrong today, but because a default is a decision made somewhere else
