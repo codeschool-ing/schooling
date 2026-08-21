@@ -21,6 +21,7 @@ locals {
   registry = "${var.region}-docker.pkg.dev/${var.project}/${google_artifact_registry_repository.images.repository_id}"
   api      = "${local.registry}/api"
   migrate  = "${local.registry}/migrate"
+  load     = "${local.registry}/load"
 }
 
 /* THE MIGRATION IS A JOB AND NOT A STEP IN THE CONTAINER'S START-UP.
@@ -77,6 +78,84 @@ resource "google_cloud_run_v2_job" "migrate" {
             }
           }
         }
+
+        volume_mounts {
+          name       = "cloudsql"
+          mount_path = "/cloudsql"
+        }
+      }
+
+      volumes {
+        name = "cloudsql"
+        cloud_sql_instance {
+          instances = [google_sql_database_instance.main.connection_name]
+        }
+      }
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      template[0].template[0].containers[0].image,
+      client,
+      client_version,
+    ]
+  }
+
+  depends_on = [google_project_service.enabled]
+}
+
+/* THE CATALOGUE, FROM THE FILES INTO THE MIRROR.
+
+   A SECOND JOB AND NOT A SECOND COMMAND IN THE FIRST ONE. The schema and the
+   content fail differently and are rolled back differently: a migration that
+   half-applied is a database in an unknown shape, a catalogue that did not pass
+   its checks is a catalogue that was never written at all — `cmd/load`
+   validates first and writes nothing if anything is wrong. Two concerns, two
+   exit codes, two places to look.
+
+   IT PRUNES. What the files no longer carry leaves the mirror, in the same
+   transaction that writes what they do carry, because a course deleted from
+   `content/` that kept serving would be visible to students and invisible in
+   the repository.
+
+   IT REFUSES A SCHOOL NOBODY CREATED. A directory in `content/` does not make a
+   tenant — a school is also an address and a domain mapping — so the row is
+   created once by hand and this fails until it is. See `infra/README.md`. */
+resource "google_cloud_run_v2_job" "load" {
+  name     = "schooling-load"
+  location = var.region
+
+  deletion_protection = false
+
+  template {
+    template {
+      service_account = google_service_account.run.email
+      max_retries     = 0
+
+      containers {
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
+
+        env {
+          name  = "SCHOOLING_ENV"
+          value = "production"
+        }
+        env {
+          name  = "SCHOOLING_PLATFORM_DOMAIN"
+          value = var.platform_domain
+        }
+        env {
+          name = "SCHOOLING_DATABASE_URL"
+          value_source {
+            secret_key_ref {
+              secret  = google_secret_manager_secret.database_url.secret_id
+              version = "latest"
+            }
+          }
+        }
+
+        // Where the image keeps the files. See `deploy/Dockerfile`.
+        args = ["/content"]
 
         volume_mounts {
           name       = "cloudsql"

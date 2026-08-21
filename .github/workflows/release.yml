@@ -147,8 +147,10 @@ jobs:
       REGION: us-central1
       SERVICE: schooling
       MIGRATE_JOB: schooling-migrate
+      LOAD_JOB: schooling-load
       API_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/api
       MIGRATE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/migrate
+      LOAD_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/load
       DEPLOY_ACCOUNT: schooling-deploy@aleogr-schooling.iam.gserviceaccount.com
       WORKLOAD_IDENTITY_PROVIDER: projects/67869214453/locations/global/workloadIdentityPools/github/providers/github
 
@@ -173,20 +175,25 @@ jobs:
       # THE GO VERSION COMES FROM go.mod, here as everywhere else. Passed into
       # the build rather than written in the Dockerfile, so a directive that
       # moves cannot leave an image behind on an older compiler.
-      - name: The two images, stamped with the tag they were cut from
+      # THE THIRD ONE CARRIES THE CATALOGUE, which is why it is built against a
+      # different target: `cmd/load` reads `content/` off a filesystem, and the
+      # other two never open it. See `deploy/Dockerfile`.
+      - name: The three images, stamped with the tag they were cut from
         run: |
           set -euo pipefail
           go_version="$(awk '/^go /{print $2}' go.mod)"
           built="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-          for command in api migrate; do
+          for command in api migrate load; do
             case "$command" in
-              api)     image="$API_IMAGE" ;;
-              migrate) image="$MIGRATE_IMAGE" ;;
+              api)     image="$API_IMAGE";     target=binary ;;
+              migrate) image="$MIGRATE_IMAGE"; target=binary ;;
+              load)    image="$LOAD_IMAGE";    target=with-content ;;
             esac
 
             docker build \
               --file deploy/Dockerfile \
+              --target "$target" \
               --build-arg "GO_VERSION=${go_version}" \
               --build-arg "COMMAND=${command}" \
               --build-arg "VERSION=${GITHUB_REF_NAME}" \
@@ -210,6 +217,24 @@ jobs:
             --image="${MIGRATE_IMAGE}:${GITHUB_REF_NAME}" \
             --quiet
           gcloud run jobs execute "$MIGRATE_JOB" --region="$REGION" --wait
+
+      # AFTER THE SCHEMA AND BEFORE THE REVISION, for the same reason the
+      # migration is before both: a revision that starts serving a catalogue
+      # older than itself shows a student a course that is not there any more,
+      # or misses one that is.
+      #
+      # IT WRITES NOTHING IF THE CATALOGUE DOES NOT PASS. `cmd/load` validates
+      # first and refuses whole — so a failure here leaves the PREVIOUS
+      # catalogue serving, which is the state worth having when something is
+      # wrong with the new one.
+      - name: The catalogue, from the files into the mirror
+        run: |
+          set -euo pipefail
+          gcloud run jobs update "$LOAD_JOB" \
+            --region="$REGION" \
+            --image="${LOAD_IMAGE}:${GITHUB_REF_NAME}" \
+            --quiet
+          gcloud run jobs execute "$LOAD_JOB" --region="$REGION" --wait
 
       - name: The revision
         run: |

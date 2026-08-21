@@ -45,9 +45,23 @@ RUN CGO_ENABLED=0 go build \
 # It carries certificates, which is not optional: the process speaks TLS to the
 # database, and without them that fails with an error about the handshake rather
 # than about the certificates.
-FROM gcr.io/distroless/static-debian12:nonroot
+FROM gcr.io/distroless/static-debian12:nonroot AS binary
 
 COPY --from=build /out/app /app
 
 EXPOSE 8080
 ENTRYPOINT ["/app"]
+
+# AND ONE OF THEM CARRIES THE CATALOGUE.
+#
+# `cmd/load` reads `content/` off a filesystem — the files are the source of
+# truth and the database is a mirror (C-01), so the thing that writes the mirror
+# has to be able to read the files. 2.7 MB of Markdown, JSON and diagrams.
+#
+# IT IS A SEPARATE TARGET RATHER THAN A COPY IN EVERY IMAGE. The API never
+# opens `content/`: it reads the mirror, which is the whole point of there being
+# one. An image carrying a directory it cannot use is a reader wondering what
+# reads it, and eventually somebody making it true.
+FROM binary AS with-content
+
+COPY --from=build /src/content /content

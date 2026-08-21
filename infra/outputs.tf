@@ -27,6 +27,16 @@ output "migrate_job" {
   value       = google_cloud_run_v2_job.migrate.name
 }
 
+output "load_image" {
+  description = "Where the catalogue loader is pushed and read from."
+  value       = local.load
+}
+
+output "load_job" {
+  description = "The job that writes the mirror from `content/`, after the schema."
+  value       = google_cloud_run_v2_job.load.name
+}
+
 output "deploy_service_account" {
   description = "The identity GitHub Actions impersonates. It cannot read secrets."
   value       = google_service_account.deploy.email
