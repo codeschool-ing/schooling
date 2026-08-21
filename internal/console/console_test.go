@@ -94,8 +94,16 @@ func TestTheConsolesShellIsServedWithoutASession(t *testing.T) {
 	if ct := rec.Header().Get("Content-Type"); !strings.HasPrefix(ct, "text/html") {
 		t.Errorf("Content-Type %q, want html", ct)
 	}
-	if !strings.Contains(rec.Body.String(), "/app/console.js") {
-		t.Error("the shell does not load the console")
+	body := rec.Body.String()
+	for _, wanted := range []string{
+		"/app/main.js",     // the console itself
+		"/assets/base.css", // the shared identity
+		"/assets/console.css",
+		`id="rail"`, `id="stage"`, // the layout the rest of this organisation uses
+	} {
+		if !strings.Contains(body, wanted) {
+			t.Errorf("the shell does not carry %s", wanted)
+		}
 	}
 }
 

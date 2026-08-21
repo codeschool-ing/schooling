@@ -1,31 +1,67 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Console — schooling</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- THE TYPE, from the same place the study interface takes it: served here,
-     not from a font CDN, and the same files. Without this the console loads
-     base.css, asks for 'IBM Plex Sans' and gets whatever the system has — the
-     identity shared by half, which is the half that shows. -->
-<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<!-- Staff-only and never a search result. -->
+<meta name="robots" content="noindex, nofollow" />
+<title>Console · schooling</title>
 
-<!-- The study interface's stylesheet, the same bytes, served from its embed.
-     See internal/console/interface.go for why there is not a second copy. -->
-<link rel="stylesheet" href="/assets/base.css">
-<!-- And the console's own layout on top of it. base.css carries the identity;
-     its classes describe the vitrine's markup rather than a form and a table. -->
-<link rel="stylesheet" href="/app/console.css">
+<script>/* the saved theme before paint, avoiding the flash — the vitrine's key, so the
+           study interface and the console agree about which one you chose */
+try{if(localStorage.getItem('codeschool-theme')==='light')document.documentElement.dataset.theme='light'}catch(e){}</script>
 
-<!-- IN ENGLISH AND NOT TRANSLATED. The study interface speaks five languages
-     because students do; two people operate this, and a console translated
-     into languages nobody reads it in is five files that drift. -->
+<!-- THE TYPE, served from here rather than from a font CDN, and the same files
+     the study interface uses. Without this base.css asks for 'IBM Plex Sans'
+     and gets whatever the system has: the identity shared by half, which is
+     the half that shows. -->
+<link rel="stylesheet" href="/assets/fonts/fonts.css" />
+
+<!-- base.css is the study interface's stylesheet, the SAME BYTES, served out
+     of its embed — the tokens, the reset and the fixed 64px bar. There is no
+     copy of it here; see internal/console/interface.go.
+     console.css adds what a console needs and a student product never did. -->
+<link rel="stylesheet" href="/assets/base.css" />
+<link rel="stylesheet" href="/assets/console.css" />
 </head>
-<body>
-<main id="console" class="container">
-  <noscript>The console needs JavaScript. Everything it does is a request that has to be signed for.</noscript>
-</main>
-<script type="module" src="/app/console.js"></script>
+<body class="console-body">
+
+<!-- THE SAME BAR AS EVERYTHING ELSE IN THIS ORGANISATION: fixed, 64px, the
+     brand at the left and who you are at the right.
+
+     THE BRAND IS THE PLATFORM AND NOT A SCHOOL. `codeschool.ing` is one school
+     here; this console operates across all of them, and a school's name on the
+     bar would be the first place somebody reads the wrong scope. -->
+<nav>
+  <a href="#/people" class="brand"><span class="led"></span><span class="brand-name">schooling</span></a>
+  <span class="bar-label mono">Console</span>
+  <span class="bar-spacer"></span>
+
+  <!-- Painted from JS: the role that is holding the door open, or nothing. -->
+  <span class="bar-state mono" id="bar-state"></span>
+
+  <button id="theme-btn" class="nav-icon" type="button" aria-label="Switch to the light theme">
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+  </button>
+
+  <span class="whoami" id="whoami"></span>
+</nav>
+
+<!-- The standing notice, painted from JS and hidden when there is nothing to
+     say. Today it says one thing: nobody is signed in. -->
+<div class="gate" id="gate" role="status" hidden></div>
+
+<div class="console">
+  <aside class="rail" id="rail" aria-label="Console sections"></aside>
+  <main class="stage" id="stage" tabindex="-1"></main>
+</div>
+
+<noscript>
+  <p>The console needs JavaScript. Everything it does is a request that has to be signed for.</p>
+</noscript>
+
+<script type="module" src="/app/main.js"></script>
 </body>
 </html>

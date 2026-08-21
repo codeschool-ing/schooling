@@ -76,11 +76,23 @@ func Interface(version string) http.Handler {
 		path := strings.TrimPrefix(r.URL.Path, "/")
 
 		switch {
-		// The shared stylesheet, out of the study interface's embed. Only
-		// `assets/` — the console has no business serving `app/`, which is a
-		// student's screens.
+		/* `assets/` IS THE CONSOLE'S FIRST AND THE STUDY INTERFACE'S SECOND.
+
+		   `console.css` is the console's own — the rail, the stage, the state
+		   vocabulary — and `base.css` and the faces are the shared ones, the
+		   same bytes out of `ui.Files`. Asking the console's tree first and
+		   falling back means neither side has to know which files the other
+		   has, and the shell links both under one prefix as a reader would
+		   expect.
+
+		   NOT `app/` THOUGH: that is a student's screens, and the console has
+		   no business serving them. */
 		case strings.HasPrefix(path, "assets/"):
 			if stamp(w, r) {
+				return
+			}
+			if _, err := fs.Stat(own, path); err == nil {
+				mine.ServeHTTP(w, r)
 				return
 			}
 			shared.ServeHTTP(w, r)
