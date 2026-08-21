@@ -20,6 +20,18 @@ on:
 permissions:
   contents: read
 
+# THIS ONE IS NOT FILTERED BY PATH, and that is the filtering decision rather
+# than an omission of it.
+#
+# `ci.yml` skips the jobs whose inputs did not change. The input HERE is the
+# whole repository: this walks every `.md` and asks whether each relative link
+# resolves to a file that exists, so a link breaks when its TARGET moves or is
+# deleted — and the target is usually not a `.md`. A filter on `*.md` would
+# skip precisely the change that breaks a link.
+#
+# It also takes five seconds and needs no database and no browser. There is
+# nothing to save.
+
 jobs:
   Links:
     runs-on: ubuntu-latest

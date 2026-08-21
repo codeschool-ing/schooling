@@ -31,7 +31,87 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # WHICH OF THE JOBS BELOW THIS CHANGE CAN POSSIBLY AFFECT.
+  #
+  # One repository holds the API, the interface, the content, the tools, the
+  # infrastructure and the documents (P-02), and that is the right shape — the
+  # boundary between repositories matched no boundary in the system, and the
+  # predecessor paid for it with a stylesheet in three copies and a contract
+  # change costing two pull requests.
+  #
+  # What it costs is this: a comment in a `.tf` file used to run a Go suite, a
+  # database and fifteen minutes of browser. Four of the last six pull requests
+  # here touched only `infra/` and `docs/`.
+  #
+  # IT IS `if` ON EACH JOB AND NOT `paths:` ON THE WORKFLOW. A job skipped by
+  # `if` reports as skipped, which a required check accepts; a workflow filtered
+  # by `paths:` never reports at all, and a required check that never reports
+  # blocks the merge forever. The second is a trap that only springs once
+  # branch protection is on, which is after the person who wrote it has moved
+  # on.
+  #
+  # IT FAILS OPEN. Anything that is not a pull request — a push to main, and a
+  # release, which calls this workflow — runs everything. So does a diff that
+  # cannot be computed. A detector that guesses wrong should waste a runner,
+  # never skip a suite.
+  Changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      go: ${{ steps.what.outputs.go }}
+      browser: ${{ steps.what.outputs.browser }}
+    steps:
+      # The whole history, because the diff is against the base commit and a
+      # shallow clone does not have it.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - id: what
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          everything() {
+            echo "go=true"      >> "$GITHUB_OUTPUT"
+            echo "browser=true" >> "$GITHUB_OUTPUT"
+            echo "$1"
+            exit 0
+          }
+
+          [ "${{ github.event_name }}" = "pull_request" ] || \
+            everything "not a pull request — running everything"
+
+          changed="$(git diff --name-only "$BASE...$HEAD")" || \
+            everything "could not diff $BASE...$HEAD — running everything"
+          [ -n "$changed" ] || everything "no files in the diff — running everything"
+
+          echo "changed:"
+          echo "$changed" | sed 's/^/  /'
+
+          # `ui/` is in the Go set because the API embeds it and
+          # `check-interface` reads it — a string added without its Portuguese
+          # is a Go failure here, not a browser one.
+          go='^(internal/|cmd/|tools/|migrations/|content/|ui/|go\.(mod|sum)$|\.golangci\.yml$|\.github/workflows/ci\.yml$)'
+
+          # The browser suite renders the interface against a real schema, so
+          # it wants everything that reaches a screen. `tools/` is narrowed to
+          # the four it actually runs.
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(graph-test|a11y-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
+
+          for name in go browser; do
+            eval "pattern=\$$name"
+            if printf '%s\n' "$changed" | grep -Eq "$pattern"; then
+              echo "$name=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "$name=false" >> "$GITHUB_OUTPUT"
+              echo "skipping $name: nothing it reads has changed"
+            fi
+          done
+
   Go:
+    needs: Changes
+    if: needs.Changes.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -200,6 +280,8 @@ jobs:
   # school to look at, and a server. Splitting them would be paying for that
   # twice to learn the same thing.
   Browser:
+    needs: Changes
+    if: needs.Changes.outputs.browser == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
