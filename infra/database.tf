@@ -18,6 +18,15 @@ resource "google_sql_database_instance" "main" {
   region           = var.region
 
   settings {
+    /* THE EDITION IS SAID OUT LOUD, and leaving it out is what broke the first
+       apply. Unset, the API picked ENTERPRISE_PLUS — where shared-core tiers do
+       not exist at all — and refused `db-f1-micro` with a message suggesting
+       `db-perf-optimized-N-*`, which is a minimum of two dedicated vCPUs and
+       several times the bill this project agreed to.
+
+       The tier and the edition are one decision and the API will make the half
+       nobody wrote down. */
+    edition           = "ENTERPRISE"
     tier              = var.database_tier
     availability_type = "ZONAL"
     disk_size         = 10
