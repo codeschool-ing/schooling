@@ -179,6 +179,32 @@ Rotating the password later is the same two commands as above:
 `latest`, and a running revision keeps the value it resolved at creation — the
 new one is picked up by the next deploy.
 
+## The school, once
+
+**A directory in `content/` does not create a school**, and `cmd/load` refuses
+to write for one that does not exist — a school is also an address and a domain
+mapping, which are decisions rather than derivations. Until the console can make
+one, it is two rows, made once.
+
+Through the Auth Proxy, or from Cloud Shell with `gcloud sql connect`:
+
+```sql
+INSERT INTO tenants (slug, name, accent)
+VALUES ('code', 'Programming', '#2F6F4E');
+
+INSERT INTO tenant_domains (host, tenant_id)
+SELECT 'code.schooling.lab.aleogr.dev', id FROM tenants WHERE slug = 'code';
+```
+
+The slug is a **host label** and the database checks it: lowercase letters,
+digits and hyphens, never starting or ending with one. It is also the subdomain
+the school answers on, which is why those are the same rule and not two.
+
+The host is stored already normalised — lowercase, no port — and it is the whole
+of how a request finds its school. A host nobody mapped is a 404 and never falls
+into a default, so until this row exists the deployment answers `/version` and
+nothing else. That is the design and not an outage.
+
 ## Monitoring
 
 `alert_email` is empty by default and nothing watches anything. That is
