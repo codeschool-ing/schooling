@@ -34,8 +34,14 @@ resource "google_sql_database_instance" "main" {
 
     /* THE ROADMAP ASKS FOR A BACKUP THAT HAS BEEN RESTORED, and this is only
        the half that can be declared. Backups configured are not backups
-       proven: the item is not done until one has been restored to a cloned
-       instance, verified and destroyed — never over the live one. */
+       proven — what is written here is a belief until something reads the
+       bytes back.
+
+       `tools/restore-drill/restore-drill.sh` is the other half: it clones this
+       instance from the transaction log onto a new one, compares the two
+       schemas and every row count, and destroys the clone. Never over the live
+       instance, because the restore is itself the destructive operation. Run
+       it after anything that changes this block. */
     backup_configuration {
       enabled                        = true
       start_time                     = "07:00"
