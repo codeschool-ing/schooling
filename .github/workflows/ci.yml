@@ -119,6 +119,27 @@ jobs:
           SCHOOLING_PLATFORM_DOMAIN: example.tld
           SCHOOLING_ENV: development
 
+      # THE RESTORE DRILL IS NOT RUN HERE — it clones production, costs money
+      # and takes a quarter of an hour. What runs here is the question it asks,
+      # against this schema, because that is the half that rots: `verify.sql`
+      # reads `information_schema` and `pg_constraint`, and a drill whose query
+      # had stopped parsing would say so on the morning somebody needs a
+      # restore. Ten seconds now against that.
+      #
+      # Twice, and the two runs have to be identical. The whole verdict is a
+      # `diff` between two databases, so a result Postgres was free to order
+      # differently would read as a failed restore when it is a failed query.
+      - name: The restore drill's question still runs
+        run: |
+          psql "$SCHOOLING_TEST_DATABASE_URL" -qtAX -v ON_ERROR_STOP=1 \
+            -f tools/restore-drill/verify.sql > /tmp/once.txt
+          psql "$SCHOOLING_TEST_DATABASE_URL" -qtAX -v ON_ERROR_STOP=1 \
+            -f tools/restore-drill/verify.sql > /tmp/twice.txt
+          diff -u /tmp/once.txt /tmp/twice.txt
+          grep -q '^migration|' /tmp/once.txt
+          grep -q '^rows|schema_migrations|' /tmp/once.txt
+          echo "$(wc -l < /tmp/once.txt) lines describe this schema"
+
       # THE REVIEWER, over the files, before anything reaches a database.
       #
       # There is no human one: the material is written by a machine, and this is
