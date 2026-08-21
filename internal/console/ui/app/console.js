@@ -128,11 +128,18 @@ async function look(email) {
     return;
   }
 
-  const rows = Object.entries(held.tables)
+  const carrying = Object.entries(held.tables)
     .filter(([, count]) => count > 0)
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(([a], [b]) => a.localeCompare(b));
+
+  const rows = carrying
     .map(([table, count]) => `<tr><th scope="row">${escape(table)}</th><td>${count}</td></tr>`)
     .join('');
+
+  // Each number pluralised by ITSELF. Written as one expression it read
+  // "562 rows across 18 table", because the table count was being pluralised
+  // by whether there were any rows at all.
+  const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
   /* THE COUNTS AND NOT THE CONTENTS. Reading the rows is the export, and the
      export is recorded — a screen that showed them would be an export nobody
@@ -144,7 +151,7 @@ async function look(email) {
          ${person.synthetic ? '&middot; <strong>synthetic</strong>' : ''}</p>
 
       <table>
-        <caption>${held.total} row${held.total === 1 ? '' : 's'} across ${rows ? Object.values(held.tables).filter(Boolean).length : 0} table${rows ? '' : 's'}</caption>
+        <caption>${plural(held.total, 'row')} across ${plural(carrying.length, 'table')}</caption>
         <tbody>${rows || '<tr><td>Nothing is held about them.</td></tr>'}</tbody>
       </table>
 
