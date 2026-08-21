@@ -11,6 +11,24 @@ a versioned file is out of date by the second week and nobody notices.
 The system is finished **before** any new content is written. **Done means:** the pipeline
 produces a course end to end, and a student can pay for it.
 
+## How a box gets ticked
+
+**A tick is a claim, and it is worth what the evidence behind it is worth.** Every `[x]` here has
+to be checkable without taking this file's word for it: a test that names it, a tool that exits
+non-zero without it, or a screen somebody can open. **The tick goes in the commit that earns it**
+— never in the one that plans it.
+
+That rule is written down because it was broken. "Drilling on a screen" was ticked while the
+screen counted the queue and said the questions were not here yet; the routes behind it were real,
+so the item read as finished for weeks and the gap was found by accident. A checked box nobody can
+disprove is worse than an unchecked one: it stops anyone looking.
+
+*Audited against the code on 2026-08-20. Every `[x]` in phases 0 to 3 was checked against a named
+test, a tool run or a screen opened. One tick was false, one item was done and unticked, and three
+descriptions had gone stale — an id format, a screen count and a list of types, each of which had
+been true when it was written. Phase 0's remaining items are infrastructure that cannot be
+verified from inside this repository.*
+
 ---
 
 ## 0 — Skeleton, and the five that cannot wait
@@ -32,7 +50,7 @@ audit with a name against it.*
 - [x] School resolved by the full `Host`; an unknown host is a 404 and never falls into a default school
 - [x] Reserved subdomains refused at creation — `www`, `api`, `admin`, `app`, `auth`, `cdn`, `mail`, `static`, `status`, `docs` — by a database constraint as well as by the application, with a test that proves the two agree
 - [x] One Go binary serving the API and the embedded frontend on one origin
-- [ ] A domain mapping per school
+- [x] A domain mapping per school — `tenant_domains`, one row per host, read on every request to decide which school is answering; a host nobody mapped is a 404 and never falls into a default. **Found unticked while it was done**, which is the same failure as a false tick read the other way round: what is missing is a bought domain and its DNS, not a mapping
 - [x] `tenant_id` on every school-scoped table, with an index leading with it, and every index that crosses schools declared with its reason
 - [x] The module dependency graph enforced by a test
 
@@ -41,7 +59,7 @@ audit with a name against it.*
 - [x] One account for the whole platform; session cookie on the parent domain, `HttpOnly`, storing the token's hash and never the token
 - [x] Staff roles — owner, operator, read-only, as a row on an account rather than a second account. *Invitations wait on e-mail, which waits on the domain.*
 - [x] Mandatory MFA for staff, enforced on the session rather than on the account, and revoking a role ends every session that held it
-- [ ] Personal-data export and erasure, reachable from the console
+- [ ] Personal-data export and erasure, **reachable from the console** — the export and the erase exist and are held by four tests (every table that reaches a student is covered, a password hash and an answer key are never carried, and erasure severs the person while leaving the statistics). What is missing is only the screen an operator uses, which waits on the console
 
 ### Operations
 
@@ -66,7 +84,7 @@ audit with a name against it.*
 - [x] The load job writes the mirror from the files and prunes what the files no longer carry, in one transaction, and writes nothing at all if the catalogue does not pass
 - [x] Nothing else writes catalogue rows; the console reads and never writes — enforced by a test that scans the source
 - [x] Draft and published state per course
-- [x] Ids are slugs that never derive from a title; order declared, never inferred from filenames
+- [x] **An opaque id that never derives from a title, and a readable slug beside it where a thing is addressed** — `co-cbwm5kwa` is what a progress row, a note and an exam answer point at; `statistics` is what the URL carries and a reviewer reads, and it is free to be rewritten. `content/` refers to everything by slug and `cmd/load` is the one translator. Order declared, never inferred from filenames
 - [x] The content check runs the **answer keys**, not only the schema, for every type that has a grader — `expression-answer` now goes through its grader too, so a question whose own accepted expression does not parse fails on a pull request rather than on a screen; `code` executed is still to come, and reported rather than skipped until then
 - [x] An orphaned `.md` that no `lesson.json` references fails the build
 
@@ -80,16 +98,16 @@ audit with a name against it.*
 - [x] Sidebar, search, dashboard, catalogue, track map
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
 - [x] Sitting an exam on a screen — the paper, an answer saved as it is made and put back on a reload, and a hand-in that says what it came to
-- [x] Drilling on a screen — one card at a time, drawn without its answer, marked by the server, and the key revealed over what the student gave once it is in. **This tick preceded the screen by weeks**: it was set while the drill counted the queue and said the questions were not here yet. It is earned by this branch, and `docs/ROADMAP.md` now says a tick goes in the commit that earns it
+- [x] Drilling on a screen — one card at a time, drawn without its answer, marked by the server, the key revealed over what the student gave once it is in, and the day it comes back said out loud. **This is the item the preamble is about**: ticked weeks before the screen could draw a card, unticked by the audit that found it, and earned here
 - [x] ~~The modal test — every course, one height, neither column scrolling~~ — **there is no modal here.** The predecessor showed a course in one, on a marketing page; a course is a screen of its own in this interface, so the test has no subject. Its actual concern — a layout that holds for every course — is covered by the accessibility pass, which opens the course and lesson screens, and by the graph test, which measures a real drawing rather than trusting one
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
-- [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over twenty-four screens, both themes, signed out and signed in, the exam paper included
+- [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over forty-four screens, both themes, signed out and signed in, the exam paper walked question by question
 - [x] Every question type operable by keyboard and legible to a screen reader — `ordering` on buttons, `matching` on a select, and `labelling` by choosing a label and then placing it with a click **or the arrow keys**, its position said in words ("63% across, 41% down") so somebody who cannot see the diagram can still be told where they put a thing and move it
 - [x] The offline bundle, built **and opened** in CI — one file, one school; opened from `file://` it reads the whole catalogue and asks nobody for anything, served from the school's origin it is the application again; signing in, progress and exams are refused with a sentence rather than a form that does nothing
 
 ### Assessment
 
-- [ ] The seven types: `quiz`, `multiple-choice`, `ordering`, `matching`, `labelling`, `expression-answer` **done**; `code` and `expected-output` need a sandbox
+- [ ] The ten types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `numeric`, `labelling`, `expression-answer` **done — eight graders, each with a conformance fixture**; `code` and `expected-output` need a sandbox that runs a student's program, which is why they are absent from `graders` rather than stubbed
 - [x] Conformance fixtures, per type — no longer between two graders (A-09 is retired: a client that could mark an answer would be a client holding the key) but between the grader and the questions, so a change that alters a verdict has to change a file somebody wrote. A gradable type with no fixture fails the build
 - [x] A question is **presented** rather than sent — the answer removed, the order shuffled where the order is the answer, and the permutation kept here
 - [x] Course exams and track exams — a sealed paper per attempt, one open attempt at a time, marked once on hand-in against the questions as they were actually asked

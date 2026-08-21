@@ -2,6 +2,7 @@ package catalog_test
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
@@ -311,3 +312,140 @@ func TestRewritingATopicsTitleDoesNotMoveItsID(t *testing.T) {
 // so there is nothing left to observe here — the cost is now paid at the pull
 // request instead of by a student. `TestATopicWithNoIDIsRefused`, in
 // `catalog_test.go`, is what that test became.
+
+/* ---------- a question in another language ---------- */
+
+// FIELD BY FIELD, AND WHAT NOBODY TRANSLATED STAYS ENGLISH (C-11).
+//
+// The interesting half is the second one. A merge that replaced the payload
+// with the translation would give a Portuguese student a question missing every
+// field somebody had not got to yet — and each of those absences is a different
+// kind of broken: no `hint` is a question with less help, no `why` is a wrong
+// answer with no explanation, and no `correct` is a question nobody can pass.
+func TestAQuestionIsTranslatedFieldByField(t *testing.T) {
+	english := []byte(`{
+		"id": "ex-spr8rdb4", "version": 1, "type": "quiz",
+		"prompt": "What is it?",
+		"hint": "Think about the moment.",
+		"choices": [
+			{"text": "A client", "correct": true,  "why": "Whoever asks is the client."},
+			{"text": "A server",  "correct": false, "why": "It is asking, not answering."}
+		]
+	}`)
+
+	prompt := "O que ele é?"
+	first := "Um cliente"
+
+	body, err := catalog.Translated(english, catalog.ExerciseText{
+		Prompt: &prompt,
+		// No `hint`, and only the first option's text: the rest has to survive.
+		Choices: []catalog.ChoiceText{{Text: &first}, {}},
+	})
+	if err != nil {
+		t.Fatalf("translating: %v", err)
+	}
+
+	var got map[string]any
+	if err := json.Unmarshal(body, &got); err != nil {
+		t.Fatalf("the translation is not an object: %v", err)
+	}
+
+	if got["prompt"] != prompt {
+		t.Errorf("the prompt is %q, want %q", got["prompt"], prompt)
+	}
+	if got["hint"] != "Think about the moment." {
+		t.Errorf("the untranslated hint became %q — a translation carries what somebody "+
+			"translated, and the English survives the rest", got["hint"])
+	}
+
+	choices, _ := got["choices"].([]any)
+	if len(choices) != 2 {
+		t.Fatalf("the translation has %d options and the question has 2", len(choices))
+	}
+	one, _ := choices[0].(map[string]any)
+	two, _ := choices[1].(map[string]any)
+
+	if one["text"] != first {
+		t.Errorf("the first option reads %q, want %q", one["text"], first)
+	}
+	if one["why"] != "Whoever asks is the client." {
+		t.Errorf("the first option's untranslated reason became %q", one["why"])
+	}
+	if two["text"] != "A server" {
+		t.Errorf("the option nobody translated became %q rather than staying English", two["text"])
+	}
+
+	// AND THE KEY IS WHERE IT WAS. This is the property the whole shape of
+	// ExerciseText exists for: a translation that could reach `correct` would
+	// mark the same answer differently in two languages, and nobody would find
+	// it, because both screens read perfectly well on their own.
+	if one["correct"] != true || two["correct"] != false {
+		t.Errorf("the answer key moved during a translation: %v, %v",
+			one["correct"], two["correct"])
+	}
+}
+
+// AND THE KEY CANNOT BE NAMED AT ALL.
+//
+// The test above proves the merge does not carry `correct` across. This proves
+// the file cannot even ask: `ExerciseText` declares the translatable fields and
+// `readJSON` refuses anything else, so a `pt.json` reaching for an answer fails
+// on a pull request rather than being quietly dropped — which is the difference
+// between a rule and a habit.
+func TestATranslationThatReachesForTheAnswerIsRefused(t *testing.T) {
+	for _, reaching := range []string{"correct", "accept", "value", "tolerance"} {
+		problems := school(t, patchJSON(
+			"courses/web-fundamentals/lessons/"+clientAndServer+"/exercises.pt.json",
+			func(d map[string]any) {
+				one, _ := d[rolesQuiz].(map[string]any)
+				one[reaching] = "anything at all"
+			}))
+
+		if !says(problems, reaching) {
+			t.Errorf("a translation setting %q was accepted:\n%s", reaching, report(t, problems))
+		}
+	}
+}
+
+// A TRANSLATION IS JOINED BY ID AND ITS LISTS BY POSITION, and both ends are
+// checked, because both come loose in silence: the English survives either way,
+// so the only symptom is a Portuguese screen reading the wrong words.
+func TestATranslationThatHasComeLooseIsRefused(t *testing.T) {
+	naming := school(t, patchJSON(
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/exercises.pt.json",
+		func(d map[string]any) { d["ex-4mzk8p2r"] = map[string]any{"prompt": "Uma pergunta"} }))
+	if !says(naming, "which is not there") {
+		t.Errorf("a translation of a question that does not exist was accepted:\n%s",
+			report(t, naming))
+	}
+
+	short := school(t, patchJSON(
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/exercises.pt.json",
+		func(d map[string]any) {
+			one, _ := d[rolesQuiz].(map[string]any)
+			choices, _ := one["choices"].([]any)
+			one["choices"] = choices[:1]
+		}))
+	if !says(short, "matched by position") {
+		t.Errorf("a translation one option short was accepted:\n%s", report(t, short))
+	}
+}
+
+// AND A FINAL IS TRANSLATED TOO, which is worth its own test only because its
+// file is named differently: `tracks/frontend-exam.pt.json` sits beside
+// `frontend-exam.json`, and the track's own translation is
+// `tracks/frontend.pt.json`. Two globs a stem apart, and a mistake in either
+// would be silent — a translation nobody reads looks exactly like one nobody
+// wrote.
+func TestATracksFinalIsTranslatedAndChecked(t *testing.T) {
+	problems := school(t, patchJSON("tracks/frontend-exam.pt.json",
+		func(d map[string]any) {
+			one, _ := d["ex-9ractp7g"].(map[string]any)
+			items, _ := one["items"].([]any)
+			one["items"] = items[:2]
+		}))
+
+	if !says(problems, "frontend/exam", "matched by position") {
+		t.Errorf("a final's translation two items short was accepted:\n%s", report(t, problems))
+	}
+}

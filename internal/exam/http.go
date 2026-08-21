@@ -78,7 +78,7 @@ func (h *Handler) start(scope Scope) http.HandlerFunc {
 		}
 		id := r.PathValue("id")
 
-		paper, resumed, err := h.store.Start(r.Context(), school, student, scope, id)
+		paper, resumed, err := h.store.Start(r.Context(), school, student, scope, id, web.Locale(r))
 		if err != nil {
 			h.refuse(w, r, err)
 			return

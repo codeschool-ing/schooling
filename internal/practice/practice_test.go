@@ -109,7 +109,7 @@ func answer(t *testing.T, s *practice.Store, tenant, me uuid.UUID,
 	id string, right bool, elapsed time.Duration) (practice.Marked, error) {
 	t.Helper()
 
-	card, err := s.Draw(context.Background(), tenant, me, id)
+	card, err := s.Draw(context.Background(), tenant, me, id, "en")
 	if err != nil {
 		return practice.Marked{}, err
 	}
@@ -135,7 +135,7 @@ func answer(t *testing.T, s *practice.Store, tenant, me uuid.UUID,
 	}
 
 	return s.Answered(context.Background(), tenant, me, id,
-		json.RawMessage(fmt.Sprintf(`{"chose":[%d]}`, chose)), elapsed)
+		json.RawMessage(fmt.Sprintf(`{"chose":[%d]}`, chose)), elapsed, "en")
 }
 
 func has(cards []practice.Card, id string) bool {
@@ -404,7 +404,7 @@ func TestAnOrderingAnswerIsMarkedInTheFrameTheStudentSaw(t *testing.T) {
 		t.Fatalf("seeding: %v", err)
 	}
 
-	card, err := s.Draw(ctx, tenant, me, "steps")
+	card, err := s.Draw(ctx, tenant, me, "steps", "en")
 	if err != nil {
 		t.Fatalf("drawing: %v", err)
 	}
@@ -437,7 +437,7 @@ func TestAnOrderingAnswerIsMarkedInTheFrameTheStudentSaw(t *testing.T) {
 		t.Fatalf("building the answer: %v", err)
 	}
 
-	marked, err := s.Answered(ctx, tenant, me, "steps", body, 3*time.Second)
+	marked, err := s.Answered(ctx, tenant, me, "steps", body, 3*time.Second, "en")
 	if err != nil {
 		t.Fatalf("answering: %v", err)
 	}
@@ -458,7 +458,7 @@ func TestAnAnswerToACardThatWasNeverDrawnIsRefused(t *testing.T) {
 	ctx := context.Background()
 	questions(t, pool, tenant)
 
-	_, err := s.Answered(ctx, tenant, me, "free-1", json.RawMessage(`{"chose":[0]}`), time.Second)
+	_, err := s.Answered(ctx, tenant, me, "free-1", json.RawMessage(`{"chose":[0]}`), time.Second, "en")
 	if !errors.Is(err, practice.ErrNotDrawn) {
 		t.Fatalf("answering an undrawn card gave %v, want ErrNotDrawn", err)
 	}
@@ -483,11 +483,11 @@ func TestAnAnswerThatDoesNotFitTheQuestionIsNotAWrongAnswer(t *testing.T) {
 	ctx := context.Background()
 	questions(t, pool, tenant)
 
-	if _, err := s.Draw(ctx, tenant, me, "free-1"); err != nil {
+	if _, err := s.Draw(ctx, tenant, me, "free-1", "en"); err != nil {
 		t.Fatalf("drawing: %v", err)
 	}
 
-	_, err := s.Answered(ctx, tenant, me, "free-1", json.RawMessage(`{"order":[9,9,9]}`), time.Second)
+	_, err := s.Answered(ctx, tenant, me, "free-1", json.RawMessage(`{"order":[9,9,9]}`), time.Second, "en")
 	if !errors.Is(err, practice.ErrBadAnswer) {
 		t.Fatalf("a malformed answer gave %v, want ErrBadAnswer", err)
 	}
@@ -549,20 +549,20 @@ func TestAWithdrawnCardCannotBeDrawnOrAnswered(t *testing.T) {
 	// Drawn while it is still in circulation, which is the situation this is
 	// about: the student has the card in front of them.
 	before := store(t, pool)
-	if _, err := before.Draw(context.Background(), tenant, account, "free-1"); err != nil {
+	if _, err := before.Draw(context.Background(), tenant, account, "free-1", "en"); err != nil {
 		t.Fatalf("drawing: %v", err)
 	}
 
 	after := practice.NewStore(pool, mayOpen,
 		withdrawing(practice.Item{ExerciseID: "free-1", Version: 1}))
 
-	if _, err := after.Draw(context.Background(), tenant, account, "free-1"); !errors.Is(err, practice.ErrWithdrawn) {
+	if _, err := after.Draw(context.Background(), tenant, account, "free-1", "en"); !errors.Is(err, practice.ErrWithdrawn) {
 		t.Errorf("drawing a withdrawn card gave %v, want ErrWithdrawn", err)
 	}
 
 	answer := json.RawMessage(`{"chose":[0]}`)
 	if _, err := after.Answered(context.Background(), tenant, account, "free-1",
-		answer, time.Second); !errors.Is(err, practice.ErrWithdrawn) {
+		answer, time.Second, "en"); !errors.Is(err, practice.ErrWithdrawn) {
 		t.Errorf("answering a withdrawn card gave %v, want ErrWithdrawn", err)
 	}
 }
@@ -670,5 +670,121 @@ func TestTheHistoryNeverCarriesAnotherStudentsAnswers(t *testing.T) {
 	}
 	if len(history) != 0 {
 		t.Errorf("a student who has answered nothing has %d answers", len(history))
+	}
+}
+
+// A CARD IS DRAWN IN THE LANGUAGE THE STUDENT IS READING IN, and falls back to
+// English rather than to nothing.
+//
+// The fallback is the half worth a test. A join that dropped a card with no
+// translation would empty the queue of a Portuguese student the moment a
+// question was added and not yet translated — and it would look like the
+// schedule working, not like a bug.
+func TestACardIsDrawnInTheStudentsLanguage(t *testing.T) {
+	pool := testPool(t)
+	tenant, me := school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+	s := store(t, pool)
+	ctx := context.Background()
+
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO catalog_exercise_text (tenant_id, exercise_id, locale, prompt, payload)
+		VALUES ($1, 'free-1', 'pt', 'Qual delas?', $2::jsonb)
+	`, tenant, `{"id":"free-1","version":1,"type":"quiz","prompt":"Qual delas?",`+
+		`"choices":[{"text":"A certa","correct":true},{"text":"A outra"}]}`); err != nil {
+		t.Fatalf("seeding the translation: %v", err)
+	}
+
+	card, err := s.Draw(ctx, tenant, me, "free-1", "pt")
+	if err != nil {
+		t.Fatalf("drawing in Portuguese: %v", err)
+	}
+	if !strings.Contains(string(card.Shown), "Qual delas?") {
+		t.Errorf("the Portuguese card came back in English: %s", card.Shown)
+	}
+
+	// The same question in a language nobody wrote, and one nobody translated.
+	for _, at := range []struct{ id, locale string }{
+		{"free-1", "fr"},
+		{"free-2", "pt"},
+	} {
+		card, err := s.Draw(ctx, tenant, me, at.id, at.locale)
+		if err != nil {
+			t.Fatalf("drawing %s in %s: %v", at.id, at.locale, err)
+		}
+		if !strings.Contains(string(card.Shown), "Which one?") {
+			t.Errorf("%s in %s came back as %s, and English was the only thing left to show",
+				at.id, at.locale, card.Shown)
+		}
+	}
+}
+
+// AND WHAT IT IS TOLD AFTERWARDS IS IN THE SAME LANGUAGE.
+//
+// `why` is the question's own words — a wrong choice's reason, an ordering's
+// trap — so a student who answered in Portuguese and is told why in English has
+// been handed the one sentence on the screen meant to teach them something, in
+// a language they did not choose.
+func TestTheReasonAnAnswerIsWrongComesBackTranslated(t *testing.T) {
+	pool := testPool(t)
+	tenant, me := school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+	s := store(t, pool)
+	ctx := context.Background()
+
+	if _, err := pool.Exec(ctx, `
+		UPDATE catalog_exercises SET payload = $2::jsonb WHERE tenant_id = $1 AND id = 'free-1'
+	`, tenant, `{"id":"free-1","version":1,"type":"quiz","prompt":"Which one?","choices":[`+
+		`{"text":"The right one","correct":true,"why":"Whoever asks is the client."},`+
+		`{"text":"The other one"}]}`); err != nil {
+		t.Fatalf("giving the question a reason: %v", err)
+	}
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO catalog_exercise_text (tenant_id, exercise_id, locale, prompt, payload)
+		VALUES ($1, 'free-1', 'pt', 'Qual delas?', $2::jsonb)
+	`, tenant, `{"id":"free-1","version":1,"type":"quiz","prompt":"Qual delas?","choices":[`+
+		`{"text":"A certa","correct":true,"why":"Quem pergunta é o cliente."},`+
+		`{"text":"A outra"}]}`); err != nil {
+		t.Fatalf("seeding the translation: %v", err)
+	}
+
+	card, err := s.Draw(ctx, tenant, me, "free-1", "pt")
+	if err != nil {
+		t.Fatalf("drawing: %v", err)
+	}
+
+	// THE WRONG ONE IN THE FRAME IT WAS SHOWN IN. The presented question is
+	// shuffled, so a fixed index is whichever choice the shuffle put there —
+	// which is how this test first passed by marking the right answer wrong.
+	var shown struct {
+		Choices []struct {
+			Text string `json:"text"`
+		} `json:"choices"`
+	}
+	if err := json.Unmarshal(card.Shown, &shown); err != nil {
+		t.Fatalf("reading the presented question: %v", err)
+	}
+	chose := -1
+	for i, c := range shown.Choices {
+		if c.Text != "A certa" {
+			chose = i
+			break
+		}
+	}
+	if chose < 0 {
+		t.Fatalf("the presented question has no wrong choice to pick: %s", card.Shown)
+	}
+
+	marked, err := s.Answered(ctx, tenant, me, "free-1",
+		json.RawMessage(fmt.Sprintf(`{"chose":[%d]}`, chose)), 3*time.Second, "pt")
+	if err != nil {
+		t.Fatalf("answering: %v", err)
+	}
+
+	if marked.Correct {
+		t.Fatal("the wrong choice was marked correct, so this proves nothing")
+	}
+	if marked.Why != "Quem pergunta é o cliente." {
+		t.Errorf("the reason came back as %q, want the Portuguese one", marked.Why)
 	}
 }

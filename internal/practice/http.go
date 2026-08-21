@@ -95,7 +95,8 @@ func (h *Handler) draw(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	card, err := h.store.Draw(r.Context(), school, student, r.PathValue("exercise"))
+	card, err := h.store.Draw(r.Context(), school, student,
+		r.PathValue("exercise"), web.Locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return
@@ -142,8 +143,13 @@ func (h *Handler) answered(w http.ResponseWriter, r *http.Request) {
 		elapsed = time.Hour
 	}
 
+	/* THE VERDICT IS READ IN THE LANGUAGE THE QUESTION WAS ASKED IN. `why` comes
+	   from the question — a wrong choice's own words, an ordering's trap — so a
+	   student who answered in Portuguese and is told why in English has been
+	   handed the one sentence on the screen that was supposed to teach them
+	   something, in a language they did not choose. */
 	marked, err := h.store.Answered(r.Context(), school, student,
-		r.PathValue("exercise"), body.Answer, elapsed)
+		r.PathValue("exercise"), body.Answer, elapsed, web.Locale(r))
 	if err != nil {
 		h.refuse(w, r, err)
 		return

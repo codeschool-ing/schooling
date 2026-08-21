@@ -190,7 +190,7 @@ func TestAPaperCarriesNoAnswers(t *testing.T) {
 
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	paper, _, err := store.Start(context.Background(), school, student,
-		exam.ScopeCourse, "web-fundamentals")
+		exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -238,7 +238,7 @@ func TestStartingAgainResumesTheSamePaper(t *testing.T) {
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
-	first, resumed, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	first, resumed, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -246,7 +246,7 @@ func TestStartingAgainResumesTheSamePaper(t *testing.T) {
 		t.Error("the first start says it resumed something")
 	}
 
-	again, resumed, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	again, resumed, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting again: %v", err)
 	}
@@ -283,7 +283,7 @@ func TestNothingChangesAfterThePaperIsHandedIn(t *testing.T) {
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
-	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -342,7 +342,7 @@ func TestAnExamNobodyMaySitCannotBeStarted(t *testing.T) {
 
 	store := exam.NewStore(db, shut, nothingWithdrawn)
 	_, _, err := store.Start(context.Background(), school, student,
-		exam.ScopeCourse, "web-fundamentals")
+		exam.ScopeCourse, "web-fundamentals", "en")
 	if !errors.Is(err, exam.ErrLocked) {
 		t.Fatalf("starting a locked exam gave %v, want ErrLocked", err)
 	}
@@ -365,7 +365,7 @@ func TestAnExamWithNoQuestionsIsNotAnEmptyPaper(t *testing.T) {
 	school, student := school(t, db), student(t, db)
 
 	store := exam.NewStore(db, open, nothingWithdrawn)
-	_, _, err := store.Start(context.Background(), school, student, exam.ScopeCourse, "nothing-here")
+	_, _, err := store.Start(context.Background(), school, student, exam.ScopeCourse, "nothing-here", "en")
 	if !errors.Is(err, exam.ErrNoSuchExam) {
 		t.Fatalf("an exam with no questions gave %v, want ErrNoSuchExam", err)
 	}
@@ -382,7 +382,7 @@ func TestSomebodyElsesPaperIsNotFound(t *testing.T) {
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
-	paper, _, err := store.Start(ctx, school, mine, exam.ScopeCourse, "web-fundamentals")
+	paper, _, err := store.Start(ctx, school, mine, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -411,7 +411,7 @@ func TestAnUnansweredQuestionIsWrong(t *testing.T) {
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
-	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -454,7 +454,7 @@ func TestTheMarkIsExact(t *testing.T) {
 		store := exam.NewStore(db, open, nothingWithdrawn)
 		ctx := context.Background()
 
-		paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+		paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 		if err != nil {
 			t.Fatalf("starting: %v", err)
 		}
@@ -496,7 +496,7 @@ func TestAPassIsNotUndoneByALaterFailure(t *testing.T) {
 	ctx := context.Background()
 
 	sit := func(correctly bool) {
-		paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+		paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 		if err != nil {
 			t.Fatalf("starting: %v", err)
 		}
@@ -555,7 +555,7 @@ func TestALongPoolIsDrawnFrom(t *testing.T) {
 
 	papers := make([][]string, 2)
 	for i, who := range []uuid.UUID{first, second} {
-		paper, _, err := store.Start(ctx, school, who, exam.ScopeTrack, "frontend")
+		paper, _, err := store.Start(ctx, school, who, exam.ScopeTrack, "frontend", "en")
 		if err != nil {
 			t.Fatalf("starting: %v", err)
 		}
@@ -585,7 +585,7 @@ func TestAnAnswerThatIsNotAnAnswerIsRefused(t *testing.T) {
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
-	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -621,7 +621,7 @@ func TestAnAnswerCanBeChangedUntilTheEnd(t *testing.T) {
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
-	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -661,7 +661,7 @@ func TestAPaperOutlivesTheCatalogueItCameFrom(t *testing.T) {
 	store := exam.NewStore(db, open, nothingWithdrawn)
 	ctx := context.Background()
 
-	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals")
+	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -714,7 +714,7 @@ func TestAWithdrawnQuestionIsNotDrawnOntoAPaper(t *testing.T) {
 	))
 
 	paper, _, err := store.Start(context.Background(), school, student,
-		exam.ScopeCourse, "web-fundamentals")
+		exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}
@@ -743,7 +743,7 @@ func TestAnExamWhoseWholePoolIsWithdrawnRefusesToStart(t *testing.T) {
 	store := exam.NewStore(db, open, withdrawing(all...))
 
 	if _, _, err := store.Start(context.Background(), school, student,
-		exam.ScopeCourse, "web-fundamentals"); err == nil {
+		exam.ScopeCourse, "web-fundamentals", "en"); err == nil {
 		t.Error("an exam with every question withdrawn set a paper anyway")
 	}
 }
@@ -762,7 +762,7 @@ func TestAQuestionWithdrawnMidAttemptComesOutOfTheDenominator(t *testing.T) {
 	// The paper is set while everything is in circulation.
 	setting := exam.NewStore(db, open, nothingWithdrawn)
 	paper, _, err := setting.Start(context.Background(), school, student,
-		exam.ScopeCourse, "web-fundamentals")
+		exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
 		t.Fatalf("starting: %v", err)
 	}

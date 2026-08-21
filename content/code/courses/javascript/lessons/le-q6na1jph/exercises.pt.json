@@ -1,0 +1,91 @@
+{
+  "ex-zp2n9hgk": {
+    "prompt": "Ponha na ordem os passos que o interpretador executa ao avaliar `\"10\" > 9`.",
+    "hint": "Antes de decidir como comparar, algo precisa ser constatado sobre os operandos. Comparar é a última coisa que acontece, não a primeira.",
+    "items": [
+      "Constata que os operandos têm tipos diferentes: string e número",
+      "Converte a string `\"10\"` para o número 10, com ToNumber",
+      "Compara 10 com 9 numericamente",
+      "Devolve `true`"
+    ],
+    "trap": "O par constatar–converter. Quem aprendeu que \"o operador `>` converte a string\" tende a pôr a conversão primeiro, como se fosse incondicional. Não é: com duas strings (`\"10\" > \"9\"`) não há conversão nenhuma e a comparação é lexicográfica, devolvendo `false`. É a constatação dos tipos que decide qual das duas comparações vai acontecer, e por isso ela vem antes."
+  },
+  "ex-wztasd4h": {
+    "prompt": "Associe cada expressão ao que ela devolve. Sobram opções na coluna da direita.",
+    "hint": "Um destes resultados é um defeito histórico da linguagem, preservado por compatibilidade. Outro surpreende quem espera que o nome do valor descreva o tipo dele.",
+    "pairs": [
+      {
+        "left": "`typeof null`",
+        "right": "`\"object\"`"
+      },
+      {
+        "left": "`typeof NaN`",
+        "right": "`\"number\"`"
+      },
+      {
+        "left": "`typeof undefined`",
+        "right": "`\"undefined\"`"
+      },
+      {
+        "left": "`typeof (() => {})`",
+        "right": "`\"function\"`"
+      },
+      {
+        "left": "`typeof Symbol()`",
+        "right": "`\"symbol\"`"
+      }
+    ],
+    "right_distractors": [
+      "`\"null\"`",
+      "`\"array\"`"
+    ]
+  },
+  "ex-q2b53gc2": {
+    "prompt": "Em `0 == \"0\"` o resultado é `true`, mas em `0 === \"0\"` é `false`. O que explica a diferença?",
+    "hint": "Um dos dois operadores tem uma etapa a mais antes de comparar. Qual etapa seria essa, e o que ela faz com a string?",
+    "choices": [
+      {
+        "text": "`==` converte os operandos para um tipo comum antes de comparar; `===` compara tipo e valor sem converter nada.",
+        "why": "É a diferença entre igualdade abstrata e estrita: a primeira aplica coerção, a segunda falha de imediato quando os tipos diferem."
+      },
+      {
+        "text": "`==` compara apenas o conteúdo textual dos valores, ignorando se são número ou string.",
+        "why": "Não há comparação textual: `0 == \"0\"` é verdadeiro porque a string vira o número 0, e não porque `0` e `\"0\"` se pareçam escritos."
+      },
+      {
+        "text": "`===` só funciona entre valores primitivos, então com uma string ele devolve `false` por não conseguir comparar.",
+        "why": "`===` funciona com qualquer valor, inclusive strings; ele devolve `false` aqui porque os tipos são diferentes."
+      },
+      {
+        "text": "`==` arredonda números antes de comparar, e o arredondamento faz `0` coincidir com a string.",
+        "why": "Não há arredondamento envolvido: a conversão é de string para número, e `\"0\"` já é exatamente 0."
+      }
+    ]
+  },
+  "ex-5fp24208": {
+    "prompt": "Marque todos os valores que são **falsy** em JavaScript — isto é, que se comportam como `false` dentro de um `if`.",
+    "hint": "A lista de valores falsy é fechada e curta. Um objeto vazio continua sendo um objeto; uma string vazia não é a mesma coisa que uma string com um caractere dentro.",
+    "choices": [
+      {
+        "text": "`0`",
+        "why": "O zero é um dos valores falsy da lista fechada."
+      },
+      {
+        "text": "`\"\"` (string vazia)",
+        "why": "String vazia é falsy; qualquer string com pelo menos um caractere é truthy."
+      },
+      {
+        "text": "`NaN`",
+        "why": "`NaN` é falsy, apesar de `typeof NaN` ser `\"number\"`."
+      },
+      {
+        "text": "`[]` (array vazio)",
+        "why": "Todo objeto é truthy, e array é objeto — mesmo vazio. É a pegadinha clássica: `[] == false` é `true`, mas `if ([])` entra."
+      },
+      {
+        "text": "`\"0\"` (string com zero)",
+        "why": "É uma string de um caractere, portanto truthy. Só a string vazia é falsy."
+      }
+    ]
+  }
+}

@@ -209,6 +209,11 @@ var Registry = []Table{
 			"which is a different table for exactly this reason",
 	},
 	{
+		Name: "catalog_exercise_text", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the same questions in another language — what a student READS, never what " +
+			"decides their mark, which is why a translation cannot reach an answer key",
+	},
+	{
 		Name: "catalog_images", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "the diagrams a question is asked about. Bytes we wrote and published, about " +
 			"nobody — and a picture of a person would be a content review problem rather " +
