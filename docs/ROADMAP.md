@@ -15,13 +15,24 @@ produces a course end to end, and a student can pay for it.
 
 **A tick is a claim, and it is worth what the evidence behind it is worth.** Every `[x]` here has
 to be checkable without taking this file's word for it: a test that names it, a tool that exits
-non-zero without it, or a screen somebody can open. **The tick goes in the commit that earns it**
-— never in the one that plans it.
+non-zero without it, or a screen somebody can open. **A tick is never written ahead of the thing
+it claims.**
 
 That rule is written down because it was broken. "Drilling on a screen" was ticked while the
 screen counted the queue and said the questions were not here yet; the routes behind it were real,
 so the item read as finished for weeks and the gap was found by accident. A checked box nobody can
 disprove is worse than an unchecked one: it stops anyone looking.
+
+**This file is changed on its own, and after the fact.** Ticks are not written into the branch
+that earns them: two branches editing one line is one correction arriving in two halves, and it
+collides — which is how the very correction above was delivered. So the work merges first, and a
+pull request that touches only this file follows it, where every claim it makes can be checked
+against `main` rather than against a promise.
+
+The cost is a window in which something is done and this file does not say so yet. That is the
+right side to be wrong on. The audit found one item of each kind — one ticked and absent, one
+present and unticked — and only the first had ever cost anything, because an unticked capability
+gets rediscovered while a false tick stops the search.
 
 *Audited against the code on 2026-08-20. Every `[x]` in phases 0 to 3 was checked against a named
 test, a tool run or a screen opened. One tick was false, one item was done and unticked, and three
@@ -98,7 +109,7 @@ audit with a name against it.*
 - [x] Sidebar, search, dashboard, catalogue, track map
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
 - [x] Sitting an exam on a screen — the paper, an answer saved as it is made and put back on a reload, and a hand-in that says what it came to
-- [x] Drilling on a screen — one card at a time, drawn without its answer, marked by the server, the key revealed over what the student gave once it is in, and the day it comes back said out loud. **This is the item the preamble is about**: ticked weeks before the screen could draw a card, unticked by the audit that found it, and earned here
+- [x] Drilling on a screen — one card at a time, drawn without its answer, marked by the server, the key revealed over what the student gave once it is in, and the day it comes back said out loud. **This is the item the preamble is about**: ticked weeks before the screen could draw a card, and unticked until it could
 - [x] ~~The modal test — every course, one height, neither column scrolling~~ — **there is no modal here.** The predecessor showed a course in one, on a marketing page; a course is a screen of its own in this interface, so the test has no subject. Its actual concern — a layout that holds for every course — is covered by the accessibility pass, which opens the course and lesson screens, and by the graph test, which measures a real drawing rather than trusting one
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
 - [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over forty-four screens, both themes, signed out and signed in, the exam paper walked question by question
