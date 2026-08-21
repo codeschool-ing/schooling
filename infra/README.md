@@ -29,6 +29,28 @@ follows the same rule.
 
 ---
 
+## Defaults are stated, not inherited
+
+Three of the first four failures here were the same failure: a field left out,
+the provider or the API filling it in, and the answer being wrong in a way that
+costs data, money or an afternoon.
+
+| left out | filled in as | what it would have cost |
+|---|---|---|
+| `google_sql_database.deletion_policy` | `DELETE` | dropping the database and every row, while the protected instance stood |
+| `settings.edition` | `ENTERPRISE_PLUS` | the tier refused, and the error suggesting a machine several times the agreed bill |
+| `deletion_protection` on the Cloud Run pair | `true` | a failed create becoming a deadlock, cleared only by editing the configuration |
+
+None of them was a mistake in what was written. All three were things nobody
+wrote, and the defaults are not stable — the edition one changed under this
+project's feet between somebody learning `db-f1-micro` and using it.
+
+**So: if behaviour is being relied on, it is in the file.** Not because the
+default is wrong today, but because a default is a decision made somewhere else
+by somebody who does not know what this project is.
+
+---
+
 ## The bootstrap, once
 
 ```sh
