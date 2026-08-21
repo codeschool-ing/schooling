@@ -54,12 +54,33 @@ variable "database_tier" {
   default     = "db-f1-micro"
 }
 
-/* Where an alert goes. Empty means no alerting is created at all, which is the
-   honest default for a project whose DNS does not exist yet: an uptime check
-   against a name nobody has published would alert on its first run and teach
-   everybody to ignore it. */
+/* Where an alert goes, and what it watches. BOTH are needed before anything is
+   created, and that is not fussiness — it is the two halves of a working alarm.
+
+   An address with nobody to tell is a check that fails into a log. Somebody to
+   tell with no address to watch is worse: it alerts on its first run and every
+   run after, and the only thing it teaches is to ignore the alert. */
 variable "alert_email" {
   description = "Address an uptime failure reaches. Empty disables monitoring."
+  type        = string
+  default     = ""
+}
+
+/* WHAT A STUDENT TYPES, NOT THE PLATFORM'S OWN NAME.
+
+   This was `platform_domain`, and that was wrong for a reason only deploying
+   showed: a host that no Cloud Run domain mapping carries never reaches the
+   container at all. Google's front end routes by hostname and answers its own
+   404 first — so a check against an unmapped name measures Google's error page
+   and reports the service down while it is perfectly healthy.
+
+   `schooling.lab.aleogr.dev` is exactly that host today: it names the platform
+   and nothing serves it, because there is no platform page and the tenant
+   resolver refuses a host it does not know. So the address worth watching is a
+   SCHOOL's — `code.schooling.lab.aleogr.dev` — where `/readyz` is reachable and
+   answers only when the process can open its database. */
+variable "uptime_host" {
+  description = "A mapped host where /readyz answers. Empty disables monitoring."
   type        = string
   default     = ""
 }
