@@ -49,14 +49,8 @@ project's feet between somebody learning `db-f1-micro` and using it, and the
 `billing_project` one is not even a default: it is whatever the shell happened
 to hold, so it changed when a Cloud Shell session restarted.
 
-The last row is the cheapest and the most instructive, because it costs
-nothing at all except noise. The apply succeeds, the field comes back, and the
-next plan proposes it again. A plan that always shows one change is a plan that
-stops being read — and the change it shows on the day it matters, a database
-being replaced or a service destroyed, arrives in the same shrug.
-
-That one is worth reading twice, because the error names two projects and puts
-the wrong one in the advice:
+The `billing_project` one is worth reading twice, because the error names two
+projects and puts the wrong one in the advice:
 
 ```
 Error when reading or editing Project "aleogr-schooling": Cloud Resource
@@ -67,6 +61,12 @@ disabled. Enable it by visiting …?project=codeschool-ing
 Following it would have enabled an API on a project with no business in this
 configuration, and it would have worked — which is how a wrong fix becomes
 permanent.
+
+The `scaling` row is the cheapest and the most instructive, because it costs
+nothing at all except noise. The apply succeeds, the field comes back, and the
+next plan proposes it again. A plan that always shows one change is a plan that
+stops being read — and the change it shows on the day it matters, a database
+being replaced or a service destroyed, arrives in the same shrug.
 
 **So: if behaviour is being relied on, it is in the file.** Not because the
 default is wrong today, but because a default is a decision made somewhere else
