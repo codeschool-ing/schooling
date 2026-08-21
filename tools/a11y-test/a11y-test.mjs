@@ -101,7 +101,7 @@ async function done(page) {
    this refuses a screen that is not the one it asked for. `expect` is the
    pattern — `/course/:id`, not the address — and `expect: 'not-found'` is how
    the one deliberate miss below says it means it. */
-async function check(page, name, where, expect, settled) {
+async function check(page, name, where, expect, { settled, act } = {}) {
   await page.goto(BASE + where, { waitUntil: 'load' });
   /* The screens are built by script after the document loads, so waiting for
      the document would be checking an empty page and calling it clean. */
@@ -129,6 +129,22 @@ async function check(page, name, where, expect, settled) {
       console.error(`✗ ${name} — the screen drew but "${settled}" never arrived, so what `
         + 'would have been measured is a placeholder. A screen that is still loading '
         + 'passes every check there is.');
+      return;
+    }
+  }
+
+  /* SOME STATES ONLY EXIST AFTER SOMEBODY DOES SOMETHING — a verdict beside an
+     answered question, a form that has been submitted. `act` is how a caller
+     reaches one, and it runs HERE so that everything below is identical: the
+     same axe, the same tags, the same report. An acted state checked by its own
+     copy of this function is a state whose failures are described differently
+     from every other, which is exactly what happened the first time. */
+  if (act) {
+    try {
+      await act(page);
+    } catch (e) {
+      violations += 1;
+      console.error(`✗ ${name} — could not reach the state to measure: ${e.message}`);
       return;
     }
   }
@@ -225,7 +241,7 @@ try {
        once and never marks one, this shows one at a time and then puts a result
        beside it — which is a live region, a disabled button and a moved focus
        that the exam never has. */
-    await check(student, `${theme} · the drill`, '/#/practice', '/practice', '.ex');
+    await check(student, `${theme} · the drill`, '/#/practice', '/practice', { settled: '.ex' });
 
     /* AND THE DRILL WITH A VERDICT ON IT, which is a different screen and the
        one this feature is actually about: a live region that has just been
@@ -233,29 +249,15 @@ try {
        what the student gave, and focus moved to "next". None of that exists on
        the screen above, and an exam never reaches this state at all — it holds
        every verdict until the paper closes. */
-    const card = await student.locator('.ex').count();
-    if (!card) {
-      violations += 1;
-      console.error(`✗ ${theme} · a drilled answer — no card was drawn, so the state after `
-        + 'answering one was never measured.');
-    } else {
-      const choices = student.locator('.choice');
-      if (await choices.count()) await choices.first().click();
-      await student.locator('.ex-answer').click();
-      await student.waitForSelector('.ex-verdict.v-right, .ex-verdict.v-wrong', { timeout: 8000 })
-        .catch(() => null);
-
-      const marked = await new AxeBuilder({ page: student }).withTags(STANDARD).analyze();
-      screens += 1;
-      if (marked.violations.length) {
-        violations += marked.violations.length;
-        console.error(`✗ ${theme} · a drilled answer`);
-        for (const v of marked.violations) {
-          console.error(`    ${v.id} (${v.impact}) — ${v.help}`);
-          for (const node of v.nodes.slice(0, 3)) console.error(`      ${node.target.join(' ')}`);
-        }
-      }
-    }
+    await check(student, `${theme} · a drilled answer`, '/#/practice', '/practice', {
+      settled: '.ex',
+      async act(page) {
+        const choices = page.locator('.choice');
+        if (await choices.count()) await choices.first().click();
+        await page.locator('.ex-answer').click();
+        await page.waitForSelector('.ex-verdict.v-right, .ex-verdict.v-wrong', { timeout: 8000 });
+      },
+    });
 
     /* THE EXAM PAPER, QUESTION BY QUESTION — and it is walked rather than
        glanced at, because this wizard shows ONE question at a time.
