@@ -1,0 +1,34 @@
+# Copy to `terraform.tfvars` and fill in. That file is gitignored, and the
+# reason is this one line: an e-mail address committed to a public repository
+# is an address that gets scraped. Everything else here has a default in
+# `variables.tf`, because everything else is a fact about the deployment rather
+# than about a person.
+#
+# ## PUT IT IN THE FILE, NOT ON THE COMMAND LINE
+#
+# `terraform apply -var='alert_email=…'` works and is a trap. Terraform reads
+# variables per run, so the NEXT apply — by anybody who did not type the same
+# flags — plans the monitoring away and removes it without argument. Nothing
+# fails, nothing warns, and the alerting is simply gone until somebody notices
+# it never fired.
+#
+# A `terraform.tfvars` beside the configuration is read automatically by every
+# apply from this directory, which is the behaviour that survives being
+# forgotten.
+#
+# The cost is that the file lives on one machine. Losing it is the same silent
+# removal, so if this is ever applied from somewhere else, copy it there first
+# — or read `terraform plan` before saying yes to it, which is the habit that
+# catches this and everything like it.
+
+# Where an uptime failure reaches. A phone, ideally: the roadmap asks for an
+# alert that reaches one, and an address that only opens on a laptop on a
+# weekday is an alert with office hours.
+alert_email = "you@example.com"
+
+# WHAT A STUDENT TYPES, and it has to be a host that is actually MAPPED.
+# `schooling.lab.aleogr.dev` is not — nothing serves it — and Cloud Run's front
+# end answers its own 404 for an unmapped name without ever reaching the
+# container, so a check against one would report the service down while it is
+# perfectly healthy.
+uptime_host = "code.schooling.lab.aleogr.dev"
