@@ -75,8 +75,8 @@ audit with a name against it.*
 ### Operations
 
 - [x] Migration as a job with an advisory lock, run before traffic reaches the new revision
-- [ ] Terraform owns the project services, registry, service accounts, IAM, Cloud SQL, secret *containers*, the identity federation and the alert policies
-- [ ] The deploy pipeline owns which revision runs; Terraform never manages the image
+- [x] Terraform owns the project services, registry, service accounts, IAM, Cloud SQL, secret *containers*, the identity federation and the alert policies — `infra/`, applied against `aleogr-schooling`. The alert policies are declared and create nothing until `alert_email` is set, which waits on an address to watch
+- [x] The deploy pipeline owns which revision runs; Terraform never manages the image — a tag builds three images, runs the migration to completion, loads the catalogue, replaces the revision, and then **asks the running service which release it is**. `lifecycle { ignore_changes }` on the image is what stops the two from arguing
 - [x] Semantic version in one place — the tag — with the release workflow refusing a tag that is malformed, does not increase, or is not on main
 - [x] `/api/v1/` from the very first route
 - [ ] Uptime check and alert policy reaching a phone
