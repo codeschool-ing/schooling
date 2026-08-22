@@ -31,6 +31,8 @@
 import { createHmac } from 'node:crypto';
 import { chromium } from 'playwright';
 
+import { signUpThroughTheForm } from '../lib/sign-up.mjs';
+
 const BASE = process.argv[2] || 'http://code.example.tld:8099';
 
 const launch = { args: [`--host-resolver-rules=MAP ${new URL(BASE).hostname} 127.0.0.1`] };
@@ -76,25 +78,11 @@ const password = 'a long enough password here';
 try {
   /* ---------- an account ---------- */
 
-  await page.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
-  await page.waitForSelector('#e-toggle', { timeout: 8000 });
-  await page.click('#e-toggle');
-  await page.waitForSelector('#e-name', { timeout: 8000 });
-  await page.fill('#e-name', 'Ada Lovelace');
-  await page.fill('#e-email', email);
-  await page.fill('#e-password', password);
-  const [signedUp] = await Promise.all([
-    page.waitForResponse((r) => r.url().endsWith('/api/v1/sign-up'), { timeout: 15000 }),
-    page.click('#form-signin button[type=submit]'),
-  ]);
-  if (!signedUp.ok()) throw new Error(`signing up: ${signedUp.status()}`);
-
-  /* WAIT FOR THE APP AND NOT FOR THE RESPONSE. Signing up lands on the
-     dashboard, and the state that says who is signed in is written on the way
-     there. Navigating on the 201 alone is a hash change into a screen whose
-     session has not arrived, which sends it straight back to sign-in — this
-     file did exactly that, and the account screen looked broken. */
-  await page.waitForSelector('#content[data-screen="/dashboard"]', { timeout: 15000 });
+  /* THROUGH THE FORM, and the sequence for doing that lives in one place now:
+     it has a window in it that a slower machine falls into — see
+     `tools/lib/sign-up.mjs`. Waiting for the dashboard rather than for the 201
+     is part of it, which is what this file used to get wrong on its own. */
+  await signUpThroughTheForm(page, BASE, { name: 'Ada Lovelace', email, password });
 
   /* ---------- enrol, from the account screen ---------- */
 
