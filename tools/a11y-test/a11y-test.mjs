@@ -752,6 +752,32 @@ try {
       },
     });
 
+    /* THE FUNNEL, WHICH IS THE FIRST SCREEN IN `Measure` AND THE FIRST ONE HERE
+       THAT DRAWS A QUANTITY. Eight rows of label, bar and count, and the bar is
+       a width in per cent — so what axe is being asked is whether a number that
+       exists only as the length of a rectangle is also readable as text. It is:
+       the count sits beside every bar. This is the check that would notice if it
+       stopped doing so.
+
+       TWO STATES, BECAUSE THE SECOND HAS SOMETHING THE FIRST CANNOT. Counting
+       the seeded population puts a banner over the chart saying the numbers are
+       a demonstration, and a banner is a region with its own contrast, its own
+       role and its own place in the reading order. Measured only in the default
+       state it would never be looked at. */
+    await check(staff.page, `${theme} · console, the funnel`, '/#/funnel', '/funnel',
+      { base: CONSOLE, region: '#stage', settled: '#chart .block' });
+
+    await check(staff.page, `${theme} · console, the funnel with the seeded population`,
+      '/#/funnel', '/funnel', {
+        base: CONSOLE,
+        region: '#stage',
+        settled: '#chart .block',
+        async act(page) {
+          await page.selectOption('#counting', 'everybody');
+          await page.waitForSelector('.notice-strong', { timeout: 8000 });
+        },
+      });
+
     /* THE HISTORY, WHICH BY NOW HAS SOMETHING IN IT: granting this operator its
        role wrote an entry, so the list is never the empty state here. The empty
        state is a paragraph and would pass every check there is, which is why

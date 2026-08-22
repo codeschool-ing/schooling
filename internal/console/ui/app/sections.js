@@ -24,8 +24,10 @@ import people from './screens/people.js';
 import history, { byActor, onSubject, entry } from './screens/history.js';
 import studentRecord, { record } from './screens/record.js';
 import schools from './screens/schools.js';
+import funnel from './screens/funnel.js';
 
 export const SECTIONS = [
+  { id: 'funnel', name: 'The funnel', group: 'Measure', screen: funnel },
   { id: 'record', name: 'Student record', group: 'Operate', screen: studentRecord },
   { id: 'schools', name: 'Schools', group: 'Operate', screen: schools },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },

@@ -189,7 +189,40 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// only need the set, and neither may import the module that knows. This is
 	// the closure that joins them, and the mapping is here rather than in
 	// either of them so that neither has to name the other's type.
-	items := analysis.NewStore(pool, nil, nil)
+	//
+	// AND THE FUNNEL'S TWO READERS, WHICH THE CONSOLE'S SCREEN NEEDS. The top of
+	// that report is browsers and the bottom is accounts, so folding the two into
+	// one person needs the link between them — `visitor` owns it, and neither of
+	// the other two may reach for it. `cmd/analyse` wires the same pair for the
+	// copy it prints to a log; here it is wired for a screen, and the difference
+	// between the two is the next paragraph.
+	items := analysis.NewStore(pool, nil, nil).WithStream(
+		func(ctx context.Context, school uuid.UUID, names []string,
+			since time.Time, who analysis.Counting) ([]analysis.Reach, error) {
+
+			/* THE POPULATION IS PASSED THROUGH, and this is the one place in the
+			   platform where it is not fixed at `real`.
+
+			   What earns it that is what sits above it: a screen that REPORTS,
+			   with the word it was asked for answered back and a banner on it.
+			   `cmd/analyse` wires this same closure and then calls with
+			   `CountingReal` and no flag, because it withdraws questions from
+			   circulation and must never do so on the strength of students who
+			   were invented (K-11). Reporting may look; acting may not. */
+			reaches, err := events.Reached(ctx, school, names, since, counting(who))
+			if err != nil {
+				return nil, err
+			}
+			out := make([]analysis.Reach, 0, len(reaches))
+			for _, r := range reaches {
+				out = append(out, analysis.Reach{
+					Name: r.Name, VisitorID: r.VisitorID, AccountID: r.AccountID,
+				})
+			}
+			return out, nil
+		},
+		visitor.NewStore(pool).Links,
+	)
 	withdrawn := func(ctx context.Context, school uuid.UUID) (map[analysis.Question]bool, error) {
 		return items.InForce(ctx, school)
 	}
@@ -405,6 +438,41 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 		func(ctx context.Context) bool {
 			m, ok := identity.MemberFromContext(ctx)
 			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
+
+	/* AND THE FIRST SCREEN IN `Measure`, which is the group the rail has had a
+	   name for and no entries in.
+
+	   THE FUNNEL WAS ALREADY COMPUTED and was going into a log, because there was
+	   no console to put it on when it was written. This is the third module
+	   meeting the other two: `console` names a function, `analysis` does the
+	   arithmetic and `event` owns the stream, and none of them imports another.
+
+	   THE POPULATION IS TRANSLATED HERE, in the one line the module boundary
+	   costs. `analysis.Reading` refuses a word it does not know; the handler has
+	   already refused the same words, and the two together are why a chart of
+	   real people can never come back under a heading saying otherwise. */
+	console.NewUnderstandHandler(
+		console.Schools{All: schoolsFor(tenant.NewStore(pool))},
+		func(ctx context.Context, school uuid.UUID, since time.Time,
+			word string) ([]console.Step, error) {
+
+			who, known := analysis.Reading(word)
+			if !known {
+				return nil, fmt.Errorf("%q is not a population this counts", word)
+			}
+			steps, err := items.Funnel(ctx, school, since, who)
+			if err != nil {
+				return nil, err
+			}
+			out := make([]console.Step, 0, len(steps))
+			for _, s := range steps {
+				out = append(out, console.Step{
+					Label: s.Label, People: s.People, Measured: s.Measured, Why: s.Why,
+				})
+			}
+			return out, nil
 		},
 	).Routes(staffAPI)
 
@@ -1166,5 +1234,25 @@ func atSchool(
 			})
 		}
 		return out, nil
+	}
+}
+
+// counting says that `analysis`'s word for a population and the stream's are the
+// same word.
+//
+// TWO TYPES BECAUSE A MODULE MAY NOT IMPORT A MODULE (X-02), and this is the one
+// line that is the price of it — `cmd/analyse` carries the same one, for the
+// same reason and over the same three values. It is exhaustive rather than a
+// cast: both sides fall back to `real` for a value they do not know, so a missed
+// case narrows the population and never widens a report about people into one
+// that quietly counts invented ones.
+func counting(who analysis.Counting) event.Counting {
+	switch who {
+	case analysis.CountingSeeded:
+		return event.CountingSeeded
+	case analysis.CountingEverybody:
+		return event.CountingEverybody
+	default:
+		return event.CountingReal
 	}
 }
