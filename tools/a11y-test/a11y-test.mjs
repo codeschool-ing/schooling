@@ -63,6 +63,8 @@ import { createHmac } from 'node:crypto';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
+import { signUpThroughTheForm } from '../lib/sign-up.mjs';
+
 const BASE = process.argv[2] || 'http://code.example.tld:8099';
 
 const CONSOLE = (() => {
@@ -108,31 +110,17 @@ async function open(theme, language) {
   return page;
 }
 
-/* A student, signed up through the form on a page that is already open.
-   Extracted because the drill needs a FRESH one per verdict: a card is answered
-   once and the queue moves on, so the second verdict has to be asked of a
-   student who has not answered anything yet. */
-async function signUp(page, name, address) {
-  await page.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
-  await page.waitForSelector('#e-toggle', { timeout: 8000 });
-  await page.click('#e-toggle');
-  await page.waitForSelector('#e-name', { timeout: 8000 });
-  await page.fill('#e-name', name);
-  await page.fill('#e-email', address);
-  await page.fill('#e-password', 'a long enough password here');
+/* A student, signed up through the form.
 
-  /* THE SUBMIT IS WAITED FOR, NOT SLEPT THROUGH. The fields are `required`, so
-     a form the browser considers incomplete sends nothing — and then every
-     screen after it is measured signed OUT, under a name that says signed in.
-     The dashboard exists either way, so `expect` does not catch it. */
-  const [signedUp] = await Promise.all([
-    page.waitForResponse((r) => r.url().endsWith('/api/v1/sign-up'), { timeout: 15000 }),
-    page.click('#form-signin button[type=submit]'),
-  ]);
-  if (!signedUp.ok()) {
-    throw new Error(`signing a student up: ${signedUp.status()} ${await signedUp.text()}`);
-  }
-  await page.waitForSelector('#content[data-screen="/dashboard"]', { timeout: 15000 });
+   THE SHARED ONE, because the second-factor suite needs the same thing and the
+   fix that made it reliable would otherwise have landed in one of the two. See
+   `tools/lib/sign-up.mjs` for what went wrong and why it is checked rather than
+   timed.
+
+   It is still the form and not a request: a suite that posted to the API would
+   prove the API works and say nothing about the screen a person uses. */
+async function signUp(page, name, address) {
+  await signUpThroughTheForm(page, BASE, { name, email: address });
 }
 
 /* Closing the page is not closing the context it came from, and a context left

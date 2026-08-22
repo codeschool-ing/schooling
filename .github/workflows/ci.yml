@@ -95,9 +95,12 @@ jobs:
           go='^(internal/|cmd/|tools/|migrations/|content/|ui/|go\.(mod|sum)$|\.golangci\.yml$|\.github/workflows/ci\.yml$)'
 
           # The browser suite renders the interface against a real schema, so
-          # it wants everything that reaches a screen. `tools/` is narrowed to
+          # it wants everything that reaches a screen. `tools/lib/` is in the
+          # list because two of those suites share the sign-up sequence through
+          # it, and a directory left out of this line is a suite that never runs
+          # on the change that broke it. `tools/` is narrowed to
           # the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(graph-test|a11y-test|landing-test|mfa-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
 
           for name in go browser; do
             eval "pattern=\$$name"
