@@ -1,7 +1,7 @@
 ---
 title: Política de privacidade
 effective: 2026-08-19
-covers: accounts, account_credentials, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 Isto diz o que guardamos sobre você, por quê, e o que acontece quando você pede
@@ -66,6 +66,10 @@ Guardamos:
   falamos com você sobre sua assinatura.
 - **Sua senha, como hash.** Não a senha. Não conseguimos lê-la, nem dizer qual
   é, nem recuperá-la para você.
+- **Seus códigos de recuperação, como hashes**, e se cada um já foi usado. Eles
+  existem apenas para contas com segundo fator. Guardamos só os hashes: os
+  códigos aparecem uma única vez, quando são criados, e não conseguimos mostrá-los
+  de novo.
 - **Suas sessões** — uma linha por navegador em que você está conectado, com um
   hash do token da sessão e a descrição que o navegador dá de si mesmo. Trocar a
   senha encerra todas as outras sessões.

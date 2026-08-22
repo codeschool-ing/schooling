@@ -162,9 +162,13 @@ var ErrAlreadyEnrolled = errors.New("identity: this account already has a second
 // written when there is nothing to replace, or when THIS session has already
 // shown the factor it is replacing. `TestAPasswordAloneCannotReplaceASecondFactor`
 // is the whole of the argument, and it fails on the previous statement.
-func (s *Store) EnrolSecondFactor(ctx context.Context, accountID uuid.UUID, token, secret, code string) error {
+// It returns the recovery codes, which exist in plain text in that return value
+// and nowhere else afterwards. Enrolling is the one moment a person is looking
+// at the screen and can write them down, and an account with a second factor
+// and no way past it is one lost phone from a database edit.
+func (s *Store) EnrolSecondFactor(ctx context.Context, accountID uuid.UUID, token, secret, code string) ([]string, error) {
 	if err := VerifyTOTP(secret, code, time.Now()); err != nil {
-		return err
+		return nil, err
 	}
 
 	/* ONE STATEMENT, because the check and the write have to be the same act.
@@ -187,23 +191,38 @@ func (s *Store) EnrolSecondFactor(ctx context.Context, accountID uuid.UUID, toke
 		DO UPDATE SET secret = EXCLUDED.secret, updated_at = now()
 	`, accountID, secret, tokenHash(token))
 	if err != nil {
-		return fmt.Errorf("identity: enrolling a second factor: %w", err)
+		return nil, fmt.Errorf("identity: enrolling a second factor: %w", err)
 	}
 	if tag.RowsAffected() == 0 {
-		return ErrAlreadyEnrolled
+		return nil, ErrAlreadyEnrolled
 	}
-	return nil
+
+	/* THE CODES COME WITH THE FACTOR, in the same call, because there is no
+	   second moment when somebody is looking at a screen ready to write ten
+	   strings down. Issuing them later is a feature nobody opens. */
+	return s.IssueRecoveryCodes(ctx, accountID)
 }
 
-// PresentSecondFactor marks a session as having shown one.
+// PresentSecondFactor marks a session as having shown one — with a code from
+// the authenticator app, or with a recovery code.
+//
+// BOTH, BECAUSE THE SCREEN OFFERS BOTH. It has said "or a recovery code" since
+// the second factor shipped, and for as long as only TOTP was accepted here
+// that sentence was a promise the system could not keep. A person whose phone
+// is gone reads it, believes there is a way back, and finds none.
+//
+// TOTP FIRST AND THE RECOVERY CODE SECOND, which costs nothing: they cannot be
+// confused for one another — six digits against ten characters with a
+// separator — and the common case is the one that runs first.
 func (s *Store) PresentSecondFactor(ctx context.Context, token, code string) error {
+	var accountID uuid.UUID
 	var secret string
 	err := s.pool.QueryRow(ctx, `
-		SELECT c.secret
+		SELECT s.account_id, c.secret
 		FROM sessions s
 		JOIN account_credentials c ON c.account_id = s.account_id AND c.kind = 'totp'
 		WHERE s.token_hash = $1 AND s.revoked_at IS NULL AND s.expires_at > now()
-	`, tokenHash(token)).Scan(&secret)
+	`, tokenHash(token)).Scan(&accountID, &secret)
 
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
@@ -216,7 +235,17 @@ func (s *Store) PresentSecondFactor(ctx context.Context, token, code string) err
 	}
 
 	if err := VerifyTOTP(secret, code, time.Now()); err != nil {
-		return err
+		/* A WRONG CODE IS NOT YET A REFUSAL. It may be a recovery code, and
+		   spending one is a write — so this is the only path here that changes
+		   anything before the session is marked. */
+		if spent := s.SpendRecoveryCode(ctx, accountID, code); spent != nil {
+			if errors.Is(spent, ErrNoRecoveryCode) {
+				// The original refusal, not this one: what the caller asked was
+				// "is this code right", and the answer is no either way.
+				return err
+			}
+			return spent
+		}
 	}
 
 	_, err = s.pool.Exec(ctx,
