@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 effective: 2026-08-19
-covers: accounts, account_credentials, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 This says what we hold about you, why, and what happens to it when you ask us to
@@ -64,6 +64,9 @@ We hold:
   in and how we reach you about your subscription.
 - **Your password, as a hash.** Not the password. We cannot read it, tell you
   what it is, or recover it for you.
+- **Your recovery codes, as hashes**, and whether each has been used. They exist
+  only for an account with a second factor. Only the hashes are kept: the codes
+  are shown once, when they are made, and we cannot show them to you again.
 - **Your sessions** — one row per browser you are signed in on, holding a hash
   of the session token and the browser's own description of itself. Changing
   your password ends every other session.

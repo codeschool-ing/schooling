@@ -110,6 +110,14 @@ var Registry = []Table{
 			"It goes with the account, by cascade",
 	},
 	{
+		Name: "account_recovery_codes", Holds: HoldsPseudonymous, Subject: SubjectAccount,
+		OnErase: EraseDelete,
+		Why: "ten hashes and whether each was spent: the way back into an account when the " +
+			"authenticator app is gone. It holds nothing about the person, and it goes with " +
+			"the account by cascade — a code that still worked after an erasure would be a " +
+			"way into an account that is not there",
+	},
+	{
 		Name: "staff", Holds: HoldsPseudonymous, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "who was allowed to operate the platform, and who let them in. It is the row the " +
 			"audit's actor is checked against months later, so it survives — and it goes by " +
@@ -367,6 +375,12 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		{"account_credentials", `
 			SELECT kind, created_at, updated_at
 			FROM account_credentials WHERE account_id = $1 ORDER BY kind`},
+		// NOT `code_hash`. The hash is not reversible and handing it over would
+		// still be handing somebody a list of what to compare against, in a
+		// file that leaves this system by design.
+		{"account_recovery_codes", `
+			SELECT created_at, used_at
+			FROM account_recovery_codes WHERE account_id = $1 ORDER BY created_at`},
 		{"sessions", `
 			SELECT id, created_at, last_seen_at, expires_at, revoked_at, user_agent
 			FROM sessions WHERE account_id = $1 ORDER BY created_at`},

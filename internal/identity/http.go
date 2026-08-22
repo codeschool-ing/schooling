@@ -289,6 +289,10 @@ func (h *Handler) SecondFactorRoutes(mux *http.ServeMux) {
 	mux.Handle("POST /api/v1/second-factor/start", Require(http.HandlerFunc(h.startFactor)))
 	mux.Handle("POST /api/v1/second-factor/enrol", Require(http.HandlerFunc(h.enrolFactor)))
 	mux.Handle("POST /api/v1/second-factor/present", Require(http.HandlerFunc(h.presentFactor)))
+	mux.Handle("GET /api/v1/second-factor/recovery-codes",
+		Require(http.HandlerFunc(h.recoveryCodesLeft)))
+	mux.Handle("POST /api/v1/second-factor/recovery-codes",
+		Require(http.HandlerFunc(h.reissueRecoveryCodes)))
 }
 
 // startFactor answers a fresh secret and the URI an authenticator app scans.
@@ -339,7 +343,8 @@ func (h *Handler) enrolFactor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.store.EnrolSecondFactor(r.Context(), account.ID, c.Value, in.Secret, in.Code); err != nil {
+	codes, err := h.store.EnrolSecondFactor(r.Context(), account.ID, c.Value, in.Secret, in.Code)
+	if err != nil {
 		switch {
 		case errors.Is(err, ErrWrongCode):
 			web.Fail(w, http.StatusBadRequest, "wrong_code",
@@ -361,7 +366,66 @@ func (h *Handler) enrolFactor(w http.ResponseWriter, r *http.Request) {
 		web.LoggerFrom(r.Context()).Error("marking the enrolling session", "error", err)
 	}
 
-	web.JSON(w, http.StatusOK, map[string]string{"status": "enrolled"})
+	/* THE ONE TIME THE CODES ARE READABLE. They are not fetchable afterwards
+	   and there is no route that returns them again — only one that replaces
+	   the set. A screen that could re-read them would make them a second
+	   password sitting behind the first. */
+	web.JSON(w, http.StatusOK, map[string]any{
+		"status":        "enrolled",
+		"recoveryCodes": codes,
+	})
+}
+
+// reissueRecoveryCodes replaces the set and returns the new one.
+//
+// IT ASKS FOR THE FACTOR THIS SESSION HAS ALREADY SHOWN, not merely for a
+// session. Otherwise a password alone mints ten new ways past the second
+// factor, which is the hole `EnrolSecondFactor` was just closed against, one
+// door along.
+func (h *Handler) reissueRecoveryCodes(w http.ResponseWriter, r *http.Request) {
+	account, _ := FromContext(r.Context())
+
+	c, err := r.Cookie(CookieName)
+	if err != nil {
+		web.Fail(w, http.StatusUnauthorized, web.CodeUnauthorized, "sign in first")
+		return
+	}
+
+	shown, err := h.store.SecondFactorShown(r.Context(), c.Value)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	if !shown {
+		web.Fail(w, http.StatusForbidden, web.CodeUnauthorized,
+			"present the second factor on this session before replacing its recovery codes")
+		return
+	}
+
+	codes, err := h.store.IssueRecoveryCodes(r.Context(), account.ID)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+
+	// REPLACES, and the answer says so: whatever was written down before this
+	// call stopped working the moment it returned.
+	web.JSON(w, http.StatusOK, map[string]any{
+		"status":        "reissued",
+		"recoveryCodes": codes,
+	})
+}
+
+// recoveryCodesLeft is how many are unspent. It is a count and never the codes.
+func (h *Handler) recoveryCodesLeft(w http.ResponseWriter, r *http.Request) {
+	account, _ := FromContext(r.Context())
+
+	left, err := h.store.RecoveryCodesLeft(r.Context(), account.ID)
+	if err != nil {
+		h.refuse(w, r, err)
+		return
+	}
+	web.JSON(w, http.StatusOK, map[string]int{"left": left})
 }
 
 func (h *Handler) presentFactor(w http.ResponseWriter, r *http.Request) {

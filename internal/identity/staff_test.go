@@ -74,7 +74,7 @@ func TestAStaffSessionWithNoSecondFactorIsRefused(t *testing.T) {
 	}
 	code := codeAt(t, secret, time.Now())
 
-	if err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, code); err != nil {
+	if _, err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, code); err != nil {
 		t.Fatalf("enrolling: %v", err)
 	}
 	if err := store.PresentSecondFactor(ctx, token, code); err != nil {
@@ -103,7 +103,7 @@ func TestEnrolmentRequiresProofBeforeItStoresAnything(t *testing.T) {
 		t.Fatalf("making a secret: %v", err)
 	}
 
-	if err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, "000000"); !errors.Is(err, identity.ErrWrongCode) {
+	if _, err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, "000000"); !errors.Is(err, identity.ErrWrongCode) {
 		// 000000 is a valid code roughly one time in a million; a flake here is
 		// a lottery win rather than a defect.
 		t.Fatalf("enrolment with a wrong code gave %v, want ErrWrongCode", err)
@@ -206,7 +206,7 @@ func TestPresentingTheFactorMarksOnlyThatSession(t *testing.T) {
 		t.Fatalf("making a secret: %v", err)
 	}
 	code := codeAt(t, secret, time.Now())
-	if err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, code); err != nil {
+	if _, err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, code); err != nil {
 		t.Fatalf("enrolling: %v", err)
 	}
 
@@ -269,7 +269,7 @@ func enrolled(t *testing.T, store *identity.Store, accountID uuid.UUID) string {
 	}
 	code := codeAt(t, secret, time.Now())
 
-	if err := store.EnrolSecondFactor(ctx, accountID, noSession, secret, code); err != nil {
+	if _, err := store.EnrolSecondFactor(ctx, accountID, noSession, secret, code); err != nil {
 		t.Fatalf("enrolling: %v", err)
 	}
 	token, err := store.Issue(ctx, accountID, "a test")
@@ -319,7 +319,7 @@ func TestAPasswordAloneCannotReplaceASecondFactor(t *testing.T) {
 	if err != nil {
 		t.Fatalf("making a secret: %v", err)
 	}
-	err = store.EnrolSecondFactor(ctx, account.ID, stolen, theirs, codeAt(t, theirs, time.Now()))
+	_, err = store.EnrolSecondFactor(ctx, account.ID, stolen, theirs, codeAt(t, theirs, time.Now()))
 	if err == nil {
 		t.Error("a session holding only the password replaced the account's second factor")
 	}
