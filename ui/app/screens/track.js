@@ -46,13 +46,51 @@ export default async function track() {
     const card1 = e.target.closest('.course-node[data-course]');
     if (card1) return goTo('/course/' + card1.dataset.course);
 
-    // switching the option of a fork step: rebuilds the whole graph, because the
-    // choice changes the path and therefore the levels
+    /* Switching the option of a fork step: rebuilds the whole graph, because
+       the choice changes the path and therefore the levels.
+
+       AND THE REBUILD KEPT THROWING THE READER BACK TO THE START. A track is
+       wider than the window — the fork on the front-end one sits at level five,
+       most of a screen to the right — so `innerHTML =` put a brand new
+       `.track-graph` in place with `scrollLeft` at zero, and the answer to
+       "what does Angular's path look like" was off the right edge again. Every
+       switch cost the scroll back.
+
+       It is not the graph moving: it is a different graph in the same place,
+       which is exactly why it has to be put back where the last one was.
+
+       THE SAME REBUILD ALSO DROPPED THE FOCUS, and that one is worse for being
+       invisible: the button that was pressed no longer exists, so focus fell to
+       `<body>` and somebody driving this from a keyboard lost their place in the
+       page entirely. Both are restored below, for one reason — nothing the
+       reader did should be undone by a redraw they asked for. */
     const tab = e.target.closest('.fork-tab');
     if (tab) {
-      api.chooseOption(t.id, Number(tab.dataset.fork), Number(tab.dataset.option));
+      const fork = Number(tab.dataset.fork);
+      const option = Number(tab.dataset.option);
+      const held = document.activeElement === tab;
+
+      const was = el.querySelector('.track-graph');
+      const at = was ? { left: was.scrollLeft, top: was.scrollTop } : null;
+
+      api.chooseOption(t.id, fork, option);
       el.innerHTML = buildTrack(t) + card();
+
+      /* Before `drawEdges`, so the graph is where it belongs when the edges are
+         measured — and synchronously, so no frame is ever painted at zero. The
+         browser clamps it when the new branch is shorter than where we were,
+         which is the right answer rather than a special case: as near the same
+         place as this graph has. */
+      const now = el.querySelector('.track-graph');
+      if (now && at) { now.scrollLeft = at.left; now.scrollTop = at.top; }
+
       drawEdges(el, t);
+
+      // `preventScroll`, or putting the focus back would undo the line above.
+      if (held) {
+        el.querySelector(`.fork-tab[data-fork="${fork}"][data-option="${option}"]`)
+          ?.focus({ preventScroll: true });
+      }
       return;
     }
 
