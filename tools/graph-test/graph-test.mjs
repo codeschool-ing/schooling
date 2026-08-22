@@ -64,6 +64,9 @@ if (process.env.CHROMIUM) launch.executablePath = process.env.CHROMIUM;
 const browser = await chromium.launch(launch);
 
 let failures = 0;
+// Edge crossings alone, so the summary can say what it actually found: the
+// block at the end of this file adds failures of another kind entirely.
+let crossings = 0;
 let drawings = 0;
 // Sizes where the stylesheet shows the track as a list and draws no edges. See
 // the skip in the measurement below.
@@ -212,6 +215,7 @@ try {
       drawings += 1;
       if (through.length) {
         failures += through.length;
+        crossings += through.length;
         console.error(`✗ ${size.name} · ${track.name}`);
         through.forEach((h) => {
           console.error(`    ${h.from} → ${h.to} passes through ${h.card}, at ${h.at.join(',')}`);
@@ -224,6 +228,77 @@ try {
 
     await page.close();
   }
+
+  /* ---------- and the graph stays where it was put ----------
+
+     A TRACK IS WIDER THAN THE WINDOW, so most of what somebody is looking at is
+     somewhere to the right of where the graph starts. Switching a fork rebuilds
+     the whole drawing, and a rebuild that starts a new `.track-graph` at scroll
+     zero throws the reader back to level one every time they compare two
+     branches — which is precisely when they are switching.
+
+     It is checked here rather than in the accessibility pass because the thing
+     that regresses is one line of a rebuild nobody looks at twice: this suite
+     already opens every track and knows which one has a fork in it, and axe
+     cannot see a scroll position at all.
+
+     THE FOCUS IS THE SAME DEFECT WITH NO PIXELS. The button that was pressed
+     stops existing, so focus falls to `<body>` and a keyboard is back at the
+     top of the document. Both are one rebuild and both are asked for here. */
+  const kept = await browser.newPage({ viewport: SIZES[0] });
+  let forked = null;
+  for (const track of tracks) {
+    await kept.goto(`${BASE}/#/track/${encodeURIComponent(track.id)}`, { waitUntil: 'load' });
+    await kept.waitForSelector('.graph-edges .row', { timeout: 5000 }).catch(() => {});
+    await kept.waitForTimeout(400);
+    if (await kept.locator('.fork-tab').count() > 1) { forked = track; break; }
+  }
+
+  if (!forked) {
+    // Not a pass. The fixture is supposed to carry a fork — it is the shape
+    // this whole screen exists for — so its absence is the check going quiet.
+    failures += 1;
+    console.error('✗ no track in this school has a fork with two options, so the one '
+      + 'rebuild this screen does could not be exercised at all');
+  } else {
+    const scroller = kept.locator('.track-graph');
+    await scroller.evaluate((el) => { el.scrollLeft = Math.round(el.scrollWidth / 2); });
+    await kept.waitForTimeout(120);
+    const before = await scroller.evaluate((el) => el.scrollLeft);
+
+    /* The tab that is NOT the chosen one, driven by the keyboard: pressing it
+       with a mouse would leave the focus question unasked, and the focus is
+       half of what this holds. */
+    const other = kept.locator('.fork-tab:not(.on)').first();
+    const wanted = await other.getAttribute('data-option');
+    await other.focus();
+    await other.press('Enter');
+    await kept.waitForTimeout(300);
+
+    const after = await kept.locator('.track-graph').evaluate((el) => el.scrollLeft);
+    const focused = await kept.evaluate(() =>
+      document.activeElement?.className?.includes?.('fork-tab')
+        ? document.activeElement.dataset.option : null);
+
+    if (before < 40) {
+      failures += 1;
+      console.error(`✗ ${forked.name} — the graph could not be scrolled (${before}px), so `
+        + 'staying put is not something this run actually asked');
+    } else if (Math.abs(after - before) > 24) {
+      failures += 1;
+      console.error(`✗ ${forked.name} — switching a fork moved the graph from ${before}px `
+        + `to ${after}px. It is a different drawing in the same place, and the reader was `
+        + 'looking at the part that moved.');
+    }
+    if (focused !== wanted) {
+      failures += 1;
+      console.error(`✗ ${forked.name} — after switching a fork with the keyboard the focus `
+        + `is on ${focused === null ? 'nothing in the graph' : 'option ' + focused}, and the `
+        + `option pressed was ${wanted}. A rebuild that drops the focus puts somebody `
+        + 'driving this from a keyboard back at the top of the document.');
+    }
+  }
+  await kept.close();
 } finally {
   await browser.close();
 }
@@ -234,10 +309,17 @@ if (notDrawn.length) {
 }
 
 if (failures) {
-  console.error(`\n${failures} lines run through a card, in ${drawings} drawings`);
-  console.error('A line through a card is always avoidable: the router takes one around');
-  console.error('the outside when it can see something in the way, so this is either a');
-  console.error('box it could not see or a lane it decided was free and is not.');
+  if (crossings) {
+    console.error(`\n${crossings} lines run through a card, in ${drawings} drawings`);
+    console.error('A line through a card is always avoidable: the router takes one around');
+    console.error('the outside when it can see something in the way, so this is either a');
+    console.error('box it could not see or a lane it decided was free and is not.');
+  }
+  if (failures > crossings) {
+    console.error(`\n${failures - crossings} thing(s) the graph does rather than draws came `
+      + 'out wrong — see above. They are in this suite because it is the one that opens every');
+    console.error('track and knows which of them has a fork to press.');
+  }
   process.exit(1);
 }
 
