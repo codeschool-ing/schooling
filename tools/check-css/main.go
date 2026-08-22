@@ -240,7 +240,7 @@ func (r rule) moves() []string {
 // pattern-matching the whole file for `.name` is exactly the hand-rolled
 // scanner that is subtly wrong for a year.
 func rulesIn(path string) ([]rule, error) {
-	b, err := os.ReadFile(path)
+	b, err := os.ReadFile(path) //nolint:gosec // a path from this tool's own list of stylesheets
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", path, err)
 	}
