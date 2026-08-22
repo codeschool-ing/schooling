@@ -249,6 +249,15 @@ jobs:
       - name: The interface speaks every language it claims to
         run: go run ./tools/check-interface
 
+      # AND THAT OUR STYLESHEET STILL ONLY OVERRIDES. `base.css` and
+      # `portal.css` are the portal's and are loaded first; ours is loaded last.
+      # So a `display` written here against a class name they already use wins
+      # on every element of the copied markup carrying it — it has happened
+      # twice, both times on a screen the change was not about, and neither time
+      # was it visible in a review of the diff.
+      - name: Our stylesheet does not lay out their elements
+        run: go run ./tools/check-css
+
       - name: The tests, with a database behind them
         run: go test -race ./...
 

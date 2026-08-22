@@ -116,7 +116,10 @@ export default async function account() {
   function askForTheCode(started) {
     factor.innerHTML =
       '<div class="block-top"><h2>' + txt('Two-factor sign-in') + '</h2></div>' +
-      '<ol class="steps">' +
+      /* `enrol-steps` AND NOT `steps`: `portal.css` owns `.steps`, where it is
+         the row of section tabs at the top of a lesson. Styling it here for
+         this list laid that row out as a column on every lesson screen. */
+      '<ol class="enrol-steps">' +
         '<li>' + txt('Put this secret into your authenticator app.') +
           '<p class="secret mono" id="secret">' + esc(grouped(started.secret)) + '</p>' +
           '<p><a class="btn btn-ghost" href="' + esc(started.uri) + '">' +
