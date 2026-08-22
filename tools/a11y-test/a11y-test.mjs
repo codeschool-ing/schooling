@@ -143,27 +143,42 @@ function totp(secret, at = Date.now()) {
 
 /* ---------- an operator, made the only way there is ----------
 
-   Sign up like anybody, then `cmd/staff` for the role, then enrol a factor —
-   which the API marks on the enrolling session, so no code has to be presented
-   a second time.
+   Sign up, then `cmd/staff` for the role, then enrol a factor — which the API
+   marks on the enrolling session, so no code has to be presented a second time.
 
    THE ORDER IS NOT INTERCHANGEABLE. `identity.RequireStaff` asks for a live
    role AND a factor already shown, so a console opened between the sign-up and
    the enrolment is a console showing its own door — which is a screen this
-   suite checks on purpose, elsewhere, with a context that never signed in. */
+   suite checks on purpose, elsewhere, with a context that never signed in.
+
+   # THE SIGN-UP IS A REQUEST AND NOT A FORM, and that is the second attempt
+
+   The first drove the school's sign-up screen — toggle to register, fill three
+   fields, submit, wait a beat. It worked here every time and failed on the
+   first CI run, with no `POST /api/v1/sign-up` in the server's log at all: the
+   fields go in while the screen is still swapping modes, and on a slower
+   machine the render lands after them and takes them with it. A blind
+   `waitForTimeout` then hides it, because what follows is a role grant for an
+   account that was never created.
+
+   THAT FORM IS NOT THIS SUITE'S SUBJECT. The student block above already drives
+   it through the interface, in both themes, and axe measures the screen. What
+   this needs is a session, so it asks for one the way the page would — same
+   origin, same cookie, no timing to lose. */
 async function operator(theme, label) {
   const page = await open(theme, 'en');
   const email = `a11y-staff-${Date.now()}-${theme}@example.tld`;
 
-  await page.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
-  await page.waitForSelector('#e-toggle', { timeout: 8000 });
-  await page.click('#e-toggle');
-  await page.waitForSelector('#e-name', { timeout: 8000 });
-  await page.fill('#e-name', label);
-  await page.fill('#e-email', email);
-  await page.fill('#e-password', 'a long enough password here');
-  await page.click('#form-signin button[type=submit]');
-  await page.waitForTimeout(1500);
+  await page.goto(`${BASE}/`, { waitUntil: 'load' });
+  const failed = await page.evaluate(async ([name, address]) => {
+    const r = await fetch('/api/v1/sign-up', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email: address, password: 'a long enough password here' }),
+    });
+    return r.ok ? '' : `${r.status} ${await r.text()}`;
+  }, [label, email]);
+  if (failed) throw new Error(`signing the operator up: ${failed}`);
 
   execFileSync('go', ['run', './cmd/staff', 'grant', email, 'operator',
     '--by', 'the accessibility suite'], { stdio: 'pipe' });
@@ -330,8 +345,25 @@ try {
     await student.fill('#e-name', 'Ada Lovelace');
     await student.fill('#e-email', studentEmail);
     await student.fill('#e-password', 'a long enough password here');
-    await student.click('#form-signin button[type=submit]');
-    await student.waitForTimeout(1500);
+
+    /* THE SUBMIT IS WAITED FOR, NOT SLEPT THROUGH.
+
+       This was `click` and a 1500ms pause, and the pause is what makes the
+       failure silent: the fields are `required`, so a form that did not take
+       them is blocked by the browser and never sends anything — and then every
+       screen below is measured signed OUT, under a name that says signed in.
+       The dashboard exists either way, so `expect` does not catch it.
+
+       Waiting for the response is the only thing here that can tell the two
+       apart, and it is also faster than the pause it replaces. */
+    const [signedUp] = await Promise.all([
+      student.waitForResponse((r) => r.url().endsWith('/api/v1/sign-up'), { timeout: 15000 }),
+      student.click('#form-signin button[type=submit]'),
+    ]);
+    if (!signedUp.ok()) {
+      throw new Error(`signing the student up: ${signedUp.status()} ${await signedUp.text()}`);
+    }
+    await student.waitForTimeout(400);
 
     await check(student, `${theme} · the dashboard`, '/#/dashboard', '/dashboard');
     await check(student, `${theme} · certificates`, '/#/certificates', '/certificates');
