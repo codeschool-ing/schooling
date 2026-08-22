@@ -23,9 +23,11 @@
 import people from './screens/people.js';
 import history, { byActor, onSubject, entry } from './screens/history.js';
 import studentRecord, { record } from './screens/record.js';
+import schools from './screens/schools.js';
 
 export const SECTIONS = [
   { id: 'record', name: 'Student record', group: 'Operate', screen: studentRecord },
+  { id: 'schools', name: 'Schools', group: 'Operate', screen: schools },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },
   { id: 'audit', name: 'History', group: 'Govern', screen: history },
 ];

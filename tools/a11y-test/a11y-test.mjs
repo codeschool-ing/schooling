@@ -722,6 +722,36 @@ try {
       staff.page.url().slice(CONSOLE.length), '/record/:id',
       { base: CONSOLE, region: '#stage', settled: '.block' });
 
+    /* THE SCHOOLS SCREEN, WHICH IS THE ONE PLACE THE CONSOLE CHANGES SOMETHING
+       RATHER THAN READING IT — and the one screen here whose subject is colour,
+       which makes measuring it with axe both obvious and easy to get wrong.
+
+       THE SPECIMENS ARE DELIBERATELY NOT THIS PAGE'S THEME. They are pictures of
+       the study interface's two themes, drawn on their own grounds, so in the
+       light console there is a dark panel and in the dark console a light one.
+       Axe measures the text on each against the ground it is actually on, which
+       is the whole point of drawing them that way — a preview that followed the
+       console's theme would be a preview of a page nobody visits.
+
+       And a colour is typed in, because the screen with a colour chosen is a
+       different screen: two specimens, four swatches and the two sentences that
+       only appear when a colour had to move. */
+    await check(staff.page, `${theme} · console, the schools`, '/#/schools', '/schools',
+      { base: CONSOLE, region: '#stage', settled: '.accent-form' });
+
+    await check(staff.page, `${theme} · console, a colour chosen`, '/#/schools', '/schools', {
+      base: CONSOLE,
+      region: '#stage',
+      settled: '.accent-form',
+      async act(page) {
+        /* AMBER RATHER THAN THE ONE IT IS WEARING: it has to move in both
+           themes, so both of the sentences this screen exists to show are on
+           the screen when axe looks at it. */
+        await page.locator('.accent-pick[data-colour="#d99000"]').first().click();
+        await page.waitForSelector('.accent-theme-light .accent-said', { timeout: 8000 });
+      },
+    });
+
     /* THE HISTORY, WHICH BY NOW HAS SOMETHING IN IT: granting this operator its
        role wrote an entry, so the list is never the empty state here. The empty
        state is a paragraph and would pass every check there is, which is why

@@ -40,7 +40,13 @@ import practice from './screens/practice.js';
 import { openSearch, close as closeSearch, searchOpen } from './search-panel.js';
 import { closeModal, modalOpen } from './modal.js';
 import { wireCopy } from './copy.js';
-import { applyAccent } from './accent.js';
+/* IT IS IN `assets/` AND NOT IN `app/`, which is what lets the console show
+   what a school will look like without a second copy of the algorithm: the
+   console's host serves `assets/` from this tree when its own has no such
+   file, and refuses to serve `app/` at all — those are a student's screens.
+   Correcting a colour for contrast is neither side's screen; it is the rule
+   both of them have to agree about. */
+import { applyAccent } from '../assets/accent.js';
 
 /* ---------- what the i18n runtime needs from us ---------- */
 globalThis.isChoice = isChoice;                  // used by applyContent()

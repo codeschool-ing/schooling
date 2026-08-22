@@ -101,7 +101,30 @@ type People struct {
 // they were answering, which is outside this system and is where that link
 // belongs.
 type Record func(ctx context.Context, actor uuid.UUID, actorLabel, action string,
-	subject uuid.UUID, what any, requestID string) error
+	subject Subject, what Changed, requestID string) error
+
+// Subject is what an entry is about.
+//
+// THE KIND IS CARRIED RATHER THAN ASSUMED. This was `uuid.UUID` while the only
+// thing the console could act on was an account, and the wiring wrote the word
+// "account" into every entry it produced. The console sets a school's colour
+// now, and an audit that called a school an account would be wrong in the one
+// column somebody searches by.
+type Subject struct {
+	Kind string
+	ID   string
+}
+
+// Changed is the value an entry is about, on both sides of it.
+//
+// BOTH, AND EITHER MAY BE ABSENT: the audit's own columns are nullable so that
+// "did not change" can be told from "was not there", and flattening the two
+// into one field is how a change loses the half that makes it reviewable. A
+// colour that moved has both; an erasure has only what was there.
+type Changed struct {
+	Before any
+	After  any
+}
 
 // PeopleHandler is find, show, export, erase.
 type PeopleHandler struct {
@@ -331,6 +354,12 @@ func subject(w http.ResponseWriter, r *http.Request) (uuid.UUID, bool) {
 // later is not an answer.
 func (h *PeopleHandler) wrote(w http.ResponseWriter, r *http.Request,
 	action string, subject uuid.UUID, what any) bool {
+
+	/* THE COUNTS SIT ON THE `before` SIDE, and for an erasure that is exactly
+	   what they are: how much was there, before it was not. An export changes
+	   nothing, and its counts describe the state that was read — which is the
+	   same side of the same word. Neither is a creation, so neither carries an
+	   `after`. */
 	actor, ok := h.who(r.Context())
 	if !ok {
 		web.LoggerFrom(r.Context()).Error("a console route ran with no account", "path", r.URL.Path)
@@ -346,7 +375,8 @@ func (h *PeopleHandler) wrote(w http.ResponseWriter, r *http.Request,
 	}
 	label := strings.TrimSpace(name + " <" + email + ">")
 
-	if err := h.record(r.Context(), actor, label, action, subject, what,
+	if err := h.record(r.Context(), actor, label, action,
+		Subject{Kind: "account", ID: subject.String()}, Changed{Before: what},
 		web.RequestIDFrom(r.Context())); err != nil {
 		web.LoggerFrom(r.Context()).Error("recording a console action", "error", err, "action", action)
 		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,

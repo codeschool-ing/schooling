@@ -229,7 +229,7 @@ function companion(accent, surfaces) {
 
    No paint happens in between: the attribute goes back before this function
    returns, and the browser has had no chance to lay out. */
-/* AND ONE OF THEM IS TRANSLUCENT. `--tint-accent` is the wash behind a verdict
+/* AND ONE OF THEM IS TRANSLUCENT. `--accent-wash` is the wash behind a verdict
    and behind anything else that is tinted with the accent's own colour; over
    the page it composites to a surface slightly darker than the page in the
    light theme, which is precisely where a colour that just cleared 4.5:1
@@ -242,7 +242,7 @@ function companion(accent, surfaces) {
 
    A translucent surface is composited over `--ink` before it is measured, which
    is what the browser does to draw it. */
-const SURFACES = ['--ink', '--panel', '--tint-accent'];
+export const SURFACES = ['--ink', '--panel', '--accent-wash'];
 
 function parse(value) {
   const v = String(value || '').trim();
@@ -293,36 +293,81 @@ function stylesheet() {
   return el;
 }
 
-export function applyAccent(accent) {
+/* What one theme would do with a colour, WITHOUT doing it.
+
+   THE CONSOLE NEEDS THE ANSWER AND NOT THE EFFECT. Somebody choosing a school's
+   colour has to see what the school will actually look like — the accent as it
+   will be corrected, in both themes, and whether the two states stay apart —
+   and a screen that answered that with arithmetic of its own would be a second
+   opinion about the one rule this file exists to hold.
+
+   So the correction is a function and applying it is what calls it. The console
+   asks the same question the study interface asks, gets the same answer, and
+   the day the palette moves they both move together.
+
+   It answers `null` where there is nothing to say: not a colour, or a document
+   with no palette in it at all. A `phosphor` of null is the other refusal —
+   nothing on that hue reaches the ratio, so the theme keeps the palette's own
+   colour and the caller has to say so rather than draw a swatch that lies. */
+export function correctionFor(accent, theme) {
   const colour = hex(accent);
-  if (!colour) return;   // no colour, or not a colour: the palette stands
+  if (!colour) return null;
+
+  const surfaces = surfacesOf(theme);
+  if (!surfaces.length) return null;
+
+  const asGiven = scoreOn(colour, surfaces);
+  const used = readable(colour, surfaces);
+  if (!used) {
+    return { theme, given: toHex(colour), asGiven, phosphor: null, mid: null,
+      moved: false, ratio: 0, midRatio: 0, distinct: false };
+  }
+
+  const phosphor = toHex(used);
+  const mid = companion(used, surfaces);
+  return {
+    theme,
+    given: toHex(colour),
+    asGiven,
+    phosphor,
+    mid,
+    moved: phosphor !== toHex(colour),
+    ratio: scoreOn(used, surfaces),
+    midRatio: scoreOn(hex(mid), surfaces),
+    /* Whether the two states are told apart at all. `companion` answers with
+       the accent itself when nothing on the hue is both readable and quieter,
+       and a screen showing that as two states would be lying about a
+       distinction the student cannot see. */
+    distinct: mid !== phosphor,
+  };
+}
+
+export function applyAccent(accent) {
+  if (!hex(accent)) return;   // no colour, or not a colour: the palette stands
 
   const rules = [];
   for (const theme of ['dark', 'light']) {
-    const surfaces = surfacesOf(theme);
-    if (!surfaces.length) continue;
+    const worked = correctionFor(accent, theme);
+    if (!worked) continue;
 
-    const score = scoreOn(colour, surfaces);
-    const used = readable(colour, surfaces);
-    if (!used) {
+    if (!worked.phosphor) {
       // eslint-disable-next-line no-console
-      console.warn(`the school's accent ${toHex(colour)} reads at ${score.toFixed(2)}:1 in the `
-        + `${theme} theme, and nothing on its hue reaches ${AA}:1 on every surface, so that `
-        + `theme keeps the palette's own colour`);
+      console.warn(`the school's accent ${worked.given} reads at ${worked.asGiven.toFixed(2)}:1 `
+        + `in the ${theme} theme, and nothing on its hue reaches ${AA}:1 on every surface, so `
+        + 'that theme keeps the palette\'s own colour');
       continue;
     }
-    if (toHex(used) !== toHex(colour)) {
+    if (worked.moved) {
       // eslint-disable-next-line no-console
-      console.info(`the school's accent ${toHex(colour)} reads at ${score.toFixed(2)}:1 in the `
-        + `${theme} theme and needs ${AA}:1, so that theme uses ${toHex(used)} — the same `
-        + `colour, moved until it can be read`);
+      console.info(`the school's accent ${worked.given} reads at ${worked.asGiven.toFixed(2)}:1 `
+        + `in the ${theme} theme and needs ${AA}:1, so that theme uses ${worked.phosphor} — the `
+        + 'same colour, moved until it can be read');
     }
 
     const where = theme === 'light'
       ? 'html[data-theme="light"]'
       : ':root, html[data-theme="dark"]';
-    rules.push(`${where}{--phosphor:${toHex(used)};`
-      + `--phosphor-mid:${companion(used, surfaces)};}`);
+    rules.push(`${where}{--phosphor:${worked.phosphor};--phosphor-mid:${worked.mid};}`);
   }
 
   stylesheet().textContent = rules.join('\n');

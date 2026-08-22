@@ -382,6 +382,32 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	   FOUR MODULES MEET HERE AND THE CONSOLE IMPORTS NONE OF THEM. It names one
 	   function — a person at a school — and this is where billing, progress,
 	   exams and certificates are asked the same question in turn. */
+	/* AND THE ONE THING THE CONSOLE CHANGES RATHER THAN READS.
+
+	   A school's colour has been a column since the first migration and was set
+	   by hand in SQL, against production, with nothing recorded. It is also the
+	   first of the "closed list of system parameters" the roadmap asks for —
+	   audited with the actor, the old value and the new one — which is why the
+	   seam carries both sides now.
+
+	   OPERATOR AND NOT READ-ONLY, for the erase path's reason one notch down:
+	   read-only opens the door so that a console nobody can look at is not a
+	   console nobody checks, and changing what every student of a school sees is
+	   not a thing a read-only role does. */
+	console.NewSchoolsHandler(
+		console.Schools{
+			All:       schoolsFor(tenant.NewStore(pool)),
+			SetAccent: accentOf(tenant.NewStore(pool)),
+		},
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
+
 	console.NewRecordHandler(somebody, console.Records{
 		Schools:  schoolsFor(tenant.NewStore(pool)),
 		Sittings: sittingsOf(accounts),
@@ -455,19 +481,26 @@ func personAt(accounts *identity.Store) func(context.Context, string) (console.P
 
 // recorded turns the console's shape into an audit entry.
 //
-// `TenantID` IS ABSENT AND THAT IS CORRECT: an account belongs to no school
-// (N-01), so exporting or erasing one is a platform-wide action — which the
-// column is nullable for.
+// `TenantID` IS ABSENT AND THAT IS CORRECT for an account: one belongs to no
+// school (N-01), so exporting or erasing it is a platform-wide action, which
+// the column is nullable for. A school's own row is the same shape from the
+// other direction — the subject IS the school, and naming it twice would put
+// the same id in two columns.
+//
+// THE KIND COMES FROM THE CONSOLE NOW. It used to be the constant "account"
+// here, which was true of everything the console could do and stopped being
+// true the moment it could set a school's colour.
 func recorded(entries *audit.Store) console.Record {
 	return func(ctx context.Context, actor uuid.UUID, actorLabel, action string,
-		subject uuid.UUID, what any, requestID string) error {
+		subject console.Subject, what console.Changed, requestID string) error {
 		return entries.Record(ctx, audit.Entry{
 			Actor:       audit.Staff(actor, actorLabel),
 			Action:      action,
-			SubjectKind: "account",
-			SubjectID:   subject.String(),
+			SubjectKind: subject.Kind,
+			SubjectID:   subject.ID,
 			// Counts, never contents: see `console.Record`.
-			Before:    what,
+			Before:    what.Before,
+			After:     what.After,
 			RequestID: requestID,
 		})
 	}
@@ -1022,9 +1055,24 @@ func schoolsFor(schools *tenant.Store) func(context.Context) ([]console.School, 
 		}
 		out := make([]console.School, 0, len(all))
 		for _, s := range all {
-			out = append(out, console.School{ID: s.ID, Slug: s.Slug, Name: s.Name})
+			out = append(out, console.School{
+				ID: s.ID, Slug: s.Slug, Name: s.Name, Accent: s.Accent,
+			})
 		}
 		return out, nil
+	}
+}
+
+// accentOf is the console's one write to a school, mapped onto the module that
+// owns the row — including the refusal, which `console` names for itself so
+// that it never has to import `tenant` to recognise one.
+func accentOf(schools *tenant.Store) func(context.Context, uuid.UUID, string) (string, error) {
+	return func(ctx context.Context, id uuid.UUID, accent string) (string, error) {
+		was, err := schools.SetAccent(ctx, id, accent)
+		if errors.Is(err, tenant.ErrNoSchool) {
+			return "", console.ErrNoSchool
+		}
+		return was, err
 	}
 }
 
