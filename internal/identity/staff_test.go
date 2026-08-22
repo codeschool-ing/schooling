@@ -74,7 +74,7 @@ func TestAStaffSessionWithNoSecondFactorIsRefused(t *testing.T) {
 	}
 	code := codeAt(t, secret, time.Now())
 
-	if err := store.EnrolSecondFactor(ctx, account.ID, secret, code); err != nil {
+	if err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, code); err != nil {
 		t.Fatalf("enrolling: %v", err)
 	}
 	if err := store.PresentSecondFactor(ctx, token, code); err != nil {
@@ -103,7 +103,7 @@ func TestEnrolmentRequiresProofBeforeItStoresAnything(t *testing.T) {
 		t.Fatalf("making a secret: %v", err)
 	}
 
-	if err := store.EnrolSecondFactor(ctx, account.ID, secret, "000000"); !errors.Is(err, identity.ErrWrongCode) {
+	if err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, "000000"); !errors.Is(err, identity.ErrWrongCode) {
 		// 000000 is a valid code roughly one time in a million; a flake here is
 		// a lottery win rather than a defect.
 		t.Fatalf("enrolment with a wrong code gave %v, want ErrWrongCode", err)
@@ -206,7 +206,7 @@ func TestPresentingTheFactorMarksOnlyThatSession(t *testing.T) {
 		t.Fatalf("making a secret: %v", err)
 	}
 	code := codeAt(t, secret, time.Now())
-	if err := store.EnrolSecondFactor(ctx, account.ID, secret, code); err != nil {
+	if err := store.EnrolSecondFactor(ctx, account.ID, noSession, secret, code); err != nil {
 		t.Fatalf("enrolling: %v", err)
 	}
 
@@ -230,6 +230,12 @@ func TestPresentingTheFactorMarksOnlyThatSession(t *testing.T) {
 }
 
 /* ---------- helpers ---------- */
+
+// noSession is the token a FIRST enrolment carries, and it is empty on purpose:
+// there is nothing to replace, so there is no factor for a session to have
+// shown. Replacing one is the case that needs a real token, and it has a test
+// of its own.
+const noSession = ""
 
 // getStaff calls a route guarded by RequireStaff, through the same middleware
 // cmd/api uses.
@@ -263,7 +269,7 @@ func enrolled(t *testing.T, store *identity.Store, accountID uuid.UUID) string {
 	}
 	code := codeAt(t, secret, time.Now())
 
-	if err := store.EnrolSecondFactor(ctx, accountID, secret, code); err != nil {
+	if err := store.EnrolSecondFactor(ctx, accountID, noSession, secret, code); err != nil {
 		t.Fatalf("enrolling: %v", err)
 	}
 	token, err := store.Issue(ctx, accountID, "a test")
@@ -274,4 +280,56 @@ func enrolled(t *testing.T, store *identity.Store, accountID uuid.UUID) string {
 		t.Fatalf("presenting: %v", err)
 	}
 	return token
+}
+
+// AND A PASSWORD ALONE CANNOT REPLACE THE SECOND FACTOR.
+//
+// This is the same guarantee as the test above, from the other side, and it was
+// broken. `Require` is a session — a password and nothing else — and enrolment
+// wrote `ON CONFLICT DO UPDATE SET secret`. So somebody holding only the
+// password could sign in, enrol a secret of their own OVER the one that was
+// there, present a code from it, and be through a door whose whole purpose is
+// to ask for something the password is not.
+//
+// Mandatory MFA is not a property of how accounts are set up. It is a property
+// of what a session with only a password can reach, and enrolment was reachable.
+func TestAPasswordAloneCannotReplaceASecondFactor(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	ctx := context.Background()
+
+	account, _ := create(t, store)
+	if err := store.Grant(ctx, account.ID, identity.RoleOwner, uuid.Nil); err != nil {
+		t.Fatalf("granting: %v", err)
+	}
+	held := enrolled(t, store, account.ID)
+	_ = held
+
+	// A session with the password and nothing else, which is what signing in
+	// gives before any code is asked for.
+	stolen, err := store.Issue(ctx, account.ID, "somebody with the password")
+	if err != nil {
+		t.Fatalf("starting a session: %v", err)
+	}
+	if rec := getStaff(t, store, identity.RoleOwner, stolen); rec.Code == http.StatusOK {
+		t.Fatal("a session with no factor was let in before the interesting part")
+	}
+
+	// Now the attack: enrol a secret of their own, over the one on the account.
+	theirs, err := identity.NewTOTPSecret()
+	if err != nil {
+		t.Fatalf("making a secret: %v", err)
+	}
+	err = store.EnrolSecondFactor(ctx, account.ID, stolen, theirs, codeAt(t, theirs, time.Now()))
+	if err == nil {
+		t.Error("a session holding only the password replaced the account's second factor")
+	}
+
+	// And the door still refuses it, which is the claim that matters.
+	if err := store.PresentSecondFactor(ctx, stolen, codeAt(t, theirs, time.Now())); err == nil {
+		t.Error("a code from the attacker's own secret was accepted")
+	}
+	if rec := getStaff(t, store, identity.RoleOwner, stolen); rec.Code == http.StatusOK {
+		t.Error("MANDATORY MFA WAS BYPASSED WITH A PASSWORD: the session enrolled a " +
+			"factor of its own and walked through the door")
+	}
 }

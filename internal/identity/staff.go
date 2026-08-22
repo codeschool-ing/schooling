@@ -133,6 +133,10 @@ func (s *Store) StaffOf(ctx context.Context, accountID uuid.UUID) (Member, error
 
 /* ---------- the second factor ---------- */
 
+// ErrAlreadyEnrolled is a second factor being replaced by a session that has
+// not shown the one already there.
+var ErrAlreadyEnrolled = errors.New("identity: this account already has a second factor")
+
 // EnrolSecondFactor stores a secret after proving the person can produce a code
 // from it.
 //
@@ -140,17 +144,53 @@ func (s *Store) StaffOf(ctx context.Context, accountID uuid.UUID) (Member, error
 // accounts locked out by a QR code that was never scanned — the person believes
 // they enrolled, the system believes it too, and the discovery happens at the
 // worst moment. Nothing is written until a code from that secret arrives.
-func (s *Store) EnrolSecondFactor(ctx context.Context, accountID uuid.UUID, secret, code string) error {
+//
+// # AND REPLACING ONE ASKS FOR THE ONE THAT IS THERE
+//
+// This is a security fix, and the hole it closes was mine. The statement was
+// `ON CONFLICT DO UPDATE SET secret`, and the route in front of it asks only for
+// a session — which is what a password alone produces, because signing in
+// issues the cookie before any code is requested.
+//
+// So somebody holding only the password could sign in, enrol a secret of their
+// OWN over the one on the account, present a code from it, and be through a
+// door whose entire purpose is to ask for something a password is not.
+// "Mandatory MFA for staff" was a description of how accounts are set up rather
+// than a property of what a password can reach.
+//
+// The session is therefore a parameter and not a convenience: the row is
+// written when there is nothing to replace, or when THIS session has already
+// shown the factor it is replacing. `TestAPasswordAloneCannotReplaceASecondFactor`
+// is the whole of the argument, and it fails on the previous statement.
+func (s *Store) EnrolSecondFactor(ctx context.Context, accountID uuid.UUID, token, secret, code string) error {
 	if err := VerifyTOTP(secret, code, time.Now()); err != nil {
 		return err
 	}
 
-	_, err := s.pool.Exec(ctx, `
-		INSERT INTO account_credentials (account_id, kind, secret) VALUES ($1, 'totp', $2)
-		ON CONFLICT (account_id, kind) DO UPDATE SET secret = EXCLUDED.secret, updated_at = now()
-	`, accountID, secret)
+	/* ONE STATEMENT, because the check and the write have to be the same act.
+	   Read-then-write here is a race with a second request holding the same
+	   stolen session, and the losing half of that race is the account. */
+	tag, err := s.pool.Exec(ctx, `
+		INSERT INTO account_credentials (account_id, kind, secret)
+		SELECT $1, 'totp', $2
+		 WHERE NOT EXISTS (
+		           SELECT 1 FROM account_credentials
+		            WHERE account_id = $1 AND kind = 'totp')
+		    OR EXISTS (
+		           SELECT 1 FROM sessions
+		            WHERE token_hash = $3
+		              AND account_id = $1
+		              AND revoked_at IS NULL
+		              AND expires_at > now()
+		              AND mfa_at IS NOT NULL)
+		ON CONFLICT (account_id, kind)
+		DO UPDATE SET secret = EXCLUDED.secret, updated_at = now()
+	`, accountID, secret, tokenHash(token))
 	if err != nil {
 		return fmt.Errorf("identity: enrolling a second factor: %w", err)
+	}
+	if tag.RowsAffected() == 0 {
+		return ErrAlreadyEnrolled
 	}
 	return nil
 }

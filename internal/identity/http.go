@@ -329,23 +329,36 @@ func (h *Handler) enrolFactor(w http.ResponseWriter, r *http.Request) {
 	}
 	account, _ := FromContext(r.Context())
 
-	if err := h.store.EnrolSecondFactor(r.Context(), account.ID, in.Secret, in.Code); err != nil {
-		if errors.Is(err, ErrWrongCode) {
+	/* THE SESSION IS AN ARGUMENT AND NOT AN AFTERTHOUGHT. Replacing a second
+	   factor asks whether THIS session has already shown the one being
+	   replaced, so the token goes in — rather than being fetched afterwards
+	   only to mark the session as having enrolled. */
+	c, err := r.Cookie(CookieName)
+	if err != nil {
+		web.Fail(w, http.StatusUnauthorized, web.CodeUnauthorized, "sign in first")
+		return
+	}
+
+	if err := h.store.EnrolSecondFactor(r.Context(), account.ID, c.Value, in.Secret, in.Code); err != nil {
+		switch {
+		case errors.Is(err, ErrWrongCode):
 			web.Fail(w, http.StatusBadRequest, "wrong_code",
 				"that code does not come from that secret — check the clock on the device")
-			return
+		case errors.Is(err, ErrAlreadyEnrolled):
+			web.Fail(w, http.StatusForbidden, "already_enrolled",
+				"this account already has a second factor — present the one it has "+
+					"before replacing it")
+		default:
+			h.refuse(w, r, err)
 		}
-		h.refuse(w, r, err)
 		return
 	}
 
 	// The session that enrolled has just proved it holds the factor, so it is
 	// marked. Asking for a second code straight afterwards teaches people that
 	// this system asks for codes twice for no reason.
-	if c, err := r.Cookie(CookieName); err == nil {
-		if err := h.store.PresentSecondFactor(r.Context(), c.Value, in.Code); err != nil {
-			web.LoggerFrom(r.Context()).Error("marking the enrolling session", "error", err)
-		}
+	if err := h.store.PresentSecondFactor(r.Context(), c.Value, in.Code); err != nil {
+		web.LoggerFrom(r.Context()).Error("marking the enrolling session", "error", err)
 	}
 
 	web.JSON(w, http.StatusOK, map[string]string{"status": "enrolled"})
