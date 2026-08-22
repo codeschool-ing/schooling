@@ -42,7 +42,11 @@ package internal_test
 
 import (
 	"errors"
+	"fmt"
+	"go/ast"
 	"go/build"
+	"go/parser"
+	"go/token"
 	"os"
 	"path/filepath"
 	"strings"
@@ -454,4 +458,84 @@ func mustRead(t *testing.T, locale string) legal.Document {
 		t.Fatalf("reading the privacy policy in %s: %v", locale, err)
 	}
 	return doc
+}
+
+// ONLY THE SEEDER SAYS WHEN AN EVENT HAPPENED.
+//
+// `event.Event.At` lets a caller write an event with a time of its own choosing,
+// and exactly one caller has a reason to: the seeder, which invents a past
+// because abandonment, coming back after a month and a funnel that narrows are
+// shapes in TIME, and a history written at `now()` has none of them.
+//
+// For everything else the column's default is the truth, and an argument for it
+// would only ever be a chance to disagree with the clock. The hazard is the
+// ordinary one for a field like this: an event stream whose times cannot be
+// trusted answers every question with a number that looks fine.
+//
+// So it is checked rather than left to a comment. Test files are exempt — a test
+// that seeds a stream to exercise a reader is not a request path lying about
+// when something happened.
+func TestOnlyTheSeederSaysWhenAnEventHappened(t *testing.T) {
+	root := repoRoot(t)
+
+	err := filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
+		switch {
+		case err != nil:
+			return err
+		case d.IsDir() && (d.Name() == ".git" || d.Name() == "testdata"):
+			return filepath.SkipDir
+		case d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go"):
+			return nil
+		}
+
+		rel := filepath.ToSlash(mustRel(t, root, path))
+		if strings.HasPrefix(rel, "cmd/seed/") || strings.HasPrefix(rel, "internal/event/") {
+			return nil // the one caller, and the package that defines the field
+		}
+
+		parsed, err := parser.ParseFile(token.NewFileSet(), path, nil, 0)
+		if err != nil {
+			return fmt.Errorf("parsing %s: %w", rel, err)
+		}
+
+		ast.Inspect(parsed, func(n ast.Node) bool {
+			lit, ok := n.(*ast.CompositeLit)
+			if !ok {
+				return true
+			}
+			named, ok := lit.Type.(*ast.SelectorExpr)
+			if !ok || named.Sel.Name != "Event" {
+				return true
+			}
+			if pkg, ok := named.X.(*ast.Ident); !ok || pkg.Name != "event" {
+				return true
+			}
+			for _, field := range lit.Elts {
+				kv, ok := field.(*ast.KeyValueExpr)
+				if !ok {
+					continue
+				}
+				if key, ok := kv.Key.(*ast.Ident); ok && key.Name == "At" {
+					t.Errorf("%s writes an event with a time of its own choosing. Only the "+
+						"seeder may do that: everything else emits as it happens, and a "+
+						"stream whose times can be argued with is one nothing can be "+
+						"counted from", rel)
+				}
+			}
+			return true
+		})
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking the repository: %v", err)
+	}
+}
+
+func mustRel(t *testing.T, root, path string) string {
+	t.Helper()
+	rel, err := filepath.Rel(root, path)
+	if err != nil {
+		t.Fatalf("%s is not under %s: %v", path, root, err)
+	}
+	return rel
 }
