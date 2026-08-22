@@ -21,16 +21,27 @@
    ========================================================================== */
 
 import people from './screens/people.js';
+import history, { byActor, onSubject, entry } from './screens/history.js';
 
 export const SECTIONS = [
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },
+  { id: 'audit', name: 'History', group: 'Govern', screen: history },
 ];
 
-/* A DETAIL IS A ROUTE WITH NO RAIL ENTRY — one person's record is not a place
-   in the navigation, but it is an address that has to survive a reload and a
-   pasted link. There are none yet; the shape is here because the router takes
-   them and a reader should not have to find that out from the router. */
-export const DETAILS = [];
+/* A DETAIL IS A ROUTE WITH NO RAIL ENTRY — one entry of the history is not a
+   place in the navigation, but it is an address that has to survive a reload
+   and a pasted link.
+
+   THE TWO FILTERED LISTS ARE HERE FOR THE SAME REASON. "One actor's entries"
+   and "everything done to one subject" are the two questions this section
+   answers besides the plain one, and a filter that lives in a variable is a
+   filter somebody has to describe over the phone. All three sit under `audit/`,
+   so the rail stays lit on the section they belong to. */
+export const DETAILS = [
+  { path: '/audit/entry/:id', screen: entry },
+  { path: '/audit/by/:actor', screen: byActor },
+  { path: '/audit/on/:kind/:subject', screen: onSubject },
+];
 
 /* The order the rail's groups appear in, when there are sections to put in
    them. Empty ones are skipped, so this is settled before the screens are.

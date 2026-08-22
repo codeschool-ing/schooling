@@ -323,6 +323,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	   wrapped in `identity.RequireStaff`, which is the second gate and fails for
 	   a different reason than the first. */
 	records := privacy.NewStore(pool)
+	entries := audit.NewStore(pool)
 
 	staffAPI := http.NewServeMux()
 	console.NewHandler(
@@ -344,7 +345,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			Held:  records.Export,
 			Erase: records.Erase,
 		},
-		recorded(audit.NewStore(pool)),
+		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
 		// OPERATOR AND NOT READ-ONLY. The door asks for read-only because a
@@ -355,6 +356,17 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			return ok && m.Role.Covers(identity.RoleOperator)
 		},
 	).Routes(staffAPI)
+
+	/* AND THE READ THAT MAKES THAT SCREEN SAFE TO USE. An operator who can
+	   erase somebody and nobody who can see that they did is one half of an
+	   arrangement; the entries have been written since phase 0 and could only
+	   be read with a SQL client until now.
+
+	   READ-ONLY IS ENOUGH, and deliberately so: the history is a read, the door
+	   already asks for a live role and a second factor, and a console where
+	   only the people who can act can see what was done would be an audit its
+	   own subjects control. */
+	console.NewHistoryHandler(history(entries)).Routes(staffAPI)
 
 	/* THE GATE IS ON THE API AND NOT ON THE WHOLE HOST, and the difference
 	   matters the moment this grows a screen: a console nobody can reach
@@ -438,6 +450,58 @@ func recorded(entries *audit.Store) console.Record {
 			Before:    what,
 			RequestID: requestID,
 		})
+	}
+}
+
+// history is the read side of the seam `recorded` is the write side of.
+//
+// TWO SHAPES AND NOT ONE STORE. `console` names `Page` and `One` because that
+// is what a screen does — a list, then one entry — and `audit` answers them
+// with the two queries its indexes already sort. Handing the console the store
+// itself would be the import the module boundary refuses, and would hand it
+// `Record` besides, which a screen that reads history has no business holding.
+func history(entries *audit.Store) console.History {
+	return console.History{
+		Page: func(ctx context.Context, ask console.Ask) ([]console.Deed, error) {
+			q := audit.Query{
+				ActorID:     ask.ActorID,
+				SubjectKind: ask.SubjectKind,
+				SubjectID:   ask.SubjectID,
+				Limit:       ask.Limit,
+			}
+			if ask.AfterTime != nil {
+				q.After = &audit.Cursor{At: *ask.AfterTime, ID: ask.AfterID}
+			}
+			rows, err := entries.Recent(ctx, q)
+			if err != nil {
+				return nil, err
+			}
+			out := make([]console.Deed, 0, len(rows))
+			for _, row := range rows {
+				out = append(out, deed(row))
+			}
+			return out, nil
+		},
+		One: func(ctx context.Context, id int64) (console.Deed, error) {
+			row, err := entries.One(ctx, id)
+			switch {
+			case errors.Is(err, audit.ErrNoEntry):
+				return console.Deed{}, console.ErrNoEntry
+			case err != nil:
+				return console.Deed{}, err
+			}
+			return deed(row), nil
+		},
+	}
+}
+
+func deed(r audit.Row) console.Deed {
+	return console.Deed{
+		ID: r.ID, OccurredAt: r.OccurredAt,
+		ActorID: r.ActorID, ActorKind: r.ActorKind, ActorLabel: r.ActorLabel,
+		Action: r.Action, SubjectKind: r.SubjectKind, SubjectID: r.SubjectID,
+		TenantID: r.TenantID, Reason: r.Reason, RequestID: r.RequestID,
+		Before: r.Before, After: r.After,
 	}
 }
 
