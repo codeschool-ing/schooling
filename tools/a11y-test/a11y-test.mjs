@@ -33,13 +33,43 @@
    somebody has an account — and the exam paper, which is the densest screen
    here, needs one that has started an attempt.
 
+   # AND THE CONSOLE, WHICH IS A SECOND HOST
+
+   `console.<platform domain>` is served by the same binary and is not a
+   school's address (K-17), so nothing in the list above ever reached it. The
+   console shipped with its markup written FOR this check — labels tied to
+   inputs, a live region for the answer, a focus outline of its own — and
+   markup written for a check nobody runs is a claim, which is the failure this
+   whole file exists to refuse.
+
+   It costs a staff account, and there is no way to make one from a browser
+   alone: the first role cannot be granted by the console, because reaching the
+   console needs one. So this shells out to `cmd/staff`, which is the door that
+   exists for exactly that reason and writes to the audit like every other
+   administrative path. It also needs a second factor, which is thirty lines of
+   RFC 6238 below rather than a dependency — the same argument `internal/
+   identity/totp.go` makes, and it is checked by the server refusing a wrong
+   code.
+
        node tools/a11y-test/a11y-test.mjs [base url]
+
+   The console's address is derived from the school's rather than passed: it is
+   the platform domain with `console.` in front, which is what `console.HostOf`
+   does in Go. Two ways to say one address is two ways to disagree about it.
    ========================================================================== */
 
+import { execFileSync } from 'node:child_process';
+import { createHmac } from 'node:crypto';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
 const BASE = process.argv[2] || 'http://code.example.tld:8099';
+
+const CONSOLE = (() => {
+  const at = new URL(BASE);
+  at.hostname = 'console.' + at.hostname.split('.').slice(1).join('.');
+  return at.origin;
+})();
 
 /* WCAG 2.2 AA, which is the sum of what came before it. The tags are what axe
    understands; naming them all is how "AA" stops being a word and becomes a
@@ -48,7 +78,10 @@ const STANDARD = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 /* See the header: Playwright finds its own browser and must not be told where
    to look. */
-const launch = { args: ['--host-resolver-rules=MAP code.example.tld 127.0.0.1'] };
+const launch = {
+  args: [`--host-resolver-rules=MAP ${new URL(BASE).hostname} 127.0.0.1,`
+       + `MAP ${new URL(CONSOLE).hostname} 127.0.0.1`],
+};
 if (process.env.CHROMIUM) launch.executablePath = process.env.CHROMIUM;
 
 const browser = await chromium.launch(launch);
@@ -82,6 +115,78 @@ async function done(page) {
   await page.owner.close();
 }
 
+/* ---------- the second factor, RFC 6238 ----------
+
+   Base32 without padding, HMAC-SHA1, six digits, thirty seconds — the same
+   parameters `internal/identity/totp.go` writes out, and for the same reason:
+   it is a HMAC and a truncation, and a wrong one is not a subtle failure here
+   because the server answers `wrong_code` and this run stops. */
+function totp(secret, at = Date.now()) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = '';
+  for (const ch of secret.toUpperCase().replace(/[\s=]/g, '')) {
+    const v = alphabet.indexOf(ch);
+    if (v < 0) throw new Error(`the secret is not base32: ${ch}`);
+    bits += v.toString(2).padStart(5, '0');
+  }
+  const key = Buffer.from(
+    (bits.match(/.{8}/g) || []).map((b) => parseInt(b, 2)));
+
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(at / 1000 / 30)));
+
+  const mac = createHmac('sha1', key).update(counter).digest();
+  const offset = mac[mac.length - 1] & 0x0f;
+  const truncated = mac.readUInt32BE(offset) & 0x7fffffff;
+  return String(truncated % 1_000_000).padStart(6, '0');
+}
+
+/* ---------- an operator, made the only way there is ----------
+
+   Sign up like anybody, then `cmd/staff` for the role, then enrol a factor —
+   which the API marks on the enrolling session, so no code has to be presented
+   a second time.
+
+   THE ORDER IS NOT INTERCHANGEABLE. `identity.RequireStaff` asks for a live
+   role AND a factor already shown, so a console opened between the sign-up and
+   the enrolment is a console showing its own door — which is a screen this
+   suite checks on purpose, elsewhere, with a context that never signed in. */
+async function operator(theme, label) {
+  const page = await open(theme, 'en');
+  const email = `a11y-staff-${Date.now()}-${theme}@example.tld`;
+
+  await page.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
+  await page.waitForSelector('#e-toggle', { timeout: 8000 });
+  await page.click('#e-toggle');
+  await page.waitForSelector('#e-name', { timeout: 8000 });
+  await page.fill('#e-name', label);
+  await page.fill('#e-email', email);
+  await page.fill('#e-password', 'a long enough password here');
+  await page.click('#form-signin button[type=submit]');
+  await page.waitForTimeout(1500);
+
+  execFileSync('go', ['run', './cmd/staff', 'grant', email, 'operator',
+    '--by', 'the accessibility suite'], { stdio: 'pipe' });
+
+  const secret = await page.evaluate(async () => {
+    const r = await fetch('/api/v1/second-factor/start', { method: 'POST' });
+    if (!r.ok) throw new Error(`starting the second factor: ${r.status}`);
+    return (await r.json()).secret;
+  });
+
+  const enrolled = await page.evaluate(async ([s, c]) => {
+    const r = await fetch('/api/v1/second-factor/enrol', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ secret: s, code: c }),
+    });
+    return r.ok ? '' : `${r.status} ${await r.text()}`;
+  }, [secret, totp(secret)]);
+
+  if (enrolled) throw new Error(`enrolling the second factor: ${enrolled}`);
+  return { page, email };
+}
+
 /* A SCREEN THAT WAS NEVER DRAWN IS THE EASIEST SCREEN IN THE WORLD TO PASS.
 
    The router answers an address it does not recognise with a short, tidy,
@@ -101,14 +206,15 @@ async function done(page) {
    this refuses a screen that is not the one it asked for. `expect` is the
    pattern — `/course/:id`, not the address — and `expect: 'not-found'` is how
    the one deliberate miss below says it means it. */
-async function check(page, name, where, expect, { settled, act } = {}) {
-  await page.goto(BASE + where, { waitUntil: 'load' });
+async function check(page, name, where, expect,
+  { settled, act, base = BASE, region = '#content' } = {}) {
+  await page.goto(base + where, { waitUntil: 'load' });
   /* The screens are built by script after the document loads, so waiting for
      the document would be checking an empty page and calling it clean. */
-  await page.waitForSelector('#content h1, #content .notice', { timeout: 8000 }).catch(() => {});
+  await page.waitForSelector(`${region} h1, ${region} .notice`, { timeout: 8000 }).catch(() => {});
   await page.waitForTimeout(400);
 
-  const drew = await page.locator('#content').getAttribute('data-screen');
+  const drew = await page.locator(region).getAttribute('data-screen');
   if (expect && drew !== expect) {
     violations += 1;
     console.error(`✗ ${name} — the router drew ${drew ? `"${drew}"` : 'nothing'} and this asked `
@@ -216,12 +322,13 @@ try {
        This list used to ask for `/#/sign-up` all the same, and got the router's
        "page not found" — a clean screen that passes every check there is. */
     const student = await open(theme, 'en');
+    const studentEmail = `a11y-${Date.now()}-${theme}@example.tld`;
     await student.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
     await student.waitForSelector('#e-toggle', { timeout: 8000 });
     await student.click('#e-toggle');
     await student.waitForSelector('#e-name', { timeout: 8000 });
     await student.fill('#e-name', 'Ada Lovelace');
-    await student.fill('#e-email', `a11y-${Date.now()}-${theme}@example.tld`);
+    await student.fill('#e-email', studentEmail);
     await student.fill('#e-password', 'a long enough password here');
     await student.click('#form-signin button[type=submit]');
     await student.waitForTimeout(1500);
@@ -319,6 +426,43 @@ try {
     }
 
     await done(student);
+
+    /* ---------- the console, on its own host ----------
+
+       THE SHUT DOOR FIRST, with a context that has never signed in — because
+       that is what a stranger who follows a link to this address sees, and
+       because the console is deliberately served to them rather than hidden
+       behind the gate that protects its API. A page nobody can open is also a
+       page that cannot say what is needed to open it. */
+    const stranger = await open(theme, 'en');
+    await check(stranger, `${theme} · console, the door shut`, '/', 'shut',
+      { base: CONSOLE, region: '#stage' });
+    await done(stranger);
+
+    const staff = await operator(theme, 'Grace Hopper');
+
+    await check(staff.page, `${theme} · console, personal data`, '/#/people', '/people',
+      { base: CONSOLE, region: '#stage' });
+
+    /* AND THE SCREEN WITH SOMEBODY ON IT, which is the one this section is
+       about: a table of counts, a link that hands over everything held, and a
+       destructive block with a confirmation field. None of that exists on the
+       screen above — an empty lookup form passes checks the answer would
+       fail. */
+    await check(staff.page, `${theme} · console, a person found`, '/#/people', '/people', {
+      base: CONSOLE,
+      region: '#stage',
+      async act(page) {
+        await page.fill('#email', studentEmail);
+        await page.click('#find button[type=submit]');
+        await page.waitForSelector('#answer .block-top h2', { timeout: 8000 });
+      },
+    });
+
+    await check(staff.page, `${theme} · console, nothing there`, '/#/nowhere-at-all', 'not-found',
+      { base: CONSOLE, region: '#stage' });
+
+    await done(staff.page);
   }
 } finally {
   await browser.close();

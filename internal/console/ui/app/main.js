@@ -56,6 +56,7 @@ whenChanged(async (path, found) => {
   if (!found) {
     stage.innerHTML = notFound(path);
     stage.setAttribute('aria-label', 'No such screen');
+    stage.dataset.screen = 'not-found';
     document.title = 'Console · schooling';
     paintRail(path);
     return;
@@ -65,6 +66,11 @@ whenChanged(async (path, found) => {
   stage.textContent = '';
   stage.appendChild(el);
   stage.scrollTop = 0;
+
+  /* WHAT WAS MATCHED, not where the browser is. See `route()`: this is what
+     lets a check refuse a screen that never drew instead of measuring the
+     router's miss and calling it clean. */
+  stage.dataset.screen = found.r.pattern;
 
   /* The tab keeps one name. A long screen title pushes the brand off the end
      and the tab stops being recognisable among a dozen others; the screen's
@@ -162,6 +168,7 @@ function paintGate() {
       'The API refuses without either, and this page is not what enforces it.</p>' +
     '</header></div>';
   stage.setAttribute('aria-label', 'The door is shut');
+  stage.dataset.screen = 'shut';
 }
 
 /* ---------- theme: the vitrine's key, so the three apps agree ---------- */
