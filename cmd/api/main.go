@@ -23,6 +23,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/analysis"
+	"github.com/codeschool-ing/schooling/internal/audit"
 	"github.com/codeschool-ing/schooling/internal/billing"
 	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/certificate"
@@ -36,6 +37,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/practice"
+	"github.com/codeschool-ing/schooling/internal/privacy"
 	"github.com/codeschool-ing/schooling/internal/progress"
 	"github.com/codeschool-ing/schooling/internal/tenant"
 	"github.com/codeschool-ing/schooling/internal/visitor"
@@ -320,6 +322,8 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	   cannot be reached at the console's. Everything on the console side is then
 	   wrapped in `identity.RequireStaff`, which is the second gate and fails for
 	   a different reason than the first. */
+	records := privacy.NewStore(pool)
+
 	staffAPI := http.NewServeMux()
 	console.NewHandler(
 		labelOf(accounts),
@@ -327,6 +331,28 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 		func(ctx context.Context) (string, bool) {
 			m, ok := identity.MemberFromContext(ctx)
 			return string(m.Role), ok
+		},
+	).Routes(staffAPI)
+
+	// THE PHASE-0 ITEM, WIRED. `console` may import neither `identity` nor
+	// `privacy` nor `audit`, so it names the shapes it needs and this is where
+	// they are filled in — the same wiring `visitor.SchoolOf` uses, and the
+	// place `K-07`'s read layer starts.
+	console.NewPeopleHandler(
+		console.People{
+			Find:  personAt(accounts),
+			Held:  records.Export,
+			Erase: records.Erase,
+		},
+		recorded(audit.NewStore(pool)),
+		labelOf(accounts),
+		identity.AccountID,
+		// OPERATOR AND NOT READ-ONLY. The door asks for read-only because a
+		// screen nobody can open is a screen nobody checks; an erasure cannot
+		// be undone, and the ranks exist to say which is which.
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
 		},
 	).Routes(staffAPI)
 
@@ -339,6 +365,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	   and the rest of the host is free to serve something a stranger may see.
 	   Today there is nothing else, and anything but the API answers 404. */
 	consoleMux := http.NewServeMux()
+
+	// THE SCREEN, AND IT IS NOT BEHIND THE GATE. A console nobody can open
+	// without a role also cannot tell somebody that they need one — so the
+	// shell is served to anybody who asks, and its first request to the API
+	// behind the gate is how it finds out who is here.
+	consoleMux.Handle("/", console.Interface(interfaceVersion))
+
 	consoleMux.Handle("/console/api/v1/", web.Chain(staffAPI,
 		identity.Authenticate(accounts),
 		// READ-ONLY IS THE FLOOR AND NOT THE CEILING. Everything this will grow
@@ -368,6 +401,44 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 		web.Recover,
 		web.NoStore,
 	)
+}
+
+// personAt is the console's one way of reaching somebody: an exact address, and
+// one person or none (K-22).
+func personAt(accounts *identity.Store) func(context.Context, string) (console.Person, error) {
+	return func(ctx context.Context, email string) (console.Person, error) {
+		account, err := accounts.ByEmail(ctx, email)
+		if errors.Is(err, identity.ErrNoAccount) {
+			return console.Person{}, console.ErrNoPerson
+		}
+		if err != nil {
+			return console.Person{}, err
+		}
+		return console.Person{
+			ID: account.ID, Name: account.Name, Email: account.Email,
+			CreatedAt: account.CreatedAt, Synthetic: account.Synthetic,
+		}, nil
+	}
+}
+
+// recorded turns the console's shape into an audit entry.
+//
+// `TenantID` IS ABSENT AND THAT IS CORRECT: an account belongs to no school
+// (N-01), so exporting or erasing one is a platform-wide action — which the
+// column is nullable for.
+func recorded(entries *audit.Store) console.Record {
+	return func(ctx context.Context, actor uuid.UUID, actorLabel, action string,
+		subject uuid.UUID, what any, requestID string) error {
+		return entries.Record(ctx, audit.Entry{
+			Actor:       audit.Staff(actor, actorLabel),
+			Action:      action,
+			SubjectKind: "account",
+			SubjectID:   subject.String(),
+			// Counts, never contents: see `console.Record`.
+			Before:    what,
+			RequestID: requestID,
+		})
+	}
 }
 
 // labelOf is the wiring `console` asks for rather than an import: who somebody

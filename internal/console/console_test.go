@@ -3,10 +3,12 @@ package console_test
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/codeschool-ing/schooling/internal/console"
 	"github.com/codeschool-ing/schooling/internal/tenant"
+	"github.com/codeschool-ing/schooling/ui"
 )
 
 // THE ADDRESS IS BUILT FROM THE PLATFORM'S AND NOWHERE ELSE.
@@ -74,5 +76,94 @@ func TestWithNoPlatformDomainNothingIsTheConsole(t *testing.T) {
 		if is(req) {
 			t.Errorf("Is(%q) said yes with no platform domain configured", host)
 		}
+	}
+}
+
+/* ---------- the screen ---------- */
+
+// THE SHELL IS SERVED TO ANYBODY, and that is the fix for a console nobody can
+// open without a role: it also cannot tell somebody they need one. What is
+// behind the gate is the API; this is a page saying where to sign in.
+func TestTheConsolesShellIsServedWithoutASession(t *testing.T) {
+	rec := httptest.NewRecorder()
+	console.Interface("v1.2.3").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("the shell answered %d, want 200", rec.Code)
+	}
+	if ct := rec.Header().Get("Content-Type"); !strings.HasPrefix(ct, "text/html") {
+		t.Errorf("Content-Type %q, want html", ct)
+	}
+	body := rec.Body.String()
+	for _, wanted := range []string{
+		"/app/main.js",     // the console itself
+		"/assets/base.css", // the shared identity
+		"/assets/console.css",
+		`id="rail"`, `id="stage"`, // the layout the rest of this organisation uses
+	} {
+		if !strings.Contains(body, wanted) {
+			t.Errorf("the shell does not carry %s", wanted)
+		}
+	}
+}
+
+// THE STYLESHEET IS THE STUDY INTERFACE'S, byte for byte, out of its embed.
+//
+// It already exists three times across this organisation with a comment asking
+// whoever edits one to copy it to the others. A fourth copy inside one binary
+// would be indefensible, so this proves there is not one.
+func TestTheConsoleServesTheSharedStylesheetAndNotACopy(t *testing.T) {
+	rec := httptest.NewRecorder()
+	console.Interface("v1.2.3").ServeHTTP(rec,
+		httptest.NewRequest(http.MethodGet, "/assets/base.css", nil))
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("the stylesheet answered %d, want 200", rec.Code)
+	}
+
+	want, err := ui.Files.ReadFile("assets/base.css")
+	if err != nil {
+		t.Fatalf("reading the study interface's stylesheet: %v", err)
+	}
+	if rec.Body.String() != string(want) {
+		t.Error("the console is serving a different stylesheet from the study interface — " +
+			"which is the fourth copy this arrangement exists to avoid")
+	}
+}
+
+// A STUDENT'S SCREENS ARE NOT THE CONSOLE'S TO SERVE. `assets/` is shared;
+// `app/` is not, and the console's own `app/` must not become a window into it.
+func TestTheConsoleDoesNotServeTheStudyInterfacesModules(t *testing.T) {
+	for _, path := range []string{"/app/api.js", "/app/screens/practice.js", "/index.html/../app/api.js"} {
+		rec := httptest.NewRecorder()
+		console.Interface("").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		if rec.Code == http.StatusOK {
+			t.Errorf("%s answered 200 from the console", path)
+		}
+	}
+}
+
+// NO CATCH-ALL. A shell that rendered itself at any address leaves somebody
+// staring at an empty screen wondering what they typed.
+func TestTheConsoleHasNoCatchAll(t *testing.T) {
+	rec := httptest.NewRecorder()
+	console.Interface("").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/whatever", nil))
+	if rec.Code != http.StatusNotFound {
+		t.Errorf("an unknown path answered %d, want 404", rec.Code)
+	}
+}
+
+// AN UNSTAMPED BUILD OFFERS NO VALIDATOR, because every unstamped build shares
+// the same one — a browser would hold the first file it ever saw and
+// revalidate it happily against every later one.
+func TestAnUnstampedConsoleOffersNoETag(t *testing.T) {
+	rec := httptest.NewRecorder()
+	console.Interface("").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+
+	if got := rec.Header().Get("ETag"); got != "" {
+		t.Errorf("an unstamped build offered the ETag %q", got)
+	}
+	if got := rec.Header().Get("Cache-Control"); got != "no-store" {
+		t.Errorf("Cache-Control %q, want no-store", got)
 	}
 }
