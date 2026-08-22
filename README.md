@@ -99,7 +99,15 @@ neither, so the interface says so where it would otherwise have shown a control.
 
 ## Where things stand
 
-Phase 4 of seven. Phases 0 to 3 are done — the skeleton and the five things that cost nothing
-now and are impossible later, the study platform, learning complete, and billing up to the point
-where it waits on a payment gateway nobody has chosen. The roadmap and what each phase is done
-by are in [`docs/PLAN.md`](docs/PLAN.md).
+Phase 4 of seven — the console. Phases 0 to 3 carry the skeleton and the five things that cost
+nothing now and are impossible later, the study platform, learning complete, and billing up to
+the point where it waits on a payment gateway nobody has chosen.
+
+**Every box in phase 0 is ticked and the phase is not finished**, which is a distinction this
+project draws rather than rounds off: its `Done when` asks for two schools answering over TLS and
+there is one, and a single school behind a `Host` check is indistinguishable from an application
+that is not multi-tenant at all. Phases 1 to 3 each keep an item open for the same kind of reason
+— a sandbox that runs a student's program, the platform's own address, a payment gateway.
+
+[`docs/ROADMAP.md`](docs/ROADMAP.md) is the list and says which and why;
+[`docs/PLAN.md`](docs/PLAN.md) is the shape and the reasoning.
