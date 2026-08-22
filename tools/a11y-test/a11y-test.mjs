@@ -491,6 +491,34 @@ try {
       },
     });
 
+    /* THE HISTORY, WHICH BY NOW HAS SOMETHING IN IT: granting this operator its
+       role wrote an entry, so the list is never the empty state here. The empty
+       state is a paragraph and would pass every check there is, which is why
+       this is worth saying. */
+    await check(staff.page, `${theme} · console, history`, '/#/audit', '/audit', {
+      base: CONSOLE,
+      region: '#stage',
+      settled: '#rows table',
+    });
+
+    /* AND ONE ENTRY, REACHED THE WAY A PERSON REACHES IT — by following a row
+       rather than by an address this file made up. An id typed in here would go
+       stale the first time the fixture changed, and a screen behind a stale
+       address is a screen nobody measures. */
+    const entry = await staff.page.locator('#rows tbody tr td a').first().getAttribute('href');
+    await check(staff.page, `${theme} · console, one entry`, '/' + entry, '/audit/entry/:id', {
+      base: CONSOLE,
+      region: '#stage',
+      settled: '.states',
+    });
+
+    /* AND THE SAME LIST NARROWED TO ONE ACTOR, because a filtered list is a
+       different screen: it carries a heading that says so and a way back. */
+    const byActor = await staff.page.locator('#stage a[href^="#/audit/by/"]').first()
+      .getAttribute('href');
+    await check(staff.page, `${theme} · console, one actor's doing`, '/' + byActor,
+      '/audit/by/:actor', { base: CONSOLE, region: '#stage', settled: '#rows table' });
+
     await check(staff.page, `${theme} · console, nothing there`, '/#/nowhere-at-all', 'not-found',
       { base: CONSOLE, region: '#stage' });
 
