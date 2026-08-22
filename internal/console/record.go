@@ -278,16 +278,20 @@ func shownAtSchool(school School, at AtSchool) atSchoolBody {
 	for _, c := range at.Courses {
 		out.Courses = append(out.Courses, courseBody{Course: c.CourseID, Sections: c.Sections})
 	}
+	/* A CONVERSION AND NOT A LITERAL, which is `staticcheck`'s S1016 and is
+	   right: these two pairs are the same fields in the same order, differing
+	   only in their JSON tags, and a field-by-field copy is a place for a field
+	   to be forgotten when one of them grows.
+
+	   The two types still exist for the reason they always did — the shape this
+	   package works in and the shape that goes over the wire are separate
+	   decisions — and the day they stop being identical the conversion stops
+	   compiling, which is exactly the moment somebody should be looking. */
 	for _, e := range at.Exams {
-		out.Exams = append(out.Exams, examBody{
-			Scope: e.Scope, ScopeID: e.ScopeID, StartedAt: e.StartedAt,
-			HandedIn: e.HandedIn, Passed: e.Passed, Score: e.Score,
-		})
+		out.Exams = append(out.Exams, examBody(e))
 	}
 	for _, c := range at.Certificates {
-		out.Certificates = append(out.Certificates, certBody{
-			Code: c.Code, Title: c.Title, IssuedAt: c.IssuedAt,
-		})
+		out.Certificates = append(out.Certificates, certBody(c))
 	}
 	return out
 }
