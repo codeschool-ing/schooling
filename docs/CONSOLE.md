@@ -249,12 +249,27 @@ will find out, and it is worth saying now so that nobody is surprised into a sho
 
 ## What the interface is
 
-`ui/` is the student interface and is, deliberately, mostly a copy of `portal-frontend`. The
-console is not a copy of anything, so it is a sibling — its own embedded tree, its own routes, no
-shared build step, and none of the assumptions that make sense for a school.
+`ui/` is the student interface and is, deliberately, mostly a copy of `portal-frontend`. **The
+console is the same kind of copy, of `console-frontend`** — the staff console the finished
+project already shipped. It is a full-screen layout and not a page: the fixed 64px bar across the
+top, a left rail whose entries are grouped by job, and a stage that fills the rest. A screen is
+`async (section) => ({ title, el })` and the router is a hash router, because that is the contract
+those screens are already written against.
 
-It shares one thing on purpose: the stylesheet. Two visual systems for one product is how a
-console starts looking like a different company's software, and the shared file is small.
+What came across is the shell and the vocabulary — `assets/console.css`, `app/routes.js`,
+`app/dom.js` — and what did not is every screen, because the screens are about this platform and
+that one is about one school. The tree is still the console's own and still embedded; nothing is
+shared at build time with a repository this one does not write to.
+
+`assets/base.css` is shared for real, though, and not by copying: the console serves the study
+interface's bytes out of its embed, so the tokens, the reset and the bar cannot drift between the
+two halves of one binary. Two visual systems for one product is how a console starts looking like
+a different company's software.
+
+**That stylesheet already exists three times across the organisation** — here, in
+`portal-frontend`, in `console-frontend` — each with a comment asking whoever edits one to copy
+it onward. A fourth copy inside this binary would have been indefensible, which is what
+`TestTheConsoleServesTheSharedStylesheetAndNotACopy` is standing on.
 
 ---
 

@@ -365,6 +365,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	   and the rest of the host is free to serve something a stranger may see.
 	   Today there is nothing else, and anything but the API answers 404. */
 	consoleMux := http.NewServeMux()
+
+	// THE SCREEN, AND IT IS NOT BEHIND THE GATE. A console nobody can open
+	// without a role also cannot tell somebody that they need one — so the
+	// shell is served to anybody who asks, and its first request to the API
+	// behind the gate is how it finds out who is here.
+	consoleMux.Handle("/", console.Interface(interfaceVersion))
+
 	consoleMux.Handle("/console/api/v1/", web.Chain(staffAPI,
 		identity.Authenticate(accounts),
 		// READ-ONLY IS THE FLOOR AND NOT THE CEILING. Everything this will grow

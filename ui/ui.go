@@ -43,6 +43,19 @@ import (
 //go:embed index.html assets app
 var files embed.FS
 
+// Files is the embedded interface, so that the console can serve the ONE
+// stylesheet both share without a second copy of it.
+//
+// `assets/base.css` exists three times across this organisation already — the
+// vitrine's, the portal's and the old console's — and the header of the file
+// says so and asks whoever edits one to copy it to the others. Inside a single
+// binary there is no excuse for a fourth: the console links `/assets/base.css`
+// and this is where those bytes come from.
+//
+// Nothing else is exported. This is a window for one file, not a way for
+// another package to reach into the study interface.
+var Files = files
+
 // `.woff2` IS NOT IN GO'S BUILT-IN TABLE. On a developer's machine it resolves
 // anyway, out of /etc/mime.types — and the deployed image is a scratch
 // container that has no such file, so the fonts would go out as
