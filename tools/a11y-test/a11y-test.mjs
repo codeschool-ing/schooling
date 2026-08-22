@@ -108,11 +108,212 @@ async function open(theme, language) {
   return page;
 }
 
+/* A student, signed up through the form on a page that is already open.
+   Extracted because the drill needs a FRESH one per verdict: a card is answered
+   once and the queue moves on, so the second verdict has to be asked of a
+   student who has not answered anything yet. */
+async function signUp(page, name, address) {
+  await page.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
+  await page.waitForSelector('#e-toggle', { timeout: 8000 });
+  await page.click('#e-toggle');
+  await page.waitForSelector('#e-name', { timeout: 8000 });
+  await page.fill('#e-name', name);
+  await page.fill('#e-email', address);
+  await page.fill('#e-password', 'a long enough password here');
+
+  /* THE SUBMIT IS WAITED FOR, NOT SLEPT THROUGH. The fields are `required`, so
+     a form the browser considers incomplete sends nothing — and then every
+     screen after it is measured signed OUT, under a name that says signed in.
+     The dashboard exists either way, so `expect` does not catch it. */
+  const [signedUp] = await Promise.all([
+    page.waitForResponse((r) => r.url().endsWith('/api/v1/sign-up'), { timeout: 15000 }),
+    page.click('#form-signin button[type=submit]'),
+  ]);
+  if (!signedUp.ok()) {
+    throw new Error(`signing a student up: ${signedUp.status()} ${await signedUp.text()}`);
+  }
+  await page.waitForSelector('#content[data-screen="/dashboard"]', { timeout: 15000 });
+}
+
 /* Closing the page is not closing the context it came from, and a context left
    open holds a browser process. */
 async function done(page) {
   await page.close();
   await page.owner.close();
+}
+
+/* ---------- the drill, answered on purpose ----------
+
+   THIS SUITE READS THE ANSWER KEY, AND THAT IS THE FIX RATHER THAN A CHEAT.
+
+   The drill draws a card, shuffles it, and sends no key with it — so a check
+   that answers by clicking something gets a verdict it did not choose. Both
+   verdicts are the accent's colour on a tinted background, only one of them
+   failed, and so this reported a contrast defect about one run in three and a
+   clean pass the rest of the time. A check that reaches a screen by luck is
+   worse than one that does not reach it: it looks like coverage.
+
+   The key comes back WITH the verdict — that is the design, so the browser can
+   show what the right answer was — which means one throwaway account can learn
+   it by answering once and reading the reply. After that every verdict is
+   arranged and the arrangement is confirmed against what the server said.
+
+   IT IS KEPT AS TEXT AND NOT AS A POSITION. The server shuffles each card as it
+   hands it out, so `expected` is an index into THIS draw; the same index on the
+   next account is a different answer. The text is the same card either way.
+
+   AND IT IS ARRANGED THROUGH THE INTERFACE — the ordering card is put in order
+   with the ↑ buttons, which is the route a student without a mouse takes. A
+   suite that posted the answer itself would be measuring a screen no student
+   can reach. */
+
+// Learnt once, by exercise id, because the queue holds more than one card and
+// which one comes up first is the server's business rather than this file's.
+let theKey = null;
+
+/* One card, answered, with what the server said about it. The reply carries the
+   verdict before the screen does, and this waits for the screen anyway: what is
+   measured afterwards is the state a person is looking at. */
+async function answerCard(page, arrange) {
+  if (arrange) await arrange(page);
+  const [reply] = await Promise.all([
+    page.waitForResponse((r) => r.url().includes('/answered'), { timeout: 15000 }),
+    page.locator('.ex-answer').click(),
+  ]);
+  if (!reply.ok()) throw new Error(`answering a card: ${reply.status()} ${await reply.text()}`);
+
+  const said = await reply.json();
+  const id = decodeURIComponent(new URL(reply.url()).pathname.split('/').at(-2));
+  const shown = await page.waitForSelector('.ex-verdict.v-right, .ex-verdict.v-wrong',
+    { timeout: 8000 });
+  const state = (await shown.getAttribute('class')).includes('v-right') ? 'v-right' : 'v-wrong';
+  return { id, state, expected: said.expected };
+}
+
+/* The key of the card on the screen, as text. */
+async function keyOf(page, expected) {
+  if (await page.locator('.ord-item').count()) {
+    // An ordering key already IS the items, in the order they belong in.
+    return { kind: 'ordering', right: expected };
+  }
+  const wanted = Array.isArray(expected) ? expected : [expected];
+  const right = [];
+  for (const ix of wanted) {
+    right.push((await page.locator(`.choice[data-ix="${ix}"] .choice-text`).innerText()).trim());
+  }
+  return { kind: 'choice', right };
+}
+
+/* Selection sort through the two arrows, which is what a keyboard does. Four
+   items, so nothing cleverer is worth writing — and the last line is the check
+   that this worked, because an ordering left half sorted answers wrong and
+   would read as the server disagreeing. */
+async function putInOrder(page, right) {
+  const order = () => page.$$eval('.ord-item', (li) => li.map((e) => decodeURIComponent(e.dataset.item)));
+
+  for (let slot = 0; slot < right.length; slot += 1) {
+    const here = (await order()).indexOf(right[slot]);
+    if (here < 0) throw new Error(`this card does not carry "${right[slot]}"`);
+    for (let up = here; up > slot; up -= 1) {
+      await page.locator('.ord-item').nth(up).locator('.ord-arrow[data-direction="-1"]').click();
+    }
+  }
+
+  const finished = await order();
+  if (finished.join(' ') !== right.join(' ')) {
+    throw new Error(`the list ended as ${JSON.stringify(finished)} and the key is `
+      + `${JSON.stringify(right)}`);
+  }
+}
+
+/* Arrange the card on the screen so that answering it produces `want`. */
+async function arrangeToBe(page, key, want) {
+  if (key.kind === 'ordering') {
+    await putInOrder(page, key.right);
+    if (want === 'v-wrong') {
+      /* ONE SWAP AWAY FROM RIGHT IS WRONG, and it is wrong without this file
+         having to know anything else about the card. */
+      const last = (await page.locator('.ord-item').count()) - 1;
+      await page.locator('.ord-item').nth(last).locator('.ord-arrow[data-direction="-1"]').click();
+    }
+    return;
+  }
+
+  const texts = (await page.locator('.choice .choice-text').allInnerTexts()).map((t) => t.trim());
+  const pick = texts
+    .map((text, ix) => ({ text, ix }))
+    .filter(({ text }) => key.right.includes(text) === (want === 'v-right'));
+  if (!pick.length) throw new Error(`no choice on this card can be ${want}`);
+
+  // Every right one, because a multiple-choice answer missing one is wrong;
+  // and exactly one wrong one, because that is enough to be wrong.
+  for (const { ix } of want === 'v-right' ? pick : pick.slice(0, 1)) {
+    await page.locator('.choice').nth(ix).click();
+  }
+}
+
+/* The queue, answered as drawn on an account that exists for this. Nothing is
+   measured here, so answering by luck is fine — what is kept is the reply. */
+async function learnTheDrill() {
+  const page = await open('dark', 'en');
+  await signUp(page, 'Ada Lovelace', `a11y-key-${Date.now()}@example.tld`);
+  await page.goto(`${BASE}/#/practice`, { waitUntil: 'load' });
+
+  const learnt = new Map();
+  for (;;) {
+    const there = await page.waitForSelector('.ex, .drill-done', { timeout: 8000 }).catch(() => null);
+    if (!there || await page.locator('.drill-done').count()) break;
+    await page.waitForTimeout(300);
+
+    /* SOMETHING HAS TO BE ANSWERED, and it does not matter what. A card with
+       nothing chosen is refused before it is sent — "answer before checking" —
+       and then there is no reply to learn from. An ordering card always has an
+       answer, because the order it was drawn in is one. */
+    const seen = await answerCard(page, async (p) => {
+      const choices = p.locator('.choice');
+      if (await choices.count()) await choices.first().click();
+    });
+    learnt.set(seen.id, await keyOf(page, seen.expected));
+
+    await page.locator('.drill-next').click();
+  }
+  await done(page);
+
+  if (!learnt.size) {
+    throw new Error('the drill queue was empty, so neither verdict can be reached and '
+      + 'the screen this section is about is not being measured at all');
+  }
+  return learnt;
+}
+
+/* A fresh account per verdict, and the FIRST card of its queue — which is the
+   one the key was learnt for, whichever of them the server puts first. Asking
+   the same student twice would be answering a card that has already moved the
+   schedule, and answering it a second time is what a drill does not allow. */
+async function drilled(theme, want) {
+  const page = await open(theme, 'en');
+  try {
+    await signUp(page, 'Ada Lovelace', `a11y-drill-${Date.now()}-${theme}@example.tld`);
+    const [drawn] = await Promise.all([
+      page.waitForResponse((r) => r.url().includes('/draw'), { timeout: 15000 }),
+      page.goto(`${BASE}/#/practice`, { waitUntil: 'load' }),
+    ]);
+    await page.waitForSelector('.ex', { timeout: 8000 });
+    await page.waitForTimeout(300);
+
+    const card = (await drawn.json()).exercise;
+    const key = theKey.get(card);
+    if (!key) throw new Error(`nothing was learnt about the card "${card}"`);
+
+    const seen = await answerCard(page, (p) => arrangeToBe(p, key, want));
+    if (seen.state !== want) {
+      throw new Error(`the card was arranged to be ${want} and the server called it ${seen.state}`);
+    }
+    return page;
+  } catch (e) {
+    await done(page);
+    throw e;
+  }
 }
 
 /* ---------- the second factor, RFC 6238 ----------
@@ -221,6 +422,31 @@ async function operator(theme, label) {
    this refuses a screen that is not the one it asked for. `expect` is the
    pattern — `/course/:id`, not the address — and `expect: 'not-found'` is how
    the one deliberate miss below says it means it. */
+/* axe on whatever is on the screen right now, reported the one way.
+   `check` reaches a screen by its address; the drill and the exam paper reach
+   theirs by working the interface. What they must not do is describe the same
+   failure differently, so all three end here. */
+async function measure(page, name) {
+  const result = await new AxeBuilder({ page }).withTags(STANDARD).analyze();
+  screens += 1;
+  if (!result.violations.length) return;
+
+  violations += result.violations.length;
+  console.error(`✗ ${name}`);
+  for (const v of result.violations) {
+    console.error(`    ${v.id} (${v.impact}) — ${v.help}`);
+    /* The selector and the markup, because "colour contrast" on a screen with
+       forty elements on it is a fact nobody can act on. */
+    for (const node of v.nodes.slice(0, 3)) {
+      console.error(`      ${node.target.join(' ')}`);
+      if (node.failureSummary) {
+        console.error(`        ${node.failureSummary.split('\n').join('\n        ')}`);
+      }
+    }
+    if (v.nodes.length > 3) console.error(`      … and ${v.nodes.length - 3} more`);
+  }
+}
+
 async function check(page, name, where, expect,
   { settled, act, base = BASE, region = '#content' } = {}) {
   await page.goto(base + where, { waitUntil: 'load' });
@@ -270,28 +496,15 @@ async function check(page, name, where, expect,
     }
   }
 
-  const result = await new AxeBuilder({ page }).withTags(STANDARD).analyze();
-  screens += 1;
-
-  if (!result.violations.length) return;
-
-  violations += result.violations.length;
-  console.error(`✗ ${name}`);
-  for (const v of result.violations) {
-    console.error(`    ${v.id} (${v.impact}) — ${v.help}`);
-    /* The selector and the markup, because "colour contrast" on a screen with
-       forty elements on it is a fact nobody can act on. */
-    for (const node of v.nodes.slice(0, 3)) {
-      console.error(`      ${node.target.join(' ')}`);
-      if (node.failureSummary) {
-        console.error(`        ${node.failureSummary.split('\n').join('\n        ')}`);
-      }
-    }
-    if (v.nodes.length > 3) console.error(`      … and ${v.nodes.length - 3} more`);
-  }
+  await measure(page, name);
 }
 
 try {
+  /* Before anything is measured, on an account that exists to be spent. Both
+     themes ask for both verdicts and the key is the same card either way, so
+     this is once rather than per theme. */
+  theKey = await learnTheDrill();
+
   for (const theme of ['dark', 'light']) {
     /* Signed out: what a stranger sees.
 
@@ -338,32 +551,7 @@ try {
        "page not found" — a clean screen that passes every check there is. */
     const student = await open(theme, 'en');
     const studentEmail = `a11y-${Date.now()}-${theme}@example.tld`;
-    await student.goto(`${BASE}/#/sign-in`, { waitUntil: 'load' });
-    await student.waitForSelector('#e-toggle', { timeout: 8000 });
-    await student.click('#e-toggle');
-    await student.waitForSelector('#e-name', { timeout: 8000 });
-    await student.fill('#e-name', 'Ada Lovelace');
-    await student.fill('#e-email', studentEmail);
-    await student.fill('#e-password', 'a long enough password here');
-
-    /* THE SUBMIT IS WAITED FOR, NOT SLEPT THROUGH.
-
-       This was `click` and a 1500ms pause, and the pause is what makes the
-       failure silent: the fields are `required`, so a form that did not take
-       them is blocked by the browser and never sends anything — and then every
-       screen below is measured signed OUT, under a name that says signed in.
-       The dashboard exists either way, so `expect` does not catch it.
-
-       Waiting for the response is the only thing here that can tell the two
-       apart, and it is also faster than the pause it replaces. */
-    const [signedUp] = await Promise.all([
-      student.waitForResponse((r) => r.url().endsWith('/api/v1/sign-up'), { timeout: 15000 }),
-      student.click('#form-signin button[type=submit]'),
-    ]);
-    if (!signedUp.ok()) {
-      throw new Error(`signing the student up: ${signedUp.status()} ${await signedUp.text()}`);
-    }
-    await student.waitForTimeout(400);
+    await signUp(student, 'Ada Lovelace', studentEmail);
 
     await check(student, `${theme} · the dashboard`, '/#/dashboard', '/dashboard');
     await check(student, `${theme} · certificates`, '/#/certificates', '/certificates');
@@ -401,15 +589,24 @@ try {
        what the student gave, and focus moved to "next". None of that exists on
        the screen above, and an exam never reaches this state at all — it holds
        every verdict until the paper closes. */
-    await check(student, `${theme} · a drilled answer`, '/#/practice', '/practice', {
-      settled: '.ex',
-      async act(page) {
-        const choices = page.locator('.choice');
-        if (await choices.count()) await choices.first().click();
-        await page.locator('.ex-answer').click();
-        await page.waitForSelector('.ex-verdict.v-right, .ex-verdict.v-wrong', { timeout: 8000 });
-      },
-    });
+/* AND BOTH VERDICTS, EACH ASKED FOR BY NAME. Which one comes up is not left
+       to the shuffle any more — see the drill block above — so being unable to
+       reach one is a FAILURE here rather than a state nobody noticed was
+       missing. */
+    for (const want of ['v-right', 'v-wrong']) {
+      let answered = null;
+      try {
+        answered = await drilled(theme, want);
+      } catch (e) {
+        violations += 1;
+        console.error(`✗ ${theme} · a drilled answer (${want}) — this state could not be `
+          + `reached, so it is not being measured: ${e.message}`);
+        continue;
+      }
+
+      await measure(answered, `${theme} · a drilled answer (${want})`);
+      await done(answered);
+    }
 
     /* THE EXAM PAPER, QUESTION BY QUESTION — and it is walked rather than
        glanced at, because this wizard shows ONE question at a time.
@@ -453,21 +650,7 @@ try {
         for (const text of cannot) console.error(`      ${text}`);
       }
 
-      const result = await new AxeBuilder({ page: student }).withTags(STANDARD).analyze();
-      screens += 1;
-      if (result.violations.length) {
-        violations += result.violations.length;
-        console.error(`✗ ${theme} · exam question ${q + 1} (${kind})`);
-        for (const v of result.violations) {
-          console.error(`    ${v.id} (${v.impact}) — ${v.help}`);
-          for (const node of v.nodes.slice(0, 3)) {
-            console.error(`      ${node.target.join(' ')}`);
-            if (node.failureSummary) {
-              console.error(`        ${node.failureSummary.split('\n').join('\n        ')}`);
-            }
-          }
-        }
-      }
+      await measure(student, `${theme} · exam question ${q + 1} (${kind})`);
     }
 
     await done(student);

@@ -229,17 +229,39 @@ function companion(accent, surfaces) {
 
    No paint happens in between: the attribute goes back before this function
    returns, and the browser has had no chance to lay out. */
-const SURFACES = ['--ink', '--panel'];
+/* AND ONE OF THEM IS TRANSLUCENT. `--tint-accent` is the wash behind a verdict
+   and behind anything else that is tinted with the accent's own colour; over
+   the page it composites to a surface slightly darker than the page in the
+   light theme, which is precisely where a colour that just cleared 4.5:1
+   against `--ink` lands at 4.32:1.
+
+   That is not hypothetical: axe found it, intermittently, on the drill — and
+   intermittently because the state it lives on is the one where the answer
+   happened to be right. A check that only sometimes reaches a screen is a check
+   that only sometimes holds it.
+
+   A translucent surface is composited over `--ink` before it is measured, which
+   is what the browser does to draw it. */
+const SURFACES = ['--ink', '--panel', '--tint-accent'];
 
 function parse(value) {
   const v = String(value || '').trim();
   if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) {
     return hex(v.length === 4 ? '#' + v[1] + v[1] + v[2] + v[2] + v[3] + v[3] : v);
   }
-  const parts = v.match(/\d+/g);
+  const parts = v.match(/[\d.]+/g);
   if (!parts || parts.length < 3) return null;
-  return { r: +parts[0], g: +parts[1], b: +parts[2] };
+  const out = { r: +parts[0], g: +parts[1], b: +parts[2] };
+  if (parts.length > 3) out.a = +parts[3];
+  return out;
 }
+
+// A translucent colour, as it is actually drawn: over the page.
+const over = (colour, page) => (colour.a === undefined || colour.a >= 1 ? colour : {
+  r: colour.r * colour.a + page.r * (1 - colour.a),
+  g: colour.g * colour.a + page.g * (1 - colour.a),
+  b: colour.b * colour.a + page.b * (1 - colour.a),
+});
 
 function surfacesOf(theme) {
   const root = document.documentElement;
@@ -251,7 +273,9 @@ function surfacesOf(theme) {
   if (before === undefined) delete root.dataset.theme;
   else root.dataset.theme = before;
 
-  return read.map(parse).filter(Boolean);
+  const surfaces = read.map(parse).filter(Boolean);
+  const page = surfaces[0];
+  return page ? surfaces.map((c) => over(c, page)) : surfaces;
 }
 
 /* `html[data-theme="light"]` is what the palette overrides under, so the rule
