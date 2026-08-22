@@ -69,16 +69,46 @@ type Funnel func(ctx context.Context, school uuid.UUID, since time.Time,
 // UnderstandHandler answers the aggregates. It reads and never writes, so it
 // carries no audit seam and no second rank — every staff role may look.
 type UnderstandHandler struct {
-	schools Schools
-	funnel  Funnel
+	schools   Schools
+	funnel    Funnel
+	questions Questions
 }
 
-func NewUnderstandHandler(schools Schools, funnel Funnel) *UnderstandHandler {
-	return &UnderstandHandler{schools: schools, funnel: funnel}
+func NewUnderstandHandler(schools Schools, funnel Funnel, questions Questions) *UnderstandHandler {
+	return &UnderstandHandler{schools: schools, funnel: funnel, questions: questions}
 }
 
 func (h *UnderstandHandler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/funnel", h.funnelOf)
+	mux.HandleFunc("GET /console/api/v1/schools/{id}/questions", h.questionsOf)
+}
+
+// schoolFrom resolves the id in the path, or answers the request itself.
+//
+// THE SCHOOL IS RESOLVED BEFORE ANYTHING IS COUNTED, so an id belonging to
+// nobody is a 404 rather than an empty report — a funnel of eight zeroes reads
+// as a school everybody left, and an empty item analysis reads as a school whose
+// questions are all fine.
+func (h *UnderstandHandler) schoolFrom(w http.ResponseWriter, r *http.Request) (School, bool) {
+	id, err := uuid.Parse(r.PathValue("id"))
+	if err != nil {
+		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
+		return School{}, false
+	}
+
+	all, err := h.schools.All(r.Context())
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading the schools", "error", err)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return School{}, false
+	}
+	for _, s := range all {
+		if s.ID == id {
+			return s, true
+		}
+	}
+	web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
+	return School{}, false
 }
 
 /*
@@ -110,9 +140,8 @@ type stepBody struct {
 }
 
 func (h *UnderstandHandler) funnelOf(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(r.PathValue("id"))
-	if err != nil {
-		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
+	school, ok := h.schoolFrom(w, r)
+	if !ok {
 		return
 	}
 
@@ -129,30 +158,10 @@ func (h *UnderstandHandler) funnelOf(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	since, ok := windowFrom(r)
-	if !ok {
+	since, sane := windowFrom(r)
+	if !sane {
 		web.Fail(w, http.StatusBadRequest, "not_a_window",
 			"`days` is a whole number of days, and 0 or nothing means since the beginning")
-		return
-	}
-
-	/* THE SCHOOL IS RESOLVED BEFORE IT IS COUNTED, so an id belonging to nobody
-	   is a 404 rather than a funnel of eight zeroes — which would read as a
-	   school where everybody left. */
-	all, err := h.schools.All(r.Context())
-	if err != nil {
-		web.LoggerFrom(r.Context()).Error("reading the schools", "error", err)
-		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
-		return
-	}
-	var school School
-	for _, s := range all {
-		if s.ID == id {
-			school = s
-		}
-	}
-	if school.ID == uuid.Nil {
-		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
 		return
 	}
 
@@ -211,4 +220,192 @@ func windowFrom(r *http.Request) (time.Time, bool) {
 		return time.Time{}, true
 	}
 	return time.Now().UTC().AddDate(0, 0, -days), true
+}
+
+/* What the answers say about a question, on a screen.
+
+   # THIS IS THE HALF OF PHASE 4 THAT `Done when` NAMES FIRST
+
+   "A question with a broken answer key is found by the statistics." The finding
+   works — it was proved by seeding a population with an inverted key planted in
+   it — and until now the only way to see the result was to read a cron job's
+   log or query the table by hand.
+
+   # EVERY THRESHOLD TRAVELS WITH THE NUMBER IT PRODUCED
+
+   A verdict is an opinion with a bar behind it, and the bar is in Go
+   (`analysis`'s constants) where a test holds each edge of it. A screen that
+   wrote `-0.10` into its own markup would be a second copy of a decision, and
+   the copy is the one that goes wrong: the constant moves, the screen keeps
+   saying what it used to be, and somebody reads a question as "just above the
+   line" when it is under it.
+
+   So the thresholds come back on the answer, from the same package that applied
+   them. This is the roadmap's "every threshold displayed beside the number it
+   produced", for these numbers.
+
+   # AND WHEN IT WAS COMPUTED, WHICH IS THE FAILURE NOBODY SEES
+
+   These rows are a cache of a nightly job. If it has been failing for a week,
+   every number here is a week old and looks exactly like this morning's. The
+   screen says when the rollup was made, and says so loudly when it was never
+   made at all — a school with no statistics and a job that never ran look
+   identical in the data and are different problems.
+
+   # THERE IS NO POPULATION SWITCH HERE, AND THAT IS DELIBERATE
+
+   The funnel next door has one. This does not, because it is not reading the
+   stream: it is showing what `cmd/analyse` wrote, and that job counts real
+   people only and has no flag to do otherwise (K-11) — it WITHDRAWS questions
+   from circulation, and doing that on the strength of invented students would
+   remove real questions from real courses. A switch here would be a control
+   with nothing behind it. The screen says so rather than leaving its absence to
+   be noticed.
+*/
+
+// Question is one question's statistics as this screen shows them.
+type Question struct {
+	ExerciseID string
+	Version    int
+	Type       string
+
+	Attempts int
+	Correct  int
+
+	// Difficulty is the share who got it right, 0 to 1 — high is EASY, which is
+	// what item analysis means by the word and the opposite of what it sounds
+	// like. The screen writes it out in words for that reason.
+	Difficulty float64
+
+	// Discrimination is the strong group's share correct minus the weak
+	// group's, ranked by the rest of the paper.
+	Discrimination float64
+
+	StrongGroup int
+	WeakGroup   int
+
+	Verdict       string
+	MinimumSample int
+
+	// Withdrawn is whether this question is out of circulation right now. It is
+	// not derivable from the verdict: the sweep runs nightly, so a question
+	// flagged this afternoon is flagged and still being asked, and one released
+	// by hand is out of quarantine with the verdict it was condemned on.
+	Withdrawn bool
+
+	FirstAnswer time.Time
+	LastAnswer  time.Time
+}
+
+// Thresholds are the bars `analysis` applied, carried so the screen never
+// writes one of its own.
+type Thresholds struct {
+	MinimumSample int
+	GroupShare    float64
+	InvertedBelow float64
+	WeakBelow     float64
+	TooEasyAbove  float64
+	TooHardBelow  float64
+}
+
+// Rollup is one school's item analysis, and when it was made.
+type Rollup struct {
+	Questions  []Question
+	Thresholds Thresholds
+
+	// ComputedAt is when the job last wrote this school's rows, and `Computed`
+	// is whether it ever has. A zero time and "never run" must not read alike.
+	ComputedAt time.Time
+	Computed   bool
+}
+
+// Questions is what this package may not import: `analysis` owns the rollup and
+// the quarantine.
+type Questions func(ctx context.Context, school uuid.UUID) (Rollup, error)
+
+type questionBody struct {
+	ExerciseID     string  `json:"exercise_id"`
+	Version        int     `json:"version"`
+	Type           string  `json:"type"`
+	Attempts       int     `json:"attempts"`
+	Correct        int     `json:"correct"`
+	Difficulty     float64 `json:"difficulty"`
+	Discrimination float64 `json:"discrimination"`
+	StrongGroup    int     `json:"strong_group"`
+	WeakGroup      int     `json:"weak_group"`
+	Verdict        string  `json:"verdict"`
+	MinimumSample  int     `json:"minimum_sample"`
+	Withdrawn      bool    `json:"withdrawn"`
+	FirstAnswer    string  `json:"first_answer,omitempty"`
+	LastAnswer     string  `json:"last_answer,omitempty"`
+}
+
+func (h *UnderstandHandler) questionsOf(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.schoolFrom(w, r)
+	if !ok {
+		return
+	}
+
+	rollup, err := h.questions(r.Context(), school.ID)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading the item analysis",
+			"error", err, "school", school.Slug)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return
+	}
+
+	out := make([]questionBody, 0, len(rollup.Questions))
+	for _, q := range rollup.Questions {
+		out = append(out, questionBody{
+			ExerciseID: q.ExerciseID, Version: q.Version, Type: q.Type,
+			Attempts: q.Attempts, Correct: q.Correct,
+			Difficulty: q.Difficulty, Discrimination: q.Discrimination,
+			StrongGroup: q.StrongGroup, WeakGroup: q.WeakGroup,
+			Verdict: q.Verdict, MinimumSample: q.MinimumSample, Withdrawn: q.Withdrawn,
+			FirstAnswer: when(q.FirstAnswer), LastAnswer: when(q.LastAnswer),
+		})
+	}
+
+	web.JSON(w, http.StatusOK, map[string]any{
+		"school": schoolBody{
+			ID: school.ID.String(), Slug: school.Slug, Name: school.Name, Accent: school.Accent,
+		},
+		"questions": out,
+
+		// THE BARS, FROM THE PACKAGE THAT APPLIED THEM. A screen writing these
+		// numbers itself would be a second copy of a decision, and the copy is
+		// the one that goes wrong when the constant moves.
+		"thresholds": map[string]any{
+			"minimum_sample": rollup.Thresholds.MinimumSample,
+			"group_share":    rollup.Thresholds.GroupShare,
+			"inverted_below": rollup.Thresholds.InvertedBelow,
+			"weak_below":     rollup.Thresholds.WeakBelow,
+			"too_easy_above": rollup.Thresholds.TooEasyAbove,
+			"too_hard_below": rollup.Thresholds.TooHardBelow,
+		},
+
+		// WHEN, AND WHETHER EVER. A cache of a nightly job that has been failing
+		// looks exactly like a cache that is current.
+		"computed":    rollup.Computed,
+		"computed_at": when(rollup.ComputedAt),
+
+		// THERE IS NO SWITCH ON THIS SCREEN, said rather than left to be
+		// noticed — the funnel beside it has one, and an operator who has seen
+		// that would reasonably look for this.
+		"counting": "real",
+		"why_no_switch": "This is what the nightly job wrote, and that job counts real people " +
+			"only — it takes questions out of circulation, which must never happen on the " +
+			"strength of students who were invented.",
+
+		"scope": "one school",
+	})
+}
+
+// when is a time as the API says it, and the empty string for a zero — which is
+// "there is none" rather than the first of January in year one.
+func when(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+	return t.UTC().Format(time.RFC3339)
 }

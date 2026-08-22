@@ -29,6 +29,10 @@ type funnelFake struct {
 	askedFor string
 	askedAt  time.Time
 	fail     bool
+
+	// The item analysis this fake answers with, and whether it was asked at all.
+	rollup console.Rollup
+	asked  bool
 }
 
 func (f *funnelFake) handler() http.Handler {
@@ -48,6 +52,13 @@ func (f *funnelFake) handler() http.Handler {
 				{Label: "Arrived", People: 12, Measured: true},
 				{Label: "Subscribed", Measured: false, Why: "there is no gateway yet"},
 			}, nil
+		},
+		func(context.Context, uuid.UUID) (console.Rollup, error) {
+			f.asked = true
+			if f.fail {
+				return console.Rollup{}, fmt.Errorf("the rollup is not there")
+			}
+			return f.rollup, nil
 		},
 	).Routes(mux)
 	return mux
@@ -215,5 +226,181 @@ func TestAnUnmeasuredStepStaysUnmeasuredInTheAnswer(t *testing.T) {
 	}
 	if last["why"] == nil || last["why"] == "" {
 		t.Error("an unmeasured step came back with nothing saying what is missing")
+	}
+}
+
+/* ---------- what the answers say about a question ---------- */
+
+func askQuestions(t *testing.T, f *funnelFake, school uuid.UUID) (int, map[string]any) {
+	t.Helper()
+	r := httptest.NewRequest(http.MethodGet,
+		"/console/api/v1/schools/"+school.String()+"/questions", nil)
+	w := httptest.NewRecorder()
+	f.handler().ServeHTTP(w, r)
+
+	var body map[string]any
+	if err := json.Unmarshal(w.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v — %s", err, w.Body.String())
+	}
+	return w.Code, body
+}
+
+func aRollup() console.Rollup {
+	return console.Rollup{
+		Questions: []console.Question{{
+			ExerciseID: "ex-6yyzbgfd", Version: 1, Type: "choice",
+			Attempts: 41, Correct: 19, Difficulty: 0.46, Discrimination: -0.32,
+			StrongGroup: 11, WeakGroup: 11, Verdict: "inverted", MinimumSample: 30,
+			Withdrawn:   true,
+			FirstAnswer: time.Date(2026, 3, 1, 9, 0, 0, 0, time.UTC),
+			LastAnswer:  time.Date(2026, 8, 1, 9, 0, 0, 0, time.UTC),
+		}},
+		Thresholds: console.Thresholds{
+			MinimumSample: 30, GroupShare: 0.27, InvertedBelow: -0.10,
+			WeakBelow: 0.15, TooEasyAbove: 0.95, TooHardBelow: 0.05,
+		},
+		ComputedAt: time.Date(2026, 8, 22, 3, 0, 0, 0, time.UTC),
+		Computed:   true,
+	}
+}
+
+// THE BARS COME FROM THE CODE THAT APPLIED THEM, all six of them.
+//
+// This is the roadmap's "every threshold displayed beside the number it
+// produced". A screen writing `-0.10` into its own markup would be a second copy
+// of a decision — and the copy is the one that goes wrong, because the constant
+// moves and the screen keeps saying what it used to be. The only way it cannot
+// is if the screen never holds one.
+func TestEveryThresholdComesBackWithTheNumbers(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, rollup: aRollup()}
+
+	code, body := askQuestions(t, f, school.ID)
+	if code != http.StatusOK {
+		t.Fatalf("the item analysis answered %d: %v", code, body)
+	}
+
+	bars, ok := body["thresholds"].(map[string]any)
+	if !ok {
+		t.Fatalf("no thresholds came back: %v", body["thresholds"])
+	}
+	for name, want := range map[string]float64{
+		"minimum_sample": 30, "group_share": 0.27, "inverted_below": -0.10,
+		"weak_below": 0.15, "too_easy_above": 0.95, "too_hard_below": 0.05,
+	} {
+		got, present := bars[name].(float64)
+		if !present {
+			t.Errorf("the answer carries no %q, so the screen would have to know it", name)
+			continue
+		}
+		if got != want {
+			t.Errorf("%q came back as %v, want %v", name, got, want)
+		}
+	}
+}
+
+// WHETHER A QUESTION IS OUT OF CIRCULATION IS READ, NOT INFERRED.
+//
+// The sweep runs nightly, so a question flagged this afternoon is flagged AND
+// still being asked; one released by hand is in circulation carrying the verdict
+// it was condemned on. A screen deriving one from the other would be confidently
+// wrong in both directions, so the field survives to the browser on its own.
+func TestWhetherAQuestionIsWithdrawnTravelsOnItsOwn(t *testing.T) {
+	school := oneSchool()
+
+	rollup := aRollup()
+	rollup.Questions = append(rollup.Questions, console.Question{
+		ExerciseID: "ex-still-asked", Version: 1, Type: "choice",
+		Attempts: 44, Correct: 20, Discrimination: -0.31,
+		StrongGroup: 12, WeakGroup: 12, Verdict: "inverted", MinimumSample: 30,
+		Withdrawn: false, // flagged tonight, swept tomorrow
+	})
+	f := &funnelFake{schools: []console.School{school}, rollup: rollup}
+
+	code, body := askQuestions(t, f, school.ID)
+	if code != http.StatusOK {
+		t.Fatalf("answered %d", code)
+	}
+
+	rows, _ := body["questions"].([]any)
+	if len(rows) != 2 {
+		t.Fatalf("two questions went in and %d came out", len(rows))
+	}
+	first, _ := rows[0].(map[string]any)
+	second, _ := rows[1].(map[string]any)
+	if first["withdrawn"] != true {
+		t.Error("a withdrawn question came back as still in circulation")
+	}
+	if second["withdrawn"] != false {
+		t.Error("a question flagged and not yet swept came back as withdrawn — " +
+			"the two are a night apart and the screen has to be able to say which")
+	}
+	if first["verdict"] != second["verdict"] {
+		t.Error("the fixture is wrong: both are inverted, and the point is that the " +
+			"verdict does not decide the quarantine")
+	}
+}
+
+// A JOB THAT NEVER RAN AND A SCHOOL WITH NO QUESTIONS LOOK IDENTICAL IN THE DATA
+// AND ARE DIFFERENT PROBLEMS. The first is broken machinery; the second is a
+// school nobody has answered anything in.
+func TestNeverComputedIsNotTheSameAsNothingToSay(t *testing.T) {
+	school := oneSchool()
+
+	// Never run: no rows, and nothing to date them by.
+	f := &funnelFake{schools: []console.School{school}}
+	code, body := askQuestions(t, f, school.ID)
+	if code != http.StatusOK {
+		t.Fatalf("answered %d", code)
+	}
+	if body["computed"] != false {
+		t.Errorf("a rollup that was never made says computed=%v", body["computed"])
+	}
+	if body["computed_at"] != "" && body["computed_at"] != nil {
+		t.Errorf("a rollup that was never made carries a date: %v", body["computed_at"])
+	}
+
+	// Run, and it found nothing to say — which is an answer.
+	f = &funnelFake{schools: []console.School{school}, rollup: console.Rollup{
+		ComputedAt: time.Date(2026, 8, 22, 3, 0, 0, 0, time.UTC), Computed: true,
+	}}
+	_, body = askQuestions(t, f, school.ID)
+	if body["computed"] != true {
+		t.Error("a run that found nothing came back as never having run")
+	}
+	if body["computed_at"] == "" || body["computed_at"] == nil {
+		t.Error("a run that found nothing came back with no date, so a stale screen " +
+			"would be indistinguishable from a fresh one")
+	}
+}
+
+// THE ABSENCE OF THE SWITCH IS SAID RATHER THAN LEFT TO BE NOTICED. The funnel
+// beside this screen has one; an operator who has seen it would reasonably look
+// for it here, and the reason there is none is a rule (K-11) rather than an
+// omission.
+func TestTheItemAnalysisSaysItIsRealPeopleAndWhyThereIsNoChoice(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, rollup: aRollup()}
+
+	_, body := askQuestions(t, f, school.ID)
+	if body["counting"] != "real" {
+		t.Errorf("the item analysis says it counted %v", body["counting"])
+	}
+	if why, _ := body["why_no_switch"].(string); why == "" {
+		t.Error("there is no switch on this screen and nothing saying why not")
+	}
+}
+
+// An id belonging to nobody is a 404 rather than a school whose questions are
+// all fine.
+func TestQuestionsOfASchoolThatDoesNotExist(t *testing.T) {
+	f := &funnelFake{schools: []console.School{oneSchool()}, rollup: aRollup()}
+
+	code, _ := askQuestions(t, f, uuid.New())
+	if code != http.StatusNotFound {
+		t.Errorf("a school nobody has answered %d", code)
+	}
+	if f.asked {
+		t.Error("the rollup was read for a school that does not exist")
 	}
 }
