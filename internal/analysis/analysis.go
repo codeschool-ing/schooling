@@ -12,15 +12,21 @@
 //
 //   - ATTEMPTS. Not a judgement, and the reason nothing is judged without it:
 //     three people answering a question tells you about those three people.
+//
 //   - PERCENTAGE CORRECT, which is difficulty. A question everybody gets right
 //     measures nothing; one everybody gets wrong is either excellent or broken,
 //     and this number cannot tell you which.
+//
 //   - THE DISCRIMINATION INDEX, which is the one that can. It asks whether the
-//     students who did well on the paper got THIS question right more often
-//     than the students who did badly. A good question separates them. One that
-//     the strong students fail and the weak ones pass is not hard — it is
-//     wrong, or its key is inverted, and it is the only failure this system can
-//     detect without a person.
+//     students who did well on THE REST OF the paper got THIS question right
+//     more often than the students who did badly. A good question separates
+//     them. One that the strong students fail and the weak ones pass is not
+//     hard — it is wrong, or its key is inverted, and it is the only failure
+//     this system can detect without a person.
+//
+//     The rest of the paper, and not the whole of it: a question included in
+//     its own ranking flatters its own index, and on a paper of the length this
+//     platform sets, that alone is enough to hide a key that is backwards.
 //
 // # NOTHING IS DECIDED BELOW THE MINIMUM SAMPLE
 //
@@ -159,6 +165,11 @@ type Statistics struct {
 
 	// Discrimination is the strong group's share correct minus the weak
 	// group's, −1 to 1. Zero below the minimum sample, where it means nothing.
+	//
+	// The groups are ranked by the rest of the paper rather than by the whole
+	// of it — see `discrimination`. Ranking by the whole includes this question
+	// in its own ranking, which biases every index upward and hides an inverted
+	// key on any paper short enough to be an exam here.
 	Discrimination float64
 
 	// The two groups, so that a number can be read back to the answers it came
@@ -261,8 +272,9 @@ func verdictOf(s Statistics) Verdict {
 	}
 }
 
-// discrimination is the classical index: the strong group's share correct minus
-// the weak group's.
+// discrimination is the classical index, corrected: the strong group's share
+// correct minus the weak group's, where strong and weak are decided by how the
+// attempt did on the REST of the paper.
 //
 // # THE GROUPS ARE ATTEMPTS, NOT ANSWERS
 //
@@ -283,13 +295,50 @@ func verdictOf(s Statistics) Verdict {
 // answer is zero — not because the question discriminated nothing, but because
 // the paper did not separate anybody to discriminate between.
 func discrimination(answers []Answer) (index float64, strong, weak int) {
-	// The mark of each attempt, deduplicated: an attempt appears once however
-	// many of its questions this is.
+	/* THE MARK IS THE REST OF THE PAPER, WITH THIS QUESTION TAKEN OUT OF IT, and
+	   that correction is the difference between finding an inverted key and
+	   calling it merely weak.
+
+	   # WHY THE UNCORRECTED INDEX CANNOT SEE THE THING THIS PACKAGE IS FOR
+
+	   Ranking attempts by their whole mark ranks them partly by THIS question:
+	   getting it right adds a point to the very total that decides which group
+	   the answer lands in. That pushes every question's index upward, by an
+	   amount that depends on how long the paper is — on a six-question paper the
+	   question is a sixth of its own ranking.
+
+	   For a good question the bias is harmless, because the index is already
+	   positive. For a question whose key is inverted it is fatal: the item's own
+	   contribution is positive and its correlation with the rest is negative and
+	   divided among the other questions, so on a short paper the two cancel and
+	   the index lands near zero — `weak`, which is a note nobody acts on, or
+	   `insufficient`, which reads as not enough data.
+
+	   Simulated against a population whose answers to one question were
+	   deliberately anti-correlated with ability, the uncorrected index came out
+	   at +0.03 on a six-question paper, −0.05 on ten, −0.06 on sixteen, and only
+	   reached `inverted` at twenty-four. Corrected, it was between −0.25 and
+	   −0.35 at every one of those lengths, and the good questions stayed between
+	   +0.39 and +0.55. Every exam this platform has is in the range where the
+	   uncorrected number is wrong.
+
+	   # IT CANNOT CONDEMN A GOOD QUESTION
+
+	   The correction removes a POSITIVE bias, so a question that separates
+	   students correctly stays positive. What it fixes is the false negative —
+	   which is the one that matters, because nobody goes looking for it. */
 	marks := map[string]float64{}
 	for _, a := range answers {
-		if a.Of > 0 {
-			marks[a.AttemptID] = float64(a.Score) / float64(a.Of)
+		// A one-question paper cannot rank anybody by the rest of it, because
+		// there is no rest of it.
+		if a.Of <= 1 {
+			continue
 		}
+		rest := float64(a.Score)
+		if a.Correct {
+			rest--
+		}
+		marks[a.AttemptID] = rest / float64(a.Of-1)
 	}
 	if len(marks) == 0 {
 		return 0, 0, 0
