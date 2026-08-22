@@ -36,6 +36,17 @@
    If the screen rebuilt in between, the whole thing is done again on the form
    that replaced it, up to a few times.
 
+   THE WHOLE ATTEMPT, and that took two goes to get right. The first version
+   retried only the values and left the waits above them throwing on their own,
+   which is exactly where the next CI run failed: `#e-name` never appeared,
+   because the screen had been rebuilt back into sign-in mode between the toggle
+   being pressed and the field being waited for. Half a race is not a race that
+   has been won.
+
+   The boot's redraw is also waited out at the top rather than raced through:
+   it follows the last of the requests the interface makes on the way up, so
+   waiting for the network to go quiet is waiting for it.
+
    And the response is checked for WHICH endpoint answered. If a sign-in comes
    back where a sign-up was asked for, that is said in one line instead of
    arriving as a timeout that names none of its causes.
@@ -49,40 +60,76 @@ export async function signUpThroughTheForm(page, base, { name, email,
   await page.goto(`${base}/#/sign-in`, { waitUntil: 'load' });
   await page.waitForSelector('#content[data-screen="/sign-in"]', { timeout: 10000 });
 
-  for (let go = 1; ; go += 1) {
-    await page.waitForSelector('#e-toggle', { timeout: 8000 });
+  /* THE BOOT'S OWN REDRAW, WAITED OUT RATHER THAN RACED. The interface fetches
+     the school, the tracks, the courses, the session and the lessons on the way
+     up, and the language is applied when they land — which calls the router
+     again and replaces the screen. Waiting for the network to go quiet is
+     waiting for the last of those, which is when the redraw happens.
 
-    // Already in register mode is the ordinary case on a second pass: toggling
-    // again would take it back to signing in.
-    if (!(await page.locator('#e-name').count())) {
-      await page.click('#e-toggle');
-      await page.waitForSelector('#e-name', { timeout: 8000 });
+     `networkidle` is a blunt instrument and Playwright says so. It is the right
+     one here: nothing on this screen polls, so quiet means finished, and the
+     loop below still holds the answer if it is wrong. */
+  await page.waitForLoadState('networkidle').catch(() => {});
+
+  /* AND EVERY STEP OF IT CAN LOSE THE RACE, so the whole attempt is one thing
+     that either holds or is done again.
+
+     The first version of this retried only the values, which left the two
+     waits above it throwing on their own — and that is exactly where CI failed
+     next: `#e-name` never appeared, because the screen had been rebuilt back
+     into sign-in mode between the toggle being pressed and the field being
+     waited for. Half a race is not a race that has been won. */
+  let ready = false;
+  let last = 'it never got that far';
+
+  for (let go = 1; go <= tries && !ready; go += 1) {
+    try {
+      await page.waitForSelector('#e-toggle', { timeout: 8000 });
+
+      // Already in register mode is the ordinary case on a second pass:
+      // toggling again would take it back to signing in.
+      if (!(await page.locator('#e-name').count())) {
+        await page.click('#e-toggle');
+        await page.waitForSelector('#e-name', { timeout: 4000 });
+      }
+
+      await page.fill('#e-name', name);
+      await page.fill('#e-email', email);
+      await page.fill('#e-password', password);
+
+      /* THE PAUSE IS A WINDOW FOR A REBUILD TO HAPPEN IN, not a hope that it
+         has: what settles this is the read below, and the wait only decides how
+         long the read has to become wrong. */
+      await page.waitForTimeout(200);
+
+      ready = await page.evaluate(([n, a]) => {
+        const named = document.querySelector('#e-name');
+        const address = document.querySelector('#e-email');
+        const secret = document.querySelector('#e-password');
+        return Boolean(named && named.value === n
+          && address && address.value === a
+          && secret && secret.value);
+      }, [name, email]);
+
+      if (!ready) last = 'the fields were empty or the register mode had gone';
+    } catch (e) {
+      last = e.message.split('\n')[0];
     }
+  }
 
-    await page.fill('#e-name', name);
-    await page.fill('#e-email', email);
-    await page.fill('#e-password', password);
-
-    /* THE PAUSE IS A WINDOW FOR THE REBUILD TO HAPPEN IN, not a hope that it
-       has: what settles this is the read below, and the wait only decides how
-       long the read has to become wrong. */
-    await page.waitForTimeout(200);
-
-    const held = await page.evaluate(([n, a]) => {
-      const named = document.querySelector('#e-name');
-      const address = document.querySelector('#e-email');
-      const secret = document.querySelector('#e-password');
-      return Boolean(named && named.value === n
-        && address && address.value === a
-        && secret && secret.value);
-    }, [name, email]);
-
-    if (held) break;
-    if (go >= tries) {
-      throw new Error(`the sign-in screen kept being rebuilt under the form: after ${tries} `
-        + 'attempts the fields were empty or the register mode had gone. Submitting now would '
-        + 'send a sign-in for somebody who does not exist yet.');
-    }
+  if (!ready) {
+    const seen = await page.evaluate(() => {
+      const form = document.querySelector('#form-signin');
+      return {
+        screen: document.querySelector('#content')?.dataset.screen || 'none',
+        form: form ? [...form.querySelectorAll('input,button')].map((e) => e.id || e.type).join(' ')
+          : 'no form on the screen',
+      };
+    }).catch(() => null);
+    throw new Error(`the sign-in screen could not be held in register mode over ${tries} `
+      + `attempts: ${last}. The screen is "${seen?.screen}" and the form holds `
+      + `[${seen?.form}]. Submitting now would send a sign-in for somebody who does not `
+      + 'exist yet.');
   }
 
   const [answered] = await Promise.all([
