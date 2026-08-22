@@ -133,6 +133,27 @@ type Event struct {
 	// per event type is how an event stream stops being written to.
 	Payload any
 
+	// At is when it happened, and the zero value means now.
+	//
+	// # ONLY A SEEDER SETS THIS, AND A TEST SAYS SO
+	//
+	// Everything else emits as it happens, so the column's default is the truth
+	// and an argument for it would only ever be a chance to disagree with the
+	// clock. What needs it is the seeded population (K-09): a cohort screen
+	// cannot be built, and a funnel cannot be read, against a history that all
+	// happened this afternoon — abandonment, returning after a month and a
+	// refund three weeks after a payment are shapes in TIME, and a seeder that
+	// wrote them at `now()` would produce a stream where every one of them is a
+	// straight line.
+	//
+	// The hazard is obvious and is the reason for the test: a field that lets a
+	// caller say when something happened is a field that lets a caller be wrong
+	// about it, and an event stream nobody can trust the clock of answers every
+	// question with a number that looks fine. So `cmd/seed` is the only package
+	// that may set it, held by a source scan in `internal/architecture_test.go`
+	// rather than by a convention.
+	At time.Time
+
 	RequestID string
 }
 
@@ -164,15 +185,23 @@ func (s *Store) Emit(ctx context.Context, e Event) error {
 		}
 	}
 
+	// `coalesce($12, now())` rather than two statements: the column's default
+	// stays the answer for every caller that does not set `At`, and there is one
+	// INSERT to keep correct rather than two that drift apart.
+	var at *time.Time
+	if !e.At.IsZero() {
+		at = &e.At
+	}
+
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO events
 			(name, visitor_id, account_id, tenant_id, school_slug, plan, country, locale,
-			 synthetic, payload, request_id)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+			 synthetic, payload, request_id, occurred_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, coalesce($12, now()))
 	`, e.Name, e.VisitorID, e.AccountID,
 		e.Dimensions.tenantID, e.Dimensions.schoolSlug,
 		e.Dimensions.plan, e.Dimensions.country, e.Dimensions.locale,
-		e.Dimensions.synthetic(), payload, e.RequestID)
+		e.Dimensions.synthetic(), payload, e.RequestID, at)
 	if err != nil {
 		return fmt.Errorf("event %q: writing it: %w", e.Name, err)
 	}
@@ -180,6 +209,61 @@ func (s *Store) Emit(ctx context.Context, e Event) error {
 }
 
 /* ---------- reading it back ---------- */
+
+// Counting says which population a read counts.
+//
+// EVERY READ OF THIS STREAM TAKES ONE, AND THE DEFAULT IS THE SAFE DIRECTION.
+// Both reads used to write `AND NOT synthetic` into the SQL, which was right and
+// was also the whole opinion: there was no way to ask the other question, so the
+// seeded population existed and nothing could look at it. A seeder whose history
+// nothing can read is a seeder that proves nothing.
+//
+// So the filter is a parameter now, and it is a word rather than a boolean for
+// the reason `Population` is: `ItemAnswers(ctx, school, since, true)` is a call
+// site nobody can read, and the one thing worse than forgetting this argument is
+// passing the wrong value for it silently.
+//
+// # THE JOB THAT ACTS STAYS ON `Real`, AND THAT IS NOT A DEFAULT — IT IS A RULE
+//
+// `cmd/analyse` does not only report: a question the strong students fail goes
+// out of circulation. Pointed at seeded answers it would quarantine REAL
+// questions out of REAL courses on the strength of a population that was
+// invented, which is the exact damage K-11 exists to prevent. What may read the
+// seeded population is something that REPORTS — a console screen that says on
+// its face that it is doing so, and the seeder's own test.
+type Counting string
+
+const (
+	// CountingReal is people who came here on their own. The default, and what
+	// anything that acts on the answer must use.
+	CountingReal Counting = "real"
+
+	// CountingSeeded is the seeded population alone. It is what a seeder checks
+	// its own output with — "did the history I wrote come out the shape I wrote
+	// it" is a question about the seeded rows and nothing else.
+	CountingSeeded Counting = "seeded"
+
+	// CountingEverybody is both, for a screen that is showing a demonstration
+	// and says so. It is never a job's choice.
+	CountingEverybody Counting = "everybody"
+)
+
+// counts is the predicate, and anything it does not recognise is `real`.
+//
+// The unrecognised value falls to the strictest answer rather than the widest,
+// which is the same direction as an unrecognised plan opening no door: a typo
+// here would otherwise quietly fold a seeded population into a report about
+// people.
+func (c Counting) counts() string {
+	switch c {
+	case CountingSeeded:
+		return "synthetic"
+	case CountingEverybody:
+		return "TRUE"
+	default:
+		return "NOT synthetic"
+	}
+}
 
 // ItemAnswered is the name of the event this module reads back for item
 // analysis. It is a constant here and not a string in two places, because the
@@ -206,12 +290,18 @@ type ItemAnswer struct {
 // ItemAnswers reads every answer to an exam question in one school since a
 // moment.
 //
-// # SYNTHETIC STUDENTS ARE LEFT OUT, AND THAT ONE IS NOT A PREFERENCE
+// # SYNTHETIC STUDENTS ARE LEFT OUT UNLESS THEY ARE ASKED FOR, AND THAT ONE IS
+// NOT A PREFERENCE
 //
-// A seeded student answers at random. Counted into item analysis they would
-// drag every question towards no discrimination at all, and the questions they
-// happened to get backwards would be quarantined — real questions, removed from
-// real courses, because of a population that was invented to test a screen.
+// A seeded student answers to a model rather than because they know the
+// material. Counted into item analysis they would drag every question towards
+// whatever the model does, and the questions they happened to get backwards
+// would be quarantined — real questions, removed from real courses, because of
+// a population that was invented to test a screen.
+//
+// `CountingReal` is the default and is what anything that ACTS must pass. The
+// other two exist so that a screen which says it is showing a demonstration, and
+// the seeder's own test, can look at what was seeded.
 //
 // # WHY THIS IS HERE AND NOT IN THE MODULE THAT INTERPRETS IT
 //
@@ -228,7 +318,14 @@ type ItemAnswer struct {
 // package, and then two places would have an opinion about what a strong
 // student is. The volume is one row per question per exam anybody sits, and the
 // caller is a job rather than a screen.
-func (s *Store) ItemAnswers(ctx context.Context, tenantID uuid.UUID, since time.Time) ([]ItemAnswer, error) {
+func (s *Store) ItemAnswers(ctx context.Context, tenantID uuid.UUID, since time.Time,
+	who Counting) ([]ItemAnswer, error) {
+
+	/* THE ONE THING FORMATTED INTO THE SQL IS A CLOSED SET. `counts` answers one
+	   of three constants written in this file and falls back to the strictest,
+	   so there is no value a caller can hand in that reaches the statement. A
+	   parameter would have been better and is not available: this is a column
+	   predicate rather than a value. */
 	rows, err := s.pool.Query(ctx, `
 		SELECT payload->>'exercise',
 		       (payload->>'version')::int,
@@ -240,7 +337,7 @@ func (s *Store) ItemAnswers(ctx context.Context, tenantID uuid.UUID, since time.
 		       occurred_at
 		FROM events
 		WHERE name = $1 AND tenant_id = $2 AND occurred_at >= $3
-		  AND NOT synthetic
+		  AND `+who.counts()+`
 		  AND payload ? 'exercise' AND payload ? 'version' AND payload ? 'correct'
 		ORDER BY occurred_at
 	`, ItemAnswered, tenantID, since)
@@ -293,9 +390,10 @@ type Reach struct {
 }
 
 // Reached answers, for each named step, which identities reached it in one
-// school since a moment. Synthetic students are excluded (K-11): they exist so
-// a cohort screen can be built before there is a population, and a funnel that
-// counted them would be a funnel about the seeder.
+// school since a moment. Synthetic students are excluded unless they are asked
+// for (K-11): they exist so a cohort screen can be built before there is a
+// population, and a funnel that counted them without saying so would be a funnel
+// about the seeder.
 //
 // # BOTH IDENTITIES COME BACK, AND NEITHER IS RESOLVED HERE
 //
@@ -311,17 +409,18 @@ type Reach struct {
 // given the names and counts them, which is the same split as everywhere else
 // here: the stream reports and something else interprets.
 func (s *Store) Reached(ctx context.Context, tenantID uuid.UUID,
-	names []string, since time.Time) ([]Reach, error) {
+	names []string, since time.Time, who Counting) ([]Reach, error) {
 
 	if len(names) == 0 {
 		return nil, nil
 	}
 
+	// See `ItemAnswers` for why this one predicate is formatted in.
 	rows, err := s.pool.Query(ctx, `
 		SELECT DISTINCT name, visitor_id, account_id
 		FROM events
 		WHERE name = ANY($1) AND tenant_id = $2 AND occurred_at >= $3
-		  AND NOT synthetic
+		  AND `+who.counts()+`
 	`, names, tenantID, since)
 	if err != nil {
 		return nil, fmt.Errorf("event: reading who reached each step: %w", err)

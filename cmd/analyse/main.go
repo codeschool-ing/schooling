@@ -92,9 +92,17 @@ func run(log *slog.Logger) error {
 	// hands rows over as they are; `analysis` decides what they mean and never
 	// touches that table. Each of these closures is one of them talking to the
 	// other in a shape the other defined (X-02).
+	//
+	// `CountingReal` IS NOT A DEFAULT HERE, IT IS A RULE, and there is
+	// deliberately no flag to change it. This job does not only report: a
+	// question the strong students fail goes out of circulation at the end of
+	// it. Run over the seeded population it would quarantine real questions out
+	// of real courses on the strength of students who were invented — which is
+	// the exact damage K-11 names. What may look at the seeded history is
+	// something that reports and says so, which this is not.
 	items := analysis.NewStore(pool,
 		func(ctx context.Context, school uuid.UUID, since time.Time) ([]analysis.Answer, error) {
-			answers, err := events.ItemAnswers(ctx, school, since)
+			answers, err := events.ItemAnswers(ctx, school, since, event.CountingReal)
 			if err != nil {
 				return nil, err
 			}
@@ -118,7 +126,7 @@ func run(log *slog.Logger) error {
 			func(ctx context.Context, school uuid.UUID, names []string,
 				since time.Time) ([]analysis.Reach, error) {
 
-				reaches, err := events.Reached(ctx, school, names, since)
+				reaches, err := events.Reached(ctx, school, names, since, event.CountingReal)
 				if err != nil {
 					return nil, err
 				}
