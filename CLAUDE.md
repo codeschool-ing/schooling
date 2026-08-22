@@ -1123,7 +1123,11 @@ psql "$SCHOOLING_DATABASE_URL" -v slug=graphtest -v host=code.example.tld \
   -f tools/graph-test/fixture.sql        # it takes its school as a parameter
 go run ./cmd/api &
 node tools/graph-test/graph-test.mjs    # no line through a card, six window sizes
-node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes
+node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes —
+                                        # the console too, on its own host. It
+                                        # grants itself an operator through
+                                        # `cmd/staff`, so this one needs the
+                                        # database as well as the server.
 
 go run ./tools/bundle -host code.example.tld -out bundle.html
 node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built

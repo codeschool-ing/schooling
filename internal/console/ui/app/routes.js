@@ -21,7 +21,18 @@ export function route(pattern, load) {
     names.push(n);
     return '([^/]+)';
   }) + '$');
-  routes.push({ re, names, load });
+  /* THE PATTERN IS KEPT, and it is the one line here `console-frontend` does
+     not have. A screen that was never drawn is the easiest screen in the world
+     to pass a check: the router answers an address it does not know with a
+     short, tidy, perfectly accessible "no such screen", so a suite asking for
+     the wrong address measures that and reports it clean.
+
+     The study interface learned this expensively — two routes changed shape,
+     its accessibility pass kept asking for the old ones, and the lesson screen
+     and the exam paper went unmeasured for weeks with two real contrast defects
+     on them. So the shell stamps what it MATCHED onto the stage, and a suite
+     asks for a pattern rather than for an address. */
+  routes.push({ re, names, load, pattern });
 }
 
 /* GOING WHERE YOU ALREADY ARE STILL RENDERS. Assigning the hash it already has
