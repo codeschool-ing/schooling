@@ -55,6 +55,13 @@ entries had been read back and checked for what they must not contain. Its last 
 found by looking at a screenshot and by nothing else — a stylesheet asking for a typeface the page
 never linked, and a table that said "18 table".*
 
+*Its other half is met since: the `Done when` also asks that the first administrative action show
+up in the audit with a name against it. The first one a released deployment wrote — the platform's
+own first role, granted through `cmd/staff`, which is the only door that exists before there is an
+operator to open the console with — has been read back on the History screen against the live
+database. The condition asked for an action, a name and somewhere to see it, and all three are
+there.*
+
 *What is left is the phase's own `Done when`, which asks for **two** schools answering over TLS
 and has one. That is not an oversight in the list: a single school with a `Host` check is
 indistinguishable from an application that is not multi-tenant at all, and the second school is
@@ -74,7 +81,7 @@ audit with a name against it.*
 
 - [x] Events carry their dimensions denormalised — plan, school, country, locale, copied at emission
 - [x] `practice_review` exists and is append-only, before any practice screen does
-- [x] Every administrative write records the actor — the audit path refuses an entry without one, and it is the only path there is
+- [x] Every administrative write records the actor — the audit path refuses an entry without one, and it is the only path there is. **And the read side is a screen now**, which is what the phase's `Done when` asks to see: `Govern → History`, newest first, with one entry opened on its own address. It answers exactly three questions — everything, one actor's entries, everything done to one subject — and **refuses the fourth by name**: a free-text search, a date range and an action filter come back saying there is no index behind them rather than reading the whole table (K-21). Paging is a keyset with an `(occurred_at, id)` tiebreaker and never `OFFSET`, because two entries written in the same microsecond are the ordinary case on an append-only table read newest first, and an offset silently drops or repeats one at every page boundary. Both were proved by breaking them: the tiebreaker removed, and a filter allowed through
 - [x] Every table holding personal data is reachable by the export and the erase path, with a test that fails on a table nobody classified
 - [x] A visitor has an identity before the account exists, and signup links the two
 
@@ -92,7 +99,7 @@ audit with a name against it.*
 
 - [x] One account for the whole platform; session cookie on the parent domain, `HttpOnly`, storing the token's hash and never the token
 - [x] Staff roles — owner, operator, read-only, as a row on an account rather than a second account. *Invitations wait on e-mail, which waits on the domain.*
-- [x] Mandatory MFA for staff, enforced on the session rather than on the account, and revoking a role ends every session that held it
+- [x] Mandatory MFA for staff, enforced on the session rather than on the account, and revoking a role ends every session that held it — **and it can now be enrolled from a screen, with recovery codes, which is the difference between a factor and a lockout.** Every part of it had a test against a real Postgres and every one of them passed while the interface refused with "this school does not have multi-factor sign-in yet": the first factor on this platform was enrolled by hand from a browser console, which is the shape of a claim that was never round-tripped. `#/account` now offers it, shows the secret to type in, takes the code back and hands over ten single-use codes once — and `tools/mfa-test` signs up, enrols, signs out through the screen's own button and signs in twice, once with the app and once with a code, then checks the code was spent. Enrolment also **refuses to replace a factor that already exists** unless the session presented one, because an attacker holding a stolen cookie could otherwise enrol their own and lock the owner out; that one was found by reading the code rather than by a test failing, and the test came after
 - [x] Personal-data export and erasure, **reachable from the console** — the export and the erase were already held by four tests (every table that reaches a student is covered, a password hash and an answer key are never carried, and erasure severs the person while leaving the statistics); what was missing was the screen, and it is at `console.<platform domain>` under `Govern`. A person is found by a **whole address and never listed** (K-22), what is held comes back as **counts and never rows** — because reading the rows *is* the export, and the export is audited — and the erasure asks for `operator`, the person's own address typed back, and refuses if the audit entry cannot be written first. **The audit entry carries counts and does not name the person**, so an append-only table cannot become the last surviving copy of somebody who asked to be forgotten. Three of the ten tests were checked by breaking what they hold: the role check disabled, the record moved after the erasure, and raw rows passed to the audit instead of counts
 
 ### Operations
@@ -135,7 +142,7 @@ audit with a name against it.*
 - [x] Drilling on a screen — one card at a time, drawn without its answer, marked by the server, the key revealed over what the student gave once it is in, and the day it comes back said out loud. **This is the item the preamble is about**: ticked weeks before the screen could draw a card, and unticked until it could
 - [x] ~~The modal test — every course, one height, neither column scrolling~~ — **there is no modal here.** The predecessor showed a course in one, on a marketing page; a course is a screen of its own in this interface, so the test has no subject. Its actual concern — a layout that holds for every course — is covered by the accessibility pass, which opens the course and lesson screens, and by the graph test, which measures a real drawing rather than trusting one
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
-- [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over forty-four screens, both themes, signed out and signed in, the exam paper walked question by question
+- [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over seventy screens, both themes, signed out and signed in, the exam paper walked question by question, and the console on its own host with an operator the suite makes for itself. **A state it can only reach by luck is a failure and not a skip**: the drill's two verdicts used to be whichever the shuffle produced, so a contrast defect on one of them was reported about one run in three and passed the rest of the time. Both are now asked for by name, arranged through the interface's own controls, and confirmed against the verdict the server returned
 - [x] Every question type operable by keyboard and legible to a screen reader — `ordering` on buttons, `matching` on a select, and `labelling` by choosing a label and then placing it with a click **or the arrow keys**, its position said in words ("63% across, 41% down") so somebody who cannot see the diagram can still be told where they put a thing and move it
 - [x] The offline bundle, built **and opened** in CI — one file, one school; opened from `file://` it reads the whole catalogue and asks nobody for anything, served from the school's origin it is the application again; signing in, progress and exams are refused with a sentence rather than a form that does nothing
 
@@ -215,7 +222,7 @@ a drop at a step nobody suspected.*
 ### Operating
 
 - [ ] View-as-student: audited, time-limited, with a visible banner
-- [ ] Student record — plan, subscription, progress, exams, certificates, sessions
+- [x] Student record — plan, subscription, progress, exams, certificates, sessions — **one request, and a section per school, because an account crosses every school and almost nothing else does** (K-18). Two schools' progress added together is a number about nobody, so the answer is a person and then a section per school they have anything in; a school they have never touched is left out, because four empty tables bury the answer in the part that says nothing. It is `billing`, `progress`, `exam` and `certificate` at once and imports none of them — ONE function type, joined where those modules already meet, rather than four the caller would only ever wire together. A sitting says how many and since when and **never carries anything that would let an operator become the person**, held by a test that reads the response for the words. It is not an export either: counts, states, dates and titles, never a note somebody wrote or an answer they gave — reading *that* is the export, and the export is audited. What it costs is said out loud in the file: one query set per school, which grows with schools rather than with students, and the honest moment to reshape it is when a fiftieth school exists
 - [ ] Reported-content queue, fed by the student
 - [ ] The closed list of system parameters, each change audited with actor, old and new value
 - [ ] Prices effective-dated — a subscriber keeps the price they bought at
