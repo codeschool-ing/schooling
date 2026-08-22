@@ -1129,6 +1129,9 @@ node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes —
                                         # `cmd/staff`, so this one needs the
                                         # database as well as the server.
 
+node tools/mfa-test/mfa-test.mjs        # enrol a second factor, sign in with it,
+                                        # then again with a recovery code
+
 go run ./tools/bundle -host code.example.tld -out bundle.html
 node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built
 ```

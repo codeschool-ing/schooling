@@ -76,6 +76,51 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'down': 'na vertical',
   'not placed yet': 'ainda não colocado',
 
+  /* ---------- My account ----------
+     The screen the account menu had been linking to since the menu existed.
+     `Two-factor` is left as `dois fatores` rather than the English acronym:
+     the phrase is not jargon in Portuguese and the person reading it is being
+     asked to do something with it. */
+  'My account': 'Minha conta',
+  'Who you are here, and how you get in.': 'Quem você é aqui, e como você entra.',
+  'You': 'Você',
+
+  'Two-factor sign-in': 'Entrada em dois fatores',
+  'A code from an app on your phone, as well as your password. Staff accounts cannot open the console without one.': 'Um código de um aplicativo no seu celular, além da sua senha. Contas da equipe não abrem a console sem isso.',
+  'Set it up': 'Configurar',
+  'Asking for a secret…': 'Pedindo um segredo…',
+  'Put this secret into your authenticator app.':
+    'Coloque este segredo no seu aplicativo autenticador.',
+  'Open it in the app on this device': 'Abrir no aplicativo deste aparelho',
+  'Then type the six digits it shows.': 'Depois digite os seis dígitos que ele mostrar.',
+  'Turn it on': 'Ativar',
+  'Checking…': 'Conferindo…',
+  'Two-factor sign-in is on.': 'A entrada em dois fatores está ativa.',
+  'It is on. Signing in asks for a code as well as your password.':
+    'Está ativa. Entrar pede um código além da sua senha.',
+
+  'Your recovery codes': 'Seus códigos de recuperação',
+  'Write these down now. They are shown once and cannot be shown again.':
+    'Anote agora. Eles aparecem uma única vez e não podem ser mostrados de novo.',
+  'Each one gets you in without your phone, and works once.':
+    'Cada um te faz entrar sem o celular, e funciona uma vez só.',
+  'Copy them': 'Copiar',
+  'Copied.': 'Copiados.',
+  'Your browser would not copy them — select them instead.':
+    'Seu navegador não copiou — selecione-os na tela.',
+  'I have them': 'Já anotei',
+  'Counting your recovery codes…': 'Contando seus códigos de recuperação…',
+  'Recovery codes left:': 'Códigos de recuperação restantes:',
+  'One recovery code left.': 'Resta um código de recuperação.',
+  'Could not count your recovery codes.': 'Não foi possível contar seus códigos de recuperação.',
+  'Replace the recovery codes': 'Substituir os códigos de recuperação',
+  'Making new ones…': 'Gerando novos…',
+  'These replace every code you had.': 'Estes substituem todos os códigos que você tinha.',
+
+  'This browser': 'Este navegador',
+  'Signing out here ends this sitting. Your work stays where it is.':
+    'Sair aqui encerra esta sessão. Seu trabalho continua onde está.',
+
   /* The name of the group of buttons that jump between questions. */
   'Questions on this paper': 'Questões desta prova',
 });

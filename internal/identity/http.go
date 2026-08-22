@@ -134,7 +134,49 @@ func (h *Handler) me(w http.ResponseWriter, r *http.Request) {
 		web.Fail(w, http.StatusUnauthorized, web.CodeUnauthorized, "sign in first")
 		return
 	}
-	web.JSON(w, http.StatusOK, view(account))
+	web.JSON(w, http.StatusOK, h.viewOf(r, account))
+}
+
+/*
+viewOf is `view` plus what the interface cannot work out for itself.
+
+	THE SCREEN HAD NO WAY TO KNOW EITHER OF THESE. `ui/app/api.js` refused to
+	complete a second factor with "this school does not have multi-factor sign-in
+	yet" — true of the CLIENT and never of the server — and the sign-in screen's
+	code step was reached by a `mfaRequired` flag nothing ever sent. So an account
+	with a second factor could be signed into through the interface and could not
+	present the code, which is how the first one here came to be enrolled through
+	the browser's own console.
+
+	`secondFactor` is a property of the account: does it have one. `mfaRequired`
+	is a property of THIS SITTING: does it still owe a code. They are different
+	questions and a screen needs both — the first to decide what the account
+	screen offers, the second to decide whether to ask for a code right now.
+*/
+func (h *Handler) viewOf(r *http.Request, account Account) map[string]any {
+	out := view(account)
+
+	has, err := h.store.HasSecondFactor(r.Context(), account.ID)
+	if err != nil {
+		// A read that failed is not a "no": saying the account has no second
+		// factor because the database hiccuped is how a screen offers to enrol
+		// one over the top of the one that is there.
+		web.LoggerFrom(r.Context()).Error("reading the second factor", "error", err)
+		return out
+	}
+	out["secondFactor"] = has
+	if !has {
+		return out
+	}
+
+	shown := false
+	if c, err := r.Cookie(CookieName); err == nil {
+		if s, err := h.store.SecondFactorShown(r.Context(), c.Value); err == nil {
+			shown = s
+		}
+	}
+	out["mfaRequired"] = !shown
+	return out
 }
 
 func (h *Handler) start(w http.ResponseWriter, r *http.Request, account Account, status int) {
@@ -144,7 +186,17 @@ func (h *Handler) start(w http.ResponseWriter, r *http.Request, account Account,
 		return
 	}
 	http.SetCookie(w, h.cookie(token))
-	web.JSON(w, status, view(account))
+
+	/* THE ANSWER SAYS WHETHER A CODE IS STILL OWED. A session is issued on the
+	   password alone — the code comes after — so the screen has to be told, and
+	   until now nothing told it. The cookie is on the response rather than the
+	   request at this point, so the freshly issued token is passed straight in. */
+	body := view(account)
+	if has, err := h.store.HasSecondFactor(r.Context(), account.ID); err == nil && has {
+		body["secondFactor"] = true
+		body["mfaRequired"] = true
+	}
+	web.JSON(w, status, body)
 }
 
 // view is what an account looks like over the wire. Explicit rather than the

@@ -30,6 +30,7 @@ import course from './screens/course.js';
 import lesson from './screens/lesson.js';
 import catalogue from './screens/catalog.js';
 import certificates from './screens/certificates.js';
+import account from './screens/account.js';
 import performance from './screens/performance.js';
 import redo from './screens/redo.js';
 import notes from './screens/notes.js';
@@ -137,6 +138,7 @@ route('/course/:id/lesson/:ix', named(courseBySlug, lesson));
 route('/course/:id/lesson/:ix/:sec', named(courseBySlug, lesson));
 route('/catalog', catalogue);
 route('/certificates', certificates);
+route('/account', account);
 route('/performance', performance);
 route('/redo', redo);
 route('/notes', notes);
@@ -349,7 +351,6 @@ function paintAccount() {
   $('#account-avatar').textContent = (s?.name || '·').trim().charAt(0).toUpperCase() || '·';
   $('#account-menu').innerHTML = s
     ? '<a class="account-op" href="#/account">' + txt('My account') + '</a>' +
-      '<a class="account-op" href="#/plan">' + txt('My plan') + '</a>' +
       '<a class="account-op" href="#/certificates">' + txt('Certificates') + '</a>' +
       /* THE SCHOOL'S OWN SITE, OR NO LINK AT ALL. This was
          `https://codeschool.ing` for every student of every school — one

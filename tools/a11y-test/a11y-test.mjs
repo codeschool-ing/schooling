@@ -367,6 +367,19 @@ try {
 
     await check(student, `${theme} · the dashboard`, '/#/dashboard', '/dashboard');
     await check(student, `${theme} · certificates`, '/#/certificates', '/certificates');
+
+    /* MY ACCOUNT, WHICH THE MENU LINKED TO BEFORE IT EXISTED. Two screens in
+       one: the account as it sits, and the enrolment the second factor needs —
+       a secret to read off the screen and a code to type back. The second is
+       reached by pressing the button, because a state nobody can reach from the
+       first is a state this suite would be measuring on its own. */
+    await check(student, `${theme} · my account`, '/#/account', '/account');
+    await check(student, `${theme} · setting up a second factor`, '/#/account', '/account', {
+      async act(page) {
+        await page.locator('#start').click();
+        await page.waitForSelector('#secret', { timeout: 8000 });
+      },
+    });
     /* A LESSON IS `/course/:id/lesson/:ix` AND HAS BEEN SINCE THE INTERFACE WAS
        REPLACED. This asked for `/#/course/<id>/<lesson-id>`, which is the shape
        the retired client used and matches no route here — so what was measured
