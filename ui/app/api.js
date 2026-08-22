@@ -235,7 +235,16 @@ function documentFrom({ completed, notes, exams, resume }, me) {
     : null;
 
   return {
-    session: me ? { name: me.name, email: me.email, emailVerified: true } : null,
+    /* `secondFactor` and `mfaRequired` are the server's two different answers:
+       whether the ACCOUNT has one, and whether THIS SITTING still owes a code.
+       The account screen reads the first and the sign-in screen the second. */
+    session: me ? {
+      name: me.name,
+      email: me.email,
+      emailVerified: true,
+      secondFactor: Boolean(me.secondFactor),
+      mfaRequired: Boolean(me.mfaRequired),
+    } : null,
     progress,
     notes: byCourse,
     exams: sat,
@@ -275,13 +284,47 @@ export async function signOut() {
   state.hydrate({});
 }
 
-/* MULTI-FACTOR DOES NOT EXIST HERE, and this refuses rather than pretending.
-   The copied sign-in screen offers a code field when the server asks for one;
-   this server never asks, so nothing reaches here in normal use — and if
-   anything does, it says what is missing instead of failing as a wrong code. */
-export function completeMfa() {
-  return Promise.reject(new ApiError(0, 'no-mfa',
-    'this school does not have multi-factor sign-in yet'));
+/* ---------- the second factor ----------
+
+   THIS FILE USED TO REFUSE. `completeMfa` rejected with "this school does not
+   have multi-factor sign-in yet" — true of THIS FILE and never of the server:
+   `/api/v1/second-factor/{start,enrol,present}` have existed for as long as
+   staff roles have, and the sign-in screen's code step was reached by a
+   `mfaRequired` flag nothing ever sent.
+
+   So an account could have a second factor, be refused at the console without
+   it, and have no way through this interface to present one. That is how the
+   first factor on this platform came to be enrolled by hand, in the browser's
+   own console, against the API. */
+
+// completeMfa presents a code on this sitting: the app's six digits, or one of
+// the recovery codes.
+export async function completeMfa(code) {
+  await post('/api/v1/second-factor/present', { code });
+  state.hydrate(documentFrom(await pull(), await get('/api/v1/me')));
+  return state.now().session;
+}
+
+// startSecondFactor asks for a secret. NOTHING IS STORED BY IT — the enrolment
+// writes, and only once a code from that secret has arrived, so a person who
+// abandons this halfway is not left with a factor they never scanned.
+export const startSecondFactor = () => post('/api/v1/second-factor/start');
+
+// enrolSecondFactor proves the secret and returns the recovery codes, which are
+// readable exactly here and never again.
+export async function enrolSecondFactor(secret, code) {
+  const out = await post('/api/v1/second-factor/enrol', { secret, code });
+  state.hydrate(documentFrom(await pull(), await get('/api/v1/me')));
+  return out.recoveryCodes || [];
+}
+
+export const recoveryCodesLeft = () => get('/api/v1/second-factor/recovery-codes');
+
+// reissueRecoveryCodes replaces the set: whatever was written down before this
+// call returned has stopped working.
+export async function reissueRecoveryCodes() {
+  const out = await post('/api/v1/second-factor/recovery-codes');
+  return out.recoveryCodes || [];
 }
 
 /* ---------- the track a student is on ---------- */

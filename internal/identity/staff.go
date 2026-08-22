@@ -337,3 +337,21 @@ func RequireStaff(store *Store, needed Role) func(http.Handler) http.Handler {
 		})
 	}
 }
+
+// HasSecondFactor answers whether the account has one at all.
+//
+// IT IS A DIFFERENT QUESTION FROM `SecondFactorShown`, and the interface needs
+// both: this one decides what the account screen offers, that one decides
+// whether to ask for a code right now. Answering the first with the second is
+// how a screen offers to enrol a factor over the top of the one that is there.
+func (s *Store) HasSecondFactor(ctx context.Context, accountID uuid.UUID) (bool, error) {
+	var has bool
+	err := s.pool.QueryRow(ctx, `
+		SELECT EXISTS (
+			SELECT 1 FROM account_credentials WHERE account_id = $1 AND kind = 'totp')
+	`, accountID).Scan(&has)
+	if err != nil {
+		return false, fmt.Errorf("identity: reading whether there is a second factor: %w", err)
+	}
+	return has, nil
+}
