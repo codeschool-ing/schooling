@@ -45,8 +45,23 @@ verified from inside this repository.*
 turned out to be the difference between a claim and a fact twice over. The alert policy applied
 cleanly and was inverted; the restore drill passed its own tests and then failed a good backup on
 six rows of ordinary traffic. Neither would have been found by reading the file that declared it.
-**One is left in phase 0**, and it is a screen: the export and the erasure exist and are held by
-four tests, and what is missing is the console page an operator opens.*
+The one that was left was a screen — the export and the erasure existed, held by four tests, with
+no console page an operator could open.*
+
+***Every box in phase 0 is now ticked, and the phase is not finished.** The screen was the last
+one, and it went the same way as the infrastructure items: the tick came after an operator had
+found a person, exported them and erased them against a real database, and after the two audit
+entries had been read back and checked for what they must not contain. Its last two defects were
+found by looking at a screenshot and by nothing else — a stylesheet asking for a typeface the page
+never linked, and a table that said "18 table".*
+
+*What is left is the phase's own `Done when`, which asks for **two** schools answering over TLS
+and has one. That is not an oversight in the list: a single school with a `Host` check is
+indistinguishable from an application that is not multi-tenant at all, and the second school is
+what tells the two apart. It needs no code — a tenant row, a `tenant_domains` row, a Cloud Run
+mapping and a DNS record, all of them already written down as a runbook in
+[`infra/README.md`](../infra/README.md). **The list being finished is not the phase being
+finished**, and the gap is left visible here rather than closed by redefining the condition.*
 
 ---
 
@@ -78,7 +93,7 @@ audit with a name against it.*
 - [x] One account for the whole platform; session cookie on the parent domain, `HttpOnly`, storing the token's hash and never the token
 - [x] Staff roles — owner, operator, read-only, as a row on an account rather than a second account. *Invitations wait on e-mail, which waits on the domain.*
 - [x] Mandatory MFA for staff, enforced on the session rather than on the account, and revoking a role ends every session that held it
-- [ ] Personal-data export and erasure, **reachable from the console** — the export and the erase exist and are held by four tests (every table that reaches a student is covered, a password hash and an answer key are never carried, and erasure severs the person while leaving the statistics). What is missing is only the screen an operator uses, which waits on the console
+- [x] Personal-data export and erasure, **reachable from the console** — the export and the erase were already held by four tests (every table that reaches a student is covered, a password hash and an answer key are never carried, and erasure severs the person while leaving the statistics); what was missing was the screen, and it is at `console.<platform domain>` under `Govern`. A person is found by a **whole address and never listed** (K-22), what is held comes back as **counts and never rows** — because reading the rows *is* the export, and the export is audited — and the erasure asks for `operator`, the person's own address typed back, and refuses if the audit entry cannot be written first. **The audit entry carries counts and does not name the person**, so an append-only table cannot become the last surviving copy of somebody who asked to be forgotten. Three of the ten tests were checked by breaking what they hold: the role check disabled, the record moved after the erasure, and raw rows passed to the audit instead of counts
 
 ### Operations
 
