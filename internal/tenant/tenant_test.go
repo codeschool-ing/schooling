@@ -3,6 +3,7 @@ package tenant_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -241,5 +242,68 @@ func TestTheHostIsNormalisedBeforeItIsLookedUp(t *testing.T) {
 		if status != http.StatusOK || body["name"] != "Programming" {
 			t.Errorf("GET with Host %q answered %d %v, want the programming school", host, status, body)
 		}
+	}
+}
+
+// SETTING A COLOUR ANSWERS WITH THE ONE IT REPLACED.
+//
+// The value an audit entry quotes as "before" comes out of the write itself, so
+// it is the value this write actually replaced rather than one read a moment
+// earlier and possibly already gone. The self-join in the statement is what
+// makes that true, and `RETURNING` alone would quietly answer with the new
+// colour instead — which reads perfectly and is wrong.
+func TestSettingAnAccentAnswersWithWhatWasThere(t *testing.T) {
+	pool := testPool(t)
+	seeded := seed(t, pool)
+	store := tenant.NewStore(pool)
+
+	ctx := context.Background()
+	school, err := store.ByHost(ctx, seeded.code)
+	if err != nil {
+		t.Fatalf("reading the school: %v", err)
+	}
+	if school.Accent != "#2F6F4E" {
+		t.Fatalf("the fixture's colour is %q", school.Accent)
+	}
+
+	was, err := store.SetAccent(ctx, school.ID, "#10a06a")
+	if err != nil {
+		t.Fatalf("setting the accent: %v", err)
+	}
+	if was != "#2F6F4E" {
+		t.Errorf("the write answered %q, and the colour it replaced was %q", was, school.Accent)
+	}
+
+	after, err := store.ByHost(ctx, seeded.code)
+	if err != nil {
+		t.Fatalf("reading the school back: %v", err)
+	}
+	if after.Accent != "#10a06a" {
+		t.Errorf("the school is wearing %q", after.Accent)
+	}
+
+	// AND THE OTHER SCHOOL IS UNTOUCHED. One statement with a self-join is one
+	// `WHERE` away from being every row, which is the shape of mistake that is
+	// invisible with a single school in the fixture.
+	other, err := store.ByHost(ctx, seeded.math)
+	if err != nil {
+		t.Fatalf("reading the other school: %v", err)
+	}
+	if other.Accent != "#2B5EA8" {
+		t.Errorf("the other school's colour became %q", other.Accent)
+	}
+}
+
+// AND AN ID NO SCHOOL HAS IS A REFUSAL RATHER THAN A SILENT NOTHING.
+//
+// An UPDATE that matches no row is not an error in SQL, so a caller that did
+// not ask would record a change to a school that does not exist and answer 200.
+func TestSettingTheAccentOfNoSchool(t *testing.T) {
+	pool := testPool(t)
+	seed(t, pool)
+
+	_, err := tenant.NewStore(pool).SetAccent(context.Background(), uuid.New(), "#10a06a")
+	if !errors.Is(err, tenant.ErrNoSchool) {
+		t.Errorf("setting the colour of no school answered %v, want ErrNoSchool", err)
 	}
 }

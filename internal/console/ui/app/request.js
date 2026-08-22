@@ -52,3 +52,9 @@ async function request(method, path, body) {
 
 export const get = (path) => request('GET', path);
 export const post = (path, body) => request('POST', path, body === undefined ? {} : body);
+
+/* PUT, because setting a school's colour is the same request twice over: press
+   save again and nothing further happens. The API answers the same way to a
+   colour that is already there, and neither writes a second entry to the
+   history. */
+export const put = (path, body) => request('PUT', path, body === undefined ? {} : body);

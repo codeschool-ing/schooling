@@ -29,8 +29,8 @@ type recorded struct {
 	action  string
 	actor   uuid.UUID
 	label   string
-	subject uuid.UUID
-	what    any
+	subject console.Subject
+	what    console.Changed
 }
 
 type fakes struct {
@@ -72,7 +72,7 @@ func (f *fakes) handler() http.Handler {
 			},
 		},
 		func(_ context.Context, actor uuid.UUID, actorLabel, action string,
-			subject uuid.UUID, what any, _ string) error {
+			subject console.Subject, what console.Changed, _ string) error {
 			if f.recordErr != nil {
 				return f.recordErr
 			}
@@ -210,8 +210,8 @@ func TestAnExportIsRecordedAndTheRecordDoesNotNameThePerson(t *testing.T) {
 	if entry.action != "personal-data.export" {
 		t.Errorf("action %q", entry.action)
 	}
-	if entry.subject != f.person.ID {
-		t.Errorf("subject %s, want the person", entry.subject)
+	if entry.subject.Kind != "account" || entry.subject.ID != f.person.ID.String() {
+		t.Errorf("subject %s %s, want the account", entry.subject.Kind, entry.subject.ID)
 	}
 	if entry.label != "Alex <alex@staff.tld>" {
 		t.Errorf("actor label %q, want the person who did it", entry.label)

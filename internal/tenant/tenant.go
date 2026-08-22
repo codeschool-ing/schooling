@@ -176,3 +176,48 @@ func (s *Store) All(ctx context.Context) ([]School, error) {
 	}
 	return out, nil
 }
+
+// ErrNoSchool is an id no school has.
+var ErrNoSchool = errors.New("tenant: no school with that id")
+
+// SetAccent writes one school's colour and answers what was there before.
+//
+// # THE FIRST WRITE THIS PACKAGE HAS
+//
+// School rows have been made by hand since the first migration — a slug, a name
+// and a colour typed into psql — and that was survivable for one school and is
+// not the shape this platform is. The colour is the first of them to get a
+// screen, because it is the one a person changes more than once and the only
+// one a student sees.
+//
+// # THE OLD VALUE COMES BACK FROM THE WRITE ITSELF
+//
+// `RETURNING` the row as it was, in the same statement that replaces it, so the
+// value recorded as "before" is the one this write actually replaced. Read
+// first and write second and the two can disagree — which is not a race worth
+// having on a column an audit entry quotes.
+//
+// A colour that is already there is still a write and still answers with the
+// same value. Deciding whether that is a change belongs to the caller, which is
+// the only one that knows whether an entry is worth writing.
+func (s *Store) SetAccent(ctx context.Context, id uuid.UUID, accent string) (string, error) {
+	/* THE SELF-JOIN IS THE IDIOM AND NOT A FLOURISH. `RETURNING` sees the row as
+	   it is AFTER the update, so it cannot answer with the value that was
+	   replaced; joining the table to itself in `FROM` binds `old` to the row as
+	   the statement found it. A sub-select in `RETURNING` looks like it would do
+	   the same and is not defined to. */
+	var was string
+	err := s.pool.QueryRow(ctx, `
+		UPDATE tenants AS t SET accent = $2
+		  FROM tenants AS old
+		 WHERE t.id = $1 AND old.id = t.id
+		RETURNING old.accent
+	`, id, accent).Scan(&was)
+	switch {
+	case errors.Is(err, pgx.ErrNoRows):
+		return "", ErrNoSchool
+	case err != nil:
+		return "", fmt.Errorf("tenant: setting a school's accent: %w", err)
+	}
+	return was, nil
+}

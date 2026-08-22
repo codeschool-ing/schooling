@@ -59,11 +59,21 @@ type Sitting struct {
 	UserAgent  string
 }
 
-// School is the one thing about a school a record needs.
+// School is what the console knows about a school.
+//
+// ONE TYPE FOR TWO SCREENS, and the fourth field is why it is worth saying: the
+// record loops over schools to gather one student's standing and never looks at
+// the colour, while the schools screen exists to change it. Two types differing
+// by one field would be two lists to keep in step with `tenants`.
+//
+// `Accent` is empty where the row has none, which is a real state: the school
+// then wears the palette's own blue, and a screen has to say so rather than
+// draw an empty swatch.
 type School struct {
-	ID   uuid.UUID
-	Slug string
-	Name string
+	ID     uuid.UUID
+	Slug   string
+	Name   string
+	Accent string
 }
 
 // Course is how far along one course they are.

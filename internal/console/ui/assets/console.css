@@ -17,6 +17,26 @@
    ========================================================================== */
 
 :root{
+  /* THE WASH THE ACCENT'S OWN TEXT SITS ON, here because the console MEASURES
+     it. `assets/accent.js` corrects a school's colour against every surface it
+     can land on and reads those surfaces off the stylesheet — `--ink`,
+     `--panel` and this — so the console showing what a school will look like
+     has to have the same three or it would answer with a colour the study
+     interface then moves again.
+
+     IT IS THEME-INDEPENDENT ON PURPOSE, unlike `--tint-accent` two blocks down,
+     which is the console's own chip tint and changes per theme. This one is the
+     STUDY interface's surface, and the value it holds there is the same in both
+     themes — a console that redefined it per theme would be measuring a page
+     that does not exist.
+
+     It is the same value as `ui/assets/app.css`'s, and that file says why it is
+     written out rather than shared: the literal lives in `portal.css` and
+     `base.css`, which are copies and take no edits here. This is the second
+     restatement and the last one — anything else that needs it should read it
+     from a stylesheet rather than write it again. */
+  --accent-wash:rgba(91,140,255,.07);
+
   /* State is not the brand. The product has one blue and one red and needs no
      more; an operations screen has to separate "healthy" from "brand". */
   --ok:#3fb27f;
@@ -471,3 +491,59 @@ body.no-rail .rail{display:none}
    nothing exists to do it. */
 .block-warn{border-color:var(--warn)}
 .block-warn .block-top h2{color:var(--warn)}
+
+/* ---------- a school's colour ----------
+
+   THE SPECIMENS PAINT THEMSELVES, in both themes, whichever theme the console
+   is in. That is the one place in this stylesheet where a colour is written
+   rather than read from a token: they are pictures of the OTHER interface's two
+   themes, so following this one would make them pictures of nothing.
+
+   The values inside them are the corrected ones, handed down as `--shown` and
+   `--shown-mid` by the screen that measured them. */
+.accent-form{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+
+.accent-picks{display:flex;flex-wrap:wrap;gap:6px}
+.accent-pick{
+  width:26px;height:26px;border-radius:6px;padding:0;cursor:pointer;
+  background:var(--pick);border:2px solid transparent;outline-offset:2px;
+}
+.accent-pick:hover{transform:translateY(-1px)}
+/* THE CHOSEN ONE IS A RING AND NOT A TICK: a tick inside a swatch is drawn in
+   one of two colours and disappears on half the hues here. */
+.accent-pick.on{border-color:var(--paper);box-shadow:0 0 0 2px var(--ink)}
+
+.accent-bar{display:flex;flex-wrap:wrap;align-items:end;gap:10px}
+.accent-hex{display:flex;flex-direction:column;gap:4px;font-size:.72rem;color:var(--paper-dim)}
+.accent-hex input{
+  font-family:var(--mono);font-size:.86rem;width:11ch;padding:7px 9px;
+  color:var(--paper);background:var(--ink);border:1px solid var(--wire);border-radius:6px;
+}
+
+.accent-themes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:12px}
+.accent-theme{border:1px solid var(--wire);border-radius:8px;padding:12px 14px;overflow:hidden}
+/* THE DIM TEXT IS A COLOUR AND NEVER AN `opacity`, and that is not a
+   preference — it is what the first run of axe over this screen found. A parent
+   at `opacity:.75` fades everything under it, and a child cannot put it back:
+   `opacity:1` on the ratio inside a faded header composites anyway, so the
+   corrected accent came out at #48987a and scored 3.15:1 on the light specimen.
+   The whole point of these panels is that what is on them is what a student
+   gets; a panel that dims its own contents is a preview of a page that does not
+   exist. */
+.accent-theme-dark{background:#0a0e14;color:#c8d2e4;--said:#8b97ad}
+.accent-theme-light{background:#f2f4f9;color:#2a3242;--said:#5c6678}
+.accent-theme-top{
+  display:flex;justify-content:space-between;font-size:.66rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--said);margin-bottom:8px;
+}
+.accent-theme-top span:last-child{color:var(--shown);font-variant-numeric:tabular-nums}
+.accent-line{margin:0}
+.accent-line-strong{font-weight:700;font-size:1.02rem;color:var(--shown)}
+.accent-line-mid{font-family:var(--mono);font-size:.76rem;color:var(--shown-mid);margin-top:2px}
+.accent-swatches{display:flex;align-items:center;gap:6px;font-size:.72rem;margin:10px 0 0;color:var(--said)}
+.accent-chip{width:13px;height:13px;border-radius:3px;display:inline-block}
+.accent-chip + .accent-chip{margin-left:8px}
+.accent-said{font-size:.72rem;margin:8px 0 0;color:var(--said)}
+/* The one line worth more than the others: two states that came out identical
+   is a distinction the student loses, and it is invisible once it is saved. */
+.accent-said-warn{color:inherit;font-weight:600}

@@ -33,10 +33,20 @@ import (
 )
 
 // School is one school's whole catalogue, as it is on disk.
+//
+// THERE IS NO COLOUR HERE, AND THERE WAS ONE. `school.json` carried an `accent`
+// that was parsed into this struct and read by nothing — the school's colour
+// lives on the school's ROW, where the console sets it and every request
+// serving that school reads it.
+//
+// It could not have lived here: the catalogue is a mirror of these files and is
+// rewritten wholesale by every load, so a colour in a file would undo whatever
+// the console had set the next time somebody published a course. Two places
+// claiming to hold one value is how the wrong one gets edited; this is the one
+// that was wrong.
 type School struct {
 	ID      string   `json:"id"`
 	Name    string   `json:"name"`
-	Accent  string   `json:"accent"`
 	Locales []string `json:"locales"`
 
 	// The tracks, in the order a student is offered them.
