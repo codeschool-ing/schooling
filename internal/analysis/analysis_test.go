@@ -9,13 +9,25 @@ import (
 	"github.com/codeschool-ing/schooling/internal/analysis"
 )
 
-// Every paper here is out of ten, which is enough to put attempts in an order
-// and keeps each test about the thing it is testing.
+// Every paper here is out of ten — this question and nine others — which is
+// enough to put attempts in an order and keeps each test about the thing it is
+// testing.
 const questionsOnThePaper = 10
 
 // One attempt's answer to this question, with the mark that attempt got on the
-// paper. Spelt out so each test reads as the situation it is describing.
-func answer(attempt string, score int, correct bool) analysis.Answer {
+// REST of the paper.
+//
+// THE REST OF IT, BECAUSE THAT IS WHAT THE INDEX RANKS BY. These fixtures used
+// to name the whole mark, which let a fixture say "scored ten out of ten and got
+// this one wrong" — a paper nobody could have sat. It read as harmless while the
+// ranking included this question in itself, and the correction to that is what
+// made it worth saying: the total is now derived here, so every attempt below is
+// one that could have existed.
+func answer(attempt string, rest int, correct bool) analysis.Answer {
+	score := rest
+	if correct {
+		score++
+	}
 	return analysis.Answer{
 		ExerciseID: "q", Version: 1, Type: "quiz",
 		AttemptID: attempt, Correct: correct,
@@ -24,15 +36,15 @@ func answer(attempt string, score int, correct bool) analysis.Answer {
 	}
 }
 
-// `strong` attempts scoring 10/10 and `weak` ones scoring 1/10, with this
-// question right for the given share of each.
+// `strong` attempts who got all nine of the others right and `weak` ones who got
+// none of them, with this question right for the given share of each.
 func paper(strong, strongRight, weak, weakRight int) []analysis.Answer {
 	var out []analysis.Answer
 	for i := range strong {
-		out = append(out, answer(fmt.Sprintf("s%d", i), 10, i < strongRight))
+		out = append(out, answer(fmt.Sprintf("s%d", i), 9, i < strongRight))
 	}
 	for i := range weak {
-		out = append(out, answer(fmt.Sprintf("w%d", i), 1, i < weakRight))
+		out = append(out, answer(fmt.Sprintf("w%d", i), 0, i < weakRight))
 	}
 	return out
 }
@@ -180,10 +192,11 @@ func TestTheOrderAnswersArriveInChangesNothing(t *testing.T) {
 // the strong group and half in the middle would be a verdict that depends on
 // which row came back first.
 func TestARunOfEqualMarksIsNotSplitAcrossTheBoundary(t *testing.T) {
-	// Forty attempts, every one scoring 6/10 except one at 10 and one at 1.
+	// Forty attempts, every one getting six of the other nine right except one
+	// who got all nine and one who got none.
 	var answers []analysis.Answer
-	answers = append(answers, answer("top", 10, true))
-	answers = append(answers, answer("bottom", 1, false))
+	answers = append(answers, answer("top", 9, true))
+	answers = append(answers, answer("bottom", 0, false))
 	for i := range 38 {
 		answers = append(answers, answer(fmt.Sprintf("m%d", i), 6, i%2 == 0))
 	}
@@ -311,4 +324,77 @@ func TestAnIndexThatCouldNotBeMeasuredIsNotReportedAsAFinding(t *testing.T) {
 		t.Errorf("the verdict is %q; a question nearly everybody got right is too easy "+
 			"whether or not the paper separated anybody", got)
 	}
+}
+
+// AN INVERTED KEY ON A SHORT PAPER, WHICH IS THE ONLY KIND OF PAPER THIS
+// PLATFORM SETS.
+//
+// This is the case the index used to miss entirely. Ranking attempts by their
+// WHOLE mark ranks them partly by this question: getting it right adds a point
+// to the total that decides which group the answer lands in. On a four-question
+// paper that contribution is a quarter of the ranking, and here it exactly
+// cancels the difference it was supposed to reveal — every attempt lands on the
+// same total, the groups collapse, and the answer comes back "the paper
+// separated nobody".
+//
+// Twenty students got two of the other three right and this one wrong. Twenty
+// got one of the other three right and this one right. That is a key that is
+// backwards, in the plainest form it comes in, and the uncorrected index called
+// it `insufficient`.
+func TestAnInvertedKeyIsFoundOnAShortPaper(t *testing.T) {
+	s := summarised(t, shortPaper(20, 2, false, 20, 1, true))
+
+	if s.Verdict != analysis.VerdictInverted {
+		t.Errorf("the verdict is %q at %+.2f — the students who did better on the rest "+
+			"of the paper got this one right less often, which is what a backwards key "+
+			"looks like from the outside", s.Verdict, s.Discrimination)
+	}
+	if s.StrongGroup == 0 || s.WeakGroup == 0 {
+		t.Errorf("the groups came out %d and %d, so nothing was compared with anything",
+			s.StrongGroup, s.WeakGroup)
+	}
+}
+
+// AND THE SAME SHORT PAPER DOES NOT CONDEMN A QUESTION THAT WORKS.
+//
+// The correction removes a bias that was always positive, so it can only ever
+// move an index down — which makes this the half worth holding: a fix that found
+// the question above by calling every question inverted would have found
+// nothing at all.
+func TestAGoodQuestionOnAShortPaperIsStillFine(t *testing.T) {
+	s := summarised(t, shortPaper(20, 2, true, 20, 1, false))
+
+	if s.Verdict != analysis.VerdictFine {
+		t.Errorf("the verdict is %q at %+.2f, and the students who did better on the "+
+			"rest of the paper are the ones who got this right", s.Verdict, s.Discrimination)
+	}
+}
+
+// shortPaper is a four-question exam: this question and three others.
+//
+// Each half is `n` attempts who got `rest` of the other three right and this one
+// right or wrong as given — which is enough to say what the two tests above
+// describe and no more.
+func shortPaper(n, rest int, right bool, m, otherRest int, otherRight bool) []analysis.Answer {
+	const of = 4
+	one := func(attempt string, rest int, correct bool) analysis.Answer {
+		score := rest
+		if correct {
+			score++
+		}
+		return analysis.Answer{
+			ExerciseID: "q", Version: 1, Type: "quiz",
+			AttemptID: attempt, Correct: correct, Score: score, Of: of,
+			AnsweredAt: time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC),
+		}
+	}
+
+	var out []analysis.Answer
+	for i := range n {
+		out = append(out, one(fmt.Sprintf("a%d", i), rest, right))
+	}
+	for i := range m {
+		out = append(out, one(fmt.Sprintf("b%d", i), otherRest, otherRight))
+	}
+	return out
 }
