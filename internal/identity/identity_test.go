@@ -277,3 +277,42 @@ func TestASignUpReportsEveryProblemTogether(t *testing.T) {
 		}
 	}
 }
+
+// AN ADDRESS FINDS ONE PERSON OR NOBODY, and never a list (K-22).
+//
+// It is the console's one way of reaching somebody, and the reason it is a
+// lookup rather than a search is that a search is browsing people — which an
+// audit trail cannot tell apart from working.
+func TestAnAccountIsFoundByAWholeAddress(t *testing.T) {
+	pool := testPool(t)
+	store := identity.NewStore(pool)
+	ctx := context.Background()
+
+	email := strings.ReplaceAll(uuid.NewString(), "-", "")[:16] + "@example.tld"
+	made, err := store.Create(ctx, identity.NewAccount{
+		Email: email, Password: "a-long-enough-password", Name: "Sam",
+	})
+	if err != nil {
+		t.Fatalf("creating an account: %v", err)
+	}
+
+	// Exactly, and as it arrives out of a support message: pasted, with the
+	// capitals and the space somebody's mail client added.
+	for _, typed := range []string{email, strings.ToUpper(email), "  " + email + " "} {
+		got, err := store.ByEmail(ctx, typed)
+		if err != nil {
+			t.Errorf("ByEmail(%q): %v", typed, err)
+			continue
+		}
+		if got.ID != made.ID {
+			t.Errorf("ByEmail(%q) found %s, want %s", typed, got.ID, made.ID)
+		}
+	}
+
+	// And not a prefix of it, which is what would make this a search.
+	for _, near := range []string{email[:8], "@example.tld", "", "   "} {
+		if _, err := store.ByEmail(ctx, near); !errors.Is(err, identity.ErrNoAccount) {
+			t.Errorf("ByEmail(%q) answered %v, want ErrNoAccount — a lookup became a search", near, err)
+		}
+	}
+}
