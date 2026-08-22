@@ -132,7 +132,11 @@ export default async function people(section) {
         '<p class="list-count">' +
           '<a class="btn btn-ghost" href="/console/api/v1/people/' + person.id + '/export" download>' +
             'Export everything</a> ' +
-          'Recorded, with your name against it.' +
+          'Recorded, with your name against it. ' +
+          /* THE OTHER SCREEN ABOUT THIS PERSON. What they have — plan, progress,
+             exams, certificates — is a read that is not an export, and somebody
+             about to erase an account usually wants to look at it first. */
+          '<a class="btn btn-ghost" href="#/record/' + person.id + '">Their record</a>' +
         '</p>' +
       '</section>' +
 

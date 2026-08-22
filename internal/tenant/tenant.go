@@ -141,3 +141,38 @@ func FromContext(ctx context.Context) (School, bool) {
 	s, ok := ctx.Value(ctxSchool).(School)
 	return s, ok
 }
+
+// All is every school, in a settled order.
+//
+// IT IS FOR CROSSING SCHOOLS AND NOT FOR SERVING ONE. Every request on a
+// school's host resolves exactly one school by its host, and nothing on that
+// side may enumerate them — a screen that could would be a school's screen
+// showing another school's name. This exists for the console, which belongs to
+// none of them and has to loop.
+//
+// Ordered by slug rather than by creation, so a list of schools reads the same
+// way twice and a person scanning it can find one by name.
+func (s *Store) All(ctx context.Context) ([]School, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, slug, name, accent, site, plan_price_cents, plan_currency
+		FROM tenants ORDER BY slug
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("tenant: reading the schools: %w", err)
+	}
+	defer rows.Close()
+
+	var out []School
+	for rows.Next() {
+		var t School
+		if err := rows.Scan(&t.ID, &t.Slug, &t.Name, &t.Accent, &t.Site,
+			&t.PlanPriceCents, &t.PlanCurrency); err != nil {
+			return nil, fmt.Errorf("tenant: reading a school: %w", err)
+		}
+		out = append(out, t)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("tenant: reading the schools: %w", err)
+	}
+	return out, nil
+}

@@ -22,8 +22,10 @@
 
 import people from './screens/people.js';
 import history, { byActor, onSubject, entry } from './screens/history.js';
+import studentRecord, { record } from './screens/record.js';
 
 export const SECTIONS = [
+  { id: 'record', name: 'Student record', group: 'Operate', screen: studentRecord },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },
   { id: 'audit', name: 'History', group: 'Govern', screen: history },
 ];
@@ -38,6 +40,7 @@ export const SECTIONS = [
    filter somebody has to describe over the phone. All three sit under `audit/`,
    so the rail stays lit on the section they belong to. */
 export const DETAILS = [
+  { path: '/record/:id', screen: record },
   { path: '/audit/entry/:id', screen: entry },
   { path: '/audit/by/:actor', screen: byActor },
   { path: '/audit/on/:kind/:subject', screen: onSubject },

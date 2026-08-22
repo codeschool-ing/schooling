@@ -55,6 +55,14 @@ type People struct {
 	// Find answers the person at exactly this address, or ErrNoPerson.
 	Find func(ctx context.Context, email string) (Person, error)
 
+	// ByID answers the person behind an id that is already in an address bar.
+	//
+	// IT IS NOT A SECOND WAY TO SEARCH. K-22 is about producing a list of
+	// people from something a staff member types; an id is what a screen was
+	// already handed, and a record has to survive a reload and a pasted link
+	// like any other detail route.
+	ByID func(ctx context.Context, id uuid.UUID) (Person, error)
+
 	// Held is everything the platform holds about them, keyed by table — the
 	// registry's own answer, including the tables with no rows, because an
 	// export that silently omits an empty table cannot be told from one that
