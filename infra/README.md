@@ -302,6 +302,29 @@ does not know rather than falling into a default. A name that resolves to a 404
 is worse than a name that does not resolve, because it looks like a broken
 deployment.
 
+### The console's address
+
+`console.<platform domain>` is a mapping like a school's, and it is the only
+address that is not a school's — *a host is a school's, or the console's, or a
+404* (`K-17`). The binary already answers there; the mapping is what lets anybody
+reach it.
+
+```sh
+gcloud beta run domain-mappings create \
+  --service=schooling \
+  --domain=console.schooling.lab.aleogr.dev \
+  --region=us-central1
+```
+
+**No row anywhere.** A school is two rows and a mapping; the console is a
+mapping and nothing else, because it belongs to no school and `tenant_domains`
+is the table that says which school a host is. Adding it there would make the
+console a school, which is the one thing the design refuses.
+
+The name is on the reserved list (`migrations/0025`), so a school cannot be
+created at it. That went in before the mapping did, on purpose: the other order
+ends with a school and the console at one address, fixed by renaming the school.
+
 ## Monitoring
 
 `alert_email` and `uptime_host` are both empty by default and nothing watches

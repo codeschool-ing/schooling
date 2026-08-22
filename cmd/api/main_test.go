@@ -75,3 +75,75 @@ func TestTheOperationalRoutesBelongToNoSchool(t *testing.T) {
 			"it is asked at whatever address the platform reaches the instance on", rec.Code)
 	}
 }
+
+// A HOST IS A SCHOOL'S, OR THE CONSOLE'S, OR A 404 (K-17).
+//
+// Three cases and no fourth, checked at the outermost handler where the split
+// happens. The pool is nil on purpose, as above: none of these three answers
+// needs a database, and a query of any kind panics rather than passing.
+func TestAHostIsASchoolsOrTheConsolesOrA404(t *testing.T) {
+	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
+		config.Config{PlatformDomain: "example.tld"})
+
+	ask := func(host, path string) *httptest.ResponseRecorder {
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, path, nil)
+		req.Host = host
+		srv.ServeHTTP(rec, req)
+		return rec
+	}
+
+	// THE CONSOLE'S. Nobody is signed in, so the second gate refuses — which is
+	// itself the proof that the request reached the console side at all.
+	if got := ask("console.example.tld", "/console/api/v1/me").Code; got != http.StatusUnauthorized {
+		t.Errorf("the console's own API answered %d at the console's host, want 401 — "+
+			"a request that never reached the staff gate cannot have been refused by it", got)
+	}
+
+	// A SCHOOL'S. The same path must not become the console by being typed at
+	// another address. 404 AND NOT 401 IS THE ASSERTION: a 401 would mean the
+	// staff gate ran here, which is the console existing at an address it does
+	// not own. 404 is the interface saying there is no such page, which is true.
+	elsewhere := ask("code.example.tld", "/console/api/v1/me")
+	if elsewhere.Code == http.StatusUnauthorized {
+		t.Error("a school's host refused a console path with 401, which means the staff gate ran " +
+			"there — the console is reachable at an address it does not own")
+	}
+	if elsewhere.Code != http.StatusNotFound {
+		t.Errorf("a console path at a school's host answered %d, want 404", elsewhere.Code)
+	}
+
+	// And the school's own routes still work there, so the split did not take
+	// the school side with it. `/` is the interface, which needs no database.
+	if got := ask("code.example.tld", "/").Code; got != http.StatusOK {
+		t.Errorf("a school's own address answered %d for the interface, want 200", got)
+	}
+
+	// AND THE SCHOOL SIDE IS NOT REACHABLE AT THE CONSOLE'S ADDRESS EITHER.
+	// The console's mux does not carry `/api/v1/`, so it is a 404 — not a 401,
+	// because nothing gated it, and not a school, because there is none here.
+	if got := ask("console.example.tld", "/api/v1/school").Code; got != http.StatusNotFound {
+		t.Errorf("a school route answered %d at the console's host, want 404", got)
+	}
+}
+
+// The first gate is the host and the second is the role, and they have to be
+// separately sufficient to refuse (K-19).
+//
+// This checks the half that needs no database: with no session at all, the
+// console's API refuses. The other half — a signed-in account with no staff
+// role, and a staff account whose session has not shown a second factor — is
+// `identity.RequireStaff`'s own test, which has a database to do it with.
+func TestTheConsoleApiRefusesWithoutASession(t *testing.T) {
+	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
+		config.Config{PlatformDomain: "example.tld"})
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/console/api/v1/me", nil)
+	req.Host = "CONSOLE.Example.TLD:8099" // and the host is normalised like a school's
+	srv.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusUnauthorized {
+		t.Errorf("answered %d with nobody signed in, want 401", rec.Code)
+	}
+}
