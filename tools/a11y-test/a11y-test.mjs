@@ -176,10 +176,35 @@ let theKey = null;
    measured afterwards is the state a person is looking at. */
 async function answerCard(page, arrange) {
   if (arrange) await arrange(page);
-  const [reply] = await Promise.all([
+
+  /* IF THE ANSWER NEVER LEAVES THE PAGE, SAY WHAT THE PAGE LOOKED LIKE.
+     CI failed here once with nothing but "waitForResponse: Timeout", which
+     names the symptom and none of the three things that produce it: a card the
+     interface considered empty, an answer button already spent, or a script
+     that threw on the way to the request. All three are visible in the document
+     at the moment it happens, and none of them are visible ten minutes later in
+     a log. So the timeout is caught and the screen is described. */
+  const reply = await Promise.all([
     page.waitForResponse((r) => r.url().includes('/answered'), { timeout: 15000 }),
     page.locator('.ex-answer').click(),
-  ]);
+  ]).then(([r]) => r).catch(async (e) => {
+    const seen = await page.evaluate(() => {
+      const card = document.querySelector('.ex');
+      const verdict = document.querySelector('.ex-verdict');
+      const button = document.querySelector('.ex-answer');
+      return {
+        card: card ? card.className : 'no card on the screen',
+        verdict: verdict ? `${verdict.className} — ${verdict.textContent.trim().slice(0, 80)}` : 'none',
+        button: button ? (button.disabled ? 'disabled' : 'enabled') : 'no answer button',
+        items: document.querySelectorAll('.ord-item').length,
+        chosen: document.querySelectorAll('.choice input:checked').length,
+      };
+    }).catch(() => null);
+    throw new Error(`${e.message}\n        the card was "${seen?.card}", the button was `
+      + `${seen?.button}, the verdict said [${seen?.verdict}], and the answer on screen was `
+      + `${seen?.items} ordered items / ${seen?.chosen} chosen options`
+      + (thrown.length ? `\n        the page threw: ${thrown.join(' | ')}` : ''));
+  });
   if (!reply.ok()) throw new Error(`answering a card: ${reply.status()} ${await reply.text()}`);
 
   const said = await reply.json();
@@ -286,12 +311,20 @@ async function learnTheDrill() {
   return learnt;
 }
 
+// What the page threw while a card was being answered. A script that fails on
+// the way to a request produces no request and no verdict, which from the
+// outside looks exactly like a card nobody answered — see `answerCard`.
+let thrown = [];
+
 /* A fresh account per verdict, and the FIRST card of its queue — which is the
    one the key was learnt for, whichever of them the server puts first. Asking
    the same student twice would be answering a card that has already moved the
    schedule, and answering it a second time is what a drill does not allow. */
 async function drilled(theme, want) {
   const page = await open(theme, 'en');
+  thrown = [];
+  page.on('pageerror', (e) => thrown.push(e.message));
+  page.on('console', (m) => { if (m.type() === 'error') thrown.push(m.text()); });
   try {
     await signUp(page, 'Ada Lovelace', `a11y-drill-${Date.now()}-${theme}@example.tld`);
     const [drawn] = await Promise.all([
