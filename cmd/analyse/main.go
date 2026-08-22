@@ -124,9 +124,16 @@ func run(log *slog.Logger) error {
 		// may reach for.
 		WithStream(
 			func(ctx context.Context, school uuid.UUID, names []string,
-				since time.Time) ([]analysis.Reach, error) {
+				since time.Time, who analysis.Counting) ([]analysis.Reach, error) {
 
-				reaches, err := events.Reached(ctx, school, names, since, event.CountingReal)
+				/* THE WORD IS TRANSLATED FAITHFULLY HERE, AND FIXED AT THE CALL
+				   SITE BELOW. A reader that quietly ignored `who` and always
+				   asked for real people would be a lie the day somebody wired it
+				   to a screen with a switch on it. What keeps this job off the
+				   seeded population is that it passes `CountingReal` and has no
+				   flag to pass anything else — the decision is visible where it
+				   is made, not buried in a closure. */
+				reaches, err := events.Reached(ctx, school, names, since, counting(who))
 				if err != nil {
 					return nil, err
 				}
@@ -198,12 +205,24 @@ func run(log *slog.Logger) error {
 		}
 	}
 
-	// THE FUNNEL, PRINTED WHERE SOMEBODY WILL SEE IT. There is no console yet,
-	// and a report nobody can read is a report nobody acts on — so the job that
-	// reads the stream says what the stream says.
+	// THE FUNNEL, PRINTED WHERE SOMEBODY WILL SEE IT. This used to say "there is
+	// no console yet"; there is one now, and this stays anyway — for the reason
+	// the reverse would be a mistake.
+	//
+	// The screen is a person asking. This is a run that happened, on a schedule,
+	// against real people, with the numbers in the log beside the questions this
+	// job took out of circulation on the same night. Deleted, the only record of
+	// what the funnel looked like on the evening something changed would be a
+	// screen nobody had open. It costs eight lines of output a day.
 	quiet := 0
 	for _, school := range schools {
-		funnel, err := items.Funnel(ctx, school, since)
+		/* REAL PEOPLE, AND THIS JOB HAS NO WAY TO ASK FOR ANYTHING ELSE. It is
+		   the job that WITHDRAWS a question, and a run that had a flag for the
+		   seeded population would be one argument away from acting on invented
+		   answers (K-11). The console's screen is where the other populations
+		   may be looked at, because a screen can say on its face that it is
+		   doing so and a cron job cannot. */
+		funnel, err := items.Funnel(ctx, school, since, analysis.CountingReal)
 		if err != nil {
 			return err
 		}
@@ -287,5 +306,24 @@ func recordedBy(log *audit.Store) analysis.Audit {
 			TenantID:    &school,
 			Reason:      reason,
 		})
+	}
+}
+
+// counting says that this module's word for a population and the stream's are
+// the same word.
+//
+// THE TWO TYPES EXIST BECAUSE A MODULE MAY NOT IMPORT A MODULE (X-02), and this
+// is the one line that is the price of it. It is exhaustive on purpose rather
+// than a cast: both sides fall back to `real` for a value they do not know, so
+// the failure mode of a missed case is a narrower population and never a report
+// about people that quietly counts invented ones.
+func counting(who analysis.Counting) event.Counting {
+	switch who {
+	case analysis.CountingSeeded:
+		return event.CountingSeeded
+	case analysis.CountingEverybody:
+		return event.CountingEverybody
+	default:
+		return event.CountingReal
 	}
 }

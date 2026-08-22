@@ -53,10 +53,53 @@ type Step struct {
 	Why string
 }
 
+// Counting says which population the funnel counts.
+//
+// IT IS THIS PACKAGE'S OWN WORD AND NOT THE STREAM'S. `internal/event` has a
+// type of the same name with the same three values, and this one exists rather
+// than importing it because a module may not import another module (X-02) —
+// `cmd/api` is what says the two are the same, in one line, where the rest of
+// the wiring already is.
+//
+// The duplication is small and it is the price of the boundary. What makes it
+// safe is that BOTH sides fall back to `real` for anything they do not
+// recognise: a value lost in translation narrows the population and never
+// widens it into a report about people that quietly counts invented ones.
+type Counting string
+
+const (
+	// CountingReal is people who came here on their own. The default, and what
+	// a screen shows unless somebody asks otherwise.
+	CountingReal Counting = "real"
+
+	// CountingSeeded is the seeded population alone — what `cmd/seed` wrote.
+	CountingSeeded Counting = "seeded"
+
+	// CountingEverybody is both, for a screen that is showing a demonstration
+	// and says on its face that it is.
+	CountingEverybody Counting = "everybody"
+)
+
+// Reading answers whether a word is one of the three.
+//
+// THE FALLBACK IS SAFE AND THE REFUSAL IS HONEST, and they are different jobs.
+// `Counting("everbody")` counts real people, which is the right thing for the
+// SQL to do and the wrong thing for a screen to do quietly — the switch would
+// say "including the seeded population" over a chart that excluded it. So a
+// caller that took the word from a request refuses it here instead.
+func Reading(word string) (Counting, bool) {
+	switch Counting(word) {
+	case CountingReal, CountingSeeded, CountingEverybody:
+		return Counting(word), true
+	default:
+		return CountingReal, false
+	}
+}
+
 // Reached is one identity having reached one step, defined here and satisfied
 // by the module that owns the stream.
 type Reached func(ctx context.Context, tenantID uuid.UUID,
-	names []string, since time.Time) ([]Reach, error)
+	names []string, since time.Time, who Counting) ([]Reach, error)
 
 // Reach is the stream's answer: a step, and whichever identities were on the
 // event.
@@ -94,8 +137,16 @@ var steps = []Step{
 	},
 }
 
-// Funnel answers how many people reached each step in one school.
-func (s *Store) Funnel(ctx context.Context, tenantID uuid.UUID, since time.Time) ([]Step, error) {
+// Funnel answers how many people reached each step in one school, over the
+// population `who` names.
+//
+// THE POPULATION IS AN ARGUMENT AND NOT A DEFAULT BURIED IN THE SQL, because
+// this report is the one place the seeded students are allowed to be counted —
+// a screen showing a demonstration, which says so on its face. Everything that
+// ACTS stays on `CountingReal` and has no way to ask for otherwise; see
+// `event.Counting`, which this mirrors.
+func (s *Store) Funnel(ctx context.Context, tenantID uuid.UUID, since time.Time,
+	who Counting) ([]Step, error) {
 	if s.reached == nil || s.links == nil {
 		return nil, fmt.Errorf("analysis: this store was built without the stream to read")
 	}
@@ -107,7 +158,7 @@ func (s *Store) Funnel(ctx context.Context, tenantID uuid.UUID, since time.Time)
 		}
 	}
 
-	reaches, err := s.reached(ctx, tenantID, names, since)
+	reaches, err := s.reached(ctx, tenantID, names, since, who)
 	if err != nil {
 		return nil, fmt.Errorf("analysis: reading who reached each step: %w", err)
 	}
