@@ -600,6 +600,15 @@ question type the portal does not have — gets a file of its own, which is what
 An accessibility fix to a copied element went into `portal.css` once. It worked and it
 was still wrong: it ended the invariant that makes the next such bug visible.
 
+**"Override" means a colour, not a `display`.** `app.css` is loaded last, so a layout
+property written there against a class name the copied stylesheet already uses wins on
+every element of the copied markup carrying it — on screens the change was never about,
+invisibly in a diff. An enrolment list styled as `.steps` laid out every lesson's row of
+section tabs as a column, and `.steps` in `portal.css` is that row. `tools/check-css`
+now fails on exactly that: a layout property, on a class of theirs, with nothing of ours
+in the selector to hold it to our screen — which is why `.view-account .on` is allowed
+and a bare `.steps` is not. A new screen's own element gets a name of its own.
+
 **Anything that differs between schools comes from the school, not from a file that
 ships with the application.** Its name, its accent, the address of its own site, what
 a subscription costs there. Each of those was a constant in a copied file first, and
@@ -1110,6 +1119,7 @@ go build ./...
 golangci-lint run            # before the tests: it is what build and vet do not do
 go run ./tools/validate-content   # the answer keys, not only the schema
 go run ./tools/check-interface    # every string the interface says, in every language it claims
+go run ./tools/check-css          # our stylesheet overrides theirs and never lays it out
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
 ```
 
