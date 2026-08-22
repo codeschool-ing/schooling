@@ -238,7 +238,7 @@ func TestTheAnswersToExamQuestionsCanBeReadBack(t *testing.T) {
 	answered("alpha", 2, false, 3, 10, "two")
 	answered("beta", 1, true, 9, 10, "one")
 
-	read, err := store.ItemAnswers(context.Background(), id, time.Time{})
+	read, err := store.ItemAnswers(context.Background(), id, time.Time{}, event.CountingReal)
 	if err != nil {
 		t.Fatalf("reading them back: %v", err)
 	}
@@ -295,7 +295,7 @@ func TestReadingTheAnswersIsScopedToOneSchoolAndOneWindow(t *testing.T) {
 		}
 	}
 
-	read, err := store.ItemAnswers(context.Background(), mine, time.Time{})
+	read, err := store.ItemAnswers(context.Background(), mine, time.Time{}, event.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -304,7 +304,7 @@ func TestReadingTheAnswersIsScopedToOneSchoolAndOneWindow(t *testing.T) {
 	}
 
 	// And nothing from before the window.
-	later, err := store.ItemAnswers(context.Background(), mine, time.Now().UTC().Add(time.Hour))
+	later, err := store.ItemAnswers(context.Background(), mine, time.Now().UTC().Add(time.Hour), event.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -328,7 +328,7 @@ func TestOnlyAnswersComeBackFromTheAnswerReader(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	read, err := store.ItemAnswers(context.Background(), id, time.Time{})
+	read, err := store.ItemAnswers(context.Background(), id, time.Time{}, event.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -423,7 +423,7 @@ func TestASeededStudentIsNotInTheReports(t *testing.T) {
 
 	// Item analysis: a seeded student answers at random, and counted in they
 	// would drag a real question towards being quarantined.
-	answers, err := store.ItemAnswers(context.Background(), id, time.Time{})
+	answers, err := store.ItemAnswers(context.Background(), id, time.Time{}, event.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -433,7 +433,8 @@ func TestASeededStudentIsNotInTheReports(t *testing.T) {
 
 	// The funnel: counting seeded students would make it a funnel about the
 	// seeder.
-	reached, err := store.Reached(context.Background(), id, []string{"account.created"}, time.Time{})
+	reached, err := store.Reached(context.Background(), id, []string{"account.created"}, time.Time{},
+		event.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -443,5 +444,118 @@ func TestASeededStudentIsNotInTheReports(t *testing.T) {
 	}
 	if len(reached) == 1 && (reached[0].AccountID == nil || *reached[0].AccountID != real) {
 		t.Errorf("the one counted is not the real student")
+	}
+}
+
+// AND THEY CAN BE ASKED FOR BY NAME, WHICH IS THE OTHER HALF OF THE SAME RULE.
+//
+// A seeded population nothing can read is a seeded population that proves
+// nothing — the screens it exists to make legible have to be able to look at it.
+// What must never happen is looking at it BY DEFAULT, which the test above
+// holds; this one holds that the other two answers exist and differ.
+func TestTheSeededPopulationCanBeAskedForByName(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	store := event.NewStore(pool)
+
+	real, seeded := uuid.New(), uuid.New()
+	for account, who := range map[uuid.UUID]event.Population{
+		real: event.Real, seeded: event.Synthetic,
+	} {
+		if err := store.Emit(context.Background(), event.Event{
+			Name:       event.ItemAnswered,
+			Dimensions: event.ForSchool(id, slug, "full", "BR", "pt", who),
+			AccountID:  &account,
+			Payload: map[string]any{
+				"exercise": "shared", "version": 1, "type": "quiz",
+				"correct": true, "attempt": account.String(), "score": 5, "of": 10,
+			},
+		}); err != nil {
+			t.Fatalf("emitting for %s: %v", who, err)
+		}
+	}
+
+	for _, want := range []struct {
+		counting event.Counting
+		rows     int
+	}{
+		{event.CountingReal, 1},
+		{event.CountingSeeded, 1},
+		{event.CountingEverybody, 2},
+		// A value this package does not recognise falls to `real`, which is the
+		// direction that cannot fold a seeded student into a report about
+		// people. A typo must not widen a read.
+		{event.Counting("everyone"), 1},
+	} {
+		read, err := store.ItemAnswers(context.Background(), id, time.Time{}, want.counting)
+		if err != nil {
+			t.Fatalf("reading as %q: %v", want.counting, err)
+		}
+		if len(read) != want.rows {
+			t.Errorf("counting %q read %d answers, want %d", want.counting, len(read), want.rows)
+		}
+	}
+}
+
+// AN EVENT CAN SAY WHEN IT HAPPENED, AND ALMOST NOTHING MAY.
+//
+// The seeder invents a past because abandonment and coming back after a month
+// are shapes in time. Everything else emits as it happens and leaves the column
+// to its default — which is checked by a source scan in
+// `internal/architecture_test.go`, because a rule this easy to break by writing
+// one more field is not a rule a comment can hold.
+func TestAnEventCanBeGivenTheTimeItHappenedAt(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	store := event.NewStore(pool)
+
+	then := time.Now().UTC().Add(-90 * 24 * time.Hour).Truncate(time.Second)
+	answer := func(at time.Time, attempt string) {
+		t.Helper()
+		if err := store.Emit(context.Background(), event.Event{
+			Name:       event.ItemAnswered,
+			At:         at,
+			Dimensions: event.ForSchool(id, slug, "full", "BR", "pt", event.Real),
+			Payload: map[string]any{
+				"exercise": "q", "version": 1, "type": "quiz",
+				"correct": true, "attempt": attempt, "score": 5, "of": 10,
+			},
+		}); err != nil {
+			t.Fatalf("emitting: %v", err)
+		}
+	}
+
+	answer(then, "backdated")
+	answer(time.Time{}, "now") // the zero value means now, as it does everywhere
+
+	read, err := store.ItemAnswers(context.Background(), id, time.Time{}, event.CountingReal)
+	if err != nil {
+		t.Fatalf("reading them back: %v", err)
+	}
+	if len(read) != 2 {
+		t.Fatalf("wrote 2 answers and read %d back", len(read))
+	}
+
+	// Newest last: the backdated one is first, and it came back at the moment it
+	// was given rather than at the moment it was written.
+	if !read[0].AnsweredAt.UTC().Truncate(time.Second).Equal(then) {
+		t.Errorf("the backdated answer came back at %s, want %s", read[0].AnsweredAt, then)
+	}
+	if time.Since(read[1].AnsweredAt) > time.Minute {
+		t.Errorf("the answer with no time on it came back at %s, and it was written now",
+			read[1].AnsweredAt)
+	}
+
+	// AND A WINDOW STILL CUTS IT OFF. A backdated event that ignored `since`
+	// would be one that turns up in every report however far back it claims to
+	// be.
+	recent, err := store.ItemAnswers(context.Background(), id,
+		time.Now().UTC().Add(-24*time.Hour), event.CountingReal)
+	if err != nil {
+		t.Fatalf("reading the window: %v", err)
+	}
+	if len(recent) != 1 {
+		t.Errorf("a day's window read %d answers, and one of the two is ninety days old",
+			len(recent))
 	}
 }
