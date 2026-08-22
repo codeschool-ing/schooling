@@ -205,18 +205,21 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// reading path; and which sections it has, so a client cannot complete a
 	// course by inventing ids. Both are closures here, which is the only place
 	// that knows about both modules.
+	//
+	// IT IS A VARIABLE because the console reads it too, for a student's
+	// record: how far one person has got, at one school.
+	studied := progress.NewStore(pool,
+		courseOpen(courses, plan),
+		func(ctx context.Context, courseID string) (map[string][]string, error) {
+			school, ok := schoolID(ctx)
+			if !ok {
+				return nil, nil
+			}
+			return courses.SectionsOf(ctx, school, courseID)
+		},
+	)
 	progress.NewHandler(
-		progress.NewStore(pool,
-			courseOpen(courses, plan),
-			func(ctx context.Context, courseID string) (map[string][]string, error) {
-				school, ok := schoolID(ctx)
-				if !ok {
-					return nil, nil
-				}
-				return courses.SectionsOf(ctx, school, courseID)
-			},
-		),
-		schoolID, identity.AccountID, studentEvents(events, log, plan),
+		studied, schoolID, identity.AccountID, studentEvents(events, log, plan),
 	).Routes(scoped)
 
 	// PRACTICE ASKS THE SAME DOOR QUESTION, with the same closure. A card in a
@@ -339,12 +342,15 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	// `privacy` nor `audit`, so it names the shapes it needs and this is where
 	// they are filled in — the same wiring `visitor.SchoolOf` uses, and the
 	// place `K-07`'s read layer starts.
+	somebody := console.People{
+		Find:  personAt(accounts),
+		ByID:  personByID(accounts),
+		Held:  records.Export,
+		Erase: records.Erase,
+	}
+
 	console.NewPeopleHandler(
-		console.People{
-			Find:  personAt(accounts),
-			Held:  records.Export,
-			Erase: records.Erase,
-		},
+		somebody,
 		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
@@ -367,6 +373,20 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	   only the people who can act can see what was done would be an audit its
 	   own subjects control. */
 	console.NewHistoryHandler(history(entries)).Routes(staffAPI)
+
+	/* AND THE OTHER READ THAT MAKES THE FIRST SCREEN USABLE: what a student
+	   actually has. `Personal data` answers "is this the right person and how
+	   much is held", which is what somebody needs before erasing and nothing
+	   anybody needs before talking.
+
+	   FOUR MODULES MEET HERE AND THE CONSOLE IMPORTS NONE OF THEM. It names one
+	   function — a person at a school — and this is where billing, progress,
+	   exams and certificates are asked the same question in turn. */
+	console.NewRecordHandler(somebody, console.Records{
+		Schools:  schoolsFor(tenant.NewStore(pool)),
+		Sittings: sittingsOf(accounts),
+		At:       atSchool(subscriptions, studied, exams, certificates),
+	}).Routes(staffAPI)
 
 	/* THE GATE IS ON THE API AND NOT ON THE WHOLE HOST, and the difference
 	   matters the moment this grows a screen: a console nobody can reach
@@ -969,5 +989,134 @@ func signedUp(visitors *visitor.Store, events *event.Store, log *slog.Logger) id
 		if err := events.Emit(ctx, e); err != nil {
 			log.Error("counting a sign-up", "error", err, "account", account.ID)
 		}
+	}
+}
+
+// personByID is the other half of `personAt`: the console's screens find
+// somebody by address and then keep the id in the address bar.
+func personByID(accounts *identity.Store) func(context.Context, uuid.UUID) (console.Person, error) {
+	return func(ctx context.Context, id uuid.UUID) (console.Person, error) {
+		account, err := accounts.ByID(ctx, id)
+		if errors.Is(err, identity.ErrNoAccount) {
+			return console.Person{}, console.ErrNoPerson
+		}
+		if err != nil {
+			return console.Person{}, err
+		}
+		return console.Person{
+			ID: account.ID, Name: account.Name, Email: account.Email,
+			CreatedAt: account.CreatedAt, Synthetic: account.Synthetic,
+		}, nil
+	}
+}
+
+// schoolsFor is the loop a record is gathered across.
+//
+// `tenant.All` exists for this and for nothing on the school side: a request on
+// a school's host resolves exactly one school and must never enumerate them.
+func schoolsFor(schools *tenant.Store) func(context.Context) ([]console.School, error) {
+	return func(ctx context.Context) ([]console.School, error) {
+		all, err := schools.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]console.School, 0, len(all))
+		for _, s := range all {
+			out = append(out, console.School{ID: s.ID, Slug: s.Slug, Name: s.Name})
+		}
+		return out, nil
+	}
+}
+
+func sittingsOf(accounts *identity.Store) func(context.Context, uuid.UUID) ([]console.Sitting, error) {
+	return func(ctx context.Context, accountID uuid.UUID) ([]console.Sitting, error) {
+		sittings, err := accounts.Sittings(ctx, accountID)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]console.Sitting, 0, len(sittings))
+		for _, s := range sittings {
+			out = append(out, console.Sitting{
+				ID: s.ID, CreatedAt: s.CreatedAt, LastSeenAt: s.LastSeenAt,
+				ExpiresAt: s.ExpiresAt, RevokedAt: s.RevokedAt, UserAgent: s.UserAgent,
+			})
+		}
+		return out, nil
+	}
+}
+
+/*
+atSchool asks four modules the same question about one person, at one school.
+
+	THIS IS WHAT THE MODULE BOUNDARY BUYS. `console` names one function; nothing
+	in it knows that a subscription is `billing`'s or that a certificate is
+	`certificate`'s, and none of those four knows the console exists. The joining
+	is here, which is where `planOf`, `maySit` and `passedExam` already join the
+	same modules for the student's own screens.
+
+	A SUBSCRIPTION IS SCOPED TO THE SCHOOL, and `billing.Of` takes that scope as
+	a string — the school's slug, which is what the student side passes. Reading
+	it with the wrong scope would answer "no plan" for somebody who is paying.
+*/
+func atSchool(
+	subscriptions *billing.Store,
+	studied *progress.Store,
+	exams *exam.Store,
+	certificates *certificate.Store,
+) func(context.Context, console.School, uuid.UUID) (console.AtSchool, error) {
+	return func(ctx context.Context, school console.School, accountID uuid.UUID) (console.AtSchool, error) {
+		out := console.AtSchool{School: school}
+
+		held, err := subscriptions.Of(ctx, accountID, school.Slug, time.Now())
+		switch {
+		case errors.Is(err, billing.ErrNoSubscription):
+			// Not an error and not a gap: most people at most schools have
+			// never held anything there.
+		case err != nil:
+			return console.AtSchool{}, err
+		default:
+			out.Plan = string(held.Model)
+			out.State = string(held.State)
+			if !held.PaidThrough.IsZero() {
+				paid := held.PaidThrough
+				out.PaidThrough = &paid
+			}
+		}
+
+		done, err := studied.Summary(ctx, school.ID, accountID)
+		if err != nil {
+			return console.AtSchool{}, err
+		}
+		for _, d := range done {
+			out.Courses = append(out.Courses, console.Course{CourseID: d.CourseID, Sections: d.Sections})
+		}
+
+		sat, err := exams.History(ctx, school.ID, accountID)
+		if err != nil {
+			return console.AtSchool{}, err
+		}
+		for _, e := range sat {
+			one := console.Sat{
+				Scope: string(e.Scope), ScopeID: e.ScopeID,
+				StartedAt: e.StartedAt, HandedIn: e.HandedIn,
+			}
+			if e.Result != nil {
+				passed := e.Result.Passed
+				score := e.Result.Score
+				one.Passed, one.Score = &passed, &score
+			}
+			out.Exams = append(out.Exams, one)
+		}
+
+		given, err := certificates.All(ctx, school.ID, accountID)
+		if err != nil {
+			return console.AtSchool{}, err
+		}
+		for _, c := range given {
+			out.Certificates = append(out.Certificates, console.Given{
+				Code: c.Code, Title: c.Title, IssuedAt: c.IssuedAt,
+			})
+		}
+		return out, nil
 	}
 }

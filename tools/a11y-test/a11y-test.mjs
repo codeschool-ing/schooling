@@ -504,6 +504,20 @@ try {
       },
     });
 
+    /* THE STUDENT RECORD, WHICH IS TWO SCREENS: the lookup, and one person.
+       The second is reached by looking the student up, because the id is not
+       something this file may invent — and a record measured at an id nobody
+       has is a "no such person" page passing as a record. */
+    await check(staff.page, `${theme} · console, the record lookup`, '/#/record', '/record',
+      { base: CONSOLE, region: '#stage' });
+
+    await staff.page.fill('#email', studentEmail);
+    await staff.page.click('#find button[type=submit]');
+    await staff.page.waitForSelector('#stage[data-screen="/record/:id"]', { timeout: 8000 });
+    await check(staff.page, `${theme} · console, one student's record`,
+      staff.page.url().slice(CONSOLE.length), '/record/:id',
+      { base: CONSOLE, region: '#stage', settled: '.block' });
+
     /* THE HISTORY, WHICH BY NOW HAS SOMETHING IN IT: granting this operator its
        role wrote an entry, so the list is never the empty state here. The empty
        state is a paragraph and would pass every check there is, which is why

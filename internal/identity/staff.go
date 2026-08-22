@@ -355,3 +355,43 @@ func (s *Store) HasSecondFactor(ctx context.Context, accountID uuid.UUID) (bool,
 	}
 	return has, nil
 }
+
+// Sitting is one browser signed in, as an operator needs to see it.
+//
+// THE TOKEN HASH IS NOT IN IT. What a record needs is how many sittings there
+// are, since when, and from what — never anything that would let somebody
+// become the person they are looking at.
+type Sitting struct {
+	ID         uuid.UUID
+	CreatedAt  time.Time
+	LastSeenAt *time.Time
+	ExpiresAt  time.Time
+	RevokedAt  *time.Time
+	UserAgent  string
+}
+
+// Sittings are the sessions of one account, newest first.
+func (s *Store) Sittings(ctx context.Context, accountID uuid.UUID) ([]Sitting, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, created_at, last_seen_at, expires_at, revoked_at, user_agent
+		FROM sessions WHERE account_id = $1 ORDER BY created_at DESC
+	`, accountID)
+	if err != nil {
+		return nil, fmt.Errorf("identity: reading the sittings: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Sitting
+	for rows.Next() {
+		var one Sitting
+		if err := rows.Scan(&one.ID, &one.CreatedAt, &one.LastSeenAt,
+			&one.ExpiresAt, &one.RevokedAt, &one.UserAgent); err != nil {
+			return nil, fmt.Errorf("identity: reading a sitting: %w", err)
+		}
+		out = append(out, one)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("identity: reading the sittings: %w", err)
+	}
+	return out, nil
+}
