@@ -18,7 +18,8 @@ func funnelOver(t *testing.T, pool *pgxpool.Pool,
 
 	t.Helper()
 	return analysis.NewStore(pool, nil, nil).WithStream(
-		func(context.Context, uuid.UUID, []string, time.Time) ([]analysis.Reach, error) {
+		func(context.Context, uuid.UUID, []string, time.Time,
+			analysis.Counting) ([]analysis.Reach, error) {
 			return reaches, nil
 		},
 		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil },
@@ -57,7 +58,7 @@ func TestSomebodyWhoArrivedAndThenSignedUpIsOnePerson(t *testing.T) {
 			reach("section.completed", nil, account),   // afterwards, account only
 		},
 		map[uuid.UUID]uuid.UUID{*browser: *account},
-	).Funnel(context.Background(), uuid.New(), time.Time{})
+	).Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +80,7 @@ func TestABrowserWithNoAccountIsCounted(t *testing.T) {
 	funnel, err := funnelOver(t, pool, []analysis.Reach{
 		reach("visitor.arrived", first, nil),
 		reach("visitor.arrived", second, nil),
-	}, nil).Funnel(context.Background(), uuid.New(), time.Time{})
+	}, nil).Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +104,7 @@ func TestOnePersonOnTwoBrowsersIsCountedOnce(t *testing.T) {
 			reach("lesson.opened", laptop, account),
 		},
 		map[uuid.UUID]uuid.UUID{*phone: *account, *laptop: *account},
-	).Funnel(context.Background(), uuid.New(), time.Time{})
+	).Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -128,7 +129,7 @@ func TestDoingAStepRepeatedlyCountsOnce(t *testing.T) {
 	}
 
 	funnel, err := funnelOver(t, pool, many, nil).
-		Funnel(context.Background(), uuid.New(), time.Time{})
+		Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -147,7 +148,7 @@ func TestTheStepsNothingEmitsSayThatRatherThanZero(t *testing.T) {
 	pool := testPool(t)
 
 	funnel, err := funnelOver(t, pool, nil, nil).
-		Funnel(context.Background(), uuid.New(), time.Time{})
+		Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -187,7 +188,7 @@ func TestEveryStepAppearsInOrderEvenWithNoData(t *testing.T) {
 
 	funnel, err := funnelOver(t, pool,
 		[]analysis.Reach{reach("course.completed", id(), nil)}, nil).
-		Funnel(context.Background(), uuid.New(), time.Time{})
+		Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -215,7 +216,7 @@ func TestAnEventWithNobodyOnItIsNotAPerson(t *testing.T) {
 
 	funnel, err := funnelOver(t, pool,
 		[]analysis.Reach{reach("visitor.arrived", nil, nil)}, nil).
-		Funnel(context.Background(), uuid.New(), time.Time{})
+		Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -230,7 +231,61 @@ func TestAFunnelWithNoStreamRefuses(t *testing.T) {
 	pool := testPool(t)
 
 	if _, err := analysis.NewStore(pool, nil, nil).
-		Funnel(context.Background(), uuid.New(), time.Time{}); err == nil {
+		Funnel(context.Background(), uuid.New(), time.Time{}, analysis.CountingReal); err == nil {
 		t.Error("a funnel was produced by a store with no stream behind it")
+	}
+}
+
+// THE POPULATION HAS TO REACH THE STREAM, and nothing else in the funnel can
+// tell whether it did: the arithmetic above it is the same whichever people it
+// is counting, so a reader that dropped the argument would pass every test in
+// this file and quietly report real students under a heading that said seeded.
+func TestThePopulationAskedForIsThePopulationRead(t *testing.T) {
+	pool := testPool(t)
+
+	for _, who := range []analysis.Counting{
+		analysis.CountingReal, analysis.CountingSeeded, analysis.CountingEverybody,
+	} {
+		var asked analysis.Counting
+		store := analysis.NewStore(pool, nil, nil).WithStream(
+			func(_ context.Context, _ uuid.UUID, _ []string, _ time.Time,
+				w analysis.Counting) ([]analysis.Reach, error) {
+				asked = w
+				return nil, nil
+			},
+			func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return nil, nil },
+		)
+
+		if _, err := store.Funnel(context.Background(), uuid.New(), time.Time{}, who); err != nil {
+			t.Fatal(err)
+		}
+		if asked != who {
+			t.Errorf("the funnel was asked for %q and read %q", who, asked)
+		}
+	}
+}
+
+// A WORD THAT IS NOT ONE OF THE THREE IS REFUSED RATHER THAN CORRECTED.
+//
+// The SQL falls back to real people for anything it does not know, which is the
+// safe direction and the wrong answer for a caller that took the word from a
+// request: `everbody` would draw real people under a switch saying otherwise.
+// So the reading is separate from the counting, and it says which happened.
+func TestAWordThatIsNotAPopulationIsRefusedAndFallsToReal(t *testing.T) {
+	for _, word := range []string{"real", "seeded", "everybody"} {
+		if who, known := analysis.Reading(word); !known || string(who) != word {
+			t.Errorf("%q is a population and Reading said (%q, %v)", word, who, known)
+		}
+	}
+
+	for _, word := range []string{"everbody", "REAL", "", "synthetic", "all"} {
+		who, known := analysis.Reading(word)
+		if known {
+			t.Errorf("%q is not one of the three and Reading accepted it", word)
+		}
+		if who != analysis.CountingReal {
+			t.Errorf("%q fell back to %q — an unknown word narrows the population, "+
+				"it never widens it", word, who)
+		}
 	}
 }
