@@ -250,9 +250,19 @@ whenChanged(async (path, found) => {
      region. It was `document.title` that announced the screen change to a screen
      reader; freezing the tab without passing that name on would leave the
      navigation mute for anyone who cannot see. */
-  /* The school's own name, because this deployment serves several and the tab
-     is how somebody with two open tells them apart. */
-  document.title = (source.school && source.school.name) || 'codeschool.ing';
+  /* AND THE NAME IS THE ADDRESS. The school's own name was here, and it answered
+     a question nobody was asking: `Programming` says nothing about which of the
+     three tabs this is, and two schools of the same subject on two deployments
+     look identical. The first two labels of the host — `code.schooling` — are
+     what actually differ, and they are what somebody types to come back.
+
+     `index.html` sets the same thing before the first paint; this is for the
+     case that one cannot reach. Opened from `file://` there is no host at all,
+     and an offline bundle IS one school, so its name is the true answer there. */
+  const host = location.hostname.split('.');
+  document.title = host.length > 1
+    ? host[0] + '.' + host[1]
+    : (source.school && source.school.name) || 'schooling';
   content.setAttribute('aria-label', title);
   // The route that matched, not the address that was typed: `/course/:id` for
   // every course. See the miss above for what this is for.

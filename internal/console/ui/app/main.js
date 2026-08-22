@@ -57,7 +57,6 @@ whenChanged(async (path, found) => {
     stage.innerHTML = notFound(path);
     stage.setAttribute('aria-label', 'No such screen');
     stage.dataset.screen = 'not-found';
-    document.title = 'Console · schooling';
     paintRail(path);
     return;
   }
@@ -72,11 +71,17 @@ whenChanged(async (path, found) => {
      router's miss and calling it clean. */
   stage.dataset.screen = found.r.pattern;
 
-  /* The tab keeps one name. A long screen title pushes the brand off the end
-     and the tab stops being recognisable among a dozen others; the screen's
-     name goes to the content region instead, where it is still announced to
-     anybody who cannot see it. */
-  document.title = 'Console · schooling';
+  /* THE TAB KEEPS ONE NAME, AND `index.html` IS WHERE IT IS SET. A long screen
+     title pushes the brand off the end and the tab stops being recognisable
+     among a dozen others; the screen's name goes to the content region instead,
+     where it is still announced to anybody who cannot see it.
+
+     It used to be assigned here, twice, to the string `Console · schooling` —
+     which is a name rather than an address, so nothing in it said which
+     deployment's console this was. The head of `index.html` now derives it from
+     the host that answered, before the first paint, and there is nothing left
+     for this to do: a constant written on every navigation is a constant with
+     two more chances to disagree with itself. */
   stage.setAttribute('aria-label', title);
 
   if (after) after();
