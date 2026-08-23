@@ -157,6 +157,36 @@ func (s *Store) runOne(ctx context.Context, school uuid.UUID, since, now time.Ti
 	return len(grouped), nil
 }
 
+// ComputedAt answers when this school's rollup was last written, and whether it
+// ever was.
+//
+// A SCREEN OF STATISTICS WITH NO "AS OF" GOES STALE IN SILENCE. These rows are
+// a cache of a job that runs on a schedule; if that job has been failing for a
+// week, every number on the console is a week old and looks exactly like a
+// number from this morning. When the rows were made is the one thing that cannot
+// be read off the rows, so it is asked for separately.
+//
+// THE MAX IS THE RUN AND NOT A MIXTURE: `runOne` writes a school's whole rollup
+// in one transaction with one `now`, so every row of a school carries the same
+// instant and the newest of them is the last run.
+//
+// `false` IS "THE JOB HAS NEVER RUN HERE", which is not the same as a school
+// with no questions. The second is an answer and the first is the absence of
+// one — the distinction the funnel makes with `Measured`, for the same reason.
+func (s *Store) ComputedAt(ctx context.Context, tenantID uuid.UUID) (time.Time, bool, error) {
+	var at *time.Time
+	if err := s.pool.QueryRow(ctx, `
+		SELECT max(computed_at) FROM item_statistics WHERE tenant_id = $1
+	`, tenantID).Scan(&at); err != nil {
+		return time.Time{}, false,
+			fmt.Errorf("analysis: reading when the statistics were made: %w", err)
+	}
+	if at == nil {
+		return time.Time{}, false, nil
+	}
+	return *at, true, nil
+}
+
 // Of answers one school's statistics, worst first.
 //
 // THE ORDER IS THE POINT OF THE SCREEN. A console listing every question in id

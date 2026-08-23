@@ -474,6 +474,66 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			}
 			return out, nil
 		},
+
+		/* AND THE OTHER HALF OF `Measure`: what the answers say about a
+		   question. Three reads of one module, joined here because the console
+		   may not import it and because they are one screen — the rollup, what
+		   is out of circulation, and when the job last ran.
+
+		   THE QUARANTINE IS NOT DERIVABLE FROM THE VERDICT and that is why it is
+		   read separately. The sweep runs nightly, so a question flagged this
+		   afternoon is flagged AND still being asked; one released by hand is in
+		   circulation with the verdict it was condemned on. A screen that
+		   inferred one from the other would be confidently wrong in both
+		   directions.
+
+		   THE THRESHOLDS COME FROM THE PACKAGE THAT APPLIED THEM, so the screen
+		   never writes a bar of its own. A constant moving here has to move the
+		   screen with it, which is the whole point of carrying them. */
+		func(ctx context.Context, school uuid.UUID) (console.Rollup, error) {
+			stats, err := items.Of(ctx, school)
+			if err != nil {
+				return console.Rollup{}, err
+			}
+			withdrawn, err := items.InForce(ctx, school)
+			if err != nil {
+				return console.Rollup{}, err
+			}
+			at, computed, err := items.ComputedAt(ctx, school)
+			if err != nil {
+				return console.Rollup{}, err
+			}
+
+			out := make([]console.Question, 0, len(stats))
+			for _, s := range stats {
+				out = append(out, console.Question{
+					ExerciseID: s.ExerciseID, Version: s.Version, Type: s.Type,
+					Attempts: s.Attempts, Correct: s.Correct,
+					Difficulty: s.Difficulty, Discrimination: s.Discrimination,
+					StrongGroup: s.StrongGroup, WeakGroup: s.WeakGroup,
+					Verdict:       string(s.Verdict),
+					MinimumSample: s.MinimumSample,
+					Withdrawn: withdrawn[analysis.Question{
+						ExerciseID: s.ExerciseID, Version: s.Version,
+					}],
+					FirstAnswer: s.FirstAnswer, LastAnswer: s.LastAnswer,
+				})
+			}
+
+			return console.Rollup{
+				Questions: out,
+				Thresholds: console.Thresholds{
+					MinimumSample: analysis.MinimumSample,
+					GroupShare:    analysis.GroupShare,
+					InvertedBelow: analysis.InvertedBelow,
+					WeakBelow:     analysis.WeakBelow,
+					TooEasyAbove:  analysis.TooEasyAbove,
+					TooHardBelow:  analysis.TooHardBelow,
+				},
+				ComputedAt: at,
+				Computed:   computed,
+			}, nil
+		},
 	).Routes(staffAPI)
 
 	console.NewRecordHandler(somebody, console.Records{

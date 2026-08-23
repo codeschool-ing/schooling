@@ -586,3 +586,79 @@ body.no-rail .rail{display:none}
   background:var(--tint-warn);border:1px solid var(--wire);border-left:3px solid var(--phosphor);
   border-radius:4px;color:var(--paper);
 }
+
+/* ---------- WHAT THE ANSWERS SAY ABOUT A QUESTION ----------
+
+   A card per question rather than a table row, and that is not decoration: every
+   number here is a judgement that needs its threshold beside it, and a threshold
+   in a table is either a column repeated on every row or a legend the eye has to
+   travel to. The card puts the bar under the number it judged.
+
+   THE VERDICT IS A WORD AND NOT A COLOUR. Colour marks the one that is a defect,
+   and colour is never the only thing that does — `inverted` says "Inverted", and
+   the border is there for the eye scanning the list rather than for the reader. */
+.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.item{
+  border:1px solid var(--wire);border-left:3px solid var(--wire);border-radius:4px;
+  padding:12px 14px;background:var(--ink);
+}
+.item-inverted{border-left-color:var(--bad)}
+.item-weak,.item-too-easy{border-left-color:var(--phosphor-dim)}
+
+.item-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.item-id{font-size:.82rem;color:var(--paper)}
+.item-v{color:var(--paper-dim)}
+.item-type{font-size:.68rem;color:var(--paper-dim)}
+.item-verdict{font-size:.78rem;font-weight:600;color:var(--paper);margin-left:auto}
+.item-inverted .item-verdict{color:var(--bad)}
+
+/* OUT OF CIRCULATION AND STILL BEING ASKED ARE BOTH WORTH SAYING, and the second
+   is the one that surprises people: the sweep runs nightly, so a question found
+   this afternoon is in front of students tonight. */
+.item-out,.item-still{
+  font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid currentColor;border-radius:3px;padding:2px 7px;
+}
+.item-out{color:var(--paper-dim)}
+.item-still{color:var(--bad)}
+
+.item-meaning{font-size:.8rem;color:var(--paper-dim);margin:8px 0 0;max-width:74ch}
+
+.item-figures{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:10px 18px;margin:12px 0 0;
+}
+.figure dt{
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);
+}
+.figure dd{margin:2px 0 0}
+.figure-value{display:block;font-size:.92rem;color:var(--paper)}
+
+/* THE BAR THE NUMBER ABOVE WAS JUDGED AGAINST. It is small and it is always
+   there — a threshold shown only when something fails is a threshold nobody can
+   check the passing numbers against. */
+.figure-bar{display:block;font-size:.66rem;color:var(--paper-dim);margin-top:2px;max-width:34ch}
+.figure-bad .figure-value{color:var(--bad)}
+
+/* The dates a question was answered between. Outside the figures because it is
+   not a judgement — nothing was compared to it — and one full line wide because
+   a date range in a 190px column breaks in the middle of a date. */
+.item-when{font-size:.7rem;color:var(--paper-dim);margin:10px 0 0}
+
+/* HOW THIS IS DECIDED — a definition list and NOT `.facts`, which in this
+   stylesheet is a grid of `.fact` tiles. A `<dl>` dropped into that grid lays
+   out as four columns with terms and definitions interleaved, which is what the
+   first screenshot of this screen showed. */
+.decided{
+  display:grid;grid-template-columns:minmax(9rem,auto) 1fr;gap:8px 18px;margin:0;
+}
+.decided dt{
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);
+  padding-top:2px;
+}
+.decided dd{margin:0;font-size:.82rem;color:var(--paper);max-width:78ch}
+
+/* When the rollup was made. A screen of statistics with no "as of" goes stale in
+   silence: a nightly job that has been failing for a week produces numbers that
+   look exactly like this morning's. */
+.as-of{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-dim);margin:0 0 12px}

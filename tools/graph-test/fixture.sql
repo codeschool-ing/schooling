@@ -287,3 +287,54 @@ FROM tenants t, (VALUES
 ) AS q(eid, kind, prompt, payload)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
+
+/* ---------- something for the item analysis to show ----------
+
+   THE CONSOLE'S `Questions` SCREEN NEEDS A ROLLUP, and nothing in CI writes
+   one: `cmd/analyse` runs against an empty stream there, on purpose, to prove
+   it still starts. So the screen it feeds would be measured in its "nothing has
+   been computed" state and never in the one that matters — five verdicts, a
+   withdrawn question and a threshold beside every number.
+
+   THESE ARE THE JOB'S OUTPUT AND NOT THE JOB'S INPUT. `item_statistics` is a
+   cache of the stream, so writing rows here fakes nothing about how a verdict is
+   reached — that arithmetic has its own tests, over answers, in `analysis`. What
+   this fixture is standing in for is a night having passed.
+
+   THE VERSIONS ARE NOT THE ONES IN THE CATALOGUE ABOVE, deliberately. A new
+   version is a different question, which is what makes fixing one the ordinary
+   way out of a quarantine — so these are the rollup of versions that have since
+   been replaced, and quarantining one takes nothing out of the exam paper or the
+   drill queue that the other suites are reading. A fixture that broke another
+   suite to feed this screen would be a bad trade. */
+
+INSERT INTO item_statistics
+  (tenant_id, exercise_id, version, type, attempts, correct, difficulty,
+   discrimination, strong_group, weak_group, verdict, minimum_sample,
+   first_answer, last_answer, computed_at)
+SELECT t.id, s.eid, s.version, s.kind, s.attempts, s.correct, s.difficulty,
+       s.discrimination, s.strong_group, s.weak_group, s.verdict, 30,
+       now() - interval '180 days', now() - interval '1 day', now() - interval '6 hours'
+FROM tenants t, (VALUES
+  -- The one this whole system exists to find, and it is out of circulation.
+  ('an-inverted',    1, 'quiz',      41, 19, 0.46::real, -0.32::real, 11, 11, 'inverted'),
+  -- The same verdict, still being asked: found this afternoon, swept tonight.
+  -- The two states are a night apart and the screen has to be able to say which.
+  ('an-still-asked', 1, 'ordering',  44, 20, 0.45::real, -0.31::real, 12, 12, 'inverted'),
+  ('an-too-easy',    1, 'quiz',      63, 61, 0.97::real,  0.04::real, 17, 17, 'too-easy'),
+  ('an-weak',        1, 'matching',  52, 30, 0.58::real,  0.09::real, 14, 14, 'weak'),
+  -- Under the minimum, which is not a criticism and must not look like one.
+  ('an-few',         1, 'labelling', 12,  7, 0.58::real,  0.00::real,  0,  0, 'insufficient'),
+  ('an-fine',        2, 'quiz',      88, 51, 0.58::real,  0.47::real, 24, 24, 'fine')
+) AS s(eid, version, kind, attempts, correct, difficulty,
+       discrimination, strong_group, weak_group, verdict)
+WHERE t.slug = :'slug'
+ON CONFLICT (tenant_id, exercise_id, version) DO UPDATE SET
+  computed_at = EXCLUDED.computed_at;
+
+INSERT INTO question_quarantine
+  (tenant_id, exercise_id, version, quarantined_at, verdict, attempts,
+   discrimination, minimum_sample)
+SELECT t.id, 'an-inverted', 1, now() - interval '5 hours', 'inverted', 41, -0.32, 30
+FROM tenants t WHERE t.slug = :'slug'
+ON CONFLICT DO NOTHING;

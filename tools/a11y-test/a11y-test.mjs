@@ -778,6 +778,18 @@ try {
         },
       });
 
+    /* AND WHAT THE ANSWERS SAY ABOUT A QUESTION, which is the other half of
+       `Measure` and the densest screen in this console: a card per question,
+       five verdicts, and a threshold under every number that is a judgement.
+
+       IT HAS ROWS TO DRAW BECAUSE THE FIXTURE WRITES A ROLLUP. Nothing in CI
+       runs `cmd/analyse` against a populated stream, so without that this would
+       be measured in its "nothing has been computed" state — a paragraph, which
+       passes every check there is — and never in the one that matters. That is
+       the same reason the fixture carries a lesson and an exam paper. */
+    await check(staff.page, `${theme} · console, the questions`, '/#/questions', '/questions',
+      { base: CONSOLE, region: '#stage', settled: '.items .item' });
+
     /* THE HISTORY, WHICH BY NOW HAS SOMETHING IN IT: granting this operator its
        role wrote an entry, so the list is never the empty state here. The empty
        state is a paragraph and would pass every check there is, which is why

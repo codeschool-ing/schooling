@@ -285,3 +285,62 @@ func TestASchoolWithNoAnswersWritesNothing(t *testing.T) {
 		t.Errorf("it wrote %d row(s) for a school where nobody has sat anything", written)
 	}
 }
+
+// A ROLLUP THAT WAS NEVER MADE AND ONE THAT FOUND NOTHING LOOK IDENTICAL IN THE
+// ROWS AND ARE DIFFERENT PROBLEMS.
+//
+// The first is broken machinery — a nightly job that has been failing, whose
+// numbers on a console look exactly like this morning's. The second is a school
+// nobody has answered anything in, which is an answer. A screen cannot tell them
+// apart without being told, so the reading says which.
+func TestWhenTheStatisticsWereMadeAndWhetherEverWere(t *testing.T) {
+	pool := testPool(t)
+	id := school(t, pool)
+
+	store := storeOver(t, pool, map[uuid.UUID][]analysis.Answer{id: paper(20, 18, 20, 4)})
+
+	if _, computed, err := store.ComputedAt(context.Background(), id); err != nil {
+		t.Fatal(err)
+	} else if computed {
+		t.Error("a school the job has never run over says it has statistics")
+	}
+
+	now := time.Now().UTC().Truncate(time.Second)
+	if _, err := store.Run(context.Background(), time.Time{}, now); err != nil {
+		t.Fatalf("running: %v", err)
+	}
+
+	at, computed, err := store.ComputedAt(context.Background(), id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !computed {
+		t.Fatal("the job ran and the school still says nothing has been computed")
+	}
+	if !at.Equal(now) {
+		t.Errorf("the rollup says it was made at %v, and the run was at %v", at, now)
+	}
+
+	// A SECOND RUN MOVES IT, which is the whole point: the number a console
+	// shows is how old its numbers are, and a date that stuck at the first run
+	// would say a healthy job had stopped.
+	later := now.Add(24 * time.Hour)
+	if _, err := store.Run(context.Background(), time.Time{}, later); err != nil {
+		t.Fatalf("running again: %v", err)
+	}
+	if at, _, err := store.ComputedAt(context.Background(), id); err != nil {
+		t.Fatal(err)
+	} else if !at.Equal(later) {
+		t.Errorf("after a second run it still says %v, want %v", at, later)
+	}
+
+	// AND IT IS ONE SCHOOL'S ANSWER. A max over every school would report a
+	// platform where one school is analysed nightly and another has been
+	// failing for a month as though both were current.
+	other := school(t, pool)
+	if _, computed, err := store.ComputedAt(context.Background(), other); err != nil {
+		t.Fatal(err)
+	} else if computed {
+		t.Error("a school with no rows of its own reported another school's run")
+	}
+}
