@@ -721,12 +721,16 @@ try {
        LIVE tile rather than the grid, so a presence count that silently stopped
        counting anybody fails here instead of passing as a quiet afternoon. */
     await student.goto(`${BASE}/#/dashboard`, { waitUntil: 'load' });
-    await student.waitForSelector('#stage[data-screen="/dashboard"]', { timeout: 8000 });
+    /* `#content` AND NOT `#stage`. This is the STUDENT's interface, whose region
+       is `#content`; `#stage` is the console's, on the other host. The first
+       version of this line asked the student's page for the console's element
+       and spent eight seconds waiting for something that was never going to be
+       there. */
+    await student.waitForSelector('#content[data-screen="/dashboard"]', { timeout: 8000 });
     await done(student);
 
     await check(staff.page, `${theme} · console, who is here`, '/#/presence', '/presence',
       { base: CONSOLE, region: '#stage', settled: '.here-live' });
-
 
     /* AND THE SCREEN WITH SOMEBODY ON IT, which is the one this section is
        about: a table of counts, a link that hands over everything held, and a
