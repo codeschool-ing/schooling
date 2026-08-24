@@ -260,6 +260,15 @@ var Registry = []Table{
 			"this registry to assume, which is why it is identifying rather than pseudonymous",
 	},
 	{
+		Name: "content_reports", Holds: HoldsIdentifying, Subject: SubjectAccount,
+		OnErase: EraseDelete,
+		Why: "free text a person wrote about our material, which is `notes` from the other " +
+			"direction and identifying for the same reason: what somebody puts in a box is " +
+			"not for this registry to assume. It goes with the account by cascade, and what " +
+			"survives is the audit entry written when the report was settled — the operational " +
+			"fact is the platform's own record and does not erase, the sentence is theirs and does",
+	},
+	{
 		Name: "exam_attempts", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "which exams one person sat and what they scored. The evidence about whether a " +
 			"QUESTION is any good is not here — that is one event per answer, and events survive " +
@@ -420,6 +429,15 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		{"notes", `
 			SELECT course_id, lesson_id, section_id, body, updated_at
 			FROM notes WHERE account_id = $1 ORDER BY course_id, lesson_id, section_id`},
+		// `settled_by` IS NOT NAMED. What was decided is the person's business
+		// and WHO decided it is not: the answer to a report is the platform's,
+		// and handing somebody the account id of the operator who read their
+		// complaint is a fact about a member of staff, in a file that leaves
+		// this system by design.
+		{"content_reports", `
+			SELECT id, course_id, lesson_id, section_id, reason, note,
+			       reported_at, settled_at, verdict
+			FROM content_reports WHERE account_id = $1 ORDER BY reported_at`},
 		{"exam_attempts", `
 			SELECT id, scope, scope_id, started_at, submitted_at, score, of, pass_mark, passed
 			FROM exam_attempts WHERE account_id = $1 ORDER BY started_at`},

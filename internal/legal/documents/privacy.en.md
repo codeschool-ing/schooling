@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 This says what we hold about you, why, and what happens to it when you ask us to
@@ -90,6 +90,14 @@ whether you have passed.
 - **Your certificates**, which carry the name you gave us, the course, and the
   date — because a certificate a stranger can verify is the point of having one.
   Anybody holding the code on a certificate can see those.
+- **Anything you report as wrong with the material**: which section it was,
+  which of our five words you picked, and what you wrote. This one we *do* read
+  — that is the entire point of it — and the person who reads it is shown what
+  you wrote and not who you are.
+
+  It goes when you do. What we keep afterwards is our own record that a section
+  was reported and what we decided about it, with no trace of you in it: we
+  cannot run a course on material we are not allowed to remember was wrong.
 
 ## Payments
 

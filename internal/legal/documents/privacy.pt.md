@@ -1,7 +1,7 @@
 ---
 title: Política de privacidade
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 Isto diz o que guardamos sobre você, por quê, e o que acontece quando você pede
@@ -92,6 +92,15 @@ foi aprovado.
 - **Seus certificados**, que trazem o nome que você nos deu, o curso e a data —
   porque um certificado que um estranho consegue verificar é o motivo de ele
   existir. Qualquer pessoa com o código de um certificado vê esses dados.
+- **O que você aponta como errado no material**: qual seção era, qual das nossas
+  cinco palavras você escolheu e o que você escreveu. Este nós *lemos* — é
+  exatamente para isso que ele existe — e quem lê vê o que você escreveu, não
+  quem você é.
+
+  Ele vai embora junto com você. O que fica depois é o nosso próprio registro de
+  que uma seção foi apontada e do que decidimos a respeito, sem nenhum traço de
+  você: não dá para tocar um curso sobre um material que não temos permissão de
+  lembrar que estava errado.
 
 ## Pagamentos
 

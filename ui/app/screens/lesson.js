@@ -33,6 +33,7 @@ import { materialList } from '../materials.js';
 import { sectionDone, visitSection, noteFor, saveNote } from '../state.js';
 import { buildAssessment } from '../exercises/index.js';
 import { empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
+import { wireReport } from '../report.js';
 import { esc, prose } from '../text.js';
 
 const ARROW = (d) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
@@ -118,6 +119,14 @@ export default async function lesson({ id, ix, sec }) {
 
   const { previous, next } = neighbours(id, n, pos);
   const note = noteFor(id, n, section.id);
+
+  /* WHO IS OFFERED THE CONTROL. A report is written against an account, so
+     somebody reading signed out has nothing to attach one to — and the offline
+     copy is a file on a disk with no server to send it to. Neither is a failure
+     worth a message: the control simply is not there, which is the same choice
+     the note makes. */
+  const canReport = !api.offline && Boolean(await api.session());
+
   const routeTo = (v) => '#/course/' + esc(courseAddress(id)) + '/lesson/' + v.ix + '/' + esc(v.sectionSlug || v.sectionId);
 
   const el = document.createElement('div');
@@ -216,6 +225,26 @@ export default async function lesson({ id, ix, sec }) {
       '<span class="note-status mono dim" aria-live="polite"></span>' +
     '</details>' +
 
+    /* AND AFTER THE NOTE, THE OTHER THING SOMEBODY MAY HAVE TO SAY.
+
+       The note is what you write for yourself; this is what you write to us,
+       and it is the only channel in the platform by which a wrong answer key
+       comes back from the person who found it. Same shape as the note for the
+       same reason: collapsed, so it asks nothing of the many people who will
+       never use it, and right at the end, because you report a problem having
+       met it.
+
+       IT IS BUILT WHEN IT IS OPENED. The list of reasons and whether this
+       section has already been reported both come from the server, and
+       fetching them on every lesson view would be a request per view to fill in
+       a form almost nobody opens. */
+    (canReport
+      ? '<details class="report">' +
+          '<summary>⚑ ' + txt('something here is wrong') + '</summary>' +
+          '<div class="report-body"><p class="checking">' + txt('reading…') + '</p></div>' +
+        '</details>'
+      : '') +
+
     /* The footer only exists where there are no side arrows — below 1400px.
        There is no complete button: moving on is completing. */
     '<footer class="lesson-foot">' +
@@ -249,6 +278,14 @@ export default async function lesson({ id, ix, sec }) {
     clearTimeout(saveT);
     saveNote(id, n, section.id, noteField.value);
   });
+
+  /* The control builds itself the first time it is opened — see `report.js` for
+     why it is not built with the rest of the screen. */
+  if (canReport) {
+    wireReport(el.querySelector('.report'), {
+      courseId: id, lessonIx: n, sectionId: section.id,
+    });
+  }
 
   /* Moving on completes. The marking is synchronous inside, so it happens before
      the browser processes the hash change — there is no race. An assessment with

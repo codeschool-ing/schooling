@@ -28,6 +28,7 @@ import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
 import presence from './screens/presence.js';
+import reports from './screens/reports.js';
 
 export const SECTIONS = [
   /* WHO IS HERE COMES FIRST, and it is the only entry under `Measure` that is
@@ -40,6 +41,11 @@ export const SECTIONS = [
   { id: 'funnel', name: 'The funnel', group: 'Measure', screen: funnel },
   { id: 'questions', name: 'Questions', group: 'Measure', screen: questions },
   { id: 'cohorts', name: 'Cohorts', group: 'Measure', screen: cohorts },
+  /* REPORTED CONTENT IS FIRST UNDER `Operate`, above the record and the
+     schools, because it is the only section in this console that somebody
+     outside it is waiting on. The other two are opened when an operator has a
+     question; this one is opened because a student had one. */
+  { id: 'reports', name: 'Reported content', group: 'Operate', screen: reports },
   { id: 'record', name: 'Student record', group: 'Operate', screen: studentRecord },
   { id: 'schools', name: 'Schools', group: 'Operate', screen: schools },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },

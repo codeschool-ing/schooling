@@ -597,6 +597,38 @@ try {
     await check(student, `${theme} · a lesson`,
       '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix');
 
+    /* AND THE ONE CONTROL ON THAT SCREEN THAT TALKS BACK. "Something here is
+       wrong" is collapsed and empty until it is opened — measured closed, what
+       axe would look at is a `summary` and nothing else, which passes every
+       check there is and is not the control.
+
+       Opened, it is a fieldset with a legend, five radios, a textarea and a
+       button: the densest piece of form in the student interface and the only
+       one built after a request. */
+    await check(student, `${theme} · a lesson, reporting a problem`,
+      '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix', {
+        async act(page) {
+          await page.locator('.report summary').click();
+          await page.waitForSelector('.report-form', { timeout: 8000 });
+        },
+      });
+
+    /* AND WHAT IT SAYS ONCE IT HAS BEEN SAID, which replaces the form rather
+       than sitting under it. It is also what puts a row in the console's queue
+       — the check on that screen further down measures a real report made here
+       rather than an empty state. */
+    await check(student, `${theme} · a lesson, the problem reported`,
+      '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix', {
+        async act(page) {
+          await page.locator('.report summary').click();
+          await page.waitForSelector('.report-form', { timeout: 8000 });
+          await page.locator('.report-note').fill(
+            'the key marks B and the working in the section gives C');
+          await page.locator('.report-form button[type=submit]').click();
+          await page.waitForSelector('.report-said', { timeout: 8000 });
+        },
+      });
+
     /* THE DRILL, WHICH IS A QUESTION AND A VERDICT ON ONE SCREEN. It is worth
        checking separately from the exam paper: the exam shows every question at
        once and never marks one, this shows one at a time and then puts a result
@@ -731,6 +763,18 @@ try {
 
     await check(staff.page, `${theme} · console, who is here`, '/#/presence', '/presence',
       { base: CONSOLE, region: '#stage', settled: '.here-live' });
+
+    /* THE REPORTED-CONTENT QUEUE, WITH A REAL REPORT IN IT — the one the
+       student made a few checks ago. `settled` asks for the card and not the
+       block, so the empty state cannot pass as the screen: this queue is empty
+       most of the time by design, and an empty state is a paragraph that meets
+       every contrast rule there is.
+
+       IT IS NOT SETTLED HERE. Measuring the buttons is measuring the screen;
+       pressing one would take the row away and leave the light-theme pass with
+       nothing to look at. */
+    await check(staff.page, `${theme} · console, reported content`, '/#/reports', '/reports',
+      { base: CONSOLE, region: '#stage', settled: '.report-card' });
 
     /* AND THE SCREEN WITH SOMEBODY ON IT, which is the one this section is
        about: a table of counts, a link that hands over everything held, and a

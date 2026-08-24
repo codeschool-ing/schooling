@@ -39,6 +39,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
 	"github.com/codeschool-ing/schooling/internal/progress"
+	"github.com/codeschool-ing/schooling/internal/report"
 	"github.com/codeschool-ing/schooling/internal/tenant"
 	"github.com/codeschool-ing/schooling/internal/visitor"
 	"github.com/codeschool-ing/schooling/ui"
@@ -274,6 +275,36 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	progress.NewHandler(
 		studied, schoolID, identity.AccountID, studentEvents(events, log, plan),
 	).Routes(scoped)
+
+	/* SAYING SOMETHING IS WRONG WITH THE MATERIAL, which is the one direction
+	   nothing else in this system runs in.
+
+	   IT IS A VARIABLE because the console reads the other end of it. And the
+	   coordinates are CHECKED against the catalogue before a row is written —
+	   `report` may not import `catalog`, so this is the closure that joins them,
+	   the same shape `progress` already uses one line above for the same reason.
+
+	   NO PAYWALL QUESTION HERE, deliberately, and it is the one place that is
+	   right. `progress` and `practice` both ask whether the course is open on
+	   this plan, because writing progress for a course somebody cannot read is
+	   a paywall discovered afterwards. A report is not a thing the student gets
+	   — it is a thing they give, and refusing one because a subscription lapsed
+	   would lose a wrong answer key to protect nothing. */
+	reports := report.NewStore(pool,
+		func(ctx context.Context, school uuid.UUID, course, lesson, section string) (bool, error) {
+			sections, err := courses.SectionsOf(ctx, school, course)
+			if err != nil {
+				return false, err
+			}
+			for _, id := range sections[lesson] {
+				if id == section {
+					return true, nil
+				}
+			}
+			return false, nil
+		},
+	)
+	report.NewHandler(reports, schoolID, identity.AccountID).Routes(scoped)
 
 	// PRACTICE ASKS THE SAME DOOR QUESTION, with the same closure. A card in a
 	// course this student cannot open is not in their queue and is not
@@ -621,6 +652,51 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			HostOf: tenant.NewStore(pool).HostOf,
 		},
 		console.Schools{All: schoolsFor(tenant.NewStore(pool))},
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
+
+	/* THE REPORTED-CONTENT QUEUE, whose other end is the lesson screen.
+
+	   THE SENTINELS TRAVEL AS PREDICATES. The console may not import `report`,
+	   so it cannot ask `errors.Is` about its errors — and the three cases it has
+	   to tell apart are different answers to an operator: a verdict that is not
+	   a word, somebody having settled it first, and a report that is not there.
+	   Handing over three functions is how a module boundary carries a
+	   distinction that a single `error` would flatten into "could not read
+	   that". */
+	console.NewContentHandler(
+		console.Schools{All: schoolsFor(tenant.NewStore(pool))},
+		console.Reports{
+			Open: func(ctx context.Context, school uuid.UUID) ([]console.Report, error) {
+				rows, err := reports.Open(ctx, school)
+				if err != nil {
+					return nil, err
+				}
+				out := make([]console.Report, 0, len(rows))
+				for _, one := range rows {
+					out = append(out, consoleReport(one))
+				}
+				return out, nil
+			},
+			About: func(ctx context.Context, id uuid.UUID) (console.Report, uuid.UUID, error) {
+				one, err := reports.One(ctx, id)
+				if err != nil {
+					return console.Report{}, uuid.Nil, err
+				}
+				return consoleReport(one), one.School, nil
+			},
+			Settle:         reports.Settle,
+			Verdicts:       report.Verdicts,
+			Refused:        func(err error) bool { return errors.Is(err, report.ErrRefused) },
+			AlreadySettled: func(err error) bool { return errors.Is(err, report.ErrAlreadySettled) },
+			NotThere:       func(err error) bool { return errors.Is(err, report.ErrNoSuchReport) },
+		},
 		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
@@ -1480,4 +1556,20 @@ func viewingBelongsHere(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+// consoleReport is the one shape crossing from `report` to `console`, written
+// once because both directions of the queue need it — reading it and settling
+// one. It drops the account deliberately: `console.Report` has no field for it,
+// so a report cannot arrive on a screen carrying who wrote it (K-22).
+func consoleReport(one report.Report) console.Report {
+	return console.Report{
+		ID:         one.ID,
+		CourseID:   one.CourseID,
+		LessonID:   one.LessonID,
+		SectionID:  one.SectionID,
+		Reason:     one.Reason,
+		Note:       one.Note,
+		ReportedAt: one.ReportedAt,
+	}
 }
