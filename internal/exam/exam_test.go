@@ -881,18 +881,39 @@ func TestAHandedInPaperCarriesTheMarkItWasJudgedBy(t *testing.T) {
 			marked.PassMark, marked.Result.PassMark)
 	}
 
-	// The mark on the row is what decides it, so a paper stored under a
-	// different one reports that one and not the constant.
-	if _, err := db.Exec(ctx,
-		`UPDATE exam_attempts SET pass_mark = 55 WHERE id = $1`, paper.AttemptID); err != nil {
-		t.Fatal(err)
+	/* AND AN ATTEMPT JUDGED UNDER A DIFFERENT MARK REPORTS THAT ONE.
+
+	   IT IS INSERTED RATHER THAN EDITED, and the first version of this test got
+	   that wrong: it tried `UPDATE exam_attempts SET pass_mark = 55` and CI
+	   answered "that exam was handed in at …: it cannot be changed. A retake is
+	   a new attempt." The trigger is right and the test was asking the schema to
+	   break its own rule — a handed-in paper is frozen, which is exactly why the
+	   mark it was judged by can be trusted a year later.
+
+	   So the row is written already handed in, which `BEFORE UPDATE` does not
+	   guard, and is the honest shape of "an attempt from before the constant
+	   moved". */
+	var older uuid.UUID
+	if err := db.QueryRow(ctx, `
+		INSERT INTO exam_attempts
+			(tenant_id, account_id, scope, scope_id, started_at, submitted_at,
+			 score, of, pass_mark, passed)
+		VALUES ($1, $2, 'course', 'web-fundamentals', now() - interval '1 year',
+		        now() - interval '1 year', 3, 4, 55, true)
+		RETURNING id
+	`, school, student).Scan(&older); err != nil {
+		t.Fatalf("seeding an attempt from before the mark moved: %v", err)
 	}
-	read, err := store.Attempt(ctx, school, student, paper.AttemptID)
+
+	read, err := store.Attempt(ctx, school, student, older)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if read.PassMark != 55 {
 		t.Errorf("an attempt judged at 55%% reads back as %d%% — the paper is answering "+
 			"with the current constant rather than with what it was held to", read.PassMark)
+	}
+	if read.Result == nil || read.Result.PassMark != 55 {
+		t.Errorf("and its result disagrees with it: %+v", read.Result)
 	}
 }
