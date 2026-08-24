@@ -39,7 +39,9 @@ is how every console rots.* That division is the spine of everything below.
   complained is a list of people to browse — which is the read an audit cannot tell from working
 - The closed list of system parameters, each change audited with actor, old value and new value.
   A **list**, not a registry: a table of names and values with a screen that edits any of them is
-  the configuration surface `K-13` exists to refuse
+  the configuration surface `K-13` exists to refuse. It lives in `internal/console/writes.go`,
+  where a test reads this package's own source and fails on a write nobody declared — so what is
+  closed is the set of things the console can do, and adding to it costs an argument
 - Prices effective-dated, so a subscriber keeps the price they bought at. A price is **appended**
   where a colour is **replaced**, and the two sit on one screen: nothing has to be explained about
   last month's colour, and a March invoice has to stay explicable in November
