@@ -244,6 +244,16 @@ function documentFrom({ completed, notes, exams, resume }, me) {
       emailVerified: true,
       secondFactor: Boolean(me.secondFactor),
       mfaRequired: Boolean(me.mfaRequired),
+
+      /* AND WHETHER SOMEBODY IS LOOKING AT THIS RATHER THAN LIVING IN IT.
+
+         The third of K-02's three restraints is a visible banner, and it is the
+         only one of the three that works while the viewing is happening — the
+         audit answers afterwards and the expiry bounds a machine left unlocked.
+         So it arrives with the session rather than being asked for separately:
+         a screen that could draw itself before learning this is a screen that
+         can draw itself without the banner. */
+      viewing: me.viewing || null,
     } : null,
     progress,
     notes: byCourse,
@@ -276,6 +286,15 @@ export async function register({ name, email, password }) {
   state.hydrate(documentFrom(await pull(), me));
   return state.now().session;
 }
+
+/* Ending a viewing, which is the banner's one button.
+
+   IT IS NOT UNDER `/api/v1/`, and that is the server's doing rather than a
+   convention here: everything under that prefix refuses a viewing session
+   anything but a GET, and a banner whose only control the rule refuses would be
+   a joke at somebody's expense. Ending a viewing is not acting as the student;
+   it is the opposite. */
+export const stopViewing = () => post('/viewing/stop');
 
 export async function signOut() {
   try { await post('/api/v1/sign-out'); } catch (e) { /* the cookie may already be gone */ }

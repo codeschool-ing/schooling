@@ -342,7 +342,20 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			Secure: cfg.Environment == config.Production,
 		}, arrived(events, log)),
 		identity.Authenticate(accounts),
+		viewingBelongsHere,
+		identity.RefuseWrites,
 	))
+
+	/* THE HANDOFF, AT THE ROOT AND NOT UNDER `/api/v1/`.
+
+	   `GET /view` turns a link into a host-only cookie and redirects; the stop
+	   route ends one. Neither belongs under the API prefix: that chain carries
+	   `RefuseWrites`, and a viewing that could not end itself would be a banner
+	   whose only button the rule refuses.
+
+	   They are registered before `mux.Handle("/", …)` below and are more
+	   specific than it, so the interface still catches everything else. */
+	people.ViewingRoutes(mux)
 
 	// THE INTERFACE, FROM THE SAME BINARY AND THE SAME ORIGIN (P-03). It is
 	// mounted last and at the root, so it catches what nothing above it claimed
@@ -584,6 +597,32 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 				})
 			}
 			return out, analysis.ActiveEvent, nil
+		},
+	).Routes(staffAPI)
+
+	/* AND THE SUPPORT TOOL K-02 GIVES THREE RESTRAINTS TO.
+
+	   Audited here, time-limited by `identity`, and with a banner the student
+	   interface draws from `/api/v1/me`. A fourth that K-02 does not name and
+	   should: `identity.RefuseWrites`, in the chain above, refuses a viewing
+	   session anything but a GET — an operator who could answer an exam question
+	   as a student could forge a pass.
+
+	   THREE MODULES MEET AND THE CONSOLE IMPORTS NONE OF THEM: `identity` mints
+	   the session, `tenant` says which address to send the operator to, and
+	   `audit` takes the entry. */
+	console.NewViewHandler(
+		console.Viewings{
+			Start:  accounts.StartViewing,
+			HostOf: tenant.NewStore(pool).HostOf,
+		},
+		console.Schools{All: schoolsFor(tenant.NewStore(pool))},
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
 		},
 	).Routes(staffAPI)
 
@@ -1366,4 +1405,43 @@ func counting(who analysis.Counting) event.Counting {
 	default:
 		return event.CountingReal
 	}
+}
+
+// viewingBelongsHere drops a viewing that was started for another school.
+//
+// # THE COOKIE ALREADY SAYS SO AND THAT IS NOT ENOUGH
+//
+// A viewing cookie is host-only, so a browser will not send `code`'s to `math`.
+// This is the same rule where a copied cookie cannot argue with it: the session
+// row records which school the viewing was opened on, and a request arriving at
+// a different one is answered as if there were no session at all.
+//
+// # IT IS HERE AND NOT IN `identity` BECAUSE OF THE BOUNDARY
+//
+// `tenant` owns which school a host is and `identity` may not import it (X-02).
+// `cmd/api` is where the two meet, which is the same reason every other seam in
+// this file exists — and it runs AFTER `Authenticate`, because there is nothing
+// to check until a session has been read.
+//
+// THE ACCOUNT GOES WITH IT. Keeping the student authenticated while dropping the
+// viewing would be the worst outcome available: a session acting as the student,
+// on a school nobody authorised, with no banner and no write refusal.
+func viewingBelongsHere(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		seeing, viewing := identity.ViewingFromContext(r.Context())
+		if !viewing {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		school, ok := tenant.FromContext(r.Context())
+		if !ok || school.ID != seeing.School {
+			web.LoggerFrom(r.Context()).Warn("a viewing arrived at another school",
+				"opened_on", seeing.School, "arrived_at", school.ID)
+			web.Fail(w, http.StatusForbidden, web.CodeUnauthorized,
+				"that viewing was opened on a different school")
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }

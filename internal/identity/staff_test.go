@@ -182,7 +182,7 @@ func TestRevokingARoleEndsTheSessionsThatHeldIt(t *testing.T) {
 		t.Fatalf("revoking: %v", err)
 	}
 
-	if _, err := store.Verify(ctx, token); !errors.Is(err, identity.ErrNoSession) {
+	if _, _, err := store.Verify(ctx, token); !errors.Is(err, identity.ErrNoSession) {
 		t.Error("the session survived the revocation — access was scheduled rather than removed")
 	}
 	if rec := getStaff(t, store, identity.RoleOperator, token); rec.Code == http.StatusOK {

@@ -221,3 +221,33 @@ func (s *Store) SetAccent(ctx context.Context, id uuid.UUID, accent string) (str
 	}
 	return was, nil
 }
+
+// HostOf answers an address a school answers at.
+//
+// # A SCHOOL CAN HAVE SEVERAL AND THIS PICKS ONE
+//
+// `tenant_domains` is a list — a school may be reachable at more than one
+// address while one is being moved to. Any of them resolves to the same school,
+// so for building a link the question is not "which is canonical" but "which
+// works", and the oldest is the one most likely to be the one people already
+// use.
+//
+// IT EXISTS FOR VIEW-AS-STUDENT. The console answers on its own host and cannot
+// set a cookie for a school's, so it hands the operator a link to follow — and a
+// link needs an address. Deriving one from the slug and the platform domain
+// would be a second copy of a rule this table already holds, and the copy is the
+// one that is wrong the day a school gets a domain of its own.
+func (s *Store) HostOf(ctx context.Context, id uuid.UUID) (string, error) {
+	var host string
+	err := s.pool.QueryRow(ctx, `
+		SELECT host FROM tenant_domains WHERE tenant_id = $1 ORDER BY host LIMIT 1
+	`, id).Scan(&host)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return "", ErrUnknownHost
+	}
+	if err != nil {
+		return "", fmt.Errorf("tenant: reading a school's address: %w", err)
+	}
+	return host, nil
+}

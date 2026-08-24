@@ -123,4 +123,26 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
 
   /* The name of the group of buttons that jump between questions. */
   'Questions on this paper': 'Questões desta prova',
+
+  /* THE BANNER THAT SAYS SOMEBODY IS LOOKING (K-02), which a student may see in
+     any language — a viewing is opened on their account, on their school, and
+     the screens they would have seen are the screens it draws. An operator
+     reading this in English while the person it names would read it in
+     Portuguese is exactly the case, since the two are not the same person.
+
+     'is looking at' AND 'nothing here can be changed' ARE HALVES OF ONE
+     SENTENCE and are separate keys because two names sit between them. In
+     Portuguese the verb agrees with what precedes it and the order holds:
+     "<Operador> está vendo <Aluno> · <Escola> — nada aqui pode ser alterado". */
+  'is looking at': 'está vendo',
+  'nothing here can be changed': 'nada aqui pode ser alterado',
+
+  /* When the operator's name could not be read. The banner appears either way:
+     an unnamed one is worse than a named one and far better than none. */
+  'Somebody': 'Alguém',
+
+  'Stop looking': 'Parar de ver',
+  'Ending…': 'Encerrando…',
+  'that did not work — close the tab instead':
+    'não funcionou — feche a aba no lugar',
 });

@@ -137,7 +137,7 @@ func TestASessionIdentifiesItsAccountUntilItIsRevoked(t *testing.T) {
 		t.Fatalf("starting a session: %v", err)
 	}
 
-	got, err := store.Verify(ctx, token)
+	got, _, err := store.Verify(ctx, token)
 	if err != nil {
 		t.Fatalf("verifying: %v", err)
 	}
@@ -148,12 +148,12 @@ func TestASessionIdentifiesItsAccountUntilItIsRevoked(t *testing.T) {
 	if err := store.Revoke(ctx, token); err != nil {
 		t.Fatalf("revoking: %v", err)
 	}
-	if _, err := store.Verify(ctx, token); !errors.Is(err, identity.ErrNoSession) {
+	if _, _, err := store.Verify(ctx, token); !errors.Is(err, identity.ErrNoSession) {
 		t.Errorf("a revoked session gave %v, want ErrNoSession", err)
 	}
 
 	// And a token nobody issued is the same answer, not a different one.
-	if _, err := store.Verify(ctx, "not-a-token"); !errors.Is(err, identity.ErrNoSession) {
+	if _, _, err := store.Verify(ctx, "not-a-token"); !errors.Is(err, identity.ErrNoSession) {
 		t.Errorf("an invented token gave %v, want ErrNoSession", err)
 	}
 }
@@ -176,7 +176,7 @@ func TestSigningOutEndsOneSessionAndNotTheOthers(t *testing.T) {
 	if err := store.Revoke(ctx, laptop); err != nil {
 		t.Fatalf("revoking: %v", err)
 	}
-	if _, err := store.Verify(ctx, phone); err != nil {
+	if _, _, err := store.Verify(ctx, phone); err != nil {
 		t.Errorf("signing out of the laptop ended the phone's session too: %v", err)
 	}
 }
@@ -205,11 +205,11 @@ func TestChangingThePasswordEndsEveryOtherSession(t *testing.T) {
 		t.Fatalf("changing the password: %v", err)
 	}
 
-	if _, err := store.Verify(ctx, theirs); !errors.Is(err, identity.ErrNoSession) {
+	if _, _, err := store.Verify(ctx, theirs); !errors.Is(err, identity.ErrNoSession) {
 		t.Error("the other session survived a password change — the person who changed it " +
 			"believes they locked somebody out, and they did not")
 	}
-	if _, err := store.Verify(ctx, mine); err != nil {
+	if _, _, err := store.Verify(ctx, mine); err != nil {
 		t.Errorf("the session that asked for the change was ended too: %v", err)
 	}
 
