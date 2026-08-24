@@ -791,6 +791,17 @@ try {
     await check(staff.page, `${theme} · console, reported content`, '/#/reports', '/reports',
       { base: CONSOLE, region: '#stage', settled: '.report-card' });
 
+    /* WHAT RAN AND WHAT DID NOT, which is the console reporting on itself.
+
+       `settled` ASKS FOR THE ADRIFT ROW and not for the list. Two of the three
+       states on this screen carry colour AND weight — failed and adrift — and
+       adrift is the one no code writes: it is what a run leaves behind when the
+       process is killed between its two writes. The fixture seeds all three, so
+       measuring the list alone could pass on a screen showing only the quiet
+       one. */
+    await check(staff.page, `${theme} · console, jobs`, '/#/jobs', '/jobs',
+      { base: CONSOLE, region: '#stage', settled: '.run-adrift' });
+
     /* AND THE SCREEN WITH SOMEBODY ON IT, which is the one this section is
        about: a table of counts, a link that hands over everything held, and a
        destructive block with a confirmation field. None of that exists on the

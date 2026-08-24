@@ -422,3 +422,31 @@ FROM tenants t, (VALUES
 ) AS a(started, later, person)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
+
+
+/* ---------- that a job ran, and that one did not ----------
+
+   THE CONSOLE'S JOBS SCREEN HAS THREE STATES AND ONLY ONE OF THEM IS QUIET.
+   Measured with an empty table it would be a paragraph saying nothing has run,
+   which passes every check there is and is not the screen — the rows that carry
+   colour and weight are the failed one and the ADRIFT one, and adrift is the
+   state no line of code ever writes: it is what a run leaves behind when the
+   process is killed between its two writes.
+
+   The three below are a good night, a bad night, and a night the job vanished.
+   Backdated, so the screen's "yesterday" and "3 days ago" are exercised too. */
+INSERT INTO job_runs (job, version, started_at, finished_at, outcome, detail)
+VALUES
+  ('analyse', 'v0.3.0', now() - interval '3 days',
+   now() - interval '3 days' + interval '41 seconds', 'ok',
+   '8 question(s) measured, 1 inverted, 1 newly out of circulation'),
+  ('analyse', 'v0.3.0', now() - interval '2 days',
+   now() - interval '2 days' + interval '12 seconds', 'failed',
+   'reading the stream: dial tcp: connect: connection refused')
+ON CONFLICT DO NOTHING;
+
+-- The one nothing closed. No `finished_at` and no outcome, exactly as a killed
+-- process leaves it — and old enough that the reader calls it adrift.
+INSERT INTO job_runs (job, version, started_at)
+VALUES ('analyse', 'v0.3.0', now() - interval '9 hours')
+ON CONFLICT DO NOTHING;

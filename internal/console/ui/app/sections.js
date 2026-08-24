@@ -29,6 +29,7 @@ import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
 import presence from './screens/presence.js';
 import reports from './screens/reports.js';
+import jobs from './screens/jobs.js';
 
 export const SECTIONS = [
   /* WHO IS HERE COMES FIRST, and it is the only entry under `Measure` that is
@@ -38,6 +39,12 @@ export const SECTIONS = [
      worthless five minutes old, so it sits above the reports it has nothing in
      common with rather than after them. */
   { id: 'presence', name: 'Who is here', group: 'Measure', screen: presence },
+
+  /* JOBS SITS BESIDE PRESENCE because it is the same job of the four — `watch`,
+     measured in seconds rather than in days — and not beside the funnel it
+     produces. It is also the only section here whose subject is US: whether the
+     machinery behind another screen ran at all. */
+  { id: 'jobs', name: 'Jobs', group: 'Measure', screen: jobs },
   { id: 'funnel', name: 'The funnel', group: 'Measure', screen: funnel },
   { id: 'questions', name: 'Questions', group: 'Measure', screen: questions },
   { id: 'cohorts', name: 'Cohorts', group: 'Measure', screen: cohorts },
