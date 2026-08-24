@@ -31,6 +31,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/event"
 	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
+	"github.com/codeschool-ing/schooling/internal/job"
 	"github.com/codeschool-ing/schooling/internal/legal"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
@@ -708,6 +709,34 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			return ok && m.Role.Covers(identity.RoleOperator)
 		},
 	).Routes(staffAPI)
+
+	/* WHAT RAN LAST NIGHT, which is the console reporting on the console rather
+	   than on students — whether the machinery behind another screen did its
+	   work. `job` owns the table and this is the one line that says so. */
+	console.NewJobsHandler(console.Jobs{
+		Names: job.NewStore(pool).Names,
+		Latest: func(ctx context.Context, name string, limit int) ([]console.Run, error) {
+			runs, err := job.NewStore(pool).Latest(ctx, name, limit)
+			if err != nil {
+				return nil, err
+			}
+			now := time.Now().UTC()
+			out := make([]console.Run, 0, len(runs))
+			for _, one := range runs {
+				out = append(out, console.Run{
+					Job: one.Job, Version: one.Version,
+					StartedAt: one.StartedAt, FinishedAt: one.FinishedAt,
+					Outcome: string(one.Outcome), Detail: one.Detail,
+
+					// DECIDED HERE AND NOT ON THE SCREEN, because it is a
+					// judgement against a threshold and `job` owns both.
+					Adrift: one.Adrift(now),
+				})
+			}
+			return out, nil
+		},
+		AdriftAfter: job.Adrift,
+	}).Routes(staffAPI)
 
 	/* WHO IS HERE, which is the one console read that is current state rather
 	   than the event stream — `identity/presence.go` says why that is K-06 and

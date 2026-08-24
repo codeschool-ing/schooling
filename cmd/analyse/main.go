@@ -47,10 +47,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/analysis"
 	"github.com/codeschool-ing/schooling/internal/audit"
 	"github.com/codeschool-ing/schooling/internal/event"
+	"github.com/codeschool-ing/schooling/internal/job"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
@@ -92,6 +94,50 @@ func run(log *slog.Logger) error {
 		return err
 	}
 	defer pool.Close()
+
+	/* THAT THIS RUN HAPPENED, RECORDED BEFORE THE WORK AND CLOSED AFTER IT.
+
+	   The console showed when the rollup was last WRITTEN, which answers a
+	   different question: a job that failed at 03:10, a job somebody disabled in
+	   March and a job that ran perfectly and changed nothing all look like a
+	   stale `computed_at`. This says when it was last ATTEMPTED.
+
+	   A FAILURE TO RECORD IS NOT A FAILURE TO RUN, which is the opposite of the
+	   console's rule and right for the opposite reason. There, an action nobody
+	   can account for must not happen. Here the work withdraws broken questions
+	   from in front of students, and refusing to do it because a bookkeeping row
+	   would not write is trading the thing that matters for the record of it. */
+	runs := job.NewStore(pool)
+	started, err := runs.Started(ctx, job.Analyse, info.Version)
+	if err != nil {
+		log.Error("this run is not being recorded", "error", err)
+	}
+
+	detail, failure := analyse(ctx, log, pool, *window)
+
+	if started != uuid.Nil {
+		/* `WithoutCancel` BECAUSE THE INTERESTING END IS THE INTERRUPTED ONE.
+		   On SIGTERM the context is already cancelled, so writing through it
+		   would fail and leave a row that says `running` for ever — which is
+		   the shape reserved for a job that vanished without a word. A run that
+		   was stopped knows it was stopped, and should say so. */
+		if err := runs.Finished(context.WithoutCancel(ctx), started, failure, detail); err != nil {
+			log.Error("the end of this run is not recorded", "error", err)
+		}
+	}
+	return failure
+}
+
+// analyse is the work, split from the bookkeeping around it so that every
+// early return is recorded by the one caller rather than by a defer that has to
+// reach into a named result.
+//
+// IT ANSWERS A SENTENCE AS WELL AS AN ERROR. What the row says about a
+// successful run is the only thing distinguishing "it ran and found nothing"
+// from "it ran", and a screen that could not tell those apart would be the
+// `computed_at` problem again one table along.
+func analyse(ctx context.Context, log *slog.Logger,
+	pool *pgxpool.Pool, window time.Duration) (string, error) {
 
 	events := event.NewStore(pool)
 
@@ -172,13 +218,13 @@ func run(log *slog.Logger) error {
 
 	now := time.Now().UTC()
 	since := time.Time{}
-	if *window > 0 {
-		since = now.Add(-*window)
+	if window > 0 {
+		since = now.Add(-window)
 	}
 
 	written, err := items.Run(ctx, since, now)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// WHAT IT FOUND, SAID OUT LOUD. A job that writes rows and prints a count
@@ -186,14 +232,14 @@ func run(log *slog.Logger) error {
 	// saying a key is inverted.
 	schools, err := events.Schools(ctx)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	flagged := 0
 	for _, school := range schools {
 		bad, err := items.Flagged(ctx, school)
 		if err != nil {
-			return err
+			return "", err
 		}
 		for _, one := range bad {
 			flagged++
@@ -218,7 +264,7 @@ func run(log *slog.Logger) error {
 	for _, school := range schools {
 		taken, err := items.Sweep(ctx, school, now)
 		if err != nil {
-			return err
+			return "", err
 		}
 		for _, q := range taken {
 			took++
@@ -246,7 +292,7 @@ func run(log *slog.Logger) error {
 		   doing so and a cron job cannot. */
 		funnel, err := items.Funnel(ctx, school, since, analysis.CountingReal)
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		// A SCHOOL WHERE NOBODY DID ANYTHING HAS NO FUNNEL TO SHOW, and
@@ -282,7 +328,16 @@ func run(log *slog.Logger) error {
 		fmt.Printf("%d question(s) measured, %d inverted, %d newly out of circulation\n",
 			written, flagged, took)
 	}
-	return nil
+	/* THE SENTENCE THE ROW KEEPS, and it is the same three cases the print above
+	   distinguishes. A run that found nothing and a run that withdrew nine
+	   questions are both successes and are not the same night, and a screen
+	   showing only `ok` would make somebody open the logs to learn which. */
+	said := fmt.Sprintf("%d question(s) measured, %d inverted, %d newly out of circulation",
+		written, flagged, took)
+	if written == 0 {
+		said = "no exam has been sat yet, so there was nothing to measure"
+	}
+	return said, nil
 }
 
 // reached is how many people got to the widest step, which is what "did

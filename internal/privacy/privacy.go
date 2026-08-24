@@ -100,6 +100,13 @@ var Registry = []Table{
 		Why: "the addresses schools answer at",
 	},
 	{
+		Name: "job_runs", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "that a scheduled job ran, when, and how it went. It is about our own machinery " +
+			"and names nobody — a run is not somebody's data even though what it reads is, " +
+			"and the sentence it records about itself is a count of questions rather than " +
+			"anything about a person",
+	},
+	{
 		Name: "school_prices", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "what a school has asked for a subscription, and since when. It is our offer " +
 			"rather than anybody's data, and it is append-only for the reason a March " +

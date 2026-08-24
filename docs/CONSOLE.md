@@ -70,7 +70,10 @@ is how every console rots.* That division is the spine of everything below.
   that needs an event for LEAVING, and no browser reliably sends one
 - A world map with per-country statistics, from an in-process GeoIP database — the country stored
   on the event, the address never stored (`K-05`)
-- The failed job queue, with retry
+- The failed job queue, with retry. Every attempt is a row, written before the work and closed
+  after it — so a job that was killed leaves the one trace it will ever leave, and after an hour
+  the reader calls it **adrift** rather than busy. The retry is the part that is not built: it
+  would mean this console holding the right to start a job
 - E-mail deliverability: bounces and complaints
 
 **Operational alerts stay out**, and that is `K-08` rather than an omission: uptime checks and
