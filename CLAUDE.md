@@ -909,6 +909,19 @@ complained about.
 `cmd/analyse` and neither touches the other's tables. The same split as the catalogue's: it
 answers which door a plan opens and does not decide which plan somebody has.
 
+**And the schedule is `infra/scheduler.tf`, at 03:10 São Paulo time.** That is worth a line
+because the paragraph above it was true of the design and false of the deployment for as long as
+this command existed: the comment said it ran on a schedule, and there was no job and no
+scheduler. It had never run in production once — so the rollup the console reads had never been
+written, and the sweep that withdraws a broken question had never withdrawn one.
+
+Two things to take from that, neither of which is about Terraform. **A comment describing
+machinery is a claim**, and a claim in this repository is held by something or it is decoration.
+And the console's item analysis is the only reason it was findable: it draws *"no rollup has been
+made"* as its own screen rather than an empty table, and an empty table would have read as a
+platform whose questions are all fine. A screen that says what it does not know finds things a
+screen showing zeroes never will.
+
 ---
 
 ## The privacy policy is checked against the registry
@@ -1121,6 +1134,16 @@ go run ./tools/validate-content   # the answer keys, not only the schema
 go run ./tools/check-interface    # every string the interface says, in every language it claims
 go run ./tools/check-css          # our stylesheet overrides theirs and never lays it out
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
+```
+
+And for anything under `infra/`, the same two commands CI now runs. `validate` and not `plan`:
+a plan needs credentials and a state file and asks Google what exists today, which is a
+different question from whether the configuration is coherent.
+
+```sh
+cd infra
+terraform fmt -check -recursive
+terraform init -backend=false && terraform validate
 ```
 
 The three browser suites need a server and a school to look at, which is what
