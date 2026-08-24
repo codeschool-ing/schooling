@@ -419,6 +419,63 @@ function paintVerifyBanner() {
     '<span class="vb-status" id="vb-status" aria-live="polite"></span>' +
     '<button type="button" class="vb-close" aria-label="' + txt('Dismiss') + '">×</button>';
 }
+/* WHO IS LOOKING, SAID ON EVERY SCREEN.
+
+   K-02 gives view-as-student three restraints that ship together or not at all,
+   and this is the one that works WHILE it is happening: the audit answers
+   afterwards and the expiry bounds a machine left unlocked, but only a banner
+   stops somebody forgetting, mid-sentence, that the work in front of them is
+   not theirs.
+
+   IT NAMES THE OPERATOR, THE STUDENT AND THE SCHOOL. The console crosses schools
+   and a student's screens are served on one, so with two tabs open a banner
+   saying only "you are viewing a student" is ambiguous — and "the address bar
+   says which" is another way of saying the information lives somewhere nobody
+   looks while concentrating. The school comes from this interface's own
+   `/api/v1/school`, which it already has; the two names come with the session.
+
+   IT CANNOT BE DISMISSED. The verify banner above has a close button because it
+   is a nudge about something the person already knows. This is a statement about
+   whose data is on the screen, and a restraint somebody can click away is not
+   one. */
+function paintViewingBanner() {
+  const el = $('#viewing-banner');
+  const seen = now().session && now().session.viewing;
+  el.hidden = !seen;
+  document.body.classList.toggle('viewing-on', Boolean(seen));
+  if (!seen) { el.innerHTML = ''; return; }
+
+  const school = (source.school && source.school.name) || '';
+  el.innerHTML =
+    '<span class="vw-text">' +
+      '<strong>' + esc(seen.by || txt('Somebody')) + '</strong> ' +
+      txt('is looking at') + ' <strong>' + esc(seen.student || '') + '</strong>' +
+      (school ? ' · ' + esc(school) : '') +
+      ' — ' + txt('nothing here can be changed') +
+    '</span>' +
+    '<button type="button" class="vw-stop">' + txt('Stop looking') + '</button>' +
+    '<span class="vw-status" id="vw-status" aria-live="polite"></span>';
+}
+
+$('#viewing-banner').addEventListener('click', async (e) => {
+  const stop = e.target.closest('.vw-stop');
+  if (!stop) return;
+  const status = $('#vw-status');
+  stop.disabled = true;
+  if (status) status.textContent = txt('Ending…');
+  try {
+    await api.stopViewing();
+    /* A FULL RELOAD AND NOT A REPAINT. The cookie is gone, so what this browser
+       is on this host has changed underneath every module that cached anything
+       — and the honest way to show that is to load the page as whoever it is
+       now, which for the operator is nobody. */
+    globalThis.location.href = '/';
+  } catch {
+    stop.disabled = false;
+    if (status) status.textContent = txt('that did not work — close the tab instead');
+  }
+});
+
 $('#verify-banner').addEventListener('click', async (e) => {
   if (e.target.closest('.vb-close')) { bannerDismissed = true; paintVerifyBanner(); return; }
   const resend = e.target.closest('.vb-resend');
@@ -538,6 +595,7 @@ subscribe(() => {
   paintContext();
   paintAccount();
   paintVerifyBanner();
+  paintViewingBanner();
 });
 
 function routeParams() {
@@ -635,6 +693,7 @@ api.loadLessonStructure().then(() => { if (booted) redrawAll(); });
 
 paintAccount();
 paintVerifyBanner();
+paintViewingBanner();
 booted = true;
 start();
 

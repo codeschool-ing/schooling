@@ -34,8 +34,9 @@
    ========================================================================== */
 
 import { esc } from '../dom.js';
-import { get, RequestError } from '../request.js';
+import { get, post, RequestError } from '../request.js';
 import { goTo } from '../routes.js';
+import { mayAct } from '../session.js';
 
 /* ---------- the way in ---------- */
 
@@ -130,21 +131,70 @@ export async function record(params) {
     '</header>' +
 
     (it.schools.length
-      ? it.schools.map(atSchool).join('')
+      ? it.schools.map((s) => atSchool(s, person.id)).join('')
       : '<section class="block"><p class="none">They have nothing at any school: ' +
         'no plan, no progress, no exam, no certificate.</p></section>') +
 
     sittings(it.sittings);
 
+  /* STARTING A VIEWING IS A REQUEST AND THEN A NAVIGATION, and the two are
+     separate on purpose. The console cannot set a cookie for a school's host, so
+     the server answers with a LINK and the operator's own browser follows it —
+     which is also the only way the cookie lands where it has to.
+
+     IT OPENS IN A NEW TAB. The console stays where it is: an operator who has
+     just started looking at somebody usually wants both, and losing the console
+     to a viewing would make stopping one harder than starting it. */
+  el.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-view]');
+    if (!button) return;
+
+    const said = button.parentElement.querySelector('.list-count');
+    button.disabled = true;
+    if (said) said.textContent = 'Starting…';
+    try {
+      const answer = await post('/console/api/v1/students/' +
+        encodeURIComponent(button.dataset.person) + '/view/' +
+        encodeURIComponent(button.dataset.view));
+
+      /* `noopener` BECAUSE THE PAGE BEING OPENED IS A SESSION. Without it the
+         new tab can reach back into this one through `window.opener`, and this
+         one is the console. */
+      globalThis.open(answer.link, '_blank', 'noopener');
+      if (said) said.textContent = 'Opened in a new tab. It ends in half an hour, ' +
+        'or when you press stop there.';
+    } catch (e) {
+      if (said) said.textContent = e.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+
   return { title: person.name, el };
 }
 
-function atSchool(s) {
+function atSchool(s, personId) {
   return '<section class="block">' +
     '<div class="block-top">' +
       '<h2>' + esc(s.name) + '</h2>' +
       '<span class="block-score mono">' + esc(s.school) + '</span>' +
     '</div>' +
+
+    /* SEEING WHAT THEY SEE, PER SCHOOL, because that is what a viewing is: a
+       session on one school's host. It is offered here rather than beside the
+       person's name for that reason — "view this student" would have to ask
+       which school next, and the answer is already the heading above.
+
+       IT IS HIDDEN FROM A READ-ONLY ROLE because a control that always fails is
+       a bad screen. Hiding it is not the check — the API refuses, and there is a
+       test for that. */
+    (mayAct()
+      ? '<p class="view-as"><button type="button" class="btn btn-ghost" ' +
+          'data-view="' + esc(s.school) + '" data-person="' + esc(personId) + '">' +
+          'See what they see</button>' +
+        '<span class="list-count">Recorded with your name. Read-only, ends in half ' +
+          'an hour, and they are not told.</span></p>'
+      : '') +
 
     /* A PLAN THAT ENDED AND NO PLAN AT ALL ARE DIFFERENT ANSWERS, and the
        second is what somebody who never subscribed looks like. */

@@ -156,6 +156,43 @@ viewOf is `view` plus what the interface cannot work out for itself.
 func (h *Handler) viewOf(r *http.Request, account Account) map[string]any {
 	out := view(account)
 
+	/* AND WHETHER THIS IS SOMEBODY LOOKING RATHER THAN THE STUDENT.
+
+	   The banner is the third of K-02's restraints and it is the only one that
+	   works while the viewing is happening — so what it needs comes back on the
+	   same answer that says who the session belongs to, and the interface cannot
+	   draw the screens without also learning that it is drawing them for
+	   somebody else.
+
+	   THE OPERATOR IS NAMED. "You are viewing as a student" is a warning; "Grace
+	   Hopper is viewing Ada Lovelace's screens" is an account of what is
+	   happening, and it is the sentence that matches the audit entry when
+	   somebody asks later. The school's name the interface already has, from
+	   `/api/v1/school`, so it is not repeated here. */
+	if v, viewing := ViewingFromContext(r.Context()); viewing {
+		seen := map[string]any{"student": account.Name}
+		if by, err := h.store.ByID(r.Context(), v.By); err == nil {
+			seen["by"] = by.Name
+			seen["byEmail"] = by.Email
+		} else {
+			// A viewing whose operator cannot be read is still a viewing, and
+			// the banner still has to appear. An unnamed one is worse than a
+			// named one and far better than none.
+			web.LoggerFrom(r.Context()).Error("reading who is viewing", "error", err)
+		}
+		out["viewing"] = seen
+
+		/* AND IT IS NEVER ASKED FOR A SECOND FACTOR. The account may have one;
+		   the operator does not have the student's phone, and a viewing that
+		   stopped at a code prompt would be a feature that never works for
+		   exactly the accounts most worth looking at. What authorised this is the
+		   operator's own factor, at the console door, which they have already
+		   presented. */
+		out["secondFactor"] = false
+		out["mfaRequired"] = false
+		return out
+	}
+
 	has, err := h.store.HasSecondFactor(r.Context(), account.ID)
 	if err != nil {
 		// A read that failed is not a "no": saying the account has no second
@@ -298,13 +335,28 @@ func AccountID(ctx context.Context) (uuid.UUID, bool) {
 func Authenticate(store *Store) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			c, err := r.Cookie(CookieName)
-			if err != nil {
+			/* THE VIEWING COOKIE WINS WHERE THERE IS ONE.
+
+			   Both can be present at once, and that is the whole design: the
+			   ordinary cookie is the operator's, scoped to the platform domain,
+			   and the viewing is host-only on the school being looked at. On
+			   that host the viewing is what the operator asked to see, so it is
+			   what answers — and the console, on its own host, never sees it.
+
+			   A student's browser has only the first, and nothing about this
+			   changes for them. */
+			token, viewing := "", false
+			if c, err := r.Cookie(ViewingCookie); err == nil && c.Value != "" {
+				token, viewing = c.Value, true
+			} else if c, err := r.Cookie(CookieName); err == nil {
+				token = c.Value
+			}
+			if token == "" {
 				next.ServeHTTP(w, r)
 				return
 			}
 
-			account, err := store.Verify(r.Context(), c.Value)
+			account, seeing, err := store.Verify(r.Context(), token)
 			if err != nil {
 				if !errors.Is(err, ErrNoSession) {
 					web.LoggerFrom(r.Context()).Error("verifying a session", "error", err)
@@ -313,7 +365,22 @@ func Authenticate(store *Store) func(http.Handler) http.Handler {
 				return
 			}
 
-			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxAccount, account)))
+			/* A VIEWING COOKIE THAT IS NOT A VIEWING IS NOT A SESSION.
+
+			   It would mean somebody put an ordinary session token into the
+			   viewing cookie — by hand, or by a bug — and honouring it would be a
+			   session with none of the restraints and no banner, which is the
+			   exact thing this feature is not allowed to be. */
+			if viewing && !seeing.Is() {
+				next.ServeHTTP(w, r)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), ctxAccount, account)
+			if seeing.Is() {
+				ctx = WithViewing(ctx, seeing)
+			}
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }

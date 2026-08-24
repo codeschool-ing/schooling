@@ -280,24 +280,33 @@ func (s *Store) SetPassword(ctx context.Context, id uuid.UUID, password, keepTok
 // Issue starts a session and answers the token, which is the only time it
 // exists outside the browser.
 func (s *Store) Issue(ctx context.Context, accountID uuid.UUID, userAgent string) (string, error) {
-	raw := make([]byte, 32)
-	if _, err := rand.Read(raw); err != nil {
-		return "", fmt.Errorf("identity: no randomness for a session: %w", err)
+	token, err := newToken()
+	if err != nil {
+		return "", err
 	}
-	token := base64.RawURLEncoding.EncodeToString(raw)
 
 	if len(userAgent) > 400 {
 		userAgent = userAgent[:400]
 	}
 
-	_, err := s.pool.Exec(ctx, `
+	if _, err := s.pool.Exec(ctx, `
 		INSERT INTO sessions (account_id, token_hash, expires_at, user_agent)
 		VALUES ($1, $2, now() + $3::interval, $4)
-	`, accountID, tokenHash(token), sessionLifetime.String(), userAgent)
-	if err != nil {
+	`, accountID, tokenHash(token), sessionLifetime.String(), userAgent); err != nil {
 		return "", fmt.Errorf("identity: starting a session: %w", err)
 	}
 	return token, nil
+}
+
+// newToken is the only place a session token is made, so that a second kind of
+// session cannot quietly be given a weaker one. 32 bytes from `crypto/rand`,
+// which is the whole of the secret — the database keeps its hash and never this.
+func newToken() (string, error) {
+	raw := make([]byte, 32)
+	if _, err := rand.Read(raw); err != nil {
+		return "", fmt.Errorf("identity: no randomness for a session: %w", err)
+	}
+	return base64.RawURLEncoding.EncodeToString(raw), nil
 }
 
 // Verify answers whose session this token is.
@@ -306,33 +315,46 @@ func (s *Store) Issue(ctx context.Context, accountID uuid.UUID, userAgent string
 // does: this is the busiest read path there will be, and turning it into a
 // write on every request is amplification for a column nobody reads to the
 // minute.
-func (s *Store) Verify(ctx context.Context, token string) (Account, error) {
+func (s *Store) Verify(ctx context.Context, token string) (Account, Viewing, error) {
 	if token == "" {
-		return Account{}, ErrNoSession
+		return Account{}, Viewing{}, ErrNoSession
 	}
 
 	var out Account
+	var viewing Viewing
+	var by, school *uuid.UUID
+
+	/* A VIEWING IS READ HERE AND NOT SOMEWHERE AFTER, because everything that
+	   decides how a request is treated has to come from the one row that
+	   authenticated it. Asking a second query "is this session a viewing" is two
+	   answers that can disagree, and the direction they would disagree in is a
+	   session behaving as the student between the two. */
 	err := s.pool.QueryRow(ctx, `
 		WITH live AS (
-			SELECT id, account_id FROM sessions
+			SELECT id, account_id, viewed_by, viewing_tenant FROM sessions
 			WHERE token_hash = $1 AND revoked_at IS NULL AND expires_at > now()
+			  AND (viewed_by IS NULL OR redeemed_at IS NOT NULL)
 		), touched AS (
 			UPDATE sessions SET last_seen_at = now()
 			WHERE id IN (SELECT id FROM live) AND last_seen_at < now() - interval '1 hour'
 			RETURNING id
 		)
-		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.created_at
+		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.created_at,
+		       live.viewed_by, live.viewing_tenant
 		FROM live JOIN accounts a ON a.id = live.account_id
 	`, tokenHash(token)).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
-		&out.Synthetic, &out.CreatedAt)
+		&out.Synthetic, &out.CreatedAt, &by, &school)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return Account{}, ErrNoSession
+		return Account{}, Viewing{}, ErrNoSession
 	}
 	if err != nil {
-		return Account{}, fmt.Errorf("identity: reading a session: %w", err)
+		return Account{}, Viewing{}, fmt.Errorf("identity: reading a session: %w", err)
 	}
-	return out, nil
+	if by != nil && school != nil {
+		viewing = Viewing{By: *by, School: *school}
+	}
+	return out, viewing, nil
 }
 
 // Revoke ends one session. Signing out of a browser must not sign the person
