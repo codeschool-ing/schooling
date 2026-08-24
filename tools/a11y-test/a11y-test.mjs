@@ -834,13 +834,19 @@ try {
        And a colour is typed in, because the screen with a colour chosen is a
        different screen: two specimens, four swatches and the two sentences that
        only appear when a colour had to move. */
+    /* IT SETTLES ON THE PRICE LIST AND NOT ON THE COLOUR FORM, which is a
+       stronger wait for one word's difference. The colour form is in the first
+       paint; the price series arrives a request later, so settling on the form
+       would measure a school whose history had not landed — and the price rows
+       are the one place on this screen where a value is marked as "in force" by
+       weight and colour, which is exactly what axe is here to look at. */
     await check(staff.page, `${theme} · console, the schools`, '/#/schools', '/schools',
-      { base: CONSOLE, region: '#stage', settled: '.accent-form' });
+      { base: CONSOLE, region: '#stage', settled: '.price-list' });
 
     await check(staff.page, `${theme} · console, a colour chosen`, '/#/schools', '/schools', {
       base: CONSOLE,
       region: '#stage',
-      settled: '.accent-form',
+      settled: '.price-list',
       async act(page) {
         /* AMBER RATHER THAN THE ONE IT IS WEARING: it has to move in both
            themes, so both of the sentences this screen exists to show are on

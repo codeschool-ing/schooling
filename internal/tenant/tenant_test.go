@@ -195,12 +195,22 @@ func TestASchoolCarriesItsOwnAddressAndItsOwnPrice(t *testing.T) {
 	at := seed(t, pool)
 	srv := server(t, pool)
 
+	slug := strings.TrimSuffix(at.code, ".example.tld")
+	if _, err := pool.Exec(context.Background(),
+		`UPDATE tenants SET site = $2 WHERE slug = $1`,
+		slug, "https://codeschool.ing"); err != nil {
+		t.Fatalf("giving the school an address: %v", err)
+	}
+
+	/* THE PRICE IS A ROW AND NOT A COLUMN (K-14), so this seeds one. It used to
+	   be part of the `UPDATE` above, which is exactly the shape the price stopped
+	   having: a value that could be overwritten is a value that cannot explain an
+	   invoice a year later. */
 	if _, err := pool.Exec(context.Background(), `
-		UPDATE tenants SET site = $2, plan_price_cents = $3, plan_currency = $4
-		WHERE slug = $1
-	`, strings.TrimSuffix(at.code, ".example.tld"),
-		"https://codeschool.ing", 49000, "BRL"); err != nil {
-		t.Fatalf("giving the school an address and a price: %v", err)
+		INSERT INTO school_prices (tenant_id, cents, currency)
+		SELECT id, $2, $3 FROM tenants WHERE slug = $1
+	`, slug, 49000, "BRL"); err != nil {
+		t.Fatalf("giving the school a price: %v", err)
 	}
 
 	status, body := get(t, srv, at.code)
@@ -306,4 +316,163 @@ func TestSettingTheAccentOfNoSchool(t *testing.T) {
 	if !errors.Is(err, tenant.ErrNoSchool) {
 		t.Errorf("setting the colour of no school answered %v, want ErrNoSchool", err)
 	}
+}
+
+/* ---------- a price is a row (K-14) ---------- */
+
+/*
+THE THING THIS TABLE EXISTS FOR: THE OLD PRICE IS STILL THERE.
+
+A column would answer "what does it cost" and nothing else. The series answers
+"what did it cost in March", which is the question an invoice raises in November
+— and it is the question the previous shape could not be asked, because setting
+the new price destroyed the old one.
+*/
+func TestASchoolsOldPriceSurvivesTheNewOne(t *testing.T) {
+	pool := testPool(t)
+	store := tenant.NewStore(pool)
+	ctx := context.Background()
+	school := aSchoolRow(t, pool)
+
+	if _, _, err := store.SetPrice(ctx, school, 49000, "BRL"); err != nil {
+		t.Fatalf("setting the first price: %v", err)
+	}
+	was, wasCurrency, err := store.SetPrice(ctx, school, 59000, "BRL")
+	if err != nil {
+		t.Fatalf("raising the price: %v", err)
+	}
+	if was != 49000 || wasCurrency != "BRL" {
+		t.Errorf("the raise answered %d %q as what it replaced", was, wasCurrency)
+	}
+
+	series, err := store.Prices(ctx, school)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(series) != 2 {
+		t.Fatalf("two prices were set and the series holds %d", len(series))
+	}
+	if series[0].Cents != 59000 {
+		t.Errorf("the newest row is %d and should be the one in force", series[0].Cents)
+	}
+	if series[1].Cents != 49000 {
+		t.Errorf("the price that was replaced is gone: %+v", series)
+	}
+}
+
+// AND THE DATABASE REFUSES AN EDIT, which is what makes the sentence above a
+// guarantee rather than a habit. Every other append-only table here carries the
+// same trigger, and a price that could be updated would explain nothing.
+func TestAPriceCannotBeEditedOrDeleted(t *testing.T) {
+	pool := testPool(t)
+	store := tenant.NewStore(pool)
+	ctx := context.Background()
+	school := aSchoolRow(t, pool)
+
+	if _, _, err := store.SetPrice(ctx, school, 49000, "BRL"); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := pool.Exec(ctx,
+		`UPDATE school_prices SET cents = 100 WHERE tenant_id = $1`, school); err == nil {
+		t.Error("a price was edited — the offer is then as forgeable as the column was")
+	}
+	if _, err := pool.Exec(ctx,
+		`DELETE FROM school_prices WHERE tenant_id = $1`, school); err == nil {
+		t.Error("a price was deleted")
+	}
+}
+
+// A SCHOOL WITH NO PRICE IS A SCHOOL, not a school priced at zero. The column
+// used zero for both, which made a free school and an undecided one the same
+// number — and one of those is a decision somebody made.
+func TestASchoolWithNoPriceHasNoOffer(t *testing.T) {
+	pool := testPool(t)
+	store := tenant.NewStore(pool)
+	school := aSchoolRow(t, pool)
+
+	series, err := store.Prices(context.Background(), school)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(series) != 0 {
+		t.Errorf("a school nobody has priced has %d prices", len(series))
+	}
+}
+
+// WHAT IS IN FORCE IS THE NEWEST ROW WHOSE DATE HAS PASSED. A row dated ahead is
+// already representable — nothing writes one today — and it must not be the
+// answer until its day arrives, or announcing a rise would apply it.
+func TestAPriceDatedAheadIsNotYetTheOffer(t *testing.T) {
+	pool := testPool(t)
+	store := tenant.NewStore(pool)
+	ctx := context.Background()
+	school := aSchoolRow(t, pool)
+
+	if _, _, err := store.SetPrice(ctx, school, 49000, "BRL"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO school_prices (tenant_id, cents, currency, effective_from)
+		VALUES ($1, 59000, 'BRL', now() + interval '30 days')
+	`, school); err != nil {
+		t.Fatalf("dating a price ahead: %v", err)
+	}
+
+	// `SetPrice` answers what is in force, which is the older row.
+	was, _, err := store.SetPrice(ctx, school, 51000, "BRL")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if was != 49000 {
+		t.Errorf("the price in force answered %d — a row dated ahead was applied early", was)
+	}
+}
+
+// NEITHER HALF OF A PRICE IS ACCEPTED ALONE. Both refusals are the caller's to
+// fix and both say which half was wrong, because a constraint violation is true
+// and is not a sentence a console can show anybody.
+func TestAPriceIsANumberAndACurrency(t *testing.T) {
+	pool := testPool(t)
+	store := tenant.NewStore(pool)
+	ctx := context.Background()
+	school := aSchoolRow(t, pool)
+
+	for _, bad := range []struct {
+		cents    int
+		currency string
+	}{
+		{0, "BRL"}, {-1, "BRL"}, {49000, ""}, {49000, "brl"}, {49000, "REAIS"},
+	} {
+		if _, _, err := store.SetPrice(ctx, school, bad.cents, bad.currency); !errors.Is(
+			err, tenant.ErrNotAPrice) {
+			t.Errorf("%d %q answered %v", bad.cents, bad.currency, err)
+		}
+	}
+}
+
+// A price against a school nobody has is a 404's worth of error rather than a
+// foreign key violation — which is true and is not something to put in front of
+// a person.
+func TestPricingASchoolThatIsNotThereSaysSo(t *testing.T) {
+	store := tenant.NewStore(testPool(t))
+
+	_, _, err := store.SetPrice(context.Background(), uuid.New(), 49000, "BRL")
+	if !errors.Is(err, tenant.ErrNoSchool) {
+		t.Errorf("pricing a school nobody has answered %v", err)
+	}
+}
+
+// A school row to hang prices on. No host and no catalogue: what is under test
+// is the series, and everything else about a school is somebody else's test.
+func aSchoolRow(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
+	t.Helper()
+	var id uuid.UUID
+	slug := "price-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:10]
+	if err := pool.QueryRow(context.Background(),
+		`INSERT INTO tenants (slug, name) VALUES ($1, 'Programming') RETURNING id`,
+		slug).Scan(&id); err != nil {
+		t.Fatalf("seeding a school: %v", err)
+	}
+	return id
 }

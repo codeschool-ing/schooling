@@ -74,6 +74,16 @@ type School struct {
 	Slug   string
 	Name   string
 	Accent string
+
+	// What the subscription costs here right now, and in which currency. It is
+	// the top of a dated series (K-14) rather than a field on the school —
+	// `tenant` holds the rest, and the console asks for it only on the screen
+	// that changes it.
+	//
+	// Zero and empty mean the school has no offer, which is a real state: a
+	// school can exist before anybody has decided what it costs.
+	PriceCents int
+	Currency   string
 }
 
 // Course is how far along one course they are.

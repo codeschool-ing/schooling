@@ -499,6 +499,9 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 		console.Schools{
 			All:       schoolsFor(tenant.NewStore(pool)),
 			SetAccent: accentOf(tenant.NewStore(pool)),
+			SetPrice:  priceOf(tenant.NewStore(pool)),
+			Prices:    pricesOf(tenant.NewStore(pool)),
+			Refused:   func(err error) bool { return errors.Is(err, tenant.ErrNotAPrice) },
 		},
 		recorded(entries),
 		labelOf(accounts),
@@ -1385,8 +1388,10 @@ func schoolsFor(schools *tenant.Store) func(context.Context) ([]console.School, 
 		}
 		out := make([]console.School, 0, len(all))
 		for _, s := range all {
+			cents, currency := s.Price()
 			out = append(out, console.School{
 				ID: s.ID, Slug: s.Slug, Name: s.Name, Accent: s.Accent,
+				PriceCents: cents, Currency: currency,
 			})
 		}
 		return out, nil
@@ -1403,6 +1408,36 @@ func accentOf(schools *tenant.Store) func(context.Context, uuid.UUID, string) (s
 			return "", console.ErrNoSchool
 		}
 		return was, err
+	}
+}
+
+// priceOf and pricesOf are the console's other two writes and reads against a
+// school. `SetPrice` APPENDS — see `tenant.SetPrice` and K-14 — and the shape of
+// this closure is the only place that difference is invisible, which is why the
+// seam it fills is documented as a series rather than as a setter.
+func priceOf(schools *tenant.Store) func(context.Context, uuid.UUID, int, string) (int, string, error) {
+	return func(ctx context.Context, id uuid.UUID, cents int, currency string) (int, string, error) {
+		was, wasCurrency, err := schools.SetPrice(ctx, id, cents, currency)
+		if errors.Is(err, tenant.ErrNoSchool) {
+			return 0, "", console.ErrNoSchool
+		}
+		return was, wasCurrency, err
+	}
+}
+
+func pricesOf(schools *tenant.Store) func(context.Context, uuid.UUID) ([]console.Price, error) {
+	return func(ctx context.Context, id uuid.UUID) ([]console.Price, error) {
+		rows, err := schools.Prices(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]console.Price, 0, len(rows))
+		for _, one := range rows {
+			out = append(out, console.Price{
+				Cents: one.Cents, Currency: one.Currency, From: one.From,
+			})
+		}
+		return out, nil
 	}
 }
 
