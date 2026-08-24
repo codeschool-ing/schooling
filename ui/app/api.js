@@ -619,6 +619,40 @@ export function saveNote(courseId, ix, sectionId, body) {
   return put(`/api/v1/notes/${enc(courseId)}/${enc(lesson)}/${enc(sectionId)}`, { body });
 }
 
+/* ---------- something here is wrong ---------- */
+
+/* THE ONE DIRECTION NOTHING ELSE IN THE INTERFACE RUNS IN. Every other call in
+   this file reads the material or records what the student did with it; this
+   one says the material itself is wrong, which is the only channel by which a
+   wrong answer key comes back from the person who found it.
+
+   IT IS FETCHED ONCE AND KEPT, and it is not fetched at all until somebody
+   opens the control. Most people never will, and a request per lesson view to
+   populate a form nobody opened is a request per lesson view. The answer also
+   carries the sections this student has already reported, which is what lets
+   the form say "you told us this" instead of inviting them to say it twice. */
+let reportsHeld = null;
+
+export function reportable() {
+  if (reportsHeld) return reportsHeld;
+  reportsHeld = get('/api/v1/reports');
+  return reportsHeld;
+}
+
+export function reportSection(courseId, ix, sectionId, reason, note) {
+  const lesson = lessonIdOf(courseId, ix);
+  if (!lesson) return echo(null);
+  return post('/api/v1/reports', {
+    courseId, lessonId: lesson, sectionId, reason, note,
+  }).then((answer) => {
+    // What is held is now out of date by exactly one report, and the next
+    // section they open has to know. Dropped rather than patched: a cache
+    // updated by hand is a cache that disagrees with the server eventually.
+    reportsHeld = null;
+    return answer;
+  });
+}
+
 /* Where the student stopped — and now with the SECTION, not just the lesson.
    Returning the top of a four-hour lesson is returning the person to scrolling;
    it is the difference between the feature being useful and being decorative.

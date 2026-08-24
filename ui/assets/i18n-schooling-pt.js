@@ -145,4 +145,31 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'Ending…': 'Encerrando…',
   'that did not work — close the tab instead':
     'não funcionou — feche a aba no lugar',
+
+  /* ---------- saying something is wrong with the material ---------- */
+
+  'something here is wrong': 'tem algo errado aqui',
+  'what is wrong?': 'o que está errado?',
+
+  /* The five reasons. They are the server's words and these are the sentences
+     beside them — a reason added there and not here is drawn under its own
+     word, which reads oddly and can still be chosen. */
+  'the answer given as correct is wrong': 'a resposta dada como correta está errada',
+  'something here is not true': 'tem algo aqui que não é verdade',
+  'something does not work — a video, an image, a link':
+    'alguma coisa não funciona — um vídeo, uma imagem, um link',
+  'I cannot follow this': 'não consigo acompanhar',
+  'something else': 'outra coisa',
+
+  'what did you see? the more exact, the sooner it is fixed…':
+    'o que você viu? quanto mais exato, mais rápido a correção…',
+  'send': 'enviar',
+  'sending…': 'enviando…',
+  'reading…': 'lendo…',
+  'thank you — somebody will look at this section':
+    'obrigado — alguém vai olhar esta seção',
+  'you have already told us about this section, and it has not been answered yet':
+    'você já nos avisou sobre esta seção, e ainda não respondemos',
+  'that did not send': 'não deu para enviar',
+  'that could not be loaded': 'não deu para carregar',
 });
