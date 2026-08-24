@@ -17,7 +17,7 @@
 
 import { courseById } from '../catalog.js';
 import { courseProgress, activeOption, examResult, examAttempts, saveExam } from '../state.js';
-import { openCourseExam, openTrackExam, examScore, examReady, PASS_MARK } from '../exams.js';
+import { openCourseExam, openTrackExam, examScore, examReady, passMark } from '../exams.js';
 import * as api from '../api.js';
 import { buildAssessment } from '../exercises/index.js';
 import { studentTrack, trackProgress, bar, empty } from './common.js';
@@ -30,6 +30,13 @@ function build(exam, progress) {
 
   const el = document.createElement('div');
   el.className = 'view view-exam';
+
+  /* WHAT THIS PAPER HAS TO REACH, and it comes off the paper. Every screen here
+     used to print a `PASS_MARK` imported from `exams.js` — the server's number
+     written down a second time, which goes stale silently the day the server's
+     moves. With no server there is no paper, and the school's own answer stands
+     in; with neither, the offline default. */
+  const mark = exam.passMark || passMark();
 
   /* Not `!exam.items.length`: a paper too thin to be passed without perfection
      is no more sittable than an empty one, and the screen has to agree with the
@@ -62,7 +69,12 @@ function build(exam, progress) {
         '<li>' + exam.items.length + ' ' + txt('questions, drawn from the bank of the') + ' ' +
           txt(exam.scope === 'track' ? 'the track\'s set of courses.' : 'course.') + '</li>' +
         '<li>' + txt('Each question\'s result appears only at the end — here the exam measures, it does not teach.') + '</li>' +
-        '<li>' + txt('Minimum to pass:') + ' <strong>' + PASS_MARK + '%</strong>.</li>' +
+        /* THE PAPER'S OWN MARK. It used to be a constant this file imported,
+           which is the number the server marks by written down a second time —
+           and the copy is the one that goes stale. `exam.passMark` comes off the
+           paper the server drew; with no server it falls back to the school's,
+           and then to the offline default. */
+        '<li>' + txt('Minimum to pass:') + ' <strong>' + mark + '%</strong>.</li>' +
         '<li>' + txt('Redoing draws a different exam. The best result stands.') + '</li>' +
       '</ul>' +
       (previous
@@ -103,8 +115,12 @@ function build(exam, progress) {
         '<p class="wz-res-score exam-score' + (n.passed ? ' passed' : ' missed') + '">' +
           '<strong>' + n.pct + '%</strong>' +
         '</p>' +
+        /* AND THE MARK IT WAS ACTUALLY JUDGED BY, which for a paper the server
+           graded is on the verdict rather than in this file: an attempt sat in
+           March is held to March's number, and showing today's beside its score
+           would be a result explaining itself with a rule nobody applied. */
         '<p class="wz-res-note">' + n.lastCorrect + ' ' + txt('of') + ' ' + n.judged + ' ' +
-          txt('questions graded') + ' · ' + txt('minimum') + ' ' + PASS_MARK + '%</p>' +
+          txt('questions graded') + ' · ' + txt('minimum') + ' ' + (n.passMark ?? mark) + '%</p>' +
         (n.passed
           ? '<p class="wz-res-note">' + txt('The certificate appears on the Certificates screen.') + '</p>'
           : '<p class="wz-res-note">' + txt('Redo it whenever you like: the next exam is drawn again.') + '</p>'),
@@ -112,7 +128,7 @@ function build(exam, progress) {
   };
 
   function local(states) {
-    const n = examScore(states);
+    const n = examScore(states, mark);
     saveExam(exam.key, {
       pct: n.pct, passed: n.passed, lastCorrect: n.lastCorrect, total: n.judged,
     });
@@ -128,6 +144,7 @@ function build(exam, progress) {
       pct: r.pct,
       passed: r.passed,
       lastCorrect: r.correct,
+      passMark: r.passMark,
       judged: r.judged,
       pending: r.pending,
       verdicts: r.verdicts,
@@ -212,7 +229,10 @@ export function examCard({ key, href, scope, count, progress, ready = true }) {
         txt(scope === 'track' ? 'end of the track' : 'end of the course') + '</span>' +
       '<h2>' + txt(scope === 'track' ? 'Track exam' : 'Final exam') + '</h2>' +
       (ready
-        ? '<p>' + count + ' ' + txt('questions drawn') + ' · ' + txt('minimum') + ' ' + PASS_MARK + '% · ' +
+        /* THE SCHOOL'S OWN, because this card is painted before any exam has
+           been started and so before any paper exists to carry it. That is the
+           reason `/api/v1/school` answers with it at all. */
+        ? '<p>' + count + ' ' + txt('questions drawn') + ' · ' + txt('minimum') + ' ' + passMark() + '% · ' +
           txt('result only at the end') + '</p>'
         : '<p>' + txt('in preparation — not enough exercises yet') + '</p>') +
       (ready && r

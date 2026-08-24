@@ -91,7 +91,7 @@ func seed(t *testing.T, pool *pgxpool.Pool) schools {
 func server(t *testing.T, pool *pgxpool.Pool) *httptest.Server {
 	t.Helper()
 	scoped := http.NewServeMux()
-	tenant.NewHandler().Routes(scoped)
+	tenant.NewHandler(70).Routes(scoped)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))

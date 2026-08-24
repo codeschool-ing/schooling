@@ -45,9 +45,22 @@ func Resolve(store *Store) web.Middleware {
 // end as to be useful — though it is useful: the app reads its name, its accent
 // colour, its own address and what a subscription costs from here before it
 // paints anything.
-type Handler struct{}
+type Handler struct {
+	// passMark is the share of an exam a student has to reach, in whole percent.
+	//
+	// IT IS HANDED IN RATHER THAN IMPORTED, because `exam` owns it and a module
+	// may not import another module (X-02). `cmd/api` is the one line that says
+	// the two are the same number.
+	//
+	// WHY A SCHOOL SAYS IT AT ALL. The interface prints "minimum to pass" on a
+	// course card, before any exam has been started and so before any paper
+	// exists to carry it. Until this field, it printed a `PASS_MARK = 70` of its
+	// own — two copies of one decision, where moving the constant marks the exam
+	// at the new number and describes it as the old one.
+	passMark int
+}
 
-func NewHandler() *Handler { return &Handler{} }
+func NewHandler(passMark int) *Handler { return &Handler{passMark: passMark} }
 
 func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/school", h.school)
@@ -66,6 +79,11 @@ type schoolBody struct {
 	// offering zero.
 	PlanPriceCents int    `json:"planPriceCents,omitempty"`
 	PlanCurrency   string `json:"planCurrency,omitempty"`
+
+	// What an exam has to reach here, in whole percent. NOT `omitempty`: zero is
+	// not a pass mark anybody set, and a screen that read a missing field as
+	// "no minimum" would say an exam is passed by answering nothing.
+	PassMark int `json:"passMark"`
 }
 
 func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
@@ -83,5 +101,6 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 	web.JSON(w, http.StatusOK, schoolBody{
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
 		PlanPriceCents: cents, PlanCurrency: currency,
+		PassMark: h.passMark,
 	})
 }
