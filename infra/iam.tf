@@ -48,6 +48,35 @@ resource "google_project_iam_member" "run_writes_logs" {
   member  = "serviceAccount:${google_service_account.run.email}"
 }
 
+/* AND IT MAY START ONE JOB — the analysis, and only that one.
+
+   THIS IS THE GRANT THAT PUT A BUTTON ON THE CONSOLE. The jobs screen said for
+   as long as it existed that there was nothing to press, and the reason it gave
+   was this: starting a job means the service holding the right to run one,
+   which is an identity and a network path it did not have. It has the identity
+   now and the path is Google's own metadata server — no key, no configuration,
+   a token minted for this instance and expiring in an hour.
+
+   ON THE JOB AND NOT ON THE PROJECT, which is the rule the secret and the
+   scheduler both follow. `roles/run.invoker` at project level is every job and
+   every service this project will ever hold, granted in advance to a web
+   application that anybody on the internet can reach the front door of. Here it
+   is one resource, and the two jobs that must never be startable from a browser
+   — the migration and the catalogue load — are not it.
+
+   THE APPLICATION REFUSES BEFORE THIS DOES. `internal/console/writes.go`
+   declares the route and `console.Jobs.Startable` is the closed list it checks
+   against, so a name outside it never reaches Google. This grant is the second
+   fence rather than the first: if that list were ever wrong, the worst it can
+   reach is one more run of a job that is idempotent and runs nightly anyway. */
+resource "google_cloud_run_v2_job_iam_member" "run_starts_the_analysis" {
+  project  = google_cloud_run_v2_job.analyse.project
+  location = google_cloud_run_v2_job.analyse.location
+  name     = google_cloud_run_v2_job.analyse.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${google_service_account.run.email}"
+}
+
 /* WHAT THE PIPELINE MAY DO */
 
 resource "google_artifact_registry_repository_iam_member" "deploy_pushes_images" {

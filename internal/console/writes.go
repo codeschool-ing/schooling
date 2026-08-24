@@ -116,6 +116,15 @@ var Writes = []Write{
 		Why: "answering a student who said the material is wrong. One report, one decision, " +
 			"and the row it closes is the student's rather than the platform's",
 	},
+	{
+		Route: "POST /console/api/v1/jobs/{job}/run",
+		Kind:  Action,
+		Why: "asking for a run of a scheduled job now rather than waiting for tonight. It " +
+			"leaves no dial at a new position — the schedule is unchanged and the next run " +
+			"happens anyway — and WHICH jobs it may ask for is a closed list of its own, " +
+			"because a migration and a catalogue load are in the same project one path " +
+			"parameter away",
+	},
 }
 
 // Parameters is the closed list K-13 asks for, which is this one narrowed to

@@ -34,6 +34,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/job"
 	"github.com/codeschool-ing/schooling/internal/legal"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
+	"github.com/codeschool-ing/schooling/internal/platform/cloudrun"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
@@ -91,7 +92,7 @@ func run(log *slog.Logger) error {
 
 	srv := &http.Server{
 		Addr:              ":" + cfg.Port,
-		Handler:           router(pool, log, cfg),
+		Handler:           router(pool, log, cfg, startsJobs(ctx, log, cfg)),
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       30 * time.Second,
 		WriteTimeout:      60 * time.Second,
@@ -132,7 +133,67 @@ func run(log *slog.Logger) error {
 // The webhooks the payment gateway will call are the second member of the
 // first class, and they arrive at a fixed address the gateway knows. Keeping
 // the split from the first day is what stops that from being a surprise.
-func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handler {
+/* WHICH CLOUD RUN JOB IS WHICH OF OURS, and the two names differ on purpose.
+
+   `job_runs.job` is what a command calls ITSELF — `analyse` — and it is the
+   word the console's screen and its audit entries carry. `schooling-analyse` is
+   a resource in a Google project that also holds a database, a registry and two
+   other jobs, where a bare `analyse` would be a name with no owner.
+
+   THE MAP IS THE TRANSLATION AND IT IS ALSO THE GATE. A route that built the
+   resource name by prefixing would start `schooling-migrate` for anybody who
+   typed `migrate`, and there is exactly one entry here because there is exactly
+   one job it is safe to begin by browsing. `console.Jobs.Startable` is the same
+   list one layer up, refusing before Google is asked anything. */
+var cloudRunJobs = map[string]string{job.Analyse: "schooling-analyse"}
+
+/*
+startsJobs works out, once, whether this process can start a Cloud Run job.
+
+	IT IS NIL EVERYWHERE THAT IS NOT CLOUD RUN, which is every developer machine,
+	the local stack and CI — and the console then draws no button rather than one
+	that fails. A stub that always succeeded would put a control on a screen that
+	does nothing, which is the exact failure the jobs screen exists to make
+	visible one layer down.
+
+	The probe is cheap and bounded, and it happens before the server listens, so
+	a network that black-holes the metadata address delays a start-up by two
+	seconds rather than hanging a request.
+*/
+func startsJobs(ctx context.Context, log *slog.Logger,
+	cfg config.Config) func(context.Context, string) error {
+
+	runner, err := cloudrun.Here(ctx)
+	if err != nil {
+		/* IN PRODUCTION THIS IS WORTH A RAISED VOICE. Off Google it is the
+		   ordinary state and says nothing; on Cloud Run it means the metadata
+		   server did not answer, and a deployment that quietly lost the ability
+		   to start its own jobs should not have to be discovered from a screen. */
+		if cfg.Environment == config.Production {
+			log.Warn("this deployment cannot start jobs", "why", err)
+		} else {
+			log.Info("this deployment cannot start jobs", "why", err)
+		}
+		return nil
+	}
+
+	project, region := runner.Where()
+	log.Info("this deployment can start jobs", "project", project, "region", region)
+
+	return func(ctx context.Context, name string) error {
+		resource, ok := cloudRunJobs[name]
+		if !ok {
+			// Unreachable through the console, which checks its own list first.
+			// It is here because the two lists are written in two places and the
+			// day they disagree this says which one was asked.
+			return fmt.Errorf("no Cloud Run job is wired for %q", name)
+		}
+		return runner.Start(ctx, resource)
+	}
+}
+
+func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
+	startJob func(ctx context.Context, name string) error) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
@@ -746,7 +807,22 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			return out, nil
 		},
 		AdriftAfter: job.Adrift,
-	}).Routes(staffAPI)
+
+		/* AND THE ONE THAT MAY BE STARTED BY HAND. It is the only job on a
+		   schedule, so it is the only one whose failure means waiting a day —
+		   `migrate` and `load` are gates a deploy waits for, and their failure
+		   already stops a release in front of somebody. */
+		Startable: []string{job.Analyse},
+		Start:     startJob,
+	},
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
 
 	/* WHO IS HERE, which is the one console read that is current state rather
 	   than the event stream — `identity/presence.go` says why that is K-06 and
