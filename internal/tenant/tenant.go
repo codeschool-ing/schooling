@@ -126,6 +126,56 @@ func (s *Store) ByHost(ctx context.Context, host string) (School, error) {
 	return out, nil
 }
 
+// ByID is the same school, found by its id rather than by an address.
+//
+// IT EXISTS FOR THE ADDRESSES THAT BELONG TO NO SCHOOL. A request at a school's
+// host resolves its school from the host and never needs this; the platform's
+// own address has no host to resolve from, and an id is what it is holding —
+// the school of a card in a queue that crosses them.
+//
+// The same LATERAL as `ByHost`, so a school read this way carries the price in
+// force exactly as one read from a host does. Two ways to load a school that
+// disagreed about a field would be discovered by a number on a screen.
+func (s *Store) ByID(ctx context.Context, id uuid.UUID) (School, error) {
+	var out School
+	var cents *int
+	var currency *string
+	err := s.pool.QueryRow(ctx, `
+		SELECT t.id, t.slug, t.name, t.accent, t.site, p.cents, p.currency
+		FROM tenants t
+		LEFT JOIN LATERAL (
+			SELECT cents, currency FROM school_prices
+			WHERE tenant_id = t.id AND effective_from <= now()
+			ORDER BY effective_from DESC
+			LIMIT 1
+		) p ON true
+		WHERE t.id = $1
+	`, id).Scan(&out.ID, &out.Slug, &out.Name, &out.Accent, &out.Site,
+		&cents, &currency)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return School{}, ErrNoSchool
+	}
+	if err != nil {
+		return School{}, fmt.Errorf("tenant: reading the school %s: %w", id, err)
+	}
+	if cents != nil && currency != nil {
+		out.PlanPriceCents, out.PlanCurrency = *cents, *currency
+	}
+	return out, nil
+}
+
+// Scoped puts a school on a context for a request that did not arrive at its
+// host.
+//
+// THE MIDDLEWARE IS STILL THE ONLY WAY A REQUEST AT A SCHOOL'S HOST GETS ONE.
+// This is for the platform's own address, where the school comes from a row the
+// student already owns rather than from the Host header — and it is
+// deliberately the SAME context key, so everything downstream is the same code
+// asking the same question. A second way to say which school a request is for
+// would be a second thing to get wrong about a paywall.
+func Scoped(ctx context.Context, s School) context.Context { return with(ctx, s) }
+
 // Normalise turns what arrived in the Host header into what the table stores.
 //
 // Three things happen to it, and each is a way the same address arrives

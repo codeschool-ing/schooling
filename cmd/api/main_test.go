@@ -76,12 +76,16 @@ func TestTheOperationalRoutesBelongToNoSchool(t *testing.T) {
 	}
 }
 
-// A HOST IS A SCHOOL'S, OR THE CONSOLE'S, OR A 404 (K-17).
+// A HOST IS A SCHOOL'S, OR THE CONSOLE'S, OR THE PLATFORM'S, OR A 404 (K-17).
 //
-// Three cases and no fourth, checked at the outermost handler where the split
-// happens. The pool is nil on purpose, as above: none of these three answers
-// needs a database, and a query of any kind panics rather than passing.
-func TestAHostIsASchoolsOrTheConsolesOrA404(t *testing.T) {
+// IT USED TO BE THREE CASES AND IT IS FOUR, which is the line worth reading
+// twice: this test is the whole of what stands between "a second address" and
+// "every route reachable from one more place". Each case below is a route
+// answering at ITS address and refusing at the others.
+//
+// The pool is nil on purpose, as above: none of these answers needs a database,
+// and a query of any kind panics rather than passing.
+func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
 		config.Config{PlatformDomain: "example.tld"}, nil)
 
@@ -124,6 +128,59 @@ func TestAHostIsASchoolsOrTheConsolesOrA404(t *testing.T) {
 	// because nothing gated it, and not a school, because there is none here.
 	if got := ask("console.example.tld", "/api/v1/school").Code; got != http.StatusNotFound {
 		t.Errorf("a school route answered %d at the console's host, want 404", got)
+	}
+
+	/* THE PLATFORM'S. Nobody is signed in, so the queue refuses with 401 — and
+	   that 401 is the proof the request reached this side: no school was
+	   resolved for it and no database was touched to refuse it. A 404 here
+	   would mean the address routed to the school mux and found nothing. */
+	if got := ask("app.example.tld", "/api/v1/review").Code; got != http.StatusUnauthorized {
+		t.Errorf("the cross-school queue answered %d at the platform's host, want 401 — "+
+			"a request that never reached it cannot have been refused by it", got)
+	}
+
+	/* AND THERE IS NO PAGE THERE YET, WHICH IS ASSERTED RATHER THAN LEFT OPEN.
+
+	   Serving the school shell here is one line and it would be wrong: that
+	   shell boots by asking for its school, its catalogue and its tracks, none
+	   of which exist at this address. This is what stops that line from being
+	   added without the screen it needs — when the screen exists, this
+	   expectation changes in the same commit. */
+	if got := ask("app.example.tld", "/").Code; got != http.StatusNotFound {
+		t.Errorf("the platform's address served a page (%d) — the student shell cannot boot "+
+			"here, so serving it would be a page that fails four requests and blames a school", got)
+	}
+
+	if got := ask("console.example.tld", "/api/v1/review").Code; got != http.StatusNotFound {
+		t.Errorf("the cross-school queue answered %d at the console's host, want 404", got)
+	}
+
+	/* WHAT THIS TEST CANNOT CHECK, SAID RATHER THAN LEFT LOOKING CHECKED.
+
+	   The mistake worth catching on this route is registering it on the
+	   school-scoped mux instead of the platform's — one line in the wrong place,
+	   working perfectly, answering a question about every school from inside
+	   one. It is not asserted here because it cannot be: every path under
+	   `/api/v1/` at a school's host goes through `tenant.Resolve` FIRST, which
+	   queries, and the pool is nil — so a registered route and an unregistered
+	   one produce the identical 500 and this test would pass either way.
+
+	   What holds it instead is `practice.NewAcrossHandler`, which is a second
+	   handler type rather than a route on the first: putting it on `scoped`
+	   does not compile into the school's practice handler by accident, it has
+	   to be written deliberately. The database-backed proof belongs to a suite
+	   that has one. */
+
+	// AND THE CONSOLE IS NOT REACHABLE FROM THE PLATFORM'S ADDRESS. Same
+	// assertion as the school's, one host along: 404 and never 401, because a
+	// 401 would mean the staff gate ran at a student's address.
+	student := ask("app.example.tld", "/console/api/v1/me")
+	if student.Code == http.StatusUnauthorized {
+		t.Error("the platform's address refused a console path with 401, which means the " +
+			"staff gate ran at an address students reach")
+	}
+	if student.Code != http.StatusNotFound {
+		t.Errorf("a console path at the platform's host answered %d, want 404", student.Code)
 	}
 }
 

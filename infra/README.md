@@ -386,6 +386,37 @@ The name is on the reserved list (`migrations/0025`), so a school cannot be
 created at it. That went in before the mapping did, on purpose: the other order
 ends with a school and the console at one address, fixed by renaming the school.
 
+### The student's own address
+
+`app.<platform domain>` is the third, and it is a student's rather than a
+school's or an operator's. It exists for the one question a school's host cannot
+be asked: **what is due everywhere this person practises.** A request at
+`code.` is scoped to that school before any module sees it — which is what makes
+every query in the platform safe to write — so crossing schools is a second
+address rather than a flag on a route.
+
+```sh
+gcloud beta run domain-mappings create \
+  --service=schooling \
+  --domain=app.schooling.lab.aleogr.dev \
+  --region=us-central1
+```
+
+**No row anywhere either**, for the console's reason: `tenant_domains` says which
+school a host is, and this host is no school's. `app` has been on the reserved
+list since `migrations/0003` — before anything used it, which is the only order
+in which such a rule works.
+
+**It needs no new sign-in.** The session cookie has been on the parent domain
+since it existed, precisely so one login covers every school (`N-01`), and
+`app.` is a sibling of `code.` under that parent.
+
+**Do not map it yet.** The API answers there and there is no page: the student
+shell boots by asking for its school, its catalogue and its tracks, none of
+which exist at this address, so it is deliberately not served. Mapping a name
+that answers 404 in a browser is the thing the paragraph about
+`schooling.lab.aleogr.dev` above warns against.
+
 ## Monitoring
 
 `alert_email` and `uptime_host` are both empty by default and nothing watches
