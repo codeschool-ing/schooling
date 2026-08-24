@@ -325,6 +325,21 @@ func AccountID(ctx context.Context) (uuid.UUID, bool) {
 	return a.ID, ok
 }
 
+// Where is which school this request arrived at, for the heartbeat that answers
+// "who is here now".
+//
+// IT IS A FUNCTION AND NOT AN IMPORT, like everything else that crosses a module
+// boundary here: `tenant` owns the answer and this package may not see it.
+type Where func(ctx context.Context) (uuid.UUID, bool)
+
+// Nowhere is the Where for a host that is not a school's — the console, and the
+// platform's own address.
+//
+// IT EXISTS SO THAT THE ANSWER IS TYPED RATHER THAN OMITTED. A nil function
+// would work and would read as "this was not wired up yet"; this reads as what
+// it is, which is a request that legitimately happened in no school.
+func Nowhere(context.Context) (uuid.UUID, bool) { return uuid.Nil, false }
+
 // Authenticate puts the account on the request when there is a live session,
 // and does nothing when there is not.
 //
@@ -332,7 +347,7 @@ func AccountID(ctx context.Context) (uuid.UUID, bool) {
 // free course, the sign-in route itself — so refusing here would mean listing
 // exceptions, and a list of exceptions is where the one nobody added lives.
 // Refusing is Require's job, on the routes that say so.
-func Authenticate(store *Store) func(http.Handler) http.Handler {
+func Authenticate(store *Store, where Where) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			/* THE VIEWING COOKIE WINS WHERE THERE IS ONE.
@@ -356,7 +371,17 @@ func Authenticate(store *Store) func(http.Handler) http.Handler {
 				return
 			}
 
-			account, seeing, err := store.Verify(r.Context(), token)
+			/* WHERE THIS LANDED, RESOLVED BEFORE THE SESSION IS READ, because
+			   it travels into the same query: the heartbeat is a clause of the
+			   statement that authenticates rather than a write after it. A host
+			   that is no school's answers nothing, and nothing does not erase
+			   the school this session was last used in — see `Verify`. */
+			var at *uuid.UUID
+			if school, ok := where(r.Context()); ok {
+				at = &school
+			}
+
+			account, seeing, err := store.Verify(r.Context(), token, at)
 			if err != nil {
 				if !errors.Is(err, ErrNoSession) {
 					web.LoggerFrom(r.Context()).Error("verifying a session", "error", err)
