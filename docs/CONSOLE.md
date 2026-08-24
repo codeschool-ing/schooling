@@ -34,9 +34,15 @@ is how every console rots.* That division is the spine of everything below.
 - The student record — plan, subscription, progress, exams, certificates, sessions
 - **View-as-student**, audited, time-limited, with a visible banner. `K-02`: without all three it
   does not ship
-- The reported-content queue, fed by the student
-- The closed list of system parameters, each change audited with actor, old value and new value
-- Prices effective-dated, so a subscriber keeps the price they bought at
+- The reported-content queue, fed by the student. It shows the report and **not who made it**:
+  a person is found here by an exact address and never listed (`K-22`), and a queue naming who
+  complained is a list of people to browse — which is the read an audit cannot tell from working
+- The closed list of system parameters, each change audited with actor, old value and new value.
+  A **list**, not a registry: a table of names and values with a screen that edits any of them is
+  the configuration surface `K-13` exists to refuse
+- Prices effective-dated, so a subscriber keeps the price they bought at. A price is **appended**
+  where a colour is **replaced**, and the two sit on one screen: nothing has to be explained about
+  last month's colour, and a March invoice has to stay explicable in November
 - Synthetic students flagged and excluded from every aggregate by default, with a visible switch
   and a banner when they are included
 - Granting access to one student — a legitimate audited action, where a global paywall switch is
@@ -54,7 +60,12 @@ is how every console rots.* That division is the spine of everything below.
 
 ### Watch
 
-- Presence, from `last_seen_at`, written at most once a minute
+- Presence, from `last_seen_at`, written at most once a minute — **people and not sessions**, so a
+  laptop and a phone are one person, and **a count and not a roll**: `K-22` holds here too, and
+  "who is online" is where it is easiest to break by being helpful. It is the one number in the
+  console that is current state rather than the event stream, which is `K-06` and not a hole in
+  `K-03`: nobody asks who was online last March, and the stream could not answer if they did —
+  that needs an event for LEAVING, and no browser reliably sends one
 - A world map with per-country statistics, from an in-process GeoIP database — the country stored
   on the event, the address never stored (`K-05`)
 - The failed job queue, with retry
@@ -93,6 +104,11 @@ Delivery order, not scope. Each of these is a body of work and each is on the ro
    view-as-student.
 
 The seeder belongs before step 3, because a funnel with four events in it cannot be reviewed.
+
+Steps 1 to 3 are done and step 4 is in the middle: presence, view-as-student and the
+reported-content queue are built, the map is blocked on a GeoIP database, and the parameters have
+two entries and no list. `ROADMAP.md` is where that is tracked — this document is what the console
+IS, and a status line here would be the same fact in two places, drifting.
 
 **Why this order and not the reverse.** Phase 0 is a wall the rest of the project is meant to
 wait behind, and one item is holding it. Everything else in the console improves a system that
