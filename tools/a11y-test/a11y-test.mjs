@@ -520,6 +520,25 @@ async function check(page, name, where, expect,
   await measure(page, name);
 }
 
+/* Open the lesson's report control, and do not close it.
+
+   THE `<details>` MAY ALREADY BE OPEN, and this is the whole reason this is a
+   function rather than two lines twice. `check` navigates with `page.goto`, and
+   a goto to a URL identical in every character — the fragment included — is a
+   same-document navigation that fires no `hashchange`. The router therefore does
+   not redraw, and the control the previous check opened is still standing.
+   Clicking the summary then CLOSES it, and the wait for the form times out on an
+   element that is in the document and not visible — which is what happened, and
+   what took the two checks after it down with it.
+
+   Asking whether it is open first makes each check say what it means: leave this
+   control open, however it got that way. */
+async function openTheReport(page) {
+  const open = await page.locator('.report').evaluate((d) => d.open);
+  if (!open) await page.locator('.report summary').click();
+  await page.waitForSelector('.report-form', { timeout: 8000 });
+}
+
 try {
   /* Before anything is measured, on an account that exists to be spent. Both
      themes ask for both verdicts and the key is the same card either way, so
@@ -607,10 +626,7 @@ try {
        one built after a request. */
     await check(student, `${theme} · a lesson, reporting a problem`,
       '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix', {
-        async act(page) {
-          await page.locator('.report summary').click();
-          await page.waitForSelector('.report-form', { timeout: 8000 });
-        },
+        act: openTheReport,
       });
 
     /* AND WHAT IT SAYS ONCE IT HAS BEEN SAID, which replaces the form rather
@@ -620,8 +636,7 @@ try {
     await check(student, `${theme} · a lesson, the problem reported`,
       '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix', {
         async act(page) {
-          await page.locator('.report summary').click();
-          await page.waitForSelector('.report-form', { timeout: 8000 });
+          await openTheReport(page);
           await page.locator('.report-note').fill(
             'the key marks B and the working in the section gives C');
           await page.locator('.report-form button[type=submit]').click();
