@@ -971,3 +971,52 @@ func (s *Store) steps(ctx context.Context, tenantID uuid.UUID,
 	}
 	return out, rows.Err()
 }
+
+// WhereIs answers where an exercise lives: its course, its lesson, its section
+// and the version that is published.
+//
+// # IT EXISTS SO THAT A CLIENT DOES NOT HAVE TO SAY
+//
+// A student reporting a question met it in a drill, whose queue spans courses
+// and whose cards carry an exercise and not a path. Asking the browser where
+// the question lives would be asking it to tell us something we hold — and a
+// stale tab would answer with a section that has since moved.
+//
+// # A BLANK LESSON IS AN ANSWER
+//
+// The join to `catalog_sections` is a LEFT JOIN because an exercise carries a
+// section id and a section is keyed by its lesson as well. Where the two do not
+// meet — a section removed by a publish, an exercise attached to a course and
+// nothing in it — the honest answer is the course and the question, with the
+// rest blank, rather than a refusal that would close the one channel by which a
+// wrong answer key comes back.
+//
+// ORDERED, so the lesson does not flap between two runs if a section id ever
+// appears under two lessons of one course. That would be a catalogue defect
+// and `validate-content` is where it belongs; this is not the place to decide
+// which of them is right, only the place not to answer differently each time.
+func (s *Store) WhereIs(ctx context.Context, tenantID uuid.UUID, exerciseID string) (
+	course, lesson, section string, version int, err error) {
+
+	err = s.pool.QueryRow(ctx, `
+		SELECT e.course_id, coalesce(sec.lesson_id, ''), e.section_id, e.version
+		FROM catalog_exercises e
+		LEFT JOIN catalog_sections sec
+		       ON sec.tenant_id = e.tenant_id
+		      AND sec.course_id = e.course_id
+		      AND sec.id = e.section_id
+		WHERE e.tenant_id = $1 AND e.id = $2
+		ORDER BY sec.lesson_id
+		LIMIT 1
+	`, tenantID, exerciseID).Scan(&course, &lesson, &section, &version)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		// Not an error: a question this school does not have is a real answer,
+		// and the caller says what to do about it.
+		return "", "", "", 0, nil
+	}
+	if err != nil {
+		return "", "", "", 0, fmt.Errorf("catalog: finding the exercise %q: %w", exerciseID, err)
+	}
+	return course, lesson, section, version, nil
+}

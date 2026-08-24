@@ -37,6 +37,11 @@ var (
 	// school's catalogue.
 	ErrNoSuchSection = errors.New("report: no such section")
 
+	// ErrNoSuchExercise is a report against a question this school does not
+	// have. Its own sentinel rather than `ErrNoSuchSection`, because the two
+	// are different sentences to the person who sent it.
+	ErrNoSuchExercise = errors.New("report: no such exercise")
+
 	// ErrNoSuchReport is a settle for a report that is not there.
 	ErrNoSuchReport = errors.New("report: no such report")
 
@@ -126,14 +131,27 @@ func Known(list []string, word string) bool {
 const NoteLimit = 500
 
 // New is a report as the student makes it.
+//
+// IT NAMES A SECTION OR AN EXERCISE. A section report carries its own
+// coordinates; an exercise report carries only the exercise, and the store
+// resolves the rest from the catalogue — a client that sent both would be a
+// client whose copy of where a question lives can disagree with ours.
 type New struct {
-	School    uuid.UUID
-	Account   uuid.UUID
+	School  uuid.UUID
+	Account uuid.UUID
+
+	// The section, for a report about the prose.
 	CourseID  string
 	LessonID  string
 	SectionID string
-	Reason    string
-	Note      string
+
+	// The exercise, for a report about a question. When this is set the three
+	// above are ignored and filled in from the catalogue.
+	ExerciseID string
+	Version    int
+
+	Reason string
+	Note   string
 }
 
 // Report is one row, as the console reads it.
@@ -145,6 +163,12 @@ type Report struct {
 	CourseID  string
 	LessonID  string
 	SectionID string
+
+	// Empty on a report about a section. When it is set, it is the question the
+	// student was looking at — and the version, because a key fixed last week
+	// and a report from last month are about different questions with one id.
+	ExerciseID string
+	Version    int
 
 	Reason     string
 	Note       string
@@ -165,13 +189,29 @@ type Report struct {
 // should be able to write a row an operator then has to investigate.
 type Knows func(ctx context.Context, school uuid.UUID, course, lesson, section string) (bool, error)
 
+// Where an exercise lives, which is what turns "question three is wrong" into
+// coordinates an operator can open a file at.
+//
+// IT ANSWERS THE PATH RATHER THAN A BOOLEAN, unlike `Knows` above, and the
+// difference is which side holds the truth. A section report is made from a
+// screen that already knows where it is; an exercise arrives from a drill queue
+// that spans courses, so asking the client where the question lives would be
+// asking it to tell us something we hold.
+//
+// A BLANK SECTION IS AN ANSWER AND NOT A FAILURE. `catalog_exercises` carries
+// one for almost every exercise and not for every one, and refusing the rest
+// would close this channel for exactly the questions a student meets most.
+type Locate func(ctx context.Context, school uuid.UUID, exercise string) (
+	course, lesson, section string, version int, err error)
+
 type Store struct {
-	pool  *pgxpool.Pool
-	knows Knows
+	pool   *pgxpool.Pool
+	knows  Knows
+	locate Locate
 }
 
-func NewStore(pool *pgxpool.Pool, knows Knows) *Store {
-	return &Store{pool: pool, knows: knows}
+func NewStore(pool *pgxpool.Pool, knows Knows, locate Locate) *Store {
+	return &Store{pool: pool, knows: knows, locate: locate}
 }
 
 // Make records a report.
@@ -195,35 +235,72 @@ func (s *Store) Make(ctx context.Context, in New) (Report, bool, error) {
 		return Report{}, false, fmt.Errorf("%w: that note is %d characters and the limit "+
 			"is %d", ErrRefused, len([]rune(in.Note)), NoteLimit)
 	}
-	if in.CourseID == "" || in.LessonID == "" || in.SectionID == "" {
-		return Report{}, false, fmt.Errorf(
-			"%w: a report names a course, a lesson and a section", ErrRefused)
-	}
+	/* A REPORT POINTS AT ONE OF TWO THINGS, and which one decides where the
+	   coordinates come from. An exercise brings its own — read from the
+	   catalogue, so a client cannot tell us where a question lives — and a
+	   section arrives already knowing, from a screen that is standing in it. */
+	in.ExerciseID = strings.TrimSpace(in.ExerciseID)
+	if in.ExerciseID != "" {
+		course, lesson, section, version, err := s.locate(ctx, in.School, in.ExerciseID)
+		if err != nil {
+			return Report{}, false, fmt.Errorf("report: finding an exercise: %w", err)
+		}
+		if course == "" {
+			return Report{}, false, ErrNoSuchExercise
+		}
+		in.CourseID, in.LessonID, in.SectionID = course, lesson, section
 
-	there, err := s.knows(ctx, in.School, in.CourseID, in.LessonID, in.SectionID)
-	if err != nil {
-		return Report{}, false, fmt.Errorf("report: checking the coordinates: %w", err)
-	}
-	if !there {
-		return Report{}, false, ErrNoSuchSection
+		/* THE VERSION IS THE CATALOGUE'S AND NOT THE CLIENT'S. What a student
+		   was looking at is what is published, and a number they send is a
+		   number a stale tab is holding — which would put a report against a
+		   version of the question that is not the one anybody can open. */
+		in.Version = version
+	} else {
+		if in.CourseID == "" || in.LessonID == "" || in.SectionID == "" {
+			return Report{}, false, fmt.Errorf(
+				"%w: a report names a course, a lesson and a section, or an exercise",
+				ErrRefused)
+		}
+
+		there, err := s.knows(ctx, in.School, in.CourseID, in.LessonID, in.SectionID)
+		if err != nil {
+			return Report{}, false, fmt.Errorf("report: checking the coordinates: %w", err)
+		}
+		if !there {
+			return Report{}, false, ErrNoSuchSection
+		}
 	}
 
 	/* ON CONFLICT DOES NOTHING AND THEN THE ROW IS READ. `DO UPDATE` would
 	   let the second click overwrite the first note, which is the wrong way
 	   round: what the person wrote when they first noticed is the report, and
 	   an empty second submission must not erase it. */
+	// The version travels as a pointer so that "no exercise" is a null rather
+	// than a zero — the constraint refuses one without the other, and a zero
+	// would read as version nought of a question nobody named.
+	var version *int
+	if in.ExerciseID != "" {
+		v := in.Version
+		version = &v
+	}
+
 	var out Report
-	err = s.pool.QueryRow(ctx, `
+	var back *int
+	err := s.pool.QueryRow(ctx, `
 		INSERT INTO content_reports
-			(tenant_id, account_id, course_id, lesson_id, section_id, reason, note)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+			(tenant_id, account_id, course_id, lesson_id, section_id,
+			 exercise_id, exercise_version, reason, note)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 		ON CONFLICT DO NOTHING
 		RETURNING id, tenant_id, account_id, course_id, lesson_id, section_id,
-		          reason, note, reported_at
+		          exercise_id, exercise_version, reason, note, reported_at
 	`, in.School, in.Account, in.CourseID, in.LessonID, in.SectionID,
-		in.Reason, in.Note).Scan(
+		in.ExerciseID, version, in.Reason, in.Note).Scan(
 		&out.ID, &out.School, &out.Account, &out.CourseID, &out.LessonID,
-		&out.SectionID, &out.Reason, &out.Note, &out.ReportedAt)
+		&out.SectionID, &out.ExerciseID, &back, &out.Reason, &out.Note, &out.ReportedAt)
+	if back != nil {
+		out.Version = *back
+	}
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		again, err := s.openOne(ctx, in)
@@ -239,15 +316,21 @@ func (s *Store) Make(ctx context.Context, in New) (Report, bool, error) {
 // what they said rather than that something went wrong.
 func (s *Store) openOne(ctx context.Context, in New) (Report, error) {
 	var out Report
+	var back *int
 	err := s.pool.QueryRow(ctx, `
 		SELECT id, tenant_id, account_id, course_id, lesson_id, section_id,
-		       reason, note, reported_at
+		       exercise_id, exercise_version, reason, note, reported_at
 		FROM content_reports
 		WHERE tenant_id = $1 AND account_id = $2 AND course_id = $3
-		  AND lesson_id = $4 AND section_id = $5 AND settled_at IS NULL
-	`, in.School, in.Account, in.CourseID, in.LessonID, in.SectionID).Scan(
+		  AND lesson_id = $4 AND section_id = $5 AND exercise_id = $6
+		  AND settled_at IS NULL
+	`, in.School, in.Account, in.CourseID, in.LessonID, in.SectionID,
+		in.ExerciseID).Scan(
 		&out.ID, &out.School, &out.Account, &out.CourseID, &out.LessonID,
-		&out.SectionID, &out.Reason, &out.Note, &out.ReportedAt)
+		&out.SectionID, &out.ExerciseID, &back, &out.Reason, &out.Note, &out.ReportedAt)
+	if back != nil {
+		out.Version = *back
+	}
 	if err != nil {
 		return Report{}, fmt.Errorf("report: reading a report back: %w", err)
 	}
@@ -264,7 +347,7 @@ func (s *Store) openOne(ctx context.Context, in New) (Report, error) {
 func (s *Store) Open(ctx context.Context, school uuid.UUID) ([]Report, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, tenant_id, account_id, course_id, lesson_id, section_id,
-		       reason, note, reported_at
+		       exercise_id, exercise_version, reason, note, reported_at
 		FROM content_reports
 		WHERE tenant_id = $1 AND settled_at IS NULL
 		ORDER BY reported_at
@@ -277,10 +360,14 @@ func (s *Store) Open(ctx context.Context, school uuid.UUID) ([]Report, error) {
 	var out []Report
 	for rows.Next() {
 		var one Report
+		var version *int
 		if err := rows.Scan(&one.ID, &one.School, &one.Account, &one.CourseID,
-			&one.LessonID, &one.SectionID, &one.Reason, &one.Note,
-			&one.ReportedAt); err != nil {
+			&one.LessonID, &one.SectionID, &one.ExerciseID, &version,
+			&one.Reason, &one.Note, &one.ReportedAt); err != nil {
 			return nil, fmt.Errorf("report: reading the queue: %w", err)
+		}
+		if version != nil {
+			one.Version = *version
 		}
 		out = append(out, one)
 	}
@@ -298,7 +385,8 @@ func (s *Store) Open(ctx context.Context, school uuid.UUID) ([]Report, error) {
 // one queue.
 func (s *Store) Mine(ctx context.Context, school, account uuid.UUID) ([]Report, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, course_id, lesson_id, section_id, reason, note, reported_at
+		SELECT id, course_id, lesson_id, section_id, exercise_id,
+		       reason, note, reported_at
 		FROM content_reports
 		WHERE tenant_id = $1 AND account_id = $2 AND settled_at IS NULL
 		ORDER BY reported_at
@@ -312,7 +400,7 @@ func (s *Store) Mine(ctx context.Context, school, account uuid.UUID) ([]Report, 
 	for rows.Next() {
 		one := Report{School: school, Account: account}
 		if err := rows.Scan(&one.ID, &one.CourseID, &one.LessonID, &one.SectionID,
-			&one.Reason, &one.Note, &one.ReportedAt); err != nil {
+			&one.ExerciseID, &one.Reason, &one.Note, &one.ReportedAt); err != nil {
 			return nil, fmt.Errorf("report: reading a student's reports: %w", err)
 		}
 		out = append(out, one)
@@ -324,19 +412,24 @@ func (s *Store) Mine(ctx context.Context, school, account uuid.UUID) ([]Report, 
 // the audit entry can name what was decided about what.
 func (s *Store) One(ctx context.Context, id uuid.UUID) (Report, error) {
 	var out Report
+	var version *int
 	err := s.pool.QueryRow(ctx, `
 		SELECT id, tenant_id, account_id, course_id, lesson_id, section_id,
-		       reason, note, reported_at, settled_at, settled_by, verdict
+		       exercise_id, exercise_version, reason, note, reported_at,
+		       settled_at, settled_by, verdict
 		FROM content_reports WHERE id = $1
 	`, id).Scan(&out.ID, &out.School, &out.Account, &out.CourseID, &out.LessonID,
-		&out.SectionID, &out.Reason, &out.Note, &out.ReportedAt,
-		&out.SettledAt, &out.SettledBy, &out.Verdict)
+		&out.SectionID, &out.ExerciseID, &version, &out.Reason, &out.Note,
+		&out.ReportedAt, &out.SettledAt, &out.SettledBy, &out.Verdict)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Report{}, ErrNoSuchReport
 	}
 	if err != nil {
 		return Report{}, fmt.Errorf("report: reading a report: %w", err)
+	}
+	if version != nil {
+		out.Version = *version
 	}
 	return out, nil
 }

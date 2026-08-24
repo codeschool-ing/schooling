@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -60,6 +61,12 @@ type Report struct {
 	CourseID  string
 	LessonID  string
 	SectionID string
+
+	// WHICH QUESTION, where the report was about one. Blank means the student
+	// was talking about the section itself — the prose, the video, the whole
+	// step — and the two are different jobs to whoever picks the report up.
+	ExerciseID string
+	Version    int
 
 	Reason string
 	Note   string
@@ -168,13 +175,15 @@ func (h *ContentHandler) queue(w http.ResponseWriter, r *http.Request) {
 	out := make([]map[string]any, 0, len(rows))
 	for _, one := range rows {
 		out = append(out, map[string]any{
-			"id":          one.ID,
-			"course_id":   one.CourseID,
-			"lesson_id":   one.LessonID,
-			"section_id":  one.SectionID,
-			"reason":      one.Reason,
-			"note":        one.Note,
-			"reported_at": one.ReportedAt,
+			"id":               one.ID,
+			"course_id":        one.CourseID,
+			"lesson_id":        one.LessonID,
+			"section_id":       one.SectionID,
+			"exercise_id":      one.ExerciseID,
+			"exercise_version": one.Version,
+			"reason":           one.Reason,
+			"note":             one.Note,
+			"reported_at":      one.ReportedAt,
 		})
 	}
 
@@ -263,7 +272,14 @@ func (h *ContentHandler) settle(w http.ResponseWriter, r *http.Request) {
 	   the audit entry is the ONLY lasting record that this section was ever
 	   complained about — writing it afterwards would mean a settle that failed
 	   halfway leaves nothing at all. */
+	/* WHAT THE AUDIT ENTRY NAMES. A question gets its id and version, because
+	   "the answer key on ex-specificity-3 v4" is what somebody types to find
+	   the file — and the path alone would name a section holding twelve
+	   questions, only one of which was ever wrong. */
 	where := about.CourseID + " · " + about.LessonID + " · " + about.SectionID
+	if about.ExerciseID != "" {
+		where += " · " + about.ExerciseID + " v" + strconv.Itoa(about.Version)
+	}
 	if err := h.record(r.Context(), actor, label(name, email),
 		"content.report.settled",
 		Subject{Kind: "content", ID: where},

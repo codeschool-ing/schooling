@@ -182,9 +182,25 @@ function card(r, verdicts) {
 
     /* THE COORDINATES IN MONO, because they are not a label — they are what
        somebody types to find the file this report is about, which is the next
-       thing they do. */
-    '<p class="report-where mono">' + esc(r.course_id) + ' / ' + esc(r.lesson_id) +
-      ' / ' + esc(r.section_id) + '</p>' +
+       thing they do.
+
+       A BLANK PART IS DRAWN AS BLANK. A question the catalogue cannot place
+       carries a course and no path, and a hyphen where the lesson goes is more
+       honest than closing the gap: what is missing is missing in the catalogue
+       too, and that is itself worth seeing. */
+    '<p class="report-where mono">' +
+      [r.course_id, r.lesson_id, r.section_id].map((p) => esc(p || '—')).join(' / ') +
+    '</p>' +
+
+    /* AND WHICH QUESTION, WHERE IT WAS ONE. It is on its own line and not
+       appended to the path, because it is the thing an operator opens: the path
+       names a section holding twelve questions and only one of them was ever
+       wrong. The version is beside it — a key fixed last week and a report from
+       last month are about different questions with one id. */
+    (r.exercise_id
+      ? '<p class="report-which mono">' + esc(r.exercise_id) +
+        '<span class="report-version"> v' + esc(String(r.exercise_version || 0)) + '</span></p>'
+      : '') +
 
     (r.note
       ? '<blockquote class="report-note">' + esc(r.note) + '</blockquote>'

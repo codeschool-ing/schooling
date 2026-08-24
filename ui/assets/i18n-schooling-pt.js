@@ -172,4 +172,14 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
     'você já nos avisou sobre esta seção, e ainda não respondemos',
   'that did not send': 'não deu para enviar',
   'that could not be loaded': 'não deu para carregar',
+
+  /* The same three sentences about a QUESTION rather than a section. They are
+     written out rather than assembled from a noun, because Portuguese does not
+     agree with English about where that noun goes — and a sentence built from
+     fragments is one no translator can put in order. */
+  'something is wrong with this question': 'tem algo errado nesta questão',
+  'thank you — somebody will look at this question':
+    'obrigado — alguém vai olhar esta questão',
+  'you have already told us about this question, and it has not been answered yet':
+    'você já nos avisou sobre esta questão, e ainda não respondemos',
 });

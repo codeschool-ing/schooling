@@ -304,6 +304,16 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			}
 			return false, nil
 		},
+
+		/* AND WHERE A QUESTION LIVES, which is the other half and the one the
+		   client cannot be asked for: a drilled card carries an exercise and no
+		   path, because its queue spans courses. `report` may not import
+		   `catalog` either, so this is the same closure shape one line up. */
+		func(ctx context.Context, school uuid.UUID, exercise string) (
+			string, string, string, int, error) {
+
+			return courses.WhereIs(ctx, school, exercise)
+		},
 	)
 	report.NewHandler(reports, schoolID, identity.AccountID).Routes(scoped)
 
@@ -1632,6 +1642,8 @@ func consoleReport(one report.Report) console.Report {
 		CourseID:   one.CourseID,
 		LessonID:   one.LessonID,
 		SectionID:  one.SectionID,
+		ExerciseID: one.ExerciseID,
+		Version:    one.Version,
 		Reason:     one.Reason,
 		Note:       one.Note,
 		ReportedAt: one.ReportedAt,

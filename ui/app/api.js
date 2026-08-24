@@ -639,6 +639,13 @@ export function reportable() {
   return reportsHeld;
 }
 
+/* WHETHER THE CONTROL CAN EXIST AT ALL, answered without a request so that a
+   renderer can decide before it draws. A report is written against an account,
+   so somebody reading signed out has nothing to attach one to — and the offline
+   copy is a file on a disk with no server to send it to. Neither is a failure
+   worth a message; the control simply is not there. */
+export const canReport = () => !reading && Boolean(state.now().session);
+
 export function reportSection(courseId, ix, sectionId, reason, note) {
   const lesson = lessonIdOf(courseId, ix);
   if (!lesson) return echo(null);
@@ -648,6 +655,16 @@ export function reportSection(courseId, ix, sectionId, reason, note) {
     // What is held is now out of date by exactly one report, and the next
     // section they open has to know. Dropped rather than patched: a cache
     // updated by hand is a cache that disagrees with the server eventually.
+    reportsHeld = null;
+    return answer;
+  });
+}
+
+/* A QUESTION, WHICH SENDS ONE FIELD. Where the exercise lives is read from the
+   catalogue on the server — this browser's copy of that can be older, and a
+   stale tab would file a report against a section the question has left. */
+export function reportExercise(exerciseId, reason, note) {
+  return post('/api/v1/reports', { exerciseId, reason, note }).then((answer) => {
     reportsHeld = null;
     return answer;
   });

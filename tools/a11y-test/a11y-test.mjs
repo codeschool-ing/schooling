@@ -533,10 +533,10 @@ async function check(page, name, where, expect,
 
    Asking whether it is open first makes each check say what it means: leave this
    control open, however it got that way. */
-async function openTheReport(page) {
-  const open = await page.locator('.report').evaluate((d) => d.open);
-  if (!open) await page.locator('.report summary').click();
-  await page.waitForSelector('.report-form', { timeout: 8000 });
+async function openTheReport(page, which = '.report-section') {
+  const open = await page.locator(which).first().evaluate((d) => d.open);
+  if (!open) await page.locator(`${which} summary`).first().click();
+  await page.waitForSelector(`${which} .report-form`, { timeout: 8000 });
 }
 
 try {
@@ -626,7 +626,7 @@ try {
        one built after a request. */
     await check(student, `${theme} · a lesson, reporting a problem`,
       '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix', {
-        act: openTheReport,
+        act: (page) => openTheReport(page, '.report-section'),
       });
 
     /* AND WHAT IT SAYS ONCE IT HAS BEEN SAID, which replaces the form rather
@@ -636,11 +636,11 @@ try {
     await check(student, `${theme} · a lesson, the problem reported`,
       '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix', {
         async act(page) {
-          await openTheReport(page);
-          await page.locator('.report-note').fill(
+          await openTheReport(page, '.report-section');
+          await page.locator('.report-section .report-note').fill(
             'the key marks B and the working in the section gives C');
-          await page.locator('.report-form button[type=submit]').click();
-          await page.waitForSelector('.report-said', { timeout: 8000 });
+          await page.locator('.report-section .report-form button[type=submit]').click();
+          await page.waitForSelector('.report-section .report-said', { timeout: 8000 });
         },
       });
 
@@ -650,6 +650,19 @@ try {
        beside it — which is a live region, a disabled button and a moved focus
        that the exam never has. */
     await check(student, `${theme} · the drill`, '/#/practice', '/practice', { settled: '.ex' });
+
+    /* AND THE WAY TO SAY THE QUESTION ITSELF IS WRONG, which is the control
+       the lesson screen has and the exam deliberately does not. It is the same
+       markup in a much denser place — inside an exercise card, under a verdict
+       region — so it is worth measuring where it actually sits rather than
+       only where it was first written. */
+    await check(student, `${theme} · the drill, reporting the question`,
+      '/#/practice', '/practice', {
+        settled: '.ex',
+        async act(page) {
+          await openTheReport(page, '.report-ex');
+        },
+      });
 
     /* AND THE DRILL WITH A VERDICT ON IT, which is a different screen and the
        one this feature is actually about: a live region that has just been

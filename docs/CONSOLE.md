@@ -34,7 +34,8 @@ is how every console rots.* That division is the spine of everything below.
 - The student record — plan, subscription, progress, exams, certificates, sessions
 - **View-as-student**, audited, time-limited, with a visible banner. `K-02`: without all three it
   does not ship
-- The reported-content queue, fed by the student. It shows the report and **not who made it**:
+- The reported-content queue, fed by the student — a **section** or a **question**, and never
+  from inside a timed exam. It shows the report and **not who made it**:
   a person is found here by an exact address and never listed (`K-22`), and a queue naming who
   complained is a list of people to browse — which is the read an audit cannot tell from working
 - The closed list of system parameters, each change audited with actor, old value and new value.

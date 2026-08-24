@@ -56,8 +56,14 @@ type madeBody struct {
 	CourseID  string `json:"courseId"`
 	LessonID  string `json:"lessonId"`
 	SectionID string `json:"sectionId"`
-	Reason    string `json:"reason"`
-	Note      string `json:"note"`
+
+	// ONE FIELD AND NOT FOUR. A report about a question sends the exercise and
+	// nothing else — where it lives is read from the catalogue, and a version
+	// the client offered would be a version a stale tab is holding.
+	ExerciseID string `json:"exerciseId"`
+
+	Reason string `json:"reason"`
+	Note   string `json:"note"`
 }
 
 func (h *Handler) make(w http.ResponseWriter, r *http.Request) {
@@ -75,12 +81,17 @@ func (h *Handler) make(w http.ResponseWriter, r *http.Request) {
 	one, already, err := h.store.Make(r.Context(), New{
 		School: school, Account: student,
 		CourseID: in.CourseID, LessonID: in.LessonID, SectionID: in.SectionID,
-		Reason: in.Reason, Note: in.Note,
+		ExerciseID: in.ExerciseID,
+		Reason:     in.Reason, Note: in.Note,
 	})
 	switch {
 	case errors.Is(err, ErrNoSuchSection):
 		web.Fail(w, http.StatusNotFound, web.CodeNotFound,
 			"there is no such section in this school")
+		return
+	case errors.Is(err, ErrNoSuchExercise):
+		web.Fail(w, http.StatusNotFound, web.CodeNotFound,
+			"there is no such question in this school")
 		return
 	case errors.Is(err, ErrRefused):
 		web.Fail(w, http.StatusBadRequest, "invalid", err.Error())
@@ -98,14 +109,15 @@ func (h *Handler) make(w http.ResponseWriter, r *http.Request) {
 	   both answer 200 and say which happened, and the interface says "already
 	   reported" in the one case and "thank you" in the other. */
 	web.JSON(w, http.StatusOK, map[string]any{
-		"id":        one.ID,
-		"courseId":  one.CourseID,
-		"lessonId":  one.LessonID,
-		"sectionId": one.SectionID,
-		"reason":    one.Reason,
-		"note":      one.Note,
-		"at":        one.ReportedAt,
-		"already":   already,
+		"id":         one.ID,
+		"courseId":   one.CourseID,
+		"lessonId":   one.LessonID,
+		"sectionId":  one.SectionID,
+		"exerciseId": one.ExerciseID,
+		"reason":     one.Reason,
+		"note":       one.Note,
+		"at":         one.ReportedAt,
+		"already":    already,
 	})
 }
 
@@ -128,8 +140,14 @@ func (h *Handler) mine(w http.ResponseWriter, r *http.Request) {
 			"courseId":  one.CourseID,
 			"lessonId":  one.LessonID,
 			"sectionId": one.SectionID,
-			"reason":    one.Reason,
-			"at":        one.ReportedAt,
+
+			// THE INTERFACE MATCHES ON THIS, so a question already reported is
+			// drawn as reported wherever it is met again — in the drill, in the
+			// assessment it came from, or on the lesson beneath it.
+			"exerciseId": one.ExerciseID,
+
+			"reason": one.Reason,
+			"at":     one.ReportedAt,
 		})
 	}
 

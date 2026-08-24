@@ -239,7 +239,13 @@ export default async function lesson({ id, ix, sec }) {
        fetching them on every lesson view would be a request per view to fill in
        a form almost nobody opens. */
     (canReport
-      ? '<details class="report">' +
+      /* `report-section` AND NOT JUST `report`. An assessment section renders
+         exercise cards into this same element, each with a control of its own,
+         and they are appended BEFORE this line runs — so `querySelector('.report')`
+         would find a question's control and wire the section's subject to it.
+         The two are told apart by class rather than by position, because
+         position is exactly what changed. */
+      ? '<details class="report report-section">' +
           '<summary>⚑ ' + txt('something here is wrong') + '</summary>' +
           '<div class="report-body"><p class="checking">' + txt('reading…') + '</p></div>' +
         '</details>'
@@ -282,7 +288,7 @@ export default async function lesson({ id, ix, sec }) {
   /* The control builds itself the first time it is opened — see `report.js` for
      why it is not built with the rest of the screen. */
   if (canReport) {
-    wireReport(el.querySelector('.report'), {
+    wireReport(el.querySelector('.report-section'), {
       courseId: id, lessonIx: n, sectionId: section.id,
     });
   }
