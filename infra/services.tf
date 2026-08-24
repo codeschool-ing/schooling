@@ -22,6 +22,11 @@ locals {
     "sts.googleapis.com",
     "iamcredentials.googleapis.com",
     "compute.googleapis.com",
+
+    // What runs the nightly item analysis. Without it the job exists and
+    // nothing ever starts one — which was the state this platform was in
+    // before `scheduler.tf`, and the state that is invisible from every screen.
+    "cloudscheduler.googleapis.com",
   ]
 }
 

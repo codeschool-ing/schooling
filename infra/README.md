@@ -228,6 +228,40 @@ of how a request finds its school. A host nobody mapped is a 404 and never falls
 into a default, so until this row exists the deployment answers `/version` and
 nothing else. That is the design and not an outage.
 
+## What runs on a clock
+
+One thing does, and it is `schooling-analyse` — the item analysis, started at
+**03:10 São Paulo time** every night by `schooling-analyse-nightly` in
+`scheduler.tf`.
+
+**It had never run.** The command has described itself as scheduled since it was
+written, and there was no job and no scheduler behind that sentence. Two things
+follow, and neither is visible from a screen:
+
+- The rollup the console's *Questions* section reads had never been written, so
+  that section had exactly one state — the one it draws when nothing has been
+  computed. It was built to say so rather than to show an empty table, which is
+  the only reason this was findable.
+- The sweep that **withdraws** a question the strong students consistently fail
+  had never withdrawn one. Every such question stayed in front of students, and
+  every student who met it was marked on our mistake.
+
+Starting it by hand is the same shape as the other two jobs:
+
+```sh
+gcloud run jobs execute schooling-analyse --region us-central1 --wait
+```
+
+It is idempotent — it recomputes from the event stream rather than merging into
+stored counts — so running it twice in a night is safe. What it is not is free
+of consequence: it acts, with an audit entry per withdrawal, so it is not a
+thing to fire off to see what happens.
+
+The release pipeline points the job at each new image and **does not run it**.
+The migration and the catalogue load are gates that a deploy waits for; this is
+a thing the clock does, and executing it on every release would put a second set
+of numbers into the same night for no reason but that somebody cut a tag.
+
 ## The address
 
 The service answers on its own `run.app` URL as soon as it is deployed. A school

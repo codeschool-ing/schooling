@@ -22,6 +22,7 @@ locals {
   api      = "${local.registry}/api"
   migrate  = "${local.registry}/migrate"
   load     = "${local.registry}/load"
+  analyse  = "${local.registry}/analyse"
 }
 
 /* THE MIGRATION IS A JOB AND NOT A STEP IN THE CONTAINER'S START-UP.
@@ -156,6 +157,95 @@ resource "google_cloud_run_v2_job" "load" {
 
         // Where the image keeps the files. See `deploy/Dockerfile`.
         args = ["/content"]
+
+        volume_mounts {
+          name       = "cloudsql"
+          mount_path = "/cloudsql"
+        }
+      }
+
+      volumes {
+        name = "cloudsql"
+        cloud_sql_instance {
+          instances = [google_sql_database_instance.main.connection_name]
+        }
+      }
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      template[0].template[0].containers[0].image,
+      client,
+      client_version,
+    ]
+  }
+
+  depends_on = [google_project_service.enabled]
+}
+
+/* THE NIGHTLY ANALYSIS, WHICH SAID IT RAN ON A SCHEDULE AND DID NOT.
+
+   `cmd/analyse` has described itself as a scheduled job since it was written —
+   "it runs on a schedule, writes a rollup, and the console reads the rollup" —
+   and nothing in this configuration ran it. There was no job and there was no
+   scheduler. In production it had never run once.
+
+   THAT IS WORSE THAN A REPORT NOBODY READS. This job does not only compute: it
+   WITHDRAWS a question the strong students fail, audited, with the numbers that
+   condemned it. Never running, every such question stayed in circulation and
+   every student who met it was marked on our mistake — and the console's
+   questions screen, which has its own screen for "the rollup was never made",
+   would have shown that screen forever while looking like a feature working
+   correctly.
+
+   IT IS A JOB AND NOT A GOROUTINE IN THE API, for the reason the migration is:
+   started inside the service it would run once per instance, on every scale
+   event, and two of them sweeping at once is two audit entries for one
+   withdrawal.
+
+   `max_retries = 0` LIKE THE OTHERS. The sweep is idempotent, so a retry would
+   be harmless — and a retry that runs an hour later is a second set of numbers
+   for the same night, which is a report that disagrees with itself. A failed
+   night is a failed night, and the screen already says when the rollup was
+   made. */
+resource "google_cloud_run_v2_job" "analyse" {
+  name     = "schooling-analyse"
+  location = var.region
+
+  deletion_protection = false
+
+  template {
+    template {
+      service_account = google_service_account.run.email
+      max_retries     = 0
+
+      containers {
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
+
+        env {
+          name  = "SCHOOLING_ENV"
+          value = "production"
+        }
+        env {
+          name  = "SCHOOLING_PLATFORM_DOMAIN"
+          value = var.platform_domain
+        }
+        env {
+          name = "SCHOOLING_DATABASE_URL"
+          value_source {
+            secret_key_ref {
+              secret  = google_secret_manager_secret.database_url.secret_id
+              version = "latest"
+            }
+          }
+        }
+
+        /* NO ARGUMENTS. `cmd/analyse` takes one flag, `-window`, and its
+           default is a year — which is the value this configuration would pass
+           if it passed anything. A window written here would be a second place
+           holding a number the command already decides, and the one that gets
+           edited would be whichever the next person happens to open. */
 
         volume_mounts {
           name       = "cloudsql"
