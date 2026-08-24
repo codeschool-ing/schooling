@@ -98,11 +98,11 @@ jobs:
 
           # The browser suite renders the interface against a real schema, so
           # it wants everything that reaches a screen. `tools/lib/` is in the
-          # list because two of those suites share the sign-up sequence through
-          # it, and a directory left out of this line is a suite that never runs
-          # on the change that broke it. `tools/` is narrowed to
-          # the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
+          # list because three of those suites share the sign-up sequence and
+          # two share the operator through it, and a directory left out of this
+          # line is a suite that never runs on the change that broke it.
+          # `tools/` is narrowed to the ones it actually runs.
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -528,3 +528,15 @@ jobs:
           # in the network log.
           go run ./tools/bundle -host code.example.tld -out bundle.html
           node tools/bundle-test/bundle-test.mjs bundle.html
+
+          # AND THE CONSOLE, USED RATHER THAN LOOKED AT. Axe opens every screen
+          # over there and measures it; it never presses anything, so every
+          # write the console can do has a Go test against a real Postgres and
+          # had never been performed by a browser. That is the gap `mfa-test`
+          # exists for, one host along.
+          #
+          # IT RUNS LAST BECAUSE IT IS THE ONLY ONE THAT WRITES. It settles a
+          # report and appends a price to the fixture's school — harmless, and
+          # not something to hand to a suite that is about to assert what the
+          # screen says.
+          node tools/console-test/console-test.mjs

@@ -44,12 +44,11 @@
 
    It costs a staff account, and there is no way to make one from a browser
    alone: the first role cannot be granted by the console, because reaching the
-   console needs one. So this shells out to `cmd/staff`, which is the door that
-   exists for exactly that reason and writes to the audit like every other
-   administrative path. It also needs a second factor, which is thirty lines of
-   RFC 6238 below rather than a dependency — the same argument `internal/
-   identity/totp.go` makes, and it is checked by the server refusing a wrong
-   code.
+   console needs one. `tools/lib/operator.mjs` is that sequence — sign up,
+   `cmd/staff` for the role, then a second factor computed rather than depended
+   on. It lives there rather than here because `console-test` needs the same
+   one, and the next thing learnt about making an operator would otherwise land
+   in whichever of the two copies the person happened to be looking at.
 
        node tools/a11y-test/a11y-test.mjs [base url]
 
@@ -58,12 +57,11 @@
    does in Go. Two ways to say one address is two ways to disagree about it.
    ========================================================================== */
 
-import { execFileSync } from 'node:child_process';
-import { createHmac } from 'node:crypto';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
 import { signUpThroughTheForm } from '../lib/sign-up.mjs';
+import { makeAnOperator } from '../lib/operator.mjs';
 
 const BASE = process.argv[2] || 'http://code.example.tld:8099';
 
@@ -337,90 +335,22 @@ async function drilled(theme, want) {
   }
 }
 
-/* ---------- the second factor, RFC 6238 ----------
-
-   Base32 without padding, HMAC-SHA1, six digits, thirty seconds — the same
-   parameters `internal/identity/totp.go` writes out, and for the same reason:
-   it is a HMAC and a truncation, and a wrong one is not a subtle failure here
-   because the server answers `wrong_code` and this run stops. */
-function totp(secret, at = Date.now()) {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-  let bits = '';
-  for (const ch of secret.toUpperCase().replace(/[\s=]/g, '')) {
-    const v = alphabet.indexOf(ch);
-    if (v < 0) throw new Error(`the secret is not base32: ${ch}`);
-    bits += v.toString(2).padStart(5, '0');
-  }
-  const key = Buffer.from(
-    (bits.match(/.{8}/g) || []).map((b) => parseInt(b, 2)));
-
-  const counter = Buffer.alloc(8);
-  counter.writeBigUInt64BE(BigInt(Math.floor(at / 1000 / 30)));
-
-  const mac = createHmac('sha1', key).update(counter).digest();
-  const offset = mac[mac.length - 1] & 0x0f;
-  const truncated = mac.readUInt32BE(offset) & 0x7fffffff;
-  return String(truncated % 1_000_000).padStart(6, '0');
-}
-
 /* ---------- an operator, made the only way there is ----------
 
-   Sign up, then `cmd/staff` for the role, then enrol a factor — which the API
-   marks on the enrolling session, so no code has to be presented a second time.
+   The making of one moved to `tools/lib/operator.mjs` when a second suite
+   needed the same account — the same reason `sign-up.mjs` is shared, and the
+   same failure avoided: the next thing learnt about making an operator would
+   otherwise land in whichever copy the person was looking at.
 
-   THE ORDER IS NOT INTERCHANGEABLE. `identity.RequireStaff` asks for a live
-   role AND a factor already shown, so a console opened between the sign-up and
-   the enrolment is a console showing its own door — which is a screen this
-   suite checks on purpose, elsewhere, with a context that never signed in.
-
-   # THE SIGN-UP IS A REQUEST AND NOT A FORM, and that is the second attempt
-
-   The first drove the school's sign-up screen — toggle to register, fill three
-   fields, submit, wait a beat. It worked here every time and failed on the
-   first CI run, with no `POST /api/v1/sign-up` in the server's log at all: the
-   fields go in while the screen is still swapping modes, and on a slower
-   machine the render lands after them and takes them with it. A blind
-   `waitForTimeout` then hides it, because what follows is a role grant for an
-   account that was never created.
-
-   THAT FORM IS NOT THIS SUITE'S SUBJECT. The student block above already drives
-   it through the interface, in both themes, and axe measures the screen. What
-   this needs is a session, so it asks for one the way the page would — same
-   origin, same cookie, no timing to lose. */
+   What stays here is the page: this suite sets a theme before the first paint,
+   and the other does not care. */
 async function operator(theme, label) {
   const page = await open(theme, 'en');
-  const email = `a11y-staff-${Date.now()}-${theme}@example.tld`;
-
-  await page.goto(`${BASE}/`, { waitUntil: 'load' });
-  const failed = await page.evaluate(async ([name, address]) => {
-    const r = await fetch('/api/v1/sign-up', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email: address, password: 'a long enough password here' }),
-    });
-    return r.ok ? '' : `${r.status} ${await r.text()}`;
-  }, [label, email]);
-  if (failed) throw new Error(`signing the operator up: ${failed}`);
-
-  execFileSync('go', ['run', './cmd/staff', 'grant', email, 'operator',
-    '--by', 'the accessibility suite'], { stdio: 'pipe' });
-
-  const secret = await page.evaluate(async () => {
-    const r = await fetch('/api/v1/second-factor/start', { method: 'POST' });
-    if (!r.ok) throw new Error(`starting the second factor: ${r.status}`);
-    return (await r.json()).secret;
+  const { email } = await makeAnOperator(page, BASE, {
+    name: label,
+    email: `a11y-staff-${Date.now()}-${theme}@example.tld`,
+    by: 'the accessibility suite',
   });
-
-  const enrolled = await page.evaluate(async ([s, c]) => {
-    const r = await fetch('/api/v1/second-factor/enrol', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ secret: s, code: c }),
-    });
-    return r.ok ? '' : `${r.status} ${await r.text()}`;
-  }, [secret, totp(secret)]);
-
-  if (enrolled) throw new Error(`enrolling the second factor: ${enrolled}`);
   return { page, email };
 }
 

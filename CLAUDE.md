@@ -1146,7 +1146,7 @@ terraform fmt -check -recursive
 terraform init -backend=false && terraform validate
 ```
 
-The three browser suites need a server and a school to look at, which is what
+The browser suites need a server and a school to look at, which is what
 `tools/graph-test/fixture.sql` is for until `content/` has one:
 
 ```sh
@@ -1162,12 +1162,27 @@ node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes —
                                         # `cmd/staff`, so this one needs the
                                         # database as well as the server.
 
+node tools/landing-test/landing-test.mjs  # a real page, in a real browser, sends
+                                          # where it came from
+
 node tools/mfa-test/mfa-test.mjs        # enrol a second factor, sign in with it,
                                         # then again with a recovery code
 
 go run ./tools/bundle -host code.example.tld -out bundle.html
 node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built
+
+node tools/console-test/console-test.mjs  # the console's writes, pressed rather
+                                          # than measured. LAST: it is the only
+                                          # suite that changes anything — it
+                                          # settles a report and appends a price.
 ```
+
+`console-test` is the console's half of what `mfa-test` is for the study interface. Axe
+proves the screens are sound and never presses a button, so every write over there had a
+Go test against a real Postgres and had never been performed by a browser: a settle that
+wrote the decision and left the card standing is a queue two people work twice, and a price
+screen showing only the newest number is the mutable column again with extra steps. Both
+pass every Go test there is.
 
 And for anything in `ui/`, open it. The shortest way is the local stack, which migrates, creates
 two schools and seeds the same fixture into `code`:
