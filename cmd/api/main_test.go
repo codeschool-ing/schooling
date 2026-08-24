@@ -19,7 +19,7 @@ import (
 // thing that is broken, and a query of any kind panics rather than passing.
 func testRouter(t *testing.T) http.Handler {
 	t.Helper()
-	return router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)), config.Config{})
+	return router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)), config.Config{}, nil)
 }
 
 // `/version` answers with no database, and that is the whole point of it.
@@ -83,7 +83,7 @@ func TestTheOperationalRoutesBelongToNoSchool(t *testing.T) {
 // needs a database, and a query of any kind panics rather than passing.
 func TestAHostIsASchoolsOrTheConsolesOrA404(t *testing.T) {
 	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
-		config.Config{PlatformDomain: "example.tld"})
+		config.Config{PlatformDomain: "example.tld"}, nil)
 
 	ask := func(host, path string) *httptest.ResponseRecorder {
 		rec := httptest.NewRecorder()
@@ -136,7 +136,7 @@ func TestAHostIsASchoolsOrTheConsolesOrA404(t *testing.T) {
 // `identity.RequireStaff`'s own test, which has a database to do it with.
 func TestTheConsoleApiRefusesWithoutASession(t *testing.T) {
 	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
-		config.Config{PlatformDomain: "example.tld"})
+		config.Config{PlatformDomain: "example.tld"}, nil)
 
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/console/api/v1/me", nil)

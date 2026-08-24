@@ -23,10 +23,28 @@
    as long as nothing scheduled anything, and it must not look like a screen
    that failed to load. The sentence for it comes from the server, because it is
    a statement about the system rather than about this page.
+
+   # A JOB THAT HAS NEVER RUN STILL GETS ITS BUTTON
+
+   The list of jobs comes from what has RECORDED a run, which is the right list
+   for a history and the wrong one for a control: a job that has never run is
+   exactly the one somebody wants to start, and drawing only jobs with rows
+   would put the button everywhere except the state it is for — which is the
+   state this platform was actually in. So the blocks are the union of what has
+   run and what may be started.
+
+   # AND WHERE THERE IS NOTHING TO PRESS THERE IS NO BUTTON
+
+   `startable` is empty on any deployment that cannot start a job — every
+   laptop, the local stack, CI — and the screen then draws none. A control that
+   always fails is a worse screen than a missing one, which is the argument the
+   schools screen makes about a read-only role and the same argument here about
+   a process with no metadata server behind it.
    ========================================================================== */
 
 import { esc } from '../dom.js';
-import { get } from '../request.js';
+import { get, post, RequestError } from '../request.js';
+import { mayAct } from '../session.js';
 
 /* The three words the store uses, and what each is drawn as. A word this file
    does not know is shown as itself: a fourth outcome should appear on the
@@ -62,27 +80,122 @@ export default async function jobs(section) {
     return { title: section.name, el };
   }
 
-  const all = answer.jobs || [];
   const adrift = Math.round((answer.adrift_after_seconds || 0) / 60);
+
+  /* TWO REASONS THERE MAY BE NOTHING TO PRESS, and they are not the same
+     reason. The server sends an empty `startable` where the deployment cannot
+     start a job at all, and then the job does not exist as a thing that could
+     be started. `mayAct` is the other half — the schools screen's rule applied
+     here, because the API refuses a read-only role and there is a test for
+     that, so a control that always fails would be a bad screen rather than a
+     safe one.
+
+     The distinction is drawn rather than collapsed: a read-only operator still
+     sees the BLOCK for a job that has never run, because that is a fact about
+     the platform they are here to read. What they do not get is the button. */
+  const known = answer.startable || [];
+  const startable = mayAct() ? known : [];
+
+  /* WHAT HAS RUN, AND THEN WHAT MAY BE STARTED AND HAS NOT. The order is that
+     way round because the history is what somebody came for; a job with no rows
+     is appended rather than promoted, so a platform where everything is fine
+     does not open with the one thing that has never happened. */
+  const ran = answer.jobs || [];
+  const never = known
+    .filter((name) => !ran.some((one) => one.name === name))
+    .map((name) => ({ name, runs: [] }));
+  const all = ran.concat(never);
 
   body.innerHTML =
     (all.length === 0
       ? '<section class="block"><p class="none">' + esc(answer.nothing_yet || '') + '</p></section>'
-      : all.map((one) => block(one, adrift)).join('')) +
+      : all.map((one) => block(one, adrift, startable.includes(one.name))).join('')) +
 
+    /* THERE IS ALWAYS A SENTENCE HERE, and which one depends on why. Somebody
+       looking for a control has to find the reason rather than conclude it was
+       forgotten — that is what this screen carried for as long as nothing could
+       be started at all, and it is still true in two of the three states. */
     '<section class="block">' +
-      '<div class="block-top"><h2>Why there is no button</h2></div>' +
-      '<p class="aside">' + esc(answer.no_retry || '') + '</p>' +
+      '<div class="block-top"><h2>' +
+        (startable.length ? 'What starting one does' : 'Why there is no button') +
+      '</h2></div>' +
+      '<p class="aside">' + esc(why(answer, known, startable)) + '</p>' +
     '</section>';
+
+  all.forEach((one) => {
+    if (startable.includes(one.name)) wireStart(body, one.name);
+  });
 
   return { title: section.name, el };
 }
 
-function block(one, adrift) {
+/* The sentence under the jobs, and there are three states rather than two.
+
+   THE TWO ABOUT THE SYSTEM COME FROM THE SERVER, because they are statements
+   about the platform rather than about this page — the rule the empty-screen
+   sentence has followed since this screen existed. The third is about the
+   PERSON READING, which the server did not put on this answer and the session
+   already knows; the schools screen owns its read-only sentence for the same
+   reason, in the same words. */
+function why(answer, known, startable) {
+  if (startable.length) return answer.about_starting || '';
+  if (known.length) {
+    return 'A read-only role may read this screen and not press anything. Starting a job '
+      + 'withdraws questions from circulation when the analysis finds them broken, which is '
+      + 'not a thing looking at a screen should do.';
+  }
+  return answer.nothing_to_press || '';
+}
+
+/* Pressing it.
+
+   THE BUTTON IS DISABLED WHILE THE CALL IS OUT AND STAYS DISABLED ON SUCCESS,
+   because the run has been ASKED for and pressing again would ask for a second
+   one — which the server refuses, but only for as long as the first is actually
+   running. The window between "accepted" and "the container is up" is exactly
+   where a second press gets through.
+
+   WHAT COMES BACK IS A SENTENCE AND NOT A REDRAW. The run's row does not exist
+   yet: the container has to start before it writes one, which is usually within
+   a minute. Redrawing here would find nothing new and look like a button that
+   did nothing — the honest thing is to say what was asked for and let somebody
+   reload when they want to see it. */
+function wireStart(body, name) {
+  const box = body.querySelector('[data-job="' + cssEscape(name) + '"]');
+  if (!box) return;
+
+  const button = box.querySelector('.job-start');
+  const said = box.querySelector('.job-said');
+  if (!button) return;
+
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    said.className = 'job-said';
+    said.textContent = 'Asking…';
+
+    try {
+      const answer = await post('/console/api/v1/jobs/' + encodeURIComponent(name) + '/run');
+      said.className = 'job-said ok';
+      said.textContent = answer.started || 'Asked for.';
+    } catch (e) {
+      button.disabled = false;
+      said.className = 'job-said bad';
+      said.textContent = e instanceof RequestError && e.status === 403
+        ? 'That asks for an operator.'
+        : e.message;
+    }
+  });
+}
+
+// An id is a job name, so this is belt and braces — but a selector built from a
+// value is a selector waiting for the value to change shape.
+const cssEscape = (v) => (window.CSS && CSS.escape ? CSS.escape(v) : String(v));
+
+function block(one, adrift, startable) {
   const runs = one.runs || [];
   const last = runs[0];
 
-  return '<section class="block">' +
+  return '<section class="block" data-job="' + esc(one.name) + '">' +
     '<div class="block-top">' +
       '<h2 class="mono">' + esc(one.name) + '</h2>' +
       '<span class="block-score mono">' + esc(headline(last)) + '</span>' +
@@ -91,6 +204,18 @@ function block(one, adrift) {
     (runs.length === 0
       ? '<p class="none">This job has recorded no runs.</p>'
       : '<ol class="run-list">' + runs.map((r) => row(r, adrift)).join('') + '</ol>') +
+
+    /* THE CONTROL IS UNDER THE HISTORY AND NOT BESIDE THE HEADING, because the
+       history is the answer to the question somebody opened this screen with
+       and the button is what they might do about it. A button in the corner
+       would be the first thing read on a screen whose whole point is the rows
+       beneath it. */
+    (startable
+      ? '<div class="job-bar">' +
+          '<button type="button" class="btn btn-ghost job-start">Run it now</button>' +
+          '<span class="job-said"></span>' +
+        '</div>'
+      : '') +
 
     /* THE THRESHOLD BESIDE THE THING IT JUDGED (K-16). It is only worth saying
        where a row was actually judged by it. */

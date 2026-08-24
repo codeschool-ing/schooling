@@ -257,6 +257,33 @@ stored counts — so running it twice in a night is safe. What it is not is free
 of consequence: it acts, with an audit entry per withdrawal, so it is not a
 thing to fire off to see what happens.
 
+### And from the console, which is the same call
+
+An operator can start it from *Watch → Jobs*. The service holds
+`roles/run.invoker` **on that job** — `run_starts_the_analysis` in `iam.tf`, on
+the resource rather than on the project, the same rule the secret and the
+scheduler follow — and reaches Google with a token the instance mints for itself
+from the metadata server. There is no key and nothing to configure: a process on
+Cloud Run already knows its project and its region, and the copy in an
+environment variable is the one that goes stale when a service moves.
+
+Two things are worth knowing before pressing it:
+
+- **The run's own row cannot say who asked.** Cloud Scheduler and the console
+  make the identical call, so `job_runs` records a run and not an actor. Who
+  started one lives in the audit — `job.started`, carrying the state the job was
+  in when somebody reacted to it — and that is the only place it can.
+- **What the console may start is a closed list of one.** `schooling-migrate`
+  and `schooling-load` are in this project behind the same permission and are
+  deliberately not on it: a migration is not a thing to begin by browsing. The
+  list is `console.Jobs.Startable`, checked before Google is asked anything, and
+  the IAM grant above is the second fence rather than the first.
+
+A deployment that is not on Cloud Run has no metadata server, sends an empty
+list, and the screen draws no button — which is every developer machine, the
+local stack and CI. The start-up log says which state it is in, and says it at
+`WARN` in production, where being unable to start your own jobs is news.
+
 The release pipeline points the job at each new image and **does not run it**.
 The migration and the catalogue load are gates that a deploy waits for; this is
 a thing the clock does, and executing it on every release would put a second set
