@@ -44,8 +44,7 @@ is how every console rots.* That division is the spine of everything below.
 
 ### Understand
 
-- The funnel, all eight steps from *arrived* to *subscribed*, counted per **person** *(already
-  built; the screen is what is missing)*
+- The funnel, all eight steps from *arrived* to *subscribed*, counted per **person**
 - Cohorts, by signup and by subscription start
 - Item analysis: which questions discriminate, which are broken, what is quarantined — with
   **every threshold displayed beside the number it produced** (`K-16`), and *insufficient data*
