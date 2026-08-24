@@ -43,12 +43,29 @@ const (
 	section = "specificity"
 )
 
+// The one exercise this store's catalogue knows about, and where it lives. It
+// is deliberately in a DIFFERENT section from the one above: a test that put
+// both in the same place could not tell "the exercise was located" from "the
+// section was used".
+const (
+	exercise        = "ex-specificity-3"
+	exerciseSection = "cascade"
+	exerciseVersion = 4
+)
+
 func aStore(t *testing.T, pool *pgxpool.Pool) *report.Store {
 	t.Helper()
-	return report.NewStore(pool, func(_ context.Context, _ uuid.UUID,
-		c, l, s string) (bool, error) {
-		return c == course && l == lesson && s == section, nil
-	})
+	return report.NewStore(pool,
+		func(_ context.Context, _ uuid.UUID, c, l, s string) (bool, error) {
+			return c == course && l == lesson && s == section, nil
+		},
+		func(_ context.Context, _ uuid.UUID, id string) (string, string, string, int, error) {
+			if id != exercise {
+				return "", "", "", 0, nil
+			}
+			return course, lesson, exerciseSection, exerciseVersion, nil
+		},
+	)
 }
 
 // A school and a person to hang the rows on. No catalogue rows: what the store
@@ -377,5 +394,175 @@ func TestErasingTheStudentTakesTheReport(t *testing.T) {
 	}
 	if len(queue) != 0 {
 		t.Errorf("an erased student's words are still in the queue: %+v", queue)
+	}
+}
+
+/* ---------- which question, and not only which section ---------- */
+
+/*
+THE EXERCISE BRINGS ITS OWN COORDINATES.
+
+A drilled card carries an exercise and no path — its queue spans courses — so
+the client sends one field and the store reads the rest. That is not a
+convenience: a browser that told us where a question lives would be a browser
+whose copy of the catalogue can be older than ours, and a stale tab would file a
+report against a section the question has since left.
+*/
+func TestReportingAQuestionFindsWhereItLives(t *testing.T) {
+	pool := testPool(t)
+	store := aStore(t, pool)
+	ctx := context.Background()
+	school, student := aSchool(t, pool), aStudent(t, pool)
+
+	one, already, err := store.Make(ctx, report.New{
+		School: school, Account: student,
+		ExerciseID: exercise,
+		Reason:     report.ReasonAnswer,
+		Note:       "it marks B and the working gives C",
+	})
+	if err != nil {
+		t.Fatalf("reporting a question: %v", err)
+	}
+	if already {
+		t.Error("the first report of a question came back as one already there")
+	}
+	if one.CourseID != course || one.SectionID != exerciseSection {
+		t.Errorf("the report landed at %s / %s / %s", one.CourseID, one.LessonID, one.SectionID)
+	}
+	if one.ExerciseID != exercise {
+		t.Errorf("which question is %q", one.ExerciseID)
+	}
+	if one.Version != exerciseVersion {
+		t.Errorf("the version is %d — a key fixed last week and a report from last month "+
+			"are about different questions with one id", one.Version)
+	}
+}
+
+// THE CLIENT'S COORDINATES ARE IGNORED WHEN IT NAMES A QUESTION. Whatever a
+// stale tab believes about where the exercise lives, the catalogue decides.
+func TestAQuestionsCoordinatesComeFromTheCatalogueAndNotTheCaller(t *testing.T) {
+	pool := testPool(t)
+	store := aStore(t, pool)
+	ctx := context.Background()
+	school, student := aSchool(t, pool), aStudent(t, pool)
+
+	one, _, err := store.Make(ctx, report.New{
+		School: school, Account: student,
+		// A section that exists, and is not this exercise's.
+		CourseID: course, LessonID: lesson, SectionID: section,
+		ExerciseID: exercise,
+		Reason:     report.ReasonAnswer,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if one.SectionID != exerciseSection {
+		t.Errorf("the caller's section won: %q", one.SectionID)
+	}
+}
+
+/*
+TWO BAD QUESTIONS IN ONE ASSESSMENT ARE TWO REPORTS.
+
+The unique index used to key on the section alone. An assessment is a section,
+so the second question a student found would have read as a duplicate of the
+first — silently, with a message thanking them for something they had already
+said. That is the exact failure this feature exists to prevent, arriving through
+its own guard.
+*/
+func TestTwoQuestionsInOneSectionAreTwoReports(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := aSchool(t, pool), aStudent(t, pool)
+
+	// A store whose catalogue knows two exercises, both in one section.
+	store := report.NewStore(pool,
+		func(context.Context, uuid.UUID, string, string, string) (bool, error) {
+			return true, nil
+		},
+		func(_ context.Context, _ uuid.UUID, id string) (string, string, string, int, error) {
+			return course, lesson, exerciseSection, 1, nil
+		},
+	)
+
+	first, _, err := store.Make(ctx, report.New{
+		School: school, Account: student,
+		ExerciseID: "ex-one", Reason: report.ReasonAnswer,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, already, err := store.Make(ctx, report.New{
+		School: school, Account: student,
+		ExerciseID: "ex-two", Reason: report.ReasonAnswer,
+	})
+	if err != nil {
+		t.Fatalf("reporting a second question in the same section: %v", err)
+	}
+	if already || second.ID == first.ID {
+		t.Error("the second question in one section read as a duplicate of the first")
+	}
+
+	// And the same question twice is still one report.
+	if _, again, err := store.Make(ctx, report.New{
+		School: school, Account: student,
+		ExerciseID: "ex-one", Reason: report.ReasonUnclear,
+	}); err != nil || !again {
+		t.Errorf("reporting one question twice answered %v, already=%v", err, again)
+	}
+}
+
+// A QUESTION THIS SCHOOL DOES NOT HAVE IS ITS OWN REFUSAL, and not the
+// section's — they are different sentences to whoever sent it.
+func TestReportingAQuestionNobodyHasSaysSo(t *testing.T) {
+	pool := testPool(t)
+	store := aStore(t, pool)
+	school, student := aSchool(t, pool), aStudent(t, pool)
+
+	_, _, err := store.Make(context.Background(), report.New{
+		School: school, Account: student,
+		ExerciseID: "ex-nobody-wrote-this", Reason: report.ReasonAnswer,
+	})
+	if !errors.Is(err, report.ErrNoSuchExercise) {
+		t.Errorf("a question nobody has answered %v", err)
+	}
+}
+
+/*
+AN EXERCISE THE CATALOGUE CANNOT PLACE IS STILL REPORTABLE.
+
+`catalog_exercises` carries a section for almost every exercise and not for
+every one. Refusing those would close this channel for exactly the questions a
+student meets most often in the drill — so the report is written with the
+course and the question, and the path it does not know is left blank rather
+than guessed at.
+*/
+func TestAQuestionWithNoSectionIsStillReportable(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	school, student := aSchool(t, pool), aStudent(t, pool)
+
+	store := report.NewStore(pool,
+		func(context.Context, uuid.UUID, string, string, string) (bool, error) {
+			return false, nil
+		},
+		func(_ context.Context, _ uuid.UUID, id string) (string, string, string, int, error) {
+			// A course, and nothing else the catalogue can say.
+			return course, "", "", 2, nil
+		},
+	)
+
+	one, _, err := store.Make(ctx, report.New{
+		School: school, Account: student,
+		ExerciseID: "ex-loose", Reason: report.ReasonAnswer,
+	})
+	if err != nil {
+		t.Fatalf("a question with no section was refused: %v", err)
+	}
+	if one.SectionID != "" || one.LessonID != "" {
+		t.Errorf("a path was invented: %s / %s", one.LessonID, one.SectionID)
+	}
+	if one.CourseID != course {
+		t.Errorf("the course was lost: %q", one.CourseID)
 	}
 }

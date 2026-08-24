@@ -25,6 +25,7 @@
 import { formatted, esc } from '../text.js';
 import * as api from '../api.js';
 import { saveAnswer, answerFor } from '../state.js';
+import { wireReport } from '../report.js';
 
 import choices from './choices.js';
 import ordering from './ordering.js';
@@ -93,9 +94,32 @@ export function buildExercise(ex, ctx, ix, options = {}) {
         ? ''
         : '<button type="button" class="btn btn-ghost ex-retry" hidden>' + txt('Try again') + '</button>') +
     '</div>' +
-    '<div class="ex-verdict" aria-live="polite"></div>';
+    '<div class="ex-verdict" aria-live="polite"></div>' +
+
+    /* AND, ON EVERYTHING BUT AN EXAM, THE WAY TO SAY THIS QUESTION IS WRONG.
+
+       THE EXAM IS EXCLUDED AND THAT IS THE DECISION, not an omission. A paper
+       is timed and held: a control that opens a form mid-question costs a
+       student minutes they are being measured on, and the one thing a person
+       is most likely to report during an exam — "the answer I gave was right" —
+       is a verdict they have not been shown yet. The same question is
+       reportable from the drill and from the assessment it belongs to, which is
+       where somebody meets it again with nothing at stake.
+
+       IT ASKS `canReport` BEFORE DRAWING rather than showing a control that
+       explains itself when opened: signed out there is nothing to attach a
+       report to, and in the offline copy there is nobody to send it to. */
+    (!exam && ex.id && api.canReport()
+      ? '<details class="report report-ex">' +
+          '<summary>⚑ ' + txt('something is wrong with this question') + '</summary>' +
+          '<div class="report-body"><p class="checking">' + txt('reading…') + '</p></div>' +
+        '</details>'
+      : '');
 
   const body = el.querySelector('.ex-body');
+
+  // Built on first open — see `report.js` for why it is not built with the card.
+  wireReport(el.querySelector('.report-ex'), { exerciseId: ex.id });
 
   /* WHEN THE CARD APPEARED. In a drill the time to answer is half of what the
      scheduler reads — the other half is whether it was right — because a

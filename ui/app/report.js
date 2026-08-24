@@ -47,8 +47,19 @@ const SAID = {
 
 /* Wire one `<details>` so that opening it builds the form, once.
 
-   `at` is the section: `{ courseId, lessonIx, sectionId }`. It is passed rather
-   than read, because this file knows nothing about where the student is. */
+   `at` is the SUBJECT, and it is one of two shapes:
+
+     { courseId, lessonIx, sectionId }   the section — its prose, its video
+     { exerciseId }                      one question
+
+   A question sends only its id: where it lives is the catalogue's answer, and
+   this browser's copy of that can be older than the server's. Both are passed
+   rather than read, because this file knows nothing about where the student is
+   and should not learn.
+
+   THE MARKUP IS THE SAME EITHER WAY. A student who has found something wrong is
+   in the same frame of mind whichever it is, and two controls that behaved
+   differently would be two things to learn for one gesture. */
 export function wireReport(details, at) {
   if (!details) return;
   const body = details.querySelector('.report-body');
@@ -70,11 +81,13 @@ export function wireReport(details, at) {
       return;
     }
 
-    const already = (answer.reports || []).find((r) =>
-      r.courseId === at.courseId && r.sectionId === at.sectionId);
+    const already = (answer.reports || []).find((r) => (at.exerciseId
+      ? r.exerciseId === at.exerciseId
+      : r.exerciseId === '' && r.courseId === at.courseId && r.sectionId === at.sectionId));
     if (already) {
-      body.innerHTML = '<p class="report-said">' +
-        esc(txt('you have already told us about this section, and it has not been answered yet')) +
+      body.innerHTML = '<p class="report-said">' + esc(at.exerciseId
+        ? txt('you have already told us about this question, and it has not been answered yet')
+        : txt('you have already told us about this section, and it has not been answered yet')) +
         '</p>';
       return;
     }
@@ -127,18 +140,29 @@ async function send(body, at) {
   status.textContent = txt('sending…');
 
   try {
-    const answer = await api.reportSection(
-      at.courseId, at.lessonIx, at.sectionId,
-      picked.value, form.querySelector('.report-note').value);
+    const note = form.querySelector('.report-note').value;
+    const answer = at.exerciseId
+      ? await api.reportExercise(at.exerciseId, picked.value, note)
+      : await api.reportSection(at.courseId, at.lessonIx, at.sectionId, picked.value, note);
 
     /* TWO LITERAL CALLS AND NOT ONE AROUND A TERNARY. The check that holds
        these strings to their translations reads the source for calls to `txt`
        with a string in them; a sentence chosen inside the brackets is invisible
        to it, and would have stayed English for every reader in Portuguese with
        nothing looking wrong. It was written the other way first. */
-    const said = answer && answer.already
-      ? txt('you have already told us about this section, and it has not been answered yet')
-      : txt('thank you — somebody will look at this section');
+    /* FOUR LITERAL CALLS AND NOT A SENTENCE ASSEMBLED FROM PARTS. The check
+       that holds these strings to their translations reads the source for calls
+       to `txt` with a string in them, so "you have already told us about this "
+       + noun would be two fragments it can see and one sentence no translator
+       can put in the right order — Portuguese does not agree with English about
+       where the noun goes. */
+    const said = at.exerciseId
+      ? (answer && answer.already
+        ? txt('you have already told us about this question, and it has not been answered yet')
+        : txt('thank you — somebody will look at this question'))
+      : (answer && answer.already
+        ? txt('you have already told us about this section, and it has not been answered yet')
+        : txt('thank you — somebody will look at this section'));
     body.innerHTML = '<p class="report-said">' + esc(said) + '</p>';
   } catch (e) {
     button.disabled = false;
