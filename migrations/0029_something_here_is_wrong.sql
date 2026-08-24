@@ -96,7 +96,13 @@ CREATE UNIQUE INDEX content_reports_one_open_each
     ON content_reports (tenant_id, account_id, course_id, lesson_id, section_id)
     WHERE settled_at IS NULL;
 
-COMMENT ON TABLE content_reports IS 'personal-data: pseudonymous';
+-- IDENTIFYING AND NOT PSEUDONYMOUS, which is the registry's word for the same
+-- decision `notes` makes: what somebody puts in a free-text box is not for a
+-- schema comment to assume. The two have to agree — a test compares this line
+-- against `privacy.Registry` — and the one that is wrong decides what an export
+-- contains. This said `pseudonymous` first, against a registry that said
+-- otherwise, which is exactly the disagreement that test exists to catch.
+COMMENT ON TABLE content_reports IS 'personal-data: identifying';
 
 -- +goose Down
 
