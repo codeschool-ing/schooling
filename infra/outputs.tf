@@ -56,6 +56,15 @@ output "workload_identity_provider" {
   ])
 }
 
+/* The nightly analysis, named here for the same reason the other two jobs are:
+   the pipeline updates its image and a person occasionally runs it by hand
+   after a content change, and neither should be typing a name this
+   configuration owns. */
+output "analyse_job" {
+  description = "The Cloud Run job the scheduler starts every night."
+  value       = google_cloud_run_v2_job.analyse.name
+}
+
 output "database_connection_name" {
   description = "What the Auth Proxy and the Cloud Run socket both address."
   value       = google_sql_database_instance.main.connection_name

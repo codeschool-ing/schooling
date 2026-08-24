@@ -148,9 +148,11 @@ jobs:
       SERVICE: schooling
       MIGRATE_JOB: schooling-migrate
       LOAD_JOB: schooling-load
+      ANALYSE_JOB: schooling-analyse
       API_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/api
       MIGRATE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/migrate
       LOAD_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/load
+      ANALYSE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/analyse
       DEPLOY_ACCOUNT: schooling-deploy@aleogr-schooling.iam.gserviceaccount.com
       WORKLOAD_IDENTITY_PROVIDER: projects/67869214453/locations/global/workloadIdentityPools/github/providers/github
 
@@ -175,20 +177,21 @@ jobs:
       # THE GO VERSION COMES FROM go.mod, here as everywhere else. Passed into
       # the build rather than written in the Dockerfile, so a directive that
       # moves cannot leave an image behind on an older compiler.
-      # THE THIRD ONE CARRIES THE CATALOGUE, which is why it is built against a
+      # ONE OF THEM CARRIES THE CATALOGUE, which is why it is built against a
       # different target: `cmd/load` reads `content/` off a filesystem, and the
-      # other two never open it. See `deploy/Dockerfile`.
-      - name: The three images, stamped with the tag they were cut from
+      # others never open it. See `deploy/Dockerfile`.
+      - name: The four images, stamped with the tag they were cut from
         run: |
           set -euo pipefail
           go_version="$(awk '/^go /{print $2}' go.mod)"
           built="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-          for command in api migrate load; do
+          for command in api migrate load analyse; do
             case "$command" in
               api)     image="$API_IMAGE";     target=binary ;;
               migrate) image="$MIGRATE_IMAGE"; target=binary ;;
               load)    image="$LOAD_IMAGE";    target=with-content ;;
+              analyse) image="$ANALYSE_IMAGE"; target=binary ;;
             esac
 
             docker build \
@@ -235,6 +238,24 @@ jobs:
             --image="${LOAD_IMAGE}:${GITHUB_REF_NAME}" \
             --quiet
           gcloud run jobs execute "$LOAD_JOB" --region="$REGION" --wait
+
+      # THE NIGHTLY ANALYSIS IS UPDATED AND NOT EXECUTED, which is the one
+      # difference between this job and the two above it. The other two are
+      # gates — a schema that has not applied and a catalogue that has not
+      # loaded are deploys that have not happened — and this one is a thing the
+      # clock does at ten past three. Running it here would put a second set of
+      # numbers into the same night for no reason other than that somebody cut
+      # a release, and `cmd/analyse` WITHDRAWS questions from circulation: it is
+      # not a report to fire off casually.
+      #
+      # It is also not `--wait`ed on, because nothing is waiting for it.
+      - name: The nightly analysis, pointed at the new image
+        run: |
+          set -euo pipefail
+          gcloud run jobs update "$ANALYSE_JOB" \
+            --region="$REGION" \
+            --image="${ANALYSE_IMAGE}:${GITHUB_REF_NAME}" \
+            --quiet
 
       - name: The revision
         run: |

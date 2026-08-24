@@ -9,6 +9,13 @@
 // gets more useful. So it runs on a schedule, writes a rollup, and the console
 // reads the rollup.
 //
+// THE SCHEDULE IS `infra/scheduler.tf`, at ten past three every morning in São
+// Paulo. That sentence is named here because the paragraph above it was true of
+// the design and false of the deployment for as long as this command existed:
+// there was no job and no scheduler, and this had never run in production once.
+// A comment describing machinery is a claim, and this one now says where to go
+// and check it.
+//
 // # IT RECOMPUTES RATHER THAN RESUMING
 //
 // A resumable job would merge new answers into stored counts, and a merge is
