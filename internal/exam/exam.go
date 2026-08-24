@@ -208,6 +208,19 @@ type Paper struct {
 
 	Questions []Question `json:"questions"`
 
+	// PassMark is the share this paper has to reach, in whole percent, and it is
+	// here rather than only on the Result.
+	//
+	// THE SCREEN SAYS "MINIMUM TO PASS" BEFORE A SINGLE QUESTION IS ANSWERED, and
+	// until this field existed the only place that number appeared was on the
+	// result — after the exam, when it is too late to be the rule somebody was
+	// told. So the interface held a `PASS_MARK = 70` of its own and showed that,
+	// which is two copies of one decision: move this constant and an exam is
+	// marked at the new number while being described as the old one.
+	//
+	// It is on every paper, handed in or not, so no screen ever has to guess.
+	PassMark int `json:"pass_mark"`
+
 	// Absent until it is handed in.
 	Result *Result `json:"result,omitempty"`
 }
@@ -759,6 +772,23 @@ func (s *Store) Attempt(ctx context.Context, tenantID, accountID, attemptID uuid
 	if p.HandedIn != nil && score != nil && of != nil && passMark != nil && passed != nil {
 		result = Result{Score: *score, Of: *of, PassMark: *passMark, Passed: *passed}
 		p.Result = &result
+	}
+
+	/* THE MARK THIS PAPER IS HELD TO, and which of two numbers that is depends
+	   on whether it has been handed in.
+
+	   A HANDED-IN PAPER CARRIES THE MARK IT WAS JUDGED BY, off its own row. That
+	   is the reason the column exists: moving `PassMark` changes what a NEW
+	   attempt has to reach and nothing about an old one, and a paper from March
+	   shown beside today's constant would be a result explaining itself with a
+	   number nobody applied to it.
+
+	   AN OPEN PAPER CARRIES THE CURRENT ONE, because that is what it will be
+	   judged by when it is handed in. */
+	if p.Result != nil {
+		p.PassMark = p.Result.PassMark
+	} else {
+		p.PassMark = PassMark
 	}
 
 	rows, err := s.pool.Query(ctx, `

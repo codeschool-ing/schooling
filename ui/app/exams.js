@@ -40,8 +40,32 @@ import { lessonExercises } from './lessons.js';
 import { NEEDS_SERVER } from './exercises/grade.js';
 import { shuffleWith } from './text.js';
 import * as api from './api.js';
+import * as source from './source.js';
 
-export const PASS_MARK = 70;         // % correct needed to pass
+/* THE PASS MARK IS THE SERVER'S, AND THIS IS THE FALLBACK FOR WHEN THERE IS NONE.
+
+   It used to be `PASS_MARK = 70`, exported, and shown on three screens — a
+   second copy of `exam.PassMark`, which is the number the server actually marks
+   by. Two copies of one decision go wrong in the direction nobody notices: move
+   the constant on the server and an exam is marked at the new number while every
+   screen describes it as the old one, and nothing fails.
+
+   So the number now travels: a paper carries `pass_mark`, and the school says
+   its own on `/api/v1/school` — which is what a course card needs, because it
+   prints "minimum to pass" before any paper exists.
+
+   THIS CONSTANT SURVIVES FOR THE ONE CASE THAT HAS NO SERVER: the single-file
+   bundle, opened off a disk, which draws and grades in the page. It is named for
+   that and is not exported, so nothing can reach for it by accident. */
+const OFFLINE_PASS_MARK = 70;
+
+/* What this school marks by, and it is a function rather than a constant because
+   the school is fetched at boot and this file is imported before that happens. */
+export const passMark = () => {
+  const said = source.school && source.school.passMark;
+  return typeof said === 'number' && said > 0 ? said : OFFLINE_PASS_MARK;
+};
+
 export const COURSE_QUESTIONS = 10;
 export const TRACK_QUESTIONS = 15;
 
@@ -55,9 +79,15 @@ export const TRACK_QUESTIONS = 15;
    It matters because the exercise bank is written course by course: four of the
    122 courses have one today, and one of those four has a single exercise —
    which was being offered as a "final exam". */
+/* IT USES THE OFFLINE CONSTANT AND NOT THE SCHOOL'S, deliberately: this is the
+   size of the LOCAL draw, decided while a course card is being painted and
+   before any school has necessarily answered. The two are the same number today,
+   and if they ever differ the honest reading of this is "the smallest paper that
+   could measure anything under the platform's default", which is what a card
+   saying "in preparation" is claiming. */
 export const MIN_QUESTIONS = (() => {
   let n = 1;
-  while (Math.ceil((PASS_MARK * n) / 100) >= n) n += 1;
+  while (Math.ceil((OFFLINE_PASS_MARK * n) / 100) >= n) n += 1;
   return n;
 })();
 export const examReady = (exam) => exam.items.length >= MIN_QUESTIONS;
@@ -113,6 +143,12 @@ async function drawnByServer(scope, scopeId, meta) {
     responses: attempt.responses,
     items: attempt.questions.map((ex) => ({ ex, ctx: contextOf(ex) })),
     bankSize: null,   // the bank is the server's and it does not say how big
+
+    /* THE MARK THIS PAPER IS HELD TO, off the paper. For one already handed in
+       the server sends the mark it was JUDGED by rather than today's, which is
+       the reason the column exists — a result explaining itself with a number
+       nobody applied to it is worse than no number. */
+    passMark: attempt.passMark,
   };
 }
 
@@ -189,13 +225,18 @@ export function trackExam(track, activeOption, attempt = 0) {
 /* The score. `right / judged` — and judged excludes what the server has not
    checked yet, never what was left blank. Leaving it blank is an answer, and it
    is a wrong one; not having been checked is not an answer at all. */
-export function examScore(states) {
+// `mark` IS AN ARGUMENT BECAUSE IT IS A PROPERTY OF THE PAPER. This function is
+// only reached on the path with no server, where the states in the browser are
+// all there is — but a scorer holding its own idea of passing is exactly what
+// this change removed everywhere else, and leaving one here would be the copy
+// growing back.
+export function examScore(states, mark = passMark()) {
   const judged = states.filter((s) => s.correct !== null || !s.answered);
   const right = states.filter((s) => s.correct === true).length;
   const pending = states.length - judged.length;
   const pct = judged.length ? Math.round((right / judged.length) * 100) : 0;
   return {
     lastCorrect: right, judged: judged.length, pending, pct,
-    passed: judged.length > 0 && pct >= PASS_MARK,
+    passed: judged.length > 0 && pct >= mark,
   };
 }

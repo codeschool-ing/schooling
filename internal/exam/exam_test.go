@@ -803,3 +803,96 @@ func TestAQuestionWithdrawnMidAttemptComesOutOfTheDenominator(t *testing.T) {
 		t.Error("the withdrawn question is not on the handed-in paper at all")
 	}
 }
+
+// A PAPER SAYS WHAT IT HAS TO REACH, BEFORE A SINGLE QUESTION IS ANSWERED.
+//
+// The screen prints "minimum to pass" on the page that explains the rules, and
+// until this field existed the only place the number appeared was on the result
+// — after the exam, when it is too late to be the rule somebody was told. So the
+// interface held a `PASS_MARK = 70` of its own and showed that: two copies of one
+// decision, where moving this constant marks the exam at the new number and
+// describes it as the old one, and nothing fails.
+func TestAnOpenPaperSaysWhatItHasToReach(t *testing.T) {
+	db := testPool(t)
+	school, student := school(t, db), student(t, db)
+	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
+	store := exam.NewStore(db, open, nothingWithdrawn)
+	ctx := context.Background()
+
+	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
+	if err != nil {
+		t.Fatalf("starting: %v", err)
+	}
+	if paper.Result != nil {
+		t.Fatal("a paper nobody has handed in came back with a result")
+	}
+	if paper.PassMark != exam.PassMark {
+		t.Errorf("an open paper says it has to reach %d%%, and this server marks at %d%%",
+			paper.PassMark, exam.PassMark)
+	}
+
+	// AND A RESUMED ONE SAYS THE SAME. It is a different code path — the open
+	// attempt is read rather than drawn — and a field filled on one of the two
+	// is a screen that is right until somebody reloads.
+	again, resumed, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
+	if err != nil {
+		t.Fatalf("resuming: %v", err)
+	}
+	if !resumed {
+		t.Fatal("starting twice drew a second paper")
+	}
+	if again.PassMark != exam.PassMark {
+		t.Errorf("a resumed paper says %d%%, want %d%%", again.PassMark, exam.PassMark)
+	}
+}
+
+// AND A HANDED-IN PAPER CARRIES THE MARK IT WAS JUDGED BY, not today's.
+//
+// That is the whole reason the column exists: moving `PassMark` changes what a
+// NEW attempt has to reach and nothing about an old one. A result shown beside
+// today's constant would be explaining itself with a rule nobody applied to it —
+// which is what the interface did, from a constant of its own, in both
+// directions at once.
+func TestAHandedInPaperCarriesTheMarkItWasJudgedBy(t *testing.T) {
+	db := testPool(t)
+	school, student := school(t, db), student(t, db)
+	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
+	store := exam.NewStore(db, open, nothingWithdrawn)
+	ctx := context.Background()
+
+	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
+	if err != nil {
+		t.Fatalf("starting: %v", err)
+	}
+	for _, q := range paper.Questions {
+		if err := store.Answer(ctx, school, student, paper.AttemptID, q.Position,
+			rightAnswer(t, db, paper.AttemptID, q.Position)); err != nil {
+			t.Fatalf("answering %d: %v", q.Position, err)
+		}
+	}
+	marked, _, err := store.Submit(ctx, school, student, paper.AttemptID)
+	if err != nil {
+		t.Fatalf("handing in: %v", err)
+	}
+
+	if marked.PassMark != marked.Result.PassMark {
+		t.Errorf("the paper says %d%% and the result it carries says %d%% — a screen "+
+			"reading the first would describe the exam by a rule the second did not apply",
+			marked.PassMark, marked.Result.PassMark)
+	}
+
+	// The mark on the row is what decides it, so a paper stored under a
+	// different one reports that one and not the constant.
+	if _, err := db.Exec(ctx,
+		`UPDATE exam_attempts SET pass_mark = 55 WHERE id = $1`, paper.AttemptID); err != nil {
+		t.Fatal(err)
+	}
+	read, err := store.Attempt(ctx, school, student, paper.AttemptID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if read.PassMark != 55 {
+		t.Errorf("an attempt judged at 55%% reads back as %d%% — the paper is answering "+
+			"with the current constant rather than with what it was held to", read.PassMark)
+	}
+}

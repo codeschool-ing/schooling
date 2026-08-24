@@ -654,6 +654,24 @@ try {
         + 'This is the densest screen in the interface and nothing here was measured.');
     }
 
+    /* AND THE RULE THE PAPER STATES IS A NUMBER THE SERVER SENT.
+
+       Not an axe check — this suite already refuses to pass a screen it could
+       not reach, and this is the same shape: the exam's rules say "minimum to
+       pass", and that number used to be a `PASS_MARK = 70` the interface kept
+       of its own beside `exam.PassMark` on the server. It comes off the paper
+       now, and the way THAT breaks is silently: `undefined%` renders, reads as
+       a rendering fault rather than a wrong rule, and passes every contrast
+       check there is. A screen stating a rule it did not get is worse than a
+       screen missing one. */
+    const rules = await student.locator('.exam-rules li').allInnerTexts();
+    if (!rules.some((t) => /\d{1,3}\s*%/.test(t))) {
+      violations += 1;
+      console.error(`✗ ${theme} · the exam's rules state no percentage at all: `
+        + `${JSON.stringify(rules)}. The minimum to pass comes off the paper the server `
+        + 'drew, so this is the interface having lost it rather than a wrong value.');
+    }
+
     for (let q = 0; q < paper; q += 1) {
       if (q) {
         await student.locator('.wz-next').click();

@@ -676,6 +676,15 @@ function attemptFrom(paper) {
   return {
     id: paper.attempt,
     responses,
+
+    /* THE MARK THIS PAPER IS HELD TO, carried through rather than dropped.
+       This function reshapes the server's paper into what the wizard wants, and
+       a field it does not name is a field that arrives as `undefined` at the
+       screen — which for this one would fall back to the school's number and
+       look right, while a paper judged under an older constant quietly stopped
+       reporting the rule it was actually held to. */
+    passMark: paper.pass_mark,
+
     questions: questions.map((q) => ({
       ...shownAsExercise(q.question || {}),
       position: q.position,
@@ -854,6 +863,13 @@ export async function submitExam(attemptId) {
     judged,
     pending: Math.max(0, questions.length - judged),
     verdicts,
+
+    /* THE MARK THIS PAPER WAS JUDGED BY, which is stored on the attempt and is
+       not necessarily today's constant. Moving the pass mark changes what a NEW
+       attempt has to reach and nothing about an old one, so a result shown
+       beside today's number would explain itself with a rule nobody applied to
+       it. */
+    passMark: result.pass_mark,
   };
 }
 

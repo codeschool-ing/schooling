@@ -166,7 +166,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	events := event.NewStore(pool)
 
 	scoped := http.NewServeMux()
-	tenant.NewHandler().Routes(scoped)
+	/* THE PASS MARK, HANDED TO THE SCHOOL ROUTE. `exam` owns the number and
+	   `tenant` may not import it, so this line is where the two are said to be
+	   the same one — and it exists because the interface prints "minimum to
+	   pass" on a course card, before any paper exists to carry it. It printed a
+	   constant of its own until now. */
+	tenant.NewHandler(exam.PassMark).Routes(scoped)
 
 	// THE TWO DOCUMENTS, MOUNTED INSIDE THE SCHOOL-SCOPED MUX AND SCOPED TO NO
 	// SCHOOL. They are the platform's rather than a school's, and they are the
