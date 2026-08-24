@@ -338,3 +338,78 @@ INSERT INTO question_quarantine
 SELECT t.id, 'an-inverted', 1, now() - interval '5 hours', 'inverted', 41, -0.32, 30
 FROM tenants t WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
+
+/* ---------- six months of history, so the cohort table has a shape ----------
+
+   THE ACCESSIBILITY PASS MEASURES WHAT IS ON THE SCREEN, and the cohort screen's
+   shape is its whole point: a triangle, where a younger intake has fewer columns
+   and the missing ones are drawn as nothing rather than as a zero. The a11y run
+   signs up its own students, so without this the table would have exactly one
+   row and one column — every state worth checking absent, and the check passing.
+
+   THESE ARE EVENTS AND NOT ACCOUNTS. `events` is the only thing a cohort reads,
+   it is append-only by trigger, and `visitor_id`/`account_id` carry no foreign
+   key — so this is six months of history with nobody behind it, which is exactly
+   what the report is built to fold. It is `synthetic = false` because the screen
+   defaults to real people and a fixture the default view cannot see is a fixture
+   that checks nothing.
+
+   THE SHAPE IS DELIBERATE: every intake starts well and thins, and one of them
+   thins much faster. A table where every row is identical would pass a check
+   that a table with the columns transposed would also pass. */
+
+INSERT INTO events
+  (occurred_at, name, account_id, tenant_id, school_slug, plan, country, locale)
+SELECT
+  (date_trunc('month', now()) - make_interval(months => c.ago) + interval '3 days'),
+  'account.created',
+  c.person, t.id, t.slug, 'free', 'BR', 'en'
+FROM tenants t, (VALUES
+  (5, '11111111-0000-4000-8000-000000000001'::uuid),
+  (5, '11111111-0000-4000-8000-000000000002'::uuid),
+  (5, '11111111-0000-4000-8000-000000000003'::uuid),
+  (4, '11111111-0000-4000-8000-000000000004'::uuid),
+  (4, '11111111-0000-4000-8000-000000000005'::uuid),
+  (3, '11111111-0000-4000-8000-000000000006'::uuid),
+  (3, '11111111-0000-4000-8000-000000000007'::uuid),
+  (3, '11111111-0000-4000-8000-000000000008'::uuid),
+  (1, '11111111-0000-4000-8000-000000000009'::uuid),
+  (0, '11111111-0000-4000-8000-00000000000a'::uuid)
+) AS c(ago, person)
+WHERE t.slug = :'slug'
+ON CONFLICT DO NOTHING;
+
+/* And who kept studying. `started` is how many months ago the person joined and
+   `later` is how far into their own life this month is, so the pairs below are
+   read as "this cohort, at that age" — which is what the table's columns are. */
+INSERT INTO events
+  (occurred_at, name, account_id, tenant_id, school_slug, plan, country, locale)
+SELECT
+  (date_trunc('month', now()) - make_interval(months => a.started - a.later) + interval '9 days'),
+  'section.completed',
+  a.person, t.id, t.slug, 'free', 'BR', 'en'
+FROM tenants t, (VALUES
+  -- The oldest intake: three joined, all studied at once, one is still here.
+  (5, 0, '11111111-0000-4000-8000-000000000001'::uuid),
+  (5, 0, '11111111-0000-4000-8000-000000000002'::uuid),
+  (5, 0, '11111111-0000-4000-8000-000000000003'::uuid),
+  (5, 1, '11111111-0000-4000-8000-000000000001'::uuid),
+  (5, 1, '11111111-0000-4000-8000-000000000002'::uuid),
+  (5, 3, '11111111-0000-4000-8000-000000000001'::uuid),
+  (5, 5, '11111111-0000-4000-8000-000000000001'::uuid),
+  -- The month after: two joined and both left immediately. A row that is not
+  -- like the others, because a table of identical rows checks nothing.
+  (4, 0, '11111111-0000-4000-8000-000000000004'::uuid),
+  -- Three months ago: a healthy intake.
+  (3, 0, '11111111-0000-4000-8000-000000000006'::uuid),
+  (3, 0, '11111111-0000-4000-8000-000000000007'::uuid),
+  (3, 0, '11111111-0000-4000-8000-000000000008'::uuid),
+  (3, 1, '11111111-0000-4000-8000-000000000006'::uuid),
+  (3, 1, '11111111-0000-4000-8000-000000000007'::uuid),
+  (3, 2, '11111111-0000-4000-8000-000000000006'::uuid),
+  -- Last month, and this one: the newest rows, one column each.
+  (1, 0, '11111111-0000-4000-8000-000000000009'::uuid),
+  (0, 0, '11111111-0000-4000-8000-00000000000a'::uuid)
+) AS a(started, later, person)
+WHERE t.slug = :'slug'
+ON CONFLICT DO NOTHING;

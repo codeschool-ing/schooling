@@ -26,10 +26,12 @@ import studentRecord, { record } from './screens/record.js';
 import schools from './screens/schools.js';
 import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
+import cohorts from './screens/cohorts.js';
 
 export const SECTIONS = [
   { id: 'funnel', name: 'The funnel', group: 'Measure', screen: funnel },
   { id: 'questions', name: 'Questions', group: 'Measure', screen: questions },
+  { id: 'cohorts', name: 'Cohorts', group: 'Measure', screen: cohorts },
   { id: 'record', name: 'Student record', group: 'Operate', screen: studentRecord },
   { id: 'schools', name: 'Schools', group: 'Operate', screen: schools },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },

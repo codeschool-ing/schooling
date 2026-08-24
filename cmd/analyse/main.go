@@ -145,6 +145,21 @@ func run(log *slog.Logger) error {
 				}
 				return out, nil
 			},
+			func(ctx context.Context, school uuid.UUID, names []string,
+				since time.Time, who analysis.Counting) ([]analysis.Active, error) {
+
+				months, err := events.Monthly(ctx, school, names, since, counting(who))
+				if err != nil {
+					return nil, err
+				}
+				out := make([]analysis.Active, 0, len(months))
+				for _, m := range months {
+					out = append(out, analysis.Active{
+						Month: m.Month, VisitorID: m.VisitorID, AccountID: m.AccountID,
+					})
+				}
+				return out, nil
+			},
 			visitor.NewStore(pool).Links,
 		)
 

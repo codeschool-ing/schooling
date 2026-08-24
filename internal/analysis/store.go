@@ -46,9 +46,10 @@ type Store struct {
 	// comment on `record`.
 	audit Audit
 
-	// The funnel's two readers. Nil until WithStream, and the funnel refuses
-	// rather than answering a report built from nothing.
+	// The stream's readers. Nil until WithStream, and the reports that need
+	// them refuse rather than answering something built from nothing.
 	reached Reached
+	monthly Monthly
 	links   Links
 }
 
@@ -57,9 +58,9 @@ type Store struct {
 // A separate call rather than constructor arguments, for the reason WithAudit
 // is one: item analysis needs neither, and a constructor that demanded all four
 // would be a constructor somebody passes nil to.
-func (s *Store) WithStream(reached Reached, links Links) *Store {
+func (s *Store) WithStream(reached Reached, monthly Monthly, links Links) *Store {
 	out := *s
-	out.reached, out.links = reached, links
+	out.reached, out.monthly, out.links = reached, monthly, links
 	return &out
 }
 

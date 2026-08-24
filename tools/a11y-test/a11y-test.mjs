@@ -808,6 +808,18 @@ try {
     await check(staff.page, `${theme} · console, the questions`, '/#/questions', '/questions',
       { base: CONSOLE, region: '#stage', settled: '.items .item' });
 
+    /* AND THE COHORTS, WHICH IS THE THIRD SCREEN IN `Measure` AND THE ONE WHOSE
+       SHAPE IS THE POINT: a triangle, where a younger intake has fewer columns
+       and the months that have not happened are drawn as nothing rather than as
+       a zero.
+
+       THE FIXTURE WRITES SIX MONTHS OF HISTORY SO THAT SHAPE EXISTS HERE. The
+       students this suite signs up all arrive today, so without it the table
+       would be one row and one column — no triangle, no empty cells, and a check
+       that passes over none of what the screen is for. */
+    await check(staff.page, `${theme} · console, the cohorts`, '/#/cohorts', '/cohorts',
+      { base: CONSOLE, region: '#stage', settled: '.cohort-table tbody tr' });
+
     /* THE HISTORY, WHICH BY NOW HAS SOMETHING IN IT: granting this operator its
        role wrote an entry, so the list is never the empty state here. The empty
        state is a paragraph and would pass every check there is, which is why

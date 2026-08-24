@@ -72,15 +72,20 @@ type UnderstandHandler struct {
 	schools   Schools
 	funnel    Funnel
 	questions Questions
+	cohorts   Cohorts
 }
 
-func NewUnderstandHandler(schools Schools, funnel Funnel, questions Questions) *UnderstandHandler {
-	return &UnderstandHandler{schools: schools, funnel: funnel, questions: questions}
+func NewUnderstandHandler(schools Schools, funnel Funnel, questions Questions,
+	cohorts Cohorts) *UnderstandHandler {
+	return &UnderstandHandler{
+		schools: schools, funnel: funnel, questions: questions, cohorts: cohorts,
+	}
 }
 
 func (h *UnderstandHandler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/funnel", h.funnelOf)
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/questions", h.questionsOf)
+	mux.HandleFunc("GET /console/api/v1/schools/{id}/cohorts", h.cohortsOf)
 }
 
 // schoolFrom resolves the id in the path, or answers the request itself.
@@ -408,4 +413,136 @@ func when(t time.Time) string {
 		return ""
 	}
 	return t.UTC().Format(time.RFC3339)
+}
+
+/* Cohorts: who started when, and what became of them.
+
+   # THE FUNNEL IS A PHOTOGRAPH AND THIS IS A FILM
+
+   That report mixes somebody who arrived yesterday with somebody who arrived a
+   year ago. Improve the first lesson in August and it barely moves, because it
+   is dominated by everybody who came before. This groups people by the month
+   they signed up and follows each group forward, so August's intake can be
+   compared with July's AT THE SAME AGE.
+
+   # ONE HALF OF THE ROADMAP'S ITEM, AND THE OTHER SAYS WHY NOT
+
+   It asks for two: by signup and by subscription start. Nothing writes a
+   subscription into the stream — there is no payment gateway — so the second
+   would be grouping by a moment nothing records. It comes back saying so, the
+   way the funnel's unmeasured steps do, rather than as an empty table that reads
+   as "nobody ever subscribed".
+*/
+
+// Cohort is one month's intake as this screen shows it.
+type Cohort struct {
+	// Month is the month they signed up, first instant, UTC.
+	Month time.Time
+
+	// People is how many signed up that month — the denominator of every cell.
+	People int
+
+	// Active is how many were still finishing sections in each month since,
+	// index 0 being the month they joined. Shorter for a younger cohort: the
+	// table is triangular because the future has not happened.
+	Active []int
+}
+
+// Cohorts is what this package may not import.
+type Cohorts func(ctx context.Context, school uuid.UUID, months int,
+	counting string) (rows []Cohort, active string, err error)
+
+type cohortBody struct {
+	Month  string `json:"month"`
+	People int    `json:"people"`
+	Active []int  `json:"active"`
+}
+
+func (h *UnderstandHandler) cohortsOf(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.schoolFrom(w, r)
+	if !ok {
+		return
+	}
+
+	counting := r.URL.Query().Get("counting")
+	if counting == "" {
+		counting = "real"
+	}
+	banner, known := populations[counting]
+	if !known {
+		web.Fail(w, http.StatusBadRequest, "not_a_population",
+			"the population is one of real, seeded or everybody — a word this does not know "+
+				"would be answered about real people under a heading saying otherwise, which is "+
+				"worse than refusing")
+		return
+	}
+
+	months, sane := monthsFrom(r)
+	if !sane {
+		web.Fail(w, http.StatusBadRequest, "not_a_window",
+			"`months` is a whole number of months between 1 and 36")
+		return
+	}
+
+	rows, active, err := h.cohorts(r.Context(), school.ID, months, counting)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading the cohorts",
+			"error", err, "school", school.Slug, "counting", counting)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return
+	}
+
+	out := make([]cohortBody, 0, len(rows))
+	for _, c := range rows {
+		one := cohortBody{Month: c.Month.UTC().Format("2006-01"), People: c.People, Active: c.Active}
+		if one.Active == nil {
+			one.Active = []int{}
+		}
+		out = append(out, one)
+	}
+
+	web.JSON(w, http.StatusOK, map[string]any{
+		"school": schoolBody{
+			ID: school.ID.String(), Slug: school.Slug, Name: school.Name, Accent: school.Accent,
+		},
+		"cohorts": out,
+		"months":  months,
+
+		// WHAT "ACTIVE" MEANS, ANSWERED RATHER THAN ASSUMED. A cohort table means
+		// whatever that word means, so a screen drawing one without saying it is
+		// a screen whose numbers cannot be argued with. It comes from the package
+		// that applied it, for the reason the item analysis's thresholds do.
+		"active": active,
+
+		"counting":    counting,
+		"banner":      banner,
+		"populations": populationOrder,
+
+		/* AND THE HALF THAT IS NOT BUILT, NAMED. `Measured` on a funnel step and
+		   this field are the same idea: an absent report and an empty one must
+		   not read alike. */
+		"by_subscription": false,
+		"why_no_subscription": "Nothing writes a subscription into the event stream yet — " +
+			"there is no payment gateway — so there is no moment to group by. This is the " +
+			"same gap that makes the funnel's last step unmeasured.",
+
+		"scope": "one school",
+	})
+}
+
+// monthsFrom reads `?months=N`, defaulting to a year and refusing the rest.
+//
+// THE CEILING IS NOT DECORATION. Each month is a column on the screen and a
+// column in every row above it; `months=100000` is a table nobody can read and a
+// response nobody asked for.
+func monthsFrom(r *http.Request) (int, bool) {
+	raw := r.URL.Query().Get("months")
+	if raw == "" {
+		return 12, true
+	}
+	n, err := strconv.Atoi(raw)
+	if err != nil || n < 1 || n > 36 {
+		return 0, false
+	}
+	return n, true
 }
