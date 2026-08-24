@@ -27,8 +27,16 @@ import schools from './screens/schools.js';
 import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
+import presence from './screens/presence.js';
 
 export const SECTIONS = [
+  /* WHO IS HERE COMES FIRST, and it is the only entry under `Measure` that is
+     not an aggregate — the group's comment below says the rail folds `watch`
+     into `understand` and the code does not. It is the question somebody opens
+     this console to ask on the way to asking anything else, and the one that is
+     worthless five minutes old, so it sits above the reports it has nothing in
+     common with rather than after them. */
+  { id: 'presence', name: 'Who is here', group: 'Measure', screen: presence },
   { id: 'funnel', name: 'The funnel', group: 'Measure', screen: funnel },
   { id: 'questions', name: 'Questions', group: 'Measure', screen: questions },
   { id: 'cohorts', name: 'Cohorts', group: 'Measure', screen: cohorts },

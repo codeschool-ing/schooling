@@ -341,7 +341,11 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			Domain: cfg.PlatformDomain,
 			Secure: cfg.Environment == config.Production,
 		}, arrived(events, log)),
-		identity.Authenticate(accounts),
+		// `schoolID` IS THE HEARTBEAT'S HALF OF THIS: the session is recorded as
+		// last seen on the school this request arrived at, which is what makes
+		// "who is here now" answerable per school. It runs after `tenant.Resolve`
+		// because that is what put the school on the context.
+		identity.Authenticate(accounts, schoolID),
 		viewingBelongsHere,
 		identity.RefuseWrites,
 	))
@@ -626,6 +630,33 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 		},
 	).Routes(staffAPI)
 
+	/* WHO IS HERE, which is the one console read that is current state rather
+	   than the event stream — `identity/presence.go` says why that is K-06 and
+	   not a hole in K-03.
+
+	   The window and the cadence come from `identity` and travel to the screen
+	   with the counts, so the two spans that make the number mean anything are
+	   never a copy inside an interface (K-16). */
+	console.NewWatchHandler(
+		console.Schools{All: schoolsFor(tenant.NewStore(pool))},
+		func(ctx context.Context) (console.Watching, error) {
+			schools, everywhere, err := accounts.Presence(ctx, identity.PresenceWindow)
+			if err != nil {
+				return console.Watching{}, err
+			}
+			out := make([]console.Here, 0, len(schools))
+			for _, one := range schools {
+				out = append(out, console.Here{School: one.School, People: one.People})
+			}
+			return console.Watching{
+				Schools:    out,
+				Everywhere: everywhere,
+				Window:     identity.PresenceWindow,
+				Cadence:    identity.PresenceCadence,
+			}, nil
+		},
+	).Routes(staffAPI)
+
 	console.NewRecordHandler(somebody, console.Records{
 		Schools:  schoolsFor(tenant.NewStore(pool)),
 		Sittings: sittingsOf(accounts),
@@ -649,7 +680,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 	consoleMux.Handle("/", console.Interface(interfaceVersion))
 
 	consoleMux.Handle("/console/api/v1/", web.Chain(staffAPI,
-		identity.Authenticate(accounts),
+		// NOWHERE, AND THAT IS AN ANSWER RATHER THAN A GAP. Staff at the console
+		// are not people present in a school, and a console left open all day
+		// would otherwise put the two people who run this platform into the
+		// presence count of whichever school they last looked at — the same
+		// mistake as a visitor row per console request, one screen along.
+		identity.Authenticate(accounts, identity.Nowhere),
 		// READ-ONLY IS THE FLOOR AND NOT THE CEILING. Everything this will grow
 		// — an export, an erasure, a parameter change — asks for more at its own
 		// route. What this says is that nobody without a live role and a second

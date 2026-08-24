@@ -692,8 +692,6 @@ try {
       await measure(student, `${theme} · exam question ${q + 1} (${kind})`);
     }
 
-    await done(student);
-
     /* ---------- the console, on its own host ----------
 
        THE SHUT DOOR FIRST, with a context that has never signed in — because
@@ -710,6 +708,25 @@ try {
 
     await check(staff.page, `${theme} · console, personal data`, '/#/people', '/people',
       { base: CONSOLE, region: '#stage' });
+    /* WHO IS HERE, AND THERE IS SOMEBODY — which is the whole reason the
+       student's context is still open at this point in the file. Presence is
+       read off `sessions.last_seen_at`, and this suite's student stopped making
+       requests several checks ago; measured cold, this screen would be four
+       zeroes and a paragraph, which passes every check there is and is not the
+       screen.
+
+       So the student is nudged first. The heartbeat writes at most once a
+       minute, so after one navigation their session is at most a minute old and
+       comfortably inside the five-minute window — and `settled` asks for the
+       LIVE tile rather than the grid, so a presence count that silently stopped
+       counting anybody fails here instead of passing as a quiet afternoon. */
+    await student.goto(`${BASE}/#/dashboard`, { waitUntil: 'load' });
+    await student.waitForSelector('#stage[data-screen="/dashboard"]', { timeout: 8000 });
+    await done(student);
+
+    await check(staff.page, `${theme} · console, who is here`, '/#/presence', '/presence',
+      { base: CONSOLE, region: '#stage', settled: '.here-live' });
+
 
     /* AND THE SCREEN WITH SOMEBODY ON IT, which is the one this section is
        about: a table of counts, a link that hands over everything held, and a

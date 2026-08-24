@@ -86,14 +86,14 @@ func TestATokenThatWasNeverRedeemedIsNotASession(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, _, err := store.Verify(ctx, token); !errors.Is(err, identity.ErrNoSession) {
+	if _, _, err := store.Verify(ctx, token, nil); !errors.Is(err, identity.ErrNoSession) {
 		t.Errorf("an unredeemed viewing verified as a session: %v", err)
 	}
 
 	if err := store.RedeemViewing(ctx, token); err != nil {
 		t.Fatal(err)
 	}
-	who, seeing, err := store.Verify(ctx, token)
+	who, seeing, err := store.Verify(ctx, token, nil)
 	if err != nil {
 		t.Fatalf("a redeemed viewing did not verify: %v", err)
 	}
@@ -124,7 +124,7 @@ func TestAnOrdinarySessionIsNotAViewing(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, seeing, err := store.Verify(ctx, token)
+	_, seeing, err := store.Verify(ctx, token, nil)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -309,13 +309,36 @@ func newToken() (string, error) {
 	return base64.RawURLEncoding.EncodeToString(raw), nil
 }
 
-// Verify answers whose session this token is.
+// Verify answers whose session this token is, and records that it was seen.
 //
-// It moves `last_seen_at` at most once an hour, for the same reason the visitor
-// does: this is the busiest read path there will be, and turning it into a
-// write on every request is amplification for a column nobody reads to the
-// minute.
-func (s *Store) Verify(ctx context.Context, token string) (Account, Viewing, error) {
+// # THE HEARTBEAT IS A MINUTE, AND IT USED TO BE AN HOUR (K-06)
+//
+// An hour was right for the question `last_seen_at` was written for — "is this
+// session still in use", asked of a person's own list of sittings, where an
+// hour is more precision than anybody wants. It cannot answer "is somebody here
+// now", which is what the console's `Watch` asks: a timestamp allowed to be
+// fifty-nine minutes stale reports an empty platform at its busiest, and
+// reports it confidently.
+//
+// It is still not a write per request. The condition below IS the rate limit,
+// it lives in the database rather than in this process — so it holds across
+// every instance instead of once per instance — and it rides the query that
+// authenticates, so the busiest read path in the system gains no round trip
+// for it.
+//
+// # `at` IS WHICH SCHOOL THIS REQUEST ARRIVED AT
+//
+// Nil on the console's host and on the platform's own address. Nil does not
+// erase what is there: somebody who reads the landing page between two lessons
+// must not vanish from the school they are studying in, which is what the
+// COALESCE is for. A session that has never touched a school therefore stays
+// null and is present nowhere, rather than being present in the last school
+// anybody happened to be in.
+//
+// The second half of the condition is what makes a brand-new session appear
+// immediately. Without it the first minute of every visit would be spent
+// invisible, which for a lesson somebody opens and abandons is most of it.
+func (s *Store) Verify(ctx context.Context, token string, at *uuid.UUID) (Account, Viewing, error) {
 	if token == "" {
 		return Account{}, Viewing{}, ErrNoSession
 	}
@@ -335,14 +358,17 @@ func (s *Store) Verify(ctx context.Context, token string) (Account, Viewing, err
 			WHERE token_hash = $1 AND revoked_at IS NULL AND expires_at > now()
 			  AND (viewed_by IS NULL OR redeemed_at IS NOT NULL)
 		), touched AS (
-			UPDATE sessions SET last_seen_at = now()
-			WHERE id IN (SELECT id FROM live) AND last_seen_at < now() - interval '1 hour'
+			UPDATE sessions
+			SET last_seen_at = now(), last_seen_tenant = COALESCE($2::uuid, last_seen_tenant)
+			WHERE id IN (SELECT id FROM live)
+			  AND (last_seen_at < now() - interval '1 minute'
+			       OR ($2::uuid IS NOT NULL AND last_seen_tenant IS NULL))
 			RETURNING id
 		)
 		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.created_at,
 		       live.viewed_by, live.viewing_tenant
 		FROM live JOIN accounts a ON a.id = live.account_id
-	`, tokenHash(token)).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
+	`, tokenHash(token), at).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
 		&out.Synthetic, &out.CreatedAt, &by, &school)
 
 	if errors.Is(err, pgx.ErrNoRows) {

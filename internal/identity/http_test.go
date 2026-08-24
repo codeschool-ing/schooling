@@ -19,7 +19,7 @@ func server(t *testing.T, store *identity.Store, signedUp identity.SignedUp) htt
 	t.Helper()
 	mux := http.NewServeMux()
 	identity.NewHandler(store, identity.Settings{}, signedUp).Routes(mux)
-	return web.Chain(mux, identity.Authenticate(store))
+	return web.Chain(mux, identity.Authenticate(store, identity.Nowhere))
 }
 
 func post(t *testing.T, h http.Handler, path string, body any, cookies ...*http.Cookie) *httptest.ResponseRecorder {
@@ -190,7 +190,7 @@ func TestAnAnonymousRequestPassesThroughAndIsRefusedOnlyWhereItSaysSo(t *testing
 			t.Error("an anonymous request carried an account")
 		}
 		w.WriteHeader(http.StatusOK)
-	}), identity.Authenticate(store))
+	}), identity.Authenticate(store, identity.Nowhere))
 
 	rec := httptest.NewRecorder()
 	open.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/v1/catalogue", nil))
@@ -202,7 +202,7 @@ func TestAnAnonymousRequestPassesThroughAndIsRefusedOnlyWhereItSaysSo(t *testing
 	guarded := web.Chain(identity.Require(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		t.Error("a guarded route ran with nobody signed in")
 		w.WriteHeader(http.StatusOK)
-	})), identity.Authenticate(store))
+	})), identity.Authenticate(store, identity.Nowhere))
 
 	rec = httptest.NewRecorder()
 	guarded.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/v1/progress", nil))
