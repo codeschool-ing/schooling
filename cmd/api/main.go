@@ -226,6 +226,21 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 			}
 			return out, nil
 		},
+		func(ctx context.Context, school uuid.UUID, names []string,
+			since time.Time, who analysis.Counting) ([]analysis.Active, error) {
+
+			months, err := events.Monthly(ctx, school, names, since, counting(who))
+			if err != nil {
+				return nil, err
+			}
+			out := make([]analysis.Active, 0, len(months))
+			for _, m := range months {
+				out = append(out, analysis.Active{
+					Month: m.Month, VisitorID: m.VisitorID, AccountID: m.AccountID,
+				})
+			}
+			return out, nil
+		},
 		visitor.NewStore(pool).Links,
 	)
 	withdrawn := func(ctx context.Context, school uuid.UUID) (map[analysis.Question]bool, error) {
@@ -538,6 +553,37 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config) http.Handle
 				ComputedAt: at,
 				Computed:   computed,
 			}, nil
+		},
+
+		/* AND THE THIRD REPORT: who started when, and what became of them.
+
+		   `now` IS PASSED IN because the width of that table is a fact about the
+		   calendar — how far a cohort has been followed is how much time has
+		   passed since it started. The first version derived it from the newest
+		   INTAKE, which renders perfectly and is wrong: a school whose last
+		   signup was in March would show every cohort one month wide.
+
+		   WHAT "ACTIVE" MEANS COMES BACK WITH THE NUMBERS, for the reason the
+		   item analysis's thresholds do — a table that means whatever that word
+		   means, drawn without saying it, is a table nobody can argue with. */
+		func(ctx context.Context, school uuid.UUID, months int,
+			word string) ([]console.Cohort, string, error) {
+
+			who, known := analysis.Reading(word)
+			if !known {
+				return nil, "", fmt.Errorf("%q is not a population this counts", word)
+			}
+			rows, err := items.Cohorts(ctx, school, months, time.Now().UTC(), who)
+			if err != nil {
+				return nil, "", err
+			}
+			out := make([]console.Cohort, 0, len(rows))
+			for _, c := range rows {
+				out = append(out, console.Cohort{
+					Month: c.Month, People: c.People, Active: c.Active,
+				})
+			}
+			return out, analysis.ActiveEvent, nil
 		},
 	).Routes(staffAPI)
 

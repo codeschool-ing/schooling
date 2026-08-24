@@ -22,6 +22,7 @@ func funnelOver(t *testing.T, pool *pgxpool.Pool,
 			analysis.Counting) ([]analysis.Reach, error) {
 			return reaches, nil
 		},
+		nil, // the funnel does not read months; `cohort_test.go` covers that reader
 		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil },
 	)
 }
@@ -253,6 +254,7 @@ func TestThePopulationAskedForIsThePopulationRead(t *testing.T) {
 				asked = w
 				return nil, nil
 			},
+			nil,
 			func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return nil, nil },
 		)
 

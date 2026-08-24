@@ -437,3 +437,67 @@ func (s *Store) Reached(ctx context.Context, tenantID uuid.UUID,
 	}
 	return out, rows.Err()
 }
+
+// Active is one identity that did something in one month.
+type Active struct {
+	// Month is the first instant of the month, in UTC.
+	Month     time.Time
+	VisitorID *uuid.UUID
+	AccountID *uuid.UUID
+}
+
+// Monthly answers which identities did one of the named things, in which month.
+//
+// # IT IS A SEPARATE READER FROM `Reached` AND NOT A WIDER ONE
+//
+// That query is `SELECT DISTINCT name, visitor_id, account_id`, and the DISTINCT
+// is what makes a funnel cheap: forty lessons opened collapse into one row before
+// they ever reach Go. Adding a timestamp to it would collapse nothing — every
+// event would come back — and the funnel would start paying for a column it does
+// not read. So the collapse happens here too, at the grain this question needs:
+// one row per identity per MONTH.
+//
+// # THE MONTH IS UTC, SAID OUT LOUD
+//
+// `date_trunc` uses the session's time zone, which is a setting rather than a
+// decision — and a cohort boundary that moves with a connection parameter would
+// put somebody who signed up at half past eleven on the 31st into a different
+// cohort depending on which server asked. So the conversion is explicit and the
+// answer is a plain timestamp: this is a bucket, not a moment.
+//
+// # WHAT COUNTS AS A MONTH'S ACTIVITY IS THE CALLER'S
+//
+// The names come in, as they do for `Reached`. This package does not know what a
+// cohort is; it reports the stream at a grain and something else decides what
+// the grain means.
+func (s *Store) Monthly(ctx context.Context, tenantID uuid.UUID,
+	names []string, since time.Time, who Counting) ([]Active, error) {
+
+	if len(names) == 0 {
+		return nil, nil
+	}
+
+	// See `ItemAnswers` for why this one predicate is formatted in.
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT
+		       date_trunc('month', occurred_at AT TIME ZONE 'UTC') AS month,
+		       visitor_id, account_id
+		FROM events
+		WHERE name = ANY($1) AND tenant_id = $2 AND occurred_at >= $3
+		  AND `+who.counts()+`
+	`, names, tenantID, since)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading who was active in which month: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Active
+	for rows.Next() {
+		var a Active
+		if err := rows.Scan(&a.Month, &a.VisitorID, &a.AccountID); err != nil {
+			return nil, fmt.Errorf("event: reading who was active in which month: %w", err)
+		}
+		out = append(out, a)
+	}
+	return out, rows.Err()
+}

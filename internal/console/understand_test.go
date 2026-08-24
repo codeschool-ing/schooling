@@ -33,6 +33,11 @@ type funnelFake struct {
 	// The item analysis this fake answers with, and whether it was asked at all.
 	rollup console.Rollup
 	asked  bool
+
+	// The cohorts, and what the seam was asked for.
+	table        []console.Cohort
+	askedMonths  int
+	askedCohorts string
 }
 
 func (f *funnelFake) handler() http.Handler {
@@ -59,6 +64,15 @@ func (f *funnelFake) handler() http.Handler {
 				return console.Rollup{}, fmt.Errorf("the rollup is not there")
 			}
 			return f.rollup, nil
+		},
+		func(_ context.Context, _ uuid.UUID, months int,
+			counting string) ([]console.Cohort, string, error) {
+
+			f.askedMonths, f.askedCohorts = months, counting
+			if f.fail {
+				return nil, "", fmt.Errorf("the stream is not there")
+			}
+			return f.table, "section.completed", nil
 		},
 	).Routes(mux)
 	return mux
@@ -402,5 +416,155 @@ func TestQuestionsOfASchoolThatDoesNotExist(t *testing.T) {
 	}
 	if f.asked {
 		t.Error("the rollup was read for a school that does not exist")
+	}
+}
+
+/* ---------- who started when ---------- */
+
+func askCohorts(t *testing.T, f *funnelFake, school uuid.UUID, query string) (int, map[string]any) {
+	t.Helper()
+	r := httptest.NewRequest(http.MethodGet,
+		"/console/api/v1/schools/"+school.String()+"/cohorts"+query, nil)
+	w := httptest.NewRecorder()
+	f.handler().ServeHTTP(w, r)
+
+	var body map[string]any
+	if err := json.Unmarshal(w.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v — %s", err, w.Body.String())
+	}
+	return w.Code, body
+}
+
+func aTable() []console.Cohort {
+	return []console.Cohort{
+		{Month: time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC), People: 40, Active: []int{31, 18, 11}},
+		{Month: time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC), People: 52, Active: []int{44, 25}},
+		{Month: time.Date(2026, 5, 1, 0, 0, 0, 0, time.UTC), People: 61, Active: []int{50}},
+	}
+}
+
+// A MONTH IS A BUCKET AND NOT A MOMENT, and the wire says so: `2026-03`, not an
+// instant with a timezone on it that a browser would render in its own.
+func TestACohortsMonthIsABucketAndNotAnInstant(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, table: aTable()}
+
+	code, body := askCohorts(t, f, school.ID, "")
+	if code != http.StatusOK {
+		t.Fatalf("the cohorts answered %d: %v", code, body)
+	}
+	rows, _ := body["cohorts"].([]any)
+	if len(rows) != 3 {
+		t.Fatalf("three cohorts went in and %d came out", len(rows))
+	}
+	first, _ := rows[0].(map[string]any)
+	if first["month"] != "2026-03" {
+		t.Errorf("the month came back as %v, want a bucket like 2026-03", first["month"])
+	}
+}
+
+// THE TRIANGLE SURVIVES THE WIRE. A younger cohort has fewer months, and padding
+// it out on the way to the browser would draw a cliff where nothing has happened
+// yet — the same mistake as reporting an unmeasured funnel step as zero.
+func TestAYoungerCohortStaysShorterInTheAnswer(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, table: aTable()}
+
+	_, body := askCohorts(t, f, school.ID, "")
+	rows, _ := body["cohorts"].([]any)
+
+	want := []int{3, 2, 1}
+	for i, n := range want {
+		row, _ := rows[i].(map[string]any)
+		active, _ := row["active"].([]any)
+		if len(active) != n {
+			t.Errorf("cohort %d carries %d months, want %d — the table is triangular "+
+				"because the future has not happened", i, len(active), n)
+		}
+	}
+}
+
+// WHAT "ACTIVE" MEANS COMES BACK WITH THE NUMBERS. A cohort table means whatever
+// that word means, so a screen drawing one without saying it is a screen whose
+// numbers cannot be argued with. It is the same rule as the item analysis's
+// thresholds, one report over.
+func TestTheCohortsSayWhatCountsAsActive(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, table: aTable()}
+
+	_, body := askCohorts(t, f, school.ID, "")
+	if body["active"] != "section.completed" {
+		t.Errorf("the answer says activity is %v, and the screen would have to guess",
+			body["active"])
+	}
+}
+
+// THE HALF THAT IS NOT BUILT SAYS SO. Grouping by subscription start needs a
+// subscription in the stream and there is none — and an empty table would read
+// as "nobody ever subscribed", which is a claim about students rather than about
+// a missing payment gateway.
+func TestGroupingBySubscriptionSaysItIsNotBuiltRatherThanEmpty(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, table: aTable()}
+
+	_, body := askCohorts(t, f, school.ID, "")
+	if body["by_subscription"] != false {
+		t.Errorf("the answer claims cohorts by subscription: %v", body["by_subscription"])
+	}
+	if why, _ := body["why_no_subscription"].(string); why == "" {
+		t.Error("the half that is missing came back with nothing saying why")
+	}
+}
+
+// The population switch is the funnel's, on this report too — it reads the same
+// stream and may be told to look at the seeded students for the same reason.
+func TestTheCohortsCarryThePopulationTheyWereAskedFor(t *testing.T) {
+	school := oneSchool()
+
+	for _, who := range []string{"real", "seeded", "everybody"} {
+		f := &funnelFake{schools: []console.School{school}, table: aTable()}
+		code, body := askCohorts(t, f, school.ID, "?counting="+who)
+		if code != http.StatusOK {
+			t.Fatalf("%q answered %d", who, code)
+		}
+		if f.askedCohorts != who {
+			t.Errorf("asked for %q and the seam was told %q", who, f.askedCohorts)
+		}
+		if body["counting"] != who {
+			t.Errorf("asked for %q and the answer says %v", who, body["counting"])
+		}
+	}
+
+	f := &funnelFake{schools: []console.School{school}, table: aTable()}
+	if code, _ := askCohorts(t, f, school.ID, "?counting=everbody"); code != http.StatusBadRequest {
+		t.Errorf("a misspelt population answered %d", code)
+	}
+	if f.askedCohorts != "" {
+		t.Error("it was refused and the cohorts were read anyway")
+	}
+}
+
+// A CEILING ON THE MONTHS, because each one is a column on the screen and a
+// column in every row above it. `months=100000` is a table nobody can read.
+func TestTheNumberOfMonthsIsBoundedAndDefaulted(t *testing.T) {
+	school := oneSchool()
+
+	f := &funnelFake{schools: []console.School{school}, table: aTable()}
+	if code, _ := askCohorts(t, f, school.ID, ""); code != http.StatusOK {
+		t.Fatalf("asking for nothing answered %d", code)
+	}
+	if f.askedMonths != 12 {
+		t.Errorf("the default is %d months, want a year", f.askedMonths)
+	}
+
+	for _, bad := range []string{"?months=0", "?months=-3", "?months=100000", "?months=soon"} {
+		f := &funnelFake{schools: []console.School{school}, table: aTable()}
+		if code, _ := askCohorts(t, f, school.ID, bad); code != http.StatusBadRequest {
+			t.Errorf("%q answered %d", bad, code)
+		}
+		if f.askedMonths != 0 {
+			t.Errorf("%q was refused and the cohorts were read anyway, over %d months",
+				bad, f.askedMonths)
+		}
 	}
 }
