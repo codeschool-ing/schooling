@@ -100,6 +100,14 @@ var Registry = []Table{
 		Why: "the addresses schools answer at",
 	},
 	{
+		Name: "school_prices", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "what a school has asked for a subscription, and since when. It is our offer " +
+			"rather than anybody's data, and it is append-only for the reason a March " +
+			"invoice has to stay explicable in November (K-14) — an erasure that could " +
+			"take a price row with it would be a person's request deleting the answer to " +
+			"why somebody else was charged what they were",
+	},
+	{
 		Name: "accounts", Holds: HoldsIdentifying, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "the e-mail and the name. It is the row that makes every account_id in the database " +
 			"mean a person, so deleting it is what the whole erase path is for",

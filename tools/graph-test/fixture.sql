@@ -42,12 +42,21 @@
    The site and the price are set for the same reason: the account menu's link
    and the invitation's amount were a competitor's address and one school's
    `R$ 490` until they came from here. */
-INSERT INTO tenants (slug, name, accent, site, plan_price_cents, plan_currency)
-VALUES (:'slug', 'Programming', '#14a06a', 'https://example.tld', 32000, 'EUR')
+INSERT INTO tenants (slug, name, accent, site)
+VALUES (:'slug', 'Programming', '#14a06a', 'https://example.tld')
 ON CONFLICT (slug) DO UPDATE SET
-  accent = EXCLUDED.accent, site = EXCLUDED.site,
-  plan_price_cents = EXCLUDED.plan_price_cents,
-  plan_currency = EXCLUDED.plan_currency;
+  accent = EXCLUDED.accent, site = EXCLUDED.site;
+
+/* THE PRICE IS A ROW OF ITS OWN, and it is not `ON CONFLICT`-ed: the table is
+   append-only by trigger (K-14), so a second run of this fixture would be
+   refused if it tried to update one and would pile up rows if it simply
+   inserted. It writes one only when the school has none, which makes running
+   this twice the same as running it once — which is what every other statement
+   in this file already promises. */
+INSERT INTO school_prices (tenant_id, cents, currency)
+SELECT t.id, 32000, 'EUR' FROM tenants t
+WHERE t.slug = :'slug'
+  AND NOT EXISTS (SELECT 1 FROM school_prices p WHERE p.tenant_id = t.id);
 
 /* THE IDS ARE OPAQUE AND THE SLUGS ARE READABLE, exactly as the loader writes
    them — a fixture that used the slug as the id would exercise a shape the
