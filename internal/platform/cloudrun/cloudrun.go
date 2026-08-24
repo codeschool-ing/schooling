@@ -176,7 +176,7 @@ func (r *Runner) Start(ctx context.Context, job string) error {
 	if err != nil {
 		return fmt.Errorf("cloudrun: asking for a run of %q: %w", job, err)
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	if res.StatusCode == http.StatusNotFound {
 		return fmt.Errorf("%w: %q", ErrNoSuchJob, job)
@@ -232,9 +232,9 @@ func (r *Runner) metadataValue(ctx context.Context, path string) (string, error)
 	if err != nil {
 		// Unreachable is the ordinary case off Google and is not worth a
 		// distinct error type: what the caller does about it is the same.
-		return "", fmt.Errorf("%w: %v", ErrNotOnCloudRun, err)
+		return "", fmt.Errorf("%w: %w", ErrNotOnCloudRun, err)
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	if res.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("%w: the metadata server answered %s for %s",
