@@ -60,6 +60,7 @@ jobs:
     outputs:
       go: ${{ steps.what.outputs.go }}
       browser: ${{ steps.what.outputs.browser }}
+      infra: ${{ steps.what.outputs.infra }}
     steps:
       # The whole history, because the diff is against the base commit and a
       # shallow clone does not have it.
@@ -75,6 +76,7 @@ jobs:
           everything() {
             echo "go=true"      >> "$GITHUB_OUTPUT"
             echo "browser=true" >> "$GITHUB_OUTPUT"
+            echo "infra=true"   >> "$GITHUB_OUTPUT"
             echo "$1"
             exit 0
           }
@@ -102,7 +104,14 @@ jobs:
           # the ones it actually runs.
           browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
 
-          for name in go browser; do
+          # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
+          # not the Go, not the content, not the workflows it deploys from — so
+          # its own directory is the whole of what can break it. The paragraph
+          # above about failing open still governs: a push, a release and a diff
+          # that cannot be computed run this like everything else.
+          infra='^(infra/|\.github/workflows/ci\.yml$)'
+
+          for name in go browser infra; do
             eval "pattern=\$$name"
             if printf '%s\n' "$changed" | grep -Eq "$pattern"; then
               echo "$name=true" >> "$GITHUB_OUTPUT"
@@ -282,6 +291,86 @@ jobs:
       # crossed" rather than as a test somewhere in a list.
       - name: The module boundaries hold
         run: go test -run 'TestPlatformImportsNothing|TestNoModuleImportsAnotherModule' -v ./internal/
+
+  # WHETHER THE INFRASTRUCTURE IS EVEN VALID.
+  #
+  # IT WAS NOT CHECKED BY ANYTHING, and `infra/` is a fifth of this repository:
+  # the service, the jobs, the database, the service accounts, the federation
+  # GitHub authenticates through and the monitoring that reaches a phone when
+  # the console is down. A syntax error in any of it was found by an `apply` —
+  # which is to say, by somebody at a terminal, during the deploy they were in
+  # the middle of.
+  #
+  # That is the one shape this repository refuses everywhere else. Every claim
+  # here is held by a check: the catalogue by `validate-content`, the strings by
+  # `check-interface`, the stylesheets by `check-css`, the module boundaries by
+  # a test. The infrastructure was the piece that was only ever argued for in
+  # prose.
+  #
+  # `validate` AND NOT `plan`. A plan needs credentials and a state file, and it
+  # asks Google what exists today — which is a different question from "is this
+  # configuration coherent", and one no pull request should be able to ask. What
+  # this catches is the class it can catch without touching the account: a
+  # reference to a resource that is not there, an argument the provider does not
+  # have, a type that does not match. Whether the plan is the one you wanted is
+  # still somebody reading it.
+  Infra:
+    needs: Changes
+    if: needs.Changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # THE RUNNER'S OWN TERRAFORM, AND NO THIRD-PARTY ACTION.
+      #
+      # `hashicorp/setup-terraform` is the obvious step here and it is one more
+      # action in the supply chain of a workflow that authenticates to Google —
+      # this repository pins every action it uses to a commit for exactly that
+      # reason, and the way to need one fewer pin is to need one fewer action.
+      #
+      # THE VERSION IS PRINTED RATHER THAN CHOSEN, and that is a real trade
+      # said out loud. Pinning would make this reproducible; not pinning means a
+      # runner image upgrade can change what validated. It is acceptable HERE
+      # and would not be in the deploy: `validate` asks whether the
+      # configuration is coherent against the provider's schema, and a newer
+      # Terraform accepting the same files is the outcome either way. What
+      # applies to the account is a person at a terminal, with their own
+      # version, which this job never speaks for.
+      - name: Terraform
+        run: |
+          set -euo pipefail
+          if ! command -v terraform >/dev/null; then
+            # The branch for the day the image stops carrying it, so this
+            # reports on the configuration rather than on the machine.
+            wget -qO- https://apt.releases.hashicorp.com/gpg \
+              | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp.gpg
+            echo "deb [signed-by=/usr/share/keyrings/hashicorp.gpg]" \
+              "https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+              | sudo tee /etc/apt/sources.list.d/hashicorp.list
+            sudo apt-get update -qq
+            sudo apt-get install -y terraform
+          fi
+          terraform version
+
+      # FORMATTING FIRST, because it is the check that fails on a diff nobody
+      # meant to make. `-recursive` because `infra/` will grow modules, and a
+      # check that stopped at the top level would pass over them silently.
+      - name: The formatting
+        working-directory: infra
+        run: terraform fmt -check -recursive -diff
+
+      # `-backend=false` IS WHAT MAKES THIS RUNNABLE WITHOUT THE ACCOUNT. It
+      # downloads the providers and skips the state entirely, which is exactly
+      # the split this job wants: the provider schema is what validates the
+      # configuration, and the state is what would need credentials.
+      - name: The providers
+        working-directory: infra
+        run: terraform init -backend=false -input=false
+
+      - name: It is valid
+        working-directory: infra
+        run: terraform validate
 
   # WHAT ONLY A REAL BROWSER CAN ANSWER, and its own job for two reasons: it
   # needs one, which is a minute of setup the Go job should not pay for; and
