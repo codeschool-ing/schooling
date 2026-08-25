@@ -1,6 +1,10 @@
 package ui_test
 
 import (
+	"bytes"
+	"context"
+	"crypto/sha256"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -288,4 +292,107 @@ func excerpt(document string, at int) string {
 	start := max(at-60, 0)
 	end := min(at+60, len(document))
 	return document[start:end]
+}
+
+/* ---------- the one asset that is a school's own ---------- */
+
+// A school with an icon gets it; a school without gets the platform's; and a
+// request with no school at all gets the platform's too.
+func TestTheIconIsTheSchoolsWhenTheSchoolHasOne(t *testing.T) {
+	for _, c := range []struct {
+		name string
+		slug string
+		want string
+	}{
+		{"a school with an icon", "math", "assets/favicon-math.svg"},
+		{"another one", "chemistry", "assets/favicon-chemistry.svg"},
+		{"a school without one", "code", "assets/favicon.svg"},
+		{"no school at all", "", "assets/favicon.svg"},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			rec := httptest.NewRecorder()
+			ui.Icon("v1.0.0", func(context.Context) string { return c.slug }).
+				ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/assets/favicon.svg", nil))
+
+			if rec.Code != http.StatusOK {
+				t.Fatalf("answered %d", rec.Code)
+			}
+			want, err := ui.Files.ReadFile(c.want)
+			if err != nil {
+				t.Fatalf("reading %s: %v", c.want, err)
+			}
+			if !bytes.Equal(rec.Body.Bytes(), want) {
+				t.Errorf("the bytes served are not %s", c.want)
+			}
+			if got := rec.Header().Get("Content-Type"); got != "image/svg+xml" {
+				t.Errorf("Content-Type = %q, want image/svg+xml", got)
+			}
+		})
+	}
+}
+
+/*
+AND THE ICONS ARE ACTUALLY DIFFERENT FILES.
+
+	The test above compares what was served against what is embedded, so it
+	would pass just as happily if every one of those files held identical
+	bytes — which is exactly what a copy-paste that forgot to change the shape
+	produces, and it would show as two schools with the same mark and nothing
+	failing anywhere.
+*/
+func TestNoTwoSchoolsShareAMark(t *testing.T) {
+	seen := map[string]string{}
+
+	for _, name := range []string{
+		"assets/favicon.svg", "assets/favicon-math.svg", "assets/favicon-chemistry.svg",
+	} {
+		icon, err := ui.Files.ReadFile(name)
+		if err != nil {
+			t.Fatalf("reading %s: %v", name, err)
+		}
+		sum := fmt.Sprintf("%x", sha256.Sum256(icon))
+		if other, twice := seen[sum]; twice {
+			t.Errorf("%s and %s are the same bytes", name, other)
+		}
+		seen[sum] = name
+	}
+}
+
+// A SLUG IS NOT A PATH. It comes from the database, which constrains it, and
+// this is the second fence — the argument is a string and the result is a file
+// name, which is the shape of every path traversal there has ever been.
+func TestASlugThatIsNotOneCannotChooseAFile(t *testing.T) {
+	platform, err := ui.Files.ReadFile("assets/favicon.svg")
+	if err != nil {
+		t.Fatalf("reading the platform's mark: %v", err)
+	}
+
+	for _, slug := range []string{
+		"../../go.mod", "..", "math/../../go.sum", "MATH", "a b", "",
+		strings.Repeat("x", 64),
+	} {
+		rec := httptest.NewRecorder()
+		ui.Icon("v1.0.0", func(context.Context) string { return slug }).
+			ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/assets/favicon.svg", nil))
+
+		if rec.Code != http.StatusOK || !bytes.Equal(rec.Body.Bytes(), platform) {
+			t.Errorf("a slug of %q answered %d with %d bytes, and should have answered "+
+				"the platform's own mark", slug, rec.Code, rec.Body.Len())
+		}
+	}
+}
+
+// An unstamped build offers no validator, here as everywhere else: every such
+// build calls itself `dev`, so an ETag would let a browser keep the first icon
+// it ever saw and revalidate it happily against every later one.
+func TestAnUnstampedBuildOffersNoEtagForTheIcon(t *testing.T) {
+	rec := httptest.NewRecorder()
+	ui.Icon("", nil).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/assets/favicon.svg", nil))
+
+	if got := rec.Header().Get("ETag"); got != "" {
+		t.Errorf("an unstamped build offered %q as a validator", got)
+	}
+	if got := rec.Header().Get("Cache-Control"); got != "no-store" {
+		t.Errorf("Cache-Control = %q, want no-store", got)
+	}
 }

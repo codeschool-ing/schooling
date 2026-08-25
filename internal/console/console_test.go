@@ -167,3 +167,49 @@ func TestAnUnstampedConsoleOffersNoETag(t *testing.T) {
 		t.Errorf("Cache-Control %q, want no-store", got)
 	}
 }
+
+/*
+AND THE ICON IS THE CONSOLE'S OWN, WHICH IS THE OPPOSITE RULE.
+
+	The stylesheet above is shared because two copies of a design token set is
+	two chances to disagree. An icon is the other thing entirely: it is what
+	somebody picks out of a row of twelve tabs, and a console that wore the
+	study interface's mark would be indistinguishable from the school it
+	administers — at exactly the moment when knowing which one you are looking
+	at matters most.
+
+	The console had NO icon at all until this test existed, which is how it went
+	unnoticed: a tab with the browser's blank glyph reads as a tab that has not
+	finished loading.
+*/
+func TestTheConsoleWearsItsOwnMark(t *testing.T) {
+	rec := httptest.NewRecorder()
+	console.Interface("v1.2.3").ServeHTTP(rec,
+		httptest.NewRequest(http.MethodGet, "/assets/favicon.svg", nil))
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("the icon answered %d, want 200", rec.Code)
+	}
+
+	theirs, err := ui.Files.ReadFile("assets/favicon.svg")
+	if err != nil {
+		t.Fatalf("reading the study interface's mark: %v", err)
+	}
+	if rec.Body.String() == string(theirs) {
+		t.Error("the console is wearing the study interface's mark, so a console tab and " +
+			"a school tab are the same picture")
+	}
+}
+
+// AND THE SHELL ASKS FOR IT. A file nobody links to is a file nobody sees, and
+// the browser's fallback for a missing declaration is `/favicon.ico`, which
+// this handler answers with a 404.
+func TestTheConsoleShellDeclaresItsIcon(t *testing.T) {
+	rec := httptest.NewRecorder()
+	console.Interface("v1.2.3").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+
+	if !strings.Contains(rec.Body.String(), `rel="icon"`) {
+		t.Error("the console's shell declares no icon, so the tab shows the browser's " +
+			"blank glyph — which reads as a page that never finished loading")
+	}
+}

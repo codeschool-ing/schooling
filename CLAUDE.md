@@ -1056,6 +1056,39 @@ number.
 
 ---
 
+## A school's face, and only the face
+
+Every asset is shared between the schools except one: `assets/favicon.svg`. `ui.Icon` answers it
+with `assets/favicon-<slug>.svg` when that file is embedded, and with the platform's own mark
+when it is not — which is the right fallback rather than a placeholder, because what a student
+is looking at IS this platform.
+
+**It is a second handler, mounted on its own path.** Deciding which icon means knowing which
+school, which is a query against `tenant_domains`; `ui.Handler` serves the shell and every
+script on every page load, and putting a query in front of all of that to settle one image would
+be paying for an answer on every request that never asks. `tenant.Resolve` therefore sits in
+front of that one route and no other outside `/api/v1/`. A browser asks for a favicon about once
+per origin.
+
+**The school is resolved and never parsed out of the host.** `math.example.tld` looks like it
+says `math`, and reading it that way would be a second rule for something K-17 already decides —
+wrong on the first school that brings its own domain, which is the case the whole design exists
+for.
+
+**The console wears its own**, out of its own tree, and that is the opposite rule from
+`base.css`: a stylesheet is shared because two copies of a token set are two chances to
+disagree, and an icon is what somebody picks out of a row of twelve tabs. It had none at all
+until a test asked for one — a tab with the browser's blank glyph reads as a page that never
+finished loading.
+
+**Redrawn, never traced.** The marks arrive as JPEGs of neon signs; a JPEG is pixels and an SVG
+is geometry, so there is no conversion, only a redraw. The glow goes: it is the first thing to
+disappear at sixteen pixels. So did a gamepad, on the console's — at that size it fused with the
+box beside it into one smudge. **Render an icon at the size it is used at**, or that is found by
+somebody else.
+
+---
+
 ## The logger's field names are Google's
 
 `internal/platform/logs` builds the logger, and every command takes it from there. It writes
