@@ -1056,6 +1056,35 @@ number.
 
 ---
 
+## The logger's field names are Google's
+
+`internal/platform/logs` builds the logger, and every command takes it from there. It writes
+`severity` and `message` rather than `slog`'s own `level` and `msg`, because those are the two
+fields Cloud Logging actually reads.
+
+**It was four calls to `slog.New` and they agreed**, which is the state in which nobody notices
+they are four things — and all four were wrong the same way. A payload calling it `level` is a
+payload with **no severity**, so every line this platform had ever written, warnings and errors
+included, was filed as the default.
+
+**That is not cosmetic.** K-08 puts operational alerts outside the console because they have to
+reach a phone when the console is down; the place they live instead is Google's alerting, and
+what it filters on is `severity`. "Alert me when the server logs an error" was not a policy
+anybody could have written, and the night it was needed is when that would have been found. It
+turned up by accident, reading a log for something else — which is the only way a defect like
+this is ever found.
+
+`TestEveryCommandTakesItsLoggerFromOnePlace` fails on a fifth command copying the old line.
+Tests may build their own: a logger writing to a buffer has nothing to do with how a deployment
+is watched.
+
+`time` is deliberately left alone. Cloud Logging would read a `timestamp` field, and renaming
+ours moves each entry's official time from when the platform received the line to when the
+process wrote it — milliseconds, bought with a new way to be wrong, since a timestamp it cannot
+parse is an entry it rejects.
+
+---
+
 ## Money
 
 **Every amount is an integer number of cents, and `billing.Money` is the only way to hold one.**

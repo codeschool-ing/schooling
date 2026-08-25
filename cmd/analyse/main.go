@@ -56,11 +56,12 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
+	"github.com/codeschool-ing/schooling/internal/platform/logs"
 	"github.com/codeschool-ing/schooling/internal/visitor"
 )
 
 func main() {
-	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	log := logs.New(os.Stdout)
 
 	if err := run(log); err != nil {
 		log.Error("the analysis failed", "error", err)

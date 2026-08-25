@@ -41,6 +41,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
+	"github.com/codeschool-ing/schooling/internal/platform/logs"
 )
 
 // A list of lines as the mirror wants it: never nil.
@@ -64,7 +65,7 @@ func sorted[V any](m map[string]V) []string {
 }
 
 func main() {
-	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	log := logs.New(os.Stdout)
 
 	root := "content"
 	if len(os.Args) > 1 {
