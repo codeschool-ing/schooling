@@ -37,6 +37,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/cloudrun"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
+	"github.com/codeschool-ing/schooling/internal/platform/geo"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
@@ -190,6 +191,29 @@ func startsJobs(ctx context.Context, log *slog.Logger,
 		}
 		return runner.Start(ctx, resource)
 	}
+}
+
+/*
+PROXIESINFRONT IS HOW MANY ENTRIES OUR OWN INFRASTRUCTURE APPENDS TO
+`X-Forwarded-For`, and it is derived rather than configured.
+
+	K-13 is that only something WITHOUT a right answer becomes a parameter. This
+	has one, per environment: on Cloud Run behind a domain mapping the front end
+	appends the address it saw, which is one entry, and anything the caller sent
+	stays to the left of it. A laptop has nothing in front of it at all, and the
+	header a caller sends there is the caller's own — read, it would make the
+	country a field strangers fill in.
+
+	SO A WRONG NUMBER IS A BUG AND NOT A SETTING. It cannot be fixed by an
+	environment variable at three in the morning, which is the point: it is
+	checked by tests, and `platform/geo` warns in production when the shape it
+	meets is not the one this says.
+*/
+func proxiesInFront(cfg config.Config) int {
+	if cfg.Environment == config.Production {
+		return 1
+	}
+	return 0
 }
 
 func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
@@ -946,6 +970,21 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	return web.Chain(byHost,
 		web.RequestID,
 		web.Logger(log),
+
+		/* THE COUNTRY IS RESOLVED ONCE, HERE, FOR EVERY HOST.
+
+		   Outside the split by host on purpose: a school, the console and the
+		   platform's own address all emit events, and a middleware mounted per
+		   mux would be three places for the rule to be different — which is
+		   how a dimension ends up meaning one thing on one address and another
+		   thing on the next.
+
+		   It is also what makes the promise checkable. The address is read in
+		   `platform/geo` and nowhere else in this repository, so "we do not
+		   store your IP address" is a property of one function rather than of
+		   everybody remembering. */
+		geo.Country(geo.Settings{Hops: proxiesInFront(cfg), Resolve: nil}, log),
+
 		web.Recover,
 		web.NoStore,
 	)
@@ -1457,7 +1496,7 @@ func studentEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) p
 		e := event.Event{
 			Name: name,
 			Dimensions: event.ForSchool(school, slug,
-				string(plan(ctx)), account.Country, account.Locale, who(account)),
+				string(plan(ctx)), geo.FromContext(ctx), account.Locale, who(account)),
 			AccountID: &account.ID,
 			Payload:   payload,
 			RequestID: web.RequestIDFrom(ctx),
@@ -1495,14 +1534,14 @@ func visitorEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) c
 		// there is one, and are the honest "we do not know" when there is not.
 		if account, signedIn := identity.FromContext(ctx); signedIn {
 			e.Dimensions = event.ForSchool(school, slug,
-				string(plan(ctx)), account.Country, account.Locale, who(account))
+				string(plan(ctx)), geo.FromContext(ctx), account.Locale, who(account))
 			e.AccountID = &account.ID
 		} else {
 			// A SIGNED-OUT BROWSER IS A REAL ONE. Nothing seeded reaches this
 			// code path: a synthetic population is written by the seeder, with
 			// the flag on every row it writes.
 			e.Dimensions = event.ForSchool(school, slug,
-				event.PlanNone, event.Unknown, event.Unknown, event.Real)
+				event.PlanNone, geo.FromContext(ctx), event.Unknown, event.Real)
 		}
 		if id, ok := visitor.FromContext(ctx); ok {
 			e.VisitorID = &id
@@ -1545,10 +1584,11 @@ func arrived(events *event.Store, log *slog.Logger) visitor.Arrived {
 	return func(ctx context.Context, visitorID uuid.UUID) {
 		// REAL, because there is no account yet to be synthetic. A browser
 		// reaching this middleware came here on its own.
-		dimensions := event.ForPlatform(event.PlanNone, event.Unknown, event.Unknown, event.Real)
+		dimensions := event.ForPlatform(event.PlanNone,
+			geo.FromContext(ctx), event.Unknown, event.Real)
 		if id, slug, ok := schoolOf(ctx); ok {
 			dimensions = event.ForSchool(id, slug,
-				event.PlanNone, event.Unknown, event.Unknown, event.Real)
+				event.PlanNone, geo.FromContext(ctx), event.Unknown, event.Real)
 		}
 
 		e := event.Event{
@@ -1583,10 +1623,10 @@ func signedUp(visitors *visitor.Store, events *event.Store, log *slog.Logger) id
 		}
 
 		dimensions := event.ForPlatform(event.PlanNone,
-			account.Country, account.Locale, who(account))
+			geo.FromContext(ctx), account.Locale, who(account))
 		if id, slug, ok := schoolOf(ctx); ok {
 			dimensions = event.ForSchool(id, slug, event.PlanNone,
-				account.Country, account.Locale, who(account))
+				geo.FromContext(ctx), account.Locale, who(account))
 		}
 
 		e := event.Event{

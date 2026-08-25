@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/codeschool-ing/schooling/internal/platform/geo"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
 
@@ -68,8 +69,15 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	/* THE COUNTRY IS WHERE THE ACCOUNT WAS OPENED, AND IT IS NEVER REWRITTEN.
+	   It answers "where do our students come from", which is a fact about a
+	   person that does not change when they travel. Where somebody is
+	   PRACTISING is a different question and a different column: it rides on
+	   each event, resolved per request, so the two can disagree — and a screen
+	   that showed them as one number would be answering neither. */
 	account, err := h.store.Create(r.Context(), NewAccount{
 		Email: in.Email, Name: in.Name, Password: in.Password,
+		Country: geo.FromContext(r.Context()),
 	})
 	switch {
 	case errors.Is(err, ErrTaken):
