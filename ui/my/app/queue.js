@@ -99,17 +99,17 @@ export function drawNothing(about) {
       '<h1>' + esc(txt('Nothing due')) + '</h1>' +
       '<p class="mine-none">' +
         /* ONE LITERAL AND NOT A CONCATENATION, however long the line. The
-           interface checker reads literal calls only, so a call whose argument
-           is two pieces joined with a plus is a string it cannot see — and its
-           translation is then reported as a stale entry for a sentence nothing
-           says. It has cost this repository two strings already.
+           interface checker reads literal `txt('…')` calls only, so
+           `txt('a ' + 'b')` is a string it cannot see — and its translation is
+           then reported as a stale entry for a sentence nothing says. It has
+           cost this repository two strings already.
 
-           THIS COMMENT IS WRITTEN AROUND A SECOND DEFECT, in the checker
-           itself: it scans the file with a regular expression and does not know
-           what a comment is, so spelling the rule out in the obvious syntax
-           makes the example itself an untranslated interface string. Its own
-           branch; this note is here so the next person does not spend the
-           afternoon I nearly did. */
+           THIS COMMENT USED TO BE WRITTEN AROUND THE CHECKER rather than in
+           plain syntax, because the checker scanned with a regular expression
+           and did not know what a comment was: the example above was itself
+           counted as an interface string, and it asked for the Portuguese of an
+           ellipsis. It reads the comments out now, and this paragraph is what
+           says so. */
         esc(txt('You have answered everything that came back today. Each school still has questions you have not seen yet.')) +
       '</p>' +
     '</section>' +

@@ -254,7 +254,10 @@ func stringsSaid(dir string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		for _, match := range txtCall.FindAllStringSubmatch(string(body), -1) {
+		// THE COMMENTS COME OUT FIRST. A file that explains this tool by writing
+		// the call it looks for used to have that example counted as a string
+		// somebody had to translate — see `withoutComments`.
+		for _, match := range txtCall.FindAllStringSubmatch(withoutComments(string(body)), -1) {
 			found[unescape(match[1]+match[2])] = true // exactly one of the two matched
 		}
 	}
@@ -451,4 +454,156 @@ func dictionaryKeys(path string) (map[string]bool, error) {
 // sequences these files actually contain.
 func unescape(s string) string {
 	return strings.NewReplacer(`\'`, `'`, `\"`, `"`, `\\`, `\`).Replace(s)
+}
+
+/*
+withoutComments blanks a script's comments, leaving everything else where it was.
+
+# THE DEFECT IT FIXES IS THIS TOOL DESCRIBING ITSELF
+
+`ui/my/app/queue.js` explains, in a comment, that the scanner reads literal
+calls only — and spelling that out in the obvious syntax made the example itself
+an interface string. The tool asked for the Portuguese of an ellipsis. Any file
+that documents this rule hits it, which is every file where somebody has just
+learnt the rule the hard way.
+
+# WHY A LEXER AND NOT A PATTERN
+
+Because of `/`. In JavaScript it starts a comment, a regular expression or a
+division, and only the tokens before it say which — `.replace(/&/g, …)` is in
+the very file that found this. So the walk below tracks what it is inside:
+code, a string of each of the three kinds, a regular expression, or a comment.
+
+The regex-or-division question is answered by the last significant character, a
+heuristic every syntax highlighter uses: after `(`, `,`, `=`, `:`, `[`, `!`, `&`,
+`|`, `?`, `{`, `}`, `;` or a newline, a slash opens a pattern; after a name, a
+number or a closing bracket, it divides.
+
+# AND BEING WRONG HERE IS LOUD
+
+That heuristic can be fooled, and the consequence is bounded on purpose: this
+function only decides which bytes the scanner reads. Blank too much and a real
+string goes missing, which fails as a dictionary entry nothing says. Blank too
+little and a commented example is counted, which fails as a string with no
+translation. Both stop a pull request with a sentence naming the string. There
+is no arrangement of mistakes here that passes quietly, which is the property
+worth having in a check.
+
+Blanked rather than deleted, so that removing a comment cannot join two tokens
+into one.
+*/
+func withoutComments(source string) string {
+	out := make([]byte, 0, len(source))
+
+	// The last character that was not whitespace, which is what decides whether
+	// a slash opens a pattern or divides.
+	var significant byte
+
+	for i := 0; i < len(source); {
+		c := source[i]
+
+		switch {
+		// ---------- a comment ----------
+		case c == '/' && i+1 < len(source) && source[i+1] == '/':
+			for i < len(source) && source[i] != '\n' {
+				out = append(out, ' ')
+				i++
+			}
+
+		case c == '/' && i+1 < len(source) && source[i+1] == '*':
+			// The newlines are kept so that a line number, if this ever reports
+			// one, still counts the same lines the file has.
+			for i < len(source) {
+				if source[i] == '\n' {
+					out = append(out, '\n')
+				} else {
+					out = append(out, ' ')
+				}
+				if source[i] == '*' && i+1 < len(source) && source[i+1] == '/' {
+					out = append(out, ' ')
+					i += 2
+					break
+				}
+				i++
+			}
+
+		// ---------- a string, of any of the three kinds ----------
+		//
+		// Kept as it is: a comment written inside a string is text, and this
+		// tool's whole subject is text inside quotes.
+		case c == '\'' || c == '"' || c == '`':
+			quote := c
+			out = append(out, c)
+			i++
+			for i < len(source) {
+				if source[i] == '\\' && i+1 < len(source) {
+					out = append(out, source[i], source[i+1])
+					i += 2
+					continue
+				}
+				out = append(out, source[i])
+				if source[i] == quote {
+					i++
+					break
+				}
+				i++
+			}
+			significant = quote
+
+		// ---------- a regular expression ----------
+		case c == '/' && opensAPattern(significant):
+			out = append(out, c)
+			i++
+			inClass := false
+			for i < len(source) {
+				if source[i] == '\\' && i+1 < len(source) {
+					out = append(out, source[i], source[i+1])
+					i += 2
+					continue
+				}
+				out = append(out, source[i])
+				switch source[i] {
+				case '[':
+					inClass = true
+				case ']':
+					inClass = false
+				case '/':
+					// A slash inside a character class is a literal one:
+					// `[^/]` is not the end of the pattern.
+					if !inClass {
+						i++
+						goto closed
+					}
+				case '\n':
+					// A pattern cannot span lines. Something is being read
+					// wrongly; stop rather than swallow the rest of the file.
+					i++
+					goto closed
+				}
+				i++
+			}
+		closed:
+			significant = '/'
+
+		default:
+			out = append(out, c)
+			if c != ' ' && c != '\t' && c != '\r' {
+				significant = c
+			}
+			i++
+		}
+	}
+
+	return string(out)
+}
+
+// opensAPattern answers the regex-or-division question from the character
+// before the slash. A file that has said nothing yet — `significant` is zero —
+// is at its start, where a slash cannot be dividing anything.
+func opensAPattern(significant byte) bool {
+	switch significant {
+	case 0, '(', ',', '=', ':', '[', '!', '&', '|', '?', '{', '}', ';', '\n', '+', '-', '*', '%', '<', '>', '~', '^':
+		return true
+	}
+	return false
 }
