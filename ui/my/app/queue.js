@@ -23,6 +23,18 @@
    A screen holding its own copy of "questions you have never answered are not
    here" would keep saying it after the rule changed. It is the same reason the
    thresholds travel with the numbers they produced (K-16).
+
+   IT STILL GOES THROUGH `txt()`, and that is the one part of this arrangement
+   that is easy to forget — it was forgotten here, and shipped: a page reading
+   in Portuguese carried one English paragraph, under two translated ones.
+
+   `check-interface` cannot catch it and says so in its own header: a server
+   sentence arrives at run time, so no static scan can enumerate one. The
+   mechanism is that it arrives in English, English is the key, and a dictionary
+   entry translates it at the point of display. What the tool CAN see is the
+   entry, which it will report as a translation nothing says — that report is
+   the price of the only arrangement that works, and the dictionary says so
+   beside the entry.
    ========================================================================== */
 
 const esc = (s) => String(s ?? '')
@@ -52,7 +64,14 @@ export function drawQueue(schools, due, about) {
       schools.map(one).join('') +
     '</ul>' +
 
-    (about ? '<p class="mine-about">' + esc(about) + '</p>' : '');
+    said(about);
+}
+
+/* The server's sentence, translated at the point of display and drawn only when
+   there is one — an empty paragraph with a rule above it is a screen that looks
+   like it lost something. */
+function said(about) {
+  return about ? '<p class="mine-about">' + esc(txt(about)) + '</p>' : '';
 }
 
 function one(school) {
@@ -113,7 +132,7 @@ export function drawNothing(about) {
         esc(txt('You have answered everything that came back today. Each school still has questions you have not seen yet.')) +
       '</p>' +
     '</section>' +
-    (about ? '<p class="mine-about">' + esc(about) + '</p>' : '');
+    said(about);
 }
 
 /* NO FORM, AND NO LIST OF SCHOOLS. Signing in is a school's — it is the school

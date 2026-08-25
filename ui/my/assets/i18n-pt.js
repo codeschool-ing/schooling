@@ -32,6 +32,21 @@ window.I18N.pt.ui = {
   'and %n more': 'e mais %n',
   'Practise at': 'Praticar em',
 
+  /* ---------- the sentence the SERVER writes ----------
+
+     It arrives in English at run time and is translated at the point of
+     display, which is the only arrangement that works: the screen must not
+     hold its own copy of the rule, and the server does not know which language
+     is being read.
+
+     `check-interface` CANNOT SEE THIS ONE, and says so in its own header — no
+     static scan can enumerate a string that arrives over HTTP. So this entry is
+     the half nobody checks, and the key has to match `internal/practice/
+     across.go` character for character. It was missing once, and the page read
+     in Portuguese with one English paragraph under two translated ones. */
+  'What is due today, everywhere you practise. Questions you have never answered are not here: those belong to a course you are working through, and each school\'s own practice screen still offers them.':
+    'O que está para hoje, em todo lugar onde você pratica. Questões que você nunca respondeu não estão aqui: elas pertencem a um curso que você está percorrendo, e a tela de prática de cada escola continua oferecendo essas.',
+
   /* ---------- nothing due ---------- */
   'Nothing due': 'Nada para hoje',
   'You have answered everything that came back today. Each school still has questions you have not seen yet.':

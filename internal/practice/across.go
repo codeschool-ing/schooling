@@ -313,6 +313,24 @@ func (h *AcrossHandler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/review", h.review)
 }
 
+/*
+About is what this queue is and is not, sent with every answer.
+
+	IT IS A NAMED CONSTANT BECAUSE IT IS THE ONE STRING NOTHING CHECKS. The
+	screen draws it through `txt()` — the only arrangement that works, since the
+	screen must not hold its own copy of the rule and the server does not know
+	which language is being read — so English is the key and a dictionary entry
+	translates it at the point of display.
+
+	`check-interface` cannot see it and says so in its own header: no static scan
+	can enumerate a string that arrives over HTTP. It shipped untranslated once,
+	which is a page reading in Portuguese with one English paragraph under two
+	translated ones. Named here, `across_test.go` can hold the dictionary to it.
+*/
+const About = "What is due today, everywhere you practise. Questions you have never " +
+	"answered are not here: those belong to a course you are working through, and " +
+	"each school's own practice screen still offers them."
+
 func (h *AcrossHandler) review(w http.ResponseWriter, r *http.Request) {
 	student, ok := h.studentOf(r.Context())
 	if !ok {
@@ -349,8 +367,6 @@ func (h *AcrossHandler) review(w http.ResponseWriter, r *http.Request) {
 		   and a school with nothing due is not a school with nothing to do —
 		   its own queue still offers questions never answered. A screen holding
 		   its own sentence about that would keep saying it after this changes. */
-		"about": "What is due today, everywhere you practise. Questions you have never " +
-			"answered are not here: those belong to a course you are working through, and " +
-			"each school's own practice screen still offers them.",
+		"about": About,
 	})
 }
