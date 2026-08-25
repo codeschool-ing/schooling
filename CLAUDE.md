@@ -1087,6 +1087,14 @@ the one shape that cannot blur — a filled circle is legible at four pixels, wh
 in exactly the place it is used. The terminal prompt that used to be here is `favicon-code.svg`
 now: a prompt says *programming*, not *schooling*.
 
+**And every SVG is well-formed XML**, which `internal/svg_test.go` checks over the whole tree —
+both embeds, because the schools' icons and the console's live in different ones. A browser is
+lenient and will draw a file no strict parser accepts, so an invalid one renders perfectly
+everywhere anybody looks and is refused everywhere they do not. `favicon.svg` shipped naming a
+CSS custom property in its comment, and **a pair of hyphens is forbidden inside an XML
+comment**: Firefox drew it, the offline render drew it, and GitHub answered "invalid image
+source". That is how it was found — by somebody clicking on the file.
+
 **Redrawn, never traced.** The marks arrive as JPEGs of neon signs; a JPEG is pixels and an SVG
 is geometry, so there is no conversion, only a redraw. The glow goes: it is the first thing to
 disappear at sixteen pixels.

@@ -5,6 +5,7 @@ import (
 	"go/parser"
 	"go/token"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -29,6 +30,28 @@ Reading every Go file in the repository, which two rules here need.
 func eachGoFile(t *testing.T, skip func(rel string) bool, visit func(rel string, file *ast.File)) {
 	t.Helper()
 
+	eachFile(t, ".go", skip, func(rel, path string, _ []byte) {
+		file, err := parser.ParseFile(token.NewFileSet(), path, nil, parser.SkipObjectResolution)
+		if err != nil {
+			// Not these rules' business. Something that does not parse fails
+			// the build long before it fails a rule about privacy or logging.
+			return
+		}
+		visit(rel, file)
+	})
+}
+
+// eachFile is the walk itself, over one extension.
+//
+// IT IS SEPARATE FROM THE PARSING because the third rule to want it is not
+// about Go at all: every SVG in the repository has to be well-formed XML, and
+// the walk is the same walk. Two copies of it were about to exist in the pull
+// request that added the second one.
+func eachFile(t *testing.T, ext string, skip func(rel string) bool,
+	visit func(rel, path string, source []byte)) {
+
+	t.Helper()
+
 	root, err := filepath.Abs("..")
 	if err != nil {
 		t.Fatalf("finding the repository root: %v", err)
@@ -46,7 +69,7 @@ func eachGoFile(t *testing.T, skip func(rel string) bool, visit func(rel string,
 			}
 			return nil
 		}
-		if filepath.Ext(path) != ".go" {
+		if filepath.Ext(path) != ext {
 			return nil
 		}
 
@@ -59,14 +82,12 @@ func eachGoFile(t *testing.T, skip func(rel string) bool, visit func(rel string,
 			return nil
 		}
 
-		file, err := parser.ParseFile(token.NewFileSet(), path, nil, parser.SkipObjectResolution)
+		source, err := os.ReadFile(path)
 		if err != nil {
-			// Not these rules' business. Something that does not parse fails
-			// the build long before it fails a rule about privacy or logging.
-			return nil
+			return err
 		}
 		read++
-		visit(rel, file)
+		visit(rel, path, source)
 		return nil
 	})
 	if err != nil {
@@ -76,7 +97,7 @@ func eachGoFile(t *testing.T, skip func(rel string) bool, visit func(rel string,
 	// A walk that found nothing would pass forever and say nothing, which is
 	// the failure mode of every check that reads a tree.
 	if read == 0 {
-		t.Fatal("no Go file was read at all, which cannot be right")
+		t.Fatal("no " + ext + " file was read at all, which cannot be right")
 	}
 }
 
