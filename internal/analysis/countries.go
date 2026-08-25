@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -101,7 +102,14 @@ func (s *Store) Countries(ctx context.Context, tenantID uuid.UUID, since time.Ti
 			// inflate whichever country it came from.
 			continue
 		}
-		country := o.Country
+		/* FOLDED TO LOWER CASE, BECAUSE THE COLUMN HAS MORE THAN ONE WRITER.
+		   `platform/geo` lowercases; the seeder wrote `BR` for its first three
+		   weeks. Grouping on the raw string made those two countries — one
+		   drawn on the map with a flag and a name, one a bare code beside it —
+		   and nothing failed anywhere. Rows written before the seeder was
+		   fixed are still in the stream and always will be, so this is where it
+		   is settled rather than in a migration nobody would run again. */
+		country := strings.ToLower(strings.TrimSpace(o.Country))
 		if country == "" {
 			// The column refuses an empty string, so this cannot come from the
 			// database; it can come from a hand-built row in a test. Either way

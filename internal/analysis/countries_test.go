@@ -212,3 +212,36 @@ func TestAMapWiredWithoutTheStreamRefuses(t *testing.T) {
 		t.Error("a map with nothing to read answered as though nobody was anywhere")
 	}
 }
+
+/*
+TWO SPELLINGS OF ONE COUNTRY ARE ONE COUNTRY.
+
+	The column has more than one writer. `platform/geo` lowercases what it
+	resolves; the seeder wrote `BR` for its first three weeks, and those rows
+	are in the stream for good. Grouped on the raw string they were two
+	countries — one drawn on the map with a flag and a name, one a bare code in
+	the list beside it — and nothing failed anywhere.
+
+	It is folded HERE and not fixed in a migration, because a migration cleans
+	what exists once and this keeps being true for whatever writes the column
+	next.
+*/
+func TestOneCountryInTwoCasesIsOneCountry(t *testing.T) {
+	where := placed(t, []analysis.Origin{
+		from("BR", nil, id()),
+		from("br", nil, id()),
+		from(" Br ", nil, id()),
+	}, nil)
+
+	if len(where.Countries) != 1 {
+		t.Fatalf("%d countries came out of three spellings of one: %v",
+			len(where.Countries), where.Countries)
+	}
+	if where.Countries[0].Code != "br" {
+		t.Errorf("the code is %q, want %q — the map is keyed by the lower-case one",
+			where.Countries[0].Code, "br")
+	}
+	if got := peopleIn(t, where, "br"); got != 3 {
+		t.Errorf("br has %d people, want 3", got)
+	}
+}
