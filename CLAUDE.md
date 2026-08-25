@@ -1001,6 +1001,47 @@ policy rather than filling in a blank.
 
 ---
 
+## Emptying the history is a deliberate act, and it looks like one
+
+Six tables are append-only, enforced by a trigger that raises: the events, the practice log, the
+audit, the ledger, the subscription events and the prices. **`0034` adds a second trigger to each
+because `TRUNCATE` does not fire row triggers** — Postgres treats it as its own event, so the
+strongest possible change to history went through the gap left for the weakest. It was found
+while writing `cmd/reset`, which needed exactly that and could have had it without the schema
+noticing.
+
+**`cmd/reset` empties the history and keeps what the platform IS**: the schools, their addresses,
+their prices and the catalogue — everything `migrate`, `load` and an afternoon in the console
+would produce again. It exists because the difference between "development rubbish nobody owns"
+and "somebody's practice history and the record of who changed what" is **a date**, and an
+improvised `DELETE` at a psql prompt does not know which side of it it is on.
+
+Four refusals, and the interesting one is the second. **The platform domain has to be typed**,
+and has to match what the process is configured against: pressing up-arrow in the wrong terminal
+is how this goes wrong, and a confirmation prompt does not help, because the answer to "are you
+sure" is always yes. Naming the thing you are about to empty is the only check that fails for the
+person who is about to be wrong. The others are `--by` (K-01), **money** — a row in
+`ledger_entries` or `subscriptions`, with no flag to override it — and a table the command has no
+opinion about.
+
+**Both halves of the table list are written out.** The first version derived the empty half from
+the keep half, and the test that was supposed to force a decision about a new table passed
+happily, because the two added up by construction — proved by putting a probe row in the registry
+and watching it stay green. Now a new table fails a test **on the day it is added**, which is
+where somebody is already thinking about it, rather than on the night of a reset, which is where
+nobody is.
+
+**`--keep <email>` spares one operator's account**: the row, the password, the second factor and
+the role. Only `accounts` is named in code — the other three follow through `ON DELETE CASCADE`,
+which the schema has said since `0004`, and a second copy of that rule here is the copy that
+stops matching. It has to be an operator's: this command is defensible because nothing it deletes
+is anybody's, and sparing a student's account would be the exception that ends that argument.
+
+And it **empties the audit and then writes to it**, in the same transaction, so the first row of
+the new history says the old one was erased, by whom, and how much of it there was.
+
+---
+
 ## The caller's address is read in one package
 
 `internal/platform/geo` reads `X-Forwarded-For`, resolves a country and returns two letters.

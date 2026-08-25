@@ -17,6 +17,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -96,7 +97,21 @@ func NewStore(pool *pgxpool.Pool) *Store { return &Store{pool: pool} }
 // whose caller forgot would produce an audit that reads plausibly and is wrong,
 // and an audit that is wrong in a readable way is worse than one that is
 // missing rows: the missing rows are noticed.
-func (s *Store) Record(ctx context.Context, e Entry) error {
+// Writes is a pool or a transaction, which is all this needs of either.
+//
+// IT EXISTS BECAUSE ONE CALLER OWNS ITS OWN TRANSACTION. `cmd/reset` empties
+// the audit and then writes the row saying so, and the two have to be atomic —
+// an audit that lost its first entry would be one that cannot account for its
+// own emptiness. Everything else uses the pool and never sees this.
+type Writes interface {
+	Exec(ctx context.Context, sql string, args ...any) (pgconn.CommandTag, error)
+}
+
+// RecordIn writes one entry through a pool or a transaction the caller owns.
+//
+// The validation is here rather than in `Record` so that no path can reach the
+// INSERT without it: an entry with no actor is refused wherever it comes from.
+func RecordIn(ctx context.Context, w Writes, e Entry) error {
 	if !e.Actor.valid() {
 		return errors.New("audit: an entry with no actor is a log, not an audit — " +
 			"build one with audit.Staff or audit.System")
@@ -114,7 +129,7 @@ func (s *Store) Record(ctx context.Context, e Entry) error {
 		return fmt.Errorf("audit: the after state of %s: %w", e.Action, err)
 	}
 
-	_, err = s.pool.Exec(ctx, `
+	_, err = w.Exec(ctx, `
 		INSERT INTO audit_log
 			(actor_id, actor_kind, actor_label, tenant_id, action,
 			 subject_kind, subject_id, before, after, reason, request_id)
@@ -125,6 +140,11 @@ func (s *Store) Record(ctx context.Context, e Entry) error {
 		return fmt.Errorf("audit: recording %s: %w", e.Action, err)
 	}
 	return nil
+}
+
+// Record writes one entry through the store's pool.
+func (s *Store) Record(ctx context.Context, e Entry) error {
+	return RecordIn(ctx, s.pool, e)
 }
 
 func encode(v any) ([]byte, error) {

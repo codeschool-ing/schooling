@@ -228,6 +228,47 @@ of how a request finds its school. A host nobody mapped is a 404 and never falls
 into a default, so until this row exists the deployment answers `/version` and
 nothing else. That is the design and not an outage.
 
+## Emptying the history, before there is any
+
+`cmd/reset` throws away everything that happened and keeps what the platform is —
+the schools, their addresses, their prices and the catalogue. What it is for and
+what it refuses is in the command's own comment; this is where it runs.
+
+**IT IS NOT A CLOUD RUN JOB, AND THAT IS THE DECISION.** `migrate`, `load` and
+`analyse` are jobs because they are safe to have standing: the worst a stray
+execution does is repeat work. A `schooling-reset` job would be a permanent
+button in this project that empties production, one `gcloud run jobs execute`
+away from anybody holding the role, for ever. Being awkward to run is
+proportionate to what it does.
+
+So it runs from Cloud Shell, through the Auth Proxy, from a checkout:
+
+```sh
+# 1. the proxy, listening on 127.0.0.1:5432
+curl -sfLo /tmp/cloud-sql-proxy \
+  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.14.1/cloud-sql-proxy.linux.amd64 &&
+chmod +x /tmp/cloud-sql-proxy &&
+/tmp/cloud-sql-proxy "$(gcloud sql instances describe schooling \
+  --project=aleogr-schooling --format='value(connectionName)')" &
+
+# 2. the same address the service uses, pointed at the proxy
+export SCHOOLING_DATABASE_URL="$(gcloud secrets versions access latest \
+  --secret=schooling-database-url --project=aleogr-schooling |
+  sed -E 's#@[^/]+/#@127.0.0.1:5432/#')"
+export SCHOOLING_PLATFORM_DOMAIN=schooling.lab.aleogr.dev
+export SCHOOLING_ENV=production
+
+# 3. and the reset itself
+go run ./cmd/reset schooling.lab.aleogr.dev --by "<name>" --keep <your address>
+```
+
+The `sed` rewrites the host in the connection string and leaves the password
+where it is, so the secret is never printed and never typed. **`--keep` spares
+your operator account** — the row, the password, the second factor and the role
+— so an afternoon of resets is not an afternoon of signing up again. Without it
+nobody is staff afterwards, including you, and the way back in is signing up and
+running `cmd/staff`.
+
 ## What runs on a clock
 
 One thing does, and it is `schooling-analyse` — the item analysis, started at
