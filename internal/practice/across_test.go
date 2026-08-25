@@ -2,6 +2,7 @@ package practice_test
 
 import (
 	"context"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -362,5 +363,44 @@ func TestTheLabelThePlatformUsesIsReserved(t *testing.T) {
 		if !strings.Contains(err.Error(), "reserved") {
 			t.Errorf("%q was refused for the wrong reason: %v", label, err)
 		}
+	}
+}
+
+/* ---------- the sentence the server writes ---------- */
+
+/*
+THE ONE STRING NO STATIC SCAN CAN CATCH, held here instead.
+
+	`check-interface` reads literal `txt('…')` calls out of the interface and
+	asks the dictionary for each one. `About` is not one: it arrives over HTTP,
+	in English, and is translated at the point of display — so the tool sees the
+	dictionary entry with nothing saying it, reports it as an entry the interface
+	does not say, and cannot tell that from a genuinely stale line.
+
+	Which leaves the two halves free to drift apart, and they did: the paragraph
+	shipped in English under two translated ones. Rewording this constant is the
+	way it happens again, because the rewording is in Go and the dictionary is in
+	JavaScript and nothing else joins them.
+
+	IT COMPARES THE ESCAPED FORM, because the sentence contains an apostrophe and
+	the dictionary is single-quoted JavaScript. That is not incidental: a key
+	written `school's` in a `'…'` literal is a syntax error, so the escaping is
+	part of what has to match.
+*/
+func TestThePortugueseCarriesTheServersSentence(t *testing.T) {
+	const dictionary = "../../ui/my/assets/i18n-pt.js"
+
+	source, err := os.ReadFile(dictionary)
+	if err != nil {
+		t.Fatalf("reading %s: %v", dictionary, err)
+	}
+
+	key := "'" + strings.ReplaceAll(practice.About, "'", `\'`) + "':"
+	if !strings.Contains(string(source), key) {
+		t.Errorf("%s does not translate the sentence the server sends.\n\n"+
+			"It has to carry this key, character for character:\n\n  %s\n\n"+
+			"Without it the paragraph under the queue reads in English on a page "+
+			"read in Portuguese. If `About` was reworded, reword the key with it.",
+			dictionary, key)
 	}
 }

@@ -196,9 +196,27 @@ func check(dir string) (problems []string, checked int, err error) {
 				unsaid++
 			}
 		}
+		/* THE NOTE NAMES BOTH REASONS AND ASSERTS NEITHER, because this tool
+		   cannot tell them apart and used to claim the first one for every
+		   directory it was pointed at. Read against `ui/my` — one screen, its
+		   own dictionary, no copied anything — it explained a single unsaid
+		   entry as the vitrine's, which was false and would have sent somebody
+		   looking for a file that is not there.
+
+		   The second reason is the one that entry actually is. It is out of this
+		   tool's reach for good — nothing static can enumerate a string that
+		   arrives over HTTP — so the check for it lives where the string is
+		   declared instead: `internal/practice/across_test.go` holds the
+		   dictionary to `practice.About`, character for character. */
+		noun := "entries"
+		if unsaid == 1 {
+			noun = "entry"
+		}
 		if unsaid > 0 {
-			fmt.Printf("%s: %d entries this interface does not say — the copied half is the "+
-				"vitrine's, and it translates that site's screens too\n", where, unsaid)
+			fmt.Printf("%s: %d %s this interface does not say. Counted and not failed: a "+
+				"dictionary may translate more than one interface — `ui/`'s carries the "+
+				"vitrine's screens too — and a sentence the SERVER sends arrives at run time, "+
+				"where no static scan can see it\n", where, unsaid, noun)
 		}
 	}
 
