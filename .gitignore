@@ -3,13 +3,30 @@
 /dist/
 *.exe
 
-# `go build ./tools/<x>` drops the binary in the working directory under the
-# package's own name, which is how one of these was committed once.
-/bundle
-/migrate
-/load
+# `go build ./tools/<x>` and `go build ./cmd/<x>` drop the binary in the working
+# directory under the package's own name, which is how one of these was
+# committed once — and then how a 3.3 MB `check-interface` was committed a
+# second time, because this list is a list of names and a name that is not on it
+# is not ignored.
+#
+# THE LIST IS NO LONGER THE DEFENCE. `internal/repository_test.go` reads the
+# tracked files and fails on anything that starts with an executable's magic
+# bytes, whatever it is called. These lines stay because keeping the working
+# directory clean is worth something on its own, and because a `git status` that
+# is quiet is one somebody reads.
+/analyse
 /api
+/bundle
+/check-css
+/check-interface
+/fonts
+/load
+/migrate
+/release
+/restore-drill
+/seed
 /staff
+/validate-content
 
 # Go
 *.test
