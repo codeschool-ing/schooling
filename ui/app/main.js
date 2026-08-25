@@ -16,7 +16,7 @@
 import { route, whenChanged, start, currentPath, dispatch, goTo } from './routes.js';
 import * as sync from './sync.js';
 import * as source from './source.js';
-import { isChoice, courseBySlug, trackBySlug, courseAddress } from './catalog.js';
+import { isChoice, courseBySlug, courseByAddress, trackBySlug, courseAddress } from './catalog.js';
 import { subscribe, now } from './state.js';
 import { buildRail, toggleLesson } from './rail.js';
 import { studentTrack, trackProgress } from './screens/common.js';
@@ -598,9 +598,16 @@ subscribe(() => {
   paintViewingBanner();
 });
 
+/* THE ID, WHATEVER NAME THE ADDRESS USED. This feeds `toggleLesson`, which
+   remembers which lessons a student opened by course, and the rail, which reads
+   that memory back. Left as whatever the address carried, the two keyed by
+   different names for one course and a lesson opened under the slug looked shut
+   when the same screen was reached by the id. */
 function routeParams() {
   const m = currentPath().match(/^\/course\/([^/]+)/);
-  return m ? { id: decodeURIComponent(m[1]) } : null;
+  if (!m) return null;
+  const found = courseByAddress(decodeURIComponent(m[1]));
+  return { id: found ? found.id : decodeURIComponent(m[1]) };
 }
 
 /* One listener for every code block on every screen — see copy.js. */

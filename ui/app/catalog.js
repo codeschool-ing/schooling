@@ -42,6 +42,22 @@ export const trackBySlug = (slug) => TRACKS.find((t) => t.slug === slug);
 export const courseAddress = (id) => (courseById(id) || {}).slug || id;
 export const trackAddress = (id) => (trackById(id) || {}).slug || id;
 
+/* AND THE WAY BACK, FOR ANYTHING HANDED A COURSE STRAIGHT OUT OF THE ADDRESS.
+
+   The router already does this, and it did it for the screen alone: `named`
+   translated the slug and passed the id on, while the rail was handed the
+   untranslated parameters and asked `courseById` — which knows only ids. On a
+   link written with the slug it found no course and drew the portal's
+   navigation instead of the course's lessons, so moving between two sections of
+   one lesson collapsed the outline the student was reading.
+
+   Both names are accepted rather than one being made canonical, for the reason
+   `courseAddress` falls back: a link somebody saved before the two were
+   separated names the course by what was then its only name, and it has to keep
+   working. The id is tried first because it is what everything JOINS on and a
+   slug can be edited. */
+export const courseByAddress = (a) => courseById(a) || courseBySlug(a);
+
 /* ---------- tracks with a fork ----------
    An item of `courses` is either a course id (a string) or a choice step (an
    object with `options`). Hence three different readings of the same track: all

@@ -24,7 +24,7 @@
    state kept for as long as the session lasts.
    ========================================================================== */
 
-import { courseLessons, courseById, trackPath } from './catalog.js';
+import { courseLessons, courseById, courseByAddress, courseAddress, trackPath } from './catalog.js';
 import { lessonSections } from './lessons.js';
 import {
   lessonDone, sectionDone, lessonProgress, courseProgress, activeOption, examPassed,
@@ -95,7 +95,7 @@ function globalRail(path) {
     if (!c) return '';
     const p = courseProgress(id);
     const st = courseState(id);
-    return '<a class="rail-course no-' + st + '" href="#/course/' + esc(id) + '">' +
+    return '<a class="rail-course no-' + st + '" href="#/course/' + esc(courseAddress(id)) + '">' +
       '<span class="tc-mark" data-state="' + st + '" aria-hidden="true"></span>' +
       '<span class="tc-name">' + esc(c.name) + '</span>' +
       '<span class="tc-count">' + p.done + '/' + p.total + '</span>' +
@@ -112,9 +112,16 @@ function globalRail(path) {
 }
 
 function courseRail(params, path) {
-  const id = params?.id;
-  const c = courseById(id);
+  /* WHAT THE ADDRESS CARRIES IS EITHER NAME, and this asked `courseById`. A
+     link written with the slug found nothing and fell through to the portal's
+     navigation below — so the outline a student was reading collapsed when they
+     moved to the next section, and came back when they clicked a tab, because
+     those two links were written with different names for the same course. */
+  const c = courseByAddress(params?.id);
   if (!c) return globalRail(path);
+  const id = c.id;
+  // Every link out of here says the same thing the rest of the app says.
+  const address = courseAddress(id);
 
   const lessons = courseLessons(id);
   const p = courseProgress(id);
@@ -137,7 +144,7 @@ function courseRail(params, path) {
       '<div class="rail-lesson' + (done ? ' done' : '') + (isCurrent ? ' on' : '') + (open ? ' is-open' : '') + '">' +
         '<button type="button" class="ta-open" data-lesson="' + a.ix + '" ' +
           'aria-expanded="' + open + '" aria-label="' + txt('Show sections') + '">' + ICON_CHEVRON + '</button>' +
-        '<a class="ta-title" href="#/course/' + esc(id) + '/lesson/' + a.ix + '/' + esc(sections[0].id) + '">' +
+        '<a class="ta-title" href="#/course/' + esc(address) + '/lesson/' + a.ix + '/' + esc(sections[0].id) + '">' +
           '<span class="ta-num">' + txt('lesson') + ' ' + String(a.ix + 1).padStart(2, '0') + '</span>' +
           '<span class="ta-tit">' + esc(a.title) + '</span>' +
         '</a>' +
@@ -157,7 +164,7 @@ function courseRail(params, path) {
       return '<a class="rail-section' + (ok ? ' done' : '') +
         (s.id === currentSec && isCurrent ? ' on' : '') +
         (s.type === 'assessment' ? ' assessment' : '') + (s.pending ? ' pending' : '') + '" ' +
-        'href="#/course/' + esc(id) + '/lesson/' + a.ix + '/' + esc(s.id) + '">' +
+        'href="#/course/' + esc(address) + '/lesson/' + a.ix + '/' + esc(s.id) + '">' +
         '<span class="ts-mark" aria-hidden="true">' + mark + '</span>' +
         '<span class="ts-middle">' +
           '<span class="ts-title">' + esc(s.title) + '</span>' +
@@ -178,7 +185,7 @@ function courseRail(params, path) {
   const passed = examPassed(exam.key);
   const examRow = exam.items.length
     ? '<a class="rail-exam' + (passed ? ' done' : '') + (onExam ? ' on' : '') + '" ' +
-      'href="#/course/' + esc(id) + '/exam">' +
+      'href="#/course/' + esc(address) + '/exam">' +
       '<span class="ts-mark" aria-hidden="true">' + (passed ? ICON_CHECK : ICON_TROPHY) + '</span>' +
       '<span class="ts-title">' + txt('Final exam') + '</span>' +
     '</a>'

@@ -145,6 +145,35 @@ try {
     if (sections.length && !(sections.length === 1 && /^content$/i.test(sections[0].trim()))) {
       right(`${lessons[0]} has its sections — ${sections.length} of them`);
       read += 1;
+
+      /* ---------- and the outline survives the arrow ----------
+
+         THE RAIL IS THE THING THAT BREAKS, and it breaks by drawing something
+         perfectly reasonable: the portal's navigation. A student reading a
+         lesson clicked the forward arrow and the list of sections they were
+         working through was replaced by Dashboard / My track / Catalog. It came
+         back if they clicked a tab, because the tabs wrote the course's id into
+         the address and the arrow wrote its slug, and only one of those two was
+         a name the rail could resolve.
+
+         Nothing threw and nothing was blank, which is why this is checked in a
+         browser rather than trusted to a unit somewhere. */
+      const outlineBefore = await page.locator('#rail .rail-lesson').count();
+      const arrow = page.locator('#content a.side-arrow.side-right');
+      if (outlineBefore > 0 && await arrow.count()) {
+        await arrow.first().click();
+        await page.waitForTimeout(150);
+        const outlineAfter = await page.locator('#rail .rail-lesson').count();
+        if (outlineAfter > 0) {
+          right(`the rail still shows the course after the arrow — ${outlineAfter} lessons`);
+        } else {
+          wrong('the forward arrow collapsed the rail to the portal navigation: the '
+            + 'address it wrote names the course differently from the address the '
+            + 'section tabs write, and the rail can only resolve one of them');
+        }
+      } else if (!outlineBefore) {
+        wrong('the rail is not showing the course outline on a lesson at all');
+      }
       break;
     }
   }
