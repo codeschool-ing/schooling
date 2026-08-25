@@ -183,6 +183,12 @@ Everything the other subjects will demand, built before a subject demands it.
 *Done when: an algebraic answer written differently is accepted, and yesterday's review comes
 back today.*
 
+***Phase 2 is finished.** Both halves of the `Done when` are held by tests against a real
+Postgres rather than by this paragraph: `(x+1)^2` is accepted against an expanded key by the
+sampling grader, and `TestAnAnsweredCardLeavesTheQueueAndComesBackWhenItIsDue` is the second
+sentence with a name. The last box was the queue that crosses schools, and it closed the way
+the phase-0 condition did — by being left visible until it was true rather than redefined.*
+
 - [x] `expression-answer` graded by a computer algebra system — **by sampling rather than by rearranging symbols.** Two expressions over the reals are the same if they agree everywhere, and everywhere can be sampled: a parser for school algebra (implicit multiplication included, because that is how people write it), then both sides evaluated at two dozen chosen points. It cannot simplify or factor and does not need to — the question is always "are these equal", never "what is this" — and what it cannot see is a difference at a single point, written down in the package and pinned by a test
 - [x] `numeric` — a number with a unit and a tolerance
 - [x] `cloze` — a blank with accepted answers and normalisation
@@ -191,7 +197,15 @@ back today.*
 - [x] `drillable` on exercises — checked rather than trusted, so an exam-only question cannot be drilled into telling a student what is on the paper
 - [x] `practice_state` — strength, due date, lapses; overwritten in place beside the append-only log it can be recomputed from
 - [x] SM-2, with the quality score derived from correctness and time rather than asked — the thresholds are a first guess, and `practice_review` carries the before-values so they can be fitted rather than argued about
-- [ ] A review queue that crosses schools, scoped by what the subscription covers — **the queue exists, within one school.** Crossing them needs the platform's own address, because a request arrives on a school's host and is scoped to it before any module sees it; that waits on the domain. The change will be a second entry point over the same rows, not a second scheduler
+- [x] A review queue that crosses schools, scoped by what the subscription covers — **`my.<platform domain>`, and it was a second entry point over the same rows exactly as this line predicted.** No second scheduler, no second table: the schedule, the SM-2 state and the answering are what they were, and this reads across them.
+
+  THE BLOCKER TURNED OUT TO BE ONE HOSTNAME AND ONE ROUTE. A request arrives at a school's host and is scoped to that school before any module sees it, which is what makes every query in this platform safe to write — so crossing schools had to be a second ADDRESS rather than a flag on a route, and adding "…or all of them" to the existing queue would have put two meanings behind one door. And it needed no new sign-in: the session cookie has been on the parent domain since it existed, precisely so one login covers every school (N-01), so `my.` is a sibling of `code.` and a student signed in at their school is signed in here.
+
+  **The gates are the same gates.** Naming a school at that address grants nothing — the paywall is asked per course with that school on the context, exactly as at the school's own host, and the quarantine is asked per school because a withdrawn question is a fact about one school's catalogue. The door cache is keyed on school AND course, and that is the one real hazard here: two schools may hold a course with one id, and a shared key would let the first school's paywall answer for the second's. It is the test a single-school suite cannot write.
+
+  WHAT IS IN IT IS WHAT IS DUE AND NOT WHAT IS NEW. A school's own queue offers both, so it is never empty for somebody who finished today's; four schools' worth of never-answered questions interleaved by nothing is a catalogue with a timer on it. That also settles which schools are in scope with no rule about it — a card is there because the student has a schedule for it, so the schools that appear are the ones they are actually in rather than every school offering its free first course.
+
+  **The screen is its own interface** (`ui/my/`), and the alternative was traced rather than assumed: serving the study interface's shell there does not crash, because its three school-scoped fetches each carry a `.catch`. It renders, the brand paint is guarded and never runs, and the markup's default stands — `codeschool.ing`, the predecessor's name, over an empty school, looking deliberate. A second mode would have put "and with no school?" into every screen written from then on, with exactly that silent failure. It shares `assets/base.css` byte for byte and has its own dictionary, checked by a second invocation of a tool that already took a directory. The cards are counted there and answered at their school, where the catalogue that explains them lives
 - [x] A test proving decayed strength never reaches a progress bar — a source scan, because the coupling that would do the damage is a SQL string and no import graph can see one
 - [x] Practice excluded from certificate eligibility — held the same way, over `certificate` and `exam`
 
