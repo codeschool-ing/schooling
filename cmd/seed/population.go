@@ -357,16 +357,24 @@ func arrival(r *rand.Rand) visitorSpec {
 }
 
 // where is a country and a locale, weighted towards where this platform is.
+//
+// LOWER CASE, LIKE EVERY OTHER PRODUCER OF THIS COLUMN. `platform/geo`
+// lowercases what the database answers, the console's map is keyed by lower
+// case, and its `isRegion` refuses anything else — so a seeded `BR` was a
+// country that matched no outline, showed no flag and got no name. It rendered
+// as a row labelled `BR` next to rows labelled `Brazil`, which is the shape of
+// this mistake: nothing fails, and the report is quietly two countries where
+// there is one.
 func where(r *rand.Rand) (string, string) {
 	switch n := r.Float64(); {
 	case n < 0.72:
-		return "BR", "pt-br"
+		return "br", "pt-br"
 	case n < 0.80:
-		return "PT", "pt-pt"
+		return "pt", "pt-pt"
 	case n < 0.90:
-		return "US", "en-us"
+		return "us", "en-us"
 	case n < 0.96:
-		return "AR", "es-ar"
+		return "ar", "es-ar"
 	default:
 		// Genuinely not known, which is what the platform sees today: Cloud Run
 		// passes no country header, so this is not a hypothetical value.

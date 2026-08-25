@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -373,5 +374,43 @@ func TestItRefusesWithoutAnActor(t *testing.T) {
 	if err == nil || !strings.Contains(err.Error(), "--by") {
 		t.Errorf("a run with no actor answered %v, and every administrative write "+
 			"records one", err)
+	}
+}
+
+/*
+THE COUNTRIES IT WRITES ARE THE ONES EVERYTHING ELSE READS.
+
+	This wrote `BR` for its first three weeks while `platform/geo` wrote `br`,
+	the console's map was keyed by `br`, and its `isRegion` refused anything
+	that was not two lower-case letters. A seeded Brazil therefore matched no
+	outline, showed no flag and got no name — it rendered as a row labelled
+	`BR` beside rows labelled `Brazil`, which is this mistake's whole shape:
+	nothing fails, and one country is quietly two.
+
+	`analysis` folds the case now, so the rows already written come out right.
+	This is the other end of it: what is written from here on is what the rest
+	of the platform writes.
+*/
+func TestTheSeededCountriesAreSpeltTheWayEverythingElseSpellsThem(t *testing.T) {
+	r := rand.New(rand.NewSource(1))
+
+	seen := map[string]bool{}
+	for i := 0; i < 2000; i++ {
+		country, _ := where(r)
+		seen[country] = true
+
+		if country != strings.ToLower(country) {
+			t.Fatalf("the seeder writes %q, and everything that reads this column "+
+				"writes and expects lower case", country)
+		}
+		if country != event.Unknown && !regexp.MustCompile(`^[a-z]{2}$`).MatchString(country) {
+			t.Fatalf("%q is neither an ISO alpha-2 code nor %q", country, event.Unknown)
+		}
+	}
+
+	// And it produces more than one, or the weighting has collapsed and every
+	// seeded report would be about a single country without saying so.
+	if len(seen) < 3 {
+		t.Errorf("two thousand draws produced only %v", seen)
 	}
 }
