@@ -600,14 +600,38 @@ export const progress = () => echo(state.now().progress);
    carries `done`, and un-completing is refused here rather than sent — a bar
    that moves backwards for somebody who did nothing wrong is the thing that
    rule exists to prevent. */
+/* AND THE OFFLINE COPY HAS NOWHERE TO SEND EITHER OF THEM, WHICH IS NOT AN
+   ERROR — it is the bundle's premise. Reading works; progress lives with the
+   school, and the file says so on the screens that are the school's.
+
+   These two are the deliberate exception to the refusal in `request`, because
+   of HOW one of them is called. `sync` already declines every write when there
+   is no school to send it to, and catches what it does send — but the lesson
+   screen calls `completeSection` DIRECTLY from a click handler, with no `await`
+   and nothing holding the promise, so offline it became an unhandled rejection
+   on every single "next". Invisible: the navigation happens anyway and nothing
+   on screen looks wrong. `bundle-test` found it the first time anything ever
+   clicked forward.
+
+   The guard is here rather than in the screen because the screens are
+   `portal-frontend`'s and the portal has no offline copy to know about — the
+   same argument that keeps the offline notice on the router. And `visitSection`
+   takes it too, though only `sync` reaches it today: the asymmetry would read
+   as a decision, and the next direct caller would rediscover this.
+
+   Signing in still refuses loudly, and must: somebody typing a password into a
+   file on a disk has to be told, or they try twice and blame themselves. The
+   difference is that a refusal there is READ, and one here is thrown into a
+   promise nobody is holding. */
 export function completeSection(courseId, ix, sectionId, done = true) {
-  if (!done) return echo(null);
+  if (!done || reading) return echo(null);
   const lesson = lessonIdOf(courseId, ix);
   if (!lesson) return echo(null);
   return post(`/api/v1/progress/${enc(courseId)}/${enc(lesson)}/${enc(sectionId)}/complete`);
 }
 
 export function visitSection(courseId, ix, sectionId) {
+  if (reading) return echo(null);
   const lesson = lessonIdOf(courseId, ix);
   if (!lesson) return echo(null);
   return post(`/api/v1/progress/${enc(courseId)}/${enc(lesson)}/${enc(sectionId)}/visit`);

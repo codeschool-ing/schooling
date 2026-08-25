@@ -136,7 +136,11 @@ export default async function lesson({ id, ix, sec }) {
   const steps = sections.map((s, i) => (
     '<a class="step' + (i === pos ? ' on' : '') + (sectionDone(id, n, s.id) ? ' done' : '') +
       (s.type === 'assessment' ? ' step-assessment' : '') + (s.pending ? ' step-pending' : '') + '" ' +
-      'href="#/course/' + esc(id) + '/lesson/' + n + '/' + esc(s.id) + '">' +
+      /* THE SAME ADDRESS THE ARROWS WRITE. These carried the raw id while
+         `routeTo` above carried the slug, so one screen wrote two addresses for
+         one course and the address bar changed depending on which control the
+         student used. */
+      'href="#/course/' + esc(courseAddress(id)) + '/lesson/' + n + '/' + esc(s.id) + '">' +
       '<span class="step-n">' + (s.type === 'assessment' ? '★' : String(i + 1).padStart(2, '0')) + '</span>' +
       '<span class="step-title">' + esc(s.title) + '</span>' +
     '</a>'
