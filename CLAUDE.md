@@ -1001,6 +1001,47 @@ policy rather than filling in a blank.
 
 ---
 
+## The caller's address is read in one package
+
+`internal/platform/geo` reads `X-Forwarded-For`, resolves a country and returns two letters.
+The address never leaves that package: it is not returned, not stored, and not logged —
+including in the line that complains about it, which is the easiest place in the world to
+leak one.
+
+**That is a promise already published.** The privacy policy says, in these words, that we do
+not store the IP address and that the country is derived from the request and the address
+itself is discarded (K-05). A promise like that is not kept by everybody remembering it, so
+`internal/address_test.go` fails on a second reader anywhere in the tree — `RemoteAddr` as a
+selector, or the header's name as a string. It reads the syntax rather than the text, so a
+comment explaining the rule is not a violation of it, and it walks the tree rather than the
+git index, so a file written and not yet added is still code.
+
+**Which entry of the header is the caller is the whole difficulty.** Every proxy appends the
+address it saw, so the trail's right-hand end is the part our own infrastructure wrote and
+everything to the left of it can be the caller's invention. `proxiesInFront` in `cmd/api`
+says how many entries are ours — 1 on Cloud Run, 0 on a laptop, derived and not configured,
+because it has a right answer per environment (K-13). Reading the leftmost entry makes the
+country a field a stranger fills in, and it passes every test in which nobody lies.
+
+**A wrong number is silent in every other way**, which is why the alarm is that the picked
+address is not a public one. It cannot fire on a request that crossed the internet, and it
+fires on the first request of a deployment whose shape is not what was configured — including
+the day somebody turns on Cloudflare's orange cloud and puts one more hop in front of the
+process. It says nothing at all when `proxiesInFront` is 0, because `127.0.0.1` is where a
+laptop is called from and an alarm on every development request is an alarm nobody reads.
+
+**There is no database yet.** `geo.Resolve` is a function type with nothing satisfying it, so
+every country is `unknown` — exactly what the columns already held. The plumbing shipped first
+on purpose: it is the half with the ways to be wrong in it, and the day a database is chosen
+it is one line in `cmd/api`.
+
+**Two countries that mean different things.** `accounts.country` is where the account was
+opened and is never rewritten; the country on an event is where that request came from. They
+disagree the moment somebody travels, both are right, and no screen may present them as one
+number.
+
+---
+
 ## Money
 
 **Every amount is an integer number of cents, and `billing.Money` is the only way to hold one.**

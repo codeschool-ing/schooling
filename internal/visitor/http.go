@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
+	"github.com/codeschool-ing/schooling/internal/platform/geo"
 )
 
 // CookieName is the identity itself. One name, on the parent domain, so a
@@ -178,7 +180,8 @@ func resolve(r *http.Request, store *Store, schoolOf SchoolOf, settings Settings
 		return outcome{offer: offer(r, schoolOf, settings)}
 	}
 
-	// THE SCHOOL COMES FROM THE REQUEST AND NEVER FROM THE COOKIE.
+	// THE SCHOOL AND THE COUNTRY COME FROM THE REQUEST AND NEVER FROM THE
+	// COOKIE.
 	//
 	// Everything else in a first touch was already the caller's to choose — a
 	// referrer is a header they set, a path is what they asked for, a campaign
@@ -186,11 +189,17 @@ func resolve(r *http.Request, store *Store, schoolOf SchoolOf, settings Settings
 	// that was ever held, and `decodeOffer` bounds them exactly as the query
 	// string was bounded. The school is resolved by the server from the host,
 	// and it stays that way.
+	//
+	// The country is the same kind of thing and the cookie never carried one:
+	// `encodeOffer` writes no field for it, so there is nothing to read back
+	// and nothing a caller could put there. It is resolved here, from the
+	// request that is writing the row.
 	if schoolOf != nil {
 		if id, _, ok := schoolOf(r.Context()); ok {
 			first.TenantID = &id
 		}
 	}
+	first.Country = geo.FromContext(r.Context())
 
 	id, inserted, err := store.Create(r.Context(), offered, first)
 	if err != nil {
@@ -214,8 +223,11 @@ func firstTouch(r *http.Request, schoolOf SchoolOf) FirstTouch {
 		// kilobyte referrer was a ten kilobyte row.
 		Path:     trim(r.URL.Path),
 		Referrer: trim(r.Referer()),
-		Country:  "unknown", // Cloud Run passes no country header; see the plan
-		Locale:   locale(r.Header.Get("Accept-Language")),
+		// FROM THE REQUEST, RESOLVED ONCE, IN ONE PLACE. See `platform/geo`:
+		// the address is read there and nowhere else, and what arrives here is
+		// already two letters or `unknown`.
+		Country: geo.FromContext(r.Context()),
+		Locale:  locale(r.Header.Get("Accept-Language")),
 	}
 	q := r.URL.Query()
 
@@ -375,8 +387,12 @@ func decodeOffer(value string) (uuid.UUID, FirstTouch, bool) {
 		Source:   trim(v.Get("s")),
 		Medium:   trim(v.Get("m")),
 		Campaign: trim(v.Get("c")),
-		Country:  "unknown",
-		Locale:   trim(v.Get("l")),
+
+		// Overwritten by `resolve` from the request. It is set here so that a
+		// FirstTouch is never handed on with an empty country, which is what
+		// the column refuses.
+		Country: geo.Unknown,
+		Locale:  trim(v.Get("l")),
 	}
 	if first.Locale == "" {
 		first.Locale = "unknown"
