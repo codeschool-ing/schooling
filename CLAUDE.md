@@ -1081,11 +1081,21 @@ disagree, and an icon is what somebody picks out of a row of twelve tabs. It had
 until a test asked for one — a tab with the browser's blank glyph reads as a page that never
 finished loading.
 
+**The platform's own mark is the LED**, the nine-pixel dot `base.css` already puts beside the
+brand in every shell. It is what a school without an icon of its own falls back to, and it is
+the one shape that cannot blur — a filled circle is legible at four pixels, which matters most
+in exactly the place it is used. The terminal prompt that used to be here is `favicon-code.svg`
+now: a prompt says *programming*, not *schooling*.
+
 **Redrawn, never traced.** The marks arrive as JPEGs of neon signs; a JPEG is pixels and an SVG
 is geometry, so there is no conversion, only a redraw. The glow goes: it is the first thing to
-disappear at sixteen pixels. So did a gamepad, on the console's — at that size it fused with the
-box beside it into one smudge. **Render an icon at the size it is used at**, or that is found by
-somebody else.
+disappear at sixteen pixels.
+
+**Render an icon at the size it is used at.** The console's carries a games controller on a
+cable, and two objects joined by a line is more than sixteen pixels can hold — at that size it
+is a smudge, and a version without the controller stays legible all the way down. Both were
+drawn and looked at side by side before one was chosen. That comparison cannot be made any
+other way, and it is the whole reason these were rendered rather than reasoned about.
 
 ---
 
