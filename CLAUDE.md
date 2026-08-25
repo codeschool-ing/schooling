@@ -632,6 +632,19 @@ a translation nothing says any more**, because a stale entry reads as current. A
 string that is the same in both languages gets an entry mapping to itself: that
 says somebody decided, where an absence says nobody looked.
 
+**There are TWO student interfaces and each has its own dictionary.** `ui/` is the
+study interface and `ui/my/` is the student's own place at `my.<platform domain>`;
+sharing one dictionary would make every string of the one read as a stale entry to
+the other, which is precisely what this tool reports. It takes the directory as an
+argument for exactly this, so both are checked without a line of it changing. The
+console is absent on purpose: staff software, English only, no dictionary to be out
+of step with.
+
+*And a defect in the tool, found by writing a comment about the tool: it scans with a
+regular expression and does not know what a comment is, so the rule spelled out in the
+obvious syntax becomes an untranslated interface string. `ui/my/app/queue.js` is
+written around it and says so.*
+
 **A dictionary translates the INTERFACE and never the catalogue.** The dictionaries
 carry the words this application says — buttons, headings, the sentence above a form.
 A course's name, summary, syllabus and topics belong to a school, and they come from
@@ -1132,6 +1145,8 @@ go build ./...
 golangci-lint run            # before the tests: it is what build and vet do not do
 go run ./tools/validate-content   # the answer keys, not only the schema
 go run ./tools/check-interface    # every string the interface says, in every language it claims
+go run ./tools/check-interface ui/my   # and the same for the student's own place, which has
+                                       # its own tree and its own dictionary
 go run ./tools/check-css          # our stylesheet overrides theirs and never lays it out
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
 ```

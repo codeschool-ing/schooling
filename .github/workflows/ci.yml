@@ -255,8 +255,20 @@ jobs:
       # added without its Portuguese works perfectly — in the wrong language,
       # for half the students, until one of them mentions it. Nothing else in
       # this list can see that.
+      #
+      # TWO INVOCATIONS, BECAUSE THERE ARE TWO STUDENT INTERFACES. The study
+      # interface is one tree and `my.<platform domain>` is another, and each
+      # carries its own dictionary — sharing one would make every string of the
+      # one read as a stale entry to the other, which is the exact failure this
+      # tool reports. The tool takes the directory for precisely this reason;
+      # neither invocation needed a line of it changed.
+      #
+      # The console is deliberately absent: it is staff software, English-only,
+      # and has no dictionary to be out of step with.
       - name: The interface speaks every language it claims to
-        run: go run ./tools/check-interface
+        run: |
+          go run ./tools/check-interface
+          go run ./tools/check-interface ui/my
 
       # AND THAT OUR STYLESHEET STILL ONLY OVERRIDES. `base.css` and
       # `portal.css` are the portal's and are loaded first; ours is loaded last.

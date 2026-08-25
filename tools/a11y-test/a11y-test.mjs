@@ -50,11 +50,22 @@
    one, and the next thing learnt about making an operator would otherwise land
    in whichever of the two copies the person happened to be looking at.
 
+   # AND THE STUDENT'S OWN PLACE, WHICH IS A THIRD
+
+   `my.<platform domain>` is a student's rather than a school's or an
+   operator's, and it has its own tree for the reason the console has one: the
+   study interface boots by asking for a school, and there is none at that
+   address. It is measured SIGNED OUT — the queue itself needs a student with a
+   schedule in two schools, which is a Postgres test and not a fixture here —
+   and the signed-out state is worth a check on its own, because "sign in
+   somewhere else" is exactly the sentence that ends up as a low-contrast aside.
+
        node tools/a11y-test/a11y-test.mjs [base url]
 
-   The console's address is derived from the school's rather than passed: it is
-   the platform domain with `console.` in front, which is what `console.HostOf`
-   does in Go. Two ways to say one address is two ways to disagree about it.
+   Both other addresses are derived from the school's rather than passed: the
+   platform domain with `console.` and with `my.` in front, which is what
+   `console.HostOf` and `practice.Host` do in Go. Two ways to say one address is
+   two ways to disagree about it.
    ========================================================================== */
 
 import { chromium } from 'playwright';
@@ -71,6 +82,15 @@ const CONSOLE = (() => {
   return at.origin;
 })();
 
+/* AND THE STUDENT'S OWN PLACE, derived the same way and for the same reason:
+   one variable holds the platform's domain and every host on it is built from
+   that, so a suite cannot be measuring an address the server does not serve. */
+const MINE = (() => {
+  const at = new URL(BASE);
+  at.hostname = 'my.' + at.hostname.split('.').slice(1).join('.');
+  return at.origin;
+})();
+
 /* WCAG 2.2 AA, which is the sum of what came before it. The tags are what axe
    understands; naming them all is how "AA" stops being a word and becomes a
    list of rules that either run or do not. */
@@ -80,7 +100,8 @@ const STANDARD = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
    to look. */
 const launch = {
   args: [`--host-resolver-rules=MAP ${new URL(BASE).hostname} 127.0.0.1,`
-       + `MAP ${new URL(CONSOLE).hostname} 127.0.0.1`],
+       + `MAP ${new URL(CONSOLE).hostname} 127.0.0.1,`
+       + `MAP ${new URL(MINE).hostname} 127.0.0.1`],
 };
 if (process.env.CHROMIUM) launch.executablePath = process.env.CHROMIUM;
 
@@ -681,6 +702,25 @@ try {
 
       await measure(student, `${theme} · exam question ${q + 1} (${kind})`);
     }
+
+    /* ---------- the student's own place, on its own host ----------
+
+       IT IS MEASURED SIGNED OUT, and that is what this suite can reach rather
+       than a compromise. The queue needs a student with a schedule in two
+       schools, which is `practice`'s test against a real Postgres and not
+       something a fixture here seeds — but the SHELL is the same shell in every
+       state: the bar, the type, the accent, the theme control and one heading
+       over one paragraph. What axe reads here is that shell.
+
+       AND THE SIGNED-OUT STATE IS WORTH MEASURING ON ITS OWN. It is what a
+       student meets on a browser that has never been to a school, and it is a
+       screen that says "sign in somewhere else" — the kind of sentence that
+       ends up as a low-contrast aside precisely because nobody thinks of it as
+       a real screen. */
+    const arriving = await open(theme, 'en');
+    await check(arriving, `${theme} · mine, nobody signed in`, '/', '',
+      { base: MINE, region: '#here' });
+    await done(arriving);
 
     /* ---------- the console, on its own host ----------
 

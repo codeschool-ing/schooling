@@ -421,11 +421,13 @@ that list is strictly worse than leaving one on.*
 since it existed, precisely so one login covers every school (`N-01`), and
 `my.` is a sibling of `code.` under that parent.
 
-**Do not map it yet.** The API answers there and there is no page: the student
-shell boots by asking for its school, its catalogue and its tracks, none of
-which exist at this address, so it is deliberately not served. Mapping a name
-that answers 404 in a browser is the thing the paragraph about
-`schooling.lab.aleogr.dev` above warns against.
+**There is a screen there now**, so the mapping is the last thing it needs. It is
+its own tree — `ui/my/`, served by `ui.Mine` — and not the study interface's
+shell: that one boots by asking for its school, its catalogue and its tracks,
+and at this address it would render, keep the markup's default brand and show
+the predecessor's name over an empty school. A page that is wrong in a way that
+looks deliberate is worse than no page, which is why this address answered 404
+until one was written for it.
 
 ## Monitoring
 
