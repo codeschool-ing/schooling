@@ -70,7 +70,11 @@ is how every console rots.* That division is the spine of everything below.
   `K-03`: nobody asks who was online last March, and the stream could not answer if they did —
   that needs an event for LEAVING, and no browser reliably sends one
 - A world map with per-country statistics, from an in-process GeoIP database — the country stored
-  on the event, the address never stored (`K-05`)
+  on the event, the address never stored (`K-05`). It counts **people** through the same
+  `personOf` the funnel uses, so the two screens cannot disagree; somebody seen in two countries
+  is in both, which makes the rows add up to more than the people, so the honest total travels
+  beside them rather than being their sum. `unknown` is a row like any other — it is where
+  everything behind a VPN comes from, and hiding it would make the percentages lies
 - The failed job queue, with retry. Every attempt is a row, written before the work and closed
   after it — so a job that was killed leaves the one trace it will ever leave, and after an hour
   the reader calls it **adrift** rather than busy. The retry is the part that is not built: it
@@ -111,9 +115,8 @@ Delivery order, not scope. Each of these is a body of work and each is on the ro
 
 The seeder belongs before step 3, because a funnel with four events in it cannot be reviewed.
 
-Steps 1 to 3 are done and step 4 is in the middle: presence, view-as-student and the
-reported-content queue are built, the map is blocked on a GeoIP database, and the parameters have
-two entries and no list. `ROADMAP.md` is where that is tracked — this document is what the console
+Steps 1 to 3 are done and step 4 is in the middle: presence, view-as-student, the
+reported-content queue and the map are built, and the parameters have two entries and no list. `ROADMAP.md` is where that is tracked — this document is what the console
 IS, and a status line here would be the same fact in two places, drifting.
 
 **Why this order and not the reverse.** Phase 0 is a wall the rest of the project is meant to
