@@ -78,6 +78,14 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	account, err := h.store.Create(r.Context(), NewAccount{
 		Email: in.Email, Name: in.Name, Password: in.Password,
 		Country: geo.FromContext(r.Context()),
+
+		/* AND THE LANGUAGE THE BROWSER DECLARED, NOT THE ONE THE PAGE IS IN.
+		   `web.Locale` reads `?lang=` and falls back to English, which is
+		   right for choosing a translation and wrong for recording a person:
+		   sign-up sends no `lang` at all, so it would have written `en`
+		   against every account ever created. `unknown` is the honest fourth
+		   answer and the column already holds it. */
+		Locale: web.Declared(r),
 	})
 	switch {
 	case errors.Is(err, ErrTaken):

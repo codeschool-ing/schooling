@@ -57,6 +57,21 @@ import (
 	"strings"
 )
 
+// HeaderForwardedFor is the trail of proxies, named here because this is the
+// package that reads it.
+//
+// IT IS EXPORTED SO THAT NOBODY ELSE SPELLS IT. A test that BUILDS such a
+// request — proving a forged entry does not choose a country, say — is not a
+// second reader of the address, but a raw string literal in its source is
+// indistinguishable from one to `internal/address_test.go`, which fails on
+// exactly that. Naming it here gives that test a way to write the request
+// without writing the header, and leaves the literal itself a thing only this
+// package contains.
+//
+// Reading the header elsewhere THROUGH this constant would still be wrong, and
+// nothing stops it. The rule catches what somebody would actually type.
+const HeaderForwardedFor = "X-Forwarded-For"
+
 // Unknown is a country nobody could work out, and it is a value rather than an
 // empty string because the columns it lands in refuse an empty one: a report
 // can then tell "we do not know" from "we lost it".
@@ -204,7 +219,7 @@ func (s Settings) pick(r *http.Request) (netip.Addr, bool) {
 
 // forwarded is the trail, oldest first, exactly as the header spells it.
 func forwarded(r *http.Request) []string {
-	header := r.Header.Get("X-Forwarded-For")
+	header := r.Header.Get(HeaderForwardedFor)
 	if strings.TrimSpace(header) == "" {
 		return nil
 	}

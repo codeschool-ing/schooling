@@ -27,7 +27,7 @@ func request(header, remote string) *http.Request {
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/anything", nil)
 	r.RemoteAddr = remote
 	if header != "" {
-		r.Header.Set("X-Forwarded-For", header)
+		r.Header.Set(geo.HeaderForwardedFor, header)
 	}
 	return r
 }

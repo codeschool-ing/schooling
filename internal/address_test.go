@@ -35,6 +35,17 @@ THE CALLER'S ADDRESS IS READ IN ONE PACKAGE, AND THIS IS WHAT SAYS SO.
 	write around the checker instead of in plain English — which this repository
 	has already done once, in `tools/check-interface`, and had to undo.
 
+	THE HEADER IS SPELLED ONCE, IN `geo.HeaderForwardedFor`. This test caught
+	the very next thing written after it: a sign-up test BUILDING a request with
+	a forged entry in front of the real one, which is not a second reader of the
+	address but is indistinguishable from one here. The constant is how such a
+	test writes the request without writing the header, and it leaves the
+	literal a thing only that package contains.
+
+	It is not airtight and does not pretend to be: reading the header elsewhere
+	THROUGH the constant would pass. What this catches is what somebody would
+	actually type.
+
 	AND IT WALKS THE TREE RATHER THAN THE INDEX. The test beside this one asks
 	git what is committed, because what it is about IS what is committed. This
 	is about the code, and a file that has been written but not yet added is

@@ -93,6 +93,30 @@ func Locale(r *http.Request) string {
 	return l
 }
 
+// Declared is the language the BROWSER says it reads, or `unknown`.
+//
+// IT IS NOT `Locale` ABOVE AND MUST NOT BE CONFUSED WITH IT. That one answers
+// "which language do I serve this page in", and its right fallback is English,
+// because a page has to be in some language. This one answers "which language
+// does this person read", which is a fact about a person and has a fourth
+// possible answer: we do not know. Falling back to English here would record
+// every visitor who sent no header as an English reader — a plausible number,
+// on every row, which is the shape of wrong this repository keeps finding.
+//
+// THE FIRST TAG IS ENOUGH. What this is used for is grouping a report; the
+// weighted list underneath answers a question nobody asks.
+func Declared(r *http.Request) string {
+	first, _, _ := strings.Cut(r.Header.Get("Accept-Language"), ",")
+	first, _, _ = strings.Cut(first, ";")
+	first = strings.ToLower(strings.TrimSpace(first))
+	if first == "" || len(first) > 35 {
+		// 35 is the longest well-formed language tag there is; anything past
+		// it is not a tag, it is a column somebody is filling in for us.
+		return "unknown"
+	}
+	return first
+}
+
 /* ---------- context ---------- */
 
 type ctxKey int

@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/codeschool-ing/schooling/internal/platform/geo"
+	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
 
 // CookieName is the identity itself. One name, on the parent domain, so a
@@ -227,7 +228,7 @@ func firstTouch(r *http.Request, schoolOf SchoolOf) FirstTouch {
 		// the address is read there and nowhere else, and what arrives here is
 		// already two letters or `unknown`.
 		Country: geo.FromContext(r.Context()),
-		Locale:  locale(r.Header.Get("Accept-Language")),
+		Locale:  web.Declared(r),
 	}
 	q := r.URL.Query()
 
@@ -398,19 +399,6 @@ func decodeOffer(value string) (uuid.UUID, FirstTouch, bool) {
 		first.Locale = "unknown"
 	}
 	return id, first, true
-}
-
-// locale takes the first language off an Accept-Language header.
-//
-// The first is enough: what it is used for is grouping a report, and the
-// weighted list underneath answers a question nobody asks.
-func locale(header string) string {
-	first, _, _ := strings.Cut(header, ",")
-	first, _, _ = strings.Cut(first, ";")
-	if first = trim(first); first == "" {
-		return "unknown"
-	}
-	return strings.ToLower(first)
 }
 
 // trim bounds what a stranger can put in a column. The values come from a query
