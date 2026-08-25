@@ -476,3 +476,101 @@ func aSchoolRow(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
 	}
 	return id
 }
+
+/* ---------- which of a school's addresses a link gets ---------- */
+
+/*
+THE OLDEST ADDRESS, WHICH IS WHAT THE COMMENT ALWAYS SAID.
+
+	`HostOf` builds the link an operator follows to view as a student, and a
+	school may answer at several addresses while one is being moved to. The rule
+	written beside it has always been "the oldest is the one most likely to be
+	the one people already use" — and the query sorted them ALPHABETICALLY,
+	which is a different answer the moment a school has two.
+
+	NOTHING NOTICED BECAUSE NO SCHOOL HAD TWO. The first one that did has its own
+	`code.<domain>` and the service's `schooling-….run.app`, where alphabetical
+	order happens to give the right answer. This is the case that does not: the
+	custom address is added first and sorts LAST, so a query ordering by name
+	hands back the raw Cloud Run URL — which works, serves the right school, and
+	is an address nobody should be given.
+*/
+func TestALinkGetsTheOldestAddressAndNotTheFirstAlphabetically(t *testing.T) {
+	pool := testPool(t)
+	id := aSchoolRow(t, pool)
+	ctx := context.Background()
+
+	// The one people use, added first and sorting last.
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO tenant_domains (host, tenant_id) VALUES ($1, $2)`,
+		"zoology."+strings.ReplaceAll(uuid.NewString(), "-", "")[:8]+".example.tld", id); err != nil {
+		t.Fatalf("seeding the address people use: %v", err)
+	}
+
+	// The platform's own, added later and sorting first.
+	later := "aaa-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:8] + ".run.app"
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO tenant_domains (host, tenant_id, created_at)
+		VALUES ($1, $2, now() + interval '1 minute')
+	`, later, id); err != nil {
+		t.Fatalf("seeding the address nobody types: %v", err)
+	}
+
+	host, err := tenant.NewStore(pool).HostOf(ctx, id)
+	if err != nil {
+		t.Fatalf("reading a school's address: %v", err)
+	}
+	if host == later {
+		t.Error("the link points at the address added later, which is what ordering by " +
+			"name does — an operator following it lands on a URL nobody should be handed")
+	}
+	if !strings.HasPrefix(host, "zoology.") {
+		t.Errorf("the link points at %q, and the oldest address is the zoology one", host)
+	}
+}
+
+// TWO ADDRESSES WRITTEN AT THE SAME INSTANT STILL GIVE ONE ANSWER. `created_at`
+// alone would let either row win, and a link that changes between refreshes is
+// worse than a link that is arguably the wrong one — the tie-break is what makes
+// it a rule rather than a coin.
+func TestASchoolWithTwoAddressesAtOnceAnswersTheSameEveryTime(t *testing.T) {
+	pool := testPool(t)
+	id := aSchoolRow(t, pool)
+	ctx := context.Background()
+
+	stamp := strings.ReplaceAll(uuid.NewString(), "-", "")[:8]
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO tenant_domains (host, tenant_id, created_at) VALUES
+			($1, $3, now()), ($2, $3, now())
+	`, "b-"+stamp+".example.tld", "a-"+stamp+".example.tld", id); err != nil {
+		t.Fatalf("seeding two addresses at one instant: %v", err)
+	}
+
+	store := tenant.NewStore(pool)
+	first, err := store.HostOf(ctx, id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < 5; i++ {
+		again, err := store.HostOf(ctx, id)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if again != first {
+			t.Fatalf("the same school answered %q and then %q — a link that changes "+
+				"between refreshes is not a link", first, again)
+		}
+	}
+}
+
+// A SCHOOL WITH NO ADDRESS IS A REAL STATE, not a failure to look one up: a
+// school row exists before its domain is mapped, and the caller has to be able
+// to tell that from a database that is unwell.
+func TestASchoolWithNoAddressSaysSoRatherThanFailing(t *testing.T) {
+	pool := testPool(t)
+
+	_, err := tenant.NewStore(pool).HostOf(context.Background(), aSchoolRow(t, pool))
+	if !errors.Is(err, tenant.ErrUnknownHost) {
+		t.Errorf("a school with no address answered %v", err)
+	}
+}

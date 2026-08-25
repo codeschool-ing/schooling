@@ -458,10 +458,31 @@ func isCurrency(c string) bool {
 // link needs an address. Deriving one from the slug and the platform domain
 // would be a second copy of a rule this table already holds, and the copy is the
 // one that is wrong the day a school gets a domain of its own.
+//
+// # IT SAID "OLDEST" AND ORDERED BY NAME
+//
+// The paragraph above has always said the oldest, and the query sorted the
+// hosts ALPHABETICALLY — which is a different answer whenever a school has more
+// than one, and no school had more than one until the day this was noticed.
+//
+// The one that did has `code.<domain>` and the service's own
+// `schooling-….run.app`, and alphabetical order happens to put the right one
+// first. That is luck and not a rule: a school at `zoology.<domain>` sorts
+// AFTER `schooling-…`, so an operator following a view-as-student link would
+// land on the raw Cloud Run URL — which works, serves the right school, and is
+// an address nobody should be handed.
+//
+// `created_at` has been on the table since the first migration, so the fix is
+// the column the comment was always describing. The tie-break on `host` is for
+// the two rows written in the same statement: a query that can return either of
+// two rows is a link that changes between refreshes.
 func (s *Store) HostOf(ctx context.Context, id uuid.UUID) (string, error) {
 	var host string
 	err := s.pool.QueryRow(ctx, `
-		SELECT host FROM tenant_domains WHERE tenant_id = $1 ORDER BY host LIMIT 1
+		SELECT host FROM tenant_domains
+		WHERE tenant_id = $1
+		ORDER BY created_at, host
+		LIMIT 1
 	`, id).Scan(&host)
 
 	if errors.Is(err, pgx.ErrNoRows) {
