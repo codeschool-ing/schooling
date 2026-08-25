@@ -27,6 +27,7 @@ func tracked(t *testing.T) []string {
 		t.Fatalf("finding the repository root: %v", err)
 	}
 
+	//nolint:gosec // `root` is this test file's own directory, resolved above
 	out, err := exec.Command("git", "-C", root, "ls-files", "-z").Output()
 	if err != nil {
 		// A tarball with no `.git` is a real way to get here, and it is not a
@@ -126,6 +127,7 @@ func TestEveryCommandsBinaryIsIgnored(t *testing.T) {
 		t.Fatalf("finding the repository root: %v", err)
 	}
 
+	//nolint:gosec // the repository's own .gitignore, at a path derived from this file
 	ignore, err := os.ReadFile(filepath.Join(root, ".gitignore"))
 	if err != nil {
 		t.Fatalf("reading .gitignore: %v", err)
