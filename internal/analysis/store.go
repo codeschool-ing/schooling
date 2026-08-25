@@ -50,17 +50,22 @@ type Store struct {
 	// them refuse rather than answering something built from nothing.
 	reached Reached
 	monthly Monthly
+	origins Origins
 	links   Links
 }
 
-// WithStream is the store with the funnel's two readers.
+// WithStream is the store with the readers that go to the event stream.
 //
 // A separate call rather than constructor arguments, for the reason WithAudit
-// is one: item analysis needs neither, and a constructor that demanded all four
-// would be a constructor somebody passes nil to.
-func (s *Store) WithStream(reached Reached, monthly Monthly, links Links) *Store {
+// is one: item analysis needs none of them, and a constructor that demanded all
+// of them would be a constructor somebody passes nil to.
+//
+// `links` is shared by all three on purpose. It is what turns two identities
+// into one person, and a report that folded them differently from another would
+// put two irreconcilable totals on two screens of the same console.
+func (s *Store) WithStream(reached Reached, monthly Monthly, origins Origins, links Links) *Store {
 	out := *s
-	out.reached, out.monthly, out.links = reached, monthly, links
+	out.reached, out.monthly, out.origins, out.links = reached, monthly, origins, links
 	return &out
 }
 

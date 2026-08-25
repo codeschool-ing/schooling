@@ -27,6 +27,7 @@ import schools from './screens/schools.js';
 import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
+import countries from './screens/countries.js';
 import presence from './screens/presence.js';
 import reports from './screens/reports.js';
 import jobs from './screens/jobs.js';
@@ -48,6 +49,13 @@ export const SECTIONS = [
   { id: 'funnel', name: 'The funnel', group: 'Measure', screen: funnel },
   { id: 'questions', name: 'Questions', group: 'Measure', screen: questions },
   { id: 'cohorts', name: 'Cohorts', group: 'Measure', screen: cohorts },
+
+  /* WHERE THEY ARE IS LAST UNDER `Measure`, and it is named for the question
+     it answers rather than for the picture on it. There IS a world map on this
+     screen — but the map cannot say how many, and the ranked list under it is
+     what somebody came for. A rail entry called "the map" would promise the
+     half that is decoration. */
+  { id: 'countries', name: 'Where they are', group: 'Measure', screen: countries },
   /* REPORTED CONTENT IS FIRST UNDER `Operate`, above the record and the
      schools, because it is the only section in this console that somebody
      outside it is waiting on. The other two are opened when an operator has a

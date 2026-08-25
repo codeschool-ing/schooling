@@ -38,6 +38,11 @@ type funnelFake struct {
 	table        []console.Cohort
 	askedMonths  int
 	askedCohorts string
+
+	// Where the people are, and what that seam was asked for.
+	where          console.Where
+	askedCountries string
+	askedSince     time.Time
 }
 
 func (f *funnelFake) handler() http.Handler {
@@ -73,6 +78,15 @@ func (f *funnelFake) handler() http.Handler {
 				return nil, "", fmt.Errorf("the stream is not there")
 			}
 			return f.table, "section.completed", nil
+		},
+		func(_ context.Context, _ uuid.UUID, since time.Time,
+			counting string) (console.Where, error) {
+
+			f.askedCountries, f.askedSince = counting, since
+			if f.fail {
+				return console.Where{}, fmt.Errorf("the stream is not there")
+			}
+			return f.where, nil
 		},
 	).Routes(mux)
 	return mux
@@ -566,5 +580,162 @@ func TestTheNumberOfMonthsIsBoundedAndDefaulted(t *testing.T) {
 			t.Errorf("%q was refused and the cohorts were read anyway, over %d months",
 				bad, f.askedMonths)
 		}
+	}
+}
+
+/* ---------- where the people are ---------- */
+
+func askCountries(t *testing.T, f *funnelFake, school uuid.UUID, query string) (int, map[string]any) {
+	t.Helper()
+	r := httptest.NewRequest(http.MethodGet,
+		"/console/api/v1/schools/"+school.String()+"/countries"+query, nil)
+	w := httptest.NewRecorder()
+	f.handler().ServeHTTP(w, r)
+
+	var body map[string]any
+	if err := json.Unmarshal(w.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v — %s", err, w.Body.String())
+	}
+	return w.Code, body
+}
+
+/*
+THE TOTAL IS SENT AND NOT LEFT TO BE ADDED UP.
+
+	Somebody who studied at home and again on a trip is honestly in two
+	countries, so the rows sum to more than the number of people. Anybody
+	reading a list of numbers will add them, so the honest total travels beside
+	them — the same rule as a threshold arriving with the number it produced
+	(K-16).
+*/
+func TestTheCountriesAddUpToMoreThanThePeopleAndTheAnswerSaysSo(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{
+		schools: []console.School{school},
+		where: console.Where{
+			People: 3,
+			Countries: []console.Country{
+				{Code: "br", People: 3},
+				{Code: "pt", People: 1},
+			},
+		},
+	}
+
+	code, body := askCountries(t, f, school.ID, "")
+	if code != http.StatusOK {
+		t.Fatalf("asking where the people are answered %d: %v", code, body)
+	}
+
+	if body["people"] != float64(3) {
+		t.Errorf("people = %v, want 3 — without it the only total available is the "+
+			"sum of the rows, which is 4 and is not a number of people", body["people"])
+	}
+	rows, ok := body["countries"].([]any)
+	if !ok || len(rows) != 2 {
+		t.Fatalf("countries = %v, want two rows", body["countries"])
+	}
+	first, _ := rows[0].(map[string]any)
+	if first["code"] != "br" || first["people"] != float64(3) {
+		t.Errorf("the first row is %v, want br with 3 people", first)
+	}
+}
+
+/*
+AND THE WORD FOR "NOBODY KNOWS" IS SENT RATHER THAN SPELLED IN JAVASCRIPT.
+
+	The screen has to draw that row differently — it is not a place — and the
+	only way it can tell is by comparing the code against a string. A copy of
+	that string in the interface is a copy that stops matching the day the
+	server's changes, and the symptom is a row labelled with a country code
+	nobody recognises, forever, with nothing failing.
+*/
+func TestTheWordForNowhereComesFromTheServer(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}}
+
+	_, body := askCountries(t, f, school.ID, "")
+	if body["unknown"] != "unknown" {
+		t.Errorf("unknown = %v, want the word the events actually carry", body["unknown"])
+	}
+}
+
+// THE POPULATION IS PASSED THROUGH AND ANSWERED BACK, as it is on every other
+// report here: a screen must not assume its own switch was obeyed (K-18), and
+// the map is where a demonstration is most likely to be mistaken for a
+// measurement — there is a whole world drawn on it either way.
+func TestTheMapAnswersWhichPopulationItCounted(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}}
+
+	code, body := askCountries(t, f, school.ID, "?counting=seeded")
+	if code != http.StatusOK {
+		t.Fatalf("asking answered %d: %v", code, body)
+	}
+	if f.askedCountries != "seeded" {
+		t.Errorf("the seam was asked for %q, want %q", f.askedCountries, "seeded")
+	}
+	if body["counting"] != "seeded" {
+		t.Errorf("counting = %v, want seeded", body["counting"])
+	}
+	if banner, _ := body["banner"].(string); banner == "" {
+		t.Error("a demonstration came back with no sentence saying so")
+	}
+}
+
+func TestAMapOfAPopulationThatIsNotOneIsRefused(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}}
+
+	code, _ := askCountries(t, f, school.ID, "?counting=everyone")
+	if code != http.StatusBadRequest {
+		t.Errorf("a word that is not a population answered %d, want %d",
+			code, http.StatusBadRequest)
+	}
+	if f.askedCountries != "" {
+		t.Errorf("it was asked for %q anyway", f.askedCountries)
+	}
+}
+
+// A WINDOW IS PASSED THROUGH TOO, and a negative one is refused rather than
+// guessed at — `days=-30` is somebody meaning something.
+func TestTheMapsWindowIsPassedThroughAndANonsenseOneRefused(t *testing.T) {
+	school := oneSchool()
+
+	f := &funnelFake{schools: []console.School{school}}
+	if code, _ := askCountries(t, f, school.ID, "?days=30"); code != http.StatusOK {
+		t.Fatalf("thirty days answered %d", code)
+	}
+	if f.askedSince.IsZero() {
+		t.Error("`days=30` was read as since the beginning")
+	}
+
+	f = &funnelFake{schools: []console.School{school}}
+	if code, _ := askCountries(t, f, school.ID, "?days=-30"); code != http.StatusBadRequest {
+		t.Errorf("a negative window answered %d, want %d", code, http.StatusBadRequest)
+	}
+}
+
+// A SCHOOL NOBODY HAS IS A 404 AND NOT AN EMPTY MAP, for the reason the funnel
+// gives: a world with nobody on it reads as a school nobody found, which is a
+// sentence somebody would act on.
+func TestAMapOfASchoolThatIsNotThereIsA404(t *testing.T) {
+	f := &funnelFake{schools: []console.School{oneSchool()}}
+
+	if code, _ := askCountries(t, f, uuid.New(), ""); code != http.StatusNotFound {
+		t.Errorf("a school nobody has answered %d, want %d", code, http.StatusNotFound)
+	}
+}
+
+// AND A STREAM THAT CANNOT BE READ SAYS SO. An empty map here would be
+// indistinguishable from a school where nobody is, which is the same
+// distinction the item analysis makes with its own screen.
+func TestAMapThatCannotBeReadIsNotAnEmptyWorld(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, fail: true}
+
+	code, _ := askCountries(t, f, school.ID, "")
+	if code != http.StatusServiceUnavailable {
+		t.Errorf("a stream that is not there answered %d, want %d",
+			code, http.StatusServiceUnavailable)
 	}
 }

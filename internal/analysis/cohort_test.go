@@ -63,6 +63,7 @@ func cohortsOver(t *testing.T, signups, studied []analysis.Active,
 			}
 			return studied, nil
 		},
+		nil, // a cohort does not read where anybody was; `countries_test.go` does
 		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil },
 	)
 }

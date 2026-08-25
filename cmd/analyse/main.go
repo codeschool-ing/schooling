@@ -214,6 +214,21 @@ func analyse(ctx context.Context, log *slog.Logger,
 				}
 				return out, nil
 			},
+			func(ctx context.Context, school uuid.UUID, since time.Time,
+				who analysis.Counting) ([]analysis.Origin, error) {
+
+				places, err := events.Countries(ctx, school, since, counting(who))
+				if err != nil {
+					return nil, err
+				}
+				out := make([]analysis.Origin, 0, len(places))
+				for _, p := range places {
+					out = append(out, analysis.Origin{
+						Country: p.Country, VisitorID: p.VisitorID, AccountID: p.AccountID,
+					})
+				}
+				return out, nil
+			},
 			visitor.NewStore(pool).Links,
 		)
 
