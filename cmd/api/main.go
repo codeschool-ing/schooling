@@ -39,6 +39,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/geo"
 	"github.com/codeschool-ing/schooling/internal/platform/geo/dbip"
+	"github.com/codeschool-ing/schooling/internal/platform/logs"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
@@ -62,7 +63,7 @@ func main() {
 		return
 	}
 
-	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	log := logs.New(os.Stdout)
 
 	if err := run(log); err != nil {
 		log.Error("the server stopped", "error", err)
