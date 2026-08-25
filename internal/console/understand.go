@@ -73,12 +73,14 @@ type UnderstandHandler struct {
 	funnel    Funnel
 	questions Questions
 	cohorts   Cohorts
+	countries Countries
 }
 
 func NewUnderstandHandler(schools Schools, funnel Funnel, questions Questions,
-	cohorts Cohorts) *UnderstandHandler {
+	cohorts Cohorts, countries Countries) *UnderstandHandler {
 	return &UnderstandHandler{
-		schools: schools, funnel: funnel, questions: questions, cohorts: cohorts,
+		schools: schools, funnel: funnel, questions: questions,
+		cohorts: cohorts, countries: countries,
 	}
 }
 
@@ -86,6 +88,7 @@ func (h *UnderstandHandler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/funnel", h.funnelOf)
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/questions", h.questionsOf)
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/cohorts", h.cohortsOf)
+	mux.HandleFunc("GET /console/api/v1/schools/{id}/countries", h.countriesOf)
 }
 
 // schoolFrom resolves the id in the path, or answers the request itself.
@@ -546,3 +549,114 @@ func monthsFrom(r *http.Request) (int, bool) {
 	}
 	return n, true
 }
+
+/* ---------- where the people are ---------- */
+
+// Country is one row of the map.
+type Country struct {
+	Code   string
+	People int
+}
+
+// Where is the whole answer: the countries, and every person counted once.
+type Where struct {
+	Countries []Country
+	People    int
+}
+
+// Countries is what this package may not import: `analysis` folds the two
+// identities on an event into a person, and `event` owns the stream.
+type Countries func(ctx context.Context, school uuid.UUID, since time.Time,
+	counting string) (Where, error)
+
+type countryBody struct {
+	Code   string `json:"code"`
+	People int    `json:"people"`
+}
+
+/*
+WHERE THE PEOPLE ARE, WHICH IS A REPORT WITH A TRAP IN IT.
+
+	The countries add up to MORE than the number of people, because somebody who
+	studied at home and again on a trip is honestly in both. Anybody reading the
+	rows will add them up, so the honest total travels beside them rather than
+	being left to be computed — the same rule as a threshold arriving with the
+	number it produced (K-16).
+
+	AND THE SCREEN IS NOT TOLD THE RULE, it is told the numbers. A sentence about
+	double counting written into the interface would keep saying it after the
+	rule changed, and it is the interface of a console whose whole job is to be
+	trusted about arithmetic.
+*/
+func (h *UnderstandHandler) countriesOf(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.schoolFrom(w, r)
+	if !ok {
+		return
+	}
+
+	counting := r.URL.Query().Get("counting")
+	if counting == "" {
+		counting = "real"
+	}
+	banner, known := populations[counting]
+	if !known {
+		web.Fail(w, http.StatusBadRequest, "not_a_population",
+			"the population is one of real, seeded or everybody — a word this does not know "+
+				"would be answered about real people under a heading saying otherwise, which is "+
+				"worse than refusing")
+		return
+	}
+
+	since, sane := windowFrom(r)
+	if !sane {
+		web.Fail(w, http.StatusBadRequest, "not_a_window",
+			"`days` is a whole number of days, and 0 or nothing means since the beginning")
+		return
+	}
+
+	where, err := h.countries(r.Context(), school.ID, since, counting)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading where the people are",
+			"error", err, "school", school.Slug, "counting", counting)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return
+	}
+
+	out := make([]countryBody, 0, len(where.Countries))
+	for _, c := range where.Countries {
+		out = append(out, countryBody(c))
+	}
+
+	web.JSON(w, http.StatusOK, map[string]any{
+		"school": schoolBody{
+			ID: school.ID.String(), Slug: school.Slug, Name: school.Name, Accent: school.Accent,
+		},
+		"countries": out,
+
+		// EVERY PERSON ONCE, which is not the sum of the rows above and is the
+		// only defence against somebody adding them up.
+		"people": where.People,
+
+		// The word for a country nobody could place, sent rather than spelled in
+		// the interface: it is the same string the events carry, and a second
+		// copy of it in JavaScript is a copy that stops matching.
+		"unknown": Unknown,
+
+		"counting":    counting,
+		"banner":      banner,
+		"populations": populationOrder,
+		"scope":       "one school",
+	})
+}
+
+// Unknown is the country of an event nobody could place.
+//
+// IT IS SPELLED HERE RATHER THAN IMPORTED, because `console` may not reach into
+// `analysis` and neither may reach into `platform/geo` from the other side of
+// the module rule. Four packages therefore write this word, and
+// `internal/unknown_test.go` — which is outside all of them — is the only thing
+// that can hold them to each other.
+//
+// It is EXPORTED for exactly that: an unexported one would leave the console
+// out of the check, and the console is the copy that reaches the screen.
+const Unknown = "unknown"

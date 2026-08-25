@@ -348,6 +348,27 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			}
 			return out, nil
 		},
+
+		/* WHERE THEY WERE, WHICH TAKES NO LIST OF NAMES. A funnel step and a
+		   cohort's activity are definitions somebody chose, so both readers
+		   above are told which events to look at. "Where are the people" is
+		   not: anything a person did is evidence they were somewhere, and a
+		   list here would be a filter nobody could explain. */
+		func(ctx context.Context, school uuid.UUID, since time.Time,
+			who analysis.Counting) ([]analysis.Origin, error) {
+
+			places, err := events.Countries(ctx, school, since, counting(who))
+			if err != nil {
+				return nil, err
+			}
+			out := make([]analysis.Origin, 0, len(places))
+			for _, p := range places {
+				out = append(out, analysis.Origin{
+					Country: p.Country, VisitorID: p.VisitorID, AccountID: p.AccountID,
+				})
+			}
+			return out, nil
+		},
 		visitor.NewStore(pool).Links,
 	)
 	withdrawn := func(ctx context.Context, school uuid.UUID) (map[analysis.Question]bool, error) {
@@ -740,6 +761,35 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 				})
 			}
 			return out, analysis.ActiveEvent, nil
+		},
+
+		/* AND THE FOURTH: where the people are.
+
+		   IT FOLDS IDENTITIES INTO PEOPLE THE SAME WAY THE FUNNEL DOES, because
+		   it is the same store and the same links. Two screens of one console
+		   disagreeing about how many people there are would be worse than one of
+		   them being wrong: both would be right by their own definition and
+		   there would be nothing to fix. */
+		func(ctx context.Context, school uuid.UUID, since time.Time,
+			word string) (console.Where, error) {
+
+			who, known := analysis.Reading(word)
+			if !known {
+				return console.Where{}, fmt.Errorf("%q is not a population this counts", word)
+			}
+			where, err := items.Countries(ctx, school, since, who)
+			if err != nil {
+				return console.Where{}, err
+			}
+			out := console.Where{
+				People:    where.People,
+				Countries: make([]console.Country, 0, len(where.Countries)),
+			}
+			for _, c := range where.Countries {
+				out.Countries = append(out.Countries,
+					console.Country{Code: c.Code, People: c.People})
+			}
+			return out, nil
 		},
 	).Routes(staffAPI)
 

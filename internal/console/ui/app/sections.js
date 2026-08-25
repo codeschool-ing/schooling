@@ -27,6 +27,7 @@ import schools from './screens/schools.js';
 import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
+import countries from './screens/countries.js';
 import presence from './screens/presence.js';
 import reports from './screens/reports.js';
 import jobs from './screens/jobs.js';
@@ -48,6 +49,14 @@ export const SECTIONS = [
   { id: 'funnel', name: 'The funnel', group: 'Measure', screen: funnel },
   { id: 'questions', name: 'Questions', group: 'Measure', screen: questions },
   { id: 'cohorts', name: 'Cohorts', group: 'Measure', screen: cohorts },
+
+  /* WHERE THEY ARE IS LAST UNDER `Measure` and is named for what it shows
+     rather than for what `docs/ROADMAP.md` calls it. The roadmap asks for a
+     world map; the geometry of one is a quarter of a megabyte of somebody
+     else's SVG under somebody else's licence, and that decision is not smuggled
+     in behind a rail entry. A section named for what it will be one day is the
+     same lie as a bar of length zero. */
+  { id: 'countries', name: 'Where they are', group: 'Measure', screen: countries },
   /* REPORTED CONTENT IS FIRST UNDER `Operate`, above the record and the
      schools, because it is the only section in this console that somebody
      outside it is waiting on. The other two are opened when an operator has a

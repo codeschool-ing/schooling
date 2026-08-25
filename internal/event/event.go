@@ -501,3 +501,59 @@ func (s *Store) Monthly(ctx context.Context, tenantID uuid.UUID,
 	}
 	return out, rows.Err()
 }
+
+// Origin is one identity seen from one country.
+type Origin struct {
+	Country   string
+	VisitorID *uuid.UUID
+	AccountID *uuid.UUID
+}
+
+// Countries answers which identities were seen from which country.
+//
+// # IT COLLAPSES IN THE DATABASE, LIKE THE TWO ABOVE
+//
+// `SELECT DISTINCT country, visitor_id, account_id` is the whole trick: a
+// student who answered four hundred cards from São Paulo is one row before it
+// ever reaches Go. What comes back is at most one row per identity per country,
+// which is a number bounded by the people rather than by the events.
+//
+// # EVERY EVENT COUNTS, WITH NO LIST OF NAMES
+//
+// `Reached` and `Monthly` take the names they care about because a funnel step
+// and a cohort's activity are DEFINITIONS somebody chose. "Where are the people"
+// is not: anything a person did is evidence they were somewhere, and a list here
+// would be a filter nobody could explain — why should opening a lesson put you
+// on the map and finishing one not.
+//
+// # AND ONE PERSON CAN BE IN TWO COUNTRIES
+//
+// Somebody who studies from home and again on a trip is two rows, honestly, and
+// this package is not where that is resolved. Whether that is one person in two
+// places or two rows to add up is a question about what the report MEANS, and
+// the module that folds identities into people answers it.
+func (s *Store) Countries(ctx context.Context, tenantID uuid.UUID,
+	since time.Time, who Counting) ([]Origin, error) {
+
+	// See `ItemAnswers` for why this one predicate is formatted in.
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT country, visitor_id, account_id
+		FROM events
+		WHERE tenant_id = $1 AND occurred_at >= $2
+		  AND `+who.counts()+`
+	`, tenantID, since)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading where people were: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Origin
+	for rows.Next() {
+		var o Origin
+		if err := rows.Scan(&o.Country, &o.VisitorID, &o.AccountID); err != nil {
+			return nil, fmt.Errorf("event: reading where people were: %w", err)
+		}
+		out = append(out, o)
+	}
+	return out, rows.Err()
+}
