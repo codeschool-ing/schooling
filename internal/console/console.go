@@ -121,13 +121,18 @@ func (h *Handler) me(w http.ResponseWriter, r *http.Request) {
 
 /* ---------- the host ---------- */
 
-// Is answers whether this request arrived at the console's address.
+// Is answers whether this request arrived at one exact host.
+//
+// IT IS THE CONSOLE'S BY BIRTH AND NO LONGER THE CONSOLE'S ALONE. `my.` takes
+// it, and so does the platform's front door: each of the three is one address
+// belonging to no school, and each needs the same question answered about the
+// `Host` header. The name stays because moving it would mean a package that
+// may import neither `tenant` nor these three, invented to hold four lines.
 //
 // THE SAME NORMALISATION AS A SCHOOL'S, and that is the point rather than a
 // convenience: two rules for reading a `Host` header is two chances to disagree
 // about `CONSOLE.example.tld:8080`, and the disagreement would be a request
-// that is neither a school's nor the console's — the fourth case the design
-// says does not exist.
+// belonging to none of the cases the design allows.
 //
 // It takes the normaliser as an argument for the same reason everything else
 // here does: this package may not import `tenant`.

@@ -89,7 +89,7 @@ func TestTheOperationalRoutesBelongToNoSchool(t *testing.T) {
 //
 // The pool is nil on purpose, as above: none of these answers needs a database,
 // and a query of any kind panics rather than passing.
-func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
+func TestAHostIsASchoolsTheConsolesAStudentsOwnTheFrontDoorOrA404(t *testing.T) {
 	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
 		config.Config{PlatformDomain: "example.tld"}, nil, nil)
 
@@ -134,12 +134,17 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 		t.Errorf("a school route answered %d at the console's host, want 404", got)
 	}
 
-	/* THE PLATFORM'S. Nobody is signed in, so the queue refuses with 401 — and
-	   that 401 is the proof the request reached this side: no school was
+	/* THE STUDENT'S OWN. Nobody is signed in, so the queue refuses with 401 —
+	   and that 401 is the proof the request reached this side: no school was
 	   resolved for it and no database was touched to refuse it. A 404 here
-	   would mean the address routed to the school mux and found nothing. */
+	   would mean the address routed to the school mux and found nothing.
+
+	   IT IS NOT CALLED "THE PLATFORM'S" ANY MORE, and that is not tidying: the
+	   platform's own address is the bare domain, which now answers, and two
+	   things called the same thing in one test is how somebody asserts about
+	   the wrong one. */
 	if got := ask("my.example.tld", "/api/v1/review").Code; got != http.StatusUnauthorized {
-		t.Errorf("the cross-school queue answered %d at the platform's host, want 401 — "+
+		t.Errorf("the cross-school queue answered %d at the student's own host, want 401 — "+
 			"a request that never reached it cannot have been refused by it", got)
 	}
 
@@ -150,7 +155,7 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 	   It needs no database: the shell is bytes out of an embed, and what it
 	   draws is decided by one request it makes afterwards. */
 	if got := ask("my.example.tld", "/").Code; got != http.StatusOK {
-		t.Errorf("the platform's address answered %d for its own screen, want 200", got)
+		t.Errorf("the student's own address answered %d for its own screen, want 200", got)
 	}
 
 	// AND IT IS ITS OWN SCREEN AND NOT THE STUDY INTERFACE'S. `app/main.js`
@@ -161,8 +166,54 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 		t.Errorf("the student's own place did not serve its own script: %d", mine.Code)
 	}
 	if got := ask("my.example.tld", "/app/rail.js").Code; got != http.StatusNotFound {
-		t.Errorf("a study-interface module answered %d at the platform's address — those "+
+		t.Errorf("a study-interface module answered %d at the student's address — those "+
 			"assume a school, which is the whole reason this tree exists", got)
+	}
+
+	/* ---------- AND THE BARE DOMAIN, WHICH USED TO BE THE 404 ----------
+
+	   It fell through to the school mux, where `tenant.Resolve` answered that no
+	   school lives there — correct, and the one address somebody types having
+	   heard the name and nothing else. The expectation changes here in the
+	   commit that wrote a screen for it, which is what the old assertion was
+	   for.
+
+	   It needs no database: the shell is bytes out of an embed and what it
+	   draws is decided by one request it makes afterwards. */
+	if got := ask("example.tld", "/").Code; got != http.StatusOK {
+		t.Errorf("the platform's own address answered %d for the front door, want 200", got)
+	}
+
+	/* AND IT IS ITS OWN TREE. `app/main.js` exists in all three and each is a
+	   different file; what proves WHICH one is served is that the modules
+	   beside the other two are not reachable here — one set assumes a school
+	   and the other assumes a session, and this address has neither. */
+	if got := ask("example.tld", "/app/main.js").Code; got != http.StatusOK {
+		t.Errorf("the front door did not serve its own boot: %d", got)
+	}
+	for _, path := range []string{"/app/rail.js", "/app/queue.js", "/app/screens/dashboard.js"} {
+		if got := ask("example.tld", path).Code; got != http.StatusNotFound {
+			t.Errorf("GET %s answered %d at the front door, want 404 — that module belongs "+
+				"to another address", path, got)
+		}
+	}
+
+	// The student's queue is the student's, and the front door is reached by
+	// people who have never signed in to anything.
+	if got := ask("example.tld", "/api/v1/review").Code; got != http.StatusNotFound {
+		t.Errorf("the cross-school queue answered %d at the front door, want 404", got)
+	}
+
+	// AND THE CONSOLE IS NOT REACHABLE FROM THE DOOR. 404 and never 401, for
+	// the third time: a 401 would mean the staff gate ran at the most public
+	// address this platform has.
+	visitor := ask("example.tld", "/console/api/v1/me")
+	if visitor.Code == http.StatusUnauthorized {
+		t.Error("the front door refused a console path with 401, which means the staff " +
+			"gate ran at the platform's most public address")
+	}
+	if visitor.Code != http.StatusNotFound {
+		t.Errorf("a console path at the front door answered %d, want 404", visitor.Code)
 	}
 
 	if got := ask("console.example.tld", "/api/v1/review").Code; got != http.StatusNotFound {
@@ -183,7 +234,16 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 	   handler type rather than a route on the first: putting it on `scoped`
 	   does not compile into the school's practice handler by accident, it has
 	   to be written deliberately. The database-backed proof belongs to a suite
-	   that has one. */
+	   that has one.
+
+	   `tenant.NewFrontHandler` is the same shape for the same reason, and the
+	   stake is higher: the route it carries LISTS EVERY SCHOOL, and `Store.All`
+	   says at its own definition that nothing on a school's host may enumerate.
+	   Registered on `scoped` it would answer one school's visitors with the
+	   names and prices of all the others, working perfectly. It is a separate
+	   type with a differently named registration — `FrontRoutes` and not
+	   `Routes` — so putting it in the wrong mux is a line somebody had to
+	   write on purpose. */
 
 	// AND THE CONSOLE IS NOT REACHABLE FROM THE PLATFORM'S ADDRESS. Same
 	// assertion as the school's, one host along: 404 and never 401, because a
