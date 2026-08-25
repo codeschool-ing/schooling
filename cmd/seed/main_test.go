@@ -392,7 +392,7 @@ THE COUNTRIES IT WRITES ARE THE ONES EVERYTHING ELSE READS.
 	of the platform writes.
 */
 func TestTheSeededCountriesAreSpeltTheWayEverythingElseSpellsThem(t *testing.T) {
-	r := rand.New(rand.NewSource(1))
+	r := rand.New(rand.NewSource(1)) //nolint:gosec // repeatable on purpose
 
 	seen := map[string]bool{}
 	for i := 0; i < 2000; i++ {
