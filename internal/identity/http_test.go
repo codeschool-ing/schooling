@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"net/netip"
 	"testing"
 
 	"github.com/codeschool-ing/schooling/internal/identity"
+	"github.com/codeschool-ing/schooling/internal/platform/geo"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
 
@@ -208,5 +211,82 @@ func TestAnAnonymousRequestPassesThroughAndIsRefusedOnlyWhereItSaysSo(t *testing
 	guarded.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/v1/progress", nil))
 	if rec.Code != http.StatusUnauthorized {
 		t.Errorf("a guarded route answered %d with nobody signed in, want 401", rec.Code)
+	}
+}
+
+/*
+THE DIMENSIONS AN ACCOUNT IS BORN WITH, WHICH NOBODY WAS FILLING IN.
+
+	`accounts.country` and `accounts.locale` were the literal string `unknown`
+	on every account ever created: `signUp` built its `NewAccount` with an
+	address, a name and a password, and the two report dimensions beside them
+	were left to the column defaults. Every cohort screen that ever groups by
+	either would have drawn one bar.
+
+	THE OBVIOUS FIX FOR THE LANGUAGE WOULD HAVE BEEN WORSE THAN THE BUG.
+	`web.Locale` was already there and already used everywhere — and it reads
+	`?lang=`, which sign-up does not send, and falls back to English. It would
+	have written `en` against every account on the platform. A missing value is
+	a hole a report can see; a confident wrong one is not.
+
+	IT GOES THROUGH THE MIDDLEWARE and not through a fabricated context,
+	because what is under test is the wiring: the country arrives from
+	`platform/geo`, which is the only thing in this repository that reads an
+	address, and a test that put the value in by hand would pass with the
+	middleware unmounted.
+*/
+func TestAnAccountIsBornWithTheCountryAndTheLanguage(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+
+	var born identity.Account
+	mux := http.NewServeMux()
+	identity.NewHandler(store, identity.Settings{}, func(_ context.Context, a identity.Account) {
+		born = a
+	}).Routes(mux)
+
+	h := web.Chain(mux,
+		geo.Country(geo.Settings{
+			Hops: 1,
+			// Stands in for the database that is not chosen yet. What is
+			// under test is that the address reaching it is the caller's.
+			Resolve: func(addr netip.Addr) string {
+				if addr.String() == "203.0.113.9" {
+					return "BR"
+				}
+				return ""
+			},
+		}, slog.New(slog.DiscardHandler)),
+		identity.Authenticate(store, identity.Nowhere),
+	)
+
+	body, err := json.Marshal(map[string]string{
+		"email": address(t), "name": "Alexandre", "password": goodPassword,
+	})
+	if err != nil {
+		t.Fatalf("encoding the request: %v", err)
+	}
+
+	// No `?lang=`, because the interface sends none — see `ui/app/api.js`.
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/sign-up", bytes.NewReader(body))
+	req.Header.Set("Accept-Language", "pt-BR,pt;q=0.9,en;q=0.8")
+
+	// A forged entry in front of the real one, because that is what a caller
+	// who wants to choose their own country would send.
+	req.Header.Set(geo.HeaderForwardedFor, "198.51.100.7, 203.0.113.9")
+
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if rec.Code != http.StatusCreated && rec.Code != http.StatusOK {
+		t.Fatalf("signing up answered %d: %s", rec.Code, rec.Body.String())
+	}
+
+	if born.Country != "br" {
+		t.Errorf("the account was born in %q, want %q — the country is resolved from "+
+			"the request by the middleware, from the entry OUR infrastructure wrote "+
+			"and not the one the caller sent", born.Country, "br")
+	}
+	if born.Locale != "pt-br" {
+		t.Errorf("the account reads %q, want %q — `web.Locale` would have answered "+
+			"\"en\" here, which is the wrong fix for this", born.Locale, "pt-br")
 	}
 }
