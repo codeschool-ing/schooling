@@ -1,19 +1,20 @@
 /* ==========================================================================
    Where they are — the people of one school, by the country they studied from.
 
-   # THIS IS THE SCREEN AND NOT YET THE MAP
+   # THE MAP IS THE PICTURE AND THE LIST IS THE REPORT
 
-   `docs/ROADMAP.md` asks for a world map, and the geometry is the one part of
-   it that cannot be written: a choropleth needs country borders, which is a
-   quarter of a megabyte of somebody else's SVG under somebody else's licence —
-   the same shape of decision the country database itself was, and deliberately
-   not smuggled in behind this. The ranked list is what a choropleth is drawn
-   FROM, so nothing here is thrown away when the outline arrives; the rows grow
-   a picture above them.
+   Both are here and neither is decoration. A choropleth answers "is this
+   platform local or is it everywhere" in one glance and cannot answer "how
+   many"; a shape a tenth of a degree wide is not a number, and eight countries
+   of similar shade are not a ranking. The list under it is the answer to
+   everything the picture cannot say, and it is what a screen reader gets —
+   the SVG is one image with one label, deliberately, rather than 174 shapes
+   read out in alphabetical order.
 
-   Which is also why the rail entry says where they are rather than promising a
-   map that is not there. A section named for what it will be one day is the
-   same lie as a bar of length zero.
+   THE OUTLINES ARE GENERATED AND COMMITTED. `tools/world` turns Natural
+   Earth's public-domain country borders into `world.js`; its own comment holds
+   the command, the projection and why Antarctica is not there. Nothing is
+   fetched at run time — this page loads from one origin and no other (P-03).
 
    # THE ROWS ADD UP TO MORE THAN THE PEOPLE, AND THAT IS NOT A DEFECT
 
@@ -47,6 +48,7 @@
 
 import { esc } from '../dom.js';
 import { get } from '../request.js';
+import { WORLD, BOX } from './world.js';
 
 /* The windows on offer. The same four the funnel uses, in days, because the API
    takes days and a second calendar in a second screen is a second thing to keep
@@ -229,7 +231,8 @@ export default async function countries(section) {
           ? '<p class="none">Nobody has done anything at this school, in this window, ' +
             'for these people. An empty world is a real answer and not a failure to ' +
             'read one.</p>'
-          : '<p class="block-lede">' + people + (people === 1 ? ' person' : ' people') +
+          : map(rows, biggest, nowhere) +
+            '<p class="block-lede">' + people + (people === 1 ? ' person' : ' people') +
               ', in ' + rows.length + (rows.length === 1 ? ' country' : ' countries') + '.' +
             '</p>' +
 
@@ -247,6 +250,72 @@ export default async function countries(section) {
               rows.map((c) => row(c, biggest, nowhere)).join('') +
             '</ul>')+
       '</section>';
+  }
+
+/* THE MAP.
+
+   ONE IMAGE WITH ONE LABEL, and not 174 shapes with names on them. A screen
+   reader given a labelled path per country reads the whole world out in the
+   order the file happens to be in, which is worse than useless — so the SVG is
+   `role="img"` with a sentence saying what it shows, and the list below is the
+   accessible answer. That is not a shortcut: the list is the better answer for
+   everybody, and the picture is what says "everywhere" or "one city" at a
+   glance.
+
+   THE SHADE IS THE SHARE OF THE BIGGEST COUNTRY, on the same scale as the bars
+   below, so the eye can move between the two without rescaling. It never goes
+   to nothing: a country with one person in it is drawn at a floor that is still
+   visibly different from a country with nobody, because "somebody is there" is
+   the whole finding on a map of a platform this size.
+
+   AND `unknown` IS NOT ON IT, which is the one thing the map cannot say. It is
+   not a place, so it has no shape — and today it is most of the platform. The
+   list carries it; the picture is honestly a picture of the part we know, and
+   the sentence under it says so rather than leaving somebody to conclude the
+   world is emptier than it is. */
+  function map(rows, biggest, nowhere) {
+    const shade = {};
+    let placed = 0;
+    rows.forEach((c) => {
+      const code = String(c.code || '');
+      if (code === nowhere || !WORLD[code]) return;
+      placed += c.people || 0;
+      /* THE FLOOR IS HIGH, AND IT WAS HIGHER THAN THE FIRST GUESS. At 0.2 a
+         country with one person sat within a shade of a country with none —
+         rendered side by side, Japan and Kazakhstan were the same colour. The
+         difference between somebody and nobody is the entire finding on a map
+         of a platform this size, so the scale starts where that difference is
+         already visible and spends the rest of its range on the ranking. */
+      shade[code] = biggest > 0 ? 0.35 + 0.65 * ((c.people || 0) / biggest) : 0.35;
+    });
+
+    const named = rows
+      .filter((c) => shade[c.code] !== undefined)
+      .map((c) => nameOf(c.code));
+
+    const label = named.length
+      ? 'A world map. ' + named.slice(0, 6).join(', ') +
+        (named.length > 6 ? ' and ' + (named.length - 6) + ' more' : '') +
+        ' are shaded. The list below has every country and its count.'
+      : 'A world map with nothing shaded on it.';
+
+    return '<figure class="worldmap">' +
+      '<svg viewBox="' + BOX + '" role="img" aria-label="' + esc(label) + '" ' +
+        'preserveAspectRatio="xMidYMid meet" fill-rule="evenodd">' +
+        Object.keys(WORLD).map((code) =>
+          '<path d="' + WORLD[code] + '" class="land' +
+            (shade[code] !== undefined ? ' land-on" style="opacity:' + shade[code].toFixed(2) : '') +
+          '"/>').join('') +
+      '</svg>' +
+
+      /* SAID ONLY WHEN THERE IS SOMETHING TO SAY. A platform where everybody's
+         country is known needs no footnote, and a footnote nobody needs is one
+         more sentence people learn to skip. */
+      (placed < rows.reduce((t, c) => t + (c.people || 0), 0)
+        ? '<figcaption>The map shows only the people whose country is known. The ' +
+          'rest are in the list below, under “Nobody knows where”.</figcaption>'
+        : '') +
+    '</figure>';
   }
 
   function row(country, biggest, nowhere) {
