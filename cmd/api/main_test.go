@@ -139,16 +139,26 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 			"a request that never reached it cannot have been refused by it", got)
 	}
 
-	/* AND THERE IS NO PAGE THERE YET, WHICH IS ASSERTED RATHER THAN LEFT OPEN.
+	/* AND THE SCREEN IS THERE. It was a 404 until one was written for this
+	   address, and the expectation changed in the commit that wrote it — which
+	   is what that assertion was for.
 
-	   Serving the school shell here is one line and it would be wrong: that
-	   shell boots by asking for its school, its catalogue and its tracks, none
-	   of which exist at this address. This is what stops that line from being
-	   added without the screen it needs — when the screen exists, this
-	   expectation changes in the same commit. */
-	if got := ask("my.example.tld", "/").Code; got != http.StatusNotFound {
-		t.Errorf("the platform's address served a page (%d) — the student shell cannot boot "+
-			"here, so serving it would be a page that fails four requests and blames a school", got)
+	   It needs no database: the shell is bytes out of an embed, and what it
+	   draws is decided by one request it makes afterwards. */
+	if got := ask("my.example.tld", "/").Code; got != http.StatusOK {
+		t.Errorf("the platform's address answered %d for its own screen, want 200", got)
+	}
+
+	// AND IT IS ITS OWN SCREEN AND NOT THE STUDY INTERFACE'S. `app/main.js`
+	// exists in both trees; the one served here must be the one written for an
+	// address with no school, and the study interface's must not be reachable.
+	mine := ask("my.example.tld", "/app/queue.js")
+	if mine.Code != http.StatusOK {
+		t.Errorf("the student's own place did not serve its own script: %d", mine.Code)
+	}
+	if got := ask("my.example.tld", "/app/rail.js").Code; got != http.StatusNotFound {
+		t.Errorf("a study-interface module answered %d at the platform's address — those "+
+			"assume a school, which is the whole reason this tree exists", got)
 	}
 
 	if got := ask("console.example.tld", "/api/v1/review").Code; got != http.StatusNotFound {

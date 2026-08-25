@@ -913,18 +913,16 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		// not the day to remember it.
 		identity.RefuseWrites,
 	))
-	/* AND THERE IS NO PAGE HERE YET, DELIBERATELY.
+	/* AND THE SCREEN, WHICH IS `ui.Mine` AND EMPHATICALLY NOT `ui.Handler`.
 
-	   The obvious line is `platformMux.Handle("/", ui.Handler(…))` — the same
-	   shell a school gets — and it would be wrong today. That shell boots by
-	   asking for its school, its catalogue and its tracks, and NONE of those
-	   exist at this address: served here it would paint, fail those requests
-	   and settle into a page saying a school could not be loaded. A screen that
-	   is broken in a way that looks like an outage is worse than no screen.
-
-	   A 404 is the honest state while the screen is being built, and it is the
-	   safe one: nothing is publicly reachable until this host is mapped, and
-	   there is no reason to map it before there is something to look at. */
+	   The obvious line was the study interface's shell, and it would have been
+	   wrong: that shell boots by asking for its school, its catalogue and its
+	   tracks, none of which exist here. It does not crash — all three fetches
+	   carry a `.catch` — it renders, keeps the markup's default brand, and
+	   shows the predecessor's name over an empty school. A screen that is wrong
+	   in a way that looks deliberate is worse than no screen, which is why this
+	   address answered 404 until there was one written for it. */
+	platformMux.Handle("/", ui.Mine(interfaceVersion))
 
 	atConsole := console.Is(console.Settings{Host: console.HostOf(cfg.PlatformDomain)}, tenant.Normalise)
 	atPlatform := console.Is(console.Settings{Host: practice.Host(cfg.PlatformDomain)}, tenant.Normalise)
