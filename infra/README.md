@@ -254,16 +254,30 @@ chmod +x /tmp/cloud-sql-proxy &&
 # 2. the same address the service uses, pointed at the proxy
 export SCHOOLING_DATABASE_URL="$(gcloud secrets versions access latest \
   --secret=schooling-database-url --project=aleogr-schooling |
-  sed -E 's#@[^/]+/#@127.0.0.1:5432/#')"
+  sed -E 's#@/#@127.0.0.1:5432/#; s#\?host=[^&]*$##')"
 export SCHOOLING_PLATFORM_DOMAIN=schooling.lab.aleogr.dev
 export SCHOOLING_ENV=production
+
+# and this says whether it worked, without printing the secret
+echo "${SCHOOLING_DATABASE_URL%%://*}://…@${SCHOOLING_DATABASE_URL##*@}"
+# postgres://…@127.0.0.1:5432/schooling
 
 # 3. and the reset itself
 go run ./cmd/reset schooling.lab.aleogr.dev --by "<name>" --keep <your address>
 ```
 
-The `sed` rewrites the host in the connection string and leaves the password
-where it is, so the secret is never printed and never typed. **`--keep` spares
+The `sed` moves the connection off the Cloud SQL socket and onto the proxy, and
+leaves the password where it is, so the secret is never printed and never typed.
+The stored address is a **unix socket** rather than a host and port —
+`postgres://…@/schooling?host=/cloudsql/<instance>` — so both halves are needed:
+the first puts the proxy's address where there was nothing at all, and the
+second drops the `host=` that would otherwise still point at a socket this
+machine does not have. The first version of this recipe had only a rewrite of
+`@host/`, which matched nothing and left the variable pointing at the socket;
+the `echo` is here because that failure is silent until `cmd/reset` cannot
+connect, and it prints only what comes after the `@`.
+
+**`--keep` spares
 your operator account** — the row, the password, the second factor and the role
 — so an afternoon of resets is not an afternoon of signing up again. Without it
 nobody is staff afterwards, including you, and the way back in is signing up and

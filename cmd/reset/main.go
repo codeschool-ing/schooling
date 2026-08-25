@@ -442,16 +442,15 @@ func erase(ctx context.Context, pool *pgxpool.Pool, empty []string, spared []doo
 	err := pgx.BeginFunc(ctx, pool, func(tx pgx.Tx) error {
 		for _, table := range empty {
 			var rows int
-			// Every name came out of `privacy.Registry`, which is a literal in
-			// this repository — there is no path from an argument to here.
-			if err := tx.QueryRow(ctx, `SELECT count(*) FROM `+table).Scan(&rows); err != nil {
+			var args []any
+			if _, byCascade := viaAccounts[table]; byCascade {
+				args = append(args, ids)
+			}
+			if err := tx.QueryRow(ctx, counting(table), args...).Scan(&rows); err != nil {
 				return fmt.Errorf("counting %s: %w", table, err)
 			}
 			counted[table] = rows
 		}
-		// Counted as what will be GONE rather than as what is there, so the
-		// audit entry adds up to what was actually removed.
-		counted["accounts"] -= len(spared)
 
 		for table, guard := range guards {
 			if _, isKept := kept[table]; isKept {
@@ -512,23 +511,54 @@ func erase(ctx context.Context, pool *pgxpool.Pool, empty []string, spared []doo
 }
 
 /*
-WHERE A SPARED OPERATOR LIVES, AND WHY ONLY ONE OF THE FOUR IS NAMED IN CODE.
+COUNTING WHAT GOES, WHICH IS NOT THE SAME AS COUNTING WHAT IS THERE.
+
+	The report and the audit entry both say how many rows this reset REMOVED, so
+	the four tables a spared operator lives in have to count around them. The
+	first version subtracted the spared people from `accounts` alone and counted
+	the other three raw, which reported the operator's own password and their own
+	`staff` row as removed — on the one run where somebody is reading the numbers
+	to decide whether it did what they meant.
+
+	It reads as a rounding error and is not: the audit entry that opens the new
+	history is the one row nobody can go back and check against the old one,
+	because the old one is what just went.
+
+	`<> ALL('{}')` is true of every row, so a reset that spares nobody counts
+	everything without a second path through here to get wrong.
+*/
+func counting(table string) string {
+	query := `SELECT count(*) FROM ` + table
+	// Every name came out of `privacy.Registry` and every column out of the map
+	// below, both literals in this repository — there is no path from an
+	// argument to here.
+	if column, byCascade := viaAccounts[table]; byCascade {
+		query += ` WHERE ` + column + ` <> ALL($1::uuid[])`
+	}
+	return query
+}
+
+/*
+WHERE A SPARED OPERATOR LIVES, AND WHY ONLY ONE OF THE FOUR IS DELETED IN CODE.
 
 	`accounts` is emptied with a DELETE so the spared rows survive. The other
 	three go with it through ON DELETE CASCADE, which the schema has said since
-	`0004` and `0005` — repeating that here would be a second copy of the rule,
-	and the copy is the one that stops matching the day somebody changes the
-	foreign key.
+	`0004`, `0005` and `0026` — repeating that here would be a second copy of the
+	rule, and the copy is the one that stops matching the day somebody changes
+	the foreign key.
 
-	They are listed anyway, because they have to come OUT of the truncate: a
-	`TRUNCATE account_credentials` would empty the spared operator's password
-	while their account row sat there, which is a door with the lock taken out.
+	They are listed anyway for two reasons. They have to come OUT of the
+	truncate: a `TRUNCATE account_credentials` would empty the spared operator's
+	password while their account row sat there, which is a door with the lock
+	taken out. And the value is the column that points at `accounts`, which is
+	what lets `counting` ask each of them how many rows are about to go rather
+	than how many exist.
 */
 var viaAccounts = map[string]string{
-	"accounts":               "deleted, minus whoever is spared",
-	"account_credentials":    "cascades from accounts",
-	"account_recovery_codes": "cascades from accounts",
-	"staff":                  "cascades from accounts",
+	"accounts":               "id",
+	"account_credentials":    "account_id",
+	"account_recovery_codes": "account_id",
+	"staff":                  "account_id",
 }
 
 func emails(spared []door) []string {
