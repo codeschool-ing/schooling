@@ -34,9 +34,11 @@
 package ui
 
 import (
+	"context"
 	"embed"
 	"mime"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -98,27 +100,7 @@ func Handler(version string) http.Handler {
 	}
 
 	static := http.FileServerFS(files)
-	etag := `"` + version + `"`
-
-	// Revalidate, always, and the validator is the build. `no-cache` does not
-	// mean "do not cache" — it means "ask first", which is exactly the contract
-	// that makes a half-old deploy impossible.
-	//
-	// It answers whether the response is finished, which it is on a 304.
-	stamp := func(w http.ResponseWriter, r *http.Request) bool {
-		if version == "" {
-			w.Header().Set("Cache-Control", "no-store")
-			return false
-		}
-
-		w.Header().Set("Cache-Control", "no-cache")
-		w.Header().Set("ETag", etag)
-		if match := r.Header.Get("If-None-Match"); match != "" && strings.Contains(match, etag) {
-			w.WriteHeader(http.StatusNotModified)
-			return true
-		}
-		return false
-	}
+	stamp := stamping(version)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := strings.TrimPrefix(r.URL.Path, "/")
@@ -148,4 +130,100 @@ func Handler(version string) http.Handler {
 			http.NotFound(w, r)
 		}
 	})
+}
+
+// stamping is the caching rule, in one place because two handlers apply it.
+//
+// Revalidate, always, and the validator is the build. `no-cache` does not mean
+// "do not cache" — it means "ask first", which is exactly the contract that
+// makes a half-old deploy impossible.
+//
+// It answers whether the response is finished, which it is on a 304.
+func stamping(version string) func(http.ResponseWriter, *http.Request) bool {
+	etag := `"` + version + `"`
+	return func(w http.ResponseWriter, r *http.Request) bool {
+		if version == "" {
+			w.Header().Set("Cache-Control", "no-store")
+			return false
+		}
+
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("ETag", etag)
+		if match := r.Header.Get("If-None-Match"); match != "" && strings.Contains(match, etag) {
+			w.WriteHeader(http.StatusNotModified)
+			return true
+		}
+		return false
+	}
+}
+
+// A slug that could name a file. The values come from `tenants.slug`, which the
+// database already constrains — this is the second fence, and it is here
+// because the argument is a string and the result is a path.
+var slugLooksLikeOne = regexp.MustCompile(`^[a-z0-9]([a-z0-9-]{0,30}[a-z0-9])?$`)
+
+// Icon serves the favicon, which is the one asset that differs between schools.
+//
+// # WHY IT IS A SECOND HANDLER AND NOT A CASE IN THE FIRST
+//
+// Answering it needs to know WHICH SCHOOL, and knowing that means resolving the
+// host against `tenant_domains` — a query. `Handler` serves the shell and every
+// script and stylesheet on every page load, and putting a query in front of all
+// of that to decide one image would be paying for the answer on every request
+// that does not ask the question.
+//
+// So this is mounted on its own path, with the resolution in front of it there
+// and nowhere else. A browser asks for a favicon roughly once per origin and
+// then revalidates it against the build like everything else, so the query is
+// rare enough to be worth what it buys.
+//
+// # THE SCHOOL IS RESOLVED AND NEVER PARSED OUT OF THE HOST
+//
+// `math.example.tld` looks like it says `math`, and reading it that way would
+// be a second rule for something K-17 already decides — wrong on the first
+// school that brings its own domain, which is the case the whole design exists
+// for. `slugOf` reads what the resolver put on the context.
+//
+// # AND A SCHOOL WITHOUT AN ICON IS NOT A BROKEN ONE
+//
+// Most schools will not have one. The fallback is the platform's mark, which is
+// the right answer rather than a placeholder: what a student is looking at IS
+// this platform, and a blank tab glyph would read as a page that never
+// finished loading.
+func Icon(version string, slugOf func(context.Context) string) http.Handler {
+	stamp := stamping(version)
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		name := "assets/favicon.svg"
+		if slugOf != nil {
+			if slug := slugOf(r.Context()); slugLooksLikeOne.MatchString(slug) {
+				if theirs := "assets/favicon-" + slug + ".svg"; exists(theirs) {
+					name = theirs
+				}
+			}
+		}
+
+		icon, err := files.ReadFile(name)
+		if err != nil {
+			// `assets/favicon.svg` is embedded, so this is a build that lost
+			// its own mark rather than a request that asked for the wrong one.
+			http.NotFound(w, r)
+			return
+		}
+
+		if stamp(w, r) {
+			return
+		}
+		w.Header().Set("Content-Type", "image/svg+xml")
+		_, _ = w.Write(icon)
+	})
+}
+
+func exists(name string) bool {
+	f, err := files.Open(name)
+	if err != nil {
+		return false
+	}
+	_ = f.Close()
+	return true
 }

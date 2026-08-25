@@ -539,6 +539,22 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	}
 	mux.Handle("/", ui.Handler(interfaceVersion))
 
+	/* AND THE ONE ASSET THAT IS THE SCHOOL'S OWN.
+
+	   A more specific pattern than `/` above, so it wins on this mux and only
+	   on this one — the console has its own icon in its own tree, and the
+	   platform's address keeps the platform's mark.
+
+	   `tenant.Resolve` IS IN FRONT OF THIS ROUTE AND NO OTHER OUTSIDE THE API.
+	   Deciding which icon means knowing which school, which is a query; putting
+	   that in front of the shell and every script would be paying for the
+	   answer on every request that never asks. A browser asks for a favicon
+	   about once per origin. See `ui.Icon`. */
+	mux.Handle("GET /assets/favicon.svg", web.Chain(
+		ui.Icon(interfaceVersion, schoolSlug),
+		tenant.Resolve(tenant.NewStore(pool)),
+	))
+
 	/* ---------- and the other address ----------
 
 	   A HOST IS A SCHOOL'S, OR THE CONSOLE'S, OR A 404 (K-17). Three cases, and
@@ -1268,6 +1284,17 @@ func labelOf(accounts *identity.Store) console.Label {
 // joined together here in cmd/. This is what that discipline looks like in
 // practice: the consumer names a function shape, the producer already satisfies
 // it, and the only place that knows about both is this one.
+// schoolSlug is `schoolOf` with the two parts an icon does not need, and an
+// empty string where there is no school — which is a real answer here rather
+// than a failure, and the reason `ui.Icon` takes a plain string.
+func schoolSlug(ctx context.Context) string {
+	s, ok := tenant.FromContext(ctx)
+	if !ok {
+		return ""
+	}
+	return s.Slug
+}
+
 func schoolOf(ctx context.Context) (uuid.UUID, string, bool) {
 	s, ok := tenant.FromContext(ctx)
 	if !ok {
