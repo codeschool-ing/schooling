@@ -8,7 +8,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"net/netip"
+
 	"github.com/codeschool-ing/schooling/internal/platform/config"
+	"github.com/codeschool-ing/schooling/internal/platform/geo"
+	"github.com/codeschool-ing/schooling/internal/platform/geo/dbip"
 )
 
 // testRouter builds the whole handler the way cmd/api does, with no database
@@ -19,7 +23,7 @@ import (
 // thing that is broken, and a query of any kind panics rather than passing.
 func testRouter(t *testing.T) http.Handler {
 	t.Helper()
-	return router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)), config.Config{}, nil)
+	return router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)), config.Config{}, nil, nil)
 }
 
 // `/version` answers with no database, and that is the whole point of it.
@@ -87,7 +91,7 @@ func TestTheOperationalRoutesBelongToNoSchool(t *testing.T) {
 // and a query of any kind panics rather than passing.
 func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
-		config.Config{PlatformDomain: "example.tld"}, nil)
+		config.Config{PlatformDomain: "example.tld"}, nil, nil)
 
 	ask := func(host, path string) *httptest.ResponseRecorder {
 		rec := httptest.NewRecorder()
@@ -203,7 +207,7 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 // `identity.RequireStaff`'s own test, which has a database to do it with.
 func TestTheConsoleApiRefusesWithoutASession(t *testing.T) {
 	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
-		config.Config{PlatformDomain: "example.tld"}, nil)
+		config.Config{PlatformDomain: "example.tld"}, nil, nil)
 
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/console/api/v1/me", nil)
@@ -212,5 +216,89 @@ func TestTheConsoleApiRefusesWithoutASession(t *testing.T) {
 
 	if rec.Code != http.StatusUnauthorized {
 		t.Errorf("answered %d with nobody signed in, want 401", rec.Code)
+	}
+}
+
+/*
+HOW MANY PROXIES ARE IN FRONT, WHICH IS A FACT ABOUT THE DEPLOYMENT.
+
+	It is derived and not configured because it has a right answer per
+	environment (K-13), and a right answer in a settings file is a knob whose
+	only job is to be wrong one day. Getting it wrong is silent in every way
+	except the alarm in `platform/geo`, so the value itself is worth pinning.
+*/
+func TestHowManyProxiesAreInFront(t *testing.T) {
+	if got := proxiesInFront(config.Config{Environment: config.Production}); got != 1 {
+		t.Errorf("production has %d proxies in front, want 1 — Cloud Run's front end "+
+			"appends the address it saw, and anything the caller sent stays left of it", got)
+	}
+	for _, env := range []config.Environment{config.Development, ""} {
+		if got := proxiesInFront(config.Config{Environment: env}); got != 0 {
+			t.Errorf("%q has %d proxies in front, want 0 — nothing stands in front of a "+
+				"laptop, so a header arriving there is the caller's own", env, got)
+		}
+	}
+}
+
+/*
+AND THE DATABASE IS WIRED TO THE MIDDLEWARE BY `router` ITSELF.
+
+	Every part of this is tested apart: `platform/geo` picks the caller out of
+	the trail, `dbip` turns an address into two letters, `identity` writes them
+	onto an account. What none of them can see is the wiring — a `geo.Resolve`
+	that never reached the chain would answer `unknown` for every request on the
+	platform while all of those stayed green.
+
+	SO IT GOES THROUGH `router` AND NOT THROUGH A CHAIN THIS TEST BUILDS. The
+	first version of this test built its own `geo.Settings` out of the same two
+	calls, passed, and went on passing when `router` was changed to wire nil —
+	which is to say it tested that this file can add two and two, not that the
+	server does.
+
+	A NIL POOL IS FINE HERE. The handler underneath will fail on a database
+	that is not there, and `web.Recover` turns that into a 500; the middleware
+	under test runs before either. What is asserted is what the resolver was
+	asked, not what came back to the caller.
+
+	`200.160.0.0/20` is NIC.br's own block in São Paulo. The entry in front of
+	it is what somebody choosing their own country would send.
+*/
+func TestTheEmbeddedDatabaseIsWiredToTheMiddleware(t *testing.T) {
+	countries, err := dbip.Open()
+	if err != nil {
+		t.Fatalf("opening the embedded country database: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := countries.Close(); err != nil {
+			t.Errorf("closing the database: %v", err)
+		}
+	})
+
+	var asked []netip.Addr
+	var answered string
+	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
+		config.Config{PlatformDomain: "example.tld", Environment: config.Production},
+		nil,
+		func(addr netip.Addr) string {
+			asked = append(asked, addr)
+			answered = countries.Country(addr)
+			return answered
+		})
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/courses", nil)
+	req.Host = "code.example.tld"
+	req.Header.Set(geo.HeaderForwardedFor, "8.8.8.8, 200.160.2.3")
+	srv.ServeHTTP(httptest.NewRecorder(), req)
+
+	if len(asked) == 0 {
+		t.Fatal("the country was never resolved for a request that went through the " +
+			"whole router — the resolver `router` was given did not reach the chain")
+	}
+	if got := asked[0].String(); got != "200.160.2.3" {
+		t.Fatalf("the country was resolved for %s, which is the entry the CALLER "+
+			"wrote — the caller is the one our own infrastructure appended", got)
+	}
+	if answered != "br" {
+		t.Errorf("the embedded database put %s in %q, want %q", asked[0], answered, "br")
 	}
 }

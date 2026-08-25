@@ -1030,10 +1030,24 @@ the day somebody turns on Cloudflare's orange cloud and puts one more hop in fro
 process. It says nothing at all when `proxiesInFront` is 0, because `127.0.0.1` is where a
 laptop is called from and an alarm on every development request is an alarm nobody reads.
 
-**There is no database yet.** `geo.Resolve` is a function type with nothing satisfying it, so
-every country is `unknown` — exactly what the columns already held. The plumbing shipped first
-on purpose: it is the half with the ways to be wrong in it, and the day a database is chosen
-it is one line in `cmd/api`.
+**The database is DB-IP's Lite, embedded, and the licence is why it can be.** CC BY 4.0 allows
+redistribution with attribution, so the file lives in `internal/platform/geo/dbip` and the build
+stays reproducible from a checkout with no network and no secret. MaxMind's GeoLite2 may not be
+redistributed and would have meant both. A hosted lookup is out for a reason that is not price:
+sending the address to somebody's API is a transfer, and the published privacy policy says it
+never leaves us.
+
+**It is replaced quarterly, and that is arithmetic rather than taste.** The file is 8 MB and
+internally compressed, so git cannot delta one version against the next — each update is a whole
+new object of about 4 MB packed, and history never shrinks. Monthly would add some 45 MB a year
+to a repository that is 36 MB in total; quarterly adds about 15, and buys at most three months
+of staleness in a value used to group a report.
+
+**And its age is checked rather than trusted.** A database from three years ago answers every
+query instantly and confidently, which is the same shape as a rollup nobody noticed had stopped
+running. The build date is inside the file, `cmd/api` says it at start-up beside the version, and
+`TestTheDatabaseIsNotTooOldToBelieve` fails past a year — deliberately loose, because a bound at
+one quarter would fail every time a quarter ticked over and be silenced within a week.
 
 **Two countries that mean different things.** `accounts.country` is where the account was
 opened and is never rewritten; the country on an event is where that request came from. They
