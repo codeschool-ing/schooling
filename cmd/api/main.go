@@ -383,18 +383,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// answerable — a queue that offered one and then refused it would be a
 	// paywall discovered one question at a time.
 	practice.NewHandler(
-		practice.NewStore(pool, courseOpen(courses, plan),
-			func(ctx context.Context, school uuid.UUID) (map[practice.Item]bool, error) {
-				out, err := withdrawn(ctx, school)
-				if err != nil {
-					return nil, err
-				}
-				set := make(map[practice.Item]bool, len(out))
-				for q := range out {
-					set[practice.Item{ExerciseID: q.ExerciseID, Version: q.Version}] = true
-				}
-				return set, nil
-			}),
+		practice.NewStore(pool, courseOpen(courses, plan), withdrawnFor(withdrawn)),
 		schoolID, identity.AccountID, practice.Emit(studentEvents(events, log, plan)),
 	).Routes(scoped)
 
@@ -887,7 +876,58 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		identity.RequireStaff(accounts, identity.RoleReadOnly),
 	))
 
+	/* ---------- and the third address ----------
+
+	   `my.<platform domain>` IS THE STUDENT'S, AND IT IS NO SCHOOL'S. It exists
+	   for the one question a school's host cannot be asked: what is due
+	   everywhere this person practises. A request at `code.` is scoped to that
+	   school before any module sees it — which is what makes every query in this
+	   platform safe to write — so crossing schools is a second address rather
+	   than a flag on a route that would put two meanings behind one door.
+
+	   IT NEEDS NO NEW SIGN-IN. The session cookie has been on the parent domain
+	   since it existed, so a student signed in at their school is signed in here
+	   (N-01). That is the whole of the mechanism, and it was decided long before
+	   there was anywhere to use it.
+
+	   The chain is the school's minus the school. `tenant.Resolve` is not in it,
+	   because it would answer this host with "no school answers at this address"
+	   — correctly and uselessly. `identity.Nowhere` is the console's argument in
+	   the same words: a session last seen HERE belongs in no school's presence
+	   count, because somebody reading their review list is not in a classroom.
+	   And there is no visitor identity, for the console's other reason — this
+	   address is reached by people who are already students. */
+	review := http.NewServeMux()
+	practice.NewAcrossHandler(
+		practice.NewStore(pool, courseOpen(courses, plan), withdrawnFor(withdrawn)),
+		scopedTo(tenant.NewStore(pool)),
+		whereSchoolsAre(tenant.NewStore(pool)),
+		identity.AccountID,
+	).Routes(review)
+
+	platformMux := http.NewServeMux()
+	platformMux.Handle("/api/v1/", web.Chain(review,
+		identity.Authenticate(accounts, identity.Nowhere),
+		// A VIEWING MAY READ AND MAY NOT WRITE (K-02). Nothing here writes
+		// today; the rule is applied anyway, because the day something does is
+		// not the day to remember it.
+		identity.RefuseWrites,
+	))
+	/* AND THERE IS NO PAGE HERE YET, DELIBERATELY.
+
+	   The obvious line is `platformMux.Handle("/", ui.Handler(…))` — the same
+	   shell a school gets — and it would be wrong today. That shell boots by
+	   asking for its school, its catalogue and its tracks, and NONE of those
+	   exist at this address: served here it would paint, fail those requests
+	   and settle into a page saying a school could not be loaded. A screen that
+	   is broken in a way that looks like an outage is worse than no screen.
+
+	   A 404 is the honest state while the screen is being built, and it is the
+	   safe one: nothing is publicly reachable until this host is mapped, and
+	   there is no reason to map it before there is something to look at. */
+
 	atConsole := console.Is(console.Settings{Host: console.HostOf(cfg.PlatformDomain)}, tenant.Normalise)
+	atPlatform := console.Is(console.Settings{Host: practice.Host(cfg.PlatformDomain)}, tenant.Normalise)
 
 	/* NO VISITOR IDENTITY HERE, and that is deliberate: the funnel counts
 	   people who might become students, and staff opening the console are not
@@ -896,6 +936,10 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	byHost := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if atConsole(r) {
 			consoleMux.ServeHTTP(w, r)
+			return
+		}
+		if atPlatform(r) {
+			platformMux.ServeHTTP(w, r)
 			return
 		}
 		mux.ServeHTTP(w, r)
@@ -907,6 +951,96 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		web.Recover,
 		web.NoStore,
 	)
+}
+
+/*
+WHAT IS OUT OF CIRCULATION, IN `practice`'s WORDS. The mapping is the one the
+
+	school-scoped store already gets, lifted into a function so the platform's
+	address wires the SAME quarantine rather than a second spelling of it — a
+	question withdrawn for a school's own queue and offered by the cross-school
+	one would be the platform contradicting itself about a broken question.
+*/
+func withdrawnFor(withdrawn func(context.Context, uuid.UUID) (map[analysis.Question]bool,
+	error)) practice.Quarantined {
+
+	return func(ctx context.Context, school uuid.UUID) (map[practice.Item]bool, error) {
+		out, err := withdrawn(ctx, school)
+		if err != nil {
+			return nil, err
+		}
+		set := make(map[practice.Item]bool, len(out))
+		for q := range out {
+			set[practice.Item{ExerciseID: q.ExerciseID, Version: q.Version}] = true
+		}
+		return set, nil
+	}
+}
+
+/*
+PUTTING A SCHOOL ON A CONTEXT THAT DID NOT ARRIVE AT ITS HOST.
+
+	This is the join that lets the cross-school queue ask the ordinary paywall
+	question. `courseOpen` reads the school off the context and knows nothing
+	about which address it is serving — which is the property worth having, and
+	the reason this scopes rather than passing a school down a second path.
+
+	A SCHOOL THAT CANNOT BE READ LEAVES THE CONTEXT ALONE, and the context
+	without a school makes `courseOpen` answer false. That is the closed
+	direction: a card whose school has gone is dropped from the queue rather than
+	offered on the strength of a lookup that failed.
+*/
+func scopedTo(schools *tenant.Store) practice.In {
+	return func(ctx context.Context, id uuid.UUID) context.Context {
+		school, err := schools.ByID(ctx, id)
+		if err != nil {
+			web.LoggerFrom(ctx).Error("scoping a card to its school",
+				"error", err, "school", id, "answering", "no school, which is the closed direction")
+			return ctx
+		}
+		return tenant.Scoped(ctx, school)
+	}
+}
+
+/*
+WHERE EACH SCHOOL IS, so a card can be answered somewhere.
+
+	The address comes from `tenant_domains` and not from the slug and the
+	platform domain, for the reason `HostOf` gives: deriving one would be a
+	second copy of a rule the table already holds, and the copy is the one that
+	is wrong the day a school gets a domain of its own.
+
+	WHAT IT COSTS IS TWO QUERIES PER SCHOOL, and it is worth writing down: this
+	grows with the number of schools a student practises in, which is one or two,
+	and not with the size of their queue. The moment to reshape it is the moment
+	somebody is enrolled in a dozen schools, and that moment will not arrive
+	quietly — it will arrive with a person.
+*/
+func whereSchoolsAre(schools *tenant.Store) practice.Schools {
+	return func(ctx context.Context, ids []uuid.UUID) ([]practice.Where, error) {
+		out := make([]practice.Where, 0, len(ids))
+		for _, id := range ids {
+			school, err := schools.ByID(ctx, id)
+			if err != nil {
+				return nil, err
+			}
+			host, err := schools.HostOf(ctx, id)
+			if err != nil {
+				/* A SCHOOL WITH NO ADDRESS IS DROPPED rather than shown with
+				   nowhere to go. It is a real state — a school row exists before
+				   its domain is mapped — and a queue offering cards that cannot
+				   be reached is worse than a queue that is one school short and
+				   says nothing. */
+				web.LoggerFrom(ctx).Warn("a school in a student's queue has no address",
+					"school", school.Slug, "error", err)
+				continue
+			}
+			out = append(out, practice.Where{
+				ID: school.ID, Slug: school.Slug, Name: school.Name, Host: host,
+			})
+		}
+		return out, nil
+	}
 }
 
 // personAt is the console's one way of reaching somebody: an exact address, and
