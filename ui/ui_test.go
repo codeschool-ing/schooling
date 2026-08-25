@@ -306,7 +306,12 @@ func TestTheIconIsTheSchoolsWhenTheSchoolHasOne(t *testing.T) {
 	}{
 		{"a school with an icon", "math", "assets/favicon-math.svg"},
 		{"another one", "chemistry", "assets/favicon-chemistry.svg"},
-		{"a school without one", "code", "assets/favicon.svg"},
+		{"and the one the platform started with", "code", "assets/favicon-code.svg"},
+
+		// THE FALLBACK IS THE PLATFORM'S OWN MARK, and most schools will meet
+		// it: it is the right answer rather than a placeholder, because what a
+		// student is looking at IS this platform.
+		{"a school without one", "geography", "assets/favicon.svg"},
 		{"no school at all", "", "assets/favicon.svg"},
 	} {
 		t.Run(c.name, func(t *testing.T) {
@@ -344,7 +349,8 @@ func TestNoTwoSchoolsShareAMark(t *testing.T) {
 	seen := map[string]string{}
 
 	for _, name := range []string{
-		"assets/favicon.svg", "assets/favicon-math.svg", "assets/favicon-chemistry.svg",
+		"assets/favicon.svg", "assets/favicon-code.svg",
+		"assets/favicon-math.svg", "assets/favicon-chemistry.svg",
 	} {
 		icon, err := ui.Files.ReadFile(name)
 		if err != nil {
@@ -394,5 +400,43 @@ func TestAnUnstampedBuildOffersNoEtagForTheIcon(t *testing.T) {
 	}
 	if got := rec.Header().Get("Cache-Control"); got != "no-store" {
 		t.Errorf("Cache-Control = %q, want no-store", got)
+	}
+}
+
+/*
+THE PATH THE SHELLS ASK FOR IS A PATH THAT ANSWERS.
+
+	Every shell in this organisation links `/assets/favicon.svg` — the school's,
+	the student's own place, and the console — and on the platform's address
+	there is no school to resolve, so `ui.Mine` serves that file straight out of
+	this embed. Renaming it is therefore a change with a blast radius, which is
+	exactly what happened: the terminal prompt became the programming school's
+	and the fallback had to be redrawn rather than deleted.
+
+	A missing one does not fail anything on its own. The tab shows the browser's
+	blank glyph, which reads as a page that never finished loading, on every
+	address at once, and nothing anywhere says so.
+*/
+func TestTheIconEveryShellLinksToExists(t *testing.T) {
+	// Asked of the handlers rather than of the embed, because the student's own
+	// place is a second `go:embed` in a second file and reaching for it by path
+	// is how this test failed the first time it ran.
+	for what, handler := range map[string]http.Handler{
+		"the school's":            ui.Handler("v1.0.0"),
+		"the student's own place": ui.Mine("v1.0.0"),
+	} {
+		rec := httptest.NewRecorder()
+		handler.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+
+		if !strings.Contains(rec.Body.String(), `href="/assets/favicon.svg"`) {
+			t.Errorf("%s does not link /assets/favicon.svg, so either it declares no icon "+
+				"or it declares one nothing here serves", what)
+		}
+	}
+
+	// And the file behind that path. `ui.Mine` has no school to resolve, so it
+	// serves this one straight out of the embed for every visitor.
+	if _, err := ui.Files.ReadFile("assets/favicon.svg"); err != nil {
+		t.Errorf("nothing answers /assets/favicon.svg, which every shell asks for: %v", err)
 	}
 }
