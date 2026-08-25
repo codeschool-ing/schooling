@@ -1091,11 +1091,13 @@ now: a prompt says *programming*, not *schooling*.
 is geometry, so there is no conversion, only a redraw. The glow goes: it is the first thing to
 disappear at sixteen pixels.
 
-**Render an icon at the size it is used at.** The console's carries a games controller on a
-cable, and two objects joined by a line is more than sixteen pixels can hold — at that size it
-is a smudge, and a version without the controller stays legible all the way down. Both were
-drawn and looked at side by side before one was chosen. That comparison cannot be made any
-other way, and it is the whole reason these were rendered rather than reasoned about.
+**Render an icon at the size it is used at**, and draw more than one. The console's arrived as a
+games console with a controller on a cable in front of it: two objects joined by a line, which
+is more than sixteen pixels can hold, and it came out a smudge. A box on its own survives the
+size and says nothing — at sixteen pixels it is a rectangle that could be a router or a drawer.
+The controller ALONE is one object with a silhouette nobody misreads, and it won by being put
+beside the other two at 128, 32 and 16. That comparison cannot be made any other way, and it is
+the whole reason these were rendered rather than reasoned about.
 
 ---
 
