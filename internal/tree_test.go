@@ -82,6 +82,8 @@ func eachFile(t *testing.T, ext string, skip func(rel string) bool,
 			return nil
 		}
 
+		//nolint:gosec // `path` is what WalkDir handed back from the repository
+		// root this test resolved itself; there is no caller to supply one.
 		source, err := os.ReadFile(path)
 		if err != nil {
 			return err
