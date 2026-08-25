@@ -640,10 +640,19 @@ argument for exactly this, so both are checked without a line of it changing. Th
 console is absent on purpose: staff software, English only, no dictionary to be out
 of step with.
 
-*And a defect in the tool, found by writing a comment about the tool: it scans with a
-regular expression and does not know what a comment is, so the rule spelled out in the
-obvious syntax becomes an untranslated interface string. `ui/my/app/queue.js` is
-written around it and says so.*
+**It reads the comments out first**, and that exists because of a defect found by writing
+a comment about the tool. It scanned with a regular expression and did not know what a
+comment was, so a file explaining the rule in the obvious syntax had its own example
+counted as a string somebody had to translate — it asked for the Portuguese of an
+ellipsis. Every file where somebody has just learnt that rule would hit it.
+
+*Blanking them needs a small lexer rather than a pattern, because a slash in JavaScript
+starts a comment, a regular expression or a division and only the tokens before it say
+which — `.replace(/&/g, …)` is in the very file that found this. The regex-or-division
+heuristic can be fooled, and the consequence is bounded on purpose: blank too much and a
+real string goes missing, which fails as a dictionary entry nothing says; blank too
+little and a commented example is counted, which fails as a string with no translation.
+There is no arrangement of mistakes there that passes quietly.*
 
 **A dictionary translates the INTERFACE and never the catalogue.** The dictionaries
 carry the words this application says — buttons, headings, the sentence above a form.
