@@ -38,6 +38,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/geo"
+	"github.com/codeschool-ing/schooling/internal/platform/geo/dbip"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
@@ -85,6 +86,24 @@ func run(log *slog.Logger) error {
 		"platform_domain", cfg.PlatformDomain,
 	)
 
+	/* THE COUNTRY DATABASE IS OPENED ONCE, AND A BROKEN ONE STOPS THE PROCESS.
+
+	   It is embedded in this binary, so a failure here is not a bad day for a
+	   dependency — it is this build being wrong about itself, and no request
+	   can work around it. A deployment that carried on would resolve every
+	   country to `unknown` while every health check passed, which is the
+	   quietest possible way to lose a dimension.
+
+	   ITS AGE IS SAID OUT LOUD AT START-UP for the same reason the version is:
+	   a stale database answers everything, confidently, and this line is what
+	   somebody reads when a distribution stops making sense. */
+	countries, err := dbip.Open()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = countries.Close() }()
+	log.Info("country database", "built", countries.Built().Format(time.DateOnly))
+
 	pool, err := database.Open(ctx, cfg.DatabaseURL)
 	if err != nil {
 		return err
@@ -93,7 +112,7 @@ func run(log *slog.Logger) error {
 
 	srv := &http.Server{
 		Addr:              ":" + cfg.Port,
-		Handler:           router(pool, log, cfg, startsJobs(ctx, log, cfg)),
+		Handler:           router(pool, log, cfg, startsJobs(ctx, log, cfg), countries.Country),
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       30 * time.Second,
 		WriteTimeout:      60 * time.Second,
@@ -217,7 +236,8 @@ func proxiesInFront(cfg config.Config) int {
 }
 
 func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
-	startJob func(ctx context.Context, name string) error) http.Handler {
+	startJob func(ctx context.Context, name string) error,
+	country geo.Resolve) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
@@ -983,7 +1003,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		   `platform/geo` and nowhere else in this repository, so "we do not
 		   store your IP address" is a property of one function rather than of
 		   everybody remembering. */
-		geo.Country(geo.Settings{Hops: proxiesInFront(cfg), Resolve: nil}, log),
+		geo.Country(geo.Settings{Hops: proxiesInFront(cfg), Resolve: country}, log),
 
 		web.Recover,
 		web.NoStore,
