@@ -48,27 +48,45 @@ six rows of ordinary traffic. Neither would have been found by reading the file 
 The one that was left was a screen — the export and the erasure existed, held by four tests, with
 no console page an operator could open.*
 
-***Every box in phase 0 is now ticked, and the phase is not finished.** The screen was the last
-one, and it went the same way as the infrastructure items: the tick came after an operator had
-found a person, exported them and erased them against a real database, and after the two audit
-entries had been read back and checked for what they must not contain. Its last two defects were
-found by looking at a screenshot and by nothing else — a stylesheet asking for a typeface the page
-never linked, and a table that said "18 table".*
+***Phase 0 is finished**, and it finished last — every box in it was ticked for weeks while the
+phase was not, because its `Done when` asked for something no box contained.*
 
-*Its other half is met since: the `Done when` also asks that the first administrative action show
-up in the audit with a name against it. The first one a released deployment wrote — the platform's
-own first role, granted through `cmd/staff`, which is the only door that exists before there is an
-operator to open the console with — has been read back on the History screen against the live
-database. The condition asked for an action, a name and somewhere to see it, and all three are
-there.*
+*The screen was the last box, and it went the same way as the infrastructure items: the tick came
+after an operator had found a person, exported them and erased them against a real database, and
+after the two audit entries had been read back and checked for what they must not contain. Its
+last two defects were found by looking at a screenshot and by nothing else — a stylesheet asking
+for a typeface the page never linked, and a table that said "18 table".*
 
-*What is left is the phase's own `Done when`, which asks for **two** schools answering over TLS
-and has one. That is not an oversight in the list: a single school with a `Host` check is
-indistinguishable from an application that is not multi-tenant at all, and the second school is
-what tells the two apart. It needs no code — a tenant row, a `tenant_domains` row, a Cloud Run
-mapping and a DNS record, all of them already written down as a runbook in
-[`infra/README.md`](../infra/README.md). **The list being finished is not the phase being
-finished**, and the gap is left visible here rather than closed by redefining the condition.*
+*The `Done when` asks two things. The first is that the first administrative action show up in the
+audit with a name against it, and it was met earlier: the first one a released deployment wrote —
+the platform's own first role, granted through `cmd/staff`, which is the only door that exists
+before there is an operator to open the console with — has been read back on the History screen
+against the live database. The condition asked for an action, a name and somewhere to see it, and
+all three are there.*
+
+*The second is met now: **two schools answer over TLS.** `math.<platform domain>` — Mathematics,
+violet, and deliberately empty — was created beside `code` and both were asked the same
+school-scoped route at the same moment. One binary, one revision, two different answers, chosen by
+nothing but the `Host`:*
+
+```
+math: {"slug":"math","name":"Mathematics","accent":"#8b5cf6","passMark":70}
+code: {"slug":"code","name":"Programming","accent":"#2f6bff","passMark":70}
+```
+
+*That condition was not decoration, and it proved it on the way in. A single school with a `Host`
+check is indistinguishable from an application that is not multi-tenant at all — and **the second
+school found two defects the first could not.** `tenant_domains` turned out to hold the service's
+own `run.app` URL against `code`, an address where the catalogue reads and signing in silently
+cannot: the session cookie is set on the parent domain, so a browser at a `run.app` host rejects
+it and the form appears to work. And `HostOf`, which builds the link an operator follows to view as
+a student, sorted a school's addresses ALPHABETICALLY while the paragraph beside it had always said
+the oldest — a difference that only exists once a school has two, and that would have handed an
+operator a raw Cloud Run URL for any school sorting after `schooling-…`.*
+
+*Neither was findable with one school. **The list being finished was not the phase being finished**,
+and the gap was left visible here rather than closed by redefining the condition — which is what
+gave the condition the chance to earn its keep.*
 
 ---
 
