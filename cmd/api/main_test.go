@@ -134,7 +134,7 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 	   that 401 is the proof the request reached this side: no school was
 	   resolved for it and no database was touched to refuse it. A 404 here
 	   would mean the address routed to the school mux and found nothing. */
-	if got := ask("app.example.tld", "/api/v1/review").Code; got != http.StatusUnauthorized {
+	if got := ask("my.example.tld", "/api/v1/review").Code; got != http.StatusUnauthorized {
 		t.Errorf("the cross-school queue answered %d at the platform's host, want 401 — "+
 			"a request that never reached it cannot have been refused by it", got)
 	}
@@ -146,7 +146,7 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 	   of which exist at this address. This is what stops that line from being
 	   added without the screen it needs — when the screen exists, this
 	   expectation changes in the same commit. */
-	if got := ask("app.example.tld", "/").Code; got != http.StatusNotFound {
+	if got := ask("my.example.tld", "/").Code; got != http.StatusNotFound {
 		t.Errorf("the platform's address served a page (%d) — the student shell cannot boot "+
 			"here, so serving it would be a page that fails four requests and blames a school", got)
 	}
@@ -174,7 +174,7 @@ func TestAHostIsASchoolsOrTheConsolesOrThePlatformsOrA404(t *testing.T) {
 	// AND THE CONSOLE IS NOT REACHABLE FROM THE PLATFORM'S ADDRESS. Same
 	// assertion as the school's, one host along: 404 and never 401, because a
 	// 401 would mean the staff gate ran at a student's address.
-	student := ask("app.example.tld", "/console/api/v1/me")
+	student := ask("my.example.tld", "/console/api/v1/me")
 	if student.Code == http.StatusUnauthorized {
 		t.Error("the platform's address refused a console path with 401, which means the " +
 			"staff gate ran at an address students reach")

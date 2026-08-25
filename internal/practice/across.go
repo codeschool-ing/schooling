@@ -24,14 +24,14 @@ import (
    "…or all of them" to `Due` would put a second meaning behind the same door.
 
    So it is a SECOND ENTRY POINT OVER THE SAME ROWS, at an address that is no
-   school's: `app.<platform domain>`, beside `console.<platform domain>` and for
+   school's: `my.<platform domain>`, beside `console.<platform domain>` and for
    the same reason (K-17). Nothing is duplicated — the schedule, the SM-2 state
    and the answering are exactly what they were, and this reads across them.
 
    # THE SESSION ALREADY REACHES IT, AND THAT IS WHY N-01 IS TRUE
 
    The session cookie has been on the PARENT domain since it existed, precisely
-   so one sign-in covers every school. `app.` is a sibling of `code.` under that
+   so one sign-in covers every school. `my.` is a sibling of `code.` under that
    parent, so a student who signed in at their school is signed in here with no
    new mechanism and no second cookie. The design decided this years before
    there was anywhere to use it.
@@ -69,16 +69,23 @@ import (
 // second thing to get wrong the day somebody moves the platform, and the two
 // would be found to disagree by a 404 nobody could explain.
 //
-// `app` IS ALREADY A RESERVED LABEL — `migrations/0003_reserved_labels.sql` has
-// held it since phase 0 — so no school can be created that would answer here.
-// That reservation was written before anything used it, which is the only order
-// in which such a rule ever works.
+// `my` SAYS WHOSE IT IS RATHER THAN WHAT HAPPENS THERE, and that is the point:
+// an account crosses every school and almost nothing else does (N-01). `code.`
+// is a school's, `console.` is an operator's, and this one is the person's.
+//
+// It was going to be `app`, reserved since phase 0 for "this platform's own,
+// and every convention's". The domain decided otherwise — `app.schooling.app`
+// is a stutter nobody would type twice.
+// `migrations/0033_a_label_for_the_student.sql` reserves this label and keeps
+// that one, because taking a name off that list is strictly worse than leaving
+// one on. The reservation goes in before anything answers here, which is the
+// only order in which such a rule ever works.
 func Host(platformDomain string) string {
 	domain := strings.ToLower(strings.TrimSpace(platformDomain))
 	if domain == "" {
 		return ""
 	}
-	return "app." + domain
+	return "my." + domain
 }
 
 // In puts a school on a context, the way the tenant middleware does for a

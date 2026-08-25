@@ -19,7 +19,7 @@ import (
    these seed a student into TWO and ask the question a school's own host cannot
    be asked. Three of them are about a gate holding across the boundary, which is
    the whole risk of a second entry point over the same rows: a paywall that
-   applied at `code.` and not at `app.` would be a way to read paid material by
+   applied at `code.` and not at `my.` would be a way to read paid material by
    typing a different address. */
 
 // Where each school is, as the wiring answers it. The host is derived here
@@ -319,14 +319,14 @@ func TestAQueueWiredWithoutAWayToScopeRefuses(t *testing.T) {
 
 // ONE PLACE THE DOMAIN IS WRITTEN, which is `console.HostOf`'s argument in the
 // same words. The empty case is the one that matters: a deployment with no
-// platform domain configured must not produce a host of `app.`, which would
+// platform domain configured must not produce a host of `my.`, which would
 // match nothing and be reported as a routing bug.
 func TestThePlatformsAddressIsDerivedFromTheDomain(t *testing.T) {
 	for domain, want := range map[string]string{
-		"example.tld":                 "app.example.tld",
-		"  Schooling.Lab.Aleogr.Dev ": "app.schooling.lab.aleogr.dev",
-		"":                            "",
-		"   ":                         "",
+		"example.tld":      "my.example.tld",
+		"  Schooling.App ": "my.schooling.app",
+		"":                 "",
+		"   ":              "",
 	} {
 		if got := practice.Host(domain); got != want {
 			t.Errorf("Host(%q) = %q, want %q", domain, got, want)
@@ -334,18 +334,33 @@ func TestThePlatformsAddressIsDerivedFromTheDomain(t *testing.T) {
 	}
 }
 
-// AND IT IS A LABEL NO SCHOOL CAN TAKE. `app` has been in the reserved list
-// since phase 0, which is the only order in which such a rule works — added
-// after a school had taken it, it would be a migration that cannot run.
+/*
+AND IT IS A LABEL NO SCHOOL CAN TAKE.
+
+	The reservation goes in before the address answers anywhere, which is the
+	only order in which such a rule works: added after a school had taken the
+	name, it is a migration that cannot run — and the way out of that is renaming
+	a school students have bookmarked.
+
+	BOTH LABELS ARE CHECKED, because the one that is NOT used is the one that
+	quietly stops being reserved. `app` was going to be this address until the
+	domain became `schooling.app` and `app.schooling.app` turned out to be a
+	stutter; `0033` keeps it anyway, and this is what would notice if a later
+	migration tidied it away.
+*/
 func TestTheLabelThePlatformUsesIsReserved(t *testing.T) {
 	pool := testPool(t)
 
-	_, err := pool.Exec(context.Background(),
-		`INSERT INTO tenants (slug, name) VALUES ('app', 'A school that would shadow the platform')`)
-	if err == nil {
-		t.Fatal("a school was created at the label the platform answers on")
-	}
-	if !strings.Contains(err.Error(), "reserved") {
-		t.Errorf("it was refused for the wrong reason: %v", err)
+	for _, label := range []string{"my", "app"} {
+		_, err := pool.Exec(context.Background(),
+			`INSERT INTO tenants (slug, name) VALUES ($1, 'A school that would shadow the platform')`,
+			label)
+		if err == nil {
+			t.Fatalf("a school was created at %q, which the platform answers on or has "+
+				"reserved against exactly that", label)
+		}
+		if !strings.Contains(err.Error(), "reserved") {
+			t.Errorf("%q was refused for the wrong reason: %v", label, err)
+		}
 	}
 }

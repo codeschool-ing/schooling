@@ -878,7 +878,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 
 	/* ---------- and the third address ----------
 
-	   `app.<platform domain>` IS THE STUDENT'S, AND IT IS NO SCHOOL'S. It exists
+	   `my.<platform domain>` IS THE STUDENT'S, AND IT IS NO SCHOOL'S. It exists
 	   for the one question a school's host cannot be asked: what is due
 	   everywhere this person practises. A request at `code.` is scoped to that
 	   school before any module sees it — which is what makes every query in this
