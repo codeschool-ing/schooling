@@ -65,6 +65,19 @@
 // supposed to find a broken answer key does not find one, and this says so
 // rather than exiting quietly. That is phase 4's `Done when` asked as a question
 // every run answers.
+//
+// # UNLESS THE SCHOOL HAS NO EXAM QUESTIONS, WHICH IS EVERY SCHOOL TODAY
+//
+// There is then nothing to plant a key on and nothing for `analysis` to find,
+// so the check does not run and the last line says exactly that. It is worth
+// reading rather than skipping: the run succeeded, the population is there, and
+// the one thing this command exists to prove about item analysis was not
+// proved. Against the fixture's eight-question exam it is proved on every run;
+// against production it has never run at all, and will not until the content
+// pipeline writes an exam.
+//
+// The population is still worth writing. The funnel, the cohorts, presence and
+// the map all need a shape and none of them needs an exam.
 package main
 
 import (
@@ -146,18 +159,8 @@ func run(args []string, out io.Writer) error {
 		return err
 	}
 
-	/* HOW MANY PEOPLE IT TAKES IS ARITHMETIC AND IS SAID BEFORE ANYTHING IS
-	   WRITTEN. Item analysis says nothing at all below thirty answers to a
-	   question, and a population that lands under it produces a screen of
-	   `insufficient` — which looks like the analysis is broken rather than like
-	   the sample is small. The stream cannot be un-written, so this refuses
-	   first rather than reporting afterwards. */
-	if sitters := int(float64(o.people) * reachesTheExam); sitters < analysis.MinimumSample {
-		return fmt.Errorf(
-			"%d people would put about %d of them through an exam, and item analysis says "+
-				"nothing below %d answers to a question — ask for at least %d people, or accept "+
-				"a population nothing can be read from",
-			o.people, sitters, analysis.MinimumSample, enoughPeople)
+	if err := enough(o.people, shape.broken); err != nil {
+		return err
 	}
 
 	now := time.Now().UTC()
@@ -304,6 +307,41 @@ func report(out io.Writer, o options, shape shape, w written) {
 // circulation, which is why that job may never look at this population — a real
 // question removed from a real course on the strength of invented students is
 // the exact damage K-11 exists to prevent.
+/*
+HOW MANY PEOPLE IT TAKES IS ARITHMETIC, AND IT IS SAID BEFORE ANYTHING IS WRITTEN.
+
+	Item analysis says nothing at all below thirty answers to a question, and a
+	population that lands under it produces a screen of `insufficient` — which
+	looks like the analysis is broken rather than like the sample is small. The
+	stream cannot be un-written, so this refuses first rather than reporting
+	afterwards.
+
+	AND IT ONLY APPLIES WHERE THERE IS AN EXAM. `planted` is the question this
+	run will plant an inverted key on, and it is empty for a school with no exam
+	questions at all — which is every school this platform has today, because the
+	content pipeline has not written one. Asked for fifty seeded people there,
+	the first version refused, and cited a minimum sample for an analysis that
+	cannot run on a school with nothing to analyse. The arithmetic was right and
+	the reason was one that could not apply, which is the harder kind of wrong to
+	notice: the refusal reads as authoritative.
+
+	A population that size is still worth having. It is the funnel, the cohorts,
+	presence and the map, none of which need an exam.
+*/
+func enough(people int, planted string) error {
+	if planted == "" {
+		return nil
+	}
+	if sitters := int(float64(people) * reachesTheExam); sitters < analysis.MinimumSample {
+		return fmt.Errorf(
+			"%d people would put about %d of them through an exam, and item analysis says "+
+				"nothing below %d answers to a question — ask for at least %d people, or accept "+
+				"a population nothing can be read from",
+			people, sitters, analysis.MinimumSample, enoughPeople)
+	}
+	return nil
+}
+
 func verify(ctx context.Context, pool *pgxpool.Pool, shape shape, out io.Writer) error {
 	if shape.broken == "" {
 		say(out, "%s\n", "this school has no exam questions, so there was nothing to plant "+

@@ -367,6 +367,38 @@ func TestItRefusesAPopulationNothingCouldBeReadFrom(t *testing.T) {
 	}
 }
 
+/*
+AND THAT REFUSAL IS ABOUT ITEM ANALYSIS, SO IT ONLY APPLIES WHERE THERE IS AN EXAM.
+
+	Every school this platform has today has no exam questions, because the
+	content pipeline has not written one. Asked for fifty seeded people there,
+	the first version refused and cited the minimum sample for an analysis that
+	cannot run on a school with nothing to analyse — arithmetic that was right,
+	for a reason that could not apply.
+
+	That is the harder kind of wrong to notice, because a refusal reads as
+	authoritative and this one names a real constant. It needs no database, which
+	is why it is here and not beside the run that found it.
+*/
+func TestASchoolWithNoExamIsNotRefusedForItsSampleSize(t *testing.T) {
+	if err := enough(1, ""); err != nil {
+		t.Errorf("one person was refused on a school with no exam question to plant a "+
+			"key on: %v — the funnel, the cohorts, presence and the map all want a "+
+			"population and none of them wants an exam", err)
+	}
+
+	// AND WHERE THERE IS AN EXAM IT STILL REFUSES, which is the half that was
+	// already right and must stay right: the stream cannot be un-written.
+	if err := enough(1, "the-planted-question"); err == nil {
+		t.Error("one person was accepted for a school with an exam, and item analysis " +
+			"says nothing below thirty answers to a question")
+	}
+	if err := enough(enoughPeople, "the-planted-question"); err != nil {
+		t.Errorf("%d people is the number this command computes as enough and it was "+
+			"refused: %v", enoughPeople, err)
+	}
+}
+
 // AND IT IS AN ADMINISTRATIVE WRITE, SO IT ASKS WHO IS DOING IT.
 func TestItRefusesWithoutAnActor(t *testing.T) {
 	var out bytes.Buffer
