@@ -361,7 +361,11 @@ catch was one the code could not catch, and nothing in the system said so.*
 
   Two things it will not do, written down where the next person will look for them. It touches **no subscription, transition or ledger row**: their timestamps are not settable and must not become settable, because a fabricated row in those three is indistinguishable from one a payment produced. And it cannot be undone — `events` is append-only by trigger, so there is no `--clean` and there cannot be one, which is why it refuses a population too small for item analysis to say anything about BEFORE writing it.
 
-  It also checks itself: one exam question is seeded with an inverted key, and the run fails if `analysis` does not call it inverted. Against the fixture's eight-question exam the planted one comes back at −0.32 and the seven others between +0.05 and +0.24
+  It also checks itself: one exam question is seeded with an inverted key, and the run fails if `analysis` does not call it inverted. Against the fixture's eight-question exam the planted one comes back at −0.32 and the seven others between +0.05 and +0.24.
+
+  **Against production it has never run, and the first real run is what said so.** A school with no exam questions has nothing to plant a key on, which is every school this platform has until the content pipeline writes one — so the command seeded a thousand people, reported it, and said in its last line that item analysis had nothing to find. That is the right behaviour and the sentence above overstated it: the self-check has a precondition, and the only school that exists does not meet it.
+
+  The same run showed the precondition missing one layer down. The refusal of too small a population is *about* item analysis, and it fired for a school where item analysis cannot run at all — fifty seeded people for the funnel, refused with a minimum sample computed for an exam that does not exist. Arithmetic that was right, for a reason that could not apply, stated with the confidence of a real constant
 
 ---
 
