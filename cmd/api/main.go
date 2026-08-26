@@ -1016,8 +1016,14 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		identity.AccountID,
 	).Routes(review)
 
-	platformMux := http.NewServeMux()
-	platformMux.Handle("/api/v1/", web.Chain(review,
+	/* IT IS `mineMux` AND NOT `platformMux`, WHICH IS WHAT IT USED TO BE CALLED.
+	   The name was fine while the apex meant nothing and this was the only
+	   address belonging to no school. It stopped being fine the moment the
+	   platform got a front door of its own: two muxes would have read as the
+	   same thing, and the one that answers `my.` is a student's, not the
+	   platform's. */
+	mineMux := http.NewServeMux()
+	mineMux.Handle("/api/v1/", web.Chain(review,
 		identity.Authenticate(accounts, identity.Nowhere),
 		// A VIEWING MAY READ AND MAY NOT WRITE (K-02). Nothing here writes
 		// today; the rule is applied anyway, because the day something does is
@@ -1033,10 +1039,34 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   shows the predecessor's name over an empty school. A screen that is wrong
 	   in a way that looks deliberate is worse than no screen, which is why this
 	   address answered 404 until there was one written for it. */
-	platformMux.Handle("/", ui.Mine(interfaceVersion))
+	mineMux.Handle("/", ui.Mine(interfaceVersion))
+
+	/* ---------- and the front door, at the bare domain ----------
+
+	   THE APEX ANSWERED "no school answers at this address" UNTIL NOW, which is
+	   `tenant.Resolve` being right and useless: the one address somebody types
+	   having heard the name and nothing else was the one that said nothing.
+
+	   IT LISTS THE SCHOOLS AND THE SCHOOLS MAY NOT LIST THEMSELVES. `Store.All`
+	   says so at its own definition — nothing on a school's host may enumerate,
+	   because a school's screen showing another school's name is the failure
+	   that rule prevents. The front door is the second address belonging to no
+	   school, so it gets a handler of its own rather than a route added to the
+	   school's: mounting either in the wrong mux is then a mistake with a name.
+
+	   AND THE VISITOR IS IDENTIFIED HERE, which the console deliberately does
+	   not do. The difference is who is at the door: staff opening the console
+	   are not people who might become students, and somebody reading this page
+	   is exactly that. The cookie is on the parent domain, so reading about the
+	   platform and then opening a school is ONE visitor — and `schoolOf` finds
+	   none here, so the arrival is recorded with no school on it rather than
+	   with a guessed one. */
+	frontMux := http.NewServeMux()
+	frontMux.Handle("/", ui.Front(interfaceVersion))
 
 	atConsole := console.Is(console.Settings{Host: console.HostOf(cfg.PlatformDomain)}, tenant.Normalise)
-	atPlatform := console.Is(console.Settings{Host: practice.Host(cfg.PlatformDomain)}, tenant.Normalise)
+	atMine := console.Is(console.Settings{Host: practice.Host(cfg.PlatformDomain)}, tenant.Normalise)
+	atFront := console.Is(console.Settings{Host: cfg.PlatformDomain}, tenant.Normalise)
 
 	/* NO VISITOR IDENTITY HERE, and that is deliberate: the funnel counts
 	   people who might become students, and staff opening the console are not
@@ -1047,8 +1077,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			consoleMux.ServeHTTP(w, r)
 			return
 		}
-		if atPlatform(r) {
-			platformMux.ServeHTTP(w, r)
+		if atMine(r) {
+			mineMux.ServeHTTP(w, r)
+			return
+		}
+		if atFront(r) {
+			frontMux.ServeHTTP(w, r)
 			return
 		}
 		mux.ServeHTTP(w, r)
