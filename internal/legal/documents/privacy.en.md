@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 This says what we hold about you, why, and what happens to it when you ask us to
@@ -67,6 +67,11 @@ We hold:
 - **Your recovery codes, as hashes**, and whether each has been used. They exist
   only for an account with a second factor. Only the hashes are kept: the codes
   are shown once, when they are made, and we cannot show them to you again.
+- **The confirmation links we sent you**, one row each: the address we wrote to,
+  when we sent it, when it stops working, and when you followed it. The link
+  itself is kept only as a hash, so we cannot re-send you an old one — we can
+  only make a new one. We keep the address the link was sent to so that a link
+  cannot confirm an address it was never sent to.
 - **Your sessions** — one row per browser you are signed in on, holding a hash
   of the session token and the browser's own description of itself. Changing
   your password ends every other session.
@@ -171,7 +176,8 @@ neither is about you:
 ## Erasure, exactly
 
 When you ask us to erase you, we delete the rows that make an identifier mean a
-person: your account, your credentials, your sessions, the visitor identifiers
+person: your account, your credentials, your confirmation links, your sessions,
+the visitor identifiers
 that belong to you and the link between them. Everything that then remains — the
 events, the practice log, the record of payments — **still exists and no longer
 joins to anybody**. There is no key left that connects them to you, to your

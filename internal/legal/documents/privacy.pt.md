@@ -1,7 +1,7 @@
 ---
 title: Política de privacidade
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 Isto diz o que guardamos sobre você, por quê, e o que acontece quando você pede
@@ -70,6 +70,12 @@ Guardamos:
   existem apenas para contas com segundo fator. Guardamos só os hashes: os
   códigos aparecem uma única vez, quando são criados, e não conseguimos mostrá-los
   de novo.
+- **Os links de confirmação que enviamos a você**, uma linha cada: o endereço
+  para onde escrevemos, quando enviamos, quando o link deixa de valer e quando
+  você o seguiu. O link em si é guardado apenas como hash, então não conseguimos
+  reenviar um antigo — só criar um novo. Guardamos o endereço para onde o link
+  foi enviado justamente para que um link não possa confirmar um endereço ao
+  qual nunca foi enviado.
 - **Suas sessões** — uma linha por navegador em que você está conectado, com um
   hash do token da sessão e a descrição que o navegador dá de si mesmo. Trocar a
   senha encerra todas as outras sessões.
@@ -175,7 +181,8 @@ nenhuma delas é sobre você:
 ## Apagamento, com precisão
 
 Quando você pede para ser apagado, excluímos as linhas que fazem um
-identificador significar uma pessoa: sua conta, suas credenciais, suas sessões,
+identificador significar uma pessoa: sua conta, suas credenciais, seus links de
+confirmação, suas sessões,
 os identificadores de visitante que são seus e a ligação entre eles. Tudo o que
 sobra — os eventos, o registro de prática, o registro de pagamentos — **continua
 existindo e não se liga mais a ninguém**. Não resta chave alguma que os conecte
