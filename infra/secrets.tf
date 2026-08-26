@@ -17,3 +17,23 @@ resource "google_secret_manager_secret" "database_url" {
 
   depends_on = [google_project_service.enabled]
 }
+
+/* The mail provider's key, in a container this file does not fill.
+
+   SAME ARRANGEMENT AS THE DATABASE URL AND FOR THE SAME REASON: a
+   `secret_version` here would put the value in the plan, in the state, and in
+   every version of the state the bucket keeps.
+
+   IT IS CREATED WHETHER OR NOT ANYTHING SENDS MAIL. An empty container costs
+   nothing, and a service that names a secret which does not exist fails to
+   start — so the container existing first is what makes turning mail on a
+   matter of writing one value rather than a Terraform run. */
+resource "google_secret_manager_secret" "mail_api_key" {
+  secret_id = "schooling-mail-api-key"
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [google_project_service.enabled]
+}

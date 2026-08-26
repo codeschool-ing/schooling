@@ -41,6 +41,13 @@ resource "google_secret_manager_secret_iam_member" "run_reads_the_database_url" 
   member    = "serviceAccount:${google_service_account.run.email}"
 }
 
+// And the mail key, granted the same way and on the same principle.
+resource "google_secret_manager_secret_iam_member" "run_reads_the_mail_key" {
+  secret_id = google_secret_manager_secret.mail_api_key.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.run.email}"
+}
+
 // A custom service account starts with nothing, logging included.
 resource "google_project_iam_member" "run_writes_logs" {
   project = var.project

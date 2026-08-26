@@ -84,3 +84,27 @@ variable "uptime_host" {
   type        = string
   default     = ""
 }
+
+/* WHO THE PLATFORM'S MAIL COMES FROM, AND WHERE AN ANSWER GOES.
+
+   TWO VARIABLES AND NOT ONE, because they are different addresses on purpose.
+   The From is a box on a domain that publishes SPF and DKIM and has NO MX — it
+   signs, it does not receive — so a reply to it would bounce. Somebody who
+   answers a message from this platform is a person with something to say, and
+   bouncing them is the rudest possible answer.
+
+   THEY ARE NOT SECRET AND THEY ARE NOT DEFAULTED EITHER. A default would be a
+   guess at somebody's domain, and `config.Load` already refuses a key with no
+   From; an empty pair here simply means this deployment keeps its mail instead
+   of sending it, which is a decision rather than a failure. */
+variable "mail_from" {
+  description = "Sender of every message, as `Name <box@domain>`. Empty keeps mail unsent."
+  type        = string
+  default     = ""
+}
+
+variable "mail_reply_to" {
+  description = "Where an answer goes. Empty sends no Reply-To at all."
+  type        = string
+  default     = ""
+}
