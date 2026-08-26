@@ -290,10 +290,15 @@ interface's bytes out of its embed, so the tokens, the reset and the bar cannot 
 two halves of one binary. Two visual systems for one product is how a console starts looking like
 a different company's software.
 
-**That stylesheet already exists three times across the organisation** — here, in
-`portal-frontend`, in `console-frontend` — each with a comment asking whoever edits one to copy
-it onward. A fourth copy inside this binary would have been indefensible, which is what
-`TestTheConsoleServesTheSharedStylesheetAndNotACopy` is standing on.
+**That stylesheet used to exist four times across the organisation** — here, in
+`portal-frontend`, in `console-frontend` and, as `style.css`, in the showcase — each with a
+comment asking whoever edits one to copy it onward. Three of those repositories were deleted
+with the predecessor, so today it is two: this one and the showcase, which is frozen.
+
+A copy inside this binary would still have been indefensible, and that is what
+`TestTheConsoleServesTheSharedStylesheetAndNotACopy` is standing on. The argument did not
+depend on how many copies there were elsewhere — it is that two of them here, in one
+deployment, would drift between two halves of the same screen.
 
 ---
 

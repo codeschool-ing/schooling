@@ -2,11 +2,15 @@
    The server, from the browser — schooling's copy.
 
    THE SECOND OF THE THREE FILES THAT ARE NOT A COPY. Everything in `app/` other
-   than this, `state.js` and `sync.js` is `portal-frontend`'s file unchanged, and
-   this is where the difference is absorbed: the portal talks to
-   `portal-backend`, which serves ONE school and keeps a student's document; this
+   than this, `state.js` and `sync.js` arrived from `portal-frontend` unchanged,
+   and this is where the difference is absorbed: the portal talked to
+   `portal-backend`, which served ONE school and kept a student's document; this
    talks to `schooling`, which serves MANY from one deployment and keeps the
    student's work in tables of its own.
+
+   BOTH OF THOSE REPOSITORIES WERE DELETED with the predecessor, so "unchanged"
+   is how these files were produced rather than something anybody can verify.
+   See the note at the top of `CLAUDE.md`.
 
    The function names, arguments and return shapes are the portal's, because the
    screens above call them and the screens are the copy.

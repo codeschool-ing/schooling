@@ -3,8 +3,9 @@
 //
 // # THE FAILURE IT EXISTS TO CATCH
 //
-// `base.css` and `portal.css` are `portal-frontend`'s, byte for byte, and they
-// are loaded first. `exercises.css` and `app.css` are this repository's and are
+// `base.css` and `portal.css` came from `portal-frontend` byte for byte, and
+// they are loaded first. That repository has since been deleted, so this tool is
+// no longer the second line of defence behind a diff — it is the only one. `exercises.css` and `app.css` are this repository's and are
 // loaded after them. So a rule written here against a class name the copied
 // stylesheet already uses does not conflict, does not warn and does not appear
 // in any diff: it simply WINS, on every element of the copied markup carrying

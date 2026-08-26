@@ -2,8 +2,9 @@
    The student's state — schooling's copy.
 
    THIS IS ONE OF THE THREE FILES THAT ARE NOT A COPY, and it is worth saying
-   exactly what differs, because everything else in `app/` is
-   `portal-frontend`'s file unchanged.
+   exactly what differs, because everything else in `app/` arrived from
+   `portal-frontend` unchanged — a repository since deleted, so that is how the
+   files were produced and not a claim anybody can check. See `CLAUDE.md`.
 
    Over there the portal is local-first: the document lives in `localStorage`
    under `codeschool-portal`, every write lands there first and a backend is
