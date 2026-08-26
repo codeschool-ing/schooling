@@ -364,12 +364,21 @@ resource "google_cloud_run_v2_service" "api" {
          one more place, and `cmd/analyse` in particular runs unattended at
          03:10 with nobody reading its environment.
 
-         AN EMPTY KEY IS NOT A FAILURE HERE. `cmd/api` wires `mail.Outbox` when
-         there is none, keeps the messages it would have sent rather than
-         dropping them, and says which of the two it chose in its start-up line.
-         So this pair can be applied before the secret has a value, and turning
-         mail on afterwards is one `secretmanager versions add` and one new
-         revision. */
+         AN EMPTY KEY IS NOT A FAILURE TO THE APPLICATION. `cmd/api` wires
+         `mail.Outbox` when there is none, keeps the messages it would have sent
+         rather than dropping them, and says which of the two it chose in its
+         start-up line.
+
+         IT IS A FAILURE TO THE REVISION, THOUGH, AND THIS COMMENT SAID
+         OTHERWISE. A `secret_key_ref` at `latest` is resolved when the instance
+         starts, so a secret with NO version stops the revision coming up at all
+         — `Secret projects/…/versions/latest was not found`, which is the same
+         wall the database URL hits and the reason `infra/README.md` has a
+         section called "Applying takes two passes".
+
+         So the value goes in FIRST and this applies after. The empty container
+         still earns its place: it is what a person writes into, and it has to
+         exist before anybody can. */
       env {
         name  = "SCHOOLING_MAIL_FROM"
         value = var.mail_from
