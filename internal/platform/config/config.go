@@ -47,6 +47,34 @@ type Config struct {
 	   addresses are built from. */
 	PlatformDomain string
 
+	/* MailKey is the provider's credential, and it is the ONE VARIABLE HERE
+	   THAT IS ALLOWED TO BE EMPTY WITHOUT BEING A PROBLEM.
+
+	   Every laptop, every test run and CI has no mail account, and refusing to
+	   start without one would make "run the platform locally" mean "get a key
+	   first". Empty wires `mail.Outbox`, which keeps what it would have sent
+	   instead of dropping it, and `cmd/api` logs which of the two it chose —
+	   so "no mail arrived" is answered by the start-up line rather than by an
+	   investigation.
+
+	   IT IS NOT FATAL IN PRODUCTION EITHER, and that is a deliberate ordering of
+	   two harms. A missing key stops addresses being confirmed, which gates
+	   nothing; refusing to start would take the lessons down with it. So
+	   production starts, and `cmd/api` says loudly at start-up that it is
+	   keeping mail rather than sending it. */
+	MailKey string
+
+	// MailFrom is the address every message leaves from, name included, as
+	// `Schooling <schooling@example.tld>`. It is configuration because SPF and
+	// DKIM are published for one domain and this repository holds no domain
+	// names.
+	MailFrom string
+
+	// MailReplyTo is where an answer goes, and it is a different address on
+	// purpose: the sending domain has no MX, so a reply to the From bounces.
+	// Empty sends no Reply-To at all, which is at least true.
+	MailReplyTo string
+
 	Environment Environment
 }
 
@@ -59,6 +87,9 @@ func Load() (Config, error) {
 		DatabaseURL:    os.Getenv("SCHOOLING_DATABASE_URL"),
 		Port:           os.Getenv("PORT"),
 		PlatformDomain: strings.ToLower(strings.TrimSpace(os.Getenv("SCHOOLING_PLATFORM_DOMAIN"))),
+		MailKey:        strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_API_KEY")),
+		MailFrom:       strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_FROM")),
+		MailReplyTo:    strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_REPLY_TO")),
 		Environment:    Environment(os.Getenv("SCHOOLING_ENV")),
 	}
 
@@ -74,6 +105,25 @@ func Load() (Config, error) {
 		problems = append(problems, errors.New("SCHOOLING_PLATFORM_DOMAIN is empty — the platform's own addresses are built from it"))
 	} else if strings.Contains(cfg.PlatformDomain, "/") || strings.Contains(cfg.PlatformDomain, ":") {
 		problems = append(problems, fmt.Errorf("SCHOOLING_PLATFORM_DOMAIN is %q — it is a host, not a URL and not a host:port", cfg.PlatformDomain))
+	}
+
+	/* A KEY WITHOUT AN ADDRESS TO SEND FROM IS THE ONE COMBINATION THAT FAILS
+	   AT THE PROVIDER RATHER THAN HERE, hours later, on somebody's sign-up. The
+	   two travel together: either this deployment sends mail or it keeps it. */
+	if cfg.MailKey != "" && cfg.MailFrom == "" {
+		problems = append(problems, errors.New(
+			"SCHOOLING_MAIL_API_KEY is set and SCHOOLING_MAIL_FROM is empty — a provider "+
+				"refuses a message with no sender, and it refuses it at the first sign-up "+
+				"rather than at start-up"))
+	}
+	if cfg.MailFrom != "" && !strings.Contains(cfg.MailFrom, "@") {
+		problems = append(problems, fmt.Errorf(
+			"SCHOOLING_MAIL_FROM is %q — it has to carry an address, as `Name <box@domain>` "+
+				"or as the address alone", cfg.MailFrom))
+	}
+	if cfg.MailReplyTo != "" && !strings.Contains(cfg.MailReplyTo, "@") {
+		problems = append(problems, fmt.Errorf(
+			"SCHOOLING_MAIL_REPLY_TO is %q — it has to carry an address", cfg.MailReplyTo))
 	}
 
 	switch cfg.Environment {

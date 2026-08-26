@@ -20,6 +20,21 @@ import (
    says out loud it cannot be counted. These hold the thing that finally writes
    it, and the four ways a link can be no good. */
 
+// confirmed reads the fact off the account row, which is where it lives — the
+// three doors into a session all answer with this account and all three have to
+// tell the screen whether to show the nudge.
+func confirmed(t *testing.T, store *identity.Store, id uuid.UUID) (time.Time, bool) {
+	t.Helper()
+	account, err := store.ByID(context.Background(), id)
+	if err != nil {
+		t.Fatalf("reading the account: %v", err)
+	}
+	if account.EmailVerifiedAt == nil {
+		return time.Time{}, false
+	}
+	return *account.EmailVerifiedAt, true
+}
+
 // THE HAPPY PATH, AND IT WRITES THE COLUMN. That is the whole point of the
 // change: a fact about an account that nothing has ever been able to record.
 func TestFollowingTheLinkConfirmsTheAddress(t *testing.T) {
@@ -27,8 +42,8 @@ func TestFollowingTheLinkConfirmsTheAddress(t *testing.T) {
 	ctx := context.Background()
 	account, email := create(t, store)
 
-	if _, confirmed, err := store.EmailConfirmed(ctx, account.ID); err != nil || confirmed {
-		t.Fatalf("a new account is already confirmed (%v, %v)", confirmed, err)
+	if _, yes := confirmed(t, store, account.ID); yes {
+		t.Fatal("a new account is already confirmed")
 	}
 
 	link, err := store.IssueEmailConfirmation(ctx, account.ID)
@@ -53,9 +68,9 @@ func TestFollowingTheLinkConfirmsTheAddress(t *testing.T) {
 		t.Errorf("the link confirmed %v, want %v", got.ID, account.ID)
 	}
 
-	at, confirmed, err := store.EmailConfirmed(ctx, account.ID)
-	if err != nil || !confirmed {
-		t.Fatalf("the address is still unconfirmed (%v, %v)", confirmed, err)
+	at, yes := confirmed(t, store, account.ID)
+	if !yes {
+		t.Fatal("the address is still unconfirmed")
 	}
 	if time.Since(at) > time.Minute {
 		t.Errorf("the address was confirmed at %v, which is not now", at)
@@ -149,20 +164,14 @@ func TestConfirmingAgainKeepsTheFirstDate(t *testing.T) {
 	if _, err := store.ConfirmEmail(ctx, first.Token); err != nil {
 		t.Fatalf("following the first: %v", err)
 	}
-	was, _, err := store.EmailConfirmed(ctx, account.ID)
-	if err != nil {
-		t.Fatalf("reading: %v", err)
-	}
+	was, _ := confirmed(t, store, account.ID)
 
 	/* THE FIRST LINK DID NOT KILL THE SECOND, which is this store's difference
 	   from IssueRecoveryCodes and the reason a slow message still works. */
 	if _, err := store.ConfirmEmail(ctx, second.Token); err != nil {
 		t.Fatalf("the second link stopped working when the first was used: %v", err)
 	}
-	now, _, err := store.EmailConfirmed(ctx, account.ID)
-	if err != nil {
-		t.Fatalf("reading again: %v", err)
-	}
+	now, _ := confirmed(t, store, account.ID)
 	if !now.Equal(was) {
 		t.Errorf("the second follow moved the date from %v to %v", was, now)
 	}
@@ -211,7 +220,7 @@ func TestAnExpiredLinkIsRefused(t *testing.T) {
 	if _, err := store.ConfirmEmail(ctx, link.Token); !errors.Is(err, identity.ErrNoConfirmation) {
 		t.Errorf("an expired link answered %v, want ErrNoConfirmation", err)
 	}
-	if _, confirmed, _ := store.EmailConfirmed(ctx, account.ID); confirmed {
+	if _, yes := confirmed(t, store, account.ID); yes {
 		t.Error("an expired link confirmed the address anyway")
 	}
 }
@@ -245,7 +254,7 @@ func TestALinkDoesNotConfirmAnAddressItWasNotSentTo(t *testing.T) {
 	if _, err := store.ConfirmEmail(ctx, link.Token); !errors.Is(err, identity.ErrNoConfirmation) {
 		t.Errorf("a link for the old address answered %v, want ErrNoConfirmation", err)
 	}
-	if _, confirmed, _ := store.EmailConfirmed(ctx, account.ID); confirmed {
+	if _, yes := confirmed(t, store, account.ID); yes {
 		t.Error("a link for the old address confirmed the new one")
 	}
 }
@@ -258,9 +267,6 @@ func TestIssuingForNobodyIsErrNoAccount(t *testing.T) {
 	_, err := store.IssueEmailConfirmation(context.Background(), uuid.New())
 	if !errors.Is(err, identity.ErrNoAccount) {
 		t.Errorf("issuing for a stranger answered %v, want ErrNoAccount", err)
-	}
-	if _, _, err := store.EmailConfirmed(context.Background(), uuid.New()); !errors.Is(err, identity.ErrNoAccount) {
-		t.Errorf("reading a stranger answered %v, want ErrNoAccount", err)
 	}
 }
 
