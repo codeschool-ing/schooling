@@ -26,7 +26,7 @@
    somebody at this address is missing is a session, not a menu.
    ========================================================================== */
 
-import { drawQueue, drawNothing, drawSignedOut, drawFailure } from './queue.js';
+import { drawQueue, drawNothing, drawSignedOut, drawFailure, drawConfirmed } from './queue.js';
 
 const here = document.getElementById('here');
 
@@ -52,6 +52,37 @@ if (themeButton) {
     } catch (e) { /* private mode: the choice holds for this page and no longer */ }
   });
 }
+
+/* ---------- what the confirmation link left behind ----------
+
+   THE LINK LANDS ON THIS HOST AND THE SERVER HAS ALREADY DEALT WITH IT. What
+   arrives here is one word in the query string saying how it went, so this
+   screen reads a fact rather than performing an action — which is why it runs
+   before the request below and does not wait for it. Somebody clicking the link
+   on a phone they have never signed in on is the ordinary case, and they must
+   still be told it worked.
+
+   THE PARAMETER IS REMOVED FROM THE ADDRESS AFTERWARDS. Left there, a refresh
+   or a bookmark would say "your address is confirmed" a week later, about
+   nothing that just happened — and `?confirmed=yes` in a copied URL would say
+   it to somebody else entirely. */
+function saySoIfALinkWasFollowed() {
+  let outcome = null;
+  try {
+    outcome = new URLSearchParams(location.search).get('confirmed');
+  } catch (e) { /* an address this browser will not parse says nothing */ }
+  if (outcome !== 'yes' && outcome !== 'no') return;
+
+  const note = document.createElement('div');
+  note.innerHTML = drawConfirmed(outcome === 'yes');
+  here.parentNode.insertBefore(note, here);
+
+  try {
+    history.replaceState(null, '', location.pathname);
+  } catch (e) { /* the note is drawn either way, which is the part that matters */ }
+}
+
+saySoIfALinkWasFollowed();
 
 /* ---------- the one request ---------- */
 

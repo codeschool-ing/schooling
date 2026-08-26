@@ -159,3 +159,28 @@ export function drawFailure() {
       '</p>' +
     '</section>';
 }
+
+/* WHAT THE CONFIRMATION LINK LEFT BEHIND.
+
+   TWO SENTENCES AND NOT FOUR. The server tells this screen whether the link
+   worked and nothing else: never issued, already spent, expired, and issued for
+   an address the account has since left all arrive as the same "no". Telling
+   them apart would confirm to somebody guessing that a token is real, and would
+   say nothing the person could act on.
+
+   THE FAILURE DOES NOT OFFER A BUTTON, and that is deliberate rather than
+   unfinished. Asking for another link means being signed in, and this address
+   is the one somebody reaches by clicking a link in their mail — often on a
+   phone with no session on it. A button that failed for half the people who saw
+   it would be worse than a sentence telling them where the working one is. */
+export function drawConfirmed(worked) {
+  if (worked) {
+    return '<section class="mine-note is-good" role="status">' +
+      '<p>' + esc(txt('Your e-mail address is confirmed.')) + '</p>' +
+    '</section>';
+  }
+  return '<section class="mine-note is-bad" role="status">' +
+    '<p>' + esc(txt('That link is no longer good.')) + ' ' +
+      esc(txt('Sign in at your school and ask for another one.')) + '</p>' +
+  '</section>';
+}
