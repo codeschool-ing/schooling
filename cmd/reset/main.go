@@ -150,27 +150,33 @@ var wiped = map[string]string{
 	"accounts":               "the people, minus whoever --keep spares",
 	"account_credentials":    "their passwords; cascades from accounts",
 	"account_recovery_codes": "their second factor; cascades from accounts",
-	"staff":                  "who operates the platform; cascades from accounts",
-	"sessions":               "who was signed in",
-	"visitors":               "the browsers that arrived",
-	"account_visitors":       "which browser became which account",
-	"events":                 "the whole stream, which is what a reset is for",
-	"practice_review":        "every answer anybody gave",
-	"section_progress":       "what anybody finished",
-	"practice_state":         "the schedule of every card",
-	"practice_drawn":         "the cards as they were shown",
-	"resume_pointer":         "where anybody left off",
-	"notes":                  "what anybody wrote",
-	"content_reports":        "what anybody reported",
-	"exam_attempts":          "every sitting",
-	"exam_answers":           "every answer in one",
-	"certificates":           "every certificate issued",
-	"question_quarantine":    "what a sweep withdrew, which is derived from answers that are going",
-	"item_statistics":        "the rollup, which is derived from the same answers",
-	"subscriptions":          "there are none, and the refusal above proves it",
-	"subscription_events":    "the same, and it is append-only for when there are",
-	"ledger_entries":         "the same again, and this is the money",
-	"audit_log":              "the history of who did what, emptied and then written to",
+
+	// Kept out of the truncate for `account_credentials`' reason: emptying it
+	// while a spared account sits there would leave the operator confirmed with
+	// nothing on record saying so, and any link still in their inbox dead.
+	"account_email_confirmations": "the links sent to prove an address; cascades from accounts",
+
+	"staff":               "who operates the platform; cascades from accounts",
+	"sessions":            "who was signed in",
+	"visitors":            "the browsers that arrived",
+	"account_visitors":    "which browser became which account",
+	"events":              "the whole stream, which is what a reset is for",
+	"practice_review":     "every answer anybody gave",
+	"section_progress":    "what anybody finished",
+	"practice_state":      "the schedule of every card",
+	"practice_drawn":      "the cards as they were shown",
+	"resume_pointer":      "where anybody left off",
+	"notes":               "what anybody wrote",
+	"content_reports":     "what anybody reported",
+	"exam_attempts":       "every sitting",
+	"exam_answers":        "every answer in one",
+	"certificates":        "every certificate issued",
+	"question_quarantine": "what a sweep withdrew, which is derived from answers that are going",
+	"item_statistics":     "the rollup, which is derived from the same answers",
+	"subscriptions":       "there are none, and the refusal above proves it",
+	"subscription_events": "the same, and it is append-only for when there are",
+	"ledger_entries":      "the same again, and this is the money",
+	"audit_log":           "the history of who did what, emptied and then written to",
 }
 
 func main() {
@@ -555,10 +561,11 @@ WHERE A SPARED OPERATOR LIVES, AND WHY ONLY ONE OF THE FOUR IS DELETED IN CODE.
 	than how many exist.
 */
 var viaAccounts = map[string]string{
-	"accounts":               "id",
-	"account_credentials":    "account_id",
-	"account_recovery_codes": "account_id",
-	"staff":                  "account_id",
+	"accounts":                    "id",
+	"account_credentials":         "account_id",
+	"account_recovery_codes":      "account_id",
+	"account_email_confirmations": "account_id",
+	"staff":                       "account_id",
 }
 
 func emails(spared []door) []string {

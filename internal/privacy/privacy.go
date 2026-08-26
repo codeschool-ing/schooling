@@ -133,6 +133,14 @@ var Registry = []Table{
 			"way into an account that is not there",
 	},
 	{
+		Name: "account_email_confirmations", Holds: HoldsIdentifying, Subject: SubjectAccount,
+		OnErase: EraseDelete,
+		Why: "the address a confirmation link was sent to, which is the e-mail itself and not a " +
+			"hash of it — the row keeps it so that a link issued for one address cannot verify " +
+			"another. It goes with the account by cascade: a link that still worked after an " +
+			"erasure would write a timestamp onto a row that is not there",
+	},
+	{
 		Name: "staff", Holds: HoldsPseudonymous, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "who was allowed to operate the platform, and who let them in. It is the row the " +
 			"audit's actor is checked against months later, so it survives — and it goes by " +
@@ -405,6 +413,13 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		{"account_recovery_codes", `
 			SELECT created_at, used_at
 			FROM account_recovery_codes WHERE account_id = $1 ORDER BY created_at`},
+		// NOT `token_hash`, for the recovery codes' reason directly above. What
+		// this row is worth to the person is the other three columns: which
+		// address we wrote to, when, and whether they ever followed it — which
+		// is the whole answer to "why does it say my e-mail is unconfirmed".
+		{"account_email_confirmations", `
+			SELECT email, created_at, expires_at, spent_at
+			FROM account_email_confirmations WHERE account_id = $1 ORDER BY created_at`},
 		{"sessions", `
 			SELECT id, created_at, last_seen_at, expires_at, revoked_at, user_agent
 			FROM sessions WHERE account_id = $1 ORDER BY created_at`},
