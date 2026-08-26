@@ -67,6 +67,7 @@ var enoughPeople = int(math.Ceil(analysis.MinimumSample / reachesTheExam))
 const (
 	onASecondDevice = 0.25 // a person who arrives again on another browser
 	signsUpTwice    = 0.06 // the duplicate signup: one person, two accounts
+	confirmsAddress = 0.68 // follows the link in the confirmation mail
 	comesBack       = 0.22 // a gap of weeks in the middle of the story
 	pays            = 0.30 // of those who get through the free course
 	sitsItAgain     = 0.35 // of those who failed
@@ -187,6 +188,23 @@ func one(r *rand.Rand, s shape, from, to time.Time, run string, n int) life {
 		l.accounts = append(l.accounts,
 			accountSpec{name: other, email: otherAddress, visitor: browser})
 		if !add("account.created", browser, 1, nil) {
+			return l
+		}
+	}
+
+	/* CONFIRMING IS NOT A GATE, WHICH IS WHY IT IS NOT A `survives` CALL.
+
+	   `survives` ends the journey; this does not. Registering signs a student in
+	   and nothing waits on the address being proved, so somebody who never opens
+	   the mail carries on to a track exactly as if they had. Modelled as a gate,
+	   this would invent a third of the population dropping out of a step nobody
+	   can drop out of — and the funnel screen would show it as a wall.
+
+	   It happens BEFORE the track opens because that is the order in life: the
+	   mail arrives within minutes and the next session is a day later. */
+	if r.Float64() < confirmsAddress {
+		at = at.Add(hours(r, 0, 12))
+		if !add("account.confirmed", browser, 0, nil) {
 			return l
 		}
 	}

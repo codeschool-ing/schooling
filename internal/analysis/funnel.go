@@ -24,12 +24,16 @@ import (
 //
 // # A STEP WITH NO EVENT IS NOT A STEP WITH NOBODY
 //
-// Two of the eight cannot be emitted today: verifying an address, because
-// nothing writes `email_verified_at`, and subscribing, because nothing creates
-// a subscription until there is a gateway. Reported as zero they would read as
-// everybody dropping out — the same mistake as a discrimination index of zero
-// that was never measured. They come back saying no event exists yet, and a
-// screen has to show that differently from a drop.
+// ONE of the eight cannot be emitted today: subscribing, because nothing
+// creates a subscription until there is a gateway. Reported as zero it would
+// read as everybody dropping out — the same mistake as a discrimination index
+// of zero that was never measured. It comes back saying no event exists yet,
+// and a screen has to show that differently from a drop.
+//
+// Verifying an address was the second until `account.confirmed` started being
+// emitted. It is measured now, and `cmd/seed` emits it too — a step named here
+// that the seeder does not produce would put a cliff in every seeded funnel,
+// which is this same mistake wearing different clothes.
 
 // Step is one step of the funnel, with what it is counted from.
 type Step struct {
@@ -121,11 +125,17 @@ type Links func(ctx context.Context) (map[uuid.UUID]uuid.UUID, error)
 var steps = []Step{
 	{Event: "visitor.arrived", Label: "Arrived"},
 	{Event: "account.created", Label: "Created an account"},
-	{
-		Label: "Verified the address",
-		Why: "nothing writes `email_verified_at` yet, so there is no event to count. " +
-			"This is a missing feature and not a step nobody reaches",
-	},
+	/* CONFIRMING IS NOT A GATE, so this step can be HIGHER than the one below
+	   it and that is not a bug. Registering signs a student in and nothing waits
+	   on the address being proved — somebody who never opens the mail carries
+	   straight on to a track. A reader who expects a funnel to fall at every
+	   step will read the rise as broken, which is why it is written here rather
+	   than left to be rediscovered.
+
+	   What the step is worth is exactly that comparison: the gap between it and
+	   "Chose a track" is how many people we cannot reach among the ones who are
+	   actually studying. */
+	{Event: "account.confirmed", Label: "Verified the address"},
 	{Event: "track.opened", Label: "Chose a track"},
 	{Event: "lesson.opened", Label: "Opened the first lesson"},
 	{Event: "section.completed", Label: "Finished the first section"},

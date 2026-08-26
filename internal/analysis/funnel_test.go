@@ -158,7 +158,7 @@ func TestTheStepsNothingEmitsSayThatRatherThanZero(t *testing.T) {
 		t.Fatalf("the funnel has %d steps, want the eight the product has", len(funnel))
 	}
 
-	for _, label := range []string{"Verified the address", "Subscribed"} {
+	for _, label := range []string{"Subscribed"} {
 		step := stepNamed(t, funnel, label)
 		if step.Measured {
 			t.Errorf("%q says it is measured, and nothing emits it", label)
