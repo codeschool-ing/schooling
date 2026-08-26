@@ -22,7 +22,14 @@ import (
 	"testing"
 )
 
-const secret = "xkeysib-not-a-real-key-0000000000"
+/*
+theKey is what the sender is configured with, and every test here that
+
+	asserts on a leak asserts on this exact string. It carries Brevo's real
+	prefix on purpose: a placeholder that looked nothing like a key would not
+	prove that a real one stays out of the errors.
+*/
+const theKey = "xkeysib-not-a-real-key-0000000000"
 
 // against stands a fake provider up and points a sender at it. The handler gets
 // the decoded body, so a test can assert on the shape rather than on a string.
@@ -37,7 +44,7 @@ func against(t *testing.T, reply func(w http.ResponseWriter, got map[string]any,
 	}))
 	t.Cleanup(srv.Close)
 
-	s := ViaBrevo(secret,
+	s := ViaBrevo(theKey,
 		Address{Name: "Schooling", Email: "schooling@example.tld"},
 		Address{Email: "reply@example.tld"},
 	).(*brevo)
@@ -67,7 +74,7 @@ func TestTheMessageIsPostedInTheProvidersShape(t *testing.T) {
 		t.Fatalf("a healthy provider produced an error: %v", err)
 	}
 
-	if sentKey != secret {
+	if sentKey != theKey {
 		t.Errorf("the api-key header carried %q", sentKey)
 	}
 
@@ -134,7 +141,7 @@ func TestAnAbsentReplyToSendsNoHeader(t *testing.T) {
 	}))
 	t.Cleanup(srv.Close)
 
-	s := ViaBrevo(secret, Address{Email: "schooling@example.tld"}, Address{}).(*brevo)
+	s := ViaBrevo(theKey, Address{Email: "schooling@example.tld"}, Address{}).(*brevo)
 	s.endpoint = srv.URL
 
 	if err := s.Send(context.Background(), Message{
@@ -206,7 +213,7 @@ func TestNoErrorCarriesTheKey(t *testing.T) {
 	// And one that cannot be reached at all, which is the other shape of error.
 	closed := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 	closed.Close()
-	unreachable := ViaBrevo(secret, Address{Email: "schooling@example.tld"}, Address{}).(*brevo)
+	unreachable := ViaBrevo(theKey, Address{Email: "schooling@example.tld"}, Address{}).(*brevo)
 	unreachable.endpoint = closed.URL
 
 	for _, s := range []Sender{refused, unreachable} {
@@ -216,7 +223,7 @@ func TestNoErrorCarriesTheKey(t *testing.T) {
 		if err == nil {
 			t.Fatal("expected an error")
 		}
-		if strings.Contains(err.Error(), secret) {
+		if strings.Contains(err.Error(), theKey) {
 			t.Errorf("the api key is in an error message: %v", err)
 		}
 	}

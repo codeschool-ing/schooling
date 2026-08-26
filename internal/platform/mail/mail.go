@@ -180,7 +180,11 @@ func (b *brevo) Send(ctx context.Context, m Message) error {
 		   than unhappy. */
 		return fmt.Errorf("mail: asking the provider: %w", err)
 	}
-	defer res.Body.Close()
+	// Discarded on purpose, and written this way because `.golangci.yml` says
+	// so: closing a body whose content has been read cannot fail in a way this
+	// caller could act on, and an error dropped without a line saying why is the
+	// failure mode that file exists to catch.
+	defer func() { _ = res.Body.Close() }()
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		return fmt.Errorf("mail: the provider answered %d: %s", res.StatusCode, complaint(res.Body))
