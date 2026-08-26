@@ -61,6 +61,16 @@ type Account struct {
 	// that builds a cohort has to be able to see it.
 	Synthetic bool
 
+	/* EmailVerifiedAt is when they proved they can read the address, or nil.
+
+	   IT IS ON THE STRUCT AND NOT A SEPARATE QUERY, and `confirmation.go` used
+	   to say the opposite. The three doors into a session — restoring one,
+	   signing in, signing up — all answer with this account, and all three have
+	   to tell the screen whether to show the nudge; a second round trip on each
+	   of them, to read one nullable timestamp off a row already in hand, would
+	   be paying for the tidiness of a struct nobody looks at. */
+	EmailVerifiedAt *time.Time
+
 	CreatedAt time.Time
 }
 
@@ -117,9 +127,9 @@ func (s *Store) Create(ctx context.Context, in NewAccount) (Account, error) {
 		err := tx.QueryRow(ctx, `
 			INSERT INTO accounts (email, name, locale, country, synthetic)
 			VALUES ($1, $2, $3, $4, $5)
-			RETURNING id, email, name, locale, country, synthetic, created_at
+			RETURNING id, email, name, locale, country, synthetic, email_verified_at, created_at
 		`, email, strings.TrimSpace(in.Name), locale, country, in.Synthetic).Scan(
-			&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country, &out.Synthetic, &out.CreatedAt)
+			&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country, &out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt)
 		if err != nil {
 			return err
 		}
@@ -151,13 +161,14 @@ func (s *Store) Authenticate(ctx context.Context, email, password string) (Accou
 	var stored string
 
 	err := s.pool.QueryRow(ctx, `
-		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.created_at, c.secret
+		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.email_verified_at,
+		       a.created_at, c.secret
 		FROM accounts a
 		JOIN account_credentials c ON c.account_id = a.id AND c.kind = 'password'
 		WHERE lower(a.email) = lower($1)
 	`, NormaliseEmail(email)).Scan(
 		&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country, &out.Synthetic,
-		&out.CreatedAt, &stored)
+		&out.EmailVerifiedAt, &out.CreatedAt, &stored)
 
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
@@ -191,9 +202,10 @@ var decoyHash = func() string {
 func (s *Store) ByID(ctx context.Context, id uuid.UUID) (Account, error) {
 	var out Account
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, email, name, locale, country, synthetic, created_at FROM accounts WHERE id = $1
+		SELECT id, email, name, locale, country, synthetic, email_verified_at, created_at
+		  FROM accounts WHERE id = $1
 	`, id).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
-		&out.Synthetic, &out.CreatedAt)
+		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Account{}, ErrNoAccount
@@ -224,9 +236,10 @@ func (s *Store) ByEmail(ctx context.Context, email string) (Account, error) {
 
 	var out Account
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, email, name, locale, country, synthetic, created_at FROM accounts WHERE email = $1
+		SELECT id, email, name, locale, country, synthetic, email_verified_at, created_at
+		  FROM accounts WHERE email = $1
 	`, address).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
-		&out.Synthetic, &out.CreatedAt)
+		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Account{}, ErrNoAccount
@@ -365,11 +378,11 @@ func (s *Store) Verify(ctx context.Context, token string, at *uuid.UUID) (Accoun
 			       OR ($2::uuid IS NOT NULL AND last_seen_tenant IS NULL))
 			RETURNING id
 		)
-		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.created_at,
-		       live.viewed_by, live.viewing_tenant
+		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.email_verified_at,
+		       a.created_at, live.viewed_by, live.viewing_tenant
 		FROM live JOIN accounts a ON a.id = live.account_id
 	`, tokenHash(token), at).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
-		&out.Synthetic, &out.CreatedAt, &by, &school)
+		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt, &by, &school)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Account{}, Viewing{}, ErrNoSession

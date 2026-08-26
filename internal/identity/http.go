@@ -262,6 +262,14 @@ func view(a Account) map[string]any {
 		"name":    a.Name,
 		"locale":  a.Locale,
 		"country": a.Country,
+
+		/* WHETHER THEY HAVE PROVED THEY CAN READ THE ADDRESS, and not WHEN.
+
+		   The screen that reads this shows a nudge or does not; the date would
+		   be a second fact nothing draws, in a response every signed-in request
+		   carries. `api.js` has hard-coded this to `true` since the banner was
+		   written, which is why the banner has never appeared for anybody. */
+		"emailVerified": a.EmailVerifiedAt != nil,
 	}
 }
 

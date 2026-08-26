@@ -194,31 +194,6 @@ func (s *Store) ConfirmEmail(ctx context.Context, token string) (Account, error)
 	return s.ByID(ctx, accountID)
 }
 
-// EmailConfirmed answers whether this account has proved it can read its
-// address, and when.
-//
-// IT IS A QUERY AND NOT A FIELD ON `Account`, for now. Every screen that wants
-// it wants only the boolean, `Account` is loaded on the path of every signed-in
-// request, and a column added to that struct is a column every one of those
-// requests carries. The day a screen wants the date beside the address, this
-// moves.
-func (s *Store) EmailConfirmed(ctx context.Context, accountID uuid.UUID) (time.Time, bool, error) {
-	var at *time.Time
-	err := s.pool.QueryRow(ctx,
-		`SELECT email_verified_at FROM accounts WHERE id = $1`, accountID).Scan(&at)
-
-	if errors.Is(err, pgx.ErrNoRows) {
-		return time.Time{}, false, ErrNoAccount
-	}
-	if err != nil {
-		return time.Time{}, false, fmt.Errorf("identity: reading a confirmed address: %w", err)
-	}
-	if at == nil {
-		return time.Time{}, false, nil
-	}
-	return *at, true, nil
-}
-
 // confirmationHash is what the row holds. Plain SHA-256 with no salt and no
 // stretching, exactly as session tokens are kept and for the same reason: this
 // is thirty-two random bytes rather than something a person chose, so there is

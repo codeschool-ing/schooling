@@ -32,7 +32,10 @@ import (
 	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
 	"github.com/codeschool-ing/schooling/internal/job"
+	netmail "net/mail"
+
 	"github.com/codeschool-ing/schooling/internal/legal"
+	"github.com/codeschool-ing/schooling/internal/notify"
 	"github.com/codeschool-ing/schooling/internal/platform/build"
 	"github.com/codeschool-ing/schooling/internal/platform/cloudrun"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
@@ -40,6 +43,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/geo"
 	"github.com/codeschool-ing/schooling/internal/platform/geo/dbip"
 	"github.com/codeschool-ing/schooling/internal/platform/logs"
+	"github.com/codeschool-ing/schooling/internal/platform/mail"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
@@ -240,6 +244,24 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	startJob func(ctx context.Context, name string) error,
 	country geo.Resolve) http.Handler {
 	mux := http.NewServeMux()
+
+	/* WHETHER THIS DEPLOYMENT SENDS MAIL OR KEEPS IT, SAID OUT LOUD AT START-UP.
+
+	   A platform that quietly stops confirming addresses looks exactly like one
+	   that is confirming them, from every screen and every log, until somebody
+	   asks why nobody has a tick beside their e-mail. This line is the answer to
+	   that question, and it costs one field. */
+	postman, sending := outbound(cfg, log)
+	log.Info("mail", "sending", sending, "from", cfg.MailFrom)
+
+	/* THE LINK IN A MESSAGE POINTS AT `my.`, WHICH IS THE ACCOUNT'S OWN HOST.
+
+	   A confirmation token belongs to an account and an account crosses every
+	   school (N-01), so a link into a school's host would have to pick one — and
+	   would pick wrongly for anybody enrolled in two. `my.` is the one host in
+	   K-17 that is the person's rather than a school's, the console's or the
+	   platform's. */
+	notifier := notify.New(postman, origin(cfg))
 
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
@@ -487,9 +509,26 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	people := identity.NewHandler(accounts, identity.Settings{
 		Domain: cfg.PlatformDomain,
 		Secure: cfg.Environment == config.Production,
-	}, signedUp(visitors, events, log))
+	}, signedUp(visitors, events, accounts, notifier, log))
 	people.Routes(scoped)
 	people.SecondFactorRoutes(scoped)
+
+	/* SENDING THE LINK AGAIN, WHICH IS THE BANNER'S ONE BUTTON.
+
+	   IT IS ON THE SCHOOL'S API AND NOT ON `my.` because that is where the
+	   banner is: the study interface draws it, and a button that had to reach
+	   another origin would need CORS for a request the browser already has a
+	   session for. The link it sends still points at `my.` — where it LANDS and
+	   who ASKS for it are different questions.
+
+	   IT ANSWERS THE SAME WAY WHETHER OR NOT IT SENT ANYTHING. An address that
+	   is already confirmed gets no second message and gets 204 anyway; so does
+	   one whose provider refused. The screen's honest sentence is "if that
+	   address is not confirmed, a link is on its way", and an endpoint that
+	   distinguished the cases would be reporting on somebody's account to
+	   whoever holds the session — which, on a shared machine, is not always
+	   them. */
+	scoped.HandleFunc("POST /api/v1/confirm/resend", resend(accounts, notifier))
 
 	mux.Handle("/api/v1/", web.Chain(scoped,
 		tenant.Resolve(tenant.NewStore(pool)),
@@ -1039,6 +1078,20 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   shows the predecessor's name over an empty school. A screen that is wrong
 	   in a way that looks deliberate is worse than no screen, which is why this
 	   address answered 404 until there was one written for it. */
+	/* THE CONFIRMATION LINK LANDS HERE, and it is a plain GET that redeems.
+
+	   A GET THAT CHANGES SOMETHING IS NORMALLY A MISTAKE, and this one is
+	   deliberate. The alternative is a page with a button that POSTs, which
+	   exists to stop a link being spent by something that is not the person —
+	   a mail scanner following every URL in a message, say. But a scanner
+	   following this link fetched it FROM THE MAILBOX WE WROTE TO, which is
+	   precisely and entirely what the link is there to prove. Spending it early
+	   reaches the right conclusion by a slightly different route.
+
+	   It costs nothing to be wrong about, either: confirming gates nothing. A
+	   button in front of it would buy a distinction with no consequence, at the
+	   price of a click on the one screen where somebody is already done. */
+	mineMux.Handle("GET /confirm/{token}", confirmed(accounts, events, log))
 	mineMux.Handle("/", ui.Mine(interfaceVersion))
 
 	/* ---------- and the front door, at the bare domain ----------
@@ -1746,8 +1799,20 @@ func arrived(events *event.Store, log *slog.Logger) visitor.Arrived {
 // arriving must not be able to stop them arriving; both are logged and the
 // student carries on. That is the opposite of the rule for a student's own
 // data, and the difference is who pays for the failure.
-func signedUp(visitors *visitor.Store, events *event.Store, log *slog.Logger) identity.SignedUp {
+func signedUp(visitors *visitor.Store, events *event.Store, accounts *identity.Store,
+	notifier *notify.Notifier, log *slog.Logger) identity.SignedUp {
 	return func(ctx context.Context, account identity.Account) {
+		/* AND NEITHER DOES A MESSAGE THAT DOES NOT GO OUT. The rule above is
+		   about a funnel; this is about a provider having an afternoon, which is
+		   the same shape of failure and gets the same answer. An address that
+		   was never confirmed costs us knowing we can reach somebody; a sign-up
+		   that failed because a third party was down costs them the lesson they
+		   came for, and mail does not get to decide who may study here.
+
+		   The person can ask again — the banner's Resend is exactly this call —
+		   which is why this is logged and dropped rather than retried here. */
+		confirm(ctx, accounts, notifier, account, log)
+
 		if id, ok := visitor.FromContext(ctx); ok {
 			if err := visitors.Link(ctx, account.ID, id); err != nil {
 				log.Error("linking a visitor to a new account", "error", err, "account", account.ID)
@@ -1775,6 +1840,166 @@ func signedUp(visitors *visitor.Store, events *event.Store, log *slog.Logger) id
 			log.Error("counting a sign-up", "error", err, "account", account.ID)
 		}
 	}
+}
+
+/*
+confirmed is where the link in the message lands.
+
+	IT REDIRECTS RATHER THAN RENDERING. This address serves one shell, and a
+	handler that wrote its own page here would be a second interface — with its
+	own markup, its own language and its own way of being out of date. So it
+	spends the token and sends the browser to the screen, carrying the one fact
+	the screen needs.
+
+	AND IT SAYS THE SAME THING WHEN THE LINK IS NO GOOD. Never issued, already
+	spent, expired, or for an address the account has since left: all four are
+	`confirmed=no`, because telling them apart would confirm to somebody guessing
+	that a token is real, and would say nothing the person could act on. The
+	screen offers to send another, which is the useful sentence in all four
+	cases.
+*/
+func confirmed(accounts *identity.Store, events *event.Store, log *slog.Logger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		account, err := accounts.ConfirmEmail(r.Context(), r.PathValue("token"))
+		if err != nil {
+			if !errors.Is(err, identity.ErrNoConfirmation) {
+				log.Error("confirming an address", "error", err)
+			}
+			http.Redirect(w, r, "/?confirmed=no", http.StatusSeeOther)
+			return
+		}
+
+		/* THE STEP GOES INTO THE STREAM, and a stream that could not record it
+		   must not be able to undo it. The address is confirmed either way; what
+		   fails here is a number on a screen, which is `signedUp`'s rule and the
+		   same trade. */
+		e := event.Event{
+			Name: "account.confirmed",
+			Dimensions: event.ForPlatform(event.PlanNone,
+				geo.FromContext(r.Context()), account.Locale, who(account)),
+			AccountID: &account.ID,
+			RequestID: web.RequestIDFrom(r.Context()),
+		}
+		if id, ok := visitor.FromContext(r.Context()); ok {
+			e.VisitorID = &id
+		}
+		if err := events.Emit(r.Context(), e); err != nil {
+			log.Error("counting a confirmed address", "error", err, "account", account.ID)
+		}
+
+		http.Redirect(w, r, "/?confirmed=yes", http.StatusSeeOther)
+	}
+}
+
+/*
+resend is the banner's button.
+
+	204 WHATEVER HAPPENS, short of not being signed in. See the note where this
+	is routed: an endpoint that reported whether a message went out would be
+	reporting on an account to whoever holds the session, and the screen's
+	sentence does not need it.
+*/
+func resend(accounts *identity.Store, notifier *notify.Notifier) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, ok := identity.AccountID(r.Context())
+		if !ok {
+			web.Fail(w, http.StatusUnauthorized, web.CodeUnauthorized, "sign in first")
+			return
+		}
+
+		log := web.LoggerFrom(r.Context())
+		account, err := accounts.ByID(r.Context(), id)
+		if err != nil {
+			log.Error("reading an account to resend its confirmation", "error", err, "account", id)
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		// ALREADY CONFIRMED IS NOT AN ERROR AND IS NOT A SECOND MESSAGE. A stale
+		// tab still showing the banner is the ordinary way to arrive here.
+		if account.EmailVerifiedAt == nil {
+			confirm(r.Context(), accounts, notifier, account, log)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+/*
+confirm issues a link for an address and puts it in the post.
+
+	IT IS TWO CALLS AND EITHER CAN FAIL INDEPENDENTLY, which is why they are
+	logged separately: a token written with no message sent is a person waiting
+	for mail that is not coming, and a message that could not be composed is a
+	token nobody will ever spend. They read differently in a log and they have
+	different fixes.
+*/
+func confirm(ctx context.Context, accounts *identity.Store, notifier *notify.Notifier,
+	account identity.Account, log *slog.Logger) {
+	link, err := accounts.IssueEmailConfirmation(ctx, account.ID)
+	if err != nil {
+		log.Error("issuing a confirmation link", "error", err, "account", account.ID)
+		return
+	}
+
+	/* THE TOKEN IS NOT IN THIS LOG LINE AND MUST NEVER BE. It is the whole
+	   secret: anybody holding it can confirm the address without reading the
+	   mail, which is the one thing the link exists to prove. */
+	if err := notifier.ConfirmAddress(ctx, notify.Person{
+		Name: account.Name, Email: link.Email, Locale: account.Locale,
+	}, link.Token); err != nil {
+		log.Error("sending a confirmation link", "error", err, "account", account.ID)
+	}
+}
+
+/*
+outbound is who posts this platform's mail, and whether anybody does.
+
+	NO KEY IS NOT AN ERROR, IT IS THE OTHER IMPLEMENTATION. Every laptop, every
+	test run and CI has no mail account, and a platform that refused to start
+	without one would make "run it locally" mean "get a key first". What it must
+	not do is drop the messages, because a dropped one is indistinguishable from
+	a delivered one until somebody complains — so `mail.Outbox` keeps them.
+*/
+func outbound(cfg config.Config, log *slog.Logger) (mail.Sender, bool) {
+	if cfg.MailKey == "" {
+		if cfg.Environment == config.Production {
+			log.Warn("no mail key in production — addresses will not be confirmed, " +
+				"and every message this platform would send is being kept instead of sent")
+		}
+		return &mail.Outbox{}, false
+	}
+	return mail.ViaBrevo(cfg.MailKey, address(cfg.MailFrom), address(cfg.MailReplyTo)), true
+}
+
+// address reads `Name <box@domain>` or a bare address. A malformed one has
+// already failed `config.Load`, which checks for the `@`; anything that gets
+// past that and past `net/mail` is used as the address alone rather than
+// dropped, because a message with a slightly odd From is worth more than no
+// message.
+func address(s string) mail.Address {
+	if s == "" {
+		return mail.Address{}
+	}
+	if parsed, err := netmail.ParseAddress(s); err == nil {
+		return mail.Address{Name: parsed.Name, Email: parsed.Address}
+	}
+	return mail.Address{Email: s}
+}
+
+/*
+origin is where a link in a message points.
+
+	HTTPS EVERYWHERE EXCEPT DEVELOPMENT, mirroring the session cookie's `Secure`
+	one screen up rather than inventing a second rule. A development deployment
+	keeps its mail rather than sending it, so the scheme there is about what a
+	person reads in the outbox and not about what a browser will do with it.
+*/
+func origin(cfg config.Config) string {
+	scheme := "http://"
+	if cfg.Environment == config.Production {
+		scheme = "https://"
+	}
+	return scheme + practice.Host(cfg.PlatformDomain)
 }
 
 // personByID is the other half of `personAt`: the console's screens find
