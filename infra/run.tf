@@ -357,6 +357,37 @@ resource "google_cloud_run_v2_service" "api" {
         }
       }
 
+      /* THE MAIL, AND ONLY ON THIS SERVICE.
+
+         The three jobs beside it — migrate, load, analyse — send nothing to
+         anybody. A key handed to a container that has no use for it is a key in
+         one more place, and `cmd/analyse` in particular runs unattended at
+         03:10 with nobody reading its environment.
+
+         AN EMPTY KEY IS NOT A FAILURE HERE. `cmd/api` wires `mail.Outbox` when
+         there is none, keeps the messages it would have sent rather than
+         dropping them, and says which of the two it chose in its start-up line.
+         So this pair can be applied before the secret has a value, and turning
+         mail on afterwards is one `secretmanager versions add` and one new
+         revision. */
+      env {
+        name  = "SCHOOLING_MAIL_FROM"
+        value = var.mail_from
+      }
+      env {
+        name  = "SCHOOLING_MAIL_REPLY_TO"
+        value = var.mail_reply_to
+      }
+      env {
+        name = "SCHOOLING_MAIL_API_KEY"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.mail_api_key.secret_id
+            version = "latest"
+          }
+        }
+      }
+
       volume_mounts {
         name       = "cloudsql"
         mount_path = "/cloudsql"

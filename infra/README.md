@@ -188,6 +188,53 @@ second pass take the connection name from the instance itself:
 CONNECTION="$(gcloud sql instances describe schooling --format='value(connectionName)')"
 ```
 
+## And the mail key, once, whenever mail is wanted
+
+The container exists from the first apply and starts empty. That is deliberate:
+a service naming a secret which does not exist fails to start, so the container
+comes first and the value follows whenever there is one.
+
+**An empty secret is not a broken deployment.** `cmd/api` wires `mail.Outbox`
+when there is no key — it keeps every message it would have sent instead of
+dropping it, and says which of the two it chose in its start-up line:
+
+```
+{"message":"mail","sending":false,"from":""}
+```
+
+Addresses simply go unconfirmed, which gates nothing.
+
+To turn it on, take an API key from the provider and write it once. **Do not
+pass it as an argument** — that is the one line of this that ends up in a shell
+history:
+
+```sh
+# Paste the key, then Ctrl-D. Nothing echoes it back and nothing stores it here.
+gcloud secrets versions add schooling-mail-api-key --data-file=- --project=aleogr-schooling
+```
+
+Then the two addresses go in `terraform.tfvars` beside `alert_email`, for the
+reason that file already explains — a `-var=` flag survives exactly one apply,
+and the next one plans it away without arguing:
+
+```
+mail_from     = "Schooling <schooling@lab.aleogr.dev>"
+mail_reply_to = "reply@id.aleogr.dev"
+```
+
+```sh
+terraform -chdir=infra apply
+```
+
+The revision that comes up says `"sending":true`. Rotating the key later is the
+same `versions add` and a new revision; the service reads `latest`, so nothing
+in Terraform changes.
+
+**The From has to be a sender the provider has authenticated**, on a domain
+whose SPF and DKIM it published. An unauthenticated From is accepted by the API
+and then either rejected or filed as spam by whoever receives it, which is the
+failure that looks like success from this side.
+
 ## And the second pass
 
 ```sh
