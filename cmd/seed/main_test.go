@@ -131,7 +131,14 @@ func TestTheHistoryItWritesCouldHaveHappened(t *testing.T) {
 	// The order the steps of a journey may appear in. A step is only allowed
 	// once whatever comes before it has happened.
 	needs := map[string]string{
-		"account.created":   "visitor.arrived",
+		"account.created": "visitor.arrived",
+
+		/* CONFIRMING IS NOT ON THE PATH TO ANYTHING, which is why nothing
+		   depends on it: `track.opened` needs the account and not the
+		   confirmation. What is asserted is only that it never happens before
+		   there is an account to confirm. */
+		"account.confirmed": "account.created",
+
 		"track.opened":      "account.created",
 		"lesson.opened":     "track.opened",
 		"section.completed": "lesson.opened",
