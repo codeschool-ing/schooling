@@ -245,7 +245,18 @@ function documentFrom({ completed, notes, exams, resume }, me) {
     session: me ? {
       name: me.name,
       email: me.email,
-      emailVerified: true,
+      /* WHETHER THEY HAVE PROVED THEY CAN READ THE ADDRESS.
+
+         THIS WAS THE LITERAL `true` FOR AS LONG AS THE BANNER HAS EXISTED, and
+         it is why nobody has ever seen the banner: `main.js` shows it when this
+         is exactly `false`, and it never was. The server did not send the field
+         either, so the lie had nothing to be caught by.
+
+         It stays truthy when the field is ABSENT rather than defaulting to
+         `false`. An old server, or the offline bundle, would otherwise show
+         every reader a nudge about an address they cannot confirm from a page
+         with no server behind it. */
+      emailVerified: me.emailVerified !== false,
       secondFactor: Boolean(me.secondFactor),
       mfaRequired: Boolean(me.mfaRequired),
 
@@ -298,6 +309,24 @@ export async function register({ name, email, password }) {
    anything but a GET, and a banner whose only control the rule refuses would be
    a joke at somebody's expense. Ending a viewing is not acting as the student;
    it is the opposite. */
+/* SENDING THE CONFIRMATION LINK AGAIN, WHICH IS THE BANNER'S ONE BUTTON.
+
+   IT DID NOT EXIST. `main.js` has called `api.resendVerification()` since the
+   banner was written, and there has never been a function of that name in this
+   file — so the click raised a TypeError, the surrounding `catch` swallowed it,
+   and the person read "that did not work" forever. Nobody found out, because
+   the banner above could not appear to be clicked.
+
+   IT IS ON THE SCHOOL'S API, which is where this interface already talks. The
+   link it sends points at `my.`; where a link LANDS and who ASKS for one are
+   different questions.
+
+   THE SERVER ANSWERS 204 WHETHER OR NOT IT SENT ANYTHING, so this resolves on
+   an address that was already confirmed. That is the endpoint's decision and
+   not a gap here: distinguishing the cases would report on somebody's account
+   to whoever holds the session. */
+export const resendVerification = () => post('/api/v1/confirm/resend');
+
 export const stopViewing = () => post('/viewing/stop');
 
 export async function signOut() {

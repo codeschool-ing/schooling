@@ -25,6 +25,12 @@ window.I18N.pt.ui = {
   'Reading…': 'Lendo…',
   'Switch theme': 'Trocar o tema',
 
+  /* ---------- what the confirmation link left behind ---------- */
+  'Your e-mail address is confirmed.': 'Seu endereço de e-mail está confirmado.',
+  'That link is no longer good.': 'Esse link não vale mais.',
+  'Sign in at your school and ask for another one.':
+    'Entre na sua escola e peça outro.',
+
   /* ---------- what is due ---------- */
   'Due today': 'Para hoje',
   '1 question': '1 questão',
