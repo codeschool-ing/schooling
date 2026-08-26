@@ -526,6 +526,27 @@ building the thing the tenancy test exists to make impossible.
 
 ---
 
+## The predecessors are named everywhere and no longer exist
+
+`portal-frontend`, `portal-backend` and `console-frontend` are cited throughout
+this repository as the origin of copied files. **They were deleted in August
+2026**, together with the GCP project that ran them, when the finished
+`codeschool.ing` was decommissioned. Only `codeschool-ing.github.io` — the
+showcase — survives, kept because the platform's own front page will be built
+from it.
+
+THE NAMES STAY, because they say WHICH predecessor a file came from and that is
+still the useful fact. What is gone is the DIFF. Every "byte for byte" and
+"unchanged" below describes how a file was produced, not a property anybody can
+check now, and the paragraphs that used to lean on running a diff say so where
+they are.
+
+That loss is smaller than it sounds and it is worth being precise about why: the
+copied files were never going to be re-synchronised — the repositories they came
+from were finished and frozen long before they were deleted. What the diff
+bought was a way to FIND an accidental edit to a copied file, and `check-css` is
+now the whole of that, which is the argument for it having been written.
+
 ## The interface
 
 `ui/` is plain HTML, CSS and JavaScript with no build step, embedded with
@@ -589,9 +610,12 @@ marketing page's thousand lines so that one file could be called shared would gi
 us a shared file nobody dares edit.
 
 **Three stylesheets, and which one a rule goes in is not a matter of taste.**
-`base.css` and `portal.css` are `portal-frontend`'s **byte for byte** — a diff of
-either being empty is what made the duplicated-stylesheet bug findable at all, so
-nothing is added to them here, not even a fix. `app.css` may only **override**, and
+`base.css` and `portal.css` came from `portal-frontend` **byte for byte**, and a
+diff of either being empty is what made the duplicated-stylesheet bug findable —
+past tense, because that repository is gone and there is nothing left to diff
+against. Nothing is added to them here, not even a fix, and that rule now rests
+on `check-css` and on whoever is reading rather than on a command anybody can
+run. `app.css` may only **override**, and
 every override in it is a WCAG failure in the copied file, argued in place and small
 enough to re-apply after the next copy. Anything that is neither — the styles for a
 question type the portal does not have — gets a file of its own, which is what
