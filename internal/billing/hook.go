@@ -122,14 +122,18 @@ type delivery struct {
 /*
 tokenHeader is where the provider puts the token from its webhook form.
 
-	THIS IS THE ONE FACT HERE NOT VERIFIED AGAINST THE PROVIDER, and it is
-	marked rather than assumed quietly. The form offers a token and generates
-	one; which header carries it is written down in their documentation, which
-	this repository has not been able to reach.
+	VERIFIED BY A REAL DELIVERY. It was the one fact in this integration that
+	could not be checked before shipping — their documentation is unreachable
+	from the machine this was written on — so it went out marked as unverified,
+	with the refusal below logging the names of whatever headers did arrive.
 
-	SO A REFUSAL SAYS WHICH HEADERS DID ARRIVE — their names and never their
-	values — and the first delivery settles it in one line of a log. That is the
-	whole of the correction if this is wrong: one constant.
+	The first delivery, on 27 August 2026, authenticated and answered 200. If it
+	had not, that log line was the whole of the correction: one constant.
+
+	THE REFUSAL STILL LISTS THE NAMES, and that is not leftover scaffolding. A
+	provider that renames this header breaks every payment on the platform at
+	once, and the difference between an hour and a week of that is a log line
+	that says which header arrived instead of one that says a token was wrong.
 */
 const tokenHeader = "asaas-access-token"
 
