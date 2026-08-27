@@ -92,7 +92,7 @@ var kept = map[string]string{
 	"schema_migrations": "which migrations ran, which is a fact about the schema",
 	"tenants":           "the schools themselves",
 	"tenant_domains":    "the addresses they answer at",
-	"school_prices":     "what a school charges, which is configuration written as history (K-14)",
+	"plan_prices":       "what the platform charges, which is configuration written as history (K-14)",
 
 	// THE ONE PIECE OF HISTORY IN THIS MAP, and it is here because emptying it
 	// is not a clean slate for us — it is a clean slate for the mailboxes that
@@ -136,7 +136,7 @@ var guards = map[string]string{
 	"audit_log":           "audit_log_is_not_emptied",
 	"ledger_entries":      "ledger_entries_are_not_emptied",
 	"subscription_events": "subscription_events_are_not_emptied",
-	"school_prices":       "school_prices_are_not_emptied",
+	"plan_prices":         "plan_prices_are_not_emptied",
 }
 
 /*

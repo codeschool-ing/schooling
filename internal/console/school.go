@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -60,13 +59,6 @@ import (
 // ErrNoSchool is an id that belongs to no school.
 var ErrNoSchool = errors.New("console: no school with that id")
 
-// Price is one row of a school's series, as the console shows it.
-type Price struct {
-	Cents    int
-	Currency string
-	From     time.Time
-}
-
 // Schools is what this package may not import: `tenant` owns the rows.
 type Schools struct {
 	// All is every school on the platform, with its colour.
@@ -78,23 +70,6 @@ type Schools struct {
 	// two cannot disagree: a read, a decision and a write in three steps is a
 	// change that records a value somebody else replaced in between.
 	SetAccent func(ctx context.Context, id uuid.UUID, accent string) (was string, err error)
-
-	// SetPrice APPENDS a price and answers the one it replaces (K-14). It is
-	// not the accent's shape and must not become it: a colour is overwritten
-	// because nothing has to be explained about the old one a year later, and a
-	// price is a series because a March invoice has to stay explicable in
-	// November.
-	SetPrice func(ctx context.Context, id uuid.UUID, cents int, currency string) (
-		wasCents int, wasCurrency string, err error)
-
-	// Prices is one school's whole series, newest first — the answer to "what
-	// was the offer in March", which a single number cannot be asked.
-	Prices func(ctx context.Context, id uuid.UUID) ([]Price, error)
-
-	// Refused is a price the caller can fix by sending another: not a number,
-	// not a currency. `tenant` builds the sentence and this package may not
-	// import its errors, so the predicate travels instead.
-	Refused func(error) bool
 }
 
 // SchoolsHandler lists the schools and sets their colours.
@@ -120,8 +95,6 @@ func NewSchoolsHandler(schools Schools, record Record, label Label,
 func (h *SchoolsHandler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /console/api/v1/schools", h.list)
 	mux.HandleFunc("PUT /console/api/v1/schools/{id}/accent", h.setAccent)
-	mux.HandleFunc("PUT /console/api/v1/schools/{id}/price", h.setPrice)
-	mux.HandleFunc("GET /console/api/v1/schools/{id}/prices", h.prices)
 }
 
 /*
@@ -139,19 +112,11 @@ type schoolBody struct {
 	Slug   string `json:"slug"`
 	Name   string `json:"name"`
 	Accent string `json:"accent,omitempty"`
-
-	// NOT `omitempty`, EITHER OF THEM. A school with no price sends a zero and
-	// an empty string, because "this school has no offer" is a fact the screen
-	// has to be able to draw — and a field that vanishes is a field the
-	// interface reads as undefined and treats as a failure to load.
-	PriceCents int    `json:"priceCents"`
-	Currency   string `json:"currency"`
 }
 
 func bodyOf(s School) schoolBody {
 	return schoolBody{
 		ID: s.ID.String(), Slug: s.Slug, Name: s.Name, Accent: s.Accent,
-		PriceCents: s.PriceCents, Currency: s.Currency,
 	}
 }
 
@@ -233,16 +198,8 @@ func (h *SchoolsHandler) setAccent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	actor, ok := h.who(r.Context())
+	actor, label, ok := acting(w, r, h.who, h.label)
 	if !ok {
-		web.LoggerFrom(r.Context()).Error("a console route ran with no account", "path", r.URL.Path)
-		web.Fail(w, http.StatusInternalServerError, web.CodeInternal, "something went wrong")
-		return
-	}
-	name, email, err := h.label(r.Context(), actor)
-	if err != nil {
-		web.LoggerFrom(r.Context()).Error("reading who is acting", "error", err)
-		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not record that")
 		return
 	}
 
@@ -252,7 +209,7 @@ func (h *SchoolsHandler) setAccent(w http.ResponseWriter, r *http.Request) {
 	   the other way round — a write that then fails leaves an entry for
 	   something that did not happen — and that is why the failure below says so
 	   plainly rather than reporting a colour that was not kept. */
-	if err := h.record(r.Context(), actor, strings.TrimSpace(name+" <"+email+">"),
+	if err := h.record(r.Context(), actor, label,
 		"school.accent.changed",
 		Subject{Kind: "school", ID: school.ID.String()},
 		Changed{Before: colourOrNone(school.Accent), After: accent},
@@ -299,167 +256,23 @@ func colourOrNone(accent string) string {
 	return accent
 }
 
-/* ---------- what it costs ---------- */
-
-/*
-SETTING A PRICE IS APPENDING TO A SERIES, AND THE HANDLER SAYS SO.
-
-The accent handler above reads the school, refuses if nothing changed, records,
-and writes. This one is the same shape with one deliberate difference: a price
-identical to the one in force is STILL WRITTEN. Pressing save twice on a colour
-is somebody clicking; re-confirming a price is a fact about the offer — "this is
-still what we ask, as of today" — and a series that dropped the repeats could not
-tell that apart from a price nobody has touched since January.
-
-The entry names both sides, like every other change this console makes, and it
-is written first for the reason all of them are.
-*/
-func (h *SchoolsHandler) setPrice(w http.ResponseWriter, r *http.Request) {
-	if !h.maySet(r.Context()) {
-		web.Fail(w, http.StatusForbidden, web.CodeUnauthorized,
-			"changing what a school charges asks for an operator")
-		return
-	}
-
-	id, err := uuid.Parse(r.PathValue("id"))
-	if err != nil {
-		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
-		return
-	}
-
-	var asked struct {
-		Cents    int    `json:"cents"`
-		Currency string `json:"currency"`
-	}
-	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<10)).Decode(&asked); err != nil {
-		web.Fail(w, http.StatusBadRequest, "unreadable", "that is not a request this reads")
-		return
-	}
-	currency := strings.ToUpper(strings.TrimSpace(asked.Currency))
-
-	school, ok := h.oneSchool(w, r, id)
-	if !ok {
-		return
-	}
-
-	actor, label, ok := h.acting(w, r)
-	if !ok {
-		return
-	}
-
-	if err := h.record(r.Context(), actor, label,
-		"school.price.changed",
-		Subject{Kind: "school", ID: school.ID.String()},
-		Changed{
-			Before: money(school.PriceCents, school.Currency),
-			After:  money(asked.Cents, currency),
-		},
-		web.RequestIDFrom(r.Context())); err != nil {
-
-		web.LoggerFrom(r.Context()).Error("recording a price change", "error", err)
-		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
-			"that was not recorded, so it was not done")
-		return
-	}
-
-	wasCents, wasCurrency, err := h.schools.SetPrice(r.Context(), school.ID, asked.Cents, currency)
-	switch {
-	case errors.Is(err, ErrNoSchool):
-		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
-		return
-	case h.schools.Refused != nil && h.schools.Refused(err):
-		web.Fail(w, http.StatusBadRequest, "not_a_price", err.Error())
-		return
-	case err != nil:
-		web.LoggerFrom(r.Context()).Error("setting a school's price",
-			"error", err, "school", school.Slug)
-		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
-			"the change was recorded and then could not be written, which is a defect — "+
-				"the history now says something happened that did not")
-		return
-	}
-	if wasCents != school.PriceCents || wasCurrency != school.Currency {
-		// Somebody else priced it between the read and the write, so the entry
-		// above names a `before` that was already gone. The series still holds
-		// the truth — that is what it is for — and this is the line that says
-		// where to look.
-		web.LoggerFrom(r.Context()).Warn("a school's price moved under a change",
-			"school", school.Slug,
-			"recorded_before", money(school.PriceCents, school.Currency),
-			"actually_was", money(wasCents, wasCurrency))
-	}
-
-	school.PriceCents, school.Currency = asked.Cents, currency
-	web.JSON(w, http.StatusOK, bodyOf(school))
-}
-
-// prices is the series, which is the half of K-14 a single number cannot show.
-func (h *SchoolsHandler) prices(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(r.PathValue("id"))
-	if err != nil {
-		web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
-		return
-	}
-	school, ok := h.oneSchool(w, r, id)
-	if !ok {
-		return
-	}
-
-	rows, err := h.schools.Prices(r.Context(), school.ID)
-	if err != nil {
-		web.LoggerFrom(r.Context()).Error("reading a school's prices",
-			"error", err, "school", school.Slug)
-		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
-		return
-	}
-
-	out := make([]map[string]any, 0, len(rows))
-	for _, one := range rows {
-		out = append(out, map[string]any{
-			"cents": one.Cents, "currency": one.Currency, "from": one.From,
-		})
-	}
-	web.JSON(w, http.StatusOK, map[string]any{
-		"school": bodyOf(school),
-		"prices": out,
-
-		// WHY THERE IS NO WAY TO EDIT ONE, said where somebody looking for the
-		// button will find it.
-		"append_only": "A price is never edited. Changing what a school charges writes a new " +
-			"row dated from today, and the old one stays — a March invoice has to stay " +
-			"explicable in November.",
-	})
-}
-
-// oneSchool resolves an id against the list, so an id belonging to nobody is a
-// 404 rather than an audit entry about a school that does not exist.
-func (h *SchoolsHandler) oneSchool(w http.ResponseWriter, r *http.Request,
-	id uuid.UUID) (School, bool) {
-
-	all, err := h.schools.All(r.Context())
-	if err != nil {
-		web.LoggerFrom(r.Context()).Error("reading the schools", "error", err)
-		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
-		return School{}, false
-	}
-	for _, s := range all {
-		if s.ID == id {
-			return s, true
-		}
-	}
-	web.Fail(w, http.StatusNotFound, web.CodeNotFound, "no such school")
-	return School{}, false
-}
-
 // acting is who is making the change, named for the audit.
-func (h *SchoolsHandler) acting(w http.ResponseWriter, r *http.Request) (uuid.UUID, string, bool) {
-	actor, ok := h.who(r.Context())
+//
+// IT IS A FUNCTION AND NOT A METHOD because two handlers need it and neither
+// owns it: the accent is a school's and the price is the platform's, and "who
+// is doing this, and what do we call them" is the same question in both. It was
+// a method on `SchoolsHandler` while the price lived there, and the copy that
+// would otherwise have appeared in `plan.go` is why it moved.
+func acting(w http.ResponseWriter, r *http.Request,
+	who func(context.Context) (uuid.UUID, bool), label Label) (uuid.UUID, string, bool) {
+
+	actor, ok := who(r.Context())
 	if !ok {
 		web.LoggerFrom(r.Context()).Error("a console route ran with no account", "path", r.URL.Path)
 		web.Fail(w, http.StatusInternalServerError, web.CodeInternal, "something went wrong")
 		return uuid.Nil, "", false
 	}
-	name, email, err := h.label(r.Context(), actor)
+	name, email, err := label(r.Context(), actor)
 	if err != nil {
 		web.LoggerFrom(r.Context()).Error("reading who is acting", "error", err)
 		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not record that")

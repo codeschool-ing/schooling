@@ -107,8 +107,9 @@ var Registry = []Table{
 			"anything about a person",
 	},
 	{
-		Name: "school_prices", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
-		Why: "what a school has asked for a subscription, and since when. It is our offer " +
+		Name: "plan_prices", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "what the platform has asked for a subscription, for which term, and since " +
+			"when. It is our offer " +
 			"rather than anybody's data, and it is append-only for the reason a March " +
 			"invoice has to stay explicable in November (K-14) — an erasure that could " +
 			"take a price row with it would be a person's request deleting the answer to " +

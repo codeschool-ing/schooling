@@ -50,13 +50,18 @@ ON CONFLICT (slug) DO UPDATE SET
 /* THE PRICE IS A ROW OF ITS OWN, and it is not `ON CONFLICT`-ed: the table is
    append-only by trigger (K-14), so a second run of this fixture would be
    refused if it tried to update one and would pile up rows if it simply
-   inserted. It writes one only when the school has none, which makes running
-   this twice the same as running it once — which is what every other statement
-   in this file already promises. */
-INSERT INTO school_prices (tenant_id, cents, currency)
-SELECT t.id, 32000, 'EUR' FROM tenants t
-WHERE t.slug = :'slug'
-  AND NOT EXISTS (SELECT 1 FROM school_prices p WHERE p.tenant_id = t.id);
+   inserted. It writes one only when nothing is priced, which makes running this
+   twice the same as running it once — which is what every other statement in
+   this file already promises.
+
+   IT IS THE PLATFORM'S PRICE AND NOT THIS SCHOOL'S (`0041`). One subscription
+   opens every school (N-02), so the fixture prices the year once rather than
+   per school — and it is deliberately guarded on the whole table rather than on
+   this slug, because a fixture that published an offer over a real one could
+   not take it back. */
+INSERT INTO plan_prices (scope, term_months, cents, currency)
+SELECT 'all', 12, 32000, 'EUR'
+WHERE NOT EXISTS (SELECT 1 FROM plan_prices p WHERE p.scope = 'all');
 
 /* THE IDS ARE OPAQUE AND THE SLUGS ARE READABLE, exactly as the loader writes
    them — a fixture that used the slug as the id would exercise a shape the

@@ -716,10 +716,27 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		console.Schools{
 			All:       schoolsFor(tenant.NewStore(pool)),
 			SetAccent: accentOf(tenant.NewStore(pool)),
-			SetPrice:  priceOf(tenant.NewStore(pool)),
-			Prices:    pricesOf(tenant.NewStore(pool)),
-			Refused:   func(err error) bool { return errors.Is(err, tenant.ErrNotAPrice) },
 		},
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
+
+	/* AND WHAT IT COSTS, WHICH IS NOT A SCHOOL'S SCREEN ANY MORE.
+
+	   It was `PUT /schools/{id}/price` while `school_prices` was keyed by
+	   school. One subscription opens every school (N-02), so `0041` moved the
+	   table to the platform and this moved with it — a form on a school's page
+	   would be a control whose effect is somewhere other than where it appears.
+
+	   The same rank as the accent, one notch above read-only, and for a reason
+	   that needs no argument: this is the number everybody pays. */
+	console.NewPlanHandler(
+		pricesOf(billing.NewPrices(pool)),
 		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
@@ -2167,10 +2184,8 @@ func schoolsFor(schools *tenant.Store) func(context.Context) ([]console.School, 
 		}
 		out := make([]console.School, 0, len(all))
 		for _, s := range all {
-			cents, currency := s.Price()
 			out = append(out, console.School{
 				ID: s.ID, Slug: s.Slug, Name: s.Name, Accent: s.Accent,
-				PriceCents: cents, Currency: currency,
 			})
 		}
 		return out, nil
@@ -2190,33 +2205,63 @@ func accentOf(schools *tenant.Store) func(context.Context, uuid.UUID, string) (s
 	}
 }
 
-// priceOf and pricesOf are the console's other two writes and reads against a
-// school. `SetPrice` APPENDS — see `tenant.SetPrice` and K-14 — and the shape of
-// this closure is the only place that difference is invisible, which is why the
-// seam it fills is documented as a series rather than as a setter.
-func priceOf(schools *tenant.Store) func(context.Context, uuid.UUID, int, string) (int, string, error) {
-	return func(ctx context.Context, id uuid.UUID, cents int, currency string) (int, string, error) {
-		was, wasCurrency, err := schools.SetPrice(ctx, id, cents, currency)
-		if errors.Is(err, tenant.ErrNoSchool) {
-			return 0, "", console.ErrNoSchool
-		}
-		return was, wasCurrency, err
-	}
-}
+/*
+THE PLAN'S PRICE, MAPPED ONTO THE MODULE THAT OWNS IT.
 
-func pricesOf(schools *tenant.Store) func(context.Context, uuid.UUID) ([]console.Price, error) {
-	return func(ctx context.Context, id uuid.UUID) ([]console.Price, error) {
-		rows, err := schools.Prices(ctx, id)
-		if err != nil {
-			return nil, err
-		}
-		out := make([]console.Price, 0, len(rows))
-		for _, one := range rows {
-			out = append(out, console.Price{
-				Cents: one.Cents, Currency: one.Currency, From: one.From,
-			})
-		}
-		return out, nil
+	These were `priceOf` and `pricesOf` against `tenant`, because the table hung
+	off a school. `0041` moved it to the platform and `billing` took the code with
+	it; the seams are the same shape and point somewhere else.
+
+	`Set` APPENDS — see `billing.Prices.Set` and K-14 — and this closure is the
+	only place that difference is invisible, which is why the field it fills is
+	documented as a series rather than as a setter.
+*/
+func pricesOf(prices *billing.Prices) console.Plan {
+	return console.Plan{
+		Set: func(ctx context.Context, termMonths, cents int, currency string) (console.Price, error) {
+			was, err := prices.Set(ctx, billing.ScopeEverything, termMonths, cents, currency)
+			if err != nil {
+				return console.Price{}, err
+			}
+			return console.Price{
+				TermMonths: was.TermMonths, Cents: was.Cents,
+				Currency: was.Currency, From: was.From,
+			}, nil
+		},
+
+		// A TERM NOBODY HAS PRICED IS A ZERO AND NOT AN ERROR. The handler asks
+		// this to name what a change replaced, and "nothing" is the true answer
+		// the first time a term is priced.
+		InForce: func(ctx context.Context, termMonths int) (console.Price, error) {
+			one, err := prices.InForce(ctx, billing.ScopeEverything, termMonths)
+			if errors.Is(err, billing.ErrNoOffer) {
+				return console.Price{}, nil
+			}
+			if err != nil {
+				return console.Price{}, err
+			}
+			return console.Price{
+				TermMonths: one.TermMonths, Cents: one.Cents,
+				Currency: one.Currency, From: one.From,
+			}, nil
+		},
+
+		Series: func(ctx context.Context) ([]console.Price, error) {
+			rows, err := prices.Series(ctx, billing.ScopeEverything)
+			if err != nil {
+				return nil, err
+			}
+			out := make([]console.Price, 0, len(rows))
+			for _, one := range rows {
+				out = append(out, console.Price{
+					TermMonths: one.TermMonths, Cents: one.Cents,
+					Currency: one.Currency, From: one.From,
+				})
+			}
+			return out, nil
+		},
+
+		Refused: func(err error) bool { return errors.Is(err, billing.ErrNotAPrice) },
 	}
 }
 

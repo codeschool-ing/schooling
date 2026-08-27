@@ -3,13 +3,11 @@ package console_test
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -33,46 +31,13 @@ type schoolsFake struct {
 	failSet bool
 	failLog bool
 	mayNot  bool
-
-	// The price series this fake has been made to write, and whether it
-	// refuses. A price is APPENDED, so the fake appends too — a fake that
-	// replaced would let a test pass that the real store would fail.
-	priced      []console.Price
-	refusePrice bool
 }
-
-var errNotAPrice = errors.New("not a price")
 
 func (f *schoolsFake) handler() http.Handler {
 	mux := http.NewServeMux()
 	console.NewSchoolsHandler(
 		console.Schools{
 			All: func(context.Context) ([]console.School, error) { return f.schools, nil },
-			SetPrice: func(_ context.Context, id uuid.UUID, cents int, currency string) (
-				int, string, error) {
-
-				if f.refusePrice {
-					return 0, "", errNotAPrice
-				}
-				if f.failSet {
-					return 0, "", fmt.Errorf("the database is not there")
-				}
-				for i, s := range f.schools {
-					if s.ID == id {
-						was, wasCurrency := s.PriceCents, s.Currency
-						f.schools[i].PriceCents, f.schools[i].Currency = cents, currency
-						f.priced = append(f.priced, console.Price{
-							Cents: cents, Currency: currency, From: time.Now(),
-						})
-						return was, wasCurrency, nil
-					}
-				}
-				return 0, "", console.ErrNoSchool
-			},
-			Prices: func(context.Context, uuid.UUID) ([]console.Price, error) {
-				return f.priced, nil
-			},
-			Refused: func(err error) bool { return errors.Is(err, errNotAPrice) },
 			SetAccent: func(_ context.Context, id uuid.UUID, accent string) (string, error) {
 				if f.failSet {
 					return "", fmt.Errorf("the database is not there")
@@ -320,150 +285,5 @@ func TestTheListOfSchoolsSaysItIsEveryone(t *testing.T) {
 	if len(body.Schools) != 1 || body.Schools[0].Accent != "#5b8cff" {
 		t.Errorf("the list came back as %+v, and the colour is what the screen is for",
 			body.Schools)
-	}
-}
-
-/* ---------- what it costs ---------- */
-
-func (f *schoolsFake) price(t *testing.T, id string, body string) *httptest.ResponseRecorder {
-	t.Helper()
-	rec := httptest.NewRecorder()
-	f.handler().ServeHTTP(rec, httptest.NewRequest(http.MethodPut,
-		"/console/api/v1/schools/"+id+"/price", strings.NewReader(body)))
-	return rec
-}
-
-/*
-A PRICE IS APPENDED AND A COLOUR IS REPLACED, AND THE DIFFERENCE IS THE FEATURE.
-
-Saving the same price twice writes two rows. On the accent that would be a log
-of somebody's clicking and the handler refuses it; here it is the answer to
-"was this re-confirmed in March, or has nobody touched it since January" — and a
-handler that copied the accent's short-circuit would have destroyed exactly the
-thing K-14 asks for, while looking like consistency.
-*/
-func TestSavingTheSamePriceAgainIsStillANewRow(t *testing.T) {
-	f := aSchool()
-	id := f.schools[0].ID.String()
-
-	for i := range 2 {
-		rec := f.price(t, id, `{"cents":49000,"currency":"BRL"}`)
-		if rec.Code != http.StatusOK {
-			t.Fatalf("setting a price the %d time answered %d: %s", i+1, rec.Code, rec.Body.String())
-		}
-	}
-	if len(f.priced) != 2 {
-		t.Errorf("the same price saved twice wrote %d rows", len(f.priced))
-	}
-	if len(f.entries) != 2 {
-		t.Errorf("two price changes wrote %d audit entries", len(f.entries))
-	}
-}
-
-// THE ENTRY IS IN CENTS AND NAMES BOTH SIDES. It is read a year later beside a
-// ledger row, and the ledger is in cents — a formatted amount would be the one
-// place in this system where money is a decimal string.
-func TestThePriceEntryNamesBothSidesInCents(t *testing.T) {
-	f := aSchool()
-	id := f.schools[0].ID.String()
-
-	if rec := f.price(t, id, `{"cents":49000,"currency":"BRL"}`); rec.Code != http.StatusOK {
-		t.Fatalf("setting a price answered %d: %s", rec.Code, rec.Body.String())
-	}
-	if rec := f.price(t, id, `{"cents":59000,"currency":"BRL"}`); rec.Code != http.StatusOK {
-		t.Fatalf("raising a price answered %d: %s", rec.Code, rec.Body.String())
-	}
-
-	if len(f.entries) != 2 {
-		t.Fatalf("two changes wrote %d entries", len(f.entries))
-	}
-	first, second := f.entries[0], f.entries[1]
-	if first.action != "school.price.changed" {
-		t.Errorf("the entry says the action was %q", first.action)
-	}
-	if got := fmt.Sprint(first.what.Before); got != "none" {
-		t.Errorf("a school that had no price recorded %q as its before", got)
-	}
-	if got := fmt.Sprint(second.what.Before); got != "49000 BRL cents" {
-		t.Errorf("the second change recorded %q as its before", got)
-	}
-	if got := fmt.Sprint(second.what.After); got != "59000 BRL cents" {
-		t.Errorf("the second change recorded %q as its after", got)
-	}
-}
-
-// A CHANGE NOBODY COULD RECORD IS NOT MADE, which is the same rule the accent
-// follows — and it matters more here, because the row it would have written
-// cannot be deleted afterwards.
-func TestAPriceNobodyCouldRecordIsNotWritten(t *testing.T) {
-	f := aSchool()
-	f.failLog = true
-
-	rec := f.price(t, f.schools[0].ID.String(), `{"cents":49000,"currency":"BRL"}`)
-	if rec.Code != http.StatusServiceUnavailable {
-		t.Fatalf("a price whose entry could not be written answered %d: %s",
-			rec.Code, rec.Body.String())
-	}
-	if len(f.priced) != 0 {
-		t.Errorf("it wrote %d price rows anyway", len(f.priced))
-	}
-}
-
-// SETTING A PRICE IS NOT A THING A READ-ONLY ROLE DOES, for the reason setting
-// a colour is not: read-only opened the door so the console can be looked at.
-func TestReadOnlyCannotSetAPrice(t *testing.T) {
-	f := aSchool()
-	f.mayNot = true
-
-	rec := f.price(t, f.schools[0].ID.String(), `{"cents":49000,"currency":"BRL"}`)
-	if rec.Code != http.StatusForbidden {
-		t.Fatalf("a read-only price answered %d: %s", rec.Code, rec.Body.String())
-	}
-	if len(f.priced) != 0 || len(f.entries) != 0 {
-		t.Errorf("a refused price wrote %d rows and %d entries", len(f.priced), len(f.entries))
-	}
-}
-
-// A PRICE THE STORE REFUSES IS THE CALLER'S TO FIX, and it comes back as one
-// rather than as an outage — the sentence names which half was wrong.
-func TestAPriceTheStoreRefusesIsABadRequest(t *testing.T) {
-	f := aSchool()
-	f.refusePrice = true
-
-	rec := f.price(t, f.schools[0].ID.String(), `{"cents":0,"currency":"BRL"}`)
-	if rec.Code != http.StatusBadRequest {
-		t.Fatalf("a refused price answered %d: %s", rec.Code, rec.Body.String())
-	}
-}
-
-// AND THE SERIES COMES BACK WHOLE, oldest rows included. A screen that could
-// only see the newest would be the mutable column again with extra steps.
-func TestTheSeriesKeepsWhatWasReplaced(t *testing.T) {
-	f := aSchool()
-	id := f.schools[0].ID.String()
-
-	for _, cents := range []string{"49000", "59000"} {
-		if rec := f.price(t, id, `{"cents":`+cents+`,"currency":"BRL"}`); rec.Code != http.StatusOK {
-			t.Fatalf("setting %s answered %d: %s", cents, rec.Code, rec.Body.String())
-		}
-	}
-
-	rec := httptest.NewRecorder()
-	f.handler().ServeHTTP(rec, httptest.NewRequest(http.MethodGet,
-		"/console/api/v1/schools/"+id+"/prices", nil))
-	if rec.Code != http.StatusOK {
-		t.Fatalf("reading the series answered %d: %s", rec.Code, rec.Body.String())
-	}
-
-	var body map[string]any
-	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
-		t.Fatalf("the answer is not JSON: %v", err)
-	}
-	rows, _ := body["prices"].([]any)
-	if len(rows) != 2 {
-		t.Errorf("two prices were set and the series holds %d", len(rows))
-	}
-	if body["append_only"] == nil || body["append_only"] == "" {
-		t.Error("the series does not say why there is no way to edit one")
 	}
 }

@@ -15,7 +15,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -105,8 +104,8 @@ func (s *Store) ByHost(ctx context.Context, host string) (School, error) {
 		FROM tenant_domains d
 		JOIN tenants t ON t.id = d.tenant_id
 		LEFT JOIN LATERAL (
-			SELECT cents, currency FROM school_prices
-			WHERE tenant_id = t.id AND effective_from <= now()
+			SELECT cents, currency FROM plan_prices
+			WHERE scope = 'all' AND term_months = 12 AND effective_from <= now()
 			ORDER BY effective_from DESC
 			LIMIT 1
 		) p ON true
@@ -144,8 +143,8 @@ func (s *Store) ByID(ctx context.Context, id uuid.UUID) (School, error) {
 		SELECT t.id, t.slug, t.name, t.accent, t.site, p.cents, p.currency
 		FROM tenants t
 		LEFT JOIN LATERAL (
-			SELECT cents, currency FROM school_prices
-			WHERE tenant_id = t.id AND effective_from <= now()
+			SELECT cents, currency FROM plan_prices
+			WHERE scope = 'all' AND term_months = 12 AND effective_from <= now()
 			ORDER BY effective_from DESC
 			LIMIT 1
 		) p ON true
@@ -235,8 +234,8 @@ func (s *Store) All(ctx context.Context) ([]School, error) {
 		SELECT t.id, t.slug, t.name, t.accent, t.site, p.cents, p.currency
 		FROM tenants t
 		LEFT JOIN LATERAL (
-			SELECT cents, currency FROM school_prices
-			WHERE tenant_id = t.id AND effective_from <= now()
+			SELECT cents, currency FROM plan_prices
+			WHERE scope = 'all' AND term_months = 12 AND effective_from <= now()
 			ORDER BY effective_from DESC
 			LIMIT 1
 		) p ON true
@@ -269,12 +268,6 @@ func (s *Store) All(ctx context.Context) ([]School, error) {
 
 // ErrNoSchool is an id no school has.
 var ErrNoSchool = errors.New("tenant: no school with that id")
-
-// ErrNotAPrice is a price the caller can fix by sending another one — a number
-// that is not above zero, or something that is not a currency. One sentinel and
-// not two, because what the caller needs to know is whether it is theirs to fix
-// and the sentence says which half.
-var ErrNotAPrice = errors.New("tenant: not a price")
 
 // SetAccent writes one school's colour and answers what was there before.
 //
@@ -316,168 +309,6 @@ func (s *Store) SetAccent(ctx context.Context, id uuid.UUID, accent string) (str
 		return "", fmt.Errorf("tenant: setting a school's accent: %w", err)
 	}
 	return was, nil
-}
-
-/*
-SETTING A PRICE IS INSERTING A ROW, and that is the whole of K-14.
-
-`SetAccent` above updates a column and answers what it replaced, which is right
-for a colour: there is one accent, the old one is of no use to anybody except
-the audit entry, and nothing has to be explained about it a year later. A price
-is the other kind of value. Overwriting one destroys the ability to say what the
-offer was on the day somebody took it, so this appends — and the trigger on the
-table refuses any statement that would do otherwise.
-
-IT STILL ANSWERS WHAT WAS THERE BEFORE, because the console records both sides
-of every change it makes (K-01) and "490 became 590" is the entry a person can
-use. The difference is that here the before is READ rather than replaced, and
-reading it is exact: the row it names is still there and always will be.
-
-A PRICE IDENTICAL TO THE ONE IN FORCE IS STILL A ROW. Deciding whether that is a
-change worth recording belongs to the caller — the same rule the accent
-follows — and a series that quietly dropped the repeats would be a series that
-cannot answer "was this price re-confirmed in March or has it simply not been
-touched since January".
-*/
-func (s *Store) SetPrice(ctx context.Context, id uuid.UUID,
-	cents int, currency string) (wasCents int, wasCurrency string, err error) {
-
-	if cents <= 0 {
-		return 0, "", fmt.Errorf("%w: a price is more than nothing, and %d is not — "+
-			"a school with no offer has no price row at all", ErrNotAPrice, cents)
-	}
-	if !isCurrency(currency) {
-		return 0, "", fmt.Errorf("%w: %q is not a currency — three capital letters, "+
-			"ISO 4217, which is what a browser can format", ErrNotAPrice, currency)
-	}
-
-	tx, err := s.pool.Begin(ctx)
-	if err != nil {
-		return 0, "", fmt.Errorf("tenant: setting a school's price: %w", err)
-	}
-	defer func() {
-		_ = tx.Rollback(context.WithoutCancel(ctx)) // a no-op once committed
-	}()
-
-	/* THE SCHOOL IS CHECKED IN THE SAME TRANSACTION, because the foreign key
-	   would otherwise answer an id nobody has with a constraint violation —
-	   true, and not a sentence the console can put in front of anybody. */
-	var exists bool
-	if err := tx.QueryRow(ctx,
-		`SELECT true FROM tenants WHERE id = $1`, id).Scan(&exists); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return 0, "", ErrNoSchool
-		}
-		return 0, "", fmt.Errorf("tenant: setting a school's price: %w", err)
-	}
-
-	// What is in force at this instant, which is what the new row replaces. No
-	// rows is a school that had no offer, and the caller is told so by a zero.
-	var before *int
-	var beforeCurrency *string
-	if err := tx.QueryRow(ctx, `
-		SELECT cents, currency FROM school_prices
-		WHERE tenant_id = $1 AND effective_from <= now()
-		ORDER BY effective_from DESC LIMIT 1
-	`, id).Scan(&before, &beforeCurrency); err != nil && !errors.Is(err, pgx.ErrNoRows) {
-		return 0, "", fmt.Errorf("tenant: reading a school's price: %w", err)
-	}
-	if before != nil && beforeCurrency != nil {
-		wasCents, wasCurrency = *before, *beforeCurrency
-	}
-
-	if _, err := tx.Exec(ctx, `
-		INSERT INTO school_prices (tenant_id, cents, currency) VALUES ($1, $2, $3)
-	`, id, cents, currency); err != nil {
-		return 0, "", fmt.Errorf("tenant: setting a school's price: %w", err)
-	}
-	if err := tx.Commit(ctx); err != nil {
-		return 0, "", fmt.Errorf("tenant: setting a school's price: %w", err)
-	}
-	return wasCents, wasCurrency, nil
-}
-
-/*
-InForce is the price row a purchase at this school would be sold at right now.
-
-	IT RETURNS THE ROW'S ID AND NOT ONLY THE NUMBER, which is the whole reason it
-	exists beside the reads above. A subscription has to point at the row it was
-	bought at, or a school raising its price raises it for everybody who already
-	paid — and `school_prices` is append-only precisely so that pointing is
-	possible.
-
-	`effective_from <= now()` is the same condition every other read here uses: a
-	price dated ahead is representable and is not the offer until its day comes.
-
-	ErrNoPrice is a school that has never had one. It is not an error in the
-	usual sense — a school with no offer is a school nobody can subscribe to —
-	but selling at a price that does not exist is not the alternative.
-*/
-func (s *Store) InForce(ctx context.Context, id uuid.UUID) (uuid.UUID, Price, error) {
-	var row uuid.UUID
-	var price Price
-	err := s.pool.QueryRow(ctx, `
-		SELECT id, cents, currency, effective_from FROM school_prices
-		WHERE tenant_id = $1 AND effective_from <= now()
-		ORDER BY effective_from DESC LIMIT 1
-	`, id).Scan(&row, &price.Cents, &price.Currency, &price.From)
-
-	if errors.Is(err, pgx.ErrNoRows) {
-		return uuid.Nil, Price{}, ErrNoPrice
-	}
-	if err != nil {
-		return uuid.Nil, Price{}, fmt.Errorf("tenant: reading the price in force: %w", err)
-	}
-	return row, price, nil
-}
-
-// ErrNoPrice is a school that has never had one.
-var ErrNoPrice = errors.New("tenant: this school has no price")
-
-// Prices is one school's whole series, newest first. It is the console's, and
-// it is the answer to "what was the offer in March" — which is a question a
-// single number cannot be asked.
-func (s *Store) Prices(ctx context.Context, id uuid.UUID) ([]Price, error) {
-	rows, err := s.pool.Query(ctx, `
-		SELECT cents, currency, effective_from FROM school_prices
-		WHERE tenant_id = $1 ORDER BY effective_from DESC
-	`, id)
-	if err != nil {
-		return nil, fmt.Errorf("tenant: reading a school's prices: %w", err)
-	}
-	defer rows.Close()
-
-	var out []Price
-	for rows.Next() {
-		var one Price
-		if err := rows.Scan(&one.Cents, &one.Currency, &one.From); err != nil {
-			return nil, fmt.Errorf("tenant: reading a school's prices: %w", err)
-		}
-		out = append(out, one)
-	}
-	return out, rows.Err()
-}
-
-// Price is one row of the series.
-type Price struct {
-	Cents    int
-	Currency string
-	From     time.Time
-}
-
-// isCurrency is the same three-letter rule the column carries, checked here so
-// that a person typing into a console gets a sentence rather than a constraint
-// violation.
-func isCurrency(c string) bool {
-	if len(c) != 3 {
-		return false
-	}
-	for _, r := range c {
-		if r < 'A' || r > 'Z' {
-			return false
-		}
-	}
-	return true
 }
 
 // HostOf answers an address a school answers at.
