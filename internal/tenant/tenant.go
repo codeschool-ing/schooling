@@ -38,37 +38,17 @@ type School struct {
 	// is better than the link every school used to get, to codeschool.ing.
 	Site string
 
-	// What the subscription costs here, in cents, and in which currency —
-	// filled from the price in force at the moment this school was read.
-	//
-	// THEY ARE NOT COLUMNS ANY MORE (K-14). A price is a series of dated rows
-	// in `school_prices`, append-only, so that the offer is as much a matter of
-	// record as the payment; these two fields are the top of that series,
-	// carried on the struct because every request that draws the offer wants it
-	// and none of them wants the history.
-	//
-	// Zero and empty mean the school has no price, which is now "no rows"
-	// rather than a zero in a column — a free school and an unpriced one were
-	// the same number before, and one of those is a decision.
-	PlanPriceCents int
-	PlanCurrency   string
-}
+	/* THERE IS NO PRICE HERE, AND THERE WAS UNTIL `0041` FINISHED.
 
-// Price is the offer, or nothing.
-//
-// HALF OF ONE IS NOT SERVED, and it stays written down although the shape that
-// made it possible has gone. The currency used to carry a column default, so a
-// school that had set NO price still had `BRL` in its row and answering it would
-// have put a currency on a school that never chose one. A row now carries both
-// or does not exist, so the guard below can no longer fire — which is a reason
-// to keep it rather than to remove it: it costs a comparison, and the day
-// somebody adds a way to write one half of a price it is the thing that refuses
-// to serve it.
-func (s School) Price() (cents int, currency string) {
-	if s.PlanPriceCents <= 0 || s.PlanCurrency == "" {
-		return 0, ""
-	}
-	return s.PlanPriceCents, s.PlanCurrency
+	   A number lived on this struct and came from a `LEFT JOIN LATERAL` on
+	   every read — and this struct is read by the middleware, which means the
+	   offer was being fetched on every request to serve the one screen that
+	   draws it.
+
+	   It also could not survive the platform selling more than one term: the
+	   join carried `term_months = 12` written into it, so the two-year price
+	   had no way of reaching any screen. What replaced it is `billing.Offer`,
+	   asked by the one handler that wants it. */
 }
 
 type Store struct {
@@ -97,30 +77,19 @@ func (s *Store) ByHost(ctx context.Context, host string) (School, error) {
 	   `LEFT JOIN` because a school with no price is an ordinary school, and an
 	   inner join would make it a 404. */
 	var out School
-	var cents *int
-	var currency *string
 	err := s.pool.QueryRow(ctx, `
-		SELECT t.id, t.slug, t.name, t.accent, t.site, p.cents, p.currency
+		SELECT t.id, t.slug, t.name, t.accent, t.site
 		FROM tenant_domains d
 		JOIN tenants t ON t.id = d.tenant_id
-		LEFT JOIN LATERAL (
-			SELECT cents, currency FROM plan_prices
-			WHERE scope = 'all' AND term_months = 12 AND effective_from <= now()
-			ORDER BY effective_from DESC
-			LIMIT 1
-		) p ON true
+
 		WHERE d.host = $1
-	`, h).Scan(&out.ID, &out.Slug, &out.Name, &out.Accent, &out.Site,
-		&cents, &currency)
+	`, h).Scan(&out.ID, &out.Slug, &out.Name, &out.Accent, &out.Site)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return School{}, ErrUnknownHost
 	}
 	if err != nil {
 		return School{}, fmt.Errorf("tenant: reading the school for %q: %w", h, err)
-	}
-	if cents != nil && currency != nil {
-		out.PlanPriceCents, out.PlanCurrency = *cents, *currency
 	}
 	return out, nil
 }
@@ -137,29 +106,18 @@ func (s *Store) ByHost(ctx context.Context, host string) (School, error) {
 // disagreed about a field would be discovered by a number on a screen.
 func (s *Store) ByID(ctx context.Context, id uuid.UUID) (School, error) {
 	var out School
-	var cents *int
-	var currency *string
 	err := s.pool.QueryRow(ctx, `
-		SELECT t.id, t.slug, t.name, t.accent, t.site, p.cents, p.currency
+		SELECT t.id, t.slug, t.name, t.accent, t.site
 		FROM tenants t
-		LEFT JOIN LATERAL (
-			SELECT cents, currency FROM plan_prices
-			WHERE scope = 'all' AND term_months = 12 AND effective_from <= now()
-			ORDER BY effective_from DESC
-			LIMIT 1
-		) p ON true
+
 		WHERE t.id = $1
-	`, id).Scan(&out.ID, &out.Slug, &out.Name, &out.Accent, &out.Site,
-		&cents, &currency)
+	`, id).Scan(&out.ID, &out.Slug, &out.Name, &out.Accent, &out.Site)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return School{}, ErrNoSchool
 	}
 	if err != nil {
 		return School{}, fmt.Errorf("tenant: reading the school %s: %w", id, err)
-	}
-	if cents != nil && currency != nil {
-		out.PlanPriceCents, out.PlanCurrency = *cents, *currency
 	}
 	return out, nil
 }
@@ -231,14 +189,9 @@ func FromContext(ctx context.Context) (School, bool) {
 // way twice and a person scanning it can find one by name.
 func (s *Store) All(ctx context.Context) ([]School, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT t.id, t.slug, t.name, t.accent, t.site, p.cents, p.currency
+		SELECT t.id, t.slug, t.name, t.accent, t.site
 		FROM tenants t
-		LEFT JOIN LATERAL (
-			SELECT cents, currency FROM plan_prices
-			WHERE scope = 'all' AND term_months = 12 AND effective_from <= now()
-			ORDER BY effective_from DESC
-			LIMIT 1
-		) p ON true
+
 		ORDER BY t.slug
 	`)
 	if err != nil {
@@ -249,14 +202,8 @@ func (s *Store) All(ctx context.Context) ([]School, error) {
 	var out []School
 	for rows.Next() {
 		var t School
-		var cents *int
-		var currency *string
-		if err := rows.Scan(&t.ID, &t.Slug, &t.Name, &t.Accent, &t.Site,
-			&cents, &currency); err != nil {
+		if err := rows.Scan(&t.ID, &t.Slug, &t.Name, &t.Accent, &t.Site); err != nil {
 			return nil, fmt.Errorf("tenant: reading a school: %w", err)
-		}
-		if cents != nil && currency != nil {
-			t.PlanPriceCents, t.PlanCurrency = *cents, *currency
 		}
 		out = append(out, t)
 	}

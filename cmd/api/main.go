@@ -355,7 +355,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   the same one — and it exists because the interface prints "minimum to
 	   pass" on a course card, before any paper exists to carry it. It printed a
 	   constant of its own until now. */
-	tenant.NewHandler(exam.PassMark).Routes(scoped)
+	tenant.NewHandler(exam.PassMark, offered(billing.NewPrices(pool))).Routes(scoped)
 
 	// THE TWO DOCUMENTS, MOUNTED INSIDE THE SCHOOL-SCOPED MUX AND SCOPED TO NO
 	// SCHOOL. They are the platform's rather than a school's, and they are the
@@ -2091,6 +2091,30 @@ resend is the banner's button.
 	reporting on an account to whoever holds the session, and the screen's
 	sentence does not need it.
 */
+/*
+offered is what can be bought, wired into the seam `tenant` declares.
+
+	IT IS THE PLATFORM'S OFFER AND NOT A SCHOOL'S, which is what `0041` settled:
+	one subscription opens every school, so this asks for `ScopeEverything` and
+	every school's page draws the same list. When scope narrows (N-03) this line
+	is where the school starts being passed in.
+*/
+func offered(prices *billing.Prices) tenant.Offer {
+	return func(ctx context.Context) ([]tenant.Plan, error) {
+		found, err := prices.Offer(ctx, billing.ScopeEverything)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]tenant.Plan, 0, len(found))
+		for _, one := range found {
+			out = append(out, tenant.Plan{
+				TermMonths: one.TermMonths, Cents: one.Cents, Currency: one.Currency,
+			})
+		}
+		return out, nil
+	}
+}
+
 /*
 viaAsaas is the payment gateway, wired into the seam `billing` declares.
 
