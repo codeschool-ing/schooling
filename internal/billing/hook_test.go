@@ -68,6 +68,22 @@ func deliver(t *testing.T, h http.Handler, token, body string) *httptest.Respons
 	return rec
 }
 
+// captured keeps the last line written, so a test can assert the LEVEL and not
+// only that something was said.
+type captured struct {
+	level   slog.Level
+	message string
+}
+
+func (c *captured) Enabled(context.Context, slog.Level) bool { return true }
+func (c *captured) WithAttrs([]slog.Attr) slog.Handler       { return c }
+func (c *captured) WithGroup(string) slog.Handler            { return c }
+
+func (c *captured) Handle(_ context.Context, r slog.Record) error {
+	c.level, c.message = r.Level, r.Message
+	return nil
+}
+
 func event(name, reference, charge string) string {
 	return fmt.Sprintf(
 		`{"id":"evt_%s","event":%q,"payment":{"id":%q,"externalReference":%q,"status":"CONFIRMED"}}`,
@@ -181,6 +197,68 @@ func TestAnEventNothingActsOnIsStillAccepted(t *testing.T) {
 	}
 	if rows != 0 {
 		t.Errorf("events nothing acts on wrote %d ledger rows", rows)
+	}
+}
+
+/*
+THE KEY'S OWN DEATH IS A WARNING AND NOT SILENCE.
+
+	A key goes quiet after three months unused and expires after six. Without
+	these events the platform finds out on the day somebody tries to pay, from a
+	checkout that answers an outage — and working back from there to "the key
+	expired" is an afternoon.
+
+	THE LEVELS ARE THE POINT. `EXPIRING_SOON` is something to do this month;
+	`EXPIRED` and `DISABLED` are the checkout being down right now. Logged at one
+	level the second would look like the first, which is the same failure one
+	step further along.
+*/
+func TestTheKeyDyingIsSaidAtTheRightVolume(t *testing.T) {
+	for _, one := range []struct {
+		event string
+		want  slog.Level
+	}{
+		{"ACCESS_TOKEN_EXPIRING_SOON", slog.LevelWarn},
+		{"ACCESS_TOKEN_EXPIRED", slog.LevelError},
+		{"ACCESS_TOKEN_DISABLED", slog.LevelError},
+		{"ACCESS_TOKEN_DELETED", slog.LevelError},
+		{"ACCESS_TOKEN_CREATED", slog.LevelInfo},
+		{"ACCESS_TOKEN_ENABLED", slog.LevelInfo},
+	} {
+		t.Run(one.event, func(t *testing.T) {
+			said := &captured{}
+			api := billing.Hook(hookToken, nil, slog.New(said))
+
+			rec := deliver(t, api, hookToken, event(one.event, "", ""))
+			if rec.Code != http.StatusOK {
+				t.Fatalf("it answered %d, and the queue is now stopped", rec.Code)
+			}
+			if said.level != one.want {
+				t.Errorf("it was logged at %v, want %v", said.level, one.want)
+			}
+			if !strings.Contains(said.message, "key") {
+				t.Errorf("the line does not mention the key: %q", said.message)
+			}
+		})
+	}
+}
+
+/*
+AND IT NEVER REACHES THE SETTLEMENT, which is why the handler above can be
+built with a nil one.
+
+	These carry no payment. Letting them fall through to `meaning` would put
+	them in the same silence as somebody opening an invoice, and letting them
+	reach `Apply` would be looking for a checkout that a key has nothing to do
+	with.
+*/
+func TestAKeyEventNeverLooksForACheckout(t *testing.T) {
+	api := billing.Hook(hookToken, nil, slog.New(slog.DiscardHandler))
+
+	// A nil settlement would panic if it were touched, which is the assertion.
+	if rec := deliver(t, api, hookToken,
+		event("ACCESS_TOKEN_EXPIRED", uuid.NewString(), "pay_x")); rec.Code != http.StatusOK {
+		t.Errorf("it answered %d", rec.Code)
 	}
 }
 
