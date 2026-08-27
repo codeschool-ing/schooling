@@ -294,3 +294,105 @@ func TestTheTableHoldsNoTokenAnybodyCouldUse(t *testing.T) {
 		t.Error("the confirmation row carries the token itself")
 	}
 }
+
+/*
+THE ACCOUNT SAYS WHETHER A LINK IS STILL WAITING TO BE FOLLOWED.
+
+	It is what stops the nudge banner claiming "we sent a link to X" at somebody
+	who was never sent one — every account created before confirmations existed,
+	and anybody whose link expired unread.
+
+	The four conditions are the four `ConfirmEmail` redeems on, which is why
+	they are one constant and not two lists that can drift.
+*/
+func TestAnAccountKnowsWhetherALinkIsOutstanding(t *testing.T) {
+	pool := testPool(t)
+	store := identity.NewStore(pool)
+	ctx := context.Background()
+
+	pending := func(id uuid.UUID) bool {
+		t.Helper()
+		account, err := store.ByID(ctx, id)
+		if err != nil {
+			t.Fatalf("reading the account: %v", err)
+		}
+		return account.ConfirmationPending
+	}
+
+	account, _ := create(t, store)
+	if pending(account.ID) {
+		t.Error("a brand new account has a link outstanding and nothing issued one")
+	}
+
+	link, err := store.IssueEmailConfirmation(ctx, account.ID)
+	if err != nil {
+		t.Fatalf("issuing: %v", err)
+	}
+	if !pending(account.ID) {
+		t.Error("a link was issued and the account does not say so")
+	}
+
+	// SPENT IS NOT OUTSTANDING. Following the link is the whole point, and a
+	// banner still offering to resend afterwards would be offering nothing.
+	if _, err := store.ConfirmEmail(ctx, link.Token); err != nil {
+		t.Fatalf("confirming: %v", err)
+	}
+	if pending(account.ID) {
+		t.Error("a spent link still counts as outstanding")
+	}
+}
+
+// AND AN EXPIRED ONE IS NOT OUTSTANDING EITHER, which is the case that made
+// this worth a column: a link nobody followed within the day is gone, and the
+// screen has to offer a new one rather than point at the old.
+func TestAnExpiredLinkIsNotOutstanding(t *testing.T) {
+	pool := testPool(t)
+	store := identity.NewStore(pool)
+	ctx := context.Background()
+	account, _ := create(t, store)
+
+	if _, err := store.IssueEmailConfirmation(ctx, account.ID); err != nil {
+		t.Fatalf("issuing: %v", err)
+	}
+	if _, err := pool.Exec(ctx, `
+		UPDATE account_email_confirmations
+		   SET created_at = now() - interval '3 days', expires_at = now() - interval '2 days'
+		 WHERE account_id = $1
+	`, account.ID); err != nil {
+		t.Fatalf("ageing the link: %v", err)
+	}
+
+	got, err := store.ByID(ctx, account.ID)
+	if err != nil {
+		t.Fatalf("reading: %v", err)
+	}
+	if got.ConfirmationPending {
+		t.Error("an expired link still counts as outstanding")
+	}
+}
+
+// A LINK FOR AN ADDRESS THE ACCOUNT HAS LEFT IS NOT OUTSTANDING, for
+// `ConfirmEmail`'s reason: it cannot be redeemed, so offering to resend it
+// would be offering something that no longer works.
+func TestALinkForAnOldAddressIsNotOutstanding(t *testing.T) {
+	pool := testPool(t)
+	store := identity.NewStore(pool)
+	ctx := context.Background()
+	account, _ := create(t, store)
+
+	if _, err := store.IssueEmailConfirmation(ctx, account.ID); err != nil {
+		t.Fatalf("issuing: %v", err)
+	}
+	if _, err := pool.Exec(ctx,
+		`UPDATE accounts SET email = $2 WHERE id = $1`, account.ID, address(t)); err != nil {
+		t.Fatalf("moving the address: %v", err)
+	}
+
+	got, err := store.ByID(ctx, account.ID)
+	if err != nil {
+		t.Fatalf("reading: %v", err)
+	}
+	if got.ConfirmationPending {
+		t.Error("a link for the old address still counts as outstanding")
+	}
+}

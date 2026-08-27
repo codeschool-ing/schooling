@@ -71,8 +71,40 @@ type Account struct {
 	   be paying for the tidiness of a struct nobody looks at. */
 	EmailVerifiedAt *time.Time
 
+	/* ConfirmationPending is whether a link is out there waiting to be
+	   followed: issued, unspent, unexpired, and for the address the account has
+	   NOW.
+
+	   IT EXISTS SO THAT A SCREEN CAN STOP SAYING SOMETHING FALSE. The nudge
+	   banner said "we sent a link to X" whenever the address was unconfirmed —
+	   true for somebody who just signed up, and a lie for every account created
+	   before confirmations existed, and for anybody whose link expired unread.
+
+	   IT COSTS NO EXTRA ROUND TRIP. Every query below already reads this
+	   account's row; this is one more column on the same statement, served by
+	   `account_email_confirmations_by_account`. A second call would have put a
+	   query in front of every signed-in request, which is the trade that made
+	   `EmailVerifiedAt` a field rather than a lookup. */
+	ConfirmationPending bool
+
 	CreatedAt time.Time
 }
+
+/*
+outstanding is the sub-select that answers `ConfirmationPending`.
+
+	IT IS A CONSTANT AND NOT FOUR COPIES, because the four conditions are the
+	same four `ConfirmEmail` redeems on, and two of them drifting apart would
+	mean a banner offering to resend a link that already works, or promising one
+	that does not. `a` is the accounts row in every query that uses it.
+*/
+const outstanding = `EXISTS (
+	SELECT 1 FROM account_email_confirmations c
+	 WHERE c.account_id = a.id
+	   AND c.spent_at IS NULL
+	   AND c.expires_at > now()
+	   AND c.email = lower(a.email)
+)`
 
 type Store struct {
 	pool *pgxpool.Pool
@@ -162,13 +194,13 @@ func (s *Store) Authenticate(ctx context.Context, email, password string) (Accou
 
 	err := s.pool.QueryRow(ctx, `
 		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.email_verified_at,
-		       a.created_at, c.secret
+		       a.created_at, `+outstanding+`, c.secret
 		FROM accounts a
 		JOIN account_credentials c ON c.account_id = a.id AND c.kind = 'password'
 		WHERE lower(a.email) = lower($1)
 	`, NormaliseEmail(email)).Scan(
 		&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country, &out.Synthetic,
-		&out.EmailVerifiedAt, &out.CreatedAt, &stored)
+		&out.EmailVerifiedAt, &out.CreatedAt, &out.ConfirmationPending, &stored)
 
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
@@ -202,10 +234,11 @@ var decoyHash = func() string {
 func (s *Store) ByID(ctx context.Context, id uuid.UUID) (Account, error) {
 	var out Account
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, email, name, locale, country, synthetic, email_verified_at, created_at
-		  FROM accounts WHERE id = $1
+		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic,
+		       a.email_verified_at, a.created_at, `+outstanding+`
+		  FROM accounts a WHERE a.id = $1
 	`, id).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
-		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt)
+		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt, &out.ConfirmationPending)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Account{}, ErrNoAccount
@@ -236,10 +269,11 @@ func (s *Store) ByEmail(ctx context.Context, email string) (Account, error) {
 
 	var out Account
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, email, name, locale, country, synthetic, email_verified_at, created_at
-		  FROM accounts WHERE email = $1
+		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic,
+		       a.email_verified_at, a.created_at, `+outstanding+`
+		  FROM accounts a WHERE a.email = $1
 	`, address).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
-		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt)
+		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt, &out.ConfirmationPending)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Account{}, ErrNoAccount
@@ -379,10 +413,11 @@ func (s *Store) Verify(ctx context.Context, token string, at *uuid.UUID) (Accoun
 			RETURNING id
 		)
 		SELECT a.id, a.email, a.name, a.locale, a.country, a.synthetic, a.email_verified_at,
-		       a.created_at, live.viewed_by, live.viewing_tenant
+		       a.created_at, `+outstanding+`, live.viewed_by, live.viewing_tenant
 		FROM live JOIN accounts a ON a.id = live.account_id
 	`, tokenHash(token), at).Scan(&out.ID, &out.Email, &out.Name, &out.Locale, &out.Country,
-		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt, &by, &school)
+		&out.Synthetic, &out.EmailVerifiedAt, &out.CreatedAt, &out.ConfirmationPending,
+		&by, &school)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Account{}, Viewing{}, ErrNoSession

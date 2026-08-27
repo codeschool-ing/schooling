@@ -257,6 +257,22 @@ function documentFrom({ completed, notes, exams, resume }, me) {
          every reader a nudge about an address they cannot confirm from a page
          with no server behind it. */
       emailVerified: me.emailVerified !== false,
+
+      /* AND WHETHER A LINK IS STILL WAITING TO BE FOLLOWED.
+
+         The banner used to say "we sent a link to X" whenever the address was
+         unconfirmed — true for somebody who just signed up, and a lie for every
+         account created before confirmations existed and for anybody whose link
+         expired unread. The screen could not tell those apart because nothing
+         told it; this is what tells it.
+
+         FALSE WHEN THE FIELD IS ABSENT, which is the opposite default to
+         `emailVerified` above and right for the same reason. There, absent means
+         an old server or the offline bundle and the safe answer is "do not
+         nag". Here, absent means we do not know that a link is out there — and
+         offering to send one is honest in a way that claiming to have sent one
+         is not. */
+      confirmationPending: me.confirmationPending === true,
       secondFactor: Boolean(me.secondFactor),
       mfaRequired: Boolean(me.mfaRequired),
 

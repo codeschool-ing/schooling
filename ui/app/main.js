@@ -412,10 +412,28 @@ function paintVerifyBanner() {
   el.hidden = !show;
   document.body.classList.toggle('banner-on', show);
   if (!show) { el.innerHTML = ''; return; }
+  /* WHICH OF THE TWO SENTENCES IS TRUE.
+
+     "We sent a link to X" was said unconditionally, and it was a lie to every
+     account created before confirmations existed and to anybody whose link
+     expired unread. The server now says whether one is outstanding, so the
+     screen can say the true thing in both cases — and the button changes with
+     it, because "Resend" is a strange word for a message nobody has had. */
+  const waiting = s.confirmationPending === true;
+
+  /* EACH STRING IS ITS OWN `txt('literal')` CALL, and the ternary picks between
+     the RESULTS rather than between the arguments. `check-interface` reads this
+     file for `txt('…')` and cannot see a literal inside a conditional passed to
+     it — written the other way these four stop being policed, and the fifth
+     language this platform learns loses them silently. The tool said so: the
+     strings it could see dropped by two and its unused count rose by the same. */
+  const lead = waiting ? txt('We sent a link to') : txt('We can send a link to');
+  const action = waiting ? txt('Resend') : txt('Send');
+
   el.innerHTML =
     '<span class="vb-text"><strong>' + txt('Confirm your e-mail.') + '</strong> ' +
-    txt('We sent a link to') + ' <span class="vb-addr">' + esc(s.email || '') + '</span></span>' +
-    '<button type="button" class="vb-resend">' + txt('Resend') + '</button>' +
+    lead + ' <span class="vb-addr">' + esc(s.email || '') + '</span></span>' +
+    '<button type="button" class="vb-resend">' + action + '</button>' +
     '<span class="vb-status" id="vb-status" aria-live="polite"></span>' +
     '<button type="button" class="vb-close" aria-label="' + txt('Dismiss') + '">×</button>';
 }
