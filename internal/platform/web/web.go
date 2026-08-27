@@ -162,38 +162,43 @@ func RequestID(next http.Handler) http.Handler {
 	})
 }
 
-// Hooks is the prefix under which a provider posts back to us, and the one
-// place in this platform where a secret travels in a path.
+// Hooks is the prefix under which a provider posts back to us.
 //
 // It lives here rather than beside the handlers because it is the LOGGER that
 // has to know about it, and the logger is here.
 const Hooks = "/hooks/"
 
 /*
-Loggable is a path with anything secret taken out of it.
+Loggable is a path with anything past a hook's own name taken out of it.
 
-	A WEBHOOK CANNOT BE SIGNED IF THE PROVIDER DOES NOT SIGN IT. Brevo posts
-	delivery events as a plain request with nothing to verify the body against,
-	so the only thing separating our endpoint from anybody who finds the URL is a
-	secret segment in the path. Which this middleware would then write to Cloud
-	Logging on the first delivery, in plain text, for as long as the logs are
-	kept — turning the one measure protecting the endpoint into the one artefact
-	that gives it away.
+	NOTHING UNDER THIS PREFIX CARRIES A SECRET TODAY, AND THIS STAYS. That is a
+	decision rather than an oversight, so here is the whole of it.
 
-	So everything under `/hooks/` is logged as its first two segments and a
-	`...`. What is kept is enough to see that a delivery arrived and answer "is
-	the endpoint being hit at all"; what is dropped is the part that would let
-	somebody hit it themselves.
+	The mail hook's credential used to be a segment of its path, because the
+	provider was believed to offer nothing better. It offers HTTP Basic, and the
+	credential moved to a header — which is the fix, since a header is in no
+	request log, no address bar and no screenshot. This middleware writes
+	`r.URL.Path` on every request, so while that secret was in the path it went
+	to Cloud Logging in plain text on the first delivery and stayed for as long
+	as logs are kept: the one measure protecting the endpoint, filed as the one
+	artefact giving it away.
 
-	IT REDACTS THE WHOLE TAIL rather than a segment it recognises as a secret,
-	because recognising one is guessing. The payment gateway's webhooks will
-	arrive under this prefix too and will find the arrangement already made.
+	THE REDACTION OUTLIVES THE PROBLEM IT WAS WRITTEN FOR. The payment gateway's
+	webhooks arrive under this prefix next, from a provider whose arrangements
+	nobody has read yet; the guarantee costs one string comparison; and the
+	change that removed it would be the one somebody later puts a secret back
+	into a path under, with nothing catching it.
+
+	What survives is the first two segments — enough to see that a delivery
+	arrived and to answer "is this endpoint being hit at all". IT REDACTS THE
+	WHOLE TAIL rather than a segment it recognises as secret, because
+	recognising one is guessing.
 */
 func Loggable(path string) string {
 	if !strings.HasPrefix(path, Hooks) {
 		return path
 	}
-	// "/hooks/mail/<secret>" -> ["", "hooks", "mail", "<secret>"]
+	// "/hooks/mail/anything" -> ["", "hooks", "mail", "anything"]
 	parts := strings.SplitN(path, "/", 4)
 	if len(parts) < 4 || parts[3] == "" {
 		return path

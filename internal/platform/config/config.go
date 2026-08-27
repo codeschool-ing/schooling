@@ -75,21 +75,28 @@ type Config struct {
 	// Empty sends no Reply-To at all, which is at least true.
 	MailReplyTo string
 
-	/* MailHookSecret is what stands between the provider's delivery events and
-	   anybody else's, because BREVO DOES NOT SIGN ITS WEBHOOKS — there is no
-	   HMAC, no shared secret in a header, nothing to verify a body against.
+	/* MailHookUser and MailHookPassword are the HTTP Basic credential the
+	   provider presents when it posts a delivery event.
 
-	   So the secret travels in the path, the handler compares it in constant
-	   time, and `web.Loggable` keeps it out of the request log. An endpoint
-	   that marks addresses as refused and is open to the world is a way to stop
-	   this platform writing to anybody: post somebody's address and they never
-	   get their link.
+	   A DELIVERY EVENT IS NOT SELF-AUTHENTICATING: nothing signs the body, so a
+	   shared secret is all there is. An endpoint that marks addresses as refused
+	   and is open to the world is a way to stop this platform writing to
+	   anybody — post somebody's address and they never get their link.
 
-	   EMPTY MOUNTS NO ENDPOINT AT ALL, which is why this is not fatal: a laptop
-	   and CI have no provider to hear from, and the failure of getting it wrong
-	   has to be "there is nothing there" rather than "there is something there
-	   that anybody may post to". */
-	MailHookSecret string
+	   IT USED TO TRAVEL IN THE PATH, on the belief that the provider offered
+	   nothing better. It offers Basic. A header is in no request log, no address
+	   bar and no screenshot, which is three places the path version was.
+
+	   ONE OF THEM IS A SECRET AND THE OTHER IS NOT, and they are separate for
+	   that reason: the user is a name, and lives in `terraform.tfvars` beside
+	   the sending addresses. The password comes out of the secret manager.
+
+	   EMPTY MOUNTS NO ENDPOINT AT ALL, which is why neither is fatal: a laptop
+	   and CI have no provider to hear from, and the failure of getting this
+	   wrong has to be "there is nothing there" rather than "there is something
+	   there that anybody may post to". */
+	MailHookUser     string
+	MailHookPassword string
 
 	Environment Environment
 }
@@ -106,8 +113,10 @@ func Load() (Config, error) {
 		MailKey:        strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_API_KEY")),
 		MailFrom:       strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_FROM")),
 		MailReplyTo:    strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_REPLY_TO")),
-		MailHookSecret: strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_SECRET")),
 		Environment:    Environment(os.Getenv("SCHOOLING_ENV")),
+
+		MailHookUser:     strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_USER")),
+		MailHookPassword: strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_PASSWORD")),
 	}
 
 	if cfg.DatabaseURL == "" {
@@ -143,17 +152,30 @@ func Load() (Config, error) {
 			"SCHOOLING_MAIL_REPLY_TO is %q — it has to carry an address", cfg.MailReplyTo))
 	}
 
-	/* A SHORT SECRET IS WORSE THAN NONE, because none mounts nothing and a
-	   short one mounts an endpoint while looking like it is protected. The
-	   value is not typed by anybody — it comes out of `openssl rand`, and the
-	   floor is here to catch a placeholder somebody meant to replace.
+	/* HALF A CREDENTIAL IS THE ONE STATE THAT CANNOT BE MEANT. Both empty is a
+	   deployment with no provider to hear from, which is every laptop and CI.
+	   Both set is a deployment that listens. One of each is somebody halfway
+	   through configuring it, and mounting nothing while the provider posts —
+	   or mounting something with an empty password — are both worse than
+	   saying so at start-up. */
+	if (cfg.MailHookUser == "") != (cfg.MailHookPassword == "") {
+		problems = append(problems, errors.New(
+			"SCHOOLING_MAIL_HOOK_USER and SCHOOLING_MAIL_HOOK_PASSWORD travel together — "+
+				"one without the other is half a credential, and the delivery hook is "+
+				"either listening or it is not"))
+	}
+
+	/* A SHORT PASSWORD IS WORSE THAN NONE, because none mounts nothing and a
+	   short one mounts an endpoint while looking protected. It is not typed by
+	   anybody — it comes out of `openssl rand` — and the floor is here to catch
+	   a placeholder somebody meant to replace.
 
 	   The message does NOT quote the value back, for the reason it is a secret. */
-	if n := len(cfg.MailHookSecret); n > 0 && n < 32 {
+	if n := len(cfg.MailHookPassword); n > 0 && n < 32 {
 		problems = append(problems, fmt.Errorf(
-			"SCHOOLING_MAIL_HOOK_SECRET is %d characters — it is the only thing standing "+
-				"between the delivery hook and anybody who finds the URL, so it wants at "+
-				"least 32. Generate one rather than choosing one", n))
+			"SCHOOLING_MAIL_HOOK_PASSWORD is %d characters — it is the only thing "+
+				"standing between the delivery hook and anybody who finds it, so it wants "+
+				"at least 32. Generate one rather than choosing one", n))
 	}
 
 	switch cfg.Environment {

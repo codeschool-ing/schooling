@@ -159,13 +159,17 @@ A SOFT BOUNCE DOES NOT REACH THIS FAR, AND IF IT DID IT WOULD BE REFUSED.
 	door, because the cost of it being wrong is the whole platform suppressing an
 	entire provider on the afternoon that provider has an outage — which is not a
 	hypothetical, it is 27 August 2026.
+
+	THE CHECK CONSTRAINT IS A THIRD, and it is the one that does not depend on
+	anybody remembering: `0038` widened it by name to admit `invalid`, so a fifth
+	value is refused by the database until somebody writes the argument down.
 */
 func TestOnlyAPermanentReasonBars(t *testing.T) {
 	list := notify.NewSuppressions(testPool(t))
 	ctx := context.Background()
 	who := address(t)
 
-	for _, why := range []notify.Reason{"soft_bounce", "unsubscribed", "opened", ""} {
+	for _, why := range []notify.Reason{"soft_bounce", "unsubscribed", "opened", "deferred", ""} {
 		if _, err := list.Bar(ctx, who, why); !errors.Is(err, notify.ErrNotPermanent) {
 			t.Errorf("barring for %q answered %v, want ErrNotPermanent", why, err)
 		}
@@ -240,5 +244,69 @@ func TestTheTableHoldsNoAddress(t *testing.T) {
 	}
 	if err := rows.Err(); err != nil {
 		t.Fatalf("reading the schema: %v", err)
+	}
+}
+
+/*
+`invalid` REACHES THE DATABASE, WHICH IS NOT THE SAME AS THE GO ACCEPTING IT.
+
+	The reason is checked twice — once by a `switch` in `Bar` and once by a CHECK
+	constraint that lists the values by name — and those two can disagree. They
+	did, for as long as it took to write `0038`: a build that knew about
+	`invalid` and a schema that did not would compile, pass every test with a
+	fake, and fail on the first real one.
+*/
+func TestAnInvalidAddressIsBarredAndTheSchemaAgrees(t *testing.T) {
+	pool := testPool(t)
+	list := notify.NewSuppressions(pool)
+	ctx := context.Background()
+	who := address(t)
+
+	if _, err := list.Bar(ctx, who, notify.Invalid); err != nil {
+		t.Fatalf("barring an invalid address: %v", err)
+	}
+
+	var reason string
+	sum := sha256.Sum256([]byte(who))
+	if err := pool.QueryRow(ctx,
+		`SELECT reason FROM mail_suppressions WHERE address_hash = $1`,
+		sum[:]).Scan(&reason); err != nil {
+		t.Fatalf("reading the row: %v", err)
+	}
+	if reason != string(notify.Invalid) {
+		t.Errorf("the row says %q, want %q", reason, notify.Invalid)
+	}
+
+	barred, err := list.Barred(ctx, who)
+	if err != nil {
+		t.Fatalf("asking: %v", err)
+	}
+	if !barred {
+		t.Error("an address the provider called invalid is not barred")
+	}
+}
+
+/*
+AND A FIFTH VALUE IS REFUSED BY THE DATABASE AND NOT ONLY BY THE GO.
+
+	`Bar` would never send one — its `switch` is closed — so this goes around it
+	deliberately. What is being held is the property that made `0038` a migration
+	rather than a constant: a reason nobody decided about cannot be written by a
+	deployment that merely believes in it.
+*/
+func TestTheSchemaRefusesAReasonNobodyDecidedAbout(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+
+	sum := sha256.Sum256([]byte(address(t)))
+	_, err := pool.Exec(ctx,
+		`INSERT INTO mail_suppressions (address_hash, reason) VALUES ($1, $2)`,
+		sum[:], "soft_bounce")
+	if err == nil {
+		t.Fatal("the database accepted a reason that is not permanent")
+	}
+	if !strings.Contains(err.Error(), "mail_suppressions_reason_check") {
+		t.Errorf("it was refused by %v, want the reason CHECK — if the constraint "+
+			"was renamed, rename it here too", err)
 	}
 }

@@ -397,21 +397,30 @@ resource "google_cloud_run_v2_service" "api" {
         }
       }
 
-      /* AND WHAT THE PROVIDER HAS TO KNOW TO BE HEARD.
+      /* AND WHAT THE PROVIDER HAS TO PRESENT TO BE HEARD.
 
-         The delivery hook's secret, subject to the same two-pass rule as the
-         key above: a versionless secret named at `latest` stops the revision
-         starting, so the value is written before this is applied.
+         The two halves of an HTTP Basic credential. The NAME is a variable and
+         the PASSWORD is a secret, which is the whole reason they are two
+         things: a `tfvars` file is a file on somebody's laptop and in a plan's
+         output, and a name belongs there.
+
+         The password is subject to the same two-pass rule as the key above: a
+         versionless secret named at `latest` stops the revision starting, so
+         the value is written before this is applied.
 
          Empty mounts no endpoint. That is deliberate rather than tolerated —
          an open one is a way for anybody to stop this platform writing to an
          address of their choosing, so the failure of forgetting the value is
          "nothing is listening" rather than "everything is". */
       env {
-        name = "SCHOOLING_MAIL_HOOK_SECRET"
+        name  = "SCHOOLING_MAIL_HOOK_USER"
+        value = var.mail_hook_user
+      }
+      env {
+        name = "SCHOOLING_MAIL_HOOK_PASSWORD"
         value_source {
           secret_key_ref {
-            secret  = google_secret_manager_secret.mail_hook_secret.secret_id
+            secret  = google_secret_manager_secret.mail_hook_password.secret_id
             version = "latest"
           }
         }

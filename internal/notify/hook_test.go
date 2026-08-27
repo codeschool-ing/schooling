@@ -15,28 +15,49 @@ import (
 
 /* The endpoint the provider posts back to.
 
-   IT IS SERVED THROUGH A MUX AND NOT CALLED DIRECTLY, because the secret
-   arrives as a path parameter and `r.PathValue` is empty on a request nothing
-   routed. A test that called the handler by hand would find every secret equal
-   to every other and pass on a comparison it never made. */
+   IT IS SERVED OVER A REAL LISTENER rather than by calling the handler, because
+   what is being checked is what a REQUEST carries: a header that Go's client
+   builds, a status a client can read, and a challenge in a response. Calling the
+   function with a hand-made `*http.Request` would pass on a request nothing
+   ever sent. */
 
-const theSecret = "0123456789abcdef0123456789abcdef"
+const (
+	theUser     = "brevo"
+	thePassword = "0123456789abcdef0123456789abcdef"
+)
 
 func hooked(t *testing.T, list *notify.Suppressions) *httptest.Server {
 	t.Helper()
 	mux := http.NewServeMux()
-	mux.Handle("POST "+web.Hooks+"mail/{secret}",
-		notify.Hook(theSecret, list, slog.New(slog.DiscardHandler)))
+	mux.Handle("POST "+web.Hooks+"mail",
+		notify.Hook(theUser, thePassword, list, slog.New(slog.DiscardHandler)))
 
 	srv := httptest.NewServer(mux)
 	t.Cleanup(srv.Close)
 	return srv
 }
 
-func post(t *testing.T, srv *httptest.Server, secret, body string) int {
+// post sends one delivery event with the right credential.
+func post(t *testing.T, srv *httptest.Server, body string) int {
 	t.Helper()
-	res, err := srv.Client().Post(
-		srv.URL+web.Hooks+"mail/"+secret, "application/json", strings.NewReader(body))
+	return postAs(t, srv, theUser, thePassword, body)
+}
+
+// postAs is the same with a credential of the caller's choosing, which is how
+// the refusals below are checked.
+func postAs(t *testing.T, srv *httptest.Server, user, password, body string) int {
+	t.Helper()
+	req, err := http.NewRequest(http.MethodPost, srv.URL+web.Hooks+"mail",
+		strings.NewReader(body))
+	if err != nil {
+		t.Fatalf("building the request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if user != "" || password != "" {
+		req.SetBasicAuth(user, password)
+	}
+
+	res, err := srv.Client().Do(req)
 	if err != nil {
 		t.Fatalf("posting: %v", err)
 	}
@@ -56,7 +77,7 @@ func TestAHardBounceStopsTheNextMessage(t *testing.T) {
 	srv := hooked(t, list)
 	who := address(t)
 
-	if got := post(t, srv, theSecret,
+	if got := post(t, srv,
 		`{"event":"hard_bounce","email":"`+who+`"}`); got != http.StatusOK {
 		t.Fatalf("the hook answered %d, want 200", got)
 	}
@@ -82,9 +103,9 @@ func TestASoftBounceSuppressesNothing(t *testing.T) {
 	list := notify.NewSuppressions(testPool(t))
 	srv := hooked(t, list)
 
-	for _, event := range []string{"soft_bounce", "delivered", "opened", "unsubscribed", "click"} {
+	for _, event := range []string{"soft_bounce", "delivered", "opened", "unsubscribed", "click", "deferred"} {
 		who := address(t)
-		if got := post(t, srv, theSecret,
+		if got := post(t, srv,
 			`{"event":"`+event+`","email":"`+who+`"}`); got != http.StatusOK {
 			t.Errorf("%q answered %d, want 200 — an event we ignore is not a failure "+
 				"and answering otherwise buys a retry loop", event, got)
@@ -100,17 +121,18 @@ func TestASoftBounceSuppressesNothing(t *testing.T) {
 	}
 }
 
-// EVERY PERMANENT REASON THE PROVIDER HAS A WORD FOR. Three of ours, five of
+// EVERY PERMANENT REASON THE PROVIDER HAS A WORD FOR. Four of ours, seven of
 // theirs, and the mapping is the part that silently stops working when a
 // provider renames one.
 func TestThePermanentReasonsAllBar(t *testing.T) {
 	list := notify.NewSuppressions(testPool(t))
 	srv := hooked(t, list)
 
-	for _, event := range []string{"hard_bounce", "hardBounce", "blocked", "spam", "complaint"} {
+	for _, event := range []string{
+		"hard_bounce", "hardBounce", "blocked", "spam", "complaint", "invalid", "invalid_email",
+	} {
 		who := address(t)
-		if got := post(t, srv, theSecret,
-			`{"event":"`+event+`","email":"`+who+`"}`); got != http.StatusOK {
+		if got := post(t, srv, `{"event":"`+event+`","email":"`+who+`"}`); got != http.StatusOK {
 			t.Fatalf("%q answered %d, want 200", event, got)
 		}
 
@@ -125,26 +147,37 @@ func TestThePermanentReasonsAllBar(t *testing.T) {
 }
 
 /*
-THE WRONG SECRET IS A 404 AND NOT A 403.
+THE WRONG CREDENTIAL IS A 401 WITH A CHALLENGE, WHICH IS THE OPPOSITE OF WHAT
+THE PATH VERSION ANSWERED.
 
-	A 403 says "there is something here and you may not have it", which tells
-	somebody scanning that they have found the endpoint and only need the
-	secret. A 404 says nothing at all, which is what this address is worth.
+	A path carrying a secret had to answer 404, because "this is here and you may
+	not have it" tells a scanner they have found the endpoint. The address is
+	public now — it is in this repository — so hiding it buys nothing, and 401
+	tells the provider its CREDENTIAL is wrong rather than its URL.
+
+	EVERY HALF-WRONG SHAPE IS HERE, including the empty one: a request with no
+	Authorization header at all must not be the one that gets through.
 */
-func TestAWrongSecretIsRefused(t *testing.T) {
+func TestAWrongCredentialIsRefused(t *testing.T) {
 	list := notify.NewSuppressions(testPool(t))
 	srv := hooked(t, list)
 	who := address(t)
 	body := `{"event":"hard_bounce","email":"` + who + `"}`
 
-	for _, secret := range []string{
-		"wrong",
-		theSecret + "x",
-		strings.ToUpper(theSecret),
-		theSecret[:len(theSecret)-1],
+	for _, credential := range []struct{ user, password string }{
+		{"", ""},
+		{theUser, ""},
+		{"", thePassword},
+		{theUser, thePassword + "x"},
+		{theUser, thePassword[:len(thePassword)-1]},
+		{theUser, strings.ToUpper(thePassword)},
+		{"nobody", thePassword},
+		{thePassword, theUser},
 	} {
-		if got := post(t, srv, secret, body); got != http.StatusNotFound {
-			t.Errorf("the secret %q answered %d, want 404", secret, got)
+		got := postAs(t, srv, credential.user, credential.password, body)
+		if got != http.StatusUnauthorized {
+			t.Errorf("the credential %q/%q answered %d, want 401",
+				credential.user, redact(credential.password), got)
 		}
 	}
 
@@ -153,7 +186,62 @@ func TestAWrongSecretIsRefused(t *testing.T) {
 		t.Fatalf("asking: %v", err)
 	}
 	if barred {
-		t.Error("a request with the wrong secret barred an address anyway")
+		t.Error("a request with the wrong credential barred an address anyway")
+	}
+}
+
+// AND THE REFUSAL CARRIES A CHALLENGE, because a 401 without one is a status
+// code that says "authenticate" and does not say how.
+func TestTheRefusalSaysHowToAuthenticate(t *testing.T) {
+	srv := hooked(t, notify.NewSuppressions(testPool(t)))
+
+	req, err := http.NewRequest(http.MethodPost, srv.URL+web.Hooks+"mail", strings.NewReader("{}"))
+	if err != nil {
+		t.Fatalf("building the request: %v", err)
+	}
+	res, err := srv.Client().Do(req)
+	if err != nil {
+		t.Fatalf("posting: %v", err)
+	}
+	defer func() { _ = res.Body.Close() }()
+	_, _ = io.Copy(io.Discard, res.Body)
+
+	if got := res.Header.Get("WWW-Authenticate"); !strings.HasPrefix(got, "Basic") {
+		t.Errorf("the challenge is %q, want one that names Basic", got)
+	}
+}
+
+/*
+THE CREDENTIAL IS NOT IN THE ADDRESS, WHICH IS THE WHOLE POINT OF THE MOVE.
+
+	Held here rather than left to the reader of `cmd/api`, because the failure it
+	prevents is silent: a path parameter added back for any reason would put a
+	secret into the request log, the address bar and every screenshot of the
+	provider's form — which is exactly what happened the first time.
+*/
+func TestTheAddressCarriesNothingSecret(t *testing.T) {
+	srv := hooked(t, notify.NewSuppressions(testPool(t)))
+	path := web.Hooks + "mail"
+
+	if strings.Contains(path, thePassword) || strings.Contains(path, theUser) {
+		t.Fatalf("the hook's path is %q and carries the credential", path)
+	}
+
+	// AND THE OLD SHAPE IS GONE. A route left mounted under `/hooks/mail/…`
+	// would be the path version still answering beside the header one.
+	if got := postAs(t, srv, theUser, thePassword, "{}"); got == http.StatusNotFound {
+		t.Fatal("the hook is not at /hooks/mail")
+	}
+	res, err := srv.Client().Post(
+		srv.URL+web.Hooks+"mail/"+thePassword, "application/json", strings.NewReader("{}"))
+	if err != nil {
+		t.Fatalf("posting: %v", err)
+	}
+	defer func() { _ = res.Body.Close() }()
+	_, _ = io.Copy(io.Discard, res.Body)
+	if res.StatusCode != http.StatusNotFound {
+		t.Errorf("a secret in the path answered %d, want 404 — that route is gone",
+			res.StatusCode)
 	}
 }
 
@@ -168,7 +256,7 @@ func TestABatchIsReadWhole(t *testing.T) {
 	body := `[{"event":"hard_bounce","email":"` + one + `"},` +
 		`{"event":"delivered","email":"` + two + `"},` +
 		`{"event":"spam","email":"` + three + `"}]`
-	if got := post(t, srv, theSecret, body); got != http.StatusOK {
+	if got := post(t, srv, body); got != http.StatusOK {
 		t.Fatalf("a batch answered %d, want 200", got)
 	}
 
@@ -190,7 +278,7 @@ func TestABodyThatIsNotJSONIsRefused(t *testing.T) {
 	srv := hooked(t, notify.NewSuppressions(testPool(t)))
 
 	for _, body := range []string{"", "not json", "{", `{"event":`} {
-		if got := post(t, srv, theSecret, body); got != http.StatusBadRequest {
+		if got := post(t, srv, body); got != http.StatusBadRequest {
 			t.Errorf("the body %q answered %d, want 400", body, got)
 		}
 	}
@@ -202,36 +290,38 @@ func TestABodyThatIsNotJSONIsRefused(t *testing.T) {
 func TestAnEventAboutNobodyIsAccepted(t *testing.T) {
 	srv := hooked(t, notify.NewSuppressions(testPool(t)))
 
-	if got := post(t, srv, theSecret, `{"event":"hard_bounce","email":""}`); got != http.StatusOK {
+	if got := post(t, srv, `{"event":"hard_bounce","email":""}`); got != http.StatusOK {
 		t.Errorf("an event with no address answered %d, want 200", got)
 	}
 }
 
 /*
-THE SECRET DOES NOT REACH THE LOG.
+THE HOOK'S PATH IS STILL REDACTED IN THE LOG, THOUGH NOTHING IN IT IS SECRET.
 
-	This is the test the whole arrangement turns on. The secret is in the path
-	because the provider does not sign anything, and `web.Logger` writes the path
-	of every request — so without this redaction the one measure protecting the
-	endpoint would be written to Cloud Logging on the first delivery, in plain
-	text, and kept there.
+	Kept deliberately: the payment gateway's webhooks arrive under this prefix
+	next, from a provider whose arrangements nobody has read yet, and this is
+	what stops a secret put back into a path from reaching Cloud Logging with
+	nothing catching it.
 */
-func TestTheSecretIsNotInTheLoggablePath(t *testing.T) {
-	path := web.Hooks + "mail/" + theSecret
-
-	got := web.Loggable(path)
-	if strings.Contains(got, theSecret) {
-		t.Errorf("the logged path is %q, which carries the secret", got)
-	}
-	if got != web.Hooks+"mail/..." {
+func TestAHookPathIsNotLoggedWhole(t *testing.T) {
+	if got := web.Loggable(web.Hooks + "mail/anything"); got != web.Hooks+"mail/..." {
 		t.Errorf("the logged path is %q, want the prefix and an ellipsis", got)
 	}
 
 	// AND EVERY OTHER PATH IS UNTOUCHED, because a log that redacted the rest
 	// would be a log nobody can use to find anything.
-	for _, plain := range []string{"/api/v1/me", "/confirm/abc123", "/", "/readyz"} {
+	for _, plain := range []string{"/api/v1/me", "/confirm/abc123", "/", "/readyz", "/hooks/mail"} {
 		if web.Loggable(plain) != plain {
-			t.Errorf("%q was redacted to %q and is not a hook", plain, web.Loggable(plain))
+			t.Errorf("%q was redacted to %q and has no tail to hide", plain, web.Loggable(plain))
 		}
 	}
+}
+
+// redact keeps a password out of a test's own failure message, which is written
+// to CI's log like any other line.
+func redact(password string) string {
+	if password == "" {
+		return ""
+	}
+	return "…"
 }
