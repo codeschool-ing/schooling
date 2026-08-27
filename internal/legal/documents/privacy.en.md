@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, checkout_intents, payment_customers, staff, audit_log
 ---
 
 This says what we hold about you, why, and what happens to it when you ask us to
@@ -134,6 +134,20 @@ is a reference to a transaction, an amount, and whether it succeeded.
 
 We hold what you are paying for, the state your subscription is in, the history
 of how it got there, and a record of every payment, refund and chargeback.
+
+We also hold **each purchase you started** — what you were buying, what we asked
+you to pay, how you chose to pay it, and how far it got. A purchase you began
+and abandoned is in there too, and it is kept for a plain reason: if you are
+ever charged for something you do not recognise, that record is how we can tell
+you what it was.
+
+**Paying in Brazil requires a CPF or CNPJ, and we do not keep yours.** The
+payment provider needs it to issue a charge at all, so we pass it to them and
+store nothing but the identifier they give back — a string that means something
+to them and nothing anywhere else. When you ask to be erased, that link is
+deleted, so nothing here connects you to them. What we cannot do is delete your
+record at the provider: they hold your tax number under their own obligations,
+and you would ask them directly.
 
 ## Counting
 
