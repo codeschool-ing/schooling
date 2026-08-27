@@ -173,6 +173,30 @@ export function drawFailure() {
    is the one somebody reaches by clicking a link in their mail — often on a
    phone with no session on it. A button that failed for half the people who saw
    it would be worse than a sentence telling them where the working one is. */
+/* AND WHAT THE CHANGE LINK LEFT BEHIND, in three answers rather than two.
+
+   `taken` is its own because a person can act on it and the other two are not
+   the same instruction: "that link is no good" sends somebody looking for a
+   broken link, when what they need is a different address. */
+export function drawChanged(outcome) {
+  if (outcome === 'yes') {
+    return '<section class="mine-note is-good" role="status">' +
+      '<p>' + esc(txt('That is your e-mail address now.')) + ' ' +
+        esc(txt('We told the old one, and we will not write to it again.')) + '</p>' +
+    '</section>';
+  }
+  if (outcome === 'taken') {
+    return '<section class="mine-note is-bad" role="status">' +
+      '<p>' + esc(txt('Somebody took that address while the link was in your inbox.')) + ' ' +
+        esc(txt('Sign in at your school and pick another one.')) + '</p>' +
+    '</section>';
+  }
+  return '<section class="mine-note is-bad" role="status">' +
+    '<p>' + esc(txt('That link is no longer good.')) + ' ' +
+      esc(txt('Sign in at your school and ask for another one.')) + '</p>' +
+  '</section>';
+}
+
 export function drawConfirmed(worked) {
   if (worked) {
     return '<section class="mine-note is-good" role="status">' +

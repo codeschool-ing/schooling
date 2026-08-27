@@ -539,7 +539,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		   list `notify` asks before every message. Two readers of one fact:
 		   one decides whether to write, the other decides what to say about
 		   having written. */
-		suppressions.Barred)
+		suppressions.Barred,
+
+		/* AND MOVING AN ACCOUNT TO A NEW ADDRESS PUTS A LINK IN THE POST, which
+		   is `notify`'s work and not `identity`'s. Same shape as `signedUp`:
+		   the store writes the row, the callback carries the message. */
+		changeRequested(notifier, log))
 	people.Routes(scoped)
 	people.SecondFactorRoutes(scoped)
 
@@ -1122,6 +1127,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   button in front of it would buy a distinction with no consequence, at the
 	   price of a click on the one screen where somebody is already done. */
 	mineMux.Handle("GET /confirm/{token}", confirmed(accounts, events, log))
+	mineMux.Handle("GET /change/{token}", changed(accounts, notifier, events, log))
 	mineMux.Handle("/", ui.Mine(interfaceVersion))
 
 	/* ---------- and the front door, at the bare domain ----------
@@ -1918,6 +1924,93 @@ func confirmed(accounts *identity.Store, events *event.Store, log *slog.Logger) 
 		}
 
 		http.Redirect(w, r, "/?confirmed=yes", http.StatusSeeOther)
+	}
+}
+
+/*
+changed is where the link in a change message lands.
+
+	IT IS ON `my.` BESIDE `confirmed`, because a change belongs to the account
+	rather than to any one school (N-01), and the link was built against the same
+	origin.
+
+	THE OLD ADDRESS IS TOLD HERE AND NOT IN THE STORE. The store's job ended when
+	the row moved; who gets written to afterwards is a decision about messages,
+	and this is where the two meet.
+*/
+func changed(accounts *identity.Store, notifier *notify.Notifier,
+	events *event.Store, log *slog.Logger) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		account, previous, err := accounts.ConfirmEmailChange(r.Context(), r.PathValue("token"))
+		switch {
+		case errors.Is(err, identity.ErrTaken):
+			/* SOMEBODY TOOK THE ADDRESS BETWEEN THE ASKING AND THE CLICKING.
+			   Its own answer, because "that link is no good" would send
+			   somebody looking for a broken link when what they need is a
+			   different address. */
+			http.Redirect(w, r, "/?changed=taken", http.StatusSeeOther)
+			return
+		case err != nil:
+			if !errors.Is(err, identity.ErrNoChange) {
+				log.Error("changing an address", "error", err)
+			}
+			http.Redirect(w, r, "/?changed=no", http.StatusSeeOther)
+			return
+		}
+
+		/* THE OLD ADDRESS IS TOLD, AND A REFUSAL THERE IS NOT A FAILURE. The
+		   commonest reason to be here at all is that the old address bounced —
+		   so `notify` refusing to write to it is this feature working, not
+		   breaking, and the change has already happened either way. */
+		if err := notifier.AddressChanged(r.Context(), notify.Person{
+			Name: account.Name, Email: previous, Locale: account.Locale,
+		}, account.Email); err != nil {
+			if errors.Is(err, notify.ErrRefused) {
+				log.Info("not telling an old address that it was replaced, because it refused our mail",
+					"account", account.ID)
+			} else {
+				log.Error("telling an old address that it was replaced", "error", err,
+					"account", account.ID)
+			}
+		}
+
+		e := event.Event{
+			Name: "account.address_changed",
+			Dimensions: event.ForPlatform(event.PlanNone,
+				geo.FromContext(r.Context()), account.Locale, who(account)),
+			AccountID: &account.ID,
+			RequestID: web.RequestIDFrom(r.Context()),
+		}
+		if id, ok := visitor.FromContext(r.Context()); ok {
+			e.VisitorID = &id
+		}
+		if err := events.Emit(r.Context(), e); err != nil {
+			log.Error("counting an address change", "error", err, "account", account.ID)
+		}
+
+		http.Redirect(w, r, "/?changed=yes", http.StatusSeeOther)
+	}
+}
+
+/*
+changeRequested puts the link for a new address in the post.
+
+	IT LOGS AND RETURNS NOTHING, like `signedUp`. A message that could not be
+	composed must not be able to fail the request that asked for it — the row is
+	written, the link is live, and what is lost is one delivery that the person
+	can ask for again.
+*/
+func changeRequested(notifier *notify.Notifier, log *slog.Logger) identity.ChangeRequested {
+	return func(ctx context.Context, account identity.Account, change identity.Change) {
+		/* THE TOKEN IS NOT IN ANY LOG LINE HERE. Anybody holding it can move
+		   this account onto an address of their choosing without reading the
+		   mail, which is the one thing the link exists to prove. */
+		if err := notifier.ChangeAddress(ctx, notify.Person{
+			Name: account.Name, Email: change.Email, Locale: account.Locale,
+		}, change.Token); err != nil {
+			log.Error("sending a link to a new address", "error", err, "account", account.ID)
+		}
 	}
 }
 

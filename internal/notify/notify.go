@@ -85,7 +85,7 @@ func (n *Notifier) ConfirmAddress(ctx context.Context, to Person, token string) 
 	if err := n.mayWrite(ctx, to.Email); err != nil {
 		return err
 	}
-	words := speak(to.Locale)
+	words := speak(to.Locale).confirm
 	link := n.at + "/confirm/" + url.PathEscape(token)
 
 	return n.sender.Send(ctx, mail.Message{
@@ -93,6 +93,85 @@ func (n *Notifier) ConfirmAddress(ctx context.Context, to Person, token string) 
 		Subject: words.subject,
 		Text:    plain(words, to.Name, link),
 		HTML:    marked(words, to.Name, link),
+	})
+}
+
+/*
+ChangeAddress sends the link that moves an account onto a new address.
+
+	IT GOES TO THE NEW ADDRESS AND NOWHERE ELSE. What the link proves is that
+	somebody can read the mailbox they are asking to move to, so sending it
+	anywhere else would prove nothing — and sending a copy to the old one would
+	be announcing a change that has not happened yet, which is how an authorised
+	person is frightened by their own request.
+*/
+func (n *Notifier) ChangeAddress(ctx context.Context, to Person, token string) error {
+	if n == nil || n.sender == nil {
+		return nil
+	}
+	if err := n.mayWrite(ctx, to.Email); err != nil {
+		return err
+	}
+	words := speak(to.Locale).change
+	link := n.at + "/change/" + url.PathEscape(token)
+
+	return n.sender.Send(ctx, mail.Message{
+		To:      mail.Address{Name: to.Name, Email: to.Email},
+		Subject: words.subject,
+		Text:    plain(words, to.Name, link),
+		HTML:    marked(words, to.Name, link),
+	})
+}
+
+/*
+AddressChanged tells the OLD address that it is no longer the account's.
+
+	IT IS THE ONLY CHANNEL THAT REACHES THE REAL OWNER if the person who asked
+	was not them, which is the whole reason it exists. Everything else about a
+	hostile change happens inside a session the attacker controls.
+
+	IT IS SENT AFTER THE CHANGE AND NOT WHEN IT IS ASKED FOR. On the request it
+	would be a way to post a message to any address, repeatedly, by asking to
+	move there and never clicking — which is the abuse `changeCap` bounds on the
+	other side and this would walk straight around.
+
+	A SUPPRESSED OLD ADDRESS IS NOT AN ERROR THE CALLER SHOULD ACT ON. It is the
+	commonest reason this feature is used at all: the address refused our mail,
+	so the person moved. `mayWrite` answers `ErrRefused`, the change has already
+	happened, and the caller logs it and carries on.
+
+	IT CARRIES NO LINK AND NOTHING TO CLICK. A message saying "if this was not
+	you, press here" is the shape of every phishing mail anybody has ever
+	received, and this one goes to somebody who may have just lost an account.
+	What it says instead is what to do: sign in and change it back, and change
+	the password.
+*/
+func (n *Notifier) AddressChanged(ctx context.Context, to Person, now string) error {
+	if n == nil || n.sender == nil {
+		return nil
+	}
+	if err := n.mayWrite(ctx, to.Email); err != nil {
+		return err
+	}
+	w := speak(to.Locale).moved
+
+	body := []string{
+		greeting(w, to.Name),
+		"",
+		w.lead,
+		"",
+		now,
+		"",
+		w.ignore,
+	}
+	return n.sender.Send(ctx, mail.Message{
+		To:      mail.Address{Name: to.Name, Email: to.Email},
+		Subject: w.subject,
+		Text:    strings.Join(body, "\n"),
+		HTML: "<p>" + html.EscapeString(greeting(w, to.Name)) + "</p>" +
+			"<p>" + html.EscapeString(w.lead) + "</p>" +
+			"<p><strong>" + html.EscapeString(now) + "</strong></p>" +
+			"<p>" + html.EscapeString(w.ignore) + "</p>",
 	})
 }
 
@@ -149,33 +228,99 @@ type words struct {
 	ignore  string
 }
 
+/*
+messages is every message this platform sends, in one language.
+
+	A STRUCT OF STRUCTS AND NOT THREE PACKAGE VARIABLES PER LANGUAGE, for the
+	reason `words` is a struct: adding a message fails to compile in every
+	language that does not have it yet, in the file rather than inside an
+	envelope that has already left.
+*/
+type messages struct {
+	confirm words
+	change  words
+	moved   words
+}
+
 var (
-	english = words{
-		subject: "Confirm your e-mail address",
-		greet:   "Hi %s,",
-		lead:    "Follow this link to confirm that this address reaches you.",
-		button:  "Confirm my address",
-		fallb:   "If the button does not work, paste this into your browser:",
-		expires: "The link works for one day.",
-		ignore: "If you did not create an account, nothing happens — you can ignore " +
-			"this message and the link will expire on its own.",
+	english = messages{
+		confirm: words{
+			subject: "Confirm your e-mail address",
+			greet:   "Hi %s,",
+			lead:    "Follow this link to confirm that this address reaches you.",
+			button:  "Confirm my address",
+			fallb:   "If the button does not work, paste this into your browser:",
+			expires: "The link works for one day.",
+			ignore: "If you did not create an account, nothing happens — you can ignore " +
+				"this message and the link will expire on its own.",
+		},
+
+		change: words{
+			subject: "Confirm your new e-mail address",
+			greet:   "Hi %s,",
+			lead: "Somebody asked to move an account to this address. Follow this link " +
+				"to confirm that it reaches you, and it becomes the address we write to.",
+			button:  "Use this address",
+			fallb:   "If the button does not work, paste this into your browser:",
+			expires: "The link works for one day, and nothing changes until you follow it.",
+			ignore: "If you did not ask for this, nothing happens — you can ignore this " +
+				"message and the link will expire on its own.",
+		},
+
+		/* THE ONE WITH NO LINK IN IT. `button`, `fallb` and `expires` are unused
+		   here and are left empty rather than filled with something plausible:
+		   a message that tells somebody they may have lost their account is the
+		   last place to put a button, because that is the shape of every
+		   phishing mail they have ever received. */
+		moved: words{
+			subject: "The e-mail address on your account changed",
+			greet:   "Hi %s,",
+			lead: "This account no longer uses this address. From now on we write to " +
+				"the one below, and this message is the last one you will get here.",
+			ignore: "If you did not do this, sign in and change it back — and change " +
+				"your password, because whoever did had it.",
+		},
 	}
 
-	portuguese = words{
-		subject: "Confirme seu endereço de e-mail",
-		greet:   "Olá, %s,",
-		lead:    "Siga este link para confirmar que este endereço chega até você.",
-		button:  "Confirmar meu endereço",
-		fallb:   "Se o botão não funcionar, cole isto no seu navegador:",
-		expires: "O link vale por um dia.",
-		ignore: "Se você não criou uma conta, nada acontece — pode ignorar esta " +
-			"mensagem, e o link expira sozinho.",
+	portuguese = messages{
+		confirm: words{
+			subject: "Confirme seu endereço de e-mail",
+			greet:   "Olá, %s,",
+			lead:    "Siga este link para confirmar que este endereço chega até você.",
+			button:  "Confirmar meu endereço",
+			fallb:   "Se o botão não funcionar, cole isto no seu navegador:",
+			expires: "O link vale por um dia.",
+			ignore: "Se você não criou uma conta, nada acontece — pode ignorar esta " +
+				"mensagem, e o link expira sozinho.",
+		},
+
+		change: words{
+			subject: "Confirme seu novo endereço de e-mail",
+			greet:   "Olá, %s,",
+			lead: "Alguém pediu para mudar uma conta para este endereço. Siga este link " +
+				"para confirmar que ele chega até você, e ele passa a ser o endereço " +
+				"para onde escrevemos.",
+			button:  "Usar este endereço",
+			fallb:   "Se o botão não funcionar, cole isto no seu navegador:",
+			expires: "O link vale por um dia, e nada muda até você segui-lo.",
+			ignore: "Se você não pediu isso, nada acontece — pode ignorar esta mensagem, " +
+				"e o link expira sozinho.",
+		},
+
+		moved: words{
+			subject: "O endereço de e-mail da sua conta mudou",
+			greet:   "Olá, %s,",
+			lead: "Esta conta não usa mais este endereço. De agora em diante escrevemos " +
+				"para o que está abaixo, e esta é a última mensagem que você recebe aqui.",
+			ignore: "Se não foi você, entre e troque de volta — e troque sua senha, " +
+				"porque quem fez isso a tinha.",
+		},
 	}
 )
 
 // speak picks the language for a locale, matching on the language subtag so that
 // `pt-BR` and `pt-PT` are both Portuguese. Anything else is English.
-func speak(locale string) words {
+func speak(locale string) messages {
 	lang, _, _ := strings.Cut(strings.ToLower(strings.TrimSpace(locale)), "-")
 	if lang == "pt" {
 		return portuguese

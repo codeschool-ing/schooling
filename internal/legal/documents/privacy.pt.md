@@ -1,7 +1,7 @@
 ---
 title: Política de privacidade
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 Isto diz o que guardamos sobre você, por quê, e o que acontece quando você pede
@@ -76,6 +76,12 @@ Guardamos:
   reenviar um antigo — só criar um novo. Guardamos o endereço para onde o link
   foi enviado justamente para que um link não possa confirmar um endereço ao
   qual nunca foi enviado.
+- **Os endereços para os quais você pediu para mudar**, uma linha cada: o
+  endereço, quando você pediu, quando o link deixa de valer e se você o seguiu.
+  Sua conta mantém o endereço atual até você seguir esse link — então um
+  endereço digitado errado é uma mensagem que ninguém lê, e não uma conta que
+  não conseguimos mais alcançar. Se você nunca seguir o link, a linha é tudo o
+  que acontece.
 - **Suas sessões** — uma linha por navegador em que você está conectado, com um
   hash do token da sessão e a descrição que o navegador dá de si mesmo. Trocar a
   senha encerra todas as outras sessões.

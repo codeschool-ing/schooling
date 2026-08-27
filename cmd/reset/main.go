@@ -164,6 +164,11 @@ var wiped = map[string]string{
 	// nothing on record saying so, and any link still in their inbox dead.
 	"account_email_confirmations": "the links sent to prove an address; cascades from accounts",
 
+	// Kept out of the truncate for the same reason as the line above: a spared
+	// operator with a change in flight would otherwise have the row emptied
+	// while their account stood, and the link in their inbox would move nothing.
+	"account_email_changes": "the links sent to move an address; cascades from accounts",
+
 	"staff":               "who operates the platform; cascades from accounts",
 	"sessions":            "who was signed in",
 	"visitors":            "the browsers that arrived",
@@ -573,6 +578,7 @@ var viaAccounts = map[string]string{
 	"account_credentials":         "account_id",
 	"account_recovery_codes":      "account_id",
 	"account_email_confirmations": "account_id",
+	"account_email_changes":       "account_id",
 	"staff":                       "account_id",
 }
 

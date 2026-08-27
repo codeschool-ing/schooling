@@ -26,7 +26,7 @@
    somebody at this address is missing is a session, not a menu.
    ========================================================================== */
 
-import { drawQueue, drawNothing, drawSignedOut, drawFailure, drawConfirmed } from './queue.js';
+import { drawQueue, drawNothing, drawSignedOut, drawFailure, drawConfirmed, drawChanged } from './queue.js';
 
 const here = document.getElementById('here');
 
@@ -83,6 +83,29 @@ function saySoIfALinkWasFollowed() {
 }
 
 saySoIfALinkWasFollowed();
+
+/* AND THE SAME FOR A CHANGE LINK, which lands on this host for the same reason
+   and is a different question: `confirmed` says an address was proved, `changed`
+   says the account moved onto one. Two parameters and not one word with four
+   values, because a stale bookmark carrying the wrong one would say something
+   false rather than nothing. */
+function saySoIfAnAddressChanged() {
+  let outcome = null;
+  try {
+    outcome = new URLSearchParams(location.search).get('changed');
+  } catch (e) { /* an address this browser will not parse says nothing */ }
+  if (outcome !== 'yes' && outcome !== 'no' && outcome !== 'taken') return;
+
+  const note = document.createElement('div');
+  note.innerHTML = drawChanged(outcome);
+  here.parentNode.insertBefore(note, here);
+
+  try {
+    history.replaceState(null, '', location.pathname);
+  } catch (e) { /* the note is drawn either way, which is the part that matters */ }
+}
+
+saySoIfAnAddressChanged();
 
 /* ---------- the one request ---------- */
 

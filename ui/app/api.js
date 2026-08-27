@@ -358,6 +358,18 @@ export async function register({ name, email, password }) {
    to whoever holds the session. */
 export const resendVerification = () => post('/api/v1/confirm/resend');
 
+/* Asking to move this account to a different address.
+
+   THE PASSWORD GOES WITH IT because the server requires one: a stolen cookie
+   lets somebody read, and moving where the recovery mail goes is the step that
+   turns it into a stolen account.
+
+   IT ANSWERS 202 AND NOT 200. Nothing has changed when this returns — a row was
+   written and a link was posted, and the account keeps its address until
+   somebody follows it. The screen's sentence says so. */
+export const changeEmail = (email, password) =>
+  post('/api/v1/account/email', { email, password });
+
 export const stopViewing = () => post('/viewing/stop');
 
 export async function signOut() {
