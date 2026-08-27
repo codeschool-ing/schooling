@@ -223,9 +223,32 @@ the phase-0 condition did — by being left visible until it was true rather tha
 *Done when: a student pays under both models, delinquency suspends on its own, and recovery
 restores access with progress intact.*
 
-- [ ] Brazil: annual and biennial in card instalments
-- [ ] Brazil: Pix in one payment, at a discount, on the annual plan
+- [ ] Brazil: annual and biennial, paid by Pix, card — with instalments — or debit
 - [ ] Elsewhere: monthly, annual and biennial, recurring
+- [ ] Pix Automático, deliberately after the first two
+
+  **THE SPLIT IS BY MECHANISM AND NOT BY COUNTRY, and getting that wrong was the first mistake made here.** "Annual and biennial, paid by Pix and instalments" was read as "Brazil has no recurrence", and it does not follow: a stored card that renews the subscription at the end of the term is recurrence, and a long term does not make the charge a one-off. Alura does exactly that. So:
+
+  - **Recurring** — a stored card, or Pix Automático. The subscription renews itself, and grace, retries and suspension apply. Brazil and elsewhere both.
+  - **One-off** — Pix in a single payment, debit, and the instalment authorisation. A term is bought; at its end, a new sale.
+
+  **AND PARCELAR IS ORTHOGONAL TO RENEWING.** Splitting one authorisation into twelve is how the issuer bills the buyer *inside* a term. Whether the subscription renews at the twelfth month is a separate decision and a separate authorisation. The machine below already accommodates it: renewal for that model is "a new sale on the same row", and the row does not care whether a person or a scheduler asked for it.
+
+  **RENEWAL IS AUTOMATIC BY DEFAULT, WITH THE NOTICE BEFORE EXPIRY** that is already built. It is better revenue and worse trust when it is not extremely clear, and Brazilian consumer law has views on how automatic renewal is disclosed — which makes the notice a requirement rather than a courtesy.
+
+  **PIX AUTOMÁTICO IS ITS OWN ITEM AND IT IS LAST ON PURPOSE.** The Banco Central's recurring-debit rail came into force in January 2026 (Resolução BC nº 422/2025) and every serious Brazilian gateway exposes it. It solves renewal for everybody unwilling to hand over a card, which in Brazil is a great many people — and it is the newest of the three mechanisms, with the most edges nobody has hit yet. Discovering them alongside this platform's FIRST payment integration is two unknowns at once.
+
+  **TWO PROVIDERS, AND THAT IS THE SHAPE OF THE PROBLEM RATHER THAN A FAILURE OF THE PLAN.** Nothing covers Pix and international recurring well; Stripe's Pix is invite-only for businesses based in Brazil, and the Brazilian gateways do not do the rest of the world. So one domestic and one international, and the ledger stays the single truth both write into.
+
+  **DO NOT BUILD THE ABSTRACTION FIRST.** The instinct is a `platform/payments` with an interface and two implementations, the way `platform/mail` was built — but that worked because a real provider's API was in hand when the interface was drawn. An interface imagined before any integration is wrong in exactly the places that matter: what is synchronous, what arrives by webhook, and what is idempotent under which key. Integrate one provider concretely, and let the second pay the cost of generalising with two real examples on the table instead of one and a guess.
+
+  **A DECISION THESE ITEMS INHERIT, recorded so it is not taken again from scratch: confirmation is required to START a payment, and never to finish one.** The check belongs in whatever creates a checkout session, before any money moves. It must NOT go in `billing.Begin`, which is called once a payment has already succeeded — a guard there refuses the subscription of somebody who has just been charged, and the honest response at that point is a refund rather than a refusal. That placement was proposed, approved, and caught while reading the code; it is written down because the wrong version is the intuitive one.
+
+  What confirmation does not gate: signing in, studying, the free first course of each track, the drill, the exams, the notes. The reason is one outage — 27 August 2026, when a provider held every message to its users for two hours. A platform whose front door depends on mail delivery is a platform a stranger's cooling failure can close.
+
+  **And the banner's sentence stops being true on the same day.** "You can carry on studying — nothing here depends on it" is exact today and becomes a lie the moment this ships, so it changes in the same commit rather than in a follow-up somebody remembers
+
+  **NONE OF IT NEEDS A COMPANY TO BUILD, AND ALL OF IT NEEDS ONE TO SHIP.** No gateway opens an account without a legal entity, and the policies still carry `{{company.name}}` for that reason. The whole integration is built against a sandbox, which asks for nothing — what an entity unlocks is the last key, not the work. Whether a MEI serves is a question for an accountant and not for this file; the one to ask first is not the revenue ceiling but whether that entity can receive recurring payment from abroad, which is the part these lists never mention
 
   **A DECISION THE THREE ITEMS ABOVE INHERIT, recorded here so it is not taken again from scratch: confirmation is required to START a payment, and never to finish one.** The check belongs in whatever creates a checkout session, before any money moves. It must NOT go in `billing.Begin`, which is called once a payment has already succeeded — a guard there refuses the subscription of somebody who has just been charged, and the honest response at that point is a refund rather than a refusal. That placement was proposed, approved, and caught while reading the code; it is written down because the wrong version is the intuitive one.
 
