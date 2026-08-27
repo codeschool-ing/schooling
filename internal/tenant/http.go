@@ -1,6 +1,7 @@
 package tenant
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -58,9 +59,30 @@ type Handler struct {
 	// own — two copies of one decision, where moving the constant marks the exam
 	// at the new number and describes it as the old one.
 	passMark int
+	offer    Offer
 }
 
-func NewHandler(passMark int) *Handler { return &Handler{passMark: passMark} }
+/*
+Offer is what can be bought, wired in by `cmd`.
+
+	IT IS A FUNCTION TYPE because `billing` owns the prices and this package may
+	not import it — the same seam every other pair of modules here uses. A nil
+	one is a deployment that sells nothing, which draws the invitation without a
+	figure rather than failing.
+*/
+type Offer func(ctx context.Context) ([]Plan, error)
+
+// Plan is one thing somebody can buy. It is `planBody`'s twin without the
+// tags, so that the wire format is this package's business and the seam is not.
+type Plan struct {
+	TermMonths int
+	Cents      int
+	Currency   string
+}
+
+func NewHandler(passMark int, offer Offer) *Handler {
+	return &Handler{passMark: passMark, offer: offer}
+}
 
 func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/school", h.school)
@@ -74,16 +96,34 @@ type schoolBody struct {
 	// is one, and `omitempty` is that rule said once instead of on both sides.
 	Site string `json:"site,omitempty"`
 
-	// What the subscription costs here. `omitempty` again, and for the same
-	// reason: a school with no price set says nothing about one rather than
-	// offering zero.
-	PlanPriceCents int    `json:"planPriceCents,omitempty"`
-	PlanCurrency   string `json:"planCurrency,omitempty"`
+	/* WHAT CAN BE BOUGHT, ONE ENTRY PER TERM.
+
+	   It was two fields and one number, which was the whole offer while the
+	   platform sold one thing. It is a LIST because it now sells up to three —
+	   a year, two years, and a month abroad — and a screen that has to show a
+	   choice cannot be given a single figure.
+
+	   `omitempty`, so nothing priced sends no key at all rather than an empty
+	   array: the interface draws the invitation without a figure, which is what
+	   it already did for a school with no price, and a made-up number is worse
+	   than no number.
+
+	   THE ORDER IS THE SERVER'S. Shortest term first, because that is how a
+	   list of options reads and because leaving it to five interfaces to sort
+	   is five chances to sort it differently. */
+	Plans []planBody `json:"plans,omitempty"`
 
 	// What an exam has to reach here, in whole percent. NOT `omitempty`: zero is
 	// not a pass mark anybody set, and a screen that read a missing field as
 	// "no minimum" would say an exam is passed by answering nothing.
 	PassMark int `json:"passMark"`
+}
+
+// planBody is one thing somebody can buy.
+type planBody struct {
+	TermMonths int    `json:"termMonths"`
+	Cents      int    `json:"cents"`
+	Currency   string `json:"currency"`
 }
 
 func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
@@ -97,10 +137,30 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cents, currency := school.Price()
+	/* THE OFFER IS ASKED FOR HERE AND NOWHERE ELSE, which is the point of it no
+	   longer being on the school. This route is one request per page load; the
+	   school itself is resolved on every request there is.
+
+	   AN OFFER THAT COULD NOT BE READ IS NOT A FAILED PAGE. The rest of this
+	   answer is what the interface needs to draw a school at all — its name, its
+	   colour, its pass mark — and refusing all of it because a price list was
+	   unavailable would take the platform down to protect a figure. It is logged
+	   and the invitation goes out without a number, which is exactly what it
+	   does for a platform that has priced nothing. */
+	var plans []planBody
+	if h.offer != nil {
+		found, err := h.offer(r.Context())
+		if err != nil {
+			web.LoggerFrom(r.Context()).Error("reading what can be bought", "error", err)
+		}
+		for _, one := range found {
+			plans = append(plans, planBody(one))
+		}
+	}
+
 	web.JSON(w, http.StatusOK, schoolBody{
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
-		PlanPriceCents: cents, PlanCurrency: currency,
+		Plans:    plans,
 		PassMark: h.passMark,
 	})
 }

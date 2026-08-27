@@ -139,6 +139,44 @@ func (p *Prices) ByID(ctx context.Context, id uuid.UUID) (Price, error) {
 	return one, nil
 }
 
+/*
+Offer is what can be bought right now: the price in force for each term.
+
+	ONE ROW PER TERM AND NOT THE WHOLE SERIES. `DISTINCT ON (term_months)` with
+	the newest effective date first is the same reach as `InForce`, done for
+	every product at once — which is what a screen showing a choice needs and
+	what asking `InForce` three times would be.
+
+	A TERM WITH NO PRICE IS SIMPLY ABSENT, which is how a platform selling only
+	a year says so: there is nothing here that lists what is not for sale.
+*/
+func (p *Prices) Offer(ctx context.Context, scope string) ([]Price, error) {
+	if scope == "" {
+		scope = ScopeEverything
+	}
+	rows, err := p.pool.Query(ctx, `
+		SELECT DISTINCT ON (term_months) id, term_months, cents, currency, effective_from
+		  FROM plan_prices
+		 WHERE scope = $1 AND effective_from <= now()
+		 ORDER BY term_months, effective_from DESC
+	`, scope)
+	if err != nil {
+		return nil, fmt.Errorf("billing: reading the offer: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Price
+	for rows.Next() {
+		one := Price{Scope: scope}
+		if err := rows.Scan(&one.ID, &one.TermMonths, &one.Cents,
+			&one.Currency, &one.From); err != nil {
+			return nil, fmt.Errorf("billing: reading the offer: %w", err)
+		}
+		out = append(out, one)
+	}
+	return out, rows.Err()
+}
+
 // Series is every price ever set for a scope, newest first, terms mixed.
 //
 // It is the console's, and it is the answer to "what was the offer in March" —

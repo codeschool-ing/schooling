@@ -150,24 +150,35 @@ export async function load(api) {
 
   school = about || null;
 
-  /* ---------- THE SCHOOL'S OWN PRICE ----------
+  /* ---------- WHAT THE PLATFORM SELLS ----------
 
      `plans.js` is the portal's file and it carries codeschool.ing's offer: one
      yearly subscription at 490, with `R$` written into the markup beside it.
      Every school was quoting that.
 
      THE SHAPE OF THE OFFER IS THE PLATFORM'S and stays in the file — the first
-     course of every track free, one yearly subscription for the rest, and a
-     list of feature KEYS the server authorises by. What is the school's is the
+     course of every track free, one subscription for the rest, and a list of
+     feature KEYS the server authorises by. What comes from the server is the
      NUMBER, so only the number is replaced, before `saveBase()` snapshots the
      plans for translation.
 
-     A school with no price set keeps none: `price` goes to zero and the screen
-     that would name it says what the subscription opens instead. */
+     IT USED TO BE ONE FIELD AND IS NOW A LIST, because the platform can sell a
+     year, two years and — abroad — a month. What the invitation draws is still
+     ONE figure: it is an invitation and not a price table, and the choice
+     belongs on the screen where somebody is choosing.
+
+     THE ONE IT DRAWS IS THE YEAR, and the fallback is the shortest term rather
+     than the first in the list — a platform that priced only the two years
+     should invite at the two years' price rather than at nothing.
+
+     Nothing priced keeps none: `price` goes to zero and the screen that would
+     name it says what the subscription opens instead. */
   const paid = (globalThis.PLANS || []).find((p) => p.id === 'student');
   if (paid && school) {
-    paid.price = (school.planPriceCents || 0) / 100;
-    paid.currency = school.planCurrency || '';
+    const offered = school.plans || [];
+    const shown = offered.find((p) => p.termMonths === 12) || offered[0];
+    paid.price = shown ? (shown.cents || 0) / 100 : 0;
+    paid.currency = shown ? shown.currency || '' : '';
   }
 
   return { courses: COURSES.length, tracks: TRACKS.length };

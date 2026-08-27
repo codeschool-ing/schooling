@@ -85,13 +85,49 @@ func seed(t *testing.T, pool *pgxpool.Pool) schools {
 	return schools{code: code + ".example.tld", math: math + ".example.tld"}
 }
 
+/*
+offering is the seam `cmd` fills with `billing`, filled here with a query of
+its own.
+
+	THE OFFER IS NOT THIS PACKAGE'S ANY MORE and that is the change `0041`
+	finished: a price hung off a school and was fetched by the middleware on
+	every request, with `term_months = 12` written into the join. It is asked
+	for by the one handler that draws it now, and this reads the same rows
+	without importing the package that owns them — which is what the seam is
+	for.
+*/
+func offering(pool *pgxpool.Pool) tenant.Offer {
+	return func(ctx context.Context) ([]tenant.Plan, error) {
+		rows, err := pool.Query(ctx, `
+			SELECT DISTINCT ON (term_months) term_months, cents, currency
+			  FROM plan_prices
+			 WHERE scope = 'all' AND effective_from <= now()
+			 ORDER BY term_months, effective_from DESC
+		`)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		var out []tenant.Plan
+		for rows.Next() {
+			var one tenant.Plan
+			if err := rows.Scan(&one.TermMonths, &one.Cents, &one.Currency); err != nil {
+				return nil, err
+			}
+			out = append(out, one)
+		}
+		return out, rows.Err()
+	}
+}
+
 // server mounts the one school-scoped route behind the middleware, exactly as
 // cmd/api does. Testing the handler without the middleware would prove nothing
 // about the thing that matters, which is the resolution.
 func server(t *testing.T, pool *pgxpool.Pool) *httptest.Server {
 	t.Helper()
 	scoped := http.NewServeMux()
-	tenant.NewHandler(70).Routes(scoped)
+	tenant.NewHandler(70, offering(pool)).Routes(scoped)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))
@@ -211,11 +247,13 @@ func TestASchoolCarriesItsOwnAddressAndThePlatformsPrice(t *testing.T) {
 	   every school (N-02), so the year has one price and every school quotes it —
 	   this used to price `code.` and leave `math.` unpriced, and the assertion
 	   below has been turned round with the table. */
+	// TWO TERMS, because the answer is a LIST now and a list of one proves
+	// nothing about ordering or about a second product reaching a screen.
 	if _, err := pool.Exec(context.Background(), `
 		INSERT INTO plan_prices (scope, term_months, cents, currency)
-		VALUES ('all', 12, $1, $2)
-	`, 49000, "BRL"); err != nil {
-		t.Fatalf("pricing the year: %v", err)
+		VALUES ('all', 12, 49000, 'BRL'), ('all', 24, 89000, 'BRL')
+	`); err != nil {
+		t.Fatalf("pricing the year and the two years: %v", err)
 	}
 
 	status, body := get(t, srv, at.code)
@@ -225,9 +263,7 @@ func TestASchoolCarriesItsOwnAddressAndThePlatformsPrice(t *testing.T) {
 	if body["site"] != "https://codeschool.ing" {
 		t.Errorf("the school's own address answered %v", body["site"])
 	}
-	if body["planPriceCents"] != float64(49000) || body["planCurrency"] != "BRL" {
-		t.Errorf("the price answered %v %v", body["planPriceCents"], body["planCurrency"])
-	}
+	quoted(t, body, "the school that has a site")
 
 	/* THE OTHER SCHOOL SET NO ADDRESS AND QUOTES THE SAME PRICE, which is the
 	   two halves of this test pulling apart. A site is a school's and is absent
@@ -242,9 +278,34 @@ func TestASchoolCarriesItsOwnAddressAndThePlatformsPrice(t *testing.T) {
 		t.Errorf("a school that set no site answered %v — the interface cannot tell "+
 			"\"none\" from \"zero\"", v)
 	}
-	if body["planPriceCents"] != float64(49000) || body["planCurrency"] != "BRL" {
-		t.Errorf("the second school quotes %v %v, and there is one subscription",
-			body["planPriceCents"], body["planCurrency"])
+	quoted(t, body, "the school that has none")
+}
+
+/*
+quoted is the offer as the interface receives it: shortest term first, every
+priced term present, and each one carrying its own number.
+
+	THE ORDER IS THE SERVER'S AND IS ASSERTED. Leaving it to five interfaces to
+	sort is five chances to sort it differently, and a list of products in a
+	different order on the Italian screen is the kind of thing nobody reports.
+*/
+func quoted(t *testing.T, body map[string]any, whose string) {
+	t.Helper()
+	plans, _ := body["plans"].([]any)
+	if len(plans) != 2 {
+		t.Fatalf("%s quotes %d plan(s), and two terms are priced", whose, len(plans))
+	}
+	for i, want := range []struct {
+		term, cents float64
+	}{{12, 49000}, {24, 89000}} {
+		one, _ := plans[i].(map[string]any)
+		if one["termMonths"] != want.term || one["cents"] != want.cents {
+			t.Errorf("%s quotes %v at position %d, want %v months at %v",
+				whose, one, i, want.term, want.cents)
+		}
+		if one["currency"] != "BRL" {
+			t.Errorf("%s quotes %v in %v", whose, one["termMonths"], one["currency"])
+		}
 	}
 }
 
@@ -262,7 +323,9 @@ AND WITH NOTHING PRICED, A SCHOOL NAMES NO NUMBER — absent rather than zero.
 */
 func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	mux := http.NewServeMux()
-	tenant.NewHandler(70).Routes(mux)
+	// NOTHING PRICED, said by the seam answering an empty list — which is also
+	// what a deployment with no `billing` wired in looks like.
+	tenant.NewHandler(70, nil).Routes(mux)
 
 	rec := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)
@@ -277,10 +340,8 @@ func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
 		t.Fatalf("the answer is not JSON: %v", err)
 	}
-	for _, absent := range []string{"planPriceCents", "planCurrency"} {
-		if v, present := body[absent]; present {
-			t.Errorf("a school with no price answered %s = %v", absent, v)
-		}
+	if v, present := body["plans"]; present {
+		t.Errorf("a platform with nothing priced answered plans = %v", v)
 	}
 }
 
