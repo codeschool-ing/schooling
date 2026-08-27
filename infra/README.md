@@ -242,18 +242,27 @@ address that refuses us permanently goes on being written to, and every attempt
 after the first is a mark against this domain with the providers who decide
 whether anybody else's mail arrives.
 
-The provider says so over a webhook, and **Brevo does not sign its webhooks** —
-no HMAC, no shared secret in a header, nothing to verify a body against. So the
-secret is a segment of the path, compared in constant time, and kept out of the
-request log by `web.Loggable`. An open endpoint here is a way for anybody to
-stop this platform writing to an address of their choosing.
+The provider says so over a webhook, and **nothing signs the body** — there is
+no HMAC over a delivery event, so a shared secret is all there is. An open
+endpoint here is a way for anybody to stop this platform writing to an address
+of their choosing: post somebody's address and they never get their link.
 
-Generate one rather than choosing one, and write it the way the key went in:
+Brevo's outbound webhook form offers **HTTP Basic**, which is where the
+credential goes. It travelled in the path first, because nobody had opened that
+form — a header appears in no request log, no address bar and no screenshot,
+and the path did in all three.
+
+The user is a name and lives in `terraform.tfvars`; the password is a secret
+and lives in the secret manager. Generate the password rather than choosing it:
 
 ```sh
 # Generate, copy, paste, Ctrl-D. Nothing echoes it back.
 openssl rand -hex 32
-gcloud secrets versions add schooling-mail-hook-secret --data-file=- --project=aleogr-schooling
+gcloud secrets versions add schooling-mail-hook-password --data-file=- --project=aleogr-schooling
+```
+
+```
+mail_hook_user = "brevo"
 ```
 
 ```sh
@@ -261,25 +270,36 @@ terraform -chdir=infra apply
 ```
 
 The revision that comes up says `{"message":"mail hook","mounted":true}`. An
-empty secret mounts no endpoint at all, which is the right failure: nothing
-there, rather than something anybody may post to.
+empty password mounts no endpoint at all, which is the right failure: nothing
+there, rather than something anybody may post to. A user without a password, or
+the other way round, refuses to start and says which half is missing.
 
-Then point the provider at it — in Brevo, *Transactional → Settings → Webhook*,
-one webhook for the whole account:
+Then point the provider at it. In Brevo, the gear at the top right → *Webhooks*
+→ **Webhook de saída** → *Adicionar webhook*, three steps:
 
-```
-https://<the service's own host>/hooks/mail/<the secret>
-```
+1. a name — `schooling-permanent-refusals`; the field takes letters, digits,
+   hyphens and underscores, and nothing else
+2. the address, with **Basic** as the authentication method and the two halves
+   of the credential:
 
-**Subscribe to the permanent events only**: hard bounce, blocked, and spam. A
-soft bounce must not be subscribed, and is refused if it arrives anyway — a
-full mailbox or a provider having an afternoon is not a refusal, and treating
-one as permanent would have suppressed every address at a whole provider during
-the outage of 27 August 2026.
+   ```
+   https://<the service's own host>/hooks/mail
+   ```
 
-Rotating the secret is a new version, an apply, and the same URL updated at the
-provider — in that order, since the old secret stops working the moment the new
-revision is up.
+3. category **Transactional email**, and the events
+
+**Subscribe to the permanent events only**: hard bounce, blocked, spam (the
+form calls it *Reclamação* in Portuguese) and invalid. A soft bounce must not be
+subscribed, and is refused if it arrives anyway — a full mailbox or a provider
+having an afternoon is not a refusal, and treating one as permanent would have
+suppressed every address at a whole provider during the outage of 27 August
+2026. Deferred and unsubscribed stay out for their own reasons, which
+`internal/notify/hook.go` gives.
+
+Rotating the password is a new version, an apply, and the credential updated at
+the provider — in that order, since the old one stops working the moment the new
+revision is up. The window between the two is deliveries answered `401`, which
+the provider retries.
 
 ## And the second pass
 

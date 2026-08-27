@@ -38,19 +38,22 @@ resource "google_secret_manager_secret" "mail_api_key" {
   depends_on = [google_project_service.enabled]
 }
 
-/* And what stands in front of the delivery hook.
+/* And the delivery hook's password.
 
-   BREVO DOES NOT SIGN ITS WEBHOOKS — no HMAC, no shared secret in a header,
-   nothing to verify a body against. So the secret is a segment of the path the
-   provider posts to, and this is its container.
+   NOTHING SIGNS A DELIVERY EVENT — there is no HMAC over the body — so a shared
+   secret is all there is between our endpoint and anybody who finds it. It
+   travels as the password half of an HTTP Basic credential, which the provider's
+   webhook form offers; it travelled in the path first, because nobody had opened
+   that form.
 
-   It is a secret rather than a plain variable for the reason the other two are:
-   a `tfvars` file is a file on somebody's laptop and in a plan's output, and an
-   endpoint that marks addresses as refused is a way to stop this platform
-   writing to anybody. Empty mounts no endpoint at all, which is the right
-   failure — nothing there, rather than something anybody may post to. */
-resource "google_secret_manager_secret" "mail_hook_secret" {
-  secret_id = "schooling-mail-hook-secret"
+   IT IS A SECRET AND `mail_hook_user` IS NOT, and they are split for that
+   reason: a `tfvars` file is a file on somebody's laptop and in a plan's output,
+   and a name belongs there while a password does not.
+
+   Empty mounts no endpoint at all, which is the right failure — nothing there,
+   rather than something anybody may post to. */
+resource "google_secret_manager_secret" "mail_hook_password" {
+  secret_id = "schooling-mail-hook-password"
 
   replication {
     auto {}

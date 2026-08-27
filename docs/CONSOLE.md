@@ -80,7 +80,7 @@ is how every console rots.* That division is the spine of everything below.
   the reader calls it **adrift** rather than busy. The retry is the part that is not built: it
   would mean this console holding the right to start a job
 - E-mail deliverability: bounces and complaints. **The mechanism exists and the screen does not.**
-  Since v0.10.0 the provider's permanent refusals reach `/hooks/mail/`, land in `mail_suppressions`
+  Since v0.10.0 the provider's permanent refusals reach `/hooks/mail`, land in `mail_suppressions`
   and stop the next message; what nobody can do is *see* them. The screen would answer "why did
   this person never get their link", and today that answer is a log line and a `psql` — which is
   the shape of a question that gets asked by somebody who has neither.

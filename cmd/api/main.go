@@ -269,16 +269,21 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	suppressions := notify.NewSuppressions(pool)
 	notifier := notify.New(postman, origin(cfg), suppressions.Barred)
 
-	/* THE PROVIDER'S WAY BACK IN, MOUNTED ONLY WHEN THERE IS A SECRET.
+	/* THE PROVIDER'S WAY BACK IN, MOUNTED ONLY WHEN THERE IS A CREDENTIAL.
 
-	   No secret, no endpoint: an open one is a way for anybody to stop this
+	   No credential, no endpoint: an open one is a way for anybody to stop this
 	   platform writing to an address of their choosing, and a deployment
 	   without a provider has nothing to hear from anyway. `mux` and not one of
 	   the per-school routers, because a delivery event belongs to no school —
 	   it is the first arrival in the class the comment above `router` reserved
-	   for the payment gateway. */
-	if cfg.MailHookSecret != "" {
-		mux.Handle("POST "+web.Hooks+"mail/{secret}", notify.Hook(cfg.MailHookSecret, suppressions, log))
+	   for the payment gateway.
+
+	   THE ADDRESS CARRIES NOTHING SECRET ANY MORE. It did, and `config.go` says
+	   why it stopped; what is left here is a fixed path and a header the
+	   handler checks. */
+	if cfg.MailHookPassword != "" {
+		mux.Handle("POST "+web.Hooks+"mail",
+			notify.Hook(cfg.MailHookUser, cfg.MailHookPassword, suppressions, log))
 		log.Info("mail hook", "mounted", true)
 	}
 

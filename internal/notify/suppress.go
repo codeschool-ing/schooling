@@ -26,7 +26,8 @@ import (
    holding a person's data after they asked us not to. A SHA-256 answers "may I
    write to THIS address" exactly, and answers nothing else. */
 
-// Reason is why an address was suppressed. All three mean the same refusal.
+// Reason is why an address was suppressed. All four mean the same instruction:
+// never write to this address again.
 type Reason string
 
 const (
@@ -35,8 +36,18 @@ const (
 	// Blocked is the receiving side refusing us for this address.
 	Blocked Reason = "blocked"
 	// Complaint is somebody marking us as spam, which is the strongest of the
-	// three as a signal and identical to the others as an instruction.
+	// four as a signal and identical to the others as an instruction.
 	Complaint Reason = "complaint"
+	/* Invalid is the provider refusing to try at all: a mistyped address, a
+	   domain that is not one.
+
+	   IT IS THE ODD ONE AND IT IS HERE ANYWAY. The other three happened to a
+	   message that LEFT, which is why they cost this domain its standing; this
+	   one never left, so there is no mark to avoid. What it buys is the rest of
+	   the value — attempts not spent, and a support answer that says "that
+	   address does not exist" rather than "I cannot tell you why nothing
+	   arrived". */
+	Invalid Reason = "invalid"
 )
 
 // ErrNotPermanent is a reason that does not suppress anything.
@@ -58,12 +69,12 @@ the list.
 	IT IS AN UPSERT AND NOT AN INSERT, because a provider retries a webhook it
 	did not hear back from: the same event arriving twice is the normal case. A
 	repeat bumps the count and the date and changes nothing else — the FIRST
-	reason is kept, because all three mean the same instruction and which one it
+	reason is kept, because all four mean the same instruction and which one it
 	was is a support conversation rather than a decision.
 */
 func (s *Suppressions) Bar(ctx context.Context, address string, why Reason) (bool, error) {
 	switch why {
-	case HardBounce, Blocked, Complaint:
+	case HardBounce, Blocked, Complaint, Invalid:
 	default:
 		return false, fmt.Errorf("%w: %q", ErrNotPermanent, why)
 	}

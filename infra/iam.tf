@@ -48,11 +48,11 @@ resource "google_secret_manager_secret_iam_member" "run_reads_the_mail_key" {
   member    = "serviceAccount:${google_service_account.run.email}"
 }
 
-// And the delivery hook's secret, which the service compares every posted event
-// against. Same grant, same principle, and it is separate from the key above
-// because the two rotate for different reasons.
-resource "google_secret_manager_secret_iam_member" "run_reads_the_mail_hook_secret" {
-  secret_id = google_secret_manager_secret.mail_hook_secret.id
+// And the delivery hook's password, which the service compares every posted
+// event's credential against. Same grant, same principle, and separate from the
+// key above because the two rotate for different reasons.
+resource "google_secret_manager_secret_iam_member" "run_reads_the_mail_hook_password" {
+  secret_id = google_secret_manager_secret.mail_hook_password.id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.run.email}"
 }

@@ -108,3 +108,18 @@ variable "mail_reply_to" {
   type        = string
   default     = ""
 }
+
+/* The name half of the delivery hook's credential.
+
+   IT IS HERE AND ITS PASSWORD IS IN THE SECRET MANAGER, which is the split
+   being made rather than an inconsistency: a name is not a secret, and a
+   `tfvars` file is a file on somebody's laptop and in a plan's output.
+
+   Empty is a deployment that mounts no hook, which is every laptop and CI. The
+   password being empty is what actually decides that; this travels with it, and
+   `config.Load` refuses one without the other. */
+variable "mail_hook_user" {
+  description = "The user half of the delivery hook's HTTP Basic credential. Empty mounts no hook."
+  type        = string
+  default     = ""
+}
