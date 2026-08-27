@@ -397,6 +397,43 @@ func (s *Store) SetPrice(ctx context.Context, id uuid.UUID,
 	return wasCents, wasCurrency, nil
 }
 
+/*
+InForce is the price row a purchase at this school would be sold at right now.
+
+	IT RETURNS THE ROW'S ID AND NOT ONLY THE NUMBER, which is the whole reason it
+	exists beside the reads above. A subscription has to point at the row it was
+	bought at, or a school raising its price raises it for everybody who already
+	paid — and `school_prices` is append-only precisely so that pointing is
+	possible.
+
+	`effective_from <= now()` is the same condition every other read here uses: a
+	price dated ahead is representable and is not the offer until its day comes.
+
+	ErrNoPrice is a school that has never had one. It is not an error in the
+	usual sense — a school with no offer is a school nobody can subscribe to —
+	but selling at a price that does not exist is not the alternative.
+*/
+func (s *Store) InForce(ctx context.Context, id uuid.UUID) (uuid.UUID, Price, error) {
+	var row uuid.UUID
+	var price Price
+	err := s.pool.QueryRow(ctx, `
+		SELECT id, cents, currency, effective_from FROM school_prices
+		WHERE tenant_id = $1 AND effective_from <= now()
+		ORDER BY effective_from DESC LIMIT 1
+	`, id).Scan(&row, &price.Cents, &price.Currency, &price.From)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return uuid.Nil, Price{}, ErrNoPrice
+	}
+	if err != nil {
+		return uuid.Nil, Price{}, fmt.Errorf("tenant: reading the price in force: %w", err)
+	}
+	return row, price, nil
+}
+
+// ErrNoPrice is a school that has never had one.
+var ErrNoPrice = errors.New("tenant: this school has no price")
+
 // Prices is one school's whole series, newest first. It is the console's, and
 // it is the answer to "what was the offer in March" — which is a question a
 // single number cannot be asked.

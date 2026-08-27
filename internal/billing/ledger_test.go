@@ -39,6 +39,35 @@ func student(t *testing.T, pool *pgxpool.Pool) uuid.UUID {
 	return id
 }
 
+/*
+price seeds a school and one row of its price series, and answers that row's id.
+
+	IT IS A REAL ROW AND NOT AN INVENTED UUID, because `subscriptions.price_id`
+	is a foreign key — which is the point of the column. A test that could point
+	a subscription at a price nobody ever published would be testing something
+	the database does not allow.
+*/
+func price(t *testing.T, pool *pgxpool.Pool, cents int) uuid.UUID {
+	t.Helper()
+	slug := "school-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
+
+	var tenant uuid.UUID
+	if err := pool.QueryRow(context.Background(),
+		`INSERT INTO tenants (slug, name) VALUES ($1, $1) RETURNING id`,
+		slug).Scan(&tenant); err != nil {
+		t.Fatalf("seeding a school: %v", err)
+	}
+
+	var row uuid.UUID
+	if err := pool.QueryRow(context.Background(), `
+		INSERT INTO school_prices (tenant_id, cents, currency)
+		VALUES ($1, $2, 'BRL') RETURNING id
+	`, tenant, cents).Scan(&row); err != nil {
+		t.Fatalf("seeding a price: %v", err)
+	}
+	return row
+}
+
 // A unique provider reference per call, so tests do not collide on the
 // idempotency index the way two runs of the same suite otherwise would.
 func ref() string { return "evt_" + strings.ReplaceAll(uuid.NewString(), "-", "") }

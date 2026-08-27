@@ -574,3 +574,68 @@ func TestASchoolWithNoAddressSaysSoRatherThanFailing(t *testing.T) {
 		t.Errorf("a school with no address answered %v", err)
 	}
 }
+
+/*
+THE PRICE IN FORCE, AND ITS ROW'S IDENTITY.
+
+	Every other read of the series answers a number. This one answers WHICH ROW,
+	because a subscription has to point at it — a school raising its price must
+	not raise it for everybody who already paid, and `school_prices` is
+	append-only precisely so that pointing is possible.
+*/
+func TestTheRowInForceIsTheLatestOneWhoseDayHasCome(t *testing.T) {
+	pool := testPool(t)
+	store := tenant.NewStore(pool)
+	ctx := context.Background()
+
+	var id uuid.UUID
+	slug := "price-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
+	if err := pool.QueryRow(ctx,
+		`INSERT INTO tenants (slug, name) VALUES ($1, $1) RETURNING id`, slug).Scan(&id); err != nil {
+		t.Fatalf("seeding a school: %v", err)
+	}
+
+	// A SCHOOL WITH NO OFFER IS NOT A SCHOOL SOMEBODY CAN SUBSCRIBE TO, and it
+	// says so rather than answering zero.
+	if _, _, err := store.InForce(ctx, id); !errors.Is(err, tenant.ErrNoPrice) {
+		t.Errorf("a school with no price answered %v, want ErrNoPrice", err)
+	}
+
+	rows := map[string]uuid.UUID{}
+	for _, r := range []struct {
+		name  string
+		cents int
+		from  string
+	}{
+		{"old", 39000, "now() - interval '90 days'"},
+		{"now", 49000, "now() - interval '1 day'"},
+		{"soon", 59000, "now() + interval '30 days'"},
+	} {
+		var row uuid.UUID
+		if err := pool.QueryRow(ctx, `
+			INSERT INTO school_prices (tenant_id, cents, currency, effective_from)
+			VALUES ($1, $2, 'BRL', `+r.from+`) RETURNING id
+		`, id, r.cents).Scan(&row); err != nil {
+			t.Fatalf("seeding the %s price: %v", r.name, err)
+		}
+		rows[r.name] = row
+	}
+
+	got, price, err := store.InForce(ctx, id)
+	if err != nil {
+		t.Fatalf("reading: %v", err)
+	}
+	if got != rows["now"] {
+		t.Errorf("the row in force is %s; the current one is %s", got, rows["now"])
+	}
+	if price.Cents != 49000 || price.Currency != "BRL" {
+		t.Errorf("it came back as %d %s", price.Cents, price.Currency)
+	}
+
+	// A PRICE DATED AHEAD IS REPRESENTABLE AND IS NOT THE OFFER. That is what
+	// `effective_from` is for, and selling at it before its day would be
+	// charging somebody a number that is not on the page yet.
+	if got == rows["soon"] {
+		t.Error("a price dated ahead was sold as the one in force")
+	}
+}

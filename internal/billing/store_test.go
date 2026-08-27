@@ -18,11 +18,16 @@ func store(t *testing.T) (*billing.Store, *pgxpool.Pool) {
 	return billing.NewStore(pool), pool
 }
 
-func begun(t *testing.T, s *billing.Store, account uuid.UUID,
+// THE POOL IS A PARAMETER BECAUSE THE PRICE IS A REAL ROW. `price_id` is a
+// foreign key — an invented uuid would be testing something the database does
+// not allow — so every subscription these tests begin needs a school and a
+// published price behind it.
+func begun(t *testing.T, s *billing.Store, pool *pgxpool.Pool, account uuid.UUID,
 	model billing.Model, through time.Time) billing.Held {
 
 	t.Helper()
-	held, err := s.Begin(context.Background(), account, "", model, day(0), through, nil)
+	held, err := s.Begin(context.Background(), account, "", model,
+		price(t, pool, 49000), day(0), through, nil)
 	if err != nil {
 		t.Fatalf("beginning a %s subscription: %v", model, err)
 	}
@@ -53,7 +58,7 @@ func TestSomebodyWithNoSubscriptionOpensNothingAndThatIsNotAnError(t *testing.T)
 func TestPayingOpensAPaidCourse(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, day(30))
 
 	open, err := s.Opens(context.Background(), account, day(1))
 	if err != nil {
@@ -71,7 +76,7 @@ func TestPayingOpensAPaidCourse(t *testing.T) {
 func TestAPeriodThatRanOutClosesTheDoorWithNoJobHavingRun(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, day(30))
 
 	if _, err := s.Advance(context.Background(), account, "",
 		billing.EventCancelled, day(5), time.Time{}, nil); err != nil {
@@ -103,7 +108,7 @@ func TestAPeriodThatRanOutClosesTheDoorWithNoJobHavingRun(t *testing.T) {
 func TestSettlingBringsTheRowUpToDateAndIsSafeToRunTwice(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, account, billing.ModelInstalments, day(365))
+	begun(t, s, pool, account, billing.ModelInstalments, day(365))
 
 	moved, err := s.Settle(context.Background(), day(366))
 	if err != nil {
@@ -149,7 +154,7 @@ func transitions(t *testing.T, pool *pgxpool.Pool, account uuid.UUID) int {
 func TestEveryTransitionIsWrittenDownWithBothSides(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, day(30))
 
 	for _, e := range []billing.Event{billing.EventPaymentFailed, billing.EventRetriesExhausted} {
 		if _, err := s.Advance(context.Background(), account, "", e, day(31), time.Time{}, nil); err != nil {
@@ -186,7 +191,8 @@ func TestATransitionCanNameTheMoneyThatCausedIt(t *testing.T) {
 
 	payment := paid(t, ledger, account, 119900)
 	if _, err := s.Begin(context.Background(), account, "",
-		billing.ModelInstalments, day(0), day(365), &payment.ID); err != nil {
+		billing.ModelInstalments, price(t, pool, 119900), day(0), day(365),
+		&payment.ID); err != nil {
 		t.Fatalf("beginning against a payment: %v", err)
 	}
 
@@ -209,14 +215,20 @@ func TestATransitionCanNameTheMoneyThatCausedIt(t *testing.T) {
 func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	first := begun(t, s, account, billing.ModelInstalments, day(365))
+	first := begun(t, s, pool, account, billing.ModelInstalments, day(365))
 
 	if _, err := s.Settle(context.Background(), day(366)); err != nil {
 		t.Fatal(err)
 	}
 
+	/* THE RENEWAL IS SOLD AT A NEW PRICE AND THE ROW KEEPS THE OLD ONE.
+
+	   This is the whole point of the column: the school raised its price
+	   between the two payments, and somebody who already bought must not be
+	   moved onto the new number by the act of paying again. */
+	raised := price(t, pool, 59000)
 	again, err := s.Begin(context.Background(), account, "",
-		billing.ModelInstalments, day(400), day(731), nil)
+		billing.ModelInstalments, raised, day(400), day(731), nil)
 	if err != nil {
 		t.Fatalf("a new sale after the term ran out: %v", err)
 	}
@@ -225,6 +237,13 @@ func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 	}
 	if again.State != billing.StateActive {
 		t.Errorf("the renewal left it %s", again.State)
+	}
+	if again.PriceID != first.PriceID {
+		t.Errorf("paying again moved the subscription onto the new price (%s, was %s)",
+			again.PriceID, first.PriceID)
+	}
+	if again.PriceID == raised {
+		t.Error("the renewal was charged at the price the school raised to")
 	}
 
 	var count int
@@ -243,7 +262,7 @@ func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 func TestAnEventIsAppliedToTheSettledStateAndNotTheStoredOne(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, day(30))
 
 	if _, err := s.Advance(context.Background(), account, "",
 		billing.EventCancelled, day(5), time.Time{}, nil); err != nil {
@@ -274,9 +293,9 @@ func TestOnlyInstalmentPlansTurnUpAsNeedingRenewal(t *testing.T) {
 	const notice = 30 * 24 * time.Hour
 
 	instalments := student(t, pool)
-	begun(t, s, instalments, billing.ModelInstalments, day(365))
+	begun(t, s, pool, instalments, billing.ModelInstalments, day(365))
 	recurring := student(t, pool)
-	begun(t, s, recurring, billing.ModelRecurring, day(365))
+	begun(t, s, pool, recurring, billing.ModelRecurring, day(365))
 
 	found, err := s.Renewing(context.Background(), day(340), notice)
 	if err != nil {
@@ -317,7 +336,7 @@ func TestOnlyInstalmentPlansTurnUpAsNeedingRenewal(t *testing.T) {
 func TestAStateTheMachineDoesNotKnowCannotBeWritten(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, day(30))
 
 	for _, state := range []string{"vip", "comped", "", "ACTIVE"} {
 		if _, err := pool.Exec(context.Background(),
@@ -340,7 +359,7 @@ func TestAStateTheMachineDoesNotKnowCannotBeWritten(t *testing.T) {
 func TestErasingSomebodyTakesTheSubscriptionAndLeavesItsHistory(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, day(30))
 
 	if _, err := pool.Exec(context.Background(),
 		`DELETE FROM accounts WHERE id = $1`, account); err != nil {
@@ -359,5 +378,46 @@ func TestErasingSomebodyTakesTheSubscriptionAndLeavesItsHistory(t *testing.T) {
 
 	if left := transitions(t, pool, account); left == 0 {
 		t.Error("the history went with the person; it is what explains the money beside it")
+	}
+}
+
+// A SUBSCRIPTION HAS TO SAY WHAT IT WAS SOLD AT, and it is refused before a
+// transaction rather than by the column. Both would fail; only one says which
+// argument was missing, and the caller that gets it wrong has just taken
+// somebody's money.
+func TestASubscriptionWithoutAPriceIsRefused(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+
+	_, err := s.Begin(context.Background(), account, "", billing.ModelRecurring,
+		uuid.Nil, day(0), day(30), nil)
+	if !errors.Is(err, billing.ErrNoPrice) {
+		t.Errorf("beginning without a price answered %v, want ErrNoPrice", err)
+	}
+}
+
+// AND THE PRICE COMES BACK WHEN THE SUBSCRIPTION IS READ, which is what makes
+// it useful: a renewal run reads the row and charges what it says rather than
+// what the school charges today.
+func TestTheSubscriptionCarriesItsPriceBackOutOfTheDatabase(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+
+	sold := price(t, pool, 49000)
+	begun, err := s.Begin(context.Background(), account, "", billing.ModelRecurring,
+		sold, day(0), day(30), nil)
+	if err != nil {
+		t.Fatalf("beginning: %v", err)
+	}
+	if begun.PriceID != sold {
+		t.Fatalf("it was begun at %s and says %s", sold, begun.PriceID)
+	}
+
+	read, err := s.Of(context.Background(), account, "", day(1))
+	if err != nil {
+		t.Fatalf("reading it back: %v", err)
+	}
+	if read.PriceID != sold {
+		t.Errorf("read back it says %s, want %s", read.PriceID, sold)
 	}
 }
