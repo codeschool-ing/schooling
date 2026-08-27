@@ -223,9 +223,55 @@ the phase-0 condition did — by being left visible until it was true rather tha
 *Done when: a student pays under both models, delinquency suspends on its own, and recovery
 restores access with progress intact.*
 
-- [ ] Brazil: annual and biennial in card instalments
-- [ ] Brazil: Pix in one payment, at a discount, on the annual plan
+**BRAZIL SHIPS FIRST, AND THE REASON IS THE ENTITY RATHER THAN THE CODE.** The cheapest legal
+entity available here is a MEI, and a MEI's weak point is not its revenue ceiling — it is
+whether it can receive recurring payment from abroad, which is the question every list of
+permitted activities leaves out. Building the international side first would mean discovering
+that answer after the work rather than before it.
+
+So the domestic list goes out on one gateway, under the cheapest entity that exists, and the
+international one follows when there is revenue to justify the entity it needs. Three things
+fall out of that order: one integration instead of two in the first release, which is what
+"integrate one concretely" below asks for anyway; the entity cost stays at its floor; and the
+hardest unknown leaves the critical path. The items do not change — only the order they ship
+in, which was until now unwritten and therefore a matter of memory.
+
+- [ ] Brazil: annual and biennial, paid by Pix, card — with instalments — or debit
 - [ ] Elsewhere: monthly, annual and biennial, recurring
+- [ ] Pix Automático, deliberately after the first two
+
+  **THE SPLIT IS BY MECHANISM AND NOT BY COUNTRY, and getting that wrong was the first mistake made here.** "Annual and biennial, paid by Pix and instalments" was read as "Brazil has no recurrence", and it does not follow: a stored card that renews the subscription at the end of the term is recurrence, and a long term does not make the charge a one-off. Alura does exactly that. So:
+
+  - **Recurring** — a stored card, or Pix Automático. The subscription renews itself, and grace, retries and suspension apply. Brazil and elsewhere both.
+  - **One-off** — Pix in a single payment, debit, and the instalment authorisation. A term is bought; at its end, a new sale.
+
+  **AND PARCELAR IS ORTHOGONAL TO RENEWING.** Splitting one authorisation into twelve is how the issuer bills the buyer *inside* a term. Whether the subscription renews at the twelfth month is a separate decision and a separate authorisation. The machine below already accommodates it: renewal for that model is "a new sale on the same row", and the row does not care whether a person or a scheduler asked for it.
+
+  **RENEWAL IS AUTOMATIC BY DEFAULT, WITH THE NOTICE BEFORE EXPIRY** that is already built. It is better revenue and worse trust when it is not extremely clear, and Brazilian consumer law has views on how automatic renewal is disclosed — which makes the notice a requirement rather than a courtesy.
+
+  **PIX AUTOMÁTICO IS ITS OWN ITEM AND IT IS LAST ON PURPOSE.** The Banco Central's recurring-debit rail came into force in January 2026 (Resolução BC nº 422/2025) and every serious Brazilian gateway exposes it. It solves renewal for everybody unwilling to hand over a card, which in Brazil is a great many people — and it is the newest of the three mechanisms, with the most edges nobody has hit yet. Discovering them alongside this platform's FIRST payment integration is two unknowns at once.
+
+  **TWO PROVIDERS, AND THAT IS THE SHAPE OF THE PROBLEM RATHER THAN A FAILURE OF THE PLAN.** Nothing covers Pix and international recurring well; Stripe's Pix is invite-only for businesses based in Brazil, and the Brazilian gateways do not do the rest of the world. So one domestic and one international, and the ledger stays the single truth both write into.
+
+  **DO NOT BUILD THE ABSTRACTION FIRST.** The instinct is a `platform/payments` with an interface and two implementations, the way `platform/mail` was built — but that worked because a real provider's API was in hand when the interface was drawn. An interface imagined before any integration is wrong in exactly the places that matter: what is synchronous, what arrives by webhook, and what is idempotent under which key. Integrate one provider concretely, and let the second pay the cost of generalising with two real examples on the table instead of one and a guess.
+
+  **TWO PRICES OF THE MECHANISM, SETTLED WITH THE NUMBERS RATHER THAN BY TASTE.**
+
+  *Instalments stop at six, with no interest, and a longer lane with interest passed to the buyer waits for evidence.* The published rate for twelve reaches upwards of twenty per cent of the sale — on a term costing R$ 590 that is over a hundred reais, too much to commit to before a real account has shown the real number. Six covers most of the objection to a large ticket at a cost that can be swallowed, and the number to check first, once there is a sandbox, is that one.
+
+  Passing the interest on above six is standard practice here and was considered properly rather than dismissed. It waits for four reasons: **the rate table is not known yet**, and building the screen against a guess is the mistake this file warns about one paragraph down; **selling with interest carries a disclosure obligation** under consumer law, which is real work and is not the work of getting somebody to pay; **it probably converts badly**, because the person who wants twelve is price-sensitive by definition and "12× R$ 59,33, total R$ 712" against "6× R$ 98,33, total R$ 590" mostly produces the six or an abandoned form; and **it divides two numbers this phase just joined**. With interest, the amount charged stops equalling `school_prices`, and then RENEWAL MUST CHARGE THE PRICE AND NOT THE AMOUNT PAID — interest is a cost of that purchase, not part of the price, and a renewal that forgot it would bill R$ 712 to somebody who agreed to R$ 590.
+
+  When it does arrive it brings one thing with it: **the rate table becomes effective-dated data, like the prices**, for K-14's reason exactly. "Why was I charged R$ 712" must stay answerable in November, and "the rate was different then, I think" is not an answer.
+
+  *Pix carries a five per cent discount, and it very nearly pays for itself.* A flat fee of about R$ 1,99 against roughly 2,99% on a card is a sixteen-real difference on the same R$ 590 sale — so a discount costing R$ 29,50 is really costing R$ 13,50, in exchange for settling immediately, with no chargeback, through the method most of this country's online commerce already uses. It is the cheapest discount this platform will ever be able to offer, and it is why the item said "at a discount" before anybody had worked out why.
+
+  **A DECISION THESE ITEMS INHERIT, recorded so it is not taken again from scratch: confirmation is required to START a payment, and never to finish one.** The check belongs in whatever creates a checkout session, before any money moves. It must NOT go in `billing.Begin`, which is called once a payment has already succeeded — a guard there refuses the subscription of somebody who has just been charged, and the honest response at that point is a refund rather than a refusal. That placement was proposed, approved, and caught while reading the code; it is written down because the wrong version is the intuitive one.
+
+  What confirmation does not gate: signing in, studying, the free first course of each track, the drill, the exams, the notes. The reason is one outage — 27 August 2026, when a provider held every message to its users for two hours. A platform whose front door depends on mail delivery is a platform a stranger's cooling failure can close.
+
+  **And the banner's sentence stops being true on the same day.** "You can carry on studying — nothing here depends on it" is exact today and becomes a lie the moment this ships, so it changes in the same commit rather than in a follow-up somebody remembers
+
+  **NONE OF IT NEEDS A COMPANY TO BUILD, AND ALL OF IT NEEDS ONE TO SHIP.** No gateway opens an account without a legal entity, and the policies still carry `{{company.name}}` for that reason. The whole integration is built against a sandbox, which asks for nothing — what an entity unlocks is the last key, not the work. Whether a MEI serves is a question for an accountant and not for this file; the one to ask first is not the revenue ceiling but whether that entity can receive recurring payment from abroad, which is the part these lists never mention
 
   **A DECISION THE THREE ITEMS ABOVE INHERIT, recorded here so it is not taken again from scratch: confirmation is required to START a payment, and never to finish one.** The check belongs in whatever creates a checkout session, before any money moves. It must NOT go in `billing.Begin`, which is called once a payment has already succeeded — a guard there refuses the subscription of somebody who has just been charged, and the honest response at that point is a refund rather than a refusal. That placement was proposed, approved, and caught while reading the code; it is written down because the wrong version is the intuitive one.
 
@@ -367,7 +413,7 @@ catch was one the code could not catch, and nothing in the system said so.*
   **The cost of adding one is the whole mechanism.** A new write fails the test until somebody writes its sentence, and writing that sentence for a parameter means arguing that the value has no right answer — because if it has one it belongs in code where a test holds it. The count of parameters is itself asserted, so a third is a deliberate line in a diff rather than a drift.
 
   What is NOT on the list, deliberately: `cmd/staff` granting a role. It is a change to the system, audited, and it is not something the console does — a role is granted from a terminal precisely because the first one could not be granted through a console that needs a role to open
-- [x] Prices effective-dated — a subscriber keeps the price they bought at. **Both halves now: the offer is a series, and the subscription points at a row of it.** `tenants.plan_price_cents` was a column that could be overwritten, which reads as harmless and is the one shape a money parameter may not have: the moment it changed, "why was this person charged 490 when the site says 590" stopped being answerable. `ledger_entries` has been append-only since it existed, so what somebody PAID was already unforgeable; this was the other half of that sentence and it was the editable half.
+- [x] Prices effective-dated — a subscriber keeps the price they bought at **for the term they bought**. *Those last five words were once implicit, were read as "for ever", and reached a column comment in production that contradicted the terms of use — `0040` corrects it, and K-14 now carries the qualifier.* **Both halves now: the offer is a series, and the subscription points at a row of it.** `tenants.plan_price_cents` was a column that could be overwritten, which reads as harmless and is the one shape a money parameter may not have: the moment it changed, "why was this person charged 490 when the site says 590" stopped being answerable. `ledger_entries` has been append-only since it existed, so what somebody PAID was already unforgeable; this was the other half of that sentence and it was the editable half.
 
   `subscriptions.price_id` is the half that closes it, and it is NOT NULL — which was only possible on the day it was added. Nothing creates a subscription yet: there is no gateway, the seeder writes none, and `billing.Begin` had no caller outside its own tests. A year from now the choice would have been a nullable column half the code checks, or a backfilled guess about what somebody was charged — the one guess this schema exists to prevent. So the migration REFUSES rather than backfills: a `DO` block raises if the table has rows, and says what to decide.
 
