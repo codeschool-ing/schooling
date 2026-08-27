@@ -103,6 +103,22 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 
 	if h.signedUp != nil {
 		h.signedUp(r.Context(), account)
+
+		/* AND THE ACCOUNT IS READ AGAIN, because that callback is where a
+		   confirmation link gets issued and the struct in hand is older than
+		   it. Without this the response says no link is outstanding about a
+		   link that was just put in the post, and the screen offers to send
+		   one that is already on its way.
+
+		   A FAILED RE-READ KEEPS THE STALE COPY rather than failing the
+		   sign-up. The account exists; what would be lost is one sentence on a
+		   banner, and losing a sign-up over it is the wrong trade. */
+		if fresh, err := h.store.ByID(r.Context(), account.ID); err == nil {
+			account = fresh
+		} else {
+			web.LoggerFrom(r.Context()).Error("re-reading a new account", "error", err,
+				"account", account.ID)
+		}
 	}
 
 	h.start(w, r, account, http.StatusCreated)
@@ -270,6 +286,13 @@ func view(a Account) map[string]any {
 		   carries. `api.js` has hard-coded this to `true` since the banner was
 		   written, which is why the banner has never appeared for anybody. */
 		"emailVerified": a.EmailVerifiedAt != nil,
+
+		/* AND WHETHER A LINK IS OUT THERE, which is what stops the nudge saying
+		   something false. "We sent a link to X" is true for somebody who just
+		   signed up and a lie for every account that predates confirmations, or
+		   whose link expired unread — and the screen had no way to tell those
+		   apart because nothing told it. */
+		"confirmationPending": a.ConfirmationPending,
 	}
 }
 
