@@ -442,6 +442,19 @@ jobs:
       SCHOOLING_ENV: development
       PORT: "8099"
 
+      # A KEY-SHAPED STRING, AND IT IS NOT A SECRET. `cmd/api` mounts the
+      # checkout route only when there is a key — no key, no route, which is
+      # `main.go`'s note about a deployment that cannot take money offering
+      # nobody a way to try. Without this the subscribe screen's button gets a
+      # 404 and the accessibility pass would be measuring an error path that
+      # does not exist anywhere.
+      #
+      # Nothing reaches the gateway with it: the refusal that suite presses for
+      # is `email_unconfirmed`, which is decided here, before a request is
+      # built. The `$aact_hmlg_` prefix is what `asaas.HostFor` reads to pick
+      # the sandbox, so a slip that did call out could not reach the live one.
+      SCHOOLING_ASAAS_KEY: "$aact_hmlg_this-key-is-not-a-key"
+
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 

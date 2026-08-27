@@ -75,8 +75,10 @@ function neighbours(courseId, ix, pos) {
    answer with a grey box and a sentence. The offer lives in
    `subscribeInvite`, shared with the plan screen so the two cannot drift.
 
-   It names the course in the mail it opens, which is the most useful thing this
-   screen can collect while there is nothing to click. */
+   IT USED TO NAME THE COURSE, in the subject of the mail the button opened —
+   the most useful thing this screen could collect while there was nothing to
+   click. There is something to click now, and a subscription opens every
+   course in every school, so the name went with the mail. */
 function locked(course) {
   const el = document.createElement('div');
   el.className = 'view view-locked';
@@ -85,7 +87,7 @@ function locked(course) {
       '<a class="back mono" href="#/catalog">← ' + esc(txt('Catalog')) + '</a>' +
       '<h1>' + esc(course.name) + '</h1>' +
     '</header>' +
-    subscribeInvite(course.name);
+    subscribeInvite();
   return el;
 }
 

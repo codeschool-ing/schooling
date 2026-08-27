@@ -31,6 +31,12 @@ import lesson from './screens/lesson.js';
 import catalogue from './screens/catalog.js';
 import certificates from './screens/certificates.js';
 import account from './screens/account.js';
+/* `subscribeScreen` AND NOT `subscribe`, which `state.js` already exports as
+   the store's observer. Two things in this file called subscribe would be a
+   collision the compiler catches — it did — and a name that reads wrong at
+   every call site afterwards. `trackScreen` above is named for the same
+   reason. */
+import subscribeScreen from './screens/subscribe.js';
 import performance from './screens/performance.js';
 import redo from './screens/redo.js';
 import notes from './screens/notes.js';
@@ -98,6 +104,12 @@ sync.start();
 
 route('/sign-in', signIn);
 route('/dashboard', dashboard);
+
+/* WHERE THE INVITATION'S BUTTON GOES, and it went to a `mailto:` until now.
+   One address, no parameters: what is being bought is chosen on the screen
+   rather than carried in the link, so a bookmarked one cannot preselect a term
+   that has since stopped being sold. */
+route('/subscribe', subscribeScreen);
 route('/track', trackScreen);
 
 /* ONE ADDRESS PER TRACK, which the portal does not need and this does.

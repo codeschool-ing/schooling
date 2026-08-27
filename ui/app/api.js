@@ -784,6 +784,28 @@ export function reportExercise(exerciseId, reason, note) {
    never appeared for anybody who had not already started. It is not a server
    question either; every value it reads is the catalogue and this browser's own
    document, which is why it can be the portal's line for line. */
+/*
+startCheckout asks the school to start a payment and answers where to go.
+
+	NOTHING HERE CARRIES AN AMOUNT. The term says what is being bought and the
+	server looks the price up; a `cents` in this body would be a buyer naming
+	their own price, and there is a test on the other side asserting that one is
+	ignored.
+
+	THE TAX ID IS SENT AND IS NOT KEPT ANYWHERE ON THIS SIDE EITHER. It goes
+	from the field into this call and nowhere else — no state, no storage, no
+	second render — and the server passes it to the gateway and stores only the
+	handle that comes back.
+*/
+export function startCheckout({ termMonths, method, instalments, taxId }) {
+  return post('/api/v1/checkout', {
+    termMonths,
+    method,
+    instalments: instalments || 1,
+    taxId: taxId || '',
+  });
+}
+
 export function resumeFrom() {
   const e = state.now();
   const firstSection = (courseId, ix) => {

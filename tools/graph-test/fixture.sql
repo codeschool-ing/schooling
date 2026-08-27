@@ -455,3 +455,23 @@ ON CONFLICT DO NOTHING;
 INSERT INTO job_runs (job, version, started_at)
 VALUES ('analyse', 'v0.3.0', now() - interval '9 hours')
 ON CONFLICT DO NOTHING;
+
+
+/* ---------- something on sale ----------
+
+   THE SUBSCRIBE SCREEN DRAWS WHAT THE PLATFORM HAS PRICED AND NOTHING ELSE, so
+   with an empty table it is a sentence saying there is nothing to buy — a
+   perfectly accessible screen, and not the one this suite is meant to measure.
+   That is the same trap the comment at the top of `a11y-test.mjs` describes, in
+   a table instead of a route.
+
+   TWO TERMS, because one is a form with a single choice and two is the
+   comparison the screen is built around: a year beside two years, each with a
+   Pix figure and a card figure under it.
+
+   The numbers are not a proposal. Nothing is priced in production and what to
+   charge is a decision that has not been made; these exist so there are two
+   rows of different lengths on the glass. */
+INSERT INTO plan_prices (scope, term_months, cents, currency)
+VALUES ('all', 12, 61234, 'BRL'), ('all', 24, 79000, 'BRL')
+ON CONFLICT DO NOTHING;

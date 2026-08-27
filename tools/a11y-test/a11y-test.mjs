@@ -559,6 +559,46 @@ try {
         await page.waitForSelector('#secret', { timeout: 8000 });
       },
     });
+
+    /* SUBSCRIBING, WHICH IS THE ONE SCREEN ON THIS LIST THAT TAKES MONEY.
+
+       Radios styled as cards, a select, a field that is not there when the
+       screen opens, and a message that appears under the button after a
+       request — every one of those is a way to lose a label, and the cards are
+       marked selected by border AND background, which is a pair axe measures
+       the contrast of.
+
+       IT NEEDS PRICES TO BE A FORM AT ALL. With none it is one sentence saying
+       nothing is on sale — a clean screen that passes everything and is not
+       this one, which is the trap the note at the top of this file describes,
+       in a table instead of a route. `fixture.sql` seeds two terms.
+
+       THE SECOND STATE IS THE CARD LANE AND A REFUSAL, both reached the way a
+       buyer reaches them. Choosing the card reveals the instalment select,
+       which does not exist while Pix is chosen; pressing the button puts a
+       message under it, which is the only red text on the screen and therefore
+       the only contrast on it worth arguing about.
+
+       THE TAX ID IS NOT AMONG THEM, and that is the gate rather than an
+       oversight: it appears when the server answers `tax_id_required`, and the
+       check BEFORE that one is a confirmed address. This suite's student has
+       no mail to confirm with, so the button here answers `email_unconfirmed`
+       every time — which is what the message below is. The field is the same
+       label-and-input as the select beside it, so what is left unmeasured is a
+       shape this check already covers. */
+    await check(student, `${theme} · subscribing`, '/#/subscribe', '/subscribe',
+      { settled: '.buy-term' });
+    await check(student, `${theme} · subscribing, in instalments and refused`,
+      '/#/subscribe', '/subscribe', {
+        settled: '.buy-term',
+        async act(page) {
+          await page.locator('input[name=method][value=card]').check();
+          await page.waitForSelector('.buy-instalments select', { timeout: 8000 });
+          await page.locator('#checkout button[type=submit]').click();
+          await page.waitForSelector('.buy-note.bad', { timeout: 8000 });
+        },
+      });
+
     /* A LESSON IS `/course/:id/lesson/:ix` AND HAS BEEN SINCE THE INTERFACE WAS
        REPLACED. This asked for `/#/course/<id>/<lesson-id>`, which is the shape
        the retired client used and matches no route here — so what was measured
