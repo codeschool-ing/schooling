@@ -40,6 +40,16 @@ const ScopeEverything = "all"
 // usually wants to know which.
 var ErrNoSubscription = errors.New("billing: this account has no subscription")
 
+/*
+ErrNoPrice is a subscription somebody tried to start without saying what it was
+sold at.
+
+	IT IS A REFUSAL AND NOT A DEFAULT. There is no sensible price to fall back
+	to: the current one is the guess this whole arrangement exists to remove, and
+	zero would be a free subscription written as if it were paid.
+*/
+var ErrNoPrice = errors.New("billing: a subscription has to say which price it was bought at")
+
 // Store reads and writes subscriptions.
 type Store struct{ pool *pgxpool.Pool }
 
@@ -53,6 +63,19 @@ type Held struct {
 	AccountID uuid.UUID
 	Scope     string
 	Subscription
+
+	/* PriceID is the `school_prices` row this was bought at.
+
+	   IT IS A UUID AND NOT A PRICE, because this module does not import the one
+	   that owns that table and must not start: what it needs is a handle it can
+	   store and hand back, and the amount is read by whoever draws or charges
+	   it. `internal/architecture_test.go` holds that boundary.
+
+	   RENEWALS CHARGE THIS ROW AND NOT WHATEVER IS CURRENT. That is the whole
+	   point of the column, and the half of "prices are effective-dated" that
+	   `school_prices` could not do on its own. */
+	PriceID uuid.UUID
+
 	StartedAt time.Time
 	UpdatedAt time.Time
 }
@@ -100,10 +123,21 @@ func (s *Store) Opens(ctx context.Context, accountID uuid.UUID, now time.Time) (
 // dates, and one that could only be tested by waiting until next year would not
 // be tested.
 func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
-	model Model, now, paidThrough time.Time, ledgerEntry *uuid.UUID) (Held, error) {
+	model Model, priceID uuid.UUID, now, paidThrough time.Time,
+	ledgerEntry *uuid.UUID) (Held, error) {
 
 	if scope == "" {
 		scope = ScopeEverything
+	}
+
+	/* A SUBSCRIPTION WITHOUT A PRICE IS REFUSED HERE RATHER THAN BY THE COLUMN.
+
+	   The column is NOT NULL, so this would fail either way — but it would fail
+	   as a constraint violation from inside a transaction, in a caller that has
+	   just taken somebody's money. Refusing before any of that says which
+	   argument was missing. */
+	if priceID == uuid.Nil {
+		return Held{}, ErrNoPrice
 	}
 	fresh, err := Start(model, paidThrough)
 	if err != nil {
@@ -133,12 +167,12 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 		return Held{}, err
 	}
 
-	held := Held{AccountID: accountID, Scope: scope, Subscription: fresh}
+	held := Held{AccountID: accountID, Scope: scope, Subscription: fresh, PriceID: priceID}
 	if err := tx.QueryRow(ctx, `
-		INSERT INTO subscriptions (account_id, scope, model, state, paid_through)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO subscriptions (account_id, scope, model, state, paid_through, price_id)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id, started_at, updated_at
-	`, accountID, scope, string(fresh.Model), string(fresh.State), fresh.PaidThrough,
+	`, accountID, scope, string(fresh.Model), string(fresh.State), fresh.PaidThrough, priceID,
 	).Scan(&held.ID, &held.StartedAt, &held.UpdatedAt); err != nil {
 		return Held{}, fmt.Errorf("billing: starting a subscription: %w", err)
 	}
@@ -227,7 +261,8 @@ func (s *Store) apply(ctx context.Context, tx pgx.Tx, held Held,
 // produces the same rows.
 func (s *Store) Settle(ctx context.Context, now time.Time) (int, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, account_id, scope, model, state, paid_through, started_at, updated_at
+		SELECT id, account_id, scope, model, state, paid_through, price_id,
+		       started_at, updated_at
 		FROM subscriptions
 		WHERE paid_through <= $1 AND state IN ('active', 'cancelled')
 	`, now)
@@ -276,7 +311,8 @@ func (s *Store) Settle(ctx context.Context, now time.Time) (int, error) {
 // (N-08). Nothing renews one on its own, so somebody has to be told.
 func (s *Store) Renewing(ctx context.Context, now time.Time, notice time.Duration) ([]Held, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, account_id, scope, model, state, paid_through, started_at, updated_at
+		SELECT id, account_id, scope, model, state, paid_through, price_id,
+		       started_at, updated_at
 		FROM subscriptions
 		WHERE model = 'instalments' AND state = 'active' AND paid_through <= $1
 		ORDER BY paid_through
@@ -354,7 +390,8 @@ func (s *Store) read(ctx context.Context, q queryer, accountID uuid.UUID, scope 
 	}
 
 	sql := `
-		SELECT id, account_id, scope, model, state, paid_through, started_at, updated_at
+		SELECT id, account_id, scope, model, state, paid_through, price_id,
+		       started_at, updated_at
 		FROM subscriptions WHERE account_id = $1 AND scope = $2
 	`
 	if _, inTransaction := q.(pgx.Tx); inTransaction {
@@ -383,7 +420,7 @@ func scanHeld(rows pgx.Rows) ([]Held, error) {
 		var h Held
 		var model, state string
 		if err := rows.Scan(&h.ID, &h.AccountID, &h.Scope, &model, &state,
-			&h.PaidThrough, &h.StartedAt, &h.UpdatedAt); err != nil {
+			&h.PaidThrough, &h.PriceID, &h.StartedAt, &h.UpdatedAt); err != nil {
 			return nil, err
 		}
 		h.Model, h.State = Model(model), State(state)
