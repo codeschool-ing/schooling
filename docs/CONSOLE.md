@@ -79,7 +79,17 @@ is how every console rots.* That division is the spine of everything below.
   after it — so a job that was killed leaves the one trace it will ever leave, and after an hour
   the reader calls it **adrift** rather than busy. The retry is the part that is not built: it
   would mean this console holding the right to start a job
-- E-mail deliverability: bounces and complaints
+- E-mail deliverability: bounces and complaints. **The mechanism exists and the screen does not.**
+  Since v0.10.0 the provider's permanent refusals reach `/hooks/mail/`, land in `mail_suppressions`
+  and stop the next message; what nobody can do is *see* them. The screen would answer "why did
+  this person never get their link", and today that answer is a log line and a `psql` — which is
+  the shape of a question that gets asked by somebody who has neither.
+
+  It is the one screen here whose table **holds a hash and never an address**, so it cannot list
+  who is suppressed. What it can do is count them, break them down by reason and by week, and
+  answer one address typed in whole — which is `K-22`'s rule arriving for a second reason: not
+  because listing people is a privacy decision, but because the data to list them was deliberately
+  never kept
 
 **Operational alerts stay out**, and that is `K-08` rather than an omission: uptime checks and
 alert policies have to reach a phone *when the console is down*, which is exactly when you need
