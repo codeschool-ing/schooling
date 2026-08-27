@@ -452,6 +452,26 @@ resource "google_cloud_run_v2_service" "api" {
         }
       }
 
+      /* AND WHAT THAT GATEWAY PRESENTS WHEN IT POSTS AN EVENT.
+
+         The other direction, and a separate secret for that reason. Same
+         two-pass rule as everything above it: the value is written before this
+         is applied, because a versionless secret at `latest` stops the revision
+         starting.
+
+         Empty mounts no endpoint. A checkout that takes money and hears nothing
+         back is a state somebody can see; an endpoint anybody may post to,
+         which would open subscriptions nobody paid for, is not. */
+      env {
+        name = "SCHOOLING_ASAAS_HOOK_TOKEN"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.asaas_hook_token.secret_id
+            version = "latest"
+          }
+        }
+      }
+
       volume_mounts {
         name       = "cloudsql"
         mount_path = "/cloudsql"

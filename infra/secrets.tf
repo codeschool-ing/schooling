@@ -89,3 +89,28 @@ resource "google_secret_manager_secret" "asaas_key" {
 
   depends_on = [google_project_service.enabled]
 }
+
+/* And the token the gateway presents when it posts an event.
+
+   IT IS A SEPARATE SECRET FROM THE KEY ABOVE, and the split is the same one the
+   mail key and the mail hook's password already have: they authenticate
+   opposite directions. The key is what we present to them; this is what they
+   present to us, it is generated on their webhook form rather than ours, and
+   rotating either has nothing to do with the other.
+
+   WHAT AN OPEN ENDPOINT WOULD BUY IS WORSE HERE THAN AT THE MAIL HOOK. Nothing
+   signs a payment event, so this token is the whole of the guard — and a forged
+   event saying a charge was paid opens a subscription nobody paid for.
+
+   Empty mounts no endpoint at all, which is the right failure: a checkout that
+   takes money and hears nothing back is a visible state, and an endpoint
+   anybody may post to is not. */
+resource "google_secret_manager_secret" "asaas_hook_token" {
+  secret_id = "schooling-asaas-hook-token"
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [google_project_service.enabled]
+}

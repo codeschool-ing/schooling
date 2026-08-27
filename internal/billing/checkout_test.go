@@ -327,13 +327,19 @@ func TestSettlingTwiceIsSettledAndAbandoningAPaidOneIsNot(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	/* AND `first` IS TRUE EXACTLY ONCE, which is what keeps six instalments of
+	   one plan from buying six terms: every one of them settles this checkout
+	   and only the one that moved it bought anything. */
 	for i := range 2 {
-		got, err := store.Settled(ctx, one.ID)
+		got, first, err := store.Settled(ctx, one.ID)
 		if err != nil {
 			t.Fatalf("settling the %d time: %v", i+1, err)
 		}
 		if got.Stage != billing.StagePaid {
 			t.Errorf("after settling it is at %q", got.Stage)
+		}
+		if want := i == 0; first != want {
+			t.Errorf("settling the %d time answered first=%v", i+1, first)
 		}
 	}
 

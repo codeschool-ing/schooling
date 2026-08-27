@@ -255,16 +255,28 @@ func (c *Checkouts) Charged(ctx context.Context, id uuid.UUID,
 	return c.ByID(ctx, id)
 }
 
-// Settled records that a charge was paid. It is idempotent: a webhook delivered
-// twice is the normal case, not the exception.
-func (c *Checkouts) Settled(ctx context.Context, id uuid.UUID) (Intent, error) {
-	if _, err := c.pool.Exec(ctx, `
+/*
+Settled records that a charge was paid, and says whether that was news.
+
+	IT IS IDEMPOTENT AND THE SECOND ANSWER IS THE INTERESTING ONE. A webhook
+	delivered twice is the normal case rather than the exception — one payment
+	produces a confirmation and then a receipt — and `first` is what tells a
+	caller which of those it is holding.
+
+	IT IS ALSO WHAT KEEPS SIX INSTALMENTS FROM BUYING SIX YEARS. Every
+	instalment of a plan is a payment of its own and all of them settle the same
+	checkout; only the one that moved it bought a term.
+*/
+func (c *Checkouts) Settled(ctx context.Context, id uuid.UUID) (Intent, bool, error) {
+	tag, err := c.pool.Exec(ctx, `
 		UPDATE checkout_intents SET stage = 'paid', updated_at = now()
 		 WHERE id = $1 AND stage <> 'paid'
-	`, id); err != nil {
-		return Intent{}, fmt.Errorf("billing: settling a checkout: %w", err)
+	`, id)
+	if err != nil {
+		return Intent{}, false, fmt.Errorf("billing: settling a checkout: %w", err)
 	}
-	return c.ByID(ctx, id)
+	one, err := c.ByID(ctx, id)
+	return one, tag.RowsAffected() == 1, err
 }
 
 // Abandoned records that a charge will not be paid — expired, deleted, or
