@@ -100,6 +100,58 @@ func meaning(event string) (outcome, bool) {
 	return "", false
 }
 
+/*
+aboutTheKey is the provider telling us something about our own credential.
+
+	# THE ONE WARNING NOBODY WOULD OTHERWISE GET
+
+	A key goes quiet after three months unused and expires after six, which the
+	generation screen says in small print and nobody reads twice. Without these,
+	the platform finds out on the day somebody tries to pay: the checkout answers
+	an outage, and the log says the gateway refused a request. Working backwards
+	from there to "the key expired" is an afternoon.
+
+	These arrive weeks earlier and say it in one line.
+
+	# THEY ARE LEVELS AND NOT ONE LEVEL
+
+	`EXPIRING_SOON` is something to do this month; `EXPIRED` and `DISABLED` are
+	the checkout being down right now. Logging both at the same level would make
+	the second one look like the first, which is the failure this exists to
+	prevent one step further along.
+
+	# AND A KEY BEING CREATED IS NOT HOUSEKEEPING
+
+	It is the event that says somebody can now charge in this platform's name.
+	Usually that somebody is us, and the line is noise; the one time it is not,
+	it is the only notice there will be.
+*/
+func aboutTheKey(event string) (slog.Level, string, bool) {
+	switch strings.ToUpper(strings.TrimSpace(event)) {
+	case "ACCESS_TOKEN_EXPIRING_SOON":
+		return slog.LevelWarn,
+			"the payment gateway's key expires soon — generate a new one and write it " +
+				"into the secret before it does, or checkout stops", true
+	case "ACCESS_TOKEN_EXPIRED":
+		return slog.LevelError,
+			"the payment gateway's key has EXPIRED — nobody can pay until a new one " +
+				"is written into the secret", true
+	case "ACCESS_TOKEN_DISABLED":
+		return slog.LevelError,
+			"the payment gateway's key has been DISABLED — an unused key is switched " +
+				"off after three months, and nobody can pay until it is replaced", true
+	case "ACCESS_TOKEN_DELETED":
+		return slog.LevelError,
+			"the payment gateway's key was DELETED — nobody can pay until a new one " +
+				"is written into the secret", true
+	case "ACCESS_TOKEN_CREATED", "ACCESS_TOKEN_ENABLED":
+		return slog.LevelInfo,
+			"a key that can charge in this platform's name was created or enabled at " +
+				"the payment gateway", true
+	}
+	return 0, "", false
+}
+
 // delivery is the part of their payload this platform reads.
 type delivery struct {
 	// ID is the event's own id. It is read to be logged and is NOT what
@@ -175,6 +227,16 @@ func Hook(token string, settle *Settlement, log *slog.Logger) http.Handler {
 		if err := json.Unmarshal(raw, &one); err != nil {
 			log.Warn("a payment event that is not JSON", "error", err)
 			http.Error(w, "not json", http.StatusBadRequest)
+			return
+		}
+
+		/* THE KEY'S OWN LIFE COMES FIRST, because these are the events that say
+		   this integration is about to stop working and they are not about a
+		   payment at all — `meaning` would drop them into the same silence as
+		   somebody opening an invoice. */
+		if level, why, about := aboutTheKey(one.Event); about {
+			log.Log(r.Context(), level, why, "event", one.Event)
+			w.WriteHeader(http.StatusOK)
 			return
 		}
 
