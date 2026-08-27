@@ -98,6 +98,20 @@ type Config struct {
 	MailHookUser     string
 	MailHookPassword string
 
+	/* AsaasKey is what the payment gateway is talked to with.
+
+	   EMPTY MOUNTS NO CHECKOUT AT ALL, which is the same arrangement the mail
+	   hook above has and the right failure for the same reason: a deployment
+	   with no key must offer nobody a way to pay rather than a button that
+	   fails after they have decided to.
+
+	   WHICH HOST IT REACHES IS NOT A SETTING. It follows `Environment`, because
+	   a key for the sandbox is refused by the live host and the other way round
+	   — so pointing production at the sandbox is not something a wrong value
+	   here can do quietly. Two settings that must agree are one setting with a
+	   way to be wrong. */
+	AsaasKey string
+
 	Environment Environment
 }
 
@@ -117,6 +131,8 @@ func Load() (Config, error) {
 
 		MailHookUser:     strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_USER")),
 		MailHookPassword: strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_PASSWORD")),
+
+		AsaasKey: strings.TrimSpace(os.Getenv("SCHOOLING_ASAAS_KEY")),
 	}
 
 	if cfg.DatabaseURL == "" {

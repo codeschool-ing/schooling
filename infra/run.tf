@@ -426,6 +426,30 @@ resource "google_cloud_run_v2_service" "api" {
         }
       }
 
+      /* AND WHAT THE PAYMENT GATEWAY IS TALKED TO WITH.
+
+         Subject to the same two-pass rule as the two above, and it has already
+         been through it: the container and its grant were applied first and the
+         value written before this line existed, because a versionless secret
+         named at `latest` stops the revision starting.
+
+         EMPTY MOUNTS NO CHECKOUT AT ALL. `cmd/api` registers the route only
+         when this has a value, so a deployment without one offers nobody a way
+         to pay rather than a button that fails after they have decided to.
+
+         WHICH HOST IT REACHES IS NOT HERE. It follows `SCHOOLING_ENV`, because
+         a sandbox key is refused by the live host and the other way round —
+         one setting instead of two that have to agree. */
+      env {
+        name = "SCHOOLING_ASAAS_KEY"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.asaas_key.secret_id
+            version = "latest"
+          }
+        }
+      }
+
       volume_mounts {
         name       = "cloudsql"
         mount_path = "/cloudsql"
