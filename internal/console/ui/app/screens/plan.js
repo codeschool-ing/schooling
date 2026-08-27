@@ -97,12 +97,26 @@ export default async function plan(section) {
       '</div>' +
       '<p class="aside">' + esc(term.note) + '</p>' +
 
+      /* WHAT THIS TERM COSTS RIGHT NOW, IN WORDS, ABOVE THE FIELD.
+
+         The field alone could not say it. Its placeholder was `490.00` — a
+         plausible price, in grey, in a box that decides what everybody pays —
+         and the first person to open this screen asked whether that was the
+         current price or an example. That is the question a control must never
+         raise about itself.
+
+         An empty field is now a sentence rather than an inference, and a
+         priced term says the number and the day it started, which is the same
+         thing the series below says and is worth saying where the decision is
+         being made. */
+      '<p class="price-state none">Reading…</p>' +
+
       '<form class="price-form" novalidate>' +
         '<div class="price-bar">' +
           '<label class="price-amount">' +
             '<span>Price</span>' +
             '<input type="text" inputmode="decimal" spellcheck="false" autocomplete="off" ' +
-              'placeholder="490.00" aria-describedby="price-note-' + term.months + '">' +
+              'placeholder="0,00" aria-describedby="price-note-' + term.months + '">' +
           '</label>' +
           '<label class="price-currency">' +
             '<span>Currency</span>' +
@@ -176,6 +190,18 @@ export default async function plan(section) {
     } catch (e) {
       series.innerHTML = '<h2>Every price ever set</h2><p class="none">' +
         esc(e.message) + '</p>';
+
+      /* AND THE TERMS SAY THEY DO NOT KNOW, rather than keeping the ellipsis
+         they were drawn with. A field with nothing above it reads as an
+         unpriced term, which is a different fact from "this screen could not
+         read what the price is" — and the two would send somebody to type a
+         number that already exists. */
+      TERMS.forEach((term) => {
+        const state = el.querySelector('[data-term="' + term.months + '"] .price-state');
+        state.className = 'price-state none';
+        state.textContent = 'What this costs could not be read, so this screen '
+          + 'cannot say whether it is priced.';
+      });
       return;
     }
 
@@ -207,12 +233,26 @@ export default async function plan(section) {
   }
 
   /* AND THE FORMS START AT WHAT IS IN FORCE, so a rise is typed over the number
-     it replaces rather than into an empty box beside it. */
+     it replaces rather than into an empty box beside it — and each term says in
+     words whether it has a price at all. */
   function fill(rows) {
     TERMS.forEach((term) => {
-      const now = rows.find((r) => r.termMonths === term.months);
-      if (!now) return;
       const box = el.querySelector('[data-term="' + term.months + '"]');
+      const state = box.querySelector('.price-state');
+      const now = rows.find((r) => r.termMonths === term.months);
+
+      if (!now) {
+        /* NOT PRICED IS NOT THE SAME AS FREE, and the second sentence is the
+           one somebody needs: the checkout refuses a term nobody has priced, so
+           an empty field here is a product nobody can buy. */
+        state.className = 'price-state none';
+        state.textContent = 'Nothing is priced for this term, so nobody can buy it.';
+        return;
+      }
+
+      state.className = 'price-state';
+      state.textContent = shown(now.cents, now.currency) + ' — in force since '
+        + day(now.from);
       box.querySelector('.price-amount input').value = asAmount(now.cents);
       box.querySelector('.price-currency input').value = now.currency;
     });
