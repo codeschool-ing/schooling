@@ -190,7 +190,7 @@ func TestAnUnknownHostIsRefusedAndNeverDefaults(t *testing.T) {
 // EACH ONE IS ABSENT RATHER THAN EMPTY when it is not set. A school with no
 // site of its own must leave the link out, and a school with no price must say
 // nothing about one rather than offer zero.
-func TestASchoolCarriesItsOwnAddressAndItsOwnPrice(t *testing.T) {
+func TestASchoolCarriesItsOwnAddressAndThePlatformsPrice(t *testing.T) {
 	pool := testPool(t)
 	at := seed(t, pool)
 	srv := server(t, pool)
@@ -205,12 +205,17 @@ func TestASchoolCarriesItsOwnAddressAndItsOwnPrice(t *testing.T) {
 	/* THE PRICE IS A ROW AND NOT A COLUMN (K-14), so this seeds one. It used to
 	   be part of the `UPDATE` above, which is exactly the shape the price stopped
 	   having: a value that could be overwritten is a value that cannot explain an
-	   invoice a year later. */
+	   invoice a year later.
+
+	   AND IT IS NOT SEEDED AT A SCHOOL, which is `0041`. One subscription opens
+	   every school (N-02), so the year has one price and every school quotes it —
+	   this used to price `code.` and leave `math.` unpriced, and the assertion
+	   below has been turned round with the table. */
 	if _, err := pool.Exec(context.Background(), `
-		INSERT INTO school_prices (tenant_id, cents, currency)
-		SELECT id, $2, $3 FROM tenants WHERE slug = $1
-	`, slug, 49000, "BRL"); err != nil {
-		t.Fatalf("giving the school a price: %v", err)
+		INSERT INTO plan_prices (scope, term_months, cents, currency)
+		VALUES ('all', 12, $1, $2)
+	`, 49000, "BRL"); err != nil {
+		t.Fatalf("pricing the year: %v", err)
 	}
 
 	status, body := get(t, srv, at.code)
@@ -224,15 +229,57 @@ func TestASchoolCarriesItsOwnAddressAndItsOwnPrice(t *testing.T) {
 		t.Errorf("the price answered %v %v", body["planPriceCents"], body["planCurrency"])
 	}
 
-	// The other school was seeded with neither, and must say so by omission.
+	/* THE OTHER SCHOOL SET NO ADDRESS AND QUOTES THE SAME PRICE, which is the
+	   two halves of this test pulling apart. A site is a school's and is absent
+	   when it has none; the price is the platform's, and a second school showing
+	   a different number would be somebody's cheaper door into the same
+	   subscription. */
 	status, body = get(t, srv, at.math)
 	if status != http.StatusOK {
 		t.Fatalf("status %d, want 200", status)
 	}
-	for _, absent := range []string{"site", "planPriceCents", "planCurrency"} {
+	if v, present := body["site"]; present {
+		t.Errorf("a school that set no site answered %v — the interface cannot tell "+
+			"\"none\" from \"zero\"", v)
+	}
+	if body["planPriceCents"] != float64(49000) || body["planCurrency"] != "BRL" {
+		t.Errorf("the second school quotes %v %v, and there is one subscription",
+			body["planPriceCents"], body["planCurrency"])
+	}
+}
+
+/*
+AND WITH NOTHING PRICED, A SCHOOL NAMES NO NUMBER — absent rather than zero.
+
+	"The subscription costs nothing" and "nobody has decided yet" are different
+	sentences, and a field that vanishes is the only way the interface can tell.
+
+	IT IS ASKED WITHOUT A DATABASE, AND THAT IS `0041`'s DOING. The price used to
+	hang off a school, so an unpriced school was one INSERT away. It is the
+	platform's now, and `plan_prices` is append-only — no test can put the
+	database back into the state where nothing is priced, so the question is put
+	to the handler with a school that has no price instead.
+*/
+func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
+	mux := http.NewServeMux()
+	tenant.NewHandler(70).Routes(mux)
+
+	rec := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)
+	mux.ServeHTTP(rec, r.WithContext(tenant.Scoped(r.Context(), tenant.School{
+		Slug: "code", Name: "Code School", Accent: "#5b8cff",
+	})))
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status %d: %s", rec.Code, rec.Body.String())
+	}
+	var body map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v", err)
+	}
+	for _, absent := range []string{"planPriceCents", "planCurrency"} {
 		if v, present := body[absent]; present {
-			t.Errorf("a school that set no %s answered %v — the interface cannot tell "+
-				"\"none\" from \"zero\"", absent, v)
+			t.Errorf("a school with no price answered %s = %v", absent, v)
 		}
 	}
 }
@@ -319,149 +366,6 @@ func TestSettingTheAccentOfNoSchool(t *testing.T) {
 }
 
 /* ---------- a price is a row (K-14) ---------- */
-
-/*
-THE THING THIS TABLE EXISTS FOR: THE OLD PRICE IS STILL THERE.
-
-A column would answer "what does it cost" and nothing else. The series answers
-"what did it cost in March", which is the question an invoice raises in November
-— and it is the question the previous shape could not be asked, because setting
-the new price destroyed the old one.
-*/
-func TestASchoolsOldPriceSurvivesTheNewOne(t *testing.T) {
-	pool := testPool(t)
-	store := tenant.NewStore(pool)
-	ctx := context.Background()
-	school := aSchoolRow(t, pool)
-
-	if _, _, err := store.SetPrice(ctx, school, 49000, "BRL"); err != nil {
-		t.Fatalf("setting the first price: %v", err)
-	}
-	was, wasCurrency, err := store.SetPrice(ctx, school, 59000, "BRL")
-	if err != nil {
-		t.Fatalf("raising the price: %v", err)
-	}
-	if was != 49000 || wasCurrency != "BRL" {
-		t.Errorf("the raise answered %d %q as what it replaced", was, wasCurrency)
-	}
-
-	series, err := store.Prices(ctx, school)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(series) != 2 {
-		t.Fatalf("two prices were set and the series holds %d", len(series))
-	}
-	if series[0].Cents != 59000 {
-		t.Errorf("the newest row is %d and should be the one in force", series[0].Cents)
-	}
-	if series[1].Cents != 49000 {
-		t.Errorf("the price that was replaced is gone: %+v", series)
-	}
-}
-
-// AND THE DATABASE REFUSES AN EDIT, which is what makes the sentence above a
-// guarantee rather than a habit. Every other append-only table here carries the
-// same trigger, and a price that could be updated would explain nothing.
-func TestAPriceCannotBeEditedOrDeleted(t *testing.T) {
-	pool := testPool(t)
-	store := tenant.NewStore(pool)
-	ctx := context.Background()
-	school := aSchoolRow(t, pool)
-
-	if _, _, err := store.SetPrice(ctx, school, 49000, "BRL"); err != nil {
-		t.Fatal(err)
-	}
-
-	if _, err := pool.Exec(ctx,
-		`UPDATE school_prices SET cents = 100 WHERE tenant_id = $1`, school); err == nil {
-		t.Error("a price was edited — the offer is then as forgeable as the column was")
-	}
-	if _, err := pool.Exec(ctx,
-		`DELETE FROM school_prices WHERE tenant_id = $1`, school); err == nil {
-		t.Error("a price was deleted")
-	}
-}
-
-// A SCHOOL WITH NO PRICE IS A SCHOOL, not a school priced at zero. The column
-// used zero for both, which made a free school and an undecided one the same
-// number — and one of those is a decision somebody made.
-func TestASchoolWithNoPriceHasNoOffer(t *testing.T) {
-	pool := testPool(t)
-	store := tenant.NewStore(pool)
-	school := aSchoolRow(t, pool)
-
-	series, err := store.Prices(context.Background(), school)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(series) != 0 {
-		t.Errorf("a school nobody has priced has %d prices", len(series))
-	}
-}
-
-// WHAT IS IN FORCE IS THE NEWEST ROW WHOSE DATE HAS PASSED. A row dated ahead is
-// already representable — nothing writes one today — and it must not be the
-// answer until its day arrives, or announcing a rise would apply it.
-func TestAPriceDatedAheadIsNotYetTheOffer(t *testing.T) {
-	pool := testPool(t)
-	store := tenant.NewStore(pool)
-	ctx := context.Background()
-	school := aSchoolRow(t, pool)
-
-	if _, _, err := store.SetPrice(ctx, school, 49000, "BRL"); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := pool.Exec(ctx, `
-		INSERT INTO school_prices (tenant_id, cents, currency, effective_from)
-		VALUES ($1, 59000, 'BRL', now() + interval '30 days')
-	`, school); err != nil {
-		t.Fatalf("dating a price ahead: %v", err)
-	}
-
-	// `SetPrice` answers what is in force, which is the older row.
-	was, _, err := store.SetPrice(ctx, school, 51000, "BRL")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if was != 49000 {
-		t.Errorf("the price in force answered %d — a row dated ahead was applied early", was)
-	}
-}
-
-// NEITHER HALF OF A PRICE IS ACCEPTED ALONE. Both refusals are the caller's to
-// fix and both say which half was wrong, because a constraint violation is true
-// and is not a sentence a console can show anybody.
-func TestAPriceIsANumberAndACurrency(t *testing.T) {
-	pool := testPool(t)
-	store := tenant.NewStore(pool)
-	ctx := context.Background()
-	school := aSchoolRow(t, pool)
-
-	for _, bad := range []struct {
-		cents    int
-		currency string
-	}{
-		{0, "BRL"}, {-1, "BRL"}, {49000, ""}, {49000, "brl"}, {49000, "REAIS"},
-	} {
-		if _, _, err := store.SetPrice(ctx, school, bad.cents, bad.currency); !errors.Is(
-			err, tenant.ErrNotAPrice) {
-			t.Errorf("%d %q answered %v", bad.cents, bad.currency, err)
-		}
-	}
-}
-
-// A price against a school nobody has is a 404's worth of error rather than a
-// foreign key violation — which is true and is not something to put in front of
-// a person.
-func TestPricingASchoolThatIsNotThereSaysSo(t *testing.T) {
-	store := tenant.NewStore(testPool(t))
-
-	_, _, err := store.SetPrice(context.Background(), uuid.New(), 49000, "BRL")
-	if !errors.Is(err, tenant.ErrNoSchool) {
-		t.Errorf("pricing a school nobody has answered %v", err)
-	}
-}
 
 // A school row to hang prices on. No host and no catalogue: what is under test
 // is the series, and everything else about a school is somebody else's test.
@@ -572,70 +476,5 @@ func TestASchoolWithNoAddressSaysSoRatherThanFailing(t *testing.T) {
 	_, err := tenant.NewStore(pool).HostOf(context.Background(), aSchoolRow(t, pool))
 	if !errors.Is(err, tenant.ErrUnknownHost) {
 		t.Errorf("a school with no address answered %v", err)
-	}
-}
-
-/*
-THE PRICE IN FORCE, AND ITS ROW'S IDENTITY.
-
-	Every other read of the series answers a number. This one answers WHICH ROW,
-	because a subscription has to point at it — a school raising its price must
-	not raise it for everybody who already paid, and `school_prices` is
-	append-only precisely so that pointing is possible.
-*/
-func TestTheRowInForceIsTheLatestOneWhoseDayHasCome(t *testing.T) {
-	pool := testPool(t)
-	store := tenant.NewStore(pool)
-	ctx := context.Background()
-
-	var id uuid.UUID
-	slug := "price-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
-	if err := pool.QueryRow(ctx,
-		`INSERT INTO tenants (slug, name) VALUES ($1, $1) RETURNING id`, slug).Scan(&id); err != nil {
-		t.Fatalf("seeding a school: %v", err)
-	}
-
-	// A SCHOOL WITH NO OFFER IS NOT A SCHOOL SOMEBODY CAN SUBSCRIBE TO, and it
-	// says so rather than answering zero.
-	if _, _, err := store.InForce(ctx, id); !errors.Is(err, tenant.ErrNoPrice) {
-		t.Errorf("a school with no price answered %v, want ErrNoPrice", err)
-	}
-
-	rows := map[string]uuid.UUID{}
-	for _, r := range []struct {
-		name  string
-		cents int
-		from  string
-	}{
-		{"old", 39000, "now() - interval '90 days'"},
-		{"now", 49000, "now() - interval '1 day'"},
-		{"soon", 59000, "now() + interval '30 days'"},
-	} {
-		var row uuid.UUID
-		if err := pool.QueryRow(ctx, `
-			INSERT INTO school_prices (tenant_id, cents, currency, effective_from)
-			VALUES ($1, $2, 'BRL', `+r.from+`) RETURNING id
-		`, id, r.cents).Scan(&row); err != nil {
-			t.Fatalf("seeding the %s price: %v", r.name, err)
-		}
-		rows[r.name] = row
-	}
-
-	got, price, err := store.InForce(ctx, id)
-	if err != nil {
-		t.Fatalf("reading: %v", err)
-	}
-	if got != rows["now"] {
-		t.Errorf("the row in force is %s; the current one is %s", got, rows["now"])
-	}
-	if price.Cents != 49000 || price.Currency != "BRL" {
-		t.Errorf("it came back as %d %s", price.Cents, price.Currency)
-	}
-
-	// A PRICE DATED AHEAD IS REPRESENTABLE AND IS NOT THE OFFER. That is what
-	// `effective_from` is for, and selling at it before its day would be
-	// charging somebody a number that is not on the page yet.
-	if got == rows["soon"] {
-		t.Error("a price dated ahead was sold as the one in force")
 	}
 }

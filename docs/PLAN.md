@@ -75,7 +75,7 @@ column retroactively. Everything else in this document can wait.
 |---|---|---|
 | N-01 | One login for the whole platform | With a single owner, one identity is better product, and it is already the mechanism: the cookie is issued for the parent domain. |
 | N-02 | One subscription, all schools | The marginal cost of another school is zero. The scarce resource is students, not content — and splitting the offer charges more from the person doing the thing that differentiates the platform. |
-| N-03 | The subscription's scope is modelled anyway | `subscription(account_id, scope)`, where scope is a school or `all`. A column today; a billing migration later. |
+| N-03 | The subscription's scope is modelled anyway | `subscription(account_id, scope)`, where scope is a school or `all`. A column today; a billing migration later. **And the PRICE carries the same word** (`0041`): a price per school under one platform-wide subscription lets somebody buy through the cheapest page and open every school, which is the dominant move rather than a loophole. "Which price applies" is now two columns being equal. |
 | N-04 | Free tier per school: the first course of every track | It is the shop window, and it must be open at every door. |
 | N-05 | One visual identity, one accent token per school | Inherited from the predecessor. The student needs to know where they are without the brand fragmenting. |
 | N-06 | English is the source language; Portuguese and English first | See [`../CLAUDE.md`](../CLAUDE.md). |

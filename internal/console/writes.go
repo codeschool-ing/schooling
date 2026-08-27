@@ -90,12 +90,14 @@ var Writes = []Write{
 			"about last month's",
 	},
 	{
-		Route: "PUT /console/api/v1/schools/{id}/price",
+		Route: "PUT /console/api/v1/plan/price",
 		Kind:  Parameter,
-		Why: "what a subscription costs at a school. No right answer for the same reason and a " +
-			"different shape: money is APPENDED, never overwritten (K-14), because a March " +
+		Why: "what a subscription costs, for one term. No right answer for the same reason and " +
+			"a different shape: money is APPENDED, never overwritten (K-14), because a March " +
 			"invoice has to stay explicable in November. Setting one writes a row dated from " +
-			"today and the old row stays",
+			"today and the old row stays. It is the PLATFORM's and not a school's, because " +
+			"one subscription opens every school (N-02) — two prices for the same thing is " +
+			"an arbitrage rather than a choice",
 	},
 	{
 		Route: "POST /console/api/v1/people/{id}/erase",

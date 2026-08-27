@@ -30,6 +30,15 @@
 
    The save is hidden from a read-only role because a control that always fails
    is a bad screen. The API refuses, and there is a test for that.
+
+   # AND WHAT IT COSTS IS NOT HERE ANY MORE
+
+   There was a price form under every school's colour, because `school_prices`
+   was keyed by school. `0041` moved the price to the platform — one
+   subscription opens every school (N-02), so two schools priced differently
+   let somebody buy through the cheaper page and open both — and the form went
+   with it, to `plan.js`. Left here it would have been a control that changes
+   what everybody pays from a screen about one school.
    ========================================================================== */
 
 import { esc } from '../dom.js';
@@ -62,16 +71,14 @@ export default async function schools(section) {
     '<header class="view-head">' +
       '<span class="eyebrow mono">Operate</span>' +
       '<h1>Schools</h1>' +
-      '<p>One colour each, and what a subscription costs. Those are the only two ' +
-      'things that differ between schools — one design system, one accent — so a ' +
-      'student knows which school they are in without the product looking like two ' +
-      'products. Every change is recorded with your name, what was there and what ' +
-      'replaced it.</p>' +
-      '<p>The two are not the same kind of setting. A colour is <strong>replaced</strong>: ' +
-      'there is one, and nothing has to be explained about the old one a year later. ' +
-      'A price is <strong>appended</strong> — saving one writes a new row dated from ' +
-      'today and the old one stays, because a March invoice has to stay explicable ' +
-      'in November.</p>' +
+      '<p>One colour each. It is the only thing that differs between schools — one ' +
+      'design system, one accent — so a student knows which school they are in ' +
+      'without the product looking like two products. Every change is recorded with ' +
+      'your name, what was there and what replaced it.</p>' +
+      '<p>A colour is <strong>replaced</strong>: there is one, and nothing has to be ' +
+      'explained about the old one a year later. What a subscription costs is not ' +
+      'here — one subscription opens every school, so there is one price for each ' +
+      'term and it is set under <strong>What it costs</strong>.</p>' +
     '</header>' +
     '<div id="list" aria-live="polite"><p class="checking">Reading…</p></div>';
 
@@ -131,32 +138,6 @@ export default async function schools(section) {
 
       '<div class="accent-themes"></div>' +
 
-      /* WHAT IT COSTS, UNDER THE COLOUR AND NOT BESIDE IT. They are two
-         settings of one school and the colour is the one somebody came for;
-         putting them side by side would make a price look like a field to
-         adjust, which is the reading this whole feature exists to prevent. */
-      '<form class="price-form" novalidate>' +
-        '<h3 class="price-head">What a subscription costs here</h3>' +
-        '<div class="price-bar">' +
-          '<label class="price-amount">' +
-            '<span>Price</span>' +
-            '<input type="text" inputmode="decimal" spellcheck="false" autocomplete="off" ' +
-              'value="' + esc(asAmount(school.priceCents)) + '" placeholder="490.00" ' +
-              'aria-describedby="price-note-' + esc(school.id) + '">' +
-          '</label>' +
-          '<label class="price-currency">' +
-            '<span>Currency</span>' +
-            '<input type="text" spellcheck="false" autocomplete="off" maxlength="3" ' +
-              'value="' + esc(school.currency || '') + '" placeholder="BRL">' +
-          '</label>' +
-          (mayAct()
-            ? '<button type="submit" class="btn btn-primary">Save a new price</button>'
-            : '<span class="list-count">A read-only role may look at this and not set it.</span>') +
-        '</div>' +
-        '<p class="signin-notice" id="price-note-' + esc(school.id) + '"></p>' +
-      '</form>' +
-
-      '<div class="price-series"></div>' +
     '</section>';
   }
 
@@ -226,129 +207,9 @@ export default async function schools(section) {
     });
 
     draw();
-    wirePrice(box, school);
-  }
-
-  /* ---------- what it costs ----------
-
-     THE SERIES IS READ WHEN THE SCREEN IS DRAWN AND AGAIN AFTER EVERY SAVE,
-     because the point of appending is that the old rows are still there and a
-     screen that showed only the newest would be the mutable field again with
-     extra steps. */
-  async function wirePrice(box, school) {
-    const form = box.querySelector('.price-form');
-    const amount = box.querySelector('.price-amount input');
-    const currency = box.querySelector('.price-currency input');
-    const note = box.querySelector('.signin-notice[id^="price-note"]');
-    const series = box.querySelector('.price-series');
-
-    await showSeries();
-
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      const cents = asCents(amount.value);
-      const money = currency.value.trim().toUpperCase();
-
-      /* CHECKED HERE SO SOMEBODY WHO MISTYPED IS TOLD AT ONCE. The check that
-         matters is the API's, which refuses the same two things for the same
-         reasons and has a test. */
-      if (cents === null || cents <= 0) {
-        note.className = 'signin-notice bad';
-        note.textContent = 'A price is an amount above zero, like 490 or 490.00. '
-          + 'A school with no offer has no price at all rather than a price of nothing.';
-        return;
-      }
-      if (!/^[A-Z]{3}$/.test(money)) {
-        note.className = 'signin-notice bad';
-        note.textContent = 'A currency is three letters, ISO 4217 — BRL, EUR, USD. '
-          + 'It is what a browser needs to format the amount.';
-        return;
-      }
-
-      note.className = 'signin-notice';
-      note.textContent = 'Saving…';
-      try {
-        const saved = await put('/console/api/v1/schools/' + school.id + '/price',
-          { cents, currency: money });
-        school.priceCents = saved.priceCents;
-        school.currency = saved.currency;
-        note.className = 'signin-notice ok';
-        note.textContent = 'Saved as a new price, from today. The one before it is still '
-          + 'in the series below.';
-      } catch (e) {
-        note.className = 'signin-notice bad';
-        note.textContent = e instanceof RequestError && e.status === 403
-          ? 'That asks for an operator.'
-          : e.message;
-      }
-      await showSeries();
-    });
-
-    async function showSeries() {
-      let answer;
-      try {
-        answer = await get('/console/api/v1/schools/' + school.id + '/prices');
-      } catch (e) {
-        series.innerHTML = '<p class="none">' + esc(e.message) + '</p>';
-        return;
-      }
-
-      const rows = answer.prices || [];
-      series.innerHTML = rows.length === 0
-        ? '<p class="none">This school has no price. The invitation then says what a ' +
-          'subscription opens without naming a figure.</p>'
-        : '<ol class="price-list">' +
-            rows.map((p, i) =>
-              '<li class="price-row' + (i === 0 ? ' price-now' : '') + '">' +
-                '<span class="price-money mono">' + esc(shown(p.cents, p.currency)) + '</span>' +
-                '<span class="price-from">' + (i === 0 ? 'in force since ' : 'from ') +
-                  esc(day(p.from)) + '</span>' +
-              '</li>').join('') +
-          '</ol>' +
-          '<p class="aside">' + esc(answer.append_only || '') + '</p>';
-    }
   }
 
   return { title: section.name, el };
-}
-
-/* CENTS IN AND A DECIMAL OUT, and the conversion lives in this file rather than
-   in the request because the server speaks cents everywhere — the ledger does,
-   the audit entry does, and a decimal crossing that boundary is the one place
-   money would become a string somebody has to parse.
-
-   `null` FOR ANYTHING THAT IS NOT A NUMBER, so the caller refuses rather than
-   sending a NaN that arrives as a zero and reads as "they set it to nothing". */
-function asCents(typed) {
-  const clean = String(typed || '').trim().replace(',', '.');
-  if (!/^\d+(\.\d{1,2})?$/.test(clean)) return null;
-  return Math.round(Number(clean) * 100);
-}
-
-function asAmount(cents) {
-  return cents > 0 ? (cents / 100).toFixed(2) : '';
-}
-
-/* What a price looks like in the list. `Intl` rather than a symbol table: the
-   console shows every school's currency and this file must not become the place
-   that knows which symbol goes on which side of which number. */
-function shown(cents, currency) {
-  try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency })
-      .format(cents / 100);
-  } catch (e) {
-    // A currency `Intl` does not know is still a real price. Showing the code
-    // beside the number is worse than showing nothing, and better than throwing.
-    return (cents / 100).toFixed(2) + ' ' + currency;
-  }
-}
-
-/* The day, not the second. A price is a decision somebody made on a date, and
-   the minute it was typed answers nothing anybody asks of this list. */
-function day(when) {
-  const at = new Date(when);
-  return Number.isNaN(at.getTime()) ? 'an unknown day' : at.toLocaleDateString();
 }
 
 /* One theme, as the study interface will actually paint it.

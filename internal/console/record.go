@@ -75,15 +75,11 @@ type School struct {
 	Name   string
 	Accent string
 
-	// What the subscription costs here right now, and in which currency. It is
-	// the top of a dated series (K-14) rather than a field on the school —
-	// `tenant` holds the rest, and the console asks for it only on the screen
-	// that changes it.
-	//
-	// Zero and empty mean the school has no offer, which is a real state: a
-	// school can exist before anybody has decided what it costs.
-	PriceCents int
-	Currency   string
+	// THERE IS NO PRICE HERE ANY MORE. `0041` moved it to the platform: one
+	// subscription opens every school (N-02), so a number per school was an
+	// offer somebody could shop between. What it costs is `PlanHandler`'s, and
+	// a school that carried a copy of it would be showing the same figure on
+	// every row while implying it belongs to one of them.
 }
 
 // Course is how far along one course they are.
