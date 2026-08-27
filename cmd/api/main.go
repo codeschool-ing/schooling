@@ -44,6 +44,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/geo/dbip"
 	"github.com/codeschool-ing/schooling/internal/platform/logs"
 	"github.com/codeschool-ing/schooling/internal/platform/mail"
+	"github.com/codeschool-ing/schooling/internal/platform/pay/asaas"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
@@ -564,6 +565,28 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   whoever holds the session — which, on a shared machine, is not always
 	   them. */
 	scoped.HandleFunc("POST /api/v1/confirm/resend", resend(accounts, notifier))
+
+	/* AND STARTING A PAYMENT, WHICH IS MOUNTED ONLY WHEN THERE IS A GATEWAY.
+
+	   No key, no route — the same arrangement the delivery hook has and the
+	   right failure for the same reason: a deployment that cannot take money
+	   must offer nobody a way to try rather than a button that fails after
+	   somebody has decided to pay. `secrets.tf` says this about the container
+	   the key lives in, and this is the line that makes it true.
+
+	   IT IS ON THE SCHOOL'S API, so the chain above applies: a viewing cannot
+	   reach it (`identity.RefuseWrites`), which is K-02 doing its job on the one
+	   route where an operator acting as somebody else would be spending their
+	   money. */
+	if cfg.AsaasKey != "" {
+		billing.NewHandler(
+			billing.NewCheckouts(pool, confirmedAddress(accounts)),
+			billing.NewPrices(pool),
+			viaAsaas(cfg, log),
+			cfg.PlatformDomain,
+			payerOf(accounts),
+		).Routes(scoped)
+	}
 
 	mux.Handle("/api/v1/", web.Chain(scoped,
 		tenant.Resolve(tenant.NewStore(pool)),
@@ -2039,6 +2062,112 @@ resend is the banner's button.
 	reporting on an account to whoever holds the session, and the screen's
 	sentence does not need it.
 */
+/*
+viaAsaas is the payment gateway, wired into the seam `billing` declares.
+
+	NEITHER SIDE IMPORTS THE OTHER. `billing` holds no provider and the provider
+	holds no domain — this function is the whole of what joins them, which is
+	what makes the second gateway a second one of these rather than a rewrite.
+
+	THE HOST IS READ OFF THE KEY AND IS NOT A SETTING. It followed `SCHOOLING_ENV`
+	first, which is one setting and is the wrong one: it would have made a
+	production deployment unable to reach the sandbox, so the first end-to-end
+	run of this integration would have been with real money. `asaas.HostFor` puts
+	the question to the thing that actually answers it.
+*/
+func viaAsaas(cfg config.Config, log *slog.Logger) billing.Gateway {
+	client := asaas.New(cfg.AsaasKey, asaas.HostFor(cfg.AsaasKey))
+
+	/* A REAL DEPLOYMENT ON A PRETEND GATEWAY IS ALLOWED AND IS SAID OUT LOUD.
+
+	   It is the rehearsal this arrangement exists to make possible — the whole
+	   path, in the real service, before an account with real money exists. What
+	   it must never be is quiet: somebody reading a log has to be able to tell
+	   why a month of subscriptions is worth nothing. The payer sees it too,
+	   because the invoice they are sent to is on the sandbox's own domain. */
+	if cfg.Environment == config.Production && asaas.IsSandbox(cfg.AsaasKey) {
+		log.Warn("the payment gateway is the SANDBOX in a production deployment — " +
+			"checkouts will complete and no money will move")
+	}
+
+	return billing.Gateway{
+		Name: "asaas",
+
+		NewCustomer: func(ctx context.Context, name, email, taxID string) (string, error) {
+			one, err := client.CreateCustomer(ctx, asaas.Customer{
+				Name: name, Email: email, TaxID: taxID,
+			})
+			if err != nil {
+				return "", err
+			}
+			return one.ID, nil
+		},
+
+		NewCharge: func(ctx context.Context, in billing.Charge) (string, string, error) {
+			method := asaas.Pix
+			if in.Method == billing.MethodCard {
+				method = asaas.Card
+			}
+			charge, err := client.CreateCharge(ctx, asaas.Charge{
+				CustomerID:  in.CustomerID,
+				Method:      method,
+				Cents:       in.Cents,
+				Due:         in.Due,
+				Reference:   in.Reference,
+				Description: in.Describes,
+				Instalments: in.Instalments,
+			})
+			if err != nil {
+				return "", "", err
+			}
+			return charge.ID, charge.InvoiceURL, nil
+		},
+
+		/* A REFUSAL IS THEIRS AND A SENTENCE IS OURS. `asaas.Refused` carries a
+		   generic code and Portuguese prose; this says only whether the caller
+		   can fix it, and `billing` picks the words in the language the buyer
+		   reads. */
+		Refused: func(err error) bool {
+			var refused *asaas.Refused
+			return errors.As(err, &refused) && refused.Status < 500
+		},
+	}
+}
+
+/*
+confirmedAddress is the gate `billing.Open` will not run without.
+
+	IT ANSWERS ONE QUESTION AND NOT "IS THIS PERSON ALLOWED TO PAY". Whether a
+	suppressed address should also stop a checkout is a decision nobody has made;
+	what ROADMAP.md settled is confirmation, and this is exactly that.
+*/
+func confirmedAddress(accounts *identity.Store) billing.Confirmed {
+	return func(ctx context.Context, id uuid.UUID) (bool, error) {
+		account, err := accounts.ByID(ctx, id)
+		if err != nil {
+			return false, err
+		}
+		return account.EmailVerifiedAt != nil, nil
+	}
+}
+
+/*
+payerOf is who is buying, in the two words a gateway wants.
+
+	THE NAME AND THE ADDRESS COME FROM THE SESSION AND NOT FROM THE REQUEST. A
+	checkout that took them from the body would let somebody register a payer
+	under a name they do not have, at a gateway that keeps it.
+*/
+func payerOf(accounts *identity.Store) func(context.Context) (uuid.UUID, string, string, bool) {
+	return func(ctx context.Context) (uuid.UUID, string, string, bool) {
+		account, ok := identity.FromContext(ctx)
+		if !ok {
+			return uuid.Nil, "", "", false
+		}
+		return account.ID, account.Name, account.Email, true
+	}
+}
+
 func resend(accounts *identity.Store, notifier *notify.Notifier) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, ok := identity.AccountID(r.Context())
