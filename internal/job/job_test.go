@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/job"
@@ -38,9 +39,27 @@ func testPool(t *testing.T) *pgxpool.Pool {
 // A name unique to each test: this table is not truncated between them and
 // `Latest` is scoped by job, so a shared name would make one test read
 // another's runs.
+/*
+aJob is a name no other run has used.
+
+	IT CARRIED ONLY THE TEST'S NAME AND THAT WAS A BUG. `job_runs` records that
+	a job ran and is never emptied between runs — not by these tests, and not by
+	`cmd/reset`, which keeps it deliberately. So a name derived from the test
+	alone was the SAME name on the second run against a database, and a test
+	asserting "three runs came back" got six, then nine.
+
+	It passed in CI throughout, because CI builds the schema fresh every time.
+	That is the shape of failure worth naming: a test that is correct exactly
+	once is indistinguishable from a correct test until somebody runs the suite
+	twice.
+
+	The test's name stays in front, because a row in a database somebody is
+	debugging should say which test left it there.
+*/
 func aJob(t *testing.T) string {
 	t.Helper()
-	return "test-" + strings.ReplaceAll(t.Name(), "/", "-")
+	return "test-" + strings.ReplaceAll(t.Name(), "/", "-") +
+		"-" + strings.ReplaceAll(uuid.NewString(), "-", "")[:12]
 }
 
 func TestARunThatSucceededSaysWhatItDid(t *testing.T) {
@@ -210,7 +229,9 @@ func TestAJobThatHasNeverRunSaysSo(t *testing.T) {
 func TestTheRunsAreOneJobsAndNewestFirst(t *testing.T) {
 	store := job.NewStore(testPool(t))
 	ctx := context.Background()
-	mine, theirs := aJob(t), aJob(t)+"-other"
+	// Two names, because the claim is that one job's history is one job's. They
+	// are distinct by construction now rather than by a suffix.
+	mine, theirs := aJob(t), aJob(t)
 
 	for _, detail := range []string{"first", "second", "third"} {
 		id, err := store.Started(ctx, mine, "v1")
