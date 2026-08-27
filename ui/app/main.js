@@ -412,21 +412,53 @@ function paintVerifyBanner() {
   el.hidden = !show;
   document.body.classList.toggle('banner-on', show);
   if (!show) { el.innerHTML = ''; return; }
-  /* WHICH OF THE TWO SENTENCES IS TRUE.
+
+  /* WHICH OF THE THREE SENTENCES IS TRUE.
 
      "We sent a link to X" was said unconditionally, and it was a lie to every
      account created before confirmations existed and to anybody whose link
-     expired unread. The server now says whether one is outstanding, so the
-     screen can say the true thing in both cases — and the button changes with
-     it, because "Resend" is a strange word for a message nobody has had. */
+     expired unread. The server says whether one is outstanding, so the screen
+     can say the true thing in both cases — and the button changes with it,
+     because "Resend" is a strange word for a message nobody has had.
+
+     THE THIRD IS THE ONE THAT MATTERS, and it is not a fourth wording of the
+     same nudge. Once the address has REFUSED us — the mailbox does not exist,
+     the receiving side blocklists us — every sentence above stays technically
+     true and stops being worth anything: the message left, it came back, and
+     the button offers to do it again. What that person needs is not a nudge,
+     it is the reason. */
+  const refused = s.emailRefused === true;
   const waiting = s.confirmationPending === true;
 
   /* EACH STRING IS ITS OWN `txt('literal')` CALL, and the ternary picks between
      the RESULTS rather than between the arguments. `check-interface` reads this
      file for `txt('…')` and cannot see a literal inside a conditional passed to
-     it — written the other way these four stop being policed, and the fifth
-     language this platform learns loses them silently. The tool said so: the
-     strings it could see dropped by two and its unused count rose by the same. */
+     it — written the other way these stop being policed, and the fifth language
+     this platform learns loses them silently. The tool said so: the strings it
+     could see dropped by two and its unused count rose by the same. */
+  if (refused) {
+    /* NO BUTTON, WHICH IS THE POINT. A control that cannot work is worse than
+       no control: it invites somebody to keep trying, and `notify` refuses the
+       send anyway — so the click would spend a request to produce silence.
+
+       AND THE SENTENCE SAYS WHAT IS NOT WRONG. Confirming gates nothing here,
+       so somebody reading this can carry on studying; saying so is the
+       difference between an explanation and an alarm about something they
+       cannot fix from this screen. */
+    el.innerHTML =
+      '<span class="vb-text"><strong>' + txt('We could not reach you.') + '</strong> ' +
+      txt('Our message to') + ' <span class="vb-addr">' + esc(s.email || '') + '</span> ' +
+      /* ONE LITERAL ON ONE LINE, however long it runs. Split across lines with
+         a `+` it reads better and `check-interface` stops seeing it — which is
+         a sentence that quietly ships untranslated, in the banner whose entire
+         job is to be understood. It was written the wrong way first and the
+         tool caught two of the three strings; this is the third. */
+      txt('came back refused, so we have stopped writing to it. You can carry on studying — nothing here depends on it.') + '</span>' +
+      '<span class="vb-status" id="vb-status" aria-live="polite"></span>' +
+      '<button type="button" class="vb-close" aria-label="' + txt('Dismiss') + '">×</button>';
+    return;
+  }
+
   const lead = waiting ? txt('We sent a link to') : txt('We can send a link to');
   const action = waiting ? txt('Resend') : txt('Send');
 
