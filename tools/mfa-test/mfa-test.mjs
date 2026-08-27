@@ -185,7 +185,30 @@ try {
   /* AND IT WAS SPENT. A code that stays unspent is a code somebody else can
      still use after the person who owned it did. */
   await page.goto(`${BASE}/#/account`, { waitUntil: 'load' });
-  await page.waitForSelector('#left', { timeout: 8000 });
+
+  /* THE ELEMENT IS THERE BEFORE THE NUMBER IS, and waiting for the element was
+     therefore waiting for nothing. `showItIsOn` writes `#left` synchronously
+     holding "Counting your recovery codes…" and only then awaits the count, so
+     a read that follows `waitForSelector('#left')` is a read of the
+     placeholder whenever the request has not landed yet.
+
+     It nearly always had. The run that finally lost it lost by TWO
+     MILLISECONDS — the server logged `GET /api/v1/second-factor/recovery-codes
+     200` at .0901 and this line reported the placeholder at .0928 — after
+     thirty green runs on main. A race this narrow does not announce itself; it
+     waits for an unrelated change to shift the boot by a few milliseconds and
+     then fails somebody else's pull request.
+
+     So it waits for a DIGIT, which is the thing being asserted. A failure to
+     count says "Could not count your recovery codes." and carries no digit, so
+     the wait is allowed to time out and the assertion below still reports what
+     the screen actually said — a wait that threw here would replace a legible
+     sentence with a Playwright stack. */
+  await page.waitForFunction(
+    () => /\d/.test(document.querySelector('#left')?.textContent || ''),
+    null, { timeout: 8000 },
+  ).catch(() => {});
+
   const left = await page.locator('#left').innerText();
   if (!/\b9\b/.test(left)) {
     wrong(`the account screen says "${left}" after one code was spent, want nine left`);
