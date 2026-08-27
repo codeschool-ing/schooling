@@ -105,11 +105,13 @@ type Config struct {
 	   with no key must offer nobody a way to pay rather than a button that
 	   fails after they have decided to.
 
-	   WHICH HOST IT REACHES IS NOT A SETTING. It follows `Environment`, because
-	   a key for the sandbox is refused by the live host and the other way round
-	   — so pointing production at the sandbox is not something a wrong value
-	   here can do quietly. Two settings that must agree are one setting with a
-	   way to be wrong. */
+	   WHICH HOST IT REACHES IS NOT A SETTING AND IS NOT THIS ONE EITHER. It is
+	   read off the key itself — `asaas.HostFor` — because the key is the thing
+	   that actually determines the answer: a sandbox key is refused by the live
+	   host and the other way round. Following `Environment` was the first
+	   version, and its cost was that a production deployment could never reach
+	   the sandbox, which would make the first end-to-end run of a payment
+	   integration one with real money in it. */
 	AsaasKey string
 
 	Environment Environment

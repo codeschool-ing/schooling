@@ -357,3 +357,34 @@ func TestAChargeCanBeReadBack(t *testing.T) {
 		t.Errorf("it read with %s", (*seen)[0].method)
 	}
 }
+
+/*
+THE HOST IS READ OFF THE KEY, AND THE UNKNOWN CASE GOES TO THE SAFE SIDE.
+
+	A sandbox key introduces itself with `$aact_hmlg_` — homologação — and that
+	is the only marker recognised here. Everything else is the live host, which
+	is the direction the unknown case has to fail in: an unrecognised key sent
+	live is a 401 and no money moves, while a live key sent to the sandbox would
+	create charges in a system nobody pays from and leave somebody believing they
+	had subscribed.
+*/
+func TestTheHostIsReadOffTheKey(t *testing.T) {
+	for _, one := range []struct {
+		what string
+		key  string
+		want string
+	}{
+		{"a sandbox key", "$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY", asaas.Sandbox},
+		{"the same with whitespace", "  $aact_hmlg_abc  ", asaas.Sandbox},
+		{"a live key", "$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY", asaas.Live},
+		{"a marker nobody has seen", "$aact_xxxx_whatever", asaas.Live},
+		{"nothing at all", "", asaas.Live},
+	} {
+		if got := asaas.HostFor(one.key); got != one.want {
+			t.Errorf("%s went to %s, want %s", one.what, got, one.want)
+		}
+		if got := asaas.IsSandbox(one.key); got != (one.want == asaas.Sandbox) {
+			t.Errorf("%s was called sandbox=%v", one.what, got)
+		}
+	}
+}

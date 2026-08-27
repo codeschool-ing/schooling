@@ -437,9 +437,11 @@ resource "google_cloud_run_v2_service" "api" {
          when this has a value, so a deployment without one offers nobody a way
          to pay rather than a button that fails after they have decided to.
 
-         WHICH HOST IT REACHES IS NOT HERE. It follows `SCHOOLING_ENV`, because
-         a sandbox key is refused by the live host and the other way round —
-         one setting instead of two that have to agree. */
+         WHICH HOST IT REACHES IS NOT HERE AND IS NOT A SETTING AT ALL. It is
+         read off the key: a sandbox one says `$aact_hmlg_` and anything else
+         goes live. That is what lets this service run the whole payment path
+         against the sandbox before an account with real money exists — and
+         `cmd/api` says so in the log when it does. */
       env {
         name = "SCHOOLING_ASAAS_KEY"
         value_source {

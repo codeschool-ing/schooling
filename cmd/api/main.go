@@ -582,7 +582,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		billing.NewHandler(
 			billing.NewCheckouts(pool, confirmedAddress(accounts)),
 			billing.NewPrices(pool),
-			viaAsaas(cfg),
+			viaAsaas(cfg, log),
 			cfg.PlatformDomain,
 			payerOf(accounts),
 		).Routes(scoped)
@@ -2069,16 +2069,26 @@ viaAsaas is the payment gateway, wired into the seam `billing` declares.
 	holds no domain — this function is the whole of what joins them, which is
 	what makes the second gateway a second one of these rather than a rewrite.
 
-	THE HOST FOLLOWS THE ENVIRONMENT AND IS NOT A SETTING. A sandbox key is
-	refused by the live host and the other way round, so pointing production at
-	the sandbox is not something a wrong value can do quietly.
+	THE HOST IS READ OFF THE KEY AND IS NOT A SETTING. It followed `SCHOOLING_ENV`
+	first, which is one setting and is the wrong one: it would have made a
+	production deployment unable to reach the sandbox, so the first end-to-end
+	run of this integration would have been with real money. `asaas.HostFor` puts
+	the question to the thing that actually answers it.
 */
-func viaAsaas(cfg config.Config) billing.Gateway {
-	base := asaas.Sandbox
-	if cfg.Environment == config.Production {
-		base = asaas.Live
+func viaAsaas(cfg config.Config, log *slog.Logger) billing.Gateway {
+	client := asaas.New(cfg.AsaasKey, asaas.HostFor(cfg.AsaasKey))
+
+	/* A REAL DEPLOYMENT ON A PRETEND GATEWAY IS ALLOWED AND IS SAID OUT LOUD.
+
+	   It is the rehearsal this arrangement exists to make possible — the whole
+	   path, in the real service, before an account with real money exists. What
+	   it must never be is quiet: somebody reading a log has to be able to tell
+	   why a month of subscriptions is worth nothing. The payer sees it too,
+	   because the invoice they are sent to is on the sandbox's own domain. */
+	if cfg.Environment == config.Production && asaas.IsSandbox(cfg.AsaasKey) {
+		log.Warn("the payment gateway is the SANDBOX in a production deployment — " +
+			"checkouts will complete and no money will move")
 	}
-	client := asaas.New(cfg.AsaasKey, base)
 
 	return billing.Gateway{
 		Name: "asaas",

@@ -47,13 +47,53 @@ import (
 	"time"
 )
 
-// The two hosts. Which one a deployment talks to is which account it has a key
-// for, and the key for one is refused by the other — so there is no way to point
-// production at the sandbox and have it quietly work.
+// The two hosts. A key for one is refused by the other, so nothing can point at
+// the wrong one and quietly work — it fails as a 401 rather than as money going
+// somewhere unexpected.
 const (
 	Sandbox = "https://api-sandbox.asaas.com/v3"
 	Live    = "https://api.asaas.com/v3"
 )
+
+/*
+sandboxPrefix is how a sandbox key introduces itself: `hmlg` for homologação.
+
+	THE PREFIX IS A FORMAT MARKER AND NOT A SECRET. It is the same eleven
+	characters on every sandbox key ever issued; the entropy is the hundred and
+	fifty after it.
+*/
+const sandboxPrefix = "$aact_hmlg_"
+
+/*
+HostFor is which host a key belongs to, read off the key itself.
+
+	# ONE SETTING INSTEAD OF TWO THAT HAVE TO AGREE
+
+	The host was going to follow `SCHOOLING_ENV`, which is one setting and is the
+	WRONG one: it makes a production deployment unable to talk to the sandbox,
+	so the first end-to-end run of a payment integration would be with real
+	money at a real account. Reading it off the key keeps the single setting and
+	moves it to the thing that actually determines the answer — a sandbox key
+	cannot reach the live host whatever anybody configures.
+
+	# THE ASYMMETRY IS DELIBERATE
+
+	Only the sandbox marker is recognised, and everything else is Live. That is
+	not laziness about the production prefix: it is the direction the unknown
+	case should fail in. A key whose marker this does not recognise sent to Live
+	is refused with a 401 and no money moves; the same key sent to the sandbox
+	would create charges in a system nobody pays from, and somebody would believe
+	they had subscribed.
+*/
+func HostFor(key string) string {
+	if strings.HasPrefix(strings.TrimSpace(key), sandboxPrefix) {
+		return Sandbox
+	}
+	return Live
+}
+
+// IsSandbox is the same reading, for a caller that wants to say so out loud.
+func IsSandbox(key string) bool { return HostFor(key) == Sandbox }
 
 /*
 callTimeout is how long one request may take.
