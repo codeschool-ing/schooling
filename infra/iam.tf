@@ -57,6 +57,15 @@ resource "google_secret_manager_secret_iam_member" "run_reads_the_mail_hook_pass
   member    = "serviceAccount:${google_service_account.run.email}"
 }
 
+// And the payment gateway's key. Same grant and same principle — and the
+// narrowest one here matters most, because this is the key that can create a
+// charge in the platform's name.
+resource "google_secret_manager_secret_iam_member" "run_reads_the_asaas_key" {
+  secret_id = google_secret_manager_secret.asaas_key.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.run.email}"
+}
+
 // A custom service account starts with nothing, logging included.
 resource "google_project_iam_member" "run_writes_logs" {
   project = var.project
