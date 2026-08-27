@@ -223,6 +223,19 @@ the phase-0 condition did — by being left visible until it was true rather tha
 *Done when: a student pays under both models, delinquency suspends on its own, and recovery
 restores access with progress intact.*
 
+**BRAZIL SHIPS FIRST, AND THE REASON IS THE ENTITY RATHER THAN THE CODE.** The cheapest legal
+entity available here is a MEI, and a MEI's weak point is not its revenue ceiling — it is
+whether it can receive recurring payment from abroad, which is the question every list of
+permitted activities leaves out. Building the international side first would mean discovering
+that answer after the work rather than before it.
+
+So the domestic list goes out on one gateway, under the cheapest entity that exists, and the
+international one follows when there is revenue to justify the entity it needs. Three things
+fall out of that order: one integration instead of two in the first release, which is what
+"integrate one concretely" below asks for anyway; the entity cost stays at its floor; and the
+hardest unknown leaves the critical path. The items do not change — only the order they ship
+in, which was until now unwritten and therefore a matter of memory.
+
 - [ ] Brazil: annual and biennial, paid by Pix, card — with instalments — or debit
 - [ ] Elsewhere: monthly, annual and biennial, recurring
 - [ ] Pix Automático, deliberately after the first two
@@ -241,6 +254,12 @@ restores access with progress intact.*
   **TWO PROVIDERS, AND THAT IS THE SHAPE OF THE PROBLEM RATHER THAN A FAILURE OF THE PLAN.** Nothing covers Pix and international recurring well; Stripe's Pix is invite-only for businesses based in Brazil, and the Brazilian gateways do not do the rest of the world. So one domestic and one international, and the ledger stays the single truth both write into.
 
   **DO NOT BUILD THE ABSTRACTION FIRST.** The instinct is a `platform/payments` with an interface and two implementations, the way `platform/mail` was built — but that worked because a real provider's API was in hand when the interface was drawn. An interface imagined before any integration is wrong in exactly the places that matter: what is synchronous, what arrives by webhook, and what is idempotent under which key. Integrate one provider concretely, and let the second pay the cost of generalising with two real examples on the table instead of one and a guess.
+
+  **TWO PRICES OF THE MECHANISM, SETTLED WITH THE NUMBERS RATHER THAN BY TASTE.**
+
+  *Instalments stop at six, with no interest, and twelve is not offered at first.* The published rate for twelve reaches upwards of twenty per cent of the sale — on a term costing R$ 590 that is over a hundred reais, which is too much money to commit to before a real account has shown the real number. Six covers most of the objection to a large ticket at a cost that can be swallowed. The number to check first, once there is a sandbox, is that one.
+
+  *Pix carries a five per cent discount, and it very nearly pays for itself.* A flat fee of about R$ 1,99 against roughly 2,99% on a card is a sixteen-real difference on the same R$ 590 sale — so a discount costing R$ 29,50 is really costing R$ 13,50, in exchange for settling immediately, with no chargeback, through the method most of this country's online commerce already uses. It is the cheapest discount this platform will ever be able to offer, and it is why the item said "at a discount" before anybody had worked out why.
 
   **A DECISION THESE ITEMS INHERIT, recorded so it is not taken again from scratch: confirmation is required to START a payment, and never to finish one.** The check belongs in whatever creates a checkout session, before any money moves. It must NOT go in `billing.Begin`, which is called once a payment has already succeeded — a guard there refuses the subscription of somebody who has just been charged, and the honest response at that point is a refund rather than a refusal. That placement was proposed, approved, and caught while reading the code; it is written down because the wrong version is the intuitive one.
 
