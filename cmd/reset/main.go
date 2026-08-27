@@ -94,6 +94,14 @@ var kept = map[string]string{
 	"tenant_domains":    "the addresses they answer at",
 	"school_prices":     "what a school charges, which is configuration written as history (K-14)",
 
+	// THE ONE PIECE OF HISTORY IN THIS MAP, and it is here because emptying it
+	// is not a clean slate for us — it is a clean slate for the mailboxes that
+	// already refused us, and writing to one again is the complaint we were
+	// told not to repeat. It names nobody: a row holds a hash. A reset is meant
+	// to cost this platform its data, not its standing with the providers who
+	// decide whether anybody else's mail arrives.
+	"mail_suppressions": "who refused our mail, as hashes and never addresses",
+
 	"catalog_tracks":            "the catalogue, all of it",
 	"catalog_track_forks":       "the catalogue",
 	"catalog_track_courses":     "the catalogue",

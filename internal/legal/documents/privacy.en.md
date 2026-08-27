@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 This says what we hold about you, why, and what happens to it when you ask us to
@@ -75,6 +75,24 @@ We hold:
 - **Your sessions** — one row per browser you are signed in on, holding a hash
   of the session token and the browser's own description of itself. Changing
   your password ends every other session.
+
+## If our mail is refused
+
+When a message we send comes back permanently — the mailbox does not exist, the
+receiving server refuses us, or you mark us as spam — we record that we must not
+write to that address again, and we stop.
+
+**We record it as a hash and never as the address.** The row cannot be read back
+into an address, and it cannot be searched for anybody: all it can do is answer
+*may we write to this one*, at the moment we are about to. It says nothing about
+who you are, and there is no account attached to it.
+
+This is the one record that outlives an erasure, and holding a hash is what lets
+it: after you are gone it holds nothing that was yours, and it still stops us
+writing to a mailbox that told us to stop.
+
+A message that merely failed to arrive today — a full mailbox, a server having
+an afternoon — is not this, and does not go on the list.
 
 ## What you do here
 
@@ -189,12 +207,16 @@ those rows are how we know which questions are bad, and deleting them would
 degrade the material for the people still studying without making you any more
 private than being unidentifiable already does.
 
-Two things do not disappear:
+Three things do not disappear:
 
 - **The record that money changed hands.** We are required to keep it, and it is
   the other half of a bank statement. After an erasure it holds an amount, a
   date and an identifier that means nobody.
 - **The record of administrative actions**, for the reason given above.
+- **That an address refused our mail**, as the hash described above and never as
+  the address. If we dropped it and you signed up again later with the same
+  mailbox, we would write to a mailbox that had already told us to stop — which
+  is the thing you asked us not to do.
 
 Your certificates **are** deleted, and the verification page then answers for
 their codes exactly as it does for a code that never existed — because answering

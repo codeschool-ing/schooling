@@ -235,6 +235,52 @@ whose SPF and DKIM it published. An unauthenticated From is accepted by the API
 and then either rejected or filed as spam by whoever receives it, which is the
 failure that looks like success from this side.
 
+## And hearing what comes back
+
+Sending without listening is how a new domain burns its own reputation: an
+address that refuses us permanently goes on being written to, and every attempt
+after the first is a mark against this domain with the providers who decide
+whether anybody else's mail arrives.
+
+The provider says so over a webhook, and **Brevo does not sign its webhooks** —
+no HMAC, no shared secret in a header, nothing to verify a body against. So the
+secret is a segment of the path, compared in constant time, and kept out of the
+request log by `web.Loggable`. An open endpoint here is a way for anybody to
+stop this platform writing to an address of their choosing.
+
+Generate one rather than choosing one, and write it the way the key went in:
+
+```sh
+# Generate, copy, paste, Ctrl-D. Nothing echoes it back.
+openssl rand -hex 32
+gcloud secrets versions add schooling-mail-hook-secret --data-file=- --project=aleogr-schooling
+```
+
+```sh
+terraform -chdir=infra apply
+```
+
+The revision that comes up says `{"message":"mail hook","mounted":true}`. An
+empty secret mounts no endpoint at all, which is the right failure: nothing
+there, rather than something anybody may post to.
+
+Then point the provider at it — in Brevo, *Transactional → Settings → Webhook*,
+one webhook for the whole account:
+
+```
+https://<the service's own host>/hooks/mail/<the secret>
+```
+
+**Subscribe to the permanent events only**: hard bounce, blocked, and spam. A
+soft bounce must not be subscribed, and is refused if it arrives anyway — a
+full mailbox or a provider having an afternoon is not a refusal, and treating
+one as permanent would have suppressed every address at a whole provider during
+the outage of 27 August 2026.
+
+Rotating the secret is a new version, an apply, and the same URL updated at the
+provider — in that order, since the old secret stops working the moment the new
+revision is up.
+
 ## And the second pass
 
 ```sh

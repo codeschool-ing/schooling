@@ -141,6 +141,17 @@ var Registry = []Table{
 			"erasure would write a timestamp onto a row that is not there",
 	},
 	{
+		Name: "mail_suppressions", Holds: HoldsPseudonymous, Subject: SubjectNobody,
+		OnErase: EraseKeep,
+		Why: "the SHA-256 of an address that refused our mail permanently, and never the " +
+			"address. IT SURVIVES AN ERASURE PRECISELY BECAUSE IT HOLDS NOTHING THAT WAS " +
+			"ERASED: somebody asks to be forgotten, signs up again a month later with the same " +
+			"mailbox, and we write to an address that already told us to stop — which is the " +
+			"complaint we were asked not to repeat. A hash answers 'may I write to THIS " +
+			"address' and answers nothing else: it names nobody, it cannot be read back into a " +
+			"list, and there is no account to attach it to, which is why the subject is nobody",
+	},
+	{
 		Name: "staff", Holds: HoldsPseudonymous, Subject: SubjectStaff, OnErase: EraseKeep,
 		Why: "who was allowed to operate the platform, and who let them in. It is the row the " +
 			"audit's actor is checked against months later, so it survives — and it goes by " +
