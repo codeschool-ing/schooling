@@ -61,3 +61,31 @@ resource "google_secret_manager_secret" "mail_hook_password" {
 
   depends_on = [google_project_service.enabled]
 }
+
+/* And the payment gateway's key, in a container this file does not fill either.
+
+   IT IS THE ONE SECRET HERE THAT MOVES MONEY. The others read a database and
+   send mail; this one creates charges against an account somebody withdraws
+   from. So the key written into it is generated WITHOUT the withdrawal
+   permission the provider offers — the platform receives and never sends, and a
+   key that cannot pay anybody out is a leak that costs an audit rather than a
+   balance. That is a property of the key and not of this file, which is why it
+   is written down here: nothing in Terraform can check it.
+
+   ONE CONTAINER FOR THE SANDBOX AND THE LIVE ACCOUNT BOTH. They are different
+   keys against different hosts, and which one is in here is which environment
+   this project is — a second container named `-sandbox` would be a value that
+   has to agree with `SCHOOLING_ENV`, and two settings that must agree are one
+   setting with a way to be wrong.
+
+   Empty mounts no gateway at all, which is the right failure: no checkout,
+   rather than a checkout that cannot take money and does not say so. */
+resource "google_secret_manager_secret" "asaas_key" {
+  secret_id = "schooling-asaas-key"
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [google_project_service.enabled]
+}
