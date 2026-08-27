@@ -64,6 +64,11 @@ $$;
 ALTER TABLE subscriptions
     ADD COLUMN price_id uuid NOT NULL REFERENCES school_prices(id);
 
+-- THE SECOND SENTENCE OF THIS COMMENT IS WRONG AND `0040` CORRECTS IT. It said
+-- renewal charges this price rather than whatever is current, which contradicts
+-- the terms of use — those promise a price change applies to renewals, with 30
+-- days notice. Left standing here because an applied migration is a record of
+-- what ran, and rewriting one is worse than being pointed past it.
 COMMENT ON COLUMN subscriptions.price_id IS
     'The school_prices row in force when this was bought. Renewals charge it, '
     'not whatever is current.';

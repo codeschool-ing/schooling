@@ -101,7 +101,10 @@ truth; the database is a derived mirror. Nothing else writes catalogue rows — 
 them and never writes. (C-01, C-07)
 
 **Money is integer cents.** Never a float. And a price is **effective-dated, never overwritten** —
-whoever subscribed keeps the price they bought at, so history stays explicable. (K-14)
+whoever subscribed keeps the price they bought at for the term they bought, so history stays
+explicable. (K-14) Renewal charges the price in force then — the terms of use promise 30 days'
+notice and at most one rise in twelve months, and `0040` exists because a column comment had
+promised otherwise.
 
 **The paywall is not configurable.** No parameter, flag or console switch may widen who gets
 access. Granting one named student access is an audited action; a global switch is not. (K-15)
