@@ -66,6 +66,15 @@ resource "google_secret_manager_secret_iam_member" "run_reads_the_asaas_key" {
   member    = "serviceAccount:${google_service_account.run.email}"
 }
 
+// And the token that gateway presents when it posts an event, which the service
+// compares every delivery against. Same grant, and separate from the key above
+// because the two authenticate opposite directions.
+resource "google_secret_manager_secret_iam_member" "run_reads_the_asaas_hook_token" {
+  secret_id = google_secret_manager_secret.asaas_hook_token.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.run.email}"
+}
+
 // A custom service account starts with nothing, logging included.
 resource "google_project_iam_member" "run_writes_logs" {
   project = var.project

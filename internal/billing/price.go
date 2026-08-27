@@ -115,6 +115,30 @@ func (p *Prices) InForce(ctx context.Context, scope string, termMonths int) (Pri
 	return one, nil
 }
 
+/*
+ByID is one row of the series, named.
+
+	IT IS WHAT A PURCHASE READS BACK. A subscription points at the price it was
+	sold under, and the term that price bought is on the row rather than copied
+	onto the purchase — so this is how a payment finds out how many months it
+	just paid for.
+*/
+func (p *Prices) ByID(ctx context.Context, id uuid.UUID) (Price, error) {
+	one := Price{ID: id}
+	err := p.pool.QueryRow(ctx, `
+		SELECT scope, term_months, cents, currency, effective_from
+		  FROM plan_prices WHERE id = $1
+	`, id).Scan(&one.Scope, &one.TermMonths, &one.Cents, &one.Currency, &one.From)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return Price{}, ErrNoOffer
+	}
+	if err != nil {
+		return Price{}, fmt.Errorf("billing: reading a price: %w", err)
+	}
+	return one, nil
+}
+
 // Series is every price ever set for a scope, newest first, terms mixed.
 //
 // It is the console's, and it is the answer to "what was the offer in March" —

@@ -288,6 +288,35 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		log.Info("mail hook", "mounted", true)
 	}
 
+	/* AND THE GATEWAY'S, WHICH IS THE ARRIVAL THAT COMMENT RESERVED THE CLASS
+	   FOR. Same prefix, same "no credential, no endpoint", and a DIFFERENT
+	   credential shape — a single token rather than Basic, because that is what
+	   this provider's form offers. Two endpoints under one prefix that
+	   authenticate differently is each one matching what its provider actually
+	   sends.
+
+	   IT IS MOUNTED ON ITS OWN TOKEN AND NOT ON THE API KEY. They rotate for
+	   different reasons and a deployment may have one without the other: a key
+	   with no token is a checkout that takes money and hears nothing back, which
+	   is worth having as a state you can see rather than one that cannot exist. */
+	if cfg.AsaasHookToken != "" {
+		mux.Handle("POST "+web.Hooks+"pay", billing.Hook(cfg.AsaasHookToken,
+			billing.NewSettlement(
+				/* NO GATE, AND THAT IS THE STRONGER STATEMENT. `NewCheckouts`
+				   with no `Confirmed` refuses every `Open` — so the store this
+				   webhook holds CANNOT create a purchase, only settle one that
+				   already exists. A payment event is not a way to buy something,
+				   and here that is a property of the wiring rather than a rule
+				   somebody has to keep. */
+				billing.NewCheckouts(pool, nil),
+				billing.NewPrices(pool),
+				billing.NewLedger(pool),
+				billing.NewStore(pool),
+				"asaas", log,
+			), log))
+		log.Info("payment hook", "mounted", true)
+	}
+
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
 		defer cancel()

@@ -114,6 +114,19 @@ type Config struct {
 	   integration one with real money in it. */
 	AsaasKey string
 
+	/* AsaasHookToken is what the gateway presents when it posts an event.
+
+	   A PAYMENT EVENT IS NOT SELF-AUTHENTICATING: nothing signs the body, so
+	   this shared token is the whole of what stands between the endpoint and
+	   anybody who finds it — and what an open one would buy is worse than the
+	   mail hook's, because an event that says a charge was paid opens a
+	   subscription nobody paid for.
+
+	   IT IS SEPARATE FROM THE KEY ABOVE and rotates for its own reasons. A
+	   deployment may have the key and not this: that is a checkout that takes
+	   money and hears nothing back, which is a state worth being able to see. */
+	AsaasHookToken string
+
 	Environment Environment
 }
 
@@ -134,7 +147,8 @@ func Load() (Config, error) {
 		MailHookUser:     strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_USER")),
 		MailHookPassword: strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_PASSWORD")),
 
-		AsaasKey: strings.TrimSpace(os.Getenv("SCHOOLING_ASAAS_KEY")),
+		AsaasKey:       strings.TrimSpace(os.Getenv("SCHOOLING_ASAAS_KEY")),
+		AsaasHookToken: strings.TrimSpace(os.Getenv("SCHOOLING_ASAAS_HOOK_TOKEN")),
 	}
 
 	if cfg.DatabaseURL == "" {
