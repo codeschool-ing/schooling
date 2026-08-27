@@ -1,7 +1,7 @@
 ---
 title: Política de privacidade
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
 ---
 
 Isto diz o que guardamos sobre você, por quê, e o que acontece quando você pede
@@ -79,6 +79,24 @@ Guardamos:
 - **Suas sessões** — uma linha por navegador em que você está conectado, com um
   hash do token da sessão e a descrição que o navegador dá de si mesmo. Trocar a
   senha encerra todas as outras sessões.
+
+## Se a nossa mensagem for recusada
+
+Quando uma mensagem que enviamos volta em definitivo — a caixa não existe, o
+servidor que recebe nos recusa, ou você nos marca como spam — registramos que
+não podemos escrever para aquele endereço de novo, e paramos.
+
+**Registramos como um hash e nunca como o endereço.** A linha não pode ser
+convertida de volta em endereço nem pesquisada por ninguém: tudo o que ela sabe
+responder é *podemos escrever para este aqui*, no momento em que estamos prestes
+a fazê-lo. Ela não diz nada sobre quem você é, e não há conta ligada a ela.
+
+Esse é o único registro que sobrevive a uma exclusão, e guardar um hash é o que
+torna isso possível: depois que você se vai, ele não guarda nada que era seu, e
+ainda assim nos impede de escrever para uma caixa que mandou parar.
+
+Uma mensagem que apenas não chegou hoje — caixa cheia, servidor com um dia ruim
+— não é isso, e não entra na lista.
 
 ## O que você faz aqui
 
@@ -193,12 +211,16 @@ porque a alternativa seria pior para todo mundo: essas linhas são como sabemos
 quais questões estão ruins, e excluí-las pioraria o material para quem continua
 estudando sem tornar você mais privado do que já ser inidentificável torna.
 
-Duas coisas não desaparecem:
+Três coisas não desaparecem:
 
 - **O registro de que dinheiro mudou de mãos.** Somos obrigados a guardá-lo, e
   ele é a outra metade de um extrato bancário. Depois de um apagamento, ele tem
   um valor, uma data e um identificador que não significa ninguém.
 - **O registro das ações administrativas**, pelo motivo dado acima.
+- **Que um endereço recusou a nossa mensagem**, como o hash descrito acima e
+  nunca como o endereço. Se abandonássemos esse registro e você se cadastrasse
+  de novo mais tarde com a mesma caixa, escreveríamos para uma caixa que já
+  tinha mandado parar — que é exatamente o que você pediu que não fizéssemos.
 
 Seus certificados **são** excluídos, e a página de verificação passa a responder
 para os códigos deles exatamente como responde para um código que nunca

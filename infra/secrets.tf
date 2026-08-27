@@ -37,3 +37,24 @@ resource "google_secret_manager_secret" "mail_api_key" {
 
   depends_on = [google_project_service.enabled]
 }
+
+/* And what stands in front of the delivery hook.
+
+   BREVO DOES NOT SIGN ITS WEBHOOKS — no HMAC, no shared secret in a header,
+   nothing to verify a body against. So the secret is a segment of the path the
+   provider posts to, and this is its container.
+
+   It is a secret rather than a plain variable for the reason the other two are:
+   a `tfvars` file is a file on somebody's laptop and in a plan's output, and an
+   endpoint that marks addresses as refused is a way to stop this platform
+   writing to anybody. Empty mounts no endpoint at all, which is the right
+   failure — nothing there, rather than something anybody may post to. */
+resource "google_secret_manager_secret" "mail_hook_secret" {
+  secret_id = "schooling-mail-hook-secret"
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [google_project_service.enabled]
+}

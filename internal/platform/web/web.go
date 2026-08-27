@@ -162,6 +162,45 @@ func RequestID(next http.Handler) http.Handler {
 	})
 }
 
+// Hooks is the prefix under which a provider posts back to us, and the one
+// place in this platform where a secret travels in a path.
+//
+// It lives here rather than beside the handlers because it is the LOGGER that
+// has to know about it, and the logger is here.
+const Hooks = "/hooks/"
+
+/*
+Loggable is a path with anything secret taken out of it.
+
+	A WEBHOOK CANNOT BE SIGNED IF THE PROVIDER DOES NOT SIGN IT. Brevo posts
+	delivery events as a plain request with nothing to verify the body against,
+	so the only thing separating our endpoint from anybody who finds the URL is a
+	secret segment in the path. Which this middleware would then write to Cloud
+	Logging on the first delivery, in plain text, for as long as the logs are
+	kept — turning the one measure protecting the endpoint into the one artefact
+	that gives it away.
+
+	So everything under `/hooks/` is logged as its first two segments and a
+	`...`. What is kept is enough to see that a delivery arrived and answer "is
+	the endpoint being hit at all"; what is dropped is the part that would let
+	somebody hit it themselves.
+
+	IT REDACTS THE WHOLE TAIL rather than a segment it recognises as a secret,
+	because recognising one is guessing. The payment gateway's webhooks will
+	arrive under this prefix too and will find the arrangement already made.
+*/
+func Loggable(path string) string {
+	if !strings.HasPrefix(path, Hooks) {
+		return path
+	}
+	// "/hooks/mail/<secret>" -> ["", "hooks", "mail", "<secret>"]
+	parts := strings.SplitN(path, "/", 4)
+	if len(parts) < 4 || parts[3] == "" {
+		return path
+	}
+	return "/" + parts[1] + "/" + parts[2] + "/..."
+}
+
 // Logger puts a logger carrying the request id into the context and writes one
 // line per request when it finishes.
 func Logger(base *slog.Logger) Middleware {
@@ -175,7 +214,7 @@ func Logger(base *slog.Logger) Middleware {
 
 			log.Info("request",
 				"method", r.Method,
-				"path", r.URL.Path,
+				"path", Loggable(r.URL.Path),
 				"host", r.Host,
 				"status", rec.status,
 				"ms", time.Since(started).Milliseconds(),
@@ -196,7 +235,7 @@ func Recover(next http.Handler) http.Handler {
 			LoggerFrom(r.Context()).Error("panic",
 				"error", rec,
 				"method", r.Method,
-				"path", r.URL.Path,
+				"path", Loggable(r.URL.Path),
 				"stack", string(debug.Stack()),
 			)
 			Fail(w, http.StatusInternalServerError, CodeInternal, "something went wrong")

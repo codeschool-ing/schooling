@@ -261,7 +261,26 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   would pick wrongly for anybody enrolled in two. `my.` is the one host in
 	   K-17 that is the person's rather than a school's, the console's or the
 	   platform's. */
-	notifier := notify.New(postman, origin(cfg))
+	/* AND WHO WE MAY NOT WRITE TO, ASKED BEFORE EVERY MESSAGE.
+
+	   The list is over the database and `notify` has none, so it arrives as the
+	   one function it needs — the same shape as everything else crossing a
+	   module boundary here. */
+	suppressions := notify.NewSuppressions(pool)
+	notifier := notify.New(postman, origin(cfg), suppressions.Barred)
+
+	/* THE PROVIDER'S WAY BACK IN, MOUNTED ONLY WHEN THERE IS A SECRET.
+
+	   No secret, no endpoint: an open one is a way for anybody to stop this
+	   platform writing to an address of their choosing, and a deployment
+	   without a provider has nothing to hear from anyway. `mux` and not one of
+	   the per-school routers, because a delivery event belongs to no school —
+	   it is the first arrival in the class the comment above `router` reserved
+	   for the payment gateway. */
+	if cfg.MailHookSecret != "" {
+		mux.Handle("POST "+web.Hooks+"mail/{secret}", notify.Hook(cfg.MailHookSecret, suppressions, log))
+		log.Info("mail hook", "mounted", true)
+	}
 
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
@@ -1947,6 +1966,18 @@ func confirm(ctx context.Context, accounts *identity.Store, notifier *notify.Not
 	if err := notifier.ConfirmAddress(ctx, notify.Person{
 		Name: account.Name, Email: link.Email, Locale: account.Locale,
 	}, link.Token); err != nil {
+		/* A REFUSED ADDRESS IS NOT AN INCIDENT AND IS NOT LOGGED AS ONE.
+
+		   It is this platform doing exactly what it was told: the mailbox is
+		   gone, or somebody marked us as spam, and nothing on our side is
+		   broken. Logged at Error it would be an alert firing on correct
+		   behaviour, which is how a log stops being read — and the one thing it
+		   still has to do is answer "why did nothing arrive", which it does at
+		   Info just as well. */
+		if errors.Is(err, notify.ErrRefused) {
+			log.Info("not writing to an address that refused our mail", "account", account.ID)
+			return
+		}
 		log.Error("sending a confirmation link", "error", err, "account", account.ID)
 	}
 }

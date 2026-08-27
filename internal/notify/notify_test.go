@@ -2,6 +2,7 @@ package notify_test
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"testing"
 
@@ -18,7 +19,7 @@ import (
 func sent(t *testing.T, to notify.Person, token string) mail.Message {
 	t.Helper()
 	var box mail.Outbox
-	n := notify.New(&box, "https://my.example.tld")
+	n := notify.New(&box, "https://my.example.tld", nil)
 
 	if err := n.ConfirmAddress(context.Background(), to, token); err != nil {
 		t.Fatalf("sending: %v", err)
@@ -162,7 +163,7 @@ func TestANotifierWithNoSenderIsHarmless(t *testing.T) {
 		t.Errorf("a nil notifier answered %v, want nothing", err)
 	}
 
-	quiet := notify.New(nil, "https://my.example.tld")
+	quiet := notify.New(nil, "https://my.example.tld", nil)
 	if err := quiet.ConfirmAddress(context.Background(),
 		notify.Person{Email: "somebody@example.tld"}, "abc123"); err != nil {
 		t.Errorf("a notifier with no sender answered %v, want nothing", err)
@@ -174,7 +175,7 @@ func TestANotifierWithNoSenderIsHarmless(t *testing.T) {
 // to explain itself.
 func TestATrailingSlashOnTheOriginDoesNotDoubleUp(t *testing.T) {
 	var box mail.Outbox
-	n := notify.New(&box, "https://my.example.tld/")
+	n := notify.New(&box, "https://my.example.tld/", nil)
 
 	if err := n.ConfirmAddress(context.Background(),
 		notify.Person{Email: "somebody@example.tld"}, "abc123"); err != nil {
@@ -183,5 +184,78 @@ func TestATrailingSlashOnTheOriginDoesNotDoubleUp(t *testing.T) {
 	m, _ := box.Last()
 	if strings.Contains(m.Text, "//confirm") {
 		t.Errorf("the link doubled its slash:\n%s", m.Text)
+	}
+}
+
+/* Asking before writing.
+
+   The list itself is tested against a database in `suppress_test.go`. These
+   test the DECISION — that a refusal stops a message, that a database which
+   would not answer also stops it, and that the two are told apart. */
+
+// AN ADDRESS THAT REFUSED US IS NOT WRITTEN TO, and the caller is told why
+// rather than handed a silent success — a message that never arrives and no
+// error to explain it is the failure the whole list exists to make legible.
+func TestARefusedAddressIsNotWrittenTo(t *testing.T) {
+	var box mail.Outbox
+	var asked string
+	n := notify.New(&box, "https://my.example.tld",
+		func(_ context.Context, address string) (bool, error) {
+			asked = address
+			return true, nil
+		})
+
+	err := n.ConfirmAddress(context.Background(),
+		notify.Person{Email: "gone@example.tld"}, "abc123")
+	if !errors.Is(err, notify.ErrRefused) {
+		t.Errorf("sending to a refused address answered %v, want ErrRefused", err)
+	}
+	if asked != "gone@example.tld" {
+		t.Errorf("the list was asked about %q, want the recipient", asked)
+	}
+	if _, any := box.Last(); any {
+		t.Error("the message went out anyway")
+	}
+}
+
+// AND AN ADDRESS THAT DID NOT STILL GETS ITS LINK. The obvious half, and the
+// one that would fail if the check were inverted — which is a failure nothing
+// else here would catch, because every other test wires no list at all.
+func TestAnAddressThatNeverRefusedUsIsStillWrittenTo(t *testing.T) {
+	var box mail.Outbox
+	n := notify.New(&box, "https://my.example.tld",
+		func(context.Context, string) (bool, error) { return false, nil })
+
+	if err := n.ConfirmAddress(context.Background(),
+		notify.Person{Email: "somebody@example.tld"}, "abc123"); err != nil {
+		t.Fatalf("sending: %v", err)
+	}
+	if _, any := box.Last(); !any {
+		t.Error("nothing was sent")
+	}
+}
+
+/*
+A LIST WE CANNOT READ IS A REFUSAL.
+
+	The safe direction, and it is not obvious enough to leave to a comment: a
+	database that will not answer is not permission to write to somebody who
+	told us to stop. Being wrong this way costs one message; being wrong the
+	other way costs the domain's standing with the providers that decide whether
+	anybody's mail arrives at all.
+*/
+func TestAListThatCannotBeReadStopsTheMessage(t *testing.T) {
+	var box mail.Outbox
+	blown := errors.New("the database is on fire")
+	n := notify.New(&box, "https://my.example.tld",
+		func(context.Context, string) (bool, error) { return false, blown })
+
+	err := n.ConfirmAddress(context.Background(),
+		notify.Person{Email: "somebody@example.tld"}, "abc123")
+	if !errors.Is(err, blown) {
+		t.Errorf("a broken list answered %v, want the failure underneath it", err)
+	}
+	if _, any := box.Last(); any {
+		t.Error("the message went out while the list was unreadable")
 	}
 }

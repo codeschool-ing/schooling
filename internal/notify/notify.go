@@ -31,6 +31,7 @@ package notify
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"html"
 	"net/url"
@@ -39,9 +40,16 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/mail"
 )
 
+// Barred answers whether an address has permanently refused us. It is a
+// function type rather than a store so that this package keeps knowing nothing
+// about a database — `Suppressions` in this same package satisfies it, and a
+// test satisfies it with a closure.
+type Barred func(ctx context.Context, address string) (bool, error)
+
 // Notifier composes this platform's messages and sends them.
 type Notifier struct {
 	sender mail.Sender
+	barred Barred
 
 	// at is the origin a link points at, as `https://my.example.tld`. It is a
 	// whole origin rather than a domain because a test serves on http and a
@@ -57,8 +65,8 @@ type Notifier struct {
 // any one school, so a link into a school's host would have to pick one — and
 // would pick wrongly for anybody enrolled in two. `my.` is the one host in K-17
 // that is the person's.
-func New(sender mail.Sender, origin string) *Notifier {
-	return &Notifier{sender: sender, at: strings.TrimSuffix(origin, "/")}
+func New(sender mail.Sender, origin string, barred Barred) *Notifier {
+	return &Notifier{sender: sender, at: strings.TrimSuffix(origin, "/"), barred: barred}
 }
 
 // Person is who a message is going to. It is this package's own shape rather
@@ -74,6 +82,9 @@ func (n *Notifier) ConfirmAddress(ctx context.Context, to Person, token string) 
 	if n == nil || n.sender == nil {
 		return nil
 	}
+	if err := n.mayWrite(ctx, to.Email); err != nil {
+		return err
+	}
 	words := speak(to.Locale)
 	link := n.at + "/confirm/" + url.PathEscape(token)
 
@@ -84,6 +95,41 @@ func (n *Notifier) ConfirmAddress(ctx context.Context, to Person, token string) 
 		HTML:    marked(words, to.Name, link),
 	})
 }
+
+/*
+mayWrite refuses an address that has told us to stop.
+
+	IT IS CHECKED HERE AND NOT AT THE SENDER, because `platform/mail` is an
+	envelope and knows nothing about who this platform has heard from. This is
+	the package that knows both.
+
+	A READ THAT FAILED IS A REFUSAL. A database we cannot ask is not permission
+	to write to somebody who asked us not to — the cost of being wrong in that
+	direction is one message that does not go out, and the cost of being wrong in
+	the other is a mark against this domain with whoever decides if anybody's
+	mail arrives.
+
+	NO LIST WIRED MEANS NO LIST, and that is for the deployments that have none:
+	a test, and a laptop whose outbox nobody reads. `cmd/api` always wires one.
+*/
+func (n *Notifier) mayWrite(ctx context.Context, address string) error {
+	if n.barred == nil {
+		return nil
+	}
+	barred, err := n.barred(ctx, address)
+	if err != nil {
+		return fmt.Errorf("notify: reading the suppression list: %w", err)
+	}
+	if barred {
+		return ErrRefused
+	}
+	return nil
+}
+
+// ErrRefused is an address on the suppression list. It is an error and not a
+// silent success, because a caller that logs it learns why nothing arrived —
+// which is the question this whole list exists to be able to answer.
+var ErrRefused = errors.New("notify: this address has refused our mail")
 
 /*
 words is one message in one language.
