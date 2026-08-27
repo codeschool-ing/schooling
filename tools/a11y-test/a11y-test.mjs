@@ -828,19 +828,21 @@ try {
        And a colour is typed in, because the screen with a colour chosen is a
        different screen: two specimens, four swatches and the two sentences that
        only appear when a colour had to move. */
-    /* IT SETTLES ON THE PRICE LIST AND NOT ON THE COLOUR FORM, which is a
-       stronger wait for one word's difference. The colour form is in the first
-       paint; the price series arrives a request later, so settling on the form
-       would measure a school whose history had not landed — and the price rows
-       are the one place on this screen where a value is marked as "in force" by
-       weight and colour, which is exactly what axe is here to look at. */
+    /* IT SETTLES ON A SPECIMEN AND NOT ON THE FORM, which is a stronger wait
+       for one word's difference. The form is in the first paint; the specimens
+       are drawn from a measurement the browser has to run, so settling on the
+       form would measure a screen whose panels had not landed.
+
+       IT SETTLED ON `.price-list` UNTIL `0041`, when the price left this screen
+       for one of its own. That selector is still measured — one screen further
+       down — and this one lost the wait it was borrowing. */
     await check(staff.page, `${theme} · console, the schools`, '/#/schools', '/schools',
-      { base: CONSOLE, region: '#stage', settled: '.price-list' });
+      { base: CONSOLE, region: '#stage', settled: '.accent-theme' });
 
     await check(staff.page, `${theme} · console, a colour chosen`, '/#/schools', '/schools', {
       base: CONSOLE,
       region: '#stage',
-      settled: '.price-list',
+      settled: '.accent-theme',
       async act(page) {
         /* AMBER RATHER THAN THE ONE IT IS WEARING: it has to move in both
            themes, so both of the sentences this screen exists to show are on
@@ -849,6 +851,14 @@ try {
         await page.waitForSelector('.accent-theme-light .accent-said', { timeout: 8000 });
       },
     });
+
+    /* WHAT IT COSTS, WHICH IS THE OTHER SCREEN THAT CHANGES SOMETHING — and
+       the one place in this console where a value is marked as "in force" by
+       weight and colour together, which is exactly the pairing axe is here to
+       look at. It settles on the series rather than on the forms, because the
+       forms are in the first paint and the history arrives a request later. */
+    await check(staff.page, `${theme} · console, what it costs`, '/#/plan', '/plan',
+      { base: CONSOLE, region: '#stage', settled: '.price-list, #series .none' });
 
     /* THE FUNNEL, WHICH IS THE FIRST SCREEN IN `Measure` AND THE FIRST ONE HERE
        THAT DRAWS A QUANTITY. Eight rows of label, bar and count, and the bar is

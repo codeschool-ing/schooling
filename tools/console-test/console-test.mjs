@@ -24,7 +24,8 @@
                          wrote the decision and left the row standing is a queue
                          two people work twice.
 
-     SAVING A PRICE      the whole of K-14 is that the old price is still there.
+     SAVING A PRICE      the whole of K-14 is that the old price is still there,
+                         and that pricing the year leaves the other terms alone.
                          A screen showing only the newest number would be the
                          mutable column again with extra steps, and it would
                          look correct.
@@ -201,55 +202,61 @@ try {
 
   /* ---------- a price, and the one before it ---------- */
 
-  await go(staff, 'schools', 'schools');
+  /* IT IS ITS OWN SCREEN NOW. This walked the schools screen while every school
+     carried a price form, and had to scope every locator to one school's block
+     so that the second school's rows were not counted into the first one's
+     series. `0041` made the price the platform's — one subscription opens every
+     school (N-02) — so there is one series, and the scoping that mattered here
+     is gone with the thing it was guarding against.
 
-  /* ONE SCHOOL'S BLOCK AND NOT THE SCREEN. Every school on this screen has a
-     price form and a series of its own, and locators that reached across all of
-     them would count the second school's rows into the first school's series —
-     which passes while the save went nowhere. */
-  const school = staff.locator('.block[data-school]').first();
-  await school.locator('.price-list, .price-series .none').first()
+     WHAT IS SCOPED INSTEAD IS THE TERM. The three products share the series, so
+     "a row was added" has to be a row for the term that was saved; counting the
+     whole list would be satisfied by a price for the month while the year went
+     nowhere. */
+
+  await go(staff, 'plan', 'plan');
+
+  await staff.locator('.price-list, #series .none').first()
     .waitFor({ timeout: 15000 });
 
-  const rows = school.locator('.price-row');
-  const rowsBefore = await rows.count();
+  const year = staff.locator('.block[data-term="12"]');
+  const rows = staff.locator('.price-row');
+  const yearRows = () => staff.locator('.price-row', { hasText: 'A year' });
+  const rowsBefore = await yearRows().count();
 
   // What is in force before the save, which is what has to survive it.
   const wasShown = rowsBefore > 0
-    ? (await rows.first().locator('.price-money').innerText()).trim()
+    ? (await yearRows().first().locator('.price-money').innerText()).trim()
     : '';
 
   /* AN AMOUNT NO FIXTURE USES. The series is not emptied between runs, so a
      price equal to the seeded one would make "the newest row is the one just
      saved" true without anything having been saved. */
-  await school.locator('.price-amount input').fill('612.34');
-  await school.locator('.price-currency input').fill('EUR');
-  await school.locator('.price-form button[type=submit]').click();
+  await year.locator('.price-amount input').fill('612.34');
+  await year.locator('.price-currency input').fill('EUR');
+  await year.locator('.price-form button[type=submit]').click();
 
   try {
-    /* COUNTED INSIDE THE SAME BLOCK the row was saved from. Counting
-       `.price-row` across the screen would be satisfied by the second school's
-       rows on a platform that has two, which is a pass with nothing saved. */
     await staff.waitForFunction(
-      (n) => document.querySelector('.block[data-school]')
-        .querySelectorAll('.price-row').length > n,
+      (n) => [...document.querySelectorAll('.price-row')]
+        .filter((r) => r.querySelector('.price-term')?.textContent.trim() === 'A year')
+        .length > n,
       rowsBefore, { timeout: 15000 });
     good('saving a price adds a row to the series');
   } catch (e) {
-    const said = await school.locator('.signin-notice[id^="price-note"]').innerText()
-      .catch(() => '');
+    const said = await year.locator('.signin-notice').innerText().catch(() => '');
     bad('saving a price adds a row to the series',
-      `the series still has ${rowsBefore} row(s) and the screen says ${JSON.stringify(said)} `
+      `the year has ${rowsBefore} row(s) and the screen says ${JSON.stringify(said)} `
       + '— a price that replaced instead of appending is the mutable column again, and it '
       + 'looks correct');
   }
 
-  if (await rows.count() > rowsBefore) {
-    const newest = (await rows.first().locator('.price-money').innerText()).trim();
+  if (await yearRows().count() > rowsBefore) {
+    const newest = (await yearRows().first().locator('.price-money').innerText()).trim();
     if (!newest.includes('612')) {
       bad('the price in force is the one just saved',
-        `the top of the series says ${newest} — the newest row is the one a student is `
-        + 'quoted, and this one is not it');
+        `the top of the year's series says ${newest} — the newest row is the one a student `
+        + 'is quoted, and this one is not it');
     } else {
       good('the price in force is the one just saved');
     }
@@ -259,21 +266,34 @@ try {
        showing only the newest number would be the mutable column with extra
        steps. */
     if (wasShown) {
-      const all = (await rows.locator('.price-money').allInnerTexts()).map((t) => t.trim());
+      const all = (await yearRows().locator('.price-money').allInnerTexts())
+        .map((t) => t.trim());
       if (!all.includes(wasShown)) {
         bad('the price that was replaced is still in the series',
-          `the series holds ${JSON.stringify(all)} and the price that was in force `
+          `the year's series holds ${JSON.stringify(all)} and the price that was in force `
           + `before this run — ${wasShown} — is not among them`);
       } else {
         good('the price that was replaced is still in the series');
       }
     } else {
-      /* THE FIXTURE SEEDS ONE, so this branch is a school that has never had a
+      /* THE FIXTURE SEEDS ONE, so this branch is a platform that has never had a
          price. It is said rather than passed silently: the strongest of the
          three assertions could not be made, and a run that reported three
          successes would be claiming otherwise. */
-      console.log('· the school had no price before this run, so nothing could be '
+      console.log('· nothing was priced before this run, so nothing could be '
         + 'checked about the one it replaced');
+    }
+
+    /* AND THE OTHER TERMS DID NOT MOVE, which is the assertion the old shape
+       could not make: there was one price, so there was nothing for a save to
+       spill into. Now three products share a table, and a `Set` that ignored
+       the term would raise all of them at once. */
+    const spilled = await rows.filter({ hasText: '612' }).count();
+    if (spilled > 1) {
+      bad('pricing one term leaves the others alone',
+        `${spilled} rows carry the amount that was saved for the year alone`);
+    } else {
+      good('pricing one term leaves the others alone');
     }
   }
 

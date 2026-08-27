@@ -24,6 +24,7 @@ import people from './screens/people.js';
 import history, { byActor, onSubject, entry } from './screens/history.js';
 import studentRecord, { record } from './screens/record.js';
 import schools from './screens/schools.js';
+import plan from './screens/plan.js';
 import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
@@ -63,6 +64,13 @@ export const SECTIONS = [
   { id: 'reports', name: 'Reported content', group: 'Operate', screen: reports },
   { id: 'record', name: 'Student record', group: 'Operate', screen: studentRecord },
   { id: 'schools', name: 'Schools', group: 'Operate', screen: schools },
+
+  /* WHAT IT COSTS IS ITS OWN SECTION AND NOT A PANEL UNDER `schools`. It was
+     one — a price form under every school's colour — until `0041` moved the
+     price to the platform, because one subscription opens every school (N-02).
+     A form on a school's page would now change what everybody pays from a
+     screen about one school. */
+  { id: 'plan', name: 'What it costs', group: 'Operate', screen: plan },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },
   { id: 'audit', name: 'History', group: 'Govern', screen: history },
 ];
