@@ -533,7 +533,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	people := identity.NewHandler(accounts, identity.Settings{
 		Domain: cfg.PlatformDomain,
 		Secure: cfg.Environment == config.Production,
-	}, signedUp(visitors, events, accounts, notifier, log))
+	}, signedUp(visitors, events, accounts, notifier, log),
+
+		/* AND THE BANNER LEARNS WHEN AN ADDRESS HAS REFUSED US, from the same
+		   list `notify` asks before every message. Two readers of one fact:
+		   one decides whether to write, the other decides what to say about
+		   having written. */
+		suppressions.Barred)
 	people.Routes(scoped)
 	people.SecondFactorRoutes(scoped)
 

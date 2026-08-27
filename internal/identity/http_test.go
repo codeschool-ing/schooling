@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -21,7 +22,17 @@ import (
 func server(t *testing.T, store *identity.Store, signedUp identity.SignedUp) http.Handler {
 	t.Helper()
 	mux := http.NewServeMux()
-	identity.NewHandler(store, identity.Settings{}, signedUp).Routes(mux)
+	identity.NewHandler(store, identity.Settings{}, signedUp, nil).Routes(mux)
+	return web.Chain(mux, identity.Authenticate(store, identity.Nowhere))
+}
+
+// listening is `server` with a suppression list behind it, which is what the
+// three tests about the banner's third sentence need and nothing else does.
+func listening(t *testing.T, store *identity.Store, refused identity.Refused) http.Handler {
+	t.Helper()
+	mux := http.NewServeMux()
+	identity.NewHandler(store, identity.Settings{},
+		func(context.Context, identity.Account) {}, refused).Routes(mux)
 	return web.Chain(mux, identity.Authenticate(store, identity.Nowhere))
 }
 
@@ -242,7 +253,7 @@ func TestAnAccountIsBornWithTheCountryAndTheLanguage(t *testing.T) {
 	mux := http.NewServeMux()
 	identity.NewHandler(store, identity.Settings{}, func(_ context.Context, a identity.Account) {
 		born = a
-	}).Routes(mux)
+	}, nil).Routes(mux)
 
 	h := web.Chain(mux,
 		geo.Country(geo.Settings{
@@ -288,5 +299,115 @@ func TestAnAccountIsBornWithTheCountryAndTheLanguage(t *testing.T) {
 	if born.Locale != "pt-br" {
 		t.Errorf("the account reads %q, want %q — `web.Locale` would have answered "+
 			"\"en\" here, which is the wrong fix for this", born.Locale, "pt-br")
+	}
+}
+
+/* Whether the address refused us, which is the banner's third sentence.
+
+   THE FIRST TWO WERE ABOUT WHETHER A LINK IS OUT THERE. This one is about
+   whether the address will ever accept one, and it is the difference between a
+   nudge and an explanation: "we sent a link to X" stays true forever after X
+   hard-bounces, and the button beside it offers to send another. */
+
+// me answers the account, as a map, for a session on this handler.
+func meOf(t *testing.T, h http.Handler, cookie *http.Cookie) map[string]any {
+	t.Helper()
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/me", nil)
+	req.AddCookie(cookie)
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("GET /api/v1/me answered %d: %s", rec.Code, rec.Body.String())
+	}
+	var out map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &out); err != nil {
+		t.Fatalf("the reply is not JSON: %v", err)
+	}
+	return out
+}
+
+// signUpOn creates an account through the handler and hands back its cookie and
+// its address.
+func signUpOn(t *testing.T, h http.Handler) (*http.Cookie, string) {
+	t.Helper()
+	email := address(t)
+	rec := post(t, h, "/api/v1/sign-up", map[string]string{
+		"email": email, "name": "Alexandre", "password": goodPassword,
+	})
+	if rec.Code != http.StatusCreated {
+		t.Fatalf("sign-up answered %d: %s", rec.Code, rec.Body.String())
+	}
+	return sessionCookie(t, rec), email
+}
+
+// A REFUSED ADDRESS IS SAID SO, AND THE LIST IS ASKED ABOUT THE RIGHT ONE.
+func TestTheAnswerSaysWhenAnAddressRefusedUs(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+
+	var asked string
+	h := listening(t, store, func(_ context.Context, a string) (bool, error) {
+		asked = a
+		return true, nil
+	})
+
+	cookie, email := signUpOn(t, h)
+	if got := meOf(t, h, cookie)["emailRefused"]; got != true {
+		t.Errorf("emailRefused is %v, want true", got)
+	}
+	if asked != email {
+		t.Errorf("the list was asked about %q, want the account's %q", asked, email)
+	}
+}
+
+// AND AN ADDRESS THAT DID NOT IS NOT ACCUSED OF IT. The obvious half, and the
+// one that would fail if the check were inverted — every other test here wires
+// no list at all, so nothing else would catch that.
+func TestAnAddressThatNeverRefusedUsIsNotSaidTo(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	h := listening(t, store, func(context.Context, string) (bool, error) { return false, nil })
+
+	cookie, _ := signUpOn(t, h)
+	if got := meOf(t, h, cookie)["emailRefused"]; got != false {
+		t.Errorf("emailRefused is %v, want false", got)
+	}
+}
+
+/*
+A LIST THAT CANNOT BE READ SAYS NOTHING, WHICH IS THE OPPOSITE OF `notify`.
+
+	There, a database that will not answer must not become permission to write to
+	somebody who said stop — the safe direction is "refused". Here the
+	consequence is a sentence on a screen, and telling somebody their address
+	refused our mail when we do not know is worse than staying quiet: they cannot
+	check it, and they have no reason to doubt us.
+*/
+func TestABrokenListDoesNotAccuseAnAddress(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	h := listening(t, store, func(context.Context, string) (bool, error) {
+		return false, errors.New("the database is on fire")
+	})
+
+	cookie, _ := signUpOn(t, h)
+	if got := meOf(t, h, cookie)["emailRefused"]; got != false {
+		t.Errorf("emailRefused is %v, want false — an unreadable list is not evidence", got)
+	}
+}
+
+// AND A DEPLOYMENT WITH NO LIST ANSWERS THE FIELD ANYWAY, as false. A missing
+// key would leave the interface's `me.emailRefused === true` reading undefined,
+// which is the same answer — but the field being absent and the field being
+// false are different contracts, and the interface is written against one.
+func TestWithNoListTheFieldIsStillThereAndFalse(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	h := server(t, store, func(context.Context, identity.Account) {})
+
+	cookie, _ := signUpOn(t, h)
+	me := meOf(t, h, cookie)
+	got, present := me["emailRefused"]
+	if !present {
+		t.Fatal("emailRefused is missing from the answer")
+	}
+	if got != false {
+		t.Errorf("emailRefused is %v, want false", got)
 	}
 }

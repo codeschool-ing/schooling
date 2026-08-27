@@ -40,14 +40,57 @@ type Settings struct {
 // be able to fail one.
 type SignedUp func(ctx context.Context, account Account)
 
+/*
+Refused answers whether an address has permanently refused our mail.
+
+	IT IS A CALLBACK FOR `SignedUp`'S REASON. The suppression list belongs to
+	`notify`, and modules talk through what the consumer defines, wired in
+	`cmd/`. The alternative was one more `EXISTS` beside the sub-select that
+	already computes `ConfirmationPending` — the table is right there, and the
+	architecture test reads imports rather than SQL, so nothing would have caught
+	it. That is the argument against it and not for it.
+
+	IT IS ON THE HANDLER AND NOT ON THE STORE, which is what bounds the cost.
+	Every authenticated request verifies a session; only two ask what an account
+	looks like. On the store this would have been a second query on every request
+	this platform serves, in order to draw a banner.
+*/
+type Refused func(ctx context.Context, address string) (bool, error)
+
 type Handler struct {
 	store    *Store
 	settings Settings
 	signedUp SignedUp
+	refused  Refused
 }
 
-func NewHandler(store *Store, settings Settings, signedUp SignedUp) *Handler {
-	return &Handler{store: store, settings: settings, signedUp: signedUp}
+func NewHandler(store *Store, settings Settings, signedUp SignedUp, refused Refused) *Handler {
+	return &Handler{store: store, settings: settings, signedUp: signedUp, refused: refused}
+}
+
+/*
+refusedBy is that question, answered safely.
+
+	AN ERROR IS A "NO" HERE, WHICH IS THE OPPOSITE OF `notify.mayWrite`, and the
+	two differ because being wrong costs opposite things. There, a list that
+	cannot be read must not become permission to write to somebody who said stop.
+	Here the consequence is a sentence on a screen — and telling somebody their
+	address refused our mail when we do not actually know is worse than saying
+	nothing, because they cannot check it and have no reason to doubt us.
+
+	NO LIST WIRED MEANS NO REFUSALS, for the deployments that have none: a test,
+	and a laptop whose outbox nobody reads.
+*/
+func (h *Handler) refusedBy(ctx context.Context, address string) bool {
+	if h.refused == nil {
+		return false
+	}
+	refused, err := h.refused(ctx, address)
+	if err != nil {
+		web.LoggerFrom(ctx).Error("reading the suppression list for the banner", "error", err)
+		return false
+	}
+	return refused
 }
 
 func (h *Handler) Routes(mux *http.ServeMux) {
@@ -186,7 +229,7 @@ viewOf is `view` plus what the interface cannot work out for itself.
 	screen offers, the second to decide whether to ask for a code right now.
 */
 func (h *Handler) viewOf(r *http.Request, account Account) map[string]any {
-	out := view(account)
+	out := view(account, h.refusedBy(r.Context(), account.Email))
 
 	/* AND WHETHER THIS IS SOMEBODY LOOKING RATHER THAN THE STUDENT.
 
@@ -260,7 +303,7 @@ func (h *Handler) start(w http.ResponseWriter, r *http.Request, account Account,
 	   password alone — the code comes after — so the screen has to be told, and
 	   until now nothing told it. The cookie is on the response rather than the
 	   request at this point, so the freshly issued token is passed straight in. */
-	body := view(account)
+	body := view(account, h.refusedBy(r.Context(), account.Email))
 	if has, err := h.store.HasSecondFactor(r.Context(), account.ID); err == nil && has {
 		body["secondFactor"] = true
 		body["mfaRequired"] = true
@@ -271,7 +314,7 @@ func (h *Handler) start(w http.ResponseWriter, r *http.Request, account Account,
 // view is what an account looks like over the wire. Explicit rather than the
 // struct: `synthetic` is an operational flag, and a person told they are
 // synthetic learns something true and useless.
-func view(a Account) map[string]any {
+func view(a Account, refused bool) map[string]any {
 	return map[string]any{
 		"id":      a.ID,
 		"email":   a.Email,
@@ -293,6 +336,17 @@ func view(a Account) map[string]any {
 		   whose link expired unread — and the screen had no way to tell those
 		   apart because nothing told it. */
 		"confirmationPending": a.ConfirmationPending,
+
+		/* AND WHETHER THE ADDRESS REFUSED US, which makes both of the above
+		   beside the point.
+
+		   "We sent a link to X" is TRUE and USELESS once X has hard-bounced: the
+		   message left, it was refused, and the button beside that sentence
+		   offers to do it again. Somebody watches a link that will never arrive
+		   and has no way to learn why — which is the state a real address in
+		   production sat in for the length of an afternoon before anybody
+		   noticed the account existed at all. */
+		"emailRefused": refused,
 	}
 }
 

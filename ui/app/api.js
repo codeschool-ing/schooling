@@ -273,6 +273,21 @@ function documentFrom({ completed, notes, exams, resume }, me) {
          offering to send one is honest in a way that claiming to have sent one
          is not. */
       confirmationPending: me.confirmationPending === true,
+
+      /* AND WHETHER THE ADDRESS REFUSED US, which makes both of those beside
+         the point.
+
+         "We sent a link to X" stays TRUE once X has hard-bounced, and stops
+         being worth anything: the message left, the receiving side refused it,
+         and the button next to that sentence offers to do it again. Somebody
+         waits for a link that will never arrive, and nothing on any screen ever
+         says why.
+
+         FALSE WHEN ABSENT, for `confirmationPending`'s reason turned up one
+         notch: an old server or the offline bundle does not know, and accusing
+         somebody's address of refusing our mail when we cannot check is the
+         worst of the three things this banner might say. */
+      emailRefused: me.emailRefused === true,
       secondFactor: Boolean(me.secondFactor),
       mfaRequired: Boolean(me.mfaRequired),
 
