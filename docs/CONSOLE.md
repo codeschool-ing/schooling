@@ -43,7 +43,8 @@ is how every console rots.* That division is the spine of everything below.
   the configuration surface `K-13` exists to refuse. It lives in `internal/console/writes.go`,
   where a test reads this package's own source and fails on a write nobody declared — so what is
   closed is the set of things the console can do, and adding to it costs an argument
-- Prices effective-dated, so a subscriber keeps the price they bought at. A price is **appended**
+- Prices effective-dated, so a subscriber keeps the price they bought at **for that term** —
+  renewal charges what is in force then, with the notice the terms promise. A price is **appended**
   where a colour is **replaced**, and the two sit on one screen: nothing has to be explained about
   last month's colour, and a March invoice has to stay explicable in November
 - Synthetic students flagged and excluded from every aggregate by default, with a visible switch
