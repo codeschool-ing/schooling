@@ -483,7 +483,10 @@ const minimumPasswordLength = 10
 func validate(email, password string) error {
 	var problems []error
 
-	if at := strings.IndexByte(email, '@'); at <= 0 || at == len(email)-1 || strings.Contains(email, " ") {
+	// The shape check lives in `change.go`, because changing an address has to
+	// make exactly this one and the two drifting would let somebody move onto an
+	// address they could never have signed up with.
+	if !reachable(email) {
 		problems = append(problems, fmt.Errorf("%q is not an address anybody can be reached at", email))
 	}
 	if len([]rune(password)) < minimumPasswordLength {

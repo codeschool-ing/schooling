@@ -63,6 +63,28 @@ export default async function account() {
 
     '<section class="block" id="factor"></section>' +
 
+    /* CHANGING THE ADDRESS, WHICH UNTIL NOW NOTHING COULD DO.
+
+       The banner can tell somebody their address refused our mail. Until this
+       form that was the whole of it: a true sentence about a problem with no
+       remedy anywhere on the platform, and the person who most needed to act
+       had nothing to press. */
+    '<section class="block">' +
+      '<div class="block-top"><h2>' + txt('Change your e-mail') + '</h2></div>' +
+      '<p>' + txt('Nothing changes until you follow the link we send to the new address — so a typo costs you a message nobody reads, and never your account.') + '</p>' +
+      '<form id="change-email" novalidate>' +
+        '<p class="field"><label for="new-email"><span>' + txt('new e-mail') + '</span>' +
+          '<input id="new-email" name="email" type="email" autocomplete="email" required></label></p>' +
+        /* THE PASSWORD IS ASKED FOR HERE AND THE SERVER REQUIRES IT. A stolen
+           cookie lets somebody read; moving where the recovery mail goes is the
+           step that turns it into a stolen account. */
+        '<p class="field"><label for="change-password"><span>' + txt('your password') + '</span>' +
+          '<input id="change-password" name="password" type="password" autocomplete="current-password" required></label></p>' +
+        '<p><button class="btn btn-primary" type="submit">' + txt('Send the link') + '</button></p>' +
+      '</form>' +
+      '<p class="dim" id="change-note" aria-live="polite"></p>' +
+    '</section>' +
+
     /* THE MENU'S HANDLER ALREADY SAID "same as the account screen's button",
        and there was no account screen and no button. Now there is one. */
     '<section class="block">' +
@@ -76,6 +98,46 @@ export default async function account() {
     await api.signOut();
     goTo('/sign-in');
   });
+
+  /* ---------- changing the address ---------- */
+
+  const changeForm = el.querySelector('#change-email');
+  const changeNote = el.querySelector('#change-note');
+  changeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const button = changeForm.querySelector('button');
+    button.disabled = true;
+    changeNote.classList.remove('bad');
+    changeNote.textContent = txt('Sending…');
+
+    const wanted = el.querySelector('#new-email').value;
+    try {
+      await api.changeEmail(wanted, el.querySelector('#change-password').value);
+      /* THE ADDRESS IS ECHOED BACK, because the commonest failure of this form
+         is a second typo — and "we sent a link" without saying where is a
+         sentence somebody can believe while waiting at the wrong inbox. */
+      changeNote.textContent = txt('Check that inbox:') + ' ' + wanted;
+      changeForm.reset();
+    } catch (err) {
+      changeNote.classList.add('bad');
+      changeNote.textContent = reasonFor(err);
+      button.disabled = false;
+    }
+  });
+
+  /* EACH SENTENCE IS ITS OWN `txt('literal')` CALL and the switch picks between
+     the RESULTS. `check-interface` reads this file for `txt('…')` and cannot see
+     a literal inside an expression handed to it — written the other way these
+     stop being policed and ship untranslated. */
+  function reasonFor(err) {
+    switch (err && err.code) {
+      case 'address_refused': return txt('Our mail to that address has come back refused, so a link would not reach you there.');
+      case 'same_address': return txt('That is already the address on this account.');
+      case 'too_many': return txt('That is a lot of addresses in one hour. Try again later.');
+      case 'unauthorized': return txt('That is not this account\'s password.');
+      default: return txt('That did not work. Try again.');
+    }
+  }
 
   const factor = el.querySelector('#factor');
   paint();

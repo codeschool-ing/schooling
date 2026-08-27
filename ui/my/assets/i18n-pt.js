@@ -28,6 +28,10 @@ window.I18N.pt.ui = {
   /* ---------- what the confirmation link left behind ---------- */
   'Your e-mail address is confirmed.': 'Seu endereço de e-mail está confirmado.',
   'That link is no longer good.': 'Esse link não vale mais.',
+  'That is your e-mail address now.': 'Esse é o seu endereço de e-mail agora.',
+  'We told the old one, and we will not write to it again.': 'Avisamos o antigo, e não vamos mais escrever para ele.',
+  'Somebody took that address while the link was in your inbox.': 'Alguém ficou com esse endereço enquanto o link estava na sua caixa de entrada.',
+  'Sign in at your school and pick another one.': 'Entre na sua escola e escolha outro.',
   'Sign in at your school and ask for another one.':
     'Entre na sua escola e peça outro.',
 

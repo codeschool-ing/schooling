@@ -141,6 +141,15 @@ var Registry = []Table{
 			"erasure would write a timestamp onto a row that is not there",
 	},
 	{
+		Name: "account_email_changes", Holds: HoldsIdentifying, Subject: SubjectAccount,
+		OnErase: EraseDelete,
+		Why: "an address somebody asked to move their account to, which is an e-mail and not " +
+			"a hash of one — redemption has to WRITE it onto the account, so it cannot be " +
+			"one-way. It goes with the account by cascade: a link that still worked after an " +
+			"erasure would move an account that is not there, and the row would meanwhile be " +
+			"an address a person gave us surviving the request to forget them",
+	},
+	{
 		Name: "mail_suppressions", Holds: HoldsPseudonymous, Subject: SubjectNobody,
 		OnErase: EraseKeep,
 		Why: "the SHA-256 of an address that refused our mail permanently, and never the " +
@@ -431,6 +440,13 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		{"account_email_confirmations", `
 			SELECT email, created_at, expires_at, spent_at
 			FROM account_email_confirmations WHERE account_id = $1 ORDER BY created_at`},
+		// NOT `token_hash`, for the reason directly above. What this row is
+		// worth to the person is the address they asked to move to, when, and
+		// whether they ever followed it — which is the whole answer to "why is
+		// my account still on the old address".
+		{"account_email_changes", `
+			SELECT email, created_at, expires_at, spent_at
+			FROM account_email_changes WHERE account_id = $1 ORDER BY created_at`},
 		{"sessions", `
 			SELECT id, created_at, last_seen_at, expires_at, revoked_at, user_agent
 			FROM sessions WHERE account_id = $1 ORDER BY created_at`},

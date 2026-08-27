@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/netip"
+	"strings"
 	"testing"
 
 	"github.com/codeschool-ing/schooling/internal/identity"
@@ -22,7 +23,7 @@ import (
 func server(t *testing.T, store *identity.Store, signedUp identity.SignedUp) http.Handler {
 	t.Helper()
 	mux := http.NewServeMux()
-	identity.NewHandler(store, identity.Settings{}, signedUp, nil).Routes(mux)
+	identity.NewHandler(store, identity.Settings{}, signedUp, nil, nil).Routes(mux)
 	return web.Chain(mux, identity.Authenticate(store, identity.Nowhere))
 }
 
@@ -32,7 +33,7 @@ func listening(t *testing.T, store *identity.Store, refused identity.Refused) ht
 	t.Helper()
 	mux := http.NewServeMux()
 	identity.NewHandler(store, identity.Settings{},
-		func(context.Context, identity.Account) {}, refused).Routes(mux)
+		func(context.Context, identity.Account) {}, refused, nil).Routes(mux)
 	return web.Chain(mux, identity.Authenticate(store, identity.Nowhere))
 }
 
@@ -253,7 +254,7 @@ func TestAnAccountIsBornWithTheCountryAndTheLanguage(t *testing.T) {
 	mux := http.NewServeMux()
 	identity.NewHandler(store, identity.Settings{}, func(_ context.Context, a identity.Account) {
 		born = a
-	}, nil).Routes(mux)
+	}, nil, nil).Routes(mux)
 
 	h := web.Chain(mux,
 		geo.Country(geo.Settings{
@@ -409,5 +410,127 @@ func TestWithNoListTheFieldIsStillThereAndFalse(t *testing.T) {
 	}
 	if got != false {
 		t.Errorf("emailRefused is %v, want false", got)
+	}
+}
+
+/* Asking to move an account, over HTTP.
+
+   THE STORE'S TESTS COVER WHAT MOVES. These cover the three things only the
+   handler decides: that a session alone is not enough, that an address we
+   already know refuses our mail is turned away before a row is written, and
+   that the caller is handed the link rather than the store sending it. */
+
+// changing is `server` with a suppression list and a place for the link to go.
+func changing(t *testing.T, store *identity.Store, refused identity.Refused,
+	asked *identity.Change) http.Handler {
+
+	t.Helper()
+	mux := http.NewServeMux()
+	identity.NewHandler(store, identity.Settings{},
+		func(context.Context, identity.Account) {}, refused,
+		func(_ context.Context, _ identity.Account, c identity.Change) { *asked = c },
+	).Routes(mux)
+	return web.Chain(mux, identity.Authenticate(store, identity.Nowhere))
+}
+
+/*
+THE PASSWORD IS REQUIRED AND THE SESSION IS NOT ENOUGH.
+
+	This is the security property of the whole feature. A stolen cookie lets
+	somebody read; moving where the recovery mail goes is the step that turns it
+	into a stolen account, and a session is exactly what an attacker holding a
+	cookie has.
+*/
+func TestChangingAnAddressNeedsThePasswordAndNotJustASession(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	var asked identity.Change
+	h := changing(t, store, nil, &asked)
+
+	cookie, _ := signUpOn(t, h)
+	rec := post(t, h, "/api/v1/account/email", map[string]string{
+		"email": address(t), "password": "not the password",
+	}, cookie)
+
+	if rec.Code != http.StatusForbidden {
+		t.Errorf("a wrong password answered %d, want 403", rec.Code)
+	}
+	if asked.Token != "" {
+		t.Error("a link was issued for a request that did not carry the password")
+	}
+}
+
+// AND A REQUEST WITH NO SESSION AT ALL IS 401 AND NOT 403, because the two are
+// different sentences: one is "sign in" and the other is "that is not your
+// password".
+func TestChangingAnAddressWithNoSessionIsRefused(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	var asked identity.Change
+	h := changing(t, store, nil, &asked)
+
+	rec := post(t, h, "/api/v1/account/email", map[string]string{
+		"email": address(t), "password": goodPassword,
+	})
+	if rec.Code != http.StatusUnauthorized {
+		t.Errorf("no session answered %d, want 401", rec.Code)
+	}
+}
+
+/*
+AN ADDRESS THAT ALREADY REFUSED US IS TURNED AWAY BEFORE ANYTHING IS WRITTEN.
+
+	Accepting it would issue a link nothing can deliver — into precisely the
+	state this feature exists to get somebody out of, from the form built to do
+	it. The answer carries its own code so the screen can say which of the four
+	things went wrong.
+*/
+func TestMovingToAnAddressThatRefusedUsIsRefused(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	var asked identity.Change
+	h := changing(t, store, func(context.Context, string) (bool, error) { return true, nil }, &asked)
+
+	cookie, _ := signUpOn(t, h)
+	rec := post(t, h, "/api/v1/account/email", map[string]string{
+		"email": address(t), "password": goodPassword,
+	}, cookie)
+
+	if rec.Code != http.StatusUnprocessableEntity {
+		t.Fatalf("a suppressed address answered %d, want 422: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), "address_refused") {
+		t.Errorf("the answer is %s, want the code the screen branches on", rec.Body.String())
+	}
+	if asked.Token != "" {
+		t.Error("a link was issued for an address we know refuses our mail")
+	}
+}
+
+// THE HAPPY PATH ANSWERS 202 AND HANDS THE LINK TO THE CALLER. Accepted, not
+// done: nothing has changed when this returns, and the callback is what puts a
+// message in the post.
+func TestAskingToChangeAnAddressIsAcceptedAndHandsOverTheLink(t *testing.T) {
+	store := identity.NewStore(testPool(t))
+	var asked identity.Change
+	h := changing(t, store, func(context.Context, string) (bool, error) { return false, nil }, &asked)
+
+	cookie, was := signUpOn(t, h)
+	next := address(t)
+	rec := post(t, h, "/api/v1/account/email", map[string]string{
+		"email": next, "password": goodPassword,
+	}, cookie)
+
+	if rec.Code != http.StatusAccepted {
+		t.Fatalf("asking answered %d, want 202: %s", rec.Code, rec.Body.String())
+	}
+	if asked.Token == "" {
+		t.Fatal("no link reached the caller, so no message can be sent")
+	}
+	if !strings.EqualFold(asked.Email, next) {
+		t.Errorf("the link is for %q, want %q", asked.Email, next)
+	}
+
+	// AND THE ACCOUNT HAS NOT MOVED, which is the point of the 202.
+	if me := meOf(t, h, cookie); !strings.EqualFold(me["email"].(string), was) {
+		t.Errorf("the account is on %v already, want %q until the link is followed",
+			me["email"], was)
 	}
 }

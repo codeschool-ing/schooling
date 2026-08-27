@@ -58,14 +58,18 @@ Refused answers whether an address has permanently refused our mail.
 type Refused func(ctx context.Context, address string) (bool, error)
 
 type Handler struct {
-	store    *Store
-	settings Settings
-	signedUp SignedUp
-	refused  Refused
+	store           *Store
+	settings        Settings
+	signedUp        SignedUp
+	refused         Refused
+	changeRequested ChangeRequested
 }
 
-func NewHandler(store *Store, settings Settings, signedUp SignedUp, refused Refused) *Handler {
-	return &Handler{store: store, settings: settings, signedUp: signedUp, refused: refused}
+func NewHandler(store *Store, settings Settings, signedUp SignedUp, refused Refused,
+	changeRequested ChangeRequested) *Handler {
+
+	return &Handler{store: store, settings: settings, signedUp: signedUp,
+		refused: refused, changeRequested: changeRequested}
 }
 
 /*
@@ -98,6 +102,7 @@ func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/v1/sign-in", h.signIn)
 	mux.HandleFunc("POST /api/v1/sign-out", h.signOut)
 	mux.HandleFunc("GET /api/v1/me", h.me)
+	mux.HandleFunc("POST /api/v1/account/email", h.changeEmail)
 }
 
 type credentials struct {
@@ -210,6 +215,91 @@ func (h *Handler) me(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	web.JSON(w, http.StatusOK, h.viewOf(r, account))
+}
+
+type addressChange struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+/*
+ChangeRequested is called when somebody asks to move an account to a new
+address, with the link to put in the post. It is a callback for `SignedUp`'s
+reason: composing and sending a message lives in another module.
+
+	IT IS GIVEN THE ACCOUNT AND THE LINK, and the account's NAME and LOCALE are
+	what the message is written with — the address it goes to is the one in the
+	change, which is not the account's yet and is the entire point.
+*/
+type ChangeRequested func(ctx context.Context, account Account, change Change)
+
+/*
+changeEmail asks to move this account to a different address.
+
+	THE PASSWORD IS REQUIRED AND THE SESSION IS NOT ENOUGH. A stolen cookie lets
+	somebody read; changing where the recovery mail goes is the step that turns
+	it into a stolen account. `SecondFactorRoutes` already refuses to replace an
+	existing factor without one presented, for the same reason and after the same
+	argument.
+
+	NOTHING CHANGES HERE. This writes a row and puts a link in the post; the
+	account keeps its address until somebody follows it. So the answer is 202 and
+	not 200 — accepted, not done.
+*/
+func (h *Handler) changeEmail(w http.ResponseWriter, r *http.Request) {
+	account, ok := FromContext(r.Context())
+	if !ok {
+		web.Fail(w, http.StatusUnauthorized, web.CodeUnauthorized, "sign in first")
+		return
+	}
+
+	var in addressChange
+	if !decode(w, r, &in) {
+		return
+	}
+
+	/* THE PASSWORD IS CHECKED AGAINST THE ACCOUNT IN HAND, by the same call the
+	   sign-in form uses. A separate "verify this password" path would be a
+	   second place for the comparison to be wrong. */
+	if _, err := h.store.Authenticate(r.Context(), account.Email, in.Password); err != nil {
+		if errors.Is(err, ErrWrongPassword) || errors.Is(err, ErrNoAccount) {
+			web.Fail(w, http.StatusForbidden, web.CodeUnauthorized,
+				"that is not this account's password")
+			return
+		}
+		h.refuse(w, r, err)
+		return
+	}
+
+	/* AND THE NEW ADDRESS IS ASKED ABOUT BEFORE ANYTHING IS WRITTEN. Accepting a
+	   move to an address we already know refuses our mail would issue a link
+	   nothing can deliver — which is precisely the state this whole feature
+	   exists to get somebody out of. */
+	if h.refusedBy(r.Context(), NormaliseEmail(in.Email)) {
+		web.Fail(w, http.StatusUnprocessableEntity, "address_refused",
+			"our mail to that address has come back refused, so a link would not reach you there")
+		return
+	}
+
+	change, err := h.store.RequestEmailChange(r.Context(), account.ID, in.Email)
+	switch {
+	case errors.Is(err, ErrSameAddress):
+		web.Fail(w, http.StatusUnprocessableEntity, "same_address",
+			"that is already the address on this account")
+		return
+	case errors.Is(err, ErrTooManyChanges):
+		web.Fail(w, http.StatusTooManyRequests, "too_many",
+			"that is a lot of addresses in one hour — try again later")
+		return
+	case err != nil:
+		h.refuse(w, r, err)
+		return
+	}
+
+	if h.changeRequested != nil {
+		h.changeRequested(r.Context(), account, change)
+	}
+	w.WriteHeader(http.StatusAccepted)
 }
 
 /*
