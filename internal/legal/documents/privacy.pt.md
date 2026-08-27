@@ -1,7 +1,7 @@
 ---
 title: Política de privacidade
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, checkout_intents, payment_customers, staff, audit_log
 ---
 
 Isto diz o que guardamos sobre você, por quê, e o que acontece quando você pede
@@ -140,6 +140,20 @@ chega até nós é uma referência a uma transação, um valor e se deu certo.
 Guardamos o que você está pagando, o estado da sua assinatura, o histórico de
 como ela chegou nesse estado, e o registro de cada pagamento, estorno e
 chargeback.
+
+Guardamos também **cada compra que você iniciou** — o que estava comprando,
+quanto pedimos, como escolheu pagar e até onde ela foi. Uma compra começada e
+abandonada também fica ali, e o motivo é simples: se algum dia aparecer uma
+cobrança que você não reconhece, é esse registro que nos permite dizer o que
+ela era.
+
+**Pagar no Brasil exige CPF ou CNPJ, e nós não guardamos o seu.** O provedor de
+pagamento precisa dele para emitir qualquer cobrança, então repassamos e
+guardamos apenas o identificador que ele devolve — uma string que significa algo
+para ele e nada em qualquer outro lugar. Quando você pede para ser apagado, esse
+vínculo é excluído, e nada aqui liga você a ele. O que não podemos fazer é
+apagar o seu cadastro no provedor: ele guarda o seu número sob as obrigações
+dele, e isso você pediria diretamente a ele.
 
 ## Contagem
 

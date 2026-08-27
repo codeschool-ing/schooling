@@ -358,6 +358,25 @@ var Registry = []Table{
 			"later, and a cascade would make erasure fail on everybody who ever subscribed",
 	},
 	{
+		Name: "payment_customers", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "the handle a payment gateway answered with for one person, and nothing else. " +
+			"Charging in Brazil needs a CPF or CNPJ; it is sent to create this handle and " +
+			"is NOT stored here, so what this row holds is a string that means something " +
+			"only at that processor. It goes on erasure because it is the join between a " +
+			"person and a company that holds their tax id, nothing obliges us to keep it, " +
+			"and a row that survived would be a way to find them again. What deleting it " +
+			"cannot do is delete their customer at the gateway, which keeps the number " +
+			"under its own retention",
+	},
+	{
+		Name: "checkout_intents", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,
+		Why: "one attempt to buy: which price, what was actually charged, how it was paid, " +
+			"and how far it got. ORPHANED for the ledger's reason exactly — a chargeback " +
+			"can arrive months after somebody has gone and \"what was this payment for\" " +
+			"has to stay answerable, while the identity that makes it theirs is deleted. " +
+			"It holds no name, no address and no tax id",
+	},
+	{
 		Name: "ledger_entries", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,
 		Why: "every movement of money, append-only by trigger and holding only ids. It is " +
 			"ORPHANED rather than deleted, and that is the only arrangement meeting both " +
@@ -523,6 +542,18 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		// export exists to answer — and the reference is what lets them match a
 		// row here against a line on their own card statement, which is the
 		// only way they can check that this file is telling the truth.
+		// WHAT THEY TRIED TO BUY AND WHAT THEY WERE ASKED FOR. Not the
+		// gateway's charge id: it is our reference for a conversation with a
+		// processor, it means nothing to the person, and an export is not the
+		// place to publish somebody else's internal identifiers.
+		{"checkout_intents", `
+			SELECT id, scope, cents, currency, method, instalments, stage,
+			       invoice_url, created_at, updated_at
+			FROM checkout_intents WHERE account_id = $1 ORDER BY created_at`},
+		// The handle, and no tax id — because there is none here to give back.
+		{"payment_customers", `
+			SELECT provider, customer_id, created_at
+			FROM payment_customers WHERE account_id = $1 ORDER BY created_at`},
 		{"ledger_entries", `
 			SELECT id, occurred_at, kind, amount_cents, currency, reverses,
 			       source, source_ref, memo

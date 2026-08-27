@@ -189,7 +189,16 @@ var wiped = map[string]string{
 	"subscriptions":       "there are none, and the refusal above proves it",
 	"subscription_events": "the same, and it is append-only for when there are",
 	"ledger_entries":      "the same again, and this is the money",
-	"audit_log":           "the history of who did what, emptied and then written to",
+
+	// EMPTIED RATHER THAN KEPT, ALTHOUGH THE GATEWAY WILL DISAGREE. A reset
+	// costs this platform its data and not the processor's: the charges those
+	// rows point at go on existing over there, and a person who paid on a
+	// sandbox that was then reset has an invoice we can no longer explain. That
+	// is what a reset IS, and it is a reason to run one only where the money is
+	// not real.
+	"checkout_intents":  "what anybody tried to buy",
+	"payment_customers": "who anybody is at a gateway; cascades from accounts",
+	"audit_log":         "the history of who did what, emptied and then written to",
 }
 
 func main() {
