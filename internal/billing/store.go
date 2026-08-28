@@ -186,8 +186,32 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 		if existing.PaidThrough.After(now) {
 			from = existing.PaidThrough
 		}
-		return s.apply(ctx, tx, existing, EventPaid, now,
+		/* AND IT IS COMMITTED HERE, WHICH IT WAS NOT.
+
+		   `apply` deliberately does not commit — its own comment says the caller
+		   owns the transaction, because `Advance` needs the read and the write
+		   in one — and this branch returned its value straight out. The deferred
+		   rollback above then threw the whole renewal away: the subscription
+		   kept its old end date, no line was written to the log, and the value
+		   handed back said otherwise, because `apply` builds it in memory.
+
+		   IT PASSED EVERY TEST FOR AS LONG AS IT EXISTED. All of them asserted
+		   on the `Held` that came back, which was correct; nothing read the row
+		   afterwards. What found it was a test written for another change that
+		   happened to `SELECT price_id` from the table.
+
+		   In production this is a renewal that took somebody's money, wrote the
+		   ledger, marked the checkout paid — and did not extend their access by
+		   a day. */
+		renewed, err := s.apply(ctx, tx, existing, EventPaid, now,
 			from.AddDate(0, termMonths, 0), ledgerEntry)
+		if err != nil {
+			return Held{}, err
+		}
+		if err := tx.Commit(ctx); err != nil {
+			return Held{}, fmt.Errorf("billing: renewing a subscription: %w", err)
+		}
+		return renewed, nil
 	case errors.Is(err, ErrNoSubscription):
 	default:
 		return Held{}, err
