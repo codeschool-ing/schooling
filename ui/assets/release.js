@@ -43,12 +43,37 @@
    it to the one person who cannot afford it. The banner is a sentence and a
    button; the button belongs to the reader.
 
-   For the same reason it stays quiet while an exam paper is open. The answer to
-   "you are running an old build" is not one anybody can act on with a clock
-   running, and a nudge that cannot be acted on is a distraction.
-   ========================================================================== */
+   For the same reason it stays quiet while an exam paper is open — see `hold`.
 
-import * as api from './api.js';
+   # WHY IT IS IN `assets/` AND NOT IN `app/`
+
+   The console needs this more than the study interface does, and it was written
+   in the student's tree where the console cannot reach it: `interface.go` serves
+   `assets/` from the console's own files and falls back to the study
+   interface's, and refuses to serve `app/` at all, because those are a
+   student's screens. `accent.js` lives here for exactly this reason and says so.
+
+   That move is what took the imports out. This file used to call the student's
+   `api.get`, which does not exist over there; it asks `fetch` itself now, and
+   the two things it cannot know about the surface it is on arrive as
+   predicates:
+
+       skip()   do not ask at all — the offline bundle has no server, and
+                telling somebody their tab is old because a file:// page has
+                nowhere to ask would be the worst possible answer
+       hold()   behind, but this is not the moment to say so — a student with
+                an exam paper open
+
+   Both default to false, which is the console's answer to both: it has no
+   offline copy and nothing on it is timed.
+
+   IT COST A DAY BEFORE IT EXISTED. A console tab left open across a deploy runs
+   every screen's module from before it — the screens are imported statically,
+   so one page load fixes the whole interface in memory — and the release that
+   added the books to the record was read as not having shipped, from a tab that
+   could not see it. The student's version of this shipped in the same release
+   and the console had none.
+   ========================================================================== */
 
 /* How long two checks must be apart. Fifteen minutes is chosen against the
    behaviour rather than against the server: somebody moving between a tab of
@@ -76,16 +101,6 @@ let behind = false;
 const identity = (info) => [info?.version, info?.commit, info?.built]
   .map((s) => String(s || '')).join(' ');
 
-/* Whether an exam paper is on screen, by the same test `main.js` already uses
-   to decide which routes need a school: an exam address ends in `/exam`. The
-   route the router matched is on the content region, so this reads what was
-   DRAWN rather than what the address bar says — a hash that has changed while
-   the screen behind it has not is exactly the state to be careful about. */
-function sittingAnExam() {
-  const drew = document.querySelector('#content')?.getAttribute('data-screen') || '';
-  return drew.endsWith('/exam');
-}
-
 /*
 Ask the server what it is, and answer whether this tab is behind it.
 
@@ -94,8 +109,8 @@ Ask the server what it is, and answer whether this tab is behind it.
 	release. The one thing this must never do is tell somebody their tab is old
 	because their train went into a tunnel.
 */
-async function ask() {
-  if (api.offline) return false;
+async function ask(skip) {
+  if (skip()) return false;
 
   /* THE FLOOR IS MEASURED FROM THE LAST COMPARISON AND NOT FROM THE LAST
      REQUEST, which is a distinction with two consequences and both are wanted.
@@ -113,9 +128,16 @@ async function ask() {
   if (running && now - lastChecked < MIN_APART) return behind;
   if (running) lastChecked = now;
 
+  /* ITS OWN `fetch` AND NOT THE CALLER'S REQUEST HELPER, which is the price of
+     living in `assets/` — see the header. It is also the honest shape: this
+     asks one unauthenticated route for a hundred bytes and wants none of what
+     a request helper adds. A non-200 is read as no news rather than as a
+     failure, for the same reason every other failure here is. */
   let info;
   try {
-    info = await api.get('/version');
+    const answer = await fetch('/version', { credentials: 'same-origin' });
+    if (!answer.ok) return behind;
+    info = await answer.json();
   } catch (e) {
     return behind;
   }
@@ -139,13 +161,13 @@ watch calls back the first time this tab is found to be behind, and never again.
 	what would let a second surface (the console, one day) use the same check
 	without inheriting a student's markup.
 */
-export function watch(whenBehind) {
+export function watch(whenBehind, { skip = () => false, hold = () => false } = {}) {
   let told = false;
 
   const look = async () => {
     if (told || document.visibilityState !== 'visible') return;
-    if (!(await ask())) return;
-    if (sittingAnExam()) return;   // asked again on the next return to the tab
+    if (!(await ask(skip))) return;
+    if (hold()) return;   // asked again on the next return to the tab
     told = true;
     whenBehind();
   };
@@ -156,5 +178,5 @@ export function watch(whenBehind) {
      is nothing to compare against yet — and it is not gated on visibility for
      that exact reason: a tab opened in the background has still been SERVED,
      and what this records is what it was served. */
-  ask();
+  ask(skip);
 }

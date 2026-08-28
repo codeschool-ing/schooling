@@ -27,6 +27,12 @@ import { route, whenChanged, start, goTo } from './routes.js';
 import { esc } from './dom.js';
 import { SECTIONS, DETAILS, GROUPS } from './sections.js';
 import * as session from './session.js';
+/* IT IS THE STUDY INTERFACE'S FILE, SERVED FROM HERE. `interface.go` asks this
+   console's `assets/` first and falls back to that tree, which is the same
+   arrangement `base.css` uses — so one copy of "is this tab still the build the
+   server is serving" answers for both, and the console does not inherit a
+   student's markup to get it. */
+import * as release from '../assets/release.js';
 
 const $ = (s) => document.querySelector(s);
 const stage = $('#stage');
@@ -201,3 +207,35 @@ if (!gated) {
   if (!location.hash || location.hash === '#') goTo('/' + (SECTIONS[0] ? SECTIONS[0].id : ''));
   start();
 }
+
+/* ---------- "this console has been open since before the last release" ----------
+
+   IT IS OUTSIDE THE GATE ON PURPOSE. A signed-out console is still a console
+   somebody left open, and the sign-in screen is as much a screen from before
+   the deploy as any other. There is nothing to sign for here — `/version` is
+   the one route this interface asks that needs no session.
+
+   NEITHER PREDICATE IS PASSED, and both defaults are the right answer: this
+   console has no offline copy to be unable to ask from, and nothing on it is
+   timed the way an exam paper is. What it has instead is the reason the check
+   matters more here — an operator deciding about money on yesterday's screens.
+
+   NOTHING RELOADS BY ITSELF. It is a sentence and a button, and the button
+   belongs to whoever is reading it; an operator halfway through typing a reason
+   into a form is exactly the person a surprise reload would rob. */
+release.watch(() => {
+  const el = $('#stale-banner');
+  el.hidden = false;
+  el.innerHTML =
+    '<span class="sb-text">This console has been open since before the last update. ' +
+      'Reload it when you are ready.</span>' +
+    '<button type="button" class="sb-reload">Reload</button>';
+});
+
+$('#stale-banner').addEventListener('click', (e) => {
+  /* `reload()` AND NOT A CACHE-BUSTING QUERY. Every file this page loaded
+     carries `no-cache` and an ETag that is the build (`interface.go`), so an
+     ordinary reload revalidates all of them. A query string would be a second,
+     weaker copy of a rule the server already states correctly. */
+  if (e.target.closest('.sb-reload')) location.reload();
+});

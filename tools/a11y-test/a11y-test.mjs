@@ -1080,6 +1080,40 @@ try {
     await check(staff.page, `${theme} · console, jobs`, '/#/jobs', '/jobs',
       { base: CONSOLE, region: '#stage', settled: '.run-adrift' });
 
+    /* A CONSOLE TAB FROM BEFORE THE LAST RELEASE, reached the way a deploy
+       reaches it: `/version` answers a different build and the return to the
+       tab is the event a browser fires when somebody looks back. Same shape as
+       the student's check further up, and here for a sharper reason — every
+       module of this interface is imported statically, so a console left open
+       across a deploy runs yesterday's screens on every one of them, and this
+       is where money is decided.
+
+       THE INTERCEPTION GOES ON BEFORE THE NAVIGATION. `check` moves between
+       console screens by changing the fragment, which is not a document load,
+       so nothing asks `/version` again until the return below — and the tab
+       recorded its own build when this page loaded, several checks ago. If that
+       ever stops being true the check times out rather than passing quietly. */
+    await staff.page.route('**/version', (r) => r.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        version: 'v99.0.0', commit: 'deadbeef', built: '2099-01-01T00:00:00Z',
+        released: true,
+      }),
+    }));
+
+    await check(staff.page, `${theme} · console, a tab from before the last release`,
+      '/#/jobs', '/jobs', {
+        base: CONSOLE,
+        region: '#stage',
+        async act(page) {
+          await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+          await page.waitForSelector('#stale-banner:not([hidden]) .sb-reload',
+            { timeout: 8000 });
+        },
+      });
+    await staff.page.unroute('**/version');
+
     /* AND THE SCREEN WITH SOMEBODY ON IT, which is the one this section is
        about: a table of counts, a link that hands over everything held, and a
        destructive block with a confirmation field. None of that exists on the

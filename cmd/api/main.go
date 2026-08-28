@@ -332,10 +332,18 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   student's, and it is the one nobody can answer during an incident
 	   without shelling into the machine. No database, so that it replies even
 	   when everything else is down — which is when it is asked. A test holds
-	   that property, because it is one line of a handler away from being lost. */
-	mux.HandleFunc("GET /version", func(w http.ResponseWriter, _ *http.Request) {
+	   that property, because it is one line of a handler away from being lost.
+
+	   IT IS MOUNTED ON THE CONSOLE'S HOST TOO, further down, and that is not
+	   symmetry for its own sake. The interface asks this route to notice that
+	   its tab is older than the build serving it, and the console — where a
+	   stale tab means somebody deciding about money on yesterday's screens —
+	   could not ask: `/version` 404'd over there, so the check recorded nothing
+	   and never fired. It is one handler and one answer, mounted twice. */
+	whichBuild := func(w http.ResponseWriter, _ *http.Request) {
 		web.JSON(w, http.StatusOK, build.Current())
-	})
+	}
+	mux.HandleFunc("GET /version", whichBuild)
 
 	// The school-scoped half. Its own mux, so that mounting a route outside
 	// the middleware has to be deliberate rather than a line in the wrong
@@ -1232,6 +1240,14 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// shell is served to anybody who asks, and its first request to the API
 	// behind the gate is how it finds out who is here.
 	consoleMux.Handle("/", console.Interface(interfaceVersion))
+
+	/* AND WHICH BUILD IS ANSWERING, which the console's own interface asks.
+	   Same handler as the platform's — see it for why there are two mounts and
+	   not two answers. It is outside the gate for the reason the shell above
+	   is: a tab that has gone stale has gone stale whether or not anybody is
+	   signed in, and this route says nothing a stranger cannot already read
+	   from the platform's own host. */
+	consoleMux.HandleFunc("GET /version", whichBuild)
 
 	consoleMux.Handle("/console/api/v1/", web.Chain(staffAPI,
 		// NOWHERE, AND THAT IS AN ANSWER RATHER THAN A GAP. Staff at the console
