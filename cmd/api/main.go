@@ -616,6 +616,10 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   bought does not, and a deployment whose key has been pulled must still
 	   answer its existing subscribers. */
 	billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
+		/* THE SAME UNGATED STORE THE WEBHOOK HOLDS, and for the same reason:
+		   `NewCheckouts` with no `Confirmed` refuses every `Open`, so the
+		   purchase history is read by a store that cannot start a purchase. */
+		billing.NewCheckouts(pool, nil),
 		func(ctx context.Context) (uuid.UUID, bool) {
 			return identity.AccountID(ctx)
 		}).Routes(scoped)
@@ -1111,6 +1115,11 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		Schools:  schoolsFor(tenant.NewStore(pool)),
 		Sittings: sittingsOf(accounts),
 		At:       atSchool(subscriptions, studied, exams, certificates),
+		Holding: holdingOf(subscriptions, billing.NewPrices(pool),
+			/* A STORE THAT CANNOT SELL. `NewCheckouts` with no `Confirmed`
+			   refuses every `Open`, so the console reads a person's purchases
+			   through something that could not start one on their behalf. */
+			billing.NewCheckouts(pool, nil)),
 	}).Routes(staffAPI)
 
 	/* THE GATE IS ON THE API AND NOT ON THE WHOLE HOST, and the difference
@@ -2548,6 +2557,77 @@ func atSchool(
 			out.Certificates = append(out.Certificates, console.Given{
 				Code: c.Code, Title: c.Title, IssuedAt: c.IssuedAt,
 			})
+		}
+		return out, nil
+	}
+}
+
+/*
+holdingOf is the console's view of what one person is paying for, and of
+everything they have ever tried to buy.
+
+	IT READS AT SCOPE `all` AND NOT PER SCHOOL, which is the whole reason it
+	exists beside `atSchool` rather than inside it. One subscription covers
+	every school (N-02), so `atSchool`'s per-school lookup finds nothing for
+	anybody — the fields are still there because `scope` exists so that can
+	narrow later (N-03), and until it does this is where the answer is.
+
+	NOTHING HERE IS AN ERROR WHEN IT IS ABSENT. Somebody with no subscription is
+	the ordinary case; somebody with purchases and no subscription is a checkout
+	that was never paid, and the console has to show it, because that row is
+	what they wrote in about.
+*/
+func holdingOf(subscriptions *billing.Store, prices *billing.Prices,
+	buys *billing.Checkouts) func(context.Context, uuid.UUID) (console.Holding, error) {
+
+	return func(ctx context.Context, accountID uuid.UUID) (console.Holding, error) {
+		var out console.Holding
+
+		bought, err := buys.Purchases(ctx, accountID)
+		if err != nil {
+			return console.Holding{}, err
+		}
+		for _, p := range bought {
+			out.Purchases = append(out.Purchases, console.Purchase{
+				ID:       p.ID,
+				OpenedAt: p.OpenedAt, MovedAt: p.MovedAt, Stage: string(p.Stage),
+				Cents: p.Cents, Listed: p.Listed, Currency: p.Currency,
+				TermMonths: p.TermMonths,
+				Method:     string(p.Method), Instalments: p.Instalments,
+				InvoiceURL: p.InvoiceURL, PaidThrough: p.PaidThrough,
+			})
+		}
+
+		held, err := subscriptions.Of(ctx, accountID, billing.ScopeEverything, time.Now())
+		switch {
+		case errors.Is(err, billing.ErrNoSubscription):
+			return out, nil
+		case err != nil:
+			return console.Holding{}, err
+		}
+
+		out.State = string(held.State)
+		out.Opens = billing.Opens(held.Subscription)
+		out.Model = string(held.Model)
+		if !held.StartedAt.IsZero() {
+			since := held.StartedAt
+			out.Since = &since
+		}
+		if !held.PaidThrough.IsZero() {
+			through := held.PaidThrough
+			out.PaidThrough = &through
+		}
+
+		/* THE PRICE IS LOOKED UP AND ITS ABSENCE IS NOT FATAL, exactly as on the
+		   student's own screen: an operator asking when somebody's access ends
+		   should not be told nothing because the amount could not be joined. */
+		if held.PriceID != uuid.Nil {
+			if price, err := prices.ByID(ctx, held.PriceID); err == nil {
+				out.Price = &console.Price{
+					TermMonths: price.TermMonths, Cents: price.Cents,
+					Currency: price.Currency, From: price.From,
+				}
+			}
 		}
 		return out, nil
 	}

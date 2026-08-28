@@ -274,4 +274,40 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   '{n} days left': 'faltam {n} dias',
   'This does not renew by itself. When the term ends, you buy another.':
     'Ela não se renova sozinha. Quando o prazo acabar, você compra outro.',
+
+  /* AND EVERYTHING THEY HAVE BOUGHT, IN A TABLE UNDER IT. The block above is
+     the state — one price, one date, both overwritten by the next purchase —
+     and this is the record, which is what somebody reconciling a card statement
+     or questioning a charge actually needs.
+
+     THE HEADINGS ARE LOWER CASE ON PURPOSE, matching `opens`, `paid` and
+     `runs to` above: they are labels on a fact rather than sentences, and the
+     stylesheet puts them in small capitals either way. */
+  'Everything you have bought': 'Tudo o que você já comprou',
+  'bought on': 'comprado em',
+  'term': 'prazo',
+  'how': 'forma',
+  'amount': 'valor',
+  'access to': 'acesso até',
+
+  /* HOW IT WAS PAID. `Pix` is a proper noun and is the same word in both
+     languages — it is here so the dictionary is complete, and so nobody has to
+     work out whether its absence was an oversight. */
+  'Pix': 'Pix',
+  'Card, {n}×': 'Cartão, {n}×',
+  'Card, in one': 'Cartão, à vista',
+
+  /* WHAT BECAME OF A PURCHASE THAT BOUGHT NOTHING. `waiting for payment` is a
+     Pix code somebody can still pay, which is why the row hands the address
+     back beside it; the other two are over. */
+  /* A PAID PURCHASE WITH NO DATE. The log only started recording what a payment
+     bought in `0043`, so the sales made before it have nothing to join — and
+     saying so is the only honest cell. The screen said "não concluída" there
+     once, about a year somebody had paid for in full. */
+  'not recorded': 'não registrado',
+
+  'waiting for payment': 'aguardando pagamento',
+  'not paid': 'não foi paga',
+  'not finished': 'não concluída',
+  'finish paying': 'terminar de pagar',
 });

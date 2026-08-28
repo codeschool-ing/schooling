@@ -309,11 +309,18 @@ export default async function account() {
       return;
     }
 
+    /* THE HISTORY IS DRAWN IN BOTH BRANCHES, and the branch below is the one it
+       would have been lost from. Somebody with no subscription may still have
+       purchases — a checkout that errored, a Pix code that expired unpaid — and
+       those are precisely the rows they came here to look at. */
+    const bought = purchaseTable(held && held.purchases);
+
     if (!held || held.state === 'none') {
       holding.innerHTML =
         '<div class="block-top"><h2>' + txt('Your subscription') + '</h2></div>' +
         '<p class="dim">' + txt('You do not have one. The first course of every track is free, in full.') + '</p>' +
-        '<p><a class="btn btn-ghost" href="#/subscribe">' + txt('See what a subscription opens') + '</a></p>';
+        '<p><a class="btn btn-ghost" href="#/subscribe">' + txt('See what a subscription opens') + '</a></p>' +
+        bought;
       return;
     }
 
@@ -347,10 +354,113 @@ export default async function account() {
       '<p class="dim">' + txt('This does not renew by itself. When the term ends, you buy another.') + '</p>' +
       (held.opens
         ? ''
-        : '<p><a class="btn btn-primary" href="#/subscribe">' + txt('Subscribe') + '</a></p>');
+        : '<p><a class="btn btn-primary" href="#/subscribe">' + txt('Subscribe') + '</a></p>') +
+      bought;
   }
 
   return { title: txt('My account'), el };
+}
+
+/*
+purchaseTable is everything somebody has bought, newest first.
+
+  THE FACTS ABOVE IT ARE THE STATE AND THIS IS THE RECORD. "Runs to 12 March"
+  is what somebody checks in passing; "in June you paid R$ 655,50 for a year in
+  Pix, and it ran to June next year" is what they need when they are
+  reconciling a card statement, questioning a charge, or simply trying to
+  remember whether they renewed. The state cannot answer the second: it holds
+  one price and one date, and the next purchase overwrites both.
+
+  IT IS ONE LINE PER SALE AND NOT PER PAYMENT. An instalment plan is one
+  purchase the issuer collects several times; a table with three rows of
+  R$ 363,33 would be showing somebody three prices they never agreed to, and
+  the server sends the checkout for exactly this reason.
+
+  THE ROWS THAT WERE NEVER PAID ARE IN IT. A Pix code that expired is the thing
+  somebody writes in about, and it still carries the address it was given — so
+  the row hands it back rather than making them start a second checkout for one
+  sale. It is dimmed and not coloured: most of them are somebody who opened the
+  form and thought better of it, which is not a fault to warn about.
+
+  EMPTY IS NOTHING AT ALL. A table with a header row and no body reads as a
+  screen that failed to load, and the sentence above it has already said they
+  have bought nothing.
+*/
+function purchaseTable(bought) {
+  if (!Array.isArray(bought) || bought.length === 0) return '';
+
+  const rows = bought.map((p) => {
+    const paid = p.stage === 'paid';
+    const through = p.paidThrough ? new Date(p.paidThrough) : null;
+    const discounted = paid && p.listed > p.cents;
+
+    return '<tr' + (paid ? '' : ' class="bought-open"') + '>' +
+      '<th scope="row">' + esc(day(new Date(p.openedAt))) + '</th>' +
+      '<td>' + esc(termName(p.termMonths)) + '</td>' +
+      '<td>' + esc(howPaid(p.method, p.instalments)) + '</td>' +
+      '<td class="bought-amount">' + esc(money(p.cents, p.currency)) +
+        (discounted
+          ? '<span class="bought-was">' + esc(money(p.listed, p.currency)) + '</span>'
+          : '') +
+      '</td>' +
+      '<td>' +
+        /* THREE ANSWERS AND NOT TWO, and the third is the one that was wrong.
+
+           A PAID PURCHASE WITH NO DATE IS NOT AN UNFINISHED ONE. The log only
+           started recording what a payment bought in `0043`, so every purchase
+           made before it has a stage of `paid` and nothing to join — and the
+           first version of this fell through to the stage word and told
+           somebody their oldest, fully paid year was "not finished". It said
+           that about the platform's first real sales. */
+        (through ? esc(day(through))
+          : paid ? '<span class="bought-stage">' + txt('not recorded') + '</span>'
+          : '<span class="bought-stage">' + esc(stageName(p.stage)) + '</span>' +
+            /* THE ADDRESS, ONLY WHILE IT CAN STILL BE PAID. An abandoned
+               charge's link leads to a page saying it expired, which is a
+               worse answer than none. */
+            (p.stage === 'charged' && p.invoiceUrl
+              ? ' <a href="' + esc(p.invoiceUrl) + '" rel="noopener">' + txt('finish paying') + '</a>'
+              : '')) +
+      '</td>' +
+    '</tr>';
+  }).join('');
+
+  return '<div class="bought">' +
+    '<div class="bought-scroll">' +
+      '<table class="bought-table">' +
+        '<caption>' + txt('Everything you have bought') + '</caption>' +
+        '<thead><tr>' +
+          '<th scope="col">' + txt('bought on') + '</th>' +
+          '<th scope="col">' + txt('term') + '</th>' +
+          '<th scope="col">' + txt('how') + '</th>' +
+          '<th scope="col">' + txt('amount') + '</th>' +
+          '<th scope="col">' + txt('access to') + '</th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>' +
+  '</div>';
+}
+
+/* How it was paid, in one cell. Each branch is its own `txt('literal')` so
+   `check-interface` can see it, and the split is spelled out because "12×" on
+   its own is a number somebody has to work out the meaning of. */
+function howPaid(method, instalments) {
+  if (method === 'pix') return txt('Pix');
+  if (instalments > 1) return txt('Card, {n}×').replace('{n}', instalments);
+  return txt('Card, in one');
+}
+
+/* What became of a purchase that was never paid.
+
+   `paid` MUST NOT REACH HERE and the caller is what keeps it out — a paid row
+   shows the date it bought, or says the date was not recorded. It fell through
+   to this once and the answer was "not finished", about a year somebody had
+   paid for in full. */
+function stageName(stage) {
+  if (stage === 'charged') return txt('waiting for payment');
+  if (stage === 'abandoned') return txt('not paid');
+  return txt('not finished');
 }
 
 /* A date the reader's language writes, without a time on it: what somebody

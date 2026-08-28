@@ -564,8 +564,14 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 		// BOTH SIDES OF EVERY TRANSITION. "It became suspended" is not an
 		// answer to somebody asking why they were locked out while paying;
 		// what it came from, and which ledger row caused it, is.
+		//
+		// AND WHAT EACH ONE COST AND BOUGHT (`0043`). `subscriptions` above
+		// holds one price and one date, and the next purchase overwrites both;
+		// these are the only copies that outlive it. Without them an export
+		// says "you renewed in March" and not at what, or until when.
 		{"subscription_events", `
-			SELECT occurred_at, event, from_state, to_state, ledger_entry_id
+			SELECT occurred_at, event, from_state, to_state, ledger_entry_id,
+			       price_id, paid_through
 			FROM subscription_events WHERE account_id = $1 ORDER BY occurred_at`},
 	}
 

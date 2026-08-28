@@ -221,11 +221,23 @@ func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	/* THE RENEWAL IS SOLD AT A NEW PRICE AND THE ROW KEEPS THE OLD ONE.
+	/* THE RENEWAL IS SOLD AT A NEW PRICE AND THE ROW MOVES ONTO IT.
 
-	   This is the whole point of the column: the school raised its price
-	   between the two payments, and somebody who already bought must not be
-	   moved onto the new number by the act of paying again. */
+	   THIS ASSERTED THE OPPOSITE UNTIL `0043`, from `0036`'s belief that the
+	   column froze what somebody bought at — that a renewal charged the stored
+	   row rather than whatever is current. `0040` corrected that: the terms of
+	   use promise a price change applies to new subscriptions AND TO RENEWALS
+	   with thirty days' notice, never retroactively to a term that is running.
+	   The store went on writing the old id anyway, because until the account
+	   screen existed nothing read it.
+
+	   It is read now, and frozen it quoted the price of a year somebody bought
+	   three years ago as the thing they had just paid for.
+
+	   WHAT THE OLD ASSERTION PROTECTED IS STILL PROTECTED, elsewhere and
+	   better: the purchase at the old price is a `checkout_intents` row and a
+	   line in `subscription_events`, both of which keep their own price and are
+	   never rewritten. This column is what a subscription stands at today. */
 	raised := price(t, pool, 59000)
 	again, err := s.Begin(context.Background(), account, "",
 		billing.ModelInstalments, raised, day(400), 12, nil)
@@ -238,12 +250,20 @@ func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 	if again.State != billing.StateActive {
 		t.Errorf("the renewal left it %s", again.State)
 	}
-	if again.PriceID != first.PriceID {
-		t.Errorf("paying again moved the subscription onto the new price (%s, was %s)",
-			again.PriceID, first.PriceID)
+	if again.PriceID != raised {
+		t.Errorf("paying again left the subscription on %s, and they bought %s",
+			again.PriceID, raised)
 	}
-	if again.PriceID == raised {
-		t.Error("the renewal was charged at the price the school raised to")
+
+	// AND ON THE ROW, not only in the value handed back — which is the half a
+	// caller cannot see, and the half every later screen reads.
+	var stored uuid.UUID
+	if err := pool.QueryRow(context.Background(),
+		`SELECT price_id FROM subscriptions WHERE id = $1`, first.ID).Scan(&stored); err != nil {
+		t.Fatal(err)
+	}
+	if stored != raised {
+		t.Errorf("the stored price is %s and they bought %s", stored, raised)
 	}
 
 	var count int
@@ -253,6 +273,106 @@ func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 	}
 	if count != 1 {
 		t.Errorf("there are %d subscription rows for one person", count)
+	}
+}
+
+/*
+TestSomethingThatIsNotAPurchaseLeavesThePriceAlone is the other half of the one
+above, and the half that is easy to lose.
+
+	A REFUND IS NOT A SALE AND HAS NO PRICE. `Advance` carries every event that
+	happens TO a subscription — a refund, a chargeback, a cancellation, a term
+	running out — and none of them is somebody agreeing to a number. It passes
+	`uuid.Nil`, and the write has to read that as "leave it" rather than as a
+	value: blanking the column would take away the one fact that explains what a
+	person was paying when the money went back.
+*/
+func TestSomethingThatIsNotAPurchaseLeavesThePriceAlone(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	first := begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	after, err := s.Advance(context.Background(), account, "",
+		billing.EventRefunded, day(30), time.Time{}, nil)
+	if err != nil {
+		t.Fatalf("refunding: %v", err)
+	}
+	if after.PriceID != first.PriceID {
+		t.Errorf("a refund moved the price to %s (was %s)", after.PriceID, first.PriceID)
+	}
+
+	var stored uuid.UUID
+	if err := pool.QueryRow(context.Background(),
+		`SELECT price_id FROM subscriptions WHERE id = $1`, first.ID).Scan(&stored); err != nil {
+		t.Fatal(err)
+	}
+	if stored != first.PriceID {
+		t.Errorf("the stored price became %s after a refund (was %s)", stored, first.PriceID)
+	}
+}
+
+/*
+TestTheLogSaysWhatEachTransitionCostAndWhereItLeftTheTerm.
+
+	THE LOG IS THE ONLY PLACE THE ANSWER SURVIVES. `subscriptions` holds one
+	price and one date, both overwritten by the next purchase; somebody asking
+	in 2029 what their 2026 renewal bought them is asking about values that row
+	stopped holding three payments ago. `0043` put them on the line that recorded
+	the transition, where nothing rewrites them.
+*/
+func TestTheLogSaysWhatEachTransitionCostAndWhereItLeftTheTerm(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	first := begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	raised := price(t, pool, 59000)
+	again, err := s.Begin(context.Background(), account, "",
+		billing.ModelInstalments, raised, day(400), 12, nil)
+	if err != nil {
+		t.Fatalf("a second sale: %v", err)
+	}
+
+	lines, err := s.History(context.Background(), account)
+	if err != nil {
+		t.Fatalf("reading the history: %v", err)
+	}
+	if len(lines) != 2 {
+		t.Fatalf("two payments left %d lines in the log", len(lines))
+	}
+
+	// Newest first, so the renewal is line zero.
+	renewal, opening := lines[0], lines[1]
+
+	for name, line := range map[string]billing.Transition{"the renewal": renewal, "the opening": opening} {
+		if line.PriceID == nil {
+			t.Fatalf("%s recorded no price", name)
+		}
+		if line.PaidThrough == nil {
+			t.Fatalf("%s recorded no date", name)
+		}
+	}
+
+	if *renewal.PriceID != raised {
+		t.Errorf("the renewal was logged at %s and was sold at %s", *renewal.PriceID, raised)
+	}
+	/* AND THE OPENING KEPT ITS OWN, which is the property the whole thing is
+	   for: the subscription has moved onto the new price, and the line that
+	   recorded the old purchase still says what that purchase cost. */
+	if *opening.PriceID != first.PriceID {
+		t.Errorf("the first sale was logged at %s and was sold at %s",
+			*opening.PriceID, first.PriceID)
+	}
+	if *opening.PriceID == *renewal.PriceID {
+		t.Error("both lines were logged at the same price, so the log was rewritten")
+	}
+
+	if !renewal.PaidThrough.Equal(again.PaidThrough) {
+		t.Errorf("the renewal logged access running to %s and it runs to %s",
+			renewal.PaidThrough, again.PaidThrough)
+	}
+	if !opening.PaidThrough.Equal(first.PaidThrough) {
+		t.Errorf("the first sale logged access running to %s and it ran to %s",
+			opening.PaidThrough, first.PaidThrough)
 	}
 }
 

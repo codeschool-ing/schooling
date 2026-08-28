@@ -35,6 +35,7 @@ type recordFake struct {
 	found    bool
 	sittings []console.Sitting
 	at       map[string]console.AtSchool
+	holding  console.Holding
 	err      error
 }
 
@@ -61,6 +62,9 @@ func (f *recordFake) handler() http.Handler {
 			},
 			At: func(_ context.Context, s console.School, _ uuid.UUID) (console.AtSchool, error) {
 				return f.at[s.Slug], nil
+			},
+			Holding: func(context.Context, uuid.UUID) (console.Holding, error) {
+				return f.holding, nil
 			},
 		},
 	).Routes(mux)
@@ -189,5 +193,119 @@ func TestAFailedRecordIsNotAnEmptyOne(t *testing.T) {
 	if rec.Code == http.StatusOK {
 		t.Error("a record that could not be read answered 200, which reads on the " +
 			"screen as somebody who has nothing")
+	}
+}
+
+/*
+TestTheRecordCarriesWhatTheyArePayingForAndEveryPurchase.
+
+	IT IS BESIDE THE SCHOOLS AND NOT INSIDE ONE. A subscription covers every
+	school (N-02), so the answer sits at the top level of the record — and the
+	per-school fields above it are empty for everybody, which is why this
+	section had to exist at all rather than be read out of `schools`.
+
+	AND THE PURCHASES ARE NOT THE LEDGER. One line per SALE, whatever number of
+	instalments it was collected in: an operator adding up ledger rows to answer
+	"what did they pay" gets the right total by luck and the wrong story every
+	time.
+*/
+func TestTheRecordCarriesWhatTheyArePayingForAndEveryPurchase(t *testing.T) {
+	f := aRecord()
+	through := time.Now().Add(300 * 24 * time.Hour)
+	f.holding = console.Holding{
+		State: "active", Opens: true, Model: "instalments",
+		PaidThrough: &through,
+		Price:       &console.Price{TermMonths: 24, Cents: 109000, Currency: "BRL"},
+		Purchases: []console.Purchase{
+			{
+				ID: uuid.New(), Stage: "paid",
+				Cents: 109000, Listed: 109000, Currency: "BRL", TermMonths: 24,
+				Method: "card", Instalments: 3, PaidThrough: &through,
+			},
+			{
+				ID: uuid.New(), Stage: "charged",
+				Cents: 65550, Listed: 69000, Currency: "BRL", TermMonths: 12,
+				Method: "pix", Instalments: 1,
+				InvoiceURL: "https://pay.example.tld/abc",
+			},
+		},
+	}
+
+	rec := get(t, f.handler(), "/console/api/v1/people/"+somebody.String()+"/record")
+	if rec.Code != http.StatusOK {
+		t.Fatalf("the record answered %d, want 200", rec.Code)
+	}
+
+	var body struct {
+		Holding *struct {
+			State string `json:"state"`
+			Opens bool   `json:"opens"`
+			Price *struct {
+				Cents int `json:"cents"`
+			} `json:"price"`
+			Purchases []struct {
+				Stage       string `json:"stage"`
+				Cents       int    `json:"cents"`
+				Listed      int    `json:"listed"`
+				Instalments int    `json:"instalments"`
+				InvoiceURL  string `json:"invoiceUrl"`
+				PaidThrough string `json:"paidThrough"`
+			} `json:"purchases"`
+		} `json:"holding"`
+	}
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("reading the record: %v", err)
+	}
+	if body.Holding == nil {
+		t.Fatalf("the record says nothing about what they are paying for: %s", rec.Body.String())
+	}
+	if body.Holding.State != "active" || !body.Holding.Opens {
+		t.Errorf("it reads as %q, opens=%v", body.Holding.State, body.Holding.Opens)
+	}
+	if body.Holding.Price == nil || body.Holding.Price.Cents != 109000 {
+		t.Errorf("the price came back as %+v", body.Holding.Price)
+	}
+
+	if len(body.Holding.Purchases) != 2 {
+		t.Fatalf("two purchases read as %d", len(body.Holding.Purchases))
+	}
+
+	// A PLAN SPLIT THREE WAYS IS ONE LINE, at the price of the sale.
+	if body.Holding.Purchases[0].Instalments != 3 ||
+		body.Holding.Purchases[0].Cents != 109000 {
+		t.Errorf("the instalment plan reads as %d× %d",
+			body.Holding.Purchases[0].Instalments, body.Holding.Purchases[0].Cents)
+	}
+
+	// AND THE UNPAID PIX IS STILL THERE, with the address to send them back to
+	// and no term, because it bought nothing.
+	unpaid := body.Holding.Purchases[1]
+	if unpaid.Stage != "charged" {
+		t.Errorf("the unpaid checkout reads as %q", unpaid.Stage)
+	}
+	if unpaid.Listed-unpaid.Cents != 3450 {
+		t.Errorf("the discount reads as %d and it was 3450", unpaid.Listed-unpaid.Cents)
+	}
+	if unpaid.InvoiceURL == "" {
+		t.Error("no address came back, so an operator cannot give them their code again")
+	}
+	if unpaid.PaidThrough != "" {
+		t.Errorf("a checkout nobody paid says it bought access to %s", unpaid.PaidThrough)
+	}
+}
+
+// SOMEBODY WHO HAS NEVER BOUGHT ANYTHING HAS NO SECTION AT ALL, rather than an
+// empty one. A block headed "subscription" with nothing under it reads as a
+// screen that failed to load, and an operator would go looking.
+func TestARecordWithNoPurchasesLeavesTheSectionOut(t *testing.T) {
+	f := aRecord()
+	rec := get(t, f.handler(), "/console/api/v1/people/"+somebody.String()+"/record")
+
+	var body map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("reading the record: %v", err)
+	}
+	if _, has := body["holding"]; has {
+		t.Errorf("somebody who has bought nothing has a subscription section: %v", body["holding"])
 	}
 }
