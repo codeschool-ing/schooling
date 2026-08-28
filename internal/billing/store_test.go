@@ -23,11 +23,11 @@ func store(t *testing.T) (*billing.Store, *pgxpool.Pool) {
 // not allow — so every subscription these tests begin needs a school and a
 // published price behind it.
 func begun(t *testing.T, s *billing.Store, pool *pgxpool.Pool, account uuid.UUID,
-	model billing.Model, through time.Time) billing.Held {
+	model billing.Model, months int) billing.Held {
 
 	t.Helper()
 	held, err := s.Begin(context.Background(), account, "", model,
-		price(t, pool, 49000), day(0), through, nil)
+		price(t, pool, 49000), day(0), months, nil)
 	if err != nil {
 		t.Fatalf("beginning a %s subscription: %v", model, err)
 	}
@@ -58,7 +58,7 @@ func TestSomebodyWithNoSubscriptionOpensNothingAndThatIsNotAnError(t *testing.T)
 func TestPayingOpensAPaidCourse(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, pool, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, 1)
 
 	open, err := s.Opens(context.Background(), account, day(1))
 	if err != nil {
@@ -76,7 +76,7 @@ func TestPayingOpensAPaidCourse(t *testing.T) {
 func TestAPeriodThatRanOutClosesTheDoorWithNoJobHavingRun(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, pool, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, 1)
 
 	if _, err := s.Advance(context.Background(), account, "",
 		billing.EventCancelled, day(5), time.Time{}, nil); err != nil {
@@ -108,7 +108,7 @@ func TestAPeriodThatRanOutClosesTheDoorWithNoJobHavingRun(t *testing.T) {
 func TestSettlingBringsTheRowUpToDateAndIsSafeToRunTwice(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, pool, account, billing.ModelInstalments, day(365))
+	begun(t, s, pool, account, billing.ModelInstalments, 12)
 
 	moved, err := s.Settle(context.Background(), day(366))
 	if err != nil {
@@ -154,7 +154,7 @@ func transitions(t *testing.T, pool *pgxpool.Pool, account uuid.UUID) int {
 func TestEveryTransitionIsWrittenDownWithBothSides(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, pool, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, 1)
 
 	for _, e := range []billing.Event{billing.EventPaymentFailed, billing.EventRetriesExhausted} {
 		if _, err := s.Advance(context.Background(), account, "", e, day(31), time.Time{}, nil); err != nil {
@@ -191,7 +191,7 @@ func TestATransitionCanNameTheMoneyThatCausedIt(t *testing.T) {
 
 	payment := paid(t, ledger, account, 119900)
 	if _, err := s.Begin(context.Background(), account, "",
-		billing.ModelInstalments, price(t, pool, 119900), day(0), day(365),
+		billing.ModelInstalments, price(t, pool, 119900), day(0), 12,
 		&payment.ID); err != nil {
 		t.Fatalf("beginning against a payment: %v", err)
 	}
@@ -215,7 +215,7 @@ func TestATransitionCanNameTheMoneyThatCausedIt(t *testing.T) {
 func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	first := begun(t, s, pool, account, billing.ModelInstalments, day(365))
+	first := begun(t, s, pool, account, billing.ModelInstalments, 12)
 
 	if _, err := s.Settle(context.Background(), day(366)); err != nil {
 		t.Fatal(err)
@@ -228,7 +228,7 @@ func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 	   moved onto the new number by the act of paying again. */
 	raised := price(t, pool, 59000)
 	again, err := s.Begin(context.Background(), account, "",
-		billing.ModelInstalments, raised, day(400), day(731), nil)
+		billing.ModelInstalments, raised, day(400), 12, nil)
 	if err != nil {
 		t.Fatalf("a new sale after the term ran out: %v", err)
 	}
@@ -262,7 +262,7 @@ func TestPayingAfterALapseReusesTheSameSubscription(t *testing.T) {
 func TestAnEventIsAppliedToTheSettledStateAndNotTheStoredOne(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, pool, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, 1)
 
 	if _, err := s.Advance(context.Background(), account, "",
 		billing.EventCancelled, day(5), time.Time{}, nil); err != nil {
@@ -293,9 +293,9 @@ func TestOnlyInstalmentPlansTurnUpAsNeedingRenewal(t *testing.T) {
 	const notice = 30 * 24 * time.Hour
 
 	instalments := student(t, pool)
-	begun(t, s, pool, instalments, billing.ModelInstalments, day(365))
+	begun(t, s, pool, instalments, billing.ModelInstalments, 12)
 	recurring := student(t, pool)
-	begun(t, s, pool, recurring, billing.ModelRecurring, day(365))
+	begun(t, s, pool, recurring, billing.ModelRecurring, 12)
 
 	found, err := s.Renewing(context.Background(), day(340), notice)
 	if err != nil {
@@ -336,7 +336,7 @@ func TestOnlyInstalmentPlansTurnUpAsNeedingRenewal(t *testing.T) {
 func TestAStateTheMachineDoesNotKnowCannotBeWritten(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, pool, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, 1)
 
 	for _, state := range []string{"vip", "comped", "", "ACTIVE"} {
 		if _, err := pool.Exec(context.Background(),
@@ -359,7 +359,7 @@ func TestAStateTheMachineDoesNotKnowCannotBeWritten(t *testing.T) {
 func TestErasingSomebodyTakesTheSubscriptionAndLeavesItsHistory(t *testing.T) {
 	s, pool := store(t)
 	account := student(t, pool)
-	begun(t, s, pool, account, billing.ModelRecurring, day(30))
+	begun(t, s, pool, account, billing.ModelRecurring, 1)
 
 	if _, err := pool.Exec(context.Background(),
 		`DELETE FROM accounts WHERE id = $1`, account); err != nil {
@@ -390,7 +390,7 @@ func TestASubscriptionWithoutAPriceIsRefused(t *testing.T) {
 	account := student(t, pool)
 
 	_, err := s.Begin(context.Background(), account, "", billing.ModelRecurring,
-		uuid.Nil, day(0), day(30), nil)
+		uuid.Nil, day(0), 1, nil)
 	if !errors.Is(err, billing.ErrNoPrice) {
 		t.Errorf("beginning without a price answered %v, want ErrNoPrice", err)
 	}
@@ -405,7 +405,7 @@ func TestTheSubscriptionCarriesItsPriceBackOutOfTheDatabase(t *testing.T) {
 
 	sold := price(t, pool, 49000)
 	begun, err := s.Begin(context.Background(), account, "", billing.ModelRecurring,
-		sold, day(0), day(30), nil)
+		sold, day(0), 1, nil)
 	if err != nil {
 		t.Fatalf("beginning: %v", err)
 	}
@@ -419,5 +419,83 @@ func TestTheSubscriptionCarriesItsPriceBackOutOfTheDatabase(t *testing.T) {
 	}
 	if read.PriceID != sold {
 		t.Errorf("read back it says %s, want %s", read.PriceID, sold)
+	}
+}
+
+/*
+TestPayingBeforeTheTermEndsAddsToItRatherThanReplacingIt is the case a
+subscriber reaches by doing something reasonable.
+
+	NOTHING STOPS SOMEBODY BUYING AGAIN. `Checkouts.Open` asks whether the
+	address is confirmed and whether the method can be split; it does not ask
+	whether they already have a subscription, and the screen offers the form to
+	anybody signed in. So an early renewal — locking a price in, or simply not
+	wanting to think about it again — is a purchase this platform accepts.
+
+	AND IT USED TO SHORTEN THE SUBSCRIPTION. `Begin` was handed a date the caller
+	had computed as `now + term`, so somebody twelve months into two years who
+	bought another year moved their end date from twenty-four months out to
+	twelve. They paid twice and came away with less.
+
+	IT IS A STORE TEST AND NOT A `subscription.Advance` ONE, which is where this
+	was first written and was the wrong layer: the pure function is handed a
+	date and can only use it. What has to be right is the arithmetic, and the
+	arithmetic needs the row's current end — so it belongs inside the
+	transaction that locks it, and so does the test.
+*/
+func TestPayingBeforeTheTermEndsAddsToItRatherThanReplacingIt(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	ctx := context.Background()
+
+	first := begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	// A second year, bought while the first still has months to run.
+	again, err := s.Begin(ctx, account, "", billing.ModelInstalments,
+		price(t, pool, 69000), day(0), 12, nil)
+	if err != nil {
+		t.Fatalf("paying again before the term ended: %v", err)
+	}
+
+	want := first.PaidThrough.AddDate(0, 12, 0)
+	if d := again.PaidThrough.Sub(want); d > time.Minute || d < -time.Minute {
+		t.Errorf("a year bought on top of a year running left access to %s, want %s"+
+			" — a second payment must never move the end date closer",
+			again.PaidThrough.Format(time.DateOnly), want.Format(time.DateOnly))
+	}
+	if !again.PaidThrough.After(first.PaidThrough) {
+		t.Error("paying again did not extend anything")
+	}
+}
+
+/*
+AND A LAPSED ONE STARTS FROM TODAY, which is the other half of the same rule.
+
+	Somebody whose term ran out three months ago and pays now buys twelve months
+	from today, not twelve from the day it lapsed — anything else charges them
+	for a quarter they could not study. The rule is "the later of the two", and
+	this is the branch where today is the later one.
+*/
+func TestPayingAfterItLapsedStartsFromTodayAndNotFromTheLapse(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	ctx := context.Background()
+
+	// Begun thirteen months ago for a year, so it ran out about a month back.
+	if _, err := s.Begin(ctx, account, "", billing.ModelInstalments,
+		price(t, pool, 49000), day(-400), 12, nil); err != nil {
+		t.Fatalf("beginning: %v", err)
+	}
+
+	again, err := s.Begin(ctx, account, "", billing.ModelInstalments,
+		price(t, pool, 69000), day(0), 12, nil)
+	if err != nil {
+		t.Fatalf("paying after the lapse: %v", err)
+	}
+
+	want := day(0).AddDate(0, 12, 0)
+	if d := again.PaidThrough.Sub(want); d > time.Minute || d < -time.Minute {
+		t.Errorf("a lapsed subscription that paid again runs to %s, want %s",
+			again.PaidThrough.Format(time.DateOnly), want.Format(time.DateOnly))
 	}
 }

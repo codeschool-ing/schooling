@@ -129,7 +129,7 @@ func (s *Store) Opens(ctx context.Context, accountID uuid.UUID, now time.Time) (
 // dates, and one that could only be tested by waiting until next year would not
 // be tested.
 func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
-	model Model, priceID uuid.UUID, now, paidThrough time.Time,
+	model Model, priceID uuid.UUID, now time.Time, termMonths int,
 	ledgerEntry *uuid.UUID) (Held, error) {
 
 	if scope == "" {
@@ -145,9 +145,9 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 	if priceID == uuid.Nil {
 		return Held{}, ErrNoPrice
 	}
-	fresh, err := Start(model, paidThrough)
-	if err != nil {
-		return Held{}, err
+	if termMonths < 1 {
+		return Held{}, fmt.Errorf("%w: a term of %d months buys nothing",
+			ErrNoPrice, termMonths)
 	}
 
 	tx, err := s.pool.Begin(ctx)
@@ -164,12 +164,38 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 	existing, err := s.read(ctx, tx, accountID, scope)
 	switch {
 	case err == nil:
-		// There is one already. A payment on it is a transition rather than a
-		// new subscription, which is what keeps progress and history attached
-		// to the same row.
-		return s.apply(ctx, tx, existing, EventPaid, now, paidThrough, ledgerEntry)
+		/* THERE IS ONE ALREADY, and a payment on it is a transition rather than
+		   a new subscription — which is what keeps progress and history
+		   attached to the same row.
+
+		   TIME IS ADDED AND NEVER REPLACED. This used to be handed a date the
+		   caller had computed as `now + term`, and a subscriber who paid before
+		   their term ran out had their end date moved BACKWARDS: twelve months
+		   into two years, buying another year took them from twenty-four months
+		   out to twelve. They paid twice and came away with less.
+
+		   Nothing stops that purchase — `Checkouts.Open` asks about the address
+		   and the method and not about what somebody already holds — so an early
+		   renewal is a thing this platform accepts and had to handle.
+
+		   THE TERM AND NOT THE DATE IS WHAT CROSSES THIS BOUNDARY, so that the
+		   addition happens HERE, with the row locked and its current end in
+		   hand. A caller cannot compute it: it would have to read the row first,
+		   outside this transaction, and act on what it said a moment ago. */
+		from := now
+		if existing.PaidThrough.After(now) {
+			from = existing.PaidThrough
+		}
+		return s.apply(ctx, tx, existing, EventPaid, now,
+			from.AddDate(0, termMonths, 0), ledgerEntry)
 	case errors.Is(err, ErrNoSubscription):
 	default:
+		return Held{}, err
+	}
+
+	// Nobody had one, so the term starts today.
+	fresh, err := Start(model, now.AddDate(0, termMonths, 0))
+	if err != nil {
 		return Held{}, err
 	}
 

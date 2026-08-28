@@ -101,9 +101,8 @@ func TestASubscriberIsToldTheTermAndThePriceTheyBought(t *testing.T) {
 	ctx := context.Background()
 
 	plans := billing.NewStore(pool)
-	through := time.Now().AddDate(0, 12, 0)
 	if _, err := plans.Begin(ctx, account, billing.ScopeEverything,
-		billing.ModelInstalments, bought, time.Now(), through, nil); err != nil {
+		billing.ModelInstalments, bought, time.Now(), 12, nil); err != nil {
 		t.Fatalf("opening a subscription: %v", err)
 	}
 
@@ -143,8 +142,10 @@ func TestASubscriberIsToldTheTermAndThePriceTheyBought(t *testing.T) {
 	if err != nil {
 		t.Fatalf("the date is not a date: %v", err)
 	}
-	if d := got.Sub(through); d > time.Minute || d < -time.Minute {
-		t.Errorf("access runs to %s and the subscription says %s", got, through)
+	// Twelve months from when it was begun, which is a minute or so ago.
+	want := time.Now().AddDate(0, 12, 0)
+	if d := got.Sub(want); d > time.Minute || d < -time.Minute {
+		t.Errorf("access runs to %s and a twelve-month term bought now ends %s", got, want)
 	}
 }
 
@@ -164,9 +165,10 @@ func TestAnExpiredSubscriptionStillSaysWhatItWas(t *testing.T) {
 	ctx := context.Background()
 
 	plans := billing.NewStore(pool)
-	ran := time.Now().AddDate(0, 0, -40)
+	// Begun a year and a bit ago, so the term it bought ran out forty days back.
+	began := time.Now().AddDate(0, -13, -10)
 	if _, err := plans.Begin(ctx, account, billing.ScopeEverything,
-		billing.ModelInstalments, bought, ran.AddDate(0, -12, 0), ran, nil); err != nil {
+		billing.ModelInstalments, bought, began, 12, nil); err != nil {
 		t.Fatalf("opening a subscription: %v", err)
 	}
 
