@@ -59,7 +59,21 @@ type Handler struct {
 	// own — two copies of one decision, where moving the constant marks the exam
 	// at the new number and describes it as the old one.
 	passMark int
-	offer    Offer
+
+	// instalments is the most parts a card sale may be split into.
+	//
+	// HANDED IN FOR passMark's REASON EXACTLY: `billing` owns it and a module may
+	// not import another module (X-02), so `cmd/api` is the one line saying that
+	// this and `billing.MaxInstalments` are the same number.
+	//
+	// WHY THE SCREEN IS TOLD RATHER THAN KNOWING. The subscribe screen draws one
+	// option per instalment and had the count written into it — so the day the
+	// policy moved, the browser would offer a split the server refuses, which is
+	// a form that fails after somebody has already chosen. That is the failure
+	// `passMark` above was introduced to end, on a different number.
+	instalments int
+
+	offer Offer
 }
 
 /*
@@ -80,8 +94,8 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark int, offer Offer) *Handler {
-	return &Handler{passMark: passMark, offer: offer}
+func NewHandler(passMark, instalments int, offer Offer) *Handler {
+	return &Handler{passMark: passMark, instalments: instalments, offer: offer}
 }
 
 func (h *Handler) Routes(mux *http.ServeMux) {
@@ -117,6 +131,12 @@ type schoolBody struct {
 	// not a pass mark anybody set, and a screen that read a missing field as
 	// "no minimum" would say an exam is passed by answering nothing.
 	PassMark int `json:"passMark"`
+
+	// The most parts a card sale may be split into. NOT `omitempty` for
+	// `passMark`'s reason: zero is not a policy anybody set, and a screen
+	// reading a missing key as "no limit" would draw a picker the server
+	// refuses at every option but the first.
+	Instalments int `json:"instalments"`
 }
 
 // planBody is one thing somebody can buy.
@@ -160,7 +180,8 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 
 	web.JSON(w, http.StatusOK, schoolBody{
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
-		Plans:    plans,
-		PassMark: h.passMark,
+		Plans:       plans,
+		PassMark:    h.passMark,
+		Instalments: h.instalments,
 	})
 }

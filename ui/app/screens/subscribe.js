@@ -196,7 +196,7 @@ export default async function subscribe() {
           (method === 'card' ? ' checked' : '') + '>' +
         '<span class="buy-method-name">' + esc(txt('Credit card')) + '</span>' +
         '<span class="buy-method-price mono">' + esc(money(term.cents, term.currency)) + '</span>' +
-        '<span class="buy-method-note dim">' + esc(txt('In up to six instalments, with no interest.')) + '</span>' +
+        '<span class="buy-method-note dim">' + esc(txt('In up to twelve instalments, with no interest.')) + '</span>' +
       '</label>' +
       (method === 'card' ? instalmentPicker() : '');
 
@@ -212,13 +212,21 @@ export default async function subscribe() {
   }
 
   function instalmentPicker() {
-    /* SIX AND NOT TWELVE. The roadmap records why: the published rate for
-       twelve is upwards of twenty per cent of the sale, and a lane with
-       interest passed to the buyer needs a rate table nobody has yet and a
-       disclosure obligation nobody has written. */
+    /* TWELVE, AND THE NUMBER COMES FROM THE SERVER RATHER THAN FROM HERE.
+       `billing.MaxInstalments` is the policy and carries the reasoning; this
+       reads `school.instalments` so a change there does not need a change
+       here. It falls back to the same twelve for the offline bundle, which has
+       no server to ask.
+
+       It said six until the account's real fee table arrived. The estimate it
+       was capped on — twenty per cent of the sale for twelve — was out by more
+       than six times, and six instalments of a term cheaper than every rival
+       still showed a LARGER monthly figure than theirs, which is the number a
+       buyer here compares. */
+    const most = Number(source.school && source.school.instalments) || 12;
     let out = '<label class="buy-instalments"><span>' +
       esc(txt('In how many instalments')) + '</span><select>';
-    for (let n = 1; n <= 6; n += 1) {
+    for (let n = 1; n <= most; n += 1) {
       out += '<option value="' + n + '"' + (n === instalments ? ' selected' : '') + '>' +
         esc(n + '× ' + money(Math.round(term.cents / n), term.currency)) + '</option>';
     }

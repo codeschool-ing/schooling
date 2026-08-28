@@ -206,6 +206,41 @@ func TestWhatIsNotSoldIsRefused(t *testing.T) {
 	}
 }
 
+/*
+TestTheSplitHasACeilingAndItIsHere is the bound the browser used to be trusted
+with.
+
+	THE PICKER STOPPED AT SIX AND THIS FUNCTION STOPPED AT NOTHING: it clamped
+	instalments up to one and never down, so five hundred was accepted, written
+	to the table and carried to the gateway for it to refuse. A limit only the
+	form knows is not a limit — it is a suggestion to whoever uses the form.
+
+	The count moved from six to twelve when the account's real fee table turned
+	up. What this test is about is that the number exists on THIS side at all, so
+	it asks about the boundary rather than about twelve.
+*/
+func TestTheSplitHasACeilingAndItIsHere(t *testing.T) {
+	store, pool := checkouts(t, confirmed)
+	account, price := student(t, pool), anOffer(t, pool)
+	ctx := context.Background()
+
+	// The most that is on offer goes through, which is what stops a ceiling
+	// from being set one below the number the screen draws.
+	if _, err := store.Open(ctx, account, "", price, listed, "BRL",
+		billing.MethodCard, billing.MaxInstalments, "asaas"); err != nil {
+		t.Errorf("the largest split on offer answered %v", err)
+	}
+	if _, err := store.Open(ctx, account, "", price, listed, "BRL",
+		billing.MethodCard, billing.MaxInstalments+1, "asaas"); !errors.Is(
+		err, billing.ErrTooManyInstalments) {
+		t.Errorf("one instalment past the ceiling answered %v", err)
+	}
+	if _, err := store.Open(ctx, account, "", price, listed, "BRL",
+		billing.MethodCard, 500, "asaas"); !errors.Is(err, billing.ErrTooManyInstalments) {
+		t.Errorf("five hundred instalments answered %v", err)
+	}
+}
+
 // AND THE DATABASE REFUSES THE SPLIT PIX TOO, from the other side. The check in
 // Go says which half was wrong; the constraint is what makes it true of every
 // row rather than of every row this code wrote.
