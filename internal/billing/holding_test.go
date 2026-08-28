@@ -192,11 +192,11 @@ func TestAnExpiredSubscriptionStillSaysWhatItWas(t *testing.T) {
 TestTheHistoryComesBackEvenWithNoSubscription, which is the case that would
 have been lost.
 
-	SOMEBODY WITH NO SUBSCRIPTION MAY STILL HAVE PURCHASES — a checkout that
-	errored before the gateway, a Pix code that expired unpaid — and those are
-	exactly the rows a person writes in about. The route answers `state: none`
-	for them and used to return on the spot; reading the history after that early
-	return would have hidden it from the only people who need it.
+	SOMEBODY WITH NO SUBSCRIPTION MAY STILL HAVE PURCHASES — a Pix code that
+	expired unpaid, a sale that was refunded — and those are exactly the rows a
+	person writes in about. The route answers `state: none` for them and used to
+	return on the spot; reading the history after that early return would have
+	hidden it from the only people who need it.
 */
 func TestTheHistoryComesBackEvenWithNoSubscription(t *testing.T) {
 	pool := testPool(t)
@@ -247,5 +247,90 @@ func TestAnEmptyHistoryIsStillAList(t *testing.T) {
 	}
 	if len(bought) != 0 {
 		t.Errorf("somebody who has bought nothing has %d purchases", len(bought))
+	}
+}
+
+/*
+TestAClickThatNeverReachedTheGatewayIsNotInTheirHistory.
+
+	THE FIRST REAL CARD SALE ON THIS PLATFORM FOUND THIS. A student bought a
+	year, and their account screen showed TWO lines a minute apart: the purchase,
+	and beside it an identical one reading "not finished".
+
+	Both rows are real. `Handler.start` opens the checkout BEFORE asking the
+	gateway who the payer is — the row carries the confirmed-address gate, and a
+	gate anywhere else is a gate somebody forgets — and nobody buying for the
+	first time has a customer at the gateway yet. So the first submit writes a
+	row and is refused with `tax_id_required`, the screen reveals the CPF field,
+	and the second submit becomes the charge.
+
+	That is every first purchase, for everybody, for ever. And what the student
+	is shown is a payment that appears to have failed next to the one that
+	worked, about which they can do precisely nothing — which is a message to
+	somebody, and there is nobody (N-05).
+
+	THE ROW IS KEPT AND THE CONSOLE SHOWS IT. `0042` argued for keeping it and
+	was right: an operator asked "I tried and nothing happened" wants that
+	evidence, with its timestamp. This is about whose screen it belongs on.
+*/
+func TestAClickThatNeverReachedTheGatewayIsNotInTheirHistory(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	// The click that was refused for a tax id: opened, and no charge, ever.
+	buys := billing.NewCheckouts(pool, anybody)
+	if _, err := buys.Open(ctx, account, "", offer, listed, "BRL",
+		billing.MethodCard, 1, "asaas"); err != nil {
+		t.Fatalf("opening the first checkout: %v", err)
+	}
+
+	// And the second one, a minute later, which became a charge.
+	charged := sold(t, pool, account, offer, listed, billing.MethodCard, 1, "pay_"+short())
+
+	// BOTH ARE IN THE STORE, which is what the console reads.
+	all, err := buys.Purchases(ctx, account)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(all) != 2 {
+		t.Fatalf("the store holds %d rows, want both", len(all))
+	}
+
+	// AND ONE IS ON THE STUDENT'S OWN SCREEN.
+	rec, body := askHolding(t, holdingFor(t, account, true))
+	if rec.Code != http.StatusOK {
+		t.Fatalf("it answered %d: %s", rec.Code, rec.Body.String())
+	}
+
+	shown, ok := body["purchases"].([]any)
+	if !ok {
+		t.Fatalf("no history came back: %s", rec.Body.String())
+	}
+	if len(shown) != 1 {
+		t.Fatalf("the student is shown %d purchases, want only the one that reached "+
+			"the gateway", len(shown))
+	}
+	if one := shown[0].(map[string]any); one["id"] != charged.ID.String() {
+		t.Errorf("the line shown is %v and the charge was %s", one["id"], charged.ID)
+	}
+}
+
+// AND A CHECKOUT THAT REACHED THE GATEWAY AND WAS NEVER PAID STAYS. That one is
+// a Pix code somebody may still be about to pay, and the row hands the address
+// back rather than making them open a second checkout for one sale.
+func TestACheckoutTheGatewayAnsweredIsStillTheirs(t *testing.T) {
+	pool := testPool(t)
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	sold(t, pool, account, offer, listed, billing.MethodPix, 1, "pay_"+short())
+
+	_, body := askHolding(t, holdingFor(t, account, true))
+	shown, ok := body["purchases"].([]any)
+	if !ok || len(shown) != 1 {
+		t.Fatalf("an unpaid but charged checkout reads as %v", body["purchases"])
+	}
+	if one := shown[0].(map[string]any); one["stage"] != string(billing.StageCharged) {
+		t.Errorf("it reads as %v", one["stage"])
 	}
 }

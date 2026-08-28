@@ -103,10 +103,13 @@ type holdingBody struct {
 
 	Price *holdingPrice `json:"price,omitempty"`
 
-	/* EVERY PURCHASE, INCLUDING THE ONES THAT ARE NOT SUBSCRIPTIONS. It is
-	   never omitted: a screen that gets no key cannot tell "this person has
-	   bought nothing" from "this version does not send it", and an empty array
-	   says the first out loud. */
+	/* EVERY PURCHASE THAT REACHED THE GATEWAY — paid, waiting, or given up on.
+	   A checkout that never got that far is a click and not a purchase, and
+	   `shownPurchases` says why it is left out here and kept in the console.
+
+	   IT IS NEVER OMITTED: a screen that gets no key cannot tell "this person
+	   has bought nothing" from "this version does not send it", and an empty
+	   array says the first out loud. */
 	Purchases []purchaseBody `json:"purchases"`
 }
 
@@ -161,10 +164,10 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 	}
 
 	/* THE HISTORY IS READ FIRST, BECAUSE IT SURVIVES THE ABSENCE OF THE REST.
-	   Somebody with no subscription may still have purchases — a checkout that
-	   errored before the gateway, a Pix code that expired unpaid — and those are
-	   exactly the rows they write in about. Reading this after the early return
-	   below would have hidden them from the only people who need them. */
+	   Somebody with no subscription may still have purchases — a Pix code that
+	   expired unpaid, a sale that was refunded — and those are exactly the rows
+	   they write in about. Reading this after the early return below would have
+	   hidden them from the only people who need them. */
 	bought, err := h.buys.Purchases(r.Context(), accountID)
 	if err != nil {
 		web.LoggerFrom(r.Context()).Error("reading what somebody has bought",
@@ -233,6 +236,36 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 func shownPurchases(bought []Purchase) []purchaseBody {
 	out := make([]purchaseBody, 0, len(bought))
 	for _, p := range bought {
+		/* A CLICK THAT NEVER REACHED THE GATEWAY IS NOT A PURCHASE, and showing
+		   it to the person who made it was a defect found by the first real card
+		   sale on this platform.
+
+		   THE TAX ID IS ASKED FOR AFTER THE ROW IS WRITTEN. `Handler.start`
+		   opens the checkout first — because the row carries the confirmed-address
+		   gate, and putting the gate anywhere else makes it forgettable — and only
+		   then asks the gateway who this person is. Nobody buying for the first
+		   time has a customer there yet, so the answer is `tax_id_required`, the
+		   screen reveals the CPF field, and the row stays behind at `opened`.
+
+		   That happens to EVERY first purchase. The student then saw two lines an
+		   identical minute apart, one of them reading "not finished" beside the
+		   one that worked — which looks like a payment that failed and is a
+		   message to somebody this platform has nobody to answer with (N-05).
+
+		   THE ROW ITSELF IS KEPT AND IS RIGHT TO BE. `0042` argues it: "somebody
+		   who clicked and got an error", and an operator asked "I tried and
+		   nothing happened" wants exactly that evidence. So the console shows
+		   every row and this shows the ones that became something. The line is
+		   whether the gateway was ever told.
+
+		   IT IS THE STAGE AND NOT THE CHARGE ID that decides. They agree today —
+		   an `opened` row has no charge — but a paid purchase whose charge id
+		   somehow failed to store is a row a student must still see, and keying
+		   on the id would hide the one line that matters most. */
+		if p.Stage == StageOpened {
+			continue
+		}
+
 		out = append(out, purchaseBody{
 			ID:       p.ID.String(),
 			OpenedAt: p.OpenedAt, MovedAt: p.MovedAt,
