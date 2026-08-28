@@ -80,7 +80,8 @@ Apply acts on one event about one charge.
 	covers the events that arrive without it — the later instalments of a plan,
 	and anything raised outside this platform.
 */
-func (s *Settlement) Apply(ctx context.Context, what outcome, reference, chargeID, moved string) error {
+func (s *Settlement) Apply(ctx context.Context, what outcome, reference, chargeID, moved string,
+	back []string) error {
 	intent, err := s.find(ctx, reference, chargeID)
 	if err != nil {
 		return err
@@ -97,9 +98,14 @@ func (s *Settlement) Apply(ctx context.Context, what outcome, reference, chargeI
 		_, err := s.checkouts.Abandoned(ctx, intent.ID)
 		return err
 	case outcomeRefunded:
-		return s.reverse(ctx, intent, chargeID, KindRefund, EventRefunded)
+		return s.reverse(ctx, intent, chargeID, KindRefund, EventRefunded, back)
 	case outcomeChargedBack:
-		return s.reverse(ctx, intent, chargeID, KindChargeback, EventChargedBack)
+		/* A CHARGEBACK TAKES THE WHOLE SALE AND HAS NO `refunds` TO READ. The
+		   issuer is reversing the authorisation, not agreeing to a figure with
+		   us, so there is no array on the payment and nil is the truthful thing
+		   to pass. `reverse` then falls back to the purchase, which is right
+		   here rather than a compromise. */
+		return s.reverse(ctx, intent, chargeID, KindChargeback, EventChargedBack, nil)
 	}
 	return fmt.Errorf("billing: nothing to do for %q", what)
 }
@@ -237,19 +243,89 @@ reverse is money going back, by agreement or by dispute.
 	IT DOES NOT CARE WHETHER THE SUBSCRIPTION IS THERE. A refund on a purchase
 	that never opened one is a refund, and the money still has to be recorded.
 */
-func (s *Settlement) reverse(ctx context.Context, intent Intent, chargeID string,
-	kind Kind, event Event) error {
+/*
+came is how much actually went back, which is not always the sale.
 
-	// THE PURCHASE'S AMOUNT AND NOT THE EVENT'S, deliberately, and unlike
-	// `paid`. A refund event carries what is being given back, which may be part
-	// of a sale; what this row records is that the SALE was reversed, and the
-	// subscription it closes below is the whole subscription either way.
-	// `PAYMENT_PARTIALLY_REFUNDED` is mapped here too, and a partial refund that
-	// closed access while recording only its own slice would leave the ledger
-	// saying less went back than the access that was taken.
-	amount, err := New(int64(intent.Cents), Currency(intent.Currency))
+	THIS RECORDED THE WHOLE SALE, ALWAYS, AND WAS WRONG ABOUT PARTIALS. The
+	argument it was written from is preserved here because it is a good argument
+	that reaches the wrong conclusion: a partial refund closes the subscription
+	entirely, so recording only its own slice was said to leave the ledger
+	"saying less went back than the access that was taken".
+
+	The mistake is treating the ledger as a record of ACCESS. It is a record of
+	MONEY, and it is the thing that has to reconcile against a bank statement.
+	R$ 200,00 leaving the account and R$ 1.090,00 written in the books is a
+	discrepancy somebody has to explain at the end of the year, and no amount of
+	access being right makes that number right. What the access did is in
+	`subscription_events`, where it belongs and where it is already recorded.
+
+	NOTHING IN THIS PLATFORM MAKES A PARTIAL REFUND. The console sends the whole
+	sale and nothing else asks. They arrive from the gateway's own dashboard,
+	where a person can return any figure they like — which is exactly why this
+	has to read what came back rather than assume.
+
+	AND THE FALLBACK IS THE SALE, LOUDLY. An event we cannot read the refunds
+	from is settled at the purchase's amount, because delivery is sequential and
+	a refusal stops the queue for every student. For a whole refund — nearly all
+	of them — the two are the same number, so the fallback is not a compromise
+	there; it is only a compromise for a partial whose payload surprised us, and
+	the warning says so.
+*/
+func (s *Settlement) came(intent Intent, chargeID string, back []string) (Money, error) {
+	whole, err := New(int64(intent.Cents), Currency(intent.Currency))
 	if err != nil {
-		return fmt.Errorf("billing: what was charged is not money: %w", err)
+		return Money{}, fmt.Errorf("billing: what was charged is not money: %w", err)
+	}
+	if len(back) == 0 {
+		return whole, nil
+	}
+
+	/* SUMMED, BECAUSE A PAYMENT CAN BE REFUNDED MORE THAN ONCE. Two partials of
+	   R$ 100,00 arrive as two events, and the second carries BOTH entries — so
+	   each event records the total returned so far, and each is a ledger row of
+	   its own keyed by its own reference. */
+	total, err := New(0, Currency(intent.Currency))
+	if err != nil {
+		return Money{}, fmt.Errorf("billing: what was charged is not money: %w", err)
+	}
+	for _, one := range back {
+		part, err := Parse(one, Currency(intent.Currency))
+		if err != nil {
+			/* ONE UNREADABLE ENTRY MAKES THE SUM UNTRUSTWORTHY, and a total that
+			   is short by the part nobody could read is a wrong number wearing
+			   the clothes of a right one. */
+			s.log.Warn("a refund event carried an amount this could not read",
+				"charge", chargeID, "checkout", intent.ID, "error", err)
+			return whole, nil
+		}
+		if total, err = total.Add(part); err != nil {
+			s.log.Warn("a refund event's amounts would not add up",
+				"charge", chargeID, "checkout", intent.ID, "error", err)
+			return whole, nil
+		}
+	}
+
+	/* MORE THAN THE SALE IS NOT A REFUND OF IT. It cannot happen and would be
+	   the books paying somebody to leave, so it is refused back to the sale and
+	   said out loud rather than trusted. */
+	if cmp, err := total.Cmp(whole); err != nil || cmp > 0 {
+		s.log.Warn("a refund event said more came back than was ever charged",
+			"charge", chargeID, "checkout", intent.ID,
+			"refunded", total.Decimal(), "charged", whole.Decimal())
+		return whole, nil
+	}
+	if total.IsZero() {
+		return whole, nil
+	}
+	return total, nil
+}
+
+func (s *Settlement) reverse(ctx context.Context, intent Intent, chargeID string,
+	kind Kind, event Event, back []string) error {
+
+	amount, err := s.came(intent, chargeID, back)
+	if err != nil {
+		return err
 	}
 
 	/* THE REFERENCE IS THE CHARGE AND THE KIND, TOGETHER. A payment and its

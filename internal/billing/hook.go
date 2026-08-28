@@ -176,6 +176,37 @@ func amountOf(raw json.RawMessage) string {
 }
 
 // delivery is the part of their payload this platform reads.
+/*
+refundedAmounts is what came back, as the provider wrote each entry.
+
+	IT DECODES AND DOES NOT ADD UP. Adding needs a currency, and the currency
+	belongs to the purchase rather than to the payload — `Settlement.reverse` has
+	the intent and does the arithmetic there. This file stays what it is: the
+	place that turns their bytes into strings, with `billing.Parse` the only door
+	a decimal goes through to become money.
+
+	NIL IS "COULD NOT TELL" AND NOT "NOTHING CAME BACK". Absent, null, not an
+	array — all of them answer nil, and the caller falls back to the sale. Zero
+	would be an amount, and this is the absence of one.
+*/
+func refundedAmounts(raw json.RawMessage) []string {
+	if len(raw) == 0 {
+		return nil
+	}
+	var entries []struct {
+		Value json.RawMessage `json:"value"`
+	}
+	if err := json.Unmarshal(raw, &entries); err != nil || len(entries) == 0 {
+		return nil
+	}
+
+	out := make([]string, 0, len(entries))
+	for _, one := range entries {
+		out = append(out, amountOf(one.Value))
+	}
+	return out
+}
+
 type delivery struct {
 	// ID is the event's own id. It is read to be logged and is NOT what
 	// idempotency rests on — see the package comment: two different events mean
@@ -211,6 +242,25 @@ type delivery struct {
 		   field that is a detail of one row. Raw accepts either and the reading
 		   happens where a bad value can be survived. */
 		Value json.RawMessage `json:"value"`
+
+		/* Refunds IS WHAT CAME BACK, AND `Value` IS NOT.
+
+		   On a refund event `value` is still the charge — the sale, unchanged —
+		   and the money that actually went back is in here. A partial refund
+		   settled from `value` would record the whole sale as reversed, which is
+		   the books saying R$ 1.090,00 came back on a day R$ 200,00 did.
+
+		   THE FIELD IS THEIRS AND WE HAVE SEEN IT. A live `GET /payments/{id}`
+		   on this platform's own first card sale answered `"refunds":null`, so
+		   the key exists on every payment and is null while there are none. What
+		   is INFERRED is the shape of an element — an object with a `value`,
+		   like every other amount in their API — which is why `refunded` below
+		   falls back rather than failing when it cannot read one.
+
+		   RAW FOR THE SAME REASON `Value` IS: a shape that surprises us must not
+		   fail the decode, because delivery is sequential and one malformed
+		   field would stop the queue for every student. */
+		Refunds json.RawMessage `json:"refunds"`
 
 		Status string `json:"status"`
 	} `json:"payment"`
@@ -296,7 +346,8 @@ func Hook(token string, settle *Settlement, log *slog.Logger) http.Handler {
 		}
 
 		switch err := settle.Apply(r.Context(), what, one.Payment.Reference,
-			one.Payment.ID, amountOf(one.Payment.Value)); {
+			one.Payment.ID, amountOf(one.Payment.Value),
+			refundedAmounts(one.Payment.Refunds)); {
 		case errors.Is(err, ErrNoIntent):
 			/* AN EVENT ABOUT A CHARGE THIS PLATFORM DID NOT MAKE. It happens on
 			   a sandbox somebody has been clicking around in, and it would
