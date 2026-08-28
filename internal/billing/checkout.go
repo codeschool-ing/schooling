@@ -60,6 +60,36 @@ var ErrNoMethod = errors.New("billing: that is not a way to pay here")
 // ErrNotSplittable is instalments asked for on Pix, which is paid once.
 var ErrNotSplittable = errors.New("billing: only a card payment can be split")
 
+// ErrTooManyInstalments is a split into more parts than this platform sells.
+var ErrTooManyInstalments = errors.New("billing: that is more instalments than are on offer")
+
+/*
+MaxInstalments is how far a card sale may be split, and it is enforced HERE
+rather than by the screen that draws the picker.
+
+	IT WAS SIX AND THE REASON WAS WRONG. The roadmap capped it at six on an
+	estimate — "the published rate for twelve reaches upwards of twenty per cent
+	of the sale" — and the account's real table says 2,49% for two to six and
+	2,99% for seven to twelve, charged on the total of the sale. Half a point
+	between the two bands. On a term of R$ 690 that is R$ 3,45 to halve the
+	instalment a buyer compares against every other school's.
+
+	NO INTEREST IS PASSED ON, at any count. Recovering R$ 3,45 through a rate the
+	buyer pays would add something like R$ 92 to a twelve-way split — a financing
+	product rather than a cost being covered. It would also split two numbers this
+	package just joined: the moment the amount charged stops equalling the price,
+	renewal has to charge the price and not the amount paid, or somebody who
+	agreed to R$ 690 is renewed at R$ 782.
+
+	AND THE BOUND WAS THE BROWSER'S ALONE UNTIL NOW, which is not a bound. The
+	picker stopped at six and `Open` clamped only the bottom, so a request asking
+	for five hundred instalments was accepted, written to the table and sent on
+	for the gateway to refuse. Nothing was wrong about the money — `Split`
+	handles any count, and its comment already said "by seven, ten or twelve as a
+	matter of course". What was missing is a policy the server states.
+*/
+const MaxInstalments = 12
+
 // Method is how a checkout is being paid.
 type Method string
 
@@ -182,6 +212,8 @@ func (c *Checkouts) Open(ctx context.Context, accountID uuid.UUID, scope string,
 		return Intent{}, fmt.Errorf("%w: %q", ErrNoMethod, method)
 	case method == MethodPix && instalments > 1:
 		return Intent{}, ErrNotSplittable
+	case instalments > MaxInstalments:
+		return Intent{}, fmt.Errorf("%w: %d", ErrTooManyInstalments, instalments)
 	case strings.TrimSpace(provider) == "":
 		return Intent{}, fmt.Errorf("%w: a checkout has to say which gateway it is at",
 			ErrNoMethod)

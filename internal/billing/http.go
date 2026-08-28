@@ -214,7 +214,7 @@ func (h *Handler) start(w http.ResponseWriter, r *http.Request) {
 				"and the banner on any page will send another")
 		return
 	case errors.Is(err, ErrNoMethod), errors.Is(err, ErrNotSplittable),
-		errors.Is(err, ErrNotAPrice):
+		errors.Is(err, ErrTooManyInstalments), errors.Is(err, ErrNotAPrice):
 		web.Fail(w, http.StatusBadRequest, "not_a_checkout", "that is not a way to pay here")
 		return
 	case err != nil:

@@ -208,7 +208,7 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'Credit card': 'Cartão de crédito',
   'Five per cent off, and it clears in seconds.':
     'Cinco por cento de desconto, e cai em segundos.',
-  'In up to six instalments, with no interest.': 'Em até seis vezes, sem juros.',
+  'In up to twelve instalments, with no interest.': 'Em até doze vezes, sem juros.',
   'In how many instalments': 'Em quantas vezes',
   'Continue to payment': 'Ir para o pagamento',
   'Starting…': 'Começando…',
