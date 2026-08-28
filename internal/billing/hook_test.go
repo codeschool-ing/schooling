@@ -577,3 +577,164 @@ func TestAnAmountAsAStringIsTheSameMoney(t *testing.T) {
 		t.Errorf(`a value of "186.83" recorded %d cents, want 18683`, total)
 	}
 }
+
+/*
+refundOf is a delivery about money going back, carrying the array the provider
+puts it in.
+
+	`value` STAYS THE SALE, WHICH IS THE WHOLE TRAP. On a refund event the
+	payment's own `value` is the charge, unchanged — the money that came back is
+	in `refunds`. A settlement reading `value` records the sale as reversed on a
+	day a fraction of it was.
+*/
+func refundOf(name, reference, charge string, back ...string) string {
+	entries := make([]string, 0, len(back))
+	for _, one := range back {
+		entries = append(entries, `{"value":`+one+`}`)
+	}
+	return fmt.Sprintf(
+		`{"id":"evt_%s","event":%q,"payment":{"id":%q,"externalReference":%q,`+
+			`"value":560.50,"status":"REFUNDED","refunds":[%s]}}`,
+		strings.ReplaceAll(uuid.NewString(), "-", "")[:12], name, charge, reference,
+		strings.Join(entries, ","))
+}
+
+func ledgerRows(t *testing.T, pool *pgxpool.Pool, charge string) map[string]int {
+	t.Helper()
+	rows, err := pool.Query(context.Background(),
+		`SELECT kind, amount_cents FROM ledger_entries WHERE source_ref LIKE $1 || '%'`, charge)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+
+	out := map[string]int{}
+	for rows.Next() {
+		var kind string
+		var cents int
+		if err := rows.Scan(&kind, &cents); err != nil {
+			t.Fatal(err)
+		}
+		out[kind] = cents
+	}
+	return out
+}
+
+/*
+TestAPartialRefundRecordsWhatCameBackAndNotTheSale.
+
+	THE LEDGER IS A RECORD OF MONEY AND NOT OF ACCESS. This recorded the whole
+	sale on every refund, from an argument that a partial refund closes the
+	subscription entirely and so recording a slice would understate what was
+	taken. That is true about ACCESS and irrelevant here: R$ 200,00 leaving the
+	bank and R$ 1.090,00 in the books is a discrepancy somebody has to explain,
+	and what the access did is in `subscription_events` already.
+
+	NOTHING IN THIS PLATFORM MAKES ONE. The console sends the whole sale. They
+	arrive from the gateway's own dashboard, where a person can return any
+	figure — which is exactly why this reads rather than assumes.
+*/
+func TestAPartialRefundRecordsWhatCameBackAndNotTheSale(t *testing.T) {
+	api, _, pool, one, charge := hookFor(t)
+
+	if rec := deliver(t, api, hookToken,
+		event("PAYMENT_CONFIRMED", one.ID.String(), charge)); rec.Code != http.StatusOK {
+		t.Fatalf("the payment answered %d", rec.Code)
+	}
+
+	// R$ 200,00 of a R$ 560,50 sale, done in their dashboard.
+	if rec := deliver(t, api, hookToken,
+		refundOf("PAYMENT_PARTIALLY_REFUNDED", one.ID.String(), charge,
+			"200.00")); rec.Code != http.StatusOK {
+		t.Fatalf("the refund answered %d", rec.Code)
+	}
+
+	rows := ledgerRows(t, pool, charge)
+	if rows["payment"] != 56050 {
+		t.Errorf("the payment reads as %d", rows["payment"])
+	}
+	if rows["refund"] != -20000 {
+		t.Errorf("the refund reads as %d, want -20000 — the books have to reconcile "+
+			"against a bank statement, and the sale is not what left the account",
+			rows["refund"])
+	}
+}
+
+// TWO PARTIALS ARE SUMMED, because the second event carries BOTH entries.
+// Reading only the newest would record the smaller of two numbers that should
+// have been added.
+func TestRefundsAreSummedBecauseTheEventCarriesAllOfThem(t *testing.T) {
+	api, _, pool, one, charge := hookFor(t)
+
+	deliver(t, api, hookToken, event("PAYMENT_CONFIRMED", one.ID.String(), charge))
+	deliver(t, api, hookToken,
+		refundOf("PAYMENT_PARTIALLY_REFUNDED", one.ID.String(), charge, "100.00", "60.50"))
+
+	if got := ledgerRows(t, pool, charge)["refund"]; got != -16050 {
+		t.Errorf("two refunds of 100.00 and 60.50 read as %d, want -16050", got)
+	}
+}
+
+/*
+TestARefundWithNoReadableAmountSettlesAtTheSale.
+
+	A FALLBACK AND NOT A REFUSAL, for the reason every fallback in this file
+	exists: delivery is SEQUENTIAL, and one event this cannot read would stop the
+	queue for every student on the platform.
+
+	AND THE SALE IS THE RIGHT FALLBACK. Nearly every refund is a whole one, where
+	the two numbers are the same — so this is only a compromise for a partial
+	whose payload surprised us, and the warning beside it says so.
+*/
+func TestARefundWithNoReadableAmountSettlesAtTheSale(t *testing.T) {
+	for _, shape := range []string{
+		`"refunds":null`,
+		`"refunds":[]`,
+		`"refunds":[{"value":"not-a-number"}]`,
+		`"status":"REFUNDED"`, // the key absent altogether
+	} {
+		api, _, pool, one, charge := hookFor(t)
+		deliver(t, api, hookToken, event("PAYMENT_CONFIRMED", one.ID.String(), charge))
+
+		body := fmt.Sprintf(
+			`{"id":"evt_x","event":"PAYMENT_REFUNDED","payment":{"id":%q,`+
+				`"externalReference":%q,"value":560.50,%s}}`,
+			charge, one.ID.String(), shape)
+		if rec := deliver(t, api, hookToken, body); rec.Code != http.StatusOK {
+			t.Fatalf("%s answered %d — a malformed refund must not stop the queue",
+				shape, rec.Code)
+		}
+		if got := ledgerRows(t, pool, charge)["refund"]; got != -56050 {
+			t.Errorf("%s recorded %d, want the sale (-56050)", shape, got)
+		}
+	}
+}
+
+// MORE THAN THE SALE IS NOT A REFUND OF IT. It cannot happen and would be the
+// books paying somebody to leave, so it falls back to the sale and is said out
+// loud rather than trusted.
+func TestARefundLargerThanTheSaleIsNotBelieved(t *testing.T) {
+	api, _, pool, one, charge := hookFor(t)
+
+	deliver(t, api, hookToken, event("PAYMENT_CONFIRMED", one.ID.String(), charge))
+	deliver(t, api, hookToken,
+		refundOf("PAYMENT_REFUNDED", one.ID.String(), charge, "9000.00"))
+
+	if got := ledgerRows(t, pool, charge)["refund"]; got != -56050 {
+		t.Errorf("a refund of 9000.00 on a 560.50 sale recorded %d, want the sale", got)
+	}
+}
+
+// AND A WHOLE REFUND IS UNCHANGED, which is nearly all of them: the array sums
+// to the sale and the row is what it always was.
+func TestAWholeRefundIsStillTheWholeSale(t *testing.T) {
+	api, _, pool, one, charge := hookFor(t)
+
+	deliver(t, api, hookToken, event("PAYMENT_CONFIRMED", one.ID.String(), charge))
+	deliver(t, api, hookToken,
+		refundOf("PAYMENT_REFUNDED", one.ID.String(), charge, "560.50"))
+
+	if got := ledgerRows(t, pool, charge)["refund"]; got != -56050 {
+		t.Errorf("a whole refund recorded %d, want -56050", got)
+	}
+}
