@@ -39,7 +39,6 @@
    ========================================================================== */
 
 import { esc } from '../text.js';
-import { goTo } from '../routes.js';
 import { now } from '../state.js';
 /* THE MODULE AND NOT THE NAME, because `source.school` is `export let` — it is
    null until the API answers and then it is the school. A named import is a
@@ -68,9 +67,28 @@ export default async function subscribe() {
   const el = document.createElement('div');
   el.className = 'view view-subscribe';
 
+  /* NOBODY IS SIGNED IN, AND THIS USED TO REDIRECT IN SILENCE.
+
+     `goTo('/sign-in')` sent a stranger who had just pressed "Subscribe" to a
+     bare form headed "Student area · Sign in to pick up where you left off" —
+     a sentence about coming back, shown to somebody who has never been here,
+     with no mention of the purchase they were in the middle of. Pressing a
+     button and landing somewhere unrelated is the shape of a broken link.
+
+     So it says what it needs and why, and offers the way. It also answers a
+     question the platform never answered anywhere: what an account is FOR
+     before there is a subscription — it is what a purchase and a record of
+     study are attached to. */
   const session = now().session;
   if (!session) {
-    goTo('/sign-in');
+    el.innerHTML =
+      '<header class="view-head">' +
+        '<h1>' + esc(txt('Subscribe')) + '</h1>' +
+        '<p>' + esc(txt('Subscribing needs an account. It is what your subscription and everything you study are attached to.')) + '</p>' +
+      '</header>' +
+      '<p><a class="btn btn-primary" href="#/sign-in">' +
+        esc(txt('Create an account')) + '</a></p>' +
+      '<p class="buy-note dim">' + esc(txt('Already have one? The same screen signs you in.')) + '</p>';
     return { title: txt('Subscribe'), el };
   }
 

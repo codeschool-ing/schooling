@@ -241,4 +241,12 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
      Pix" — a sentence cut into fragments could do neither. */
   '{amount} with Pix': '{amount} no Pix',
   'or {count}× {amount}, with no interest': 'ou {count}× {amount}, sem juros',
+
+  /* WHAT AN ACCOUNT IS FOR, said on the one screen where somebody is about to
+     need one. It replaced a silent redirect to a form headed "pick up where you
+     left off", shown to people who had never been here. */
+  'Subscribing needs an account. It is what your subscription and everything you study are attached to.':
+    'Assinar precisa de uma conta. É a ela que a assinatura e tudo o que você estudar ficam ligados.',
+  'Already have one? The same screen signs you in.':
+    'Já tem uma? A mesma tela faz seu login.',
 });

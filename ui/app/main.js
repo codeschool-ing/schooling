@@ -176,9 +176,16 @@ route('/privacy', privacy);
 /* Which screens are the school's rather than the catalogue's. Everything that
    reads or writes a student's own record: there is no student in a file on a
    disk. The exams are matched by their ending because there is one per course
-   and one per track. */
+   and one per track.
+
+   `/subscribe` JOINED THIS LIST WHEN IT STOPPED REDIRECTING. While it sent a
+   signed-out visitor to `/sign-in` it was unreachable in the bundle and listing
+   it would have been dead weight — the notice appeared on the form it landed
+   on. Now the screen draws, in a file on a disk, offering to create an account
+   against a server that is not there. Saying so is the whole of what this list
+   does. */
 const OF_THE_SCHOOL = ['/sign-in', '/dashboard', '/certificates', '/performance',
-  '/redo', '/notes', '/practice'];
+  '/redo', '/notes', '/practice', '/subscribe'];
 const needsTheSchool = (path) =>
   OF_THE_SCHOOL.includes(path) || path.endsWith('/exam');
 

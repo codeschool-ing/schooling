@@ -516,6 +516,13 @@ try {
     await check(out, `${theme} · track`, '/#/track/frontend', '/track/:id');
     await check(out, `${theme} · course`, '/#/course/web-fundamentals', '/course/:id');
     await check(out, `${theme} · sign in`, '/#/sign-in', '/sign-in');
+    /* SUBSCRIBING WITHOUT AN ACCOUNT, which is a screen and no longer a
+       redirect. It used to send a stranger to the sign-in form, so what was
+       measured under any name here was that form; now it is its own state and
+       the only one on this list whose whole job is to explain why an account
+       exists. It belongs in the signed-OUT pass, which is the only place it can
+       be reached. */
+    await check(out, `${theme} · subscribing with no account`, '/#/subscribe', '/subscribe');
     await check(out, `${theme} · nothing there`, '/#/nowhere-at-all', 'not-found');
     /* The two documents, signed out, because signed out is when they are read:
        somebody deciding whether to hand over an e-mail address. They are also
