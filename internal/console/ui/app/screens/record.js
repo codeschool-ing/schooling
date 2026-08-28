@@ -134,7 +134,7 @@ export async function record(params) {
        subscription covers every school (N-02), and it is also the first thing
        asked on nearly every support message — so it sits above the schools
        rather than being hunted for inside one of them. */
-    holding(it.holding, person.id) +
+    holding(it.holding, person.id, it.refundable) +
 
     (it.schools.length
       ? it.schools.map((s) => atSchool(s, person.id)).join('')
@@ -184,6 +184,31 @@ export async function record(params) {
      IT IS DELEGATED RATHER THAN BOUND PER FORM, because that block is replaced
      wholesale after a change and listeners bound to the old markup would go
      with it. */
+  /* CHOOSING WHICH SALE, from the line rather than from a list. The form is
+     hidden until this runs, so there is no state in which it is standing open
+     with no purchase in it — which would be a "Send it back" button whose
+     subject is whatever was last clicked. */
+  el.addEventListener('click', (event) => {
+    const open = event.target.closest('[data-refund]');
+    if (!open) return;
+
+    const row = open.closest('tr');
+    const form = el.querySelector('.sub-refund');
+    if (!row || !form) return;
+
+    form.hidden = false;
+    form.dataset.purchase = open.dataset.refund;
+    form.dataset.cents = row.dataset.cents;
+    form.querySelector('.sub-chosen').textContent =
+      row.cells[0].textContent + ' \u00b7 ' + row.cells[3].textContent.split('of')[0].trim() +
+      ' \u00b7 ' + row.cells[5].textContent;
+    form.querySelector('[name=amount]').value = '';
+    form.querySelector('.sub-said').textContent = '';
+
+    el.querySelector('.sub-change').open = true;
+    form.querySelector('[name=amount]').focus();
+  });
+
   el.addEventListener('submit', async (event) => {
     const form = event.target.closest('.sub-form');
     if (!form) return;
@@ -206,6 +231,11 @@ export async function record(params) {
     if (!why) {
       tell('Say why. It is written down, and a change nobody can account for is worse '
         + 'than one that did not happen.', true);
+      return;
+    }
+
+    if (what === 'refund') {
+      await sendBack(form, said, why, tell);
       return;
     }
 
@@ -273,6 +303,55 @@ export async function record(params) {
       button.disabled = false;
     }
   });
+
+  /*
+  sendBack is the refund, and it is its own function because nothing it does is
+  shared with the other three.
+
+    IT DOES NOT REDRAW. The other two that change a term answer the new
+    standing; this one answers "the gateway was asked", and the subscription is
+    still open at that moment — it closes when the event arrives. Redrawing here
+    would paint a screen that says nothing happened, one second before something
+    did.
+
+    THE AMOUNT IS COMPARED IN CENTS AND IN THE BROWSER FIRST, so a mistyped
+    figure is a sentence rather than a round trip. The API compares it again,
+    against the row rather than against what a screen said the row was, and that
+    is the check that counts.
+  */
+  async function sendBack(form, said, why, tell) {
+    const cents = asCents(form.querySelector('[name=amount]').value);
+    const want = Number(form.dataset.cents);
+
+    if (cents === null) {
+      tell('An amount, like 655,50. Type what the line says.', true);
+      return;
+    }
+    if (cents !== want) {
+      tell('That is not what this purchase came to. Type the amount on the line — a '
+        + 'record with several purchases has several buttons that look the same.', true);
+      return;
+    }
+
+    const button = form.querySelector('button[type=submit]');
+    button.disabled = true;
+    tell('Asking the gateway…');
+    try {
+      const answer = await post('/console/api/v1/purchases/'
+        + encodeURIComponent(form.dataset.purchase) + '/refund', { cents, why });
+      tell(answer.note || 'Asked and accepted.');
+      form.querySelector('[name=amount]').value = '';
+    } catch (e) {
+      /* THE GATEWAY'S OWN SENTENCE, THROUGH. A key without the permission and a
+         charge in a state that cannot be refunded arrive as the same status
+         with different Portuguese, and only the Portuguese says which. */
+      tell(e instanceof RequestError && e.status === 403
+        ? 'That asks for an operator.'
+        : e.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  }
 
   /* REDRAWN FROM THE ANSWER AND NOT FROM A SECOND REQUEST. The API answers the
      new standing, so asking again would be one more round trip and one more
@@ -374,17 +453,18 @@ function atSchool(s, personId) {
    so an operator can give it back rather than tell them to start again, which
    would open a second checkout for one sale.
    ========================================================================== */
-function holding(h, personId) {
-  return '<section class="block" id="holding">' + holdingInside(h, personId) + '</section>';
+function holding(h, personId, refundable) {
+  return '<section class="block" id="holding">' +
+    holdingInside(h, personId, refundable) + '</section>';
 }
 
 // holdingInside is redrawn on its own after a change, so an operator sees the
 // row they just moved rather than the one the page loaded with.
-function holdingInside(h, personId) {
+function holdingInside(h, personId, refundable) {
   if (!h) {
     return '<div class="block-top"><h2>Subscription</h2></div>' +
       '<p class="none">They have never bought anything, and never tried to.</p>' +
-      changes(personId, false);
+      changes(personId, false, refundable);
   }
 
   const bought = h.purchases || [];
@@ -421,9 +501,10 @@ function holdingInside(h, personId) {
 
     table('Purchases',
       'Nothing bought, and nothing attempted.',
-      ['Opened', 'Term', 'How', 'Amount', 'Access to', ''],
+      ['Opened', 'Term', 'How', 'Amount', 'Access to', 'At the gateway', ''],
       bought.map((p) =>
-        '<tr><td class="mono">' + esc(day(p.openedAt)) + '</td>' +
+        '<tr data-purchase="' + esc(p.id) + '" data-cents="' + p.cents + '">' +
+        '<td class="mono">' + esc(day(p.openedAt)) + '</td>' +
         '<td class="mono">' + p.termMonths + ' months</td>' +
         '<td>' + esc(howPaid(p)) + '</td>' +
         '<td class="num mono">' + esc(money(p.cents, p.currency)) +
@@ -440,7 +521,19 @@ function holdingInside(h, personId) {
             : p.stage === 'paid' ? '<span class="none">not recorded</span>'
             : '\u2014') +
         '</td>' +
-        '<td>' + stage(p) + '</td></tr>')) +
+
+        /* THEIR REFERENCE FOR IT, which is what somebody reads out to the
+           processor's support desk. Until now it existed only in the database,
+           so a conversation with Asaas began by opening a SQL client.
+
+           It is `user-select:all` in the stylesheet: it is copied far more
+           often than it is read, and a string of eighteen characters selected
+           by dragging is a string selected wrongly. */
+        '<td><span class="sub-charge mono">' +
+          (p.chargeId ? esc(p.chargeId) : '<span class="none">never sent</span>') +
+        '</span></td>' +
+
+        '<td>' + stage(p) + refundButton(p) + '</td></tr>')) +
 
     (spent
       ? '<p class="list-count">' + esc(spent) + ' across ' + paid.length +
@@ -449,7 +542,7 @@ function holdingInside(h, personId) {
         'collection there.</p>'
       : '') +
 
-    changes(personId, Boolean(h.state));
+    changes(personId, Boolean(h.state), refundable);
 }
 
 /* ==========================================================================
@@ -471,7 +564,7 @@ function holdingInside(h, personId) {
    A READ-ONLY ROLE SEES NONE OF IT. That is not the check: the API refuses, and
    there is a test for it. A control that always fails is simply a bad screen.
    ========================================================================== */
-function changes(personId, hasSubscription) {
+function changes(personId, hasSubscription, refundable) {
   if (!mayAct()) {
     return '<p class="sub-note">A read-only role may read this and not change it.</p>';
   }
@@ -558,8 +651,49 @@ function changes(personId, hasSubscription) {
         '<p class="sub-said" aria-live="polite"></p>' +
       '</form>' +
 
+      /* SENDING MONEY BACK, WHICH IS THE ONE THAT LEAVES THIS PLATFORM.
+
+         IT IS NOT REACHED FROM HERE. The form has no purchase in it until
+         somebody presses Refund on a LINE of the table above, because "which
+         sale" is a question a dropdown answers badly: a record with four
+         purchases has four amounts and two dates that look alike, and the one
+         an operator means is the one they have just read out.
+
+         THE AMOUNT IS TYPED, and that is the confirmation. Same shape as the
+         erasure asking for the address: the mistake here is the wrong ROW, and
+         typing R$ 655,50 means having read the line. */
+      (refundable
+        ? '<form class="sub-form sub-refund" data-do="refund" novalidate hidden>' +
+            '<h3 class="eyebrow mono">Send money back</h3>' +
+            '<p class="sub-note">This asks the gateway and writes nothing here. Their ' +
+              'access closes when the gateway\u2019s event comes back, which is seconds ' +
+              'later and not part of the request. It cannot be undone.</p>' +
+            '<p class="sub-chosen mono"></p>' +
+            '<div class="sub-bar">' +
+              '<label class="sub-field"><span>Type the amount</span>' +
+                '<input name="amount" type="text" inputmode="decimal" autocomplete="off" ' +
+                  'placeholder="0,00"></label>' +
+              '<label class="sub-field sub-why"><span>Why</span>' +
+                '<input name="why" type="text" autocomplete="off" ' +
+                  'placeholder="the course was withdrawn, ticket 903"></label>' +
+              '<button type="submit" class="btn btn-bad">Send it back</button>' +
+            '</div>' +
+            '<p class="sub-said" aria-live="polite"></p>' +
+          '</form>'
+        : '<p class="sub-note">This deployment has no payment gateway configured, so ' +
+          'nothing can be sent back from here.</p>') +
+
     '</div>' +
   '</details>';
+}
+
+/* THE BUTTON ON A LINE, and only on a line that was actually paid. It carries
+   nothing but the row's identity — the form above reads the amount and the date
+   off the same row, so there is one place where "which purchase" is decided. */
+function refundButton(p) {
+  if (p.stage !== 'paid' || !mayAct()) return '';
+  return ' <button type="button" class="sub-refund-open" data-refund="' + esc(p.id) + '">' +
+    'Refund</button>';
 }
 
 /*

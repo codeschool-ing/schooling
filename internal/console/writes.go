@@ -146,6 +146,17 @@ var Writes = []Write{
 			"no money moves because of this row, it records that money moved elsewhere",
 	},
 	{
+		Route: "POST /console/api/v1/purchases/{id}/refund",
+		Kind:  Action,
+		Why: "sending money back. It is the only write in this console that changes something " +
+			"OUTSIDE it — everything else moves rows this platform owns, and this asks the " +
+			"gateway and then stops. What it leaves behind here is an audit entry saying " +
+			"somebody asked; the ledger row and the closed subscription arrive with the " +
+			"webhook that refund causes, which is the same path a refund made from the " +
+			"gateway's own dashboard takes. One writer for money, and it is the one that " +
+			"hears from the gateway",
+	},
+	{
 		Route: "POST /console/api/v1/jobs/{job}/run",
 		Kind:  Action,
 		Why: "asking for a run of a scheduled job now rather than waiting for tonight. It " +

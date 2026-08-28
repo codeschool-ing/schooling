@@ -988,6 +988,19 @@ try {
           await page.locator('.sub-change summary').click();
           await page.waitForSelector('.sub-form[data-do=adjust] [name=amount]',
             { timeout: 8000 });
+
+          /* AND THE REFUND, WHICH IS HIDDEN UNTIL A LINE IS CHOSEN. It has no
+             purchase in it until somebody presses Refund on a row — that is
+             the design, so that "Send it back" never stands open with an
+             unnamed subject — and a `hidden` form is out of the accessibility
+             tree, so without this click the densest and reddest control on the
+             screen goes unmeasured. */
+          const refund = page.locator('[data-refund]').first();
+          if (await refund.count()) {
+            await refund.click();
+            await page.waitForSelector('.sub-refund:not([hidden]) [name=amount]',
+              { timeout: 8000 });
+          }
         },
       });
 

@@ -388,3 +388,98 @@ func TestTheHostIsReadOffTheKey(t *testing.T) {
 		}
 	}
 }
+
+/* ---------- money going back ---------- */
+
+/*
+TestARefundAsksForTheWholeSale.
+
+	THE BODY IS `{}` AND THAT IS THE ASSERTION. Their endpoint takes an optional
+	`value`, and sending one asks for a partial refund — which this platform has
+	nowhere to put, because a refund closes the subscription outright and a
+	ledger saying more went back than did is worse than no refund button at all.
+	An empty object is how a JSON API is asked for the whole amount without any
+	room to be read as something else.
+*/
+func TestARefundAsksForTheWholeSale(t *testing.T) {
+	client, seen := gateway(t, http.StatusOK, `{
+		"id":"pay_9vvwq9mgo4xq775x","customer":"cus_000008904370",
+		"billingType":"PIX","value":655.50,"netValue":654.51,
+		"dueDate":"2026-09-03","status":"REFUNDED","externalReference":"intent-teste-1"
+	}`)
+
+	back, err := client.Refund(context.Background(), "pay_9vvwq9mgo4xq775x")
+	if err != nil {
+		t.Fatalf("refunding: %v", err)
+	}
+
+	if len(*seen) != 1 {
+		t.Fatalf("it made %d calls", len(*seen))
+	}
+	one := (*seen)[0]
+	if one.method != http.MethodPost {
+		t.Errorf("it was a %s", one.method)
+	}
+	if one.path != "/payments/pay_9vvwq9mgo4xq775x/refund" {
+		t.Errorf("it asked %q", one.path)
+	}
+	if len(one.body) != 0 {
+		t.Errorf("it sent %v — a `value` here is a PARTIAL refund, which this "+
+			"platform cannot record", one.body)
+	}
+
+	/* THE ANSWER IS THE CHARGE AS IT NOW STANDS, so a caller logs their word
+	   for what happened rather than assuming the request meant it did. */
+	if back.Status != "REFUNDED" {
+		t.Errorf("it came back as %q", back.Status)
+	}
+	if back.Cents != 65550 {
+		t.Errorf("the amount reads %d", back.Cents)
+	}
+}
+
+// A REFUSAL COMES BACK WHOLE, because the meaning is in their Portuguese prose
+// and not in the code: a key without the permission and a charge in a state
+// that cannot be refunded both arrive as a 400 with a sentence, and an operator
+// needs the sentence to know which of the two to go and fix.
+func TestARefundTheGatewayWillNotMakeCarriesItsWords(t *testing.T) {
+	client, _ := gateway(t, http.StatusBadRequest, `{"errors":[
+		{"code":"invalid_action","description":"Não é possível estornar uma cobrança recebida em dinheiro."}
+	]}`)
+
+	_, err := client.Refund(context.Background(), "pay_9vvwq9mgo4xq775x")
+
+	var refused *asaas.Refused
+	if !errors.As(err, &refused) {
+		t.Fatalf("it answered %v, want a Refused", err)
+	}
+	if !strings.Contains(refused.Description, "recebida em dinheiro") {
+		t.Errorf("their words did not come back: %q", refused.Description)
+	}
+	if refused.Status != http.StatusBadRequest {
+		t.Errorf("the status reads %d", refused.Status)
+	}
+}
+
+// NO KEY, NO CALL. A deployment whose gateway key has been pulled must not
+// reach the network to find that out — and this is the one call where a request
+// made by mistake cannot be taken back.
+func TestARefundWithNoKeyNeverLeaves(t *testing.T) {
+	if _, err := asaas.New("", "https://example.invalid").
+		Refund(context.Background(), "pay_9vvwq9mgo4xq775x"); !errors.Is(err, asaas.ErrNoKey) {
+		t.Errorf("it answered %v, want ErrNoKey", err)
+	}
+}
+
+// AND NO CHARGE, NO CALL. An empty id would be `POST /payments//refund`, which
+// is a request to an address that means nothing and could mean anything.
+func TestARefundWithNoChargeNeverLeaves(t *testing.T) {
+	client, seen := gateway(t, http.StatusOK, `{}`)
+
+	if _, err := client.Refund(context.Background(), "  "); !errors.Is(err, asaas.ErrNoCharge) {
+		t.Errorf("it answered %v, want ErrNoCharge", err)
+	}
+	if len(*seen) != 0 {
+		t.Error("it went to the network with no charge to refund")
+	}
+}

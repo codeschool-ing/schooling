@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 )
 
 /*
@@ -49,6 +50,15 @@ rather than make somebody start again.
 // Purchase is one checkout, with what it cost and what it bought.
 type Purchase struct {
 	ID uuid.UUID
+
+	// AccountID is whose it is. A caller that found this by the purchase's own
+	// id — a refund does — has no other way to know.
+	AccountID uuid.UUID
+
+	/* ChargeID is the gateway's reference for it, and empty on a row that never
+	   reached them. It is what somebody reads out to the processor's support
+	   desk, which until now meant opening a SQL client to have a conversation. */
+	ChargeID string
 
 	// OpenedAt is when they asked to buy. MovedAt is when it last changed —
 	// which for a paid one is when the payment landed, and for an abandoned one
@@ -101,62 +111,119 @@ Purchases is everything one account has tried to buy, newest first.
 	cell nobody investigates. The term is a subquery because it is genuinely
 	absent for most rows.
 */
+/*
+purchaseColumns is the one SELECT both reads use.
+
+	TWO READS AND ONE SHAPE. The history is by account and a refund finds one by
+	its own id; they differ in a WHERE and in nothing else, and two copies of a
+	twenty-line query with a three-table join is two things to keep in step. The
+	scan below is shared for the same reason — a column added to one and not the
+	other is a runtime error rather than a compile one.
+*/
+const purchaseColumns = `
+	SELECT ci.id, ci.account_id, COALESCE(ci.provider_charge_id, ''),
+	       ci.created_at, ci.updated_at, ci.stage,
+	       ci.cents, ci.currency, ci.method, ci.instalments,
+	       COALESCE(ci.invoice_url, ''),
+	       pp.cents, pp.term_months,
+
+	       /* WHAT THE TERM BECAME, THROUGH THE LEDGER ROW BETWEEN THEM.
+	          There is no column joining a subscription event to a checkout
+	          and there should not be: the event records the entry that
+	          caused it, the entry records the charge the money came on, and
+	          the charge is what the checkout was answered with. Three facts,
+	          each written by whoever knew it.
+
+	          A SUBQUERY AND NOT A JOIN, so that a second event somehow
+	          pointing at one entry cannot double a line of somebody's
+	          history. Nothing writes two — Checkouts.Settled answers "first"
+	          exactly once per purchase — and a duplicated purchase is a bad
+	          way to find out otherwise.
+
+	          (No backticks in here: this is a Go raw string, and one would
+	          end it in the middle of a query.) */
+	       (SELECT se.paid_through
+	          FROM subscription_events se
+	          JOIN ledger_entries le ON le.id = se.ledger_entry_id
+	         WHERE le.source = ci.provider
+	           AND le.source_ref = ci.provider_charge_id
+	         ORDER BY se.occurred_at
+	         LIMIT 1)
+
+	FROM checkout_intents ci
+	JOIN plan_prices pp ON pp.id = ci.price_id
+`
+
+/*
+Purchases is everything one account has tried to buy, newest first.
+
+	IT IS ONE QUERY AND NOT A LOOP. A history is drawn whole or not at all — a
+	screen half of whose rows have an amount is worse than one with none — and
+	joining in Go would be one round trip per purchase for a page that exists to
+	be read in a single glance.
+
+	THE TWO JOINS ARE NOT THE SAME SHAPE, deliberately. `plan_prices` is an inner
+	join because a checkout cannot exist without one: the column is NOT NULL with
+	a foreign key, so a missing row is a broken database rather than a purchase
+	with no price, and hiding it behind a LEFT JOIN would turn that into a blank
+	cell nobody investigates. The term is a subquery because it is genuinely
+	absent for most rows.
+*/
 func (c *Checkouts) Purchases(ctx context.Context, accountID uuid.UUID) ([]Purchase, error) {
-	rows, err := c.pool.Query(ctx, `
-		SELECT ci.id, ci.created_at, ci.updated_at, ci.stage,
-		       ci.cents, ci.currency, ci.method, ci.instalments,
-		       COALESCE(ci.invoice_url, ''),
-		       pp.cents, pp.term_months,
-
-		       /* WHAT THE TERM BECAME, THROUGH THE LEDGER ROW BETWEEN THEM.
-		          There is no column joining a subscription event to a checkout
-		          and there should not be: the event records the entry that
-		          caused it, the entry records the charge the money came on, and
-		          the charge is what the checkout was answered with. Three facts,
-		          each written by whoever knew it.
-
-		          A SUBQUERY AND NOT A JOIN, so that a second event somehow
-		          pointing at one entry cannot double a line of somebody's
-		          history. Nothing writes two — Checkouts.Settled answers "first"
-		          exactly once per purchase — and a duplicated purchase is a bad
-		          way to find out otherwise.
-
-		          (No backticks in here: this is a Go raw string, and one would
-		          end it in the middle of a query.) */
-		       (SELECT se.paid_through
-		          FROM subscription_events se
-		          JOIN ledger_entries le ON le.id = se.ledger_entry_id
-		         WHERE le.source = ci.provider
-		           AND le.source_ref = ci.provider_charge_id
-		         ORDER BY se.occurred_at
-		         LIMIT 1)
-
-		FROM checkout_intents ci
-		JOIN plan_prices pp ON pp.id = ci.price_id
-		WHERE ci.account_id = $1
-		ORDER BY ci.created_at DESC, ci.id
-	`, accountID)
+	rows, err := c.pool.Query(ctx,
+		purchaseColumns+` WHERE ci.account_id = $1 ORDER BY ci.created_at DESC, ci.id`,
+		accountID)
 	if err != nil {
 		return nil, fmt.Errorf("billing: reading what somebody has bought: %w", err)
 	}
+	found, err := scanPurchases(rows)
+	if err != nil {
+		return nil, fmt.Errorf("billing: reading what somebody has bought: %w", err)
+	}
+	return found, nil
+}
+
+/*
+PurchaseByID is one purchase, found the way a refund finds it.
+
+	A REFUND KNOWS THE PURCHASE AND NOT THE PERSON, which is the whole reason
+	this exists beside the read above: the screen hands back the row's own id,
+	and everything the act needs afterwards — whose it is, what it cost, whether
+	it was ever paid, and the gateway's reference for it — comes from here rather
+	than from a caller that would have to be trusted to pass it consistently.
+*/
+func (c *Checkouts) PurchaseByID(ctx context.Context, id uuid.UUID) (Purchase, error) {
+	rows, err := c.pool.Query(ctx, purchaseColumns+` WHERE ci.id = $1`, id)
+	if err != nil {
+		return Purchase{}, fmt.Errorf("billing: reading a purchase: %w", err)
+	}
+	found, err := scanPurchases(rows)
+	if err != nil {
+		return Purchase{}, fmt.Errorf("billing: reading a purchase: %w", err)
+	}
+	if len(found) == 0 {
+		return Purchase{}, ErrNoIntent
+	}
+	return found[0], nil
+}
+
+func scanPurchases(rows pgx.Rows) ([]Purchase, error) {
 	defer rows.Close()
 
 	out := make([]Purchase, 0)
 	for rows.Next() {
 		var p Purchase
 		var stage, method string
-		if err := rows.Scan(&p.ID, &p.OpenedAt, &p.MovedAt, &stage,
+		if err := rows.Scan(&p.ID, &p.AccountID, &p.ChargeID,
+			&p.OpenedAt, &p.MovedAt, &stage,
 			&p.Cents, &p.Currency, &method, &p.Instalments, &p.InvoiceURL,
 			&p.Listed, &p.TermMonths, &p.PaidThrough); err != nil {
-			return nil, fmt.Errorf("billing: reading what somebody has bought: %w", err)
+			return nil, err
 		}
 		p.Stage, p.Method = Stage(stage), Method(method)
 		out = append(out, p)
 	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("billing: reading what somebody has bought: %w", err)
-	}
-	return out, nil
+	return out, rows.Err()
 }
 
 // Spent is what a purchase came to when it is over and nothing when it is not.
