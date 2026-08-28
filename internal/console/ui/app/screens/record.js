@@ -136,6 +136,19 @@ export async function record(params) {
        rather than being hunted for inside one of them. */
     holding(it.holding, person.id, it.refundable) +
 
+    /* AND WHERE THE MONEY ACTUALLY MOVED, under the subscription because it is
+       the same subject, and above the schools because it is nobody school's.
+
+       IT IS DRAWN EMPTY AND FILLED AFTERWARDS, which makes it the one thing on
+       this screen that asks twice. The record is one request on purpose — a
+       person on the telephone is not read out in instalments — and this stays
+       out of it because the ADJUSTMENT writes a row immediately, unlike a
+       refund, so there has to be a way to re-read this table and nothing else.
+       Folded into the record it would be either stale after every correction or
+       a whole second record fetched to refresh one table. */
+    '<section class="block" id="ledger"><div class="block-top"><h2>The books</h2></div>' +
+      '<p class="checking">Reading…</p></section>' +
+
     (it.schools.length
       ? it.schools.map((s) => atSchool(s, person.id)).join('')
       : '<section class="block"><p class="none">They have nothing at any school: ' +
@@ -281,8 +294,23 @@ export async function record(params) {
 
       if (what === 'adjust') {
         tell('Written. It is in the books and nowhere else — the gateway was not told, '
-          + 'and no money has moved because of it.');
+          + 'and no money has moved because of it. It is in the table below.');
         form.reset();
+        /* AND THE BOOKS ARE RE-READ, which is the reason that table is a
+           request of its own.
+
+           This is the only write on this screen whose row exists the moment it
+           returns. A refund asks the gateway and the ledger row arrives later,
+           with the webhook, so there would be nothing to show; an adjustment IS
+           the row. Until now the sentence above ended at "nowhere else", which
+           was literally true — an operator could write into an append-only
+           table and have no way of checking they had put the sign the right way
+           round.
+
+           Not awaited: what the sentence says is already true, and holding the
+           button disabled through a second round trip would make a correction
+           feel slower than the thing it corrects. */
+        showLedger();
       } else {
         /* THE BLOCK IS REDRAWN FIRST AND THE ANSWER WRITTEN AFTERWARDS, which
            is the wrong way round only until you try it. `redraw` replaces the
@@ -376,7 +404,107 @@ export async function record(params) {
     }
   }
 
+  /* THE BOOKS, READ AFTER THE RECORD AND AGAIN AFTER EVERY CORRECTION.
+
+     It is not awaited by the caller: the record is already on screen and the
+     books are the last thing on it, so holding the whole page for one more
+     round trip would make every lookup slower to serve a table most people
+     scroll past. It says "Reading…" until it arrives, like the screen it is on
+     said a moment ago. */
+  async function showLedger() {
+    const block = el.querySelector('#ledger');
+    if (!block) return;
+
+    let answer;
+    try {
+      answer = await get('/console/api/v1/people/' + encodeURIComponent(person.id) + '/ledger');
+    } catch (e) {
+      block.innerHTML = '<div class="block-top"><h2>The books</h2></div>' +
+        '<p class="none">' + esc(e.message) + '</p>';
+      return;
+    }
+    block.innerHTML = books(answer);
+  }
+  showLedger();
+
   return { title: person.name, el };
+}
+
+/* ==========================================================================
+   The books — every movement of money, which is NOT the purchase table.
+
+   `record.go` says why in one sentence and it decides the whole of this block:
+
+       An instalment plan is one sale collected several times and the ledger is
+       keyed by the charge, so the biennial bought in three parts is three rows
+       there and one line here. An operator adding up ledger rows to answer
+       "what did they pay" would get the right total by luck and the wrong story
+       every time.
+
+   So the two tables are two questions, and the sentence saying so is on the
+   screen rather than only in a comment: somebody comparing the two totals will
+   look for the explanation exactly there.
+
+   # THE NET IS THE SERVER'S ARITHMETIC
+
+   Money is counted in integer cents by the side that has them. A column handed
+   to a browser to add up is the one sum in this system that could have two
+   answers, and the difference between them would be the number an operator
+   quotes to a student.
+
+   # WHAT EACH ROW HAS TO SAY
+
+   The kind, because a refund and a write-off are different conversations with
+   the same person. The reference, because it is what somebody reads out to the
+   processor's support desk. And the memo, which only a hand-written line has —
+   it is the whole reason that line exists, and a table that hid it would leave
+   the escape hatch as anonymous as it was when nothing showed it at all.
+   ========================================================================== */
+function books(answer) {
+  const rows = answer.movements || [];
+  const head = '<div class="block-top"><h2>The books</h2>' +
+    (answer.net || []).map((n) =>
+      '<span class="block-score mono">' + esc(money(n.cents, n.currency)) + '</span>').join('') +
+  '</div>';
+
+  if (!rows.length) {
+    /* NOTHING IS THE ORDINARY STATE and it is said as one. Most people have
+       never paid anything, and a blank table under a heading reads as a screen
+       that failed rather than as an account with no money in it. */
+    return head + '<p class="none">No money has moved either way.</p>';
+  }
+
+  return head +
+    '<p class="aside">' + esc(answer.not_the_purchases || '') + '</p>' +
+    table('', '', ['When', 'What', 'Amount', 'Reference'], rows.map((m) =>
+      '<tr>' +
+        '<th scope="row" class="mono">' + esc(when(m.at)) + '</th>' +
+        '<td>' + esc(movement(m)) +
+          (m.memo ? '<span class="ledger-memo">' + esc(m.memo) + '</span>' : '') +
+        '</td>' +
+        '<td class="mono' + (m.cents < 0 ? ' ledger-back' : '') + '">' +
+          esc(money(m.cents, m.currency)) + '</td>' +
+        '<td class="mono dim">' + esc(m.sourceRef || m.source || '—') + '</td>' +
+      // `table` joins the rows itself. Handing it a joined string made it call
+      // `join` on one, which threw inside a handler nothing was watching: the
+      // adjustment was written, the form said so, and the table went on saying
+      // no money had moved. `console-test` is what said otherwise.
+      '</tr>'));
+}
+
+/* WHAT THE LINE IS, IN WORDS. The kinds are the ledger's own vocabulary and a
+   screen that printed them raw would be asking an operator to know that
+   `chargeback` is the issuer's decision and `refund` is ours. `reversed` is
+   said separately because it is a different fact from a negative amount: a
+   manual credit is negative and undoes nothing. */
+function movement(m) {
+  const named = {
+    payment: 'Payment',
+    refund: 'Refunded to them',
+    chargeback: 'Taken back by the issuer',
+    adjustment: 'Written by hand',
+  }[m.kind] || m.kind;
+  return m.reversed ? named + ', against an earlier line' : named;
 }
 
 function atSchool(s, personId) {

@@ -384,6 +384,57 @@ try {
     good('an address with no reason is refused');
   }
 
+  /* ---------- a line written by hand, and read back ----------
+
+     THIS IS THE ONE WRITE IN THIS CONSOLE WHOSE RESULT NOBODY COULD SEE. The
+     adjustment is the escape hatch — one line for money that moved outside the
+     gateway — and until the books got a table it wrote into an append-only
+     table and showed nothing afterwards. An operator had no way of checking
+     they had put the sign the right way round, and no way of noticing they had
+     already made the same correction last week.
+
+     So the round trip is the claim: type it on the record screen, and find it
+     in the table below without reloading the page. Neither half proves the
+     other — the handler's tests use a fake store, the store's tests use no
+     handler, and what neither presses is the button. */
+  await go(staff, 'record', 'record');
+  await staff.locator('#email').fill(`console-${stamp}@example.tld`);
+  await staff.locator('#find button[type=submit]').click();
+  await staff.waitForSelector('#stage[data-screen="/record/:id"]', { timeout: 15000 });
+
+  /* THE BOOKS ARE EMPTY FIRST, and saying so is half the check: a table that
+     was already full would let "the row is there" pass without the write. */
+  await staff.locator('#ledger .none, #ledger .grid').first().waitFor({ timeout: 15000 });
+  const booksBefore = (await staff.locator('#ledger').innerText()).trim();
+
+  const memo = `console suite ${stamp}`;
+  await staff.locator('.sub-change summary').click();
+  const adjust = staff.locator('.sub-form[data-do=adjust]');
+  await adjust.locator('[name=amount]').fill('12,34');
+  await adjust.locator('[name=currency]').fill('BRL');
+  await adjust.locator('[name=why]').fill(memo);
+  await adjust.locator('button[type=submit]').click();
+
+  try {
+    await staff.locator('#ledger', { hasText: memo }).waitFor({ timeout: 15000 });
+    good('a line written by hand appears in the books');
+  } catch (e) {
+    bad('a line written by hand appears in the books',
+      `after writing an adjustment the books say "${(await staff.locator('#ledger')
+        .innerText().catch(() => '—')).trim().slice(0, 200)}" — the memo is what identifies `
+      + 'the line, and a write nobody can read back is a write nobody can review');
+  }
+
+  /* AND THE TABLE WAS NOT ALREADY SHOWING IT, which is what makes the line
+     above about the write rather than about the fixture. */
+  if (booksBefore.includes(memo)) {
+    bad('the books were empty of this line before it was written',
+      'the memo carries this run\'s stamp and the table already held it, so the check '
+      + 'above would pass without anything having been written');
+  } else {
+    good('the books were empty of this line before it was written');
+  }
+
   await done(staff);
 } finally {
   await browser.close();
