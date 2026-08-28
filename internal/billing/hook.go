@@ -152,6 +152,29 @@ func aboutTheKey(event string) (slog.Level, string, bool) {
 	return 0, "", false
 }
 
+/*
+amountOf is the provider's amount as text, however they chose to write it.
+
+	A JSON number and a JSON string of the same digits mean the same money, and
+	which one arrives is theirs to change without telling anybody. This takes the
+	bytes as they came and removes the quotes if there were any; what the digits
+	MEAN is `billing.Parse`'s business, and what an unreadable one does is the
+	settlement's.
+*/
+func amountOf(raw json.RawMessage) string {
+	text := strings.TrimSpace(string(raw))
+	if len(text) >= 2 && text[0] == '"' && text[len(text)-1] == '"' {
+		var unquoted string
+		if err := json.Unmarshal(raw, &unquoted); err == nil {
+			return unquoted
+		}
+	}
+	if text == "null" {
+		return ""
+	}
+	return text
+}
+
 // delivery is the part of their payload this platform reads.
 type delivery struct {
 	// ID is the event's own id. It is read to be logged and is NOT what
@@ -166,6 +189,28 @@ type delivery struct {
 		// Reference is ours. It is the checkout's id, put on the charge when it
 		// was created, and it is the first way home.
 		Reference string `json:"externalReference"`
+
+		/* Value IS WHAT MOVED, AND IT IS NOT THE SAME AS WHAT WAS SOLD.
+
+		   It was not read at all until an instalment plan proved it had to be.
+		   A split of R$ 1.090,00 in three arrives as THREE events carrying one
+		   reference and three ids — 363.33, 363.33, 363.34 — and the settlement
+		   recorded the checkout's amount against each, so a ledger keyed by the
+		   charge wrote the price three times over.
+
+		   RAW, AND NEVER A FLOAT. It keeps the digits the provider sent, as
+		   text, for `billing.Parse` to read exactly. Decoding money into a
+		   float64 is the mistake `Money` exists to make unwritable, and a struct
+		   tag is the one place it can sneak back in.
+
+		   AND `json.RawMessage` RATHER THAN `json.Number`, which was the first
+		   choice and was wrong in a way worth keeping written down: `json.Number`
+		   refuses a JSON string, so the day this provider sends `"value":"363.33"`
+		   instead of `363.33` the WHOLE DELIVERY fails to decode, the endpoint
+		   answers 400, and a sequential queue stops for every student — over a
+		   field that is a detail of one row. Raw accepts either and the reading
+		   happens where a bad value can be survived. */
+		Value json.RawMessage `json:"value"`
 
 		Status string `json:"status"`
 	} `json:"payment"`
@@ -251,7 +296,7 @@ func Hook(token string, settle *Settlement, log *slog.Logger) http.Handler {
 		}
 
 		switch err := settle.Apply(r.Context(), what, one.Payment.Reference,
-			one.Payment.ID); {
+			one.Payment.ID, amountOf(one.Payment.Value)); {
 		case errors.Is(err, ErrNoIntent):
 			/* AN EVENT ABOUT A CHARGE THIS PLATFORM DID NOT MAKE. It happens on
 			   a sandbox somebody has been clicking around in, and it would
