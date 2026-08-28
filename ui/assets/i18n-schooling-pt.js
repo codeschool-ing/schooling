@@ -318,6 +318,17 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
      once, about a year somebody had paid for in full. */
   'not recorded': 'não registrado',
 
+  /* ---------- a tab open since before the last release ----------
+
+     "atualização" AND NOT "versão". A student is not maintaining software and
+     does not have a version; what happened, from where they are sitting, is
+     that the site was updated while their page sat there. And the second
+     sentence hands the moment back to them on purpose — this platform has
+     timed exams, and nothing here reloads anything by itself. */
+  'This page has been open since before the last update. Reload it when you are ready.':
+    'Esta página está aberta desde antes da última atualização. Recarregue quando quiser.',
+  'Reload': 'Recarregar',
+
   'waiting for payment': 'aguardando pagamento',
   'not paid': 'não foi paga',
   'not finished': 'não concluída',

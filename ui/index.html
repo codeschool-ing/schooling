@@ -62,7 +62,7 @@ try{if(localStorage.getItem('codeschool-theme')==='light')document.documentEleme
      exception; here it is nearly the whole page, and that is why it moved out
      of i18n-runtime.js and became configuration — the file stays identical to
      the one over there. -->
-<script>window.I18N_DYNAMIC = ['#content', '#rail', '#nav-context', '#account-menu', '#verify-banner', '#viewing-banner', '.drop-current'];</script>
+<script>window.I18N_DYNAMIC = ['#content', '#rail', '#nav-context', '#account-menu', '#verify-banner', '#viewing-banner', '#stale-banner', '.drop-current'];</script>
 
 
 <!-- The local stylesheets first, and the only ones that block the first paint.
@@ -137,6 +137,21 @@ try{if(localStorage.getItem('codeschool-theme')==='light')document.documentEleme
      because it is not a notice about the page — it is a statement that the page
      is not what it appears to be. -->
 <div class="viewing-banner" id="viewing-banner" role="alert" hidden></div>
+
+<!-- A TAB THAT HAS BEEN OPEN SINCE BEFORE THE LAST RELEASE. The caching is
+     correct and does not help: every file revalidates and a deploy invalidates
+     all of them at once, but a tab that never reloads never asks again. It runs
+     what it has, in memory, until somebody reloads it.
+
+     It is at the FOOT of the window rather than at the top, and that is the
+     whole reason it is a separate element from the two above: neither of those
+     is about the page, and this one is about nothing else. Pushing a screen
+     down to say so would make the notice cost more than what it reports.
+
+     `role="status"` and not `alert`: nothing is wrong, nothing is urgent, and
+     nothing here is going to reload anything by itself — this platform has
+     timed exams. -->
+<div class="stale-banner" id="stale-banner" role="status" hidden></div>
 
 <div class="portal">
   <!-- Rail: answers "where am I" and "how much is left" without a click. It

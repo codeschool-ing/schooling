@@ -596,6 +596,54 @@ try {
     await check(student, `${theme} · the dashboard`, '/#/dashboard', '/dashboard');
     await check(student, `${theme} · certificates`, '/#/certificates', '/certificates');
 
+    /* THE TAB THAT HAS BEEN OPEN SINCE BEFORE THE LAST RELEASE.
+
+       IT IS REACHED THE WAY A DEPLOY REACHES IT, which is the only way this
+       suite is willing to reach a state. `release.js` records what `/version`
+       said when the page loaded and asks again when the tab is returned to; so
+       the deploy is performed by making the second answer a different build,
+       and the return is the event a browser fires when somebody looks back at a
+       tab. No hook in the product, no state set from outside — the same two
+       requests and the same comparison a real release goes through.
+
+       WITHOUT THIS IT WOULD NEVER BE DRAWN. Every other screen here exists on
+       an ordinary day; this one exists for about a day per release, on the
+       machines of people who had a tab open, and nobody would ever think to
+       look at it. That is the exact shape of the defect the verify banner had —
+       written, styled, and never once rendered, so its contrast was wrong on
+       nineteen screens until something made it appear. */
+    /* THE DEPLOY IS EVERY ANSWER FROM NOW ON, and it can be, because the tab
+       recorded what it is running when the document loaded — at the sign-up,
+       several checks ago. `check` moves between screens by changing the
+       fragment, which is not a document load, so nothing here asks `/version`
+       again until the return to the tab below.
+
+       AND IF THAT EVER STOPS BEING TRUE the check fails rather than passing
+       quietly: a reload under this route would record v99 as the tab's own
+       build, the comparison would find nothing, the banner would not appear and
+       `act` would time out saying so. The failure mode of the assumption is a
+       red run, not a green one that measured nothing. */
+    await student.route('**/version', (r) => r.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        version: 'v99.0.0', commit: 'deadbeef', built: '2099-01-01T00:00:00Z',
+        released: true,
+      }),
+    }));
+
+    await check(student, `${theme} · a tab from before the last release`,
+      '/#/dashboard', '/dashboard', {
+        async act(page) {
+          // Looking back at the tab. `visibilityState` is already 'visible', so
+          // the event is the whole of what the browser would contribute.
+          await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+          await page.waitForSelector('#stale-banner:not([hidden]) .sb-reload',
+            { timeout: 8000 });
+        },
+      });
+    await student.unroute('**/version');
+
     /* MY ACCOUNT, WHICH THE MENU LINKED TO BEFORE IT EXISTED. Two screens in
        one: the account as it sits, and the enrolment the second factor needs —
        a secret to read off the screen and a code to type back. The second is
