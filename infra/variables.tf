@@ -109,6 +109,24 @@ variable "mail_reply_to" {
   default     = ""
 }
 
+/* Where somebody writes when only a person will do.
+
+   IT EXISTS BECAUSE THE TERMS OF USE PROMISE SOMETHING. Seven days to withdraw
+   from a purchase, whole amount, no reason — art. 49 of the Código de Defesa do
+   Consumidor, and not ours to narrow. The account screen names the deadline
+   with or without this and names the ADDRESS only with it, so a deployment that
+   leaves it empty publishes a right and no way to use it.
+
+   EMPTY IS ALLOWED FOR THE SAME REASON THE MAIL PAIR ABOVE IS. A default would
+   be a guess at somebody's domain, and a deployment whose terms differ owes
+   nothing here. What it is NOT is a detail: a promise nobody can act on is
+   worse than no promise, because the document is evidence. */
+variable "support_email" {
+  description = "Where a student writes to use the seven-day withdrawal. Empty names no address."
+  type        = string
+  default     = ""
+}
+
 /* The name half of the delivery hook's credential.
 
    IT IS HERE AND ITS PASSWORD IS IN THE SECRET MANAGER, which is the split
