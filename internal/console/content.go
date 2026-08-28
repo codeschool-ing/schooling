@@ -284,6 +284,9 @@ func (h *ContentHandler) settle(w http.ResponseWriter, r *http.Request) {
 		"content.report.settled",
 		Subject{Kind: "content", ID: where},
 		Changed{Before: "reported as " + about.Reason, After: "settled as " + in.Verdict},
+		// The verdict IS the reason on this one: an operator settling a report
+		// is answering a question, and the answer is already in `after`.
+		"",
 		web.RequestIDFrom(r.Context())); err != nil {
 
 		web.LoggerFrom(r.Context()).Error("recording a settled report", "error", err)

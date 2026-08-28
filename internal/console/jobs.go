@@ -320,6 +320,9 @@ func (h *JobsHandler) start(w http.ResponseWriter, r *http.Request) {
 		"job.started",
 		Subject{Kind: "job", ID: name},
 		Changed{Before: was(recent), After: "asked to run now"},
+		// Nobody is asked why they started a job, and nobody should be: the
+		// schedule is unchanged and the run happens tonight anyway.
+		"",
 		web.RequestIDFrom(r.Context())); err != nil {
 
 		web.LoggerFrom(r.Context()).Error("recording a job start", "error", err, "job", name)

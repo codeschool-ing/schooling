@@ -137,6 +137,21 @@ const (
 	// and the other is a dispute, and a system that recorded them as the same
 	// thing could not tell an operator which conversation to have.
 	EventChargedBack Event = "charged-back"
+
+	/* EventGranted is time given rather than sold — an outage, a support case
+	   that took a fortnight, somebody charged for a week they could not study.
+
+	   IT DOES EXACTLY WHAT `EventPaid` DOES, AND IS A DIFFERENT WORD ON PURPOSE.
+	   The state machine cannot tell the two apart and should not try: both
+	   extend a term, and both revive a subscription that had lapsed. What
+	   differs is everything around it — a payment has a ledger row behind it
+	   and a grant has none, because no money moved.
+
+	   Recording it as `paid` would have been one word cheaper and would have
+	   put a sale in the log that nobody made. A year later, "why is the money
+	   short against the terms we sold" would be answered by counting rows that
+	   were never money, and nothing would be left to tell the two apart. */
+	EventGranted Event = "granted"
 )
 
 // Transition is what an event did, or why it could not.
@@ -190,6 +205,20 @@ func Advance(s Subscription, e Event, at time.Time, paidThrough time.Time) (Subs
 			return s, fmt.Errorf("%w: it is already over", ErrNotFromHere)
 		}
 		return Subscription{Model: s.Model, State: StateEnded, PaidThrough: at}, nil
+	}
+
+	/* A GRANT IS A PAYMENT AS FAR AS THIS FUNCTION IS CONCERNED, and folding it
+	   in here is the whole of the difference rather than a shortcut.
+
+	   Time given and time sold do the same thing to access: they extend a term,
+	   and they revive a subscription that had lapsed. Writing a second set of
+	   arms for `EventGranted` would be writing the same table twice, and the
+	   day somebody fixed one of them the other would be the bug.
+
+	   What must NOT be folded is anything outside this file. A grant has no
+	   ledger row and the log records its own word — see `EventGranted`. */
+	if e == EventGranted {
+		e = EventPaid
 	}
 
 	switch s.State {
@@ -311,7 +340,9 @@ func receivable(model Model, e Event) error {
 		return fmt.Errorf("%w: %q is not a kind of subscription", ErrNotThisModel, model)
 	}
 	switch e {
-	case EventPaid, EventCancelled, EventRefunded, EventChargedBack:
+	// A GRANT IS RECEIVABLE BY BOTH, like a payment and for the same reason: it
+	// extends a term, and both machines have one.
+	case EventPaid, EventGranted, EventCancelled, EventRefunded, EventChargedBack:
 		return nil
 	case EventPaymentFailed, EventRetriesExhausted:
 		if model == ModelInstalments {

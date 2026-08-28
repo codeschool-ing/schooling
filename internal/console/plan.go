@@ -150,6 +150,13 @@ func (h *PlanHandler) setPrice(w http.ResponseWriter, r *http.Request) {
 			Before: money(was.Cents, was.Currency),
 			After:  money(asked.Cents, currency),
 		},
+		/* NO REASON ON THIS ONE YET, and it is the write that most deserves
+		   one — "why is the year twenty reais dearer since June" is exactly
+		   the question this log should answer. The screen does not ask for a
+		   sentence, and inventing one here would be the console explaining a
+		   decision it did not make. Adding the field to that form is a change
+		   to that screen and belongs with it. */
+		"",
 		web.RequestIDFrom(r.Context())); err != nil {
 
 		web.LoggerFrom(r.Context()).Error("recording a price change", "error", err)

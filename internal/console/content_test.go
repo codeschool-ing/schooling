@@ -78,7 +78,7 @@ func (f *queueFake) handler() http.Handler {
 			NotThere:       func(err error) bool { return errors.Is(err, errGone) },
 		},
 		func(_ context.Context, _ uuid.UUID, _, action string,
-			subject console.Subject, what console.Changed, _ string) error {
+			subject console.Subject, what console.Changed, _, _ string) error {
 			if f.failLog {
 				return fmt.Errorf("the audit is not writable")
 			}

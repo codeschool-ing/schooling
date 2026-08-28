@@ -685,3 +685,132 @@ func TestPayingAfterItLapsedStartsFromTodayAndNotFromTheLapse(t *testing.T) {
 			again.PaidThrough.Format(time.DateOnly), want.Format(time.DateOnly))
 	}
 }
+
+/*
+TestGrantedTimeIsAddedAndIsNotASale.
+
+	THE CONSOLE NEEDED THIS AND THE STATE MACHINE ALREADY HAD HALF OF IT. An
+	operator making good on an outage was, until now, a person with a SQL
+	client — and the honest version of that act has two halves the machine could
+	not express together: extend the term, and do NOT say it was bought.
+*/
+func TestGrantedTimeIsAddedAndIsNotASale(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	ctx := context.Background()
+
+	first := begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	given, err := s.Grant(ctx, account, "", 30, day(0))
+	if err != nil {
+		t.Fatalf("granting a month: %v", err)
+	}
+
+	want := first.PaidThrough.AddDate(0, 0, 30)
+	if !given.PaidThrough.Equal(want) {
+		t.Errorf("thirty days on top of a running year ended at %s, want %s",
+			given.PaidThrough.Format(time.DateOnly), want.Format(time.DateOnly))
+	}
+
+	// AND ON THE ROW, because `apply` builds the answer in memory — which is
+	// how a renewal was rolled back for as long as the file existed.
+	stored, err := s.Of(ctx, account, "", day(0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !stored.PaidThrough.Equal(given.PaidThrough) {
+		t.Errorf("the answer says %s and the row says %s",
+			given.PaidThrough.Format(time.DateOnly), stored.PaidThrough.Format(time.DateOnly))
+	}
+
+	/* THE LOG SAYS `granted` AND NOT `paid`, which is the half that is easy to
+	   lose and impossible to recover. Recorded as a payment, this would be a
+	   sale nobody made, counted against revenue a year later by somebody
+	   wondering where the money went. */
+	lines, err := s.History(ctx, account)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(lines) != 2 {
+		t.Fatalf("a purchase and a grant left %d lines", len(lines))
+	}
+	if lines[0].Event != billing.EventGranted {
+		t.Errorf("the grant was logged as %q", lines[0].Event)
+	}
+	if lines[0].LedgerEntryID != nil {
+		t.Error("the grant names a ledger row, so somewhere it was written down as money")
+	}
+
+	// AND NO MONEY MOVED. The ledger is what says it did, and it must be empty.
+	var rows int
+	if err := pool.QueryRow(ctx,
+		`SELECT count(*) FROM ledger_entries WHERE account_id = $1`, account).Scan(&rows); err != nil {
+		t.Fatal(err)
+	}
+	if rows != 0 {
+		t.Errorf("granting time wrote %d ledger rows", rows)
+	}
+}
+
+// A GRANT REVIVES A TERM THAT RAN OUT, and starts from today rather than from
+// the day it lapsed — the same rule a payment follows, because giving somebody
+// thirty days three months after their access stopped must be thirty days they
+// can use.
+func TestGrantingAfterItLapsedStartsFromToday(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	ctx := context.Background()
+
+	begun(t, s, pool, account, billing.ModelInstalments, 12)
+	if _, err := s.Settle(ctx, day(400)); err != nil {
+		t.Fatal(err)
+	}
+
+	given, err := s.Grant(ctx, account, "", 30, day(500))
+	if err != nil {
+		t.Fatalf("granting after it lapsed: %v", err)
+	}
+	if given.State != billing.StateActive {
+		t.Errorf("a grant left a lapsed subscription %s", given.State)
+	}
+	want := day(500).AddDate(0, 0, 30)
+	if !given.PaidThrough.Equal(want) {
+		t.Errorf("it runs to %s, want thirty days from today (%s)",
+			given.PaidThrough.Format(time.DateOnly), want.Format(time.DateOnly))
+	}
+}
+
+/*
+TestGrantingToSomebodyWithNoSubscriptionIsRefused.
+
+	EXTENDING A TERM AND GIVING ONE ARE DIFFERENT ACTS. The second has to say
+	what it was sold at — `price_id` is NOT NULL and is what keeps a March
+	invoice explicable in November — and there is no honest number for a
+	subscription nobody bought. A grant that invented one would put a price in
+	the books that nobody agreed to and nobody paid.
+*/
+func TestGrantingToSomebodyWithNoSubscriptionIsRefused(t *testing.T) {
+	s, pool := store(t)
+
+	_, err := s.Grant(context.Background(), student(t, pool), "", 30, day(0))
+	if !errors.Is(err, billing.ErrNothingToExtend) {
+		t.Errorf("granting to somebody with no subscription gave %v, want ErrNothingToExtend", err)
+	}
+}
+
+// THE PRICE STAYS WHERE IT IS. A grant is not somebody agreeing to a number,
+// and moving the column would rewrite what their running term was sold at with
+// nothing to put in its place.
+func TestAGrantLeavesThePriceAlone(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	first := begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	given, err := s.Grant(context.Background(), account, "", 14, day(0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if given.PriceID != first.PriceID {
+		t.Errorf("a grant moved the price to %s (was %s)", given.PriceID, first.PriceID)
+	}
+}

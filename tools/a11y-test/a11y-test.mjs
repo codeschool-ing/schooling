@@ -969,6 +969,28 @@ try {
       staff.page.url().slice(CONSOLE.length), '/record/:id',
       { base: CONSOLE, region: '#stage', settled: '.block' });
 
+    /* AND THE THREE CONTROLS UNDER IT, WHICH ARE SHUT UNTIL SOMEBODY OPENS
+       THEM. A `details` that has never been opened has its contents out of the
+       accessibility tree entirely, so the check above measures a summary and
+       nothing else — four inputs, a select, and two buttons that would go to
+       production unmeasured.
+
+       IT IS THE DENSEST FORM IN THIS CONSOLE. Every field has a label above it
+       in `--paper-dim` on the panel, which is the arrangement axe has already
+       caught twice in this stylesheet, and one of the buttons is the only
+       `.btn-bad` on any record. */
+    await check(staff.page, `${theme} · console, changing what somebody holds`,
+      staff.page.url().slice(CONSOLE.length), '/record/:id', {
+        base: CONSOLE,
+        region: '#stage',
+        settled: '.sub-change',
+        async act(page) {
+          await page.locator('.sub-change summary').click();
+          await page.waitForSelector('.sub-form[data-do=adjust] [name=amount]',
+            { timeout: 8000 });
+        },
+      });
+
     /* THE SCHOOLS SCREEN, WHICH IS THE ONE PLACE THE CONSOLE CHANGES SOMETHING
        RATHER THAN READING IT — and the one screen here whose subject is colour,
        which makes measuring it with axe both obvious and easy to get wrong.

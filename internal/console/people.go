@@ -100,8 +100,22 @@ type People struct {
 // auditing. Somebody who needs to connect an entry to a person has the ticket
 // they were answering, which is outside this system and is where that link
 // belongs.
+//
+// # AND WHY, IN THE ACTOR'S OWN WORDS
+//
+// `audit_log.reason` has existed since the table did, and the screen that reads
+// the history already draws it. Nothing ever set it: this seam had no parameter
+// for one, so every entry the console has written carries an empty string
+// there. The erasure was the sharpest version of that — the handler read a
+// `reason` off the request body and dropped it on the floor, so somebody typing
+// why they were erasing a person was typing into nothing.
+//
+// It matters most for the writes that move money or time. `before` and `after`
+// say what changed and can never say what for: "sixty days, because we lost
+// their fortnight to the March outage" is not derivable from two dates, and it
+// is the whole of what somebody reviewing this a year later came for.
 type Record func(ctx context.Context, actor uuid.UUID, actorLabel, action string,
-	subject Subject, what Changed, requestID string) error
+	subject Subject, what Changed, reason, requestID string) error
 
 // Subject is what an entry is about.
 //
@@ -248,7 +262,12 @@ func (h *PeopleHandler) export(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !h.wrote(w, r, "personal-data.export", id, counts(held)) {
+	/* NO REASON ON AN EXPORT, and that is not an omission. Nobody is asked for
+	   one — the screen is a button — and a sentence written here would be this
+	   console describing its own behaviour rather than an actor explaining
+	   themselves. The erasure below asks, because somebody is already typing
+	   the address to confirm it. */
+	if !h.wrote(w, r, "personal-data.export", id, counts(held), "") {
 		return
 	}
 
@@ -312,7 +331,10 @@ func (h *PeopleHandler) erase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !h.wrote(w, r, "personal-data.erase", id, counts(held)) {
+	/* AND THE REASON THEY TYPED, WHICH USED TO GO NOWHERE. It was read off the
+	   body and dropped: an operator explaining an irreversible act was writing
+	   into a field this code discarded. */
+	if !h.wrote(w, r, "personal-data.erase", id, counts(held), strings.TrimSpace(in.Reason)) {
 		return
 	}
 
@@ -353,7 +375,7 @@ func subject(w http.ResponseWriter, r *http.Request) (uuid.UUID, bool) {
 // people leave, and an entry reading "erased an account, actor 9f2c…" a year
 // later is not an answer.
 func (h *PeopleHandler) wrote(w http.ResponseWriter, r *http.Request,
-	action string, subject uuid.UUID, what any) bool {
+	action string, subject uuid.UUID, what any, why string) bool {
 
 	/* THE COUNTS SIT ON THE `before` SIDE, and for an erasure that is exactly
 	   what they are: how much was there, before it was not. An export changes
@@ -377,7 +399,7 @@ func (h *PeopleHandler) wrote(w http.ResponseWriter, r *http.Request,
 
 	if err := h.record(r.Context(), actor, label, action,
 		Subject{Kind: "account", ID: subject.String()}, Changed{Before: what},
-		web.RequestIDFrom(r.Context())); err != nil {
+		why, web.RequestIDFrom(r.Context())); err != nil {
 		web.LoggerFrom(r.Context()).Error("recording a console action", "error", err, "action", action)
 		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
 			"that was not recorded, so it was not done")

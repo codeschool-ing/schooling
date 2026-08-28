@@ -134,7 +134,7 @@ export async function record(params) {
        subscription covers every school (N-02), and it is also the first thing
        asked on nearly every support message — so it sits above the schools
        rather than being hunted for inside one of them. */
-    holding(it.holding) +
+    holding(it.holding, person.id) +
 
     (it.schools.length
       ? it.schools.map((s) => atSchool(s, person.id)).join('')
@@ -175,6 +175,127 @@ export async function record(params) {
       button.disabled = false;
     }
   });
+
+  /* THE THREE CHANGES, ON ONE LISTENER. Every form under the fold posts, says
+     what happened in its own line, and — for the two that move a term —
+     redraws the block above it from the answer rather than from what the page
+     was holding when it loaded.
+
+     IT IS DELEGATED RATHER THAN BOUND PER FORM, because that block is replaced
+     wholesale after a change and listeners bound to the old markup would go
+     with it. */
+  el.addEventListener('submit', async (event) => {
+    const form = event.target.closest('.sub-form');
+    if (!form) return;
+    event.preventDefault();
+
+    const what = form.dataset.do;
+    const said = form.querySelector('.sub-said');
+    const person = form.closest('.sub-change').dataset.person;
+    const field = (name) => form.querySelector('[name=' + name + ']');
+    const why = field('why').value.trim();
+
+    const tell = (text, bad) => {
+      said.className = 'sub-said' + (bad ? ' bad' : '');
+      said.textContent = text;
+    };
+
+    /* CHECKED HERE SO SOMEBODY WHO MISTYPED IS TOLD AT ONCE, and checked again
+       by the API, which refuses the same things for the same reasons and has
+       tests. This is the courtesy; that one is the rule. */
+    if (!why) {
+      tell('Say why. It is written down, and a change nobody can account for is worse '
+        + 'than one that did not happen.', true);
+      return;
+    }
+
+    let where = '/console/api/v1/people/' + encodeURIComponent(person);
+    const body = { why };
+
+    if (what === 'extend') {
+      const days = Number(field('days').value);
+      if (!Number.isInteger(days) || days < 1 || days > 366) {
+        tell('Between one day and a year. More than that is two grants, and the second '
+          + 'entry in the history is the record that you meant it.', true);
+        return;
+      }
+      where += '/subscription/extend';
+      body.days = days;
+    } else if (what === 'cancel') {
+      where += '/subscription/cancel';
+    } else {
+      const cents = asCents(field('amount').value);
+      const currency = field('currency').value.trim().toUpperCase();
+      if (cents === null || cents === 0) {
+        tell('An amount, like 69 or 69,00. An adjustment of nothing is not a correction.', true);
+        return;
+      }
+      if (!/^[A-Z]{3}$/.test(currency)) {
+        tell('A currency is three letters, ISO 4217 — BRL, EUR, USD.', true);
+        return;
+      }
+      where += '/ledger/adjustment';
+      /* THE SIGN IS PUT ON HERE, FROM THE WORD THEY CHOSE. The ledger counts
+         what a student paid us, so a credit to them is negative — and that is
+         a convention nobody should have to hold in their head while typing a
+         number into a box. */
+      body.cents = field('way').value === 'credit' ? -cents : cents;
+      body.currency = currency;
+    }
+
+    const button = form.querySelector('button[type=submit]');
+    button.disabled = true;
+    tell('Saving…');
+    try {
+      const answer = await post(where, body);
+
+      if (what === 'adjust') {
+        tell('Written. It is in the books and nowhere else — the gateway was not told, '
+          + 'and no money has moved because of it.');
+        form.reset();
+      } else {
+        /* THE BLOCK IS REDRAWN FIRST AND THE ANSWER WRITTEN AFTERWARDS, which
+           is the wrong way round only until you try it. `redraw` replaces the
+           whole section — including this form and the line being written into
+           — so a message set before it is thrown away by the thing that proves
+           it worked, and the operator sees a screen that changed and says
+           nothing about why. */
+        redraw(answer, person);
+        say(what, what === 'extend'
+          ? 'Given, and recorded as a grant rather than a sale.'
+          : 'Cancelled. What they paid for still stands to the date above.');
+      }
+    } catch (e) {
+      tell(e instanceof RequestError && e.status === 403
+        ? 'That asks for an operator.'
+        : e.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  /* REDRAWN FROM THE ANSWER AND NOT FROM A SECOND REQUEST. The API answers the
+     new standing, so asking again would be one more round trip and one more
+     chance to draw a screen from a moment that is not the one just changed. */
+  function redraw(answer, person) {
+    const block = el.querySelector('#holding');
+    if (!block || !answer) return;
+    block.innerHTML = holdingInside(answer, person);
+    // The fold was open — somebody was working in it — and a section that
+    // closed itself after every change would make the second change a hunt.
+    const open = block.querySelector('.sub-change');
+    if (open) open.open = true;
+  }
+
+  // say writes into the form that exists NOW, which after a redraw is not the
+  // one the submit handler was holding.
+  function say(what, text) {
+    const said = el.querySelector('.sub-form[data-do="' + what + '"] .sub-said');
+    if (said) {
+      said.className = 'sub-said';
+      said.textContent = text;
+    }
+  }
 
   return { title: person.name, el };
 }
@@ -253,12 +374,17 @@ function atSchool(s, personId) {
    so an operator can give it back rather than tell them to start again, which
    would open a second checkout for one sale.
    ========================================================================== */
-function holding(h) {
+function holding(h, personId) {
+  return '<section class="block" id="holding">' + holdingInside(h, personId) + '</section>';
+}
+
+// holdingInside is redrawn on its own after a change, so an operator sees the
+// row they just moved rather than the one the page loaded with.
+function holdingInside(h, personId) {
   if (!h) {
-    return '<section class="block">' +
-      '<div class="block-top"><h2>Subscription</h2></div>' +
+    return '<div class="block-top"><h2>Subscription</h2></div>' +
       '<p class="none">They have never bought anything, and never tried to.</p>' +
-    '</section>';
+      changes(personId, false);
   }
 
   const bought = h.purchases || [];
@@ -271,8 +397,7 @@ function holding(h) {
     ? money(paid.reduce((n, p) => n + p.cents, 0), paid[0].currency)
     : null;
 
-  return '<section class="block">' +
-    '<div class="block-top">' +
+  return '<div class="block-top">' +
       '<h2>Subscription</h2>' +
       '<span class="block-score mono">every school</span>' +
     '</div>' +
@@ -323,7 +448,132 @@ function holding(h) {
         ' Not the ledger: an instalment plan is one sale here and one row per ' +
         'collection there.</p>'
       : '') +
-  '</section>';
+
+    changes(personId, Boolean(h.state));
+}
+
+/* ==========================================================================
+   AND WHAT AN OPERATOR MAY DO ABOUT IT.
+
+   IT IS FOLDED SHUT AND IT IS THE ONLY THING ON THIS SCREEN THAT IS. Everything
+   above answers a question somebody already has; this is three ways to change
+   what a person holds, and a form standing open beside a record somebody is
+   reading over the telephone is a form that gets used by the hand rather than
+   by the decision. The report control in the study interface is shut for the
+   same reason and says so.
+
+   EVERY ONE ASKS WHY, AND THE FIELD IS NOT OPTIONAL. `before` and `after` say
+   what changed and can never say what for; two dates do not explain sixty free
+   days. The API refuses an empty one — a screen that merely asked politely
+   would leave the field empty in exactly the rows somebody goes looking for —
+   and this asks first so the refusal is not how somebody finds out.
+
+   A READ-ONLY ROLE SEES NONE OF IT. That is not the check: the API refuses, and
+   there is a test for it. A control that always fails is simply a bad screen.
+   ========================================================================== */
+function changes(personId, hasSubscription) {
+  if (!mayAct()) {
+    return '<p class="sub-note">A read-only role may read this and not change it.</p>';
+  }
+
+  return '<details class="sub-change" data-person="' + esc(personId) + '">' +
+    '<summary>Change something</summary>' +
+    '<div class="sub-forms">' +
+
+      /* GIVING TIME, AND THE SENTENCE SAYS WHAT IT IS NOT. "Extend" reads like
+         a renewal; this is a gift, it is written down as one, and the ledger
+         will not show it because no money moved. */
+      '<form class="sub-form" data-do="extend" novalidate>' +
+        '<h3 class="eyebrow mono">Give time</h3>' +
+        '<p class="sub-note">Time nobody paid for — an outage, a fortnight lost to ' +
+          'support. It is recorded as a grant and not as a sale, so it will not appear ' +
+          'in the purchases above and no money is written anywhere.</p>' +
+        (hasSubscription ? '' :
+          '<p class="none">They have no subscription to extend. Giving somebody a term ' +
+            'is not this: a subscription has to say what it was sold at, and there is no ' +
+            'honest answer for one nobody bought.</p>') +
+        '<div class="sub-bar">' +
+          '<label class="sub-field"><span>Days</span>' +
+            '<input name="days" type="number" min="1" max="366" step="1" ' +
+              'inputmode="numeric" autocomplete="off"' +
+              (hasSubscription ? '' : ' disabled') + '></label>' +
+          '<label class="sub-field sub-why"><span>Why</span>' +
+            '<input name="why" type="text" autocomplete="off" ' +
+              'placeholder="the March outage cost them a fortnight"' +
+              (hasSubscription ? '' : ' disabled') + '></label>' +
+          '<button type="submit" class="btn btn-primary"' +
+            (hasSubscription ? '' : ' disabled') + '>Give it</button>' +
+        '</div>' +
+        '<p class="sub-said" aria-live="polite"></p>' +
+      '</form>' +
+
+      /* CANCELLING, AND THE SENTENCE HAS TO CORRECT AN EXPECTATION. Everybody
+         reads "cancel" as "cut off now". Here the paid term stands and what
+         stops is the renewal notice — which is the opposite of what an
+         operator would tell a student if this screen did not say so. */
+      '<form class="sub-form" data-do="cancel" novalidate>' +
+        '<h3 class="eyebrow mono">Cancel</h3>' +
+        '<p class="sub-note">This does NOT cut their access. Every purchase here is a ' +
+          'term bought outright and the paid period is honoured to its end — what stops ' +
+          'is the reminder that it is about to run out.</p>' +
+        (hasSubscription ? '' : '<p class="none">They have no subscription to cancel.</p>') +
+        '<div class="sub-bar">' +
+          '<label class="sub-field sub-why"><span>Why</span>' +
+            '<input name="why" type="text" autocomplete="off" ' +
+              'placeholder="they asked to stop, ticket 812"' +
+              (hasSubscription ? '' : ' disabled') + '></label>' +
+          '<button type="submit" class="btn btn-bad"' +
+            (hasSubscription ? '' : ' disabled') + '>Cancel it</button>' +
+        '</div>' +
+        '<p class="sub-said" aria-live="polite"></p>' +
+      '</form>' +
+
+      /* THE ESCAPE HATCH, AND THE SIGN IS THE WHOLE DANGER. Which way the
+         money went is what an operator gets backwards at four in the
+         afternoon, so it is a choice between two words rather than a minus
+         sign somebody has to remember to type. */
+      '<form class="sub-form" data-do="adjust" novalidate>' +
+        '<h3 class="eyebrow mono">Adjust the ledger</h3>' +
+        '<p class="sub-note">One line in the books for money that moved outside the ' +
+          'gateway: a bank transfer, a write-off, a goodwill credit. It tells the ' +
+          'gateway NOTHING — no money moves because of this, it records that money ' +
+          'moved somewhere else.</p>' +
+        '<div class="sub-bar">' +
+          '<label class="sub-field"><span>Direction</span>' +
+            '<select name="way">' +
+              '<option value="credit">Credited to them</option>' +
+              '<option value="charge">Charged to them</option>' +
+            '</select></label>' +
+          '<label class="sub-field"><span>Amount</span>' +
+            '<input name="amount" type="text" inputmode="decimal" autocomplete="off" ' +
+              'placeholder="69,00"></label>' +
+          '<label class="sub-field"><span>Currency</span>' +
+            '<input name="currency" type="text" maxlength="3" autocomplete="off" ' +
+              'spellcheck="false" placeholder="BRL" value="BRL"></label>' +
+          '<label class="sub-field sub-why"><span>Why</span>' +
+            '<input name="why" type="text" autocomplete="off" ' +
+              'placeholder="bank transfer, receipt 4471"></label>' +
+          '<button type="submit" class="btn btn-primary">Write it</button>' +
+        '</div>' +
+        '<p class="sub-said" aria-live="polite"></p>' +
+      '</form>' +
+
+    '</div>' +
+  '</details>';
+}
+
+/*
+asCents reads what somebody typed as an amount.
+
+	BOTH SEPARATORS, because this console is in English and its operators are
+	in Brazil: "69,00" and "69.00" are the same amount typed by the same person
+	on two different days. Anything else is refused rather than guessed — a
+	silent zero here writes the wrong number into the books.
+*/
+function asCents(text) {
+  const cleaned = String(text || '').trim().replace(/\s/g, '').replace(',', '.');
+  if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) return null;
+  return Math.round(Number(cleaned) * 100);
 }
 
 /* HOW IT WAS PAID, SPELLED OUT. "12x" on its own is a number an operator has to

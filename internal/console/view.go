@@ -159,6 +159,9 @@ func (h *ViewHandler) start(w http.ResponseWriter, r *http.Request) {
 		"student.viewed",
 		Subject{Kind: "account", ID: student.String()},
 		Changed{After: "started viewing this student's screens on " + school.Slug},
+		// K-02 asks for the record and not for an essay. What a viewing is for
+		// is in the ticket that prompted it, which lives outside this system.
+		"",
 		web.RequestIDFrom(r.Context())); err != nil {
 
 		web.LoggerFrom(r.Context()).Error("recording a viewing", "error", err)

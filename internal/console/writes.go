@@ -119,6 +119,33 @@ var Writes = []Write{
 			"and the row it closes is the student's rather than the platform's",
 	},
 	{
+		Route: "POST /console/api/v1/people/{id}/subscription/extend",
+		Kind:  Action,
+		Why: "giving somebody time nobody paid for — an outage, a fortnight lost to support. " +
+			"It happens once and leaves no dial at a new position: their term is longer and " +
+			"nothing about the platform behaves differently afterwards. The CEILING on it " +
+			"is in code rather than settable, because the mistake it guards against is a " +
+			"typed zero and there is no right answer to make configurable",
+	},
+	{
+		Route: "POST /console/api/v1/people/{id}/subscription/cancel",
+		Kind:  Action,
+		Why: "stopping the renewal notices. It does NOT take access away — every purchase " +
+			"here is a term bought outright and the paid period is honoured — so what it " +
+			"changes today is that nobody writes to somebody about renewing a thing they " +
+			"have already said they are leaving",
+	},
+	{
+		Route: "POST /console/api/v1/people/{id}/ledger/adjustment",
+		Kind:  Action,
+		Why: "one line in the ledger for money that moved outside the gateway: a bank " +
+			"transfer, a write-off, a goodwill credit, an amount keyed wrongly once. It is " +
+			"the escape hatch and is supposed to look like one — everything else this " +
+			"console does is a shape the system understands, and this is the one that says " +
+			"something happened that none of them describe. It tells the gateway nothing: " +
+			"no money moves because of this row, it records that money moved elsewhere",
+	},
+	{
 		Route: "POST /console/api/v1/jobs/{job}/run",
 		Kind:  Action,
 		Why: "asking for a run of a scheduled job now rather than waiting for tonight. It " +
