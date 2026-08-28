@@ -611,6 +611,15 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   reach it (`identity.RefuseWrites`), which is K-02 doing its job on the one
 	   route where an operator acting as somebody else would be spending their
 	   money. */
+	/* WHAT SOMEBODY HOLDS, ALWAYS READABLE — and outside the key's condition
+	   below on purpose. Buying needs a gateway; being told what you already
+	   bought does not, and a deployment whose key has been pulled must still
+	   answer its existing subscribers. */
+	billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
+		func(ctx context.Context) (uuid.UUID, bool) {
+			return identity.AccountID(ctx)
+		}).Routes(scoped)
+
 	if cfg.AsaasKey != "" {
 		billing.NewHandler(
 			billing.NewCheckouts(pool, confirmedAddress(accounts)),

@@ -825,6 +825,20 @@ startCheckout asks the school to start a payment and answers where to go.
 	second render — and the server passes it to the gateway and stores only the
 	handle that comes back.
 */
+/*
+subscription is what this account holds, asked of the school.
+
+	IT IS NOT IN THE HYDRATE, deliberately. `pull()` fetches the five things
+	every screen needs before anything paints; this is wanted by one screen and
+	costs a request nobody else should pay for. It is also the answer most likely
+	to be stale in a stored document — a term runs out on a date, not on an
+	action — so reading it when the screen opens is reading it at the only moment
+	it is looked at.
+*/
+export function subscription() {
+  return get('/api/v1/subscription');
+}
+
 export function startCheckout({ termMonths, method, instalments, taxId }) {
   return post('/api/v1/checkout', {
     termMonths,

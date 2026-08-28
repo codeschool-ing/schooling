@@ -71,9 +71,15 @@ type Held struct {
 	   store and hand back, and the amount is read by whoever draws or charges
 	   it. `internal/architecture_test.go` holds that boundary.
 
-	   RENEWALS CHARGE THIS ROW AND NOT WHATEVER IS CURRENT. That is the whole
-	   point of the column, and the half of "prices are effective-dated" that
-	   `school_prices` could not do on its own. */
+	   WHAT IT IS FOR IS EXPLAINING A TERM, NOT PRICING THE NEXT ONE. This said
+	   "renewals charge this row and not whatever is current", which is what
+	   `0036` believed and what `0040` corrected: the terms of use promise the
+	   opposite — a price change applies to new subscriptions AND TO RENEWALS,
+	   with thirty days' notice, never retroactively to a term that is running.
+	   The column survives that correction unchanged, because within a term it is
+	   exactly right and it is the only way a March invoice stays explicable in
+	   November. The comment did not, and a renewal written against it would have
+	   billed somebody the price of a year they bought three years ago. */
 	PriceID uuid.UUID
 
 	StartedAt time.Time

@@ -559,7 +559,13 @@ try {
        a secret to read off the screen and a code to type back. The second is
        reached by pressing the button, because a state nobody can reach from the
        first is a state this suite would be measuring on its own. */
-    await check(student, `${theme} · my account`, '/#/account', '/account');
+    /* MY ACCOUNT, and it now carries a block that asks the server a question.
+       This student has never bought anything, so what is measured is the state
+       almost everybody is in: the block that says so and offers the way. The
+       block with a subscription in it is a `<dl>` of the same shape as the one
+       above it and is not worth a second sign-up to see. */
+    await check(student, `${theme} · my account`, '/#/account', '/account',
+      { settled: '#holding p, #holding .facts' });
     await check(student, `${theme} · setting up a second factor`, '/#/account', '/account', {
       async act(page) {
         await page.locator('#start').click();

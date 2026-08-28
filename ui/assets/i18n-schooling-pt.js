@@ -249,4 +249,29 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
     'Assinar precisa de uma conta. É a ela que a assinatura e tudo o que você estudar ficam ligados.',
   'Already have one? The same screen signs you in.':
     'Já tem uma? A mesma tela faz seu login.',
+
+  /* WHAT YOU HOLD, ON THE ACCOUNT SCREEN. The sentence about renewing is the
+     one that matters most: nothing here renews itself, and somebody who assumes
+     otherwise loses access on a day nobody warned them about. */
+  'Your subscription': 'Sua assinatura',
+  /* NOT 'Checking…', WHICH THIS FILE ALREADY HAS. It belongs to the second
+     factor above and means "conferindo o código"; a duplicate key in an object
+     literal is silent and the LAST one wins, so reusing the string here would
+     have quietly changed a sentence on another screen. */
+  'Reading your subscription…': 'Lendo sua assinatura…',
+  'This could not be read just now. Nothing has changed.':
+    'Não deu para ler isso agora. Nada mudou.',
+  'You do not have one. The first course of every track is free, in full.':
+    'Você não tem uma. O primeiro curso de cada trilha é gratuito, por inteiro.',
+  'See what a subscription opens': 'Veja o que uma assinatura abre',
+  'opens': 'abre',
+  'every course, exam and certificate': 'todos os cursos, provas e certificados',
+  'nothing — it has run out': 'nada — ela venceu',
+  'paid': 'pago',
+  'runs to': 'vale até',
+  'today is the last day': 'hoje é o último dia',
+  'one day left': 'falta um dia',
+  '{n} days left': 'faltam {n} dias',
+  'This does not renew by itself. When the term ends, you buy another.':
+    'Ela não se renova sozinha. Quando o prazo acabar, você compra outro.',
 });

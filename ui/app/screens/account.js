@@ -61,6 +61,12 @@ export default async function account() {
       '</dl>' +
     '</section>' +
 
+    /* WHAT YOU BOUGHT AND UNTIL WHEN, which nothing on this platform could tell
+       anybody until there was a route to ask. Filled after the first paint, like
+       the second factor below it: the account's own facts are already in this
+       browser and should not wait on a request. */
+    '<section class="block" id="holding"></section>' +
+
     '<section class="block" id="factor"></section>' +
 
     /* CHANGING THE ADDRESS, WHICH UNTIL NOW NOTHING COULD DO.
@@ -280,7 +286,124 @@ export default async function account() {
     factor.querySelector('#done').addEventListener('click', showItIsOn);
   }
 
+  /* ---------- what you hold ---------- */
+
+  const holding = el.querySelector('#holding');
+  showHolding();
+
+  async function showHolding() {
+    holding.innerHTML =
+      '<div class="block-top"><h2>' + txt('Your subscription') + '</h2></div>' +
+      '<p class="dim">' + txt('Reading your subscription…') + '</p>';
+
+    let held;
+    try {
+      held = await api.subscription();
+    } catch (e) {
+      /* NOT A BROKEN SCREEN. The rest of this page is about who somebody is and
+         how they get in, and none of it depends on this answer. A subscription
+         that could not be read says so and leaves everything above it alone. */
+      holding.innerHTML =
+        '<div class="block-top"><h2>' + txt('Your subscription') + '</h2></div>' +
+        '<p class="dim">' + txt('This could not be read just now. Nothing has changed.') + '</p>';
+      return;
+    }
+
+    if (!held || held.state === 'none') {
+      holding.innerHTML =
+        '<div class="block-top"><h2>' + txt('Your subscription') + '</h2></div>' +
+        '<p class="dim">' + txt('You do not have one. The first course of every track is free, in full.') + '</p>' +
+        '<p><a class="btn btn-ghost" href="#/subscribe">' + txt('See what a subscription opens') + '</a></p>';
+      return;
+    }
+
+    const ends = held.paidThrough ? new Date(held.paidThrough) : null;
+    const left = ends ? Math.ceil((ends - Date.now()) / 86400000) : null;
+
+    holding.innerHTML =
+      '<div class="block-top"><h2>' + txt('Your subscription') + '</h2></div>' +
+      '<dl class="facts">' +
+        '<dt>' + txt('opens') + '</dt><dd>' +
+          (held.opens ? txt('every course, exam and certificate') : txt('nothing — it has run out')) +
+        '</dd>' +
+        (held.price
+          ? '<dt>' + txt('paid') + '</dt><dd>' +
+            esc(money(held.price.cents, held.price.currency)) + ' · ' +
+            esc(termName(held.price.termMonths)) + '</dd>'
+          : '') +
+        (ends
+          ? '<dt>' + txt('runs to') + '</dt><dd>' + esc(day(ends)) +
+            (left !== null && left >= 0
+              ? ' <span class="dim">' + esc(daysLeft(left)) + '</span>'
+              : '') + '</dd>'
+          : '') +
+      '</dl>' +
+
+      /* WHAT HAPPENS NEXT, SAID BEFORE IT HAPPENS. Nothing on this platform
+         renews itself: every purchase is an instalment plan in the sense that a
+         term is bought and at its end there is a new sale. Somebody who assumes
+         otherwise loses access on a day nobody warned them about, and this is
+         the one screen where the warning fits. */
+      '<p class="dim">' + txt('This does not renew by itself. When the term ends, you buy another.') + '</p>' +
+      (held.opens
+        ? ''
+        : '<p><a class="btn btn-primary" href="#/subscribe">' + txt('Subscribe') + '</a></p>');
+  }
+
   return { title: txt('My account'), el };
+}
+
+/* A date the reader's language writes, without a time on it: what somebody
+   wants from "runs to" is a day, and an hour invites the question of which
+   timezone it is in. */
+function day(when) {
+  const lang = document.documentElement.lang || 'en';
+  try {
+    return new Intl.DateTimeFormat(lang, { dateStyle: 'long' }).format(when);
+  } catch (e) {
+    return when.toISOString().slice(0, 10);
+  }
+}
+
+/* HOW LONG IS LEFT, in whole days, and each branch is its own `txt('literal')`
+   so `check-interface` can see them. One day is its own sentence because "1
+   days" is the kind of thing that makes a paid product look unfinished. */
+function daysLeft(n) {
+  if (n === 0) return txt('today is the last day');
+  if (n === 1) return txt('one day left');
+  return txt('{n} days left').replace('{n}', n);
+}
+
+/* What a number of months is called. It is `screens/subscribe.js`'s function,
+   copied deliberately rather than shared: two screens name a term, the strings
+   are four words each, and the dictionary already holds all four.
+
+   AND THE WORDING OF THIS COMMENT IS LOAD-BEARING, which is worth one line to
+   say. `tools/bundle` links the interface line by line and refuses anything it
+   cannot classify; a line that BEGAN with the word this sentence is avoiding
+   read as a declaration and stopped the build. Prose wraps where it wraps, so
+   the rule is not "do not mention it" but "do not let it start a line". */
+function termName(months) {
+  switch (months) {
+    case 1: return txt('A month');
+    case 12: return txt('A year');
+    case 24: return txt('Two years');
+    default: return months + ' ' + txt('months');
+  }
+}
+
+/* An amount as the reader's language writes it, in the currency the server
+   said — `screens/subscribe.js`'s, in cents for the same reason. */
+function money(cents, currency) {
+  const lang = document.documentElement.lang || 'en';
+  const amount = (cents || 0) / 100;
+  try {
+    return currency
+      ? new Intl.NumberFormat(lang, { style: 'currency', currency }).format(amount)
+      : new Intl.NumberFormat(lang).format(amount);
+  } catch (e) {
+    return String(amount);
+  }
 }
 
 // Five and five, which is how somebody reads a long string off a screen.
