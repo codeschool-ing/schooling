@@ -11,6 +11,45 @@ export const esc = (s) => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
+/* ==========================================================================
+   A count and the noun it counts.
+
+   # "1 TRILHAS"
+
+   Screens across this interface wrote `n + ' ' + txt('tracks')`, which is right
+   for every number except the one a student is most likely to meet. A course in
+   one track said "in 1 tracks"; a course with one lesson said "1 lessons".
+   Portuguese forgives it no more than English does, and it is the kind of
+   wrongness that makes a page look machine-made — which is the one thing a
+   catalogue is trying not to look like.
+
+   # THE TRANSLATION HAPPENS AT THE CALL SITE, AND THAT IS NOT A STYLE CHOICE
+
+   The obvious signature is `counted(n, 'track', 'tracks')`, calling `txt` in
+   here. It would break the tooling. `check-interface` finds what this interface
+   says by matching `txt(` with EXACTLY ONE quoted string inside it, so words
+   passed to a helper as bare literals are invisible to the scan: they would go
+   untranslated, and the check whose entire job is to catch that would report
+   nothing wrong.
+
+   So both words arrive already translated, from two separate `txt` calls the
+   scanner can see. The same rule rules out `txt(n === 1 ? 'track' : 'tracks')`.
+
+   # WHAT IT DELIBERATELY DOES NOT TOUCH
+
+   A FRACTION. `3/8 sections` is not a count of one even when the numerator is,
+   and "1/8 section" would be wrong the other way. Those stay as they are, on
+   the dashboard, in the rail and on the graph's nodes.
+
+   AND IT IS NOT A PLURAL RULE. Two forms is what English and Portuguese need
+   for these nouns. A language with more would want `Intl.PluralRules` and a
+   dictionary keyed by category, which is a different piece of work and one
+   nothing here is asking for yet.
+   ========================================================================== */
+export function counted(n, one, many) {
+  return n + ' ' + (n === 1 ? one : many);
+}
+
 /* `backticks` become <code>, **bold** becomes <strong>. Nothing else — this is
    not Markdown, it is the subset the content actually uses. It escapes BEFORE
    marking up, or the markup would be escaped along with everything else and

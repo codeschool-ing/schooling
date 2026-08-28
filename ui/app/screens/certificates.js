@@ -50,7 +50,7 @@ import { courseDone, activeOption, examPassed, examResult, now } from '../state.
 import { studentTrack } from './common.js';
 import { openModal } from '../modal.js';
 import { downloadCertificatePNG } from '../certificate-png.js';
-import { esc } from '../text.js';
+import { esc, counted } from '../text.js';
 import * as api from '../api.js';
 /* THE SCHOOL'S OWN NAME ON THE CERTIFICATE, and one of the two divergences in
    this file. The portal is one school and writes its brand into the markup;
@@ -250,7 +250,7 @@ function fromServer(cert, { track, onPath }) {
      that is not the one they are on. */
   const mine = isTrack && track && track.id === cert.scopeId;
   const meta = isTrack
-    ? (mine ? onPath.length + ' ' + txt('courses') + ' · ' + hoursOf(onPath) + 'h' : '')
+    ? (mine ? counted(onPath.length, txt('course'), txt('courses')) + ' · ' + hoursOf(onPath) + 'h' : '')
     : [
       cert.hours != null ? cert.hours + 'h' : '',
       course ? txt(course.level) : '',
@@ -332,7 +332,7 @@ export default async function certificates() {
       ? card({
         label: 'track completed',
         name: t.name,
-        meta: onPath.length + ' ' + txt('courses') + ' · ' + hoursOf(onPath) + 'h',
+        meta: counted(onPath.length, txt('course'), txt('courses')) + ' · ' + hoursOf(onPath) + 'h',
         who: who,
         when: today,
         key: 'track.' + t.id,
@@ -376,7 +376,7 @@ export default async function certificates() {
     (hasTrackCert ? '' : card({
       label: 'track completed',
       name: t ? t.name : TRACKS[0].name,
-      meta: (onPath.length || 10) + ' ' + txt('courses') + ' · ' +
+      meta: counted(onPath.length || 10, txt('course'), txt('courses')) + ' · ' +
         (onPath.reduce((s, id) => s + (courseById(id)?.hours || 0), 0) || 380) + 'h',
       who: who,
       when: today,

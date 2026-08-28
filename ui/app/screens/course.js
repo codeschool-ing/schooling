@@ -15,7 +15,7 @@ import { courseExam, examReady } from '../exams.js';
 import { examCard } from './exam.js';
 import { materialList } from '../materials.js';
 import { bar, empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
-import { esc, formatted } from '../text.js';
+import { esc, formatted, counted } from '../text.js';
 import * as api from '../api.js';
 
 export default async function course({ id }) {
@@ -42,8 +42,9 @@ export default async function course({ id }) {
       '<div class="course-meta">' +
         '<span>' + c.hours + 'h</span>' +
         '<span>' + txt(c.level) + '</span>' +
-        '<span>' + lessons.length + ' ' + txt('lessons') + '</span>' +
-        '<span>' + txt('in') + ' ' + tracksWithCourse(id).length + ' ' + txt('tracks') + '</span>' +
+        '<span>' + counted(lessons.length, txt('lesson'), txt('lessons')) + '</span>' +
+        '<span>' + txt('in') + ' ' +
+          counted(tracksWithCourse(id).length, txt('track'), txt('tracks')) + '</span>' +
       '</div>' +
       bar(p.pct, p.done + ' ' + txt('of') + ' ' + p.total) +
       '<p class="course-count">' + p.done + '/' + p.total + ' ' + txt('sections completed') + '</p>' +
@@ -69,7 +70,7 @@ export default async function course({ id }) {
               '<span class="lesson-num">' + String(a.ix + 1).padStart(2, '0') + '</span>' +
               '<span class="lesson-tit">' + esc(a.title) + '</span>' +
               '<span class="lesson-sections">' +
-                (sections.length > 1 ? sections.length + ' ' + txt('sections') : txt('1 section')) +
+                counted(sections.length, txt('section'), txt('sections')) +
                 (hasAssessment ? ' · ' + txt('with an assessment') : '') +
               '</span>' +
               '<span class="lesson-prog">' + pa.done + '/' + pa.total + '</span>' +

@@ -440,7 +440,91 @@ async function operator(theme, label) {
    `check` reaches a screen by its address; the drill and the exam paper reach
    theirs by working the interface. What they must not do is describe the same
    failure differently, so all three end here. */
+/* ==========================================================================
+   "1 trilhas" — a count of one followed by a plural.
+
+   IT IS HERE BECAUSE THERE IS NOWHERE ELSE IT COULD BE. `check-interface` reads
+   the source and sees every string this interface says; what it cannot see is
+   the NUMBER in front of one, because the number arrives at run time. The only
+   place this is visible is a rendered screen — which is what this suite has
+   open anyway.
+
+   It rides on `measure` for the reason everything else does: every screen goes
+   through there, so a screen added later is checked without anybody having to
+   remember. axe cannot decide this one — it is grammar rather than
+   accessibility — which is the same argument this file's header makes for the
+   checks it already carries beyond axe's reach.
+
+   # A FRACTION IS NOT A COUNT OF ONE
+
+   "1/1 seções" is right and "1 seções" is not, and the two differ by the
+   character before the digit. The lookbehind is what tells them apart. Without
+   it this would fail on the dashboard of anybody who has finished their only
+   section, which is a screen a real student meets on their first day.
+   ========================================================================== */
+const PLURAL_OF_ONE = new RegExp(
+  '(?<![\\d/])\\b1\\s+(' + [
+    'lessons', 'tracks', 'courses', 'sections', 'attempts', 'days',
+    'aulas', 'trilhas', 'cursos', 'seções', 'tentativas', 'dias',
+  ].join('|') + ')\\b',
+);
+
+/* THE ONE PLACE THIS IS ALLOWED TO SAY IT, and the exception is narrow enough
+   to name in a selector.
+
+   `.invite-opens` is the subscription's feature list — "All 122 courses and 19
+   tracks" — and the number is inside the TRANSLATION KEY rather than beside it.
+   That was decided on purpose and `common.js` argues it: French needs "Les 122
+   cours et les 19 parcours", and a translator handed the fragments "All",
+   "courses and", "tracks" has nowhere to put the second "les". Making it
+   plural-aware means four variants of one sentence in five languages, to
+   describe a catalogue with one track in it.
+
+   AND THAT CATALOGUE IS THE FIXTURE'S. This suite seeds the smallest school
+   that can draw a graph; the sentence is a claim about breadth, and a platform
+   selling access to one track is not a rounding problem. The exception is here
+   rather than in a quieter place so that it stays arguable — if the day comes
+   that a real deployment shows one, this comment is what has to be answered. */
+const NOT_COUNTED_BY_US = '.invite-opens';
+
+/* WHAT IT READS, AND THE ONE THING IT CANNOT SEE
+
+   `innerText` and not `textContent`, because this check is about two words with
+   a space between them and only the first knows there is one. `textContent`
+   joins across elements — a `<b>1</b>` beside the word after it comes out
+   "1attempts" — and a clone cannot answer `innerText` at all, having no layout.
+
+   So the exception is applied by comparing what was found against what the
+   allowed element says, rather than by removing it from the page. The cost is
+   that a screen saying the same thing twice, once inside the invitation and
+   once outside it, would be forgiven both times. That is a narrower hole than
+   it sounds: the sentence in question is one specific piece of marketing copy.
+
+   AND THE SHAPE IT MISSES, said out loud: a count in its own element with no
+   space after it — `<b>1</b>attempts`, which the performance screen does — is
+   invisible to this and to any check reading rendered text, because on the
+   screen there is no space either. That one was found by reading the source and
+   fixed there. */
+async function readsAsOne(page, name) {
+  const { text, allowed } = await page.evaluate((skip) => ({
+    text: document.body.innerText || '',
+    allowed: [...document.querySelectorAll(skip)].map((el) => el.innerText || ''),
+  }), NOT_COUNTED_BY_US);
+
+  const said = text.match(PLURAL_OF_ONE);
+  if (!said) return;
+  if (allowed.some((one) => one.includes(said[0]))) return;
+
+  violations += 1;
+  console.error(`✗ ${name} — the screen says "${said[0]}". One of something takes the `
+    + 'singular, and a page that gets this wrong reads as machine-made, which is the one '
+    + 'thing a catalogue is trying not to be. `counted` in `ui/app/text.js` is the shape: '
+    + 'the count, then both words, each from its own txt() so the scanner can see them.');
+}
+
 async function measure(page, name) {
+  await readsAsOne(page, name);
+
   const result = await new AxeBuilder({ page }).withTags(STANDARD).analyze();
   screens += 1;
   if (!result.violations.length) return;

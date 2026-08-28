@@ -79,7 +79,8 @@ export default async function performance() {
       '<div class="track-numbers">' +
         '<span><b>' + pct + '%</b>' + txt('correct') + '</span>' +
         '<span><b>' + right + '/' + checked.length + '</b>' + txt('exercises checked') + '</span>' +
-        '<span><b>' + attempts + '</b>' + txt('attempts') + '</span>' +
+        '<span><b>' + attempts + '</b>' +
+          (attempts === 1 ? txt('attempt') : txt('attempts')) + '</span>' +
         (pending ? '<span><b>' + pending + '</b>' + txt('waiting for the server') + '</span>' : '') +
       '</div>' +
       bar(pct, pct + '%') +
