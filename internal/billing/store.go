@@ -71,15 +71,19 @@ type Held struct {
 	   store and hand back, and the amount is read by whoever draws or charges
 	   it. `internal/architecture_test.go` holds that boundary.
 
-	   WHAT IT IS FOR IS EXPLAINING A TERM, NOT PRICING THE NEXT ONE. This said
-	   "renewals charge this row and not whatever is current", which is what
-	   `0036` believed and what `0040` corrected: the terms of use promise the
-	   opposite — a price change applies to new subscriptions AND TO RENEWALS,
-	   with thirty days' notice, never retroactively to a term that is running.
-	   The column survives that correction unchanged, because within a term it is
-	   exactly right and it is the only way a March invoice stays explicable in
-	   November. The comment did not, and a renewal written against it would have
-	   billed somebody the price of a year they bought three years ago. */
+	   IT IS THE TERM RUNNING NOW, AND IT MOVES WHEN ONE IS BOUGHT. `0036`
+	   believed this row was frozen for the life of a subscription — that a
+	   renewal charged whatever was stored here — and `0040` corrected it: the
+	   terms of use promise the opposite, a price change applies to new
+	   subscriptions AND TO RENEWALS with thirty days' notice, never
+	   retroactively to a term that is running.
+
+	   So a subscription is REUSED across years and several purchases, and this
+	   is the last price its holder agreed to. Nothing is lost by moving it: the
+	   purchase at the old price is a `checkout_intents` row and a line in
+	   `subscription_events`, both of which keep their own and are never
+	   rewritten. Leaving it frozen was what made an account screen quote a
+	   figure from three years ago as the thing somebody just bought. */
 	PriceID uuid.UUID
 
 	StartedAt time.Time
@@ -204,7 +208,7 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 		   ledger, marked the checkout paid — and did not extend their access by
 		   a day. */
 		renewed, err := s.apply(ctx, tx, existing, EventPaid, now,
-			from.AddDate(0, termMonths, 0), ledgerEntry)
+			from.AddDate(0, termMonths, 0), priceID, ledgerEntry)
 		if err != nil {
 			return Held{}, err
 		}
@@ -265,7 +269,12 @@ func (s *Store) Advance(ctx context.Context, accountID uuid.UUID, scope string,
 		return Held{}, err
 	}
 
-	updated, err := s.apply(ctx, tx, held, e, now, paidThrough, ledgerEntry)
+	/* NO PRICE CROSSES THIS ONE. Every event Advance carries — a refund, a
+	   chargeback, a cancellation, a term running out — is something happening TO
+	   a subscription rather than something being bought, so there is no row for
+	   it to have been bought at and `uuid.Nil` leaves the stored one alone.
+	   Buying is Begin's, and Begin is the only caller that has a price. */
+	updated, err := s.apply(ctx, tx, held, e, now, paidThrough, uuid.Nil, ledgerEntry)
 	if err != nil {
 		return Held{}, err
 	}
@@ -275,11 +284,19 @@ func (s *Store) Advance(ctx context.Context, accountID uuid.UUID, scope string,
 	return updated, nil
 }
 
-// apply runs the state machine and writes both halves. It does NOT commit: the
-// caller owns the transaction, because Begin needs the read and the write in
-// one and so does Advance.
+/*
+apply runs the state machine and writes both halves. It does NOT commit: the
+caller owns the transaction, because Begin needs the read and the write in one
+and so does Advance.
+
+	`priceID` IS THE ROW THIS EVENT WAS PAID AT, and `uuid.Nil` for every event
+	that is not a payment — see Advance's caller comment. It is written rather
+	than kept because a subscription is REUSED: one row lives for years across
+	several purchases, and the price on it has to be the last one somebody
+	agreed to.
+*/
 func (s *Store) apply(ctx context.Context, tx pgx.Tx, held Held,
-	e Event, now, paidThrough time.Time, ledgerEntry *uuid.UUID) (Held, error) {
+	e Event, now, paidThrough time.Time, priceID uuid.UUID, ledgerEntry *uuid.UUID) (Held, error) {
 
 	// SETTLED FIRST, so an event lands on the subscription as it actually is. A
 	// payment arriving on a cancellation whose period ran out three weeks ago is
@@ -292,10 +309,29 @@ func (s *Store) apply(ctx context.Context, tx pgx.Tx, held Held,
 	}
 
 	held.Subscription = next
+
+	/* THE PRICE MOVES FORWARD WITH THE PAYMENT, which `0040` settled and this
+	   did not do. The terms of use promise that a price change applies to new
+	   subscriptions AND TO RENEWALS with thirty days' notice — never
+	   retroactively to a term that is running — so somebody renewing has just
+	   agreed to whatever is current, and leaving the old id here would make
+	   their account screen quote a figure from a purchase two years ago as the
+	   thing they just bought.
+
+	   WHAT IT DOES NOT DO IS REWRITE HISTORY. The purchase they made at the old
+	   price is a `checkout_intents` row and a line in the log below, both of
+	   which keep their own price and are never touched again. This column is the
+	   CURRENT standing of a subscription, and every other one is a record. */
+	if priceID != uuid.Nil {
+		held.PriceID = priceID
+	}
+
 	if err := tx.QueryRow(ctx, `
-		UPDATE subscriptions SET state = $2, paid_through = $3, updated_at = now()
+		UPDATE subscriptions
+		SET state = $2, paid_through = $3, price_id = $4, updated_at = now()
 		WHERE id = $1 RETURNING updated_at
-	`, held.ID, string(next.State), next.PaidThrough).Scan(&held.UpdatedAt); err != nil {
+	`, held.ID, string(next.State), next.PaidThrough, held.PriceID,
+	).Scan(&held.UpdatedAt); err != nil {
 		return Held{}, fmt.Errorf("billing: writing a subscription: %w", err)
 	}
 
@@ -396,7 +432,8 @@ func (s *Store) Renewing(ctx context.Context, now time.Time, notice time.Duratio
 // History is every transition a subscription has been through, newest first.
 func (s *Store) History(ctx context.Context, accountID uuid.UUID) ([]Transition, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT event, from_state, to_state, ledger_entry_id, occurred_at
+		SELECT event, from_state, to_state, ledger_entry_id, occurred_at,
+		       price_id, paid_through
 		FROM subscription_events WHERE account_id = $1 ORDER BY occurred_at DESC, id
 	`, accountID)
 	if err != nil {
@@ -408,7 +445,8 @@ func (s *Store) History(ctx context.Context, accountID uuid.UUID) ([]Transition,
 	for rows.Next() {
 		var t Transition
 		var event, from, to string
-		if err := rows.Scan(&event, &from, &to, &t.LedgerEntryID, &t.OccurredAt); err != nil {
+		if err := rows.Scan(&event, &from, &to, &t.LedgerEntryID, &t.OccurredAt,
+			&t.PriceID, &t.PaidThrough); err != nil {
 			return nil, fmt.Errorf("billing: reading a subscription's history: %w", err)
 		}
 		t.Event, t.From, t.To = Event(event), State(from), State(to)
@@ -427,6 +465,14 @@ type Transition struct {
 	To            State
 	LedgerEntryID *uuid.UUID
 	OccurredAt    time.Time
+
+	/* WHAT IT COST AND WHERE IT LEFT THE TERM, both nil on a line written
+	   before `0043` added the columns. Nil is a real answer — "the log did not
+	   record this then" — and a screen says so rather than filling it in: a
+	   backfill would have had to guess, and a guessed price on a purchase is
+	   the confusion the price column exists to remove. */
+	PriceID     *uuid.UUID
+	PaidThrough *time.Time
 }
 
 /* ---------- reading ---------- */
@@ -488,11 +534,23 @@ func scanHeld(rows pgx.Rows) ([]Held, error) {
 func logTransition(ctx context.Context, tx pgx.Tx, held Held,
 	e Event, from State, ledgerEntry *uuid.UUID) error {
 
+	/* THE PRICE AND THE DATE ARE TAKEN FROM `held` AND NOT PASSED IN, which is
+	   what makes them impossible to get wrong: every caller has already applied
+	   the transition to it, so these two are the standing AFTER the event by
+	   construction rather than by a caller remembering to pass the new values
+	   instead of the old ones. */
+	var priceID *uuid.UUID
+	if held.PriceID != uuid.Nil {
+		priceID = &held.PriceID
+	}
+
 	if _, err := tx.Exec(ctx, `
 		INSERT INTO subscription_events
-			(subscription_id, account_id, event, from_state, to_state, ledger_entry_id)
-		VALUES ($1, $2, $3, $4, $5, $6)
+			(subscription_id, account_id, event, from_state, to_state, ledger_entry_id,
+			 price_id, paid_through)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	`, held.ID, held.AccountID, string(e), fromOrStart(from), string(held.State), ledgerEntry,
+		priceID, held.PaidThrough,
 	); err != nil {
 		return fmt.Errorf("billing: recording a transition: %w", err)
 	}

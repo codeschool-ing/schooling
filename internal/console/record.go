@@ -109,8 +109,15 @@ type Given struct {
 type AtSchool struct {
 	School School
 
-	// Empty when they have never held anything here, which is different from a
-	// plan that ended: the screen says which.
+	/* Empty when they have never held anything here, which is different from a
+	   plan that ended: the screen says which.
+
+	   AND IN PRACTICE IT IS ALWAYS EMPTY TODAY, because there is no per-school
+	   subscription to find: N-02 made one subscription cover every school and
+	   it is held at scope `all`. These three are kept rather than deleted
+	   because `subscriptions.scope` exists precisely so that can narrow later
+	   (N-03) — and what a screen needs meanwhile is `Holding` below, which is
+	   platform-wide and says so. */
 	Plan        string
 	State       string
 	PaidThrough *time.Time
@@ -118,6 +125,90 @@ type AtSchool struct {
 	Courses      []Course
 	Exams        []Sat
 	Certificates []Given
+}
+
+/*
+Holding is what one person is paying for and everything they have ever bought.
+
+	IT IS PLATFORM-WIDE AND SITS BESIDE THE SCHOOLS RATHER THAN INSIDE ONE. One
+	login, one subscription, every school (N-01, N-02) — so putting it under a
+	school would be the scope error this project keeps naming, and repeating it
+	under each would show the same figure several times as though there were
+	several.
+
+	IT IS THE SAME ANSWER THE STUDENT GETS. `GET /api/v1/subscription` draws
+	their own account screen from these fields; an operator on the telephone
+	needs to be looking at what the person on the other end is looking at, and
+	two readings of one subscription is how a conversation goes wrong.
+*/
+type Holding struct {
+	// State is empty when they have never held anything, `none` never appears
+	// here: absence is absence, and the screen leaves the section out.
+	State string
+
+	// Opens is whether it opens paid courses TODAY, which is not readable from
+	// the state — `grace` opens and `suspended` does not.
+	Opens bool
+
+	// Model is how it was bought, and it matters because the consequence
+	// differs: an instalment plan ends and nothing renews it.
+	Model string
+
+	Since       *time.Time
+	PaidThrough *time.Time
+
+	/* Price is what the term running now was bought at, resolved.
+
+	   IT IS `plan.go`'S TYPE AND NOT ONE OF ITS OWN, deliberately: this is a
+	   row of the same series that screen lists, and two types for it would be
+	   two places to keep in step with `plan_prices`. `From` is when that price
+	   took effect, which is the fact that turns "they pay R$ 690,00" into "they
+	   pay the price published in June". */
+	Price *Price
+
+	// Purchases is every checkout, paid or not, newest first.
+	Purchases []Purchase
+}
+
+/*
+Purchase is one checkout: what was asked for, how, and what became of it.
+
+	IT IS NOT A LEDGER ROW AND MUST NOT BE READ AS ONE. An instalment plan is
+	one sale collected several times and the ledger is keyed by the charge, so
+	the biennial bought in three parts is three rows there and one line here.
+	An operator adding up ledger rows to answer "what did they pay" would get
+	the right total by luck and the wrong story every time.
+*/
+type Purchase struct {
+	ID uuid.UUID
+
+	OpenedAt time.Time
+	MovedAt  time.Time
+
+	// Stage is how far it got — `opened`, `charged`, `paid`, `abandoned`. It is
+	// deliberately not the word `state`: that one is the subscription's and is
+	// what access is computed from.
+	Stage string
+
+	// Cents is what was actually charged and Listed is the offer it came from.
+	// They differ by the Pix discount, and an operator asked "why R$ 655,50 when
+	// the site says R$ 690,00" needs both to answer in one sentence.
+	Cents      int
+	Listed     int
+	Currency   string
+	TermMonths int
+
+	Method      string
+	Instalments int
+
+	// InvoiceURL is where the payer was sent. It is here so an operator can
+	// give somebody back a Pix code they lost rather than tell them to start
+	// again — which would open a second checkout for one sale.
+	InvoiceURL string
+
+	// PaidThrough is where the term stood after this purchase, absent when it
+	// bought nothing or predates the log recording it.
+	PaidThrough *time.Time
 }
 
 // Records is what this package may not import — and here that is four modules
@@ -139,6 +230,11 @@ type Records struct {
 	// At is one person at one school, or a zero value if they have nothing
 	// there. It is not an error to have nothing: most people are at one school.
 	At func(ctx context.Context, school School, accountID uuid.UUID) (AtSchool, error)
+
+	// Holding is their subscription and their purchases, platform-wide. A zero
+	// value is somebody who has never bought anything, which is most people and
+	// is not an error.
+	Holding func(ctx context.Context, accountID uuid.UUID) (Holding, error)
 }
 
 // RecordHandler is the record for one person.
@@ -160,6 +256,52 @@ type recordBody struct {
 	Sittings []sittingBody  `json:"sittings"`
 	Schools  []atSchoolBody `json:"schools"`
 	Scope    string         `json:"scope"`
+
+	// Holding is beside the schools and not inside one, because a subscription
+	// covers every school (N-02). Absent for somebody who has never bought
+	// anything, which is most people.
+	Holding *holdingBody `json:"holding,omitempty"`
+}
+
+type holdingBody struct {
+	State       string     `json:"state,omitempty"`
+	Opens       bool       `json:"opens"`
+	Model       string     `json:"model,omitempty"`
+	Since       *time.Time `json:"since,omitempty"`
+	PaidThrough *time.Time `json:"paidThrough,omitempty"`
+
+	Price *priceBody `json:"price,omitempty"`
+
+	// Purchases is never omitted once there is a holding at all: an operator
+	// seeing no key cannot tell an empty history from a version that does not
+	// send one.
+	Purchases []purchaseBody `json:"purchases"`
+}
+
+type priceBody struct {
+	TermMonths int       `json:"termMonths"`
+	Cents      int       `json:"cents"`
+	Currency   string    `json:"currency"`
+	From       time.Time `json:"from"`
+}
+
+type purchaseBody struct {
+	ID string `json:"id"`
+
+	OpenedAt time.Time `json:"openedAt"`
+	MovedAt  time.Time `json:"movedAt"`
+	Stage    string    `json:"stage"`
+
+	Cents      int    `json:"cents"`
+	Listed     int    `json:"listed"`
+	Currency   string `json:"currency"`
+	TermMonths int    `json:"termMonths"`
+
+	Method      string `json:"method"`
+	Instalments int    `json:"instalments"`
+
+	InvoiceURL  string     `json:"invoiceUrl,omitempty"`
+	PaidThrough *time.Time `json:"paidThrough,omitempty"`
 }
 
 type sittingBody struct {
@@ -280,7 +422,47 @@ func (h *RecordHandler) record(w http.ResponseWriter, r *http.Request) {
 		body.Schools = append(body.Schools, shownAtSchool(school, at))
 	}
 
+	/* AND WHAT THEY ARE PAYING FOR, WHICH IS NOT A SCHOOL'S. Last, because it
+	   is the one read that is allowed to be absent: somebody who has never
+	   bought anything has no holding, and the section is left out rather than
+	   drawn empty. */
+	holding, err := h.records.Holding(r.Context(), id)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading a subscription",
+			"error", err, "account", id)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return
+	}
+	if holding.State != "" || len(holding.Purchases) > 0 {
+		body.Holding = shownHolding(holding)
+	}
+
 	web.JSON(w, http.StatusOK, body)
+}
+
+func shownHolding(h Holding) *holdingBody {
+	out := &holdingBody{
+		State: h.State, Opens: h.Opens, Model: h.Model,
+		Since: h.Since, PaidThrough: h.PaidThrough,
+		Purchases: make([]purchaseBody, 0, len(h.Purchases)),
+	}
+	if h.Price != nil {
+		out.Price = &priceBody{
+			TermMonths: h.Price.TermMonths, Cents: h.Price.Cents,
+			Currency: h.Price.Currency, From: h.Price.From,
+		}
+	}
+	for _, p := range h.Purchases {
+		out.Purchases = append(out.Purchases, purchaseBody{
+			ID:       p.ID.String(),
+			OpenedAt: p.OpenedAt, MovedAt: p.MovedAt, Stage: p.Stage,
+			Cents: p.Cents, Listed: p.Listed, Currency: p.Currency,
+			TermMonths: p.TermMonths,
+			Method:     p.Method, Instalments: p.Instalments,
+			InvoiceURL: p.InvoiceURL, PaidThrough: p.PaidThrough,
+		})
+	}
+	return out
 }
 
 func shownAtSchool(school School, at AtSchool) atSchoolBody {

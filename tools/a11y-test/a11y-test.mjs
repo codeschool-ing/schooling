@@ -68,6 +68,8 @@
    two ways to disagree about it.
    ========================================================================== */
 
+import { execFileSync } from 'node:child_process';
+
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -140,6 +142,46 @@ async function open(theme, language) {
    prove the API works and say nothing about the screen a person uses. */
 async function signUp(page, name, address) {
   await signUpThroughTheForm(page, BASE, { name, email: address });
+}
+
+/*
+boughtSomething gives an account a purchase history to draw.
+
+  IT IS SEEDED AND EVERY OTHER STATE IN THIS SUITE IS NOT, which is worth
+  saying out loud because it is a rule being broken. Everything else here is
+  reached the way a person reaches it — the form, the button, the radio — and
+  that is why this suite finds real defects.
+
+  A purchase cannot be. Buying needs a confirmed address, a gateway key and
+  money somebody actually sends; this suite has no mail to confirm with, and a
+  check that waited for a Pix to clear would be a check that never ran. The
+  alternative is measuring an empty table, which is the shape without the rows,
+  and the rows are the whole thing — three of them, drawing three different
+  ways. See `bought.sql`.
+
+  IT SHELLS OUT TO psql BECAUSE THE FIXTURE DOES, and this is the same job: CI
+  seeds `graph-test/fixture.sql` a step earlier through exactly this command.
+  A suite growing its own database client would be a second way to disagree
+  about the schema.
+
+  WITHOUT A DATABASE URL IT SEEDS NOTHING AND SAYS SO. The suite then measures
+  the empty state, which is what it measured before this existed — a missing
+  variable must not be a failed accessibility run.
+*/
+function boughtSomething(email) {
+  const url = process.env.SCHOOLING_DATABASE_URL;
+  if (!url) {
+    console.log('  · no SCHOOLING_DATABASE_URL — the purchase history is measured empty');
+    return false;
+  }
+  try {
+    execFileSync('psql', [url, '-q', '-v', 'ON_ERROR_STOP=1',
+      '-v', `email=${email}`, '-f', 'tools/a11y-test/bought.sql'], { stdio: 'pipe' });
+    return true;
+  } catch (e) {
+    console.log(`  · could not seed a purchase history: ${e.message.split('\n')[0]}`);
+    return false;
+  }
 }
 
 /* Closing the page is not closing the context it came from, and a context left
@@ -566,6 +608,36 @@ try {
        above it and is not worth a second sign-up to see. */
     await check(student, `${theme} · my account`, '/#/account', '/account',
       { settled: '#holding p, #holding .facts' });
+
+    /* AND THE SAME BLOCK WITH A PURCHASE HISTORY UNDER IT, which is the one
+       thing on this screen that is NOT the same shape as something already
+       measured: a table, with a header row, a row header per line, an amount
+       struck through, and a dimmed row for the purchase nobody paid.
+
+       THE DIMMED ROW IS WHY THIS CHECK EXISTS. `.bought-open` and
+       `.bought-was` both take text to `--paper-dim` on the panel, and quiet
+       grey on a dark ground is exactly the arrangement that lands at 4.1:1 —
+       which is what axe found on the locked course card, in this same
+       stylesheet, the first time it ran. */
+    if (boughtSomething(studentEmail)) {
+      /* AND IT IS SENT SOMEWHERE ELSE FIRST, which is not fussiness.
+
+         `check` reaches a screen with `page.goto`, and a goto whose only
+         difference from where the browser already is is the FRAGMENT does not
+         reload anything: it changes the hash, and when the hash is the one
+         already there it does nothing at all. The check above is `/#/account`
+         too — so without a real navigation between them, this would measure
+         the copy drawn before these purchases existed and pass by having
+         nothing new on it.
+
+         A HASH CHANGE AND NOT A RELOAD, because the session this suite signs
+         up with lives in the page. Reloading drops it and the router draws
+         `/sign-in`, which is a clean screen and the wrong one. */
+      await student.goto(`${BASE}/#/dashboard`, { waitUntil: 'load' });
+      await student.waitForTimeout(200);
+      await check(student, `${theme} · my account, with a purchase history`,
+        '/#/account', '/account', { settled: '.bought-table tbody tr' });
+    }
     await check(student, `${theme} · setting up a second factor`, '/#/account', '/account', {
       async act(page) {
         await page.locator('#start').click();

@@ -130,6 +130,12 @@ export async function record(params) {
       '</p>' +
     '</header>' +
 
+    /* WHAT THEY ARE PAYING FOR COMES FIRST AND IS NOT UNDER A SCHOOL. One
+       subscription covers every school (N-02), and it is also the first thing
+       asked on nearly every support message — so it sits above the schools
+       rather than being hunted for inside one of them. */
+    holding(it.holding) +
+
     (it.schools.length
       ? it.schools.map((s) => atSchool(s, person.id)).join('')
       : '<section class="block"><p class="none">They have nothing at any school: ' +
@@ -196,13 +202,17 @@ function atSchool(s, personId) {
           'an hour, and they are not told.</span></p>'
       : '') +
 
-    /* A PLAN THAT ENDED AND NO PLAN AT ALL ARE DIFFERENT ANSWERS, and the
-       second is what somebody who never subscribed looks like. */
+    /* A PLAN HELD FOR THIS SCHOOL ALONE, WHICH TODAY IS NOBODY. N-02 made one
+       subscription cover every school and it is held at scope `all`, so this
+       line is empty for everyone — and the sentence says where to look rather
+       than "no subscription", which would be false about most of the people it
+       was drawn for. It stays because `scope` exists so this can narrow later
+       (N-03), and the day it does, this is where the answer appears. */
     '<p class="list-count">' +
       (s.plan
         ? esc(s.plan) + ' &middot; <span class="mono">' + esc(s.state) + '</span>' +
           (s.paidThrough ? ' &middot; paid through ' + esc(day(s.paidThrough)) : '')
-        : 'No subscription here, ever.') +
+        : 'Nothing held for this school on its own — the subscription above covers every school.') +
     '</p>' +
 
     table('Courses', 'Nothing started here.', ['Course', 'Sections'], s.courses.map((c) =>
@@ -220,6 +230,137 @@ function atSchool(s, personId) {
       '<td>' + esc(c.title) + '</td>' +
       '<td class="mono">' + esc(day(c.issuedAt)) + '</td></tr>')) +
   '</section>';
+}
+
+/* ==========================================================================
+   WHAT THEY ARE PAYING FOR, AND EVERYTHING THEY HAVE EVER BOUGHT.
+
+   THE STATE AND THE RECORD ARE TWO ANSWERS AND AN OPERATOR NEEDS BOTH. The
+   line at the top is what is true today — opens or does not, runs to this day,
+   bought at this price — and it is one row that the next purchase overwrites.
+   The table under it is what happened, and it is the half a support message is
+   nearly always about: a charge on a statement, a Pix that was paid twice, a
+   card that was split and shows as three lines at the bank.
+
+   THE TABLE IS THE CHECKOUTS AND NOT THE LEDGER, and reading it as a ledger is
+   the mistake it is drawn this way to prevent. An instalment plan is ONE sale
+   the issuer collects several times; the ledger has a row per collection,
+   keyed by the charge, and adding those up to answer "what did they pay" gets
+   the right total and the wrong story every time. One line here is one sale.
+
+   AND IT SHOWS WHAT WAS NEVER PAID. A checkout that stopped at `charged` is a
+   Pix code somebody may still be about to pay — the row carries the address,
+   so an operator can give it back rather than tell them to start again, which
+   would open a second checkout for one sale.
+   ========================================================================== */
+function holding(h) {
+  if (!h) {
+    return '<section class="block">' +
+      '<div class="block-top"><h2>Subscription</h2></div>' +
+      '<p class="none">They have never bought anything, and never tried to.</p>' +
+    '</section>';
+  }
+
+  const bought = h.purchases || [];
+  const paid = bought.filter((p) => p.stage === 'paid');
+  /* WHAT THEY HAVE SPENT, ADDED UP FROM THE SALES. Only the paid ones, and only
+     when they are all in one currency: a sum across two is a number about
+     nothing, and the honest answer there is no sum at all. */
+  const currencies = new Set(paid.map((p) => p.currency));
+  const spent = currencies.size === 1
+    ? money(paid.reduce((n, p) => n + p.cents, 0), paid[0].currency)
+    : null;
+
+  return '<section class="block">' +
+    '<div class="block-top">' +
+      '<h2>Subscription</h2>' +
+      '<span class="block-score mono">every school</span>' +
+    '</div>' +
+
+    '<p class="list-count">' +
+      (h.state
+        ? '<span class="tag ' + (h.opens ? 'tag-staff' : 'tag-warn') + '">' +
+            esc(h.state) + '</span> ' +
+          (h.opens ? 'opens every course' : 'opens nothing') +
+          (h.paidThrough ? ' &middot; paid through ' + esc(day(h.paidThrough)) : '') +
+          (h.price
+            ? ' &middot; ' + esc(money(h.price.cents, h.price.currency)) +
+              ' for ' + h.price.termMonths + ' months'
+            : '') +
+          /* NOTHING RENEWS ITSELF HERE, and an operator telling somebody their
+             subscription will renew would be telling them something this
+             platform does not do. */
+          ' &middot; does not renew by itself'
+        : 'No subscription — but they have tried to buy, below.') +
+    '</p>' +
+
+    table('Purchases',
+      'Nothing bought, and nothing attempted.',
+      ['Opened', 'Term', 'How', 'Amount', 'Access to', ''],
+      bought.map((p) =>
+        '<tr><td class="mono">' + esc(day(p.openedAt)) + '</td>' +
+        '<td class="mono">' + p.termMonths + ' months</td>' +
+        '<td>' + esc(howPaid(p)) + '</td>' +
+        '<td class="num mono">' + esc(money(p.cents, p.currency)) +
+          (p.listed > p.cents
+            ? '<span class="cell-sub mono">of ' + esc(money(p.listed, p.currency)) + '</span>'
+            : '') +
+        '</td>' +
+        /* A PAID PURCHASE WITH NO DATE IS NOT AN UNPAID ONE. The log only
+           started recording what a payment bought in `0043`, so every sale
+           before it has nothing to join — and the honest cell says so rather
+           than a dash, which reads as "bought nothing". */
+        '<td class="mono">' +
+          (p.paidThrough ? esc(day(p.paidThrough))
+            : p.stage === 'paid' ? '<span class="none">not recorded</span>'
+            : '\u2014') +
+        '</td>' +
+        '<td>' + stage(p) + '</td></tr>')) +
+
+    (spent
+      ? '<p class="list-count">' + esc(spent) + ' across ' + paid.length +
+        (paid.length === 1 ? ' paid purchase.' : ' paid purchases.') +
+        ' Not the ledger: an instalment plan is one sale here and one row per ' +
+        'collection there.</p>'
+      : '') +
+  '</section>';
+}
+
+/* HOW IT WAS PAID, SPELLED OUT. "12x" on its own is a number an operator has to
+   work out the meaning of while somebody waits on the telephone. */
+function howPaid(p) {
+  if (p.method === 'pix') return 'Pix';
+  return p.instalments > 1 ? 'Card, ' + p.instalments + '\u00d7' : 'Card, in one';
+}
+
+/* HOW FAR A PURCHASE GOT. A paid one is not tagged: it is the ordinary case and
+   a tag on every row is a column of noise. The link is offered only while the
+   charge can still be paid — an abandoned one leads to a page saying it
+   expired, which is a worse answer than none. */
+function stage(p) {
+  if (p.stage === 'paid') return '';
+  if (p.stage === 'charged') {
+    return '<span class="tag tag-quiet">waiting</span>' +
+      (p.invoiceUrl
+        ? ' <a href="' + esc(p.invoiceUrl) + '" target="_blank" rel="noopener">invoice</a>'
+        : '');
+  }
+  return '<span class="tag tag-quiet">' +
+    esc(p.stage === 'abandoned' ? 'not paid' : 'not finished') + '</span>';
+}
+
+/* An amount in the currency the server said, in cents. `en-GB` and not the
+   operator's locale: the console is one language and a figure that moved its
+   separators between two staff members reading the same screen is a figure two
+   people would read out differently. */
+function money(cents, currency) {
+  const amount = (cents || 0) / 100;
+  try {
+    return new Intl.NumberFormat('en-GB',
+      { style: 'currency', currency: currency || 'BRL' }).format(amount);
+  } catch (e) {
+    return String(amount) + ' ' + String(currency || '');
+  }
 }
 
 /* AN EXAM IN PROGRESS IS NOT A FAILED ONE. Drawing a blank where the verdict

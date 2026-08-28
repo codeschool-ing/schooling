@@ -50,16 +50,24 @@ type Holding struct {
 	plans  *Store
 	prices *Prices
 
+	/* AND THE CHECKOUTS, WHICH ARE THE HISTORY. The subscription says what is
+	   true today; a person opening this screen is usually asking about a year
+	   they have already paid for, and the state has by then been overwritten
+	   several times. `Checkouts` given no `Confirmed` cannot open anything —
+	   the same wiring the webhook uses — so this handler can read every
+	   purchase and start none. */
+	buys *Checkouts
+
 	// who answers which account is asking, wired by `cmd` — the same seam
 	// `Handler.payer` uses, without the name and address it does not need.
 	who func(context.Context) (uuid.UUID, bool)
 }
 
-// NewHolding is the read side over the two stores it joins.
-func NewHolding(plans *Store, prices *Prices,
+// NewHolding is the read side over the three stores it joins.
+func NewHolding(plans *Store, prices *Prices, buys *Checkouts,
 	who func(context.Context) (uuid.UUID, bool)) *Holding {
 
-	return &Holding{plans: plans, prices: prices, who: who}
+	return &Holding{plans: plans, prices: prices, buys: buys, who: who}
 }
 
 func (h *Holding) Routes(mux *http.ServeMux) {
@@ -94,6 +102,12 @@ type holdingBody struct {
 	PaidThrough *time.Time `json:"paidThrough,omitempty"`
 
 	Price *holdingPrice `json:"price,omitempty"`
+
+	/* EVERY PURCHASE, INCLUDING THE ONES THAT ARE NOT SUBSCRIPTIONS. It is
+	   never omitted: a screen that gets no key cannot tell "this person has
+	   bought nothing" from "this version does not send it", and an empty array
+	   says the first out loud. */
+	Purchases []purchaseBody `json:"purchases"`
 }
 
 // holdingPrice is what was paid, for how long.
@@ -103,12 +117,63 @@ type holdingPrice struct {
 	Currency   string `json:"currency"`
 }
 
+/*
+purchaseBody is one line of the history.
+
+	IT SENDS THE LISTED PRICE BESIDE WHAT WAS CHARGED rather than the discount
+	between them. The subtraction is presentation — a screen may show "R$ 690,00
+	less 5% in Pix" or "you saved R$ 34,50" or neither — and a server that sent
+	only the difference would have decided that for it, in a place no designer
+	looks.
+*/
+type purchaseBody struct {
+	ID string `json:"id"`
+
+	OpenedAt time.Time `json:"openedAt"`
+	MovedAt  time.Time `json:"movedAt"`
+
+	// Stage is `opened`, `charged`, `paid` or `abandoned` — how far it got, and
+	// NOT whether it opens anything. See `0042`: that word is the subscription's.
+	Stage string `json:"stage"`
+
+	Cents      int    `json:"cents"`
+	Listed     int    `json:"listed"`
+	Currency   string `json:"currency"`
+	TermMonths int    `json:"termMonths"`
+
+	Method      string `json:"method"`
+	Instalments int    `json:"instalments"`
+
+	// InvoiceURL is where the payer was sent, and is worth sending back for a
+	// `charged` row: it is a Pix code somebody may still be about to pay.
+	InvoiceURL string `json:"invoiceUrl,omitempty"`
+
+	// PaidThrough is where the term stood after this purchase, absent when it
+	// bought nothing or when it predates the log recording it.
+	PaidThrough *time.Time `json:"paidThrough,omitempty"`
+}
+
 func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 	accountID, ok := h.who(r.Context())
 	if !ok {
 		web.Fail(w, http.StatusUnauthorized, web.CodeUnauthorized, "sign in first")
 		return
 	}
+
+	/* THE HISTORY IS READ FIRST, BECAUSE IT SURVIVES THE ABSENCE OF THE REST.
+	   Somebody with no subscription may still have purchases — a checkout that
+	   errored before the gateway, a Pix code that expired unpaid — and those are
+	   exactly the rows they write in about. Reading this after the early return
+	   below would have hidden them from the only people who need them. */
+	bought, err := h.buys.Purchases(r.Context(), accountID)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading what somebody has bought",
+			"error", err, "account", accountID)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
+			"could not read your subscription")
+		return
+	}
+	purchases := shownPurchases(bought)
 
 	held, err := h.plans.Of(r.Context(), accountID, ScopeEverything, time.Now())
 	switch {
@@ -117,7 +182,7 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 		   ordinary case — every student who has not subscribed — look like a
 		   broken address, and a screen cannot tell one from the other without
 		   reading the code that produced it. */
-		web.JSON(w, http.StatusOK, holdingBody{State: "none"})
+		web.JSON(w, http.StatusOK, holdingBody{State: "none", Purchases: purchases})
 		return
 	case err != nil:
 		web.LoggerFrom(r.Context()).Error("reading a subscription",
@@ -128,10 +193,11 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 	}
 
 	body := holdingBody{
-		State: string(held.State),
-		Opens: Opens(held.Subscription),
-		Scope: held.Scope,
-		Model: string(held.Model),
+		State:     string(held.State),
+		Opens:     Opens(held.Subscription),
+		Scope:     held.Scope,
+		Model:     string(held.Model),
+		Purchases: purchases,
 	}
 	if !held.StartedAt.IsZero() {
 		body.Since = &held.StartedAt
@@ -160,4 +226,24 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 	}
 
 	web.JSON(w, http.StatusOK, body)
+}
+
+// shownPurchases is the list as it goes out. It is never nil: see `Purchases`
+// on the body.
+func shownPurchases(bought []Purchase) []purchaseBody {
+	out := make([]purchaseBody, 0, len(bought))
+	for _, p := range bought {
+		out = append(out, purchaseBody{
+			ID:       p.ID.String(),
+			OpenedAt: p.OpenedAt, MovedAt: p.MovedAt,
+			Stage:      string(p.Stage),
+			Cents:      p.Cents,
+			Listed:     p.Listed,
+			Currency:   p.Currency,
+			TermMonths: p.TermMonths,
+			Method:     string(p.Method), Instalments: p.Instalments,
+			InvoiceURL: p.InvoiceURL, PaidThrough: p.PaidThrough,
+		})
+	}
+	return out
 }

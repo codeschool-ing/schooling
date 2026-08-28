@@ -29,6 +29,7 @@ func holdingFor(t *testing.T, account uuid.UUID, signedIn bool) http.Handler {
 	pool := testPool(t)
 
 	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
+		billing.NewCheckouts(pool, nil),
 		func(context.Context) (uuid.UUID, bool) { return account, signedIn })
 
 	mux := http.NewServeMux()
@@ -184,5 +185,67 @@ func TestAnExpiredSubscriptionStillSaysWhatItWas(t *testing.T) {
 	}
 	if _, has := body["paidThrough"]; !has {
 		t.Error("no date came back, so nothing explains why the courses closed")
+	}
+}
+
+/*
+TestTheHistoryComesBackEvenWithNoSubscription, which is the case that would
+have been lost.
+
+	SOMEBODY WITH NO SUBSCRIPTION MAY STILL HAVE PURCHASES — a checkout that
+	errored before the gateway, a Pix code that expired unpaid — and those are
+	exactly the rows a person writes in about. The route answers `state: none`
+	for them and used to return on the spot; reading the history after that early
+	return would have hidden it from the only people who need it.
+*/
+func TestTheHistoryComesBackEvenWithNoSubscription(t *testing.T) {
+	pool := testPool(t)
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	sold(t, pool, account, offer, listed, billing.MethodPix, 1, "pay_"+short())
+
+	rec, body := askHolding(t, holdingFor(t, account, true))
+	if rec.Code != http.StatusOK {
+		t.Fatalf("it answered %d: %s", rec.Code, rec.Body.String())
+	}
+	if body["state"] != "none" {
+		t.Errorf("somebody who never paid is in state %v", body["state"])
+	}
+
+	bought, ok := body["purchases"].([]any)
+	if !ok {
+		t.Fatalf("no history came back: %s", rec.Body.String())
+	}
+	if len(bought) != 1 {
+		t.Fatalf("their unpaid checkout reads as %d purchases", len(bought))
+	}
+
+	one, ok := bought[0].(map[string]any)
+	if !ok {
+		t.Fatalf("a purchase came back as %#v", bought[0])
+	}
+	if one["stage"] != string(billing.StageCharged) {
+		t.Errorf("it reads as %v", one["stage"])
+	}
+	if one["invoiceUrl"] == nil {
+		t.Error("no address came back, so nothing can send them back to their code")
+	}
+	if int(one["listed"].(float64)) != listed {
+		t.Errorf("the offer reads as %v and it was %d", one["listed"], listed)
+	}
+}
+
+// AND AN EMPTY HISTORY IS `[]` AND NOT `null`, so a screen can tell "has bought
+// nothing" from "this version does not send the field".
+func TestAnEmptyHistoryIsStillAList(t *testing.T) {
+	pool := testPool(t)
+	_, body := askHolding(t, holdingFor(t, student(t, pool), true))
+
+	bought, ok := body["purchases"].([]any)
+	if !ok {
+		t.Fatalf("the history is %#v, want an empty list", body["purchases"])
+	}
+	if len(bought) != 0 {
+		t.Errorf("somebody who has bought nothing has %d purchases", len(bought))
 	}
 }
