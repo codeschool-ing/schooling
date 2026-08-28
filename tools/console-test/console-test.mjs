@@ -317,6 +317,73 @@ try {
     }
   }
 
+  /* ---------- and where a student writes to give it back ----------
+
+     ON THE SAME SCREEN AND IN THE SAME RUN, because it is the same offer: the
+     terms promise seven days to withdraw and this is the address that promise
+     names. It was an environment variable until `0044`, which meant it could
+     only be changed by an apply from the one machine holding a gitignored
+     file — and an apply from anywhere else planned it back to empty and took
+     the address off the account screen with nothing failing.
+
+     WHAT THIS PROVES THAT THE GO TESTS CANNOT. The handler's tests use a fake
+     store, and the store's tests use no handler; what neither presses is the
+     button. This is the round trip — type an address, save, and read it back
+     off a block that re-fetched it from the server. */
+  const address = `seven-days-${Date.now()}@example.tld`;
+
+  await staff.locator('#contact .contact-form').waitFor({ timeout: 15000 });
+  await staff.locator('#contact [name=email]').fill(address);
+  await staff.locator('#contact [name=reason]').fill('the console suite, proving the round trip');
+  await staff.locator('#contact button[type=submit]').click();
+
+  /* THE SENTENCE AND NOT THE FIELD. The field would still hold what was typed
+     into it even if nothing had been saved — it is the paragraph above it that
+     is rebuilt from a fresh read, so that is what is waited on. */
+  try {
+    await staff.locator('#contact .price-state', { hasText: address })
+      .waitFor({ timeout: 15000 });
+    good('the address students are told to write to is saved and read back');
+  } catch (e) {
+    const said = await staff.locator('#contact .price-state').innerText().catch(() => '—');
+    bad('the address students are told to write to is saved and read back',
+      `after saving ${address} the block still says "${said.trim()}" — the value did not `
+      + 'survive the round trip through the server');
+  }
+
+  /* AND IT SAYS THE ROW IS ANSWERING, which is the distinction the block exists
+     to draw: an address coming from the deployment's own variable and one
+     somebody typed here look identical if all the screen shows is the address,
+     and only one of the two can be changed from this console. */
+  const saying = (await staff.locator('#contact .price-state').innerText()).trim();
+  if (!saying.includes('set here')) {
+    bad("the screen says the address is the console's and not the deployment's",
+      `the block says "${saying}" — after a save it has to be the row talking, or an `
+      + 'operator cannot tell whether this screen is what decides it');
+  } else {
+    good("the screen says the address is the console's and not the deployment's");
+  }
+
+  /* AND A CHANGE WITH NO REASON IS REFUSED, on the screen and not only in the
+     handler. It is the one field the price form does not have, and it is here
+     because the log has to be able to tell an address that moved because the
+     person answering changed from one that moved because the last was a typo —
+     only the second means what was published in between was wrong. */
+  await staff.locator('#contact [name=email]').fill(`unsaid-${Date.now()}@example.tld`);
+  await staff.locator('#contact [name=reason]').fill('');
+  await staff.locator('#contact button[type=submit]').click();
+
+  const refusal = (await staff.locator('#contact .signin-notice')
+    .innerText().catch(() => '')).trim();
+  const stillSaying = (await staff.locator('#contact .price-state').innerText()).trim();
+  if (!refusal || !stillSaying.includes(address)) {
+    bad('an address with no reason is refused',
+      `the form said "${refusal || 'nothing'}" and the block now says "${stillSaying}" — a `
+      + 'change with no reason has to be refused and leave the published address alone');
+  } else {
+    good('an address with no reason is refused');
+  }
+
   await done(staff);
 } finally {
   await browser.close();

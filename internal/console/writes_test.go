@@ -125,7 +125,18 @@ it asks for is that somebody who wants a third parameter says here, in a diff,
 that they read K-13 first.
 */
 func TestTheParametersAreStillFew(t *testing.T) {
-	const known = 2
+	/* THREE SINCE THE SUPPORT ADDRESS, and this is the diff saying K-13 was read
+	   first. The argument for it is in `writes.go` beside the entry and in
+	   `0044` at length; the short version is that it is a fact about who is
+	   answering rather than about the platform, and that it was already
+	   settable — from a gitignored file on one machine, where an apply run from
+	   anywhere else planned it back to empty and took a published legal right's
+	   only channel off the screen with nothing failing.
+
+	   Moving a value that already had no right answer is not the growth this
+	   test watches for. The growth would be a fourth entry whose sentence reads
+	   "so it can be configured". */
+	const known = 3
 
 	if got := len(console.Parameters()); got != known {
 		t.Errorf("this console has %d parameters and had %d. If that is right, read K-13 "+

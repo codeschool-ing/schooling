@@ -94,6 +94,14 @@ var kept = map[string]string{
 	"tenant_domains":    "the addresses they answer at",
 	"plan_prices":       "what the platform charges, which is configuration written as history (K-14)",
 
+	/* KEPT FOR THE REASON THE PRICE IS: it is the platform's own configuration
+	   and not anybody's data. A reset that took it away would leave a
+	   deployment publishing the seven-day right with nowhere to use it — and
+	   the point of moving this value out of the environment was precisely that
+	   it should stop vanishing when somebody runs something from elsewhere. */
+	"support_contact": "where students are told to write to use the seven days, which is our " +
+		"configuration and not anybody's data",
+
 	// THE ONE PIECE OF HISTORY IN THIS MAP, and it is here because emptying it
 	// is not a clean slate for us — it is a clean slate for the mailboxes that
 	// already refused us, and writing to one again is the complaint we were

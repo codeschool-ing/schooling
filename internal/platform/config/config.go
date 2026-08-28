@@ -143,7 +143,19 @@ type Config struct {
 	   EMPTY IS ALLOWED AND COSTS SOMETHING. The screen still tells somebody the
 	   deadline they are inside — that is worth knowing on its own — and simply
 	   has no address to offer them. A deployment whose terms promise the seven
-	   days should set this. */
+	   days should set this.
+
+	   AND SINCE 0044 IT IS THE FALLBACK RATHER THAN THE ANSWER. The address an
+	   operator sets in the console wins over this, and this is what answers
+	   before anybody has set one — a first deployment, a laptop, CI. That order
+	   lives in `cmd`'s `whereToWrite` and nowhere else.
+
+	   Keeping it was not sentiment. This value is read once at start-up and
+	   this struct is where a deployment's facts live; the console's row is read
+	   per request. A value that only existed in the database would leave a
+	   fresh deployment publishing the seven days with nowhere to use them until
+	   somebody opened a screen — which is the exact defect the notice was built
+	   to close, moved one step later. */
 	SupportEmail string
 
 	Environment Environment

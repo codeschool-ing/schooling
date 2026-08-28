@@ -116,6 +116,18 @@ var Registry = []Table{
 			"why somebody else was charged what they were",
 	},
 	{
+		Name: "support_contact", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "the one address students are told to write to, to use the seven days the terms " +
+			"promise. An e-mail address in a column is the shape this registry exists to " +
+			"be suspicious of, and this one is still nobody's: it is a channel the " +
+			"platform PUBLISHES, chosen so that it can be printed on a screen every " +
+			"subscriber can read. The edge worth naming is an operator typing their own " +
+			"personal address into it — that is still a decision to publish rather than " +
+			"data held about them, it is undone by typing another, and an erasure that " +
+			"reached this row would take the platform's only stated support channel away " +
+			"on one person's request",
+	},
+	{
 		Name: "accounts", Holds: HoldsIdentifying, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "the e-mail and the name. It is the row that makes every account_id in the database " +
 			"mean a person, so deleting it is what the whole erase path is for",

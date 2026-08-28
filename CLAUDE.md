@@ -1026,6 +1026,16 @@ days' notice and happens at most once in twelve months. The privacy policy names
 the ANPD. None of that is a placeholder — it is the answer, and changing it means changing a
 policy rather than filling in a blank.
 
+**The seven days need a channel, and the channel is a parameter.** The account screen names the
+deadline whatever happens and names an ADDRESS only when there is one, so a deployment with none
+publishes a right with no way to use it. It began as `SCHOOLING_SUPPORT_EMAIL`, which meant it
+could only be changed by an apply from the one machine holding a gitignored `terraform.tfvars` —
+and an apply run from anywhere else planned it back to empty and took the address off the screen
+without anything failing. `0044` makes it a console parameter, and it clears the K-13 bar on a
+reason neither of the other two gives: it is a fact about **who is answering**, not about the
+platform, so the correct value changes when the person does and no code changes with it. The
+variable stays behind it as the value a deployment starts with, and both empty is still allowed.
+
 ---
 
 ## Emptying the history is a deliberate act, and it looks like one

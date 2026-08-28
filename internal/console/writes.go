@@ -100,6 +100,21 @@ var Writes = []Write{
 			"an arbitrage rather than a choice",
 	},
 	{
+		Route: "PUT /console/api/v1/support/contact",
+		Kind:  Parameter,
+		Why: "where a student writes to use the seven days the terms promise. No right answer, " +
+			"and for a reason neither of the two above gives: it is a fact about WHO IS " +
+			"ANSWERING rather than about the platform, so the correct address changes when " +
+			"the person does and no code changes with it. REPLACED like the accent — a " +
+			"price is a series because a March invoice has to stay explicable in November, " +
+			"and an address owes nothing like that, because what was published in March is " +
+			"what the audit entry says. It lived in the infrastructure until 0044, which " +
+			"meant an apply and a new revision from the one machine holding a gitignored " +
+			"file — and an apply from anywhere else planned it back to empty and took the " +
+			"address off the screen with nothing failing, which is a right losing the way " +
+			"to use it in silence",
+	},
+	{
 		Route: "POST /console/api/v1/people/{id}/erase",
 		Kind:  Action,
 		Why: "the phase-0 obligation. It happens once, to one person who asked, and what it " +

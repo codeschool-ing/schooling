@@ -82,11 +82,23 @@ export default async function plan(section) {
     '<section class="block" id="series" aria-live="polite">' +
       '<h2>Every price ever set</h2>' +
       '<p class="checking">Reading…</p>' +
+    '</section>' +
+
+    /* AND WHERE SOMEBODY WRITES TO GIVE IT BACK, on this screen because it is
+       part of the same offer. The terms promise seven days to withdraw — art.
+       49 of the Código de Defesa do Consumidor — and the account screen names
+       that deadline whether or not there is an address to name it with. A
+       price and the way out of it are one subject. */
+    '<section class="block" id="contact">' +
+      '<h2>Where a student writes to use the seven days</h2>' +
+      '<p class="checking">Reading…</p>' +
     '</section>';
 
   const series = el.querySelector('#series');
+  const contact = el.querySelector('#contact');
 
   await showSeries();
+  await showContact();
   TERMS.forEach(wire);
 
   function block(term) {
@@ -258,7 +270,143 @@ export default async function plan(section) {
     });
   }
 
+  /* THE ADDRESS, DRAWN WHOLE EACH TIME rather than patched, for the same reason
+     the series is re-read: what this block says is mostly the SENTENCE about
+     which of two sources is answering, and that sentence changes shape when a
+     row appears where there was none. Rebuilding it is one function; keeping
+     four elements in step with each other is four. */
+  async function showContact() {
+    let answer;
+    try {
+      answer = await get('/console/api/v1/support/contact');
+    } catch (e) {
+      contact.innerHTML = '<h2>Where a student writes to use the seven days</h2>' +
+        '<p class="none">' + esc(e.message) + '</p>';
+      return;
+    }
+
+    contact.innerHTML =
+      '<h2>Where a student writes to use the seven days</h2>' +
+
+      /* WHAT THE TERMS ACTUALLY PROMISE, said here because this is where
+         somebody decides whether the address is worth setting. An operator who
+         reads "support e-mail" and nothing else has no way to know that leaving
+         it empty publishes a legal right with no way to exercise it. */
+      '<p class="aside">The terms of use give a student seven days from the purchase to ' +
+      'give the subscription back, for the whole amount and with no reason — art. 49 of ' +
+      'the Código de Defesa do Consumidor. The account screen names that deadline ' +
+      'whatever happens here, and names an address only when there is one.</p>' +
+
+      '<p class="price-state' + (answer.published ? '' : ' none') + '">' +
+        esc(saying(answer)) +
+      '</p>' +
+
+      (mayAct()
+        ? '<form class="contact-form" novalidate>' +
+            '<div class="list-bar">' +
+            '<label class="field">' +
+              '<span>Address</span>' +
+              '<input type="email" name="email" spellcheck="false" autocomplete="off" ' +
+                'inputmode="email" placeholder="contact@example.tld" ' +
+                'value="' + esc(answer.email || '') + '">' +
+            '</label>' +
+
+            /* THE REASON IS REQUIRED AND THE API REFUSES WITHOUT IT. It is one
+               line rather than a paragraph because the useful answers are one
+               line: "the old box is closed", "typo", "moved to the shared
+               inbox". The log has to be able to tell the second from the first
+               — only one of them means the address published in between was
+               wrong. */
+            '<label class="field">' +
+              '<span>Why</span>' +
+              '<input type="text" name="reason" autocomplete="off" ' +
+                'placeholder="the old inbox is closed" maxlength="200">' +
+            '</label>' +
+            '<button type="submit" class="btn btn-primary">Save this address</button>' +
+            '</div>' +
+            '<p class="signin-notice"></p>' +
+          '</form>'
+        : '<p class="list-count">A read-only role may look at this and not set it.</p>');
+
+    const form = contact.querySelector('.contact-form');
+    if (!form) return;
+    const note = form.querySelector('.signin-notice');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = form.querySelector('[name=email]').value.trim();
+      const reason = form.querySelector('[name=reason]').value.trim();
+
+      /* CHECKED HERE SO A MISTYPED ADDRESS IS REFUSED BEFORE IT IS RECORDED.
+         The check that matters is the API's, which refuses the same things and
+         has a test — this one exists because the entry is written FIRST, and a
+         round trip that records a change and then rejects it would leave the
+         log saying something happened that did not. */
+      if (!email) {
+        return say('bad', 'An address, or nothing at all — but nothing is cleared by the '
+          + 'deployment rather than from here, and this form only sets one.');
+      }
+      if (!reason) {
+        return say('bad', 'Say why in a few words. This is published to every student, and '
+          + 'the log has to tell an address that moved because the person answering '
+          + 'changed from one that moved because the last was a typo.');
+      }
+
+      say('', 'Saving…');
+      try {
+        await put('/console/api/v1/support/contact', { email, reason });
+      } catch (e) {
+        return say('bad', e instanceof RequestError && e.status === 403
+          ? 'That asks for an operator.'
+          : e.message);
+      }
+
+      /* REDRAWN FIRST AND SPOKEN INTO SECOND. Writing the confirmation and then
+         rebuilding the block replaces the node it was written into, so the
+         message disappears at the moment it is earned — which is a mistake this
+         console has already made once, on the refund form. */
+      await showContact();
+      say('ok', 'Saved. Every student inside their seven days is now told to write there.');
+    });
+
+    function say(how, text) {
+      const where = contact.querySelector('.signin-notice');
+      if (!where) return;
+      where.className = 'signin-notice' + (how ? ' ' + how : '');
+      where.textContent = text;
+    }
+  }
+
   return { title: section.name, el };
+}
+
+/* WHICH OF THE TWO SOURCES IS ANSWERING, in a sentence rather than as a badge.
+
+   There are three states and they are genuinely different decisions:
+
+     a row          somebody set this here, and it can be changed here
+     no row         the deployment's own variable is answering, and saving an
+                    address below takes it over for good
+     neither        the notice names the deadline and nobody is told where to
+                    write, which is the state this whole screen exists to end
+
+   A field showing the resolved address in all three would look identical in the
+   first two and would invite somebody to "fix" a value that is already correct
+   by typing it again — with the difference that after typing it, it is a row
+   this console owns rather than a value one machine's gitignored file holds. */
+function saying(answer) {
+  if (answer.email) {
+    return 'Students are told to write to ' + answer.email
+      + (answer.since ? ', set here on ' + day(answer.since) + '.' : '.');
+  }
+  if (answer.published) {
+    return 'Students are told to write to ' + answer.published + ', which comes from this '
+      + "deployment's own configuration and not from here. Saving an address below takes "
+      + 'it over — after that this screen is what decides it.';
+  }
+  return 'Nobody is told where to write. The account screen still names the deadline, '
+    + 'because knowing the date is worth something on its own — but a student inside '
+    + 'the seven days has no address to use them at.';
 }
 
 // A term's name where one exists, and its months where it does not. The table

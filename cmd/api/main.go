@@ -624,7 +624,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			return identity.AccountID(ctx)
 		},
 		// Where somebody writes to use the seven days the terms promise them.
-		cfg.SupportEmail,
+		whereToWrite(billing.NewSupport(pool), cfg.SupportEmail),
 	).Routes(scoped)
 
 	if cfg.AsaasKey != "" {
@@ -809,6 +809,24 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   that needs no argument: this is the number everybody pays. */
 	console.NewPlanHandler(
 		pricesOf(billing.NewPrices(pool)),
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
+
+	/* AND WHERE A STUDENT WRITES TO USE THE SEVEN DAYS, beside the price
+	   because it is part of the same offer: the terms promise a week to give
+	   the subscription back, and this is the address that promise names.
+
+	   The same rank as the price for the same reason — it is published to every
+	   student, and a read-only role does not decide what everybody is told. */
+	console.NewSupportHandler(
+		contactOf(billing.NewSupport(pool)),
+		console.Fallback(cfg.SupportEmail),
 		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
@@ -2294,6 +2312,41 @@ func confirmedAddress(accounts *identity.Store) billing.Confirmed {
 }
 
 /*
+whereToWrite is the support address, with the environment behind it.
+
+	TWO SOURCES AND ONE ORDER. The row an operator set from the console wins,
+	and `SCHOOLING_SUPPORT_EMAIL` answers when there is no row. That order is
+	the point: the console is where the address can be changed by somebody who
+	is not running `terraform apply`, and the variable is what a deployment
+	starts with before anybody has opened the console — including a laptop and
+	CI, which draw the notice without writing to the database at all.
+
+	NEITHER IS REQUIRED. Both empty is a deployment whose withdrawal notice names
+	the deadline and no address, which is allowed and argued for in `0044` and in
+	`config.SupportEmail`: knowing the date is worth something on its own.
+
+	A FAILED READ FALLS BACK RATHER THAN FAILING. The alternative would be an
+	account screen that 500s because one row could not be read, which trades a
+	missing address for a missing screen. It is logged at WARN, because an
+	address quietly reverting to the deployment's is exactly the kind of change
+	nobody would otherwise notice.
+*/
+func whereToWrite(support *billing.Support, configured string) func(context.Context) string {
+	return func(ctx context.Context) string {
+		found, err := support.Now(ctx)
+		if err != nil {
+			web.LoggerFrom(ctx).Warn("reading where a student writes, falling back to the "+
+				"deployment's address", "error", err)
+			return configured
+		}
+		if found.Email == "" {
+			return configured
+		}
+		return found.Email
+	}
+}
+
+/*
 payerOf is who is buying, in the two words a gateway wants.
 
 	THE NAME AND THE ADDRESS COME FROM THE SESSION AND NOT FROM THE REQUEST. A
@@ -2533,6 +2586,30 @@ func pricesOf(prices *billing.Prices) console.Plan {
 		},
 
 		Refused: func(err error) bool { return errors.Is(err, billing.ErrNotAPrice) },
+	}
+}
+
+// contactOf is the console's half of where a student writes. It hands the ROW
+// across and not the resolved answer: `whereToWrite` is what falls back to the
+// deployment's variable, and a console shown the resolved value could not tell
+// an operator whether this screen is what decides it.
+func contactOf(support *billing.Support) console.Support {
+	return console.Support{
+		Now: func(ctx context.Context) (console.Contact, error) {
+			one, err := support.Now(ctx)
+			if err != nil {
+				return console.Contact{}, err
+			}
+			return console.Contact{Email: one.Email, Since: one.Since}, nil
+		},
+		Set: func(ctx context.Context, email string) (console.Contact, error) {
+			was, err := support.Set(ctx, email)
+			if err != nil {
+				return console.Contact{}, err
+			}
+			return console.Contact{Email: was.Email, Since: was.Since}, nil
+		},
+		Refused: func(err error) bool { return errors.Is(err, billing.ErrNotAnAddress) },
 	}
 }
 

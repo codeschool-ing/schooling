@@ -47,6 +47,13 @@ is how every console rots.* That division is the spine of everything below.
   renewal charges what is in force then, with the notice the terms promise. A price is **appended**
   where a colour is **replaced**, and the two sit on one screen: nothing has to be explained about
   last month's colour, and a March invoice has to stay explicable in November
+- **Where a student writes to use the seven days**, on the same screen as the price because it is
+  the same offer: the terms promise a week to withdraw (art. 49 of the CDC) and this is the address
+  that promise names. It was an environment variable, which meant an apply and a new revision from
+  the one machine holding a gitignored file — and an apply run from anywhere else planned it back
+  to empty and took the address off the account screen with nothing failing. **Replaced** like a
+  colour, with a reason the form requires, and the variable stays behind it as the value a
+  deployment starts with
 - Synthetic students flagged and excluded from every aggregate by default, with a visible switch
   and a banner when they are included
 - Granting access to one student — a legitimate audited action, where a global paywall switch is
