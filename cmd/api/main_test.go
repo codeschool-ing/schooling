@@ -80,6 +80,49 @@ func TestTheOperationalRoutesBelongToNoSchool(t *testing.T) {
 	}
 }
 
+/*
+AND IT ANSWERS AT THE CONSOLE'S ADDRESS TOO, which it did not.
+
+	THE CONSOLE ASKS THIS ROUTE ABOUT ITSELF. `assets/release.js` records what
+	build a tab was served and asks again when the tab is returned to, so that a
+	console left open across a deploy says so instead of quietly running
+	yesterday's screens — which matters more there than on a student's page,
+	because the console is where money is decided.
+
+	It could not ask. `/version` was mounted on the platform's mux alone and
+	404'd at `console.<domain>`, so the check recorded nothing and never fired
+	once. Nothing failed; the banner simply never appeared, which is the exact
+	shape of defect the banner exists to end.
+
+	A ROUTE THAT ANSWERS AT ONE ADDRESS AND NOT ANOTHER is a thing a test has to
+	hold, because both mounts are one line each and either could be deleted by
+	somebody tidying.
+*/
+func TestTheConsoleCanAskWhichBuildIsAnswering(t *testing.T) {
+	srv := testRouter(t)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/version", nil)
+	req.Host = "console.example.tld"
+	srv.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("GET /version at the console answered %d, want 200 — the console's own "+
+			"interface asks it to notice that its tab is older than the build serving "+
+			"it, and a 404 makes that check record nothing and never fire", rec.Code)
+	}
+
+	var got struct {
+		Version string `json:"version"`
+	}
+	if err := json.Unmarshal(rec.Body.Bytes(), &got); err != nil {
+		t.Fatalf("the console's /version is not JSON: %v — %s", err, rec.Body.String())
+	}
+	if got.Version != "dev" {
+		t.Errorf("the console was told the build is %q and the platform says \"dev\"", got.Version)
+	}
+}
+
 // A HOST IS A SCHOOL'S, OR THE CONSOLE'S, OR THE PLATFORM'S, OR A 404 (K-17).
 //
 // IT USED TO BE THREE CASES AND IT IS FOUR, which is the line worth reading

@@ -46,14 +46,19 @@ import practice from './screens/practice.js';
 import { openSearch, close as closeSearch, searchOpen } from './search-panel.js';
 import { closeModal, modalOpen } from './modal.js';
 import { wireCopy } from './copy.js';
-import * as release from './release.js';
-/* IT IS IN `assets/` AND NOT IN `app/`, which is what lets the console show
-   what a school will look like without a second copy of the algorithm: the
-   console's host serves `assets/` from this tree when its own has no such
-   file, and refuses to serve `app/` at all — those are a student's screens.
-   Correcting a colour for contrast is neither side's screen; it is the rule
-   both of them have to agree about. */
+/* THE TWO THAT LIVE IN `assets/`, AND THEY ARE THERE FOR ONE REASON. The
+   console's host serves `assets/` from this tree when its own has no such file,
+   and refuses to serve `app/` at all — those are a student's screens.
+
+   `accent.js` is there so the console can show what a school will look like
+   without a second copy of the algorithm: correcting a colour for contrast is
+   neither side's screen, it is the rule both have to agree about.
+
+   `release.js` is there because a console tab goes stale exactly as a student's
+   does, and rather worse — see its header. What this file supplies is the two
+   things it cannot know about the surface it is running on. */
 import { applyAccent } from '../assets/accent.js';
+import * as release from '../assets/release.js';
 
 /* ---------- what the i18n runtime needs from us ---------- */
 globalThis.isChoice = isChoice;                  // used by applyContent()
@@ -819,7 +824,19 @@ start();
    until the tab is left and come back to, so its place in this sequence is
    about politeness rather than correctness: the first paint should not queue
    behind it. */
-release.watch(() => { staleShown = true; paintStaleBanner(); });
+release.watch(() => { staleShown = true; paintStaleBanner(); }, {
+  /* NOTHING TO ASK. The offline copy is one file opened off a disk and there
+     is no server anywhere near it; a notice that it is out of date would be
+     both unanswerable and, for a bundle, meaningless. */
+  skip: () => api.offline,
+
+  /* AND NOT WHILE A PAPER IS OPEN. The route the router matched is written on
+     the content region, so this reads what was DRAWN rather than what the
+     address bar says — a hash that has changed while the screen behind it has
+     not is exactly the state to be careful about. An exam address ends in
+     `/exam`, which is the same test `needsTheSchool` above already uses. */
+  hold: () => ($('#content')?.getAttribute('data-screen') || '').endsWith('/exam'),
+});
 
 restoring.then((outcome) => {
   /* The screen on the page was chosen from what the browser remembered, and the
