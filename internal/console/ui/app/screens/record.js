@@ -661,7 +661,7 @@ function holdingInside(h, personId, refundable) {
           (p.chargeId ? esc(p.chargeId) : '<span class="none">never sent</span>') +
         '</span></td>' +
 
-        '<td>' + stage(p) + refundButton(p) + '</td></tr>')) +
+        '<td>' + stage(p) + refundButton(p, refundable) + '</td></tr>')) +
 
     (spent
       ? '<p class="list-count">' + esc(spent) + ' across ' + paid.length +
@@ -817,9 +817,24 @@ function changes(personId, hasSubscription, refundable) {
 
 /* THE BUTTON ON A LINE, and only on a line that was actually paid. It carries
    nothing but the row's identity — the form above reads the amount and the date
-   off the same row, so there is one place where "which purchase" is decided. */
-function refundButton(p) {
-  if (p.stage !== 'paid' || !mayAct()) return '';
+   off the same row, so there is one place where "which purchase" is decided.
+
+   AND ONLY WHERE PRESSING IT CAN DO SOMETHING, which it was not. `RecordHandler`
+   carries `refundable` and its comment states the rule: "a button that always
+   fails is worse than a button that is not drawn". The rule was applied to the
+   FORM and not to the button that opens it — so a deployment with no gateway key
+   explained itself inside the fold, in as many words, and then drew a Refund
+   button on every paid line of the table above it. Pressing one found no form
+   and returned in silence: nothing failed, nothing was said, and an operator was
+   entitled to conclude the console was broken.
+
+   IT SURFACED FROM THE OTHER END. `a11y-test` clicks the first one it finds and
+   waits for the form, and against a server started without a key it timed out
+   naming a selector and no cause. The suite was right and the screen was wrong;
+   what looked like a suite that needed configuring was a screen that needed
+   fixing. */
+function refundButton(p, refundable) {
+  if (!refundable || p.stage !== 'paid' || !mayAct()) return '';
   return ' <button type="button" class="sub-refund-open" data-refund="' + esc(p.id) + '">' +
     'Refund</button>';
 }

@@ -1147,6 +1147,19 @@ try {
             await refund.click();
             await page.waitForSelector('.sub-refund:not([hidden]) [name=amount]',
               { timeout: 8000 });
+          } else {
+            /* NOT A PASS, AND SAID SO. There is no refund control on a
+               deployment with no gateway key — which is correct, and means the
+               reddest form in this console went unmeasured. A run that reported
+               every screen sound while one of them was never looked at is the
+               shape of claim this whole file exists to refuse, so it says which
+               one and why rather than staying quiet.
+
+               `SCHOOLING_ASAAS_KEY` is what turns this line off. CI sets it and
+               `CLAUDE.md` says why; a local run without it is not broken, it is
+               measuring less. */
+            console.log('\u00b7 no gateway key, so the refund form does not exist here '
+              + 'and was not measured');
           }
         },
       });
