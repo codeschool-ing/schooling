@@ -10,7 +10,7 @@ import { courseLessons } from '../catalog.js';
 import { courseProgress } from '../state.js';
 import { courseState } from '../graph.js';
 import { bar } from './common.js';
-import { esc } from '../text.js';
+import { esc, counted } from '../text.js';
 
 export default async function catalogue() {
   const el = document.createElement('div');
@@ -76,7 +76,7 @@ export default async function catalogue() {
         '<span class="card-cat">' + txt(c.category) + '</span>' +
         '<span class="card-name">' + esc(c.name) + '</span>' +
         '<span class="card-summary">' + esc(c.summary) + '</span>' +
-        '<span class="card-meta">' + c.hours + 'h · ' + txt(c.level) + ' · ' + lessons + ' ' + txt('lessons') + '</span>' +
+        '<span class="card-meta">' + c.hours + 'h · ' + txt(c.level) + ' · ' + counted(lessons, txt('lesson'), txt('lessons')) + '</span>' +
         (p.done ? bar(p.pct, p.done + ' ' + txt('of') + ' ' + p.total) : '') +
       '</a>';
     }).join('');

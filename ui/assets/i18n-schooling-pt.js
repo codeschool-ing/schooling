@@ -322,4 +322,22 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'not paid': 'não foi paga',
   'not finished': 'não concluída',
   'finish paying': 'terminar de pagar',
+
+  /* ---------- one of something ----------
+
+     THE PLURALS WERE ALREADY THERE AND THE SINGULARS WERE NOT, because until
+     now nothing ever said one. Screens wrote `n + ' ' + txt('tracks')`, and a
+     course belonging to a single track read "em 1 trilhas".
+
+     THEY LIVE HERE AND NOT IN `i18n-pt.js`, which is the copied dictionary kept
+     syncable with the interface it came from — the plurals beside them are that
+     file's and stay there. Adding to it is what makes the next copy a merge by
+     hand, and the rule does not bend for four words.
+
+     `attempt` is not on this list: the exercises screen needed a singular
+     before anybody else did, and it is already over there beside its plural. */
+  'lesson': 'aula',
+  'track': 'trilha',
+  'course': 'curso',
+  'section': 'seção',
 });
