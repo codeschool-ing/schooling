@@ -141,19 +141,19 @@ export const withCounts = (s) => s
   .replace('{courses}', COURSES.length)
   .replace('{tracks}', TRACKS.length);
 
-const CONTACT = 'contact@codeschool.ing';
+/* WHERE THE INVITATION'S BUTTON GOES.
 
-/* The address, with the course already in the subject and the body. `mailto:`
-   wants every part percent-encoded, including the spaces. */
-export function subscribeHref(courseName) {
-  const subject = txt('I would like the subscription')
-    + (courseName ? ' — ' + courseName : '');
-  const body = courseName
-    ? txt('I would like the subscription') + ': ' + courseName
-    : txt('I would like the subscription');
-  return 'mailto:' + CONTACT
-    + '?subject=' + encodeURIComponent(subject)
-    + '&body=' + encodeURIComponent(body);
+   IT WAS A `mailto:` AND CARRIED THE COURSE'S NAME. Somebody wrote to us and
+   somebody opened the subscription by hand, which is what a platform with no
+   gateway can do and is what this payment phase exists to end.
+
+   THE COURSE'S NAME IS GONE WITH IT, and its absence is not an oversight: a
+   subscription opens every course in every school, so naming the one somebody
+   happened to be looking at would suggest they were buying that. The argument
+   for it was to save a support conversation, and there is no longer a
+   conversation to save. */
+export function subscribeHref() {
+  return '#/subscribe';
 }
 
 // The paying plan, or nothing when no plan is configured — the offline bundle
@@ -174,9 +174,13 @@ function money(amount, currency) {
   }
 }
 
-/* The block itself. `courseName` is optional: on the plan screen there is no
-   course to name, and the invitation still stands. */
-export function subscribeInvite(courseName) {
+/* The block itself.
+
+   IT TOOK A `courseName` AND NO LONGER DOES. The name went into the `mailto:`'s
+   subject line, and nothing else here ever read it — so with the mail gone the
+   parameter was an argument the one caller still passed and this function
+   ignored, which reads as a bug the next time somebody looks. */
+export function subscribeInvite() {
   const plan = paidPlan();
   const opens = (plan?.includes || [])
     .map((k) => (window.FEATURES || {})[k])
@@ -209,8 +213,13 @@ export function subscribeInvite(courseName) {
       ? '<p class="invite-price"><strong>' + esc(money(plan.price, plan.currency)) + '</strong>'
         + '<span class="invite-cycle dim">' + esc(txt(plan?.cycle)) + '</span></p>'
       : '') +
-    '<a class="btn btn-primary invite-cta" href="' + subscribeHref(courseName) + '">'
-      + esc(txt('Ask for the subscription')) + '</a>' +
-    '<p class="invite-note dim">' + esc(txt('Write to us and we will open it for your account.')) + '</p>' +
+    /* THE BUTTON'S OWN WORDS CHANGED WITH WHAT IT DOES. "Ask for the
+       subscription" was accurate while it opened a mail client — somebody
+       asked, and somebody answered. It opens a checkout now, so it says the
+       thing it does, and the note under it said "write to us and we will open
+       it for your account", which stopped being true on the same commit. */
+    '<a class="btn btn-primary invite-cta" href="' + subscribeHref() + '">'
+      + esc(txt('Subscribe')) + '</a>' +
+    '<p class="invite-note dim">' + esc(txt('You pick the term and how to pay on the next screen.')) + '</p>' +
   '</section>';
 }

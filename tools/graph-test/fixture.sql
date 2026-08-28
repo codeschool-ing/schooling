@@ -55,12 +55,31 @@ ON CONFLICT (slug) DO UPDATE SET
    this file already promises.
 
    IT IS THE PLATFORM'S PRICE AND NOT THIS SCHOOL'S (`0041`). One subscription
-   opens every school (N-02), so the fixture prices the year once rather than
+   opens every school (N-02), so the fixture prices the terms once rather than
    per school — and it is deliberately guarded on the whole table rather than on
    this slug, because a fixture that published an offer over a real one could
-   not take it back. */
+   not take it back.
+
+   TWO TERMS AND NOT ONE, because the subscribe screen is a COMPARISON: with a
+   single price it is a form with one choice, which is not the screen the
+   accessibility pass is there to measure. The guard covers both — one statement,
+   so either both rows land or neither does.
+
+   BRL AND NOT EUR, which is what this said until the screen could spend it.
+   `billing.New` knows BRL and USD, so a checkout against a euro price answered
+   503 "the price in force is not money" — and the accessibility check that
+   presses the button would have passed on the wrong refusal, having measured a
+   server error dressed as a message to the buyer.
+
+   612.34 IS NOT AVAILABLE AND THAT IS A CONTRACT, not a coincidence.
+   `console-test.mjs` saves exactly that amount and then counts the rows
+   carrying it, so a fixture using it makes "pricing one term leaves the others
+   alone" fail — its comment says "an amount no fixture uses", and this is the
+   file that has to keep the promise. It was broken once, by seeding 612.34
+   here, and CI said so. */
 INSERT INTO plan_prices (scope, term_months, cents, currency)
-SELECT 'all', 12, 32000, 'EUR'
+SELECT 'all', v.months, v.cents, 'BRL'
+FROM (VALUES (12, 69000), (24, 109000)) AS v(months, cents)
 WHERE NOT EXISTS (SELECT 1 FROM plan_prices p WHERE p.scope = 'all');
 
 /* THE IDS ARE OPAQUE AND THE SLUGS ARE READABLE, exactly as the loader writes
@@ -455,3 +474,4 @@ ON CONFLICT DO NOTHING;
 INSERT INTO job_runs (job, version, started_at)
 VALUES ('analyse', 'v0.3.0', now() - interval '9 hours')
 ON CONFLICT DO NOTHING;
+

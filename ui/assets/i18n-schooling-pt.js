@@ -182,4 +182,56 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
     'obrigado — alguém vai olhar esta questão',
   'you have already told us about this question, and it has not been answered yet':
     'você já nos avisou sobre esta questão, e ainda não respondemos',
+
+  /* ---------- subscribing ----------
+
+     THE SCREEN THAT REPLACED A `mailto:`. Two of these are worth a note.
+
+     "Pix" is absent because it is not a sentence: the Banco Central's rail is
+     called Pix in every language, so the screen writes it directly rather than
+     asking this file for a translation that cannot exist.
+
+     AND THE TAX-ID SENTENCES SAY WHAT HAPPENS TO THE NUMBER, in both
+     languages, because the privacy policy promises it in both: we pass it on
+     and keep only the identifier that comes back. A translation that dropped
+     the second half would be a promise made in English and not in Portuguese. */
+  'Subscribe': 'Assinar',
+  'One subscription opens every course, the final exams, the certificates and the material to download.':
+    'Uma assinatura abre todos os cursos, as provas finais, os certificados e o material para baixar.',
+  'There is nothing on sale here yet.': 'Ainda não há nada à venda aqui.',
+  'For how long': 'Por quanto tempo',
+  'How you pay': 'Como você paga',
+  'A month': 'Um mês',
+  'A year': 'Um ano',
+  'Two years': 'Dois anos',
+  'months': 'meses',
+  'Credit card': 'Cartão de crédito',
+  'Five per cent off, and it clears in seconds.':
+    'Cinco por cento de desconto, e cai em segundos.',
+  'In up to six instalments, with no interest.': 'Em até seis vezes, sem juros.',
+  'In how many instalments': 'Em quantas vezes',
+  'Continue to payment': 'Ir para o pagamento',
+  'Starting…': 'Começando…',
+  'Your CPF or CNPJ': 'Seu CPF ou CNPJ',
+  'The payment provider needs it to issue the charge. We send it and keep only the identifier it answers with.':
+    'O provedor de pagamento precisa dele para emitir a cobrança. Nós enviamos e guardamos apenas o identificador que ele devolve.',
+  'Paying in Brazil needs a CPF or CNPJ. We pass it to the payment provider and do not store it.':
+    'Pagar no Brasil exige CPF ou CNPJ. Nós repassamos ao provedor de pagamento e não guardamos.',
+  'A CPF has eleven digits and a CNPJ has fourteen.':
+    'CPF tem onze dígitos e CNPJ tem quatorze.',
+  'Confirm your e-mail address before paying. The banner on any page will send the link again.':
+    'Confirme seu e-mail antes de pagar. O aviso em qualquer página envia o link de novo.',
+  'The payment provider would not accept those details.':
+    'O provedor de pagamento não aceitou esses dados.',
+  'That is not on sale here.': 'Isso não está à venda aqui.',
+  'The school could not be reached. Nothing has been charged.':
+    'Não deu para falar com a escola. Nada foi cobrado.',
+  'The payment could not be started, and nothing has been charged. Try again.':
+    'Não deu para começar o pagamento, e nada foi cobrado. Tente de novo.',
+
+  /* AND THE INVITATION'S OWN LINE, which is not on that screen but is the thing
+     that leads to it. It replaced "escreva para nós e abrimos na sua conta",
+     which was true of a `mailto:` and of nothing since. */
+  'You pick the term and how to pay on the next screen.':
+    'Você escolhe o prazo e a forma de pagamento na próxima tela.',
 });
