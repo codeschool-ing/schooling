@@ -41,7 +41,15 @@
 import { esc } from '../text.js';
 import { goTo } from '../routes.js';
 import { now } from '../state.js';
-import { school } from '../source.js';
+/* THE MODULE AND NOT THE NAME, because `source.school` is `export let` — it is
+   null until the API answers and then it is the school. A named import is a
+   live binding in a browser and would have worked there, which is exactly what
+   makes this worth a comment: the OFFLINE BUNDLE inlines these modules and
+   destructures, so the import reads null once and keeps it. The screen would
+   have drawn "nothing on sale here yet" in `showcase.html` and been right in
+   every other build. `tools/bundle` refuses it for that reason, and `exams.js`
+   and `main.js` reach for the same binding the same way. */
+import * as source from '../source.js';
 import * as api from '../api.js';
 
 /* THE DISCOUNT IS DRAWN HERE AND DECIDED THERE.
@@ -65,7 +73,7 @@ export default async function subscribe() {
     return { title: txt('Subscribe'), el };
   }
 
-  const plans = ((school && school.plans) || []).slice();
+  const plans = ((source.school && source.school.plans) || []).slice();
   if (!plans.length) {
     /* NOTHING IS PRICED, so there is nothing to sell and this says so rather
        than drawing an empty form. It is the same state the invitation already
