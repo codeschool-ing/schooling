@@ -136,7 +136,16 @@ export default async function course({ id }) {
   if (await api.loadCourseContent(id) === 'locked') {
     const offer = document.createElement('div');
     offer.innerHTML = subscribeInvite();
-    el.append(offer.firstElementChild);
+
+    /* INTO THE COLUMN AND NOT ONTO THE PAGE. Appended to the view it was a
+       sibling of `.course-cols`, so it spanned the grid — 320px and a gap wider
+       than every block above it, which reads as a panel that belongs to a
+       different page.
+
+       `.course-main` is where the lessons and the exam already are, and the
+       offer is the step after the exam in the same sense: the last thing on the
+       way down this column. */
+    el.querySelector('.course-main').append(offer.firstElementChild);
   }
 
   return { title: c.name, el };
