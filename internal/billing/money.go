@@ -7,8 +7,12 @@
 // Brazilian card instalments and Pix at once, and that is a commercial question
 // rather than a technical one. None of what is here depends on the answer. An
 // amount is an integer number of cents whoever charges it; a ledger that cannot
-// be edited is append-only whoever wrote the row; splitting a year into twelve
-// instalments loses a cent in the same place regardless of who takes the card.
+// be edited is append-only whoever wrote the row.
+//
+// That list had a third item — splitting a year into twelve instalments loses a
+// cent in the same place regardless of who takes the card — and it was the one
+// claim on it the gateway turned out to decide. See WHY NOTHING HERE SPLITS AN
+// AMOUNT, below.
 //
 // Writing it now is also the only way it gets written properly. A money type
 // added after there is code doing arithmetic on floats is a refactor of every
@@ -22,6 +26,33 @@
 // in. The type below makes the wrong thing unrepresentable rather than
 // discouraged: the fields are unexported, so there is no `amount.Cents * 1.1`
 // to write anywhere in this repository.
+//
+// # WHY NOTHING HERE SPLITS AN AMOUNT
+//
+// There was a `Money.Split`, written before the gateway was chosen, and it was
+// good code: it divided into n parts that added back up to the whole, with the
+// remainder distributed a cent at a time so that R$1.000,00 in seven came to
+// exactly R$1.000,00 and no instalment differed from another by more than a
+// cent. Two tests held it to that. Nothing ever called it.
+//
+// It could not be called, because of a decision made one package away.
+// `asaas.go` sends `totalValue` and `installmentCount` rather than
+// `installmentValue`, and says why: "sending the total and the count leaves the
+// rounding to the party that has to make the instalments add up". The platform
+// deliberately does not divide. The gateway divides, prints the parts on the
+// invoice, and collects them.
+//
+// So the only thing a split here could have done was PREDICT the gateway's
+// arithmetic — and its documentation asserted a prediction this repository had
+// no evidence for: that the extra cent goes on the early instalments, "which is
+// the convention a card issuer uses". Nobody here established that, and the one
+// real invoice anybody has looked at did not agree with it.
+//
+// A wrong prediction is worse than none, because it is the kind that is only
+// discovered by a person comparing our number against their statement. If a
+// split is ever needed — a second gateway that wants the parts spelled out, a
+// receipt of our own — write it then, against what that gateway actually does,
+// and let a test hold it to the invoice rather than to a convention.
 package billing
 
 import (
@@ -45,8 +76,8 @@ const (
 )
 
 // known is the whole list, and anything else is refused. A currency this code
-// does not know is not an amount it can add up, compare or split — and guessing
-// at the number of minor units is how an amount lands a hundred times off.
+// does not know is not an amount it can add up or compare — and guessing at the
+// number of minor units is how an amount lands a hundred times off.
 var known = map[Currency]bool{BRL: true, USD: true}
 
 // Both of these are two-decimal currencies. The constant is here so that the
@@ -161,8 +192,9 @@ func (m Money) Sub(other Money) (Money, error) {
 }
 
 // Times multiplies by a whole number, which is the only multiplication that
-// cannot lose a cent. Anything else — a percentage, a proportion — goes through
-// Percent or Split, where the rounding rule is written down.
+// cannot lose a cent. A percentage goes through Percent, where the rounding
+// rule is written down. A proportion has nowhere to go and that is deliberate —
+// see WHY NOTHING HERE SPLITS AN AMOUNT on the package.
 //
 // It refuses rather than wrapping: this is the one operation here whose result
 // is not bounded by its inputs, and a silently negative total is the worst
@@ -219,9 +251,9 @@ func (m Money) comparable(other Money) error {
 //
 // It is NOT banker's rounding. That exists to keep a long series of roundings
 // unbiased, which is a real concern when summing thousands of independently
-// rounded lines — and it is not this: a discount is applied once to one price,
-// and the sum that has to come out exactly is Split's, which does not round at
-// all.
+// rounded lines — and it is not this: a discount is applied once, to one price,
+// and the result is charged as one amount. This is the only rounding in the
+// package, because it is the only division in it.
 func (m Money) Percent(basisPoints int64) Money {
 	const wholeInBasisPoints = 10_000
 
@@ -231,62 +263,6 @@ func (m Money) Percent(basisPoints int64) Money {
 		half = -half
 	}
 	return Money{cents: (product + half) / wholeInBasisPoints, currency: m.currency}
-}
-
-// ErrInstalments is a number of instalments that is not one.
-var ErrInstalments = errors.New("billing: that is not a number of instalments")
-
-// Split divides an amount into n parts THAT ADD BACK UP TO IT.
-//
-// # THIS IS WHERE THE CENT GOES MISSING, AND WHY IT IS A FUNCTION
-//
-// Brazil is billed annually or biennially in card instalments (N-08), so an
-// amount is divided by seven, ten or twelve as a matter of course. R$1.000,00
-// in seven is R$142,857142… and there is no arrangement of equal instalments
-// that sums to the original. Every implementation that divides and rounds
-// produces parts that add up to something else, and the difference lands
-// somewhere: on the customer's statement, on ours, or in a reconciliation
-// nobody can close.
-//
-// So the remainder is DISTRIBUTED rather than dropped: the first `remainder`
-// parts get one cent more than the rest. R$1.000,00 in seven is four instalments
-// of R$142,86 and three of R$142,85, which sums to exactly R$1.000,00.
-//
-// The extra cent goes on the EARLY instalments rather than the last one, which
-// is the convention a card issuer uses — and it means the final instalment is
-// never the odd one, which is the one a customer is most likely to compare
-// against a number they were quoted.
-//
-// A negative amount splits the same way, with the extra cent on the early parts
-// in the same direction. A refund of a split charge has to be splittable by the
-// same rule or the two do not cancel.
-func (m Money) Split(n int) ([]Money, error) {
-	if !m.Valid() {
-		return nil, fmt.Errorf("%w: it is not an amount", ErrAmount)
-	}
-	if n < 1 {
-		return nil, fmt.Errorf("%w: %d", ErrInstalments, n)
-	}
-
-	each := m.cents / int64(n)
-	remainder := m.cents % int64(n)
-
-	// Go truncates towards zero, so a negative amount leaves a negative
-	// remainder — which is the sign the extra cent has to have.
-	step := int64(1)
-	if remainder < 0 {
-		step, remainder = -1, -remainder
-	}
-
-	parts := make([]Money, n)
-	for i := range parts {
-		cents := each
-		if int64(i) < remainder {
-			cents += step
-		}
-		parts[i] = Money{cents: cents, currency: m.currency}
-	}
-	return parts, nil
 }
 
 /* ---------- reading and writing one ---------- */
