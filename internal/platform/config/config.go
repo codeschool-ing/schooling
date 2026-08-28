@@ -127,6 +127,25 @@ type Config struct {
 	   money and hears nothing back, which is a state worth being able to see. */
 	AsaasHookToken string
 
+	/* SupportEmail is where a person writes when only a person will do.
+
+	   IT EXISTS BECAUSE THE TERMS OF USE PROMISE SOMETHING. They give seven
+	   days to withdraw from a purchase, unconditionally, for the full amount —
+	   which is art. 49 of the Código de Defesa do Consumidor and is not ours to
+	   narrow. A promise with nowhere to send it is worse than no promise: the
+	   document is evidence, and the person holding the right cannot use it.
+
+	   IT IS CONFIGURED AND NOT A CONSTANT because it is a deployment's fact.
+	   `contact@codeschool.ing` belongs to one platform; a lab, a fork and
+	   anybody else running this are not it, and an address baked into the code
+	   is an address that is wrong everywhere except one place.
+
+	   EMPTY IS ALLOWED AND COSTS SOMETHING. The screen still tells somebody the
+	   deadline they are inside — that is worth knowing on its own — and simply
+	   has no address to offer them. A deployment whose terms promise the seven
+	   days should set this. */
+	SupportEmail string
+
 	Environment Environment
 }
 
@@ -142,6 +161,7 @@ func Load() (Config, error) {
 		MailKey:        strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_API_KEY")),
 		MailFrom:       strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_FROM")),
 		MailReplyTo:    strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_REPLY_TO")),
+		SupportEmail:   strings.ToLower(strings.TrimSpace(os.Getenv("SCHOOLING_SUPPORT_EMAIL"))),
 		Environment:    Environment(os.Getenv("SCHOOLING_ENV")),
 
 		MailHookUser:     strings.TrimSpace(os.Getenv("SCHOOLING_MAIL_HOOK_USER")),

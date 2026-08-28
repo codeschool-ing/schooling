@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/billing"
 )
@@ -24,13 +25,30 @@ Reading a subscription, which nothing could do until this route existed.
 
 // holdingFor is the route over a real database, with `who` answering a fixed
 // account — the seam `cmd` fills from the session.
+// settled moves a charged checkout to `paid`, which is what a payment event
+// does to it — without the ledger row and the subscription that come with a
+// real one, because none of the tests below is about those.
+func settled(t *testing.T, pool *pgxpool.Pool, bought billing.Intent) {
+	t.Helper()
+	if _, _, err := billing.NewCheckouts(pool, nil).
+		Settled(context.Background(), bought.ID); err != nil {
+		t.Fatalf("settling a checkout: %v", err)
+	}
+}
+
+// support is the address this suite's deployment has configured. It is a real
+// value rather than empty because the interesting assertion is that it reaches
+// the screen; `TestTheSevenDaysAreSaidEvenWithNowhereToWrite` covers the other.
+const support = "contact@example.tld"
+
 func holdingFor(t *testing.T, account uuid.UUID, signedIn bool) http.Handler {
 	t.Helper()
 	pool := testPool(t)
 
 	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
 		billing.NewCheckouts(pool, nil),
-		func(context.Context) (uuid.UUID, bool) { return account, signedIn })
+		func(context.Context) (uuid.UUID, bool) { return account, signedIn },
+		support)
 
 	mux := http.NewServeMux()
 	h.Routes(mux)
@@ -332,5 +350,173 @@ func TestACheckoutTheGatewayAnsweredIsStillTheirs(t *testing.T) {
 	}
 	if one := shown[0].(map[string]any); one["stage"] != string(billing.StageCharged) {
 		t.Errorf("it reads as %v", one["stage"])
+	}
+}
+
+/*
+The seven days, which the terms of use promise and nothing could reach.
+
+	ART. 49 OF THE CDC: a purchase made at a distance may be withdrawn from
+	within seven days, for the whole amount, with no reason. The terms say it in
+	as many words — "Você tem sete dias para desistir […] devolvemos o valor
+	integral, sem precisar de motivo" — and the screen where somebody looks at
+	what they bought said nothing about it at all.
+
+	A promise with nowhere to send it is worse than no promise, because the
+	document is evidence and the person holding the right cannot use it.
+*/
+func TestSomebodyWhoJustBoughtIsToldTheyCanStillChangeTheirMind(t *testing.T) {
+	pool := testPool(t)
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	bought := sold(t, pool, account, offer, listed, billing.MethodCard, 1, "pay_"+short())
+	settled(t, pool, bought)
+
+	_, body := askHolding(t, holdingFor(t, account, true))
+
+	window, ok := body["withdraw"].(map[string]any)
+	if !ok {
+		t.Fatalf("somebody who bought minutes ago is told nothing about the seven "+
+			"days: %v", body["withdraw"])
+	}
+	if window["email"] != support {
+		t.Errorf("nowhere to write: %v", window["email"])
+	}
+
+	until, err := time.Parse(time.RFC3339, window["until"].(string))
+	if err != nil {
+		t.Fatalf("the deadline is not a date: %v", err)
+	}
+	/* SEVEN DAYS FROM WHEN IT WAS PAID. Counting from the click would eat the
+	   three days a Pix code can sit unpaid, out of somebody's seven. */
+	want := time.Now().AddDate(0, 0, 7)
+	if d := until.Sub(want); d > time.Minute || d < -time.Minute {
+		t.Errorf("the deadline is %s, want seven days from now (%s)", until, want)
+	}
+}
+
+// AND AFTER THEM, NOTHING IS SAID. The right has expired, a refund is
+// discretionary from then on, and a line inviting somebody to write would be an
+// invitation to a message nobody can answer (N-05).
+func TestAfterTheSevenDaysTheScreenSaysNothingAboutThem(t *testing.T) {
+	pool := testPool(t)
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	bought := sold(t, pool, account, offer, listed, billing.MethodPix, 1, "pay_"+short())
+	settled(t, pool, bought)
+	// Paid eight days ago, so the window shut yesterday.
+	if _, err := pool.Exec(context.Background(),
+		`UPDATE checkout_intents SET updated_at = now() - interval '8 days' WHERE id = $1`,
+		bought.ID); err != nil {
+		t.Fatal(err)
+	}
+
+	_, body := askHolding(t, holdingFor(t, account, true))
+	if _, has := body["withdraw"]; has {
+		t.Errorf("a purchase from eight days ago still offers the seven days: %v",
+			body["withdraw"])
+	}
+}
+
+/*
+TestTheNewestPurchaseOpensAFreshSevenDays.
+
+	SOMEBODY WHO RENEWS HAS A NEW WINDOW ON THE NEW SALE, and the old one is long
+	gone. Looking at the first purchase rather than the latest would tell a
+	person who bought yesterday that their right expired last March.
+*/
+func TestTheNewestPurchaseOpensAFreshSevenDays(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	old := sold(t, pool, account, offer, listed, billing.MethodPix, 1, "pay_"+short())
+	settled(t, pool, old)
+	if _, err := pool.Exec(ctx, `UPDATE checkout_intents
+		SET created_at = now() - interval '400 days', updated_at = now() - interval '400 days'
+		WHERE id = $1`, old.ID); err != nil {
+		t.Fatal(err)
+	}
+
+	fresh := sold(t, pool, account, offer, listed, billing.MethodCard, 1, "pay_"+short())
+	settled(t, pool, fresh)
+
+	_, body := askHolding(t, holdingFor(t, account, true))
+	if _, ok := body["withdraw"].(map[string]any); !ok {
+		t.Error("a renewal yesterday offers no seven days, so the old sale was read")
+	}
+}
+
+// A CHECKOUT NOBODY PAID OPENS NO WINDOW. There is nothing to withdraw from and
+// nothing to give back.
+func TestAnUnpaidCheckoutOffersNoWithdrawal(t *testing.T) {
+	pool := testPool(t)
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	sold(t, pool, account, offer, listed, billing.MethodPix, 1, "pay_"+short())
+
+	_, body := askHolding(t, holdingFor(t, account, true))
+	if _, has := body["withdraw"]; has {
+		t.Errorf("a checkout nobody paid offers a withdrawal: %v", body["withdraw"])
+	}
+}
+
+// THE DEADLINE IS SAID EVEN WITH NOWHERE TO WRITE. A deployment that configured
+// no address still owes the seven days, and knowing the date is worth having on
+// its own — see `config.SupportEmail`.
+func TestTheSevenDaysAreSaidEvenWithNowhereToWrite(t *testing.T) {
+	pool := testPool(t)
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	bought := sold(t, pool, account, offer, listed, billing.MethodPix, 1, "pay_"+short())
+	settled(t, pool, bought)
+
+	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
+		billing.NewCheckouts(pool, nil),
+		func(context.Context) (uuid.UUID, bool) { return account, true }, "")
+
+	mux := http.NewServeMux()
+	h.Routes(mux)
+
+	_, body := askHolding(t, mux)
+	window, ok := body["withdraw"].(map[string]any)
+	if !ok {
+		t.Fatal("no address meant no deadline, and the deadline is the part that is owed")
+	}
+	if _, has := window["email"]; has {
+		t.Errorf("an address was invented: %v", window["email"])
+	}
+}
+
+/*
+TestAPurchaseAlreadyRefundedOffersNoWindow.
+
+	THIS IS THE SUCCESS PATH OF THE FEATURE, READING AS THOUGH NOTHING HAPPENED.
+	A refund does not move the checkout's stage — it got all the way — so without
+	skipping these the screen tells somebody who has just used their seven days
+	that they have until Tuesday to use them.
+*/
+func TestAPurchaseAlreadyRefundedOffersNoWindow(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	bought := sold(t, pool, account, offer, listed, billing.MethodCard, 1, "pay_"+short())
+	settled(t, pool, bought)
+
+	// The money going back, keyed as `Settlement.reverse` keys it.
+	ledger := billing.NewLedger(pool)
+	if _, err := ledger.Record(ctx, billing.Entry{
+		AccountID: account, Kind: billing.KindRefund,
+		Amount: billing.MustNew(int64(-listed), billing.BRL),
+		Source: "asaas", SourceRef: bought.ChargeID + ":refund",
+	}); err != nil {
+		t.Fatalf("recording the refund: %v", err)
+	}
+
+	_, body := askHolding(t, holdingFor(t, account, true))
+	if _, has := body["withdraw"]; has {
+		t.Errorf("a purchase already refunded still offers the seven days: %v",
+			body["withdraw"])
 	}
 }

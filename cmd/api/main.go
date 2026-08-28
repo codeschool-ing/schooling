@@ -622,7 +622,10 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		billing.NewCheckouts(pool, nil),
 		func(ctx context.Context) (uuid.UUID, bool) {
 			return identity.AccountID(ctx)
-		}).Routes(scoped)
+		},
+		// Where somebody writes to use the seven days the terms promise them.
+		cfg.SupportEmail,
+	).Routes(scoped)
 
 	if cfg.AsaasKey != "" {
 		billing.NewHandler(
