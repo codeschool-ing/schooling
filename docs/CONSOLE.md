@@ -32,6 +32,13 @@ is how every console rots.* That division is the spine of everything below.
 
 - Find a person, show what is held about them, **export** it, **erase** them *(the phase-0 item)*
 - The student record — plan, subscription, progress, exams, certificates, sessions
+- **The books**, on that record: every movement of money for one person, with the net per
+  currency. It is deliberately **not** the purchase table beside it — an instalment plan is one
+  sale collected several times and the ledger is keyed by the charge, so adding these up answers
+  what we received rather than what they bought, and the screen says so where somebody comparing
+  the two totals will look. It exists because the console could already WRITE to the ledger — the
+  manual adjustment — and the row appeared on no screen at all, so an operator had no way of
+  checking they had put the sign the right way round
 - **View-as-student**, audited, time-limited, with a visible banner. `K-02`: without all three it
   does not ship
 - The reported-content queue, fed by the student — a **section** or a **question**, and never

@@ -1105,9 +1105,16 @@ try {
     await staff.page.fill('#email', studentEmail);
     await staff.page.click('#find button[type=submit]');
     await staff.page.waitForSelector('#stage[data-screen="/record/:id"]', { timeout: 8000 });
+    /* THE BOOKS ARE WHAT IT WAITS FOR, and not just any `.block`. That table is
+       the one thing on this record fetched AFTER the screen is drawn — the
+       adjustment writes its row immediately, so it has to be re-readable on its
+       own — which means `.block` is satisfied by the subscription above it
+       while the books still say "Reading…". A placeholder passes every check
+       there is, and the table has a header row, a row header per line and an
+       amount in a colour that means direction rather than error. */
     await check(staff.page, `${theme} · console, one student's record`,
       staff.page.url().slice(CONSOLE.length), '/record/:id',
-      { base: CONSOLE, region: '#stage', settled: '.block' });
+      { base: CONSOLE, region: '#stage', settled: '#ledger .grid, #ledger .none' });
 
     /* AND THE THREE CONTROLS UNDER IT, WHICH ARE SHUT UNTIL SOMEBODY OPENS
        THEM. A `details` that has never been opened has its contents out of the

@@ -1153,6 +1153,20 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		cfg.AsaasKey != "",
 	).Routes(staffAPI)
 
+	/* AND WHERE THE MONEY ACTUALLY MOVED, which nothing could read.
+
+	   This console has been able to WRITE to the ledger since the adjustment
+	   arrived — one line for money that moved outside the gateway — and there
+	   was no screen anywhere that showed the result. A write nobody can read
+	   back is a write nobody can review, and this is the one write whose entire
+	   purpose is to correct something.
+
+	   MOUNTED UNCONDITIONALLY, unlike the refund beside it: reading what
+	   happened needs no gateway, and a deployment whose key has been pulled
+	   still has a history to account for. */
+	console.NewLedgerHandler(somebody,
+		movementsOf(billing.NewLedger(pool))).Routes(staffAPI)
+
 	/* AND WHAT AN OPERATOR MAY DO ABOUT IT. Until now the console could see
 	   everything about a subscription and change none of it, so every
 	   conversation ending in "we will sort that out" ended at a SQL client —
@@ -2586,6 +2600,42 @@ func pricesOf(prices *billing.Prices) console.Plan {
 		},
 
 		Refused: func(err error) bool { return errors.Is(err, billing.ErrNotAPrice) },
+	}
+}
+
+/*
+movementsOf is the console's half of the ledger.
+
+	IT PASSES THE SIGN THROUGH UNTOUCHED, which is the only interesting thing
+	about it. `Money` carries direction in the sign — a refund is a payment with
+	the other one — and a translation that took the magnitude "because the screen
+	will show the direction anyway" would put a refund on the wrong side of a
+	total the first time somebody added the column up.
+*/
+func movementsOf(ledger *billing.Ledger) console.Ledger {
+	return func(ctx context.Context, accountID uuid.UUID) ([]console.Movement, error) {
+		entries, err := ledger.Of(ctx, accountID)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]console.Movement, 0, len(entries))
+		for _, e := range entries {
+			out = append(out, console.Movement{
+				ID:   e.ID,
+				Kind: string(e.Kind),
+				// int and not int64: every amount on this platform is far
+				// inside it, and the console counts in the same units the
+				// audit and the purchase table already use.
+				Cents:     int(e.Amount.Cents()),
+				Currency:  string(e.Amount.Currency()),
+				Reversed:  e.Reverses != nil,
+				Source:    e.Source,
+				SourceRef: e.SourceRef,
+				Memo:      e.Memo,
+				At:        e.OccurredAt,
+			})
+		}
+		return out, nil
 	}
 }
 
