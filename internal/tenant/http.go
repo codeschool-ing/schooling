@@ -73,6 +73,16 @@ type Handler struct {
 	// `passMark` above was introduced to end, on a different number.
 	instalments int
 
+	// pixDiscount is what a Pix payment takes off, in basis points.
+	//
+	// HANDED IN LIKE THE OTHER TWO, and here for the reason the subscribe screen
+	// wrote down and could not fix on its own: it held a copy of this number
+	// with a comment saying it was a copy. The invitation now draws a Pix figure
+	// too, so the copy would have become two — and two copies of a rate is a
+	// rate that drifts, with the SERVER's number being the one charged and the
+	// browser's being the one somebody read.
+	pixDiscount int
+
 	offer Offer
 }
 
@@ -94,8 +104,11 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark, instalments int, offer Offer) *Handler {
-	return &Handler{passMark: passMark, instalments: instalments, offer: offer}
+func NewHandler(passMark, instalments, pixDiscount int, offer Offer) *Handler {
+	return &Handler{
+		passMark: passMark, instalments: instalments,
+		pixDiscount: pixDiscount, offer: offer,
+	}
 }
 
 func (h *Handler) Routes(mux *http.ServeMux) {
@@ -137,6 +150,12 @@ type schoolBody struct {
 	// reading a missing key as "no limit" would draw a picker the server
 	// refuses at every option but the first.
 	Instalments int `json:"instalments"`
+
+	// What Pix takes off, in basis points. NOT `omitempty` for the same reason
+	// as the two above: zero is a real answer — a platform that has stopped
+	// discounting Pix — and it has to be distinguishable from a field the
+	// interface failed to read.
+	PixDiscount int `json:"pixDiscount"`
 }
 
 // planBody is one thing somebody can buy.
@@ -183,5 +202,6 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 		Plans:       plans,
 		PassMark:    h.passMark,
 		Instalments: h.instalments,
+		PixDiscount: h.pixDiscount,
 	})
 }

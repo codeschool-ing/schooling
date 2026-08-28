@@ -234,4 +234,11 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
      which was true of a `mailto:` and of nothing since. */
   'You pick the term and how to pay on the next screen.':
     'Você escolhe o prazo e a forma de pagamento na próxima tela.',
+
+  /* THE SAME MONEY SAID TWO SMALLER WAYS, under the invitation's price. The
+     placeholders survive translation because they are part of the KEY, which is
+     what lets Portuguese put "no Pix" after the figure and English put "with
+     Pix" — a sentence cut into fragments could do neither. */
+  '{amount} with Pix': '{amount} no Pix',
+  'or {count}× {amount}, with no interest': 'ou {count}× {amount}, sem juros',
 });

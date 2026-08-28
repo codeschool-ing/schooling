@@ -52,16 +52,17 @@ import { now } from '../state.js';
 import * as source from '../source.js';
 import * as api from '../api.js';
 
-/* THE DISCOUNT IS DRAWN HERE AND DECIDED THERE.
+/* THE DISCOUNT IS THE SERVER'S NUMBER NOW, AND IT USED TO BE A COPY.
 
-   Five per cent, the same number `billing.pixDiscount` applies — and this is a
-   copy, which is worth saying out loud. The alternative is a round trip per
-   click to be told a figure the screen could work out, and the protection
-   against the two drifting is that the SERVER's number is the one charged: a
-   screen showing the wrong discount shows a wrong number and takes the right
-   money, which is visible and cheap to fix. The reverse arrangement — the
-   browser sending what it thinks — is the one that cannot be allowed. */
-const PIX_DISCOUNT = 0.05;
+   This file held `const PIX_DISCOUNT = 0.05` under a comment admitting it was a
+   copy of `billing.pixDiscount` and arguing the copy was safe. The argument
+   held while one screen drew a Pix figure. The invitation draws one too, so the
+   copy would have become two — and the failure mode is quiet: a screen showing
+   the wrong discount shows a wrong number and takes the right money.
+
+   `school.pixDiscount` rides down beside the prices, in basis points, which is
+   how the server counts it. Nothing here decides it. */
+const pixDiscount = () => (Number(source.school && source.school.pixDiscount) || 0) / 10000;
 
 export default async function subscribe() {
   const el = document.createElement('div');
@@ -188,7 +189,7 @@ export default async function subscribe() {
            wrong. `txt` is for sentences, and this is a name. */
         '<span class="buy-method-name">Pix</span>' +
         '<span class="buy-method-price mono">' +
-          esc(money(Math.round(term.cents * (1 - PIX_DISCOUNT)), term.currency)) + '</span>' +
+          esc(money(Math.round(term.cents * (1 - pixDiscount())), term.currency)) + '</span>' +
         '<span class="buy-method-note dim">' + esc(txt('Five per cent off, and it clears in seconds.')) + '</span>' +
       '</label>' +
       '<label class="buy-method' + (method === 'card' ? ' on' : '') + '">' +

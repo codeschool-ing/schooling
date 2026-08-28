@@ -358,7 +358,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	/* THE TWO NUMBERS A SCHOOL STATES THAT ARE NOT ITS OWN. Both belong to
 	   another module and neither may be imported by `tenant` (X-02), so this is
 	   the one line saying they are the same numbers. */
-	tenant.NewHandler(exam.PassMark, billing.MaxInstalments,
+	tenant.NewHandler(exam.PassMark, billing.MaxInstalments, billing.PixDiscountBasisPoints,
 		offered(billing.NewPrices(pool))).Routes(scoped)
 
 	// THE TWO DOCUMENTS, MOUNTED INSIDE THE SCHOOL-SCOPED MUX AND SCOPED TO NO
