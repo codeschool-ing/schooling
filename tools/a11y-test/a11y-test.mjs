@@ -625,6 +625,18 @@ try {
       '/#/course/html-css/lesson/0', '/course/:id/lesson/:ix',
       { settled: '.invite' });
 
+    /* AND THE COURSE PAGE OF ONE, which is a different screen and the one that
+       matters most commercially: this is where somebody arrives from the
+       catalogue, reads a whole syllabus, and decides. The list above measures
+       the free course at this address, signed out — the same route drawn
+       without the offer under it.
+
+       It is a denser measurement than the lesson's, because here the invitation
+       sits BELOW a full page rather than alone on one: heading order, landmarks
+       and the contrast of its price against the panel it now shares. */
+    await check(student, `${theme} · a course behind the wall`,
+      '/#/course/html-css', '/course/:id', { settled: '.invite' });
+
     /* AND THE ONE CONTROL ON THAT SCREEN THAT TALKS BACK. "Something here is
        wrong" is collapsed and empty until it is opened — measured closed, what
        axe would look at is a `summary` and nothing else, which passes every

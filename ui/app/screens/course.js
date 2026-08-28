@@ -14,8 +14,9 @@ import { courseState } from '../graph.js';
 import { courseExam, examReady } from '../exams.js';
 import { examCard } from './exam.js';
 import { materialList } from '../materials.js';
-import { bar, empty, videoFrame, playsOnClick } from './common.js';
+import { bar, empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
 import { esc, formatted } from '../text.js';
+import * as api from '../api.js';
 
 export default async function course({ id }) {
   const c = courseById(id);
@@ -114,6 +115,29 @@ export default async function course({ id }) {
      cookie from them. Bound here rather than in main.js's delegation: the
      screen element is new on every render, so the listener goes with it. */
   playsOnClick(el, txt('course introduction'));
+
+  /* ---------- and the offer, if this one is not open ----------
+
+     THE BEST PLACE ON THIS PLATFORM TO MAKE THE CASE, and it carried nothing.
+     Somebody who reaches here came from the catalogue and has just read the
+     whole syllabus of a course they want; the lesson screen only meets people
+     who already clicked into one. This screen had no mention of the
+     subscription at all.
+
+     IT IS APPENDED AND THE PAGE ABOVE IS UNTOUCHED. The syllabus is the shop
+     window (N-04) and stays readable — hiding it would remove the very thing
+     that makes somebody want to buy. What is added is the offer under it.
+
+     THE SERVER DECIDES, NOT THIS FILE. `loadCourseContent` answers 'locked' on
+     the 402, which is the same signal the lesson screen acts on. Working out
+     which courses are free from the track's shape would be a second copy of a
+     rule the server already owns — and the copy that disagreed would either
+     sell a free course or give away a paid one. */
+  if (await api.loadCourseContent(id) === 'locked') {
+    const offer = document.createElement('div');
+    offer.innerHTML = subscribeInvite();
+    el.append(offer.firstElementChild);
+  }
 
   return { title: c.name, el };
 }

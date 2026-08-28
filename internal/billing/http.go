@@ -85,7 +85,7 @@ type Charge struct {
 }
 
 /*
-pixDiscount is five per cent, in basis points.
+PixDiscountBasisPoints is five per cent, in basis points.
 
 	IT IS A CONSTANT AND NOT A DIALED SETTING, and that is a decision rather than
 	a shortcut. K-13 asks whether a value has a right answer; this one does not,
@@ -98,12 +98,22 @@ pixDiscount is five per cent, in basis points.
 	The day somebody wants to change it without a deploy, it becomes a dated row
 	like the prices — not a column that can be overwritten.
 
-	WHY FIVE. A Pix received costs about R$ 0,99 against 1,99% + R$ 0,49 on a
-	card, which on a R$ 590 sale is an eleven-real difference; five per cent
-	costs R$ 29,50, so roughly a third of the discount pays for itself. The rest
-	buys settlement in seconds instead of in 32 days, and no chargeback.
+	IT IS EXPORTED SO THAT THE INTERFACE CAN BE TOLD RATHER THAN KNOW. Two
+	screens draw a Pix figure — the subscribe form and the invitation that leads
+	to it — and the first of them held a copy of this number with a comment
+	admitting it was one. Two copies is a number that drifts; three is a
+	certainty. It goes down with the school, beside `MaxInstalments`, and the
+	browser computes nothing this file has not stated.
+
+	WHY FIVE, WITH THE ARITHMETIC THE ACCOUNT ACTUALLY SHOWS. On a term of
+	R$ 690 the discount is R$ 34,50 and the fee it saves is R$ 13,23 — a Pix
+	received costs R$ 0,99 against 1,99% + R$ 0,49 on a card. So it costs
+	R$ 21,27 a sale and pays for NONE of itself, which is the opposite of what
+	this comment said while the figures were guesses. What it buys is settlement
+	in seconds instead of 32 days per instalment, and no chargeback. That is the
+	whole of the argument and it has to carry it alone.
 */
-const pixDiscount = 500
+const PixDiscountBasisPoints = 500
 
 /*
 chargeLife is how long a charge stays payable.
@@ -193,7 +203,7 @@ func (h *Handler) start(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if method == MethodPix {
-		off := amount.Percent(pixDiscount)
+		off := amount.Percent(PixDiscountBasisPoints)
 		if amount, err = amount.Sub(off); err != nil {
 			web.LoggerFrom(r.Context()).Error("applying the discount", "error", err)
 			web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")

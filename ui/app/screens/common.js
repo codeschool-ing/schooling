@@ -10,6 +10,11 @@
 import { trackById, trackPath } from '../catalog.js';
 import { courseProgress, activeOption, now } from '../state.js';
 import { esc } from '../text.js';
+/* THE MODULE AND NOT THE NAME. `source.school` is `export let` and null until
+   the API answers; a named import reads it once, which works in a browser and
+   not in the offline bundle. `tools/bundle` refuses the other shape — see the
+   note on the same import in `screens/subscribe.js`. */
+import * as source from '../source.js';
 
 /* The progress of a whole track, counted in SECTIONS and not in courses or
    lessons: a course with 48 topics and one with 11 are not worth the same, and a
@@ -160,6 +165,51 @@ export function subscribeHref() {
 // and a local run both reach here with an empty window.PLANS.
 const paidPlan = () => (window.PLANS || []).find((p) => p.id === 'student');
 
+/*
+shapesOf is the same money said two smaller ways.
+
+	BOTH NUMBERS COME FROM THE SERVER AND NEITHER IS ASSUMED. `pixDiscount` and
+	`instalments` ride down with the school beside the prices, so this computes
+	arithmetic rather than policy — and a deployment that stopped discounting
+	Pix, or capped the split at six again, says so here without anybody editing
+	this file.
+
+	IT DRAWS NOTHING IT CANNOT STATE. No school, no line; no discount, no Pix
+	figure; a split of one, no instalment figure. The offline bundle reaches here
+	with no school at all and gets the price alone, which is what it showed
+	before this existed.
+
+	THE ROUNDING IS THE SCREEN'S AND THE CHARGE IS THE SERVER'S. `Money.Split`
+	distributes the odd cent across the early instalments; this divides and
+	rounds, so a twelfth here can differ by a cent from a twelfth on the invoice.
+	That is acceptable in a sentence whose job is to say "about this much a
+	month" and would not be in the checkout, which is why the checkout does not
+	compute it.
+*/
+function shapesOf(plan) {
+  const school = source.school;
+  if (!school) return '';
+
+  const parts = [];
+
+  const off = Number(school.pixDiscount) || 0;
+  if (off > 0) {
+    parts.push(txt('{amount} with Pix')
+      .replace('{amount}', money(plan.price * (1 - off / 10000), plan.currency)));
+  }
+
+  const most = Number(school.instalments) || 0;
+  if (most > 1) {
+    parts.push(txt('or {count}× {amount}, with no interest')
+      .replace('{count}', most)
+      .replace('{amount}', money(plan.price / most, plan.currency)));
+  }
+
+  return parts.length
+    ? '<p class="invite-shapes dim">' + esc(parts.join(' · ')) + '</p>'
+    : '';
+}
+
 /* An amount as the reader's language writes it, in the school's currency.
    Falls back to the plain number when the currency is unknown, rather than
    inventing a symbol for it. */
@@ -209,9 +259,23 @@ export function subscribeInvite() {
        A school with no price set names none: the sentence above already says
        what the subscription opens, and a made-up number is worse than no
        number. */
+    /* ONE PRICE AND THREE WAYS TO LOOK AT IT, which is not a price table.
+
+       The figure alone was the LARGEST number this platform can show, standing
+       by itself: R$ 690. Beside it are the two that make it small — R$ 655,50
+       on Pix, and twelve instalments of R$ 57,50, which is the number a
+       Brazilian buyer compares against every other school's and the one that
+       wins.
+
+       THE SECOND TERM IS NOT HERE ON PURPOSE. The invitation exists to earn one
+       click; choosing between a year and two years is a decision, and the
+       subscribe screen already draws both side by side for somebody who is
+       deciding. Two prices here invite comparison at the moment you want a
+       choice. */
     (plan && plan.price
       ? '<p class="invite-price"><strong>' + esc(money(plan.price, plan.currency)) + '</strong>'
         + '<span class="invite-cycle dim">' + esc(txt(plan?.cycle)) + '</span></p>'
+        + shapesOf(plan)
       : '') +
     /* THE BUTTON'S OWN WORDS CHANGED WITH WHAT IT DOES. "Ask for the
        subscription" was accurate while it opened a mail client — somebody
