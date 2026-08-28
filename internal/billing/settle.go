@@ -134,10 +134,15 @@ moved is how much this event actually moved, which is not always what was sold.
 	against every one of them put the price in the ledger three times.
 
 	The three still add up to the sale, which is the property that matters: the
-	provider splits and this reads, so whichever end rounds the odd cent, the
-	total is the price. Ours rounds it onto the early instalments and theirs onto
-	the last; neither is charged from `Money.Split`, and the difference does not
-	reach a row.
+	provider splits and this reads, so wherever the odd cent lands, the total is
+	the price. It lands on the LAST instalment — 363,33, 363,33 and 363,34 is the
+	observation, right there in the line above.
+
+	NOTHING HERE HAS AN OPINION ABOUT THAT, and the sentence that used to say
+	"ours rounds it onto the early instalments" is gone with the code that did.
+	`asaas.go` sends the total and the count exactly so that the party collecting
+	the parts is the party that makes them add up; see WHY NOTHING HERE SPLITS AN
+	AMOUNT on the package.
 
 	AND A FALLBACK RATHER THAN A REFUSAL, because delivery is sequential and a
 	failure stops the queue for every student. An event with no readable amount

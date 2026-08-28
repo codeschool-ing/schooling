@@ -192,8 +192,9 @@ func (m Money) Sub(other Money) (Money, error) {
 }
 
 // Times multiplies by a whole number, which is the only multiplication that
-// cannot lose a cent. Anything else — a percentage, a proportion — goes through
-// Percent or Split, where the rounding rule is written down.
+// cannot lose a cent. A percentage goes through Percent, where the rounding
+// rule is written down. A proportion has nowhere to go and that is deliberate —
+// see WHY NOTHING HERE SPLITS AN AMOUNT on the package.
 //
 // It refuses rather than wrapping: this is the one operation here whose result
 // is not bounded by its inputs, and a silently negative total is the worst
@@ -250,9 +251,9 @@ func (m Money) comparable(other Money) error {
 //
 // It is NOT banker's rounding. That exists to keep a long series of roundings
 // unbiased, which is a real concern when summing thousands of independently
-// rounded lines — and it is not this: a discount is applied once to one price,
-// and the sum that has to come out exactly is Split's, which does not round at
-// all.
+// rounded lines — and it is not this: a discount is applied once, to one price,
+// and the result is charged as one amount. This is the only rounding in the
+// package, because it is the only division in it.
 func (m Money) Percent(basisPoints int64) Money {
 	const wholeInBasisPoints = 10_000
 

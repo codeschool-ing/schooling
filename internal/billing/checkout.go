@@ -84,9 +84,11 @@ rather than by the screen that draws the picker.
 	AND THE BOUND WAS THE BROWSER'S ALONE UNTIL NOW, which is not a bound. The
 	picker stopped at six and `Open` clamped only the bottom, so a request asking
 	for five hundred instalments was accepted, written to the table and sent on
-	for the gateway to refuse. Nothing was wrong about the money — `Split`
-	handles any count, and its comment already said "by seven, ten or twelve as a
-	matter of course". What was missing is a policy the server states.
+	for the gateway to refuse. Nothing was wrong about the money: this platform
+	does not divide the amount at all — it sends the total and the count, and the
+	gateway makes the parts add up — so a count of five hundred was arithmetic
+	nobody here was going to get wrong. What was missing is a policy the server
+	states.
 */
 const MaxInstalments = 12
 
