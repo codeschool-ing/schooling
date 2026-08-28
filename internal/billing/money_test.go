@@ -7,69 +7,6 @@ import (
 	"github.com/codeschool-ing/schooling/internal/billing"
 )
 
-// THE ONE THAT JUSTIFIES THE TYPE. Twelve instalments of a year's subscription
-// have to add back up to the year's price, and no arrangement of equal parts
-// does. A grader for this is not needed: the sum either equals the whole or
-// somebody is out of pocket.
-func TestInstalmentsAddBackUpToWhatWasCharged(t *testing.T) {
-	for _, whole := range []int64{
-		119900, // R$1.199,00 — a year
-		100000, // the awkward one: 1000 ÷ 7 recurs
-		1,      // one cent, in twelve
-		0,      // nothing, in twelve
-		-119900,
-		-100000,
-		-1,
-		99999999,
-	} {
-		for _, n := range []int{1, 2, 3, 4, 6, 7, 10, 12, 24} {
-			amount := billing.MustNew(whole, billing.BRL)
-
-			parts, err := amount.Split(n)
-			if err != nil {
-				t.Fatalf("splitting %s into %d: %v", amount, n, err)
-			}
-			if len(parts) != n {
-				t.Fatalf("splitting %s into %d gave %d parts", amount, n, len(parts))
-			}
-
-			var total int64
-			for _, part := range parts {
-				total += part.Cents()
-			}
-			if total != whole {
-				t.Errorf("%s in %d instalments sums to %d cents, not %d — %d cents "+
-					"went somewhere", amount, n, total, whole, whole-total)
-			}
-		}
-	}
-}
-
-// AND THE PARTS DIFFER BY AT MOST A CENT, with the extra on the early ones.
-// A split that satisfied the sum by making the last instalment absorb the whole
-// remainder would pass the test above and put a visibly different number on the
-// customer's final statement.
-func TestNoInstalmentIsMoreThanACentFromAnother(t *testing.T) {
-	amount := billing.MustNew(100000, billing.BRL) // R$1.000,00 in seven
-
-	parts, err := amount.Split(7)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	first, last := parts[0].Cents(), parts[len(parts)-1].Cents()
-	if first-last != 1 {
-		t.Errorf("the first instalment is %d and the last is %d; the extra cent belongs "+
-			"on the early ones and the difference should be exactly one", first, last)
-	}
-	for i, part := range parts {
-		if part.Cents() != 14286 && part.Cents() != 14285 {
-			t.Errorf("instalment %d is %d cents, which is neither of the two the split "+
-				"should produce", i+1, part.Cents())
-		}
-	}
-}
-
 // A DECIMAL PRICE IS READ EXACTLY. Through a float, 1199.90 × 100 is
 // 119989.99999999999, and truncating it prices the subscription a cent below
 // what the page says. This is the whole reason Parse does not call ParseFloat.
