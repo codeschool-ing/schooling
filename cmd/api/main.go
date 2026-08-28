@@ -1111,16 +1111,43 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		},
 	).Routes(staffAPI)
 
+	/* ONE READING OF A SUBSCRIPTION, HANDED TO BOTH HANDLERS. The record screen
+	   draws it and the three writes below read it to say what they replaced; a
+	   second closure would be a second answer to "what does this person hold",
+	   and an operator arguing with a student about a date is how that ends. */
+	held := holdingOf(subscriptions, billing.NewPrices(pool),
+		/* A STORE THAT CANNOT SELL. `NewCheckouts` with no `Confirmed` refuses
+		   every `Open`, so the console reads a person's purchases through
+		   something that could not start one on their behalf. */
+		billing.NewCheckouts(pool, nil))
+
 	console.NewRecordHandler(somebody, console.Records{
 		Schools:  schoolsFor(tenant.NewStore(pool)),
 		Sittings: sittingsOf(accounts),
 		At:       atSchool(subscriptions, studied, exams, certificates),
-		Holding: holdingOf(subscriptions, billing.NewPrices(pool),
-			/* A STORE THAT CANNOT SELL. `NewCheckouts` with no `Confirmed`
-			   refuses every `Open`, so the console reads a person's purchases
-			   through something that could not start one on their behalf. */
-			billing.NewCheckouts(pool, nil)),
+		Holding:  held,
 	}).Routes(staffAPI)
+
+	/* AND WHAT AN OPERATOR MAY DO ABOUT IT. Until now the console could see
+	   everything about a subscription and change none of it, so every
+	   conversation ending in "we will sort that out" ended at a SQL client —
+	   the same power with no audit, no rank, and no record of who or why. */
+	console.NewSubscriptionHandler(
+		somebody,
+		subscriptionWrites(subscriptions, billing.NewLedger(pool), held),
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		/* OPERATOR AND NOT READ-ONLY, the same second rank the erasure asks
+		   for. `RoleOperator`'s own definition is "changes a student's plan",
+		   which is precisely this. Owner is not required: none of the three
+		   moves money out of an account — the refund is the one that does, and
+		   it is not among them. */
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
 
 	/* THE GATE IS ON THE API AND NOT ON THE WHOLE HOST, and the difference
 	   matters the moment this grows a screen: a console nobody can reach
@@ -1412,15 +1439,19 @@ func personAt(accounts *identity.Store) func(context.Context, string) (console.P
 // true the moment it could set a school's colour.
 func recorded(entries *audit.Store) console.Record {
 	return func(ctx context.Context, actor uuid.UUID, actorLabel, action string,
-		subject console.Subject, what console.Changed, requestID string) error {
+		subject console.Subject, what console.Changed, reason, requestID string) error {
 		return entries.Record(ctx, audit.Entry{
 			Actor:       audit.Staff(actor, actorLabel),
 			Action:      action,
 			SubjectKind: subject.Kind,
 			SubjectID:   subject.ID,
 			// Counts, never contents: see `console.Record`.
-			Before:    what.Before,
-			After:     what.After,
+			Before: what.Before,
+			After:  what.After,
+			// WHAT THE ACTOR SAID, which the column has had room for since the
+			// table existed and which nothing filled until the console grew the
+			// writes that move money and time.
+			Reason:    reason,
 			RequestID: requestID,
 		})
 	}
@@ -2630,6 +2661,82 @@ func holdingOf(subscriptions *billing.Store, prices *billing.Prices,
 			}
 		}
 		return out, nil
+	}
+}
+
+/*
+subscriptionWrites is the three things an operator may do about a subscription.
+
+	IT IS THE WRITE SIDE OF THE SEAM `holdingOf` IS THE READ SIDE OF, and it
+	takes that closure rather than rebuilding one: the console reads what
+	somebody holds before every change so the audit entry can name what it
+	replaced, and two readings of one subscription is two answers to the same
+	question.
+
+	THE STATE MACHINE'S REFUSALS BECOME ONE ERROR THE CONSOLE KNOWS. `billing`
+	answers `ErrNotFromHere` for a cancellation of something already over, and
+	`ErrNothingToExtend` for a term that does not exist. Those are the caller
+	being told the rules, not a fault — so they are translated at this boundary
+	into `console.ErrNotAllowedThere`, which the handler turns into a 400 with
+	the sentence in it. Everything else stays an error and is logged.
+*/
+func subscriptionWrites(plans *billing.Store, ledger *billing.Ledger,
+	held func(context.Context, uuid.UUID) (console.Holding, error)) console.Subscriptions {
+
+	return console.Subscriptions{
+		Held: held,
+
+		Extend: func(ctx context.Context, accountID uuid.UUID, days int) (console.Holding, error) {
+			switch _, err := plans.Grant(ctx, accountID, billing.ScopeEverything,
+				days, time.Now()); {
+			case errors.Is(err, billing.ErrNothingToExtend), errors.Is(err, billing.ErrNotFromHere):
+				return console.Holding{}, fmt.Errorf("%w: %w", console.ErrNotAllowedThere, err)
+			case err != nil:
+				return console.Holding{}, err
+			}
+			/* AND IT IS RE-READ RATHER THAN CONVERTED. `Grant` answers a
+			   `billing.Held`, which is the subscription and not the purchases
+			   beside it; the screen redraws the whole block from what comes
+			   back, and a half-filled one would blank the history under it. */
+			return held(ctx, accountID)
+		},
+
+		Cancel: func(ctx context.Context, accountID uuid.UUID) (console.Holding, error) {
+			switch _, err := plans.Advance(ctx, accountID, billing.ScopeEverything,
+				billing.EventCancelled, time.Now(), time.Time{}, nil); {
+			case errors.Is(err, billing.ErrNoSubscription), errors.Is(err, billing.ErrNotFromHere):
+				return console.Holding{}, fmt.Errorf("%w: %w", console.ErrNotAllowedThere, err)
+			case err != nil:
+				return console.Holding{}, err
+			}
+			return held(ctx, accountID)
+		},
+
+		Adjust: func(ctx context.Context, accountID uuid.UUID,
+			cents int, currency, memo string) error {
+
+			amount, err := billing.New(int64(cents), billing.Currency(currency))
+			if err != nil {
+				return fmt.Errorf("%w: %w", console.ErrNotAllowedThere, err)
+			}
+			/* `SourceManual` AND NO REFERENCE, which is what makes this row
+			   findable as the one nothing outside produced. The unique index on
+			   (source, source_ref) does not bite: an empty reference is stored
+			   as NULL, and Postgres counts NULLs as distinct — so a hundred
+			   adjustments coexist and a second webhook for one charge still
+			   cannot. */
+			_, err = ledger.Record(ctx, billing.Entry{
+				AccountID: accountID,
+				Kind:      billing.KindAdjustment,
+				Amount:    amount,
+				Source:    billing.SourceManual,
+				Memo:      memo,
+			})
+			if errors.Is(err, billing.ErrBadEntry) {
+				return fmt.Errorf("%w: %w", console.ErrNotAllowedThere, err)
+			}
+			return err
+		},
 	}
 }
 

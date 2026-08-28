@@ -31,6 +31,9 @@ type recorded struct {
 	label   string
 	subject console.Subject
 	what    console.Changed
+	// why is what the actor typed. It was read off the request body and
+	// dropped until the seam grew a parameter for it.
+	why string
 }
 
 type fakes struct {
@@ -72,11 +75,11 @@ func (f *fakes) handler() http.Handler {
 			},
 		},
 		func(_ context.Context, actor uuid.UUID, actorLabel, action string,
-			subject console.Subject, what console.Changed, _ string) error {
+			subject console.Subject, what console.Changed, why, _ string) error {
 			if f.recordErr != nil {
 				return f.recordErr
 			}
-			f.entries = append(f.entries, recorded{action, actor, actorLabel, subject, what})
+			f.entries = append(f.entries, recorded{action, actor, actorLabel, subject, what, why})
 			return nil
 		},
 		func(context.Context, uuid.UUID) (string, string, error) {
@@ -327,5 +330,50 @@ func TestAnAddressThatBelongsToSomebodyElseDoesNotConfirm(t *testing.T) {
 	}
 	if len(f.erased) != 0 {
 		t.Error("the wrong person was erased")
+	}
+}
+
+/*
+TestTheReasonForAnErasureIsRecorded.
+
+	IT WAS READ AND DROPPED. The handler decoded a `reason` off the request body
+	and used it for nothing: `console.Record` had no parameter for one, so
+	`audit_log.reason` — a column that has existed since the table did, and that
+	the history screen already draws — was an empty string on every entry the
+	console had ever written.
+
+	An operator explaining the one act that cannot be undone was typing into
+	nothing, and the screen showed them a field that implied otherwise.
+*/
+func TestTheReasonForAnErasureIsRecorded(t *testing.T) {
+	f := seeded()
+
+	got := ask(t, f.handler(), http.MethodPost,
+		"/console/api/v1/people/"+f.person.ID.String()+"/erase",
+		`{"email":"sam@example.tld","reason":"they asked, ticket 812"}`)
+	if got.Code != http.StatusNoContent {
+		t.Fatalf("it answered %d, want 204", got.Code)
+	}
+	if len(f.entries) != 1 {
+		t.Fatalf("it wrote %d entries", len(f.entries))
+	}
+	if f.entries[0].why != "they asked, ticket 812" {
+		t.Errorf("the entry's reason reads %q", f.entries[0].why)
+	}
+}
+
+// AND AN EXPORT CARRIES NONE, which is not an omission: nobody is asked for
+// one, and a sentence invented here would be this console describing its own
+// behaviour rather than an actor explaining themselves.
+func TestAnExportRecordsNoReasonBecauseNobodyIsAskedForOne(t *testing.T) {
+	f := seeded()
+
+	ask(t, f.handler(), http.MethodGet,
+		"/console/api/v1/people/"+f.person.ID.String()+"/export", "")
+	if len(f.entries) != 1 {
+		t.Fatalf("it wrote %d entries", len(f.entries))
+	}
+	if f.entries[0].why != "" {
+		t.Errorf("the export invented a reason: %q", f.entries[0].why)
 	}
 }

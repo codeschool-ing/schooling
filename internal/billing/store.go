@@ -246,6 +246,87 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 	return held, nil
 }
 
+/*
+ErrNothingToExtend is a grant aimed at somebody who has no subscription.
+
+	IT IS A REFUSAL AND NOT A FREE ONE. Extending a term and giving somebody a
+	term are different acts: the second has to say what it was sold at —
+	`price_id` is NOT NULL, and it is the column that keeps a March invoice
+	explicable in November — and there is no honest value for a subscription
+	nobody bought. Inventing one would put a price in the books that nobody
+	agreed to and nobody paid.
+
+	So an operator can make good on a term that exists and cannot conjure one.
+	Comping somebody who has never subscribed is a different feature, and it
+	needs an offer priced at zero rather than a grant pretending to be one.
+*/
+var ErrNothingToExtend = errors.New("billing: there is no subscription to extend")
+
+/*
+Grant gives time that nobody paid for.
+
+	IT IS `Begin` WITHOUT THE MONEY, and it is a method of its own rather than an
+	argument to that one because the two are asked by different people for
+	different reasons: `Begin` is a payment settling, and this is somebody in
+	the console making good on a fortnight the platform lost.
+
+	THE ARITHMETIC IS THE SAME AND HAS TO BE. Time is ADDED to what is there,
+	from the later of today and the current end — which is `Begin`'s rule, and
+	is what stops a goodwill fortnight from moving somebody's end date backwards
+	by eleven months. It happens here, inside the transaction that locks the
+	row, for the reason `Begin` gives: a caller cannot compute it without
+	reading the row first, outside this transaction, and acting on what it said
+	a moment ago.
+
+	NO LEDGER ROW GOES WITH IT, and that is the point of the separate event. No
+	money moved. An operator who wants the gift to appear in the books writes an
+	adjustment, which is a deliberate second act and says so.
+*/
+func (s *Store) Grant(ctx context.Context, accountID uuid.UUID, scope string,
+	days int, now time.Time) (Held, error) {
+
+	if scope == "" {
+		scope = ScopeEverything
+	}
+	if days < 1 {
+		return Held{}, fmt.Errorf("%w: %d days is not time to give", ErrNoPrice, days)
+	}
+
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return Held{}, fmt.Errorf("billing: granting time: %w", err)
+	}
+	defer func() {
+		_ = tx.Rollback(context.WithoutCancel(ctx)) // a no-op once committed
+	}()
+
+	existing, err := s.read(ctx, tx, accountID, scope)
+	switch {
+	case errors.Is(err, ErrNoSubscription):
+		return Held{}, ErrNothingToExtend
+	case err != nil:
+		return Held{}, err
+	}
+
+	from := now
+	if existing.PaidThrough.After(now) {
+		from = existing.PaidThrough
+	}
+
+	/* `uuid.Nil` FOR THE PRICE, so the stored one is left where it is. A grant
+	   is not somebody agreeing to a number, and moving the column would rewrite
+	   what this person's running term was sold at with nothing to replace it. */
+	granted, err := s.apply(ctx, tx, existing, EventGranted, now,
+		from.AddDate(0, 0, days), uuid.Nil, nil)
+	if err != nil {
+		return Held{}, err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return Held{}, fmt.Errorf("billing: granting time: %w", err)
+	}
+	return granted, nil
+}
+
 // Advance applies an event to somebody's subscription and writes the answer.
 //
 // `paidThrough` is what a payment bought and is ignored by every other event.

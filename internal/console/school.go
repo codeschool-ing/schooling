@@ -213,6 +213,8 @@ func (h *SchoolsHandler) setAccent(w http.ResponseWriter, r *http.Request) {
 		"school.accent.changed",
 		Subject{Kind: "school", ID: school.ID.String()},
 		Changed{Before: colourOrNone(school.Accent), After: accent},
+		// A colour is its own explanation, and both sides of it are above.
+		"",
 		web.RequestIDFrom(r.Context())); err != nil {
 
 		web.LoggerFrom(r.Context()).Error("recording a colour change", "error", err)
