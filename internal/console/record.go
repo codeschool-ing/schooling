@@ -182,6 +182,24 @@ Purchase is one checkout: what was asked for, how, and what became of it.
 type Purchase struct {
 	ID uuid.UUID
 
+	/* AccountID is whose it is. It is redundant on the record screen, which
+	   already knows — and it is not redundant on a refund, which is reached by
+	   the PURCHASE's id and has to name the person in the audit without being
+	   told who they are a second time. */
+	AccountID uuid.UUID
+
+	/* ChargeID is the gateway's own reference, and it is here for one reason:
+	   it is what somebody says out loud to the processor's support desk. Until
+	   now it existed only in the database, so a conversation with Asaas began
+	   with an operator opening a SQL client.
+
+	   IT IS NOT IN THE PERSON'S OWN EXPORT, deliberately, and the two are not
+	   in tension. `privacy.go` leaves it out because it means nothing to the
+	   student and an export is not the place to publish somebody else's
+	   internal identifiers; staff talking to that somebody else need exactly
+	   it. */
+	ChargeID string
+
 	OpenedAt time.Time
 	MovedAt  time.Time
 
@@ -241,10 +259,21 @@ type Records struct {
 type RecordHandler struct {
 	people  People
 	records Records
+
+	/* refundable is whether this deployment can send money back at all, which
+	   is whether it has a gateway key.
+
+	   THE SCREEN NEEDS IT BECAUSE THE ROUTE IS NOT ALWAYS THERE. `RefundHandler`
+	   is mounted only where there is a key, so on a deployment without one the
+	   refund button would be a control that answers 404 — and a button that
+	   always fails is worse than a button that is not drawn. Asking the screen
+	   to discover that by trying is asking an operator to discover it by
+	   telling a student their money is on its way. */
+	refundable bool
 }
 
-func NewRecordHandler(people People, records Records) *RecordHandler {
-	return &RecordHandler{people: people, records: records}
+func NewRecordHandler(people People, records Records, refundable bool) *RecordHandler {
+	return &RecordHandler{people: people, records: records, refundable: refundable}
 }
 
 func (h *RecordHandler) Routes(mux *http.ServeMux) {
@@ -261,6 +290,9 @@ type recordBody struct {
 	// covers every school (N-02). Absent for somebody who has never bought
 	// anything, which is most people.
 	Holding *holdingBody `json:"holding,omitempty"`
+
+	// Refundable says whether this deployment has a gateway to ask at all.
+	Refundable bool `json:"refundable"`
 }
 
 type holdingBody struct {
@@ -287,6 +319,10 @@ type priceBody struct {
 
 type purchaseBody struct {
 	ID string `json:"id"`
+
+	// ChargeID is what an operator reads out to the processor's support desk.
+	// Absent on a checkout that never reached them.
+	ChargeID string `json:"chargeId,omitempty"`
 
 	OpenedAt time.Time `json:"openedAt"`
 	MovedAt  time.Time `json:"movedAt"`
@@ -390,9 +426,10 @@ func (h *RecordHandler) record(w http.ResponseWriter, r *http.Request) {
 			ID: person.ID.String(), Name: person.Name, Email: person.Email,
 			CreatedAt: person.CreatedAt, Synthetic: person.Synthetic,
 		},
-		Sittings: make([]sittingBody, 0, len(sittings)),
-		Schools:  make([]atSchoolBody, 0, len(schools)),
-		Scope:    "every school",
+		Sittings:   make([]sittingBody, 0, len(sittings)),
+		Schools:    make([]atSchoolBody, 0, len(schools)),
+		Scope:      "every school",
+		Refundable: h.refundable,
 	}
 
 	now := time.Now()
@@ -455,6 +492,7 @@ func shownHolding(h Holding) *holdingBody {
 	for _, p := range h.Purchases {
 		out.Purchases = append(out.Purchases, purchaseBody{
 			ID:       p.ID.String(),
+			ChargeID: p.ChargeID,
 			OpenedAt: p.OpenedAt, MovedAt: p.MovedAt, Stage: p.Stage,
 			Cents: p.Cents, Listed: p.Listed, Currency: p.Currency,
 			TermMonths: p.TermMonths,

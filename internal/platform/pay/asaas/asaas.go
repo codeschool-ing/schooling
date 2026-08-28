@@ -367,6 +367,51 @@ func (c *Client) ChargeByID(ctx context.Context, id string) (Charge, error) {
 	return out.charge()
 }
 
+/*
+Refund asks for money to go back, in full.
+
+	IT IS THE ONLY CALL IN THIS PACKAGE THAT MOVES MONEY THE OTHER WAY, and the
+	only one that cannot be undone by asking again. Everything else here creates
+	something or reads it.
+
+	IN FULL, AND PARTIAL IS NOT OFFERED. Their API takes a `value` and will give
+	back a slice of a sale; this platform has nowhere to put that. A refund
+	closes the subscription outright — `Settlement.reverse` says so and argues
+	it — and recording the whole sale as reversed while returning a third of it
+	would leave the ledger saying more went back than did. Whole refunds are the
+	shape the rest of this system already has; partial ones need a decision
+	about what a half-refunded term opens, and that decision has not been made.
+
+	WHAT IT DOES NOT DO IS WRITE ANYTHING DOWN. The ledger row and the closed
+	subscription come from the WEBHOOK this refund causes, exactly as they do
+	when somebody refunds from the gateway's own dashboard. One writer for money,
+	and it is the one that hears from the gateway — so a refund made here and a
+	refund made there settle through the same tested path, and neither can
+	produce a row the other would duplicate.
+
+	THE ANSWER IS THE CHARGE AS IT NOW STANDS, so a caller can log the status
+	their words for it rather than assume the request meant it happened.
+*/
+func (c *Client) Refund(ctx context.Context, id string) (Charge, error) {
+	if c.key == "" {
+		return Charge{}, ErrNoKey
+	}
+	if strings.TrimSpace(id) == "" {
+		return Charge{}, ErrNoCharge
+	}
+
+	/* AN EMPTY BODY AND NOT AN ABSENT ONE. Their endpoint takes an optional
+	   `value` and an optional `description`; sending neither is what asks for
+	   the whole amount, and `{}` says that in the one way a JSON API cannot
+	   read as something else. */
+	var out chargeBody
+	if err := c.call(ctx, http.MethodPost, "/payments/"+url(id)+"/refund",
+		map[string]any{}, &out); err != nil {
+		return Charge{}, err
+	}
+	return out.charge()
+}
+
 func (c *Client) checkCharge(want Charge) error {
 	switch {
 	case c.key == "":

@@ -31,12 +31,13 @@ var (
 )
 
 type recordFake struct {
-	person   console.Person
-	found    bool
-	sittings []console.Sitting
-	at       map[string]console.AtSchool
-	holding  console.Holding
-	err      error
+	person     console.Person
+	found      bool
+	sittings   []console.Sitting
+	at         map[string]console.AtSchool
+	holding    console.Holding
+	refundable bool
+	err        error
 }
 
 func (f *recordFake) handler() http.Handler {
@@ -67,6 +68,9 @@ func (f *recordFake) handler() http.Handler {
 				return f.holding, nil
 			},
 		},
+		// This deployment has a gateway, so the screen may draw a refund
+		// control. `TestARecordSaysWhetherAnythingCanBeSentBack` holds both.
+		f.refundable,
 	).Routes(mux)
 	return mux
 }
@@ -75,8 +79,9 @@ func aRecord() *recordFake {
 	yesterday := time.Now().Add(-24 * time.Hour)
 	paid := time.Now().Add(300 * 24 * time.Hour)
 	return &recordFake{
-		found:  true,
-		person: console.Person{ID: somebody, Name: "Sam Oliveira", Email: "sam@example.tld"},
+		found:      true,
+		refundable: true,
+		person:     console.Person{ID: somebody, Name: "Sam Oliveira", Email: "sam@example.tld"},
 		sittings: []console.Sitting{
 			{ID: uuid.New(), CreatedAt: yesterday, ExpiresAt: time.Now().Add(time.Hour),
 				UserAgent: "a browser"},
@@ -307,5 +312,33 @@ func TestARecordWithNoPurchasesLeavesTheSectionOut(t *testing.T) {
 	}
 	if _, has := body["holding"]; has {
 		t.Errorf("somebody who has bought nothing has a subscription section: %v", body["holding"])
+	}
+}
+
+/*
+TestARecordSaysWhetherAnythingCanBeSentBack.
+
+	THE REFUND ROUTE IS NOT ALWAYS THERE. It is mounted only where there is a
+	gateway key, so on a deployment without one the button would answer 404 —
+	and a control that always fails is worse than one that is not drawn. The
+	screen cannot know that by itself, and asking it to find out by trying is
+	asking an operator to find out by telling a student their money is on its
+	way.
+*/
+func TestARecordSaysWhetherAnythingCanBeSentBack(t *testing.T) {
+	for _, can := range []bool{true, false} {
+		f := aRecord()
+		f.refundable = can
+
+		rec := get(t, f.handler(), "/console/api/v1/people/"+somebody.String()+"/record")
+		var body struct {
+			Refundable bool `json:"refundable"`
+		}
+		if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+			t.Fatalf("reading the record: %v", err)
+		}
+		if body.Refundable != can {
+			t.Errorf("a deployment with refundable=%v answered %v", can, body.Refundable)
+		}
 	}
 }

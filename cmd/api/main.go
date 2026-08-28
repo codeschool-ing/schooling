@@ -1126,7 +1126,11 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		Sittings: sittingsOf(accounts),
 		At:       atSchool(subscriptions, studied, exams, certificates),
 		Holding:  held,
-	}).Routes(staffAPI)
+	},
+		// Whether anything can be sent back at all, which is whether there is a
+		// gateway to ask. See `RecordHandler.refundable`.
+		cfg.AsaasKey != "",
+	).Routes(staffAPI)
 
 	/* AND WHAT AN OPERATOR MAY DO ABOUT IT. Until now the console could see
 	   everything about a subscription and change none of it, so every
@@ -1148,6 +1152,35 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			return ok && m.Role.Covers(identity.RoleOperator)
 		},
 	).Routes(staffAPI)
+
+	/* AND SENDING MONEY BACK, BEHIND THE SAME CONDITION AS BUYING IT.
+
+	   The three above are mounted unconditionally, as the read is: they move
+	   this platform's own rows and need no gateway. This one asks Asaas, so
+	   without a key it would be a control that cannot work — and a button that
+	   always fails is worse than a button that is not there. The screen hides it
+	   when the route is missing, which is the same arrangement the checkout has.
+
+	   IT IS NOT THE GATEWAY THE CHECKOUT HOLDS. `viaAsaas` builds a `Gateway` of
+	   four functions for selling; this needs one, and giving the console the
+	   selling gateway would hand a refund screen the ability to create charges. */
+	if cfg.AsaasKey != "" {
+		console.NewRefundHandler(
+			refundsVia(billing.NewCheckouts(pool, nil), cfg, log),
+			recorded(entries),
+			labelOf(accounts),
+			identity.AccountID,
+			/* OPERATOR, WHICH IS THE ERASURE'S RANK. Both are irreversible, and
+			   this project already answered that with a second rank plus a typed
+			   confirmation rather than a third rank — a control only the owner
+			   can reach waits for the owner, and a refund that waits becomes a
+			   chargeback. */
+			func(ctx context.Context) bool {
+				m, ok := identity.MemberFromContext(ctx)
+				return ok && m.Role.Covers(identity.RoleOperator)
+			},
+		).Routes(staffAPI)
+	}
 
 	/* THE GATE IS ON THE API AND NOT ON THE WHOLE HOST, and the difference
 	   matters the moment this grows a screen: a console nobody can reach
@@ -2620,8 +2653,10 @@ func holdingOf(subscriptions *billing.Store, prices *billing.Prices,
 		}
 		for _, p := range bought {
 			out.Purchases = append(out.Purchases, console.Purchase{
-				ID:       p.ID,
-				OpenedAt: p.OpenedAt, MovedAt: p.MovedAt, Stage: string(p.Stage),
+				ID:        p.ID,
+				AccountID: p.AccountID,
+				ChargeID:  p.ChargeID,
+				OpenedAt:  p.OpenedAt, MovedAt: p.MovedAt, Stage: string(p.Stage),
 				Cents: p.Cents, Listed: p.Listed, Currency: p.Currency,
 				TermMonths: p.TermMonths,
 				Method:     string(p.Method), Instalments: p.Instalments,
@@ -2736,6 +2771,88 @@ func subscriptionWrites(plans *billing.Store, ledger *billing.Ledger,
 				return fmt.Errorf("%w: %w", console.ErrNotAllowedThere, err)
 			}
 			return err
+		},
+	}
+}
+
+/*
+refundsVia is the console's refund, which asks the gateway and writes nothing.
+
+	THE WRITE SIDE OF THIS ONE IS THE WEBHOOK, and that is the whole design —
+	`internal/console/refund.go` argues it. The ledger row and the closed
+	subscription arrive with the event the refund causes, through the settlement
+	that has been tested since the hook existed and that already runs when
+	somebody refunds from Asaas's own dashboard. A second writer here would race
+	the first on the one table where a duplicate is money.
+
+	IT BUILDS ITS OWN CLIENT AND DOES NOT TAKE `viaAsaas`'s. That one is a
+	`billing.Gateway` of four functions for SELLING — a customer, a charge, a
+	reading. Handing it to a refund screen would give that screen the ability to
+	create charges, which is a strictly larger power than the one it needs.
+
+	THEIR REFUSAL COMES BACK WHOLE. A key without the permission and a charge in
+	a state that cannot be refunded both arrive as one status and a sentence in
+	Portuguese, and only the sentence says which. `asaas.Refused` carries it and
+	this passes it through, because the operator reading it is the person who can
+	act on either.
+*/
+func refundsVia(buys *billing.Checkouts, cfg config.Config, log *slog.Logger) console.Refunds {
+	client := asaas.New(cfg.AsaasKey, asaas.HostFor(cfg.AsaasKey))
+
+	one := func(ctx context.Context, id uuid.UUID) (console.Purchase, error) {
+		bought, err := buys.PurchaseByID(ctx, id)
+		if errors.Is(err, billing.ErrNoIntent) {
+			return console.Purchase{}, console.ErrNoPurchase
+		}
+		if err != nil {
+			return console.Purchase{}, err
+		}
+		return console.Purchase{
+			ID: bought.ID, AccountID: bought.AccountID, ChargeID: bought.ChargeID,
+			OpenedAt: bought.OpenedAt, MovedAt: bought.MovedAt,
+			Stage: string(bought.Stage),
+			Cents: bought.Cents, Listed: bought.Listed, Currency: bought.Currency,
+			TermMonths: bought.TermMonths,
+			Method:     string(bought.Method), Instalments: bought.Instalments,
+			InvoiceURL: bought.InvoiceURL, PaidThrough: bought.PaidThrough,
+		}, nil
+	}
+
+	return console.Refunds{
+		One: one,
+
+		Ask: func(ctx context.Context, id uuid.UUID) (string, error) {
+			bought, err := one(ctx, id)
+			if err != nil {
+				return "", err
+			}
+			/* A PURCHASE WITH NO CHARGE NEVER REACHED THEM, so there is nothing
+			   to ask about. The handler has already refused anything not paid;
+			   this is the narrower case of a paid row whose charge id is somehow
+			   missing, which would otherwise become `POST /payments//refund`. */
+			if bought.ChargeID == "" {
+				return "", fmt.Errorf("%w: that purchase has no charge at the gateway",
+					console.ErrGatewayRefused)
+			}
+
+			back, err := client.Refund(ctx, bought.ChargeID)
+			var refused *asaas.Refused
+			switch {
+			case errors.As(err, &refused):
+				return "", fmt.Errorf("%w: %s", console.ErrGatewayRefused, refused.Description)
+			case err != nil:
+				return "", err
+			}
+
+			/* SAID OUT LOUD, WITH THE CHARGE. The subscription closes on the
+			   event and not here, so this line is the only thing in the logs
+			   that connects an operator's click to the delivery that follows it
+			   — which is exactly the join somebody makes at the point where a
+			   refund seems not to have happened. */
+			log.Info("a refund was taken by the gateway",
+				"charge", bought.ChargeID, "purchase", bought.ID,
+				"account", bought.AccountID, "status", back.Status)
+			return back.Status, nil
 		},
 	}
 }

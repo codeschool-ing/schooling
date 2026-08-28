@@ -24,9 +24,10 @@ that ends in "we will sort that out for you" ended, in fact, at a SQL client —
 which is the same power with no audit, no second rank, and no record of who did
 it or why.
 
-Three things happen here. A fourth — asking the gateway for a refund — is not
-in this file, because it is the only one that moves real money out of a real
-account, and it belongs with the code that talks to the gateway.
+Three things happen here. The fourth — asking the gateway for a refund — is
+`refund.go`, and it is a file of its own because it is the only console write
+that changes something OUTSIDE this platform: it writes nothing here at all, and
+the row it produces arrives later, with the webhook.
 
 	extend    give time nobody paid for: an outage, a fortnight lost to support
 	cancel    stop the renewal notices; the paid term is still honoured
