@@ -236,9 +236,37 @@ fall out of that order: one integration instead of two in the first release, whi
 hardest unknown leaves the critical path. The items do not change — only the order they ship
 in, which was until now unwritten and therefore a matter of memory.
 
-- [ ] Brazil: annual and biennial, paid by Pix or by card, with instalments
+- [x] Brazil: annual and biennial, paid by Pix or by card, with instalments
 - [ ] Elsewhere: monthly, annual and biennial, recurring
 - [ ] Pix Automático, deliberately after the first two
+
+  **THE TICK ABOVE WAS REFUSED TWICE BEFORE IT WAS EARNED, and what earned it is
+  two sales rather than a screen.** All four of its words are covered, each by a
+  purchase made from the interface against the real gateway and settled by a
+  delivery nobody sent by hand:
+
+  | | term | method | what settled it |
+  |---|---|---|---|
+  | 28 Aug, 02:31 | annual | Pix | one event, R$ 655,50, one year opened |
+  | 28 Aug, 13:49 | biennial | card in 3× | three events, R$ 1.090,00 in three rows, **one** term of 24 months |
+
+  The second is the one that matters, and it is the one that could not be
+  claimed from the code: an instalment plan is THREE charges with three ids and
+  one reference, and both halves of what it must satisfy had to hold together —
+  the term bought once and the money counted once. Only the first was ever
+  tested, by a test that delivered the same charge three times and described
+  itself as covering the other. The ledger recorded the price three times over
+  until a real plan was put through it (#205).
+
+  Checkable without this file's word for it: `TestAnInstalmentPlanIsONESALEInTheLedger`
+  fails on the code that shipped in v0.14.0, and the production ledger for that
+  purchase reads `3 rows | 1090.00 | 36333 + 36333 + 36334`.
+
+  **WHAT IS NOT COVERED BY IT.** A card AUTHORISATION was never given — the
+  sandbox's instalments were settled through `receiveInCash`, so the issuer's
+  own leg of a card payment is still unexercised, and so is every refusal it can
+  answer with. That is a thing to meet with a test card before the first real
+  buyer does, and it is not what this item claims.
 
   **THE SPLIT IS BY MECHANISM AND NOT BY COUNTRY, and getting that wrong was the first mistake made here.** "Annual and biennial, paid by Pix and instalments" was read as "Brazil has no recurrence", and it does not follow: a stored card that renews the subscription at the end of the term is recurrence, and a long term does not make the charge a one-off. Alura does exactly that. So:
 
