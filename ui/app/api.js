@@ -619,12 +619,40 @@ export async function loadCourseContent(courseId) {
   if (!lessons.length) return false;
 
   const locale = wanted();
+
+  /* A REFUSAL IS NOT A FAILURE, AND THIS TREATED THEM AS ONE.
+
+     `.catch(() => null)` swallowed everything, the 402 the server answers for a
+     course outside the plan included — so the paywall arrived, was thrown away,
+     and this returned `true` as though the content had loaded. `lesson.js`
+     compares the result against `'locked'`, which nothing could produce: the
+     check was dead from the day it was written, and the invitation it guards
+     had never been drawn for anybody.
+
+     What a student saw instead was the CATALOGUE's skeleton — section titles, a
+     video frame, a duration — which is public by design (N-04) and is not the
+     leak it resembles. Nothing behind the wall came through: no prose, no video.
+     What leaked was MEANING. An empty lesson reads as a course that is broken,
+     not as one that is for sale. */
+  let refused = false;
   const fetched = await Promise.all(lessons.map((a, ix) => {
     const id = lessonIdOf(courseId, ix);
     if (!id) return null;   // announced and not yet written
     return get(`/api/v1/courses/${enc(courseId)}/lessons/${enc(id)}?lang=${enc(locale)}`)
-      .catch(() => null);
+      .catch((e) => {
+        /* THE CODE AND NOT THE STATUS. `web.Fail` writes both and the code is
+           the half this repository controls; a proxy inventing a 402 is not
+           this school saying so.
+
+           EVERY OTHER FAILURE STAYS WHAT IT WAS. One lesson that could not be
+           read is not a course somebody has to buy, and turning a blip into a
+           paywall would show the offer to a student who has already paid. */
+        if (e && e.code === 'locked') refused = true;
+        return null;
+      });
   }));
+
+  if (refused) return 'locked';
 
   const out = [];
   fetched.forEach((lesson, ix) => {

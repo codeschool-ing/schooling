@@ -96,6 +96,9 @@ WHERE NOT EXISTS (SELECT 1 FROM plan_prices p WHERE p.scope = 'all');
 \set trk 'tr-fraaaaa1'
 \set les 'le-4mzk8p2r'
 \set sec 'se-rlaaaaa1'
+-- The lesson and section on a PAID course; see the block that seeds them.
+\set ples 'le-pw4k8p2r'
+\set psec 'se-pwaaaaa1'
 
 INSERT INTO tenant_domains (host, tenant_id)
 SELECT :'host', id FROM tenants WHERE slug = :'slug'
@@ -209,6 +212,34 @@ ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, slug, kind, position)
 SELECT id, :'wf', :'les', :'sec', 'roles', 'reading', 0
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
+
+/* ---------- a lesson BEHIND the wall ----------
+
+   EVERY LESSON IN THIS FIXTURE WAS ON THE FREE FIRST COURSE, so the paywall had
+   nothing to stand in front of and no suite could reach it. That is not a gap
+   in coverage so much as the reason a bug survived: `loadCourseContent` threw
+   the server's 402 away and `lesson.js` compared against a sentinel nothing
+   produced, and neither could be caught by a browser that had no locked lesson
+   to open.
+
+   `html-css` is the second course of the track, so N-04 does not make it free —
+   which makes this the smallest lesson that answers 402 to somebody signed in
+   and not subscribed, and the only way the subscription invitation is ever
+   drawn for a suite to measure. */
+INSERT INTO catalog_lessons (tenant_id, course_id, id, title, position)
+SELECT id, :'hc', :'ples', 'The box model', 0
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO catalog_course_topics (tenant_id, course_id, position, topic_id, title)
+SELECT id, :'hc', 0, :'ples', 'The box model'
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, slug, kind, position)
+SELECT id, :'hc', :'ples', :'psec', 'padding', 'reading', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 

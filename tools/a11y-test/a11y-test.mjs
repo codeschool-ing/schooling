@@ -607,6 +607,24 @@ try {
     await check(student, `${theme} · a lesson`,
       '/#/course/web-fundamentals/lesson/0', '/course/:id/lesson/:ix');
 
+    /* AND A LESSON THIS STUDENT HAS NOT BOUGHT, which is the offer rather than
+       the lesson — the block that leads to the subscribe screen further up, and
+       the only screen on this platform whose whole job is to sell.
+
+       IT HAD NEVER BEEN DRAWN FOR ANYBODY. `loadCourseContent` threw the
+       server's 402 away and `lesson.js` compared the result against a sentinel
+       nothing produced, so the invitation was unreachable code guarded by a
+       dead check — and no suite could say so, because every lesson in the
+       fixture was on the free first course. `html-css` now carries one; see
+       `fixture.sql`.
+
+       It settles on `.invite` rather than on the screen name, because the
+       address is a lesson's either way: what separates the two is which of them
+       was drawn. */
+    await check(student, `${theme} · a lesson behind the wall`,
+      '/#/course/html-css/lesson/0', '/course/:id/lesson/:ix',
+      { settled: '.invite' });
+
     /* AND THE ONE CONTROL ON THAT SCREEN THAT TALKS BACK. "Something here is
        wrong" is collapsed and empty until it is opened — measured closed, what
        axe would look at is a `summary` and nothing else, which passes every
