@@ -46,6 +46,7 @@ import practice from './screens/practice.js';
 import { openSearch, close as closeSearch, searchOpen } from './search-panel.js';
 import { closeModal, modalOpen } from './modal.js';
 import { wireCopy } from './copy.js';
+import * as release from './release.js';
 /* IT IS IN `assets/` AND NOT IN `app/`, which is what lets the console show
    what a school will look like without a second copy of the algorithm: the
    console's host serves `assets/` from this tree when its own has no such
@@ -526,6 +527,46 @@ function paintViewingBanner() {
     '<span class="vw-status" id="vw-status" aria-live="polite"></span>';
 }
 
+/* ---------- "this page has been open since before the last update" ----------
+
+   `release.js` decides WHEN; this decides what it looks like. The split keeps
+   the detection readable on its own, and would let a second surface use the
+   same check one day without inheriting a student's markup.
+
+   IT SAYS WHAT IS TRUE AND OFFERS THE ONE ACT. Not "an update is available",
+   which is a sentence about software to somebody who is not maintaining any.
+   What is true is that this page has been open since before the last release,
+   and what fixes it is reloading — the same thing they would do anyway if the
+   screen started behaving oddly, except that now they know why.
+
+   NO DISMISS, and not for the viewing banner's reason: this is a nudge and
+   could perfectly well have one. It has none because there is nothing to
+   dismiss it into. It appears once per tab, at the foot of the window, and a
+   second control beside the only one that matters would be two decisions where
+   there is one. Reloading is what makes it go away and is what it is for. */
+let staleShown = false;
+function paintStaleBanner() {
+  const el = $('#stale-banner');
+  el.hidden = !staleShown;
+  if (!staleShown) { el.innerHTML = ''; return; }
+
+  el.innerHTML =
+    '<span class="sb-text">' +
+      txt('This page has been open since before the last update. Reload it when you are ready.') +
+    '</span>' +
+    '<button type="button" class="sb-reload">' + txt('Reload') + '</button>';
+}
+
+$('#stale-banner').addEventListener('click', (e) => {
+  if (!e.target.closest('.sb-reload')) return;
+  /* `reload()` AND NOT A CACHE-BUSTING QUERY. Every file this page loaded
+     carries `no-cache` and an ETag that is the build, so an ordinary reload
+     revalidates all of them and the ones that moved come down again. A query
+     string would be a second, weaker copy of a caching rule the server already
+     states correctly. */
+  globalThis.location.reload();
+});
+
 $('#viewing-banner').addEventListener('click', async (e) => {
   const stop = e.target.closest('.vw-stop');
   if (!stop) return;
@@ -772,6 +813,13 @@ paintVerifyBanner();
 paintViewingBanner();
 booted = true;
 start();
+
+/* AND THE WATCH ON THE BUILD, STARTED AFTER THE FIRST SCREEN IS UP. It makes
+   one request at boot to record what this tab was served and then asks nothing
+   until the tab is left and come back to, so its place in this sequence is
+   about politeness rather than correctness: the first paint should not queue
+   behind it. */
+release.watch(() => { staleShown = true; paintStaleBanner(); });
 
 restoring.then((outcome) => {
   /* The screen on the page was chosen from what the browser remembered, and the
