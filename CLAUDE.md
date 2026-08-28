@@ -1393,7 +1393,12 @@ npm ci && npx playwright install chromium
 go run ./cmd/migrate
 psql "$SCHOOLING_DATABASE_URL" -v slug=graphtest -v host=code.example.tld \
   -f tools/graph-test/fixture.sql        # it takes its school as a parameter
-go run ./cmd/api &
+# THE SERVER'S ENVIRONMENT IS PART OF THE SUITE, and two of these variables
+# decide what gets measured however optional they look. `ci.yml` sets both and
+# says why; the paragraph under this block says what a run without them misses.
+SCHOOLING_SUPPORT_EMAIL=contact@example.tld \
+SCHOOLING_ASAAS_KEY='$aact_hmlg_this-key-is-not-a-key' \
+  go run ./cmd/api &
 node tools/graph-test/graph-test.mjs    # no line through a card, six window sizes
 node tools/a11y-test/a11y-test.mjs      # axe over every screen, both themes —
                                         # the console too, on its own host. It
@@ -1413,8 +1418,30 @@ node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built
 node tools/console-test/console-test.mjs  # the console's writes, pressed rather
                                           # than measured. LAST: it is the only
                                           # suite that changes anything — it
-                                          # settles a report and appends a price.
+                                          # settles a report, appends a price,
+                                          # sets the support address and writes
+                                          # a line into somebody's ledger.
 ```
+
+**WHY THOSE TWO VARIABLES ARE NOT A CONVENIENCE.**
+
+`SCHOOLING_SUPPORT_EMAIL` is the address the account screen names inside the seven days
+the terms promise. Empty, the notice draws the deadline and no link — half the element,
+and the half with a colour of its own — so `a11y-test` measures something that is not what
+ships. (Since `0044` the console can set this too; the variable is what answers before
+anybody has.)
+
+`SCHOOLING_ASAAS_KEY` decides whether the refund route is mounted at all, and the console's
+record screen draws the refund control from that. Without one there is nothing to open, so
+`a11y-test` never measures the densest and reddest form in the console. It says so — one
+`·` line per theme, rather than a green run implying it looked — but a run that says it
+measured less is still a run that measured less. It is a sandbox key SHAPE and it reaches
+nobody; nothing in these suites calls out.
+
+IT USED TO FAIL INSTEAD, with `waiting for locator('.sub-refund:not([hidden])
+[name=amount]')`, and that failure was correct: the button was drawn on a deployment whose
+form is not rendered, so pressing it did nothing at all. An afternoon went into configuring
+the suite before it became clear the screen was the thing that was wrong.
 
 `console-test` is the console's half of what `mfa-test` is for the study interface. Axe
 proves the screens are sound and never presses a button, so every write over there had a
