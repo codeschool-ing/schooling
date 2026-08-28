@@ -203,8 +203,12 @@ func (s *Settlement) paid(ctx context.Context, intent Intent, chargeID, moved st
 	now := time.Now()
 	/* THE TERM RUNS FROM TODAY AND NOT FROM THE CHARGE'S DATE. A Pix paid three
 	   days after the checkout was opened buys twelve months from the day it was
-	   paid — anything else charges somebody for days they could not study. */
-	paidThrough := now.AddDate(0, price.TermMonths, 0)
+	   paid — anything else charges somebody for days they could not study.
+
+	   WHERE "TODAY" IS NOT THE START, THE STORE DECIDES. A subscriber who pays
+	   before their term runs out adds to it, and the addition happens inside the
+	   transaction that locks their row — see `Store.Begin`. This used to compute
+	   the date here, which moved an early renewal's end date backwards. */
 
 	held, err := s.plans.Begin(ctx, settled.AccountID, settled.Scope,
 		/* EVERY PURCHASE HERE IS AN INSTALMENT PLAN IN THE SENSE THAT MATTERS:
@@ -212,7 +216,7 @@ func (s *Settlement) paid(ctx context.Context, intent Intent, chargeID, moved st
 		   platform creates a subscription AT the gateway yet, so there is no
 		   charge for us to see fail, which is exactly what `ModelRecurring`
 		   would promise and could not keep. */
-		ModelInstalments, settled.PriceID, now, paidThrough, &entry.ID)
+		ModelInstalments, settled.PriceID, now, price.TermMonths, &entry.ID)
 	if err != nil {
 		return fmt.Errorf("billing: opening what was paid for: %w", err)
 	}
