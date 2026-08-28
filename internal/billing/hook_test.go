@@ -85,9 +85,25 @@ func (c *captured) Handle(_ context.Context, r slog.Record) error {
 }
 
 func event(name, reference, charge string) string {
+	return eventOf(name, reference, charge, "560.50")
+}
+
+/*
+eventOf is a delivery carrying an amount, which every real one does.
+
+	`event` above sends the whole sale, because a single payment settles the
+	whole sale — 560.50 is `hookFor`'s checkout to the cent, and every test
+	written before instalments existed means exactly that.
+
+	An INSTALMENT is the case that needs its own amount, and needing one is the
+	point: three deliveries of one purchase carry a third each, and a settlement
+	that ignored them recorded the price three times.
+*/
+func eventOf(name, reference, charge, value string) string {
 	return fmt.Sprintf(
-		`{"id":"evt_%s","event":%q,"payment":{"id":%q,"externalReference":%q,"status":"CONFIRMED"}}`,
-		strings.ReplaceAll(uuid.NewString(), "-", "")[:12], name, charge, reference)
+		`{"id":"evt_%s","event":%q,"payment":{"id":%q,"externalReference":%q,`+
+			`"value":%s,"status":"CONFIRMED"}}`,
+		strings.ReplaceAll(uuid.NewString(), "-", "")[:12], name, charge, reference, value)
 }
 
 // A WRONG TOKEN IS A 401 AND CHANGES NOTHING. There is no signature over the
@@ -394,5 +410,170 @@ func TestAnOverdueAfterAPaymentChangesNothing(t *testing.T) {
 	}
 	if got.Stage != billing.StagePaid {
 		t.Errorf("a late overdue took a paid purchase to %q", got.Stage)
+	}
+}
+
+/*
+TestAnInstalmentPlanIsONESALEInTheLedger is the claim the test above says it
+makes and does not.
+
+	`TestAPaymentOpensOneTerm` delivers the SAME charge three times and calls
+	that "the same guard that keeps six instalments of one plan from buying six
+	years". It is not. Repeating one charge exercises idempotency; an instalment
+	plan is THREE CHARGES, with three ids, which the ledger has never seen —
+	and the ledger is keyed by the charge precisely so that two ids are two
+	movements.
+
+	A REAL PLAN, FROM THE SANDBOX, LOOKS LIKE THIS. One checkout for R$ 1.090,00
+	in three; the gateway answers with three payments carrying one
+	`externalReference` and three ids of their own:
+
+	    pay_3gbj9q0yafl7lla5  363.33  parcela 1  97945f8e-…
+	    pay_70wnsxl0i5w6sqvq  363.33  parcela 2  97945f8e-…
+	    pay_gi1mm7y86jxge84p  363.34  parcela 3  97945f8e-…
+
+	So the two halves of what an instalment plan must satisfy are separate
+	claims, and only one of them was ever checked:
+
+	    the TERM is bought once      — three payments, one year (checked)
+	    the MONEY is counted once    — three payments, one price (not checked)
+*/
+func TestAnInstalmentPlanIsONESALEInTheLedger(t *testing.T) {
+	api, store, pool, one, _ := hookFor(t)
+	ctx := context.Background()
+
+	/* THREE CHARGES OF ONE PURCHASE, which is what the gateway makes of a split
+	   and what this platform has never been handed. The reference is the same on
+	   all three because they are one sale; the ids differ because they are three
+	   collections. */
+	charges := []string{
+		"pay_" + strings.ReplaceAll(uuid.NewString(), "-", "")[:16],
+		"pay_" + strings.ReplaceAll(uuid.NewString(), "-", "")[:16],
+		"pay_" + strings.ReplaceAll(uuid.NewString(), "-", "")[:16],
+	}
+	// The thirds the provider actually sends, odd cent and all: 560.50 in three
+	// is 186.83 twice and 186.84 once, and they have to add back up to the sale.
+	for i, charge := range charges {
+		value := "186.83"
+		if i == 2 {
+			value = "186.84"
+		}
+		rec := deliver(t, api, hookToken,
+			eventOf("PAYMENT_RECEIVED", one.ID.String(), charge, value))
+		if rec.Code != http.StatusOK {
+			t.Fatalf("an instalment answered %d: %s", rec.Code, rec.Body.String())
+		}
+	}
+
+	var rows int
+	var total int64
+	if err := pool.QueryRow(ctx, `
+		SELECT count(*), coalesce(sum(amount_cents), 0)
+		FROM ledger_entries WHERE account_id = $1 AND kind = 'payment'
+	`, one.AccountID).Scan(&rows, &total); err != nil {
+		t.Fatal(err)
+	}
+
+	/* WHAT THE SALE WAS, AND NOTHING ABOVE IT. Three instalments of one purchase
+	   move the price once between them — however many rows the ledger chooses to
+	   write, they have to add up to what somebody agreed to pay. A ledger that
+	   totals three times the price says a student paid for three subscriptions,
+	   and it is append-only: the rows cannot be deleted, only reversed. */
+	if want := int64(one.Cents); total != want {
+		t.Errorf("three instalments of one %d-cent sale recorded %d cents across %d row(s)",
+			want, total, rows)
+	}
+
+	_ = store
+}
+
+/*
+TestAnEventWithNoAmountSettlesAtThePurchase is the fallback, and it is a
+fallback rather than a refusal on purpose.
+
+	Delivery is sequential and a non-2xx stops the queue for every student, so a
+	malformed event may not be the thing that takes payments down. An event with
+	no readable amount settles at what the purchase was for — which is what every
+	event did before instalments existed, and is right for the single payment
+	that is nearly all of them.
+
+	It is checked with the amount MISSING and with it unreadable, because the two
+	arrive by different routes: a provider that stops sending the field, and one
+	that sends something this cannot parse.
+*/
+func TestAnEventWithNoAmountSettlesAtThePurchase(t *testing.T) {
+	/* FOUR SHAPES A PROVIDER MIGHT SEND, and none of them may stop the queue:
+	   an empty string, a string that is not a number, an explicit null, and the
+	   field left out altogether. The first two also cover the day this arrives
+	   as a JSON string rather than a JSON number, which `json.Number` would have
+	   refused at the decode and answered 400 to. */
+	for _, value := range []string{`""`, `"not-a-number"`, `null`, ``} {
+		t.Run("value:"+value, func(t *testing.T) {
+			api, _, pool, one, charge := hookFor(t)
+
+			body := eventOf("PAYMENT_RECEIVED", one.ID.String(), charge, value)
+			if value == `` {
+				// The field absent altogether, which is a different route in.
+				body = fmt.Sprintf(
+					`{"id":"evt_x","event":"PAYMENT_RECEIVED","payment":`+
+						`{"id":%q,"externalReference":%q,"status":"CONFIRMED"}}`,
+					charge, one.ID.String())
+			}
+			rec := deliver(t, api, hookToken, body)
+			if rec.Code != http.StatusOK {
+				t.Fatalf("it answered %d: %s — a malformed event must not stop the queue",
+					rec.Code, rec.Body.String())
+			}
+
+			var total int64
+			if err := pool.QueryRow(context.Background(), `
+				SELECT coalesce(sum(amount_cents), 0)
+				FROM ledger_entries WHERE account_id = $1 AND kind = 'payment'
+			`, one.AccountID).Scan(&total); err != nil {
+				t.Fatal(err)
+			}
+			if want := int64(one.Cents); total != want {
+				t.Errorf("an event carrying %s recorded %d cents, want the purchase's %d",
+					value, total, want)
+			}
+		})
+	}
+}
+
+/*
+TestAnAmountAsAStringIsTheSameMoney is the shape change this endpoint has to
+survive without anybody deploying anything.
+
+	A JSON number and a JSON string of the same digits are the same money, and
+	which one a provider sends is theirs to change. The first version of this
+	read it as `json.Number`, which refuses a string at the DECODE — so the whole
+	delivery would have failed, the endpoint would have answered 400, and a
+	sequential queue would have stopped for every student over the shape of one
+	field.
+
+	The fallback would not have saved it either: a decode that fails never
+	reaches the settlement. That is why the amount is read raw and understood
+	late, and why this test asserts the money rather than the status.
+*/
+func TestAnAmountAsAStringIsTheSameMoney(t *testing.T) {
+	api, _, pool, one, charge := hookFor(t)
+
+	rec := deliver(t, api, hookToken,
+		eventOf("PAYMENT_RECEIVED", one.ID.String(), charge, `"186.83"`))
+	if rec.Code != http.StatusOK {
+		t.Fatalf("it answered %d: %s", rec.Code, rec.Body.String())
+	}
+
+	var total int64
+	if err := pool.QueryRow(context.Background(), `
+		SELECT coalesce(sum(amount_cents), 0)
+		FROM ledger_entries WHERE account_id = $1 AND kind = 'payment'
+	`, one.AccountID).Scan(&total); err != nil {
+		t.Fatal(err)
+	}
+	// The quoted digits and not the purchase's 56050, which is what a fallback
+	// would have recorded and would have looked like success.
+	if total != 18683 {
+		t.Errorf(`a value of "186.83" recorded %d cents, want 18683`, total)
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -79,7 +80,7 @@ Apply acts on one event about one charge.
 	covers the events that arrive without it — the later instalments of a plan,
 	and anything raised outside this platform.
 */
-func (s *Settlement) Apply(ctx context.Context, what outcome, reference, chargeID string) error {
+func (s *Settlement) Apply(ctx context.Context, what outcome, reference, chargeID, moved string) error {
 	intent, err := s.find(ctx, reference, chargeID)
 	if err != nil {
 		return err
@@ -87,7 +88,7 @@ func (s *Settlement) Apply(ctx context.Context, what outcome, reference, chargeI
 
 	switch what {
 	case outcomePaid:
-		return s.paid(ctx, intent, chargeID)
+		return s.paid(ctx, intent, chargeID, moved)
 	case outcomeGone:
 		/* A CHARGE THAT WILL NOT BE PAID CHANGES NOTHING BUT THE PURCHASE. No
 		   subscription was started, so there is nothing to end — and a paid
@@ -116,10 +117,50 @@ func (s *Settlement) find(ctx context.Context, reference, chargeID string) (Inte
 	return s.checkouts.ByCharge(ctx, s.provider, chargeID)
 }
 
-func (s *Settlement) paid(ctx context.Context, intent Intent, chargeID string) error {
-	amount, err := New(int64(intent.Cents), Currency(intent.Currency))
+/*
+moved is how much this event actually moved, which is not always what was sold.
+
+	IT READS THE EVENT AND FALLS BACK TO THE PURCHASE. For a single payment the
+	two agree — a Pix charge for R$ 655,50 is settled by one event carrying
+	655.50 — and for an INSTALMENT PLAN they do not: one sale of R$ 1.090,00
+	arrives as three events of 363,33, 363,33 and 363,34, and the ledger is keyed
+	by the charge, so each of them writes a row. Recording the purchase's amount
+	against every one of them put the price in the ledger three times.
+
+	The three still add up to the sale, which is the property that matters: the
+	provider splits and this reads, so whichever end rounds the odd cent, the
+	total is the price. Ours rounds it onto the early instalments and theirs onto
+	the last; neither is charged from `Money.Split`, and the difference does not
+	reach a row.
+
+	AND A FALLBACK RATHER THAN A REFUSAL, because delivery is sequential and a
+	failure stops the queue for every student. An event with no readable amount
+	is malformed, is said out loud, and settles at the purchase's amount — which
+	is what this did for every event before instalments existed, and is right for
+	the single payment that is nearly all of them.
+*/
+func (s *Settlement) moved(intent Intent, chargeID, moved string) (Money, error) {
+	whole, err := New(int64(intent.Cents), Currency(intent.Currency))
 	if err != nil {
-		return fmt.Errorf("billing: what was charged is not money: %w", err)
+		return Money{}, fmt.Errorf("billing: what was charged is not money: %w", err)
+	}
+	if strings.TrimSpace(moved) == "" {
+		return whole, nil
+	}
+
+	part, err := Parse(moved, Currency(intent.Currency))
+	if err != nil {
+		s.log.Warn("a payment event carried an amount this could not read",
+			"charge", chargeID, "checkout", intent.ID, "error", err)
+		return whole, nil
+	}
+	return part, nil
+}
+
+func (s *Settlement) paid(ctx context.Context, intent Intent, chargeID, moved string) error {
+	amount, err := s.moved(intent, chargeID, moved)
+	if err != nil {
+		return err
 	}
 
 	/* 1. THE LEDGER, KEYED BY THE CHARGE. A second event about the same payment
@@ -195,6 +236,13 @@ reverse is money going back, by agreement or by dispute.
 func (s *Settlement) reverse(ctx context.Context, intent Intent, chargeID string,
 	kind Kind, event Event) error {
 
+	// THE PURCHASE'S AMOUNT AND NOT THE EVENT'S, deliberately, and unlike
+	// `paid`. A refund event carries what is being given back, which may be part
+	// of a sale; what this row records is that the SALE was reversed, and the
+	// subscription it closes below is the whole subscription either way.
+	// `PAYMENT_PARTIALLY_REFUNDED` is mapped here too, and a partial refund that
+	// closed access while recording only its own slice would leave the ledger
+	// saying less went back than the access that was taken.
 	amount, err := New(int64(intent.Cents), Currency(intent.Currency))
 	if err != nil {
 		return fmt.Errorf("billing: what was charged is not money: %w", err)
