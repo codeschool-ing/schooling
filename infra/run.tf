@@ -387,6 +387,14 @@ resource "google_cloud_run_v2_service" "api" {
         name  = "SCHOOLING_MAIL_REPLY_TO"
         value = var.mail_reply_to
       }
+
+      /* AND WHERE A PERSON WRITES WHEN ONLY A PERSON WILL DO. The account
+         screen names it inside the seven days the terms of use promise; empty
+         is a deployment that publishes the right and no way to use it. */
+      env {
+        name  = "SCHOOLING_SUPPORT_EMAIL"
+        value = var.support_email
+      }
       env {
         name = "SCHOOLING_MAIL_API_KEY"
         value_source {

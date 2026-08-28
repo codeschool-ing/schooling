@@ -89,6 +89,20 @@ type Purchase struct {
 	// reached the gateway.
 	InvoiceURL string
 
+	/* Refunded is whether the money has already gone back.
+
+	   A REFUND DOES NOT MOVE THE STAGE, and it should not: `stage` is how far
+	   the CHECKOUT got, and it got all the way. What happened afterwards is the
+	   ledger's and the subscription log's. But "was this reversed" is a question
+	   two screens now ask, and answering it by making them join the ledger
+	   themselves would be the join written twice.
+
+	   IT KNOWS THE `:refund` SUFFIX, which is `Settlement.reverse`'s convention
+	   for keying a reversal apart from the payment it reverses. That is one
+	   fact in two places and is worth the coupling: the alternative is a column
+	   on `checkout_intents` that a webhook would have to remember to write. */
+	Refunded bool
+
 	/* PaidThrough is where the term stood AFTER this purchase, and nil when
 	   there is nothing to say: a checkout that was never paid, or one paid
 	   before `0043` gave the log this column. Nil is drawn as "not recorded"
@@ -96,21 +110,6 @@ type Purchase struct {
 	PaidThrough *time.Time
 }
 
-/*
-Purchases is everything one account has tried to buy, newest first.
-
-	IT IS ONE QUERY AND NOT A LOOP. A history is drawn whole or not at all — a
-	screen half of whose rows have an amount is worse than one with none — and
-	joining in Go would be one round trip per purchase for a page that exists to
-	be read in a single glance.
-
-	THE TWO JOINS ARE NOT THE SAME SHAPE, deliberately. `plan_prices` is an inner
-	join because a checkout cannot exist without one: the column is NOT NULL with
-	a foreign key, so a missing row is a broken database rather than a purchase
-	with no price, and hiding it behind a LEFT JOIN would turn that into a blank
-	cell nobody investigates. The term is a subquery because it is genuinely
-	absent for most rows.
-*/
 /*
 purchaseColumns is the one SELECT both reads use.
 
@@ -141,7 +140,16 @@ const purchaseColumns = `
 	          way to find out otherwise.
 
 	          (No backticks in here: this is a Go raw string, and one would
-	          end it in the middle of a query.) */
+	          end it in the middle of a query — which is a mistake made twice
+	          now, both times in a comment naming a Go symbol.) */
+
+	       /* WHETHER THE MONEY WENT BACK. Settlement.reverse keys a reversal on
+	          the charge PLUS the kind, so a refund row is the payment's own
+	          reference with ':refund' after it. See Purchase.Refunded. */
+	       EXISTS (SELECT 1 FROM ledger_entries le
+	                WHERE le.source = ci.provider
+	                  AND le.source_ref = ci.provider_charge_id || ':refund'),
+
 	       (SELECT se.paid_through
 	          FROM subscription_events se
 	          JOIN ledger_entries le ON le.id = se.ledger_entry_id
@@ -217,7 +225,7 @@ func scanPurchases(rows pgx.Rows) ([]Purchase, error) {
 		if err := rows.Scan(&p.ID, &p.AccountID, &p.ChargeID,
 			&p.OpenedAt, &p.MovedAt, &stage,
 			&p.Cents, &p.Currency, &method, &p.Instalments, &p.InvoiceURL,
-			&p.Listed, &p.TermMonths, &p.PaidThrough); err != nil {
+			&p.Listed, &p.TermMonths, &p.Refunded, &p.PaidThrough); err != nil {
 			return nil, err
 		}
 		p.Stage, p.Method = Stage(stage), Method(method)

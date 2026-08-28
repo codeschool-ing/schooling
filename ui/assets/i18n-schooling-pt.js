@@ -275,6 +275,18 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'This does not renew by itself. When the term ends, you buy another.':
     'Ela não se renova sozinha. Quando o prazo acabar, você compra outro.',
 
+  /* THE SEVEN DAYS, ENQUANTO ELES CORREM.
+
+     Art. 49 do Código de Defesa do Consumidor, e os termos de uso repetem com
+     todas as letras. A tela onde a pessoa olha o que comprou não dizia nada
+     sobre isso, e o único endereço estava no rodapé de um site institucional
+     que ela teria que sair do produto para achar.
+
+     One line, however long: `check-interface` lê a chave com uma expressão
+     regular que começa na aspa e termina na outra, e uma frase partida num `+`
+     é uma frase que ele não enxerga. */
+  'Changed your mind? You have until {day} to undo this purchase and get the whole amount back, no reason needed.': 'Mudou de ideia? Você tem até {day} para desfazer esta compra e receber o valor integral, sem precisar de motivo.',
+
   /* AND EVERYTHING THEY HAVE BOUGHT, IN A TABLE UNDER IT. The block above is
      the state — one price, one date, both overwritten by the next purchase —
      and this is the record, which is what somebody reconciling a card statement

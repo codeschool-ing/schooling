@@ -1,4 +1,4 @@
--- Three purchases for one account, so the history table has something in it.
+-- Four purchases for one account, so the history table has something in it.
 --
 -- # WHY THIS IS A FIXTURE AND NOT A SEQUENCE THE SUITE PERFORMS
 --
@@ -14,14 +14,15 @@
 -- that never ran. The alternative to seeding is measuring the empty table,
 -- which is the shape with no rows in it — and the rows are the whole thing.
 --
--- # THREE, BECAUSE THE THREE DRAW DIFFERENTLY
+-- # FOUR, BECAUSE THE FOUR DRAW DIFFERENTLY
 --
 --   paid, in one       the ordinary line, and a Pix discount to strike through
 --   paid, in twelve    the split, which is the widest cell in the table
 --   charged            dimmed, no date, and an address to finish paying at
+--   paid, two days ago the seven-day withdrawal notice above the table
 --
 -- An `abandoned` row draws as `charged` does without the link, so it is the one
--- shape not seeded: it would add a fourth row and no fourth arrangement.
+-- shape not seeded: it would add a row and no arrangement.
 --
 -- # IT IS KEYED BY ADDRESS AND NOT BY ID
 --
@@ -56,7 +57,21 @@ FROM (VALUES
     -- Two years on a card in twelve, three years ago.
     ('b', 24, 109000, 'card', 12, 'paid',    interval '1095 days'),
     -- And a Pix opened last week that nobody has paid.
-    ('c', 12, 65550,  'pix',  1,  'charged', interval '7 days')
+    ('c', 12, 65550,  'pix',  1,  'charged', interval '7 days'),
+    /* AND ONE PAID TWO DAYS AGO WHOSE EVENT HAS NOT ARRIVED.
+
+       It is what opens the seven-day withdrawal notice, which is the only
+       thing on that screen with its own colours and its own deadline and
+       which nothing else here would draw — the two paid rows above are years
+       old and the window on them shut long ago.
+
+       AND IT IS A REAL STATE RATHER THAN A CONVENIENT ONE. A payment whose
+       webhook has not landed is paid at the gateway and unknown here:
+       delivery is Sequential, so one stuck event holds up every student
+       behind it. Two days is a long outage and a fixture depicts a shape, but
+       the shape is one this platform can have — and it is why the paywall
+       checks further down still see a student with no access. */
+    ('d', 12, 65550,  'pix',  1,  'paid',    interval '2 days')
 ) AS v(tag, months, cents, method, instalments, stage, ago)
 JOIN accounts a ON a.email = :'email'
 WHERE NOT EXISTS (

@@ -637,6 +637,14 @@ try {
       await student.waitForTimeout(200);
       await check(student, `${theme} · my account, with a purchase history`,
         '/#/account', '/account', { settled: '.bought-table tbody tr' });
+
+      /* AND THE SEVEN DAYS, which is the one thing on that block with colours
+         of its own — the panel's ground, a phosphor rule, and a `mailto` link
+         inside a sentence. None of that is measured anywhere else, and it is
+         drawn only while a purchase is younger than a week, which is why the
+         fixture seeds one two days old. */
+      await check(student, `${theme} · my account, inside the seven days`,
+        '/#/account', '/account', { settled: '.withdraw a' });
     }
     await check(student, `${theme} · setting up a second factor`, '/#/account', '/account', {
       async act(page) {

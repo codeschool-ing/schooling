@@ -61,14 +61,40 @@ type Holding struct {
 	// who answers which account is asking, wired by `cmd` — the same seam
 	// `Handler.payer` uses, without the name and address it does not need.
 	who func(context.Context) (uuid.UUID, bool)
+
+	// support is where somebody writes to use the seven days. Empty is allowed
+	// and the screen then names the deadline without an address — see
+	// `config.SupportEmail`.
+	support string
 }
 
 // NewHolding is the read side over the three stores it joins.
 func NewHolding(plans *Store, prices *Prices, buys *Checkouts,
-	who func(context.Context) (uuid.UUID, bool)) *Holding {
+	who func(context.Context) (uuid.UUID, bool), support string) *Holding {
 
-	return &Holding{plans: plans, prices: prices, buys: buys, who: who}
+	return &Holding{plans: plans, prices: prices, buys: buys, who: who, support: support}
 }
+
+/*
+WithdrawalDays is how long somebody has to change their mind, and it is seven
+because the law says seven.
+
+	ART. 49 OF THE CÓDIGO DE DEFESA DO CONSUMIDOR. A purchase made at a distance
+	may be withdrawn from within seven days of contracting, for the whole amount,
+	with no reason given. It is not a policy, it is not ours to narrow, and the
+	terms of use say so in as many words: "Você tem sete dias para desistir […]
+	devolvemos o valor integral, sem precisar de motivo".
+
+	IT IS COUNTED FROM WHEN THE PURCHASE WAS PAID and not from when the checkout
+	was opened. A Pix code paid three days after it was generated is contracted
+	on the day it was paid, and counting from the click would quietly eat three
+	of somebody's seven.
+
+	AND IT IS COMPUTED HERE RATHER THAN ON THE SCREEN. A deadline worked out in a
+	browser is a deadline held by a clock the person can set, and this one has a
+	legal meaning. The screen draws what this decides.
+*/
+const WithdrawalDays = 7
 
 func (h *Holding) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/subscription", h.mine)
@@ -111,6 +137,28 @@ type holdingBody struct {
 	   has bought nothing" from "this version does not send it", and an empty
 	   array says the first out loud. */
 	Purchases []purchaseBody `json:"purchases"`
+
+	/* Withdraw is present ONLY while the seven days are still running, which is
+	   the whole design of it: a right somebody still has is worth a sentence on
+	   the screen, and a right that has expired is a sentence that invites a
+	   message nobody can answer (N-05). Absent means "nothing is owed to you
+	   here", and the screen says nothing rather than something useless. */
+	Withdraw *withdrawBody `json:"withdraw,omitempty"`
+}
+
+/*
+withdrawBody is the seven days, while they last.
+
+	IT CARRIES THE DEADLINE AND NOT THE DAYS LEFT. "3 days left" computed here
+	is stale the moment the page sits open overnight; a date is true whenever it
+	is read, and the screen can count down from it if it wants to.
+*/
+type withdrawBody struct {
+	Until time.Time `json:"until"`
+
+	// Email is empty where the deployment has configured none. The deadline is
+	// still worth saying; see `config.SupportEmail`.
+	Email string `json:"email,omitempty"`
 }
 
 // holdingPrice is what was paid, for how long.
@@ -177,6 +225,7 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	purchases := shownPurchases(bought)
+	withdraw := h.withdrawable(bought)
 
 	held, err := h.plans.Of(r.Context(), accountID, ScopeEverything, time.Now())
 	switch {
@@ -185,7 +234,13 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 		   ordinary case — every student who has not subscribed — look like a
 		   broken address, and a screen cannot tell one from the other without
 		   reading the code that produced it. */
-		web.JSON(w, http.StatusOK, holdingBody{State: "none", Purchases: purchases})
+		/* AND THE SEVEN DAYS EVEN HERE. Somebody whose only subscription was
+		   refunded has no state and may still be inside the window on a LATER
+		   purchase — and somebody who bought minutes ago is in this branch for
+		   as long as the webhook takes to arrive. Dropping it would take the
+		   right away in exactly the seconds it is newest. */
+		web.JSON(w, http.StatusOK, holdingBody{
+			State: "none", Purchases: purchases, Withdraw: withdraw})
 		return
 	case err != nil:
 		web.LoggerFrom(r.Context()).Error("reading a subscription",
@@ -201,6 +256,7 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 		Scope:     held.Scope,
 		Model:     string(held.Model),
 		Purchases: purchases,
+		Withdraw:  withdraw,
 	}
 	if !held.StartedAt.IsZero() {
 		body.Since = &held.StartedAt
@@ -229,6 +285,39 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 	}
 
 	web.JSON(w, http.StatusOK, body)
+}
+
+/*
+withdrawable is the seven days, if they are still running.
+
+	THE NEWEST PAID PURCHASE IS THE ONE THAT COUNTS. Somebody who bought a year
+	in March and renewed in December has a fresh seven days on the December sale,
+	and the March one is long gone — so this looks for the latest, not the first.
+	`Purchases` answers newest first, so the first paid row is it.
+
+	A REFUNDED PURCHASE OPENS NO WINDOW, and skipping it rather than stopping at
+	it is deliberate. A refund does not move the stage — the checkout got all the
+	way — so without this the screen would tell somebody who has just used the
+	seven days that they have until Tuesday to use them. That is the SUCCESS path
+	of this feature reading as though nothing had happened.
+
+	It is skipped and not treated as the end of the search, because the purchase
+	under it may be a live one: somebody who renewed, changed their mind about
+	the renewal and got it back still holds the term they bought last year, and
+	that term's own seven days are long gone anyway.
+*/
+func (h *Holding) withdrawable(bought []Purchase) *withdrawBody {
+	for _, p := range bought {
+		if p.Stage != StagePaid || p.Refunded {
+			continue
+		}
+		until := p.MovedAt.AddDate(0, 0, WithdrawalDays)
+		if !time.Now().Before(until) {
+			return nil
+		}
+		return &withdrawBody{Until: until, Email: h.support}
+	}
+	return nil
 }
 
 // shownPurchases is the list as it goes out. It is never nil: see `Purchases`

@@ -314,13 +314,14 @@ export default async function account() {
        purchases — a checkout that errored, a Pix code that expired unpaid — and
        those are precisely the rows they came here to look at. */
     const bought = purchaseTable(held && held.purchases);
+    const back = withdrawal(held && held.withdraw);
 
     if (!held || held.state === 'none') {
       holding.innerHTML =
         '<div class="block-top"><h2>' + txt('Your subscription') + '</h2></div>' +
         '<p class="dim">' + txt('You do not have one. The first course of every track is free, in full.') + '</p>' +
         '<p><a class="btn btn-ghost" href="#/subscribe">' + txt('See what a subscription opens') + '</a></p>' +
-        bought;
+        back + bought;
       return;
     }
 
@@ -355,10 +356,51 @@ export default async function account() {
       (held.opens
         ? ''
         : '<p><a class="btn btn-primary" href="#/subscribe">' + txt('Subscribe') + '</a></p>') +
-      bought;
+      back + bought;
   }
 
   return { title: txt('My account'), el };
+}
+
+/*
+withdrawal is the seven days, while somebody still has them.
+
+  THE TERMS PROMISE THIS AND THE SCREEN SAID NOTHING. Seven days to change
+  your mind, whole amount back, no reason needed — art. 49 of the Código de
+  Defesa do Consumidor, and the terms of use repeat it in as many words. The
+  one screen where a person looks at what they bought did not mention it, and
+  the only address anywhere was in the footer of a marketing site they would
+  have to leave the product to find.
+
+  A right nobody can reach is worse than no right at all, because the document
+  promising it is evidence.
+
+  IT APPEARS ONLY WHILE THE DAYS ARE RUNNING, which the server decides — a
+  legal deadline worked out from a browser's clock is not a deadline. Once
+  they are gone a refund is discretionary, and a line inviting somebody to
+  write about it would be an invitation to a message nobody can answer (N-05).
+
+  THE DEADLINE IS A DATE AND NOT A COUNTDOWN. "3 days left" is stale the
+  moment a tab sits open overnight; the day it runs to is true whenever it is
+  read.
+*/
+function withdrawal(when) {
+  if (!when || !when.until) return '';
+
+  const until = new Date(when.until);
+  if (Number.isNaN(until.getTime())) return '';
+
+  return '<p class="withdraw">' +
+    /* ONE LINE, HOWEVER LONG. `check-interface` reads a key with a regular
+       expression that starts at the quote and ends at the closing one; a
+       sentence split across a `+` is a sentence it cannot see, and an
+       unseen sentence is one that ships untranslated without failing
+       anything. This was written the other way first and was invisible. */
+    esc(txt('Changed your mind? You have until {day} to undo this purchase and get the whole amount back, no reason needed.').replace('{day}', day(until))) +
+    (when.email
+      ? ' <a href="mailto:' + esc(when.email) + '">' + esc(when.email) + '</a>'
+      : '') +
+  '</p>';
 }
 
 /*
