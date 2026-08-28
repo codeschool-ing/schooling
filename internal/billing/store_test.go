@@ -466,6 +466,72 @@ func TestPayingBeforeTheTermEndsAddsToItRatherThanReplacingIt(t *testing.T) {
 	if !again.PaidThrough.After(first.PaidThrough) {
 		t.Error("paying again did not extend anything")
 	}
+
+	/* AND IT IS ON THE ROW. Everything above reads the value `Begin` handed
+	   back, which `apply` builds in memory — so all of it passed while the
+	   renewal was being rolled back and nothing was written at all. See
+	   TestARenewalIsWrittenDownAndNotRolledBack below. */
+	stored, err := s.Of(ctx, account, "", day(0))
+	if err != nil {
+		t.Fatalf("reading it back: %v", err)
+	}
+	if !stored.PaidThrough.Equal(again.PaidThrough) {
+		t.Errorf("the answer says access runs to %s and the row says %s",
+			again.PaidThrough.Format(time.DateOnly), stored.PaidThrough.Format(time.DateOnly))
+	}
+}
+
+/*
+TestARenewalIsWrittenDownAndNotRolledBack.
+
+	`Begin` OWNS ITS TRANSACTION AND HAS TO END IT. `apply` deliberately does
+	not commit — `Advance` needs the read and the write in one, and says so —
+	and the branch of `Begin` that renews an existing subscription returned
+	`apply`'s value straight out, so the deferred rollback threw the renewal
+	away. The subscription kept its old end date and the log got no line.
+
+	IT SURVIVED EVERY TEST THIS FILE HAD, because all of them asserted on the
+	`Held` that came back and that value was correct: it is built in memory from
+	the state machine, and never re-read. In production it is a renewal that took
+	the money, wrote the ledger, marked the checkout paid, and gave nobody a day
+	of access.
+
+	SO THIS TEST NEVER LOOKS AT THE RETURN VALUE. Everything it asserts is read
+	back out of the database afterwards, which is the only way this class of bug
+	is visible at all.
+*/
+func TestARenewalIsWrittenDownAndNotRolledBack(t *testing.T) {
+	s, pool := store(t)
+	account := student(t, pool)
+	ctx := context.Background()
+
+	begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	before, err := s.Of(ctx, account, "", day(0))
+	if err != nil {
+		t.Fatalf("reading the first term: %v", err)
+	}
+	lines := transitions(t, pool, account)
+
+	if _, err := s.Begin(ctx, account, "", billing.ModelInstalments,
+		price(t, pool, 69000), day(0), 12, nil); err != nil {
+		t.Fatalf("renewing: %v", err)
+	}
+
+	after, err := s.Of(ctx, account, "", day(0))
+	if err != nil {
+		t.Fatalf("reading it back: %v", err)
+	}
+	if !after.PaidThrough.After(before.PaidThrough) {
+		t.Errorf("the row still says access runs to %s after a second year was paid for — "+
+			"the renewal was rolled back", after.PaidThrough.Format(time.DateOnly))
+	}
+
+	// AND THE LOG HAS THE LINE, which is the half somebody needs a year later
+	// when they ask what that second payment bought them.
+	if grew := transitions(t, pool, account) - lines; grew != 1 {
+		t.Errorf("the renewal wrote %d lines to the log, want one", grew)
+	}
 }
 
 /*
