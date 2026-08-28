@@ -288,10 +288,30 @@ try {
        could not make: there was one price, so there was nothing for a save to
        spill into. Now three products share a table, and a `Set` that ignored
        the term would raise all of them at once. */
-    const spilled = await rows.filter({ hasText: '612' }).count();
-    if (spilled > 1) {
+    /* IT COUNTS THE OTHER TERMS AND NOT THE WHOLE LIST, which is the difference
+       between this assertion and the one that used to stand here.
+
+       Counting every row carrying the amount contradicts the assertion three
+       lines up. That one requires the year's series to GROW — append, never
+       edit, which is the whole of K-14 — so the second save into the same
+       database leaves two rows carrying 612, both of them the year's, both of
+       them correct, and the count said the price had spilled.
+
+       It only ever passed because CI builds a fresh schema per run, so this
+       suite had never been run twice against one database. That is the same
+       shape as the four isolation bugs in #190 and the race in #198: a test
+       that is correct exactly once is indistinguishable from a correct test
+       until somebody runs it twice.
+
+       What "spilled" means is a row for ANOTHER term carrying the year's
+       amount, so that is what is counted, and one is already too many. */
+    const spilled = await rows
+      .filter({ hasText: '612' })
+      .filter({ hasNotText: 'A year' })
+      .count();
+    if (spilled > 0) {
       bad('pricing one term leaves the others alone',
-        `${spilled} rows carry the amount that was saved for the year alone`);
+        `${spilled} row(s) outside the year carry the amount that was saved for the year alone`);
     } else {
       good('pricing one term leaves the others alone');
     }
