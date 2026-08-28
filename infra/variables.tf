@@ -120,9 +120,20 @@ variable "mail_reply_to" {
    EMPTY IS ALLOWED FOR THE SAME REASON THE MAIL PAIR ABOVE IS. A default would
    be a guess at somebody's domain, and a deployment whose terms differ owes
    nothing here. What it is NOT is a detail: a promise nobody can act on is
-   worse than no promise, because the document is evidence. */
+   worse than no promise, because the document is evidence.
+
+   AND IT IS NOW THE STARTING VALUE RATHER THAN THE ONLY ONE. Migration 0044
+   gives the console a form for this address, and the row an operator sets there
+   wins over what is written here. This stays because it is what answers before
+   anybody has opened that screen — and because the reason that form exists is
+   THIS FILE: `terraform.tfvars` is gitignored and lives on one machine, so an
+   apply run from anywhere else plans this back to empty and takes the address
+   off the account screen with nothing failing.
+
+   So set it, and treat it as the floor. Changing the address afterwards is a
+   thing to do in the console, where it is audited and takes effect at once. */
 variable "support_email" {
-  description = "Where a student writes to use the seven-day withdrawal. Empty names no address."
+  description = "Where a student writes to use the seven-day withdrawal, until the console sets one. Empty names no address."
   type        = string
   default     = ""
 }

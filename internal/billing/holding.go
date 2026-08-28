@@ -62,15 +62,29 @@ type Holding struct {
 	// `Handler.payer` uses, without the name and address it does not need.
 	who func(context.Context) (uuid.UUID, bool)
 
-	// support is where somebody writes to use the seven days. Empty is allowed
-	// and the screen then names the deadline without an address — see
-	// `config.SupportEmail`.
-	support string
+	/* support is where somebody writes to use the seven days. Empty is allowed
+	   and the screen then names the deadline without an address — see
+	   `config.SupportEmail`.
+
+	   IT IS A FUNCTION BECAUSE THE VALUE CAN BE CHANGED WHILE THE PROCESS RUNS.
+	   It was a string read once from the environment, which meant the address
+	   only moved with a new revision of the service; `0044` puts it in a row an
+	   operator sets from the console, and a value captured at start-up would
+	   make that form a control whose effect arrives at the next deployment.
+
+	   `cmd` wires the fallback into it — the row, and the environment variable
+	   when there is no row — so this package still knows nothing about where
+	   the answer came from. It takes a context so the read can be cancelled
+	   with the request it belongs to, and it swallows its own failure: a
+	   database that cannot answer costs the notice its address, not the
+	   screen. */
+	support func(context.Context) string
 }
 
 // NewHolding is the read side over the three stores it joins.
 func NewHolding(plans *Store, prices *Prices, buys *Checkouts,
-	who func(context.Context) (uuid.UUID, bool), support string) *Holding {
+	who func(context.Context) (uuid.UUID, bool),
+	support func(context.Context) string) *Holding {
 
 	return &Holding{plans: plans, prices: prices, buys: buys, who: who, support: support}
 }
@@ -225,7 +239,7 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	purchases := shownPurchases(bought)
-	withdraw := h.withdrawable(bought)
+	withdraw := h.withdrawable(r.Context(), bought)
 
 	held, err := h.plans.Of(r.Context(), accountID, ScopeEverything, time.Now())
 	switch {
@@ -306,7 +320,7 @@ withdrawable is the seven days, if they are still running.
 	the renewal and got it back still holds the term they bought last year, and
 	that term's own seven days are long gone anyway.
 */
-func (h *Holding) withdrawable(bought []Purchase) *withdrawBody {
+func (h *Holding) withdrawable(ctx context.Context, bought []Purchase) *withdrawBody {
 	for _, p := range bought {
 		if p.Stage != StagePaid || p.Refunded {
 			continue
@@ -315,7 +329,13 @@ func (h *Holding) withdrawable(bought []Purchase) *withdrawBody {
 		if !time.Now().Before(until) {
 			return nil
 		}
-		return &withdrawBody{Until: until, Email: h.support}
+
+		/* THE ADDRESS IS READ ONLY WHEN THERE IS A NOTICE TO PUT IT ON, which
+		   is why this is here and not beside the other reads above. Almost
+		   nobody is inside the seven days, so almost every draw of this screen
+		   costs nothing — and the read that does happen is one row by primary
+		   key. */
+		return &withdrawBody{Until: until, Email: h.support(ctx)}
 	}
 	return nil
 }

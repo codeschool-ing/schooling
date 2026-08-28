@@ -48,7 +48,11 @@ func holdingFor(t *testing.T, account uuid.UUID, signedIn bool) http.Handler {
 	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
 		billing.NewCheckouts(pool, nil),
 		func(context.Context) (uuid.UUID, bool) { return account, signedIn },
-		support)
+		// A CLOSURE OVER A CONSTANT, which is what `cmd` hands over after it has
+		// chosen between the row an operator set and the deployment's variable.
+		// This suite is about the screen and not about that choice; the store's
+		// own tests cover the row, and the resolution is `cmd`'s.
+		func(context.Context) string { return support })
 
 	mux := http.NewServeMux()
 	h.Routes(mux)
@@ -473,7 +477,8 @@ func TestTheSevenDaysAreSaidEvenWithNowhereToWrite(t *testing.T) {
 
 	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
 		billing.NewCheckouts(pool, nil),
-		func(context.Context) (uuid.UUID, bool) { return account, true }, "")
+		func(context.Context) (uuid.UUID, bool) { return account, true },
+		func(context.Context) string { return "" })
 
 	mux := http.NewServeMux()
 	h.Routes(mux)
