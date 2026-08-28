@@ -374,10 +374,15 @@ function daysLeft(n) {
   return txt('{n} days left').replace('{n}', n);
 }
 
-/* What a number of months is called. It is `screens/subscribe.js`'s function
-   and deliberately a second copy of four short strings rather than a shared
-   import: this screen and that one are the only two that name a term, and the
-   dictionary already holds all four. */
+/* What a number of months is called. It is `screens/subscribe.js`'s function,
+   copied deliberately rather than shared: two screens name a term, the strings
+   are four words each, and the dictionary already holds all four.
+
+   AND THE WORDING OF THIS COMMENT IS LOAD-BEARING, which is worth one line to
+   say. `tools/bundle` links the interface line by line and refuses anything it
+   cannot classify; a line that BEGAN with the word this sentence is avoiding
+   read as a declaration and stopped the build. Prose wraps where it wraps, so
+   the rule is not "do not mention it" but "do not let it start a line". */
 function termName(months) {
   switch (months) {
     case 1: return txt('A month');
