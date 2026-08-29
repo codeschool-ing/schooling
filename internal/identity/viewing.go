@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
 
@@ -61,13 +62,46 @@ import (
 // the console the moment they look at anything.
 const ViewingCookie = "schooling_viewing"
 
-// ViewingLifetime is how long a viewing lasts before it stops working.
-//
-// LONG ENOUGH TO READ A SCREEN AND SHORT ENOUGH THAT A MACHINE LEFT UNLOCKED IS
-// NOT AN OPEN DOOR. Half an hour is the time-limited half of K-02; it is not a
-// parameter, because there is a right answer and a knob here would be a knob
-// somebody turns up on the afternoon it is inconvenient (K-13).
-const ViewingLifetime = 30 * time.Minute
+/*
+ViewingLifetime is how long a viewing lasts before it stops working.
+
+	LONG ENOUGH TO READ A SCREEN AND SHORT ENOUGH THAT A MACHINE LEFT UNLOCKED
+	IS NOT AN OPEN DOOR. Half an hour is the time-limited half of K-02.
+
+	THE OLD COMMENT REFUSED TO MAKE IT A PARAMETER AND NAMED THE EXACT FAILURE:
+	"a knob here would be a knob somebody turns up on the afternoon it is
+	inconvenient". That is right, and it is a statement about ONE DIRECTION.
+
+	SO THE CEILING IS THE SHIPPED VALUE AND THE KNOB ONLY GOES DOWN. `Most` is
+	30 and nothing can raise it — not a console, not an operator having an
+	inconvenient afternoon, not `cmd` wiring it wrongly. What a deployment may
+	do is ask for LESS, which is the preference the old comment did not have a
+	name for: an organisation that wants ten minutes is tightening K-02 and not
+	loosening it, and there is no argument for refusing them.
+
+	THIS IS THE ONLY DECLARATION IN THE REGISTRY WHOSE FENCE PROTECTS A DECISION
+	RATHER THAN A TYPO. The others guard a digit too many; this one guards a
+	rule, and the direction is the whole of it — a `Most` of 31 would make the
+	refusal above true again.
+
+	FIVE MINUTES IS THE FLOOR because a viewing shorter than the screen it
+	exists to read is a feature that does not work, and an operator who cannot
+	finish looking will start another one — which is the same access with more
+	audit rows and less attention paid to each.
+*/
+var ViewingLifetime = setting.Declared{
+	Name:     "identity.viewinglife",
+	Unit:     setting.Minutes,
+	Least:    5,
+	Most:     30,
+	Fallback: 30,
+	Why: "how long an operator may look at a student's screens before the viewing stops " +
+		"working (K-02). It may only be made SHORTER: thirty is the ceiling and nothing " +
+		"can raise it, because a knob that went up would be one somebody turns on the " +
+		"afternoon it is inconvenient. An organisation that wants ten minutes is " +
+		"tightening the rule rather than loosening it, and there is no argument for " +
+		"refusing them.",
+}
 
 // HandoffLifetime is how long the link is worth following.
 //
@@ -122,7 +156,7 @@ func (s *Store) StartViewing(ctx context.Context,
 		INSERT INTO sessions
 			(account_id, token_hash, expires_at, user_agent, viewed_by, viewing_tenant)
 		VALUES ($1, $2, now() + $3::interval, 'view-as-student', $4, $5)
-	`, student, tokenHash(token), ViewingLifetime.String(), operator, school); err != nil {
+	`, student, tokenHash(token), s.viewingLife().String(), operator, school); err != nil {
 		return "", fmt.Errorf("identity: starting a viewing: %w", err)
 	}
 	return token, nil
@@ -291,8 +325,15 @@ func (h *Handler) viewingCookie(token string) *http.Cookie {
 		HttpOnly: true,
 		Secure:   h.settings.Secure,
 		SameSite: http.SameSiteStrictMode,
-		Expires:  time.Now().Add(ViewingLifetime),
-		MaxAge:   int(ViewingLifetime.Seconds()),
+		/* THE COOKIE AND THE ROW READ THE SAME DECLARATION, a moment apart,
+		   and the row is what decides. A change landing between the two makes
+		   the cookie outlive the row — the operator's browser keeps a token the
+		   server has already stopped honouring, which is a sign-out one refresh
+		   later — or the reverse, which is a sign-out one refresh early. Both
+		   are the harmless direction: ACCESS is the row's, always, and the
+		   cookie is only how the browser carries the token. */
+		Expires: time.Now().Add(h.store.viewingLife()),
+		MaxAge:  int(h.store.viewingLife().Seconds()),
 	}
 }
 

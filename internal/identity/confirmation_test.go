@@ -396,3 +396,48 @@ func TestALinkForAnOldAddressIsNotOutstanding(t *testing.T) {
 		t.Error("a link for the old address still counts as outstanding")
 	}
 }
+
+/*
+AND THE LINK LIVES AS LONG AS THE PARAMETER SAYS.
+
+	The test above wires nothing and so measures the twenty-four hours this
+	package shipped with. What `0046` adds is that a deployment can lengthen the
+	leash for students who read their mail on Monday, or shorten it, and that
+	both ends are fenced: under an hour somebody who stepped away has to ask
+	again, over three days a forwarded message is a standing key.
+
+	ONE DECLARATION FEEDS BOTH LINKS. `change.go` used to carry a `changeLife`
+	of its own with a comment saying it was the same number for the same reason,
+	which is two names for one fact — so this checks the change link moves with
+	it, and that is the assertion that would fail if somebody re-split them.
+*/
+func TestTheLinkLivesAsLongAsTheParameterSays(t *testing.T) {
+	for _, hours := range []int{2, 48} {
+		store := identity.NewStore(testPool(t)).WithLimits(identity.Limits{
+			ConfirmationLife: func(context.Context) int { return hours },
+		})
+		ctx := context.Background()
+		account, _ := create(t, store)
+
+		link, err := store.IssueEmailConfirmation(ctx, account.ID)
+		if err != nil {
+			t.Fatalf("at %d hours, minting a confirmation: %v", hours, err)
+		}
+		if until := time.Until(link.ExpiresAt); until < time.Duration(hours-1)*time.Hour ||
+			until > time.Duration(hours)*time.Hour {
+
+			t.Errorf("at %d hours the confirmation link expires in %s", hours, until)
+		}
+
+		moving, err := store.RequestEmailChange(ctx, account.ID, address(t))
+		if err != nil {
+			t.Fatalf("at %d hours, asking to move: %v", hours, err)
+		}
+		if until := time.Until(moving.ExpiresAt); until < time.Duration(hours-1)*time.Hour ||
+			until > time.Duration(hours)*time.Hour {
+
+			t.Errorf("at %d hours the change link expires in %s — the two links are one "+
+				"declaration, and this is what says so", hours, until)
+		}
+	}
+}

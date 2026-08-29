@@ -308,3 +308,65 @@ func TestTheChangeTableHoldsNoTokenAnybodyCouldUse(t *testing.T) {
 		t.Error("the change row carries the token itself")
 	}
 }
+
+/*
+AND THE CAP IS WHEREVER THE PARAMETER SAYS.
+
+	`TestAnAccountCannotPostStrangersMailAllDay` above wires nothing and so
+	measures three — the number this package shipped with. What `0046` adds is
+	that a school whose students type half their addresses on a phone keyboard
+	can raise it without a deployment, and that raising it is bounded: ten is
+	where a cap stops bounding the abuse it exists for.
+
+	IT IS CHECKED AT BOTH ENDS OF ONE FENCE. One, where a single correction is
+	all anybody gets; five, which is the shape of the school this exists for.
+*/
+func TestTheCapIsWhereverTheParameterSays(t *testing.T) {
+	for _, cap := range []int{1, 5} {
+		store := identity.NewStore(testPool(t)).WithLimits(identity.Limits{
+			ChangeCap: func(context.Context) int { return cap },
+		})
+		ctx := context.Background()
+		account, _ := create(t, store)
+
+		for i := 0; i < cap; i++ {
+			if _, err := store.RequestEmailChange(ctx, account.ID, address(t)); err != nil {
+				t.Fatalf("at a cap of %d, ask %d answered %v", cap, i+1, err)
+			}
+		}
+		if _, err := store.RequestEmailChange(ctx, account.ID, address(t)); !errors.Is(
+			err, identity.ErrTooManyChanges) {
+
+			t.Errorf("at a cap of %d, ask %d answered %v, want ErrTooManyChanges",
+				cap, cap+1, err)
+		}
+	}
+}
+
+/*
+AND A WIRING OUTSIDE THE FENCE IS THE SHIPPED CAP.
+
+	This one fails in the direction that costs somebody else. A cap of a
+	thousand looks like no cap at all only from the mailbox of whoever is being
+	written to — every screen here, every log line, and the account doing it all
+	look exactly as they do today.
+*/
+func TestACapOutsideTheFenceIsTheShippedOne(t *testing.T) {
+	store := identity.NewStore(testPool(t)).WithLimits(identity.Limits{
+		ChangeCap: func(context.Context) int { return 1000 },
+	})
+	ctx := context.Background()
+	account, _ := create(t, store)
+
+	for i := 0; i < identity.ChangeCap.Fallback; i++ {
+		if _, err := store.RequestEmailChange(ctx, account.ID, address(t)); err != nil {
+			t.Fatalf("ask %d: %v", i+1, err)
+		}
+	}
+	if _, err := store.RequestEmailChange(ctx, account.ID, address(t)); !errors.Is(
+		err, identity.ErrTooManyChanges) {
+
+		t.Errorf("a wiring answering a thousand was obeyed: ask %d gave %v",
+			identity.ChangeCap.Fallback+1, err)
+	}
+}
