@@ -127,7 +127,7 @@ func TestQuarantineRefusesAVerdictThatIsNotFlagged(t *testing.T) {
 	} {
 		err := store.Quarantine(context.Background(), id, analysis.Statistics{
 			ExerciseID: "x", Version: 1, Verdict: verdict,
-			Attempts: 100, MinimumSample: analysis.MinimumSample,
+			Attempts: 100, MinimumSample: analysis.MinimumSample.Fallback,
 		}, time.Now().UTC())
 		if err == nil {
 			t.Errorf("a %q question was quarantined", verdict)

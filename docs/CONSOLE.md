@@ -95,7 +95,14 @@ is how every console rots.* That division is the spine of everything below.
   "who is online" is where it is easiest to break by being helpful. It is the one number in the
   console that is current state rather than the event stream, which is `K-06` and not a hole in
   `K-03`: nobody asks who was online last March, and the stream could not answer if they did —
-  that needs an event for LEAVING, and no browser reliably sends one
+  that needs an event for LEAVING, and no browser reliably sends one. **How recently counts as
+  here is a declared parameter** (2 to 30 minutes, shipping 5). The old constant's comment said
+  the answer follows from the heartbeat, and that is true of one end only: below the writing
+  cadence people are reported gone between their own requests, which is now the `Least` bound
+  and is held to the cadence by a test. Where "now" ENDS is nobody's fact — a deploy going wrong
+  is watched at the short end and an evening's traffic at the long one. The window travels to the
+  screen with the count it produced (`K-16`), which matters more now and not less: a screen with
+  the span written into it would label today's number with yesterday's window
 - A world map with per-country statistics, from an in-process GeoIP database — the country stored
   on the event, the address never stored (`K-05`). It counts **people** through the same
   `personOf` the funnel uses, so the two screens cannot disagree; somebody seen in two countries

@@ -332,12 +332,12 @@ func enough(people int, planted string) error {
 	if planted == "" {
 		return nil
 	}
-	if sitters := int(float64(people) * reachesTheExam); sitters < analysis.MinimumSample {
+	if sitters := int(float64(people) * reachesTheExam); sitters < analysis.MinimumSample.Fallback {
 		return fmt.Errorf(
 			"%d people would put about %d of them through an exam, and item analysis says "+
 				"nothing below %d answers to a question — ask for at least %d people, or accept "+
 				"a population nothing can be read from",
-			people, sitters, analysis.MinimumSample, enoughPeople)
+			people, sitters, analysis.MinimumSample.Fallback, enoughPeople)
 	}
 	return nil
 }
@@ -373,7 +373,7 @@ func verify(ctx context.Context, pool *pgxpool.Pool, shape shape, out io.Writer)
 	say(out, "%s\n", "\nwhat the statistics say about the questions this population answered:")
 	var found bool
 	for _, id := range ids {
-		s, err := analysis.Summarise(byQuestion[id])
+		s, err := analysis.Summarise(byQuestion[id], analysis.MinimumSample.Fallback)
 		if err != nil {
 			return err
 		}

@@ -27,7 +27,7 @@ import (
 // them.
 func present(t *testing.T, store *identity.Store, school uuid.UUID) int {
 	t.Helper()
-	rows, _, err := store.Presence(context.Background(), identity.PresenceWindow)
+	rows, _, err := store.Presence(context.Background(), identity.Window(identity.PresenceWindow.Fallback))
 	if err != nil {
 		t.Fatalf("reading who is here: %v", err)
 	}
@@ -178,7 +178,7 @@ func TestAHostThatIsNoSchoolNeitherPlacesNorRemoves(t *testing.T) {
 	if _, _, err := store.Verify(ctx, token, nil); err != nil {
 		t.Fatalf("verifying a session: %v", err)
 	}
-	rows, _, err := store.Presence(ctx, identity.PresenceWindow)
+	rows, _, err := store.Presence(ctx, identity.Window(identity.PresenceWindow.Fallback))
 	if err != nil {
 		t.Fatalf("reading who is here: %v", err)
 	}
@@ -222,5 +222,40 @@ func TestNobodyIsHereInAWindowOfNoTime(t *testing.T) {
 		if one.School == school {
 			t.Errorf("%d people were seen in the last no seconds", one.People)
 		}
+	}
+}
+
+/*
+THE WINDOW'S FLOOR IS DERIVED FROM THE HEARTBEAT, AND NOTHING BUT THIS HOLDS
+THEM TOGETHER.
+
+	`PresenceWindow` was a constant whose comment established one real
+	constraint: a window narrower than the writing cadence reports people as
+	gone between their own requests, because `Verify` writes at most once a
+	minute. When the number became a parameter that constraint became `Least`,
+	and a bound in one file derived from a constant in another is a bound that
+	stops being derived from anything the day somebody changes the constant —
+	silently, with the console still offering the same range.
+
+	TWICE THE CADENCE RATHER THAN ONCE, because equal is already wrong: a
+	heartbeat written at the very start of a window and the next one written a
+	minute later would both have to land inside it, and a window of exactly one
+	cadence has no room for the jitter of a request that took a moment.
+*/
+func TestTheWindowCannotBeSetInsideTheHeartbeat(t *testing.T) {
+	floor := identity.Window(identity.PresenceWindow.Least)
+
+	if floor < 2*identity.PresenceCadence {
+		t.Errorf("the window may be set as low as %s and the heartbeat is written every %s — "+
+			"below twice the cadence, this platform reports people as gone between their own "+
+			"requests. Raise `PresenceWindow.Least`, or say here why the pair is safe",
+			floor, identity.PresenceCadence)
+	}
+
+	// AND THE SHIPPED VALUE SITS INSIDE ITS OWN FENCE, which `NewRegistry` also
+	// checks at start-up — here so the answer is a diff rather than a panic in
+	// front of whoever deployed it.
+	if err := identity.PresenceWindow.Valid(identity.PresenceWindow.Fallback); err != nil {
+		t.Errorf("the window falls back to a value it would refuse: %v", err)
 	}
 }

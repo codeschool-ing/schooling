@@ -52,6 +52,48 @@ type Store struct {
 	monthly Monthly
 	origins Origins
 	links   Links
+
+	// How many answers a question needs before this store says anything about
+	// it. Nil until WithMinimumSample, and nil is the number `MinimumSample`
+	// ships with — see `enough`.
+	minimum func(ctx context.Context) int
+}
+
+/*
+WithMinimumSample is the store reading its threshold from the registry.
+
+	A SEPARATE CALL for the reason `WithStream` and `WithAudit` are: nothing
+	that only reads a cohort or a funnel needs it, and a constructor demanding
+	it would be a constructor somebody passes nil to. The difference from those
+	two is that a nil here is not a refusal — it is the shipped number, because
+	an un-wired threshold should compute the analysis this package has always
+	computed rather than compute none.
+*/
+func (s *Store) WithMinimumSample(minimum func(ctx context.Context) int) *Store {
+	out := *s
+	out.minimum = minimum
+	return &out
+}
+
+/*
+enough is the threshold in force, bounded by the declaration however it is
+wired.
+
+	A VALUE OUTSIDE THE FENCE IS THE SHIPPED ONE. `setting.Store` refuses one on
+	the way in and ignores one on the way out, so a value arriving here means
+	`cmd` is answering something the declaration would not accept — and the
+	failure that would follow is the quiet kind: a threshold of two makes this
+	platform quarantine questions on the evidence of two people, and every
+	screen would look exactly as it does now.
+*/
+func (s *Store) enough(ctx context.Context) int {
+	if s.minimum == nil {
+		return MinimumSample.Fallback
+	}
+	if got := s.minimum(ctx); MinimumSample.Valid(got) == nil {
+		return got
+	}
+	return MinimumSample.Fallback
 }
 
 // WithStream is the store with the readers that go to the event stream.
@@ -113,7 +155,7 @@ func (s *Store) runOne(ctx context.Context, school uuid.UUID, since, now time.Ti
 		return 0, nil
 	}
 
-	grouped, err := Group(answers)
+	grouped, err := Group(answers, s.enough(ctx))
 	if err != nil {
 		return 0, fmt.Errorf("analysis: %s: %w", school, err)
 	}

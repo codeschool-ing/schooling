@@ -939,7 +939,14 @@ Four rules, each a test:
 - **Nothing is decided below the minimum sample**, and `insufficient` is a member of the verdict
   list rather than the absence of one — a screen cannot show an unmeasured question as though it
   had passed. The index is not even computed below the sample: a number on a screen is read as a
-  finding whatever the label beside it says.
+  finding whatever the label beside it says. **Where the sample sits is a declared parameter**
+  (10 to 200, shipping 30): thirty is what classical item analysis uses, which is a rule of thumb
+  and not a result, and the real choice is between saying something early and risking noise or
+  saying nothing until certain — a cohort of forty and a cohort of four thousand want opposite
+  ends of it. Every rollup records the sample it was judged against, which is what makes moving
+  it safe, and `cmd/analyse` reads it **once per run**: a sweep that picked up a change halfway
+  would judge half the questions by one bar and half by another, in one run, with one line in the
+  log saying which. The other thresholds are arithmetic and stay in code.
 - **An index of zero is not always a measurement.** When the paper separated nobody there are no
   two groups to compare, so the answer is `insufficient` rather than `weak`. Reading it as weak
   blames the question for the paper — and getting this wrong was the first mistake here, caught
