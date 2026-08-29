@@ -33,6 +33,7 @@ import countries from './screens/countries.js';
 import presence from './screens/presence.js';
 import reports from './screens/reports.js';
 import jobs from './screens/jobs.js';
+import staff from './screens/staff.js';
 
 export const SECTIONS = [
   /* WHO IS HERE COMES FIRST, and it is the only entry under `Measure` that is
@@ -86,6 +87,20 @@ export const SECTIONS = [
      and larger act and does not want to be the first thing under the heading. */
   { id: 'settings', name: 'What it is set to', group: 'Operate', screen: parameters },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },
+
+  /* WHO CAN OPEN THIS, BETWEEN THE TWO IT BELONGS WITH. `Personal data` is what
+     this console holds about somebody; the history is what it did about them;
+     this is who was able to do it. The three are one question asked from three
+     sides, and it sits in the middle because the roster is what makes the other
+     two reviewable rather than merely available.
+
+     IT IS NOT WHAT K-22 GOVERNS — see `console/staff.go`. That decision is
+     about listing STUDENTS, and it has since been amended: the section above
+     lists them now, under four conditions. Neither version reaches this one.
+     There is no reviewing an access-control list an address at a time, because
+     the whole question is who is on it that nobody thought to ask about. */
+  { id: 'staff', name: 'Who can open this', group: 'Govern', screen: staff },
+
   { id: 'audit', name: 'History', group: 'Govern', screen: history },
 ];
 

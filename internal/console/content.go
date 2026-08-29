@@ -37,11 +37,15 @@ import (
 
    # IT DOES NOT SHOW WHO REPORTED IT
 
-   K-22 says a person is found by an exact address and never listed, and a queue
-   that named its reporters would be a list of people who complain — sortable,
-   browsable, and exactly the read an audit cannot tell from working. What the
-   screen gets is the report and the section; the account id is on the row for
-   the erase path and does not leave this package.
+   K-22 was amended and a listing of people exists now, on `Personal data`, held
+   by four conditions. A queue that named its reporters would fail the one that
+   matters most here: it would not be MINIMAL. The people on it are selected by
+   something they did — they complained — so the list itself is the disclosure,
+   and no amount of recording who read it takes that back.
+
+   That is a sharper reason than the old one and it points the same way. What
+   the screen gets is the report and the section; the account id is on the row
+   for the erase path and does not leave this package.
 */
 
 // Report is one open report as the console shows it.
@@ -195,9 +199,10 @@ func (h *ContentHandler) queue(w http.ResponseWriter, r *http.Request) {
 		// WHAT THE QUEUE DOES NOT SAY, said by the thing that decided not to
 		// say it. An operator wondering why they cannot see who reported
 		// something should find the rule rather than conclude it was forgotten.
-		"anonymous": "A report is shown without its reporter. A person is found here by an " +
-			"exact address and never listed, and a queue naming who complained is a list " +
-			"of people to browse.",
+		"anonymous": "A report is shown without its reporter. People can be looked up on " +
+			"Personal data, a page at a time and recorded — but a queue naming who " +
+			"complained would be a list of people picked out by something they did, and " +
+			"that is the disclosure itself rather than a read anybody could record.",
 	})
 }
 

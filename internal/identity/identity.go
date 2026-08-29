@@ -325,11 +325,15 @@ func (s *Store) ByID(ctx context.Context, id uuid.UUID) (Account, error) {
 
 // ByEmail answers the account at exactly this address, and never a list.
 //
-// EXACT, AND THERE IS NO PARTIAL FORM OF IT (K-22). The console's one way of
-// reaching a person is this, and the reason it is not a search is that a search
-// is not a lookup: typing `@example.tld` and reading the result is BROWSING
-// PEOPLE, which is the one thing an audit trail cannot tell apart from working
-// — both look like a staff member opening records.
+// EXACT, AND THERE IS NO PARTIAL FORM OF IT — which is a statement about this
+// method now rather than about the platform. K-22 was amended and `Look` is the
+// listing it allows: bounded to a page, carrying the four fields this returns
+// and no more, and recorded once per page with what was searched for.
+//
+// SO THIS ONE MUST NOT DRIFT. Every protection on the listing is ON the
+// listing. A lookup that quietly began matching prefixes would be the same
+// power reached by the route that records nothing — which is the shape K-22 was
+// right to refuse, however the rule around it was worded.
 //
 // The address is folded and trimmed the way one pasted out of a support message
 // arrives. A lookup that missed on a trailing space would be read as "this

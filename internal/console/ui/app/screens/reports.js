@@ -17,10 +17,13 @@
 
    # IT DOES NOT SAY WHO
 
-   A person is found in this console by an exact address and never listed
-   (K-22). A queue naming who complained is a list of people to browse, which is
-   the read an audit cannot tell apart from working. The answer carries no
-   account and this screen has nothing to draw one with.
+   K-22 was amended and this console lists people now, on `Personal data`, under
+   four conditions. A queue naming who complained would fail the one that bites
+   hardest here: it would not be MINIMAL. The people on such a list are selected
+   by something they did — they complained — so the list IS the disclosure, and
+   no amount of recording who read it takes that back.
+
+   The answer carries no account and this screen has nothing to draw one with.
 
    # THE VERDICTS ARE THE SERVER'S
 

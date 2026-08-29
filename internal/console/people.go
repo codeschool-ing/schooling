@@ -57,10 +57,11 @@ type People struct {
 
 	// ByID answers the person behind an id that is already in an address bar.
 	//
-	// IT IS NOT A SECOND WAY TO SEARCH. K-22 is about producing a list of
-	// people from something a staff member types; an id is what a screen was
-	// already handed, and a record has to survive a reload and a pasted link
-	// like any other detail route.
+	// IT IS NOT A THIRD WAY TO SEARCH, and it was a second one until `List`
+	// existed. An id is what a screen was already handed — a record has to
+	// survive a reload and a pasted link like any other detail route — so
+	// nothing about it selects a person from a population, which is what the
+	// four conditions on `List` are there to hold.
 	ByID func(ctx context.Context, id uuid.UUID) (Person, error)
 
 	/* List answers a page of people, newest first, matching a substring or
@@ -216,12 +217,17 @@ type personBody struct {
 	Synthetic bool      `json:"synthetic,omitempty"`
 }
 
-// find is the only way in, and it takes a whole address.
+// find takes a whole address and answers one person or none.
 //
-// THE ADDRESS IS IN THE QUERY STRING AND THE ANSWER IS ONE PERSON OR NONE.
-// There is no listing route on purpose, and no prefix match: see K-22. A
-// console that can produce a page of people is a console somebody can browse,
-// and browsing personal data is indistinguishable from working.
+// IT WAS "THE ONLY WAY IN" AND IS NOT ANY MORE. `list` is one route along, and
+// it is the amendment to K-22 — bounded, minimal, counted and named. This route
+// is none of those and does not need to be: it discloses only whether the
+// address somebody already typed belongs to an account, which tells the asker
+// nothing they did not bring with them.
+//
+// WHICH IS EXACTLY WHY IT MUST NOT GROW A PREFIX MATCH. Every protection on the
+// listing is on the listing; a lookup that started matching partially would be
+// the same power reached by the route that records nothing.
 func (h *PeopleHandler) find(w http.ResponseWriter, r *http.Request) {
 	email := strings.TrimSpace(r.URL.Query().Get("email"))
 	if email == "" {

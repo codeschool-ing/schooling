@@ -72,6 +72,12 @@ package console
    system and it is not on this list, because this list is what the CONSOLE can
    change — and a role is granted by a command precisely because the first one
    could not be granted through a console that needs a role to open.
+
+   THE CONSOLE CAN NOW SEE THAT LIST WITHOUT BEING ABLE TO CHANGE IT, which is
+   `staff.go` and is correctly absent from here. A roster is a read; what makes
+   it worth having is exactly that the write stays where it is. Two doors onto
+   `staff` would be two paths to keep audited and in agreement, bought for the
+   convenience of not opening a terminal on the rarest write this platform has.
 */
 
 // Kind is what a write leaves behind.

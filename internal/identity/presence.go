@@ -32,11 +32,16 @@ import (
 
    # AND IT DOES NOT SAY WHO THEY ARE
 
-   K-22: a person is found by an exact address and never listed. A list of who
-   is online is a browse of the population — precisely the read an audit cannot
-   tell from working — so this answers a count and has no shape in which to
-   return a name. The operator who needs a name has one already, because
-   somebody wrote in.
+   K-22 no longer says people are never listed — it was amended, and a listing
+   is allowed where it is bounded, minimal, counted and named. This would be
+   none of those, and the last two are what settle it: a list of who is online
+   is refreshed on a timer, so there is no moment at which somebody asked for it
+   and nothing to record against a purpose. That is a browse of the population
+   with the one thing the amendment rests on missing.
+
+   So this answers a count and has no shape in which to return a name. The
+   operator who needs one has it already, because somebody wrote in — and the
+   operator who does not have it has `Look`, which records that they asked.
 */
 
 /*
