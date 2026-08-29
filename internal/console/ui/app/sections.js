@@ -25,6 +25,7 @@ import history, { byActor, onSubject, entry } from './screens/history.js';
 import studentRecord, { record } from './screens/record.js';
 import schools from './screens/schools.js';
 import plan from './screens/plan.js';
+import parameters from './screens/settings.js';
 import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
@@ -71,6 +72,19 @@ export const SECTIONS = [
      A form on a school's page would now change what everybody pays from a
      screen about one school. */
   { id: 'plan', name: 'What it costs', group: 'Operate', screen: plan },
+
+  /* AND WHAT IT IS SET TO, BESIDE WHAT IT COSTS AND NOT INSIDE IT. The two are
+     the same job — deciding something the whole platform then behaves by — and
+     they are different subjects: one is the offer, and a price is appended
+     because a March invoice has to stay explicable in November. The other is
+     every remaining knob, replaced rather than appended, because none of them
+     is money.
+
+     IT IS LAST UNDER `Operate` on purpose. The three above it are opened
+     because somebody has a question about a person or a school; this one is
+     opened to change how the system behaves for everybody, which is the rarer
+     and larger act and does not want to be the first thing under the heading. */
+  { id: 'settings', name: 'What it is set to', group: 'Operate', screen: parameters },
   { id: 'people', name: 'Personal data', group: 'Govern', screen: people },
   { id: 'audit', name: 'History', group: 'Govern', screen: history },
 ];

@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"net/netip"
@@ -403,5 +404,77 @@ func TestTheEmbeddedDatabaseIsWiredToTheMiddleware(t *testing.T) {
 	}
 	if answered != "br" {
 		t.Errorf("the embedded database put %s in %q, want %q", asked[0], answered, "br")
+	}
+}
+
+/*
+THE ARGUMENT IS THE COST, AND THIS IS WHERE IT IS COLLECTED.
+
+`internal/console/writes.go` opens by refusing a registry of parameters, on the
+grounds that one makes "the next value somebody wants to make settable cost one
+INSERT and no argument". `0046` built the registry anyway and moved the fence
+onto the declaration; that sentence is the failure the move is measured against,
+and this test is what holds it.
+
+WHAT IT CAN CHECK AND WHAT IT CANNOT. It cannot know whether twelve instalments
+has a right answer — no test can, which is why K-13 asks for a sentence and a
+review rather than a rule. What it can do is make sure the sentence is THERE,
+that the fence exists and has room in it, and that the name reads as something
+an audit entry can carry to somebody with neither this file nor the console in
+front of them.
+
+A DECLARATION THAT FAILS HERE FAILS BEFORE START-UP. `MustRegistry` panics on
+some of the same things, in front of whoever deployed it; this is the same
+questions asked in a place where the answer is a diff.
+*/
+func TestEveryParameterCarriesItsArgument(t *testing.T) {
+	all := parameters()
+	if len(all) == 0 {
+		t.Fatal("no parameters at all — this platform has had one since `0046`, so this is " +
+			"the list having been emptied rather than the console becoming fixed")
+	}
+
+	// `module.thing`: the shape `settings.name` is CHECKed against, so a
+	// declaration that could never be written fails here rather than at the
+	// first attempt to set it.
+	shaped := regexp.MustCompile(`^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)+$`)
+
+	for _, one := range all {
+		t.Run(one.Name, func(t *testing.T) {
+			if !shaped.MatchString(one.Name) {
+				t.Errorf("%q is not a name the table would accept — it is `module.thing`, "+
+					"lowercase and dotted, and it is what an audit entry names", one.Name)
+			}
+			if one.Unit == "" {
+				t.Error("no unit, so a screen has nothing to draw and nothing to say " +
+					"the number is counted in")
+			}
+
+			/* THE SENTENCE, AND THE LENGTH IS A FLOOR RATHER THAN A MEASURE.
+			   What it holds is that an entry added to silence a compiler cannot
+			   be added blank — the argument itself is what a review reads, and
+			   an entry whose reason says "so it can be configured" passes this
+			   and should not pass that. */
+			if len(one.Why) < 60 {
+				t.Errorf("declared with %q, which is not the argument for it existing. "+
+					"Say what it decides and why it has no right answer — a value with one "+
+					"belongs in code, where a test holds it (K-13)", one.Why)
+			}
+
+			/* A FENCE WITH ROOM IN IT. `Least == Most` is a constant with a
+			   screen in front of it: nobody can move it and the console offers
+			   to, which is worse than not offering. */
+			if one.Least >= one.Most {
+				t.Errorf("takes %d to %d, which is not a knob — a value that cannot move "+
+					"is a constant, and a constant belongs in code", one.Least, one.Most)
+			}
+
+			// And the fallback inside it, because everything resolves to the
+			// fallback: an unset row, an unreadable database, a value written by
+			// hand that the declaration refuses.
+			if err := one.Valid(one.Fallback); err != nil {
+				t.Errorf("falls back to a value it would refuse: %v", err)
+			}
+		})
 	}
 }

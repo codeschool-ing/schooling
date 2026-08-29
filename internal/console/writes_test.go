@@ -120,28 +120,42 @@ notice that the set of things this platform lets somebody configure has grown,
 which is the moment the claim is worth re-reading rather than a moment to reach
 for a settings row.
 
-The number is what it is today. Passing it is not permission to raise it: what
-it asks for is that somebody who wants a third parameter says here, in a diff,
-that they read K-13 first.
-*/
-func TestTheParametersAreStillFew(t *testing.T) {
-	/* THREE SINCE THE SUPPORT ADDRESS, and this is the diff saying K-13 was read
-	   first. The argument for it is in `writes.go` beside the entry and in
-	   `0044` at length; the short version is that it is a fact about who is
-	   answering rather than about the platform, and that it was already
-	   settable — from a gitignored file on one machine, where an apply run from
-	   anywhere else planned it back to empty and took a published legal right's
-	   only channel off the screen with nothing failing.
+WHAT THIS NUMBER COUNTS CHANGED WITH `0046`, and the difference is worth being
+exact about, because a count that quietly stopped counting the same thing is a
+ratchet that has come loose.
 
-	   Moving a value that already had no right answer is not the growth this
-	   test watches for. The growth would be a fourth entry whose sentence reads
-	   "so it can be configured". */
-	const known = 3
+It counts WRITE ROUTES of the parameter kind, and it always did. Three of the
+four are one value each — a school's accent, the price of a term, where a
+student writes. The fourth is `settings/{name}`, which is every other knob this
+platform has, and it is ONE entry here because it is one route: what closes the
+set behind it is not this file but `internal/platform/setting`, where each name
+is a declaration in the module that owns the decision, and `cmd/api`'s
+`TestEveryParameterCarriesItsArgument`, which fails a declaration without an
+argument, without a fence, or with a fence it cannot move inside.
+
+So this test no longer holds the number of knobs. It holds the number of DOORS,
+and a fifth one is still a diff saying K-13 was read first.
+
+The number is what it is today. Passing it is not permission to raise it.
+*/
+func TestTheParameterRoutesAreStillFew(t *testing.T) {
+	/* FOUR SINCE THE REGISTRY, and this is the diff saying K-13 was read first.
+	   The argument is in `writes.go` beside the entry, in `0046` at length, and
+	   in `internal/platform/setting`'s package comment; the short version is
+	   that the guarantee moved from "a knob costs a table" to "a knob costs a
+	   declaration and an argument", which is the same cost in the place that
+	   was actually paying it.
+
+	   The growth this watches for is a fifth ROUTE that writes a persisting
+	   value outside the registry — which is somebody routing around the
+	   declaration rather than writing one. */
+	const known = 4
 
 	if got := len(console.Parameters()); got != known {
-		t.Errorf("this console has %d parameters and had %d. If that is right, read K-13 "+
-			"and change this number in the same commit: a value with a right answer belongs "+
-			"in code where a test holds it, and only something without one becomes a knob",
+		t.Errorf("this console has %d parameter routes and had %d. If that is right, read "+
+			"K-13 and change this number in the same commit — and check first whether what "+
+			"you want is a `setting.Declared` beside the code that reads it, which is where "+
+			"a new knob goes and costs no route at all",
 			got, known)
 	}
 }

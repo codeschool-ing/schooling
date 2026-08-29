@@ -121,13 +121,18 @@ func offering(pool *pgxpool.Pool) tenant.Offer {
 	}
 }
 
+// twelve is the instalment count as `cmd/api` now hands it in: a function
+// asked per request, because the day the policy moves is a console screen and
+// not a deployment. What these tests care about is the number that comes out.
+func twelve(context.Context) int { return 12 }
+
 // server mounts the one school-scoped route behind the middleware, exactly as
 // cmd/api does. Testing the handler without the middleware would prove nothing
 // about the thing that matters, which is the resolution.
 func server(t *testing.T, pool *pgxpool.Pool) *httptest.Server {
 	t.Helper()
 	scoped := http.NewServeMux()
-	tenant.NewHandler(70, 12, 500, offering(pool)).Routes(scoped)
+	tenant.NewHandler(70, twelve, 500, offering(pool)).Routes(scoped)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))
@@ -325,7 +330,7 @@ func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	mux := http.NewServeMux()
 	// NOTHING PRICED, said by the seam answering an empty list — which is also
 	// what a deployment with no `billing` wired in looks like.
-	tenant.NewHandler(70, 12, 500, nil).Routes(mux)
+	tenant.NewHandler(70, twelve, 500, nil).Routes(mux)
 
 	rec := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)

@@ -64,14 +64,19 @@ type Handler struct {
 	//
 	// HANDED IN FOR passMark's REASON EXACTLY: `billing` owns it and a module may
 	// not import another module (X-02), so `cmd/api` is the one line saying that
-	// this and `billing.MaxInstalments` are the same number.
+	// this and `billing.MostInstalments` are the same number.
 	//
 	// WHY THE SCREEN IS TOLD RATHER THAN KNOWING. The subscribe screen draws one
 	// option per instalment and had the count written into it — so the day the
 	// policy moved, the browser would offer a split the server refuses, which is
 	// a form that fails after somebody has already chosen. That is the failure
 	// `passMark` above was introduced to end, on a different number.
-	instalments int
+	//
+	// AND IT IS A FUNCTION NOW RATHER THAN A NUMBER, because the day the policy
+	// moves is a Tuesday afternoon on a console screen and not a deployment. A
+	// number read once at start-up would make this the copy that is stale — the
+	// same failure as the browser's, one process further in.
+	instalments func(ctx context.Context) int
 
 	// pixDiscount is what a Pix payment takes off, in basis points.
 	//
@@ -104,7 +109,9 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark, instalments, pixDiscount int, offer Offer) *Handler {
+func NewHandler(passMark int, instalments func(ctx context.Context) int,
+	pixDiscount int, offer Offer) *Handler {
+
 	return &Handler{
 		passMark: passMark, instalments: instalments,
 		pixDiscount: pixDiscount, offer: offer,
@@ -113,6 +120,25 @@ func NewHandler(passMark, instalments, pixDiscount int, offer Offer) *Handler {
 
 func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/school", h.school)
+}
+
+/*
+mostInstalments is what the storefront is told a card sale splits into.
+
+	A DEPLOYMENT THAT WIRED NOTHING SAYS ONE, not zero. Zero would have the
+	subscribe screen draw an empty picker and the invitation quote a payment in
+	no parts; one is a card paid in full, which is a thing this platform sells
+	and the honest floor. It is a wiring mistake either way, and this is the
+	version of it a buyer can still use.
+*/
+func (h *Handler) mostInstalments(ctx context.Context) int {
+	if h.instalments == nil {
+		return 1
+	}
+	if got := h.instalments(ctx); got >= 1 {
+		return got
+	}
+	return 1
 }
 
 type schoolBody struct {
@@ -201,7 +227,7 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
 		Plans:       plans,
 		PassMark:    h.passMark,
-		Instalments: h.instalments,
+		Instalments: h.mostInstalments(r.Context()),
 		PixDiscount: h.pixDiscount,
 	})
 }

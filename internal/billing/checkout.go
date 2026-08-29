@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -64,7 +65,7 @@ var ErrNotSplittable = errors.New("billing: only a card payment can be split")
 var ErrTooManyInstalments = errors.New("billing: that is more instalments than are on offer")
 
 /*
-MaxInstalments is how far a card sale may be split, and it is enforced HERE
+MostInstalments is how far a card sale may be split, and it is enforced HERE
 rather than by the screen that draws the picker.
 
 	IT WAS SIX AND THE REASON WAS WRONG. The roadmap capped it at six on an
@@ -89,8 +90,25 @@ rather than by the screen that draws the picker.
 	gateway makes the parts add up — so a count of five hundred was arithmetic
 	nobody here was going to get wrong. What was missing is a policy the server
 	states.
+
+	IT IS A PARAMETER BECAUSE IT IS A COMMERCIAL POSITION AND NOT A FACT. Twelve
+	against six is half a point of fee against how an instalment reads next to
+	another school's, and the argument above is an argument rather than a
+	measurement — which is exactly the shape K-13 asks for before a number gets a
+	screen. `Most` is twelve because that is where the gateway's card bands stop:
+	a thirteenth part is not a decision this platform is allowed to make, so the
+	fence does not move and only the position inside it does.
 */
-const MaxInstalments = 12
+var MostInstalments = setting.Declared{
+	Name:     "billing.instalments",
+	Unit:     setting.Count,
+	Least:    1,
+	Most:     12,
+	Fallback: 12,
+	Why: "how far a card sale may be split. Twelve costs half a point more in fees " +
+		"than six and halves the instalment a buyer compares against other schools; " +
+		"one turns instalments off. No interest is passed on at any count.",
+}
 
 // Method is how a checkout is being paid.
 type Method string
@@ -171,12 +189,40 @@ type Confirmed func(ctx context.Context, accountID uuid.UUID) (bool, error)
 type Checkouts struct {
 	pool      *pgxpool.Pool
 	confirmed Confirmed
+
+	/* most is today's answer to `MostInstalments`, asked per checkout rather
+	   than read once at start-up — a parameter changed on a screen has to reach
+	   a server nobody restarted, or it is a screen that lies. `cmd` wires it;
+	   see `Open` for what a nil one does. */
+	most func(ctx context.Context) int
 }
 
-// NewCheckouts is the store. `confirmed` is required: a nil one would make the
-// gate a thing every caller has to remember.
-func NewCheckouts(pool *pgxpool.Pool, confirmed Confirmed) *Checkouts {
-	return &Checkouts{pool: pool, confirmed: confirmed}
+/*
+NewCheckouts is the store.
+
+	`confirmed` IS REQUIRED and a nil one refuses every checkout — the gate is
+	not a thing a caller gets to forget. `most` is not: a nil one is read as the
+	number the code shipped with, because the fence that matters is
+	`MostInstalments.Most`, which is the gateway's ceiling and is enforced
+	whatever is wired. Forgetting to pass it costs the platform a configured
+	preference; forgetting `confirmed` would cost it the rule.
+*/
+func NewCheckouts(pool *pgxpool.Pool, confirmed Confirmed,
+	most func(ctx context.Context) int) *Checkouts {
+
+	return &Checkouts{pool: pool, confirmed: confirmed, most: most}
+}
+
+// mostInstalments is what a card sale may be split into today, bounded by the
+// declaration however it is wired.
+func (c *Checkouts) mostInstalments(ctx context.Context) int {
+	if c.most == nil {
+		return MostInstalments.Fallback
+	}
+	if got := c.most(ctx); MostInstalments.Valid(got) == nil {
+		return got
+	}
+	return MostInstalments.Fallback
 }
 
 /*
@@ -214,7 +260,7 @@ func (c *Checkouts) Open(ctx context.Context, accountID uuid.UUID, scope string,
 		return Intent{}, fmt.Errorf("%w: %q", ErrNoMethod, method)
 	case method == MethodPix && instalments > 1:
 		return Intent{}, ErrNotSplittable
-	case instalments > MaxInstalments:
+	case instalments > c.mostInstalments(ctx):
 		return Intent{}, fmt.Errorf("%w: %d", ErrTooManyInstalments, instalments)
 	case strings.TrimSpace(provider) == "":
 		return Intent{}, fmt.Errorf("%w: a checkout has to say which gateway it is at",

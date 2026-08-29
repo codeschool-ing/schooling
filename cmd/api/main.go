@@ -45,6 +45,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/logs"
 	"github.com/codeschool-ing/schooling/internal/platform/mail"
 	"github.com/codeschool-ing/schooling/internal/platform/pay/asaas"
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
@@ -241,10 +242,52 @@ func proxiesInFront(cfg config.Config) int {
 	return 0
 }
 
+/*
+parameters is every knob this platform has, and it is the whole of the closed
+set K-13 asks for.
+
+	IT IS A FUNCTION SO A TEST CAN READ IT. `TestEveryParameterCarriesItsArgument`
+	holds each entry to the thing `console/writes.go` was afraid a registry would
+	end: that adding one costs an argument. A declaration with no `Why`, with no
+	room to move, or with a fallback outside its own fence fails there rather
+	than at start-up in front of somebody.
+
+	EACH ONE IS DECLARED SOMEWHERE ELSE, in the module that owns the decision —
+	`billing` knows why an instalment ceiling is a commercial position and this
+	file does not, and a list that carried every module's reasons would be the
+	one file nobody keeps true. What happens HERE is only that they become a set,
+	which is what `cmd` is for: it is the only place allowed to know about two
+	modules at once.
+
+	A NAME DECLARED TWICE PANICS AT START-UP rather than letting the later one
+	win, because two modules believing they own one decision is a screen that
+	moves whichever one the map happened to keep.
+*/
+func parameters() []setting.Declared {
+	return []setting.Declared{
+		billing.MostInstalments,
+	}
+}
+
 func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	startJob func(ctx context.Context, name string) error,
 	country geo.Resolve) http.Handler {
 	mux := http.NewServeMux()
+
+	/* EVERY KNOB THIS PLATFORM HAS, GATHERED IN ONE PLACE — and declared in
+	   another, which is the whole arrangement.
+
+	   `internal/platform/setting` holds the mechanism and no opinions: the
+	   module that owns a decision declares its name, unit, bounds, fallback and
+	   the sentence saying what it is for, and this line is where those become a
+	   set. It is the same seam as every other thing that crosses a module
+	   boundary here — `cmd` is the only file that may know about two modules at
+	   once.
+
+	   A REPEATED NAME PANICS AT START-UP rather than letting the later
+	   declaration win, because two modules believing they own one decision is a
+	   screen that moves whichever one the map happened to keep. */
+	settings := setting.NewStore(pool, setting.MustRegistry(parameters()...))
 
 	/* WHETHER THIS DEPLOYMENT SENDS MAIL OR KEEPS IT, SAID OUT LOUD AT START-UP.
 
@@ -308,7 +351,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 				   already exists. A payment event is not a way to buy something,
 				   and here that is a property of the wiring rather than a rule
 				   somebody has to keep. */
-				billing.NewCheckouts(pool, nil),
+				billing.NewCheckouts(pool, nil, nil),
 				billing.NewPrices(pool),
 				billing.NewLedger(pool),
 				billing.NewStore(pool),
@@ -363,10 +406,17 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   the same one — and it exists because the interface prints "minimum to
 	   pass" on a course card, before any paper exists to carry it. It printed a
 	   constant of its own until now. */
-	/* THE TWO NUMBERS A SCHOOL STATES THAT ARE NOT ITS OWN. Both belong to
-	   another module and neither may be imported by `tenant` (X-02), so this is
-	   the one line saying they are the same numbers. */
-	tenant.NewHandler(exam.PassMark, billing.MaxInstalments, billing.PixDiscountBasisPoints,
+	/* THE THREE NUMBERS A SCHOOL STATES THAT ARE NOT ITS OWN. Each belongs to
+	   another module and none may be imported by `tenant` (X-02), so this is the
+	   one line saying they are the same numbers. (It said TWO until the Pix
+	   discount joined them, and the count had been wrong since.)
+
+	   THE MIDDLE ONE IS A FUNCTION AND THE OTHERS ARE VALUES, which is the
+	   difference between a constant and a parameter said in the wiring: the
+	   instalment ceiling is asked per request because it can move on a console
+	   screen while this process is running. */
+	tenant.NewHandler(exam.PassMark, settings.Reads(billing.MostInstalments),
+		billing.PixDiscountBasisPoints,
 		offered(billing.NewPrices(pool))).Routes(scoped)
 
 	// THE TWO DOCUMENTS, MOUNTED INSIDE THE SCHOOL-SCOPED MUX AND SCOPED TO NO
@@ -627,7 +677,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		/* THE SAME UNGATED STORE THE WEBHOOK HOLDS, and for the same reason:
 		   `NewCheckouts` with no `Confirmed` refuses every `Open`, so the
 		   purchase history is read by a store that cannot start a purchase. */
-		billing.NewCheckouts(pool, nil),
+		billing.NewCheckouts(pool, nil, nil),
 		func(ctx context.Context) (uuid.UUID, bool) {
 			return identity.AccountID(ctx)
 		},
@@ -637,7 +687,8 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 
 	if cfg.AsaasKey != "" {
 		billing.NewHandler(
-			billing.NewCheckouts(pool, confirmedAddress(accounts)),
+			billing.NewCheckouts(pool, confirmedAddress(accounts),
+				settings.Reads(billing.MostInstalments)),
 			billing.NewPrices(pool),
 			viaAsaas(cfg, log),
 			cfg.PlatformDomain,
@@ -835,6 +886,33 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	console.NewSupportHandler(
 		contactOf(billing.NewSupport(pool)),
 		console.Fallback(cfg.SupportEmail),
+		recorded(entries),
+		labelOf(accounts),
+		identity.AccountID,
+		func(ctx context.Context) bool {
+			m, ok := identity.MemberFromContext(ctx)
+			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
+
+	/* AND EVERY OTHER KNOB, THROUGH ONE ROUTE. See `console/settings.go` and
+	   `internal/platform/setting` for why this is not the `system_parameters`
+	   table `console/writes.go` opens by refusing: the set of names is closed in
+	   Go, beside the code that reads each one, and `parameters()` above is the
+	   only place they become a set.
+
+	   The same rank as the two above, and for a wider reason — these are numbers
+	   the whole platform behaves by. */
+	console.NewSettingsHandler(
+		console.Knobs{
+			Now: settings.Now,
+			Set: settings.Set,
+			Refused: func(err error) bool {
+				return errors.Is(err, setting.ErrOutOfBounds) ||
+					errors.Is(err, setting.ErrUnknown) ||
+					errors.Is(err, setting.ErrNotANumber)
+			},
+		},
 		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
@@ -1148,7 +1226,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		/* A STORE THAT CANNOT SELL. `NewCheckouts` with no `Confirmed` refuses
 		   every `Open`, so the console reads a person's purchases through
 		   something that could not start one on their behalf. */
-		billing.NewCheckouts(pool, nil))
+		billing.NewCheckouts(pool, nil, nil))
 
 	console.NewRecordHandler(somebody, console.Records{
 		Schools:  schoolsFor(tenant.NewStore(pool)),
@@ -1209,7 +1287,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   selling gateway would hand a refund screen the ability to create charges. */
 	if cfg.AsaasKey != "" {
 		console.NewRefundHandler(
-			refundsVia(billing.NewCheckouts(pool, nil), cfg, log),
+			refundsVia(billing.NewCheckouts(pool, nil, nil), cfg, log),
 			recorded(entries),
 			labelOf(accounts),
 			identity.AccountID,

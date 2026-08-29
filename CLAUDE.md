@@ -113,6 +113,27 @@ access. Granting one named student access is an audited action; a global switch 
 lives in code where a test holds it. Every knob multiplies the state two people have to
 test. (K-13)
 
+**And that cost is a declaration, not a table.** `0046` builds the registry `K-13` spent three
+migrations refusing, and the amendment is narrower than it sounds. What `K-13` protects is that a
+knob costs an **argument**; a table per parameter delivered that by making the mechanism
+expensive, which worked at three and stops working at fifteen — the price of a migration is paid
+by whoever is tired enough to stop writing the sentence, and the sentence was the point. So a
+parameter is now a `setting.Declared` in the module that owns the decision, carrying its unit,
+the bounds it may move inside, the value the code ships with and what it decides; `cmd/api`
+gathers them into one registry, a name declared twice panics at start-up, and a name declared
+nowhere is a 404 on the way in and decides nothing on the way out.
+`cmd/api`'s `TestEveryParameterCarriesItsArgument` is what holds the cost in place: no argument,
+no room to move inside the fence, or a fallback the declaration would itself refuse, and the
+build fails. **There is no screen that adds a parameter and there will not be** — the way to add
+one is a diff somebody reads.
+
+**Nothing about access may be declared there**, ever: reads come from a snapshot up to fifteen
+seconds old, so a value deciding who may open something would be a permission that lags — and
+K-15 keeps the paywall out of every parameter surface anyway. Neither may anything whose wrong
+value is a **weakening** rather than a preference: the minimum length of a password, the number
+of recovery codes, the cost of the hash, the size of a token. Those have right answers — the
+highest the platform can afford — and a settable minimum is a weakening with an interface on it.
+
 **Every screen is operable by keyboard and legible to a screen reader**, at WCAG 2.2 AA. The
 hard part is not contrast — it is the question types: `matching` and `ordering` by drag and drop,
 and `labelling` by clicking a point on an image, are unusable without a keyboard path designed
@@ -1419,8 +1440,11 @@ node tools/console-test/console-test.mjs  # the console's writes, pressed rather
                                           # than measured. LAST: it is the only
                                           # suite that changes anything — it
                                           # settles a report, appends a price,
-                                          # sets the support address and writes
-                                          # a line into somebody's ledger.
+                                          # sets the support address, moves a
+                                          # declared parameter and then asks the
+                                          # SCHOOL's host whether the storefront
+                                          # is on the new number, and writes a
+                                          # line into somebody's ledger.
 ```
 
 **WHY THOSE TWO VARIABLES ARE NOT A CONVENIENCE.**

@@ -66,7 +66,7 @@ func checkoutAPI(t *testing.T, gate func(uuid.UUID) (bool, error)) (
 
 	store := billing.NewCheckouts(pool, func(_ context.Context, id uuid.UUID) (bool, error) {
 		return gate(id)
-	})
+	}, nil)
 
 	mux := http.NewServeMux()
 	billing.NewHandler(store, billing.NewPrices(pool), fake.seam(), "example.tld",
