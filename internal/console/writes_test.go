@@ -120,37 +120,48 @@ notice that the set of things this platform lets somebody configure has grown,
 which is the moment the claim is worth re-reading rather than a moment to reach
 for a settings row.
 
-The number is what it is today. Passing it is not permission to raise it: what
-it asks for is that somebody who wants a third parameter says here, in a diff,
-that they read K-13 first.
+WHAT THIS NUMBER COUNTS CHANGED WITH `0046`, and the difference is worth being
+exact about, because a count that quietly stopped counting the same thing is a
+ratchet that has come loose.
+
+It counts WRITE ROUTES of the parameter kind, and it always did. Four of the
+five are one value each — a school's accent, the price of a term, what a Pix
+takes off, where a student writes. The fifth is `settings/{name}`, which is
+every other knob this platform has, and it is ONE entry here because it is one
+route: what closes the set behind it is not this file but
+`internal/platform/setting`, where each name is a declaration in the module that
+owns the decision, and `cmd/api`'s `TestEveryParameterCarriesItsArgument`, which
+fails a declaration without an argument, without a fence, or with a fence it
+cannot move inside.
+
+So this test no longer holds the number of knobs. It holds the number of DOORS,
+and a sixth one is still a diff saying K-13 was read first.
+
+The number is what it is today. Passing it is not permission to raise it.
 */
-func TestTheParametersAreStillFew(t *testing.T) {
-	/* FOUR SINCE THE PIX DISCOUNT, AND THIS NUMBER IS ON ITS WAY OUT.
+func TestTheParameterRoutesAreStillFew(t *testing.T) {
+	/* FIVE, AND THE FIFTH IS WHY THIS TEST IS WORTH KEEPING. Four came from the
+	   registry landing on main; the Pix discount is the one that was in flight
+	   beside it, and neither branch could see the other's route. The count is
+	   what noticed — which is exactly the job of a number nobody may raise
+	   without saying so.
 
-	   The three before it each argued their way in one at a time, which is what
-	   this test is for. This one did too — `writes.go` carries the sentence —
-	   but it arrives with a decision that changes what the test should be
-	   measuring: the platform is to be highly parameterised, deliberately, and
-	   a guard whose whole content is "there are still few of them" will be
-	   failing every time on purpose and raised every time without thought.
-	   A ratchet nobody may refuse is a ratchet nobody reads.
+	   The argument for each is in `writes.go` beside its entry, and for the
+	   registry in `0046` at length and in `internal/platform/setting`'s package
+	   comment; the short version is that the guarantee moved from "a knob costs
+	   a table" to "a knob costs a declaration and an argument", which is the
+	   same cost in the place that was actually paying it.
 
-	   So the guarantee moves rather than goes. K-13's real claim is that a
-	   configuration surface grows to fill the space it is given; what stops that
-	   is not scarcity, it is that every knob costs an argument, has a declared
-	   shape and lands in the audit with both sides. The next change replaces
-	   this count with a test for exactly that, and amends K-13 to say what is
-	   true instead of what was true.
-
-	   Until then it counts, because a number that is wrong for one commit is
-	   better than a guard removed in the commit that first found it
-	   inconvenient. */
-	const known = 4
+	   The growth this watches for is a sixth ROUTE that writes a persisting
+	   value outside the registry — which is somebody routing around the
+	   declaration rather than writing one. */
+	const known = 5
 
 	if got := len(console.Parameters()); got != known {
-		t.Errorf("this console has %d parameters and had %d. If that is right, read K-13 "+
-			"and change this number in the same commit: a value with a right answer belongs "+
-			"in code where a test holds it, and only something without one becomes a knob",
+		t.Errorf("this console has %d parameter routes and had %d. If that is right, read "+
+			"K-13 and change this number in the same commit — and check first whether what "+
+			"you want is a `setting.Declared` beside the code that reads it, which is where "+
+			"a new knob goes and costs no route at all",
 			got, known)
 	}
 }

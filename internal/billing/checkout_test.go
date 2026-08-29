@@ -27,7 +27,7 @@ func checkouts(t *testing.T, answer func(uuid.UUID) (bool, error)) (*billing.Che
 	pool := testPool(t)
 	return billing.NewCheckouts(pool, func(_ context.Context, id uuid.UUID) (bool, error) {
 		return answer(id)
-	}), pool
+	}, nil), pool
 }
 
 func confirmed(uuid.UUID) (bool, error) { return true, nil }
@@ -110,7 +110,7 @@ func TestAConfirmationThatCouldNotBeCheckedIsARefusal(t *testing.T) {
 // on with no check — is what this whole arrangement exists to prevent.
 func TestAStoreWithNoGateRefuses(t *testing.T) {
 	pool := testPool(t)
-	store := billing.NewCheckouts(pool, nil)
+	store := billing.NewCheckouts(pool, nil, nil)
 	account, price := student(t, pool), anOffer(t, pool)
 
 	if _, err := open(t, store, account, price); !errors.Is(err, billing.ErrNotConfirmed) {
@@ -216,28 +216,70 @@ with.
 	form knows is not a limit — it is a suggestion to whoever uses the form.
 
 	The count moved from six to twelve when the account's real fee table turned
-	up. What this test is about is that the number exists on THIS side at all, so
-	it asks about the boundary rather than about twelve.
+	up, and then became a parameter. What this test is about is that the number
+	exists on THIS side at all, so it asks about the boundary rather than about
+	twelve.
 */
 func TestTheSplitHasACeilingAndItIsHere(t *testing.T) {
 	store, pool := checkouts(t, confirmed)
 	account, price := student(t, pool), anOffer(t, pool)
 	ctx := context.Background()
+	most := billing.MostInstalments.Fallback
 
 	// The most that is on offer goes through, which is what stops a ceiling
 	// from being set one below the number the screen draws.
 	if _, err := store.Open(ctx, account, "", price, listed, "BRL",
-		billing.MethodCard, billing.MaxInstalments, "asaas"); err != nil {
+		billing.MethodCard, most, "asaas"); err != nil {
 		t.Errorf("the largest split on offer answered %v", err)
 	}
 	if _, err := store.Open(ctx, account, "", price, listed, "BRL",
-		billing.MethodCard, billing.MaxInstalments+1, "asaas"); !errors.Is(
+		billing.MethodCard, most+1, "asaas"); !errors.Is(
 		err, billing.ErrTooManyInstalments) {
 		t.Errorf("one instalment past the ceiling answered %v", err)
 	}
 	if _, err := store.Open(ctx, account, "", price, listed, "BRL",
 		billing.MethodCard, 500, "asaas"); !errors.Is(err, billing.ErrTooManyInstalments) {
 		t.Errorf("five hundred instalments answered %v", err)
+	}
+}
+
+/*
+TestTheCeilingIsWhereTheParameterSaysAndNoHigher is the knob and its fence.
+
+	THE FENCE IS THE HALF THAT MATTERS. A console can move the ceiling down —
+	that is a commercial position and the whole reason this is a parameter — and
+	it cannot move it up, because twelve is where the gateway's card bands stop
+	and a thirteenth part is not a decision this platform is allowed to make.
+	So a wired answer above `Most` is not obeyed and not an outage either: it
+	falls back to what the code shipped with, which is the ceiling itself.
+*/
+func TestTheCeilingIsWhereTheParameterSaysAndNoHigher(t *testing.T) {
+	pool := testPool(t)
+	account, price := student(t, pool), anOffer(t, pool)
+	ctx := context.Background()
+
+	says := func(n int) *billing.Checkouts {
+		return billing.NewCheckouts(pool, func(context.Context, uuid.UUID) (bool, error) {
+			return true, nil
+		}, func(context.Context) int { return n })
+	}
+
+	if _, err := says(3).Open(ctx, account, "", price, listed, "BRL",
+		billing.MethodCard, 3, "asaas"); err != nil {
+		t.Errorf("three instalments under a ceiling of three answered %v", err)
+	}
+	if _, err := says(3).Open(ctx, account, "", price, listed, "BRL",
+		billing.MethodCard, 4, "asaas"); !errors.Is(err, billing.ErrTooManyInstalments) {
+		t.Errorf("four instalments under a ceiling of three answered %v", err)
+	}
+
+	// Above the declaration's own bound: ignored, and the shipped ceiling
+	// stands rather than the platform selling a split it cannot charge.
+	beyond := billing.MostInstalments.Most + 1
+	if _, err := says(beyond).Open(ctx, account, "", price, listed, "BRL",
+		billing.MethodCard, beyond, "asaas"); !errors.Is(
+		err, billing.ErrTooManyInstalments) {
+		t.Errorf("a ceiling past what the declaration allows answered %v", err)
 	}
 }
 

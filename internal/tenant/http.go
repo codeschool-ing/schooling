@@ -64,14 +64,19 @@ type Handler struct {
 	//
 	// HANDED IN FOR passMark's REASON EXACTLY: `billing` owns it and a module may
 	// not import another module (X-02), so `cmd/api` is the one line saying that
-	// this and `billing.MaxInstalments` are the same number.
+	// this and `billing.MostInstalments` are the same number.
 	//
 	// WHY THE SCREEN IS TOLD RATHER THAN KNOWING. The subscribe screen draws one
 	// option per instalment and had the count written into it — so the day the
 	// policy moved, the browser would offer a split the server refuses, which is
 	// a form that fails after somebody has already chosen. That is the failure
 	// `passMark` above was introduced to end, on a different number.
-	instalments int
+	//
+	// AND IT IS A FUNCTION NOW RATHER THAN A NUMBER, because the day the policy
+	// moves is a Tuesday afternoon on a console screen and not a deployment. A
+	// number read once at start-up would make this the copy that is stale — the
+	// same failure as the browser's, one process further in.
+	instalments func(ctx context.Context) int
 
 	/* pixDiscount is what a Pix payment takes off, in basis points.
 
@@ -82,12 +87,18 @@ type Handler struct {
 	   rate that drifts, with the SERVER's number being the one charged and the
 	   browser's being the one somebody read.
 
-	   IT IS A FUNCTION AND THE OTHER TWO ARE NOT, which is the whole of what
+	   IT IS A FUNCTION AND THE PASS MARK IS NOT, which is the whole of what
 	   `0045` changed here. The rate is a dated series now, settable from the
 	   console, so a number captured when this handler was constructed would be
 	   the number until the next deployment — and the screen quoting it would
 	   drift from the checkout charging it, which is exactly the drift this field
 	   exists to prevent. It takes a context so the read belongs to the request.
+
+	   `instalments` ABOVE IS ONE TOO, for the same reason arrived at from the
+	   other side: `0046` made it a declared parameter. This comment said "the
+	   other two are not" until that landed, and the difference these three
+	   fields now draw is between what a deployment decides and what a console
+	   does — not between one field and the rest.
 
 	   AN ERROR IS NO DISCOUNT, not a broken screen. The invitation without a
 	   struck-through figure is the invitation this platform drew before there
@@ -116,7 +127,7 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark, instalments int, pixDiscount func(context.Context) int,
+func NewHandler(passMark int, instalments, pixDiscount func(ctx context.Context) int,
 	offer Offer) *Handler {
 
 	return &Handler{
@@ -127,6 +138,49 @@ func NewHandler(passMark, instalments int, pixDiscount func(context.Context) int
 
 func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/school", h.school)
+}
+
+/*
+mostInstalments is what the storefront is told a card sale splits into.
+
+	A DEPLOYMENT THAT WIRED NOTHING SAYS ONE, not zero. Zero would have the
+	subscribe screen draw an empty picker and the invitation quote a payment in
+	no parts; one is a card paid in full, which is a thing this platform sells
+	and the honest floor. It is a wiring mistake either way, and this is the
+	version of it a buyer can still use.
+*/
+/*
+pixOff is what the storefront is told a Pix takes off, in basis points.
+
+	A DEPLOYMENT THAT WIRED NOTHING SAYS ZERO, which is a real answer — a
+	platform that has stopped discounting Pix — and it is the one this field's
+	own comment already promises: an invitation without a struck-through figure
+	is the invitation this platform drew before there was a discount.
+
+	IT IS HERE BECAUSE THE MERGE THAT BROUGHT `0046` MADE THE ASYMMETRY VISIBLE.
+	`mostInstalments` below has guarded a nil since it became a function; this
+	one called through without checking, so a deployment that forgot to wire it
+	would panic on the one route every storefront asks for. Neither branch was
+	wrong on its own and the pair was.
+*/
+func (h *Handler) pixOff(ctx context.Context) int {
+	if h.pixDiscount == nil {
+		return 0
+	}
+	if off := h.pixDiscount(ctx); off > 0 {
+		return off
+	}
+	return 0
+}
+
+func (h *Handler) mostInstalments(ctx context.Context) int {
+	if h.instalments == nil {
+		return 1
+	}
+	if got := h.instalments(ctx); got >= 1 {
+		return got
+	}
+	return 1
 }
 
 type schoolBody struct {
@@ -215,7 +269,7 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
 		Plans:       plans,
 		PassMark:    h.passMark,
-		Instalments: h.instalments,
-		PixDiscount: h.pixDiscount(r.Context()),
+		Instalments: h.mostInstalments(r.Context()),
+		PixDiscount: h.pixOff(r.Context()),
 	})
 }

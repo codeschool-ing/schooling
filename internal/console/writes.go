@@ -15,6 +15,31 @@ package console
    the set of values a table may contain; it is the set of things this console
    can do at all.
 
+   # AND THAT PARAGRAPH WAS RIGHT ABOUT THE DANGER AND WRONG ABOUT THE FENCE
+
+   The registry it turns down was built, in `0046` and `internal/platform/setting`
+   — read those two before this reads as a reversal, because the amendment is
+   narrower than it looks.
+
+   What K-13 protects is that a knob costs an ARGUMENT. A table and a migration
+   per parameter delivered that by making the MECHANISM expensive, which worked
+   while there were three and stops working the moment the platform wants
+   fifteen: the cost of a migration is paid by whoever is tired enough to stop
+   writing the sentence, and the sentence was the point.
+
+   So the cost moved onto the declaration and stayed the same size. A parameter
+   is a `setting.Declared` in the module that owns the decision, carrying its
+   unit, the bounds it may move inside, the value the code shipped with, and the
+   sentence saying what it decides — and `cmd` is where they become a set, so a
+   name declared twice panics at start-up rather than letting one of them
+   silently decide nothing. A name absent from that set is refused on the way in
+   and ignored on the way out.
+
+   The sentence "the next value somebody wants to make settable costs one INSERT
+   and no argument" is the failure this arrangement is measured against, and
+   `cmd/api`'s `TestEveryParameterCarriesItsArgument` is what holds it: no INSERT
+   makes a parameter, and no declaration passes without the argument.
+
    # THE COST OF ADDING ONE IS THE POINT
 
    A new write in this package fails `TestEveryConsoleWriteIsDeclared` until it
@@ -127,6 +152,23 @@ var Writes = []Write{
 			"file — and an apply from anywhere else planned it back to empty and took the " +
 			"address off the screen with nothing failing, which is a right losing the way " +
 			"to use it in silence",
+	},
+	{
+		Route: "PUT /console/api/v1/settings/{name}",
+		Kind:  Parameter,
+		Why: "every OTHER knob this platform has, through one route. It looks like the " +
+			"`system_parameters` table this file opens by refusing and it is not, because the " +
+			"refusal was about where the cost sits rather than about the shape: the set of " +
+			"names is closed in Go, each one declared beside the code that reads it with its " +
+			"unit, its bounds, the value the code shipped with and the argument for it " +
+			"existing. The path parameter is checked against that set and nothing else — a " +
+			"name nobody declared is a 404 here and decides nothing anywhere. What this " +
+			"entry buys is that the eleven numbers a deployment used to be needed to move " +
+			"can move on a Tuesday afternoon; what it does not buy is a twelfth without a " +
+			"declaration, which is the whole of K-13 and is unchanged. REPLACED and not " +
+			"appended: none of these is money, the values that needed dating (a price, a " +
+			"discount, the mark a paper was judged by) have their own tables, and the audit " +
+			"entry is the history of the rest",
 	},
 	{
 		Route: "POST /console/api/v1/people/{id}/erase",

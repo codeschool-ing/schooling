@@ -102,6 +102,13 @@ var kept = map[string]string{
 	"plan_discounts": "what comes off for a Pix, which is configuration written as history " +
 		"(K-14) just as the price is",
 
+	/* KEPT FOR THE SAME REASON, one layer up: these are the numbers the platform
+	   behaves by, chosen deliberately and argued for in a declaration each. A
+	   reset that emptied them would put a deployment back on the shipped
+	   defaults without saying so — the values are not data anybody owns, and
+	   the record of who moved them is in the audit log rather than here. */
+	"settings": "what this platform is set to, which is our configuration and not anybody's data",
+
 	/* KEPT FOR THE REASON THE PRICE IS: it is the platform's own configuration
 	   and not anybody's data. A reset that took it away would leave a
 	   deployment publishing the seven-day right with nowhere to use it — and

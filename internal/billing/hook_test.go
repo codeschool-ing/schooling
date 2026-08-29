@@ -34,7 +34,7 @@ func hookFor(t *testing.T) (http.Handler, *billing.Checkouts, *pgxpool.Pool, bil
 
 	store := billing.NewCheckouts(pool, func(context.Context, uuid.UUID) (bool, error) {
 		return true, nil
-	})
+	}, nil)
 	ctx := context.Background()
 
 	one, err := store.Open(ctx, account, "", price, 56050, "BRL", billing.MethodPix, 1, "asaas")
@@ -49,7 +49,7 @@ func hookFor(t *testing.T) (http.Handler, *billing.Checkouts, *pgxpool.Pool, bil
 	/* THE SETTLEMENT'S OWN STORE HAS NO GATE, exactly as `cmd` wires it: a
 	   webhook may settle a purchase and must never be able to open one. */
 	settle := billing.NewSettlement(
-		billing.NewCheckouts(pool, nil), billing.NewPrices(pool),
+		billing.NewCheckouts(pool, nil, nil), billing.NewPrices(pool),
 		billing.NewLedger(pool), billing.NewStore(pool), "asaas",
 		slog.New(slog.DiscardHandler),
 	)

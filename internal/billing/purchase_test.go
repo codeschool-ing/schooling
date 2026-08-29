@@ -28,7 +28,7 @@ func sold(t *testing.T, pool *pgxpool.Pool, account, price uuid.UUID,
 
 	t.Helper()
 	ctx := context.Background()
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 
 	intent, err := buys.Open(ctx, account, "", price, cents, "BRL", method, instalments, "asaas")
 	if err != nil {
@@ -51,7 +51,7 @@ func TestAPurchaseIsTheSaleAndNotEachInstalmentOfIt(t *testing.T) {
 	ctx := context.Background()
 	account, price := student(t, pool), anOffer(t, pool)
 	ledger := billing.NewLedger(pool)
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 
 	intent := sold(t, pool, account, price, listed, billing.MethodCard, 3, "pay_"+short())
 
@@ -98,7 +98,7 @@ func TestAPurchaseCarriesWhatWasChargedAndWhatWasOnTheShelf(t *testing.T) {
 	pool := testPool(t)
 	ctx := context.Background()
 	account, price := student(t, pool), anOffer(t, pool)
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 
 	const charged = 56050 // `listed` less the five per cent a Pix payment gets
 	sold(t, pool, account, price, charged, billing.MethodPix, 1, "pay_"+short())
@@ -137,7 +137,7 @@ func TestAPurchaseSaysWhereItLeftTheTerm(t *testing.T) {
 	pool := testPool(t)
 	ctx := context.Background()
 	account, price := student(t, pool), anOffer(t, pool)
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 	ledger := billing.NewLedger(pool)
 	plans := billing.NewStore(pool)
 
@@ -185,7 +185,7 @@ func TestACheckoutNOBODYPAIDIsStillInTheHistory(t *testing.T) {
 	pool := testPool(t)
 	ctx := context.Background()
 	account, price := student(t, pool), anOffer(t, pool)
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 
 	sold(t, pool, account, price, listed, billing.MethodPix, 1, "pay_"+short())
 
@@ -217,7 +217,7 @@ func TestTheHistoryIsNewestFirst(t *testing.T) {
 	pool := testPool(t)
 	ctx := context.Background()
 	account, price := student(t, pool), anOffer(t, pool)
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 
 	first := sold(t, pool, account, price, listed, billing.MethodPix, 1, "pay_"+short())
 	// A second, a moment later. The column defaults to now() and the two would
@@ -251,7 +251,7 @@ func TestOnlyTheirOwnPurchasesComeBack(t *testing.T) {
 	pool := testPool(t)
 	ctx := context.Background()
 	price := anOffer(t, pool)
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 
 	mine, theirs := student(t, pool), student(t, pool)
 	sold(t, pool, mine, price, listed, billing.MethodPix, 1, "pay_"+short())
@@ -271,7 +271,7 @@ func TestOnlyTheirOwnPurchasesComeBack(t *testing.T) {
 // second from a version that does not send the field.
 func TestNoPurchasesIsAnEmptyListAndNotNothing(t *testing.T) {
 	pool := testPool(t)
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 
 	bought, err := buys.Purchases(context.Background(), student(t, pool))
 	if err != nil {

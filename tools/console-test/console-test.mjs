@@ -14,10 +14,11 @@
    multi-factor sign-in yet". The server being right is not the claim; the round
    trip is.
 
-   # THE TWO WRITES IT PERFORMS
+   # THE WRITES IT PERFORMS
 
-   Both are chosen because a Go test cannot see them and axe cannot either: they
-   are about what happens to the SCREEN after the server has answered.
+   Every one is chosen because a Go test cannot see it and axe cannot either:
+   they are about what happens to the SCREEN, or to another screen, after the
+   server has answered.
 
      SETTLING A REPORT   a student says a section is wrong, an operator answers
                          it, and the queue must lose the card. A screen that
@@ -29,6 +30,23 @@
                          A screen showing only the newest number would be the
                          mutable column again with extra steps, and it would
                          look correct.
+
+     THE SUPPORT ADDRESS the terms promise seven days to withdraw and this is
+                         the address that promise names. What is checked is that
+                         it survives the round trip AND that the block says the
+                         row is answering rather than the deployment's variable
+                         — two states that look identical if all you show is the
+                         address, and only one of them is this console's.
+
+     A PARAMETER         the registry `0046` built, used: move the instalment
+                         ceiling on the console and ask the SCHOOL's own host
+                         what it now tells a buyer. This is the only assertion
+                         here that crosses hosts, and it is the whole claim the
+                         registry makes — a number that moved in the table and
+                         not in the answer is a screen that lies.
+
+     A LEDGER LINE       the escape hatch, written by hand and read back out of
+                         the table below it without a reload.
 
    # IT IS NOT A SECOND ACCESSIBILITY SUITE
 
@@ -431,6 +449,114 @@ try {
       + 'change with no reason has to be refused and leave the published address alone');
   } else {
     good('an address with no reason is refused');
+  }
+
+  /* ---------- a knob, moved, and the storefront on the new number ----------
+
+     THIS IS THE ROUND TRIP THE WHOLE REGISTRY IS FOR. `0046` moved K-13's fence
+     from "a knob costs a table" to "a knob costs a declaration and an argument",
+     and the claim that buys is that a number the platform behaves by can be
+     changed without a deployment. Nothing in Go can press that: the handler's
+     tests use a fake store, the store's tests use no handler, and neither of
+     them asks the SCHOOL API what it is now telling a buyer.
+
+     So the assertion is end to end and deliberately crosses hosts — set the
+     instalment ceiling on the console, then ask the storefront on the school's
+     own host what it says a card sale splits into. A value that moved in the
+     table and not in the answer is a screen that lies, which is the exact
+     failure a parameter surface is worth nothing without. */
+
+  await go(staff, 'settings', 'settings');
+
+  const knob = staff.locator('.block[data-name="billing.instalments"]');
+  await knob.waitFor({ timeout: 15000 });
+
+  /* A COUNT NO FIXTURE USES, and not the one it is already on. Saving the value
+     that is already there is a legitimate act — it records that this is still
+     what we ask — but it would make "the answer changed" true without anything
+     having moved. */
+  const wasSet = (await knob.locator('[name=value]').inputValue()).trim();
+  const want = wasSet === '7' ? '6' : '7';
+
+  await knob.locator('[name=value]').fill(want);
+  await knob.locator('[name=reason]').fill('the console suite, proving the round trip');
+  await knob.locator('button[type=submit]').click();
+
+  /* THE SENTENCE AND NOT THE FIELD, for the reason the address block gives: the
+     field holds what was typed into it whether or not anything was saved, and
+     the paragraph above it is rebuilt from a fresh read of the server. */
+  try {
+    await knob.locator('.price-state', { hasText: `Set to ${want}` })
+      .waitFor({ timeout: 15000 });
+    good('a parameter is saved and read back');
+  } catch (e) {
+    const said = await knob.locator('.price-state').innerText().catch(() => '—');
+    bad('a parameter is saved and read back',
+      `after saving ${want} the block still says "${said.trim()}" — the value did not `
+      + 'survive the round trip through the server');
+  }
+
+  /* AND THE STOREFRONT IS ON THE NEW NUMBER. A fresh page on the SCHOOL's host,
+     because the console's origin does not serve the school API — and because
+     the student page opened at the top of this run is long closed.
+
+     IT NAVIGATES TO THE ROUTE RATHER THAN FETCHING IT. A blank page has no
+     origin, so a `fetch` from one is cross-origin to everything and fails
+     before it is sent; loading the storefront first would boot the whole
+     interface to ask it one question. Going straight at the JSON is one
+     request and the same answer a buyer's browser gets. */
+  const shop = await open();
+  try {
+    await shop.goto(`${BASE}/api/v1/school`, { waitUntil: 'load' });
+    const says = JSON.parse(await shop.locator('body').innerText()).instalments;
+
+    if (says !== Number(want)) {
+      bad('the storefront is on the number the console set',
+        `the console saved ${want} and the school API says ${says} — a parameter that moved `
+        + 'in the table and not in the answer is a screen that lies about what it decides');
+    } else {
+      good('the storefront is on the number the console set');
+    }
+  } finally {
+    await done(shop);
+  }
+
+  /* AND A CHANGE WITH NO REASON IS REFUSED, on the screen. Same field and same
+     argument as the address above: a parameter is REPLACED rather than
+     appended, so the audit is the whole history of what this platform was set
+     to, and an entry with no sentence is a number that changed for reasons
+     nobody wrote down. */
+  await knob.locator('[name=value]').fill(want === '7' ? '8' : '9');
+  await knob.locator('[name=reason]').fill('');
+  await knob.locator('button[type=submit]').click();
+
+  const unsaid = (await knob.locator('.signin-notice').innerText().catch(() => '')).trim();
+  const stillSet = (await knob.locator('.price-state').innerText()).trim();
+  if (!unsaid || !stillSet.includes(`Set to ${want}`)) {
+    bad('a parameter with no reason is refused',
+      `the form said "${unsaid || 'nothing'}" and the block now says "${stillSet}" — a `
+      + 'change with no reason has to be refused and leave the value alone');
+  } else {
+    good('a parameter with no reason is refused');
+  }
+
+  /* AND THE FENCE IS THE DECLARATION'S, not the screen's opinion. `Most` is
+     twelve because that is where the gateway's card bands stop; a console that
+     accepted thirteen would be selling a split it cannot charge. The form
+     refuses first so nothing is recorded — the server refuses too, and has a
+     test. */
+  await knob.locator('[name=value]').fill('40');
+  await knob.locator('[name=reason]').fill('the console suite, past the fence on purpose');
+  await knob.locator('button[type=submit]').click();
+
+  const fenced = (await knob.locator('.signin-notice').innerText().catch(() => '')).trim();
+  const unmoved = (await knob.locator('.price-state').innerText()).trim();
+  if (!fenced || !unmoved.includes(`Set to ${want}`)) {
+    bad('a value past the declaration\'s bound is refused',
+      `the form said "${fenced || 'nothing'}" and the block now says "${unmoved}" — the `
+      + 'bounds are part of what declares a parameter and cannot be moved from a screen');
+  } else {
+    good('a value past the declaration\'s bound is refused');
   }
 
   /* ---------- a line written by hand, and read back ----------

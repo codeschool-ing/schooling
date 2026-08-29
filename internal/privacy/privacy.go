@@ -127,6 +127,16 @@ var Registry = []Table{
 			"paid",
 	},
 	{
+		Name: "settings", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "every knob this platform has, as a name and a number. It holds no data about " +
+			"anybody by construction and not by luck: the set of names is closed in Go " +
+			"(`internal/platform/setting`), every one of them is a bounded integer, and a " +
+			"row for a name nothing declares decides nothing. WHO changed one and why is " +
+			"the audit log's, which is where the personal half of this lives and is " +
+			"classified. An erasure that reached these rows would put the platform back on " +
+			"the numbers it shipped with on one person's request",
+	},
+	{
 		Name: "support_contact", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "the one address students are told to write to, to use the seven days the terms " +
 			"promise. An e-mail address in a column is the shape this registry exists to " +
