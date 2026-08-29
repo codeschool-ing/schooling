@@ -270,6 +270,8 @@ func parameters() []setting.Declared {
 		billing.WithdrawalDays,
 		exam.PassMark,
 		exam.QuestionsPerAttempt,
+		identity.ChangeCap,
+		identity.ConfirmationLife,
 		identity.PresenceWindow,
 	}
 }
@@ -402,7 +404,15 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// they arrived at recorded as their first touch — which is the question
 	// the funnel exists to answer and the one that cannot be reconstructed.
 	visitors := visitor.NewStore(pool)
-	accounts := identity.NewStore(pool)
+	/* AND THE TWO NUMBERS A CONFIRMATION COSTS, from the registry: how long a
+	   link keeps working, and how many an account may ask for in an hour. The
+	   store reads none of them on the paths that sign somebody in — see
+	   `identity.Limits` on why this is a second call and not two more
+	   arguments. */
+	accounts := identity.NewStore(pool).WithLimits(identity.Limits{
+		ConfirmationLife: settings.Reads(identity.ConfirmationLife),
+		ChangeCap:        settings.Reads(identity.ChangeCap),
+	})
 	events := event.NewStore(pool)
 
 	scoped := http.NewServeMux()

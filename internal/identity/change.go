@@ -11,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -46,27 +47,50 @@ import (
    The guard that exists for another reason does this one for free. */
 
 const (
-	// changeLife is how long the link works for. The same day a confirmation
-	// gets, for the same reason: long enough for a message that sat in a queue,
-	// short enough that an abandoned mailbox does not carry a live one for a
-	// month.
-	changeLife = 24 * time.Hour
+	/* changeWindow is how long the cap below is counted over.
 
-	/* changeCap and changeWindow are how many of these an account may ask for.
-
-	   THIS IS THE ONE ABUSE SURFACE THE FEATURE OPENS, and it is worth naming
-	   rather than discovering. An authenticated session can now make this
-	   platform post a message to an address of the sender's choosing: sign up,
-	   ask to move to somebody@example.com, repeat. What arrives is a link that
-	   does nothing unless clicked — but it arrives from our domain, on our
-	   reputation, to somebody who did not ask.
-
-	   Three an hour is a cap somebody correcting a typo will never reach and a
-	   sender will notice immediately. It is a threshold, so the number lives
-	   beside its reason (K-16) rather than in a config nobody reads. */
-	changeCap    = 3
+	   IT STAYS A CONSTANT WHILE THE CAP MOVES, and the pair is the reason. A
+	   rate limit is one fact said as two numbers, and two knobs for it double
+	   the states two people have to hold in their heads to answer "how many can
+	   somebody send". An hour is the span a person waiting for a link would
+	   accept being told to wait, so the useful question is only ever how many
+	   inside it. */
 	changeWindow = time.Hour
 )
+
+/*
+ChangeCap is how many address changes an account may ask for in an hour.
+
+	THIS IS THE ONE ABUSE SURFACE THE FEATURE OPENS, and it is worth naming
+	rather than discovering. An authenticated session can make this platform
+	post a message to an address of the sender's choosing: sign up, ask to move
+	to somebody@example.com, repeat. What arrives is a link that does nothing
+	unless clicked — but it arrives from our domain, on our reputation, to
+	somebody who did not ask.
+
+	THREE IS A GUESS ABOUT PEOPLE AND NOT A MEASUREMENT. It is a cap somebody
+	correcting a typo will never reach; whether the person correcting it is on
+	a phone keyboard at a school where half the addresses are typed wrong is a
+	fact about that school, and one is as defensible as five.
+
+	THE FENCE IS WHERE IT STOPS BEING A CAP. Below one nobody could change an
+	address at all — the feature would be off, which is a decision to make by
+	deleting it and not by typing a zero. Above ten an hour this stops bounding
+	the abuse it exists for and starts describing it.
+*/
+var ChangeCap = setting.Declared{
+	Name:     "identity.changecap",
+	Unit:     setting.Count,
+	Least:    1,
+	Most:     10,
+	Fallback: 3,
+	Why: "how many address changes an account may ask for in an hour. Each one posts a " +
+		"message from our domain to an address the asker chose, so this is the bound on " +
+		"the one abuse the feature opens — and three is a guess about how often a person " +
+		"mistypes, which a school with half its addresses typed on phones may read " +
+		"differently. Below one the feature is off, which is a decision to make by " +
+		"deleting it; above ten it stops bounding the abuse and starts describing it.",
+}
 
 // ErrTooManyChanges is the cap above, reached.
 //
@@ -146,7 +170,7 @@ func (s *Store) RequestEmailChange(ctx context.Context, accountID uuid.UUID, to 
 		`, accountID, changeWindow.Seconds()).Scan(&asked); err != nil {
 			return err
 		}
-		if asked >= changeCap {
+		if asked >= s.changeCap() {
 			return ErrTooManyChanges
 		}
 
@@ -154,7 +178,7 @@ func (s *Store) RequestEmailChange(ctx context.Context, accountID uuid.UUID, to 
 			INSERT INTO account_email_changes (token_hash, account_id, email, expires_at)
 			VALUES ($1, $2, $3, now() + make_interval(secs => $4))
 			RETURNING expires_at
-		`, confirmationHash(token), accountID, email, changeLife.Seconds()).Scan(&expires)
+		`, confirmationHash(token), accountID, email, s.linkLife().Seconds()).Scan(&expires)
 	})
 
 	switch {

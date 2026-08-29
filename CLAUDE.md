@@ -106,6 +106,17 @@ explicable. (K-14) Renewal charges the price in force then — the terms of use 
 notice and at most one rise in twelve months, and `0040` exists because a column comment had
 promised otherwise.
 
+**A confirmation link's life and the address-change cap are declared parameters.** Both had a
+comment saying they were constants; both were right about the RANGE and not the point in it. "Every
+service that has thought about it landed within a day of ours" is evidence that twelve hours and
+forty-eight are each defensible, not that twenty-four is correct — so 1 to 72 hours is the fence
+and where to sit inside it is the deployment's. The cap is 1 to 10 an hour for the same shape:
+three is a guess about how often a person mistypes, and a school where half the addresses are
+typed on phones may read it differently. **The entropy in the link is NOT settable and must not
+become so** — there is no trade there, more costs nothing anybody notices, and a settable minimum
+is a weakening with an interface on it. **One declaration feeds both links**: `change.go` used to
+carry a lifetime of its own with a comment saying it was the same number for the same reason.
+
 **The paywall is not configurable.** No parameter, flag or console switch may widen who gets
 access. Granting one named student access is an audited action; a global switch is not. (K-15)
 

@@ -241,6 +241,7 @@ function counted(unit) {
     count: 'How many',
     percent: 'Per cent',
     days: 'Days',
+    hours: 'Hours',
     minutes: 'Minutes',
     seconds: 'Seconds',
     bytes: 'Bytes',

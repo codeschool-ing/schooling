@@ -86,6 +86,11 @@ const (
 	// Minutes is a whole number of minutes.
 	Minutes Unit = "minutes"
 
+	// Hours is a whole number of hours. It exists because a lifetime measured
+	// in hours reads as one on a screen and as 1440 of something else in
+	// minutes — the unit a person would say it in is the unit to store it in.
+	Hours Unit = "hours"
+
 	// Seconds is a whole number of seconds.
 	Seconds Unit = "seconds"
 
