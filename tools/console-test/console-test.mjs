@@ -38,12 +38,23 @@
                          — two states that look identical if all you show is the
                          address, and only one of them is this console's.
 
+     THE PIX DISCOUNT    a dated series like the price, and the reader furthest
+                         from the write is the school route: a rate that reached
+                         the table and not that answer is a screen striking a
+                         price through with one figure while the checkout takes
+                         off another.
+
      A PARAMETER         the registry `0046` built, used: move the instalment
-                         ceiling on the console and ask the SCHOOL's own host
-                         what it now tells a buyer. This is the only assertion
-                         here that crosses hosts, and it is the whole claim the
-                         registry makes — a number that moved in the table and
-                         not in the answer is a screen that lies.
+                         ceiling on the console and ask what a buyer is now
+                         told. It is the whole claim the registry makes — a
+                         number that moved in the table and not in the answer
+                         is a screen that lies.
+
+                         These last two are the assertions that CROSS HOSTS, and
+                         they have to: the console's origin is not a school's,
+                         so `/api/v1/school` answers 404 there (K-17 working,
+                         not a problem). Asking has to happen where a student
+                         would ask.
 
      A LEDGER LINE       the escape hatch, written by hand and read back out of
                          the table below it without a reload.
