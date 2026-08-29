@@ -788,3 +788,110 @@ func TestTheReasonAnAnswerIsWrongComesBackTranslated(t *testing.T) {
 		t.Errorf("the reason came back as %q, want the Portuguese one", marked.Why)
 	}
 }
+
+/*
+THE GRADE FOLLOWS THE PARAMETERS, AND THE ROW RECORDS WHAT IT WAS GRADED BY.
+
+	`sm2.go` has always said the two thresholds are "not measurements (…) a
+	starting point (…) meant to be fitted", and named the condition for moving
+	them: rename the scheduler in the same diff, so rows from two tunings stay
+	distinguishable. That worked while moving them meant editing the file. It
+	does not survive a console.
+
+	SO `0047` PUTS THE PAIR ON EVERY ROW, and this is the test that says so. One
+	answer, five seconds, graded twice: at the shipped ten it is a 5, and at a
+	quick boundary of three it is a 4 — and each row carries the boundaries its
+	own grade came from, which is what a fit reads.
+
+	IT IS THE THIRD TIME THIS SHAPE HAS APPEARED — `exam_attempts.pass_mark`,
+	`item_statistics.minimum_sample`, and now this. A judgement made against a
+	number that can move has to carry the number it was made against.
+*/
+func TestTheGradeFollowsTheThresholdsAndTheRowRecordsThem(t *testing.T) {
+	for _, one := range []struct {
+		quick, considered int
+		want              int
+	}{
+		{10, 45, 5}, // five seconds is quick at the shipped boundary
+		{3, 45, 4},  // and considered at a tighter one
+	} {
+		pool := testPool(t)
+		tenant, me := school(t, pool), student(t, pool)
+		questions(t, pool, tenant)
+
+		s := practice.NewStore(pool, mayOpen, nothingWithdrawn).
+			WithThresholds(practice.Tuning{
+				QuickAnswer:      func(context.Context) int { return one.quick },
+				ConsideredAnswer: func(context.Context) int { return one.considered },
+			})
+
+		if _, err := answer(t, s, tenant, me, "free-1", true, 5*time.Second); err != nil {
+			t.Fatalf("at %ds/%ds, answering: %v", one.quick, one.considered, err)
+		}
+
+		var quality, quickMs, consideredMs int
+		if err := pool.QueryRow(context.Background(), `
+			SELECT quality, quick_ms, considered_ms
+			FROM practice_review
+			WHERE tenant_id = $1 AND account_id = $2
+		`, tenant, me).Scan(&quality, &quickMs, &consideredMs); err != nil {
+			t.Fatalf("reading the review: %v", err)
+		}
+
+		if quality != one.want {
+			t.Errorf("five seconds at a quick boundary of %ds graded %d, want %d",
+				one.quick, quality, one.want)
+		}
+		if quickMs != one.quick*1000 || consideredMs != one.considered*1000 {
+			t.Errorf("the row was graded by %ds/%ds and records %dms/%dms — a review that "+
+				"does not carry its own boundaries cannot be fitted, in the log that "+
+				"exists to be fitted",
+				one.quick, one.considered, quickMs, consideredMs)
+		}
+	}
+}
+
+/*
+AND A PAIR THAT CROSSED FALLS BACK TOGETHER.
+
+	Neither declaration can see the other, so "quick under considered" is not a
+	fence either of them carries. If they crossed, the quick band would swallow
+	the considered one and every correct answer would be a 5 or a 3 — the middle
+	grade unreachable, silently, for every student.
+
+	HALF-OBEYING WOULD PRODUCE EXACTLY THAT, which is why the fallback is the
+	pair and not the field: a deployment that wired them backwards gets the two
+	numbers this package shipped with, and a five-second answer is a 5 again.
+*/
+func TestThresholdsThatCrossedAreBothTheShippedOnes(t *testing.T) {
+	pool := testPool(t)
+	tenant, me := school(t, pool), student(t, pool)
+	questions(t, pool, tenant)
+
+	s := practice.NewStore(pool, mayOpen, nothingWithdrawn).
+		WithThresholds(practice.Tuning{
+			QuickAnswer:      func(context.Context) int { return 60 },
+			ConsideredAnswer: func(context.Context) int { return 30 },
+		})
+
+	if _, err := answer(t, s, tenant, me, "free-1", true, 5*time.Second); err != nil {
+		t.Fatalf("answering: %v", err)
+	}
+
+	var quickMs, consideredMs int
+	if err := pool.QueryRow(context.Background(), `
+		SELECT quick_ms, considered_ms FROM practice_review
+		WHERE tenant_id = $1 AND account_id = $2
+	`, tenant, me).Scan(&quickMs, &consideredMs); err != nil {
+		t.Fatalf("reading the review: %v", err)
+	}
+
+	if quickMs != practice.QuickAnswer.Fallback*1000 ||
+		consideredMs != practice.ConsideredAnswer.Fallback*1000 {
+
+		t.Errorf("a crossed pair gave %dms/%dms, want the shipped %dms/%dms — one of "+
+			"theirs and one of ours is the arrangement that makes a grade unreachable",
+			quickMs, consideredMs,
+			practice.QuickAnswer.Fallback*1000, practice.ConsideredAnswer.Fallback*1000)
+	}
+}

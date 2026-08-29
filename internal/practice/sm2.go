@@ -3,6 +3,8 @@ package practice
 import (
 	"math"
 	"time"
+
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 )
 
 // SM-2, and the one decision that is not SM-2.
@@ -28,13 +30,90 @@ import (
 // This is exactly why `practice_review` has been written since Fase 0, with the
 // values from BEFORE each answer as well as after: the numbers below can be
 // fitted against real history rather than argued about, and the fitting needs
-// history that only exists if it was being recorded all along. Changing them is
-// a change to `scheduler` in that log too, so a run of rows from a different
-// one is distinguishable rather than silently mixed in.
-const (
-	quick      = 10 * time.Second
-	considered = 45 * time.Second
+// history that only exists if it was being recorded all along.
+//
+// # AND THE SENTENCE THAT USED TO FOLLOW STOPPED BEING TRUE
+//
+// It read: "changing them is a change to `scheduler` in that log too, so a run
+// of rows from a different one is distinguishable rather than silently mixed
+// in". That worked while changing them meant a deployment — somebody editing
+// the constants was somebody reading this file, and this file told them to
+// rename the scheduler in the same diff.
+//
+// `0046` makes them settable from a console, where there is no diff and nobody
+// to read an instruction. So `0047` puts the two thresholds on every review row
+// instead: a fit reads the boundaries each quality was computed against, from
+// the row itself, and no longer depends on anybody having remembered anything.
+
+/*
+QuickAnswer and ConsideredAnswer are the two boundaries the quality is derived
+from.
+
+	THEY ARE PARAMETERS BECAUSE THIS FILE SAID SO FIRST — "not measurements (…)
+	a starting point (…) meant to be fitted". A value nobody can defend as
+	correct, in a place where the platform is collecting the data to find out,
+	is the clearest case K-13 has: the honest thing is to make it movable and
+	record what each answer was judged by, not to argue about it in a comment
+	for a year.
+
+	THE FENCES ARE WHERE THE BANDS STOP MEANING ANYTHING. Under two seconds
+	nobody is answering, they are clicking; over five minutes a tab was left
+	open and the elapsed time is about lunch. Between them the arrangement holds
+	whatever a fit lands on.
+
+	THE ORDER IS NOT FENCED HERE AND CANNOT BE. Each declaration bounds itself
+	and neither can see the other, so "quick must be under considered" is
+	checked where both are known — `thresholds` below — and again by a
+	constraint on the table, which is what makes it true of rows rather than of
+	requests.
+*/
+var (
+	QuickAnswer = setting.Declared{
+		Name:     "practice.quickanswer",
+		Unit:     setting.Seconds,
+		Least:    2,
+		Most:     300,
+		Fallback: 10,
+		Why: "how fast an answer has to be to count as known without hesitation, which is " +
+			"the top SM-2 grade. Ten seconds is a first guess and this file has always " +
+			"said so — it is roughly right for a quiz and roughly wrong for a labelling " +
+			"question, which takes longer for reasons that have nothing to do with " +
+			"knowing the answer. Every review records the boundary it was judged by, so " +
+			"moving this changes what is scheduled next and nothing already scheduled.",
+	}
+
+	ConsideredAnswer = setting.Declared{
+		Name:     "practice.consideredanswer",
+		Unit:     setting.Seconds,
+		Least:    3,
+		Most:     600,
+		Fallback: 45,
+		Why: "how long an answer may take and still count as remembered rather than nearly " +
+			"forgotten. Above it the answer was right and slow, which SM-2 reads as a card " +
+			"due back sooner. Forty-five seconds is the same first guess as the boundary " +
+			"below it and wants fitting against the same history.",
+	}
 )
+
+/*
+thresholds is the pair in force, with the one relationship neither declaration
+can enforce alone.
+
+	IF THEY CROSS, THE MIDDLE GRADE IS UNREACHABLE — the quick band swallows the
+	considered one and every correct answer is a 5 or a 3. That is a silent
+	change to what the platform believes about every student, so the pair falls
+	back TOGETHER rather than half-obeying: a deployment that wired them
+	backwards gets the two numbers this package shipped with, not one of theirs
+	and one of ours.
+*/
+func thresholds(quick, considered int) (time.Duration, time.Duration) {
+	if QuickAnswer.Valid(quick) != nil || ConsideredAnswer.Valid(considered) != nil ||
+		quick >= considered {
+
+		quick, considered = QuickAnswer.Fallback, ConsideredAnswer.Fallback
+	}
+	return time.Duration(quick) * time.Second, time.Duration(considered) * time.Second
+}
 
 // The name recorded against every answer, so rows produced by a later scheduler
 // are not mixed into these.
@@ -54,7 +133,7 @@ const easeStart = 2.5
 // once shown", which is a distinction only the student can make — so this uses
 // one value for wrong and spends its resolution on the correct end, where the
 // elapsed time is evidence about fluency rather than about mood.
-func Quality(correct bool, elapsed time.Duration) int {
+func Quality(correct bool, elapsed, quick, considered time.Duration) int {
 	if !correct {
 		return 1
 	}

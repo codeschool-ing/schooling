@@ -263,6 +263,15 @@ set K-13 asks for.
 	win, because two modules believing they own one decision is a screen that
 	moves whichever one the map happened to keep.
 */
+// practiceTuning is the pair `practice` grades a review by, said once because
+// two stores read it and a second copy is a second thing to keep true.
+func practiceTuning(settings *setting.Store) practice.Tuning {
+	return practice.Tuning{
+		QuickAnswer:      settings.Reads(practice.QuickAnswer),
+		ConsideredAnswer: settings.Reads(practice.ConsideredAnswer),
+	}
+}
+
 func parameters() []setting.Declared {
 	return []setting.Declared{
 		analysis.MinimumSample,
@@ -274,6 +283,8 @@ func parameters() []setting.Declared {
 		identity.ConfirmationLife,
 		identity.PresenceWindow,
 		identity.ViewingLifetime,
+		practice.ConsideredAnswer,
+		practice.QuickAnswer,
 	}
 }
 
@@ -636,7 +647,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// answerable — a queue that offered one and then refused it would be a
 	// paywall discovered one question at a time.
 	practice.NewHandler(
-		practice.NewStore(pool, courseOpen(courses, plan), withdrawnFor(withdrawn)),
+		/* AND THE TWO BOUNDARIES A REVIEW IS GRADED BY, from the registry. Only
+		   marking an answer reads them — see `practice.Tuning` on why this is a
+		   second call and not two more arguments — and `0047` records the pair
+		   on every row, so a fit reads what each answer was judged against
+		   rather than what the constants happened to be. */
+		practice.NewStore(pool, courseOpen(courses, plan), withdrawnFor(withdrawn)).
+			WithThresholds(practiceTuning(settings)),
 		schoolID, identity.AccountID, practice.Emit(studentEvents(events, log, plan)),
 	).Routes(scoped)
 
@@ -1437,7 +1454,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   address is reached by people who are already students. */
 	review := http.NewServeMux()
 	practice.NewAcrossHandler(
-		practice.NewStore(pool, courseOpen(courses, plan), withdrawnFor(withdrawn)),
+		/* THIS ONE DRAWS A QUEUE AND NEVER MARKS AN ANSWER, so the thresholds
+		   reach nothing here. They are wired anyway: a store that behaves
+		   differently from its twin two hundred lines up is a thing somebody
+		   discovers by moving a call, and the cost of consistency is one
+		   line. */
+		practice.NewStore(pool, courseOpen(courses, plan), withdrawnFor(withdrawn)).
+			WithThresholds(practiceTuning(settings)),
 		scopedTo(tenant.NewStore(pool)),
 		whereSchoolsAre(tenant.NewStore(pool)),
 		identity.AccountID,
