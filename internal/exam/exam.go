@@ -60,25 +60,97 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/codeschool-ing/schooling/internal/grade"
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 )
 
-// PassMark is the share of an exam's questions a student has to get right,
-// in whole percent.
-//
-// IT LIVES IN CODE AND A TEST HOLDS IT (K-13). Only something without a right
-// answer becomes a configurable parameter; a pass mark somebody can move from a
-// console is a certificate that means whatever it meant on the day, and the
-// first time it is lowered there is no record of what the old one was. Every
-// attempt records the mark it was judged by, so moving this constant later
-// changes what a NEW attempt has to reach and nothing about an old one.
-const PassMark = 70
+/*
+PassMark is the share of an exam's questions a student has to get right, in
+whole percent.
 
-// QuestionsPerAttempt is how long a paper is when the pool is longer.
-//
-// A pool smaller than this is asked in full — which is the normal case for a
-// course exam, and it is not a lesser exam for it. Drawing is what stops a pool
-// of two hundred from being memorised one attempt at a time.
-const QuestionsPerAttempt = 20
+	IT WAS A CONSTANT, AND THE COMMENT REFUSING TO MAKE IT A PARAMETER REFUTED
+	ITSELF IN ITS LAST SENTENCE. It read: "a pass mark somebody can move from a
+	console is a certificate that means whatever it meant on the day, and the
+	first time it is lowered there is no record of what the old one was" — and
+	then, immediately: "every attempt records the mark it was judged by".
+
+	Both cannot be true. `exam_attempts.pass_mark` is written on every attempt
+	precisely so that a certificate says what it was worth on the day it was
+	earned, and `0046`'s audit entry says who moved the mark, when, from what,
+	to what, and why. The record the objection said would be missing is kept in
+	two places, and was already kept in one of them when the objection was
+	written.
+
+	SO WHAT IS LEFT IS A JUDGEMENT WITH NO RIGHT ANSWER, which is exactly K-13's
+	bar. Seventy is a convention. No test can say that a school teaching
+	mathematics is wrong to want seventy-five, and nothing about the number is
+	measurable — it is how strict this platform chooses to be.
+
+	THE FENCE IS WHERE THE MISTAKE IS. Below fifty a pass is worth less than a
+	coin toss on a two-option question; above ninety-five, one wrong answer of
+	twenty fails everybody, which is not strictness but arithmetic. Neither
+	bound moves from a screen.
+
+	MOVING IT CHANGES WHAT A NEW ATTEMPT HAS TO REACH AND NOTHING ABOUT AN OLD
+	ONE. That was true of the constant and it is true of the row; it is the
+	whole reason the column exists.
+*/
+var PassMark = setting.Declared{
+	Name:     "exam.passmark",
+	Unit:     setting.Percent,
+	Least:    50,
+	Most:     95,
+	Fallback: 70,
+	Why: "the share of an exam a student has to get right. Seventy is a convention and " +
+		"not a measurement — no test can say a school is wrong to want seventy-five — so " +
+		"it is how strict this platform chooses to be. Every attempt records the mark it " +
+		"was judged by, so moving this changes what a NEW attempt has to reach and " +
+		"nothing about a certificate already earned.",
+}
+
+/*
+QuestionsPerAttempt is how long a paper is when the pool is longer.
+
+	A pool smaller than this is asked in full — which is the normal case for a
+	course exam, and it is not a lesser exam for it. Drawing is what stops a pool
+	of two hundred from being memorised one attempt at a time.
+
+	IT HAS NO RIGHT ANSWER EITHER, and the two ends of it are different worries:
+	a short paper is quicker to sit and easier to get lucky on, a long one
+	measures better and is abandoned more. Where to sit between them is a
+	judgement about the course rather than a fact about exams.
+
+	THE FENCE: under five, one lucky guess is a fifth of the mark; over sixty,
+	the paper is longer than a sitting and what it measures is stamina.
+*/
+var QuestionsPerAttempt = setting.Declared{
+	Name:     "exam.questions",
+	Unit:     setting.Count,
+	Least:    5,
+	Most:     60,
+	Fallback: 20,
+	Why: "how long a paper is when the pool is longer. A short paper is quicker to sit " +
+		"and easier to get lucky on; a long one measures better and is abandoned more. " +
+		"Where to sit between those is a judgement about how this platform wants to be " +
+		"examined, and a pool smaller than the number is still asked in full.",
+}
+
+/*
+Numbers is what this module reads from the parameter registry, wired by `cmd`.
+
+	IT IS A STRUCT OF FUNCTIONS RATHER THAN TWO MORE CONSTRUCTOR ARGUMENTS
+	because there will be more of them, and a constructor that grows one
+	positional `func(context.Context) int` per knob is a call nobody can read
+	and a test everybody copies wrongly.
+
+	A ZERO `Numbers` IS THE SHIPPED BEHAVIOUR, not a broken store. Every field
+	falls back to its declaration, which is the number this package carried
+	before any of this existed — so a test that does not care about parameters
+	passes `exam.Numbers{}` and gets the exam it always got.
+*/
+type Numbers struct {
+	PassMark          func(ctx context.Context) int
+	QuestionsPerPaper func(ctx context.Context) int
+}
 
 // Scope is which kind of exam. The course exam issues a certificate; the track
 // exam is the final (A-08).
@@ -158,10 +230,45 @@ type Store struct {
 	// default, because the failure it produces is a question that keeps being
 	// asked rather than an exam that cannot be sat.
 	quarantined Quarantined
+
+	// What this store reads from the parameter registry. A zero value is the
+	// shipped behaviour — see `Numbers`.
+	numbers Numbers
 }
 
-func NewStore(pool *pgxpool.Pool, maySit MaySit, quarantined Quarantined) *Store {
-	return &Store{pool: pool, maySit: maySit, quarantined: quarantined}
+func NewStore(pool *pgxpool.Pool, maySit MaySit, quarantined Quarantined,
+	numbers Numbers) *Store {
+
+	return &Store{pool: pool, maySit: maySit, quarantined: quarantined, numbers: numbers}
+}
+
+/*
+passMark and questionsPerPaper are today's answers, bounded by the declaration
+however they are wired.
+
+	A VALUE OUTSIDE THE FENCE IS THE FALLBACK AND NOT AN OUTAGE. `setting.Store`
+	already refuses one on the way in and ignores one on the way out, so getting
+	here means the wiring itself is answering something the declaration would
+	not accept — a mistake in `cmd` rather than in the database. The honest
+	response is the number this package shipped with, because that is what the
+	platform behaved like before anybody wired anything.
+*/
+func (s *Store) passMark(ctx context.Context) int {
+	return within(ctx, s.numbers.PassMark, PassMark)
+}
+
+func (s *Store) questionsPerPaper(ctx context.Context) int {
+	return within(ctx, s.numbers.QuestionsPerPaper, QuestionsPerAttempt)
+}
+
+func within(ctx context.Context, read func(context.Context) int, one setting.Declared) int {
+	if read == nil {
+		return one.Fallback
+	}
+	if got := read(ctx); one.Valid(got) == nil {
+		return got
+	}
+	return one.Fallback
 }
 
 // outOfCirculation is the set, or an empty one when nothing is wired in.
@@ -406,8 +513,8 @@ func (s *Store) draw(ctx context.Context, tenantID, accountID uuid.UUID,
 		order[i] = i
 	}
 	rnd.Shuffle(len(order), func(i, j int) { order[i], order[j] = order[j], order[i] })
-	if len(order) > QuestionsPerAttempt {
-		order = order[:QuestionsPerAttempt]
+	if most := s.questionsPerPaper(ctx); len(order) > most {
+		order = order[:most]
 	}
 
 	drawn := make([]pooled, len(order))
@@ -598,15 +705,23 @@ func (s *Store) Submit(ctx context.Context, tenantID, accountID, attemptID uuid.
 			return err
 		}
 
+		/* THE MARK IS READ ONCE AND USED TWICE, which is the whole reason it
+		   is a local. It decides whether this paper passed and it is written
+		   into the row as the mark it was judged by; reading it twice would let
+		   a change landing between the two lines judge by one number and record
+		   another — a certificate whose own row disagrees with the arithmetic
+		   that issued it, and nothing would report it. */
+		mark := s.passMark(ctx)
+
 		// Exact, in integers. See PassMark: a student sitting exactly on the
 		// mark must not pass or fail depending on how a ratio rounded.
-		passed := score*100 >= PassMark*of
+		passed := score*100 >= mark*of
 
 		if _, err := tx.Exec(ctx, `
 			UPDATE exam_attempts
 			SET submitted_at = now(), score = $2, of = $3, pass_mark = $4, passed = $5
 			WHERE id = $1
-		`, attemptID, score, of, PassMark, passed); err != nil {
+		`, attemptID, score, of, mark, passed); err != nil {
 			return fmt.Errorf("exam: handing in an attempt: %w", err)
 		}
 		marked = true
@@ -788,7 +903,7 @@ func (s *Store) Attempt(ctx context.Context, tenantID, accountID, attemptID uuid
 	if p.Result != nil {
 		p.PassMark = p.Result.PassMark
 	} else {
-		p.PassMark = PassMark
+		p.PassMark = s.passMark(ctx)
 	}
 
 	rows, err := s.pool.Query(ctx, `

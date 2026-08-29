@@ -124,6 +124,10 @@ func offering(pool *pgxpool.Pool) tenant.Offer {
 // twelve is the instalment count as `cmd/api` now hands it in: a function
 // asked per request, because the day the policy moves is a console screen and
 // not a deployment. What these tests care about is the number that comes out.
+// seventy is the pass mark as `cmd/api` hands it in — a function since `0046`
+// made it a declared parameter, for the reason the two below are functions.
+func seventy(context.Context) int { return 70 }
+
 func twelve(context.Context) int { return 12 }
 
 // fivePerCent is the Pix discount as `cmd/api` hands it in, for the reason
@@ -137,7 +141,7 @@ func fivePerCent(context.Context) int { return 500 }
 func server(t *testing.T, pool *pgxpool.Pool) *httptest.Server {
 	t.Helper()
 	scoped := http.NewServeMux()
-	tenant.NewHandler(70, twelve, fivePerCent, offering(pool)).Routes(scoped)
+	tenant.NewHandler(seventy, twelve, fivePerCent, offering(pool)).Routes(scoped)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))
@@ -335,7 +339,7 @@ func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	mux := http.NewServeMux()
 	// NOTHING PRICED, said by the seam answering an empty list — which is also
 	// what a deployment with no `billing` wired in looks like.
-	tenant.NewHandler(70, twelve, fivePerCent, nil).Routes(mux)
+	tenant.NewHandler(seventy, twelve, fivePerCent, nil).Routes(mux)
 
 	rec := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)

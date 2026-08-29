@@ -25,6 +25,18 @@ import (
 // Nothing is out of circulation, which is what a school looks like before
 // anything has been measured. The tests that care about a withdrawn question
 // pass their own.
+/*
+asShipped is the numbers as this package carried them before `0046` made them
+parameters: a zero `Numbers` falls back to each declaration.
+
+	IT IS NAMED RATHER THAN WRITTEN OUT at every call site, because what it
+	says is the reason the whole suite still reads as it did — none of these
+	tests is about the registry, and every one of them wants the exam this
+	package has always given. The two that ARE about the registry wire their
+	own readers and say so.
+*/
+var asShipped = exam.Numbers{}
+
 func nothingWithdrawn(context.Context, uuid.UUID) (map[exam.Item]bool, error) {
 	return nil, nil
 }
@@ -188,7 +200,7 @@ func TestAPaperCarriesNoAnswers(t *testing.T) {
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 6)
 
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	paper, _, err := store.Start(context.Background(), school, student,
 		exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
@@ -235,7 +247,7 @@ func TestStartingAgainResumesTheSamePaper(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 8)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	first, resumed, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -280,7 +292,7 @@ func TestNothingChangesAfterThePaperIsHandedIn(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -340,7 +352,7 @@ func TestAnExamNobodyMaySitCannotBeStarted(t *testing.T) {
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
 
-	store := exam.NewStore(db, shut, nothingWithdrawn)
+	store := exam.NewStore(db, shut, nothingWithdrawn, asShipped)
 	_, _, err := store.Start(context.Background(), school, student,
 		exam.ScopeCourse, "web-fundamentals", "en")
 	if !errors.Is(err, exam.ErrLocked) {
@@ -364,7 +376,7 @@ func TestAnExamWithNoQuestionsIsNotAnEmptyPaper(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	_, _, err := store.Start(context.Background(), school, student, exam.ScopeCourse, "nothing-here", "en")
 	if !errors.Is(err, exam.ErrNoSuchExam) {
 		t.Fatalf("an exam with no questions gave %v, want ErrNoSuchExam", err)
@@ -379,7 +391,7 @@ func TestSomebodyElsesPaperIsNotFound(t *testing.T) {
 	school := school(t, db)
 	mine, theirs := student(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, mine, exam.ScopeCourse, "web-fundamentals", "en")
@@ -408,7 +420,7 @@ func TestAnUnansweredQuestionIsWrong(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -445,13 +457,13 @@ func TestAnUnansweredQuestionIsWrong(t *testing.T) {
 // or fail depending on how a ratio rounded.
 func TestTheMarkIsExact(t *testing.T) {
 	const of = 20
-	needed := of * exam.PassMark / 100 // 14 of 20, at seventy percent
+	needed := of * exam.PassMark.Fallback / 100 // 14 of 20, at seventy percent
 
 	for _, right := range []int{needed, needed - 1} {
 		db := testPool(t)
 		school, student := school(t, db), student(t, db)
 		questions(t, db, school, exam.ScopeCourse, "web-fundamentals", of)
-		store := exam.NewStore(db, open, nothingWithdrawn)
+		store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 		ctx := context.Background()
 
 		paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -477,12 +489,150 @@ func TestTheMarkIsExact(t *testing.T) {
 		}
 		if want := right >= needed; marked.Result.Passed != want {
 			t.Errorf("%d of %d at a pass mark of %d%% came back passed=%v, want %v",
-				right, of, exam.PassMark, marked.Result.Passed, want)
+				right, of, exam.PassMark.Fallback, marked.Result.Passed, want)
 		}
-		if marked.Result.PassMark != exam.PassMark {
+		if marked.Result.PassMark != exam.PassMark.Fallback {
 			t.Errorf("the attempt recorded a pass mark of %d, want %d",
-				marked.Result.PassMark, exam.PassMark)
+				marked.Result.PassMark, exam.PassMark.Fallback)
 		}
+	}
+}
+
+/*
+AND THE MARK IS WHATEVER THE PARAMETER SAYS, which is the half `TestTheMarkIsExact`
+above cannot see.
+
+	That test wires `asShipped` and so measures seventy — the number this
+	package carried when the mark was a constant. The claim `0046` adds is that
+	an operator can move it without a deployment, and a registry that stored the
+	new number while the exam went on judging by the old one would be the most
+	expensive kind of working: every screen agreeing, every certificate wrong.
+
+	SO THIS SITS ONE PAPER TWICE, at two marks, with the same answers. Fifteen
+	of twenty passes at seventy and fails at eighty, and the attempt's own row
+	has to carry the mark it was actually judged by — because that column is
+	what makes a certificate from March explicable in November, and it is the
+	whole reason moving this parameter is safe.
+*/
+func TestTheMarkIsWhateverTheParameterSays(t *testing.T) {
+	const of, right = 20, 15
+
+	for _, one := range []struct {
+		mark   int
+		passed bool
+	}{
+		{70, true},  // 15 of 20 is 75%
+		{80, false}, // and 75% is not 80%
+	} {
+		db := testPool(t)
+		school, student := school(t, db), student(t, db)
+		questions(t, db, school, exam.ScopeCourse, "web-fundamentals", of)
+
+		store := exam.NewStore(db, open, nothingWithdrawn, exam.Numbers{
+			PassMark: func(context.Context) int { return one.mark },
+		})
+		ctx := context.Background()
+
+		paper, _, err := store.Start(ctx, school, student,
+			exam.ScopeCourse, "web-fundamentals", "en")
+		if err != nil {
+			t.Fatalf("starting: %v", err)
+		}
+
+		/* AN OPEN PAPER CARRIES THE CURRENT MARK, because that is what it will
+		   be judged by. A screen showing seventy over a paper about to be
+		   marked at eighty is the drift this whole arrangement exists to
+		   prevent, one process closer to the student. */
+		if paper.PassMark != one.mark {
+			t.Errorf("an open paper says %d%% and the parameter says %d%%",
+				paper.PassMark, one.mark)
+		}
+
+		for _, q := range paper.Questions {
+			answer := wrongAnswer(t, db, paper.AttemptID, q.Position)
+			if q.Position < right {
+				answer = rightAnswer(t, db, paper.AttemptID, q.Position)
+			}
+			if err := store.Answer(ctx, school, student,
+				paper.AttemptID, q.Position, answer); err != nil {
+
+				t.Fatalf("answering %d: %v", q.Position, err)
+			}
+		}
+
+		marked, _, err := store.Submit(ctx, school, student, paper.AttemptID)
+		if err != nil {
+			t.Fatalf("handing in: %v", err)
+		}
+		if marked.Result.Passed != one.passed {
+			t.Errorf("%d of %d at %d%% came back passed=%v, want %v",
+				right, of, one.mark, marked.Result.Passed, one.passed)
+		}
+		if marked.Result.PassMark != one.mark {
+			t.Errorf("the attempt recorded a pass mark of %d, want the %d it was "+
+				"judged by — that column is what makes a certificate explicable later",
+				marked.Result.PassMark, one.mark)
+		}
+	}
+}
+
+/*
+AND A WIRING THAT ANSWERS OUTSIDE THE FENCE IS THE SHIPPED NUMBER, not an outage
+and not the number it asked for.
+
+	`setting.Store` already refuses one on the way in and ignores one on the way
+	out, so a value this far along means `cmd` itself is answering something the
+	declaration would not accept. Marking every paper at five hundred per cent —
+	nobody passes, ever, silently — is the failure this guards, and the honest
+	response is what the code shipped with.
+*/
+func TestAMarkOutsideTheFenceIsTheShippedOne(t *testing.T) {
+	db := testPool(t)
+	school, student := school(t, db), student(t, db)
+	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
+
+	store := exam.NewStore(db, open, nothingWithdrawn, exam.Numbers{
+		PassMark: func(context.Context) int { return 500 },
+	})
+
+	paper, _, err := store.Start(context.Background(), school, student,
+		exam.ScopeCourse, "web-fundamentals", "en")
+	if err != nil {
+		t.Fatalf("starting: %v", err)
+	}
+	if paper.PassMark != exam.PassMark.Fallback {
+		t.Errorf("a mark of 500%% was obeyed: the paper says %d%%, want the shipped %d%%",
+			paper.PassMark, exam.PassMark.Fallback)
+	}
+}
+
+/*
+AND A PAPER IS AS LONG AS THE PARAMETER SAYS.
+
+	`TestALongPoolIsDrawnFrom` below checks the drawing happens at all, at the
+	shipped twenty. This checks the number is the one somebody set — the same
+	claim as the mark's, on the knob whose wrong value is not a wrong result but
+	an exam that takes three times as long as anybody agreed to.
+*/
+func TestAPaperIsAsLongAsTheParameterSays(t *testing.T) {
+	const pool, want = 28, 8
+
+	db := testPool(t)
+	school, student := school(t, db), student(t, db)
+	questions(t, db, school, exam.ScopeTrack, "frontend", pool)
+
+	store := exam.NewStore(db, open, nothingWithdrawn, exam.Numbers{
+		QuestionsPerPaper: func(context.Context) int { return want },
+	})
+
+	paper, _, err := store.Start(context.Background(), school, student,
+		exam.ScopeTrack, "frontend", "en")
+	if err != nil {
+		t.Fatalf("starting: %v", err)
+	}
+	if len(paper.Questions) != want {
+		t.Errorf("a pool of %d drew %d questions at a setting of %d",
+			pool, len(paper.Questions), want)
 	}
 }
 
@@ -492,7 +642,7 @@ func TestAPassIsNotUndoneByALaterFailure(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	sit := func(correctly bool) {
@@ -549,8 +699,8 @@ func TestALongPoolIsDrawnFrom(t *testing.T) {
 	db := testPool(t)
 	school := school(t, db)
 	first, second := student(t, db), student(t, db)
-	questions(t, db, school, exam.ScopeTrack, "frontend", exam.QuestionsPerAttempt+8)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	questions(t, db, school, exam.ScopeTrack, "frontend", exam.QuestionsPerAttempt.Fallback+8)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	papers := make([][]string, 2)
@@ -559,9 +709,9 @@ func TestALongPoolIsDrawnFrom(t *testing.T) {
 		if err != nil {
 			t.Fatalf("starting: %v", err)
 		}
-		if len(paper.Questions) != exam.QuestionsPerAttempt {
+		if len(paper.Questions) != exam.QuestionsPerAttempt.Fallback {
 			t.Fatalf("a pool of %d gave a paper of %d, want %d",
-				exam.QuestionsPerAttempt+8, len(paper.Questions), exam.QuestionsPerAttempt)
+				exam.QuestionsPerAttempt.Fallback+8, len(paper.Questions), exam.QuestionsPerAttempt.Fallback)
 		}
 		for _, q := range paper.Questions {
 			papers[i] = append(papers[i], q.ExerciseID)
@@ -582,7 +732,7 @@ func TestAnAnswerThatIsNotAnAnswerIsRefused(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -618,7 +768,7 @@ func TestAnAnswerCanBeChangedUntilTheEnd(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -658,7 +808,7 @@ func TestAPaperOutlivesTheCatalogueItCameFrom(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -711,7 +861,7 @@ func TestAWithdrawnQuestionIsNotDrawnOntoAPaper(t *testing.T) {
 	store := exam.NewStore(db, open, withdrawing(
 		exam.Item{ExerciseID: "q00", Version: 1},
 		exam.Item{ExerciseID: "q03", Version: 1},
-	))
+	), asShipped)
 
 	paper, _, err := store.Start(context.Background(), school, student,
 		exam.ScopeCourse, "web-fundamentals", "en")
@@ -740,7 +890,7 @@ func TestAnExamWhoseWholePoolIsWithdrawnRefusesToStart(t *testing.T) {
 	for i := range 3 {
 		all = append(all, exam.Item{ExerciseID: fmt.Sprintf("q%02d", i), Version: 1})
 	}
-	store := exam.NewStore(db, open, withdrawing(all...))
+	store := exam.NewStore(db, open, withdrawing(all...), asShipped)
 
 	if _, _, err := store.Start(context.Background(), school, student,
 		exam.ScopeCourse, "web-fundamentals", "en"); err == nil {
@@ -760,7 +910,7 @@ func TestAQuestionWithdrawnMidAttemptComesOutOfTheDenominator(t *testing.T) {
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
 
 	// The paper is set while everything is in circulation.
-	setting := exam.NewStore(db, open, nothingWithdrawn)
+	setting := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	paper, _, err := setting.Start(context.Background(), school, student,
 		exam.ScopeCourse, "web-fundamentals", "en")
 	if err != nil {
@@ -773,7 +923,7 @@ func TestAQuestionWithdrawnMidAttemptComesOutOfTheDenominator(t *testing.T) {
 	// One of them is withdrawn before it is handed in.
 	withdrawn := paper.Questions[0].ExerciseID
 	marking := exam.NewStore(db, open, withdrawing(
-		exam.Item{ExerciseID: withdrawn, Version: paper.Questions[0].Version}))
+		exam.Item{ExerciseID: withdrawn, Version: paper.Questions[0].Version}), asShipped)
 
 	marked, _, err := marking.Submit(context.Background(), school, student, paper.AttemptID)
 	if err != nil {
@@ -816,7 +966,7 @@ func TestAnOpenPaperSaysWhatItHasToReach(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
@@ -826,9 +976,9 @@ func TestAnOpenPaperSaysWhatItHasToReach(t *testing.T) {
 	if paper.Result != nil {
 		t.Fatal("a paper nobody has handed in came back with a result")
 	}
-	if paper.PassMark != exam.PassMark {
+	if paper.PassMark != exam.PassMark.Fallback {
 		t.Errorf("an open paper says it has to reach %d%%, and this server marks at %d%%",
-			paper.PassMark, exam.PassMark)
+			paper.PassMark, exam.PassMark.Fallback)
 	}
 
 	// AND A RESUMED ONE SAYS THE SAME. It is a different code path — the open
@@ -841,8 +991,8 @@ func TestAnOpenPaperSaysWhatItHasToReach(t *testing.T) {
 	if !resumed {
 		t.Fatal("starting twice drew a second paper")
 	}
-	if again.PassMark != exam.PassMark {
-		t.Errorf("a resumed paper says %d%%, want %d%%", again.PassMark, exam.PassMark)
+	if again.PassMark != exam.PassMark.Fallback {
+		t.Errorf("a resumed paper says %d%%, want %d%%", again.PassMark, exam.PassMark.Fallback)
 	}
 }
 
@@ -857,7 +1007,7 @@ func TestAHandedInPaperCarriesTheMarkItWasJudgedBy(t *testing.T) {
 	db := testPool(t)
 	school, student := school(t, db), student(t, db)
 	questions(t, db, school, exam.ScopeCourse, "web-fundamentals", 4)
-	store := exam.NewStore(db, open, nothingWithdrawn)
+	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
 	paper, _, err := store.Start(ctx, school, student, exam.ScopeCourse, "web-fundamentals", "en")
