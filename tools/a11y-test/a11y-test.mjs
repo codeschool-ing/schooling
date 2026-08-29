@@ -1315,6 +1315,22 @@ try {
     await check(staff.page, `${theme} · console, the cohorts`, '/#/cohorts', '/cohorts',
       { base: CONSOLE, region: '#stage', settled: '.cohort-table tbody tr' });
 
+    /* WHO CAN OPEN THIS, WHICH IS NEVER EMPTY HERE FOR THE REASON THE HISTORY
+       BELOW IS NOT: the operator this suite made is on it. That matters more
+       than usual, because this screen's empty state is a paragraph saying the
+       roster cannot be empty — so measuring it there would be measuring the one
+       shape it is built never to reach.
+
+       WHAT IS BEING LOOKED AT IS COLOUR CARRYING A FINDING. Two cells on every
+       row are a tag rather than a sentence — whether the role opens anything,
+       and whether it has ever been used — and a tag is a border and a colour
+       around one word. `no second factor` and `never` are drawn in the warning
+       colour precisely because they are what somebody came to find, which makes
+       them the two places on this screen where a contrast failure would hide
+       the finding rather than an ornament. */
+    await check(staff.page, `${theme} · console, who can open this`, '/#/staff', '/staff',
+      { base: CONSOLE, region: '#stage', settled: '.grid tbody tr' });
+
     /* THE HISTORY, WHICH BY NOW HAS SOMETHING IN IT: granting this operator its
        role wrote an entry, so the list is never the empty state here. The empty
        state is a paragraph and would pass every check there is, which is why
