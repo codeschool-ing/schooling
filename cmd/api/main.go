@@ -358,6 +358,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	events := event.NewStore(pool)
 
 	scoped := http.NewServeMux()
+
+	/* THE DISCOUNTS, ONE STORE READ FROM THREE PLACES: the school route quotes
+	   the rate, the checkout applies it, and the console appends to it. One
+	   store rather than three, so the number a screen shows and the number a
+	   charge takes off cannot come from two reads that disagree. */
+	discounts := billing.NewDiscounts(pool)
+
 	/* THE PASS MARK, HANDED TO THE SCHOOL ROUTE. `exam` owns the number and
 	   `tenant` may not import it, so this line is where the two are said to be
 	   the same one — and it exists because the interface prints "minimum to
@@ -366,7 +373,23 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	/* THE TWO NUMBERS A SCHOOL STATES THAT ARE NOT ITS OWN. Both belong to
 	   another module and neither may be imported by `tenant` (X-02), so this is
 	   the one line saying they are the same numbers. */
-	tenant.NewHandler(exam.PassMark, billing.MaxInstalments, billing.PixDiscountBasisPoints,
+	tenant.NewHandler(exam.PassMark, billing.MaxInstalments,
+		/* AND THE RATE IS READ PER REQUEST, because it is a dated series since
+		   `0045` rather than a constant. A number captured here would be the
+		   number until the next deployment, and the screen quoting it would
+		   drift from the checkout charging it.
+
+		   AN ERROR IS NO DISCOUNT. The school still describes itself; the
+		   invitation simply draws no struck-through figure, which is what it
+		   did before there was a discount at all. */
+		func(ctx context.Context) int {
+			off, err := discounts.InForce(ctx, billing.ScopeEverything, billing.MethodPix)
+			if err != nil {
+				web.LoggerFrom(ctx).Error("reading the Pix discount for a school", "error", err)
+				return 0
+			}
+			return off.BasisPoints
+		},
 		offered(billing.NewPrices(pool))).Routes(scoped)
 
 	// THE TWO DOCUMENTS, MOUNTED INSIDE THE SCHOOL-SCOPED MUX AND SCOPED TO NO
@@ -639,6 +662,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		billing.NewHandler(
 			billing.NewCheckouts(pool, confirmedAddress(accounts)),
 			billing.NewPrices(pool),
+			discounts,
 			viaAsaas(cfg, log),
 			cfg.PlatformDomain,
 			payerOf(accounts),
@@ -816,7 +840,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   The same rank as the accent, one notch above read-only, and for a reason
 	   that needs no argument: this is the number everybody pays. */
 	console.NewPlanHandler(
-		pricesOf(billing.NewPrices(pool)),
+		pricesOf(billing.NewPrices(pool), discounts),
 		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
@@ -2570,7 +2594,7 @@ THE PLAN'S PRICE, MAPPED ONTO THE MODULE THAT OWNS IT.
 	only place that difference is invisible, which is why the field it fills is
 	documented as a series rather than as a setter.
 */
-func pricesOf(prices *billing.Prices) console.Plan {
+func pricesOf(prices *billing.Prices, discounts *billing.Discounts) console.Plan {
 	return console.Plan{
 		Set: func(ctx context.Context, termMonths, cents int, currency string) (console.Price, error) {
 			was, err := prices.Set(ctx, billing.ScopeEverything, termMonths, cents, currency)
@@ -2616,6 +2640,51 @@ func pricesOf(prices *billing.Prices) console.Plan {
 		},
 
 		Refused: func(err error) bool { return errors.Is(err, billing.ErrNotAPrice) },
+
+		/* AND THE DISCOUNTS, ON THE SAME SEAM. They are the same subject — what
+		   this platform asks for a subscription — so the console reads and
+		   writes both through one struct rather than two wired separately. */
+		SetDiscount: func(ctx context.Context, method string, basisPoints int) (
+			console.Discount, error) {
+
+			was, err := discounts.Set(ctx, billing.ScopeEverything,
+				billing.Method(method), basisPoints)
+			if err != nil {
+				return console.Discount{}, err
+			}
+			return console.Discount{
+				Method: string(was.Method), BasisPoints: was.BasisPoints, From: was.From,
+			}, nil
+		},
+
+		// A METHOD NOBODY HAS DISCOUNTED IS A ZERO AND NOT AN ERROR. The handler
+		// asks this to name what a change replaced, and "nothing" is the true
+		// answer the first time a method is discounted.
+		DiscountInForce: func(ctx context.Context, method string) (console.Discount, error) {
+			one, err := discounts.InForce(ctx, billing.ScopeEverything, billing.Method(method))
+			if err != nil {
+				return console.Discount{}, err
+			}
+			return console.Discount{
+				Method: string(one.Method), BasisPoints: one.BasisPoints, From: one.From,
+			}, nil
+		},
+
+		Discounts: func(ctx context.Context) ([]console.Discount, error) {
+			rows, err := discounts.Series(ctx, billing.ScopeEverything)
+			if err != nil {
+				return nil, err
+			}
+			out := make([]console.Discount, 0, len(rows))
+			for _, one := range rows {
+				out = append(out, console.Discount{
+					Method: string(one.Method), BasisPoints: one.BasisPoints, From: one.From,
+				})
+			}
+			return out, nil
+		},
+
+		RefusedDiscount: func(err error) bool { return errors.Is(err, billing.ErrNotADiscount) },
 	}
 }
 

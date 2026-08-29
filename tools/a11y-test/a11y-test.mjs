@@ -1240,7 +1240,13 @@ try {
        the one place in this console where a value is marked as "in force" by
        weight and colour together, which is exactly the pairing axe is here to
        look at. It settles on the series rather than on the forms, because the
-       forms are in the first paint and the history arrives a request later. */
+       forms are in the first paint and the history arrives a request later.
+
+       THE SERIES CARRIES TWO KINDS SINCE `0045` — what a term costs and what
+       comes off for a Pix — drawn as one list in one order, because "what did
+       we ask in March" and "what did we take off in March" are one question. So
+       the row this settles on is either of them, and the discount block's own
+       state line is filled from the same answer. */
     await check(staff.page, `${theme} · console, what it costs`, '/#/plan', '/plan',
       { base: CONSOLE, region: '#stage', settled: '.price-list, #series .none' });
 

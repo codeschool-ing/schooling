@@ -73,15 +73,27 @@ type Handler struct {
 	// `passMark` above was introduced to end, on a different number.
 	instalments int
 
-	// pixDiscount is what a Pix payment takes off, in basis points.
-	//
-	// HANDED IN LIKE THE OTHER TWO, and here for the reason the subscribe screen
-	// wrote down and could not fix on its own: it held a copy of this number
-	// with a comment saying it was a copy. The invitation now draws a Pix figure
-	// too, so the copy would have become two — and two copies of a rate is a
-	// rate that drifts, with the SERVER's number being the one charged and the
-	// browser's being the one somebody read.
-	pixDiscount int
+	/* pixDiscount is what a Pix payment takes off, in basis points.
+
+	   HANDED IN LIKE THE OTHER TWO, and here for the reason the subscribe screen
+	   wrote down and could not fix on its own: it held a copy of this number
+	   with a comment saying it was a copy. The invitation now draws a Pix figure
+	   too, so the copy would have become two — and two copies of a rate is a
+	   rate that drifts, with the SERVER's number being the one charged and the
+	   browser's being the one somebody read.
+
+	   IT IS A FUNCTION AND THE OTHER TWO ARE NOT, which is the whole of what
+	   `0045` changed here. The rate is a dated series now, settable from the
+	   console, so a number captured when this handler was constructed would be
+	   the number until the next deployment — and the screen quoting it would
+	   drift from the checkout charging it, which is exactly the drift this field
+	   exists to prevent. It takes a context so the read belongs to the request.
+
+	   AN ERROR IS NO DISCOUNT, not a broken screen. The invitation without a
+	   struck-through figure is the invitation this platform drew before there
+	   was one; a school that could not be described because a rate could not be
+	   read would be the worse answer. */
+	pixDiscount func(ctx context.Context) int
 
 	offer Offer
 }
@@ -104,7 +116,9 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark, instalments, pixDiscount int, offer Offer) *Handler {
+func NewHandler(passMark, instalments int, pixDiscount func(context.Context) int,
+	offer Offer) *Handler {
+
 	return &Handler{
 		passMark: passMark, instalments: instalments,
 		pixDiscount: pixDiscount, offer: offer,
@@ -202,6 +216,6 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 		Plans:       plans,
 		PassMark:    h.passMark,
 		Instalments: h.instalments,
-		PixDiscount: h.pixDiscount,
+		PixDiscount: h.pixDiscount(r.Context()),
 	})
 }

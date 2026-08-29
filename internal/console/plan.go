@@ -41,6 +41,19 @@ import (
    price nobody can account for is worse than a price nobody changed.
 */
 
+// Discount is one row of the discount series, as the console shows it.
+//
+// IT IS BASIS POINTS AND NOT A PERCENTAGE, all the way to the screen. The
+// arithmetic that applies it speaks this unit, the audit entry records it, and
+// a conversion in the middle is the one place a rate could arrive at the
+// browser meaning something else. The screen divides by a hundred to draw it
+// and multiplies to send it, in one function each, and says so.
+type Discount struct {
+	Method      string
+	BasisPoints int
+	From        time.Time
+}
+
 // Price is one row of the platform's series, as the console shows it.
 type Price struct {
 	TermMonths int
@@ -73,6 +86,34 @@ type Plan struct {
 	// not a currency, not a term. `billing` builds the sentence and this package
 	// may not import its errors, so the predicate travels instead.
 	Refused func(error) bool
+
+	/* ---------- and what comes off for paying a cheaper way ----------
+
+	   IT IS ON `Plan` AND NOT ON A SEAM OF ITS OWN, because it is the same
+	   subject: what this platform asks for a subscription. The screen draws
+	   both, one write records both the same way, and a second struct would be
+	   two things to wire for one question.
+
+	   THE SHAPE IS THE PRICE'S EXACTLY — appended, dated, answering what it
+	   replaced — for the reason `0045` gives: a rate that was live for a
+	   fortnight and sold nothing leaves no trace in any sale, and that
+	   fortnight is what somebody asks about. */
+
+	// SetDiscount appends a rate for a method and answers the one it replaces.
+	// A zero `was` is a method that had no discount, which is a real state.
+	SetDiscount func(ctx context.Context, method string, basisPoints int) (was Discount, err error)
+
+	// DiscountInForce is what comes off right now, read before the write so the
+	// audit entry can name both sides. A zero is a method nobody has discounted
+	// — which is not an error: it is sold at the price.
+	DiscountInForce func(ctx context.Context, method string) (Discount, error)
+
+	// Discounts is the whole series, newest first, every method together.
+	Discounts func(ctx context.Context) ([]Discount, error)
+
+	// RefusedDiscount is a rate the caller can fix by sending another: nothing
+	// off, more than half off, a method this platform does not take.
+	RefusedDiscount func(error) bool
 }
 
 // PlanHandler reads and writes what the platform charges.
@@ -98,6 +139,7 @@ func NewPlanHandler(plan Plan, record Record, label Label,
 func (h *PlanHandler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /console/api/v1/plan/prices", h.prices)
 	mux.HandleFunc("PUT /console/api/v1/plan/price", h.setPrice)
+	mux.HandleFunc("PUT /console/api/v1/plan/discount", h.setDiscount)
 }
 
 /*
@@ -196,6 +238,105 @@ func (h *PlanHandler) setPrice(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+/*
+SETTING A DISCOUNT IS APPENDING TO A SERIES, exactly as a price is.
+
+	SAVING THE SAME RATE AGAIN IS STILL A NEW ROW, for the price's reason: it
+	records that this is still what we take off, as of today, and a series that
+	dropped the repeats could not tell that from a rate nobody has touched.
+
+	THE CEILING IS NOT HERE. `billing.MostBasisPoints` is a fence against a typed
+	digit — 5000 where 500 was meant — and a fence somebody can move from a
+	screen is a fence in the way rather than a fence. The store refuses and its
+	sentence comes back verbatim.
+*/
+func (h *PlanHandler) setDiscount(w http.ResponseWriter, r *http.Request) {
+	if !h.maySet(r.Context()) {
+		web.Fail(w, http.StatusForbidden, web.CodeUnauthorized,
+			"changing what comes off a payment asks for an operator")
+		return
+	}
+
+	var asked struct {
+		Method      string `json:"method"`
+		BasisPoints int    `json:"basisPoints"`
+	}
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<10)).Decode(&asked); err != nil {
+		web.Fail(w, http.StatusBadRequest, "unreadable", "that is not a request this reads")
+		return
+	}
+	method := strings.ToLower(strings.TrimSpace(asked.Method))
+
+	actor, label, ok := acting(w, r, h.who, h.label)
+	if !ok {
+		return
+	}
+
+	was, err := h.plan.DiscountInForce(r.Context(), method)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading the discount in force",
+			"error", err, "method", method)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return
+	}
+
+	if err := h.record(r.Context(), actor, label,
+		"plan.discount.changed",
+		/* THE SUBJECT IS THE METHOD, as a price's is the term: it is the whole
+		   of what distinguishes one of these rows from another while the scope
+		   stays `all`. */
+		Subject{Kind: "plan", ID: method},
+		Changed{Before: rate(was.BasisPoints), After: rate(asked.BasisPoints)},
+		// No reason asked for, as on the price beside it — and the same comment
+		// applies: it is a change to that form rather than to this handler.
+		"",
+		web.RequestIDFrom(r.Context())); err != nil {
+
+		web.LoggerFrom(r.Context()).Error("recording a discount change", "error", err)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
+			"that was not recorded, so it was not done")
+		return
+	}
+
+	before, err := h.plan.SetDiscount(r.Context(), method, asked.BasisPoints)
+	switch {
+	case h.plan.RefusedDiscount != nil && h.plan.RefusedDiscount(err):
+		web.Fail(w, http.StatusBadRequest, "not_a_discount", err.Error())
+		return
+	case err != nil:
+		web.LoggerFrom(r.Context()).Error("setting the discount", "error", err, "method", method)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
+			"the change was recorded and then could not be written, which is a defect — "+
+				"the history now says something happened that did not")
+		return
+	}
+	if before.BasisPoints != was.BasisPoints {
+		web.LoggerFrom(r.Context()).Warn("a discount moved under a change",
+			"method", method,
+			"recorded_before", rate(was.BasisPoints),
+			"actually_was", rate(before.BasisPoints))
+	}
+
+	web.JSON(w, http.StatusOK, map[string]any{
+		"method":      method,
+		"basisPoints": asked.BasisPoints,
+	})
+}
+
+/*
+A RATE AS THE AUDIT RECORDS IT, in basis points and saying so. The entry is
+
+	read a year later beside a checkout row, and "500" alone is a number somebody
+	has to be told the unit of — the same argument `money` beside it makes for
+	writing cents in cents.
+*/
+func rate(basisPoints int) string {
+	if basisPoints <= 0 {
+		return "nothing"
+	}
+	return strconv.Itoa(basisPoints) + " basis points"
+}
+
 // prices is the series, which is the half of K-14 a single number cannot show.
 func (h *PlanHandler) prices(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.plan.Series(r.Context())
@@ -214,8 +355,32 @@ func (h *PlanHandler) prices(w http.ResponseWriter, r *http.Request) {
 			"from":       one.From,
 		})
 	}
+	/* AND THE DISCOUNTS, IN THE SAME ANSWER. They are the same subject — what
+	   this platform asks for a subscription — drawn on the same screen, and two
+	   requests for one page would be two chances to draw half of an offer.
+
+	   A FAILURE HERE COSTS THE DISCOUNTS AND NOT THE PRICES. Somebody opening
+	   this screen is nearly always here about a price; refusing the whole page
+	   because a second series could not be read would be trading the answer for
+	   the footnote. It comes back absent and the screen says it could not read
+	   them. */
+	off, err := h.plan.Discounts(r.Context())
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading the discounts", "error", err)
+		off = nil
+	}
+	discounts := make([]map[string]any, 0, len(off))
+	for _, one := range off {
+		discounts = append(discounts, map[string]any{
+			"method":      one.Method,
+			"basisPoints": one.BasisPoints,
+			"from":        one.From,
+		})
+	}
+
 	web.JSON(w, http.StatusOK, map[string]any{
-		"prices": out,
+		"prices":    out,
+		"discounts": discounts,
 
 		// WHY THERE IS NO WAY TO EDIT ONE, said where somebody looking for the
 		// button will find it.

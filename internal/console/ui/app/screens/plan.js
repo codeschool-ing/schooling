@@ -79,6 +79,41 @@ export default async function plan(section) {
     '<div id="terms">' +
       TERMS.map(block).join('') +
     '</div>' +
+    /* WHAT COMES OFF FOR PAYING A CHEAPER WAY, above the series because it is
+       part of the same offer and below the terms because it applies to all of
+       them. It was a constant in `billing/http.go` until `0045`, and that
+       constant's own comment named the condition for it stopping to be one.
+
+       APPENDED LIKE THE PRICE, and for a reason of its own: a past sale is
+       already explicable without a series — the checkout records what was
+       charged beside the price it was sold under — but a rate that was live for
+       a fortnight and sold NOTHING leaves no trace in any sale, and that is
+       exactly the fortnight somebody asks about. */
+    '<section class="block" id="discount">' +
+      '<div class="block-top">' +
+        '<h2>What comes off for a Pix</h2>' +
+        '<span class="block-score mono">every term</span>' +
+      '</div>' +
+      '<p class="aside">A Pix settles in seconds and costs this platform less to receive ' +
+      'than a card does, and this is the share of that handed back. It applies to every ' +
+      'term, which is why it is one figure here rather than one per block above.</p>' +
+      '<p class="price-state none">Reading…</p>' +
+      '<form class="discount-form" novalidate>' +
+        '<div class="price-bar">' +
+          '<label class="price-amount">' +
+            '<span>Off</span>' +
+            '<input type="text" inputmode="decimal" spellcheck="false" autocomplete="off" ' +
+              'placeholder="5" aria-describedby="discount-note">' +
+          '</label>' +
+          '<span class="list-count">per cent</span>' +
+          (mayAct()
+            ? '<button type="submit" class="btn btn-primary">Save a new rate</button>'
+            : '<span class="list-count">A read-only role may look at this and not set it.</span>') +
+        '</div>' +
+        '<p class="signin-notice" id="discount-note"></p>' +
+      '</form>' +
+    '</section>' +
+
     '<section class="block" id="series" aria-live="polite">' +
       '<h2>Every price ever set</h2>' +
       '<p class="checking">Reading…</p>' +
@@ -96,10 +131,12 @@ export default async function plan(section) {
 
   const series = el.querySelector('#series');
   const contact = el.querySelector('#contact');
+  const discount = el.querySelector('#discount');
 
   await showSeries();
   await showContact();
   TERMS.forEach(wire);
+  wireDiscount();
 
   function block(term) {
     return '<section class="block" data-term="' + term.months + '">' +
@@ -200,7 +237,7 @@ export default async function plan(section) {
     try {
       answer = await get('/console/api/v1/plan/prices');
     } catch (e) {
-      series.innerHTML = '<h2>Every price ever set</h2><p class="none">' +
+      series.innerHTML = '<h2>Everything ever set</h2><p class="none">' +
         esc(e.message) + '</p>';
 
       /* AND THE TERMS SAY THEY DO NOT KNOW, rather than keeping the ellipsis
@@ -217,17 +254,45 @@ export default async function plan(section) {
       return;
     }
 
+    /* THE DISCOUNTS COME BACK IN THE SAME ANSWER and are drawn in the same
+       list, because "what did we ask in March" and "what did we take off in
+       March" are one question asked about one moment. Two lists side by side
+       would make somebody read two dates to answer it. */
+    fillDiscount(answer.discounts || []);
+
     const rows = answer.prices || [];
-    series.innerHTML = '<h2>Every price ever set</h2>' + (rows.length === 0
+    const off = answer.discounts || [];
+
+    /* ONE LIST, IN ONE ORDER, and the two kinds are told apart by what they say
+       rather than by which column they are in. Somebody reading this is asking
+       what the offer was on a day, and the offer is both numbers — a list of
+       prices beside a list of rates makes them read two dates and hold one in
+       their head while they find the other. */
+    const everything = [
+      ...rows.map((p) => ({
+        at: p.from,
+        what: named(p.termMonths),
+        said: shown(p.cents, p.currency),
+        now: inForce(rows, p),
+      })),
+      ...off.map((d) => ({
+        at: d.from,
+        what: d.method === 'pix' ? 'A Pix' : d.method,
+        said: asPercent(d.basisPoints) + '% off',
+        now: newestFor(off, d),
+      })),
+    ].sort((a, b) => String(b.at).localeCompare(String(a.at)));
+
+    series.innerHTML = '<h2>Everything ever set</h2>' + (everything.length === 0
       ? '<p class="none">Nothing is priced yet. The invitation then says what a ' +
         'subscription opens without naming a figure.</p>'
       : '<ol class="price-list">' +
-          rows.map((p) =>
-            '<li class="price-row' + (inForce(rows, p) ? ' price-now' : '') + '">' +
-              '<span class="price-term">' + esc(named(p.termMonths)) + '</span>' +
-              '<span class="price-money mono">' + esc(shown(p.cents, p.currency)) + '</span>' +
+          everything.map((one) =>
+            '<li class="price-row' + (one.now ? ' price-now' : '') + '">' +
+              '<span class="price-term">' + esc(one.what) + '</span>' +
+              '<span class="price-money mono">' + esc(one.said) + '</span>' +
               '<span class="price-from">' +
-                (inForce(rows, p) ? 'in force since ' : 'from ') + esc(day(p.from)) +
+                (one.now ? 'in force since ' : 'from ') + esc(day(one.at)) +
               '</span>' +
             '</li>').join('') +
         '</ol>' +
@@ -242,6 +307,12 @@ export default async function plan(section) {
      whichever term happened to be priced last. */
   function inForce(rows, row) {
     return rows.find((r) => r.termMonths === row.termMonths) === row;
+  }
+
+  // The same rule for a rate: the list is newest first, so the first row for a
+  // method is the one in force and every later one is history.
+  function newestFor(rows, row) {
+    return rows.find((r) => r.method === row.method) === row;
   }
 
   /* AND THE FORMS START AT WHAT IS IN FORCE, so a rise is typed over the number
@@ -377,7 +448,85 @@ export default async function plan(section) {
     }
   }
 
+  /* ---------- what comes off ----------
+
+     THE FIELD IS PER CENT AND EVERYTHING ELSE IS BASIS POINTS, and the
+     conversion lives here for the reason `asCents` beside it does: the server
+     speaks one unit everywhere — the arithmetic that applies the rate, the
+     audit entry, the column — and a percentage crossing that boundary is the
+     one place a rate could arrive meaning a hundredth of what was typed.
+
+     Somebody typing into a console types "5", not "500". */
+  function fillDiscount(rows) {
+    const state = discount.querySelector('.price-state');
+    const now = rows.find((r) => r.method === 'pix');
+
+    if (!now) {
+      /* NOTHING OFF IS A REAL OFFER, not a screen that failed. A method nobody
+         has discounted is sold at the price, and saying so is what stops
+         somebody typing a rate on the assumption that the blank meant broken. */
+      state.className = 'price-state none';
+      state.textContent = 'Nothing comes off a Pix. It is charged at the price above.';
+      return;
+    }
+    state.className = 'price-state';
+    state.textContent = asPercent(now.basisPoints) + '% off — in force since ' + day(now.from);
+    discount.querySelector('.price-amount input').value = asPercent(now.basisPoints);
+  }
+
+  function wireDiscount() {
+    const form = discount.querySelector('.discount-form');
+    const note = form.querySelector('.signin-notice');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const points = asBasisPoints(form.querySelector('.price-amount input').value);
+
+      /* CHECKED HERE SO SOMEBODY WHO MISTYPED IS TOLD AT ONCE, and the ceiling
+         is the API's — `MostBasisPoints` is a fence against 5000 typed where
+         500 was meant, and a fence a screen could move is a fence in the way. */
+      if (points === null || points <= 0) {
+        note.className = 'signin-notice bad';
+        note.textContent = 'A rate is a number above zero, like 5 or 7.5. Nothing off is not '
+          + 'a rate of nothing — it is no discount at all, which is a different thing and '
+          + 'is not set from here.';
+        return;
+      }
+
+      note.className = 'signin-notice';
+      note.textContent = 'Saving…';
+      try {
+        await put('/console/api/v1/plan/discount', { method: 'pix', basisPoints: points });
+        note.className = 'signin-notice ok';
+        note.textContent = 'Saved as a new rate, from today. The one before it is still in '
+          + 'the series below.';
+      } catch (e) {
+        note.className = 'signin-notice bad';
+        note.textContent = e instanceof RequestError && e.status === 403
+          ? 'That asks for an operator.'
+          : e.message;
+      }
+      await showSeries();
+    });
+  }
+
   return { title: section.name, el };
+}
+
+/* BASIS POINTS IN AND A PERCENTAGE OUT. `500` is five per cent; `750` is seven
+   and a half. Two decimal places of a per cent is the whole precision the unit
+   carries, which is why the field accepts one and the conversion is exact. */
+function asPercent(basisPoints) {
+  return String(Number((basisPoints / 100).toFixed(2)));
+}
+
+/* AND BACK, refusing anything that is not a number rather than sending a NaN —
+   which would arrive as a zero and read as somebody having set the rate to
+   nothing, when nothing is a state this form cannot reach on purpose. */
+function asBasisPoints(typed) {
+  const clean = String(typed || '').trim().replace(',', '.');
+  if (!/^\d+(\.\d{1,2})?$/.test(clean)) return null;
+  return Math.round(Number(clean) * 100);
 }
 
 /* WHICH OF THE TWO SOURCES IS ANSWERING, in a sentence rather than as a badge.

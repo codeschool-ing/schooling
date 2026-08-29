@@ -69,7 +69,8 @@ func checkoutAPI(t *testing.T, gate func(uuid.UUID) (bool, error)) (
 	})
 
 	mux := http.NewServeMux()
-	billing.NewHandler(store, billing.NewPrices(pool), fake.seam(), "example.tld",
+	billing.NewHandler(store, billing.NewPrices(pool), billing.NewDiscounts(pool),
+		fake.seam(), "example.tld",
 		func(context.Context) (uuid.UUID, string, string, bool) {
 			return account, "Ada Lovelace", "ada@example.tld", true
 		},

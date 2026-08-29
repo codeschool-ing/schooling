@@ -317,6 +317,55 @@ try {
     }
   }
 
+  /* ---------- and what comes off for a Pix ----------
+
+     THE CLAIM IS THAT THE NUMBER REACHES THE PRICE A STUDENT IS QUOTED, which
+     is what makes this worth a browser rather than a Go test. The rate was a
+     constant compiled into `billing/http.go` until `0045`; now the console
+     appends to a series, the checkout reads it, and the school route quotes it
+     — three readers of one row, and a suite that only checked the form would
+     prove that a screen accepts typing.
+
+     So it saves a rate and then asks the STUDENT's side what a Pix costs. */
+  const rate = 12;
+  await staff.locator('#discount .discount-form input').fill(String(rate));
+  await staff.locator('#discount .discount-form button[type=submit]').click();
+
+  try {
+    await staff.locator('#discount .price-state', { hasText: `${rate}% off` })
+      .waitFor({ timeout: 15000 });
+    good('a new Pix rate is saved and read back');
+  } catch (e) {
+    const said = await staff.locator('#discount .price-state').innerText().catch(() => '—');
+    bad('a new Pix rate is saved and read back',
+      `after saving ${rate}% the block says "${said.trim()}"`);
+  }
+
+  /* AND THE SCHOOL QUOTES IT, which is the reader furthest from the write. It
+     is the number the invitation strikes a price through with, so a rate that
+     reached the table and not this answer would be a screen quoting one figure
+     while the checkout charged another — the exact drift the constant was
+     handed in to prevent. */
+  /* A PAGE OF ITS OWN, ON THE SCHOOL'S HOST. The student above was closed
+     before the operator signed in, and the console's origin is not a school's —
+     `/api/v1/school` answers 404 there, which is `K-17` working rather than a
+     problem. Asking has to happen where a student would ask. */
+  const asking = await open();
+  await asking.goto(`${BASE}/#/dashboard`, { waitUntil: 'load' });
+  const quoted = await asking.evaluate(async () => {
+    const answer = await fetch('/api/v1/school', { credentials: 'same-origin' });
+    return (await answer.json()).pixDiscount;
+  });
+  await done(asking);
+  if (quoted !== rate * 100) {
+    bad('the school quotes the rate that was just set',
+      `the school route says ${quoted} basis points and the console set ${rate * 100} — `
+      + 'the screen would strike a price through with one figure while the checkout took '
+      + 'off another');
+  } else {
+    good('the school quotes the rate that was just set');
+  }
+
   /* ---------- and where a student writes to give it back ----------
 
      ON THE SAME SCREEN AND IN THE SAME RUN, because it is the same offer: the

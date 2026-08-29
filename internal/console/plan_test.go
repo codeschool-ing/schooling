@@ -35,15 +35,18 @@ type planFake struct {
 	// price is APPENDED, so the fake appends too — a fake that replaced would
 	// let a test pass that the real store would fail.
 	priced  []console.Price
+	cutting []console.Discount
 	entries []recorded
 
-	refusePrice bool
-	failSet     bool
-	failLog     bool
-	mayNot      bool
+	refusePrice    bool
+	refuseDiscount bool
+	failSet        bool
+	failLog        bool
+	mayNot         bool
 }
 
 var errNotAPrice = errors.New("not a price")
+var errNotADiscount = errors.New("not a discount")
 
 func (f *planFake) handler() http.Handler {
 	mux := http.NewServeMux()
@@ -72,6 +75,29 @@ func (f *planFake) handler() http.Handler {
 			Refused: func(err error) bool {
 				return errors.Is(err, errNotAPrice)
 			},
+
+			/* THE DISCOUNTS, APPENDED LIKE THE PRICES BY A FAKE THAT ALSO
+			   APPENDS. A fake that replaced would let a test pass that the real
+			   store — and the whole argument for dating this — would fail. */
+			SetDiscount: func(_ context.Context, method string, basisPoints int) (
+				console.Discount, error) {
+
+				if f.refuseDiscount {
+					return console.Discount{}, errNotADiscount
+				}
+				was := f.discountInForce(method)
+				f.cutting = append(f.cutting, console.Discount{
+					Method: method, BasisPoints: basisPoints, From: time.Now(),
+				})
+				return was, nil
+			},
+			DiscountInForce: func(_ context.Context, method string) (console.Discount, error) {
+				return f.discountInForce(method), nil
+			},
+			Discounts: func(context.Context) ([]console.Discount, error) { return f.cutting, nil },
+			RefusedDiscount: func(err error) bool {
+				return errors.Is(err, errNotADiscount)
+			},
 		},
 		func(_ context.Context, _ uuid.UUID, _, action string,
 			subject console.Subject, what console.Changed, _, _ string) error {
@@ -99,6 +125,26 @@ func (f *planFake) inForce(termMonths int) console.Price {
 		}
 	}
 	return newest
+}
+
+// discountInForce is the newest row for a method, which is what the real store
+// answers.
+func (f *planFake) discountInForce(method string) console.Discount {
+	var newest console.Discount
+	for _, one := range f.cutting {
+		if one.Method == method {
+			newest = one
+		}
+	}
+	return newest
+}
+
+func (f *planFake) discount(t *testing.T, body string) *httptest.ResponseRecorder {
+	t.Helper()
+	rec := httptest.NewRecorder()
+	f.handler().ServeHTTP(rec, httptest.NewRequest(http.MethodPut,
+		"/console/api/v1/plan/discount", strings.NewReader(body)))
+	return rec
 }
 
 func (f *planFake) price(t *testing.T, body string) *httptest.ResponseRecorder {
@@ -287,5 +333,123 @@ func TestTheSeriesKeepsWhatWasReplaced(t *testing.T) {
 	}
 	if body["append_only"] == nil || body["append_only"] == "" {
 		t.Error("the series does not say why there is no way to edit one")
+	}
+}
+
+/* ---------- what comes off, which is the price's shape asked differently ----------
+
+   THE ASSERTIONS THAT MATTER ARE THE ONES THAT DIFFER. Appended, recorded before
+   it happens, refused below operator — those are the price's and they are held
+   there. What is checked here is what a discount does that a price does not.
+*/
+
+// APPENDED, LIKE THE PRICE. The whole reason `0045` is a table rather than a
+// column is that the rate live for a fortnight that sold nothing leaves no
+// trace in any sale — so a save that replaced would destroy the only record of
+// it while looking like consistency with the accent beside it.
+func TestSavingADiscountKeepsTheOneBefore(t *testing.T) {
+	f := &planFake{}
+
+	for _, points := range []int{500, 700} {
+		rec := f.discount(t, fmt.Sprintf(`{"method":"pix","basisPoints":%d}`, points))
+		if rec.Code != http.StatusOK {
+			t.Fatalf("setting %d answered %d: %s", points, rec.Code, rec.Body.String())
+		}
+	}
+	if len(f.cutting) != 2 {
+		t.Errorf("two rates wrote %d rows", len(f.cutting))
+	}
+	if len(f.entries) != 2 {
+		t.Errorf("two rate changes wrote %d audit entries", len(f.entries))
+	}
+}
+
+/*
+THE ENTRY IS IN BASIS POINTS AND SAYS SO, and names both sides.
+
+It is read a year later beside a checkout row, and "500" alone is a number
+somebody has to be told the unit of — the same argument the price's entry makes
+for writing cents in cents. The first rate for a method replaced NOTHING, and
+the entry says that word rather than a zero nobody can tell from a rate.
+*/
+func TestTheDiscountEntryNamesBothSidesInBasisPoints(t *testing.T) {
+	f := &planFake{}
+
+	if rec := f.discount(t, `{"method":"pix","basisPoints":500}`); rec.Code != http.StatusOK {
+		t.Fatalf("the first rate answered %d: %s", rec.Code, rec.Body.String())
+	}
+	first := f.entries[0]
+	if first.what.Before != "nothing" {
+		t.Errorf("the first rate says it replaced %v", first.what.Before)
+	}
+	if first.what.After != "500 basis points" {
+		t.Errorf("the entry records %v, which does not say the unit", first.what.After)
+	}
+	// THE SUBJECT IS THE METHOD, as a price's is the term: it is the whole of
+	// what distinguishes one of these rows from another while the scope is 'all'.
+	if first.subject.ID != "pix" {
+		t.Errorf("the subject is %q", first.subject.ID)
+	}
+}
+
+// WHAT THE STORE REFUSES COMES BACK AS THE STORE'S OWN SENTENCE. The ceiling is
+// there and not here — a fence somebody can move from a screen is a fence in the
+// way — so this package has to be able to pass the refusal through without
+// importing the error that carries it.
+func TestARefusedDiscountAnswersWithTheReason(t *testing.T) {
+	f := &planFake{refuseDiscount: true}
+
+	rec := f.discount(t, `{"method":"pix","basisPoints":9000}`)
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("a refused rate answered %d: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), "not a discount") {
+		t.Errorf("the store's sentence did not reach the caller: %s", rec.Body.String())
+	}
+}
+
+// A READ-ONLY ROLE MAY LOOK AND NOT SET, like every other parameter here.
+func TestAReadOnlyRoleCannotChangeWhatComesOff(t *testing.T) {
+	f := &planFake{mayNot: true}
+
+	rec := f.discount(t, `{"method":"pix","basisPoints":500}`)
+	if rec.Code != http.StatusForbidden {
+		t.Fatalf("a read-only role answered %d: %s", rec.Code, rec.Body.String())
+	}
+	if len(f.cutting) != 0 || len(f.entries) != 0 {
+		t.Error("a refused role wrote something")
+	}
+}
+
+/*
+THE DISCOUNTS TRAVEL WITH THE PRICES, in one answer.
+
+They are the same subject drawn on the same screen, and two requests for one
+page would be two chances to draw half of an offer — a screen showing a price
+and no discount is a screen quoting the wrong number to whoever reads it.
+*/
+func TestTheSeriesAnswerCarriesBothPricesAndDiscounts(t *testing.T) {
+	f := &planFake{}
+
+	if rec := f.price(t, `{"termMonths":12,"cents":69000,"currency":"BRL"}`); rec.Code != http.StatusOK {
+		t.Fatal(rec.Body.String())
+	}
+	if rec := f.discount(t, `{"method":"pix","basisPoints":500}`); rec.Code != http.StatusOK {
+		t.Fatal(rec.Body.String())
+	}
+
+	rec := httptest.NewRecorder()
+	f.handler().ServeHTTP(rec, httptest.NewRequest(http.MethodGet,
+		"/console/api/v1/plan/prices", nil))
+
+	var body map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v", err)
+	}
+	if rows, _ := body["prices"].([]any); len(rows) != 1 {
+		t.Errorf("the answer carries %d prices", len(rows))
+	}
+	if rows, _ := body["discounts"].([]any); len(rows) != 1 {
+		t.Errorf("the answer carries %d discounts, and the screen draws both", len(rows))
 	}
 }

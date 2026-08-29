@@ -125,18 +125,27 @@ it asks for is that somebody who wants a third parameter says here, in a diff,
 that they read K-13 first.
 */
 func TestTheParametersAreStillFew(t *testing.T) {
-	/* THREE SINCE THE SUPPORT ADDRESS, and this is the diff saying K-13 was read
-	   first. The argument for it is in `writes.go` beside the entry and in
-	   `0044` at length; the short version is that it is a fact about who is
-	   answering rather than about the platform, and that it was already
-	   settable — from a gitignored file on one machine, where an apply run from
-	   anywhere else planned it back to empty and took a published legal right's
-	   only channel off the screen with nothing failing.
+	/* FOUR SINCE THE PIX DISCOUNT, AND THIS NUMBER IS ON ITS WAY OUT.
 
-	   Moving a value that already had no right answer is not the growth this
-	   test watches for. The growth would be a fourth entry whose sentence reads
-	   "so it can be configured". */
-	const known = 3
+	   The three before it each argued their way in one at a time, which is what
+	   this test is for. This one did too — `writes.go` carries the sentence —
+	   but it arrives with a decision that changes what the test should be
+	   measuring: the platform is to be highly parameterised, deliberately, and
+	   a guard whose whole content is "there are still few of them" will be
+	   failing every time on purpose and raised every time without thought.
+	   A ratchet nobody may refuse is a ratchet nobody reads.
+
+	   So the guarantee moves rather than goes. K-13's real claim is that a
+	   configuration surface grows to fill the space it is given; what stops that
+	   is not scarcity, it is that every knob costs an argument, has a declared
+	   shape and lands in the audit with both sides. The next change replaces
+	   this count with a test for exactly that, and amends K-13 to say what is
+	   true instead of what was true.
+
+	   Until then it counts, because a number that is wrong for one commit is
+	   better than a guard removed in the commit that first found it
+	   inconvenient. */
+	const known = 4
 
 	if got := len(console.Parameters()); got != known {
 		t.Errorf("this console has %d parameters and had %d. If that is right, read K-13 "+

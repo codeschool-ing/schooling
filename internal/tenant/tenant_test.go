@@ -127,7 +127,7 @@ func offering(pool *pgxpool.Pool) tenant.Offer {
 func server(t *testing.T, pool *pgxpool.Pool) *httptest.Server {
 	t.Helper()
 	scoped := http.NewServeMux()
-	tenant.NewHandler(70, 12, 500, offering(pool)).Routes(scoped)
+	tenant.NewHandler(70, 12, func(context.Context) int { return 500 }, offering(pool)).Routes(scoped)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))
@@ -325,7 +325,7 @@ func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	mux := http.NewServeMux()
 	// NOTHING PRICED, said by the seam answering an empty list — which is also
 	// what a deployment with no `billing` wired in looks like.
-	tenant.NewHandler(70, 12, 500, nil).Routes(mux)
+	tenant.NewHandler(70, 12, func(context.Context) int { return 500 }, nil).Routes(mux)
 
 	rec := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)
