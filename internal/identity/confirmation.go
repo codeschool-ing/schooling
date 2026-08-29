@@ -11,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -46,20 +47,55 @@ import (
 
    Long enough for somebody who signed up at midnight and reads their mail after
    work, short enough that a message forwarded or left in an open inbox stops
-   being a way in. It is a constant and not a parameter, because K-13 asks
-   whether there is a right answer, and for "how long should a confirmation link
-   live" every service that has thought about it landed within a day of this
-   one. */
+   being a way in.
 
-const (
-	// confirmationBytes is the entropy in the link. Thirty-two is the same as a
-	// session token, which is the right comparison: both are a bearer secret
-	// that arrives over a channel we do not control.
-	confirmationBytes = 32
+   THE OLD COMMENT SAID THIS WAS A CONSTANT AND NOT A PARAMETER, on the grounds
+   that "every service that has thought about it landed within a day of this
+   one". A convergence is evidence about the RANGE and not about the point
+   inside it: twelve hours and forty-eight hours are both within a day of
+   twenty-four, both shipped by serious people, and nothing measures which is
+   right for a school whose students read mail on Monday.
 
-	// confirmationLife is how long the link works for. See the note above.
-	confirmationLife = 24 * time.Hour
-)
+   SO THE RANGE IS THE FENCE AND THE POINT IS THE KNOB, which is the same shape
+   the withdrawal window took from a statute and the presence window took from
+   the heartbeat. Under an hour and somebody who stepped away from their desk
+   has to ask again; over three days a link sitting in a forwarded message is a
+   standing key, and that IS the weakening this package's rules refuse to make
+   settable. Neither bound moves from a screen. */
+
+// confirmationBytes is the entropy in the link. Thirty-two is the same as a
+// session token, which is the right comparison: both are a bearer secret that
+// arrives over a channel we do not control.
+//
+// IT IS NOT A PARAMETER AND MUST NOT BECOME ONE, unlike the lifetime beside it.
+// There is no trade here: more entropy costs nothing anybody notices, so the
+// right answer is the most the platform can afford, and a settable one is a
+// weakening with an interface on it.
+const confirmationBytes = 32
+
+/*
+ConfirmationLife is how long a confirmation link works for.
+
+	IT IS ONE DECLARATION FOR TWO LINKS. `change.go` had a `changeLife` of its
+	own whose comment said "the same day a confirmation gets, for the same
+	reason" — two names for one number, which is the shape this platform has
+	spent a week removing. If a deployment wants a longer leash for the link
+	that confirms a new address, it wants the same for the one that confirms a
+	move: both are a message sitting in a mailbox we do not control.
+*/
+var ConfirmationLife = setting.Declared{
+	Name:     "identity.confirmationlife",
+	Unit:     setting.Hours,
+	Least:    1,
+	Most:     72,
+	Fallback: 24,
+	Why: "how long a confirmation link keeps working. Nothing measures where the right " +
+		"answer is between an inbox read after work and a message forwarded to somebody " +
+		"else — services that have thought about it land anywhere within a day of ours. " +
+		"The fence is the part that is not a preference: under an hour somebody who " +
+		"stepped away has to ask again, and over three days a link in a forwarded message " +
+		"is a standing key.",
+}
 
 // ErrNoConfirmation is a token that cannot be redeemed, and it is deliberately
 // one error for four situations: never existed, already spent, expired, or
@@ -116,7 +152,7 @@ func (s *Store) IssueEmailConfirmation(ctx context.Context, accountID uuid.UUID)
 		  FROM accounts a
 		 WHERE a.id = $2
 		RETURNING email, expires_at
-	`, confirmationHash(token), accountID, confirmationLife.Seconds()).Scan(&email, &expires)
+	`, confirmationHash(token), accountID, s.linkLife().Seconds()).Scan(&email, &expires)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		// The SELECT found no account, so the INSERT wrote nothing. A foreign

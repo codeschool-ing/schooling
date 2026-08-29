@@ -207,3 +207,56 @@ func TestAnOrdinarySessionMayStillWrite(t *testing.T) {
 		t.Errorf("a student's own POST was refused with %d", w.Code)
 	}
 }
+
+/*
+A VIEWING MAY BE MADE SHORTER AND MAY NOT BE MADE LONGER.
+
+	This is the one fence in the registry that protects a decision rather than a
+	typo. K-02 requires a viewing to be time-limited, and the constant this
+	replaced refused to become a parameter naming the exact failure — "a knob
+	somebody turns up on the afternoon it is inconvenient".
+
+	The refusal was about ONE DIRECTION. `Most` is the shipped thirty minutes,
+	so the knob only goes down: an organisation asking for ten is tightening
+	K-02, and there is no argument for refusing them.
+
+	SO THIS TEST IS TWO CLAIMS, and the second is the load-bearing one. Ten
+	minutes is obeyed. Sixty is not — not refused with an error, which would be
+	a viewing that cannot start, but silently held at thirty, which is K-02 as
+	it has always been.
+*/
+func TestAViewingMayBeShortenedAndNeverLengthened(t *testing.T) {
+	pool := testPool(t)
+
+	for _, one := range []struct {
+		asked, want int
+	}{
+		{10, 10}, // inside the fence: obeyed
+		{60, 30}, // above the ceiling: held at what K-02 shipped with
+	} {
+		store := identity.NewStore(pool).WithLimits(identity.Limits{
+			ViewingLife: func(context.Context) int { return one.asked },
+		})
+		ctx := context.Background()
+		operator, student := operatorAndStudent(t, store)
+		school := aSchoolID(t, pool)
+
+		if _, err := store.StartViewing(ctx, operator, student, school); err != nil {
+			t.Fatalf("at %d minutes, starting a viewing: %v", one.asked, err)
+		}
+
+		var minutes float64
+		if err := pool.QueryRow(ctx, `
+			SELECT extract(epoch FROM (expires_at - now())) / 60
+			FROM sessions
+			WHERE viewed_by = $1
+		`, operator).Scan(&minutes); err != nil {
+			t.Fatalf("reading the viewing: %v", err)
+		}
+
+		if minutes < float64(one.want)-1 || minutes > float64(one.want) {
+			t.Errorf("a wiring asking for %d minutes gave a viewing of %.1f, want %d",
+				one.asked, minutes, one.want)
+		}
+	}
+}

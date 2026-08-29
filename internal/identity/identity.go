@@ -25,6 +25,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -108,9 +109,82 @@ const outstanding = `EXISTS (
 
 type Store struct {
 	pool *pgxpool.Pool
+
+	// What this store reads from the parameter registry. Nil until WithLimits,
+	// and nil is what the code shipped with — see `linkLife` and `changeCap`.
+	limits Limits
 }
 
 func NewStore(pool *pgxpool.Pool) *Store { return &Store{pool: pool} }
+
+/*
+Limits is what this package reads from the parameter registry, wired by `cmd`.
+
+	A SEPARATE CALL RATHER THAN CONSTRUCTOR ARGUMENTS, the arrangement
+	`analysis.WithStream` uses and for the same reason: most of what this store
+	does — signing in, hashing a password, minting a session — reads none of
+	these, and a constructor demanding them would be one that half the callers
+	pass nil to.
+
+	A NIL FIELD IS THE SHIPPED NUMBER and not a refusal. An un-wired deployment
+	should confirm addresses the way this package always has, not stop
+	confirming them.
+*/
+type Limits struct {
+	ConfirmationLife func(ctx context.Context) int
+	ChangeCap        func(ctx context.Context) int
+	ViewingLife      func(ctx context.Context) int
+}
+
+// WithLimits is the store reading its two numbers from the registry.
+func (s *Store) WithLimits(limits Limits) *Store {
+	out := *s
+	out.limits = limits
+	return &out
+}
+
+/*
+linkLife and changeCap are the values in force, bounded by their declarations
+however they are wired.
+
+	A VALUE OUTSIDE THE FENCE IS THE SHIPPED ONE. `setting.Store` refuses one on
+	the way in and ignores one on the way out, so anything arriving here means
+	`cmd` is answering something the declaration would not accept — and both of
+	these fail quietly if obeyed: a link that lives a year looks exactly like
+	one that lives a day until somebody uses an old message, and a cap of a
+	thousand looks like no cap at all only from the mailbox of whoever is being
+	written to.
+
+	THEY TAKE NO CONTEXT AND THAT IS A COMPROMISE. The two callers are deep in
+	statements that already hold one; threading it here would be right and would
+	touch four signatures for a value read from a snapshot either way. The
+	background context costs the read nothing it can use — the snapshot is
+	already in memory — and it is the one place in this arrangement where the
+	request's cancellation does not reach a parameter.
+*/
+func (s *Store) linkLife() time.Duration {
+	return time.Duration(within(s.limits.ConfirmationLife, ConfirmationLife)) * time.Hour
+}
+
+func (s *Store) changeCap() int { return within(s.limits.ChangeCap, ChangeCap) }
+
+// viewingLife is the same, and its fence is the one that matters: `Most` is the
+// shipped thirty minutes, so nothing here can lengthen a viewing — see
+// `ViewingLifetime`. An out-of-fence wiring falls back to the ceiling, which is
+// K-02 as it has always been rather than the shorter window somebody meant.
+func (s *Store) viewingLife() time.Duration {
+	return time.Duration(within(s.limits.ViewingLife, ViewingLifetime)) * time.Minute
+}
+
+func within(read func(context.Context) int, one setting.Declared) int {
+	if read == nil {
+		return one.Fallback
+	}
+	if got := read(context.Background()); one.Valid(got) == nil {
+		return got
+	}
+	return one.Fallback
+}
 
 /* ---------- accounts ---------- */
 
