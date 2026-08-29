@@ -58,7 +58,14 @@ type Handler struct {
 	// exists to carry it. Until this field, it printed a `PASS_MARK = 70` of its
 	// own — two copies of one decision, where moving the constant marks the exam
 	// at the new number and describes it as the old one.
-	passMark int
+	//
+	// AND IT IS A FUNCTION NOW, which is that same failure moved one process
+	// further out. It was a constant read at start-up; `0046` made it a declared
+	// parameter, so it can move on a console screen while this process runs —
+	// and a number captured when this handler was built would have the card
+	// printing one minimum while the exam applied another. All three fields here
+	// are functions for that reason, arrived at from three directions.
+	passMark func(ctx context.Context) int
 
 	// instalments is the most parts a card sale may be split into.
 	//
@@ -72,7 +79,7 @@ type Handler struct {
 	// a form that fails after somebody has already chosen. That is the failure
 	// `passMark` above was introduced to end, on a different number.
 	//
-	// AND IT IS A FUNCTION NOW RATHER THAN A NUMBER, because the day the policy
+	// AND IT IS A FUNCTION RATHER THAN A NUMBER, because the day the policy
 	// moves is a Tuesday afternoon on a console screen and not a deployment. A
 	// number read once at start-up would make this the copy that is stale — the
 	// same failure as the browser's, one process further in.
@@ -87,18 +94,20 @@ type Handler struct {
 	   rate that drifts, with the SERVER's number being the one charged and the
 	   browser's being the one somebody read.
 
-	   IT IS A FUNCTION AND THE PASS MARK IS NOT, which is the whole of what
-	   `0045` changed here. The rate is a dated series now, settable from the
-	   console, so a number captured when this handler was constructed would be
-	   the number until the next deployment — and the screen quoting it would
-	   drift from the checkout charging it, which is exactly the drift this field
-	   exists to prevent. It takes a context so the read belongs to the request.
+	   IT IS A FUNCTION, which is what `0045` changed here. The rate is a dated
+	   series now, settable from the console, so a number captured when this
+	   handler was constructed would be the number until the next deployment —
+	   and the screen quoting it would drift from the checkout charging it, which
+	   is exactly the drift this field exists to prevent. It takes a context so
+	   the read belongs to the request.
 
-	   `instalments` ABOVE IS ONE TOO, for the same reason arrived at from the
-	   other side: `0046` made it a declared parameter. This comment said "the
-	   other two are not" until that landed, and the difference these three
-	   fields now draw is between what a deployment decides and what a console
-	   does — not between one field and the rest.
+	   ALL THREE OF THESE ARE FUNCTIONS, arrived at from three directions and one
+	   at a time: this one because a rate is a dated series (`0045`), the two
+	   above because they became declared parameters (`0046`). This comment
+	   claimed to be the ONLY function twice on its way here, which is what a
+	   field comment describing its neighbours costs — so it now says what the
+	   three have in common instead: not one of them is settled when this handler
+	   is built.
 
 	   AN ERROR IS NO DISCOUNT, not a broken screen. The invitation without a
 	   struck-through figure is the invitation this platform drew before there
@@ -127,7 +136,7 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark int, instalments, pixDiscount func(ctx context.Context) int,
+func NewHandler(passMark, instalments, pixDiscount func(ctx context.Context) int,
 	offer Offer) *Handler {
 
 	return &Handler{
@@ -141,27 +150,48 @@ func (h *Handler) Routes(mux *http.ServeMux) {
 }
 
 /*
-mostInstalments is what the storefront is told a card sale splits into.
+THE THREE READERS BELOW ALL GUARD A NIL, AND EACH ANSWERS DIFFERENTLY.
 
-	A DEPLOYMENT THAT WIRED NOTHING SAYS ONE, not zero. Zero would have the
-	subscribe screen draw an empty picker and the invitation quote a payment in
-	no parts; one is a card paid in full, which is a thing this platform sells
-	and the honest floor. It is a wiring mistake either way, and this is the
-	version of it a buyer can still use.
+	None of the three is a value any more, so each can be un-wired — and what an
+	un-wired one should say is not the same question three times. It is the SAFE
+	end of a wiring mistake in each case, and safe points in a different
+	direction for each: no discount, a card paid in full, an exam nobody passes
+	by accident.
+
+	The guards were not written together. `mostInstalments` had one from the
+	day it became a function; `pixOff` did not, and called through — a
+	deployment that forgot to wire it would have panicked on the one route
+	every storefront asks for. Two branches in flight at once, neither wrong
+	alone. This block exists so the third one could not repeat it.
 */
+
+/*
+theMark is what a course card prints as the minimum to pass.
+
+	AN UNWIRED HANDLER SAYS 100 rather than nothing, because the wire format has
+	no way to say nothing: `passMark` is deliberately not `omitempty`, since a
+	screen reading a missing key as "no minimum" would tell a student an exam is
+	passed by answering nothing. A hundred is the safe end — an exam nobody
+	passes by accident — and it is visibly wrong on the card rather than
+	quietly permissive.
+*/
+func (h *Handler) theMark(ctx context.Context) int {
+	if h.passMark == nil {
+		return 100
+	}
+	if mark := h.passMark(ctx); mark > 0 {
+		return mark
+	}
+	return 100
+}
+
 /*
 pixOff is what the storefront is told a Pix takes off, in basis points.
 
-	A DEPLOYMENT THAT WIRED NOTHING SAYS ZERO, which is a real answer — a
-	platform that has stopped discounting Pix — and it is the one this field's
-	own comment already promises: an invitation without a struck-through figure
-	is the invitation this platform drew before there was a discount.
-
-	IT IS HERE BECAUSE THE MERGE THAT BROUGHT `0046` MADE THE ASYMMETRY VISIBLE.
-	`mostInstalments` below has guarded a nil since it became a function; this
-	one called through without checking, so a deployment that forgot to wire it
-	would panic on the one route every storefront asks for. Neither branch was
-	wrong on its own and the pair was.
+	AN UNWIRED HANDLER SAYS ZERO, which is a real answer — a platform that has
+	stopped discounting Pix — and it is the one this field's own comment already
+	promises: an invitation without a struck-through figure is the invitation
+	this platform drew before there was a discount.
 */
 func (h *Handler) pixOff(ctx context.Context) int {
 	if h.pixDiscount == nil {
@@ -173,6 +203,15 @@ func (h *Handler) pixOff(ctx context.Context) int {
 	return 0
 }
 
+/*
+mostInstalments is what the storefront is told a card sale splits into.
+
+	AN UNWIRED HANDLER SAYS ONE, not zero. Zero would have the
+	subscribe screen draw an empty picker and the invitation quote a payment in
+	no parts; one is a card paid in full, which is a thing this platform sells
+	and the honest floor. It is a wiring mistake either way, and this is the
+	version of it a buyer can still use.
+*/
 func (h *Handler) mostInstalments(ctx context.Context) int {
 	if h.instalments == nil {
 		return 1
@@ -268,7 +307,7 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 	web.JSON(w, http.StatusOK, schoolBody{
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
 		Plans:       plans,
-		PassMark:    h.passMark,
+		PassMark:    h.theMark(r.Context()),
 		Instalments: h.mostInstalments(r.Context()),
 		PixDiscount: h.pixOff(r.Context()),
 	})

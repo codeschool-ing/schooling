@@ -266,6 +266,8 @@ set K-13 asks for.
 func parameters() []setting.Declared {
 	return []setting.Declared{
 		billing.MostInstalments,
+		exam.PassMark,
+		exam.QuestionsPerAttempt,
 	}
 }
 
@@ -418,15 +420,16 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   one line saying they are the same numbers. (It said TWO until the Pix
 	   discount joined them, and the count had been wrong since.)
 
-	   TWO OF THE THREE ARE FUNCTIONS NOW, and the odd one out is the pass mark:
-	   it is a constant with a test on it, so a number captured here stays true
-	   until somebody changes the code. The other two can move on a console
-	   screen while this process is running — the instalment ceiling through the
-	   parameter registry (`0046`), the Pix rate as a dated series (`0045`) — and
-	   a number read once at start-up would be the number until the next
-	   deployment, with the screen quoting it drifting from the checkout charging
-	   it. */
-	tenant.NewHandler(exam.PassMark, settings.Reads(billing.MostInstalments),
+	   ALL THREE ARE FUNCTIONS NOW, and this comment has said "two" and "one" on
+	   its way here — each time because a number that used to be settled at
+	   start-up stopped being. Two came through the parameter registry (`0046`)
+	   and one is a dated series (`0045`), and what they have in common is that
+	   they can move on a console screen while this process is running. A number
+	   read once would be the number until the next deployment, with the screen
+	   quoting it drifting from whatever is actually applied — which is the
+	   failure `passMark` was handed in to end, on the day it was still a
+	   constant. */
+	tenant.NewHandler(settings.Reads(exam.PassMark), settings.Reads(billing.MostInstalments),
 		/* AN ERROR IS NO DISCOUNT. The school still describes itself; the
 		   invitation simply draws no struck-through figure, which is what it
 		   did before there was a discount at all. */
@@ -627,6 +630,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 				set[exam.Item{ExerciseID: q.ExerciseID, Version: q.Version}] = true
 			}
 			return set, nil
+		},
+		/* AND THE TWO NUMBERS AN EXAM IS SET BY, from the registry. `exam`
+		   declares both — it is where the argument for each lives — and this is
+		   the line that hands it the readers. */
+		exam.Numbers{
+			PassMark:          settings.Reads(exam.PassMark),
+			QuestionsPerPaper: settings.Reads(exam.QuestionsPerAttempt),
 		})
 
 	// A CERTIFICATE IS THREE FACTS THIS MODULE MAY NOT GO AND READ: whether the

@@ -444,10 +444,21 @@ answer is `recorded` and nothing else.
 somebody chose to attempt would let a student answer the one they were sure of and score a
 hundred percent.
 
-**The pass mark is in code with a test on it** (K-13), and every attempt records the mark it was
-judged by, so moving the constant changes what a new attempt must reach and nothing about an old
-one. The comparison is `score * 100 >= PassMark * of` — integers, because a student sitting
-exactly on the mark must not pass or fail depending on how a ratio rounded.
+**The pass mark is a declared parameter, and every attempt records the mark it was judged by**,
+so moving it changes what a new attempt must reach and nothing about an old one. It was a
+constant, and the comment refusing to make it settable refuted itself in its own last sentence:
+it said that a mark somebody can move leaves "no record of what the old one was" and then, in
+the next breath, that every attempt records the mark it was judged by. `exam_attempts.pass_mark`
+is that record and it predates the objection; `0046`'s audit entry is the second one. What is
+left is a convention with no right answer — seventy is not measurable — which is exactly K-13's
+bar. It moves between 50 and 95, and neither bound moves from a screen. The comparison is
+`score * 100 >= mark * of` — integers, because a student sitting exactly on the mark must not
+pass or fail depending on how a ratio rounded, and the mark is read ONCE per submission, because
+a value read twice could judge a paper by one number and record another.
+
+**How long a paper is** is declared beside it, for the same reason and with a different worry at
+each end: a short paper is quicker to sit and easier to get lucky on, a long one measures better
+and is abandoned more. A pool smaller than the number is still asked in full.
 
 **A pass is never undone.** Sitting it again and failing does not unmake the day somebody knew
 the material, for the same reason a finished section never un-finishes (A-05).

@@ -101,9 +101,23 @@ export default async function settings(section) {
 
   function block(one) {
     return '<section class="block" data-name="' + esc(one.name) + '">' +
+      /* THE HEADING IS THE NAME ITSELF, and it stopped being a derived title
+         the moment a second module declared one. `billing.instalments` reads
+         as "Instalments" and `exam.passmark` reads as "Passmark", which is a
+         function that is approximately right and getting worse — and the name
+         is what an audit entry says, what an operator would search for, and
+         what somebody would quote over the phone. A prettier word that is not
+         the parameter's name is a second name for one thing.
+
+         WHAT THE CHIP CARRIES INSTEAD IS THE FENCE, which is the fact the
+         heading used to spend its space repeating: the range this may move
+         inside, and the unit it counts in. It is the one thing on this block
+         that the form's own `min` and `max` say silently. */
       '<div class="block-top">' +
-        '<h2>' + esc(titleOf(one.name)) + '</h2>' +
-        '<span class="block-score mono">' + esc(one.name) + '</span>' +
+        '<h2 class="mono">' + esc(one.name) + '</h2>' +
+        '<span class="block-score mono">' +
+          one.least + '–' + one.most + ' ' + esc(String(one.unit)) +
+        '</span>' +
       '</div>' +
 
       // THE ARGUMENT, above the field. See the header.
@@ -217,15 +231,6 @@ function saying(one) {
   }
   return 'Nobody has changed this. It is on ' + one.fallback + ', which is what the code '
     + 'ships with — and what it falls back to if these rows are ever unreadable.';
-}
-
-/* A HEADING FROM THE NAME, so that a declaration added in Go arrives here with a
-   readable title and no second list to keep in step. `billing.instalments`
-   becomes "Instalments", and the dotted name is still printed beside it because
-   that is what an audit entry says and what somebody would be searching for. */
-function titleOf(name) {
-  const last = String(name).split('.').pop() || String(name);
-  return last.charAt(0).toUpperCase() + last.slice(1);
 }
 
 // What the field is labelled, from the unit the declaration carries. An unknown
