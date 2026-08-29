@@ -61,7 +61,14 @@ const reachesTheExam = signsUp * opensATrack * opensALesson *
 // enoughPeople is the smallest population that puts the minimum sample through
 // every exam question. It is arithmetic and it is stated once, because it is
 // both the refusal above and the number that refusal has to suggest.
-var enoughPeople = int(math.Ceil(analysis.MinimumSample / reachesTheExam))
+//
+// IT IS THE SHIPPED SAMPLE AND NOT THE DEPLOYMENT'S. `MinimumSample` became a
+// parameter, and a seeder that sized its population from whatever a console
+// happens to be set to would plant a different fixture on two machines running
+// the same command — and would need a database open to answer a question about
+// how many people to invent. What this number is for is a demonstration that
+// can be read, against the platform as it ships.
+var enoughPeople = int(math.Ceil(float64(analysis.MinimumSample.Fallback) / reachesTheExam))
 
 // How often the less common things happen.
 const (

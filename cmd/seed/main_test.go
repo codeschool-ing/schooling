@@ -215,9 +215,9 @@ func TestItFallsOffAtEveryStep(t *testing.T) {
 				steps[i], count[steps[i]], steps[i-1], count[steps[i-1]])
 		}
 	}
-	if count["exam.submitted"] < analysis.MinimumSample {
+	if count["exam.submitted"] < analysis.MinimumSample.Fallback {
 		t.Errorf("only %d people sat an exam, and item analysis says nothing below %d",
-			count["exam.submitted"], analysis.MinimumSample)
+			count["exam.submitted"], analysis.MinimumSample.Fallback)
 	}
 }
 
@@ -259,13 +259,13 @@ func TestTheBrokenKeyIsFound(t *testing.T) {
 
 	var others int
 	for question, answers := range byQuestion {
-		s, err := analysis.Summarise(answers)
+		s, err := analysis.Summarise(answers, analysis.MinimumSample.Fallback)
 		if err != nil {
 			t.Fatalf("summarising %s: %v", question, err)
 		}
-		if s.Attempts < analysis.MinimumSample {
+		if s.Attempts < analysis.MinimumSample.Fallback {
 			t.Errorf("%s has %d answers and needs %d before anything can be said",
-				question, s.Attempts, analysis.MinimumSample)
+				question, s.Attempts, analysis.MinimumSample.Fallback)
 		}
 		switch {
 		case question == "ex-1" && s.Verdict != analysis.VerdictInverted:

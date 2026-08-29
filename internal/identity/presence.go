@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 	"github.com/google/uuid"
 )
 
@@ -38,16 +39,54 @@ import (
    somebody wrote in.
 */
 
-// PresenceWindow is how recently somebody has to have been seen to be here.
-//
-// IT IS A CONSTANT AND NOT A SETTING (K-13). There is a right answer and it
-// follows from the heartbeat: `Verify` writes at most once a minute, so a
-// window narrower than that would report people as gone between their own
-// requests, and a window much wider stops being "now". Five minutes is the
-// smallest span that cannot be wrong for the reason the writing cadence makes
-// it wrong, and it travels to the screen beside the number it produced (K-16)
-// rather than being written down again there.
-const PresenceWindow = 5 * time.Minute
+/*
+PresenceWindow is how recently somebody has to have been seen to be here.
+
+	IT WAS A CONSTANT, AND THE ARGUMENT FOR THAT WAS RIGHT ABOUT ONE END ONLY.
+	It read: the answer follows from the heartbeat, because `Verify` writes at
+	most once a minute, so a window narrower than that reports people as gone
+	between their own requests — and a window much wider stops being "now".
+
+	The first half is a fact and the second half is a preference wearing its
+	clothes. Nothing measures where "now" ends. Three minutes and ten minutes
+	are both defensible readings of the same screen, and which one an operator
+	wants depends on what they are watching for: a deploy going wrong wants the
+	short end, an evening's traffic wants the long one.
+
+	SO THE FACT BECAME THE FENCE AND THE PREFERENCE BECAME THE KNOB. `Least` is
+	twice the cadence, which is the constraint the old comment actually
+	established — `TestTheWindowCannotBeSetInsideTheHeartbeat` holds the two
+	together, because the day somebody changes the cadence is the day this
+	bound stops being derived from anything.
+
+	`Most` is half an hour, where a count of "who is here" has plainly become a
+	count of who was here.
+
+	IT STILL TRAVELS TO THE SCREEN BESIDE THE NUMBER IT PRODUCED (K-16) rather
+	than being written down again there — and it matters more now, not less: a
+	screen with the window hard-coded would label today's count with yesterday's
+	span the moment somebody moved it.
+*/
+var PresenceWindow = setting.Declared{
+	Name:     "identity.presencewindow",
+	Unit:     setting.Minutes,
+	Least:    2,
+	Most:     30,
+	Fallback: 5,
+	Why: "how recently somebody has to have been seen to count as here. Nothing measures " +
+		"where \"now\" ends — a deploy going wrong is watched at the short end and an " +
+		"evening's traffic at the long one — so this is what the platform means by now. " +
+		"It cannot go below twice the heartbeat, because a window narrower than the " +
+		"writing cadence reports people as gone between their own requests.",
+}
+
+// Window is the declaration's answer as a duration, which is what everything
+// that reads it actually wants. The registry counts in whole minutes because a
+// screen and an audit entry both do; this is the one place that conversion
+// lives, so it cannot be written down two ways.
+func Window(minutes int) time.Duration {
+	return time.Duration(minutes) * time.Minute
+}
 
 // PresenceCadence is what the heartbeat costs, sent alongside the window
 // because it is the other half of what the number means: a count of people seen

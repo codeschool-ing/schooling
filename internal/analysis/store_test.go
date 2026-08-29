@@ -131,7 +131,7 @@ func TestTheStoredRowSaysWhatItWasMeasuredAgainst(t *testing.T) {
 	if len(all) != 1 {
 		t.Fatalf("%d rows", len(all))
 	}
-	if all[0].MinimumSample != analysis.MinimumSample {
+	if all[0].MinimumSample != analysis.MinimumSample.Fallback {
 		t.Errorf("the row says the minimum sample was %d", all[0].MinimumSample)
 	}
 	if all[0].StrongGroup == 0 || all[0].WeakGroup == 0 {
@@ -342,5 +342,39 @@ func TestWhenTheStatisticsWereMadeAndWhetherEverWere(t *testing.T) {
 		t.Fatal(err)
 	} else if computed {
 		t.Error("a school with no rows of its own reported another school's run")
+	}
+}
+
+/*
+A WIRING THAT ANSWERS OUTSIDE THE FENCE IS THE SHIPPED SAMPLE.
+
+	`setting.Store` refuses one on the way in and ignores one on the way out, so
+	a value reaching the store means `cmd` itself is answering something the
+	declaration would not accept. What follows is the quiet kind of failure: a
+	sample of two makes this platform quarantine questions on the evidence of
+	two people, and every screen looks exactly as it does now — the verdict
+	arrives with "minimum sample: 2" beside it, which is a label nobody reads
+	as a warning.
+*/
+func TestASampleOutsideTheFenceIsTheShippedOne(t *testing.T) {
+	for _, absurd := range []int{2, 5000} {
+		store := analysis.NewStore(nil, nil, nil).
+			WithMinimumSample(func(context.Context) int { return absurd })
+
+		if got := store.Enough(context.Background()); got != analysis.MinimumSample.Fallback {
+			t.Errorf("a wiring answering %d gave %d, wanted the shipped %d",
+				absurd, got, analysis.MinimumSample.Fallback)
+		}
+	}
+}
+
+// AND A STORE NOBODY WIRED COMPUTES THE ANALYSIS THIS PACKAGE HAS ALWAYS
+// COMPUTED, rather than none. That is the difference between this option and
+// `WithAudit`, where a nil is a refusal.
+func TestAnUnwiredSampleIsTheShippedOne(t *testing.T) {
+	store := analysis.NewStore(nil, nil, nil)
+	if got := store.Enough(context.Background()); got != analysis.MinimumSample.Fallback {
+		t.Errorf("an unwired store answered %d, wanted the shipped %d",
+			got, analysis.MinimumSample.Fallback)
 	}
 }

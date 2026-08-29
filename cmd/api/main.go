@@ -265,9 +265,11 @@ set K-13 asks for.
 */
 func parameters() []setting.Declared {
 	return []setting.Declared{
+		analysis.MinimumSample,
 		billing.MostInstalments,
 		exam.PassMark,
 		exam.QuestionsPerAttempt,
+		identity.PresenceWindow,
 	}
 }
 
@@ -1002,7 +1004,10 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 
 		   THE THRESHOLDS COME FROM THE PACKAGE THAT APPLIED THEM, so the screen
 		   never writes a bar of its own. A constant moving here has to move the
-		   screen with it, which is the whole point of carrying them. */
+		   screen with it, which is the whole point of carrying them — and the
+		   sample is read from the registry rather than the package now, because
+		   it can move between two loads of this screen. It is what the store
+		   below was told to use, said once. */
 		func(ctx context.Context, school uuid.UUID) (console.Rollup, error) {
 			stats, err := items.Of(ctx, school)
 			if err != nil {
@@ -1036,7 +1041,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			return console.Rollup{
 				Questions: out,
 				Thresholds: console.Thresholds{
-					MinimumSample: analysis.MinimumSample,
+					MinimumSample: settings.Int(ctx, analysis.MinimumSample.Name),
 					GroupShare:    analysis.GroupShare,
 					InvertedBelow: analysis.InvertedBelow,
 					WeakBelow:     analysis.WeakBelow,
@@ -1233,7 +1238,14 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	console.NewWatchHandler(
 		console.Schools{All: schoolsFor(tenant.NewStore(pool))},
 		func(ctx context.Context) (console.Watching, error) {
-			schools, everywhere, err := accounts.Presence(ctx, identity.PresenceWindow)
+			/* THE WINDOW IS READ ONCE PER REQUEST AND USED TWICE — to ask the
+			   question and to label the answer. Reading it twice would let a
+			   change landing between the two lines count people over one span
+			   and tell the screen it was another, which is the one way this
+			   number can be wrong without looking wrong. */
+			window := identity.Window(settings.Int(ctx, identity.PresenceWindow.Name))
+
+			schools, everywhere, err := accounts.Presence(ctx, window)
 			if err != nil {
 				return console.Watching{}, err
 			}
@@ -1244,7 +1256,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			return console.Watching{
 				Schools:    out,
 				Everywhere: everywhere,
-				Window:     identity.PresenceWindow,
+				Window:     window,
 				Cadence:    identity.PresenceCadence,
 			}, nil
 		},

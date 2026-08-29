@@ -46,6 +46,8 @@ import (
 	"fmt"
 	"sort"
 	"time"
+
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 )
 
 // Answer is one person's answer to one question, with the mark that person got
@@ -73,17 +75,28 @@ type Answer struct {
 	AnsweredAt time.Time
 }
 
-// The thresholds. They are constants and not settings, because each has a right
-// answer that a test can hold — and only something WITHOUT a right answer
-// becomes a parameter (K-13). Changing one of these changes what the system
-// asserts about a question, which is a decision that belongs in a diff.
-const (
-	// MinimumSample is how many answers a question needs before anything is
-	// said about it. Thirty is the number classical item analysis uses, and it
-	// is where the discrimination index stops being dominated by which
-	// particular people happened to sit the paper.
-	MinimumSample = 30
+/*
+The thresholds that stayed constants, and why they are not the same as the one
+that left.
 
+	EACH OF THESE IS ARITHMETIC. 27% is the split that maximises the difference
+	between the ends for a normal distribution; the two discrimination bars are
+	where an index stops describing a hard question and starts describing a
+	wrong one. A test can hold each, and only something WITHOUT a right answer
+	becomes a parameter (K-13). Changing one of these changes what the system
+	asserts about a question, which is a decision that belongs in a diff.
+
+	`MinimumSample` LEFT THIS GROUP, and it is worth being exact about why,
+	because it sat here under this sentence for a long time. Thirty is a rule of
+	thumb from a discipline, not a result: it is where the index is USUALLY no
+	longer dominated by which particular people sat the paper. What a school
+	actually wants there is a trade — say something early and risk noise, or say
+	nothing until certain — and a cohort of forty and a cohort of four thousand
+	want opposite ends of it. The design had already anticipated it moving:
+	every rollup records the sample it was judged against, exactly as an exam
+	attempt records its pass mark.
+*/
+const (
 	// GroupShare is the fraction of attempts taken from each end to form the
 	// strong and weak groups. 27% is the classical choice: it is the split that
 	// maximises the difference between the groups for a normal distribution,
@@ -109,6 +122,38 @@ const (
 	TooEasyAbove = 0.95
 	TooHardBelow = 0.05
 )
+
+/*
+MinimumSample is how many answers a question needs before anything is said about
+it.
+
+	THIRTY IS A CONVENTION AND NOT A RESULT — see the block above for what
+	separates it from the thresholds that stayed constants. What it decides is
+	when this platform is willing to speak about a question.
+
+	THE FENCE IS WHERE THE ANSWER STOPS MEANING ANYTHING. Under ten, a
+	discrimination index is a description of four people; over two hundred, a
+	question is left saying nothing for years while it goes on being asked.
+	Neither bound moves from a screen.
+
+	EVERY ROLLUP RECORDS THE SAMPLE IT WAS JUDGED AGAINST, which is what makes
+	moving this safe — the same column, for the same reason, as an exam
+	attempt's pass mark. A verdict from March explains itself with the number
+	that produced it and not with today's.
+*/
+var MinimumSample = setting.Declared{
+	Name:     "analysis.minimumsample",
+	Unit:     setting.Count,
+	Least:    10,
+	Most:     200,
+	Fallback: 30,
+	Why: "how many answers a question needs before this platform says anything about it. " +
+		"Thirty is what classical item analysis uses, which is a rule of thumb rather " +
+		"than a result — the real choice is between saying something early and risking " +
+		"noise, or saying nothing until certain, and a cohort of forty and a cohort of " +
+		"four thousand want opposite ends of it. Every rollup records the sample it was " +
+		"judged against, so moving this changes what is said next and nothing already said.",
+}
 
 // Verdict is what the numbers say about a question.
 //
@@ -189,7 +234,7 @@ type Statistics struct {
 // It is a pure function: no clock, no database. Every threshold above is applied
 // here and nowhere else, so "why was this flagged" has one answer and a test can
 // hold each edge of it.
-func Summarise(answers []Answer) (Statistics, error) {
+func Summarise(answers []Answer, minimum int) (Statistics, error) {
 	if len(answers) == 0 {
 		return Statistics{}, fmt.Errorf("analysis: nothing to summarise")
 	}
@@ -199,7 +244,7 @@ func Summarise(answers []Answer) (Statistics, error) {
 		Version:       answers[0].Version,
 		Type:          answers[0].Type,
 		Attempts:      len(answers),
-		MinimumSample: MinimumSample,
+		MinimumSample: minimum,
 		Verdict:       VerdictInsufficient,
 		FirstAnswer:   answers[0].AnsweredAt,
 		LastAnswer:    answers[0].AnsweredAt,
@@ -228,7 +273,7 @@ func Summarise(answers []Answer) (Statistics, error) {
 
 	s.Difficulty = float64(s.Correct) / float64(s.Attempts)
 
-	if s.Attempts < MinimumSample {
+	if s.Attempts < minimum {
 		// AND NOTHING ELSE IS COMPUTED. A discrimination index from eleven
 		// answers is a number, and a number on a screen is read as a finding
 		// whatever the label beside it says.
@@ -395,7 +440,7 @@ func discrimination(answers []Answer) (index float64, strong, weak int) {
 
 // Group folds a flat list of answers into one Statistics per question and
 // version, sorted so the output of a job is stable between runs.
-func Group(answers []Answer) ([]Statistics, error) {
+func Group(answers []Answer, minimum int) ([]Statistics, error) {
 	type key struct {
 		id      string
 		version int
@@ -409,7 +454,7 @@ func Group(answers []Answer) ([]Statistics, error) {
 
 	out := make([]Statistics, 0, len(byQuestion))
 	for _, group := range byQuestion {
-		s, err := Summarise(group)
+		s, err := Summarise(group, minimum)
 		if err != nil {
 			return nil, err
 		}

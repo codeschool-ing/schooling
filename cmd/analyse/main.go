@@ -58,6 +58,8 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/database"
 	"github.com/codeschool-ing/schooling/internal/platform/logs"
 	"github.com/codeschool-ing/schooling/internal/visitor"
+
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 )
 
 func main() {
@@ -87,14 +89,29 @@ func run(log *slog.Logger) error {
 	}
 
 	info := build.Current()
-	log.Info("analysing", "version", info.Version, "commit", info.Commit,
-		"window", window.String(), "minimum_sample", analysis.MinimumSample)
 
 	pool, err := database.Open(ctx, cfg.DatabaseURL)
 	if err != nil {
 		return err
 	}
 	defer pool.Close()
+
+	/* THE THRESHOLD COMES FROM THE REGISTRY, WHICH IS WHY THIS LINE MOVED BELOW
+	   THE POOL. It used to log `analysis.MinimumSample` before there was a
+	   database open, because it was a constant; it is a row now, and a job that
+	   announced one number and then judged by another would be a log nobody can
+	   use to explain a quarantine.
+
+	   IT IS READ ONCE, HERE, AND USED FOR THE WHOLE RUN. A sweep that picked up
+	   a change halfway would judge the first half of the questions by one bar
+	   and the rest by another, in one run, with one line in the log saying which
+	   — and the rollup rows would disagree with each other for a reason nothing
+	   records. */
+	settings := setting.NewStore(pool, setting.MustRegistry(analysis.MinimumSample))
+	minimum := settings.Int(ctx, analysis.MinimumSample.Name)
+
+	log.Info("analysing", "version", info.Version, "commit", info.Commit,
+		"window", window.String(), "minimum_sample", minimum)
 
 	/* THAT THIS RUN HAPPENED, RECORDED BEFORE THE WORK AND CLOSED AFTER IT.
 
@@ -114,7 +131,7 @@ func run(log *slog.Logger) error {
 		log.Error("this run is not being recorded", "error", err)
 	}
 
-	detail, failure := analyse(ctx, log, pool, *window)
+	detail, failure := analyse(ctx, log, pool, *window, minimum)
 
 	if started != uuid.Nil {
 		/* `WithoutCancel` BECAUSE THE INTERESTING END IS THE INTERRUPTED ONE.
@@ -138,7 +155,7 @@ func run(log *slog.Logger) error {
 // from "it ran", and a screen that could not tell those apart would be the
 // `computed_at` problem again one table along.
 func analyse(ctx context.Context, log *slog.Logger,
-	pool *pgxpool.Pool, window time.Duration) (string, error) {
+	pool *pgxpool.Pool, window time.Duration, minimum int) (string, error) {
 
 	events := event.NewStore(pool)
 
@@ -171,7 +188,8 @@ func analyse(ctx context.Context, log *slog.Logger,
 			return out, nil
 		},
 		events.Schools,
-	).WithAudit(recordedBy(audit.NewStore(pool))).
+	).WithMinimumSample(func(context.Context) int { return minimum }).
+		WithAudit(recordedBy(audit.NewStore(pool))).
 		// AND THE THIRD MODULE THE FUNNEL NEEDS. The top of it is browsers and
 		// the bottom is accounts, so folding the two into one person needs the
 		// link between them — which `visitor` owns and neither of the others

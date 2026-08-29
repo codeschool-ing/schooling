@@ -51,7 +51,7 @@ func paper(strong, strongRight, weak, weakRight int) []analysis.Answer {
 
 func summarised(t *testing.T, answers []analysis.Answer) analysis.Statistics {
 	t.Helper()
-	s, err := analysis.Summarise(answers)
+	s, err := analysis.Summarise(answers, analysis.MinimumSample.Fallback)
 	if err != nil {
 		t.Fatalf("summarising: %v", err)
 	}
@@ -97,10 +97,10 @@ func TestAQuestionTheStrongStudentsPassIsFine(t *testing.T) {
 // question removed from a course because two people misread it.
 func TestNothingIsDecidedBelowTheMinimumSample(t *testing.T) {
 	// As inverted as a question can be, and one answer short of the sample.
-	short := analysis.MinimumSample - 1
+	short := analysis.MinimumSample.Fallback - 1
 	s := summarised(t, paper(short/2, 0, short-short/2, short-short/2))
 
-	if s.Attempts >= analysis.MinimumSample {
+	if s.Attempts >= analysis.MinimumSample.Fallback {
 		t.Fatalf("the fixture has %d attempts, which is not below the sample", s.Attempts)
 	}
 	if s.Verdict != analysis.VerdictInsufficient {
@@ -125,13 +125,59 @@ func TestNothingIsDecidedBelowTheMinimumSample(t *testing.T) {
 	}
 }
 
+/*
+AND WHERE THE MINIMUM SITS IS THE PARAMETER'S TO SAY, which is the half the two
+tests around this one cannot see: both wire the shipped thirty.
+
+	THE SAME ANSWERS, TWO THRESHOLDS, TWO VERDICTS. Twenty answers say nothing
+	at a sample of thirty and are judged at a sample of ten — and the statistics
+	carry the number they were judged against either way, which is what makes
+	moving it safe. A rollup written in March explains itself with the bar that
+	produced it and not with today's, exactly as an exam attempt does with its
+	pass mark.
+
+	THE FIXTURE IS AS INVERTED AS A QUESTION GETS, so the verdict at ten is not
+	merely "computed" but "condemned" — which is the outcome that actually costs
+	something, because it takes a question out of circulation.
+*/
+func TestTheMinimumIsWhereTheParameterSaysItIs(t *testing.T) {
+	answers := paper(10, 0, 10, 10) // the strong students all wrong, the weak all right
+
+	silent, err := analysis.Summarise(answers, 30)
+	if err != nil {
+		t.Fatalf("summarising at thirty: %v", err)
+	}
+	if silent.Verdict != analysis.VerdictInsufficient {
+		t.Errorf("twenty answers at a sample of thirty gave %q", silent.Verdict)
+	}
+	if silent.MinimumSample != 30 {
+		t.Errorf("the statistics say the sample was %d, not the 30 they were judged against",
+			silent.MinimumSample)
+	}
+
+	judged, err := analysis.Summarise(answers, 10)
+	if err != nil {
+		t.Fatalf("summarising at ten: %v", err)
+	}
+	if judged.Verdict == analysis.VerdictInsufficient {
+		t.Error("twenty answers at a sample of ten still said nothing")
+	}
+	if !judged.Verdict.Flagged() {
+		t.Errorf("a question the strong students all got wrong came back %q", judged.Verdict)
+	}
+	if judged.MinimumSample != 10 {
+		t.Errorf("the statistics say the sample was %d, not the 10 they were judged against",
+			judged.MinimumSample)
+	}
+}
+
 // THE THRESHOLD TRAVELS WITH THE NUMBER IT PRODUCED (K-16). A verdict that
 // arrives without saying what it was measured against invites somebody to lower
 // the bar until the dashboard finally shows something.
 func TestEveryVerdictSaysWhatItWasMeasuredAgainst(t *testing.T) {
 	s := summarised(t, paper(20, 18, 20, 4))
 
-	if s.MinimumSample != analysis.MinimumSample {
+	if s.MinimumSample != analysis.MinimumSample.Fallback {
 		t.Errorf("the statistics say the minimum sample is %d", s.MinimumSample)
 	}
 	if s.Attempts != 40 || s.StrongGroup == 0 || s.WeakGroup == 0 {
@@ -237,7 +283,7 @@ func TestTwoVersionsOfAQuestionAreNeverFoldedTogether(t *testing.T) {
 		after[i].Version = 2
 	}
 
-	grouped, err := analysis.Group(append(before, after...))
+	grouped, err := analysis.Group(append(before, after...), analysis.MinimumSample.Fallback)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -253,7 +299,7 @@ func TestTwoVersionsOfAQuestionAreNeverFoldedTogether(t *testing.T) {
 	}
 
 	// And summarising them as one is refused rather than averaged.
-	if _, err := analysis.Summarise(append(before, after...)); err == nil {
+	if _, err := analysis.Summarise(append(before, after...), analysis.MinimumSample.Fallback); err == nil {
 		t.Error("two versions were summarised into one set of statistics")
 	}
 }
@@ -270,7 +316,7 @@ func TestTheGroupedOutputIsInAStableOrder(t *testing.T) {
 		}
 	}
 
-	grouped, err := analysis.Group(answers)
+	grouped, err := analysis.Group(answers, analysis.MinimumSample.Fallback)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -286,7 +332,7 @@ func TestTheGroupedOutputIsInAStableOrder(t *testing.T) {
 // Nothing at all is not a question with no answers; it is a call that should not
 // have been made, and it says so rather than answering zeroes.
 func TestSummarisingNothingIsAnError(t *testing.T) {
-	if _, err := analysis.Summarise(nil); err == nil {
+	if _, err := analysis.Summarise(nil, analysis.MinimumSample.Fallback); err == nil {
 		t.Error("summarising no answers produced statistics")
 	}
 }
