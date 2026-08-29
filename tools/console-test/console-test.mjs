@@ -532,6 +532,74 @@ try {
     await done(shop);
   }
 
+  /* ---------- and the terms of use are regenerated ----------
+
+     THIS IS THE ONE ASSERTION IN THIS SUITE ABOUT A LEGAL DOCUMENT, and it is
+     here because the failure it guards is the worst one this registry can
+     produce. The withdrawal window is a parameter with art. 49's seven days as
+     its floor; the terms of use used to spell "sete dias" out in words, so a
+     platform offering fourteen would have PROMISED seven and honoured
+     something else — in the document whose entire job is to be the promise.
+
+     So the number is substituted into the document at serve time from the same
+     value the account screen's deadline is computed from, and this walks it:
+     set fourteen on the console, then read the published Portuguese terms off
+     the school's own host and find fourteen in them.
+
+     AND THE STATUTE IS STILL IN WORDS. "O Código de Defesa do Consumidor
+     garante sete dias" must survive at every value — it is a fact about Brazil
+     and not about us, and a document that printed the platform's number where
+     it means the law's would misquote it. */
+
+  const term = staff.locator('.block[data-name="billing.withdrawaldays"]');
+  await term.waitFor({ timeout: 15000 });
+
+  await term.locator('[name=value]').fill('14');
+  await term.locator('[name=reason]').fill('the console suite, proving the terms follow');
+  await term.locator('button[type=submit]').click();
+  await term.locator('.price-state', { hasText: 'Set to 14' }).waitFor({ timeout: 15000 });
+
+  const terms = await open();
+  try {
+    await terms.goto(`${BASE}/api/v1/legal/terms?lang=pt`, { waitUntil: 'load' });
+    const body = JSON.parse(await terms.locator('body').innerText()).body;
+
+    if (!body.includes('14 dias para desistir')) {
+      bad('the terms of use print the window the console set',
+        'the console set fourteen days and the published Portuguese terms do not say so — '
+        + 'the document promises one window while the platform honours another, which is '
+        + 'the drift the number was generated to prevent');
+    } else {
+      good('the terms of use print the window the console set');
+    }
+
+    if (!body.includes('garante sete dias')) {
+      bad('the terms still quote the statute in words',
+        'the published terms stopped saying that the Code guarantees seven days — that is a '
+        + 'fact about Brazil, not about us, and it does not move when this platform offers '
+        + 'more');
+    } else {
+      good('the terms still quote the statute in words');
+    }
+
+    /* AND NOTHING ELSE REACHES A READER WITH A HOLE IN IT. The four
+       `{{company.…}}` tokens are meant to be there until the company is real —
+       everything else is a token something was supposed to fill, and it looks
+       identical to a reader. `legal`'s own tests hold this too; here it is
+       against the running server, in the document a person actually gets. */
+    const unfilled = (body.match(/\{\{[a-z0-9._-]+\}\}/g) || [])
+      .filter((token) => !token.startsWith('{{company.'));
+    if (unfilled.length > 0) {
+      bad('nothing reaches a reader unfilled',
+        `the published terms still carry ${unfilled.join(', ')} — a reader gets that literal `
+        + 'text, in the document whose job is to be exact');
+    } else {
+      good('nothing reaches a reader unfilled');
+    }
+  } finally {
+    await done(terms);
+  }
+
   /* AND A CHANGE WITH NO REASON IS REFUSED, on the screen. Same field and same
      argument as the address above: a parameter is REPLACED rather than
      appended, so the audit is the whole history of what this platform was set

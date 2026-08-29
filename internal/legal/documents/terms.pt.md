@@ -97,12 +97,13 @@ peça o apagamento — a política de privacidade diz exatamente o que ele faz.
 
 ## Estornos
 
-**Você tem sete dias para desistir**, contados do dia em que assina, porque é o
-que o Código de Defesa do Consumidor dá para uma compra feita a distância. Peça
-dentro desses sete dias e devolvemos o valor integral, sem precisar de motivo.
+**Você tem {{withdrawal.days}} dias para desistir**, contados do dia em que
+assina. O Código de Defesa do Consumidor garante sete dias para uma compra feita
+a distância: esse é o mínimo, e nunca oferecemos menos. Peça dentro do prazo e
+devolvemos o valor integral, sem precisar de motivo.
 
-Não oferecemos prazo maior que esse, e dizemos isso aqui em vez de deixar você
-descobrir: sete dias é tudo.
+Dizemos o número aqui em vez de deixar você descobrir: {{withdrawal.days}} dias
+é tudo.
 
 Depois disso, um estorno é algo com que podemos concordar e não algo a que somos
 obrigados.

@@ -35,6 +35,7 @@ import (
 	"path"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -74,6 +75,73 @@ type Document struct {
 	// uses. One renderer, so a heading looks the same in a policy as in a
 	// lesson and there is one place for it to be wrong.
 	Body string `json:"body"`
+}
+
+/* ---------- the numbers a document states about this platform ---------- */
+
+/*
+Numbers is what a document says about this platform that is not written in it.
+
+	# WHY A DOCUMENT HAS A HOLE IN IT AT ALL
+
+	The package comment above says these are files rather than rows, because a
+	legal document held in a database is one somebody can change without a diff.
+	That is still true of every word here. What this adds is a hole for one
+	NUMBER — and the reason is the failure it prevents rather than a convenience.
+
+	The terms of use said "sete dias" in words while `billing.WithdrawalDays`
+	said 7 in Go. Two statements of one fact, in the document whose whole job is
+	to BE the fact. `0046` made the window a parameter with the statute as its
+	floor, and the moment a platform offered fourteen the document would have
+	promised seven and honoured something else — the exact drift the number was
+	moved for, in the one place it cannot be tolerated.
+
+	# WHAT MAY BECOME A HOLE AND WHAT MAY NOT
+
+	A number this platform DECIDES and states. Not the law: the Code guarantees
+	seven days, and that sentence is written out in words in both languages
+	because it is not ours to move — a hole there would be a document that
+	could misquote a statute.
+
+	And nothing about who we are. `{{company.name}}` and the other three stay
+	unfilled tokens for the reason `unfilled` gives below: they are facts with a
+	right answer that is not known yet, and a settable one would publish a policy
+	attributed to whoever an environment variable said.
+*/
+type Numbers struct {
+	// WithdrawalDays is what `billing.WithdrawalDays` is set to. It is an int
+	// and not a function: a document is rendered once per request and the
+	// caller has already read it.
+	WithdrawalDays int
+}
+
+// Filled is every token this substitutes, and it is the closed list the tests
+// hold the documents to — in both directions: nothing reaches a reader unfilled,
+// and nothing is filled that no document contains. A token outside it would
+// reach a reader as `{{…}}`, in a legal document, looking exactly like the four
+// that are meant to.
+//
+// IT IS EXPORTED FOR THOSE TESTS AND FOR NOTHING ELSE. Callers want `With`.
+func (n Numbers) Filled() map[string]string {
+	return map[string]string{
+		"{{withdrawal.days}}": strconv.Itoa(n.WithdrawalDays),
+	}
+}
+
+/*
+With is the document as it is published, with this platform's numbers in it.
+
+	IT IS SEPARATE FROM `Read` ON PURPOSE. `Read` answers the document as
+	WRITTEN, which is what the placeholder tests read and what somebody
+	comparing a file to a published page needs. This is the published form, and
+	the two being distinguishable is what lets a test say "nothing reaches a
+	reader unfilled" without that test being the thing that fills it.
+*/
+func (d Document) With(n Numbers) Document {
+	for token, value := range n.Filled() {
+		d.Body = strings.ReplaceAll(d.Body, token, value)
+	}
+	return d
 }
 
 /* ---------- what is not filled in yet ---------- */

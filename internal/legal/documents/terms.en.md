@@ -95,13 +95,13 @@ does.
 
 ## Refunds
 
-**You have seven days to change your mind**, counted from the day you subscribe,
-because that is what the Consumer Protection Code gives you for a purchase made
-at a distance. Ask within those seven days and you get your money back in full,
-with no reason required.
+**You have {{withdrawal.days}} days to change your mind**, counted from the day
+you subscribe. The Consumer Protection Code guarantees seven days for a purchase
+made at a distance: that is the minimum, and we never offer less. Ask within the
+window and you get your money back in full, with no reason required.
 
-We do not offer a longer window than that, and we say so here rather than
-leaving you to find out: seven days is the whole of it.
+We say the number here rather than leaving you to find out: {{withdrawal.days}}
+days is the whole of it.
 
 After that, a refund is something we may agree to and are not obliged to.
 

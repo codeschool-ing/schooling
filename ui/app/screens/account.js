@@ -363,14 +363,19 @@ export default async function account() {
 }
 
 /*
-withdrawal is the seven days, while somebody still has them.
+withdrawal is the window to change your mind, while somebody still has it.
 
-  THE TERMS PROMISE THIS AND THE SCREEN SAID NOTHING. Seven days to change
-  your mind, whole amount back, no reason needed — art. 49 of the Código de
-  Defesa do Consumidor, and the terms of use repeat it in as many words. The
-  one screen where a person looks at what they bought did not mention it, and
-  the only address anywhere was in the footer of a marketing site they would
-  have to leave the product to find.
+  THE TERMS PROMISE THIS AND THE SCREEN SAID NOTHING. Whole amount back, no
+  reason needed, within a window art. 49 of the Código de Defesa do Consumidor
+  puts a floor of seven days under — and the terms of use print the number this
+  platform actually offers. The one screen where a person looks at what they
+  bought did not mention it at all, and the only address anywhere was in the
+  footer of a marketing site they would have to leave the product to find.
+
+  THE SCREEN HOLDS NO COPY OF THE COUNT, which is why nothing here changed when
+  it became settable: the server sends a DATE. That was already the rule for a
+  different reason — a legal deadline worked out from a browser's clock is not
+  a deadline — and it happens to be the shape that survives the number moving.
 
   A right nobody can reach is worse than no right at all, because the document
   promising it is evidence.
