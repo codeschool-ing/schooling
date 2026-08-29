@@ -11,11 +11,34 @@
    This is done FOR one, because they asked, and the entry it writes is about
    the person doing it.
 
-   # IT ASKS FOR A WHOLE ADDRESS AND SHOWS ONE PERSON
+   # TWO WAYS IN, AND THEY ANSWER DIFFERENT QUESTIONS
 
-   No list, no partial match, and the API refuses to provide either (K-22). A
-   search is not a lookup: typing `@example.tld` and reading the answer is
-   browsing people, which an audit trail cannot tell apart from working.
+   A WHOLE ADDRESS answers "this person who wrote to me, are they here?" — one
+   person or none, and nothing is recorded, because nothing left and nobody was
+   browsed.
+
+   A FRAGMENT answers the question that was being asked all along and had no way
+   to be: somebody writes in from an address that is not the one they signed up
+   with, or signs their e-mail with a surname. That is a list, and K-22 refused
+   it — "browsing personal data is what an audit cannot tell from working". The
+   amendment is that an audit does not have to tell one read from another in
+   order to make the difference visible: fifty rows, forty times in an
+   afternoon, is a shape in a log, and a month of answering support is not.
+
+   So the list is BOUNDED (a page, whose size the request does not choose),
+   MINIMAL (the same four fields the lookup shows — a name, an address, when
+   they arrived, whether they are seeded), COUNTED (an entry per page, carrying
+   what was searched for and how many came back), and NAMED: this screen says
+   what the list is for, above the field, in the server's own words. That last
+   one is the only part of the arrangement that reaches somebody BEFORE they
+   type.
+
+   WHAT THE LIST DOES NOT DO is show anything about a person. Reading what is
+   held is the block below, one at a time; taking a copy of it is the export,
+   recorded against a name; erasing still asks for that person's address to be
+   typed. None of those moved, and the last of them was written for exactly this
+   day — "an erasure reached by one click from a list somebody was scrolling"
+   was a danger this console did not have when the sentence was written.
 
    # NOTHING HERE DECIDES WHAT IS ALLOWED
 
@@ -55,19 +78,131 @@ export default async function people(section) {
                  'placeholder="somebody@example.tld" required>' +
         '</label>' +
         '<button class="btn btn-primary" type="submit">Look up</button>' +
-        '<span class="list-count">There is no search here, only a lookup.</span>' +
+        '<span class="list-count">One person, or none.</span>' +
       '</form>' +
+    '</section>' +
+
+    /* AND THE SECOND WAY IN, BELOW THE FIRST. The order is the argument: an
+       exact address is what an operator has most of the time and it records
+       nothing, so it is what the screen offers first. The list is underneath
+       because it is the larger act, not because it is a lesser one. */
+    '<section class="block">' +
+      '<div class="block-top">' +
+        '<h2>Or look for somebody</h2>' +
+        '<span class="block-score mono">a page at a time</span>' +
+      '</div>' +
+
+      // WHAT THIS IS FOR, FROM THE SERVER. It is the one protection that
+      // reaches somebody before they type, so it lives beside the rule it
+      // describes rather than in a screen that can drift from it. Filled in
+      // after the first search, because that is when the server has spoken.
+      '<p class="aside" id="about-list">Anything in an address or a name — a fragment ' +
+      'is enough, and nothing at all lists everybody, newest first. Every page is ' +
+      'recorded with your name, what you searched for and how many came back.</p>' +
+
+      '<form id="search" class="list-bar" novalidate>' +
+        '<label class="search">' +
+          '<span class="visually-hidden">Part of an address or a name</span>' +
+          '<input id="words" type="search" autocomplete="off" spellcheck="false" ' +
+                 'placeholder="silva, or @gmail.com, or nothing">' +
+        '</label>' +
+        '<button class="btn btn-ghost" type="submit">Look</button>' +
+      '</form>' +
+      '<div id="matches" aria-live="polite"></div>' +
     '</section>' +
 
     '<div id="answer" aria-live="polite"></div>';
 
   const answer = el.querySelector('#answer');
   const field = el.querySelector('#email');
+  const matches = el.querySelector('#matches');
+  const words = el.querySelector('#words');
 
   el.querySelector('#find').addEventListener('submit', async (event) => {
     event.preventDefault();
     await look(field.value.trim());
   });
+
+  el.querySelector('#search').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    await list(words.value.trim(), null);
+  });
+
+  /* THE LIST, AND EVERY PAGE OF IT IS A REQUEST THE SERVER RECORDS.
+
+     "Show more" APPENDS RATHER THAN REPLACING, because the pages are one act:
+     somebody reading page four is still looking for the person they were
+     looking for on page one, and a table that threw away what they had already
+     read would make them page back through rows the server counted again. */
+  async function list(query, cursor) {
+    if (!cursor) matches.innerHTML = '<p class="checking">Looking…</p>';
+
+    let page;
+    try {
+      const at = new URLSearchParams();
+      if (query) at.set('q', query);
+      if (cursor) {
+        at.set('before', cursor.before);
+        at.set('beforeId', cursor.beforeId);
+      }
+      page = await get('/console/api/v1/people/list?' + at.toString());
+    } catch (e) {
+      matches.innerHTML = '<p class="none">' + esc(e.message) + '</p>';
+      return;
+    }
+
+    // The server's own sentence about what this is, once it has said it.
+    if (page.about) el.querySelector('#about-list').textContent = page.about;
+
+    const found = page.people || [];
+    if (!cursor && found.length === 0) {
+      matches.innerHTML = '<p class="none">' + esc(page.none || 'Nobody matches that.') + '</p>';
+      return;
+    }
+
+    if (!cursor) {
+      matches.innerHTML =
+        '<div class="table-wrap"><table class="grid">' +
+          '<thead><tr>' +
+            '<th scope="col">Who</th><th scope="col">Signed up</th>' +
+          '</tr></thead><tbody></tbody>' +
+        '</table></div>' +
+        '<p id="more"></p>';
+    }
+
+    matches.querySelector('tbody').insertAdjacentHTML('beforeend', found.map(match).join(''));
+
+    /* HOW MANY ARE ON THE SCREEN, AND NEVER HOW MANY THERE ARE. A total would
+       be a second query over the whole table — and it would answer a question
+       nobody asked while telling somebody exactly how many people this platform
+       has, from a screen whose whole defence is that it shows the minimum. */
+    const showing = matches.querySelectorAll('tbody tr').length;
+    matches.querySelector('#more').innerHTML =
+      (page.before
+        ? '<button class="btn btn-ghost" type="button" id="show-more">Show more</button> '
+        : '') +
+      '<span class="list-count">' + showing + (showing === 1 ? ' person' : ' people') +
+        (page.before ? ' so far' : '') + '</span>';
+
+    const button = matches.querySelector('#show-more');
+    if (button) {
+      button.addEventListener('click', () => {
+        button.disabled = true;
+        return list(query, { before: page.before, beforeId: page.beforeId });
+      });
+    }
+
+    /* A ROW OPENS THE PERSON THROUGH THE SAME PATH A TYPED ADDRESS DOES, by
+       address and not by id. Not for tidiness: the lookup is what fetches what
+       is held and paints the export and erase blocks, so a second way of
+       opening somebody would be a second place for those to fall out of step. */
+    matches.querySelectorAll('button[data-email]').forEach((one) => {
+      one.addEventListener('click', () => {
+        field.value = one.dataset.email;
+        return look(one.dataset.email);
+      });
+    });
+  }
 
   async function look(email) {
     if (!email) return;
@@ -200,3 +335,28 @@ const day = (iso) => {
   const at = new Date(iso);
   return Number.isNaN(at.getTime()) ? 'an unknown day' : at.toISOString().slice(0, 10);
 };
+
+/* ONE MATCH — a name, an address, the day they arrived, and nothing else.
+
+   THE FOUR FIELDS ARE THE WHOLE OF WHAT MAKES THIS LIST DEFENSIBLE, so the row
+   is deliberately dull: no country, no plan, no progress, nothing that would
+   make scrolling this worth doing for its own sake. A column added here is a
+   change to the decision and not to a table.
+
+   THE WHOLE ROW IS A BUTTON rather than a link, because opening somebody is a
+   request this screen makes and not an address it navigates to — and because a
+   button is what a keyboard reaches, which is also what makes the scrolling
+   table above reachable at all. */
+function match(one) {
+  return '<tr>' +
+    '<td>' +
+      '<button type="button" class="btn-plain" data-email="' + esc(one.email) + '">' +
+        '<span class="cell-main">' + esc(one.name || '—') +
+          (one.synthetic ? '<span class="tag tag-quiet">synthetic</span>' : '') +
+        '</span>' +
+        '<span class="cell-sub mono">' + esc(one.email) + '</span>' +
+      '</button>' +
+    '</td>' +
+    '<td>' + esc(day(one.createdAt)) + '</td>' +
+  '</tr>';
+}

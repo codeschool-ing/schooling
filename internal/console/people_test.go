@@ -42,6 +42,15 @@ type fakes struct {
 	erased  []uuid.UUID
 	entries []recorded
 
+	/* What a listing answers, and what it was ASKED. The `look` is kept because
+	   a cursor read off the address bar and then dropped is how paging becomes a
+	   screen that shows the first page for ever — and nothing about the answer
+	   would say so. */
+	page    []console.Person
+	look    console.Look
+	listErr error
+	unwired bool
+
 	findErr   error
 	heldErr   error
 	eraseErr  error
@@ -51,7 +60,28 @@ type fakes struct {
 	may  bool      // whether that actor may erase
 }
 
+/*
+fakePage is what this suite calls a full page.
+
+	IT IS THREE AND NOT FIFTY. What the handler does with it is one comparison —
+	a page of exactly this many gets a cursor after it and a shorter one does
+	not — so the number only has to be large enough for "full" and "short" to be
+	different, and small enough that a test can write out both.
+*/
+const fakePage = 3
+
 func (f *fakes) handler() http.Handler {
+	var list func(context.Context, console.Look) ([]console.Person, error)
+	if !f.unwired {
+		list = func(_ context.Context, look console.Look) ([]console.Person, error) {
+			f.look = look
+			if f.listErr != nil {
+				return nil, f.listErr
+			}
+			return f.page, nil
+		}
+	}
+
 	h := console.NewPeopleHandler(
 		console.People{
 			Find: func(_ context.Context, email string) (console.Person, error) {
@@ -63,6 +93,11 @@ func (f *fakes) handler() http.Handler {
 				}
 				return f.person, nil
 			},
+			List: list,
+			// The console decides whether there is a next page by comparing
+			// against this, and it is wired from `identity.Page` in `cmd/api`.
+			Page: fakePage,
+
 			Held: func(context.Context, uuid.UUID) (map[string][]map[string]any, error) {
 				return f.held, f.heldErr
 			},
@@ -123,10 +158,13 @@ func ask(t *testing.T, h http.Handler, method, path string, body string) *httpte
 	return rec
 }
 
-// A WHOLE ADDRESS, OR NOTHING (K-22).
+// A WHOLE ADDRESS, OR NOTHING — on THIS route.
 //
-// There is no listing route and no prefix match, and the refusal for an empty
-// address says which of the two this is: a lookup, not a search.
+// K-22 was amended and a listing exists now, one route along and with an audit
+// entry per page. This one did not change and must not: a lookup that quietly
+// started matching prefixes would be the listing without any of the four things
+// that make the listing defensible, reached by the route that records nothing.
+// The refusal for an empty address is what says which of the two this is.
 func TestAPersonIsFoundByAWholeAddressOrNotAtAll(t *testing.T) {
 	f := seeded()
 	h := f.handler()
@@ -375,5 +413,248 @@ func TestAnExportRecordsNoReasonBecauseNobodyIsAskedForOne(t *testing.T) {
 	}
 	if f.entries[0].why != "" {
 		t.Errorf("the export invented a reason: %q", f.entries[0].why)
+	}
+}
+
+/* ---------- the listing, which is K-22 amended ---------- */
+
+func someone(name, email string) console.Person {
+	return console.Person{
+		ID: uuid.New(), Name: name, Email: email, CreatedAt: time.Now(),
+	}
+}
+
+// listed asks for a page and decodes it.
+func listed(t *testing.T, f *fakes, query string) (int, map[string]any) {
+	t.Helper()
+	rec := ask(t, f.handler(), http.MethodGet, "/console/api/v1/people/list"+query, "")
+
+	var body map[string]any
+	_ = json.Unmarshal(rec.Body.Bytes(), &body)
+	return rec.Code, body
+}
+
+/*
+TestEveryPageOfALLListingIsRecorded is the whole of the amendment.
+
+	K-22 refused a listing because an audit cannot tell browsing from working.
+	What replaced "never" is that it does not have to tell one read from
+	another: the entry says what was searched for and how many came back, and
+	forty of those in an afternoon is a shape. An entry that carried neither
+	would leave the decision with nothing behind it.
+*/
+func TestEveryPageOfAListingIsRecorded(t *testing.T) {
+	f := seeded()
+	f.page = []console.Person{someone("Ana", "ana@example.tld")}
+
+	if code, _ := listed(t, f, "?q=ana"); code != http.StatusOK {
+		t.Fatalf("a listing answered %d", code)
+	}
+	if len(f.entries) != 1 {
+		t.Fatalf("%d entries were written for one page", len(f.entries))
+	}
+
+	entry := f.entries[0]
+	if entry.action != "personal-data.listed" {
+		t.Errorf("the entry says %q", entry.action)
+	}
+	if entry.subject.Kind != "people" {
+		t.Errorf("the subject is %q, and an entry filed against an account would be filed "+
+			"against whoever happened to come back first", entry.subject.Kind)
+	}
+
+	what, ok := entry.what.Before.(map[string]any)
+	if !ok {
+		t.Fatalf("the entry carries %T", entry.what.Before)
+	}
+	if what["query"] != "ana" {
+		t.Errorf("the entry says the query was %v — without it the entry reads "+
+			"\"somebody listed people\", which cannot distinguish the two things it exists "+
+			"to distinguish", what["query"])
+	}
+	if what["returned"] != 1 {
+		t.Errorf("the entry says %v came back, and the count is the number a review reads",
+			what["returned"])
+	}
+}
+
+/*
+TestAListingThatCouldNotBeRecordedIsNotAnswered.
+
+	The rows are in the process and have reached nobody. Handing them over after
+	failing to write the entry would be a listing this console cannot see, which
+	is the entire objection K-22 raised — so the failure of the audit is the
+	failure of the read.
+*/
+func TestAListingThatCouldNotBeRecordedIsNotAnswered(t *testing.T) {
+	f := seeded()
+	f.page = []console.Person{someone("Ana", "ana@example.tld")}
+	f.recordErr = errors.New("the audit is not writable")
+
+	code, body := listed(t, f, "?q=ana")
+	if code != http.StatusServiceUnavailable {
+		t.Fatalf("a listing nobody could record answered %d", code)
+	}
+	if _, present := body["people"]; present {
+		t.Fatal("the rows were handed over anyway, so a listing happened that this console " +
+			"has no record of")
+	}
+}
+
+/*
+TestNothingSearchedForIsEverybodyAndSaysSoInTheLog.
+
+	"Who signed up this week" is a legitimate question with no search term in
+	it, so an empty query is not refused. It is the BROADEST read this route
+	does, which makes it the one an entry must not record as a blank — a missing
+	value and a deliberate one look identical in a log.
+*/
+func TestNothingSearchedForIsEverybodyAndSaysSoInTheLog(t *testing.T) {
+	f := seeded()
+	f.page = []console.Person{someone("Ana", "ana@example.tld")}
+
+	if code, _ := listed(t, f, ""); code != http.StatusOK {
+		t.Fatalf("an empty search answered %d, and it is a real question", code)
+	}
+
+	what := f.entries[0].what.Before.(map[string]any)
+	if what["query"] != "everybody" {
+		t.Errorf("an empty search is recorded as %v", what["query"])
+	}
+}
+
+/*
+TestTheEntryCarriesTheQueryAndNeverTheResults.
+
+	The uncomfortable half, held by a test. Storing what was typed is what makes
+	the entry worth writing; storing what came back would make the audit a copy
+	of the list — an append-only one, which is the failure `erase` avoids by
+	recording counts and never the person.
+*/
+func TestTheEntryCarriesTheQueryAndNeverTheResults(t *testing.T) {
+	f := seeded()
+	f.page = []console.Person{someone("Ana", "ana@example.tld"), someone("Bo", "bo@example.tld")}
+
+	if code, _ := listed(t, f, "?q=example"); code != http.StatusOK {
+		t.Fatalf("a listing answered %d", code)
+	}
+
+	written, err := json.Marshal(f.entries[0].what)
+	if err != nil {
+		t.Fatalf("marshalling the entry: %v", err)
+	}
+	for _, leaked := range []string{"ana@example.tld", "bo@example.tld", "Ana", "Bo"} {
+		if strings.Contains(string(written), leaked) {
+			t.Fatalf("the entry names somebody who came back (%q): %s", leaked, written)
+		}
+	}
+}
+
+/*
+TestAShortPageIsTheLastOne.
+
+	A full page is not proof there is another — the next query can come back
+	empty — but a short page IS proof there is not. That is the half worth
+	acting on: the screen draws no button rather than one that leads nowhere.
+*/
+func TestAShortPageIsTheLastOne(t *testing.T) {
+	f := seeded()
+	f.page = []console.Person{someone("Ana", "ana@example.tld")}
+
+	_, body := listed(t, f, "")
+	if _, present := body["before"]; present {
+		t.Fatal("a page shorter than a full one offered a cursor after it")
+	}
+
+	full := seeded()
+	for i := 0; i < fakePage; i++ {
+		full.page = append(full.page, someone("Ana", "ana@example.tld"))
+	}
+	_, body = listed(t, full, "")
+	if _, present := body["before"]; !present {
+		t.Fatal("a full page offered no cursor, so everybody past the first page is " +
+			"reachable by nothing")
+	}
+}
+
+/*
+TestACursorReachesTheStore.
+
+	Paging that reads a cursor and drops it is a screen that shows the first page
+	for ever, and nothing about the answer says so — every page looks like a
+	page. What is checked is that both halves arrived: `created_at` is not
+	unique, so a cursor missing its id would put two accounts made in the same
+	millisecond on both pages or on neither.
+*/
+func TestACursorReachesTheStore(t *testing.T) {
+	f := seeded()
+	at := time.Now().Add(-time.Hour).UTC()
+	id := uuid.New()
+
+	code, _ := listed(t, f, "?before="+at.Format(time.RFC3339Nano)+"&beforeId="+id.String())
+	if code != http.StatusOK {
+		t.Fatalf("a listing with a cursor answered %d", code)
+	}
+	if !f.look.Before.Equal(at) || f.look.BeforeID != id {
+		t.Fatalf("the store was asked for %v/%v, and the address bar said %v/%v",
+			f.look.Before, f.look.BeforeID, at, id)
+	}
+}
+
+/*
+TestANonsenseCursorIsTheFirstPageAndNotAnError.
+
+	Somebody edited an address bar, or a bookmark went stale. The honest answer
+	to a cursor that means nothing is the top of the list; a 400 would be this
+	screen breaking on a link somebody saved.
+*/
+func TestANonsenseCursorIsTheFirstPageAndNotAnError(t *testing.T) {
+	f := seeded()
+
+	code, _ := listed(t, f, "?before=yesterday&beforeId=nobody")
+	if code != http.StatusOK {
+		t.Fatalf("a broken cursor answered %d", code)
+	}
+	if !f.look.Before.IsZero() || f.look.BeforeID != uuid.Nil {
+		t.Fatalf("a broken cursor reached the store as %v/%v", f.look.Before, f.look.BeforeID)
+	}
+}
+
+/*
+TestADeploymentThatCannotListSaysSo.
+
+	The dangerous answer here is an empty page, because "nobody matches" is what
+	an operator would read — about a platform full of people. It is also the
+	answer a nil seam gives if nothing checks for one.
+*/
+func TestADeploymentThatCannotListSaysSo(t *testing.T) {
+	f := seeded()
+	f.unwired = true
+
+	code, _ := listed(t, f, "?q=ana")
+	if code != http.StatusNotImplemented {
+		t.Fatalf("a deployment with no listing wired answered %d", code)
+	}
+	if len(f.entries) != 0 {
+		t.Fatal("an entry was written for a read that never happened")
+	}
+}
+
+/*
+TestTheListingSaysWhatItIsFor.
+
+	"Named" is one of the four conditions the amendment rests on, and it is the
+	only one that reaches somebody BEFORE they type. It comes from the server
+	because it describes a rule the server enforces; a copy in an interface is a
+	copy that can drift from what is actually true.
+*/
+func TestTheListingSaysWhatItIsFor(t *testing.T) {
+	f := seeded()
+	f.page = []console.Person{someone("Ana", "ana@example.tld")}
+
+	_, body := listed(t, f, "?q=ana")
+	if said, _ := body["about"].(string); said == "" {
+		t.Fatal("the listing does not say what it is for, so the stated purpose the " +
+			"amendment rests on exists only in a document")
 	}
 }
