@@ -1,8 +1,10 @@
 package legal_test
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"slices"
@@ -106,7 +108,7 @@ func TestALocaleCannotReachOutOfTheDirectory(t *testing.T) {
 // sign up, which is the moment it exists for.
 func TestThePoliciesAreReadableByAnybody(t *testing.T) {
 	mux := http.NewServeMux()
-	legal.NewHandler().Routes(mux)
+	legal.NewHandler(sevenDays).Routes(mux)
 
 	for _, name := range legal.Names() {
 		w := httptest.NewRecorder()
@@ -132,7 +134,7 @@ func TestThePoliciesAreReadableByAnybody(t *testing.T) {
 // A DOCUMENT NOBODY PUBLISHES IS A 404 rather than a 500 or an empty policy.
 func TestAskingForSomethingElseIsANotFound(t *testing.T) {
 	mux := http.NewServeMux()
-	legal.NewHandler().Routes(mux)
+	legal.NewHandler(sevenDays).Routes(mux)
 
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/api/v1/legal/refunds", nil))
@@ -147,7 +149,7 @@ func TestAskingForSomethingElseIsANotFound(t *testing.T) {
 // would do it by accident.
 func TestTheTableNamesAreNotSentToAnybody(t *testing.T) {
 	mux := http.NewServeMux()
-	legal.NewHandler().Routes(mux)
+	legal.NewHandler(sevenDays).Routes(mux)
 
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/api/v1/legal/privacy", nil))
@@ -171,6 +173,14 @@ func TestTheTableNamesAreNotSentToAnybody(t *testing.T) {
 // which is a policy published with a blank in it, in the language half the
 // students read. So the token SET has to match across languages, not merely be
 // non-empty.
+// sevenDays is the platform's window as `cmd/api` hands it in — a function,
+// because `billing.WithdrawalDays` is a declared parameter and can move while
+// the process runs. These tests are not about the parameter, so they wire the
+// statutory floor and the documents read as they always have.
+func sevenDays(context.Context) legal.Numbers {
+	return legal.Numbers{WithdrawalDays: 7}
+}
+
 func TestWhatIsNotFilledInIsTheSameInEveryLanguage(t *testing.T) {
 	for _, name := range legal.Names() {
 		want := legal.Placeholders(mustRead(t, name, legal.Fallback).Body)
@@ -207,10 +217,20 @@ func TestTheCompanyIsStillAPlaceholder(t *testing.T) {
 			continue
 		}
 		for _, token := range found {
-			if !strings.HasPrefix(token, "{{company.") {
-				t.Errorf("%s carries %s, which is not one of the company details this is "+
-					"waiting on — a new placeholder needs a reason somebody can read", name, token)
+			if strings.HasPrefix(token, "{{company.") {
+				continue
 			}
+			/* A TOKEN THIS PLATFORM FILLS IS NOT A PLACEHOLDER, and the two
+			   look identical in the file. `{{withdrawal.days}}` is written into
+			   the document at serve time from `billing.WithdrawalDays`, so it
+			   never reaches a reader — which is what the test below proves, and
+			   why it is the one that would notice a typo in the token name. */
+			if _, fills := (legal.Numbers{}).Filled()[token]; fills {
+				continue
+			}
+			t.Errorf("%s carries %s, which is neither one of the company details this is "+
+				"waiting on nor a number this platform fills in — a new placeholder needs "+
+				"a reason somebody can read", name, token)
 		}
 	}
 }
@@ -222,4 +242,91 @@ func mustRead(t *testing.T, name, locale string) legal.Document {
 		t.Fatalf("reading %s in %s: %v", name, locale, err)
 	}
 	return doc
+}
+
+/*
+NOTHING REACHES A READER WITH A HOLE IN IT.
+
+	This is the test that makes a generated number safe to put in a legal
+	document. `{{withdrawal.days}}` looks exactly like `{{company.name}}` in the
+	file, and the difference between them is entirely in whether something fills
+	it — so a token misspelt in the Markdown, or a substitution removed from
+	`Numbers`, publishes `{{withdrawal.days}}` to a consumer in the clause that
+	tells them how long they have to change their mind.
+
+	IT CHECKS THE PUBLISHED FORM AND NOT THE FILE, in every language, and what
+	it allows to survive is the company details and nothing else.
+*/
+func TestADocumentNeverReachesAReaderUnfilled(t *testing.T) {
+	numbers := legal.Numbers{WithdrawalDays: 7}
+
+	for _, name := range legal.Names() {
+		for _, locale := range legal.Locales(name) {
+			published := mustRead(t, name, locale).With(numbers)
+
+			for _, token := range legal.Placeholders(published.Body) {
+				if strings.HasPrefix(token, "{{company.") {
+					continue
+				}
+				t.Errorf("%s in %s still carries %s after publication — a reader gets that "+
+					"literal text, in a document whose job is to be exact", name, locale, token)
+			}
+		}
+	}
+}
+
+/*
+AND EVERY SUBSTITUTION IS ACTUALLY USED.
+
+	The other direction, and the one that goes wrong silently: a token renamed
+	in the Markdown leaves `Numbers` filling something no document contains, and
+	the test above still passes because there is nothing left to find. What
+	would reach a reader then is the OLD prose, unchanged, with a number nobody
+	is maintaining.
+*/
+func TestEveryNumberThisPlatformFillsAppearsInADocument(t *testing.T) {
+	for token := range (legal.Numbers{}).Filled() {
+		found := false
+		for _, name := range legal.Names() {
+			for _, locale := range legal.Locales(name) {
+				if strings.Contains(mustRead(t, name, locale).Body, token) {
+					found = true
+				}
+			}
+		}
+		if !found {
+			t.Errorf("%s is filled in and no document contains it — either the token was "+
+				"renamed in the Markdown, in which case the prose is now saying whatever it "+
+				"said before, or this substitution is dead", token)
+		}
+	}
+}
+
+/*
+AND THE NUMBER IN THE DOCUMENT IS THE ONE THAT WAS PASSED.
+
+	Weak on its own and load-bearing beside the two above: they prove no hole
+	survives and no filler is dead, and this proves the value that lands is the
+	caller's rather than something the package decided. Together they are the
+	claim — the terms of use state what `billing.WithdrawalDays` is set to, and
+	cannot state anything else.
+*/
+func TestTheWindowInTheTermsIsTheOneItWasGiven(t *testing.T) {
+	for _, days := range []int{7, 14, 30} {
+		body := mustRead(t, legal.Terms, "pt").With(legal.Numbers{WithdrawalDays: days}).Body
+
+		want := fmt.Sprintf("%d dias para desistir", days)
+		if !strings.Contains(body, want) {
+			t.Errorf("the terms do not say %q at a window of %d days", want, days)
+		}
+	}
+
+	// AND THE STATUTE IS STILL WRITTEN OUT IN WORDS, at every value. It is not
+	// ours to move, so it is not a hole — and a document that printed the
+	// platform's number where it means the law's would misquote art. 49.
+	body := mustRead(t, legal.Terms, "pt").With(legal.Numbers{WithdrawalDays: 30}).Body
+	if !strings.Contains(body, "garante sete dias") {
+		t.Error("the terms stopped saying that the law guarantees seven days — the statute " +
+			"is a fact about Brazil and does not move when this platform offers more")
+	}
 }

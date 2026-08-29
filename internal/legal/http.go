@@ -1,6 +1,7 @@
 package legal
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strings"
@@ -16,9 +17,47 @@ import (
 // exists for. It is the same document in every school, because there is one
 // platform and one company behind it.
 
-type Handler struct{}
+type Handler struct {
+	/* numbers is what the documents state about this platform that is not
+	   written in them — today, one: the withdrawal window. It is a function
+	   because `billing.WithdrawalDays` is a declared parameter and can move
+	   while this process runs, and a document rendered from a number captured
+	   at start-up would publish yesterday's promise. */
+	numbers func(ctx context.Context) Numbers
+}
 
-func NewHandler() *Handler { return &Handler{} }
+/*
+NewHandler is the two documents.
+
+	A NIL `numbers` PUBLISHES THE STATUTORY MINIMUM rather than a document with
+	a hole in it. It is a wiring mistake either way; what makes this the right
+	end of it is that the number is a promise to a consumer, and the safe
+	direction of a wrong promise is the one where the platform owes more than it
+	said. `billing.WithdrawalDays.Fallback` is seven, which is what the law
+	gives — see `defaults`.
+*/
+func NewHandler(numbers func(ctx context.Context) Numbers) *Handler {
+	return &Handler{numbers: numbers}
+}
+
+/*
+statutoryMinimum is the seven days art. 49 of the Código de Defesa do Consumidor
+gives for a purchase made at a distance.
+
+	IT IS NOT A COPY OF `billing.WithdrawalDays`, and the distinction is the
+	whole reason it may live here. That one is what this PLATFORM offers, which
+	is a decision and can be more; this is what the LAW guarantees, which is a
+	fact about Brazil and is already written out in words in both documents for
+	the same reason. `legal` may not import `billing` (X-02) and does not need
+	to: what it needs is the floor, and the floor is not the platform's to set.
+
+	It is used in one place — a handler nobody wired — where the alternative is
+	publishing "0 dias" to a consumer.
+*/
+const statutoryMinimum = 7
+
+// defaults is what a document states when nothing was wired. See NewHandler.
+func defaults() Numbers { return Numbers{WithdrawalDays: statutoryMinimum} }
 
 func (h *Handler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/legal/{document}", h.document)
@@ -41,7 +80,11 @@ func (h *Handler) document(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	web.JSON(w, http.StatusOK, doc)
+	numbers := defaults()
+	if h.numbers != nil {
+		numbers = h.numbers(r.Context())
+	}
+	web.JSON(w, http.StatusOK, doc.With(numbers))
 }
 
 // locale is the same reading as the catalogue's, so a lesson and a policy are

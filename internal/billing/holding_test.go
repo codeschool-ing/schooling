@@ -52,7 +52,12 @@ func holdingFor(t *testing.T, account uuid.UUID, signedIn bool) http.Handler {
 		// chosen between the row an operator set and the deployment's variable.
 		// This suite is about the screen and not about that choice; the store's
 		// own tests cover the row, and the resolution is `cmd`'s.
-		func(context.Context) string { return support })
+		func(context.Context) string { return support },
+
+		/* THE STATUTORY WINDOW, wired as `cmd` wires it. This suite is about
+		   the screen and not about the parameter — `TestTheWindowOnTheScreen…`
+		   below is the one that moves it. */
+		func(context.Context) int { return billing.WithdrawalDays.Fallback })
 
 	mux := http.NewServeMux()
 	h.Routes(mux)
@@ -358,6 +363,94 @@ func TestACheckoutTheGatewayAnsweredIsStillTheirs(t *testing.T) {
 }
 
 /*
+AND THE DEADLINE IS AS FAR OUT AS THE PARAMETER SAYS.
+
+	`0046` made the window settable with the statute as its floor, so a platform
+	may offer fourteen days and may never offer six. What this checks is the
+	half that costs money: the DATE a student is told, which is what they act
+	on — a screen still counting seven while the terms of use print fourteen
+	would be the drift the generated document exists to prevent, arriving from
+	the other side.
+
+	SEVEN IS CHECKED TOO, and not because it is the fallback. It is the
+	statutory floor, and a wiring that answered six would have to come back
+	seven rather than six — which is the one direction of this parameter that is
+	not a preference at all.
+*/
+func TestTheDeadlineIsAsFarOutAsTheWindowSays(t *testing.T) {
+	for _, days := range []int{7, 14, 30} {
+		pool := testPool(t)
+		account, offer := student(t, pool), anOffer(t, pool)
+
+		bought := sold(t, pool, account, offer, listed, billing.MethodCard, 1, "pay_"+short())
+		settled(t, pool, bought)
+
+		h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
+			billing.NewCheckouts(pool, nil, nil),
+			func(context.Context) (uuid.UUID, bool) { return account, true },
+			func(context.Context) string { return support },
+			func(context.Context) int { return days })
+
+		mux := http.NewServeMux()
+		h.Routes(mux)
+
+		_, body := askHolding(t, mux)
+		window, ok := body["withdraw"].(map[string]any)
+		if !ok {
+			t.Fatalf("at a window of %d days nobody is told they can change their mind: %v",
+				days, body["withdraw"])
+		}
+
+		until, err := time.Parse(time.RFC3339, window["until"].(string))
+		if err != nil {
+			t.Fatalf("the deadline is not a date: %v", err)
+		}
+		if left := time.Until(until).Hours() / 24; left < float64(days)-1 ||
+			left > float64(days) {
+
+			t.Errorf("a window of %d days gave a deadline %.1f days out", days, left)
+		}
+	}
+}
+
+/*
+AND A WIRING BELOW THE STATUTE IS THE STATUTE, not what it asked for.
+
+	This is the one bound in the whole registry that is not a preference. Six
+	days is illegal, `Least` is 7 so no console can write it, and this is what
+	happens if `cmd` itself answers six: the platform gives seven. A screen that
+	obeyed would publish a window art. 49 does not allow, from a document that
+	says in words that seven is the minimum.
+*/
+func TestAWindowBelowTheStatuteIsTheStatute(t *testing.T) {
+	pool := testPool(t)
+	account, offer := student(t, pool), anOffer(t, pool)
+
+	bought := sold(t, pool, account, offer, listed, billing.MethodCard, 1, "pay_"+short())
+	settled(t, pool, bought)
+
+	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
+		billing.NewCheckouts(pool, nil, nil),
+		func(context.Context) (uuid.UUID, bool) { return account, true },
+		func(context.Context) string { return support },
+		func(context.Context) int { return 3 })
+
+	mux := http.NewServeMux()
+	h.Routes(mux)
+
+	_, body := askHolding(t, mux)
+	window := body["withdraw"].(map[string]any)
+	until, err := time.Parse(time.RFC3339, window["until"].(string))
+	if err != nil {
+		t.Fatalf("the deadline is not a date: %v", err)
+	}
+	if left := time.Until(until).Hours() / 24; left < float64(billing.WithdrawalDays.Fallback)-1 {
+		t.Errorf("a wiring answering three days gave a deadline %.1f days out — the Código "+
+			"de Defesa do Consumidor gives seven and it is not ours to narrow", left)
+	}
+}
+
+/*
 The seven days, which the terms of use promise and nothing could reach.
 
 	ART. 49 OF THE CDC: a purchase made at a distance may be withdrawn from
@@ -478,7 +571,8 @@ func TestTheSevenDaysAreSaidEvenWithNowhereToWrite(t *testing.T) {
 	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
 		billing.NewCheckouts(pool, nil, nil),
 		func(context.Context) (uuid.UUID, bool) { return account, true },
-		func(context.Context) string { return "" })
+		func(context.Context) string { return "" },
+		func(context.Context) int { return billing.WithdrawalDays.Fallback })
 
 	mux := http.NewServeMux()
 	h.Routes(mux)

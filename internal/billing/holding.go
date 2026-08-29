@@ -9,6 +9,8 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/codeschool-ing/schooling/internal/platform/web"
+
+	"github.com/codeschool-ing/schooling/internal/platform/setting"
 )
 
 /*
@@ -79,25 +81,66 @@ type Holding struct {
 	   database that cannot answer costs the notice its address, not the
 	   screen. */
 	support func(context.Context) string
+
+	/* window is how many days somebody has to change their mind, asked per
+	   request because `0046` made it a declared parameter. A number captured
+	   when this handler was built would tell a buyer one deadline while the
+	   terms of use printed another — the two are generated from this one
+	   value precisely so that cannot happen. */
+	window func(context.Context) int
 }
 
 // NewHolding is the read side over the three stores it joins.
 func NewHolding(plans *Store, prices *Prices, buys *Checkouts,
 	who func(context.Context) (uuid.UUID, bool),
-	support func(context.Context) string) *Holding {
+	support func(context.Context) string,
+	window func(context.Context) int) *Holding {
 
-	return &Holding{plans: plans, prices: prices, buys: buys, who: who, support: support}
+	return &Holding{plans: plans, prices: prices, buys: buys, who: who,
+		support: support, window: window}
+}
+
+// days is the window in force, bounded by the declaration however it is wired.
+//
+// AN UNWIRED ONE IS SEVEN, which is the statutory minimum and the number this
+// package shipped with. It is also the only safe end of the mistake: a
+// deployment that forgot to wire this must not publish a window shorter than
+// the law gives, and seven is what the law gives.
+func (h *Holding) days(ctx context.Context) int {
+	if h.window == nil {
+		return WithdrawalDays.Fallback
+	}
+	if got := h.window(ctx); WithdrawalDays.Valid(got) == nil {
+		return got
+	}
+	return WithdrawalDays.Fallback
 }
 
 /*
-WithdrawalDays is how long somebody has to change their mind, and it is seven
-because the law says seven.
+WithdrawalDays is how long somebody has to change their mind.
 
 	ART. 49 OF THE CÓDIGO DE DEFESA DO CONSUMIDOR. A purchase made at a distance
 	may be withdrawn from within seven days of contracting, for the whole amount,
-	with no reason given. It is not a policy, it is not ours to narrow, and the
-	terms of use say so in as many words: "Você tem sete dias para desistir […]
-	devolvemos o valor integral, sem precisar de motivo".
+	with no reason given. It is not ours to narrow.
+
+	THE OLD COMMENT SAID "IT IS SEVEN BECAUSE THE LAW SAYS SEVEN", AND THAT IS
+	HALF OF IT. The law says SEVEN AT LEAST. Nothing stops this platform giving
+	fourteen, or thirty; what it may never do is give six. So the statute is the
+	FENCE and not the value — `Least` is 7 and no console can move it — and how
+	much more than the minimum to offer is a commercial position with no right
+	answer, which is exactly K-13's bar. A longer window is a thing a school
+	competes on, and it costs whatever the refunds cost.
+
+	THE TERMS OF USE ARE GENERATED FROM THIS, which is the half that makes it
+	safe to move. They used to say "sete dias" in words, so a platform that
+	offered fourteen would publish a promise of seven and honour something else
+	— two numbers for one fact, in the document whose entire job is to be the
+	number. `{{withdrawal.days}}` is now substituted at serve time from this
+	same value, and `legal` fails a token nothing fills.
+
+	WHAT THE DOCUMENT STILL SAYS IN WORDS is the statute: the Code guarantees
+	seven, that is the minimum, and we never offer less. That sentence is true
+	at every value this may take, which is what let the number beside it move.
 
 	IT IS COUNTED FROM WHEN THE PURCHASE WAS PAID and not from when the checkout
 	was opened. A Pix code paid three days after it was generated is contracted
@@ -108,7 +151,19 @@ because the law says seven.
 	browser is a deadline held by a clock the person can set, and this one has a
 	legal meaning. The screen draws what this decides.
 */
-const WithdrawalDays = 7
+var WithdrawalDays = setting.Declared{
+	Name:     "billing.withdrawaldays",
+	Unit:     setting.Days,
+	Least:    7,
+	Most:     90,
+	Fallback: 7,
+	Why: "how long somebody has to change their mind. Art. 49 of the Código de Defesa do " +
+		"Consumidor gives seven days for a purchase made at a distance and that is a floor " +
+		"rather than an answer — `Least` is 7 so no console can narrow it, and how far above " +
+		"the minimum to go is a commercial position: a longer window is something a school " +
+		"competes on and it costs whatever the refunds cost. The terms of use print this " +
+		"number rather than spelling one out, so the promise and the behaviour cannot part.",
+}
 
 func (h *Holding) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/subscription", h.mine)
@@ -302,10 +357,10 @@ func (h *Holding) mine(w http.ResponseWriter, r *http.Request) {
 }
 
 /*
-withdrawable is the seven days, if they are still running.
+withdrawable is the window to change your mind, if it is still running.
 
 	THE NEWEST PAID PURCHASE IS THE ONE THAT COUNTS. Somebody who bought a year
-	in March and renewed in December has a fresh seven days on the December sale,
+	in March and renewed in December has a fresh window on the December sale,
 	and the March one is long gone — so this looks for the latest, not the first.
 	`Purchases` answers newest first, so the first paid row is it.
 
@@ -325,7 +380,7 @@ func (h *Holding) withdrawable(ctx context.Context, bought []Purchase) *withdraw
 		if p.Stage != StagePaid || p.Refunded {
 			continue
 		}
-		until := p.MovedAt.AddDate(0, 0, WithdrawalDays)
+		until := p.MovedAt.AddDate(0, 0, h.days(ctx))
 		if !time.Now().Before(until) {
 			return nil
 		}

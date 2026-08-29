@@ -267,6 +267,7 @@ func parameters() []setting.Declared {
 	return []setting.Declared{
 		analysis.MinimumSample,
 		billing.MostInstalments,
+		billing.WithdrawalDays,
 		exam.PassMark,
 		exam.QuestionsPerAttempt,
 		identity.PresenceWindow,
@@ -450,7 +451,17 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// same in every one — but a browser only ever reaches this server through a
 	// school's host, so the route has to be here to be reachable at all. It
 	// asks the request for nothing.
-	legal.NewHandler().Routes(scoped)
+	/* AND THE TWO DOCUMENTS, WHICH NOW STATE A NUMBER THIS PLATFORM DECIDES.
+	   The terms said "sete dias" in words while `billing.WithdrawalDays` said 7
+	   in Go — two statements of one fact, in the document whose whole job is to
+	   be the fact. The window is a parameter with the statute as its floor, so
+	   the document prints it rather than spelling one out, and this line is
+	   where the two are said to be the same number. */
+	legal.NewHandler(func(ctx context.Context) legal.Numbers {
+		return legal.Numbers{
+			WithdrawalDays: settings.Int(ctx, billing.WithdrawalDays.Name),
+		}
+	}).Routes(scoped)
 	courses := catalog.NewStore(pool)
 
 	// THE PAYWALL, IN ONE PLACE. `plan` is the only thing that turns a
@@ -714,8 +725,14 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		func(ctx context.Context) (uuid.UUID, bool) {
 			return identity.AccountID(ctx)
 		},
-		// Where somebody writes to use the seven days the terms promise them.
+		// Where somebody writes to use the days the terms promise them.
 		whereToWrite(billing.NewSupport(pool), cfg.SupportEmail),
+
+		/* AND HOW MANY DAYS THOSE ARE, from the same value the terms of use are
+		   printed from. A deadline drawn on the account screen from one number
+		   while the document promised another is the drift this parameter was
+		   given a fence and a generated document to prevent. */
+		settings.Reads(billing.WithdrawalDays),
 	).Routes(scoped)
 
 	if cfg.AsaasKey != "" {

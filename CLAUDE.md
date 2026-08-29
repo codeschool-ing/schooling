@@ -1059,11 +1059,23 @@ Two more rules about the documents:
   a wrong environment variable publishes a policy against the wrong company with.
 
 **The decided half is Brazilian.** The terms are governed by the Consumer Protection Code and a
-dispute is heard where the student lives; the refund window is the statutory seven days and
-nothing beyond it, said out loud rather than left to be discovered; a price change carries 30
-days' notice and happens at most once in twelve months. The privacy policy names the LGPD and
-the ANPD. None of that is a placeholder — it is the answer, and changing it means changing a
-policy rather than filling in a blank.
+dispute is heard where the student lives; the refund window has the statutory seven days as its
+FLOOR, said out loud rather than left to be discovered; a price change carries 30 days' notice
+and happens at most once in twelve months. The privacy policy names the LGPD and the ANPD. None
+of that is a placeholder — it is the answer, and changing it means changing a policy rather than
+filling in a blank.
+
+**The refund window is a declared parameter, and the terms of use print it.** The old comment
+said "it is seven because the law says seven", which is half of it: art. 49 says seven AT LEAST,
+and nothing stops this platform giving fourteen. So the statute is the fence — `Least` is 7 and
+no console can move it — and how far above the minimum to go is a commercial position a school
+competes on. What made that safe to build is the other half: the documents used to say "sete
+dias" in words while `billing.WithdrawalDays` said 7 in Go, which is two statements of one fact
+in the document whose whole job is to BE the fact. `{{withdrawal.days}}` is substituted at serve
+time from the same value the account screen's deadline is computed from, and `legal` fails a
+token nothing fills AND a substitution no document contains. What the documents still write out
+in words is the STATUTE — the Code guarantees seven, that is the minimum, we never offer less —
+because that sentence is true at every value the parameter may take and is not ours to move.
 
 **The seven days need a channel, and the channel is a parameter.** The account screen names the
 deadline whatever happens and names an ADDRESS only when there is one, so a deployment with none
