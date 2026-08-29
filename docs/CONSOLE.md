@@ -46,10 +46,22 @@ is how every console rots.* That division is the spine of everything below.
   a person is found here by an exact address and never listed (`K-22`), and a queue naming who
   complained is a list of people to browse — which is the read an audit cannot tell from working
 - The closed list of system parameters, each change audited with actor, old value and new value.
-  A **list**, not a registry: a table of names and values with a screen that edits any of them is
-  the configuration surface `K-13` exists to refuse. It lives in `internal/console/writes.go`,
-  where a test reads this package's own source and fails on a write nobody declared — so what is
-  closed is the set of things the console can do, and adding to it costs an argument
+  It lives in `internal/console/writes.go`, where a test reads this package's own source and
+  fails on a write nobody declared — so what is closed is the set of things the console can do,
+  and adding to it costs an argument
+- **The registry `K-13` refused, built once the refusal stopped working.** That entry used to say
+  "a **list**, not a registry", because a table of names and values with a screen that edits any
+  of them is the configuration surface `K-13` exists to refuse. `0046` built it anyway, and the
+  amendment is narrower than it sounds: what `K-13` protects is that a knob costs an **argument**,
+  and a table per parameter delivered that by making the mechanism expensive — which worked at
+  three and stops working at fifteen, because the cost of a migration is paid by whoever is tired
+  enough to stop writing the sentence. So the cost moved onto the declaration. A parameter is a
+  `setting.Declared` in the module that owns the decision, carrying its unit, the bounds it may
+  move inside, the value the code ships with and the sentence saying what it decides; `cmd/api`
+  gathers them and `TestEveryParameterCarriesItsArgument` fails one with no argument, no room to
+  move, or a fallback outside its own fence. A name absent from that set is a 404 on the way in
+  and decides nothing on the way out. **There is no "add a parameter" screen and there will not
+  be** — the way to add one is a declaration in Go, in a diff somebody reads
 - Prices effective-dated, so a subscriber keeps the price they bought at **for that term** —
   renewal charges what is in force then, with the notice the terms promise. A price is **appended**
   where a colour is **replaced**, and the two sit on one screen: nothing has to be explained about
@@ -141,7 +153,7 @@ Delivery order, not scope. Each of these is a body of work and each is on the ro
 The seeder belongs before step 3, because a funnel with four events in it cannot be reviewed.
 
 Steps 1 to 3 are done and step 4 is in the middle: presence, view-as-student, the
-reported-content queue and the map are built, and the parameters have two entries and no list. `ROADMAP.md` is where that is tracked — this document is what the console
+reported-content queue and the map are built, and the parameters have a screen of their own. `ROADMAP.md` is where that is tracked — this document is what the console
 IS, and a status line here would be the same fact in two places, drifting.
 
 **Why this order and not the reverse.** Phase 0 is a wall the rest of the project is meant to

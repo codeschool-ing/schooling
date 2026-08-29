@@ -30,7 +30,7 @@ Reading a subscription, which nothing could do until this route existed.
 // real one, because none of the tests below is about those.
 func settled(t *testing.T, pool *pgxpool.Pool, bought billing.Intent) {
 	t.Helper()
-	if _, _, err := billing.NewCheckouts(pool, nil).
+	if _, _, err := billing.NewCheckouts(pool, nil, nil).
 		Settled(context.Background(), bought.ID); err != nil {
 		t.Fatalf("settling a checkout: %v", err)
 	}
@@ -46,7 +46,7 @@ func holdingFor(t *testing.T, account uuid.UUID, signedIn bool) http.Handler {
 	pool := testPool(t)
 
 	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
-		billing.NewCheckouts(pool, nil),
+		billing.NewCheckouts(pool, nil, nil),
 		func(context.Context) (uuid.UUID, bool) { return account, signedIn },
 		// A CLOSURE OVER A CONSTANT, which is what `cmd` hands over after it has
 		// chosen between the row an operator set and the deployment's variable.
@@ -301,7 +301,7 @@ func TestAClickThatNeverReachedTheGatewayIsNotInTheirHistory(t *testing.T) {
 	account, offer := student(t, pool), anOffer(t, pool)
 
 	// The click that was refused for a tax id: opened, and no charge, ever.
-	buys := billing.NewCheckouts(pool, anybody)
+	buys := billing.NewCheckouts(pool, anybody, nil)
 	if _, err := buys.Open(ctx, account, "", offer, listed, "BRL",
 		billing.MethodCard, 1, "asaas"); err != nil {
 		t.Fatalf("opening the first checkout: %v", err)
@@ -476,7 +476,7 @@ func TestTheSevenDaysAreSaidEvenWithNowhereToWrite(t *testing.T) {
 	settled(t, pool, bought)
 
 	h := billing.NewHolding(billing.NewStore(pool), billing.NewPrices(pool),
-		billing.NewCheckouts(pool, nil),
+		billing.NewCheckouts(pool, nil, nil),
 		func(context.Context) (uuid.UUID, bool) { return account, true },
 		func(context.Context) string { return "" })
 

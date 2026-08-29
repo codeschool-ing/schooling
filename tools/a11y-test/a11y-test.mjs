@@ -1244,6 +1244,21 @@ try {
     await check(staff.page, `${theme} · console, what it costs`, '/#/plan', '/plan',
       { base: CONSOLE, region: '#stage', settled: '.price-list, #series .none' });
 
+    /* AND WHAT IT IS SET TO, which is the broadest write in this console and the
+       one whose whole defence is a paragraph of prose per block. Every knob
+       prints the argument its declaration carries above the field — that
+       sentence is the cost of the knob existing (K-13) — so this screen is
+       mostly running text beside a number and a fence, and what axe is being
+       asked is whether the sentence saying "nobody has changed this" is legible
+       as something other than decoration when it is drawn in the muted colour
+       an absent value uses.
+
+       IT SETTLES ON A BLOCK rather than on the form, because a read-only role
+       gets no form and the check has to be the same shape whoever is signed
+       in. */
+    await check(staff.page, `${theme} · console, what it is set to`, '/#/settings', '/settings',
+      { base: CONSOLE, region: '#stage', settled: '#knobs .block, #knobs .none' });
+
     /* THE FUNNEL, WHICH IS THE FIRST SCREEN IN `Measure` AND THE FIRST ONE HERE
        THAT DRAWS A QUANTITY. Eight rows of label, bar and count, and the bar is
        a width in per cent — so what axe is being asked is whether a number that
