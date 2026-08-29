@@ -77,6 +77,46 @@ is not a subtle failure: a deployment that has never set a discount would be
 unable to open any checkout at all, because the handler would treat "no row" as
 a reason to refuse rather than as nothing off.
 */
+/*
+AND THE DATABASE REFUSES AN EDIT, which is what makes the sentence above a
+guarantee rather than a habit.
+
+	IT WAS A HABIT UNTIL THIS TEST. `0045` shipped without the trigger
+	`plan_prices` carries — the header said the rate is APPENDED, `writes.go`
+	said it, the screen said it, and nothing but the code that writes it made it
+	true. A series that can be updated explains nothing, and the way that fails
+	is not a console doing it: it is a hand at a psql prompt correcting a typo
+	the honest way, which for this table is a new dated row.
+*/
+func TestARateCannotBeEditedOrDeleted(t *testing.T) {
+	pool := testPool(t)
+	discounts := billing.NewDiscounts(pool)
+	ctx, scope := context.Background(), scoped(t)
+
+	if _, err := discounts.Set(ctx, scope, billing.MethodPix, 500); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := pool.Exec(ctx,
+		`UPDATE plan_discounts SET basis_points = 100 WHERE scope = $1`, scope); err == nil {
+		t.Error("a rate was edited — the offer is then as forgeable as a column would be")
+	}
+	if _, err := pool.Exec(ctx,
+		`DELETE FROM plan_discounts WHERE scope = $1`, scope); err == nil {
+		t.Error("a rate was deleted")
+	}
+
+	// AND IT IS STILL THE ONE THAT WAS SET, which is the half a refused write
+	// does not prove on its own.
+	now, err := discounts.InForce(ctx, scope, billing.MethodPix)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if now.BasisPoints != 500 {
+		t.Errorf("after two refused writes the rate reads %d", now.BasisPoints)
+	}
+}
+
 func TestAMethodNobodyHasDiscountedIsNotAnError(t *testing.T) {
 	discounts := billing.NewDiscounts(testPool(t))
 

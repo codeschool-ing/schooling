@@ -85,6 +85,27 @@ CREATE TABLE plan_discounts (
 CREATE INDEX plan_discounts_in_force
     ON plan_discounts (scope, method, effective_from DESC);
 
+/* APPEND-ONLY, BY THE SAME TRIGGER AS `plan_prices`, THE LEDGER AND THE AUDIT.
+
+   This was missing from the first version of this migration and the omission
+   is worth naming rather than quietly correcting: everything else here — the
+   header, `console/writes.go`'s entry, the screen — says the discount is
+   APPENDED like the price, and a series that can be edited is a series that
+   explains nothing. The claim was in the prose and not in the schema, which is
+   the shape of a guarantee that holds until the first person who does not know
+   about it.
+
+   A mistake is corrected by dating a new row, exactly as it is for a price. */
+CREATE TRIGGER plan_discounts_are_append_only
+    BEFORE UPDATE OR DELETE ON plan_discounts
+    FOR EACH ROW EXECUTE FUNCTION refuse_to_change_history();
+
+-- And not emptied either, for `0034`'s reason: truncating is changing history
+-- with a bigger hammer.
+CREATE TRIGGER plan_discounts_are_not_emptied
+    BEFORE TRUNCATE ON plan_discounts
+    FOR EACH STATEMENT EXECUTE FUNCTION refuse_to_empty_history();
+
 COMMENT ON TABLE plan_discounts IS 'personal-data: none';
 
 /* AND THE RATE IN FORCE TODAY, SEEDED, because the interface has been quoting

@@ -116,6 +116,17 @@ var Registry = []Table{
 			"why somebody else was charged what they were",
 	},
 	{
+		Name: "plan_discounts", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "what comes off for paying a way that costs us less to receive, and since when. " +
+			"The price's twin in every respect this registry cares about: it is our offer " +
+			"rather than anybody's data — a rate in basis points, a scope and a date, with " +
+			"no column that could hold a person — and it is append-only for K-14's reason. " +
+			"A sale is explained by the price row it was sold under AND the rate that was " +
+			"in force that day; an erasure that could take one of these rows with it would " +
+			"be a person's request deleting the answer to why somebody else paid what they " +
+			"paid",
+	},
+	{
 		Name: "support_contact", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "the one address students are told to write to, to use the seven days the terms " +
 			"promise. An e-mail address in a column is the shape this registry exists to " +
