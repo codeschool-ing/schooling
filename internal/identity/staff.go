@@ -131,6 +131,116 @@ func (s *Store) StaffOf(ctx context.Context, accountID uuid.UUID) (Member, error
 	return m, nil
 }
 
+// Standing is one staff row with everything an access review needs beside it.
+//
+// IT IS NOT `Member`. `Member` is what a REQUEST is checked against — an id, a
+// role, a date — and it is read on every staff route, so it must stay one row
+// and no joins. This is the other question, asked rarely and whole: who has a
+// role, whether they can actually use it, who let them in, and when they last
+// did. Answering it with a loop over `Member` would be four queries per person
+// on the one screen that has every person on it.
+type Standing struct {
+	AccountID uuid.UUID
+	Name      string
+	Email     string
+	Role      Role
+
+	GrantedAt time.Time
+
+	// Who granted it, denormalised into a name and an address here for the
+	// reason `audit_log.actor_label` is denormalised in the table: the id of
+	// somebody who has since been erased points at nothing, and "who let this
+	// person in" is asked long after the fact. Empty for the first owner, who
+	// has nobody above them — `granted_by` is null there by design.
+	GrantedByName  string
+	GrantedByEmail string
+
+	// Set on somebody who left. A revoked row is KEPT (see `0005`) so that a
+	// person who left is distinguishable from a person who was never staff,
+	// and a listing that hid them could not answer the question the row was
+	// kept for.
+	RevokedAt *time.Time
+
+	// Whether they have a second factor at all. A role without one opens
+	// nothing — the check is at the door — so a roster that showed the role
+	// and not this would be describing access that does not exist.
+	SecondFactor bool
+
+	// When they last presented that second factor, which is when they last
+	// actually opened the console.
+	//
+	// IT IS `mfa_at` AND NOT `last_seen_at`, and the difference is the whole
+	// value of the column. A staff member is also a student here (see the top
+	// of this file), so a session touched five minutes ago may well be somebody
+	// reading their own course. `mfa_at` is set exactly once per session, at the
+	// moment a code was presented, and nothing but reaching a staff route asks
+	// for one.
+	//
+	// Nil is nobody who has ever opened it, which is the row an access review
+	// exists to find.
+	LastOpenedConsole *time.Time
+}
+
+/*
+Staff is everybody who has a role or has had one, current first.
+
+	WHY THE CONSOLE MAY SEE THIS AT ALL, when it may not list students (K-22).
+	The argument against listing people is that browsing personal data is
+	indistinguishable from working. It does not reach here: this is not a
+	population, it is the platform's own access-control list, and the reason to
+	read it is the reason it exists — somebody checking whether the set of people
+	who can open this is still the set that should. That check is impossible to
+	do one exact address at a time, because the whole question is who is on the
+	list that you did not think to ask about.
+
+	REVOKED ROWS COME BACK TOO, and they are ordered last rather than filtered.
+	`cmd/staff list` filters them, correctly, because it answers "who can get in
+	right now" for somebody about to grant or revoke. A screen answers "who has
+	ever been able to", which is the question with an audit in it.
+*/
+func (s *Store) Staff(ctx context.Context) ([]Standing, error) {
+	rows, err := s.pool.Query(ctx, `
+		SELECT a.id, a.name, a.email, s.role, s.granted_at, s.revoked_at,
+		       coalesce(g.name, ''), coalesce(g.email, ''),
+		       EXISTS (SELECT 1 FROM account_credentials c
+		               WHERE c.account_id = a.id AND c.kind = 'totp'),
+		       (SELECT max(x.mfa_at) FROM sessions x WHERE x.account_id = a.id)
+		FROM staff s
+		JOIN accounts a ON a.id = s.account_id
+		LEFT JOIN accounts g ON g.id = s.granted_by
+		-- Current before revoked, then by RANK rather than by the word. Sorting
+		-- on the role column alphabetically puts operator above owner and
+		-- read-only below both, which reads as an order and is not one. The
+		-- rank map in this file is the real order, spelled out again here
+		-- because SQL cannot see a Go map.
+		ORDER BY s.revoked_at IS NOT NULL,
+		         CASE s.role WHEN 'owner' THEN 1 WHEN 'operator' THEN 2 ELSE 3 END,
+		         a.email
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("identity: reading the staff: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Standing
+	for rows.Next() {
+		var one Standing
+		var role string
+		if err := rows.Scan(&one.AccountID, &one.Name, &one.Email, &role,
+			&one.GrantedAt, &one.RevokedAt, &one.GrantedByName, &one.GrantedByEmail,
+			&one.SecondFactor, &one.LastOpenedConsole); err != nil {
+
+			return nil, fmt.Errorf("identity: reading a staff row: %w", err)
+		}
+		one.Role = Role(role)
+		out = append(out, one)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("identity: reading the staff: %w", err)
+	}
+	return out, nil
+}
+
 /* ---------- the second factor ---------- */
 
 // ErrAlreadyEnrolled is a second factor being replaced by a session that has

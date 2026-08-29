@@ -903,6 +903,27 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   own subjects control. */
 	console.NewHistoryHandler(history(entries)).Routes(staffAPI)
 
+	/* AND THE OTHER HALF OF THAT ARRANGEMENT: who can do any of it.
+
+	   `cmd/staff list` has printed this since phase 0, into a terminal beside
+	   the database. So this console could set what every student pays, erase a
+	   person and read every entry in the audit — and could not answer "who else
+	   can". An access list nobody can see is an access list nobody reviews.
+
+	   IT IS NOT WHAT K-22 REFUSES. That decision is about producing a page of
+	   STUDENTS from something somebody typed, and its argument is that browsing
+	   personal data cannot be told from working. This is the platform's own
+	   access-control list — there is no reviewing one an address at a time,
+	   because the whole question is who is on it that nobody thought to ask
+	   about.
+
+	   READ-ONLY, AND NOTHING TO PASS BUT THE READ. No `Record`, because nothing
+	   is written; no rank closure, because reviewing who has access is the most
+	   read-only act this console has. Granting stays in `cmd/staff`, which has
+	   to exist regardless — the first owner cannot be granted a role by a
+	   console that needs one to open. */
+	console.NewStaffHandler(rosterOf(accounts)).Routes(staffAPI)
+
 	/* AND THE OTHER READ THAT MAKES THE FIRST SCREEN USABLE: what a student
 	   actually has. `Personal data` answers "is this the right person and how
 	   much is held", which is what somebody needs before erasing and nothing
@@ -1681,6 +1702,39 @@ func personAt(accounts *identity.Store) func(context.Context, string) (console.P
 			ID: account.ID, Name: account.Name, Email: account.Email,
 			CreatedAt: account.CreatedAt, Synthetic: account.Synthetic,
 		}, nil
+	}
+}
+
+// rosterOf is who can open the console, which is the one list `console` may
+// show whole — see the comment where it is wired and `console/staff.go` for why
+// K-22 does not reach it.
+//
+// THE ROLE CROSSES AS A STRING and is not translated into a set of the console's
+// own. There are three today and a fourth would be a decision about a person;
+// the day one appears, a `switch` here would fold it into whichever of the three
+// looked closest, and the screen would name it wrongly with nothing failing.
+// Passed through, an unknown role arrives on the screen as itself — which is the
+// same rule `console.Run.Outcome` follows for the same reason.
+func rosterOf(accounts *identity.Store) console.Operators {
+	return func(ctx context.Context) ([]console.Operator, error) {
+		all, err := accounts.Staff(ctx)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]console.Operator, 0, len(all))
+		for _, one := range all {
+			out = append(out, console.Operator{
+				AccountID: one.AccountID, Name: one.Name, Email: one.Email,
+				Role:      string(one.Role),
+				GrantedAt: one.GrantedAt,
+
+				GrantedByName: one.GrantedByName, GrantedByEmail: one.GrantedByEmail,
+				RevokedAt:         one.RevokedAt,
+				SecondFactor:      one.SecondFactor,
+				LastOpenedConsole: one.LastOpenedConsole,
+			})
+		}
+		return out, nil
 	}
 }
 
