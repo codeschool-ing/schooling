@@ -103,6 +103,60 @@ type Store struct {
 	// dates, and one that could only be tested by waiting until tomorrow would
 	// not be tested.
 	now func() time.Time
+
+	// The two boundaries the quality is derived from. Nil until WithThresholds,
+	// and nil is the pair this package shipped with.
+	tuning Tuning
+}
+
+/*
+Tuning is what this package reads from the parameter registry, wired by `cmd`.
+
+	A SEPARATE CALL rather than two more constructor arguments, for the reason
+	`analysis.WithStream` and `identity.WithLimits` are: drawing a queue,
+	opening a section and counting what is due read none of these — only
+	marking an answer does.
+
+	A NIL FIELD IS THE SHIPPED NUMBER. An un-wired deployment schedules practice
+	the way this package always has.
+*/
+type Tuning struct {
+	QuickAnswer      func(ctx context.Context) int
+	ConsideredAnswer func(ctx context.Context) int
+}
+
+// WithThresholds is the store reading its two boundaries from the registry.
+func (s *Store) WithThresholds(tuning Tuning) *Store {
+	out := *s
+	out.tuning = tuning
+	return &out
+}
+
+/*
+quickSeconds and consideredSeconds are what was wired, unbounded.
+
+	THEY DO NOT CHECK THE FENCES AND THAT IS DELIBERATE. `thresholds` takes
+	both and falls back TOGETHER, because the pair has a relationship neither
+	number can be judged by alone — a quick boundary above a considered one
+	makes the middle grade unreachable, and half-obeying would produce exactly
+	that. Checking here would let one through.
+
+	THEY TAKE NO CONTEXT for the reason `identity.within` gives: the caller is
+	inside a transaction that holds one, and the value comes from a snapshot
+	already in memory.
+*/
+func (s *Store) quickSeconds() int {
+	if s.tuning.QuickAnswer == nil {
+		return QuickAnswer.Fallback
+	}
+	return s.tuning.QuickAnswer(context.Background())
+}
+
+func (s *Store) consideredSeconds() int {
+	if s.tuning.ConsideredAnswer == nil {
+		return ConsideredAnswer.Fallback
+	}
+	return s.tuning.ConsideredAnswer(context.Background())
 }
 
 func NewStore(pool *pgxpool.Pool, may MayOpen, quarantined Quarantined) *Store {
@@ -435,7 +489,14 @@ func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
 		return Marked{}, err
 	}
 
-	quality := Quality(correct, elapsed)
+	/* THE THRESHOLDS ARE READ ONCE AND USED TWICE, which is why they are a
+	   local. They derive the quality and they are written into the row as what
+	   it was judged by; reading them twice would let a change landing between
+	   the two lines grade an answer by one pair and record another — a review
+	   that cannot be fitted, in the log that exists to be fitted. */
+	quick, considered := thresholds(s.quickSeconds(), s.consideredSeconds())
+
+	quality := Quality(correct, elapsed, quick, considered)
 	after := After(before, quality)
 	due := Due(s.now(), after)
 
@@ -466,12 +527,14 @@ func (s *Store) Answered(ctx context.Context, tenantID, accountID uuid.UUID,
 			(tenant_id, account_id, exercise_id, exercise_version, section_id,
 			 correct, quality, elapsed_ms,
 			 interval_before, interval_after, ease_before, ease_after,
-			 repetition_before, repetition_after, scheduler)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+			 repetition_before, repetition_after, scheduler,
+			 quick_ms, considered_ms)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
 	`, tenantID, accountID, exerciseID, version, e.sectionID,
 		correct, quality, elapsed.Milliseconds(),
 		before.Interval, after.Interval, before.Ease, after.Ease,
-		before.Repetition, after.Repetition, Scheduler); err != nil {
+		before.Repetition, after.Repetition, Scheduler,
+		quick.Milliseconds(), considered.Milliseconds()); err != nil {
 		return Marked{}, fmt.Errorf("practice: writing the review of %q: %w", exerciseID, err)
 	}
 

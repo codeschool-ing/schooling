@@ -47,7 +47,7 @@ func TestAMissedCardComesBackTomorrow(t *testing.T) {
 		t.Fatalf("the setup did not reach a long interval: %d", s.Interval)
 	}
 
-	s = practice.After(s, practice.Quality(false, time.Second))
+	s = practice.After(s, practice.Quality(false, time.Second, shipped, thoughtful))
 	if s.Interval != 1 {
 		t.Errorf("a missed card is due in %d days, want 1", s.Interval)
 	}
@@ -110,13 +110,13 @@ func TestAnIntervalAlwaysAdvancesOnceItIsMultiplied(t *testing.T) {
 // THE QUALITY IS DERIVED, NEVER ASKED (A-04). A person rating their own recall
 // rates their mood, so what the platform observes is what it uses.
 func TestQualityComesFromWhatHappenedRatherThanFromAnOpinion(t *testing.T) {
-	if q := practice.Quality(true, time.Second); q != 5 {
+	if q := practice.Quality(true, time.Second, shipped, thoughtful); q != 5 {
 		t.Errorf("right and immediate scored %d, want 5", q)
 	}
-	if q := practice.Quality(true, 30*time.Second); q != 4 {
+	if q := practice.Quality(true, 30*time.Second, shipped, thoughtful); q != 4 {
 		t.Errorf("right after thinking scored %d, want 4", q)
 	}
-	if q := practice.Quality(true, 5*time.Minute); q != 3 {
+	if q := practice.Quality(true, 5*time.Minute, shipped, thoughtful); q != 3 {
 		t.Errorf("right but slow scored %d, want 3", q)
 	}
 
@@ -124,7 +124,7 @@ func TestQualityComesFromWhatHappenedRatherThanFromAnOpinion(t *testing.T) {
 	// 0..2 band means deciding whether somebody "nearly knew it", which is a
 	// judgement only they can make and which this design refuses to ask for.
 	for _, took := range []time.Duration{time.Second, time.Minute, time.Hour} {
-		if q := practice.Quality(false, took); q != 1 {
+		if q := practice.Quality(false, took, shipped, thoughtful); q != 1 {
 			t.Errorf("a wrong answer after %s scored %d, want 1", took, q)
 		}
 	}
@@ -135,7 +135,7 @@ func TestQualityComesFromWhatHappenedRatherThanFromAnOpinion(t *testing.T) {
 // in different places and this is the seam between them.
 func TestAWrongAnswerScoresBelowTheRememberedThreshold(t *testing.T) {
 	learnt := practice.After(practice.After(practice.New(), 5), 5)
-	after := practice.After(learnt, practice.Quality(false, 2*time.Second))
+	after := practice.After(learnt, practice.Quality(false, 2*time.Second, shipped, thoughtful))
 
 	if after.Interval >= learnt.Interval {
 		t.Errorf("missing a card moved it from %d days to %d — the quality a wrong answer "+
@@ -183,3 +183,16 @@ func TestTheEaseFormulaIsThePublishedOne(t *testing.T) {
 		}
 	}
 }
+
+/*
+shipped and thoughtful are the two boundaries as this package carried them
+before `0046` made them settable.
+
+	EVERY TEST AROUND THEM IS ABOUT THE GRADES rather than about the
+	boundaries, and wants the scheduler this package has always had. The tests
+	that ARE about the parameters wire their own and say so.
+*/
+var (
+	shipped    = time.Duration(practice.QuickAnswer.Fallback) * time.Second
+	thoughtful = time.Duration(practice.ConsideredAnswer.Fallback) * time.Second
+)

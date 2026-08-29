@@ -106,6 +106,16 @@ explicable. (K-14) Renewal charges the price in force then — the terms of use 
 notice and at most one rise in twelve months, and `0040` exists because a column comment had
 promised otherwise.
 
+**The two SM-2 boundaries are parameters, and every review records the pair it was graded by.**
+`sm2.go` has always said ten seconds and forty-five "are not measurements (…) a starting point (…)
+meant to be fitted" — the clearest case K-13 has, because the platform is already collecting the
+history to find out. What the file also said was the condition for moving them: rename the
+scheduler in the same diff, so rows from two tunings stay distinguishable. That worked while
+moving them meant editing the file, and does not survive a console — so `0047` puts `quick_ms`
+and `considered_ms` on every row. **The pair falls back together**: neither declaration can see
+the other, and a quick boundary above a considered one makes the middle grade unreachable for
+every student, silently. Half-obeying would produce exactly that.
+
 **The paywall is not configurable.** No parameter, flag or console switch may widen who gets
 access. Granting one named student access is an audited action; a global switch is not. (K-15)
 
