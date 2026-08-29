@@ -273,6 +273,7 @@ func parameters() []setting.Declared {
 		identity.ChangeCap,
 		identity.ConfirmationLife,
 		identity.PresenceWindow,
+		identity.ViewingLifetime,
 	}
 }
 
@@ -412,6 +413,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	accounts := identity.NewStore(pool).WithLimits(identity.Limits{
 		ConfirmationLife: settings.Reads(identity.ConfirmationLife),
 		ChangeCap:        settings.Reads(identity.ChangeCap),
+		ViewingLife:      settings.Reads(identity.ViewingLifetime),
 	})
 	events := event.NewStore(pool)
 

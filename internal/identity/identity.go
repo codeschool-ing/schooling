@@ -133,6 +133,7 @@ Limits is what this package reads from the parameter registry, wired by `cmd`.
 type Limits struct {
 	ConfirmationLife func(ctx context.Context) int
 	ChangeCap        func(ctx context.Context) int
+	ViewingLife      func(ctx context.Context) int
 }
 
 // WithLimits is the store reading its two numbers from the registry.
@@ -166,6 +167,14 @@ func (s *Store) linkLife() time.Duration {
 }
 
 func (s *Store) changeCap() int { return within(s.limits.ChangeCap, ChangeCap) }
+
+// viewingLife is the same, and its fence is the one that matters: `Most` is the
+// shipped thirty minutes, so nothing here can lengthen a viewing — see
+// `ViewingLifetime`. An out-of-fence wiring falls back to the ceiling, which is
+// K-02 as it has always been rather than the shorter window somebody meant.
+func (s *Store) viewingLife() time.Duration {
+	return time.Duration(within(s.limits.ViewingLife, ViewingLifetime)) * time.Minute
+}
 
 func within(read func(context.Context) int, one setting.Declared) int {
 	if read == nil {

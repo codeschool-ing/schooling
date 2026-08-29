@@ -117,6 +117,13 @@ become so** — there is no trade there, more costs nothing anybody notices, and
 is a weakening with an interface on it. **One declaration feeds both links**: `change.go` used to
 carry a lifetime of its own with a comment saying it was the same number for the same reason.
 
+**A viewing may be made SHORTER and never longer.** The constant refused to become a parameter
+naming the exact failure — "a knob somebody turns up on the afternoon it is inconvenient" — and
+that refusal is about one direction. `Most` is the shipped thirty minutes and nothing can raise
+it, so an organisation asking for ten is tightening K-02 rather than loosening it. It is the only
+declaration in the registry whose fence protects a DECISION rather than a typed digit, and a
+`Most` of 31 would make the old refusal true again.
+
 **The paywall is not configurable.** No parameter, flag or console switch may widen who gets
 access. Granting one named student access is an audited action; a global switch is not. (K-15)
 
