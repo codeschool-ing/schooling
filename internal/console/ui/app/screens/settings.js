@@ -51,11 +51,14 @@ export default async function settings(section) {
       'deployment. Every change is recorded with your name, what was there and ' +
       'what replaced it — and each one asks you why.</p>' +
 
-      /* WHY THE LIST IS SHORT AND WHY IT WILL STAY SHORT, said on the screen
-         rather than only in the source. Somebody who opens this page and sees
-         five entries will wonder where the sixth is; the answer is that a knob
-         costs a declaration and an argument, which is a decision made in a diff
-         and not a gap waiting to be filled. */
+      /* WHY THE LIST IS AS LONG AS IT IS AND NO LONGER, said on the screen
+         rather than only in the source. Somebody who opens this page and counts
+         the entries will wonder where the next one is; the answer is that a
+         knob costs a declaration and an argument, which is a decision made in a
+         diff and not a gap waiting to be filled.
+
+         IT SAID "FIVE ENTRIES" UNTIL THERE WERE ELEVEN, which is what a comment
+         counting something it does not control is always going to do. */
       '<p>This list is closed. A parameter exists because some part of the ' +
       'system declared it — with what it counts in, the range it may move ' +
       'inside, the value the code ships with, and the argument for it being ' +
@@ -139,11 +142,25 @@ export default async function settings(section) {
                  parameter is one row that is replaced, so this log is the whole
                  history of what the platform was set to — and a number that
                  moved because a fee table changed is a different fact from one
-                 that moved because somebody was trying it out. */
-              '<label class="field">' +
+                 that moved because somebody was trying it out.
+
+                 THE PLACEHOLDER SAYS A LENGTH AND NOT A REASON, and it took
+                 seeing eleven of these on one screen to notice why that
+                 matters. It used to read "the fee bands changed" — written
+                 when the only parameter here was the instalment ceiling, where
+                 that sentence is plausible. Beside a pass mark or a presence
+                 window it is nonsense, and a placeholder is not decoration: it
+                 is a SUGGESTION, in the one field whose entire job is to make
+                 somebody write down the real reason. An operator in a hurry
+                 reads it, thinks close enough, and the log fills with a
+                 sentence the screen supplied.
+
+                 So it describes the shape of an answer — how long — and
+                 supplies none of its content. */
+              '<label class="field field-wide">' +
                 '<span>Why</span>' +
                 '<input type="text" name="reason" autocomplete="off" maxlength="200" ' +
-                  'placeholder="the fee bands changed">' +
+                  'placeholder="in a few words">' +
               '</label>' +
               '<button type="submit" class="btn btn-primary">Save</button>' +
             '</div>' +
