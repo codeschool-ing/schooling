@@ -78,7 +78,23 @@ export default async function staff(section) {
 
   body.innerHTML =
     '<section class="block">' +
-      '<div class="table-wrap"><table class="grid">' +
+      /* THE SCROLL CONTAINER IS FOCUSABLE HERE AND IS NOT ON THE OTHER TABLES,
+         and the difference is what is INSIDE them rather than a preference.
+
+         `table-wrap` scrolls sideways — it is the console's one element allowed
+         to, so the page never does — and a region that scrolls has to be
+         reachable by keyboard. Everywhere else in this console the rows contain
+         links: the history links to an entry, the record links to a person, and
+         tabbing through them scrolls the box as a side effect. This table is six
+         columns of facts with nothing to click, so there is nothing for a
+         keyboard to land on and the container has to take the focus itself.
+
+         WHICH MEANS IT NEEDS A NAME. A focusable box announced as "region" and
+         nothing else is a stop on the tab order that says nothing about why it
+         is there. `a11y-test` found this — the table went out without it. */
+      '<div class="table-wrap" tabindex="0" role="region" ' +
+        'aria-label="Everybody with a role on this platform">' +
+      '<table class="grid">' +
         '<thead><tr>' +
           '<th scope="col">Who</th>' +
           '<th scope="col">Role</th>' +
