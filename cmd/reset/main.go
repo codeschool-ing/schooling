@@ -94,6 +94,14 @@ var kept = map[string]string{
 	"tenant_domains":    "the addresses they answer at",
 	"plan_prices":       "what the platform charges, which is configuration written as history (K-14)",
 
+	// KEPT FOR THE PRICE'S REASON EXACTLY, and it has to be said separately
+	// because the two are separate tables: a reset that kept the price and
+	// emptied the discount would leave a deployment charging full price for a
+	// Pix, having changed an offer by running a command that promises to
+	// change data.
+	"plan_discounts": "what comes off for a Pix, which is configuration written as history " +
+		"(K-14) just as the price is",
+
 	/* KEPT FOR THE SAME REASON, one layer up: these are the numbers the platform
 	   behaves by, chosen deliberately and argued for in a declaration each. A
 	   reset that emptied them would put a deployment back on the shipped
@@ -152,6 +160,7 @@ var guards = map[string]string{
 	"ledger_entries":      "ledger_entries_are_not_emptied",
 	"subscription_events": "subscription_events_are_not_emptied",
 	"plan_prices":         "plan_prices_are_not_emptied",
+	"plan_discounts":      "plan_discounts_are_not_emptied",
 }
 
 /*

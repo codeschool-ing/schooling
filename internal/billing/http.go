@@ -85,37 +85,6 @@ type Charge struct {
 }
 
 /*
-PixDiscountBasisPoints is five per cent, in basis points.
-
-	IT IS A CONSTANT AND NOT A DIALED SETTING, and that is a decision rather than
-	a shortcut. K-13 asks whether a value has a right answer; this one does not,
-	so the argument for a console field is real — and it loses to K-14, which
-	asks whether a March invoice stays explicable in November. It does: the
-	checkout row records what was actually charged, beside the price row it was
-	sold under, so the discount is visible as the difference between two recorded
-	numbers rather than reconstructed from a rate.
-
-	The day somebody wants to change it without a deploy, it becomes a dated row
-	like the prices — not a column that can be overwritten.
-
-	IT IS EXPORTED SO THAT THE INTERFACE CAN BE TOLD RATHER THAN KNOW. Two
-	screens draw a Pix figure — the subscribe form and the invitation that leads
-	to it — and the first of them held a copy of this number with a comment
-	admitting it was one. Two copies is a number that drifts; three is a
-	certainty. It goes down with the school, beside `MaxInstalments`, and the
-	browser computes nothing this file has not stated.
-
-	WHY FIVE, WITH THE ARITHMETIC THE ACCOUNT ACTUALLY SHOWS. On a term of
-	R$ 690 the discount is R$ 34,50 and the fee it saves is R$ 13,23 — a Pix
-	received costs R$ 0,99 against 1,99% + R$ 0,49 on a card. So it costs
-	R$ 21,27 a sale and pays for NONE of itself, which is the opposite of what
-	this comment said while the figures were guesses. What it buys is settlement
-	in seconds instead of 32 days per instalment, and no chargeback. That is the
-	whole of the argument and it has to carry it alone.
-*/
-const PixDiscountBasisPoints = 500
-
-/*
 chargeLife is how long a charge stays payable.
 
 	SHORT, BECAUSE IT IS A PERSON WHO JUST CLICKED. Three days covers somebody
@@ -129,7 +98,14 @@ const chargeLife = 3 * 24 * time.Hour
 type Handler struct {
 	checkouts *Checkouts
 	prices    *Prices
-	gateway   Gateway
+
+	/* AND THE DISCOUNTS, WHICH USED TO BE A CONSTANT IN THIS FILE. `0045` makes
+	   the rate a dated series like the price, so what comes off a Pix is read
+	   here rather than compiled in — see `discount.go` for why it is dated and
+	   not simply settable. */
+	discounts *Discounts
+
+	gateway Gateway
 
 	// payer is who is buying, in the words the gateway wants. It is a
 	// collaborator for the reason everything else here is: `identity` owns the
@@ -145,11 +121,11 @@ type Handler struct {
 	brand string
 }
 
-func NewHandler(checkouts *Checkouts, prices *Prices, gateway Gateway, brand string,
-	payer func(context.Context) (uuid.UUID, string, string, bool)) *Handler {
+func NewHandler(checkouts *Checkouts, prices *Prices, discounts *Discounts, gateway Gateway,
+	brand string, payer func(context.Context) (uuid.UUID, string, string, bool)) *Handler {
 
 	return &Handler{
-		checkouts: checkouts, prices: prices, gateway: gateway,
+		checkouts: checkouts, prices: prices, discounts: discounts, gateway: gateway,
 		brand: brand, payer: payer,
 	}
 }
@@ -202,9 +178,22 @@ func (h *Handler) start(w http.ResponseWriter, r *http.Request) {
 		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
 		return
 	}
-	if method == MethodPix {
-		off := amount.Percent(PixDiscountBasisPoints)
-		if amount, err = amount.Sub(off); err != nil {
+	/* WHAT COMES OFF, READ RATHER THAN COMPILED IN. It was a constant here until
+	   `0045`, and its own comment named the condition for it stopping to be one.
+
+	   NO ROW IS NO DISCOUNT AND IS NOT AN ERROR: a method nobody has discounted
+	   is sold at the price, which is an ordinary offer rather than a failure.
+	   The store answers a zero and this takes nothing off. */
+	off, err := h.discounts.InForce(r.Context(), ScopeEverything, method)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading the discount in force",
+			"error", err, "method", method)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return
+	}
+	if off.BasisPoints > 0 {
+		less := amount.Percent(int64(off.BasisPoints))
+		if amount, err = amount.Sub(less); err != nil {
 			web.LoggerFrom(r.Context()).Error("applying the discount", "error", err)
 			web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
 			return

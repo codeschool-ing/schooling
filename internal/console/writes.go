@@ -125,6 +125,20 @@ var Writes = []Write{
 			"an arbitrage rather than a choice",
 	},
 	{
+		Route: "PUT /console/api/v1/plan/discount",
+		Kind:  Parameter,
+		Why: "what comes off for paying a way that costs us less to receive — five per cent " +
+			"for a Pix. No right answer: it is the share of a cheaper settlement this " +
+			"platform hands back, which is a commercial choice and not a fact anybody can " +
+			"check. APPENDED like the price and for a reason of its own: a past sale is " +
+			"already explicable without a series, because the checkout records what was " +
+			"charged beside the price row it was sold under — what a series adds is the " +
+			"fortnight that sold NOTHING, which leaves no trace in any sale and is exactly " +
+			"the fortnight somebody asks about. The CEILING stays in code (0045, " +
+			"MostBasisPoints): it guards 5000 typed where 500 was meant, and a fence " +
+			"somebody can move from a screen is a fence in the way rather than a fence",
+	},
+	{
 		Route: "PUT /console/api/v1/support/contact",
 		Kind:  Parameter,
 		Why: "where a student writes to use the seven days the terms promise. No right answer, " +

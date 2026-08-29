@@ -124,32 +124,38 @@ WHAT THIS NUMBER COUNTS CHANGED WITH `0046`, and the difference is worth being
 exact about, because a count that quietly stopped counting the same thing is a
 ratchet that has come loose.
 
-It counts WRITE ROUTES of the parameter kind, and it always did. Three of the
-four are one value each — a school's accent, the price of a term, where a
-student writes. The fourth is `settings/{name}`, which is every other knob this
-platform has, and it is ONE entry here because it is one route: what closes the
-set behind it is not this file but `internal/platform/setting`, where each name
-is a declaration in the module that owns the decision, and `cmd/api`'s
-`TestEveryParameterCarriesItsArgument`, which fails a declaration without an
-argument, without a fence, or with a fence it cannot move inside.
+It counts WRITE ROUTES of the parameter kind, and it always did. Four of the
+five are one value each — a school's accent, the price of a term, what a Pix
+takes off, where a student writes. The fifth is `settings/{name}`, which is
+every other knob this platform has, and it is ONE entry here because it is one
+route: what closes the set behind it is not this file but
+`internal/platform/setting`, where each name is a declaration in the module that
+owns the decision, and `cmd/api`'s `TestEveryParameterCarriesItsArgument`, which
+fails a declaration without an argument, without a fence, or with a fence it
+cannot move inside.
 
 So this test no longer holds the number of knobs. It holds the number of DOORS,
-and a fifth one is still a diff saying K-13 was read first.
+and a sixth one is still a diff saying K-13 was read first.
 
 The number is what it is today. Passing it is not permission to raise it.
 */
 func TestTheParameterRoutesAreStillFew(t *testing.T) {
-	/* FOUR SINCE THE REGISTRY, and this is the diff saying K-13 was read first.
-	   The argument is in `writes.go` beside the entry, in `0046` at length, and
-	   in `internal/platform/setting`'s package comment; the short version is
-	   that the guarantee moved from "a knob costs a table" to "a knob costs a
-	   declaration and an argument", which is the same cost in the place that
-	   was actually paying it.
+	/* FIVE, AND THE FIFTH IS WHY THIS TEST IS WORTH KEEPING. Four came from the
+	   registry landing on main; the Pix discount is the one that was in flight
+	   beside it, and neither branch could see the other's route. The count is
+	   what noticed — which is exactly the job of a number nobody may raise
+	   without saying so.
 
-	   The growth this watches for is a fifth ROUTE that writes a persisting
+	   The argument for each is in `writes.go` beside its entry, and for the
+	   registry in `0046` at length and in `internal/platform/setting`'s package
+	   comment; the short version is that the guarantee moved from "a knob costs
+	   a table" to "a knob costs a declaration and an argument", which is the
+	   same cost in the place that was actually paying it.
+
+	   The growth this watches for is a sixth ROUTE that writes a persisting
 	   value outside the registry — which is somebody routing around the
 	   declaration rather than writing one. */
-	const known = 4
+	const known = 5
 
 	if got := len(console.Parameters()); got != known {
 		t.Errorf("this console has %d parameter routes and had %d. If that is right, read "+
