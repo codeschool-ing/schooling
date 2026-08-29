@@ -34,11 +34,13 @@ import (
    `writes.go` lists what this console can CHANGE, and this route is correctly
    absent from it.
 
-   # WHY THIS IS NOT THE THING K-22 REFUSES
+   # WHY THIS IS NOT WHAT K-22 GOVERNS
 
-   K-22 says a person is found by an exact address and never listed, because
-   browsing personal data is indistinguishable from working. The argument does
-   not reach this list, and the difference is not one of degree:
+   K-22 said a person is found by an exact address and never listed, because
+   browsing personal data is indistinguishable from working. It has since been
+   amended — a listing of PEOPLE exists now, on `Personal data`, held by four
+   conditions — and neither the old wording nor the new one reaches this list.
+   The difference was never one of degree:
 
      - it is not a population, it is this platform's access-control list, and
        there is no version of reviewing one that goes address by address — the
@@ -55,6 +57,13 @@ import (
    leaves: it is the roster, read by people who are on it, and an entry per
    read would be an audit trail of operators looking at their own names — noise
    in exactly the log that has to stay searchable for the week it matters.
+
+   THE PEOPLE LISTING IS AUDITED AND THIS IS NOT, AND THE DIFFERENCE IS WHO IS
+   ON THE LIST. An entry there answers "was this operator working, or reading
+   the customer list" — a question with two possible answers. Here the readers
+   and the subjects are the same handful of people, so the entry would say that
+   somebody who can open this console opened the page saying who can open this
+   console. That is a count of nothing.
 
    # WHAT IT SHOWS THAT `cmd/staff list` DOES NOT
 

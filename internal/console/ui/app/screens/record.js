@@ -12,9 +12,14 @@
    Each is entered on its own, from its own place in the rail, and an operator
    answering a support message should not have to walk through the erasure
    screen to read somebody's plan. The form is the same shape in both because
-   the rule is the same — a whole address, never a list (K-22) — and the
+   the rule is the same — a whole address, and one person or none — and the
    sentence that refuses a partial one comes from the API in both cases, so
    there is one refusal and not two.
+
+   LOOKING SOMEBODY UP WITHOUT THEIR EXACT ADDRESS IS `Personal data`, which is
+   where K-22's amendment put it: a page at a time, and recorded. This form is
+   unchanged, and that is the point — a lookup that started matching partially
+   would be that power reached by a route that records nothing.
 
    Once found, the record is its own address: `#/record/<id>` survives a reload
    and can be pasted into a message.

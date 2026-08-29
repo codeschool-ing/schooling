@@ -31,11 +31,15 @@ import (
 
    # WHAT IT WILL NOT SHOW
 
-   Who they are. K-22 is that a person is found by an exact address and never
-   listed, and a list of who is online is a browse of the population wearing a
-   different hat — the read an audit cannot tell from working. So there is no
-   shape here that can carry a name: the answer is counts, and the operator who
-   needs a name already has one, because somebody wrote in.
+   Who they are. K-22 was amended and a listing of people now exists — bounded,
+   minimal, counted and named — and this would be none of the four. The one that
+   settles it is COUNTED: this screen refreshes on a timer, so there is no
+   moment at which anybody asked, and an entry per poll would be an audit of a
+   clock rather than of a person.
+
+   So there is no shape here that can carry a name. The answer is counts, and an
+   operator who needs a name has `Personal data`, which asks them what they are
+   looking for and writes down that they asked.
 */
 
 // Here is one school and how many people are in it right now.

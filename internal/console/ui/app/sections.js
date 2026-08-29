@@ -94,11 +94,11 @@ export const SECTIONS = [
      sides, and it sits in the middle because the roster is what makes the other
      two reviewable rather than merely available.
 
-     IT IS NOT WHAT K-22 REFUSES — see `console/staff.go`. That decision is
-     about listing STUDENTS, and its argument is that browsing personal data
-     cannot be told from working. There is no reviewing an access-control list
-     one address at a time: the whole question is who is on it that nobody
-     thought to ask about. */
+     IT IS NOT WHAT K-22 GOVERNS — see `console/staff.go`. That decision is
+     about listing STUDENTS, and it has since been amended: the section above
+     lists them now, under four conditions. Neither version reaches this one.
+     There is no reviewing an access-control list an address at a time, because
+     the whole question is who is on it that nobody thought to ask about. */
   { id: 'staff', name: 'Who can open this', group: 'Govern', screen: staff },
 
   { id: 'audit', name: 'History', group: 'Govern', screen: history },

@@ -184,14 +184,14 @@ type Standing struct {
 /*
 Staff is everybody who has a role or has had one, current first.
 
-	WHY THE CONSOLE MAY SEE THIS AT ALL, when it may not list students (K-22).
-	The argument against listing people is that browsing personal data is
-	indistinguishable from working. It does not reach here: this is not a
-	population, it is the platform's own access-control list, and the reason to
-	read it is the reason it exists — somebody checking whether the set of people
-	who can open this is still the set that should. That check is impossible to
-	do one exact address at a time, because the whole question is who is on the
-	list that you did not think to ask about.
+	WHY THIS IS NOT THE LISTING K-22 GOVERNS. That decision was about producing
+	a page of STUDENTS, and it has since been amended — `Look` in this package is
+	what it now allows, bounded and recorded. Neither version reaches here: this
+	is not a population, it is the platform's own access-control list, and the
+	reason to read it is the reason it exists — somebody checking whether the set
+	of people who can open this is still the set that should. That check is
+	impossible to do one exact address at a time, because the whole question is
+	who is on the list that you did not think to ask about.
 
 	REVOKED ROWS COME BACK TOO, and they are ordered last rather than filtered.
 	`cmd/staff list` filters them, correctly, because it answers "who can get in

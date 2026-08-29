@@ -872,8 +872,27 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// they are filled in — the same wiring `visitor.SchoolOf` uses, and the
 	// place `K-07`'s read layer starts.
 	somebody := console.People{
-		Find:  personAt(accounts),
-		ByID:  personByID(accounts),
+		Find: personAt(accounts),
+		ByID: personByID(accounts),
+
+		/* AND THE LISTING K-22 REFUSED UNTIL IT WAS AMENDED. `0048` and the
+		   block above `PeopleHandler.list` carry the argument; the short version
+		   is that "an audit cannot tell browsing from working" is true of one
+		   read and false of a hundred, and a page that records what was searched
+		   for and how many came back makes a hundred reads plainly visible in a
+		   log.
+
+		   The refusal it replaces was routed around rather than obeyed: an
+		   operator who could not find somebody reached for a SQL client against
+		   production, which is the same power with no audit and no gate. */
+		List: peopleLike(accounts),
+
+		// AND HOW BIG A PAGE IS, from the one place that decides it. The
+		// console uses it to work out whether there is another page; a copy of
+		// the number over there would end a listing early and leave the people
+		// below the cut reachable by nothing.
+		Page: identity.Page,
+
 		Held:  records.Export,
 		Erase: records.Erase,
 	}
@@ -910,12 +929,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   person and read every entry in the audit — and could not answer "who else
 	   can". An access list nobody can see is an access list nobody reviews.
 
-	   IT IS NOT WHAT K-22 REFUSES. That decision is about producing a page of
-	   STUDENTS from something somebody typed, and its argument is that browsing
-	   personal data cannot be told from working. This is the platform's own
-	   access-control list — there is no reviewing one an address at a time,
-	   because the whole question is who is on it that nobody thought to ask
-	   about.
+	   IT IS NOT WHAT K-22 GOVERNS. That decision is about producing a page of
+	   STUDENTS from something somebody typed, and it has since been amended —
+	   `somebody.List` above is what it now allows. Neither version reaches
+	   here: this is the platform's own access-control list, and there is no
+	   reviewing one an address at a time, because the whole question is who is
+	   on it that nobody thought to ask about.
 
 	   READ-ONLY, AND NOTHING TO PASS BUT THE READ. No `Record`, because nothing
 	   is written; no rank closure, because reviewing who has access is the most
@@ -1687,8 +1706,12 @@ func whereSchoolsAre(schools *tenant.Store) practice.Schools {
 	}
 }
 
-// personAt is the console's one way of reaching somebody: an exact address, and
-// one person or none (K-22).
+// personAt answers the person at exactly this address, or nobody.
+//
+// IT WAS "THE CONSOLE'S ONE WAY OF REACHING SOMEBODY", and `peopleLike` below
+// is why that sentence is gone rather than qualified. K-22 was amended: an
+// exact address is still the way to reach ONE person, and it is no longer the
+// only way to find them.
 func personAt(accounts *identity.Store) func(context.Context, string) (console.Person, error) {
 	return func(ctx context.Context, email string) (console.Person, error) {
 		account, err := accounts.ByEmail(ctx, email)
@@ -1702,6 +1725,33 @@ func personAt(accounts *identity.Store) func(context.Context, string) (console.P
 			ID: account.ID, Name: account.Name, Email: account.Email,
 			CreatedAt: account.CreatedAt, Synthetic: account.Synthetic,
 		}, nil
+	}
+}
+
+// peopleLike is a page of people matching a fragment, or everybody.
+//
+// THE TWO SHAPES ARE FIELD FOR FIELD THE SAME and this function is still four
+// lines of copying, because the module boundary is what makes them two types
+// (X-02). That is the cost of the rule and it is paid here on purpose: the day
+// one of the two grows a field, this is where somebody has to decide whether
+// the other gets it — which is exactly the decision that matters, since what a
+// listing may show about somebody is the whole of what makes it defensible.
+func peopleLike(accounts *identity.Store) func(context.Context, console.Look) ([]console.Person, error) {
+	return func(ctx context.Context, look console.Look) ([]console.Person, error) {
+		found, err := accounts.Look(ctx, identity.Look{
+			Words: look.Words, Before: look.Before, BeforeID: look.BeforeID,
+		})
+		if err != nil {
+			return nil, err
+		}
+		out := make([]console.Person, 0, len(found))
+		for _, one := range found {
+			out = append(out, console.Person{
+				ID: one.ID, Name: one.Name, Email: one.Email,
+				CreatedAt: one.CreatedAt, Synthetic: one.Synthetic,
+			})
+		}
+		return out, nil
 	}
 }
 
@@ -3338,7 +3388,10 @@ func viewingBelongsHere(next http.Handler) http.Handler {
 // consoleReport is the one shape crossing from `report` to `console`, written
 // once because both directions of the queue need it — reading it and settling
 // one. It drops the account deliberately: `console.Report` has no field for it,
-// so a report cannot arrive on a screen carrying who wrote it (K-22).
+// so a report cannot arrive on a screen carrying who wrote it. A queue naming
+// its reporters is a list of people selected by something they did, which is
+// the disclosure a listing may not be however carefully it is recorded — see
+// `console/content.go`.
 func consoleReport(one report.Report) console.Report {
 	return console.Report{
 		ID:         one.ID,

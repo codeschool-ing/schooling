@@ -348,7 +348,7 @@ deployment, would drift between two halves of the same screen.
 
 ## The three that were open
 
-### A person is found by an exact address, and never listed *(K-22)*
+### A person is found by an exact address, and never listed *(K-22, since amended)*
 
 E-mail, because it is the only identifier a support request carries — nobody writes in quoting a
 uuid, and a name is not unique.
@@ -362,6 +362,49 @@ Exact match also closes the smaller thing: a search that answers "no such accoun
 from "found" is an oracle for whether any given address has an account here. Among two people
 with mandatory MFA that is a small worry, but not building it is free — and with an exact match,
 "not found" tells the asker only what they already typed in.
+
+#### And then it was amended, because the load-bearing sentence was wrong
+
+**"Not building it is free"** was carrying the argument and it was not true. What it cost was
+the case nobody had walked when it was written: somebody writes in from an address that is not
+the one they signed up with, or signs their e-mail with a surname and nothing else. `find`
+answers yes or no about a string, so answering them meant guessing spellings at a form — and
+the fallback, every time, was a SQL client pointed at production. **A refusal that is routed
+around is not a control.** It is the same power with the audit and the gate removed, reached by
+whoever is willing to open a terminal.
+
+The other half — that an audit cannot distinguish browsing from working — is true, and does not
+support the conclusion. It cannot distinguish ONE read from another. It does not have to:
+nobody reviews access one entry at a time. Fifty rows, forty times in an afternoon, is a shape
+plainly visible in a log; a month of answering support is not. The decision was protecting
+against a listing that left **no trace**, and it wrote the rule as though the only alternative
+to no trace was no listing.
+
+So `never` became four conditions, which hold together rather than separately:
+
+| | |
+|---|---|
+| **bounded** | a page, and the size is `identity.Page` rather than a number the request sends. A listing whose size the caller chooses is an export that nothing recorded. |
+| **minimal** | a name, an address, when they arrived, whether they are seeded — the same four fields the exact lookup already returns about one person. A fifth field here is a change to this decision, not to a table. |
+| **counted** | an entry per page: who, when, what was searched for, how many came back. It carries the **query** and never the **results**, so the log never becomes a copy of the list. |
+| **named** | the screen states what the list is for, above the field, in the server's words. It is the only one of the four that reaches somebody *before* they type, which is the only moment a stated purpose can change what anybody does. |
+
+The uncomfortable part, said out loud: storing the query means somebody who types a whole
+address into that field leaves a fragment of it in a log that outlives that person's erasure.
+The alternative is an entry reading "somebody listed people", which cannot distinguish the two
+things the entry exists to distinguish — so it is stored, and what limits it is that the results
+never are.
+
+**Nothing about a person moved.** What is held is still read one at a time; the export is still
+recorded against a name (K-20); erasing still asks for that person's address to be typed. That
+last guard was written with the sentence *"an erasure reached by one click from a list somebody
+was scrolling is the accident this guards against"* — describing a danger this console did not
+have at the time. It has it now, and the guard was already standing.
+
+**And none of it was ever the law.** The LGPD asks for purpose (`finalidade`), necessity
+(`necessidade`) and a record of the operation (art. 37). It required nothing the old wording
+refused; the four conditions above are what those three look like built into a screen rather
+than asserted about one.
 
 ### The banner names the school as well as the student, and so does the audit entry
 

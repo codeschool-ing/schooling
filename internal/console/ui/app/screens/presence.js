@@ -9,11 +9,17 @@
 
    # IT COUNTS AND IT DOES NOT LIST
 
-   K-22: a person is found by an exact address and never listed. "Who is online"
-   is the most natural place in a console for that rule to quietly break — so
-   the answer has no names in it, and this screen has nothing to draw them with
-   even if one arrived. The number is the whole report, and the operator who
-   needs a name has one already, because somebody wrote in.
+   K-22 was amended and `Personal data` lists people now, under four conditions
+   — bounded, minimal, counted, named. This screen would fail two, and the
+   decisive one is COUNTED: it refreshes on a timer, so there is no moment at
+   which anybody asked for it and nothing to record a purpose against. A roll of
+   who is online, arriving every few seconds unbidden, is the browse with the
+   whole of what makes a listing defensible missing.
+
+   So the answer has no names in it, and this screen has nothing to draw them
+   with even if one arrived. The number is the whole report, and an operator who
+   needs a name has one already — or has the listing, which asks what they are
+   looking for and writes down that they asked.
 
    # THE WINDOW IS NOT WRITTEN IN THIS FILE
 
@@ -128,13 +134,18 @@ export default async function presence(section) {
         '<div class="block-top"><h2>What this does not count</h2></div>' +
         '<p class="aside">' + esc(answer.not_counted || '') + '</p>' +
 
-        /* K-22 ON THE SCREEN, because "why can I not see who" is a question an
-           operator will have, and the answer is a rule rather than an omission
-           somebody can be asked to fix. */
-        '<p class="aside">And it does not say <b>who</b>. A person is found ' +
-        'here by an exact address and never listed: a roll of who is online is ' +
-        'browsing people, which is the one read an audit cannot tell apart ' +
-        'from working.</p>' +
+        /* THE RULE ON THE SCREEN, because "why can I not see who" is a question
+           an operator will have, and the answer is a rule rather than an
+           omission somebody can be asked to fix.
+
+           IT IS A SHARPER ANSWER SINCE K-22 WAS AMENDED, not a weaker one:
+           there IS a place to look people up, and the reason it is not this one
+           is that this page arrives on a timer with nobody having asked. */
+        '<p class="aside">And it does not say <b>who</b>. This page refreshes ' +
+        'on its own, so there is no moment where somebody asked for it and ' +
+        'nothing to record a reason against — which is what a list of people ' +
+        'has to carry. Looking somebody up is <b>Personal data</b>, where every ' +
+        'page is recorded with what was searched for.</p>' +
       '</section>' +
 
       '<p class="freshness mono">Read at ' +

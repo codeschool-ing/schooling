@@ -1129,6 +1129,28 @@ try {
       },
     });
 
+    /* AND THE LISTING, WHICH IS THE AMENDMENT TO K-22 DRAWN. It is a third
+       state of this screen and not a variant of the one above: a table of
+       people, where the whole first cell of every row is a BUTTON — because
+       opening somebody is a request the screen makes rather than an address it
+       navigates to, and because a button is what a keyboard can reach.
+
+       THAT LAST PART IS WHAT AXE IS HERE FOR. The table scrolls sideways inside
+       `table-wrap`, and a scrolling region with nothing focusable in it is a
+       region a keyboard cannot reach — a violation the roster screen shipped
+       with and this suite caught. Here the row buttons are the focusable
+       content, so the check is that they really are focusable rather than a
+       `div` styled to look pressable. */
+    await check(staff.page, `${theme} · console, people listed`, '/#/people', '/people', {
+      base: CONSOLE,
+      region: '#stage',
+      async act(page) {
+        await page.fill('#words', 'example.tld');
+        await page.click('#search button[type=submit]');
+        await page.waitForSelector('#matches tbody tr', { timeout: 8000 });
+      },
+    });
+
     /* THE STUDENT RECORD, WHICH IS TWO SCREENS: the lookup, and one person.
        The second is reached by looking the student up, because the id is not
        something this file may invent — and a record measured at an id nobody

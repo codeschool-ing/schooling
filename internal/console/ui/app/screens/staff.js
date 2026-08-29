@@ -10,13 +10,14 @@
    access list nobody reviews, and the row that matters on it is always the one
    nobody remembered was there.
 
-   # IT IS NOT WHAT K-22 REFUSES
+   # IT IS NOT WHAT K-22 GOVERNS
 
    That decision is about producing a page of STUDENTS from something somebody
-   typed, and its argument is that browsing personal data cannot be told from
-   working. It does not reach here: this is the platform's own access-control
-   list, and there is no version of reviewing one that goes an address at a time
-   — the whole question is who is on it that nobody thought to ask about.
+   typed. It has since been amended — `Personal data` lists people now, under
+   four conditions — and neither version of it reaches here: this is the
+   platform's own access-control list, and there is no version of reviewing one
+   that goes an address at a time, because the whole question is who is on it
+   that nobody thought to ask about.
 
    # AND THERE IS NO FORM, WHICH THE SCREEN SAYS OUT LOUD
 
