@@ -39,6 +39,7 @@
 
 import { esc } from '../dom.js';
 import { get } from '../request.js';
+import { txt, day } from '../../assets/language.js';
 
 export default async function staff(section) {
   const el = document.createElement('div');
@@ -46,14 +47,15 @@ export default async function staff(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Govern</span>' +
-      '<h1>Who can open this</h1>' +
-      '<p>Everybody with a role on this platform, and everybody who has had ' +
+      '<span class="eyebrow mono">' + esc(txt('Govern')) + '</span>' +
+      '<h1>' + esc(txt('Who can open this')) + '</h1>' +
+      '<p>' + esc(txt('Everybody with a role on this platform, and everybody who has had ' +
       'one. A role opens nothing without a second factor, and neither says ' +
       'whether it has been used — which is the column an access review is ' +
-      'actually for.</p>' +
+      'actually for.')) + '</p>' +
     '</header>' +
-    '<div id="body" aria-live="polite"><p class="checking">Reading…</p></div>';
+    '<div id="body" aria-live="polite"><p class="checking">' +
+      esc(txt('Reading…')) + '</p></div>';
 
   const body = el.querySelector('#body');
 
@@ -61,7 +63,12 @@ export default async function staff(section) {
   try {
     answer = await get('/console/api/v1/staff');
   } catch (e) {
-    body.innerHTML = '<section class="block"><p class="none">' + esc(e.message) + '</p></section>';
+    /* THE FAILURE IS THE SERVER'S SENTENCE AND GOES THROUGH `txt()` LIKE ANY
+       OTHER. It arrives in English, English is the key, and it falls back to
+       English where nobody has written an entry — which is the right answer for
+       a message no static check can enumerate. */
+    body.innerHTML = '<section class="block"><p class="none">'
+      + esc(txt(e.message)) + '</p></section>';
     return { title: section.name, el };
   }
 
@@ -73,7 +80,7 @@ export default async function staff(section) {
      words, because it is a statement about the system rather than about a page. */
   if (all.length === 0) {
     body.innerHTML = '<section class="block"><p class="none">'
-      + esc(answer.impossible || '') + '</p></section>';
+      + esc(txt(answer.impossible || '')) + '</p></section>';
     return { title: section.name, el };
   }
 
@@ -94,30 +101,39 @@ export default async function staff(section) {
          nothing else is a stop on the tab order that says nothing about why it
          is there. `a11y-test` found this — the table went out without it. */
       '<div class="table-wrap" tabindex="0" role="region" ' +
-        'aria-label="Everybody with a role on this platform">' +
+        'aria-label="' + esc(txt('Everybody with a role on this platform')) + '">' +
       '<table class="grid">' +
         '<thead><tr>' +
-          '<th scope="col">Who</th>' +
-          '<th scope="col">Role</th>' +
-          '<th scope="col">Can get in</th>' +
-          '<th scope="col">Since</th>' +
-          '<th scope="col">Let in by</th>' +
-          '<th scope="col">Last opened this</th>' +
+          '<th scope="col">' + esc(txt('Who')) + '</th>' +
+          '<th scope="col">' + esc(txt('Role')) + '</th>' +
+          '<th scope="col">' + esc(txt('Can get in')) + '</th>' +
+          '<th scope="col">' + esc(txt('Since')) + '</th>' +
+          '<th scope="col">' + esc(txt('Let in by')) + '</th>' +
+          '<th scope="col">' + esc(txt('Last opened this')) + '</th>' +
         '</tr></thead>' +
         '<tbody>' + all.map(row).join('') + '</tbody>' +
       '</table></div>' +
-      '<p class="list-count">' + all.length
-        + (all.length === 1 ? ' row' : ' rows') + '</p>' +
+
+      /* THE COUNT IS TWO WHOLE SENTENCES AND NOT A WORD APPENDED TO A NUMBER.
+         "1 row" and "3 rows" differ in English by one letter and in Portuguese
+         by two words, and a plural built by adding an `s` to a translated noun
+         is the defect this console has already shipped once — "1 trilhas", a
+         count of one followed by a plural. */
+      '<p class="list-count">' +
+        esc(all.length === 1
+          ? txt('one row')
+          : txt('%d rows').replace('%d', all.length)) +
+      '</p>' +
     '</section>' +
 
     '<section class="block">' +
-      '<div class="block-top"><h2>Reading this list</h2></div>' +
-      '<p class="aside">' + esc(answer.about_reviewing || '') + '</p>' +
+      '<div class="block-top"><h2>' + esc(txt('Reading this list')) + '</h2></div>' +
+      '<p class="aside">' + esc(txt(answer.about_reviewing || '')) + '</p>' +
     '</section>' +
 
     '<section class="block">' +
-      '<div class="block-top"><h2>Why there is no form</h2></div>' +
-      '<p class="aside">' + esc(answer.how_to_change_it || '') + '</p>' +
+      '<div class="block-top"><h2>' + esc(txt('Why there is no form')) + '</h2></div>' +
+      '<p class="aside">' + esc(txt(answer.how_to_change_it || '')) + '</p>' +
     '</section>';
 
   return { title: section.name, el };
@@ -133,7 +149,7 @@ function row(one) {
        somebody acting on this row is copying that line. */
     '<td>' +
       '<span class="cell-main">' + esc(one.name || '—') +
-        (gone ? '<span class="tag tag-quiet">left</span>' : '') +
+        (gone ? '<span class="tag tag-quiet">' + esc(txt('left')) + '</span>' : '') +
       '</span>' +
       '<span class="cell-sub mono">' + esc(one.email) + '</span>' +
     '</td>' +
@@ -146,7 +162,13 @@ function row(one) {
     '<td>' + access(one, gone) + '</td>' +
 
     '<td>' + esc(day(one.granted_at)) +
-      (gone ? '<span class="cell-sub">until ' + esc(day(one.revoked_at)) + '</span>' : '') +
+      /* "until <date>" IS ONE SENTENCE WITH A HOLE IN IT, and not two strings
+         either side of a date: Portuguese puts the preposition somewhere
+         English does not, and a translation cut in half cannot move it. */
+      (gone
+        ? '<span class="cell-sub">' +
+            esc(txt('until %s').replace('%s', day(one.revoked_at))) + '</span>'
+        : '') +
     '</td>' +
 
     /* NOBODY, SPELLED OUT. `staff.granted_by` is null for exactly one row in
@@ -157,7 +179,7 @@ function row(one) {
       (one.granted_by_email
         ? '<span class="cell-main">' + esc(one.granted_by_name || '—') + '</span>' +
           '<span class="cell-sub mono">' + esc(one.granted_by_email) + '</span>'
-        : '<span class="none">nobody — the first owner</span>') +
+        : '<span class="none">' + esc(txt('nobody — the first owner')) + '</span>') +
     '</td>' +
 
     '<td>' + used(one, gone) + '</td>' +
@@ -169,11 +191,11 @@ function row(one) {
    factor cannot reach a staff route, and there is no state in between. A screen
    that showed the role alone would describe access that does not exist. */
 function access(one, gone) {
-  if (gone) return '<span class="none">revoked</span>';
+  if (gone) return '<span class="none">' + esc(txt('revoked')) + '</span>';
   if (!one.second_factor) {
-    return '<span class="tag tag-warn">no second factor</span>';
+    return '<span class="tag tag-warn">' + esc(txt('no second factor')) + '</span>';
   }
-  return '<span class="tag tag-staff">yes</span>';
+  return '<span class="tag tag-staff">' + esc(txt('yes')) + '</span>';
 }
 
 /* THE FINDING, RATHER THAN THE DATE. A role nobody has used is what somebody
@@ -189,8 +211,8 @@ const QUIET_DAYS = 90;
 
 function used(one, gone) {
   if (!one.last_opened_console) {
-    return '<span class="tag tag-warn">never</span>' +
-      (gone ? '' : '<span class="cell-sub">granted and not used</span>');
+    return '<span class="tag tag-warn">' + esc(txt('never')) + '</span>' +
+      (gone ? '' : '<span class="cell-sub">' + esc(txt('granted and not used')) + '</span>');
   }
 
   const when = new Date(one.last_opened_console);
@@ -202,8 +224,8 @@ function used(one, gone) {
       : '');
 }
 
-function day(iso) {
-  if (!iso) return '—';
-  const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? String(iso) : at.toLocaleDateString();
-}
+/* `day` USED TO BE HERE AND IS NOW `language.js`'s. It called
+   `toLocaleDateString()` with no argument, which formats in the BROWSER's
+   locale — so this screen printed `8/30/2026` while every word around it was
+   Portuguese. A date is a function of the language that was chosen, and it
+   lives beside the picker that chooses it. */
