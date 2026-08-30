@@ -57,6 +57,22 @@ try{if(localStorage.getItem('codeschool-theme')==='light')document.documentEleme
     <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
   </button>
 
+  <!-- THE STUDY INTERFACE'S BUTTON, IN THE SAME MARKUP. `.lang`, `.lang-btn`,
+       `.lang-menu` and `.lang-op` live in `base.css`, which this console serves
+       the same bytes of — so this is styled without a rule of its own, and the
+       two applications cannot drift into two different pickers.
+
+       WHAT IS NOT SHARED IS THE RUNTIME BEHIND IT: that file translates a
+       catalogue this console does not have, from globals that are undeclared
+       here. See `assets/language.js`, which is short for exactly that reason. -->
+  <div class="lang" id="lang">
+    <button class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Choose a language">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>
+      <span id="lang-short">EN</span>
+    </button>
+    <div class="lang-menu" id="lang-menu" role="menu"></div>
+  </div>
+
   <span class="whoami" id="whoami"></span>
 </nav>
 
@@ -83,6 +99,17 @@ try{if(localStorage.getItem('codeschool-theme')==='light')document.documentEleme
 <noscript>
   <p>The console needs JavaScript. Everything it does is a request that has to be signed for.</p>
 </noscript>
+
+<!-- THE DICTIONARY IS A CLASSIC SCRIPT AND THE ORDER MATTERS. It sets
+     `window.I18N`, and modules are deferred — so this has run by the time
+     `main.js` starts, and `txt()` never answers from an empty dictionary on the
+     first paint. The shape is `window.I18N.<lang>.ui`, which is what
+     `tools/check-interface` reads a dictionary by: the name alone was not
+     enough once, because a runtime and a catalogue translation both matched it.
+
+     There is no `i18n-en.js` and there never will be: the key IS the English
+     string, so an English dictionary would be an identity map. -->
+<script src="/assets/i18n-pt.js"></script>
 
 <script type="module" src="/app/main.js"></script>
 </body>
