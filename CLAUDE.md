@@ -723,9 +723,34 @@ says somebody decided, where an absence says nobody looked.
 study interface and `ui/my/` is the student's own place at `my.<platform domain>`;
 sharing one dictionary would make every string of the one read as a stale entry to
 the other, which is precisely what this tool reports. It takes the directory as an
-argument for exactly this, so both are checked without a line of it changing. The
-console is absent on purpose: staff software, English only, no dictionary to be out
-of step with.
+argument for exactly this, so both are checked without a line of it changing.
+
+**The console has one too, and it used to be absent on purpose** — *"staff software,
+English only, no dictionary to be out of step with"*. That reason was an assumption
+about who reads it. The people who operate this platform are Brazilian, and a console
+deciding refunds, erasures and what everybody pays is the software where reading a
+sentence twice costs the most. English stays the source, so a missing entry falls back
+to it rather than breaking a screen. **It claims two languages and not five**, because
+two are translated — a picker offering a third would promise a language and then answer
+in English.
+
+**Its runtime is its own, and short.** `ui/assets/i18n-runtime.js` cannot run there:
+`saveBase()` and `applyContent()` read `COURSES` and `TRACKS` as bare globals, which are
+undeclared in a console that has no catalogue, so the first switch of language throws a
+ReferenceError. It is also a copied file, and the rule those came in with is that
+nothing is added to them. What IS shared is the button — `.lang`, `.lang-btn`,
+`.lang-menu` and `.lang-op` are `base.css`'s and the console serves the same bytes — so
+the picker cannot drift into two pickers while the machinery for a catalogue stays
+where the catalogue is.
+
+**Seventeen of its most visible strings are invisible to the tool**, and a test covers
+them instead. The rail draws `txt(s.name)` and `txt(g)`, where the argument is a
+variable — a section's identity must not depend on what language somebody is reading in
+— so `internal/console/language_test.go` reads `sections.js` and the dictionary and
+compares them. **Only that direction.** An entry left behind by a rename is
+indistinguishable from a sentence the server sent, and the check for it that was written
+reported ten correct entries as suspects on its first run; a check that cries wolf
+teaches whoever reads it to skip the output that would one day name a real one.
 
 **It reads the comments out first**, and that exists because of a defect found by writing
 a comment about the tool. It scanned with a regular expression and did not know what a
@@ -1448,6 +1473,7 @@ go build ./...
 golangci-lint run            # before the tests: it is what build and vet do not do
 go run ./tools/validate-content   # the answer keys, not only the schema
 go run ./tools/check-interface    # every string the interface says, in every language it claims
+go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has
                                        # its own tree and its own dictionary
 go run ./tools/check-css          # our stylesheet overrides theirs and never lays it out
