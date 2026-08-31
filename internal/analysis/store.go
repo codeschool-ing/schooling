@@ -48,10 +48,11 @@ type Store struct {
 
 	// The stream's readers. Nil until WithStream, and the reports that need
 	// them refuse rather than answering something built from nothing.
-	reached Reached
-	monthly Monthly
-	origins Origins
-	links   Links
+	reached  Reached
+	anywhere ReachedAnywhere
+	monthly  Monthly
+	origins  Origins
+	links    Links
 
 	// How many answers a question needs before this store says anything about
 	// it. Nil until WithMinimumSample, and nil is the number `MinimumSample`
@@ -102,12 +103,21 @@ func (s *Store) enough(ctx context.Context) int {
 // is one: item analysis needs none of them, and a constructor that demanded all
 // of them would be a constructor somebody passes nil to.
 //
-// `links` is shared by all three on purpose. It is what turns two identities
+// `links` is shared by all of them on purpose. It is what turns two identities
 // into one person, and a report that folded them differently from another would
 // put two irreconcilable totals on two screens of the same console.
-func (s *Store) WithStream(reached Reached, monthly Monthly, origins Origins, links Links) *Store {
+//
+// `anywhere` is the one reader that is not about a school, and it is here
+// rather than behind its own `With…` because it is not optional: the funnel's
+// last step needs it, and a store wired with four of five readers would answer
+// that step with a silent zero. Everything the stream can be asked arrives in
+// one call, so there is one thing to forget rather than two.
+func (s *Store) WithStream(reached Reached, anywhere ReachedAnywhere,
+	monthly Monthly, origins Origins, links Links) *Store {
+
 	out := *s
-	out.reached, out.monthly, out.origins, out.links = reached, monthly, origins, links
+	out.reached, out.anywhere = reached, anywhere
+	out.monthly, out.origins, out.links = monthly, origins, links
 	return &out
 }
 

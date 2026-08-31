@@ -858,6 +858,13 @@ window.I18N.pt.ui = {
      sit in the same place in every language. */
   'Not counted yet — %s': 'Ainda não contado — %s',
 
+  /* THE LAST STEP BELONGS TO THE PLATFORM AND NOT TO THE SCHOOL, which this
+     screen says twice on purpose: once on the row, where somebody scanning the
+     chart will see it, and once underneath, where the reason fits. */
+  'platform-wide': 'toda a plataforma',
+  'The last step is not about this school. One subscription opens every school, so it counts the people who arrived here and went on to subscribe anywhere — which means two schools can each count the same person, and their last steps do not add up to the number of subscribers on the platform.':
+    'A última etapa não é sobre esta escola. Uma assinatura abre todas as escolas, então ela conta as pessoas que chegaram aqui e passaram a assinar em qualquer lugar — o que significa que duas escolas podem contar a mesma pessoa, e a soma das últimas etapas delas não dá o número de assinantes da plataforma.',
+
   /* ---------- Measure · Questions ----------
 
      THE FIVE VERDICTS AND WHAT EACH MEANS are drawn through a variable and are

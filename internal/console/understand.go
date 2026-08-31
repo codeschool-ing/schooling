@@ -48,16 +48,31 @@ import (
 
 // Step is one step of the funnel as this screen shows it.
 //
-// `Measured` IS A FIELD AND NOT `People == 0`. Two of the eight steps have no
-// event to count yet — verifying an address, and subscribing — and reported as
-// zero they read as everybody dropping out there. "Nobody got here" and
-// "nothing counts this" are different facts, and a screen that showed them
-// alike would report a missing feature as the platform's worst drop-off.
+// `Measured` IS A FIELD AND NOT `People == 0`. A step with no event to count,
+// reported as a zero, reads as everybody dropping out there. "Nobody got here"
+// and "nothing counts this" are different facts, and a screen that showed them
+// alike would report a missing feature as the platform's worst drop-off. Every
+// step is measured as of this branch; the field stays because the distinction
+// is what makes the screen safe to draw, not because there is a case today.
 type Step struct {
 	Label    string
 	People   int
 	Measured bool
 	Why      string
+
+	/* Platform says this step did not happen at this school.
+
+	   THERE IS ONE, AND THE SCREEN HAS TO SAY SO OUT LOUD. A subscription
+	   covers every school (N-02), so the last step counts the people who
+	   arrived HERE and went on to subscribe ANYWHERE. That is the honest
+	   reading, and it is not the one somebody takes from a column of numbers
+	   that are otherwise all about this school: two schools can each count the
+	   same person, and their last steps do not add up to the platform's
+	   subscribers. The countries screen carries a sentence for the same shape.
+
+	   IT TRAVELS AS A FLAG AND NOT AS A SENTENCE ABOUT "THE LAST STEP", because
+	   which step it happens to be is not the screen's business to know. */
+	Platform bool
 }
 
 // Funnel is what this package may not import: `analysis` owns the arithmetic
@@ -145,6 +160,7 @@ type stepBody struct {
 	People   int    `json:"people"`
 	Measured bool   `json:"measured"`
 	Why      string `json:"why,omitempty"`
+	Platform bool   `json:"platform,omitempty"`
 }
 
 func (h *UnderstandHandler) funnelOf(w http.ResponseWriter, r *http.Request) {

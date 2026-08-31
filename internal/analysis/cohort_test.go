@@ -56,6 +56,7 @@ func cohortsOver(t *testing.T, signups, studied []analysis.Active,
 			analysis.Counting) ([]analysis.Reach, error) {
 			return nil, nil
 		},
+		nil, // a cohort reads no platform step; `funnel_test.go` covers that one
 		func(_ context.Context, _ uuid.UUID, names []string, _ time.Time,
 			_ analysis.Counting) ([]analysis.Active, error) {
 			if len(names) == 1 && names[0] == analysis.SignupEvent {

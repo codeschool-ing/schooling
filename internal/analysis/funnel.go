@@ -40,6 +40,24 @@ type Step struct {
 	// Event is the name in the stream, or empty when nothing emits this step.
 	Event string
 
+	/* Platform says this step is not something that happens inside a school.
+
+	   THERE IS EXACTLY ONE, AND IT IS NOT AN OVERSIGHT. One subscription covers
+	   every school (N-02), so a subscription belongs to no school and its event
+	   carries no tenant — `event.ForPlatform` says exactly that. Seven steps of
+	   this funnel are things somebody did at a school and the eighth is not,
+	   and flattening the difference would mean picking a school to attribute a
+	   purchase to that was never about one.
+
+	   WHAT THE STEP THEN MEANS is: of the people who arrived HERE, how many
+	   went on to subscribe — anywhere. That is the honest reading and it is the
+	   question somebody opens a funnel to ask. It also means somebody who
+	   arrived at two schools and subscribed once is counted under both, which
+	   is true rather than double-counted: each funnel is asking about its own
+	   arrivals. It is the shape the countries screen already carries a sentence
+	   about, and this screen now carries its own. */
+	Platform bool
+
 	// Label is what it is called on a screen, in English. The source language
 	// is English and the key is the string (N-06).
 	Label string
@@ -105,6 +123,25 @@ func Reading(word string) (Counting, bool) {
 type Reached func(ctx context.Context, tenantID uuid.UUID,
 	names []string, since time.Time, who Counting) ([]Reach, error)
 
+/*
+ReachedAnywhere is the same question asked of the events that belong to no
+school.
+
+	IT IS A SECOND READER AND NOT A NULLABLE TENANT ON THE FIRST. `Reached` takes
+	a `uuid.UUID`, and the way to say "no school" through it would be
+	`uuid.Nil` — a value that means "the zero school" as readily as it means
+	"every school", at a call site where getting it wrong returns an empty
+	answer rather than an error. Two functions cannot be confused for each
+	other, and each one's SQL says plainly which rows it is about.
+
+	IT IS STILL SCOPED BY THE PEOPLE, not by nothing. The funnel folds what
+	comes back into the same set of identities as every other step, so a
+	platform event only reaches a school's chart through somebody who arrived
+	at that school. The query is wide; the reading is not.
+*/
+type ReachedAnywhere func(ctx context.Context,
+	names []string, since time.Time, who Counting) ([]Reach, error)
+
 // Reach is the stream's answer: a step, and whichever identities were on the
 // event.
 type Reach struct {
@@ -140,12 +177,34 @@ var steps = []Step{
 	{Event: "lesson.opened", Label: "Opened the first lesson"},
 	{Event: "section.completed", Label: "Finished the first section"},
 	{Event: "course.completed", Label: "Finished the free course"},
-	{
-		Label: "Subscribed",
-		Why: "nothing creates a subscription until there is a payment gateway, so there " +
-			"is no event to count. A missing feature and not a step nobody reaches",
-	},
+	/* AND THE EIGHTH IS MEASURED NOW, which it was not since this file existed.
+
+	   What it used to say — "nothing creates a subscription until there is a
+	   payment gateway" — stopped being true when phase 3 shipped and stayed on
+	   the screen anyway, which is the quietest kind of wrong: a sentence that
+	   explains an absence somebody would otherwise investigate. Billing has
+	   created subscriptions for weeks; what did not exist was the event, and
+	   `billing.EventStarted` is it.
+
+	   IT COUNTS STARTING AND NOT PAYING. A renewal is a different name in the
+	   stream on purpose — a funnel asks how many people got this far, once, and
+	   a step that counted every payment would grow every year without one more
+	   person ever reaching it.
+
+	   THE NAME IS THIS PACKAGE'S OWN AND NOT `billing.EventStarted`, which is
+	   X-02: modules do not import modules. It is the arrangement every other
+	   step is already under — `section.completed` is written out in `progress`
+	   where it is emitted and again in `cohort.go` where it is read — because a
+	   name in an append-only stream is a contract with rows written years ago
+	   rather than a variable one package owns. A rename reaching only one end
+	   is a query that matches nothing and a report that says nobody ever
+	   subscribed, so `TestTheStreamsNamesAreWrittenAtBothEnds` holds the pair. */
+	{Event: SubscribedEvent, Label: "Subscribed", Platform: true},
 }
+
+// SubscribedEvent is the name this package reads the last step from. Its other
+// end is `billing.EventStarted`; see the step above for why there are two.
+const SubscribedEvent = "subscription.started"
 
 // Funnel answers how many people reached each step in one school, over the
 // population `who` names.
@@ -157,20 +216,35 @@ var steps = []Step{
 // `event.Counting`, which this mirrors.
 func (s *Store) Funnel(ctx context.Context, tenantID uuid.UUID, since time.Time,
 	who Counting) ([]Step, error) {
-	if s.reached == nil || s.links == nil {
+	if s.reached == nil || s.anywhere == nil || s.links == nil {
 		return nil, fmt.Errorf("analysis: this store was built without the stream to read")
 	}
 
-	var names []string
+	/* TWO LISTS, BECAUSE THEY ARE TWO QUESTIONS. Seven of these steps happened
+	   inside this school and the eighth did not belong to any — see `Platform`
+	   on `Step`. Asking for all eight with a tenant would drop the eighth
+	   silently, which is the failure this whole file is written against: a step
+	   that reports zero where it should report a number, and looks like a
+	   cliff. */
+	var here, anywhere []string
 	for _, step := range steps {
-		if step.Event != "" {
-			names = append(names, step.Event)
+		switch {
+		case step.Event == "":
+		case step.Platform:
+			anywhere = append(anywhere, step.Event)
+		default:
+			here = append(here, step.Event)
 		}
 	}
 
-	reaches, err := s.reached(ctx, tenantID, names, since, who)
+	reaches, err := s.reached(ctx, tenantID, here, since, who)
 	if err != nil {
 		return nil, fmt.Errorf("analysis: reading who reached each step: %w", err)
+	}
+
+	beyond, err := s.anywhere(ctx, anywhere, since, who)
+	if err != nil {
+		return nil, fmt.Errorf("analysis: reading who subscribed: %w", err)
 	}
 
 	links, err := s.links(ctx)
@@ -187,6 +261,45 @@ func (s *Store) Funnel(ctx context.Context, tenantID uuid.UUID, since time.Time,
 			// An event with neither identity on it. It happened, and there is
 			// nobody to count it for — dropping it is right, and counting it as
 			// an anonymous person would inflate every step it appears in.
+			continue
+		}
+		if people[r.Name] == nil {
+			people[r.Name] = map[string]bool{}
+		}
+		people[r.Name][who] = true
+	}
+
+	/* WHO THIS SCHOOL HAS SEEN AT ALL, which is what makes the platform's
+	   events into this school's number.
+
+	   THE PLATFORM READ IS DELIBERATELY WIDE AND HAS TO BE NARROWED HERE. It
+	   returns every subscription on the platform, because a subscription
+	   carries no school to filter by — so folding it in with the rest, as the
+	   first version of this did, would have put every subscriber on the
+	   platform into every school's last step. Eight schools would each have
+	   claimed the same conversions, and the number would have looked plausible
+	   on all eight.
+
+	   THE SET IS EVERY STEP AND NOT JUST THE FIRST. "Arrived" is the honest
+	   denominator and it is also the event most likely to be missing — it is
+	   emitted for a signed-out browser, before any account exists, and it is
+	   the one a blocked script or a direct link never produces. Somebody whose
+	   arrival was never recorded but who opened four lessons here is plainly
+	   somebody this school has seen, and requiring the first step would drop
+	   them from the last one while leaving them in the middle six. */
+	seen := map[string]bool{}
+	for _, step := range steps {
+		if step.Event == "" || step.Platform {
+			continue
+		}
+		for who := range people[step.Event] {
+			seen[who] = true
+		}
+	}
+
+	for _, r := range beyond {
+		who := personOf(r, links)
+		if who == "" || !seen[who] {
 			continue
 		}
 		if people[r.Name] == nil {

@@ -438,6 +438,57 @@ func (s *Store) Reached(ctx context.Context, tenantID uuid.UUID,
 	return out, rows.Err()
 }
 
+/*
+ReachedAnywhere is `Reached` for the events that belong to no school.
+
+	WHAT IT IS FOR: a subscription covers every school (N-02), so it is written
+	with no tenant — `ForPlatform` above — and `Reached` cannot see it, because
+	`tenant_id = $2` is not a predicate NULL satisfies. That is not a bug in
+	either query; they are about different rows.
+
+	`tenant_id IS NULL` AND NOT "ANY TENANT". The difference matters and the two
+	would be easy to confuse: this is the platform's own events, not every
+	school's added together. A caller wanting the second would be asking a
+	question this platform has no screen for, and would get a number that looked
+	exactly like this one.
+
+	THE CALLER NARROWS IT, AND THIS DOES NOT. What comes back is every identity
+	on the platform that did the named thing; `analysis.Funnel` keeps only the
+	people the school in hand has already seen. Narrowing here would mean this
+	package knowing what a funnel is, which is the line `Monthly`'s comment
+	draws: report the stream at a grain, and let something else decide what the
+	grain means.
+*/
+func (s *Store) ReachedAnywhere(ctx context.Context,
+	names []string, since time.Time, who Counting) ([]Reach, error) {
+
+	if len(names) == 0 {
+		return nil, nil
+	}
+
+	// See `ItemAnswers` for why this one predicate is formatted in.
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT name, visitor_id, account_id
+		FROM events
+		WHERE name = ANY($1) AND tenant_id IS NULL AND occurred_at >= $2
+		  AND `+who.counts()+`
+	`, names, since)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading who reached a step off any school: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Reach
+	for rows.Next() {
+		var r Reach
+		if err := rows.Scan(&r.Name, &r.VisitorID, &r.AccountID); err != nil {
+			return nil, fmt.Errorf("event: reading who reached a step off any school: %w", err)
+		}
+		out = append(out, r)
+	}
+	return out, rows.Err()
+}
+
 // Active is one identity that did something in one month.
 type Active struct {
 	// Month is the first instant of the month, in UTC.

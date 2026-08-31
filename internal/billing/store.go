@@ -51,10 +51,52 @@ sold at.
 var ErrNoPrice = errors.New("billing: a subscription has to say which price it was bought at")
 
 // Store reads and writes subscriptions.
-type Store struct{ pool *pgxpool.Pool }
+type Store struct {
+	pool *pgxpool.Pool
+
+	// emit is what a subscription's life is counted as, and it is optional:
+	// nil means nothing is counted, which is what every test about the state
+	// machine wants. See `WithStream`.
+	emit Emit
+}
 
 // NewStore is the store over a pool.
 func NewStore(pool *pgxpool.Pool) *Store { return &Store{pool: pool} }
+
+/*
+WithStream gives this store somewhere to count a subscription's life.
+
+	IT IS A SECOND STEP AND NOT AN ARGUMENT TO `NewStore` — the shape
+	`analysis.WithStream` already uses, for the same reason. A store that reads
+	and writes subscriptions is complete without one, every test of the state
+	machine builds it that way, and a required argument would make each of them
+	pass a nil they do not care about.
+
+	THE EMISSION IS AFTER THE COMMIT, ALWAYS. A subscription that was written
+	and not counted is a hole in a report; one counted and then rolled back is a
+	report that disagrees with the thing it reports on, and no later read can
+	tell that it does. So the write wins and the count follows it — the same
+	trade `confirmed` makes in `cmd/api`, out loud.
+*/
+func (s *Store) WithStream(emit Emit) *Store {
+	out := *s
+	out.emit = emit
+	return &out
+}
+
+// count emits one fact about a subscription, and can fail nothing.
+//
+// A NIL CALLBACK IS SILENCE RATHER THAN A PANIC, because the store is
+// legitimately built without one. The check lives here rather than at each
+// call site.
+func (s *Store) count(ctx context.Context, name string, accountID uuid.UUID,
+	payload map[string]any) {
+
+	if s.emit == nil {
+		return
+	}
+	s.emit(ctx, name, accountID, payload)
+}
 
 // Held is a subscription as it is stored: the state machine's value, plus who
 // it belongs to.
@@ -215,6 +257,17 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 		if err := tx.Commit(ctx); err != nil {
 			return Held{}, fmt.Errorf("billing: renewing a subscription: %w", err)
 		}
+
+		/* A RENEWAL AND NOT A START, which is the distinction this branch
+		   exists for: the row was already there. Counting it as a start would
+		   put one person into the "began paying" figure once a year, and a
+		   cohort by subscription start would move them forward into a younger
+		   intake every time they paid. */
+		s.count(ctx, EventRenewed, accountID, map[string]any{
+			"model":        string(renewed.Model),
+			"term_months":  termMonths,
+			"paid_through": renewed.PaidThrough,
+		})
 		return renewed, nil
 	case errors.Is(err, ErrNoSubscription):
 	default:
@@ -243,6 +296,15 @@ func (s *Store) Begin(ctx context.Context, accountID uuid.UUID, scope string,
 	if err := tx.Commit(ctx); err != nil {
 		return Held{}, fmt.Errorf("billing: starting a subscription: %w", err)
 	}
+
+	// THE ONE THE FUNNEL'S LAST STEP COUNTS. It happens once in a
+	// subscription's life, which is what makes it answerable as "how many of
+	// the people who arrived here went on to subscribe".
+	s.count(ctx, EventStarted, accountID, map[string]any{
+		"model":        string(held.Model),
+		"term_months":  termMonths,
+		"paid_through": held.PaidThrough,
+	})
 	return held, nil
 }
 
@@ -355,12 +417,32 @@ func (s *Store) Advance(ctx context.Context, accountID uuid.UUID, scope string,
 	   a subscription rather than something being bought, so there is no row for
 	   it to have been bought at and `uuid.Nil` leaves the stored one alone.
 	   Buying is Begin's, and Begin is the only caller that has a price. */
+	/* WHAT IT WAS, SETTLED, because that is what `apply` will compare against.
+	   Reading `held.Subscription` raw would call a cancellation whose period
+	   ran out three weeks ago "open", and then report its ending twice: once
+	   here, and once when the term actually elapsed. `Settle` is pure, so
+	   asking it twice costs nothing and cannot disagree with itself. */
+	was := Settle(held.Subscription, now)
+
 	updated, err := s.apply(ctx, tx, held, e, now, paidThrough, uuid.Nil, ledgerEntry)
 	if err != nil {
 		return Held{}, err
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return Held{}, fmt.Errorf("billing: advancing a subscription: %w", err)
+	}
+
+	/* ONLY THE TRANSITIONS THAT CLOSED ACCESS FOR GOOD. Every event Advance
+	   carries reaches `subscription_events` regardless — that log is complete
+	   and this stream is deliberately not. What a report asks of this one is
+	   when somebody stopped, and a payment that failed and was retried
+	   successfully is not somebody stopping; it is a fact about a card, and it
+	   is already recorded where a person reading one account will find it. */
+	if ended(was, updated.Subscription) {
+		s.count(ctx, EventEnded, accountID, map[string]any{
+			"reason": string(e),
+			"state":  string(updated.State),
+		})
 	}
 	return updated, nil
 }
@@ -475,6 +557,22 @@ func (s *Store) Settle(ctx context.Context, now time.Time) (int, error) {
 		`, held.ID, held.AccountID, string(held.State), string(settled.State)); err != nil {
 			return moved, fmt.Errorf("billing: recording a lapse: %w", err)
 		}
+
+		/* A TERM RUNNING OUT IS AN ENDING, AND THIS IS THE ONLY PLACE IT HAS A
+		   MOMENT. Everywhere else an ending arrives as something somebody did —
+		   a cancellation, a refund, a chargeback — and goes through `Advance`.
+		   A term simply elapsing is nobody doing anything: the state machine
+		   settles it in memory on every read, so the fact exists long before
+		   any row says so, and this job is what turns it into a time.
+
+		   It matters because it is the ordinary way a subscription on this
+		   platform ends. Instalment plans do not renew themselves (N-08), so
+		   most endings are this one — and a stream that recorded only the
+		   dramatic endings would say almost nobody ever stops. */
+		s.count(ctx, EventEnded, held.AccountID, map[string]any{
+			"reason": "elapsed",
+			"state":  string(settled.State),
+		})
 		moved++
 	}
 	return moved, nil
