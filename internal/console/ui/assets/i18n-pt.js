@@ -103,6 +103,61 @@ window.I18N.pt.ui = {
     'São necessários um papel de equipe e um segundo fator já apresentado. A API recusa sem ' +
     'qualquer um dos dois, e não é esta página que garante isso.',
 
+  /* ---------- what every screen says while it is fetching ---------- */
+  'Reading…': 'Lendo…',
+
+  /* ---------- Govern · Who can open this ---------- */
+  'Everybody with a role on this platform, and everybody who has had one. A role opens nothing without a second factor, and neither says whether it has been used — which is the column an access review is actually for.':
+    'Todo mundo com um papel nesta plataforma, e todo mundo que já teve um. Um papel não ' +
+    'abre nada sem um segundo fator, e nenhum dos dois diz se foi usado — que é a coluna ' +
+    'para a qual uma revisão de acesso realmente serve.',
+  'Everybody with a role on this platform': 'Todo mundo com um papel nesta plataforma',
+
+  'Who': 'Quem',
+  'Role': 'Papel',
+  'Can get in': 'Consegue entrar',
+  'Since': 'Desde',
+  'Let in by': 'Autorizado por',
+  'Last opened this': 'Abriu isto pela última vez',
+
+  /* A COUNT IS TWO WHOLE SENTENCES. Building a plural by adding a letter to a
+     translated noun is how "1 trilhas" shipped — a count of one followed by a
+     plural — and Portuguese does not even agree with English about where the
+     word goes. */
+  'one row': 'uma linha',
+  '%d rows': '%d linhas',
+
+  'left': 'saiu',
+  'revoked': 'revogado',
+  'yes': 'sim',
+  'no second factor': 'sem segundo fator',
+  'never': 'nunca',
+  'granted and not used': 'concedido e não usado',
+  'until %s': 'até %s',
+  'nobody — the first owner': 'ninguém — o primeiro dono',
+
+  'Reading this list': 'Lendo esta lista',
+  'Why there is no form': 'Por que não há formulário',
+
+  /* THE THREE SENTENCES THIS SCREEN GETS FROM THE SERVER. They are written in
+     Go, so `check-interface` cannot enumerate them — it says so in its own
+     header. They arrive in English, English is the key, and they are here
+     because somebody read the screen in Portuguese and found them. */
+  'A role is granted and revoked with `staff grant` and `staff revoke`, from a terminal where the database is reachable. It is not a form here because the first owner cannot be granted a role by a console that needs one to open — so that door has to exist anyway, and a second door onto the same table would be a second thing to keep audited and in agreement.':
+    'Um papel é concedido e revogado com `staff grant` e `staff revoke`, de um terminal onde ' +
+    'o banco de dados é alcançável. Não é um formulário aqui porque o primeiro dono não pode ' +
+    'receber um papel de um console que precisa de um para abrir — então essa porta tem de ' +
+    'existir de qualquer forma, e uma segunda porta para a mesma tabela seria mais um caminho ' +
+    'a manter auditado e em acordo.',
+  'Every row here is somebody who can open this console, or could. The column worth reading is the last one: a role granted a year ago and never used since is access nobody is missing, and it is the row an access review exists to find. Revoked rows stay so that somebody who left is distinguishable from somebody who was never here.':
+    'Cada linha aqui é alguém que pode abrir este console, ou podia. A coluna que vale ler é ' +
+    'a última: um papel concedido há um ano e nunca usado desde então é acesso que ninguém ' +
+    'sente falta, e é a linha que uma revisão de acesso existe para encontrar. Linhas ' +
+    'revogadas ficam para que quem saiu seja distinguível de quem nunca esteve aqui.',
+  'Nobody has a role, which cannot be true — this page was opened by somebody who has one. Something is answering wrongly rather than there being nobody here.':
+    'Ninguém tem um papel, o que não pode ser verdade — esta página foi aberta por alguém que ' +
+    'tem um. Algo está respondendo errado, e não é que não haja ninguém aqui.',
+
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
     'Este console está aberto desde antes da última atualização. Recarregue quando puder.',

@@ -100,6 +100,47 @@ export function txt(s) {
   return (d && d[s]) || s;
 }
 
+/*
+day is a date in the language that was CHOSEN, not the one the browser is in.
+
+	`toLocaleDateString()` with no argument uses the browser's locale, which was
+	the only sensible answer while this console had no language of its own — and
+	became wrong the moment it got one. It put `8/30/2026` on a screen otherwise
+	entirely in Portuguese: an American date, from a browser configured in
+	English, for somebody who had just asked for Portuguese. The defect is
+	quiet in the worst way, because a date always looks like a date, and 8/9 is a
+	real day in both readings.
+
+	IT LIVES HERE BECAUSE IT IS A FUNCTION OF THE LANGUAGE. Every screen had its
+	own two-line `day()` and each would have to be found and fixed; there is one
+	now, and it moves when the picker does.
+
+	EN-GB AND NOT EN-US. This repository is written in British English
+	throughout — `internationalisation`, `colour` — and 30/08 beside 30/08 is one
+	format for both languages rather than two that differ only in the reader's
+	head.
+*/
+export function day(iso) {
+  if (!iso) return '—';
+  const at = new Date(iso);
+  if (Number.isNaN(at.getTime())) return String(iso);
+  return at.toLocaleDateString(LANG === 'pt' ? 'pt-BR' : 'en-GB');
+}
+
+/*
+moment is a date with the time on it, for the screens that need one.
+
+	SAME ARGUMENT AS `day`, and it is separate rather than a flag because the two
+	are read for different reasons: a grant is a day, and an audit entry is a
+	moment. A caller choosing between them says which it meant.
+*/
+export function moment(iso) {
+  if (!iso) return '—';
+  const at = new Date(iso);
+  if (Number.isNaN(at.getTime())) return String(iso);
+  return at.toLocaleString(LANG === 'pt' ? 'pt-BR' : 'en-GB');
+}
+
 /* ---------- the page's own text ----------
 
    ONE WALK, AND THE ORIGINALS ARE KEPT. Switching language rewrites the same
