@@ -34,11 +34,16 @@
 import { esc } from '../dom.js';
 import { get, put, RequestError } from '../request.js';
 import { mayAct } from '../session.js';
+import { txt, day, money } from '../../assets/language.js';
 
 /* THE TERMS THAT HAVE A FORM, which is not the same as the terms the table can
    hold. The column takes any number of months; these three are what the
    platform sells, and a screen offering an open field for "how many months"
    would be inviting somebody to invent a fourth product by typing. */
+/* THE THREE TERMS ARE ENGLISH HERE AND TRANSLATED WHERE THEY ARE DRAWN, for
+   the reason `reports.js` gives about its verdicts: this list is evaluated once
+   when the module loads, so a `txt()` inside it would bake in whatever language
+   was chosen then and keep saying it after somebody switches. */
 const TERMS = [
   {
     months: 12,
@@ -66,15 +71,10 @@ export default async function plan(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Operate</span>' +
-      '<h1>What it costs</h1>' +
-      '<p>One subscription opens every school, so there is one price for each ' +
-      'term and not one per school. Every change is recorded with your name, ' +
-      'what was there and what replaced it.</p>' +
-      '<p>A price is <strong>appended</strong>, never edited — saving one writes ' +
-      'a new row dated from today and the old one stays, because a March invoice ' +
-      'has to stay explicable in November. Saving the same number again is not a ' +
-      'mistake: it records that this is still what we ask, as of today.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Operate')) + '</span>' +
+      '<h1>' + esc(txt('What it costs')) + '</h1>' +
+      '<p>' + esc(txt('One subscription opens every school, so there is one price for each term and not one per school. Every change is recorded with your name, what was there and what replaced it.')) + '</p>' +
+      '<p>' + txt('A price is <strong>appended</strong>, never edited — saving one writes a new row dated from today and the old one stays, because a March invoice has to stay explicable in November. Saving the same number again is not a mistake: it records that this is still what we ask, as of today.') + '</p>' +
     '</header>' +
     '<div id="terms">' +
       TERMS.map(block).join('') +
@@ -91,32 +91,32 @@ export default async function plan(section) {
        exactly the fortnight somebody asks about. */
     '<section class="block" id="discount">' +
       '<div class="block-top">' +
-        '<h2>What comes off for a Pix</h2>' +
-        '<span class="block-score mono">every term</span>' +
+        '<h2>' + esc(txt('What comes off for a Pix')) + '</h2>' +
+        '<span class="block-score mono">' + esc(txt('every term')) + '</span>' +
       '</div>' +
-      '<p class="aside">A Pix settles in seconds and costs this platform less to receive ' +
-      'than a card does, and this is the share of that handed back. It applies to every ' +
-      'term, which is why it is one figure here rather than one per block above.</p>' +
-      '<p class="price-state none">Reading…</p>' +
+      '<p class="aside">' + esc(txt('A Pix settles in seconds and costs this platform less to receive than a card does, and this is the share of that handed back. It applies to every term, which is why it is one figure here rather than one per block above.')) + '</p>' +
+      '<p class="price-state none">' + esc(txt('Reading…')) + '</p>' +
       '<form class="discount-form" novalidate>' +
         '<div class="price-bar">' +
           '<label class="price-amount">' +
-            '<span>Off</span>' +
+            '<span>' + esc(txt('Off')) + '</span>' +
             '<input type="text" inputmode="decimal" spellcheck="false" autocomplete="off" ' +
               'placeholder="5" aria-describedby="discount-note">' +
           '</label>' +
-          '<span class="list-count">per cent</span>' +
+          '<span class="list-count">' + esc(txt('per cent')) + '</span>' +
           (mayAct()
-            ? '<button type="submit" class="btn btn-primary">Save a new rate</button>'
-            : '<span class="list-count">A read-only role may look at this and not set it.</span>') +
+            ? '<button type="submit" class="btn btn-primary">' +
+                esc(txt('Save a new rate')) + '</button>'
+            : '<span class="list-count">' +
+                esc(txt('A read-only role may look at this and not set it.')) + '</span>') +
         '</div>' +
         '<p class="signin-notice" id="discount-note"></p>' +
       '</form>' +
     '</section>' +
 
     '<section class="block" id="series" aria-live="polite">' +
-      '<h2>Every price ever set</h2>' +
-      '<p class="checking">Reading…</p>' +
+      '<h2>' + esc(txt('Every price ever set')) + '</h2>' +
+      '<p class="checking">' + esc(txt('Reading…')) + '</p>' +
     '</section>' +
 
     /* AND WHERE SOMEBODY WRITES TO GIVE IT BACK, on this screen because it is
@@ -125,8 +125,8 @@ export default async function plan(section) {
        that deadline whether or not there is an address to name it with. A
        price and the way out of it are one subject. */
     '<section class="block" id="contact">' +
-      '<h2>Where a student writes to use the seven days</h2>' +
-      '<p class="checking">Reading…</p>' +
+      '<h2>' + esc(txt('Where a student writes to use the seven days')) + '</h2>' +
+      '<p class="checking">' + esc(txt('Reading…')) + '</p>' +
     '</section>';
 
   const series = el.querySelector('#series');
@@ -141,10 +141,13 @@ export default async function plan(section) {
   function block(term) {
     return '<section class="block" data-term="' + term.months + '">' +
       '<div class="block-top">' +
-        '<h2>' + esc(term.name) + '</h2>' +
-        '<span class="block-score mono">' + term.months + ' months</span>' +
+        '<h2>' + esc(txt(term.name)) + '</h2>' +
+        '<span class="block-score mono">' +
+          esc(term.months === 1
+            ? txt('one month')
+            : txt('%d months').replace('%d', term.months)) + '</span>' +
       '</div>' +
-      '<p class="aside">' + esc(term.note) + '</p>' +
+      '<p class="aside">' + esc(txt(term.note)) + '</p>' +
 
       /* WHAT THIS TERM COSTS RIGHT NOW, IN WORDS, ABOVE THE FIELD.
 
@@ -158,23 +161,25 @@ export default async function plan(section) {
          priced term says the number and the day it started, which is the same
          thing the series below says and is worth saying where the decision is
          being made. */
-      '<p class="price-state none">Reading…</p>' +
+      '<p class="price-state none">' + esc(txt('Reading…')) + '</p>' +
 
       '<form class="price-form" novalidate>' +
         '<div class="price-bar">' +
           '<label class="price-amount">' +
-            '<span>Price</span>' +
+            '<span>' + esc(txt('Price')) + '</span>' +
             '<input type="text" inputmode="decimal" spellcheck="false" autocomplete="off" ' +
               'placeholder="0,00" aria-describedby="price-note-' + term.months + '">' +
           '</label>' +
           '<label class="price-currency">' +
-            '<span>Currency</span>' +
+            '<span>' + esc(txt('Currency')) + '</span>' +
             '<input type="text" spellcheck="false" autocomplete="off" maxlength="3" ' +
               'placeholder="BRL">' +
           '</label>' +
           (mayAct()
-            ? '<button type="submit" class="btn btn-primary">Save a new price</button>'
-            : '<span class="list-count">A read-only role may look at this and not set it.</span>') +
+            ? '<button type="submit" class="btn btn-primary">' +
+                esc(txt('Save a new price')) + '</button>'
+            : '<span class="list-count">' +
+                esc(txt('A read-only role may look at this and not set it.')) + '</span>') +
         '</div>' +
         '<p class="signin-notice" id="price-note-' + term.months + '"></p>' +
       '</form>' +
@@ -199,30 +204,27 @@ export default async function plan(section) {
          reasons and has a test. */
       if (cents === null || cents <= 0) {
         note.className = 'signin-notice bad';
-        note.textContent = 'A price is an amount above zero, like 490 or 490.00. '
-          + 'A term with no offer has no price at all rather than a price of nothing.';
+        note.textContent = txt('A price is an amount above zero, like 490 or 490.00. A term with no offer has no price at all rather than a price of nothing.');
         return;
       }
       if (!/^[A-Z]{3}$/.test(money)) {
         note.className = 'signin-notice bad';
-        note.textContent = 'A currency is three letters, ISO 4217 — BRL, EUR, USD. '
-          + 'It is what a browser needs to format the amount.';
+        note.textContent = txt('A currency is three letters, ISO 4217 — BRL, EUR, USD. It is what a browser needs to format the amount.');
         return;
       }
 
       note.className = 'signin-notice';
-      note.textContent = 'Saving…';
+      note.textContent = txt('Saving…');
       try {
         await put('/console/api/v1/plan/price',
           { termMonths: term.months, cents, currency: money });
         note.className = 'signin-notice ok';
-        note.textContent = 'Saved as a new price, from today. The one before it is still '
-          + 'in the series below.';
+        note.textContent = txt('Saved as a new price, from today. The one before it is still in the series below.');
       } catch (e) {
         note.className = 'signin-notice bad';
         note.textContent = e instanceof RequestError && e.status === 403
-          ? 'That asks for an operator.'
-          : e.message;
+          ? txt('That asks for an operator.')
+          : txt(e.message);
       }
       await showSeries();
     });
@@ -237,8 +239,8 @@ export default async function plan(section) {
     try {
       answer = await get('/console/api/v1/plan/prices');
     } catch (e) {
-      series.innerHTML = '<h2>Everything ever set</h2><p class="none">' +
-        esc(e.message) + '</p>';
+      series.innerHTML = '<h2>' + esc(txt('Everything ever set')) + '</h2><p class="none">' +
+        esc(txt(e.message)) + '</p>';
 
       /* AND THE TERMS SAY THEY DO NOT KNOW, rather than keeping the ellipsis
          they were drawn with. A field with nothing above it reads as an
@@ -248,8 +250,7 @@ export default async function plan(section) {
       TERMS.forEach((term) => {
         const state = el.querySelector('[data-term="' + term.months + '"] .price-state');
         state.className = 'price-state none';
-        state.textContent = 'What this costs could not be read, so this screen '
-          + 'cannot say whether it is priced.';
+        state.textContent = txt('What this costs could not be read, so this screen cannot say whether it is priced.');
       });
       return;
     }
@@ -277,26 +278,30 @@ export default async function plan(section) {
       })),
       ...off.map((d) => ({
         at: d.from,
-        what: d.method === 'pix' ? 'A Pix' : d.method,
-        said: asPercent(d.basisPoints) + '% off',
+        what: d.method === 'pix' ? txt('A Pix') : d.method,
+        said: txt('%p% off').replace('%p', asPercent(d.basisPoints)),
         now: newestFor(off, d),
       })),
     ].sort((a, b) => String(b.at).localeCompare(String(a.at)));
 
-    series.innerHTML = '<h2>Everything ever set</h2>' + (everything.length === 0
-      ? '<p class="none">Nothing is priced yet. The invitation then says what a ' +
-        'subscription opens without naming a figure.</p>'
+    series.innerHTML = '<h2>' + esc(txt('Everything ever set')) + '</h2>' + (everything.length === 0
+      ? '<p class="none">' + esc(txt('Nothing is priced yet. The invitation then says what a subscription opens without naming a figure.')) + '</p>'
       : '<ol class="price-list">' +
           everything.map((one) =>
             '<li class="price-row' + (one.now ? ' price-now' : '') + '">' +
               '<span class="price-term">' + esc(one.what) + '</span>' +
               '<span class="price-money mono">' + esc(one.said) + '</span>' +
+              /* ONE SENTENCE WITH THE DATE IN IT, and not a phrase glued in
+                 front of one. "in force since" and "from" sit before the date
+                 in English and Portuguese alike, but the article does not:
+                 "em vigor desde 29/08" against "de 29/08". */
               '<span class="price-from">' +
-                (one.now ? 'in force since ' : 'from ') + esc(day(one.at)) +
+                esc((one.now ? txt('in force since %s') : txt('from %s'))
+                  .replace('%s', day(one.at))) +
               '</span>' +
             '</li>').join('') +
         '</ol>' +
-        '<p class="aside">' + esc(answer.append_only || '') + '</p>');
+        '<p class="aside">' + esc(txt(answer.append_only || '')) + '</p>');
 
     fill(rows);
   }
@@ -329,13 +334,13 @@ export default async function plan(section) {
            one somebody needs: the checkout refuses a term nobody has priced, so
            an empty field here is a product nobody can buy. */
         state.className = 'price-state none';
-        state.textContent = 'Nothing is priced for this term, so nobody can buy it.';
+        state.textContent = txt('Nothing is priced for this term, so nobody can buy it.');
         return;
       }
 
       state.className = 'price-state';
-      state.textContent = shown(now.cents, now.currency) + ' — in force since '
-        + day(now.from);
+      state.textContent = txt('%m — in force since %s')
+        .replace('%m', shown(now.cents, now.currency)).replace('%s', day(now.from));
       box.querySelector('.price-amount input').value = asAmount(now.cents);
       box.querySelector('.price-currency input').value = now.currency;
     });
@@ -351,22 +356,19 @@ export default async function plan(section) {
     try {
       answer = await get('/console/api/v1/support/contact');
     } catch (e) {
-      contact.innerHTML = '<h2>Where a student writes to use the seven days</h2>' +
-        '<p class="none">' + esc(e.message) + '</p>';
+      contact.innerHTML = '<h2>' + esc(txt('Where a student writes to use the seven days')) +
+        '</h2><p class="none">' + esc(txt(e.message)) + '</p>';
       return;
     }
 
     contact.innerHTML =
-      '<h2>Where a student writes to use the seven days</h2>' +
+      '<h2>' + esc(txt('Where a student writes to use the seven days')) + '</h2>' +
 
       /* WHAT THE TERMS ACTUALLY PROMISE, said here because this is where
          somebody decides whether the address is worth setting. An operator who
          reads "support e-mail" and nothing else has no way to know that leaving
          it empty publishes a legal right with no way to exercise it. */
-      '<p class="aside">The terms of use give a student seven days from the purchase to ' +
-      'give the subscription back, for the whole amount and with no reason — art. 49 of ' +
-      'the Código de Defesa do Consumidor. The account screen names that deadline ' +
-      'whatever happens here, and names an address only when there is one.</p>' +
+      '<p class="aside">' + esc(txt('The terms of use give a student seven days from the purchase to give the subscription back, for the whole amount and with no reason — art. 49 of the Código de Defesa do Consumidor. The account screen names that deadline whatever happens here, and names an address only when there is one.')) + '</p>' +
 
       '<p class="price-state' + (answer.published ? '' : ' none') + '">' +
         esc(saying(answer)) +
@@ -376,7 +378,7 @@ export default async function plan(section) {
         ? '<form class="contact-form" novalidate>' +
             '<div class="list-bar">' +
             '<label class="field">' +
-              '<span>Address</span>' +
+              '<span>' + esc(txt('Address')) + '</span>' +
               '<input type="email" name="email" spellcheck="false" autocomplete="off" ' +
                 'inputmode="email" placeholder="contact@example.tld" ' +
                 'value="' + esc(answer.email || '') + '">' +
@@ -389,15 +391,17 @@ export default async function plan(section) {
                — only one of them means the address published in between was
                wrong. */
             '<label class="field">' +
-              '<span>Why</span>' +
+              '<span>' + esc(txt('Why')) + '</span>' +
               '<input type="text" name="reason" autocomplete="off" ' +
-                'placeholder="the old inbox is closed" maxlength="200">' +
+                'placeholder="' + esc(txt('the old inbox is closed')) + '" maxlength="200">' +
             '</label>' +
-            '<button type="submit" class="btn btn-primary">Save this address</button>' +
+            '<button type="submit" class="btn btn-primary">' +
+              esc(txt('Save this address')) + '</button>' +
             '</div>' +
             '<p class="signin-notice"></p>' +
           '</form>'
-        : '<p class="list-count">A read-only role may look at this and not set it.</p>');
+        : '<p class="list-count">' +
+            esc(txt('A read-only role may look at this and not set it.')) + '</p>');
 
     const form = contact.querySelector('.contact-form');
     if (!form) return;
@@ -414,22 +418,19 @@ export default async function plan(section) {
          round trip that records a change and then rejects it would leave the
          log saying something happened that did not. */
       if (!email) {
-        return say('bad', 'An address, or nothing at all — but nothing is cleared by the '
-          + 'deployment rather than from here, and this form only sets one.');
+        return say('bad', txt('An address, or nothing at all — but nothing is cleared by the deployment rather than from here, and this form only sets one.'));
       }
       if (!reason) {
-        return say('bad', 'Say why in a few words. This is published to every student, and '
-          + 'the log has to tell an address that moved because the person answering '
-          + 'changed from one that moved because the last was a typo.');
+        return say('bad', txt('Say why in a few words. This is published to every student, and the log has to tell an address that moved because the person answering changed from one that moved because the last was a typo.'));
       }
 
-      say('', 'Saving…');
+      say('', txt('Saving…'));
       try {
         await put('/console/api/v1/support/contact', { email, reason });
       } catch (e) {
         return say('bad', e instanceof RequestError && e.status === 403
-          ? 'That asks for an operator.'
-          : e.message);
+          ? txt('That asks for an operator.')
+          : txt(e.message));
       }
 
       /* REDRAWN FIRST AND SPOKEN INTO SECOND. Writing the confirmation and then
@@ -437,7 +438,7 @@ export default async function plan(section) {
          message disappears at the moment it is earned — which is a mistake this
          console has already made once, on the refund form. */
       await showContact();
-      say('ok', 'Saved. Every student inside their seven days is now told to write there.');
+      say('ok', txt('Saved. Every student inside their seven days is now told to write there.'));
     });
 
     function say(how, text) {
@@ -466,11 +467,12 @@ export default async function plan(section) {
          has discounted is sold at the price, and saying so is what stops
          somebody typing a rate on the assumption that the blank meant broken. */
       state.className = 'price-state none';
-      state.textContent = 'Nothing comes off a Pix. It is charged at the price above.';
+      state.textContent = txt('Nothing comes off a Pix. It is charged at the price above.');
       return;
     }
     state.className = 'price-state';
-    state.textContent = asPercent(now.basisPoints) + '% off — in force since ' + day(now.from);
+    state.textContent = txt('%p% off — in force since %s')
+      .replace('%p', asPercent(now.basisPoints)).replace('%s', day(now.from));
     discount.querySelector('.price-amount input').value = asPercent(now.basisPoints);
   }
 
@@ -487,19 +489,16 @@ export default async function plan(section) {
          500 was meant, and a fence a screen could move is a fence in the way. */
       if (points === null || points <= 0) {
         note.className = 'signin-notice bad';
-        note.textContent = 'A rate is a number above zero, like 5 or 7.5. Nothing off is not '
-          + 'a rate of nothing — it is no discount at all, which is a different thing and '
-          + 'is not set from here.';
+        note.textContent = txt('A rate is a number above zero, like 5 or 7.5. Nothing off is not a rate of nothing — it is no discount at all, which is a different thing and is not set from here.');
         return;
       }
 
       note.className = 'signin-notice';
-      note.textContent = 'Saving…';
+      note.textContent = txt('Saving…');
       try {
         await put('/console/api/v1/plan/discount', { method: 'pix', basisPoints: points });
         note.className = 'signin-notice ok';
-        note.textContent = 'Saved as a new rate, from today. The one before it is still in '
-          + 'the series below.';
+        note.textContent = txt('Saved as a new rate, from today. The one before it is still in the series below.');
       } catch (e) {
         note.className = 'signin-notice bad';
         note.textContent = e instanceof RequestError && e.status === 403
@@ -544,18 +543,21 @@ function asBasisPoints(typed) {
    by typing it again — with the difference that after typing it, it is a row
    this console owns rather than a value one machine's gitignored file holds. */
 function saying(answer) {
+  /* FOUR SENTENCES WITH HOLES, and the address is always inside one of them.
+     It was assembled — a phrase, the address, a comma, "set here on", a date —
+     which is a string nobody wrote and no dictionary can hold, and Portuguese
+     does not put the date clause where English does. */
   if (answer.email) {
-    return 'Students are told to write to ' + answer.email
-      + (answer.since ? ', set here on ' + day(answer.since) + '.' : '.');
+    return answer.since
+      ? txt('Students are told to write to %e, set here on %d.')
+          .replace('%e', answer.email).replace('%d', day(answer.since))
+      : txt('Students are told to write to %e.').replace('%e', answer.email);
   }
   if (answer.published) {
-    return 'Students are told to write to ' + answer.published + ', which comes from this '
-      + "deployment's own configuration and not from here. Saving an address below takes "
-      + 'it over — after that this screen is what decides it.';
+    return txt('Students are told to write to %e, which comes from this deployment&rsquo;s own configuration and not from here. Saving an address below takes it over — after that this screen is what decides it.')
+      .replace('%e', answer.published);
   }
-  return 'Nobody is told where to write. The account screen still names the deadline, '
-    + 'because knowing the date is worth something on its own — but a student inside '
-    + 'the seven days has no address to use them at.';
+  return txt('Nobody is told where to write. The account screen still names the deadline, because knowing the date is worth something on its own — but a student inside the seven days has no address to use them at.');
 }
 
 // A term's name where one exists, and its months where it does not. The table
@@ -563,7 +565,8 @@ function saying(answer) {
 // to show it — a row it could not name would be a price nobody can account for.
 function named(months) {
   const known = TERMS.find((t) => t.months === months);
-  return known ? known.name : months + ' months';
+  if (known) return txt(known.name);
+  return months === 1 ? txt('one month') : txt('%d months').replace('%d', months);
 }
 
 /* CENTS IN AND A DECIMAL OUT, and the conversion lives in this file rather than
@@ -586,18 +589,10 @@ function asAmount(cents) {
 /* What a price looks like in the list. `Intl` rather than a symbol table: the
    console shows every currency the platform sells in and this file must not
    become the place that knows which symbol goes on which side of which number. */
-function shown(cents, currency) {
-  try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency })
-      .format(cents / 100);
-  } catch (e) {
-    // A currency `Intl` does not know is still a real price. Showing the code
-    // beside the number is worse than showing nothing, and better than throwing.
-    return (cents / 100).toFixed(2) + ' ' + currency;
-  }
-}
-
-function day(iso) {
-  const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? String(iso) : at.toLocaleDateString();
-}
+/* `shown` AND `day` ARE `language.js`'s NOW, and the first was a defect in the
+   same shape as the second. It called `Intl.NumberFormat(undefined, …)`, which
+   formats in the BROWSER's locale — so this screen, the one that decides what
+   everybody pays, printed `R$ 490.00` in the middle of Portuguese. It is
+   quieter than the date: a price always looks like a price, and 1.500 is a real
+   amount under both readings, one of them a thousand times the other. */
+const shown = (cents, currency) => money(cents, currency);

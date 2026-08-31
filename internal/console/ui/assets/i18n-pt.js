@@ -390,6 +390,212 @@ window.I18N.pt.ui = {
   'how fast an answer has to be to count as known without hesitation, which is the top SM-2 grade. Ten seconds is a first guess and this file has always said so — it is roughly right for a quiz and roughly wrong for a labelling question, which takes longer for reasons that have nothing to do with knowing the answer. Every review records the boundary it was judged by, so moving this changes what is scheduled next and nothing already scheduled.':
     'quão rápida uma resposta tem de ser para contar como sabida sem hesitação, que é a nota máxima do SM-2. Dez segundos é um primeiro chute e este arquivo sempre disse isso — é aproximadamente certo para um quiz e aproximadamente errado para uma questão de rotular, que demora mais por razões que nada têm a ver com saber a resposta. Cada revisão registra o limite pelo qual foi julgada, então mexer nisto muda o que será agendado adiante e nada do que já foi agendado.',
 
+  /* ---------- Operate · Reported content ----------
+     `Reported content` is in the rail block above: it is a section name AND
+     this screen's heading, which is one string and therefore one entry. */
+  'What students say is wrong with the material. It is the only channel by which a wrong answer key comes back from the person who found it — the check that runs on every pull request can tell that a key parses and not that it is the right one.':
+    'O que os alunos dizem estar errado no material. É o único canal pelo qual um gabarito ' +
+    'errado volta de quem o encontrou — a verificação que roda em cada pull request sabe ' +
+    'dizer que um gabarito é bem formado, não que ele está certo.',
+  'There are no schools on this platform yet, so there is no material to report.':
+    'Ainda não há escolas nesta plataforma, então não há material a reportar.',
+  'Which school': 'Qual escola',
+  'Waiting': 'Aguardando',
+  'Nobody has reported anything in this school. That is the state this screen is meant to be in.':
+    'Ninguém reportou nada nesta escola. É o estado em que esta tela deve estar.',
+  'They picked a reason and wrote nothing.': 'A pessoa escolheu um motivo e não escreveu nada.',
+  'Settling…': 'Resolvendo…',
+
+  /* THE REASONS AND THE VERDICTS, drawn through a variable — `txt(WHY[r.reason])`
+     — so `check-interface` cannot see them, the same blindness the rail has.
+     `language_test.go` reads the two maps and holds them instead. */
+  'answer key': 'gabarito',
+  'not true': 'não é verdade',
+  'does not work': 'não funciona',
+  'cannot follow it': 'não dá para acompanhar',
+  'something else': 'outra coisa',
+  'The material was changed': 'O material foi alterado',
+  'Looked at it — nothing is wrong': 'Olhei — não há nada errado',
+  'Real, and not being fixed now': 'Procede, e não será corrigido agora',
+
+  /* HOW LONG SOMEBODY HAS WAITED, in five sentences. `hours + ' hours'` builds
+     a plural by concatenation, which is the shape that shipped "1 trilhas". */
+  'unknown': 'desconhecido',
+  'just now': 'agora mesmo',
+  'one hour': 'uma hora',
+  '%d hours': '%d horas',
+  'one day': 'um dia',
+  '%d days': '%d dias',
+
+  /* ---------- Operate · Schools ---------- */
+  'One colour each. It is the only thing that differs between schools — one design system, one accent — so a student knows which school they are in without the product looking like two products. Every change is recorded with your name, what was there and what replaced it.':
+    'Uma cor cada. É a única coisa que difere entre escolas — um sistema de design, um ' +
+    'destaque — para que o aluno saiba em qual escola está sem o produto parecer dois ' +
+    'produtos. Cada mudança é registrada com o seu nome, o que estava lá e o que substituiu.',
+  'A colour is <strong>replaced</strong>: there is one, and nothing has to be explained about the old one a year later. What a subscription costs is not here — one subscription opens every school, so there is one price for each term and it is set under <strong>What it costs</strong>.':
+    'Uma cor é <strong>substituída</strong>: existe uma, e nada precisa ser explicado sobre a ' +
+    'antiga um ano depois. Quanto custa uma assinatura não está aqui — uma assinatura abre ' +
+    'todas as escolas, então há um preço por prazo, definido em <strong>Quanto custa</strong>.',
+  'There are no schools on this platform yet. A school is a row, a host and a colour, in that order.':
+    'Ainda não há escolas nesta plataforma. Uma escola é uma linha, um endereço e uma cor, ' +
+    'nessa ordem.',
+
+  'Colour': 'Cor',
+  'Suggested colours for %s': 'Cores sugeridas para %s',
+  'A colour is six hex digits after a hash, like <code class="mono">#5b8cff</code>. Empty is a real answer too: the school then wears the palette&rsquo;s own blue.':
+    'Uma cor são seis dígitos hexadecimais depois de uma cerquilha, como ' +
+    '<code class="mono">#5b8cff</code>. Vazio também é uma resposta de verdade: a escola ' +
+    'passa a usar o azul da própria paleta.',
+  'Six hex digits after a hash, like #5b8cff. A shorthand or a name reaches the interface as no colour at all, and the school stays as it was with nothing to say why.':
+    'Seis dígitos hexadecimais depois de uma cerquilha, como #5b8cff. Uma forma abreviada ou ' +
+    'um nome chega à interface como cor nenhuma, e a escola fica como estava sem nada que ' +
+    'diga por quê.',
+  'Saved. Students see it on their next page — nothing is cached about a school&rsquo;s colour.':
+    'Salvo. Os alunos veem na próxima página — nada da cor de uma escola fica em cache.',
+
+  /* THE TWO THEME NAMES, drawn through a variable like the verdicts. */
+  'dark': 'escuro',
+  'light': 'claro',
+  'This browser could not measure the %s theme.':
+    'Este navegador não conseguiu medir o tema %s.',
+  'nothing on this hue reaches 4.5:1 against every surface it lands on, so this theme would keep the palette&rsquo;s own blue and the school would look like two different schools in the two themes.':
+    'nada nesta matiz alcança 4,5:1 contra toda superfície em que pousa, então este tema ' +
+    'manteria o azul da própria paleta e a escola pareceria duas escolas diferentes nos dois ' +
+    'temas.',
+  'Moved from %c, which reads at %r:1 here and needs 4.5. Same hue, far enough to be read.':
+    'Movida de %c, que lê a %r:1 aqui e precisa de 4,5. Mesma matiz, longe o bastante para ' +
+    'ser lida.',
+  'Used exactly as chosen.': 'Usada exatamente como escolhida.',
+  'A finished course and an available one come out the same colour in this theme: nothing on this hue is both readable and quieter than the accent.':
+    'Um curso concluído e um disponível saem da mesma cor neste tema: nada nesta matiz é ao ' +
+    'mesmo tempo legível e mais discreto que o destaque.',
+
+  /* ---------- Operate · What it costs ---------- */
+  'One subscription opens every school, so there is one price for each term and not one per school. Every change is recorded with your name, what was there and what replaced it.':
+    'Uma assinatura abre todas as escolas, então há um preço por prazo e não um por escola. ' +
+    'Cada mudança é registrada com o seu nome, o que estava lá e o que substituiu.',
+  'A price is <strong>appended</strong>, never edited — saving one writes a new row dated from today and the old one stays, because a March invoice has to stay explicable in November. Saving the same number again is not a mistake: it records that this is still what we ask, as of today.':
+    'Um preço é <strong>acrescentado</strong>, nunca editado — salvar um escreve uma linha ' +
+    'nova datada de hoje e a antiga fica, porque uma fatura de março tem de continuar ' +
+    'explicável em novembro. Salvar o mesmo número de novo não é engano: registra que é ' +
+    'isto que ainda pedimos, a partir de hoje.',
+
+  /* THE THREE TERMS, drawn through a variable — `txt(term.name)` — like the
+     verdicts and the theme names. `language_test.go` holds them. */
+  'A year': 'Um ano',
+  'Two years': 'Dois anos',
+  'A month': 'Um mês',
+  'The subscription as it has always been quoted. One charge or one card that renews at the end of it.':
+    'A assinatura como sempre foi cotada. Uma cobrança, ou um cartão que renova ao fim dela.',
+  'One charge for a 24-month term, renewed as a new sale — no gateway here bills a subscription every two years, so this is not a recurrence.':
+    'Uma cobrança por um prazo de 24 meses, renovada como venda nova — nenhum gateway aqui ' +
+    'cobra uma assinatura a cada dois anos, então isto não é recorrência.',
+  'For subscribers paying from abroad, where a stored card renewing monthly is what people expect.':
+    'Para assinantes pagando do exterior, onde um cartão guardado renovando todo mês é o que ' +
+    'as pessoas esperam.',
+
+  'one month': 'um mês',
+  '%d months': '%d meses',
+  'Price': 'Preço',
+  'Currency': 'Moeda',
+  'Save a new price': 'Salvar um preço novo',
+  'A price is an amount above zero, like 490 or 490.00. A term with no offer has no price at all rather than a price of nothing.':
+    'Um preço é um valor acima de zero, como 490 ou 490,00. Um prazo sem oferta não tem ' +
+    'preço nenhum, e não um preço de nada.',
+  'A currency is three letters, ISO 4217 — BRL, EUR, USD. It is what a browser needs to format the amount.':
+    'Uma moeda são três letras, ISO 4217 — BRL, EUR, USD. É o que um navegador precisa para ' +
+    'formatar o valor.',
+  'Saved as a new price, from today. The one before it is still in the series below.':
+    'Salvo como preço novo, a partir de hoje. O anterior continua na série abaixo.',
+  'Nothing is priced for this term, so nobody can buy it.':
+    'Nada está precificado para este prazo, então ninguém consegue comprá-lo.',
+  'What this costs could not be read, so this screen cannot say whether it is priced.':
+    'Não foi possível ler quanto isto custa, então esta tela não sabe dizer se está ' +
+    'precificado.',
+  '%m — in force since %s': '%m — em vigor desde %s',
+
+  'What comes off for a Pix': 'O que sai no Pix',
+  'every term': 'todos os prazos',
+  'A Pix settles in seconds and costs this platform less to receive than a card does, and this is the share of that handed back. It applies to every term, which is why it is one figure here rather than one per block above.':
+    'Um Pix compensa em segundos e custa menos a esta plataforma do que um cartão, e esta é ' +
+    'a parte disso que volta para quem paga. Vale para todos os prazos, e é por isso que é ' +
+    'um número só aqui em vez de um por bloco acima.',
+  'Off': 'Desconto',
+  'per cent': 'por cento',
+  'Save a new rate': 'Salvar uma taxa nova',
+  'Nothing comes off a Pix. It is charged at the price above.':
+    'Nada sai no Pix. Ele é cobrado pelo preço acima.',
+  'A rate is a number above zero, like 5 or 7.5. Nothing off is not a rate of nothing — it is no discount at all, which is a different thing and is not set from here.':
+    'Uma taxa é um número acima de zero, como 5 ou 7,5. Nada de desconto não é uma taxa de ' +
+    'zero — é desconto nenhum, que é outra coisa e não se define daqui.',
+  'Saved as a new rate, from today. The one before it is still in the series below.':
+    'Salva como taxa nova, a partir de hoje. A anterior continua na série abaixo.',
+  'A Pix': 'Um Pix',
+  '%p% off': '%p% de desconto',
+  '%p% off — in force since %s': '%p% de desconto — em vigor desde %s',
+
+  'Every price ever set': 'Todo preço já definido',
+  'Everything ever set': 'Tudo o que já foi definido',
+  'Nothing is priced yet. The invitation then says what a subscription opens without naming a figure.':
+    'Nada está precificado ainda. O convite então diz o que uma assinatura abre sem citar ' +
+    'um valor.',
+  'in force since %s': 'em vigor desde %s',
+  'from %s': 'de %s',
+
+  'Where a student writes to use the seven days': 'Para onde o aluno escreve nos sete dias',
+  'The terms of use give a student seven days from the purchase to give the subscription back, for the whole amount and with no reason — art. 49 of the Código de Defesa do Consumidor. The account screen names that deadline whatever happens here, and names an address only when there is one.':
+    'Os termos de uso dão ao aluno sete dias a partir da compra para devolver a assinatura, ' +
+    'pelo valor inteiro e sem motivo — art. 49 do Código de Defesa do Consumidor. A tela da ' +
+    'conta informa esse prazo aconteça o que acontecer aqui, e informa um endereço só quando ' +
+    'existe um.',
+  'Address': 'Endereço',
+  'the old inbox is closed': 'a caixa antiga foi fechada',
+  'Save this address': 'Salvar este endereço',
+  'An address, or nothing at all — but nothing is cleared by the deployment rather than from here, and this form only sets one.':
+    'Um endereço, ou nada — mas nada se limpa pelo deploy e não daqui, e este formulário só ' +
+    'define um.',
+  'Say why in a few words. This is published to every student, and the log has to tell an address that moved because the person answering changed from one that moved because the last was a typo.':
+    'Diga por quê em poucas palavras. Isto é publicado para todo aluno, e o registro tem de ' +
+    'distinguir um endereço que mudou porque quem responde mudou de um que mudou porque o ' +
+    'anterior era um erro de digitação.',
+  'Saved. Every student inside their seven days is now told to write there.':
+    'Salvo. Todo aluno dentro dos seus sete dias passa a ser orientado a escrever para lá.',
+  'Students are told to write to %e.': 'Os alunos são orientados a escrever para %e.',
+  'Students are told to write to %e, set here on %d.':
+    'Os alunos são orientados a escrever para %e, definido aqui em %d.',
+  'Students are told to write to %e, which comes from this deployment&rsquo;s own configuration and not from here. Saving an address below takes it over — after that this screen is what decides it.':
+    'Os alunos são orientados a escrever para %e, que vem da configuração do próprio deploy ' +
+    'e não daqui. Salvar um endereço abaixo assume o lugar — a partir daí é esta tela que ' +
+    'decide.',
+  'Nobody is told where to write. The account screen still names the deadline, because knowing the date is worth something on its own — but a student inside the seven days has no address to use them at.':
+    'Ninguém é orientado sobre para onde escrever. A tela da conta ainda informa o prazo, ' +
+    'porque saber a data já vale alguma coisa — mas um aluno dentro dos sete dias não tem ' +
+    'endereço nenhum para usá-los.',
+
+
+  /* THE TWENTY SUGGESTED COLOURS. The hex beside each is the identifier and is
+     never translated; the name is what a person — and a screen reader — reads. */
+  'Cobalt': 'Cobalto',
+  'Sky': 'Céu',
+  'Cyan': 'Ciano',
+  'Teal': 'Azul-petróleo',
+  'Spring': 'Verde-primavera',
+  'Emerald': 'Esmeralda',
+  'Grass': 'Verde-grama',
+  'Lime': 'Lima',
+  'Olive': 'Oliva',
+  'Amber': 'Âmbar',
+  'Tangerine': 'Tangerina',
+  'Copper': 'Cobre',
+  'Vermilion': 'Vermelhão',
+  'Crimson': 'Carmesim',
+  'Rose': 'Rosa',
+  'Fuchsia': 'Fúcsia',
+  'Violet': 'Violeta',
+  'Indigo': 'Índigo',
+  'Periwinkle': 'Pervinca',
+  'Slate': 'Ardósia',
+
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
     'Este console está aberto desde antes da última atualização. Recarregue quando puder.',

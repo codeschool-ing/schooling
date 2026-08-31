@@ -141,6 +141,29 @@ export function moment(iso) {
   return at.toLocaleString(LANG === 'pt' ? 'pt-BR' : 'en-GB');
 }
 
+/*
+money is an amount in the language that was chosen, for the same reason `day` is.
+
+	`Intl.NumberFormat(undefined, …)` formats in the BROWSER's locale — so a
+	console in Portuguese printed `R$ 490.00`, with the separator of a language
+	nobody had asked for, on the screen that decides what everybody pays. It is
+	the date defect in a second place, and it is quieter: a price always looks
+	like a price, and 1.500 is a real amount under both readings — one of them a
+	thousand times the other.
+
+	A CURRENCY `Intl` DOES NOT KNOW IS STILL A REAL PRICE. Throwing there would
+	take down the screen over a three-letter code; the number and the code
+	together are worse than a formatted amount and better than nothing.
+*/
+export function money(cents, currency) {
+  const at = LANG === 'pt' ? 'pt-BR' : 'en-GB';
+  try {
+    return new Intl.NumberFormat(at, { style: 'currency', currency }).format(cents / 100);
+  } catch (e) {
+    return (cents / 100).toFixed(2) + ' ' + currency;
+  }
+}
+
 /* ---------- the page's own text ----------
 
    ONE WALK, AND THE ORIGINALS ARE KEPT. Switching language rewrites the same
