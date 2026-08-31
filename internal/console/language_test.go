@@ -189,3 +189,41 @@ func TestEveryKeyIsOneStringOnOneLine(t *testing.T) {
    output that would one day name a real one. The tool already reports the count
    of unsaid entries without failing on it, for exactly this reason, and that
    count is where a rename would show up for somebody looking. */
+
+/*
+TestNoKeyIsWrittenTwice, because JavaScript will not say a word about it.
+
+	A duplicate key in an object literal is legal: the last one wins, silently.
+	So two people translating the same English sentence — or one person adding an
+	entry to a screen's block that a rail block already carries — produce a file
+	where one of the two translations decides nothing, and every check passes.
+	`check-interface` reads keys into a map and cannot see it either.
+
+	IT ALMOST SHIPPED IN THIS FILE. `History` was written twice, once as a
+	section name and once as the heading of the screen it names. Both mapped to
+	the same Portuguese, so nothing would have looked wrong — which is the whole
+	problem: the version that catches this has to run when the two agree, because
+	by the time they disagree somebody is already reading the wrong one.
+*/
+func TestNoKeyIsWrittenTwice(t *testing.T) {
+	source, err := os.ReadFile("ui/assets/i18n-pt.js")
+	if err != nil {
+		t.Fatalf("reading the dictionary: %v", err)
+	}
+
+	seen := map[string]int{}
+	key := regexp.MustCompile(`(?m)^\s*'((?:[^'\\]|\\.)*)':`)
+	for i, line := range strings.Split(string(source), "\n") {
+		m := key.FindStringSubmatch(line)
+		if m == nil {
+			continue
+		}
+		if before, twice := seen[m[1]]; twice {
+			t.Errorf("%q is a key on line %d and again on line %d. JavaScript keeps the "+
+				"last one and says nothing, so one of the two translations decides "+
+				"nothing", m[1], before, i+1)
+			continue
+		}
+		seen[m[1]] = i + 1
+	}
+}

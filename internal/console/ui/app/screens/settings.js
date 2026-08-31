@@ -38,6 +38,7 @@
 import { esc } from '../dom.js';
 import { get, put, RequestError } from '../request.js';
 import { mayAct } from '../session.js';
+import { txt, day } from '../../assets/language.js';
 
 export default async function settings(section) {
   const el = document.createElement('div');
@@ -45,11 +46,9 @@ export default async function settings(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Operate</span>' +
-      '<h1>What it is set to</h1>' +
-      '<p>Numbers the whole platform behaves by, changed here instead of by a ' +
-      'deployment. Every change is recorded with your name, what was there and ' +
-      'what replaced it — and each one asks you why.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Operate')) + '</span>' +
+      '<h1>' + esc(txt('What it is set to')) + '</h1>' +
+      '<p>' + esc(txt('Numbers the whole platform behaves by, changed here instead of by a deployment. Every change is recorded with your name, what was there and what replaced it — and each one asks you why.')) + '</p>' +
 
       /* WHY THE LIST IS AS LONG AS IT IS AND NO LONGER, said on the screen
          rather than only in the source. Somebody who opens this page and counts
@@ -59,15 +58,10 @@ export default async function settings(section) {
 
          IT SAID "FIVE ENTRIES" UNTIL THERE WERE ELEVEN, which is what a comment
          counting something it does not control is always going to do. */
-      '<p>This list is closed. A parameter exists because some part of the ' +
-      'system declared it — with what it counts in, the range it may move ' +
-      'inside, the value the code ships with, and the argument for it being ' +
-      'settable at all. There is no way to add one from here, and that is ' +
-      'deliberate: a value with a right answer belongs in code, where a test ' +
-      'holds it.</p>' +
+      '<p>' + esc(txt('This list is closed. A parameter exists because some part of the system declared it — with what it counts in, the range it may move inside, the value the code ships with, and the argument for it being settable at all. There is no way to add one from here, and that is deliberate: a value with a right answer belongs in code, where a test holds it.')) + '</p>' +
     '</header>' +
     '<div id="knobs" aria-live="polite">' +
-      '<p class="checking">Reading…</p>' +
+      '<p class="checking">' + esc(txt('Reading…')) + '</p>' +
     '</div>';
 
   const knobs = el.querySelector('#knobs');
@@ -83,7 +77,7 @@ export default async function settings(section) {
     try {
       answer = await get('/console/api/v1/settings');
     } catch (e) {
-      knobs.innerHTML = '<p class="none">' + esc(e.message) + '</p>';
+      knobs.innerHTML = '<p class="none">' + esc(txt(e.message)) + '</p>';
       return;
     }
 
@@ -123,8 +117,12 @@ export default async function settings(section) {
         '</span>' +
       '</div>' +
 
-      // THE ARGUMENT, above the field. See the header.
-      '<p class="aside">' + esc(one.why) + '</p>' +
+      /* THE ARGUMENT, above the field. See the header. It is the SERVER's
+         sentence — one per declaration, written in Go beside the code that
+         reads the parameter — so it goes through `txt()` like every other, and
+         a declaration nobody has translated falls back to English rather than
+         drawing an empty paragraph where the whole case for the knob goes. */
+      '<p class="aside">' + esc(txt(one.why)) + '</p>' +
 
       '<p class="price-state' + (one.set ? '' : ' none') + '">' + esc(saying(one)) + '</p>' +
 
@@ -158,15 +156,17 @@ export default async function settings(section) {
                  So it describes the shape of an answer — how long — and
                  supplies none of its content. */
               '<label class="field field-wide">' +
-                '<span>Why</span>' +
+                '<span>' + esc(txt('Why')) + '</span>' +
                 '<input type="text" name="reason" autocomplete="off" maxlength="200" ' +
-                  'placeholder="in a few words">' +
+                  'placeholder="' + esc(txt('in a few words')) + '">' +
               '</label>' +
-              '<button type="submit" class="btn btn-primary">Save</button>' +
+              '<button type="submit" class="btn btn-primary">' +
+                esc(txt('Save')) + '</button>' +
             '</div>' +
             '<p class="signin-notice"></p>' +
           '</form>'
-        : '<p class="list-count">A read-only role may look at this and not set it.</p>') +
+        : '<p class="list-count">' +
+            esc(txt('A read-only role may look at this and not set it.')) + '</p>') +
     '</section>';
   }
 
@@ -187,29 +187,33 @@ export default async function settings(section) {
          a change and then refuses it would leave the log saying something
          happened that did not. The check that matters is still the API's, which
          refuses the same things against the same declaration. */
+      /* THE THREE REFUSALS ARE SENTENCES WITH HOLES, not sentences with
+         numbers glued on. Each was assembled around its values — "This one
+         takes 1 to 12" — which is a string nobody wrote and no dictionary can
+         hold, and the words either side of a number are exactly what a
+         language moves. */
       if (value === null) {
-        return say(form, 'bad', 'A whole number. This one is counted in '
-          + counted(one.unit).toLowerCase() + '.');
+        return say(form, 'bad',
+          txt('A whole number. This one is counted in %s.')
+            .replace('%s', counted(one.unit).toLowerCase()));
       }
       if (value < one.least || value > one.most) {
-        return say(form, 'bad', 'This one takes ' + one.least + ' to ' + one.most
-          + '. That range is part of what declares it and cannot be moved from here — '
-          + 'it is where the mistake of a digit too many is caught.');
+        return say(form, 'bad',
+          txt('This one takes %a to %b. That range is part of what declares it and cannot be moved from here — it is where the mistake of a digit too many is caught.')
+            .replace('%a', one.least).replace('%b', one.most));
       }
       if (!reason) {
-        return say(form, 'bad', 'Say why in a few words. A parameter is replaced rather '
-          + 'than appended, so this log is the whole history of what the platform was '
-          + 'set to.');
+        return say(form, 'bad', txt('Say why in a few words. A parameter is replaced rather than appended, so this log is the whole history of what the platform was set to.'));
       }
 
-      say(form, '', 'Saving…');
+      say(form, '', txt('Saving…'));
       try {
         await put('/console/api/v1/settings/' + encodeURIComponent(one.name),
           { value, reason });
       } catch (e) {
         return say(form, 'bad', e instanceof RequestError && e.status === 403
-          ? 'That asks for an operator.'
-          : e.message);
+          ? txt('That asks for an operator.')
+          : txt(e.message));
       }
 
       /* REDRAWN FIRST AND SPOKEN INTO SECOND. Writing the confirmation and then
@@ -218,9 +222,7 @@ export default async function settings(section) {
          already made once, on the refund form. */
       await show();
       const again = knobs.querySelector('[data-name="' + cssName(one.name) + '"] .knob-form');
-      say(again, 'ok', 'Saved. Every part of the platform that reads this is on the new '
-        + 'number within fifteen seconds — the servers keep a short snapshot rather than '
-        + 'asking the database on every request.');
+      say(again, 'ok', txt('Saved. Every part of the platform that reads this is on the new number within fifteen seconds — the servers keep a short snapshot rather than asking the database on every request.'));
     });
   }
 
@@ -239,15 +241,27 @@ export default async function settings(section) {
    A field showing the number in both cases looks identical, and the difference
    is exactly what somebody about to type needs to know. */
 function saying(one) {
-  if (one.set) {
-    return 'Set to ' + one.value + (one.since ? ' on ' + day(one.since) : '')
-      + '. The code ships with ' + one.fallback + '.'
-      + (one.value === one.fallback
-        ? ' Somebody set it back to what it was, which is a decision and not an absence.'
-        : '');
+  if (!one.set) {
+    return txt('Nobody has changed this. It is on %s, which is what the code ships with — and what it falls back to if these rows are ever unreadable.')
+      .replace('%s', one.fallback);
   }
-  return 'Nobody has changed this. It is on ' + one.fallback + ', which is what the code '
-    + 'ships with — and what it falls back to if these rows are ever unreadable.';
+
+  /* FOUR SENTENCES AND NOT ONE ASSEMBLED FROM SIX PIECES. It was built by
+     concatenation — a value, "on", a date, "The code ships with", a number —
+     which reads as English prose and arrives at a dictionary as a string
+     nobody wrote. The date is optional and the last clause is conditional, so
+     the cases are enumerated rather than glued: that is four entries where a
+     rule would be one, and it is the only shape in which somebody translating
+     can put "on <date>" where their language puts it. */
+  const said = one.since
+    ? txt('Set to %v on %d. The code ships with %f.')
+        .replace('%v', one.value).replace('%d', day(one.since)).replace('%f', one.fallback)
+    : txt('Set to %v. The code ships with %f.')
+        .replace('%v', one.value).replace('%f', one.fallback);
+
+  return one.value === one.fallback
+    ? said + ' ' + txt('Somebody set it back to what it was, which is a decision and not an absence.')
+    : said;
 }
 
 // What the field is labelled, from the unit the declaration carries. An unknown
@@ -255,15 +269,15 @@ function saying(one) {
 // nothing.
 function counted(unit) {
   const known = {
-    count: 'How many',
-    percent: 'Per cent',
-    days: 'Days',
-    hours: 'Hours',
-    minutes: 'Minutes',
-    seconds: 'Seconds',
-    bytes: 'Bytes',
+    count: txt('How many'),
+    percent: txt('Per cent'),
+    days: txt('Days'),
+    hours: txt('Hours'),
+    minutes: txt('Minutes'),
+    seconds: txt('Seconds'),
+    bytes: txt('Bytes'),
   };
-  return known[unit] || 'Value';
+  return known[unit] || txt('Value');
 }
 
 /* A NAME IS SAFE IN AN ATTRIBUTE SELECTOR because the server's own CHECK says
@@ -274,10 +288,10 @@ function cssName(name) {
   return String(name).replace(/["\\]/g, '\\$&');
 }
 
-function day(iso) {
-  const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? String(iso) : at.toLocaleDateString();
-}
+/* `day` USED TO BE HERE and called `toLocaleDateString()` with no argument,
+   which formats in the BROWSER's locale — an American date beside a Portuguese
+   sentence. It is `language.js`'s now: a date is a function of the language
+   that was chosen. */
 
 function say(form, how, text) {
   if (!form) return;

@@ -164,7 +164,8 @@ window.I18N.pt.ui = {
     'Nada aqui pode ser editado: a tabela recusa alteração e exclusão, e uma correção é ' +
     'uma entrada nova.',
 
-  'History': 'Histórico',
+  /* `History` is in the rail block above — it is a section name AND this
+     screen's heading, which is one string and therefore one entry. */
   'One person’s doing': 'O que uma pessoa fez',
 
   /* THE KIND IS THE SERVER'S WORD IN A HOLE. `account`, `school`, `job` are
@@ -299,6 +300,95 @@ window.I18N.pt.ui = {
   'Nobody here matches that. It is matched anywhere in the address or the name, so a fragment is enough — and nothing at all lists everybody, newest first.':
     'Ninguém aqui corresponde a isso. A busca casa em qualquer parte do endereço ou do ' +
     'nome, então um fragmento basta — e nada lista todo mundo, mais recentes primeiro.',
+
+  /* ---------- Operate · What it is set to ---------- */
+  'Numbers the whole platform behaves by, changed here instead of by a deployment. Every change is recorded with your name, what was there and what replaced it — and each one asks you why.':
+    'Números pelos quais a plataforma inteira se comporta, alterados aqui em vez de por um ' +
+    'deploy. Cada mudança é registrada com o seu nome, o que estava lá e o que substituiu — ' +
+    'e cada uma pergunta por quê.',
+  'This list is closed. A parameter exists because some part of the system declared it — with what it counts in, the range it may move inside, the value the code ships with, and the argument for it being settable at all. There is no way to add one from here, and that is deliberate: a value with a right answer belongs in code, where a test holds it.':
+    'Esta lista é fechada. Um parâmetro existe porque alguma parte do sistema o declarou — ' +
+    'com a unidade em que conta, a faixa dentro da qual pode se mover, o valor com que o ' +
+    'código sai, e o argumento para ele ser ajustável. Não há como acrescentar um daqui, e ' +
+    'isso é deliberado: um valor que tem resposta certa pertence ao código, onde um teste o ' +
+    'segura.',
+
+  /* THE UNIT NAMES, which label the field. `count` becomes "How many" in
+     English because that is what the field asks; Portuguese asks it the same
+     way and the word is not a translation of "count". */
+  'How many': 'Quantos',
+  'Per cent': 'Por cento',
+  'Days': 'Dias',
+  'Hours': 'Horas',
+  'Minutes': 'Minutos',
+  'Seconds': 'Segundos',
+  'Bytes': 'Bytes',
+  'Value': 'Valor',
+
+  'in a few words': 'em poucas palavras',
+  'Save': 'Salvar',
+  'Saving…': 'Salvando…',
+  'A read-only role may look at this and not set it.':
+    'Um papel somente-leitura pode olhar isto e não ajustar.',
+  'That asks for an operator.': 'Isso pede um operador.',
+
+  /* WHAT THE STATE LINE SAYS, in four cases rather than one sentence glued
+     together from six pieces. The date is optional and the last clause is
+     conditional, so the cases are enumerated: it is the only shape in which
+     somebody translating can put "em <data>" where their language puts it. */
+  'Set to %v. The code ships with %f.': 'Ajustado para %v. O código sai com %f.',
+  'Set to %v on %d. The code ships with %f.': 'Ajustado para %v em %d. O código sai com %f.',
+  'Somebody set it back to what it was, which is a decision and not an absence.':
+    'Alguém o colocou de volta no que era, o que é uma decisão e não uma ausência.',
+  'Nobody has changed this. It is on %s, which is what the code ships with — and what it falls back to if these rows are ever unreadable.':
+    'Ninguém mudou isto. Está em %s, que é o valor com que o código sai — e para o qual ele ' +
+    'volta se estas linhas alguma vez ficarem ilegíveis.',
+
+  'A whole number. This one is counted in %s.': 'Um número inteiro. Este é contado em %s.',
+  'This one takes %a to %b. That range is part of what declares it and cannot be moved from here — it is where the mistake of a digit too many is caught.':
+    'Este aceita de %a a %b. Essa faixa faz parte do que o declara e não pode ser movida ' +
+    'daqui — é onde o erro de um dígito a mais é pego.',
+  'Say why in a few words. A parameter is replaced rather than appended, so this log is the whole history of what the platform was set to.':
+    'Diga por quê em poucas palavras. Um parâmetro é substituído e não acrescentado, então ' +
+    'este registro é toda a história de como a plataforma esteve ajustada.',
+  'Saved. Every part of the platform that reads this is on the new number within fifteen seconds — the servers keep a short snapshot rather than asking the database on every request.':
+    'Salvo. Toda parte da plataforma que lê isto está no número novo em quinze segundos — os ' +
+    'servidores mantêm um retrato curto em vez de perguntar ao banco a cada requisição.',
+
+
+  /* ---------- the ELEVEN ARGUMENTS, which are the point of that screen ----------
+
+     `writes.go` says a knob costs a declaration, bounds and a sentence arguing
+     that the value has no right answer — and the screen prints that sentence
+     above the field because it is the whole cost of the knob existing. Left in
+     English on a Portuguese screen it is a paragraph nobody reads, which is the
+     same as not having spent it.
+
+     They are written in Go, beside the code that reads each parameter, so
+     `check-interface` cannot enumerate them. These are here because somebody
+     opened the screen and read all eleven. */
+  'how many answers a question needs before this platform says anything about it. Thirty is what classical item analysis uses, which is a rule of thumb rather than a result — the real choice is between saying something early and risking noise, or saying nothing until certain, and a cohort of forty and a cohort of four thousand want opposite ends of it. Every rollup records the sample it was judged against, so moving this changes what is said next and nothing already said.':
+    'quantas respostas uma questão precisa antes de esta plataforma dizer qualquer coisa sobre ela. Trinta é o que a análise clássica de itens usa, o que é uma regra de bolso e não um resultado — a escolha real é entre dizer algo cedo e arriscar ruído, ou não dizer nada até ter certeza, e uma turma de quarenta e uma de quatro mil querem pontas opostas disso. Cada consolidação registra a amostra contra a qual foi julgada, então mexer nisto muda o que será dito adiante e nada do que já foi dito.',
+  'how far a card sale may be split. Twelve costs half a point more in fees than six and halves the instalment a buyer compares against other schools; one turns instalments off. No interest is passed on at any count.':
+    'em quantas partes uma venda no cartão pode ser dividida. Doze custa meio ponto a mais em taxas do que seis e reduz à metade a parcela que o comprador compara com outras escolas; um desliga o parcelamento. Nenhum juro é repassado em qualquer quantidade.',
+  'how long somebody has to change their mind. Art. 49 of the Código de Defesa do Consumidor gives seven days for a purchase made at a distance and that is a floor rather than an answer — `Least` is 7 so no console can narrow it, and how far above the minimum to go is a commercial position: a longer window is something a school competes on and it costs whatever the refunds cost. The terms of use print this number rather than spelling one out, so the promise and the behaviour cannot part.':
+    'quanto tempo alguém tem para mudar de ideia. O art. 49 do Código de Defesa do Consumidor dá sete dias para uma compra feita a distância, e isso é um piso e não uma resposta — `Least` é 7, então nenhum console consegue estreitar, e quanto ir acima do mínimo é uma posição comercial: uma janela maior é algo em que uma escola compete, e custa o que os estornos custarem. Os termos de uso imprimem este número em vez de escrever um por extenso, então a promessa e o comportamento não podem se separar.',
+  'the share of an exam a student has to get right. Seventy is a convention and not a measurement — no test can say a school is wrong to want seventy-five — so it is how strict this platform chooses to be. Every attempt records the mark it was judged by, so moving this changes what a NEW attempt has to reach and nothing about a certificate already earned.':
+    'a fração de uma prova que o aluno tem de acertar. Setenta é uma convenção e não uma medição — nenhum teste pode dizer que uma escola está errada em querer setenta e cinco — então é o quanto esta plataforma escolhe ser rigorosa. Cada tentativa registra a nota pela qual foi julgada, então mexer nisto muda o que uma tentativa NOVA precisa alcançar e nada sobre um certificado já conquistado.',
+  'how long a paper is when the pool is longer. A short paper is quicker to sit and easier to get lucky on; a long one measures better and is abandoned more. Where to sit between those is a judgement about how this platform wants to be examined, and a pool smaller than the number is still asked in full.':
+    'quantas questões uma prova tem quando o banco é maior. Uma prova curta é mais rápida de fazer e mais fácil de acertar por sorte; uma longa mede melhor e é abandonada mais. Onde ficar entre as duas é um julgamento sobre como esta plataforma quer ser examinada, e um banco menor que o número continua sendo perguntado por inteiro.',
+  'how many address changes an account may ask for in an hour. Each one posts a message from our domain to an address the asker chose, so this is the bound on the one abuse the feature opens — and three is a guess about how often a person mistypes, which a school with half its addresses typed on phones may read differently. Below one the feature is off, which is a decision to make by deleting it; above ten it stops bounding the abuse and starts describing it.':
+    'quantas trocas de endereço uma conta pode pedir em uma hora. Cada uma envia uma mensagem do nosso domínio para um endereço escolhido por quem pediu, então este é o limite do único abuso que o recurso abre — e três é um chute sobre com que frequência uma pessoa erra ao digitar, o que uma escola com metade dos endereços digitados no celular pode ler de outro jeito. Abaixo de um o recurso está desligado, o que é uma decisão a tomar apagando-o; acima de dez ele deixa de limitar o abuso e passa a descrevê-lo.',
+  'how long a confirmation link keeps working. Nothing measures where the right answer is between an inbox read after work and a message forwarded to somebody else — services that have thought about it land anywhere within a day of ours. The fence is the part that is not a preference: under an hour somebody who stepped away has to ask again, and over three days a link in a forwarded message is a standing key.':
+    'por quanto tempo um link de confirmação continua funcionando. Nada mede onde está a resposta certa entre uma caixa de entrada lida depois do expediente e uma mensagem encaminhada para outra pessoa — serviços que pensaram sobre isso caem em qualquer ponto a um dia do nosso. A cerca é a parte que não é preferência: abaixo de uma hora quem se afastou tem de pedir de novo, e acima de três dias um link numa mensagem encaminhada é uma chave permanente.',
+  'how recently somebody has to have been seen to count as here. Nothing measures where \"now\" ends — a deploy going wrong is watched at the short end and an evening\'s traffic at the long one — so this is what the platform means by now. It cannot go below twice the heartbeat, because a window narrower than the writing cadence reports people as gone between their own requests.':
+    'há quanto tempo alguém precisa ter sido visto para contar como presente. Nada mede onde o \"agora\" termina — um deploy dando errado é acompanhado na ponta curta e o tráfego de uma noite na ponta longa — então isto é o que a plataforma quer dizer por agora. Não pode ficar abaixo do dobro do batimento, porque uma janela mais estreita que a cadência de escrita reporta pessoas como ausentes entre as próprias requisições.',
+  'how long an operator may look at a student\'s screens before the viewing stops working (K-02). It may only be made SHORTER: thirty is the ceiling and nothing can raise it, because a knob that went up would be one somebody turns on the afternoon it is inconvenient. An organisation that wants ten minutes is tightening the rule rather than loosening it, and there is no argument for refusing them.':
+    'por quanto tempo um operador pode olhar as telas de um aluno antes de a observação parar de funcionar (K-02). Só pode ser ENCURTADO: trinta é o teto e nada o levanta, porque um botão que subisse seria um que alguém gira na tarde em que ele incomoda. Uma organização que quer dez minutos está apertando a regra e não afrouxando, e não há argumento para recusar.',
+  'how long an answer may take and still count as remembered rather than nearly forgotten. Above it the answer was right and slow, which SM-2 reads as a card due back sooner. Forty-five seconds is the same first guess as the boundary below it and wants fitting against the same history.':
+    'quanto tempo uma resposta pode levar e ainda contar como lembrada em vez de quase esquecida. Acima disso a resposta foi certa e lenta, o que o SM-2 lê como um cartão que volta mais cedo. Quarenta e cinco segundos é o mesmo primeiro chute que o limite abaixo dele, e quer ser ajustado contra a mesma história.',
+  'how fast an answer has to be to count as known without hesitation, which is the top SM-2 grade. Ten seconds is a first guess and this file has always said so — it is roughly right for a quiz and roughly wrong for a labelling question, which takes longer for reasons that have nothing to do with knowing the answer. Every review records the boundary it was judged by, so moving this changes what is scheduled next and nothing already scheduled.':
+    'quão rápida uma resposta tem de ser para contar como sabida sem hesitação, que é a nota máxima do SM-2. Dez segundos é um primeiro chute e este arquivo sempre disse isso — é aproximadamente certo para um quiz e aproximadamente errado para uma questão de rotular, que demora mais por razões que nada têm a ver com saber a resposta. Cada revisão registra o limite pelo qual foi julgada, então mexer nisto muda o que será agendado adiante e nada do que já foi agendado.',
 
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
