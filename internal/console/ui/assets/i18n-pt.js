@@ -596,6 +596,168 @@ window.I18N.pt.ui = {
   'Periwinkle': 'Pervinca',
   'Slate': 'Ardósia',
 
+
+  /* ---------- Operate · Student record ----------
+
+     The largest screen in this console, and the one where every kind of
+     string it has appears at once: headings, table columns, tags, the
+     placeholders in four forms that move money or time, and the sentences
+     that correct an expectation — "this does NOT cut their access" is the
+     one an operator would otherwise get wrong out loud. */
+  '%a live of %b': '%a ativas de %b',
+  'one live of %b': 'uma ativa de %b',
+  '%m for %n months': '%m por %n meses',
+  '%m for one month': '%m por um mês',
+  '%s across %n paid purchases. Not the ledger: an instalment plan is one sale here and one row per collection there.':
+    '%s em %n compras pagas. Não é o livro-caixa: um parcelamento é uma venda aqui e uma ' +
+    'linha por cobrança lá.',
+  '%s across one paid purchase. Not the ledger: an instalment plan is one sale here and one row per collection there.':
+    '%s em uma compra paga. Não é o livro-caixa: um parcelamento é uma venda aqui e uma ' +
+    'linha por cobrança lá.',
+  '%s, against an earlier line': '%s, contra uma linha anterior',
+  'A currency is three letters, ISO 4217 — BRL, EUR, USD.': 'Uma moeda são três letras, ISO 4217 — BRL, EUR, USD.',
+  'A read-only role may read this and not change it.': 'Um papel somente-leitura pode ler isto e não alterar.',
+  'Access to': 'Acesso até',
+  'Adjust the ledger': 'Ajustar o livro-caixa',
+  'Amount': 'Valor',
+  'An amount, like 655,50. Type what the line says.': 'Um valor, como 655,50. Digite o que a linha diz.',
+  'An amount, like 69 or 69,00. An adjustment of nothing is not a correction.': 'Um valor, como 69 ou 69,00. Um ajuste de nada não é correção.',
+  'Asked and accepted.': 'Pedido e aceito.',
+  'Asking the gateway…': 'Pedindo ao gateway…',
+  'At the gateway': 'No gateway',
+  'Between one day and a year. More than that is two grants, and the second entry in the history is the record that you meant it.':
+    'Entre um dia e um ano. Mais que isso são duas concessões, e a segunda entrada no ' +
+    'histórico é o registro de que você quis mesmo.',
+  'Cancel': 'Cancelamento',
+  'Cancel it': 'Cancelar',
+  'Cancelled. What they paid for still stands to the date above.': 'Cancelado. O que a pessoa pagou continua valendo até a data acima.',
+  'Card, %d×': 'Cartão, %d×',
+  'Card, in one': 'Cartão, à vista',
+  'Certificates': 'Certificados',
+  'Change something': 'Alterar alguma coisa',
+  'Charged to them': 'Cobrado da pessoa',
+  'Code': 'Código',
+  'Course': 'Curso',
+  'Courses': 'Cursos',
+  'Credited to them': 'Creditado à pessoa',
+  'Direction': 'Direção',
+  'Everything done to them': 'Tudo o que foi feito com a pessoa',
+  'Exams': 'Provas',
+  'For': 'Por',
+  'From': 'De',
+  'Give it': 'Conceder',
+  'Give time': 'Conceder tempo',
+  'Given, and recorded as a grant rather than a sale.': 'Concedido, e registrado como concessão e não como venda.',
+  'How': 'Como',
+  'Issued': 'Emitido',
+  'Last seen': 'Visto por último',
+  'Look somebody up': 'Procurar alguém',
+  'No money has moved either way.': 'Nenhum dinheiro se moveu em nenhuma direção.',
+  'No paper sat here.': 'Nenhuma prova feita aqui.',
+  'No subscription — but they have tried to buy, below.': 'Sem assinatura — mas houve tentativa de compra, abaixo.',
+  'No such person': 'Pessoa inexistente',
+  'Nothing awarded here.': 'Nada concedido aqui.',
+  'Nothing bought, and nothing attempted.': 'Nada comprado, e nada tentado.',
+  'Nothing held for this school on its own — the subscription above covers every school.': 'Nada mantido só para esta escola — a assinatura acima cobre todas as escolas.',
+  'Nothing is held under that id.': 'Nada é guardado sob esse id.',
+  'Nothing started here.': 'Nada iniciado aqui.',
+  'One line in the books for money that moved outside the gateway: a bank transfer, a write-off, a goodwill credit. It tells the gateway NOTHING — no money moves because of this, it records that money moved somewhere else.':
+    'Uma linha no livro-caixa para dinheiro que se moveu fora do gateway: uma ' +
+    'transferência, uma baixa, um crédito de cortesia. Não diz NADA ao gateway — nenhum ' +
+    'dinheiro se move por causa disto, ele registra que o dinheiro se moveu em outro ' +
+    'lugar.',
+  'One person, or none. Searching is on Personal data.': 'Uma pessoa, ou nenhuma. A busca fica em Dados pessoais.',
+  'One row per browser they have signed in on. The token is not here and never will be — this says how many and since when, not how to become them.':
+    'Uma linha por navegador em que a pessoa entrou. O token não está aqui e nunca estará ' +
+    '— isto diz quantos e desde quando, não como se tornar a pessoa.',
+  'Opened': 'Aberta',
+  'Opened in a new tab. It ends in half an hour, or when you press stop there.': 'Aberto em uma aba nova. Termina em meia hora, ou quando você apertar parar lá.',
+  'Paper': 'Prova',
+  'Purchases': 'Compras',
+  'Recorded with your name. Read-only, ends in half an hour, and they are not told.':
+    'Registrado com o seu nome. Somente leitura, termina em meia hora, e a pessoa não é ' +
+    'avisada.',
+  'Reference': 'Referência',
+  'Result': 'Resultado',
+  'Sat': 'Feita em',
+  'Say why. It is written down, and a change nobody can account for is worse than one that did not happen.':
+    'Diga por quê. Fica registrado, e uma mudança que ninguém consegue justificar é pior ' +
+    'que uma que não aconteceu.',
+  'Sections': 'Seções',
+  'See what they see': 'Ver o que a pessoa vê',
+  'Send it back': 'Devolver',
+  'Send money back': 'Devolver dinheiro',
+  'Sittings': 'Sessões',
+  'Somebody else': 'Outra pessoa',
+  'Started': 'Iniciada',
+  'Starting…': 'Iniciando…',
+  'Subscription': 'Assinatura',
+  'Term': 'Prazo',
+  'That is not what this purchase came to. Type the amount on the line — a record with several purchases has several buttons that look the same.':
+    'Não é esse o total desta compra. Digite o valor que está na linha — uma ficha com ' +
+    'várias compras tem vários botões parecidos.',
+  'The books': 'O livro-caixa',
+  'They have never bought anything, and never tried to.': 'A pessoa nunca comprou nada, e nunca tentou.',
+  'They have never signed in.': 'A pessoa nunca entrou.',
+  'They have no subscription to cancel.': 'A pessoa não tem assinatura para cancelar.',
+  'They have no subscription to extend. Giving somebody a term is not this: a subscription has to say what it was sold at, and there is no honest answer for one nobody bought.':
+    'A pessoa não tem assinatura para estender. Dar um prazo a alguém não é isto: uma ' +
+    'assinatura tem de dizer por quanto foi vendida, e não há resposta honesta para uma ' +
+    'que ninguém comprou.',
+  'They have nothing at any school: no plan, no progress, no exam, no certificate.':
+    'A pessoa não tem nada em escola nenhuma: sem plano, sem progresso, sem prova, sem ' +
+    'certificado.',
+  'This asks the gateway and writes nothing here. Their access closes when the gateway&rsquo;s event comes back, which is seconds later and not part of the request. It cannot be undone.':
+    'Isto pede ao gateway e não escreve nada aqui. O acesso da pessoa fecha quando o ' +
+    'evento do gateway volta, o que é segundos depois e não faz parte da requisição. Não ' +
+    'pode ser desfeito.',
+  'This deployment has no payment gateway configured, so nothing can be sent back from here.':
+    'Este deploy não tem gateway de pagamento configurado, então nada pode ser devolvido ' +
+    'daqui.',
+  'This does NOT cut their access. Every purchase here is a term bought outright and the paid period is honoured to its end — what stops is the reminder that it is about to run out.':
+    'Isto NÃO corta o acesso. Cada compra aqui é um prazo comprado por inteiro e o ' +
+    'período pago é honrado até o fim — o que para é o aviso de que está acabando.',
+  'Time nobody paid for — an outage, a fortnight lost to support. It is recorded as a grant and not as a sale, so it will not appear in the purchases above and no money is written anywhere.':
+    'Tempo que ninguém pagou — uma indisponibilidade, uma quinzena perdida no suporte. É ' +
+    'registrado como concessão e não como venda, então não aparece nas compras acima e ' +
+    'nenhum dinheiro é escrito em lugar nenhum.',
+  'Type the amount': 'Digite o valor',
+  'What': 'O quê',
+  'What one person has, at each school: their plan, how far they have got, what they sat and what they were awarded. Reading it is not an export and is not recorded — what it shows is somebody&rsquo;s standing rather than their work.':
+    'O que uma pessoa tem, em cada escola: o plano, até onde chegou, o que fez e o que ' +
+    'recebeu. Ler isto não é uma exportação e não é registrado — o que mostra é a ' +
+    'situação de alguém, e não o trabalho dela.',
+  'Write it': 'Escrever',
+  'Written. It is in the books and nowhere else — the gateway was not told, and no money has moved because of it. It is in the table below.':
+    'Escrito. Está no livro-caixa e em nenhum outro lugar — o gateway não foi avisado, e ' +
+    'nenhum dinheiro se moveu por causa disso. Está na tabela abaixo.',
+  'an unknown day': 'um dia desconhecido',
+  'arrived %s': 'chegou em %s',
+  'bank transfer, receipt 4471': 'transferência, recibo 4471',
+  'does not renew by itself': 'não renova sozinha',
+  'ended': 'encerrada',
+  'every school': 'todas as escolas',
+  'expired': 'expirada',
+  'failed': 'reprovado',
+  'invoice': 'cobrança',
+  'live': 'ativa',
+  'never sent': 'nunca enviada',
+  'not finished': 'não concluída',
+  'not marked': 'não corrigida',
+  'not paid': 'não paga',
+  'not recorded': 'não registrado',
+  'not said': 'não informado',
+  'of %s': 'de %s',
+  'open': 'em aberto',
+  'opens every course': 'abre todos os cursos',
+  'opens nothing': 'não abre nada',
+  'paid through %s': 'pago até %s',
+  'passed': 'aprovado',
+  'the March outage cost them a fortnight': 'a queda de março custou uma quinzena',
+  'the course was withdrawn, ticket 903': 'o curso foi retirado, chamado 903',
+  'they asked to stop, ticket 812': 'a pessoa pediu para parar, chamado 812',
+  'waiting': 'aguardando',
+
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
     'Este console está aberto desde antes da última atualização. Recarregue quando puder.',
