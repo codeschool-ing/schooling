@@ -42,6 +42,7 @@ import { esc } from '../dom.js';
 import { get, post, RequestError } from '../request.js';
 import { goTo } from '../routes.js';
 import { mayAct } from '../session.js';
+import { txt, day as dayIn, moment, money as amount } from '../../assets/language.js';
 
 /* ---------- the way in ---------- */
 
@@ -51,27 +52,31 @@ export default async function lookup(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Operate</span>' +
-      '<h1>Student record</h1>' +
-      '<p>What one person has, at each school: their plan, how far they have got, ' +
-      'what they sat and what they were awarded. Reading it is not an export and ' +
-      'is not recorded — what it shows is somebody&rsquo;s standing rather than ' +
-      'their work.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Operate')) + '</span>' +
+      '<h1>' + esc(txt('Student record')) + '</h1>' +
+      '<p>' + txt('What one person has, at each school: their plan, how far they have got, what they sat and what they were awarded. Reading it is not an export and is not recorded — what it shows is somebody&rsquo;s standing rather than their work.') + '</p>' +
     '</header>' +
 
     '<section class="block">' +
       '<div class="block-top">' +
-        '<h2>Find somebody</h2>' +
-        '<span class="block-score mono">exact address</span>' +
+        '<h2>' + esc(txt('Find somebody')) + '</h2>' +
+        '<span class="block-score mono">' + esc(txt('exact address')) + '</span>' +
       '</div>' +
       '<form id="find" class="list-bar" novalidate>' +
         '<label class="search">' +
-          '<span class="visually-hidden">The whole address</span>' +
+          '<span class="visually-hidden">' + esc(txt('The whole address')) + '</span>' +
           '<input id="email" type="email" autocomplete="off" spellcheck="false" ' +
                  'placeholder="somebody@example.tld" required>' +
         '</label>' +
-        '<button class="btn btn-primary" type="submit">Look up</button>' +
-        '<span class="list-count">There is no search here, only a lookup.</span>' +
+        '<button class="btn btn-primary" type="submit">' + esc(txt('Look up')) + '</button>' +
+        /* IT SAID "THERE IS NO SEARCH HERE, ONLY A LOOKUP", which stopped being
+           true when K-22 was amended: `Personal data` searches now, a page at a
+           time and recorded. THIS form is still exact and that is the fact
+           worth stating — every protection on the listing is on the listing, so
+           a lookup that started matching partially would be that power reached
+           by a route that records nothing. */
+        '<span class="list-count">' +
+          esc(txt('One person, or none. Searching is on Personal data.')) + '</span>' +
       '</form>' +
       '<p class="none" id="answer" aria-live="polite"></p>' +
     '</section>';
@@ -83,14 +88,14 @@ export default async function lookup(section) {
     const email = el.querySelector('#email').value.trim();
     if (!email) return;
 
-    answer.textContent = 'Looking…';
+    answer.textContent = txt('Looking…');
     try {
       const person = await get('/console/api/v1/people?email=' + encodeURIComponent(email));
       goTo('/record/' + person.id);
     } catch (e) {
       answer.textContent = e instanceof RequestError && e.status === 404
-        ? 'No account at that address.'
-        : e.message;
+        ? txt('No account at that address.')
+        : txt(e.message);
     }
   });
 
@@ -102,36 +107,39 @@ export default async function lookup(section) {
 export async function record(params) {
   const el = document.createElement('div');
   el.className = 'view';
-  el.innerHTML = '<p class="checking">Reading…</p>';
+  el.innerHTML = '<p class="checking">' + esc(txt('Reading…')) + '</p>';
 
   let it;
   try {
     it = await get('/console/api/v1/people/' + encodeURIComponent(params.id) + '/record');
   } catch (e) {
     el.innerHTML =
-      '<header class="view-head"><h1>No such person</h1>' +
+      '<header class="view-head"><h1>' + esc(txt('No such person')) + '</h1>' +
       '<p>' + esc(e instanceof RequestError && e.status === 404
-        ? 'Nothing is held under that id.' : e.message) + '</p>' +
-      '<p class="list-bar"><a class="btn btn-ghost" href="#/record">Look somebody up</a></p>' +
+        ? txt('Nothing is held under that id.') : txt(e.message)) + '</p>' +
+      '<p class="list-bar"><a class="btn btn-ghost" href="#/record">' +
+        esc(txt('Look somebody up')) + '</a></p>' +
       '</header>';
-    return { title: 'No such person', el };
+    return { title: txt('No such person'), el };
   }
 
   const person = it.person;
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Operate</span>' +
+      '<span class="eyebrow mono">' + esc(txt('Operate')) + '</span>' +
       '<h1>' + esc(person.name) +
-        (person.synthetic ? '<span class="tag tag-quiet">synthetic</span>' : '') + '</h1>' +
-      '<p class="mono">' + esc(person.email) + ' &middot; arrived ' + esc(day(person.createdAt)) + '</p>' +
+        (person.synthetic
+          ? '<span class="tag tag-quiet">' + esc(txt('synthetic')) + '</span>' : '') + '</h1>' +
+      '<p class="mono">' + esc(person.email) + ' &middot; ' +
+        esc(txt('arrived %s').replace('%s', day(person.createdAt))) + '</p>' +
       '<p class="list-bar">' +
-        '<a class="btn btn-ghost" href="#/record">Somebody else</a> ' +
+        '<a class="btn btn-ghost" href="#/record">' + esc(txt('Somebody else')) + '</a> ' +
         /* THE TWO SCREENS ABOUT ONE PERSON KNOW ABOUT EACH OTHER. An operator
            who has decided to erase somebody arrived at that decision here. */
-        '<a class="btn btn-ghost" href="#/people">Personal data</a> ' +
+        '<a class="btn btn-ghost" href="#/people">' + esc(txt('Personal data')) + '</a> ' +
         '<a class="btn btn-ghost" href="#/audit/on/account/' + esc(person.id) + '">' +
-          'Everything done to them</a>' +
+          esc(txt('Everything done to them')) + '</a>' +
       '</p>' +
     '</header>' +
 
@@ -151,13 +159,15 @@ export async function record(params) {
        refund, so there has to be a way to re-read this table and nothing else.
        Folded into the record it would be either stale after every correction or
        a whole second record fetched to refresh one table. */
-    '<section class="block" id="ledger"><div class="block-top"><h2>The books</h2></div>' +
-      '<p class="checking">Reading…</p></section>' +
+    '<section class="block" id="ledger"><div class="block-top"><h2>' +
+      esc(txt('The books')) + '</h2></div>' +
+      '<p class="checking">' + esc(txt('Reading…')) + '</p></section>' +
 
     (it.schools.length
       ? it.schools.map((s) => atSchool(s, person.id)).join('')
-      : '<section class="block"><p class="none">They have nothing at any school: ' +
-        'no plan, no progress, no exam, no certificate.</p></section>') +
+      : '<section class="block"><p class="none">' +
+        esc(txt('They have nothing at any school: no plan, no progress, no exam, no certificate.')) +
+        '</p></section>') +
 
     sittings(it.sittings);
 
@@ -175,7 +185,7 @@ export async function record(params) {
 
     const said = button.parentElement.querySelector('.list-count');
     button.disabled = true;
-    if (said) said.textContent = 'Starting…';
+    if (said) said.textContent = txt('Starting…');
     try {
       const answer = await post('/console/api/v1/students/' +
         encodeURIComponent(button.dataset.person) + '/view/' +
@@ -185,10 +195,11 @@ export async function record(params) {
          new tab can reach back into this one through `window.opener`, and this
          one is the console. */
       globalThis.open(answer.link, '_blank', 'noopener');
-      if (said) said.textContent = 'Opened in a new tab. It ends in half an hour, ' +
-        'or when you press stop there.';
+      if (said) {
+        said.textContent = txt('Opened in a new tab. It ends in half an hour, or when you press stop there.');
+      }
     } catch (e) {
-      if (said) said.textContent = e.message;
+      if (said) said.textContent = txt(e.message);
     } finally {
       button.disabled = false;
     }
@@ -247,8 +258,7 @@ export async function record(params) {
        by the API, which refuses the same things for the same reasons and has
        tests. This is the courtesy; that one is the rule. */
     if (!why) {
-      tell('Say why. It is written down, and a change nobody can account for is worse '
-        + 'than one that did not happen.', true);
+      tell(txt('Say why. It is written down, and a change nobody can account for is worse than one that did not happen.'), true);
       return;
     }
 
@@ -263,8 +273,7 @@ export async function record(params) {
     if (what === 'extend') {
       const days = Number(field('days').value);
       if (!Number.isInteger(days) || days < 1 || days > 366) {
-        tell('Between one day and a year. More than that is two grants, and the second '
-          + 'entry in the history is the record that you meant it.', true);
+        tell(txt('Between one day and a year. More than that is two grants, and the second entry in the history is the record that you meant it.'), true);
         return;
       }
       where += '/subscription/extend';
@@ -275,11 +284,11 @@ export async function record(params) {
       const cents = asCents(field('amount').value);
       const currency = field('currency').value.trim().toUpperCase();
       if (cents === null || cents === 0) {
-        tell('An amount, like 69 or 69,00. An adjustment of nothing is not a correction.', true);
+        tell(txt('An amount, like 69 or 69,00. An adjustment of nothing is not a correction.'), true);
         return;
       }
       if (!/^[A-Z]{3}$/.test(currency)) {
-        tell('A currency is three letters, ISO 4217 — BRL, EUR, USD.', true);
+        tell(txt('A currency is three letters, ISO 4217 — BRL, EUR, USD.'), true);
         return;
       }
       where += '/ledger/adjustment';
@@ -293,13 +302,12 @@ export async function record(params) {
 
     const button = form.querySelector('button[type=submit]');
     button.disabled = true;
-    tell('Saving…');
+    tell(txt('Saving…'));
     try {
       const answer = await post(where, body);
 
       if (what === 'adjust') {
-        tell('Written. It is in the books and nowhere else — the gateway was not told, '
-          + 'and no money has moved because of it. It is in the table below.');
+        tell(txt('Written. It is in the books and nowhere else — the gateway was not told, and no money has moved because of it. It is in the table below.'));
         form.reset();
         /* AND THE BOOKS ARE RE-READ, which is the reason that table is a
            request of its own.
@@ -325,13 +333,13 @@ export async function record(params) {
            nothing about why. */
         redraw(answer, person);
         say(what, what === 'extend'
-          ? 'Given, and recorded as a grant rather than a sale.'
-          : 'Cancelled. What they paid for still stands to the date above.');
+          ? txt('Given, and recorded as a grant rather than a sale.')
+          : txt('Cancelled. What they paid for still stands to the date above.'));
       }
     } catch (e) {
       tell(e instanceof RequestError && e.status === 403
-        ? 'That asks for an operator.'
-        : e.message, true);
+        ? txt('That asks for an operator.')
+        : txt(e.message), true);
     } finally {
       button.disabled = false;
     }
@@ -357,30 +365,29 @@ export async function record(params) {
     const want = Number(form.dataset.cents);
 
     if (cents === null) {
-      tell('An amount, like 655,50. Type what the line says.', true);
+      tell(txt('An amount, like 655,50. Type what the line says.'), true);
       return;
     }
     if (cents !== want) {
-      tell('That is not what this purchase came to. Type the amount on the line — a '
-        + 'record with several purchases has several buttons that look the same.', true);
+      tell(txt('That is not what this purchase came to. Type the amount on the line — a record with several purchases has several buttons that look the same.'), true);
       return;
     }
 
     const button = form.querySelector('button[type=submit]');
     button.disabled = true;
-    tell('Asking the gateway…');
+    tell(txt('Asking the gateway…'));
     try {
       const answer = await post('/console/api/v1/purchases/'
         + encodeURIComponent(form.dataset.purchase) + '/refund', { cents, why });
-      tell(answer.note || 'Asked and accepted.');
+      tell(answer.note ? txt(answer.note) : txt('Asked and accepted.'));
       form.querySelector('[name=amount]').value = '';
     } catch (e) {
       /* THE GATEWAY'S OWN SENTENCE, THROUGH. A key without the permission and a
          charge in a state that cannot be refunded arrive as the same status
          with different Portuguese, and only the Portuguese says which. */
       tell(e instanceof RequestError && e.status === 403
-        ? 'That asks for an operator.'
-        : e.message, true);
+        ? txt('That asks for an operator.')
+        : txt(e.message), true);
     } finally {
       button.disabled = false;
     }
@@ -424,8 +431,8 @@ export async function record(params) {
     try {
       answer = await get('/console/api/v1/people/' + encodeURIComponent(person.id) + '/ledger');
     } catch (e) {
-      block.innerHTML = '<div class="block-top"><h2>The books</h2></div>' +
-        '<p class="none">' + esc(e.message) + '</p>';
+      block.innerHTML = '<div class="block-top"><h2>' + esc(txt('The books')) + '</h2></div>' +
+        '<p class="none">' + esc(txt(e.message)) + '</p>';
       return;
     }
     block.innerHTML = books(answer);
@@ -467,7 +474,7 @@ export async function record(params) {
    ========================================================================== */
 function books(answer) {
   const rows = answer.movements || [];
-  const head = '<div class="block-top"><h2>The books</h2>' +
+  const head = '<div class="block-top"><h2>' + esc(txt('The books')) + '</h2>' +
     (answer.net || []).map((n) =>
       '<span class="block-score mono">' + esc(money(n.cents, n.currency)) + '</span>').join('') +
   '</div>';
@@ -476,12 +483,12 @@ function books(answer) {
     /* NOTHING IS THE ORDINARY STATE and it is said as one. Most people have
        never paid anything, and a blank table under a heading reads as a screen
        that failed rather than as an account with no money in it. */
-    return head + '<p class="none">No money has moved either way.</p>';
+    return head + '<p class="none">' + esc(txt('No money has moved either way.')) + '</p>';
   }
 
   return head +
-    '<p class="aside">' + esc(answer.not_the_purchases || '') + '</p>' +
-    table('', '', ['When', 'What', 'Amount', 'Reference'], rows.map((m) =>
+    '<p class="aside">' + esc(txt(answer.not_the_purchases || '')) + '</p>' +
+    table('', '', [txt('When'), txt('What'), txt('Amount'), txt('Reference')], rows.map((m) =>
       '<tr>' +
         '<th scope="row" class="mono">' + esc(when(m.at)) + '</th>' +
         '<td>' + esc(movement(m)) +
@@ -503,13 +510,21 @@ function books(answer) {
    said separately because it is a different fact from a negative amount: a
    manual credit is negative and undoes nothing. */
 function movement(m) {
-  const named = {
+  /* THE KINDS ARE ENGLISH IN THIS MAP AND LOOKED UP HERE, like every other
+     closed list in this console: they are the ledger's own vocabulary, and the
+     map is built fresh on each call so `txt()` inside it is read at the moment
+     of drawing rather than at module load. */
+  const named = txt({
     payment: 'Payment',
     refund: 'Refunded to them',
     chargeback: 'Taken back by the issuer',
     adjustment: 'Written by hand',
-  }[m.kind] || m.kind;
-  return m.reversed ? named + ', against an earlier line' : named;
+  }[m.kind] || m.kind);
+
+  /* "…, against an earlier line" IS A SENTENCE WITH THE KIND IN IT, and not a
+     phrase appended to one. Portuguese agrees the clause with what precedes it,
+     which concatenation cannot do. */
+  return m.reversed ? txt('%s, against an earlier line').replace('%s', named) : named;
 }
 
 function atSchool(s, personId) {
@@ -530,9 +545,10 @@ function atSchool(s, personId) {
     (mayAct()
       ? '<p class="view-as"><button type="button" class="btn btn-ghost" ' +
           'data-view="' + esc(s.school) + '" data-person="' + esc(personId) + '">' +
-          'See what they see</button>' +
-        '<span class="list-count">Recorded with your name. Read-only, ends in half ' +
-          'an hour, and they are not told.</span></p>'
+          esc(txt('See what they see')) + '</button>' +
+        '<span class="list-count">' +
+          esc(txt('Recorded with your name. Read-only, ends in half an hour, and they are not told.')) +
+          '</span></p>'
       : '') +
 
     /* A PLAN HELD FOR THIS SCHOOL ALONE, WHICH TODAY IS NOBODY. N-02 made one
@@ -544,21 +560,26 @@ function atSchool(s, personId) {
     '<p class="list-count">' +
       (s.plan
         ? esc(s.plan) + ' &middot; <span class="mono">' + esc(s.state) + '</span>' +
-          (s.paidThrough ? ' &middot; paid through ' + esc(day(s.paidThrough)) : '')
-        : 'Nothing held for this school on its own — the subscription above covers every school.') +
+          (s.paidThrough
+            ? ' &middot; ' + esc(txt('paid through %s').replace('%s', day(s.paidThrough)))
+            : '')
+        : esc(txt('Nothing held for this school on its own — the subscription above covers every school.'))) +
     '</p>' +
 
-    table('Courses', 'Nothing started here.', ['Course', 'Sections'], s.courses.map((c) =>
+    table(txt('Courses'), txt('Nothing started here.'), [txt('Course'), txt('Sections')],
+      s.courses.map((c) =>
       '<tr><td><span class="cell-main mono">' + esc(c.course) + '</span></td>' +
       '<td class="num mono">' + c.sections + '</td></tr>')) +
 
-    table('Exams', 'No paper sat here.', ['Paper', 'Sat', 'Result'], s.exams.map((e) =>
+    table(txt('Exams'), txt('No paper sat here.'), [txt('Paper'), txt('Sat'), txt('Result')],
+      s.exams.map((e) =>
       '<tr><td><span class="cell-main mono">' + esc(e.subject) + '</span>' +
         '<span class="cell-sub mono">' + esc(e.scope) + '</span></td>' +
       '<td class="mono">' + esc(day(e.startedAt)) + '</td>' +
       '<td>' + verdict(e) + '</td></tr>')) +
 
-    table('Certificates', 'Nothing awarded here.', ['Code', 'For', 'Issued'], s.certificates.map((c) =>
+    table(txt('Certificates'), txt('Nothing awarded here.'),
+      [txt('Code'), txt('For'), txt('Issued')], s.certificates.map((c) =>
       '<tr><td><span class="cell-main mono">' + esc(c.code) + '</span></td>' +
       '<td>' + esc(c.title) + '</td>' +
       '<td class="mono">' + esc(day(c.issuedAt)) + '</td></tr>')) +
@@ -595,8 +616,8 @@ function holding(h, personId, refundable) {
 // row they just moved rather than the one the page loaded with.
 function holdingInside(h, personId, refundable) {
   if (!h) {
-    return '<div class="block-top"><h2>Subscription</h2></div>' +
-      '<p class="none">They have never bought anything, and never tried to.</p>' +
+    return '<div class="block-top"><h2>' + esc(txt('Subscription')) + '</h2></div>' +
+      '<p class="none">' + esc(txt('They have never bought anything, and never tried to.')) + '</p>' +
       changes(personId, false, refundable);
   }
 
@@ -611,38 +632,48 @@ function holdingInside(h, personId, refundable) {
     : null;
 
   return '<div class="block-top">' +
-      '<h2>Subscription</h2>' +
-      '<span class="block-score mono">every school</span>' +
+      '<h2>' + esc(txt('Subscription')) + '</h2>' +
+      '<span class="block-score mono">' + esc(txt('every school')) + '</span>' +
     '</div>' +
 
     '<p class="list-count">' +
       (h.state
         ? '<span class="tag ' + (h.opens ? 'tag-staff' : 'tag-warn') + '">' +
             esc(h.state) + '</span> ' +
-          (h.opens ? 'opens every course' : 'opens nothing') +
-          (h.paidThrough ? ' &middot; paid through ' + esc(day(h.paidThrough)) : '') +
+          esc(h.opens ? txt('opens every course') : txt('opens nothing')) +
+          (h.paidThrough
+            ? ' &middot; ' + esc(txt('paid through %s').replace('%s', day(h.paidThrough)))
+            : '') +
+          /* THE PRICE AND THE TERM IN ONE SENTENCE. "R$ 690,00 for 12 months"
+             is three pieces in English and one clause in Portuguese, where the
+             preposition and the number do not sit where they do here. */
           (h.price
-            ? ' &middot; ' + esc(money(h.price.cents, h.price.currency)) +
-              ' for ' + h.price.termMonths + ' months'
+            ? ' &middot; ' + esc((h.price.termMonths === 1
+                ? txt('%m for one month')
+                : txt('%m for %n months').replace('%n', h.price.termMonths))
+              .replace('%m', money(h.price.cents, h.price.currency)))
             : '') +
           /* NOTHING RENEWS ITSELF HERE, and an operator telling somebody their
              subscription will renew would be telling them something this
              platform does not do. */
-          ' &middot; does not renew by itself'
-        : 'No subscription — but they have tried to buy, below.') +
+          ' &middot; ' + esc(txt('does not renew by itself'))
+        : esc(txt('No subscription — but they have tried to buy, below.'))) +
     '</p>' +
 
-    table('Purchases',
-      'Nothing bought, and nothing attempted.',
-      ['Opened', 'Term', 'How', 'Amount', 'Access to', 'At the gateway', ''],
+    table(txt('Purchases'),
+      txt('Nothing bought, and nothing attempted.'),
+      [txt('Opened'), txt('Term'), txt('How'), txt('Amount'), txt('Access to'),
+        txt('At the gateway'), ''],
       bought.map((p) =>
         '<tr data-purchase="' + esc(p.id) + '" data-cents="' + p.cents + '">' +
         '<td class="mono">' + esc(day(p.openedAt)) + '</td>' +
-        '<td class="mono">' + p.termMonths + ' months</td>' +
+        '<td class="mono">' + esc(p.termMonths === 1
+          ? txt('one month') : txt('%d months').replace('%d', p.termMonths)) + '</td>' +
         '<td>' + esc(howPaid(p)) + '</td>' +
         '<td class="num mono">' + esc(money(p.cents, p.currency)) +
           (p.listed > p.cents
-            ? '<span class="cell-sub mono">of ' + esc(money(p.listed, p.currency)) + '</span>'
+            ? '<span class="cell-sub mono">' +
+                esc(txt('of %s').replace('%s', money(p.listed, p.currency))) + '</span>'
             : '') +
         '</td>' +
         /* A PAID PURCHASE WITH NO DATE IS NOT AN UNPAID ONE. The log only
@@ -651,7 +682,8 @@ function holdingInside(h, personId, refundable) {
            than a dash, which reads as "bought nothing". */
         '<td class="mono">' +
           (p.paidThrough ? esc(day(p.paidThrough))
-            : p.stage === 'paid' ? '<span class="none">not recorded</span>'
+            : p.stage === 'paid'
+              ? '<span class="none">' + esc(txt('not recorded')) + '</span>'
             : '\u2014') +
         '</td>' +
 
@@ -663,16 +695,23 @@ function holdingInside(h, personId, refundable) {
            often than it is read, and a string of eighteen characters selected
            by dragging is a string selected wrongly. */
         '<td><span class="sub-charge mono">' +
-          (p.chargeId ? esc(p.chargeId) : '<span class="none">never sent</span>') +
+          (p.chargeId
+            ? esc(p.chargeId)
+            : '<span class="none">' + esc(txt('never sent')) + '</span>') +
         '</span></td>' +
 
         '<td>' + stage(p) + refundButton(p, refundable) + '</td></tr>')) +
 
+    /* WHAT THEY HAVE SPENT, AS TWO WHOLE SENTENCES. It was an amount, "across",
+       a count, and a noun pluralised by choosing between two suffixes — which
+       is the shape that shipped "1 trilhas", and which puts none of its parts
+       where Portuguese puts them. */
     (spent
-      ? '<p class="list-count">' + esc(spent) + ' across ' + paid.length +
-        (paid.length === 1 ? ' paid purchase.' : ' paid purchases.') +
-        ' Not the ledger: an instalment plan is one sale here and one row per ' +
-        'collection there.</p>'
+      ? '<p class="list-count">' + esc((paid.length === 1
+          ? txt('%s across one paid purchase. Not the ledger: an instalment plan is one sale here and one row per collection there.')
+          : txt('%s across %n paid purchases. Not the ledger: an instalment plan is one sale here and one row per collection there.')
+            .replace('%n', paid.length))
+        .replace('%s', spent)) + '</p>'
       : '') +
 
     changes(personId, Boolean(h.state), refundable);
@@ -699,36 +738,32 @@ function holdingInside(h, personId, refundable) {
    ========================================================================== */
 function changes(personId, hasSubscription, refundable) {
   if (!mayAct()) {
-    return '<p class="sub-note">A read-only role may read this and not change it.</p>';
+    return '<p class="sub-note">' + esc(txt('A read-only role may read this and not change it.')) + '</p>';
   }
 
   return '<details class="sub-change" data-person="' + esc(personId) + '">' +
-    '<summary>Change something</summary>' +
+    '<summary>' + esc(txt('Change something')) + '</summary>' +
     '<div class="sub-forms">' +
 
       /* GIVING TIME, AND THE SENTENCE SAYS WHAT IT IS NOT. "Extend" reads like
          a renewal; this is a gift, it is written down as one, and the ledger
          will not show it because no money moved. */
       '<form class="sub-form" data-do="extend" novalidate>' +
-        '<h3 class="eyebrow mono">Give time</h3>' +
-        '<p class="sub-note">Time nobody paid for — an outage, a fortnight lost to ' +
-          'support. It is recorded as a grant and not as a sale, so it will not appear ' +
-          'in the purchases above and no money is written anywhere.</p>' +
+        '<h3 class="eyebrow mono">' + esc(txt('Give time')) + '</h3>' +
+        '<p class="sub-note">' + esc(txt('Time nobody paid for — an outage, a fortnight lost to support. It is recorded as a grant and not as a sale, so it will not appear in the purchases above and no money is written anywhere.')) + '</p>' +
         (hasSubscription ? '' :
-          '<p class="none">They have no subscription to extend. Giving somebody a term ' +
-            'is not this: a subscription has to say what it was sold at, and there is no ' +
-            'honest answer for one nobody bought.</p>') +
+          '<p class="none">' + esc(txt('They have no subscription to extend. Giving somebody a term is not this: a subscription has to say what it was sold at, and there is no honest answer for one nobody bought.')) + '</p>') +
         '<div class="sub-bar">' +
-          '<label class="sub-field"><span>Days</span>' +
+          '<label class="sub-field"><span>' + esc(txt('Days')) + '</span>' +
             '<input name="days" type="number" min="1" max="366" step="1" ' +
               'inputmode="numeric" autocomplete="off"' +
               (hasSubscription ? '' : ' disabled') + '></label>' +
-          '<label class="sub-field sub-why"><span>Why</span>' +
+          '<label class="sub-field sub-why"><span>' + esc(txt('Why')) + '</span>' +
             '<input name="why" type="text" autocomplete="off" ' +
-              'placeholder="the March outage cost them a fortnight"' +
+              'placeholder="' + esc(txt('the March outage cost them a fortnight')) + '"' +
               (hasSubscription ? '' : ' disabled') + '></label>' +
           '<button type="submit" class="btn btn-primary"' +
-            (hasSubscription ? '' : ' disabled') + '>Give it</button>' +
+            (hasSubscription ? '' : ' disabled') + '>' + esc(txt('Give it')) + '</button>' +
         '</div>' +
         '<p class="sub-said" aria-live="polite"></p>' +
       '</form>' +
@@ -738,18 +773,16 @@ function changes(personId, hasSubscription, refundable) {
          stops is the renewal notice — which is the opposite of what an
          operator would tell a student if this screen did not say so. */
       '<form class="sub-form" data-do="cancel" novalidate>' +
-        '<h3 class="eyebrow mono">Cancel</h3>' +
-        '<p class="sub-note">This does NOT cut their access. Every purchase here is a ' +
-          'term bought outright and the paid period is honoured to its end — what stops ' +
-          'is the reminder that it is about to run out.</p>' +
-        (hasSubscription ? '' : '<p class="none">They have no subscription to cancel.</p>') +
+        '<h3 class="eyebrow mono">' + esc(txt('Cancel')) + '</h3>' +
+        '<p class="sub-note">' + esc(txt('This does NOT cut their access. Every purchase here is a term bought outright and the paid period is honoured to its end — what stops is the reminder that it is about to run out.')) + '</p>' +
+        (hasSubscription ? '' : '<p class="none">' + esc(txt('They have no subscription to cancel.')) + '</p>') +
         '<div class="sub-bar">' +
-          '<label class="sub-field sub-why"><span>Why</span>' +
+          '<label class="sub-field sub-why"><span>' + esc(txt('Why')) + '</span>' +
             '<input name="why" type="text" autocomplete="off" ' +
-              'placeholder="they asked to stop, ticket 812"' +
+              'placeholder="' + esc(txt('they asked to stop, ticket 812')) + '"' +
               (hasSubscription ? '' : ' disabled') + '></label>' +
           '<button type="submit" class="btn btn-bad"' +
-            (hasSubscription ? '' : ' disabled') + '>Cancel it</button>' +
+            (hasSubscription ? '' : ' disabled') + '>' + esc(txt('Cancel it')) + '</button>' +
         '</div>' +
         '<p class="sub-said" aria-live="polite"></p>' +
       '</form>' +
@@ -759,27 +792,24 @@ function changes(personId, hasSubscription, refundable) {
          afternoon, so it is a choice between two words rather than a minus
          sign somebody has to remember to type. */
       '<form class="sub-form" data-do="adjust" novalidate>' +
-        '<h3 class="eyebrow mono">Adjust the ledger</h3>' +
-        '<p class="sub-note">One line in the books for money that moved outside the ' +
-          'gateway: a bank transfer, a write-off, a goodwill credit. It tells the ' +
-          'gateway NOTHING — no money moves because of this, it records that money ' +
-          'moved somewhere else.</p>' +
+        '<h3 class="eyebrow mono">' + esc(txt('Adjust the ledger')) + '</h3>' +
+        '<p class="sub-note">' + esc(txt('One line in the books for money that moved outside the gateway: a bank transfer, a write-off, a goodwill credit. It tells the gateway NOTHING — no money moves because of this, it records that money moved somewhere else.')) + '</p>' +
         '<div class="sub-bar">' +
-          '<label class="sub-field"><span>Direction</span>' +
+          '<label class="sub-field"><span>' + esc(txt('Direction')) + '</span>' +
             '<select name="way">' +
-              '<option value="credit">Credited to them</option>' +
-              '<option value="charge">Charged to them</option>' +
+              '<option value="credit">' + esc(txt('Credited to them')) + '</option>' +
+              '<option value="charge">' + esc(txt('Charged to them')) + '</option>' +
             '</select></label>' +
-          '<label class="sub-field"><span>Amount</span>' +
+          '<label class="sub-field"><span>' + esc(txt('Amount')) + '</span>' +
             '<input name="amount" type="text" inputmode="decimal" autocomplete="off" ' +
               'placeholder="69,00"></label>' +
-          '<label class="sub-field"><span>Currency</span>' +
+          '<label class="sub-field"><span>' + esc(txt('Currency')) + '</span>' +
             '<input name="currency" type="text" maxlength="3" autocomplete="off" ' +
               'spellcheck="false" placeholder="BRL" value="BRL"></label>' +
-          '<label class="sub-field sub-why"><span>Why</span>' +
+          '<label class="sub-field sub-why"><span>' + esc(txt('Why')) + '</span>' +
             '<input name="why" type="text" autocomplete="off" ' +
-              'placeholder="bank transfer, receipt 4471"></label>' +
-          '<button type="submit" class="btn btn-primary">Write it</button>' +
+              'placeholder="' + esc(txt('bank transfer, receipt 4471')) + '"></label>' +
+          '<button type="submit" class="btn btn-primary">' + esc(txt('Write it')) + '</button>' +
         '</div>' +
         '<p class="sub-said" aria-live="polite"></p>' +
       '</form>' +
@@ -797,24 +827,22 @@ function changes(personId, hasSubscription, refundable) {
          typing R$ 655,50 means having read the line. */
       (refundable
         ? '<form class="sub-form sub-refund" data-do="refund" novalidate hidden>' +
-            '<h3 class="eyebrow mono">Send money back</h3>' +
-            '<p class="sub-note">This asks the gateway and writes nothing here. Their ' +
-              'access closes when the gateway\u2019s event comes back, which is seconds ' +
-              'later and not part of the request. It cannot be undone.</p>' +
+            '<h3 class="eyebrow mono">' + esc(txt('Send money back')) + '</h3>' +
+            '<p class="sub-note">' + txt('This asks the gateway and writes nothing here. Their access closes when the gateway&rsquo;s event comes back, which is seconds later and not part of the request. It cannot be undone.') + '</p>' +
             '<p class="sub-chosen mono"></p>' +
             '<div class="sub-bar">' +
-              '<label class="sub-field"><span>Type the amount</span>' +
+              '<label class="sub-field"><span>' + esc(txt('Type the amount')) + '</span>' +
                 '<input name="amount" type="text" inputmode="decimal" autocomplete="off" ' +
                   'placeholder="0,00"></label>' +
-              '<label class="sub-field sub-why"><span>Why</span>' +
+              '<label class="sub-field sub-why"><span>' + esc(txt('Why')) + '</span>' +
                 '<input name="why" type="text" autocomplete="off" ' +
-                  'placeholder="the course was withdrawn, ticket 903"></label>' +
-              '<button type="submit" class="btn btn-bad">Send it back</button>' +
+                  'placeholder="' + esc(txt('the course was withdrawn, ticket 903')) + '"></label>' +
+              '<button type="submit" class="btn btn-bad">' +
+                esc(txt('Send it back')) + '</button>' +
             '</div>' +
             '<p class="sub-said" aria-live="polite"></p>' +
           '</form>'
-        : '<p class="sub-note">This deployment has no payment gateway configured, so ' +
-          'nothing can be sent back from here.</p>') +
+        : '<p class="sub-note">' + esc(txt('This deployment has no payment gateway configured, so nothing can be sent back from here.')) + '</p>') +
 
     '</div>' +
   '</details>';
@@ -862,7 +890,9 @@ function asCents(text) {
    work out the meaning of while somebody waits on the telephone. */
 function howPaid(p) {
   if (p.method === 'pix') return 'Pix';
-  return p.instalments > 1 ? 'Card, ' + p.instalments + '\u00d7' : 'Card, in one';
+  return p.instalments > 1
+    ? txt('Card, %d×').replace('%d', p.instalments)
+    : txt('Card, in one');
 }
 
 /* HOW FAR A PURCHASE GOT. A paid one is not tagged: it is the ordinary case and
@@ -872,37 +902,44 @@ function howPaid(p) {
 function stage(p) {
   if (p.stage === 'paid') return '';
   if (p.stage === 'charged') {
-    return '<span class="tag tag-quiet">waiting</span>' +
+    return '<span class="tag tag-quiet">' + esc(txt('waiting')) + '</span>' +
       (p.invoiceUrl
-        ? ' <a href="' + esc(p.invoiceUrl) + '" target="_blank" rel="noopener">invoice</a>'
+        ? ' <a href="' + esc(p.invoiceUrl) + '" target="_blank" rel="noopener">' +
+          esc(txt('invoice')) + '</a>'
         : '');
   }
   return '<span class="tag tag-quiet">' +
-    esc(p.stage === 'abandoned' ? 'not paid' : 'not finished') + '</span>';
+    esc(p.stage === 'abandoned' ? txt('not paid') : txt('not finished')) + '</span>';
 }
 
-/* An amount in the currency the server said, in cents. `en-GB` and not the
-   operator's locale: the console is one language and a figure that moved its
+/* An amount in the currency the server said, in cents.
+
+   IT WAS PINNED TO `en-GB`, AND THE ARGUMENT FOR THAT WAS RIGHT UNTIL IT WAS
+   NOT. It read: "the console is one language and a figure that moved its
    separators between two staff members reading the same screen is a figure two
-   people would read out differently. */
+   people would read out differently". True of a console with one language;
+   this one has two, and pinning now means a Portuguese screen printing
+   `R$ 1,090.00` — the separators of the language nobody chose.
+
+   The worry it names is real and does not go away: two operators reading in
+   two languages DO see different separators. What settles it is that they each
+   see the ones their own language uses, which is the same rule the date and the
+   price screen follow, rather than one of them reading a format that is wrong
+   for both. */
 function money(cents, currency) {
-  const amount = (cents || 0) / 100;
-  try {
-    return new Intl.NumberFormat('en-GB',
-      { style: 'currency', currency: currency || 'BRL' }).format(amount);
-  } catch (e) {
-    return String(amount) + ' ' + String(currency || '');
-  }
+  return amount(cents || 0, currency || 'BRL');
 }
 
 /* AN EXAM IN PROGRESS IS NOT A FAILED ONE. Drawing a blank where the verdict
    goes would read as "did not pass", which is the wrong thing to tell somebody
    who is sitting the paper right now. */
 function verdict(e) {
-  if (!e.handedInAt) return '<span class="tag tag-quiet">open</span>';
-  if (e.passed === undefined || e.passed === null) return '<span class="none">not marked</span>';
+  if (!e.handedInAt) return '<span class="tag tag-quiet">' + esc(txt('open')) + '</span>';
+  if (e.passed === undefined || e.passed === null) {
+    return '<span class="none">' + esc(txt('not marked')) + '</span>';
+  }
   return '<span class="tag ' + (e.passed ? 'tag-staff' : 'tag-warn') + '">' +
-    (e.passed ? 'passed' : 'failed') + '</span>' +
+    esc(e.passed ? txt('passed') : txt('failed')) + '</span>' +
     (e.score === undefined || e.score === null ? '' : ' <span class="mono">' + e.score + '</span>');
 }
 
@@ -910,18 +947,26 @@ function sittings(list) {
   const live = list.filter((s) => s.live).length;
   return '<section class="block">' +
     '<div class="block-top">' +
-      '<h2>Sittings</h2>' +
-      '<span class="block-score mono">' + live + ' live of ' + list.length + '</span>' +
+      '<h2>' + esc(txt('Sittings')) + '</h2>' +
+      /* TWO FORMS, BECAUSE THE WORD AGREES WITH THE NUMBER. "1 live of 1" is
+         clumsy in English and wrong in Portuguese, where the adjective takes
+         the plural with it — this drew "1 ativas de 1" until somebody read the
+         screen. It is the "1 trilhas" shape, written fresh into a translation
+         by the same hand that had just written that comment twice. */
+      '<span class="block-score mono">' +
+        esc((live === 1 ? txt('one live of %b') : txt('%a live of %b'))
+          .replace('%a', live).replace('%b', list.length)) + '</span>' +
     '</div>' +
-    '<p class="list-count">One row per browser they have signed in on. The token is not ' +
-      'here and never will be — this says how many and since when, not how to become them.</p>' +
-    table('', 'They have never signed in.', ['Started', 'Last seen', 'From', ''], list.map((s) =>
+    '<p class="list-count">' + esc(txt('One row per browser they have signed in on. The token is not here and never will be — this says how many and since when, not how to become them.')) + '</p>' +
+    table('', txt('They have never signed in.'),
+      [txt('Started'), txt('Last seen'), txt('From'), ''], list.map((s) =>
       '<tr><td class="mono">' + esc(when(s.createdAt)) + '</td>' +
       '<td class="mono">' + esc(s.lastSeenAt ? when(s.lastSeenAt) : '—') + '</td>' +
-      '<td class="detail">' + esc(s.userAgent || 'not said') + '</td>' +
+      '<td class="detail">' + esc(s.userAgent || txt('not said')) + '</td>' +
       '<td>' + (s.live
-        ? '<span class="tag tag-staff">live</span>'
-        : '<span class="tag tag-quiet">' + (s.revokedAt ? 'ended' : 'expired') + '</span>') +
+        ? '<span class="tag tag-staff">' + esc(txt('live')) + '</span>'
+        : '<span class="tag tag-quiet">' +
+          esc(s.revokedAt ? txt('ended') : txt('expired')) + '</span>') +
       '</td></tr>')) +
   '</section>';
 }
@@ -944,13 +989,17 @@ function table(name, nothing, columns, rows) {
     '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>';
 }
 
-const day = (iso) => {
-  const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? 'an unknown day' : at.toISOString().slice(0, 10);
-};
+/* `day` IS `language.js`'s NOW, and this file's was ISO — the same for
+   everybody, so never wrong, merely not what anybody reads a date as. */
+const day = (iso) => (iso ? dayIn(iso) : txt('an unknown day'));
 
+/* `when` IS NOT, AND MUST NOT BECOME `moment()`. A sitting is read beside the
+   audit, which is UTC for the reason `history.js` states at length: a record
+   read in one timezone and written in another is a record two people disagree
+   about. Every date on this screen follows the language; this one follows the
+   clock, and the difference is deliberate. */
 const when = (iso) => {
   const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? 'an unknown moment'
+  return Number.isNaN(at.getTime()) ? txt('an unknown moment')
     : at.toISOString().replace('T', ' ').slice(0, 16) + 'Z';
 };
