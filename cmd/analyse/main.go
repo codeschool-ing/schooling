@@ -217,6 +217,27 @@ func analyse(ctx context.Context, log *slog.Logger,
 				}
 				return out, nil
 			},
+
+			/* AND THE ONE THAT IS ABOUT NO SCHOOL — the funnel's last step. It
+			   is wired here because this job builds the same store the API
+			   does, and a store with four of the five readers would answer that
+			   step with a silent zero. This job does not draw a funnel today;
+			   what it must not be is the copy that quietly differs. */
+			func(ctx context.Context, names []string,
+				since time.Time, who analysis.Counting) ([]analysis.Reach, error) {
+
+				reaches, err := events.ReachedAnywhere(ctx, names, since, counting(who))
+				if err != nil {
+					return nil, err
+				}
+				out := make([]analysis.Reach, 0, len(reaches))
+				for _, r := range reaches {
+					out = append(out, analysis.Reach{
+						Name: r.Name, VisitorID: r.VisitorID, AccountID: r.AccountID,
+					})
+				}
+				return out, nil
+			},
 			func(ctx context.Context, school uuid.UUID, names []string,
 				since time.Time, who analysis.Counting) ([]analysis.Active, error) {
 

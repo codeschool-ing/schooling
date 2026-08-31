@@ -190,6 +190,16 @@ export default async function funnel(section) {
             esc(txt('Nobody has reached any step of this, in this window, for these people. An empty funnel is a real answer and not a failure to read one.')) +
             '</p>'
           : '<ol class="funnel">' + steps.map((s) => row(s, arrived)).join('') + '</ol>') +
+
+        /* SAID ONLY WHERE THERE IS A STEP IT IS ABOUT, and decided from the
+           answer rather than from a sentence written here about "the last
+           step". A screen that hard-coded which step this applies to would go
+           quietly wrong the day one is inserted before it. */
+        (steps.some((s) => s.platform && s.measured)
+          ? '<p class="hint">' +
+            esc(txt('The last step is not about this school. One subscription opens every school, so it counts the people who arrived here and went on to subscribe anywhere — which means two schools can each count the same person, and their last steps do not add up to the number of subscribers on the platform.')) +
+            '</p>'
+          : '') +
       '</section>';
   }
 
@@ -212,7 +222,14 @@ export default async function funnel(section) {
 
     const share = arrived > 0 ? step.people / arrived : 0;
     return '<li class="funnel-step">' +
-      '<span class="funnel-label">' + esc(txt(step.label)) + '</span>' +
+      '<span class="funnel-label">' + esc(txt(step.label)) +
+        /* AND THE ONE STEP THAT IS NOT ABOUT THIS SCHOOL SAYS SO ON ITSELF.
+           The paragraph under the chart explains it; this is what stops
+           somebody reading the row without having read the paragraph. */
+        (step.platform
+          ? '<span class="tag tag-quiet">' + esc(txt('platform-wide')) + '</span>'
+          : '') +
+      '</span>' +
       '<span class="funnel-bar"><span class="funnel-fill" ' +
         'style="width:' + (share * 100).toFixed(1) + '%"></span></span>' +
       '<span class="funnel-count mono">' + step.people +

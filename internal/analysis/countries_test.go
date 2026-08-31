@@ -21,7 +21,7 @@ func placed(t *testing.T, origins []analysis.Origin,
 	links map[uuid.UUID]uuid.UUID) analysis.Where {
 
 	t.Helper()
-	store := analysis.NewStore(nil, nil, nil).WithStream(nil, nil,
+	store := analysis.NewStore(nil, nil, nil).WithStream(nil, nil, nil,
 		func(context.Context, uuid.UUID, time.Time, analysis.Counting) ([]analysis.Origin, error) {
 			return origins, nil
 		},

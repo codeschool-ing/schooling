@@ -559,3 +559,148 @@ func TestAnEventCanBeGivenTheTimeItHappenedAt(t *testing.T) {
 			len(recent))
 	}
 }
+
+/*
+TestAPlatformEventIsInvisibleToASchoolAndVisibleToReachedAnywhere.
+
+	# THE TWO QUERIES ARE ABOUT DIFFERENT ROWS, AND ONLY SQL SAYS SO
+
+	`Reached` filters `tenant_id = $2`. A subscription belongs to no school
+	(N-02) and is written with a NULL tenant, and NULL satisfies no equality —
+	so the funnel's last step was invisible to the reader every other step uses.
+	That is not a bug in either query, and it is also not something a type
+	checker or a unit test over folded values can see: both functions compile,
+	both return rows, and the one that returns none returns none silently.
+
+	SO IT IS WRITTEN AND READ BACK. Two events by the same account, one at a
+	school and one at neither, and each reader has to find exactly its own.
+*/
+func TestAPlatformEventIsInvisibleToASchoolAndVisibleToReachedAnywhere(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	ctx := context.Background()
+
+	store := event.NewStore(pool)
+	account := uuid.New()
+
+	// A NAME NOTHING ELSE WRITES, because this database is shared with every
+	// other package's tests and the assertions below are counts.
+	atSchool := "test.at.school." + uuid.NewString()[:8]
+	anywhere := "test.anywhere." + uuid.NewString()[:8]
+
+	if err := store.Emit(ctx, event.Event{
+		Name:       atSchool,
+		Dimensions: event.ForSchool(id, slug, "full", "BR", "pt-br", event.Real),
+		AccountID:  &account,
+	}); err != nil {
+		t.Fatalf("emitting the school's: %v", err)
+	}
+	if err := store.Emit(ctx, event.Event{
+		Name:       anywhere,
+		Dimensions: event.ForPlatform("full", "BR", "pt-br", event.Real),
+		AccountID:  &account,
+	}); err != nil {
+		t.Fatalf("emitting the platform's: %v", err)
+	}
+
+	names := []string{atSchool, anywhere}
+
+	/* THE SCHOOL'S READER SEES ONE OF THE TWO. If this ever returns both, the
+	   tenant predicate has been loosened and every school's funnel has quietly
+	   become the platform's. */
+	here, err := store.Reached(ctx, id, names, time.Time{}, event.Counting("real"))
+	if err != nil {
+		t.Fatalf("reading at the school: %v", err)
+	}
+	if len(here) != 1 || here[0].Name != atSchool {
+		t.Errorf("`Reached` returned %d rows %v; it is about this school's events and "+
+			"there is exactly one", len(here), namesOf(here))
+	}
+
+	/* AND THE PLATFORM'S SEES THE OTHER ONE. The failure that matters is this
+	   returning nothing, which is what "the last step reports zero" looked
+	   like from the outside. */
+	beyond, err := store.ReachedAnywhere(ctx, names, time.Time{}, event.Counting("real"))
+	if err != nil {
+		t.Fatalf("reading off any school: %v", err)
+	}
+	var mine []event.Reach
+	for _, r := range beyond {
+		if r.AccountID != nil && *r.AccountID == account {
+			mine = append(mine, r)
+		}
+	}
+	if len(mine) != 1 || mine[0].Name != anywhere {
+		t.Errorf("`ReachedAnywhere` returned %d of this account's rows %v; it is about "+
+			"the events that belong to no school and there is exactly one",
+			len(mine), namesOf(mine))
+	}
+}
+
+/*
+And the population is honoured by the second reader as well as the first.
+
+	IT IS THE SAME PREDICATE FORMATTED INTO BOTH QUERIES, and a copy is a place
+	one of them can be edited. What it protects is K-11: a seeded student
+	appearing in the funnel's last step, in a chart headed "real people", on the
+	one screen with a switch that exists to keep them apart.
+*/
+func TestReachedAnywhereCountsThePopulationItWasAsked(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+
+	store := event.NewStore(pool)
+	real, seeded := uuid.New(), uuid.New()
+	name := "test.population." + uuid.NewString()[:8]
+
+	for _, one := range []struct {
+		account uuid.UUID
+		who     event.Population
+	}{{real, event.Real}, {seeded, event.Synthetic}} {
+		if err := store.Emit(ctx, event.Event{
+			Name:       name,
+			Dimensions: event.ForPlatform("full", "BR", "pt-br", one.who),
+			AccountID:  &one.account,
+		}); err != nil {
+			t.Fatalf("emitting the %s one: %v", one.who, err)
+		}
+	}
+
+	for _, want := range []struct {
+		counting string
+		accounts []uuid.UUID
+	}{
+		{"real", []uuid.UUID{real}},
+		{"seeded", []uuid.UUID{seeded}},
+		{"everybody", []uuid.UUID{real, seeded}},
+	} {
+		got, err := store.ReachedAnywhere(ctx, []string{name}, time.Time{},
+			event.Counting(want.counting))
+		if err != nil {
+			t.Fatalf("reading %s: %v", want.counting, err)
+		}
+		found := map[uuid.UUID]bool{}
+		for _, r := range got {
+			if r.AccountID != nil {
+				found[*r.AccountID] = true
+			}
+		}
+		if len(found) != len(want.accounts) {
+			t.Errorf("%q found %d of these accounts, want %d",
+				want.counting, len(found), len(want.accounts))
+		}
+		for _, id := range want.accounts {
+			if !found[id] {
+				t.Errorf("%q did not find %s", want.counting, id)
+			}
+		}
+	}
+}
+
+func namesOf(rows []event.Reach) []string {
+	out := make([]string, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, r.Name)
+	}
+	return out
+}

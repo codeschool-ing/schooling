@@ -52,6 +52,13 @@ import (
 	"strings"
 	"testing"
 
+	/* THIS FILE IMPORTS MODULES, AND THAT IS NOT THE THING IT FORBIDS. Rule 2
+	   is about what the SHIPPED packages import, which is why both scans below
+	   skip `_test.go`. A test is the one place two modules that may not know
+	   about each other can be held to the same string —
+	   `TestTheStreamsNamesAreWrittenAtBothEnds`, at the foot of this file. */
+	"github.com/codeschool-ing/schooling/internal/analysis"
+	"github.com/codeschool-ing/schooling/internal/billing"
 	"github.com/codeschool-ing/schooling/internal/legal"
 	"github.com/codeschool-ing/schooling/internal/privacy"
 )
@@ -538,4 +545,54 @@ func mustRel(t *testing.T, root, path string) string {
 		t.Fatalf("%s is not under %s: %v", path, root, err)
 	}
 	return rel
+}
+
+/*
+TestTheStreamsNamesAreWrittenAtBothEnds holds the one contract the module
+boundary cannot.
+
+	# WHY THE NAMES ARE DUPLICATED IN THE FIRST PLACE
+
+	Rule 2 above: modules do not import modules. So the end that EMITS an event
+	and the end that READS it cannot share a constant — `progress` writes
+	"section.completed" and `analysis` writes it again, and the same is true of
+	every other name in the stream. That is not a wart to be fixed by relaxing
+	the rule: a name in an append-only stream is a contract with rows written
+	years ago, not a variable one package owns.
+
+	# WHAT GOES WRONG WITHOUT THIS TEST
+
+	A rename that reaches only one end. Nothing fails to compile, nothing errors
+	at run time, and the query simply matches no rows — so a report says nobody
+	ever did the thing. It is the failure this whole area is written against:
+	confident, plausible, and zero.
+
+	# WHY IT IS A PAIR AND NOT A SCAN
+
+	Reading every string literal in the repository and guessing which are event
+	names would flag the prose in comments and miss anything built at run time.
+	These are the pairs that exist, listed; a name added without a line here is
+	a name whose two ends nothing compares, and that is a review's job to catch
+	rather than a regular expression's.
+*/
+func TestTheStreamsNamesAreWrittenAtBothEnds(t *testing.T) {
+	for _, pair := range []struct {
+		what            string
+		emitted, read   string
+		emitter, reader string
+	}{
+		{
+			what:    "a subscription starting",
+			emitted: billing.EventStarted,
+			read:    analysis.SubscribedEvent,
+			emitter: "billing.EventStarted",
+			reader:  "analysis.SubscribedEvent",
+		},
+	} {
+		if pair.emitted != pair.read {
+			t.Errorf("%s: %s is %q and %s is %q — the two ends of one name have "+
+				"drifted, so the report reads no rows and says nobody ever did it",
+				pair.what, pair.emitter, pair.emitted, pair.reader, pair.read)
+		}
+	}
 }

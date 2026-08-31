@@ -350,34 +350,14 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		log.Info("mail hook", "mounted", true)
 	}
 
-	/* AND THE GATEWAY'S, WHICH IS THE ARRIVAL THAT COMMENT RESERVED THE CLASS
-	   FOR. Same prefix, same "no credential, no endpoint", and a DIFFERENT
-	   credential shape — a single token rather than Basic, because that is what
-	   this provider's form offers. Two endpoints under one prefix that
-	   authenticate differently is each one matching what its provider actually
-	   sends.
+	/* THE GATEWAY'S HOOK IS THE ARRIVAL THAT COMMENT RESERVED THE CLASS FOR,
+	   AND IT IS MOUNTED FURTHER DOWN rather than here beside the mail one.
 
-	   IT IS MOUNTED ON ITS OWN TOKEN AND NOT ON THE API KEY. They rotate for
-	   different reasons and a deployment may have one without the other: a key
-	   with no token is a checkout that takes money and hears nothing back, which
-	   is worth having as a state you can see rather than one that cannot exist. */
-	if cfg.AsaasHookToken != "" {
-		mux.Handle("POST "+web.Hooks+"pay", billing.Hook(cfg.AsaasHookToken,
-			billing.NewSettlement(
-				/* NO GATE, AND THAT IS THE STRONGER STATEMENT. `NewCheckouts`
-				   with no `Confirmed` refuses every `Open` — so the store this
-				   webhook holds CANNOT create a purchase, only settle one that
-				   already exists. A payment event is not a way to buy something,
-				   and here that is a property of the wiring rather than a rule
-				   somebody has to keep. */
-				billing.NewCheckouts(pool, nil, nil),
-				billing.NewPrices(pool),
-				billing.NewLedger(pool),
-				billing.NewStore(pool),
-				"asaas", log,
-			), log))
-		log.Info("payment hook", "mounted", true)
-	}
+	   It moved when a settlement became something that is COUNTED. The store it
+	   holds now needs somewhere to emit — and the event store and the accounts
+	   it looks a subscriber up in are both built below, after the settings this
+	   file reads them from. Mounting order is nothing to `http.ServeMux`, which
+	   matches on patterns, so the choice is only about what exists yet. */
 
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
@@ -427,6 +407,46 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		ViewingLife:      settings.Reads(identity.ViewingLifetime),
 	})
 	events := event.NewStore(pool)
+
+	/* WHAT A SUBSCRIPTION'S LIFE IS COUNTED AS, built once and given to every
+	   billing store that can move one. There are two — this one and the
+	   webhook's — and they must both have it: an ending recorded on one path
+	   and not the other would be a stream that says people start and never
+	   stop, which reads as a platform nobody leaves. */
+	countSubscriptions := subscriptionEvents(events, accounts, log)
+
+	/* AND THE GATEWAY'S HOOK, MOUNTED HERE. Same prefix as the mail one, same
+	   "no credential, no endpoint", and a DIFFERENT credential shape — a single
+	   token rather than Basic, because that is what this provider's form
+	   offers. Two endpoints under one prefix that authenticate differently is
+	   each one matching what its provider actually sends.
+
+	   IT IS MOUNTED ON ITS OWN TOKEN AND NOT ON THE API KEY. They rotate for
+	   different reasons and a deployment may have one without the other: a key
+	   with no token is a checkout that takes money and hears nothing back,
+	   which is worth having as a state you can see rather than one that cannot
+	   exist. */
+	if cfg.AsaasHookToken != "" {
+		mux.Handle("POST "+web.Hooks+"pay", billing.Hook(cfg.AsaasHookToken,
+			billing.NewSettlement(
+				/* NO GATE, AND THAT IS THE STRONGER STATEMENT. `NewCheckouts`
+				   with no `Confirmed` refuses every `Open` — so the store this
+				   webhook holds CANNOT create a purchase, only settle one that
+				   already exists. A payment event is not a way to buy something,
+				   and here that is a property of the wiring rather than a rule
+				   somebody has to keep. */
+				billing.NewCheckouts(pool, nil, nil),
+				billing.NewPrices(pool),
+				billing.NewLedger(pool),
+
+				/* THIS IS THE PATH MOST SUBSCRIPTIONS ARE BORN ON, so a store
+				   here without the stream would leave the funnel's last step
+				   counting only the ones an operator granted by hand. */
+				billing.NewStore(pool).WithStream(countSubscriptions),
+				"asaas", log,
+			), log))
+		log.Info("payment hook", "mounted", true)
+	}
 
 	scoped := http.NewServeMux()
 
@@ -492,7 +512,11 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// goes through it — the catalogue's locks, the exam a student may sit, and
 	// the dimension an event carries so the funnel can tell somebody who never
 	// subscribed from somebody who did and stopped coming.
-	subscriptions := billing.NewStore(pool)
+	//
+	// AND IT COUNTS WHAT IT MOVES. This is the store the console's grants,
+	// cancellations and refunds go through — the other half of what the
+	// webhook writes — so it carries the same emitter.
+	subscriptions := billing.NewStore(pool).WithStream(countSubscriptions)
 	plan := planOf(subscriptions)
 
 	// WHAT IS OUT OF CIRCULATION, ASKED BY BOTH PLACES A QUESTION IS SERVED.
@@ -521,6 +545,30 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			   circulation and must never do so on the strength of students who
 			   were invented (K-11). Reporting may look; acting may not. */
 			reaches, err := events.Reached(ctx, school, names, since, counting(who))
+			if err != nil {
+				return nil, err
+			}
+			out := make([]analysis.Reach, 0, len(reaches))
+			for _, r := range reaches {
+				out = append(out, analysis.Reach{
+					Name: r.Name, VisitorID: r.VisitorID, AccountID: r.AccountID,
+				})
+			}
+			return out, nil
+		},
+
+		/* THE SAME QUESTION ASKED OFF ANY SCHOOL, which is the funnel's last
+		   step and nothing else. A subscription covers every school (N-02), so
+		   it is written with no tenant and the reader above cannot see it.
+
+		   `who` IS CARRIED FAITHFULLY HERE TOO, for the reason it is carried
+		   above: a reader that quietly always asked for real people would be a
+		   lie the day somebody wired it to a screen with a switch, and this one
+		   is wired to exactly that screen. */
+		func(ctx context.Context, names []string,
+			since time.Time, who analysis.Counting) ([]analysis.Reach, error) {
+
+			reaches, err := events.ReachedAnywhere(ctx, names, since, counting(who))
 			if err != nil {
 				return nil, err
 			}
@@ -1071,6 +1119,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			for _, s := range steps {
 				out = append(out, console.Step{
 					Label: s.Label, People: s.People, Measured: s.Measured, Why: s.Why,
+
+					// WHETHER THE STEP IS ABOUT THIS SCHOOL AT ALL. Dropping it
+					// here would leave the screen presenting a platform-wide
+					// number as one of this school's, which is the reading the
+					// flag exists to prevent.
+					Platform: s.Platform,
 				})
 			}
 			return out, nil
@@ -2269,6 +2323,69 @@ func who(account identity.Account) event.Population {
 		return event.Synthetic
 	}
 	return event.Real
+}
+
+/*
+subscriptionEvents counts a subscription's life into the stream.
+
+	IT LOOKS THE ACCOUNT UP RATHER THAN READING ONE OFF THE CONTEXT, which every
+	other emitter here does, and the difference is the whole reason
+	`billing.Emit` takes an id. Half of these do not happen in the subscriber's
+	own request: a settlement arrives on a webhook the gateway called, and an
+	operator's grant is a request belonging to the operator. Reading the context
+	would attribute a student's renewal to whoever's request was running, or —
+	on the webhook, where nobody is signed in — drop it silently.
+
+	THE POPULATION HAS TO BE RIGHT, and that is what the lookup is really for.
+	K-11 keeps seeded students out of every aggregate, and it works because the
+	event says which it is. A subscription event that guessed `real` would put
+	the seeded population into the funnel's last step on every school, in the
+	one report that has a switch for exactly that.
+
+	AND THE PLAN IS DERIVED FROM THE NAME. `plan` is `full` or `none` (see
+	`catalog.Plan`), and what these three events record is precisely a crossing
+	between the two — so the name already carries the answer, and asking the
+	paywall instead would ask it AFTER the write, racing with anything else
+	that moved the same row.
+
+	NO SCHOOL, AND THAT IS THE POINT. One subscription covers every school
+	(N-02), so `ForPlatform` is the honest dimension and `analysis.Funnel` is
+	what turns it back into one school's number.
+
+	IT FAILS NOTHING. A payment that was taken and not counted is a hole in a
+	report; a payment refused because counting failed is somebody's money.
+*/
+func subscriptionEvents(events *event.Store, accounts *identity.Store,
+	log *slog.Logger) billing.Emit {
+
+	return func(ctx context.Context, name string, accountID uuid.UUID,
+		payload map[string]any) {
+
+		account, err := accounts.ByID(ctx, accountID)
+		if err != nil {
+			log.Error("counting a subscription", "error", err,
+				"event", name, "account", accountID)
+			return
+		}
+
+		plan := string(catalog.PlanFull)
+		if name == billing.EventEnded {
+			plan = string(catalog.PlanNone)
+		}
+
+		e := event.Event{
+			Name: name,
+			Dimensions: event.ForPlatform(plan,
+				geo.FromContext(ctx), account.Locale, who(account)),
+			AccountID: &account.ID,
+			Payload:   payload,
+			RequestID: web.RequestIDFrom(ctx),
+		}
+		if err := events.Emit(ctx, e); err != nil {
+			log.Error("counting a subscription", "error", err,
+				"event", name, "account", accountID)
+		}
+	}
 }
 
 // arrived is the first step of the funnel, and the only one that cannot be
