@@ -51,6 +51,7 @@
 import { esc } from '../dom.js';
 import { get, post, RequestError } from '../request.js';
 import { mayAct } from '../session.js';
+import { txt, day } from '../../assets/language.js';
 
 export default async function people(section) {
   const el = document.createElement('div');
@@ -58,27 +59,27 @@ export default async function people(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Govern</span>' +
-      '<h1>Personal data</h1>' +
-      '<p>What is held about one person, handed to them, or removed. ' +
+      '<span class="eyebrow mono">' + esc(txt('Govern')) + '</span>' +
+      '<h1>' + esc(txt('Personal data')) + '</h1>' +
+      '<p>' + esc(txt('What is held about one person, handed to them, or removed. ' +
       'Both of the last two are recorded with your name against them — an ' +
       'export is a read that leaves this system, and the record of who took it ' +
-      'has to already exist by the time anybody asks.</p>' +
+      'has to already exist by the time anybody asks.')) + '</p>' +
     '</header>' +
 
     '<section class="block">' +
       '<div class="block-top">' +
-        '<h2>Find somebody</h2>' +
-        '<span class="block-score mono">exact address</span>' +
+        '<h2>' + esc(txt('Find somebody')) + '</h2>' +
+        '<span class="block-score mono">' + esc(txt('exact address')) + '</span>' +
       '</div>' +
       '<form id="find" class="list-bar" novalidate>' +
         '<label class="search">' +
-          '<span class="visually-hidden">The whole address</span>' +
+          '<span class="visually-hidden">' + esc(txt('The whole address')) + '</span>' +
           '<input id="email" type="email" autocomplete="off" spellcheck="false" ' +
                  'placeholder="somebody@example.tld" required>' +
         '</label>' +
-        '<button class="btn btn-primary" type="submit">Look up</button>' +
-        '<span class="list-count">One person, or none.</span>' +
+        '<button class="btn btn-primary" type="submit">' + esc(txt('Look up')) + '</button>' +
+        '<span class="list-count">' + esc(txt('One person, or none.')) + '</span>' +
       '</form>' +
     '</section>' +
 
@@ -88,25 +89,26 @@ export default async function people(section) {
        because it is the larger act, not because it is a lesser one. */
     '<section class="block">' +
       '<div class="block-top">' +
-        '<h2>Or look for somebody</h2>' +
-        '<span class="block-score mono">a page at a time</span>' +
+        '<h2>' + esc(txt('Or look for somebody')) + '</h2>' +
+        '<span class="block-score mono">' + esc(txt('a page at a time')) + '</span>' +
       '</div>' +
 
       // WHAT THIS IS FOR, FROM THE SERVER. It is the one protection that
       // reaches somebody before they type, so it lives beside the rule it
       // describes rather than in a screen that can drift from it. Filled in
       // after the first search, because that is when the server has spoken.
-      '<p class="aside" id="about-list">Anything in an address or a name — a fragment ' +
-      'is enough, and nothing at all lists everybody, newest first. Every page is ' +
-      'recorded with your name, what you searched for and how many came back.</p>' +
+      '<p class="aside" id="about-list">' + esc(txt('Anything in an address or a name — ' +
+      'a fragment is enough, and nothing at all lists everybody, newest first. Every page ' +
+      'is recorded with your name, what you searched for and how many came back.')) + '</p>' +
 
       '<form id="search" class="list-bar" novalidate>' +
         '<label class="search">' +
-          '<span class="visually-hidden">Part of an address or a name</span>' +
+          '<span class="visually-hidden">' +
+            esc(txt('Part of an address or a name')) + '</span>' +
           '<input id="words" type="search" autocomplete="off" spellcheck="false" ' +
-                 'placeholder="silva, or @gmail.com, or nothing">' +
+                 'placeholder="' + esc(txt('silva, or @gmail.com, or nothing')) + '">' +
         '</label>' +
-        '<button class="btn btn-ghost" type="submit">Look</button>' +
+        '<button class="btn btn-ghost" type="submit">' + esc(txt('Look')) + '</button>' +
       '</form>' +
       '<div id="matches" aria-live="polite"></div>' +
     '</section>' +
@@ -135,7 +137,7 @@ export default async function people(section) {
      looking for on page one, and a table that threw away what they had already
      read would make them page back through rows the server counted again. */
   async function list(query, cursor) {
-    if (!cursor) matches.innerHTML = '<p class="checking">Looking…</p>';
+    if (!cursor) matches.innerHTML = '<p class="checking">' + esc(txt('Looking…')) + '</p>';
 
     let page;
     try {
@@ -147,16 +149,17 @@ export default async function people(section) {
       }
       page = await get('/console/api/v1/people/list?' + at.toString());
     } catch (e) {
-      matches.innerHTML = '<p class="none">' + esc(e.message) + '</p>';
+      matches.innerHTML = '<p class="none">' + esc(txt(e.message)) + '</p>';
       return;
     }
 
     // The server's own sentence about what this is, once it has said it.
-    if (page.about) el.querySelector('#about-list').textContent = page.about;
+    if (page.about) el.querySelector('#about-list').textContent = txt(page.about);
 
     const found = page.people || [];
     if (!cursor && found.length === 0) {
-      matches.innerHTML = '<p class="none">' + esc(page.none || 'Nobody matches that.') + '</p>';
+      matches.innerHTML = '<p class="none">' +
+        esc(page.none ? txt(page.none) : txt('Nobody matches that.')) + '</p>';
       return;
     }
 
@@ -164,7 +167,8 @@ export default async function people(section) {
       matches.innerHTML =
         '<div class="table-wrap"><table class="grid">' +
           '<thead><tr>' +
-            '<th scope="col">Who</th><th scope="col">Signed up</th>' +
+            '<th scope="col">' + esc(txt('Who')) + '</th>' +
+            '<th scope="col">' + esc(txt('Signed up')) + '</th>' +
           '</tr></thead><tbody></tbody>' +
         '</table></div>' +
         '<p id="more"></p>';
@@ -179,10 +183,10 @@ export default async function people(section) {
     const showing = matches.querySelectorAll('tbody tr').length;
     matches.querySelector('#more').innerHTML =
       (page.before
-        ? '<button class="btn btn-ghost" type="button" id="show-more">Show more</button> '
+        ? '<button class="btn btn-ghost" type="button" id="show-more">' +
+            esc(txt('Show more')) + '</button> '
         : '') +
-      '<span class="list-count">' + showing + (showing === 1 ? ' person' : ' people') +
-        (page.before ? ' so far' : '') + '</span>';
+      '<span class="list-count">' + esc(showingPeople(showing, Boolean(page.before))) + '</span>';
 
     const button = matches.querySelector('#show-more');
     if (button) {
@@ -206,16 +210,16 @@ export default async function people(section) {
 
   async function look(email) {
     if (!email) return;
-    answer.innerHTML = '<p class="checking">Looking…</p>';
+    answer.innerHTML = '<p class="checking">' + esc(txt('Looking…')) + '</p>';
 
     let person;
     try {
       person = await get('/console/api/v1/people?email=' + encodeURIComponent(email));
     } catch (e) {
       answer.innerHTML = '<section class="block"><p class="none">' +
-        (e instanceof RequestError && e.status === 404
-          ? 'No account at that address.'
-          : esc(e.message)) + '</p></section>';
+        esc(e instanceof RequestError && e.status === 404
+          ? txt('No account at that address.')
+          : txt(e.message)) + '</p></section>';
       return;
     }
 
@@ -223,8 +227,9 @@ export default async function people(section) {
     try {
       held = await get('/console/api/v1/people/' + person.id + '/held');
     } catch (e) {
-      answer.innerHTML = '<section class="block"><p class="none">Found them, but could not ' +
-        'count what is held: ' + esc(e.message) + '</p></section>';
+      answer.innerHTML = '<section class="block"><p class="none">' +
+        esc(txt('Found them, but could not count what is held.')) + ' ' +
+        esc(txt(e.message)) + '</p></section>';
       return;
     }
     paint(person, held);
@@ -238,10 +243,18 @@ export default async function people(section) {
       .filter(([, count]) => count > 0)
       .sort(([a], [b]) => a.localeCompare(b));
 
-    // Each number pluralised by ITSELF: written as one expression this read
-    // "562 rows across 18 table", pluralising the tables by whether there were
-    // any rows at all — right for exactly the case nobody looks at.
-    const plural = (n, word) => n + ' ' + word + (n === 1 ? '' : 's');
+    /* HOW MUCH IS HELD, AS ONE SENTENCE WITH TWO HOLES IN IT.
+
+       It was `plural(n, word)` — a number, a space, the word, and an `s` unless
+       the number was one. That was already the second try: written as a single
+       expression it had read "562 rows across 18 table", pluralising the tables
+       by whether there were any ROWS. What it cannot survive is translation.
+       Portuguese does not build a plural by adding a letter to the word English
+       chose, and "across" is not a word that sits between two numbers there.
+
+       So the four cases are four sentences. That is more entries than a rule
+       would be, and it is the only shape where somebody translating can put the
+       words where their language puts them. */
 
     const rows = carrying.map(([table, count]) =>
       '<tr><td><span class="cell-main mono">' + esc(table) + '</span></td>' +
@@ -251,45 +264,57 @@ export default async function people(section) {
       '<section class="block">' +
         '<div class="block-top">' +
           '<h2>' + esc(person.name) + (person.synthetic
-            ? '<span class="tag tag-quiet">synthetic</span>' : '') + '</h2>' +
+            ? '<span class="tag tag-quiet">' + esc(txt('synthetic')) + '</span>' : '') + '</h2>' +
           '<span class="block-score mono">' + esc(person.email) + '</span>' +
         '</div>' +
-        '<p class="list-count">Arrived ' + esc(day(person.createdAt)) + ' &middot; ' +
-          plural(held.total, 'row') + ' across ' + plural(carrying.length, 'table') + '</p>' +
+        '<p class="list-count">' +
+          esc(txt('Arrived %s').replace('%s', day(person.createdAt))) + ' &middot; ' +
+          esc(holding(held.total, carrying.length)) + '</p>' +
 
         (rows
           ? '<div class="table-wrap"><table class="grid">' +
-              '<thead><tr><th scope="col">Table</th><th scope="col" class="num">Rows</th></tr></thead>' +
+              '<thead><tr><th scope="col">' + esc(txt('Table')) + '</th>' +
+                '<th scope="col" class="num">' + esc(txt('Rows')) + '</th></tr></thead>' +
               '<tbody>' + rows + '</tbody>' +
             '</table></div>'
-          : '<p class="none">Nothing is held about them beyond the account itself.</p>') +
+          : '<p class="none">' +
+              esc(txt('Nothing is held about them beyond the account itself.')) + '</p>') +
 
         '<p class="list-count">' +
           '<a class="btn btn-ghost" href="/console/api/v1/people/' + person.id + '/export" download>' +
-            'Export everything</a> ' +
-          'Recorded, with your name against it. ' +
+            esc(txt('Export everything')) + '</a> ' +
+          esc(txt('Recorded, with your name against it.')) + ' ' +
           /* THE OTHER SCREEN ABOUT THIS PERSON. What they have — plan, progress,
              exams, certificates — is a read that is not an export, and somebody
              about to erase an account usually wants to look at it first. */
-          '<a class="btn btn-ghost" href="#/record/' + person.id + '">Their record</a>' +
+          '<a class="btn btn-ghost" href="#/record/' + person.id + '">' +
+            esc(txt('Their record')) + '</a>' +
         '</p>' +
       '</section>' +
 
       (!mayAct() ? '' :
       '<section class="block" id="erase-block">' +
         '<div class="block-top">' +
-          '<h2>Erase them</h2>' +
-          '<span class="block-score mono">cannot be undone</span>' +
+          '<h2>' + esc(txt('Erase them')) + '</h2>' +
+          '<span class="block-score mono">' + esc(txt('cannot be undone')) + '</span>' +
         '</div>' +
-        '<p class="list-count">It severs the person and leaves the statistics. ' +
-          'The entry in the audit says who did it and how much went, and does not name them.</p>' +
+        '<p class="list-count">' + esc(txt('It severs the person and leaves the ' +
+          'statistics. The entry in the audit says who did it and how much went, and ' +
+          'does not name them.')) + '</p>' +
         '<form id="erase" class="list-bar" novalidate>' +
           '<label class="search">' +
-            '<span class="visually-hidden">Type their address to confirm</span>' +
+            '<span class="visually-hidden">' +
+              esc(txt('Type their address to confirm')) + '</span>' +
+            /* THE ADDRESS SITS IN A HOLE IN THE SENTENCE. "type X to confirm"
+               wraps the value in English; Portuguese puts nothing after it, so
+               a placeholder built by concatenation would end in a dangling
+               word. */
             '<input id="confirm" type="email" autocomplete="off" spellcheck="false" ' +
-                   'placeholder="type ' + esc(person.email) + ' to confirm" required>' +
+                   'placeholder="' +
+                     esc(txt('type %s to confirm').replace('%s', person.email)) +
+                   '" required>' +
           '</label>' +
-          '<button class="btn btn-bad" type="submit">Erase</button>' +
+          '<button class="btn btn-bad" type="submit">' + esc(txt('Erase')) + '</button>' +
         '</form>' +
         '<p class="signin-notice" id="erase-note" role="alert"></p>' +
       '</section>');
@@ -314,27 +339,45 @@ export default async function people(section) {
       await post('/console/api/v1/people/' + person.id + '/erase', { email: typed });
     } catch (e) {
       note.className = 'signin-notice bad';
-      note.textContent = e.message;
+      note.textContent = txt(e.message);
       return;
     }
 
     answer.innerHTML =
       '<section class="block">' +
-        '<div class="block-top"><h2>Erased</h2>' +
+        '<div class="block-top"><h2>' + esc(txt('Erased')) + '</h2>' +
         '<span class="block-score mono">' + esc(person.email) + '</span></div>' +
-        '<p class="list-count">The entry in the audit says who did it and how much went. ' +
-        'It does not name them: an append-only table that recorded the address would ' +
-        'be the last surviving copy of somebody who asked to be forgotten.</p>' +
+        '<p class="list-count">' + esc(txt('The entry in the audit says who did it and ' +
+        'how much went. It does not name them: an append-only table that recorded the ' +
+        'address would be the last surviving copy of somebody who asked to be ' +
+        'forgotten.')) + '</p>' +
       '</section>';
   }
 
   return { title: section.name, el };
 }
 
-const day = (iso) => {
-  const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? 'an unknown day' : at.toISOString().slice(0, 10);
-};
+/* `day` USED TO BE HERE and is `language.js`'s now. It formatted as an ISO
+   date, which is at least the same for everybody — unlike the version on the
+   roster, which printed the BROWSER's locale on a Portuguese screen — but it is
+   still not what somebody reads a date as. A date is a function of the language
+   that was chosen, and it lives beside the picker that chooses it.
+
+   HOW MANY PEOPLE ARE ON THE SCREEN, AND HOW MUCH IS HELD: four sentences each
+   rather than a number with a word after it. See where each is used. */
+function showingPeople(n, more) {
+  if (n === 1) return more ? txt('one person so far') : txt('one person');
+  return (more ? txt('%d people so far') : txt('%d people')).replace('%d', n);
+}
+
+function holding(rows, tables) {
+  const one = rows === 1;
+  const single = tables === 1;
+  if (one && single) return txt('one row in one table');
+  if (one) return txt('one row across %t tables').replace('%t', tables);
+  if (single) return txt('%r rows in one table').replace('%r', rows);
+  return txt('%r rows across %t tables').replace('%r', rows).replace('%t', tables);
+}
 
 /* ONE MATCH — a name, an address, the day they arrived, and nothing else.
 
@@ -352,7 +395,8 @@ function match(one) {
     '<td>' +
       '<button type="button" class="btn-plain" data-email="' + esc(one.email) + '">' +
         '<span class="cell-main">' + esc(one.name || '—') +
-          (one.synthetic ? '<span class="tag tag-quiet">synthetic</span>' : '') +
+          (one.synthetic
+            ? '<span class="tag tag-quiet">' + esc(txt('synthetic')) + '</span>' : '') +
         '</span>' +
         '<span class="cell-sub mono">' + esc(one.email) + '</span>' +
       '</button>' +

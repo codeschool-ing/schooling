@@ -29,6 +29,7 @@
 
 import { esc } from '../dom.js';
 import { get, RequestError } from '../request.js';
+import { txt } from '../../assets/language.js';
 
 /* ---------- the list ---------- */
 
@@ -40,22 +41,23 @@ export default async function history(section, filter = {}) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Govern</span>' +
+      '<span class="eyebrow mono">' + esc(txt('Govern')) + '</span>' +
       '<h1>' + esc(heading(filter)) + '</h1>' +
-      '<p>Every administrative action, newest first, with the person who took it ' +
+      '<p>' + esc(txt('Every administrative action, newest first, with the person who took it ' +
       'against it. Nothing here can be edited: the table refuses an update and a ' +
-      'delete, and a correction is a new entry.</p>' +
+      'delete, and a correction is a new entry.')) + '</p>' +
       (filter.actor || filter.kind
-        ? '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">Everything again</a></p>'
+        ? '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">' +
+            esc(txt('Everything again')) + '</a></p>'
         : '') +
     '</header>' +
 
     '<section class="block">' +
       '<div class="block-top">' +
-        '<h2>Entries</h2>' +
+        '<h2>' + esc(txt('Entries')) + '</h2>' +
         '<span class="block-score mono" id="scope">…</span>' +
       '</div>' +
-      '<div id="rows"><p class="checking">Reading…</p></div>' +
+      '<div id="rows"><p class="checking">' + esc(txt('Reading…')) + '</p></div>' +
       '<p class="list-bar" id="more"></p>' +
     '</section>';
 
@@ -76,15 +78,19 @@ export default async function history(section, filter = {}) {
          and a screen that turned that into "something went wrong" would be
          hiding the only useful part. */
       rows.innerHTML = '<p class="none">' + esc(e instanceof RequestError
-        ? e.message : 'the history could not be read') + '</p>';
+        ? txt(e.message) : txt('the history could not be read')) + '</p>';
       more.innerHTML = '';
       return;
     }
 
-    scope.textContent = page.scope;
+    /* THE SCOPE IS THE SERVER'S SENTENCE WITH THE SUBJECT KIND IN A HOLE. The
+       kind is not translated — it is what the audit records — and the sentence
+       around it is, because Portuguese does not put the words in that order. */
+    scope.textContent = txt(page.scope).replace('%s', filter.kind || '');
 
     if (!page.entries.length && !entries) {
-      rows.innerHTML = '<p class="none">Nothing has been recorded here yet.</p>';
+      rows.innerHTML = '<p class="none">' +
+        esc(txt('Nothing has been recorded here yet.')) + '</p>';
       more.innerHTML = '';
       return;
     }
@@ -93,8 +99,10 @@ export default async function history(section, filter = {}) {
       rows.innerHTML =
         '<div class="table-wrap"><table class="grid">' +
           '<thead><tr>' +
-            '<th scope="col">When</th><th scope="col">Who</th>' +
-            '<th scope="col">Did what</th><th scope="col">To</th>' +
+            '<th scope="col">' + esc(txt('When')) + '</th>' +
+            '<th scope="col">' + esc(txt('Who')) + '</th>' +
+            '<th scope="col">' + esc(txt('Did what')) + '</th>' +
+            '<th scope="col">' + esc(txt('To')) + '</th>' +
           '</tr></thead><tbody></tbody>' +
         '</table></div>';
       table = rows.querySelector('tbody');
@@ -107,12 +115,16 @@ export default async function history(section, filter = {}) {
        over the whole table on every page — the expensive half this screen is
        built to avoid — and a number that said 4,812 while showing fifty rows
        would be answering a question nobody asked. */
+    /* THE COUNT IS FOUR WHOLE SENTENCES, not a number with words appended.
+       Singular and plural differ, and "so far" moves: Portuguese puts it before
+       the noun where English puts it after, so a translation assembled from
+       fragments cannot say it at all. */
     more.innerHTML =
       (page.next
-        ? '<button class="btn btn-ghost" type="button" id="show-more">Show more</button> '
+        ? '<button class="btn btn-ghost" type="button" id="show-more">' +
+            esc(txt('Show more')) + '</button> '
         : '') +
-      '<span class="list-count">' + entries + (entries === 1 ? ' entry' : ' entries') +
-        (page.next ? ' so far' : '') + '</span>';
+      '<span class="list-count">' + esc(counted(entries, Boolean(page.next))) + '</span>';
 
     const button = more.querySelector('#show-more');
     if (button) {
@@ -144,10 +156,22 @@ function query(filter) {
 
 const sep = (where) => (where ? '&' : '?');
 
+/* THE KIND IS THE SERVER'S WORD IN A HOLE IN A SENTENCE, and not two strings
+   either side of it. `account`, `school`, `job`, `people` — they are what the
+   audit records and what somebody would search by, so they are not translated;
+   what has to move around them is the sentence, and Portuguese does not put its
+   preposition where English does. */
 function heading(filter) {
-  if (filter.actor) return 'One person’s doing';
-  if (filter.kind) return 'Everything done to one ' + filter.kind;
-  return 'History';
+  if (filter.actor) return txt('One person’s doing');
+  if (filter.kind) return txt('Everything done to one %s').replace('%s', filter.kind);
+  return txt('History');
+}
+
+/* How many entries are on the screen, and whether there are more. Four whole
+   sentences rather than a number with a word after it: see where it is used. */
+function counted(n, more) {
+  if (n === 1) return more ? txt('one entry so far') : txt('one entry');
+  return (more ? txt('%d entries so far') : txt('%d entries')).replace('%d', n);
 }
 
 function row(e) {
@@ -157,7 +181,8 @@ function row(e) {
       esc(when(e.occurredAt)) + '</a></td>' +
     '<td><a href="#/audit/by/' + esc(e.actorId) + '">' +
       '<span class="cell-main">' + esc(name) + '</span></a>' +
-      (e.actorKind === 'system' ? '<span class="tag tag-quiet">system</span>' : '') +
+      (e.actorKind === 'system'
+        ? '<span class="tag tag-quiet">' + esc(txt('system')) + '</span>' : '') +
       (address ? '<span class="cell-sub mono">' + esc(address) + '</span>' : '') + '</td>' +
     '<td class="mono">' + esc(e.action) + '</td>' +
     '<td><a href="#/audit/on/' + esc(e.subject) + '/' + esc(e.subjectId) + '">' +
@@ -192,35 +217,42 @@ export async function entry(params) {
     deed = await get('/console/api/v1/audit/' + encodeURIComponent(params.id));
   } catch (e) {
     el.innerHTML =
-      '<header class="view-head"><h1>No such entry</h1>' +
+      '<header class="view-head"><h1>' + esc(txt('No such entry')) + '</h1>' +
       '<p>' + esc(e instanceof RequestError && e.status === 404
-        ? 'Nothing is recorded under that number. History does not lose entries, so the number is wrong.'
-        : e.message) + '</p>' +
-      '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">Back to the history</a></p>' +
+        ? txt('Nothing is recorded under that number. History does not lose entries, ' +
+              'so the number is wrong.')
+        : txt(e.message)) + '</p>' +
+      '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">' +
+        esc(txt('Back to the history')) + '</a></p>' +
       '</header>';
-    return { title: 'No such entry', el };
+    return { title: txt('No such entry'), el };
   }
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Govern &middot; entry ' + esc(deed.id) + '</span>' +
+      '<span class="eyebrow mono">' + esc(txt('Govern')) + ' &middot; ' +
+        esc(txt('entry %s').replace('%s', deed.id)) + '</span>' +
       '<h1>' + esc(deed.action) + '</h1>' +
-      '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">Back to the history</a></p>' +
+      '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">' +
+        esc(txt('Back to the history')) + '</a></p>' +
     '</header>' +
 
     '<section class="block">' +
-      '<div class="block-top"><h2>What happened</h2>' +
+      '<div class="block-top"><h2>' + esc(txt('What happened')) + '</h2>' +
         '<span class="block-score mono">' + esc(when(deed.occurredAt)) + '</span></div>' +
       '<div class="table-wrap"><table class="grid"><tbody>' +
-        fact('Who', '<a href="#/audit/by/' + esc(deed.actorId) + '">' + esc(deed.actor) + '</a>' +
-          (deed.actorKind === 'system' ? ' <span class="tag tag-quiet">system</span>' : '')) +
-        fact('To', '<a href="#/audit/on/' + esc(deed.subject) + '/' + esc(deed.subjectId) + '">' +
+        fact(txt('Who'), '<a href="#/audit/by/' + esc(deed.actorId) + '">' +
+          esc(deed.actor) + '</a>' +
+          (deed.actorKind === 'system'
+            ? ' <span class="tag tag-quiet">' + esc(txt('system')) + '</span>' : '')) +
+        fact(txt('To'), '<a href="#/audit/on/' + esc(deed.subject) + '/' + esc(deed.subjectId) + '">' +
           '<span class="mono">' + esc(deed.subject) + ' ' + esc(deed.subjectId) + '</span></a>') +
-        fact('School', deed.school
+        fact(txt('School'), deed.school
           ? '<span class="mono">' + esc(deed.school) + '</span>'
-          : '<span class="none">the platform, not a school</span>') +
-        (deed.reason ? fact('Why', esc(deed.reason)) : '') +
-        (deed.requestId ? fact('Request', '<span class="mono">' + esc(deed.requestId) + '</span>') : '') +
+          : '<span class="none">' + esc(txt('the platform, not a school')) + '</span>') +
+        (deed.reason ? fact(txt('Why'), esc(deed.reason)) : '') +
+        (deed.requestId
+          ? fact(txt('Request'), '<span class="mono">' + esc(deed.requestId) + '</span>') : '') +
       '</tbody></table></div>' +
     '</section>' +
 
@@ -234,14 +266,15 @@ export async function entry(params) {
        and what that means is the reader's, who can see the action it is
        under. */
     '<section class="block">' +
-      '<div class="block-top"><h2>What the value was</h2>' +
-        '<span class="block-score mono">before &rarr; after</span></div>' +
-      '<p class="list-count">A thing that did not exist yet has no before, and one that ' +
-        'does not exist any more has no after. Not every action is a change of state, so an ' +
-        'empty side is what was recorded rather than what happened.</p>' +
+      '<div class="block-top"><h2>' + esc(txt('What the value was')) + '</h2>' +
+        '<span class="block-score mono">' +
+          esc(txt('before')) + ' &rarr; ' + esc(txt('after')) + '</span></div>' +
+      '<p class="list-count">' + esc(txt('A thing that did not exist yet has no before, ' +
+        'and one that does not exist any more has no after. Not every action is a change ' +
+        'of state, so an empty side is what was recorded rather than what happened.')) + '</p>' +
       '<div class="states">' +
-        state('Before', deed.before) +
-        state('After', deed.after) +
+        state(txt('Before'), deed.before) +
+        state(txt('After'), deed.after) +
       '</div>' +
     '</section>';
 
@@ -253,18 +286,24 @@ const fact = (name, value) =>
 
 function state(name, value) {
   const body = value === undefined || value === null
-    ? '<p class="none">Nothing was recorded on this side.</p>'
+    ? '<p class="none">' + esc(txt('Nothing was recorded on this side.')) + '</p>'
     : '<pre class="state mono">' + esc(JSON.stringify(value, null, 2)) + '</pre>';
   return '<div><h3 class="eyebrow mono">' + esc(name) + '</h3>' + body + '</div>';
 }
 
 /* ---------- two small things ---------- */
 
-// The whole instant, in UTC, because an audit read in one timezone and written
-// in another is an audit two people disagree about.
+/* The whole instant, in UTC, because an audit read in one timezone and written
+   in another is an audit two people disagree about.
+
+   IT IS NOT `language.js`'s `moment()` AND MUST NOT BECOME ONE. Every other
+   date in this console follows the language that was chosen, which is right for
+   a date somebody reads; this one is the one place where two readers agreeing
+   matters more than either of them reading it comfortably. The rule above is
+   older than the picker and survives it. */
 function when(iso) {
   const at = new Date(iso);
-  if (Number.isNaN(at.getTime())) return 'an unknown moment';
+  if (Number.isNaN(at.getTime())) return txt('an unknown moment');
   return at.toISOString().replace('T', ' ').slice(0, 19) + 'Z';
 }
 

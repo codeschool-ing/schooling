@@ -158,6 +158,148 @@ window.I18N.pt.ui = {
     'Ninguém tem um papel, o que não pode ser verdade — esta página foi aberta por alguém que ' +
     'tem um. Algo está respondendo errado, e não é que não haja ninguém aqui.',
 
+  /* ---------- Govern · History ---------- */
+  'Every administrative action, newest first, with the person who took it against it. Nothing here can be edited: the table refuses an update and a delete, and a correction is a new entry.':
+    'Toda ação administrativa, mais recentes primeiro, com a pessoa que a tomou ao lado. ' +
+    'Nada aqui pode ser editado: a tabela recusa alteração e exclusão, e uma correção é ' +
+    'uma entrada nova.',
+
+  'History': 'Histórico',
+  'One person’s doing': 'O que uma pessoa fez',
+
+  /* THE KIND IS THE SERVER'S WORD IN A HOLE. `account`, `school`, `job` are
+     what the audit records and what somebody searches by, so they stay as they
+     are — and Portuguese does not put its preposition where English does, which
+     is why the sentence has a hole rather than two halves. */
+  'Everything done to one %s': 'Tudo o que foi feito em %s',
+  'entry %s': 'entrada %s',
+
+  'Entries': 'Entradas',
+  'Everything again': 'Tudo de novo',
+  'Nothing has been recorded here yet.': 'Nada foi registrado aqui ainda.',
+  'the history could not be read': 'não foi possível ler o histórico',
+
+  'When': 'Quando',
+  'Did what': 'Fez o quê',
+  'To': 'Em',
+  'Why': 'Por quê',
+  'School': 'Escola',
+  'Request': 'Requisição',
+  'system': 'sistema',
+  'the platform, not a school': 'a plataforma, não uma escola',
+  'an unknown moment': 'um momento desconhecido',
+
+  /* FOUR WHOLE SENTENCES FOR ONE COUNT, because "so far" moves: English puts
+     it after the noun and Portuguese before it, so a translation assembled from
+     fragments cannot say it at all. */
+  'one entry': 'uma entrada',
+  '%d entries': '%d entradas',
+  'one entry so far': 'uma entrada até agora',
+  '%d entries so far': 'até agora, %d entradas',
+  'Show more': 'Mostrar mais',
+
+  'No such entry': 'Entrada inexistente',
+  'Nothing is recorded under that number. History does not lose entries, so the number is wrong.':
+    'Nada está registrado sob esse número. O histórico não perde entradas, então o número ' +
+    'é que está errado.',
+  'Back to the history': 'Voltar ao histórico',
+
+  'What happened': 'O que aconteceu',
+  'What the value was': 'Qual era o valor',
+  'before': 'antes',
+  'after': 'depois',
+  'Before': 'Antes',
+  'After': 'Depois',
+  'A thing that did not exist yet has no before, and one that does not exist any more has no after. Not every action is a change of state, so an empty side is what was recorded rather than what happened.':
+    'Uma coisa que ainda não existia não tem antes, e uma que não existe mais não tem ' +
+    'depois. Nem toda ação é uma mudança de estado, então um lado vazio é o que foi ' +
+    'registrado e não o que aconteceu.',
+  'Nothing was recorded on this side.': 'Nada foi registrado deste lado.',
+
+  /* ---------- Govern · Personal data ---------- */
+  'What is held about one person, handed to them, or removed. Both of the last two are recorded with your name against them — an export is a read that leaves this system, and the record of who took it has to already exist by the time anybody asks.':
+    'O que é guardado sobre uma pessoa, entregue a ela, ou removido. Os dois últimos são ' +
+    'registrados com o seu nome — uma exportação é uma leitura que sai deste sistema, e o ' +
+    'registro de quem a levou tem de já existir quando alguém perguntar.',
+
+  'Find somebody': 'Encontrar alguém',
+  'exact address': 'endereço exato',
+  'The whole address': 'O endereço inteiro',
+  'Look up': 'Procurar',
+  'One person, or none.': 'Uma pessoa, ou nenhuma.',
+  'No account at that address.': 'Nenhuma conta nesse endereço.',
+
+  'Or look for somebody': 'Ou busque alguém',
+  'a page at a time': 'uma página por vez',
+  'Part of an address or a name': 'Parte de um endereço ou de um nome',
+  'Look': 'Buscar',
+  'Looking…': 'Buscando…',
+  'silva, or @gmail.com, or nothing': 'silva, ou @gmail.com, ou nada',
+  'Anything in an address or a name — a fragment is enough, and nothing at all lists everybody, newest first. Every page is recorded with your name, what you searched for and how many came back.':
+    'Qualquer coisa em um endereço ou nome — um fragmento basta, e nada lista todo mundo, ' +
+    'mais recentes primeiro. Cada página é registrada com o seu nome, o que você buscou e ' +
+    'quantos voltaram.',
+  'Nobody matches that.': 'Ninguém corresponde a isso.',
+  'Signed up': 'Cadastrou-se',
+  'synthetic': 'sintético',
+
+  /* FOUR SENTENCES FOR ONE COUNT. See `showingPeople`. */
+  'one person': 'uma pessoa',
+  '%d people': '%d pessoas',
+  'one person so far': 'uma pessoa até agora',
+  '%d people so far': 'até agora, %d pessoas',
+
+  /* AND FOUR FOR HOW MUCH IS HELD, which used to be a number, a space, the
+     English word and an `s`. Portuguese does not build a plural that way, and
+     it does not put "across" between two numbers at all. */
+  'one row in one table': 'uma linha em uma tabela',
+  'one row across %t tables': 'uma linha, distribuída em %t tabelas',
+  '%r rows in one table': '%r linhas em uma tabela',
+  '%r rows across %t tables': '%r linhas em %t tabelas',
+
+  'Arrived %s': 'Chegou em %s',
+  'Table': 'Tabela',
+  'Rows': 'Linhas',
+  'Nothing is held about them beyond the account itself.':
+    'Nada é guardado sobre a pessoa além da própria conta.',
+  'Found them, but could not count what is held.':
+    'Encontrei a pessoa, mas não consegui contar o que é guardado.',
+
+  'Export everything': 'Exportar tudo',
+  'Recorded, with your name against it.': 'Registrado, com o seu nome.',
+  'Their record': 'A ficha dela',
+
+  'Erase them': 'Apagar a pessoa',
+  'cannot be undone': 'não pode ser desfeito',
+  'It severs the person and leaves the statistics. The entry in the audit says who did it and how much went, and does not name them.':
+    'Isso desliga a pessoa e mantém as estatísticas. A entrada no histórico diz quem fez e ' +
+    'quanto foi, e não a nomeia.',
+  'Type their address to confirm': 'Digite o endereço dela para confirmar',
+  'type %s to confirm': 'digite %s para confirmar',
+  'Erase': 'Apagar',
+  'Erased': 'Apagada',
+  'The entry in the audit says who did it and how much went. It does not name them: an append-only table that recorded the address would be the last surviving copy of somebody who asked to be forgotten.':
+    'A entrada no histórico diz quem fez e quanto foi. Ela não nomeia a pessoa: uma tabela ' +
+    'que só cresce e que registrasse o endereço seria a última cópia sobrevivente de quem ' +
+    'pediu para ser esquecido.',
+
+  /* ---------- sentences the SERVER sends to these two screens ----------
+     Written in Go, so `check-interface` cannot enumerate them; they are here
+     because somebody opened the screens in Portuguese and read them. */
+  'every action, every school': 'toda ação, todas as escolas',
+  'one actor, every school': 'um autor, todas as escolas',
+  'one %s, every school': 'um %s, todas as escolas',
+
+  'This list answers a question somebody outside asked: they wrote in, and the address on the message is not the one they signed up with, or they signed their name and nothing else. It shows what identifies a person and not what is held about them — that is their record, one at a time, and the whole of it is the export, which is recorded against your name. Every page of this is recorded too, with what you searched for and how many came back.':
+    'Esta lista responde a uma pergunta que alguém de fora fez: a pessoa escreveu, e o ' +
+    'endereço da mensagem não é o do cadastro, ou ela assinou só o nome. Ela mostra o que ' +
+    'identifica uma pessoa e não o que é guardado sobre ela — isso é a ficha dela, uma de ' +
+    'cada vez, e o todo é a exportação, que fica registrada com o seu nome. Cada página ' +
+    'desta lista também é registrada, com o que você buscou e quantos voltaram.',
+  'Nobody here matches that. It is matched anywhere in the address or the name, so a fragment is enough — and nothing at all lists everybody, newest first.':
+    'Ninguém aqui corresponde a isso. A busca casa em qualquer parte do endereço ou do ' +
+    'nome, então um fragmento basta — e nada lista todo mundo, mais recentes primeiro.',
+
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
     'Este console está aberto desde antes da última atualização. Recarregue quando puder.',
