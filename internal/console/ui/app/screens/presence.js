@@ -37,6 +37,7 @@
 
 import { esc } from '../dom.js';
 import { get } from '../request.js';
+import { txt, language } from '../../assets/language.js';
 
 /* HOW OFTEN THIS ASKS AGAIN. It is deliberately slower than the heartbeat it
    watches: the server writes a session's last-seen at most once a minute, so
@@ -51,13 +52,9 @@ export default async function presence(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Watch</span>' +
-      '<h1>Who is here</h1>' +
-      '<p>People signed in and seen a moment ago, by school. This is the one ' +
-      'number in the console that comes from the sessions table rather than ' +
-      'from the event stream — presence is the question where being ' +
-      'overwritten is the point, because nobody asks who was online last ' +
-      'March.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Watch')) + '</span>' +
+      '<h1>' + esc(txt('Who is here')) + '</h1>' +
+      '<p>' + esc(txt('People signed in and seen a moment ago, by school. This is the one number in the console that comes from the sessions table rather than from the event stream — presence is the question where being overwritten is the point, because nobody asks who was online last March.')) + '</p>' +
     '</header>' +
 
     /* NOTHING HERE IS A LIVE REGION, and that is a decision rather than an
@@ -72,7 +69,7 @@ export default async function presence(section) {
        would announce a new clock reading every fifteen seconds — which is the
        same interruption wearing a smaller sentence. What announces this screen
        is the router naming it on arrival, once. */
-    '<div id="body"><p class="checking">Reading…</p></div>';
+    '<div id="body"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const body = el.querySelector('#body');
 
@@ -94,7 +91,7 @@ export default async function presence(section) {
       /* A READ THAT FAILED IS NOT AN EMPTY PLATFORM. Nobody being here is a
          real answer that looks exactly like this, so the failure has to replace
          the numbers rather than be shown as zero people. */
-      body.innerHTML = '<section class="block"><p class="none">' + esc(e.message) +
+      body.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) +
         '</p></section>';
       return;
     }
@@ -105,34 +102,36 @@ export default async function presence(section) {
 
     body.innerHTML =
       '<section class="block">' +
-        '<div class="block-top"><h2>On the platform</h2></div>' +
+        '<div class="block-top"><h2>' + esc(txt('On the platform')) + '</h2></div>' +
         '<span class="here-total">' + (answer.everywhere || 0) + '</span>' +
-        '<p class="aside">Seen in the last <b>' + minutes + ' minute' +
-          (minutes === 1 ? '' : 's') + '</b>. A session says it is still ' +
-          'in use at most once a ' + (cadence === 1 ? 'minute' : cadence + ' minutes') +
-          ', so this number is accurate to that and no better — it moves in ' +
-          'steps rather than smoothly, and that is the heartbeat rather than ' +
-          'the platform.</p>' +
+        /* TWO NUMBERS IN ONE SENTENCE, AND BOTH ARE HOLES. It was assembled —
+           a window, a plural `s` chosen by hand, a cadence, another plural —
+           which is the "1 trilhas" shape twice in one paragraph. Four cases,
+           because both numbers can be one and each of the two languages
+           agrees differently. */
+        '<p class="aside">' +
+          (minutes === 1 ? txt('Seen in the last minute.') : txt('Seen in the last %w minutes.').replace('%w', minutes)) +
+          ' ' +
+          (cadence === 1 ? txt('A session says it is still in use at most once a minute, so this number is accurate to that and no better — it moves in steps rather than smoothly, and that is the heartbeat rather than the platform.') : txt('A session says it is still in use at most once every %c minutes, so this number is accurate to that and no better — it moves in steps rather than smoothly, and that is the heartbeat rather than the platform.').replace('%c', cadence)) +
+        '</p>' +
       '</section>' +
 
       '<section class="block">' +
-        '<div class="block-top"><h2>By school</h2></div>' +
+        '<div class="block-top"><h2>' + esc(txt('By school')) + '</h2></div>' +
         (schools.length === 0
-          ? '<p class="none">There are no schools on this platform yet.</p>'
+          ? '<p class="none">' + esc(txt('There are no schools on this platform yet.')) + '</p>'
           : '<div class="here-all">' + schools.map(tile).join('') + '</div>') +
 
         /* THE TWO NUMBERS DISAGREE ON PURPOSE, said once, here, rather than
            discovered by somebody adding the tiles up. */
         (schools.length > 1
-          ? '<p class="aside">These do not add up to the number above, and ' +
-            'should not: somebody studying in two schools is present in both ' +
-            'and is <b>one person</b> on the platform.</p>'
+          ? '<p class="aside">' + txt('These do not add up to the number above, and should not: somebody studying in two schools is present in both and is <b>one person</b> on the platform.') + '</p>'
           : '') +
       '</section>' +
 
       '<section class="block">' +
-        '<div class="block-top"><h2>What this does not count</h2></div>' +
-        '<p class="aside">' + esc(answer.not_counted || '') + '</p>' +
+        '<div class="block-top"><h2>' + esc(txt('What this does not count')) + '</h2></div>' +
+        '<p class="aside">' + esc(txt(answer.not_counted || '')) + '</p>' +
 
         /* THE RULE ON THE SCREEN, because "why can I not see who" is a question
            an operator will have, and the answer is a rule rather than an
@@ -141,16 +140,13 @@ export default async function presence(section) {
            IT IS A SHARPER ANSWER SINCE K-22 WAS AMENDED, not a weaker one:
            there IS a place to look people up, and the reason it is not this one
            is that this page arrives on a timer with nobody having asked. */
-        '<p class="aside">And it does not say <b>who</b>. This page refreshes ' +
-        'on its own, so there is no moment where somebody asked for it and ' +
-        'nothing to record a reason against — which is what a list of people ' +
-        'has to carry. Looking somebody up is <b>Personal data</b>, where every ' +
-        'page is recorded with what was searched for.</p>' +
+        '<p class="aside">' + txt('And it does not say <b>who</b>. This page refreshes on its own, so there is no moment where somebody asked for it and nothing to record a reason against — which is what a list of people has to carry. Looking somebody up is <b>Personal data</b>, where every page is recorded with what was searched for.') + '</p>' +
       '</section>' +
 
-      '<p class="freshness mono">Read at ' +
-        esc(clock(answer.as_of)) + ' · refreshing every ' +
-        Math.round(EVERY / 1000) + 's</p>';
+      '<p class="freshness mono">' +
+        esc(txt('Read at %t · refreshing every %n s')
+          .replace('%t', clock(answer.as_of))
+          .replace('%n', Math.round(EVERY / 1000))) + '</p>';
   }
 }
 
@@ -170,6 +166,10 @@ function tile(school) {
    silently stopped refreshing looks identical to a quiet Tuesday. */
 function clock(when) {
   const at = new Date(when);
-  if (Number.isNaN(at.getTime())) return 'an unknown moment';
-  return at.toLocaleTimeString();
+  if (Number.isNaN(at.getTime())) return txt('an unknown moment');
+  /* THE READER'S OWN CLOCK, IN THE READER'S OWN LANGUAGE. `toLocaleTimeString()`
+     with no argument is the BROWSER's locale, which is the defect the dates and
+     the money on the other screens had: a 12-hour clock with `PM` on a screen
+     otherwise in Portuguese. */
+  return at.toLocaleTimeString(language() === 'pt' ? 'pt-BR' : 'en-GB');
 }

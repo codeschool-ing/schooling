@@ -45,11 +45,15 @@
 import { esc } from '../dom.js';
 import { get, post, RequestError } from '../request.js';
 import { mayAct } from '../session.js';
+import { txt } from '../../assets/language.js';
 
 /* The three words the store uses, and what each is drawn as. A word this file
    does not know is shown as itself: a fourth outcome should appear on the
    screen as a thing nobody has styled yet, rather than be folded into one of
    the three and read as something it is not. */
+/* THE THREE OUTCOMES ARE THE STORE'S OWN WORDS, English here and looked up
+   where they are drawn — like every closed list in this console. A fourth would
+   appear on the screen as itself rather than folded into one of the three. */
 const SAID = {
   ok: 'Finished',
   failed: 'Failed',
@@ -62,13 +66,11 @@ export default async function jobs(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Watch</span>' +
-      '<h1>Jobs</h1>' +
-      '<p>What runs on a schedule, and how it went. This is the console ' +
-      'reporting on itself: the question is not what students did, it is ' +
-      'whether the work behind another screen actually happened last night.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Watch')) + '</span>' +
+      '<h1>' + esc(txt('Jobs')) + '</h1>' +
+      '<p>' + esc(txt('What runs on a schedule, and how it went. This is the console reporting on itself: the question is not what students did, it is whether the work behind another screen actually happened last night.')) + '</p>' +
     '</header>' +
-    '<div id="body" aria-live="polite"><p class="checking">Reading…</p></div>';
+    '<div id="body" aria-live="polite"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const body = el.querySelector('#body');
 
@@ -108,7 +110,7 @@ export default async function jobs(section) {
 
   body.innerHTML =
     (all.length === 0
-      ? '<section class="block"><p class="none">' + esc(answer.nothing_yet || '') + '</p></section>'
+      ? '<section class="block"><p class="none">' + esc(txt(answer.nothing_yet || '')) + '</p></section>'
       : all.map((one) => block(one, adrift, startable.includes(one.name))).join('')) +
 
     /* THERE IS ALWAYS A SENTENCE HERE, and which one depends on why. Somebody
@@ -117,7 +119,7 @@ export default async function jobs(section) {
        be started at all, and it is still true in two of the three states. */
     '<section class="block">' +
       '<div class="block-top"><h2>' +
-        (startable.length ? 'What starting one does' : 'Why there is no button') +
+        esc(startable.length ? txt('What starting one does') : txt('Why there is no button')) +
       '</h2></div>' +
       '<p class="aside">' + esc(why(answer, known, startable)) + '</p>' +
     '</section>';
@@ -138,13 +140,16 @@ export default async function jobs(section) {
    already knows; the schools screen owns its read-only sentence for the same
    reason, in the same words. */
 function why(answer, known, startable) {
-  if (startable.length) return answer.about_starting || '';
+  if (startable.length) return txt(answer.about_starting || '');
   if (known.length) {
-    return 'A read-only role may read this screen and not press anything. Starting a job '
-      + 'withdraws questions from circulation when the analysis finds them broken, which is '
-      + 'not a thing looking at a screen should do.';
+    /* ONE LITERAL, HOWEVER LONG THE LINE. `txt('a ' + 'b')` asks the dictionary
+       for a key no dictionary can be written against — the concatenation is
+       gone by the time `check-interface` reads the file, so it reports nothing
+       and the sentence stays English in every language. It has cost this
+       repository eighteen strings once already. */
+    return txt('A read-only role may read this screen and not press anything. Starting a job withdraws questions from circulation when the analysis finds them broken, which is not a thing looking at a screen should do.');
   }
-  return answer.nothing_to_press || '';
+  return txt(answer.nothing_to_press || '');
 }
 
 /* Pressing it.
@@ -171,18 +176,18 @@ function wireStart(body, name) {
   button.addEventListener('click', async () => {
     button.disabled = true;
     said.className = 'job-said';
-    said.textContent = 'Asking…';
+    said.textContent = txt('Asking…');
 
     try {
       const answer = await post('/console/api/v1/jobs/' + encodeURIComponent(name) + '/run');
       said.className = 'job-said ok';
-      said.textContent = answer.started || 'Asked for.';
+      said.textContent = answer.started ? txt(answer.started) : txt('Asked for.');
     } catch (e) {
       button.disabled = false;
       said.className = 'job-said bad';
       said.textContent = e instanceof RequestError && e.status === 403
-        ? 'That asks for an operator.'
-        : e.message;
+        ? txt('That asks for an operator.')
+        : txt(e.message);
     }
   });
 }
@@ -202,7 +207,7 @@ function block(one, adrift, startable) {
     '</div>' +
 
     (runs.length === 0
-      ? '<p class="none">This job has recorded no runs.</p>'
+      ? '<p class="none">' + esc(txt('This job has recorded no runs.')) + '</p>'
       : '<ol class="run-list">' + runs.map((r) => row(r, adrift)).join('') + '</ol>') +
 
     /* THE CONTROL IS UNDER THE HISTORY AND NOT BESIDE THE HEADING, because the
@@ -212,7 +217,8 @@ function block(one, adrift, startable) {
        beneath it. */
     (startable
       ? '<div class="job-bar">' +
-          '<button type="button" class="btn btn-ghost job-start">Run it now</button>' +
+          '<button type="button" class="btn btn-ghost job-start">' +
+            esc(txt('Run it now')) + '</button>' +
           '<span class="job-said"></span>' +
         '</div>'
       : '') +
@@ -220,9 +226,9 @@ function block(one, adrift, startable) {
     /* THE THRESHOLD BESIDE THE THING IT JUDGED (K-16). It is only worth saying
        where a row was actually judged by it. */
     (runs.some((r) => r.adrift)
-      ? '<p class="aside">A run still saying <b>running</b> after ' + adrift +
-        ' minutes is drawn as adrift. Nothing rewrites it: the row is what the ' +
-        'job itself last said, and a job that was killed says nothing on the way out.</p>'
+      ? '<p class="aside">' +
+        txt('A run still saying <b>running</b> after %d minutes is drawn as adrift. Nothing rewrites it: the row is what the job itself last said, and a job that was killed says nothing on the way out.')
+          .replace('%d', adrift) + '</p>'
       : '') +
   '</section>';
 }
@@ -232,18 +238,18 @@ function block(one, adrift, startable) {
    possible sentence, because the point of this screen is the day it is not
    quiet. */
 function headline(last) {
-  if (!last) return 'never run';
-  if (last.adrift) return 'started and never finished';
-  if (last.outcome === 'failed') return 'last run failed';
-  if (last.outcome === 'running') return 'running now';
-  return 'last run ' + ago(last.started_at);
+  if (!last) return txt('never run');
+  if (last.adrift) return txt('started and never finished');
+  if (last.outcome === 'failed') return txt('last run failed');
+  if (last.outcome === 'running') return txt('running now');
+  return txt('last run %s').replace('%s', ago(last.started_at));
 }
 
 function row(r, adrift) {
   const state = r.adrift ? 'adrift' : r.outcome;
   return '<li class="run run-' + esc(state) + '">' +
     '<span class="run-state mono">' +
-      esc(r.adrift ? 'Adrift' : (SAID[r.outcome] || r.outcome)) +
+      esc(r.adrift ? txt('Adrift') : txt(SAID[r.outcome] || r.outcome)) +
     '</span>' +
     '<span class="run-when">' + esc(ago(r.started_at)) + '</span>' +
     '<span class="run-took mono">' + esc(took(r, adrift)) + '</span>' +
@@ -261,21 +267,28 @@ function took(r, adrift) {
   if (Number.isNaN(from) || Number.isNaN(to)) return '';
 
   const seconds = Math.max(0, Math.round((to - from) / 1000));
+  /* `s` AND `m` ARE UNITS AND NOT WORDS, so they are not translated — but "and
+     counting" is a sentence, and it goes after the number in English and
+     before it in some languages, so the whole thing is one key with a hole. */
   const said = seconds < 60
     ? seconds + 's'
     : Math.round(seconds / 60) + 'm';
-  return r.finished_at ? said : said + ' and counting';
+  return r.finished_at ? said : txt('%s and counting').replace('%s', said);
 }
 
 /* When it started, in words. A job runs at the same time every night, so the
    useful reading is "last night" or "three nights ago" rather than a clock. */
 function ago(when) {
   const at = new Date(when);
-  if (Number.isNaN(at.getTime())) return 'at an unknown time';
+  if (Number.isNaN(at.getTime())) return txt('at an unknown time');
 
+  // Five whole sentences. See `reports.js` for why a plural is never built by
+  // appending a letter to a translated word.
   const hours = Math.floor((Date.now() - at.getTime()) / 3600000);
-  if (hours < 1) return 'within the hour';
-  if (hours < 24) return hours + (hours === 1 ? ' hour ago' : ' hours ago');
+  if (hours < 1) return txt('within the hour');
+  if (hours < 24) {
+    return hours === 1 ? txt('an hour ago') : txt('%d hours ago').replace('%d', hours);
+  }
   const days = Math.floor(hours / 24);
-  return days === 1 ? 'yesterday' : days + ' days ago';
+  return days === 1 ? txt('yesterday') : txt('%d days ago').replace('%d', days);
 }

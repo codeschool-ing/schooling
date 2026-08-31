@@ -32,8 +32,16 @@
 
 import { esc } from '../dom.js';
 import { get } from '../request.js';
+import { txt } from '../../assets/language.js';
 
-const WINDOWS = [['6', '6 months'], ['12', '12 months'], ['24', '24 months']];
+/* OBJECTS AND NOT PAIRS, for the reason `funnel.js` gives at its own copy: one
+   half is a number the API takes and the other is a sentence somebody reads,
+   and `language_test.go` has to be able to tell which is which. */
+const WINDOWS = [
+  { months: '6', label: '6 months' },
+  { months: '12', label: '12 months' },
+  { months: '24', label: '24 months' },
+];
 
 const NAMES = {
   real: 'Real people',
@@ -47,14 +55,11 @@ export default async function cohorts(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Measure</span>' +
-      '<h1>Cohorts</h1>' +
-      '<p>People grouped by the month they signed up, followed forward. Each ' +
-      'row is one intake and each column is a month of its life, so two ' +
-      'intakes can be compared at the same age — which the funnel, being a ' +
-      'single photograph of everybody at once, cannot do.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Measure')) + '</span>' +
+      '<h1>' + esc(txt('Cohorts')) + '</h1>' +
+      '<p>' + esc(txt('People grouped by the month they signed up, followed forward. Each row is one intake and each column is a month of its life, so two intakes can be compared at the same age — which the funnel, being a single photograph of everybody at once, cannot do.')) + '</p>' +
     '</header>' +
-    '<div id="body" aria-live="polite"><p class="checking">Reading…</p></div>';
+    '<div id="body" aria-live="polite"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const body = el.querySelector('#body');
 
@@ -62,13 +67,14 @@ export default async function cohorts(section) {
   try {
     schools = (await get('/console/api/v1/schools')).schools || [];
   } catch (e) {
-    body.innerHTML = '<section class="block"><p class="none">' + esc(e.message) + '</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) + '</p></section>';
     return { title: section.name, el };
   }
 
   if (!schools.length) {
-    body.innerHTML = '<section class="block"><p class="none">There are no schools on this ' +
-      'platform yet, so nobody has signed up to one.</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' +
+      esc(txt('There are no schools on this platform yet, so nobody has signed up to one.')) +
+      '</p></section>';
     return { title: section.name, el };
   }
 
@@ -76,33 +82,33 @@ export default async function cohorts(section) {
 
   body.innerHTML =
     '<section class="block">' +
-      '<div class="block-top"><h2>What to follow</h2></div>' +
+      '<div class="block-top"><h2>' + esc(txt('What to follow')) + '</h2></div>' +
       '<form id="ask" class="list-bar" novalidate>' +
         '<label class="field">' +
-          '<span>School</span>' +
+          '<span>' + esc(txt('School')) + '</span>' +
           '<select id="school">' +
             schools.map((s) =>
               '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>').join('') +
           '</select>' +
         '</label>' +
         '<label class="field">' +
-          '<span>Followed for</span>' +
+          '<span>' + esc(txt('Followed for')) + '</span>' +
           '<select id="months">' +
-            WINDOWS.map(([value, label]) =>
-              '<option value="' + value + '"' + (value === '12' ? ' selected' : '') + '>' +
-              esc(label) + '</option>').join('') +
+            WINDOWS.map((w) =>
+              '<option value="' + w.months + '"' + (w.months === '12' ? ' selected' : '') + '>' +
+              esc(txt(w.label)) + '</option>').join('') +
           '</select>' +
         '</label>' +
         '<label class="field">' +
-          '<span>People</span>' +
+          '<span>' + esc(txt('People')) + '</span>' +
           '<select id="counting">' +
             Object.keys(NAMES).map((k) =>
-              '<option value="' + k + '">' + esc(NAMES[k]) + '</option>').join('') +
+              '<option value="' + k + '">' + esc(txt(NAMES[k])) + '</option>').join('') +
           '</select>' +
         '</label>' +
       '</form>' +
     '</section>' +
-    '<div id="table"><p class="checking">Reading…</p></div>';
+    '<div id="table"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const table = body.querySelector('#table');
   body.querySelector('#ask').addEventListener('change', (event) => {
@@ -116,7 +122,7 @@ export default async function cohorts(section) {
   return { title: section.name, el };
 
   async function draw() {
-    table.innerHTML = '<p class="checking">Reading…</p>';
+    table.innerHTML = '<p class="checking">' + esc(txt('Reading…')) + '</p>';
 
     /* The request that was sent is remembered, so an answer arriving after
        somebody changed the school is dropped rather than drawn. */
@@ -129,7 +135,7 @@ export default async function cohorts(section) {
         '&counting=' + encodeURIComponent(asking.counting));
     } catch (e) {
       if (mine !== JSON.stringify(asking)) return;
-      table.innerHTML = '<section class="block"><p class="none">' + esc(e.message) +
+      table.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) +
         '</p></section>';
       return;
     }
@@ -142,25 +148,35 @@ export default async function cohorts(section) {
       /* The banner is the server's sentence, drawn only when it sent one, so a
          table of real people cannot appear under a heading claiming otherwise. */
       (answer.banner
-        ? '<p class="notice-strong" role="status">' + esc(answer.banner) + '</p>'
+        ? '<p class="notice-strong" role="status">' + esc(txt(answer.banner)) + '</p>'
         : '') +
 
       '<section class="block">' +
         '<div class="block-top">' +
           '<h2>' + esc((answer.school && answer.school.name) || '') + '</h2>' +
           '<span class="block-score mono">' +
-            esc(NAMES[answer.counting] || answer.counting) + '</span>' +
+            esc(txt(NAMES[answer.counting] || answer.counting)) + '</span>' +
         '</div>' +
 
         (rows.length === 0
-          ? '<p class="none">Nobody has signed up to this school yet, for these people. ' +
-            'An empty table is a real answer and not a failure to read one.</p>'
+          ? '<p class="none">' +
+            esc(txt('Nobody has signed up to this school yet, for these people. An empty table is a real answer and not a failure to read one.')) +
+            '</p>'
           : grid(rows, widest)) +
 
-        '<p class="cohort-said">Active means <strong>' + esc(answer.active || '') +
-          '</strong> — the smallest signal that somebody actually studied that month. ' +
-          'Every share is of the intake, including the first column: an intake where ' +
-          'half never started is a different problem from one that starts well and leaks.</p>' +
+        /* THE SENTENCE IS TRANSLATED AND THE THING IT NAMES IS NOT. What comes
+           back on `active` is `section.completed` — an event name, which is
+           what the stream holds and what somebody would grep for. It is on the
+           same line as the roles and the parameter names: a screen calling it
+           something else would be a second name for one thing.
+
+           THE `<strong>` IS INSIDE THE KEY rather than wrapped around a hole,
+           because where the emphasis falls is part of how a sentence reads and
+           a translation cut either side of the tag cannot move it. */
+        '<p class="cohort-said">' +
+          txt('Active means <strong>%s</strong> — the smallest signal that somebody actually studied that month. Every share is of the intake, including the first column: an intake where half never started is a different problem from one that starts well and leaks.')
+            .replace('%s', esc(answer.active || '')) +
+        '</p>' +
       '</section>' +
 
       /* THE HALF THAT IS NOT BUILT, SAID ON THE SCREEN. An operator looking for
@@ -169,15 +185,25 @@ export default async function cohorts(section) {
       (answer.by_subscription
         ? ''
         : '<section class="block">' +
-            '<div class="block-top"><h2>By subscription start</h2></div>' +
-            '<p class="empty-note">' + esc(answer.why_no_subscription || '') + '</p>' +
+            '<div class="block-top"><h2>' + esc(txt('By subscription start')) + '</h2></div>' +
+            '<p class="empty-note">' + esc(txt(answer.why_no_subscription || '')) + '</p>' +
           '</section>');
   }
 
   function grid(rows, widest) {
-    const head = ['<th scope="col">Signed up</th>', '<th scope="col">People</th>']
+    /* `+1` IS A COORDINATE AND NOT A WORD, so it is not translated; "same
+       month" is a word and is. The first column is named rather than numbered
+       because `+0` reads as an offset nobody applied. */
+    const head = [
+      /* `Month they signed up` AND NOT `Signed up`, which the student record
+         already uses for the DAY somebody registered. The key IS the English
+         string, so two screens meaning different things by the same words get
+         one entry and one of them is wrong. */
+      '<th scope="col">' + esc(txt('Month they signed up')) + '</th>',
+      '<th scope="col">' + esc(txt('People')) + '</th>',
+    ]
       .concat(Array.from({ length: widest }, (_, i) =>
-        '<th scope="col" class="mono">' + (i === 0 ? 'same month' : '+' + i) + '</th>'))
+        '<th scope="col" class="mono">' + (i === 0 ? esc(txt('same month')) : '+' + i) + '</th>'))
       .join('');
 
     /* `table-wrap` IS THE CONSOLE'S OWN SCROLL CONTAINER, already used by every
@@ -192,7 +218,7 @@ export default async function cohorts(section) {
              marked so a screen reader says so rather than reading silence. */
           if (i >= active.length) {
             return '<td class="cohort-none"><span class="visually-hidden">' +
-              'not yet</span></td>';
+              esc(txt('not yet')) + '</span></td>';
           }
           const share = c.people > 0 ? active[i] / c.people : 0;
           return '<td class="cohort-cell" style="--fill:' + (share * 100).toFixed(1) + '%">' +

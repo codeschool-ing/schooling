@@ -159,6 +159,42 @@ func drawnThroughAVariable(t *testing.T) []string {
 	out = append(out, fieldValues(t, "plan.js", read(t, "ui/app/screens/plan.js"),
 		"TERMS", "name", "note")...)
 
+	/* HOW A RUN ENDED. `jobs.js` holds the three outcomes the API can send in
+	   `SAID` and draws `txt(SAID[r.outcome])`, so the words on every row of that
+	   screen are looked up rather than written where the checker scans. The
+	   job's NAME beside them is deliberately not translated — it is what somebody
+	   types to start one — and that is the difference this entry marks. */
+	out = append(out, mapValues(t, "jobs.js", read(t, "ui/app/screens/jobs.js"),
+		"SAID")...)
+
+	/* THE THREE POPULATIONS AND THE WINDOWS, ON ALL FOUR `Measure` SCREENS.
+	   `NAMES` is the same three words in each file — real people, the seeded
+	   ones, both — and `WINDOWS` is that screen's list of periods. Both are
+	   drawn as `txt(NAMES[k])` and `txt(w.label)`, through a variable, which is
+	   the shape no static scan can follow.
+
+	   ALL FOUR ARE NAMED RATHER THAN ONE STANDING FOR THE REST. They are
+	   separate literals in separate files: `countries.js` offers days and
+	   `cohorts.js` offers months, and a fifth screen copying one of them is
+	   exactly the case where checking one file would pass and the screen would
+	   be half English. */
+	for _, screen := range []string{"funnel.js", "cohorts.js", "countries.js"} {
+		out = append(out, mapValues(t, screen, read(t, "ui/app/screens/"+screen), "NAMES")...)
+	}
+	out = append(out, fieldValues(t, "funnel.js", read(t, "ui/app/screens/funnel.js"),
+		"WINDOWS", "label")...)
+	out = append(out, fieldValues(t, "cohorts.js", read(t, "ui/app/screens/cohorts.js"),
+		"WINDOWS", "label")...)
+	out = append(out, fieldValues(t, "countries.js", read(t, "ui/app/screens/countries.js"),
+		"WINDOWS", "label")...)
+
+	/* THE FIVE VERDICTS AND WHAT EACH MEANS. `questions.js` draws `txt(v.name)`
+	   and `txt(v.meaning)` after finding the entry the server's word names — so
+	   both halves are looked up, and the `verdict` beside them is the wire value
+	   and is deliberately not translated. */
+	out = append(out, fieldValues(t, "questions.js", read(t, "ui/app/screens/questions.js"),
+		"VERDICTS", "name", "meaning")...)
+
 	return out
 }
 
@@ -178,9 +214,13 @@ func fieldValues(t *testing.T, file, source, list string, fields ...string) []st
 	for _, field := range fields {
 		/* A VALUE MAY BE CONCATENATED ACROSS LINES here, unlike a dictionary
 		   key: these are ordinary JavaScript expressions and the file is
-		   written that way. So the literals are gathered up to the line that
-		   ends the entry — a comma at the end of a line with no open quote. */
-		found := regexp.MustCompile(`(?s)`+field+`:\s*((?:'(?:[^'\\]|\\.)*'\s*\+?\s*)+),`).
+		   written that way. So the literals are gathered up to whatever ends
+		   the entry — a comma, or the closing brace of a one-line object, which
+		   is how the short lists in `funnel.js` and its neighbours are written.
+		   Accepting only the comma made this test fail on a list it was being
+		   pointed at for the first time, which is the least useful moment for a
+		   guard to be picky about punctuation. */
+		found := regexp.MustCompile(`(?s)`+field+`:\s*((?:'(?:[^'\\]|\\.)*'\s*\+?\s*)+)[,}]`).
 			FindAllStringSubmatch(block[1], -1)
 		if len(found) == 0 {
 			t.Fatalf("no `%s:` in %s's %s, so its shape changed", field, file, list)
