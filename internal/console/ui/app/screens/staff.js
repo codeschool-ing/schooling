@@ -49,10 +49,7 @@ export default async function staff(section) {
     '<header class="view-head">' +
       '<span class="eyebrow mono">' + esc(txt('Govern')) + '</span>' +
       '<h1>' + esc(txt('Who can open this')) + '</h1>' +
-      '<p>' + esc(txt('Everybody with a role on this platform, and everybody who has had ' +
-      'one. A role opens nothing without a second factor, and neither says ' +
-      'whether it has been used — which is the column an access review is ' +
-      'actually for.')) + '</p>' +
+      '<p>' + esc(txt('Everybody with a role on this platform, and everybody who has had one. A role opens nothing without a second factor, and neither says whether it has been used — which is the column an access review is actually for.')) + '</p>' +
     '</header>' +
     '<div id="body" aria-live="polite"><p class="checking">' +
       esc(txt('Reading…')) + '</p></div>';

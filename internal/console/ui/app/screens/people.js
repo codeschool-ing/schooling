@@ -61,10 +61,7 @@ export default async function people(section) {
     '<header class="view-head">' +
       '<span class="eyebrow mono">' + esc(txt('Govern')) + '</span>' +
       '<h1>' + esc(txt('Personal data')) + '</h1>' +
-      '<p>' + esc(txt('What is held about one person, handed to them, or removed. ' +
-      'Both of the last two are recorded with your name against them — an ' +
-      'export is a read that leaves this system, and the record of who took it ' +
-      'has to already exist by the time anybody asks.')) + '</p>' +
+      '<p>' + esc(txt('What is held about one person, handed to them, or removed. Both of the last two are recorded with your name against them — an export is a read that leaves this system, and the record of who took it has to already exist by the time anybody asks.')) + '</p>' +
     '</header>' +
 
     '<section class="block">' +
@@ -97,9 +94,7 @@ export default async function people(section) {
       // reaches somebody before they type, so it lives beside the rule it
       // describes rather than in a screen that can drift from it. Filled in
       // after the first search, because that is when the server has spoken.
-      '<p class="aside" id="about-list">' + esc(txt('Anything in an address or a name — ' +
-      'a fragment is enough, and nothing at all lists everybody, newest first. Every page ' +
-      'is recorded with your name, what you searched for and how many came back.')) + '</p>' +
+      '<p class="aside" id="about-list">' + esc(txt('Anything in an address or a name — a fragment is enough, and nothing at all lists everybody, newest first. Every page is recorded with your name, what you searched for and how many came back.')) + '</p>' +
 
       '<form id="search" class="list-bar" novalidate>' +
         '<label class="search">' +
@@ -298,9 +293,7 @@ export default async function people(section) {
           '<h2>' + esc(txt('Erase them')) + '</h2>' +
           '<span class="block-score mono">' + esc(txt('cannot be undone')) + '</span>' +
         '</div>' +
-        '<p class="list-count">' + esc(txt('It severs the person and leaves the ' +
-          'statistics. The entry in the audit says who did it and how much went, and ' +
-          'does not name them.')) + '</p>' +
+        '<p class="list-count">' + esc(txt('It severs the person and leaves the statistics. The entry in the audit says who did it and how much went, and does not name them.')) + '</p>' +
         '<form id="erase" class="list-bar" novalidate>' +
           '<label class="search">' +
             '<span class="visually-hidden">' +
@@ -347,10 +340,7 @@ export default async function people(section) {
       '<section class="block">' +
         '<div class="block-top"><h2>' + esc(txt('Erased')) + '</h2>' +
         '<span class="block-score mono">' + esc(person.email) + '</span></div>' +
-        '<p class="list-count">' + esc(txt('The entry in the audit says who did it and ' +
-        'how much went. It does not name them: an append-only table that recorded the ' +
-        'address would be the last surviving copy of somebody who asked to be ' +
-        'forgotten.')) + '</p>' +
+        '<p class="list-count">' + esc(txt('The entry in the audit says who did it and how much went. It does not name them: an append-only table that recorded the address would be the last surviving copy of somebody who asked to be forgotten.')) + '</p>' +
       '</section>';
   }
 

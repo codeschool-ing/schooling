@@ -43,9 +43,7 @@ export default async function history(section, filter = {}) {
     '<header class="view-head">' +
       '<span class="eyebrow mono">' + esc(txt('Govern')) + '</span>' +
       '<h1>' + esc(heading(filter)) + '</h1>' +
-      '<p>' + esc(txt('Every administrative action, newest first, with the person who took it ' +
-      'against it. Nothing here can be edited: the table refuses an update and a ' +
-      'delete, and a correction is a new entry.')) + '</p>' +
+      '<p>' + esc(txt('Every administrative action, newest first, with the person who took it against it. Nothing here can be edited: the table refuses an update and a delete, and a correction is a new entry.')) + '</p>' +
       (filter.actor || filter.kind
         ? '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">' +
             esc(txt('Everything again')) + '</a></p>'
@@ -219,8 +217,7 @@ export async function entry(params) {
     el.innerHTML =
       '<header class="view-head"><h1>' + esc(txt('No such entry')) + '</h1>' +
       '<p>' + esc(e instanceof RequestError && e.status === 404
-        ? txt('Nothing is recorded under that number. History does not lose entries, ' +
-              'so the number is wrong.')
+        ? txt('Nothing is recorded under that number. History does not lose entries, so the number is wrong.')
         : txt(e.message)) + '</p>' +
       '<p class="list-bar"><a class="btn btn-ghost" href="#/audit">' +
         esc(txt('Back to the history')) + '</a></p>' +
@@ -269,9 +266,7 @@ export async function entry(params) {
       '<div class="block-top"><h2>' + esc(txt('What the value was')) + '</h2>' +
         '<span class="block-score mono">' +
           esc(txt('before')) + ' &rarr; ' + esc(txt('after')) + '</span></div>' +
-      '<p class="list-count">' + esc(txt('A thing that did not exist yet has no before, ' +
-        'and one that does not exist any more has no after. Not every action is a change ' +
-        'of state, so an empty side is what was recorded rather than what happened.')) + '</p>' +
+      '<p class="list-count">' + esc(txt('A thing that did not exist yet has no before, and one that does not exist any more has no after. Not every action is a change of state, so an empty side is what was recorded rather than what happened.')) + '</p>' +
       '<div class="states">' +
         state(txt('Before'), deed.before) +
         state(txt('After'), deed.after) +

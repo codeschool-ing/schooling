@@ -203,11 +203,8 @@ function paintGate() {
     '<div class="view"><header class="view-head">' +
       '<span class="eyebrow mono">' + esc(txt('Not signed in')) + '</span>' +
       '<h1>' + esc(txt('The door is shut')) + '</h1>' +
-      '<p>' + esc(txt('Sign in at a school’s address, then come back here. This console ' +
-      'cannot sign anybody in yet: sign-in belongs to a school and this belongs ' +
-      'to none of them.')) + '</p>' +
-      '<p>' + esc(txt('A staff role and a second factor already shown are both needed. ' +
-      'The API refuses without either, and this page is not what enforces it.')) + '</p>' +
+      '<p>' + esc(txt('Sign in at a school’s address, then come back here. This console cannot sign anybody in yet: sign-in belongs to a school and this belongs to none of them.')) + '</p>' +
+      '<p>' + esc(txt('A staff role and a second factor already shown are both needed. The API refuses without either, and this page is not what enforces it.')) + '</p>' +
     '</header></div>';
   stage.setAttribute('aria-label', txt('The door is shut'));
   stage.dataset.screen = 'shut';
@@ -276,8 +273,7 @@ release.watch(() => {
   const el = $('#stale-banner');
   el.hidden = false;
   el.innerHTML =
-    '<span class="sb-text">' + esc(txt('This console has been open since before the last ' +
-      'update. Reload it when you are ready.')) + '</span>' +
+    '<span class="sb-text">' + esc(txt('This console has been open since before the last update. Reload it when you are ready.')) + '</span>' +
     '<button type="button" class="sb-reload">' + esc(txt('Reload')) + '</button>';
 });
 
