@@ -44,6 +44,7 @@
 import { esc } from '../dom.js';
 import { get, put, RequestError } from '../request.js';
 import { mayAct } from '../session.js';
+import { txt } from '../../assets/language.js';
 import { correctionFor } from '/assets/accent.js';
 
 /* Twenty to start from, spread around the wheel and named so that two people
@@ -53,6 +54,16 @@ import { correctionFor } from '/assets/accent.js';
    them takes any colour; these exist because "pick a hue" is a worse question
    than "pick one of these, or type your own", and because a school chosen from
    a spread is less likely to land next to the school beside it in the rail. */
+/* THE PALETTE'S NAMES ARE TRANSLATED AND THE HEX IS NOT, which is the line this
+   console draws everywhere: the value is the identifier — it is what the field
+   takes, what the audit records and what somebody quotes over the phone — and
+   the name beside it is for a person to read. A swatch announces both to a
+   screen reader, so leaving the name English would have a Portuguese screen say
+   "Sky #0ea5e9" out loud.
+
+   THEY ARE ENGLISH HERE AND LOOKED UP WHERE THEY ARE DRAWN, for the reason the
+   verdicts and the terms are: this list is evaluated once when the module
+   loads. */
 const SUGGESTED = [
   ['Cobalt', '#2f6bff'], ['Sky', '#0ea5e9'], ['Cyan', '#06b6d4'], ['Teal', '#0d9488'],
   ['Spring', '#00a878'], ['Emerald', '#10a06a'], ['Grass', '#3f9a2f'], ['Lime', '#7cb305'],
@@ -69,18 +80,16 @@ export default async function schools(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Operate</span>' +
-      '<h1>Schools</h1>' +
-      '<p>One colour each. It is the only thing that differs between schools — one ' +
-      'design system, one accent — so a student knows which school they are in ' +
-      'without the product looking like two products. Every change is recorded with ' +
-      'your name, what was there and what replaced it.</p>' +
-      '<p>A colour is <strong>replaced</strong>: there is one, and nothing has to be ' +
-      'explained about the old one a year later. What a subscription costs is not ' +
-      'here — one subscription opens every school, so there is one price for each ' +
-      'term and it is set under <strong>What it costs</strong>.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Operate')) + '</span>' +
+      '<h1>' + esc(txt('Schools')) + '</h1>' +
+      '<p>' + esc(txt('One colour each. It is the only thing that differs between schools — one design system, one accent — so a student knows which school they are in without the product looking like two products. Every change is recorded with your name, what was there and what replaced it.')) + '</p>' +
+      /* THE `<strong>` IS THE ONLY MARKUP INSIDE A TRANSLATED SENTENCE HERE,
+         and it is in the key rather than around it: what a language emphasises
+         is not always the word English emphasises, and cutting the sentence
+         into three around the tags would make it three keys nobody can order. */
+      '<p>' + txt('A colour is <strong>replaced</strong>: there is one, and nothing has to be explained about the old one a year later. What a subscription costs is not here — one subscription opens every school, so there is one price for each term and it is set under <strong>What it costs</strong>.') + '</p>' +
     '</header>' +
-    '<div id="list" aria-live="polite"><p class="checking">Reading…</p></div>';
+    '<div id="list" aria-live="polite"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const list = el.querySelector('#list');
 
@@ -88,13 +97,14 @@ export default async function schools(section) {
   try {
     all = (await get('/console/api/v1/schools')).schools || [];
   } catch (e) {
-    list.innerHTML = '<section class="block"><p class="none">' + esc(e.message) + '</p></section>';
+    list.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) + '</p></section>';
     return { title: section.name, el };
   }
 
   if (!all.length) {
-    list.innerHTML = '<section class="block"><p class="none">There are no schools on this ' +
-      'platform yet. A school is a row, a host and a colour, in that order.</p></section>';
+    list.innerHTML = '<section class="block"><p class="none">' +
+      esc(txt('There are no schools on this platform yet. A school is a row, a host and a colour, in that order.')) +
+      '</p></section>';
     return { title: section.name, el };
   }
 
@@ -111,26 +121,27 @@ export default async function schools(section) {
       '</div>' +
 
       '<form class="accent-form" novalidate>' +
-        '<div class="accent-picks" role="group" aria-label="Suggested colours for ' +
-          esc(school.name) + '">' +
+        '<div class="accent-picks" role="group" aria-label="' +
+          esc(txt('Suggested colours for %s').replace('%s', school.name)) + '">' +
           SUGGESTED.map(([name, colour]) =>
             '<button type="button" class="accent-pick' +
               (same(colour, school.accent) ? ' on' : '') + '" data-colour="' + colour + '" ' +
-              'style="--pick:' + colour + '" title="' + name + ' ' + colour + '">' +
-              '<span class="visually-hidden">' + name + ' ' + colour + '</span>' +
+              'style="--pick:' + colour + '" title="' + esc(txt(name)) + ' ' + colour + '">' +
+              '<span class="visually-hidden">' + esc(txt(name)) + ' ' + colour + '</span>' +
             '</button>').join('') +
         '</div>' +
 
         '<div class="accent-bar">' +
           '<label class="accent-hex">' +
-            '<span>Colour</span>' +
+            '<span>' + esc(txt('Colour')) + '</span>' +
             '<input type="text" spellcheck="false" autocomplete="off" ' +
               'value="' + esc(school.accent || '') + '" placeholder="#5b8cff" ' +
               'aria-describedby="note-' + esc(school.id) + '">' +
           '</label>' +
           (mayAct()
-            ? '<button type="submit" class="btn btn-primary">Save</button>'
-            : '<span class="list-count">A read-only role may look at this and not set it.</span>') +
+            ? '<button type="submit" class="btn btn-primary">' + esc(txt('Save')) + '</button>'
+            : '<span class="list-count">' +
+                esc(txt('A read-only role may look at this and not set it.')) + '</span>') +
         '</div>' +
 
         '<p class="signin-notice" id="note-' + esc(school.id) + '"></p>' +
@@ -155,9 +166,7 @@ export default async function schools(section) {
       });
       themes.innerHTML = HEX.test(wanted)
         ? ['dark', 'light'].map((theme) => specimen(theme, wanted)).join('')
-        : '<p class="none">A colour is six hex digits after a hash, like ' +
-          '<code class="mono">#5b8cff</code>. Empty is a real answer too: the school then ' +
-          'wears the palette\'s own blue.</p>';
+        : '<p class="none">' + txt('A colour is six hex digits after a hash, like <code class="mono">#5b8cff</code>. Empty is a real answer too: the school then wears the palette&rsquo;s own blue.') + '</p>';
     };
 
     box.querySelectorAll('.accent-pick').forEach((pick) => {
@@ -182,26 +191,23 @@ export default async function schools(section) {
          and has a test. */
       if (!HEX.test(wanted)) {
         note.className = 'signin-notice bad';
-        note.textContent = 'Six hex digits after a hash, like #5b8cff. A shorthand or a name '
-          + 'reaches the interface as no colour at all, and the school stays as it was with '
-          + 'nothing to say why.';
+        note.textContent = txt('Six hex digits after a hash, like #5b8cff. A shorthand or a name reaches the interface as no colour at all, and the school stays as it was with nothing to say why.');
         return;
       }
 
       note.className = 'signin-notice';
-      note.textContent = 'Saving…';
+      note.textContent = txt('Saving…');
       try {
         const saved = await put('/console/api/v1/schools/' + school.id + '/accent',
           { accent: wanted });
         school.accent = saved.accent;
         note.className = 'signin-notice ok';
-        note.textContent = 'Saved. Students see it on their next page — nothing is cached '
-          + 'about a school\'s colour.';
+        note.textContent = txt('Saved. Students see it on their next page — nothing is cached about a school&rsquo;s colour.');
       } catch (e) {
         note.className = 'signin-notice bad';
         note.textContent = e instanceof RequestError && e.status === 403
-          ? 'That asks for an operator.'
-          : e.message;
+          ? txt('That asks for an operator.')
+          : txt(e.message);
       }
       draw();
     });
@@ -221,21 +227,24 @@ export default async function schools(section) {
 function specimen(theme, wanted) {
   const worked = correctionFor(wanted, theme);
   if (!worked) {
-    return '<div class="accent-theme"><p class="none">This browser could not measure the ' +
-      esc(theme) + ' theme.</p></div>';
+    return '<div class="accent-theme"><p class="none">' +
+      esc(txt('This browser could not measure the %s theme.').replace('%s', txt(theme))) +
+      '</p></div>';
   }
 
   if (!worked.phosphor) {
     return '<div class="accent-theme accent-theme-' + theme + '">' +
-      '<p class="none"><strong>' + esc(theme) + '</strong> — nothing on this hue reaches ' +
-      '4.5:1 against every surface it lands on, so this theme would keep the palette\'s own ' +
-      'blue and the school would look like two different schools in the two themes.</p></div>';
+      '<p class="none"><strong>' + esc(txt(theme)) + '</strong> — ' +
+      esc(txt('nothing on this hue reaches 4.5:1 against every surface it lands on, so this theme would keep the palette&rsquo;s own blue and the school would look like two different schools in the two themes.')) +
+      '</p></div>';
   }
 
   return '<div class="accent-theme accent-theme-' + theme + '" ' +
       'style="--shown:' + worked.phosphor + ';--shown-mid:' + worked.mid + '">' +
     '<div class="accent-theme-top mono">' +
-      '<span>' + esc(theme) + '</span>' +
+      /* THE THEME'S NAME IS DRAWN THROUGH A VARIABLE, so `check-interface`
+         cannot see it and `language_test.go` holds the two words instead. */
+      '<span>' + esc(txt(theme)) + '</span>' +
       '<span>' + worked.ratio.toFixed(2) + ':1</span>' +
     '</div>' +
     '<p class="accent-line accent-line-strong">Front-end Development</p>' +
@@ -246,15 +255,19 @@ function specimen(theme, wanted) {
       '<span class="accent-chip" style="background:' + worked.mid + '"></span>' +
       worked.mid +
     '</p>' +
+    /* THE TWO NUMBERS ARE HOLES AND NOT SPLICES. "Moved from #5b8cff, which
+       reads at 3.91:1 here" was one sentence cut into three around two values;
+       Portuguese does not put either of them where English does. */
     (worked.moved
-      ? '<p class="accent-said">Moved from ' + esc(worked.given) + ', which reads at ' +
-        worked.asGiven.toFixed(2) + ':1 here and needs 4.5. Same hue, far enough to be read.</p>'
-      : '<p class="accent-said">Used exactly as chosen.</p>') +
+      ? '<p class="accent-said">' +
+        esc(txt('Moved from %c, which reads at %r:1 here and needs 4.5. Same hue, far enough to be read.')
+          .replace('%c', worked.given).replace('%r', worked.asGiven.toFixed(2))) + '</p>'
+      : '<p class="accent-said">' + esc(txt('Used exactly as chosen.')) + '</p>') +
     (worked.distinct
       ? ''
-      : '<p class="accent-said accent-said-warn">A finished course and an available one come ' +
-        'out the same colour in this theme: nothing on this hue is both readable and quieter ' +
-        'than the accent.</p>') +
+      : '<p class="accent-said accent-said-warn">' +
+        esc(txt('A finished course and an available one come out the same colour in this theme: nothing on this hue is both readable and quieter than the accent.')) +
+        '</p>') +
     '</div>';
 }
 

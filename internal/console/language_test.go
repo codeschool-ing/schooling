@@ -37,15 +37,32 @@ import (
    directory, so these paths are stable.
 */
 
+/*
+read is the one place a file is opened, and every caller hands it a literal.
+
+	gosec's G304 is about a filename that came from somewhere — and it is right
+	about that — so the answer is one reader rather than a `//nolint` on each
+	helper. Everything below works on the text.
+*/
+func read(t *testing.T, name string) string {
+	t.Helper()
+	// G304 is about a filename that came from somewhere, and it is right about
+	// that in general. Every call site below hands this a literal; gosec cannot
+	// see across the call, and one suppression on one line is the honest
+	// version of saying so.
+	source, err := os.ReadFile(name) //nolint:gosec // every caller passes a literal
+	if err != nil {
+		t.Fatalf("reading %s: %v", name, err)
+	}
+	return string(source)
+}
+
 // sectionNames is every `name:` in the sections list, and every group.
 func sectionNames(t *testing.T) []string {
 	t.Helper()
 
-	source, err := os.ReadFile("ui/app/sections.js")
-	if err != nil {
-		t.Fatalf("reading the sections: %v", err)
-	}
-	text := string(source)
+	source := read(t, "ui/app/sections.js")
+	text := source
 
 	var out []string
 	for _, m := range regexp.MustCompile(`name: '([^']+)'`).FindAllStringSubmatch(text, -1) {
@@ -73,10 +90,7 @@ func sectionNames(t *testing.T) []string {
 func portuguese(t *testing.T) map[string]bool {
 	t.Helper()
 
-	source, err := os.ReadFile("ui/assets/i18n-pt.js")
-	if err != nil {
-		t.Fatalf("reading the dictionary: %v", err)
-	}
+	source := read(t, "ui/assets/i18n-pt.js")
 
 	/* A KEY IS A QUOTED STRING FOLLOWED BY A COLON, which is enough here and
 	   would not be in general: this file is written by hand in one shape, and a
@@ -85,7 +99,7 @@ func portuguese(t *testing.T) map[string]bool {
 	   guard is below — too few keys and this is reading the wrong thing. */
 	keys := map[string]bool{}
 	for _, m := range regexp.MustCompile(`(?m)^\s*'((?:[^'\\]|\\.)*)':`).
-		FindAllStringSubmatch(string(source), -1) {
+		FindAllStringSubmatch(source, -1) {
 
 		keys[strings.ReplaceAll(m[1], `\'`, `'`)] = true
 	}
@@ -97,20 +111,140 @@ func portuguese(t *testing.T) map[string]bool {
 }
 
 /*
-TestEveryRailStringHasPortuguese is the missing half of the checker.
+drawnThroughAVariable is every English string a screen looks up before showing.
 
-	A section whose name has no entry draws in English inside a Portuguese rail,
-	which is the one place somebody would read it as a bug in the translation
-	rather than as a missing one — and nothing else on the screen looks wrong.
+	THE CHECKER READS `txt('…')` AND THESE ARE `txt(SOMETHING[key])`, which is
+	the same blindness the rail has and for the same good reason: the value is a
+	CLOSED LIST that also has to stay English, because it is what the server
+	sends, what the audit records, or what the console's own map of itself calls
+	a section. Translating in the data would make an identity depend on what
+	language somebody is reading in.
+
+	SO THE LIST OF SOURCES IS MAINTAINED HERE, and it grows. That is a cost and
+	it is the smaller one: the alternative is a test that tries to recognise
+	"an object literal of English strings" across twenty screens, which is
+	fragile in the direction that fails silently. A new map like these needs a
+	line here, and the failure if somebody forgets is the one this file already
+	describes — English words inside a Portuguese screen, with nothing else
+	looking wrong.
 */
-func TestEveryRailStringHasPortuguese(t *testing.T) {
+func drawnThroughAVariable(t *testing.T) []string {
+	t.Helper()
+	out := sectionNames(t)
+
+	// The reasons a student picks, and the three verdicts an operator answers
+	// with. `reports.js` holds both as module-level maps, English on the value
+	// side, and draws them as `txt(WHY[…])` and `txt(MEANS[…])`.
+	out = append(out, mapValues(t, "reports.js", read(t, "ui/app/screens/reports.js"),
+		"MEANS", "WHY")...)
+
+	/* THE TWO THEME NAMES. `schools.js` draws a specimen per theme from
+	   `['dark', 'light']` and prints `txt(theme)` in three places, so the words
+	   are looked up rather than said. They are written out here rather than
+	   parsed out of an array literal: two words that have not changed since the
+	   stylesheet had two themes, and a regular expression for a bare array is
+	   the kind that quietly matches the wrong one. */
+	out = append(out, "dark", "light")
+
+	/* THE TWENTY SUGGESTED COLOURS, whose names `schools.js` draws through
+	   `txt(name)` beside a hex it never translates. */
+	out = append(out, pairFirsts(t, "schools.js", read(t, "ui/app/screens/schools.js"),
+		"SUGGESTED")...)
+
+	/* THE THREE TERMS THIS PLATFORM SELLS. `plan.js` holds them in `TERMS` —
+	   objects rather than a flat map — and draws `txt(term.name)` and
+	   `txt(term.note)`. `PLAN.md` says the list is closed on purpose: a screen
+	   with an open "how many months" field would be inviting somebody to invent
+	   a fourth product by typing. */
+	out = append(out, fieldValues(t, "plan.js", read(t, "ui/app/screens/plan.js"),
+		"TERMS", "name", "note")...)
+
+	return out
+}
+
+// fieldValues reads named string fields out of a `const X = [ … ]` list of
+// objects, which is the other shape a closed list takes in this console.
+func fieldValues(t *testing.T, file, source, list string, fields ...string) []string {
+	t.Helper()
+
+	block := regexp.MustCompile(`(?s)const ` + list + ` = \[(.*?)\n\];`).
+		FindStringSubmatch(source)
+	if block == nil {
+		t.Fatalf("no `const %s = […]` in %s — it was renamed or removed, and this test is "+
+			"now checking nothing", list, file)
+	}
+
+	var out []string
+	for _, field := range fields {
+		/* A VALUE MAY BE CONCATENATED ACROSS LINES here, unlike a dictionary
+		   key: these are ordinary JavaScript expressions and the file is
+		   written that way. So the literals are gathered up to the line that
+		   ends the entry — a comma at the end of a line with no open quote. */
+		found := regexp.MustCompile(`(?s)`+field+`:\s*((?:'(?:[^'\\]|\\.)*'\s*\+?\s*)+),`).
+			FindAllStringSubmatch(block[1], -1)
+		if len(found) == 0 {
+			t.Fatalf("no `%s:` in %s's %s, so its shape changed", field, file, list)
+		}
+		for _, m := range found {
+			var whole strings.Builder
+			for _, part := range regexp.MustCompile(`'((?:[^'\\]|\\.)*)'`).
+				FindAllStringSubmatch(m[1], -1) {
+
+				whole.WriteString(part[1])
+			}
+			out = append(out, strings.ReplaceAll(whole.String(), `\'`, `'`))
+		}
+	}
+	return out
+}
+
+/*
+mapValues reads the quoted values out of named `const X = { … }` maps.
+
+	IT TAKES THE SOURCE AND NOT A PATH, which is why there is no `os.ReadFile`
+	here: gosec flags a read whose filename is a variable (G304), and it is right
+	to in general — the fix is to have one reader, called with a literal, rather
+	than a suppression on every helper that happens to need a file.
+*/
+func mapValues(t *testing.T, file, source string, names ...string) []string {
+	t.Helper()
+
+	var out []string
+	for _, name := range names {
+		block := regexp.MustCompile(`(?s)const ` + name + ` = \{(.*?)\n\};`).
+			FindStringSubmatch(source)
+		if block == nil {
+			t.Fatalf("no `const %s = {…}` in %s — it was renamed or removed, and this test "+
+				"is now checking nothing", name, file)
+		}
+		found := regexp.MustCompile(`:\s*'((?:[^'\\]|\\.)*)'`).
+			FindAllStringSubmatch(block[1], -1)
+		if len(found) == 0 {
+			t.Fatalf("%s in %s has no quoted values, so its shape changed", name, file)
+		}
+		for _, m := range found {
+			out = append(out, strings.ReplaceAll(m[1], `\'`, `'`))
+		}
+	}
+	return out
+}
+
+/*
+TestEveryStringDrawnThroughAVariableHasPortuguese is the missing half of the
+checker.
+
+	A section name or a verdict with no entry draws in English inside a
+	Portuguese screen, which is the one place somebody reads it as a bug in the
+	translation rather than as a missing one — and nothing else looks wrong.
+*/
+func TestEveryStringDrawnThroughAVariableHasPortuguese(t *testing.T) {
 	has := portuguese(t)
 
-	for _, name := range sectionNames(t) {
+	for _, name := range drawnThroughAVariable(t) {
 		if !has[name] {
-			t.Errorf("the rail says %q and the dictionary has no Portuguese for it. "+
-				"`check-interface` cannot see this one: the rail translates `s.name`, and "+
-				"the argument is a variable", name)
+			t.Errorf("the console draws %q and the dictionary has no Portuguese for it. "+
+				"`check-interface` cannot see this one: it is looked up through a variable, "+
+				"so the call it scans for is not there", name)
 		}
 	}
 }
@@ -149,15 +283,12 @@ TestEveryKeyIsOneStringOnOneLine, which is a syntax rule and cost a whole file.
 	breaking the file on purpose before believing it.
 */
 func TestEveryKeyIsOneStringOnOneLine(t *testing.T) {
-	source, err := os.ReadFile("ui/assets/i18n-pt.js")
-	if err != nil {
-		t.Fatalf("reading the dictionary: %v", err)
-	}
+	source := read(t, "ui/assets/i18n-pt.js")
 
 	joins := regexp.MustCompile(`\+\s*$`)
 	isKey := regexp.MustCompile(`^\s*'(?:[^'\\]|\\.)*'\s*:`)
 
-	lines := strings.Split(string(source), "\n")
+	lines := strings.Split(source, "\n")
 	for i := 0; i+1 < len(lines); i++ {
 		if !joins.MatchString(lines[i]) || !isKey.MatchString(lines[i+1]) {
 			continue
@@ -206,14 +337,11 @@ TestNoKeyIsWrittenTwice, because JavaScript will not say a word about it.
 	by the time they disagree somebody is already reading the wrong one.
 */
 func TestNoKeyIsWrittenTwice(t *testing.T) {
-	source, err := os.ReadFile("ui/assets/i18n-pt.js")
-	if err != nil {
-		t.Fatalf("reading the dictionary: %v", err)
-	}
+	source := read(t, "ui/assets/i18n-pt.js")
 
 	seen := map[string]int{}
 	key := regexp.MustCompile(`(?m)^\s*'((?:[^'\\]|\\.)*)':`)
-	for i, line := range strings.Split(string(source), "\n") {
+	for i, line := range strings.Split(source, "\n") {
 		m := key.FindStringSubmatch(line)
 		if m == nil {
 			continue
@@ -226,4 +354,27 @@ func TestNoKeyIsWrittenTwice(t *testing.T) {
 		}
 		seen[m[1]] = i + 1
 	}
+}
+
+// pairFirsts reads the first string of each `['a', 'b']` pair in a named list.
+func pairFirsts(t *testing.T, file, source, list string) []string {
+	t.Helper()
+
+	block := regexp.MustCompile(`(?s)const ` + list + ` = \[(.*?)\n\];`).
+		FindStringSubmatch(source)
+	if block == nil {
+		t.Fatalf("no `const %s = […]` in %s — it was renamed or removed, and this test is "+
+			"now checking nothing", list, file)
+	}
+
+	found := regexp.MustCompile(`\['((?:[^'\\]|\\.)*)',`).FindAllStringSubmatch(block[1], -1)
+	if len(found) == 0 {
+		t.Fatalf("%s in %s has no pairs, so its shape changed", list, file)
+	}
+
+	out := make([]string, 0, len(found))
+	for _, m := range found {
+		out = append(out, strings.ReplaceAll(m[1], `\'`, `'`))
+	}
+	return out
 }

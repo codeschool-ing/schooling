@@ -35,11 +35,17 @@
 
 import { esc } from '../dom.js';
 import { get, post } from '../request.js';
+import { txt } from '../../assets/language.js';
 
 /* The sentence beside each word. Presentation, so it lives here — but a verdict
    the server offers and this file has no sentence for is drawn under its own
    word rather than dropped, because a decision an operator cannot reach is
    worse than a button that reads oddly. */
+/* THE VERDICTS AND THE REASONS ARE ENGLISH HERE AND TRANSLATED WHERE THEY ARE
+   DRAWN. These two maps are evaluated once, when the module loads — so a
+   `txt()` in them would bake in whatever language was chosen at that moment and
+   keep saying it after somebody switches. The key stays English, which is also
+   what the server sends and what the audit records. */
 const MEANS = {
   fixed: 'The material was changed',
   'no-change': 'Looked at it — nothing is wrong',
@@ -60,14 +66,11 @@ export default async function reports(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Operate</span>' +
-      '<h1>Reported content</h1>' +
-      '<p>What students say is wrong with the material. It is the only channel ' +
-      'by which a wrong answer key comes back from the person who found it — ' +
-      'the check that runs on every pull request can tell that a key parses ' +
-      'and not that it is the right one.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Operate')) + '</span>' +
+      '<h1>' + esc(txt('Reported content')) + '</h1>' +
+      '<p>' + esc(txt('What students say is wrong with the material. It is the only channel by which a wrong answer key comes back from the person who found it — the check that runs on every pull request can tell that a key parses and not that it is the right one.')) + '</p>' +
     '</header>' +
-    '<div id="body" aria-live="polite"><p class="checking">Reading…</p></div>';
+    '<div id="body" aria-live="polite"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const body = el.querySelector('#body');
 
@@ -75,13 +78,14 @@ export default async function reports(section) {
   try {
     schools = (await get('/console/api/v1/schools')).schools || [];
   } catch (e) {
-    body.innerHTML = '<section class="block"><p class="none">' + esc(e.message) + '</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) + '</p></section>';
     return { title: section.name, el };
   }
 
   if (!schools.length) {
-    body.innerHTML = '<section class="block"><p class="none">There are no schools on this ' +
-      'platform yet, so there is no material to report.</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' +
+      esc(txt('There are no schools on this platform yet, so there is no material to report.')) +
+      '</p></section>';
     return { title: section.name, el };
   }
 
@@ -89,10 +93,10 @@ export default async function reports(section) {
 
   body.innerHTML =
     '<section class="block">' +
-      '<div class="block-top"><h2>Which school</h2></div>' +
+      '<div class="block-top"><h2>' + esc(txt('Which school')) + '</h2></div>' +
       '<form id="ask" class="list-bar" novalidate>' +
         '<label class="field">' +
-          '<span>School</span>' +
+          '<span>' + esc(txt('School')) + '</span>' +
           '<select id="school">' +
             schools.map((s) =>
               '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>').join('') +
@@ -100,7 +104,7 @@ export default async function reports(section) {
         '</label>' +
       '</form>' +
     '</section>' +
-    '<div id="queue"><p class="checking">Reading…</p></div>';
+    '<div id="queue"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const queue = body.querySelector('#queue');
   body.querySelector('#ask').addEventListener('change', (event) => {
@@ -114,7 +118,7 @@ export default async function reports(section) {
   return { title: section.name, el };
 
   async function draw() {
-    queue.innerHTML = '<p class="checking">Reading…</p>';
+    queue.innerHTML = '<p class="checking">' + esc(txt('Reading…')) + '</p>';
     const mine = asking.school;
 
     let answer;
@@ -123,7 +127,7 @@ export default async function reports(section) {
         encodeURIComponent(asking.school) + '/reports');
     } catch (e) {
       if (mine !== asking.school) return;
-      queue.innerHTML = '<section class="block"><p class="none">' + esc(e.message) +
+      queue.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) +
         '</p></section>';
       return;
     }
@@ -134,7 +138,7 @@ export default async function reports(section) {
     queue.innerHTML =
       '<section class="block">' +
         '<div class="block-top">' +
-          '<h2>Waiting</h2>' +
+          '<h2>' + esc(txt('Waiting')) + '</h2>' +
           '<span class="block-score mono">' + rows.length + '</span>' +
         '</div>' +
 
@@ -142,11 +146,10 @@ export default async function reports(section) {
            drawn as nothing is indistinguishable from a read that failed, and
            this screen is empty most of the time by design. */
         (rows.length === 0
-          ? '<p class="none">Nobody has reported anything in this school. That is the ' +
-            'state this screen is meant to be in.</p>'
+          ? '<p class="none">' + esc(txt('Nobody has reported anything in this school. That is the state this screen is meant to be in.')) + '</p>'
           : rows.map((r) => card(r, answer.verdicts || [])).join('')) +
 
-        '<p class="aside">' + esc(answer.anonymous || '') + '</p>' +
+        '<p class="aside">' + esc(txt(answer.anonymous || '')) + '</p>' +
       '</section>';
 
     queue.querySelectorAll('.verdict-pick').forEach((button) => {
@@ -159,7 +162,7 @@ export default async function reports(section) {
     const card = button.closest('.report-card');
     const said = card.querySelector('.report-status');
     card.querySelectorAll('.verdict-pick').forEach((b) => { b.disabled = true; });
-    said.textContent = 'Settling…';
+    said.textContent = txt('Settling…');
 
     try {
       await post('/console/api/v1/reports/' + encodeURIComponent(id) + '/settle', { verdict });
@@ -169,7 +172,7 @@ export default async function reports(section) {
          The message says so and the row is redrawn out of existence by the
          reload rather than left claiming to be open. */
       card.querySelectorAll('.verdict-pick').forEach((b) => { b.disabled = false; });
-      said.textContent = e.message;
+      said.textContent = txt(e.message);
       return;
     }
     await draw();
@@ -179,7 +182,7 @@ export default async function reports(section) {
 function card(r, verdicts) {
   return '<article class="report-card">' +
     '<div class="report-top">' +
-      '<span class="tag-why mono">' + esc(WHY[r.reason] || r.reason) + '</span>' +
+      '<span class="tag-why mono">' + esc(txt(WHY[r.reason] || r.reason)) + '</span>' +
       '<span class="report-waited mono">' + esc(waited(r.reported_at)) + '</span>' +
     '</div>' +
 
@@ -207,13 +210,14 @@ function card(r, verdicts) {
 
     (r.note
       ? '<blockquote class="report-note">' + esc(r.note) + '</blockquote>'
-      : '<p class="report-nonote">They picked a reason and wrote nothing.</p>') +
+      : '<p class="report-nonote">' +
+          esc(txt('They picked a reason and wrote nothing.')) + '</p>') +
 
     '<div class="report-foot">' +
       verdicts.map((v) =>
         '<button type="button" class="btn btn-ghost verdict-pick" ' +
           'data-report="' + esc(r.id) + '" data-verdict="' + esc(v) + '">' +
-          esc(MEANS[v] || v) +
+          esc(txt(MEANS[v] || v)) +
         '</button>').join('') +
       '<span class="report-status mono"></span>' +
     '</div>' +
@@ -225,11 +229,17 @@ function card(r, verdicts) {
    is the fact, and "3 days, 4 hours" invites arithmetic nobody wanted. */
 function waited(when) {
   const at = new Date(when);
-  if (Number.isNaN(at.getTime())) return 'unknown';
+  if (Number.isNaN(at.getTime())) return txt('unknown');
 
+  /* FIVE SENTENCES AND NOT A NUMBER WITH A WORD AFTER IT. `hours + ' hours'`
+     builds the plural by concatenation, which is the shape that shipped
+     "1 trilhas" — and Portuguese does not put the number where English does in
+     every one of these. Each case is its own entry. */
   const hours = Math.floor((Date.now() - at.getTime()) / 3600000);
-  if (hours < 1) return 'just now';
-  if (hours < 24) return hours + (hours === 1 ? ' hour' : ' hours');
+  if (hours < 1) return txt('just now');
+  if (hours < 24) {
+    return hours === 1 ? txt('one hour') : txt('%d hours').replace('%d', hours);
+  }
   const days = Math.floor(hours / 24);
-  return days + (days === 1 ? ' day' : ' days');
+  return days === 1 ? txt('one day') : txt('%d days').replace('%d', days);
 }
