@@ -263,12 +263,19 @@ func shown(d Deed) deedBody {
 // IT IS BUILT HERE AND NOT ON THE SCREEN because the scope is a property of the
 // query that ran, and a sentence assembled from the address bar is a sentence
 // that can disagree with the rows underneath it.
+// IT IS ONE OF THREE FIXED SENTENCES AND THE THIRD HAS A HOLE IN IT. It used
+// to be assembled — `"one " + ask.SubjectKind + ", every school"` — which is
+// three words in English and cannot be a dictionary key in any language: the
+// screen translates what the server says, and a sentence built by
+// concatenation arrives as a string nobody wrote. The subject kind itself is
+// NOT translated, here or anywhere: `account`, `school` and `job` are what the
+// audit records and what somebody searches by.
 func scopeOf(ask Ask) string {
 	switch {
 	case ask.ActorID != nil:
 		return "one actor, every school"
 	case ask.SubjectKind != "":
-		return "one " + ask.SubjectKind + ", every school"
+		return "one %s, every school"
 	default:
 		return "every action, every school"
 	}

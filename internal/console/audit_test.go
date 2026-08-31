@@ -196,7 +196,12 @@ func TestAPageSaysWhatItWasNarrowedTo(t *testing.T) {
 	for query, want := range map[string]string{
 		"": "every action, every school",
 		"actor=11111111-1111-4111-8111-111111111111": "one actor, every school",
-		"subjectKind=account&subject=x":              "one account, every school",
+		/* THE KIND IS A HOLE AND NOT A WORD SPLICED IN. It used to read "one
+		   account, every school", assembled on the server — which is three
+		   English words in an order Portuguese does not use, and a string
+		   nobody could translate because nobody wrote it. The screen fills the
+		   hole with the kind, which is never translated. */
+		"subjectKind=account&subject=x": "one %s, every school",
 	} {
 		rec := get(t, f.handler(), "/console/api/v1/audit?"+query)
 		var body struct {
