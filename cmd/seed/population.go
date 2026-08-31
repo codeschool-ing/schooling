@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sort"
 	"time"
 
 	"github.com/google/uuid"
@@ -38,9 +39,12 @@ import (
    # WHAT IT DOES NOT INVENT
 
    No subscription row and no ledger entry — see the command's header. A person
-   the model decided is paying carries `full` in the plan dimension of their
-   later events, which is what the stream would say, and nothing else in the
-   database claims they paid. */
+   the model decided is paying gets `subscription.started` in the STREAM and
+   carries `full` in the plan dimension of every event after it, which is what
+   the stream would have said; nothing else in the database claims they paid.
+   Somebody refunded gets `subscription.ended` and goes back to `none`, and that
+   is the entire difference between a subscriber and a refund as far as anything
+   that reads this can tell — which is the point. */
 
 // The chance of surviving each step, before the person's own grit shifts it.
 const (
@@ -78,6 +82,28 @@ const (
 	comesBack       = 0.22 // a gap of weeks in the middle of the story
 	pays            = 0.30 // of those who get through the free course
 	sitsItAgain     = 0.35 // of those who failed
+
+	/* THE FOURTH BEHAVIOUR, and the one this seeder was written unable to
+	   produce.
+
+	   IT IS HIGH ON PURPOSE AND IT IS NOT A FORECAST. Refunds are a fraction of
+	   a fraction: of a thousand people who arrive, about a hundred and twenty
+	   finish the free course and about thirty-eight pay. At a plausible real
+	   rate of one in twenty-five that is a single refund in the whole run — and
+	   a fixture with one of something is a fixture where a screen that draws it
+	   wrongly still looks fine, which is the opposite of what a fixture is for.
+	   The first draft of this number was 0.04 with a comment claiming it would
+	   yield "a handful"; the arithmetic was simply wrong.
+
+	   So it is set where the run produces a shape somebody can read, and every
+	   row it writes says `synthetic` — which is what stops anybody reading a
+	   business number off a demonstration. */
+	refunds = 0.18 // of those who paid
+
+	// And paying again a year later, which almost nobody in a six-month window
+	// reaches. It exists so a report that counts starts can be caught counting
+	// payments instead.
+	renews = 0.45 // of those who paid and did not refund
 )
 
 type life struct {
@@ -112,19 +138,92 @@ type moment struct {
 	account int
 	plan    string
 	payload map[string]any
+
+	/* platform says this moment belongs to no school.
+
+	   ONE SUBSCRIPTION COVERS EVERY SCHOOL (N-02), so a subscription event
+	   carries no tenant — `event.ForPlatform` — and the funnel reads those with
+	   a second query for exactly that reason. A seeder that wrote them against
+	   a school would invent a past the report reading it cannot see, which is
+	   the worst kind of fixture: it looks like the screen is broken rather than
+	   like the data is wrong. */
+	platform bool
 }
 
-// populate plans everybody.
-func populate(r *rand.Rand, s shape, from, to time.Time, people int) []life {
+/*
+populate plans everybody.
+
+	# WHY THERE ARE TWO GENERATORS AND NOT ONE
+
+	`money` decides what happens to a subscription and `r` decides everything
+	else, and they are separate because a shared one made adding a behaviour a
+	change to the whole fixture.
+
+	Every `r.Float64()` moves the stream along, so inserting two draws for the
+	refund shifted every draw after them: the same seed produced a different
+	population, and an exam question that had been passing tipped over a
+	threshold. Nothing about the exam had changed. The seeded past is a fixture
+	other tests assert against, and a fixture that reshuffles whenever an
+	unrelated behaviour is added is one nobody can add a behaviour to.
+
+	BOTH COME FROM THE RUN'S SEED, so `--rand` still decides the whole run and a
+	run is still repeatable. What they do not do is share a position in one
+	sequence.
+*/
+func populate(r, money *rand.Rand, s shape, from, to time.Time, people int) []life {
 	run := fmt.Sprintf("%d", from.Unix()%100000)
 	lives := make([]life, 0, people)
 	for i := 0; i < people; i++ {
-		lives = append(lives, one(r, s, from, to, run, i))
+		l := one(r, money, s, from, to, run, i)
+
+		/* THE MOMENTS COME OUT IN TIME ORDER, WHICH `one` NO LONGER GUARANTEES.
+
+		   Almost everything it appends advances one clock, so the slice was
+		   already sorted — but a renewal happens a year after the payment while
+		   the rest of the life carries on around it, and writing it in place
+		   would have moved the exam a year too. So it is placed at its own
+		   moment and the order is restored here.
+
+		   WHY IT MATTERS AT ALL, given that the stream carries a timestamp and
+		   nothing reads the slice order: this is what the shape test walks. A
+		   life it cannot read in order is a life it cannot check for "a course
+		   completed before the lesson was opened", which is the one thing that
+		   test exists to catch. Sorting here keeps that assertion possible
+		   instead of teaching it to tolerate gaps. */
+		sort.SliceStable(l.moments, func(a, b int) bool {
+			return l.moments[a].at.Before(l.moments[b].at)
+		})
+
+		/* AND THE PLAN GOES BACK TO `none` AFTER A REFUND, which can only be
+		   done once the moments are in order.
+
+		   EVERY EVENT CARRIES THE PLAN AS IT WAS AT THE TIME (K-04), and a
+		   refund is exactly a crossing back. Left on `full`, the stream would
+		   describe somebody who bought once and never stopped — and `plan` is
+		   the dimension a retention report reads, so it would answer
+		   confidently and wrongly, which is the failure `internal/event`'s own
+		   header opens with.
+
+		   IT IS A PASS AND NOT A FLAG SET WHILE BUILDING, because the refund is
+		   written at its own moment rather than in sequence: while the life was
+		   being assembled there was no way to know which of the events already
+		   appended would turn out to come after it. */
+		refunded := false
+		for i := range l.moments {
+			if refunded {
+				l.moments[i].plan = event.PlanNone
+			}
+			if l.moments[i].name == "subscription.ended" {
+				refunded = true
+			}
+		}
+
+		lives = append(lives, l)
 	}
 	return lives
 }
 
-func one(r *rand.Rand, s shape, from, to time.Time, run string, n int) life {
+func one(r, money *rand.Rand, s shape, from, to time.Time, run string, n int) life {
 	grit, ability := r.Float64(), r.Float64()
 	country, locale := where(r)
 
@@ -138,8 +237,11 @@ func one(r *rand.Rand, s shape, from, to time.Time, run string, n int) life {
 	at := from.Add(time.Duration(r.Float64() * float64(window)))
 	plan := event.PlanNone
 
-	// `plan` is captured rather than passed: it changes once, partway through the
-	// story, and every moment after that carries the new value.
+	/* `plan` is captured rather than passed: it changes partway through the
+	   story, and every moment after that carries the new value. It used to
+	   change ONCE, and now it can change back — a refund puts somebody on
+	   `none` again, and their later events have to say so or the stream would
+	   describe a subscriber who never stopped. */
 	add := func(name string, visitor, account int, payload map[string]any) bool {
 		if at.After(to) {
 			return false // still going, which is what most people are
@@ -268,11 +370,63 @@ func one(r *rand.Rand, s shape, from, to time.Time, run string, n int) life {
 		return l
 	}
 
-	// PAYING IS A CHANGE OF DIMENSION AND NOT A ROW. From here on their events
-	// carry `full`, which is what the stream would have said. Nothing else in
-	// the database says they paid, because nothing else may be invented.
+	/* PAYING IS AN EVENT AND A CHANGE OF DIMENSION, AND STILL NOT A ROW.
+
+	   IT USED TO BE ONLY THE DIMENSION, and the command's header said why: a
+	   refund was "not representable in the stream today because nothing emits a
+	   subscription event into it", and it promised this — "the day a gateway
+	   puts those events in the stream, this gains the fourth by writing them".
+	   That day arrived, so here is the fourth behaviour the roadmap asks for.
+
+	   WHAT HAS NOT CHANGED IS THE RULE IT WAS WAITING ON. No subscription row,
+	   no transition, no ledger entry: those three tables answer "what happened
+	   to this person's money", and an invented row in them is indistinguishable
+	   from one a payment produced. Every event this writes says `synthetic`;
+	   money that never moved would say nothing at all. What is added is the
+	   stream, which is the one place a seeded past belongs.
+
+	   NONE OF IT MOVES `at`. What happens to a subscription happens alongside a
+	   life rather than inside it: somebody pays, carries on studying, and asks
+	   for their money back a fortnight later while still opening lessons. The
+	   first version advanced the shared clock and pushed the exam a fortnight —
+	   or, on a renewal, a year — which is a different fixture rather than an
+	   additional behaviour. So these are written at their own moments and
+	   `populate` sorts them into place. */
 	if r.Float64() < pays {
 		plan = "full"
+
+		paid := at.Add(hours(money, 0, 48))
+		sub := func(name string, when time.Time, payload map[string]any) {
+			if when.After(to) {
+				return // it has not happened yet, which is true of most renewals
+			}
+			l.moments = append(l.moments, moment{
+				name: name, at: when, visitor: -1, account: 0,
+				plan: "full", payload: payload, platform: true,
+			})
+		}
+
+		sub("subscription.started", paid,
+			map[string]any{"model": "instalments", "term_months": 12})
+
+		/* THE REFUND, WHICH IS THE WHOLE REASON THIS BRANCH EXISTS. It is a
+		   real shape and not a rounding error: the terms promise seven days to
+		   withdraw, so these cluster near the purchase and a few come later. A
+		   population with none of them would let a screen that cannot draw an
+		   ending pass, which is exactly what a fixture is for. */
+		if money.Float64() < refunds {
+			sub("subscription.ended", paid.Add(hours(money, 12, 30*24)),
+				map[string]any{"reason": "refunded", "state": "ended"})
+		} else if money.Float64() < renews {
+			/* A RENEWAL IS THE SAME PERSON PAYING AGAIN, a year later, and it
+			   exists so that a report which counts starts can be caught
+			   counting payments instead. On a six-month window nobody reaches
+			   it — a term is twelve — and `sub` refusing anything past today is
+			   what keeps that honest rather than inventing renewals that could
+			   not have happened yet. */
+			sub("subscription.renewed", paid.Add(hours(money, 350*24, 380*24)),
+				map[string]any{"model": "instalments", "term_months": 12})
+		}
 	}
 
 	if !survives(r, sitsTheExam, grit) || len(s.questions) == 0 {

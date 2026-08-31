@@ -34,12 +34,19 @@
 // apart from a real one everywhere else, because every row this writes says
 // `synthetic`; money that never moved would say nothing at all.
 //
-// The cost is written down rather than hidden: of the four behaviours the
-// roadmap asks a seeder for — abandonment, returns, duplicate signups and
-// refunds — this makes three. A refund is not representable in the stream today
-// because nothing emits a subscription event into it, which is also why the
-// funnel's last step comes back saying "not measured". The day a gateway puts
-// those events in the stream, this gains the fourth by writing them.
+// The three tables stay untouched and the fourth behaviour now exists anyway,
+// which is worth saying because this header used to say the opposite. Of what
+// the roadmap asks a seeder for — abandonment, returns, duplicate signups and
+// refunds — a refund was the one missing, and the reason given was that nothing
+// emitted a subscription event into the stream. The promise was: "the day a
+// gateway puts those events in the stream, this gains the fourth by writing
+// them." Billing emits them now, so it does.
+//
+// A refund here is `subscription.started` and then `subscription.ended` with
+// `refunded` on it, in the stream and nowhere else, and the person's later
+// events carry `none` again. That is the whole of what a refund IS to a report;
+// what it is to the books stays out of reach, which was never the part that was
+// missing.
 //
 // # IT CANNOT BE UNDONE
 //
@@ -167,7 +174,11 @@ func run(args []string, out io.Writer) error {
 	//nolint:gosec // G404: a seeded population has to be repeatable, which is the
 	// opposite of what a cryptographic source is for. Nothing here is a secret:
 	// it decides which invented student abandoned a course in March.
-	lives := populate(rand.New(rand.NewSource(o.rand)), shape,
+	lives := populate(rand.New(rand.NewSource(o.rand)),
+		/* THE SECOND GENERATOR, from the same seed offset by one. It decides
+		   what happens to a subscription, and it is separate so that adding a
+		   behaviour there does not reshuffle the exam fixture — see `populate`. */
+		rand.New(rand.NewSource(o.rand+1)), shape,
 		now.AddDate(0, -o.months, 0), now, o.people)
 
 	written, err := write(ctx, pool, shape, lives)
@@ -270,6 +281,19 @@ func write(ctx context.Context, pool *pgxpool.Pool, shape shape, lives []life) (
 				Dimensions: event.ForSchool(shape.id, shape.slug, m.plan,
 					l.country, l.locale, event.Synthetic),
 			}
+
+			/* A SUBSCRIPTION BELONGS TO NO SCHOOL, so it is written with no
+			   tenant (N-02). It is the one dimension this loop chooses between,
+			   and choosing wrongly would be invisible: the database accepts
+			   `ForSchool` perfectly well, and the funnel's last step — which
+			   reads the tenant-less rows with a query of its own — would come
+			   back empty while every other step of the same seeded run looked
+			   exactly right. */
+			if m.platform {
+				e.Dimensions = event.ForPlatform(m.plan,
+					l.country, l.locale, event.Synthetic)
+			}
+
 			if m.visitor >= 0 {
 				e.VisitorID = &here[m.visitor]
 			}

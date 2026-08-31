@@ -126,7 +126,7 @@ func TestTheHistoryItWritesCouldHaveHappened(t *testing.T) {
 		broken:    "ex-1",
 	}
 
-	lives := populate(rand.New(rand.NewSource(7)), s, from, to, 400) //nolint:gosec // repeatable on purpose
+	lives := populate(rand.New(rand.NewSource(7)), rand.New(rand.NewSource(7+1)), s, from, to, 400) //nolint:gosec // repeatable on purpose
 
 	// The order the steps of a journey may appear in. A step is only allowed
 	// once whatever comes before it has happened.
@@ -144,6 +144,14 @@ func TestTheHistoryItWritesCouldHaveHappened(t *testing.T) {
 		"section.completed": "lesson.opened",
 		"course.completed":  "section.completed",
 		"exam.submitted":    "course.completed",
+
+		/* AND WHAT HAPPENS TO A SUBSCRIPTION, which is three more steps that
+		   cannot come in any order. An ending before a start is the one that
+		   would render perfectly and describe nothing: a refund of something
+		   nobody bought, drawn as a churned customer by anything reading it. */
+		"subscription.started": "course.completed",
+		"subscription.ended":   "subscription.started",
+		"subscription.renewed": "subscription.started",
 	}
 
 	var everybodyMoved int
@@ -193,7 +201,7 @@ func TestItFallsOffAtEveryStep(t *testing.T) {
 		questions: []question{{id: "ex-1", version: 1, kind: "quiz"}},
 		broken:    "ex-1",
 	}
-	lives := populate(rand.New(rand.NewSource(3)), s, to.AddDate(0, -6, 0), to, 800) //nolint:gosec // repeatable on purpose
+	lives := populate(rand.New(rand.NewSource(3)), rand.New(rand.NewSource(3+1)), s, to.AddDate(0, -6, 0), to, 800) //nolint:gosec // repeatable on purpose
 
 	count := map[string]int{}
 	for _, l := range lives {
@@ -451,5 +459,148 @@ func TestTheSeededCountriesAreSpeltTheWayEverythingElseSpellsThem(t *testing.T) 
 	// seeded report would be about a single country without saying so.
 	if len(seen) < 3 {
 		t.Errorf("two thousand draws produced only %v", seen)
+	}
+}
+
+/*
+THE FOURTH BEHAVIOUR EXISTS, AND IT IS THE ONE THIS SEEDER COULD NOT PRODUCE.
+
+	`docs/ROADMAP.md` keeps a box open for a seeder that generates history —
+	abandonment, returns, duplicate signups and refunds — and it stayed open on
+	the refund alone, because nothing emitted a subscription into the stream.
+	This asserts the shape rather than the count: a fixture that produced two
+	refunds in a thousand people would satisfy a `> 0` and would still be a
+	fixture where a screen that draws an ending wrongly looks fine.
+*/
+func TestTheSeededPastContainsRefunds(t *testing.T) {
+	to := time.Now().UTC()
+	from := to.AddDate(0, -6, 0)
+	s := shape{
+		id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one", lesson: "le-one",
+		sections:  []string{"se-1", "se-2", "se-3"},
+		questions: []question{{id: "ex-1", version: 1, kind: "quiz"}},
+		broken:    "ex-1",
+	}
+
+	lives := populate(rand.New(rand.NewSource(11)), rand.New(rand.NewSource(11+1)), s, from, to, 800) //nolint:gosec // repeatable on purpose
+
+	started, ended := 0, 0
+	for _, l := range lives {
+		for _, m := range l.moments {
+			switch m.name {
+			case "subscription.started":
+				started++
+			case "subscription.ended":
+				ended++
+				if got := m.payload["reason"]; got != "refunded" {
+					t.Errorf("an ending says its reason is %v; the only ending this "+
+						"seeder can honestly write is a refund, because a term running "+
+						"out is a job's finding and not a person's act", got)
+				}
+			}
+		}
+	}
+
+	if started == 0 {
+		t.Fatal("nobody in eight hundred people subscribed, so the funnel's last step " +
+			"has nothing to draw and this fixture demonstrates the screen it was made for " +
+			"exactly as well as an empty database would")
+	}
+	if ended == 0 {
+		t.Error("nobody was refunded — the one behaviour of the four this seeder was " +
+			"written unable to produce, and the reason its box stays open")
+	}
+	if ended >= started {
+		t.Errorf("%d of %d subscriptions ended; a population where everybody who paid "+
+			"asked for it back is not a shape any screen should be built against",
+			ended, started)
+	}
+}
+
+/*
+A SUBSCRIPTION IS WRITTEN AGAINST NO SCHOOL, AND EVERYTHING ELSE IS.
+
+	One subscription covers every school (N-02), so these are the only moments
+	this seeder marks `platform` — and the funnel reads them with a query of its
+	own, `tenant_id IS NULL`. Written against a school they would be accepted by
+	the database and invisible to the report: the last step would come back
+	empty while every other step of the same run looked right, which reads as a
+	broken screen rather than as a bad fixture.
+*/
+func TestOnlyTheSubscriptionMomentsBelongToNoSchool(t *testing.T) {
+	to := time.Now().UTC()
+	from := to.AddDate(0, -6, 0)
+	s := shape{
+		id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one", lesson: "le-one",
+		sections:  []string{"se-1", "se-2"},
+		questions: []question{{id: "ex-1", version: 1, kind: "quiz"}},
+		broken:    "ex-1",
+	}
+
+	lives := populate(rand.New(rand.NewSource(13)), rand.New(rand.NewSource(13+1)), s, from, to, 400) //nolint:gosec // repeatable on purpose
+
+	for i, l := range lives {
+		for _, m := range l.moments {
+			subscription := strings.HasPrefix(m.name, "subscription.")
+			if subscription != m.platform {
+				t.Fatalf("person %d has %q with platform=%v — a subscription belongs to "+
+					"no school and everything else belongs to one, and the dimension is "+
+					"what a report filters on", i, m.name, m.platform)
+			}
+
+			/* AND IT CARRIES NO BROWSER. A subscription is bought signed in;
+			   which browser it was bought from is not a fact about it, and the
+			   funnel folds it onto the person through the account anyway. */
+			if subscription && m.visitor >= 0 {
+				t.Errorf("person %d has %q carrying a visitor", i, m.name)
+			}
+			if subscription && m.account < 0 {
+				t.Errorf("person %d has %q carrying no account, so there is nobody "+
+					"for it to be counted for", i, m.name)
+			}
+		}
+	}
+}
+
+/*
+AND THE PLAN GOES BACK TO `none` AFTER A REFUND.
+
+	Every event carries the plan as it was at the moment it happened, which is
+	the whole reason `Dimensions` cannot be built by naming the fields you
+	remembered. A refund that left the person on `full` would put a stream in
+	the database describing somebody who bought once and never stopped — and
+	`plan` is exactly the dimension a retention report reads, so it would answer
+	confidently and wrongly, which is the failure `internal/event`'s own header
+	opens with.
+*/
+func TestAfterARefundTheLaterEventsSayTheyAreNotPaying(t *testing.T) {
+	to := time.Now().UTC()
+	from := to.AddDate(0, -18, 0) // long enough that a story continues past a refund
+	s := shape{
+		id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one", lesson: "le-one",
+		sections:  []string{"se-1", "se-2"},
+		questions: []question{{id: "ex-1", version: 1, kind: "quiz"}},
+		broken:    "ex-1",
+	}
+
+	lives := populate(rand.New(rand.NewSource(17)), rand.New(rand.NewSource(17+1)), s, from, to, 800) //nolint:gosec // repeatable on purpose
+
+	checked := 0
+	for i, l := range lives {
+		refunded := false
+		for _, m := range l.moments {
+			if refunded && m.plan != "none" {
+				t.Errorf("person %d has %q on plan %q after a refund; the stream would "+
+					"describe somebody who bought once and never stopped",
+					i, m.name, m.plan)
+			}
+			if m.name == "subscription.ended" {
+				refunded = true
+				checked++
+			}
+		}
+	}
+	if checked == 0 {
+		t.Skip("this seed produced no refunds, so there was nothing to check")
 	}
 }
