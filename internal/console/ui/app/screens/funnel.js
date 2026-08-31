@@ -40,16 +40,25 @@
 
 import { esc } from '../dom.js';
 import { get } from '../request.js';
+import { txt } from '../../assets/language.js';
 
 /* The windows on offer. Days, because the API takes days and a screen that
-   offered "this quarter" would be a second calendar to keep in step. */
+   offered "this quarter" would be a second calendar to keep in step.
+
+   OBJECTS AND NOT PAIRS, since the labels became translatable: a pair says
+   nothing about which half is a number the API takes and which is a sentence a
+   person reads, and `language_test.go` has to be able to tell them apart to
+   check the second half has Portuguese. Naming the fields is what lets it. */
 const WINDOWS = [
-  ['0', 'Since the beginning'],
-  ['30', 'Last 30 days'],
-  ['90', 'Last 90 days'],
-  ['365', 'Last year'],
+  { days: '0', label: 'Since the beginning' },
+  { days: '30', label: 'Last 30 days' },
+  { days: '90', label: 'Last 90 days' },
+  { days: '365', label: 'Last year' },
 ];
 
+/* THE THREE POPULATIONS, NAMED. The key is what the API takes and never moves;
+   the value is read by a person and is looked up through `txt()` where it is
+   drawn — which the checker cannot see, so `language_test.go` carries it. */
 const NAMES = {
   real: 'Real people',
   seeded: 'The seeded population',
@@ -62,15 +71,11 @@ export default async function funnel(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Measure</span>' +
-      '<h1>The funnel</h1>' +
-      '<p>Of the people who arrived at a school, how many reached each step. ' +
-      'Every number is a count of people rather than of visits: somebody who ' +
-      'arrived without an account and came back signed in is one person, which ' +
-      'is the only reason the top and the bottom of this can be compared at ' +
-      'all.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Measure')) + '</span>' +
+      '<h1>' + esc(txt('The funnel')) + '</h1>' +
+      '<p>' + esc(txt('Of the people who arrived at a school, how many reached each step. Every number is a count of people rather than of visits: somebody who arrived without an account and came back signed in is one person, which is the only reason the top and the bottom of this can be compared at all.')) + '</p>' +
     '</header>' +
-    '<div id="body" aria-live="polite"><p class="checking">Reading…</p></div>';
+    '<div id="body" aria-live="polite"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const body = el.querySelector('#body');
 
@@ -78,13 +83,14 @@ export default async function funnel(section) {
   try {
     schools = (await get('/console/api/v1/schools')).schools || [];
   } catch (e) {
-    body.innerHTML = '<section class="block"><p class="none">' + esc(e.message) + '</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) + '</p></section>';
     return { title: section.name, el };
   }
 
   if (!schools.length) {
-    body.innerHTML = '<section class="block"><p class="none">There are no schools on this ' +
-      'platform yet, so there is nobody to have arrived at one.</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' +
+      esc(txt('There are no schools on this platform yet, so there is nobody to have arrived at one.')) +
+      '</p></section>';
     return { title: section.name, el };
   }
 
@@ -95,32 +101,32 @@ export default async function funnel(section) {
 
   body.innerHTML =
     '<section class="block">' +
-      '<div class="block-top"><h2>What to count</h2></div>' +
+      '<div class="block-top"><h2>' + esc(txt('What to count')) + '</h2></div>' +
       '<form id="ask" class="list-bar" novalidate>' +
         '<label class="field">' +
-          '<span>School</span>' +
+          '<span>' + esc(txt('School')) + '</span>' +
           '<select id="school">' +
             schools.map((s) =>
               '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>').join('') +
           '</select>' +
         '</label>' +
         '<label class="field">' +
-          '<span>Window</span>' +
+          '<span>' + esc(txt('Window')) + '</span>' +
           '<select id="days">' +
-            WINDOWS.map(([value, label]) =>
-              '<option value="' + value + '">' + esc(label) + '</option>').join('') +
+            WINDOWS.map((w) =>
+              '<option value="' + w.days + '">' + esc(txt(w.label)) + '</option>').join('') +
           '</select>' +
         '</label>' +
         '<label class="field">' +
-          '<span>People</span>' +
+          '<span>' + esc(txt('People')) + '</span>' +
           '<select id="counting">' +
             Object.keys(NAMES).map((k) =>
-              '<option value="' + k + '">' + esc(NAMES[k]) + '</option>').join('') +
+              '<option value="' + k + '">' + esc(txt(NAMES[k])) + '</option>').join('') +
           '</select>' +
         '</label>' +
       '</form>' +
     '</section>' +
-    '<div id="chart"><p class="checking">Reading…</p></div>';
+    '<div id="chart"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const chart = body.querySelector('#chart');
   const controls = body.querySelector('#ask');
@@ -137,7 +143,7 @@ export default async function funnel(section) {
   return { title: section.name, el };
 
   async function draw() {
-    chart.innerHTML = '<p class="checking">Reading…</p>';
+    chart.innerHTML = '<p class="checking">' + esc(txt('Reading…')) + '</p>';
 
     /* THE REQUEST THAT WAS SENT IS REMEMBERED, so an answer that arrives after
        somebody has already changed the school is dropped rather than drawn.
@@ -151,7 +157,7 @@ export default async function funnel(section) {
         '&counting=' + encodeURIComponent(asking.counting));
     } catch (e) {
       if (mine !== JSON.stringify(asking)) return;
-      chart.innerHTML = '<section class="block"><p class="none">' + esc(e.message) + '</p></section>';
+      chart.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) + '</p></section>';
       return;
     }
     if (mine !== JSON.stringify(asking)) return;
@@ -169,19 +175,20 @@ export default async function funnel(section) {
          screen does not decide when the numbers are about invented students —
          the answer that carries them does, so the two cannot disagree. */
       (answer.banner
-        ? '<p class="notice-strong" role="status">' + esc(answer.banner) + '</p>'
+        ? '<p class="notice-strong" role="status">' + esc(txt(answer.banner)) + '</p>'
         : '') +
 
       '<section class="block">' +
         '<div class="block-top">' +
           '<h2>' + esc((answer.school && answer.school.name) || '') + '</h2>' +
-          '<span class="block-score mono">' + esc(NAMES[answer.counting] || answer.counting) +
+          '<span class="block-score mono">' +
+            esc(txt(NAMES[answer.counting] || answer.counting)) +
           '</span>' +
         '</div>' +
         (arrived === 0 && steps.every((s) => !s.measured || s.people === 0)
-          ? '<p class="none">Nobody has reached any step of this, in this window, ' +
-            'for these people. An empty funnel is a real answer and not a failure ' +
-            'to read one.</p>'
+          ? '<p class="none">' +
+            esc(txt('Nobody has reached any step of this, in this window, for these people. An empty funnel is a real answer and not a failure to read one.')) +
+            '</p>'
           : '<ol class="funnel">' + steps.map((s) => row(s, arrived)).join('') + '</ol>') +
       '</section>';
   }
@@ -191,15 +198,21 @@ export default async function funnel(section) {
        either — there is no bar at all, because a bar of length nothing is
        exactly the reading this is here to prevent. */
     if (!step.measured) {
+      /* "Not counted yet — <reason>" IS ONE KEY WITH A HOLE and not a prefix
+         glued to a sentence. The reason is the server's and translates on its
+         own; what joins them is punctuation that sits differently in different
+         languages, and a translator given only the first half cannot move it. */
       return '<li class="funnel-step funnel-step-unmeasured">' +
-        '<span class="funnel-label">' + esc(step.label) + '</span>' +
-        '<span class="funnel-missing">Not counted yet — ' + esc(step.why || '') + '</span>' +
+        '<span class="funnel-label">' + esc(txt(step.label)) + '</span>' +
+        '<span class="funnel-missing">' +
+          esc(txt('Not counted yet — %s').replace('%s', txt(step.why || ''))) +
+        '</span>' +
       '</li>';
     }
 
     const share = arrived > 0 ? step.people / arrived : 0;
     return '<li class="funnel-step">' +
-      '<span class="funnel-label">' + esc(step.label) + '</span>' +
+      '<span class="funnel-label">' + esc(txt(step.label)) + '</span>' +
       '<span class="funnel-bar"><span class="funnel-fill" ' +
         'style="width:' + (share * 100).toFixed(1) + '%"></span></span>' +
       '<span class="funnel-count mono">' + step.people +

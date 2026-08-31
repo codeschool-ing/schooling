@@ -49,15 +49,16 @@
 import { esc } from '../dom.js';
 import { get } from '../request.js';
 import { WORLD, BOX } from './world.js';
+import { txt, language } from '../../assets/language.js';
 
 /* The windows on offer. The same four the funnel uses, in days, because the API
    takes days and a second calendar in a second screen is a second thing to keep
-   in step. */
+   in step. Objects rather than pairs, for the reason `funnel.js` gives. */
 const WINDOWS = [
-  ['0', 'Since the beginning'],
-  ['30', 'Last 30 days'],
-  ['90', 'Last 90 days'],
-  ['365', 'Last year'],
+  { days: '0', label: 'Since the beginning' },
+  { days: '30', label: 'Last 30 days' },
+  { days: '90', label: 'Last 90 days' },
+  { days: '365', label: 'Last year' },
 ];
 
 const NAMES = {
@@ -66,18 +67,38 @@ const NAMES = {
   everybody: 'Everybody, real and seeded',
 };
 
-/* Built once. It is not free to construct and this screen redraws on every
-   change of three controls. */
-const REGIONS = regionNames();
+/*
+The country names, in the language that was chosen, built once PER LANGUAGE.
 
-function regionNames() {
-  try {
-    return new Intl.DisplayNames(['en'], { type: 'region' });
-  } catch (e) {
-    // An engine without it draws the codes, which are still readable. A screen
-    // that failed over a label would be a screen lost to a nicety.
-    return null;
+	IT USED TO BE `new Intl.DisplayNames(['en'], …)` AT MODULE LOAD, which was
+	the right answer for exactly as long as this console had one language. It is
+	the `day()` defect in a third place and the loudest of the three: a screen
+	otherwise entirely in Portuguese listing `Germany`, `Spain` and `Japan` — and
+	they are real country names, so nothing looks broken.
+
+	CACHED, BECAUSE IT IS NOT FREE TO CONSTRUCT and this screen redraws on every
+	change of three controls. Keyed by language, because the language moves and a
+	single cached one would be the old language's names for the rest of the
+	session — which is the same defect wearing a cache.
+
+	AND THE NAMES ARE THE BROWSER'S, not a table this repository carries. That is
+	the whole reason the answer comes back as ISO codes: 249 region names in two
+	languages is a thing to keep current, and every browser already has it.
+*/
+const REGIONS = {};
+
+function regions() {
+  const at = language();
+  if (!(at in REGIONS)) {
+    try {
+      REGIONS[at] = new Intl.DisplayNames([at === 'pt' ? 'pt-BR' : 'en-GB'], { type: 'region' });
+    } catch (e) {
+      // An engine without it draws the codes, which are still readable. A screen
+      // that failed over a label would be a screen lost to a nicety.
+      REGIONS[at] = null;
+    }
   }
+  return REGIONS[at];
 }
 
 /* THE CODE IS ALL THAT ARRIVES, and everything below is derived from it. A
@@ -89,8 +110,9 @@ const isRegion = (code) => /^[a-z]{2}$/.test(String(code || ''));
 function nameOf(code) {
   if (!isRegion(code)) return String(code || '');
   const upper = String(code).toUpperCase();
+  const names = regions();
   try {
-    return (REGIONS && REGIONS.of(upper)) || upper;
+    return (names && names.of(upper)) || upper;
   } catch (e) {
     return upper;
   }
@@ -111,14 +133,11 @@ export default async function countries(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">Measure</span>' +
-      '<h1>Where they are</h1>' +
-      '<p>The people of one school, by the country each request came from. The ' +
-      'country is worked out in this process from the address and the address ' +
-      'is discarded, which is what the privacy policy promises and the reason ' +
-      'there is no city here and never will be.</p>' +
+      '<span class="eyebrow mono">' + esc(txt('Measure')) + '</span>' +
+      '<h1>' + esc(txt('Where they are')) + '</h1>' +
+      '<p>' + esc(txt('The people of one school, by the country each request came from. The country is worked out in this process from the address and the address is discarded, which is what the privacy policy promises and the reason there is no city here and never will be.')) + '</p>' +
     '</header>' +
-    '<div id="body" aria-live="polite"><p class="checking">Reading…</p></div>';
+    '<div id="body" aria-live="polite"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const body = el.querySelector('#body');
 
@@ -126,13 +145,14 @@ export default async function countries(section) {
   try {
     schools = (await get('/console/api/v1/schools')).schools || [];
   } catch (e) {
-    body.innerHTML = '<section class="block"><p class="none">' + esc(e.message) + '</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) + '</p></section>';
     return { title: section.name, el };
   }
 
   if (!schools.length) {
-    body.innerHTML = '<section class="block"><p class="none">There are no schools on this ' +
-      'platform yet, so there is nobody to be anywhere.</p></section>';
+    body.innerHTML = '<section class="block"><p class="none">' +
+      esc(txt('There are no schools on this platform yet, so there is nobody to be anywhere.')) +
+      '</p></section>';
     return { title: section.name, el };
   }
 
@@ -142,32 +162,32 @@ export default async function countries(section) {
 
   body.innerHTML =
     '<section class="block">' +
-      '<div class="block-top"><h2>What to count</h2></div>' +
+      '<div class="block-top"><h2>' + esc(txt('What to count')) + '</h2></div>' +
       '<form id="ask" class="list-bar" novalidate>' +
         '<label class="field">' +
-          '<span>School</span>' +
+          '<span>' + esc(txt('School')) + '</span>' +
           '<select id="school">' +
             schools.map((s) =>
               '<option value="' + esc(s.id) + '">' + esc(s.name) + '</option>').join('') +
           '</select>' +
         '</label>' +
         '<label class="field">' +
-          '<span>Window</span>' +
+          '<span>' + esc(txt('Window')) + '</span>' +
           '<select id="days">' +
-            WINDOWS.map(([value, label]) =>
-              '<option value="' + value + '">' + esc(label) + '</option>').join('') +
+            WINDOWS.map((w) =>
+              '<option value="' + w.days + '">' + esc(txt(w.label)) + '</option>').join('') +
           '</select>' +
         '</label>' +
         '<label class="field">' +
-          '<span>People</span>' +
+          '<span>' + esc(txt('People')) + '</span>' +
           '<select id="counting">' +
             Object.keys(NAMES).map((k) =>
-              '<option value="' + k + '">' + esc(NAMES[k]) + '</option>').join('') +
+              '<option value="' + k + '">' + esc(txt(NAMES[k])) + '</option>').join('') +
           '</select>' +
         '</label>' +
       '</form>' +
     '</section>' +
-    '<div id="where"><p class="checking">Reading…</p></div>';
+    '<div id="where"><p class="checking">' + esc(txt('Reading…')) + '</p></div>';
 
   const where = body.querySelector('#where');
   const controls = body.querySelector('#ask');
@@ -184,7 +204,7 @@ export default async function countries(section) {
   return { title: section.name, el };
 
   async function draw() {
-    where.innerHTML = '<p class="checking">Reading…</p>';
+    where.innerHTML = '<p class="checking">' + esc(txt('Reading…')) + '</p>';
 
     // The request that was sent is remembered, so an answer arriving after
     // somebody changed the school is dropped rather than drawn.
@@ -197,7 +217,7 @@ export default async function countries(section) {
         '&counting=' + encodeURIComponent(asking.counting));
     } catch (e) {
       if (mine !== JSON.stringify(asking)) return;
-      where.innerHTML = '<section class="block"><p class="none">' + esc(e.message) +
+      where.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) +
         '</p></section>';
       return;
     }
@@ -217,33 +237,33 @@ export default async function countries(section) {
     where.innerHTML =
       // The server's sentence, drawn only when it sent one.
       (answer.banner
-        ? '<p class="notice-strong" role="status">' + esc(answer.banner) + '</p>'
+        ? '<p class="notice-strong" role="status">' + esc(txt(answer.banner)) + '</p>'
         : '') +
 
       '<section class="block">' +
         '<div class="block-top">' +
           '<h2>' + esc((answer.school && answer.school.name) || '') + '</h2>' +
-          '<span class="block-score mono">' + esc(NAMES[answer.counting] || answer.counting) +
+          '<span class="block-score mono">' +
+            esc(txt(NAMES[answer.counting] || answer.counting)) +
           '</span>' +
         '</div>' +
 
         (rows.length === 0
-          ? '<p class="none">Nobody has done anything at this school, in this window, ' +
-            'for these people. An empty world is a real answer and not a failure to ' +
-            'read one.</p>'
+          ? '<p class="none">' +
+            esc(txt('Nobody has done anything at this school, in this window, for these people. An empty world is a real answer and not a failure to read one.')) +
+            '</p>'
           : map(rows, biggest, nowhere) +
-            '<p class="block-lede">' + people + (people === 1 ? ' person' : ' people') +
-              ', in ' + rows.length + (rows.length === 1 ? ' country' : ' countries') + '.' +
-            '</p>' +
+            '<p class="block-lede">' + esc(lede(people, rows.length)) + '</p>' +
 
             /* SAID ONLY WHEN IT IS TRUE. Comparing the two numbers is what
                decides, rather than a sentence written here about a subtlety a
                school where nobody travelled does not have. */
             (summed > people
-              ? '<p class="hint">These add up to ' + summed + ' and there are ' + people +
-                ' people, because somebody who studied from two countries is honestly ' +
-                'in both. The countries are shares of where the studying happened; the ' +
-                'number above is how many people did it.</p>'
+              ? '<p class="hint">' +
+                esc(txt('These add up to %s and there are %p people, because somebody who studied from two countries is honestly in both. The countries are shares of where the studying happened; the number above is how many people did it.')
+                  .replace('%s', summed)
+                  .replace('%p', people)) +
+                '</p>'
               : '') +
 
             '<ul class="countries">' +
@@ -293,11 +313,21 @@ export default async function countries(section) {
       .filter((c) => shade[c.code] !== undefined)
       .map((c) => nameOf(c.code));
 
+    /* THE LABEL IS THE WHOLE THING A SCREEN READER GETS FOR THIS PICTURE, so it
+       is assembled from whole sentences rather than glued together around a
+       comma: the tail — "and four more" — sits before the list in some
+       languages, and a translator handed ` and ` cannot move it. */
+    const first = named.slice(0, 6).join(', ');
+    const shown = named.length > 6
+      ? (named.length === 7
+        ? txt('%s and one more').replace('%s', first)
+        : txt('%s and %d more').replace('%s', first).replace('%d', named.length - 6))
+      : first;
+
     const label = named.length
-      ? 'A world map. ' + named.slice(0, 6).join(', ') +
-        (named.length > 6 ? ' and ' + (named.length - 6) + ' more' : '') +
-        ' are shaded. The list below has every country and its count.'
-      : 'A world map with nothing shaded on it.';
+      ? txt('A world map. %s are shaded. The list below has every country and its count.')
+        .replace('%s', shown)
+      : txt('A world map with nothing shaded on it.');
 
     return '<figure class="worldmap">' +
       '<svg viewBox="' + BOX + '" role="img" aria-label="' + esc(label) + '" ' +
@@ -312,10 +342,30 @@ export default async function countries(section) {
          country is known needs no footnote, and a footnote nobody needs is one
          more sentence people learn to skip. */
       (placed < rows.reduce((t, c) => t + (c.people || 0), 0)
-        ? '<figcaption>The map shows only the people whose country is known. The ' +
-          'rest are in the list below, under “Nobody knows where”.</figcaption>'
+        /* THE QUOTED NAME IS INSIDE THE KEY and not spliced in, so a translator
+           sees the caption and the row label together and can make them match.
+           Splicing would guarantee they match and guarantee nothing about the
+           sentence around it reading in the language it was translated into. */
+        ? '<figcaption>' +
+          esc(txt('The map shows only the people whose country is known. The rest are in the list below, under “Nobody knows where”.')) +
+          '</figcaption>'
         : '') +
     '</figure>';
+  }
+
+  /* HOW MANY PEOPLE, IN HOW MANY COUNTRIES — two numbers that can each be one,
+     so four whole sentences and no plural assembled from a letter. This console
+     has shipped "1 trilhas" once; the fix is never a rule, it is writing the
+     sentence out. */
+  function lede(people, places) {
+    if (people === 1) {
+      return places === 1
+        ? txt('one person, in one country.')
+        : txt('one person, in %c countries.').replace('%c', places);
+    }
+    return places === 1
+      ? txt('%p people, in one country.').replace('%p', people)
+      : txt('%p people, in %c countries.').replace('%p', people).replace('%c', places);
   }
 
   function row(country, biggest, nowhere) {
@@ -327,11 +377,11 @@ export default async function countries(section) {
     return '<li class="country' + (placeless ? ' country-nowhere' : '') + '">' +
       '<span class="country-flag" aria-hidden="true">' + flagOf(code) + '</span>' +
       '<span class="country-name">' +
-        (placeless ? 'Nobody knows where' : esc(nameOf(code))) +
+        (placeless ? esc(txt('Nobody knows where')) : esc(nameOf(code))) +
         (placeless
-          ? '<span class="country-why">No country could be worked out — a request ' +
-            'from before there was a database to work it out with, or one through ' +
-            'something that hides where it came from.</span>'
+          ? '<span class="country-why">' +
+            esc(txt('No country could be worked out — a request from before there was a database to work it out with, or one through something that hides where it came from.')) +
+            '</span>'
           : '<span class="country-code mono">' + esc(code.toUpperCase()) + '</span>') +
       '</span>' +
       '<span class="country-bar"><span class="country-fill" ' +

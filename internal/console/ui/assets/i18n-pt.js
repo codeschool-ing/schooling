@@ -758,6 +758,288 @@ window.I18N.pt.ui = {
   'they asked to stop, ticket 812': 'a pessoa pediu para parar, chamado 812',
   'waiting': 'aguardando',
 
+  /* ---------- Watch · Who is here ----------
+
+     `Watch` IS THE RAIL'S GROUP AND THE SCREEN'S EYEBROW, and one entry serves
+     both because it is one word saying one thing arriving from two files. The
+     dictionary has no idea there are two and does not need one.
+
+     THE TWO-NUMBER SENTENCES ARE FOUR ENTRIES AND NOT TWO WITH A PLURAL RULE.
+     "1 minutos" is the defect this console has already shipped once, on a count
+     of one — so a sentence whose number can be one is written twice, in full,
+     and the screen picks between them. */
+  'Watch': 'Acompanhar',
+  'People signed in and seen a moment ago, by school. This is the one number in the console that comes from the sessions table rather than from the event stream — presence is the question where being overwritten is the point, because nobody asks who was online last March.':
+    'Pessoas conectadas e vistas há pouco, por escola. Este é o único número do console que vem da tabela de sessões e não do fluxo de eventos — presença é a pergunta em que ser sobrescrito é justamente o ponto, porque ninguém pergunta quem estava online em março passado.',
+  'On the platform': 'Na plataforma',
+  'Seen in the last minute.': 'Vistas no último minuto.',
+  'Seen in the last %w minutes.': 'Vistas nos últimos %w minutos.',
+  'A session says it is still in use at most once a minute, so this number is accurate to that and no better — it moves in steps rather than smoothly, and that is the heartbeat rather than the platform.':
+    'Uma sessão avisa que ainda está em uso no máximo uma vez por minuto, então este número é preciso até aí e não mais — ele anda aos saltos em vez de suavemente, e isso é o sinal de vida, não a plataforma.',
+  'A session says it is still in use at most once every %c minutes, so this number is accurate to that and no better — it moves in steps rather than smoothly, and that is the heartbeat rather than the platform.':
+    'Uma sessão avisa que ainda está em uso no máximo uma vez a cada %c minutos, então este número é preciso até aí e não mais — ele anda aos saltos em vez de suavemente, e isso é o sinal de vida, não a plataforma.',
+  'By school': 'Por escola',
+  'There are no schools on this platform yet.': 'Ainda não há escolas nesta plataforma.',
+  'These do not add up to the number above, and should not: somebody studying in two schools is present in both and is <b>one person</b> on the platform.':
+    'A soma destes não bate com o número acima, e não deve bater: quem estuda em duas escolas está presente nas duas e é <b>uma pessoa</b> na plataforma.',
+  'What this does not count': 'O que isto não conta',
+  'And it does not say <b>who</b>. This page refreshes on its own, so there is no moment where somebody asked for it and nothing to record a reason against — which is what a list of people has to carry. Looking somebody up is <b>Personal data</b>, where every page is recorded with what was searched for.':
+    'E não diz <b>quem</b>. Esta página se atualiza sozinha, então não existe um momento em que alguém a pediu nem nada a que atribuir um motivo — que é o que uma lista de pessoas tem de carregar. Procurar alguém é <b>Dados pessoais</b>, onde cada página fica registrada com o que foi buscado.',
+  'Read at %t · refreshing every %n s': 'Lido às %t · atualizando a cada %n s',
+
+  /* ---------- Watch · Jobs ----------
+
+     THE OUTCOME OF A RUN IS A WORD ON A ROW AND IS TRANSLATED; the JOB'S NAME
+     is not, because it is what somebody types to start one and what the audit
+     records. That is the line the roles and the parameter names are already on.
+
+     `s` AND `m` STAY, being units rather than words. "and counting" is a
+     sentence, and it goes after the number in English and before it elsewhere,
+     so it is one key with a hole in it. */
+  'What runs on a schedule, and how it went. This is the console reporting on itself: the question is not what students did, it is whether the work behind another screen actually happened last night.':
+    'O que roda em horário marcado, e como foi. Aqui o console presta contas de si mesmo: a pergunta não é o que os alunos fizeram, é se o trabalho por trás de outra tela realmente aconteceu ontem à noite.',
+  'This job has recorded no runs.': 'Esta rotina não registrou nenhuma execução.',
+  'Run it now': 'Executar agora',
+  'Asking…': 'Pedindo…',
+  'Asked for.': 'Pedido.',
+  'What starting one does': 'O que executar uma delas faz',
+  'Why there is no button': 'Por que não há botão',
+  'A read-only role may read this screen and not press anything. Starting a job withdraws questions from circulation when the analysis finds them broken, which is not a thing looking at a screen should do.':
+    'Um papel somente-leitura pode ler esta tela e não apertar nada. Executar uma rotina tira questões de circulação quando a análise as encontra defeituosas, e isso não é coisa que olhar para uma tela deva fazer.',
+  'A run still saying <b>running</b> after %d minutes is drawn as adrift. Nothing rewrites it: the row is what the job itself last said, and a job that was killed says nothing on the way out.':
+    'Uma execução que ainda diz <b>em andamento</b> depois de %d minutos é desenhada como à deriva. Nada a reescreve: a linha é a última coisa que a própria rotina disse, e uma rotina que foi morta não diz nada ao sair.',
+  'Finished': 'Concluída',
+  'Failed': 'Falhou',
+  'Running': 'Em andamento',
+  'Adrift': 'À deriva',
+  'never run': 'nunca executada',
+  'started and never finished': 'começou e nunca terminou',
+  'last run failed': 'a última execução falhou',
+  'running now': 'executando agora',
+  'last run %s': 'última execução %s',
+  '%s and counting': '%s e contando',
+  'at an unknown time': 'em um horário desconhecido',
+  'within the hour': 'na última hora',
+  'an hour ago': 'há uma hora',
+  '%d hours ago': 'há %d horas',
+  'yesterday': 'ontem',
+  '%d days ago': 'há %d dias',
+
+  /* ---------- Measure · the three controls all four screens share ----------
+
+     THE POPULATIONS AND THE WINDOWS ARE ONE SET OF ENTRIES FOR FOUR SCREENS,
+     which is not a saving — it is the point. `funnel.js`, `cohorts.js` and
+     `countries.js` each hold their own `NAMES`, in English, and a reader moving
+     between them has to see the same three words or conclude the three screens
+     count different people. One entry per string is what guarantees that.
+
+     NONE OF THEM IS VISIBLE TO `check-interface`: they are drawn through a
+     variable. `language_test.go` reads the lists out of all four files. */
+  'Real people': 'Pessoas reais',
+  'The seeded population': 'A população semeada',
+  'Everybody, real and seeded': 'Todo mundo, real e semeado',
+  'Window': 'Janela',
+  'People': 'Pessoas',
+  'What to count': 'O que contar',
+  'Since the beginning': 'Desde o início',
+  'Last 30 days': 'Últimos 30 dias',
+  'Last 90 days': 'Últimos 90 dias',
+  'Last year': 'Último ano',
+
+  /* ---------- Measure · The funnel ---------- */
+  'Of the people who arrived at a school, how many reached each step. Every number is a count of people rather than of visits: somebody who arrived without an account and came back signed in is one person, which is the only reason the top and the bottom of this can be compared at all.':
+    'Das pessoas que chegaram a uma escola, quantas alcançaram cada etapa. Todo número aqui é uma contagem de pessoas e não de visitas: quem chegou sem conta e voltou conectado é uma pessoa só, que é a única razão pela qual o topo e o fundo disto podem ser comparados.',
+  'There are no schools on this platform yet, so there is nobody to have arrived at one.':
+    'Ainda não há escolas nesta plataforma, então não há ninguém para ter chegado a uma.',
+  'Nobody has reached any step of this, in this window, for these people. An empty funnel is a real answer and not a failure to read one.':
+    'Ninguém alcançou nenhuma etapa disto, nesta janela, para estas pessoas. Um funil vazio é uma resposta de verdade e não uma falha em ler uma.',
+  /* THE REASON A STEP IS NOT COUNTED IS THE SERVER'S SENTENCE and translates on
+     its own; this is only what joins the two, which is punctuation that does not
+     sit in the same place in every language. */
+  'Not counted yet — %s': 'Ainda não contado — %s',
+
+  /* ---------- Measure · Questions ----------
+
+     THE FIVE VERDICTS AND WHAT EACH MEANS are drawn through a variable and are
+     `language_test.go`'s. Three of the five names are also the headings of the
+     thresholds further down that screen, and they share one entry each on
+     purpose: somebody matching a verdict to the rule that produced it should not
+     have to notice that two translations mean the same thing. */
+  'What the answers say about each question, worst first. Every number that is a judgement is followed by what it was judged against — the thresholds come from the code that applied them, so this screen and the job cannot drift apart.':
+    'O que as respostas dizem sobre cada questão, pior primeiro. Todo número que é um julgamento vem seguido daquilo contra o que foi julgado — os limites vêm do código que os aplicou, então esta tela e a rotina não podem divergir.',
+  'There are no schools on this platform yet, so there are no questions to have been answered.':
+    'Ainda não há escolas nesta plataforma, então não há questões para terem sido respondidas.',
+  /* `Which school` IS ALREADY UP IN `Personal data`'s SECTION, one entry for
+     both screens. A second copy here would be legal JavaScript, silently keep
+     the last, and make one of the two translations decide nothing — which is
+     what `TestNoKeyIsWrittenTwice` exists to catch, and did. */
+  'Real students only — see below.': 'Apenas alunos reais — veja abaixo.',
+  'Nothing has been computed for this school': 'Nada foi calculado para esta escola',
+  'The nightly analysis has never written a row here. That is not the same as every question being fine — it is nobody having looked. If this school has been answering questions for a while, the job is what to check.':
+    'A análise noturna nunca escreveu uma linha aqui. Isso não é o mesmo que todas as questões estarem bem — é ninguém ter olhado. Se esta escola já responde questões há algum tempo, a rotina é o que verificar.',
+  'Computed %s': 'Calculado em %s',
+  'The analysis ran and found no question with any answers to it yet.':
+    'A análise rodou e não encontrou nenhuma questão com respostas ainda.',
+  'one question': 'uma questão',
+  '%d questions': '%d questões',
+  'Inverted': 'Invertida',
+  'The students who did well on the paper got this right LESS often than the students who did badly. That is a wrong key, an ambiguous prompt, or a question asking something other than what it looks like.':
+    'Os alunos que foram bem na prova acertaram esta MENOS vezes do que os alunos que foram mal. Isso é um gabarito errado, um enunciado ambíguo, ou uma questão que pergunta outra coisa que não o que parece.',
+  'Weak': 'Fraca',
+  'It barely separates students. Worth a look, and not evidence of anything broken.':
+    'Ela mal separa os alunos. Vale uma olhada, e não é prova de nada quebrado.',
+  'Too easy': 'Fácil demais',
+  'Almost everybody gets it right, so it measures nothing. A content problem rather than a broken question.':
+    'Quase todo mundo acerta, então ela não mede nada. Um problema de conteúdo, e não uma questão quebrada.',
+  'Fine': 'Bem',
+  'Doing its job.': 'Fazendo o seu trabalho.',
+  'Not enough answers': 'Respostas insuficientes',
+  'Nothing is being said about this one yet. It is the starting state of every question and it is not a criticism.':
+    'Nada está sendo dito sobre esta ainda. É o estado inicial de toda questão e não é uma crítica.',
+  'Out of circulation': 'Fora de circulação',
+  'Still being asked': 'Ainda sendo perguntada',
+  'Answers': 'Respostas',
+  'at or over %d, the minimum to say anything': 'em %d ou mais, o mínimo para dizer qualquer coisa',
+  'under %d, the minimum to say anything': 'abaixo de %d, o mínimo para dizer qualquer coisa',
+  'Got it right': 'Acertaram',
+  '%s (%c of %a)': '%s (%c de %a)',
+  'too easy at %e and up, very hard under %h — hard is not a fault':
+    'fácil demais de %e para cima, muito difícil abaixo de %h — difícil não é defeito',
+  'Discrimination': 'Discriminação',
+  'inverted at %i and under, weak under %w':
+    'invertida em %i ou menos, fraca abaixo de %w',
+  'The two groups': 'Os dois grupos',
+  '%s strong, %w weak': '%s fortes, %w fracos',
+  'the top and bottom %p% by the REST of the paper, so a question is not part of its own ranking':
+    'os %p% do topo e do fundo pelo RESTO da prova, para que uma questão não faça parte do próprio ranking',
+  'Answered %a to %b': 'Respondida de %a a %b',
+  'How this is decided': 'Como isto é decidido',
+  'Minimum sample': 'Amostra mínima',
+  '%d answers before anything is said. Classical item analysis’s number, and where the index stops being dominated by which particular people sat the paper.':
+    '%d respostas antes de dizer qualquer coisa. É o número da análise clássica de itens, e onde o índice deixa de ser dominado por quais pessoas em particular fizeram a prova.',
+  'Groups': 'Grupos',
+  'The top and bottom %p% of attempts, ranked by the rest of the paper. Ranking by the WHOLE paper puts a question inside its own ranking, which hid an inverted key on every paper length this platform sets.':
+    'Os %p% do topo e do fundo das tentativas, ordenados pelo resto da prova. Ordenar pela prova INTEIRA coloca uma questão dentro do próprio ranking, o que escondeu um gabarito invertido em todo tamanho de prova que esta plataforma monta.',
+  'Discrimination at %s or under. The only verdict that is a defect, and the only one this system can find without a person.':
+    'Discriminação em %s ou menos. O único veredito que é um defeito, e o único que este sistema consegue encontrar sem uma pessoa.',
+  'Under %s. A note.': 'Abaixo de %s. Uma observação.',
+  '%s or more get it right.': '%s ou mais acertam.',
+  'Very hard': 'Muito difícil',
+  'Under %s get it right. Reported and never condemned on its own — a question almost nobody answers may be an excellent one.':
+    'Menos de %s acertam. Reportada e nunca condenada por si só — uma questão que quase ninguém responde pode ser excelente.',
+  'Who is counted': 'Quem é contado',
+
+  /* ---------- Measure · Cohorts ---------- */
+  'People grouped by the month they signed up, followed forward. Each row is one intake and each column is a month of its life, so two intakes can be compared at the same age — which the funnel, being a single photograph of everybody at once, cannot do.':
+    'Pessoas agrupadas pelo mês em que se inscreveram, acompanhadas adiante. Cada linha é uma entrada e cada coluna é um mês de vida dela, então duas entradas podem ser comparadas na mesma idade — o que o funil, sendo uma única fotografia de todo mundo de uma vez, não consegue fazer.',
+  'There are no schools on this platform yet, so nobody has signed up to one.':
+    'Ainda não há escolas nesta plataforma, então ninguém se inscreveu em nenhuma.',
+  'What to follow': 'O que acompanhar',
+  'Followed for': 'Acompanhado por',
+  '6 months': '6 meses',
+  '12 months': '12 meses',
+  '24 months': '24 meses',
+  'Nobody has signed up to this school yet, for these people. An empty table is a real answer and not a failure to read one.':
+    'Ninguém se inscreveu nesta escola ainda, para estas pessoas. Uma tabela vazia é uma resposta de verdade e não uma falha em ler uma.',
+  'Active means <strong>%s</strong> — the smallest signal that somebody actually studied that month. Every share is of the intake, including the first column: an intake where half never started is a different problem from one that starts well and leaks.':
+    'Ativo significa <strong>%s</strong> — o menor sinal de que alguém de fato estudou naquele mês. Toda proporção é sobre a entrada, inclusive na primeira coluna: uma entrada em que metade nunca começou é um problema diferente de uma que começa bem e vaza.',
+  'By subscription start': 'Por início de assinatura',
+  /* THE COLUMN IS `Month they signed up` AND NOT `Signed up`, and the reason is
+     the dictionary rather than the screen: `Signed up` is already the student
+     record's label for the DAY somebody registered, and one English string can
+     only have one entry. Two screens meaning different things by the same words
+     is how a translation ends up wrong on the screen that lost. */
+  'Month they signed up': 'Mês da inscrição',
+  'same month': 'mesmo mês',
+  'not yet': 'ainda não',
+
+  /* ---------- Measure · Where they are ----------
+
+     THE COUNTRY NAMES ARE NOT HERE and never will be. `Intl.DisplayNames` has
+     all 249 of them in both languages, in the browser, which is exactly why the
+     answer comes back as ISO codes — see `countries.js`. What is here is the
+     words around them. */
+  'The people of one school, by the country each request came from. The country is worked out in this process from the address and the address is discarded, which is what the privacy policy promises and the reason there is no city here and never will be.':
+    'As pessoas de uma escola, pelo país de onde veio cada requisição. O país é deduzido neste processo a partir do endereço e o endereço é descartado, que é o que a política de privacidade promete e a razão pela qual não há cidade aqui e nunca haverá.',
+  'There are no schools on this platform yet, so there is nobody to be anywhere.':
+    'Ainda não há escolas nesta plataforma, então não há ninguém para estar em lugar algum.',
+  'Nobody has done anything at this school, in this window, for these people. An empty world is a real answer and not a failure to read one.':
+    'Ninguém fez nada nesta escola, nesta janela, para estas pessoas. Um mundo vazio é uma resposta de verdade e não uma falha em ler uma.',
+  'one person, in one country.': 'uma pessoa, em um país.',
+  'one person, in %c countries.': 'uma pessoa, em %c países.',
+  '%p people, in one country.': '%p pessoas, em um país.',
+  '%p people, in %c countries.': '%p pessoas, em %c países.',
+  'These add up to %s and there are %p people, because somebody who studied from two countries is honestly in both. The countries are shares of where the studying happened; the number above is how many people did it.':
+    'Isto soma %s e há %p pessoas, porque quem estudou de dois países está honestamente nos dois. Os países são proporções de onde o estudo aconteceu; o número acima é quantas pessoas o fizeram.',
+  'A world map with nothing shaded on it.': 'Um mapa-múndi sem nada sombreado nele.',
+  'A world map. %s are shaded. The list below has every country and its count.':
+    'Um mapa-múndi. %s estão sombreados. A lista abaixo tem cada país e sua contagem.',
+  '%s and one more': '%s e mais um',
+  '%s and %d more': '%s e mais %d',
+  'The map shows only the people whose country is known. The rest are in the list below, under “Nobody knows where”.':
+    'O mapa mostra apenas as pessoas cujo país é conhecido. As demais estão na lista abaixo, sob “Ninguém sabe onde”.',
+  'Nobody knows where': 'Ninguém sabe onde',
+  'No country could be worked out — a request from before there was a database to work it out with, or one through something that hides where it came from.':
+    'Nenhum país pôde ser deduzido — uma requisição de antes de haver um banco de dados para deduzi-lo, ou uma passando por algo que esconde de onde veio.',
+
+  /* ---------- sentences the SERVER sends to Watch and Measure ----------
+
+     Written in Go, so `check-interface` cannot enumerate them and nothing but
+     opening the screens finds them missing. They are here because somebody did.
+
+     WHAT IS NOT HERE: `section.completed`, which arrives on the cohorts answer
+     as the definition of "active". That is an event name — the thing the stream
+     holds and the thing somebody would grep for — and it is on the same line as
+     the roles and the parameter names. The sentence around it translates; it
+     does not. */
+  'People signed in, and only them: somebody reading a course without an account is not counted, because a visitor\'s heartbeat is hourly and answers a different question. Nor is an operator viewing a student\'s screens, nor a seeded student — who never signs in at all.':
+    'Pessoas conectadas, e apenas elas: quem lê um curso sem conta não é contado, porque o ' +
+    'sinal de vida de um visitante é de hora em hora e responde outra pergunta. Nem um ' +
+    'operador vendo as telas de um aluno, nem um aluno semeado — que nunca se conecta.',
+
+  'No job has recorded a run. Before the first night that is what this screen says — and it is also what it says if nothing is scheduled at all.':
+    'Nenhuma rotina registrou uma execução. Antes da primeira noite é isso que esta tela ' +
+    'diz — e é também o que ela diz se nada estiver agendado.',
+  'Starting one asks for a run now instead of waiting for the next night. It is recorded with your name — the run\'s own row cannot say who asked, because the scheduler makes the same call. This is not an alarm: an alert has to reach a phone when this console is down, which is exactly when it is needed.':
+    'Executar uma pede uma rodada agora em vez de esperar a próxima noite. Fica registrado ' +
+    'com o seu nome — a linha da própria execução não consegue dizer quem pediu, porque o ' +
+    'agendador faz a mesma chamada. Isto não é um alarme: um alerta tem de chegar a um ' +
+    'telefone quando este console está fora do ar, que é exatamente quando ele é preciso.',
+  'Nothing here can start a job. This deployment is not running on Cloud Run, so there is nothing to ask — which is the ordinary state of a laptop, of the local stack and of the test suite. A failed night still runs again on the next one.':
+    'Nada aqui consegue executar uma rotina. Este deploy não está rodando no Cloud Run, ' +
+    'então não há a quem pedir — que é o estado comum de um laptop, da pilha local e da ' +
+    'suíte de testes. Uma noite que falhou roda de novo na noite seguinte assim mesmo.',
+
+  'These are the seeded students and nobody else. They were written by `cmd/seed` to exercise this machinery and none of them exists.':
+    'Estes são os alunos semeados e mais ninguém. Foram escritos pelo `cmd/seed` para ' +
+    'exercitar esta maquinaria e nenhum deles existe.',
+  'This counts the seeded students as well as the real ones. The shape of it is a demonstration, not a measurement of anybody\'s behaviour.':
+    'Isto conta os alunos semeados junto com os reais. O formato disto é uma demonstração, ' +
+    'não uma medição do comportamento de ninguém.',
+
+  /* THE EIGHT STEPS OF THE FUNNEL, in `internal/analysis/funnel.go`. The ORDER
+     is the product and lives there; these are only the words. */
+  'Arrived': 'Chegou',
+  'Created an account': 'Criou uma conta',
+  'Verified the address': 'Confirmou o endereço',
+  'Chose a track': 'Escolheu uma trilha',
+  'Opened the first lesson': 'Abriu a primeira aula',
+  'Finished the first section': 'Concluiu a primeira seção',
+  'Finished the free course': 'Concluiu o curso gratuito',
+  'Subscribed': 'Assinou',
+  'nothing creates a subscription until there is a payment gateway, so there is no event to count. A missing feature and not a step nobody reaches':
+    'nada cria uma assinatura enquanto não houver um gateway de pagamento, então não há ' +
+    'evento a contar. Uma funcionalidade que falta, e não uma etapa a que ninguém chega',
+
+  'This is what the nightly job wrote, and that job counts real people only — it takes questions out of circulation, which must never happen on the strength of students who were invented.':
+    'Isto é o que a rotina noturna escreveu, e essa rotina conta apenas pessoas reais — ela ' +
+    'tira questões de circulação, o que jamais pode acontecer com base em alunos que foram ' +
+    'inventados.',
+  'Nothing writes a subscription into the event stream yet — there is no payment gateway — so there is no moment to group by. This is the same gap that makes the funnel\'s last step unmeasured.':
+    'Nada escreve uma assinatura no fluxo de eventos ainda — não há gateway de pagamento — ' +
+    'então não existe um momento pelo qual agrupar. É a mesma lacuna que deixa a última ' +
+    'etapa do funil sem medição.',
+
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
     'Este console está aberto desde antes da última atualização. Recarregue quando puder.',
