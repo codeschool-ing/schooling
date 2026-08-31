@@ -62,17 +62,87 @@ const (
 const reachesTheExam = signsUp * opensATrack * opensALesson *
 	finishesASection * finishesTheCourse * sitsTheExam
 
-// enoughPeople is the smallest population that puts the minimum sample through
-// every exam question. It is arithmetic and it is stated once, because it is
-// both the refusal above and the number that refusal has to suggest.
-//
-// IT IS THE SHIPPED SAMPLE AND NOT THE DEPLOYMENT'S. `MinimumSample` became a
-// parameter, and a seeder that sized its population from whatever a console
-// happens to be set to would plant a different fixture on two machines running
-// the same command — and would need a database open to answer a question about
-// how many people to invent. What this number is for is a demonstration that
-// can be read, against the platform as it ships.
-var enoughPeople = int(math.Ceil(float64(analysis.MinimumSample.Fallback) / reachesTheExam))
+/*
+enoughPeople is the smallest population this command will run for.
+
+	# IT USED TO SIZE FOR THE ANALYSIS TO SPEAK, AND THE QUESTION IS WHETHER IT
+	# SPEAKS CORRECTLY
+
+	It was `MinimumSample / reachesTheExam` — the population that yields thirty
+	answers per question, which is the threshold below which the analysis
+	refuses to say anything at all. Two things are wrong with that, and the
+	second is the one that bites.
+
+	THIRTY ON AVERAGE MEANS HALF THE RUNS ARE UNDER IT. It is an expectation,
+	not a floor, and every question is a separate draw — so at exactly that
+	population a good fraction of runs come back `insufficient` on some question
+	and the demonstration says nothing about it.
+
+	AND THIRTY IS NOT ENOUGH TO BE RIGHT. The minimum sample is where the index
+	stops being dominated by which particular people sat the paper; it is not
+	where it becomes accurate. Discrimination compares the top and bottom 27% of
+	attempts, so thirty answers means groups of eight, and the standard error of
+	the comparison is larger than the threshold it is being judged against.
+	Measured over forty seeds at the old number, the planted key came back
+	`inverted` NINE TIMES. The command errors when it does not, so three runs in
+	four failed — on a fixture that was built exactly as designed.
+
+	# SO IT SIZES FOR THE DEMONSTRATION TO WORK
+
+	Three times the minimum sample, which comes from measuring rather than from
+	liking round numbers. Over forty seeds, with the slope below: at seven
+	hundred people the planted key is found thirty-nine times, and at nine
+	hundred, forty out of forty. This lands above both — and a test holds it,
+	because this number is the promise the command makes when it refuses
+	anything smaller. See `TestThePlantedKeyIsFoundOnEverySeed`, which runs the
+	model at exactly this population and not at a comfortable one.
+
+	THE OTHER HALF OF THE FIX IS `brokenSlope` BELOW. A sample this size and an
+	effect that size are one answer to one question; either alone leaves the
+	coin weighted, which is what the old pair of numbers was.
+
+	IT IS THE SHIPPED SAMPLE AND NOT THE DEPLOYMENT'S. `MinimumSample` became a
+	parameter, and a seeder that sized its population from whatever a console
+	happens to be set to would plant a different fixture on two machines running
+	the same command — and would need a database open to answer a question about
+	how many people to invent.
+*/
+const readableMultiple = 3
+
+var enoughPeople = int(math.Ceil(
+	readableMultiple * float64(analysis.MinimumSample.Fallback) / reachesTheExam))
+
+/*
+How steeply the planted key inverts, and why it is steeper than it was.
+
+	IT WAS 0.80 − 0.65·ability AND THE DEMONSTRATION FAILED ONE RUN IN FOUR.
+	That is not a figure of speech: running the model over forty seeds at the
+	population `enoughPeople` used to allow, the analysis called the planted
+	question `inverted` nine times. The command errors out when it does not —
+	"the thing this run was meant to demonstrate did not happen" — so three
+	people in four running `seed` on a fresh school got a failure about a
+	question that was planted exactly as designed.
+
+	WHAT WAS ACTUALLY WRONG was not the slope alone: an expected discrimination
+	of −0.27 against a threshold of −0.10, measured on a sample whose standard
+	error is around 0.20, is a coin weighted only slightly. Both halves are
+	fixed here — the sample below, and the size of the effect here.
+
+	MEASURED, NOT GUESSED. At 0.90 − 0.85·ability the expected discrimination is
+	about −0.36, and over forty seeds the planted key is found 40 times at nine
+	hundred people and 39 at seven hundred.
+
+	AND THE DIFFICULTY DOES NOT MOVE, which is the property that makes the
+	demonstration worth anything: averaged over ability this is still about half
+	the students getting it right, so the question looks perfectly ordinary on
+	the one number a person would look at first. Difficulty cannot tell you the
+	key is wrong, and discrimination can — steepening the slope must not quietly
+	turn it into a question that is obviously strange.
+*/
+const (
+	brokenBase  = 0.90
+	brokenSlope = 0.85
+)
 
 // How often the less common things happen.
 const (
@@ -468,7 +538,7 @@ func sit(r *rand.Rand, s shape, l *life, at *time.Time, to time.Time,
 			   answer that is actually correct, and the paper marked them wrong.
 			   Nothing about the question is otherwise unusual, which is the
 			   point — difficulty cannot tell you this and discrimination can. */
-			chance = 0.80 - 0.65*ability
+			chance = brokenBase - brokenSlope*ability
 		} else {
 			chance = 0.15 + 0.70*ability + q.ease
 		}

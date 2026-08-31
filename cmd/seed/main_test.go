@@ -242,7 +242,7 @@ func TestTheBrokenKeyIsFound(t *testing.T) {
 	pool := testPool(t)
 	id, slug := aSchool(t, pool)
 
-	out := seeded(t, slug, "--people", "600", "--rand", "11")
+	out := seeded(t, slug, "--people", "1200", "--rand", "11")
 	if !strings.Contains(out, "the planted key was found") {
 		t.Fatalf("the run did not report finding the planted key:\n%s", out)
 	}
@@ -302,7 +302,7 @@ func TestTheBrokenKeyIsFound(t *testing.T) {
 func TestTheDefaultReadCannotSeeAnyOfIt(t *testing.T) {
 	pool := testPool(t)
 	id, slug := aSchool(t, pool)
-	seeded(t, slug, "--people", "400", "--rand", "5")
+	seeded(t, slug, "--people", "1200", "--rand", "5")
 
 	ctx := context.Background()
 	events := event.NewStore(pool)
@@ -602,5 +602,174 @@ func TestAfterARefundTheLaterEventsSayTheyAreNotPaying(t *testing.T) {
 	}
 	if checked == 0 {
 		t.Skip("this seed produced no refunds, so there was nothing to check")
+	}
+}
+
+/*
+THE PLANTED KEY IS FOUND ON EVERY SEED, AND NOT ON MOST OF THEM.
+
+	# WHAT THIS IS GUARDING
+
+	`TestTheBrokenKeyIsFound` runs the command once, on one seed, against a
+	database. It is the end-to-end check and it cannot be the reliability check:
+	one seed passing says nothing about the next one, and for a long time the
+	next one was a coin toss. Measured over forty seeds at the population the
+	command used to accept, the analysis called the planted question `inverted`
+	NINE times — and the command errors out when it does not, so three runs in
+	four failed on a fixture built exactly as designed.
+
+	Nothing caught it because everything that ran, ran on a seed that worked.
+
+	# WHY IT CAN BE A REAL TEST RATHER THAN A NOTE IN A COMMENT
+
+	The model is a pure function of a seed — that is `population.go`'s first
+	claim — so twenty-five populations can be generated and marked in-process,
+	with no Postgres and no command. The whole thing costs less than the single
+	database run it protects.
+
+	# WHAT IT WILL CATCH
+
+	Anything that weakens the demonstration without breaking it outright: a
+	gentler slope on the planted key, a smaller `readableMultiple`, a change to
+	the drop-off rates that thins the exam population, or a threshold moving in
+	`analysis`. Each of those leaves every existing test passing on its own
+	lucky seed.
+*/
+func TestThePlantedKeyIsFoundOnEverySeed(t *testing.T) {
+	to := time.Now().UTC()
+	from := to.AddDate(0, -6, 0)
+
+	const seeds = 25
+	var missed []string
+
+	for seed := int64(1); seed <= seeds; seed++ {
+		s := shape{
+			id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one", lesson: "le-one",
+			sections: []string{"se-1", "se-2", "se-3"},
+			broken:   "ex-1",
+		}
+		for i := 1; i <= 6; i++ {
+			id := fmt.Sprintf("ex-%d", i)
+			s.questions = append(s.questions,
+				question{id: id, version: 1, kind: "quiz", ease: easeOf(id)})
+		}
+
+		/* AT `enoughPeople` AND NOT AT WHATEVER IS COMFORTABLE. That constant is
+		   what the command refuses below, so it is the promise being made: run
+		   this many and the demonstration works. A test at a larger population
+		   would be checking a promise nobody made. */
+		lives := populate(
+			rand.New(rand.NewSource(seed)),   //nolint:gosec // repeatable on purpose
+			rand.New(rand.NewSource(seed+1)), //nolint:gosec // the same
+			s, from, to, enoughPeople)
+
+		answers := map[string][]analysis.Answer{}
+		for _, l := range lives {
+			for _, m := range l.moments {
+				if m.name != event.ItemAnswered {
+					continue
+				}
+				id, _ := m.payload["exercise"].(string)
+				correct, _ := m.payload["correct"].(bool)
+				attempt, _ := m.payload["attempt"].(string)
+				score, _ := m.payload["score"].(int)
+				of, _ := m.payload["of"].(int)
+				answers[id] = append(answers[id], analysis.Answer{
+					ExerciseID: id, Version: 1, Type: "quiz", AttemptID: attempt,
+					Correct: correct, Score: score, Of: of, AnsweredAt: m.at,
+				})
+			}
+		}
+
+		got, err := analysis.Summarise(answers[s.broken], analysis.MinimumSample.Fallback)
+		if err != nil {
+			t.Fatalf("summarising seed %d: %v", seed, err)
+		}
+		if got.Verdict != analysis.VerdictInverted {
+			missed = append(missed, fmt.Sprintf("seed %d: %s (%d answers, discrimination %+.2f)",
+				seed, got.Verdict, got.Attempts, got.Discrimination))
+		}
+	}
+
+	if len(missed) > 0 {
+		t.Errorf("the planted key was missed on %d of %d seeds, and the command errors "+
+			"out when that happens — so this is the share of runs that fail for somebody "+
+			"who did nothing wrong:\n  %s",
+			len(missed), seeds, strings.Join(missed, "\n  "))
+	}
+}
+
+/*
+AND THE GOOD QUESTIONS ARE NOT CONDEMNED, on every seed as well.
+
+	The other half of a demonstration worth believing. A fixture that called
+	every question broken would find the planted one too, and would prove
+	nothing at all — so the same twenty-five populations are asked about the
+	five questions nothing was done to.
+
+	IT ALLOWS `weak` AND REFUSES `inverted`. Weak is a note about a question that
+	barely separates students, which a small sample will produce honestly;
+	inverted is the accusation, and it is the one that would be false.
+*/
+func TestNoGoodQuestionIsCondemnedOnAnySeed(t *testing.T) {
+	to := time.Now().UTC()
+	from := to.AddDate(0, -6, 0)
+
+	const seeds = 25
+	var wrong []string
+
+	for seed := int64(1); seed <= seeds; seed++ {
+		s := shape{
+			id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one", lesson: "le-one",
+			sections: []string{"se-1", "se-2", "se-3"},
+			broken:   "ex-1",
+		}
+		for i := 1; i <= 6; i++ {
+			id := fmt.Sprintf("ex-%d", i)
+			s.questions = append(s.questions,
+				question{id: id, version: 1, kind: "quiz", ease: easeOf(id)})
+		}
+		lives := populate(
+			rand.New(rand.NewSource(seed)),   //nolint:gosec // repeatable on purpose
+			rand.New(rand.NewSource(seed+1)), //nolint:gosec // the same
+			s, from, to, enoughPeople)
+
+		answers := map[string][]analysis.Answer{}
+		for _, l := range lives {
+			for _, m := range l.moments {
+				if m.name != event.ItemAnswered {
+					continue
+				}
+				id, _ := m.payload["exercise"].(string)
+				correct, _ := m.payload["correct"].(bool)
+				attempt, _ := m.payload["attempt"].(string)
+				score, _ := m.payload["score"].(int)
+				of, _ := m.payload["of"].(int)
+				answers[id] = append(answers[id], analysis.Answer{
+					ExerciseID: id, Version: 1, Type: "quiz", AttemptID: attempt,
+					Correct: correct, Score: score, Of: of, AnsweredAt: m.at,
+				})
+			}
+		}
+
+		for id, got := range answers {
+			if id == s.broken {
+				continue
+			}
+			sum, err := analysis.Summarise(got, analysis.MinimumSample.Fallback)
+			if err != nil {
+				t.Fatalf("summarising %s on seed %d: %v", id, seed, err)
+			}
+			if sum.Verdict == analysis.VerdictInverted {
+				wrong = append(wrong, fmt.Sprintf("seed %d: %s came back inverted "+
+					"(discrimination %+.2f)", seed, id, sum.Discrimination))
+			}
+		}
+	}
+
+	if len(wrong) > 0 {
+		t.Errorf("%d good questions were condemned across %d seeds — a seeder that "+
+			"condemns questions it did not break is one nobody can believe about the "+
+			"one it did:\n  %s", len(wrong), seeds, strings.Join(wrong, "\n  "))
 	}
 }
