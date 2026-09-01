@@ -10,14 +10,10 @@ import "testing"
    example, and the example was counted as an interface string somebody had to
    translate. Every file where somebody has just learnt that rule hits it. */
 
-// said is what the scanner would find in a source, after the comments go.
-func said(source string) []string {
-	var out []string
-	for _, m := range txtCall.FindAllStringSubmatch(withoutComments(source), -1) {
-		out = append(out, unescape(m[1]+m[2]))
-	}
-	return out
-}
+// said is what the scanner would find in a source, after the comments go. It is
+// the tool's own `saidIn` and not a second copy of the walk: a helper that
+// reimplemented it would keep passing on the day the real one stopped working.
+func said(source string) []string { return saidIn(source) }
 
 func only(t *testing.T, source string, want ...string) {
 	t.Helper()

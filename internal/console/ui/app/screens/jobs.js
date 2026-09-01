@@ -155,11 +155,14 @@ export default async function jobs(section) {
 function why(answer, known, startable) {
   if (startable.length) return txt(answer.about_starting || '');
   if (known.length) {
-    /* ONE LITERAL, HOWEVER LONG THE LINE. `txt('a ' + 'b')` asks the dictionary
-       for a key no dictionary can be written against — the concatenation is
-       gone by the time `check-interface` reads the file, so it reports nothing
-       and the sentence stays English in every language. It has cost this
-       repository eighteen strings once already. */
+    /* A CONCATENATION IS READ NOW, and this stays one line by preference
+       rather than by rule. `txt('a ' + 'b')` used to match nothing, so the
+       sentence stayed English in every language and its translation was
+       reported stale on top — it cost this repository eighteen strings once.
+       `tools/check-interface` joins the literals and asks for the key the
+       runtime asks for. What is still invisible, and still has to be, is a call
+       with a VALUE in it: `txt('over ' + n)` names a key no dictionary can hold,
+       and `language_test.go` is what covers those. */
     return txt('A read-only role may read this screen and not press anything. Starting a job withdraws questions from circulation when the analysis finds them broken, which is not a thing looking at a screen should do.');
   }
   return txt(answer.nothing_to_press || '');
