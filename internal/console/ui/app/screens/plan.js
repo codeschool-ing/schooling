@@ -25,6 +25,29 @@
    wants to see is that the year moved and the two years did not, which is a
    comparison three separate tables cannot be asked for.
 
+   # AND THE SAME SERIES ONCE AS A SHAPE, WHICH IS WHAT THAT PARAGRAPH ASKED FOR
+
+   One list in date order gets a reader most of the way there and stops short of
+   two things. *Did the year move while the two years stood still* means walking
+   an interleaved list and holding three trajectories at once — the comparison
+   the paragraph above has always said it wanted. And *how long was that price in
+   force* is a subtraction from the next row of the same term, done by hand,
+   every time somebody asks.
+
+   A step chart answers both by being one: a line per term, and THE WIDTH OF A
+   STEP IS HOW LONG THAT PRICE LASTED. The lines label themselves at the right
+   rather than in a legend, for the reason the item-analysis chart gives about
+   legends.
+
+   ONE CHART PER CURRENCY, because two currencies on one money axis is not a
+   comparison, it is an exchange rate nobody supplied. The discounts stay off it
+   for the same kind of reason — a percentage and a price do not share an axis —
+   and both facts are said under the chart rather than left to be noticed.
+
+   THE MONEY AXIS STARTS AT ZERO. It is the oldest way to make a chart lie: a
+   3% rise off a floor of last month's price looks like a doubling, and this is
+   a screen where somebody decides whether a rise was large.
+
    # NOTHING HERE DECIDES WHAT IS ALLOWED
 
    The save is hidden from a read-only role because a control that always fails
@@ -286,7 +309,8 @@ export default async function plan(section) {
 
     series.innerHTML = '<h2>' + esc(txt('Everything ever set')) + '</h2>' + (everything.length === 0
       ? '<p class="none">' + esc(txt('Nothing is priced yet. The invitation then says what a subscription opens without naming a figure.')) + '</p>'
-      : '<ol class="price-list">' +
+      : steps(rows, off.length > 0) +
+        '<ol class="price-list">' +
           everything.map((one) =>
             '<li class="price-row' + (one.now ? ' price-now' : '') + '">' +
               '<span class="price-term">' + esc(one.what) + '</span>' +
@@ -558,6 +582,187 @@ function saying(answer) {
       .replace('%e', answer.published);
   }
   return txt('Nobody is told where to write. The account screen still names the deadline, because knowing the date is worth something on its own — but a student inside the seven days has no address to use them at.');
+}
+
+/* ---------- what the price has done, as a shape ---------- */
+
+/* Where the plot sits inside the viewBox. The left is one formatted amount —
+   `R$ 1.090,00` is ten characters — and the right is a gutter the lines label
+   themselves in, which is where the item-analysis chart put its threshold words
+   and for the same reason: a label inside the plot covers the thing it names. */
+const PLOT = { left: 84, right: 428, top: 16, bottom: 196 };
+const CANVAS = '0 0 560 248';
+
+/*
+steps is every price ever set, as one chart per currency.
+
+	IT IS DRAWN ONLY WHERE SOMETHING CHANGED, which is what `hasAShape` decides.
+
+	ONE CHART PER CURRENCY. Two currencies on one money axis is not a comparison,
+	it is an exchange rate nobody supplied — and this platform's table can hold
+	both, which is the only reason the loop exists.
+*/
+function steps(rows, hasDiscounts) {
+  /* WHICH CURRENCIES WILL ACTUALLY DRAW, DECIDED BEFORE ANY OF THEM IS DRAWN.
+
+     The caption says "one chart per currency" and that sentence has to be true
+     of what is on the screen rather than of what is in the table. The first
+     draft asked how many currencies existed, and this platform has two — one of
+     them priced once, which has no history and no chart — so a single chart
+     appeared under a sentence promising several, and the only thing a reader
+     could do with that is look for the missing one. */
+  const drawable = [...new Set(rows.map((p) => p.currency))].sort()
+    .map((currency) => ({ currency, mine: rows.filter((p) => p.currency === currency) }))
+    .filter((c) => hasAShape(c.mine));
+
+  return drawable
+    .map((c) => chart(c.mine, c.currency, drawable.length > 1, hasDiscounts))
+    .join('');
+}
+
+/*
+hasAShape is whether a currency's prices are a history rather than a moment.
+
+	TWO DISTINCT DATES IS THE SMALLEST ONE. With every price set on the same day
+	there is nothing for a step chart to say that the list does not say in words:
+	it would be flat lines and a decoration. The check is separate from the
+	drawing because the caption has to know the answer for every currency before
+	the first chart is written.
+*/
+function hasAShape(rows) {
+  if (rows.length < 2) return false;
+  if (new Set(rows.map((p) => String(p.from))).size < 2) return false;
+  if (rows.reduce((top, p) => Math.max(top, p.cents || 0), 0) <= 0) return false;
+
+  const from = rows.reduce((first, p) => Math.min(first, new Date(p.from).getTime()), Infinity);
+  return Number.isFinite(from) && Date.now() > from;
+}
+
+/* One currency's chart. Everything it refuses to draw, `hasAShape` has already
+   refused — it is asked first so that the caption can count the charts before
+   any of them exists. */
+function chart(rows, currency, several, hasDiscounts) {
+  const from = rows.reduce((first, p) =>
+    Math.min(first, new Date(p.from).getTime()), Infinity);
+  const until = Date.now();
+  const most = rows.reduce((top, p) => Math.max(top, p.cents || 0), 0);
+
+  const atX = (ms) =>
+    PLOT.left + (PLOT.right - PLOT.left) * Math.min(1, Math.max(0, (ms - from) / (until - from)));
+  /* ZERO AT THE FOOT, ALWAYS. A money axis that starts at last month's price is
+     the oldest way to make a chart lie — a rise of three per cent off that
+     floor fills half the picture — and this is the screen where somebody
+     decides whether a rise was large. */
+  const atY = (cents) => PLOT.bottom - (PLOT.bottom - PLOT.top) * (cents / most);
+
+  /* A TERM AT A TIME, OLDEST FIRST, and a term's line begins at its own first
+     price rather than at the left edge: before that date the term was not sold,
+     and a line running back to the start of the chart would draw a price nobody
+     could have paid. */
+  const terms = [...new Set(rows.map((p) => p.termMonths))]
+    .sort((a, b) => b - a)
+    .map((months) => {
+      const mine = rows
+        .filter((p) => p.termMonths === months)
+        .sort((a, b) => new Date(a.from) - new Date(b.from));
+      return { months, mine, ends: atY(mine[mine.length - 1].cents) };
+    });
+
+  const label = txt('A step chart of every price ever set. Time runs left to right and the money axis starts at zero; each line is one term, named at its right-hand end. The list below has every price with its date.');
+
+  return '<figure class="steps">' +
+    '<svg viewBox="' + CANVAS + '" role="img" aria-label="' + esc(label) + '" ' +
+      'preserveAspectRatio="xMidYMid meet">' +
+
+      [0, 0.5, 1].map((t) =>
+        '<line class="steps-grid" x1="' + PLOT.left + '" y1="' + atY(most * t).toFixed(1) +
+          '" x2="' + PLOT.right + '" y2="' + atY(most * t).toFixed(1) + '"/>' +
+        '<text class="steps-tick" x="' + (PLOT.left - 8) + '" y="' + atY(most * t).toFixed(1) +
+          '" text-anchor="end" dy=".32em">' +
+          esc(money(Math.round(most * t), currency)) + '</text>').join('') +
+
+      terms.map((t) => drawn(t, atX, atY, until)).join('') +
+
+      '<line class="steps-axis" x1="' + PLOT.left + '" y1="' + PLOT.top +
+        '" x2="' + PLOT.left + '" y2="' + PLOT.bottom + '"/>' +
+
+      /* THE TWO ENDS OF THE TIME AXIS AND NO TICKS BETWEEN THEM. A row of dates
+         across the foot of a chart this wide is five labels nobody reads; what
+         a reader needs is which way round it goes and what "now" is. */
+      '<text class="steps-tick" x="' + PLOT.left + '" y="' + (PLOT.bottom + 16) +
+        '" text-anchor="start">' + esc(day(new Date(from).toISOString())) + '</text>' +
+      '<text class="steps-tick" x="' + PLOT.right + '" y="' + (PLOT.bottom + 16) +
+        '" text-anchor="end">' + esc(txt('today')) + '</text>' +
+
+      spread(terms).map((t) =>
+        '<text class="steps-name" x="' + (PLOT.right + 8) + '" y="' + t.at.toFixed(1) +
+          '" text-anchor="start" dy=".32em">' + esc(named(t.months)) + '</text>').join('') +
+    '</svg>' +
+
+    '<figcaption>' +
+      esc(txt('A step is as wide as that price was in force for, and the axis starts at zero — a money axis that does not is how a small rise is made to look like a large one.')) +
+      (several
+        ? ' ' + esc(txt('One chart per currency: two currencies on one axis is an exchange rate nobody supplied.'))
+        : '') +
+      (hasDiscounts
+        ? ' ' + esc(txt('The discounts are in the list below and not on this chart, because a percentage and a price do not share an axis.'))
+        : '') +
+    '</figcaption>' +
+  '</figure>';
+}
+
+/* One term's line. A price holds until the next one replaces it, so the path is
+   a flat run and then a jump — which is what the money actually did, and what a
+   line drawn straight between two prices would quietly deny: it would show a
+   month of gentle increases that were never charged to anybody. */
+function drawn(term, atX, atY, until) {
+  let d = '';
+  term.mine.forEach((p, i) => {
+    const x = atX(new Date(p.from).getTime());
+    const y = atY(p.cents);
+    d += i === 0 ? 'M' + x.toFixed(1) + ',' + y.toFixed(1)
+      : 'L' + x.toFixed(1) + ',' + atY(term.mine[i - 1].cents).toFixed(1) +
+        'L' + x.toFixed(1) + ',' + y.toFixed(1);
+  });
+  d += 'L' + atX(until).toFixed(1) + ',' + term.ends.toFixed(1);
+
+  const which = look(term.months);
+  return '<path class="steps-line' + which('line') + '" d="' + d + '" fill="none"/>' +
+    /* THE DOT TIES THE NAME TO ITS LINE, which the name alone cannot once two
+       of them have been pushed apart to stop overlapping. */
+    '<circle class="steps-now' + which('now') + '" cx="' + PLOT.right +
+      '" cy="' + term.ends.toFixed(1) + '" r="3"/>';
+}
+
+/* WHICH OF THE THREE LOOKS A TERM GETS, by its place in `TERMS` so that the
+   same term is drawn the same way on every render. A term the platform does not
+   sell — the table takes any number of months — gets none of them and is drawn
+   as itself, which is the closed-list rule this console follows everywhere.
+
+   IT ANSWERS A FUNCTION AND NOT A CLASS NAME because the line and the dot at
+   the end of it are two elements taking two different properties: a stroke and
+   a fill. The first draft handed the line's class to both, so every dot on the
+   chart was drawn in the fallback colour and the one on the year's line did not
+   match the line it sat on. */
+function look(months) {
+  const i = TERMS.findIndex((t) => t.months === months);
+  return (kind) => (i < 0 ? '' : ' steps-' + kind + '-' + i);
+}
+
+/* WHERE EACH NAME GOES, WHICH IS NOT ALWAYS WHERE ITS LINE ENDS. Two terms
+   priced within a few pounds of each other end at the same height and their
+   names land on top of one another — one word over another is unreadable in a
+   way a slightly misplaced one is not. So they are pushed apart, in order, and
+   the dot on the line is what says which name belongs to which. */
+function spread(terms) {
+  const gap = 12;
+  return terms
+    .map((t) => ({ months: t.months, at: t.ends }))
+    .sort((a, b) => a.at - b.at)
+    .map((t, i, all) => {
+      if (i > 0) t.at = Math.max(t.at, all[i - 1].at + gap);
+      return t;
+    });
 }
 
 // A term's name where one exists, and its months where it does not. The table

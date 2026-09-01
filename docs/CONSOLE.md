@@ -66,6 +66,16 @@ is how every console rots.* That division is the spine of everything below.
   renewal charges what is in force then, with the notice the terms promise. A price is **appended**
   where a colour is **replaced**, and the two sit on one screen: nothing has to be explained about
   last month's colour, and a March invoice has to stay explicable in November
+  - and the series once as a **step chart**, a line per term, where the *width of a step is how
+    long that price was in force*. It answers the two things the dated list cannot: whether the
+    year moved while the two years stood still — the comparison this screen has always said it
+    wanted — and how long a price lasted, which is otherwise a subtraction done by hand. **The
+    money axis starts at zero**, because a money axis that starts at last month's price is how a
+    3% rise is made to look like a doubling, and this is the screen where somebody decides
+    whether a rise was large. **One chart per currency** — two currencies on one axis is an
+    exchange rate nobody supplied — and the discounts stay in the list, a percentage and a price
+    having no axis in common. It is drawn only where something actually changed: with every price
+    set on one day there is nothing a step chart says that the list does not say in words
 - **Where a student writes to use the seven days**, on the same screen as the price because it is
   the same offer: the terms promise a week to withdraw (art. 49 of the CDC) and this is the address
   that promise names. It was an environment variable, which meant an apply and a new revision from

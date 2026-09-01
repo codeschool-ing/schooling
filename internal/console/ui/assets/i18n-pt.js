@@ -541,6 +541,15 @@ window.I18N.pt.ui = {
     'um valor.',
   'in force since %s': 'em vigor desde %s',
   'from %s': 'de %s',
+  'today': 'hoje',
+  'A step chart of every price ever set. Time runs left to right and the money axis starts at zero; each line is one term, named at its right-hand end. The list below has every price with its date.':
+    'Um gráfico de degraus de todo preço já definido. O tempo corre da esquerda para a direita e o eixo do dinheiro começa em zero; cada linha é um prazo, nomeado na sua ponta direita. A lista abaixo tem cada preço com a sua data.',
+  'A step is as wide as that price was in force for, and the axis starts at zero — a money axis that does not is how a small rise is made to look like a large one.':
+    'Um degrau é tão largo quanto o tempo em que aquele preço esteve em vigor, e o eixo começa em zero — um eixo de dinheiro que não começa é como se faz um aumento pequeno parecer grande.',
+  'One chart per currency: two currencies on one axis is an exchange rate nobody supplied.':
+    'Um gráfico por moeda: duas moedas em um eixo só é uma taxa de câmbio que ninguém forneceu.',
+  'The discounts are in the list below and not on this chart, because a percentage and a price do not share an axis.':
+    'Os descontos estão na lista abaixo e não neste gráfico, porque uma porcentagem e um preço não dividem um eixo.',
 
   'Where a student writes to use the seven days': 'Para onde o aluno escreve nos sete dias',
   'The terms of use give a student seven days from the purchase to give the subscription back, for the whole amount and with no reason — art. 49 of the Código de Defesa do Consumidor. The account screen names that deadline whatever happens here, and names an address only when there is one.':
