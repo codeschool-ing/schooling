@@ -187,10 +187,16 @@ func (h *TodayHandler) findings(w http.ResponseWriter, r *http.Request) {
 	   without it: `Finding` went out as `Kind`, `Count` and `Where`, the screen
 	   read `kind` and `count`, and every row drew "undefined — undefined". It
 	   rendered perfectly and said nothing, which is the failure this whole
-	   console is written against. Found by opening the screen. */
+	   console is written against. Found by opening the screen.
+
+	   THE CONVERSION IS SAFE BECAUSE THE COMPILER CHECKS IT, which is the
+	   reason `stepBody` is written the same way one file over: the two types
+	   having the same fields is what makes this one expression rather than
+	   three, and the day they stop matching this line stops building rather
+	   than quietly dropping a field. */
 	body := make([]findingBody, 0, len(out))
 	for _, one := range out {
-		body = append(body, findingBody{Kind: one.Kind, Count: one.Count, Where: one.Where})
+		body = append(body, findingBody(one))
 	}
 
 	web.JSON(w, http.StatusOK, map[string]any{
