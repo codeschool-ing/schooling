@@ -109,5 +109,10 @@ there is one, and a single school behind a `Host` check is indistinguishable fro
 that is not multi-tenant at all. Phases 1 to 3 each keep an item open for the same kind of reason
 — a sandbox that runs a student's program, the platform's own address, a payment gateway.
 
+Phase 4's boxes are all ticked now and it is not finished either, for a reason of its own: its
+`Done when` asks for a funnel that shows a drop at a step nobody suspected, and a population this
+repository invented drops where the model was told to make it drop. The machinery is what is
+finished. The finding waits on real students.
+
 [`docs/ROADMAP.md`](docs/ROADMAP.md) is the list and says which and why;
 [`docs/PLAN.md`](docs/PLAN.md) is the shape and the reasoning.
