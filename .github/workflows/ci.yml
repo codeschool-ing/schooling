@@ -310,6 +310,14 @@ jobs:
       - name: Our stylesheet does not lay out their elements
         run: go run ./tools/check-css
 
+      # P-03, which until now was cited in eight files as the reason for a design
+      # choice and held to by nobody. A font from a CDN, an icon, an analytics
+      # snippet: each works perfectly, and each tells a third party which school a
+      # student is reading, with the `Referer` naming the lesson. None of that
+      # appears in a diff as a decision — it appears as a font.
+      - name: Nothing the browser fetches leaves the origin
+        run: go run ./tools/check-origin
+
       - name: The tests, with a database behind them
         run: go test -race ./...
 
