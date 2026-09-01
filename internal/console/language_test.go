@@ -195,6 +195,12 @@ func drawnThroughAVariable(t *testing.T) []string {
 	out = append(out, fieldValues(t, "questions.js", read(t, "ui/app/screens/questions.js"),
 		"VERDICTS", "name", "meaning")...)
 
+	/* THE TWO BASES A COHORT CAN BE COUNTED FROM. `cohorts.js` draws
+	   `txt(g.label)` out of `GROUPINGS`; `basis` beside it is the word the API
+	   takes and is deliberately not translated. */
+	out = append(out, fieldValues(t, "cohorts.js", read(t, "ui/app/screens/cohorts.js"),
+		"GROUPINGS", "label")...)
+
 	return out
 }
 

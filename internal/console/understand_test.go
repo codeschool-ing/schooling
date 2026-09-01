@@ -35,9 +35,10 @@ type funnelFake struct {
 	asked  bool
 
 	// The cohorts, and what the seam was asked for.
-	table        []console.Cohort
-	askedMonths  int
-	askedCohorts string
+	table         []console.Cohort
+	askedMonths   int
+	askedCohorts  string
+	askedGrouping string
 
 	// Where the people are, and what that seam was asked for.
 	where          console.Where
@@ -71,9 +72,10 @@ func (f *funnelFake) handler() http.Handler {
 			return f.rollup, nil
 		},
 		func(_ context.Context, _ uuid.UUID, months int,
-			counting string) ([]console.Cohort, string, error) {
+			counting, grouping string) ([]console.Cohort, string, error) {
 
 			f.askedMonths, f.askedCohorts = months, counting
+			f.askedGrouping = grouping
 			if f.fail {
 				return nil, "", fmt.Errorf("the stream is not there")
 			}
@@ -513,20 +515,65 @@ func TestTheCohortsSayWhatCountsAsActive(t *testing.T) {
 	}
 }
 
-// THE HALF THAT IS NOT BUILT SAYS SO. Grouping by subscription start needs a
-// subscription in the stream and there is none — and an empty table would read
-// as "nobody ever subscribed", which is a claim about students rather than about
-// a missing payment gateway.
-func TestGroupingBySubscriptionSaysItIsNotBuiltRatherThanEmpty(t *testing.T) {
+/*
+THE BASIS COMES BACK WITH THE NUMBERS, AND SO DOES THE SENTENCE FOR IT.
+
+	This used to be `TestGroupingBySubscriptionSaysItIsNotBuiltRatherThanEmpty`,
+	which asserted an absence: nothing wrote a subscription into the stream, so
+	the answer said so rather than returning an empty table that would have read
+	as "nobody ever subscribed". Billing writes them now, so the absence is a
+	choice — and a choice has to be answered back, for the reason the population
+	is (K-18). A table drawn under the wrong heading is worse than a refusal,
+	because both look right.
+*/
+func TestTheCohortsSayWhichBasisTheyWereBuiltOn(t *testing.T) {
+	school := oneSchool()
+
+	for _, basis := range []string{"signup", "subscription"} {
+		f := &funnelFake{schools: []console.School{school}, table: aTable()}
+
+		_, body := askCohorts(t, f, school.ID, "?grouping="+basis)
+		if body["grouping"] != basis {
+			t.Errorf("asked to group by %q and the answer says %v", basis, body["grouping"])
+		}
+		if f.askedGrouping != basis {
+			t.Errorf("asked to group by %q and the stream was read for %q",
+				basis, f.askedGrouping)
+		}
+		if said, _ := body["grouped"].(string); said == "" {
+			t.Errorf("grouping by %q came back with nothing saying what that means, "+
+				"and a column of months does not say which moment it counts from", basis)
+		}
+	}
+}
+
+// AND SIGNUP IS WHAT IT DOES WITHOUT BEING ASKED, because a default that
+// answered about subscribers would report the smaller population to anybody who
+// opened the screen and read the first table they saw.
+func TestTheCohortsGroupBySignupWhenNobodySaid(t *testing.T) {
 	school := oneSchool()
 	f := &funnelFake{schools: []console.School{school}, table: aTable()}
 
 	_, body := askCohorts(t, f, school.ID, "")
-	if body["by_subscription"] != false {
-		t.Errorf("the answer claims cohorts by subscription: %v", body["by_subscription"])
+	if body["grouping"] != "signup" {
+		t.Errorf("with no basis asked for, it grouped by %v", body["grouping"])
 	}
-	if why, _ := body["why_no_subscription"].(string); why == "" {
-		t.Error("the half that is missing came back with nothing saying why")
+}
+
+/*
+A WORD THAT IS NOT A BASIS IS REFUSED RATHER THAN CORRECTED.
+
+	The same rule the population is under, and the same reason: falling back to
+	signups would draw the larger population under a heading somebody chose to
+	say "subscription". A refusal is visible; a quiet correction is not.
+*/
+func TestABasisThatIsNotOneIsRefused(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}, table: aTable()}
+
+	code, _ := askCohorts(t, f, school.ID, "?grouping=whenever")
+	if code != http.StatusBadRequest {
+		t.Errorf("grouping by a word nothing knows answered %d, want 400", code)
 	}
 }
 

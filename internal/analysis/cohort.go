@@ -36,13 +36,30 @@ import (
    different report. It is a constant here rather than a parameter for the reason
    K-13 gives: there is a right answer, so it lives in code where a test holds it.
 
-   # ONLY BY SIGNUP, AND THE OTHER HALF SAYS WHY NOT
+   # TWO BASES, WHICH THE ROADMAP ASKED FOR AND ONLY ONE OF WHICH EXISTED
 
-   The roadmap asks for two: by signup and by subscription start. Nothing writes a
-   subscription into the stream — there is no payment gateway yet — so grouping by
-   it would mean grouping by a moment nothing records. It comes back saying so,
-   the way the funnel's last step does, rather than as an empty table that reads
-   as "nobody ever subscribed".
+   By signup and by subscription start. The second used to come back saying it
+   could not be built, because nothing wrote a subscription into the stream —
+   grouping by it would have meant grouping by a moment nothing recorded. That
+   changed when billing started emitting, and this is the other half.
+
+   THEY ANSWER DIFFERENT QUESTIONS AND BOTH ARE WORTH ASKING. By signup is "does
+   the product hold the people it attracts"; by subscription start is "does it
+   hold the people who paid", which is a different population and the one whose
+   retention costs money to get wrong. A platform where signups retain well and
+   subscribers do not has a problem no signup cohort can show.
+
+   # THE SUBSCRIPTION BASIS IS STILL ABOUT THIS SCHOOL
+
+   A subscription covers every school (N-02), so the event carries no tenant and
+   the intake could easily become the platform's — every school reporting the
+   same subscribers. It does not: membership comes from having SIGNED UP HERE,
+   which is school-scoped and already read. The subscription month decides which
+   cohort somebody is in; it does not decide whether they are in the table.
+
+   So this basis reads: of the people who signed up at this school and later
+   started paying, grouped by the month they started, how many were still
+   studying here each month afterwards.
 
    # A PERSON, NOT AN IDENTITY
 
@@ -57,6 +74,13 @@ const (
 	// created.
 	SignupEvent = "account.created"
 
+	/* THE OTHER BASIS READS `SubscribedEvent`, WHICH IS `funnel.go`'s AND IS
+	   NOT REDECLARED HERE. "How many subscribed" and "when did they subscribe"
+	   are two questions about one fact, and a second constant for it is how the
+	   funnel's last step and this table would come to disagree about which rows
+	   they mean. It is the one name, in the one place, with the note about why
+	   `billing.EventStarted` cannot simply be imported. */
+
 	// ActiveEvent is what counts as having studied in a month.
 	//
 	// FINISHING A SECTION AND NOT OPENING A PAGE. An `opened` event is a click,
@@ -66,6 +90,54 @@ const (
 	// shape would be noise.
 	ActiveEvent = "section.completed"
 )
+
+/*
+Basis is what decides which cohort somebody is in.
+
+	A CLOSED LIST AND A REFUSAL, the same shape as `Counting` next door and for
+	the same reason: the word arrives on a request, and a screen that asked for
+	one basis and was quietly answered about the other would be a table headed
+	with a claim its numbers do not support. `Reading` refuses; nothing here
+	falls back.
+*/
+type Basis string
+
+const (
+	// BySignup groups by the month somebody's account was created. The default,
+	// and the question "does the product hold the people it attracts".
+	BySignup Basis = "signup"
+
+	// BySubscription groups by the month somebody first started paying. The
+	// question "does it hold the people who paid", which is a different
+	// population and the one whose retention costs money to get wrong.
+	BySubscription Basis = "subscription"
+)
+
+// Grouping answers whether a word is one of the two, and refuses rather than
+// falling back — see `Basis`.
+func Grouping(word string) (Basis, bool) {
+	switch Basis(word) {
+	case BySignup, BySubscription:
+		return Basis(word), true
+	default:
+		return BySignup, false
+	}
+}
+
+/*
+MonthlyAnywhere is `Monthly` for the events that belong to no school.
+
+	IT EXISTS FOR ONE CALLER: grouping a cohort by when somebody started paying.
+	A subscription carries no tenant (N-02), so `Monthly`'s `tenant_id = $2`
+	cannot see it — the same wall `Reached` met, and the same answer.
+
+	WHAT KEEPS THE ANSWER ABOUT ONE SCHOOL is not this reader. It comes back
+	platform-wide and `Cohorts` keeps only the people who signed up at the
+	school in hand. Narrowing here would mean this seam knowing what a cohort
+	is.
+*/
+type MonthlyAnywhere func(ctx context.Context,
+	names []string, since time.Time, who Counting) ([]Active, error)
 
 // Cohort is one month's intake, and what became of it.
 type Cohort struct {
@@ -96,10 +168,14 @@ type Cohort struct {
 // month wide, and every month of retention after that would be missing with
 // nothing to say so.
 func (s *Store) Cohorts(ctx context.Context, tenantID uuid.UUID,
-	months int, now time.Time, who Counting) ([]Cohort, error) {
+	months int, now time.Time, who Counting, basis Basis) ([]Cohort, error) {
 
 	if s.monthly == nil || s.links == nil {
 		return nil, fmt.Errorf("analysis: this store was built without the stream to read")
+	}
+	if basis == BySubscription && s.monthlyAnywhere == nil {
+		return nil, fmt.Errorf("analysis: this store cannot read the events that belong " +
+			"to no school, and a subscription is one of them")
 	}
 	if months < 1 {
 		months = 1
@@ -125,7 +201,9 @@ func (s *Store) Cohorts(ctx context.Context, tenantID uuid.UUID,
 	   the stream is append-only and a replayed or duplicated event is a thing
 	   that happens. Taking the earliest is the answer that cannot move somebody
 	   forward into a younger cohort, which would quietly shrink an old intake
-	   and inflate a new one. */
+	   and inflate a new one. It matters more on the other basis: a subscription
+	   is started, refunded and started again by the same person, and the first
+	   time is the one that says when they became a payer. */
 	joined := map[string]time.Time{}
 	for _, a := range signups {
 		who := personOf(Reach{VisitorID: a.VisitorID, AccountID: a.AccountID}, links)
@@ -136,6 +214,41 @@ func (s *Store) Cohorts(ctx context.Context, tenantID uuid.UUID,
 			joined[who] = a.Month
 		}
 	}
+
+	/* AND ON THE OTHER BASIS, THE MONTH IS REPLACED AND THE MEMBERSHIP IS NOT.
+
+	   `joined` is, at this point, everybody who signed up at this school —
+	   which is the school-scoped fact, and the only one there is. What follows
+	   keeps exactly those people and re-dates them by when they started paying;
+	   anybody who never did drops out of the table entirely, because they are
+	   not in the population this basis is about.
+
+	   THE PLATFORM READ IS WIDE AND IS NARROWED HERE. It returns every
+	   subscription on the platform, so folding it in without the membership
+	   check would give every school the same intake — the mistake the funnel's
+	   last step was written wrong once already. */
+	if basis == BySubscription {
+		paid, err := s.monthlyAnywhere(ctx, []string{SubscribedEvent}, time.Time{}, who)
+		if err != nil {
+			return nil, fmt.Errorf("analysis: reading who started paying when: %w", err)
+		}
+
+		started := map[string]time.Time{}
+		for _, a := range paid {
+			person := personOf(Reach{VisitorID: a.VisitorID, AccountID: a.AccountID}, links)
+			if person == "" {
+				continue
+			}
+			if _, here := joined[person]; !here {
+				continue // they pay, and they are not this school's student
+			}
+			if at, seen := started[person]; !seen || a.Month.Before(at) {
+				started[person] = a.Month
+			}
+		}
+		joined = started
+	}
+
 	if len(joined) == 0 {
 		return []Cohort{}, nil
 	}

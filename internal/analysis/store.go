@@ -48,11 +48,12 @@ type Store struct {
 
 	// The stream's readers. Nil until WithStream, and the reports that need
 	// them refuse rather than answering something built from nothing.
-	reached  Reached
-	anywhere ReachedAnywhere
-	monthly  Monthly
-	origins  Origins
-	links    Links
+	reached         Reached
+	anywhere        ReachedAnywhere
+	monthly         Monthly
+	monthlyAnywhere MonthlyAnywhere
+	origins         Origins
+	links           Links
 
 	// How many answers a question needs before this store says anything about
 	// it. Nil until WithMinimumSample, and nil is the number `MinimumSample`
@@ -113,11 +114,13 @@ func (s *Store) enough(ctx context.Context) int {
 // that step with a silent zero. Everything the stream can be asked arrives in
 // one call, so there is one thing to forget rather than two.
 func (s *Store) WithStream(reached Reached, anywhere ReachedAnywhere,
-	monthly Monthly, origins Origins, links Links) *Store {
+	monthly Monthly, monthlyAnywhere MonthlyAnywhere,
+	origins Origins, links Links) *Store {
 
 	out := *s
 	out.reached, out.anywhere = reached, anywhere
-	out.monthly, out.origins, out.links = monthly, origins, links
+	out.monthly, out.monthlyAnywhere = monthly, monthlyAnywhere
+	out.origins, out.links = origins, links
 	return &out
 }
 

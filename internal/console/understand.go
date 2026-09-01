@@ -467,9 +467,35 @@ type Cohort struct {
 	Active []int
 }
 
-// Cohorts is what this package may not import.
+// Cohorts is what this package may not import. `grouping` is one of the two
+// words below, already checked.
 type Cohorts func(ctx context.Context, school uuid.UUID, months int,
-	counting string) (rows []Cohort, active string, err error)
+	counting, grouping string) (rows []Cohort, active string, err error)
+
+/*
+THE TWO BASES A COHORT CAN BE BUILT ON, with what the screen says about each.
+
+	The sentence travels with the numbers for the reason the population's banner
+	does: a request that asked for one basis and was answered about the other is
+	the failure this map prevents, and it cannot happen when the words come back
+	together.
+
+	IT IS NOT AN EMPTY DEFAULT LIKE `real` IS. Both of these say something,
+	because neither is the obvious reading of a table of months — somebody has
+	to be told which moment the columns are counted from.
+*/
+var groupings = map[string]string{
+	"signup": "Grouped by the month each person signed up. This asks whether the product " +
+		"holds the people it attracts.",
+	"subscription": "Grouped by the month each person first started paying, and only the " +
+		"people who did. This asks whether the product holds the people who paid, which is " +
+		"a different population — and a school where signups stay and subscribers leave has " +
+		"a problem no signup cohort can show.",
+}
+
+// The order they are offered in. Signup first because it is the default and the
+// larger population.
+var groupingOrder = []string{"signup", "subscription"}
 
 type cohortBody struct {
 	Month  string `json:"month"`
@@ -503,10 +529,27 @@ func (h *UnderstandHandler) cohortsOf(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, active, err := h.cohorts(r.Context(), school.ID, months, counting)
+	/* AND WHICH MOMENT THE COLUMNS ARE COUNTED FROM. Refused rather than
+	   defaulted, for the reason the population is: a word this does not know,
+	   answered about signups under a heading saying subscriptions, is worse
+	   than a refusal. */
+	grouping := r.URL.Query().Get("grouping")
+	if grouping == "" {
+		grouping = "signup"
+	}
+	note, sensible := groupings[grouping]
+	if !sensible {
+		web.Fail(w, http.StatusBadRequest, "not_a_grouping",
+			"`grouping` is one of signup or subscription — a word this does not know "+
+				"would be answered about signups under a heading saying otherwise")
+		return
+	}
+
+	rows, active, err := h.cohorts(r.Context(), school.ID, months, counting, grouping)
 	if err != nil {
 		web.LoggerFrom(r.Context()).Error("reading the cohorts",
-			"error", err, "school", school.Slug, "counting", counting)
+			"error", err, "school", school.Slug, "counting", counting,
+			"grouping", grouping)
 		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
 		return
 	}
@@ -537,13 +580,14 @@ func (h *UnderstandHandler) cohortsOf(w http.ResponseWriter, r *http.Request) {
 		"banner":      banner,
 		"populations": populationOrder,
 
-		/* AND THE HALF THAT IS NOT BUILT, NAMED. `Measured` on a funnel step and
-		   this field are the same idea: an absent report and an empty one must
-		   not read alike. */
-		"by_subscription": false,
-		"why_no_subscription": "Nothing writes a subscription into the event stream yet — " +
-			"there is no payment gateway — so there is no moment to group by. This is the " +
-			"same gap that makes the funnel's last step unmeasured.",
+		/* AND WHICH BASIS WAS USED, ANSWERED BACK. This field used to be
+		   `by_subscription: false` beside a sentence explaining that nothing
+		   wrote a subscription into the stream. Billing writes them now, so
+		   what was an absence is a choice — and a choice has to come back with
+		   the numbers or the screen is guessing which one it drew. */
+		"grouping":  grouping,
+		"grouped":   note,
+		"groupings": groupingOrder,
 
 		"scope": "one school",
 	})

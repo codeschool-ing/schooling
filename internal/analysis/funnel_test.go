@@ -44,7 +44,8 @@ func funnelOver(t *testing.T, pool *pgxpool.Pool,
 			return only(true), nil
 		},
 		nil, // the funnel reads neither months nor countries; `cohort_test.go`
-		nil, // and `countries_test.go` cover those two readers
+		nil, // and `countries_test.go` cover those three readers
+		nil,
 		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil },
 	)
 }
@@ -412,6 +413,7 @@ func TestThePopulationAskedForIsThePopulationRead(t *testing.T) {
 				anywhere = w
 				return nil, nil
 			},
+			nil,
 			nil,
 			nil,
 			func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return nil, nil },

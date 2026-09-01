@@ -553,6 +553,51 @@ func (s *Store) Monthly(ctx context.Context, tenantID uuid.UUID,
 	return out, rows.Err()
 }
 
+/*
+MonthlyAnywhere is `Monthly` for the events that belong to no school.
+
+	The pair `Reached`/`ReachedAnywhere` already are, one question up, and the
+	reason is the same: a subscription covers every school (N-02), carries no
+	tenant, and `tenant_id = $2` is not a predicate NULL satisfies.
+
+	IT IS A FOURTH QUERY RATHER THAN A FLAG ON THE THIRD. `Monthly` with a
+	nullable tenant would be one function whose meaning changes with an argument
+	that is easy to leave zero, and the failure is an empty answer rather than an
+	error. Two functions cannot be confused for one another, and each one's SQL
+	says which rows it is about.
+*/
+func (s *Store) MonthlyAnywhere(ctx context.Context,
+	names []string, since time.Time, who Counting) ([]Active, error) {
+
+	if len(names) == 0 {
+		return nil, nil
+	}
+
+	// See `ItemAnswers` for why this one predicate is formatted in.
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT
+		       date_trunc('month', occurred_at AT TIME ZONE 'UTC') AS month,
+		       visitor_id, account_id
+		FROM events
+		WHERE name = ANY($1) AND tenant_id IS NULL AND occurred_at >= $2
+		  AND `+who.counts()+`
+	`, names, since)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading who did something off any school, by month: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Active
+	for rows.Next() {
+		var a Active
+		if err := rows.Scan(&a.Month, &a.VisitorID, &a.AccountID); err != nil {
+			return nil, fmt.Errorf("event: reading who did something off any school, by month: %w", err)
+		}
+		out = append(out, a)
+	}
+	return out, rows.Err()
+}
+
 // Origin is one identity seen from one country.
 type Origin struct {
 	Country   string

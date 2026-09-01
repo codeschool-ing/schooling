@@ -596,6 +596,26 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			return out, nil
 		},
 
+		/* AND THE MONTHS OF THE EVENTS THAT BELONG TO NO SCHOOL, which is
+		   one caller: a cohort grouped by when somebody started paying.
+		   A subscription carries no tenant (N-02), so the reader above
+		   cannot see it and a table built on it would be empty. */
+		func(ctx context.Context, names []string,
+			since time.Time, who analysis.Counting) ([]analysis.Active, error) {
+
+			months, err := events.MonthlyAnywhere(ctx, names, since, counting(who))
+			if err != nil {
+				return nil, err
+			}
+			out := make([]analysis.Active, 0, len(months))
+			for _, m := range months {
+				out = append(out, analysis.Active{
+					Month: m.Month, VisitorID: m.VisitorID, AccountID: m.AccountID,
+				})
+			}
+			return out, nil
+		},
+
 		/* WHERE THEY WERE, WHICH TAKES NO LIST OF NAMES. A funnel step and a
 		   cohort's activity are definitions somebody chose, so both readers
 		   above are told which events to look at. "Where are the people" is
@@ -1205,13 +1225,23 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		   item analysis's thresholds do — a table that means whatever that word
 		   means, drawn without saying it, is a table nobody can argue with. */
 		func(ctx context.Context, school uuid.UUID, months int,
-			word string) ([]console.Cohort, string, error) {
+			word, by string) ([]console.Cohort, string, error) {
 
 			who, known := analysis.Reading(word)
 			if !known {
 				return nil, "", fmt.Errorf("%q is not a population this counts", word)
 			}
-			rows, err := items.Cohorts(ctx, school, months, time.Now().UTC(), who)
+
+			/* AND WHICH MOMENT PUTS SOMEBODY IN A COHORT, translated as
+			   faithfully as the population is and refused the same way. The
+			   console has already checked it; this refuses again rather than
+			   defaulting, because a seam that quietly answered about signups
+			   would be a lie the day the two checks disagree. */
+			basis, sensible := analysis.Grouping(by)
+			if !sensible {
+				return nil, "", fmt.Errorf("%q is not a basis this groups by", by)
+			}
+			rows, err := items.Cohorts(ctx, school, months, time.Now().UTC(), who, basis)
 			if err != nil {
 				return nil, "", err
 			}
