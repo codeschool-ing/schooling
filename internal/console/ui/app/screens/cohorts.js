@@ -43,6 +43,11 @@ const WINDOWS = [
   { months: '24', label: '24 months' },
 ];
 
+const GROUPINGS = [
+  { basis: 'signup', label: 'the month they signed up' },
+  { basis: 'subscription', label: 'the month they started paying' },
+];
+
 const NAMES = {
   real: 'Real people',
   seeded: 'The seeded population',
@@ -78,7 +83,11 @@ export default async function cohorts(section) {
     return { title: section.name, el };
   }
 
-  const asking = { school: schools[0].id, months: '12', counting: 'real' };
+  const asking = { school: schools[0].id, months: '12', counting: 'real', grouping: 'signup' };
+
+/* THE TWO BASES, NAMED HERE AND SENT AS THE WORD THE API TAKES. The same
+   objects-not-pairs shape as `WINDOWS`, for the same reason: one half is a wire
+   value and the other is a sentence somebody reads. */
 
   body.innerHTML =
     '<section class="block">' +
@@ -104,6 +113,13 @@ export default async function cohorts(section) {
           '<select id="counting">' +
             Object.keys(NAMES).map((k) =>
               '<option value="' + k + '">' + esc(txt(NAMES[k])) + '</option>').join('') +
+          '</select>' +
+        '</label>' +
+        '<label class="field">' +
+          '<span>' + esc(txt('Counted from')) + '</span>' +
+          '<select id="grouping">' +
+            GROUPINGS.map((g) =>
+              '<option value="' + g.basis + '">' + esc(txt(g.label)) + '</option>').join('') +
           '</select>' +
         '</label>' +
       '</form>' +
@@ -132,7 +148,8 @@ export default async function cohorts(section) {
     try {
       answer = await get('/console/api/v1/schools/' + encodeURIComponent(asking.school) +
         '/cohorts?months=' + encodeURIComponent(asking.months) +
-        '&counting=' + encodeURIComponent(asking.counting));
+        '&counting=' + encodeURIComponent(asking.counting) +
+        '&grouping=' + encodeURIComponent(asking.grouping));
     } catch (e) {
       if (mine !== JSON.stringify(asking)) return;
       table.innerHTML = '<section class="block"><p class="none">' + esc(txt(e.message)) +
@@ -162,7 +179,7 @@ export default async function cohorts(section) {
           ? '<p class="none">' +
             esc(txt('Nobody has signed up to this school yet, for these people. An empty table is a real answer and not a failure to read one.')) +
             '</p>'
-          : grid(rows, widest)) +
+          : grid(rows, widest, answer.grouping)) +
 
         /* THE SENTENCE IS TRANSLATED AND THE THING IT NAMES IS NOT. What comes
            back on `active` is `section.completed` — an event name, which is
@@ -179,27 +196,37 @@ export default async function cohorts(section) {
         '</p>' +
       '</section>' +
 
-      /* THE HALF THAT IS NOT BUILT, SAID ON THE SCREEN. An operator looking for
-         "by subscription start" should find the reason here rather than conclude
-         it was forgotten. */
-      (answer.by_subscription
-        ? ''
-        : '<section class="block">' +
-            '<div class="block-top"><h2>' + esc(txt('By subscription start')) + '</h2></div>' +
-            '<p class="empty-note">' + esc(txt(answer.why_no_subscription || '')) + '</p>' +
-          '</section>');
+      /* WHICH MOMENT THE COLUMNS ARE COUNTED FROM, SAID BY THE ANSWER RATHER
+         THAN BY THE CONTROL. This block used to explain why the second basis
+         could not be built; it exists now, so what a reader needs is not an
+         apology but the sentence that says which of the two they are looking
+         at — and it comes back with the numbers, so the heading and the table
+         cannot disagree. */
+      '<section class="block">' +
+        '<div class="block-top"><h2>' + esc(txt('Counted from')) + '</h2></div>' +
+        '<p class="aside">' + esc(txt(answer.grouped || '')) + '</p>' +
+      '</section>';
   }
 
-  function grid(rows, widest) {
+  function grid(rows, widest, grouping) {
     /* `+1` IS A COORDINATE AND NOT A WORD, so it is not translated; "same
        month" is a word and is. The first column is named rather than numbered
        because `+0` reads as an offset nobody applied. */
     const head = [
-      /* `Month they signed up` AND NOT `Signed up`, which the student record
-         already uses for the DAY somebody registered. The key IS the English
-         string, so two screens meaning different things by the same words get
-         one entry and one of them is wrong. */
-      '<th scope="col">' + esc(txt('Month they signed up')) + '</th>',
+      /* THE FIRST COLUMN NAMES THE MOMENT THE ROWS ARE COUNTED FROM, and it
+         moves with the basis. Left as "the month they signed up" on a table
+         grouped by subscriptions it would be a heading that contradicts its own
+         numbers — which is worse than a vague one, because it is specific.
+
+         `Month they signed up` AND NOT `Signed up`: the student record already
+         uses that for the DAY somebody registered, and the key IS the English
+         string, so two screens meaning different things by one phrase get one
+         entry and one of them is wrong. */
+      '<th scope="col">' +
+        esc(grouping === 'subscription'
+          ? txt('Month they started paying')
+          : txt('Month they signed up')) +
+      '</th>',
       '<th scope="col">' + esc(txt('People')) + '</th>',
     ]
       .concat(Array.from({ length: widest }, (_, i) =>

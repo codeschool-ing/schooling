@@ -950,7 +950,14 @@ window.I18N.pt.ui = {
     'Ninguém se inscreveu nesta escola ainda, para estas pessoas. Uma tabela vazia é uma resposta de verdade e não uma falha em ler uma.',
   'Active means <strong>%s</strong> — the smallest signal that somebody actually studied that month. Every share is of the intake, including the first column: an intake where half never started is a different problem from one that starts well and leaks.':
     'Ativo significa <strong>%s</strong> — o menor sinal de que alguém de fato estudou naquele mês. Toda proporção é sobre a entrada, inclusive na primeira coluna: uma entrada em que metade nunca começou é um problema diferente de uma que começa bem e vaza.',
-  'By subscription start': 'Por início de assinatura',
+  /* THE SECOND BASIS IS BUILT NOW, so what this screen needs is not the old
+     apology block but the words for the control and the column. `Counted from`
+     is both the control's label and the block's heading — one string saying one
+     thing in two places, which is what keeps them reading as the same idea. */
+  'Counted from': 'Contado a partir de',
+  'the month they signed up': 'do mês em que se inscreveram',
+  'the month they started paying': 'do mês em que começaram a pagar',
+  'Month they started paying': 'Mês em que começou a pagar',
   /* THE COLUMN IS `Month they signed up` AND NOT `Signed up`, and the reason is
      the dictionary rather than the screen: `Signed up` is already the student
      record's label for the DAY somebody registered, and one English string can
@@ -1042,10 +1049,18 @@ window.I18N.pt.ui = {
     'Isto é o que a rotina noturna escreveu, e essa rotina conta apenas pessoas reais — ela ' +
     'tira questões de circulação, o que jamais pode acontecer com base em alunos que foram ' +
     'inventados.',
-  'Nothing writes a subscription into the event stream yet — there is no payment gateway — so there is no moment to group by. This is the same gap that makes the funnel\'s last step unmeasured.':
-    'Nada escreve uma assinatura no fluxo de eventos ainda — não há gateway de pagamento — ' +
-    'então não existe um momento pelo qual agrupar. É a mesma lacuna que deixa a última ' +
-    'etapa do funil sem medição.',
+  /* THE TWO SENTENCES THAT SAY WHICH BASIS A TABLE IS ON. They replace the one
+     that used to explain why the second basis could not be built — it can, so
+     the explanation is gone and what is left is the choice. Written in Go, so
+     `check-interface` cannot see them. */
+  'Grouped by the month each person signed up. This asks whether the product holds the people it attracts.':
+    'Agrupado pelo mês em que cada pessoa se inscreveu. Isto pergunta se o produto segura ' +
+    'as pessoas que ele atrai.',
+  'Grouped by the month each person first started paying, and only the people who did. This asks whether the product holds the people who paid, which is a different population — and a school where signups stay and subscribers leave has a problem no signup cohort can show.':
+    'Agrupado pelo mês em que cada pessoa começou a pagar, e apenas quem pagou. Isto ' +
+    'pergunta se o produto segura as pessoas que pagaram, que é outra população — e uma ' +
+    'escola onde os inscritos ficam e os assinantes vão embora tem um problema que nenhuma ' +
+    'coorte por inscrição consegue mostrar.',
 
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
