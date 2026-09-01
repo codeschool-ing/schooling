@@ -32,6 +32,26 @@
    The funnel next door has one. This screen shows what the nightly job wrote,
    and that job counts real people only, because it WITHDRAWS questions from
    circulation (K-11). A switch here would be a control with nothing behind it.
+
+   # AND THE SAME NUMBERS ONCE, AS A SHAPE
+
+   The list answers "is this question broken" one question at a time. It cannot
+   answer "what shape is this bank of questions", and that is the question
+   somebody opening this screen for the first time actually has — a bank where
+   everything sits at 95% correct and no discrimination is a bank measuring
+   nothing, and no amount of reading cards one at a time says so.
+
+   So the chart is the canonical picture of item analysis: how often each
+   question is got right, across; how well it separates students, up. THE
+   THRESHOLDS ARE THE LINES ON IT, which is the whole reason this chart earns
+   its place here rather than being decoration — a dot below the line labelled
+   `Inverted` IS an inverted question, so the picture carries what each point was
+   judged against (K-16) without repeating one number the cards already show.
+
+   The colour of a dot says the same thing its position does, deliberately, and
+   that is why there is no legend: position is the finding and colour is the
+   echo of it. A legend would be a second place to look up something the chart
+   already states twice.
    ========================================================================== */
 
 import { esc } from '../dom.js';
@@ -75,6 +95,49 @@ const VERDICTS = [
     meaning: 'Nothing is being said about this one yet. It is the starting state of every question and it is not a criticism.',
   },
 ];
+
+/* Where the chart's plot area sits inside its own viewBox, in the viewBox's
+   units. The margins are the room the labels need and nothing else: the left is
+   five characters of `+0.50`, the bottom is a line of ticks and the axis name
+   under them, and the top is the one line the vertical thresholds label
+   themselves on.
+
+   AND THE RIGHT IS A GUTTER, WHICH THE FIRST DRAFT DID NOT HAVE. The two
+   horizontal thresholds labelled themselves at the right end of their own line,
+   inside the plot — which is exactly where a question that is too easy lives:
+   high on the difficulty axis and, being too easy, near zero on the other. The
+   first school this was opened against had its `too-easy` question drawn
+   underneath the word `INVERTED`. A label that hides the point it explains is
+   worse than no label, and it hides it SYSTEMATICALLY rather than by chance, so
+   the words moved out of the picture rather than being nudged within it. */
+const PLOT = { left: 52, right: 424, top: 24, bottom: 268 };
+const CANVAS = '0 0 520 312';
+
+/* THE AXES ARE THE STATISTIC'S OWN RANGE AND NOT THIS DATA'S.
+
+   A proportion runs 0 to 1 and a discrimination index runs −1 to +1, so that is
+   what is drawn, every time, for every school. Fitting the axes to the points
+   would be the defect `funnel.js` names one screen over: the shape is the
+   finding, and a chart that rescales itself is a chart where two schools cannot
+   be compared, where last month cannot be compared to this one, and where the
+   threshold lines land at a different height every time somebody edits a
+   question. Half of the vertical range is usually empty. That emptiness is
+   information — it is where the broken questions would be. */
+const TICKS_X = [0, 0.25, 0.5, 0.75, 1];
+const TICKS_Y = [1, 0.5, 0, -0.5, -1];
+
+const atX = (share) => PLOT.left + (PLOT.right - PLOT.left) * bounded(share, 0, 1);
+const atY = (index) =>
+  PLOT.top + (PLOT.bottom - PLOT.top) * (1 - (bounded(index, -1, 1) + 1) / 2);
+
+/* Neither statistic can leave its range by construction, and a value that did
+   would be drawn off the canvas — invisible, rather than obviously wrong. It is
+   pinned to the edge instead, where it is still a dot somebody can ask about. */
+function bounded(value, low, high) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return low;
+  return Math.min(high, Math.max(low, n));
+}
 
 export default async function questions(section) {
   const el = document.createElement('div');
@@ -186,9 +249,163 @@ export default async function questions(section) {
                   : txt('%d questions').replace('%d', all.length)) +
               '</span>' +
             '</div>' +
+            scatter(all, bars) +
             '<ol class="items">' + all.map((q) => item(q, bars)).join('') + '</ol>' +
           '</section>') +
       thresholds(bars, answer.why_no_switch);
+  }
+
+/* THE PICTURE.
+
+   ONE IMAGE WITH ONE LABEL, and not one labelled shape per question. The list
+   under it is the accessible answer and the better one for everybody — the same
+   division `countries.js` makes, for the same reason: a screen reader handed
+   sixty dots reads out sixty coordinates in whatever order the array happens to
+   be in, which is worse than useless, and the cards below already say every
+   number in sentences.
+
+   # A QUESTION NOBODY HAS ANSWERED ENOUGH IS NOT A DOT AT ZERO
+
+   Below the minimum sample, the job writes a discrimination of zero, because it
+   has not measured one. Plotting that puts a dot on the line marked `Weak` and
+   claims a measurement nobody made — the same mistake the funnel refuses when
+   it draws an unmeasured step as a sentence instead of an empty bar. Those
+   questions are counted in a sentence under the chart and left off it.
+
+   THE TEST IS THE ROW'S OWN NUMBERS AND NOT THE WORD `insufficient`. Verdicts
+   are a closed list this screen may one day not fully know, and a sixth one it
+   has never heard of must not be silently plotted at a zero it never measured.
+   Comparing the answers to the minimum is the same condition the server
+   applied, expressed in what it sent. */
+  function scatter(all, bars) {
+    const plotted = all.filter((q) => q.attempts >= q.minimum_sample);
+    const held = all.length - plotted.length;
+
+    /* TWO WHOLE SENTENCES, because a count can be one. This console has shipped
+       a plural assembled from a letter once and the fix is never a rule. */
+    const note = held === 0
+      ? ''
+      : (held === 1
+        ? txt('One question is not on the chart: too few people have answered it, and an index nobody has measured is not a zero to draw. It is in the list below, with the number of answers it still needs.')
+        : txt('%d questions are not on the chart: too few people have answered them, and an index nobody has measured is not a zero to draw. They are in the list below, with the number of answers each still needs.')
+          .replace('%d', held));
+
+    /* NO AXES WITH NOTHING BETWEEN THEM. An empty plot area under two labelled
+       scales reads as "every question is broken and none of them plotted"; the
+       sentence alone says what actually happened. */
+    if (!plotted.length) {
+      return note ? '<p class="hint">' + esc(note) + '</p>' : '';
+    }
+
+    const label = txt('A scatter plot of the questions on this screen: how often each one is got right, across; how well each one separates students, up. The lines on it are the thresholds. The list below has every question and its numbers.');
+
+    return '<figure class="scatter">' +
+      '<svg viewBox="' + CANVAS + '" role="img" aria-label="' + esc(label) + '" ' +
+        'preserveAspectRatio="xMidYMid meet">' +
+
+        TICKS_X.map((t) => rule(atX(t), PLOT.top, atX(t), PLOT.bottom)).join('') +
+        TICKS_Y.map((t) => rule(PLOT.left, atY(t), PLOT.right, atY(t))).join('') +
+
+        /* The thresholds, under the dots so a dot sitting exactly on one is not
+           drawn over by the line that judged it. Only `Inverted` is coloured,
+           because only `Inverted` is a defect — the other three are notes, and
+           four red lines would say this chart is mostly bad news. */
+        across(bars.weak_below, txt('Weak'), false) +
+        across(bars.inverted_below, txt('Inverted'), true) +
+        down(bars.too_hard_below, txt('Very hard'), 'start', 4) +
+        down(bars.too_easy_above, txt('Too easy'), 'end', -4) +
+
+        plotted.map((q) => dot(q)).join('') +
+
+        /* The axes last and on top, so the leftmost and lowest dots do not sit
+           over the lines that give them their meaning. */
+        '<line class="scatter-axis" x1="' + PLOT.left + '" y1="' + PLOT.top +
+          '" x2="' + PLOT.left + '" y2="' + PLOT.bottom + '"/>' +
+        '<line class="scatter-axis" x1="' + PLOT.left + '" y1="' + PLOT.bottom +
+          '" x2="' + PLOT.right + '" y2="' + PLOT.bottom + '"/>' +
+
+        TICKS_X.map((t) =>
+          '<text class="scatter-tick" x="' + atX(t).toFixed(1) + '" y="' + (PLOT.bottom + 14) +
+            '" text-anchor="middle">' + esc(share(t)) + '</text>').join('') +
+        TICKS_Y.map((t) =>
+          '<text class="scatter-tick" x="' + (PLOT.left - 8) + '" y="' + atY(t).toFixed(1) +
+            '" text-anchor="end" dy=".32em">' + esc(signed(t)) + '</text>').join('') +
+
+        /* THE AXIS NAMES ARE THE FIGURE LABELS FROM THE CARDS BELOW, the same
+           two keys deliberately: somebody moving between the picture and a card
+           is matching one word to the other, and two translations of one word
+           would break that in every language but the one this is written in. */
+        '<text class="scatter-title" x="' + ((PLOT.left + PLOT.right) / 2) +
+          '" y="' + (PLOT.bottom + 36) + '" text-anchor="middle">' +
+          esc(txt('Got it right')) + '</text>' +
+        '<text class="scatter-title" transform="rotate(-90 14 ' +
+          ((PLOT.top + PLOT.bottom) / 2) + ')" x="14" y="' +
+          ((PLOT.top + PLOT.bottom) / 2) + '" text-anchor="middle" dy=".32em">' +
+          esc(txt('Discrimination')) + '</text>' +
+      '</svg>' +
+
+      (note ? '<figcaption>' + esc(note) + '</figcaption>' : '') +
+    '</figure>';
+  }
+
+  function rule(x1, y1, x2, y2) {
+    return '<line class="scatter-grid" x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) +
+      '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/>';
+  }
+
+  /* A threshold across the plot, labelled in the gutter beside it with the WORD
+     and not the number. The number is on every card below and again under `How
+     this is decided`; a third copy of it here would be a third thing to keep in
+     step for no reading anybody does. The word is what makes the line mean
+     something, and the axis opposite is where the number is read off.
+
+     IN THE GUTTER AND NOT ON THE LINE — see `PLOT`. A word inside the plot area
+     covers the dots at that height, and the dots at that height are the ones it
+     is there to explain. */
+  function across(value, word, bad) {
+    if (value === undefined || value === null) return '';
+    const y = atY(value);
+    return '<line class="scatter-bar' + (bad ? ' scatter-bar-bad' : '') +
+        '" x1="' + PLOT.left + '" y1="' + y.toFixed(1) +
+        '" x2="' + PLOT.right + '" y2="' + y.toFixed(1) + '"/>' +
+      '<text class="scatter-word' + (bad ? ' scatter-word-bad' : '') +
+        '" x="' + (PLOT.right + 6) + '" y="' + y.toFixed(1) +
+        '" text-anchor="start" dy=".32em">' + esc(word) + '</text>';
+  }
+
+  /* And down it. These two label themselves on the line above the plot rather
+     than beside the line, because a word rotated ninety degrees is a word
+     nobody reads; the anchor leans each of them inwards so neither runs off its
+     own edge of the picture. */
+  function down(value, word, anchor, dx) {
+    if (value === undefined || value === null) return '';
+    const x = atX(value);
+    return '<line class="scatter-bar" x1="' + x.toFixed(1) + '" y1="' + PLOT.top +
+        '" x2="' + x.toFixed(1) + '" y2="' + PLOT.bottom + '"/>' +
+      '<text class="scatter-word" x="' + (x + dx).toFixed(1) + '" y="' + (PLOT.top - 7) +
+        '" text-anchor="' + anchor + '">' + esc(word) + '</text>';
+  }
+
+  /* One question. The `<title>` is a hover tooltip and NOT an accessibility
+     claim — the SVG is one labelled image, so nothing in it is announced — and
+     it holds only an id, a version and two numbers, which is a coordinate
+     somebody quotes into the list below rather than a sentence to translate.
+
+     THE CLASS IS THE VERDICT AND ONLY TWO OF THEM ARE STYLED, which is not an
+     oversight: `fine` is brighter and `inverted` is red, and the other three
+     fall through to the same quiet dot. A colour per verdict would be five
+     categories to tell apart in a picture where the position already says which
+     is which — and it would need a legend, which is the thing that makes charts
+     unreadable. A verdict this screen has never heard of gets no class at all,
+     the same closed-list rule the cards follow. */
+  function dot(q) {
+    const known = VERDICTS.find((v) => v.verdict === q.verdict);
+    return '<circle class="scatter-dot' + (known ? ' scatter-dot-' + esc(q.verdict) : '') +
+        '" cx="' + atX(q.difficulty).toFixed(1) + '" cy="' + atY(q.discrimination).toFixed(1) +
+        '" r="4">' +
+      '<title>' + esc(q.exercise_id + ' v' + q.version + ' · ' +
+        share(q.difficulty) + ' · ' + signed(q.discrimination)) + '</title>' +
+    '</circle>';
   }
 
   /* One question: what it is, what happened, and every judgement with its bar

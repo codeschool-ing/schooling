@@ -903,6 +903,12 @@ window.I18N.pt.ui = {
   'Not enough answers': 'Respostas insuficientes',
   'Nothing is being said about this one yet. It is the starting state of every question and it is not a criticism.':
     'Nada está sendo dito sobre esta ainda. É o estado inicial de toda questão e não é uma crítica.',
+  'A scatter plot of the questions on this screen: how often each one is got right, across; how well each one separates students, up. The lines on it are the thresholds. The list below has every question and its numbers.':
+    'Um gráfico de dispersão das questões desta tela: quantas vezes cada uma é acertada, na horizontal; o quanto cada uma separa os alunos, na vertical. As linhas nele são os limites. A lista abaixo tem cada questão e seus números.',
+  'One question is not on the chart: too few people have answered it, and an index nobody has measured is not a zero to draw. It is in the list below, with the number of answers it still needs.':
+    'Uma questão não está no gráfico: pouca gente respondeu a ela, e um índice que ninguém mediu não é um zero para desenhar. Ela está na lista abaixo, com quantas respostas ainda faltam.',
+  '%d questions are not on the chart: too few people have answered them, and an index nobody has measured is not a zero to draw. They are in the list below, with the number of answers each still needs.':
+    '%d questões não estão no gráfico: pouca gente respondeu a elas, e um índice que ninguém mediu não é um zero para desenhar. Elas estão na lista abaixo, com quantas respostas faltam para cada uma.',
   'Out of circulation': 'Fora de circulação',
   'Still being asked': 'Ainda sendo perguntada',
   'Answers': 'Respostas',

@@ -85,6 +85,14 @@ is how every console rots.* That division is the spine of everything below.
 - Item analysis: which questions discriminate, which are broken, what is quarantined — with
   **every threshold displayed beside the number it produced** (`K-16`), and *insufficient data*
   rather than a red that means nothing beneath the minimum sample (`C-17`)
+  - and the same numbers once as a shape: difficulty across, discrimination up, **the thresholds
+    drawn as the lines on it**, which is `K-16` in a picture — a dot below the line labelled
+    *Inverted* is an inverted question, so the chart carries what each point was judged against
+    without repeating one figure the cards already show. The axes are the statistics' own ranges
+    and never the data's, so two schools and two months are the same chart. A question under the
+    minimum sample is **not a dot at zero**: the job writes a zero it did not measure, and
+    plotting it would claim a measurement nobody made — those are counted in a sentence beside
+    the chart instead, which is `C-17` carried into the picture
 - The catalogue as it stands — draft and published per course. Read, never written: `C-07`, held
   by a test that scans the source
 
