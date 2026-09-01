@@ -52,7 +52,7 @@ export default async function presence(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">' + esc(txt('Watch')) + '</span>' +
+      '<span class="eyebrow mono">' + esc(txt('Measure')) + '</span>' +
       '<h1>' + esc(txt('Who is here')) + '</h1>' +
       '<p>' + esc(txt('People signed in and seen a moment ago, by school. This is the one number in the console that comes from the sessions table rather than from the event stream — presence is the question where being overwritten is the point, because nobody asks who was online last March.')) + '</p>' +
     '</header>' +

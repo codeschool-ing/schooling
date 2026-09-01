@@ -760,15 +760,10 @@ window.I18N.pt.ui = {
 
   /* ---------- Watch · Who is here ----------
 
-     `Watch` IS THE RAIL'S GROUP AND THE SCREEN'S EYEBROW, and one entry serves
-     both because it is one word saying one thing arriving from two files. The
-     dictionary has no idea there are two and does not need one.
-
      THE TWO-NUMBER SENTENCES ARE FOUR ENTRIES AND NOT TWO WITH A PLURAL RULE.
      "1 minutos" is the defect this console has already shipped once, on a count
      of one — so a sentence whose number can be one is written twice, in full,
      and the screen picks between them. */
-  'Watch': 'Acompanhar',
   'People signed in and seen a moment ago, by school. This is the one number in the console that comes from the sessions table rather than from the event stream — presence is the question where being overwritten is the point, because nobody asks who was online last March.':
     'Pessoas conectadas e vistas há pouco, por escola. Este é o único número do console que vem da tabela de sessões e não do fluxo de eventos — presença é a pergunta em que ser sobrescrito é justamente o ponto, porque ninguém pergunta quem estava online em março passado.',
   'On the platform': 'Na plataforma',

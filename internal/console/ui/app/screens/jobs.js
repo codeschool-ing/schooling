@@ -66,7 +66,7 @@ export default async function jobs(section) {
 
   el.innerHTML =
     '<header class="view-head">' +
-      '<span class="eyebrow mono">' + esc(txt('Watch')) + '</span>' +
+      '<span class="eyebrow mono">' + esc(txt('Measure')) + '</span>' +
       '<h1>' + esc(txt('Jobs')) + '</h1>' +
       '<p>' + esc(txt('What runs on a schedule, and how it went. This is the console reporting on itself: the question is not what students did, it is whether the work behind another screen actually happened last night.')) + '</p>' +
     '</header>' +
