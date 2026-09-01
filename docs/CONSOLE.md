@@ -28,6 +28,48 @@ staged is the order it arrives in, which is a different sentence and is now writ
 **audit** (immutable history) — because *serving all four from the same queries against production
 is how every console rots.* That division is the spine of everything below.
 
+**It is a division of READS and not of screens, and the rail says so differently on purpose.** The
+four jobs are about where an answer may be fetched from and how fresh it has to be; the rail is
+about what somebody came here to do, and it groups the sections as `Attend`, `Measure`, `Operate`
+and `Govern`. The two lists are near enough to be mistaken for each other and are not the same
+list: `Measure` holds both *understand* and *watch*, because a person choosing a screen does not
+care which of the two a number came from, while the seam behind it very much does. A screen
+announces its rail group and a test holds it to the one the rail actually gives it —
+`TestEveryScreensEyebrowIsItsRailGroup`, which exists because two screens announced a group the
+rail did not have.
+
+`Attend` is the newest of the four and the only one that is not a subject. It holds one section and
+that section is first in the list, which is what makes it the landing route: the router opens
+`SECTIONS[0]` when the address carries no fragment. Nothing names it as the home — being first
+*is* being the home, and a second place saying so is a second place to keep in step.
+
+### Attend
+
+- **A front door** — the question the other fourteen screens could not answer. Each of them
+  answers one thing well and says its scope; none of them answers *what should I look at*. Opening
+  this console cold meant already knowing which screen held the thing that was wrong, and the
+  screens somebody opens are the ones they already suspect
+- **Findings and not figures**, which is the whole design. A dashboard of numbers is a screen with
+  no question, and this console's rule is that a screen says what it is about (`K-18`) — *1,204
+  students* under no scope, no population and no date is what that rule exists against, and a tile
+  has nowhere to put the sentence the cohorts screen needs a paragraph for. Every line is instead
+  something that is **true and wants a person**: a condemned question still in front of students, a
+  night that did not run, a report nobody answered, a role granted and never used, a role with no
+  second factor. **Where nothing is wrong the screen is empty**, which is the right amount of
+  information — the opposite of a wall of figures that always has something to look at
+- Almost none of it is a threshold. *Granted and never used* is a fact, *waiting to be answered* is
+  a fact; only the adrift run is a judgement, and its bar is the one the jobs screen already draws
+  and the store already decided — `K-16` one layer along, so no number that decided something sits
+  in two places able to disagree
+- **A reader that fails is itself a finding.** A count this screen could not obtain is shown as
+  one, because a home that quietly drops a check it could not run is a home that says *nothing
+  needs you* on the strength of not having looked — the same failure as an empty item-analysis
+  table on a job that never ran
+- It asks the **same functions the screens ask**, passed in unchanged, so there is one definition
+  of "has this person ever opened the console" rather than two that disagree on the row somebody is
+  trying to understand. And it is **not an alarm and says so** (`K-08`): an alert has to reach a
+  phone when this console is down, which is when it matters; this is a screen somebody opens
+
 ### Operate
 
 - Find a person, show what is held about them, **export** it, **erase** them *(the phase-0 item)*
