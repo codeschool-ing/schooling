@@ -176,6 +176,58 @@ jobs:
       - name: The registry, as somewhere docker may push
         run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
 
+      # EVERYTHING THIS DEPLOY WILL TOUCH, CHECKED BEFORE IT TOUCHES ANY OF IT.
+      #
+      # This is the step above's argument one stage further along, and it is
+      # here because the further stage actually happened. Terraform declares the
+      # service and the four jobs (P-07); this pipeline only ever UPDATES them,
+      # and an update against a resource nobody applied fails. That much is
+      # correct. WHERE it failed was the problem: v0.24.0 found
+      # `schooling-settle` missing after it had already migrated the schema and
+      # loaded the catalogue, and then skipped the revision — leaving production
+      # on the new schema with the old code, which is a state the
+      # migrate-before-traffic order is built to survive and which nobody chose.
+      #
+      # A deploy that cannot finish should find that out while it has changed
+      # nothing.
+      #
+      # THE REMEDY IS NAMED, because `could not be found` does not say it. The
+      # resource is not missing from this repository — it is declared in
+      # `infra/` and waiting on an apply that a person runs from a terminal, and
+      # a release is exactly when nobody remembers that a Terraform resource
+      # arrived in the same pull request as the step that uses it.
+      #
+      # IT DESCRIBES RATHER THAN LISTS. `roles/run.admin` covers both, but a
+      # `describe` per name says which one is absent; a list would have to be
+      # matched against these variables here, which is a second place for a name
+      # to be spelled.
+      - name: Everything this deploy updates already exists
+        run: |
+          set -euo pipefail
+
+          missing=()
+          for job in "$MIGRATE_JOB" "$LOAD_JOB" "$ANALYSE_JOB" "$SETTLE_JOB"; do
+            gcloud run jobs describe "$job" --region "$REGION" >/dev/null 2>&1 \
+              || missing+=("job ${job}")
+          done
+          gcloud run services describe "$SERVICE" --region "$REGION" >/dev/null 2>&1 \
+            || missing+=("service ${SERVICE}")
+
+          if [ "${#missing[@]}" -ne 0 ]; then
+            echo "this deploy would update something that is not there:"
+            printf '  %s\n' "${missing[@]}"
+            echo
+            echo "infra/ declares these and Terraform creates them. Against"
+            echo "${CLOUDSDK_CORE_PROJECT:-the project}, run"
+            echo
+            echo "    terraform -chdir=infra apply"
+            echo
+            echo "and then re-run this job. Nothing has been changed."
+            exit 1
+          fi
+
+          echo "the service and all four jobs are there"
+
       # THE GO VERSION COMES FROM go.mod, here as everywhere else. Passed into
       # the build rather than written in the Dockerfile, so a directive that
       # moves cannot leave an image behind on an older compiler.

@@ -310,6 +310,28 @@ terraform -chdir=infra apply     # the service, the job, the invoker binding
 The service and the job come up on Google's placeholder container. They are
 supposed to: there is no image yet, and the first deploy replaces it.
 
+### A new job needs an apply BEFORE the release that uses it
+
+This is where v0.24.0's deploy failed, and the shape is worth keeping. A pull
+request may add a Cloud Run job here and, in the same diff, the step in
+`release.yml` that points it at an image — reviewed together, merged together.
+Nothing between that merge and the tag runs `terraform apply`, because nothing
+here ever does: the apply is a person at a terminal, which is the whole of
+`P-07`. So the release reaches a `gcloud run jobs update` for a job that was
+declared and never created.
+
+**The pipeline now refuses at the start rather than halfway.** `Everything this
+deploy updates already exists` describes the service and all four jobs before the
+first image is pushed, and names this command when one of them is absent. Before
+that step, the absence was found after the schema had been migrated and the
+catalogue loaded — leaving production on the new schema with the old code, which
+is a state the migrate-before-traffic order survives and which nobody chose.
+
+CI cannot catch it and is not meant to: the `Infra` job runs `fmt`, `validate`
+and the provider check, and never plans against the project. A plan needs
+credentials, and letting a pull request read this project's state is a worse
+trade than a release that stops early and says what to run.
+
 Rotating the password later is the same two commands as above:
 `gcloud sql users set-password`, then a new secret version. The service reads
 `latest`, and a running revision keeps the value it resolved at creation — the
