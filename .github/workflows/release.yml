@@ -106,8 +106,42 @@ jobs:
           fi
           echo "the binary reports ${reported}"
 
+      # A RE-RUN IS NOT A SECOND RELEASE, and this step used to think it was.
+      #
+      # `gh release create` refuses a tag that already has a release, so once
+      # this job had succeeded it could never succeed again. `Deploy` needs
+      # `Publish` — so any failure AFTER this point made the deploy unreachable
+      # through the workflow, permanently, no matter how the failure was fixed.
+      #
+      # v0.24.0 is what that costs. Its deploy failed on a missing Cloud Run job;
+      # the fix was an apply that took eight seconds; and the only way back to
+      # the deploy was DELETING A PUBLISHED RELEASE so that this step could
+      # create it again. That is the worst recovery step in this file: it is
+      # outward-facing, anybody watching the repository sees it go, and it was
+      # forced by a step that is meant to be bookkeeping.
+      #
+      # SO IT SKIPS RATHER THAN FAILING, and skips rather than replacing. The
+      # notes come from `--generate-notes` over a tag that cannot move, so a
+      # release made on the first attempt and one made on the third would be
+      # identical — there is nothing to bring up to date, and deleting and
+      # recreating would churn a published artifact to arrive back where it
+      # started.
+      #
+      # IT DOES NOT WEAKEN THE TAG CHECKS. `Tag` still refuses a malformed tag,
+      # one that does not increase, and one that is not on main, before anything
+      # is built. What is relaxed here is only "this exact release already
+      # exists", which is a fact about a previous attempt at THIS tag.
       - name: The release
-        run: gh release create "${GITHUB_REF_NAME}" --generate-notes --verify-tag
+        run: |
+          set -euo pipefail
+
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            echo "the release for ${GITHUB_REF_NAME} already exists — this is a"
+            echo "re-run of a release that got this far once, not a second one."
+            exit 0
+          fi
+
+          gh release create "${GITHUB_REF_NAME}" --generate-notes --verify-tag
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
