@@ -1057,6 +1057,70 @@ window.I18N.pt.ui = {
     'escola onde os inscritos ficam e os assinantes vão embora tem um problema que nenhuma ' +
     'coorte por inscrição consegue mostrar.',
 
+  /* ---------- Attend · What needs you ----------
+
+     THE HOME SCREEN, and every sentence on it is written twice: one for one and
+     one for several. A count of one followed by a plural is the defect this
+     console shipped once — "1 trilhas" — and it is worse here than anywhere,
+     because this is the screen somebody reads at a glance to decide whether
+     tonight is the night.
+
+     THEY ARE SENTENCES AND NOT LABELS. `3` beside "questões" is a number to
+     decode; "3 questões que a análise condenou continuam sendo perguntadas" is
+     already o pensamento. */
+  'Attend': 'Atender',
+  'What needs you': 'O que precisa de você',
+  'Everything on this platform that is true right now and wants a person. It is empty on the days nothing is — which is most of them, and is the reason a line appearing here means something.':
+    'Tudo nesta plataforma que é verdade agora e quer uma pessoa. Fica vazia nos dias em ' +
+    'que nada é — que são a maioria, e é justamente por isso que uma linha aparecendo ' +
+    'aqui significa alguma coisa.',
+  'This is not an alarm': 'Isto não é um alarme',
+
+  'A question the analysis condemned is still being asked.':
+    'Uma questão que a análise condenou continua sendo perguntada.',
+  '%d questions the analysis condemned are still being asked.':
+    '%d questões que a análise condenou continuam sendo perguntadas.',
+  'A student wrote in about a lesson and nobody has answered.':
+    'Um aluno escreveu sobre uma aula e ninguém respondeu.',
+  '%d students wrote in about a lesson and nobody has answered.':
+    '%d alunos escreveram sobre uma aula e ninguém respondeu.',
+  'Somebody holds a role and has no second factor, so it opens nothing.':
+    'Alguém tem um papel e não tem segundo fator, então ele não abre nada.',
+  '%d people hold a role and have no second factor, so it opens nothing.':
+    '%d pessoas têm um papel e não têm segundo fator, então ele não abre nada.',
+  'A role was granted and has never been used.':
+    'Um papel foi concedido e nunca foi usado.',
+  '%d roles were granted and have never been used.':
+    '%d papéis foram concedidos e nunca foram usados.',
+  'A scheduled job failed the last time it ran.':
+    'Uma rotina agendada falhou na última vez que rodou.',
+  '%d scheduled jobs failed the last time they ran.':
+    '%d rotinas agendadas falharam na última vez que rodaram.',
+  'A job started and never said it finished.':
+    'Uma rotina começou e nunca disse que terminou.',
+  '%d jobs started and never said they finished.':
+    '%d rotinas começaram e nunca disseram que terminaram.',
+  'A job that can be started has never recorded a run.':
+    'Uma rotina que pode ser executada nunca registrou uma execução.',
+  '%d jobs that can be started have never recorded a run.':
+    '%d rotinas que podem ser executadas nunca registraram uma execução.',
+  'One of the things this screen checks could not be read, so its line is missing rather than empty.':
+    'Uma das coisas que esta tela verifica não pôde ser lida, então a linha dela está ' +
+    'faltando em vez de vazia.',
+  '%d of the things this screen checks could not be read, so their lines are missing rather than empty.':
+    '%d das coisas que esta tela verifica não puderam ser lidas, então as linhas delas ' +
+    'estão faltando em vez de vazias.',
+
+  /* AND THE TWO THE SERVER SENDS. Written in Go, so no static check sees them. */
+  'Everything here is true for as long as nobody acts on it. It is not an alarm and cannot be: an alert has to reach a phone when this console is down, which is exactly when it matters.':
+    'Tudo aqui é verdade enquanto ninguém agir. Não é um alarme e não pode ser: um ' +
+    'alerta tem de chegar a um telefone quando este console está fora do ar, que é ' +
+    'exatamente quando ele importa.',
+  'Nothing on this platform is asking for a person right now. This screen is empty when that is true, which is most days — it is the screens under Measure that are worth opening when nothing is wrong.':
+    'Nada nesta plataforma está pedindo uma pessoa agora. Esta tela fica vazia quando ' +
+    'isso é verdade, que é a maioria dos dias — quando nada está errado, as telas que ' +
+    'valem a pena abrir são as de Medir.',
+
   /* ---------- the tab that is older than the build ---------- */
   'This console has been open since before the last update. Reload it when you are ready.':
     'Este console está aberto desde antes da última atualização. Recarregue quando puder.',

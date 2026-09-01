@@ -20,6 +20,7 @@
      `screen` the module: `async (section) => ({ title, el, after?, onLeave? })`
    ========================================================================== */
 
+import today from './screens/today.js';
 import people from './screens/people.js';
 import history, { byActor, onSubject, entry } from './screens/history.js';
 import studentRecord, { record } from './screens/record.js';
@@ -36,7 +37,16 @@ import jobs from './screens/jobs.js';
 import staff from './screens/staff.js';
 
 export const SECTIONS = [
-  /* WHO IS HERE COMES FIRST, and it is the only entry under `Measure` that is
+  /* WHAT NEEDS A PERSON COMES FIRST, AND `main.js` LANDS ON IT. The console
+     opens on `SECTIONS[0]` when there is no fragment, so this ordering is what
+     makes it the home rather than a route somebody has to find.
+
+     It is the one screen that is about the platform rather than about a
+     question: everything on it is already computed by a screen further down,
+     and every line is one click from the one that can explain it. */
+  { id: 'today', name: 'What needs you', group: 'Attend', screen: today },
+
+  /* WHO IS HERE COMES FIRST under `Measure`, and it is the only entry under `Measure` that is
      not an aggregate — the group's comment below says the rail folds `watch`
      into `understand` and the code does not. It is the question somebody opens
      this console to ask on the way to asking anything else, and the one that is
@@ -127,6 +137,14 @@ export const DETAILS = [
    screen: operate (now), understand (aggregates), watch (seconds) and audit
    (history). `Measure` is `understand` and `Watch`, which the rail can afford
    to fold together and the code cannot. */
-export const GROUPS = ['Measure', 'Operate', 'Govern'];
+/* `Attend` IS FIRST AND IT IS A VERB LIKE THE OTHERS. The three that follow say
+   what somebody came to DO; this one says what the platform is asking of them,
+   which is the same kind of word and the reason it sits with them rather than
+   above them as a special case.
+
+   IT HOLDS ONE SECTION AND THAT IS ALLOWED — see the note at the top of this
+   file: a group may hold names before it holds entries, and one is not fewer
+   than none. */
+export const GROUPS = ['Attend', 'Measure', 'Operate', 'Govern'];
 
 export const sectionById = (id) => SECTIONS.find((s) => s.id === id) || null;

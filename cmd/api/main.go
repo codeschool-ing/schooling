@@ -1012,7 +1012,13 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   read-only act this console has. Granting stays in `cmd/staff`, which has
 	   to exist regardless — the first owner cannot be granted a role by a
 	   console that needs one to open. */
-	console.NewStaffHandler(rosterOf(accounts)).Routes(staffAPI)
+	/* THE ROSTER IS NAMED RATHER THAN BUILT INLINE, because the home screen
+	   asks it too. Two readers with their own idea of "has this person ever
+	   opened the console" would disagree on exactly the row somebody is trying
+	   to understand — the mistake `personOf` is shared to avoid, one report
+	   over. */
+	roster := rosterOf(accounts)
+	console.NewStaffHandler(roster).Routes(staffAPI)
 
 	/* AND THE OTHER READ THAT MAKES THE FIRST SCREEN USABLE: what a student
 	   actually has. `Personal data` answers "is this the right person and how
@@ -1361,7 +1367,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	/* WHAT RAN LAST NIGHT, which is the console reporting on the console rather
 	   than on students — whether the machinery behind another screen did its
 	   work. `job` owns the table and this is the one line that says so. */
-	console.NewJobsHandler(console.Jobs{
+	nightly := console.Jobs{
 		Names: job.NewStore(pool).Names,
 		Latest: func(ctx context.Context, name string, limit int) ([]console.Run, error) {
 			runs, err := job.NewStore(pool).Latest(ctx, name, limit)
@@ -1397,7 +1403,9 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		   decided. */
 		Startable: []string{job.Analyse, job.Settle},
 		Start:     startJob,
-	},
+	}
+
+	console.NewJobsHandler(nightly,
 		recorded(entries),
 		labelOf(accounts),
 		identity.AccountID,
@@ -1406,6 +1414,20 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			return ok && m.Role.Covers(identity.RoleOperator)
 		},
 	).Routes(staffAPI)
+
+	/* WHAT NEEDS A PERSON TODAY, which is the console's first screen and the
+	   one question fourteen others could not answer between them.
+
+	   IT IS HANDED THE SEAMS THE SCREENS THEMSELVES USE — `roster` and
+	   `nightly`, unchanged — and two counts nothing else asks, because no other
+	   screen looks across every school. A home with its own readers would be a
+	   second set of definitions for facts that already have one. */
+	console.NewTodayHandler(console.Today{
+		Condemned: items.StillAsked,
+		Waiting:   reports.Waiting,
+		Operators: roster,
+		Jobs:      nightly,
+	}).Routes(staffAPI)
 
 	/* WHO IS HERE, which is the one console read that is current state rather
 	   than the event stream — `identity/presence.go` says why that is K-06 and
