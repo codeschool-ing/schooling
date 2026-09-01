@@ -794,6 +794,12 @@ window.I18N.pt.ui = {
   'What runs on a schedule, and how it went. This is the console reporting on itself: the question is not what students did, it is whether the work behind another screen actually happened last night.':
     'O que roda em horário marcado, e como foi. Aqui o console presta contas de si mesmo: a pergunta não é o que os alunos fizeram, é se o trabalho por trás de outra tela realmente aconteceu ontem à noite.',
   'This job has recorded no runs.': 'Esta rotina não registrou nenhuma execução.',
+  'A bar for each run, oldest at the left, as tall as the run took. The list below has every run with its outcome and its length.':
+    'Uma barra para cada execução, a mais antiga à esquerda, tão alta quanto o tempo que a execução levou. A lista abaixo tem cada execução com o seu desfecho e a sua duração.',
+  'As tall as the run took. The longest here is %s, and the scale is this job’s own — the strips on this screen are not to be read against each other.':
+    'Tão alta quanto o tempo que a execução levou. A mais longa aqui é %s, e a escala é a desta rotina — as faixas desta tela não devem ser lidas uma contra a outra.',
+  'An outline is a run that never finished. It has no length to draw: a run still open grows for as long as nobody looks, so drawn as a bar it would be the tallest thing here and would flatten every real one.':
+    'Um contorno é uma execução que nunca terminou. Ela não tem duração para desenhar: uma execução ainda aberta cresce enquanto ninguém olha, então desenhada como barra seria a coisa mais alta daqui e achataria todas as de verdade.',
   'Run it now': 'Executar agora',
   'Asking…': 'Pedindo…',
   'Asked for.': 'Pedido.',

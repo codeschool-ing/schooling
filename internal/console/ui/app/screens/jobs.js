@@ -40,6 +40,19 @@
    always fails is a worse screen than a missing one, which is the argument the
    schools screen makes about a read-only role and the same argument here about
    a process with no metadata server behind it.
+
+   # AND THE HISTORY ONCE AS A STRIP, WHICH ANSWERS TWO THINGS THE LIST CANNOT
+
+   Three failures scattered through a fortnight and three failures in a row are
+   the same three rows in a list and completely different diagnoses — the first
+   is a flaky job and the second is a job that broke on Tuesday and has been
+   broken since. And a job that used to take forty seconds and now takes six
+   minutes is a column of durations nobody compares pairwise.
+
+   Both are one glance in a strip and neither is in a list, which is the whole
+   of why it is here. It is HTML bars and not an SVG, because a bar per row is
+   what `funnel.js` and the country list already draw and this is that idiom
+   turned on its side.
    ========================================================================== */
 
 import { esc } from '../dom.js';
@@ -208,7 +221,8 @@ function block(one, adrift, startable) {
 
     (runs.length === 0
       ? '<p class="none">' + esc(txt('This job has recorded no runs.')) + '</p>'
-      : '<ol class="run-list">' + runs.map((r) => row(r, adrift)).join('') + '</ol>') +
+      : strip(runs) +
+        '<ol class="run-list">' + runs.map((r) => row(r)).join('') + '</ol>') +
 
     /* THE CONTROL IS UNDER THE HISTORY AND NOT BESIDE THE HEADING, because the
        history is the answer to the question somebody opened this screen with
@@ -245,35 +259,147 @@ function headline(last) {
   return txt('last run %s').replace('%s', ago(last.started_at));
 }
 
-function row(r, adrift) {
+/* ONE JOB'S HISTORY AS A SHAPE.
+
+   Each run is a bar, oldest at the LEFT — which is the opposite of the list
+   underneath it, and deliberately: a series of time reads left to right and a
+   list of what happened reads newest first, and both are right for what they
+   are. The two ends are labelled with when they were, so nobody has to work out
+   which way round it goes.
+
+   # THE SCALE IS THIS JOB'S OWN AND THE CAPTION SAYS SO
+
+   Unlike the item-analysis chart next door, there is no natural range for a
+   duration: a sweep takes seconds and an analysis takes minutes, and one scale
+   across the screen would draw every fast job as a flat line. So each strip is
+   scaled to its own longest run, the longest is named in words underneath, and
+   the caption says outright that two strips here cannot be compared by eye.
+   That is a real cost of this drawing, and a cost stated is a cost somebody can
+   allow for.
+
+   # A RUN THAT NEVER FINISHED HAS NO LENGTH TO DRAW
+
+   Its `took` is the time SINCE it started, which is not a duration — it grows
+   for as long as nobody looks. Drawn as a bar it would be the tallest thing on
+   every strip that contained one and would flatten every real run into the
+   floor, so it is an OUTLINE at full height instead: present, obviously not a
+   measurement, and in the same colour the list gives it. The status vocabulary
+   this stylesheet opens with, applied — colour AND shape, never colour alone.
+
+   # AND UNDER THREE RUNS THERE IS NO PICTURE
+
+   Two bars is a comparison the list makes just as well, and a chart of two bars
+   reads as something that failed to load the rest. Nor is one drawn where
+   nothing has finished: there would be no scale, and a strip of outlines says
+   only what the list already says in words. */
+function strip(runs) {
+  const measured = runs.map((r) => span(r)).filter((s) => s !== null && s.done);
+  if (runs.length < 3 || measured.length === 0) return '';
+
+  const longest = measured.reduce((most, s) => Math.max(most, s.seconds), 0);
+  const open = runs.some((r) => !r.finished_at);
+
+  const label = txt('A bar for each run, oldest at the left, as tall as the run took. The list below has every run with its outcome and its length.');
+
+  /* HOW WIDE THE BARS MAY GET, AND THE ONLY GEOMETRY THIS SCREEN WRITES.
+
+     A strip of `flex:1 1 0` bars fills whatever it is given, so three runs
+     across a console-wide block are three columns a hundred pixels each — which
+     is not a series, it is three tiles. Capping the bar in the stylesheet was
+     the first answer and it was wrong in the other direction: the bars stopped
+     at the cap and the strip did not, so the label for the newest run sat five
+     hundred pixels to the right of the newest bar. The width belongs to the
+     COUNT, which only this file knows, so it is computed here and the ends ride
+     on the same box. */
+  const across = runs.length * 26 + (runs.length - 1) * 4;
+
+  return '<figure class="runs">' +
+    '<div class="runs-plot" style="max-width:' + across + 'px">' +
+      '<div class="runs-strip" role="img" aria-label="' + esc(label) + '">' +
+        /* REVERSED HERE AND NOT IN THE CALLER, so the list below keeps the
+           order the server sent it in. A screen that sorted its data once for
+           two readings is a screen where fixing one of them moves the other. */
+        runs.slice().reverse().map((r) => bar(r, longest)).join('') +
+      '</div>' +
+      '<div class="runs-ends">' +
+        '<span>' + esc(ago(runs[runs.length - 1].started_at)) + '</span>' +
+        '<span>' + esc(ago(runs[0].started_at)) + '</span>' +
+      '</div>' +
+    '</div>' +
+
+    '<figcaption>' +
+      esc(txt('As tall as the run took. The longest here is %s, and the scale is this job’s own — the strips on this screen are not to be read against each other.')
+        .replace('%s', clock(longest))) +
+      (open
+        ? ' ' + esc(txt('An outline is a run that never finished. It has no length to draw: a run still open grows for as long as nobody looks, so drawn as a bar it would be the tallest thing here and would flatten every real one.'))
+        : '') +
+    '</figcaption>' +
+  '</figure>';
+}
+
+/* One run. The `title` is a hover tooltip and not an accessibility claim — the
+   strip is one labelled image, so nothing inside it is announced — and it is
+   three values with a separator rather than a sentence, so there is nothing in
+   it a translator would need to reorder.
+
+   THE FLOOR IS THERE BECAUSE A RUN THAT HAPPENED HAS TO BE VISIBLE. Beside a
+   six-minute run, a one-second one rounds to nothing and the strip loses it —
+   and "it ran" is most of what this picture is for. The world map's shading has
+   a floor of its own for the same reason, in its own units. */
+function bar(r, longest) {
+  const state = r.adrift ? 'adrift' : r.outcome;
+  const ran = span(r);
+  const done = ran !== null && ran.done;
+  const height = done && longest > 0
+    ? Math.max(8, (ran.seconds / longest) * 100)
+    : 100;
+
+  return '<span class="runs-bar runs-' + esc(state) + (done ? '' : ' runs-open') +
+    '" style="height:' + height.toFixed(1) + '%" title="' +
+    esc([r.adrift ? txt('Adrift') : txt(SAID[r.outcome] || r.outcome),
+      ago(r.started_at), took(r)].join(' · ')) + '"></span>';
+}
+
+function row(r) {
   const state = r.adrift ? 'adrift' : r.outcome;
   return '<li class="run run-' + esc(state) + '">' +
     '<span class="run-state mono">' +
       esc(r.adrift ? txt('Adrift') : txt(SAID[r.outcome] || r.outcome)) +
     '</span>' +
     '<span class="run-when">' + esc(ago(r.started_at)) + '</span>' +
-    '<span class="run-took mono">' + esc(took(r, adrift)) + '</span>' +
+    '<span class="run-took mono">' + esc(took(r)) + '</span>' +
     (r.version ? '<span class="run-version mono">' + esc(r.version) + '</span>' : '') +
     (r.detail ? '<p class="run-detail">' + esc(r.detail) + '</p>' : '') +
   '</li>';
 }
 
-/* How long it took, or how long it has been open. An unfinished run shows the
-   time SINCE it started, which is the number that makes "adrift" obvious
-   without needing the word. */
-function took(r, adrift) {
+/* How long a run has been going, and WHETHER THAT IS ITS LENGTH. The two are
+   different facts and one number cannot carry both: a finished run's seconds
+   are how long it took, and an open one's are how long it has been open, which
+   is not a duration at all. The strip needs to tell them apart to know what it
+   may draw, so the answer says which it is rather than leaving that to be
+   inferred from a field somewhere else. */
+function span(r) {
   const from = new Date(r.started_at).getTime();
   const to = r.finished_at ? new Date(r.finished_at).getTime() : Date.now();
-  if (Number.isNaN(from) || Number.isNaN(to)) return '';
+  if (Number.isNaN(from) || Number.isNaN(to)) return null;
+  return { seconds: Math.max(0, Math.round((to - from) / 1000)), done: !!r.finished_at };
+}
 
-  const seconds = Math.max(0, Math.round((to - from) / 1000));
-  /* `s` AND `m` ARE UNITS AND NOT WORDS, so they are not translated — but "and
-     counting" is a sentence, and it goes after the number in English and
-     before it in some languages, so the whole thing is one key with a hole. */
-  const said = seconds < 60
-    ? seconds + 's'
-    : Math.round(seconds / 60) + 'm';
-  return r.finished_at ? said : txt('%s and counting').replace('%s', said);
+/* `s` AND `m` ARE UNITS AND NOT WORDS, so they are not translated. */
+const clock = (seconds) => (seconds < 60 ? seconds + 's' : Math.round(seconds / 60) + 'm');
+
+/* How long it took, or how long it has been open. An unfinished run shows the
+   time SINCE it started, which is the number that makes "adrift" obvious
+   without needing the word — and "and counting" is a sentence, which goes after
+   the number in English and before it in some languages, so the whole thing is
+   one key with a hole rather than a phrase glued to a figure. */
+function took(r) {
+  const ran = span(r);
+  if (ran === null) return '';
+  return ran.done
+    ? clock(ran.seconds)
+    : txt('%s and counting').replace('%s', clock(ran.seconds));
 }
 
 /* When it started, in words. A job runs at the same time every night, so the
