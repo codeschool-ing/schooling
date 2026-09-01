@@ -56,13 +56,40 @@ output "workload_identity_provider" {
   ])
 }
 
-/* The nightly analysis, named here for the same reason the other two jobs are:
-   the pipeline updates its image and a person occasionally runs it by hand
-   after a content change, and neither should be typing a name this
-   configuration owns. */
+/* THE TWO ON THE CLOCK, AND BOTH HALVES OF EACH.
+
+   Named here for the reason at the top of this file: the pipeline updates their
+   images and a person occasionally runs one by hand, and neither should be
+   typing a name this configuration owns.
+
+   THE IMAGES WERE THE HALF THAT WENT MISSING, twice, and in the same shape both
+   times: the analysis arrived with a `_job` and no `_image`, and the settling
+   arrived with neither. `release.yml` carried `ANALYSE_IMAGE`, `SETTLE_JOB` and
+   `SETTLE_IMAGE` typed in with nothing here to read them from — which is
+   exactly the "second place they are decided" this file opens by refusing.
+
+   It is worth saying that this did not break anything and would not have: the
+   values agreed. That is the point. A fact with one source and a copy that
+   happens to match is indistinguishable from a fact with one source, right up
+   until the day somebody changes the source. */
 output "analyse_job" {
   description = "The Cloud Run job the scheduler starts every night."
   value       = google_cloud_run_v2_job.analyse.name
+}
+
+output "analyse_image" {
+  description = "Where the item analysis is pushed and read from."
+  value       = local.analyse
+}
+
+output "settle_job" {
+  description = "The Cloud Run job that brings lapsed subscriptions up to date."
+  value       = google_cloud_run_v2_job.settle.name
+}
+
+output "settle_image" {
+  description = "Where the lapse sweeper is pushed and read from."
+  value       = local.settle
 }
 
 output "database_connection_name" {
