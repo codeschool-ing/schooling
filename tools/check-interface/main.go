@@ -226,14 +226,64 @@ func check(dir string) (problems []string, checked int, err error) {
 
 /* ---------- what the interface says ---------- */
 
-// txtCall finds `txt('…')` and `txt("…")`. A call with anything else in it — a
-// variable, a template literal — is not a fixed string and cannot be checked
-// against a dictionary; `trouble()` is the one place that does it deliberately,
-// and the package comment says why.
-// The two quotes are written out rather than captured and back-referenced,
-// because Go's regexp has no back-references at all — RE2 trades them for the
-// guarantee that a pattern cannot take exponential time.
-var txtCall = regexp.MustCompile(`\btxt\(\s*(?:'((?:\\.|[^'\\])*)'|"((?:\\.|[^"\\])*)")\s*\)`)
+/*
+txtCall finds a `txt(…)` whose argument is a fixed string, and `oneLiteral`
+takes that argument apart again.
+
+# IT USED TO READ ONE LITERAL AND NOTHING ELSE
+
+`txt('a ' + 'b')` matched nothing, so the call was invisible — and invisible
+here is not neutral, it fails in BOTH directions at once. The screen says
+English in every language, because nobody was told a translation was missing.
+And the entry that would have translated it is reported STALE, because this tool
+believes nothing says that sentence — so acting on the second report means
+deleting the thing that would have fixed the first. `ui/my/app/queue.js` says it
+has cost this repository two strings.
+
+It was defended by a rule written in a comment, in two files, which is a rule
+defended by whoever remembers reading it. The tool can see the string instead:
+the runtime asks the dictionary for the joined value, and joining the literals
+here asks for exactly the same key.
+
+# A LITERAL AT EVERY POSITION, OR NOTHING
+
+`txt('at or over ' + n)` still matches nothing, and must not: that key depends on
+a value, and no dictionary can be written against it. The pattern requires a
+literal on both sides of every `+`, so a call with a variable anywhere in it
+falls out entirely rather than being read as its literal half — which would ask
+for a fragment, and a fragment is the thing a translator cannot reorder.
+`internal/console/language_test.go` covers those, by reading the lists they are
+drawn from.
+
+# TWO PATTERNS, BECAUSE RE2 KEEPS ONLY THE LAST REPETITION
+
+A repeated capturing group answers once, with whatever matched last, so one
+pattern cannot hand back four literals. The first finds the whole call and keeps
+its argument; the second walks that argument. The quotes are written out rather
+than captured and back-referenced, because Go's regexp has no back-references at
+all — RE2 trades them for the guarantee that a pattern cannot take exponential
+time.
+*/
+const literal = `(?:'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*")`
+
+var (
+	txtCall    = regexp.MustCompile(`\btxt\(\s*(` + literal + `(?:\s*\+\s*` + literal + `)*)\s*\)`)
+	oneLiteral = regexp.MustCompile(literal)
+)
+
+// saidIn is every fixed string a source says through `txt()`. The comments come
+// out first — see `withoutComments` for the defect that requires it.
+func saidIn(source string) []string {
+	var out []string
+	for _, call := range txtCall.FindAllStringSubmatch(withoutComments(source), -1) {
+		var joined strings.Builder
+		for _, quoted := range oneLiteral.FindAllString(call[1], -1) {
+			joined.WriteString(unescape(quoted[1 : len(quoted)-1])) // the quotes come off
+		}
+		out = append(out, joined.String())
+	}
+	return out
+}
 
 func stringsSaid(dir string) ([]string, error) {
 	found := map[string]bool{}
@@ -272,11 +322,8 @@ func stringsSaid(dir string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		// THE COMMENTS COME OUT FIRST. A file that explains this tool by writing
-		// the call it looks for used to have that example counted as a string
-		// somebody had to translate — see `withoutComments`.
-		for _, match := range txtCall.FindAllStringSubmatch(withoutComments(string(body)), -1) {
-			found[unescape(match[1]+match[2])] = true // exactly one of the two matched
+		for _, s := range saidIn(string(body)) {
+			found[s] = true
 		}
 	}
 

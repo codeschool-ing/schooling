@@ -117,11 +117,19 @@ export function drawNothing(about) {
   return '<section class="mine-head">' +
       '<h1>' + esc(txt('Nothing due')) + '</h1>' +
       '<p class="mine-none">' +
-        /* ONE LITERAL AND NOT A CONCATENATION, however long the line. The
-           interface checker reads literal `txt('…')` calls only, so
-           `txt('a ' + 'b')` is a string it cannot see — and its translation is
-           then reported as a stale entry for a sentence nothing says. It has
-           cost this repository two strings already.
+        /* THE CHECKER READS A CONCATENATION NOW, so this is one long line
+           because a long line is easier to read here — not because splitting it
+           would hide it.
+
+           IT USED TO HIDE IT. `txt('a ' + 'b')` matched nothing, and being
+           invisible failed in both directions at once: the screen said English
+           in every language, and the entry that would have translated it was
+           reported STALE, so acting on the report deleted the fix. It cost this
+           repository two strings, and the defence was this paragraph — a rule
+           kept by whoever remembered reading it. `tools/check-interface` joins
+           the literals itself now and asks for the same key the runtime asks
+           for. A call with a VALUE in it is still invisible, and still must be:
+           `txt('over ' + n)` is a key no dictionary can be written against.
 
            THIS COMMENT USED TO BE WRITTEN AROUND THE CHECKER rather than in
            plain syntax, because the checker scanned with a regular expression
