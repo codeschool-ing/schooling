@@ -12,11 +12,21 @@
    there is an image to give it. It is Google's own hello container, it is
    replaced by the first deploy, and it is never looked at again. */
 
-/* TWO IMAGES AND NOT ONE. `deploy/local/Dockerfile` builds a single binary
-   chosen by a build argument, so the API and the migration are separate images
-   sharing every layer up to the compile. Neither name is ever pushed by
-   Terraform — they are here so the pipeline and this configuration cannot
-   disagree about where an image goes. */
+/* ONE IMAGE PER COMMAND. `deploy/Dockerfile` builds a single binary chosen by a
+   build argument, so each command is its own image sharing every layer up to
+   the compile — and one of them, `load`, is built against a different target
+   because it carries `content/`.
+
+   IT SAID "TWO IMAGES AND NOT ONE" UNTIL THERE WERE FIVE, and pointed at
+   `deploy/local/Dockerfile`, which is the development one and builds nothing
+   that is ever pushed here. Both halves went stale silently, because a name in
+   this block is correct whatever a comment above it says. The rule is written
+   now instead of the tally: a count goes stale every time the thing it counts
+   grows, and a rule does not.
+
+   No name here is ever pushed by Terraform. They exist so the pipeline and this
+   configuration cannot disagree about where an image goes — which is also why
+   every one of them is an output, and was not. */
 locals {
   registry = "${var.region}-docker.pkg.dev/${var.project}/${google_artifact_registry_repository.images.repository_id}"
   api      = "${local.registry}/api"
