@@ -201,6 +201,14 @@ func drawnThroughAVariable(t *testing.T) []string {
 	out = append(out, fieldValues(t, "cohorts.js", read(t, "ui/app/screens/cohorts.js"),
 		"GROUPINGS", "label")...)
 
+	/* WHAT EACH FINDING SAYS ON THE HOME SCREEN. `today.js` holds one sentence
+	   for one and another for several in `SAYS`, keyed by the server's word for
+	   the kind, and draws them as `txt(says.one)` — through a variable, so the
+	   checker sees nothing. The KEYS are wire values and are deliberately not
+	   translated. */
+	out = append(out, mapValues(t, "today.js", read(t, "ui/app/screens/today.js"),
+		"SAYS")...)
+
 	return out
 }
 

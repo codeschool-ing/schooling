@@ -466,3 +466,29 @@ func (s *Store) Settle(ctx context.Context, id, by uuid.UUID, verdict string) er
 	}
 	return ErrAlreadySettled
 }
+
+/*
+Waiting counts the reports nobody has answered, across every school.
+
+	IT IS A COUNT AND NOT THE ROWS. The queue screen reads the rows, one school
+	at a time, because answering one is what that screen is for. This is for the
+	screen that asks what needs a person today, where the useful fact is that
+	there are eleven — and the eleventh is somebody who wrote in about a lesson
+	and has been waiting a fortnight.
+
+	ACROSS SCHOOLS, for the reason `analysis.StillAsked` gives: somebody who has
+	to pick a school before being told anything is waiting will check the school
+	they already suspect.
+
+	`content_reports_open` IS PARTIAL ON `settled_at IS NULL` and already
+	existed, so this is a count over exactly the rows it is about (K-21).
+*/
+func (s *Store) Waiting(ctx context.Context) (int, error) {
+	var n int
+	if err := s.pool.QueryRow(ctx, `
+		SELECT count(*) FROM content_reports WHERE settled_at IS NULL
+	`).Scan(&n); err != nil {
+		return 0, fmt.Errorf("report: counting what is waiting for an answer: %w", err)
+	}
+	return n, nil
+}

@@ -238,3 +238,53 @@ func (s *Store) record(ctx context.Context, action string, tenantID uuid.UUID,
 	}
 	return nil
 }
+
+/*
+StillAsked counts the questions this analysis condemned that students are
+still being given, across every school.
+
+	# WHY THIS IS THE ONE FINDING WORTH WAKING SOMEBODY FOR
+
+	An inverted key is the only defect this platform finds on its own without a
+	person, and the sweep that acts on it runs nightly — so a question found
+	this afternoon is in front of students tonight. That gap is normal and
+	closes by itself. What is not normal is a question that stayed: one released
+	by hand and still carrying the verdict, or one the sweep could not act on.
+	Every day it stays, more students are marked on our mistake.
+
+	# IT COUNTS ACROSS SCHOOLS AND THAT IS THE POINT
+
+	Every other read in this package takes a tenant, because every other screen
+	is about one school (K-18). This is for the screen that asks what needs a
+	person TODAY, and "which school" is the second question rather than the
+	first — somebody who has to pick a school before being told anything is
+	wrong is somebody who checks the school they already suspect.
+
+	# THE INDEX ALREADY SUSTAINS IT (K-21)
+
+	`item_statistics_needing_attention` is partial on exactly these verdicts and
+	`question_quarantine_in_force` is partial on the ones still in force, so
+	this is two partial indexes and an anti-join rather than a scan of every
+	question ever answered. No migration was needed, which is the answer to
+	whether a screen may ask this at all.
+*/
+func (s *Store) StillAsked(ctx context.Context) (int, error) {
+	var n int
+	err := s.pool.QueryRow(ctx, `
+		SELECT count(*)
+		FROM item_statistics s
+		WHERE s.verdict = 'inverted'
+		  AND NOT EXISTS (
+		      SELECT 1 FROM question_quarantine q
+		      WHERE q.tenant_id = s.tenant_id
+		        AND q.exercise_id = s.exercise_id
+		        AND q.version = s.version
+		        AND q.released_at IS NULL
+		  )
+	`).Scan(&n)
+	if err != nil {
+		return 0, fmt.Errorf("analysis: counting the condemned questions still in "+
+			"circulation: %w", err)
+	}
+	return n, nil
+}
