@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -36,6 +37,19 @@ type shape struct {
 	// funnel shows the drop where the content is missing, which is true.
 	lesson   string
 	sections []string
+
+	/* AND THE FIRST COURSE A SUBSCRIPTION BUYS, which is the second of the
+	   track. The free tier is the first course of every track, so this is what
+	   somebody is paying to reach — and a seeded subscriber who never opens it
+	   is a subscriber who bought nothing, which is what this fixture used to
+	   produce.
+
+	   EMPTY IS SURVIVABLE, exactly as the free lesson's is: a school with one
+	   course seeds no paid study and the cohorts by subscription show the drop
+	   where the content is missing, which is true. */
+	paidCourse   string
+	paidLesson   string
+	paidSections []string
 
 	questions []question
 
@@ -81,6 +95,26 @@ func shapeOf(ctx context.Context, pool *pgxpool.Pool, slug string) (shape, error
 	if err != nil {
 		return s, fmt.Errorf("%s has no track with a course in it, so there is nothing "+
 			"for a seeded student to do: %w", slug, err)
+	}
+
+	/* THE SECOND COURSE OF THE SAME TRACK, by the same declared order. It is
+	   what a subscription opens, and `LIMIT 1 OFFSET 1` says that plainly
+	   rather than reading the whole track to take the second. A track with one
+	   course leaves these empty, which the struct says is survivable. */
+	switch err := pool.QueryRow(ctx, `
+		SELECT c.course_id
+		FROM catalog_track_courses c
+		WHERE c.tenant_id = $1 AND c.track_id = $2
+		ORDER BY c.position
+		LIMIT 1 OFFSET 1
+	`, s.id, s.track).Scan(&s.paidCourse); {
+	case err == nil:
+		if err := paidLessonOf(ctx, pool, &s); err != nil {
+			return s, err
+		}
+	case errors.Is(err, pgx.ErrNoRows):
+	default:
+		return s, fmt.Errorf("reading the course after the free one: %w", err)
 	}
 
 	// A lesson and its sections. Absent is not an error: see the struct.
@@ -162,4 +196,40 @@ func easeOf(id string) float64 {
 	sum := sha256.Sum256([]byte(id))
 	n := binary.BigEndian.Uint32(sum[:4])
 	return float64(n%401)/1000 - 0.2
+}
+
+// paidLessonOf reads the first lesson of the paid course and the sections under
+// it — the same shape as the free one, and empty rather than an error where the
+// course has no lesson yet.
+func paidLessonOf(ctx context.Context, pool *pgxpool.Pool, s *shape) error {
+	switch err := pool.QueryRow(ctx, `
+		SELECT id FROM catalog_lessons
+		WHERE tenant_id = $1 AND course_id = $2
+		ORDER BY position LIMIT 1
+	`, s.id, s.paidCourse).Scan(&s.paidLesson); {
+	case err == nil:
+	case errors.Is(err, pgx.ErrNoRows):
+		return nil
+	default:
+		return fmt.Errorf("reading the first lesson of %s: %w", s.paidCourse, err)
+	}
+
+	rows, err := pool.Query(ctx, `
+		SELECT id FROM catalog_sections
+		WHERE tenant_id = $1 AND course_id = $2 AND lesson_id = $3
+		ORDER BY position
+	`, s.id, s.paidCourse, s.paidLesson)
+	if err != nil {
+		return fmt.Errorf("reading the sections of %s: %w", s.paidLesson, err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return fmt.Errorf("reading the sections of %s: %w", s.paidLesson, err)
+		}
+		s.paidSections = append(s.paidSections, id)
+	}
+	return rows.Err()
 }
