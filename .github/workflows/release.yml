@@ -149,10 +149,12 @@ jobs:
       MIGRATE_JOB: schooling-migrate
       LOAD_JOB: schooling-load
       ANALYSE_JOB: schooling-analyse
+      SETTLE_JOB: schooling-settle
       API_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/api
       MIGRATE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/migrate
       LOAD_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/load
       ANALYSE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/analyse
+      SETTLE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/settle
       DEPLOY_ACCOUNT: schooling-deploy@aleogr-schooling.iam.gserviceaccount.com
       WORKLOAD_IDENTITY_PROVIDER: projects/67869214453/locations/global/workloadIdentityPools/github/providers/github
 
@@ -180,18 +182,19 @@ jobs:
       # ONE OF THEM CARRIES THE CATALOGUE, which is why it is built against a
       # different target: `cmd/load` reads `content/` off a filesystem, and the
       # others never open it. See `deploy/Dockerfile`.
-      - name: The four images, stamped with the tag they were cut from
+      - name: The five images, stamped with the tag they were cut from
         run: |
           set -euo pipefail
           go_version="$(awk '/^go /{print $2}' go.mod)"
           built="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-          for command in api migrate load analyse; do
+          for command in api migrate load analyse settle; do
             case "$command" in
               api)     image="$API_IMAGE";     target=binary ;;
               migrate) image="$MIGRATE_IMAGE"; target=binary ;;
               load)    image="$LOAD_IMAGE";    target=with-content ;;
               analyse) image="$ANALYSE_IMAGE"; target=binary ;;
+              settle)  image="$SETTLE_IMAGE";  target=binary ;;
             esac
 
             docker build \
@@ -255,6 +258,20 @@ jobs:
           gcloud run jobs update "$ANALYSE_JOB" \
             --region="$REGION" \
             --image="${ANALYSE_IMAGE}:${GITHUB_REF_NAME}" \
+            --quiet
+
+      # AND THE NIGHTLY SETTLING. Neither of these is EXECUTED here — they are
+      # pointed at the new image and the scheduler runs them tonight. Running
+      # them now would make a deploy do a night's work at a time nobody chose,
+      # which is what `migrate` and `load` are for and these two deliberately
+      # are not: one withdraws questions from in front of students and the other
+      # writes an ending into an append-only stream.
+      - name: The nightly settling, pointed at the new image
+        run: |
+          set -euo pipefail
+          gcloud run jobs update "$SETTLE_JOB" \
+            --region="$REGION" \
+            --image="${SETTLE_IMAGE}:${GITHUB_REF_NAME}" \
             --quiet
 
       - name: The revision

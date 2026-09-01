@@ -171,3 +171,83 @@ func TestAStoreWithNoStreamStillWritesSubscriptions(t *testing.T) {
 		t.Error("a subscription begun without a stream to count it does not open a course")
 	}
 }
+
+/*
+A TERM RUNNING OUT IS COUNTED, AND IT IS THE ORDINARY WAY ONE ENDS HERE.
+
+	Every other ending arrives as something somebody DID — a cancellation, a
+	refund, a chargeback — and goes through `Advance`. A term simply elapsing is
+	nobody doing anything: the state machine settles it in memory on every read,
+	so the fact exists long before any row says so, and the sweep is what turns
+	it into a moment.
+
+	IT MATTERS BECAUSE IT IS MOST OF THEM. An instalment plan does not renew
+	itself (N-08), so on this platform the common ending is this one — and a
+	stream that recorded only the dramatic endings would describe a platform
+	almost nobody ever leaves.
+
+	The sweeper had no caller at all until `cmd/settle`, which is a separate
+	defect and the reason this test is worth having: it holds the emission, and
+	`cmd/settle` holds that something runs it.
+*/
+func TestATermRunningOutIsCountedBySweepingIt(t *testing.T) {
+	s, pool := store(t)
+	emit, got := recorder()
+	s = s.WithStream(emit)
+
+	account := student(t, pool)
+	begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	// Long after the term: `day(400)` is past twelve months from `day(0)`.
+	moved, err := s.Settle(context.Background(), day(400))
+	if err != nil {
+		t.Fatalf("settling: %v", err)
+	}
+	if moved < 1 {
+		t.Fatal("the sweep moved nothing, and a twelve-month term is over by day 400")
+	}
+
+	var endings []counted
+	for _, one := range *got {
+		if one.name == billing.EventEnded && one.account == account {
+			endings = append(endings, one)
+		}
+	}
+	if len(endings) != 1 {
+		t.Fatalf("sweeping emitted %d endings for this account, want one: %v", len(endings), *got)
+	}
+	if reason := endings[0].payload["reason"]; reason != "elapsed" {
+		t.Errorf("the ending says its reason is %v, want %q — a term running out is not "+
+			"a cancellation and a report reading this has to tell them apart",
+			reason, "elapsed")
+	}
+}
+
+// AND SWEEPING TWICE COUNTS IT ONCE. The sweep is idempotent by design — "safe
+// to run at any time and any number of times" — and an emitter that fired on
+// every pass would put an ending into an append-only stream every night for the
+// rest of the platform's life, for one subscription that ended once.
+func TestSweepingTwiceCountsTheEndingOnce(t *testing.T) {
+	s, pool := store(t)
+	emit, got := recorder()
+	s = s.WithStream(emit)
+
+	account := student(t, pool)
+	begun(t, s, pool, account, billing.ModelInstalments, 12)
+
+	for i := 0; i < 2; i++ {
+		if _, err := s.Settle(context.Background(), day(400)); err != nil {
+			t.Fatalf("settling, pass %d: %v", i+1, err)
+		}
+	}
+
+	endings := 0
+	for _, one := range *got {
+		if one.name == billing.EventEnded && one.account == account {
+			endings++
+		}
+	}
+	if endings != 1 {
+		t.Errorf("two sweeps emitted %d endings for one subscription that ended once", endings)
+	}
+}

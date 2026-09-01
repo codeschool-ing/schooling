@@ -169,10 +169,13 @@ func run(log *slog.Logger) error {
 
    THE MAP IS THE TRANSLATION AND IT IS ALSO THE GATE. A route that built the
    resource name by prefixing would start `schooling-migrate` for anybody who
-   typed `migrate`, and there is exactly one entry here because there is exactly
-   one job it is safe to begin by browsing. `console.Jobs.Startable` is the same
-   list one layer up, refusing before Google is asked anything. */
-var cloudRunJobs = map[string]string{job.Analyse: "schooling-analyse"}
+   typed `migrate`, and there are exactly two entries here because there are
+   exactly two jobs it is safe to begin by browsing. `console.Jobs.Startable` is
+   the same list one layer up, refusing before Google is asked anything. */
+var cloudRunJobs = map[string]string{
+	job.Analyse: "schooling-analyse",
+	job.Settle:  "schooling-settle",
+}
 
 /*
 startsJobs works out, once, whether this process can start a Cloud Run job.
@@ -1382,11 +1385,17 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		},
 		AdriftAfter: job.Adrift,
 
-		/* AND THE ONE THAT MAY BE STARTED BY HAND. It is the only job on a
-		   schedule, so it is the only one whose failure means waiting a day —
-		   `migrate` and `load` are gates a deploy waits for, and their failure
-		   already stops a release in front of somebody. */
-		Startable: []string{job.Analyse},
+		/* AND THE ONES THAT MAY BE STARTED BY HAND: the two on a schedule, so
+		   the two whose failure means waiting a day. `migrate` and `load` are
+		   gates a deploy waits for, and their failure already stops a release in
+		   front of somebody.
+
+		   SETTLING IS SAFE TO PRESS for the reason it is safe to schedule: it is
+		   idempotent, and settling something already settled changes nothing. It
+		   is the weaker claim of the two — the analysis withdraws questions from
+		   in front of students, and this only writes down what the clock already
+		   decided. */
+		Startable: []string{job.Analyse, job.Settle},
 		Start:     startJob,
 	},
 		recorded(entries),
