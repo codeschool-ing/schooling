@@ -97,6 +97,57 @@ func priced(t *testing.T, pool *pgxpool.Pool) {
 	}
 }
 
+/*
+discounted puts a Pix rate in force, which a test asserting on a discounted
+amount has to do for itself.
+
+	IT USED TO ASSERT ON SOMEBODY ELSE'S ROW. `0045` seeds five per cent when it
+	creates the table, and the test below asserted `listed` less exactly that,
+	having written no rate at all. Against a database that has only ever been
+	migrated — which is what CI builds fresh every run — it passes. Against a
+	shared development database it failed on EVERY run, because `console-test`
+	saves a different rate through the console and `Discounts.InForce` reads the
+	newest row: the assertion was about a write from another suite.
+
+	A test that is red on every developer's machine and green in CI is worse
+	than a test that is simply wrong. It teaches people that this package has
+	one failure that does not count, and the second one arrives unnoticed.
+
+	IT APPENDS TO THE SHARED SCOPE, WHICH IS NOT A CHOICE. `anOffer` next door
+	takes a scope of its own "so that runs do not read each other's rows", and
+	that is the better idiom — but it is not reachable from here: the handler
+	resolves `ScopeEverything` for both the price and the rate, and a test going
+	through HTTP cannot ask it for another. `priced` above appends to the same
+	scope for the same reason.
+
+	SO WHAT MAKES THIS SAFE IS RECENCY RATHER THAN ISOLATION. `InForce` reads the
+	newest row, and a row written during the test is newer than anything a
+	database had accumulated before it started. The cost is one more row per run
+	in a table that is append-only by design, which is the same cost `priced` has
+	always carried.
+*/
+func discounted(t *testing.T, pool *pgxpool.Pool) {
+	t.Helper()
+	if _, err := pool.Exec(context.Background(), `
+		INSERT INTO plan_discounts (scope, method, basis_points)
+		VALUES ($1, $2, $3)
+	`, billing.ScopeEverything, string(billing.MethodPix), pixOff); err != nil {
+		t.Fatalf("discounting a Pix: %v", err)
+	}
+}
+
+// The rate this file puts in force, and what a Pix therefore pays.
+//
+// `pixPays` IS DERIVED AND NOT TYPED, so the two numbers cannot drift apart in a
+// file that asserts on both. The arithmetic is `Money.Percent`'s — half away
+// from zero — and at these figures no rounding happens at all: five per cent of
+// 59000 is exactly 2950, so the constant and the code agree by value rather
+// than by both being told the same answer.
+const (
+	pixOff  = 500 // basis points, which is hundredths of a per cent
+	pixPays = listed - listed*pixOff/10_000
+)
+
 func post(t *testing.T, h http.Handler, body string) *httptest.ResponseRecorder {
 	t.Helper()
 	rec := httptest.NewRecorder()
@@ -161,13 +212,14 @@ THE DISCOUNT IS APPLIED AND WHAT WAS CHARGED IS RECORDED BESIDE THE PRICE.
 func TestPixIsChargedLessAndBothNumbersSurvive(t *testing.T) {
 	api, fake, store, pool, _ := checkoutAPI(t, confirmed)
 	priced(t, pool)
+	discounted(t, pool)
 
 	rec := post(t, api, `{"termMonths":12,"method":"pix","taxId":"249.715.637-92"}`)
 	if rec.Code != http.StatusOK {
 		t.Fatalf("it answered %d: %s", rec.Code, rec.Body.String())
 	}
 	body := answer(t, rec)
-	if body["cents"] != float64(56050) {
+	if body["cents"] != float64(pixPays) {
 		t.Errorf("it charged %v", body["cents"])
 	}
 	if body["invoiceUrl"] == "" || body["invoiceUrl"] == nil {
@@ -182,7 +234,7 @@ func TestPixIsChargedLessAndBothNumbersSurvive(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if one.Cents != 56050 {
+	if one.Cents != pixPays {
 		t.Errorf("the row says %d was charged", one.Cents)
 	}
 	if one.Stage != billing.StageCharged {
