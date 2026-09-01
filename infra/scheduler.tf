@@ -68,6 +68,17 @@ resource "google_cloud_run_v2_job_iam_member" "scheduler_starts_the_analysis" {
    twice, and this configuration already carries the argument for why a value
    with a right answer lives in code (K-13). What would make it a variable is a
    second deployment in another country, and that day it becomes one. */
+// AND ON THE SECOND JOB, granted separately for the same reason: a role at
+// project level is every job this project will ever have, given to a cron entry
+// in advance.
+resource "google_cloud_run_v2_job_iam_member" "scheduler_starts_the_settling" {
+  project  = google_cloud_run_v2_job.settle.project
+  location = google_cloud_run_v2_job.settle.location
+  name     = google_cloud_run_v2_job.settle.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${google_service_account.scheduler.email}"
+}
+
 resource "google_cloud_scheduler_job" "analyse" {
   name        = "schooling-analyse-nightly"
   region      = var.region
@@ -109,5 +120,59 @@ resource "google_cloud_scheduler_job" "analyse" {
   depends_on = [
     google_project_service.enabled,
     google_cloud_run_v2_job_iam_member.scheduler_starts_the_analysis,
+  ]
+}
+
+/* 03:40, THE SAME NIGHT AND HALF AN HOUR LATER.
+
+   NOT THE SAME MINUTE AS THE ANALYSIS, which is the only scheduling decision
+   here. Two jobs starting together on one small database are two jobs
+   contending for it, and the failure would be the flaky kind that appears on
+   the busy nights and not on the quiet ones. Thirty minutes is comfortably
+   longer than the analysis has ever taken and short enough that both are done
+   before anybody is awake.
+
+   AFTER IT RATHER THAN BEFORE, though nothing depends on the order. If one has
+   to be second it should be this one: the analysis withdraws broken questions
+   from in front of students, which is the work that would be worth protecting
+   if they ever did contend.
+
+   THE ZONE IS THE STUDENTS' for the reason the analysis gives, and it matters
+   slightly more here: a term that ends "today" ends on a Brazilian calendar,
+   and a sweep at 03:40 UTC would settle it three hours into the wrong day. */
+resource "google_cloud_scheduler_job" "settle" {
+  name        = "schooling-settle-nightly"
+  region      = var.region
+  description = "Bring lapsed subscriptions up to date and record that they ended."
+
+  schedule  = "40 3 * * *"
+  time_zone = "America/Sao_Paulo"
+
+  /* ONE ATTEMPT, AND THEN TOMORROW. The command is idempotent so a retry would
+     be safe — and a night that failed is a night the table disagrees with the
+     clock, which the jobs screen shows. A retry that quietly fixed it would
+     remove the only signal that anything went wrong. */
+  retry_config {
+    retry_count = 0
+  }
+
+  attempt_deadline = "30s"
+
+  http_target {
+    http_method = "POST"
+    uri = join("", [
+      "https://", var.region, "-run.googleapis.com",
+      "/apis/run.googleapis.com/v1/namespaces/", var.project,
+      "/jobs/", google_cloud_run_v2_job.settle.name, ":run",
+    ])
+
+    oauth_token {
+      service_account_email = google_service_account.scheduler.email
+    }
+  }
+
+  depends_on = [
+    google_project_service.enabled,
+    google_cloud_run_v2_job_iam_member.scheduler_starts_the_settling,
   ]
 }

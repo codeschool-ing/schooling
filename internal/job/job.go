@@ -39,6 +39,10 @@ import (
 // shows an empty history of a job that runs nightly.
 const Analyse = "analyse"
 
+// Settle is the sweeper that brings lapsed subscriptions up to date. A second
+// name, added when a second thing went on the clock — see `cmd/settle`.
+const Settle = "settle"
+
 // Outcome is how a run ended, or that it has not.
 type Outcome string
 

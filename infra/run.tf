@@ -23,6 +23,7 @@ locals {
   migrate  = "${local.registry}/migrate"
   load     = "${local.registry}/load"
   analyse  = "${local.registry}/analyse"
+  settle   = "${local.registry}/settle"
 }
 
 /* THE MIGRATION IS A JOB AND NOT A STEP IN THE CONTAINER'S START-UP.
@@ -246,6 +247,79 @@ resource "google_cloud_run_v2_job" "analyse" {
            if it passed anything. A window written here would be a second place
            holding a number the command already decides, and the one that gets
            edited would be whichever the next person happens to open. */
+
+        volume_mounts {
+          name       = "cloudsql"
+          mount_path = "/cloudsql"
+        }
+      }
+
+      volumes {
+        name = "cloudsql"
+        cloud_sql_instance {
+          instances = [google_sql_database_instance.main.connection_name]
+        }
+      }
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      template[0].template[0].containers[0].image,
+      client,
+      client_version,
+    ]
+  }
+
+  depends_on = [google_project_service.enabled]
+}
+
+/* THE SECOND THING ON THE CLOCK, and the reason it is a job of its own rather
+   than a second half of the analysis is `cmd/settle`'s first heading: that
+   command reads how people answered, and settling subscriptions is not that.
+
+   IT LOOKS LIKE THE ANALYSIS BECAUSE IT IS THE SAME KIND OF THING — one
+   binary, one database, no arguments, no retries — and where they differ is
+   only in what they do. Copying the block is the honest shape for two jobs
+   that genuinely have the same needs; a module abstracting one of each would be
+   indirection bought with nothing.
+
+   `max_retries = 0` FOR A DIFFERENT REASON THAN THE ANALYSIS'S. There, a retry
+   writes a second set of numbers for one night. Here the sweep is idempotent
+   and a retry would be harmless — but a night that failed is a night the table
+   disagrees with the clock, which is visible on the jobs screen, and a retry
+   that quietly fixed it would remove the only signal that anything went wrong. */
+resource "google_cloud_run_v2_job" "settle" {
+  name     = "schooling-settle"
+  location = var.region
+
+  deletion_protection = false
+
+  template {
+    template {
+      service_account = google_service_account.run.email
+      max_retries     = 0
+
+      containers {
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
+
+        env {
+          name  = "SCHOOLING_ENV"
+          value = "production"
+        }
+        env {
+          name  = "SCHOOLING_PLATFORM_DOMAIN"
+          value = var.platform_domain
+        }
+        env {
+          name = "SCHOOLING_DATABASE_URL"
+          value_source {
+            secret_key_ref {
+              secret  = google_secret_manager_secret.database_url.secret_id
+              version = "latest"
+            }
+          }
+        }
 
         volume_mounts {
           name       = "cloudsql"
