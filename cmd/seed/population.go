@@ -174,6 +174,14 @@ const (
 	// reaches. It exists so a report that counts starts can be caught counting
 	// payments instead.
 	renews = 0.45 // of those who paid and did not refund
+
+	/* AND HOW OFTEN A SUBSCRIBER COMES BACK FOR THE NEXT SECTION of the course
+	   they bought. It is per section rather than per person, so the paid course
+	   thins out the way the free one does — and it is HIGHER than the free
+	   tier's, because somebody who paid has already shown more intent than
+	   somebody who clicked. A table where everybody who paid stayed for ever
+	   would be as useless as the wall of zeroes it replaces. */
+	keepsStudying = 0.82
 )
 
 type life struct {
@@ -485,8 +493,13 @@ func one(r, money *rand.Rand, s shape, from, to time.Time, run string, n int) li
 		   population with none of them would let a screen that cannot draw an
 		   ending pass, which is exactly what a fixture is for. */
 		if money.Float64() < refunds {
-			sub("subscription.ended", paid.Add(hours(money, 12, 30*24)),
+			refunded := paid.Add(hours(money, 12, 30*24))
+			sub("subscription.ended", refunded,
 				map[string]any{"reason": "refunded", "state": "ended"})
+			/* AND THEY STOP STUDYING WHAT THEY BOUGHT, because they no longer
+			   have it. `studies` is bounded by this moment, which is what makes
+			   a refund visible as a shape rather than only as an event. */
+			studies(money, s, &l, paid, refunded, to, browser)
 		} else if money.Float64() < renews {
 			/* A RENEWAL IS THE SAME PERSON PAYING AGAIN, a year later, and it
 			   exists so that a report which counts starts can be caught
@@ -496,6 +509,9 @@ func one(r, money *rand.Rand, s shape, from, to time.Time, run string, n int) li
 			   not have happened yet. */
 			sub("subscription.renewed", paid.Add(hours(money, 350*24, 380*24)),
 				map[string]any{"model": "instalments", "term_months": 12})
+			studies(money, s, &l, paid, to, to, browser)
+		} else {
+			studies(money, s, &l, paid, to, to, browser)
 		}
 	}
 
@@ -643,5 +659,88 @@ func clamp(v, low, high float64) float64 {
 		return high
 	default:
 		return v
+	}
+}
+
+/*
+studies is what somebody does with a subscription after they have bought one.
+
+	# THE FIXTURE USED TO SAY NOBODY EVER DID ANYTHING WITH ONE
+
+	A seeded life paid immediately after finishing the free course, and the only
+	thing that counts as active is finishing a section — every one of which had
+	already happened. So by construction a seeded subscriber never studied
+	again, and the cohorts-by-subscription table was a wall of zeroes after
+	month zero. The table was right and the past was wrong: checked against the
+	database, 0 of 37 subscribers had a single `section.completed` after their
+	payment.
+
+	It is the shape of the mistake this seeder exists to avoid, one report
+	along. A funnel with four events in it is four boxes in a column; a
+	retention table where nobody is ever retained is a screen that reads as
+	broken and cannot be told from one that is.
+
+	# WHAT IT WRITES IS THE COURSE THEY PAID FOR
+
+	The second course of the track — the first one a subscription opens — and
+	not more of the free one. Re-completing a section somebody finished last
+	month would be inventing a repeat of something that happens once, and the
+	funnel counts distinct people per step so it would not even show.
+
+	# IT IS SPREAD OVER MONTHS, WHICH IS THE ENTIRE POINT
+
+	A cohort table asks who was still here in the months AFTER, so study that
+	all landed in the payment month would produce the same wall of zeroes with
+	extra rows. Each section is a few weeks after the one before it, and the
+	person drops out along the way at the same rate they did in the free course:
+	a table where everybody who paid stayed for ever is as useless as one where
+	nobody did.
+
+	# AND IT ENDS WHEN THE ACCESS DOES
+
+	`until` is the refund for somebody who asked for their money back, and today
+	otherwise. Somebody who was refunded in March and kept completing paid
+	sections in June would be a fixture demonstrating a paywall that does not
+	work.
+
+	# IT DRAWS FROM `money` AND NEVER MOVES `at`
+
+	The same discipline the refund is under, and for the reason that cost a
+	branch once: every draw from `r` shifts the exam fixture, and study that
+	advanced the shared clock would push the exam by months.
+*/
+func studies(money *rand.Rand, s shape, l *life, from, until, to time.Time, browser int) {
+	if s.paidLesson == "" || len(s.paidSections) == 0 {
+		return // a school with one course, which the shape says is survivable
+	}
+
+	stop := until
+	if to.Before(stop) {
+		stop = to
+	}
+
+	at := from.Add(hours(money, 12, 20*24))
+	if !at.Before(stop) {
+		return
+	}
+	l.moments = append(l.moments, moment{
+		name: "lesson.opened", at: at, visitor: browser, account: 0, plan: "full",
+		payload: map[string]any{"course": s.paidCourse, "lesson": s.paidLesson},
+	})
+
+	for _, section := range s.paidSections {
+		if money.Float64() > keepsStudying {
+			return
+		}
+		at = at.Add(hours(money, 5*24, 45*24))
+		if !at.Before(stop) {
+			return
+		}
+		l.moments = append(l.moments, moment{
+			name: "section.completed", at: at, visitor: browser, account: 0, plan: "full",
+			payload: map[string]any{
+				"course": s.paidCourse, "lesson": s.paidLesson, "section": section,
+			},
+		})
 	}
 }

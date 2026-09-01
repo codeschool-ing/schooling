@@ -773,3 +773,126 @@ func TestNoGoodQuestionIsCondemnedOnAnySeed(t *testing.T) {
 			"one it did:\n  %s", len(wrong), seeds, strings.Join(wrong, "\n  "))
 	}
 }
+
+/*
+A SEEDED SUBSCRIBER STUDIES WHAT THEY BOUGHT.
+
+	# WHAT THIS IS GUARDING, AND HOW IT WAS FOUND
+
+	Not by a test. The cohorts-by-subscription screen was opened against seeded
+	data and every column after month zero read 0% — correctly, because the
+	model had people pay immediately after finishing the free course and the only
+	thing that counts as active is finishing a section, all of which had already
+	happened. Checked against the database at the time: 0 of 37 subscribers had a
+	single `section.completed` after their payment.
+
+	A retention table where nobody is ever retained is a screen that reads as
+	broken and cannot be told from one that is. That is the same failure this
+	seeder exists to prevent one report along — "a funnel with four events in it
+	is four boxes in a column".
+
+	# IT ASSERTS A SHAPE AND NOT A COUNT
+
+	Some subscribers carry on and some do not, which is what makes a retention
+	curve a curve. A fixture where everybody who paid stayed for ever would be as
+	useless as the wall of zeroes it replaces, so both ends are checked.
+*/
+func TestASeededSubscriberStudiesAfterPaying(t *testing.T) {
+	to := time.Now().UTC()
+	from := to.AddDate(0, -12, 0)
+	s := shape{
+		id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one", lesson: "le-one",
+		sections:     []string{"se-1", "se-2", "se-3"},
+		paidCourse:   "co-two",
+		paidLesson:   "le-two",
+		paidSections: []string{"ps-1", "ps-2", "ps-3", "ps-4"},
+		questions:    []question{{id: "ex-1", version: 1, kind: "quiz", ease: easeOf("ex-1")}},
+		broken:       "ex-1",
+	}
+
+	lives := populate(
+		rand.New(rand.NewSource(21)), //nolint:gosec // repeatable on purpose
+		rand.New(rand.NewSource(22)), //nolint:gosec // the same
+		s, from, to, 900)
+
+	subscribers, stayed := 0, 0
+	for _, l := range lives {
+		var paid time.Time
+		for _, m := range l.moments {
+			if m.name == "subscription.started" {
+				paid = m.at
+				break
+			}
+		}
+		if paid.IsZero() {
+			continue
+		}
+		subscribers++
+		for _, m := range l.moments {
+			if m.name == "section.completed" && m.at.After(paid) {
+				stayed++
+				break
+			}
+		}
+	}
+
+	if subscribers == 0 {
+		t.Fatal("nobody subscribed, so this test checks nothing")
+	}
+	if stayed == 0 {
+		t.Errorf("none of %d subscribers finished a section after paying — which is the "+
+			"fixture that made the cohorts-by-subscription table a wall of zeroes, "+
+			"correctly and uselessly", subscribers)
+	}
+	if stayed == subscribers {
+		t.Errorf("all %d subscribers carried on studying, and a retention curve where "+
+			"nobody ever stops is as useless as one where nobody ever starts", subscribers)
+	}
+}
+
+// AND SOMEBODY REFUNDED STOPS, because they no longer have what they bought. A
+// fixture where a refunded student kept completing paid sections would be one
+// demonstrating a paywall that does not work.
+func TestARefundedSubscriberStopsStudyingWhatTheyBought(t *testing.T) {
+	to := time.Now().UTC()
+	from := to.AddDate(0, -12, 0)
+	s := shape{
+		id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one", lesson: "le-one",
+		sections:     []string{"se-1", "se-2"},
+		paidCourse:   "co-two",
+		paidLesson:   "le-two",
+		paidSections: []string{"ps-1", "ps-2", "ps-3", "ps-4"},
+		questions:    []question{{id: "ex-1", version: 1, kind: "quiz", ease: easeOf("ex-1")}},
+		broken:       "ex-1",
+	}
+
+	lives := populate(
+		rand.New(rand.NewSource(23)), //nolint:gosec // repeatable on purpose
+		rand.New(rand.NewSource(24)), //nolint:gosec // the same
+		s, from, to, 900)
+
+	checked := 0
+	for i, l := range lives {
+		var refunded time.Time
+		for _, m := range l.moments {
+			if m.name == "subscription.ended" {
+				refunded = m.at
+				break
+			}
+		}
+		if refunded.IsZero() {
+			continue
+		}
+		checked++
+		for _, m := range l.moments {
+			if m.name == "section.completed" && m.at.After(refunded) &&
+				m.payload["course"] == s.paidCourse {
+
+				t.Errorf("person %d finished a paid section after being refunded", i)
+			}
+		}
+	}
+	if checked == 0 {
+		t.Skip("this seed produced no refunds, so there was nothing to check")
+	}
+}
