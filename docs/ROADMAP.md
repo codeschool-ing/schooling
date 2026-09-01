@@ -369,6 +369,18 @@ demonstrated by a population this repository invented, because a seeded funnel d
 model was told to make it drop. It waits on real students, and the machinery to see it is what is
 finished here.*
 
+### Attending
+
+- [x] A front door — **the question fourteen screens could not answer.** Every screen here answers one thing well and says its scope, and none of them answered *what should I look at?* Opening this console cold meant already knowing which screen held the thing that was wrong, and the screens somebody opens are the ones they already suspect. The defect nobody suspects is the one that stays.
+
+  **It is FINDINGS and not figures, which is the whole design.** A dashboard of numbers is a screen with no question, and this console's rule is that a screen says what it is about (`K-18`). *1,204 students* under no scope, no population and no date is exactly what that decision exists against — and there is nowhere on a tile to put the sentence the cohorts screen needs a paragraph for. So every line is something that is true and wants a person: a condemned question still being asked, a night that did not run, a report nobody answered, a role granted and never used, a role with no second factor. **On a platform where nothing is wrong the screen is empty**, which is the right amount of information and the opposite of a wall of figures that always has something to look at.
+
+  **Almost none of it is a threshold.** *Granted and never used* is a fact; *waiting to be answered* is a fact. Only the adrift run is a judgement, and its bar is the one the jobs screen already draws and the store already decided — `K-16` one layer along, so a number that decided something never appears in two places with a chance to disagree.
+
+  **And a reader that fails is a finding rather than a silence.** A count this screen could not obtain comes back as `could-not-be-checked` and is shown, because a home screen that quietly drops the check it could not run is a screen that says *nothing needs you* on the strength of not having looked — which is the same failure as an empty item-analysis table on a job that never ran.
+
+  It asks the **same functions the screens ask** — `Operators` and `Jobs` are those screens' own seams, passed in unchanged — because a home with its own idea of "has this person ever opened the console" would be a second definition of one fact, and the two would disagree on exactly the row somebody is trying to understand. And it is **not an alarm and says so** (`K-08`): an alert has to reach a phone when this console is down, which is when it matters; this is a screen somebody opens, and everything on it stays true for as long as nobody acts on it
+
 ### Understanding
 
 - [x] Cohorts, by signup and by subscription start — **both, and they answer different questions.** By signup is *does the product hold the people it attracts*; by subscription start is *does it hold the people who paid*, which is a different population and the one whose retention costs money to get wrong. A school where signups stay and subscribers leave has a problem no signup cohort can show.
