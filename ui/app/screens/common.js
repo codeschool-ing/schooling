@@ -77,19 +77,45 @@ export function videoFrame(id, { label, duration } = {}) {
       badge +
       '</div>';
   }
+  /* NO THUMBNAIL, AND THAT IS THE POINT OF THE FACADE.
+
+     This used to render an `img` whose source was a thumbnail on `i.ytimg.com`,
+     which a browser fetches on its own, before anybody clicks anything — handing
+     YouTube the reader's address, their user agent, the video id and a `Referer`
+     naming the school and the lesson. The paragraph under `playsOnClick` claimed
+     the opposite ("a screen opens without asking YouTube for anything") eight
+     lines below the line that did the asking.
+
+     It had never actually leaked, because no video id is published yet and this
+     branch is therefore unreachable — which is exactly what made it worth
+     removing now rather than later. It was a leak scheduled for the day somebody
+     publishes the first video, with a comment beside it saying it could not
+     happen.
+
+     A THUMBNAIL IS STILL WORTH HAVING, and when video ships it comes through
+     this origin: fetched and cached by the server, served from the host that
+     served the page. `tools/check-origin` is what will refuse the shortcut. */
   return '<button type="button" class="modal-video" data-video="' + esc(id) + '" ' +
     'aria-label="' + esc(label || txt('Watch')) + '">' +
-    '<img src="https://i.ytimg.com/vi/' + encodeURIComponent(id) + '/hqdefault.jpg" ' +
-      'alt="" loading="lazy" />' +
     '<span class="video-play"></span>' +
     badge +
     '</button>';
 }
 
 /* The facade only becomes a player on a click, so a screen opens without asking
-   YouTube for anything and a student who does not watch receives no cookie from
-   them. Bound to the screen element rather than delegated from main.js: the
-   element is new on every render, so the listener goes with it. */
+   YouTube for anything and a student who does not watch is not known to them at
+   all. That sentence was written before it was true — `videoFrame` above used to
+   request the thumbnail with the page — and `tools/check-origin` is what holds
+   it now rather than this paragraph.
+
+   THIS IS THE ONE FETCH THAT LEAVES THE ORIGIN, and it is declared there with
+   its reason: a student who clicks play is asking for a YouTube player, and the
+   video is on YouTube. Refusing it would remove the video rather than protect
+   anybody, which is the difference between this and the thumbnail — nobody asked
+   for the thumbnail.
+
+   Bound to the screen element rather than delegated from main.js: the element is
+   new on every render, so the listener goes with it. */
 export function playsOnClick(el, title) {
   el.addEventListener('click', (e) => {
     const thumb = e.target.closest('[data-video]');
