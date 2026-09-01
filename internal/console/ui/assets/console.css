@@ -897,6 +897,56 @@ body.no-rail .rail{display:none}
    distinction the whole table exists to keep.
    ========================================================================== */
 
+/* ---------- one job's history as a strip ----------
+
+   ONE COLOUR TOKEN PER STATE, SET AS `color` AND NOT AS `background`. The bar
+   is `currentColor` and so is the outline, so a finished run and an unfinished
+   one in the same state are the same colour in two shapes rather than two
+   rules that have to be kept in step. The four are the four the list below
+   uses, deliberately: the same word must be the same colour in the picture and
+   in the rows, or matching one to the other is guesswork.
+
+   AND SHAPE CARRIES WHAT COLOUR CARRIES. A run that never finished is an
+   outline, which is legible with no colour at all — the promise the status
+   vocabulary at the top of this file makes, kept here rather than assumed. */
+.runs{margin:0 0 16px}
+
+/* THE BOX THE STRIP AND ITS TWO END LABELS SHARE. Its width comes from the
+   screen, because it comes from the number of runs and nothing in a stylesheet
+   knows that — see `strip()`. Capping the BAR here instead was the first
+   attempt and it put the newest run's label a long way to the right of the
+   newest run's bar. */
+.runs-plot{max-width:100%}
+.runs-strip{
+  display:flex;align-items:flex-end;gap:4px;height:56px;
+  border-bottom:1px solid var(--wire);
+}
+.runs-bar{
+  flex:1 1 0;min-width:3px;
+  background:currentColor;color:var(--paper-dim);border-radius:2px 2px 0 0;
+}
+.runs-ok{color:var(--ok)}
+.runs-failed{color:var(--bad)}
+.runs-adrift{color:var(--warn)}
+.runs-running{color:var(--phosphor)}
+
+/* AFTER THE FOUR, so it takes the background back off at equal specificity.
+   No bottom border: the strip's own line is the floor and a second one on top
+   of it draws a bar that appears to hover. */
+.runs-open{background:none;border:1px dashed currentColor;border-bottom:0}
+
+/* WHEN THE TWO ENDS WERE, because the strip runs oldest-to-newest and the list
+   under it runs newest-first. Both are right for what they are, and neither is
+   guessable, so the picture says which way round it goes. */
+.runs-ends{
+  display:flex;justify-content:space-between;gap:12px;margin-top:5px;
+  font-size:.66rem;color:var(--paper-dim);
+}
+.runs figcaption{
+  margin-top:7px;font-size:.7rem;line-height:1.6;color:var(--paper-dim);
+  font-style:italic;max-width:74ch;
+}
+
 .run-list{list-style:none;margin:0;padding:0}
 .run{
   display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:baseline;

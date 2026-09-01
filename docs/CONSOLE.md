@@ -113,6 +113,15 @@ is how every console rots.* That division is the spine of everything below.
   after it — so a job that was killed leaves the one trace it will ever leave, and after an hour
   the reader calls it **adrift** rather than busy. The retry is the part that is not built: it
   would mean this console holding the right to start a job
+  - and the same runs once as a strip, a bar per run, oldest at the left and as tall as the run
+    took. It answers the two things the list cannot: **three failures scattered and three in a
+    row are the same three rows and different diagnoses**, and a job that used to take forty
+    seconds and now takes six minutes is a column of durations nobody compares pairwise. The
+    scale is each job's **own** longest run — a duration has no natural range, and one scale
+    across the screen would draw every fast job flat — so the caption says outright that two
+    strips are not to be read against each other. A run that never finished is an **outline** and
+    not a bar: its `took` is time-since-start, which is not a length, and drawn as one it would
+    be the tallest thing on every strip that held it
 - E-mail deliverability: bounces and complaints. **The mechanism exists and the screen does not.**
   Since v0.10.0 the provider's permanent refusals reach `/hooks/mail`, land in `mail_suppressions`
   and stop the next message; what nobody can do is *see* them. The screen would answer "why did
