@@ -4,8 +4,8 @@ A course is published as a **set**, not as a pile of files that happen to have b
 same afternoon. Prose, exercises and videos are frozen together, verified together, approved
 together, and go into effect together.
 
-Nothing here is built. Most of it is decided; **one row is still a proposal**, and the state
-column says which — a proposal recorded as a decision is how a document starts lying.
+Nothing here is built, and everything in it is decided. The state column is kept anyway, because
+rows will be added and a proposal recorded as a decision is how a document starts lying.
 
 ---
 
@@ -323,18 +323,37 @@ same reason as the three that are already there.
 | Decision | Why | State |
 |---|---|---|
 | A retired line's catalogue rows are pruned | The catalogue is a derived mirror; git holds the release under its tag. Student history is unkeyed and survives orphaned by design. | Decided |
-| The certificate captures the version it was earned on | It already captures the title, the name and the school for exactly this reason. A version left out is a document that cannot say which course it means once the lines diverge. | Proposed |
+| The certificate captures the version it was earned on, and the verification page shows it | It already captures the title, the name and the school for exactly this reason, and a version left out is a document that cannot say which course it means once the lines diverge. What settles it is the asymmetry rather than the value: a certificate is immutable by trigger, so the version either enters at issue or never exists — hiding a captured field later is easy, capturing retroactively is impossible. Shown, because a captured field nobody displays answers nothing, and because the reason the score is withheld does not apply: a score would rank people, and a version describes the course. | Decided |
+
+---
+
+## A broken key on a line that has retired
+
+Retirement does not touch this, and the reason is that the remedy was never in the catalogue.
+
+The quarantine (`C-15`) stops a question being **served**, which applies to a live line by
+definition. The retrospective half — finding who was affected — runs over `exam_attempts` and
+`exam_answers`, which are a student's record rather than catalogue rows and survive the prune
+intact. The chain is already built and already argued: the certificate stores `attempt_id`, and
+its migration says why — "for the question 'which questions was this earned on', which is the one
+that matters the day a question is found to be broken." A line retiring cuts no link in it.
+
+The question's text goes with the prune, and is in git under the release's tag, which is the same
+answer as everything else here.
+
+**What is left over is not a line problem.** Nothing looks backwards: `C-15` quarantines forward
+and no one re-examines past attempts. That is true today, with no releases and no lines, so
+recording it here would file it under the wrong subject. If it is ever closed, it is a console
+screen — quarantining a question lists the attempts that contained it and the certificates resting
+on those attempts, **for a person to look at**. Not automatic: touching a certificate is a decision
+about a person, and a certificate leaves only by erasure.
 
 ---
 
 ## Still open
 
-**Whether the video decisions and these become numbered entries in `PLAN.md`.** `VIDEO.md` settled
-`P-11`, `P-12`, `C-18` to `C-20`, `K-23` and `K-24`; this document settles more, and which of them
-are rules other work can violate — rather than reasoning that belongs here — is a judgement nobody
-has made yet.
-
-**What a fix looks like on a line that has retired.** A wrong key found in a course whose line is
-gone: the quarantine is automatic and applies to the live catalogue, and there is nothing to
-quarantine on a line that no longer exists. Whether the certificates earned on it need anything is
-the question `C-15` does not currently reach.
+**Whether these become numbered entries in `PLAN.md`.** `VIDEO.md` settled `P-11`, `P-12`, `C-18`
+to `C-20`, `K-23` and `K-24`. This document settles more, and which of them are rules other work
+can violate — rather than reasoning that belongs here — is a judgement to make on its own, in its
+own change, the way the numbering of the video decisions followed the document that argued for
+them.
