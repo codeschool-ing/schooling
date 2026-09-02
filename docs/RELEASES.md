@@ -4,8 +4,8 @@ A course is published as a **set**, not as a pile of files that happen to have b
 same afternoon. Prose, exercises and videos are frozen together, verified together, approved
 together, and go into effect together.
 
-Nothing here is built. Most of it is decided; two rows are proposals, and the state column says
-which is which — a proposal recorded as a decision is how a document starts lying.
+Nothing here is built. Most of it is decided; **one row is still a proposal**, and the state
+column says which — a proposal recorded as a decision is how a document starts lying.
 
 ---
 
