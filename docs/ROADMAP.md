@@ -554,10 +554,17 @@ reports no inverted key.*
 
 ## 6 — Video and scale
 
+The reasoning behind this phase is in [`VIDEO.md`](VIDEO.md) — hosting, delivery, protection,
+cost and telemetry, written before any of it exists, because `C-08` puts video last and that is
+exactly what makes the decisions cheap to take now. What it settled and numbered is `P-11`,
+`P-12`, `C-18` to `C-20`, `K-23` and `K-24`.
+
 *Done when: opening a new school is running the pipeline, and nothing else.*
 
 - [ ] Video as the final layer of the material
 - [ ] Signed URLs, short-lived, validated against the subscription at every issue
+- [ ] A student chooses the narration language, and is told on screen when it fell back to English
+- [ ] The console shows how much of each video was watched, by milestone
 - [ ] Physics and chemistry
 - [ ] The remaining languages
 - [ ] A custom domain per school, if it turns out to be worth it
