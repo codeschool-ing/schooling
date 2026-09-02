@@ -48,6 +48,7 @@ so the next person can disagree with it rather than rediscover it.
 |---|---|---|
 | One course first: `web-fundamentals` | Code-level adjustments will surface as the material grows. One course keeps each adjustment cheap. | Decided |
 | Material in English only, for now | It is the source language everywhere (`N-06`). Translations divide storage by five the day they arrive, and the material is still changing shape. | Decided |
+| One rendition in a second language exists during development, in `content/` | Not a nicety. It is the only way the fallback path is ever taken: with everything in English the "not narrated in your language" branch is never exercised and ships broken to the first student who needs it. It is the most valuable test asset in the set. | Decided |
 | Structure frozen | Tracks, courses, `requires` and `links` do not change. Phase 5 is prose, exercises and script. Held by `validate-catalog`. | Decided |
 | The spoken script is authored source | Written beside the prose, versioned in git under `content/`. The generator reads it; the student reads it back as the transcript. | Decided |
 
@@ -68,8 +69,19 @@ so the next person can disagree with it rather than rediscover it.
 | Decision | Why | State |
 |---|---|---|
 | `controlsList="nodownload"` and the context menu suppressed | Removes the button and the right-click — the one-step path. Anyone who opens the network tab finds the file; that person was never the target. | Decided |
-| A watermark composited in the DOM, carrying the student, from the first video | Catches a screen recording and a camera. Does not catch a download, because it is not in the file — so its **absence is never evidence of anything**. | Decided |
+| A watermark composited in the DOM, carrying the student | Costs nothing recurring — see below — but spends a visible annoyance on every honest student, in every video, to reach only the screen-recording case. **The recommendation is not to ship it initially** and to reopen it if material is ever found circulating. | Proposed |
+| A watermark burned into the pixels, unique per student | One render per student per video. Storage stops being one object per (video, language) and becomes one per (video, language, **student**) — 10,000 files where there were 10, at a thousand students. It is the Netflix-class answer, priced accordingly. | Refused |
 | DRM | A monthly licence and a licence server, and the analogue hole stays open either way. | Refused |
+
+**The two things called "watermark" are not variants of each other.** The DOM overlay is an HTML
+element above the `<video>`; the file is untouched, one object still serves everybody, and the
+extra cost is zero. It catches a screen recording or a camera, because the mark is in the
+recording. It does not catch a download — the mark is not in the file — and it does not catch
+somebody who deletes the element in devtools first. The burned-in version catches the download
+and is the reason the row above it is refused.
+
+This distinction is written out because the overlay was first recorded here as *decided* on the
+strength of nobody having objected to it, which is the failure the four states exist to prevent.
 
 ### Infrastructure
 
@@ -78,7 +90,9 @@ so the next person can disagree with it rather than rediscover it.
 | United States region | The free 100 GiB/month egress tier is North America. São Paulo costs more per GiB *and* forfeits the tier. | Decided |
 | Standard for what is watched, Autoclass on from day one | US$0.125/month for 50,000 objects. What nobody watches demotes itself, with nobody remembering to do it. | Decided |
 | Masters in Archive, separate from the served renditions | The original render is never read by a student, which is the one case where Archive's retrieval price does not matter. | Decided |
-| Video language decoupled from the interface: a selector on the player, defaulting to the interface language, falling back to English **spoken aloud** | A video is not a string — a missing translation is not a key showing through, it is somebody hearing the wrong language. Remembering the choice is a separate decision: it would be the third key stored in a browser, and every stored key needs a migration and a test that seeds a real browser. | Deferred |
+| Video language decoupled from the interface: a selector on the player, defaulting to the interface language, falling back to English **and saying so on screen** | A video is not a string — a missing translation is not a key showing through, it is somebody hearing a language they did not choose, with no way to tell whether that is a fault or an absence. | Decided |
+| The chosen language is stored **on the account**, not in the browser | This sidesteps the third-stored-key problem rather than paying it: a column has migrations by construction, where `localStorage` has neither version nor owner. It is also the right home — audio language is a property of a person, not of a device, and should follow them to a phone. There is never an anonymous case: the signed URL is already issued against an active subscription, so an account exists at the exact moment the preference matters. | Decided |
+| The selector offers only the languages **that video** has | They will arrive unevenly. Offering five and failing on three is worse than offering the two that exist. | Decided |
 
 ### Telemetry
 
@@ -86,11 +100,14 @@ so the next person can disagree with it rather than rediscover it.
 |---|---|---|
 | `internal/event/` takes the rows, a fold in `internal/analysis/` aggregates, the console reads the aggregate | `K-03`, applied. Not a new decision — the existing one, arriving somewhere new. | Decided |
 | Nothing below the minimum sample | `C-17`. A completion rate over three views is noise, and the questions screen already knows how to say how many were left out. | Decided |
-| Milestones at 25%, 50%, 75%, 95% — not a periodic heartbeat | Four rows per view instead of about forty. The stream is permanent by decision, and the heartbeat stores a detail nobody will ask for. | Proposed |
-| The milestone is **earned**: emitted from media time actually played, never from the playhead | Dragging the scrubber to the end fires 95% in two seconds. Read from position, the metric measures who touched the control. | Proposed |
-| Media seconds, not wall-clock seconds | At 1.5×, two thirds of a video takes the running time of all of it and passes for finished. | Proposed |
-| The row stores the milestone reached, not a count of seconds | Replace a video with a shorter one and stored seconds become more than 100% with nobody noticing. "Reached 75%" stays true without consulting current state, which is the whole reason `K-03` exists. | Proposed |
-| The rendition's language is on the event | Turns "when do the translations land" from a guess into an observation, using a row that was going to be written anyway. | Proposed |
+| Milestones at 25%, 50%, 75%, 95% — not a periodic heartbeat | Four rows per view instead of about forty. The stream is permanent by decision, and the heartbeat stores a detail nobody will ask for. | Decided |
+| The milestone is **earned**: emitted from media time actually played, never from the playhead | Dragging the scrubber to the end fires 95% in two seconds. Read from position, the metric measures who touched the control. | Decided |
+| Media seconds, not wall-clock seconds | At 1.5×, two thirds of a video takes the running time of all of it and passes for finished. Counted in media seconds the number is right at any speed, which is what makes the row below affordable. | Decided |
+| The row stores the milestone reached, not a count of seconds | Replace a video with a shorter one and stored seconds become more than 100% with nobody noticing. "Reached 75%" stays true without consulting current state, which is the whole reason `K-03` exists. | Decided |
+| The rendition's language is on the event | Turns "when do the translations land" from a guess into an observation, using a row that was going to be written anyway. | Decided |
+| The playback rate is on the event | If most completions happen at 1.5×, the videos are too slow and the script is what should change. A worry about pacing becomes a reading. | Decided |
+| The player restricts nothing: speed stays available, 0.75× to 2× | Media seconds already make the metric correct at any rate, so removing speed buys the measurement nothing. It costs the thing we least want — a platform that feels incomplete — and reaches only honest students, since `playbackRate` is one line in a console. It is accessibility in both directions: with the material in English, 0.75× matters more here than 1.5× does. | Decided |
+| Playback is never paused or discounted for focus or visibility | **The scrubber is the attack, not the tab.** Dragging is instant, deliberate and free, and the earned milestone already refuses it; leaving a video running costs real time, and nobody games a system by waiting. Listening to the audio from another tab is learning. | Decided |
 
 ---
 
@@ -212,14 +229,31 @@ With N videos to a section, each with its own id, script and duration, the boole
 ```json
 { "id": "se-pm2stfcw", "slug": "shared", "kind": "video",
   "videos": [
-    { "id": "vd-…", "script": "…", "duration": "08 min" },
-    { "id": "vd-…", "script": "…", "duration": "03 min" }
+    { "id": "vd-…", "version": 1, "script": "…", "duration": "08 min", "locales": ["en", "pt"] },
+    { "id": "vd-…", "version": 1, "script": "…", "duration": "03 min", "locales": ["en"] }
   ] }
 ```
 
 The id is what ties the video to its object, its script and its transcript — nothing joins by
 prose or position (`C-09`). The script is authored source: it lives in `content/`, it is
 versioned, and one rendition per language is generated from it.
+
+**`locales` is declared per video and its absence is normal.** Languages will arrive unevenly, one
+correction at a time, and a video narrated in two of five is the ordinary state rather than an
+error — the same rule `C-11` already applies to prose, where the translation sits beside the file
+and is optional. The content check must not demand five.
+
+**A re-render bumps the version; it does not mint a new id.** Both break the series, which is what
+has to happen — a corrected script measured against the old one answers nothing. But a version
+keeps the lineage, and the lineage is what answers *whether the correction worked*, because v1 and
+v2 can be put side by side. Two unrelated ids cannot. This is `C-16` for exercises, arriving
+somewhere else: the artefact is versioned, and the event records the version it saw.
+
+Which makes the object key the three things that identify a rendition, and nothing else:
+
+```
+vd-<id>/v<version>/<locale>.mp4
+```
 
 **Calling the script a transcript is a claim about the video, not about the text.** While the
 generator reads the script literally the two are the same string. The day a rendition drifts from
@@ -228,22 +262,66 @@ has to be corrected, not the label.
 
 ---
 
+## Measuring what was watched
+
+Two of the decisions above say the player must **not** do something — must not remove the speed
+control, must not pause when attention seems to lapse. Both look like leniency and are not: they
+follow from being precise about where the number is actually attacked.
+
+**It is attacked from the scrubber.** Dragging to the end is instant, deliberate, costs nothing
+and, read from the playhead, produces a perfect completion. That is the whole vector, and the
+earned milestone closes it: time only accumulates while media is playing, so a drag advances
+nothing. Leaving a video running in a hidden tab is the other way to fake a number, and it costs
+the running time of the video to do it. Nobody games a system by waiting.
+
+So restricting the player buys the metric nothing, and the two restrictions somebody reaches for
+first are both worse than they look.
+
+**Speed.** Counted in media seconds, a student at 2× who watches the whole thing has 100% of the
+media seconds — correct, with no special case. Removing the control therefore protects nothing,
+while `playbackRate` in the console returns it to anyone who wants it. It reaches only the
+students who were playing fairly.
+
+**Focus.** There are three browser signals here and they mean different things, which is worth
+writing down because the wrong one is the intuitive one:
+
+| Signal | Fires when | Does not fire when |
+|---|---|---|
+| `visibilitychange` | the tab is hidden — another tab, minimised, screen locked, app switched on a phone | the window is merely behind another one, or on a second monitor |
+| `window.blur` | the window loses keyboard focus, including a click on any other window | — |
+| neither | — | a window is fully covered by another; the browser cannot tell |
+
+The case that decides it: **two monitors, the browser window on the second one.** Clicking the
+first monitor fires `blur` and not `visibilitychange`, while the video stays visible and audible.
+Pausing on `blur` would stop the video of a student watching the lesson on one screen and typing
+the code on the other — which is the behaviour a programming school most wants to encourage.
+
+Neither signal is used. Nothing pauses, and hidden time is not discounted: listening to the audio
+from another tab is learning, and the system cannot tell it from a person who walked away without
+also punishing the person who did not.
+
+**Protecting the number is telemetry's job. Producing attention is the material's job.** The
+drop-off curve says which video loses people, and the answer to that is a better video — not a
+player that holds a student in place.
+
+---
+
 ## Still open
 
-**Does re-rendering a video mint a new id?** If the script is corrected and the id stays, the
-drop-off curve mixes two versions and cannot say whether the correction worked. A new id breaks
-the series on purpose, which is the honest behaviour and matches `C-16` for exercises. Cheap to
-decide now, expensive once there is history.
+**What becomes of a superseded rendition.** Version 2 exists; version 1 is still the thing older
+events refer to. Deleting it makes those events unresolvable, and keeping every version in
+Standard pays Standard prices for files nobody plays. Archive is the obvious home — a superseded
+rendition is read about as often as a master — but the 365-day minimum makes deleting one early
+cost the remainder anyway, so the choice is really *keep in Archive* against *delete and accept
+that the old rows point at nothing*.
 
-**Does the player pause when the tab loses focus?** Pausing brings the milestone closer to real
-attention and annoys the person listening in another window deliberately. Either way it has to be
-chosen before the first events: changing it later leaves two halves of one series measuring
-different things under the same name.
+**Which transcript is shown when the audio fell back.** The interface is in Portuguese, the video
+is narrated in English because that is all there is, and the panel beside it has to show one of
+the two. Showing the English script matches what is being heard; showing the Portuguese prose
+matches what the student reads everywhere else. They are different answers to "what is a
+transcript for" and the choice should be made once, not per screen.
 
-**When do the translations land?** Each language multiplies storage and renders. Starting with
-one keeps the bill at a fifth while the material is still moving — and the telemetry above is
-what turns this from a guess into a reading.
-
-**What the watermark shows.** That it exists is decided; what it carries, how often it moves and
-whether it fades on hover are not. Each of those trades a paying student's comfort for friction
-against somebody recording the screen.
+**What the watermark carries, if it ships at all.** Conditional on the proposal above being taken
+up. What it shows, how often it moves and whether it fades on hover each trade a paying student's
+comfort for friction against somebody recording the screen — which is why the recommendation is to
+leave it out until there is evidence the friction buys anything.
