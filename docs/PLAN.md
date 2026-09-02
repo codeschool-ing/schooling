@@ -256,9 +256,15 @@ card instalments, and Pix. Without splits and third-party onboarding the problem
 than it was — fees, interest-free instalments and the cost of two coexisting billing models
 remain. Decide before the billing phase, not during it.
 
-**Video provider.** Managed service or own transcoding, behind an interface. Deferred by
-construction: video is the last layer of the material, so the decision happens when there are
-real hours watched to weigh.
+**~~Video provider.~~ Answered — see [`VIDEO.md`](VIDEO.md).** We host it: Cloud Storage in a US
+region, progressive MP4, a signed URL per object issued against the active subscription. No
+managed service, no DRM, and segmented delivery deferred behind a number rather than a date.
+
+It is worth recording that this was **not** settled the way this entry expected. The deferral said
+the decision happens "when there are real hours watched to weigh"; what actually settled it was a
+requirement — the videos must not be reachable from outside the system — which removes every
+provider that serves the file directly, before a single hour is watched. The economics only chose
+between the options that requirement left standing.
 
 **The definition of a practice "item".** Whether it is the same across domains or each school
 declares its own. Decide alongside the practice subsystem.
