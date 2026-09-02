@@ -22,6 +22,7 @@ The platform domain is provisional — see *The name* in [`docs/PLAN.md`](docs/P
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what each phase is made of, as capabilities to tick off |
 | [`docs/CONTENT.md`](docs/CONTENT.md) | the shape of `content/`, what CI checks, and what happens when a question turns out to be bad |
 | [`docs/CONSOLE.md`](docs/CONSOLE.md) | what the console is, whole, and the order it arrives in — the decisions it settled are K-17 to K-22 |
+| [`docs/VIDEO.md`](docs/VIDEO.md) | how video is hosted, delivered, protected and measured, what it costs, and which parts are still only proposed |
 | [`infra/README.md`](infra/README.md) | the project this runs in, and the runbook for it: the bootstrap, the database, a school, an address, monitoring |
 
 `CLAUDE.md` is normative and `PLAN.md` is historical. If they disagree, the code follows
