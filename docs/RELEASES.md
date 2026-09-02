@@ -350,10 +350,14 @@ about a person, and a certificate leaves only by erasure.
 
 ---
 
-## Still open
+## What this settled, and what stayed here
 
-**Whether these become numbered entries in `PLAN.md`.** `VIDEO.md` settled `P-11`, `P-12`, `C-18`
-to `C-20`, `K-23` and `K-24`. This document settles more, and which of them are rules other work
-can violate — rather than reasoning that belongs here — is a judgement to make on its own, in its
-own change, the way the numbering of the video decisions followed the document that argued for
-them.
+Seven of the decisions above are rules other work can violate, so they carry numbers and live where
+every other rule lives: **C-21** a course is published as one set, **C-22** the level is a computed
+floor, **C-23** migration is the intersection of ids, **C-24** the console triggers the load and the
+load job stays the only writer, **N-11** only major lines coexist, **K-25** the prose version rides
+on the event, **K-26** item analysis sums across lines and never across exercise versions.
+
+The rest stayed here, and that is not a leftover: the drain, the tail rule, the arithmetic a student
+sees before migrating, and what survives a retired line are reasoning and mechanism rather than
+rules somebody could break. A register that swallowed them would stop being a list of rules.
