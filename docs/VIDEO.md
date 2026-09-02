@@ -69,7 +69,11 @@ so the next person can disagree with it rather than rediscover it.
 | Decision | Why | State |
 |---|---|---|
 | `controlsList="nodownload"` and the context menu suppressed | Removes the button and the right-click — the one-step path. Anyone who opens the network tab finds the file; that person was never the target. | Decided |
-| A watermark composited in the DOM, carrying the student | Costs nothing recurring — see below — but spends a visible annoyance on every honest student, in every video, to reach only the screen-recording case. **The recommendation is not to ship it initially** and to reopen it if material is ever found circulating. | Proposed |
+| A watermark composited in the DOM, built and shipped **switched off** | Costs nothing recurring — see below. Shipping it off answers the doubt without paying it up front: if material is ever found circulating, the response is a click rather than a project. | Decided |
+| It shows the student's **full email address** | Unique where a name is not. And the exposure when somebody shares their screen is the *mechanism*, not the cost — the subscription is personal, and whoever broadcasts their own address in a call is who broadcast it. A closed set of values (full, masked, account id) keeps a change of mind out of the code. | Decided |
+| It moves every 60 s through a fixed cycle of five positions, one of them away from the edges; opacity 0.4; **nothing on hover** | Fixed rather than random, or it jitters; and one central position because a mark that only visits corners leaves whole in a crop. Fading on hover would be **a switch the person recording controls** — if it annoys, the opacity drops for everybody rather than handing over the off switch. `pointer-events: none`, or it intercepts the player's clicks. | Decided |
+| Its four values are console parameters | Exactly what the parameter register is for (`K-13`): a value with no right answer, where being wrong is a preference. `setting.Store` keeps a snapshot and refreshes it when stale, so an instance answers the old value for a while — for a door that is a defect nobody reproduces, and for a watermark it is a few students seeing it appear a minute later. That difference is what separates this from `K-15`. | Decided |
+| Switched off, it still has to be exercised | A test that turns it **on** and checks the result, and a preview on the console screen. A feature born switched off is a feature nobody runs, and it breaks on the day of the click — this repository's own roadmap audit found a ticked box whose screen did not exist. | Decided |
 | A watermark burned into the pixels, unique per student | One render per student per video. Storage stops being one object per (video, language) and becomes one per (video, language, **student**) — 10,000 files where there were 10, at a thousand students. It is the Netflix-class answer, priced accordingly. | Refused |
 | DRM | A monthly licence and a licence server, and the analogue hole stays open either way. | Refused |
 
@@ -93,6 +97,22 @@ strength of nobody having objected to it, which is the failure the four states e
 | Video language decoupled from the interface: a selector on the player, defaulting to the interface language, falling back to English **and saying so on screen** | A video is not a string — a missing translation is not a key showing through, it is somebody hearing a language they did not choose, with no way to tell whether that is a fault or an absence. | Decided |
 | The chosen language is stored **on the account**, not in the browser | This sidesteps the third-stored-key problem rather than paying it: a column has migrations by construction, where `localStorage` has neither version nor owner. It is also the right home — audio language is a property of a person, not of a device, and should follow them to a phone. There is never an anonymous case: the signed URL is already issued against an active subscription, so an account exists at the exact moment the preference matters. | Decided |
 | The selector offers only the languages **that video** has | They will arrive unevenly. Offering five and failing on three is worse than offering the two that exist. | Decided |
+
+### The transcript
+
+| Decision | Why | State |
+|---|---|---|
+| It follows the **page's** language, not the audio's — with a selector to change it | If the student chose Portuguese, that is what they read. English audio with a Portuguese panel is the ordinary case while the videos have not caught up with the texts. | Decided |
+| The text runs ahead of the video | The script is text: it translates the way prose translates, a file beside it and optional (`C-11`). Translating text costs almost nothing next to rendering a video, and that asymmetry is what delivers the Portuguese panel before a Portuguese video exists — with no new machinery. | Decided |
+| Labelled **"Transcript (translated from English)"** when the language differs from the audio, and "Transcript" when it does not | Portuguese on screen with English in the ear is a *translation of the script*, and the word alone would cover both. The source language goes into the string, so the key interpolates rather than being fixed text — today it is always English, but a video born in another language has to change the label instead of lying. Amends `C-20` by a sentence. | Decided |
+
+### Versions and removal
+
+| Decision | Why | State |
+|---|---|---|
+| A superseded rendition stays in Standard, indefinitely | Standard has no minimum duration: deleting it today or in three years costs the same. It is Nearline (30 days), Coldline (90) and Archive (365) that charge the remainder for an early delete. | Decided |
+| Deleting one for good is a console action, after review — and the screen puts v1 and v2 side by side, with both drop-off curves | Deleting acts on storage and not on the catalogue, so it creates no second owner of the truth. And the comparison is what the version bought: it is by looking at it that deleting makes sense. | Decided |
+| Which version is served is not chosen here | The console triggers `load` at a named release; see [`RELEASES.md`](RELEASES.md). | Decided |
 
 ### Telemetry
 
@@ -303,6 +323,16 @@ also punishing the person who did not.
 **Protecting the number is telemetry's job. Producing attention is the material's job.** The
 drop-off curve says which video loses people, and the answer to that is a better video — not a
 player that holds a student in place.
+
+---
+
+## Where the versioning went
+
+A video's version is one part of a larger question — how a course is published as a set, so that a
+corrected script and the prose beside it never reach a student separately. That is
+[`RELEASES.md`](RELEASES.md), which is also where *who chooses the version on the air* is answered:
+the console triggers `load` at a named release rather than picking a version, so nothing here needs
+a second writer of the catalogue.
 
 ---
 
