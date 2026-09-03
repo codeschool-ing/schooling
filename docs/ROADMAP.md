@@ -328,7 +328,9 @@ in, which was until now unwritten and therefore a matter of memory.
 - [x] Renewal as a **new sale** for the instalment model, with notice before expiry — an expired term is revived by a payment on the same row, so recovery keeps the person's history rather than starting a second subscription beside it. The notice window is one function, asked by whatever screen or job needs it, because two implementations of "is it nearly over" would disagree in the one week that matters
 - [x] Grace with retries before suspension — grace still opens the door. Cutting somebody off at the first declined card would lock out every student whose bank flagged a routine transaction, and the retry schedule exists because most of those recover. A recurring subscription is also never expired by time alone: one that lapsed because a webhook was late would be a paying student cut off for our own outage
 - [x] Cancellation at the end of the paid period; refund and chargeback cutting immediately. The two are separate events even though both cut access at once, because they mean opposite things about the person — one is an agreement and the other is a dispute, and an operator needs to know which conversation to have
-- [ ] Webhooks idempotent by event id — **the guarantee is in place; the endpoint waits on the gateway.** And when that endpoint is written, it arrives at `/hooks/`, where the mail hook already established the arrangement: a credential the provider presents rather than a secret in the path, and `web.Loggable` redacting the tail regardless. It is a unique index on the ledger row itself rather than a table somebody checks first: read as check-then-insert it is a race, and a retry arriving while the first delivery is still running is the normal case rather than the exception. Both are pinned by a test, one of them concurrent
+- [x] Webhooks idempotent — **by the charge, and never by the event id this line used to promise.** One payment produces two events we act on: `PAYMENT_CONFIRMED` when it is paid and `PAYMENT_RECEIVED` when the money is available. Both mean paid, so a key on the event would write two ledger rows for one purchase. It rests instead on the ledger's unique index on `(source, ref)` keyed by the charge, and on a checkout being settled once — the second attempt changes nothing and says so. It is a unique index on the ledger row itself rather than a table somebody checks first: read as check-then-insert it is a race, and a retry arriving while the first delivery is still running is the normal case rather than the exception. Both are pinned by a test, one of them concurrent.
+
+  **The endpoint no longer waits on the gateway**, and the sentence that said so is how this box went stale. It is `POST /hooks/pay` in `cmd/api`, mounted when the token is configured, in the shape the mail hook established: a credential the provider presents rather than a secret in the path, and `web.Loggable` redacting the tail regardless. The two purchases that earned the tick three items above **settled through it** — "a delivery nobody sent by hand" is this endpoint. So the work that earned one tick falsified the line beneath another, which is the collision this file's own rule is written to avoid, arriving by omission rather than by conflict
 - [x] An append-only ledger — no update, no delete; a reversal is a new entry. Not double entry, and the reason is written in the migration: the second side would be a constant, because splits, payouts and school-to-platform billing were all removed from this system before it was built. A refund points at the payment it refunds, and cannot take off more than is left — checked in the transaction that writes it, with the row locked, because it is an aggregate over siblings rather than a property of one row
 - [x] Every amount an integer number of cents — a `Money` whose fields are unexported, so there is no float arithmetic on an amount to write anywhere in this repository, and whose zero value is deliberately invalid, so an uninitialised total cannot add cleanly to a bill in any currency. Instalments are split so the parts sum back to the whole, with the odd cent on the early ones; a percentage rounds half away from zero, which is what a person checking the invoice by hand does
 - [x] Access always computed from the subscription, never from an enrolment record — `planOf` in `cmd/api` is the only place `catalog` and `billing` meet, which is why neither ever had to know about the other. It fails closed on an unreadable database too: an outage that quietly made every paid course free is the one failure a paywall cannot have. Reading a subscription **settles it in memory**, so a period that ran out closes the door with no job having run; the job that writes the row back exists so a report is not counting cancellations that ended weeks ago
@@ -538,14 +540,21 @@ finished here.*
 
 The last component of the system, and the first batch of what it produces.
 
+How what it produces reaches a student is [`RELEASES.md`](RELEASES.md): a course goes out as one
+versioned set, frozen and approved together, so a corrected script and the prose beside it never
+arrive separately. What it settled and numbered is `C-21` to `C-24`, `N-11`, `K-25` and `K-26`.
+
 *Done when: a course is born end to end without anyone writing a sentence, and item analysis
 reports no inverted key.*
 
-- [ ] The generator writes prose, exercises and exams into `content/`
+- [ ] The generator writes prose, exercises, exams **and the spoken script** into `content/`
 - [ ] Three verification levels recorded per item — structure, execution, critiqued
 - [ ] Provenance recorded on everything it produces
 - [ ] It is resumable: it knows what it has already written and does not start over
 - [ ] The regeneration loop — item analysis flags a question, the pipeline rewrites it, and the new version is compared against the old
+- [ ] A course is published as one versioned set, its level computed from what moved rather than declared
+- [ ] An operator publishes a release, and rolls one back by loading the previous one
+- [ ] A student mid-course keeps the structure they started on, and moves to the new one by choosing
 - [ ] `code`: the seven entry courses that currently open onto an empty room
 - [ ] `code`: the remaining courses
 - [ ] `math`: the whole school
