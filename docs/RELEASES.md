@@ -33,9 +33,9 @@ web-fundamentals  v3.4.1
   structure    = major   no number of its own, because it already has one
 ```
 
-The first three carry a number because **they move without moving the release**: two exercises and
-a video can rise in one *minor*, and in a *fix* only the prose. The release number does not say
-which of them moved.
+The first three carry a number because **they move without moving the release**: two exercises and a
+video can rise together in one publication, and the release's own number does not say which of them
+did. That is what makes the parts' versions the thing every machine answer is read from (`C-25`).
 
 Structure cannot do that. It does not move without producing a *major*, and a *major* does not
 happen without it — so the `3` in `v3.4.1` **is** the structure, in its third shape. A separate
@@ -53,35 +53,54 @@ up disagreeing.
 
 ## The ruler
 
-Every level is "some version rose", and the release's level is the highest class that moved.
+**major is the shape. minor is new material. fix is a correction.** In any of the three media —
+prose, exercises and video are read the same way, because a student reads one, watches another and
+answers the third, and none of that tells you what a change did.
 
-| Level | What rose | How it is detected |
+| Level | What it means | What is computed |
 |---|---|---|
-| **major** | the structure: a section or lesson added, removed, reordered, or its `kind` changed | compare the trees of ids and order |
-| **minor** | an exercise or a video — something the student interacts with | compare the declared versions |
-| **fix** | only the prose | everything else is identical |
+| **major** | the shape moved: a section or lesson added, removed, reordered, or its `kind` changed | compare the trees of ids and order |
+| **minor** | material that is **new** — an exercise or a video with an id that did not exist | compare the sets of ids |
+| **fix** | something changed **in place** | everything else is identical |
 
-This corrects a case the intuitive definition gets wrong. **Repairing a wrong answer key is a
-"correction"** and would land in *fix* — but a wrong key is the most consequential change this
-system has, the only one it quarantines on its own (`C-15`). By the ruler it is a *minor*, because
-the exercise's version rises.
+Two of the three are settled by a diff. The third is not, and saying so is the point: **a corrected
+accent and a rewritten section raise the prose version identically**, because the difference is
+intent and no diff carries intent.
 
-**The tool computes a floor. Whoever publishes may raise it with a reason, and nobody lowers it.**
+**So the tool computes a floor, whoever publishes may raise it with a reason, and nobody lowers it.**
+A change in place floors at *fix* and is declared *minor* when it was evolution rather than repair.
+Content redistributed among the same sections floors at *fix* too, and is raised to *major* by hand,
+because no diff sees it. The number is left incapable of understating — the dangerous direction —
+and judgement enters only where the machine is blind.
 
-That is what preserves the distinction the ruler alone cannot draw. A corrected accent and a
-rewritten section raise the prose version equally — no diff separates them, because the difference
-is intent. So the machine guarantees the floor (only the prose moved: *fix* at least) and a person
-declares *minor* when it was a real rewrite.
+**Why a new id can be trusted where a changed one cannot:** an exercise or a video that did not
+exist before cannot be a correction, since there was nothing to correct. That is the one case where
+"new" is a fact rather than a claim, and it is also what *minor* means in ordinary semantic
+versioning. (A new prose file is a new section, so it is `major` and never reaches this line.)
 
-The number becomes incapable of understating, which is the dangerous error, and judgement enters
-only where the machine is blind — including content redistributed among the same sections, which
-no diff sees and which whoever publishes raises to *major* by hand. The valve is not an exception
-to the rule: it is what stops the rule lying through a technical limitation.
+### What this ruler used to say, and why it does not
+
+It read *minor* as **an exercise or a video** and *fix* as **the prose**, sorted by what records
+each: an answer names an exercise version and an event names a video version, while prose was only
+read. The argument was that a change to an exercise reaches a judgement about a student — a mark, a
+pass, a certificate — so a corrected answer key must not be filed as a *fix*.
+
+**The premise was true and it did not matter.** Nothing reads a release's level to decide how to
+treat an answer. `C-16` carries that on the exercise's own version, and `C-15` quarantines on it.
+The level was being asked to protect something already protected elsewhere, and paying for it with
+the only meaning a reader actually wants from a version number.
+
+It also failed on its own terms, which is how it was caught: the rule was written as *"something the
+student interacts with"*, and that separates nothing. A student interacts with prose by reading it
+and with a video by watching it. The wording was a description of two of the three, standing in for
+a criterion that was not there — the same fault, one layer along, as the first draft's *"content
+changed"* against *"a correction"*.
 
 | Decision | Why | State |
 |---|---|---|
-| major is structure, minor is exercise or video, fix is prose | The three levels are the three classes of artefact by what records them. Mechanically derivable, which a rule about "how big was the change" is not. | Decided |
+| major is the shape, minor is new material, fix is a correction | It is what a person reads a version number for, and the level has no other job — see below. Two of the three levels are still derived. | Decided |
 | The tool computes a floor; a person may raise it, never lower it | A number that cannot understate, with judgement only where a diff is blind. `A-04` already derives rather than asks. | Decided |
+| **Nothing computes from the declared level** | For a change in place, *minor* against *fix* is a claim about intent that no diff can check — safe exactly as long as nothing reads it but a person. Every machine answer comes from the versions of the parts: "did anything but the prose move between these two" is asked of prose, exercises and videos directly. The day something folds the level into a query, one person's judgement becomes load-bearing, and the day it is wrong nobody will know why. `C-25`. | Decided |
 | Semantic version, not a monotonic counter | With the floor and the valve the three positions carry meaning that holds. A running number would carry none. | Decided |
 
 ---
@@ -352,11 +371,12 @@ about a person, and a certificate leaves only by erasure.
 
 ## What this settled, and what stayed here
 
-Seven of the decisions above are rules other work can violate, so they carry numbers and live where
+Eight of the decisions above are rules other work can violate, so they carry numbers and live where
 every other rule lives: **C-21** a course is published as one set, **C-22** the level is a computed
 floor, **C-23** migration is the intersection of ids, **C-24** the console triggers the load and the
-load job stays the only writer, **N-11** only major lines coexist, **K-25** the prose version rides
-on the event, **K-26** item analysis sums across lines and never across exercise versions.
+load job stays the only writer, **C-25** nothing computes from the declared level, **N-11** only
+major lines coexist, **K-25** the prose version rides on the event, **K-26** item analysis sums
+across lines and never across exercise versions.
 
 The rest stayed here, and that is not a leftover: the drain, the tail rule, the arithmetic a student
 sees before migrating, and what survives a retired line are reasoning and mechanism rather than
