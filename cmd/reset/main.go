@@ -139,6 +139,7 @@ var kept = map[string]string{
 	"catalog_lessons":           "the catalogue",
 	"catalog_sections":          "the catalogue",
 	"catalog_prose":             "the catalogue",
+	"catalog_videos":            "the catalogue",
 	"catalog_exercises":         "the catalogue",
 	"catalog_exercise_text":     "the catalogue",
 	"catalog_images":            "the catalogue",

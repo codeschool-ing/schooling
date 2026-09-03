@@ -263,6 +263,12 @@ func checkTracksAreOrdered(s *School) []error {
 }
 
 func checkLessons(s *School) []error {
+
+	// What the school offers, for the videos below to be checked against.
+	locales := map[string]bool{}
+	for _, l := range s.Locales {
+		locales[l] = true
+	}
 	var problems []error
 
 	for _, c := range s.Courses {
@@ -283,6 +289,13 @@ func checkLessons(s *School) []error {
 		   allowed is a lesson that is empty, or a section with no prose, and
 		   those checks are below and unchanged: the line is between "not written
 		   yet" and "written wrongly". */
+
+		/* THE VIDEO IDS ARE UNIQUE ACROSS THE COURSE and not merely inside a
+		   section, because the object key is `vd-<id>/v<version>/<locale>.mp4`
+		   and carries no course, lesson or section (C-18). Two renderings with
+		   one id are two files at one address, and the second upload wins
+		   silently. */
+		seenVideo := map[string]bool{}
 
 		for _, l := range c.Loaded {
 			where := c.Slug + "/" + l.ID
@@ -325,9 +338,62 @@ func checkLessons(s *School) []error {
 						"%s/%s is a reading section and there is no %s.md — a student opens it "+
 							"and finds nothing", where, sec.Slug, sec.Slug))
 				}
-				if sec.Kind == KindVideo && !sec.Video && !l.Prose[sec.Slug] {
+				if sec.Kind == KindVideo && len(sec.Videos) == 0 && !l.Prose[sec.Slug] {
 					problems = append(problems, fmt.Errorf(
 						"%s/%s is a video section with neither a video nor prose", where, sec.Slug))
+				}
+
+				// AND EVERY VIDEO CARRIES WHAT MAKES IT ONE. A rendering with
+				// no script is a transcript nobody can show and a narration
+				// nothing can be regenerated from (C-20); a repeated id is two
+				// different recordings answering to one object key (C-18); a
+				// locale outside the school's list is a language the interface
+				// cannot offer, so the selector would name what it cannot play.
+				for _, v := range sec.Videos {
+					at := where + "/" + sec.Slug
+					if v.ID == "" {
+						problems = append(problems, fmt.Errorf("%s has a video with no id", at))
+					} else if seenVideo[v.ID] {
+						problems = append(problems, fmt.Errorf(
+							"%s repeats the video id %s — two renderings would share one object key",
+							at, v.ID))
+					}
+					seenVideo[v.ID] = true
+
+					if strings.TrimSpace(v.Script) == "" {
+						problems = append(problems, fmt.Errorf(
+							"%s/%s has no script — it is what the narration is generated from and "+
+								"what the student reads back as the transcript", at, v.ID))
+					}
+					if v.Version < 1 {
+						problems = append(problems, fmt.Errorf(
+							"%s/%s has no version — a re-render has to break the series it belongs to",
+							at, v.ID))
+					}
+					if v.Seconds <= 0 {
+						problems = append(problems, fmt.Errorf(
+							"%s/%s has no length in seconds", at, v.ID))
+					}
+					for _, loc := range v.Locales {
+						if !locales[loc] {
+							problems = append(problems, fmt.Errorf(
+								"%s/%s says it exists in %q, which this school does not offer",
+								at, v.ID, loc))
+						}
+					}
+				}
+			}
+
+			// EVERY PROSE FILE DECLARES ITS VERSION (C-25). Without it a reading
+			// event has nothing to record, and the first generation of a text
+			// has no baseline to be compared against — which is the comparison
+			// the version exists for, lost exactly where material changes most.
+			for _, t := range l.Text {
+				if t.Version < 1 {
+					problems = append(problems, fmt.Errorf(
+						"%s/%s (%s) has no version in its front matter — a reading event records "+
+							"the version read, and a text with none cannot be compared with what "+
+							"replaces it", where, t.SectionID, t.Locale))
 				}
 			}
 

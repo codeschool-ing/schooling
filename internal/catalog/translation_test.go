@@ -185,7 +185,7 @@ func TestTheShapeOfTheCatalogueCarriesTranslatedTitles(t *testing.T) {
 	// because two identical titles pass whether or not a locale was used.
 	id := loaded(t, pool, write(
 		"courses/web-fundamentals/lessons/"+clientAndServer+"/roles.pt.md",
-		"---\ntitle: As duas funções\n---\n"))
+		"---\ntitle: As duas funções\nversion: 1\n---\n"))
 	store := catalog.NewStore(pool)
 	ctx := context.Background()
 

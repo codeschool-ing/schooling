@@ -360,6 +360,13 @@ type Prose struct {
 	// prose itself. Everything the JSON already knows stays in the JSON.
 	Title string
 	Body  string
+
+	// Version is the prose's own, and it is what a reading event records so
+	// that two generations of a text can be compared at all (C-25). A
+	// translation declares the version it translated, which is how a `.pt.md`
+	// that has gone stale becomes visible — today `ls` shows only that it
+	// exists.
+	Version int
 }
 
 // Topic is one entry of a course's technical contents — which is also one
@@ -489,13 +496,42 @@ type Section struct {
 	Slug string `json:"slug"`
 	Kind string `json:"kind"`
 
-	Video     bool     `json:"video"`
-	Duration  string   `json:"duration"`
+	// A section carries as many videos as it needs, each with its own id, the
+	// spoken script it was rendered from, and the languages that exist for it.
+	//
+	// IT WAS A BOOLEAN AND A DURATION, which could say a video was there and
+	// nothing about which one. An event records the version a student watched
+	// and an object key carries it (C-18), and neither has anything to name
+	// while the answer is `true`.
+	Videos    []Video  `json:"videos"`
 	Materials []string `json:"materials"`
 
 	// Countable is separate from Kind on purpose, so progress semantics never
 	// have to be inferred from what a section IS.
 	Countable *bool `json:"countable"`
+}
+
+// Video is one rendering inside a section.
+//
+// THE SCRIPT IS AUTHORED SOURCE AND LIVES HERE (C-20). It is what the generator
+// reads to produce the narration, and what the student reads back as the
+// transcript — one string rather than two, for as long as the rendering says
+// what the script says. The day it does not, the script is what is corrected.
+//
+// `Locales` is what EXISTS rather than what is wanted, and its absence is
+// ordinary: languages arrive unevenly, one correction at a time, and a video
+// narrated in two of five is the normal state and not an error (C-19). The
+// player offers what is here and says so when it falls back.
+//
+// Version is the rendering's own, so a re-render breaks the series where it
+// must and keeps the lineage that answers whether the correction worked — the
+// same argument that versions an exercise (C-16).
+type Video struct {
+	ID      string   `json:"id"`
+	Version int      `json:"version"`
+	Script  string   `json:"script"`
+	Seconds int      `json:"seconds"`
+	Locales []string `json:"locales"`
 }
 
 // The kinds a section may be. `assessment` is appended by the platform and is

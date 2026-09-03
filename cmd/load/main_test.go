@@ -305,3 +305,63 @@ func copyTree(t *testing.T, from, to string) {
 		t.Fatalf("copying the fixture: %v", err)
 	}
 }
+
+/*
+EVERY CATALOGUE TABLE IS ON THE LIST THIS JOB CLEARS.
+
+	`write` deletes a school's rows and writes them again, from a list of table
+	names held in one place. A table added to the schema and not to that list
+	is never cleared, and the failure is quiet in the worst case: this one had
+	a primary key, so a second load collided and said so — a table without one
+	would have grown by a full copy of the catalogue on every deploy, each row
+	a duplicate of a row the files still carry.
+
+	Reading the list back is not a check. The schema is, so this asks the
+	database what exists rather than asking the code what it remembers.
+*/
+func TestEveryCatalogueTableIsClearedByTheLoad(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+
+	rows, err := pool.Query(ctx, `
+		SELECT table_name FROM information_schema.tables
+		WHERE table_schema = 'public' AND table_name LIKE 'catalog\_%'
+		ORDER BY table_name
+	`)
+	if err != nil {
+		t.Fatalf("asking the schema which catalogue tables exist: %v", err)
+	}
+	defer rows.Close()
+
+	cleared := map[string]bool{}
+	for _, name := range catalogueTables {
+		cleared[name] = true
+	}
+
+	found := 0
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			t.Fatalf("reading a table name: %v", err)
+		}
+		found++
+		if !cleared[name] {
+			t.Errorf("%s exists in the schema and is not in `catalogueTables` — the load would "+
+				"write into it and never clear it, so a second load duplicates the catalogue "+
+				"or collides, depending on whether that table happens to have a key", name)
+		}
+	}
+	if err := rows.Err(); err != nil {
+		t.Fatalf("reading the table names: %v", err)
+	}
+
+	// AND THE OTHER DIRECTION, so a renamed table does not leave a name on the
+	// list that clears nothing while looking like it does.
+	if found == 0 {
+		t.Fatal("the schema reported no catalogue tables at all, so this checked nothing")
+	}
+	if found != len(catalogueTables) {
+		t.Errorf("the schema has %d catalogue tables and the list has %d — a name on the list "+
+			"that no table answers to is a delete that does nothing", found, len(catalogueTables))
+	}
+}

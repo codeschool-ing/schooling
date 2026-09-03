@@ -238,7 +238,7 @@ func TestATranslationFallsBackFieldByField(t *testing.T) {
 	pool := testPool(t)
 	id := loaded(t, pool, write(
 		"courses/web-fundamentals/lessons/"+clientAndServer+"/roles.pt.md",
-		"---\ntitle: As duas funções\n---\n"))
+		"---\ntitle: As duas funções\nversion: 1\n---\n"))
 	store := catalog.NewStore(pool)
 
 	lesson, err := store.Lesson(context.Background(), id,
