@@ -88,6 +88,18 @@ operator a raw Cloud Run URL for any school sorting after `schooling-…`.*
 and the gap was left visible here rather than closed by redefining the condition — which is what
 gave the condition the chance to earn its keep.*
 
+*The date on that audit is the whole of its claim rather than a formality, and the proof arrived
+eight days later. The payment webhook was **correctly** unticked when the pass ran, and stopped
+being so on 28 August, when the first two purchases settled through the very endpoint its line
+called absent. Phase 3 was audited, was right, and went stale anyway — which is what an audit is:
+a statement about a day, not a property the file acquires.*
+
+***Phase 4 has never had a pass of any kind.** Every box in it was ticked after 2026-08-20, and what
+stands behind each is its own paragraph rather than anybody having checked them together against a
+test, a tool run or a screen. That is not a claim that any of them is wrong; it is the difference
+between a claim nobody has audited and one somebody has, and the audit above says nothing about
+this phase.*
+
 ---
 
 ## 0 — Skeleton, and the five that cannot wait
