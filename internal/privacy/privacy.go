@@ -289,6 +289,14 @@ var Registry = []Table{
 		Why: "the words of a section, per locale — written by us, about nobody",
 	},
 	{
+		Name: "catalog_videos", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
+		Why: "a rendering's id, length and the script it was spoken from — written by us, about " +
+			"nobody. WHAT A STUDENT WATCHED IS AN EVENT (K-23), which is the table that holds " +
+			"the person, and the watermark burns nothing into these bytes: it is drawn by the " +
+			"player over one signed URL per viewer (C-18), so no row here differs by who is " +
+			"watching",
+	},
+	{
 		Name: "catalog_exercises", Holds: HoldsNothing, Subject: SubjectNobody, OnErase: EraseKeep,
 		Why: "the questions and their answer keys. What a STUDENT answered is practice_review, " +
 			"which is a different table for exactly this reason",

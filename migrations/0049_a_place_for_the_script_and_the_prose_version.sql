@@ -75,6 +75,12 @@ CREATE TABLE catalog_videos (
     PRIMARY KEY (tenant_id, course_id, lesson_id, section_id, id)
 );
 
+-- The registry in `internal/privacy` carries the same answer, and a test
+-- compares the two. Nothing here is about a person: what a student WATCHED is
+-- an event, and the watermark is drawn by the player over a signed URL rather
+-- than burned into these bytes, so no row differs by who is watching.
+COMMENT ON TABLE catalog_videos IS 'personal-data: none';
+
 -- UNIQUE ACROSS THE SCHOOL, because the object key carries no course, lesson or
 -- section. Two renderings sharing an id are two files at one address, and the
 -- second upload wins in silence.
