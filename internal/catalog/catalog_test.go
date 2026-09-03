@@ -147,7 +147,7 @@ func TestACycleInRequiresIsReportedOnceAndPlainly(t *testing.T) {
 func TestProseNoSectionReferencesIsRefused(t *testing.T) {
 	problems := school(t, write(
 		"courses/web-fundamentals/lessons/"+clientAndServer+"/packets.md",
-		"---\ntitle: Packets\n---\n\nWritten, and never linked to anything.\n"))
+		"---\ntitle: Packets\nversion: 1\n---\n\nWritten, and never linked to anything.\n"))
 
 	if !says(problems, "packets.md is not referenced by any section") {
 		t.Errorf("an orphaned file was accepted:\n%s", report(t, problems))
@@ -443,7 +443,7 @@ func course(slug, courseID, lessonID, sectionID, requires string) func(string) {
 			"sections": [{ "id": "`+sectionID+`", "slug": "overview", "kind": "reading" }]
 		}`)(dir)
 		write("courses/"+slug+"/lessons/"+lessonID+"/overview.md",
-			"---\ntitle: Overview\n---\n\nText.\n")(dir)
+			"---\ntitle: Overview\nversion: 1\n---\n\nText.\n")(dir)
 	}
 }
 

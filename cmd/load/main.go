@@ -397,18 +397,30 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 						 countable, position)
 					VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 				`, tenantID, course.ID, lesson.ID, section.ID, section.Slug, section.Kind,
-					section.Video, section.Duration, countable, j); err != nil {
+					len(section.Videos) > 0, summarise(section.Videos), countable, j); err != nil {
 					return fmt.Errorf("writing the section %s: %w", section.ID, err)
+				}
+
+				for k, v := range section.Videos {
+					if _, err := tx.Exec(ctx, `
+						INSERT INTO catalog_videos
+							(tenant_id, course_id, lesson_id, section_id, id, version,
+							 script, seconds, locales, position)
+						VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+					`, tenantID, course.ID, lesson.ID, section.ID, v.ID, v.Version,
+						v.Script, v.Seconds, v.Locales, k); err != nil {
+						return fmt.Errorf("writing the video %s: %w", v.ID, err)
+					}
 				}
 			}
 
 			for _, prose := range lesson.Text {
 				if _, err := tx.Exec(ctx, `
 					INSERT INTO catalog_prose
-						(tenant_id, course_id, lesson_id, section_id, locale, title, body)
-					VALUES ($1, $2, $3, $4, $5, $6, $7)
+						(tenant_id, course_id, lesson_id, section_id, locale, title, body, version)
+					VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 				`, tenantID, course.ID, lesson.ID, prose.SectionID, prose.Locale,
-					prose.Title, prose.Body); err != nil {
+					prose.Title, prose.Body, prose.Version); err != nil {
 					return fmt.Errorf("writing the prose of %s: %w", prose.SectionID, err)
 				}
 			}
@@ -515,4 +527,29 @@ func writeExercises(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID,
 		}
 	}
 	return nil
+}
+
+/*
+summarise is what the rail prints beside a section, and it is a SUMMARY rather
+than a second source: it is computed by the only writer, from the rows written
+beside it, in the same transaction.
+
+THE FORMAT DOES NOT BELONG HERE and it is not moving in this change. A column
+holding "12 min" is presentation in data — a screen in another language prints
+an English word — and the right home is the interface, with the player that
+will read `catalog_videos.seconds` directly. That is phase 6's; until then this
+keeps what the rail already draws from going blank.
+*/
+func summarise(videos []catalog.Video) string {
+	total := 0
+	for _, v := range videos {
+		total += v.Seconds
+	}
+	if total == 0 {
+		return ""
+	}
+	if minutes := (total + 59) / 60; minutes < 60 {
+		return fmt.Sprintf("%02d min", minutes)
+	}
+	return fmt.Sprintf("%d h %02d min", total/3600, (total%3600+59)/60)
 }

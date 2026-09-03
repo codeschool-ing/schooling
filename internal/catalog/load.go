@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"path"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -342,9 +343,10 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 			problems = append(problems, fmt.Errorf("%s/%s: %w", base, f.Name(), err))
 			continue
 		}
-		title, text := frontMatter(string(body))
+		title, version, text, bad := frontMatter(base+"/"+f.Name(), string(body))
+		problems = append(problems, bad...)
 		lesson.Text = append(lesson.Text, Prose{
-			SectionID: section, Locale: locale, Title: title, Body: text,
+			SectionID: section, Locale: locale, Title: title, Body: text, Version: version,
 		})
 	}
 
@@ -402,13 +404,19 @@ func sectionAndLocale(file string) (section, locale string) {
 // frontMatter takes the leading `---` block off a Markdown file.
 //
 // IT IS NOT YAML AND WILL NOT BECOME YAML. The block carries what belongs to
-// the prose and nothing the JSON already knows, which today is one line. A
-// parser for the general case would invite the second line, and the second line
+// the prose and nothing the JSON already knows, and the keys are a CLOSED LIST
+// OF TWO. A parser for the general case would invite the third, and the third
 // is where a catalogue starts having two places that declare the same thing.
-func frontMatter(body string) (title, rest string) {
+//
+// AN UNKNOWN KEY IS AN ERROR, and that is the half this parser was missing. It
+// read `title` and ignored everything else in silence, so a `version:` written
+// before this change would have parsed, been dropped, and looked exactly like
+// it had worked — which is worse than refusing, because nothing would ever say
+// so. A closed list is only closed if it says no.
+func frontMatter(file, body string) (title string, version int, rest string, problems []error) {
 	body = strings.ReplaceAll(body, "\r\n", "\n")
 	if !strings.HasPrefix(body, "---\n") {
-		return "", strings.TrimSpace(body)
+		return "", 0, strings.TrimSpace(body), nil
 	}
 
 	block, after, found := strings.Cut(body[len("---\n"):], "\n---")
@@ -416,16 +424,41 @@ func frontMatter(body string) (title, rest string) {
 		// An opening fence with no closing one: the whole file is front matter
 		// as far as any parser can tell, so it is left as prose rather than
 		// swallowed.
-		return "", strings.TrimSpace(body)
+		return "", 0, strings.TrimSpace(body), nil
 	}
 
 	for _, line := range strings.Split(block, "\n") {
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
 		key, value, ok := strings.Cut(line, ":")
-		if ok && strings.TrimSpace(key) == "title" {
-			title = strings.Trim(strings.TrimSpace(value), `"'`)
+		if !ok {
+			problems = append(problems, fmt.Errorf(
+				"%s: %q in the front matter is not `key: value`", file, strings.TrimSpace(line)))
+			continue
+		}
+		value = strings.Trim(strings.TrimSpace(value), `"'`)
+
+		switch strings.TrimSpace(key) {
+		case "title":
+			title = value
+		case "version":
+			n, err := strconv.Atoi(value)
+			if err != nil || n < 1 {
+				problems = append(problems, fmt.Errorf(
+					"%s: the front matter's version is %q, which is not a whole number from 1",
+					file, value))
+				continue
+			}
+			version = n
+		default:
+			problems = append(problems, fmt.Errorf(
+				"%s: the front matter carries %q, and it may carry only `title` and `version` — "+
+					"anything the JSON already knows stays in the JSON",
+				file, strings.TrimSpace(key)))
 		}
 	}
-	return title, strings.TrimSpace(after)
+	return title, version, strings.TrimSpace(after), problems
 }
 
 // examSuffix is what makes `tracks/frontend-exam.json` the exam of `frontend`
