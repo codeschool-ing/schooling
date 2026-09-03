@@ -166,6 +166,17 @@ The free tier covers about **285 views a month**, which is more than the first y
 produce. So at the start **storage dominates and egress is free** — the reverse of the intuition
 that serving is what costs.
 
+**And this table counts subscribers, which the entry course does not have.** The free tier is the
+first course of every track, and `web-fundamentals` is the first course of ten of the twelve tracks
+that contain it — so its videos are served to people who have paid nothing, and no subscription
+bounds how many of them there are. At the ~120 videos that course is planned to carry, one visitor
+who watches all of it consumes **42 GiB**: two and a half of them exhaust the month's free egress,
+and a hundred would cost around **US$330**. In practice almost nobody watches a whole course, and
+the exposure is still real and asymmetric — the one course with no door in front of it is the one
+whose viewers are unbounded. `C-28` sizes that course for this reason as well as for conversion,
+and the entry course is the one place where a smaller rendition, or a limit, is worth arguing
+about.
+
 ---
 
 ## MP4 now, HLS at a number

@@ -307,3 +307,36 @@ everything sits in that state for months, and that is correct. (C-17)
 
 Quarantine, replacement and reinstatement are audited events. Provenance already records which
 run produced a version; the loop records why this version replaced that one.
+
+---
+
+## How much of it there has to be
+
+**A course is published complete, or it is not published.** (C-26)
+
+The argument is mechanical rather than editorial, and it is the three subsystems already built
+that make it. The drill and SM-2 are useless at twenty-two exercises — a spaced-repetition queue
+with twenty-two cards is not a queue. `C-17` fires nothing below a minimum sample, so a thin
+course is one the console is permanently silent about. And `C-04` already has the state for a
+course that is not finished: it is a **draft**, which is what draft is for.
+
+**The declared hours follow the material, and are written once.** (C-27)
+
+`hours` in `course.json` is a promise made in the shop window, and one course's hours move every
+track that contains it. Adjusting the number while a plan grows leaves it wrong at every
+intermediate moment with nobody able to say which moment was authoritative — so the content
+leads, and the number is written in the release that finishes the course. It is not part of the
+structure a school freezes while material is written: a course's relationships and dependencies
+are, and a description of its size is not.
+
+**The first course of a track is the free sample, and is sized on purpose.** (C-28)
+
+The free tier is the first course of every track, so that course is what somebody meets before
+paying anything. Two things follow, and neither is about ambition. Depth there costs abandonment
+that depth in the eighth course does not. And its videos are served to people with no
+subscription, where nothing bounds how many of them there are — at 120 videos of 0.35 GiB, two
+and a half visitors watching everything exhaust the month's free egress ([`VIDEO.md`](VIDEO.md)
+carries that arithmetic).
+
+So `C-26` applies in full **from the second course of a track**, and the entry course is decided
+by conversion and by the cost of serving it.
