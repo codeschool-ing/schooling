@@ -111,7 +111,7 @@ func withVideos(t *testing.T, videos ...map[string]any) []error {
 func good(over ...func(map[string]any)) map[string]any {
 	v := map[string]any{
 		"id": "vd-7k2m9x4p", "version": 1,
-		"script": "Two roles, and everything else is detail.",
+		"script":  "Two roles, and everything else is detail.",
 		"seconds": 480.0, "locales": []any{"en"},
 	}
 	for _, f := range over {
