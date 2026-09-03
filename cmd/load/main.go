@@ -177,16 +177,25 @@ func tenantOf(ctx context.Context, pool *pgxpool.Pool, slug string) (uuid.UUID, 
 // means; deleting the school's rows and writing them again cannot. The
 // catalogue is small — a few thousand rows — and this runs at deploy time, so
 // the simplest thing that is obviously right wins.
+//
+// AND THE LIST IS ASSERTED AGAINST THE SCHEMA, because a catalogue table nobody
+// adds here is not caught by reading this function. `catalog_videos` was added
+// to the schema and not to this list, and what failed was a SECOND load
+// colliding on a primary key — loud only because that table happens to have
+// one. A table without a colliding key would simply have grown, one deploy at a
+// time, with every row a copy of a row the files still carry.
+var catalogueTables = []string{
+	"catalog_exercise_text", "catalog_exercises",
+	"catalog_images", "catalog_prose", "catalog_videos", "catalog_sections",
+	"catalog_lessons",
+	"catalog_course_topics", "catalog_course_requires", "catalog_courses",
+	"catalog_course_topic_text", "catalog_course_text",
+	"catalog_track_fork_text", "catalog_track_text",
+	"catalog_track_links", "catalog_track_courses", "catalog_track_forks", "catalog_tracks",
+}
+
 func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.School) error {
-	for _, table := range []string{
-		"catalog_exercise_text", "catalog_exercises",
-		"catalog_images", "catalog_prose", "catalog_sections",
-		"catalog_lessons",
-		"catalog_course_topics", "catalog_course_requires", "catalog_courses",
-		"catalog_course_topic_text", "catalog_course_text",
-		"catalog_track_fork_text", "catalog_track_text",
-		"catalog_track_links", "catalog_track_courses", "catalog_track_forks", "catalog_tracks",
-	} {
+	for _, table := range catalogueTables {
 		// The table names come from this list and from nowhere else, so there
 		// is no interpolation of anything a file could influence.
 		if _, err := tx.Exec(ctx, "DELETE FROM "+table+" WHERE tenant_id = $1", tenantID); err != nil {
