@@ -73,6 +73,13 @@ Content redistributed among the same sections floors at *fix* too, and is raised
 because no diff sees it. The number is left incapable of understating — the dangerous direction —
 and judgement enters only where the machine is blind.
 
+**A course's first release is `v1.0.0`, declared rather than derived.** The ruler describes
+transitions, and the first publication has no predecessor to diff against — no level can be
+computed, because the floor has no input. Being a declaration, it should say what is true:
+`v0.1.0` would announce that this is not yet the course, which contradicts `C-26`, and climbing
+from `0.x` to `1.0.0` would need the shape to move, which is the wrong reason to reach a
+major. A course exists, complete, or it is a draft and is not published at all.
+
 **Why a new id can be trusted where a changed one cannot:** an exercise or a video that did not
 exist before cannot be a correction, since there was nothing to correct. That is the one case where
 "new" is a fact rather than a claim, and it is also what *minor* means in ordinary semantic
@@ -102,6 +109,7 @@ changed"* against *"a correction"*.
 | The tool computes a floor; a person may raise it, never lower it | A number that cannot understate, with judgement only where a diff is blind. `A-04` already derives rather than asks. | Decided |
 | **Nothing computes from the declared level** | For a change in place, *minor* against *fix* is a claim about intent that no diff can check — safe exactly as long as nothing reads it but a person. Every machine answer comes from the versions of the parts: "did anything but the prose move between these two" is asked of prose, exercises and videos directly. The day something folds the level into a query, one person's judgement becomes load-bearing, and the day it is wrong nobody will know why. `C-25`. | Decided |
 | Semantic version, not a monotonic counter | With the floor and the valve the three positions carry meaning that holds. A running number would carry none. | Decided |
+| A course's first release is `v1.0.0` | The first publication has no predecessor, so no level can be derived and the number is a declaration. `v0.1.0` would announce a course that is not the course yet, which `C-26` refuses. | Decided |
 
 ---
 
