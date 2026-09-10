@@ -21,6 +21,8 @@ The platform domain is provisional — see *The name* in [`docs/PLAN.md`](docs/P
 | [`docs/PLAN.md`](docs/PLAN.md) | why each rule exists: 100 decisions with their reasoning, the open questions, the shape of the phases |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what each phase is made of, as capabilities to tick off |
 | [`docs/CONTENT.md`](docs/CONTENT.md) | the shape of `content/`, what CI checks, what happens when a question turns out to be bad, and how much material a course has to carry — the decisions it settled are C-26 to C-28 |
+| [`docs/EXERCISES.md`](docs/EXERCISES.md) | what makes a question worth asking rather than merely well formed: the ten ways a question leaks its answer, why difficulty belongs to the thinking and never to the options, and why discrimination is the axis that matters |
+| [`docs/TEACHING.md`](docs/TEACHING.md) | how the material itself is written — when a second explanation is not repetition, when a diagram earns its place, and what goes in a spoken script |
 | [`docs/CONSOLE.md`](docs/CONSOLE.md) | what the console is, whole, and the order it arrives in — the decisions it settled are K-17 to K-22 |
 | [`docs/VIDEO.md`](docs/VIDEO.md) | how video is **made**, hosted, delivered, protected and measured, what it costs, and what was deferred or refused — the decisions it settled are P-11, P-12, C-18 to C-20, C-29 to C-36, K-23 and K-24 |
 | [`docs/RELEASES.md`](docs/RELEASES.md) | how a course is published as one versioned set, what major/minor/fix mean, and what happens to a student mid-course when the structure changes — the decisions it settled are C-21 to C-25, N-11, K-25 and K-26 |
@@ -52,8 +54,9 @@ internal/     platform, tenant, identity, catalog, progress, practice, exam, gra
               visitor, console
 ui/           the student interface, embedded in the binary — no build step
 tools/        the checks and the jobs — a11y-test, graph-test, landing-test,
-              check-interface, check-css, validate-content, bundle,
-              bundle-test, restore-drill, release, fonts
+              console-test, mfa-test, check-interface, check-css, check-origin,
+              validate-content, check-exercises, bundle, bundle-test,
+              restore-drill, release, fonts, world
 content/      the catalogue: prose in Markdown, structure and exercises in JSON
 migrations/
 deploy/       the Dockerfile, and the compose file that brings the system up locally

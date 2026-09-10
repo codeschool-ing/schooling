@@ -323,6 +323,11 @@ An exercise carries a `version`, and a student's answer records the version it a
 question the statistics flag is **quarantined by threshold, never by decision** — and nothing
 fires below a minimum sample, because three wrong out of three is chance. (C-15, C-16, C-17)
 
+A well-formed question whose key grades correctly can still be worthless: if its options can be
+sorted without the material, it measures reading habits. **`docs/EXERCISES.md` says what makes a
+question worth asking and `tools/check-exercises` refuses the tells a machine can see**; the
+craft of the prose, the diagrams and the spoken scripts is `docs/TEACHING.md`.
+
 ## The catalogue is a mirror, and only one thing writes it
 
 `content/` is the truth; the `catalog_*` tables are derived (C-01). **A test scans the source for
@@ -1472,6 +1477,7 @@ gofmt -l .                   # silence is the pass
 go build ./...
 golangci-lint run            # before the tests: it is what build and vet do not do
 go run ./tools/validate-content   # the answer keys, not only the schema
+go run ./tools/check-exercises    # and whether the keys can be found without the material
 go run ./tools/check-interface    # every string the interface says, in every language it claims
 go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has
