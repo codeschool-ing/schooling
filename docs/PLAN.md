@@ -321,6 +321,94 @@ declares its own. Decide alongside the practice subsystem.
 
 ---
 
+### What the catalogue sweep left open
+
+[`design/`](design/) now carries one sheet per course — **all 122**, written before any of their
+material. Six things it found need a decision that no sheet can take. They are questions rather
+than decisions, so they sit here; the evidence for each is in
+[`design/README.md`](design/README.md).
+
+**The free sample, now that `C-28` has met the whole catalogue.** The rule makes the first course
+of a track free, and it was sized on `web-fundamentals`. Applied to the three tracks that
+`continues` another it gives away **170 hours to students who have already bought a whole track** —
+`process-management`, `architecture-role` and `bigdata`. The rule is keyed on position and takes no
+account of `continues`, **which is already in the data**.
+
+It works where it was meant to, twice: `security-fundamentals` and `python` are position 1 of
+tracks that continue nothing. `python` is the one that shows what the rule is worth — 90 hours,
+nine dependents, nine tracks, so a visitor who finishes it can enter eight others. It is also
+larger than the course the free tier was sized on, which is the same fact seen as a cost.
+**Decide before the free tier is priced**, and the cheapest version is one condition on one rule.
+
+**What gets unblocked first, and it is not only the sandbox.** Phases 1 to 3 each keep an item
+open, and one of them is "a sandbox that runs a student's program". The sweep says that is one of
+**four** things blocking material, and the other three are not engineering:
+
+| | |
+|---|---|
+| an **environment** | a runtime, a browser, a database, a cluster, a topology, a GPU — what everybody means by the sandbox |
+| **somebody else's bill** | ~15 courses, including 750 h of vendor cloud, both mobile stores, Excel and Power BI |
+| an **answer type that does not exist** | see the next entry |
+| **material nobody has written** | see the one after it |
+
+Seventeen courses and 940 hours need no runtime at all, and four have no path at any price —
+`operating-systems`, `virtualization`, `ios-apps` and the iOS half of `api-mobile-automation` —
+three of those because of a licence rather than an engineering limit. **The order of work is the
+decision**, and the evidence says the two cheapest environments with the most behind them are a
+shell and a database: `sql-databases` and `python` tie at nine dependents each, and a database has
+a version that runs in the browser with no server at all.
+
+**Three answer types the catalogue wants and `internal/grade` does not have.** The eight graders
+all check a closed form, and nothing reads a paragraph, receives a drawing, or looks at a rendered
+page:
+
+| missing | courses | the rescue that exists |
+|---|---|---|
+| **prose** | most of `management`; `people-leadership` is the extreme at 24 lessons | the scenario with four replies — a `quiz`, and several times the cost of one about a fact |
+| **a diagram the student draws** | `architecture-modeling`, `threat-modeling` | `labelling` on a finished diagram: grades and teaches, never asks them to draw |
+| **a rendered page** | `html-css` | **a screenshot diffed against a reference** |
+
+The third is the one to decide first, because **this repository already does it**:
+`tools/graph-test` and `tools/landing-test` drive a real browser and compare what came out. The
+mechanism exists here for the platform's own checks and has never been pointed at a student's
+answer.
+
+**Who makes the material nobody has written.** The largest single unowned cost the sweep found,
+and it is not an environment:
+
+- **~6,600 diagrams**, summed across the 122 sheets. In `architecture-modeling` (~130),
+  `visualization` (~110) and `data-storytelling` (~90) the images **are** the assessment rather
+  than the illustration, and `visualization` and `data-storytelling` share a subject and two
+  tracks, so their ~200 images must not contradict each other.
+- **A deliberately broken web application**, which serves seven courses across three categories and
+  is cheaper than any environment on the list — plus **logs containing a real attack** for
+  `soc-response`, **a corpus where retrieval can fail** for `rag`, and **tables with the right
+  defects** for `data-cleaning`.
+
+All of it reads as blocked on the sandbox and none of it is. It is authored content, it belongs in
+`content/`, and nobody has been named to make any of it.
+
+**Teaching exploitation at scale.** `pentest` lessons 1, 2 and 22 are rules of engagement, *"the
+document that separates a profession from a crime"*, and the tester's liability in Brazil;
+`ai-security` lesson 11 is the same boundary. **Teaching this to anonymous paying students at scale
+is not the exposure a university course with an enrolled cohort has.** It is not a design question
+and no sheet can answer it. **Decide before the course is sold**, not after.
+
+**Whether coverage of the sheets becomes a failing check.** `docs.yml` reports how many courses
+have a sheet and does not fail on the ones that do not — deliberately, because a red build on 119
+missing sheets would have described a plan working as intended. Coverage is now 122 of 122, so the
+number can only fall when somebody adds a course without a sheet, which is the thing the sheets
+exist to prevent. **Enforcing it is now free**; turning a reported number into a failing one is a
+decision about what CI is for.
+
+**Two findings that are not questions**, because the catalogue's shape is fixed: `backend`'s
+language fork offers four options at 140, 150, 220 and 290 hours while its note says the paths are
+equivalent, and `mobile` offers three at exactly 170 hours of which one — iOS — cannot be practised
+at any price. Neither can be fixed by changing a track. What can change is what the track and the
+material **say**, and both are recorded on their sheets for whoever writes them.
+
+---
+
 ## Roadmap
 
 The shape and the reason for the order. The list of what each phase is made of lives in
