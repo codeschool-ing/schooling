@@ -277,10 +277,34 @@ Nothing is blocked while this is open. The repository is named for the product r
 domain, the GCP project id is neutral and never public, and the platform domain is an environment
 variable — so the decision reduces to DNS and a variable rather than a change to the code.
 
-**Payment gateway.** It has to cover three things at once: international recurrence, Brazilian
-card instalments, and Pix. Without splits and third-party onboarding the problem is far smaller
-than it was — fees, interest-free instalments and the cost of two coexisting billing models
-remain. Decide before the billing phase, not during it.
+**~~Payment gateway.~~ Half answered, and answering it dissolved the question.** The domestic one
+is Asaas: `internal/platform/pay/asaas`, Pix, boleto and card with instalments, `POST /hooks/pay`
+mounted in `cmd/api` when the token is configured, and **two real purchases settled through it**
+rather than a sandbox screen — see phase 3 in [`ROADMAP.md`](ROADMAP.md). What is still open is the
+international provider, and Stripe is the candidate.
+
+This entry asked for one gateway covering **three things at once** — international recurrence,
+Brazilian card instalments, and Pix — and that gateway does not exist. Stripe's Pix is invite-only
+for businesses based in Brazil; the Brazilian gateways do not serve the rest of the world. So the
+answer was not to find the one that covers all three but to **stop requiring them at once**: one
+domestic provider and one international, with the ledger as the single truth both write into.
+
+The schema had already assumed it, which is the part worth recording. `payment_customers` is keyed
+on `(account_id, provider)` and `checkout_intents` carries a `provider` column, both written in
+`0042` **before either provider was chosen** — because an account paying from abroad was always
+going to hold its handle somewhere else, and the migration says so in its own comments. A decision
+this entry described as open had, in the shape that mattered, already been taken in the schema.
+
+What remains is also not a choice between products. The international side waits on the **legal
+entity**: whether a MEI can receive recurring payment from abroad is the unknown the roadmap
+deliberately moved off the critical path, so the domestic list ships first under the cheapest
+entity that exists and the international one follows when there is revenue to justify the entity it
+needs.
+
+It is worth recording, as with the video entry below, that this was **not** settled the way the
+entry expected. It set a deadline — "decide before the billing phase, not during it" — and the
+billing phase is what settled it, by integrating one provider concretely and learning from the
+integration that the requirement had been written as one problem and was two.
 
 **~~Video provider.~~ Answered — see [`VIDEO.md`](VIDEO.md).** We host it: Cloud Storage in a US
 region, progressive MP4, a signed URL per object issued against the active subscription. No

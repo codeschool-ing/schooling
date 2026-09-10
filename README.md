@@ -103,14 +103,22 @@ neither, so the interface says so where it would otherwise have shown a control.
 ## Where things stand
 
 Phase 4 of seven — the console. Phases 0 to 3 carry the skeleton and the five things that cost
-nothing now and are impossible later, the study platform, learning complete, and billing up to
-the point where it waits on a payment gateway nobody has chosen.
+nothing now and are impossible later, the study platform, learning complete, and billing that
+sells in Brazil and nowhere else yet.
 
 **Every box in phase 0 is ticked and the phase is not finished**, which is a distinction this
 project draws rather than rounds off: its `Done when` asks for two schools answering over TLS and
 there is one, and a single school behind a `Host` check is indistinguishable from an application
 that is not multi-tenant at all. Phases 1 to 3 each keep an item open for the same kind of reason
-— a sandbox that runs a student's program, the platform's own address, a payment gateway.
+— a sandbox that runs a student's program, the platform's own address, and a way to be paid from
+outside Brazil.
+
+**That last one used to read "a payment gateway", and it had been wrong for a while.** The
+domestic gateway is chosen and integrated — Asaas, with Pix, boleto and card instalments, a
+webhook that has settled real purchases — and what is open is the international provider, which
+waits on the legal entity rather than on a comparison of products. A sentence describing a
+decision as unmade after it was made is the kind of thing this repository would rather name than
+quietly correct.
 
 Phase 4's boxes are all ticked now and it is not finished either, for a reason of its own: its
 `Done when` asks for a funnel that shows a drop at a step nobody suspected, and a population this
