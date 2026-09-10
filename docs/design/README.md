@@ -104,24 +104,27 @@ mathematics), `tech-strategy` (total cost of ownership, cost of delay, debt pric
 `tech-support` (reproduce, isolate, test, confirm — a method in four steps is an `ordering` item,
 and every lesson after the first can reuse the shape).
 
-### `C-28` is keyed on position and does not know about `continues`
+### `C-28` is wrong in every case where a track continues another — three for three
 
-Two courses in this batch are free, and **nobody arrives at either of them free**:
+Three courses are free, and **nobody arrives at any of them free**:
 
-| course | free because | reached by |
+| course | free because | the track it opens |
 |---|---|---|
-| `process-management` | position 1 of `tech-lead` | a track whose own goal says it "does not start a career, it continues one" |
-| `architecture-role` | position 1 of `software-architecture` | a track that `continues: backend` — fifteen paid courses first |
+| `process-management` (60 h) | position 1 of `tech-lead` | its own goal says it "does not start a career, it continues one" |
+| `architecture-role` (40 h) | position 1 of `software-architecture` | declares `continues: backend` — fifteen paid courses first |
+| `bigdata` (70 h) | position 1 of `data-platform` | declares `continues: data` |
 
 `C-28` makes the first course of a track the free sample, and it was sized on `web-fundamentals`,
-which really is what a visitor meets before paying anything. Applied to the two continuation
-tracks it gives away **100 hours to students who have already converted**. The same defect found
-independently in both is what makes it a rule problem rather than two accidents — and the rule
-already has the field it needs to tell the cases apart, because `continues` is in the data and the
-free-sample rule does not read it.
+which really is what a visitor meets before paying anything. Applied to a track that continues
+another it gives away **170 hours to students who have already converted**.
+
+Found in `management`/`architecture` first, where two instances made it "a rule problem rather than
+two accidents"; `data` supplied the third and closed it. **That is all three continuation tracks in
+the catalogue** — the rule is not misfiring occasionally, it is wrong every time it meets one, and
+`continues` is already in the data.
 
 The sheets do not decide it. It is a pricing decision, and it belongs beside the free-tier question
-`computing-essentials` already raises from the other direction.
+`computing-essentials` raises from the other direction.
 
 ### The two courses everybody finishes through, and nothing points at
 
@@ -135,22 +138,6 @@ student's experience they are the final impression the school leaves and rank fi
 readings disagree maximally, and this is the only place in the sweep where they do.** A
 graph-shaped argument about what to build first cannot see these two courses at all, which is a
 reasonable summary of why the sweep is worth its time.
-
-### Two courses want the same mechanism, and it does not exist
-
-Nothing in `content/` lets a course, a lesson or a section differ by the track that reached it or
-by the option a student took at a fork. Two sheets in this batch need exactly that:
-
-- **`design-patterns`** sits behind `backend`'s choice of JavaScript, Python, Java or Go, and every
-  pattern it teaches is code in one of them. Pick one language (wrong for three quarters of
-  readers), write four snippets (four times the writing and the maintenance), or use pseudocode
-  (grades nothing).
-- **`portfolio-project`** has sixteen audiences and knows it — lesson 3 is *"Choosing by track: what
-  somebody hiring in your field actually opens"*. Generic is the one thing a portfolio course must
-  not be.
-
-One course wanting a mechanism is a request. Two, arrived at from different categories for
-different reasons, is a decision with something behind it.
 
 ### `data` — the environment question splits into six, and one of them is metered
 
@@ -201,17 +188,6 @@ database courses on the table: a surface you can query is not a server you can m
 `db-administration` alone** — the highest concentration of blocked hours behind a single unbuilt
 thing anywhere in the sweep.
 
-### Three for three: `C-28` is wrong in every case where a track continues another
-
-`bigdata` is free because it is position 1 of `data-platform`, and `data-platform` declares
-`continues: data`. With `process-management` (`tech-lead`) and `architecture-role`
-(`software-architecture`), that is **all three continuation tracks in the catalogue**.
-
-The previous batch called this "a rule problem rather than two accidents". Three for three closes
-it: the free-sample rule is not misfiring occasionally, it is **wrong in every case where it meets
-a track that continues another** — 170 hours given to students who have already bought a whole
-track — and `continues` is already in the data.
-
 ### The two courses that could be built today
 
 Of 1,550 hours in this category, **130 need nothing**: `statistics` (80 h) and `data-fundamentals`
@@ -239,10 +215,124 @@ For comparison, the highest figure in the two previous batches was `design-patte
 category that carries the most hours is also the one least able to publish them**, and the two
 facts compound: 1,550 hours where the median course cannot ship most of its practice.
 
-### Nobody has been named to draw ~3,200 pictures
+### `ai` — the first category that can go wrong faster than it can be written
 
-Summed across the 63 sheets written so far, the diagram estimates come to **3,217** — for half the
-catalogue. The heaviest are `architecture-modeling` (~130), `visualization` (~110),
+Eleven courses, 630 hours. The environment answer is short and the same for ten of the eleven: **an
+API key with a bill attached** — a metered third party, not a machine. It is cheap per call,
+impossible to avoid (prompt engineering needs something to prompt) and non-deterministic, so
+`expected-output` would not grade it even if that grader existed. `ml-mlops` is the exception and
+needs no key at all.
+
+The finding is elsewhere, and it is about time rather than money.
+
+**This category names more third-party products than any other, and unlike a console they get
+discontinued.** `ai-models` names fifteen in twenty-one lessons — Claude, Gemini, the GPT and o
+families, Cohere, Mistral, Llama, DeepSeek, Qwen, Gemma, Hugging Face, Transformers.js, Ollama, LM
+Studio, OpenRouter. `embeddings-vectors` names seven vector databases. `llm-observability` names
+six SaaS products. `agents-mcp` spends six lessons on a protocol barely two years old and three
+more on vendors' agent SDKs.
+
+The `infra` sweep's ageing finding was *"eleven of twenty-three teach somebody else's interface"* —
+a console gets redrawn while continuing to exist. **Here the product goes away.** And that meets
+`C-30`, which makes the screen the frame: a course of this shape has a re-recording cost that
+recurs on somebody else's schedule and never stops. `agents-mcp` is 80 hours — the largest course
+in the category — on the fastest-moving subject in the catalogue, and every other large course the
+sweep has met is large *because* its subject is settled (`design-patterns` at 80 h on thirty-year-old
+patterns; `machine-learning` at 90 h).
+
+**So the design instruction for this category is a split rather than a schedule:** separate the
+durable spine from the product directory, and give the directory the opposite treatment to
+everything else — text-first, short, cheap to re-render. In `ai-models` the spine is lessons 1–5
+and 21 and the directory is 6–20. In `agents-mcp` the spine is lesson 7, *"Implementing an agent by
+hand, from scratch"*, which is what makes the three SDK lessons readable rather than magic.
+
+Two courses escape it. **`ai-security` ages slowest** — attacks and defences outlive the models
+they are aimed at — and it is also the only course here with real reach (three tracks). It is the
+best-value course in the category on both axes at once. **`prompt-reliability`** names almost no
+products and teaches discipline.
+
+### `ai-dev` is placed correctly eleven times and wrongly once
+
+Twelve tracks — the widest reach after `portfolio-project`, `first-job` (16) and `git` (13), tied
+with `web-fundamentals`. In eleven of them it is the only AI course there is, arriving late in a
+track about something else, which is exactly right.
+
+In the twelfth it is a summary of the four courses immediately before it. `ai` reaches it at
+position 10, after `ai-models`(6), `embeddings-vectors`(7), `rag`(8) and `agents-mcp`(9), and its
+eleven lessons are tokens, RAG, agents and MCP, function calling, providers and risks — **a
+50-hour compression of the 270 hours just finished.**
+
+That is the same defect `data` produced (`bi-techniques`'s four-lesson machine-learning overview
+reaching `data-science` at position 9, one after `machine-learning` itself at 8) and it is larger
+here. **Two categories, found independently, both invisible from inside either course** — which is
+what a sweep is for.
+
+The cheap fix is a position in a track file rather than a mechanism: `ai` could reach `ai-dev`
+before the deep courses instead of after.
+
+### Three courses now want content that varies by the path taken
+
+Nothing in `content/` lets a course, a lesson or a section differ by the track that reached it or
+by the option a student took at a fork. **Three courses from three categories need exactly that,
+for three unrelated reasons:**
+
+- **`design-patterns`** sits behind `backend`'s choice of JavaScript, Python, Java or Go, and every
+  pattern it teaches is code in one of them. Pick one language (wrong for three quarters of
+  readers), write four snippets (four times the writing and the maintenance), or use pseudocode
+  (grades nothing).
+- **`portfolio-project`** has sixteen audiences and knows it — lesson 3 is *"Choosing by track: what
+  somebody hiring in your field actually opens"*. Generic is the one thing a portfolio course must
+  not be.
+- **`ai-dev`** is the only AI course in eleven tracks and the fifth in one, and the right material
+  differs by which.
+
+One course wanting a mechanism is a request. Three, arrived at independently, is a decision with
+something behind it — and `ai-dev`'s case has a cheap partial answer the others do not: moving it
+earlier in one track file.
+
+### A category of work that is not an environment: authored adversarial material
+
+Three courses in two batches need **data with deliberate defects in it**, which is fixture content
+living in `content/` rather than a machine to be provisioned:
+
+| course | what it needs |
+|---|---|
+| `data-cleaning` | tables with the right defects — a column where missing means zero, a duplicate that is not exact, an outlier that is a real event |
+| `rag` | a corpus long enough to chunk, ambiguous enough that retrieval can fail, structured enough that a citation means something |
+| `ai-security` | a deliberately vulnerable application, with known weaknesses, that resets |
+
+These read as blocked on the sandbox and are not. **They are blocked on somebody writing the
+broken thing**, which is closer to the illustration bill than to the environment list — and, like
+it, has no owner.
+
+### The subjects that most need a real bill are the ones a sandbox can least provide
+
+Named after the third instance rather than the first: the vendor data family (*"the two decisions
+that define the bill"*), `bigdata` (*"what an hour of cluster costs"*), `deep-learning` (*"training
+time against the gain"*) and `multimodal` (*"cost, file size and upload limits"*) all teach cost as
+subject matter to students who cannot incur any.
+
+`multimodal` is the sharpest case, and it is a shape the sweep had not met: **every other blocked
+exercise costs a machine that is already running; these cost money per attempt.** Generating an
+image or transcribing audio is a metered call, and *retrying is the pedagogy* — lesson 3 is prompt,
+style and limits, learnt by varying one thing and looking again. A per-attempt cost that rises with
+how much a student practises is worse than `deep-learning`'s GPU, because for most of it there is
+no cheaper local substitute.
+
+### `continues` read correctly, for once
+
+`ml-mlops`'s first four lessons duplicate `machine-learning`'s first four — supervised and
+unsupervised, the common tasks, splits and leakage, the accuracy trap. **No student ever meets
+both**: `ml-mlops` is reached only through `data-platform`, which `continues: data`, and `data` does
+not contain `machine-learning` (`data-science` does).
+
+Worth recording as the positive case beside the three places where `C-28` reads the same field
+wrongly. The mechanism works; the free-sample rule just does not consult it.
+
+### Nobody has been named to draw ~3,800 pictures
+
+Summed across the 74 sheets written so far, the diagram estimates come to **3,797** — for three
+fifths of the catalogue. The heaviest are `architecture-modeling` (~130), `visualization` (~110),
 `data-storytelling` (~90), `computing-essentials` (~85) and `statistics` (~80), and in most of
 those **the images are the assessment rather than the illustration**: "mark the three things wrong
 with this chart" is a `labelling` item, which is the one grader that fits soft material well, and
