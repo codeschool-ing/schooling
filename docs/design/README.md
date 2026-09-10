@@ -74,6 +74,95 @@ than retention.
 the split that decides which courses can be re-rendered from a file and which have to be
 re-recorded by a person.
 
+### `management`, `architecture`, `career` — the bottleneck moves, it does not go away
+
+Fourteen courses, 780 hours, swept together because a guess had been made about them: that they
+need no runtime, no browser and no database, and are therefore the cheapest hours in the
+catalogue to build. **The guess was right about the sandbox and wrong about the conclusion.**
+
+Thirteen of the fourteen need nothing to run. The exception is `design-patterns` — 80 hours of
+SOLID, GoF, TDD and the actor model, where a quarter of the natural exercises are code. Every
+other course in the three categories could be published tomorrow as far as an environment is
+concerned.
+
+What stops them is the other end. `internal/grade` carries **eight graders and every one of them
+checks a closed form** — a choice, an ordering, a number, a label on a picture. None of them reads
+a paragraph, and a paragraph is what one-to-ones, feedback, technical proposals, mediation and
+saying no are made of. `people-leadership` is the extreme: 24 lessons, ~600 exercises, and no
+grader that fits its subject.
+
+**The rescue is the scenario with four replies**, and it is a cost rather than a solution. *Here is
+what the engineer said; which of these four answers is feedback and which three are judgement
+dressed as feedback* is a `quiz`, and it grades today. It is also several times more expensive to
+write than a quiz about a fact, because each wrong answer has to be wrong for a reason a reader can
+find. That is the authoring bill for a large part of 780 hours, and it was invisible while the
+sandbox was the thing being counted.
+
+Three courses escape it on their own material, and it is worth knowing which: `delivery-metrics`
+(Little's law, DORA, error budgets, Monte Carlo — `numeric` fits better than anywhere outside
+mathematics), `tech-strategy` (total cost of ownership, cost of delay, debt priced as interest) and
+`tech-support` (reproduce, isolate, test, confirm — a method in four steps is an `ordering` item,
+and every lesson after the first can reuse the shape).
+
+### `C-28` is keyed on position and does not know about `continues`
+
+Two courses in this batch are free, and **nobody arrives at either of them free**:
+
+| course | free because | reached by |
+|---|---|---|
+| `process-management` | position 1 of `tech-lead` | a track whose own goal says it "does not start a career, it continues one" |
+| `architecture-role` | position 1 of `software-architecture` | a track that `continues: backend` — fifteen paid courses first |
+
+`C-28` makes the first course of a track the free sample, and it was sized on `web-fundamentals`,
+which really is what a visitor meets before paying anything. Applied to the two continuation
+tracks it gives away **100 hours to students who have already converted**. The same defect found
+independently in both is what makes it a rule problem rather than two accidents — and the rule
+already has the field it needs to tell the cases apart, because `continues` is in the data and the
+free-sample rule does not read it.
+
+The sheets do not decide it. It is a pricing decision, and it belongs beside the free-tier question
+`computing-essentials` already raises from the other direction.
+
+### The two courses everybody finishes through, and nothing points at
+
+`portfolio-project` and `first-job` are the last two courses of **all sixteen tracks that start a
+career** — always in that order, always at the end, absent from the three tracks that continue one.
+Sixteen tracks each is **the widest reach in the catalogue**, wider than `git` (13) and
+`web-fundamentals` (12).
+
+Neither has a single dependent. By the dependency graph they are leaves and rank last; by the
+student's experience they are the final impression the school leaves and rank first. **Those two
+readings disagree maximally, and this is the only place in the sweep where they do.** A
+graph-shaped argument about what to build first cannot see these two courses at all, which is a
+reasonable summary of why the sweep is worth its time.
+
+### Two courses want the same mechanism, and it does not exist
+
+Nothing in `content/` lets a course, a lesson or a section differ by the track that reached it or
+by the option a student took at a fork. Two sheets in this batch need exactly that:
+
+- **`design-patterns`** sits behind `backend`'s choice of JavaScript, Python, Java or Go, and every
+  pattern it teaches is code in one of them. Pick one language (wrong for three quarters of
+  readers), write four snippets (four times the writing and the maintenance), or use pseudocode
+  (grades nothing).
+- **`portfolio-project`** has sixteen audiences and knows it — lesson 3 is *"Choosing by track: what
+  somebody hiring in your field actually opens"*. Generic is the one thing a portfolio course must
+  not be.
+
+One course wanting a mechanism is a request. Two, arrived at from different categories for
+different reasons, is a decision with something behind it.
+
+### Nobody has been named to draw ~1,750 pictures
+
+Summed across the 40 sheets written so far, the diagram estimates come to **1,747** — for a third
+of the catalogue. The heaviest are `architecture-modeling` (~130), `data-storytelling` (~90) and
+`computing-essentials` (~85), and in two of those three **the images are the assessment rather than
+the illustration**: "mark the three things wrong with this chart" is a `labelling` item, which is
+the one grader that fits soft material well, and it does not exist without the picture.
+
+This began as a note on one sheet. At three courses and ~305 images between them it is a
+catalogue-level fact, and it has no owner.
+
 ---
 
 ## What a sheet is not

@@ -24,7 +24,7 @@ The platform domain is provisional — see *The name* in [`docs/PLAN.md`](docs/P
 | [`docs/CONSOLE.md`](docs/CONSOLE.md) | what the console is, whole, and the order it arrives in — the decisions it settled are K-17 to K-22 |
 | [`docs/VIDEO.md`](docs/VIDEO.md) | how video is **made**, hosted, delivered, protected and measured, what it costs, and what was deferred or refused — the decisions it settled are P-11, P-12, C-18 to C-20, C-29 to C-36, K-23 and K-24 |
 | [`docs/RELEASES.md`](docs/RELEASES.md) | how a course is published as one versioned set, what major/minor/fix mean, and what happens to a student mid-course when the structure changes — the decisions it settled are C-21 to C-25, N-11, K-25 and K-26 |
-| [`docs/design/`](docs/design/) | one sheet per course, written before its material: how much of everything it carries, what it may assume from the courses before it, and what it needs that does not exist yet. 26 of 122 so far, one of them with its sections designed, and the count is reported rather than enforced |
+| [`docs/design/`](docs/design/) | one sheet per course, written before its material: how much of everything it carries, what it may assume from the courses before it, and what it needs that does not exist yet. 40 of 122 so far, one of them with its sections designed, and the count is reported rather than enforced |
 | [`infra/README.md`](infra/README.md) | the project this runs in, and the runbook for it: the bootstrap, the database, a school, an address, monitoring |
 
 `CLAUDE.md` is normative and `PLAN.md` is historical. If they disagree, the code follows
