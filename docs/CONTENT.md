@@ -133,7 +133,10 @@ another track, and the site drew arrows at prerequisites the track did not conta
   "id": "client-and-server",
   "title": "Client, server and host: who asks and who answers",
   "sections": [
-    { "id": "intro",  "kind": "video",   "video": true, "duration": "02 min" },
+    { "id": "intro", "kind": "video", "videos": [
+        { "id": "vd-7k2m9x4p", "version": 1, "script": "Two roles, and everything else is detail.",
+          "seconds": 120, "locales": ["en"] }
+      ] },
     { "id": "roles",  "kind": "reading", "materials": ["wf-dns-cheatsheet"] },
     { "id": "drill",  "kind": "practice" }
   ]
@@ -141,8 +144,19 @@ another track, and the site drew arrows at prerequisites the track did not conta
 ```
 
 `kind` is `reading`, `video`, `practice` or `assessment`. A `reading` section must have a
-Markdown file of the same id; a `video` section may hold the frame with `video: true` before the
-video exists; an `assessment` section is appended by the portal and is not written here.
+Markdown file of the same id; an `assessment` section is appended by the portal and is not written
+here.
+
+**This block said `"video": true, "duration": "02 min"` until #274 replaced it.** A boolean could
+say a rendering was there and nothing about *which* — while `C-18` versions a rendition and
+addresses it at `vd-<id>/v<version>/<locale>.mp4`, an event records the version watched, and
+`C-20` makes the spoken script authored source. A section carries as many videos as it needs, each
+with its own id, version, script, length and the locales that **exist** — whose absence is
+ordinary (`C-19`) and which the content check must not demand five of.
+
+`seconds` and not `"02 min"`: a number is what a milestone is computed against, and a formatted
+string is what a screen prints. `catalog_sections.duration` stays a string, written by the loader
+from the sum of a section's videos.
 
 `countable` stays a separate field from `kind`, so progress semantics never have to be inferred
 from what a section is.
@@ -150,11 +164,13 @@ from what a section is.
 ### The prose — `<section-id>.md`
 
 One file per section, one section per file. Front-matter carries nothing the JSON already knows;
-it exists only for what belongs to the prose itself.
+it exists only for what belongs to the prose itself — **exactly two keys, and anything else is an
+error**.
 
 ```markdown
 ---
 title: The two roles
+version: 1
 ---
 
 Almost everything that happens on the internet is a conversation between two parties with fixed
@@ -163,6 +179,16 @@ roles. The **client** asks; the **server** answers.
 The roles belong to the moment, not to the machine. A web server that needs to query a database
 becomes the database's client at that instant.
 ```
+
+**`version` is the prose's own, and it was added because a comparison needs a baseline from the
+FIRST release** (`C-25`). Added afterwards, the first generation of every section has none — the
+comparison the version exists for, lost exactly where material changes most. A translation
+declares the version it translated, so a `.pt.md` saying 3 while the English says 4 is a stale
+translation that says so; `ls` only ever shows that the file exists.
+
+**And the parser refuses a third key.** It read `title` and ignored everything else in silence
+until #274, which meant a `version:` written before the parser learned the word would have parsed,
+been dropped, and looked exactly like it had worked. A closed list is only closed if it refuses.
 
 A diff on this file is a diff per paragraph, which is the entire reason the catalogue is a file
 and not a row (C-01). A paragraph inside a JSON string reviews badly, so prose never lives in
@@ -194,9 +220,20 @@ Every exercise belongs to a lesson, joins by id, and declares the grader that ju
 `version` is not decoration — see **The loop** below.
 
 Types: `quiz`, `multiple-choice`, `ordering`, `matching`, `code`, `expected-output`,
-`expression-answer`, `numeric`, `cloze`, `labelling`. **Every type has a machine grader; that is
-the entry requirement.** Free-text essays are out, because nothing can check them and this system
-has no reviewer.
+`expression-answer`, `numeric`, `cloze`, `labelling`. **Every type has to have a machine grader;
+that is the entry requirement.** Free-text essays are out, because nothing can check them and this
+system has no reviewer.
+
+**Eight of the ten meet it. `code` and `expected-output` do not yet**, and this paragraph said
+they did. Both need a sandbox that runs a student's program, which is its own piece of work —
+so they are **absent from `graders` in `internal/grade` rather than stubbed**, and asking for one
+answers `ErrUnknownType` instead of guessing. The rule above is the requirement, not a description
+of today.
+
+The distinction matters when a course is being planned rather than written: a course whose
+practice *is* writing a program cannot be finished until that sandbox exists, and one that has no
+programming in it is not waiting on anything. `ROADMAP.md` has carried the honest count all along;
+this file has not, and a reader planning against ten working types would have planned wrong.
 
 ### `exercises.pt.json`
 
