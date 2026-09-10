@@ -280,6 +280,16 @@ Exams do not belong to a lesson, so they do not live in one: the course exam is
 `courses/<id>/exam.json` and the track exam is `tracks/<id>-exam.json`. Same exercise shape,
 drawn from a sealed pool that never reaches the practice globals.
 
+**The pool holds five times what a paper draws** (`A-11`) — a hundred questions against the
+default draw of twenty. A paper is a sample of this file and never the whole of it, and that is
+what makes an uncapped retake something other than a memory test. A pool shorter than the draw is
+asked in full and is not a lesser exam for it; a course still being written may have no
+`exam.json` at all.
+
+**A lesson's `exercises.json` is the opposite** (`A-12`): fixed, answered in full by everybody, no
+pool and no draw. The two files look identical and are written for different purposes —
+[`EXERCISES.md`](EXERCISES.md) says which purpose changes what.
+
 The price of naming a track's final after its track is that a track may not itself be called
 `<x>-exam`: such a file is read as the final of `<x>` and never as a track of its own. That would
 be silent, so it is not — a `tracks/<x>-exam.json` with no track `<x>` is refused, which catches
