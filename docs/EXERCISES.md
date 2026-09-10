@@ -67,13 +67,13 @@ see it, because the ones a machine can see are checked rather than remembered.
 
 | | the tell | checked |
 |---|---|---|
-| 1 | **Length.** The correct option is the longest, or the most qualified. | **yes** |
+| 1 | **Length.** The correct option is the longest, or the most qualified. | **the longest, across a lesson** |
 | 2 | **Absolutes in the wrong options** — *never, always, only, all, must, none*. And the mirror: hedges (*usually, often, can, tends to*) concentrated in the correct one. | **yes** |
 | 3 | **Two options.** A coin flip floors the score at 50%. | **yes** |
 | 4 | **Furniture** — an option nobody would choose. | no |
 | 5 | **Convergence.** Three options say the same thing in different words and one stands apart; the one that stands apart is the answer. | no |
-| 6 | **Echo.** The correct option repeats the rare words of the prompt. | **yes** |
-| 7 | **Grammar.** Article, number or tense agreeing with the stem in only one option. | partly |
+| 6 | **Echo.** The correct option repeats the rare words of the prompt. | **long words, not rare ones** |
+| 7 | **Grammar.** Article, number or tense agreeing with the stem in only one option. | no |
 | 8 | **"All of the above", "none of the above".** | **yes** |
 | 9 | **Position.** The correct option sitting in the same place across a lesson. | **yes** |
 | 10 | **Leakage.** One question's stem answers another question. | no |
@@ -82,9 +82,50 @@ see it, because the ones a machine can see are checked rather than remembered.
 which side of the line something falls — and even then, prefer three where the third is a real
 belief.
 
-`tools/check-exercises` measures the checkable rows across a lesson and fails the build on the ones
-that are decidable. It cannot see furniture or convergence; those are why this document is longer
-than the check.
+Three rows carried a stronger word than the code earns, and this is what they say now.
+
+**Row 7 said "partly" and nothing was ever written.** There is no grammar check — not a partial
+one, not a weak one. It was an aspiration in a column that reads as a fact, which is the failure
+this whole document exists to name, committed in the document itself.
+
+**Row 1 is a share across a lesson, never a rule per question.** One question whose correct option
+happens to be longest is not flagged and should not be — see `LongestShareCeiling`. And *"the most
+qualified"* is not measured at all: the closest thing to it is row 2's hedge rule.
+
+**Row 6 counts words of six letters or more,** which is a proxy for rare and not the thing itself.
+A prompt and an option sharing "database" three times reads as an echo to it; a shared *rare short*
+word does not.
+
+---
+
+## Four things the check does not look at at all
+
+Rows 4, 5 and 10 are honest limits, and they are why this document is longer than the check: no
+machine separates an option somebody believes from one nobody would pick. Row 7 is not a limit, it
+is unwritten. And the four below are neither — they are places the check does not reach at all, so
+a question can carry every tell in the table and pass because it sits in one of them.
+
+**Only `quiz` and `multiple-choice` are examined.** `ordering`, `matching`, `cloze`, `numeric`,
+`labelling` and `expression-answer` go through untouched. In the first lesson written that is 7
+questions of 36. Those types have their own tells — a `cloze` whose blank accepts one word the
+prose used four times, an `ordering` whose items are already in order in the material — and nothing
+looks for them.
+
+**The word lists are English.** `absolutes` and `hedges` are English words, and so is
+`all of the above`. The day a question is authored in Portuguese, three of the checkable rows score
+zero and the run still says "no tell above its threshold" — which is worse than not running, because
+it answers with confidence.
+
+**`exercises.pt.json` is never read.** The glob is literal on `exercises.json`. A translation can
+reintroduce every tell in the table — lengthen the correct option, drop the absolutes from the
+distractors — and nothing objects.
+
+**The aggregate rows need a quorum.** Position and length need six questions, the end-to-end score
+needs eight. A section with four questions is invisible to the three checks that matter most, and a
+lesson can stay under the threshold by being short.
+
+None of these is hard to fix and none is fixed. They are written down so that the next person to
+read a green run knows what green does not mean.
 
 ---
 
