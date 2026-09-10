@@ -123,6 +123,12 @@ two accidents"; `data` supplied the third and closed it. **That is all three con
 the catalogue** — the rule is not misfiring occasionally, it is wrong every time it meets one, and
 `continues` is already in the data.
 
+**And the rule works where it was meant to.** `security-fundamentals` is free as position 1 of
+`security`, a track that continues nothing, so a visitor really can arrive there having paid for
+nothing — sixty hours needing no environment at all. Having the working case in the register beside
+the three broken ones is what shows the rule is sound and its blindness to `continues` is the whole
+of the defect.
+
 The sheets do not decide it. It is a pricing decision, and it belongs beside the free-tier question
 `computing-essentials` raises from the other direction.
 
@@ -329,10 +335,120 @@ not contain `machine-learning` (`data-science` does).
 Worth recording as the positive case beside the three places where `C-28` reads the same field
 wrongly. The mechanism works; the free-sample rule just does not consult it.
 
-### Nobody has been named to draw ~3,800 pictures
+### `security` and `quality` — thirteen courses want the same fixture
 
-Summed across the 74 sheets written so far, the diagram estimates come to **3,797** — for three
-fifths of the catalogue. The heaviest are `architecture-modeling` (~130), `visualization` (~110),
+Fifteen courses, 940 hours, swept together because both categories are about **checking somebody
+else's system**, and the guess was that they would want the same thing. They do.
+
+**Ten of the fifteen need an application with known flaws that resets**, and so do `ai-security`
+and `rag` from the previous batch. That is not an environment — it is *authored material*, and it
+lives in `content/`:
+
+| the fixture | courses it serves |
+|---|---|
+| a **web application with known flaws** | `attacks-threats`, `secure-code`, `ai-security`, `manual-testing`, `web-automation`, `non-functional-testing`, `api-mobile-automation` |
+| a **vulnerable network** | `pentest`, `defense-hardening`, `soc-response` |
+| **logs and captures containing a real attack** | `soc-response` |
+| a **corpus where retrieval can fail** | `rag` |
+| **tables with deliberate defects** | `data-cleaning` |
+
+The first row is the finding. **One deliberately-broken web application is the most reused piece of
+authored material in the catalogue** — seven courses across three categories — and it is cheaper
+than any environment on the `infra` or `data` lists. Nothing in the sweep has a better ratio.
+
+The `soc-response` fixture is the expensive one and worth separating out: realistic logs containing
+an attack, **with the answer known**, is harder to write than a vulnerable application, because the
+evidence has to be findable in retrospect and the noise has to be convincing. It also pays back
+most, because a capture is a fixed artefact — "which of these five events is the compromise" is a
+`quiz`, "order these into the kill chain" is an `ordering`, "mark the indicator" is `labelling`.
+**The authored data unlocks graders that already exist.**
+
+And `pentest` supplies its own answer, which no other blocked course in the sweep does: its lesson
+20 names HackTheBox, TryHackMe, VulnHub, picoCTF and pwn.college. **The vulnerable network already
+exists publicly and is somebody else's to run.**
+
+### The platform is the worked example, four times over
+
+A pattern that started as a note on one sheet is now a list, and it is short enough to act on:
+
+| course | its lessons | what already exists here |
+|---|---|---|
+| `web-automation` | Playwright, Page Object, traces, parallel execution, flaky tests | `tools/a11y-test`, `tools/graph-test`, `tools/landing-test`, `tools/bundle-test` — four Playwright suites driving a real application |
+| `db-reliability` | backup, restore drills, measuring how long a restore took | `tools/restore-drill`, restoring a real database in CI |
+| `data-governance` | personal and sensitive data, lineage, retention, audit | `internal/privacy`, a registry of every table with a test against the live schema |
+| `secure-pipeline` | quality gates, secret scanning, runner permissions, policy as code | `.github/workflows/`, and `tools/check-origin` is policy-as-code by another name |
+
+`web-automation` is the strongest of the four — four suites rather than one artefact, and its
+lesson 14 is *"Flaky tests: causes, diagnosis and quarantine"*, which this repository has lived
+rather than read about.
+
+### `quality` is the only self-contained category in the catalogue
+
+Five courses, **one track**, a single linear chain: `qa-fundamentals` → `manual-testing` →
+{`web-automation`, `api-mobile-automation`} → `non-functional-testing`. Nothing outside `qa`
+reaches any of them, and nothing outside the category depends on any of them. No other category is
+closed like this.
+
+Two things follow. It can be designed as one 310-hour object rather than as five courses — and it
+is **the easiest category in the catalogue to defer entirely**, because deferring it strands
+nothing else.
+
+It is also uniform in a way worth checking rather than trusting: **22, 22, 22, 22 and 24 lessons;
+60, 60, 60, 60 and 70 hours.** The register's opening paragraph names exactly this shape as the
+reason the sheets exist, about `aws-`, `azure-` and `gcp-foundations`. Here it may be right — a
+chain of equal-weight courses is a reasonable thing — but *"they came out the same"* and *"they
+were designed the same"* are different claims, and only the lesson lists tell them apart.
+`api-mobile-automation` is the one that already fails it: **it is two courses in one file**, API
+testing to lesson 13 and mobile from 14, sharing a track position and nothing else.
+
+### The deepest chain in the catalogue is in `security`, and it is six long
+
+`security-fundamentals` → `cryptography` → `attacks-threats` → `secure-code` → `threat-modeling` →
+`secure-pipeline`, with `testing-cicd` arriving from another category at the end. **360 hours have
+to be right before the last course means anything**, and nothing else in the catalogue sits behind
+six prerequisites.
+
+`attacks-threats` is the hub of it — four dependents, two tracks — and its first nine lessons are
+about people rather than machines, which makes roughly a third of a 70-hour course publishable with
+no environment at all.
+
+### `security` ages slowest, which is the opposite of what the subject suggests
+
+nmap, Wireshark, netcat, Metasploit, `dd` and Autopsy are decades old and current. Phishing,
+spoofing, injection and privilege escalation still work. STRIDE is from the 1990s. Set against
+`ai`, where one course names fifteen products and the central protocol is two years old, **this is
+the most durable technical category the sweep has found**.
+
+The exceptions are named rather than general: `cloud-security` (three providers' consoles),
+`api-mobile-automation` and `web-automation` (fifteen and eight tools by name), and the
+certification lists that appear as a single lesson in several courses.
+
+### Two courses are blocked on the same missing answer type, and it is not a sandbox
+
+`architecture-modeling` and `threat-modeling` both ask the student to **draw**, and there is no
+answer type for a diagram — no upload, no canvas, no comparison. Both have the same rescue:
+`labelling` on a finished diagram, which grades today and teaches, but never asks the student to
+produce one.
+
+`threat-modeling` is the cleaner case, and an unusually clean test of whether the illustration bill
+gets paid: fifty hours, no runtime, no target, no account, **and ~90 diagrams**. The pictures are
+its entire cost.
+
+### `pentest` raises something the sheets cannot settle
+
+Its lessons 1, 2 and 22 are rules of engagement, *"Written authorisation: the document that
+separates a profession from a crime"*, and the tester's liability in Brazil. `ai-security`'s lesson
+11 is the same boundary.
+
+**Teaching exploitation to anonymous paying students at scale is not the exposure a university
+course with an enrolled cohort has.** That is not a design question and no sheet can answer it — it
+is the one place in the sweep where the material raises something for the platform to decide, and
+it wants deciding before the course is sold rather than after.
+
+### Nobody has been named to draw ~4,750 pictures
+
+Summed across the 89 sheets written so far, the diagram estimates come to **4,752** — for nearly
+three quarters of the catalogue. The heaviest are `architecture-modeling` (~130), `visualization` (~110),
 `data-storytelling` (~90), `computing-essentials` (~85) and `statistics` (~80), and in most of
 those **the images are the assessment rather than the illustration**: "mark the three things wrong
 with this chart" is a `labelling` item, which is the one grader that fits soft material well, and
