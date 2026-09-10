@@ -152,16 +152,109 @@ by the option a student took at a fork. Two sheets in this batch need exactly th
 One course wanting a mechanism is a request. Two, arrived at from different categories for
 different reasons, is a decision with something behind it.
 
-### Nobody has been named to draw ~1,750 pictures
+### `data` — the environment question splits into six, and one of them is metered
 
-Summed across the 40 sheets written so far, the diagram estimates come to **1,747** — for a third
-of the catalogue. The heaviest are `architecture-modeling` (~130), `data-storytelling` (~90) and
-`computing-essentials` (~85), and in two of those three **the images are the assessment rather than
-the illustration**: "mark the three things wrong with this chart" is a `labelling` item, which is
-the one grader that fits soft material well, and it does not exist without the picture.
+Twenty-three courses, **1,550 hours** — the largest category in the catalogue and the largest
+batch in the sweep. `infra` asked *which environment*; `data` asks it again and gets six different
+answers, one of which is unlike anything found so far.
 
-This began as a note on one sheet. At three courses and ~305 images between them it is a
-catalogue-level fact, and it has no owner.
+| what a course needs | courses |
+|---|---|
+| **nothing** | `statistics`, `data-fundamentals` |
+| a **query surface** | `sql-databases`, `warehouse-modeling`, `data-governance` |
+| a **server the student can misconfigure** | `db-administration`, `db-performance` |
+| **two servers and permission to destroy one** | `db-reliability` |
+| **three servers, none of them relational** | `nosql-operations` |
+| a **notebook and the scientific stack** | `python-data`, `machine-learning`, `data-cleaning`, `bi-techniques` |
+| a **cluster** | `bigdata`, `streaming`, `pipelines-etl` |
+| a **GPU** | `deep-learning` |
+| a **licensed desktop product** | `excel-analytics`, `analytics-bi` |
+| a **paid vendor account** | `aws-data`, `azure-data`, `gcp-data` |
+| a **plotting library** | `visualization` |
+
+**A GPU is the first environment in the catalogue whose cost scales with enrolment.** Every
+environment the sweep has found until now is provisioned once and shared — a shell, a container
+daemon, a cluster, a database, a topology. `deep-learning` needs metered compute per student per
+hour, and a free-tier student running a training loop is a bill rather than a load problem.
+Nothing in `PLAN.md` or `ROADMAP.md` prices it.
+
+**Two more axes appeared that are not machines at all.** `pipelines-etl` needs *time to pass* —
+scheduling, sensors, backfill, "the pipeline that failed at 3am" — and `streaming` needs a process
+that *never exits* and is observed while data arrives. Every blocked course before these needed
+something to run; these need something to keep running, and to have been running yesterday.
+
+### The cheapest environment in the catalogue serves the most dependents in it
+
+`sql-databases` and `python` are tied at **nine dependents each**, the two hubs of the whole
+catalogue. `sql-databases` is in seven tracks, is beginner, and about 60% of its natural exercises
+are blocked because SQL is learnt by running it.
+
+And unlike every environment `infra` asked for, **this one has a version with no server**: SQLite
+or Postgres compiled to WebAssembly, seeded from a fixture, discarded on reload. A query's result
+is a table and comparing two tables is not a sandbox. That is the `infra` sweep's *"a topology is
+the cheapest environment and it serves four courses"* argument an order of magnitude larger — and
+if one environment in the whole sweep gets built first, this is where the evidence points.
+
+The database question then **splits**, which is the finding that only appears with all four
+database courses on the table: a surface you can query is not a server you can misconfigure, and
+`db-administration`, `db-performance` and `db-reliability` need the second. **210 hours sit behind
+`db-administration` alone** — the highest concentration of blocked hours behind a single unbuilt
+thing anywhere in the sweep.
+
+### Three for three: `C-28` is wrong in every case where a track continues another
+
+`bigdata` is free because it is position 1 of `data-platform`, and `data-platform` declares
+`continues: data`. With `process-management` (`tech-lead`) and `architecture-role`
+(`software-architecture`), that is **all three continuation tracks in the catalogue**.
+
+The previous batch called this "a rule problem rather than two accidents". Three for three closes
+it: the free-sample rule is not misfiring occasionally, it is **wrong in every case where it meets
+a track that continues another** — 170 hours given to students who have already bought a whole
+track — and `continues` is already in the data.
+
+### The two courses that could be built today
+
+Of 1,550 hours in this category, **130 need nothing**: `statistics` (80 h) and `data-fundamentals`
+(50 h).
+
+`statistics` is the stronger of the two, and it may be the strongest build-first candidate the
+sweep has produced. It is **the best-graded course in the catalogue** — `numeric` and
+`expression-answer` are two of the eight graders that exist, and this is the one course whose
+natural answers *are* numbers with tolerances and expressions that must agree everywhere. It needs
+no runtime, no browser, no database, no account and no GPU. It has three dependents and three
+tracks behind it. `web-fundamentals` is the shop window; **this is the course that would prove the
+machine-graded premise on material nobody could fake.**
+
+### The blocked proportions are much worse here, and they are worth ranking
+
+| course | blocked | by what |
+|---|---|---|
+| `deep-learning` | ~80% | a GPU |
+| `db-reliability` | ~75% | two servers and permission to destroy one |
+| `excel-analytics` | ~75% | a Microsoft licence |
+| `python-data`, `machine-learning`, `bigdata`, `streaming`, `db-administration`, `db-performance` | ~70% | a runtime or a cluster |
+| `sql-databases` | ~60% | a database |
+
+For comparison, the highest figure in the two previous batches was `design-patterns` at 25%. **The
+category that carries the most hours is also the one least able to publish them**, and the two
+facts compound: 1,550 hours where the median course cannot ship most of its practice.
+
+### Nobody has been named to draw ~3,200 pictures
+
+Summed across the 63 sheets written so far, the diagram estimates come to **3,217** — for half the
+catalogue. The heaviest are `architecture-modeling` (~130), `visualization` (~110),
+`data-storytelling` (~90), `computing-essentials` (~85) and `statistics` (~80), and in most of
+those **the images are the assessment rather than the illustration**: "mark the three things wrong
+with this chart" is a `labelling` item, which is the one grader that fits soft material well, and
+it does not exist without the picture.
+
+`visualization` and `data-storytelling` sharpen it further: ~200 images across two courses on the
+same subject, adjacent in the same two tracks, **which must not contradict each other**. That is
+the first shared illustration budget the sweep has found, and it is an argument for drawing them
+together or not at all.
+
+This began as a note on one sheet. At half the catalogue it is the largest single unowned cost the
+sweep has surfaced, and it is still nobody's.
 
 ---
 
