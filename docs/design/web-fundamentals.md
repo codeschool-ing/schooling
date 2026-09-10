@@ -1,5 +1,5 @@
 ---
-format: 4
+format: 5
 course: web-fundamentals
 ---
 
@@ -30,11 +30,14 @@ answer, and what a domain is. `html-css` does not re-explain HTTP.
 
 | | |
 |---|---|
+| declared hours | 40 h |
+| lessons | 11 |
+| **hours per lesson** | **3.64** |
+| section budget | ~86, about 7.8 a lesson — **and 85 were designed**, which is the evidence the budget rests on |
 | sections | **85** — 53 reading, 21 video, 11 practice |
 | exercises | ~380–420, floor 350 |
 | video | estimated, not a target (`C-36`) |
 | avatar visible | ~20–25% overall, and **100% in an opening** — see below |
-| hours estimated × declared | 40 × 40 |
 
 Exercise types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `labelling`,
 `numeric`. Not `code` or `expected-output` — there is no programming here, which is why this

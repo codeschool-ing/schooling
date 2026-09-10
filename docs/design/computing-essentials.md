@@ -1,5 +1,5 @@
 ---
-format: 4
+format: 5
 course: computing-essentials
 ---
 
@@ -28,10 +28,12 @@ it can be designed without reference to anything else.
 
 | | |
 |---|---|
-| sections | ~120 — ~76 reading, ~28 video, 16 practice |
-| exercises | ~560 |
+| declared hours | 60 h |
+| lessons | 16 |
+| **hours per lesson** | **3.75** |
+| section budget | ~129, about 8.1 a lesson |
+| exercises | ~600, at the catalogue's density |
 | video | estimated, and the number depends on flag 1 |
-| hours estimated × declared | ~56 × 60 |
 
 `labelling` carries more weight here than anywhere else in the catalogue: motherboard, ports,
 connectors, peripherals are all diagrams with names on them, and the type has a grader.

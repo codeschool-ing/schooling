@@ -23,6 +23,59 @@ is visible from inside one course**, and all of them change what gets built firs
 
 ---
 
+## What the sweep has found
+
+### `infra` — the sandbox stops being a runtime
+
+Everything before this category asked the same question of the sandbox: *which language*.
+`foundations` wanted a shell and nothing else. **`infra` asks a different question, and the answer
+is not a list of languages** — it is a list of environments, and some of them cannot be built at
+any price.
+
+| what a course needs | courses |
+|---|---|
+| nothing | `cloud` |
+| a **shell** | `linux-terminal`, `networks`, half of `iac` |
+| a shell and a **container daemon** | `docker` |
+| a **cluster** | `kubernetes`, `gitops` |
+| a **network topology** | `networks-addressing`, `-availability`, `-security`, `-automation` |
+| a language **and** a topology | `networks-automation` |
+| a **paid account with a third party** | the nine `aws-`, `azure-` and `gcp-` courses |
+| a **hypervisor the student drives** | `virtualization` |
+| **three desktop operating systems** | `operating-systems` |
+
+Three things follow that no single sheet says on its own.
+
+**Nine of twenty-three are blocked by money rather than by engineering.** A vendor course needs a
+real account with a real bill, which is not a sandbox problem and will not be solved by building
+one.
+
+**Two have no path at all.** `virtualization` is about building a lab on the student's own
+machine, and `operating-systems` covers two desktops nobody can hand out from a browser. For
+`virtualization` that may be the answer rather than the problem: the environment is the student's,
+and the material should be written to assume that instead of working around it.
+
+**And a topology is the cheapest environment on the list** — several containers that can see each
+other is not a cluster — and it serves four courses. If anything beyond a shell is built, that is
+the one with the best ratio.
+
+### The reach that was not obvious
+
+`linux-terminal` is **free**, in **ten tracks**, with four dependents — and two of those,
+`docker` and `networks`, reach fifteen tracks between them. Only `git` (13) and
+`web-fundamentals` (12) appear in more, and neither is free *and* a prerequisite of this much.
+It is a stronger argument for shell-first than `git` was, and a different one: conversion rather
+than retention.
+
+### Ageing is concentrated, not spread
+
+**Eleven of twenty-three teach somebody else's interface** — the nine vendor courses,
+`operating-systems` and `virtualization`. In the rest, the subject outlives its tools. That is
+the split that decides which courses can be re-rendered from a file and which have to be
+re-recorded by a person.
+
+---
+
 ## What a sheet is not
 
 **It is not the material, and it is not a promise about the material.** Every number in a
@@ -40,7 +93,7 @@ Each sheet declares `format` in its front matter:
 
 ```markdown
 ---
-format: 3
+format: 5
 course: web-fundamentals
 ---
 ```
@@ -72,13 +125,13 @@ would be a red build describing a plan working as intended.
 
 ---
 
-## Format 4
+## Format 5
 
 | block | what it holds |
 |---|---|
 | **Reach** | the tracks it appears in and where; whether it is free (`C-28`); what depends on it; whether a track reaches it through a *choice*, in which case nothing after that choice may assume it |
 | **Assumes / leaves ready** | what `requires` lets the prose take for granted, and what this course owes the ones below it. This is the field that stops 122 courses re-teaching HTTP |
-| **Shape** | sections and their kinds, exercises, video minutes, estimated hours against declared |
+| **Shape** | declared hours, lessons, **hours per lesson**, and the **section budget** those hours buy. Not an hours estimate — see below |
 | **Execution** | runtime, browser, database, exercises *blocked* without a sandbox against exercises that would merely *improve*, and the diagram count |
 | **Ageing** | whether the video depends on a third party's interface — the one kind of material that goes wrong while its script stays right |
 | **Sections** | optional, and present only once a course's sections are designed: every section numbered, with its slug, its kind and what it covers |
@@ -102,6 +155,26 @@ without those fields it could not.
   product is the only material that expires on its own;
 - **video as an estimate rather than a target**, after `C-36` — two numbers had been invented for
   it before anybody noticed they were being obeyed.
+
+**4 → 5.** The `Shape` block stopped estimating hours and started stating facts, because the
+estimate was an artefact of its own proxy.
+
+A rule projecting sections from the *lesson count* — 7.7 a lesson, measured on `web-fundamentals`
+— was applied to the 23 courses of `infra` and **fired on 15 of them**, in both directions:
+`kubernetes` +116%, `docker` +102%, the nine vendor courses between +32% and +55%, `cloud` and
+`networks` at −40%. A rule that fires on two thirds of a category is not finding exceptions.
+
+Anchoring on the hours instead — sections = hours × 60 ÷ 28, floored at the minimum shape of four
+a lesson — puts almost every course at its declared figure, and puts `web-fundamentals` at 86
+against the **85 that were actually designed**. That course is the only one whose sections were
+drawn against the material rather than projected, so its agreement is the evidence, and it says
+the declared hours were fine and the proxy was not.
+
+What survives is better than what was lost: **hours per lesson varies 3.6× across the catalogue**,
+from 1.67 in `kubernetes` to 6.00 in `cloud` and `networks`. A six-hour lesson needs about
+thirteen sections and a 1.7-hour lesson sits on the floor of four. Those are different objects,
+and a sheet that says so is more useful than one that reports a divergence its own arithmetic
+invented. The 20% rule is retired with it.
 
 **3 → 4.** The `Sections` block, so that a course whose sections are designed keeps that design
 where its material will be written rather than in a rendering of it. It arrived with the third
