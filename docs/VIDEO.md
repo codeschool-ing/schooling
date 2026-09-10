@@ -347,22 +347,28 @@ a second writer of the catalogue.
 
 ---
 
-## Still open
+## What was still open, and where the answers went
 
-**What becomes of a superseded rendition.** Version 2 exists; version 1 is still the thing older
-events refer to. Deleting it makes those events unresolvable, and keeping every version in
-Standard pays Standard prices for files nobody plays. Archive is the obvious home — a superseded
-rendition is read about as often as a master — but the 365-day minimum makes deleting one early
-cost the remainder anyway, so the choice is really *keep in Archive* against *delete and accept
-that the old rows point at nothing*.
+**This section listed three questions the register above already answers.** They are named here
+rather than deleted quietly, so that a reader who saw them once can tell a question that was
+settled from a question that was dropped.
 
-**Which transcript is shown when the audio fell back.** The interface is in Portuguese, the video
-is narrated in English because that is all there is, and the panel beside it has to show one of
-the two. Showing the English script matches what is being heard; showing the Portuguese prose
-matches what the student reads everywhere else. They are different answers to "what is a
-transcript for" and the choice should be made once, not per screen.
+| It asked | Where the answer is |
+|---|---|
+| What becomes of a superseded rendition | **Versions and removal** — it stays in Standard indefinitely, because Standard has no minimum duration; deleting one for good is a console action after review, on a screen that puts v1 and v2 side by side with both drop-off curves |
+| Which transcript is shown when the audio fell back | **The transcript** — it follows the *page's* language, with a selector, and is labelled "Transcript (translated from English)" when that language differs from the audio |
+| What the watermark carries, if it ships at all | **Protection** — the student's full email address, five positions on a 60 s cycle, opacity 0.4, nothing on hover, and the four values are console parameters |
 
-**What the watermark carries, if it ships at all.** Conditional on the proposal above being taken
-up. What it shows, how often it moves and whether it fades on hover each trade a paying student's
-comfort for friction against somebody recording the screen — which is why the recommendation is to
-leave it out until there is evidence the friction buys anything.
+**None of it was open. The rows were written and this footer was not swept.**
+
+That is the same defect this file already names one section above, facing the other way. Protection
+records that the DOM overlay was once written down as *decided* on the strength of nobody having
+objected — a state inferred rather than stated — and says the four states exist to stop exactly
+that. A question still listed as open after it has been answered infers the opposite state from the
+same kind of silence, and costs somebody an afternoon deciding it a second time.
+
+Both failures have one cause: a document is edited where the change belongs, and read from the end.
+**So the sweep is against the register, not against memory** — the register is where a decision is
+written, which makes it the only thing a footer can be checked against.
+
+The file has no open questions today. When it has one, it comes back here.

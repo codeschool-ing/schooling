@@ -22,7 +22,7 @@ The platform domain is provisional — see *The name* in [`docs/PLAN.md`](docs/P
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what each phase is made of, as capabilities to tick off |
 | [`docs/CONTENT.md`](docs/CONTENT.md) | the shape of `content/`, what CI checks, what happens when a question turns out to be bad, and how much material a course has to carry — the decisions it settled are C-26 to C-28 |
 | [`docs/CONSOLE.md`](docs/CONSOLE.md) | what the console is, whole, and the order it arrives in — the decisions it settled are K-17 to K-22 |
-| [`docs/VIDEO.md`](docs/VIDEO.md) | how video is hosted, delivered, protected and measured, what it costs, and which parts are still only proposed — the decisions it settled are P-11, P-12, C-18 to C-20, K-23 and K-24 |
+| [`docs/VIDEO.md`](docs/VIDEO.md) | how video is hosted, delivered, protected and measured, what it costs, and what was deferred or refused — the decisions it settled are P-11, P-12, C-18 to C-20, K-23 and K-24 |
 | [`docs/RELEASES.md`](docs/RELEASES.md) | how a course is published as one versioned set, what major/minor/fix mean, and what happens to a student mid-course when the structure changes — the decisions it settled are C-21 to C-25, N-11, K-25 and K-26 |
 | [`infra/README.md`](infra/README.md) | the project this runs in, and the runbook for it: the bootstrap, the database, a school, an address, monitoring |
 
