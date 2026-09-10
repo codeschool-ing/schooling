@@ -69,6 +69,8 @@ and nothing said how one gets made. The decisions were taken in a conversation a
 | **A video is a list of segments**, and a segment boundary is a natural pause *and* a change of presenter mode — the same list (`C-31`) | Generation is stochastic: the same text and the same settings produce different takes, so a bad sentence in one long file costs the whole file, and re-rolling changes the parts that were good. Segmenting fixes that, but only if the seam is inaudible — and it is inaudible exactly where the voice was going to stop anyway. Mode changes fall on those same beats, so there is one list rather than two to keep aligned. | Decided |
 | **The ceiling is the tool's and differs by mode; there is no floor** | 3 min where the avatar shows, because that is the renderer's limit; the provider's character cap where it does not, because no avatar is being generated; nothing at all for a silent stretch. A fixed number for all three was proposed here and was invented — it would have forced a cut into an explanation that had not finished, which is the seam this whole row exists to avoid. A 15-second segment is ordinary. | Decided |
 | A stretch with **no natural pause for minutes** is a script defect, not a tooling problem | The constraint improves the writing, which is the argument for accepting it rather than working around it. | Decided |
+| **A video is as long as its section needs. There is no quota per lesson and none per course** (`C-36`) | `C-27` already settles this shape for declared hours — the content leads and the number is written once, at the end — and video minutes are the same kind of number: a consequence measured, not an allowance spent. Two numbers were proposed against this and both were invented, which is why the row exists rather than being obvious. See below. | Decided |
+| The only length that binds anything is **a free course's total**, measured against the trigger in *Delivery* | It is a threshold to watch, not a limit to design against, and it applies to one course rather than to a rule: total minutes decide how many complete viewings fit before paid egress passes US$50 a month. Crossing it has a recorded answer already — segmented delivery, `Deferred` behind that exact number — so the consequence of a longer free course is a date moving, not a design being wrong. For a paid course nothing binds: egress is about US$2.30 per subscriber per year at any plausible density, and what the catalogue actually pays for scales with avatar-visible minutes (`C-30`) rather than with length. | Decided |
 | **An approved take is a stored artifact, not a build output** (`C-32`) | Listening is the one step that cannot be automated, and it must happen once per take rather than once per build. Without this, every re-render silently replaces audio somebody approved. | Decided |
 | **The scene is timed by cues anchored to words, never to seconds** (`C-33`) | Timestamps are known only after the audio exists, change with every edit and differ in every language. A name attached to a word survives all three. It is `C-09` applied to a timeline: nothing joins by position. | Decided |
 | **Whoever approves a take has to speak its language** (`C-34`) | A take nobody understood was not approved, it was presumed. English and Portuguese are approved in-house; a third language needs somebody who speaks it, which is what bounds how many languages this catalogue can carry — not storage and not credits. | Decided |
@@ -77,6 +79,24 @@ and nothing said how one gets made. The decisions were taken in a conversation a
 | The cutout comes from a **transparent rendition**, with chroma key as the fallback | The provider's API offers transparency for avatars that support it; whether this one does is unverified. The fallback works and loses edge quality on hair, which is a difference in beauty and not in automation. | Proposed |
 | Capture is **frame by frame**, not a real-time screen recording | Deterministic and full quality, and it makes a cue land on an exact frame rather than approximately in a second. Untested, and the awkward part is stepping a video element in lockstep with the page. | Proposed |
 | A check that **nothing important is drawn under the presenter** | The corner is reserved and the scene has to be laid out around it; `tools/graph-test` already measures geometric non-overlap in a real browser, which is the same measurement. Without it the defect is the silent kind: the video renders beautifully with a caption behind a shoulder. | Proposed |
+
+**The two invented numbers, kept because the habit is the defect and not either figure.**
+
+The first was **a flat two-minute ceiling on a segment**. What had actually been argued was *cut
+where the voice was going to stop anyway*; the number was fastened on afterwards and does not
+follow from it. It would have forced a cut into an explanation that had not finished, which is the
+one seam the whole segment rule exists to avoid — and it has no basis in the tools either, since
+the limit that is real is three minutes and applies only where an avatar is being rendered.
+
+The second was **a target of twenty-two minutes of video per lesson**. It came from counting two
+lessons of one course on a competitor's site — twenty-four minutes and twenty — and taking the
+average. A sample of two, promoted to a planning figure, and then written into a proposal as
+though it were a requirement.
+
+Both are the same move: **an observation turned into a rule**, which reads as rigour and is the
+opposite of it. A number that arrived this way constrains the material without anybody having
+decided that it should, and the material is what this whole phase is for. The register is where a
+number earns the right to bind something, and neither of these was ever brought to it.
 
 ### Delivery
 
