@@ -72,7 +72,7 @@ would be a red build describing a plan working as intended.
 
 ---
 
-## Format 3
+## Format 4
 
 | block | what it holds |
 |---|---|
@@ -81,7 +81,12 @@ would be a red build describing a plan working as intended.
 | **Shape** | sections and their kinds, exercises, video minutes, estimated hours against declared |
 | **Execution** | runtime, browser, database, exercises *blocked* without a sandbox against exercises that would merely *improve*, and the diagram count |
 | **Ageing** | whether the video depends on a third party's interface — the one kind of material that goes wrong while its script stays right |
+| **Sections** | optional, and present only once a course's sections are designed: every section numbered, with its slug, its kind and what it covers |
 | **Flags** | what needs a decision, numbered, with the cost attached |
+
+**A sheet with a `Sections` block states the same fact twice** — once as the list and once as the
+total in `Shape` — so the check compares them, and compares the numbering against itself. A gap
+or a repeat in 1..N is the silent kind of defect, because the list still reads as a list.
 
 ### What each format added
 
@@ -97,3 +102,15 @@ without those fields it could not.
   product is the only material that expires on its own;
 - **video as an estimate rather than a target**, after `C-36` — two numbers had been invented for
   it before anybody noticed they were being obeyed.
+
+**3 → 4.** The `Sections` block, so that a course whose sections are designed keeps that design
+where its material will be written rather than in a rendering of it. It arrived with the third
+instance of one habit: the section list had every lesson opening with a video and seven of eleven
+with the second video in the penultimate slot, and **neither had been decided** — it was one shape
+applied eleven times.
+
+Checking it lesson by lesson is what makes the entry worth reading. Most of those positions turned
+out to be right for a reason that belongs to the material: a demonstration shows what an
+explanation has established, so it falls late on its own. **The suspicion was correct about the
+opening and wrong about the demonstration**, which is why a pattern is worth checking rather than
+either trusted or condemned.

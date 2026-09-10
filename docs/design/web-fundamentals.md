@@ -1,5 +1,5 @@
 ---
-format: 3
+format: 4
 course: web-fundamentals
 ---
 
@@ -30,19 +30,15 @@ answer, and what a domain is. `html-css` does not re-explain HTTP.
 
 | | |
 |---|---|
-| sections | **85** — 54 reading, 20 video, 11 practice |
+| sections | **85** — 53 reading, 21 video, 11 practice |
 | exercises | ~380–420, floor 350 |
-| video | ~150–240 min, **estimated** (`C-36`) |
-| avatar visible | ~25% of that |
+| video | estimated, not a target (`C-36`) |
+| avatar visible | ~20–25% overall, and **100% in an opening** — see below |
 | hours estimated × declared | 40 × 40 |
 
-Four volumes — *the wire*, *the conversation*, *the name and the machine*, *the browser* —
-carrying 38, 18, 15 and 14 sections. The volumes are a reading device; the lessons and their ids
-are the contract with the portal and do not move.
-
 Exercise types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `labelling`,
-`numeric`. Not `code` or `expected-output` — there is no programming in this course, which is why
-it is unaffected by the two types that have no grader.
+`numeric`. Not `code` or `expected-output` — there is no programming here, which is why this
+course is unaffected by the two types with no grader.
 
 ## Execution
 
@@ -57,10 +53,208 @@ it is unaffected by the two types that have no grader.
 ## Ageing
 
 **No.** The screen shows diagrams and annotated stills, not a third party's product. Nothing here
-expires while its script stays right, which is the opposite of every `aws-`, `azure-` and `gcp-`
-course and worth recording as the contrast.
+expires while its script stays right — the opposite of every `aws-`, `azure-` and `gcp-` course,
+and worth recording as the contrast.
+
+## Sections
+
+Four volumes. **The volumes are a reading device; the lessons and their ids are the contract with
+the portal and do not move.** The numbering 01–85 is the path a student walks, in the order they
+walk it.
+
+### An opening is short, and it is the most expensive minute in the course
+
+Every lesson opens with a video, and every opening is **60–90 seconds**, almost entirely in
+`full` mode — the presenter talking to the person, no screen, no cues.
+
+That length is a decision rather than a default, and the reason is a cost the rest of the design
+does not have. `C-30` makes absence the lever: across the course the presenter is on screen
+perhaps a fifth of the time. **An opening is on screen for all of it.** At two and a half
+minutes each, eleven openings would be about 9% of the runtime and near 40% of the avatar
+budget — the most avatar-expensive material in the course, in the place where an extra minute
+buys least. At 60–90 seconds they cost about a fifth of that, and an opening that cannot say what
+the lesson is for in ninety seconds is not an opening.
+
+Keeping all eleven is also a decision. Uniform orientation is worth something to a beginner, and
+the pattern is one the market has validated — it is not the always-present avatar, which was
+decoration; this is a student knowing where they are.
+
+### And the demonstration goes where the concept ends
+
+**The second video sat in the penultimate slot in seven of eleven lessons, and that looked like a
+template.** It was checked lesson by lesson, and mostly it is not: a demonstration shows what an
+explanation has already established, so it falls late for a reason that belongs to the material
+rather than to a shape. Lessons 1 and 6 have it mid-lesson because there is more to say
+afterwards, which is the same rule producing a different answer.
+
+**One real change came out of the check.** Lesson 3 had no second video and its last reading is
+*reading a speed test, a ping and a traceroute honestly* — which is a demonstration described as
+prose. It is a video now, which is what moves the shape from 54/20/11 to 53/21/11.
+
+The position is not fixed and no lesson owes anybody a second video: lesson 9 has none, because
+comparing four kinds of hosting is a table and not something to watch.
+
+---
+
+## Volume I — The wire
+
+**Lesson 1 · Client, server and host: who asks and who answers** — `le-tt74bvn7`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 01 | `intro` | video | The question this course answers — **opening** |
+| 02 | `roles` | reading | Client and server are roles in a moment, not properties of a machine |
+| 03 | `host` | reading | Host, node, endpoint — the words for a machine on a network |
+| 04 | `request-response` | reading | The shape of one exchange, end to end |
+| 05 | `who-asks` | video | A whole exchange, drawn — and the server that becomes a client |
+| 06 | `many-clients` | reading | One server, many clients: concurrency as the ordinary case |
+| 07 | `peer-to-peer` | reading | Where the model does not apply, and why the web is not it |
+| 08 | `drill` | practice | Naming the role in twelve situations |
+
+**Lesson 2 · Packet, frame and socket** — `le-v2fa0w8t`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 09 | `intro` | video | Why there is a unit of transmission at all — **opening** |
+| 10 | `packets` | reading | The packet: header, payload, and what a router reads |
+| 11 | `frames` | reading | The frame: what the cable carries, and where it stops |
+| 12 | `mtu` | reading | MTU and fragmentation: the size that decides the cut |
+| 13 | `sockets` | reading | Address plus port, and what "listening" means |
+| 14 | `tcp-udp` | reading | Ordered and acknowledged, or fast and unacknowledged |
+| 15 | `handshake` | video | Opening a connection, and what UDP skips |
+| 16 | `drill` | practice | Read a header and say where it stops |
+
+**Lesson 3 · Bandwidth, latency and throughput** — `le-61gshrr6`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 17 | `intro` | video | Three numbers people use as if they were one — **opening** |
+| 18 | `bandwidth` | reading | Capacity per second, and why it is not speed |
+| 19 | `latency` | reading | Round trip, and the floor distance imposes |
+| 20 | `throughput` | reading | What you actually get, and what eats the difference |
+| 21 | `jitter-loss` | reading | The numbers behind a bad call |
+| 22 | `measuring` | video | Reading a speed test, a ping and a traceroute honestly |
+| 23 | `drill` | practice | Say which of the three explains each symptom |
+
+**Lesson 4 · IP address, MAC address and ARP** — `le-ss19f9x3`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 24 | `intro` | video | Why one address is not enough — **opening** |
+| 25 | `ipv4` | reading | Notation, ranges, and what a private address is |
+| 26 | `subnet` | reading | Mask and CIDR: deciding what is local |
+| 27 | `ipv6` | reading | Why it exists and how to read one |
+| 28 | `mac` | reading | The address burned into the card |
+| 29 | `arp` | reading | Turning an IP into a MAC on the local segment |
+| 30 | `nat` | video | One house, one public address — and what NAT breaks |
+| 31 | `drill` | practice | Given an address and a mask, say what is local |
+
+**Lesson 5 · Layered networks: from the cable to the browser** — `le-n74cj30g`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 32 | `intro` | video | Layers, and why they exist — **opening** |
+| 33 | `why-layers` | reading | What layering buys, and what it costs |
+| 34 | `osi` | reading | The seven layers of OSI, and where they are useful |
+| 35 | `tcp-ip` | reading | The four of TCP/IP, which is the one that runs |
+| 36 | `encapsulation` | reading | One message wearing four headers |
+| 37 | `tracing` | video | An HTTP request followed down the stack and back up |
+| 38 | `drill` | practice | Put each header on the layer that wrote it |
+
+## Volume II — The conversation
+
+**Lesson 6 · HTTP and HTTPS: methods, headers and status codes** — `le-mcwtvwbv`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 39 | `intro` | video | HTTP is a conversation you can read — **opening** |
+| 40 | `anatomy` | reading | The anatomy of a request and of a response |
+| 41 | `methods` | reading | GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS — safety and idempotence |
+| 42 | `status` | reading | Codes by family, and the ones that actually appear |
+| 43 | `headers` | reading | Type, length, host, user agent |
+| 44 | `content-negotiation` | reading | Negotiating language and format |
+| 45 | `tls` | reading | What HTTPS adds: encryption, integrity, identity |
+| 46 | `certificates` | video | The chain, and the limits of what the padlock promises |
+| 47 | `versions` | reading | HTTP/1.1, /2 and /3 — what changed and why |
+| 48 | `drill` | practice | Choose a method and a code for twenty situations |
+
+**Lesson 7 · Cookies, sessions and browser cache** — `le-hptsw8ct`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 49 | `intro` | video | State in a protocol that has none — **opening** |
+| 50 | `cookies` | reading | Setting, sending and scoping a cookie |
+| 51 | `attributes` | reading | Expires, Secure, HttpOnly, SameSite — the attributes that are security |
+| 52 | `sessions` | reading | Session on the server, identifier in the cookie |
+| 53 | `tokens` | reading | Tokens and local storage: the other way, and its price |
+| 54 | `caching` | reading | Cache-Control, ETag and conditional requests |
+| 55 | `cache-in-practice` | video | Cache and SameSite seen in the network panel |
+| 56 | `drill` | practice | Decide a cookie's attributes per scenario |
+
+## Volume III — The name and the machine
+
+**Lesson 8 · Domains: registration, DNS, propagation and subdomains** — `le-z9qkkeww`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 57 | `intro` | video | What happens before the first packet — **opening** |
+| 58 | `name-structure` | reading | TLD, domain, subdomain: reading a name right to left |
+| 59 | `registration` | reading | Registry, registrar, registrant — and what you actually buy |
+| 60 | `resolution` | reading | Recursive resolution: root, TLD, authoritative |
+| 61 | `records` | reading | A, AAAA, CNAME, MX, TXT, NS — what each one answers |
+| 62 | `ttl` | reading | TTL and "propagation", which is caching with a better name |
+| 63 | `subdomains` | video | Resolution and pointing, start to finish |
+| 64 | `drill` | practice | Choose the right record for each need |
+
+**Lesson 9 · Hosting: shared, VPS, cloud and CDN** — `le-5he7q8tg`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 65 | `intro` | video | Where a site actually lives — **opening** |
+| 66 | `shared` | reading | What is shared, and what that costs you |
+| 67 | `vps-dedicated` | reading | A machine's worth of control |
+| 68 | `cloud` | reading | IaaS, PaaS and serverless as three sizes of responsibility |
+| 69 | `static-hosting` | reading | Static hosting and object storage, and when they are enough |
+| 70 | `cdn` | reading | What a CDN caches, where, and what it cannot help |
+| 71 | `drill` | practice | Choose the hosting for eight different projects |
+
+## Volume IV — The browser
+
+**Lesson 10 · How the browser builds the page: DOM, CSSOM and rendering** — `le-yw79hrg1`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 72 | `intro` | video | What happens after the bytes arrive — **opening** |
+| 73 | `parsing` | reading | Parsing HTML into the DOM, incrementally |
+| 74 | `cssom` | reading | The CSSOM, and why CSS blocks rendering |
+| 75 | `render-tree` | reading | The render tree: what is in it and what is not |
+| 76 | `layout-paint` | reading | Layout, paint and composite |
+| 77 | `scripts` | reading | Where a script blocks, and what `defer` and `async` change |
+| 78 | `critical-path` | video | The critical path, on a timeline |
+| 79 | `drill` | practice | Order the steps between the byte and the pixel |
+
+**Lesson 11 · Developer tools: network, console and elements** — `le-88yzj4ty`
+
+| | slug | kind | covers |
+|---|---|---|---|
+| 80 | `intro` | video | The tools that came with the browser — **opening** |
+| 81 | `elements` | reading | Reading and editing the live DOM |
+| 82 | `network` | reading | Waterfall, timings, headers and payloads |
+| 83 | `console` | reading | Errors, logs and running a line of JS |
+| 84 | `diagnosing` | video | Two real faults, found from nothing |
+| 85 | `drill` | practice | Diagnose ten pages from the network panel |
+
+---
+
+## Exercises
+
+| where | how many |
+|---|---|
+| in each of the 53 reading sections | ≥ 4 → ~250 |
+| in each of the 11 practice sections, all `drillable` | 12–16 → ~154 |
+| total proposed | ~380–420 |
+| floor, below which it is not published | 350 |
 
 ## Flags
 
-None. **This course can be written today**, and it is the one with the full section design
-already drawn.
+None. **This course can be written today**, and it is the only one whose sections are designed.
