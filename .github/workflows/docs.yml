@@ -96,7 +96,8 @@ jobs:
           problems, seen, formats = [], {}, {}
 
           for sheet in sheets:
-              m = FRONT.match(sheet.read_text())
+              text = sheet.read_text()
+              m = FRONT.match(text)
               if not m:
                   problems.append(f'{sheet}: no front matter — a sheet with no format '
                                   f'cannot be told apart from a current one')
@@ -131,6 +132,42 @@ jobs:
                       f'the current format is {current}, and these are behind it — bring them up '
                       f'or the register is half migrated:')
                   problems += [f'    {s}  (format {formats[s]})' for s in behind]
+
+              # A SHEET WHOSE SECTIONS ARE DESIGNED STATES THEM TWICE — once as
+              # a numbered list and once as a total in `Shape` — and two
+              # statements of one fact drift. So they are compared, along with
+              # the numbering itself: a gap or a repeat in 1..N is the silent
+              # kind of defect, since the list still reads as a list.
+              SECTION = re.compile(r'^\| (\d+) \| `[^`]+` \| (\w+) \|', re.M)
+              SHAPE = re.compile(r'\| sections \| \*\*(\d+)\*\* — (\d+) reading, '
+                                 r'(\d+) video, (\d+) practice')
+
+              for sheet in sheets:
+                  rows = SECTION.findall(sheet.read_text())
+                  if not rows:
+                      continue
+                  numbers = [int(n) for n, _ in rows]
+                  if numbers != list(range(1, len(numbers) + 1)):
+                      missing = [i for i in range(1, len(numbers) + 1) if i not in numbers]
+                      repeated = sorted({n for n in numbers if numbers.count(n) > 1})
+                      problems.append(
+                          f'{sheet}: the section numbering is not 1..{len(numbers)} — '
+                          f'missing {missing or "nothing"}, repeated {repeated or "nothing"}')
+
+                  shape = SHAPE.search(sheet.read_text())
+                  if not shape:
+                      problems.append(f'{sheet}: has a section list and no `sections` line in '
+                                      f'Shape to check it against')
+                      continue
+                  said = tuple(int(g) for g in shape.groups())
+                  kinds = [k for _, k in rows]
+                  counted = (len(rows), kinds.count('reading'),
+                             kinds.count('video'), kinds.count('practice'))
+                  if said != counted:
+                      problems.append(
+                          f'{sheet}: Shape says {said[0]} sections '
+                          f'({said[1]} reading, {said[2]} video, {said[3]} practice) and the '
+                          f'list holds {counted[0]} ({counted[1]}, {counted[2]}, {counted[3]})')
 
           if problems:
               print('design sheets:')
