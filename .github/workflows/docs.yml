@@ -66,6 +66,35 @@ jobs:
           print('OK — every relative link resolves')
           PY
 
+      # THE ASYMMETRY THE LINK CHECK LEAVES OPEN. That one fails when the README
+      # points at a document that is gone. It says nothing about the opposite —
+      # a document that EXISTS and nobody lists — because there is no link to
+      # walk, and an unlisted document is invisible in exactly the way a broken
+      # link is not: it renders nothing, breaks nothing, and is simply never
+      # read.
+      #
+      # Two rows in the README once promised `docs/adr/` and `docs/DEPLOY.md`,
+      # which were never written; neither was a link, so nothing caught it. This
+      # is the same defect from the other side, and it is the orphan check
+      # `validate-content` already runs on sections nobody references.
+      - name: Every document under docs/ is listed in the README
+        run: |
+          python3 - <<'PY'
+          import pathlib, sys
+
+          readme = pathlib.Path('README.md').read_text()
+          orphans = [str(p) for p in sorted(pathlib.Path('docs').glob('*.md'))
+                     if str(p) not in readme]
+
+          if orphans:
+              print('documents nobody lists:')
+              print('\n'.join('  ' + o for o in orphans))
+              print('\nAdd a row to the table in README.md. A document that is not listed is '
+                    'not findable, and writing it was the expensive part.')
+              sys.exit(1)
+          print(f'OK — every document under docs/ is named in README.md')
+          PY
+
       # THE CURRENT FORMAT IS WHATEVER THE NEWEST SHEET DECLARES, and there is
       # deliberately no constant anywhere saying which one that is. A constant
       # would be a second place to state the same fact, and it would disagree
