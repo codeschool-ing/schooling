@@ -1,5 +1,5 @@
 ---
-format: 4
+format: 5
 course: git
 ---
 
@@ -30,10 +30,12 @@ language course re-explains Git.**
 
 | | |
 |---|---|
-| sections | ~125 — ~78 reading, ~28 video, 19 practice |
-| exercises | ~590 |
+| declared hours | 40 h |
+| lessons | 19 |
+| **hours per lesson** | **2.11** |
+| section budget | ~86, about 4.5 a lesson |
+| exercises | ~400, at the catalogue's density |
 | video | estimated, and unusually front-loaded: see flag 3 |
-| hours estimated × declared | **~58 × 40** |
 
 ## Execution
 
@@ -53,11 +55,22 @@ and code review*, and those three interfaces move — so that lesson's screen is
 
 ## Flags
 
-**1 · The 40 hours do not fit; the estimate is ~58.** Nineteen lessons at the minimum shape of a
-lesson already exceed what 40 hours buys at this catalogue's density, and lessons are frozen. What
-is left is accepting that `git` is a 58-hour course advertised as 40. `course.json` keeps saying
-40 until the release that finishes it (`C-27`), and the divergence is above the 20% that makes it
-a decision rather than a note.
+**1 · The 40 hours were reported as not fitting, and they fit. That was wrong.**
+
+This flag said the material was ~58 hours against 40 declared. It came from a rule that projected
+sections from the *lesson count* — 7.7 a lesson — and that rule turned out to be worth nothing
+outside the one course it was measured on. Anchored on the hours instead, `git` is 86 sections at
+4.5 a lesson, which is **exactly the 40 declared**.
+
+The correction is kept rather than deleted because of how it was found: applying the same rule to
+the 23 courses of `infra` made it fire on **15 of them**, in both directions, and a rule that
+fires on two thirds of a category is not finding exceptions. `web-fundamentals` — the only course
+whose sections were designed against the material rather than projected — lands at 85 where the
+hours-anchored budget says 86, which is the evidence that settled which of the two was the proxy.
+
+**4.5 sections a lesson is thin**, and that is the real observation left standing: an opening, two
+or three readings and a drill, with no room for a fourth reading. It is a consequence of nineteen
+lessons in forty hours, and it is a fact about the shape rather than a divergence to resolve.
 
 **2 · The highest-leverage course in the catalogue.** Thirteen tracks, seven dependents, paid in
 all of them. Quality here is retention rather than conversion, which is a different argument for
