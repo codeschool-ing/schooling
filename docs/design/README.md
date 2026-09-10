@@ -123,11 +123,17 @@ two accidents"; `data` supplied the third and closed it. **That is all three con
 the catalogue** — the rule is not misfiring occasionally, it is wrong every time it meets one, and
 `continues` is already in the data.
 
-**And the rule works where it was meant to.** `security-fundamentals` is free as position 1 of
-`security`, a track that continues nothing, so a visitor really can arrive there having paid for
-nothing — sixty hours needing no environment at all. Having the working case in the register beside
-the three broken ones is what shows the rule is sound and its blindness to `continues` is the whole
-of the defect.
+**And the rule works where it was meant to, twice.** `security-fundamentals` is free as position 1
+of `security` and `python` as position 1 of `data-science` — both tracks continue nothing, so a
+visitor really can arrive at either having paid for nothing.
+
+`python` is the striking one: **ninety hours, nine dependents, nine tracks — the largest hub in the
+catalogue, given away correctly.** A visitor who finishes it can enter eight other tracks, which
+makes it a far stronger conversion instrument than `web-fundamentals`, the course `C-28` was
+actually sized on. It is also bigger than that course, which is the cost side of the same fact.
+
+Having the two working cases in the register beside the three broken ones is what shows the rule is
+sound and its blindness to `continues` is the whole of the defect.
 
 The sheets do not decide it. It is a pricing decision, and it belongs beside the free-tier question
 `computing-essentials` raises from the other direction.
@@ -445,10 +451,144 @@ course with an enrolled cohort has.** That is not a design question and no sheet
 is the one place in the sweep where the material raises something for the platform to decide, and
 it wants deciding before the course is sold rather than after.
 
-### Nobody has been named to draw ~4,750 pictures
+### `programming`, `backend`, `frontend`, `mobile` — the fork is where the catalogue lies
 
-Summed across the 89 sheets written so far, the diagram estimates come to **4,752** — for nearly
-three quarters of the catalogue. The heaviest are `architecture-modeling` (~130), `visualization` (~110),
+Thirty-three courses, 2,360 hours, and the category the sandbox was originally imagined for: a
+language runtime and a file. The environment answer is the least interesting part of this batch.
+**The forks are the finding.**
+
+Four tracks reach a choice, and the options are meant to be comparable. Three of them are:
+
+| fork | options | spread |
+|---|---|---|
+| `frontend` — the framework | 90, 90, 80, 70 h | 1.29× |
+| `mobile` — which platform | 170, 170, 170 h | **exactly equal** |
+| `devops` / `devsecops` — the automation language | 90, 80, 80 h | 1.13× |
+| **`backend` — the server language** | **140, 150, 220, 290 h** | **2.07×** |
+
+**A student choosing Go in `backend` signs up for 150 hours more than one choosing JavaScript**,
+and the fork's note says *"Master one properly before jumping to another. The rest of the track is
+the same on any path."* That note is true and it is about what comes *after*. Nothing tells the
+student that the paths themselves are not comparable.
+
+JavaScript is `javascript` + `node`. Go is `go` + `go-concurrency` + `go-back` + `go-production` —
+four courses, because Go's concurrency and its production tooling were each given a course. Both
+decisions are defensible on their own; **together they make one option of a four-way choice more
+than twice the size of another, presented as an equal.** No sheet could see this and no course
+contains it.
+
+And `mobile`'s equal hours hide the opposite problem: **one of its three options cannot be
+practised at all.** `ios-apps` needs Xcode, which is macOS-only by Apple's licence, plus a paid
+developer account. Android needs a heavy emulator that nonetheless runs on Linux in a container;
+React Native is JavaScript. **The hours are equal and the buildability is not.**
+
+The useful half of that: `swift` runs on Linux — its own lesson 20 says so — so the wall falls
+*between* the two courses of the iOS path rather than across both. The first 80 hours are
+teachable and the second 90 are not.
+
+### The one place the catalogue already solved the problem it keeps asking for
+
+Three sheets in earlier batches asked for a mechanism that does not exist: content varying by the
+path a student took. **`frontend` solves it in the material instead**, and does it four times.
+
+`react-ts` closes with *"A look at Angular, Vue and Svelte, from where React stands"*. `vue`,
+`angular` and `svelte` each close the same way, from their own position. `react-ts` and `angular`
+also **open** by naming the contrast — *"Why React is a library where Angular is a framework"*.
+`node` does it too, opening with *"Why master one language before jumping to another"* and closing
+with a look at the others. `react-native` closes on Flutter and Kotlin Multiplatform.
+`mobile-fundamentals` goes further and teaches the whole fork **one position before the student
+reaches it**.
+
+That is the fork's own note — *"the fourth course you meet in your career will cost you a week"* —
+written into every option rather than left in the track file. **It costs one lesson per course and
+needs no mechanism at all**, and it is the answer `design-patterns`, `portfolio-project` and
+`ai-dev` do not have. Whether it generalises to them is a real question; that it works here is
+demonstrated four times over.
+
+The discipline extends past the fork: `apis`, `architecture`, `scale`, `servers-cache` and
+`testing-cicd` in `backend`, and all four `front-*` courses in `frontend`, are written for a
+student holding any option and **name none**. `front-performance` discharges the obligation in a
+single lesson that covers Next, Nuxt, SvelteKit and Angular SSR — one per fork option.
+
+### A third missing answer type, and this one has a mechanical answer
+
+`html-css`'s exercises produce a **picture**. "Does this layout centre" is not a string, an
+ordering or a number, and `expected-output` would not help even if it existed, because the output
+is rendered rather than printed.
+
+That is the third answer type the catalogue wants and does not have:
+
+| missing type | courses | rescue |
+|---|---|---|
+| **prose** | `people-leadership`, `architect-communication`, most of `management` | the scenario with four replies, expensive |
+| **a diagram the student draws** | `architecture-modeling`, `threat-modeling` | `labelling` on a finished diagram |
+| **a rendered page** | `html-css` | **a screenshot diffed against a reference** |
+
+The third has something the other two do not: **this repository already does it.**
+`tools/graph-test` and `tools/landing-test` drive a real browser and compare what came out. The
+mechanism exists, in this codebase, for the platform's own checks.
+
+---
+
+## What the finished sweep says
+
+122 of 122. **7,880 hours, 2,402 lessons, 19 tracks, 13 categories** — every course with a sheet,
+all at format 5.
+
+**Seventeen courses, 940 hours, need no runtime at all.** That is 12% of the catalogue's hours, and
+it is where anything gets built first. But needing no runtime is not the same as being unblocked:
+`people-leadership` and `architect-communication` are stopped by the grader, and
+`architecture-modeling`, `threat-modeling`, `computing-essentials` and `data-storytelling` by the
+illustration bill. **The courses clear on every axis are a much shorter list** — `statistics`,
+`data-fundamentals`, `security-fundamentals`, `qa-fundamentals` and `web-fundamentals` — and
+`statistics` is the strongest of them: 80 hours whose natural answers are numbers with tolerances,
+which two of the eight existing graders already check.
+
+**Forty-two courses are 70% blocked or worse**, peaking at `deep-learning` and `ios-apps` at 80%.
+The blocked hours are not spread evenly: they concentrate in `data`, in the language chains, and in
+mobile.
+
+**Four things block material, and only one of them is a sandbox:**
+
+| what blocks it | scale |
+|---|---|
+| **an environment** — a runtime, a browser, a database, a cluster, a topology, a GPU | most of the catalogue, and the thing everybody means by "the sandbox" |
+| **somebody else's bill** — twelve vendor cloud courses, `cloud-security`, both mobile stores, Excel, Power BI | ~15 courses, 750 h in the cloud family alone |
+| **an answer type that does not exist** — prose, a drawn diagram, a rendered page | `management` almost entirely, plus five named courses |
+| **material nobody has written** — ~6,600 diagrams, a vulnerable web application, attack logs, a broken-data corpus | catalogue-wide, and with no owner |
+
+The last row is the one the sweep changed most. It began as a note on `computing-essentials`'s ~85
+diagrams and ended as **~6,600 across 122 sheets**, plus a category of authored adversarial
+material — a deliberately broken web application serving seven courses, logs containing a real
+attack, tables with the right defects — that reads as an environment problem and is not one.
+
+**And four courses have no path at any price**: `operating-systems`, `virtualization`, `ios-apps`
+and the iOS lessons of `api-mobile-automation`. Three of the four are somebody's licence rather
+than an engineering limit.
+
+### What the sweep found that no single sheet could
+
+- **`C-28` is wrong in every case where a track continues another** — three for three, 170 free
+  hours to students who have already bought a track, and `continues` already in the data.
+- **`backend`'s fork is 2.07×**, presented as a choice of equals.
+- **`portfolio-project` and `first-job` are the last two courses of all sixteen career tracks** —
+  the widest reach in the catalogue, and invisible to every graph-shaped argument because neither
+  has a dependent.
+- **`sql-databases` and `python` tie at nine dependents**, and `python` is free while
+  `sql-databases` is the cheapest large environment nobody has built.
+- **Eight compressed overviews**, of which one is wrong (`ai-dev` at position 10 of `ai`), one is
+  arguable (`bi-techniques` after `machine-learning` in `data-science`) and six are correctly
+  placed because no student meets both sides.
+- **The platform is the worked example five times over** — `web-automation`, `db-reliability`,
+  `data-governance`, `secure-pipeline`, `testing-cicd`.
+- **`pentest` raises a question no sheet can answer**, about teaching exploitation at scale to
+  anonymous students.
+
+None of those is visible from inside one course, which was the argument for doing this at all.
+
+### Nobody has been named to draw ~6,600 pictures
+
+Summed across all 122 sheets, the diagram estimates come to **6,662**. The heaviest are `architecture-modeling` (~130), `visualization` (~110),
 `data-storytelling` (~90), `computing-essentials` (~85) and `statistics` (~80), and in most of
 those **the images are the assessment rather than the illustration**: "mark the three things wrong
 with this chart" is a `labelling` item, which is the one grader that fits soft material well, and
@@ -459,8 +599,8 @@ same subject, adjacent in the same two tracks, **which must not contradict each 
 the first shared illustration budget the sweep has found, and it is an argument for drawing them
 together or not at all.
 
-This began as a note on one sheet. At half the catalogue it is the largest single unowned cost the
-sweep has surfaced, and it is still nobody's.
+This began as a note on one sheet. Across the finished catalogue it is the largest single unowned
+cost the sweep surfaced, and it is still nobody's.
 
 ---
 
@@ -507,9 +647,18 @@ a check on documents has to run on a change that touches no code.
 | `course` names a course that exists in `content/` | a sheet for a course that was renamed is a sheet nobody will find |
 | two sheets never name the same course | |
 
-It does **not** ask that every course has a sheet. Coverage is reported and not enforced: the
-sweep is deliberately partial for a long time, and a check that failed on the 119 missing ones
-would be a red build describing a plan working as intended.
+It does **not** ask that every course has a sheet. Coverage is reported rather than enforced,
+because the sweep was deliberately partial for a long time and a check failing on the 119 missing
+ones would have been a red build describing a plan working as intended.
+
+**That reason has expired.** Coverage is 122 of 122, so the check now reports a number that cannot
+go down by accident and can only go down when somebody adds a course without a sheet — which is
+exactly the thing the sheets exist to prevent. **Enforcing coverage is now free**, and the argument
+against it was entirely about the transition.
+
+The sheet does not make the change, because turning a reported number into a failing one is a
+decision about what CI is for rather than a fact about the catalogue. It is recorded here as the
+one thing completing the sweep unlocked.
 
 ---
 
