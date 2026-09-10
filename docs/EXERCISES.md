@@ -164,12 +164,33 @@ The two instruments want different difficulty:
 | | what it is for | where the success rate should sit |
 |---|---|---|
 | **the drill queue** (`drillable`, spaced repetition) | retention — bringing back something already understood | **high**, deliberately. Failure here is friction, not information |
-| **the assessment at the end of a lesson** | separating who understood from who did not | **middle**, roughly half to two thirds |
+| **the closing section of a lesson** | separating who understood from who did not | **middle**, roughly half to two thirds |
+| **the course exam** | asserting that the student knows, once | the pass mark decides it, and the paper is drawn from a pool |
 
-A lesson's closing section is an assessment. **It must not be the easiest part of the lesson**, and
-it must vary its dynamics — a `quiz`, an `ordering`, a `matching`, a `cloze` ask different things
-of the same knowledge, and a section of twelve identical two-option questions asks one thing twelve
-times.
+A lesson's closing section **must not be the easiest part of the lesson**, and it must vary its
+dynamics — a `quiz`, an `ordering`, a `matching`, a `cloze` ask different things of the same
+knowledge, and a section of twelve identical two-option questions asks one thing twelve times.
+
+But it is not a test, and this is the part that changes how the questions are written.
+
+> **Nothing in a lesson carries a mark** (`A-10`). Wrong is marked, the option's own `why` says
+> what the misunderstanding was, and the student carries on. There is no score to repair and
+> nothing to sit again.
+
+Two consequences fall straight out of that.
+
+**The `why` is the deliverable, not the key.** In an exam the key is the point and the explanation
+is a courtesy. Here it is the reverse: the moment a reader is wrong and still cares why is the best
+teaching the lesson will ever do, and an option whose `why` only says *"that is not right"* has
+thrown it away. Write every `why`, including the ones on the correct option.
+
+**The question set is fixed and everybody answers all of it** (`A-12`). There is no bank, no
+rotation, no draw — and that is what makes a lesson the cheapest place in the system to find out a
+question is bad. Thirty students is a verdict here; an exam question inside a pool five times the
+draw needs a hundred and fifty attempts to reach the same confidence.
+
+So the two instruments face opposite ways. **A lesson question is written to be measured. An exam
+question is written to be survived.**
 
 ---
 

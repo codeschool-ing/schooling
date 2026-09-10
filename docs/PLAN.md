@@ -128,6 +128,9 @@ prerequisite that does not exist.
 | A-07 | Practice does not count towards the certificate | A certificate that depended on decaying strength could be revoked by forgetting. Finishing is history; remembering is present tense. |
 | A-08 | Exams per course and per track, kept | Without a human reviewer, the exam is the only moment the system asserts that the student knows. The course issues a certificate; the track is the final. |
 | A-09 | ~~A conformance test between the two graders~~ → **one grader, on the server** | Retired. It assumed the client would grade for immediate feedback, which cannot be done without giving the client the key — and a question is *presented* rather than sent. The last candidate, feedback on a drill, is marked server-side. The conformance fixtures stay, as the contract between the grader and the questions rather than between two graders. |
+| A-10 | A lesson's questions carry **no mark** | Wrong is marked, explained by the option's own `why`, and the student carries on. Two reasons. A number that can fall is a number a student optimises instead of learning — A-05's argument, one level down. And the instant somebody is wrong and still cares why is the best teaching moment the system gets; spending it on repairing a score wastes it. A wrong answer here produces two signals and neither is a grade: the card comes back sooner, and `internal/analysis` gets an observation. |
+| A-11 | The exam pool is **five times the draw** | With `exam.questions` at 20 that is 100 per course exam. Drawing is what stops a pool being memorised one attempt at a time, and attempts are uncapped, so the pool is the only thing between an uncapped retake and a memory test. **The cost is stated rather than discovered:** item analysis needs `MinimumSample` answers per question, so a pool of `P` drawn `N` at a time needs `30·P/N` attempts — **150 here, against 90 for a pool of three times the draw**. Five was chosen knowing that. It prices out more memorisation and waits longer to learn that a question is bad. |
+| A-12 | A lesson's question set is **fixed, not drawn** | Every student answers all of them and there is deliberately no bank to rotate. There is no mark to protect (A-10), so drawing would buy nothing — and it would cost the cheapest item statistics in the system: **30 students** is enough to judge a lesson question, where an exam question needs 150 attempts. The lesson is where a bad question is found; the exam is where a memorised one is priced out. |
 
 **Question types.** Seven exist and all stay: `quiz`, `multiple-choice`, `ordering`, `matching`,
 `code`, `expected-output`, `expression-answer`. Three join, each with a machine grader:
@@ -437,7 +440,17 @@ Migration of what already works: the catalogue in files with its load job, the g
 edge-crossing test at six viewport sizes, sidebar, search, course and track exams, certificates,
 the seven question types. No new content.
 
-*Done when: a student walks a whole track of `code` on the new platform.*
+**One thing here is not migration and is not done: answering the questions inside a lesson.** An
+exam can be sat and a card can be drilled, both on a screen; `lessonExercises()` returns an empty
+list. It is absent rather than unticked, which is the orphan failure again — nothing looks wrong,
+the item simply is not there, and every neighbouring box is ticked. What it needs is the
+present-then-mark pair the drill already uses (A-09) scoped to a lesson, because a lesson's
+questions cannot be served with their answers in them; the drill's own routes cannot be reused
+because they check `drillable`, which is precisely what keeps an exam question out of reach. Under
+A-10 the marking returns the chosen option's `why` and stores no score.
+
+*Done when: a student walks a whole track of `code` on the new platform — which includes answering
+the questions in a lesson, not only sitting its course's exam.*
 
 ### 2 — Learning, complete
 

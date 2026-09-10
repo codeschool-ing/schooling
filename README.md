@@ -18,7 +18,7 @@ The platform domain is provisional — see *The name* in [`docs/PLAN.md`](docs/P
 | | what it is for |
 |---|---|
 | [`CLAUDE.md`](CLAUDE.md) | the rules the code has to obey, in the imperative. Read this before writing a line. |
-| [`docs/PLAN.md`](docs/PLAN.md) | why each rule exists: 100 decisions with their reasoning, the open questions, the shape of the phases |
+| [`docs/PLAN.md`](docs/PLAN.md) | why each rule exists: 103 decisions with their reasoning, the open questions, the shape of the phases |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what each phase is made of, as capabilities to tick off |
 | [`docs/CONTENT.md`](docs/CONTENT.md) | the shape of `content/`, what CI checks, what happens when a question turns out to be bad, and how much material a course has to carry — the decisions it settled are C-26 to C-28 |
 | [`docs/EXERCISES.md`](docs/EXERCISES.md) | what makes a question worth asking rather than merely well formed: the ten ways a question leaks its answer, why difficulty belongs to the thinking and never to the options, and why discrimination is the axis that matters |
@@ -115,6 +115,12 @@ there is one, and a single school behind a `Host` check is indistinguishable fro
 that is not multi-tenant at all. Phases 1 to 3 each keep an item open for the same kind of reason
 — a sandbox that runs a student's program, the platform's own address, and a way to be paid from
 outside Brazil.
+
+**Phase 1 keeps a second one, and it was found by being asked about rather than by being tracked:**
+a student can sit an exam and drill a card, both on a screen, and cannot answer the questions
+inside a lesson. `lessonExercises()` returns an empty list. It was never an unticked box — it was
+absent from the list entirely, which is the failure mode this repository checks for everywhere
+except in its own roadmap.
 
 **That last one used to read "a payment gateway", and it had been wrong for a while.** The
 domestic gateway is chosen and integrated — Asaas, with Pix, boleto and card instalments, a
