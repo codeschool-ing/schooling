@@ -47,10 +47,36 @@ so the next person can disagree with it rather than rediscover it.
 | Decision | Why | State |
 |---|---|---|
 | One course first: `web-fundamentals` | Code-level adjustments will surface as the material grows. One course keeps each adjustment cheap. | Decided |
-| Material in English only, for now | It is the source language everywhere (`N-06`). Translations divide storage by five the day they arrive, and the material is still changing shape. | Decided |
-| One rendition in a second language exists during development, in `content/` | Not a nicety. It is the only way the fallback path is ever taken: with everything in English the "not narrated in your language" branch is never exercised and ships broken to the first student who needs it. It is the most valuable test asset in the set. | Decided |
+| Every video exists in **English and Portuguese**, from the first one (`C-35`) | **This row said "English only, for now", and the row under it made the second language a single test rendition.** Both were written before it was known who would narrate. The presenter is Brazilian and so is the audience the whole commercial apparatus is built for — prices in reais, Pix, instalments, a Brazilian entity issuing the invoice — so the Portuguese rendition is not a test asset that happens to prove the fallback. It is what the first student watches. English stays the **source text** (`N-06`); it is the render order that was wrong, and there is no order: there are two. | Decided |
+| The fallback path is exercised anyway, and that is now a consequence rather than the reason | With two complete languages and three that do not exist, the "not narrated in your language" branch is taken by every student who picks Spanish, French or Italian — which is the same coverage the single test rendition was bought for, without a rendition existing to buy it. | Decided |
 | Structure frozen | Tracks, courses, `requires` and `links` do not change while the material is written; phase 5 is prose, exercises, exams and the script. **Nothing checks the freeze**, and this row said otherwise twice over: it named `validate-catalog`, which is a tool in another repository and has never existed here, and the tool that does exist checks something else. `tools/validate-content` refuses a graph that is INCOHERENT — a prerequisite no branch of a track satisfies, a cycle, an order that cannot be walked — which is not the same as refusing one that has CHANGED. A freeze is an agreement about what nobody will touch, and no file violates an agreement. Saying a guard held it was worse than saying nothing, because a claimed guard stops anyone looking. | Decided |
 | The spoken script is authored source | Written beside the prose, versioned in git under `content/`. The generator reads it; the student reads it back as the transcript. | Decided |
+
+### Production
+
+**This section did not exist while the rest of the file did**, and its absence was not neutral:
+everything below described where a video is stored, how it reaches a student and what it costs,
+and nothing said how one gets made. The decisions were taken in a conversation and lived nowhere.
+
+| Decision | Why | State |
+|---|---|---|
+| The presenter is **one real person, rendered synthetically** — a cloned voice and an avatar of the same person (`C-29`) | Somebody has to be teaching. A synthetic presenter corresponding to nobody is a different claim to a buyer than a real person rendered by machine, and the second is the one that can be made honestly. | Decided |
+| A second persona is a **clone of a real person with an agreement**, when one is needed | Nobody teaches 122 subjects credibly, so more personas is a question of when. The alternative — a voice from the provider's shared library — is refused below. | Decided |
+| Eleven Multilingual v2, with style exaggeration at zero, and **the settings frozen and written down** | v3 is more expressive and v2 is closer to the person, and closeness is the whole point of cloning: a voice 90% like yours is worse than one that never tried, because it lands in the gap where people who know you hear something wrong. Expressiveness is bought back in the writing instead — short sentences, beats at paragraph breaks, punctuation as the only prosody control the API offers. A setting nobody wrote down is a setting that drifts across a catalogue. | Decided |
+| A voice from the shared **Voice Library** as a persona | It belongs to whoever shared it. If they unshare it, the courses narrated in it can no longer be corrected — a dependency on a stranger for an asset with no replacement. Some carry a credit multiplier as well, and the rights for a paid product are theirs to state rather than ours to assume. | Refused |
+| **The screen is the frame; the presenter is a cutout in a corner, and absent by default** (`C-30`) | Copied deliberately from a format the market has already validated. Absent by default is the part that is ours: a webcam costs nothing to leave running, and a generated avatar is billed by the minute, so presence has to earn itself. It earns it at an opening and at a change of subject — where the face returns as punctuation, telling a student the ground moved — and not while a terminal scrolls. | Decided |
+| A full-frame stretch is **never assembled from two renders** | A cut in a talking head fills the frame and reads as an edit. In a corner cutout it is a 200 px box while the eye is on the screen, and a short dissolve hides what is left. So the assembly is available in the corner and not full-frame, which caps a full-frame stretch at one render. | Decided |
+| **A video is a list of segments**, and a segment boundary is a natural pause *and* a change of presenter mode — the same list (`C-31`) | Generation is stochastic: the same text and the same settings produce different takes, so a bad sentence in one long file costs the whole file, and re-rolling changes the parts that were good. Segmenting fixes that, but only if the seam is inaudible — and it is inaudible exactly where the voice was going to stop anyway. Mode changes fall on those same beats, so there is one list rather than two to keep aligned. | Decided |
+| **The ceiling is the tool's and differs by mode; there is no floor** | 3 min where the avatar shows, because that is the renderer's limit; the provider's character cap where it does not, because no avatar is being generated; nothing at all for a silent stretch. A fixed number for all three was proposed here and was invented — it would have forced a cut into an explanation that had not finished, which is the seam this whole row exists to avoid. A 15-second segment is ordinary. | Decided |
+| A stretch with **no natural pause for minutes** is a script defect, not a tooling problem | The constraint improves the writing, which is the argument for accepting it rather than working around it. | Decided |
+| **An approved take is a stored artifact, not a build output** (`C-32`) | Listening is the one step that cannot be automated, and it must happen once per take rather than once per build. Without this, every re-render silently replaces audio somebody approved. | Decided |
+| **The scene is timed by cues anchored to words, never to seconds** (`C-33`) | Timestamps are known only after the audio exists, change with every edit and differ in every language. A name attached to a word survives all three. It is `C-09` applied to a timeline: nothing joins by position. | Decided |
+| **Whoever approves a take has to speak its language** (`C-34`) | A take nobody understood was not approved, it was presumed. English and Portuguese are approved in-house; a third language needs somebody who speaks it, which is what bounds how many languages this catalogue can carry — not storage and not credits. | Decided |
+| Recording a **third-party interface** as the screen track is the exception, declared per course | It is the only material that goes wrong without anybody editing it: a cloud console changes and the recording is wrong while the script is still right, which is the one case where a video needs a new version and the text does not. Our own visuals re-render from a file; a recording has to be re-made. | Decided |
+| The screen track is generated — a browser driven and captured for interfaces and diagrams, a scripted terminal for shells, our own rendered panel for code | Proposed rather than decided because none of it has produced a frame yet. Five scenarios are being run to find out, and the answers belong here afterwards. | Proposed |
+| The cutout comes from a **transparent rendition**, with chroma key as the fallback | The provider's API offers transparency for avatars that support it; whether this one does is unverified. The fallback works and loses edge quality on hair, which is a difference in beauty and not in automation. | Proposed |
+| Capture is **frame by frame**, not a real-time screen recording | Deterministic and full quality, and it makes a cue land on an exact frame rather than approximately in a second. Untested, and the awkward part is stepping a video element in lockstep with the page. | Proposed |
+| A check that **nothing important is drawn under the presenter** | The corner is reserved and the scene has to be laid out around it; `tools/graph-test` already measures geometric non-overlap in a real browser, which is the same measurement. Without it the defect is the silent kind: the video renders beautifully with a caption behind a shoulder. | Proposed |
 
 ### Delivery
 
@@ -128,6 +154,114 @@ strength of nobody having objected to it, which is the failure the four states e
 | The playback rate is on the event | If most completions happen at 1.5×, the videos are too slow and the script is what should change. A worry about pacing becomes a reading. | Decided |
 | The player restricts nothing: speed stays available, 0.75× to 2× | Media seconds already make the metric correct at any rate, so removing speed buys the measurement nothing. It costs the thing we least want — a platform that feels incomplete — and reaches only honest students, since `playbackRate` is one line in a console. It is accessibility in both directions: with the material in English, 0.75× matters more here than 1.5× does. | Decided |
 | Playback is never paused or discounted for focus or visibility | **The scrubber is the attack, not the tab.** Dragging is instant, deliberate and free, and the earned milestone already refuses it; leaving a video running costs real time, and nobody games a system by waiting. Listening to the audio from another tab is learning. | Decided |
+
+---
+
+## How a video is made
+
+The register says what was decided; this is the mechanism it decided on, written out because the
+awkward parts are in the joins and a table has no room for them.
+
+### A video is a list of segments, and the list is the only structure
+
+```
+segments:
+  - mode: full     text: "Type an address. Hit enter. Page shows up..."
+  - mode: corner   text: "Look at this header {{host}} — it tells the server which site..."
+  - mode: absent   text: "Which is why the answer comes back as a 301."
+  - mode: silent   seconds: 8
+  - mode: corner   text: "See what happened there?"
+```
+
+Four modes: the presenter fills the frame, sits in a corner, is gone with the narration
+continuing, or there is no narration at all. From this one list the pipeline derives everything
+else — every segment with text goes to the voice provider, only `full` and `corner` go to the
+avatar renderer, and `silent` goes to neither.
+
+**`silent` is the only mode that declares its own length**, because there is no audio to measure.
+Everywhere else the duration is a property of the take, discovered rather than written.
+
+### The takes are content-addressed, so nothing has to be kept in sync
+
+A take is identified by a hash of **what produces it** — the exact text spoken, the voice, the
+model and the settings:
+
+```
+takes/<locale>/<hash>/<attempt>.mp3
+takes/<locale>/<hash>/<attempt>.align.json
+```
+
+The segment does not store the hash. **The hash is computed from the segment**, which means there
+is no join to maintain and nothing breaks when segments are reordered or one is inserted in the
+middle — the same reason `C-09` refuses to join anything by position.
+
+What follows from that:
+
+- **Change the text and the hash changes.** It is a different take; it has to be generated and
+  listened to. Change nothing and the hash is the same, and the approved file is reused. Nothing
+  else triggers a regeneration.
+- **Two segments with identical text and settings share one file**, in any course, for free.
+- **The attempt number exists because generation is stochastic.** The hash identifies the
+  *request*; the same request produces a different take every time it runs. Without the attempt,
+  a re-roll would overwrite the take somebody approved.
+
+Approval is what makes it an artifact rather than a cache, and approval is a human act, so it is
+recorded in git beside the content:
+
+```
+<hash>  attempt 2  approved  0:47.312  2026-09-10
+```
+
+**The manifest is in git and the audio is not.** The manifest is authored state — a person
+listened and said yes — and it reviews in a diff. The audio is a large binary and lives in the
+bucket. They are checked against each other in both directions: a manifest naming a hash the
+bucket does not have fails, and an object nothing references is an orphan and is pruned. That is
+the same two-sided assertion that the privacy registry and `cmd/load`'s table list already carry,
+and it is here for the same reason — one list drifts, two lists checked against each other do not.
+
+**The alignment file sits with the audio and not with the text.** The per-character timings the
+provider returns belong to that specific generation. Without them the approved take cannot time
+its own scene.
+
+### Cues, and why they are names
+
+A cue is a name written into the script at the exact word where something happens on screen. It
+is stripped before the text reaches the voice provider, so it is never spoken:
+
+```markdown
+This is the request line. {{request-line}}
+And the Host header tells the server which site you want. {{host}}
+```
+
+The scene, beside it, says what each name does. The assembler resolves a name to a second by
+looking it up in the alignment, so **an edit re-times everything automatically**: a sentence gets
+longer, the audio moves, and every cue after it lands correctly on the next render without anybody
+touching the scene.
+
+Two consequences worth stating, because both are the sort of thing that is discovered late:
+
+**A cue naming no scene step, or a scene step no cue names, has to fail.** Two lists that describe
+each other always drift, and the failure here is the quiet kind — the video renders perfectly and
+the highlight simply never happens.
+
+**The delimiter is `{{ }}` and not `[ ]`** because the voice provider's expressive model reads
+square brackets as its own audio tags. Two syntaxes competing for one symbol in a file that gets
+mechanically stripped is a defect waiting for the day somebody writes a stage direction.
+
+### Where the human is
+
+Two places, and neither of them is production:
+
+**Authoring** — the script and the scene, both text, both in git, both reviewed in a pull request.
+This is the ordinary loop, the same one prose and exercises already use (`C-14`).
+
+**Listening** — once per take, at authoring time. This is the step that does not automate and the
+one that scales worst: it is bounded per course and unbounded per language, which is `C-34`'s real
+argument and a stronger one than any storage figure.
+
+Everything between them — audio, avatar, screen capture, assembly, upload — runs without a person
+in it. That is not a preference. At the size this catalogue is planned for, a step that needs a
+person is a step that does not happen.
 
 ---
 
@@ -260,10 +394,20 @@ With N videos to a section, each with its own id, script and duration, the boole
 ```json
 { "id": "se-pm2stfcw", "slug": "shared", "kind": "video",
   "videos": [
-    { "id": "vd-…", "version": 1, "script": "…", "duration": "08 min", "locales": ["en", "pt"] },
-    { "id": "vd-…", "version": 1, "script": "…", "duration": "03 min", "locales": ["en"] }
+    { "id": "vd-…", "version": 1, "script": "…", "seconds": 480, "locales": ["en", "pt"] },
+    { "id": "vd-…", "version": 1, "script": "…", "seconds": 180, "locales": ["en"] }
   ] }
 ```
+
+**`seconds` and not `"08 min"`.** This block said the second thing until the first was built:
+a number is what a milestone is computed against, and a formatted string is what a screen prints.
+`catalog_sections.duration` stays a string, written by the loader from the sum of its videos —
+a summary produced by the single writer inside the same transaction, not a second source.
+
+**One video is one published object, assembled from many segments.** The segments and their takes
+are production and are described under *How a video is made*; nothing above knows they exist.
+`script` holds the whole narration with the cues stripped, which is what a student reads back as
+the transcript.
 
 The id is what ties the video to its object, its script and its transcript — nothing joins by
 prose or position (`C-09`). The script is authored source: it lives in `content/`, it is
