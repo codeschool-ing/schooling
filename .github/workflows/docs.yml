@@ -65,3 +65,78 @@ jobs:
               sys.exit(1)
           print('OK — every relative link resolves')
           PY
+
+      # THE CURRENT FORMAT IS WHATEVER THE NEWEST SHEET DECLARES, and there is
+      # deliberately no constant anywhere saying which one that is. A constant
+      # would be a second place to state the same fact, and it would disagree
+      # with the sheets the first time somebody bumped one file and stopped.
+      #
+      # So raising the format on one sheet is what fails the others, by name.
+      # That is the point rather than a side effect: a sheet left at an older
+      # format looks finished and is missing fields nobody remembers.
+      #
+      # Coverage is REPORTED AND NOT ENFORCED. The sweep is partial on purpose
+      # for a long time, and a check that failed on the courses without a sheet
+      # would be a red build describing a plan working as intended.
+      - name: Every design sheet is at the current format
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, re, sys
+
+          sheets = sorted(pathlib.Path('docs/design').glob('*.md'))
+          sheets = [s for s in sheets if s.name != 'README.md']
+          if not sheets:
+              print('no design sheets'); raise SystemExit(0)
+
+          courses = {json.loads(p.read_text())['slug']
+                     for p in pathlib.Path('content').rglob('courses/*/course.json')
+                     if not p.name.endswith('.pt.json')}
+
+          FRONT = re.compile(r'\A---\n(.*?)\n---\n', re.S)
+          problems, seen, formats = [], {}, {}
+
+          for sheet in sheets:
+              m = FRONT.match(sheet.read_text())
+              if not m:
+                  problems.append(f'{sheet}: no front matter — a sheet with no format '
+                                  f'cannot be told apart from a current one')
+                  continue
+              front = dict(
+                  (k.strip(), v.strip())
+                  for k, _, v in (l.partition(':') for l in m.group(1).splitlines() if l.strip()))
+
+              for key in ('format', 'course'):
+                  if key not in front:
+                      problems.append(f'{sheet}: front matter has no `{key}`')
+              if 'format' in front:
+                  if not front['format'].isdigit():
+                      problems.append(f'{sheet}: format {front["format"]!r} is not a whole number')
+                  else:
+                      formats[sheet] = int(front['format'])
+              if 'course' in front:
+                  slug = front['course']
+                  if slug not in courses:
+                      problems.append(f'{sheet}: names the course {slug!r}, which is not in '
+                                      f'content/ — a sheet for a course that was renamed is a '
+                                      f'sheet nobody will find')
+                  if slug in seen:
+                      problems.append(f'{sheet}: names {slug!r}, and so does {seen[slug]}')
+                  seen[slug] = sheet
+
+          if formats:
+              current = max(formats.values())
+              behind = sorted(s for s, f in formats.items() if f < current)
+              if behind:
+                  problems.append(
+                      f'the current format is {current}, and these are behind it — bring them up '
+                      f'or the register is half migrated:')
+                  problems += [f'    {s}  (format {formats[s]})' for s in behind]
+
+          if problems:
+              print('design sheets:')
+              print('\n'.join('  ' + p for p in problems))
+              sys.exit(1)
+
+          print(f'OK — {len(sheets)} design sheet(s) at format {max(formats.values())}; '
+                f'{len(courses) - len(seen)} of {len(courses)} courses have none yet')
+          PY
