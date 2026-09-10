@@ -26,7 +26,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -100,7 +99,7 @@ func main() {
 	var report []string
 	lessons := 0
 	for _, f := range files {
-		body, err := os.ReadFile(f)
+		body, err := os.ReadFile(f) //nolint:gosec // a path from this tool's own glob
 		if err != nil {
 			problems = append(problems, fmt.Sprintf("%s: %v", f, err))
 			continue
@@ -342,8 +341,14 @@ func overlap(a, b map[string]bool) int {
 // longest option that contains no absolute. It is only run over single-answer
 // questions, because a strategy for choosing a SET is a different thing and
 // this one would flatter itself.
+//
+// IT IS DETERMINISTIC, and that is the point rather than a shortcut. A student
+// reading tells is not rolling dice — they apply the rule and get one answer —
+// so the score has to be reproducible or a lesson would pass on one run and
+// fail on the next. Where every option carries an absolute the rule has nothing
+// to eliminate, and it falls back to the half of it that still applies: take
+// the longest.
 func guess(exs []exercise) (hit, total int) {
-	r := rand.New(rand.NewSource(1))
 	for _, e := range exs {
 		if e.Type != "quiz" || len(e.Choices) < 2 {
 			continue
@@ -356,7 +361,9 @@ func guess(exs []exercise) (hit, total int) {
 			}
 		}
 		if len(candidates) == 0 {
-			candidates = []int{r.Intn(len(e.Choices))}
+			for i := range e.Choices {
+				candidates = append(candidates, i)
+			}
 		}
 		best := candidates[0]
 		for _, i := range candidates {
