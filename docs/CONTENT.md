@@ -10,10 +10,10 @@ person, because it is what stands in for the reviewer nobody is going to be (C-1
 This file says what a course *is*. [`design/`](design/) says what each particular one **will be** —
 one sheet per course, all 122, written before any of their material: how much of everything it
 carries, what it may assume from the courses before it, and what it needs that does not exist yet.
-Where this file sets the density a course has to reach (C-26 to C-28), a sheet is where that
-arithmetic meets one course and sometimes disagrees with it. What the finished sweep found across
-all 122 — including the four different things that block material, of which only one is a sandbox
-— is in [`PLAN.md`](PLAN.md)'s open questions.
+Where this file sets the density a course has to reach (C-26 to C-28) and insists it cover its
+subject (C-37), a sheet is where that arithmetic meets one course and sometimes disagrees with
+it. What the finished sweep found across all 122 — including the four different things that block
+material, of which only one is a sandbox — is in [`PLAN.md`](PLAN.md)'s open questions.
 
 ---
 
@@ -424,3 +424,23 @@ carries that arithmetic).
 
 So `C-26` applies in full **from the second course of a track**, and the entry course is decided
 by conversion and by the cost of serving it.
+
+**And a subject the course leaves out is a defect, not a scope.** (C-37)
+
+Everything above is about DENSITY — enough material, enough questions, nothing half written. A
+course can satisfy all of it and still have a hole in it, and `web-fundamentals` is the case that
+produced this rule: 85 sections designed, around 400 exercises, every box ticked, and **routing
+in none of them**. The word *router* appears once in the whole sheet, as "what a router reads".
+The student meets the phenomenon in lesson 3, where `traceroute` prints the hops, and is never
+told what produces them.
+
+The next course does not save it either. `networks-addressing` owns routing and is in **one** of
+the twelve tracks that start with `web-fundamentals`; `networks` is in five more and has no
+routing of its own; six tracks reach neither.
+
+Nothing this repository checks could have found it, because **nothing can miss a section that was
+never designed**. So it is caught the only way it can be: a design sheet is read against its
+SUBJECT and not only against its own budget, and what a course deliberately does not cover is
+written down where a reader can disagree with it. A boundary named is legitimate —
+`web-fundamentals` leaves CORS to `front-quality` and WebSockets to `architecture`, on purpose. A
+boundary that is only an absence is a hole.
