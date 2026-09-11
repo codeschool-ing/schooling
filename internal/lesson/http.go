@@ -118,10 +118,29 @@ func (h *Handler) answered(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	/* FLAT, THE WAY THE DRILL SENDS IT AND THE WAY EVERY RENDERER READS IT.
+
+	   This sent `"reveal": {"expected": …, "explanations": …}` — the struct, one
+	   level down — and `applyKey` in the browser reads `v.expected`. It found
+	   `undefined` on every answer this route has ever marked and returned
+	   without doing anything.
+
+	   What that costs is the whole of the feedback. A quiz keeps no `correct`
+	   on any choice, so the option the student ticked gets `choice-wrong` for
+	   being ticked and not correct, and NOTHING is marked right: a correct
+	   answer was painted red under a banner saying it was correct. An ordering
+	   question never showed the right order, a matching question revealed no
+	   pairing, and the per-choice `why` — the one thing A-10 keeps instead of a
+	   score — never appeared at all.
+
+	   `internal/practice` has flattened it since it was written, with a comment
+	   describing this exact contract. Two routes, one client, one of them
+	   shaped differently: the same join this repository keeps finding. */
 	web.JSON(w, http.StatusOK, map[string]any{
-		"correct": marked.Correct,
-		"why":     marked.Why,
-		"reveal":  marked.Reveal,
+		"correct":      marked.Correct,
+		"why":          marked.Why,
+		"expected":     marked.Reveal.Expected,
+		"explanations": marked.Reveal.Explanations,
 	})
 }
 

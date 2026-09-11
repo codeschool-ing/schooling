@@ -252,8 +252,18 @@ function showVerdict(el, ex, v) {
   }
 
   if (v.correct) {
+    /* ITS OWN KEY, BECAUSE THIS ONE IS A SENTENCE AND THE OTHER TWO ARE A UNIT.
+
+       It said `txt('correct')`, which is also what `7/12 correct` and
+       `85% correct` say. One English word does both jobs and no other language
+       has to: Portuguese translates the unit as `de acerto`, so this banner
+       announced a right answer with the words "of accuracy" and nothing else.
+
+       A key is a string in one grammatical role. Sharing one across two is a
+       translation that can only be right about one of them, and the dictionary
+       had picked the other. */
     out.className = 'ex-verdict v-right';
-    out.innerHTML = '<strong>' + txt('correct') + '</strong>';
+    out.innerHTML = '<strong>' + txt('That is right') + '</strong>';
     return;
   }
 
