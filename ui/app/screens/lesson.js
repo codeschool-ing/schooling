@@ -265,8 +265,30 @@ export default async function lesson({ id, ix, sec }) {
     '</footer>';
 
   if (section.type === 'assessment' && !section.pending) {
-    const exercises = await api.lessonExercises(id, a.key);
-    el.querySelector('.lesson-exercises').appendChild(buildAssessment(exercises, { courseId: id, lessonIx: n }));
+    /* A REFUSAL HERE IS NOT A FAILURE AND MUST NOT BE SWALLOWED EITHER.
+       `prose(body)` threw once and the dispatch chain ate it, leaving every
+       reading section on the placeholder it had been drawn with — so a throw in
+       this path would be the same silent screen, on the questions this time.
+       It is caught, said, and the rest of the section still renders. */
+    let exercises = [];
+    let refused = false;
+    try {
+      exercises = await api.lessonExercises(id, a.key);
+    } catch (e) {
+      refused = true;
+      console.error('the questions of this lesson did not load', e);
+    }
+    const into = el.querySelector('.lesson-exercises');
+    if (refused) {
+      into.innerHTML = '<p class="mono dim">' +
+        txt('[the questions did not load — reload the page to try again]') + '</p>';
+    } else if (exercises.length) {
+      into.appendChild(buildAssessment(exercises, { courseId: id, lessonIx: n },
+        /* WHICH LESSON, because the route is under the course and this is the
+           only place that knows both. And `lesson` is what tells the wizard to
+           mark against the route that keeps no score. */
+        { lesson: { courseId: id, lessonId: a.key } }));
+    }
   }
 
   playsOnClick(el, section.title);

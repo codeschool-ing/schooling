@@ -142,13 +142,23 @@ export function buildExercise(ex, ctx, ix, options = {}) {
 
     let v;
     try {
-      /* THREE PLACES AN ANSWER CAN BE MARKED, AND THEY ARE NOT THREE GRADERS.
-         A drill and an exam are both marked on the server, against a payload
-         this browser has never held; only the offline copy compares locally,
-         because it is a bundle with the answers baked in and no server to ask. */
+      /* FOUR PLACES AN ANSWER CAN BE MARKED, AND THEY ARE NOT FOUR GRADERS.
+         A drill, a lesson and an exam are all marked on the server, against a
+         payload this browser has never held; only the offline copy compares
+         locally, because it is a bundle with the answers baked in and no server
+         to ask.
+
+         THE LESSON IS THE ONE THAT KEEPS NOTHING. A drill's answer moves a
+         schedule and an exam's is a mark on a paper; this one leaves an event
+         and no row (A-10), which is why the branch below reveals the key
+         immediately and leaves the retry button showing. Getting it wrong and
+         then getting it right is not a score being repaired — there is no
+         score. */
       v = options.drill
         ? await api.drill(ex, answer, performance.now() - shownAt)
-        : await api.grade(ex, answer, options.attempt);
+        : options.lesson
+          ? await api.lessonAnswer(ex, answer, options.lesson)
+          : await api.grade(ex, answer, options.attempt);
     } catch (e) {
       /* Only reachable inside a server-drawn exam, where the answer is a
          request and not a comparison. It has to be said rather than swallowed:
@@ -192,7 +202,12 @@ export function buildExercise(ex, ctx, ix, options = {}) {
       /* NOT IN A DRILL. The schedule moved the moment the answer landed, so a
          second attempt would be a second answer to a card that has already been
          counted — and the interval it earned would be the one for whichever try
-         the student stopped on. */
+         the student stopped on.
+
+         IN A LESSON IT STAYS, and that is A-10 on a screen: nothing was
+         recorded, so trying again costs nobody anything and the second attempt
+         is the first thing the student does after reading why they were
+         wrong. */
       const again = el.querySelector('.ex-retry');
       if (again) again.hidden = Boolean(options.drill);
     }

@@ -677,23 +677,46 @@ export async function loadCourseContent(courseId) {
   return true;
 }
 
-/* THE QUESTIONS ARE HERE AND THIS ROUTE IS NOT.
+/* THE QUESTIONS IN THIS LESSON, WHICH NOW HAVE A ROUTE.
 
-   They were imported — 36 of them, across four courses — and they are reachable:
-   the drill draws one and marks it. What is missing is the route that answers
-   "the questions in THIS lesson", and it is missing for a reason worth writing
-   down rather than left as a stub nobody revisits.
+   It returned an empty list for as long as there was nothing behind it, with a
+   comment saying what the route would have to be: the present-then-mark pair
+   the drill uses, scoped to a lesson, because a lesson's questions cannot be
+   served with their answers in them and the drill's own routes check
+   `drillable` — which is precisely what keeps an exam question out of reach.
 
-   A lesson's assessment cannot be served with the answers in it, because that is
-   an assessment you pass by reading the response. So it needs the same
-   present-then-mark pair the drill uses, scoped to a lesson — and the drill's
-   own two routes cannot be reused for it, because they check `drillable`, which
-   is precisely what keeps an exam-only question out of a student's reach.
+   `internal/lesson` is that pair. The flatten is the drill's, for the reason
+   `shownAsExercise` already gives: the renderers are the portal's files and
+   speak its dialect, so one place translates and they stay a copy.
 
-   It answers an empty list until then, which is a state every screen here
-   already handles: 118 of the 122 courses have no questions either. */
-export function lessonExercises() {
-  return [];
+   THE PERMUTATION RIDES ALONG. It goes out with the question and comes back
+   with the answer, and the server keeps no copy — there is no score to protect
+   (A-10), so a client that sent a different one would only mark its own answer
+   wrongly. `perm` is carried on the exercise for `lessonAnswer` to send back. */
+export async function lessonExercises(courseId, lessonId) {
+  const list = await get(`/api/v1/courses/${enc(courseId)}/lessons/${enc(lessonId)}` +
+    `/exercises?lang=${enc(wanted())}`);
+  return (list || []).map((q) => ({
+    ...shownAsExercise(q.question || {}),
+    id: q.exercise,
+    type: q.type,
+    section: q.section,
+    difficulty: q.difficulty,
+    perm: q.perm,
+  }));
+}
+
+/* One answered question of a lesson, and what comes back with the verdict.
+
+   IT IS `grade`'s FOURTH CASE. The exam records and says nothing until the
+   paper closes; the drill marks and schedules; the offline copy compares
+   locally. This marks and keeps NOTHING — the verdict, the option's own `why`
+   and the key, so `applyKey` can show the student what was right beside what
+   they chose, and no row anywhere says it happened. */
+export async function lessonAnswer(ex, answer, ctx) {
+  return post(`/api/v1/courses/${enc(ctx.courseId)}/lessons/${enc(ctx.lessonId)}` +
+    `/exercises/${enc(ex.id)}/answered?lang=${enc(wanted())}`,
+    { answer: answerForServer(ex, answer), perm: ex.perm || null });
 }
 
 /* ---------- progress ---------- */
