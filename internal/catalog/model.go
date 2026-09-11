@@ -617,6 +617,41 @@ type ExerciseText struct {
 	// because a translation that renamed a field would be a second spelling to
 	// remember.
 	RightDistractors []string `json:"right_distractors"`
+
+	/* WHAT A `cloze` WILL ACCEPT, AND THE ONE EXCEPTION TO THE RULE ABOVE.
+
+	   The rule is right for `correct`, `value`, `tolerance` and a label's
+	   coordinates: those are an index, a number and a pair of numbers, which
+	   mean the same thing in every language, so a translation reaching them
+	   could only make two screens disagree for no reason.
+
+	   IT IS BACKWARDS FOR A CLOZE. There what is accepted is a STRING THE
+	   STUDENT TYPES, and a string the student types is the language itself.
+	   Refusing to translate it does not keep the two languages consistent — it
+	   makes the Portuguese question ungradeable: it asks in Portuguese, the
+	   student answers in Portuguese, and the key still says `node`. Marking a
+	   Portuguese answer differently from an English one is the required
+	   behaviour here, not the hazard.
+
+	   AND THERE IS NO SHARED KEY TO DIVERGE. `catalog_exercise_text` holds a
+	   COMPLETE payload per locale (`0024`), and every grader reads
+	   `coalesce(t.payload, e.payload)` — so a translated `accept` is only ever
+	   graded against the student who read that locale. The English question is
+	   untouched by it, which is the property the rule was protecting.
+
+	   IT CARRIES `accept` AND NOTHING ELSE. `ignore_case` and `ignore_accents`
+	   are pedagogical properties of the question — whether the difference
+	   between `SELECT` and `select` is the point — and they belong to the
+	   question in every language. A translation that could loosen them would be
+	   a translation that makes a question easier, which is the class of thing
+	   this struct exists to keep out. */
+	Blanks []BlankText `json:"blanks"`
+}
+
+// BlankText is one blank of a `cloze`, in one other language: the answers that
+// language accepts, and nothing else. See ExerciseText's `Blanks`.
+type BlankText struct {
+	Accept []string `json:"accept"`
 }
 
 // ChoiceText is one option of a `quiz` or a `multiple-choice`, in one other

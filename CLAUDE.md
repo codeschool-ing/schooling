@@ -798,11 +798,27 @@ that is not a fork, and a list of option names a different length from the fork'
 **A QUESTION IS TRANSLATED AND ITS ANSWER KEY IS NOT.** `exercises.<locale>.json`
 sits beside `exercises.json`, keyed by the question's id, and carries only what a
 student reads: `prompt`, `hint`, `trap`, the option texts and the reasons they are
-wrong, the items of an ordering, the two halves of a pair. `correct`, `accept`,
-`value`, `tolerance` and a label's coordinates are not nameable in it — a file that
-mentions one is refused, because a translation that could reach the key would mark
-the same answer differently in two languages and **nobody would find it**: both
-screens read perfectly well on their own.
+wrong, the items of an ordering, the two halves of a pair, and **a cloze's accepted
+answers**. `correct`, `value`, `tolerance` and a label's coordinates are not nameable
+in it — a file that mentions one is refused, because a translation that could reach
+the key would mark the same answer differently in two languages and **nobody would
+find it**: both screens read perfectly well on their own.
+
+**A cloze's `accept` is the exception, and it is one because marking a Portuguese
+answer differently from an English one is exactly what it is for.** Those four are an
+index, a number and a pair of numbers: they mean the same thing in every language, so
+a translation reaching them could only make two screens disagree for no reason. What a
+cloze accepts is a STRING THE STUDENT TYPES, and that is the language itself — keeping
+it English does not keep the two consistent, it makes the Portuguese question
+ungradeable: it asks in Portuguese and marks against `node`. The property the rule
+protects still holds, because `catalog_exercise_text` keeps a **complete payload per
+locale** and every grader reads `coalesce(t.payload, e.payload)`: a translated
+`accept` only ever meets the student who read that locale, and the English question
+does not move. It carries `accept` and nothing else — `ignore_case` and
+`ignore_accents` are what the question is asking about and belong to it in every
+language. **A cloze is translated whole or not at all**: a blank left English inside a
+translated sentence asks in one language and marks in another, so `validate-content`
+refuses it rather than serving half a question.
 
 `cmd/load` merges each translation over the English and writes a COMPLETE payload
 per locale, so the grader, the presenter and the offline bundle each take one
