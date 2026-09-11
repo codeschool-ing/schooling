@@ -138,6 +138,18 @@ func drawnThroughAVariable(t *testing.T) []string {
 	out = append(out, mapValues(t, "reports.js", read(t, "ui/app/screens/reports.js"),
 		"MEANS", "WHY")...)
 
+	/* WHAT CAN BE RATED, AND THE TWO ENDS OF EACH PAIR. `ratings.js` draws
+	   `txt(KINDS[k])` for the three subjects and `txt(ends.low)` / `txt(ends.high)`
+	   for the four scales.
+
+	   THE ENDS ARE THE ONLY THING THAT MAKES THOSE BARS READABLE, which is why
+	   they are on this list rather than treated as decoration: a distribution
+	   under the word "padding" cannot be read without knowing which direction is
+	   bad, and half of it in English on a Portuguese screen is a chart an
+	   operator will misread rather than notice. */
+	out = append(out, mapValues(t, "ratings.js", read(t, "ui/app/screens/ratings.js"),
+		"KINDS", "ENDS")...)
+
 	/* AND THE FOUR SHAPES A PERSON STUDIES ON. `devices.js` draws
 	   `txt(KINDS[d.kind])`, where the key is the word the events carry and stays
 	   English. Its `WINDOWS` and `NAMES` are picked up by the loop below, which

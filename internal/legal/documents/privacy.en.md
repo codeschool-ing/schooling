@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, checkout_intents, payment_customers, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, ratings, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, checkout_intents, payment_customers, staff, audit_log
 ---
 
 This says what we hold about you, why, and what happens to it when you ask us to
@@ -126,6 +126,19 @@ whether you have passed.
   It goes when you do. What we keep afterwards is our own record that a section
   was reported and what we decided about it, with no trace of you in it: we
   cannot run a course on material we are not allowed to remember was wrong.
+- **What you think of a course, a track, or this place**: the stars you gave it,
+  the four answers you may or may not have added — whether anything was missing,
+  whether it is padded, whether it interested you, whether it was pitched right —
+  and which release of the material you were looking at.
+
+  There is no box to write in, deliberately. This is five numbers between one and
+  five, and it cannot hold anything else because the database refuses anything
+  else. We hold one per person per course, so changing your mind replaces what
+  you said rather than adding to it.
+
+  Nobody who reads these can see whose they are. It is not that we decline to
+  show it — the count is built without ever reading who gave what, so there is
+  nothing to decline. It goes when you do.
 
 ## Payments
 

@@ -33,6 +33,7 @@ import cohorts from './screens/cohorts.js';
 import countries from './screens/countries.js';
 import devices from './screens/devices.js';
 import presence from './screens/presence.js';
+import ratings from './screens/ratings.js';
 import reports from './screens/reports.js';
 import jobs from './screens/jobs.js';
 import staff from './screens/staff.js';
@@ -78,6 +79,13 @@ export const SECTIONS = [
      signed up. */
   { id: 'devices', name: 'What they are on', group: 'Measure', screen: devices },
 
+  /* AND THE ONE MEASUREMENT WHOSE SUBJECT IS US. Every entry above it counts
+     the students; this one counts what they said about the material and about
+     this place. It is last under `Measure` because it is the only one that
+     stays empty until somebody finishes a course — and because it is the one
+     an operator opens after the numbers above have already told them something
+     is wrong and not what. */
+  { id: 'ratings', name: 'What they think of it', group: 'Measure', screen: ratings },
   /* REPORTED CONTENT IS FIRST UNDER `Operate`, above the record and the
      schools, because it is the only section in this console that somebody
      outside it is waiting on. The other two are opened when an operator has a

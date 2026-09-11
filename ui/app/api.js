@@ -976,6 +976,47 @@ export function reportExercise(exerciseId, reason, note) {
   });
 }
 
+/* ---------- what you think of it ---------- */
+
+/* THE OTHER DIRECTION, AND IT IS NOT THE ONE ABOVE. A report says the material
+   is wrong and has coordinates; this says what somebody thought of the whole
+   thing, which no section is responsible for and which nothing else in this
+   interface can ask.
+
+   HELD LIKE THE REPORTS AND FOR THE SAME REASON, with one addition: the answer
+   carries the threshold at which the four pairs are offered, which is a
+   parameter an operator can move. An interface holding its own copy of it would
+   keep asking the old question after somebody decided otherwise. */
+let ratingsHeld = null;
+
+export function ratable() {
+  if (ratingsHeld) return ratingsHeld;
+  ratingsHeld = get('/api/v1/ratings');
+  return ratingsHeld;
+}
+
+/* WHETHER THE CONTROL CAN EXIST, answered without a request, as `canReport` is:
+   a rating is written against an account, and the offline copy has no server to
+   send one to. Neither is worth a message — the control is simply not drawn. */
+export const canRate = () => !reading && Boolean(state.now().session);
+
+/* `aspects` IS OMITTED AND NOT EMPTIED when nobody answered the pairs, because
+   those are two different sentences to the server: an empty map clears what was
+   there, which is right for somebody answering the short form a second time and
+   wrong for a first rating that was never offered them. Both send `{}` — the
+   store treats them identically and the distinction lives in what the interface
+   offered — so this sends whatever it was given and invents nothing. */
+export function rate(kind, subjectId, stars, aspects) {
+  return post('/api/v1/ratings', { kind, subjectId, stars, aspects: aspects || {} })
+    .then((answer) => {
+      // Out of date by exactly one rating, and the next screen has to know.
+      // Dropped rather than patched, as the reports are: a cache updated by
+      // hand is a cache that disagrees with the server eventually.
+      ratingsHeld = null;
+      return answer;
+    });
+}
+
 /* Where the student stopped — and now with the SECTION, not just the lesson.
    Returning the top of a four-hour lesson is returning the person to scrolling;
    it is the difference between the feature being useful and being decorative.

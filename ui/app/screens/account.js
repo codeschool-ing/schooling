@@ -35,6 +35,7 @@
 import { esc } from '../text.js';
 import { goTo } from '../routes.js';
 import { now } from '../state.js';
+import { ratingBlock, wireRating } from '../rate.js';
 import * as api from '../api.js';
 
 export default async function account() {
@@ -91,6 +92,24 @@ export default async function account() {
       '<p class="dim" id="change-note" aria-live="polite"></p>' +
     '</section>' +
 
+    /* ---------- and what they think of the place ----------
+
+       HERE AND NOT AT THE END OF A COURSE, which is the one placement decision
+       in this feature that is about contamination rather than about timing.
+       "Was the course good" and "is this site good" asked in the same breath
+       become one answer, and the one people give is about whichever of the two
+       annoyed them most recently.
+
+       This screen is where somebody is already thinking about the platform
+       rather than about a subject, and it is reached on purpose rather than
+       arrived at — which also means nobody is interrupted by it. */
+    '<section class="block">' +
+      '<div class="block-top"><h2>' + txt('This place') + '</h2></div>' +
+      '<p>' + txt('The interface rather than the material — whether this site is '
+        + 'a good place to study in.') + '</p>' +
+      ratingBlock('platform') +
+    '</section>' +
+
     /* THE MENU'S HANDLER ALREADY SAID "same as the account screen's button",
        and there was no account screen and no button. Now there is one. */
     '<section class="block">' +
@@ -99,6 +118,10 @@ export default async function account() {
       '<p><button type="button" class="btn btn-ghost" id="sign-out">' +
         txt('Sign out') + '</button></p>' +
     '</section>';
+
+  // The platform carries no id: there is one of it, and the store refuses a
+  // rating that names something.
+  wireRating(el, { kind: 'platform' });
 
   el.querySelector('#sign-out').addEventListener('click', async () => {
     await api.signOut();
