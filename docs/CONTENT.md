@@ -202,6 +202,35 @@ A diff on this file is a diff per paragraph, which is the entire reason the cata
 and not a row (C-01). A paragraph inside a JSON string reviews badly, so prose never lives in
 JSON.
 
+#### Three things Markdown cannot say, which a fence says instead
+
+The interface renders paragraphs, lists and fenced code from this file. Three blocks have no
+Markdown of their own, so they are written as a **fence whose info string names the block and
+whose body is that block as JSON** — a fence to every Markdown reader, including the ones nobody
+has written yet, and one `switch` in `api.js` to read them.
+
+| fence | what it is |
+|---|---|
+| `schooling-figure` | `{"svg": "<svg…>", "caption": "…"}`, or `{"image": "…", "alt": "…", "caption": "…"}` |
+| `schooling-example` | annotated code, Go-By-Example style: the program on one side, the commentary beside the line it explains |
+| `schooling-block` | any other block the renderer knows, passed through as it is |
+
+**A concept diagram is `svg` and is written inline.** It enters the document, so `var(--phosphor)`
+and the rest of the palette resolve and the drawing is right in both themes. An SVG behind
+`<img src>` is an isolated document that inherits none of them, and a raster is born with a
+background that is wrong on half the visits — which is why `image` is for photographs and
+screenshots and not for diagrams.
+
+**The palette is this application's, and there is no check that it is.** `paper`, `paper-dim`,
+`panel`, `scan`, `wire`, `phosphor`, `phosphor-dim`, `amber` and `ink` — where **`ink` is the
+ground and `paper` is what is written on it**, which catches everybody once. A token that does not
+exist resolves to nothing and the figure renders invisible, with every check in this repository
+still green: nothing reads inside an SVG. The thirteen figures of `web-fundamentals` lesson 1 were
+drawn against a different palette and were one command away from shipping exactly like that.
+
+An inline drawing makes its own file several times larger. That is the price of the diff being per
+paragraph *and* the figure being beside the paragraph it illustrates, and it was paid deliberately.
+
 ### `exercises.json`
 
 Every exercise belongs to a lesson, joins by id, and declares the grader that judges it.
