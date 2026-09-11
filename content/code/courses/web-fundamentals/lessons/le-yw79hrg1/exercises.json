@@ -1,0 +1,1255 @@
+[
+  {
+    "id": "ex-0xeg8a2z",
+    "version": 1,
+    "section": "parsing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page contains a tag nested where the specification does not permit it. What does the browser do?",
+    "hint": "HTML parsing has one property no other format here shares.",
+    "choices": [
+      {
+        "text": "It repairs the structure and produces a valid tree, silently",
+        "correct": true,
+        "why": "Every browser does the same repair, and nothing tells you it happened."
+      },
+      {
+        "text": "It refuses the document, which is why a validator exists",
+        "correct": false,
+        "why": "Nothing is refused; a validator reports what the parser forgave."
+      },
+      {
+        "text": "It keeps the structure as written, which is why the tree can be invalid",
+        "correct": false,
+        "why": "The tree is always valid, and that is what the repairs are for."
+      },
+      {
+        "text": "It reports an error in the console and renders what it understood up to that point",
+        "correct": false,
+        "why": "No error is reported, which is the difficulty rather than the behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-491kt26v",
+    "version": 1,
+    "section": "parsing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill the blank: the tree the parser produces from the markup is called the ___ — it is not the file, and scripts change it afterwards.",
+    "hint": "Three letters, for the document object model.",
+    "blanks": [
+      {
+        "accept": [
+          "DOM"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1wrg1dna",
+    "version": 1,
+    "section": "parsing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the browser fetch other files while the parser is stopped at a script?",
+    "hint": "A second, simpler reader is involved.",
+    "choices": [
+      {
+        "text": "The parser continues in a second thread, hidden from the script",
+        "correct": false,
+        "why": "The parser is stopped; the fetching is done by something else entirely."
+      },
+      {
+        "text": "A preload scanner runs ahead through the bytes looking for addresses",
+        "correct": true,
+        "why": "The fetches overlap; only the building of the tree is stopped."
+      },
+      {
+        "text": "The server pushes the rest of the files without being asked for them",
+        "correct": false,
+        "why": "That feature existed, was removed, and is not what happens here."
+      },
+      {
+        "text": "The stylesheet already listed the other files, so they were requested earlier",
+        "correct": false,
+        "why": "A stylesheet lists its own resources and nothing else on the page."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7v790f4",
+    "version": 1,
+    "section": "parsing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script cannot find an element, and the element is plainly in the HTML file. What should you look at?",
+    "hint": "The file is what was sent.",
+    "choices": [
+      {
+        "text": "The character encoding, which changes how tag names are read",
+        "correct": false,
+        "why": "An encoding damages text and leaves tag names intact."
+      },
+      {
+        "text": "The network panel, to confirm the file arrived in full",
+        "correct": false,
+        "why": "Worth a glance, and it would not explain an element the file plainly contains."
+      },
+      {
+        "text": "The tree, in the elements panel, which is what actually exists",
+        "correct": true,
+        "why": "Between the file and the tree are the parser's repairs and every script."
+      },
+      {
+        "text": "The stylesheet, since a style can remove an element from the document",
+        "correct": false,
+        "why": "A style can remove it from the render tree and not from the document."
+      }
+    ]
+  },
+  {
+    "id": "ex-krwpscky",
+    "version": 1,
+    "section": "parsing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are true of HTML parsing? Choose all that apply.",
+    "hint": "One of them is a deliberate design decision with a real cost.",
+    "choices": [
+      {
+        "text": "It happens as the bytes arrive rather than after the file finishes",
+        "correct": true,
+        "why": "Which is why a large page can start appearing before it is downloaded."
+      },
+      {
+        "text": "It does not fail, whatever the markup looks like",
+        "correct": true,
+        "why": "The specification says what to do with every mistake."
+      },
+      {
+        "text": "Two browsers repair the same broken markup the same way",
+        "correct": true,
+        "why": "The repairs are specified, not invented per browser."
+      },
+      {
+        "text": "It stops when it meets a stylesheet",
+        "correct": false,
+        "why": "A stylesheet blocks rendering; parsing carries on."
+      },
+      {
+        "text": "It produces a structure identical to the file that was sent",
+        "correct": false,
+        "why": "The repairs alone make that untrue, before any script runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-gfpn48j3",
+    "version": 1,
+    "section": "cssom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page is blank for two seconds while the server answered in forty milliseconds. What is the likely cause?",
+    "hint": "Something has to arrive before anything is drawn.",
+    "choices": [
+      {
+        "text": "A large image at the top of the page, which the layout is waiting for",
+        "correct": false,
+        "why": "An image delays its own area and does not hold the whole first paint."
+      },
+      {
+        "text": "A slow name lookup, which happens before anything is requested",
+        "correct": false,
+        "why": "That would delay the forty milliseconds rather than follow it."
+      },
+      {
+        "text": "A script at the end of the body, which delays the first paint until it runs",
+        "correct": false,
+        "why": "A script at the end runs after parsing; it would not hold the paint that long."
+      },
+      {
+        "text": "A stylesheet that is still outstanding",
+        "correct": true,
+        "why": "The browser refuses to paint unstyled content, so the screen stays blank."
+      }
+    ]
+  },
+  {
+    "id": "ex-vz115d0s",
+    "version": 1,
+    "section": "cssom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two rules match an element and set the same property. Which wins?",
+    "hint": "Two mechanisms, applied in one order.",
+    "choices": [
+      {
+        "text": "The more specific one, and between equals, the later one",
+        "correct": true,
+        "why": "Specificity first, then order, and inheritance for what matched nothing."
+      },
+      {
+        "text": "The one in the file that finished downloading first",
+        "correct": false,
+        "why": "Arrival order does not enter into it; the order in the document does."
+      },
+      {
+        "text": "The one closer to the element in the tree, since styles inherit downwards",
+        "correct": false,
+        "why": "Inheritance applies where nothing matched, rather than as a tiebreak."
+      },
+      {
+        "text": "The one that appears first, since the browser stops at the first match",
+        "correct": false,
+        "why": "Nothing stops at the first match; every matching rule is combined."
+      }
+    ]
+  },
+  {
+    "id": "ex-fx54e79a",
+    "version": 1,
+    "section": "cssom",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill the blank: CSS is described as render-___, because the browser will not paint anything while a stylesheet is outstanding.",
+    "hint": "It is what a script does to the parser.",
+    "blanks": [
+      {
+        "accept": [
+          "blocking",
+          "bloqueante"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tqpcxhc3",
+    "version": 1,
+    "section": "cssom",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a stylesheet that imports another stylesheet worth avoiding?",
+    "hint": "Ask when the second file is discovered.",
+    "choices": [
+      {
+        "text": "The second file is not cached, because an import is fetched with a different priority",
+        "correct": false,
+        "why": "Both are cached like any other file."
+      },
+      {
+        "text": "The browser cannot discover the second until it has parsed the first",
+        "correct": true,
+        "why": "Two round trips one after the other where they could have happened at once."
+      },
+      {
+        "text": "Imported rules lose to rules in the importing file, whatever their specificity",
+        "correct": false,
+        "why": "They take part in the cascade normally."
+      },
+      {
+        "text": "An import is fetched after the first paint, so its rules arrive too late to apply",
+        "correct": false,
+        "why": "It blocks rendering as well, which is why the delay is visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-36ea10wq",
+    "version": 1,
+    "section": "cssom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which stylesheet does not delay the first paint?",
+    "hint": "One of them is for something other than the screen.",
+    "choices": [
+      {
+        "text": "One that is small, since the browser paints once a threshold is passed",
+        "correct": false,
+        "why": "There is no such threshold; the file being outstanding is what matters."
+      },
+      {
+        "text": "One on a third-party host, which is fetched at a lower priority",
+        "correct": false,
+        "why": "Priority is high and the host being slow is a common cause of delay."
+      },
+      {
+        "text": "One whose media condition does not match, such as a print stylesheet",
+        "correct": true,
+        "why": "It is fetched at low priority and blocks nothing."
+      },
+      {
+        "text": "One placed at the end of the body rather than in the head",
+        "correct": false,
+        "why": "It still blocks, and now the page may paint and then change."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe7fxh6c",
+    "version": 1,
+    "section": "render-tree",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is in the render tree that is in no document?",
+    "hint": "A rule can produce one.",
+    "choices": [
+      {
+        "text": "The head of the document, which is drawn as the browser's own chrome",
+        "correct": false,
+        "why": "The head is in the document and nothing in it is drawn."
+      },
+      {
+        "text": "An element hidden with `visibility: hidden`, which the document no longer holds",
+        "correct": false,
+        "why": "That element is in both, and drawn as nothing."
+      },
+      {
+        "text": "A comment left in the markup, which the browser keeps for scripts to read",
+        "correct": false,
+        "why": "A comment is in the document and is not drawn."
+      },
+      {
+        "text": "A box generated by a rule, before or after an element",
+        "correct": true,
+        "why": "Which is why a generated icon is on screen and invisible to a script."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fzeg3kr",
+    "version": 1,
+    "section": "render-tree",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of hiding something to what it does.",
+    "hint": "Three different behaviours, and one of them still takes clicks.",
+    "pairs": [
+      {
+        "left": "display: none",
+        "right": "Out of the render tree, taking no space"
+      },
+      {
+        "left": "visibility: hidden",
+        "right": "In the render tree, its space kept, drawing nothing"
+      },
+      {
+        "left": "opacity: 0",
+        "right": "Fully laid out and invisible, and still receiving clicks"
+      }
+    ],
+    "right_distractors": [
+      "Removed from the document entirely",
+      "Drawn behind everything else on the page"
+    ]
+  },
+  {
+    "id": "ex-m5084tec",
+    "version": 1,
+    "section": "render-tree",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill the blank: the third tree, built by joining the document to the styles and containing exactly what will be drawn, is the ___ tree.",
+    "hint": "The word is what the browser does with it.",
+    "blanks": [
+      {
+        "accept": [
+          "render",
+          "renderização",
+          "renderizacao"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rge97jg4",
+    "version": 1,
+    "section": "render-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A menu is hidden with `opacity: 0` and a keyboard user tabs into it. Why?",
+    "hint": "Ask what the render tree still holds.",
+    "choices": [
+      {
+        "text": "The element is still there, still focusable and still announced",
+        "correct": true,
+        "why": "Which is how somebody tabs into things they cannot see."
+      },
+      {
+        "text": "Focus order disregards styles, so each method of hiding has this problem",
+        "correct": false,
+        "why": "Two of the three methods take the element out of focus order."
+      },
+      {
+        "text": "The browser restores opacity when an element receives focus",
+        "correct": false,
+        "why": "Nothing restores it; the element is focused and remains invisible."
+      },
+      {
+        "text": "A screen reader reads the document rather than the render tree, so the three behave alike",
+        "correct": false,
+        "why": "It follows the render tree closely enough that the other two are excluded."
+      }
+    ]
+  },
+  {
+    "id": "ex-758rbpk8",
+    "version": 1,
+    "section": "render-tree",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Showing an element that was `display: none` is more expensive than showing one that was `visibility: hidden`. Why?",
+    "hint": "Ask what space each was occupying.",
+    "choices": [
+      {
+        "text": "The first has to be downloaded again, since the browser discarded its resources",
+        "correct": false,
+        "why": "Nothing is discarded; the element and its resources are present throughout."
+      },
+      {
+        "text": "The first takes no space, so its appearance is a layout",
+        "correct": true,
+        "why": "The second kept its space, so showing it is a repaint."
+      },
+      {
+        "text": "The second is composited separately, which is why it is cheaper to change",
+        "correct": false,
+        "why": "Neither is promoted to its own surface by hiding."
+      },
+      {
+        "text": "The first has to be re-parsed, because it was absent from the tree the parser built",
+        "correct": false,
+        "why": "It was in the tree the parser built; it is the render tree it was absent from."
+      }
+    ]
+  },
+  {
+    "id": "ex-70tng177",
+    "version": 1,
+    "section": "layout-paint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is animating `transform` smoother than animating `left`?",
+    "hint": "Ask which steps of the pipeline each one costs.",
+    "choices": [
+      {
+        "text": "Transforms are animated at a lower frame rate, which hides any stutter",
+        "correct": false,
+        "why": "They run at the same rate and simply have less to do."
+      },
+      {
+        "text": "A transform is computed by the graphics hardware and `left` is computed in the script",
+        "correct": false,
+        "why": "Both are computed by the browser; where they sit in the pipeline is the difference."
+      },
+      {
+        "text": "One costs a composite per frame and the other costs a layout and a paint",
+        "correct": true,
+        "why": "A consequence of the pipeline rather than a fashion."
+      },
+      {
+        "text": "`left` is a percentage of the parent, so it is recalculated more often",
+        "correct": false,
+        "why": "It may be a pixel value and would cost the same either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbzy0kd7",
+    "version": 1,
+    "section": "layout-paint",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill the blank: the step that computes a position and a size in pixels for every box, for this window at this width, is ___.",
+    "hint": "An older word for it is reflow.",
+    "blanks": [
+      {
+        "accept": [
+          "layout",
+          "leiaute"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ccck75hv",
+    "version": 1,
+    "section": "layout-paint",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A script changes a style and reads a width, forty times in a loop. What happens?",
+    "hint": "The browser cannot answer a width without doing something.",
+    "choices": [
+      {
+        "text": "The browser batches the whole loop and lays out once at the end",
+        "correct": false,
+        "why": "It batches writes, and a read forces the batch to be flushed."
+      },
+      {
+        "text": "The loop is moved to a second thread, so the page stays responsive",
+        "correct": false,
+        "why": "Layout happens on the thread that handles the page."
+      },
+      {
+        "text": "The reads are answered from the previous layout, which is why the values are wrong",
+        "correct": false,
+        "why": "The values are correct, which is exactly what makes it expensive."
+      },
+      {
+        "text": "Forty layouts happen where one would have done",
+        "correct": true,
+        "why": "Layout thrashing: read everything first, then write."
+      }
+    ]
+  },
+  {
+    "id": "ex-194pea5k",
+    "version": 1,
+    "section": "layout-paint",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these changes cost a layout? Choose all that apply.",
+    "hint": "Anything that changes where a box is or how big it is.",
+    "choices": [
+      {
+        "text": "Changing an element's width",
+        "correct": true,
+        "why": "Position and size are what layout computes."
+      },
+      {
+        "text": "Changing the font size of a paragraph",
+        "correct": true,
+        "why": "Every line break below it may move."
+      },
+      {
+        "text": "Adding a sentence to a paragraph",
+        "correct": true,
+        "why": "A layout of everything after it."
+      },
+      {
+        "text": "Changing an element's background colour",
+        "correct": false,
+        "why": "A paint, and no layout."
+      },
+      {
+        "text": "Changing an element's opacity",
+        "correct": false,
+        "why": "A composite alone, which is why it is cheap to animate."
+      }
+    ]
+  },
+  {
+    "id": "ex-4sd8360t",
+    "version": 1,
+    "section": "layout-paint",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many milliseconds is the budget for one frame of smooth animation?",
+    "hint": "Sixty frames in a second.",
+    "value": 16,
+    "unit": "ms",
+    "accept_units": [
+      "milliseconds"
+    ],
+    "tolerance": 0
+  },
+  {
+    "id": "ex-47c4t938",
+    "version": 1,
+    "section": "scripts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an ordinary `<script src>` in the head stop?",
+    "hint": "Something stronger than rendering.",
+    "choices": [
+      {
+        "text": "The parser, so the tree stops being built",
+        "correct": true,
+        "why": "And nothing can be drawn from a tree that is not being built."
+      },
+      {
+        "text": "Rendering alone, so the tree is complete by the time it finishes",
+        "correct": false,
+        "why": "That describes a stylesheet; a script stops the parser itself."
+      },
+      {
+        "text": "The stylesheet, which is queued behind it and fetched afterwards",
+        "correct": false,
+        "why": "The stylesheet is fetched in parallel by the scanner."
+      },
+      {
+        "text": "The network, since no other file is fetched until it has finished",
+        "correct": false,
+        "why": "Other files are fetched by the preload scanner during the block."
+      }
+    ]
+  },
+  {
+    "id": "ex-5k4wpt8g",
+    "version": 1,
+    "section": "scripts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each script arrangement to when it runs.",
+    "hint": "Two of the three are fetched alongside parsing.",
+    "pairs": [
+      {
+        "left": "no attribute",
+        "right": "Parsing stops, and it runs before parsing continues"
+      },
+      {
+        "left": "defer",
+        "right": "After the document is parsed, in the order written"
+      },
+      {
+        "left": "async",
+        "right": "The moment it arrives, in no particular order"
+      }
+    ],
+    "right_distractors": [
+      "After every image and font has finished",
+      "Before the stylesheet is applied, always"
+    ]
+  },
+  {
+    "id": "ex-k7cbpshn",
+    "version": 1,
+    "section": "scripts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a script tag in the head with `defer` better than the same script at the end of the body?",
+    "hint": "Both run at the same moment. Something else differs.",
+    "choices": [
+      {
+        "text": "It runs earlier, because it does not wait for the document to be parsed",
+        "correct": false,
+        "why": "It waits for exactly that; the two run at the same moment."
+      },
+      {
+        "text": "It is discovered and fetched earlier",
+        "correct": true,
+        "why": "Same execution time, and the download started sooner."
+      },
+      {
+        "text": "It runs on a complete tree, which a script at the end of the body does not",
+        "correct": false,
+        "why": "Both do; that is what makes the end of the body work at all."
+      },
+      {
+        "text": "It is cached separately from scripts in the body, so it survives a reload",
+        "correct": false,
+        "why": "Caching is decided by headers and has nothing to do with position."
+      }
+    ]
+  },
+  {
+    "id": "ex-grn22xjp",
+    "version": 1,
+    "section": "scripts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script waits for `load` before it does anything. What is wrong with that?",
+    "hint": "Two events, and one is much later.",
+    "choices": [
+      {
+        "text": "It runs before deferred scripts, so anything they set up is missing",
+        "correct": false,
+        "why": "It runs well after them, which is part of why it is late."
+      },
+      {
+        "text": "`load` fires before stylesheets are applied, so measurements taken then are wrong",
+        "correct": false,
+        "why": "It fires after everything, which is the opposite problem."
+      },
+      {
+        "text": "It waits for each image and font, seconds after the tree is ready",
+        "correct": true,
+        "why": "The visitor is already reading and the script has done nothing."
+      },
+      {
+        "text": "`load` stays silent on a page that failed to fetch one resource",
+        "correct": false,
+        "why": "It fires whether or not individual resources failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pykymq46",
+    "version": 1,
+    "section": "scripts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A site measures well on every network number and feels unusable on a phone. What is the likely explanation?",
+    "hint": "Ask what happens after the bytes arrive.",
+    "choices": [
+      {
+        "text": "The connection is fast and the latency is high, so each request waits",
+        "correct": false,
+        "why": "That is a network number, and the network numbers are good."
+      },
+      {
+        "text": "The stylesheet is large, so the matching pass takes a second per page",
+        "correct": false,
+        "why": "Matching is fast, and a second per page would be extraordinary."
+      },
+      {
+        "text": "The images are large, so the page is still drawing while the visitor scrolls",
+        "correct": false,
+        "why": "A real cause of a different symptom, and it would show in the network numbers."
+      },
+      {
+        "text": "A megabyte of script has to be parsed, compiled and run on that thread",
+        "correct": true,
+        "why": "The bytes arrived quickly; the phone is still busy with them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezzzpa00",
+    "version": 1,
+    "section": "fonts-and-images",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Text appears in a system font and then changes appearance a moment later. What happened?",
+    "hint": "Neither of the two choices is invisible here.",
+    "choices": [
+      {
+        "text": "The browser drew a fallback and swapped when the web font arrived",
+        "correct": true,
+        "why": "The reader could read immediately, and the text moved on the swap."
+      },
+      {
+        "text": "Two stylesheets disagreed, and the later one replaced the earlier choice",
+        "correct": false,
+        "why": "The cascade is resolved before anything is drawn."
+      },
+      {
+        "text": "The font failed to load, and the browser retried and succeeded",
+        "correct": false,
+        "why": "A retry is not what produces this; the first draw was deliberate."
+      },
+      {
+        "text": "The stylesheet arrived late, so the text was drawn unstyled",
+        "correct": false,
+        "why": "That would change far more than the letterforms."
+      }
+    ]
+  },
+  {
+    "id": "ex-mz7rh5yg",
+    "version": 1,
+    "section": "fonts-and-images",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Everything below an image moves down when it finishes loading. What prevents it?",
+    "hint": "Tell the browser something before the bytes arrive.",
+    "choices": [
+      {
+        "text": "Loading the image lazily, so it arrives once the reader approaches it",
+        "correct": false,
+        "why": "That defers the movement rather than removing it."
+      },
+      {
+        "text": "Putting `width` and `height` attributes on the image tag",
+        "correct": true,
+        "why": "The space is reserved before the bytes, even when the stylesheet resizes it."
+      },
+      {
+        "text": "Giving the image a fixed size in the stylesheet, in pixels",
+        "correct": false,
+        "why": "Close, and it works against responsive sizing while the attributes do not."
+      },
+      {
+        "text": "Putting the image at the end of the document, with no content after it",
+        "correct": false,
+        "why": "A rearrangement of the page rather than a fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5fp6482",
+    "version": 1,
+    "section": "fonts-and-images",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill the blank: content moving after it has been drawn is called a layout ___, and it is what makes a reader tap the wrong link.",
+    "hint": "The page moved between deciding and touching.",
+    "blanks": [
+      {
+        "accept": [
+          "shift",
+          "deslocamento"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ft0jb8c9",
+    "version": 1,
+    "section": "fonts-and-images",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should `loading=\"lazy\"` not be used?",
+    "hint": "One image is what the reader is waiting for.",
+    "choices": [
+      {
+        "text": "On images inside an element that is hidden, since they are fetched anyway",
+        "correct": false,
+        "why": "A hidden element's images are handled separately and not by this attribute."
+      },
+      {
+        "text": "On images inside a long list, which the reader may not scroll as far as",
+        "correct": false,
+        "why": "That is exactly where it helps most."
+      },
+      {
+        "text": "On the image at the top of the page",
+        "correct": true,
+        "why": "Deferring that one is the case where the attribute makes a page worse."
+      },
+      {
+        "text": "On images that are also the largest files, since the saving is greatest there",
+        "correct": false,
+        "why": "Backwards: a large file below the fold is the best candidate."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxtet084",
+    "version": 1,
+    "section": "fonts-and-images",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these reduce the font problem rather than trading one symptom for the other? Choose all that apply.",
+    "hint": "Three of them make the wait shorter or the swap smaller.",
+    "choices": [
+      {
+        "text": "Shipping fewer weights",
+        "correct": true,
+        "why": "Each weight is a separate file."
+      },
+      {
+        "text": "Preloading the font so it is discovered with the stylesheet",
+        "correct": true,
+        "why": "Otherwise it is discovered after the stylesheet has been parsed."
+      },
+      {
+        "text": "Choosing a fallback of similar width",
+        "correct": true,
+        "why": "The swap then moves the text less."
+      },
+      {
+        "text": "Choosing to leave the text invisible until the font arrives",
+        "correct": false,
+        "why": "A trade between two symptoms rather than a reduction."
+      },
+      {
+        "text": "Choosing to draw a fallback and swap",
+        "correct": false,
+        "why": "The other side of the same trade."
+      }
+    ]
+  },
+  {
+    "id": "ex-5y9g1a9k",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps between the bytes and the pixels in order.",
+    "hint": "Two trees before anything is joined.",
+    "items": [
+      "The markup is parsed into the document",
+      "The styles are parsed into their own structure",
+      "The two are joined into the render tree",
+      "Layout, then paint, then composite"
+    ],
+    "trap": "The tempting order puts layout before the render tree, because a page feels like it is laid out as it is read. There is nothing to lay out until the two trees have been joined, which is why an outstanding stylesheet is a blank screen."
+  },
+  {
+    "id": "ex-gx6qmmjc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a fair summary of why the screen stays blank while a stylesheet loads?",
+    "hint": "The browser is choosing between two bad options.",
+    "choices": [
+      {
+        "text": "The layout waits for the window size, which the stylesheet sets",
+        "correct": false,
+        "why": "The window size is known immediately and is not set by a stylesheet."
+      },
+      {
+        "text": "The browser is downloading the stylesheet on the same connection as the page",
+        "correct": false,
+        "why": "Connections are shared or multiplexed, and neither explains the blankness."
+      },
+      {
+        "text": "The parser has stopped, leaving no tree to draw from",
+        "correct": false,
+        "why": "Parsing continues through a stylesheet; it is the drawing that waits."
+      },
+      {
+        "text": "Painting now would mean painting the wrong thing and painting again",
+        "correct": true,
+        "why": "A flash of unstyled content on every load, and the second version unrecognisable."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9m6fyna",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page stutters while the network panel is completely idle. Where would you look?",
+    "hint": "Nothing is downloading, and something is busy.",
+    "choices": [
+      {
+        "text": "At layout and paint, and at whether a script is forcing them repeatedly",
+        "correct": true,
+        "why": "Layout thrashing is one of the few things that stutters with an idle network."
+      },
+      {
+        "text": "At the certificate, which is revalidated periodically during a visit",
+        "correct": false,
+        "why": "Nothing revalidates a certificate mid-visit in a way that costs frames."
+      },
+      {
+        "text": "At the cache, since a stale copy is fetched again in the background",
+        "correct": false,
+        "why": "That would appear in the network panel, which is idle."
+      },
+      {
+        "text": "At the server's response time, which the panel does not show while idle",
+        "correct": false,
+        "why": "Nothing is being requested, so no server is involved at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-5akghzpr",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill the blank: the two properties to animate, because a change to either costs a composite and nothing above it, are `transform` and `___`.",
+    "hint": "Zero to one.",
+    "blanks": [
+      {
+        "accept": [
+          "opacity",
+          "opacidade"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zwqqdykb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which attribute belongs on almost every script tag on a page?",
+    "hint": "It is discovered early and runs at the right moment.",
+    "choices": [
+      {
+        "text": "`async`, so it holds up no other part of the load",
+        "correct": false,
+        "why": "It interrupts parsing whenever it lands and loses ordering."
+      },
+      {
+        "text": "`defer`",
+        "correct": true,
+        "why": "Fetched alongside parsing, run after it, in order."
+      },
+      {
+        "text": "Neither one, if the tag is at the end of the body",
+        "correct": false,
+        "why": "Then it is discovered late, which is what `defer` in the head avoids."
+      },
+      {
+        "text": "`type=\"module\"`, which is the way to control when a script runs",
+        "correct": false,
+        "why": "It does behave like `defer`, and it is not the only way."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qx8axqd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these delay the first paint? Choose all that apply.",
+    "hint": "Two of the five are drawn after the first paint rather than before it.",
+    "choices": [
+      {
+        "text": "A stylesheet that has not arrived",
+        "correct": true,
+        "why": "The browser refuses to paint unstyled content."
+      },
+      {
+        "text": "An ordinary script tag near the top of the head",
+        "correct": true,
+        "why": "The parser stops, so there is no tree to draw."
+      },
+      {
+        "text": "A stylesheet that imports another stylesheet",
+        "correct": true,
+        "why": "A second round trip in front of the first pixel."
+      },
+      {
+        "text": "An image in the middle of the page",
+        "correct": false,
+        "why": "It delays its own area and not the first paint."
+      },
+      {
+        "text": "A script with `defer`",
+        "correct": false,
+        "why": "Fetched alongside and run afterwards; the paint is unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-npamyyxv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A generated icon appears on screen and a script cannot find the element. Why?",
+    "hint": "Two trees, and only one of them has it.",
+    "choices": [
+      {
+        "text": "The icon is part of the font, which is why it has no element",
+        "correct": false,
+        "why": "A font glyph appears inside an element that does exist."
+      },
+      {
+        "text": "The script ran before the icon was inserted into the document",
+        "correct": false,
+        "why": "No insertion happens; nothing was ever put in the document."
+      },
+      {
+        "text": "It is a box in the render tree with no element behind it",
+        "correct": true,
+        "why": "Generated content is drawn and is not part of the document."
+      },
+      {
+        "text": "The element is hidden, so it was removed from the document by the style",
+        "correct": false,
+        "why": "A style never removes anything from the document."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jqb66hn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody says the site is slow because the server is slow. The response time is 40 ms and the page is blank for two seconds. What is the honest reply?",
+    "hint": "Lesson three separated the numbers, and this lesson spends them.",
+    "choices": [
+      {
+        "text": "Response time is measured after the connection, so it hides most of the delay",
+        "correct": false,
+        "why": "The connection cost would still not account for two seconds of blankness."
+      },
+      {
+        "text": "Forty milliseconds is slow, and a page of this kind should answer in ten",
+        "correct": false,
+        "why": "Forty is fine, and there are two seconds unaccounted for either way."
+      },
+      {
+        "text": "The measurement is an average, and the visitors who waited are in the tail",
+        "correct": false,
+        "why": "Possible in general, and it does not explain a blank screen on every load."
+      },
+      {
+        "text": "The server number is fine and the blank screen is the browser waiting for something",
+        "correct": true,
+        "why": "A stylesheet, a blocking script, or both, and neither is the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-exep40h1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does putting `width` and `height` on an image cost you, given that the stylesheet resizes it anyway?",
+    "hint": "Modern browsers use them for something other than the final size.",
+    "choices": [
+      {
+        "text": "No cost at all, and it reserves the right space before the bytes arrive",
+        "correct": true,
+        "why": "The old habit, the current advice, and a different reason than it used to have."
+      },
+      {
+        "text": "The image is drawn at those pixel dimensions, so the stylesheet has to override them",
+        "correct": false,
+        "why": "The stylesheet's size wins; the attributes are used for the ratio."
+      },
+      {
+        "text": "An extra layout, because the declared size and the real size disagree",
+        "correct": false,
+        "why": "There is no second layout; the reserved space is what the image fills."
+      },
+      {
+        "text": "A slower download, since the browser requests a resized version from the server",
+        "correct": false,
+        "why": "Nothing about attributes changes what is requested."
+      }
+    ]
+  },
+  {
+    "id": "ex-kd80tj02",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a third-party script a risk beyond its size?",
+    "hint": "It runs with the same authority as your own code.",
+    "choices": [
+      {
+        "text": "It is not cached, so the cost is paid at each visit",
+        "correct": false,
+        "why": "It is cached like anything else, by its own host's headers."
+      },
+      {
+        "text": "It reads the page and the form fields, and sends what it likes",
+        "correct": true,
+        "why": "When one is compromised, each site carrying it is compromised at once."
+      },
+      {
+        "text": "It is loaded from another host, so the encryption does not cover it",
+        "correct": false,
+        "why": "It has its own encrypted connection, which is not the issue."
+      },
+      {
+        "text": "It runs before your own scripts, whatever order the tags are in",
+        "correct": false,
+        "why": "Order follows the tags and the attributes on them."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hbpfkag",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which measurement is made worse by a hero image sent in an old format at four times the needed size?",
+    "hint": "It is about the largest thing in the visible area.",
+    "choices": [
+      {
+        "text": "The time to the first byte, which grows with the size of the largest file",
+        "correct": false,
+        "why": "That is measured on the document's own response."
+      },
+      {
+        "text": "The score for movement after drawing, since a large image shifts more",
+        "correct": false,
+        "why": "That measures movement, which declared dimensions prevent regardless of size."
+      },
+      {
+        "text": "The time at which the largest visible thing appears",
+        "correct": true,
+        "why": "The most common reason that number is bad."
+      },
+      {
+        "text": "The moment the document has been parsed, which waits for images above the fold",
+        "correct": false,
+        "why": "Parsing does not wait for images at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9fb9p0s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the argument for knowing this lesson, in one sentence?",
+    "hint": "It changes what you would measure.",
+    "choices": [
+      {
+        "text": "It explains how to write a browser, which is what makes the rest of the course concrete",
+        "correct": false,
+        "why": "Nothing here is about writing one."
+      },
+      {
+        "text": "It lists the properties that are fastest, so a page can be built from those alone",
+        "correct": false,
+        "why": "No page is built from three properties, and speed is not a property of properties."
+      },
+      {
+        "text": "It replaces measurement with a set of rules that hold whatever the page does",
+        "correct": false,
+        "why": "The lesson ends by pointing at the tool that measures."
+      },
+      {
+        "text": "It separates the problems a network can solve from the problems only the page can",
+        "correct": true,
+        "why": "A font drawn twice and an image without dimensions are fixed by an attribute."
+      }
+    ]
+  }
+]
