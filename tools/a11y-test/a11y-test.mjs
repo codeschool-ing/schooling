@@ -665,6 +665,34 @@ async function lessonMatchingHasItsOptions(theme) {
     const lefts = page.locator('.ex .tile-left');
     const rights = page.locator('.ex .tile-right');
     const n = await lefts.count();
+
+    /* BEFORE ANYTHING IS CLICKED THE TWO COLUMNS LOOK THE SAME, and they have
+       to, because they are the same thing: options nobody has touched.
+
+       `tile-right` used to mean both "the right-hand column" and "this pair is
+       correct", one class carrying both, so every option in this column was
+       drawn in the styling for a pair already closed — tinted, faded, and
+       `cursor:default`, which is the declaration that says a thing is not for
+       clicking. Nothing in the DOM was wrong and no check looked at paint, so
+       it survived every suite here while being the first thing a person
+       noticed.
+
+       Painted state is compared and not asserted against fixed values: the
+       claim is that the two columns agree, not that either is a particular
+       colour, and a theme is free to change both. */
+    const [asLeft, asRight] = await page.evaluate(() => {
+      const look = (el) => {
+        const s = getComputedStyle(el);
+        return [s.backgroundColor, s.opacity, s.cursor, s.borderColor].join(' | ');
+      };
+      return ['.ex .tile-left', '.ex .tile-right'].map((q) => look(document.querySelector(q)));
+    });
+    if (asLeft !== asRight) {
+      throw new Error('an untouched option in the right-hand column is painted differently from '
+        + `one in the left: left is [${asLeft}] and right is [${asRight}]. Nothing has been `
+        + 'clicked, so a student reads the difference as "these are already chosen" — and a '
+        + '`cursor` that is not `pointer` says they are not even clickable');
+    }
     for (let i = 0; i < n; i += 1) {
       await lefts.nth(i).click();
       await rights.nth(i).click();

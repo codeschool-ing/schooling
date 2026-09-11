@@ -107,6 +107,18 @@ export default {
        and reading it off the DOM order would file every choice against its
        neighbour. */
     const at = new Map(ex.pairs.map((p, i) => [p.left, i]));
+    /* `tile-left` AND `tile-right` SAY WHICH COLUMN, AND NOTHING ELSE.
+
+       A correct pair is `tile-correct`. It used to be `tile-right` as well —
+       `right` meaning correct and `right` meaning the right-hand side, one
+       class name for two ideas — so every tile in this column was drawn in the
+       styling that means "you got this one", from the moment it rendered:
+       tinted blue, faded to .65, and `cursor:default`. Nothing had been
+       clicked. It read as a column of options already chosen, and the one that
+       is not clickable is the one that says `cursor:default`.
+
+       The two stylesheets had each already picked a different meaning for it,
+       a comment apiece, neither of them the other's. */
     const tile = (text, side) =>
       '<button type="button" class="tile tile-' + side + '" data-value="' + esc(text) + '"' +
         (side === 'left' ? ' data-pair="' + at.get(text) + '"' : '') + '>' +
@@ -167,7 +179,7 @@ export default {
       root.querySelectorAll('.tile-left').forEach((f) => {
         const want = v.expected[Number(f.dataset.pair)];
         const got = f.dataset.with || '';
-        f.classList.add(got === want ? 'tile-right' : 'tile-wrong');
+        f.classList.add(got === want ? 'tile-correct' : 'tile-wrong');
         const mark = f.querySelector('.tile-chosen');
         if (mark && got !== want) {
           mark.textContent = '→ ' + want;
@@ -233,7 +245,7 @@ function setupPractice(root, exercise, done) {
     if (key[leftValue] === rightValue) {
       [state.left, f].forEach((el) => {
         el.classList.remove('sel');
-        el.classList.add('tile-right');
+        el.classList.add('tile-correct');
         el.disabled = true;
       });
       state.left = null;
