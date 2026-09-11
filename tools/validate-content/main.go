@@ -158,30 +158,56 @@ func checkFigureFonts(school string, s *catalog.School, families map[string]bool
 	seen := map[string]bool{}
 
 	for _, course := range s.Courses {
+		complain := func(where, first string) {
+			if first == "" || families[first] || seen[where] {
+				return
+			}
+			seen[where] = true
+			problems = append(problems, fmt.Errorf(
+				"%s is not a font this interface serves, so every label asking for it "+
+					"falls back to whatever generic the browser picks — a different "+
+					"typeface from the page around it, and a different one per machine",
+				where))
+		}
+
 		for _, lesson := range course.Loaded {
 			for _, t := range lesson.Text {
 				for _, m := range namesFamily.FindAllStringSubmatch(t.Body, -1) {
-					first := strings.ToLower(strings.Trim(
-						strings.TrimSpace(strings.Split(m[1], ",")[0]), `'"`))
-					if first == "" || families[first] {
-						continue
-					}
-					where := fmt.Sprintf("%s: %s/%s/%s (%s): %q",
-						school, course.ID, lesson.ID, t.SectionID, t.Locale, first)
-					if seen[where] {
-						continue
-					}
-					seen[where] = true
-					problems = append(problems, fmt.Errorf(
-						"%s is not a font this interface serves, so every label asking for it "+
-							"falls back to whatever generic the browser picks — a different "+
-							"typeface from the page around it, and a different one per machine",
-						where))
+					complain(fmt.Sprintf("%s: %s/%s/%s (%s): %q",
+						school, course.ID, lesson.ID, t.SectionID, t.Locale, firstOf(m[1])),
+						firstOf(m[1]))
 				}
+			}
+		}
+
+		/* AND THE PICTURES, WHICH WERE THE ONE PLACE LEFT.
+
+		   This walked prose and nothing else, because when it was written every
+		   drawing in the catalogue lived inside a `.md`. A `labelling` question
+		   names a file in `images/` instead, and that file is an SVG full of
+		   `<text>` exactly like the others — read by the loader, served by a
+		   route, carried into the offline bundle, and looked at by nothing here.
+
+		   The first one arrives with lesson two of `web-fundamentals`, so this
+		   arrives with it. A picture is not a different kind of drawing because
+		   of where it is stored. */
+		for _, img := range course.Images {
+			if img.MediaType != "image/svg+xml" {
+				continue
+			}
+			for _, m := range namesFamily.FindAllStringSubmatch(string(img.Bytes), -1) {
+				complain(fmt.Sprintf("%s: %s/images/%s: %q",
+					school, course.Slug, img.Name, firstOf(m[1])), firstOf(m[1]))
 			}
 		}
 	}
 	return problems
+}
+
+// firstOf is the first choice of a font stack, which is the one that has to be
+// a font the application ships. The generic at the end is what a stack is for.
+func firstOf(stack string) string {
+	return strings.ToLower(strings.Trim(strings.TrimSpace(strings.Split(stack, ",")[0]), `'"`))
 }
 
 func check(root string) (problems []error, schools int, err error) {

@@ -53,9 +53,26 @@ function figures(dir) {
   return out;
 }
 
-const found = figures(ROOT);
+/* AND THE PICTURES A `labelling` QUESTION NAMES, which are the same kind of
+   drawing kept in a different place. `figures` walks `.md` files because when
+   it was written every drawing in the catalogue lived inside one; an SVG in a
+   course's `images/` is loaded, served, bundled and measured by nothing. The
+   first one arrives with lesson two of `web-fundamentals`, so this does too. */
+function pictures(dir) {
+  const out = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true, recursive: true })) {
+    if (!entry.isFile() || !entry.name.endsWith('.svg')) continue;
+    const parent = entry.parentPath ?? entry.path;
+    if (!parent.split(/[\\/]/).includes('images')) continue;
+    const path = join(parent, entry.name);
+    out.push({ path, n: 0, svg: readFileSync(path, 'utf8') });
+  }
+  return out;
+}
+
+const found = [...figures(ROOT), ...pictures(ROOT)];
 if (!found.length) {
-  console.log(`no figures under ${ROOT}, nothing to measure`);
+  console.log(`no figures or pictures under ${ROOT}, nothing to measure`);
   process.exit(0);
 }
 
