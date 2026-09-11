@@ -57,7 +57,28 @@ export function counted(n, one, many) {
 export function formatted(s) {
   return esc(s)
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    /* LAZY, AND ALLOWING ASTERISKS INSIDE, so that `**the two *jobs*.**` — bold
+       with an italic within it, which lesson one writes — is one bold span
+       rather than no match at all. `[^*]+` refused it, and then the italic rule
+       below matched across the opening `**` and produced a stray asterisk on
+       screen. Lazy is what keeps `**a** and **b**` two spans and not one. */
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    /* `**bold**` FIRST AND `*italic*` SECOND, which is what lets this pattern
+       be as simple as it is: by the time it runs, every doubled asterisk is
+       already a tag, so a lone `*` is unambiguous. The other order turns
+       `**a**` into `<em></em>a<em></em>`.
+
+       Italic was missing altogether, and 34 lines of lesson one were showing
+       their asterisks to students.
+
+       WHERE THE SUBSET STOPS, said out loud rather than discovered: `**a *b***`
+       — a bold span ending the instant an italic inside it does — comes out
+       mis-nested, because these are two passes and not a parser. `***a***` is
+       the same case. No content file writes either (checked: zero occurrences),
+       the shape the content DOES write is `**a *b*.**`, which is correct here,
+       and the day one is wanted is the day this becomes a parser rather than
+       the day a third regular expression is added. */
+    .replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
 }
 
 /* ---------- copying the code ----------
@@ -93,14 +114,25 @@ export const copyButton = () =>
 
 export const COPY_ICONS = { copy: ICON_COPY, copied: ICON_COPIED };
 
-/* The prose of a lesson section. Six block forms, and nothing beyond them:
+/* The prose of a lesson section. Ten block forms, and nothing beyond them:
 
-     'text'                        → paragraph, with `code` and **bold**
-     ['a', 'b']                    → list
+     'text'                        → paragraph, with `code`, **bold**, *italic*
+     ['a', 'b']                    → bullet list
+     { ordered: ['a', 'b'] }       → numbered list
+     { heading: 'Roles', level }   → a heading inside the section
+     { table: { head, rows } }     → a comparison table
+     { quote: 'said' }             → a quotation
      { code: 'css', text: … }     → code block
      { image: url, caption, alt }  → figure
      { svg: '<svg…>', caption }    → diagram drawn right here
      { example: { … } }            → annotated code, Go By Example style
+
+   FOUR OF THOSE ARRIVED LATE AND THE CONTENT HAD BEEN WRITING THEM ALL ALONG.
+   Heading, table, numbered list and quotation are ordinary markdown, `blocksOf`
+   did not recognise them, and everything it does not recognise is a paragraph —
+   so a student read `## The two roles` with the hashes in it and a comparison
+   table as a run of pipes. Nothing could report that: a paragraph is valid
+   markup with good contrast whatever it happens to say.
 
    The code block arrived when the first PRACTICAL course was written. In
    `web-fundamentals`, which is conceptual, a backtick mid-sentence was enough;
@@ -126,6 +158,18 @@ export function prose(body) {
     if (block && typeof block === 'object') {
       if (block.example) return annotatedExample(block.example);
       if (block.image || block.svg) return figure(block);
+      if (block.heading !== undefined) {
+        const n = Math.min(Math.max(block.level || 3, 3), 6);
+        return '<h' + n + ' class="prose-heading">' + formatted(block.heading) + '</h' + n + '>';
+      }
+      if (block.ordered) {
+        return '<ol class="prose-ordered">' +
+          block.ordered.map((i) => '<li>' + formatted(i) + '</li>').join('') + '</ol>';
+      }
+      if (block.quote !== undefined) {
+        return '<blockquote class="prose-quote">' + formatted(block.quote) + '</blockquote>';
+      }
+      if (block.table) return table(block.table);
       if (block.text !== undefined) {
         /* NOT `formatted`: inside a code block a backtick is a backtick and an
            asterisk is an asterisk — marking them up would eat the code itself.
@@ -152,6 +196,32 @@ export function prose(body) {
     }
     return '<p>' + formatted(block) + '</p>';
   }).join('');
+}
+
+/* ---------- table ----------
+
+   IT SCROLLS INSIDE ITS OWN BOX AND THE PAGE DOES NOT. A comparison table has
+   as many columns as the comparison has sides, and the reading column is
+   narrower than the widest of them on a phone. The choice is a table that
+   scrolls sideways or a page that does, and a page that scrolls sideways takes
+   every other screen with it.
+
+   A HEADER CELL MAY BE EMPTY, which is what the corner of a comparison table
+   is: the rows are the property and the columns are the thing, so the top-left
+   names neither. It is still a `<th>` — the column below it has a header even
+   when the corner has no word — and `scope` is what tells a screen reader which
+   direction each one governs. */
+function table(t) {
+  const head = '<thead><tr>' +
+    (t.head || []).map((c) => '<th scope="col">' + formatted(c) + '</th>').join('') +
+  '</tr></thead>';
+  const body = '<tbody>' + (t.rows || []).map((r) =>
+    '<tr>' + r.map((c, at) =>
+      (at === 0
+        ? '<th scope="row">' + formatted(c) + '</th>'
+        : '<td>' + formatted(c) + '</td>')).join('') +
+    '</tr>').join('') + '</tbody>';
+  return '<div class="prose-table-wrap"><table class="prose-table">' + head + body + '</table></div>';
 }
 
 /* ---------- figure ----------
