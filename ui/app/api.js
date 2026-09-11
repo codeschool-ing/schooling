@@ -521,6 +521,12 @@ export async function loadLessonStructure() {
       lessonIx: indexOfLesson(courseId, l.id),
       key: l.id,
       title: l.title,
+      /* HOW MANY QUESTIONS THIS LESSON HAS, which the server counts because a
+         client cannot. Without it `lessonSections` decided from
+         `window.SAMPLE_EXERCISES` — the predecessor's static data, empty here —
+         so every assessment was `pending` and the route that serves the
+         questions was never called. */
+      questions: l.questions || 0,
       sections: (l.sections || []).map((s) => ({
         id: s.id,
         title: s.title || s.id,
@@ -661,6 +667,7 @@ export async function loadCourseContent(courseId) {
       lessonIx: ix,
       key: lessons[ix].key,
       title: lesson.title || lessons[ix].title,
+      questions: lesson.questions || 0,
       sections: (lesson.sections || []).map((s) => ({
         id: s.id,
         title: s.title || s.id,

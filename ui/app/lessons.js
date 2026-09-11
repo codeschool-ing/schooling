@@ -136,7 +136,9 @@ export const courseLoaded = (courseId) => remote.courses.has(courseId);
    whether it counts depends on exercises this module already has an answer
    about — so keeping the rule in one place means taking the server's copy out
    rather than trusting two of them to agree. */
-function writtenSections(courseId, key) {
+/* The lesson as a source knows it, or nothing. Both readers below need the same
+   walk, and they used to do half of it each. */
+function servedLesson(courseId, key) {
   const ix = courseLessons(courseId).findIndex((a) => a.key === key);
 
   for (const source of [remote.courses.get(courseId), remote.structure?.get(courseId)]) {
@@ -144,9 +146,31 @@ function writtenSections(courseId, key) {
     const lesson = source.find((l) => l.lessonIx === ix);
     /* A lesson the source knows and has nothing for is not the same as one it
        has never heard of. Only the second falls through to the next source. */
-    if (lesson) return (lesson.sections || []).filter((s) => s.kind !== 'assessment');
+    if (lesson) return lesson;
   }
+  return null;
+}
+
+function writtenSections(courseId, key) {
+  const lesson = servedLesson(courseId, key);
+  if (lesson) return (lesson.sections || []).filter((s) => s.kind !== 'assessment');
   return window.LESSONS?.[courseId]?.[key];
+}
+
+/* HOW MANY QUESTIONS THIS LESSON ASKS, from the server where there is one.
+
+   IT WAS `window.SAMPLE_EXERCISES` FOR EVERY LESSON, AND THAT GLOBAL IS EMPTY
+   HERE. It is the predecessor's static sample data, loaded by script tags that
+   this interface does not have — so the count was always zero, every assessment
+   was `pending`, and `lesson.js` never reached the route that serves a lesson's
+   questions. The route worked; nothing ever called it.
+
+   The offline bundle still has the global and no server, so it still answers
+   from it. */
+function questionCount(courseId, key) {
+  const lesson = servedLesson(courseId, key);
+  if (lesson) return lesson.questions || 0;
+  return lessonExercises(courseId, key).length;
 }
 
 export function lessonSections(courseId, key) {
@@ -156,14 +180,14 @@ export function lessonSections(courseId, key) {
     ? written.map((s) => ({ ...s, type: 'content' }))
     : [{ id: 'content', title: txt('Content'), type: 'content', body: null }];
 
-  const exercises = lessonExercises(courseId, key);
+  const questions = questionCount(courseId, key);
   sections.push({
     id: 'assessment',
     title: txt('Assessment'),
     type: 'assessment',
-    count: exercises.length,
-    pending: exercises.length === 0,
-    countsTowardsProgress: exercises.length > 0,
+    count: questions,
+    pending: questions === 0,
+    countsTowardsProgress: questions > 0,
   });
   return sections;
 }

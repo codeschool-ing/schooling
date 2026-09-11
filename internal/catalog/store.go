@@ -235,6 +235,22 @@ type LessonView struct {
 	ID       string        `json:"id"`
 	Title    string        `json:"title"`
 	Sections []SectionView `json:"sections"`
+
+	// Questions is how many a student would be asked in this lesson — its own,
+	// never the course's exam.
+	//
+	// THE SCREEN HAS TO BE TOLD, and this is the same argument `Exam` makes one
+	// type up: a client that found out by asking would have to ask for every
+	// lesson of every course to draw a rail, and a client that guessed would
+	// guess wrong. It guessed wrong for a while — `lessonSections` decided
+	// whether a lesson had an assessment from `window.SAMPLE_EXERCISES`, which
+	// is the predecessor's static sample data and is empty here, so every
+	// lesson's assessment was `pending` and the route that serves its questions
+	// was never called.
+	//
+	// IT COUNTS AND DOES NOT MERELY SAY WHETHER, because the section strip
+	// shows the number before a student opens it, and "some" is not a number.
+	Questions int `json:"questions"`
 }
 
 type SectionView struct {
@@ -456,7 +472,10 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT l.course_id, l.id, l.title, s.id, s.slug, s.kind, s.duration, s.countable,
-		       COALESCE(NULLIF(t.title, ''), e.title)
+		       COALESCE(NULLIF(t.title, ''), e.title),
+		       (SELECT count(*) FROM catalog_exercises x
+		         WHERE x.tenant_id = l.tenant_id AND x.course_id = l.course_id
+		           AND x.lesson_id = l.id AND NOT x.exam)
 		FROM catalog_lessons l
 		JOIN catalog_courses c
 		  ON c.tenant_id = l.tenant_id AND c.id = l.course_id AND NOT c.draft
@@ -481,14 +500,17 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
 		var courseID, lessonID, title string
 		var section, sectionSlug, kind, duration, sectionTitle *string
 		var countable *bool
+		var questions int
 		if err := rows.Scan(&courseID, &lessonID, &title,
-			&section, &sectionSlug, &kind, &duration, &countable, &sectionTitle); err != nil {
+			&section, &sectionSlug, &kind, &duration, &countable, &sectionTitle,
+			&questions); err != nil {
 			return nil, fmt.Errorf("catalog: reading the shape of every course: %w", err)
 		}
 
 		list := out[courseID]
 		if len(list) == 0 || list[len(list)-1].ID != lessonID {
-			list = append(list, LessonView{ID: lessonID, Title: title, Sections: []SectionView{}})
+			list = append(list, LessonView{
+				ID: lessonID, Title: title, Sections: []SectionView{}, Questions: questions})
 		}
 		// A lesson with no sections joins as one row with nulls, which is a
 		// lesson and not a section — the LEFT JOIN is what keeps it visible.
@@ -513,7 +535,10 @@ func (s *Store) Structure(ctx context.Context, tenantID uuid.UUID,
 
 func (s *Store) lessons(ctx context.Context, tenantID uuid.UUID, courseID string) ([]LessonView, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT l.id, l.title, s.id, s.slug, s.kind, s.duration, s.countable
+		SELECT l.id, l.title, s.id, s.slug, s.kind, s.duration, s.countable,
+		       (SELECT count(*) FROM catalog_exercises x
+		         WHERE x.tenant_id = l.tenant_id AND x.course_id = l.course_id
+		           AND x.lesson_id = l.id AND NOT x.exam)
 		FROM catalog_lessons l
 		LEFT JOIN catalog_sections s
 		       ON s.tenant_id = l.tenant_id AND s.course_id = l.course_id AND s.lesson_id = l.id
@@ -532,15 +557,16 @@ func (s *Store) lessons(ctx context.Context, tenantID uuid.UUID, courseID string
 		var lessonID, title string
 		var section, sectionSlug, kind, duration *string
 		var countable *bool
+		var questions int
 
 		if err := rows.Scan(&lessonID, &title, &section, &sectionSlug,
-			&kind, &duration, &countable); err != nil {
+			&kind, &duration, &countable, &questions); err != nil {
 			return nil, fmt.Errorf("catalog: reading the lessons of %q: %w", courseID, err)
 		}
 
 		i, seen := at[lessonID]
 		if !seen {
-			out = append(out, LessonView{ID: lessonID, Title: title})
+			out = append(out, LessonView{ID: lessonID, Title: title, Questions: questions})
 			i = len(out) - 1
 			at[lessonID] = i
 		}
