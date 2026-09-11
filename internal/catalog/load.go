@@ -392,13 +392,19 @@ func sectionOfProse(file string) string {
 	return section
 }
 
+// sourceLocale is the language the content is WRITTEN in, everywhere, and the
+// one a file with no locale suffix is in. It is named rather than spelled out
+// at each use so that "the source language" and "English" stay one idea with
+// one spelling.
+const sourceLocale = "en"
+
 func sectionAndLocale(file string) (section, locale string) {
 	name := strings.TrimSuffix(file, ".md")
 	if i := strings.LastIndex(name, "."); i > 0 {
 		return name[:i], name[i+1:]
 	}
 	// No suffix means the source language, which is English everywhere.
-	return name, "en"
+	return name, sourceLocale
 }
 
 // frontMatter takes the leading `---` block off a Markdown file.

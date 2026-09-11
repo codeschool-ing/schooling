@@ -808,3 +808,50 @@ func TestATranslationWithNoTopicsAtAllIsAccepted(t *testing.T) {
 		t.Errorf("a translation of the name alone was refused:\n%s", report(t, problems))
 	}
 }
+
+/* ---------- every section has a name ----------
+
+   THE DEFECT THESE TWO ARE ABOUT REACHED A DEPLOYMENT. A section's title comes
+   from its prose's front matter, so a section with no prose file had no title,
+   and the interface drew its ID: a student read `se-7g4aqpg0` in the rail, in
+   the step chips and as the heading of the page. It is right for a section
+   nobody has written yet and wrong for a `video` or a `practice`, which have no
+   body by definition and never will.
+
+   What makes it checkable is that the fix is a prose file carrying ONLY front
+   matter — already understood by the loader, the mirror, the screen and the
+   translation mechanism — so the rule is simply that one exists. */
+
+func TestASectionWithNoTitleIsRefused(t *testing.T) {
+	// Front matter with a version and no title, which isolates this from the
+	// check that every text declares its version.
+	problems := school(t, write(
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/intro.md",
+		"---\nversion: 1\n---\n"))
+
+	var said string
+	for _, p := range problems {
+		if strings.Contains(p.Error(), "se-ddvn1g61") {
+			said = p.Error()
+		}
+	}
+	if said == "" {
+		t.Fatalf("a section with no title was accepted, and a student would read its id "+
+			"as its name:\n%s", report(t, problems))
+	}
+	// The message has to name the FILE to write, or it tells somebody they have
+	// a problem and not what to do about it.
+	if !strings.Contains(said, "intro.md") {
+		t.Errorf("the complaint does not name the file to write: %s", said)
+	}
+}
+
+// AND THE OTHER HALF, which is the whole mechanism: a title with no body is
+// exactly what a video section carries, so it has to be accepted rather than
+// treated as an empty file somebody forgot to finish.
+func TestASectionMayBeTitledWithNoBodyAtAll(t *testing.T) {
+	if problems := school(t); len(problems) != 0 {
+		t.Fatalf("the good fixture, whose video and practice sections carry a title and no "+
+			"body, was refused:\n%s", report(t, problems))
+	}
+}
