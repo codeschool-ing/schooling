@@ -33,9 +33,9 @@ answer, and what a domain is. `html-css` does not re-explain HTTP.
 | declared hours | 40 h |
 | lessons | 11 |
 | **hours per lesson** | **3.64** |
-| section budget | ~86, about 7.8 a lesson — **and 86 are designed**, which is the evidence the budget rests on |
-| sections | **86** — 54 reading, 21 video, 11 practice |
-| exercises | ~385–425, floor 350 |
+| section budget | ~86, about 7.8 a lesson — **and 87 are designed**, which is the evidence the budget rests on |
+| sections | **87** — 55 reading, 21 video, 11 practice |
+| exercises | ~390–430, floor 350 |
 | video | estimated, not a target (`C-36`) |
 | avatar visible | ~20–25% overall, and **100% in an opening** — see below |
 
@@ -62,7 +62,7 @@ and worth recording as the contrast.
 ## Sections
 
 Four volumes. **The volumes are a reading device; the lessons and their ids are the contract with
-the portal and do not move.** The numbering 01–86 is the path a student walks, in the order they
+the portal and do not move.** The numbering 01–87 is the path a student walks, in the order they
 walk it.
 
 ### An opening is short, and it is the most expensive minute in the course
@@ -142,37 +142,48 @@ latency of lesson 3 is the sum of a dozen independent decisions.
 | | slug | kind | covers |
 |---|---|---|---|
 | 18 | `intro` | video | Three numbers people use as if they were one — **opening** |
-| 19 | `bandwidth` | reading | Capacity per second, and why it is not speed |
+| 19 | `bandwidth` | reading | Capacity per second, why it is not speed, and the upload nobody advertises |
 | 20 | `latency` | reading | Round trip, and the floor distance imposes |
 | 21 | `throughput` | reading | What you actually get, and what eats the difference |
-| 22 | `jitter-loss` | reading | The numbers behind a bad call |
-| 23 | `measuring` | video | Reading a speed test, a ping and a traceroute honestly |
-| 24 | `drill` | practice | Say which of the three explains each symptom |
+| 22 | `queues` | reading | The queue that helps throughput and destroys latency |
+| 23 | `jitter-loss` | reading | The numbers behind a bad call |
+| 24 | `measuring` | video | Reading a speed test, a ping and a traceroute honestly |
+| 25 | `drill` | practice | Say which of the five explains each symptom |
+
+**`queues` is the second section C-37 produced.** Nothing in the 86 covered queuing delay, and the
+most common domestic network complaint there is — *the video call breaks the moment somebody starts
+a download* — is not bandwidth, not loss and not distance. It is a buffer that got too deep. It is
+also what makes latency and throughput oppose each other; without it the other three readings are
+three numbers that never interact. Lesson 2's `packets` already promised it, by naming the time a
+packet spends "waiting behind whatever else is queued".
+
+**And `bandwidth` gained upload.** Asymmetry appeared nowhere in the sheet, and it is the whole
+explanation of *you see them fine and they say you are frozen*.
 
 **Lesson 4 · IP address, MAC address and ARP** — `le-ss19f9x3`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 25 | `intro` | video | Why one address is not enough — **opening** |
-| 26 | `ipv4` | reading | Notation, ranges, and what a private address is |
-| 27 | `subnet` | reading | Mask and CIDR: deciding what is local |
-| 28 | `ipv6` | reading | Why it exists and how to read one |
-| 29 | `mac` | reading | The address burned into the card |
-| 30 | `arp` | reading | Turning an IP into a MAC on the local segment |
-| 31 | `nat` | video | One house, one public address — and what NAT breaks |
-| 32 | `drill` | practice | Given an address and a mask, say what is local |
+| 26 | `intro` | video | Why one address is not enough — **opening** |
+| 27 | `ipv4` | reading | Notation, ranges, and what a private address is |
+| 28 | `subnet` | reading | Mask and CIDR: deciding what is local |
+| 29 | `ipv6` | reading | Why it exists and how to read one |
+| 30 | `mac` | reading | The address burned into the card |
+| 31 | `arp` | reading | Turning an IP into a MAC on the local segment |
+| 32 | `nat` | video | One house, one public address — and what NAT breaks |
+| 33 | `drill` | practice | Given an address and a mask, say what is local |
 
 **Lesson 5 · Layered networks: from the cable to the browser** — `le-n74cj30g`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 33 | `intro` | video | Layers, and why they exist — **opening** |
-| 34 | `why-layers` | reading | What layering buys, and what it costs |
-| 35 | `osi` | reading | The seven layers of OSI, and where they are useful |
-| 36 | `tcp-ip` | reading | The four of TCP/IP, which is the one that runs |
-| 37 | `encapsulation` | reading | One message wearing four headers |
-| 38 | `tracing` | video | An HTTP request followed down the stack and back up |
-| 39 | `drill` | practice | Put each header on the layer that wrote it |
+| 34 | `intro` | video | Layers, and why they exist — **opening** |
+| 35 | `why-layers` | reading | What layering buys, and what it costs |
+| 36 | `osi` | reading | The seven layers of OSI, and where they are useful |
+| 37 | `tcp-ip` | reading | The four of TCP/IP, which is the one that runs |
+| 38 | `encapsulation` | reading | One message wearing four headers |
+| 39 | `tracing` | video | An HTTP request followed down the stack and back up |
+| 40 | `drill` | practice | Put each header on the layer that wrote it |
 
 ## Volume II — The conversation
 
@@ -180,29 +191,29 @@ latency of lesson 3 is the sum of a dozen independent decisions.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 40 | `intro` | video | HTTP is a conversation you can read — **opening** |
-| 41 | `anatomy` | reading | The anatomy of a request and of a response |
-| 42 | `methods` | reading | GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS — safety and idempotence |
-| 43 | `status` | reading | Codes by family, and the ones that actually appear |
-| 44 | `headers` | reading | Type, length, host, user agent |
-| 45 | `content-negotiation` | reading | Negotiating language and format |
-| 46 | `tls` | reading | What HTTPS adds: encryption, integrity, identity |
-| 47 | `certificates` | video | The chain, and the limits of what the padlock promises |
-| 48 | `versions` | reading | HTTP/1.1, /2 and /3 — what changed and why |
-| 49 | `drill` | practice | Choose a method and a code for twenty situations |
+| 41 | `intro` | video | HTTP is a conversation you can read — **opening** |
+| 42 | `anatomy` | reading | The anatomy of a request and of a response |
+| 43 | `methods` | reading | GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS — safety and idempotence |
+| 44 | `status` | reading | Codes by family, and the ones that actually appear |
+| 45 | `headers` | reading | Type, length, host, user agent |
+| 46 | `content-negotiation` | reading | Negotiating language and format |
+| 47 | `tls` | reading | What HTTPS adds: encryption, integrity, identity |
+| 48 | `certificates` | video | The chain, and the limits of what the padlock promises |
+| 49 | `versions` | reading | HTTP/1.1, /2 and /3 — what changed and why |
+| 50 | `drill` | practice | Choose a method and a code for twenty situations |
 
 **Lesson 7 · Cookies, sessions and browser cache** — `le-hptsw8ct`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 50 | `intro` | video | State in a protocol that has none — **opening** |
-| 51 | `cookies` | reading | Setting, sending and scoping a cookie |
-| 52 | `attributes` | reading | Expires, Secure, HttpOnly, SameSite — the attributes that are security |
-| 53 | `sessions` | reading | Session on the server, identifier in the cookie |
-| 54 | `tokens` | reading | Tokens and local storage: the other way, and its price |
-| 55 | `caching` | reading | Cache-Control, ETag and conditional requests |
-| 56 | `cache-in-practice` | video | Cache and SameSite seen in the network panel |
-| 57 | `drill` | practice | Decide a cookie's attributes per scenario |
+| 51 | `intro` | video | State in a protocol that has none — **opening** |
+| 52 | `cookies` | reading | Setting, sending and scoping a cookie |
+| 53 | `attributes` | reading | Expires, Secure, HttpOnly, SameSite — the attributes that are security |
+| 54 | `sessions` | reading | Session on the server, identifier in the cookie |
+| 55 | `tokens` | reading | Tokens and local storage: the other way, and its price |
+| 56 | `caching` | reading | Cache-Control, ETag and conditional requests |
+| 57 | `cache-in-practice` | video | Cache and SameSite seen in the network panel |
+| 58 | `drill` | practice | Decide a cookie's attributes per scenario |
 
 ## Volume III — The name and the machine
 
@@ -210,26 +221,26 @@ latency of lesson 3 is the sum of a dozen independent decisions.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 58 | `intro` | video | What happens before the first packet — **opening** |
-| 59 | `name-structure` | reading | TLD, domain, subdomain: reading a name right to left |
-| 60 | `registration` | reading | Registry, registrar, registrant — and what you actually buy |
-| 61 | `resolution` | reading | Recursive resolution: root, TLD, authoritative |
-| 62 | `records` | reading | A, AAAA, CNAME, MX, TXT, NS — what each one answers |
-| 63 | `ttl` | reading | TTL and "propagation", which is caching with a better name |
-| 64 | `subdomains` | video | Resolution and pointing, start to finish |
-| 65 | `drill` | practice | Choose the right record for each need |
+| 59 | `intro` | video | What happens before the first packet — **opening** |
+| 60 | `name-structure` | reading | TLD, domain, subdomain: reading a name right to left |
+| 61 | `registration` | reading | Registry, registrar, registrant — and what you actually buy |
+| 62 | `resolution` | reading | Recursive resolution: root, TLD, authoritative |
+| 63 | `records` | reading | A, AAAA, CNAME, MX, TXT, NS — what each one answers |
+| 64 | `ttl` | reading | TTL and "propagation", which is caching with a better name |
+| 65 | `subdomains` | video | Resolution and pointing, start to finish |
+| 66 | `drill` | practice | Choose the right record for each need |
 
 **Lesson 9 · Hosting: shared, VPS, cloud and CDN** — `le-5he7q8tg`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 66 | `intro` | video | Where a site actually lives — **opening** |
-| 67 | `shared` | reading | What is shared, and what that costs you |
-| 68 | `vps-dedicated` | reading | A machine's worth of control |
-| 69 | `cloud` | reading | IaaS, PaaS and serverless as three sizes of responsibility |
-| 70 | `static-hosting` | reading | Static hosting and object storage, and when they are enough |
-| 71 | `cdn` | reading | What a CDN caches, where, and what it cannot help |
-| 72 | `drill` | practice | Choose the hosting for eight different projects |
+| 67 | `intro` | video | Where a site actually lives — **opening** |
+| 68 | `shared` | reading | What is shared, and what that costs you |
+| 69 | `vps-dedicated` | reading | A machine's worth of control |
+| 70 | `cloud` | reading | IaaS, PaaS and serverless as three sizes of responsibility |
+| 71 | `static-hosting` | reading | Static hosting and object storage, and when they are enough |
+| 72 | `cdn` | reading | What a CDN caches, where, and what it cannot help |
+| 73 | `drill` | practice | Choose the hosting for eight different projects |
 
 ## Volume IV — The browser
 
@@ -237,25 +248,25 @@ latency of lesson 3 is the sum of a dozen independent decisions.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 73 | `intro` | video | What happens after the bytes arrive — **opening** |
-| 74 | `parsing` | reading | Parsing HTML into the DOM, incrementally |
-| 75 | `cssom` | reading | The CSSOM, and why CSS blocks rendering |
-| 76 | `render-tree` | reading | The render tree: what is in it and what is not |
-| 77 | `layout-paint` | reading | Layout, paint and composite |
-| 78 | `scripts` | reading | Where a script blocks, and what `defer` and `async` change |
-| 79 | `critical-path` | video | The critical path, on a timeline |
-| 80 | `drill` | practice | Order the steps between the byte and the pixel |
+| 74 | `intro` | video | What happens after the bytes arrive — **opening** |
+| 75 | `parsing` | reading | Parsing HTML into the DOM, incrementally |
+| 76 | `cssom` | reading | The CSSOM, and why CSS blocks rendering |
+| 77 | `render-tree` | reading | The render tree: what is in it and what is not |
+| 78 | `layout-paint` | reading | Layout, paint and composite |
+| 79 | `scripts` | reading | Where a script blocks, and what `defer` and `async` change |
+| 80 | `critical-path` | video | The critical path, on a timeline |
+| 81 | `drill` | practice | Order the steps between the byte and the pixel |
 
 **Lesson 11 · Developer tools: network, console and elements** — `le-88yzj4ty`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 81 | `intro` | video | The tools that came with the browser — **opening** |
-| 82 | `elements` | reading | Reading and editing the live DOM |
-| 83 | `network` | reading | Waterfall, timings, headers and payloads |
-| 84 | `console` | reading | Errors, logs and running a line of JS |
-| 85 | `diagnosing` | video | Two real faults, found from nothing |
-| 86 | `drill` | practice | Diagnose ten pages from the network panel |
+| 82 | `intro` | video | The tools that came with the browser — **opening** |
+| 83 | `elements` | reading | Reading and editing the live DOM |
+| 84 | `network` | reading | Waterfall, timings, headers and payloads |
+| 85 | `console` | reading | Errors, logs and running a line of JS |
+| 86 | `diagnosing` | video | Two real faults, found from nothing |
+| 87 | `drill` | practice | Diagnose ten pages from the network panel |
 
 ---
 
@@ -263,9 +274,9 @@ latency of lesson 3 is the sum of a dozen independent decisions.
 
 | where | how many |
 |---|---|
-| in each of the 54 reading sections | ≥ 4 → ~255 |
+| in each of the 55 reading sections | ≥ 4 → ~260 |
 | in each of the 11 practice sections, all `drillable` | 12–16 → ~154 |
-| total proposed | ~385–425 |
+| total proposed | ~390–430 |
 | floor, below which it is not published | 350 |
 
 ## What it does not cover, on purpose
