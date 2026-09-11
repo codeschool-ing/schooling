@@ -290,6 +290,7 @@ window.I18N.pt.ui = {
   "[assessment in preparation — this topic's exercises have not been produced yet]": "[avaliação em preparação — os exercícios deste tópico ainda não foram produzidos]",
   "[exam in preparation — not enough exercises have been produced yet]": "[prova em preparação — ainda não há exercícios suficientes produzidos]",
   "[lesson content — the real material lands in Stage 2]": "[conteúdo da aula — entra com o material real na Etapa 2]",
+  "[the questions did not load — reload the page to try again]": "[as questões não carregaram — recarregue a página para tentar de novo]",
   "[sample answer — invoicing and terms are still to be defined]": "[resposta de exemplo — nota fiscal e condições ainda serão definidas]",
   "[sample answer — payment methods are still to be defined]": "[resposta de exemplo — os meios de pagamento ainda serão definidos]",
   "[sample answer — selling single courses is still to be decided]": "[resposta de exemplo — a venda avulsa ainda será decidida]",
