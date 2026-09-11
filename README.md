@@ -116,11 +116,14 @@ that is not multi-tenant at all. Phases 1 to 3 each keep an item open for the sa
 — a sandbox that runs a student's program, the platform's own address, and a way to be paid from
 outside Brazil.
 
-**Phase 1 keeps a second one, and it was found by being asked about rather than by being tracked:**
-a student can sit an exam and drill a card, both on a screen, and cannot answer the questions
-inside a lesson. `lessonExercises()` returns an empty list. It was never an unticked box — it was
-absent from the list entirely, which is the failure mode this repository checks for everywhere
-except in its own roadmap.
+**Phase 1 kept a second one for a while, and how it was found is worth more than the item was.** A
+student could sit an exam and drill a card, both on a screen, and could not answer the questions
+inside a lesson — and that was never an unticked box. It was **absent from the list entirely**,
+between two ticked neighbours, which is the orphan this repository refuses in content, in images
+and in documents and does not check for in its own roadmap. It surfaced because somebody asked what
+happens when a student gets a question wrong. It is closed now, and the closing took four pull
+requests rather than one: the route, the screen, and then two defects that lived in the join
+between them, each invisible while both halves were green.
 
 **That last one used to read "a payment gateway", and it had been wrong for a while.** The
 domestic gateway is chosen and integrated — Asaas, with Pix, boleto and card instalments, a
