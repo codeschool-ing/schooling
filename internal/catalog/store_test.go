@@ -425,3 +425,71 @@ func TestTheCountsDoNotMultiplyAgainstThePrerequisites(t *testing.T) {
 	}
 	t.Fatal("react-ts is not in the catalogue")
 }
+
+// A LESSON SAYS HOW MANY QUESTIONS IT ASKS, in both of the shapes a client
+// reads it in.
+//
+// IT EXISTS BECAUSE THE INTERFACE GUESSED. `lessonSections` decided whether a
+// lesson had an assessment from `window.SAMPLE_EXERCISES` — the predecessor's
+// static sample data, which this interface never loads — so the count was
+// always zero, every assessment was marked `pending`, and the route that serves
+// a lesson's questions was never called by anything. The route worked. Nothing
+// reached it.
+//
+// BOTH READERS, because `writtenSections` walks the per-course answer and the
+// whole-catalogue one in turn and takes whichever knows the lesson. A count
+// present in only one of them is a count that depends on which screen the
+// student arrived from, which is the kind of difference nobody reproduces.
+func TestALessonSaysHowManyQuestionsItAsks(t *testing.T) {
+	pool := testPool(t)
+	id := loaded(t, pool)
+	store := catalog.NewStore(pool)
+	ctx := context.Background()
+
+	course, err := store.Course(ctx, id, webFundamentals, "en", catalog.PlanFull)
+	if err != nil {
+		t.Fatalf("reading the course: %v", err)
+	}
+
+	var fromCourse *catalog.LessonView
+	for i := range course.Lessons {
+		if course.Lessons[i].ID == clientAndServer {
+			fromCourse = &course.Lessons[i]
+		}
+	}
+	if fromCourse == nil {
+		t.Fatalf("the course does not carry %s", clientAndServer)
+	}
+	if fromCourse.Questions != 2 {
+		t.Errorf("the course's copy says %d questions, and the fixture writes 2",
+			fromCourse.Questions)
+	}
+
+	shape, err := store.Structure(ctx, id, "en")
+	if err != nil {
+		t.Fatalf("reading the shape: %v", err)
+	}
+	var fromShape *catalog.LessonView
+	for i, l := range shape[webFundamentals] {
+		if l.ID == clientAndServer {
+			fromShape = &shape[webFundamentals][i]
+		}
+	}
+	if fromShape == nil {
+		t.Fatalf("the shape does not carry %s", clientAndServer)
+	}
+	if fromShape.Questions != fromCourse.Questions {
+		t.Errorf("the shape says %d questions and the course says %d — one screen would "+
+			"offer an assessment and another would not",
+			fromShape.Questions, fromCourse.Questions)
+	}
+
+	// AND A LESSON WITH NONE SAYS NONE rather than leaving the field at
+	// whatever the previous row had. The loop fills one struct per lesson and a
+	// count carried over would mark an empty assessment as ready.
+	for _, l := range shape[webFundamentals] {
+		if l.ID != clientAndServer && l.Questions != 0 {
+			t.Errorf("%s asks no questions and says %d", l.ID, l.Questions)
+		}
+	}
+}
