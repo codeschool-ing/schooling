@@ -178,7 +178,14 @@ func run(args []string, out io.Writer) error {
 		/* THE SECOND GENERATOR, from the same seed offset by one. It decides
 		   what happens to a subscription, and it is separate so that adding a
 		   behaviour there does not reshuffle the exam fixture — see `populate`. */
-		rand.New(rand.NewSource(o.rand+1)), shape,
+		rand.New(rand.NewSource(o.rand+1)),
+		/* AND THE THIRD, offset by two, for the same reason one line up. It
+		   decides what each seeded person studies on — a draw that was added to
+		   `r` first, and the exam fixture reshuffled exactly as `populate`
+		   warns: one seed of twenty-five tipped a planted question below its
+		   discrimination threshold, and nothing about that question had
+		   changed. */
+		rand.New(rand.NewSource(o.rand+2)), shape,
 		now.AddDate(0, -o.months, 0), now, o.people)
 
 	written, err := write(ctx, pool, shape, lives)
@@ -279,7 +286,7 @@ func write(ctx context.Context, pool *pgxpool.Pool, shape shape, lives []life) (
 				At:      m.at,
 				Payload: m.payload,
 				Dimensions: event.ForSchool(shape.id, shape.slug, m.plan,
-					l.country, l.locale, event.Synthetic),
+					l.country, l.locale, event.Synthetic).On(l.device),
 			}
 
 			/* A SUBSCRIPTION BELONGS TO NO SCHOOL, so it is written with no
@@ -291,7 +298,7 @@ func write(ctx context.Context, pool *pgxpool.Pool, shape shape, lives []life) (
 			   exactly right. */
 			if m.platform {
 				e.Dimensions = event.ForPlatform(m.plan,
-					l.country, l.locale, event.Synthetic)
+					l.country, l.locale, event.Synthetic).On(l.device)
 			}
 
 			if m.visitor >= 0 {

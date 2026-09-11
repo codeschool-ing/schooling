@@ -25,8 +25,8 @@ func placed(t *testing.T, origins []analysis.Origin,
 		func(context.Context, uuid.UUID, time.Time, analysis.Counting) ([]analysis.Origin, error) {
 			return origins, nil
 		},
-		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil },
-	)
+		nil,
+		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil })
 
 	where, err := store.Countries(context.Background(), uuid.New(), time.Time{},
 		analysis.Counting("real"))

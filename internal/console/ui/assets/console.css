@@ -1150,6 +1150,46 @@ body.no-rail .rail{display:none}
 }
 
 /* ==========================================================================
+   WHAT THEY ARE ON — the map's list with the map taken off and one column
+   added.
+
+   FOUR COLUMNS FOR FOUR THINGS, which is the rule the row above it learned the
+   hard way: a name, a bar, a count and the conversion beside it. Declare three
+   and the fourth wraps onto an implicit second row, every bar is squeezed into
+   what is left, and nothing in the build has an opinion about it.
+
+   THE CONVERSION IS A NUMBER AND NOT A SECOND BAR. Two bars of different
+   denominators side by side read as a comparison of the same thing, and these
+   are not: one is a share of everybody, the other is a share of that row.
+   ========================================================================== */
+.holds{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.hold{display:grid;grid-template-columns:9rem 1fr 4rem 6rem;align-items:center;gap:14px}
+.hold-what{font-size:.86rem;color:var(--paper)}
+.hold-bar{
+  height:22px;border:1px solid var(--wire);border-radius:3px;
+  background:var(--ink);overflow:hidden;
+}
+.hold-fill{display:block;height:100%;background:var(--tint-accent);border-right:2px solid var(--phosphor)}
+.hold-people{font-size:.76rem;color:var(--paper-dim);text-align:right;font-variant-numeric:tabular-nums}
+.hold-rate{font-size:.76rem;color:var(--phosphor);text-align:right;font-variant-numeric:tabular-nums}
+
+/* THE ROW FOR "DID NOT SAY" IS DIMMED AND KEEPS ITS PLACE IN THE ORDER, which
+   is the map's decision for the map's reason: it is the largest group today,
+   moving it to the bottom would be a lie told politely, and it is not a shape
+   of thing — so it is drawn as the absence it is rather than as a device. */
+.hold-nothing .hold-what{color:var(--paper-dim)}
+.hold-nothing .hold-fill{background:var(--wire);border-right-color:var(--paper-dim)}
+.hold-nothing .hold-rate{color:var(--paper-dim)}
+
+@media (max-width:720px){
+  .hold{grid-template-columns:1fr auto;grid-template-areas:'what count' 'bar bar' 'rate rate';gap:6px}
+  .hold-what{grid-area:what}
+  .hold-people{grid-area:count}
+  .hold-bar{grid-area:bar}
+  .hold-rate{grid-area:rate;text-align:left}
+}
+
+/* ==========================================================================
    CHANGING WHAT SOMEBODY HOLDS — the three forms under the subscription block.
 
    IT IS SHUT AND IT IS THE ONLY THING ON THE RECORD THAT IS. Everything else

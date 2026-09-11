@@ -44,6 +44,9 @@ type funnelFake struct {
 	where          console.Where
 	askedCountries string
 	askedSince     time.Time
+
+	held         console.Held
+	askedDevices string
 }
 
 func (f *funnelFake) handler() http.Handler {
@@ -89,6 +92,15 @@ func (f *funnelFake) handler() http.Handler {
 				return console.Where{}, fmt.Errorf("the stream is not there")
 			}
 			return f.where, nil
+		},
+		func(_ context.Context, _ uuid.UUID, since time.Time,
+			counting string) (console.Held, error) {
+
+			f.askedDevices, f.askedSince = counting, since
+			if f.fail {
+				return console.Held{}, fmt.Errorf("the stream is not there")
+			}
+			return f.held, nil
 		},
 	).Routes(mux)
 	return mux
@@ -784,5 +796,110 @@ func TestAMapThatCannotBeReadIsNotAnEmptyWorld(t *testing.T) {
 	if code != http.StatusServiceUnavailable {
 		t.Errorf("a stream that is not there answered %d, want %d",
 			code, http.StatusServiceUnavailable)
+	}
+}
+
+/* ---------- what the people are on ---------- */
+
+func askDevices(t *testing.T, f *funnelFake, school uuid.UUID, query string) (int, map[string]any) {
+	t.Helper()
+	r := httptest.NewRequest(http.MethodGet,
+		"/console/api/v1/schools/"+school.String()+"/devices"+query, nil)
+	w := httptest.NewRecorder()
+	f.handler().ServeHTTP(w, r)
+
+	var body map[string]any
+	if err := json.Unmarshal(w.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v — %s", err, w.Body.String())
+	}
+	return w.Code, body
+}
+
+/*
+THE TOTAL TRAVELS BESIDE THE ROWS, WHICH IS THE MAP'S TRAP EXACTLY.
+
+	Somebody who reads on a phone in a queue and drills on a laptop is honestly
+	in both rows, so the devices add up to more than the people. Anybody reading
+	the rows will add them up, so the honest number is sent rather than left to
+	be computed.
+*/
+func TestTheDeviceTotalIsSentAndNotLeftToBeAddedUp(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{
+		schools: []console.School{school},
+		held: console.Held{
+			People: 3,
+			Devices: []console.Device{
+				{Kind: "phone", People: 3, Students: 1},
+				{Kind: "computer", People: 2, Students: 2},
+			},
+		},
+	}
+
+	code, body := askDevices(t, f, school.ID, "")
+	if code != http.StatusOK {
+		t.Fatalf("asking answered %d: %v", code, body)
+	}
+	if body["people"] != float64(3) {
+		t.Errorf("people = %v, and the rows sum to five for three people", body["people"])
+	}
+
+	rows, _ := body["devices"].([]any)
+	if len(rows) != 2 {
+		t.Fatalf("two devices came back as %d: %v", len(rows), body["devices"])
+	}
+	first, _ := rows[0].(map[string]any)
+	if first["kind"] != "phone" || first["students"] != float64(1) {
+		t.Errorf("the first row is %v, and it is three people on a phone of whom one "+
+			"is a student", first)
+	}
+}
+
+/*
+AND THE REASON THE UNKNOWN ROW IS LARGE IS SENT WITH IT.
+
+	An operator reading a big `unknown` should find the reason on the screen
+	rather than conclude the column is broken — the same rule as a threshold
+	arriving with the number it produced (K-16).
+*/
+func TestTheDevicesSayWhyTheUnknownRowIsLarge(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}}
+
+	_, body := askDevices(t, f, school.ID, "")
+	if body["unknown"] != "unknown" {
+		t.Errorf("unknown = %v, want the word the events actually carry", body["unknown"])
+	}
+	if why, _ := body["why_unknown"].(string); why == "" {
+		t.Error("the row that will be biggest came back with no sentence explaining it")
+	}
+}
+
+// THE POPULATION IS PASSED THROUGH AND ANSWERED BACK (K-18), as it is on every
+// other report here.
+func TestTheDevicesAnswerWhichPopulationTheyCounted(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}}
+
+	code, body := askDevices(t, f, school.ID, "?counting=seeded")
+	if code != http.StatusOK {
+		t.Fatalf("asking answered %d: %v", code, body)
+	}
+	if f.askedDevices != "seeded" {
+		t.Errorf("the seam was asked for %q, want %q", f.askedDevices, "seeded")
+	}
+	if body["counting"] != "seeded" {
+		t.Errorf("counting = %v, want seeded", body["counting"])
+	}
+}
+
+func TestDevicesOfAPopulationThatIsNotOneAreRefused(t *testing.T) {
+	school := oneSchool()
+	f := &funnelFake{schools: []console.School{school}}
+
+	code, _ := askDevices(t, f, school.ID, "?counting=whoever")
+	if code != http.StatusBadRequest {
+		t.Errorf("a population nobody defined answered %d — answering about real people "+
+			"under a heading saying otherwise is worse than refusing", code)
 	}
 }

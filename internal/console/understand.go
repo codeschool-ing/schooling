@@ -89,13 +89,14 @@ type UnderstandHandler struct {
 	questions Questions
 	cohorts   Cohorts
 	countries Countries
+	devices   Devices
 }
 
 func NewUnderstandHandler(schools Schools, funnel Funnel, questions Questions,
-	cohorts Cohorts, countries Countries) *UnderstandHandler {
+	cohorts Cohorts, countries Countries, devices Devices) *UnderstandHandler {
 	return &UnderstandHandler{
 		schools: schools, funnel: funnel, questions: questions,
-		cohorts: cohorts, countries: countries,
+		cohorts: cohorts, countries: countries, devices: devices,
 	}
 }
 
@@ -104,6 +105,7 @@ func (h *UnderstandHandler) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/questions", h.questionsOf)
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/cohorts", h.cohortsOf)
 	mux.HandleFunc("GET /console/api/v1/schools/{id}/countries", h.countriesOf)
+	mux.HandleFunc("GET /console/api/v1/schools/{id}/devices", h.devicesOf)
 }
 
 // schoolFrom resolves the id in the path, or answers the request itself.
@@ -701,6 +703,121 @@ func (h *UnderstandHandler) countriesOf(w http.ResponseWriter, r *http.Request) 
 		// the interface: it is the same string the events carry, and a second
 		// copy of it in JavaScript is a copy that stops matching.
 		"unknown": Unknown,
+
+		"counting":    counting,
+		"banner":      banner,
+		"populations": populationOrder,
+		"scope":       "one school",
+	})
+}
+
+/* ---------- what the people are on ---------- */
+
+// Device is one row of the breakdown.
+type Device struct {
+	Kind   string
+	People int
+
+	// Students is how many of those People have an account, which is the half
+	// that turns a share into a question.
+	Students int
+}
+
+// Held is the whole answer: the devices, and every person counted once.
+type Held struct {
+	Devices []Device
+	People  int
+}
+
+// Devices is what this package may not import, exactly as `Countries` above is:
+// `analysis` folds the two identities on an event into a person and `event`
+// owns the stream.
+type Devices func(ctx context.Context, school uuid.UUID, since time.Time,
+	counting string) (Held, error)
+
+type deviceBody struct {
+	Kind     string `json:"kind"`
+	People   int    `json:"people"`
+	Students int    `json:"students"`
+}
+
+/*
+WHAT THE PEOPLE ARE ON, WHICH IS THE MAP'S REPORT WITH ONE COLUMN CHANGED.
+
+	It carries the same trap and the same defence: somebody who reads on a phone
+	in a queue and drills on a laptop is honestly in both rows, so the devices
+	add up to more than the people and the honest total travels beside them.
+
+	AND THE SCREEN IS NOT TOLD THE RULE, it is told the numbers — the map's
+	argument, for the map's reason.
+
+	WHAT MAKES IT WORTH A SCREEN is the second column. A share of the people on
+	phones is trivia; that share next to how many of them ever signed up is the
+	only place on this platform where "the site is hard to use on a phone"
+	appears as a number rather than as a feeling.
+*/
+func (h *UnderstandHandler) devicesOf(w http.ResponseWriter, r *http.Request) {
+	school, ok := h.schoolFrom(w, r)
+	if !ok {
+		return
+	}
+
+	counting := r.URL.Query().Get("counting")
+	if counting == "" {
+		counting = "real"
+	}
+	banner, known := populations[counting]
+	if !known {
+		web.Fail(w, http.StatusBadRequest, "not_a_population",
+			"the population is one of real, seeded or everybody — a word this does not know "+
+				"would be answered about real people under a heading saying otherwise, which is "+
+				"worse than refusing")
+		return
+	}
+
+	since, sane := windowFrom(r)
+	if !sane {
+		web.Fail(w, http.StatusBadRequest, "not_a_window",
+			"`days` is a whole number of days, and 0 or nothing means since the beginning")
+		return
+	}
+
+	held, err := h.devices(r.Context(), school.ID, since, counting)
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("reading what the people are on",
+			"error", err, "school", school.Slug, "counting", counting)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal, "could not read that")
+		return
+	}
+
+	out := make([]deviceBody, 0, len(held.Devices))
+	for _, d := range held.Devices {
+		out = append(out, deviceBody(d))
+	}
+
+	web.JSON(w, http.StatusOK, map[string]any{
+		"school": schoolBody{
+			ID: school.ID.String(), Slug: school.Slug, Name: school.Name, Accent: school.Accent,
+		},
+		"devices": out,
+
+		// EVERY PERSON ONCE, which is not the sum of the rows above.
+		"people": held.People,
+
+		// The word for a browser that told us nothing, sent rather than spelled
+		// in the interface, for the reason the map sends its own.
+		"unknown": Unknown,
+
+		/* AND WHY THAT ROW IS LARGE, said by the thing that knows. It is not a
+		   gap in the data: only Chromium sends the hints, the page fills in for
+		   the browsers it can, and what is left told us nothing. An operator
+		   reading a big `unknown` should find the reason rather than conclude
+		   the column is broken. */
+		"why_unknown": "Only Chromium-based browsers send the hint this is read from. The page " +
+			"reports one for the rest, so what is left here is a browser that sent neither — " +
+			"an old one, a privacy extension, or something that is not a browser at all. It is " +
+			"a row and not a gap, and folding it into the largest bucket would turn a report " +
+			"about the browsers we can read into a report about the audience.",
 
 		"counting":    counting,
 		"banner":      banner,

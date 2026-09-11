@@ -41,6 +41,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/platform/cloudrun"
 	"github.com/codeschool-ing/schooling/internal/platform/config"
 	"github.com/codeschool-ing/schooling/internal/platform/database"
+	"github.com/codeschool-ing/schooling/internal/platform/device"
 	"github.com/codeschool-ing/schooling/internal/platform/geo"
 	"github.com/codeschool-ing/schooling/internal/platform/geo/dbip"
 	"github.com/codeschool-ing/schooling/internal/platform/logs"
@@ -638,6 +639,25 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			for _, p := range places {
 				out = append(out, analysis.Origin{
 					Country: p.Country, VisitorID: p.VisitorID, AccountID: p.AccountID,
+				})
+			}
+			return out, nil
+		},
+
+		/* AND WHAT THEY WERE ON, which is the same shape one reader along and
+		   deliberately so: the two reports fold identities into people the same
+		   way, so the two screens agree about how many people there are. */
+		func(ctx context.Context, school uuid.UUID, since time.Time,
+			who analysis.Counting) ([]analysis.Holding, error) {
+
+			held, err := events.Devices(ctx, school, since, counting(who))
+			if err != nil {
+				return nil, err
+			}
+			out := make([]analysis.Holding, 0, len(held))
+			for _, h := range held {
+				out = append(out, analysis.Holding{
+					Device: h.Device, VisitorID: h.VisitorID, AccountID: h.AccountID,
 				})
 			}
 			return out, nil
@@ -1364,6 +1384,35 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			}
 			return out, nil
 		},
+
+		/* AND THE FIFTH: what they are on.
+
+		   THE SAME STORE AND THE SAME LINKS as the one above it, deliberately:
+		   the two reports fold identities into people identically, so the two
+		   screens agree about how many people there are. Written any other way
+		   they would be two totals on two screens of one console, both right by
+		   their own definition and neither reconcilable. */
+		func(ctx context.Context, school uuid.UUID, since time.Time,
+			word string) (console.Held, error) {
+
+			who, known := analysis.Reading(word)
+			if !known {
+				return console.Held{}, fmt.Errorf("%q is not a population this counts", word)
+			}
+			held, err := items.Devices(ctx, school, since, who)
+			if err != nil {
+				return console.Held{}, err
+			}
+			out := console.Held{
+				People:  held.People,
+				Devices: make([]console.Device, 0, len(held.Devices)),
+			}
+			for _, d := range held.Devices {
+				out.Devices = append(out.Devices,
+					console.Device{Kind: d.Kind, People: d.People, Students: d.Students})
+			}
+			return out, nil
+		},
 	).Routes(staffAPI)
 
 	/* AND THE SUPPORT TOOL K-02 GIVES THREE RESTRAINTS TO.
@@ -1831,6 +1880,16 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		   store your IP address" is a property of one function rather than of
 		   everybody remembering. */
 		geo.Country(geo.Settings{Hops: proxiesInFront(cfg), Resolve: country}, log),
+
+		/* AND WHAT THEY ARE ON, BESIDE IT, FOR THE SAME REASONS IN THE SAME
+		   ORDER. It is a dimension of an event, every host emits events, and a
+		   middleware mounted per mux would be three places for one rule.
+
+		   IT READS HEADERS AND NOTHING ELSE — no address, no user-agent — so
+		   unlike its neighbour it makes no promise that needs guarding. What it
+		   shares with it is the shape: resolved once per request, put in the
+		   context, and read at emission by whoever needs it. */
+		device.Kind(),
 
 		web.Recover,
 		web.NoStore,
@@ -2441,7 +2500,8 @@ func studentEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) p
 		e := event.Event{
 			Name: name,
 			Dimensions: event.ForSchool(school, slug,
-				string(plan(ctx)), geo.FromContext(ctx), account.Locale, who(account)),
+				string(plan(ctx)), geo.FromContext(ctx), account.Locale, who(account)).
+				On(device.FromContext(ctx)),
 			AccountID: &account.ID,
 			Payload:   payload,
 			RequestID: web.RequestIDFrom(ctx),
@@ -2479,14 +2539,16 @@ func visitorEvents(events *event.Store, log *slog.Logger, plan catalog.PlanOf) c
 		// there is one, and are the honest "we do not know" when there is not.
 		if account, signedIn := identity.FromContext(ctx); signedIn {
 			e.Dimensions = event.ForSchool(school, slug,
-				string(plan(ctx)), geo.FromContext(ctx), account.Locale, who(account))
+				string(plan(ctx)), geo.FromContext(ctx), account.Locale, who(account)).
+				On(device.FromContext(ctx))
 			e.AccountID = &account.ID
 		} else {
 			// A SIGNED-OUT BROWSER IS A REAL ONE. Nothing seeded reaches this
 			// code path: a synthetic population is written by the seeder, with
 			// the flag on every row it writes.
 			e.Dimensions = event.ForSchool(school, slug,
-				event.PlanNone, geo.FromContext(ctx), event.Unknown, event.Real)
+				event.PlanNone, geo.FromContext(ctx), event.Unknown, event.Real).
+				On(device.FromContext(ctx))
 		}
 		if id, ok := visitor.FromContext(ctx); ok {
 			e.VisitorID = &id
@@ -2562,7 +2624,8 @@ func subscriptionEvents(events *event.Store, accounts *identity.Store,
 		e := event.Event{
 			Name: name,
 			Dimensions: event.ForPlatform(plan,
-				geo.FromContext(ctx), account.Locale, who(account)),
+				geo.FromContext(ctx), account.Locale, who(account)).
+				On(device.FromContext(ctx)),
 			AccountID: &account.ID,
 			Payload:   payload,
 			RequestID: web.RequestIDFrom(ctx),
@@ -2593,10 +2656,11 @@ func arrived(events *event.Store, log *slog.Logger) visitor.Arrived {
 		// REAL, because there is no account yet to be synthetic. A browser
 		// reaching this middleware came here on its own.
 		dimensions := event.ForPlatform(event.PlanNone,
-			geo.FromContext(ctx), event.Unknown, event.Real)
+			geo.FromContext(ctx), event.Unknown, event.Real).On(device.FromContext(ctx))
 		if id, slug, ok := schoolOf(ctx); ok {
 			dimensions = event.ForSchool(id, slug,
-				event.PlanNone, geo.FromContext(ctx), event.Unknown, event.Real)
+				event.PlanNone, geo.FromContext(ctx), event.Unknown, event.Real).
+				On(device.FromContext(ctx))
 		}
 
 		e := event.Event{
@@ -2643,10 +2707,11 @@ func signedUp(visitors *visitor.Store, events *event.Store, accounts *identity.S
 		}
 
 		dimensions := event.ForPlatform(event.PlanNone,
-			geo.FromContext(ctx), account.Locale, who(account))
+			geo.FromContext(ctx), account.Locale, who(account)).On(device.FromContext(ctx))
 		if id, slug, ok := schoolOf(ctx); ok {
 			dimensions = event.ForSchool(id, slug, event.PlanNone,
-				geo.FromContext(ctx), account.Locale, who(account))
+				geo.FromContext(ctx), account.Locale, who(account)).
+				On(device.FromContext(ctx))
 		}
 
 		e := event.Event{
@@ -2699,7 +2764,8 @@ func confirmed(accounts *identity.Store, events *event.Store, log *slog.Logger) 
 		e := event.Event{
 			Name: "account.confirmed",
 			Dimensions: event.ForPlatform(event.PlanNone,
-				geo.FromContext(r.Context()), account.Locale, who(account)),
+				geo.FromContext(r.Context()), account.Locale, who(account)).
+				On(device.FromContext(r.Context())),
 			AccountID: &account.ID,
 			RequestID: web.RequestIDFrom(r.Context()),
 		}
@@ -2765,7 +2831,8 @@ func changed(accounts *identity.Store, notifier *notify.Notifier,
 		e := event.Event{
 			Name: "account.address_changed",
 			Dimensions: event.ForPlatform(event.PlanNone,
-				geo.FromContext(r.Context()), account.Locale, who(account)),
+				geo.FromContext(r.Context()), account.Locale, who(account)).
+				On(device.FromContext(r.Context())),
 			AccountID: &account.ID,
 			RequestID: web.RequestIDFrom(r.Context()),
 		}

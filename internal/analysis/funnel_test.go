@@ -46,8 +46,8 @@ func funnelOver(t *testing.T, pool *pgxpool.Pool,
 		nil, // the funnel reads neither months nor countries; `cohort_test.go`
 		nil, // and `countries_test.go` cover those three readers
 		nil,
-		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil },
-	)
+		nil,
+		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil })
 }
 
 // The step that belongs to no school, named here because these tests are about
@@ -416,8 +416,8 @@ func TestThePopulationAskedForIsThePopulationRead(t *testing.T) {
 			nil,
 			nil,
 			nil,
-			func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return nil, nil },
-		)
+			nil,
+			func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return nil, nil })
 
 		if _, err := store.Funnel(context.Background(), uuid.New(), time.Time{}, who); err != nil {
 			t.Fatal(err)

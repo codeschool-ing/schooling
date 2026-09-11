@@ -704,3 +704,80 @@ func namesOf(rows []event.Reach) []string {
 	}
 	return out
 }
+
+// WHAT THEY WERE ON IS A DIMENSION LIKE THE FOUR ABOVE, and it is the only one
+// that defaults rather than being passed: a nightly job has no device, so both
+// constructors say `unknown` and `On` replaces it where a request can be read.
+//
+// The default is what this test is really about. A dimension that arrived empty
+// would fail at the INSERT with a message about a constraint, three layers from
+// the call site that forgot it.
+func TestADeviceDefaultsToUnknownAndIsReplacedByOn(t *testing.T) {
+	pool := testPool(t)
+	id, slug := school(t, pool)
+	ctx := context.Background()
+	store := event.NewStore(pool)
+
+	nobody := uuid.New()
+	if err := store.Emit(ctx, event.Event{
+		Name:       "job.ran",
+		Dimensions: event.ForSchool(id, slug, "annual", "BR", "pt-br", event.Real),
+		AccountID:  &nobody,
+	}); err != nil {
+		t.Fatalf("emitting without a device: %v", err)
+	}
+
+	somebody := uuid.New()
+	if err := store.Emit(ctx, event.Event{
+		Name: "section.read",
+		Dimensions: event.ForSchool(id, slug, "annual", "BR", "pt-br", event.Real).
+			On("phone"),
+		AccountID: &somebody,
+	}); err != nil {
+		t.Fatalf("emitting on a phone: %v", err)
+	}
+
+	var unsaid, said string
+	if err := pool.QueryRow(ctx,
+		`SELECT device FROM events WHERE name = 'job.ran' AND tenant_id = $1`,
+		id).Scan(&unsaid); err != nil {
+		t.Fatalf("reading the one with no device: %v", err)
+	}
+	if err := pool.QueryRow(ctx,
+		`SELECT device FROM events WHERE name = 'section.read' AND tenant_id = $1`,
+		id).Scan(&said); err != nil {
+		t.Fatalf("reading the one on a phone: %v", err)
+	}
+
+	if unsaid != event.Unknown {
+		t.Errorf("an event nobody said a device for recorded %q", unsaid)
+	}
+	if said != "phone" {
+		t.Errorf("an event on a phone recorded %q", said)
+	}
+
+	// AN EMPTY WORD LEAVES THE DEFAULT STANDING, so a caller reading a context
+	// no middleware wrote to does not replace a word with a blank.
+	blank := uuid.New()
+	if err := store.Emit(ctx, event.Event{
+		Name: "section.read.again",
+		Dimensions: event.ForSchool(id, slug, "annual", "BR", "pt-br", event.Real).
+			On(""),
+		AccountID: &blank,
+	}); err != nil {
+		t.Fatalf("emitting with an empty device: %v", err)
+	}
+
+	held, err := store.Devices(ctx, id, time.Time{}, event.CountingReal)
+	if err != nil {
+		t.Fatalf("reading what people were on: %v", err)
+	}
+	seen := map[string]bool{}
+	for _, h := range held {
+		seen[h.Device] = true
+	}
+	if !seen["phone"] || !seen[event.Unknown] {
+		t.Errorf("the breakdown came back as %+v, and it should hold both a phone "+
+			"and the two that said nothing", held)
+	}
+}

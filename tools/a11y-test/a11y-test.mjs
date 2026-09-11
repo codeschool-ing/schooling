@@ -1666,13 +1666,25 @@ try {
     await check(staff.page, `${theme} · console, reported content`, '/#/reports', '/reports',
       { base: CONSOLE, region: '#stage', settled: '.report-card' });
 
+    /* WHAT THEY ARE ON, which is the map's screen without the map.
+
+       `settled` ASKS FOR A ROW and not for the list, so the empty state cannot
+       pass as the screen — the trap `settled: '.report-card'` avoids one
+       check above. The rows are real: this suite's student signs up and studies
+       through the actual API, so the dimension is recorded on every event they
+       produce. It arrives from the PAGE and not from a client hint — those are
+       secure-context only and this suite runs over plain HTTP — which is the
+       half of the mechanism a local run is able to exercise at all. */
+    await check(staff.page, `${theme} · console, what they are on`, '/#/devices', '/devices',
+      { base: CONSOLE, region: '#stage', settled: '.hold' });
     /* AND WHAT THEY THINK OF IT, WITH A REAL RATING IN IT — the one the student
        gave on their account screen a few checks ago.
 
        THE `About` SELECT IS MOVED FIRST, because the screen opens on courses and
        nobody in this fixture has finished one — so left alone it would draw its
        empty state, which is a paragraph that meets every contrast rule there is.
-       That is the trap `settled: '.report-card'` avoids one check above.
+       That is the trap the two checks above it avoid, each with a
+       selector that only a row can satisfy.
 
        AND THE WAIT FOR THE ROW IS INSIDE THE `act` RATHER THAN IN `settled`,
        which is not a style choice: `settled` is awaited BEFORE `act` runs, so

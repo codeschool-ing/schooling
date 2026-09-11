@@ -16,6 +16,7 @@ import (
 
 	"github.com/codeschool-ing/schooling/internal/analysis"
 	"github.com/codeschool-ing/schooling/internal/event"
+	"github.com/codeschool-ing/schooling/internal/platform/device"
 )
 
 /* What a seeder has to be held to.
@@ -126,7 +127,7 @@ func TestTheHistoryItWritesCouldHaveHappened(t *testing.T) {
 		broken:    "ex-1",
 	}
 
-	lives := populate(rand.New(rand.NewSource(7)), rand.New(rand.NewSource(7+1)), s, from, to, 400) //nolint:gosec // repeatable on purpose
+	lives := populate(rand.New(rand.NewSource(7)), rand.New(rand.NewSource(7+1)), rand.New(rand.NewSource(7+2)), s, from, to, 400) //nolint:gosec // repeatable on purpose
 
 	// The order the steps of a journey may appear in. A step is only allowed
 	// once whatever comes before it has happened.
@@ -201,7 +202,7 @@ func TestItFallsOffAtEveryStep(t *testing.T) {
 		questions: []question{{id: "ex-1", version: 1, kind: "quiz"}},
 		broken:    "ex-1",
 	}
-	lives := populate(rand.New(rand.NewSource(3)), rand.New(rand.NewSource(3+1)), s, to.AddDate(0, -6, 0), to, 800) //nolint:gosec // repeatable on purpose
+	lives := populate(rand.New(rand.NewSource(3)), rand.New(rand.NewSource(3+1)), rand.New(rand.NewSource(3+2)), s, to.AddDate(0, -6, 0), to, 800) //nolint:gosec // repeatable on purpose
 
 	count := map[string]int{}
 	for _, l := range lives {
@@ -482,7 +483,7 @@ func TestTheSeededPastContainsRefunds(t *testing.T) {
 		broken:    "ex-1",
 	}
 
-	lives := populate(rand.New(rand.NewSource(11)), rand.New(rand.NewSource(11+1)), s, from, to, 800) //nolint:gosec // repeatable on purpose
+	lives := populate(rand.New(rand.NewSource(11)), rand.New(rand.NewSource(11+1)), rand.New(rand.NewSource(11+2)), s, from, to, 800) //nolint:gosec // repeatable on purpose
 
 	started, ended := 0, 0
 	for _, l := range lives {
@@ -537,7 +538,7 @@ func TestOnlyTheSubscriptionMomentsBelongToNoSchool(t *testing.T) {
 		broken:    "ex-1",
 	}
 
-	lives := populate(rand.New(rand.NewSource(13)), rand.New(rand.NewSource(13+1)), s, from, to, 400) //nolint:gosec // repeatable on purpose
+	lives := populate(rand.New(rand.NewSource(13)), rand.New(rand.NewSource(13+1)), rand.New(rand.NewSource(13+2)), s, from, to, 400) //nolint:gosec // repeatable on purpose
 
 	for i, l := range lives {
 		for _, m := range l.moments {
@@ -583,7 +584,7 @@ func TestAfterARefundTheLaterEventsSayTheyAreNotPaying(t *testing.T) {
 		broken:    "ex-1",
 	}
 
-	lives := populate(rand.New(rand.NewSource(17)), rand.New(rand.NewSource(17+1)), s, from, to, 800) //nolint:gosec // repeatable on purpose
+	lives := populate(rand.New(rand.NewSource(17)), rand.New(rand.NewSource(17+1)), rand.New(rand.NewSource(17+2)), s, from, to, 800) //nolint:gosec // repeatable on purpose
 
 	checked := 0
 	for i, l := range lives {
@@ -661,6 +662,7 @@ func TestThePlantedKeyIsFoundOnEverySeed(t *testing.T) {
 		lives := populate(
 			rand.New(rand.NewSource(seed)),   //nolint:gosec // repeatable on purpose
 			rand.New(rand.NewSource(seed+1)), //nolint:gosec // the same
+			rand.New(rand.NewSource(seed+2)), //nolint:gosec // the same again
 			s, from, to, enoughPeople)
 
 		answers := map[string][]analysis.Answer{}
@@ -732,6 +734,7 @@ func TestNoGoodQuestionIsCondemnedOnAnySeed(t *testing.T) {
 		lives := populate(
 			rand.New(rand.NewSource(seed)),   //nolint:gosec // repeatable on purpose
 			rand.New(rand.NewSource(seed+1)), //nolint:gosec // the same
+			rand.New(rand.NewSource(seed+2)), //nolint:gosec // the same again
 			s, from, to, enoughPeople)
 
 		answers := map[string][]analysis.Answer{}
@@ -811,8 +814,9 @@ func TestASeededSubscriberStudiesAfterPaying(t *testing.T) {
 	}
 
 	lives := populate(
-		rand.New(rand.NewSource(21)), //nolint:gosec // repeatable on purpose
-		rand.New(rand.NewSource(22)), //nolint:gosec // the same
+		rand.New(rand.NewSource(21)),  //nolint:gosec // repeatable on purpose
+		rand.New(rand.NewSource(22)),  //nolint:gosec // the same
+		rand.New(rand.NewSource(122)), //nolint:gosec // the same again
 		s, from, to, 900)
 
 	subscribers, stayed := 0, 0
@@ -867,8 +871,9 @@ func TestARefundedSubscriberStopsStudyingWhatTheyBought(t *testing.T) {
 	}
 
 	lives := populate(
-		rand.New(rand.NewSource(23)), //nolint:gosec // repeatable on purpose
-		rand.New(rand.NewSource(24)), //nolint:gosec // the same
+		rand.New(rand.NewSource(23)),  //nolint:gosec // repeatable on purpose
+		rand.New(rand.NewSource(24)),  //nolint:gosec // the same
+		rand.New(rand.NewSource(124)), //nolint:gosec // the same again
 		s, from, to, 900)
 
 	checked := 0
@@ -894,5 +899,50 @@ func TestARefundedSubscriberStopsStudyingWhatTheyBought(t *testing.T) {
 	}
 	if checked == 0 {
 		t.Skip("this seed produced no refunds, so there was nothing to check")
+	}
+}
+
+/*
+AND THE DEVICES IT WRITES ARE THE FOUR THE PLATFORM KNOWS.
+
+	The same failure as the countries above, one column along: a word this
+	seeder invented would be a row on the console's breakdown that no real
+	browser can ever produce, sitting next to rows that look exactly like it.
+	`device.Known` is the closed list and this is held to it.
+
+	IT ALSO HAS TO PRODUCE `unknown` HEAVILY. That row will be the biggest one
+	on the real screen for a long time — only Chromium sends the hint — and a
+	seeded demonstration without it would teach an operator the wrong shape,
+	which is the one thing a seeded population exists to avoid (K-09).
+*/
+func TestTheSeededDevicesAreTheFourThePlatformKnows(t *testing.T) {
+	r := rand.New(rand.NewSource(1)) //nolint:gosec // repeatable on purpose
+
+	seen := map[string]int{}
+	const draws = 2000
+	for i := 0; i < draws; i++ {
+		what := holding(r)
+		if !device.Known(what) {
+			t.Fatalf("the seeder writes %q, which is not one of the four words the "+
+				"platform can ever record", what)
+		}
+		seen[what]++
+	}
+
+	// All four, or the weighting has collapsed and a seeded screen would be
+	// missing a row an operator has to learn to read.
+	if len(seen) != 4 {
+		t.Errorf("two thousand draws produced %v, and there are four words", seen)
+	}
+
+	// AND `unknown` IS THE BIGGEST, because that is what the real screen will
+	// look like. A demonstration whose largest row is one the real one does not
+	// have is a demonstration of a different platform.
+	for what, many := range seen {
+		if what != device.Unknown && many >= seen[device.Unknown] {
+			t.Errorf("%q came up %d times against %d for %q — the row that will be "+
+				"biggest in reality is not the biggest here",
+				what, many, seen[device.Unknown], device.Unknown)
+		}
 	}
 }

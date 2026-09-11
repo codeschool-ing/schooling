@@ -85,6 +85,39 @@ const landing = (() => {
   }
 })();
 
+/* WHAT THIS IS, IN ONE OF FOUR WORDS.
+
+   THE SERVER ASKS THE BROWSER FIRST AND THIS IS THE FALLBACK. `Sec-CH-UA-Mobile`
+   and `Sec-CH-UA-Platform` are sent by Chromium and by nothing else, so without
+   this line every iPhone on Safari and every Firefox would be recorded as
+   "unknown" — a hole big enough to make the whole number a report about
+   Chromium wearing the word "students".
+
+   IT IS THE VIEWPORT AND THE POINTER, WHICH IS WHAT THE LAYOUT ITSELF RESPONDS
+   TO. A coarse pointer is a finger; the width is which of the stylesheet's
+   layouts is in use. Between them they separate the three shapes about as well
+   as anything can from inside a page, and neither is a fingerprint: what leaves
+   here is one of four words, never a width and never a pointer.
+
+   READ ONCE, AT LOAD, LIKE THE LANDING ABOVE. A window resized across the
+   breakpoint mid-session is somebody dragging a window rather than changing
+   device, and a dimension that flipped halfway through an evening would make
+   one person two rows on every report.
+
+   THE SERVER BOUNDS IT TO THE SAME FOUR WORDS, because this is a header and a
+   header is the caller's. Anything else lands as "unknown". */
+const shape = (() => {
+  if (reading) return '';
+  try {
+    const finger = globalThis.matchMedia('(pointer: coarse)').matches;
+    const wide = globalThis.matchMedia('(min-width: 861px)').matches;
+    if (!finger) return 'computer';
+    return wide ? 'tablet' : 'phone';
+  } catch (e) {
+    return ''; // no matchMedia: a worker, or a harness
+  }
+})();
+
 async function request(method, path, body) {
   if (reading) {
     if (method === 'GET' && Object.hasOwn(baked.answers, path)) return baked.answers[path];
@@ -101,6 +134,10 @@ async function request(method, path, body) {
     // this request's own `Referer`, which is this page.
     headers['X-Schooling-Landing-Referrer'] = landing.referrer;
   }
+  // ON EVERY REQUEST AND NOT ONLY THE FIRST, unlike the landing above: the
+  // device is a dimension of each EVENT rather than of the first touch, and a
+  // person who arrives on a phone and studies on a laptop is both.
+  if (shape) headers['X-Schooling-Device'] = shape;
 
   let response;
   try {

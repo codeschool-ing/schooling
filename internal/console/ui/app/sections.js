@@ -31,6 +31,7 @@ import funnel from './screens/funnel.js';
 import questions from './screens/questions.js';
 import cohorts from './screens/cohorts.js';
 import countries from './screens/countries.js';
+import devices from './screens/devices.js';
 import presence from './screens/presence.js';
 import ratings from './screens/ratings.js';
 import reports from './screens/reports.js';
@@ -70,6 +71,13 @@ export const SECTIONS = [
      what somebody came for. A rail entry called "the map" would promise the
      half that is decoration. */
   { id: 'countries', name: 'Where they are', group: 'Measure', screen: countries },
+
+  /* AND WHAT THEY ARE ON, DIRECTLY BESIDE IT, because they are one question
+     asked about two dimensions of the same arrival — and because reading them
+     together is what the second column of this one is for: a share of the
+     people on phones means nothing until it sits next to how many of them ever
+     signed up. */
+  { id: 'devices', name: 'What they are on', group: 'Measure', screen: devices },
 
   /* AND THE ONE MEASUREMENT WHOSE SUBJECT IS US. Every entry above it counts
      the students; this one counts what they said about the material and about
