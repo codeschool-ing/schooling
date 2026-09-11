@@ -478,6 +478,65 @@ async function lessonAnswered(theme) {
   }
 }
 
+/* ---------- a matching question, WITH its right-hand column ----------
+
+   THE ONE TYPE THAT COULD ONLY EVER FAIL OFF THE PAPER.
+
+   The server presents a matching question as two parallel arrays, `left` and
+   `right`, the pairing removed, because the pairing IS the answer. `api.js`
+   files them as `pairs[i].left` and `ex.rights`, writing no `pairs[i].right`
+   because there is none. `matching.js` read `ex.rights` only when the mode was
+   `exam` — so on a paper it worked, and in a LESSON and in a DRILL it mapped
+   `p.right` over pairs that have none and drew a column of empty tiles.
+
+   A student could not answer it. It reached a real deployment and was found by
+   somebody opening the page.
+
+   WHY NO SUITE COULD HAVE SAID SO: the fixture covered every question type on
+   the exam, and outside one it had a quiz and an ordering — neither of which
+   has a second column. The defect was unreachable by construction. `dr-zmatch`
+   is there so it is reachable, and this is what reads it.
+
+   It asserts the TEXT of the tiles and not their count: three empty tiles are
+   three tiles, laid out correctly, with the contrast of the theme, and axe is
+   perfectly happy with them. */
+async function lessonMatchingHasItsOptions(theme) {
+  const page = await open(theme, 'en');
+  try {
+    await signUp(page, 'Grace Hopper', `a11y-match-${Date.now()}-${theme}@example.tld`);
+
+    const [served] = await Promise.all([
+      page.waitForResponse((r) => /\/lessons\/[^/]+\/exercises/.test(r.url()), { timeout: 15000 }),
+      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0/assessment`, { waitUntil: 'load' }),
+    ]);
+    const questions = await served.json();
+    const at = questions.findIndex((q) => q.type === 'matching');
+    if (at < 0) {
+      throw new Error('the lesson serves no matching question, so this checks nothing — '
+        + '`dr-zmatch` is in the fixture for exactly this reason');
+    }
+
+    await page.waitForSelector('.wz-dot', { timeout: 8000 });
+    await page.click(`.wz-dot[data-ir="${at}"]`);
+    await page.waitForSelector('.tile-right', { timeout: 8000 });
+
+    const tiles = await page.evaluate(() =>
+      [...document.querySelectorAll('.tile-right')].map((t) => t.textContent.trim()));
+
+    if (!tiles.length) throw new Error('the right-hand column drew no tiles at all');
+    const blank = tiles.filter((t) => !t).length;
+    if (blank) {
+      throw new Error(`${blank} of the ${tiles.length} options in the right-hand column are `
+        + 'EMPTY — the renderer read `pairs[i].right`, which the server does not send, instead '
+        + 'of `ex.rights`, which it does. The question cannot be answered');
+    }
+    return page;
+  } catch (e) {
+    await done(page);
+    throw e;
+  }
+}
+
 /* ---------- a lesson's prose, as ELEMENTS and not as its own source ----------
 
    THE SECOND JOIN NOTHING WAS LOOKING AT, and it failed more quietly than the
@@ -1110,6 +1169,20 @@ try {
     if (lessonPage) {
       await measure(lessonPage, `${theme} · a lesson's own questions, answered`);
       await done(lessonPage);
+    }
+
+    /* AND A MATCHING QUESTION WITH ITS OPTIONS. See `lessonMatchingHasItsOptions`
+       for the mode that had none. */
+    let matchPage = null;
+    try {
+      matchPage = await lessonMatchingHasItsOptions(theme);
+    } catch (e) {
+      violations += 1;
+      console.error(`✗ ${theme} · a lesson's matching question — ${e.message}`);
+    }
+    if (matchPage) {
+      await measure(matchPage, `${theme} · a lesson's matching question, both columns`);
+      await done(matchPage);
     }
 
     /* AND THE LESSON'S WORDS, AS ELEMENTS. Same shape of failure as above and

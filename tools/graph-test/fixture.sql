@@ -366,7 +366,16 @@ ON CONFLICT DO NOTHING;
    paper. So the practice screen needs its own, and these are it — the same
    shapes, in a lesson rather than on an exam.
 
-   Two, because a queue of one never exercises "next question". */
+   Two, because a queue of one never exercises "next question".
+
+   AND A `matching`, WHICH IS THE ONE TYPE THAT CAN ONLY FAIL HERE. The server
+   presents a matching question as two parallel arrays with the pairing removed,
+   and `matching.js` read the right-hand one only when the mode was `exam` — so
+   a matching question worked on a paper and drew a column of EMPTY tiles in a
+   lesson and in a drill. The reason nothing said so is this list: every type
+   was covered on the exam above, and the only two shapes reachable outside one
+   were a quiz and an ordering, neither of which has a second column. A fixture
+   that cannot express the defect is a suite that cannot find it. */
 
 INSERT INTO catalog_exercises
   (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
@@ -377,7 +386,9 @@ FROM tenants t, (VALUES
   ('dr-quiz', 'quiz', 'Who is the client in an exchange?',
    '{"id":"dr-quiz","version":1,"type":"quiz","prompt":"Who is the client in an exchange?","choices":[{"text":"Whoever asks","correct":true,"why":"The roles belong to the moment, not the machine."},{"text":"Whoever answers"},{"text":"Whichever machine is smaller"}]}'),
   ('dr-order', 'ordering', 'Put the steps of a request in order.',
-   '{"id":"dr-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}')
+   '{"id":"dr-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}'),
+  ('dr-zmatch', 'matching', 'Match each symptom to what it tells you.',
+   '{"id":"dr-zmatch","version":1,"type":"matching","prompt":"Match each symptom to what it tells you.","pairs":[{"left":"It hangs, then gives up","right":"Nobody was there to say no"},{"left":"Refused in under a millisecond","right":"Something was there and refused"}],"right_distractors":["The request was never sent"]}')
 ) AS q(eid, kind, prompt, payload)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
