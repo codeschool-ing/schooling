@@ -507,41 +507,65 @@ async function sectionsAskTheirOwn(theme) {
   try {
     await signUp(page, 'Barbara Liskov', `a11y-sections-${Date.now()}-${theme}@example.tld`);
 
-    const prompts = async (path) => {
+    /* THE SECTION'S OWN HEADING IS WAITED FOR FIRST, AND THAT IS NOT CAUTION.
+
+       These are two addresses that differ only in the FRAGMENT, so `page.goto`
+       does not reload anything — it fires `hashchange` and the app re-renders on
+       its own clock. Waiting for a selector straight after it finds the PREVIOUS
+       screen's, which is still in the document.
+
+       That is how this check first failed: it reported the practice section
+       asking the reading's question, and the request log showed the navigation
+       had happened correctly. It was reading the screen it had just left. The
+       title is waited for because it is what changes when the new section is
+       drawn; the prompts are waited for after it, because the questions mount a
+       fetch later than the section around them. */
+    const prompts = async (path, heading) => {
       await page.goto(`${BASE}/#/course/web-fundamentals/${path}`, { waitUntil: 'load' });
+      await page.waitForFunction((want) => {
+        const h = document.querySelector('.section-title');
+        return Boolean(h) && h.textContent.trim() === want;
+      }, heading, { timeout: 10000 });
       await page.waitForSelector('.ex-prompt, .assessment-pending', { timeout: 10000 });
-      return page.evaluate(() =>
-        [...document.querySelectorAll('.ex-prompt')].map((p) => p.textContent.trim()));
+      /* THE DOTS AND NOT ONLY THE PROMPTS. The wizard shows one question at a
+         time, so the visible prompt says which question is FIRST and nothing
+         about how many there are — and "this section asks nobody else's" is a
+         claim about how many. There is one dot per question. */
+      return page.evaluate(() => ({
+        shown: [...document.querySelectorAll('.ex-prompt')].map((p) => p.textContent.trim()),
+        count: document.querySelectorAll('.wz-dot').length,
+      }));
     };
 
-    /* The reading. `dr-quiz` is assigned to it and `dr-order` is not. */
-    const reading = await prompts('lesson/0');
-    if (!reading.some((t) => t.includes('Who is the client'))) {
-      throw new Error(`the reading section asked ${JSON.stringify(reading)} — its own question `
-        + 'is not among them, so the section field is still not being read');
+    /* The reading. The fixture assigns `dr-quiz` to it and `dr-order` to the
+       practice section, so one question each: a section showing two is the old
+       behaviour, every question of the lesson in one pile. */
+    const reading = await prompts('lesson/0', 'The two roles');
+    if (!reading.shown.some((t) => t.includes('Who is the client'))) {
+      throw new Error(`the reading section asked ${JSON.stringify(reading.shown)} — its own `
+        + 'question is not among them, so the section field is still not being read');
     }
-    if (reading.some((t) => t.includes('Put the steps'))) {
-      throw new Error('the reading section asked a question belonging to the practice section, '
-        + 'which is the old behaviour: every question of the lesson in one pile');
+    if (reading.count !== 1) {
+      throw new Error(`the reading section carries ${reading.count} questions and is assigned 1 `
+        + '— it is being given the whole lesson, which is what this is about');
     }
 
     /* And the practice section, which is the assessment. Its heading is its own
        title rather than the word "Assessment", because it is a real section. */
-    const closing = await prompts('lesson/0/se-drlaaaa2');
-    if (!closing.some((t) => t.includes('Put the steps'))) {
-      throw new Error(`the practice section asked ${JSON.stringify(closing)} — a practice `
+    const closing = await prompts('lesson/0/se-drlaaaa2', 'Putting it together');
+    if (!closing.shown.some((t) => t.includes('Put the steps'))) {
+      throw new Error(`the practice section asked ${JSON.stringify(closing.shown)} — a practice `
         + 'section used to render nothing at all, having no branch of its own');
     }
-    if (closing.some((t) => t.includes('Who is the client'))) {
-      throw new Error('the practice section repeated the reading\'s question, so a student '
-        + 'answers it twice');
+    if (closing.count !== 1) {
+      throw new Error(`the practice section carries ${closing.count} questions and is assigned 1 `
+        + "— the extra is the reading's, which a student would then answer twice");
     }
 
-    const titled = await page.textContent('.section-title');
-    if (!titled || !titled.includes('Putting it together')) {
-      throw new Error(`the practice section is headed ${JSON.stringify(titled)} rather than its `
-        + 'own title — a section with no prose file shows its id, which is what students read');
-    }
+    /* That the practice section is headed by its own title rather than its id
+       is asserted by the wait above: it is how this knew it had arrived. A
+       section with no prose file shows `se-drlaaaa2`, and the wait would time
+       out saying so. */
     return page;
   } catch (e) {
     await done(page);
