@@ -228,8 +228,10 @@ ON CONFLICT DO NOTHING;
 
    With one reading section and nothing else, "this section asks its own" and
    "and not somebody else's" are the same sentence and neither can fail. So the
-   two questions are split — `dr-quiz` stays on the reading and `dr-order` moves
-   here — which is the smallest shape where they are different claims. */
+   three questions are split — `dr-quiz` and `dr-zmatch` stay on the reading,
+   `dr-order` moves here — which makes them different claims, and makes the
+   COUNT per section the thing worth asserting: the wizard shows one question at
+   a time, so what is on screen says which is first and nothing about how many. */
 INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, slug, kind, position)
 SELECT id, :'wf', :'les', :'dsec', 'drill', 'practice', 1
 FROM tenants WHERE slug = :'slug'
@@ -393,21 +395,50 @@ ON CONFLICT DO NOTHING;
    paper. So the practice screen needs its own, and these are it — the same
    shapes, in a lesson rather than on an exam.
 
-   Two, because a queue of one never exercises "next question". */
+   Two, because a queue of one never exercises "next question".
+
+   THE `matching` IS NOT DRILLABLE, AND THAT IS A SCOPE LINE RATHER THAN A
+   PROPERTY OF MATCHING QUESTIONS — every matching question in `content/` is
+   drillable. It is held out of the drill queue because a matching question
+   CANNOT BE COMPLETED in a drill or a lesson at all, for a reason this fixture
+   cannot paper over: `setupPractice` builds its answer key in the browser, from
+   `exercise.pairs[i].right`, and a question presented by this server has no
+   such field — the pairing IS the answer and is deliberately kept on the
+   server. So `key[left]` is `undefined`, no pair ever locks, the card never
+   completes, and there is no answer button either because practice matching is
+   self-completing. Putting it in the queue makes `learnTheDrill` hang on a card
+   nobody can finish, which is what CI said.
+
+   That is a second defect and a design decision — the Duolingo interaction
+   needs a key in the browser and this platform does not put one there. It has
+   its own branch. When it is settled, this row becomes drillable and the drill
+   is the better place to check it.
+
+   AND A `matching`, WHICH IS THE ONE TYPE THAT CAN ONLY FAIL HERE. The server
+   presents a matching question as two parallel arrays with the pairing removed,
+   and `matching.js` read the right-hand one only when the mode was `exam` — so
+   a matching question worked on a paper and drew a column of EMPTY tiles in a
+   lesson and in a drill. The reason nothing said so is this list: every type
+   was covered on the exam above, and the only two shapes reachable outside one
+   were a quiz and an ordering, neither of which has a second column. A fixture
+   that cannot express the defect is a suite that cannot find it. */
 
 INSERT INTO catalog_exercises
   (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
    drillable, prompt, payload)
 SELECT t.id, q.eid, :'wf', :'les', q.sec, false, 1, q.kind,
-       true, q.prompt, q.payload::jsonb
+       q.drill, q.prompt, q.payload::jsonb
 FROM tenants t, (VALUES
   ('dr-quiz', 'quiz', 'Who is the client in an exchange?',
    '{"id":"dr-quiz","version":1,"type":"quiz","prompt":"Who is the client in an exchange?","choices":[{"text":"Whoever asks","correct":true,"why":"The roles belong to the moment, not the machine."},{"text":"Whoever answers"},{"text":"Whichever machine is smaller"}]}',
-   :'sec'),
+   true, :'sec'),
+  ('dr-zmatch', 'matching', 'Match each symptom to what it tells you.',
+   '{"id":"dr-zmatch","version":1,"type":"matching","prompt":"Match each symptom to what it tells you.","pairs":[{"left":"It hangs, then gives up","right":"Nobody was there to say no"},{"left":"Refused in under a millisecond","right":"Something was there and refused"}],"right_distractors":["The request was never sent"]}',
+   false, :'sec'),
   ('dr-order', 'ordering', 'Put the steps of a request in order.',
    '{"id":"dr-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}',
-   :'dsec')
-) AS q(eid, kind, prompt, payload, sec)
+   true, :'dsec')
+) AS q(eid, kind, prompt, payload, drill, sec)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 

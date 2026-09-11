@@ -537,17 +537,18 @@ async function sectionsAskTheirOwn(theme) {
       }));
     };
 
-    /* The reading. The fixture assigns `dr-quiz` to it and `dr-order` to the
-       practice section, so one question each: a section showing two is the old
-       behaviour, every question of the lesson in one pile. */
+    /* The fixture assigns TWO questions to the reading and ONE to the practice
+       section, out of three in the lesson. The counts are what carry the claim:
+       a section showing three is the old behaviour, every question of the
+       lesson in one pile, and it would pass on the prompts alone. */
     const reading = await prompts('lesson/0', 'The two roles');
     if (!reading.shown.some((t) => t.includes('Who is the client'))) {
       throw new Error(`the reading section asked ${JSON.stringify(reading.shown)} — its own `
         + 'question is not among them, so the section field is still not being read');
     }
-    if (reading.count !== 1) {
-      throw new Error(`the reading section carries ${reading.count} questions and is assigned 1 `
-        + '— it is being given the whole lesson, which is what this is about');
+    if (reading.count !== 2) {
+      throw new Error(`the reading section carries ${reading.count} questions and is assigned 2 `
+        + '— three is the whole lesson in one pile, which is what this is about');
     }
 
     /* And the practice section, which is the assessment. Its heading is its own
@@ -559,13 +560,89 @@ async function sectionsAskTheirOwn(theme) {
     }
     if (closing.count !== 1) {
       throw new Error(`the practice section carries ${closing.count} questions and is assigned 1 `
-        + "— the extra is the reading's, which a student would then answer twice");
+        + "— the extras are the reading's, which a student would then answer twice");
     }
 
     /* That the practice section is headed by its own title rather than its id
        is asserted by the wait above: it is how this knew it had arrived. A
        section with no prose file shows `se-drlaaaa2`, and the wait would time
        out saying so. */
+    return page;
+  } catch (e) {
+    await done(page);
+    throw e;
+  }
+}
+
+/* ---------- a matching question, WITH its right-hand column ----------
+
+   THE ONE TYPE THAT COULD ONLY EVER FAIL OFF THE PAPER.
+
+   The server presents a matching question as two parallel arrays, `left` and
+   `right`, the pairing removed, because the pairing IS the answer. `api.js`
+   files them as `pairs[i].left` and `ex.rights`, writing no `pairs[i].right`
+   because there is none. `matching.js` read `ex.rights` only when the mode was
+   `exam` — so on a paper it worked, and in a LESSON and in a DRILL it mapped
+   `p.right` over pairs that have none and drew a column of empty tiles.
+
+   A student could not answer it. It reached a real deployment and was found by
+   somebody opening the page.
+
+   WHY NO SUITE COULD HAVE SAID SO: the fixture covered every question type on
+   the exam, and outside one it had a quiz and an ordering — neither of which
+   has a second column. The defect was unreachable by construction. `dr-zmatch`
+   is there so it is reachable, and this is what reads it.
+
+   It asserts the TEXT of the tiles and not their count: three empty tiles are
+   three tiles, laid out correctly, with the contrast of the theme, and axe is
+   perfectly happy with them. */
+async function lessonMatchingHasItsOptions(theme) {
+  const page = await open(theme, 'en');
+  try {
+    await signUp(page, 'Grace Hopper', `a11y-match-${Date.now()}-${theme}@example.tld`);
+
+    /* THE SECTION THE QUESTION BELONGS TO, WORKED OUT FROM THE QUESTION.
+
+       This asked for `/assessment`, the synthetic section that used to hold
+       every question of the lesson. There is no such section on a lesson that
+       declares a `practice` one, and a question is now asked in the section it
+       names — so the address comes from the question, and so does the position.
+
+       THE INDEX IS WITHIN THE SECTION AND NOT WITHIN THE LESSON. The route
+       serves the whole lesson ordered by section; the wizard on screen holds
+       one section's worth. Using the lesson-wide index would click the wrong
+       dot as soon as a section before this one has a question, which is the
+       entire arrangement here. */
+    const [served] = await Promise.all([
+      page.waitForResponse((r) => /\/lessons\/[^/]+\/exercises/.test(r.url()), { timeout: 15000 }),
+      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0`, { waitUntil: 'load' }),
+    ]);
+    const questions = await served.json();
+    const target = questions.find((q) => q.type === 'matching');
+    if (!target) {
+      throw new Error('the lesson serves no matching question, so this checks nothing — '
+        + '`dr-zmatch` is in the fixture for exactly this reason');
+    }
+    const sameSection = questions.filter((q) => q.section === target.section);
+    const at = sameSection.findIndex((q) => q.exercise === target.exercise);
+
+    await page.goto(`${BASE}/#/course/web-fundamentals/lesson/0/${target.section}`,
+      { waitUntil: 'load' });
+    await page.waitForFunction((n) => document.querySelectorAll('.wz-dot').length === n,
+      sameSection.length, { timeout: 10000 });
+    await page.click(`.wz-dot[data-ir="${at}"]`);
+    await page.waitForSelector('.tile-right', { timeout: 8000 });
+
+    const tiles = await page.evaluate(() =>
+      [...document.querySelectorAll('.tile-right')].map((t) => t.textContent.trim()));
+
+    if (!tiles.length) throw new Error('the right-hand column drew no tiles at all');
+    const blank = tiles.filter((t) => !t).length;
+    if (blank) {
+      throw new Error(`${blank} of the ${tiles.length} options in the right-hand column are `
+        + 'EMPTY — the renderer read `pairs[i].right`, which the server does not send, instead '
+        + 'of `ex.rights`, which it does. The question cannot be answered');
+    }
     return page;
   } catch (e) {
     await done(page);
@@ -1219,6 +1296,20 @@ try {
     if (ownPage) {
       await measure(ownPage, `${theme} · a lesson's closing section`);
       await done(ownPage);
+    }
+
+    /* AND A MATCHING QUESTION WITH ITS OPTIONS. See `lessonMatchingHasItsOptions`
+       for the mode that had none. */
+    let matchPage = null;
+    try {
+      matchPage = await lessonMatchingHasItsOptions(theme);
+    } catch (e) {
+      violations += 1;
+      console.error(`✗ ${theme} · a lesson's matching question — ${e.message}`);
+    }
+    if (matchPage) {
+      await measure(matchPage, `${theme} · a lesson's matching question, both columns`);
+      await done(matchPage);
     }
 
     /* AND THE LESSON'S WORDS, AS ELEMENTS. Same shape of failure as above and

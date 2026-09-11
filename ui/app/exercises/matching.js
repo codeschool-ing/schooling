@@ -41,11 +41,31 @@ export default {
 
   body(ex, uid, { exam } = {}) {
     const left = shuffleWith(uid + ':e', ex.pairs.map((p) => p.left));
-    /* In an exam the right-hand column arrives from the server as `rights`,
-       already shuffled there, with the pairing removed — `pairs[i].right` does
-       not exist to sort. During practice it is built here, and sorted, so that
-       written order does not hand over the key by position. */
-    const right = exam && Array.isArray(ex.rights)
+    /* WHERE THE RIGHT-HAND COLUMN COMES FROM IS DECIDED BY `rights` EXISTING
+       AND NOT BY THE MODE, and that distinction is the whole of this fix.
+
+       When the server presents a question it sends two parallel arrays, `left`
+       and `right` — the second shuffled there with the pairing removed, because
+       the pairing IS the answer. `api.js` puts them where this file looks:
+       `pairs[i].left` and `ex.rights`. It deliberately writes no
+       `pairs[i].right`, because there is none to write.
+
+       THIS READ `exam && …`. An exam is presented by the server, so it worked.
+       A LESSON AND A DRILL ARE PRESENTED BY THE SERVER TOO and are not exams,
+       so they took the other branch, mapped `p.right` over pairs that have
+       none, and drew a column of empty tiles. A matching question was
+       unanswerable everywhere except on a paper.
+
+       `api.js` states the rule this file was breaking, as a fact about this
+       file: "the renderer reads `ex.rights` … whatever mode it is in". That was
+       a belief about the renderer nobody checked — the same shape as the two
+       defects in #299 and #300, two halves each right on their own terms and
+       disagreeing at the join.
+
+       `rights` present means presented by the server. Absent means the offline
+       copy, where `pairs[i].right` is there and is sorted here so that written
+       order does not hand over the key by position. */
+    const right = Array.isArray(ex.rights) && ex.rights.length
       ? ex.rights.slice()
       : [...ex.pairs.map((p) => p.right), ...(ex.rightDistractors || [])]
         .sort((a, b) => a.localeCompare(b, 'pt'));
