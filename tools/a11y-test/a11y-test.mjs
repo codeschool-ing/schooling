@@ -643,6 +643,46 @@ async function lessonMatchingHasItsOptions(theme) {
         + 'EMPTY — the renderer read `pairs[i].right`, which the server does not send, instead '
         + 'of `ex.rights`, which it does. The question cannot be answered');
     }
+
+    /* AND THEN IT IS ANSWERED, WHICH IS THE HALF THE TILES DO NOT PROVE.
+
+       Visible options and an answerable question are two different claims, and
+       for a while only the first was true: the browser held no key, so no pair
+       could lock, the card never completed, and there was no answer button
+       either. A student saw a full question and could do nothing with it.
+
+       So every left tile is paired with some right tile through the interface,
+       the answer is submitted, and a verdict is expected FROM THE SERVER. Which
+       verdict does not matter — what is being checked is that one arrives at
+       all, against a question this browser cannot mark. */
+    const button = page.locator('.ex .ex-answer').first();
+    if (!(await button.count())) {
+      throw new Error('the matching question has no answer button and nothing on screen can '
+        + 'complete it — which is what `selfCompleting` said before it asked whether this copy '
+        + 'of the question has a key');
+    }
+
+    const lefts = page.locator('.ex .tile-left');
+    const rights = page.locator('.ex .tile-right');
+    const n = await lefts.count();
+    for (let i = 0; i < n; i += 1) {
+      await lefts.nth(i).click();
+      await rights.nth(i).click();
+    }
+    const paired = await page.locator('.ex .tile-left[data-with]').count();
+    if (paired !== n) {
+      throw new Error(`${paired} of ${n} left-hand items took a pairing — clicking a left tile `
+        + 'and then a right one is the whole interaction, and it did not hold');
+    }
+
+    const [reply] = await Promise.all([
+      page.waitForResponse((r) => r.url().includes('/answered'), { timeout: 15000 }),
+      button.click(),
+    ]);
+    if (!reply.ok()) {
+      throw new Error(`answering the matching question: ${reply.status()} ${await reply.text()}`);
+    }
+    await page.waitForSelector('.ex-verdict.v-right, .ex-verdict.v-wrong', { timeout: 8000 });
     return page;
   } catch (e) {
     await done(page);
