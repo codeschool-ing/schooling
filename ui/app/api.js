@@ -800,9 +800,23 @@ export async function loadCourseContent(courseId) {
 export async function lessonExercises(courseId, lessonId) {
   const list = await get(`/api/v1/courses/${enc(courseId)}/lessons/${enc(lessonId)}` +
     `/exercises?lang=${enc(wanted())}`);
+  /* THE COURSE RIDES ALONG, AND IT WAS A PARAMETER OF THIS FUNCTION.
+
+     A `labelling` question names a picture by file name, and `asset()` needs
+     the course to build the address of it — `api.asset(ex.course, ex.image)`.
+     The route does not send a course, because the client asked for one by name
+     and the server had no reason to repeat it. So `ex.course` was `undefined`,
+     `asset()` answered with an empty string, and the renderer drew its "this
+     question needs a picture that is not here" — on a question whose picture is
+     in the repository, in the mirror, and reachable on its own route.
+
+     The drill puts it on the card and an exam paper puts it on the question.
+     This was the third reader and the only one without it, and the value was
+     sitting in the argument list the whole time. */
   return (list || []).map((q) => ({
     ...shownAsExercise(q.question || {}),
     id: q.exercise,
+    course: courseId,
     type: q.type,
     section: q.section,
     difficulty: q.difficulty,

@@ -179,6 +179,41 @@ function measure(svg) {
     }
   }
 
+  /* AND A LINE MAY NOT RUN THROUGH A BOX.
+
+     Reported from a screen: an arrow drawn from a sender to a router passed
+     straight over the firewall box between them, through its label. The two
+     checks above had nothing to say — one measures text, the other measures
+     shapes, and a `<path>` is neither.
+
+     A BACKDROP IS NOT A BOX THE LINE CROSSES, and that distinction is the whole
+     rule. Nearly every figure here draws its arrows INSIDE a panel, and a first
+     version of this reported 28 of them. What is wrong is a line traversing a
+     box SMALLER than the line's own extent — it went through something rather
+     than living within it. With that, the same 66 figures gave four findings,
+     all of them real: the one that was reported, and one in lesson one that
+     nobody had noticed, each in two languages. */
+  for (const path of el.querySelectorAll('path')) {
+    const len = path.getTotalLength();
+    if (!len) continue;
+    const extent = path.getBBox();
+    for (const r of boxes) {
+      if (r.w >= extent.width && r.h >= extent.height) continue;
+      let inside = 0;
+      const n = 120;
+      // The ends are skipped: an arrow is expected to touch what it points at.
+      for (let i = 2; i <= n - 2; i += 1) {
+        const at = path.getPointAtLength((len * i) / n);
+        if (at.x > r.x + 2 && at.x < r.x + r.w - 2 &&
+            at.y > r.y + 2 && at.y < r.y + r.h - 2) inside += 1;
+      }
+      if (inside > 6) {
+        out.push(`a line runs through the box at (${Math.round(r.x)}, ${Math.round(r.y)}), ` +
+          `${Math.round(r.w)} by ${Math.round(r.h)} — over whatever is drawn in it`);
+      }
+    }
+  }
+
   /* AND THE SHAPES, WHICH IS THE HALF THAT WAS MISSING. `core 4` was a bar two
      pixels below the panel drawn around it — nothing to do with text. */
   for (const r of el.querySelectorAll('rect, circle, ellipse')) {
