@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -138,7 +139,7 @@ func TestAnExamQuestionCannotBeAnsweredThroughThisRoute(t *testing.T) {
 	tenant := school(t, pool)
 	questions(t, pool, tenant, seed{"ex-sealed", "free-course", "le-three", true, "quiz", quiz("ex-sealed")})
 
-	_, err := store(pool).Answered(ctx, tenant, "ex-sealed", nil, json.RawMessage(`0`), "en")
+	_, err := store(pool).Answered(ctx, tenant, "ex-sealed", nil, chose(0), "en")
 	if !errors.Is(err, lesson.ErrIsAnExamQuestion) {
 		t.Fatalf("want ErrIsAnExamQuestion, got %v", err)
 	}
@@ -153,7 +154,7 @@ func TestACourseThePlanDoesNotOpenIsRefusedRatherThanServed(t *testing.T) {
 	if _, err := store(pool).Questions(ctx, tenant, "paid-course", "le-four", "en"); !errors.Is(err, lesson.ErrLocked) {
 		t.Fatalf("reading: want ErrLocked, got %v", err)
 	}
-	if _, err := store(pool).Answered(ctx, tenant, "ex-paid", nil, json.RawMessage(`0`), "en"); !errors.Is(err, lesson.ErrLocked) {
+	if _, err := store(pool).Answered(ctx, tenant, "ex-paid", nil, chose(0), "en"); !errors.Is(err, lesson.ErrLocked) {
 		t.Fatalf("answering: want ErrLocked, got %v", err)
 	}
 }
@@ -183,7 +184,7 @@ func TestAWithdrawnQuestionIsLeftOutAndRefusedIfAnswered(t *testing.T) {
 		t.Fatalf("the withdrawn question was served: %+v", got)
 	}
 
-	if _, err := s.Answered(ctx, tenant, "ex-bad", nil, json.RawMessage(`0`), "en"); !errors.Is(err, lesson.ErrWithdrawn) {
+	if _, err := s.Answered(ctx, tenant, "ex-bad", nil, chose(0), "en"); !errors.Is(err, lesson.ErrWithdrawn) {
 		t.Fatalf("want ErrWithdrawn, got %v", err)
 	}
 }
@@ -224,7 +225,7 @@ func TestACorrectAnswerSurvivesTheShuffle(t *testing.T) {
 		t.Fatal("the correct option is not among the ones shown")
 	}
 
-	marked, err := s.Answered(ctx, tenant, "ex-shuf", q.Perm, json.RawMessage([]byte(itoa(at))), "en")
+	marked, err := s.Answered(ctx, tenant, "ex-shuf", q.Perm, chose(at), "en")
 	if err != nil {
 		t.Fatalf("answering: %v", err)
 	}
@@ -264,7 +265,7 @@ func TestAWrongAnswerComesBackWithTheReasonRatherThanOnlyAVerdict(t *testing.T) 
 		t.Fatal("the wrong option under test is not among the ones shown")
 	}
 
-	marked, err := s.Answered(ctx, tenant, "ex-why", q.Perm, json.RawMessage([]byte(itoa(wrong))), "en")
+	marked, err := s.Answered(ctx, tenant, "ex-why", q.Perm, chose(wrong), "en")
 	if err != nil {
 		t.Fatalf("answering: %v", err)
 	}
@@ -305,14 +306,13 @@ func TestThisPackageWritesNothing(t *testing.T) {
 	}
 }
 
-func itoa(n int) string {
-	if n == 0 {
-		return "0"
-	}
-	var b []byte
-	for n > 0 {
-		b = append([]byte{byte('0' + n%10)}, b...)
-		n /= 10
-	}
-	return string(b)
+// chose is one answer to a `quiz`, in the shape the grader decodes.
+//
+// IT IS `{"chose":[n]}` AND NOT `n`, which is the whole of what CI found: a
+// bare number is a well-formed JSON document that `choiceAnswer` cannot read,
+// so every test that answered a question came back with ErrBadAnswer instead
+// of a verdict. There is no database in the environment these were written in,
+// so the first run of them was the one on the server.
+func chose(at int) json.RawMessage {
+	return json.RawMessage(fmt.Sprintf(`{"chose":[%d]}`, at))
 }
