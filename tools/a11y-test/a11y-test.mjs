@@ -628,9 +628,17 @@ async function sectionsAskTheirOwn(theme) {
        is one in the lesson now, last in this section, and this opens it.
 
        The image is asked to DECODE rather than merely to be in the document: a
-       broken address still produces an <img>. */
+       broken address still produces an <img>.
+
+       THE TWO SHAPES TO WAIT FOR ARE `.labelling-board` AND `.ex-error`, which
+       is what the module actually draws. `.ex .labelling` was neither: the type
+       goes on the article itself, as `ex-labelling`, and every class inside the
+       body carries the prefix. So that selector matched nothing on a screen
+       that was drawing perfectly, and this waited out its whole timeout — a
+       selector that cannot match is a check that cannot pass, and it fails the
+       same way the defect it was written for does. */
     await page.click('.wz-dot[data-ir="1"]');
-    await page.waitForSelector('.ex .labelling, .ex .ex-error', { timeout: 8000 });
+    await page.waitForSelector('.ex .labelling-board, .ex .ex-error', { timeout: 8000 });
     const picture = await page.evaluate(async () => {
       const refused = document.querySelector('.ex .ex-error');
       if (refused) return { refused: refused.textContent.trim() };
