@@ -18,9 +18,9 @@ The platform domain is provisional — see *The name* in [`docs/PLAN.md`](docs/P
 | | what it is for |
 |---|---|
 | [`CLAUDE.md`](CLAUDE.md) | the rules the code has to obey, in the imperative. Read this before writing a line. |
-| [`docs/PLAN.md`](docs/PLAN.md) | why each rule exists: 106 decisions with their reasoning, the open questions, the shape of the phases |
+| [`docs/PLAN.md`](docs/PLAN.md) | why each rule exists: 107 decisions with their reasoning, the open questions, the shape of the phases |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | what each phase is made of, as capabilities to tick off |
-| [`docs/CONTENT.md`](docs/CONTENT.md) | the shape of `content/`, what CI checks, what happens when a question turns out to be bad, and how much material a course has to carry — the decisions it settled are C-26 to C-28 |
+| [`docs/CONTENT.md`](docs/CONTENT.md) | the shape of `content/`, what CI checks, what happens when a question turns out to be bad, and how much material a course has to carry and why a subject left out is a defect — the decisions it settled are C-26 to C-28 and C-37 |
 | [`docs/EXERCISES.md`](docs/EXERCISES.md) | what makes a question worth asking rather than merely well formed: the ten ways a question leaks its answer, why difficulty belongs to the thinking and never to the options, and why discrimination is the axis that matters |
 | [`docs/TEACHING.md`](docs/TEACHING.md) | how the material itself is written — when a second explanation is not repetition, when a diagram earns its place, and what goes in a spoken script |
 | [`docs/CONSOLE.md`](docs/CONSOLE.md) | what the console is, whole, and the order it arrives in — the decisions it settled are K-17 to K-22 |
