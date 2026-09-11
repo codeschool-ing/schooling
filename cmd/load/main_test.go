@@ -365,3 +365,75 @@ func TestEveryCatalogueTableIsClearedByTheLoad(t *testing.T) {
 			"that no table answers to is a delete that does nothing", found, len(catalogueTables))
 	}
 }
+
+/*
+A QUESTION REACHES THE MIRROR UNDER A NAME ITS SECTION ANSWERS TO.
+
+	`internal/catalog` asserts the same thing about what the loader produces;
+	this asserts it about the two ROWS, which is what every reader above the
+	mirror actually joins — the lesson screen through the API, and `WhereIs`
+	through `sec.id = e.section_id`.
+
+	Both halves are here because the defect lived between them. `exercises.json`
+	names a section exactly as a filename does, so `catalog_prose.section_id`
+	held `se-65fm07ad` and `catalog_exercises.section_id` held `roles`, and no
+	test compared the two columns to each other. Every question fell past its
+	section into the lesson's assessment, and the browser fixture agreed with the
+	screen rather than with this, so it went green.
+*/
+func TestAQuestionInTheMirrorJoinsToItsSection(t *testing.T) {
+	pool := testPool(t)
+	id, dir := school(t, pool)
+
+	if err := load(t, pool, dir); err != nil {
+		t.Fatalf("loading: %v", err)
+	}
+
+	rows, err := pool.Query(context.Background(), `
+		SELECT e.id, e.section_id
+		FROM catalog_exercises e
+		WHERE e.tenant_id = $1 AND e.lesson_id <> '' AND NOT e.exam
+		  AND NOT EXISTS (
+		      SELECT 1 FROM catalog_sections s
+		      WHERE s.tenant_id = e.tenant_id
+		        AND s.course_id = e.course_id
+		        AND s.lesson_id = e.lesson_id
+		        AND s.id = e.section_id)
+	`, id)
+	if err != nil {
+		t.Fatalf("joining the questions to their sections: %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var exercise, section string
+		if err := rows.Scan(&exercise, &section); err != nil {
+			t.Fatalf("reading an unjoined question: %v", err)
+		}
+		t.Errorf("the question %s is filed under %q and no section of its lesson answers to "+
+			"that — on screen it belongs to no section, and `WhereIs` cannot say which lesson "+
+			"a report about it is about", exercise, section)
+	}
+	if err := rows.Err(); err != nil {
+		t.Fatalf("reading the unjoined questions: %v", err)
+	}
+
+	// AND THE COLUMN IS NOT SIMPLY EMPTY, which would satisfy nothing above but
+	// would also produce no rows for the query to complain about.
+	var lesson string
+	if err := pool.QueryRow(context.Background(), `
+		SELECT coalesce(sec.lesson_id, '')
+		FROM catalog_exercises e
+		LEFT JOIN catalog_sections sec
+		       ON sec.tenant_id = e.tenant_id
+		      AND sec.course_id = e.course_id
+		      AND sec.id = e.section_id
+		WHERE e.tenant_id = $1 AND e.id = $2
+	`, id, rolesQuiz).Scan(&lesson); err != nil {
+		t.Fatalf("asking where the roles quiz lives: %v", err)
+	}
+	if lesson != clientAndServer {
+		t.Errorf("`WhereIs` puts the roles quiz in lesson %q, want %q — a report about a wrong "+
+			"answer key arrives naming no lesson", lesson, clientAndServer)
+	}
+}

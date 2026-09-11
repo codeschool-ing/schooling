@@ -95,6 +95,15 @@ WHERE NOT EXISTS (SELECT 1 FROM plan_prices p WHERE p.scope = 'all');
 \set dp  'co-dpaaaaa7'
 \set trk 'tr-fraaaaa1'
 \set les 'le-4mzk8p2r'
+/* A SECTION'S ID IS WHAT `catalog_exercises.section_id` HOLDS, never its slug.
+   This file hand-writes rows that `cmd/load` would otherwise have written, so
+   it is only as true as its agreement with that loader.
+
+   It said the right thing here while the loader said the other, which is the
+   worse of the two ways to disagree: every browser check passed against a
+   catalogue no load could produce, and every question in `content/` fell past
+   its section on the real site. That agreement is asserted now, against a real
+   load, by TestAQuestionInTheMirrorJoinsToItsSection in `cmd/load`. */
 \set sec 'se-rlaaaaa1'
 -- The lesson's closing set. A `practice` section IS the assessment, rather than
 -- a second thing beside a synthetic one — see the block that seeds it.
