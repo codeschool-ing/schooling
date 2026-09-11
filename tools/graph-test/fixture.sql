@@ -243,14 +243,44 @@ SELECT id, :'hc', :'ples', :'psec', 'padding', 'reading', 0
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
+/* EVERY CONSTRUCT THE CONTENT WRITES, AND NOT A WORD LESS.
+
+   This prose used to be a paragraph, a bold span, a bullet list and a fence —
+   four of the ten forms `prose()` renders. The real lessons write six more, and
+   `blocksOf` recognised none of them: a heading reached the screen as a
+   paragraph reading `## Who asks`, a comparison table as a run of pipes, a
+   numbered list with its numbers typed into the sentence. In lesson one of
+   `web-fundamentals` that was 174 lines, for as long as the lesson has existed.
+
+   A FIXTURE THAT UNDERSTATES THE CONTENT CANNOT CATCH ANYTHING, which is how it
+   survived: every browser check already opened this lesson, and this lesson had
+   no heading in it to come out wrong. So the sample is now the union of what
+   the content actually uses — wrapped list items included, because a wrapped
+   item ended its own list — and `lessonProseRenders` in `a11y-test` asserts
+   each one arrives as an element rather than as its own source text. */
 INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
 SELECT id, :'wf', :'les', :'sec', 'en', 'The two roles',
 $prose$The words **client** and **server** name a moment, not a machine.
 
-Whoever asks is the client. Whoever answers is the server.
+## Who asks, and who waits
+
+Whoever asks is the client. Whoever answers is the server. The role belongs to
+the *exchange*, and **never to the *machine* it runs on**.
 
 - the browser asks
-- the server answers
+- the server answers, and a wrapped item like this one carries on
+  over a second line without ending the list
+
+1. the client opens the exchange
+2. the server answers it, and this item wraps onto a second
+   line as well, to prove the numbering survives it
+
+> A server that remembered you would have to be the same server every time.
+
+| | client | server |
+|---|---|---|
+| starts the exchange | **yes** | no |
+| waits to be spoken to | no | **yes** |
 
 ```
 browser -> server -> database

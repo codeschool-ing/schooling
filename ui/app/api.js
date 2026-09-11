@@ -560,18 +560,62 @@ export async function loadLessonStructure() {
    that is READING did not, in either language. That is what "the material lands
    in Stage 2" was on screen for.
 
-   MARKDOWN SPELLS THREE OF THE FIVE — paragraph, bullet list, fenced code with
-   its language. The other two have no markdown of their own, so the content
-   files carry them as a fence whose info string names the block and whose body
-   is the block as JSON. It is a fence to every markdown reader, including the
-   ones nobody has written yet, and one `switch` here. `tools/…/reimport` wrote
-   them; this reads them. */
+   MARKDOWN SPELLS MOST OF THEM — paragraph, bullet list, numbered list,
+   heading, table, blockquote, fenced code with its language. The three that
+   have no markdown of their own are carried as a fence whose info string names
+   the block and whose body is the block as JSON. It is a fence to every
+   markdown reader, including the ones nobody has written yet, and one `switch`
+   here. `tools/…/reimport` wrote them; this reads them.
+
+   # IT USED TO SPELL THREE, AND THE CONTENT WAS ALREADY WRITING SEVEN
+
+   This function recognised a fence, a `- ` bullet and a blank line. Everything
+   else fell through to the paragraph branch — which is not a failure anything
+   could report, because a paragraph renders perfectly. So `## The two roles`
+   reached the screen as a paragraph reading `## The two roles`, hashes and all;
+   a comparison table reached it as one paragraph of pipes; a numbered list
+   arrived as prose with the numbers typed in it.
+
+   In lesson one of `web-fundamentals` alone that was 174 lines — 70 headings,
+   40 table rows, 28 numbered items, 2 quotations and 34 lines whose italics
+   showed their asterisks. Every check was green the whole time: the markup is
+   valid, the contrast is fine, and axe has no opinion about a paragraph that
+   begins with two hashes. It was invisible for the same reason the rest of this
+   lesson's defects were — the file reads correctly in any markdown viewer, so
+   the one place it was wrong was the one place nobody was looking.
+
+   A MULTI-LINE ITEM IS THE SAME BUG ONE LEVEL DOWN, and the bullet branch had
+   it from the start: a `- ` item wrapped onto a second line ended the list at
+   the wrap, and the continuation became a paragraph of its own between two
+   lists. `continued` below is what folds those back, for both kinds of list. */
 function blocksOf(text) {
   if (typeof text !== 'string') return text;   // already a list: the offline copy
 
   const out = [];
   const lines = text.split('\n');
   let i = 0;
+
+  /* A line that belongs to the item above it: markdown indents a wrapped item,
+     and nothing else in this dialect is indented. It is checked against the
+     RAW line, because `trim()` is what hid the distinction before. */
+  const continued = (s) => /^\s+\S/.test(s);
+
+  const list = (match) => {
+    const items = [];
+    while (i < lines.length) {
+      const m = lines[i].match(match);
+      if (m) { items.push(m[1]); i += 1; continue; }
+      if (items.length && continued(lines[i])) {
+        items[items.length - 1] += ' ' + lines[i].trim();
+        i += 1;
+        continue;
+      }
+      break;
+    }
+    return items;
+  };
+
+  const cells = (s) => s.replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
 
   while (i < lines.length) {
     const line = lines[i];
@@ -596,20 +640,53 @@ function blocksOf(text) {
       continue;
     }
 
-    if (line.startsWith('- ')) {
-      const items = [];
-      while (i < lines.length && lines[i].startsWith('- ')) { items.push(lines[i].slice(2)); i += 1; }
-      out.push(items);
+    /* `#` is the section's own title and lives in the front matter, so the
+       prose starts at `##` — which sits under the `<h2>` the screen draws for
+       that title, and therefore renders as `<h3>`. */
+    const heading = line.match(/^(#{2,5})\s+(.*)$/);
+    if (heading) {
+      out.push({ heading: heading[2].trim(), level: Math.min(heading[1].length + 1, 6) });
+      i += 1;
+      continue;
+    }
+
+    /* A table is the one block here that needs its SECOND line to know what it
+       is: `| a | b |` alone could be prose that happens to start with a pipe.
+       Without the `---` rule underneath, it is left as a paragraph rather than
+       guessed at. */
+    if (line.startsWith('|') && i + 1 < lines.length && /^\|[\s|:-]+\|?\s*$/.test(lines[i + 1])) {
+      const head = cells(line);
+      i += 2;
+      const rows = [];
+      while (i < lines.length && lines[i].startsWith('|')) { rows.push(cells(lines[i])); i += 1; }
+      out.push({ table: { head, rows } });
+      continue;
+    }
+
+    if (line.startsWith('- ')) { out.push(list(/^- (.*)$/)); continue; }
+
+    const numbered = line.match(/^\d+\.\s/);
+    if (numbered) { out.push({ ordered: list(/^\d+\.\s+(.*)$/) }); continue; }
+
+    if (line.startsWith('>')) {
+      const said = [];
+      while (i < lines.length && lines[i].startsWith('>')) {
+        said.push(lines[i].replace(/^>\s?/, ''));
+        i += 1;
+      }
+      out.push({ quote: said.join(' ').trim() });
       continue;
     }
 
     if (line.trim() === '') { i += 1; continue; }
 
     // A paragraph, which the content files write on one line and a person
-    // editing one may well wrap. It ends at a blank line or at a fence.
+    // editing one may well wrap. It ends at a blank line or at any block above.
     const paragraph = [];
     while (i < lines.length && lines[i].trim() !== ''
-           && !lines[i].startsWith('```') && !lines[i].startsWith('- ')) {
+           && !lines[i].startsWith('```') && !lines[i].startsWith('- ')
+           && !lines[i].startsWith('|') && !lines[i].startsWith('>')
+           && !/^#{2,5}\s/.test(lines[i]) && !/^\d+\.\s/.test(lines[i])) {
       paragraph.push(lines[i]);
       i += 1;
     }

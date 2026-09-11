@@ -478,6 +478,87 @@ async function lessonAnswered(theme) {
   }
 }
 
+/* ---------- a lesson's prose, as ELEMENTS and not as its own source ----------
+
+   THE SECOND JOIN NOTHING WAS LOOKING AT, and it failed more quietly than the
+   first. `blocksOf` in `api.js` turns a section's markdown into the blocks
+   `prose()` renders, and it recognised three constructs: a fence, a `- ` bullet
+   and a blank line. Everything else fell through to the paragraph branch.
+
+   So a heading reached a student as a paragraph reading `## Who asks`, hashes
+   and all; a comparison table as one paragraph of pipes; a numbered list with
+   its numbers typed into the prose; italics with their asterisks showing. In
+   lesson one of `web-fundamentals` that was 174 lines.
+
+   NOT ONE CHECK COULD HAVE SAID SO. The markup is valid, the contrast is fine,
+   and axe has no opinion about what a paragraph contains — a page of them
+   passes everything. The fixture could not say so either, because it wrote four
+   of the ten forms and none of the six that were broken.
+
+   So this asserts the ELEMENTS: a heading is an `<h3>`, a table is a `<table>`,
+   and — the half that matters more — no visible text still carries the markup
+   that produced it. The first assertion alone would pass on a screen that
+   rendered a heading AND left a pipe table as prose beside it. */
+async function lessonProseRenders(theme) {
+  const page = await open(theme, 'en');
+  try {
+    await page.goto(`${BASE}/#/course/web-fundamentals/lesson/0`, { waitUntil: 'load' });
+    await page.waitForSelector('.lesson-text', { timeout: 8000 });
+
+    const seen = await page.evaluate(() => {
+      const at = document.querySelector('.lesson-text');
+      return {
+        heading: at.querySelectorAll('h3.prose-heading, h4.prose-heading').length,
+        table: at.querySelectorAll('table.prose-table').length,
+        ordered: at.querySelectorAll('ol.prose-ordered').length,
+        quote: at.querySelectorAll('blockquote.prose-quote').length,
+        italic: at.querySelectorAll('em').length,
+        items: at.querySelectorAll('.prose-list li').length,
+        /* What a person actually reads, with the tags gone. If any of the
+           markup below survives into it, the block it belongs to was drawn as a
+           paragraph of its own source. */
+        text: at.innerText,
+      };
+    });
+
+    const missing = Object.entries({
+      heading: seen.heading, table: seen.table, ordered: seen.ordered,
+      quote: seen.quote, italic: seen.italic,
+    }).filter(([, n]) => n === 0).map(([what]) => what);
+    if (missing.length) {
+      throw new Error('the fixture\'s prose writes a heading, a table, a numbered list, a quote '
+        + `and an italic, and the screen drew no ${missing.join(', no ')} — which is what `
+        + 'happens when `blocksOf` does not recognise a construct and hands it to the paragraph '
+        + 'branch instead');
+    }
+
+    /* A wrapped `- ` item used to end its own list, leaving the continuation as
+       a paragraph between two lists. The fixture writes two items, one of them
+       wrapped; three would mean the wrap became an item of its own. */
+    if (seen.items !== 2) {
+      throw new Error(`the bullet list came out with ${seen.items} items and the fixture writes `
+        + '2 — a wrapped item was split from the one it belongs to');
+    }
+
+    for (const [what, pattern] of [
+      ['a heading', /^\s*#{2,}\s/m],
+      ['a table row', /^\s*\|.*\|/m],
+      ['a numbered item', /^\s*\d+\.\s/m],
+      ['a quotation', /^\s*>\s/m],
+      ['emphasis', /\*/],
+    ]) {
+      if (pattern.test(seen.text)) {
+        throw new Error(`${what} is on screen as its own markup — a student is reading the `
+          + 'source of the lesson rather than the lesson');
+      }
+    }
+    return page;
+  } catch (e) {
+    await done(page);
+    throw e;
+  }
+}
+
 /* ---------- an operator, made the only way there is ----------
 
    The making of one moved to `tools/lib/operator.mjs` when a second suite
@@ -1029,6 +1110,22 @@ try {
     if (lessonPage) {
       await measure(lessonPage, `${theme} · a lesson's own questions, answered`);
       await done(lessonPage);
+    }
+
+    /* AND THE LESSON'S WORDS, AS ELEMENTS. Same shape of failure as above and
+       the same kind of check: the axe pass is what it earns on the way past,
+       and the claim it is actually making is about the markup the renderer
+       produced. */
+    let prosePage = null;
+    try {
+      prosePage = await lessonProseRenders(theme);
+    } catch (e) {
+      violations += 1;
+      console.error(`✗ ${theme} · a lesson's prose — ${e.message}`);
+    }
+    if (prosePage) {
+      await measure(prosePage, `${theme} · a lesson's prose, every construct drawn`);
+      await done(prosePage);
     }
 
     /* THE EXAM PAPER, QUESTION BY QUESTION — and it is walked rather than
