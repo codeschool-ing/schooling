@@ -207,6 +207,24 @@ func checkIDs(s *School) []error {
 						"topic somebody has written, so this one is on no screen", c.Slug, id))
 			}
 		}
+
+		/* AND A SECTION'S ID IS CLAIMED LIKE EVERY OTHER.
+
+		   It was checked for SHAPE and never for uniqueness, which was harmless
+		   for exactly as long as nothing joined by it: a section's slug is
+		   unique within its lesson and that was the only name anything used.
+
+		   It is not harmless now. A question is filed under its section's id,
+		   so two sections sharing one would quietly pool their questions — and
+		   a progress row, which has always pointed at this id, would count one
+		   section's reading as the other's. Copying a lesson directory to start
+		   the next one is how it would happen, and it is a minute's work to
+		   miss. */
+		for _, l := range c.Loaded {
+			for _, sec := range l.Sections {
+				problems = append(problems, claim(taken, sec.ID, c.Slug+"/"+l.ID+"/"+sec.Slug)...)
+			}
+		}
 	}
 
 	return problems
@@ -543,9 +561,16 @@ func checkExercises(s *School) []error {
 		clear(used)
 
 		for _, l := range c.Loaded {
+			/* BY ID, because that is what a question carries by the time it
+			   reaches here: the loader resolves the slug the author wrote, the
+			   same way it has always done for prose.
+
+			   A name that resolved to nothing is left exactly as it was
+			   written, so this still fails on it and the message below still
+			   quotes the author's typo rather than a code. */
 			sections := map[string]bool{}
 			for _, sec := range l.Sections {
-				sections[sec.Slug] = true
+				sections[sec.ID] = true
 			}
 			check(c.Slug+"/"+l.ID, sections, pictures, l.Exercises)
 		}

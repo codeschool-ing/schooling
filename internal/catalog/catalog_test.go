@@ -855,3 +855,97 @@ func TestASectionMayBeTitledWithNoBodyAtAll(t *testing.T) {
 			"body, was refused:\n%s", report(t, problems))
 	}
 }
+
+/*
+A QUESTION IS FILED UNDER ITS SECTION'S ID, the same way its prose is.
+
+	`exercises.json` names a section the way a person does — `"section": "roles"`
+	— and `roles.md` is named the same way. The loader translates the prose and
+	used to leave the questions alone, so two rows describing the same section of
+	the same lesson reached the mirror under two different names:
+
+	    catalog_prose.section_id      se-65fm07ad
+	    catalog_exercises.section_id  roles
+
+	Everything above the mirror joins by id. `lessonSections()` hands the screen
+	`s.id`, and `lesson.js` asks `q.section === section.id` — which was false for
+	every question ever written, so every one of them fell through to the
+	lesson's assessment. That is the defect A-13 was meant to close, still open
+	in the content while the fixture agreed with the screen.
+
+	The loader's own comment above `bySlug` states the invariant this broke:
+	"every reader downstream gets ids".
+*/
+func TestAQuestionIsFiledUnderItsSectionsID(t *testing.T) {
+	loaded, problems := loadGood(t)
+	if loaded == nil {
+		t.Fatalf("the good fixture would not load: %v", problems)
+	}
+
+	for _, c := range loaded.Courses {
+		for _, l := range c.Loaded {
+			ids := map[string]string{} // section id -> its slug
+			slugs := map[string]bool{}
+			for _, sec := range l.Sections {
+				ids[sec.ID] = sec.Slug
+				slugs[sec.Slug] = true
+			}
+
+			for _, e := range l.Exercises {
+				if _, ok := ids[e.Section]; ok {
+					continue
+				}
+				if slugs[e.Section] {
+					t.Errorf("%s/%s reaches the mirror filed under %q, which is the section's "+
+						"SLUG — the screen joins a question to a section by id, so this question "+
+						"belongs to no section on screen and falls through to the assessment",
+						l.ID, e.ID, e.Section)
+					continue
+				}
+				t.Errorf("%s/%s names the section %q, which is neither an id nor a slug of that "+
+					"lesson", l.ID, e.ID, e.Section)
+			}
+		}
+	}
+}
+
+/*
+Two sections cannot share an id, and until the join above started using one
+
+	nothing said so.
+
+	The fixture has one lesson with three sections; this gives the video section
+	the reading section's id, which is what copying a lesson directory to start
+	the next one produces.
+*/
+func TestTwoSectionsCannotShareAnID(t *testing.T) {
+	problems := school(t, patchJSON(
+		"courses/web-fundamentals/lessons/"+clientAndServer+"/lesson.json",
+		func(d map[string]any) {
+			sections, _ := d["sections"].([]any)
+			if len(sections) < 2 {
+				t.Fatalf("the fixture lesson has %d sections, so this test checks nothing",
+					len(sections))
+			}
+			first, _ := sections[0].(map[string]any)
+			second, _ := sections[1].(map[string]any)
+			second["id"] = first["id"]
+		}))
+
+	var said string
+	for _, p := range problems {
+		if strings.Contains(p.Error(), "same id") && strings.Contains(p.Error(), "se-65fm07ad") {
+			said = p.Error()
+		}
+	}
+	if said == "" {
+		t.Fatalf("two sections shared an id and it was accepted — they would pool their "+
+			"questions, and one section's progress would count as the other's:\n%s",
+			report(t, problems))
+	}
+	// It has to say WHICH two, or it reports a collision and leaves somebody
+	// grepping a catalogue for the second half of it.
+	if !strings.Contains(said, "roles") || !strings.Contains(said, "intro") {
+		t.Errorf("the complaint does not name both sections: %s", said)
+	}
+}

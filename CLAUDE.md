@@ -281,6 +281,14 @@ predecessor lost exercises whenever a lesson was renamed. Its own id is opaque l
 `ex-` and eight characters — because a student's answer records it, and a history has to survive
 every rewrite the question's wording ever gets.
 
+**And the loader files it under the section's id**, the same way it has always done for prose.
+The slug is what an author writes and the id is what every reader above the mirror joins by; the
+loader is the single seam that knows both. This sentence used to stop at the slug, and so did the
+loader for questions while doing the translation for prose — so the same section of the same
+lesson reached the mirror under two names, `q.section === section.id` was false for every
+question ever written, and all of them fell past their sections into the lesson's assessment.
+Two sections may not share an id for the same reason. (A-13)
+
 **`requires` is knowledge; `links` is sequence.** `requires` names only what the student has to
 know first. If the reason is "in this track it comes after that one", it belongs to the track's
 `links`, which draws the same arrow in that track and nowhere else. Conflating the two cost 18

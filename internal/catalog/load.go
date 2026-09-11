@@ -294,28 +294,54 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 			"%s/lesson.json: the lesson calls itself %q and lives in %q", base, lesson.ID, name))
 	}
 
-	if exercises, err := readExercises(dir, path.Join(base, "exercises.json")); err != nil {
-		problems = append(problems, err)
-	} else {
-		lesson.Exercises = exercises
-	}
-	text, found := readTranslations[map[string]ExerciseText](dir, base, "exercises")
-	lesson.ExerciseText = text
-	problems = append(problems, found...)
-
-	/* THE PROSE IS NAMED FOR THE SLUG AND FILED UNDER THE ID.
+	/* A SECTION IS NAMED FOR ITS SLUG AND FILED UNDER ITS ID.
 
 	   `vps.md` is what somebody writing a section types, and `se-gy02rmmz` is
 	   what the row holding a student's progress through it points at. This is
 	   the seam between the two, and it is the only place in the loader that has
 	   to know both — every reader downstream gets ids.
 
-	   A file naming no section keeps its own stem, so the orphan check below
-	   can say `vps.md` rather than a code that resolves to nothing. */
+	   A name that resolves to no section keeps what was written, so the checks
+	   below can say `vps.md` and `"vps"` rather than a code that resolves to
+	   nothing.
+
+	   IT CROSSED THE PROSE AND NOT THE QUESTIONS, and the two halves were
+	   written a few lines apart. `exercises.json` names a section exactly as a
+	   filename does — `"section": "roles"` beside `roles.md` — so the same
+	   section of the same lesson reached the mirror under two names:
+	   `catalog_prose.section_id` was `se-65fm07ad` and
+	   `catalog_exercises.section_id` was `roles`.
+
+	   Everything above the mirror joins by id. The screen asks
+	   `q.section === section.id`, which was false for every question ever
+	   written, so all of them fell past their sections into the lesson's
+	   assessment — the very thing A-13 exists to stop, still happening in the
+	   content while the browser fixture agreed with the screen and passed.
+
+	   So the translation happens HERE, once, for both, and the sentence above
+	   about every reader downstream is true rather than intended. */
 	bySlug := map[string]string{}
 	for _, sec := range lesson.Sections {
 		bySlug[sec.Slug] = sec.ID
 	}
+	filedUnder := func(written string) string {
+		if id, ok := bySlug[written]; ok {
+			return id
+		}
+		return written
+	}
+
+	if exercises, err := readExercises(dir, path.Join(base, "exercises.json")); err != nil {
+		problems = append(problems, err)
+	} else {
+		for i := range exercises {
+			exercises[i].Section = filedUnder(exercises[i].Section)
+		}
+		lesson.Exercises = exercises
+	}
+	text, found := readTranslations[map[string]ExerciseText](dir, base, "exercises")
+	lesson.ExerciseText = text
+	problems = append(problems, found...)
 
 	// Every Markdown file in the directory, so the orphan check has both sides
 	// of the comparison. Content that was generated and forgotten shows up
@@ -333,10 +359,7 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 
 		slug, locale := sectionAndLocale(f.Name())
 		lesson.Prose[slug] = true
-		section := slug
-		if id, ok := bySlug[slug]; ok {
-			section = id
-		}
+		section := filedUnder(slug)
 
 		body, err := fs.ReadFile(dir, path.Join(base, f.Name()))
 		if err != nil {
