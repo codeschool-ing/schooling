@@ -102,7 +102,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test|figure-fit)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -534,6 +534,15 @@ jobs:
         run: |
           npm ci
           npx playwright install chromium
+
+      # BEFORE THE DATABASE, BECAUSE IT DOES NOT NEED ONE. A figure is markup in
+      # a content file and this measures it in a browser against a local page —
+      # no server, no schema, no fixture. It runs here so that a drawing with a
+      # bar hanging out of its box fails in seconds rather than after the whole
+      # stack is up.
+      - name: Every drawing inside its own box
+        timeout-minutes: 3
+        run: node tools/figure-fit/figure-fit.mjs content
 
       - name: The schema
         run: go run ./cmd/migrate
