@@ -220,7 +220,12 @@ var Registry = []Table{
 	{
 		Name: "events", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,
 		Why: "append-only by trigger, and holds only ids. Once visitors and account_visitors " +
-			"are gone these rows join to nobody, and the statistics they carry survive",
+			"are gone these rows join to nobody, and the statistics they carry survive. The " +
+			"dimensions beside the ids are about the world rather than about a person — the " +
+			"school, the plan, the country, the language, and since `0051` the SHAPE of the " +
+			"thing it happened on, in four words with no way to record a fifth. That last one " +
+			"is deliberately too coarse to recognise anybody by, which is what keeps a column " +
+			"in an orphan-surviving table from becoming the thing that un-orphans it",
 	},
 	{
 		Name: "practice_review", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseOrphan,

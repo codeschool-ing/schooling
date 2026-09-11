@@ -152,13 +152,26 @@ and you would ask them directly.
 ## Counting
 
 Everything the platform reports on is built from a stream of events: something
-happened, when, in which school, in which country, in which language, and under
-which plan. Every one of them carries only identifiers — the visitor identifier
-above, or the account one.
+happened, when, in which school, in which country, in which language, under
+which plan, and on **what kind of thing** — a phone, a tablet, a computer, or
+"did not say". Every one of them carries only identifiers — the visitor
+identifier above, or the account one.
 
-These are how we know which lessons are read, where people stop, and which
-questions are so badly written that everybody gets them wrong. They are about
-the material rather than about you.
+That last one is deliberately blunt and there is no way in our code to record
+anything finer. We do not hold your device model, your screen size, your
+operating system or its version, and we do not read the browser's own
+description of itself. Three shapes and a shrug: enough to know whether this
+site is worse to use on a phone, not enough to pick you out of a crowd.
+
+Where it comes from: your browser sends a one-word hint saying whether it is on
+a handset, and some browsers do not, so the page also reports which of our
+layouts it is using. Neither number leaves your browser — what is recorded is
+one of those four words.
+
+These are how we know which lessons are read, where people stop, which questions
+are so badly written that everybody gets them wrong, and whether the people who
+arrive on a phone go on to study. They are about the material and about this
+site rather than about you.
 
 ## People who operate the platform
 

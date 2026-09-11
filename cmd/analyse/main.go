@@ -288,6 +288,28 @@ func analyse(ctx context.Context, log *slog.Logger,
 				}
 				return out, nil
 			},
+
+			/* AND WHAT THEY WERE ON. This command does not read it — it writes
+			   item statistics and nothing else — and it is wired anyway,
+			   because `WithStream` takes every reader at once on purpose: a
+			   store built with five of six would answer the sixth report with a
+			   silent nothing, which is the failure the comment on that method
+			   describes. */
+			func(ctx context.Context, school uuid.UUID, since time.Time,
+				who analysis.Counting) ([]analysis.Holding, error) {
+
+				held, err := events.Devices(ctx, school, since, counting(who))
+				if err != nil {
+					return nil, err
+				}
+				out := make([]analysis.Holding, 0, len(held))
+				for _, h := range held {
+					out = append(out, analysis.Holding{
+						Device: h.Device, VisitorID: h.VisitorID, AccountID: h.AccountID,
+					})
+				}
+				return out, nil
+			},
 			visitor.NewStore(pool).Links,
 		)
 

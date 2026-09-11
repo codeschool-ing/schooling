@@ -53,6 +53,7 @@ type Store struct {
 	monthly         Monthly
 	monthlyAnywhere MonthlyAnywhere
 	origins         Origins
+	holdings        Holdings
 	links           Links
 
 	// How many answers a question needs before this store says anything about
@@ -115,12 +116,13 @@ func (s *Store) enough(ctx context.Context) int {
 // one call, so there is one thing to forget rather than two.
 func (s *Store) WithStream(reached Reached, anywhere ReachedAnywhere,
 	monthly Monthly, monthlyAnywhere MonthlyAnywhere,
-	origins Origins, links Links) *Store {
+	origins Origins, holdings Holdings, links Links) *Store {
 
 	out := *s
 	out.reached, out.anywhere = reached, anywhere
 	out.monthly, out.monthlyAnywhere = monthly, monthlyAnywhere
-	out.origins, out.links = origins, links
+	out.origins, out.holdings = origins, holdings
+	out.links = links
 	return &out
 }
 

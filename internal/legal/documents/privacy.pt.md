@@ -158,13 +158,26 @@ dele, e isso você pediria diretamente a ele.
 ## Contagem
 
 Tudo o que a plataforma reporta é construído a partir de um fluxo de eventos:
-algo aconteceu, quando, em qual escola, em qual país, em qual idioma e sob qual
-plano. Cada um deles carrega apenas identificadores — o de visitante acima, ou o
-da conta.
+algo aconteceu, quando, em qual escola, em qual país, em qual idioma, sob qual
+plano e em **que tipo de coisa** — um celular, um tablet, um computador, ou
+"não disse". Cada um deles carrega apenas identificadores — o de visitante
+acima, ou o da conta.
 
-É assim que sabemos quais aulas são lidas, onde as pessoas param e quais
-questões estão tão mal escritas que todo mundo erra. São sobre o material, não
-sobre você.
+Esse último é grosso de propósito e não há no nosso código jeito de registrar
+nada mais fino. Não guardamos o modelo do seu aparelho, o tamanho da sua tela, o
+seu sistema operacional nem a versão dele, e não lemos a descrição que o
+navegador faz de si mesmo. Três formatos e um encolher de ombros: o bastante
+para saber se este site é pior de usar no celular, longe do bastante para
+distinguir você no meio de uma multidão.
+
+De onde vem: o seu navegador manda uma dica de uma palavra dizendo se está num
+aparelho de mão, e alguns navegadores não mandam — então a página também informa
+qual dos nossos layouts está em uso. Nenhum número sai do seu navegador: o que
+fica registrado é uma daquelas quatro palavras.
+
+É assim que sabemos quais aulas são lidas, onde as pessoas param, quais questões
+estão tão mal escritas que todo mundo erra, e se quem chega pelo celular chega a
+estudar. São sobre o material e sobre este site, não sobre você.
 
 ## Quem opera a plataforma
 

@@ -138,6 +138,13 @@ func drawnThroughAVariable(t *testing.T) []string {
 	out = append(out, mapValues(t, "reports.js", read(t, "ui/app/screens/reports.js"),
 		"MEANS", "WHY")...)
 
+	/* AND THE FOUR SHAPES A PERSON STUDIES ON. `devices.js` draws
+	   `txt(KINDS[d.kind])`, where the key is the word the events carry and stays
+	   English. Its `WINDOWS` and `NAMES` are picked up by the loop below, which
+	   names that screen with the three it copied them from. */
+	out = append(out, mapValues(t, "devices.js", read(t, "ui/app/screens/devices.js"),
+		"KINDS")...)
+
 	/* THE TWO THEME NAMES. `schools.js` draws a specimen per theme from
 	   `['dark', 'light']` and prints `txt(theme)` in three places, so the words
 	   are looked up rather than said. They are written out here rather than
@@ -178,7 +185,7 @@ func drawnThroughAVariable(t *testing.T) []string {
 	   `cohorts.js` offers months, and a fifth screen copying one of them is
 	   exactly the case where checking one file would pass and the screen would
 	   be half English. */
-	for _, screen := range []string{"funnel.js", "cohorts.js", "countries.js"} {
+	for _, screen := range []string{"funnel.js", "cohorts.js", "countries.js", "devices.js"} {
 		out = append(out, mapValues(t, screen, read(t, "ui/app/screens/"+screen), "NAMES")...)
 	}
 	out = append(out, fieldValues(t, "funnel.js", read(t, "ui/app/screens/funnel.js"),
@@ -186,6 +193,8 @@ func drawnThroughAVariable(t *testing.T) []string {
 	out = append(out, fieldValues(t, "cohorts.js", read(t, "ui/app/screens/cohorts.js"),
 		"WINDOWS", "label")...)
 	out = append(out, fieldValues(t, "countries.js", read(t, "ui/app/screens/countries.js"),
+		"WINDOWS", "label")...)
+	out = append(out, fieldValues(t, "devices.js", read(t, "ui/app/screens/devices.js"),
 		"WINDOWS", "label")...)
 
 	/* THE FIVE VERDICTS AND WHAT EACH MEANS. `questions.js` draws `txt(v.name)`

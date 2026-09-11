@@ -11,6 +11,7 @@ import (
 
 	"github.com/codeschool-ing/schooling/internal/analysis"
 	"github.com/codeschool-ing/schooling/internal/event"
+	"github.com/codeschool-ing/schooling/internal/platform/device"
 )
 
 /* The population, as a plan and before anything is written.
@@ -187,6 +188,16 @@ const (
 type life struct {
 	country, locale string
 
+	/* WHAT THIS PERSON STUDIES ON, chosen once per life rather than per moment.
+
+	   Somebody who reads on a phone in a queue and drills on a laptop is real,
+	   and seeding it would make every seeded person appear on two rows of that
+	   screen — which would make the seeded breakdown say something about how
+	   people behave that this seeder has no evidence for. One thing each is the
+	   honest simplification, and the screen's own sentence about somebody being
+	   in two rows then never fires on a demonstration. */
+	device string
+
 	visitors []visitorSpec
 	accounts []accountSpec
 	moments  []moment
@@ -244,15 +255,21 @@ populate plans everybody.
 	other tests assert against, and a fixture that reshuffles whenever an
 	unrelated behaviour is added is one nobody can add a behaviour to.
 
-	BOTH COME FROM THE RUN'S SEED, so `--rand` still decides the whole run and a
-	run is still repeatable. What they do not do is share a position in one
+	`gear` IS THE THIRD, AND IT WAS ADDED THE EXPENSIVE WAY. What somebody
+	studies on was drawn from `r` first, and one seed of twenty-five then
+	produced a planted exam question below its discrimination threshold — a
+	failure with nothing to do with exams, in a test that had been green for
+	months, exactly as the paragraph above describes.
+
+	ALL THREE COME FROM THE RUN'S SEED, so `--rand` still decides the whole run
+	and a run is still repeatable. What they do not do is share a position in one
 	sequence.
 */
-func populate(r, money *rand.Rand, s shape, from, to time.Time, people int) []life {
+func populate(r, money, gear *rand.Rand, s shape, from, to time.Time, people int) []life {
 	run := fmt.Sprintf("%d", from.Unix()%100000)
 	lives := make([]life, 0, people)
 	for i := 0; i < people; i++ {
-		l := one(r, money, s, from, to, run, i)
+		l := one(r, money, gear, s, from, to, run, i)
 
 		/* THE MOMENTS COME OUT IN TIME ORDER, WHICH `one` NO LONGER GUARANTEES.
 
@@ -301,11 +318,11 @@ func populate(r, money *rand.Rand, s shape, from, to time.Time, people int) []li
 	return lives
 }
 
-func one(r, money *rand.Rand, s shape, from, to time.Time, run string, n int) life {
+func one(r, money, gear *rand.Rand, s shape, from, to time.Time, run string, n int) life {
 	grit, ability := r.Float64(), r.Float64()
 	country, locale := where(r)
 
-	l := life{country: country, locale: locale}
+	l := life{country: country, locale: locale, device: holding(gear)}
 	l.visitors = append(l.visitors, arrival(r))
 
 	// Somewhere in the window, and never so late that the story would run past
@@ -644,6 +661,32 @@ func where(r *rand.Rand) (string, string) {
 		// Genuinely not known, which is what the platform sees today: Cloud Run
 		// passes no country header, so this is not a hypothetical value.
 		return event.Unknown, "en-us"
+	}
+}
+
+/*
+holding is what a seeded person studies on.
+
+	IT IS WEIGHTED TOWARDS A PHONE AND TOWARDS NOT KNOWING, because that is what
+	this platform will actually see: most of Brazil is on a handset, and only
+	Chromium sends the hint the real value is read from — so a seeded population
+	that was mostly `computer` would make the demonstration screen look nothing
+	like the real one, which is the whole failure a seeder exists to avoid.
+
+	`unknown` IS SEEDED DELIBERATELY AND HEAVILY. It is the row an operator has
+	to learn to read, it will be the biggest one for a long time, and a seeded
+	screen without it would teach the wrong shape.
+*/
+func holding(r *rand.Rand) string {
+	switch n := r.Float64(); {
+	case n < 0.34:
+		return device.Phone
+	case n < 0.46:
+		return device.Computer
+	case n < 0.50:
+		return device.Tablet
+	default:
+		return device.Unknown
 	}
 }
 

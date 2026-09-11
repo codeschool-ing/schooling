@@ -85,9 +85,9 @@ func cohortsAlso(t *testing.T, signups, studied, paid []analysis.Active,
 			}
 			return nil, nil
 		},
+		nil,
 		nil, // a cohort does not read where anybody was; `countries_test.go` does
-		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil },
-	)
+		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return links, nil })
 }
 
 func cohortOf(t *testing.T, all []analysis.Cohort, at time.Time) analysis.Cohort {
@@ -515,8 +515,8 @@ func TestGroupingBySubscriptionRefusesWithoutThePlatformReader(t *testing.T) {
 		},
 		nil, // the platform reader this basis needs, deliberately absent
 		nil,
-		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return nil, nil },
-	)
+		nil,
+		func(context.Context) (map[uuid.UUID]uuid.UUID, error) { return nil, nil })
 
 	_, err := store.Cohorts(context.Background(), uuid.New(), 12,
 		month(2026, time.April), analysis.CountingReal, analysis.BySubscription)

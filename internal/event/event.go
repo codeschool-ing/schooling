@@ -65,6 +65,36 @@ type Dimensions struct {
 	country    string
 	locale     string
 	population Population
+
+	/* WHAT THEY WERE ON, and it is the one dimension set by a method rather
+	   than by a parameter.
+
+	   The four above are known wherever an event is emitted. This one is
+	   knowable only on a request that came from a browser — a nightly job has
+	   no device in any meaningful sense, and neither does a webhook from a
+	   payment gateway — so a seventh positional argument would be `Unknown`
+	   written out at most call sites, on a call the comment above `Population`
+	   already says nobody can read.
+
+	   So both constructors set it to `Unknown` and `On` replaces it. A caller
+	   that does not know still says so with a word, which is the rule this file
+	   holds the other four to; the difference is that saying so is the default
+	   rather than a thing to remember. */
+	device string
+}
+
+// On says what the person was holding, for the callers that have a request to
+// read it from. See the field for why it is not a parameter.
+//
+// AN EMPTY WORD CHANGES NOTHING, so a caller reading a context that was never
+// written to leaves `Unknown` standing rather than replacing it with a blank
+// the database would refuse three layers down.
+func (d Dimensions) On(what string) Dimensions {
+	if what == "" {
+		return d
+	}
+	d.device = what
+	return d
 }
 
 // ForSchool is the usual case: something happened inside one school.
@@ -78,6 +108,7 @@ func ForSchool(tenantID uuid.UUID, schoolSlug, plan, country, locale string,
 		country:    country,
 		locale:     locale,
 		population: who,
+		device:     Unknown,
 	}
 }
 
@@ -85,7 +116,10 @@ func ForSchool(tenantID uuid.UUID, schoolSlug, plan, country, locale string,
 // to the platform's own address, or a subscription, belongs to no school. It
 // takes no slug, so "which school" cannot be answered with a guess.
 func ForPlatform(plan, country, locale string, who Population) Dimensions {
-	return Dimensions{plan: plan, country: country, locale: locale, population: who}
+	return Dimensions{
+		plan: plan, country: country, locale: locale,
+		population: who, device: Unknown,
+	}
 }
 
 // synthetic is the column's value. A population this does not recognise is
@@ -108,6 +142,12 @@ func (d Dimensions) validate() error {
 	}
 	for _, f := range []struct{ name, value string }{
 		{"plan", d.plan}, {"country", d.country}, {"locale", d.locale},
+		/* THE DEVICE IS HELD TO THE SAME RULE even though both constructors
+		   fill it in, because a `Dimensions{}` built as a literal somewhere
+		   would otherwise reach the INSERT with a blank and fail there instead
+		   of here — with a message about a constraint rather than about a
+		   dimension nobody set. */
+		{"device", d.device},
 	} {
 		if f.value == "" {
 			problems = append(problems, fmt.Errorf(
@@ -196,11 +236,12 @@ func (s *Store) Emit(ctx context.Context, e Event) error {
 	_, err := s.pool.Exec(ctx, `
 		INSERT INTO events
 			(name, visitor_id, account_id, tenant_id, school_slug, plan, country, locale,
-			 synthetic, payload, request_id, occurred_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, coalesce($12, now()))
+			 device, synthetic, payload, request_id, occurred_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, coalesce($13, now()))
 	`, e.Name, e.VisitorID, e.AccountID,
 		e.Dimensions.tenantID, e.Dimensions.schoolSlug,
 		e.Dimensions.plan, e.Dimensions.country, e.Dimensions.locale,
+		e.Dimensions.device,
 		e.Dimensions.synthetic(), payload, e.RequestID, at)
 	if err != nil {
 		return fmt.Errorf("event %q: writing it: %w", e.Name, err)
@@ -650,6 +691,53 @@ func (s *Store) Countries(ctx context.Context, tenantID uuid.UUID,
 			return nil, fmt.Errorf("event: reading where people were: %w", err)
 		}
 		out = append(out, o)
+	}
+	return out, rows.Err()
+}
+
+// Held is one identity seen on one kind of device.
+type Held struct {
+	Device    string
+	VisitorID *uuid.UUID
+	AccountID *uuid.UUID
+}
+
+// Devices answers which identities were seen on which kind of thing.
+//
+// IT IS `Countries` WITH ONE COLUMN CHANGED, and that is deliberate rather than
+// lazy: the two questions have the same shape all the way down. A person who
+// studies on a laptop and again on a phone is two rows here exactly as a person
+// who studies from two countries is, the collapse happens in the database for
+// the same reason, and every event counts for the same reason — anything
+// somebody did is evidence of what they did it on, and a list of event names
+// here would be a filter nobody could explain.
+//
+// SO THE MODULE ABOVE RESOLVES IT THE SAME WAY, and the two screens then agree
+// about how many people there are. Two aggregates of one stream that folded
+// identities into people differently would put two totals on two screens of one
+// console, both right by their own definition and neither reconcilable.
+func (s *Store) Devices(ctx context.Context, tenantID uuid.UUID,
+	since time.Time, who Counting) ([]Held, error) {
+
+	// See `ItemAnswers` for why this one predicate is formatted in.
+	rows, err := s.pool.Query(ctx, `
+		SELECT DISTINCT device, visitor_id, account_id
+		FROM events
+		WHERE tenant_id = $1 AND occurred_at >= $2
+		  AND `+who.counts()+`
+	`, tenantID, since)
+	if err != nil {
+		return nil, fmt.Errorf("event: reading what people were on: %w", err)
+	}
+	defer rows.Close()
+
+	var out []Held
+	for rows.Next() {
+		var h Held
+		if err := rows.Scan(&h.Device, &h.VisitorID, &h.AccountID); err != nil {
+			return nil, fmt.Errorf("event: reading what people were on: %w", err)
+		}
+		out = append(out, h)
 	}
 	return out, rows.Err()
 }

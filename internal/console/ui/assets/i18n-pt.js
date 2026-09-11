@@ -69,6 +69,7 @@ window.I18N.pt.ui = {
   'Questions': 'Questões',
   'Cohorts': 'Coortes',
   'Where they are': 'De onde são',
+  'What they are on': 'Em que estão',
   'Reported content': 'Conteúdo reportado',
   'Student record': 'Ficha do aluno',
   'Schools': 'Escolas',
@@ -426,6 +427,36 @@ window.I18N.pt.ui = {
   '%d hours': '%d horas',
   'one day': 'um dia',
   '%d days': '%d dias',
+
+  /* ---------- Measure · What they are on ----------
+     `What they are on` is in the rail block above: it is a section name AND
+     this screen's heading, which is one string and therefore one entry. */
+  'The people of one school, by the shape of the thing they studied on, and how many of each ever signed up. Three shapes and a shrug: there is no model here and no screen size, because that is the granularity at which a dimension becomes a way of recognising somebody.':
+    'As pessoas de uma escola, pelo formato da coisa em que estudaram, e quantas de cada ' +
+    'chegaram a se cadastrar. Três formatos e um encolher de ombros: não há modelo aqui nem ' +
+    'tamanho de tela, porque é nessa granularidade que uma dimensão vira um jeito de ' +
+    'reconhecer alguém.',
+  'There are no schools on this platform yet, so there is nobody to be on anything.':
+    'Ainda não há escolas nesta plataforma, então não há ninguém para estar em nada.',
+  'Nobody has been seen in this school in this window.':
+    'Ninguém foi visto nesta escola nesta janela.',
+  'Somebody who read on a phone and drilled on a laptop is in both rows, so these add up to more than the people. The number beside the heading is everybody, counted once.':
+    'Quem leu no celular e treinou no notebook está nas duas linhas, então isto soma mais ' +
+    'do que o número de pessoas. O número ao lado do título é todo mundo, contado uma vez.',
+  'of them have an account': 'dessas pessoas têm conta',
+  'people': 'pessoas',
+
+  /* THE FOUR SHAPES, drawn through a variable — `txt(KINDS[d.kind])` — so
+     `check-interface` cannot see them. `language_test.go` reads the map and
+     holds it instead.
+
+     `Did not say` RATHER THAN `Unknown`, because that row is not a gap in what
+     we measured: it is a browser that sent nothing, which is a different fact
+     and reads as one. */
+  'Phone': 'Celular',
+  'Tablet': 'Tablet',
+  'Computer': 'Computador',
+  'Did not say': 'Não disse',
 
   /* ---------- Operate · Schools ---------- */
   'One colour each. It is the only thing that differs between schools — one design system, one accent — so a student knows which school they are in without the product looking like two products. Every change is recorded with your name, what was there and what replaced it.':
