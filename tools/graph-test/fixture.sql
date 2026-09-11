@@ -96,6 +96,9 @@ WHERE NOT EXISTS (SELECT 1 FROM plan_prices p WHERE p.scope = 'all');
 \set trk 'tr-fraaaaa1'
 \set les 'le-4mzk8p2r'
 \set sec 'se-rlaaaaa1'
+-- The lesson's closing set. A `practice` section IS the assessment, rather than
+-- a second thing beside a synthetic one — see the block that seeds it.
+\set dsec 'se-drlaaaa2'
 -- The lesson and section on a PAID course; see the block that seeds them.
 \set ples 'le-pw4k8p2r'
 \set psec 'se-pwaaaaa1'
@@ -212,6 +215,30 @@ ON CONFLICT DO NOTHING;
 
 INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, slug, kind, position)
 SELECT id, :'wf', :'les', :'sec', 'roles', 'reading', 0
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
+
+/* AND A `practice` SECTION, BECAUSE THE FIXTURE COULD NOT EXPRESS THE THING
+   BEING CHECKED WITHOUT ONE.
+
+   Every question names the section it belongs to, and the screen threw that
+   away: all of a lesson's non-exam questions went into one pile after the last
+   section. A content section now asks its OWN, and a `practice` section is the
+   lesson's assessment instead of a synthetic one appended beside it.
+
+   With one reading section and nothing else, "this section asks its own" and
+   "and not somebody else's" are the same sentence and neither can fail. So the
+   two questions are split — `dr-quiz` stays on the reading and `dr-order` moves
+   here — which is the smallest shape where they are different claims. */
+INSERT INTO catalog_sections (tenant_id, course_id, lesson_id, id, slug, kind, position)
+SELECT id, :'wf', :'les', :'dsec', 'drill', 'practice', 1
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
+
+/* Its title, which is prose with NO BODY — the only way a section that will
+   never have one gets a name instead of showing its id on screen. */
+INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
+SELECT id, :'wf', :'les', :'dsec', 'en', 'Putting it together', ''
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
@@ -371,14 +398,16 @@ ON CONFLICT DO NOTHING;
 INSERT INTO catalog_exercises
   (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
    drillable, prompt, payload)
-SELECT t.id, q.eid, :'wf', :'les', :'sec', false, 1, q.kind,
+SELECT t.id, q.eid, :'wf', :'les', q.sec, false, 1, q.kind,
        true, q.prompt, q.payload::jsonb
 FROM tenants t, (VALUES
   ('dr-quiz', 'quiz', 'Who is the client in an exchange?',
-   '{"id":"dr-quiz","version":1,"type":"quiz","prompt":"Who is the client in an exchange?","choices":[{"text":"Whoever asks","correct":true,"why":"The roles belong to the moment, not the machine."},{"text":"Whoever answers"},{"text":"Whichever machine is smaller"}]}'),
+   '{"id":"dr-quiz","version":1,"type":"quiz","prompt":"Who is the client in an exchange?","choices":[{"text":"Whoever asks","correct":true,"why":"The roles belong to the moment, not the machine."},{"text":"Whoever answers"},{"text":"Whichever machine is smaller"}]}',
+   :'sec'),
   ('dr-order', 'ordering', 'Put the steps of a request in order.',
-   '{"id":"dr-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}')
-) AS q(eid, kind, prompt, payload)
+   '{"id":"dr-order","version":1,"type":"ordering","prompt":"Put the steps of a request in order.","items":["The browser resolves the name","It opens a connection","It sends the request","The server answers"]}',
+   :'dsec')
+) AS q(eid, kind, prompt, payload, sec)
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 

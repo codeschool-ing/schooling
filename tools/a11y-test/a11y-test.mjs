@@ -428,9 +428,14 @@ async function lessonAnswered(theme) {
 
     /* The fixture puts two non-exam questions in `web-fundamentals`' first
        lesson, which is the one every other lesson check here already opens. */
+    /* THE READING SECTION, WHICH IS WHERE ITS OWN QUESTIONS NOW ARE. This
+       asked for `/assessment`, the synthetic section that used to be appended
+       after the last one and held every question of the lesson. A lesson that
+       declares a `practice` section has no synthetic one — that section IS the
+       assessment — and a content section asks the questions assigned to it. */
     const [served] = await Promise.all([
       page.waitForResponse((r) => /\/lessons\/[^/]+\/exercises/.test(r.url()), { timeout: 15000 }),
-      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0/assessment`, { waitUntil: 'load' }),
+      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0`, { waitUntil: 'load' }),
     ]).catch(() => {
       throw new Error('the screen never asked for the lesson\'s questions. That is not a slow '
         + 'request: it is the assessment being marked `pending`, which is what happens when the '
@@ -470,6 +475,72 @@ async function lessonAnswered(theme) {
     });
     if (seen.state !== 'v-right' && seen.state !== 'v-wrong') {
       throw new Error(`the screen showed "${seen.state}" instead of a verdict`);
+    }
+    return page;
+  } catch (e) {
+    await done(page);
+    throw e;
+  }
+}
+
+/* ---------- each section asking its OWN questions ----------
+
+   WHAT THIS IS ABOUT IS A FIELD THAT WAS ALWAYS THERE AND NEVER READ. Every
+   question names the section it belongs to; the server has always sent it and
+   has always ordered by it; and the screen put every non-exam question of the
+   lesson into one pile after the last section. In lesson one of
+   `web-fundamentals` that meant 6,200 words and then 36 questions at once, when
+   the content had already assigned 24 of them to the five readings they were
+   written for.
+
+   TWO ASSERTIONS, AND THE SECOND IS THE ONE THAT CAN FAIL. That a section shows
+   its own questions is half the claim; that it shows NOBODY ELSE'S is the half
+   that separates this from the old behaviour, where every section would have
+   passed the first test by showing all of them.
+
+   The fixture had one reading section and nothing else, which made those two
+   sentences identical and neither of them able to fail. It now splits its two
+   questions across a reading and a `practice` section — and that practice
+   section IS the assessment, rather than a synthetic one appended beside it. */
+async function sectionsAskTheirOwn(theme) {
+  const page = await open(theme, 'en');
+  try {
+    await signUp(page, 'Barbara Liskov', `a11y-sections-${Date.now()}-${theme}@example.tld`);
+
+    const prompts = async (path) => {
+      await page.goto(`${BASE}/#/course/web-fundamentals/${path}`, { waitUntil: 'load' });
+      await page.waitForSelector('.ex-prompt, .assessment-pending', { timeout: 10000 });
+      return page.evaluate(() =>
+        [...document.querySelectorAll('.ex-prompt')].map((p) => p.textContent.trim()));
+    };
+
+    /* The reading. `dr-quiz` is assigned to it and `dr-order` is not. */
+    const reading = await prompts('lesson/0');
+    if (!reading.some((t) => t.includes('Who is the client'))) {
+      throw new Error(`the reading section asked ${JSON.stringify(reading)} — its own question `
+        + 'is not among them, so the section field is still not being read');
+    }
+    if (reading.some((t) => t.includes('Put the steps'))) {
+      throw new Error('the reading section asked a question belonging to the practice section, '
+        + 'which is the old behaviour: every question of the lesson in one pile');
+    }
+
+    /* And the practice section, which is the assessment. Its heading is its own
+       title rather than the word "Assessment", because it is a real section. */
+    const closing = await prompts('lesson/0/se-drlaaaa2');
+    if (!closing.some((t) => t.includes('Put the steps'))) {
+      throw new Error(`the practice section asked ${JSON.stringify(closing)} — a practice `
+        + 'section used to render nothing at all, having no branch of its own');
+    }
+    if (closing.some((t) => t.includes('Who is the client'))) {
+      throw new Error('the practice section repeated the reading\'s question, so a student '
+        + 'answers it twice');
+    }
+
+    const titled = await page.textContent('.section-title');
+    if (!titled || !titled.includes('Putting it together')) {
+      throw new Error(`the practice section is headed ${JSON.stringify(titled)} rather than its `
+        + 'own title — a section with no prose file shows its id, which is what students read');
     }
     return page;
   } catch (e) {
@@ -1110,6 +1181,20 @@ try {
     if (lessonPage) {
       await measure(lessonPage, `${theme} · a lesson's own questions, answered`);
       await done(lessonPage);
+    }
+
+    /* AND EACH SECTION ASKING ITS OWN. See `sectionsAskTheirOwn` for the field
+       that was served all along and read by nothing. */
+    let ownPage = null;
+    try {
+      ownPage = await sectionsAskTheirOwn(theme);
+    } catch (e) {
+      violations += 1;
+      console.error(`✗ ${theme} · a section's own questions — ${e.message}`);
+    }
+    if (ownPage) {
+      await measure(ownPage, `${theme} · a lesson's closing section`);
+      await done(ownPage);
     }
 
     /* AND THE LESSON'S WORDS, AS ELEMENTS. Same shape of failure as above and

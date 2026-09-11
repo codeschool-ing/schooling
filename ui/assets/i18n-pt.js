@@ -62,6 +62,7 @@ window.I18N.pt.ui = {
   "I would like the subscription": "Quero assinar a codeschool.ing",
   "The first course of every track is free, in full. Everything past it is the subscription.": "O primeiro curso de cada trilha é gratuito, por inteiro. Tudo além dele é a assinatura.",
   "Assessment": "Avaliação",
+  "A few questions on this section": "Algumas questões sobre esta seção",
   "By course": "Por curso",
   "By exercise type": "Por tipo de exercício",
   "Can I buy a single course without subscribing?": "Dá para comprar um curso avulso, sem assinar?",
