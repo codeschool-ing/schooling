@@ -663,6 +663,7 @@ func checkOneExerciseText(locale, where string, e Exercise, text ExerciseText) [
 		Pairs            []json.RawMessage `json:"pairs"`
 		Labels           []json.RawMessage `json:"labels"`
 		RightDistractors []json.RawMessage `json:"right_distractors"`
+		Blanks           []json.RawMessage `json:"blanks"`
 	}
 	if err := json.Unmarshal(e.Raw, &counts); err != nil {
 		return []error{fmt.Errorf("%s/%s: %w", where, e.ID, err)}
@@ -679,6 +680,7 @@ func checkOneExerciseText(locale, where string, e Exercise, text ExerciseText) [
 		{"pairs", len(text.Pairs), len(counts.Pairs)},
 		{"labels", len(text.Labels), len(counts.Labels)},
 		{"leftover options", len(text.RightDistractors), len(counts.RightDistractors)},
+		{"blanks", len(text.Blanks), len(counts.Blanks)},
 	}
 	for _, l := range lengths {
 		// Nothing translated is not a shortfall: a translation carries what
@@ -688,6 +690,25 @@ func checkOneExerciseText(locale, where string, e Exercise, text ExerciseText) [
 				"the %s of %s/%s gives %d %s and the question has %d — they are matched by "+
 					"position, so one of them is written over the wrong one",
 				locale, where, e.ID, l.translated, l.what, l.original))
+		}
+	}
+
+	/* A CLOZE IS TRANSLATED WHOLE OR NOT AT ALL, which is the one place C-11's
+	   field-by-field fallback would do harm rather than good.
+
+	   Everywhere else a missing entry keeps the English and the screen is a
+	   little less translated. Here the prompt and the key are the same question:
+	   a blank left English inside a Portuguese sentence asks in one language and
+	   accepts in another, and the student cannot see which. That is not a
+	   shortfall, it is a question nobody can answer — so it is refused, and the
+	   message says which blank. */
+	for i, blank := range text.Blanks {
+		if len(blank.Accept) == 0 {
+			problems = append(problems, fmt.Errorf(
+				"blank %d of %s/%s is in the %s translation with nothing in its `accept` — a "+
+					"blank left in English inside a translated sentence asks in one language "+
+					"and marks in another, so translate every blank of a cloze or none of them",
+				i+1, where, e.ID, locale))
 		}
 	}
 	return problems

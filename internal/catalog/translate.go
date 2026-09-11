@@ -25,13 +25,21 @@ translated. The mirror holds a COMPLETE payload per locale: the grader, the
 presenter and the offline bundle all take one payload and never ask which
 language they are in.
 
-# THE ANSWER IS NOT REACHABLE FROM HERE
+# THE ANSWER IS NOT REACHABLE FROM HERE, WITH ONE EXCEPTION THAT PROVES IT
 
 Only the fields ExerciseText declares are written, and it declares none of the
 ones grading reads. That is worth stating as a property rather than a habit: a
-merge that copied unknown keys across would let a `pt.json` set `correct` or
-`accept`, and a question would then be marked differently depending on the
-language it was answered in. Nobody would find that — both screens read fine.
+merge that copied unknown keys across would let a `pt.json` set `correct`, and a
+question would then be marked differently depending on the language it was
+answered in. Nobody would find that — both screens read fine.
+
+The exception is a cloze's `accept`, and it is an exception because marking a
+Portuguese answer differently from an English one is exactly what it is FOR: the
+accepted answer is a string the student types, and that is the language. The
+property still holds where it matters — `catalog_exercise_text` keeps a complete
+payload per locale, so a translated `accept` is only ever graded against the
+student who read that locale, and the English question does not move. See
+`ExerciseText.Blanks`.
 */
 func Translated(raw json.RawMessage, text ExerciseText) (json.RawMessage, error) {
 	var payload map[string]any
@@ -63,6 +71,23 @@ func Translated(raw json.RawMessage, text ExerciseText) (json.RawMessage, error)
 
 	replace(payload, "items", text.Items)
 	replace(payload, "right_distractors", text.RightDistractors)
+
+	/* A BLANK TAKES ITS ACCEPTED ANSWERS AND LEAVES THE REST OF ITSELF ALONE.
+	   `ignore_case` and `ignore_accents` stay the question's in every language —
+	   see ExerciseText — so this writes one key into an object that already
+	   exists rather than replacing the object. A translation with no `accept`
+	   for a blank leaves that blank English, which is C-11 one level down and
+	   is refused by `Validate` rather than served: half a cloze is a question
+	   nobody can answer. */
+	for i, blank := range text.Blanks {
+		if at, ok := object(payload, "blanks", i); ok && len(blank.Accept) > 0 {
+			accept := make([]any, len(blank.Accept))
+			for j, word := range blank.Accept {
+				accept[j] = word
+			}
+			at["accept"] = accept
+		}
+	}
 
 	body, err := json.Marshal(payload)
 	if err != nil {
