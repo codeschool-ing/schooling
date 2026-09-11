@@ -589,9 +589,36 @@ async function sectionsAskTheirOwn(theme) {
         + '— three is the whole lesson in one pile, which is what this is about');
     }
 
+    /* AND THE NEXT SECTION OPENS AT ITS TOP.
+
+       The router has always had a line for this and it moved nothing: it set
+       `content.scrollTop`, and `.content` is not a scroll container — it has no
+       `overflow`, so what scrolls is the page and that property is always 0.
+       Every screen opened at the offset the last one was left at, which is at
+       its worst here: read half of one section, click the next, and it opens
+       half way down a different text.
+
+       The scroll is CONFIRMED before the navigation. A viewport tall enough to
+       hold the whole fixture section would leave nothing to scroll, and a check
+       that cannot move the page would pass without testing anything. */
+    await page.evaluate(() => window.scrollTo({ top: 900, behavior: 'instant' }));
+    await page.waitForTimeout(100);
+    const scrolled = await page.evaluate(() => document.scrollingElement.scrollTop);
+    if (scrolled === 0) {
+      throw new Error('the reading section is shorter than the viewport, so nothing here can '
+        + 'scroll and the check below would pass on a page that never moved');
+    }
+
     /* And the practice section, which is the assessment. Its heading is its own
        title rather than the word "Assessment", because it is a real section. */
     const closing = await prompts('lesson/0/se-drlaaaa2', 'Putting it together');
+
+    const landed = await page.evaluate(() => document.scrollingElement.scrollTop);
+    if (landed !== 0) {
+      throw new Error(`the next section opened ${landed}px down, where the previous one had been `
+        + `left at ${scrolled}px — a student reads half a section, clicks the next, and arrives `
+        + 'in the middle of it');
+    }
     if (!closing.shown.some((t) => t.includes('Put the steps'))) {
       throw new Error(`the practice section asked ${JSON.stringify(closing.shown)} — a practice `
         + 'section used to render nothing at all, having no branch of its own');
