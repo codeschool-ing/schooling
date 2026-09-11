@@ -153,7 +153,10 @@ audit with a name against it.*
 
 ## 1 — The study platform
 
-*Done when: a student walks a whole track of `code` on the new platform.*
+*Done when: a student walks a whole track of `code` on the new platform — reading its lessons,
+**answering the questions in them**, drilling what comes back and sitting each course's exam. The
+middle clause was added after the fact: the condition used to say "walks a whole track", which a
+student cannot do today and which every ticked box below was consistent with.*
 
 ### The catalogue
 
@@ -177,6 +180,11 @@ audit with a name against it.*
 - [x] Section progress, resume pointer, notes — completion set-true and never toggled, and refused in a course the student cannot open
 - [x] Sitting an exam on a screen — the paper, an answer saved as it is made and put back on a reload, and a hand-in that says what it came to
 - [x] Drilling on a screen — one card at a time, drawn without its answer, marked by the server, the key revealed over what the student gave once it is in, and the day it comes back said out loud. **This is the item the preamble is about**: ticked weeks before the screen could draw a card, and unticked until it could
+- [ ] **Answering a lesson's own questions on a screen** — `lessonExercises()` returns an empty list and there is no route behind it. The questions are loaded and reachable, which is what made this invisible: the drill draws one and marks it, so every part except the lesson's own path works. It needs the present-then-mark pair the drill uses (A-09) scoped to a lesson, because a lesson's questions cannot be served with their answers in them; the drill's two routes cannot be reused, because they check `drillable` — which is exactly what keeps an exam question out of a student's reach. Under A-10 the marking returns the chosen option's `why` and stores **no score**.
+
+  **THIS LINE IS THE PREAMBLE'S SECOND LESSON, and it is the worse one.** "Drilling on a screen" was a tick written ahead of the thing — findable by anybody who opened the screen. This was never written at all: not an unticked box but an absent one, sitting between two ticked neighbours, so the section read as complete and nothing disagreed. It was found because somebody asked what happens when a student gets a question wrong, not because any check or any list noticed.
+  
+  That is the orphan failure this repository refuses everywhere else — an `.md` no `lesson.json` references, an image no question labels, a document the README does not list, all of them build failures. **The roadmap is the one place where nothing looks for what is missing**, because a checklist can only be compared against itself. The honest fix is not a check; it is that a `Done when` has to describe a student's whole path, and phase 1's now says so.
 - [x] ~~The modal test — every course, one height, neither column scrolling~~ — **there is no modal here.** The predecessor showed a course in one, on a marketing page; a course is a screen of its own in this interface, so the test has no subject. Its actual concern — a layout that holds for every course — is covered by the accessibility pass, which opens the course and lesson screens, and by the graph test, which measures a real drawing rather than trusting one
 - [x] Portuguese and English, with the interface-string checker — which fails on a missing translation **and** on one nothing says any more
 - [x] WCAG 2.2 AA on every screen, with an automated check in the browser suites — axe over seventy-four screens, both themes, signed out and signed in, the exam paper walked question by question, and the console on its own host with an operator the suite makes for itself. **A state it can only reach by luck is a failure and not a skip**: the drill's two verdicts used to be whichever the shuffle produced, so a contrast defect on one of them was reported about one run in three and passed the rest of the time. Both are now asked for by name, arranged through the interface's own controls, and confirmed against the verdict the server returned
