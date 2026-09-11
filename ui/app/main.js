@@ -238,7 +238,24 @@ whenChanged(async (path, found) => {
   const { title, el, after, onLeave } = await found.r.load(found.params);
   content.textContent = '';
   content.appendChild(el);
-  content.scrollTop = 0;
+
+  /* A NEW SCREEN STARTS AT ITS TOP, and this line moved nothing until now.
+
+     It read `content.scrollTop = 0`. `.content` is not a scroll container — it
+     has no `overflow` and never has; what scrolls is the page. So the property
+     was set on an element whose `scrollTop` is always 0 anyway, and every
+     screen opened at whatever offset the last one had been left at.
+
+     It is worst between the sections of a lesson, where it was reported from:
+     read half of one, click the next, and it opens half way down a different
+     text. But it was never about sections — it is every route in the portal,
+     and the line that was supposed to prevent it had the wrong element.
+
+     `instant` IS LOAD-BEARING. `base.css` sets `scroll-behavior:smooth` on
+     `html`, which applies to programmatic scrolling too, so the default would
+     animate the whole way up a lesson that can be several screens long — while
+     the new screen is already drawn. A screen change is a cut, not a journey. */
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
   /* ---------- AND IN THE OFFLINE COPY, THE SCREENS THAT CANNOT WORK SAY SO ----
 
