@@ -9,13 +9,14 @@
 
 import { courseLessons, courseById, courseAddress, tracksWithCourse, unlockedBy } from '../catalog.js';
 import { lessonSections, courseMaterials } from '../lessons.js';
-import { courseProgress, lessonProgress, lessonDone } from '../state.js';
+import { courseProgress, lessonProgress, lessonDone, courseDone } from '../state.js';
 import { courseState } from '../graph.js';
 import { courseExam, examReady } from '../exams.js';
 import { examCard } from './exam.js';
 import { materialList } from '../materials.js';
 import { bar, empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
 import { esc, formatted, counted } from '../text.js';
+import { ratingBlock, wireRating } from '../rate.js';
 import * as api from '../api.js';
 
 export default async function course({ id }) {
@@ -86,6 +87,21 @@ export default async function course({ id }) {
         key: exam.key, href: '#/course/' + esc(courseAddress(id)) + '/exam', scope: 'course',
         count: exam.items.length, progress: p.pct, ready: examReady(exam),
       }) +
+
+      /* ---------- and what they thought of it ----------
+
+         ONLY ONCE THE COURSE IS FINISHED, and that is the whole of the
+         placement argument. Somebody halfway through has an opinion about the
+         half they have read, and asking for it turns a progress screen into a
+         survey; somebody who has finished is at a real pause, on a screen they
+         came back to on purpose.
+
+         IT IS THE LAST THING IN THE COLUMN, below the exam, because it is the
+         last thing in the course. And it stays there afterwards rather than
+         disappearing once given — the control draws what they said, and a
+         rating that vanished when answered would be a rating nobody could
+         change after the rewrite it asked for. */
+      (courseDone(id) ? ratingBlock('course') : '') +
       '</div>' +
 
       '<aside class="course-side">' +
@@ -116,6 +132,11 @@ export default async function course({ id }) {
      cookie from them. Bound here rather than in main.js's delegation: the
      screen element is new on every render, so the listener goes with it. */
   playsOnClick(el, txt('course introduction'));
+
+  /* The stars fill themselves in from what this student already said, which is
+     one request and only for somebody who has finished the course. It is bound
+     here for the same reason the player is: the element is new on every render. */
+  wireRating(el, { kind: 'course', subjectId: id });
 
   /* ---------- and the offer, if this one is not open ----------
 

@@ -69,6 +69,7 @@ window.I18N.pt.ui = {
   'Questions': 'Questões',
   'Cohorts': 'Coortes',
   'Where they are': 'De onde são',
+  'What they think of it': 'O que acham daqui',
   'Reported content': 'Conteúdo reportado',
   'Student record': 'Ficha do aluno',
   'Schools': 'Escolas',
@@ -426,6 +427,43 @@ window.I18N.pt.ui = {
   '%d hours': '%d horas',
   'one day': 'um dia',
   '%d days': '%d dias',
+
+  /* ---------- Measure · What they think of it ----------
+     `What they think of it` is in the rail block above: it is a section name AND
+     this screen's heading, which is one string and therefore one entry. */
+  'What students say about a course as a whole, which no single section is responsible for and nothing else here can ask. It is counted and never attributed.':
+    'O que os alunos dizem do curso inteiro, coisa de que nenhuma seção é responsável e ' +
+    'que nada mais aqui consegue perguntar. É contado e nunca atribuído.',
+  'There are no schools on this platform yet, so there is nothing to have an opinion about.':
+    'Ainda não há escolas nesta plataforma, então não há sobre o que ter opinião.',
+  'Nobody has rated anything here yet. The control is only offered to somebody who has finished, so this stays empty until the first person does.':
+    'Ninguém avaliou nada aqui ainda. O controle só aparece para quem terminou, então isto ' +
+    'fica vazio até a primeira pessoa terminar.',
+  'What to look at': 'O que olhar',
+  'About': 'Sobre',
+  'Stars': 'Estrelas',
+  'ratings': 'avaliações',
+  'the platform': 'a plataforma',
+
+  /* THE THREE SUBJECTS AND THE FOUR PAIRS, drawn through a variable —
+     `txt(KINDS[k])` and `txt(ends.low)` — so `check-interface` cannot see them.
+     `language_test.go` reads both maps and holds them instead.
+
+     THE ENDS ARE WHAT MAKES THE BARS READABLE. A distribution under the word
+     "padding" cannot be read without knowing which direction is bad, so half of
+     this in English is a chart somebody misreads rather than notices. */
+  /* `Courses` is not repeated here: the student record already translates it,
+     and a second entry would be the duplicate JavaScript keeps quietly. */
+  'Tracks': 'Trilhas',
+  'This platform': 'Esta plataforma',
+  'something was missing': 'faltou assunto',
+  'nothing was missing': 'não faltou nada',
+  'padded': 'enrolado',
+  'direct': 'direto',
+  'not interesting': 'sem interesse',
+  'interesting': 'interessante',
+  'too easy': 'fácil demais',
+  'too hard': 'difícil demais',
 
   /* ---------- Operate · Schools ---------- */
   'One colour each. It is the only thing that differs between schools — one design system, one accent — so a student knows which school they are in without the product looking like two products. Every change is recorded with your name, what was there and what replaced it.':

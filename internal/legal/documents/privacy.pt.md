@@ -1,7 +1,7 @@
 ---
 title: Política de privacidade
 effective: 2026-08-19
-covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, checkout_intents, payment_customers, staff, audit_log
+covers: accounts, account_credentials, account_recovery_codes, account_email_confirmations, account_email_changes, mail_suppressions, sessions, visitors, account_visitors, events, section_progress, resume_pointer, notes, content_reports, ratings, practice_state, practice_review, practice_drawn, exam_attempts, exam_answers, certificates, ledger_entries, subscriptions, subscription_events, checkout_intents, payment_customers, staff, audit_log
 ---
 
 Isto diz o que guardamos sobre você, por quê, e o que acontece quando você pede
@@ -131,6 +131,19 @@ foi aprovado.
   que uma seção foi apontada e do que decidimos a respeito, sem nenhum traço de
   você: não dá para tocar um curso sobre um material que não temos permissão de
   lembrar que estava errado.
+- **O que você acha de um curso, de uma trilha ou deste lugar**: as estrelas que
+  você deu, as quatro respostas que você pode ou não ter acrescentado — se faltou
+  assunto, se enrola, se te interessou, se o nível estava certo — e contra qual
+  versão do material você estava olhando.
+
+  Não há campo para escrever, de propósito. São cinco números de um a cinco, e
+  não cabe nada além disso porque o banco de dados recusa qualquer outra coisa.
+  Guardamos um por pessoa por curso, então mudar de ideia substitui o que você
+  disse em vez de acrescentar.
+
+  Ninguém que lê esses números consegue ver de quem eles são. Não é que a gente
+  se recuse a mostrar — a contagem é montada sem nunca ler quem deu o quê, então
+  não há o que recusar. Vai embora junto com você.
 
 ## Pagamentos
 

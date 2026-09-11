@@ -17,6 +17,7 @@ import { goTo } from '../routes.js';
 import { trackExam, examReady } from '../exams.js';
 import { examCard } from './exam.js';
 import { studentTrack, trackProgress, empty } from './common.js';
+import { ratingBlock, wireRating } from '../rate.js';
 
 let redrawT = null;
 
@@ -39,7 +40,26 @@ export default async function track() {
       ready: examReady(exam),
     });
   };
-  el.innerHTML = buildTrack(t) + card();
+  /* ---------- and what they thought of the track ----------
+
+     A TRACK IS NOT THE MEAN OF ITS COURSES, which is why it is asked at all:
+     four good courses in an order that teaches nothing is a bad track, and no
+     course rating can say so.
+
+     IT IS DRAWN BY `paint` AND NOT BY A LINE OF ITS OWN, because this screen
+     replaces its whole contents when somebody switches a fork — and a control
+     put in once would survive exactly until the first switch, then vanish with
+     no error anywhere. The two rebuilds go through here for that reason. */
+  const done = () => {
+    const p = trackProgress(t);
+    return p.total > 0 && p.done === p.total;
+  };
+  const paint = () => {
+    el.innerHTML = buildTrack(t) + card() + (done() ? ratingBlock('track') : '');
+    wireRating(el, { kind: 'track', subjectId: t.id });
+  };
+
+  paint();
 
   // open a course from its card in the graph
   el.addEventListener('click', (e) => {
@@ -74,7 +94,7 @@ export default async function track() {
       const at = was ? { left: was.scrollLeft, top: was.scrollTop } : null;
 
       api.chooseOption(t.id, fork, option);
-      el.innerHTML = buildTrack(t) + card();
+      paint();
 
       /* Before `drawEdges`, so the graph is where it belongs when the edges are
          measured — and synchronously, so no frame is ever painted at zero. The

@@ -394,6 +394,88 @@ html[data-theme="light"]{--phosphor-mid:#4468c4}
 .report-said{font-size:.82rem;color:var(--paper-dim);line-height:1.6;max-width:60ch}
 
 /* ==========================================================================
+   WHAT YOU THOUGHT OF IT — the stars, and the four pairs behind them.
+
+   IT IS OPEN WHERE THE BLOCK ABOVE IS CLOSED, which is the whole difference
+   between the two. A report is opened by somebody who has found a defect; this
+   is asked of everybody, so it has to be visible and has to cost one tap.
+
+   THE RADIOS ARE HIDDEN AND NOT REMOVED. `display:none` would take them out of
+   the tab order and out of the accessibility tree, which is exactly the control
+   this refuses to build (X-05, X-06). They are clipped, they still focus, the
+   arrow keys still move between them, and the ring is drawn on the label.
+   ========================================================================== */
+
+.rate{border-top:1px dashed var(--wire);padding-top:14px;margin-top:16px}
+
+.rate-hide,
+.rate-row input,
+.rate-pair input{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+.rate-row{display:flex;align-items:center;gap:4px;border:0;padding:0;margin:0;flex-wrap:wrap}
+.rate-row legend{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--paper-dim);padding:0;margin-bottom:6px;
+}
+.rate-row label{
+  cursor:pointer;line-height:1;padding:2px;border-radius:3px;
+  color:var(--wire);font-size:1.45rem;transition:color .12s;
+}
+.rate-row label:hover{color:var(--amber)}
+.rate-row input:focus-visible+label{outline:1px solid var(--phosphor);outline-offset:2px}
+
+/* Lit up to the number the fieldset carries. Written out rather than generated,
+   because five rules that say what they do beat a selector nobody can read —
+   and the scale is a constant this interface does not get to change on its own. */
+.rate-row[data-stars="1"] label:nth-of-type(-n+1),
+.rate-row[data-stars="2"] label:nth-of-type(-n+2),
+.rate-row[data-stars="3"] label:nth-of-type(-n+3),
+.rate-row[data-stars="4"] label:nth-of-type(-n+4),
+.rate-row[data-stars="5"] label:nth-of-type(-n+5){color:var(--amber)}
+
+/* THE SECOND LAYER, and it says out loud that it is optional. A block of four
+   questions with no such line reads as a form somebody has to finish. */
+.rate-invite{
+  font-size:.76rem;color:var(--paper-dim);margin:14px 0 10px;line-height:1.6;max-width:60ch;
+}
+
+.rate-pair{
+  display:flex;align-items:center;gap:10px;border:0;padding:0;margin:0 0 9px;flex-wrap:wrap;
+}
+.rate-pair legend{font-size:.8rem;color:var(--paper);padding:0;margin-bottom:5px}
+
+/* THE TWO ENDS ARE THE QUESTION. A number between "too easy" and "too hard"
+   means something; the same number under the word "depth" does not. */
+.rate-end{font-size:.72rem;color:var(--paper-dim);flex:none;max-width:14ch;line-height:1.4}
+.rate-dots{display:flex;gap:7px;align-items:center}
+.rate-pair label{
+  cursor:pointer;width:15px;height:15px;border-radius:50%;
+  border:1px solid var(--wire);background:var(--panel);
+  transition:background .12s,border-color .12s;
+}
+.rate-pair label:hover{border-color:var(--phosphor)}
+.rate-pair input:checked+label{background:var(--phosphor);border-color:var(--phosphor)}
+.rate-pair input:focus-visible+label{outline:1px solid var(--phosphor);outline-offset:2px}
+
+.rate-said{
+  font-size:.72rem;color:var(--paper-dim);margin-top:10px;
+  font-family:'IBM Plex Mono',monospace;
+}
+
+/* On a phone the two ends and the dots stop fitting on one line, and a pair
+   wrapped mid-scale is unreadable. The ends go to the outside of a grid row
+   instead, which keeps the scale in one piece at any width. */
+@media (max-width:520px){
+  .rate-pair{display:grid;grid-template-columns:1fr auto 1fr;gap:8px}
+  .rate-pair legend{grid-column:1 / -1}
+  .rate-end{max-width:none}
+  .rate-end:last-of-type{text-align:right}
+}
+
+/* ==========================================================================
    WHAT YOU HAVE BOUGHT — the purchase history, in "Your subscription".
 
    THE FACTS ABOVE IT ARE THE STATE AND THIS IS THE RECORD, and they answer

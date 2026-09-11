@@ -183,6 +183,51 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'you have already told us about this question, and it has not been answered yet':
     'você já nos avisou sobre esta questão, e ainda não respondemos',
 
+  /* ---------- and what they thought of it ----------
+
+     THE QUESTION IS ASKED IN FULL IN EACH CASE and not assembled from a noun,
+     for the reason the three sentences above are written out: Portuguese does
+     not agree with English about where that noun goes, and a sentence built
+     from fragments is one no translator can put in order. */
+
+  'What did you think of this course?': 'O que você achou deste curso?',
+  'What did you think of this track?': 'O que você achou desta trilha?',
+  'What do you think of this place?': 'O que você acha daqui?',
+
+  'This place': 'Este lugar',
+  'The interface rather than the material — whether this site is a good place to study in.':
+    'A interface e não o material — se este site é um bom lugar para estudar.',
+
+  'If you have another moment — none of these are required.':
+    'Se você tiver mais um minuto — nenhuma destas é obrigatória.',
+
+  /* THE FOUR PAIRS. Each is a question and two ends, and the ends are what give
+     the number a direction: "3 de 5" under the word "depth" says nothing, and
+     between "fácil demais" and "difícil demais" it says something. */
+  'Was anything left out?': 'Ficou faltando alguma coisa?',
+  'something was missing': 'faltou assunto',
+  'nothing was missing': 'não faltou nada',
+
+  'Does it get to the point?': 'Vai direto ao ponto?',
+  'it is padded': 'enrola',
+  'it is direct': 'é direto',
+
+  'Was it interesting?': 'Foi interessante?',
+  'it was not': 'não foi',
+  'it was': 'foi',
+
+  /* The one with no good end, and the Portuguese keeps it that way: neither
+     "fácil demais" nor "difícil demais" is the answer. */
+  'Was it pitched right?': 'O nível estava certo?',
+  'too easy': 'fácil demais',
+  'too hard': 'difícil demais',
+
+  'saving…': 'salvando…',
+  'thank you': 'obrigado',
+  'changed, thank you': 'alterado, obrigado',
+  'that was not recorded — please try again':
+    'não deu para registrar — tente de novo, por favor',
+
   /* ---------- subscribing ----------
 
      THE SCREEN THAT REPLACED A `mailto:`. Two of these are worth a note.
