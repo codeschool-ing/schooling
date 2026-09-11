@@ -1,0 +1,142 @@
+---
+title: Um servidor, muitos clientes
+version: 1
+---
+
+Todo diagrama de uma requisição tem um cliente nele. Servidores reais nunca veem esse desenho. **A
+condição normal de um servidor é atender muita gente ao mesmo tempo**, e quase tudo o que torna um
+software de servidor complicado vem desse único fato.
+
+## Sua requisição não é especial
+
+Quando você carrega uma página, a máquina que lhe responde está, no mesmo segundo, respondendo a
+outras pessoas. Sua requisição chega, espera a vez, é pega, é trabalhada — possivelmente ao lado
+de centenas de outras em curso no mesmo instante — e é respondida.
+
+Isso reformula uma frase que você já disse e já ouviu:
+
+> "O site está lento."
+
+Quase sempre isso significa uma destas coisas:
+
+- **o servidor está ocupado** — chegam mais requisições do que ele consegue terminar, então a sua
+  espera mais;
+- **o servidor está esperando outra coisa** — ele pediu a um banco de dados e está travado como
+  cliente;
+- **a rede entre você e ele está lenta** — o servidor está bem e a distância não;
+- **a resposta chegou rápido e a sua máquina está lenta para desenhá-la** — não havia nada errado.
+
+Quatro problemas diferentes, quatro consertos diferentes, um sintoma. A aula 3 lhe dá os números
+para distinguir os três primeiros e a aula 10 explica o quarto.
+
+## Por que uma máquina consegue atender milhares
+
+Porque a maior parte da vida de uma requisição é passada **esperando**, não calculando.
+
+Acompanhe uma requisição atravessando um servidor e cronometre com honestidade. Talvez dois
+milissegundos sejam gastos lendo-a e descobrindo o que se quer. Então o servidor pergunta a um
+banco de dados e **espera quarenta milissegundos** — sem fazer nada, segurando a requisição,
+enquanto outra máquina faz o trabalho. Depois mais três milissegundos transformando o resultado em
+uma página. Cinco milissegundos de trabalho, quarenta de espera.
+
+Durante aqueles quarenta milissegundos um servidor que só soubesse fazer uma coisa por vez ficaria
+ocioso. Então software de servidor é construído para não ficar: ele mantém muitas trocas em curso
+e trabalha na que estiver pronta, na ordem em que ficarem prontas.
+
+A consequência é que **capacidade raramente é "quão rápido é o processador"**. É mais perto de
+*quantas trocas cabem em curso antes de alguma coisa acabar* — memória para segurá-las, conexões
+com o banco de dados, descritores de arquivo, ou a paciência de quem está esperando.
+
+### Fazer muitas coisas ao mesmo tempo, e fazer muitas coisas simultaneamente
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"Duas linhas do tempo comparadas. Acima, um processador com quatro requisições: cada uma ocupa o processador por uma fatia mínima e depois espera por muito tempo, e as esperas se sobrepõem. Abaixo, quatro processadores calculando ao mesmo tempo, suas barras cheias e paralelas.\"><defs>\n<marker id=\"ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper)\"></path></marker>\n<marker id=\"ahs\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker>\n<marker id=\"ahv\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor-dim)\"></path></marker>\n<marker id=\"ahn\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker>\n</defs>\n  <text x=\"14\" y=\"18\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" font-weight=\"700\" fill=\"var(--phosphor)\">AO MESMO TEMPO · um processador, quatro requisições, quase só esperando</text>\n  <rect x=\"118\" y=\"30\" width=\"578\" height=\"112\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect>\n  <text x=\"110\" y=\"48\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">requisição 1</text>\n  <rect x=\"126\" y=\"38\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <rect x=\"140\" y=\"38\" width=\"330\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\" stroke-dasharray=\"3 2\"></rect>\n  <rect x=\"474\" y=\"38\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <text x=\"110\" y=\"74\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">requisição 2</text>\n  <rect x=\"152\" y=\"64\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <rect x=\"166\" y=\"64\" width=\"386\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\" stroke-dasharray=\"3 2\"></rect>\n  <rect x=\"556\" y=\"64\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <text x=\"110\" y=\"100\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">requisição 3</text>\n  <rect x=\"178\" y=\"90\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <rect x=\"192\" y=\"90\" width=\"250\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\" stroke-dasharray=\"3 2\"></rect>\n  <rect x=\"446\" y=\"90\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <text x=\"110\" y=\"126\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">requisição 4</text>\n  <rect x=\"204\" y=\"116\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <rect x=\"218\" y=\"116\" width=\"428\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\" stroke-dasharray=\"3 2\"></rect>\n  <rect x=\"650\" y=\"116\" width=\"10\" height=\"14\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <rect x=\"126\" y=\"150\" width=\"10\" height=\"10\" rx=\"1\" fill=\"var(--phosphor)\"></rect>\n  <text x=\"144\" y=\"159\" font-family=\"Archivo, sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">no processador</text>\n  <rect x=\"256\" y=\"150\" width=\"10\" height=\"10\" rx=\"1\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\" stroke-dasharray=\"3 2\"></rect>\n  <text x=\"274\" y=\"159\" font-family=\"Archivo, sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">esperando outra coisa — não custa nada segurar</text>\n\n  <text x=\"14\" y=\"196\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" font-weight=\"700\" fill=\"var(--phosphor-dim)\">SIMULTANEAMENTE · quatro processadores, quatro cálculos</text>\n  <rect x=\"118\" y=\"208\" width=\"578\" height=\"62\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect>\n  <text x=\"110\" y=\"222\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">núcleo 1</text>\n  <rect x=\"126\" y=\"214\" width=\"420\" height=\"10\" rx=\"1\" fill=\"var(--phosphor-dim)\"></rect>\n  <text x=\"110\" y=\"238\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">núcleo 2</text>\n  <rect x=\"126\" y=\"230\" width=\"420\" height=\"10\" rx=\"1\" fill=\"var(--phosphor-dim)\"></rect>\n  <text x=\"110\" y=\"254\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">núcleo 3</text>\n  <rect x=\"126\" y=\"246\" width=\"420\" height=\"10\" rx=\"1\" fill=\"var(--phosphor-dim)\"></rect>\n  <text x=\"110\" y=\"270\" text-anchor=\"end\" font-family=\"JetBrains Mono, monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">núcleo 4</text>\n  <rect x=\"126\" y=\"262\" width=\"420\" height=\"10\" rx=\"1\" fill=\"var(--phosphor-dim)\"></rect>\n  <text x=\"558\" y=\"236\" font-family=\"Archivo, sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">é este o caso que</text>\n  <text x=\"558\" y=\"250\" font-family=\"Archivo, sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">mais núcleos resolvem</text>\n  <text x=\"360\" y=\"292\" text-anchor=\"middle\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">o dia de um servidor web é o desenho de cima — por isso dobrar os núcleos não faz nada</text>\n</svg>", "caption": "Acima, quatro requisições ao mesmo tempo num único processador: o que se sobrepõe é a espera. Abaixo, quatro cálculos simultâneos. A expressão “ao mesmo tempo” cobre os dois, e só o de baixo precisa de mais processadores."}
+```
+
+São coisas diferentes, e a diferença explica por que acrescentar processadores às vezes ajuda e às
+vezes não faz nada.
+
+**Muitas ao mesmo tempo** quer dizer que o servidor tem cem trocas abertas e está avançando na que
+puder avançar. A maioria delas está esperando outra coisa; uma está sendo trabalhada. Um único
+processador faz isso muito bem, porque só há um pouquinho de trabalho a fazer em cada instante.
+
+**Muitas simultaneamente** quer dizer calcular de verdade várias respostas no mesmo instante, o
+que exige vários processadores.
+
+A maior parte do trabalho da web é do primeiro tipo, e é por isso que uma máquina modesta consegue
+atender um número surpreendente de pessoas, e por isso que dobrar os processadores de um servidor
+que está esperando um banco de dados não muda absolutamente nada. Descubra que tipo de ocupado
+você tem antes de comprar o outro tipo de máquina.
+
+## A fila, e o que acontece quando ela enche
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 258\" role=\"img\" aria-label=\"Uma curva de tempo de resposta contra a carga que chega. Ela é quase plana na maior parte de sua extensão e depois sobe abruptamente perto da ponta direita, onde a fila deixa de esvaziar tão rápido quanto enche.\"><defs>\n<marker id=\"ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper)\"></path></marker>\n<marker id=\"ahs\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker>\n<marker id=\"ahv\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor-dim)\"></path></marker>\n<marker id=\"ahn\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker>\n</defs>\n  <line x1=\"70\" y1=\"24\" x2=\"70\" y2=\"200\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line>\n  <line x1=\"70\" y1=\"200\" x2=\"690\" y2=\"200\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line>\n  <text x=\"70\" y=\"18\" text-anchor=\"middle\" font-family=\"Archivo, sans-serif\" font-size=\"10.5\" font-weight=\"600\" letter-spacing=\"1\" fill=\"var(--paper-dim)\">TEMPO</text>\n  <text x=\"690\" y=\"222\" text-anchor=\"end\" font-family=\"Archivo, sans-serif\" font-size=\"10.5\" font-weight=\"600\" letter-spacing=\"1\" fill=\"var(--paper-dim)\">CARGA</text>\n\n  <path d=\"M70 190 C 260 186, 400 178, 500 162 C 560 150, 600 122, 622 74 C 632 50, 636 36, 638 28\"\n        stroke=\"var(--phosphor-dim)\" stroke-width=\"2.4\" fill=\"none\"></path>\n\n  <line x1=\"500\" y1=\"200\" x2=\"500\" y2=\"162\" stroke=\"var(--wire)\" stroke-dasharray=\"3 3\"></line>\n  <text x=\"500\" y=\"216\" text-anchor=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">80%</text>\n  <line x1=\"588\" y1=\"200\" x2=\"588\" y2=\"104\" stroke=\"var(--wire)\" stroke-dasharray=\"3 3\"></line>\n  <text x=\"588\" y=\"216\" text-anchor=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">90%</text>\n\n  <circle cx=\"500\" cy=\"162\" r=\"4\" fill=\"var(--phosphor-dim)\"></circle>\n  <circle cx=\"588\" cy=\"104\" r=\"4\" fill=\"var(--phosphor-dim)\"></circle>\n  <text x=\"352\" y=\"120\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">chegadas mais lentas que saídas:</text>\n  <text x=\"352\" y=\"136\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">a fila fica curta e ninguém percebe</text>\n  <path d=\"M348 128 L200 172\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" stroke-dasharray=\"3 3\" fill=\"none\"></path>\n  <text x=\"612\" y=\"60\" font-family=\"Archivo, sans-serif\" font-size=\"12\" font-weight=\"700\" fill=\"var(--phosphor-dim)\">o joelho</text>\n  <text x=\"14\" y=\"246\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">Timeouts e recusas existem para segurar a curva. De fora parecem falhas; são a defesa.</text>\n</svg>", "caption": "O joelho é o assunto. Um servidor a 90% não está 10% pior que um a 80% — a fila deixa de esvaziar tão rápido quanto enche, e a espera deixa de ser espera e vira crescimento."}
+```
+
+Requisições que ainda não podem ser trabalhadas esperam numa fila. Essa fila é a coisa mais útil
+de se visualizar, porque tudo o que um servidor faz sob pressão gira em torno dela.
+
+Enquanto as chegadas forem mais lentas que as saídas, a fila fica curta e ninguém percebe nada. No
+momento em que as chegadas passarem as saídas — mesmo que só um pouco — a fila cresce, e não
+cresce com delicadeza. Cada requisição agora espera atrás de tudo o que está na frente dela, então
+**o tempo de resposta que todo mundo vê piora muito mais rápido do que a carga piora**. Um servidor
+a 90% da capacidade não está 10% mais lento que um a 80%; ele pode facilmente estar várias vezes
+mais lento.
+
+É por isso que sites não degradam com elegância por conta própria. Eles estão bem, e aí não estão.
+
+Existem dois mecanismos para impedir isso, e os dois parecem falhas vistos de fora:
+
+**Timeouts.** Uma requisição que esperou além de algum limite é abandonada. Parece desperdício — o
+trabalho é jogado fora — e é a coisa certa a fazer, porque uma resposta que ninguém está mais
+esperando não tem valor, e segurá-la custa às que ainda estão.
+
+**Recusa.** A partir de certo ponto o servidor para de aceitar novas requisições, ou as aceita só
+para responder na hora "agora não". Ser recusado rápido é muito melhor para você do que ser aceito
+e obrigado a esperar cinco minutos, e é muito melhor para todo mundo, porque impede um cliente
+entusiasmado de consumir a capacidade de cem clientes comuns.
+
+Os dois têm nomes e códigos de status em HTTP, e você os conhece na aula 6. O que importa aqui é
+que **um servidor recusando você pode ser um servidor funcionando corretamente**.
+
+## Uma dependência lenta trava tudo
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"Dezesseis vagas de atendimento desenhadas como quadradinhos. No painel de cima quatro estão ocupadas e todas se liberam rápido. No painel de baixo todas as dezesseis estão presas por requisições esperando a busca, e uma fila de requisições que nada têm a ver com busca espera do lado de fora, sem conseguir entrar.\"><defs>\n<marker id=\"ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper)\"></path></marker>\n<marker id=\"ahs\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker>\n<marker id=\"ahv\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor-dim)\"></path></marker>\n<marker id=\"ahn\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\">\n  <path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker>\n</defs>\n  <text x=\"14\" y=\"18\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" font-weight=\"700\" fill=\"var(--paper-dim)\">BUSCA A 40 ms · uma vaga fica livre de novo quase na hora</text>\n  <rect x=\"14\" y=\"28\" width=\"420\" height=\"72\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect>\n  <text x=\"24\" y=\"44\" font-family=\"JetBrains Mono, monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">16 vagas</text>\n  <rect x=\"24\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\"></rect><rect x=\"74\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\"></rect><rect x=\"124\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\"></rect><rect x=\"174\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".13\" stroke=\"var(--phosphor)\"></rect><rect x=\"224\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"274\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"324\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"374\" y=\"52\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"24\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"74\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"124\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"174\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"224\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"274\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"324\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect><rect x=\"374\" y=\"74\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect>\n  <text x=\"454\" y=\"60\" font-family=\"Archivo, sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">4 em uso, 12 livres</text>\n  <text x=\"454\" y=\"78\" font-family=\"Archivo, sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">qualquer coisa que chega entra</text>\n\n  <text x=\"14\" y=\"140\" font-family=\"Archivo, sans-serif\" font-size=\"11.5\" font-weight=\"700\" fill=\"var(--amber)\">BUSCA A 4 s · cada vaga fica presa cem vezes mais tempo</text>\n  <rect x=\"14\" y=\"150\" width=\"420\" height=\"72\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--amber)\"></rect>\n  <text x=\"24\" y=\"166\" font-family=\"JetBrains Mono, monospace\" font-size=\"9.5\" fill=\"var(--amber)\">16 vagas</text>\n  <rect x=\"24\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"46\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"74\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"96\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"124\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"146\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"174\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"196\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"224\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"246\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"274\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"296\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"324\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"346\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"374\" y=\"174\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"396\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"24\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"46\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"74\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"96\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"124\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"146\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"174\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"196\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"224\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"246\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"274\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"296\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"324\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"346\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text><rect x=\"374\" y=\"196\" width=\"44\" height=\"16\" rx=\"2\" fill=\"var(--amber)\" fill-opacity=\".13\" stroke=\"var(--amber)\"></rect><text x=\"396\" y=\"205\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"8\" fill=\"var(--amber)\">busca</text>\n  <text x=\"454\" y=\"176\" font-family=\"Archivo, sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--amber)\">16 em uso, 0 livre</text>\n  <text x=\"454\" y=\"194\" font-family=\"Archivo, sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">a máquina está ociosa enquanto</text>\n  <text x=\"454\" y=\"209\" font-family=\"Archivo, sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">isso acontece — esperar não é trabalho</text>\n\n  <text x=\"14\" y=\"252\" font-family=\"Archivo, sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">esperando do lado de fora, e nenhuma delas toca a busca:</text>\n  <rect x=\"14\" y=\"262\" width=\"150\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect>\n  <text x=\"89\" y=\"274\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">a página sobre</text>\n  <rect x=\"172\" y=\"262\" width=\"150\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect>\n  <text x=\"247\" y=\"274\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o formulário de login</text>\n  <rect x=\"330\" y=\"262\" width=\"150\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect>\n  <text x=\"405\" y=\"274\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"JetBrains Mono, monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">uma folha de estilo</text>\n  <path d=\"M492 273 L556 273\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"4 3\" marker-end=\"url(#ahn)\"></path>\n  <path d=\"M512 262 L536 284\" stroke=\"var(--amber)\" stroke-width=\"2.4\"></path>\n  <path d=\"M536 262 L512 284\" stroke=\"var(--amber)\" stroke-width=\"2.4\"></path>\n  <text x=\"572\" y=\"277\" font-family=\"Archivo, sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">sem entrada</text>\n</svg>", "caption": "Nada quebrou e nada ficou mais lento por si só: a busca passou a segurar cada vaga cem vezes mais tempo, e as vagas acabaram. Quem paga são as requisições que nunca tocam a busca."}
+```
+
+Aqui está a falha que surpreende as equipes, e ela decorre do que está acima.
+
+Suponha que um servidor consiga segurar duzentas trocas em curso, e que uma das coisas a que ele
+pergunta — um serviço de busca, digamos — fique lenta. Não quebrada: lenta. Requisições que
+precisam da busca agora seguram sua vaga por quatro segundos em vez de quarenta milissegundos.
+
+Em um minuto, cada uma das duzentas vagas está ocupada por uma requisição esperando a busca. O
+servidor não está ocupado em nenhum sentido significativo — ele está ocioso, segurando duzentas
+conversas que estão todas esperando outra pessoa. E agora requisições que **nada têm a ver com
+busca** também não conseguem entrar, porque não há vagas.
+
+Uma dependência lenta virou uma queda total, e toda medição do servidor em si parece saudável.
+Esse é o formato mais comum de falhas grandes, e as defesas contra ele — limites por dependência,
+timeouts, desistir cedo — são assunto de boa parte da carreira posterior de um engenheiro. Você
+ainda não precisa delas. Você precisa reconhecer o formato.
+
+## O que isso significa para você como cliente
+
+Três coisas que vale levar adiante.
+
+**Você não pode presumir que o servidor está ocioso.** Mandar cem requisições o mais rápido
+possível não é de graça para ele, e um servidor bem cuidado vai começar a recusar você em vez de
+cair. Peça o que você precisa, e se estiver escrevendo algo com um laço, ponha um limite nele.
+
+**Você não pode presumir que suas requisições chegam em ordem.** Se você manda duas ao mesmo
+tempo, a segunda pode ser respondida primeiro — são trocas separadas e nada promete sequenciá-las.
+Sempre que a ordem importar, alguma coisa precisa garanti-la, e essa coisa normalmente é você:
+espere a primeira resposta antes de mandar a segunda, ou faça com que as operações sejam seguras
+de aplicar em qualquer ordem.
+
+**Tentar de novo também não é de graça.** Quando algo falha, tentar imediatamente é o instinto
+natural e muitas vezes o errado — se o servidor está sofrendo, mil clientes tentando de novo ao
+mesmo tempo são exatamente a carga extra que o mantém no chão. O hábito que vale construir cedo é
+esperar um pouco mais antes de cada tentativa, em vez de martelar.
