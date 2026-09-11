@@ -397,6 +397,47 @@ func checkLessons(s *School) []error {
 				}
 			}
 
+			/* EVERY SECTION HAS A NAME, AND THE ONES THAT DID NOT SHOWED THEIR
+			   ID TO STUDENTS.
+
+			   A section's title is its prose's title, out of the front matter —
+			   which is right, because a title is what a person reads and prose
+			   is where what a person reads lives. It also means a section with
+			   NO prose file has no title at all, and the interface falls back
+			   to the id. That fallback is correct for a section nobody has
+			   written yet and wrong for one that will never have prose: a
+			   `video` section and a `practice` section have no body by
+			   definition, so they showed `se-7g4aqpg0` and `se-b88hj82h` in the
+			   rail, in the step chips, and as the heading of the page.
+
+			   It reached a deployment and was found by somebody reading the
+			   screen. Nothing here could have said so: every check was looking
+			   at prose that exists, and the defect was prose that does not.
+
+			   THE FIX IS A FILE WITH ONLY FRONT MATTER IN IT, which is why this
+			   is a check and not a schema column. `intro.md` carrying a title
+			   and no body is already understood end to end — the loader reads
+			   it, the mirror stores it, the screen draws it, and `intro.pt.md`
+			   translates it through the same mechanism as every other title. A
+			   column would have been a second place to say the same thing, with
+			   a translation story of its own to invent. */
+			for _, sec := range l.Sections {
+				named := false
+				for _, t := range l.Text {
+					if t.SectionID == sec.ID && t.Locale == sourceLocale && t.Title != "" {
+						named = true
+						break
+					}
+				}
+				if !named {
+					problems = append(problems, fmt.Errorf(
+						"%s/%s (%s) has no title — write `%s.md` with front matter naming it, "+
+							"even when the section has no body, because a section with no title "+
+							"is drawn as its own id and a student reads %q as its name",
+						where, sec.ID, sec.Kind, sec.Slug, sec.ID))
+				}
+			}
+
 			// AND THE OTHER DIRECTION. Content that was generated and forgotten
 			// shows up nowhere else in the system (C-13): it is not linked, so
 			// no screen misses it, and it sits in the repository looking like
