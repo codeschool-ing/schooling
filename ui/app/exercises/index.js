@@ -431,7 +431,17 @@ export function buildAssessment(exercises, ctx, options = {}) {
 
   function show(i) {
     current = i;
-    if (!screens[i]) screens[i] = buildExercise(exercises[i], contextFor(i), i, { exam, attempt: options.attempt });
+    /* `lesson` GOES DOWN WITH THE OTHER TWO, and it did not. The wizard took
+       the option at the top and built each question without it, so the marking
+       fell through to `api.grade` with no attempt — which is `gradeLocally`,
+       comparing an answer against a question the browser holds no key for. An
+       option accepted at one end and dropped at the other is the same shape as
+       the count that never reached `lessonSections`: nothing is missing, it
+       just never arrives. */
+    if (!screens[i]) {
+      screens[i] = buildExercise(exercises[i], contextFor(i), i,
+        { exam, attempt: options.attempt, lesson: options.lesson });
+    }
     stage.textContent = '';
     stage.appendChild(screens[i]);
     paintHeader();

@@ -398,6 +398,86 @@ async function drilled(theme, want) {
   }
 }
 
+/* ---------- a lesson's own questions, answered ----------
+
+   THE ONE CLAIM NEITHER HALF'S TESTS CAN MAKE.
+
+   `internal/lesson` has seven store tests against a real database, and
+   `api.js`'s wiring is driven by a harness with a stubbed `fetch`. Both were
+   green while the screen called the route ZERO TIMES: `lessonSections` decided
+   whether an assessment had questions from `window.SAMPLE_EXERCISES`, a global
+   this interface never loads, so every assessment was `pending` and the guard in
+   `lesson.js` was false every time. Each half worked. The join did not, and
+   nothing in the repository was looking at the join.
+
+   So this is not an accessibility check that happens to answer a question. It
+   is the check that the route is REACHED — the axe pass over the answered state
+   is what it earns on the way past.
+
+   IT ASSERTS THE REQUEST AND NOT THE PIXELS. A screen that rendered an empty
+   assessment would look tidy and pass every contrast rule there is, which is
+   precisely how this went unnoticed. */
+async function lessonAnswered(theme) {
+  const page = await open(theme, 'en');
+  thrown = [];
+  page.on('pageerror', (e) => thrown.push(e.message));
+  page.on('console', (m) => { if (m.type() === 'error') thrown.push(m.text()); });
+
+  try {
+    await signUp(page, 'Ada Lovelace', `a11y-lesson-${Date.now()}-${theme}@example.tld`);
+
+    /* The fixture puts two non-exam questions in `web-fundamentals`' first
+       lesson, which is the one every other lesson check here already opens. */
+    const [served] = await Promise.all([
+      page.waitForResponse((r) => /\/lessons\/[^/]+\/exercises/.test(r.url()), { timeout: 15000 }),
+      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0/assessment`, { waitUntil: 'load' }),
+    ]).catch(() => {
+      throw new Error('the screen never asked for the lesson\'s questions. That is not a slow '
+        + 'request: it is the assessment being marked `pending`, which is what happens when the '
+        + 'question count the server sends never reaches `lessonSections`');
+    });
+
+    if (!served.ok()) {
+      throw new Error(`asking for the questions: ${served.status()} ${await served.text()}`);
+    }
+    const questions = await served.json();
+    if (!Array.isArray(questions) || questions.length === 0) {
+      throw new Error(`the route answered with ${JSON.stringify(questions)} — the fixture writes `
+        + 'two questions into this lesson, so an empty list is the query and not the content');
+    }
+
+    /* AND NO KEY CAME WITH THEM. The server strips it, `internal/grade` has a
+       test for that, and this is the same claim made about the bytes a browser
+       actually received — which is the only place the two could ever disagree. */
+    const wire = JSON.stringify(questions);
+    for (const leak of ['"correct"', '"why"']) {
+      if (wire.includes(leak)) {
+        throw new Error(`the questions arrived carrying ${leak}, so the assessment can be `
+          + 'passed by reading the response');
+      }
+    }
+
+    await page.waitForSelector('.ex', { timeout: 8000 });
+    await page.waitForTimeout(300);
+
+    /* Answered by choosing the first option, because WHICH verdict comes back
+       does not matter here: what is being checked is that a verdict comes back
+       at all, from the server, against a question the browser holds no key for.
+       The drill above is where both verdicts are arranged and measured. */
+    const seen = await answerCard(page, async (p) => {
+      const choices = p.locator('.ex').first().locator('.choice');
+      if (await choices.count()) await choices.first().click();
+    });
+    if (seen.state !== 'v-right' && seen.state !== 'v-wrong') {
+      throw new Error(`the screen showed "${seen.state}" instead of a verdict`);
+    }
+    return page;
+  } catch (e) {
+    await done(page);
+    throw e;
+  }
+}
+
 /* ---------- an operator, made the only way there is ----------
 
    The making of one moved to `tools/lib/operator.mjs` when a second suite
@@ -933,6 +1013,22 @@ try {
 
       await measure(answered, `${theme} · a drilled answer (${want})`);
       await done(answered);
+    }
+
+    /* AND A LESSON'S OWN QUESTIONS, WHICH IS THE JOIN NOTHING ELSE CHECKS.
+       See `lessonAnswered` for what was green while this was broken. */
+    let lessonPage = null;
+    try {
+      lessonPage = await lessonAnswered(theme);
+    } catch (e) {
+      violations += 1;
+      console.error(`✗ ${theme} · a lesson's own questions — this state could not be reached, `
+        + `so it is not being measured: ${e.message}`
+        + (thrown.length ? `\n        the page threw: ${thrown.join(' | ')}` : ''));
+    }
+    if (lessonPage) {
+      await measure(lessonPage, `${theme} · a lesson's own questions, answered`);
+      await done(lessonPage);
     }
 
     /* THE EXAM PAPER, QUESTION BY QUESTION — and it is walked rather than
