@@ -19,12 +19,16 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
+	"strings"
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/grade"
+	"github.com/codeschool-ing/schooling/ui"
 )
 
 func main() {
@@ -93,6 +97,93 @@ func checkKeys(school string, s *catalog.School) []error {
 	return problems
 }
 
+// servedFonts answers the font families the interface actually ships.
+//
+// IT READS THE EMBED AND NOT A PATH, so this says the same thing wherever the
+// tool is run from, and so that "the app serves it" means the bytes that go
+// into the binary rather than a file that happens to sit next to the checker.
+func servedFonts() (map[string]bool, error) {
+	body, err := fs.ReadFile(ui.Files, "assets/fonts/fonts.css")
+	if err != nil {
+		return nil, fmt.Errorf("reading the interface's font faces: %w", err)
+	}
+	families := map[string]bool{}
+	for _, m := range declaresFamily.FindAllStringSubmatch(string(body), -1) {
+		families[strings.ToLower(m[1])] = true
+	}
+	if len(families) == 0 {
+		return nil, fmt.Errorf("the interface's stylesheet declares no font faces at all, " +
+			"which cannot be right and would let every figure below pass")
+	}
+	return families, nil
+}
+
+var (
+	declaresFamily = regexp.MustCompile(`(?i)font-family:\s*'([^']+)'`)
+
+	/* THE BACKSLASH IS NOT OPTIONAL DECORATION, it is the whole reason the first
+	   version of this check passed on the very files it was written for. A
+	   figure's SVG is a STRING inside the JSON of a `schooling-figure` fence, so
+	   in the file the attribute reads `font-family=\"Archivo, sans-serif\"` —
+	   every quote escaped. A pattern expecting a bare quote matches nothing, and
+	   a check that matches nothing reports nothing, which is indistinguishable
+	   from a clean run. It was caught by putting the defect back and watching
+	   this stay silent. */
+	namesFamily = regexp.MustCompile(`(?i)font-family=\\?"([^\\"]*)`)
+)
+
+// checkFigureFonts holds a drawing's lettering to the fonts the app has.
+//
+// # NOTHING READS INSIDE AN SVG, AND THAT IS THE THIRD TIME IT COST SOMETHING
+//
+// A figure is markup written inside a content file, which puts it past every
+// check here: this tool reads the catalogue's shape, `check-exercises` reads
+// the questions, and axe reads the rendered page and has no opinion about which
+// typeface it is in. Inside the drawing nobody was looking, and three separate
+// defects lived there — twelve palette tokens that resolved to nothing and
+// would have rendered invisible, three labels still in Portuguese in the
+// English lesson, and this: every `<text>` in all thirteen figures asked for
+// `Archivo` and `JetBrains Mono`, which this application has never shipped. Each
+// one fell through to whatever generic the browser chose, so the lettering was a
+// different typeface from the page around it and a different one per machine.
+//
+// # IT CHECKS THE FIRST NAME AND NOT THE FALLBACK
+//
+// `font-family="'IBM Plex Sans', sans-serif"` is right, and the generic at the
+// end is what a stack is for. The question is whether the FIRST choice is one
+// the app can honour, because a first choice it cannot honour is a decision
+// handed silently to the browser.
+func checkFigureFonts(school string, s *catalog.School, families map[string]bool) []error {
+	var problems []error
+	seen := map[string]bool{}
+
+	for _, course := range s.Courses {
+		for _, lesson := range course.Loaded {
+			for _, t := range lesson.Text {
+				for _, m := range namesFamily.FindAllStringSubmatch(t.Body, -1) {
+					first := strings.ToLower(strings.Trim(
+						strings.TrimSpace(strings.Split(m[1], ",")[0]), `'"`))
+					if first == "" || families[first] {
+						continue
+					}
+					where := fmt.Sprintf("%s: %s/%s/%s (%s): %q",
+						school, course.ID, lesson.ID, t.SectionID, t.Locale, first)
+					if seen[where] {
+						continue
+					}
+					seen[where] = true
+					problems = append(problems, fmt.Errorf(
+						"%s is not a font this interface serves, so every label asking for it "+
+							"falls back to whatever generic the browser picks — a different "+
+							"typeface from the page around it, and a different one per machine",
+						where))
+				}
+			}
+		}
+	}
+	return problems
+}
+
 func check(root string) (problems []error, schools int, err error) {
 	entries, err := os.ReadDir(root)
 	if os.IsNotExist(err) {
@@ -100,6 +191,11 @@ func check(root string) (problems []error, schools int, err error) {
 	}
 	if err != nil {
 		return nil, 0, fmt.Errorf("reading %s: %w", root, err)
+	}
+
+	families, err := servedFonts()
+	if err != nil {
+		return nil, 0, err
 	}
 
 	for _, entry := range entries {
@@ -135,6 +231,11 @@ func check(root string) (problems []error, schools int, err error) {
 		// also the honest place: reading files and judging answers are two
 		// jobs, and the only thing that needs both is the checker.
 		problems = append(problems, checkKeys(entry.Name(), school)...)
+
+		// AND THE LETTERING OF EVERY DRAWING, against the fonts the binary
+		// actually carries. See `checkFigureFonts` for the three defects that
+		// have now lived inside an SVG, where nothing was reading.
+		problems = append(problems, checkFigureFonts(entry.Name(), school, families)...)
 	}
 
 	sort.Slice(problems, func(i, j int) bool { return problems[i].Error() < problems[j].Error() })
