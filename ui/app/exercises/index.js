@@ -88,7 +88,7 @@ export function buildExercise(ex, ctx, ix, options = {}) {
       ? '<details class="ex-hint"><summary>' + txt('hint') + '</summary><p>' + formatted(ex.socraticHint) + '</p></details>'
       : '') +
     '<div class="ex-actions">' +
-      (selfCompleting(mod, exam) ? '' : '<button type="button" class="btn btn-primary ex-answer">' +
+      (selfCompleting(mod, exam, ex) ? '' : '<button type="button" class="btn btn-primary ex-answer">' +
         txt(exam ? 'Record answer' : 'Answer') + '</button>') +
       (exam || options.drill
         ? ''
@@ -223,7 +223,9 @@ export function buildExercise(ex, ctx, ix, options = {}) {
   if (previous?.correct) markAlreadyDone(el, previous);
 
   const answerButton = el.querySelector('.ex-answer');
-  if (answerButton) answerButton.addEventListener('click', () => check(mod.collect(body, { exam })));
+  if (answerButton) {
+    answerButton.addEventListener('click', () => check(mod.collect(body, { exam, exercise: ex })));
+  }
 
   const retry = el.querySelector('.ex-retry');
   if (retry) {
@@ -304,9 +306,16 @@ function markAlreadyDone(el, previous) {
  * on: the student pairs everything up and then presses the button like every
  * other type. So it is a question about the MODE and not only about the type.
  */
-function selfCompleting(mod, exam) {
+/* THE EXERCISE IS PASSED IN, BECAUSE ONE TYPE CANNOT ANSWER FROM THE MODE
+   ALONE. `matching` finishes on its own only where the browser holds the answer
+   key, and whether it does is a property of the PAYLOAD — the offline copy
+   carries one and a question presented by the server does not. See its file.
+
+   Every other type ignores the second argument, which is why this stays one
+   call rather than a second hook. */
+function selfCompleting(mod, exam, ex) {
   return typeof mod.selfCompleting === 'function'
-    ? mod.selfCompleting(exam)
+    ? mod.selfCompleting(exam, ex)
     : Boolean(mod.selfCompleting);
 }
 

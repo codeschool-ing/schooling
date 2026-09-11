@@ -1,27 +1,37 @@
 /* ==========================================================================
-   `matching` — pairing by clicking, with immediate feedback.
+   `matching` — pairing by clicking.
 
    The per-row <select> was replaced by two columns of tiles: you click one on
-   the left, then one on the right, and the pair is checked ON THE SPOT — green
-   and locked if it is right, red and undone if it is not. It is the Duolingo
-   gesture, and it is better here for three reasons: it works the same on touch
-   and mouse, it does not hide the options inside a menu, and it turns the
-   exercise into practice instead of a form.
+   the left, then one on the right. It works the same on touch and mouse and it
+   does not hide the options inside a menu.
 
-   WHAT THAT BREAKS, AND HOW IT STAYS HONEST
-   With immediate feedback the final mapping is ALWAYS right — you only have to
-   keep trying. If the verdict still compared the map to the answer key,
-   everyone would score 100%. So the measure becomes ANOTHER one: how many pairs
-   were wrong along the way. Zero mistakes is a pass; any mistake is "not yet",
-   with the count. The pipeline's yardstick still holds — getting there by
-   elimination cannot count as knowing — only now it is measured on the process
-   and not on the result.
+   TWO INTERACTIONS, AND WHAT CHOOSES BETWEEN THEM IS WHERE THE KEY IS.
 
-   The right-hand column stays SORTED ALPHABETICALLY. In the JSON the correct
-   pair is `pairs[i].left ↔ pairs[i].right`, and presenting it in written
-   order would hand over the key by position. It is the same reason the
-   pipeline's probe sorts. The `rightDistractors` go in with it, so the last
-   pair cannot fall out by elimination.
+   MAKE THEM ALL, THEN SUBMIT — wherever the question was presented by the
+   server, which is every lesson, every drill and every exam. Nothing on screen
+   says whether a pair is right, because nothing on screen KNOWS: the pairing is
+   the answer and it stays on the server (A-09). The mapping goes up, the server
+   marks it, and `reveal` puts the right-hand answer beside each wrong choice.
+
+   CHECKED AS EACH PAIR LANDS — green and locked if right, red and undone if
+   not, the Duolingo gesture — only in the offline copy, where the whole
+   question including its key is baked into the page and there is nobody to keep
+   it from. `setupPractice` below is that one.
+
+   THE SECOND USED TO BE THE DEFAULT FOR EVERYTHING THAT WAS NOT AN EXAM, and it
+   could not work: with no key in the browser no pair ever locked, the card never
+   completed, and it hid the answer button on the way past. See `selfCompleting`.
+
+   WHAT THE IMMEDIATE ONE BREAKS, where it still runs. The final mapping is
+   ALWAYS right — you only have to keep trying — so the verdict cannot compare
+   the map to the key or everyone scores 100%. The measure is how many pairs were
+   wrong along the way: zero is a pass, any mistake is "not yet", with the count.
+
+   The right-hand column stays SORTED ALPHABETICALLY in that copy. In the JSON
+   the correct pair is `pairs[i].left ↔ pairs[i].right`, and presenting it in
+   written order would hand over the key by position. The `rightDistractors` go
+   in with it, so the last pair cannot fall out by elimination.
+
    ========================================================================== */
 
 import { formatted, esc, shuffleWith } from '../text.js';
@@ -31,13 +41,34 @@ const WRONG_PAIR_PAUSE = 700;   // how long a wrong pair stays red before it let
 export default {
   types: ['matching'],
 
-  /* During PRACTICE this type finishes on its own: the last pair closes and
-     there is nothing left to "answer", so the wrapper hides the button and
-     waits for the signal.
+  /* WHAT DECIDES THE INTERACTION IS WHETHER THE BROWSER HOLDS THE KEY.
 
-     IN AN EXAM IT DOES NOT, because there is nothing to close ON. See the note
-     below the header. */
-  selfCompleting: (exam) => !exam,
+     The Duolingo gesture in the header — every pair checked the instant it
+     lands — can only exist where this file can say whether a pair is right.
+     `setupPractice` answers that from `exercise.pairs[i].right`.
+
+     A QUESTION PRESENTED BY THE SERVER HAS NO SUCH FIELD. The pairing IS the
+     answer and is kept on the server, which is the whole of A-09. So in a
+     lesson and in a drill `key[left]` was `undefined`, NO PAIR COULD EVER
+     LOCK, `state.done` never reached the total — and there was no answer button
+     either, because this said it finishes on its own. A matching question was
+     impossible to complete anywhere except on an exam paper. Making the
+     right-hand column visible (#306) did not change that: the tiles were there
+     and clicking them did nothing.
+
+     So the question is not "is this an exam", it is "is there a key here". No
+     key means the exam's interaction: make every pairing, submit, and the
+     server marks it. That is the only shape compatible with the key living on
+     the server, and it is the one that already works.
+
+     WHAT IT COSTS, said rather than discovered: feedback per pair is gone
+     wherever the server presents the question, which is every lesson and every
+     drill. It was a good teaching gesture. It cannot be had without either
+     sending the key to the browser — which would hand over the answer to
+     anybody reading the response — or a request per pair, which is a route and
+     a failure mode per pair. The offline copy keeps it, because there the key
+     is already in the page and nothing is being protected. */
+  selfCompleting: (exam, ex) => !exam && holdsTheKey(ex),
 
   body(ex, uid, { exam } = {}) {
     const left = shuffleWith(uid + ':e', ex.pairs.map((p) => p.left));
@@ -84,7 +115,10 @@ export default {
 
     return (
       '<p class="ex-instruction">' +
-        txt(exam
+        /* The undo sentence belongs to the interaction and not to the mode: a
+           lesson now uses the same one an exam does, and telling a student they
+           cannot undo when they can is a worse instruction than none. */
+        txt(exam || !holdsTheKey(ex)
           ? 'Tap an item on the left, then its pair on the right. Tap a pair again to undo it.'
           : 'Tap an item on the left, then its pair on the right.') +
         (spare > 0 ? ' <strong>' + spare + ' ' + txt('options are left out.') + '</strong>' : '') +
@@ -98,12 +132,12 @@ export default {
   },
 
   setup(root, { exercise, done, exam }) {
-    if (exam) return setupExam(root, exercise);
+    if (exam || !holdsTheKey(exercise)) return setupExam(root, exercise);
     return setupPractice(root, exercise, done);
   },
 
-  collect(root, { exam } = {}) {
-    if (exam) {
+  collect(root, { exam, exercise } = {}) {
+    if (exam || !holdsTheKey(exercise)) {
       /* The mapping, BY INDEX of the left-hand pair — which is what the server
          grades against, because the left texts live in the public half and the
          grading does not read it. The order here is the exercise's own and not
@@ -114,9 +148,9 @@ export default {
       });
       return chosen.some(Boolean) ? chosen : null;
     }
-    // Practice: the wrapper only calls this if the student hits "Responder"
-    // before closing every pair — that answer is partial, and partial is not a
-    // pass.
+    /* The immediate-feedback interaction, which is the offline copy only. The
+       wrapper calls this only if the student hits the button before closing
+       every pair — that answer is partial, and partial is not a pass. */
     const done = Number(root.querySelector('.assoc-done').textContent);
     return done > 0 ? { map: {}, errors: -1, partial: true } : null;
   },
@@ -153,6 +187,17 @@ export default {
     }
   },
 };
+
+/* Whether THIS COPY of the question can mark a pair itself.
+
+   `pairs[i].right` is the answer. The offline bundle carries it, because there
+   the whole question is baked into the page and there is nobody to protect it
+   from; a question presented by the server never does, because the pairing is
+   what is being asked. One field, asked of the payload rather than of the mode,
+   because the mode was never what it depended on. */
+function holdsTheKey(ex) {
+  return Boolean(ex) && Array.isArray(ex.pairs) && ex.pairs.some((p) => p.right !== undefined);
+}
 
 /* ---------- practice: every pair is checked as it lands ---------- */
 function setupPractice(root, exercise, done) {
