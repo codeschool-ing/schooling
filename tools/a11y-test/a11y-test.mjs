@@ -428,9 +428,14 @@ async function lessonAnswered(theme) {
 
     /* The fixture puts two non-exam questions in `web-fundamentals`' first
        lesson, which is the one every other lesson check here already opens. */
+    /* THE READING SECTION, WHICH IS WHERE ITS OWN QUESTIONS NOW ARE. This
+       asked for `/assessment`, the synthetic section that used to be appended
+       after the last one and held every question of the lesson. A lesson that
+       declares a `practice` section has no synthetic one — that section IS the
+       assessment — and a content section asks the questions assigned to it. */
     const [served] = await Promise.all([
       page.waitForResponse((r) => /\/lessons\/[^/]+\/exercises/.test(r.url()), { timeout: 15000 }),
-      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0/assessment`, { waitUntil: 'load' }),
+      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0`, { waitUntil: 'load' }),
     ]).catch(() => {
       throw new Error('the screen never asked for the lesson\'s questions. That is not a slow '
         + 'request: it is the assessment being marked `pending`, which is what happens when the '
@@ -478,6 +483,97 @@ async function lessonAnswered(theme) {
   }
 }
 
+/* ---------- each section asking its OWN questions ----------
+
+   WHAT THIS IS ABOUT IS A FIELD THAT WAS ALWAYS THERE AND NEVER READ. Every
+   question names the section it belongs to; the server has always sent it and
+   has always ordered by it; and the screen put every non-exam question of the
+   lesson into one pile after the last section. In lesson one of
+   `web-fundamentals` that meant 6,200 words and then 36 questions at once, when
+   the content had already assigned 24 of them to the five readings they were
+   written for.
+
+   TWO ASSERTIONS, AND THE SECOND IS THE ONE THAT CAN FAIL. That a section shows
+   its own questions is half the claim; that it shows NOBODY ELSE'S is the half
+   that separates this from the old behaviour, where every section would have
+   passed the first test by showing all of them.
+
+   The fixture had one reading section and nothing else, which made those two
+   sentences identical and neither of them able to fail. It now splits its two
+   questions across a reading and a `practice` section — and that practice
+   section IS the assessment, rather than a synthetic one appended beside it. */
+async function sectionsAskTheirOwn(theme) {
+  const page = await open(theme, 'en');
+  try {
+    await signUp(page, 'Barbara Liskov', `a11y-sections-${Date.now()}-${theme}@example.tld`);
+
+    /* THE SECTION'S OWN HEADING IS WAITED FOR FIRST, AND THAT IS NOT CAUTION.
+
+       These are two addresses that differ only in the FRAGMENT, so `page.goto`
+       does not reload anything — it fires `hashchange` and the app re-renders on
+       its own clock. Waiting for a selector straight after it finds the PREVIOUS
+       screen's, which is still in the document.
+
+       That is how this check first failed: it reported the practice section
+       asking the reading's question, and the request log showed the navigation
+       had happened correctly. It was reading the screen it had just left. The
+       title is waited for because it is what changes when the new section is
+       drawn; the prompts are waited for after it, because the questions mount a
+       fetch later than the section around them. */
+    const prompts = async (path, heading) => {
+      await page.goto(`${BASE}/#/course/web-fundamentals/${path}`, { waitUntil: 'load' });
+      await page.waitForFunction((want) => {
+        const h = document.querySelector('.section-title');
+        return Boolean(h) && h.textContent.trim() === want;
+      }, heading, { timeout: 10000 });
+      await page.waitForSelector('.ex-prompt, .assessment-pending', { timeout: 10000 });
+      /* THE DOTS AND NOT ONLY THE PROMPTS. The wizard shows one question at a
+         time, so the visible prompt says which question is FIRST and nothing
+         about how many there are — and "this section asks nobody else's" is a
+         claim about how many. There is one dot per question. */
+      return page.evaluate(() => ({
+        shown: [...document.querySelectorAll('.ex-prompt')].map((p) => p.textContent.trim()),
+        count: document.querySelectorAll('.wz-dot').length,
+      }));
+    };
+
+    /* The fixture assigns TWO questions to the reading and ONE to the practice
+       section, out of three in the lesson. The counts are what carry the claim:
+       a section showing three is the old behaviour, every question of the
+       lesson in one pile, and it would pass on the prompts alone. */
+    const reading = await prompts('lesson/0', 'The two roles');
+    if (!reading.shown.some((t) => t.includes('Who is the client'))) {
+      throw new Error(`the reading section asked ${JSON.stringify(reading.shown)} — its own `
+        + 'question is not among them, so the section field is still not being read');
+    }
+    if (reading.count !== 2) {
+      throw new Error(`the reading section carries ${reading.count} questions and is assigned 2 `
+        + '— three is the whole lesson in one pile, which is what this is about');
+    }
+
+    /* And the practice section, which is the assessment. Its heading is its own
+       title rather than the word "Assessment", because it is a real section. */
+    const closing = await prompts('lesson/0/se-drlaaaa2', 'Putting it together');
+    if (!closing.shown.some((t) => t.includes('Put the steps'))) {
+      throw new Error(`the practice section asked ${JSON.stringify(closing.shown)} — a practice `
+        + 'section used to render nothing at all, having no branch of its own');
+    }
+    if (closing.count !== 1) {
+      throw new Error(`the practice section carries ${closing.count} questions and is assigned 1 `
+        + "— the extras are the reading's, which a student would then answer twice");
+    }
+
+    /* That the practice section is headed by its own title rather than its id
+       is asserted by the wait above: it is how this knew it had arrived. A
+       section with no prose file shows `se-drlaaaa2`, and the wait would time
+       out saying so. */
+    return page;
+  } catch (e) {
+    await done(page);
+    throw e;
+  }
+}
+
 /* ---------- a matching question, WITH its right-hand column ----------
 
    THE ONE TYPE THAT COULD ONLY EVER FAIL OFF THE PAPER.
@@ -505,18 +601,35 @@ async function lessonMatchingHasItsOptions(theme) {
   try {
     await signUp(page, 'Grace Hopper', `a11y-match-${Date.now()}-${theme}@example.tld`);
 
+    /* THE SECTION THE QUESTION BELONGS TO, WORKED OUT FROM THE QUESTION.
+
+       This asked for `/assessment`, the synthetic section that used to hold
+       every question of the lesson. There is no such section on a lesson that
+       declares a `practice` one, and a question is now asked in the section it
+       names — so the address comes from the question, and so does the position.
+
+       THE INDEX IS WITHIN THE SECTION AND NOT WITHIN THE LESSON. The route
+       serves the whole lesson ordered by section; the wizard on screen holds
+       one section's worth. Using the lesson-wide index would click the wrong
+       dot as soon as a section before this one has a question, which is the
+       entire arrangement here. */
     const [served] = await Promise.all([
       page.waitForResponse((r) => /\/lessons\/[^/]+\/exercises/.test(r.url()), { timeout: 15000 }),
-      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0/assessment`, { waitUntil: 'load' }),
+      page.goto(`${BASE}/#/course/web-fundamentals/lesson/0`, { waitUntil: 'load' }),
     ]);
     const questions = await served.json();
-    const at = questions.findIndex((q) => q.type === 'matching');
-    if (at < 0) {
+    const target = questions.find((q) => q.type === 'matching');
+    if (!target) {
       throw new Error('the lesson serves no matching question, so this checks nothing — '
         + '`dr-zmatch` is in the fixture for exactly this reason');
     }
+    const sameSection = questions.filter((q) => q.section === target.section);
+    const at = sameSection.findIndex((q) => q.exercise === target.exercise);
 
-    await page.waitForSelector('.wz-dot', { timeout: 8000 });
+    await page.goto(`${BASE}/#/course/web-fundamentals/lesson/0/${target.section}`,
+      { waitUntil: 'load' });
+    await page.waitForFunction((n) => document.querySelectorAll('.wz-dot').length === n,
+      sameSection.length, { timeout: 10000 });
     await page.click(`.wz-dot[data-ir="${at}"]`);
     await page.waitForSelector('.tile-right', { timeout: 8000 });
 
@@ -1169,6 +1282,20 @@ try {
     if (lessonPage) {
       await measure(lessonPage, `${theme} · a lesson's own questions, answered`);
       await done(lessonPage);
+    }
+
+    /* AND EACH SECTION ASKING ITS OWN. See `sectionsAskTheirOwn` for the field
+       that was served all along and read by nothing. */
+    let ownPage = null;
+    try {
+      ownPage = await sectionsAskTheirOwn(theme);
+    } catch (e) {
+      violations += 1;
+      console.error(`✗ ${theme} · a section's own questions — ${e.message}`);
+    }
+    if (ownPage) {
+      await measure(ownPage, `${theme} · a lesson's closing section`);
+      await done(ownPage);
     }
 
     /* AND A MATCHING QUESTION WITH ITS OPTIONS. See `lessonMatchingHasItsOptions`

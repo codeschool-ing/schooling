@@ -173,14 +173,49 @@ function questionCount(courseId, key) {
   return lessonExercises(courseId, key).length;
 }
 
+/* WHERE A LESSON'S QUESTIONS GO, WHICH THE CONTENT HAD ALREADY DECIDED.
+
+   Every question carries the id of the section it belongs to. The content of
+   lesson one of `web-fundamentals` assigns 24 of its 36 to the five readings,
+   four or five each, and the remaining 12 to a `practice` section at the end.
+   The server has always served that field — `ORDER BY e.section_id` — and this
+   screen threw it away and put all 36 in one pile after the last section.
+
+   So a student read 6,200 words and then met 36 questions at once, and the
+   `practice` section rendered as an empty page, because `lesson.js` has a
+   branch for an assessment, for prose and for a video, and none for practice.
+
+   TWO THINGS WERE STANDING WHERE ONE BELONGS. The lesson DECLARES a `practice`
+   section and this function APPENDED a synthetic `assessment` one, and they
+   are the same idea: the set a lesson closes with. So a declared practice
+   section becomes the assessment — keeping its own id, its own title and its
+   own place in the order — and the synthetic one is appended only when a
+   lesson declares none, which is what keeps a lesson with no practice section
+   working exactly as before.
+
+   `count` and `pending` stay a statement about the LESSON rather than about
+   this section, because that is the number the server sends. It decides
+   whether there are questions at all, which is what `pending` has always
+   meant; it does not decide which questions this section shows. Reading a
+   per-section count off a list this function has not fetched is the mistake
+   that made every assessment `pending` once (#299), and it is not worth
+   repeating for a label. */
 export function lessonSections(courseId, key) {
   const written = writtenSections(courseId, key);
+  const questions = questionCount(courseId, key);
 
   const sections = written?.length
-    ? written.map((s) => ({ ...s, type: 'content' }))
+    ? written.map((s) => ({
+      ...s,
+      type: s.kind === 'practice' ? 'assessment' : 'content',
+      ...(s.kind === 'practice'
+        ? { count: questions, pending: questions === 0 }
+        : {}),
+    }))
     : [{ id: 'content', title: txt('Content'), type: 'content', body: null }];
 
-  const questions = questionCount(courseId, key);
+  if (sections.some((s) => s.type === 'assessment')) return sections;
+
   sections.push({
     id: 'assessment',
     title: txt('Assessment'),

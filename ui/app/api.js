@@ -530,6 +530,16 @@ export async function loadLessonStructure() {
       sections: (l.sections || []).map((s) => ({
         id: s.id,
         title: s.title || s.id,
+        /* THE KIND TRAVELS, AND UNTIL NOW ONLY ONE ANSWER TO IT DID. This read
+           `kind` to set `video: true` and then dropped the field — so the
+           screen could ask "is this a video?" and nothing else. A `practice`
+           section was indistinguishable from a reading with no body, which is
+           exactly how it came to render as an empty page.
+
+           It is the fourth time this session that a field the server sends has
+           gone missing in this adapter, between two halves that each work.
+           `video` stays because the copied screens read it by that name. */
+        kind: s.kind,
         ...(s.kind === 'video' ? { video: true } : {}),
         ...(s.duration ? { duration: s.duration } : {}),
         countable: s.countable !== false,
@@ -749,6 +759,16 @@ export async function loadCourseContent(courseId) {
         id: s.id,
         title: s.title || s.id,
         ...(s.body ? { body: blocksOf(s.body) } : {}),
+        /* THE KIND TRAVELS, AND UNTIL NOW ONLY ONE ANSWER TO IT DID. This read
+           `kind` to set `video: true` and then dropped the field — so the
+           screen could ask "is this a video?" and nothing else. A `practice`
+           section was indistinguishable from a reading with no body, which is
+           exactly how it came to render as an empty page.
+
+           It is the fourth time this session that a field the server sends has
+           gone missing in this adapter, between two halves that each work.
+           `video` stays because the copied screens read it by that name. */
+        kind: s.kind,
         ...(s.kind === 'video' ? { video: true } : {}),
         ...(s.duration ? { duration: s.duration } : {}),
         countable: s.countable !== false,

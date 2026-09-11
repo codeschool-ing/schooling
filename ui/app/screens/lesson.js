@@ -211,7 +211,12 @@ export default async function lesson({ id, ix, sec }) {
          to come" notice, which would be false there: the content is the video.
          The notice still holds for a lesson with nothing written yet. */
       : (section.body
-        ? '<section class="block lesson-text">' + prose(section.body) + '</section>'
+        ? '<section class="block lesson-text">' + prose(section.body) + '</section>' +
+          /* AND THE SECTION'S OWN QUESTIONS, AFTER ITS WORDS. Empty until the
+             fetch below fills it, and left out of the document entirely when
+             this section has none, so a reading with nothing to ask does not
+             draw a heading over an empty box. */
+          '<section class="block lesson-exercises section-exercises" hidden></section>'
         : (hasVideo
           ? ''
           : '<section class="block lesson-text"><p class="mono dim">' +
@@ -264,7 +269,23 @@ export default async function lesson({ id, ix, sec }) {
       '<a class="btn btn-primary advances" href="' + nextTarget + '">' + txt('next') + ' →</a>' +
     '</footer>';
 
-  if (section.type === 'assessment' && !section.pending) {
+  /* WHICH QUESTIONS THIS SECTION ASKS.
+
+     A question names the section it belongs to, and one screen used that field:
+     none. Every non-exam question of the lesson went into one pile after the
+     last section — so a student read 6,200 words and met 36 questions at once,
+     when the content had already assigned 24 of them to the five readings it
+     wrote them for.
+
+     A CONTENT SECTION TAKES ITS OWN. An ASSESSMENT takes its own AND everything
+     no content section claimed — written as "what is left over" rather than as
+     two cases, so a question whose section names nothing on this screen is
+     still asked somewhere instead of silently disappearing. */
+  const claimed = new Set(sections.filter((s) => s.type === 'content').map((s) => s.id));
+  const mine = (all) => all.filter((q) => q.section === section.id
+    || (section.type === 'assessment' && !claimed.has(q.section)));
+
+  if (section.type === 'assessment' ? !section.pending : section.body) {
     /* A REFUSAL HERE IS NOT A FAILURE AND MUST NOT BE SWALLOWED EITHER.
        `prose(body)` threw once and the dispatch chain ate it, leaving every
        reading section on the placeholder it had been drawn with — so a throw in
@@ -279,11 +300,23 @@ export default async function lesson({ id, ix, sec }) {
       console.error('the questions of this lesson did not load', e);
     }
     const into = el.querySelector('.lesson-exercises');
+    const ours = mine(exercises);
     if (refused) {
+      into.hidden = false;
       into.innerHTML = '<p class="mono dim">' +
         txt('[the questions did not load — reload the page to try again]') + '</p>';
-    } else if (exercises.length) {
-      into.appendChild(buildAssessment(exercises, { courseId: id, lessonIx: n },
+    } else if (ours.length) {
+      /* The heading is this section's and not the lesson's: after a reading it
+         says what these few are for, and on an assessment the section's own
+         title is already the page's heading, so it would say it twice. */
+      if (section.type !== 'assessment') {
+        const said = document.createElement('h3');
+        said.className = 'prose-heading section-exercises-title';
+        said.textContent = txt('A few questions on this section');
+        into.appendChild(said);
+      }
+      into.hidden = false;
+      into.appendChild(buildAssessment(ours, { courseId: id, lessonIx: n },
         /* WHICH LESSON, because the route is under the course and this is the
            only place that knows both. And `lesson` is what tells the wizard to
            mark against the route that keeps no score. */
