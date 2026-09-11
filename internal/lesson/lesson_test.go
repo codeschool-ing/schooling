@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
@@ -315,4 +317,59 @@ func TestThisPackageWritesNothing(t *testing.T) {
 // so the first run of them was the one on the server.
 func chose(at int) json.RawMessage {
 	return json.RawMessage(fmt.Sprintf(`{"chose":[%d]}`, at))
+}
+
+/*
+THE ANSWER GOES BACK IN THE SHAPE THE BROWSER READS, which is flat.
+
+	`applyKey` in `ui/app/exercises/index.js` reads `v.expected` and
+	`v.explanations`. This route used to send the struct instead —
+	`{"reveal":{"expected":…}}` — one level below where anything looks, so the
+	key was in the response and reached nothing.
+
+	What that cost is the whole of the feedback A-10 keeps instead of a score. No
+	choice carried `correct`, so the option the student ticked was painted wrong
+	for being ticked and not correct, and none was painted right: a correct
+	answer shown in red under a banner saying it was correct.
+
+	`internal/practice` has sent it flat since it was written. Two routes, one
+	client, and only one of them shaped the way the client reads.
+*/
+func TestTheKeyComesBackWhereTheBrowserLooksForIt(t *testing.T) {
+	pool := testPool(t)
+	tenant := school(t, pool)
+	questions(t, pool, tenant, seed{"ex-flat", "free-course", "le-flat", false, "quiz", quiz("ex-flat")})
+
+	mux := http.NewServeMux()
+	lesson.NewHandler(store(pool),
+		func(context.Context) (uuid.UUID, bool) { return tenant, true },
+		func(context.Context) (uuid.UUID, bool) { return uuid.New(), true },
+		nil,
+	).Routes(mux)
+
+	rec := httptest.NewRecorder()
+	mux.ServeHTTP(rec, httptest.NewRequest(http.MethodPost,
+		"/api/v1/courses/free-course/lessons/le-flat/exercises/ex-flat/answered",
+		strings.NewReader(`{"answer":{"chose":[0]},"perm":[0,1,2]}`)))
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("answering: %d %s", rec.Code, rec.Body.String())
+	}
+
+	var body map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v", err)
+	}
+
+	if _, nested := body["reveal"]; nested {
+		t.Error("the key is nested under `reveal`, and every renderer reads it at the top level")
+	}
+	if _, ok := body["expected"]; !ok {
+		t.Errorf("no `expected` in %s — the browser cannot say which answer was right, so it "+
+			"marks none of them right and the one that was ticked wrong", rec.Body.String())
+	}
+	if _, ok := body["explanations"]; !ok {
+		t.Errorf("no `explanations` in %s — a quiz's per-choice `why` is the feedback, and it "+
+			"is not in the question the student was given", rec.Body.String())
+	}
 }

@@ -476,6 +476,44 @@ async function lessonAnswered(theme) {
     if (seen.state !== 'v-right' && seen.state !== 'v-wrong') {
       throw new Error(`the screen showed "${seen.state}" instead of a verdict`);
     }
+
+    /* AND THE SCREEN SAYS WHICH ANSWER WAS RIGHT, which a verdict does not
+       prove and which is the whole of what A-10 keeps instead of a score.
+
+       The key arrives WITH the verdict — the question the browser was given has
+       none — and `applyKey` puts it back into the question before `reveal`
+       draws it. It read `v.expected`, and this route used to send the key one
+       level down as `reveal.expected`, so it found `undefined` and returned
+       having done nothing. Then every choice had `correct` missing, which made
+       the ticked one `choice-wrong` for being ticked and not correct, and made
+       no choice at all `choice-right`.
+
+       A correct answer was painted red under a banner saying it was correct.
+       Exactly one option is the right one, so exactly one carries the mark. */
+    const marks = await page.evaluate(() => {
+      const card = [...document.querySelectorAll('.ex')]
+        .find((e) => e.querySelector('.ex-verdict.v-right, .ex-verdict.v-wrong'));
+      if (!card) return null;
+      return {
+        options: card.querySelectorAll('.choice').length,
+        right: card.querySelectorAll('.choice.choice-right').length,
+        tickedWrong: Boolean(card.querySelector('.choice.choice-wrong input:checked')),
+      };
+    });
+    if (!marks) throw new Error('no answered card is on screen to read the marking off');
+    if (!marks.options) {
+      throw new Error('the answered question has no options, so this checks nothing — it is '
+        + 'meant to be the quiz that `ORDER BY e.section_id, e.id` puts first in this section');
+    }
+    if (marks.right !== 1) {
+      throw new Error(`${marks.right} of the ${marks.options} options are marked as the correct `
+        + 'one, and exactly one is. The key comes back with the verdict and `applyKey` puts it '
+        + 'into the question — none marked means it never arrived in the shape the browser reads');
+    }
+    if (seen.state === 'v-right' && marks.tickedWrong) {
+      throw new Error('the server said the answer was correct and the option the student ticked '
+        + 'is painted as wrong');
+    }
     return page;
   } catch (e) {
     await done(page);

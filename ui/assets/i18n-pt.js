@@ -165,6 +165,7 @@ window.I18N.pt.ui = {
   "That is already the address on this account.": "Esse já é o endereço desta conta.",
   "That is a lot of addresses in one hour. Try again later.": "São muitos endereços em uma hora. Tente mais tarde.",
   "That is not this account's password.": "Essa não é a senha desta conta.",
+  "That is right": "Isso mesmo",
   "That did not work. Try again.": "Não deu certo. Tente de novo.",
   "Dismiss": "Dispensar",
   "My plan": "Meu plano",
@@ -333,6 +334,9 @@ window.I18N.pt.ui = {
   "completed the course": "concluiu o curso",
   "completed the track": "concluiu a trilha",
   "content completed": "conteúdo concluído",
+  /* The unit, as in `7/12 de acerto` and `85% de acerto`. The banner that
+     announces one right answer is "That is right" and is a sentence — it
+     used to share this key and therefore said "de acerto" on its own. */
   "correct": "de acerto",
   "could not copy": "não foi possível copiar",
   "course": "curso",
