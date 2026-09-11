@@ -32,6 +32,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
 	"github.com/codeschool-ing/schooling/internal/job"
+	"github.com/codeschool-ing/schooling/internal/lesson"
 	netmail "net/mail"
 
 	"github.com/codeschool-ing/schooling/internal/legal"
@@ -726,6 +727,17 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		practice.NewStore(pool, courseOpen(courses, plan), withdrawnFor(withdrawn)).
 			WithThresholds(practiceTuning(settings)),
 		schoolID, identity.AccountID, practice.Emit(studentEvents(events, log, plan)),
+	).Routes(scoped)
+
+	/* AND THE QUESTIONS INSIDE A LESSON, which is the third instrument and the
+	   one a student meets most often. Same door, same quarantine; no schedule
+	   and no score, because A-10 keeps neither. The event it emits is the only
+	   thing a wrong answer leaves behind, and it is what earns a lesson question
+	   its discrimination — cheaply, since every student answers every one of
+	   them (A-12). */
+	lesson.NewHandler(
+		lesson.NewStore(pool, courseOpen(courses, plan), withdrawnForLesson(withdrawn)),
+		schoolID, identity.AccountID, lesson.Emit(studentEvents(events, log, plan)),
 	).Routes(scoped)
 
 	// AN EXAM ASKS THE SAME DOOR QUESTION AS A LESSON, and for a track it asks
@@ -1750,6 +1762,25 @@ func withdrawnFor(withdrawn func(context.Context, uuid.UUID) (map[analysis.Quest
 		set := make(map[practice.Item]bool, len(out))
 		for q := range out {
 			set[practice.Item{ExerciseID: q.ExerciseID, Version: q.Version}] = true
+		}
+		return set, nil
+	}
+}
+
+// The same set, in the shape the lesson module names it. Two spellings of one
+// fact is the shape this file already refuses elsewhere — but a module may not
+// import another module, so the translation happens here, where they meet.
+func withdrawnForLesson(withdrawn func(context.Context, uuid.UUID) (map[analysis.Question]bool,
+	error)) lesson.Quarantined {
+
+	return func(ctx context.Context, school uuid.UUID) (map[lesson.Item]bool, error) {
+		out, err := withdrawn(ctx, school)
+		if err != nil {
+			return nil, err
+		}
+		set := make(map[lesson.Item]bool, len(out))
+		for q := range out {
+			set[lesson.Item{ExerciseID: q.ExerciseID, Version: q.Version}] = true
 		}
 		return set, nil
 	}
