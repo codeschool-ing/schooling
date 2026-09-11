@@ -55,8 +55,8 @@ internal/     platform, tenant, identity, catalog, progress, practice, exam, gra
 ui/           the student interface, embedded in the binary — no build step
 tools/        the checks and the jobs — a11y-test, graph-test, landing-test,
               console-test, mfa-test, check-interface, check-css, check-origin,
-              validate-content, check-exercises, bundle, bundle-test,
-              restore-drill, release, fonts, world
+              validate-content, check-exercises, figure-fit, bundle,
+              bundle-test, restore-drill, release, fonts, world
 content/      the catalogue: prose in Markdown, structure and exercises in JSON
 migrations/
 deploy/       the Dockerfile, and the compose file that brings the system up locally
