@@ -19,7 +19,17 @@ export default {
   types: ['numeric'],
 
   body(ex, uid) {
-    const units = [ex.unit, ...(ex.accept_units || [])].filter(Boolean);
+    /* ONE OPTION PER SPELLING, AND `accept_units` MAY REPEAT THE UNIT.
+
+       `accept_units` is documented as OTHER spellings of the same unit, so it
+       should not contain `unit` itself — but a list that does is easy to write
+       and the reader of it is a menu. Two identical options is a choice with no
+       meaning: whichever the student picks, it is the same answer.
+
+       So this deduplicates rather than trusting the content, because the
+       failure is silent and lands on the student. `validate-content` refuses
+       the repetition as well, which is where an author finds out. */
+    const units = [...new Set([ex.unit, ...(ex.accept_units || [])].filter(Boolean))];
 
     const value = '<input type="text" inputmode="decimal" class="numeric-value" '
       + 'id="' + uid + '-value" autocomplete="off" '

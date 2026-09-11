@@ -523,6 +523,25 @@ func checkExercises(s *School) []error {
 					where, e.ID, e.Section))
 			}
 
+			/* A UNIT IS OFFERED ONCE. `accept_units` holds other SPELLINGS of
+			   the unit, so the unit itself does not belong in it — and the
+			   reader of that list is a menu the student picks from, where the
+			   same word twice is a choice with no meaning. The renderer
+			   deduplicates so nobody meets it; this is where the author does. */
+			if e.Type == "numeric" {
+				seenUnit := map[string]bool{e.Unit: e.Unit != ""}
+				for _, u := range e.AcceptUnits {
+					if seenUnit[u] {
+						problems = append(problems, fmt.Errorf(
+							"%s/%s offers the unit %q twice — `accept_units` is for other "+
+								"spellings of the unit, and two identical options are the "+
+								"same answer under two names", where, e.ID, u))
+						continue
+					}
+					seenUnit[u] = true
+				}
+			}
+
 			// THE PICTURE HAS TO EXIST, and this is the only place that can see
 			// whether it does. The grader checks an answer against coordinates
 			// and never opens the file; the interface asks the server and gets a

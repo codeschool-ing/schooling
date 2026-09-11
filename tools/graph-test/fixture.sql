@@ -397,6 +397,32 @@ SELECT t.id, 'fx-label', :'wf', true, 1, 'labelling',
 FROM tenants t WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
+/* AND THE SAME KIND OF QUESTION INSIDE A LESSON, which is where it was broken.
+
+   `fx-label` above is on an EXAM, and an exam paper has always carried the
+   course on each question — so the only `labelling` in this fixture ran on the
+   one path that worked, and the defect lived on the other one untouched. A
+   lesson's question is served by a different route, adapted by a different
+   function, and that function dropped the course id it had been handed.
+
+   On screen the student got "this question needs a picture that is not here",
+   about a picture sitting in the mirror on its own route. So there is one here
+   now, in the lesson, and the browser suite opens it and waits for the image to
+   decode. It is last in its section by id, so the questions before it keep the
+   positions the other checks count on. */
+INSERT INTO catalog_exercises
+  (tenant_id, id, course_id, lesson_id, section_id, exam, version, type,
+   drillable, prompt, payload)
+SELECT t.id, 'dr-zlabel', :'wf', :'les', :'dsec', false, 1, 'labelling', false,
+       'Put each name on the band that plays that part.',
+       '{"id":"dr-zlabel","version":1,"type":"labelling","image":"request.png",'
+       '"prompt":"Put each name on the band that plays that part.","labels":['
+       '{"text":"The browser","x":0.5,"y":0.17,"radius":0.14},'
+       '{"text":"The server","x":0.5,"y":0.5,"radius":0.14},'
+       '{"text":"The database","x":0.5,"y":0.83,"radius":0.14}]}'::jsonb
+FROM tenants t WHERE t.slug = :'slug'
+ON CONFLICT DO NOTHING;
+
 /* ---------- something to drill ----------
 
    The exam questions above are `exam = true` and are NOT drillable: an
