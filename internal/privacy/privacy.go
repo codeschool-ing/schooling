@@ -354,6 +354,16 @@ var Registry = []Table{
 			"fact is the platform's own record and does not erase, the sentence is theirs and does",
 	},
 	{
+		Name: "ratings", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
+		Why: "what somebody thinks of a course, a track or this place: five bounded integers, a " +
+			"word from a closed list and the release it was given against. It is the one table " +
+			"here that is pseudonymous BY CONSTRUCTION rather than by assumption — `notes` and " +
+			"`content_reports` are identifying because a free-text box is not for this registry " +
+			"to second-guess, and this has no box, which the CHECK constraints make a fact " +
+			"instead of a hope. It still goes with the account: the numbers are about our " +
+			"material and WHOSE opinion they are is theirs",
+	},
+	{
 		Name: "exam_attempts", Holds: HoldsPseudonymous, Subject: SubjectAccount, OnErase: EraseDelete,
 		Why: "which exams one person sat and what they scored. The evidence about whether a " +
 			"QUESTION is any good is not here — that is one event per answer, and events survive " +
@@ -556,6 +566,15 @@ func (s *Store) Export(ctx context.Context, accountID uuid.UUID) (map[string][]m
 			SELECT id, course_id, lesson_id, section_id, reason, note,
 			       reported_at, settled_at, verdict
 			FROM content_reports WHERE account_id = $1 ORDER BY reported_at`},
+		// `rated_version` IS NAMED, unlike the version a student is never shown
+		// in the interface. An export is what we hold about somebody, and what
+		// we hold is that this opinion was about that release — telling them the
+		// stars without it would be handing over a number whose subject we kept.
+		{"ratings", `
+			SELECT subject_kind, subject_id, stars,
+			       completeness, padding, interest, depth,
+			       rated_version, rated_at, changed_at
+			FROM ratings WHERE account_id = $1 ORDER BY subject_kind, subject_id`},
 		{"exam_attempts", `
 			SELECT id, scope, scope_id, started_at, submitted_at, score, of, pass_mark, passed
 			FROM exam_attempts WHERE account_id = $1 ORDER BY started_at`},

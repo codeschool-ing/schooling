@@ -1252,6 +1252,32 @@ try {
     await check(student, `${theme} · my account`, '/#/account', '/account',
       { settled: '#holding p, #holding .facts' });
 
+    /* AND THE STARS ON IT, WHICH ARE THE OTHER CONTROL THAT TALKS BACK.
+
+       IT IS MEASURED HERE AND NOT ON A COURSE, and that is the one thing worth
+       saying about this check. The same control sits at the bottom of a course
+       and of a track, and there it is drawn only for somebody who has FINISHED
+       — which this fixture's student has not, and making them would be a
+       half-hour of clicking to measure markup that is identical. The platform
+       rating has no such condition, so this is where the widget can be reached.
+
+       THE SECOND HALF IS THE POINT OF THE `act`. Unopened, this is five radios
+       and a legend. Two stars is at or below the threshold, so the four pairs
+       appear — eight more radios, four legends and the two end-labels that give
+       each scale its direction — and that is the dense half, built after a
+       request, exactly as the report form is.
+
+       AND IT PUTS A ROW IN THE CONSOLE, which the check further down measures
+       rather than an empty state. */
+    await check(student, `${theme} · my account, rating this place`,
+      '/#/account', '/account', {
+        settled: '.rate .rate-row',
+        async act(page) {
+          await page.locator('.rate .rate-row label').nth(1).click();
+          await page.waitForSelector('.rate-pair', { timeout: 8000 });
+        },
+      });
+
     /* AND THE SAME BLOCK WITH A PURCHASE HISTORY UNDER IT, which is the one
        thing on this screen that is NOT the same shape as something already
        measured: a table, with a header row, a row header per line, an amount
@@ -1639,6 +1665,33 @@ try {
        nothing to look at. */
     await check(staff.page, `${theme} · console, reported content`, '/#/reports', '/reports',
       { base: CONSOLE, region: '#stage', settled: '.report-card' });
+
+    /* AND WHAT THEY THINK OF IT, WITH A REAL RATING IN IT — the one the student
+       gave on their account screen a few checks ago.
+
+       THE `About` SELECT IS MOVED FIRST, because the screen opens on courses and
+       nobody in this fixture has finished one — so left alone it would draw its
+       empty state, which is a paragraph that meets every contrast rule there is.
+       That is the trap `settled: '.report-card'` avoids one check above.
+
+       AND THE WAIT FOR THE ROW IS INSIDE THE `act` RATHER THAN IN `settled`,
+       which is not a style choice: `settled` is awaited BEFORE `act` runs, so
+       asking it for a row that only exists after the select has moved is asking
+       for something that cannot be there yet. `settled` gets the control that
+       is there on the first paint, and the row is waited for after moving it.
+
+       WHAT IS ACTUALLY BEING MEASURED is the bar chart: five columns per scale,
+       a number under each, two end-labels and a mean in the dim mono that this
+       stylesheet has already put at 4.1:1 once. */
+    await check(staff.page, `${theme} · console, what they think of it`, '/#/ratings', '/ratings', {
+      base: CONSOLE,
+      region: '#stage',
+      settled: '#kind',
+      async act(page) {
+        await page.selectOption('#kind', 'platform');
+        await page.waitForSelector('.rated', { timeout: 8000 });
+      },
+    });
 
     /* WHAT RAN AND WHAT DID NOT, which is the console reporting on itself.
 

@@ -51,6 +51,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/practice"
 	"github.com/codeschool-ing/schooling/internal/privacy"
 	"github.com/codeschool-ing/schooling/internal/progress"
+	"github.com/codeschool-ing/schooling/internal/rating"
 	"github.com/codeschool-ing/schooling/internal/report"
 	"github.com/codeschool-ing/schooling/internal/tenant"
 	"github.com/codeschool-ing/schooling/internal/visitor"
@@ -289,6 +290,7 @@ func parameters() []setting.Declared {
 		identity.ViewingLifetime,
 		practice.ConsideredAnswer,
 		practice.QuickAnswer,
+		rating.AskDeeper,
 	}
 }
 
@@ -713,6 +715,65 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		},
 	)
 	report.NewHandler(reports, schoolID, identity.AccountID).Routes(scoped)
+
+	/* AND WHAT THEY THINK OF IT, which is the other direction nothing else runs
+	   in and is not the same direction as the one above.
+
+	   `report` carries a defect, which has coordinates and a verdict and an
+	   end. This carries a judgement, which has none of those and is the only
+	   evidence this platform can get about whether a course was worth the
+	   evening — the grader knows whether they answered, the funnel knows
+	   whether they left, and neither knows that.
+
+	   NO PAYWALL QUESTION, for `report`'s reason exactly: a rating is a thing
+	   the student gives rather than gets, and refusing one because a
+	   subscription lapsed would lose the opinion of the person best placed to
+	   have it. A VARIABLE because the console reads the aggregate. */
+	ratings := rating.NewStore(pool,
+		/* WHETHER THE SUBJECT IS REAL, and `rating` may not import `catalog`
+		   any more than `report` may — so it is a closure here, the same shape
+		   as the two above.
+
+		   A COURSE IS ITS SECTIONS. There is no cheaper existence check on the
+		   mirror and there does not need to be: this runs when somebody rates
+		   something, which is once per course per person forever. A course with
+		   no sections is not a course anybody finished. */
+		func(ctx context.Context, school uuid.UUID, kind, id string) (bool, error) {
+			switch kind {
+			case rating.KindCourse:
+				sections, err := courses.SectionsOf(ctx, school, id)
+				return len(sections) > 0, err
+
+			case rating.KindTrack:
+				/* THE DEFAULT LOCALE, because the question is whether the track
+				   EXISTS and a translation missing is not a track missing. */
+				all, err := courses.Tracks(ctx, school, "")
+				if err != nil {
+					return false, err
+				}
+				for _, one := range all {
+					if one.ID == id {
+						return true, nil
+					}
+				}
+				return false, nil
+			}
+
+			/* THE PLATFORM NEVER REACHES HERE — the store answers it without
+			   asking, because there is one platform and it is in no catalogue.
+			   A kind that is neither is refused before this, so arriving here
+			   at all is a bug rather than a lookup that failed. */
+			return false, fmt.Errorf("no catalogue lookup for a %q rating", kind)
+		},
+	)
+	rating.NewHandler(ratings, schoolID, identity.AccountID,
+		/* WHICH RELEASE THE OPINION WAS FORMED AGAINST, read per request rather
+		   than captured once: a binary does not change release while it runs,
+		   and a function here is what keeps that fact in `build` instead of in
+		   a copy taken at start-up. */
+		func() string { return build.Current().Version },
+		settings.Reads(rating.AskDeeper),
+	).Routes(scoped)
 
 	// PRACTICE ASKS THE SAME DOOR QUESTION, with the same closure. A card in a
 	// course this student cannot open is not in their queue and is not
@@ -1373,6 +1434,39 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		func(ctx context.Context) bool {
 			m, ok := identity.MemberFromContext(ctx)
 			return ok && m.Role.Covers(identity.RoleOperator)
+		},
+	).Routes(staffAPI)
+
+	/* AND WHAT THEY THOUGHT OF IT, whose other end is the course screen.
+
+	   NO WRITE AND NO SECOND RANK. Every other console handler here takes a
+	   `maySettle`-shaped predicate because it can change something; this one
+	   reads and that is all it will ever do. An operator able to delete a
+	   rating could delete the ones they disagreed with, at which point the
+	   number measures the operator.
+
+	   THE SHAPES ARE CONVERTED HERE and not shared, because `console` may not
+	   import `rating` any more than it may import `report`. What crosses is
+	   three slices of integers per row, which is the aggregate and carries no
+	   account: there is nothing to withhold on that screen because nothing
+	   about a person was ever read into it. */
+	console.NewOpinionHandler(
+		console.Schools{All: schoolsFor(tenant.NewStore(pool))},
+		console.Ratings{
+			Over: func(ctx context.Context, school uuid.UUID, kind string) ([]console.Rated, error) {
+				rows, err := ratings.Over(ctx, school, kind)
+				if err != nil {
+					return nil, err
+				}
+				out := make([]console.Rated, 0, len(rows))
+				for _, one := range rows {
+					out = append(out, consoleRated(one))
+				}
+				return out, nil
+			},
+			Kinds:   rating.Kinds,
+			Aspects: rating.Aspects,
+			Refused: func(err error) bool { return errors.Is(err, rating.ErrRefused) },
 		},
 	).Routes(staffAPI)
 
@@ -3612,5 +3706,38 @@ func consoleReport(one report.Report) console.Report {
 		Reason:     one.Reason,
 		Note:       one.Note,
 		ReportedAt: one.ReportedAt,
+	}
+}
+
+// consoleRated is the shape crossing from `rating` to `console`.
+//
+// IT DROPS NOTHING, which is the difference from `consoleReport` above and is
+// worth saying out loud. That one drops the account on purpose, and this one
+// has no account to drop: `rating.Summary` is an aggregate and was built
+// without reading who gave anything. The privacy property of this screen is
+// therefore structural rather than remembered — there is no field here that a
+// later change could start filling in.
+//
+// THE ARRAYS BECOME SLICES because the fixed-size one is `rating`'s own shape
+// and a console that imported it would be importing the module. Index 0 travels
+// with them and is always zero: the index is the answer, which is a subtraction
+// nobody then gets wrong.
+func consoleRated(one rating.Summary) console.Rated {
+	aspects := map[string]console.RatedAspect{}
+	for name, spread := range one.Aspects {
+		aspects[name] = console.RatedAspect{
+			At: spread.At[:], Count: spread.Count, Mean: spread.Mean,
+		}
+	}
+	return console.Rated{
+		Kind:      one.Kind,
+		SubjectID: one.SubjectID,
+		Version:   one.Version,
+		Stars:     one.Stars.At[:],
+		StarCount: one.Stars.Count,
+		StarMean:  one.Stars.Mean,
+		Aspects:   aspects,
+		First:     one.First,
+		Last:      one.Last,
 	}
 }
