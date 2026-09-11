@@ -174,7 +174,13 @@ export function prose(body) {
 function figure(b) {
   const body = b.svg
     ? '<div class="fig-svg">' + b.svg + '</div>'
-    : '<img src="' + esc(b.image) + '" choice="' + esc(b.choice || b.caption || '') + '" loading="lazy">';
+    /* `alt` AND NOT `choice`, WHICH IS WHAT IT SAID. `choice` is a fork's label
+       in a track and an option's text in a question; on an image it is a made-up
+       attribute, and the image it was on had no alt at all. axe would refuse it
+       in a second — and never got the chance, because no content writes an
+       `image` figure yet, so this line has never run. A dead path is where a
+       defect waits. */
+    : '<img src="' + esc(b.image) + '" alt="' + esc(b.alt || b.caption || '') + '" loading="lazy">';
   return '<figure class="fig">' + body +
     (b.caption ? '<figcaption>' + formatted(b.caption) + '</figcaption>' : '') +
   '</figure>';
