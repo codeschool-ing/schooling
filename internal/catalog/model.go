@@ -578,6 +578,13 @@ type Exercise struct {
 	// wrote is one a student cannot answer however well they know the material,
 	// and that has to fail on a pull request rather than on a screen.
 	Image string `json:"image"`
+
+	// A `numeric`'s unit and the other spellings of it this question takes.
+	// Read here so the checker can see that the list does not repeat the unit:
+	// `accept_units` is OTHER spellings, and a menu with the same word twice is
+	// a choice that means nothing whichever way the student answers it.
+	Unit        string   `json:"unit"`
+	AcceptUnits []string `json:"accept_units"`
 }
 
 /*
@@ -646,6 +653,19 @@ type ExerciseText struct {
 	   a translation that makes a question easier, which is the class of thing
 	   this struct exists to keep out. */
 	Blanks []BlankText `json:"blanks"`
+
+	/* AND A `numeric`'s UNIT, FOR THE SAME REASON AS `accept`.
+
+	   The unit is a word the student READS IN A MENU and hands back with the
+	   number, so it is language in exactly the way a cloze's accepted answer
+	   is. `packets` in a Portuguese question is the menu of an English one, and
+	   the grader then marks a Portuguese answer against an English word.
+
+	   `value`, `tolerance` and `relative` stay out, and the line is the same
+	   one A-15 drew: a quantity means the same thing in every language, and a
+	   word somebody types or picks does not. */
+	Unit        *string  `json:"unit"`
+	AcceptUnits []string `json:"accept_units"`
 }
 
 // BlankText is one blank of a `cloze`, in one other language: the answers that

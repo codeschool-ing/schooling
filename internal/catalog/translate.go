@@ -89,6 +89,19 @@ func Translated(raw json.RawMessage, text ExerciseText) (json.RawMessage, error)
 		}
 	}
 
+	/* The unit, and the other spellings of it that this language accepts. Both
+	   are words in a menu; neither is a quantity. */
+	if text.Unit != nil {
+		payload["unit"] = *text.Unit
+	}
+	if len(text.AcceptUnits) > 0 {
+		units := make([]any, len(text.AcceptUnits))
+		for i, u := range text.AcceptUnits {
+			units[i] = u
+		}
+		payload["accept_units"] = units
+	}
+
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return nil, fmt.Errorf("catalog: writing a translated question: %w", err)

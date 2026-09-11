@@ -501,6 +501,7 @@ async function lessonAnswered(theme) {
       };
     });
     if (!marks) throw new Error('no answered card is on screen to read the marking off');
+
     if (!marks.options) {
       throw new Error('the answered question has no options, so this checks nothing — it is '
         + 'meant to be the quiz that `ORDER BY e.section_id, e.id` puts first in this section');
@@ -613,6 +614,42 @@ async function sectionsAskTheirOwn(theme) {
        title rather than the word "Assessment", because it is a real section. */
     const closing = await prompts('lesson/0/se-drlaaaa2', 'Putting it together');
 
+    /* AND A QUESTION THAT NAMES A PICTURE CAN REACH IT.
+
+       `labelling` builds its address from `api.asset(ex.course, ex.image)`, and
+       the lesson route does not send a course — so `ex.course` was undefined,
+       `asset()` answered with an empty string, and the renderer drew "this
+       question needs a picture that is not here" about a picture that is in the
+       mirror and served on its own route. The course id was a parameter of the
+       very function that dropped it.
+
+       The fixture's only `labelling` used to be on an EXAM, where the course
+       has always been carried, so the broken path had nothing to run on. There
+       is one in the lesson now, last in this section, and this opens it.
+
+       The image is asked to DECODE rather than merely to be in the document: a
+       broken address still produces an <img>. */
+    await page.click('.wz-dot[data-ir="1"]');
+    await page.waitForSelector('.ex .labelling, .ex .ex-error', { timeout: 8000 });
+    const picture = await page.evaluate(async () => {
+      const refused = document.querySelector('.ex .ex-error');
+      if (refused) return { refused: refused.textContent.trim() };
+      const img = document.querySelector('.ex img');
+      if (!img) return { none: true };
+      try { await img.decode(); } catch { return { broken: img.getAttribute('src') }; }
+      return { ok: img.naturalWidth > 0, src: img.getAttribute('src') };
+    });
+    if (picture.refused) {
+      throw new Error(`the labelling question refused to draw: "${picture.refused}" — its picture `
+        + 'is in the course, so what is missing is the course id the address is built from');
+    }
+    if (picture.none) {
+      throw new Error('the labelling question drew no image at all, so this checked nothing');
+    }
+    if (!picture.ok) {
+      throw new Error(`the picture at ${picture.broken || picture.src} did not load`);
+    }
+
     const landed = await page.evaluate(() => document.scrollingElement.scrollTop);
     if (landed !== 0) {
       throw new Error(`the next section opened ${landed}px down, where the previous one had been `
@@ -623,8 +660,8 @@ async function sectionsAskTheirOwn(theme) {
       throw new Error(`the practice section asked ${JSON.stringify(closing.shown)} — a practice `
         + 'section used to render nothing at all, having no branch of its own');
     }
-    if (closing.count !== 1) {
-      throw new Error(`the practice section carries ${closing.count} questions and is assigned 1 `
+    if (closing.count !== 2) {
+      throw new Error(`the practice section carries ${closing.count} questions and is assigned 2 `
         + "— the extras are the reading's, which a student would then answer twice");
     }
 
