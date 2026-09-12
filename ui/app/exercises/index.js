@@ -369,6 +369,19 @@ function applyKey(ex, v) {
         (ex.pairs || []).forEach((p, i) => { p.right = v.expected[i]; });
       }
       break;
+
+    /* THE TWO THAT ARE TYPED, AND WHOSE RENDERERS READ THE VERDICT DIRECTLY.
+
+       Nothing is put back on `ex` for these, because there is nothing on `ex`
+       to put it on: a public cloze has blanks with no `accept` and a public
+       numeric has no `value`, so there is no field a renderer would later read.
+       They take the verdict as an argument instead — which is why both appear
+       here doing nothing rather than being absent, where their absence would
+       read as "these do not need a key" and that is the belief this whole
+       family of defects came from. */
+    case 'cloze':
+    case 'numeric':
+      break;
     default:
       break;
   }
