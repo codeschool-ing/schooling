@@ -182,6 +182,15 @@ export default {
     return { placed: at.map((p) => ({ x: p.x, y: p.y })) };
   },
 
+  // The markers back where they were dropped. `refresh` draws them from `_at`.
+  restore(root, ex, answer) {
+    const placed = (answer && answer.placed) || null;
+    const board = root.querySelector('.labelling-board');
+    if (!placed || !board) return;
+    board._at = placed.map((p) => (p ? { x: p.x, y: p.y } : null));
+    refresh(root);
+  },
+
   reveal(root) {
     root.querySelectorAll('.labelling-labels input').forEach((r) => { r.disabled = true; });
   },

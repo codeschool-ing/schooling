@@ -884,7 +884,18 @@ export async function lessonExercises(courseId, lessonId) {
     difficulty: q.difficulty,
     perm: q.perm,
   }));
-  ours.forEach((ex) => shown.set(ex.id, ex));
+  /* A COPY, AND THE COPY IS THE POINT. What is handed back is the object the
+     screen then works on — and `applyKey` WRITES THE ANSWER INTO IT when the
+     verdict comes back, because that is how the reveal shows what was right.
+
+     Keeping that same object here would mean `redo` replays a question with
+     its key inside, and a question that holds its key is a different question:
+     `matching` switches to the immediate gesture where every pair locks as it
+     lands, which exists for the offline bundle and nowhere else. That is the
+     board somebody saw in `redo` — three pairs closed, all correct, marked
+     "not yet" because the measure there is how many were tried before they
+     closed. The question as it was SERVED is the one to ask again. */
+  ours.forEach((ex) => shown.set(ex.id, structuredClone(ex)));
   return ours;
 }
 

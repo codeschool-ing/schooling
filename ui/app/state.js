@@ -271,12 +271,29 @@ export function visitSection(courseId, ix, sectionId) {
   onWrite({ kind: 'visit', courseId, ix, sectionId });
 }
 
-export function saveAnswer(courseId, ix, exId, verdict) {
+/* `given` IS THE ANSWER ITSELF, AND IT IS WHY THIS TAKES A FIFTH ARGUMENT.
+   Everything above is a fact ABOUT the answer — how many tries, whether it was
+   right, whether anybody judged it — and none of it can put the card back the
+   way the student left it. A section left and come back to rebuilt every
+   question blank underneath a line saying two of five were right.
+
+   IT IS MEMORY AND NEVER A RECORD. Nothing here is sent anywhere: `onWrite` is
+   not called, no route carries it, and `hydrate` replaces this whole document
+   from the server at boot — so it lasts exactly as long as the tab, which is
+   A-10 unchanged. What a reload loses is a half-finished section, which was
+   never a fact about anybody.
+
+   The VERDICT is kept beside it for the same reason and it is the cheaper half:
+   without it the card would have to be marked a second time to be shown, and a
+   lesson's marking is a request. */
+export function saveAnswer(courseId, ix, exId, verdict, given) {
   change(() => {
     const r = ensureLesson(courseId, ix);
     const before = r.exercises[exId] || { attempts: 0, correct: false, checked: false };
     r.exercises[exId] = {
       attempts: before.attempts + 1,
+      given,
+      verdict,
       // once right, still right: redoing it to practise does not take the credit
       correct: before.correct || verdict.correct === true,
       /* `checked` separates "got it wrong" from "nobody checked". Without it,

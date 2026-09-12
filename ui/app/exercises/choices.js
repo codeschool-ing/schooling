@@ -48,6 +48,20 @@ export default {
     return root.querySelector('.choice input[type="checkbox"]') ? ticked : ticked[0];
   },
 
+  /* PUTTING BACK WHAT WAS TICKED, which is `collect` read backwards.
+
+     It exists for one moment: a section left and come back to within the
+     sitting. Without it the card comes back blank and `reveal` below marks it
+     against nothing — every wrong answer would show as "you ticked nothing",
+     which is not what happened. */
+  restore(root, ex, answer) {
+    const ticked = Array.isArray(answer) ? answer : [answer];
+    ticked.forEach((i) => {
+      const input = root.querySelector('.choice[data-ix="' + i + '"] input');
+      if (input) input.checked = true;
+    });
+  },
+
   reveal(root, ex, v) {
     root.querySelectorAll('.choice').forEach((el) => {
       const ix = Number(el.dataset.ix);

@@ -88,6 +88,22 @@ export default {
     return items.length ? items : null;
   },
 
+  /* THE ORDER THEY LEFT IT IN, and this type is the one that proves why any of
+     this is needed: `reveal` below marks each row against `ex.items` by its
+     CURRENT position. Rebuilt and not restored, the rows are back in the
+     shuffled order nobody submitted — so the card would mark an order the
+     student never gave, in red, and call it their mistake. */
+  restore(root, ex, answer) {
+    const wanted = Array.isArray(answer) ? answer : null;
+    const list = root.querySelector('.ord');
+    if (!wanted || !list) return;
+    wanted.forEach((item) => {
+      const li = [...list.querySelectorAll('.ord-item')]
+        .find((x) => decodeURIComponent(x.dataset.item) === item);
+      if (li) list.appendChild(li);       // appending in order IS the order
+    });
+  },
+
   reveal(root, ex) {
     root.querySelectorAll('.ord-item').forEach((li, i) => {
       const right = decodeURIComponent(li.dataset.item) === ex.items[i];

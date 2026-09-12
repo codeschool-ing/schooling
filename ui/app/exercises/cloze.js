@@ -54,6 +54,14 @@ export default {
     return filled.some((v) => v !== '') ? { filled } : null;
   },
 
+  // The words that were typed, back in the boxes they were typed into.
+  restore(root, ex, answer) {
+    const filled = (answer && answer.filled) || [];
+    [...root.querySelectorAll('.blank')].forEach((b, i) => {
+      if (filled[i] !== undefined) b.value = filled[i];
+    });
+  },
+
   /* AND WHAT IT SHOULD HAVE SAID, WHICH THIS USED TO KEEP TO ITSELF.
 
      It disabled the boxes and stopped. A student who typed the wrong word was

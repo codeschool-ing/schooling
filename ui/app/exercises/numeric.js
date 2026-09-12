@@ -71,6 +71,17 @@ export default {
     };
   },
 
+  /* The number as it was given, and the unit it was given in. It is written
+     back with a full stop even where a comma was typed: what is stored is the
+     number `collect` produced, and the two are the same answer. */
+  restore(root, ex, answer) {
+    if (!answer) return;
+    const value = root.querySelector('.numeric-value');
+    if (value && answer.value !== undefined) value.value = String(answer.value);
+    const select = root.querySelector('select.numeric-unit');
+    if (select && answer.unit) select.value = answer.unit;
+  },
+
   /* AND THE NUMBER THAT WAS WANTED — `cloze`'s gap in the type beside it, with
      the same cause and the same fix. A student who answered 340 to a question
      wanting 300 was told "not yet" and never told what.
