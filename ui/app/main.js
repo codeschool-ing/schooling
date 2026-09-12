@@ -686,11 +686,18 @@ $('#rail-btn').addEventListener('click', () => {
 });
 $('#rail-veil').addEventListener('click', closeRail);
 $('#rail').addEventListener('click', (e) => {
-  const opener = e.target.closest('.ta-open');
+  const opener = e.target.closest('.rail-lesson');
   if (opener) {
-    // it is a <button> and does not navigate: it only shows or hides that
-    // lesson's sections
-    toggleLesson(routeParams()?.id, Number(opener.dataset.lesson));
+    /* THE WHOLE ROW, AND NOT A CHEVRON ON IT. The row is one `<button>`: it
+       does not navigate, it shows or hides that lesson's sections, and it does
+       so whether or not that lesson is the one already on screen — which is
+       exactly what it did not do while the title beside the chevron was a link
+       to the section already being read. See `rail.js`. */
+    /* The address is either name; `rail.js` keys what is open by the ID, so a
+       course reached by its slug has to be translated here or the row is
+       toggled under a key nobody reads. */
+    const here = courseByAddress(routeParams()?.id);
+    toggleLesson(here?.id, Number(opener.dataset.lesson));
     buildRail(rail, currentPath(), routeParams());
     return;
   }

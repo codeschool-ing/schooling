@@ -140,16 +140,31 @@ function courseRail(params, path) {
     const marked = Boolean(opened[openKey(id, a.ix)]);
     const open = isCurrent ? !marked : marked;
 
+    /* THE WHOLE ROW IS THE CONTROL, AND IT IS ONE BUTTON.
+
+       It used to be a chevron that toggled beside a link that navigated, and
+       the two were three millimetres apart doing different things. Clicking the
+       title of the lesson you were already on went to its first section — the
+       screen you were already looking at — so the row appeared to do nothing,
+       and the only thing that ever seemed to open a lesson was choosing a
+       DIFFERENT one, which opens by being current rather than by being clicked.
+
+       A lesson is not a destination. Its sections are, they are one click away
+       once it is open, and the row's job is to show them. So the row discloses
+       and the sections navigate — which is also why there is no `<a>` here any
+       more, and why `aria-expanded` belongs on the thing a person presses
+       rather than on a chevron beside it. */
     const head =
-      '<div class="rail-lesson' + (done ? ' done' : '') + (isCurrent ? ' on' : '') + (open ? ' is-open' : '') + '">' +
-        '<button type="button" class="ta-open" data-lesson="' + a.ix + '" ' +
-          'aria-expanded="' + open + '" aria-label="' + txt('Show sections') + '">' + ICON_CHEVRON + '</button>' +
-        '<a class="ta-title" href="#/course/' + esc(address) + '/lesson/' + a.ix + '/' + esc(sections[0].id) + '">' +
+      '<button type="button" class="rail-lesson' + (done ? ' done' : '') +
+        (isCurrent ? ' on' : '') + (open ? ' is-open' : '') + '" ' +
+        'data-lesson="' + a.ix + '" aria-expanded="' + open + '">' +
+        '<span class="ta-open" aria-hidden="true">' + ICON_CHEVRON + '</span>' +
+        '<span class="ta-title">' +
           '<span class="ta-num">' + txt('lesson') + ' ' + String(a.ix + 1).padStart(2, '0') + '</span>' +
           '<span class="ta-tit">' + esc(a.title) + '</span>' +
-        '</a>' +
+        '</span>' +
         '<span class="ta-count">' + pa.done + '/' + pa.total + '</span>' +
-      '</div>';
+      '</button>';
 
     if (!open) return head;
 
