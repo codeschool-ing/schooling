@@ -834,6 +834,31 @@ export async function loadCourseContent(courseId) {
    with the answer, and the server keeps no copy — there is no score to protect
    (A-10), so a client that sent a different one would only mark its own answer
    wrongly. `perm` is carried on the exercise for `lessonAnswer` to send back. */
+/* EVERY LESSON QUESTION THIS SITTING HAS BEEN SHOWN, BY ID.
+
+   It exists because two screens need the QUESTION and the store keeps only what
+   was done to it: `progress[course].lessons[ix].exercises` is `{attempts,
+   correct, checked}` under an id, which is enough to count and not enough to
+   draw. `performance` and `redo` joined that against `window.SAMPLE_EXERCISES`
+   — the predecessor's static sample data, loaded by script tags this interface
+   does not have. The join therefore matched nothing, ever: "how you are doing"
+   said nobody had answered anything and "the ones you got wrong" said there was
+   nothing wrong, on any account, however much had been answered. It is the same
+   empty global that made every assessment `pending` (#299), found in its second
+   place.
+
+   IT HOLDS A SITTING AND NOT A HISTORY, and that is A-10 rather than a
+   shortcut: a lesson's answers are stored nowhere on purpose, so this must not
+   outlive the tab any more than they do.
+
+   AND IT IS WHAT KEEPS AN EXAM OUT OF `redo`. The store cannot tell a lesson's
+   answer from an exam's — both are saved against the lesson the question came
+   from — but only a lesson's questions are ever put in here, so the join is the
+   filter. A paper's questions offered back as practice is precisely the leak
+   this repository writes tests about. */
+const shown = new Map();
+export const questionsSeen = () => shown;
+
 export async function lessonExercises(courseId, lessonId) {
   const list = await get(`/api/v1/courses/${enc(courseId)}/lessons/${enc(lessonId)}` +
     `/exercises?lang=${enc(wanted())}`);
@@ -850,7 +875,7 @@ export async function lessonExercises(courseId, lessonId) {
      The drill puts it on the card and an exam paper puts it on the question.
      This was the third reader and the only one without it, and the value was
      sitting in the argument list the whole time. */
-  return (list || []).map((q) => ({
+  const ours = (list || []).map((q) => ({
     ...shownAsExercise(q.question || {}),
     id: q.exercise,
     course: courseId,
@@ -859,6 +884,8 @@ export async function lessonExercises(courseId, lessonId) {
     difficulty: q.difficulty,
     perm: q.perm,
   }));
+  ours.forEach((ex) => shown.set(ex.id, ex));
+  return ours;
 }
 
 /* One answered question of a lesson, and what comes back with the verdict.

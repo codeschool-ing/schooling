@@ -382,6 +382,44 @@ export default async function lesson({ id, ix, sec }) {
          week has already done everything it asks. */
       waitingFor = ours;
       settleSection();
+
+      /* ---------- how it is going, said and not enforced ----------
+
+         THE STANDING OF THE WHOLE LESSON AND NOT OF THESE FEW, because the few
+         are already counted by the wizard's own result panel. What nobody could
+         see was the lesson: four questions here, five in the reading before, a
+         dozen in the closing set, and no screen that added them up while the
+         student was still in the lesson they are about.
+
+         IT DOES NOT GATE ANYTHING, and that is the decision rather than an
+         omission. Being right is not what finishes a section — a wrong answer
+         now shows the right one, so a rule that demanded the right one would
+         measure copying and call it knowing. What being wrong earns is this
+         line and the practice it links to.
+
+         A SITTING, AND IT SAYS SO. A lesson's answers are stored nowhere
+         (A-10), so this counts what happened since the tab was opened; a
+         reload leaves the sections ticked and this line empty, which is the
+         truth and reads as one only because the words say "this sitting". */
+      const standing = document.createElement('p');
+      standing.className = 'lesson-standing mono';
+      const paintStanding = () => {
+        const answers = exercises
+          .map((q) => (q.id ? answerFor(id, n, q.id) : null))
+          .filter(Boolean);
+        const right = answers.filter((r) => r.correct).length;
+        const missed = answers.filter((r) => r.checked && !r.correct).length;
+        standing.hidden = answers.length === 0;
+        standing.innerHTML =
+          '<span>' + txt('Right in this sitting') + ': ' + right + '/' + answers.length + '</span>' +
+          (missed
+            ? ' · <a class="lesson-redo" href="#/redo">' +
+                txt('redo what you got wrong') + ' (' + missed + ')</a>'
+            : '');
+      };
+      paintStanding();
+      into.appendChild(standing);
+      el.addEventListener('exercise:answered', paintStanding);
     }
   }
 

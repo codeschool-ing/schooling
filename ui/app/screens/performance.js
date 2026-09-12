@@ -15,16 +15,30 @@
 
 import { courseLessons, courseById } from '../catalog.js';
 import { answersGiven } from '../state.js';
+import * as api from '../api.js';
 import { bar, empty } from './common.js';
 import { esc } from '../text.js';
 
 /* Joins what the student answered with the matching exercise. The `id` is the
-   stable key — that is what it exists for. */
+   stable key — that is what it exists for.
+
+   WHAT IT JOINS AGAINST WAS `window.SAMPLE_EXERCISES` AND THAT GLOBAL IS EMPTY
+   HERE. It is the predecessor's static sample data, loaded by script tags this
+   interface does not have — so `byId` was always `{}`, the filter dropped every
+   row, and both screens built on this function were permanently empty: this one
+   said nobody had answered anything, and `redo` said there was nothing wrong to
+   redo, no matter how much had been answered a minute earlier.
+
+   `api.questionsSeen()` is what this sitting has actually been shown, which is
+   the only place a lesson's questions exist on this side — see its comment for
+   why that is A-10 and not a stopgap. The global stays as the fallback for the
+   offline bundle, where it is the one thing that IS loaded. */
 export function answersWithExercise() {
+  const seen = api.questionsSeen();
   const byId = {};
   (window.SAMPLE_EXERCISES || []).forEach((e) => { byId[e.id] = e; });
   return answersGiven()
-    .map((r) => ({ ...r, ex: byId[r.exId] }))
+    .map((r) => ({ ...r, ex: seen.get(r.exId) || byId[r.exId] }))
     .filter((r) => r.ex);
 }
 
