@@ -688,17 +688,24 @@ $('#rail-veil').addEventListener('click', closeRail);
 $('#rail').addEventListener('click', (e) => {
   const opener = e.target.closest('.rail-lesson');
   if (opener) {
-    /* THE WHOLE ROW, AND NOT A CHEVRON ON IT. The row is one `<button>`: it
-       does not navigate, it shows or hides that lesson's sections, and it does
-       so whether or not that lesson is the one already on screen — which is
-       exactly what it did not do while the title beside the chevron was a link
-       to the section already being read. See `rail.js`. */
-    /* The address is either name; `rail.js` keys what is open by the ID, so a
+    /* THE WHOLE ROW, AND NOT A CHEVRON ON IT. The row is one `<button>`, and
+       pressing it is the whole gesture: the lesson opens, whichever was open
+       closes, and the first section comes up on screen. Pressing the lesson
+       that is already open folds it and goes nowhere — the one way to say "not
+       this one". See `rail.js`.
+
+       The address is either name; `rail.js` keys what is open by the ID, so a
        course reached by its slug has to be translated here or the row is
        toggled under a key nobody reads. */
     const here = courseByAddress(routeParams()?.id);
-    toggleLesson(here?.id, Number(opener.dataset.lesson));
+    const nowOpen = toggleLesson(here?.id, Number(opener.dataset.lesson));
+    /* THE RAIL IS DRAWN FIRST AND ONLY THEN DOES THE ROUTE MOVE. Going first
+       would rebuild the rail from the route with the fold half applied, and the
+       row a person pressed would flicker shut and open again. With no address
+       to go to — a lesson with no sections, which the validator refuses — the
+       fold still stands on its own. */
     buildRail(rail, currentPath(), routeParams());
+    if (nowOpen && opener.dataset.first) goTo(opener.dataset.first);
     return;
   }
   if (e.target.closest('a')) closeRail();
