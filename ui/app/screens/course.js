@@ -9,7 +9,7 @@
 
 import { courseLessons, courseById, courseAddress, tracksWithCourse, unlockedBy } from '../catalog.js';
 import { lessonSections, courseMaterials } from '../lessons.js';
-import { courseProgress, lessonProgress, lessonDone, courseDone } from '../state.js';
+import { courseProgress, lessonProgress, lessonDone, someLessonDone } from '../state.js';
 import { courseState } from '../graph.js';
 import { courseExam, examReady } from '../exams.js';
 import { examCard } from './exam.js';
@@ -90,18 +90,28 @@ export default async function course({ id }) {
 
       /* ---------- and what they thought of it ----------
 
-         ONLY ONCE THE COURSE IS FINISHED, and that is the whole of the
-         placement argument. Somebody halfway through has an opinion about the
-         half they have read, and asking for it turns a progress screen into a
-         survey; somebody who has finished is at a real pause, on a screen they
-         came back to on purpose.
+         ONCE A LESSON OF IT IS FINISHED, and it used to be once the COURSE was.
+         The argument for that was that somebody halfway through has an opinion
+         about the half they have read — which is true, and is not a reason to
+         wait: the half they have read is the half we can still fix. Against it
+         stands the arithmetic. `web-fundamentals` is ninety-four sections; a
+         question asked at the end of them is a question asked months after the
+         lesson it is about, of somebody who has stopped being the beginner who
+         could tell us the third lesson moved too fast.
+
+         A FINISHED LESSON IS THE SMALLEST HONEST BASIS. Somebody who has read
+         a lesson and answered everything it asks has met the writing, the
+         figures and the questions — the three things the stars ask about. It
+         is also, now, a real piece of work rather than a row of clicks: a
+         section with questions is finished by answering them (see
+         `lesson.js`).
 
          IT IS THE LAST THING IN THE COLUMN, below the exam, because it is the
          last thing in the course. And it stays there afterwards rather than
          disappearing once given — the control draws what they said, and a
          rating that vanished when answered would be a rating nobody could
          change after the rewrite it asked for. */
-      (courseDone(id) ? ratingBlock('course') : '') +
+      (someLessonDone(id) ? ratingBlock('course') : '') +
       '</div>' +
 
       '<aside class="course-side">' +
