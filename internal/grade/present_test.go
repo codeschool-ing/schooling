@@ -352,6 +352,30 @@ func revealAsAnswer(questionType string, r grade.Reveal, shown json.RawMessage) 
 			return nil, err
 		}
 		return json.Marshal(map[string][]int{"matched": matched})
+
+	/* THE TWO THAT ARE TYPED RATHER THAN CHOSEN, and they are the reason this
+	   check is worth having on them at all: the revealed text goes back through
+	   the grader that will judge a student's typing, so a canonical spelling
+	   that the question's own normalisation would REFUSE fails here rather than
+	   on a screen. A cloze whose `accept` is case-sensitive and whose first
+	   entry is capitalised differently from what it accepts is exactly that
+	   mistake, and it is invisible by reading. */
+	case "cloze":
+		var want []string
+		if err := json.Unmarshal(body, &want); err != nil {
+			return nil, err
+		}
+		return json.Marshal(map[string][]string{"filled": want})
+
+	case "numeric":
+		var want struct {
+			Value float64 `json:"value"`
+			Unit  string  `json:"unit"`
+		}
+		if err := json.Unmarshal(body, &want); err != nil {
+			return nil, err
+		}
+		return json.Marshal(map[string]any{"value": want.Value, "unit": want.Unit})
 	}
 	return nil, fmt.Errorf("%s revealed %v and nothing here knows what to do with it",
 		questionType, r.Expected)

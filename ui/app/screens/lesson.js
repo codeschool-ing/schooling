@@ -14,23 +14,35 @@
       the question: if moving on already completed the section, the button was a
       second route to the same gesture.
 
-      NOW MOVING ON IS COMPLETING. Going to the next section marks the current
-      one as done — which is what the student already meant by clicking next. The
-      feedback is still immediate and in two places: the step gets its check and
-      so does the rail.
+      WHAT COMPLETES A SECTION IS ANSWERING IT, AND MOVING ON ONLY WHERE THERE
+      IS NOTHING TO ANSWER.
 
-      What is lost, and it is worth knowing: there is no longer a way to mark
-      without leaving the section, nor to unmark. Anyone who skims accumulates
-      progress without having read. It is the trade accepted in favour of a single
-      gesture — and it matches the rest of the portal, which shows and does not
-      lock.
+      It used to be moving on, always, and the trade was written down right
+      here: "anyone who skims accumulates progress without having read". That
+      trade was worse than it looked, because progress is not only a bar. It
+      decides when a course is finished, and therefore when a certificate is
+      earned and when we ask somebody what they thought of the course — three
+      statements about somebody having LEARNT something, all resting on a
+      student having clicked `next` fourteen times.
+
+      A section that asks questions is finished when they have all been
+      answered. Answered, not answered correctly: a lesson keeps no score
+      (A-10), a wrong answer is where the teaching happens, and locking the
+      path behind being right would turn every hard question into a wall.
+
+      A section that asks nothing still completes by moving on, because there
+      is nothing else about it to measure — a reading with no questions offers
+      no other evidence that anybody read it.
+
+      And if the questions fail to load, moving on completes as it always did.
+      A broken request must not hold a student's progress hostage.
    ========================================================================== */
 
 import * as api from '../api.js';
 import { courseLessons, courseById, courseAddress } from '../catalog.js';
 import { lessonSections, sectionMaterials } from '../lessons.js';
 import { materialList } from '../materials.js';
-import { sectionDone, visitSection, noteFor, saveNote, answerFor } from '../state.js';
+import { sectionDone, visitSection, noteFor, saveNote, answerFor, markSection } from '../state.js';
 import { buildAssessment } from '../exercises/index.js';
 import { empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
 import { wireReport } from '../report.js';
@@ -285,6 +297,38 @@ export default async function lesson({ id, ix, sec }) {
   const mine = (all) => all.filter((q) => q.section === section.id
     || (section.type === 'assessment' && !claimed.has(q.section)));
 
+  /* ---------- what this section is waiting for ----------
+
+     Empty until the questions land, and empty for good on a section that asks
+     none or whose questions refused to load. Both of those fall back to moving
+     on, which is what the header says.
+
+     ANSWERED IS TRACKED IN TWO PLACES BECAUSE THERE ARE TWO MOMENTS. While the
+     section is on screen the event carries the question object itself, which is
+     exact. Leaving it and coming back within the session leaves only the store,
+     keyed by the question's id — so four answered, a walk to another lesson and
+     the fifth answered still finishes the section.
+
+     ACROSS A RELOAD THERE IS NEITHER, and there does not need to be: a lesson
+     keeps no score (A-10), so no answer is stored anywhere, and the section
+     that those answers completed is already ticked — `sectionDone` above is
+     what makes this function stop. What a reload loses is a half-answered
+     section, which was never a fact about anything. */
+  let waitingFor = [];
+  const answeredNow = new Set();
+  const answered = (q) => answeredNow.has(q) || Boolean(q.id && answerFor(id, n, q.id));
+
+  function settleSection() {
+    if (!waitingFor.length || sectionDone(id, n, section.id)) return;
+    if (!waitingFor.every(answered)) return;
+    markSection(id, n, section.id);
+  }
+
+  el.addEventListener('exercise:answered', (e) => {
+    answeredNow.add(e.detail.ex);
+    settleSection();
+  });
+
   if (section.type === 'assessment' ? !section.pending : section.body) {
     /* A REFUSAL HERE IS NOT A FAILURE AND MUST NOT BE SWALLOWED EITHER.
        `prose(body)` threw once and the dispatch chain ate it, leaving every
@@ -315,12 +359,29 @@ export default async function lesson({ id, ix, sec }) {
         said.textContent = txt('A few questions on this section');
         into.appendChild(said);
       }
+      /* WHAT THE TICK IS WAITING FOR, SAID BEFORE IT IS WAITED FOR. The rule
+         changed under students who had learnt the old one: clicking `next` used
+         to tick the section off, and a check that stops appearing without a
+         word reads as a defect rather than as a rule. It is said only while
+         there is something to do — on a section already finished it would be a
+         sentence about the past. */
+      if (!sectionDone(id, n, section.id)) {
+        const rule = document.createElement('p');
+        rule.className = 'mono dim section-exercises-rule';
+        rule.textContent = txt('Answering these completes the section.');
+        into.appendChild(rule);
+      }
       into.hidden = false;
       into.appendChild(buildAssessment(ours, { courseId: id, lessonIx: n },
         /* WHICH LESSON, because the route is under the course and this is the
            only place that knows both. And `lesson` is what tells the wizard to
            mark against the route that keeps no score. */
         { lesson: { courseId: id, lessonId: a.key } }));
+      /* From here on, these are what completes the section. Settled once
+         straight away: a student coming back to a section they finished last
+         week has already done everything it asks. */
+      waitingFor = ours;
+      settleSection();
 
       /* ---------- how it is going, said and not enforced ----------
 
@@ -392,13 +453,17 @@ export default async function lesson({ id, ix, sec }) {
     });
   }
 
-  /* Moving on completes. The marking is synchronous inside, so it happens before
-     the browser processes the hash change — there is no race. An assessment with
-     no exercises yet stays out: there is nothing to complete in it. */
+  /* Moving on completes A SECTION THAT ASKS NOTHING — see the header. Where
+     there are questions, `settleSection` above is what marks it, and leaving
+     without answering them leaves it open.
+
+     The marking is synchronous inside, so it happens before the browser
+     processes the hash change — there is no race. An assessment with no
+     exercises yet stays out: there is nothing to complete in it. */
   el.addEventListener('click', (e) => {
     if (!e.target.closest('.advances')) return;
-    if (section.pending) return;
-    if (!sectionDone(id, n, section.id)) api.completeSection(id, n, section.id, true);
+    if (section.pending || waitingFor.length) return;
+    if (!sectionDone(id, n, section.id)) markSection(id, n, section.id);
   });
 
   return { title: a.title + ' · ' + section.title, el };

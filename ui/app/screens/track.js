@@ -11,7 +11,8 @@ import { buildTrack, drawEdges, adjustGraphArrows } from '../graph.js';
    screen already uses. Both were `state.chooseOption` until the server learned
    about forks; a screen writing straight to the browser now reaches only one of
    the two places the choice has to land. */
-import { activeOption } from '../state.js';
+import { activeOption, courseDone } from '../state.js';
+import { trackPath } from '../catalog.js';
 import * as api from '../api.js';
 import { goTo } from '../routes.js';
 import { trackExam, examReady } from '../exams.js';
@@ -49,11 +50,16 @@ export default async function track() {
      IT IS DRAWN BY `paint` AND NOT BY A LINE OF ITS OWN, because this screen
      replaces its whole contents when somebody switches a fork — and a control
      put in once would survive exactly until the first switch, then vanish with
-     no error anywhere. The two rebuilds go through here for that reason. */
-  const done = () => {
-    const p = trackProgress(t);
-    return p.total > 0 && p.done === p.total;
-  };
+     no error anywhere. The two rebuilds go through here for that reason.
+
+     ONE COURSE OF IT FINISHED, AND NOT THE WHOLE TRACK. It was the whole
+     track, which is four to eight courses and something like two thousand
+     hours — an opinion collected there arrives years after the ordering that
+     would have to change, and only ever from the students the ordering never
+     stopped. Somebody who has finished the first course has already met what
+     a track rating is about: what it assumed they knew, and what it left them
+     ready for. */
+  const done = () => trackPath(t, activeOption).some((id) => courseDone(id));
   const paint = () => {
     el.innerHTML = buildTrack(t) + card() + (done() ? ratingBlock('track') : '');
     wireRating(el, { kind: 'track', subjectId: t.id });

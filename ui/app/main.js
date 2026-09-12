@@ -686,11 +686,18 @@ $('#rail-btn').addEventListener('click', () => {
 });
 $('#rail-veil').addEventListener('click', closeRail);
 $('#rail').addEventListener('click', (e) => {
-  const opener = e.target.closest('.ta-open');
+  const opener = e.target.closest('.rail-lesson');
   if (opener) {
-    // it is a <button> and does not navigate: it only shows or hides that
-    // lesson's sections
-    toggleLesson(routeParams()?.id, Number(opener.dataset.lesson));
+    /* THE WHOLE ROW, AND NOT A CHEVRON ON IT. The row is one `<button>`: it
+       does not navigate, it shows or hides that lesson's sections, and it does
+       so whether or not that lesson is the one already on screen — which is
+       exactly what it did not do while the title beside the chevron was a link
+       to the section already being read. See `rail.js`. */
+    /* The address is either name; `rail.js` keys what is open by the ID, so a
+       course reached by its slug has to be translated here or the row is
+       toggled under a key nobody reads. */
+    const here = courseByAddress(routeParams()?.id);
+    toggleLesson(here?.id, Number(opener.dataset.lesson));
     buildRail(rail, currentPath(), routeParams());
     return;
   }
@@ -855,19 +862,26 @@ release.watch(() => { staleShown = true; paintStaleBanner(); }, {
   hold: () => ($('#content')?.getAttribute('data-screen') || '').endsWith('/exam'),
 });
 
-restoring.then((outcome) => {
-  /* The screen on the page was chosen from what the browser remembered, and the
-     server has just contradicted it: re-run the router so the guard at the top
-     of this file sends a signed-out student to sign-in, and so a switched
-     account's screen is rebuilt from ITS data rather than the previous one's.
-     `restored` and `unknown` leave the routing as it stands.
+restoring.then((session) => {
+  /* THE SESSION ARRIVED AFTER THE SCREEN DID, so the screen is rebuilt from
+     what came with it: this is the request that brings a student's progress,
+     their notes and their exams, and the first paint happened without any of
+     them. Re-running the router also puts the guard at the top of this file
+     back in charge — a signed-out student ends up at sign-in.
 
-     `KEPT` REDRAWS TOO, AND THAT IS NEW. It used to mean "the two already
-     agreed, nothing to do", and it no longer does: a kept session now
-     reconciles progress and exams with the server, so by the time this
-     resolves the numbers on the screen can be out of date — which is exactly
-     what the same account open in two windows looked like. The route does not
-     change; the screen is rebuilt from the same store, which is what a
-     language switch already does several times a session. */
-  if (outcome === 'signed-out' || outcome === 'switched' || outcome === 'kept') dispatch();
+     A VISITOR CHANGES NOTHING AND IS NOT REDRAWN. There, and where the request
+     failed, the store was empty before and is empty after; a rebuild would
+     redraw the same screen for the half of this platform's traffic that never
+     signs in.
+
+     IT USED TO TEST FOR `'signed-out'`, `'switched'` AND `'kept'`, AND NOTHING
+     EVER PRODUCED THOSE WORDS. They are the portal's vocabulary, where a
+     document is kept in the browser and the server's answer either agrees with
+     it or does not; this copy holds nothing between loads, so there is never
+     anything to disagree with — `restoreSession` returns the session and this
+     compared it against three strings it could not be. The redraw therefore
+     never happened, and the cost was exactly what you would predict and never
+     see in a click-through: reload a course and the progress bar reads zero,
+     every tick gone, until you navigate somewhere and it all comes back. */
+  if (session) dispatch();
 });

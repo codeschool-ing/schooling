@@ -172,6 +172,15 @@ export const courseDone = (courseId) => {
   return p.total > 0 && p.done === p.total;
 };
 
+/* Whether a whole lesson of this course has been finished — any one of them.
+   It is not a milestone and nothing is awarded for it; it is the smallest
+   amount of a course somebody can have an OPINION about, which is the one
+   thing it is asked for. A course rating waited for the course to be finished,
+   and `web-fundamentals` is ninety-four sections: the question arrived, if it
+   ever arrived, months after the part it is asking about. */
+export const someLessonDone = (courseId) =>
+  courseLessons(courseId).some((_, ix) => lessonDone(courseId, ix));
+
 /* ---------- exams ----------
    It keeps the BEST result, not the last one. Failing after having already
    passed cannot take away a certificate that was issued — and retaking an exam

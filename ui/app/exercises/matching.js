@@ -180,10 +180,28 @@ export default {
         const want = v.expected[Number(f.dataset.pair)];
         const got = f.dataset.with || '';
         f.classList.add(got === want ? 'tile-correct' : 'tile-wrong');
+        /* THE WRONG PAIR STAYS AND THE RIGHT ONE IS ADDED, rather than the
+           second overwriting the first.
+
+           `.tile-chosen` already said `→ <what I picked>` while the student was
+           working, and revealing replaced that text in place with `→ <what was
+           right>`. The shape is identical, so nothing on screen said a
+           substitution had happened: it was reported as an answer that was
+           marked wrong while apparently showing the answer given. The right
+           text was there the whole time and could not be recognised as the
+           right text.
+
+           So what they chose stays, struck through, and the answer arrives
+           beside it under a word. Same decision as `cloze`, for the same
+           reason: what is being taught is the difference between the two, and a
+           difference needs both of its halves on screen. */
         const mark = f.querySelector('.tile-chosen');
         if (mark && got !== want) {
-          mark.textContent = '→ ' + want;
-          mark.classList.add('tile-answer');
+          mark.classList.add('tile-missed');
+          const answer = document.createElement('span');
+          answer.className = 'tile-chosen tile-answer';
+          answer.textContent = txt('answer') + ': ' + want;
+          mark.insertAdjacentElement('afterend', answer);
         }
       });
       return;

@@ -264,15 +264,27 @@ body.no-rail .rail{display:none}
    stays in normal text with an icon. Two different natures, two different
    shapes. */
 .rail-lessons{display:flex;flex-direction:column;gap:6px}
+/* THE ROW IS A `<button>` NOW, so it has to be told to stop looking like one:
+   a browser gives it a border, a background, a centred inline layout and its
+   own font, none of which a rail row wants. `width:100%` and `text-align:left`
+   are the two that are load-bearing — without them the row shrinks to its
+   content and the title centres itself. */
 .rail-lesson{
   display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:8px;
   border-radius:4px;padding:3px 8px 3px 2px;
+  width:100%;text-align:left;background:none;border:0;
+  font:inherit;color:inherit;cursor:pointer;
 }
 .rail-lesson:hover{background:var(--panel)}
 .rail-lesson.on{background:var(--panel);box-shadow:inset 2px 0 0 var(--phosphor)}
+/* The focus ring goes on the row, because the row is what takes the focus. It
+   used to sit on a chevron the size of a fingernail. */
+.rail-lesson:focus-visible{outline:1px solid var(--phosphor);outline-offset:-1px}
+/* A SPAN, NOT A BUTTON. It is the arrow drawn on the control rather than a
+   control of its own — a second tab stop inside the first, doing the same
+   thing, is a second thing to reach and nothing to reach it for. */
 .ta-open{
-  display:grid;place-items:center;width:20px;height:26px;
-  background:none;border:0;color:var(--phosphor-dim);cursor:pointer;
+  display:grid;place-items:center;width:20px;height:26px;color:var(--phosphor-dim);
 }
 .ta-open svg{width:13px;height:13px;transition:transform .18s}
 .rail-lesson.is-open .ta-open svg{transform:rotate(-180deg)}
@@ -767,9 +779,14 @@ h5.prose-heading,h6.prose-heading{font-size:.9rem;color:var(--paper-dim)}
    is somewhere else and means something different. */
 .section-exercises{margin-top:28px;padding-top:22px;border-top:1px solid var(--wire)}
 .section-exercises-title{margin-top:0}
-/* How the lesson is going, under its questions. It is a statement and not a
-   verdict — see `lesson.js` — so it sits at the size of a footnote and the link
-   beside it is the only thing with any colour. */
+/* WHAT TICKS THIS SECTION OFF, said once above the questions. Small and dim on
+   purpose: it is a fact about the interface rather than part of the lesson, and
+   it is gone the moment it stops being true. */
+.section-exercises-rule{margin:0 0 14px;font-size:.74rem}
+/* And how the lesson is going, under them. The one above says what will finish
+   this section; this one says how the whole lesson has gone so far, and it is a
+   statement rather than a verdict — see `lesson.js` — so it sits at the size of
+   a footnote and the link beside it is the only thing with any colour. */
 .lesson-standing{
   display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;margin:16px 0 0;
   font-size:.72rem;color:var(--paper-dim);
@@ -1054,6 +1071,28 @@ h5.prose-heading,h6.prose-heading{font-size:.9rem;color:var(--paper-dim)}
 /* After the exam: the pairing arrives with the verdict and the wrong ones say
    what the right answer was, since this is the first time anybody sees it. */
 .tile-chosen.tile-answer{color:var(--phosphor)}
+/* WHAT WAS PICKED AND WHAT WAS RIGHT, ONE ABOVE THE OTHER. The struck-through
+   one is the student's; the one under it is the answer, and it says so in
+   words. Before, the second replaced the first in place and the two were
+   indistinguishable — see `matching.js`. */
+.tile-chosen.tile-missed{text-decoration:line-through;opacity:.7}
+
+/* ==========================================================================
+   WHAT A TYPED ANSWER SHOULD HAVE BEEN.
+
+   A cloze and a numeric are the two types whose answer is a string the student
+   writes, which is exactly why being told only "not yet" is worst here: there
+   are no options to re-read and nothing to compare against. Both now put the
+   accepted answer next to what was typed, and neither replaces it.
+   ========================================================================== */
+.blank-right{border-color:var(--phosphor)}
+.blank-wrong{border-color:var(--amber);text-decoration:line-through;opacity:.75}
+.blank-answer,
+.numeric-answer{
+  display:inline-block;margin-left:6px;padding:1px 7px;border-radius:3px;
+  background:rgba(91,140,255,.12);border:1px solid var(--phosphor);
+  color:var(--phosphor);font-family:'IBM Plex Mono',monospace;font-size:.82em;
+}
 
 /* ---------- code and expected output ---------- */
 .code-block{border:1px solid var(--wire);border-radius:5px;overflow:hidden;background:var(--panel)}

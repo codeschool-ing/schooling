@@ -54,7 +54,49 @@ export default {
     return filled.some((v) => v !== '') ? { filled } : null;
   },
 
-  reveal(root) {
-    root.querySelectorAll('.blank').forEach((b) => { b.disabled = true; });
+  /* AND WHAT IT SHOULD HAVE SAID, WHICH THIS USED TO KEEP TO ITSELF.
+
+     It disabled the boxes and stopped. A student who typed the wrong word was
+     told "not yet", left looking at their own wrong word, and had no way to
+     find the right one — on the one question type where the answer is a word
+     rather than something they could re-read in the options.
+
+     `reveal.go` claimed a cloze needed nothing here because its renderer
+     "already has" the key. That is true of an exam paper and false everywhere a
+     cloze is actually answered: a lesson and a drill are drawn from the public
+     payload, which carries no `accept`. The key now arrives with the verdict,
+     the same way every other type's does.
+
+     THE WRONG WORD STAYS ON SCREEN, beside the right one and not replaced by
+     it. Overwriting the box would leave somebody looking at the correct answer
+     in the place they typed, with nothing to compare and a fair suspicion that
+     they had typed it. What is being taught is the difference. */
+  reveal(root, ex, v) {
+    const want = v && Array.isArray(v.expected) ? v.expected : null;
+
+    root.querySelectorAll('.blank').forEach((b, i) => {
+      b.disabled = true;
+      if (!want) return;
+
+      const right = String(want[i] === undefined ? '' : want[i]);
+      if (!right) return;
+
+      /* Whether THIS blank was right is not on the verdict — it marks the
+         answer as a whole — so it is decided here the way a person would: the
+         normalisation the question declared is not on the public payload
+         either, so this compares leniently and is only ever used to decide
+         whether to draw the answer. The grader's verdict is what stands. */
+      const said = b.value.trim();
+      const same = said.localeCompare(right, undefined,
+        { sensitivity: 'base', usage: 'search' }) === 0;
+
+      b.classList.add(same ? 'blank-right' : 'blank-wrong');
+      if (same) return;
+
+      const answer = document.createElement('span');
+      answer.className = 'blank-answer';
+      answer.textContent = right;
+      b.insertAdjacentElement('afterend', answer);
+    });
   },
 };

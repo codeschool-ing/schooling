@@ -190,6 +190,10 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
      not agree with English about where that noun goes, and a sentence built
      from fragments is one no translator can put in order. */
 
+  /* The word in front of a revealed answer, on a matching question. It is a
+     noun here — "resposta: X" — and not the verb the button beside it uses. */
+  'answer': 'resposta',
+
   'What did you think of this course?': 'O que você achou deste curso?',
   'What did you think of this track?': 'O que você achou desta trilha?',
   'What do you think of this place?': 'O que você acha daqui?',

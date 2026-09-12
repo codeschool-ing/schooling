@@ -181,3 +181,43 @@ func (cloze) present(payload json.RawMessage, _ *rand.Rand) (Presented, error) {
 func (cloze) restore(answer json.RawMessage, _ []int) (json.RawMessage, error) {
 	return answer, nil
 }
+
+/*
+The accepted answer for each blank, which a cloze could not previously be told.
+
+	# THIS FILE'S HEADER USED TO SAY THIS WAS UNNECESSARY
+
+	`reveal.go` listed a cloze among the types "revealed by their own renderer
+	out of what it already has". That is true of an exam paper, where the whole
+	question travels with its key; it is false everywhere else, and everywhere
+	else is where a cloze is actually answered. A lesson and a drill are drawn
+	from the PUBLIC payload, which has no `accept` in it — so the renderer had
+	nothing to reveal, revealed nothing, and the student was told "not yet" and
+	left looking at their own wrong word with no way to learn the right one.
+
+	# THE FIRST ACCEPTED SPELLING, AND NOT ALL OF THEM
+
+	`accept` is a set of spellings that mean one thing — `computed`, `computado`,
+	`computadas` — and showing all three would present a list of synonyms as if
+	the question had three answers. The first is the canonical one: it is what
+	the author wrote before thinking of the variants.
+
+	A blank with an empty `accept` answers an empty string rather than being
+	skipped, because the positions have to line up with the blanks on screen.
+*/
+func (cloze) reveal(payload json.RawMessage, _ []int) (Reveal, error) {
+	var p clozePayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Reveal{}, err
+	}
+
+	want := make([]string, 0, len(p.Blanks))
+	for _, b := range p.Blanks {
+		if len(b.Accept) == 0 {
+			want = append(want, "")
+			continue
+		}
+		want = append(want, b.Accept[0])
+	}
+	return Reveal{Expected: want}, nil
+}
