@@ -56,10 +56,17 @@ export const isKnownType = (t) => Boolean(REGISTRY[t]);
    try until you get it right, and then it stops measuring anything. The answer
    is still recorded normally — what changes is only what the screen says, and
    when. */
+/* WHAT AN ANSWER IS FILED UNDER. The id where there is one, and a made-up key
+   from the question's place where there is not — the offline bundle's sample
+   data has no ids. It is a function rather than a line inside `buildExercise`
+   because the wizard has to ask the same question about a card it has not
+   built yet, and two spellings of one key is how half of them go missing. */
+export const answerKey = (ex, ix) => ex.id || `${ex.course}:${ex.topic}:${ix}`;
+
 export function buildExercise(ex, ctx, ix, options = {}) {
   const mod = REGISTRY[ex.type];
   const exam = Boolean(options.exam);
-  const uid = ex.id || `${ex.course}:${ex.topic}:${ix}`;
+  const uid = answerKey(ex, ix);
   const el = document.createElement('article');
   el.className = 'ex ex-' + ex.type + (exam ? ' ex-exam' : '');
   // the DOM id: answers are stored under it, and it is how you can tell WHICH
@@ -128,6 +135,43 @@ export function buildExercise(ex, ctx, ix, options = {}) {
      commit, which is the only span that means anything to them. */
   const shownAt = performance.now();
 
+  /* WHICH LESSON MARKS THIS ONE, and it can arrive two ways.
+
+     A lesson's own assessment hands one down for the whole wizard — every
+     question on the screen belongs to the same lesson. `redo` cannot: it
+     gathers questions from wherever they were got wrong, so the lesson is a
+     fact about the QUESTION and travels in its context.
+
+     It matters more than it looks. Without it `redo` fell through to
+     `api.grade` with no attempt, which is `gradeLocally` — the offline
+     comparator, against a key the browser does not hold. Four of the nine
+     types have no local grader at all, so a cloze or a numeric got wrong in a
+     lesson and opened here sat at "not checked" for ever; and the four that do
+     have one were compared against a question served without its answer. */
+  const lesson = options.lesson
+    || (ctx && ctx.lessonId ? { courseId: ctx.courseId, lessonId: ctx.lessonId } : null);
+
+  /* Everything that happens to a card once it has a verdict, in one place
+     because there are now two ways in: answering it, and coming back to a
+     section where it was already answered. */
+  function settle(v) {
+    applyKey(ex, v);
+    mod.reveal(body, ex, v);
+    showVerdict(el, ex, v);
+    const button = el.querySelector('.ex-answer');
+    if (button) button.disabled = true;
+    /* NOT IN A DRILL. The schedule moved the moment the answer landed, so a
+       second attempt would be a second answer to a card that has already been
+       counted — and the interval it earned would be the one for whichever try
+       the student stopped on.
+
+       IN A LESSON IT STAYS, and that is A-10 on a screen: nothing was
+       recorded, so trying again costs nobody anything and the second attempt
+       is the first thing the student does after reading why they were wrong. */
+    const again = el.querySelector('.ex-retry');
+    if (again) again.hidden = Boolean(options.drill);
+  }
+
   async function check(answer) {
     const out = el.querySelector('.ex-verdict');
     if (answer === null) {
@@ -156,8 +200,8 @@ export function buildExercise(ex, ctx, ix, options = {}) {
          score. */
       v = options.drill
         ? await api.drill(ex, answer, performance.now() - shownAt)
-        : options.lesson
-          ? await api.lessonAnswer(ex, answer, options.lesson)
+        : lesson
+          ? await api.lessonAnswer(ex, answer, lesson)
           : await api.grade(ex, answer, options.attempt);
     } catch (e) {
       /* Only reachable inside a server-drawn exam, where the answer is a
@@ -169,7 +213,7 @@ export function buildExercise(ex, ctx, ix, options = {}) {
       if (button) button.disabled = false;
       return;
     }
-    if (ctx) saveAnswer(ctx.courseId, ctx.lessonIx, uid, v);
+    if (ctx) saveAnswer(ctx.courseId, ctx.lessonIx, uid, v, answer);
 
     if (exam) {
       /* Held back. The element remembers how to reveal itself later — the whole
@@ -195,21 +239,7 @@ export function buildExercise(ex, ctx, ix, options = {}) {
          the offline copy has it in the question already, and `applyKey` sees
          nothing to apply. Either way `reveal` is looking at a question that
          knows which answer was right. */
-      applyKey(ex, v);
-      mod.reveal(body, ex, v);
-      showVerdict(el, ex, v);
-
-      /* NOT IN A DRILL. The schedule moved the moment the answer landed, so a
-         second attempt would be a second answer to a card that has already been
-         counted — and the interval it earned would be the one for whichever try
-         the student stopped on.
-
-         IN A LESSON IT STAYS, and that is A-10 on a screen: nothing was
-         recorded, so trying again costs nobody anything and the second attempt
-         is the first thing the student does after reading why they were
-         wrong. */
-      const again = el.querySelector('.ex-retry');
-      if (again) again.hidden = Boolean(options.drill);
+      settle(v);
     }
     el.dispatchEvent(new CustomEvent('exercise:answered', { bubbles: true, detail: { ex, v } }));
   }
@@ -220,7 +250,34 @@ export function buildExercise(ex, ctx, ix, options = {}) {
      answer key in an exam: the exam draws from the same bank as the lessons, so
      almost every question has been seen before. */
   const previous = !exam && ctx && answerFor(ctx.courseId, ctx.lessonIx, uid);
-  if (previous?.correct) markAlreadyDone(el, previous);
+
+  /* ---------- A QUESTION ALREADY ANSWERED COMES BACK ANSWERED ----------
+
+     Leaving a section and returning to it rebuilt every card blank — under a
+     line saying two of five were right. The screen contradicted itself, and
+     the contradiction was the honest half: the card really did know nothing.
+
+     WHY THE ANSWER AND NOT JUST THE VERDICT. Every `reveal` reads the DOM to
+     say what happened: `choices` marks what was ticked, `ordering` compares
+     the rows IN THEIR CURRENT ORDER against the key, `cloze` puts the right
+     word beside the typed one. Shown over a blank card they do not merely say
+     less — they say something false. An ordering rebuilt from the shuffle and
+     revealed would mark an order the student never gave and call it their
+     mistake. So what goes back is the answer first, and the verdict over it.
+
+     NOT IN `redo`, WHICH IS THE ONE PLACE THAT WANTS THE QUESTION BACK. That
+     screen exists to ask it again; handing back the wrong answer and its
+     verdict would make it a gallery of mistakes with a button under each.
+     `fresh` is how it says so.
+
+     A card whose answer was not kept — one answered before a reload, or in an
+     exam — still gets the old sentence, which claims nothing it cannot show. */
+  if (previous && previous.given !== undefined && previous.verdict && !options.fresh) {
+    mod.restore?.(body, ex, previous.given);
+    settle(previous.verdict);
+  } else if (previous?.correct) {
+    markAlreadyDone(el, previous);
+  }
 
   const answerButton = el.querySelector('.ex-answer');
   if (answerButton) {
@@ -391,7 +448,22 @@ export function buildAssessment(exercises, ctx, options = {}) {
   const exam = Boolean(options.exam);
   const el = document.createElement('div');
   el.className = 'wizard' + (exam ? ' wizard-exam' : '');
-  const states = exercises.map(() => ({ answered: false, correct: null }));
+  /* THE DOTS START FROM WHAT IS ALREADY KNOWN, and they used to start grey
+     over a section whose questions were all answered a minute ago. The header
+     is the one thing that says how far through the set somebody is, so an
+     empty header is the screen saying "you have not started this" to somebody
+     who has finished it.
+
+     NOT IN AN EXAM, where a dot's colour is the verdict being held back, and
+     not in `redo`, which is asking again on purpose. */
+  const states = exercises.map((ex, i) => {
+    const c = Array.isArray(ctx) ? ctx[i] : ctx;
+    const was = !exam && !options.fresh && c
+      && answerFor(c.courseId, c.lessonIx, answerKey(ex, i));
+    return was && was.given !== undefined
+      ? { answered: true, correct: was.checked ? was.correct : null }
+      : { answered: false, correct: null };
+  });
   let current = 0;
   let submitted = false;
   let confirming = false;
@@ -471,8 +543,12 @@ export function buildAssessment(exercises, ctx, options = {}) {
        the count that never reached `lessonSections`: nothing is missing, it
        just never arrives. */
     if (!screens[i]) {
+      /* AND `fresh` GOES DOWN WITH THE OTHER THREE, which is this same comment
+         happening a second time: the options are named one by one, so an
+         option nobody added here is accepted at the top and dropped on the way
+         down. `redo` asked for fresh cards and got answered ones. */
       screens[i] = buildExercise(exercises[i], contextFor(i), i,
-        { exam, attempt: options.attempt, lesson: options.lesson });
+        { exam, attempt: options.attempt, lesson: options.lesson, fresh: options.fresh });
     }
     stage.textContent = '';
     stage.appendChild(screens[i]);

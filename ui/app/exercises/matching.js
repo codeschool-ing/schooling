@@ -167,6 +167,35 @@ export default {
     return done > 0 ? { map: {}, errors: -1, partial: true } : null;
   },
 
+  /* THE PAIRS AS THEY WERE LEFT, and only the mapping kind — the immediate one
+     has no mapping to put back, because there every pair that closed was
+     correct and the answer was the PATH. See `collect` above for the same
+     split.
+
+     It repeats what pairing a tile does in `setupExam` rather than calling it,
+     because that lives inside a click handler; the four lines are the price of
+     not turning a listener into an API. */
+  restore(root, ex, answer) {
+    if (!Array.isArray(answer)) return;
+    answer.forEach((want, pair) => {
+      if (!want) return;
+      const left = root.querySelector('.tile-left[data-pair="' + pair + '"]');
+      const right = [...root.querySelectorAll('.tile-right')]
+        .find((f) => f.dataset.value === want);
+      if (!left || !right) return;
+      left.dataset.with = want;
+      left.classList.add('tile-paired');
+      const mark = document.createElement('span');
+      mark.className = 'tile-chosen';
+      mark.textContent = right.textContent.trim();
+      left.appendChild(mark);
+      right.classList.add('tile-taken');
+      right.disabled = true;
+    });
+    const done = root.querySelector('.assoc-done');
+    if (done) done.textContent = root.querySelectorAll('.tile-left[data-with]').length;
+  },
+
   reveal(root, ex, v) {
     root.querySelectorAll('.tile').forEach((f) => { f.disabled = true; });
 

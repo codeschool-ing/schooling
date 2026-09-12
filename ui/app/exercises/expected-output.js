@@ -41,6 +41,12 @@ export default {
     return v.trim() ? v : null;
   },
 
+  // What was written, back in the field it was written in.
+  restore(root, ex, answer) {
+    const field = root.querySelector('.ex-field');
+    if (field && typeof answer === 'string') field.value = answer;
+  },
+
   reveal(root, ex, v) {
     root.querySelector('.ex-field').disabled = true;
     if (v && v.simulated) return;      // no server: claim nothing

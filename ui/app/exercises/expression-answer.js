@@ -58,6 +58,12 @@ export default {
     return v.trim() ? v.trim() : null;
   },
 
+  // What was written, back in the field it was written in.
+  restore(root, ex, answer) {
+    const field = root.querySelector('.ex-field');
+    if (field && typeof answer === 'string') field.value = answer;
+  },
+
   reveal(root) {
     root.querySelector('.ex-field').disabled = true;
   },

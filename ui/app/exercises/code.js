@@ -69,6 +69,12 @@ export default {
     return v.trim() ? v : null;
   },
 
+  // What was written, back in the field it was written in.
+  restore(root, ex, answer) {
+    const field = root.querySelector('.code-area');
+    if (field && typeof answer === 'string') field.value = answer;
+  },
+
   reveal(root) {
     root.querySelector('.code-area').disabled = true;
   },
