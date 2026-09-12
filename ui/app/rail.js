@@ -17,11 +17,25 @@
    for reading, a star for the assessment). Before, everything was a play, which
    promised video in every section — including the text-only ones.
 
-   MORE THAN ONE LESSON CAN BE OPEN. The earlier version was a pure accordion:
-   only the current lesson opened. That forces you to close what you are looking
-   at to peek at what comes next, and comparing two lessons becomes impossible.
-   Now the current one opens by itself and the others open on a click, with the
-   state kept for as long as the session lasts.
+   ONE LESSON IS OPEN AT A TIME, and clicking one goes into it.
+
+   It was the other way round twice. First a pure accordion that only ever
+   opened the CURRENT lesson, so you could not look ahead at all. Then the
+   opposite — any number open at once, and clicking a lesson only folded it —
+   which is what this replaces.
+
+   What that cost is what a rail is for: with eleven lessons of eight sections
+   each left open, the list is ninety rows and finding where you are means
+   scrolling past everything you are not doing. And a click that opened a
+   lesson without going into it left the outline describing one lesson and the
+   page showing another.
+
+   So a click does the whole gesture: it opens that lesson, closes whichever
+   was open, and lands on its first section. Clicking the one already open
+   folds it away again, which is the only way to say "not this one" — and
+   moving between lessons by any other route (the arrows at the end of a
+   section, a link in the text) opens the one you arrive in, because the rail
+   follows the reader rather than the other way round.
    ========================================================================== */
 
 import { courseLessons, courseById, courseByAddress, courseAddress, trackPath } from './catalog.js';
@@ -59,14 +73,27 @@ const ICON_TROPHY = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" 
   'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="M4.5 2.5h7v3a3.5 3.5 0 0 1-7 0zM4.5 3.5H3a1.5 1.5 0 0 0 1.5 3M11.5 3.5H13a1.5 1.5 0 0 1-1.5 3M8 9v2.5M6 13.5h4"/></svg>';
 
-/* Which lessons are open, per course. It lives in memory: it is a navigation
-   preference of the moment, not progress — it does not deserve storage, nor a
-   trip to the server in Stage 2. */
-const opened = {};
-const openKey = (courseId, ix) => courseId + ':' + ix;
+/* WHICH ONE LESSON IS OPEN, per course, and `null` for none of them. It lives
+   in memory: it is a navigation preference of the moment, not progress — it
+   does not deserve storage, nor a trip to the server in Stage 2.
+
+   A course ABSENT from this map has never been touched by hand, which is not
+   the same as "nothing is open": there the current lesson is open, because
+   that is where the reader is. `in` rather than a falsy test, so a course
+   folded shut by hand stays shut. */
+const openOf = {};
+
+/* Where the ROUTE was last time the rail was drawn, per course. It is what
+   tells a lesson reached by the arrows from one reached by a click: when the
+   route moves to another lesson, that lesson opens and takes the place of
+   whatever was open. Without it, reading to the end of lesson three and
+   stepping into lesson four left the rail describing three. */
+const wasOn = {};
+
+// Answers whether it ended up OPEN, because the caller navigates only then.
 export const toggleLesson = (courseId, ix) => {
-  const k = openKey(courseId, ix);
-  opened[k] = !opened[k];
+  openOf[courseId] = openOf[courseId] === ix ? null : ix;
+  return openOf[courseId] === ix;
 };
 
 export function buildRail(el, path, params) {
@@ -129,35 +156,53 @@ function courseRail(params, path) {
   const currentIx = here ? Number(here[1]) : -1;
   const currentSec = here && here[2] ? decodeURIComponent(here[2]) : null;
 
+  /* THE RAIL FOLLOWS THE READER. Arriving in a lesson opens it and closes what
+     was open, whether the reader got there by clicking the row, by the arrow at
+     the end of the section before, or by a link somebody sent them. Only the
+     ARRIVAL does this — redrawing the same lesson must not undo a fold the
+     reader just asked for, which is what `wasOn` distinguishes. */
+  if (currentIx >= 0 && wasOn[id] !== currentIx) {
+    wasOn[id] = currentIx;
+    openOf[id] = currentIx;
+  }
+  const openIx = id in openOf ? openOf[id] : currentIx;
+
   const rows = lessons.map((a) => {
     const sections = lessonSections(id, a.key);
     const done = lessonDone(id, a.ix);
     const isCurrent = a.ix === currentIx;
     const pa = lessonProgress(id, a.ix);
-    /* The current lesson opens on its own, so for it the record means "I closed
-       it by hand"; for the others it means "I opened it by hand". One map, read
-       inverted where the default is inverted. */
-    const marked = Boolean(opened[openKey(id, a.ix)]);
-    const open = isCurrent ? !marked : marked;
+    const open = a.ix === openIx;
 
     /* THE WHOLE ROW IS THE CONTROL, AND IT IS ONE BUTTON.
 
        It used to be a chevron that toggled beside a link that navigated, and
-       the two were three millimetres apart doing different things. Clicking the
-       title of the lesson you were already on went to its first section — the
-       screen you were already looking at — so the row appeared to do nothing,
-       and the only thing that ever seemed to open a lesson was choosing a
-       DIFFERENT one, which opens by being current rather than by being clicked.
+       the two were three millimetres apart doing different things: clicking the
+       title of the lesson you were already on went to the screen you were
+       already looking at, so the row appeared to do nothing.
 
-       A lesson is not a destination. Its sections are, they are one click away
-       once it is open, and the row's job is to show them. So the row discloses
-       and the sections navigate — which is also why there is no `<a>` here any
-       more, and why `aria-expanded` belongs on the thing a person presses
-       rather than on a chevron beside it. */
+       ONE BUTTON DOING ONE GESTURE. Pressing it opens the lesson, closes the
+       one that was open, and lands on the first section — "go into this
+       lesson", which is what a person means by clicking its name. Pressing the
+       one already open folds it away and goes nowhere.
+
+       IT IS STILL NOT AN `<a>`, even though it now navigates, and the
+       difference is not pedantry: what it does is not "follow this address".
+       The same press also folds one lesson and unfolds another, a middle click
+       could not sensibly open a second tab of a rail state, and the address it
+       lands on depends on which sections that lesson has. `aria-expanded` is
+       the promise it makes, and it belongs on the thing a person presses. */
     const head =
       '<button type="button" class="rail-lesson' + (done ? ' done' : '') +
         (isCurrent ? ' on' : '') + (open ? ' is-open' : '') + '" ' +
-        'data-lesson="' + a.ix + '" aria-expanded="' + open + '">' +
+        'data-lesson="' + a.ix + '" aria-expanded="' + open + '" ' +
+        /* WHERE OPENING IT LANDS. The row is not a link — see below — but the
+           gesture is "go into this lesson", and the first section is where that
+           means. It is written here because this is where the lesson's sections
+           are already in hand; `main.js` reads it off the button it was
+           handed. */
+        'data-first="/course/' + esc(address) + '/lesson/' + a.ix + '/' +
+          esc(sections[0].slug || sections[0].id) + '">' +
         '<span class="ta-open" aria-hidden="true">' + ICON_CHEVRON + '</span>' +
         '<span class="ta-title">' +
           '<span class="ta-num">' + txt('lesson') + ' ' + String(a.ix + 1).padStart(2, '0') + '</span>' +
