@@ -280,3 +280,28 @@ func (labelling) present(payload json.RawMessage, _ *rand.Rand) (Presented, erro
 func (labelling) restore(answer json.RawMessage, _ []int) (json.RawMessage, error) {
 	return answer, nil
 }
+
+/*
+The number that was wanted, and the unit it was wanted in.
+
+	THE SAME GAP A CLOZE HAD, in the type next to it: a numeric is drawn from
+	the public payload, which carries no `value`, so the renderer had nothing to
+	reveal and a student who answered 340 to a question wanting 300 was told
+	"not yet" and never told what.
+
+	THE TOLERANCE IS NOT SENT. "300" is the answer; "300 give or take 5%" is the
+	marking rule, and putting a rule on the screen invites reading it as the
+	answer — which is how a student comes away believing the answer was a range.
+	What was accepted is a fact about the grading and it stays here.
+
+	THE UNIT TRAVELS WITH IT because the two are one answer: `300` is wrong for
+	a question that wanted `300 ms` in the same way a wrong number is, and the
+	renderer has to be able to put them back together.
+*/
+func (numeric) reveal(payload json.RawMessage, _ []int) (Reveal, error) {
+	var p numericPayload
+	if err := decode(payload, &p, ErrBadPayload); err != nil {
+		return Reveal{}, err
+	}
+	return Reveal{Expected: map[string]any{"value": p.Value, "unit": p.Unit}}, nil
+}

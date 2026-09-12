@@ -71,7 +71,36 @@ export default {
     };
   },
 
-  reveal(root) {
+  /* AND THE NUMBER THAT WAS WANTED — `cloze`'s gap in the type beside it, with
+     the same cause and the same fix. A student who answered 340 to a question
+     wanting 300 was told "not yet" and never told what.
+
+     THE TOLERANCE IS NOT DRAWN, and the server does not send it. "300" is the
+     answer; "300 give or take 5%" is the marking rule, and a rule on the screen
+     is read as the answer — which is how somebody comes away believing the
+     answer was a range.
+
+     WRITTEN WITH THE STUDENT'S OWN SEPARATOR, because `collect` already accepts
+     a comma as a decimal point for most of the people this school serves. Being
+     shown `9.81` after typing `9,5` would be answering in a notation the
+     question did not ask for. */
+  reveal(root, ex, v) {
     root.querySelectorAll('.numeric input, .numeric select').forEach((c) => { c.disabled = true; });
+
+    const want = v && v.expected;
+    if (!want || typeof want !== 'object' || want.value === undefined) return;
+    if (v.correct === true) return;
+
+    const box = root.querySelector('.numeric');
+    const typed = root.querySelector('.numeric-value');
+    if (!box) return;
+
+    const comma = Boolean(typed && typed.value.includes(','));
+    const shown = comma ? String(want.value).replace('.', ',') : String(want.value);
+
+    const answer = document.createElement('span');
+    answer.className = 'numeric-answer';
+    answer.textContent = shown + (want.unit ? ' ' + want.unit : '');
+    box.append(answer);
   },
 };
