@@ -63,6 +63,7 @@ window.I18N.pt.ui = {
   "The first course of every track is free, in full. Everything past it is the subscription.": "O primeiro curso de cada trilha é gratuito, por inteiro. Tudo além dele é a assinatura.",
   "Assessment": "Avaliação",
   "A few questions on this section": "Algumas questões sobre esta seção",
+  "Answering these completes the section.": "Responder a estas conclui a seção.",
   "By course": "Por curso",
   "By exercise type": "Por tipo de exercício",
   "Can I buy a single course without subscribing?": "Dá para comprar um curso avulso, sem assinar?",

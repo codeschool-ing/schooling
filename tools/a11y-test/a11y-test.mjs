@@ -1256,10 +1256,11 @@ try {
 
        IT IS MEASURED HERE AND NOT ON A COURSE, and that is the one thing worth
        saying about this check. The same control sits at the bottom of a course
-       and of a track, and there it is drawn only for somebody who has FINISHED
-       — which this fixture's student has not, and making them would be a
-       half-hour of clicking to measure markup that is identical. The platform
-       rating has no such condition, so this is where the widget can be reached.
+       and of a track, and there it waits for a finished LESSON and a finished
+       COURSE respectively — which this fixture's student has neither of, and
+       answering a lesson's worth of questions would be a long way round to
+       markup that is identical. The platform rating has no such condition, so
+       this is where the widget can be reached.
 
        THE SECOND HALF IS THE POINT OF THE `act`. Unopened, this is five radios
        and a legend. Two stars is at or below the threshold, so the four pairs
