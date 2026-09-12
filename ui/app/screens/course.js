@@ -17,6 +17,10 @@ import { materialList } from '../materials.js';
 import { bar, empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
 import { esc, formatted, counted } from '../text.js';
 import { ratingBlock, wireRating } from '../rate.js';
+/* The one screen that knows which questions went wrong — see `performance.js`,
+   where the join lives. Reaching for it from here is what turns a screen nobody
+   could find into a link on the way past. */
+import { wrongOnes } from './performance.js';
 import * as api from '../api.js';
 
 export default async function course({ id }) {
@@ -29,6 +33,8 @@ export default async function course({ id }) {
   const opens = unlockedBy(id);
   const exam = courseExam(id);
   const materials = courseMaterials(id);
+  // this sitting's wrong answers, in THIS course: the redo screen takes them all
+  const missed = wrongOnes().filter((r) => r.courseId === id);
 
   const el = document.createElement('div');
   el.className = 'view screen-course';
@@ -49,6 +55,17 @@ export default async function course({ id }) {
       '</div>' +
       bar(p.pct, p.done + ' ' + txt('of') + ' ' + p.total) +
       '<p class="course-count">' + p.done + '/' + p.total + ' ' + txt('sections completed') + '</p>' +
+      /* WHAT WENT WRONG IN THIS SITTING, WITH SOMEWHERE TO PUT IT. The screen
+         that gathers those questions has existed all along and nothing has ever
+         pointed at it, so the only way to find the practice was to know the
+         address. Being wrong is not punished anywhere — it does not hold a
+         section, a lesson or a certificate — and this line is the whole of what
+         it earns: an offer, on the screen a student comes back to. */
+      (missed.length
+        ? '<p class="course-missed"><a href="#/redo">' +
+            counted(missed.length, txt('question to redo'), txt('questions to redo')) +
+          '</a></p>'
+        : '') +
     '</header>' +
 
     '<div class="course-cols">' +
