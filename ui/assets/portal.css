@@ -264,15 +264,27 @@ body.no-rail .rail{display:none}
    stays in normal text with an icon. Two different natures, two different
    shapes. */
 .rail-lessons{display:flex;flex-direction:column;gap:6px}
+/* THE ROW IS A `<button>` NOW, so it has to be told to stop looking like one:
+   a browser gives it a border, a background, a centred inline layout and its
+   own font, none of which a rail row wants. `width:100%` and `text-align:left`
+   are the two that are load-bearing — without them the row shrinks to its
+   content and the title centres itself. */
 .rail-lesson{
   display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:8px;
   border-radius:4px;padding:3px 8px 3px 2px;
+  width:100%;text-align:left;background:none;border:0;
+  font:inherit;color:inherit;cursor:pointer;
 }
 .rail-lesson:hover{background:var(--panel)}
 .rail-lesson.on{background:var(--panel);box-shadow:inset 2px 0 0 var(--phosphor)}
+/* The focus ring goes on the row, because the row is what takes the focus. It
+   used to sit on a chevron the size of a fingernail. */
+.rail-lesson:focus-visible{outline:1px solid var(--phosphor);outline-offset:-1px}
+/* A SPAN, NOT A BUTTON. It is the arrow drawn on the control rather than a
+   control of its own — a second tab stop inside the first, doing the same
+   thing, is a second thing to reach and nothing to reach it for. */
 .ta-open{
-  display:grid;place-items:center;width:20px;height:26px;
-  background:none;border:0;color:var(--phosphor-dim);cursor:pointer;
+  display:grid;place-items:center;width:20px;height:26px;color:var(--phosphor-dim);
 }
 .ta-open svg{width:13px;height:13px;transition:transform .18s}
 .rail-lesson.is-open .ta-open svg{transform:rotate(-180deg)}
