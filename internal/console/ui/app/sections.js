@@ -82,9 +82,11 @@ export const SECTIONS = [
   /* AND THE ONE MEASUREMENT WHOSE SUBJECT IS US. Every entry above it counts
      the students; this one counts what they said about the material and about
      this place. It is last under `Measure` because it is the only one that
-     stays empty until somebody finishes a course — and because it is the one
-     an operator opens after the numbers above have already told them something
-     is wrong and not what. */
+     stays empty until a student has finished a LESSON — a course, until #326,
+     which on `web-fundamentals` is ninety-four sections and was the difference
+     between a screen that fills within a week and one that fills next term —
+     and because it is the one an operator opens after the numbers above have
+     already told them something is wrong and not what. */
   { id: 'ratings', name: 'What they think of it', group: 'Measure', screen: ratings },
   /* REPORTED CONTENT IS FIRST UNDER `Operate`, above the record and the
      schools, because it is the only section in this console that somebody
