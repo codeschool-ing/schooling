@@ -430,12 +430,28 @@ function applyKey(ex, v) {
     case 'expected-output':
       ex.answer = String(v.expected);
       break;
+    /* MATCHING TAKES NOTHING BACK, AND THAT IS THE WHOLE OF A DEFECT FAMILY.
+
+       It used to write `expected[i]` into `pairs[i].right`, which reads as
+       putting the sealed half back where the public one had it removed. Two
+       things were wrong with that. `reveal` never needed it — it marks each
+       tile against `v.expected`, the verdict it is handed. And `pairs[i].right`
+       is the ONE FIELD that decides what KIND of question this is:
+       `holdsTheKey` reads it to choose between the served interaction and the
+       offline one, where every pair locks as it lands because the answers are
+       baked into the page.
+
+       So revealing the answer quietly turned a served question into a baked
+       one. Asked again — by `redo`, or by "try again" on the same card — it
+       came back self-completing: no answer button, pairs closing on their own,
+       and `collect` returning the shape that gesture produces, which the
+       lesson's route cannot read. What the student saw was "that answer did not
+       reach the server" on a question they had just got right, with
+       `(answer || []).map is not a function` in the console.
+
+       A key that changes what a question IS cannot be written onto the
+       question. */
     case 'matching':
-      /* `expected[i]` is the right-hand text of pair i, which is exactly what
-         the sealed half holds and what the public one had removed. */
-      if (Array.isArray(v.expected)) {
-        (ex.pairs || []).forEach((p, i) => { p.right = v.expected[i]; });
-      }
       break;
 
     /* THE TWO THAT ARE TYPED, AND WHOSE RENDERERS READ THE VERDICT DIRECTLY.

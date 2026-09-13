@@ -857,7 +857,22 @@ export async function loadCourseContent(courseId) {
    filter. A paper's questions offered back as practice is precisely the leak
    this repository writes tests about. */
 const shown = new Map();
-export const questionsSeen = () => shown;
+
+/* AND WHAT COMES OUT IS A COPY OF THE COPY, which is the same lesson one level
+   down. Storing a clone stopped the SCREEN's object from reaching this map;
+   handing the map's object out let the next screen write into it instead —
+   `applyKey` puts the key into whatever it is given, so a matching question
+   answered in `redo` came back, the second time, holding its own answer. That
+   is a different question: it self-completes, every pair locks as it lands, and
+   `collect` returns the shape the practice gesture produces, which the server
+   route cannot read. On screen it was "that answer did not reach the server",
+   with a TypeError in the console, on a question the student had just got
+   right.
+
+   So nobody gets the stored object. `structuredClone` per read is a few dozen
+   small objects and it is the only version of this that cannot be defeated by
+   whoever is rendering next. */
+export const questionAsServed = (id) => (shown.has(id) ? structuredClone(shown.get(id)) : null);
 
 export async function lessonExercises(courseId, lessonId) {
   const list = await get(`/api/v1/courses/${enc(courseId)}/lessons/${enc(lessonId)}` +
