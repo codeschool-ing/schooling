@@ -579,22 +579,31 @@ finished here.*
 
 ---
 
-## 5 — The pipeline and the content
+## 5 — The content, and what stands in for a reviewer
 
 The last component of the system, and the first batch of what it produces.
 
-How what it produces reaches a student is [`RELEASES.md`](RELEASES.md): a course goes out as one
+**THIS LIST DESCRIBED A PROGRAM THAT `C-14` HAD ALREADY REFUSED**, and it said so for three weeks
+before anybody read the two side by side. The decision is *"generation is a person with an agent;
+the system automates the checking — there is no pipeline service. Git is the state, so 'how does it
+know what it wrote' and 'how does it resume' stop being questions."* `CONTENT.md` opens on the same
+sentence. This file's own first line says `PLAN.md` carries the shape and this one carries the
+list, so where they disagreed it was the list that was wrong — and a phase describing a service
+nobody decided to build is exactly the kind of claim that stops people looking at what is actually
+missing, which here is material.
+
+How what is written reaches a student is [`RELEASES.md`](RELEASES.md): a course goes out as one
 versioned set, frozen and approved together, so a corrected script and the prose beside it never
 arrive separately. What it settled and numbered is `C-21` to `C-24`, `N-11`, `K-25` and `K-26`.
 
-*Done when: a course is born end to end without anyone writing a sentence, and item analysis
-reports no inverted key.*
+*Done when: a course exists end to end — prose, figures, exercises, exam and script — with every
+check that stands in for a reviewer passing on it, and item analysis reports no inverted key.*
 
-- [ ] The generator writes prose, exercises, exams **and the spoken script** into `content/`
+- [ ] ~~The generator writes prose, exercises, exams **and the spoken script** into `content/`~~ — **there is no generator** (`C-14`). A course is written by a person with an agent, on demand, into `content/`; what runs without a person is the checking, because that is the half standing in for the reviewer nobody is going to be. The item that remains is the material: **a course written end to end, prose to script**, which is one of 122 today
 - [ ] Three verification levels recorded per item — structure, execution, critiqued
-- [ ] Provenance recorded on everything it produces
-- [ ] It is resumable: it knows what it has already written and does not start over
-- [ ] The regeneration loop — item analysis flags a question, the pipeline rewrites it, and the new version is compared against the old
+- [ ] Provenance recorded on everything written
+- [ ] ~~It is resumable: it knows what it has already written and does not start over~~ — **the question does not exist.** `C-14` puts the state in git: what has been written is what is committed, and a rewrite is a diff somebody reads. Resumability is a property of a long-running job, and there is no job
+- [ ] The regeneration loop — item analysis flags a question, it is rewritten, and the new version is compared against the old. The flagging is automatic (`cmd/analyse`, nightly) and the rewriting is not, which is `C-14` again: what a machine decides is that a question is bad, never what replaces it
 - [ ] A course is published as one versioned set, its level computed from what moved rather than declared
 - [ ] An operator publishes a release, and rolls one back by loading the previous one
 - [ ] A student mid-course keeps the structure they started on, and moves to the new one by choosing
