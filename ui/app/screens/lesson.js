@@ -397,10 +397,23 @@ export default async function lesson({ id, ix, sec }) {
          measure copying and call it knowing. What being wrong earns is this
          line and the practice it links to.
 
-         A SITTING, AND IT SAYS SO. A lesson's answers are stored nowhere
-         (A-10), so this counts what happened since the tab was opened; a
-         reload leaves the sections ticked and this line empty, which is the
-         truth and reads as one only because the words say "this sitting". */
+         SO IT HAS TO SAY "LESSON", AND IT DID NOT. It said "right in this
+         sitting", which names WHEN and not WHAT — and it sits directly under
+         the heading "a few questions on this section", so the only subject in
+         sight was the section. Open a fresh section with five untouched
+         questions and it read `3/5`: a score about work you did somewhere
+         else, attached to a set you have not started. In Portuguese the two
+         words are one letter apart — *sessão* and *seção* — so the sentence
+         could be read the wrong way without misreading a word of it.
+
+         What it says now is the lesson, and the set in front of you is
+         counted where it belongs: the wizard's own result panel, at the end.
+
+         IT IS STILL A SITTING'S WORTH, and that is not in the words any more
+         because naming the subject matters more than naming the clock. A
+         lesson's answers are stored nowhere (A-10), so a reload leaves the
+         sections ticked and this line gone — which is the truth, and the line
+         claims nothing that would survive it. */
       const standing = document.createElement('p');
       standing.className = 'lesson-standing mono';
       const paintStanding = () => {
@@ -410,8 +423,16 @@ export default async function lesson({ id, ix, sec }) {
         const right = answers.filter((r) => r.correct).length;
         const missed = answers.filter((r) => r.checked && !r.correct).length;
         standing.hidden = answers.length === 0;
+        /* TWO COUNTS AND NOT A FRACTION, because the fraction kept colliding
+           with the set on screen. A section asks about five questions, so
+           "3/5" on a section nobody has started is a number that looks exactly
+           like this one and is about somewhere else — naming the lesson fixes
+           the sentence and leaves the arithmetic still borrowing the shape of
+           what is underneath it. "5 answered, 3 right" cannot be read as a
+           score out of the five questions in front of you. */
         standing.innerHTML =
-          '<span>' + txt('Right in this sitting') + ': ' + right + '/' + answers.length + '</span>' +
+          '<span>' + txt('In this lesson') + ': ' + answers.length + ' ' + txt('answered') +
+            ', ' + right + ' ' + txt('got right') + '</span>' +
           (missed
             ? ' · <a class="lesson-redo" href="#/redo">' +
                 txt('redo what you got wrong') + ' (' + missed + ')</a>'

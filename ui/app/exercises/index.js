@@ -528,6 +528,15 @@ export function buildAssessment(exercises, ctx, options = {}) {
      Rebuilding would erase that, and the student would think they lost work. */
   const screens = exercises.map(() => null);
 
+  /* WHICH ONES ARE BEING ASKED AGAIN. A card whose answer was thrown away has
+     to be BUILT as if it had never been answered — otherwise the rebuild puts
+     the wrong answer straight back on it, which is what `fresh` means and why
+     it travels per card here rather than per wizard. */
+  const asking = new Set();
+  const missed = () => states
+    .map((s, i) => (s.answered && s.correct === false ? i : -1))
+    .filter((i) => i >= 0);
+
   /* `ctx` can be a single context (one lesson's assessment) or one per exercise
      (the redo screen, which gathers exercises from different lessons and has to
      store each answer against the lesson it came from). */
@@ -548,7 +557,8 @@ export function buildAssessment(exercises, ctx, options = {}) {
          option nobody added here is accepted at the top and dropped on the way
          down. `redo` asked for fresh cards and got answered ones. */
       screens[i] = buildExercise(exercises[i], contextFor(i), i,
-        { exam, attempt: options.attempt, lesson: options.lesson, fresh: options.fresh });
+        { exam, attempt: options.attempt, lesson: options.lesson,
+          fresh: options.fresh || asking.has(i) });
     }
     stage.textContent = '';
     stage.appendChild(screens[i]);
@@ -607,10 +617,48 @@ export function buildAssessment(exercises, ctx, options = {}) {
         '<p class="wz-res-score"><strong>' + final.right + '</strong>/' + exercises.length + ' ' + txt('correct') + '</p>') +
       (final.unchecked ? '<p class="wz-res-note">' + final.unchecked + ' ' + txt('are waiting to be checked on the server.') + '</p>' : '') +
       (final.unanswered ? '<p class="wz-res-note">' + final.unanswered + ' ' + txt('unanswered.') + '</p>' : '') +
-      '<button type="button" class="btn btn-ghost wz-back">' +
-        txt(exam ? 'Review the exam question by question' : 'Review the questions') + '</button>';
+      /* ---------- and the second go, from the one screen that knows the score
+
+         THE RESULT PANEL IS WHERE SOMEBODY DECIDES WHAT TO DO NEXT, and until
+         now it offered one thing: read them all again from the first. The
+         ones worth going back to are the ones that were wrong, and every card
+         already carries "try again" — but reaching them meant remembering
+         which numbers were red and pressing each in turn.
+
+         NOT IN AN EXAM, where the paper is closed and a second answer is not
+         a thing that exists; not in a drill, where the schedule already moved
+         (see `check`); and not in `redo`, which IS the second go and would be
+         offering itself. */
+      '<div class="wz-res-actions">' +
+        (!exam && !options.drill && !options.fresh && missed().length
+          ? '<button type="button" class="btn btn-primary wz-redo">' +
+              txt('redo what you got wrong') + ' (' + missed().length + ')</button>'
+          : '') +
+        '<button type="button" class="btn btn-ghost wz-back">' +
+          txt(exam ? 'Review the exam question by question' : 'Review the questions') + '</button>' +
+      '</div>';
     stage.appendChild(r);
     r.querySelector('.wz-back').addEventListener('click', () => show(0));
+
+    /* THE ANSWERS GO, THE ATTEMPTS STAY. The cards are rebuilt with nothing on
+       them and the dots go back to grey for those questions only — what the
+       store keeps is untouched, so `attempts` still counts every try and
+       `correct` stays true for anything already got right (A-10: there is no
+       score to repair). Answering them again lands on the result again, this
+       time with the new verdicts in it. */
+    const secondGo = r.querySelector('.wz-redo');
+    if (secondGo) {
+      secondGo.addEventListener('click', () => {
+        const again = missed();
+        again.forEach((i) => {
+          asking.add(i);
+          screens[i] = null;
+          states[i] = { answered: false, correct: null };
+        });
+        el.querySelector('.wz-next').disabled = false;
+        show(again[0]);
+      });
+    }
     el.querySelector('.wz-next').disabled = true;
     paintHeader();
     el.dispatchEvent(new CustomEvent('assessment:concluida', {
