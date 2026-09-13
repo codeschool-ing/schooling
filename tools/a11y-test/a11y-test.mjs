@@ -515,6 +515,55 @@ async function lessonAnswered(theme) {
       throw new Error('the server said the answer was correct and the option the student ticked '
         + 'is painted as wrong');
     }
+
+    /* AND "TRY AGAIN" PUTS THE CARD BACK TO BLANK, which is the one gesture in
+       a lesson that A-10 exists for: nothing was recorded, so a second attempt
+       costs nobody anything and is the first thing a student does after
+       reading why they were wrong.
+
+       IT IS CHECKED HERE BECAUSE IT BROKE HERE, INVISIBLY. The button has
+       always worked by rebuilding the card — and once a card could come back
+       carrying the answer that was kept for it, the rebuild restored what had
+       just been thrown away. The screen after the click was identical to the
+       screen before it, down to the verdict, and nothing failed anywhere: no
+       request, no error, no missing element. A student pressed it and nothing
+       happened.
+
+       Four things have to go at once, because three of them going is a card
+       that still looks answered.
+
+       WHAT IS ALLOWED TO STAY IS "ALREADY SOLVED", and this check asked for an
+       empty verdict box until CI said otherwise. A card answered correctly and
+       then reopened says "already solved in N attempts" — `v-old`, drawn from
+       the attempts the store keeps and never from the answer, which is exactly
+       what `forgetAnswerGiven` leaves behind on purpose. The verdict to insist
+       on is the one that came back from the marking: `v-right`, `v-wrong` or
+       `v-pending`. Asking for emptiness passed here only because the local
+       probe answered WRONGLY, and this one answers with the first choice,
+       which the fixture makes the correct one. */
+    await page.locator('.ex .ex-retry:visible').first().click();
+    await page.waitForTimeout(400);
+    const blank = await page.evaluate(() => {
+      const card = document.querySelector('.ex');
+      if (!card) return null;
+      const verdict = card.querySelector('.ex-verdict');
+      const is = (c) => Boolean(verdict && verdict.classList.contains(c));
+      return {
+        said: (verdict?.textContent || '').trim(),
+        marked: card.querySelectorAll('.choice-right, .choice-wrong, .choice-missed').length,
+        ticked: card.querySelectorAll('input:checked').length,
+        canAnswer: !card.querySelector('.ex-answer')?.disabled,
+        judged: is('v-right') || is('v-wrong') || is('v-pending'),
+      };
+    });
+    if (!blank) throw new Error('the card vanished when "try again" was pressed');
+    if (blank.judged || blank.marked || blank.ticked || !blank.canAnswer) {
+      throw new Error('"try again" left the card as it was — it still says '
+        + `"${blank.said}", ${blank.marked} options still marked, ${blank.ticked} still ticked, `
+        + `the answer button ${blank.canAnswer ? 'enabled' : 'still disabled'}. `
+        + 'The card is rebuilt on that click, so a rebuild that restores the kept answer '
+        + 'makes the button do nothing at all');
+    }
     return page;
   } catch (e) {
     await done(page);

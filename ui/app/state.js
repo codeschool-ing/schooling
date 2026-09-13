@@ -308,6 +308,28 @@ export function saveAnswer(courseId, ix, exId, verdict, given) {
   });
 }
 
+/* THROWING AWAY THE ANSWER WITHOUT THROWING AWAY THE FACT OF IT.
+
+   "Try again" means this card goes back to blank, and the card and the memory
+   have to agree about that: a card cleared on screen whose answer is still
+   kept comes back ANSWERED the next time the section is built, resurrecting
+   something the student explicitly discarded.
+
+   `attempts`, `correct` and `checked` stay, and that is the whole distinction.
+   They are facts about the past — how many times this was tried, whether it
+   was ever right — and A-10 and A-16 both rest on the past not being rewritten
+   by a second go. What goes is only the copy kept to put the card back the way
+   it was, because it is not the way it is any more. */
+export function forgetAnswerGiven(courseId, ix, exId) {
+  change(() => {
+    const r = lessonRecord(courseId, ix);
+    const kept = r && r.exercises && r.exercises[exId];
+    if (!kept) return;
+    delete kept.given;
+    delete kept.verdict;
+  });
+}
+
 /* ---------- notes ----------
    One per section, free text. It is the only thing in the portal the STUDENT
    writes, and that is why it does not get lost even when the content changes:

@@ -24,7 +24,7 @@
 
 import { formatted, esc } from '../text.js';
 import * as api from '../api.js';
-import { saveAnswer, answerFor } from '../state.js';
+import { saveAnswer, answerFor, forgetAnswerGiven } from '../state.js';
 import { wireReport } from '../report.js';
 
 import choices from './choices.js';
@@ -287,9 +287,20 @@ export function buildExercise(ex, ctx, ix, options = {}) {
   const retry = el.querySelector('.ex-retry');
   if (retry) {
     retry.addEventListener('click', () => {
-      const fresh = buildExercise(ex, ctx, ix, options);
-      el.replaceWith(fresh);
-      fresh.dispatchEvent(new CustomEvent('exercise:redone', { bubbles: true }));
+      /* `fresh`, AND WITHOUT IT THIS BUTTON DID NOTHING AT ALL. Rebuilding is
+         how "try again" has always worked — a new card in place of the old
+         one — and a card now comes back with its answer on it if one was
+         kept. So the rebuild restored what the student had just asked to
+         throw away, and the screen after the click was identical to the
+         screen before it, down to the verdict.
+
+         The kept answer goes with it. A card blank on screen whose answer is
+         still in the store comes back ANSWERED next time the section is
+         built, which would be the same defect one navigation later. */
+      forgetAnswerGiven(ctx?.courseId, ctx?.lessonIx, uid);
+      const blank = buildExercise(ex, ctx, ix, { ...options, fresh: true });
+      el.replaceWith(blank);
+      blank.dispatchEvent(new CustomEvent('exercise:redone', { bubbles: true }));
     });
   }
 
@@ -654,6 +665,9 @@ export function buildAssessment(exercises, ctx, options = {}) {
           asking.add(i);
           screens[i] = null;
           states[i] = { answered: false, correct: null };
+          // and the kept answer, for `ex-retry`'s reason one line at a time
+          const c = contextFor(i);
+          if (c) forgetAnswerGiven(c.courseId, c.lessonIx, answerKey(exercises[i], i));
         });
         el.querySelector('.wz-next').disabled = false;
         show(again[0]);
