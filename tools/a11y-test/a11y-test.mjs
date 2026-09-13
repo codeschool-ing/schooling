@@ -530,23 +530,36 @@ async function lessonAnswered(theme) {
        happened.
 
        Four things have to go at once, because three of them going is a card
-       that still looks answered. */
+       that still looks answered.
+
+       WHAT IS ALLOWED TO STAY IS "ALREADY SOLVED", and this check asked for an
+       empty verdict box until CI said otherwise. A card answered correctly and
+       then reopened says "already solved in N attempts" — `v-old`, drawn from
+       the attempts the store keeps and never from the answer, which is exactly
+       what `forgetAnswerGiven` leaves behind on purpose. The verdict to insist
+       on is the one that came back from the marking: `v-right`, `v-wrong` or
+       `v-pending`. Asking for emptiness passed here only because the local
+       probe answered WRONGLY, and this one answers with the first choice,
+       which the fixture makes the correct one. */
     await page.locator('.ex .ex-retry:visible').first().click();
     await page.waitForTimeout(400);
     const blank = await page.evaluate(() => {
       const card = document.querySelector('.ex');
       if (!card) return null;
+      const verdict = card.querySelector('.ex-verdict');
+      const is = (c) => Boolean(verdict && verdict.classList.contains(c));
       return {
-        verdict: (card.querySelector('.ex-verdict')?.textContent || '').trim(),
+        said: (verdict?.textContent || '').trim(),
         marked: card.querySelectorAll('.choice-right, .choice-wrong, .choice-missed').length,
         ticked: card.querySelectorAll('input:checked').length,
         canAnswer: !card.querySelector('.ex-answer')?.disabled,
+        judged: is('v-right') || is('v-wrong') || is('v-pending'),
       };
     });
     if (!blank) throw new Error('the card vanished when "try again" was pressed');
-    if (blank.verdict || blank.marked || blank.ticked || !blank.canAnswer) {
-      throw new Error('"try again" left the card as it was — verdict '
-        + `"${blank.verdict}", ${blank.marked} options still marked, ${blank.ticked} still ticked, `
+    if (blank.judged || blank.marked || blank.ticked || !blank.canAnswer) {
+      throw new Error('"try again" left the card as it was — it still says '
+        + `"${blank.said}", ${blank.marked} options still marked, ${blank.ticked} still ticked, `
         + `the answer button ${blank.canAnswer ? 'enabled' : 'still disabled'}. `
         + 'The card is rebuilt on that click, so a rebuild that restores the kept answer '
         + 'makes the button do nothing at all');
