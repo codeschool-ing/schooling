@@ -870,6 +870,31 @@ async function lessonMatchingHasItsOptions(theme) {
       throw new Error(`answering the matching question: ${reply.status()} ${await reply.text()}`);
     }
     await page.waitForSelector('.ex-verdict.v-right, .ex-verdict.v-wrong', { timeout: 8000 });
+
+    /* AND ASKED AGAIN IT IS STILL THE SAME QUESTION, which is the assertion
+       this file was missing when a reveal could change what a question IS.
+
+       `applyKey` used to write the answer into `pairs[i].right` — the one field
+       `holdsTheKey` reads to choose between the served interaction and the
+       offline one, where every pair locks as it lands because the answers are
+       in the page. So revealing turned a served question into a baked one, and
+       the next time it was drawn — "try again" here, or the redo screen later —
+       it came back with no answer button, completing itself, and handing the
+       lesson's route a payload it cannot read. On screen: "that answer did not
+       reach the server", on a question just got right.
+
+       THE ANSWER BUTTON IS THE WHOLE TELL. A question served by this platform
+       always has one; only the offline copy's does not. */
+    const askAgain = page.locator('.ex .ex-retry:visible').first();
+    if (await askAgain.count()) {
+      await askAgain.click();
+      await page.waitForSelector('.ex .tile-right', { timeout: 8000 });
+      if (!(await page.locator('.ex .ex-answer').count())) {
+        throw new Error('asked a second time, the matching question came back with no answer '
+          + 'button — it is completing itself, which is the offline copy\'s gesture and needs '
+          + 'the key in the page. Something put the key ON the question: see `applyKey`');
+      }
+    }
     return page;
   } catch (e) {
     await done(page);

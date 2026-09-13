@@ -29,16 +29,18 @@ import { esc } from '../text.js';
    said nobody had answered anything, and `redo` said there was nothing wrong to
    redo, no matter how much had been answered a minute earlier.
 
-   `api.questionsSeen()` is what this sitting has actually been shown, which is
-   the only place a lesson's questions exist on this side — see its comment for
-   why that is A-10 and not a stopgap. The global stays as the fallback for the
-   offline bundle, where it is the one thing that IS loaded. */
+   `api.questionAsServed()` hands back what this sitting was actually shown,
+   which is the only place a lesson's questions exist on this side — see its
+   comment for why that is A-10 and not a stopgap, and why it is a COPY. The
+   global stays as the fallback for the offline bundle, where it is the one
+   thing that IS loaded. */
 export function answersWithExercise() {
-  const seen = api.questionsSeen();
   const byId = {};
   (window.SAMPLE_EXERCISES || []).forEach((e) => { byId[e.id] = e; });
   return answersGiven()
-    .map((r) => ({ ...r, ex: seen.get(r.exId) || byId[r.exId] }))
+    /* A COPY EACH TIME, and see `questionAsServed` for what happens without
+       one: whatever renders this question writes the key into it. */
+    .map((r) => ({ ...r, ex: api.questionAsServed(r.exId) || byId[r.exId] }))
     .filter((r) => r.ex);
 }
 
