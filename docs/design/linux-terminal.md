@@ -26,11 +26,11 @@ In **10 tracks** — `backend`(4), `cloud-engineering`(2), `data`(2), `dba`(3), 
 | declared hours | 70 h |
 | lessons | 13 |
 | **hours per lesson** | **5.38** |
-| section budget | ~150, about 11.5 a lesson — **and 210 are designed**; the arithmetic is below |
-| sections | **210** — 170 reading, 27 video, 13 practice |
+| section budget | ~150, about 11.5 a lesson — **and 223 are designed**; the arithmetic is below |
+| sections | **223** — 170 reading, 40 video, 13 practice |
 | exercises | ~890, floor 700 |
 | video | estimated, not a target (`C-36`) |
-| avatar visible | **~8%**, the lowest in the catalogue — and the reason is below |
+| avatar visible | **~15%** of video runtime, and only in the opening and the closing — the reason is below |
 
 Exercise types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `labelling`,
 `numeric`, **`expected-output`**. The last one has no grader, which is why the Execution table
@@ -54,21 +54,35 @@ below says *publishable degraded* rather than *blocked*: a question nobody check
 ## Sections
 
 Five volumes. **The volumes are a reading device; the lessons and their ids are the contract
-with the portal and do not move.** The numbering 01–210 is the path a student walks, in the
+with the portal and do not move.** The numbering 01–223 is the path a student walks, in the
 order they walk it.
 
-### The video here is a terminal, not a face
+### The video here is a terminal — and the lesson still opens and closes on a face
 
 `web-fundamentals` puts the presenter on screen for about a fifth of its runtime and all of
-every opening. **This course cannot afford that shape and does not want it**, for a reason that
-belongs to the subject: what a student needs to see is a prompt, a command being typed, and the
-output arriving — the pause between the two included. A face over that is the decoration `C-30`
-already refused.
+every opening. **The middle of this course cannot afford that shape and does not want it**, for
+a reason that belongs to the subject: what a student needs to see is a prompt, a command being
+typed, and the output arriving — the pause between the two included. A face over that is the
+decoration `C-30` already refused.
 
-So: openings stay, at **60–90 seconds**, because uniform orientation is worth the same here as
-there. Everything after the opening is **screen only** — a real terminal, real output, the
-presenter's voice over it. That puts the avatar at roughly 8% of runtime, the lowest figure in
-the catalogue, and it is the honest one rather than a saving found afterwards.
+**But a lesson that ends on a maximised terminal ends without anybody saying so.** The screen
+goes quiet, the voice stops, and the last thing the student was told is what the command
+printed. So the rule is a bracket rather than a ceiling:
+
+| | mode | length |
+|---|---|---|
+| the **opening** | `full` — presenter, no screen | 60–90 s |
+| everything between | **screen only** — a real terminal, real output, voice over it | as long as the demonstration takes |
+| the **closing** | `full` — presenter again, for the considerations that are the lesson's own | 30–60 s |
+
+That is what a closing is for and it is not a summary of the sections: it is what the student
+should be holding now, what is going to feel wrong tomorrow anyway, and why the next lesson is
+the next lesson. It lands **before the drill**, which stays last — you say what was learnt, then
+the student practises it.
+
+The bracket costs about **15% of video runtime as avatar**, against `web-fundamentals`' 20–25%.
+The earlier figure in this sheet was 8%, and it was 8% because there was no closing: the number
+moved because the design did, which is the right direction for a number to move.
 
 **Every lesson gets a demonstration**, and in this course the demonstration is not optional
 garnish: the material is a thing people do, and a lesson that never shows it being done teaches
@@ -90,7 +104,7 @@ against a newer distribution and see what moved.
 This is a decision made here, for this course. `TEACHING.md`'s open question — *where
 illustration stops being authorable* — is where it belongs once a second course needs it.
 
-### What a section is worth here, and why there are 210 of them
+### What a section is worth here, and why there are 223 of them
 
 The budget of ~150 came from declared hours at the catalogue's average density. Two numbers
 argue it is low.
@@ -99,15 +113,16 @@ argue it is low.
 40 declared hours, or 2.35 sections an hour. At that density 70 hours is **164 sections**, not
 150 — so the budget was already under the only figure anybody has actually designed against.
 
-**And this course's sections are shorter.** 210 sections in 70 hours is 20 minutes each, against
-`web-fundamentals`' 25.5. That difference is real and it is not padding: a section there
+**And this course's sections are shorter.** 223 sections in 70 hours is under 19 minutes each,
+against `web-fundamentals`' 25.5. That difference is real and it is not padding: a section there
 establishes a concept that took five paragraphs to build, and a section here is frequently one
 command, its three or four flags that matter, the output it prints, and five questions. `grep`
 is not a smaller subject than the CSSOM; it is a subject that reaches the student in less time,
-because they can run it.
+because they can run it. The average also understates the readings, because 26 of the 223 are an
+opening or a closing and those are ninety seconds apiece.
 
 **The declared hours do not move** — they are on the course card and in the portal — so of the
-two ways to absorb 210 sections, this sheet takes the one that does not change the contract.
+two ways to absorb 223 sections, this sheet takes the one that does not change the contract.
 If the real figure turns out to be 80 hours rather than 70, that is a catalogue change with its
 own argument, not something a design sheet gets to decide.
 
@@ -138,7 +153,8 @@ own argument, not something a design sheet gets to decide.
 | 17 | `when-it-goes-wrong` | reading | Reading an error — not found, permission denied, no such file — and the exit status behind it |
 | 18 | `windows-side-by-side` | reading | The table, once: paths, separators, permissions, services, packages, shells |
 | 19 | `a-first-session` | video | One small real task, start to finish, using only what lesson 1 taught — **demonstration** |
-| 20 | `drill` | practice | Fourteen situations: name the piece, read the prompt, say what the error means |
+| 20 | `closing` | video | What you can carry out of a first hour at a prompt, and the one thing that will still feel wrong tomorrow — **closing** |
+| 21 | `drill` | practice | Fourteen situations: name the piece, read the prompt, say what the error means |
 
 **`getting-a-linux` is the section without which the course does not work**, and a budget-shaped
 design would not have it: it teaches no Linux at all. It is here because ten tracks start at this
@@ -157,19 +173,20 @@ a script on Windows — which, for this audience, is most of them.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 21 | `intro` | video | One kernel, a hundred distributions, and why the answer matters at three in the morning — **opening** |
-| 22 | `what-a-distribution-is` | reading | Kernel, userland, package manager, defaults and policy: the four things being bundled |
-| 23 | `the-families` | reading | Debian, Red Hat, SUSE, Arch and the independents — the tree drawn once |
-| 24 | `debian-ubuntu` | reading | Debian, Ubuntu and what sits below them |
-| 25 | `rhel-and-the-rebuilds` | reading | RHEL, CentOS, CentOS Stream, Rocky and Alma: what happened, and which one you are on now |
-| 26 | `suse` | reading | SUSE Linux Enterprise, openSUSE Leap and Tumbleweed |
-| 27 | `alpine-and-containers` | reading | musl and busybox: why the image is 5 MB and why your command behaves differently in it |
-| 28 | `release-models` | reading | Fixed, LTS and rolling; version numbers that mean something and ones that do not |
-| 29 | `lifecycles` | reading | Support windows, end of life, and the upgrade somebody will have to do |
-| 30 | `what-actually-differs` | reading | Package manager, service names, config paths, firewall tool, SELinux against AppArmor, default shell |
-| 31 | `which-am-i-on` | reading | `/etc/os-release`, `uname -a`, `hostnamectl` — and checking first as a reflex |
-| 32 | `choosing` | video | Three real situations, three different answers — **demonstration** |
-| 33 | `drill` | practice | Given a symptom or a command that failed, name the family |
+| 22 | `intro` | video | One kernel, a hundred distributions, and why the answer matters at three in the morning — **opening** |
+| 23 | `what-a-distribution-is` | reading | Kernel, userland, package manager, defaults and policy: the four things being bundled |
+| 24 | `the-families` | reading | Debian, Red Hat, SUSE, Arch and the independents — the tree drawn once |
+| 25 | `debian-ubuntu` | reading | Debian, Ubuntu and what sits below them |
+| 26 | `rhel-and-the-rebuilds` | reading | RHEL, CentOS, CentOS Stream, Rocky and Alma: what happened, and which one you are on now |
+| 27 | `suse` | reading | SUSE Linux Enterprise, openSUSE Leap and Tumbleweed |
+| 28 | `alpine-and-containers` | reading | musl and busybox: why the image is 5 MB and why your command behaves differently in it |
+| 29 | `release-models` | reading | Fixed, LTS and rolling; version numbers that mean something and ones that do not |
+| 30 | `lifecycles` | reading | Support windows, end of life, and the upgrade somebody will have to do |
+| 31 | `what-actually-differs` | reading | Package manager, service names, config paths, firewall tool, SELinux against AppArmor, default shell |
+| 32 | `which-am-i-on` | reading | `/etc/os-release`, `uname -a`, `hostnamectl` — and checking first as a reflex |
+| 33 | `choosing` | video | Three real situations, three different answers — **demonstration** |
+| 34 | `closing` | video | Why you do not have to choose a distribution, and what to check first when you arrive on somebody's machine — **closing** |
+| 35 | `drill` | practice | Given a symptom or a command that failed, name the family |
 
 **`alpine-and-containers` is the section this lesson would have skipped**, and it is the one its
 students meet first: `docker` depends on this course, and the base image in every tutorial they
@@ -183,43 +200,45 @@ lesson.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 34 | `intro` | video | A tree with one root, and the address of everything in it — **opening** |
-| 35 | `fhs` | reading | The hierarchy, directory by directory, and what each one is actually for |
-| 36 | `absolute-relative` | reading | A leading `/` or not, and what "the current directory" means |
-| 37 | `dot-dotdot-tilde` | reading | `.`, `..`, `~`, `-` and `~someone` |
-| 38 | `moving-and-looking` | reading | `pwd`, `cd`, `ls`, and the flags worth having in your fingers |
-| 39 | `reading-ls-long` | reading | `ls -l` field by field — the densest line in the course, decoded before permissions arrive |
-| 40 | `file-operations` | reading | `cp`, `mv`, `rm`, `mkdir`, `rmdir`, `touch`; `-r`, `-i`, and the respect `rm -rf` is owed |
-| 41 | `looking-inside` | reading | `cat`, `less`, `head`, `tail`, `file`, `wc`, `stat` |
-| 42 | `finding` | reading | `find` by name, time, size and type, `-exec`, and `locate` |
-| 43 | `globbing` | reading | `*`, `?`, `[…]`, brace expansion — and that the shell expands them before the command sees anything |
-| 44 | `links` | reading | Inodes, hard links and symlinks, and the link that points at nothing |
-| 45 | `mounts` | reading | Mounting, `df`, `lsblk`, `/mnt` and `/media`; a second disk arriving as a directory |
-| 46 | `disk-usage` | reading | `du`, what is actually taking the space, and `df` disagreeing with it |
-| 47 | `hidden-and-special` | reading | Dotfiles, `/proc` and `/sys`, `/dev/null`, `/dev/zero`, `/dev/urandom` |
-| 48 | `archives` | reading | `tar`, `gzip`, `zip`: the three-flag incantation explained instead of memorised |
-| 49 | `a-walk` | video | A tour of a real root directory, opening things — **demonstration** |
-| 50 | `drill` | practice | Resolve paths, predict a glob, say where a file belongs |
+| 36 | `intro` | video | A tree with one root, and the address of everything in it — **opening** |
+| 37 | `fhs` | reading | The hierarchy, directory by directory, and what each one is actually for |
+| 38 | `absolute-relative` | reading | A leading `/` or not, and what "the current directory" means |
+| 39 | `dot-dotdot-tilde` | reading | `.`, `..`, `~`, `-` and `~someone` |
+| 40 | `moving-and-looking` | reading | `pwd`, `cd`, `ls`, and the flags worth having in your fingers |
+| 41 | `reading-ls-long` | reading | `ls -l` field by field — the densest line in the course, decoded before permissions arrive |
+| 42 | `file-operations` | reading | `cp`, `mv`, `rm`, `mkdir`, `rmdir`, `touch`; `-r`, `-i`, and the respect `rm -rf` is owed |
+| 43 | `looking-inside` | reading | `cat`, `less`, `head`, `tail`, `file`, `wc`, `stat` |
+| 44 | `finding` | reading | `find` by name, time, size and type, `-exec`, and `locate` |
+| 45 | `globbing` | reading | `*`, `?`, `[…]`, brace expansion — and that the shell expands them before the command sees anything |
+| 46 | `links` | reading | Inodes, hard links and symlinks, and the link that points at nothing |
+| 47 | `mounts` | reading | Mounting, `df`, `lsblk`, `/mnt` and `/media`; a second disk arriving as a directory |
+| 48 | `disk-usage` | reading | `du`, what is actually taking the space, and `df` disagreeing with it |
+| 49 | `hidden-and-special` | reading | Dotfiles, `/proc` and `/sys`, `/dev/null`, `/dev/zero`, `/dev/urandom` |
+| 50 | `archives` | reading | `tar`, `gzip`, `zip`: the three-flag incantation explained instead of memorised |
+| 51 | `a-walk` | video | A tour of a real root directory, opening things — **demonstration** |
+| 52 | `closing` | video | The tree as a map you now carry, and the handful of commands worth trusting your fingers to — **closing** |
+| 53 | `drill` | practice | Resolve paths, predict a glob, say where a file belongs |
 
 **Lesson 4 · Permissions, owners, groups, sudo and umask** — `le-chtj4bkk`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 51 | `intro` | video | Twelve bits that decide everything — **opening** |
-| 52 | `user-group-other` | reading | Three audiences, three bits each, and which one applies to you |
-| 53 | `reading-the-mode` | reading | `-rwxr-xr--` character by character, including the first one |
-| 54 | `octal` | reading | 755 and 644, and the arithmetic that produces them |
-| 55 | `chmod` | reading | Symbolic and numeric, `-R`, and what recursion does to directories |
-| 56 | `directory-bits` | reading | What `x` means on a directory — and the readable directory you cannot enter |
-| 57 | `chown-chgrp` | reading | Ownership, and why giving a file away needs root |
-| 58 | `groups` | reading | Primary and supplementary, `id`, `groups`, and the group as the unit of sharing |
-| 59 | `umask` | reading | The mask that decides what a new file is born with |
-| 60 | `special-bits` | reading | setuid, setgid and the sticky bit: why `/tmp` needs one and `passwd` the other |
-| 61 | `root-and-sudo` | reading | root, `su`, `sudo`, `sudoers` — and why `sudo` beats logging in as root |
-| 62 | `sudo-in-practice` | reading | `sudo -i`, the redirect that still fails under sudo, `sudo !!`, and the password timeout |
-| 63 | `acl-and-mac` | reading | Where twelve bits run out: `getfacl`/`setfacl`, and SELinux and AppArmor named honestly |
-| 64 | `permission-denied` | video | Five denials, each diagnosed to its actual cause — **demonstration** |
-| 65 | `drill` | practice | Given a mode and a user, say what happens |
+| 54 | `intro` | video | Twelve bits that decide everything — **opening** |
+| 55 | `user-group-other` | reading | Three audiences, three bits each, and which one applies to you |
+| 56 | `reading-the-mode` | reading | `-rwxr-xr--` character by character, including the first one |
+| 57 | `octal` | reading | 755 and 644, and the arithmetic that produces them |
+| 58 | `chmod` | reading | Symbolic and numeric, `-R`, and what recursion does to directories |
+| 59 | `directory-bits` | reading | What `x` means on a directory — and the readable directory you cannot enter |
+| 60 | `chown-chgrp` | reading | Ownership, and why giving a file away needs root |
+| 61 | `groups` | reading | Primary and supplementary, `id`, `groups`, and the group as the unit of sharing |
+| 62 | `umask` | reading | The mask that decides what a new file is born with |
+| 63 | `special-bits` | reading | setuid, setgid and the sticky bit: why `/tmp` needs one and `passwd` the other |
+| 64 | `root-and-sudo` | reading | root, `su`, `sudo`, `sudoers` — and why `sudo` beats logging in as root |
+| 65 | `sudo-in-practice` | reading | `sudo -i`, the redirect that still fails under sudo, `sudo !!`, and the password timeout |
+| 66 | `acl-and-mac` | reading | Where twelve bits run out: `getfacl`/`setfacl`, and SELinux and AppArmor named honestly |
+| 67 | `permission-denied` | video | Five denials, each diagnosed to its actual cause — **demonstration** |
+| 68 | `closing` | video | Permissions as a question about audiences, and the denial you should now be able to name out loud — **closing** |
+| 69 | `drill` | practice | Given a mode and a user, say what happens |
 
 **`sudo-in-practice` exists because of one line**: `sudo echo x > /root/f` fails, and it fails for
 a reason — the redirect is the shell's, and the shell is not root — that a student cannot derive
@@ -232,21 +251,22 @@ answer to it online is a fix without an explanation.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 66 | `intro` | video | Who is on the machine, and what is running when nobody is — **opening** |
-| 67 | `what-a-user-is` | reading | `/etc/passwd`, UID, shell and home; the system users that are not people |
-| 68 | `shadow-and-passwords` | reading | `/etc/shadow`, hashing, `passwd`, and password ageing |
-| 69 | `managing-users` | reading | `useradd`/`adduser`, `usermod`, `userdel`, `groupadd` — and the home directory that stays behind |
-| 70 | `login-and-sessions` | reading | Login against interactive shells, `who`, `w`, `last`, and which startup file runs when |
-| 71 | `ssh` | reading | Reaching another machine: keys over passwords, `~/.ssh`, and the fingerprint it asks you about |
-| 72 | `what-a-service-is` | reading | A program that outlives your session, and the daemon it used to be called |
-| 73 | `init-and-pid-1` | reading | What starts everything: SysV init, Upstart, systemd, and why there was an argument |
-| 74 | `systemctl` | reading | start, stop, restart, reload, enable, disable, status — the six verbs, and that enable is not start |
-| 75 | `reading-status` | reading | `systemctl status` line by line: active, enabled, the PID, and the log lines at the bottom |
-| 76 | `unit-files` | reading | `[Unit]`, `[Service]`, `[Install]`; where they live, which copy wins, and `systemctl edit` |
-| 77 | `journalctl` | reading | `-u`, `-f`, `--since`, `-p`, and a log that survives a reboot |
-| 78 | `targets-and-boot` | reading | Targets instead of runlevels, `systemd-analyze`, and the machine that will not come up |
-| 79 | `a-service-that-fails` | video | A unit written, broken, and read back out of the journal — **demonstration** |
-| 80 | `drill` | practice | Read a status, choose a verb, find the log |
+| 70 | `intro` | video | Who is on the machine, and what is running when nobody is — **opening** |
+| 71 | `what-a-user-is` | reading | `/etc/passwd`, UID, shell and home; the system users that are not people |
+| 72 | `shadow-and-passwords` | reading | `/etc/shadow`, hashing, `passwd`, and password ageing |
+| 73 | `managing-users` | reading | `useradd`/`adduser`, `usermod`, `userdel`, `groupadd` — and the home directory that stays behind |
+| 74 | `login-and-sessions` | reading | Login against interactive shells, `who`, `w`, `last`, and which startup file runs when |
+| 75 | `ssh` | reading | Reaching another machine: keys over passwords, `~/.ssh`, and the fingerprint it asks you about |
+| 76 | `what-a-service-is` | reading | A program that outlives your session, and the daemon it used to be called |
+| 77 | `init-and-pid-1` | reading | What starts everything: SysV init, Upstart, systemd, and why there was an argument |
+| 78 | `systemctl` | reading | start, stop, restart, reload, enable, disable, status — the six verbs, and that enable is not start |
+| 79 | `reading-status` | reading | `systemctl status` line by line: active, enabled, the PID, and the log lines at the bottom |
+| 80 | `unit-files` | reading | `[Unit]`, `[Service]`, `[Install]`; where they live, which copy wins, and `systemctl edit` |
+| 81 | `journalctl` | reading | `-u`, `-f`, `--since`, `-p`, and a log that survives a reboot |
+| 82 | `targets-and-boot` | reading | Targets instead of runlevels, `systemd-analyze`, and the machine that will not come up |
+| 83 | `a-service-that-fails` | video | A unit written, broken, and read back out of the journal — **demonstration** |
+| 84 | `closing` | video | The machine as somewhere other people and other programs also are, whether or not you are logged in — **closing** |
+| 85 | `drill` | practice | Read a status, choose a verb, find the log |
 
 **`ssh` is in a lesson whose title does not mention it**, deliberately. Nothing else in this
 course is where it fits, every machine these students will meet is reached over it, and `networks`
@@ -258,43 +278,45 @@ tunnels and hardening are not.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 81 | `intro` | video | A program is a file; a process is a file that is happening — **opening** |
-| 82 | `what-a-process-is` | reading | PID, PPID, the process table, and what a process owns |
-| 83 | `lifecycle` | reading | fork, exec, exit, wait — and the parent that has to collect |
-| 84 | `states` | reading | Running, sleeping, stopped, zombie and uninterruptible, read off the state column |
-| 85 | `ps` | reading | `ps aux` and `ps -ef`, the two dialects, and the columns that matter |
-| 86 | `pstree-and-parents` | reading | The tree, orphans, and reparenting to PID 1 |
-| 87 | `top-and-htop` | reading | The live view, and what the load average is really counting |
-| 88 | `signals` | reading | Numbered messages: TERM, KILL, HUP, INT, STOP — and which ones a program can refuse |
-| 89 | `kill` | reading | `kill`, `killall`, `pkill`, and why `-9` is the last resort rather than the first |
-| 90 | `jobs` | reading | Foreground and background, `&`, `Ctrl+Z`, `bg`, `fg`, `jobs` |
-| 91 | `surviving-the-hangup` | reading | `nohup`, `disown`, and `screen`/`tmux` named for the SSH session that drops |
-| 92 | `priority` | reading | `nice` and `renice` — and what a priority is not |
-| 93 | `file-descriptors` | reading | 0, 1, 2 and `/proc/<pid>/fd`; `lsof`, and the deleted file still holding the disk |
-| 94 | `exit-status` | reading | `$?`, the conventions, and the 130 that means somebody pressed `Ctrl+C` |
-| 95 | `a-runaway` | video | Finding and stopping a process that is eating the machine — **demonstration** |
-| 96 | `drill` | practice | Read a `ps` line, choose a signal, explain a state |
+| 86 | `intro` | video | A program is a file; a process is a file that is happening — **opening** |
+| 87 | `what-a-process-is` | reading | PID, PPID, the process table, and what a process owns |
+| 88 | `lifecycle` | reading | fork, exec, exit, wait — and the parent that has to collect |
+| 89 | `states` | reading | Running, sleeping, stopped, zombie and uninterruptible, read off the state column |
+| 90 | `ps` | reading | `ps aux` and `ps -ef`, the two dialects, and the columns that matter |
+| 91 | `pstree-and-parents` | reading | The tree, orphans, and reparenting to PID 1 |
+| 92 | `top-and-htop` | reading | The live view, and what the load average is really counting |
+| 93 | `signals` | reading | Numbered messages: TERM, KILL, HUP, INT, STOP — and which ones a program can refuse |
+| 94 | `kill` | reading | `kill`, `killall`, `pkill`, and why `-9` is the last resort rather than the first |
+| 95 | `jobs` | reading | Foreground and background, `&`, `Ctrl+Z`, `bg`, `fg`, `jobs` |
+| 96 | `surviving-the-hangup` | reading | `nohup`, `disown`, and `screen`/`tmux` named for the SSH session that drops |
+| 97 | `priority` | reading | `nice` and `renice` — and what a priority is not |
+| 98 | `file-descriptors` | reading | 0, 1, 2 and `/proc/<pid>/fd`; `lsof`, and the deleted file still holding the disk |
+| 99 | `exit-status` | reading | `$?`, the conventions, and the 130 that means somebody pressed `Ctrl+C` |
+| 100 | `a-runaway` | video | Finding and stopping a process that is eating the machine — **demonstration** |
+| 101 | `closing` | video | Processes as the thing you can always go and look at when nothing else explains it — **closing** |
+| 102 | `drill` | practice | Read a `ps` line, choose a signal, explain a state |
 
 **Lesson 7 · Package managers: apt, dnf/yum and zypper** — `le-gkrq1aza`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 97 | `intro` | video | Software you do not download — **opening** |
-| 98 | `why-a-package-manager` | reading | The installer that does not exist, and the trust that replaces it |
-| 99 | `anatomy-of-a-package` | reading | Files, metadata, dependencies and the scripts that run on install |
-| 100 | `repositories` | reading | What a repository is, mirrors, and the signature that makes any of it safe |
-| 101 | `apt` | reading | `update`, `upgrade`, `install`, `remove`, `purge`, `search`, `show` — and update not being upgrade |
-| 102 | `dnf-yum` | reading | The same verbs in the Red Hat family, plus groups and `history undo` |
-| 103 | `zypper` | reading | SUSE's, and `zypper patch`, which is not quite upgrade |
-| 104 | `dependencies` | reading | Resolution, conflicts, and what "held back" is telling you |
-| 105 | `low-level` | reading | `dpkg` and `rpm` underneath, and the times you have to go there |
-| 106 | `versions-and-pinning` | reading | Which version you actually get, pinning, and downgrading |
-| 107 | `outside-the-repository` | reading | Third-party repos, PPAs, loose `.deb`/`.rpm`, Snap, Flatpak, AppImage — in order of risk |
-| 108 | `building-from-source` | reading | `./configure && make && make install`, and why it is the last option and not the first |
-| 109 | `updates-and-reboots` | reading | Security updates, unattended upgrades, and the kernel update that does need one |
-| 110 | `where-did-this-come-from` | reading | `dpkg -S`, `rpm -qf`, `apt-file`: answering "what installed this file?" |
-| 111 | `installing-something` | video | One tool installed on three distributions — **demonstration** |
-| 112 | `drill` | practice | Choose the command, read the failure, decide the source |
+| 103 | `intro` | video | Software you do not download — **opening** |
+| 104 | `why-a-package-manager` | reading | The installer that does not exist, and the trust that replaces it |
+| 105 | `anatomy-of-a-package` | reading | Files, metadata, dependencies and the scripts that run on install |
+| 106 | `repositories` | reading | What a repository is, mirrors, and the signature that makes any of it safe |
+| 107 | `apt` | reading | `update`, `upgrade`, `install`, `remove`, `purge`, `search`, `show` — and update not being upgrade |
+| 108 | `dnf-yum` | reading | The same verbs in the Red Hat family, plus groups and `history undo` |
+| 109 | `zypper` | reading | SUSE's, and `zypper patch`, which is not quite upgrade |
+| 110 | `dependencies` | reading | Resolution, conflicts, and what "held back" is telling you |
+| 111 | `low-level` | reading | `dpkg` and `rpm` underneath, and the times you have to go there |
+| 112 | `versions-and-pinning` | reading | Which version you actually get, pinning, and downgrading |
+| 113 | `outside-the-repository` | reading | Third-party repos, PPAs, loose `.deb`/`.rpm`, Snap, Flatpak, AppImage — in order of risk |
+| 114 | `building-from-source` | reading | `./configure && make && make install`, and why it is the last option and not the first |
+| 115 | `updates-and-reboots` | reading | Security updates, unattended upgrades, and the kernel update that does need one |
+| 116 | `where-did-this-come-from` | reading | `dpkg -S`, `rpm -qf`, `apt-file`: answering "what installed this file?" |
+| 117 | `installing-something` | video | One tool installed on three distributions — **demonstration** |
+| 118 | `closing` | video | Trust, versions, and the moment you decide to step outside the repository anyway — **closing** |
+| 119 | `drill` | practice | Choose the command, read the failure, decide the source |
 
 **`outside-the-repository` is the section that keeps the lesson honest.** Everything before it
 describes a system where software is signed, versioned and removable; the student's actual next
@@ -308,49 +330,51 @@ judgement they can make.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 113 | `intro` | video | Small programs, one job each, and a pipe between them — **opening** |
-| 114 | `text-is-the-interface` | reading | Why everything speaks lines, and what that buys you |
-| 115 | `stdin-stdout-stderr` | reading | Three streams, and the one that does not go down the pipe |
-| 116 | `redirection` | reading | `>`, `>>`, `<`, `2>`, `2>&1`, `&>` and `/dev/null` |
-| 117 | `pipes` | reading | `\|`, and the filter as a shape you will use for the rest of your career |
-| 118 | `grep` | reading | `-i`, `-v`, `-r`, `-n`, `-c`, `-l`, `-w`, `-A`/`-B`/`-C` |
-| 119 | `regex-basics` | reading | Anchors, classes, quantifiers, groups — and where `grep -E` changes the rules |
-| 120 | `cut-and-columns` | reading | `cut`, `paste`, `column`, and the delimiter that is not a space |
-| 121 | `sort` | reading | `-n`, `-r`, `-k`, `-u`, `-t`, and the locale that changes the answer |
-| 122 | `uniq` | reading | Why it needs sorted input, and `sort \| uniq -c \| sort -rn` as the idiom to keep |
-| 123 | `small-filters` | reading | `tr`, `rev`, `fold`, `nl`, `tee` |
-| 124 | `sed` | reading | Substitution, addresses, delete and print, `-i` and the backup it should be making |
-| 125 | `awk` | reading | Records and fields, patterns and actions, `BEGIN`/`END`, `NR` and `NF` |
-| 126 | `awk-further` | reading | Variables, arithmetic, and the one-line report |
-| 127 | `xargs` | reading | Turning a list into arguments; `-n`, `-I`, `-0`, and `find -print0` |
-| 128 | `diff-and-patch` | reading | Comparing two files, and reading a unified diff — which is also every code review |
-| 129 | `beyond-lines` | reading | Where lines stop being enough: `jq` for JSON, and CSV's quoting |
-| 130 | `a-log-file` | video | A real question answered from a real log, in one pipeline — **demonstration** |
-| 131 | `drill` | practice | Predict the output; build the pipeline |
+| 120 | `intro` | video | Small programs, one job each, and a pipe between them — **opening** |
+| 121 | `text-is-the-interface` | reading | Why everything speaks lines, and what that buys you |
+| 122 | `stdin-stdout-stderr` | reading | Three streams, and the one that does not go down the pipe |
+| 123 | `redirection` | reading | `>`, `>>`, `<`, `2>`, `2>&1`, `&>` and `/dev/null` |
+| 124 | `pipes` | reading | `\|`, and the filter as a shape you will use for the rest of your career |
+| 125 | `grep` | reading | `-i`, `-v`, `-r`, `-n`, `-c`, `-l`, `-w`, `-A`/`-B`/`-C` |
+| 126 | `regex-basics` | reading | Anchors, classes, quantifiers, groups — and where `grep -E` changes the rules |
+| 127 | `cut-and-columns` | reading | `cut`, `paste`, `column`, and the delimiter that is not a space |
+| 128 | `sort` | reading | `-n`, `-r`, `-k`, `-u`, `-t`, and the locale that changes the answer |
+| 129 | `uniq` | reading | Why it needs sorted input, and `sort \| uniq -c \| sort -rn` as the idiom to keep |
+| 130 | `small-filters` | reading | `tr`, `rev`, `fold`, `nl`, `tee` |
+| 131 | `sed` | reading | Substitution, addresses, delete and print, `-i` and the backup it should be making |
+| 132 | `awk` | reading | Records and fields, patterns and actions, `BEGIN`/`END`, `NR` and `NF` |
+| 133 | `awk-further` | reading | Variables, arithmetic, and the one-line report |
+| 134 | `xargs` | reading | Turning a list into arguments; `-n`, `-I`, `-0`, and `find -print0` |
+| 135 | `diff-and-patch` | reading | Comparing two files, and reading a unified diff — which is also every code review |
+| 136 | `beyond-lines` | reading | Where lines stop being enough: `jq` for JSON, and CSV's quoting |
+| 137 | `a-log-file` | video | A real question answered from a real log, in one pipeline — **demonstration** |
+| 138 | `closing` | video | Why the pipeline is the skill, rather than any one of the commands in it — **closing** |
+| 139 | `drill` | practice | Predict the output; build the pipeline |
 
 **Lesson 9 · Bash scripting: variables, conditionals, loops and functions** — `le-82pt20zt`
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 132 | `intro` | video | The commands you already know, in a file — **opening** |
-| 133 | `a-script-is-a-file` | reading | Shebang, `chmod +x`, PATH, and `./script` against `bash script` |
-| 134 | `variables` | reading | Assignment with no spaces, `$VAR` against `${VAR}`, and why you quote |
-| 135 | `quoting` | reading | Single, double, backslash — and the space in a filename that breaks everything |
-| 136 | `expansion` | reading | `$(…)`, `$((…))`, `${VAR:-default}`, and the order the shell does it in |
-| 137 | `arguments` | reading | `$1`, `$@`, `$#`, `shift`, and `"$@"` against `$@` |
-| 138 | `environment` | reading | Environment against shell variables, `export`, `env`, and PATH itself |
-| 139 | `conditionals` | reading | `if`, `test`, `[ ]`, `[[ ]]`, string and numeric comparison, file tests |
-| 140 | `chaining` | reading | `&&`, `\|\|`, `!`, and the exit status they are reading |
-| 141 | `loops` | reading | `for`, `while`, `until`, `read`, and looping over lines without losing them |
-| 142 | `case` | reading | `case`, and the argument parser it makes |
-| 143 | `functions` | reading | Defining, arguments, `return` against output, and `local` |
-| 144 | `arrays` | reading | Indexed arrays, `${arr[@]}`, and where bash stops being the right tool |
-| 145 | `input-output` | reading | `read`, heredocs, and prompting without being lied to |
-| 146 | `errors-and-traps` | reading | `set -euo pipefail` one flag at a time, `trap`, and cleaning up on exit |
-| 147 | `debugging` | reading | `bash -x`, `shellcheck`, and the three bugs everybody writes |
-| 148 | `when-not-to` | reading | The point at which a shell script should have been a program |
-| 149 | `a-real-script` | video | A backup script written from nothing, including the bugs — **demonstration** |
-| 150 | `drill` | practice | Read a script and say what it does; fix one that is wrong |
+| 140 | `intro` | video | The commands you already know, in a file — **opening** |
+| 141 | `a-script-is-a-file` | reading | Shebang, `chmod +x`, PATH, and `./script` against `bash script` |
+| 142 | `variables` | reading | Assignment with no spaces, `$VAR` against `${VAR}`, and why you quote |
+| 143 | `quoting` | reading | Single, double, backslash — and the space in a filename that breaks everything |
+| 144 | `expansion` | reading | `$(…)`, `$((…))`, `${VAR:-default}`, and the order the shell does it in |
+| 145 | `arguments` | reading | `$1`, `$@`, `$#`, `shift`, and `"$@"` against `$@` |
+| 146 | `environment` | reading | Environment against shell variables, `export`, `env`, and PATH itself |
+| 147 | `conditionals` | reading | `if`, `test`, `[ ]`, `[[ ]]`, string and numeric comparison, file tests |
+| 148 | `chaining` | reading | `&&`, `\|\|`, `!`, and the exit status they are reading |
+| 149 | `loops` | reading | `for`, `while`, `until`, `read`, and looping over lines without losing them |
+| 150 | `case` | reading | `case`, and the argument parser it makes |
+| 151 | `functions` | reading | Defining, arguments, `return` against output, and `local` |
+| 152 | `arrays` | reading | Indexed arrays, `${arr[@]}`, and where bash stops being the right tool |
+| 153 | `input-output` | reading | `read`, heredocs, and prompting without being lied to |
+| 154 | `errors-and-traps` | reading | `set -euo pipefail` one flag at a time, `trap`, and cleaning up on exit |
+| 155 | `debugging` | reading | `bash -x`, `shellcheck`, and the three bugs everybody writes |
+| 156 | `when-not-to` | reading | The point at which a shell script should have been a program |
+| 157 | `a-real-script` | video | A backup script written from nothing, including the bugs — **demonstration** |
+| 158 | `closing` | video | When a script is the right answer, and the line past which it stops being one — **closing** |
+| 159 | `drill` | practice | Read a script and say what it does; fix one that is wrong |
 
 **`quoting` and `errors-and-traps` are the two sections that make the rest survive contact.**
 Unquoted variables and a script that keeps going after a failed command are not stylistic
@@ -362,20 +386,21 @@ produces confidence without cover.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 151 | `intro` | video | A shell that pipes objects — **opening** |
-| 152 | `objects-not-text` | reading | The one difference every other difference follows from |
-| 153 | `cmdlets` | reading | Verb-noun, and discoverability as a design decision |
-| 154 | `the-pipeline` | reading | Piping objects: `Select-Object`, `Where-Object`, `ForEach-Object`, `Sort-Object` |
-| 155 | `equivalents` | reading | The table — `ls`/`Get-ChildItem`, `cat`/`Get-Content`, `grep`/`Select-String` — and the aliases that mislead you |
-| 156 | `help-system` | reading | `Get-Help`, `Get-Command`, `Get-Member`: finding out without leaving the shell |
-| 157 | `providers` | reading | The filesystem, the registry and the certificate store, all as drives |
-| 158 | `scripting` | reading | Variables, `if`, `foreach`, functions, `.ps1` |
-| 159 | `execution-policy` | reading | Why your script will not run, and what the policy is and is not for |
-| 160 | `remoting` | reading | `Enter-PSSession`, `Invoke-Command`, and WinRM against SSH |
-| 161 | `powershell-on-linux` | reading | PowerShell 7 is cross-platform; when that is the right answer |
-| 162 | `both-at-once` | reading | WSL in both directions, paths across the boundary, and line endings for the second time |
-| 163 | `a-comparison` | video | One task, done twice — **demonstration** |
-| 164 | `drill` | practice | Translate between the two shells; predict what the pipeline carries |
+| 160 | `intro` | video | A shell that pipes objects — **opening** |
+| 161 | `objects-not-text` | reading | The one difference every other difference follows from |
+| 162 | `cmdlets` | reading | Verb-noun, and discoverability as a design decision |
+| 163 | `the-pipeline` | reading | Piping objects: `Select-Object`, `Where-Object`, `ForEach-Object`, `Sort-Object` |
+| 164 | `equivalents` | reading | The table — `ls`/`Get-ChildItem`, `cat`/`Get-Content`, `grep`/`Select-String` — and the aliases that mislead you |
+| 165 | `help-system` | reading | `Get-Help`, `Get-Command`, `Get-Member`: finding out without leaving the shell |
+| 166 | `providers` | reading | The filesystem, the registry and the certificate store, all as drives |
+| 167 | `scripting` | reading | Variables, `if`, `foreach`, functions, `.ps1` |
+| 168 | `execution-policy` | reading | Why your script will not run, and what the policy is and is not for |
+| 169 | `remoting` | reading | `Enter-PSSession`, `Invoke-Command`, and WinRM against SSH |
+| 170 | `powershell-on-linux` | reading | PowerShell 7 is cross-platform; when that is the right answer |
+| 171 | `both-at-once` | reading | WSL in both directions, paths across the boundary, and line endings for the second time |
+| 172 | `a-comparison` | video | One task, done twice — **demonstration** |
+| 173 | `closing` | video | What crossing between two shells actually asks of you, and what it does not — **closing** |
+| 174 | `drill` | practice | Translate between the two shells; predict what the pipeline carries |
 
 ## Volume V — Keeping it running
 
@@ -383,22 +408,23 @@ produces confidence without cover.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 165 | `intro` | video | "It is slow" is not a diagnosis — **opening** |
-| 166 | `what-slow-means` | reading | Four resources and a method: measure before you believe anybody, including yourself |
-| 167 | `load-average` | reading | The three numbers, what Linux counts in them, and reading them per core |
-| 168 | `cpu` | reading | `top`'s CPU line: user, system, nice, iowait — and steal, which means it is not your machine |
-| 169 | `memory` | reading | `free -h`, and why "used" is not what you think: cache is not waste |
-| 170 | `swap` | reading | Swappiness, and the difference between using swap and thrashing |
-| 171 | `oom` | reading | The OOM killer, how to find out it fired, and what it chose |
-| 172 | `disk-space` | reading | `df` against `du`, inodes, and the full disk with nothing on it |
-| 173 | `disk-io` | reading | `iostat`, `iotop`, await and utilisation |
-| 174 | `network-quickly` | reading | `ss`, `ip`, `ping`, and the port that is already in use |
-| 175 | `per-process` | reading | Attributing it to something: `pidstat`, `/proc/<pid>` |
-| 176 | `tracing` | reading | `strace` and `lsof` as two questions — what is it calling, and what is it holding |
-| 177 | `limits` | reading | `ulimit`, cgroups named, and the container that is slower than its host |
-| 178 | `a-method` | reading | A checklist that ends at a cause rather than at a graph |
-| 179 | `a-slow-machine` | video | One real diagnosis, from complaint to cause — **demonstration** |
-| 180 | `drill` | practice | Given four numbers, say which resource is the problem |
+| 175 | `intro` | video | "It is slow" is not a diagnosis — **opening** |
+| 176 | `what-slow-means` | reading | Four resources and a method: measure before you believe anybody, including yourself |
+| 177 | `load-average` | reading | The three numbers, what Linux counts in them, and reading them per core |
+| 178 | `cpu` | reading | `top`'s CPU line: user, system, nice, iowait — and steal, which means it is not your machine |
+| 179 | `memory` | reading | `free -h`, and why "used" is not what you think: cache is not waste |
+| 180 | `swap` | reading | Swappiness, and the difference between using swap and thrashing |
+| 181 | `oom` | reading | The OOM killer, how to find out it fired, and what it chose |
+| 182 | `disk-space` | reading | `df` against `du`, inodes, and the full disk with nothing on it |
+| 183 | `disk-io` | reading | `iostat`, `iotop`, await and utilisation |
+| 184 | `network-quickly` | reading | `ss`, `ip`, `ping`, and the port that is already in use |
+| 185 | `per-process` | reading | Attributing it to something: `pidstat`, `/proc/<pid>` |
+| 186 | `tracing` | reading | `strace` and `lsof` as two questions — what is it calling, and what is it holding |
+| 187 | `limits` | reading | `ulimit`, cgroups named, and the container that is slower than its host |
+| 188 | `a-method` | reading | A checklist that ends at a cause rather than at a graph |
+| 189 | `a-slow-machine` | video | One real diagnosis, from complaint to cause — **demonstration** |
+| 190 | `closing` | video | A method you can repeat, and the honesty it needs about what you actually measured — **closing** |
+| 191 | `drill` | practice | Given four numbers, say which resource is the problem |
 
 **`oom` and `disk-space` are the two that get skipped and then cost a night.** A process that
 vanished with no error in its own log, and `df` saying the disk is full while `du` says it is
@@ -410,21 +436,22 @@ where it is.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 181 | `intro` | video | The machine with no desktop and the file you have to fix — **opening** |
-| 182 | `why-a-terminal-editor` | reading | Editing over SSH, in a container, on a server that is not booting |
-| 183 | `nano` | reading | Open, edit, save, exit, and the bottom bar that tells you how |
-| 184 | `vim-modes` | reading | Normal, insert, visual, command — the idea before a single key |
-| 185 | `vim-survival` | reading | Ten commands that are enough, starting with how to leave |
-| 186 | `vim-moving` | reading | Words, lines, screens, `gg` and `G`, search |
-| 187 | `vim-editing` | reading | Operators and motions, `dd`, `yy`, `p`, `u`, and `.` |
-| 188 | `vim-files` | reading | `:w`, `:q`, `:wq`, `:q!`, `:e`; buffers and splits, briefly |
-| 189 | `vim-config` | reading | `.vimrc`, and three settings actually worth having |
-| 190 | `emacs` | reading | The other one: buffers, `C-x C-s`, and why people choose it |
-| 191 | `which-one` | reading | Choosing — and that `vi` is the one guaranteed to be on the machine |
-| 192 | `editors-other-commands-open` | reading | `EDITOR`, `visudo`, `systemctl edit`, `crontab -e`: the editor you did not choose |
-| 193 | `not-opening-an-editor` | reading | When `sed -i`, `tee` or a heredoc is the right answer instead |
-| 194 | `a-config-fix` | video | A real config edited over SSH and the service restarted — **demonstration** |
-| 195 | `drill` | practice | Say what a key sequence does; get out of a mode |
+| 192 | `intro` | video | The machine with no desktop and the file you have to fix — **opening** |
+| 193 | `why-a-terminal-editor` | reading | Editing over SSH, in a container, on a server that is not booting |
+| 194 | `nano` | reading | Open, edit, save, exit, and the bottom bar that tells you how |
+| 195 | `vim-modes` | reading | Normal, insert, visual, command — the idea before a single key |
+| 196 | `vim-survival` | reading | Ten commands that are enough, starting with how to leave |
+| 197 | `vim-moving` | reading | Words, lines, screens, `gg` and `G`, search |
+| 198 | `vim-editing` | reading | Operators and motions, `dd`, `yy`, `p`, `u`, and `.` |
+| 199 | `vim-files` | reading | `:w`, `:q`, `:wq`, `:q!`, `:e`; buffers and splits, briefly |
+| 200 | `vim-config` | reading | `.vimrc`, and three settings actually worth having |
+| 201 | `emacs` | reading | The other one: buffers, `C-x C-s`, and why people choose it |
+| 202 | `which-one` | reading | Choosing — and that `vi` is the one guaranteed to be on the machine |
+| 203 | `editors-other-commands-open` | reading | `EDITOR`, `visudo`, `systemctl edit`, `crontab -e`: the editor you did not choose |
+| 204 | `not-opening-an-editor` | reading | When `sed -i`, `tee` or a heredoc is the right answer instead |
+| 205 | `a-config-fix` | video | A real config edited over SSH and the service restarted — **demonstration** |
+| 206 | `closing` | video | Enough of an editor never to be stuck, and permission to learn the rest slowly — **closing** |
+| 207 | `drill` | practice | Say what a key sequence does; get out of a mode |
 
 **`editors-other-commands-open` is the section this lesson exists for.** A student who never
 chooses an editor will still be dropped into one by `crontab -e` or `visudo` — and `visudo` in
@@ -435,21 +462,22 @@ your own machine.
 
 | | slug | kind | covers |
 |---|---|---|---|
-| 196 | `intro` | video | The work nobody should have to remember — **opening** |
-| 197 | `why-schedule` | reading | Backups, rotation, cleanup, reports: what a machine does when you are asleep |
-| 198 | `crontab` | reading | `crontab -e`, `-l`, `-r`; user crontabs against `/etc/crontab` and `cron.d` |
-| 199 | `the-five-fields` | reading | Minute, hour, day, month, weekday; ranges, lists and steps |
-| 200 | `cron-gotchas` | reading | The environment cron does not give you, PATH, the bare `%`, and the relative path that worked by hand |
-| 201 | `cron-output` | reading | Where output goes, MAILTO, and redirecting to a log on purpose |
-| 202 | `anacron-and-at` | reading | `cron.daily` and friends, anacron for a machine that is off, `at` for once |
-| 203 | `systemd-timers` | reading | The pair: a service unit, and a timer that starts it |
-| 204 | `oncalendar` | reading | `OnCalendar`, `OnBootSec`, and `systemd-analyze calendar` to check before you wait a day |
-| 205 | `timer-advantages` | reading | `Persistent`, randomised delay, logs in the journal, dependencies on other units |
-| 206 | `cron-or-timer` | reading | Choosing — and why a container usually has neither |
-| 207 | `idempotence-and-locking` | reading | The job that must not run twice, and `flock` |
-| 208 | `monitoring-jobs` | reading | Finding out a job stopped running, before the backup you needed was not there |
-| 209 | `a-scheduled-backup` | video | Lesson 9's script, scheduled both ways, and made to fail on purpose — **demonstration** |
-| 210 | `drill` | practice | Read a cron line; convert it to a timer; find the mistake |
+| 208 | `intro` | video | The work nobody should have to remember — **opening** |
+| 209 | `why-schedule` | reading | Backups, rotation, cleanup, reports: what a machine does when you are asleep |
+| 210 | `crontab` | reading | `crontab -e`, `-l`, `-r`; user crontabs against `/etc/crontab` and `cron.d` |
+| 211 | `the-five-fields` | reading | Minute, hour, day, month, weekday; ranges, lists and steps |
+| 212 | `cron-gotchas` | reading | The environment cron does not give you, PATH, the bare `%`, and the relative path that worked by hand |
+| 213 | `cron-output` | reading | Where output goes, MAILTO, and redirecting to a log on purpose |
+| 214 | `anacron-and-at` | reading | `cron.daily` and friends, anacron for a machine that is off, `at` for once |
+| 215 | `systemd-timers` | reading | The pair: a service unit, and a timer that starts it |
+| 216 | `oncalendar` | reading | `OnCalendar`, `OnBootSec`, and `systemd-analyze calendar` to check before you wait a day |
+| 217 | `timer-advantages` | reading | `Persistent`, randomised delay, logs in the journal, dependencies on other units |
+| 218 | `cron-or-timer` | reading | Choosing — and why a container usually has neither |
+| 219 | `idempotence-and-locking` | reading | The job that must not run twice, and `flock` |
+| 220 | `monitoring-jobs` | reading | Finding out a job stopped running, before the backup you needed was not there |
+| 221 | `a-scheduled-backup` | video | Lesson 9's script, scheduled both ways, and made to fail on purpose — **demonstration** |
+| 222 | `closing` | video | The last section of the course: what to do in the first week you are responsible for a machine — **closing** |
+| 223 | `drill` | practice | Read a cron line; convert it to a timer; find the mistake |
 
 **`monitoring-jobs` closes the course**, and it is the one a syllabus never has room for. A
 scheduled job's failure mode is silence: it does not error where anybody is looking, and the
@@ -480,7 +508,7 @@ reading IS the task. The ones where the student should be able to produce the an
 
 ## What C-37 cost this sheet, counted once
 
-There was no earlier design to compare against: this sheet went from a budget to 209 sections in
+There was no earlier design to compare against: this sheet went from a budget to 223 sections in
 one pass. So the count below is of sections that a design working to ~150 would not have
 written — each checked by asking what a student would not know at the end of the course without
 it, rather than whether the lesson felt full.
@@ -558,6 +586,6 @@ what lesson 13 asks: to schedule a job you wrote yourself and know whether it ra
 
 **2 ·** **It is the strongest argument for shell as the sandbox's first runtime, ahead of `git`.** `git` would be improved by a shell; this course *is* a shell. And it is free, so the argument is about conversion rather than retention.
 
-**3 ·** **210 sections against a budget of ~150, and the budget was the thing that was wrong.** The only measured density in the repository puts 70 hours at 164, and this sheet's sections are shorter than that one's because a command can be taught and then run. The declared hours do not move; see *What a section is worth here*.
+**3 ·** **223 sections against a budget of ~150, and the budget was the thing that was wrong.** The only measured density in the repository puts 70 hours at 164, and this sheet's sections are shorter than that one's because a command can be taught and then run. The declared hours do not move; see *What a section is worth here*.
 
 **4 ·** **About a fifth of the exercises want a type that has no grader.** They are written anyway and answered `correct: null` — `EXECUTOR.md` is why that is a degradation and not a hole. It is also the clearest volume argument for building the executor that exists in the catalogue.
