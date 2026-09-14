@@ -446,6 +446,37 @@ $('#account').addEventListener('click', async (e) => {
    returns on the next visit until the address is confirmed. Painted here (the
    container is in window.I18N_DYNAMIC) so it survives a screen re-render and picks
    up the language on the next state change, exactly like the account menu. */
+/* WHILE THE CATALOGUE IS MOSTLY UNWRITTEN, SAY SO ON EVERY SCREEN.
+
+   TURN IT OFF BY CHANGING THIS ONE LINE, and what has to be true first is not
+   a date: it is that somebody arriving at the catalogue can tell a written
+   course from an announced one without clicking. Today two courses of a
+   hundred and twenty-two have any material at all, and the catalogue draws
+   all of them the same way.
+
+   IT IS A CONSTANT AND NOT A SETTING. A toggle would be a row somebody could
+   change without a release, which is a second source of truth for a fact this
+   repository already holds — `C-14` keeps the state in git, and this is state.
+   One line, one review, one deploy.
+
+   IT IS NOT `SCHOOLING_ENV`. That says which environment the code runs in, and
+   this says which stage the product is at. They disagree exactly where it
+   matters: production, right now, is a live address serving an unfinished
+   catalogue — and an environment flag would hide the notice precisely there. */
+const UNDER_CONSTRUCTION = true;
+
+function paintDevBanner() {
+  const el = $('#dev-banner');
+  el.hidden = !UNDER_CONSTRUCTION;
+  document.body.classList.toggle('dev-on', UNDER_CONSTRUCTION);
+  if (!UNDER_CONSTRUCTION) { el.innerHTML = ''; return; }
+
+  el.innerHTML =
+    '<span class="db-text"><strong>' + txt('This platform is being built.') + '</strong> ' +
+    txt('Courses are still being written, and accounts and progress may be reset without notice.') +
+    '</span>';
+}
+
 let bannerDismissed = false;
 function paintVerifyBanner() {
   const el = $('#verify-banner');
@@ -740,6 +771,7 @@ subscribe(() => {
   if (now().session) buildRail(rail, currentPath(), routeParams());
   paintContext();
   paintAccount();
+  paintDevBanner();
   paintVerifyBanner();
   paintViewingBanner();
 });

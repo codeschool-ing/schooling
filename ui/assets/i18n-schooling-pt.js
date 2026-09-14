@@ -374,6 +374,10 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
      that the site was updated while their page sat there. And the second
      sentence hands the moment back to them on purpose — this platform has
      timed exams, and nothing here reloads anything by itself. */
+  'This platform is being built.': 'Esta plataforma está em construção.',
+  'Courses are still being written, and accounts and progress may be reset without notice.':
+    'Os cursos ainda estão sendo escritos, e contas e progresso podem ser apagados sem aviso.',
+
   'This page has been open since before the last update. Reload it when you are ready.':
     'Esta página está aberta desde antes da última atualização. Recarregue quando quiser.',
   'Reload': 'Recarregar',
