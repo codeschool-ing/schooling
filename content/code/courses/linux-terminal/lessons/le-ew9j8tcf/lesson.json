@@ -1,0 +1,63 @@
+{
+  "id": "le-ew9j8tcf",
+  "title": "Users, services and systemd",
+  "sections": [
+    {
+      "id": "se-9hd7bkmx",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-qxbr2ypq",
+          "version": 1,
+          "script": "Everything you have done so far, you did while sitting at a machine. This lesson is about the machine when you are not. {{away}} Two halves, and they are the same subject from two sides. The first is who is on this computer. Not who is logged in — who exists. Run one command on a fresh install and you will find thirty accounts, and about one of them is a person. The rest are there so that a web server is not root, so that a database is not root, so that when one of them is broken into, what the attacker gets is a web server rather than a machine. {{accounts}} The second is what is running when nobody is logged in. Those things are called services, and on nearly every Linux machine built in the last decade the thing that starts, stops and watches them is called systemd. It is the piece of software with the strongest opinions and the longest argument attached to it, and you need about seven of its commands. {{services}} I want to be straight with you about one thing before we start. The machine these transcripts were recorded on does not run systemd as process one — it is a container, and containers frequently do not. So the sections on units, on enabling and on verifying a file are recorded here and real, and the two places where a running systemd is needed, you will see a drawing rather than a capture, and I will say so at the time. That is a better deal than a screenshot I made up. {{honest}} We will also spend one section on ssh, because every machine you will ever administer is one you reach over it, and the course has nowhere else to put it. {{ssh}} By the end you should be able to arrive at a machine you have never seen, find out who is on it, find out what it is running, and read why one of those things is not. {{title}}",
+          "seconds": 90,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-qbq42p9j",
+      "slug": "what-a-user-is",
+      "kind": "reading"
+    },
+    {
+      "id": "se-htct2tz6",
+      "slug": "shadow-and-passwords",
+      "kind": "reading"
+    },
+    {
+      "id": "se-mm605m23",
+      "slug": "a-service-that-fails",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-fx7an4rc",
+          "version": 1,
+          "script": "A unit file with three mistakes in it, and one command that finds all three. {{open}} Here is the file. Description spelled wrong by two letters. A restart policy that says maybe. And an ExecStart pointing at a script that is not there. Read it and it looks fine — that is the point of this one. {{file}} Now systemd-analyze verify, and it takes the file rather than a running service, which is why this works on a machine that is not running systemd at all. {{verify}} Three findings, in order. Line two: unknown key name Descriptoin, ignoring. Read the last word — ignoring. It did not fail, it dropped the line, and your service now has no description and no complaint. That is the whole class of systemd bug: a typo in a key name is silence, not an error. {{one}} Line eight: failed to parse service restart specifier, ignoring, maybe. Same shape. The value was wrong, the line was dropped, and the service you thought would restart on failure will not. {{two}} And the last one, which is the only one that mentions the service by name: command does not exist, is not executable. This one would have failed at start, loudly, with a status you could read. It is the least dangerous of the three, and it is the only one people usually catch. {{three}} Fix all three and verify says nothing. Nothing is what success looks like — the same silence lesson one spent a section on. {{fixed}} One command, before you ever start the thing. It costs a second, and it catches the two mistakes that would otherwise cost you an afternoon apiece.",
+          "seconds": 188,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-347smceh",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-522nrdk7",
+          "version": 1,
+          "script": "So the machine is somewhere other people are, and where programs run without anybody watching. {{open}} Three things to carry. The first: most accounts are not people. When you look at a passwd file and find thirty entries and four shells, you are looking at a design decision — one account per service, so that a compromise is bounded. When you install something and it makes an account, that is what it is doing. {{accounts}} The second, and it is the sentence I would most like you to keep: enable is not start. Start is now. Enable is at the next boot. They are different verbs for different moments, and every one of us has restarted a machine and found a service we were sure we had set up simply absent. You saw why in section seventy-eight — enable makes a symlink, and nothing about a symlink starts anything. {{enable}} The third is where to look. A service that is not working has told you why, in two places, and both are one command away: status for what systemd thinks, the journal for what the program said. Read both before you change anything. Most of the time the answer is in the last four lines of one of them. {{look}} And the honest note I owe you. The sections on units and on verifying a file are recorded on this machine and real. The status block and the journal output in sections seventy-nine and eighty-one are drawings, because this machine does not run systemd as process one. When you get to a machine that does, run them; they will look like the drawing and the fields will be where the drawing puts them. {{honest}} Next lesson goes one level down, to processes: the thing a service is made of, and what you do when one of them will not stop. {{next}} Before that, the drill.",
+          "seconds": 68,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-mv0bga1r",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
