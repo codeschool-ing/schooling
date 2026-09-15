@@ -49,6 +49,22 @@
 //
 //	-callout '1:one bar per processor, and this machine has four'
 //
+// A screen that is not the one the program opens on is reached by typing:
+//
+//	-send G            -- vim server.conf      # the ruler now reads 6,1
+//	-send i            -- vim server.conf      # -- INSERT --
+//	-quit '\e:q!\r'    -- vim …                # how this one is left
+//	-quit '^X'         -- nano …               # and how that one is
+//
+// `\e` is Escape and `^X` is a control character, because neither is something
+// a shell hands over on its own. Every key-taking flag reads the same two.
+//
+// `-repaint` is the key that asks for the whole screen again, Ctrl-L by
+// default. It is a flag because the key is not universal: vim and nano redraw,
+// emacs RECENTRES, and a program that paints its whole screen at once — vim on
+// a small file — wants `-repaint ”` so the keystroke does not appear in
+// the picture.
+//
 // # WHAT IT DOES NOT DO
 //
 // It does not make the capture true. The machine has to be worth capturing —
@@ -63,6 +79,7 @@ import (
 	"fmt"
 	"html"
 	"image/color"
+	"io"
 	"os"
 	"os/exec"
 	"strconv"
@@ -132,7 +149,10 @@ func main() {
 		out     = flag.String("out", "", "where to write the SVG (required)")
 		label   = flag.String("label", "", "the figure's aria-label (required)")
 		quitKey = flag.String("quit", "q", "the key that makes the program exit")
+		repaint = flag.String("repaint", "^L", "the key that asks for a full redraw, or empty for none")
 	)
+	var sends sendList
+	flag.Var(&sends, "send", "keys to type before reading, repeatable and in order")
 	var callouts calloutList
 	flag.Var(&callouts, "callout", "a numbered note, as ROW:TEXT, repeatable")
 	flag.Parse()
@@ -147,7 +167,18 @@ func main() {
 		os.Exit(2)
 	}
 
-	screen, err := capture(flag.Args(), *cols, *rows, *warmup, *quiet, *quitKey)
+	repaintKeys, err := keystrokes(*repaint)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "term-capture: -repaint:", err)
+		os.Exit(2)
+	}
+	quitKeys, err := keystrokes(*quitKey)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "term-capture: -quit:", err)
+		os.Exit(2)
+	}
+
+	screen, err := capture(flag.Args(), *cols, *rows, *warmup, *quiet, sends, repaintKeys, quitKeys)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "term-capture:", err)
 		os.Exit(1)
@@ -181,7 +212,8 @@ type cell struct {
 	bold   bool
 }
 
-func capture(argv []string, cols, rows int, warmup, quiet time.Duration, quitKey string) (grid, error) {
+func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
+	keys []string, repaint, quitKey string) (grid, error) {
 	master, slave, err := openPTY(cols, rows)
 	if err != nil {
 		return nil, fmt.Errorf("opening a pseudo-terminal: %w", err)
@@ -215,6 +247,17 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration, quitKey
 	}()
 
 	term := vt.NewSafeEmulator(cols, rows)
+	// read-only afterwards; this unblocks the reply pump below
+	defer func() { _ = term.Close() }()
+
+	// THE PROGRAM ASKS THE TERMINAL QUESTIONS AND HAS TO GET ANSWERS. vim opens
+	// by querying device attributes; an emulator composes the reply and writes
+	// it to an io.Pipe, which BLOCKS until somebody reads it — while holding the
+	// emulator's lock. Nothing drained it in the first version, so reading the
+	// first cell of a vim screen deadlocked against a reply nobody collected.
+	// htop never asks, which is why it never showed.
+	go func() { _, _ = io.Copy(master, term) }()
+
 	var lastWrite atomic.Int64
 	lastWrite.Store(time.Now().UnixNano())
 	go func() {
@@ -233,8 +276,27 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration, quitKey
 
 	time.Sleep(warmup)
 
-	if _, err := master.Write([]byte{0x0c}); err != nil { // Ctrl-L
-		return nil, fmt.Errorf("asking for a repaint: %w", err)
+	// Typing, when the screen wanted is not the one the program opens on. Each
+	// batch settles before the next, because a program that is still redrawing
+	// has not finished reading either.
+	for i, k := range keys {
+		if _, err := master.Write([]byte(k)); err != nil {
+			return nil, fmt.Errorf("typing -send %d: %w", i+1, err)
+		}
+		if err := settle(&lastWrite, quiet); err != nil {
+			return nil, fmt.Errorf("after -send %d: %w", i+1, err)
+		}
+	}
+
+	// A full-screen program redraws only what changed, so a read in the middle
+	// of a partial update interleaves two frames. This asks for the whole
+	// screen. It is a flag because the key is not universal: Ctrl-L redraws in
+	// vim and nano and RECENTRES THE VIEW in emacs, which moves the thing being
+	// photographed.
+	if repaint != "" {
+		if _, err := master.Write([]byte(repaint)); err != nil {
+			return nil, fmt.Errorf("asking for a repaint: %w", err)
+		}
 	}
 	if err := settle(&lastWrite, quiet); err != nil {
 		return nil, err
@@ -276,10 +338,30 @@ func read(term *vt.SafeEmulator, cols, rows int) grid {
 			if text == "" {
 				text = " "
 			}
+			fg, bg := token(c.Style.Fg), token(c.Style.Bg)
+			// REVERSE VIDEO IS A SWAP, NOT AN ATTRIBUTE THE SVG HAS. nano's
+			// title bar and its two rows of shortcuts are drawn this way, and
+			// so is a vim selection: no colour is set, the two are exchanged.
+			// Ignoring it loses the bar entirely — it comes out as ordinary
+			// text on the ordinary ground.
+			if c.Style.Attrs&uv.AttrReverse != 0 {
+				// The defaults have to be named before they can be swapped, and
+				// in the right order: the text is the light one and the ground
+				// is the dark one, so reversing gives dark text on a light bar.
+				// Naming them the other way round paints a black bar on a dark
+				// panel, which is a bar nobody can see.
+				if fg == "" {
+					fg = "white"
+				}
+				if bg == "" {
+					bg = "black"
+				}
+				fg, bg = bg, fg
+			}
 			g[y][x] = cell{
 				text: text,
-				fg:   token(c.Style.Fg),
-				bg:   token(c.Style.Bg),
+				fg:   fg,
+				bg:   bg,
 				bold: c.Style.Attrs&uv.AttrBold != 0,
 			}
 		}
@@ -414,6 +496,68 @@ func blank(row []cell) bool {
 		}
 	}
 	return true
+}
+
+// sendList is the keys typed before the screen is read. The escapes are the
+// ones a keyboard needs and Go's own unquoting does not have: `\e` is Escape,
+// which is how you leave vim's insert mode, and `^X` is a control character,
+// which is how you do anything at all in nano and emacs.
+type sendList []string
+
+func (l *sendList) String() string { return fmt.Sprint(*l) }
+
+func (l *sendList) Set(v string) error {
+	k, err := keystrokes(v)
+	if err != nil {
+		return err
+	}
+	*l = append(*l, k)
+	return nil
+}
+
+// keystrokes turns what somebody can type on a command line into what a
+// terminal driver expects. Go's own unquoting has neither of the two that
+// matter here: `\e` is Escape, which is how you leave vim's insert mode, and
+// `^X` is a control character, which is how you do anything in nano or emacs.
+//
+// EVERY key-taking flag goes through this. The first version decoded only
+// `-send`, so `-quit ':q!\r'` sent a literal backslash and an r — vim sat in
+// its command line holding an unfinished `:q!` and the capture hung.
+func keystrokes(v string) (string, error) {
+	var b strings.Builder
+	for i := 0; i < len(v); i++ {
+		switch {
+		case v[i] == '^' && i+1 < len(v):
+			c := v[i+1]
+			if c == '^' {
+				b.WriteByte('^')
+			} else if c >= '?' && c <= '_' || c >= 'a' && c <= 'z' {
+				b.WriteByte(strings.ToUpper(string(c))[0] & 0x1f)
+			} else {
+				return "", fmt.Errorf("%q is not a control character", v[i:i+2])
+			}
+			i++
+		case v[i] == '\\' && i+1 < len(v):
+			switch v[i+1] {
+			case 'e':
+				b.WriteByte(0x1b)
+			case 'r':
+				b.WriteByte('\r')
+			case 'n':
+				b.WriteByte('\n')
+			case 't':
+				b.WriteByte('\t')
+			case '\\':
+				b.WriteByte('\\')
+			default:
+				return "", fmt.Errorf("%q is not an escape this understands", v[i:i+2])
+			}
+			i++
+		default:
+			b.WriteByte(v[i])
+		}
+	}
+	return b.String(), nil
 }
 
 type callout struct {
