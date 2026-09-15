@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -218,5 +219,39 @@ func TestReverseVideoBecomesALightBar(t *testing.T) {
 	svg := draw(g, 3, 1, "a screen", nil)
 	if !strings.Contains(svg, "var(--term-white-bg)") {
 		t.Errorf("the ground has to be the light token or the bar is invisible on a dark panel; got %s", svg)
+	}
+}
+
+// ONE CAPTURE, DRAWN TWICE. The callouts are prose and belong in the reader's
+// language; the screen behind them is a measurement and must not move between
+// the two. Running the program once per language gives two screens — the same
+// figure with different numbers in English and in Portuguese, which is worse
+// than not translating at all.
+//
+// Getting it wrong the first time went the other way: one SVG written into both
+// files, so a reader in Portuguese met four English callouts under a caption
+// that was theirs.
+func TestASavedScreenDrawsAgainUnchanged(t *testing.T) {
+	g := grid{
+		append(text("PID", "black", "green"), text(" ana", "", "")...),
+		text("2396", "", ""),
+	}
+
+	path := filepath.Join(t.TempDir(), "screen.json")
+	if err := store(path, g); err != nil {
+		t.Fatal(err)
+	}
+	back, err := load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	mono := regexp.MustCompile(`(?s)<g font-family[^>]*>.*?</g>`)
+	first := mono.FindString(draw(g, 7, 2, "a screen", calloutList{{row: 0, text: "one bar per processor"}}))
+	again := mono.FindString(draw(back, 7, 2, "uma tela", calloutList{{row: 0, text: "uma barra por processador"}}))
+
+	if first == "" || first != again {
+		t.Errorf("the screen has to survive the round trip byte for byte, or the two languages "+
+			"carry different numbers under the same figure:\n first: %s\n again: %s", first, again)
 	}
 }

@@ -252,6 +252,16 @@ go run ./tools/term-capture -send G -quit '\e:q!\r' -out figure.svg -- vim serve
 go run ./tools/term-capture -quit '^X' -out figure.svg -- nano notes.txt
 ```
 
+**The screen is captured once and drawn once per language.** The callouts are prose and belong
+in the reader's language; the screen behind them is a measurement and must not move between the
+two. Running the program twice gives two screens — the same figure with different numbers in each
+language, which is worse than not translating at all.
+
+```sh
+go run ./tools/term-capture -save screen.json -out figure.svg -label '…' -callout '1:…' -- htop
+go run ./tools/term-capture -from screen.json -out figure.pt.svg -label '…' -callout '1:…'
+```
+
 The SVG goes to `-out` and the fence's JSON to stdout. The eight ANSI colours come out as
 `--term-*` tokens from `ui/assets/terminal.css`, so a captured screen follows the theme the way a
 drawn one does. Those are **two sets, a foreground and a `-bg`**, and the reason is htop's header

@@ -150,6 +150,8 @@ func main() {
 		label   = flag.String("label", "", "the figure's aria-label (required)")
 		quitKey = flag.String("quit", "q", "the key that makes the program exit")
 		repaint = flag.String("repaint", "^L", "the key that asks for a full redraw, or empty for none")
+		save    = flag.String("save", "", "also write the screen here, to be drawn again with -from")
+		from    = flag.String("from", "", "draw a screen saved earlier instead of running a program")
 	)
 	var sends sendList
 	flag.Var(&sends, "send", "keys to type before reading, repeatable and in order")
@@ -157,8 +159,14 @@ func main() {
 	flag.Var(&callouts, "callout", "a numbered note, as ROW:TEXT, repeatable")
 	flag.Parse()
 
-	if *out == "" || *label == "" || flag.NArg() == 0 {
-		fmt.Fprintln(os.Stderr, "usage: term-capture -out FILE -label TEXT [-callout ROW:TEXT] -- COMMAND [ARGS]")
+	if *out == "" || *label == "" || (*from == "" && flag.NArg() == 0) {
+		fmt.Fprintln(os.Stderr, "usage: term-capture -out FILE -label TEXT [-callout ROW:TEXT] -- COMMAND [ARGS]\n"+
+			"       term-capture -from SCREEN -out FILE -label TEXT [-callout ROW:TEXT]")
+		os.Exit(2)
+	}
+	if *from != "" && flag.NArg() > 0 {
+		fmt.Fprintln(os.Stderr, "term-capture: -from draws a screen that was already taken, so there is "+
+			"no command to run")
 		os.Exit(2)
 	}
 	if *cols < 1 || *cols > maxDimension || *rows < 1 || *rows > maxDimension {
@@ -178,10 +186,39 @@ func main() {
 		os.Exit(2)
 	}
 
-	screen, err := capture(flag.Args(), *cols, *rows, *warmup, *quiet, sends, repaintKeys, quitKeys)
+	/* ONE CAPTURE, DRAWN ONCE PER LANGUAGE.
+
+	   The callouts are prose and belong in the reader's language; the screen
+	   behind them is a measurement and must not move between the two. Running
+	   the program twice gives two screens — the same figure with different
+	   numbers in English and in Portuguese, which is worse than not translating
+	   at all. So the screen is saved and drawn again.
+
+	   It is how this was got wrong: the first pair wrote one SVG into both
+	   files and translated only the caption, so a reader in Portuguese met four
+	   callouts in English under a figure whose caption was theirs. */
+	var screen grid
+	if *from != "" {
+		screen, err = load(*from)
+	} else {
+		screen, err = capture(flag.Args(), *cols, *rows, *warmup, *quiet, sends, repaintKeys, quitKeys)
+	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "term-capture:", err)
 		os.Exit(1)
+	}
+	if *from != "" {
+		*rows, *cols = len(screen), 0
+		if len(screen) > 0 {
+			*cols = len(screen[0])
+		}
+	}
+
+	if *save != "" {
+		if err := store(*save, screen); err != nil {
+			fmt.Fprintln(os.Stderr, "term-capture:", err)
+			os.Exit(1)
+		}
 	}
 
 	svg := draw(screen, *cols, *rows, *label, callouts)
@@ -205,6 +242,57 @@ func main() {
 // grid is a resolved screen: what the program had drawn at the moment it was
 // read, one entry per cell.
 type grid [][]cell
+
+/*
+A SCREEN ON DISK, so one capture can be drawn in more than one language.
+
+	JSON and not the SVG, because what has to survive is the cells: re-reading
+	an SVG would mean parsing back out what this wrote, and the second drawing
+	would inherit every decision the first made about layout.
+*/
+type savedCell struct {
+	Text string `json:"t"`
+	Fg   string `json:"f,omitempty"`
+	Bg   string `json:"b,omitempty"`
+	Bold bool   `json:"o,omitempty"`
+}
+
+func store(path string, g grid) error {
+	rows := make([][]savedCell, len(g))
+	for y, row := range g {
+		rows[y] = make([]savedCell, len(row))
+		for x, c := range row {
+			rows[y][x] = savedCell{Text: c.text, Fg: c.fg, Bg: c.bg, Bold: c.bold}
+		}
+	}
+	b, err := json.Marshal(rows)
+	if err != nil {
+		return fmt.Errorf("writing the screen: %w", err)
+	}
+	if err := os.WriteFile(path, b, fileMode); err != nil {
+		return fmt.Errorf("writing the screen: %w", err)
+	}
+	return nil
+}
+
+func load(path string) (grid, error) {
+	b, err := os.ReadFile(path) //nolint:gosec // the author names the file
+	if err != nil {
+		return nil, fmt.Errorf("reading the screen: %w", err)
+	}
+	var rows [][]savedCell
+	if err := json.Unmarshal(b, &rows); err != nil {
+		return nil, fmt.Errorf("reading the screen: %w", err)
+	}
+	g := make(grid, len(rows))
+	for y, row := range rows {
+		g[y] = make([]cell, len(row))
+		for x, c := range row {
+			g[y][x] = cell{text: c.Text, fg: c.Fg, bg: c.Bg, bold: c.Bold}
+		}
+	}
+	return g, nil
+}
 
 type cell struct {
 	text   string
