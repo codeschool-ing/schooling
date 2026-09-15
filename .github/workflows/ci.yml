@@ -102,7 +102,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test|figure-fit)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test|figure-fit|fetch-once)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -608,6 +608,15 @@ jobs:
           # a site that works perfectly and a funnel that answers with this
           # site's own name.
           node tools/landing-test/landing-test.mjs
+
+          # AND THAT A SCREEN DRAWN TWICE DOES NOT ASK TWICE. Every piece of
+          # `loadCourseContent` worked and nothing asked whether the course was
+          # already in the store, so a redraw fetched all of it again — and a
+          # language switch dispatches twice. On `linux-terminal`, 228 sections
+          # across thirteen lessons, that was 5 MB and the best part of a minute
+          # before the screen appeared. A unit test could not see it: the defect
+          # is in how often a correct function is called.
+          node tools/fetch-once/fetch-once.mjs
 
           # AND WHETHER THE INTERFACE CAN REACH THE SECOND FACTOR AT ALL. Every
           # part of it has a Go test against a real Postgres and every one of
