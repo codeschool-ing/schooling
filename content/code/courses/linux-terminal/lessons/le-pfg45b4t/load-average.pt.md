@@ -86,9 +86,10 @@ procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu----
  0  1      0 14485424  56304 1542856    0    0     0 980992 3815 4290  2  4 72 22  0  0
 ```
 
-**Carga 1,39 numa máquina de quatro núcleos, e o disco a 93% de utilização.** Só
-com a carga média você fecharia o chamado. O `b 1` e o `wa 22` são a história de
-verdade, e estão nas próximas duas seções.
+**Carga 1,39 numa máquina de quatro núcleos, e o disco a 93% de utilização.** Esse
+93% é do `iostat`, na seção 184; o `vmstat` não o carrega. Só com a carga média
+você fecharia o chamado. O `b 1` e o `wa 22` são a história de verdade, e são
+lidos na seção 179 e na seção 184.
 
 O contrário também acontece. Uma máquina emperrada num sistema de arquivos de
 rede morto mostra carga média 40 com todo processador ocioso, porque quarenta
