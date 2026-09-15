@@ -100,6 +100,14 @@ const (
 	lineHeight = 15.5
 	padding    = 14.0
 	gutter     = 26.0 // the left margin the callout numbers sit in
+
+	// The same as `tools/bundle` and `tools/fonts` write with: the file is the
+	// author's own, on the author's own machine, on the way into a commit.
+	fileMode = 0o600
+
+	// A terminal is addressed in 16-bit fields, and the flags are somebody
+	// typing. Past this the conversion below wraps instead of failing.
+	maxDimension = 1000
 )
 
 // The eight ANSI colours are tokens rather than values, so a figure follows the
@@ -133,6 +141,11 @@ func main() {
 		fmt.Fprintln(os.Stderr, "usage: term-capture -out FILE -label TEXT [-callout ROW:TEXT] -- COMMAND [ARGS]")
 		os.Exit(2)
 	}
+	if *cols < 1 || *cols > maxDimension || *rows < 1 || *rows > maxDimension {
+		fmt.Fprintf(os.Stderr, "term-capture: a screen is between 1 and %d columns and rows, not %dx%d\n",
+			maxDimension, *cols, *rows)
+		os.Exit(2)
+	}
 
 	screen, err := capture(flag.Args(), *cols, *rows, *warmup, *quiet, *quitKey)
 	if err != nil {
@@ -141,7 +154,7 @@ func main() {
 	}
 
 	svg := draw(screen, *cols, *rows, *label, callouts)
-	if err := os.WriteFile(*out, []byte(svg+"\n"), 0o644); err != nil {
+	if err := os.WriteFile(*out, []byte(svg+"\n"), fileMode); err != nil {
 		fmt.Fprintln(os.Stderr, "term-capture:", err)
 		os.Exit(1)
 	}
@@ -173,9 +186,14 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration, quitKey
 	if err != nil {
 		return nil, fmt.Errorf("opening a pseudo-terminal: %w", err)
 	}
-	defer master.Close()
+	// read-only from here: there is nothing a failed close could lose
+	defer func() { _ = master.Close() }()
 
-	cmd := exec.Command(argv[0], argv[1:]...)
+	// The command is what the author typed after `--`, which is the whole point
+	// of the tool: it photographs a program somebody chose. It runs on an
+	// author's machine with that author's own privileges, so there is no
+	// boundary here for a tainted argument to cross.
+	cmd := exec.Command(argv[0], argv[1:]...) //nolint:gosec
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = slave, slave, slave
 	// A program with no locale draws its box and its arrows in ASCII: htop's
 	// sort indicator comes out as "-" where it means "▽". The capture should
@@ -185,10 +203,12 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration, quitKey
 		"LANG=C.UTF-8", "LC_ALL=C.UTF-8")
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: true, Ctty: 0}
 	if err := cmd.Start(); err != nil {
-		slave.Close()
+		_ = slave.Close() // the child never got it; nothing was written
 		return nil, fmt.Errorf("starting %s: %w", argv[0], err)
 	}
-	slave.Close()
+	// The child holds its own descriptor now. This end has to go or the read
+	// below never sees EOF.
+	_ = slave.Close()
 	defer func() {
 		_ = cmd.Process.Kill()
 		_ = cmd.Wait()
@@ -428,7 +448,7 @@ func openPTY(cols, rows int) (master, slave *os.File, err error) {
 		return nil, nil, err
 	}
 	closeOnError := func(e error) (*os.File, *os.File, error) {
-		m.Close()
+		_ = m.Close() // already failing; a second error would bury the first
 		return nil, nil, e
 	}
 	if err := unix.IoctlSetPointerInt(int(m.Fd()), unix.TIOCSPTLCK, 0); err != nil {
@@ -442,9 +462,11 @@ func openPTY(cols, rows int) (master, slave *os.File, err error) {
 	if err != nil {
 		return closeOnError(err)
 	}
-	ws := unix.Winsize{Row: uint16(rows), Col: uint16(cols)}
+	// `main` refuses anything outside 1..maxDimension, which is well inside
+	// what these fields hold.
+	ws := unix.Winsize{Row: uint16(rows), Col: uint16(cols)} //nolint:gosec
 	if err := unix.IoctlSetWinsize(int(m.Fd()), unix.TIOCSWINSZ, &ws); err != nil {
-		s.Close()
+		_ = s.Close() // same
 		return closeOnError(err)
 	}
 	return m, s, nil
