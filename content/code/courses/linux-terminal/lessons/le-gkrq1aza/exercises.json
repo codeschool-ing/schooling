@@ -1,0 +1,1990 @@
+[
+  {
+    "id": "ex-fjqya6z2",
+    "version": 1,
+    "section": "what-a-package-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `dpkg` and `apt`?",
+    "hint": "One of them knows where packages come from.",
+    "choices": [
+      {
+        "text": "`apt` is the newer command and `dpkg` is deprecated",
+        "correct": false,
+        "why": "Both are current, and `apt` calls `dpkg` to do the actual work."
+      },
+      {
+        "text": "`apt` handles `.deb` files and `dpkg` handles repositories",
+        "correct": false,
+        "why": "It is the other way round, which is worth getting straight before the rest of the lesson."
+      },
+      {
+        "text": "`dpkg` handles one package file; `apt` knows the repositories",
+        "correct": true,
+        "why": "Right — two layers, and `apt` runs `dpkg` underneath."
+      },
+      {
+        "text": "`dpkg` is for system packages and `apt` for ones you install by hand",
+        "correct": false,
+        "why": "Both work on any package; the split is about fetching and resolving, not about who asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kk6f5ww",
+    "version": 1,
+    "section": "what-a-package-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A one-line `apt install` downloaded forty megabytes for a small utility. Which field explains it?",
+    "hint": "One of the relationship fields is installed by default and is not required.",
+    "choices": [
+      {
+        "text": "`Depends`, since a utility can require a lot",
+        "correct": false,
+        "why": "It can, and `Depends` is the required set, which is not what the flag below turns off."
+      },
+      {
+        "text": "`Suggests`, which apt installs unless told otherwise",
+        "correct": false,
+        "why": "`Suggests` is mentioned and never installed automatically."
+      },
+      {
+        "text": "`Pre-Depends`, which pulls in a whole configured chain",
+        "correct": false,
+        "why": "Pre-Depends changes the ordering, not the size of the set."
+      },
+      {
+        "text": "`Recommends`, which is on by default",
+        "correct": true,
+        "why": "Right — and `--no-install-recommends` is the flag that turns it off."
+      }
+    ]
+  },
+  {
+    "id": "ex-75078nq3",
+    "version": 1,
+    "section": "what-a-package-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A package goes from `3.03+dfsg2-7` to `3.03+dfsg2-8`. What changed?",
+    "hint": "Three parts, and only one of them moved.",
+    "choices": [
+      {
+        "text": "The packaging, not the program",
+        "correct": true,
+        "why": "Right — a patch, a build fix or a backported security change, with upstream untouched."
+      },
+      {
+        "text": "The program, from 7 to 8",
+        "correct": false,
+        "why": "The upstream version is the `3.03` at the front, and it is the same."
+      },
+      {
+        "text": "Little that matters; the trailing number is a build counter",
+        "correct": false,
+        "why": "It counts packaging attempts, and a new one is frequently a backported security fix."
+      },
+      {
+        "text": "The distribution removed something not redistributable",
+        "correct": false,
+        "why": "That is what the `+dfsg2` marker records, and it did not change either."
+      }
+    ]
+  },
+  {
+    "id": "ex-jt02jg07",
+    "version": 1,
+    "section": "what-a-package-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "List what is inside a `.deb` without installing it: `dpkg ____ thing.deb`",
+    "hint": "One letter, lowercase, and it is the same letter `tar` uses for the same job.",
+    "blanks": [
+      {
+        "accept": [
+          "-c"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-39xbjqj1",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You run `apt upgrade` and it reports nothing to do, but you know a new version was released this morning. What did you forget?",
+    "hint": "One command downloads a catalogue and the other acts on it.",
+    "choices": [
+      {
+        "text": "`apt full-upgrade`, since plain upgrade refuses to remove",
+        "correct": false,
+        "why": "That matters when packages are held back, and here nothing was even offered."
+      },
+      {
+        "text": "`apt update`, so the indexes are current",
+        "correct": true,
+        "why": "Right — `upgrade` acted on yesterday's catalogue, correctly."
+      },
+      {
+        "text": "`apt-mark unhold`, since the package is probably held",
+        "correct": false,
+        "why": "A hold is possible, and the first thing to rule out costs one command and no guessing."
+      },
+      {
+        "text": "`apt clean`, since the old package is cached",
+        "correct": false,
+        "why": "The cache holds downloaded files and is not consulted to decide what is available."
+      }
+    ]
+  },
+  {
+    "id": "ex-32ksd5w3",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`apt update` prints `E: The repository ... is no longer signed.` What do you check first?",
+    "hint": "That message names a consequence. The cause is one line above it.",
+    "choices": [
+      {
+        "text": "Whether the signing key expired, with `apt-key list`",
+        "correct": false,
+        "why": "That is one cause of several, and `apt-key` is the deprecated tool it is not checked with."
+      },
+      {
+        "text": "Whether the repository still exists, by opening the URL in a browser",
+        "correct": false,
+        "why": "Worth doing eventually, and apt already printed the server's answer."
+      },
+      {
+        "text": "The `E: Failed to fetch` line above it, for the HTTP code",
+        "correct": true,
+        "why": "Right — a `403` or `404` is a network answer, and a key problem says `NO_PUBKEY` instead."
+      },
+      {
+        "text": "Whether `signed-by=` is present in the source file",
+        "correct": false,
+        "why": "Its absence is a configuration style question rather than a cause of this error."
+      }
+    ]
+  },
+  {
+    "id": "ex-mv720bvn",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `signed-by=/etc/apt/keyrings/docker.asc` in a source line accomplish?",
+    "hint": "Think about what a key in the old global keyring could do.",
+    "choices": [
+      {
+        "text": "It encrypts the connection to that repository",
+        "correct": false,
+        "why": "HTTPS does that, and it is a different property from a signature."
+      },
+      {
+        "text": "It signs the packages you install from that repository",
+        "correct": false,
+        "why": "The repository's publisher signs them; your machine only verifies."
+      },
+      {
+        "text": "It records which key was used, for auditing",
+        "correct": false,
+        "why": "It is consulted at every update rather than written down after the fact."
+      },
+      {
+        "text": "It limits that key to that one repository",
+        "correct": true,
+        "why": "Right — a key in the old global keyring could vouch for any repository configured."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zwa1p6c",
+    "version": 1,
+    "section": "repositories",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each word in an `apt update` listing to what it means.",
+    "hint": "Three outcomes for one repository each.",
+    "pairs": [
+      {
+        "left": "Hit",
+        "right": "unchanged, so nothing was downloaded"
+      },
+      {
+        "left": "Get",
+        "right": "changed, so it was fetched"
+      },
+      {
+        "left": "Err",
+        "right": "it did not work, and E: says why"
+      }
+    ],
+    "right_distractors": [
+      "queued for the next run",
+      "signature verified"
+    ]
+  },
+  {
+    "id": "ex-s17bxyhr",
+    "version": 1,
+    "section": "repositories",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Print what `apt upgrade` would do, without doing it: `apt list ____`",
+    "hint": "One long flag, and it is a single word after the dashes.",
+    "blanks": [
+      {
+        "accept": [
+          "--upgradable",
+          "--upgradeable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vqte996m",
+    "version": 1,
+    "section": "apt-day-to-day",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`0 upgraded, 2 newly installed, 4 to remove and 168 not upgraded.` Which number should stop you?",
+    "hint": "Three of the four are routine. One is the machine telling you something is being taken away.",
+    "choices": [
+      {
+        "text": "`4 to remove`",
+        "correct": true,
+        "why": "Right — satisfying the request needs four packages gone, and that is worth reading before `y`."
+      },
+      {
+        "text": "`168 not upgraded`, since the machine is far behind",
+        "correct": false,
+        "why": "It is, and that is a separate job; it has nothing to do with this install."
+      },
+      {
+        "text": "`2 newly installed`, since you asked for one package",
+        "correct": false,
+        "why": "That is normal: the extra one is a dependency, listed above."
+      },
+      {
+        "text": "`0 upgraded`, since an install should upgrade dependencies",
+        "correct": false,
+        "why": "An install only upgrades a dependency when the requested version needs it to."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxqvsszd",
+    "version": 1,
+    "section": "apt-day-to-day",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `apt` print `WARNING: apt does not have a stable CLI interface` when its output goes into a pipe?",
+    "hint": "Two commands do this job and only one of them promises not to change.",
+    "choices": [
+      {
+        "text": "Because piping apt's output is unsupported",
+        "correct": false,
+        "why": "It works; the warning is about relying on the exact text in the long term."
+      },
+      {
+        "text": "Because `apt` reserves the right to change its output",
+        "correct": true,
+        "why": "Right — `apt` is for people, `apt-get` and `apt-cache` for scripts."
+      },
+      {
+        "text": "Because apt drops its progress bars in a pipe, and wants to say so",
+        "correct": false,
+        "why": "It quietly drops them; the warning is about the interface rather than the display."
+      },
+      {
+        "text": "Because it may need a terminal for the confirmation prompt",
+        "correct": false,
+        "why": "`-y` handles that, and the warning appears for commands that never prompt."
+      }
+    ]
+  },
+  {
+    "id": "ex-n9edm82f",
+    "version": 1,
+    "section": "apt-day-to-day",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between the `Unpacking` and `Setting up` lines of an install?",
+    "hint": "One writes files and the other runs something.",
+    "choices": [
+      {
+        "text": "`Unpacking` extracts the archive and `Setting up` verifies the checksums",
+        "correct": false,
+        "why": "Verification happens before either, when the download is checked against the index."
+      },
+      {
+        "text": "`Unpacking` is the dependency and `Setting up` is the package you asked for",
+        "correct": false,
+        "why": "Both lines appear for every package, dependencies included."
+      },
+      {
+        "text": "`Unpacking` writes the files; `Setting up` runs the package's own setup",
+        "correct": true,
+        "why": "Right, and a package can be stuck between the two — section 109's `iU`."
+      },
+      {
+        "text": "`Unpacking` is done by apt and `Setting up` by systemd",
+        "correct": false,
+        "why": "dpkg does both; systemd is involved only if the package starts a service."
+      }
+    ]
+  },
+  {
+    "id": "ex-8q28pg1t",
+    "version": 1,
+    "section": "apt-day-to-day",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Install without pulling in the optional extras: `apt install ____ thing`",
+    "hint": "One long flag, three words joined by dashes.",
+    "blanks": [
+      {
+        "accept": [
+          "--no-install-recommends"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rck6c7ng",
+    "version": 1,
+    "section": "finding-things",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A config file appeared in `/etc` and you do not know what wrote it. One command.",
+    "hint": "The package manager wrote down what it installed.",
+    "choices": [
+      {
+        "text": "`apt search` with part of the filename",
+        "correct": false,
+        "why": "`apt search` matches names and descriptions of packages, not the files inside them."
+      },
+      {
+        "text": "`apt-file search /etc/thatfile`",
+        "correct": false,
+        "why": "That asks the repositories about packages you have not installed, which is the other direction."
+      },
+      {
+        "text": "`find / -newer` to see what changed at the same time",
+        "correct": false,
+        "why": "That finds files with similar timestamps and never names a package."
+      },
+      {
+        "text": "`dpkg -S /etc/thatfile`",
+        "correct": true,
+        "why": "Right — a database lookup, and it answers instantly."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj91qbqs",
+    "version": 1,
+    "section": "finding-things",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dpkg -S /usr/local/bin/mytool` prints `no path found matching pattern`. What does that tell you?",
+    "hint": "Lesson 3 named that directory for a reason.",
+    "choices": [
+      {
+        "text": "The dpkg database is out of date and needs `dpkg --configure -a`",
+        "correct": false,
+        "why": "The database is fine; it simply has no row for that path, which is an answer."
+      },
+      {
+        "text": "No package installed it, so nothing will upgrade or remove it",
+        "correct": true,
+        "why": "Right — `/usr/local` is for software installed outside the package manager."
+      },
+      {
+        "text": "The file is a symlink, and `dpkg -S` cannot follow one",
+        "correct": false,
+        "why": "`dpkg -S` matches the path as recorded; a symlink installed by a package is found."
+      },
+      {
+        "text": "You need `sudo` to read the package database",
+        "correct": false,
+        "why": "It is world-readable, and a permission problem reports differently."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkxmk69v",
+    "version": 1,
+    "section": "finding-things",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`bash: pdftotext: command not found`, and you do not know which package has it. What do you use?",
+    "hint": "The file is not on the machine, so the machine's own database cannot help.",
+    "choices": [
+      {
+        "text": "`apt-file search bin/pdftotext`",
+        "correct": true,
+        "why": "Right — it searches the repositories' file lists, which is what `dpkg -S` cannot do."
+      },
+      {
+        "text": "`dpkg -S $(which pdftotext)`",
+        "correct": false,
+        "why": "`which` finds nothing, so there is no path to look up."
+      },
+      {
+        "text": "`apt search pdftotext`, since the description will mention it",
+        "correct": false,
+        "why": "Sometimes it does, and a file that is not in any description is not found at all."
+      },
+      {
+        "text": "`dpkg -L poppler-utils`, once you have guessed the package",
+        "correct": false,
+        "why": "That works after the guess, and the guess is the part you needed help with."
+      }
+    ]
+  },
+  {
+    "id": "ex-faqzd49b",
+    "version": 1,
+    "section": "finding-things",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each question to the command that answers it.",
+    "hint": "Four questions that sound alike and are not.",
+    "pairs": [
+      {
+        "left": "what is this package called",
+        "right": "apt search text"
+      },
+      {
+        "left": "what did this package install",
+        "right": "dpkg -L thing"
+      },
+      {
+        "left": "what put this file here",
+        "right": "dpkg -S /path"
+      },
+      {
+        "left": "which package would give me this file",
+        "right": "apt-file search /path"
+      }
+    ],
+    "right_distractors": [
+      "apt policy thing",
+      "apt-mark showauto"
+    ]
+  },
+  {
+    "id": "ex-06mh81m2",
+    "version": 1,
+    "section": "finding-things",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Search for a package by exactly that name and nothing else: `apt search \"____ripgrep$\"`",
+    "hint": "One character, and it is the regular-expression anchor for the start of a string.",
+    "blanks": [
+      {
+        "accept": [
+          "^"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9mnpv1he",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are about to `apt remove` a library on a production machine. What do you run first?",
+    "hint": "Two commands answer it; one asks the repositories and one asks this machine.",
+    "choices": [
+      {
+        "text": "`apt-cache depends libfoo` on the library you are about to remove",
+        "correct": false,
+        "why": "That lists what the library itself needs, which is the wrong direction."
+      },
+      {
+        "text": "`dpkg -L libfoo` to see what it owns",
+        "correct": false,
+        "why": "The file list does not say which other packages would break."
+      },
+      {
+        "text": "`apt-get remove --dry-run libfoo`",
+        "correct": true,
+        "why": "Right — it prints the exact plan, including anything that comes with it, and changes nothing."
+      },
+      {
+        "text": "`apt-mark showauto` to see whether it was a dependency",
+        "correct": false,
+        "why": "That says how it got there rather than what depends on it now."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmzsc1p5",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`apt-cache rdepends libfoo` lists three packages, but `--dry-run` on removing it takes away only one. Why?",
+    "hint": "The two commands are asking different populations.",
+    "choices": [
+      {
+        "text": "`rdepends` includes Recommends, and `--dry-run` counts Depends alone",
+        "correct": false,
+        "why": "`rdepends` does report the relationship type when asked, and the count here is about something else."
+      },
+      {
+        "text": "`rdepends` covers the repositories; one of the three is here",
+        "correct": true,
+        "why": "Right — read `rdepends` as who could care, and `--dry-run` as what would happen here."
+      },
+      {
+        "text": "`rdepends` includes the package itself, so the real count is two",
+        "correct": false,
+        "why": "It does print the name at the top, and that accounts for one line and not two."
+      },
+      {
+        "text": "`--dry-run` stops at the first package it would remove",
+        "correct": false,
+        "why": "It prints the complete plan; that is what makes it useful."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebew2v4a",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You installed A, which pulled in B. You removed A but you use B directly. How do you stop `autoremove` taking B?",
+    "hint": "apt records why each package is there, and the record can be corrected.",
+    "choices": [
+      {
+        "text": "`apt-mark hold B`",
+        "correct": false,
+        "why": "A hold stops upgrades and does not stop autoremove from removing it."
+      },
+      {
+        "text": "Reinstall B with `apt install B`, which resets the mark",
+        "correct": false,
+        "why": "Installing a package that is already installed leaves the mark as it is."
+      },
+      {
+        "text": "Add B to `/etc/apt/preferences.d/`",
+        "correct": false,
+        "why": "Pins change which version is chosen, not whether a package is wanted."
+      },
+      {
+        "text": "`apt-mark manual B`",
+        "correct": true,
+        "why": "Right — that says somebody wants it, regardless of what needs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vfkkjsn",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`somepackage : Depends: libsomething (>= 2.0) but 1.9 is to be installed`. What usually causes this?",
+    "hint": "Read the two version numbers, and ask where each one came from.",
+    "choices": [
+      {
+        "text": "A package built for a different release",
+        "correct": true,
+        "why": "Right — a `.deb` for a newer version, or a third-party repository assuming another base."
+      },
+      {
+        "text": "An interrupted install, which `--fix-broken` will repair",
+        "correct": false,
+        "why": "That produces unconfigured packages rather than an unsatisfiable version constraint."
+      },
+      {
+        "text": "A held package, which `apt-mark unhold` will release",
+        "correct": false,
+        "why": "A hold keeps a package where it is and does not create this message."
+      },
+      {
+        "text": "A stale index, which `apt update` will refresh",
+        "correct": false,
+        "why": "Worth ruling out first, and a fresh index rarely turns 1.9 into 2.0."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmj3f6y1",
+    "version": 1,
+    "section": "dependencies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each relationship field to what it means.",
+    "hint": "Five of the seven; two of them are about things that cannot coexist or can substitute.",
+    "pairs": [
+      {
+        "left": "Depends",
+        "right": "must be there, or this is not configured"
+      },
+      {
+        "left": "Recommends",
+        "right": "installed by default, and refusable"
+      },
+      {
+        "left": "Suggests",
+        "right": "mentioned, never installed on its own"
+      },
+      {
+        "left": "Conflicts",
+        "right": "cannot be installed alongside this"
+      },
+      {
+        "left": "Provides",
+        "right": "a virtual name several packages can satisfy"
+      }
+    ],
+    "right_distractors": [
+      "installed before this one is unpacked",
+      "the same version must be used"
+    ]
+  },
+  {
+    "id": "ex-cd63ar7d",
+    "version": 1,
+    "section": "dpkg-underneath",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`dpkg -l thing` shows `iU`. What has happened?",
+    "hint": "Two letters, two steps of an install.",
+    "choices": [
+      {
+        "text": "It is installed and an upgrade is available",
+        "correct": false,
+        "why": "`dpkg -l` reports state, not what the repositories offer; that is `apt policy`."
+      },
+      {
+        "text": "It is installed and marked for upgrade at the next run",
+        "correct": false,
+        "why": "Nothing queues an upgrade in the status column."
+      },
+      {
+        "text": "Wanted installed; unpacked and not configured",
+        "correct": true,
+        "why": "Right — the files exist and the package's setup never ran."
+      },
+      {
+        "text": "It is installed and its user configuration has been changed",
+        "correct": false,
+        "why": "A changed config file does not appear in the status letters at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsvrf976",
+    "version": 1,
+    "section": "dpkg-underneath",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody sends you a `.deb`. Which command installs it with its dependencies?",
+    "hint": "One of these two forms tells apt to treat a path as a package file.",
+    "choices": [
+      {
+        "text": "`dpkg -i ./thing.deb`",
+        "correct": false,
+        "why": "dpkg installs it and does not fetch anything, which is the whole point of this section."
+      },
+      {
+        "text": "`apt install ./thing.deb`",
+        "correct": true,
+        "why": "Right — the `./` makes apt read it as a file, and it resolves dependencies as usual."
+      },
+      {
+        "text": "`apt install thing.deb`",
+        "correct": false,
+        "why": "Without a slash, apt looks for a package named `thing.deb` in the repositories."
+      },
+      {
+        "text": "`apt-get download ./thing.deb`",
+        "correct": false,
+        "why": "`download` fetches a package from a repository into the current directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh4am5f3",
+    "version": 1,
+    "section": "dpkg-underneath",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An install was interrupted by a reboot. Packages are unpacked and unconfigured, and nothing is missing. Which repair?",
+    "hint": "Two commands repair two different causes.",
+    "choices": [
+      {
+        "text": "`apt-get --fix-broken install`",
+        "correct": false,
+        "why": "That fetches what is missing, and by the premise nothing is."
+      },
+      {
+        "text": "`apt-get purge` and install again",
+        "correct": false,
+        "why": "That works and throws away configuration you did not have to lose."
+      },
+      {
+        "text": "`dpkg -i` the packages again from the cache",
+        "correct": false,
+        "why": "Reinstalling repeats the unpack, and the unpack is not the step that failed."
+      },
+      {
+        "text": "`dpkg --configure -a`",
+        "correct": true,
+        "why": "Right — it retries the configuration step for everything that is half done."
+      }
+    ]
+  },
+  {
+    "id": "ex-pae948er",
+    "version": 1,
+    "section": "dpkg-underneath",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fetch a package file into the current directory without installing it: `apt-get ____ cowsay`",
+    "hint": "One word, eight letters.",
+    "blanks": [
+      {
+        "accept": [
+          "download"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9vc8tbd2",
+    "version": 1,
+    "section": "remove-and-purge",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`dpkg -l thing` shows `rc`. What is on the machine?",
+    "hint": "Two letters: what is wanted, and what is true.",
+    "choices": [
+      {
+        "text": "Nothing; the row is left over and can be ignored",
+        "correct": false,
+        "why": "The row exists because something does: the configuration files."
+      },
+      {
+        "text": "Its configuration files, and nothing else",
+        "correct": true,
+        "why": "Right — `remove` was used, so `/etc` still has its settings."
+      },
+      {
+        "text": "The program, with its configuration removed",
+        "correct": false,
+        "why": "That is not a state dpkg can be in; the files go together with the package."
+      },
+      {
+        "text": "A partial install that needs `dpkg --configure -a`",
+        "correct": false,
+        "why": "That state is `iU`, with an uppercase second letter meaning something went wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-e55wphyk",
+    "version": 1,
+    "section": "remove-and-purge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You removed a misconfigured service and reinstalled it. It came back with the same broken settings. Why?",
+    "hint": "One of the two uninstall commands keeps something for you.",
+    "choices": [
+      {
+        "text": "The package cached its own configuration away in `/var/cache/apt`",
+        "correct": false,
+        "why": "That directory holds downloaded `.deb` files, not settings."
+      },
+      {
+        "text": "`autoremove` restored the old files when it ran",
+        "correct": false,
+        "why": "`autoremove` removes packages; it puts nothing back."
+      },
+      {
+        "text": "The reinstall pulled your settings from the repository",
+        "correct": false,
+        "why": "Repositories carry a package's default files, not yours."
+      },
+      {
+        "text": "`remove` kept the configuration, and the reinstall reused it",
+        "correct": true,
+        "why": "Right — `purge` is the one that would have taken it away."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhjvntc0",
+    "version": 1,
+    "section": "remove-and-purge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `apt autoremove` use to decide what to take?",
+    "hint": "apt records something about every package at install time.",
+    "choices": [
+      {
+        "text": "The `auto` mark, and whether anything needs it",
+        "correct": true,
+        "why": "Right — installed as a dependency, and nothing depends on it any more."
+      },
+      {
+        "text": "The last access time recorded on the package's own files",
+        "correct": false,
+        "why": "Nothing in apt looks at access times; many filesystems do not record them usefully."
+      },
+      {
+        "text": "Whether the package is in any repository's index",
+        "correct": false,
+        "why": "A package missing from the indexes is a different situation and is not removed for it."
+      },
+      {
+        "text": "The `rc` state left behind by previous removals",
+        "correct": false,
+        "why": "`rc` packages have no files to speak of, and `autoremove --purge` is what clears them."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5z7jrf8",
+    "version": 1,
+    "section": "remove-and-purge",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "List every package that has left configuration behind: `dpkg -l | grep '____rc'`",
+    "hint": "One character: the regular-expression anchor for the start of a line.",
+    "blanks": [
+      {
+        "accept": [
+          "^"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ayzq3e3g",
+    "version": 1,
+    "section": "versions-and-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A package will not upgrade, `apt upgrade` says nothing about it, and the version is months old. First command?",
+    "hint": "Something can make apt skip a package silently.",
+    "choices": [
+      {
+        "text": "`apt policy thatpackage`, to see the candidate",
+        "correct": false,
+        "why": "Worth running second; it shows what is offered without saying why it is being skipped."
+      },
+      {
+        "text": "`apt update`, in case the index is stale",
+        "correct": false,
+        "why": "Cheap and worth doing, and a stale index would affect every package rather than one."
+      },
+      {
+        "text": "`apt-mark showhold`",
+        "correct": true,
+        "why": "Right — a hold makes `upgrade` skip it without a word, and this is the only way to see one."
+      },
+      {
+        "text": "`apt-cache rdepends thatpackage`, for something blocking it",
+        "correct": false,
+        "why": "That lists what depends on it, and a blocked upgrade is reported as `not upgraded` rather than silence."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gygke4b",
+    "version": 1,
+    "section": "versions-and-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `apt policy`, what does `Candidate` mean?",
+    "hint": "It is the newest of a set, and the set is narrower than you might think.",
+    "choices": [
+      {
+        "text": "The newest version the project has released",
+        "correct": false,
+        "why": "apt has no idea what upstream released; it knows only what your repositories offer."
+      },
+      {
+        "text": "The version `apt install` would give you now",
+        "correct": true,
+        "why": "Right — newest among the configured repositories, at their priorities."
+      },
+      {
+        "text": "The version that was installed most recently",
+        "correct": false,
+        "why": "That is `Installed`, printed on the line above it."
+      },
+      {
+        "text": "The version recommended by the distribution's maintainers",
+        "correct": false,
+        "why": "There is no such field; priority is the mechanism and it is a number."
+      }
+    ]
+  },
+  {
+    "id": "ex-cby5gy7p",
+    "version": 1,
+    "section": "versions-and-holds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An installed package sits at priority 100. What does that number stop from happening?",
+    "hint": "Repositories are 500. Ask what 500 beats and what it does not.",
+    "choices": [
+      {
+        "text": "It stops the package from being removed by a routine autoremove run",
+        "correct": false,
+        "why": "The auto mark decides that; priorities are about which version wins."
+      },
+      {
+        "text": "It stops third-party repositories from upgrading it",
+        "correct": false,
+        "why": "A third-party repository is 500, which is higher, so it can and does."
+      },
+      {
+        "text": "It stops the package from being upgraded by anything",
+        "correct": false,
+        "why": "500 beats 100, so a newer version from any normal repository is installed happily."
+      },
+      {
+        "text": "It stops an older version replacing it on its own",
+        "correct": true,
+        "why": "Right — nothing below 1000 can push an installed version out in favour of an older one."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mh13hw5",
+    "version": 1,
+    "section": "versions-and-holds",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Stop a package from being upgraded, without editing any file: `apt-mark ____ postgresql`",
+    "hint": "One word, four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "hold"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1ww9fc8d",
+    "version": 1,
+    "section": "dnf-and-yum",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a Rocky Linux machine, somebody's notes say `yum install nginx`. Should you change it to `dnf`?",
+    "hint": "Look up what `yum` is on a current Red Hat family system.",
+    "choices": [
+      {
+        "text": "Yes — `yum` was removed and the command will fail",
+        "correct": false,
+        "why": "It is still there and still works; it was kept precisely so notes like these keep working."
+      },
+      {
+        "text": "Yes — `yum` works but resolves dependencies differently",
+        "correct": false,
+        "why": "There is one resolver, and both names reach it."
+      },
+      {
+        "text": "No — `yum` is a symlink to `dnf`",
+        "correct": true,
+        "why": "Right, and typing either is fine."
+      },
+      {
+        "text": "No — `yum` is for RHEL and `dnf` is for Fedora",
+        "correct": false,
+        "why": "Both names work on both; the split is historical rather than by distribution."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yfpkd1k",
+    "version": 1,
+    "section": "dnf-and-yum",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is there no `dnf update` step before `dnf install`, the way `apt update` comes before `apt install`?",
+    "hint": "One of the two refreshes itself.",
+    "choices": [
+      {
+        "text": "Because dnf downloads the package list on each install",
+        "correct": false,
+        "why": "It uses a cache; re-downloading each time would make every command slow."
+      },
+      {
+        "text": "Because dnf reads the repositories directly rather than caching",
+        "correct": false,
+        "why": "It caches; the difference is when the cache is considered stale."
+      },
+      {
+        "text": "Because dnf has no index, and resolves against the server",
+        "correct": false,
+        "why": "It has metadata, and `dnf makecache` is the command that builds it."
+      },
+      {
+        "text": "Because dnf expires its own metadata on a timer",
+        "correct": true,
+        "why": "Right — `Last metadata expiration check` is the line that reports it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xg0y2ga2",
+    "version": 1,
+    "section": "dnf-and-yum",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You press Return at `Is this ok [y/N]:` in dnf, out of habit from apt. What happens?",
+    "hint": "Read which letter is capitalised.",
+    "choices": [
+      {
+        "text": "Nothing is installed; the capital `N` is the default",
+        "correct": true,
+        "why": "Right — apt's `[Y/n]` and zypper's `(y)` go the other way."
+      },
+      {
+        "text": "It installs, since Return accepts in every package manager",
+        "correct": false,
+        "why": "It does in two of the three, which is exactly why this catches people."
+      },
+      {
+        "text": "It asks again, since Return is not a valid answer",
+        "correct": false,
+        "why": "Return is valid and means the capitalised option."
+      },
+      {
+        "text": "It shows the full version list, which is what `v` does",
+        "correct": false,
+        "why": "That is zypper's prompt, and it needs the letter typed."
+      }
+    ]
+  },
+  {
+    "id": "ex-szwr70tc",
+    "version": 1,
+    "section": "dnf-and-yum",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `rpm` query to its Debian equivalent.",
+    "hint": "Five queries, and every one of them starts with `-q`.",
+    "pairs": [
+      {
+        "left": "rpm -q thing",
+        "right": "dpkg -l thing"
+      },
+      {
+        "left": "rpm -ql thing",
+        "right": "dpkg -L thing"
+      },
+      {
+        "left": "rpm -qf /path",
+        "right": "dpkg -S /path"
+      },
+      {
+        "left": "rpm -qi thing",
+        "right": "apt show thing"
+      },
+      {
+        "left": "rpm -qa",
+        "right": "dpkg -l"
+      }
+    ],
+    "right_distractors": [
+      "apt policy thing",
+      "apt-mark showhold"
+    ]
+  },
+  {
+    "id": "ex-062s25nh",
+    "version": 1,
+    "section": "dnf-and-yum",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`rpm -i pkg.rpm` fails with `Failed dependencies`. How does that differ from `dpkg -i` failing the same way?",
+    "hint": "One of them has already written to the disk by the time it complains.",
+    "choices": [
+      {
+        "text": "rpm leaves the package unpacked; dpkg refuses outright",
+        "correct": false,
+        "why": "It is the other way round, and the difference matters when you go looking for the damage."
+      },
+      {
+        "text": "rpm writes nothing; dpkg unpacks and leaves it unconfigured",
+        "correct": true,
+        "why": "Right — there is no rpm equivalent of `iU` to clean up afterwards."
+      },
+      {
+        "text": "Both write nothing, and the two messages are just worded differently",
+        "correct": false,
+        "why": "dpkg's message says `leaving unconfigured`, which is it telling you it wrote files."
+      },
+      {
+        "text": "rpm retries against the repositories; dpkg has none to try",
+        "correct": false,
+        "why": "`rpm -i` is the low layer and does not know about repositories either."
+      }
+    ]
+  },
+  {
+    "id": "ex-68w4qmbd",
+    "version": 1,
+    "section": "dnf-and-yum",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a large `dnf upgrade`, what should you look for in `/etc`?",
+    "hint": "rpm does not ask about configuration the way Debian does; it leaves something instead.",
+    "choices": [
+      {
+        "text": "Packages in the `rc` state, with `rpm -qa | grep rc`",
+        "correct": false,
+        "why": "`rc` is a dpkg status and has no rpm equivalent."
+      },
+      {
+        "text": "Config files with no owner, using `rpm -qf` on each",
+        "correct": false,
+        "why": "Worth doing once in a while, and it is not what an upgrade leaves behind."
+      },
+      {
+        "text": "`.rpmnew` and `.rpmsave` files",
+        "correct": true,
+        "why": "Right — the packagers' new version beside yours, or yours moved aside."
+      },
+      {
+        "text": "Files newer than the upgrade, using `find /etc -newer`",
+        "correct": false,
+        "why": "That finds everything the upgrade touched, including the many files with no decision to make."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwxmpm3c",
+    "version": 1,
+    "section": "dnf-and-yum",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ask dnf which package ships a given path, quoting so the shell leaves it alone: `dnf ____ '*/bin/pdftotext'`",
+    "hint": "One word, eight letters.",
+    "blanks": [
+      {
+        "accept": [
+          "provides"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h5w5mcs2",
+    "version": 1,
+    "section": "zypper",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You run openSUSE Tumbleweed and have used `zypper up` every month for a year. What is the problem?",
+    "hint": "A rolling release replaces whole sets of packages at once.",
+    "choices": [
+      {
+        "text": "Little; `up` is the routine command on most systems",
+        "correct": false,
+        "why": "It is on Leap and SLES, and Tumbleweed is the distribution that differs."
+      },
+      {
+        "text": "`up` refuses vendor changes, so the machine is half-upgraded",
+        "correct": true,
+        "why": "Right — `dup` is the routine command on a rolling release, and `up` is not."
+      },
+      {
+        "text": "`up` upgrades everything including the kernel, which needs a reboot first",
+        "correct": false,
+        "why": "A kernel upgrade wants a reboot afterwards on any distribution, and that is not this."
+      },
+      {
+        "text": "`up` applies security patches alone, which is `zypper patch`",
+        "correct": false,
+        "why": "`patch` is the patches-only command; `up` does ordinary version upgrades."
+      }
+    ]
+  },
+  {
+    "id": "ex-dj0ycwf3",
+    "version": 1,
+    "section": "zypper",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `zypper search` output, what is the difference between `i` and `i+` in the `S` column?",
+    "hint": "One of the two is a package somebody typed the name of.",
+    "choices": [
+      {
+        "text": "`i+` means an upgrade is available for it",
+        "correct": false,
+        "why": "Availability is what `zypper list-updates` reports, in a different listing."
+      },
+      {
+        "text": "`i+` means it is installed from a third-party repository",
+        "correct": false,
+        "why": "The repository appears in `zypper info`, not as a plus in the status column."
+      },
+      {
+        "text": "`i+` means it is locked against upgrades",
+        "correct": false,
+        "why": "Locks show in `zypper locks`; the status column does not carry them."
+      },
+      {
+        "text": "`i+` was asked for; plain `i` came in as a dependency",
+        "correct": true,
+        "why": "Right — the same distinction as apt's manual and auto marks."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s8kxa8s",
+    "version": 1,
+    "section": "zypper",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `zypper ps` report, and why does it matter after an upgrade?",
+    "hint": "Section 98's open descriptors, used on purpose.",
+    "choices": [
+      {
+        "text": "Processes still using files the upgrade replaced",
+        "correct": true,
+        "why": "Right — they are running code that no longer exists on disk, and need restarting."
+      },
+      {
+        "text": "Processes started by packages the upgrade installed",
+        "correct": false,
+        "why": "Being newly installed does not make a process interesting; still holding old files does."
+      },
+      {
+        "text": "Packages whose services failed to restart after the upgrade",
+        "correct": false,
+        "why": "That is `systemctl --failed`, and it is a different question."
+      },
+      {
+        "text": "Processes that are blocking the package database lock",
+        "correct": false,
+        "why": "A held lock is reported when zypper cannot start, with a different message."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dvtrdv9",
+    "version": 1,
+    "section": "zypper",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The two-letter short form of `zypper install`, which is what SUSE documentation uses: `zypper ____ nginx`",
+    "hint": "Two letters, and they are the middle of the word it stands for.",
+    "blanks": [
+      {
+        "accept": [
+          "in"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xk9mt0ke",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are on an unfamiliar distribution and about to run an upgrade command you half remember. What do you do first?",
+    "hint": "All three managers have the same escape hatch.",
+    "choices": [
+      {
+        "text": "Run it and read the confirmation prompt",
+        "correct": false,
+        "why": "Reasonable on two of the three, and dnf's prompt defaults to no while the others default to yes."
+      },
+      {
+        "text": "Check `/etc/os-release` to identify the distribution",
+        "correct": false,
+        "why": "Worth knowing and it does not tell you what the command would do."
+      },
+      {
+        "text": "Ask it to print the plan without acting",
+        "correct": true,
+        "why": "Right: `apt --dry-run`, `dnf --assumeno`, `zypper install --dry-run`."
+      },
+      {
+        "text": "Look for the transaction log, so you can undo it afterwards",
+        "correct": false,
+        "why": "Only dnf can undo, and undoing is worse than not doing."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsz4w1az",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these has no equivalent on the rpm side?",
+    "hint": "It is the one about what is left behind after an uninstall.",
+    "choices": [
+      {
+        "text": "`apt autoremove`",
+        "correct": false,
+        "why": "`dnf autoremove` is the same idea with the same name."
+      },
+      {
+        "text": "`apt purge`",
+        "correct": true,
+        "why": "Right — rpm has no `rc` state; it leaves `.rpmsave` files instead."
+      },
+      {
+        "text": "`apt policy`",
+        "correct": false,
+        "why": "`dnf --showduplicates list` answers the same question about versions."
+      },
+      {
+        "text": "`apt-file search`",
+        "correct": false,
+        "why": "`dnf provides` does it, and without the extra index download."
+      }
+    ]
+  },
+  {
+    "id": "ex-05w7d7r7",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each apt command to its dnf equivalent.",
+    "hint": "Five pairs; one of the five needs no command at all on the dnf side.",
+    "pairs": [
+      {
+        "left": "apt update",
+        "right": "automatic, on a timer"
+      },
+      {
+        "left": "apt list --upgradable",
+        "right": "dnf check-update"
+      },
+      {
+        "left": "apt full-upgrade",
+        "right": "dnf distro-sync"
+      },
+      {
+        "left": "apt-file search X",
+        "right": "dnf provides '*/X'"
+      },
+      {
+        "left": "apt-mark hold X",
+        "right": "dnf versionlock add X"
+      }
+    ],
+    "right_distractors": [
+      "dnf clean all",
+      "dnf repolist"
+    ]
+  },
+  {
+    "id": "ex-g2da6x2e",
+    "version": 1,
+    "section": "outside-the-distribution",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`sudo pip install requests` on a system that allows it. What breaks, and when?",
+    "hint": "Ask which directory it writes into, and who else writes there.",
+    "choices": [
+      {
+        "text": "A system tool in python, at the next upgrade",
+        "correct": true,
+        "why": "Right — two package managers disagreeing about one directory, and the loser is usually not your project."
+      },
+      {
+        "text": "Your own project, immediately, because the version is wrong",
+        "correct": false,
+        "why": "Your project gets the version you asked for; the damage lands elsewhere."
+      },
+      {
+        "text": "Little, as long as the version matches the system package",
+        "correct": false,
+        "why": "The versions drift on the next upgrade, which is when it arrives."
+      },
+      {
+        "text": "pip itself, for want of write access to a root-owned directory",
+        "correct": false,
+        "why": "With `sudo` it writes fine, which is the whole problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-e16vnjfv",
+    "version": 1,
+    "section": "outside-the-distribution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`error: externally-managed-environment` from pip. What is the best response?",
+    "hint": "The error text names three alternatives, in order.",
+    "choices": [
+      {
+        "text": "`pip install --break-system-packages`, which is what the flag is for",
+        "correct": false,
+        "why": "The flag exists and is named after what it does; it is the last resort rather than the first."
+      },
+      {
+        "text": "Remove the `EXTERNALLY-MANAGED` marker file",
+        "correct": false,
+        "why": "That silences the check and leaves the collision it was warning about."
+      },
+      {
+        "text": "Run it with `sudo`, which has the necessary permissions",
+        "correct": false,
+        "why": "Permission was never the problem; the check is deliberate."
+      },
+      {
+        "text": "The distribution's package, a venv, or pipx — in that order",
+        "correct": true,
+        "why": "Right, and those are the three the error itself suggests."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzrnnpk4",
+    "version": 1,
+    "section": "outside-the-distribution",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are true of software installed into `/usr/local` by hand?",
+    "hint": "Think about what the package database does and does not contain.",
+    "choices": [
+      {
+        "text": "`dpkg -S` on its files finds no package",
+        "correct": true,
+        "why": "Yes — that empty answer is the definition of unmanaged."
+      },
+      {
+        "text": "It is not upgraded when the machine is upgraded",
+        "correct": true,
+        "why": "Yes, and it stays at the version you installed until you notice."
+      },
+      {
+        "text": "`apt remove` cannot remove it",
+        "correct": true,
+        "why": "Yes — apt has no record of it to act on."
+      },
+      {
+        "text": "It is ignored by the shell's PATH by default",
+        "correct": false,
+        "why": "`/usr/local/bin` is on the default PATH, which is why the binary works at all."
+      },
+      {
+        "text": "It will conflict with a distribution package of the same name",
+        "correct": false,
+        "why": "They coexist in different directories; which one runs is a PATH question."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr1shgad",
+    "version": 1,
+    "section": "outside-the-distribution",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Give a command-line tool its own environment and one entry on your PATH: `____ install ruff`",
+    "hint": "Four letters, and it is pip's name with one more.",
+    "blanks": [
+      {
+        "accept": [
+          "pipx"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6a456jjx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague installed a `.deb` by hand and the program now fails with a library error. What do you check first?",
+    "hint": "One command tells you whether the package finished installing.",
+    "choices": [
+      {
+        "text": "`ldd` on the binary, to see which library is missing",
+        "correct": false,
+        "why": "That names the library and not the reason, and the reason is one letter away."
+      },
+      {
+        "text": "`dpkg -l thatpackage`, for the two status letters",
+        "correct": true,
+        "why": "Right — `iU` means unpacked and never configured, which is exactly this failure."
+      },
+      {
+        "text": "The program's own log, for the version it thinks it has",
+        "correct": false,
+        "why": "A half-configured package rarely logs anything useful, and often will not start to log."
+      },
+      {
+        "text": "`apt update`, in case the index is stale",
+        "correct": false,
+        "why": "The index has nothing to do with a package that is already on the disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbt6w29k",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order you would work through installing something you have never installed before.",
+    "items": [
+      "apt policy thing",
+      "apt install --dry-run thing",
+      "apt install thing",
+      "dpkg -L thing | grep bin"
+    ],
+    "trap": "Find out what version you would get, see the plan, do it, then find out where it went."
+  },
+  {
+    "id": "ex-hmz5cq6v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The disk is filling up on a machine that has been upgraded for years. Which of these frees space and loses nothing you need?",
+    "hint": "Two of the four remove things that might matter.",
+    "choices": [
+      {
+        "text": "`apt purge` on each package left in the `rc` state",
+        "correct": false,
+        "why": "It does free space, and it also throws away configuration for software you may reinstall."
+      },
+      {
+        "text": "`apt autoremove --purge`",
+        "correct": false,
+        "why": "Useful and worth reading first; it removes packages, which is more than nothing."
+      },
+      {
+        "text": "`apt clean`",
+        "correct": true,
+        "why": "Right — it empties the cache of downloaded `.deb` files, which can be fetched again."
+      },
+      {
+        "text": "`apt-mark showhold` and unhold everything",
+        "correct": false,
+        "why": "That changes nothing on disk and lets held packages upgrade, which uses more space."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dy930sw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are writing a Dockerfile. Which line is wrong?",
+    "hint": "One of these is the interactive habit, in a place where nobody is watching.",
+    "choices": [
+      {
+        "text": "`RUN apt-get update && apt-get install -y --no-install-recommends curl`",
+        "correct": false,
+        "why": "That is the correct shape: update and install in one layer, recommends off, non-interactive."
+      },
+      {
+        "text": "`RUN apt-get clean && rm -rf /var/lib/apt/lists/*`",
+        "correct": false,
+        "why": "That is the cleanup that keeps the image small."
+      },
+      {
+        "text": "`RUN apt-get install -y ca-certificates`",
+        "correct": false,
+        "why": "Acceptable after an update in the same layer, and the scripted command is the right one."
+      },
+      {
+        "text": "`RUN apt install curl`",
+        "correct": true,
+        "why": "Right — `apt` for scripts, and no `-y`, so the build stops at a prompt nobody can answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qhdksrn",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to the first command to run.",
+    "hint": "Six symptoms from across the lesson.",
+    "pairs": [
+      {
+        "left": "a program fails looking for a library",
+        "right": "dpkg -l on its package"
+      },
+      {
+        "left": "upgrade never touches one package",
+        "right": "apt-mark showhold"
+      },
+      {
+        "left": "command not found and no idea what to install",
+        "right": "apt-file search bin/name"
+      },
+      {
+        "left": "a config file you did not write",
+        "right": "dpkg -S on the path"
+      },
+      {
+        "left": "reinstalled and the old settings came back",
+        "right": "apt purge, then install"
+      },
+      {
+        "left": "is no longer signed after an update",
+        "right": "read the E: Failed to fetch line"
+      }
+    ],
+    "right_distractors": [
+      "reboot and try again",
+      "apt clean"
+    ]
+  },
+  {
+    "id": "ex-ab0kwj8d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A third-party repository has started providing a newer version of a library your distribution also ships. What do you do about it?",
+    "hint": "There is a file whose whole purpose is expressing this preference.",
+    "choices": [
+      {
+        "text": "Pin that origin below 500, so nothing comes from it unless asked",
+        "correct": true,
+        "why": "Right — `Pin-Priority: 100` puts it under \"already installed\"."
+      },
+      {
+        "text": "Hold the library, so it stays where it is",
+        "correct": false,
+        "why": "That fixes one package and leaves the next one the repository takes over."
+      },
+      {
+        "text": "Disable the repository, and enable it only when installing from it",
+        "correct": false,
+        "why": "It works and it means the thing you wanted from that repository stops upgrading too."
+      },
+      {
+        "text": "Remove the library and install it from the third party deliberately",
+        "correct": false,
+        "why": "That accepts the takeover rather than preventing it, for a package you did not choose them for."
+      }
+    ]
+  },
+  {
+    "id": "ex-n65x0f3m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dnf remove openssl-libs` proposes to remove forty packages. What is it telling you?",
+    "hint": "It resolved dependencies in the direction you did not ask about.",
+    "choices": [
+      {
+        "text": "Those forty are unused dependencies it is tidying up",
+        "correct": false,
+        "why": "That is `autoremove`, and it is a separate command with a separate list."
+      },
+      {
+        "text": "Forty installed packages require it and cannot stay",
+        "correct": true,
+        "why": "Right — and this is the moment to press `n` and think."
+      },
+      {
+        "text": "Forty packages provide the same capability and conflict",
+        "correct": false,
+        "why": "Conflicts are reported as conflicts, and they are not removed in bulk."
+      },
+      {
+        "text": "The transaction test failed and it is proposing a rollback",
+        "correct": false,
+        "why": "The test runs after you confirm, and a rollback is `dnf history undo`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn8x0szg",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Finish configuring every package that an interrupted install left half done: `dpkg --configure ____`",
+    "hint": "A dash and one letter, meaning all of them.",
+    "blanks": [
+      {
+        "accept": [
+          "-a"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f4zb6hk2",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Repair a package left unconfigured because a dependency was missing: `apt-get ____ install`",
+    "hint": "Two words after the dashes, joined by one.",
+    "blanks": [
+      {
+        "accept": [
+          "--fix-broken",
+          "-f"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bsytn3yy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put these in the order they happen when `apt install` runs on a package with one missing dependency.",
+    "items": [
+      "apt reads its cached indexes",
+      "apt resolves the dependency and prints the plan",
+      "the archives are downloaded",
+      "dpkg unpacks both packages",
+      "dpkg configures the dependency, then the package"
+    ],
+    "trap": "Read, decide, fetch, write, run — and the dependency is configured before the thing that needs it."
+  },
+  {
+    "id": "ex-hm87ywev",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The rpm-family command that answers \"which package owns this file\", on both dnf and zypper systems: `____ /usr/bin/ls`",
+    "hint": "Two words: the low-layer tool and a query flag with one extra letter.",
+    "blanks": [
+      {
+        "accept": [
+          "rpm -qf"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5nh6kht8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command changes nothing on the machine?",
+    "hint": "Three of these four write something.",
+    "choices": [
+      {
+        "text": "`apt upgrade`",
+        "correct": false,
+        "why": "It installs newer versions of everything installed, which is a great deal of change."
+      },
+      {
+        "text": "`apt autoremove`",
+        "correct": false,
+        "why": "It removes packages nothing needs any more."
+      },
+      {
+        "text": "`apt update`",
+        "correct": true,
+        "why": "Right — it refreshes the indexes in a cache and touches no installed package."
+      },
+      {
+        "text": "`apt purge thing`",
+        "correct": false,
+        "why": "It removes a package and its configuration files."
+      }
+    ]
+  },
+  {
+    "id": "ex-3vcxv4yv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody's runbook says `apt-key add` to trust a new repository. What do you do?",
+    "hint": "That command was replaced, and the replacement is in the source line rather than a keyring.",
+    "choices": [
+      {
+        "text": "Run it; `apt-key` is the supported way to add a repository key",
+        "correct": false,
+        "why": "It is deprecated, and a key added that way vouches for every repository on the machine."
+      },
+      {
+        "text": "Run it with `sudo`, since keys are root-owned",
+        "correct": false,
+        "why": "Permission is not the problem; the mechanism is."
+      },
+      {
+        "text": "Skip the key entirely and add `[trusted=yes]` to the source line",
+        "correct": false,
+        "why": "That disables verification, which is worse than the deprecated command."
+      },
+      {
+        "text": "Put the key in `/etc/apt/keyrings/` and use `signed-by=`",
+        "correct": true,
+        "why": "Right — one key, scoped to one repository, and the runbook is old enough to re-check."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xt9rrqj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need the same software on a Debian machine and a Rocky machine. Which part of your notes transfers unchanged?",
+    "hint": "One layer is shared between dnf and zypper, and one is not shared with Debian at all.",
+    "choices": [
+      {
+        "text": "The install command, if you use the low layer on both",
+        "correct": false,
+        "why": "`dpkg -i` and `rpm -i` are different commands with different options and different behaviour on failure."
+      },
+      {
+        "text": "The reasoning, not the words",
+        "correct": true,
+        "why": "Right — verb, target, scope, dry-run, and a table to look the spelling up in."
+      },
+      {
+        "text": "The queries, since `rpm -qf` works on Debian too",
+        "correct": false,
+        "why": "`rpm` can be installed on Debian and its database is empty of Debian packages."
+      },
+      {
+        "text": "The repository files, since both use the same format",
+        "correct": false,
+        "why": "`.repo` and `.list` are different formats with different field names."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpzeh91y",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Print what `apt install nginx` would do, without installing anything: `apt install ____ nginx`",
+    "hint": "One long flag, two words joined by a dash.",
+    "blanks": [
+      {
+        "accept": [
+          "--dry-run",
+          "-s",
+          "--simulate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
