@@ -55,12 +55,26 @@ toda barra e todo ponto; o `W` pula a coisa inteira.
 | `{` `}` | atrás e adiante um parágrafo — um bloco de linhas não vazias |
 | `%` | ao delimitador correspondente |
 
-```schooling-figure
-{"svg": "<svg viewBox=\"0 0 586 245\" role=\"img\" aria-label=\"A captured vim screen after pressing G: the same six lines of server.conf, and the ruler at the bottom right reading 6,1 instead of 1,1.\"><rect x=\"26\" y=\"0\" width=\"560\" height=\"245\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><g font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\"><text x=\"40.00\" y=\"25.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-cyan)\" textLength=\"182.00\" lengthAdjust=\"spacingAndGlyphs\"># the server configuration</tspan><tspan fill=\"var(--paper)\" textLength=\"350.00\" lengthAdjust=\"spacingAndGlyphs\">                                                  </tspan></text><text x=\"40.00\" y=\"41.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">listen 8080                                                                 </tspan></text><text x=\"40.00\" y=\"56.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">workers 4                                                                   </tspan></text><text x=\"40.00\" y=\"72.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">timeout 30                                                                  </tspan></text><text x=\"40.00\" y=\"87.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">log_level info                                                              </tspan></text><text x=\"40.00\" y=\"103.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">log_file /var/log/app.log                                                   </tspan></text><text x=\"40.00\" y=\"118.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                           </tspan></text><text x=\"40.00\" y=\"134.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                           </tspan></text><text x=\"40.00\" y=\"149.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                           </tspan></text><text x=\"40.00\" y=\"165.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                           </tspan></text><text x=\"40.00\" y=\"180.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                           </tspan></text><text x=\"40.00\" y=\"196.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                           </tspan></text><text x=\"40.00\" y=\"211.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                           </tspan></text><text x=\"40.00\" y=\"227.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"532.00\" lengthAdjust=\"spacingAndGlyphs\">&#34;server.conf&#34; 6L, 101B                                    6,1           All </tspan></text></g></svg>", "caption": "O `server.conf` no vim depois de `G`, capturado de um terminal de verdade. A r\u00e9gua no canto inferior direito \u00e9 a \u00fanica coisa que mudou."}
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│# the server configuration                                              │
+│listen 8080                                                             │
+│workers 4                                                               │
+│timeout 30                                                              │
+│log_level info                                                          │
+│log_file /var/log/app.log                                               │
+│~                                                                       │
+│~                                                                       │
+│~                                                                       │
+│~                                                                       │
+│~                                                                       │
+│"server.conf" 6L, 101B                                6,1           All │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Nada na tela mudou a não ser os números da direita** — `6,1` onde dizia `1,1`.
-O vim moveu o cursor e disse isso no único lugar em que ele diz qualquer coisa.
+Aquilo é o `G`. **Nada na tela mudou a não ser os números da direita** — `6,1` em
+vez de `1,1`. O vim moveu o cursor e disse isso no único lugar em que ele diz
+qualquer coisa.
 
 O `%` vale mais do que parece: ponha o cursor numa `{` e aperte, e você vai para
 a `}` correspondente. Num arquivo de configuração com blocos aninhados, é assim
