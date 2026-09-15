@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/charmbracelet/x/ansi"
+	"github.com/charmbracelet/x/vt"
 )
 
 // What is tested here is the half that has no pseudo-terminal in it. The other
@@ -156,5 +157,66 @@ func TestACalloutNeedsARowAndText(t *testing.T) {
 	}
 	if err := l.Set("nine:the sorted column"); err == nil {
 		t.Error("a callout whose row is not a number is the same failure")
+	}
+}
+
+// A KEYBOARD IS NOT A GO STRING LITERAL. Escape leaves vim's insert mode and
+// control characters are the whole of nano's and emacs's vocabulary, and Go's
+// own unquoting has neither. Every key-taking flag goes through one decoder,
+// because the first version decoded only `-send`: `-quit ':q!\r'` then sent a
+// literal backslash and an r, vim sat holding an unfinished command line, and
+// the capture hung until it was killed.
+func TestKeystrokesDecodesWhatAKeyboardSends(t *testing.T) {
+	for _, c := range []struct{ in, want string }{
+		{`i`, "i"},
+		{`\e`, "\x1b"},
+		{`:q!\r`, ":q!\r"},
+		{`^X`, "\x18"},
+		{`^x`, "\x18"}, // the shift is not part of the control character
+		{`^L`, "\x0c"}, // the repaint key
+		{`^^`, "^"},    // and the way to type the caret itself
+		{`\\n`, `\n`},  // an escaped backslash is not an escape
+		{`G`, "G"},     // an ordinary key survives the decoder
+	} {
+		got, err := keystrokes(c.in)
+		if err != nil {
+			t.Errorf("keystrokes(%q): %v", c.in, err)
+			continue
+		}
+		if got != c.want {
+			t.Errorf("keystrokes(%q) = %q, want %q", c.in, got, c.want)
+		}
+	}
+
+	for _, bad := range []string{`\q`, `^!`} {
+		if _, err := keystrokes(bad); err == nil {
+			t.Errorf("keystrokes(%q) should refuse: a key nobody can send is a "+
+				"silent no-op in the middle of a capture", bad)
+		}
+	}
+}
+
+// REVERSE VIDEO IS A SWAP AND THE SVG HAS NO ATTRIBUTE FOR IT. nano draws its
+// title bar, its message line and its two rows of shortcuts this way: neither
+// colour is set, the two are exchanged. The first version named the defaults
+// the wrong way round and painted a black bar on a dark panel — a bar nobody
+// could see.
+func TestReverseVideoBecomesALightBar(t *testing.T) {
+	// `ESC [ 7 m` is what nano writes before its title bar. No colour is named:
+	// the terminal is told to exchange the two it already has.
+	term := vt.NewSafeEmulator(3, 1)
+	if _, err := term.Write([]byte("\x1b[7mGNU")); err != nil {
+		t.Fatal(err)
+	}
+	g := read(term, 3, 1)
+
+	if g[0][0].fg != "black" || g[0][0].bg != "white" {
+		t.Fatalf("reversed with no colours set should read dark on light, got fg=%q bg=%q",
+			g[0][0].fg, g[0][0].bg)
+	}
+
+	svg := draw(g, 3, 1, "a screen", nil)
+	if !strings.Contains(svg, "var(--term-white-bg)") {
+		t.Errorf("the ground has to be the light token or the bar is invisible on a dark panel; got %s", svg)
 	}
 }

@@ -244,6 +244,14 @@ go run ./tools/term-capture -rows 18 -out figure.svg \
   -- htop -u ana
 ```
 
+A screen that is not the one the program opens on is reached by typing at it, and every
+key-taking flag reads `\e` for Escape and `^X` for a control character:
+
+```sh
+go run ./tools/term-capture -send G -quit '\e:q!\r' -out figure.svg -- vim server.conf
+go run ./tools/term-capture -quit '^X' -out figure.svg -- nano notes.txt
+```
+
 The SVG goes to `-out` and the fence's JSON to stdout. The eight ANSI colours come out as
 `--term-*` tokens from `ui/assets/terminal.css`, so a captured screen follows the theme the way a
 drawn one does. Those are **two sets, a foreground and a `-bg`**, and the reason is htop's header
