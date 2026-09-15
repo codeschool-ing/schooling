@@ -92,7 +92,17 @@ const remote = { structure: null, courses: new Map(), lang: null };
    structure as well: its section titles are translated too. */
 export function forLanguage(lang) {
   if (remote.lang === lang) return false;
+
+  /* THE FIRST CALL ADOPTS A LANGUAGE, IT DOES NOT DROP ONE. `lang` starts null,
+     so without this the first caller through here emptied a store that had
+     never held another language — and the offline bundle fills it at boot from
+     the file itself, with no server behind it to fetch it back. It came out as
+     a lesson whose questions "did not load", from a copy that has every
+     question inside it. */
+  const nothingToDrop = remote.lang === null;
   remote.lang = lang;
+  if (nothingToDrop) return false;
+
   remote.structure = null;
   remote.courses.clear();
   return true;
