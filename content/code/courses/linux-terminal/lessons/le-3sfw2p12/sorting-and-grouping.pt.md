@@ -134,10 +134,10 @@ south     3
 west      1
 ```
 
-Filtre, agrupe, ordene, pegue. **Essa forma responde a maioria das perguntas que
-você vai fazer a uma máquina**, e é a mesma forma do `grep | cut | sort | uniq -c
-| sort -rn` da aula 8 — com a análise removida e a pré-condição de ordenação
-desaparecida.
+Filtre, agrupe, ordene, pegue. **Essa forma responde a maioria das perguntas
+que você vai fazer a uma máquina**, e é a mesma forma do
+`grep | cut | sort | uniq -c | sort -rn` da aula 8 — com a análise removida e a
+pré-condição de ordenação desaparecida.
 
 Um pipeline pode ser quebrado em linhas depois de um `|`. O PowerShell sabe que a
 instrução não terminou, então não há `\` no fim da linha.

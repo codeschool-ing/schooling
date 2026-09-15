@@ -204,6 +204,75 @@ func checkFigureFonts(school string, s *catalog.School, families map[string]bool
 	return problems
 }
 
+/*
+A LINE THAT BEGINS WITH A PIPE AND IS NOT A TABLE.
+
+	`blocksOf` in `ui/app/api.js` reads a table by its SECOND line: the `---`
+	rule is what tells a row apart from prose that happens to start with a pipe.
+	Without the rule underneath, the line falls through every branch, and the
+	paragraph branch refuses lines starting with a pipe — so nothing consumed it
+	and nothing advanced. The reader got `RangeError: Invalid array length` and a
+	course that would not open.
+
+	The parser cannot hang on it any more; this is the other half, because what
+	it renders instead is a stray fragment of a sentence standing alone as a
+	paragraph. One wrapped line produced both: a paragraph in
+	`sorting-and-grouping.pt.md` broke after the pipe inside `grep | cut | sort`,
+	in Portuguese only, so the course opened in English and hung in Portuguese.
+
+	THE RULE IS THE SECOND LINE, not the first, because `| a | b |` on its own IS
+	how every table here starts. A row inside a table is fine; a pipe-first line
+	with no rule under it and no table above it is the shape that breaks.
+*/
+func checkPipeLines(school string, s *catalog.School) []error {
+	var problems []error
+	rule := regexp.MustCompile(`^\|[\s|:-]+\|?\s*$`)
+
+	for _, course := range s.Courses {
+		for _, lesson := range course.Loaded {
+			for _, t := range lesson.Text {
+				lines := strings.Split(t.Body, "\n")
+				fence := false
+				table := false
+				for i, line := range lines {
+					if strings.HasPrefix(line, "```") {
+						fence = !fence
+						continue
+					}
+					if fence {
+						continue
+					}
+					if !strings.HasPrefix(line, "|") {
+						table = false
+						continue
+					}
+					// the first row of a table is the one the rule sits under
+					if i+1 < len(lines) && rule.MatchString(lines[i+1]) {
+						table = true
+						continue
+					}
+					if table {
+						continue
+					}
+					problems = append(problems, fmt.Errorf(
+						"%s: %s/%s/%s (%s) line %d begins with a pipe and is not a table row: %q — "+
+							"a wrapped line that breaks after a pipe reads as prose to a person and "+
+							"as a broken table to the renderer",
+						school, course.ID, lesson.ID, t.SectionID, t.Locale, i+1, firstChars(line)))
+				}
+			}
+		}
+	}
+	return problems
+}
+
+func firstChars(s string) string {
+	if len(s) > 60 {
+		return s[:60] + "…"
+	}
+	return s
+}
+
 // firstOf is the first choice of a font stack, which is the one that has to be
 // a font the application ships. The generic at the end is what a stack is for.
 func firstOf(stack string) string {
@@ -262,6 +331,7 @@ func check(root string) (problems []error, schools int, err error) {
 		// actually carries. See `checkFigureFonts` for the three defects that
 		// have now lived inside an SVG, where nothing was reading.
 		problems = append(problems, checkFigureFonts(entry.Name(), school, families)...)
+		problems = append(problems, checkPipeLines(entry.Name(), school)...)
 	}
 
 	sort.Slice(problems, func(i, j int) bool { return problems[i].Error() < problems[j].Error() })
