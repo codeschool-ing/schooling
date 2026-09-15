@@ -1,0 +1,2106 @@
+[
+  {
+    "id": "ex-p5mywt8r",
+    "version": 1,
+    "section": "objects-not-text",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What travels down a PowerShell pipeline between two commands?",
+    "hint": "It is the one idea the whole language is built on.",
+    "choices": [
+      {
+        "text": "Lines of text, as in bash",
+        "correct": false,
+        "why": "That is the Unix pipeline, and choosing otherwise is what makes PowerShell different."
+      },
+      {
+        "text": "A rendered table, ready to print",
+        "correct": false,
+        "why": "The table is drawn at the very end, by a formatter."
+      },
+      {
+        "text": "Objects with named properties",
+        "correct": true,
+        "why": "Yes, and the next command receives them rather than a rendering of them."
+      },
+      {
+        "text": "A file handle the next command reads",
+        "correct": false,
+        "why": "Nothing is written to a file or a buffer between stages."
+      }
+    ]
+  },
+  {
+    "id": "ex-7q9rr6r5",
+    "version": 1,
+    "section": "objects-not-text",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You have an object and no idea what you can ask it. Which command answers that?",
+    "hint": "It is the first one to learn.",
+    "choices": [
+      {
+        "text": "Get-Help",
+        "correct": false,
+        "why": "It documents a command, not an object that came out of one."
+      },
+      {
+        "text": "Get-Member",
+        "correct": true,
+        "why": "Right. It prints the type and every property and method on it."
+      },
+      {
+        "text": "Get-Command",
+        "correct": false,
+        "why": "That finds commands by name, verb or noun."
+      },
+      {
+        "text": "Format-List",
+        "correct": false,
+        "why": "That shows the values it chooses to show, not what else is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkqcnj22",
+    "version": 1,
+    "section": "objects-not-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ls -l f | awk '{print $5}'` and `(Get-ChildItem f).Length` both give a file's size. Which problem does only the first one have?",
+    "hint": "Lesson 8 measured this on a log where every line looked the same shape.",
+    "choices": [
+      {
+        "text": "It struggles with files over two gigabytes",
+        "correct": false,
+        "why": "Both read the same number from the same place."
+      },
+      {
+        "text": "It needs the file to exist first",
+        "correct": false,
+        "why": "So does the other one, and it says so if it does not."
+      },
+      {
+        "text": "It rounds the answer to the nearest kilobyte",
+        "correct": false,
+        "why": "Neither rounds; `-l` prints exact bytes."
+      },
+      {
+        "text": "It counts columns in a rendering",
+        "correct": true,
+        "why": "Correct. A name with a space in it shifts every column after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vnb18pk",
+    "version": 1,
+    "section": "objects-not-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PowerShell starts in about 0.4 seconds against bash's 0.003. When does that actually matter?",
+    "hint": "Think about who or what is starting the shell, and how often.",
+    "choices": [
+      {
+        "text": "When a scheduler runs it every minute",
+        "correct": true,
+        "why": "Yes — a hundred and thirty times the startup cost, repeated all day."
+      },
+      {
+        "text": "When the script has a large file to process",
+        "correct": false,
+        "why": "Startup is paid once whatever the file size is."
+      },
+      {
+        "text": "When you are typing at a prompt",
+        "correct": false,
+        "why": "Four tenths of a second is below what a person notices while typing."
+      },
+      {
+        "text": "When the script is long",
+        "correct": false,
+        "why": "The length of the file changes parsing time, not runtime startup."
+      }
+    ]
+  },
+  {
+    "id": "ex-8r8f947b",
+    "version": 1,
+    "section": "verb-noun",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every PowerShell command is named `Verb-Noun`. What does the convention buy you?",
+    "hint": "Think about a command whose name you have never seen.",
+    "choices": [
+      {
+        "text": "Faster execution, because the name is parsed once",
+        "correct": false,
+        "why": "Names are not a performance question."
+      },
+      {
+        "text": "You look one up by what it works on",
+        "correct": true,
+        "why": "Correct — `Get-Command -Noun Service` lists everything that works on services."
+      },
+      {
+        "text": "Two commands are prevented from sharing a name",
+        "correct": false,
+        "why": "Modules can and do collide; the convention does not prevent it."
+      },
+      {
+        "text": "The shell can tell a cmdlet apart from a native program",
+        "correct": false,
+        "why": "That distinction comes from where the command is, not what it is called."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6heb7xm",
+    "version": 1,
+    "section": "verb-noun",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On PowerShell for Linux, `Get-Alias ls` reports that no such alias exists. On Windows it points at `Get-ChildItem`. Why the difference?",
+    "hint": "What else is called `ls` on a Linux machine?",
+    "choices": [
+      {
+        "text": "Aliases are user settings and were not configured here",
+        "correct": false,
+        "why": "They are created by PowerShell itself at startup."
+      },
+      {
+        "text": "The Linux build ships fewer commands overall",
+        "correct": false,
+        "why": "It ships fewer modules, but this is not about a missing cmdlet."
+      },
+      {
+        "text": "A real `ls` program exists here and would be shadowed",
+        "correct": true,
+        "why": "Right. PowerShell drops the alias so the native tool stays reachable."
+      },
+      {
+        "text": "`Get-ChildItem` behaves differently on Linux",
+        "correct": false,
+        "why": "It is the same cmdlet; only the alias differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wq8e3r7",
+    "version": 1,
+    "section": "verb-noun",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should a script spell out `-Recurse` rather than the `-Rec` that works at a prompt?",
+    "hint": "Think about a future version of the cmdlet.",
+    "choices": [
+      {
+        "text": "Abbreviations are slower to resolve",
+        "correct": false,
+        "why": "The resolution cost is not measurable."
+      },
+      {
+        "text": "Abbreviations work interactively and nowhere else",
+        "correct": false,
+        "why": "They work everywhere; that is the problem."
+      },
+      {
+        "text": "The shell warns about them in a file",
+        "correct": false,
+        "why": "Nothing warns, which is why this is worth saying."
+      },
+      {
+        "text": "A new parameter could make it ambiguous",
+        "correct": true,
+        "why": "Correct. Your script breaks on an upgrade you did not make."
+      }
+    ]
+  },
+  {
+    "id": "ex-15fwjn69",
+    "version": 1,
+    "section": "verb-noun",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each discovery command to what it tells you.",
+    "hint": "One of them is about an object rather than a command.",
+    "pairs": [
+      {
+        "left": "Get-Verb",
+        "right": "the list of approved verbs"
+      },
+      {
+        "left": "Get-Command -Noun X",
+        "right": "every command that works on X"
+      },
+      {
+        "left": "Get-Member",
+        "right": "what properties this object has"
+      },
+      {
+        "left": "Get-Help X -Examples",
+        "right": "worked examples from whoever wrote X"
+      }
+    ],
+    "right_distractors": [
+      "which module is loaded",
+      "how long the command takes"
+    ]
+  },
+  {
+    "id": "ex-wxdqtn7m",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Import-Csv sales.csv | Get-Member` shows `revenue` as `string revenue=8721`. What does that tell you?",
+    "hint": "Look at the word before the property name.",
+    "choices": [
+      {
+        "text": "Import-Csv does not guess types",
+        "correct": true,
+        "why": "Correct — every column comes back as text, whatever it looks like."
+      },
+      {
+        "text": "The file has a formatting error in that column",
+        "correct": false,
+        "why": "The file is fine; this is what the cmdlet always does."
+      },
+      {
+        "text": "Get-Member displays each value as a string",
+        "correct": false,
+        "why": "It prints the declared type, and other cmdlets show integers here."
+      },
+      {
+        "text": "The column was quoted in the CSV",
+        "correct": false,
+        "why": "Quoting in the file changes nothing about the resulting type."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zwz4273",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`1..1000000 | ForEach-Object { $_ } | Select-Object -First 3` returns at once. What happened to the other 999,997?",
+    "hint": "A PowerShell pipeline passes one object all the way down before starting the next.",
+    "choices": [
+      {
+        "text": "They were produced and discarded",
+        "correct": false,
+        "why": "Producing a million objects would not have been instant."
+      },
+      {
+        "text": "They were buffered and freed later",
+        "correct": false,
+        "why": "Nothing was buffered; there was nothing to buffer."
+      },
+      {
+        "text": "They were never produced",
+        "correct": true,
+        "why": "Right. Select-Object had what it asked for and stopped the pipeline."
+      },
+      {
+        "text": "They went to a background thread",
+        "correct": false,
+        "why": "PowerShell ran the whole pipeline in one thread here."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dhwz7hz",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `Select-Object Name` and `Select-Object -ExpandProperty Name`?",
+    "hint": "One gives you a container, the other gives you what is in it.",
+    "choices": [
+      {
+        "text": "The second is faster on large collections",
+        "correct": false,
+        "why": "Speed is not the distinction; what comes out is."
+      },
+      {
+        "text": "The first gives containers, the second gives contents",
+        "correct": true,
+        "why": "Correct, and it is why something downstream sometimes cannot find what you handed it."
+      },
+      {
+        "text": "The first keeps the original type, the second converts to string",
+        "correct": false,
+        "why": "The first produces a new PSCustomObject; the original type is gone either way."
+      },
+      {
+        "text": "The second also removes duplicates",
+        "correct": false,
+        "why": "Neither one de-duplicates; `Sort-Object -Unique` does."
+      }
+    ]
+  },
+  {
+    "id": "ex-768sc57t",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Name the variable that holds the object currently going past inside a `ForEach-Object` block: `1..3 | ForEach-Object { ____ * 2 }`",
+    "hint": "Two characters.",
+    "blanks": [
+      {
+        "accept": [
+          "$_"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c373js1a",
+    "version": 1,
+    "section": "filtering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same file and threshold give 16 rows with `$_.revenue -gt 30000` and 7 with `[int]$_.revenue -gt 30000`. What produced the 16?",
+    "hint": "What type is the left-hand side, and what does PowerShell do to the right?",
+    "choices": [
+      {
+        "text": "Rows where revenue was blank counted as zero",
+        "correct": false,
+        "why": "A blank would compare as an empty string, and would not be greater."
+      },
+      {
+        "text": "The unquoted form matched on a substring",
+        "correct": false,
+        "why": "`-gt` never does substring matching."
+      },
+      {
+        "text": "Nine rows were duplicated in the file",
+        "correct": false,
+        "why": "The file has 32 rows and no duplicates."
+      },
+      {
+        "text": "An alphabetical comparison of two strings",
+        "correct": true,
+        "why": "Correct. The right side is converted to the left's type, so 30000 became a string."
+      }
+    ]
+  },
+  {
+    "id": "ex-g267yetn",
+    "version": 1,
+    "section": "filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\"ANA\" -eq \"ana\"` returns True. How do you ask the case-sensitive question?",
+    "hint": "One letter, on the front of the operator.",
+    "choices": [
+      {
+        "text": "`-ceq`",
+        "correct": true,
+        "why": "Right. `-c` in front makes any comparison operator case-sensitive."
+      },
+      {
+        "text": "`-eq -CaseSensitive`",
+        "correct": false,
+        "why": "Operators do not take parameters; that is cmdlet syntax."
+      },
+      {
+        "text": "`-seq`",
+        "correct": false,
+        "why": "There is no such operator."
+      },
+      {
+        "text": "`-eq` with both sides cast to `[string]`",
+        "correct": false,
+        "why": "They are already strings; the cast changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-770zdcaj",
+    "version": 1,
+    "section": "filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Get-ChildItem -Filter '*.log'` and `Get-ChildItem | Where-Object Name -like '*.log'` give the same answer. Why prefer the first?",
+    "hint": "Which one builds an object for every file in the directory?",
+    "choices": [
+      {
+        "text": "`-Filter` understands regular expressions",
+        "correct": false,
+        "why": "It takes a wildcard, and a narrower one than `-like`."
+      },
+      {
+        "text": "`Where-Object` is unable to see hidden files",
+        "correct": false,
+        "why": "Neither does by default; `-Force` is what changes that."
+      },
+      {
+        "text": "The provider filters first",
+        "correct": true,
+        "why": "Correct, and on a directory server or across a network that is the whole difference."
+      },
+      {
+        "text": "`-Filter` is case-sensitive and safer",
+        "correct": false,
+        "why": "Both are case-insensitive here."
+      }
+    ]
+  },
+  {
+    "id": "ex-fe3znhn2",
+    "version": 1,
+    "section": "filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\"web01\" -contains $allowed` returns False even though `web01` is in `$allowed`. What went wrong?",
+    "hint": "Which side of `-contains` is the collection?",
+    "choices": [
+      {
+        "text": "`-contains` compares case-sensitively",
+        "correct": false,
+        "why": "It does not; `-ccontains` is the case-sensitive one."
+      },
+      {
+        "text": "The collection has to be on the left",
+        "correct": true,
+        "why": "Correct. Written that way it asks whether one string contains a two-element array."
+      },
+      {
+        "text": "`$allowed` needs to be cast to an array first",
+        "correct": false,
+        "why": "It already is an array; the operands are the wrong way round."
+      },
+      {
+        "text": "`-contains` works on strings, not arrays",
+        "correct": false,
+        "why": "It is specifically the collection membership operator."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvrh8gp8",
+    "version": 1,
+    "section": "sorting-and-grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 8 warned that `uniq -c` on unsorted input gives a wrong answer. Why does `Group-Object` not have that problem?",
+    "hint": "What does `uniq` actually collapse?",
+    "choices": [
+      {
+        "text": "It sorts its input first, internally",
+        "correct": false,
+        "why": "It does not sort, and its output is in first-seen order."
+      },
+      {
+        "text": "It refuses unsorted input with an error",
+        "correct": false,
+        "why": "It accepts anything and reports correctly."
+      },
+      {
+        "text": "It accepts objects, which arrive already ordered",
+        "correct": false,
+        "why": "Objects arrive in whatever order the previous command emitted them."
+      },
+      {
+        "text": "It groups by value rather than by adjacency",
+        "correct": true,
+        "why": "Correct — `uniq` collapses runs, and `Group-Object` keeps a bucket per distinct value."
+      }
+    ]
+  },
+  {
+    "id": "ex-zydgjktc",
+    "version": 1,
+    "section": "sorting-and-grouping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Sort-Object revenue -Descending` puts 8721 at the top of a file whose largest revenue is 43731. Why?",
+    "hint": "The property came out of Import-Csv.",
+    "choices": [
+      {
+        "text": "It sorted the values as text",
+        "correct": true,
+        "why": "Right — `8` beats `4`, and the answer is plausible and wrong."
+      },
+      {
+        "text": "`-Descending` reverses twice on numeric data",
+        "correct": false,
+        "why": "It reverses once, whatever the type."
+      },
+      {
+        "text": "The file is not sorted, so the result is undefined",
+        "correct": false,
+        "why": "`Sort-Object` does not care what order its input arrives in."
+      },
+      {
+        "text": "Just the first page of results was sorted",
+        "correct": false,
+        "why": "It is a blocking stage: it sees everything before emitting anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-39wdr2ae",
+    "version": 1,
+    "section": "sorting-and-grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Select-Object -First 3` belong after `Sort-Object` rather than before it?",
+    "hint": "What does each of them need in order to do its job?",
+    "choices": [
+      {
+        "text": "`Select-Object` is unable to end a pipeline",
+        "correct": false,
+        "why": "It can, and often is."
+      },
+      {
+        "text": "`Sort-Object` refuses input shorter than its buffer",
+        "correct": false,
+        "why": "It sorts whatever it is given, including three objects."
+      },
+      {
+        "text": "Three arbitrary objects are not the top three",
+        "correct": true,
+        "why": "Correct. `Sort-Object` has to see everything, so it goes first and the take goes after."
+      },
+      {
+        "text": "`-First` counts from the end when it follows a sort",
+        "correct": false,
+        "why": "It counts from the start wherever it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-59eygg5j",
+    "version": 1,
+    "section": "sorting-and-grouping",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "One cmdlet replaces `sort | uniq -c` from lesson 8. Name it: `Import-Csv f | ____ region`",
+    "hint": "Two words with a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "Group-Object"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rpj4rkyf",
+    "version": 1,
+    "section": "formatting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Import-Csv f | Format-Table | Where-Object region -eq north | Measure-Object` reports a count of zero, and eight rows match. What did Where-Object receive?",
+    "hint": "Ask Get-Member what came out of the formatter.",
+    "choices": [
+      {
+        "text": "The eight rows, with their properties renamed",
+        "correct": false,
+        "why": "Nothing was renamed; the rows are not there at all."
+      },
+      {
+        "text": "Formatting instructions, not sales records",
+        "correct": true,
+        "why": "Correct. `FormatStartData` and friends have no `region` on them, so nothing matched."
+      },
+      {
+        "text": "Not a thing — Format-Table consumes its input",
+        "correct": false,
+        "why": "Objects did come out — just a different kind."
+      },
+      {
+        "text": "A single string containing the whole table",
+        "correct": false,
+        "why": "It is a stream of objects, not one string."
+      }
+    ]
+  },
+  {
+    "id": "ex-xe50ww0h",
+    "version": 1,
+    "section": "formatting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function returns a value with `Write-Host` and the caller gets nothing. Why?",
+    "hint": "Which of the two writing cmdlets puts an object in the pipeline?",
+    "choices": [
+      {
+        "text": "Write-Host needs a `-PassThru` switch",
+        "correct": false,
+        "why": "There is no such switch on it."
+      },
+      {
+        "text": "The value was converted to a string and lost",
+        "correct": false,
+        "why": "No conversion happened; nothing was emitted at all."
+      },
+      {
+        "text": "Write-Host works inside a script but not a function",
+        "correct": false,
+        "why": "It works in both, and does the same thing in both."
+      },
+      {
+        "text": "It writes to the host, bypassing the pipeline",
+        "correct": true,
+        "why": "Correct. It cannot be captured or redirected, which is exactly its purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3y0hq3q",
+    "version": 1,
+    "section": "formatting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You want a pipeline's results in a file for another program to read. Which one?",
+    "hint": "Formatting is for people reading a screen.",
+    "choices": [
+      {
+        "text": "ConvertTo-Json",
+        "correct": true,
+        "why": "Yes — data the other side can parse, and `ConvertFrom-Json` reads it back."
+      },
+      {
+        "text": "Format-Table > out.txt",
+        "correct": false,
+        "why": "That writes the table a human would have read, headers and all."
+      },
+      {
+        "text": "Out-Host -Paging > out.txt",
+        "correct": false,
+        "why": "That is a pager, for a person, and it writes nothing useful."
+      },
+      {
+        "text": "Format-List | Out-File",
+        "correct": false,
+        "why": "Same problem: a rendering, with the labels in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmh17zyb",
+    "version": 1,
+    "section": "formatting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`@{a=@{b=@{c=@{d=1}}}} | ConvertTo-Json` produces `\"c\": \"System.Collections.Hashtable\"`. What is the fix?",
+    "hint": "The cmdlet has a parameter about how far down it goes.",
+    "choices": [
+      {
+        "text": "Convert each level separately and join them",
+        "correct": false,
+        "why": "That is a great deal of work to replace one parameter."
+      },
+      {
+        "text": "Use `[ordered]` hashtables so the order is stable",
+        "correct": false,
+        "why": "Ordering is a different concern and does not affect depth."
+      },
+      {
+        "text": "Pass `-Depth 10`",
+        "correct": true,
+        "why": "Right. The default is 2 and anything deeper becomes the type name."
+      },
+      {
+        "text": "Pipe through `ConvertFrom-Json` first",
+        "correct": false,
+        "why": "That parses JSON; there is no JSON yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhs5fyse",
+    "version": 1,
+    "section": "variables-and-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\"42\" + 1` gives 421 and `42 + \"1\"` gives 43. What rule explains both?",
+    "hint": "Something is converted. The question is which side.",
+    "choices": [
+      {
+        "text": "Numbers are converted to strings when mixed",
+        "correct": false,
+        "why": "That would make the second answer 421 as well."
+      },
+      {
+        "text": "The right operand is converted to the left's type",
+        "correct": true,
+        "why": "Correct, and it is the same rule behind the comparison trap in filtering."
+      },
+      {
+        "text": "Quoted values are treated as text throughout",
+        "correct": false,
+        "why": "The second line has a quoted value and still added."
+      },
+      {
+        "text": "The result takes the type of whichever side is longer",
+        "correct": false,
+        "why": "Length is not consulted."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyq3ysgf",
+    "version": 1,
+    "section": "variables-and-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\"$f.Name\"` prints the whole path followed by `.Name`. What did you want?",
+    "hint": "The variable expanded on its own and stopped there.",
+    "choices": [
+      {
+        "text": "`\"${f.Name}\"`",
+        "correct": false,
+        "why": "Braces delimit a variable name, and a dot is not part of one."
+      },
+      {
+        "text": "`\"$f->Name\"`",
+        "correct": false,
+        "why": "That arrow is not PowerShell syntax."
+      },
+      {
+        "text": "`'$($f.Name)'`, with single quotes",
+        "correct": false,
+        "why": "Single quotes expand nothing at all."
+      },
+      {
+        "text": "`\"$($f.Name)\"`",
+        "correct": true,
+        "why": "Right. `$( )` runs an expression inside a double-quoted string."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbx70361",
+    "version": 1,
+    "section": "variables-and-types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a PowerShell double-quoted string, what is the escape character?",
+    "hint": "It is not the one you are used to.",
+    "choices": [
+      {
+        "text": "A backtick",
+        "correct": true,
+        "why": "Yes — `` `n `` is a newline, and backslash is an ordinary character."
+      },
+      {
+        "text": "A backslash",
+        "correct": false,
+        "why": "That is an ordinary character here, which is why Windows paths are easy to write."
+      },
+      {
+        "text": "A caret",
+        "correct": false,
+        "why": "That is `cmd.exe`'s escape character, not PowerShell's."
+      },
+      {
+        "text": "A percent sign",
+        "correct": false,
+        "why": "That is an alias for `ForEach-Object`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwhdme1z",
+    "version": 1,
+    "section": "variables-and-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\"hello\".Trim` prints a list of signatures instead of trimming. What is missing?",
+    "hint": "One is a method and one is a property.",
+    "choices": [
+      {
+        "text": "A cast to `[string]` first",
+        "correct": false,
+        "why": "It is already a string; that is how it has a Trim at all."
+      },
+      {
+        "text": "An argument saying what to trim",
+        "correct": false,
+        "why": "Trim works with no argument, which is one of the signatures printed."
+      },
+      {
+        "text": "The parentheses",
+        "correct": true,
+        "why": "Right. A method without them is the method itself, and PowerShell prints its overloads."
+      },
+      {
+        "text": "A `$` before the string literal",
+        "correct": false,
+        "why": "Literals do not take a `$`; that is for variables."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwrybyfj",
+    "version": 1,
+    "section": "collections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A loop builds a result with `$results += $item` and gets slow at ten thousand items. Why?",
+    "hint": "PowerShell arrays are a fixed size.",
+    "choices": [
+      {
+        "text": "Each `+=` copies the array into a new one",
+        "correct": true,
+        "why": "Correct — and the cost grows with every iteration."
+      },
+      {
+        "text": "`+=` on an array is a string concatenation",
+        "correct": false,
+        "why": "It appends an element; the array stays an array."
+      },
+      {
+        "text": "The garbage collector runs after each append",
+        "correct": false,
+        "why": "Collection is not triggered per statement."
+      },
+      {
+        "text": "Arrays are stored on disk above a certain size",
+        "correct": false,
+        "why": "Nothing about arrays touches the disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-sepjw65j",
+    "version": 1,
+    "section": "collections",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `$h.Keys` on `@{ name = 'web01'; port = 8080 }` print `port` first?",
+    "hint": "Look at what a plain `@{ }` promises about order.",
+    "choices": [
+      {
+        "text": "The keys are sorted alphabetically",
+        "correct": false,
+        "why": "`name` would come first if they were."
+      },
+      {
+        "text": "A hashtable does not preserve insertion order",
+        "correct": true,
+        "why": "Correct — same as bash's associative arrays, and `[ordered]@{ }` is the fix."
+      },
+      {
+        "text": "The shorter key is emitted first",
+        "correct": false,
+        "why": "Length plays no part in it."
+      },
+      {
+        "text": "`Keys` returns them in reverse order of writing",
+        "correct": false,
+        "why": "It is not reversed either; there is no order to reverse."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ea5fgq4",
+    "version": 1,
+    "section": "collections",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why write `@(Get-ChildItem *.log).Count` rather than `(Get-ChildItem *.log).Count`?",
+    "hint": "Think about a match of exactly one file, on an older version.",
+    "choices": [
+      {
+        "text": "`@( )` sorts the results first",
+        "correct": false,
+        "why": "It does not sort; it only guarantees an array."
+      },
+      {
+        "text": "One result comes back without that property",
+        "correct": true,
+        "why": "Correct, and on Windows PowerShell 5.1 that is exactly what happens."
+      },
+      {
+        "text": "`@( )` removes duplicate filenames",
+        "correct": false,
+        "why": "Nothing is de-duplicated."
+      },
+      {
+        "text": "Without it the wildcard stays unexpanded, as text",
+        "correct": false,
+        "why": "The glob is expanded by the cmdlet either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8ed306x",
+    "version": 1,
+    "section": "collections",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each operator or spelling to what it produces.",
+    "hint": "Two of them turn one thing into the other.",
+    "pairs": [
+      {
+        "left": "`-join ','`",
+        "right": "one string from a collection"
+      },
+      {
+        "left": "`-split '\\\\s+'`",
+        "right": "a collection from one string"
+      },
+      {
+        "left": "`[pscustomobject]@{ }`",
+        "right": "a thing with properties"
+      },
+      {
+        "left": "`[ordered]@{ }`",
+        "right": "a hashtable that keeps its key order"
+      }
+    ],
+    "right_distractors": [
+      "a sorted copy of a collection",
+      "a hashtable merged with another"
+    ]
+  },
+  {
+    "id": "ex-fprmcf6p",
+    "version": 1,
+    "section": "control-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A setting read from a file holds the text `false`, and `if ($setting) { }` runs the block. Why?",
+    "hint": "What makes a string truthy?",
+    "choices": [
+      {
+        "text": "The file had trailing whitespace",
+        "correct": false,
+        "why": "Whitespace is not what decided this."
+      },
+      {
+        "text": "`if` accepts booleans alone and coerced it wrongly",
+        "correct": false,
+        "why": "It accepts any expression and evaluates its truthiness."
+      },
+      {
+        "text": "PowerShell reads `false` as the keyword `$false`",
+        "correct": false,
+        "why": "It does not; `$false` and the string `false` are different things."
+      },
+      {
+        "text": "A non-empty string is true, whatever it says",
+        "correct": true,
+        "why": "Correct — `[bool]\"false\"` is True, and that is the bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8cvc83k",
+    "version": 1,
+    "section": "control-flow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`switch (3) { 1 { \"one\" } 3 { \"three\" } 3 { \"three again\" } }` prints two lines. How does this differ from bash's `case`?",
+    "hint": "Where does each of them stop?",
+    "choices": [
+      {
+        "text": "Every matching branch runs, not just the first",
+        "correct": true,
+        "why": "Correct, and `break` inside a branch is how you stop it."
+      },
+      {
+        "text": "The branches are evaluated in reverse order",
+        "correct": false,
+        "why": "They run top to bottom, as written."
+      },
+      {
+        "text": "`switch` compares as strings and matched twice",
+        "correct": false,
+        "why": "It matched twice because both patterns are 3, not because of a type."
+      },
+      {
+        "text": "`default` ran as well as the match",
+        "correct": false,
+        "why": "There is no `default` in that line."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xd9fa6s",
+    "version": 1,
+    "section": "control-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `Set-StrictMode -Version Latest` the PowerShell equivalent of?",
+    "hint": "It is about names that were never assigned.",
+    "choices": [
+      {
+        "text": "`set -e`",
+        "correct": false,
+        "why": "That is `$ErrorActionPreference = 'Stop'`."
+      },
+      {
+        "text": "`set -o pipefail`",
+        "correct": false,
+        "why": "PowerShell pipelines do not have per-stage exit statuses to combine."
+      },
+      {
+        "text": "`set -u`",
+        "correct": true,
+        "why": "Right. An uninitialised variable becomes an error instead of `$null`."
+      },
+      {
+        "text": "`shopt -s nullglob`",
+        "correct": false,
+        "why": "That is about globs matching nothing, which PowerShell handles differently."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9ecgsx9",
+    "version": 1,
+    "section": "control-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When should you use `ForEach-Object` rather than the `foreach` keyword?",
+    "hint": "One of them needs the whole collection in memory first.",
+    "choices": [
+      {
+        "text": "When the collection is small and already in a variable",
+        "correct": false,
+        "why": "That is the case where `foreach` wins on speed."
+      },
+      {
+        "text": "When the objects are still arriving slowly",
+        "correct": true,
+        "why": "Correct — it streams, so work starts before the last object exists."
+      },
+      {
+        "text": "When you need `break` to leave the loop",
+        "correct": false,
+        "why": "`break` is the one thing that works better in `foreach`."
+      },
+      {
+        "text": "When the block assigns to a variable outside it",
+        "correct": false,
+        "why": "Both can do that; scope is not the distinction."
+      }
+    ]
+  },
+  {
+    "id": "ex-na11g5kd",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Get-Doubled -Number \"twelve\"` fails before the function body runs. What made that happen?",
+    "hint": "Look at what is in front of the parameter name.",
+    "choices": [
+      {
+        "text": "A `Test-Path` check on the function's first line",
+        "correct": false,
+        "why": "The function body never ran at all."
+      },
+      {
+        "text": "`[CmdletBinding()]` on the function",
+        "correct": false,
+        "why": "That adds common parameters; it does not type anything."
+      },
+      {
+        "text": "`[int]` on the parameter in the `param` block",
+        "correct": true,
+        "why": "Correct. PowerShell converts and rejects before the body is entered."
+      },
+      {
+        "text": "`Set-StrictMode` being on",
+        "correct": false,
+        "why": "Strict mode is about unset variables, not argument types."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cnqnh97",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function takes pipeline input, two objects are piped in, and it reports only the last. What is missing?",
+    "hint": "There are three blocks, and one of them runs per object.",
+    "choices": [
+      {
+        "text": "A `process { }` block",
+        "correct": true,
+        "why": "Correct. Without it the body is one big `end`, run once after everything arrived."
+      },
+      {
+        "text": "A `begin { }` block",
+        "correct": false,
+        "why": "That runs once before, which is not where the per-object work goes."
+      },
+      {
+        "text": "`[Parameter(ValueFromPipeline)]`",
+        "correct": false,
+        "why": "It has that already, which is how the last object got in."
+      },
+      {
+        "text": "A `foreach` inside the body",
+        "correct": false,
+        "why": "The body does not receive a collection; it receives one object."
+      }
+    ]
+  },
+  {
+    "id": "ex-qf4bse5m",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In bash a function's variables are global unless you say `local`. In PowerShell?",
+    "hint": "The defaults are the other way round.",
+    "choices": [
+      {
+        "text": "The same: global unless declared otherwise",
+        "correct": false,
+        "why": "That is bash's default, and it is why section 150 had to insist on `local`."
+      },
+      {
+        "text": "Confined to the function, unless you say otherwise",
+        "correct": true,
+        "why": "Correct, and needing one of those is usually a sign the function should return a value."
+      },
+      {
+        "text": "Local, and the caller's variables are unreachable from it",
+        "correct": false,
+        "why": "There is a way; it is just explicit."
+      },
+      {
+        "text": "Global, but restored when the function returns",
+        "correct": false,
+        "why": "Nothing restores them, in either language."
+      }
+    ]
+  },
+  {
+    "id": "ex-55gbphqm",
+    "version": 1,
+    "section": "functions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Complete the attribute that makes PowerShell reject a bad value before your code runs: `[____('Table','Json','Csv')] [string]$As`",
+    "hint": "Two words run together, starting with Validate.",
+    "blanks": [
+      {
+        "accept": [
+          "ValidateSet"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5rj5jneg",
+    "version": 1,
+    "section": "providers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Get-ChildItem Env:` lists environment variables and `Get-ChildItem C:\\` lists files. What makes that possible?",
+    "hint": "Both are trees, and something makes trees look alike.",
+    "choices": [
+      {
+        "text": "Env: is a folder the shell creates at startup",
+        "correct": false,
+        "why": "Nothing is created on disk; there is no folder anywhere."
+      },
+      {
+        "text": "Get-ChildItem has a special case for each one",
+        "correct": false,
+        "why": "The cmdlet has no idea what it is listing."
+      },
+      {
+        "text": "A provider presents each as a drive",
+        "correct": true,
+        "why": "Correct — the same four cmdlets then work on all of them."
+      },
+      {
+        "text": "The environment is stored in a file underneath",
+        "correct": false,
+        "why": "It lives in the process, and is never written out."
+      }
+    ]
+  },
+  {
+    "id": "ex-qagad1b3",
+    "version": 1,
+    "section": "providers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Get-ChildItem > out.txt` writes a table with headers, and `Get-ChildItem | Set-Content out.txt` writes bare paths. Why the difference?",
+    "hint": "One of them goes through the formatter.",
+    "choices": [
+      {
+        "text": "One renders a picture, the other writes values",
+        "correct": true,
+        "why": "Correct, and it is section 164's rule showing up where you did not expect it."
+      },
+      {
+        "text": "Set-Content adds a header when it is told to",
+        "correct": false,
+        "why": "It never adds one; the header came from the other side."
+      },
+      {
+        "text": "`>` uses the console width and Set-Content does not",
+        "correct": false,
+        "why": "Width affects the layout, not whether there is a table."
+      },
+      {
+        "text": "They write the file in different encodings entirely",
+        "correct": false,
+        "why": "Encoding differs in some versions and is not what produced the headers."
+      }
+    ]
+  },
+  {
+    "id": "ex-cp1v75cm",
+    "version": 1,
+    "section": "providers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Select-String` give you that `grep -n` does not?",
+    "hint": "Think about what you do with the line number afterwards.",
+    "choices": [
+      {
+        "text": "Case-insensitive matching by default",
+        "correct": false,
+        "why": "`grep -i` does that, and `Select-String` being insensitive by default is a separate surprise."
+      },
+      {
+        "text": "Recursive search down through directories",
+        "correct": false,
+        "why": "`grep -r` does that too."
+      },
+      {
+        "text": "Regular expressions rather than fixed strings",
+        "correct": false,
+        "why": "`grep` has taken regular expressions since 1973."
+      },
+      {
+        "text": "Objects, with a usable line number on them",
+        "correct": true,
+        "why": "Correct — no second step to cut the number back out of the text."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mrp79gs",
+    "version": 1,
+    "section": "providers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Name the cmdlet that answers `test -e`: `if (____ /etc/hosts) { \"it is there\" }`",
+    "hint": "Two words with a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "Test-Path"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9680kr0y",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `try` block around `Get-Content /etc/nosuchfile` never enters its `catch`, and the error is printed anyway. What is missing?",
+    "hint": "There are two classes of error and `catch` only sees one.",
+    "choices": [
+      {
+        "text": "A `finally` block written after the catch",
+        "correct": false,
+        "why": "`finally` runs afterwards; it does not make anything catchable."
+      },
+      {
+        "text": "`-ErrorAction Stop` on the cmdlet",
+        "correct": true,
+        "why": "Correct — a non-terminating error is reported and stepped over, catch or no catch."
+      },
+      {
+        "text": "`Set-StrictMode -Version Latest`",
+        "correct": false,
+        "why": "That is about unset variables, not about errors."
+      },
+      {
+        "text": "A `throw` inside the try block",
+        "correct": false,
+        "why": "Adding one would be caught, and would not catch the original."
+      }
+    ]
+  },
+  {
+    "id": "ex-en1evvhg",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a cmdlet fails, `$LASTEXITCODE` still holds 2 from an `ls` two lines earlier. What does that tell you?",
+    "hint": "One of the two status variables is only touched by one kind of command.",
+    "choices": [
+      {
+        "text": "The cmdlet failed with the same code by coincidence",
+        "correct": false,
+        "why": "It set no code at all, which is the point."
+      },
+      {
+        "text": "`$LASTEXITCODE` accumulates the worst status seen",
+        "correct": false,
+        "why": "It holds the most recent one, not a running maximum."
+      },
+      {
+        "text": "Cmdlets do not set `$LASTEXITCODE`",
+        "correct": true,
+        "why": "Correct — it is stale until the next native program, so reading it after a cmdlet is reading history."
+      },
+      {
+        "text": "The cmdlet ran a native program internally",
+        "correct": false,
+        "why": "`Get-Content` starts no process."
+      }
+    ]
+  },
+  {
+    "id": "ex-9eqhsqf4",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pair is the PowerShell equivalent of `set -euo pipefail` at the top of a script?",
+    "hint": "One line for unset names, one for failures.",
+    "choices": [
+      {
+        "text": "`Set-StrictMode` and `$ErrorActionPreference = 'Stop'`",
+        "correct": true,
+        "why": "Yes, and neither notices a native program that returned 1."
+      },
+      {
+        "text": "`$ErrorActionPreference = 'Stop'` and `trap { }`",
+        "correct": false,
+        "why": "A `trap` handles errors; it does not catch unset variables."
+      },
+      {
+        "text": "`Set-StrictMode -Version Latest` and `$ErrorView = 'DetailedView'`",
+        "correct": false,
+        "why": "`$ErrorView` changes how an error is printed."
+      },
+      {
+        "text": "`-ErrorAction Stop` and `-WarningAction Stop`",
+        "correct": false,
+        "why": "Those are per-command parameters, not script-wide settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vf1q62p",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script runs `git clone $url` and carries on after it fails, despite `$ErrorActionPreference = 'Stop'`. Why?",
+    "hint": "`git` is not a cmdlet.",
+    "choices": [
+      {
+        "text": "`git` writes its error to standard output",
+        "correct": false,
+        "why": "Where it writes changes nothing about the preference."
+      },
+      {
+        "text": "The preference applies inside functions alone",
+        "correct": false,
+        "why": "It applies to the whole session."
+      },
+      {
+        "text": "`git` exited with 0 despite the failure",
+        "correct": false,
+        "why": "It exits non-zero; nothing is reading that."
+      },
+      {
+        "text": "A native program has no ErrorAction to obey",
+        "correct": true,
+        "why": "Correct. Check `$LASTEXITCODE` yourself, or `$?` on the very next line."
+      }
+    ]
+  },
+  {
+    "id": "ex-6b0nw972",
+    "version": 1,
+    "section": "talking-to-windows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On this Linux machine, `Get-Service` reports that the term is not recognised. What does that mean?",
+    "hint": "Look at the module list.",
+    "choices": [
+      {
+        "text": "The cmdlet is disabled and can be switched on",
+        "correct": false,
+        "why": "There is no switch; it is not installed."
+      },
+      {
+        "text": "Its module is not built for this platform",
+        "correct": true,
+        "why": "Correct — that is why the lesson shows the error rather than inventing output."
+      },
+      {
+        "text": "It needs elevated privileges before it will appear",
+        "correct": false,
+        "why": "Privileges change what a command may do, not whether it exists."
+      },
+      {
+        "text": "It was renamed in PowerShell 7",
+        "correct": false,
+        "why": "`Get-Service` is still its name on Windows."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypn05s2s",
+    "version": 1,
+    "section": "talking-to-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does `Invoke-Command -ComputerName web01 { Get-Service }` differ from `ssh web01 'systemctl list-units'`?",
+    "hint": "Think about what arrives back on your machine.",
+    "choices": [
+      {
+        "text": "It runs without a network connection",
+        "correct": false,
+        "why": "Both need one."
+      },
+      {
+        "text": "It encrypts the session, where ssh does not",
+        "correct": false,
+        "why": "ssh encrypts everything by design."
+      },
+      {
+        "text": "Objects come back, not text",
+        "correct": true,
+        "why": "Correct — serialised on the far end and rehydrated here, so you can group and sort them."
+      },
+      {
+        "text": "It targets a single machine at a time",
+        "correct": false,
+        "why": "It takes a list, which is most of why people use it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6z8q3khs",
+    "version": 1,
+    "section": "talking-to-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are handed a Windows Server nobody documented. Which PowerShell should you assume is on it?",
+    "hint": "One of the two ships in the box.",
+    "choices": [
+      {
+        "text": "The one that shipped with the box",
+        "correct": true,
+        "why": "Yes — Windows PowerShell 5.1. PowerShell 7 is a separate install and a decision somebody has to make."
+      },
+      {
+        "text": "PowerShell 7, since it is current",
+        "correct": false,
+        "why": "It is current and it is not installed by default anywhere."
+      },
+      {
+        "text": "Whichever the domain controller runs",
+        "correct": false,
+        "why": "Versions are per machine, not per domain."
+      },
+      {
+        "text": "Neither, until a role is installed",
+        "correct": false,
+        "why": "5.1 is there from the first boot."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzzacvtp",
+    "version": 1,
+    "section": "talking-to-windows",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Windows-only cmdlet family to the Linux tool it stands in for.",
+    "hint": "One of them has no single Linux equivalent at all.",
+    "pairs": [
+      {
+        "left": "Get-Service",
+        "right": "systemctl"
+      },
+      {
+        "left": "Get-CimInstance",
+        "right": "/proc, /sys, lsblk and dmidecode together"
+      },
+      {
+        "left": "Get-ItemProperty on HKLM:",
+        "right": "reading a file under /etc"
+      },
+      {
+        "left": "Invoke-Command",
+        "right": "ssh"
+      }
+    ],
+    "right_distractors": [
+      "cron",
+      "journalctl"
+    ]
+  },
+  {
+    "id": "ex-2jrb6g8z",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which bash tool has no PowerShell counterpart in the Rosetta table, and why?",
+    "hint": "Three of the four rules explain the absence.",
+    "choices": [
+      {
+        "text": "`find`, because there is no recursive search",
+        "correct": false,
+        "why": "`Get-ChildItem -Recurse` does exactly that."
+      },
+      {
+        "text": "`sort`, because objects arrive pre-sorted",
+        "correct": false,
+        "why": "`Sort-Object` exists and does the same job."
+      },
+      {
+        "text": "`ssh`, because remoting works differently",
+        "correct": false,
+        "why": "`Invoke-Command` is in the table, and it is the counterpart."
+      },
+      {
+        "text": "`awk`, with no columns left to parse",
+        "correct": true,
+        "why": "Correct — you take a property, so a field-extracting language has nothing to do."
+      }
+    ]
+  },
+  {
+    "id": "ex-frf5fdt8",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are genuine advantages of the bash side?",
+    "hint": "The lesson lists four, and two of these are not among them.",
+    "choices": [
+      {
+        "text": "it starts in three milliseconds",
+        "correct": true,
+        "why": "Which is the whole argument for anything a scheduler runs on a timer."
+      },
+      {
+        "text": "every program written in fifty years can join a pipeline",
+        "correct": true,
+        "why": "Text is the lowest common denominator, and that is its strength."
+      },
+      {
+        "text": "it is installed on every Linux machine already",
+        "correct": true,
+        "why": "PowerShell is a download and a decision."
+      },
+      {
+        "text": "filenames with spaces are handled more safely",
+        "correct": false,
+        "why": "That is exactly what the object pipeline fixes and bash does not."
+      },
+      {
+        "text": "arithmetic with decimals is built in",
+        "correct": false,
+        "why": "`$(( ))` is integer only; lesson 9 sent you to `bc` for fractions."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4p0ctw6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put this pipeline in the order that works.",
+    "items": [
+      "Import-Csv sales.csv",
+      "Where-Object { [int]$_.revenue -gt 20000 }",
+      "Group-Object region",
+      "Sort-Object Count -Descending",
+      "Format-Table -AutoSize"
+    ],
+    "trap": "One of these destroys the objects, so it can only be last."
+  },
+  {
+    "id": "ex-093etbv3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three different bugs in this lesson all produce a plausible wrong answer with no error. Which is NOT one of them?",
+    "hint": "Two are about types and one is about pipeline position.",
+    "choices": [
+      {
+        "text": "Comparing a CSV column against a number",
+        "correct": false,
+        "why": "That one gave 16 rows where the truth is 7."
+      },
+      {
+        "text": "Putting Format-Table in the middle of a pipeline",
+        "correct": false,
+        "why": "That one gave a count of zero where eight rows matched."
+      },
+      {
+        "text": "Calling Get-Service on a Linux machine",
+        "correct": true,
+        "why": "Right — that one fails loudly, names the term, and stops. It is the honest kind."
+      },
+      {
+        "text": "Sorting a CSV column without casting it",
+        "correct": false,
+        "why": "That one put 8721 above 43731."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkvp9ar5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need the three largest files in a directory. Which pipeline?",
+    "hint": "Two stages, and their order matters.",
+    "choices": [
+      {
+        "text": "`Get-ChildItem | Sort-Object Length -Descending | Select-Object -First 3`",
+        "correct": true,
+        "why": "Correct: sort everything, then take the top of it."
+      },
+      {
+        "text": "`Get-ChildItem | Select-Object -First 3 | Sort-Object Length -Descending`",
+        "correct": false,
+        "why": "That sorts three arbitrary files."
+      },
+      {
+        "text": "`Get-ChildItem | Measure-Object Length -Maximum | Select-Object -First 3`",
+        "correct": false,
+        "why": "That gives one statistic, not three files."
+      },
+      {
+        "text": "`Get-ChildItem -Filter Length | Sort-Object -Descending`",
+        "correct": false,
+        "why": "`-Filter` takes a name pattern, not a property."
+      }
+    ]
+  },
+  {
+    "id": "ex-rym84sw7",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CSV column is text. Complete the cast that makes the comparison numeric: `Where-Object { ____$_.revenue -gt 30000 }`",
+    "hint": "Five characters, including the brackets.",
+    "blanks": [
+      {
+        "accept": [
+          "[int]"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wq4mqtqx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague's script uses `ls`, `cat` and `sort` and works on their Windows laptop. What happens on a Linux server?",
+    "hint": "Those three are aliases on one platform and real programs on the other.",
+    "choices": [
+      {
+        "text": "It fails immediately with unrecognised commands",
+        "correct": false,
+        "why": "The commands exist on Linux — that is the problem."
+      },
+      {
+        "text": "Different programs run, and the output changes",
+        "correct": true,
+        "why": "Correct: on Linux those are the native tools, and they emit text rather than objects."
+      },
+      {
+        "text": "It runs identically, because aliases are portable",
+        "correct": false,
+        "why": "The aliases are created only where they do not collide."
+      },
+      {
+        "text": "PowerShell rewrites them to the cmdlet names",
+        "correct": false,
+        "why": "Nothing rewrites them; they resolve to whatever is found first."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9av90mr",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each PowerShell cmdlet to the bash command it replaces.",
+    "hint": "Two of them replace a pair of bash commands rather than one.",
+    "pairs": [
+      {
+        "left": "Group-Object",
+        "right": "sort | uniq -c"
+      },
+      {
+        "left": "Select-String",
+        "right": "grep"
+      },
+      {
+        "left": "Measure-Object -Sum",
+        "right": "awk '{s+=$1} END{print s}'"
+      },
+      {
+        "left": "ConvertFrom-Json",
+        "right": "jq"
+      }
+    ],
+    "right_distractors": [
+      "xargs",
+      "sed -i"
+    ]
+  },
+  {
+    "id": "ex-xkkk4aj3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which single habit would have prevented the most bugs in this lesson?",
+    "hint": "Count how many sections mention the same thing.",
+    "choices": [
+      {
+        "text": "Writing `Get-ChildItem` instead of `gci`",
+        "correct": false,
+        "why": "Good practice, and it prevents a different class of problem."
+      },
+      {
+        "text": "Putting `-ErrorAction Stop` on each cmdlet",
+        "correct": false,
+        "why": "Useful, and it does not touch the comparison or the sort."
+      },
+      {
+        "text": "Running Get-Member on an unfamiliar object",
+        "correct": false,
+        "why": "Excellent advice for learning, and it fixes nothing on its own."
+      },
+      {
+        "text": "Casting text to a number at the boundary",
+        "correct": true,
+        "why": "Correct — the filter, the sort and the arithmetic all went wrong on the same omission."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hfjs5dv",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the PowerShell equivalent of `export X=1`?",
+    "hint": "The environment is a drive, and there is a shorthand for it.",
+    "choices": [
+      {
+        "text": "`Set-Variable X 1 -Scope Global`",
+        "correct": false,
+        "why": "That makes a shell variable, which a child process never sees."
+      },
+      {
+        "text": "`$env:X = 1`",
+        "correct": true,
+        "why": "Correct — the `env:` prefix is what makes it part of the environment."
+      },
+      {
+        "text": "`New-Item Env:X -Value 1 -Force`",
+        "correct": false,
+        "why": "It works and nobody writes it that way."
+      },
+      {
+        "text": "`$global:X = 1`",
+        "correct": false,
+        "why": "A global shell variable is still not in the environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-vpf7qpr7",
+    "version": 1,
+    "section": "a-rosetta-stone",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`$((1+2))` in bash becomes what in PowerShell?",
+    "hint": "Arithmetic needs no special syntax there.",
+    "choices": [
+      {
+        "text": "`$[1+2]`",
+        "correct": false,
+        "why": "That is obsolete bash syntax, not PowerShell."
+      },
+      {
+        "text": "`$((1+2))`",
+        "correct": false,
+        "why": "That is a subexpression containing a subexpression, and it is not how you add."
+      },
+      {
+        "text": "`[math]::Add(1,2)`",
+        "correct": false,
+        "why": "It works and nobody would write it for a sum."
+      },
+      {
+        "text": "`1+2`",
+        "correct": true,
+        "why": "Correct — every expression is evaluated, so arithmetic needs nothing around it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p0fymgp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A PowerShell function returns a number, but the caller gets two values. What is the likely cause?",
+    "hint": "Something else in the body was not consumed.",
+    "choices": [
+      {
+        "text": "A stray expression nobody captured",
+        "correct": true,
+        "why": "Correct — every uncaptured expression becomes output, so a bare `$x` on a line joins the result."
+      },
+      {
+        "text": "`return` was used instead of `Write-Output`",
+        "correct": false,
+        "why": "`return $x` emits `$x` and stops; it does not add anything extra."
+      },
+      {
+        "text": "The function was called inside a pipeline",
+        "correct": false,
+        "why": "The pipeline passes on what it is given; it does not add."
+      },
+      {
+        "text": "The parameter was declared `[int]`",
+        "correct": false,
+        "why": "A type on a parameter constrains the input, not the output."
+      }
+    ]
+  },
+  {
+    "id": "ex-fyg8vj11",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is safe to run on a production machine without reading the documentation first?",
+    "hint": "One verb group is defined as read-only.",
+    "choices": [
+      {
+        "text": "`Set-Service -Name X -StartupType Disabled`",
+        "correct": false,
+        "why": "`Set-` overwrites, and this one stops a service coming back."
+      },
+      {
+        "text": "`Remove-Item C:\\Temp -Recurse`",
+        "correct": false,
+        "why": "`Remove-` deletes, which is the point of the verb."
+      },
+      {
+        "text": "`Get-CimInstance Win32_LogicalDisk`",
+        "correct": true,
+        "why": "Right. `Get-` reads and returns; a `Get-` cmdlet that changed something would not have shipped."
+      },
+      {
+        "text": "`New-Item HKCU:\\Software\\App`",
+        "correct": false,
+        "why": "`New-` creates, which is a change even when it is a harmless one."
+      }
+    ]
+  },
+  {
+    "id": "ex-swpm6s4b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are looking at an object and do not know what is on it. What do you type?",
+    "hint": "One command answers that and nothing else does.",
+    "choices": [
+      {
+        "text": "`$obj | Format-List *`",
+        "correct": false,
+        "why": "It shows the values it can render, and hides methods entirely."
+      },
+      {
+        "text": "`$obj | Get-Member`",
+        "correct": true,
+        "why": "Correct — the type name, every property and every method, in one table."
+      },
+      {
+        "text": "`Get-Help $obj`",
+        "correct": false,
+        "why": "Help documents commands, and an object is not one."
+      },
+      {
+        "text": "`$obj.GetType()`",
+        "correct": false,
+        "why": "That names the type and stops, leaving you to look it up."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kfd82db",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these four questions in the order the one-question video asks them.",
+    "items": [
+      "turn twelve hundred log lines into objects",
+      "group by status and sort by count",
+      "find the requests over three thousand milliseconds",
+      "group those by path to see which endpoint they are"
+    ],
+    "trap": "Nothing can be grouped until the text has become objects."
+  },
+  {
+    "id": "ex-9wyq245k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Both lessons 8 and 10 found the same twelve slow requests on the same endpoint. What did each pay for the answer?",
+    "hint": "One paid at the start, the other paid all the way through.",
+    "choices": [
+      {
+        "text": "Bash paid zero; PowerShell paid one parse line for it",
+        "correct": false,
+        "why": "Bash paid too — lesson 8 measured the cost, and it was not zero."
+      },
+      {
+        "text": "Both paid about the same, so it comes down to taste",
+        "correct": false,
+        "why": "The costs are real and different; taste is not the whole of it."
+      },
+      {
+        "text": "PowerShell paid zero; bash paid in startup time alone",
+        "correct": false,
+        "why": "Startup is real and is not what either lesson was measuring here."
+      },
+      {
+        "text": "Bash counted columns; PowerShell built objects once",
+        "correct": true,
+        "why": "Correct — and lesson 8 showed the column counting going wrong on a field with spaces in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjvrp1x5",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the cmdlet that tells you what an object has on it: `Get-ChildItem | ____`",
+    "hint": "Two words with a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "Get-Member"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

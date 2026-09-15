@@ -1,0 +1,1595 @@
+{
+  "ex-jw30gnmw": {
+    "prompt": "O `/usr/bin/sleep` está no disco e três pessoas estão rodando `sleep 60` agora. Quantos há de cada?",
+    "hint": "Um destes mora no disco e não muda quando roda.",
+    "choices": [
+      {
+        "text": "Três arquivos e três processos, um par por pessoa",
+        "why": "Rodar um programa não o copia; o arquivo no disco fica intacto."
+      },
+      {
+        "text": "Um arquivo e um processo, dividido entre os três",
+        "why": "Eles interfeririam na memória um do outro, que é justamente o que um processo é feito para impedir."
+      },
+      {
+        "text": "Um arquivo e três processos",
+        "why": "Isso — o arquivo fica intacto e cada execução é um processo separado com a memória dele."
+      },
+      {
+        "text": "Três arquivos e um processo, escalonado em turnos",
+        "why": "Nada escreve cópias extras de um binário para rodá-lo."
+      }
+    ]
+  },
+  "ex-6h02jccj": {
+    "prompt": "Você anota um PID, espera dez minutos, e então dá `kill` nele. Qual é o risco?",
+    "hint": "O kernel distribui números em ordem e depois recomeça.",
+    "choices": [
+      {
+        "text": "O número terá crescido, e ele pode nomear um processo mais novo",
+        "why": "PIDs não são deslocamentos; um número antigo continua válido até o kernel dar a volta até ele."
+      },
+      {
+        "text": "O número pertence a outra coisa até lá",
+        "why": "Isso — PIDs são reusados depois que o contador dá a volta, então um salvo fica velho."
+      },
+      {
+        "text": "Dez minutos é tempo demais, e o kernel pode esquecer o número",
+        "why": "Nada expira um PID; ele vale exatamente enquanto o processo viver."
+      },
+      {
+        "text": "O PID terá sido renumerado quando o processo mudou de estado",
+        "why": "Um processo mantém o número dele do `fork` ao `exit`, faça o que fizer no meio."
+      }
+    ]
+  },
+  "ex-vn7x4ayn": {
+    "prompt": "O `ps aux` mostra uma linha com `[kthreadd]` entre colchetes e zeros nas colunas VSZ e RSS. O que é?",
+    "hint": "Os colchetes são o `ps` dizendo que não há o que imprimir.",
+    "choices": [
+      {
+        "text": "Código de kernel com um PID, sem linha de comando e sem memória",
+        "why": "Isso — os colchetes querem dizer que não há linha de comando, e os zeros que não há memória de usuário."
+      },
+      {
+        "text": "Um processo cuja linha de comando era longa demais para caber na coluna e foi descartada",
+        "why": "O `ps` trunca linhas longas em vez disso, e não acrescenta colchetes quando faz isso."
+      },
+      {
+        "text": "Um processo que terminou e espera ser recolhido",
+        "why": "Esse é marcado com `<defunct>` e mostra um `Z` na coluna de estado."
+      },
+      {
+        "text": "Uma thread de outro processo, mostrada porque pediram threads ao `ps`",
+        "why": "Threads precisam de `-L` ou `-H`, e carregam os números de memória do pai em vez de zeros."
+      }
+    ]
+  },
+  "ex-dqc77r6s": {
+    "prompt": "Complete com o número de processo do seu próprio shell, numa palavra: `ps -p ____ -o pid,ppid`",
+    "hint": "Dois caracteres, e o shell o substitui antes de o `ps` sequer vê-lo."
+  },
+  "ex-x0fh6zg4": {
+    "prompt": "Ligue cada entrada de `/proc/PID` ao que lê-la te diz.",
+    "hint": "As quatro são arquivos, e cada uma responde uma pergunta diferente sobre um processo.",
+    "pairs": [
+      {
+        "left": "cmdline",
+        "right": "os argumentos com que ele foi iniciado"
+      },
+      {
+        "left": "exe",
+        "right": "qual binário ele está rodando"
+      },
+      {
+        "left": "cwd",
+        "right": "o diretório que ele trata como aqui"
+      },
+      {
+        "left": "fd/",
+        "right": "os arquivos numerados que ele tem abertos"
+      }
+    ],
+    "right_distractors": [
+      "a conta a que ele pertence",
+      "quanto processador ele já usou"
+    ]
+  },
+  "ex-qf3y3ee8": {
+    "prompt": "Ponha os passos de rodar um `ls` a partir de um shell em ordem.",
+    "items": [
+      "o bash chama fork, e há dois bashes",
+      "o filho chama exec e vira o /usr/bin/ls",
+      "o bash chama wait e bloqueia",
+      "o ls imprime e sai com um código",
+      "o wait do bash retorna, define o $?, e imprime um prompt"
+    ],
+    "trap": "Copiar primeiro, substituir depois; o pai só espera quando o filho já existe."
+  },
+  "ex-vzy4v5q7": {
+    "prompt": "Por que o `fork` e o `exec` são duas chamadas em vez de uma?",
+    "hint": "Pense no que precisa acontecer com a cópia antes de o novo programa começar.",
+    "choices": [
+      {
+        "text": "Para que um processo possa ser copiado sem rodar nada novo",
+        "why": "Isso acontece, mas uma cópia em que ninguém dá `exec` é o caso incomum, e não o motivo."
+      },
+      {
+        "text": "Porque copiar memória é lento e é feito em segundo plano",
+        "why": "O `fork` não copia memória de imediato; as páginas são compartilhadas até um dos lados escrever."
+      },
+      {
+        "text": "Porque o kernel precisa escalonar o filho antes de conseguir carregar um programa",
+        "why": "O filho já é escalonável na hora, e carregar um programa não espera o escalonador."
+      },
+      {
+        "text": "Para o filho poder mudar identidade, diretório e arquivos abertos no meio",
+        "why": "Isso — redirecionamentos e o `User=` de um arquivo de unit acontecem nessa lacuna."
+      }
+    ]
+  },
+  "ex-rgmzv6qq": {
+    "prompt": "Um script faz `cd /tmp` e termina. O diretório do seu shell não mudou. Por quê?",
+    "hint": "O script rodou em algum lugar, e não foi no seu shell.",
+    "choices": [
+      {
+        "text": "O `cd` do script foi desfeito quando ele saiu",
+        "why": "Nada o desfaz; simplesmente não há diretório compartilhado para desfazer."
+      },
+      {
+        "text": "O script é um processo separado com a própria cópia",
+        "why": "Isso — e é por isso que o `cd` precisa ser um builtin do shell para servir para alguma coisa."
+      },
+      {
+        "text": "O `cd` dentro de um script precisa de `export` para chegar ao pai",
+        "why": "O `export` passa variáveis para os filhos; nada passa um diretório de volta para cima."
+      },
+      {
+        "text": "O shell põe o diretório dele de volta assim que o comando termina",
+        "why": "Não restaura; um `cd` builtin que você digita muda o diretório e ele fica mudado."
+      }
+    ]
+  },
+  "ex-2a69yy6w": {
+    "prompt": "Um pai recolhe o código de saída do filho chamando ____ — a outra metade do `exit`.",
+    "hint": "Quatro letras, e o bash tem um builtin com o mesmo nome."
+  },
+  "ex-40wxjx2c": {
+    "prompt": "Um `ps -eo stat --no-headers | sort | uniq -c` numa máquina saudável dá 36 `S`, 24 `I<` e 1 `R`. O que isso diz?",
+    "hint": "Conte quantos estão de fato fazendo alguma coisa.",
+    "choices": [
+      {
+        "text": "A máquina está sufocada, com um processo monopolizando o processador",
+        "why": "Um `R` só é um processo na fila de execução, que é o oposto de disputa."
+      },
+      {
+        "text": "Algo está errado: um processo só conseguiu iniciar",
+        "why": "Os oitenta e cinco iniciaram; oitenta e quatro deles estão esperando algo."
+      },
+      {
+        "text": "Ela está ociosa e normal — quase tudo está dormindo",
+        "why": "Isso, e as linhas `I<` são trabalhadores de kernel sem fazer nada, que é o trabalho deles."
+      },
+      {
+        "text": "As threads de kernel estão bloqueadas, e por isso a contagem é alta",
+        "why": "O `I` é o estado ocioso de uma thread de kernel; o bloqueado seria o `D`."
+      }
+    ]
+  },
+  "ex-shwxwk5b": {
+    "prompt": "Um processo está em `D` há quatro minutos. O que você faz a respeito?",
+    "hint": "Descubra primeiro se um sinal chegaria nele.",
+    "choices": [
+      {
+        "text": "Mandar `TERM`, esperar, e depois `KILL` se ele continuar ali",
+        "why": "Nenhum dos dois chega: um sinal é entregue na volta ao espaço de usuário, e ele não voltou."
+      },
+      {
+        "text": "Dar `renice` para 19 para ele parar de disputar o disco",
+        "why": "A niceness é tempo de processador, e este processo não está pedindo nenhum."
+      },
+      {
+        "text": "Deixe — alguns minutos em `D` é comum numa leitura de disco",
+        "why": "Um instante é comum; quatro minutos querem dizer que o que ele espera não está respondendo."
+      },
+      {
+        "text": "Olhar embaixo: o dispositivo que ele espera",
+        "why": "Isso — o `D` é um sintoma, e a causa é o dispositivo que não está respondendo."
+      }
+    ]
+  },
+  "ex-3eb61r4x": {
+    "prompt": "Você acha um processo em `Z`. O `kill -9` não faz nada com ele. Por quê?",
+    "hint": "Pergunte o que sobrou dele para receber qualquer coisa.",
+    "choices": [
+      {
+        "text": "Ele acabou; não sobrou nada para receber",
+        "why": "Isso — o que resta é uma entrada de tabela segurando um número que ninguém leu."
+      },
+      {
+        "text": "Ele é um processo protegido, do jeito que o PID 1 é",
+        "why": "Nenhum processo é protegido do `KILL` pelo kernel; a permissão é a única checagem."
+      },
+      {
+        "text": "Ele está bloqueando sinais com um trap",
+        "why": "O `KILL` não pode ser capturado por nada, e um processo terminado não roda código."
+      },
+      {
+        "text": "Ele está em sono ininterruptível dentro de uma chamada de kernel",
+        "why": "Esse é o `D`; um zumbi não está dormindo, ele terminou."
+      }
+    ]
+  },
+  "ex-jkj5m5vf": {
+    "prompt": "Milhares de zumbis se acumularam. Qual é o dano de verdade, e o que conserta?",
+    "hint": "Um zumbi segura uma coisa, e não é memória.",
+    "choices": [
+      {
+        "text": "Eles seguram memória; reinicie a máquina para recuperá-la",
+        "why": "Um zumbi não segura memória, nem arquivos, nem processador; é isso que o torna um zumbi."
+      },
+      {
+        "text": "Eles enchem a tabela de processos; conserte o pai",
+        "why": "Isso — e quando o pai com bug sai, o PID 1 recolhe os zumbis dele na hora."
+      },
+      {
+        "text": "Eles consomem processador girando; dê renice no pai",
+        "why": "Um processo terminado não é escalonado e não usa processador nenhum."
+      },
+      {
+        "text": "Eles mantêm os arquivos abertos; feche os descritores com `lsof -k`",
+        "why": "Tudo o que um zumbi tinha aberto foi liberado quando ele saiu."
+      }
+    ]
+  },
+  "ex-et48xjad": {
+    "prompt": "Ligue cada letra de `STAT` ao que ela quer dizer.",
+    "hint": "Cinco letras, cinco motivos diferentes para um processo não estar usando o processador agora — ou estar.",
+    "pairs": [
+      {
+        "left": "R",
+        "right": "rodando, ou na fila para rodar"
+      },
+      {
+        "left": "S",
+        "right": "dormindo, e um sinal o acordaria"
+      },
+      {
+        "left": "D",
+        "right": "dormindo no kernel, e nenhum sinal acorda"
+      },
+      {
+        "left": "T",
+        "right": "suspenso, segurando tudo que tinha"
+      },
+      {
+        "left": "Z",
+        "right": "terminado, código ainda não recolhido"
+      }
+    ],
+    "right_distractors": [
+      "descarregado para o disco",
+      "esperando uma trava que o root segura"
+    ]
+  },
+  "ex-8f389v2q": {
+    "prompt": "O `ps` escreve ____ no lugar de uma linha de comando para um zumbi, porque não sobrou programa para nomear.",
+    "hint": "Sete letras, e o `ps` o põe entre colchetes."
+  },
+  "ex-dsd365va": {
+    "prompt": "Você quer saber qual conta iniciou o quê. Qual dos dois, e por quê?",
+    "hint": "Um dos dois traz uma coluna de pai e o outro traz colunas de recurso.",
+    "choices": [
+      {
+        "text": "`ps aux`, porque ele tem a coluna `USER`",
+        "why": "Os dois imprimem um usuário; a pergunta é o pai, e o `aux` deixa isso de fora."
+      },
+      {
+        "text": "`ps -ef`, porque ele também imprime o `PPID`",
+        "why": "Isso — o `-ef` é a listagem de quem-iniciou-o-quê e o `aux` é a de recursos."
+      },
+      {
+        "text": "`ps aux`, porque o `-ef` esconde processos de outras contas",
+        "why": "Os dois listam todo processo da máquina; nenhum esconde nada por conta."
+      },
+      {
+        "text": "`ps -ef`, porque o `aux` é a grafia BSD antiga e está obsoleta",
+        "why": "Os dois são atuais e nenhum vai sumir; eles diferem em colunas, não em idade."
+      }
+    ]
+  },
+  "ex-jt4a2ebe": {
+    "prompt": "Um processo mostra `VSZ` de 2,1 GB e `RSS` de 40 MB. Quanta memória ele está usando?",
+    "hint": "Uma coluna conta o que foi mapeado e a outra o que foi tocado.",
+    "choices": [
+      {
+        "text": "2,1 GB, e o número do RSS é a parte que está carregada agora",
+        "why": "O swap tem a contabilidade dele; o RSS é o que está residente independente do swap."
+      },
+      {
+        "text": "Algo entre os dois, e nenhuma coluna sabe dizer",
+        "why": "Uma delas responde direto, e é a menor."
+      },
+      {
+        "text": "40 MB de memória virtual e 2,1 GB de espaço reservado no disco",
+        "why": "Nada é reservado em disco por mapear; os termos estão trocados aqui."
+      },
+      {
+        "text": "Cerca de 40 MB — o `RSS` é o que está na memória física",
+        "why": "Isso, e o `VSZ` inclui tudo que foi mapeado e nunca tocado."
+      }
+    ]
+  },
+  "ex-8jfxdx8e": {
+    "prompt": "O `%CPU` no `ps` diz 92 para um processo que o `top` mostra em 0. Qual está mentindo?",
+    "hint": "As duas colunas são medidas em janelas diferentes.",
+    "choices": [
+      {
+        "text": "Nenhum: o `ps` faz média da vida inteira e o `top` amostra agora",
+        "why": "Isso — um processo que grudou num núcleo por uma hora e parou mostra exatamente isso."
+      },
+      {
+        "text": "O `top`, porque a primeira amostra do modo de lote lê zero",
+        "why": "Isso vale para o `top -b -n 1` e não explicaria um 92 no `ps`."
+      },
+      {
+        "text": "O `ps`, porque ele conta o tempo de filhos que já terminaram",
+        "why": "Isso precisa ser pedido com contabilidade `cputime`; a coluna simples é deste processo."
+      },
+      {
+        "text": "O `top`, porque ele divide pelo número de processadores e o `ps` não",
+        "why": "Os dois expressam `%CPU` por processador; a linha de cabeçalho é a que divide."
+      }
+    ]
+  },
+  "ex-vx3yz7aw": {
+    "prompt": "Por que o `pgrep -f sleeper.sh` acha o script e o `pgrep sleeper.sh` não?",
+    "hint": "Pense em qual é de fato o nome do programa quando você roda um script de shell.",
+    "choices": [
+      {
+        "text": "O `-f` segue symlinks até o executável real, e o script é um",
+        "why": "O `-f` não tem nada a ver com links; ele muda qual texto é comparado."
+      },
+      {
+        "text": "O `-f` força a correspondência mesmo quando vários processos casam de uma vez",
+        "why": "Vários casamentos já funcionam sem ele; o `pgrep` imprime um PID por linha."
+      },
+      {
+        "text": "Sem o `-f` ele compara com o nome do programa, que é o `bash`",
+        "why": "Isso — o script é um argumento, então só a linha de comando inteira contém o nome dele."
+      },
+      {
+        "text": "Sem o `-f` ele fica limitado a processos do root",
+        "why": "Propriedade é o `-u`, e por padrão o `pgrep` olha todas as contas."
+      }
+    ]
+  },
+  "ex-xekthr35": {
+    "prompt": "Um `ps aux | grep nginx` imprime uma linha e o nginx não está rodando. O que aconteceu?",
+    "hint": "Olhe a linha de comando do que casou.",
+    "choices": [
+      {
+        "text": "O `ps` casou com a própria linha, que contém o pipeline do nginx inteiro",
+        "why": "O `ps` tira a foto antes de o pipe ser lido e não lista o pipeline inteiro como uma linha."
+      },
+      {
+        "text": "O `grep` casou consigo mesmo: os argumentos dele contêm a palavra",
+        "why": "Isso, e o `grep -v grep` é o remendo de sempre em cima disso."
+      },
+      {
+        "text": "Uma entrada em cache da última vez que o nginx rodou continua no `/proc`",
+        "why": "O `/proc` não tem cache; um diretório some no instante em que o processo some."
+      },
+      {
+        "text": "O shell expandiu `nginx` do histórico antes de o `ps` rodar",
+        "why": "Expansão de histórico precisa de um `!`, e ela teria reescrito a linha que você vê."
+      }
+    ]
+  },
+  "ex-wvcfj16m": {
+    "prompt": "Complete o `ps` mais útil que existe, ordenado com o processo mais pesado primeiro: `ps -eo pid,comm,%cpu --sort=____ | head`",
+    "hint": "O nome da coluna com um sinal na frente para inverter a ordem."
+  },
+  "ex-xjqm61vf": {
+    "prompt": "Um script iniciou três filhos em segundo plano. Você mata o script pelo PID dele. O que acontece com os filhos?",
+    "hint": "Um sinal chega num processo, e o kernel tem uma regra para o que sobra.",
+    "choices": [
+      {
+        "text": "Eles são mortos junto, já que pertencem ao script",
+        "why": "Pertencer não propaga um sinal; cada filho é um processo próprio."
+      },
+      {
+        "text": "Eles ficam suspensos até algo os adotar",
+        "why": "Nada os suspende; eles seguem a toda enquanto a vaga do pai está vazia."
+      },
+      {
+        "text": "Eles continuam rodando, e o PPID deles vira 1",
+        "why": "Isso — o kernel readota um órfão para o processo um, que o recolhe depois."
+      },
+      {
+        "text": "Eles são mortos, porque um processo sem pai é removido",
+        "why": "Um processo sem pai ganha um; é exatamente isso que a adoção é."
+      }
+    ]
+  },
+  "ex-sh0z6ave": {
+    "prompt": "Na saída do `pstree`, o que quer dizer `10*[{process_api}]`?",
+    "hint": "As chaves e o asterisco são duas notações separadas, e as duas estão naquela entrada.",
+    "choices": [
+      {
+        "text": "Dez processos chamados `process_api`, cada um com o próprio PID no `ps`",
+        "why": "As chaves marcam threads, e o `ps` mostra os dez como uma linha e não como dez."
+      },
+      {
+        "text": "Um processo que reiniciou dez vezes, com o atual entre chaves",
+        "why": "O `pstree` não acompanha reinícios; ele desenha o que existe agora."
+      },
+      {
+        "text": "Dez processos filhos cujos nomes o `pstree` não conseguiu ler",
+        "why": "Um nome ilegível não seria repetido dez vezes com uma contagem na frente."
+      },
+      {
+        "text": "Um processo com dez threads, agrupado numa entrada só",
+        "why": "Isso — o asterisco é a contagem e as chaves querem dizer thread e não processo."
+      }
+    ]
+  },
+  "ex-mdtasq8b": {
+    "prompt": "Algo inesperado está rodando e você quer saber o que o iniciou. Um comando.",
+    "hint": "Você tem o número dele; você quer a cadeia acima.",
+    "choices": [
+      {
+        "text": "`pstree -s PID`",
+        "why": "Isso — ele imprime a cadeia daquele processo até o PID 1 numa linha só."
+      },
+      {
+        "text": "`pstree -p PID`",
+        "why": "Esse desenha o que está abaixo dele, que é a direção oposta."
+      },
+      {
+        "text": "`pstree -u PID`",
+        "why": "O `-u` marca onde a conta muda; sozinho ele não sobe."
+      },
+      {
+        "text": "`pstree -n PID`",
+        "why": "O `-n` ordena por PID em vez de por nome, e ainda desenha para baixo."
+      }
+    ]
+  },
+  "ex-xfq71e1g": {
+    "prompt": "O `ps -ef | awk '$3==1'` lista processos cujo pai sumiu. A coluna que ele testa se chama ____.",
+    "hint": "Quatro letras, e é a coluna logo depois do PID."
+  },
+  "ex-gn02cgr6": {
+    "prompt": "O `top` mostra um processo em `100.0` e a linha de cabeçalho em `25.0 us`. A máquina tem quatro processadores. Quem está certo?",
+    "hint": "Os dois números têm denominadores diferentes.",
+    "choices": [
+      {
+        "text": "O cabeçalho; a coluna do processo conta threads, então ela exagera a máquina",
+        "why": "A coluna do processo é por processo, e threads só aparecem com o `-H`."
+      },
+      {
+        "text": "Os dois: um é por processador, o outro por máquina",
+        "why": "Isso — um núcleo saturado de quatro é 100 numa coluna e 25 na outra."
+      },
+      {
+        "text": "A coluna do processo; o cabeçalho faz média do último minuto e atrasa",
+        "why": "A carga média atrasa; a linha `%Cpu(s)` é uma amostra do intervalo que acabou de passar."
+      },
+      {
+        "text": "Nenhum, porque o modo de lote mede mal um quadro único",
+        "why": "Um quadro único é medido contra a vida inteira do processo, que é outra ressalva."
+      }
+    ]
+  },
+  "ex-9smd589x": {
+    "prompt": "`load average: 8.10, 8.05, 7.98` numa máquina com oito processadores. O que isso te diz?",
+    "hint": "Compare o número com algo, e leia as três posições como uma forma.",
+    "choices": [
+      {
+        "text": "Um pico que começou no último minuto e vai passar",
+        "why": "Um pico mostra o primeiro número alto e os outros baixos; estes três mal diferem."
+      },
+      {
+        "text": "Oito processos estão presos em sono ininterruptível",
+        "why": "O `D` conta na carga, mas nada aqui diz que a carga é feita disso."
+      },
+      {
+        "text": "Os processadores estão 8% ocupados, o que é confortável",
+        "why": "Carga é uma contagem do que queria rodar, não uma porcentagem de nada."
+      },
+      {
+        "text": "Saturada, e estável há um quarto de hora",
+        "why": "Isso — 8 em oito processadores é saturado, e o trio achatado quer dizer sustentado."
+      }
+    ]
+  },
+  "ex-32w8cqjd": {
+    "prompt": "Uma máquina reporta `0.5 us`, `0.3 sy`, `60.0 wa` e carga de 30. O que há de errado com ela?",
+    "hint": "Leia qual coluna está grande, e pergunte o que aquela coluna conta.",
+    "choices": [
+      {
+        "text": "Os processadores estão completamente saturados e a carga confirma isso",
+        "why": "Os processadores estão 99% ociosos; as colunas `us` e `sy` estão perto de zero."
+      },
+      {
+        "text": "Trinta processos estão girando num laço ocupado",
+        "why": "Um laço ocupado aparece como `us`, e aquela coluna está em meio por cento."
+      },
+      {
+        "text": "O armazenamento está atrasado, e a carga é a fila por ele",
+        "why": "Isso — o `wa` é espera de entrada e saída, e a carga conta `D` além de `R`."
+      },
+      {
+        "text": "Um hipervisor está tomando o tempo da máquina",
+        "why": "Essa é a coluna `st`, que não é a que está grande aqui."
+      }
+    ]
+  },
+  "ex-41phb3gt": {
+    "prompt": "O `free -h` reporta 561 MiB usados, 14 GiB livres, 892 MiB em buff/cache e 15 GiB disponíveis. Qual número responde \"posso iniciar algo grande\"?",
+    "hint": "Um dos quatro é calculado exatamente para esta pergunta.",
+    "choices": [
+      {
+        "text": "O `available`, em 15 GiB",
+        "why": "Isso — ele conta o cache como recuperável, que é como o kernel o trata."
+      },
+      {
+        "text": "O `free`, em 14 GiB, porque o cache está em uso",
+        "why": "O cache é devolvido no instante em que um programa pede, então contá-lo como usado é pessimista."
+      },
+      {
+        "text": "O `used` subtraído do total, em torno de 15,4 GiB",
+        "why": "Isso ignora a sobrecarga do próprio kernel, que o `available` leva em conta."
+      },
+      {
+        "text": "O `buff/cache`, em 892 MiB, já que é a parte que pode ser liberada",
+        "why": "Isso é uma das entradas da resposta, e não a resposta."
+      }
+    ]
+  },
+  "ex-ygj2fage": {
+    "prompt": "Ligue cada abreviação de `%Cpu(s)` ao que ela conta.",
+    "hint": "Quatro das oito, e duas delas apontam para algo fora dos programas da própria máquina.",
+    "pairs": [
+      {
+        "left": "us",
+        "right": "os seus programas, no trabalho deles"
+      },
+      {
+        "left": "sy",
+        "right": "o kernel, trabalhando em nome deles"
+      },
+      {
+        "left": "wa",
+        "right": "tempo perdido esperando armazenamento"
+      },
+      {
+        "left": "st",
+        "right": "tempo que um hipervisor deu a outro"
+      }
+    ],
+    "right_distractors": [
+      "tempo gasto no escalonador",
+      "pressão de memória"
+    ]
+  },
+  "ex-88pa7kcq": {
+    "prompt": "Mostre cada processador numa linha própria no `top` interativo apertando ____.",
+    "hint": "Um único dígito."
+  },
+  "ex-f4tq5c01": {
+    "prompt": "Quais dois sinais não podem ser capturados, bloqueados nem ignorados?",
+    "hint": "Um remove o processo e o outro o congela, e o kernel trata dos dois sozinho.",
+    "choices": [
+      {
+        "text": "`TERM` e `INT`, já que os dois querem dizer pare",
+        "why": "Os dois são capturados rotineiramente; é assim que um programa limpa antes de sair."
+      },
+      {
+        "text": "`HUP` e `TERM`, porque vêm do terminal",
+        "why": "O `HUP` é capturado o tempo todo, que é como daemons o usam para recarregar."
+      },
+      {
+        "text": "`KILL` e `QUIT`, porque nenhum deixa o programa rodar código",
+        "why": "O `QUIT` pode ser capturado; ele só escreve um core dump por padrão."
+      },
+      {
+        "text": "`KILL` e `STOP`",
+        "why": "Isso — um programa que pudesse recusar qualquer um dos dois seria ingerenciável."
+      }
+    ]
+  },
+  "ex-7j931bwf": {
+    "prompt": "Uma tarefa em segundo plano terminou com `[1]+ Killed` e o `trap` dela não imprimiu nada. Que sinal ela recebeu?",
+    "hint": "O trap continua no script. Algo não o consultou.",
+    "choices": [
+      {
+        "text": "`TERM`, e o trap tinha um bug",
+        "why": "Um trap de `TERM` que roda imprime algo; o silêncio é a prova de que ele não rodou."
+      },
+      {
+        "text": "`HUP`, porque o terminal sumiu",
+        "why": "Um hangup é reportado como `Hangup` e não `Killed`, e ele pode ser capturado."
+      },
+      {
+        "text": "`KILL`",
+        "why": "Isso — `Killed` e um trap silencioso juntos são a assinatura do `kill -9`."
+      },
+      {
+        "text": "`STOP`, que o suspendeu antes de o tratador rodar",
+        "why": "Uma tarefa parada é reportada como `Stopped` e continua ali depois."
+      }
+    ]
+  },
+  "ex-m1fj6bhg": {
+    "prompt": "O `yes | head -2` termina, e o `${PIPESTATUS[0]}` é 141. O que quer dizer 141?",
+    "hint": "Ele está acima de 128, o que é uma dica de como ele é montado.",
+    "choices": [
+      {
+        "text": "O `yes` foi morto pelo sinal 13, que é o `SIGPIPE`",
+        "why": "Isso — 128 mais o número do sinal, e o `head` já tinha fechado o pipe."
+      },
+      {
+        "text": "O `yes` escolheu sair com 141 para reportar um erro de escrita",
+        "why": "O `yes` não tem essa convenção; o número veio de como ele morreu, não de uma escolha."
+      },
+      {
+        "text": "141 bytes foram escritos antes de o pipe fechar",
+        "why": "Um código de saída é um código, não uma contagem de bytes."
+      },
+      {
+        "text": "O shell retornou 141 porque o pipeline tinha uma etapa sem tratamento",
+        "why": "O bash reporta o código da última etapa, e o `head` saiu limpo com 0."
+      }
+    ]
+  },
+  "ex-ft1jtg0c": {
+    "prompt": "O `kill -0 PID` retorna 1 em duas situações muito diferentes. Quais duas, e por que isso importa?",
+    "hint": "Leia as duas mensagens que o bash imprime; depois leia o código de saída de cada uma.",
+    "choices": [
+      {
+        "text": "Sinal bloqueado, ou processo parado — e um parado precisa de `CONT` antes",
+        "why": "Bloquear não faz a chamada falhar, e um processo parado aceita sinais normalmente."
+      },
+      {
+        "text": "Sumiu, ou não é seu — e o `$?` sozinho não distingue os dois",
+        "why": "Isso, e os dois pedem respostas opostas, então a mensagem é a parte que importa."
+      },
+      {
+        "text": "Zumbi, ou thread de kernel — e nenhum dos dois pode ser sinalizado",
+        "why": "Um zumbi e uma thread de kernel passam na checagem de existência que o `-0` faz."
+      },
+      {
+        "text": "Sintaxe de PID inválida, ou PID acima do limite — os dois são erros de argumento",
+        "why": "Esses são erros de uso e são reportados de forma diferente de um processo recusado ou ausente."
+      }
+    ]
+  },
+  "ex-9xfbqrgm": {
+    "prompt": "Ligue cada sinal ao que o manda ou para o que ele serve.",
+    "hint": "Seis dos sessenta e quatro, e cada um tem uma ocasião distinta.",
+    "pairs": [
+      {
+        "left": "SIGINT",
+        "right": "a tecla Ctrl+C"
+      },
+      {
+        "left": "SIGTERM",
+        "right": "a parada educada, e o padrão do kill"
+      },
+      {
+        "left": "SIGKILL",
+        "right": "remoção, sem chance de limpar"
+      },
+      {
+        "left": "SIGHUP",
+        "right": "o terminal sumiu, ou recarregue-se"
+      },
+      {
+        "left": "SIGCHLD",
+        "right": "um filho seu terminou"
+      },
+      {
+        "left": "SIGSEGV",
+        "right": "o programa tocou memória que não é dele"
+      }
+    ],
+    "right_distractors": [
+      "o disco está cheio",
+      "um temporizador que você pôs expirou"
+    ]
+  },
+  "ex-1hq808ht": {
+    "prompt": "Capture o `SIGTERM` num script bash e rode `cleanup` quando ele chegar: `____ cleanup TERM`",
+    "hint": "Quatro letras, e é um builtin do shell."
+  },
+  "ex-46m276v2": {
+    "prompt": "O `kill 2189` num processo do root falha. O `kill -9 2189` passa?",
+    "hint": "Descubra em que ponto a recusa acontece.",
+    "choices": [
+      {
+        "text": "Sim, porque o `-9` é tratado pelo kernel e não pelo processo",
+        "why": "O kernel trata do sinal e também faz a checagem de permissão, nessa ordem."
+      },
+      {
+        "text": "Sim, para processos que dividem a sua sessão",
+        "why": "Sessões não dão direito de sinalizar; a conta dá."
+      },
+      {
+        "text": "Não — a checagem de permissão roda antes de qualquer sinal ser escolhido",
+        "why": "Isso, então o `-9` falha exatamente como o educado falhou."
+      },
+      {
+        "text": "Não, mas o `-9` passa quando o processo soltar a trava dele",
+        "why": "Travas não têm nada a ver; a recusa é sobre propriedade."
+      }
+    ]
+  },
+  "ex-kqgs5akr": {
+    "prompt": "Um script iniciou três filhos. O `kill $PID` no script deixa os filhos rodando; o `kill %1` não. Qual é a diferença?",
+    "hint": "Um deles nomeia um processo e o outro nomeia algo maior.",
+    "choices": [
+      {
+        "text": "O `%1` manda `KILL` enquanto um `kill` simples manda `TERM`",
+        "why": "Os dois usam `TERM` por padrão; a diferença é quem recebe, não qual sinal."
+      },
+      {
+        "text": "O `%1` nomeia o grupo de processos da tarefa, então tudo é sinalizado",
+        "why": "Isso — o bash criou o grupo quando iniciou o comando, e o `%1` se refere ao grupo."
+      },
+      {
+        "text": "O `%1` espera os filhos terminarem antes de matar o pai",
+        "why": "Ele não espera nada; o grupo inteiro é sinalizado de uma vez."
+      },
+      {
+        "text": "O `%1` readota os filhos para o shell primeiro, e depois mata todos eles",
+        "why": "Órfãos vão para o PID 1, e nada readota nada para um shell."
+      }
+    ]
+  },
+  "ex-vr7f1k1a": {
+    "prompt": "Por que o `kill -- -2684` é escrito com dois traços na frente do número do grupo?",
+    "hint": "Pergunte o que o bash faria do número se os traços não estivessem lá.",
+    "choices": [
+      {
+        "text": "O `--` diz ao `kill` para sinalizar o grupo em vez do líder",
+        "why": "O sinal de menos na frente do número faz isso; o `--` é sobre análise de opções."
+      },
+      {
+        "text": "O `--` suprime a mensagem de erro quando parte do grupo sumiu",
+        "why": "Nada é suprimido; a chamada reporta se sinalizou alguma coisa."
+      },
+      {
+        "text": "O `--` é exigido sempre que o argumento vem de uma variável",
+        "why": "Variáveis não precisam desse marcador; o problema é o traço inicial."
+      },
+      {
+        "text": "Sem ele, o `-2684` é lido como número de sinal",
+        "why": "Isso — o bash responde com `invalid signal specification`."
+      }
+    ]
+  },
+  "ex-kd2rm0kn": {
+    "prompt": "O `pkill -f watcher` também matou um `tail -f watcher.log` que não tinha nada a ver. Qual hábito evita isso?",
+    "hint": "Os dois comandos aceitam as mesmas opções por um motivo.",
+    "choices": [
+      {
+        "text": "Rodar a correspondência pelo `pgrep` antes e ler a lista",
+        "why": "Isso — o `pgrep` imprime o que o `pkill` sinalizaria, com opções idênticas."
+      },
+      {
+        "text": "Usar `pkill -x` para o padrão ter que casar com a linha inteira",
+        "why": "O `-x` exige correspondência exata do nome, o que aí perderia o script também."
+      },
+      {
+        "text": "Acrescentar `-u` para limitar a correspondência à sua própria conta",
+        "why": "Os dois processos aqui são da mesma conta, então isso não muda nada."
+      },
+      {
+        "text": "Usar o `killall`, que compara com o nome do programa",
+        "why": "Isso ajuda neste par e perde scripts por completo, já que o programa é o `bash`."
+      }
+    ]
+  },
+  "ex-6ar0bg4j": {
+    "prompt": "Ponha em ordem os passos de parar um processo que não está respondendo.",
+    "items": [
+      "kill PID",
+      "esperar alguns segundos",
+      "kill -0 PID para ver se ele ainda está lá",
+      "kill -9 PID"
+    ],
+    "trap": "Pedir educadamente, dar tempo, conferir, e só então remover."
+  },
+  "ex-5c256z8c": {
+    "prompt": "Quais destas são consequências reais de um `kill -9` num banco de dados?",
+    "hint": "O trap nunca roda. Siga a partir daí.",
+    "choices": [
+      {
+        "text": "Ele não consegue descarregar o que segurava, e a próxima inicialização é uma recuperação",
+        "why": "Sim — o código de desligamento que ele rodaria é o código que descarrega."
+      },
+      {
+        "text": "Um arquivo de trava ou de PID fica para trás e a próxima inicialização recusa",
+        "why": "Sim, e esse é o sintoma visível mais comum na manhã seguinte."
+      },
+      {
+        "text": "Os filhos dele ficam rodando, porque ele não chegou a pará-los",
+        "why": "Sim — um sinal para um processo é um sinal para um processo."
+      },
+      {
+        "text": "Os arquivos dele ficam corrompidos no nível do sistema de arquivos e precisam de fsck",
+        "why": "O sistema de arquivos fica consistente; o que fica inconsistente são os dados da aplicação."
+      },
+      {
+        "text": "O kernel recusa se o processo segura uma trava que outro processo quer",
+        "why": "Nada checa travas; o `KILL` não é recusável por esse motivo."
+      }
+    ]
+  },
+  "ex-222eymep": {
+    "prompt": "Peça ao `killall` para nomear cada processo que ele para, para você ver no que acertou: `killall ____ watcher.sh`",
+    "hint": "Uma opção curta."
+  },
+  "ex-s95esysg": {
+    "prompt": "Você apertou `Ctrl+Z` num download uma hora atrás. Quanto ele baixou desde então?",
+    "hint": "Procure em que estado o `Ctrl+Z` deixa um processo.",
+    "choices": [
+      {
+        "text": "Tudo, já que suspender só o desliga do teclado",
+        "why": "Desligar do teclado é o que o `bg` faz; o `Ctrl+Z` para o processo."
+      },
+      {
+        "text": "O que couber no buffer de socket do kernel, e depois nada",
+        "why": "O buffer enche em instantes, então a resposta honesta arredonda para nada."
+      },
+      {
+        "text": "Mais ou menos uma hora de execução, menos a sobrecarga de escalonamento",
+        "why": "Um processo parado não é escalonado, então ele não ganha processador nem progresso."
+      },
+      {
+        "text": "Nada — um processo parado está suspenso, não em segundo plano",
+        "why": "Isso, e o `bg` era o que faltava; o `Ctrl+Z` sozinho só o estaciona."
+      }
+    ]
+  },
+  "ex-p75erp2g": {
+    "prompt": "Você iniciou um comando longo em primeiro plano e quer o prompt de volta sem perdê-lo. Quais dois passos?",
+    "hint": "Duas teclas e depois duas letras.",
+    "choices": [
+      {
+        "text": "`Ctrl+Z`, e depois `bg`",
+        "why": "Isso — pare-o, e depois retome-o sem o terminal."
+      },
+      {
+        "text": "`Ctrl+Z`, e depois `fg`",
+        "why": "O `fg` o retoma em primeiro plano, o que te põe de volta onde você começou."
+      },
+      {
+        "text": "`Ctrl+C`, e depois rodar de novo com `&`",
+        "why": "Isso joga fora o que ele já tinha feito e recomeça."
+      },
+      {
+        "text": "`Ctrl+Z`, e depois `disown`",
+        "why": "O `disown` esquece a tarefa enquanto ela ainda está parada, e ela fica parada para sempre."
+      }
+    ]
+  },
+  "ex-f5cgjegx": {
+    "prompt": "O `Ctrl+D` num prompt de shell fecha o shell. Que sinal ele manda?",
+    "hint": "Ele não pertence à mesma lista das outras duas teclas.",
+    "choices": [
+      {
+        "text": "`SIGHUP`, o mesmo sinal que um terminal fechado manda a um shell",
+        "why": "Um terminal fechado manda esse; a tecla faz outra coisa completamente."
+      },
+      {
+        "text": "`SIGQUIT`, e é por isso que nenhuma mensagem é impressa",
+        "why": "O `SIGQUIT` é o `Ctrl+\\`, e ele escreve um core dump em vez de sair quieto."
+      },
+      {
+        "text": "Nenhum — ele é fim de entrada, e ler isso encerra o bash",
+        "why": "Isso, e é por isso que ele não faz nada com um programa que não está lendo."
+      },
+      {
+        "text": "`SIGINT`, entregue ao grupo de processos de primeiro plano",
+        "why": "Esse é o `Ctrl+C`, e num prompt ele te dá uma linha nova em vez de uma saída."
+      }
+    ]
+  },
+  "ex-ne2tyzvm": {
+    "prompt": "Depois de um `disown %1`, o `jobs` está vazio e o `ps` ainda mostra o processo com o shell como pai. O que o `disown` mudou?",
+    "hint": "Um desses dois comandos lê a memória do próprio shell e o outro lê a do kernel.",
+    "choices": [
+      {
+        "text": "Ele desligou o processo do terminal, e por isso o `jobs` está vazio",
+        "why": "O terminal está intacto; uma tarefa desapropriada ainda escreve na sua tela."
+      },
+      {
+        "text": "A contabilidade do shell, então ele não vai mandar um hangup à tarefa na saída",
+        "why": "Isso — o processo está intacto, e o que mudou foi o que o bash vai fazer depois."
+      },
+      {
+        "text": "O pai do processo, que agora é o PID 1",
+        "why": "O `ps` da pergunta mostra o shell ainda como pai; nada foi readotado."
+      },
+      {
+        "text": "O grupo de processos da tarefa, então o shell não o sinaliza mais como grupo",
+        "why": "O grupo é do kernel e está intacto; o bash simplesmente parou de acompanhar a tarefa."
+      }
+    ]
+  },
+  "ex-havyfza2": {
+    "prompt": "Mostre a lista de tarefas com o PID de cada uma ao lado: `jobs ____`",
+    "hint": "Uma opção curta."
+  },
+  "ex-cmmsaaqn": {
+    "prompt": "Três tarefas em segundo plano idênticas; depois de o terminal fechar, só a simples morreu. Por que as outras duas sobreviveram?",
+    "hint": "Uma foi instruída a ignorar o sinal e a outra nunca o recebeu.",
+    "choices": [
+      {
+        "text": "As duas foram readotadas pelo PID 1 bem antes de o sinal sequer ser entregue",
+        "why": "A adoção acontece depois de o pai sair, que é depois de o sinal ser mandado."
+      },
+      {
+        "text": "As duas tiveram a saída redirecionada, então o hangup não conseguiu alcançá-las",
+        "why": "Redirecionar muda para onde as escritas vão e nada sobre entrega de sinais."
+      },
+      {
+        "text": "O `nohup` ignorou o sinal; a desapropriada nunca o recebeu",
+        "why": "Isso — dois mecanismos diferentes com o mesmo resultado."
+      },
+      {
+        "text": "As duas foram iniciadas com `&`, que desliga uma tarefa da sessão dela",
+        "why": "O `&` põe em segundo plano e deixa na mesma sessão; as três usaram isso."
+      }
+    ]
+  },
+  "ex-sztrvc8n": {
+    "prompt": "Uma tarefa de quatro horas já está rodando em primeiro plano e você tem que fechar o laptop. O que você usa?",
+    "hint": "Ela já começou, então um dos dois não está mais disponível para você.",
+    "choices": [
+      {
+        "text": "`Ctrl+Z`, `bg`, e depois `disown`",
+        "why": "Isso — o `nohup` teria que ser decidido antes, e o `disown` é o resgate."
+      },
+      {
+        "text": "`nohup` no processo que está rodando",
+        "why": "O `nohup` envolve um comando que você está prestes a iniciar; ele não se aplica depois."
+      },
+      {
+        "text": "`setsid` no processo que está rodando",
+        "why": "O `setsid` também inicia algo novo; ele não move um processo rodando para uma sessão."
+      },
+      {
+        "text": "`systemctl` para adotá-la como serviço",
+        "why": "O systemd inicia serviços a partir de arquivos de unit em vez de adotar um processo existente."
+      }
+    ]
+  },
+  "ex-6fxhdjwf": {
+    "prompt": "A tarefa precisa sobreviver a um reboot, reiniciar se quebrar, e ser encontrável por um colega. Qual destas?",
+    "hint": "Três requisitos, e só uma das opções atende aos dois primeiros.",
+    "choices": [
+      {
+        "text": "`nohup` com a saída num arquivo de log",
+        "why": "Ela sobrevive a um terminal fechado e não a um reboot, e não reinicia nada."
+      },
+      {
+        "text": "`setsid`, para ela ficar sem terminal de controle",
+        "why": "A mesma limitação: desanexado não é o mesmo que supervisionado."
+      },
+      {
+        "text": "Uma sessão do `tmux` deixada rodando na máquina",
+        "why": "Um reboot leva o tmux junto, e nada reinicia a tarefa depois."
+      },
+      {
+        "text": "Um arquivo de unit do systemd",
+        "why": "Isso — boot, reinício e um nome que um colega consegue procurar são para o que uma unit serve."
+      }
+    ]
+  },
+  "ex-xr5pmn2r": {
+    "prompt": "Diga o nome do arquivo em que o `nohup` escreve a saída quando você não a redireciona: ____",
+    "hint": "Duas palavras unidas por um ponto, no diretório atual."
+  },
+  "ex-p2z1mcg4": {
+    "prompt": "Qual valor de nice faz um processo sair da frente de todo o resto?",
+    "hint": "O nome está na direção certa: um processo nice é um educado.",
+    "choices": [
+      {
+        "text": "`-20`, a ponta extrema da faixa",
+        "why": "Aquela ponta é a exigente, e só o root pode pedi-la."
+      },
+      {
+        "text": "`19`",
+        "why": "Isso — o valor mais alto é o mais educado, e ele roda quando mais nada quer."
+      },
+      {
+        "text": "`0`, que é neutro e portanto cede",
+        "why": "Zero é o padrão que todo processo já tem, então ele não cede para nada em particular."
+      },
+      {
+        "text": "`100`, o máximo que o escalonador aceita",
+        "why": "A faixa para em 19; um número maior é limitado."
+      }
+    ]
+  },
+  "ex-70znj4re": {
+    "prompt": "Você põe um processo em nice 15, e depois tenta `renice -n 5` nele. O processo é seu. O que acontece?",
+    "hint": "A niceness se move livremente numa direção para uma conta sem privilégio.",
+    "choices": [
+      {
+        "text": "Funciona sem reclamar, já que o processo é seu mesmo",
+        "why": "Ser dono deixa você aumentar o valor; não deixa baixá-lo de novo."
+      },
+      {
+        "text": "Funciona, mas apenas até o processo dormir da próxima vez",
+        "why": "A niceness não reseta quando um processo dorme; é uma propriedade do processo."
+      },
+      {
+        "text": "`Permission denied` — ele é uma catraca para cima",
+        "why": "Isso, e a conta que o definiu em primeiro lugar é recusada junto com todo mundo."
+      },
+      {
+        "text": "Funciona e o escalonador o devolve para 15 em silêncio",
+        "why": "Nada é limitado em silêncio; o `renice` reporta o que recusou."
+      }
+    ]
+  },
+  "ex-0007v4j0": {
+    "prompt": "Dois laços ocupados idênticos dividem um processador fixado por trinta segundos, em nice 0 e nice 19. Como ficam os tempos de processador deles?",
+    "hint": "Pergunte o que um valor de nice 19 quer dizer quando há competição.",
+    "choices": [
+      {
+        "text": "Uns trinta segundos e quase nada",
+        "why": "Isso — 19 quer dizer rodar quando mais ninguém quiser, e alguém quis o tempo todo."
+      },
+      {
+        "text": "Uns quinze segundos cada, já que os dois estavam prontos o tempo todo",
+        "why": "Partes iguais são o que se obtém com niceness igual; a graça do 19 é não ser igual."
+      },
+      {
+        "text": "Uns vinte e uns dez, em proporção aos dois valores",
+        "why": "A niceness não é uma razão entre os números; a ponderação é bem mais íngreme."
+      },
+      {
+        "text": "Uns trinta segundos cada, porque a niceness vale por processador",
+        "why": "Os dois estavam fixados no mesmo processador, então trinta segundos era tudo que havia."
+      }
+    ]
+  },
+  "ex-0afrd61q": {
+    "prompt": "Um backup noturno está deixando o banco de dados lento, e o `top` mostra o backup usando quase nenhum processador. Qual botão ajuda?",
+    "hint": "Descubra qual recurso está de fato disputado antes de escolher uma ferramenta.",
+    "choices": [
+      {
+        "text": "`renice -n 19` no backup",
+        "why": "A niceness é tempo de processador, e o backup mal está pedindo algum."
+      },
+      {
+        "text": "`renice -n -5` no banco de dados, para ele ganhar a disputa",
+        "why": "Não é uma disputa de processador, e valores negativos precisam de root também."
+      },
+      {
+        "text": "`kill -STOP` no backup até o banco de dados sossegar",
+        "why": "Isso segura as travas e os arquivos do backup abertos, o que o torna diagnóstico e não plano."
+      },
+      {
+        "text": "`ionice -c 3` no backup",
+        "why": "Isso — a disputa é o disco, e entrada e saída em classe ociosa é o botão correspondente."
+      }
+    ]
+  },
+  "ex-m8qwqw20": {
+    "prompt": "Um `nice -n -5 true` como usuário comum imprime `Permission denied` e o `$?` é 0. Por que isso é uma armadilha?",
+    "hint": "Leia o que o código de saída está descrevendo.",
+    "choices": [
+      {
+        "text": "O código é do shell, e o `nice` não chegou a rodar",
+        "why": "O `nice` rodou e imprimiu a recusa; o que ele não conseguiu foi mudar o valor."
+      },
+      {
+        "text": "O `nice` rodou o comando mesmo assim, então o código é do comando",
+        "why": "Isso — um script que olha o `$?` não descobre nada sobre a niceness ter sido aplicada."
+      },
+      {
+        "text": "O `nice` tentou de novo num valor permitido, então o código reporta sucesso",
+        "why": "Ele não tenta de novo; ele mantém a niceness que já tinha e segue."
+      },
+      {
+        "text": "O `true` sobrescreveu um código diferente de zero que o `nice` tinha definido",
+        "why": "O `nice` não define um código próprio quando ele vai em frente e roda o comando."
+      }
+    ]
+  },
+  "ex-tkms23pf": {
+    "prompt": "Inicie uma reindexação na prioridade mais educada que existe: `____ -n 19 ./nightly-reindex.sh`",
+    "hint": "Quatro letras."
+  },
+  "ex-frwbqj0y": {
+    "prompt": "O que o `2>&1` de fato pede?",
+    "hint": "Os dois números nomeiam entradas de uma tabela.",
+    "choices": [
+      {
+        "text": "Mandar os erros para um arquivo chamado `&1`",
+        "why": "O e comercial é o que impede que isso aconteça; sem ele é exatamente o que acontece."
+      },
+      {
+        "text": "Rodar o comando duas vezes, uma por fluxo",
+        "why": "Nada é rodado duas vezes; o redirecionamento é montado antes de o programa começar."
+      },
+      {
+        "text": "Fazer o descritor 2 virar uma cópia do descritor 1",
+        "why": "Isso — os erros vão para onde quer que a saída esteja indo."
+      },
+      {
+        "text": "Fundir os dois fluxos num descritor novo, de número 3",
+        "why": "Nenhum descritor novo aparece; o 2 é apontado para o que o 1 já referencia."
+      }
+    ]
+  },
+  "ex-1h0ww0eq": {
+    "prompt": "Um arquivo de log foi apagado, o `du` não acha nada grande, e o `df` continua reportando o disco cheio. O que está acontecendo?",
+    "hint": "A aula 3 disse que o `rm` remove um nome.",
+    "choices": [
+      {
+        "text": "O sistema de arquivos precisa de `fsck` para liberar os blocos",
+        "why": "O sistema de arquivos está consistente; nada está esperando reparo."
+      },
+      {
+        "text": "O `du` está lendo um cache velho e o diretório precisa ser revarrido",
+        "why": "O `du` percorre a árvore de novo a cada vez; ele não tem cache para envelhecer."
+      },
+      {
+        "text": "Os blocos são reservados para o root e o `df` os conta como usados",
+        "why": "A reserva do root é uma fração fixa e não muda quando um arquivo é apagado."
+      },
+      {
+        "text": "Algo o tem aberto, então os blocos seguem alocados",
+        "why": "Isso — o `lsof +L1` o encontra, e o conserto é reiniciar ou dar `HUP` naquele processo."
+      }
+    ]
+  },
+  "ex-hjwe2wra": {
+    "prompt": "Um serviço loga `Too many open files`. Em que limite ele bateu, e o que normalmente causa isso?",
+    "hint": "Conexões de rede moram na mesma tabela que arquivos.",
+    "choices": [
+      {
+        "text": "No `ulimit -n`, e a causa é abrir sem fechar",
+        "why": "Isso, e o `ls -l /proc/PID/fd` costuma nomear o culpado repetido."
+      },
+      {
+        "text": "No `ulimit -u`, a contagem de processos, já que cada arquivo aberto bifurca um ajudante",
+        "why": "Abrir um arquivo não bifurca nada; o `-u` conta processos."
+      },
+      {
+        "text": "No limite de inodes do sistema de arquivos, que pode contar arquivos abertos também",
+        "why": "Inodes são propriedade do sistema de arquivos e não têm relação com quantos um processo abriu."
+      },
+      {
+        "text": "No `ulimit -f`, o tamanho máximo de arquivo, atingido em muitos arquivos de uma vez",
+        "why": "O `-f` limita quanto um arquivo pode crescer, não quantos existem."
+      }
+    ]
+  },
+  "ex-540fdn2p": {
+    "prompt": "Ligue cada número de descritor ao que ele é por convenção.",
+    "hint": "Três números que todo programa recebe antes de começar.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "entrada padrão"
+      },
+      {
+        "left": "1",
+        "right": "saída padrão"
+      },
+      {
+        "left": "2",
+        "right": "erro padrão"
+      }
+    ],
+    "right_distractors": [
+      "o terminal de controle",
+      "o diretório de trabalho"
+    ]
+  },
+  "ex-s5egq23b": {
+    "prompt": "Liste todo arquivo aberto que não tem mais nome, num comando: `lsof ____`",
+    "hint": "Um sinal de mais, uma letra e um dígito."
+  },
+  "ex-byhsxt62": {
+    "prompt": "O log de um job de cron termina com código 127. O que deu errado?",
+    "hint": "É um de dois números sobre o comando em si, e não sobre o trabalho dele.",
+    "choices": [
+      {
+        "text": "O comando rodou e reportou 127 falhas",
+        "why": "Uma contagem seria escolha do programa; o 127 é reservado para outra coisa."
+      },
+      {
+        "text": "O comando não foi encontrado",
+        "why": "Isso — um erro de digitação, ou um programa que não está instalado onde o cron olhou."
+      },
+      {
+        "text": "O comando foi morto pelo sinal 127",
+        "why": "Sinais somam a 128, então um processo morto reporta acima disso e não abaixo."
+      },
+      {
+        "text": "O comando estourou o tempo depois de 127 segundos rodando",
+        "why": "Timeouts reportam o próprio código, e nada codifica uma duração num deles."
+      }
+    ]
+  },
+  "ex-rgxtg6z8": {
+    "prompt": "Um contêiner fica reiniciando e o último código dele é 137. O que o matou?",
+    "hint": "Subtraia 128 e procure o resto.",
+    "choices": [
+      {
+        "text": "A aplicação, que escolheu 137 como código de erro próprio",
+        "why": "137 acima de 128 é aritmética do kernel e não escolha de um programa."
+      },
+      {
+        "text": "A checagem de saúde do orquestrador, depois de 137 sondagens falhas",
+        "why": "Uma sondagem falha não põe a contagem dela num código de saída."
+      },
+      {
+        "text": "Um `SIGTERM`, como pode acontecer num reinício gradual",
+        "why": "O `TERM` é 15, o que dá 143 e não 137."
+      },
+      {
+        "text": "`SIGKILL` — normalmente o matador de falta de memória",
+        "why": "Isso: 128 mais 9, e nada educado manda `KILL` por conta própria."
+      }
+    ]
+  },
+  "ex-7kxkxgxw": {
+    "prompt": "`curl https://example.test/x | tar xz` e o `$?` é 0, mas nada foi extraído. Por que o código não disse isso?",
+    "hint": "De qual etapa vem o código de um pipeline?",
+    "choices": [
+      {
+        "text": "O `$?` é só da última etapa, então o `curl` falhar fica invisível",
+        "why": "Isso — e o `set -o pipefail` ou o `PIPESTATUS` é como você enxerga a etapa anterior."
+      },
+      {
+        "text": "O `tar` engole erros da entrada padrão e sai com 0",
+        "why": "O `tar` reporta os problemas dele; a questão é qual código o shell guardou."
+      },
+      {
+        "text": "O `curl` sai com 0 num erro de HTTP a menos que se dê `-f`",
+        "why": "Essa é uma verruga real do `curl` e é outra: aqui o shell descartou o código."
+      },
+      {
+        "text": "O pipe retorna o código da etapa que falhou primeiro",
+        "why": "Isso é o que o `pipefail` faz; o padrão é a última etapa."
+      }
+    ]
+  },
+  "ex-zjwwpt8z": {
+    "prompt": "Um `grep padrão arquivo` retorna 1 num script sob `set -e`, e o script para. Isso é um bug?",
+    "hint": "Pergunte o que o 1 do `grep` quer dizer antes de perguntar o que o `set -e` deveria fazer.",
+    "choices": [
+      {
+        "text": "Sim — o `set -e` deveria ignorar um código 1 e parar acima dele",
+        "why": "O `set -e` trata todo código diferente de zero igual; não há limiar."
+      },
+      {
+        "text": "Não — um código 1 do `grep` pode querer dizer que o arquivo não pôde ser lido",
+        "why": "Um arquivo ilegível é 2; o 1 é uma busca limpa que não casou com nada."
+      },
+      {
+        "text": "Na prática sim: 1 quer dizer nenhuma correspondência, resposta perfeitamente normal",
+        "why": "Isso — ponha num `if`, ou acrescente `|| true` quando você espera não casar."
+      },
+      {
+        "text": "Não — o `set -e` não age na última etapa de um pipeline de qualquer forma",
+        "why": "Ele age nela; as exceções são condições e comandos unidos por `&&` ou `||`."
+      }
+    ]
+  },
+  "ex-e9h4553e": {
+    "prompt": "Ligue cada código de saída ao que o produziu.",
+    "hint": "Cinco números, e dois deles são sobre o comando e não sobre o trabalho dele.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "funcionou"
+      },
+      {
+        "left": "1",
+        "right": "o grep não achou correspondência"
+      },
+      {
+        "left": "126",
+        "right": "achou o arquivo, não conseguiu executar"
+      },
+      {
+        "left": "127",
+        "right": "comando inexistente"
+      },
+      {
+        "left": "130",
+        "right": "alguém apertou Ctrl+C"
+      }
+    ],
+    "right_distractors": [
+      "o argumento estava fora da faixa",
+      "o disco encheu no meio da escrita"
+    ]
+  },
+  "ex-7t728zga": {
+    "prompt": "Faça um pipeline reportar o último código diferente de zero em vez do da última etapa: `set -o ____`",
+    "hint": "Uma palavra, oito letras."
+  },
+  "ex-hxjtxv8q": {
+    "prompt": "Uma máquina está lenta. O `top` mostra `%Cpu(s): 3.0 us, 1.0 sy, 0.0 wa, 96.0 id` e carga média de 0,4. Onde você olha em seguida?",
+    "hint": "Toda coluna que você recebeu está pequena. Isso já é o achado.",
+    "choices": [
+      {
+        "text": "Na lista de processos ordenada por `%CPU`, atrás do descontrolado",
+        "why": "Não há o que achar: 96% ocioso e carga abaixo de um querem dizer que nada está na fila."
+      },
+      {
+        "text": "No `ps` atrás de processos em `D`, já que a carga os esconde",
+        "why": "Processos em `D` empurram a carga para cima, e esta carga está baixa."
+      },
+      {
+        "text": "Em outro lugar que não o processador — memória, rede ou a aplicação",
+        "why": "Isso — esta máquina não está ocupada, então a lentidão não é problema de escalonamento."
+      },
+      {
+        "text": "Na carga média numa janela maior, já que um minuto é pouco",
+        "why": "Os três números estão na mesma linha, e nenhum deles está alto."
+      }
+    ]
+  },
+  "ex-hppq86f8": {
+    "prompt": "Ponha em ordem como você trabalharia num processo desconhecido que está comendo a máquina.",
+    "items": [
+      "top -b -n 1 -o %CPU | head",
+      "pstree -s PID",
+      "ls -l /proc/PID/cwd /proc/PID/exe",
+      "kill PID",
+      "kill -9 PID"
+    ],
+    "trap": "Ache, descubra o que o iniciou, descubra o que ele é, peça que pare, e só então remova."
+  },
+  "ex-tc096wy0": {
+    "prompt": "Um serviço foi parado uma hora atrás e a porta dele continua em uso. O `ps` não mostra processo nenhum com aquele nome. Qual é a explicação mais provável?",
+    "hint": "Matar um pai deixa algo para trás, e isso apareceu duas vezes nesta aula.",
+    "choices": [
+      {
+        "text": "O kernel segura a porta por uma hora depois do último fechamento",
+        "why": "Um socket fechado de fato fica pendurado, e por segundos e não por uma hora."
+      },
+      {
+        "text": "Um filho do serviço continua rodando, adotado pelo PID 1",
+        "why": "Isso — o `ss -lptn` nomeia o processo, e o `PPID` dele será `1`."
+      },
+      {
+        "text": "O serviço deixou um zumbi que ainda é dono do socket",
+        "why": "Um zumbi não segura arquivos nem sockets; tudo foi liberado quando ele saiu."
+      },
+      {
+        "text": "A porta está ligada a uma socket unit do systemd e não ao serviço",
+        "why": "Esse é um arranjo real e ele apareceria listado no systemd em vez de sumido."
+      }
+    ]
+  },
+  "ex-vm0y4c0v": {
+    "prompt": "Você tem um PID e quer três coisas: o que ele é, o que o iniciou, e se ele é seu para sinalizar. Quais três comandos?",
+    "hint": "Um lê o `/proc`, um sobe, e um pergunta sem mandar nada.",
+    "choices": [
+      {
+        "text": "`ls -l /proc/PID/exe`, `pstree -s PID`, `kill -0 PID`",
+        "why": "Isso — o binário, a ascendência, e a checagem de permissão que não manda nada."
+      },
+      {
+        "text": "`ps -p PID`, `ps -ef | grep PID`, `kill -9 PID`",
+        "why": "O último responde à pergunta agindo, o que não é o mesmo que perguntar."
+      },
+      {
+        "text": "`lsof -p PID`, `pstree -p PID`, `renice -n 0 -p PID`",
+        "why": "O `pstree -p` olha para baixo, e o `renice` muda o processo para descobrir sobre ele."
+      },
+      {
+        "text": "`cat /proc/PID/status`, `pgrep -P PID`, `killall -0 PID`",
+        "why": "O `pgrep -P` lista filhos, e o `killall` aceita um nome em vez de um número."
+      }
+    ]
+  },
+  "ex-vasww4bb": {
+    "prompt": "Quais destes deixam um processo rodando depois que você fecha o terminal?",
+    "hint": "Dois mecanismos funcionam, um é sobre a lista do shell, e dois não fazem nada aqui.",
+    "choices": [
+      {
+        "text": "`nohup cmd &`",
+        "why": "Sim — o sinal chega e é ignorado."
+      },
+      {
+        "text": "`cmd &` seguido de `disown`",
+        "why": "Sim — o bash esquece a tarefa e nunca manda o sinal."
+      },
+      {
+        "text": "`setsid cmd &`",
+        "why": "Sim — não há terminal de controle para desligar, para começar."
+      },
+      {
+        "text": "`cmd &` sozinho",
+        "why": "Não — este é o que morreu no experimento."
+      },
+      {
+        "text": "`cmd &` com `renice -n 19`",
+        "why": "A niceness é escalonamento; ela não tem nada a ver com hangups."
+      }
+    ]
+  },
+  "ex-1tsbz549": {
+    "prompt": "Um colega diz que a máquina tem 400 processos porque o `top` disse `Tasks: 400`. O que você conferiria?",
+    "hint": "Duas seções desta aula avisaram sobre essa mesma contagem.",
+    "choices": [
+      {
+        "text": "O `ps -e | wc -l`, já que o `top` conta threads de kernel e o `ps` não",
+        "why": "Os dois incluem threads de kernel; nenhum as esconde."
+      },
+      {
+        "text": "A carga média, que conta as mesmas coisas que o `Tasks:`",
+        "why": "A carga conta o que queria rodar, não o que existe."
+      },
+      {
+        "text": "O `/proc`, já que o `top` inclui diretórios deixados por processos que saíram",
+        "why": "Uma entrada do `/proc` some com o processo dela; nada fica para trás."
+      },
+      {
+        "text": "Se o `-H` está ligado, já que ele conta threads em vez de processos",
+        "why": "Isso — o cabeçalho diz `Threads:` em vez de `Tasks:` quando está."
+      }
+    ]
+  },
+  "ex-y61rfkh8": {
+    "prompt": "Ligue cada sintoma à primeira coisa a usar.",
+    "hint": "Seis sintomas de toda a aula, cada um com uma primeira jogada.",
+    "pairs": [
+      {
+        "left": "um processo a 100% numa máquina de quatro núcleos",
+        "right": "dar renice, e depois descobrir por quê"
+      },
+      {
+        "left": "carga 30 com os processadores ociosos",
+        "right": "olhar o armazenamento e a coluna wa"
+      },
+      {
+        "left": "milhares de entradas <defunct>",
+        "right": "consertar o pai que não recolhe"
+      },
+      {
+        "left": "disco cheio e o du não acha nada",
+        "right": "lsof +L1 atrás de um aberto apagado"
+      },
+      {
+        "left": "Too many open files num log",
+        "right": "contar /proc/PID/fd e subir o LimitNOFILE"
+      },
+      {
+        "left": "uma tarefa morreu quando o laptop fechou",
+        "right": "nohup ou disown, da próxima vez"
+      }
+    ],
+    "right_distractors": [
+      "reiniciar em modo monousuário",
+      "limpar o cache de páginas na mão"
+    ]
+  },
+  "ex-4scgy6mt": {
+    "prompt": "Uma linha que responde \"o que está comendo esta máquina\": `ps -eo pid,comm,%cpu --sort=-%cpu | ____`",
+    "hint": "Quatro letras, e ela guarda as primeiras linhas."
+  },
+  "ex-xv46ectc": {
+    "prompt": "Ponha a vida de um comando em segundo plano em ordem, do shell ao órfão.",
+    "items": [
+      "o bash bifurca uma cópia de si mesmo",
+      "a cópia dá exec no programa que você nomeou",
+      "o bash imprime [1] e o PID, e não espera",
+      "você fecha o terminal e o bash manda SIGHUP",
+      "a tarefa sumiu, ou sobrevive com PPID 1"
+    ],
+    "trap": "Copiar, substituir, pular a espera, e aí o terminal some."
+  },
+  "ex-89bzb2vg": {
+    "prompt": "Que par de estados quer dizer a mesma coisa para o processador — nenhuma instrução sendo rodada?",
+    "hint": "Quatro dos cinco estados não estão num processador.",
+    "choices": [
+      {
+        "text": "`R` e `S`, já que um processo dormindo continua escalonado",
+        "why": "O `R` é justamente o que está num processador ou esperando um."
+      },
+      {
+        "text": "`R` e `Z`, já que nenhum faz trabalho útil",
+        "why": "O `R` faz trabalho por definição; o zumbi é o que não faz."
+      },
+      {
+        "text": "`T` e `Z`",
+        "why": "Isso — parado e terminado, e nenhum dos dois recebe tempo de processador."
+      },
+      {
+        "text": "`D` e `R`, já que os dois estão dentro do kernel",
+        "why": "O `D` dorme no kernel e o `R` está pronto; só um dos dois ganha processador."
+      }
+    ]
+  },
+  "ex-sqrhdjta": {
+    "prompt": "Qual destes de fato reduz o tempo que um processo passa esperando um disco ocupado?",
+    "hint": "Três dos quatro são sobre o processador.",
+    "choices": [
+      {
+        "text": "`renice -n 19` no processo",
+        "why": "A niceness é tempo de processador, e um processo esperando um disco não pede nenhum."
+      },
+      {
+        "text": "`taskset -c 0` para fixá-lo num processador",
+        "why": "Fixar muda qual processador ele usa, não como o disco é dividido."
+      },
+      {
+        "text": "`kill -STOP` e `kill -CONT` alternados",
+        "why": "Isso pausa o processo por inteiro e segura os arquivos abertos dele enquanto espera."
+      },
+      {
+        "text": "`ionice -c 3` no processo",
+        "why": "Isso — entrada e saída em classe ociosa é o botão para disputa de disco."
+      }
+    ]
+  },
+  "ex-acrxqqww": {
+    "prompt": "Você precisa que um script de deploy pare um serviço do jeito que o `systemctl stop` pararia. O que ele tem que fazer?",
+    "hint": "A aula 5 descreveu a sequência; esta aula forneceu cada peça dela.",
+    "choices": [
+      {
+        "text": "Dar `kill -9` no PID principal, e depois apagar o arquivo de PID dele na mão",
+        "why": "Essa é a sequência que o `systemctl stop` existe para evitar."
+      },
+      {
+        "text": "Mandar `TERM` ao grupo, esperar, e depois `KILL` no que sobrar",
+        "why": "Isso — educado primeiro, um prazo, e remoção só para o que ignorou."
+      },
+      {
+        "text": "Mandar `TERM` ao PID principal e reportar sucesso quando ele retornar",
+        "why": "O `kill` retorna assim que o sinal é enfileirado, o que não diz nada sobre os filhos."
+      },
+      {
+        "text": "Mandar `STOP` ao grupo, conferir que está quieto, e então `KILL`",
+        "why": "Um processo parado mantém travas e arquivos, então isso piora a limpeza."
+      }
+    ]
+  },
+  "ex-t0nj88ah": {
+    "prompt": "O `ps` reporta `%CPU` de 0,0 para um processo que você vê que está ocupado. Que comando mostraria a verdade?",
+    "hint": "Uma coluna é média de vida inteira e a outra é uma amostra.",
+    "choices": [
+      {
+        "text": "`top -b -n 2 -d 1`, cujo segundo quadro é um intervalo",
+        "why": "Isso — dois quadros a um segundo de distância dão ao `top` o que medir no meio."
+      },
+      {
+        "text": "`ps -eo pid,%cpu --sort=-%cpu`, que recalcula a coluna",
+        "why": "É a mesma média de vida inteira, ordenada; ordenar não muda o que ela mede."
+      },
+      {
+        "text": "`pstree -p`, que mostra atividade ao vivo por ramo",
+        "why": "O `pstree` desenha estrutura e não reporta atividade nenhuma."
+      },
+      {
+        "text": "`/proc/PID/status`, que guarda o número atual",
+        "why": "Ele guarda contadores e estado; a taxa tem que ser calculada de duas leituras."
+      }
+    ]
+  },
+  "ex-pc21ss31": {
+    "prompt": "Retome uma tarefa parada em segundo plano, em duas letras: `____`",
+    "hint": "É o oposto do `fg`."
+  },
+  "ex-yhv4sdv8": {
+    "prompt": "Complete a checagem que pergunta se um processo existe e é seu, sem mandar nada a ele: `kill ____ $PID`",
+    "hint": "Um traço e um dígito."
+  }
+}

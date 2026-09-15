@@ -1,0 +1,63 @@
+{
+  "id": "le-3sfw2p12",
+  "title": "An overview of PowerShell for Windows environments",
+  "sections": [
+    {
+      "id": "se-re6ev4c9",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-byay95w3",
+          "version": 1,
+          "script": "This lesson exists because the machine you did not choose still needs administering, and on a Windows network that machine is administered with PowerShell. {{why}} It is not a Unix shell with different command names. There is one idea underneath it and it changes everything above it: the pipeline carries objects, not text. {{idea}} Here is what that means in practice. In bash, ls gives you lines, and to get the size of a file you count columns with awk and hope nothing has a space in its name. In PowerShell, Get-ChildItem gives you file objects, and the size is a property called Length, which is a number, and it is the same property whatever the filename contains. {{objects}} Nothing gets parsed, so nothing gets mis-parsed. That is the whole trade, and the cost is on the other side: the objects are verbose, the commands are long, and a thing that is one character in bash is a word in PowerShell. {{trade}} One honest note about this lesson. PowerShell seven runs on Linux, and that is what every transcript here was captured on — version seven point four point six, on Ubuntu, as an ordinary user. So the language, the pipeline, the objects and the errors are all real. What is not here is Windows: Get-Service, the registry drive, the CIM classes. Those cmdlets do not exist on this machine and you will see them not existing, rather than being described as though they ran. {{honest}} {{title}}",
+          "seconds": 128,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-cjqke0ng", "slug": "objects-not-text", "kind": "reading" },
+    { "id": "se-acyp5d4r", "slug": "verb-noun", "kind": "reading" },
+    { "id": "se-gcehapp1", "slug": "the-pipeline", "kind": "reading" },
+    { "id": "se-0hstwyde", "slug": "filtering", "kind": "reading" },
+    { "id": "se-a82aqatb", "slug": "sorting-and-grouping", "kind": "reading" },
+    { "id": "se-vd3pavz1", "slug": "formatting", "kind": "reading" },
+    { "id": "se-6ft8sr73", "slug": "variables-and-types", "kind": "reading" },
+    { "id": "se-83xg6jrp", "slug": "collections", "kind": "reading" },
+    { "id": "se-ps4r799n", "slug": "control-flow", "kind": "reading" },
+    { "id": "se-zgwvmvsf", "slug": "functions", "kind": "reading" },
+    { "id": "se-zcqvgsz8", "slug": "providers", "kind": "reading" },
+    { "id": "se-4gwvqhgb", "slug": "errors", "kind": "reading" },
+    { "id": "se-bdz6szjd", "slug": "talking-to-windows", "kind": "reading" },
+    { "id": "se-da6ysre6", "slug": "a-rosetta-stone", "kind": "reading" },
+    {
+      "id": "se-httbwdnq",
+      "slug": "one-question",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-m7n953dy",
+          "version": 1,
+          "script": "The same question lesson eight asked, asked again in PowerShell, on the same twelve hundred line log. What is slow? {{ask}} First, turn the text into objects, because that is the step PowerShell wants and bash does not have. Get-Content, ForEach-Object, split on spaces, and build a pscustomobject with four properties: ip, path, status as an integer, and milliseconds as an integer. One line, and after it the log is twelve hundred records rather than twelve hundred strings. {{parse}} Now the questions are one cmdlet each. Group by status, sort by count: a thousand and thirty three two hundreds, seventy two-oh-ones, twenty eight four-oh-fours, twenty one five hundreds, eighteen three-oh-twos. The same five numbers lesson eight got with sort and uniq minus c. {{group}} Where milliseconds is greater than three thousand, grouped by path: twelve, and all twelve are slash api slash reports. The same twelve. {{slow}} And Measure-Object over the milliseconds gives an average of a hundred and thirty eight point nine one and a maximum of five thousand eight hundred and thirty three, which took one command where bash needed awk. {{measure}} So which is better. Look at what each one paid. Bash cut the ninth column by counting spaces, and lesson eight showed that going wrong: the user agent field has spaces in it, so the field count varies from twelve to twenty on lines that look identical. PowerShell paid that cost once, in the parse line, and then never again — status is an integer in every one of the twelve hundred records. {{compare}} And the bill for that: the parse line is sixty characters of ceremony that bash did not need at all, and every command after it is a word where bash had a symbol. That is the trade, in one log file, with both answers in front of you. {{bill}}",
+          "seconds": 196,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-q1m2jrn5",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-49fv0jbv",
+          "version": 1,
+          "script": "Three things to carry out of this, and none of them is a list of cmdlet names. {{three}} The first is the one idea: the pipeline carries objects. Everything else in PowerShell follows from it — why the commands are verbs and nouns, why there is no awk, why Select-Object and Where-Object and Group-Object exist at all, and why Format-Table is the last thing in a pipeline and never the middle. If you remember one sentence, remember that one. {{idea}} The second is the trap you will actually hit, and it is not syntax. A property read out of a CSV or a text file is a string, and a string comparison with a number does not fail — it answers. Revenue greater than thirty thousand matched sixteen rows as text and seven as numbers, and nothing warned about the other nine. Cast it. Square bracket int, every time, at the boundary where text becomes data. {{trap}} The third is how to find things without a search engine. Get-Verb lists the approved verbs, Get-Command minus Noun finds every command that works on a kind of thing, Get-Member tells you what an object actually has on it, and Get-Help minus Examples is written by the people who wrote the cmdlet. Those four will get you further than remembering names. {{find}} And the honest scope of this lesson. It is an overview: enough to read a script somebody hands you, enough to write a short one, enough to know what to search for. What is not in it is Windows itself — services, the registry, CIM, Active Directory, remoting — because none of that exists on the machine these transcripts were taken on, and describing output nobody ran is exactly what this course does not do. {{scope}} Lesson eleven goes back to Linux and to measuring it: CPU, memory, disk and input-output, and which number actually means the machine is in trouble. {{next}}",
+          "seconds": 176,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-ahbsr0xf", "slug": "drill", "kind": "practice" }
+  ]
+}

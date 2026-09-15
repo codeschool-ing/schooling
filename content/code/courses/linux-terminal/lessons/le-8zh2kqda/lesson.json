@@ -1,0 +1,62 @@
+{
+  "id": "le-8zh2kqda",
+  "title": "Processes: ps, top, htop, kill, jobs and signals",
+  "sections": [
+    {
+      "id": "se-5xt4fhnh",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-kx25h5az",
+          "version": 1,
+          "script": "A program is a file. A process is a file that is happening. {{two}} That sentence is the whole lesson, and it is worth a second. Slash usr slash bin slash sleep is a file on a disk — you can look at it, copy it, delete it, and it does nothing, because a file does not do anything. Run it and something else exists: a number, some memory, an account it belongs to, a set of files it has open, and a parent. That thing is a process, and it is what the machine is actually made of. {{process}} Last lesson ended with a service that was failing, and the honest answer at that point was: go one level down. This is one level down. Everything systemd was managing is processes, and everything in this lesson works just as well on a program you started by hand two seconds ago. {{down}} We will look at them — ps, and the two dialects it speaks, and top, which is the same question asked continuously. We will look at how they are born and how they die, including the two states that confuse everybody: the zombie, which is finished and still in the table, and the orphan, which has lost its parent and been adopted. {{look}} Then the part you will use most: sending one a message. Signals are numbered, some of them can be refused, and one of them cannot — and the reason minus nine is the last resort rather than the first is that it takes away the program's chance to tidy up. {{signals}} And at the end, jobs: the things you start from a shell, the ones that die when your connection drops, and how to stop that happening. {{jobs}} Every transcript in this lesson was run on a real machine, including a real zombie and a real runaway process eating a whole core. {{title}}",
+          "seconds": 88,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-vt1x9xgg", "slug": "what-a-process-is", "kind": "reading" },
+    { "id": "se-rtcevezw", "slug": "lifecycle", "kind": "reading" },
+    { "id": "se-mhjbk4a5", "slug": "states", "kind": "reading" },
+    { "id": "se-5n6hz77t", "slug": "ps", "kind": "reading" },
+    { "id": "se-9qq5rer2", "slug": "pstree-and-parents", "kind": "reading" },
+    { "id": "se-ar8wc4k9", "slug": "top-and-htop", "kind": "reading" },
+    { "id": "se-xtftsq07", "slug": "signals", "kind": "reading" },
+    { "id": "se-np63df99", "slug": "kill", "kind": "reading" },
+    { "id": "se-x0y3vxq0", "slug": "jobs", "kind": "reading" },
+    { "id": "se-xmcpd8zr", "slug": "surviving-the-hangup", "kind": "reading" },
+    { "id": "se-ehgt8n49", "slug": "priority", "kind": "reading" },
+    { "id": "se-6hm9v8ky", "slug": "file-descriptors", "kind": "reading" },
+    { "id": "se-mye4x1xp", "slug": "exit-status", "kind": "reading" },
+    {
+      "id": "se-789rp96z",
+      "slug": "a-runaway",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-2btpzjmv",
+          "version": 1,
+          "script": "Something on this machine is eating a processor, and we are going to find it and stop it — in four commands, in about forty seconds. {{open}} First: is anything actually wrong. Uptime, and the three numbers at the end. Zero point zero eight, zero point zero three, zero point zero one — one minute, five minutes, fifteen minutes. All near zero on a machine with four cores. Nothing is wrong yet. {{uptime-before}} Now top, in batch mode, sorted by processor. And there it is on the first line: runaway dot sh, one hundred percent, owned by ana, six seconds of processor time in six seconds of wall clock. That is one core, entirely consumed, by a shell script. {{top}} Read the header row while we are here. Eighty-one tasks, two running, seventy-nine sleeping — and almost everything on a healthy machine is asleep. Twenty-five percent user time, and twenty-five is one core out of four. The numbers agree with each other, which is how you know you are reading them right. {{header}} Same answer from ps, if you prefer a list that holds still. Pid, parent, user, percent, elapsed — sorted by processor, top five. Same process, same hundred percent. {{ps}} And now the number that tells you how long this has been going on. Uptime again, twenty seconds later. Zero point three four, up from zero point zero eight. The one-minute average is climbing and the fifteen-minute average has barely moved, which says this started recently. Load average is not a percentage — it is how many processes wanted to run, and on four cores, four is busy and not broken. {{uptime-after}} Here is the script, and it is three lines. While true, do nothing, done. A loop with an empty body. It is a bug you will write, and it is a bug you will inherit, and it looks like this from outside every time. {{script}} Stop it properly. Pkill, matching the full command line, as this user. No minus nine — it is a bash script with nothing to clean up, and it goes on the first ask. The habit is what matters, not this case. {{kill}} Four commands. Uptime to see whether anything is wrong, top to find it, ps to confirm, pkill to end it. That is the whole procedure, and it does not change when the process matters more than this one did.",
+          "seconds": 214,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-dsqkmvpj",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-chgnkg8g",
+          "version": 1,
+          "script": "Processes are the thing you can always go and look at. {{open}} That is what I would most like you to take out of this lesson. When a service will not start and the status is unhelpful, when a disk is full and nothing explains it, when a machine is slow and the graphs are lying — there is a process, it has a number, and everything about it is readable. Ps tells you who it belongs to. Slash proc slash the number tells you what it has open, where it is running from, what it was started with. None of that requires a tool anybody had to install. {{look}} Three things to carry. The first: a process has a parent, and when the parent dies the child is adopted by process one rather than killed. That is why closing a terminal does not necessarily stop what you started in it, and it is why a background job needs section ninety-six before you trust it. {{parent}} The second: signals are messages, and most of them can be refused. Term asks. Kill does not ask, and the program gets no chance to close a file, finish a write, or tell anybody. Minus nine is not the strong version of stopping something — it is the version that skips the part where the program tidies up. Ask first. Wait. {{signals}} The third is the exit status, and it is the smallest useful thing in this course. Zero worked. One did not. One hundred and twenty-seven means the command was not found, one hundred and twenty-six means it was found and could not run, and anything above one hundred and twenty-eight is a signal — one thirty is somebody pressing control C. You will read those numbers for the rest of your career and nobody will ever explain them to you again. {{status}} Next lesson is where software comes from: package managers, repositories, and the signature that makes any of it safe to install. {{next}} Before that, the drill.",
+          "seconds": 70,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-m9em8ja9", "slug": "drill", "kind": "practice" }
+  ]
+}

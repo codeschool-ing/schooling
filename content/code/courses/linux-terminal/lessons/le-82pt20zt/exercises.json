@@ -1,0 +1,2741 @@
+[
+  {
+    "id": "ex-g7ypkw63",
+    "version": 1,
+    "section": "a-file-with-a-name",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You save a one-line script and type its bare name. The shell answers `command not found`. Why?",
+    "hint": "Where does the shell look for a program to run?",
+    "choices": [
+      {
+        "text": "The file has no `#!` line on top",
+        "correct": false,
+        "why": "A missing shebang produces a different outcome, and the file still has to be found first."
+      },
+      {
+        "text": "The file is not executable yet",
+        "correct": false,
+        "why": "That gives `Permission denied` instead, which is a later step."
+      },
+      {
+        "text": "The current directory is not searched",
+        "correct": true,
+        "why": "Right. `$PATH` is the search list and `.` is deliberately absent from it, so the name has to be spelled `./name`."
+      },
+      {
+        "text": "Scripts have to be given a `.sh` extension",
+        "correct": false,
+        "why": "The extension means nothing to the kernel; it is a convention for humans."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7fppnyb",
+    "version": 1,
+    "section": "a-file-with-a-name",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script begins `#!/bin/sh` and uses `[[ ]]`. On Ubuntu, what happens?",
+    "hint": "What is `/bin/sh` on a Debian-family machine?",
+    "choices": [
+      {
+        "text": "It runs until the `[[` line and fails there",
+        "correct": true,
+        "why": "Yes. `/bin/sh` is dash, the earlier lines run, and the script stops half-done."
+      },
+      {
+        "text": "It refuses to start",
+        "correct": false,
+        "why": "The interpreter exists and starts fine; the trouble is further in."
+      },
+      {
+        "text": "Bash is quietly picked up instead, so it works fine",
+        "correct": false,
+        "why": "The shebang names `/bin/sh`, and that is what the kernel runs."
+      },
+      {
+        "text": "A warning is printed and it carries on",
+        "correct": false,
+        "why": "Nothing warns; `[[` is simply not a command dash knows."
+      }
+    ]
+  },
+  {
+    "id": "ex-2v82s5kr",
+    "version": 1,
+    "section": "a-file-with-a-name",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./setup.sh` prints `cannot execute: required file not found`, and `setup.sh` is right there. What is missing?",
+    "hint": "Read the message again: which file is it talking about?",
+    "choices": [
+      {
+        "text": "Read permission on the script",
+        "correct": false,
+        "why": "That reports `Permission denied`, naming the script itself."
+      },
+      {
+        "text": "A closing `fi` somewhere in the file",
+        "correct": false,
+        "why": "A syntax error names a line number and comes from bash, not the kernel."
+      },
+      {
+        "text": "The directory the script is sitting in, on disk",
+        "correct": false,
+        "why": "You just listed it, and the shell resolved the path to reach this message."
+      },
+      {
+        "text": "The interpreter named on the `#!` line",
+        "correct": true,
+        "why": "Yes. The kernel could not find that program, and the message says so without naming it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhcs1qcf",
+    "version": 1,
+    "section": "a-file-with-a-name",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script ends with `cd /srv/app`. You run it with `./deploy.sh` and your prompt has not moved. What would move it?",
+    "hint": "Which of these runs the lines in the shell you are sitting in?",
+    "choices": [
+      {
+        "text": "`bash deploy.sh`",
+        "correct": false,
+        "why": "That starts a child too, so the directory change dies with it."
+      },
+      {
+        "text": "`source deploy.sh`",
+        "correct": true,
+        "why": "Correct. The lines run in your own shell, so the `cd` sticks."
+      },
+      {
+        "text": "`exec ./deploy.sh`",
+        "correct": false,
+        "why": "That replaces your shell with the script and you lose the session when it ends."
+      },
+      {
+        "text": "`chmod +x deploy.sh` and run it again",
+        "correct": false,
+        "why": "It is already executable — it ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwp3zwh7",
+    "version": 1,
+    "section": "a-file-with-a-name",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Make `report.sh` runnable as `./report.sh`: `____ +x report.sh`",
+    "hint": "One command, three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "chmod"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1fe7bt7q",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Typing `name = ana` at the prompt reports `bash: name: command not found`. What did the shell do?",
+    "hint": "The shell splits a line into words. What is the first word here?",
+    "choices": [
+      {
+        "text": "Refused the assignment as malformed",
+        "correct": false,
+        "why": "It never saw an assignment; it saw a command."
+      },
+      {
+        "text": "Tried to run `name` with two arguments",
+        "correct": true,
+        "why": "Right. `=` and `ana` became arguments, because an assignment cannot have spaces around the `=`."
+      },
+      {
+        "text": "Set `name` to an empty string",
+        "correct": false,
+        "why": "That is what `name= ana` does, which is a different line."
+      },
+      {
+        "text": "Went looking for a variable of that name",
+        "correct": false,
+        "why": "Reading a variable takes a `$`, and nothing here had one."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5rrmcgr",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You set `LEVEL=debug` at the prompt, then run `./app.sh`, and inside the script `$LEVEL` is empty. What fixes it?",
+    "hint": "What does a child process inherit from its parent?",
+    "choices": [
+      {
+        "text": "Quoting it as `LEVEL=\"debug\"`",
+        "correct": false,
+        "why": "The quotes change nothing here; the value has no spaces."
+      },
+      {
+        "text": "Spelling it `${LEVEL}` in the script",
+        "correct": false,
+        "why": "The braces only mark where the name ends."
+      },
+      {
+        "text": "Declaring it with `declare -i LEVEL`",
+        "correct": false,
+        "why": "That makes a variable integer, which is a different property."
+      },
+      {
+        "text": "`export LEVEL=debug`",
+        "correct": true,
+        "why": "Yes. Only exported variables are part of the environment, and the environment is what a child gets."
+      }
+    ]
+  },
+  {
+    "id": "ex-gn1nwh9c",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `LANG=C sort names.txt` leave behind in your shell?",
+    "hint": "Think about where that assignment applies.",
+    "choices": [
+      {
+        "text": "`LANG` as it was before",
+        "correct": true,
+        "why": "Correct. A variable written in front of a command applies to that command alone."
+      },
+      {
+        "text": "`LANG` set to `C` from then on",
+        "correct": false,
+        "why": "That would need a separate assignment line, or an `export`."
+      },
+      {
+        "text": "`LANG` unset entirely",
+        "correct": false,
+        "why": "Nothing here removes it."
+      },
+      {
+        "text": "An error, because `sort` takes no such option",
+        "correct": false,
+        "why": "It is not an option to `sort`; the shell consumes it before `sort` starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss24pzd2",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`echo ${dir}s` prints `logs` but `echo $dirs` prints a blank line. What is `$dirs`?",
+    "hint": "How far does the shell read a variable name?",
+    "choices": [
+      {
+        "text": "`$dir` with an `s` appended",
+        "correct": false,
+        "why": "That is what the braces produce, and it is the one that printed `logs`."
+      },
+      {
+        "text": "A syntax error the shell ignored",
+        "correct": false,
+        "why": "Nothing is wrong with the syntax; it is valid and means something else."
+      },
+      {
+        "text": "A variable of that name, which does not exist",
+        "correct": true,
+        "why": "Right. Names run over letters, digits and underscores, so `dirs` is one name — and an unset one expands to nothing."
+      },
+      {
+        "text": "The first element of an array that is called `dir`",
+        "correct": false,
+        "why": "That spelling would be `${dir[0]}`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6thv9vwt",
+    "version": 1,
+    "section": "variables",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each spelling to what it does.",
+    "hint": "Two of these differ only by a colon.",
+    "pairs": [
+      {
+        "left": "`${v-x}`",
+        "right": "use x when v is unset"
+      },
+      {
+        "left": "`${v:-x}`",
+        "right": "use x when v is unset or empty"
+      },
+      {
+        "left": "`export v`",
+        "right": "make v part of the environment"
+      },
+      {
+        "left": "`declare -p v`",
+        "right": "print v with its type and exact value"
+      }
+    ],
+    "right_distractors": [
+      "remove v from the shell",
+      "make v unchangeable"
+    ]
+  },
+  {
+    "id": "ex-z3dvb0hf",
+    "version": 1,
+    "section": "quoting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`f='my file.txt'` and then `ls -l $f` reports two missing files. What did `ls` receive?",
+    "hint": "What happens to the result of an unquoted expansion?",
+    "choices": [
+      {
+        "text": "One argument, `my file.txt`, intact",
+        "correct": false,
+        "why": "That is what `\"$f\"` produces, and it is the version that works."
+      },
+      {
+        "text": "Two arguments, cut at the space",
+        "correct": true,
+        "why": "Correct. The shell splits the result of an unquoted expansion on whitespace."
+      },
+      {
+        "text": "No arguments, because the value had a space",
+        "correct": false,
+        "why": "The value arrived; it was then cut in two."
+      },
+      {
+        "text": "The literal text `$f`",
+        "correct": false,
+        "why": "Single quotes around the assignment do not stop the later expansion."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g3z7a1h",
+    "version": 1,
+    "section": "quoting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pattern='*.log'`. Why does `echo $pattern` list files while `echo \"$pattern\"` prints two characters and a dot?",
+    "hint": "Two things happen to an unquoted expansion, not one.",
+    "choices": [
+      {
+        "text": "Unquoted, the `*` is matched against the directory",
+        "correct": true,
+        "why": "Yes. Globbing runs on the result of the expansion, so the pattern that came out of the variable was then expanded again."
+      },
+      {
+        "text": "The single quotes were kept inside the value",
+        "correct": false,
+        "why": "Quotes never end up in a value."
+      },
+      {
+        "text": "`echo` expands wildcards in its arguments",
+        "correct": false,
+        "why": "`echo` prints what it is given; the shell had already decided."
+      },
+      {
+        "text": "The variable is holding a list of names rather than a string",
+        "correct": false,
+        "why": "A plain variable holds one string."
+      }
+    ]
+  },
+  {
+    "id": "ex-cybvt6gq",
+    "version": 1,
+    "section": "quoting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A script does `rm -rf \"/var/cache/$app\"/*` and `app` is empty. What does it delete?",
+    "hint": "Write out the path with nothing where `$app` is.",
+    "choices": [
+      {
+        "text": "Not a thing — the quotes protect it",
+        "correct": false,
+        "why": "Quoting keeps it one word; it does not put a value in it."
+      },
+      {
+        "text": "Not a thing — that path does not exist",
+        "correct": false,
+        "why": "`/var/cache//*` is a valid path — the double slash is collapsed."
+      },
+      {
+        "text": "Everything under `/var/cache`",
+        "correct": true,
+        "why": "Right, and there is no error to warn you: the path simply closed up."
+      },
+      {
+        "text": "Just the files whose name is empty",
+        "correct": false,
+        "why": "There is no such filename; the glob expanded against a real directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcxwy6k3",
+    "version": 1,
+    "section": "quoting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which quoting keeps an `awk` program exactly as typed?",
+    "hint": "Which kind expands nothing at all?",
+    "choices": [
+      {
+        "text": "Double quotes",
+        "correct": false,
+        "why": "`$1` inside them is the shell's first argument, not awk's first field."
+      },
+      {
+        "text": "No quotes, with `\\$` before each dollar",
+        "correct": false,
+        "why": "It works and is unreadable after the second escape."
+      },
+      {
+        "text": "Backticks",
+        "correct": false,
+        "why": "Those run a command and substitute its output."
+      },
+      {
+        "text": "Single quotes",
+        "correct": true,
+        "why": "Correct. Nothing inside them is expanded, which is why every awk and sed program in the last lesson used them."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j18babr",
+    "version": 1,
+    "section": "quoting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill in the safe way to pass a filename that may contain a space: `rm ____`  (the variable is `f`)",
+    "hint": "Four characters, and two of them are quotes.",
+    "blanks": [
+      {
+        "accept": [
+          "\"$f\""
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ktpvw7yq",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A script is called with `./s.sh 'two words' second`. How many arguments does `\"$@\"` produce?",
+    "hint": "The quotes around it are the whole question.",
+    "choices": [
+      {
+        "text": "Three, one per word",
+        "correct": false,
+        "why": "That is what `$@` without quotes gives."
+      },
+      {
+        "text": "One, with everything joined",
+        "correct": false,
+        "why": "That is `\"$*\"`."
+      },
+      {
+        "text": "Two, each intact",
+        "correct": true,
+        "why": "Correct. `\"$@\"` produces one quoted word per argument, whatever is inside them."
+      },
+      {
+        "text": "Four, counting the script name",
+        "correct": false,
+        "why": "`$0` is not part of `$@`."
+      }
+    ]
+  },
+  {
+    "id": "ex-142ze1mw",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a script, `echo $10` prints the first argument followed by a zero. What did you want?",
+    "hint": "The shell reads the longest name it can, and `1` is already a name.",
+    "choices": [
+      {
+        "text": "`${10}`",
+        "correct": true,
+        "why": "Yes. From ten on, the braces are what tell the shell where the number ends."
+      },
+      {
+        "text": "`$(10)`",
+        "correct": false,
+        "why": "That tries to run a command called `10`."
+      },
+      {
+        "text": "`$[10]`",
+        "correct": false,
+        "why": "That is obsolete arithmetic syntax, not an argument."
+      },
+      {
+        "text": "`$arg10`",
+        "correct": false,
+        "why": "There is no variable of that name."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xc9tbm1",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a usage message end with `>&2`?",
+    "hint": "Think about somebody running the script with `> report.txt`.",
+    "choices": [
+      {
+        "text": "It makes the shell exit after printing",
+        "correct": false,
+        "why": "The `exit` does that; `>&2` is only about where the text goes."
+      },
+      {
+        "text": "It keeps the message visible when output is redirected",
+        "correct": true,
+        "why": "Right. Standard error is a separate stream, so `> file` does not swallow it."
+      },
+      {
+        "text": "It sends the message to the system log",
+        "correct": false,
+        "why": "Nothing here involves the log; `2` is the process's own error stream."
+      },
+      {
+        "text": "It stops the message from being coloured by the terminal",
+        "correct": false,
+        "why": "Colour is unrelated to which stream is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k6bj6zb",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `shift` runs once in a script called with three arguments, what is `$#`?",
+    "hint": "`shift` drops one and renumbers the rest.",
+    "choices": [
+      {
+        "text": "Three, unchanged",
+        "correct": false,
+        "why": "`shift` changes the count as well as the numbering."
+      },
+      {
+        "text": "One, the one that was dropped",
+        "correct": false,
+        "why": "The dropped argument is gone, not counted."
+      },
+      {
+        "text": "Zero, because the list was consumed",
+        "correct": false,
+        "why": "Only one was consumed."
+      },
+      {
+        "text": "Two",
+        "correct": true,
+        "why": "Correct. `$1` is gone, what was `$2` is now `$1`, and the count fell by one."
+      }
+    ]
+  },
+  {
+    "id": "ex-0srkdj2x",
+    "version": 1,
+    "section": "exit-status",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A script's `cp` fails, the script keeps going, and it ends with status 0. What was missing from the top?",
+    "hint": "One three-character setting turns the first failure into a stop.",
+    "choices": [
+      {
+        "text": "`#!/usr/bin/env bash`",
+        "correct": false,
+        "why": "A shebang decides which interpreter runs; it does not change what happens after a failure."
+      },
+      {
+        "text": "`set -o noclobber`",
+        "correct": false,
+        "why": "That refuses to overwrite a file with `>`, which is a different concern."
+      },
+      {
+        "text": "`set -e`",
+        "correct": true,
+        "why": "Yes. Without it the shell carries on after a failed command, which is right at a prompt and wrong in a file."
+      },
+      {
+        "text": "`trap cleanup EXIT`",
+        "correct": false,
+        "why": "A trap runs code on the way out; it does not decide when the way out happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdp6xyb2",
+    "version": 1,
+    "section": "exit-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`grep missing file | wc -l` prints 0 and the pipeline's status is 0, under `set -e`. Which setting changes that?",
+    "hint": "Whose exit status does a pipeline report by default?",
+    "choices": [
+      {
+        "text": "`set -u`",
+        "correct": false,
+        "why": "That is about unset variables, which is a separate failure mode."
+      },
+      {
+        "text": "`set -x`",
+        "correct": false,
+        "why": "That prints commands as they run; it changes no status."
+      },
+      {
+        "text": "`shopt -s failglob`",
+        "correct": false,
+        "why": "That is about globs matching nothing, not about pipelines."
+      },
+      {
+        "text": "`set -o pipefail`",
+        "correct": true,
+        "why": "Right. By default a pipeline reports its last stage, and `wc` succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8cca2jc",
+    "version": 1,
+    "section": "exit-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script has `TARGET=/srv/data` and, three lines later, `rm -rf $TARGE/old`. With `set -u`, what happens?",
+    "hint": "What does `-u` do to a name that was never assigned?",
+    "choices": [
+      {
+        "text": "It stops, naming `TARGE` and the line",
+        "correct": true,
+        "why": "Correct. The typo becomes an unbound-variable error instead of an empty string."
+      },
+      {
+        "text": "It removes `/old` at the root",
+        "correct": false,
+        "why": "That is the behaviour without `-u`, and it is the reason `-u` exists."
+      },
+      {
+        "text": "It substitutes `TARGET`, the closest name",
+        "correct": false,
+        "why": "The shell does no such guessing."
+      },
+      {
+        "text": "It prints a warning and carries on regardless",
+        "correct": false,
+        "why": "The script exits; it does not continue."
+      }
+    ]
+  },
+  {
+    "id": "ex-an93kr09",
+    "version": 1,
+    "section": "exit-status",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Under `set -e`, which of these failing commands do NOT stop the script?",
+    "hint": "Four holes were shown in one script.",
+    "choices": [
+      {
+        "text": "`false` as the condition of an `if`",
+        "correct": true,
+        "why": "A condition is allowed to be false; that is what a condition is for."
+      },
+      {
+        "text": "`false` on the left of `||`",
+        "correct": true,
+        "why": "You are already handling the failure, so the shell leaves it to you."
+      },
+      {
+        "text": "a command that fails inside a function used as a condition",
+        "correct": true,
+        "why": "The suspension covers the whole call, which is the hole that surprises people."
+      },
+      {
+        "text": "`false` on a line of its own",
+        "correct": false,
+        "why": "That one does stop the script — it is the plain case `-e` is for."
+      },
+      {
+        "text": "a `cp` of a file that does not exist, on its own line",
+        "correct": false,
+        "why": "That stops it too, and it is the example the section opens with."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwcgjy3f",
+    "version": 1,
+    "section": "exit-status",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Write the line that turns on all three strict-mode settings at once: `set ____`",
+    "hint": "One dash, three letters, then a word after `-o`.",
+    "blanks": [
+      {
+        "accept": [
+          "-euo pipefail"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bs6xnkqn",
+    "version": 1,
+    "section": "conditionals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `if` actually examine to decide between `then` and `else`?",
+    "hint": "There is no boolean type in the shell.",
+    "choices": [
+      {
+        "text": "Whether the text between `if` and `then` is non-empty",
+        "correct": false,
+        "why": "Emptiness is a test you can write, not what `if` itself looks at."
+      },
+      {
+        "text": "The exit status of the command it ran",
+        "correct": true,
+        "why": "Correct. Zero means `then`, anything else means `else`."
+      },
+      {
+        "text": "Whether the brackets balance",
+        "correct": false,
+        "why": "Unbalanced brackets are a syntax error, caught before anything runs."
+      },
+      {
+        "text": "The value the expression evaluates to, as a number",
+        "correct": false,
+        "why": "That is `(( ))`, which is arithmetic rather than control flow."
+      }
+    ]
+  },
+  {
+    "id": "ex-311s9jbh",
+    "version": 1,
+    "section": "conditionals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `[ 1 -lt 2 ]` need a space after the `[`?",
+    "hint": "Run `type [` and read the answer.",
+    "choices": [
+      {
+        "text": "Because the shell strips leading spaces in tests",
+        "correct": false,
+        "why": "Nothing is stripped; the space is what separates two words."
+      },
+      {
+        "text": "Because `-lt` is a keyword and needs room",
+        "correct": false,
+        "why": "The operator's position is not what forces the space."
+      },
+      {
+        "text": "Because `[` is a command and that is its name",
+        "correct": true,
+        "why": "Right. It is a program — there is even a file called `[` in `/usr/bin` — so `[1` would be a different command's name."
+      },
+      {
+        "text": "Because POSIX reserves the bracket character",
+        "correct": false,
+        "why": "The character is not reserved; it is used as an ordinary command name."
+      }
+    ]
+  },
+  {
+    "id": "ex-shh8v0vm",
+    "version": 1,
+    "section": "conditionals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`a && b || c` with `a` succeeding and `b` failing: what runs?",
+    "hint": "`||` looks at the status of everything to its left.",
+    "choices": [
+      {
+        "text": "`a`, `b` and `c`",
+        "correct": true,
+        "why": "Correct — and this is why the construction is not an if-then-else."
+      },
+      {
+        "text": "`a` and `b`, and then it stops",
+        "correct": false,
+        "why": "`b` failed, which is exactly what makes `||` fire."
+      },
+      {
+        "text": "`a` and `c`, skipping `b`",
+        "correct": false,
+        "why": "`a` succeeded, so `&&` ran `b`."
+      },
+      {
+        "text": "`a` alone, because the rest short-circuits",
+        "correct": false,
+        "why": "A success does not short-circuit `&&`."
+      }
+    ]
+  },
+  {
+    "id": "ex-csphd3yg",
+    "version": 1,
+    "section": "conditionals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which is the better way to ask whether a log contains the word ERROR?",
+    "hint": "Some commands already answer in their exit status.",
+    "choices": [
+      {
+        "text": "`if [ $(grep -c ERROR log) -gt 0 ]`",
+        "correct": false,
+        "why": "It works, reads the whole file, and starts two extra processes."
+      },
+      {
+        "text": "`if [ -n \"$(cat log | grep ERROR)\" ]`",
+        "correct": false,
+        "why": "Three processes and a whole file's contents in a variable."
+      },
+      {
+        "text": "`if [[ $(cat log) == *ERROR* ]]`",
+        "correct": false,
+        "why": "That loads the entire file into memory to answer a yes-or-no question."
+      },
+      {
+        "text": "`if grep -q ERROR log`",
+        "correct": true,
+        "why": "Yes. `grep` already reports the answer, and `-q` stops at the first match."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkmc1tna",
+    "version": 1,
+    "section": "comparing-things",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`[ \"$x\" \\> \"$y\" ]` with x=10 and y=9 says false. Why?",
+    "hint": "Which operators are for numbers and which for strings?",
+    "choices": [
+      {
+        "text": "Because `\\>` is not a valid operator",
+        "correct": false,
+        "why": "It is valid, and the backslash is there because `>` alone would redirect."
+      },
+      {
+        "text": "Because the values were quoted",
+        "correct": false,
+        "why": "Quoting protects the values; it does not change the comparison."
+      },
+      {
+        "text": "Because `\\>` compares as text, and `10` sorts before `9`",
+        "correct": true,
+        "why": "Right. The symbols are the string operators; `-gt` is the numeric one."
+      },
+      {
+        "text": "Because comparing two variables needs them joined by an operator",
+        "correct": false,
+        "why": "It compares two arguments, whatever they came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gm4vmw0",
+    "version": 1,
+    "section": "comparing-things",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`[ $x = yes ]` with `x` empty reports `unary operator expected` and status 2. What did `[` see?",
+    "hint": "Count the arguments after the expansion.",
+    "choices": [
+      {
+        "text": "Four arguments, one of them empty",
+        "correct": false,
+        "why": "An empty expansion without quotes produces no argument at all."
+      },
+      {
+        "text": "Three: `=`, `yes` and `]`",
+        "correct": true,
+        "why": "Correct. The empty variable vanished, so `[` was left holding something it cannot parse."
+      },
+      {
+        "text": "Two: `yes` and `]`",
+        "correct": false,
+        "why": "The `=` survived; it is one of the words."
+      },
+      {
+        "text": "Five, with the empty value counted twice",
+        "correct": false,
+        "why": "Nothing is counted twice; the value produced no word."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcghz4se",
+    "version": 1,
+    "section": "comparing-things",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`[ \"$name\" == *.log ]` answered differently in three directories with the same value in `name`. What varied?",
+    "hint": "`[` is a command, and something happens to a command's arguments first.",
+    "choices": [
+      {
+        "text": "The locale, which changes how `==` sorts",
+        "correct": false,
+        "why": "Sorting rules do not turn one argument into two."
+      },
+      {
+        "text": "Whether `name` was exported",
+        "correct": false,
+        "why": "Exporting decides what children see, not what `[` receives."
+      },
+      {
+        "text": "Whether the shell was interactive",
+        "correct": false,
+        "why": "The expansion happens the same way either way."
+      },
+      {
+        "text": "How many files the pattern matched",
+        "correct": true,
+        "why": "Right. The shell expanded `*.log` before `[` ran, so the number of matching files changed the argument count."
+      }
+    ]
+  },
+  {
+    "id": "ex-3vvephs9",
+    "version": 1,
+    "section": "comparing-things",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You want to check that `$n` is made of digits. Which line does it?",
+    "hint": "One of these is a regular expression, unquoted on purpose.",
+    "choices": [
+      {
+        "text": "`[[ $n =~ ^[0-9]+$ ]]`",
+        "correct": true,
+        "why": "Yes, and the pattern goes unquoted — quoting it turns it into eleven literal characters."
+      },
+      {
+        "text": "`[[ $n =~ \"^[0-9]+$\" ]]`",
+        "correct": false,
+        "why": "Quoted, it compares literally and quietly never matches."
+      },
+      {
+        "text": "`[ $n =~ ^[0-9]+$ ]`",
+        "correct": false,
+        "why": "`[` has no `=~` operator at all."
+      },
+      {
+        "text": "`[[ $n == ^[0-9]+$ ]]`",
+        "correct": false,
+        "why": "`==` does glob matching, where `^` and `+` are ordinary characters."
+      }
+    ]
+  },
+  {
+    "id": "ex-esmgqnc2",
+    "version": 1,
+    "section": "comparing-things",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each file test to what it asks.",
+    "hint": "One of these is about the link and not what it points at.",
+    "pairs": [
+      {
+        "left": "`-f`",
+        "right": "is there a regular file here"
+      },
+      {
+        "left": "`-d`",
+        "right": "is this a directory"
+      },
+      {
+        "left": "`-s`",
+        "right": "does this exist and hold something"
+      },
+      {
+        "left": "`-L`",
+        "right": "is this a symbolic link"
+      }
+    ],
+    "right_distractors": [
+      "is this readable by me",
+      "was this changed today"
+    ]
+  },
+  {
+    "id": "ex-p8h3k5qr",
+    "version": 1,
+    "section": "case",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `case \"$f\" in *.log) …` — what kind of pattern is `*.log`?",
+    "hint": "It is the same syntax as `ls *.log`.",
+    "choices": [
+      {
+        "text": "An extended regular expression",
+        "correct": false,
+        "why": "That is what `[[ =~ ]]` takes; `case` predates it and uses something simpler."
+      },
+      {
+        "text": "A glob",
+        "correct": true,
+        "why": "Correct — the same wildcards as filename matching, so `.` is an ordinary character."
+      },
+      {
+        "text": "A literal string, compared character by character",
+        "correct": false,
+        "why": "Then `*.log` would only match a file actually called `*.log`."
+      },
+      {
+        "text": "A basic regular expression, as `grep` uses",
+        "correct": false,
+        "why": "`case` does not use regular expressions of either flavour."
+      }
+    ]
+  },
+  {
+    "id": "ex-gp46fjst",
+    "version": 1,
+    "section": "case",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An option parser has no `-*)` branch. A user types `--verbsoe` instead of `--verbose`. What happens?",
+    "hint": "Which branch catches a word the others did not?",
+    "choices": [
+      {
+        "text": "The parser exits with status 2",
+        "correct": false,
+        "why": "That is what the missing branch would have done."
+      },
+      {
+        "text": "The loop spins forever on that word",
+        "correct": false,
+        "why": "The `shift` at the bottom moves past it regardless."
+      },
+      {
+        "text": "It falls into `*)` and is treated as a positional argument",
+        "correct": true,
+        "why": "Right, so the flag is silently ignored and the script runs without it."
+      },
+      {
+        "text": "Bash rejects the unknown option before the script even starts",
+        "correct": false,
+        "why": "Bash passes arguments through without inspecting them."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5z0kgg7",
+    "version": 1,
+    "section": "case",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the branch `-e|--env) env=\"$2\"; shift ;;`, why is there a `shift` before the `;;`?",
+    "hint": "There is already a `shift` at the bottom of the loop.",
+    "choices": [
+      {
+        "text": "The option took a value, so two words were used",
+        "correct": true,
+        "why": "Correct. One `shift` for the flag, one for the value it consumed."
+      },
+      {
+        "text": "Without it the `case` would fall through to the next branch",
+        "correct": false,
+        "why": "Branches do not fall through; `;;` ends them."
+      },
+      {
+        "text": "It resets `$#` so the loop can end",
+        "correct": false,
+        "why": "The bottom `shift` already reduces the count each time round."
+      },
+      {
+        "text": "It moves the value into `$1` for the next test",
+        "correct": false,
+        "why": "The value has been read already and is not tested again."
+      }
+    ]
+  },
+  {
+    "id": "ex-r56tge3t",
+    "version": 1,
+    "section": "case",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do most real scripts hand-write a `case` loop instead of using `getopts`?",
+    "hint": "Try `getopts` with `--verbose` and read the error.",
+    "choices": [
+      {
+        "text": "`getopts` is not available in bash",
+        "correct": false,
+        "why": "It is a bash builtin and has been for a very long time."
+      },
+      {
+        "text": "`getopts` cannot read an option's value",
+        "correct": false,
+        "why": "`$OPTARG` holds it, and `t:` in the spec asks for it."
+      },
+      {
+        "text": "`getopts` gets slower as the argument list gets longer",
+        "correct": false,
+        "why": "Speed is not the issue at the scale of a command line."
+      },
+      {
+        "text": "`getopts` handles short options and nothing else",
+        "correct": true,
+        "why": "Right. It reads `--verbose` as a dash followed by a word, and long options are worth more than the bundling it offers."
+      }
+    ]
+  },
+  {
+    "id": "ex-g734rs40",
+    "version": 1,
+    "section": "loops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A directory holds `a.log`, `b.log` and `two words.log`. How many times does `for f in $(ls *.log)` go round?",
+    "hint": "Where does the splitting happen?",
+    "choices": [
+      {
+        "text": "Three, one per file",
+        "correct": false,
+        "why": "That is what the glob gives; `$(ls)` has one more step after it."
+      },
+      {
+        "text": "One, with the whole listing in `$f`",
+        "correct": false,
+        "why": "The result is split, not kept whole."
+      },
+      {
+        "text": "Four",
+        "correct": true,
+        "why": "Right. The listing is split on whitespace, so the name with a space in it became two iterations."
+      },
+      {
+        "text": "Two, because `ls` merges the padded name",
+        "correct": false,
+        "why": "`ls` pads columns for a terminal, not for a pipeline."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q3p1txa",
+    "version": 1,
+    "section": "loops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`for f in *.bak` in a directory with no `.bak` files. What is `$f` on the single iteration?",
+    "hint": "An unmatched glob does not disappear on its own.",
+    "choices": [
+      {
+        "text": "The pattern `*.bak`, as typed",
+        "correct": true,
+        "why": "Correct — the pattern stays literal, which is why `shopt -s nullglob` exists."
+      },
+      {
+        "text": "An empty string",
+        "correct": false,
+        "why": "Emptiness would be a different bug; the pattern survives intact."
+      },
+      {
+        "text": "The name of the directory",
+        "correct": false,
+        "why": "Nothing substitutes a directory name here."
+      },
+      {
+        "text": "Not a thing — the loop body is skipped",
+        "correct": false,
+        "why": "That is the `nullglob` behaviour, and it is not the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsge1t2n",
+    "version": 1,
+    "section": "loops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`n=4; for i in {1..$n}` goes round a single time. What went wrong?",
+    "hint": "Which expansion happens first?",
+    "choices": [
+      {
+        "text": "`$n` had not been given a value yet",
+        "correct": false,
+        "why": "It was assigned on the same line, and it did expand — just too late."
+      },
+      {
+        "text": "Braces are expanded before parameters",
+        "correct": true,
+        "why": "Right. The braces saw `$n`, not `4`, so there was no range to build."
+      },
+      {
+        "text": "Ranges need `{1..4..1}` with a step",
+        "correct": false,
+        "why": "A step is optional and does not change when braces are processed."
+      },
+      {
+        "text": "`for` accepts a range in the C-style form alone",
+        "correct": false,
+        "why": "The brace form works fine — with literal numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxc8rjgp",
+    "version": 1,
+    "section": "loops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside two nested `for` loops, `break 2` is reached. What ends?",
+    "hint": "The number is how many levels.",
+    "choices": [
+      {
+        "text": "The inner loop, twice over",
+        "correct": false,
+        "why": "A loop cannot end twice; the number means something else."
+      },
+      {
+        "text": "The inner loop, and then the script",
+        "correct": false,
+        "why": "Ending the script is `exit`, not `break`."
+      },
+      {
+        "text": "Not so — `break` takes no argument",
+        "correct": false,
+        "why": "It does take one, and it defaults to 1."
+      },
+      {
+        "text": "Both loops",
+        "correct": true,
+        "why": "Correct. Execution resumes after the outer `done`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcmrp7yz",
+    "version": 1,
+    "section": "loops",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need to gzip four hundred log files. Which is the better shape?",
+    "hint": "Most commands already take many arguments.",
+    "choices": [
+      {
+        "text": "`for f in *.log; do gzip \"$f\"; done`",
+        "correct": false,
+        "why": "It works and starts four hundred processes to do it."
+      },
+      {
+        "text": "`for f in $(ls); do gzip $f; done`",
+        "correct": false,
+        "why": "Two separate bugs on top of the extra processes."
+      },
+      {
+        "text": "`gzip *.log`",
+        "correct": true,
+        "why": "Right. One process, and the shell built the argument list safely."
+      },
+      {
+        "text": "`ls *.log | while read f; do gzip $f; done`",
+        "correct": false,
+        "why": "A process per file, plus a subshell and an unquoted expansion."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjy07t7j",
+    "version": 1,
+    "section": "reading-input",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `while IFS= read -r line`, what does the `-r` prevent?",
+    "hint": "Think about a Windows path in the input.",
+    "choices": [
+      {
+        "text": "Leading spaces being trimmed",
+        "correct": false,
+        "why": "That is what the empty `IFS` handles."
+      },
+      {
+        "text": "The loop ending early at end of file",
+        "correct": false,
+        "why": "Ending at end of file is how the loop is meant to stop."
+      },
+      {
+        "text": "The line being split into several variables",
+        "correct": false,
+        "why": "Splitting into several needs several names after `read`."
+      },
+      {
+        "text": "Backslashes being eaten as escapes",
+        "correct": true,
+        "why": "Yes. Without `-r`, `C:\\path\\to\\file` arrives as `C:pathtofile`."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8mvbzen",
+    "version": 1,
+    "section": "reading-input",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`printf '%s\\n' 10 20 30 | while read n; do total=$((total+n)); done` leaves `total` at 0. Why?",
+    "hint": "What does a `|` do to each side of it?",
+    "choices": [
+      {
+        "text": "The loop ran in a subshell that then exited",
+        "correct": true,
+        "why": "Correct. Every stage of a pipeline is a child, and its variables die with it."
+      },
+      {
+        "text": "`read` is unable to assign to a variable used later",
+        "correct": false,
+        "why": "It assigns normally; the assignment just happened elsewhere."
+      },
+      {
+        "text": "`$(( ))` does not accept a variable on the left",
+        "correct": false,
+        "why": "It does, and the arithmetic was right."
+      },
+      {
+        "text": "`printf` sent the numbers to standard error",
+        "correct": false,
+        "why": "`printf` writes to standard output, which is what the pipe carries."
+      }
+    ]
+  },
+  {
+    "id": "ex-np3663my",
+    "version": 1,
+    "section": "reading-input",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which spelling feeds a command's output to a `while read` loop without a subshell?",
+    "hint": "There is a space between the two `<` characters.",
+    "choices": [
+      {
+        "text": "`cmd | while read -r l; do …; done`",
+        "correct": false,
+        "why": "That is the subshell version, and it is the one to avoid."
+      },
+      {
+        "text": "`while read -r l; do …; done < <(cmd)`",
+        "correct": true,
+        "why": "Yes — process substitution makes the output look like a file, so the loop stays in the current shell."
+      },
+      {
+        "text": "`while read -r l; do …; done <<< cmd`",
+        "correct": false,
+        "why": "A here-string passes the word `cmd`, not its output."
+      },
+      {
+        "text": "`while read -r l < cmd.out; do …; done`",
+        "correct": false,
+        "why": "That redirects each `read` from a file named `cmd.out`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zg7g5wb9",
+    "version": 1,
+    "section": "reading-input",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A file's last line has no newline after it, and a `while read` loop misses that line. What recovers it?",
+    "hint": "`read` assigned the value and reported failure at the same time.",
+    "choices": [
+      {
+        "text": "`read -N 0` to ignore delimiters",
+        "correct": false,
+        "why": "That reads a fixed number of characters, which is a different mode."
+      },
+      {
+        "text": "Appending a newline to the end of that file first",
+        "correct": false,
+        "why": "It fixes that one file and not the next one."
+      },
+      {
+        "text": "adding `|| [ -n \"$l\" ]` to the while condition",
+        "correct": true,
+        "why": "Right. Keep going when the failed `read` nonetheless produced something."
+      },
+      {
+        "text": "`set -o pipefail` at the top",
+        "correct": false,
+        "why": "That is about pipelines, and there is no pipeline here."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnqc9vh2",
+    "version": 1,
+    "section": "reading-input",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Complete the idiom that reads a file line by line with nothing mangled: `while ____ read -r line; do`",
+    "hint": "Four characters, and one of them is an equals sign.",
+    "blanks": [
+      {
+        "accept": [
+          "IFS="
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vh2ebdqv",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`hosts=(web01 web02 'db 01')`. What does `echo $hosts` print?",
+    "hint": "A bare array name is not the whole array.",
+    "choices": [
+      {
+        "text": "The three of them, separated by spaces",
+        "correct": false,
+        "why": "That needs `${hosts[@]}` or `${hosts[*]}`."
+      },
+      {
+        "text": "`web01`",
+        "correct": true,
+        "why": "Correct. `$hosts` is shorthand for `${hosts[0]}`, which catches people out."
+      },
+      {
+        "text": "The number of elements, three",
+        "correct": false,
+        "why": "That is `${#hosts[@]}`."
+      },
+      {
+        "text": "An error, because the name needs a subscript",
+        "correct": false,
+        "why": "It is valid and quietly means element zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-egn7s7n4",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You write `c[apple]=red; c[lime]=green` without declaring `c`. What does `declare -p c` show?",
+    "hint": "An indexed array subscripts with arithmetic.",
+    "choices": [
+      {
+        "text": "Two keys, in the order written",
+        "correct": false,
+        "why": "That needs an associative array, which has to be declared."
+      },
+      {
+        "text": "An error complaining about an invalid subscript",
+        "correct": false,
+        "why": "No error is produced; the subscript is evaluated instead."
+      },
+      {
+        "text": "An empty array",
+        "correct": false,
+        "why": "Something was stored; the question is where."
+      },
+      {
+        "text": "One element at index 0, with the second value",
+        "correct": true,
+        "why": "Right. Both names evaluated to zero as arithmetic, so the second assignment overwrote the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-crb55cv4",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `opts=(-a --delete --exclude '*.tmp')` better than putting those flags in a plain string?",
+    "hint": "Think about the option that has a space inside it.",
+    "choices": [
+      {
+        "text": "Each element stays one argument",
+        "correct": true,
+        "why": "Correct. The string version splits `--exclude '*.tmp'` into three words."
+      },
+      {
+        "text": "An array can hold more characters than a string",
+        "correct": false,
+        "why": "Both are limited by the same command-line size."
+      },
+      {
+        "text": "Arrays are expanded before globbing happens",
+        "correct": false,
+        "why": "Both are subject to the same expansion order."
+      },
+      {
+        "text": "A string is unable to start with a dash",
+        "correct": false,
+        "why": "It can; leading dashes are ordinary characters in a value."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4et1w54",
+    "version": 1,
+    "section": "arrays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`mapfile users < /etc/passwd` — what is wrong with `${users[0]}`?",
+    "hint": "One flag strips something from every element.",
+    "choices": [
+      {
+        "text": "It holds the whole file",
+        "correct": false,
+        "why": "Each element holds one line; that part worked."
+      },
+      {
+        "text": "It holds the second line, not the first",
+        "correct": false,
+        "why": "Indexing starts at zero and the first line landed there."
+      },
+      {
+        "text": "It ends with a newline",
+        "correct": true,
+        "why": "Right. `-t` is the flag that strips it, and without `-t` every element keeps one."
+      },
+      {
+        "text": "It is empty until the array is declared",
+        "correct": false,
+        "why": "`mapfile` creates the array itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-kktfffsj",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function assigns to `i` without `local`, and the caller also uses `i`. What happens to the caller's value?",
+    "hint": "A function shares the shell it was called from.",
+    "choices": [
+      {
+        "text": "It is restored when the function returns",
+        "correct": false,
+        "why": "Nothing restores it; there is no scope to leave."
+      },
+      {
+        "text": "It is shadowed for the duration of the call",
+        "correct": false,
+        "why": "Shadowing is what `local` provides, and it was not used."
+      },
+      {
+        "text": "The shell reports a name collision",
+        "correct": false,
+        "why": "No collision is reported; the assignment simply lands."
+      },
+      {
+        "text": "It is overwritten",
+        "correct": true,
+        "why": "Correct. Everything in a function is global unless declared `local`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvkyyfpt",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function does `return 300`. What does `$?` hold afterwards?",
+    "hint": "Exit statuses are one byte.",
+    "choices": [
+      {
+        "text": "300, as given",
+        "correct": false,
+        "why": "There is no room for it; the value is taken modulo 256."
+      },
+      {
+        "text": "44",
+        "correct": true,
+        "why": "Correct, and nothing warns you — which is why `return` is for success and failure only."
+      },
+      {
+        "text": "1, because the value was rejected",
+        "correct": false,
+        "why": "It was not rejected; it was truncated."
+      },
+      {
+        "text": "255, the maximum",
+        "correct": false,
+        "why": "That is what `return -1` gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-srwery4j",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function prints its answer with `echo` and also prints progress with `echo`. The caller uses `r=$(fn)`. What is in `r`?",
+    "hint": "Command substitution captures one stream and not the other.",
+    "choices": [
+      {
+        "text": "Both lines, joined",
+        "correct": true,
+        "why": "Correct. Progress belongs on standard error, which `$( )` does not capture."
+      },
+      {
+        "text": "Just the last line printed",
+        "correct": false,
+        "why": "Everything written to standard output is captured, not just the end."
+      },
+      {
+        "text": "Just the first line printed",
+        "correct": false,
+        "why": "Capture does not stop after a line."
+      },
+      {
+        "text": "The function's return status as a number",
+        "correct": false,
+        "why": "That is in `$?`, separately from the output."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb4x28cd",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under `set -e`, `local out=$(failing_cmd)` does not stop the script. Why not?",
+    "hint": "Which command's exit status did the shell look at?",
+    "choices": [
+      {
+        "text": "`set -e` is switched off inside a function body",
+        "correct": false,
+        "why": "It applies; the four holes are elsewhere."
+      },
+      {
+        "text": "Command substitution suppresses failures by design",
+        "correct": false,
+        "why": "A bare `out=$(failing_cmd)` does stop the script."
+      },
+      {
+        "text": "`local` succeeded, and that is the status of the line",
+        "correct": true,
+        "why": "Right. Split it into `local out; out=$(cmd)` when the status matters."
+      },
+      {
+        "text": "The failing command ran in a subshell that was ignored",
+        "correct": false,
+        "why": "It runs in a subshell, and that subshell's status is still reported."
+      }
+    ]
+  },
+  {
+    "id": "ex-650gqx6w",
+    "version": 1,
+    "section": "functions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line to what it is for.",
+    "hint": "Two of them write to standard error.",
+    "pairs": [
+      {
+        "left": "`local x`",
+        "right": "keep a name inside the function"
+      },
+      {
+        "left": "`return 1`",
+        "right": "report failure to the caller"
+      },
+      {
+        "left": "`die() { echo \"$*\" >&2; exit 1; }`",
+        "right": "one place that formats every error"
+      },
+      {
+        "left": "`cat <<'USAGE'`",
+        "right": "print a block of text with nothing expanded"
+      }
+    ],
+    "right_distractors": [
+      "run the function in the background",
+      "export the function to a child"
+    ]
+  },
+  {
+    "id": "ex-gt02qs3z",
+    "version": 1,
+    "section": "substitution",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`n=$(wc -l report.log)` puts `1200 report.log` in `n`. How do you get the bare count?",
+    "hint": "`wc` labels its output when it knows the name.",
+    "choices": [
+      {
+        "text": "`n=$(wc -l report.log | cut -d' ' -f1)`",
+        "correct": false,
+        "why": "It works, and it starts a third process to undo something you can avoid."
+      },
+      {
+        "text": "`n=${$(wc -l report.log)%% *}`",
+        "correct": false,
+        "why": "That is not valid syntax; expansion operators do not apply to a substitution."
+      },
+      {
+        "text": "`n=$(wc -l < report.log)`",
+        "correct": true,
+        "why": "Right. Fed on standard input, `wc` has no name to print."
+      },
+      {
+        "text": "`n=$(wc -l report.log | tr -d ' ')`",
+        "correct": false,
+        "why": "That leaves the filename glued to the number."
+      }
+    ]
+  },
+  {
+    "id": "ex-92rbjwn9",
+    "version": 1,
+    "section": "substitution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why prefer `$(cmd)` over backticks?",
+    "hint": "Try writing one inside another.",
+    "choices": [
+      {
+        "text": "Backticks were removed in bash 5",
+        "correct": false,
+        "why": "They still work, everywhere, and in every shell."
+      },
+      {
+        "text": "Nesting works without escaping",
+        "correct": true,
+        "why": "Correct — `$(basename $(dirname x))` reads, and the backtick version needs escapes at the second level."
+      },
+      {
+        "text": "Backticks run the command in the current shell",
+        "correct": false,
+        "why": "Both run it in a subshell."
+      },
+      {
+        "text": "Backticks do not strip trailing newlines",
+        "correct": false,
+        "why": "Both strip them, identically."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pzxyeam",
+    "version": 1,
+    "section": "substitution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`m=08; echo $(( m + 1 ))` fails with `value too great for base`. What is bash doing?",
+    "hint": "Where do numbers with a leading zero usually come from?",
+    "choices": [
+      {
+        "text": "Refusing a two-digit value in arithmetic",
+        "correct": false,
+        "why": "Two digits are fine; it is the first one that matters."
+      },
+      {
+        "text": "Treating `m` as a string, because it was in quotes",
+        "correct": false,
+        "why": "Nothing here is quoted, and arithmetic reads it as a number."
+      },
+      {
+        "text": "Rejecting the name `m` as too short",
+        "correct": false,
+        "why": "One-letter names are perfectly valid."
+      },
+      {
+        "text": "Reading `08` as octal, where there is no digit 8",
+        "correct": true,
+        "why": "Right, and `date +%m` produces exactly this every August."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2sg3zbw",
+    "version": 1,
+    "section": "substitution",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under `set -e`, a script with `count=0` then `(( count++ ))` dies before printing anything. Why?",
+    "hint": "What does post-increment evaluate to?",
+    "choices": [
+      {
+        "text": "The expression came out 0, which counts as failure",
+        "correct": true,
+        "why": "Correct. `count++` yields the value before incrementing, and `(( ))` maps zero to a non-zero status."
+      },
+      {
+        "text": "`count` had not been declared as an integer",
+        "correct": false,
+        "why": "Arithmetic contexts treat any name as a number."
+      },
+      {
+        "text": "`++` is not a bash operator",
+        "correct": false,
+        "why": "It is; the increment happened."
+      },
+      {
+        "text": "`set -e` forbids arithmetic anywhere outside `$(( ))`",
+        "correct": false,
+        "why": "Statement-form `(( ))` is ordinary bash and is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-deyy02kv",
+    "version": 1,
+    "section": "substitution",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script needs an average with a decimal point. `$(( ))` cannot. Name the calculator it pipes to instead: `echo 'scale=2; 7/2' | ____`",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "bc"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-34v0rknd",
+    "version": 1,
+    "section": "parameter-expansion",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`p=/var/log/app.log`. Which spelling gives `app.log`?",
+    "hint": "Remove the longest thing ending in a slash.",
+    "choices": [
+      {
+        "text": "`${p%/*}`",
+        "correct": false,
+        "why": "That removes from the back and gives the directory."
+      },
+      {
+        "text": "`${p##*/}`",
+        "correct": true,
+        "why": "Correct — this is `basename`, without a process."
+      },
+      {
+        "text": "`${p#*/}`",
+        "correct": false,
+        "why": "A single `#` removes the shortest match, leaving `var/log/app.log`."
+      },
+      {
+        "text": "`${p%%/*}`",
+        "correct": false,
+        "why": "That removes the longest match from the back and leaves an empty string."
+      }
+    ]
+  },
+  {
+    "id": "ex-b31q6hq7",
+    "version": 1,
+    "section": "parameter-expansion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `${v-x}` and `${v:-x}`?",
+    "hint": "One character, and one case.",
+    "choices": [
+      {
+        "text": "The first one assigns a value and the second does not",
+        "correct": false,
+        "why": "Assigning is `${v:=x}`, which is a third spelling."
+      },
+      {
+        "text": "The first is POSIX and the second is bash",
+        "correct": false,
+        "why": "Both are POSIX and both work in dash."
+      },
+      {
+        "text": "The colon makes an empty value count as missing",
+        "correct": true,
+        "why": "Right, and that is the one you usually want."
+      },
+      {
+        "text": "The colon makes the default a literal",
+        "correct": false,
+        "why": "Defaults are expanded the same way in both."
+      }
+    ]
+  },
+  {
+    "id": "ex-dng103r5",
+    "version": 1,
+    "section": "parameter-expansion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`f=notes.tar.gz`. What does `${f%.*}` produce?",
+    "hint": "A single `%` removes the shortest match.",
+    "choices": [
+      {
+        "text": "`notes.tar`",
+        "correct": true,
+        "why": "Correct — only the last extension goes, because the match is the shortest one."
+      },
+      {
+        "text": "just `notes`",
+        "correct": false,
+        "why": "That is `${f%%.*}`, or `${f%.tar.gz}` if you name the suffix."
+      },
+      {
+        "text": "`tar.gz`, the suffixes",
+        "correct": false,
+        "why": "Removing from the back leaves the front, not the back."
+      },
+      {
+        "text": "`gz` on its own",
+        "correct": false,
+        "why": "That would be `${f##*.}`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fahycjke",
+    "version": 1,
+    "section": "parameter-expansion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `name=${path##*/}` preferred over `name=$(basename \"$path\")`?",
+    "hint": "Two reasons, and one of them shows up in a loop over ten thousand files.",
+    "choices": [
+      {
+        "text": "`basename` is absent on some distributions",
+        "correct": false,
+        "why": "It is part of coreutils and is present everywhere you will meet."
+      },
+      {
+        "text": "`basename` gets the answer wrong on nested paths",
+        "correct": false,
+        "why": "It handles them correctly; the objection is elsewhere."
+      },
+      {
+        "text": "The expansion keeps a trailing slash that `basename` drops",
+        "correct": false,
+        "why": "Neither of them keeps one on a plain file path."
+      },
+      {
+        "text": "It starts no process, and survives an odd filename",
+        "correct": true,
+        "why": "Right — a name beginning with a dash is an option to `basename` and ordinary text to the expansion."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjgeh8z6",
+    "version": 1,
+    "section": "parameter-expansion",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expansion to its result.",
+    "hint": "Two of them are about defaults.",
+    "pairs": [
+      {
+        "left": "`${#v}`",
+        "right": "how many characters v holds"
+      },
+      {
+        "left": "`${v:?msg}`",
+        "right": "stop with msg when v is unset or empty"
+      },
+      {
+        "left": "`${v//a/b}`",
+        "right": "replace every a with b"
+      },
+      {
+        "left": "`${v,,}`",
+        "right": "the value in lower case"
+      }
+    ],
+    "right_distractors": [
+      "the value in upper case",
+      "replace the first a with b"
+    ]
+  },
+  {
+    "id": "ex-0p70ssj8",
+    "version": 1,
+    "section": "traps-and-temp-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why `mktemp` rather than `/tmp/myscript.$$`?",
+    "hint": "Think about two copies running at once, and about who else is on the machine.",
+    "choices": [
+      {
+        "text": "`$$` is not available in a script",
+        "correct": false,
+        "why": "It is; it holds the shell's own process id."
+      },
+      {
+        "text": "`mktemp` puts the file in memory instead of writing it to disk",
+        "correct": false,
+        "why": "It creates an ordinary file, in an ordinary directory."
+      },
+      {
+        "text": "A process id is guessable, so somebody could get there first",
+        "correct": true,
+        "why": "Right. `mktemp` creates the file itself, in one step that cannot be raced."
+      },
+      {
+        "text": "`$$` changes its value while the script is still running",
+        "correct": false,
+        "why": "It stays the same for the life of the shell."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5whqk6s",
+    "version": 1,
+    "section": "traps-and-temp-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does `trap 'rm -rf \"$work\"' EXIT` belong in the file?",
+    "hint": "What is the window you are trying to close?",
+    "choices": [
+      {
+        "text": "On the line after the `mktemp`",
+        "correct": true,
+        "why": "Correct. Anything between creating it and arming the trap is a gap where the script can die and leave it."
+      },
+      {
+        "text": "At the very bottom, after the work",
+        "correct": false,
+        "why": "A failing script does not reach the bottom, which is the case the trap is for."
+      },
+      {
+        "text": "Directly before the first `exit`",
+        "correct": false,
+        "why": "There are usually several exits, and the error paths come earlier."
+      },
+      {
+        "text": "Inside the cleanup function it calls",
+        "correct": false,
+        "why": "The function would then have to be called to arm itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-ersw3tg9",
+    "version": 1,
+    "section": "traps-and-temp-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script traps `INT` and exits 130 from the handler. It also traps `EXIT`. On Ctrl-C, which handlers run?",
+    "hint": "An `exit` is still an exit.",
+    "choices": [
+      {
+        "text": "The `INT` handler alone",
+        "correct": false,
+        "why": "The `exit` in it is what fires the other one."
+      },
+      {
+        "text": "Both, `INT` first",
+        "correct": true,
+        "why": "Right, and that is why cleanup belongs on `EXIT`: it is reached whichever way the script ends."
+      },
+      {
+        "text": "The `EXIT` handler alone",
+        "correct": false,
+        "why": "The signal handler is what caught the Ctrl-C in the first place."
+      },
+      {
+        "text": "Neither, because Ctrl-C kills the shell outright",
+        "correct": false,
+        "why": "That is `KILL`; `INT` is catchable, which is the point of trapping it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxj50gzj",
+    "version": 1,
+    "section": "traps-and-temp-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the trap command written in single quotes, as `trap 'rm -rf \"$work\"' EXIT`?",
+    "hint": "When should `$work` be looked up?",
+    "choices": [
+      {
+        "text": "Double quotes are a syntax error there",
+        "correct": false,
+        "why": "They parse fine; they just mean something else."
+      },
+      {
+        "text": "Single quotes stop `rm` being run immediately",
+        "correct": false,
+        "why": "Neither form runs it now; `trap` stores the text either way."
+      },
+      {
+        "text": "The trap accepts just a single-quoted string",
+        "correct": false,
+        "why": "It accepts any word, including a function name with no quotes at all."
+      },
+      {
+        "text": "So `$work` is expanded when the trap fires",
+        "correct": true,
+        "why": "Correct. With double quotes it is expanded at the moment the trap is set, which breaks if the value changes later."
+      }
+    ]
+  },
+  {
+    "id": "ex-j39xkmr9",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`bash -n deploy.sh` reports a syntax error at line 40, the last line of the file. Where is the mistake likely to be?",
+    "hint": "A shell cannot know which block you meant to close.",
+    "choices": [
+      {
+        "text": "On line 40, exactly where it says",
+        "correct": false,
+        "why": "The end of file is where the shell ran out of input, not where the block opened."
+      },
+      {
+        "text": "On line 39, the one before",
+        "correct": false,
+        "why": "The report is not off by one; it is at the end for a structural reason."
+      },
+      {
+        "text": "Anywhere above, in a block that was never closed",
+        "correct": true,
+        "why": "Right. A missing `fi`, `done`, `esac` or `}` always lands the complaint at the bottom."
+      },
+      {
+        "text": "In a different file that this one sources at the top",
+        "correct": false,
+        "why": "`-n` parses one file and does not follow a `source`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9ajz9e1",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`count=3` and `if [ $count > 5 ]` prints `many`, and a file called `5` appears. What did the `>` do?",
+    "hint": "It is the same `>` you use everywhere else.",
+    "choices": [
+      {
+        "text": "Compared the two values as ordinary strings",
+        "correct": false,
+        "why": "String comparison inside `[` is spelled `\\>`, escaped."
+      },
+      {
+        "text": "Redirected the output of `[ 3 ]` into `5`",
+        "correct": true,
+        "why": "Correct, and `[ 3 ]` asks whether `3` is a non-empty string, which is true."
+      },
+      {
+        "text": "Been ignored as an unknown operator",
+        "correct": false,
+        "why": "Nothing was ignored; a file appeared."
+      },
+      {
+        "text": "Been read as part of the number `3`",
+        "correct": false,
+        "why": "The number was never touched."
+      }
+    ]
+  },
+  {
+    "id": "ex-kayvf39v",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You set `PS4` at the prompt and `bash -x script.sh` still shows a plain `+`. What is missing?",
+    "hint": "Which shell prints the trace?",
+    "choices": [
+      {
+        "text": "`set -x` inside the script as well",
+        "correct": false,
+        "why": "The `-x` on the command line already switched tracing on."
+      },
+      {
+        "text": "A trailing space at the end of `PS4`",
+        "correct": false,
+        "why": "The spacing changes how it looks, not whether it is used."
+      },
+      {
+        "text": "`shopt -s xpg_echo`",
+        "correct": false,
+        "why": "That is about how `echo` handles escapes."
+      },
+      {
+        "text": "`export`",
+        "correct": true,
+        "why": "Right. The trace is printed by the bash you are starting, and it only sees exported variables."
+      }
+    ]
+  },
+  {
+    "id": "ex-5myn3ta1",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nine-line script parses cleanly with `bash -n` and still has four bugs. Which tool finds them?",
+    "hint": "It has a rule number for each one.",
+    "choices": [
+      {
+        "text": "`shellcheck`",
+        "correct": true,
+        "why": "Yes. It reads the script the way an experienced reviewer would, and does not get bored."
+      },
+      {
+        "text": "`bash -x`",
+        "correct": false,
+        "why": "It shows what happened, which needs you to run the script first."
+      },
+      {
+        "text": "`bash -v`",
+        "correct": false,
+        "why": "That echoes lines before running them, unexpanded."
+      },
+      {
+        "text": "`declare -p` on each variable in turn",
+        "correct": false,
+        "why": "Useful once you suspect a particular value, and it inspects nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-wthvms5p",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the top of a well-built script in order.",
+    "items": [
+      "#!/usr/bin/env bash",
+      "set -euo pipefail",
+      "usage() { … }",
+      "parse the arguments",
+      "check the arguments are usable",
+      "work=$(mktemp -d)",
+      "trap 'rm -rf \"$work\"' EXIT",
+      "do the work"
+    ],
+    "trap": "The trap goes after the thing it cleans up, not at the end of the file."
+  },
+  {
+    "id": "ex-z8hzhcf0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One line of a script reads `rm -rf $DEST/old`. Name the single worst thing that can happen.",
+    "hint": "What is `$DEST` if the assignment three lines up had a typo?",
+    "choices": [
+      {
+        "text": "The command fails with a syntax error",
+        "correct": false,
+        "why": "It is syntactically perfect, which is the problem."
+      },
+      {
+        "text": "It deletes `/old` at the root of the disk",
+        "correct": true,
+        "why": "Correct. An empty variable closes the path up, silently, and the command succeeds."
+      },
+      {
+        "text": "`rm` refuses because the path is relative",
+        "correct": false,
+        "why": "The path begins with a slash either way."
+      },
+      {
+        "text": "The shell warns that the variable was empty",
+        "correct": false,
+        "why": "Only `set -u` produces that warning, and the line does not have it."
+      }
+    ]
+  },
+  {
+    "id": "ex-arh1mc1f",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to the setting that would have caught it.",
+    "hint": "Three are `set` flags and one is a separate tool.",
+    "pairs": [
+      {
+        "left": "a typo'd variable name became an empty string",
+        "right": "set -u"
+      },
+      {
+        "left": "a failed command was followed by six more",
+        "right": "set -e"
+      },
+      {
+        "left": "a pipeline reported success after grep found nothing",
+        "right": "set -o pipefail"
+      },
+      {
+        "left": "a missing quote around a filename with a space",
+        "right": "shellcheck"
+      }
+    ],
+    "right_distractors": [
+      "bash -n",
+      "trap ERR"
+    ]
+  },
+  {
+    "id": "ex-x0tzx525",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line safely passes every argument the script was given on to another command?",
+    "hint": "Two arguments in should be two arguments out.",
+    "choices": [
+      {
+        "text": "`other $*`",
+        "correct": false,
+        "why": "Joined and then split again, so a value with a space is cut up."
+      },
+      {
+        "text": "`other \"$*\"`",
+        "correct": false,
+        "why": "That produces one argument containing all of them."
+      },
+      {
+        "text": "`other $@`, no quotes",
+        "correct": false,
+        "why": "The quotes are what make `$@` keep its boundaries."
+      },
+      {
+        "text": "`other \"$@\"`",
+        "correct": true,
+        "why": "Correct. One quoted word per argument, whatever is inside them."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxzds0bz",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Turn a glob that matches nothing into zero iterations rather than one: `shopt -s ____`",
+    "hint": "One word, eight letters.",
+    "blanks": [
+      {
+        "accept": [
+          "nullglob"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cpgmy0xn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A script counts lines into `total` inside `cat f | while read l; do total=$((total+1)); done` and `total` is 0 after. What is the smallest fix?",
+    "hint": "Which side of the pipe is the loop on?",
+    "choices": [
+      {
+        "text": "`done < f`, dropping the `cat` and the pipe",
+        "correct": true,
+        "why": "Correct. No pipe means no subshell, and it removes a process at the same time."
+      },
+      {
+        "text": "`export total` before the loop",
+        "correct": false,
+        "why": "Exporting sends a value down to a child; it does not bring one back up."
+      },
+      {
+        "text": "`total=$((total+1))` written as `(( total++ ))`",
+        "correct": false,
+        "why": "The arithmetic was right; the trouble is where it happened."
+      },
+      {
+        "text": "`local total` at the top of the script",
+        "correct": false,
+        "why": "`local` is for functions, and it would change nothing here."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4423eb5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need the directory a path points into, with no process started. Which one?",
+    "hint": "The `%` operator removes from the back.",
+    "choices": [
+      {
+        "text": "`${p##*/}`",
+        "correct": false,
+        "why": "That gives the filename — it is `basename`."
+      },
+      {
+        "text": "`$(dirname \"$p\")`",
+        "correct": false,
+        "why": "Right answer, wrong requirement: that starts a process."
+      },
+      {
+        "text": "`${p%/*}`",
+        "correct": true,
+        "why": "Correct. Remove the shortest match ending at the last slash, and the directory is left."
+      },
+      {
+        "text": "`${p%%/*}`",
+        "correct": false,
+        "why": "The longest match from the back leaves an empty string on an absolute path."
+      }
+    ]
+  },
+  {
+    "id": "ex-pk5k2ayq",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these are true of `[[ ]]` but not of `[ ]`?",
+    "hint": "One of them is why `[ $x = y ]` breaks on an empty `x`.",
+    "choices": [
+      {
+        "text": "unquoted expansions are not split into words",
+        "correct": true,
+        "why": "It is shell syntax, so the shell parses inside it rather than expanding into arguments."
+      },
+      {
+        "text": "`==` matches a glob pattern",
+        "correct": true,
+        "why": "`[[ $f == *.log ]]` is a pattern; `[ ]` compares the text it was handed."
+      },
+      {
+        "text": "`=~` matches a regular expression",
+        "correct": true,
+        "why": "`[` has no such operator."
+      },
+      {
+        "text": "it exists in dash as well as bash",
+        "correct": false,
+        "why": "It is a bash keyword, which is the one reason to still write `[ ]`."
+      },
+      {
+        "text": "it can test whether a file is a directory",
+        "correct": false,
+        "why": "Both do `-d`; the file tests are shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ehqm877",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function prints a progress line and returns a number. The caller gets both. Where should the progress line go?",
+    "hint": "Command substitution captures one of the two streams.",
+    "choices": [
+      {
+        "text": "Into a variable the caller reads afterwards",
+        "correct": false,
+        "why": "That is more machinery than the problem needs."
+      },
+      {
+        "text": "To standard error, with `>&2`",
+        "correct": true,
+        "why": "Correct. `$( )` captures standard output only, so the answer stays clean."
+      },
+      {
+        "text": "Into a log file named in the function",
+        "correct": false,
+        "why": "It works and takes the message away from whoever is watching."
+      },
+      {
+        "text": "Nowhere — drop the progress line",
+        "correct": false,
+        "why": "Progress output is useful; it just belongs on the other stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-b36r5g44",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these debugging steps in the order you should reach for them.",
+    "items": [
+      "shellcheck script.sh",
+      "bash -n script.sh",
+      "bash -x script.sh",
+      "echo \"DEBUG: [$var]\" >&2"
+    ],
+    "trap": "Two of them do not need the script to run at all, and those come first."
+  },
+  {
+    "id": "ex-g2pv70fj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these stops a script under `set -e`?",
+    "hint": "Three of the four are the holes.",
+    "choices": [
+      {
+        "text": "`grep missing file` as an `if` condition",
+        "correct": false,
+        "why": "A condition is allowed to be false."
+      },
+      {
+        "text": "`false || echo ok`",
+        "correct": false,
+        "why": "The failure is on the left of `||`, so you are handling it."
+      },
+      {
+        "text": "a failing command inside a function used as a condition",
+        "correct": false,
+        "why": "The suspension covers the whole call."
+      },
+      {
+        "text": "`cp /etc/nothing /tmp/x` on a line of its own",
+        "correct": true,
+        "why": "Correct — the plain case, and the one `-e` is actually for."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8cfe5sk",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ninety per cent of quoting bugs go away with one habit. Complete it, for the variable `f`: always write `____`",
+    "hint": "Four characters.",
+    "blanks": [
+      {
+        "accept": [
+          "\"$f\""
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dkysbtdd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An option parser reads `-t` and takes its value from `$2`. How many times must it `shift` for that branch?",
+    "hint": "Count the words the branch used up.",
+    "choices": [
+      {
+        "text": "Twice",
+        "correct": true,
+        "why": "Correct — one for the flag and one for the value, which is why the branch has an extra `shift` of its own."
+      },
+      {
+        "text": "Once, at the bottom of the loop",
+        "correct": false,
+        "why": "That consumes the flag and leaves the value to be read as a target."
+      },
+      {
+        "text": "Three times, to clear the whole option",
+        "correct": false,
+        "why": "An option and a value are two words, not three."
+      },
+      {
+        "text": "Zero times, since `$2` was read directly",
+        "correct": false,
+        "why": "Reading a word does not remove it from the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-s17fctyx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your script has grown to two hundred lines, parses JSON, and computes an average. What does that suggest?",
+    "hint": "Three of bash's weak points are in that sentence.",
+    "choices": [
+      {
+        "text": "Break it into sourced function libraries",
+        "correct": false,
+        "why": "That organises the code and leaves the arithmetic and the JSON where they were."
+      },
+      {
+        "text": "Replace `$(( ))` with `bc` throughout",
+        "correct": false,
+        "why": "It fixes the fractions and neither of the other two."
+      },
+      {
+        "text": "Rewrite it in Python",
+        "correct": true,
+        "why": "Right. Structured data and real arithmetic are the two things bash is worst at, and two hundred lines is a cheap rewrite."
+      },
+      {
+        "text": "Add `set -euo pipefail` and more tests",
+        "correct": false,
+        "why": "Worth doing anyway, and it does not address what the script is being asked to do."
+      }
+    ]
+  },
+  {
+    "id": "ex-31gkkyen",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./tidy.sh` exits 1 on an error path and leaves no temporary file behind. What made that work?",
+    "hint": "The exit was not the one the author was thinking about.",
+    "choices": [
+      {
+        "text": "The `rm` on the last line of the script",
+        "correct": false,
+        "why": "An error path does not reach the last line."
+      },
+      {
+        "text": "A `trap` on `EXIT`, set early",
+        "correct": true,
+        "why": "Correct. `EXIT` fires on any exit, including the ones you did not plan."
+      },
+      {
+        "text": "`mktemp` deleting the file when the process ends",
+        "correct": false,
+        "why": "`mktemp` creates it and then has nothing more to do with it."
+      },
+      {
+        "text": "`set -e`, which cleans up before stopping",
+        "correct": false,
+        "why": "It decides when to stop and cleans up nothing."
+      }
+    ]
+  }
+]

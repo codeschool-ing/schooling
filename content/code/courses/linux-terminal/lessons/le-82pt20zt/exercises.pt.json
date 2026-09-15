@@ -1,0 +1,1842 @@
+{
+  "ex-g7ypkw63": {
+    "prompt": "Você salva um script de uma linha e digita o nome pelado dele. O shell responde `command not found`. Por quê?",
+    "hint": "Onde o shell procura um programa para rodar?",
+    "choices": [
+      {
+        "text": "O arquivo não tem uma linha `#!` no topo",
+        "why": "Um shebang faltando dá outro resultado, e o arquivo ainda precisa ser achado primeiro."
+      },
+      {
+        "text": "O arquivo ainda não é executável",
+        "why": "Isso dá `Permission denied`, que é um passo depois."
+      },
+      {
+        "text": "O diretório atual não é procurado",
+        "why": "Isso mesmo. O `$PATH` é a lista de busca e o `.` está deliberadamente fora dela, então o nome tem que ser escrito `./nome`."
+      },
+      {
+        "text": "Scripts precisam receber uma extensão `.sh`",
+        "why": "A extensão não significa nada para o kernel; é uma convenção para humanos."
+      }
+    ]
+  },
+  "ex-k7fppnyb": {
+    "prompt": "Um script começa com `#!/bin/sh` e usa `[[ ]]`. No Ubuntu, o que acontece?",
+    "hint": "O que é o `/bin/sh` numa máquina da família Debian?",
+    "choices": [
+      {
+        "text": "Ele roda até a linha do `[[` e falha ali",
+        "why": "Sim. O `/bin/sh` é o dash, as linhas anteriores rodam, e o script para pela metade."
+      },
+      {
+        "text": "Ele não inicia",
+        "why": "O interpretador existe e inicia normalmente; o problema está mais adiante."
+      },
+      {
+        "text": "O bash é silenciosamente usado no lugar, então funciona bem",
+        "why": "O shebang nomeia o `/bin/sh`, e é isso que o kernel roda."
+      },
+      {
+        "text": "Um aviso é impresso e ele segue",
+        "why": "Nada avisa; o `[[` simplesmente não é um comando que o dash conheça."
+      }
+    ]
+  },
+  "ex-2v82s5kr": {
+    "prompt": "O `./setup.sh` imprime `cannot execute: required file not found`, e o `setup.sh` está bem ali. O que falta?",
+    "hint": "Leia a mensagem de novo: de qual arquivo ela está falando?",
+    "choices": [
+      {
+        "text": "Permissão de leitura no script",
+        "why": "Isso informa `Permission denied`, nomeando o próprio script."
+      },
+      {
+        "text": "Um `fi` de fechamento em algum lugar do arquivo",
+        "why": "Um erro de sintaxe nomeia um número de linha e vem do bash, não do kernel."
+      },
+      {
+        "text": "O diretório em que o script está, no disco",
+        "why": "Você acabou de listá-lo, e o shell resolveu o caminho para chegar a essa mensagem."
+      },
+      {
+        "text": "O interpretador nomeado na linha `#!`",
+        "why": "Sim. O kernel não achou aquele programa, e a mensagem diz isso sem nomeá-lo."
+      }
+    ]
+  },
+  "ex-yhcs1qcf": {
+    "prompt": "Um script termina com `cd /srv/app`. Você o roda com `./deploy.sh` e o seu prompt não se moveu. O que o moveria?",
+    "hint": "Qual destes roda as linhas no shell em que você está sentado?",
+    "choices": [
+      {
+        "text": "`bash deploy.sh`",
+        "why": "Isso também inicia um filho, então a mudança de diretório morre com ele."
+      },
+      {
+        "text": "`source deploy.sh`",
+        "why": "Correto. As linhas rodam no seu próprio shell, então o `cd` fica."
+      },
+      {
+        "text": "`exec ./deploy.sh`",
+        "why": "Isso substitui o seu shell pelo script e você perde a sessão quando ele termina."
+      },
+      {
+        "text": "`chmod +x deploy.sh` e rodar de novo",
+        "why": "Ele já é executável — ele rodou."
+      }
+    ]
+  },
+  "ex-gwp3zwh7": {
+    "prompt": "Torne o `report.sh` executável como `./report.sh`: `____ +x report.sh`",
+    "hint": "Um comando, cinco letras."
+  },
+  "ex-1fe7bt7q": {
+    "prompt": "Digitar `name = ana` no prompt informa `bash: name: command not found`. O que o shell fez?",
+    "hint": "O shell divide uma linha em palavras. Qual é a primeira palavra aqui?",
+    "choices": [
+      {
+        "text": "Recusou a atribuição por estar malformada",
+        "why": "Ele nunca viu uma atribuição; viu um comando."
+      },
+      {
+        "text": "Tentou rodar o `name` com dois argumentos",
+        "why": "Isso. O `=` e o `ana` viraram argumentos, porque uma atribuição não pode ter espaços em volta do `=`."
+      },
+      {
+        "text": "Definiu `name` como string vazia",
+        "why": "Isso é o que o `name= ana` faz, que é outra linha."
+      },
+      {
+        "text": "Foi procurar uma variável com esse nome",
+        "why": "Ler uma variável exige um `$`, e nada aqui tinha um."
+      }
+    ]
+  },
+  "ex-z5rrmcgr": {
+    "prompt": "Você define `LEVEL=debug` no prompt, roda `./app.sh`, e dentro do script o `$LEVEL` está vazio. O que conserta?",
+    "hint": "O que um processo filho herda do pai?",
+    "choices": [
+      {
+        "text": "Pôr aspas, `LEVEL=\"debug\"`",
+        "why": "As aspas não mudam nada aqui; o valor não tem espaços."
+      },
+      {
+        "text": "Escrever `${LEVEL}` no script",
+        "why": "As chaves só marcam onde o nome termina."
+      },
+      {
+        "text": "Declarar com `declare -i LEVEL`",
+        "why": "Isso torna a variável inteira, que é outra propriedade."
+      },
+      {
+        "text": "`export LEVEL=debug`",
+        "why": "Sim. Só variáveis exportadas fazem parte do ambiente, e o ambiente é o que um filho recebe."
+      }
+    ]
+  },
+  "ex-gn1nwh9c": {
+    "prompt": "O que o `LANG=C sort names.txt` deixa para trás no seu shell?",
+    "hint": "Pense em onde aquela atribuição se aplica.",
+    "choices": [
+      {
+        "text": "O `LANG` como estava antes",
+        "why": "Correto. Uma variável escrita na frente de um comando se aplica só àquele comando."
+      },
+      {
+        "text": "O `LANG` definido como `C` dali em diante",
+        "why": "Isso precisaria de uma linha de atribuição separada, ou de um `export`."
+      },
+      {
+        "text": "O `LANG` completamente removido",
+        "why": "Nada aqui o remove."
+      },
+      {
+        "text": "Um erro, porque o `sort` não tem essa opção",
+        "why": "Não é uma opção do `sort`; o shell a consome antes de o `sort` começar."
+      }
+    ]
+  },
+  "ex-ss24pzd2": {
+    "prompt": "O `echo ${dir}s` imprime `logs` mas o `echo $dirs` imprime uma linha em branco. O que é o `$dirs`?",
+    "hint": "Até onde o shell lê um nome de variável?",
+    "choices": [
+      {
+        "text": "O `$dir` com um `s` no fim",
+        "why": "Isso é o que as chaves produzem, e é o que imprimiu `logs`."
+      },
+      {
+        "text": "Um erro de sintaxe que o shell ignorou",
+        "why": "Não há nada errado na sintaxe; ela é válida e quer dizer outra coisa."
+      },
+      {
+        "text": "Uma variável com esse nome, que não existe",
+        "why": "Isso. Nomes correm sobre letras, dígitos e sublinhados, então `dirs` é um nome só — e um não definido expande para nada."
+      },
+      {
+        "text": "O primeiro elemento de um array que se chama `dir`",
+        "why": "Essa grafia seria `${dir[0]}`."
+      }
+    ]
+  },
+  "ex-6thv9vwt": {
+    "prompt": "Ligue cada grafia ao que ela faz.",
+    "hint": "Duas delas diferem só por dois pontos.",
+    "pairs": [
+      {
+        "left": "`${v-x}`",
+        "right": "usa x quando v não está definida"
+      },
+      {
+        "left": "`${v:-x}`",
+        "right": "usa x quando v não está definida ou está vazia"
+      },
+      {
+        "left": "`export v`",
+        "right": "faz v virar parte do ambiente"
+      },
+      {
+        "left": "`declare -p v`",
+        "right": "imprime v com o tipo e o valor exato"
+      }
+    ],
+    "right_distractors": [
+      "remove v do shell",
+      "torna v imutável"
+    ]
+  },
+  "ex-z3dvb0hf": {
+    "prompt": "`f='my file.txt'` e então `ls -l $f` informa dois arquivos faltando. O que o `ls` recebeu?",
+    "hint": "O que acontece com o resultado de uma expansão sem aspas?",
+    "choices": [
+      {
+        "text": "Um argumento, `my file.txt`, inteiro",
+        "why": "Isso é o que o `\"$f\"` produz, e é a versão que funciona."
+      },
+      {
+        "text": "Dois argumentos, cortados no espaço",
+        "why": "Correto. O shell divide o resultado de uma expansão sem aspas no espaço em branco."
+      },
+      {
+        "text": "Nenhum argumento, porque o valor tinha espaço",
+        "why": "O valor chegou; ele então foi cortado em dois."
+      },
+      {
+        "text": "O texto literal `$f`",
+        "why": "Aspas simples na atribuição não impedem a expansão depois."
+      }
+    ]
+  },
+  "ex-4g3z7a1h": {
+    "prompt": "`pattern='*.log'`. Por que o `echo $pattern` lista arquivos e o `echo \"$pattern\"` imprime dois caracteres e um ponto?",
+    "hint": "Duas coisas acontecem com uma expansão sem aspas, não uma.",
+    "choices": [
+      {
+        "text": "Sem aspas, o `*` é comparado com o diretório",
+        "why": "Sim. O globbing roda sobre o resultado da expansão, então o padrão que saiu da variável foi expandido de novo."
+      },
+      {
+        "text": "As aspas simples ficaram dentro do valor",
+        "why": "Aspas nunca acabam dentro de um valor."
+      },
+      {
+        "text": "O `echo` expande curingas nos argumentos dele",
+        "why": "O `echo` imprime o que recebe; o shell já tinha decidido."
+      },
+      {
+        "text": "A variável está guardando uma lista de nomes em vez de uma string",
+        "why": "Uma variável comum guarda uma string."
+      }
+    ]
+  },
+  "ex-cybvt6gq": {
+    "prompt": "Um script faz `rm -rf \"/var/cache/$app\"/*` e o `app` está vazio. O que ele apaga?",
+    "hint": "Escreva o caminho com nada no lugar do `$app`.",
+    "choices": [
+      {
+        "text": "Coisa nenhuma — as aspas o protegem",
+        "why": "Pôr aspas o mantém como uma palavra; não põe um valor dentro dele."
+      },
+      {
+        "text": "Coisa nenhuma — esse caminho não existe",
+        "why": "O `/var/cache//*` é um caminho válido — a barra dupla é colapsada."
+      },
+      {
+        "text": "Tudo abaixo de `/var/cache`",
+        "why": "Isso, e não há erro para te avisar: o caminho simplesmente se fechou."
+      },
+      {
+        "text": "Apenas os arquivos cujo nome é vazio",
+        "why": "Não existe esse nome de arquivo; o glob expandiu sobre um diretório real."
+      }
+    ]
+  },
+  "ex-kcxwy6k3": {
+    "prompt": "Qual tipo de aspas mantém um programa de `awk` exatamente como digitado?",
+    "hint": "Qual tipo não expande absolutamente nada?",
+    "choices": [
+      {
+        "text": "Aspas duplas",
+        "why": "O `$1` dentro delas é o primeiro argumento do shell, não o primeiro campo do awk."
+      },
+      {
+        "text": "Sem aspas, com `\\$` antes de cada cifrão",
+        "why": "Funciona e fica ilegível depois do segundo escape."
+      },
+      {
+        "text": "Crases",
+        "why": "Elas rodam um comando e substituem pela saída dele."
+      },
+      {
+        "text": "Aspas simples",
+        "why": "Correto. Nada dentro delas é expandido, que é por que todo programa de awk e sed da aula passada as usou."
+      }
+    ]
+  },
+  "ex-7j18babr": {
+    "prompt": "Complete a forma segura de passar um nome de arquivo que pode ter espaço: `rm ____`  (a variável é `f`)",
+    "hint": "Quatro caracteres, e dois deles são aspas."
+  },
+  "ex-ktpvw7yq": {
+    "prompt": "Um script é chamado com `./s.sh 'two words' second`. Quantos argumentos o `\"$@\"` produz?",
+    "hint": "As aspas em volta dele são a pergunta inteira.",
+    "choices": [
+      {
+        "text": "Três, um por palavra",
+        "why": "Isso é o que o `$@` sem aspas dá."
+      },
+      {
+        "text": "Um, com tudo junto",
+        "why": "Isso é o `\"$*\"`."
+      },
+      {
+        "text": "Dois, cada um inteiro",
+        "why": "Correto. O `\"$@\"` produz uma palavra entre aspas por argumento, seja lá o que houver dentro."
+      },
+      {
+        "text": "Quatro, contando o nome do script",
+        "why": "O `$0` não faz parte do `$@`."
+      }
+    ]
+  },
+  "ex-142ze1mw": {
+    "prompt": "Dentro de um script, `echo $10` imprime o primeiro argumento seguido de um zero. O que você queria?",
+    "hint": "O shell lê o nome mais longo que consegue, e `1` já é um nome.",
+    "choices": [
+      {
+        "text": "`${10}`",
+        "why": "Sim. Do dez em diante, as chaves são o que dizem ao shell onde o número termina."
+      },
+      {
+        "text": "`$(10)`",
+        "why": "Isso tenta rodar um comando chamado `10`."
+      },
+      {
+        "text": "`$[10]`",
+        "why": "Isso é sintaxe aritmética obsoleta, não um argumento."
+      },
+      {
+        "text": "`$arg10`",
+        "why": "Não existe variável com esse nome."
+      }
+    ]
+  },
+  "ex-2xc9tbm1": {
+    "prompt": "Por que uma mensagem de uso termina com `>&2`?",
+    "hint": "Pense em alguém rodando o script com `> report.txt`.",
+    "choices": [
+      {
+        "text": "Faz o shell sair depois de imprimir",
+        "why": "O `exit` faz isso; o `>&2` é só sobre para onde o texto vai."
+      },
+      {
+        "text": "Mantém a mensagem visível quando a saída é redirecionada",
+        "why": "Isso. A saída de erro é um fluxo separado, então o `> arquivo` não a engole."
+      },
+      {
+        "text": "Manda a mensagem para o log do sistema",
+        "why": "Nada aqui envolve o log; o `2` é o fluxo de erro do próprio processo."
+      },
+      {
+        "text": "Impede que a mensagem seja colorida pelo terminal",
+        "why": "Cor não tem relação com qual fluxo é usado."
+      }
+    ]
+  },
+  "ex-3k6bj6zb": {
+    "prompt": "Depois de um `shift` num script chamado com três argumentos, quanto vale o `$#`?",
+    "hint": "O `shift` descarta um e renumera o resto.",
+    "choices": [
+      {
+        "text": "Três, sem mudança",
+        "why": "O `shift` muda a contagem junto com a numeração."
+      },
+      {
+        "text": "Um, o que foi descartado",
+        "why": "O argumento descartado sumiu, não é contado."
+      },
+      {
+        "text": "Zero, porque a lista foi consumida",
+        "why": "Só um foi consumido."
+      },
+      {
+        "text": "Dois",
+        "why": "Correto. O `$1` sumiu, o que era `$2` agora é `$1`, e a contagem caiu um."
+      }
+    ]
+  },
+  "ex-0srkdj2x": {
+    "prompt": "O `cp` de um script falha, o script segue, e ele termina com código 0. O que faltava no topo?",
+    "hint": "Uma configuração de três caracteres transforma a primeira falha numa parada.",
+    "choices": [
+      {
+        "text": "`#!/usr/bin/env bash`",
+        "why": "Um shebang decide qual interpretador roda; ele não muda o que acontece depois de uma falha."
+      },
+      {
+        "text": "`set -o noclobber`",
+        "why": "Isso recusa sobrescrever um arquivo com `>`, que é outra preocupação."
+      },
+      {
+        "text": "`set -e`",
+        "why": "Sim. Sem ele o shell segue depois de um comando que falhou, o que é certo num prompt e errado num arquivo."
+      },
+      {
+        "text": "`trap cleanup EXIT`",
+        "why": "Um trap roda código na saída; ele não decide quando a saída acontece."
+      }
+    ]
+  },
+  "ex-gdp6xyb2": {
+    "prompt": "`grep missing file | wc -l` imprime 0 e o código do pipeline é 0, sob `set -e`. Qual configuração muda isso?",
+    "hint": "De quem é o código de saída que um pipeline informa por padrão?",
+    "choices": [
+      {
+        "text": "`set -u`",
+        "why": "Isso é sobre variáveis não definidas, que é outro modo de falha."
+      },
+      {
+        "text": "`set -x`",
+        "why": "Isso imprime os comandos conforme rodam; não muda código nenhum."
+      },
+      {
+        "text": "`shopt -s failglob`",
+        "why": "Isso é sobre globs que não casam com nada, não sobre pipelines."
+      },
+      {
+        "text": "`set -o pipefail`",
+        "why": "Isso. Por padrão um pipeline informa o último estágio, e o `wc` deu certo."
+      }
+    ]
+  },
+  "ex-m8cca2jc": {
+    "prompt": "Um script tem `TARGET=/srv/data` e, três linhas depois, `rm -rf $TARGE/old`. Com `set -u`, o que acontece?",
+    "hint": "O que o `-u` faz com um nome que nunca foi atribuído?",
+    "choices": [
+      {
+        "text": "Ele para, nomeando o `TARGE` e a linha",
+        "why": "Correto. O erro de digitação vira um erro de variável não vinculada em vez de uma string vazia."
+      },
+      {
+        "text": "Ele apaga o `/old` na raiz",
+        "why": "Esse é o comportamento sem o `-u`, e é o motivo de o `-u` existir."
+      },
+      {
+        "text": "Ele substitui pelo `TARGET`, o nome mais próximo",
+        "why": "O shell não faz esse tipo de adivinhação."
+      },
+      {
+        "text": "Ele imprime um aviso e segue assim mesmo",
+        "why": "O script sai; ele não continua."
+      }
+    ]
+  },
+  "ex-an93kr09": {
+    "prompt": "Sob `set -e`, quais destes comandos que falham NÃO param o script?",
+    "hint": "Quatro buracos foram mostrados num script só.",
+    "choices": [
+      {
+        "text": "`false` como condição de um `if`",
+        "why": "Uma condição pode ser falsa; é para isso que uma condição serve."
+      },
+      {
+        "text": "`false` à esquerda de um `||`",
+        "why": "Você já está tratando a falha, então o shell deixa por sua conta."
+      },
+      {
+        "text": "um comando que falha dentro de uma função usada como condição",
+        "why": "A suspensão cobre a chamada inteira, que é o buraco que surpreende."
+      },
+      {
+        "text": "`false` numa linha sozinha",
+        "why": "Esse para o script — é o caso simples para o qual o `-e` serve."
+      },
+      {
+        "text": "um `cp` de um arquivo que não existe, numa linha sozinha",
+        "why": "Esse também para, e é o exemplo com que a seção abre."
+      }
+    ]
+  },
+  "ex-vwcgjy3f": {
+    "prompt": "Escreva a linha que liga as três configurações do modo estrito de uma vez: `set ____`",
+    "hint": "Um traço, três letras, e então uma palavra depois do `-o`."
+  },
+  "ex-bs6xnkqn": {
+    "prompt": "O que o `if` de fato examina para decidir entre `then` e `else`?",
+    "hint": "Não existe tipo booleano no shell.",
+    "choices": [
+      {
+        "text": "Se o texto entre `if` e `then` é não vazio",
+        "why": "Vazio é um teste que você pode escrever, não o que o `if` em si olha."
+      },
+      {
+        "text": "O código de saída do comando que ele rodou",
+        "why": "Correto. Zero quer dizer `then`, qualquer outra coisa quer dizer `else`."
+      },
+      {
+        "text": "Se os colchetes estão balanceados",
+        "why": "Colchetes desbalanceados são erro de sintaxe, pego antes de qualquer coisa rodar."
+      },
+      {
+        "text": "O valor a que a expressão chega, como número",
+        "why": "Isso é o `(( ))`, que é aritmética e não controle de fluxo."
+      }
+    ]
+  },
+  "ex-311s9jbh": {
+    "prompt": "Por que o `[ 1 -lt 2 ]` precisa de um espaço depois do `[`?",
+    "hint": "Rode `type [` e leia a resposta.",
+    "choices": [
+      {
+        "text": "Porque o shell remove espaços iniciais em testes",
+        "why": "Nada é removido; o espaço é o que separa duas palavras."
+      },
+      {
+        "text": "Porque o `-lt` é uma palavra-chave e precisa de espaço",
+        "why": "A posição do operador não é o que força o espaço."
+      },
+      {
+        "text": "Porque o `[` é um comando e esse é o nome dele",
+        "why": "Isso. Ele é um programa — existe até um arquivo chamado `[` em `/usr/bin` — então `[1` seria o nome de outro comando."
+      },
+      {
+        "text": "Porque o POSIX reserva o caractere de colchete",
+        "why": "O caractere não é reservado; ele é usado como nome de comando comum."
+      }
+    ]
+  },
+  "ex-shh8v0vm": {
+    "prompt": "`a && b || c` com o `a` dando certo e o `b` falhando: o que roda?",
+    "hint": "O `||` olha o código de tudo à esquerda dele.",
+    "choices": [
+      {
+        "text": "`a`, `b` e `c`",
+        "why": "Correto — e é por isso que a construção não é um if-então-senão."
+      },
+      {
+        "text": "`a` e `b`, e então ele para",
+        "why": "O `b` falhou, que é exatamente o que dispara o `||`."
+      },
+      {
+        "text": "`a` e `c`, pulando o `b`",
+        "why": "O `a` deu certo, então o `&&` rodou o `b`."
+      },
+      {
+        "text": "`a` sozinho, porque o resto faz curto-circuito",
+        "why": "Um sucesso não causa curto-circuito no `&&`."
+      }
+    ]
+  },
+  "ex-csphd3yg": {
+    "prompt": "Qual é a melhor forma de perguntar se um log contém a palavra ERROR?",
+    "hint": "Alguns comandos já respondem no código de saída deles.",
+    "choices": [
+      {
+        "text": "`if [ $(grep -c ERROR log) -gt 0 ]`",
+        "why": "Funciona, lê o arquivo inteiro, e inicia dois processos a mais."
+      },
+      {
+        "text": "`if [ -n \"$(cat log | grep ERROR)\" ]`",
+        "why": "Três processos e o conteúdo de um arquivo inteiro numa variável."
+      },
+      {
+        "text": "`if [[ $(cat log) == *ERROR* ]]`",
+        "why": "Isso carrega o arquivo inteiro na memória para responder um sim ou não."
+      },
+      {
+        "text": "`if grep -q ERROR log`",
+        "why": "Sim. O `grep` já informa a resposta, e o `-q` para na primeira ocorrência."
+      }
+    ]
+  },
+  "ex-wkmc1tna": {
+    "prompt": "`[ \"$x\" \\> \"$y\" ]` com x=10 e y=9 diz falso. Por quê?",
+    "hint": "Quais operadores são para números e quais para strings?",
+    "choices": [
+      {
+        "text": "Porque o `\\>` não é um operador válido",
+        "why": "Ele é válido, e a barra invertida está ali porque o `>` sozinho redirecionaria."
+      },
+      {
+        "text": "Porque os valores estavam entre aspas",
+        "why": "As aspas protegem os valores; elas não mudam a comparação."
+      },
+      {
+        "text": "Porque o `\\>` compara como texto, e `10` vem antes de `9`",
+        "why": "Isso. Os símbolos são os operadores de string; o `-gt` é o numérico."
+      },
+      {
+        "text": "Porque comparar duas variáveis exige uni-las com um operador",
+        "why": "Ele compara dois argumentos, venham de onde vierem."
+      }
+    ]
+  },
+  "ex-9gm4vmw0": {
+    "prompt": "`[ $x = yes ]` com o `x` vazio informa `unary operator expected` e código 2. O que o `[` viu?",
+    "hint": "Conte os argumentos depois da expansão.",
+    "choices": [
+      {
+        "text": "Quatro argumentos, um deles vazio",
+        "why": "Uma expansão vazia sem aspas não produz argumento nenhum."
+      },
+      {
+        "text": "Três: `=`, `yes` e `]`",
+        "why": "Correto. A variável vazia sumiu, então o `[` ficou com algo que ele não consegue analisar."
+      },
+      {
+        "text": "Dois: `yes` e `]`",
+        "why": "O `=` sobreviveu; ele é uma das palavras."
+      },
+      {
+        "text": "Cinco, com o valor vazio contado duas vezes",
+        "why": "Nada é contado duas vezes; o valor não produziu palavra."
+      }
+    ]
+  },
+  "ex-kcghz4se": {
+    "prompt": "`[ \"$name\" == *.log ]` respondeu diferente em três diretórios com o mesmo valor em `name`. O que variou?",
+    "hint": "O `[` é um comando, e algo acontece com os argumentos de um comando primeiro.",
+    "choices": [
+      {
+        "text": "O locale, que muda como o `==` ordena",
+        "why": "Regras de ordenação não transformam um argumento em dois."
+      },
+      {
+        "text": "Se o `name` estava exportado",
+        "why": "Exportar decide o que os filhos veem, não o que o `[` recebe."
+      },
+      {
+        "text": "Se o shell era interativo",
+        "why": "A expansão acontece do mesmo jeito nos dois casos."
+      },
+      {
+        "text": "Quantos arquivos o padrão casou",
+        "why": "Isso. O shell expandiu o `*.log` antes de o `[` rodar, então a quantidade de arquivos mudou o número de argumentos."
+      }
+    ]
+  },
+  "ex-3vvephs9": {
+    "prompt": "Você quer conferir que o `$n` é feito de dígitos. Qual linha faz isso?",
+    "hint": "Uma destas é uma expressão regular, sem aspas de propósito.",
+    "choices": [
+      {
+        "text": "`[[ $n =~ ^[0-9]+$ ]]`",
+        "why": "Sim, e o padrão vai sem aspas — pôr aspas o transforma em onze caracteres literais."
+      },
+      {
+        "text": "`[[ $n =~ \"^[0-9]+$\" ]]`",
+        "why": "Entre aspas, ele compara literalmente e em silêncio nunca casa."
+      },
+      {
+        "text": "`[ $n =~ ^[0-9]+$ ]`",
+        "why": "O `[` não tem operador `=~` nenhum."
+      },
+      {
+        "text": "`[[ $n == ^[0-9]+$ ]]`",
+        "why": "O `==` faz correspondência de glob, onde `^` e `+` são caracteres comuns."
+      }
+    ]
+  },
+  "ex-esmgqnc2": {
+    "prompt": "Ligue cada teste de arquivo ao que ele pergunta.",
+    "hint": "Um destes é sobre o link e não sobre o que ele aponta.",
+    "pairs": [
+      {
+        "left": "`-f`",
+        "right": "existe um arquivo comum aqui"
+      },
+      {
+        "left": "`-d`",
+        "right": "isto é um diretório"
+      },
+      {
+        "left": "`-s`",
+        "right": "isto existe e tem algum conteúdo"
+      },
+      {
+        "left": "`-L`",
+        "right": "isto é um link simbólico"
+      }
+    ],
+    "right_distractors": [
+      "isto é legível por mim",
+      "isto foi alterado hoje"
+    ]
+  },
+  "ex-p8h3k5qr": {
+    "prompt": "Em `case \"$f\" in *.log) …` — que tipo de padrão é o `*.log`?",
+    "hint": "É a mesma sintaxe do `ls *.log`.",
+    "choices": [
+      {
+        "text": "Uma expressão regular estendida",
+        "why": "Isso é o que o `[[ =~ ]]` recebe; o `case` é mais antigo e usa algo mais simples."
+      },
+      {
+        "text": "Um glob",
+        "why": "Correto — os mesmos curingas da correspondência de nomes, então o `.` é um caractere comum."
+      },
+      {
+        "text": "Uma string literal, comparada caractere a caractere",
+        "why": "Então o `*.log` só casaria com um arquivo de fato chamado `*.log`."
+      },
+      {
+        "text": "Uma expressão regular básica, como o `grep` usa",
+        "why": "O `case` não usa expressões regulares de nenhum sabor."
+      }
+    ]
+  },
+  "ex-gp46fjst": {
+    "prompt": "Um parser de opções não tem ramo `-*)`. Um usuário digita `--verbsoe` em vez de `--verbose`. O que acontece?",
+    "hint": "Qual ramo pega uma palavra que os outros não pegaram?",
+    "choices": [
+      {
+        "text": "O parser sai com código 2",
+        "why": "Isso é o que o ramo faltante teria feito."
+      },
+      {
+        "text": "O laço gira para sempre naquela palavra",
+        "why": "O `shift` lá embaixo passa dela de qualquer jeito."
+      },
+      {
+        "text": "Ela cai no `*)` e é tratada como argumento posicional",
+        "why": "Isso, então a opção é ignorada em silêncio e o script roda sem ela."
+      },
+      {
+        "text": "O bash rejeita a opção desconhecida antes de o script começar",
+        "why": "O bash repassa os argumentos sem inspecioná-los."
+      }
+    ]
+  },
+  "ex-x5z0kgg7": {
+    "prompt": "No ramo `-e|--env) env=\"$2\"; shift ;;`, por que há um `shift` antes do `;;`?",
+    "hint": "Já existe um `shift` no fim do laço.",
+    "choices": [
+      {
+        "text": "A opção recebeu um valor, então duas palavras foram usadas",
+        "why": "Correto. Um `shift` para a opção, um para o valor que ela consumiu."
+      },
+      {
+        "text": "Sem ele o `case` escorreria para o ramo seguinte",
+        "why": "Ramos não escorrem; o `;;` os encerra."
+      },
+      {
+        "text": "Ele redefine o `$#` para o laço poder terminar",
+        "why": "O `shift` de baixo já reduz a contagem a cada volta."
+      },
+      {
+        "text": "Ele move o valor para o `$1` para o próximo teste",
+        "why": "O valor já foi lido e não é testado de novo."
+      }
+    ]
+  },
+  "ex-r56tge3t": {
+    "prompt": "Por que a maioria dos scripts reais escreve um laço `case` à mão em vez de usar o `getopts`?",
+    "hint": "Tente o `getopts` com `--verbose` e leia o erro.",
+    "choices": [
+      {
+        "text": "O `getopts` não existe no bash",
+        "why": "Ele é um builtin do bash e é há muito tempo."
+      },
+      {
+        "text": "O `getopts` não consegue ler o valor de uma opção",
+        "why": "O `$OPTARG` o guarda, e o `t:` na especificação o pede."
+      },
+      {
+        "text": "O `getopts` fica mais lento conforme a lista de argumentos cresce",
+        "why": "Velocidade não é o problema na escala de uma linha de comando."
+      },
+      {
+        "text": "O `getopts` trata opções curtas e mais nada",
+        "why": "Isso. Ele lê `--verbose` como um traço seguido de uma palavra, e opções longas valem mais que o agrupamento que ele oferece."
+      }
+    ]
+  },
+  "ex-g734rs40": {
+    "prompt": "Um diretório tem `a.log`, `b.log` e `two words.log`. Quantas vezes o `for f in $(ls *.log)` dá a volta?",
+    "hint": "Onde acontece a divisão?",
+    "choices": [
+      {
+        "text": "Três, uma por arquivo",
+        "why": "Isso é o que o glob dá; o `$(ls)` tem um passo a mais depois."
+      },
+      {
+        "text": "Uma, com a listagem inteira no `$f`",
+        "why": "O resultado é dividido, não mantido inteiro."
+      },
+      {
+        "text": "Quatro",
+        "why": "Isso. A listagem é dividida no espaço em branco, então o nome com espaço virou duas iterações."
+      },
+      {
+        "text": "Duas, porque o `ls` junta o nome preenchido",
+        "why": "O `ls` preenche colunas para um terminal, não para um pipeline."
+      }
+    ]
+  },
+  "ex-2q3p1txa": {
+    "prompt": "`for f in *.bak` num diretório sem arquivos `.bak`. Qual é o `$f` na única iteração?",
+    "hint": "Um glob sem correspondência não some sozinho.",
+    "choices": [
+      {
+        "text": "O padrão `*.bak`, como digitado",
+        "why": "Correto — o padrão fica literal, que é por que o `shopt -s nullglob` existe."
+      },
+      {
+        "text": "Uma string vazia",
+        "why": "Vazio seria outro bug; o padrão sobrevive inteiro."
+      },
+      {
+        "text": "O nome do diretório",
+        "why": "Nada substitui um nome de diretório aqui."
+      },
+      {
+        "text": "Coisa nenhuma — o corpo do laço é pulado",
+        "why": "Esse é o comportamento do `nullglob`, e não é o padrão."
+      }
+    ]
+  },
+  "ex-tsge1t2n": {
+    "prompt": "`n=4; for i in {1..$n}` dá uma volta só. O que deu errado?",
+    "hint": "Qual expansão acontece primeiro?",
+    "choices": [
+      {
+        "text": "O `$n` ainda não tinha recebido valor",
+        "why": "Ele recebeu na mesma linha, e ele de fato expandiu — só que tarde demais."
+      },
+      {
+        "text": "Chaves são expandidas antes dos parâmetros",
+        "why": "Isso. As chaves viram `$n`, não `4`, então não havia intervalo a montar."
+      },
+      {
+        "text": "Intervalos precisam de `{1..4..1}` com passo",
+        "why": "O passo é opcional e não muda quando as chaves são processadas."
+      },
+      {
+        "text": "O `for` aceita intervalo apenas na forma estilo C",
+        "why": "A forma com chaves funciona bem — com números literais."
+      }
+    ]
+  },
+  "ex-hxc8rjgp": {
+    "prompt": "Dentro de dois `for` aninhados, um `break 2` é alcançado. O que termina?",
+    "hint": "O número é quantos níveis.",
+    "choices": [
+      {
+        "text": "O laço interno, duas vezes",
+        "why": "Um laço não pode terminar duas vezes; o número quer dizer outra coisa."
+      },
+      {
+        "text": "O laço interno, e então o script",
+        "why": "Terminar o script é o `exit`, não o `break`."
+      },
+      {
+        "text": "Não é isso — o `break` não recebe argumento",
+        "why": "Ele recebe, e o padrão é 1."
+      },
+      {
+        "text": "Os dois laços",
+        "why": "Correto. A execução retoma depois do `done` externo."
+      }
+    ]
+  },
+  "ex-bcmrp7yz": {
+    "prompt": "Você precisa comprimir quatrocentos arquivos de log com gzip. Qual é a melhor forma?",
+    "hint": "A maioria dos comandos já recebe muitos argumentos.",
+    "choices": [
+      {
+        "text": "`for f in *.log; do gzip \"$f\"; done`",
+        "why": "Funciona e inicia quatrocentos processos para isso."
+      },
+      {
+        "text": "`for f in $(ls); do gzip $f; done`",
+        "why": "Dois bugs distintos além dos processos extras."
+      },
+      {
+        "text": "`gzip *.log`",
+        "why": "Isso. Um processo, e o shell montou a lista de argumentos com segurança."
+      },
+      {
+        "text": "`ls *.log | while read f; do gzip $f; done`",
+        "why": "Um processo por arquivo, mais um subshell e uma expansão sem aspas."
+      }
+    ]
+  },
+  "ex-kjy07t7j": {
+    "prompt": "Em `while IFS= read -r line`, o que o `-r` impede?",
+    "hint": "Pense num caminho do Windows na entrada.",
+    "choices": [
+      {
+        "text": "Espaços iniciais serem removidos",
+        "why": "Isso é o que o `IFS` vazio trata."
+      },
+      {
+        "text": "O laço terminar cedo no fim do arquivo",
+        "why": "Terminar no fim do arquivo é como o laço deve parar."
+      },
+      {
+        "text": "A linha ser dividida em várias variáveis",
+        "why": "Dividir em várias exige vários nomes depois do `read`."
+      },
+      {
+        "text": "Barras invertidas serem comidas como escapes",
+        "why": "Sim. Sem o `-r`, `C:\\path\\to\\file` chega como `C:pathtofile`."
+      }
+    ]
+  },
+  "ex-p8mvbzen": {
+    "prompt": "`printf '%s\\n' 10 20 30 | while read n; do total=$((total+n)); done` deixa o `total` em 0. Por quê?",
+    "hint": "O que um `|` faz com cada lado dele?",
+    "choices": [
+      {
+        "text": "O laço rodou num subshell que então saiu",
+        "why": "Correto. Todo estágio de um pipeline é um filho, e as variáveis dele morrem junto."
+      },
+      {
+        "text": "O `read` é incapaz de atribuir a uma variável usada depois",
+        "why": "Ele atribui normalmente; a atribuição só aconteceu em outro lugar."
+      },
+      {
+        "text": "O `$(( ))` não aceita variável à esquerda",
+        "why": "Aceita, e a aritmética estava certa."
+      },
+      {
+        "text": "O `printf` mandou os números para a saída de erro",
+        "why": "O `printf` escreve na saída padrão, que é o que o pipe carrega."
+      }
+    ]
+  },
+  "ex-np3663my": {
+    "prompt": "Qual grafia alimenta a saída de um comando a um laço `while read` sem subshell?",
+    "hint": "Há um espaço entre os dois caracteres `<`.",
+    "choices": [
+      {
+        "text": "`cmd | while read -r l; do …; done`",
+        "why": "Essa é a versão com subshell, e é a de evitar."
+      },
+      {
+        "text": "`while read -r l; do …; done < <(cmd)`",
+        "why": "Sim — a substituição de processo faz a saída parecer um arquivo, então o laço continua no shell atual."
+      },
+      {
+        "text": "`while read -r l; do …; done <<< cmd`",
+        "why": "Uma here-string passa a palavra `cmd`, não a saída dela."
+      },
+      {
+        "text": "`while read -r l < cmd.out; do …; done`",
+        "why": "Isso redireciona cada `read` de um arquivo chamado `cmd.out`."
+      }
+    ]
+  },
+  "ex-zg7g5wb9": {
+    "prompt": "A última linha de um arquivo não tem quebra de linha depois dela, e um laço `while read` perde essa linha. O que a recupera?",
+    "hint": "O `read` atribuiu o valor e informou falha ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "`read -N 0` para ignorar delimitadores",
+        "why": "Isso lê um número fixo de caracteres, que é outro modo."
+      },
+      {
+        "text": "Acrescentar uma quebra de linha ao fim daquele arquivo antes",
+        "why": "Isso conserta aquele arquivo e não o próximo."
+      },
+      {
+        "text": "acrescentar `|| [ -n \"$l\" ]` à condição do while",
+        "why": "Isso. Continue quando o `read` que falhou mesmo assim produziu alguma coisa."
+      },
+      {
+        "text": "`set -o pipefail` no topo",
+        "why": "Isso é sobre pipelines, e não há pipeline aqui."
+      }
+    ]
+  },
+  "ex-bnqc9vh2": {
+    "prompt": "Complete o idioma que lê um arquivo linha a linha sem estragar nada: `while ____ read -r line; do`",
+    "hint": "Quatro caracteres, e um deles é um sinal de igual."
+  },
+  "ex-vh2ebdqv": {
+    "prompt": "`hosts=(web01 web02 'db 01')`. O que o `echo $hosts` imprime?",
+    "hint": "Um nome de array pelado não é o array inteiro.",
+    "choices": [
+      {
+        "text": "Os três deles, separados por espaços",
+        "why": "Isso precisa de `${hosts[@]}` ou `${hosts[*]}`."
+      },
+      {
+        "text": "`web01`",
+        "why": "Correto. O `$hosts` é atalho para `${hosts[0]}`, o que pega as pessoas."
+      },
+      {
+        "text": "O número de elementos, três",
+        "why": "Isso é o `${#hosts[@]}`."
+      },
+      {
+        "text": "Um erro, porque o nome precisa de índice",
+        "why": "É válido e em silêncio quer dizer elemento zero."
+      }
+    ]
+  },
+  "ex-egn7s7n4": {
+    "prompt": "Você escreve `c[apple]=red; c[lime]=green` sem declarar o `c`. O que o `declare -p c` mostra?",
+    "hint": "Um array indexado usa aritmética no índice.",
+    "choices": [
+      {
+        "text": "Duas chaves, na ordem escrita",
+        "why": "Isso precisa de um array associativo, que tem que ser declarado."
+      },
+      {
+        "text": "Um erro reclamando de um índice inválido",
+        "why": "Erro nenhum é produzido; o índice é avaliado."
+      },
+      {
+        "text": "Um array vazio",
+        "why": "Alguma coisa foi guardada; a pergunta é onde."
+      },
+      {
+        "text": "Um elemento no índice 0, com o segundo valor",
+        "why": "Isso. Os dois nomes avaliaram para zero como aritmética, então a segunda atribuição sobrescreveu a primeira."
+      }
+    ]
+  },
+  "ex-crb55cv4": {
+    "prompt": "Por que `opts=(-a --delete --exclude '*.tmp')` é melhor que pôr essas opções numa string comum?",
+    "hint": "Pense na opção que tem um espaço dentro dela.",
+    "choices": [
+      {
+        "text": "Cada elemento continua sendo um argumento",
+        "why": "Correto. A versão com string divide `--exclude '*.tmp'` em três palavras."
+      },
+      {
+        "text": "Um array guarda mais caracteres que uma string",
+        "why": "Os dois são limitados pelo mesmo tamanho de linha de comando."
+      },
+      {
+        "text": "Arrays são expandidos antes de o globbing acontecer",
+        "why": "Os dois estão sujeitos à mesma ordem de expansão."
+      },
+      {
+        "text": "Uma string é incapaz de começar com traço",
+        "why": "Pode; traços iniciais são caracteres comuns num valor."
+      }
+    ]
+  },
+  "ex-a4et1w54": {
+    "prompt": "`mapfile users < /etc/passwd` — o que há de errado com o `${users[0]}`?",
+    "hint": "Uma opção remove algo de todo elemento.",
+    "choices": [
+      {
+        "text": "Ele guarda o arquivo inteiro",
+        "why": "Cada elemento guarda uma linha; essa parte funcionou."
+      },
+      {
+        "text": "Ele guarda a segunda linha, não a primeira",
+        "why": "A indexação começa em zero e a primeira linha caiu ali."
+      },
+      {
+        "text": "Ele termina com uma quebra de linha",
+        "why": "Isso. O `-t` é a opção que a remove, e sem o `-t` todo elemento mantém uma."
+      },
+      {
+        "text": "Ele fica vazio até o array ser declarado",
+        "why": "O `mapfile` cria o array ele mesmo."
+      }
+    ]
+  },
+  "ex-kktfffsj": {
+    "prompt": "Uma função atribui a `i` sem `local`, e quem chamou também usa `i`. O que acontece com o valor de quem chamou?",
+    "hint": "Uma função divide o shell de onde foi chamada.",
+    "choices": [
+      {
+        "text": "Ele é restaurado quando a função retorna",
+        "why": "Nada o restaura; não há escopo do qual sair."
+      },
+      {
+        "text": "Ele fica sombreado durante a chamada",
+        "why": "Sombrear é o que o `local` oferece, e ele não foi usado."
+      },
+      {
+        "text": "O shell informa uma colisão de nomes",
+        "why": "Colisão nenhuma é informada; a atribuição simplesmente acontece."
+      },
+      {
+        "text": "Ele é sobrescrito",
+        "why": "Correto. Tudo dentro de uma função é global a menos que declarado `local`."
+      }
+    ]
+  },
+  "ex-gvkyyfpt": {
+    "prompt": "Uma função faz `return 300`. O que o `$?` guarda depois?",
+    "hint": "Códigos de saída têm um byte.",
+    "choices": [
+      {
+        "text": "300, como dado",
+        "why": "Não há espaço para ele; o valor é tomado módulo 256."
+      },
+      {
+        "text": "44",
+        "why": "Correto, e nada te avisa — que é por que o `return` serve só para sucesso e falha."
+      },
+      {
+        "text": "1, porque o valor foi rejeitado",
+        "why": "Ele não foi rejeitado; ele foi truncado."
+      },
+      {
+        "text": "255, o máximo",
+        "why": "Isso é o que o `return -1` dá."
+      }
+    ]
+  },
+  "ex-srwery4j": {
+    "prompt": "Uma função imprime a resposta com `echo` e também imprime progresso com `echo`. Quem chama usa `r=$(fn)`. O que está em `r`?",
+    "hint": "A substituição de comando captura um fluxo e não o outro.",
+    "choices": [
+      {
+        "text": "As duas linhas, juntas",
+        "why": "Correto. Progresso pertence à saída de erro, que o `$( )` não captura."
+      },
+      {
+        "text": "Apenas a última linha impressa",
+        "why": "Tudo escrito na saída padrão é capturado, não só o fim."
+      },
+      {
+        "text": "Apenas a primeira linha impressa",
+        "why": "A captura não para depois de uma linha."
+      },
+      {
+        "text": "O código de retorno da função, como número",
+        "why": "Isso está no `$?`, separado da saída."
+      }
+    ]
+  },
+  "ex-nb4x28cd": {
+    "prompt": "Sob `set -e`, o `local out=$(comando_que_falha)` não para o script. Por quê?",
+    "hint": "De qual comando o shell olhou o código de saída?",
+    "choices": [
+      {
+        "text": "O `set -e` fica desligado dentro do corpo de uma função",
+        "why": "Ele se aplica; os quatro buracos são outros."
+      },
+      {
+        "text": "A substituição de comando suprime falhas por design",
+        "why": "Um `out=$(comando_que_falha)` pelado para o script."
+      },
+      {
+        "text": "O `local` deu certo, e esse é o código da linha",
+        "why": "Isso. Separe em `local out; out=$(cmd)` quando o código importar."
+      },
+      {
+        "text": "O comando que falhou rodou num subshell que foi ignorado",
+        "why": "Ele roda num subshell, e o código daquele subshell ainda é informado."
+      }
+    ]
+  },
+  "ex-650gqx6w": {
+    "prompt": "Ligue cada linha ao que ela serve.",
+    "hint": "Duas delas escrevem na saída de erro.",
+    "pairs": [
+      {
+        "left": "`local x`",
+        "right": "manter um nome dentro da função"
+      },
+      {
+        "left": "`return 1`",
+        "right": "informar falha a quem chamou"
+      },
+      {
+        "left": "`die() { echo \"$*\" >&2; exit 1; }`",
+        "right": "um lugar só que formata todo erro"
+      },
+      {
+        "left": "`cat <<'USAGE'`",
+        "right": "imprimir um bloco de texto sem expandir nada"
+      }
+    ],
+    "right_distractors": [
+      "rodar a função em segundo plano",
+      "exportar a função para um filho"
+    ]
+  },
+  "ex-gt02qs3z": {
+    "prompt": "`n=$(wc -l report.log)` põe `1200 report.log` no `n`. Como obter a contagem pelada?",
+    "hint": "O `wc` rotula a saída quando conhece o nome.",
+    "choices": [
+      {
+        "text": "`n=$(wc -l report.log | cut -d' ' -f1)`",
+        "why": "Funciona, e inicia um terceiro processo para desfazer algo que dá para evitar."
+      },
+      {
+        "text": "`n=${$(wc -l report.log)%% *}`",
+        "why": "Isso não é sintaxe válida; operadores de expansão não se aplicam a uma substituição."
+      },
+      {
+        "text": "`n=$(wc -l < report.log)`",
+        "why": "Isso. Alimentado pela entrada padrão, o `wc` não tem nome para imprimir."
+      },
+      {
+        "text": "`n=$(wc -l report.log | tr -d ' ')`",
+        "why": "Isso deixa o nome do arquivo colado no número."
+      }
+    ]
+  },
+  "ex-92rbjwn9": {
+    "prompt": "Por que preferir `$(cmd)` a crases?",
+    "hint": "Tente escrever uma dentro da outra.",
+    "choices": [
+      {
+        "text": "Crases foram removidas no bash 5",
+        "why": "Elas ainda funcionam, em todo lugar, e em todo shell."
+      },
+      {
+        "text": "Aninhar funciona sem escape",
+        "why": "Correto — o `$(basename $(dirname x))` se lê, e a versão com crases precisa de escapes no segundo nível."
+      },
+      {
+        "text": "Crases rodam o comando no shell atual",
+        "why": "As duas rodam num subshell."
+      },
+      {
+        "text": "Crases não removem quebras de linha do fim",
+        "why": "As duas removem, de forma idêntica."
+      }
+    ]
+  },
+  "ex-9pzxyeam": {
+    "prompt": "`m=08; echo $(( m + 1 ))` falha com `value too great for base`. O que o bash está fazendo?",
+    "hint": "De onde costumam vir números com zero à esquerda?",
+    "choices": [
+      {
+        "text": "Recusando um valor de dois dígitos em aritmética",
+        "why": "Dois dígitos estão ok; o que importa é o primeiro."
+      },
+      {
+        "text": "Tratando o `m` como string, porque estava entre aspas",
+        "why": "Nada aqui está entre aspas, e a aritmética o lê como número."
+      },
+      {
+        "text": "Rejeitando o nome `m` por ser curto demais",
+        "why": "Nomes de uma letra são perfeitamente válidos."
+      },
+      {
+        "text": "Lendo o `08` como octal, onde não existe dígito 8",
+        "why": "Isso, e o `date +%m` produz exatamente isto todo mês de agosto."
+      }
+    ]
+  },
+  "ex-t2sg3zbw": {
+    "prompt": "Sob `set -e`, um script com `count=0` e depois `(( count++ ))` morre antes de imprimir qualquer coisa. Por quê?",
+    "hint": "Para que valor o pós-incremento avalia?",
+    "choices": [
+      {
+        "text": "A expressão deu 0, o que conta como falha",
+        "why": "Correto. O `count++` dá o valor antes de incrementar, e o `(( ))` mapeia zero para um código diferente de zero."
+      },
+      {
+        "text": "O `count` não tinha sido declarado como inteiro",
+        "why": "Contextos aritméticos tratam qualquer nome como número."
+      },
+      {
+        "text": "O `++` não é um operador do bash",
+        "why": "É sim; o incremento aconteceu."
+      },
+      {
+        "text": "O `set -e` proíbe aritmética em qualquer lugar fora do `$(( ))`",
+        "why": "O `(( ))` em forma de instrução é bash comum e é permitido."
+      }
+    ]
+  },
+  "ex-deyy02kv": {
+    "prompt": "Um script precisa de uma média com casa decimal. O `$(( ))` não consegue. Nomeie a calculadora para a qual ele encanha: `echo 'scale=2; 7/2' | ____`",
+    "hint": "Duas letras."
+  },
+  "ex-34v0rknd": {
+    "prompt": "`p=/var/log/app.log`. Qual grafia dá `app.log`?",
+    "hint": "Remova a coisa mais longa terminada em barra.",
+    "choices": [
+      {
+        "text": "`${p%/*}`",
+        "why": "Isso remove por trás e dá o diretório."
+      },
+      {
+        "text": "`${p##*/}`",
+        "why": "Correto — este é o `basename`, sem um processo."
+      },
+      {
+        "text": "`${p#*/}`",
+        "why": "Um `#` sozinho remove a correspondência mais curta, deixando `var/log/app.log`."
+      },
+      {
+        "text": "`${p%%/*}`",
+        "why": "Isso remove a correspondência mais longa por trás e deixa uma string vazia."
+      }
+    ]
+  },
+  "ex-b31q6hq7": {
+    "prompt": "Qual é a diferença entre `${v-x}` e `${v:-x}`?",
+    "hint": "Um caractere, e um caso.",
+    "choices": [
+      {
+        "text": "A primeira atribui um valor e a segunda não",
+        "why": "Atribuir é o `${v:=x}`, que é uma terceira grafia."
+      },
+      {
+        "text": "A primeira é POSIX e a segunda é bash",
+        "why": "As duas são POSIX e as duas funcionam no dash."
+      },
+      {
+        "text": "Os dois pontos fazem um valor vazio contar como ausente",
+        "why": "Isso, e é a que você normalmente quer."
+      },
+      {
+        "text": "Os dois pontos tornam o padrão literal",
+        "why": "Padrões são expandidos do mesmo jeito nas duas."
+      }
+    ]
+  },
+  "ex-dng103r5": {
+    "prompt": "`f=notes.tar.gz`. O que o `${f%.*}` produz?",
+    "hint": "Um `%` sozinho remove a correspondência mais curta.",
+    "choices": [
+      {
+        "text": "`notes.tar`",
+        "why": "Correto — só a última extensão vai embora, porque a correspondência é a mais curta."
+      },
+      {
+        "text": "só `notes`",
+        "why": "Isso é o `${f%%.*}`, ou o `${f%.tar.gz}` se você nomear o sufixo."
+      },
+      {
+        "text": "`tar.gz`, os sufixos",
+        "why": "Remover por trás deixa a frente, não o fim."
+      },
+      {
+        "text": "`gz` sozinho",
+        "why": "Isso seria o `${f##*.}`."
+      }
+    ]
+  },
+  "ex-fahycjke": {
+    "prompt": "Por que o `name=${path##*/}` é preferível ao `name=$(basename \"$path\")`?",
+    "hint": "Dois motivos, e um deles aparece num laço sobre dez mil arquivos.",
+    "choices": [
+      {
+        "text": "O `basename` não existe em algumas distribuições",
+        "why": "Ele faz parte do coreutils e está presente em todo lugar que você vai encontrar."
+      },
+      {
+        "text": "O `basename` erra a resposta em caminhos aninhados",
+        "why": "Ele os trata corretamente; a objeção é outra."
+      },
+      {
+        "text": "A expansão mantém uma barra final que o `basename` tira",
+        "why": "Nenhum dos dois mantém uma num caminho de arquivo comum."
+      },
+      {
+        "text": "Ela não inicia processo, e sobrevive a um nome estranho",
+        "why": "Isso — um nome começando com traço é uma opção para o `basename` e texto comum para a expansão."
+      }
+    ]
+  },
+  "ex-rjgeh8z6": {
+    "prompt": "Ligue cada expansão ao resultado dela.",
+    "hint": "Duas delas são sobre valores padrão.",
+    "pairs": [
+      {
+        "left": "`${#v}`",
+        "right": "quantos caracteres v guarda"
+      },
+      {
+        "left": "`${v:?msg}`",
+        "right": "para com msg quando v não está definida ou está vazia"
+      },
+      {
+        "left": "`${v//a/b}`",
+        "right": "substitui todo a por b"
+      },
+      {
+        "left": "`${v,,}`",
+        "right": "o valor em minúsculas"
+      }
+    ],
+    "right_distractors": [
+      "o valor em maiúsculas",
+      "substitui o primeiro a por b"
+    ]
+  },
+  "ex-0p70ssj8": {
+    "prompt": "Por que `mktemp` em vez de `/tmp/meuscript.$$`?",
+    "hint": "Pense em duas cópias rodando ao mesmo tempo, e em quem mais está na máquina.",
+    "choices": [
+      {
+        "text": "O `$$` não está disponível num script",
+        "why": "Está; ele guarda o id do processo do próprio shell."
+      },
+      {
+        "text": "O `mktemp` põe o arquivo na memória em vez de escrevê-lo no disco",
+        "why": "Ele cria um arquivo comum, num diretório comum."
+      },
+      {
+        "text": "Um id de processo é adivinhável, então alguém chegaria antes",
+        "why": "Isso. O `mktemp` cria o arquivo ele mesmo, num passo que não dá para correr na frente."
+      },
+      {
+        "text": "O `$$` muda de valor enquanto o script ainda roda",
+        "why": "Ele fica igual pela vida do shell."
+      }
+    ]
+  },
+  "ex-g5whqk6s": {
+    "prompt": "Onde o `trap 'rm -rf \"$work\"' EXIT` pertence no arquivo?",
+    "hint": "Qual é a janela que você está tentando fechar?",
+    "choices": [
+      {
+        "text": "Na linha depois do `mktemp`",
+        "why": "Correto. Tudo entre criá-lo e armar o trap é uma brecha em que o script pode morrer e deixá-lo."
+      },
+      {
+        "text": "Lá no fim, depois do trabalho",
+        "why": "Um script que falha não chega ao fim, que é o caso para o qual o trap serve."
+      },
+      {
+        "text": "Logo antes do primeiro `exit`",
+        "why": "Normalmente há vários exits, e os caminhos de erro vêm antes."
+      },
+      {
+        "text": "Dentro da função de limpeza que ele chama",
+        "why": "A função então teria que ser chamada para se armar."
+      }
+    ]
+  },
+  "ex-ersw3tg9": {
+    "prompt": "Um script captura `INT` e sai com 130 do tratador. Ele também captura `EXIT`. No Ctrl-C, quais tratadores rodam?",
+    "hint": "Um `exit` ainda é uma saída.",
+    "choices": [
+      {
+        "text": "Só o tratador de `INT`",
+        "why": "O `exit` dentro dele é o que dispara o outro."
+      },
+      {
+        "text": "Os dois, o `INT` primeiro",
+        "why": "Isso, e é por isso que a limpeza pertence ao `EXIT`: ele é alcançado de qualquer jeito que o script termine."
+      },
+      {
+        "text": "Só o tratador de `EXIT`",
+        "why": "O tratador de sinal é o que pegou o Ctrl-C em primeiro lugar."
+      },
+      {
+        "text": "Nenhum, porque o Ctrl-C mata o shell na hora",
+        "why": "Isso é o `KILL`; o `INT` é capturável, que é o sentido de capturá-lo."
+      }
+    ]
+  },
+  "ex-vxj50gzj": {
+    "prompt": "Por que o comando do trap é escrito entre aspas simples, como `trap 'rm -rf \"$work\"' EXIT`?",
+    "hint": "Quando o `$work` deve ser consultado?",
+    "choices": [
+      {
+        "text": "Aspas duplas são erro de sintaxe ali",
+        "why": "Elas analisam bem; só querem dizer outra coisa."
+      },
+      {
+        "text": "Aspas simples impedem o `rm` de rodar imediatamente",
+        "why": "Nenhuma das formas o roda agora; o `trap` guarda o texto de qualquer jeito."
+      },
+      {
+        "text": "O trap aceita só uma string entre aspas simples",
+        "why": "Ele aceita qualquer palavra, inclusive um nome de função sem aspas nenhumas."
+      },
+      {
+        "text": "Para o `$work` ser expandido quando o trap dispara",
+        "why": "Correto. Com aspas duplas ele é expandido no momento em que o trap é armado, o que quebra se o valor mudar depois."
+      }
+    ]
+  },
+  "ex-j39xkmr9": {
+    "prompt": "`bash -n deploy.sh` informa um erro de sintaxe na linha 40, a última do arquivo. Onde o erro provavelmente está?",
+    "hint": "Um shell não tem como saber qual bloco você quis fechar.",
+    "choices": [
+      {
+        "text": "Na linha 40, exatamente onde ele diz",
+        "why": "O fim do arquivo é onde o shell ficou sem entrada, não onde o bloco abriu."
+      },
+      {
+        "text": "Na linha 39, a anterior",
+        "why": "O relato não está errado por um; ele fica no fim por um motivo estrutural."
+      },
+      {
+        "text": "Em qualquer lugar acima, num bloco que não foi fechado",
+        "why": "Isso. Um `fi`, `done`, `esac` ou `}` faltando sempre joga a reclamação lá embaixo."
+      },
+      {
+        "text": "Num arquivo diferente que este carrega com source no topo",
+        "why": "O `-n` analisa um arquivo e não segue um `source`."
+      }
+    ]
+  },
+  "ex-y9ajz9e1": {
+    "prompt": "`count=3` e `if [ $count > 5 ]` imprime `many`, e um arquivo chamado `5` aparece. O que o `>` fez?",
+    "hint": "É o mesmo `>` que você usa em todo lugar.",
+    "choices": [
+      {
+        "text": "Comparou os dois valores como strings comuns",
+        "why": "Comparação de string dentro do `[` se escreve `\\>`, com escape."
+      },
+      {
+        "text": "Redirecionou a saída do `[ 3 ]` para o `5`",
+        "why": "Correto, e o `[ 3 ]` pergunta se `3` é uma string não vazia, o que é verdade."
+      },
+      {
+        "text": "Foi ignorado como operador desconhecido",
+        "why": "Nada foi ignorado; um arquivo apareceu."
+      },
+      {
+        "text": "Foi lido como parte do número `3`",
+        "why": "O número nunca foi tocado."
+      }
+    ]
+  },
+  "ex-kayvf39v": {
+    "prompt": "Você define o `PS4` no prompt e o `bash -x script.sh` ainda mostra um `+` simples. O que falta?",
+    "hint": "Qual shell imprime o rastro?",
+    "choices": [
+      {
+        "text": "`set -x` dentro do script também",
+        "why": "O `-x` na linha de comando já ligou o rastreamento."
+      },
+      {
+        "text": "Um espaço no fim do `PS4`",
+        "why": "O espaçamento muda a aparência, não se ele é usado."
+      },
+      {
+        "text": "`shopt -s xpg_echo`",
+        "why": "Isso é sobre como o `echo` trata escapes."
+      },
+      {
+        "text": "`export`",
+        "why": "Isso. O rastro é impresso pelo bash que você está iniciando, e ele só enxerga variáveis exportadas."
+      }
+    ]
+  },
+  "ex-5myn3ta1": {
+    "prompt": "Um script de nove linhas analisa limpo com `bash -n` e ainda tem quatro bugs. Qual ferramenta os acha?",
+    "hint": "Ela tem um número de regra para cada um.",
+    "choices": [
+      {
+        "text": "`shellcheck`",
+        "why": "Sim. Ele lê o script como um revisor experiente leria, e não fica entediado."
+      },
+      {
+        "text": "`bash -x`",
+        "why": "Ele mostra o que aconteceu, o que exige rodar o script antes."
+      },
+      {
+        "text": "`bash -v`",
+        "why": "Isso ecoa as linhas antes de rodá-las, sem expandir."
+      },
+      {
+        "text": "`declare -p` em cada variável, uma a uma",
+        "why": "Útil quando você já suspeita de um valor, e não inspeciona mais nada."
+      }
+    ]
+  },
+  "ex-wthvms5p": {
+    "prompt": "Ponha o topo de um script bem construído em ordem.",
+    "items": [
+      "#!/usr/bin/env bash",
+      "set -euo pipefail",
+      "usage() { … }",
+      "analise os argumentos",
+      "confira que os argumentos servem",
+      "work=$(mktemp -d)",
+      "trap 'rm -rf \"$work\"' EXIT",
+      "faça o trabalho"
+    ],
+    "trap": "O trap vai depois da coisa que ele limpa, não no fim do arquivo."
+  },
+  "ex-z8hzhcf0": {
+    "prompt": "Uma linha de um script diz `rm -rf $DEST/old`. Nomeie a pior coisa que pode acontecer.",
+    "hint": "O que é o `$DEST` se a atribuição três linhas acima tivesse um erro de digitação?",
+    "choices": [
+      {
+        "text": "O comando falha com um erro de sintaxe",
+        "why": "Ele está sintaticamente perfeito, que é o problema."
+      },
+      {
+        "text": "Ele apaga o `/old` na raiz do disco",
+        "why": "Correto. Uma variável vazia fecha o caminho, em silêncio, e o comando dá certo."
+      },
+      {
+        "text": "O `rm` recusa porque o caminho é relativo",
+        "why": "O caminho começa com uma barra de qualquer jeito."
+      },
+      {
+        "text": "O shell avisa que a variável estava vazia",
+        "why": "Só o `set -u` produz esse aviso, e a linha não o tem."
+      }
+    ]
+  },
+  "ex-arh1mc1f": {
+    "prompt": "Ligue cada sintoma à configuração que o teria pegado.",
+    "hint": "Três são opções do `set` e uma é uma ferramenta à parte.",
+    "pairs": [
+      {
+        "left": "um nome de variável errado virou string vazia",
+        "right": "set -u"
+      },
+      {
+        "left": "um comando que falhou foi seguido de mais seis",
+        "right": "set -e"
+      },
+      {
+        "left": "um pipeline informou sucesso depois de o grep não achar nada",
+        "right": "set -o pipefail"
+      },
+      {
+        "left": "uma aspa faltando num nome de arquivo com espaço",
+        "right": "shellcheck"
+      }
+    ],
+    "right_distractors": [
+      "bash -n",
+      "trap ERR"
+    ]
+  },
+  "ex-x0tzx525": {
+    "prompt": "Qual linha repassa com segurança todo argumento que o script recebeu para outro comando?",
+    "hint": "Dois argumentos entrando devem ser dois saindo.",
+    "choices": [
+      {
+        "text": "`other $*`",
+        "why": "Juntados e então divididos de novo, então um valor com espaço é cortado."
+      },
+      {
+        "text": "`other \"$*\"`",
+        "why": "Isso produz um argumento contendo todos eles."
+      },
+      {
+        "text": "`other $@`, sem aspas",
+        "why": "As aspas são o que fazem o `$@` preservar as fronteiras."
+      },
+      {
+        "text": "`other \"$@\"`",
+        "why": "Correto. Uma palavra entre aspas por argumento, seja lá o que houver dentro."
+      }
+    ]
+  },
+  "ex-pxzds0bz": {
+    "prompt": "Transforme um glob sem correspondência em zero iterações em vez de uma: `shopt -s ____`",
+    "hint": "Uma palavra, oito letras."
+  },
+  "ex-cpgmy0xn": {
+    "prompt": "Um script conta linhas em `total` dentro de `cat f | while read l; do total=$((total+1)); done` e o `total` é 0 depois. Qual é o menor conserto?",
+    "hint": "De que lado do pipe está o laço?",
+    "choices": [
+      {
+        "text": "`done < f`, tirando o `cat` e o pipe",
+        "why": "Correto. Sem pipe não há subshell, e some um processo de quebra."
+      },
+      {
+        "text": "`export total` antes do laço",
+        "why": "Exportar manda um valor para um filho; não traz um de volta."
+      },
+      {
+        "text": "`total=$((total+1))` escrito como `(( total++ ))`",
+        "why": "A aritmética estava certa; o problema é onde ela aconteceu."
+      },
+      {
+        "text": "`local total` no topo do script",
+        "why": "O `local` é para funções, e não mudaria nada aqui."
+      }
+    ]
+  },
+  "ex-j4423eb5": {
+    "prompt": "Você precisa do diretório para o qual um caminho aponta, sem iniciar processo. Qual?",
+    "hint": "O operador `%` remove por trás.",
+    "choices": [
+      {
+        "text": "`${p##*/}`",
+        "why": "Isso dá o nome do arquivo — é o `basename`."
+      },
+      {
+        "text": "`$(dirname \"$p\")`",
+        "why": "Resposta certa, exigência errada: isso inicia um processo."
+      },
+      {
+        "text": "`${p%/*}`",
+        "why": "Correto. Remova a correspondência mais curta terminando na última barra, e sobra o diretório."
+      },
+      {
+        "text": "`${p%%/*}`",
+        "why": "A mais longa por trás deixa uma string vazia num caminho absoluto."
+      }
+    ]
+  },
+  "ex-pk5k2ayq": {
+    "prompt": "Quais destas são verdade para o `[[ ]]` e não para o `[ ]`?",
+    "hint": "Uma delas é por que o `[ $x = y ]` quebra com um `x` vazio.",
+    "choices": [
+      {
+        "text": "expansões sem aspas não são divididas em palavras",
+        "why": "É sintaxe do shell, então ele analisa por dentro em vez de expandir em argumentos."
+      },
+      {
+        "text": "o `==` casa com um padrão glob",
+        "why": "O `[[ $f == *.log ]]` é um padrão; o `[ ]` compara o texto que recebeu."
+      },
+      {
+        "text": "o `=~` casa com uma expressão regular",
+        "why": "O `[` não tem esse operador."
+      },
+      {
+        "text": "existe no dash tanto quanto no bash",
+        "why": "É uma palavra-chave do bash, que é o único motivo para ainda escrever `[ ]`."
+      },
+      {
+        "text": "consegue testar se um arquivo é um diretório",
+        "why": "Os dois fazem `-d`; os testes de arquivo são compartilhados."
+      }
+    ]
+  },
+  "ex-7ehqm877": {
+    "prompt": "Uma função imprime uma linha de progresso e devolve um número. Quem chama recebe as duas. Para onde a linha de progresso deve ir?",
+    "hint": "A substituição de comando captura um dos dois fluxos.",
+    "choices": [
+      {
+        "text": "Para uma variável que quem chamou lê depois",
+        "why": "Isso é mais maquinário do que o problema pede."
+      },
+      {
+        "text": "Para a saída de erro, com `>&2`",
+        "why": "Correto. O `$( )` captura só a saída padrão, então a resposta fica limpa."
+      },
+      {
+        "text": "Para um arquivo de log nomeado na função",
+        "why": "Funciona e tira a mensagem de quem está olhando."
+      },
+      {
+        "text": "Para lugar nenhum — tire a linha de progresso",
+        "why": "Saída de progresso é útil; ela só pertence ao outro fluxo."
+      }
+    ]
+  },
+  "ex-b36r5g44": {
+    "prompt": "Ponha estes passos de depuração na ordem em que você deve pegá-los.",
+    "items": [
+      "shellcheck script.sh",
+      "bash -n script.sh",
+      "bash -x script.sh",
+      "echo \"DEBUG: [$var]\" >&2"
+    ],
+    "trap": "Dois deles não precisam que o script rode, e esses vêm primeiro."
+  },
+  "ex-g2pv70fj": {
+    "prompt": "Qual destes para um script sob `set -e`?",
+    "hint": "Três dos quatro são os buracos.",
+    "choices": [
+      {
+        "text": "`grep missing file` como condição de um `if`",
+        "why": "Uma condição pode ser falsa."
+      },
+      {
+        "text": "`false || echo ok`",
+        "why": "A falha está à esquerda do `||`, então você está tratando dela."
+      },
+      {
+        "text": "um comando que falha dentro de uma função usada como condição",
+        "why": "A suspensão cobre a chamada inteira."
+      },
+      {
+        "text": "`cp /etc/nothing /tmp/x` numa linha sozinha",
+        "why": "Correto — o caso simples, e aquele para o qual o `-e` de fato serve."
+      }
+    ]
+  },
+  "ex-m8cfe5sk": {
+    "prompt": "Noventa por cento dos bugs de aspas somem com um hábito. Complete-o, para a variável `f`: escreva sempre `____`",
+    "hint": "Quatro caracteres."
+  },
+  "ex-dkysbtdd": {
+    "prompt": "Um parser de opções lê `-t` e pega o valor dele do `$2`. Quantos `shift` aquele ramo precisa?",
+    "hint": "Conte as palavras que o ramo gastou.",
+    "choices": [
+      {
+        "text": "Dois",
+        "why": "Correto — um para a opção e um para o valor, que é por que o ramo tem um `shift` próprio a mais."
+      },
+      {
+        "text": "Um, no fim do laço",
+        "why": "Isso consome a opção e deixa o valor para ser lido como alvo."
+      },
+      {
+        "text": "Três, para limpar a opção inteira",
+        "why": "Uma opção e um valor são duas palavras, não três."
+      },
+      {
+        "text": "Zero vezes, já que o `$2` foi lido direto",
+        "why": "Ler uma palavra não a remove da lista."
+      }
+    ]
+  },
+  "ex-s17fctyx": {
+    "prompt": "Seu script chegou a duzentas linhas, analisa JSON, e calcula uma média. O que isso sugere?",
+    "hint": "Três dos pontos fracos do bash estão nessa frase.",
+    "choices": [
+      {
+        "text": "Quebre em bibliotecas de funções carregadas com source",
+        "why": "Isso organiza o código e deixa a aritmética e o JSON onde estavam."
+      },
+      {
+        "text": "Troque o `$(( ))` por `bc` em tudo",
+        "why": "Isso conserta as frações e nenhum dos outros dois."
+      },
+      {
+        "text": "Reescreva em Python",
+        "why": "Isso. Dados estruturados e aritmética de verdade são as duas coisas em que o bash é pior, e duzentas linhas é uma reescrita barata."
+      },
+      {
+        "text": "Acrescente `set -euo pipefail` e mais testes",
+        "why": "Vale fazer de qualquer forma, e não resolve o que o script está sendo pedido a fazer."
+      }
+    ]
+  },
+  "ex-31gkkyen": {
+    "prompt": "O `./tidy.sh` sai com 1 num caminho de erro e não deixa arquivo temporário para trás. O que fez isso funcionar?",
+    "hint": "A saída não foi a que o autor estava pensando.",
+    "choices": [
+      {
+        "text": "O `rm` na última linha do script",
+        "why": "Um caminho de erro não chega à última linha."
+      },
+      {
+        "text": "Um `trap` no `EXIT`, armado cedo",
+        "why": "Correto. O `EXIT` dispara em qualquer saída, inclusive nas que você não planejou."
+      },
+      {
+        "text": "O `mktemp` apagando o arquivo quando o processo termina",
+        "why": "O `mktemp` o cria e depois não tem mais nada a ver com ele."
+      },
+      {
+        "text": "O `set -e`, que limpa antes de parar",
+        "why": "Ele decide quando parar e não limpa nada."
+      }
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "le-82pt20zt",
+  "title": "Bash scripting: variables, conditionals, loops and functions",
+  "sections": [
+    {
+      "id": "se-48ecjhjj",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-ef771z5a",
+          "version": 1,
+          "script": "At the end of the last lesson there was a rule about when to stop: when the one-liner needs a second condition and a third variable, it has become a program. This lesson is what to do then. {{rule}} And the surprise is that there is almost nothing new to learn. A bash script is the commands you already type, in a file, in order. That is the whole idea, and it is why this is the language operations people end up writing, whatever they wanted to write instead. {{idea}} What the file adds is four things. A name, so you can run it again. Arguments, so it can run against something other than what you were looking at. Conditions, so it can decide. And loops, so it can do the same thing to twenty machines. {{four}} The things that will bite you are not the loops. They are quoting, which decides whether a filename with a space in it is one thing or two, and the empty variable, which turns a path into a slash. Both get a section, and both get shown failing rather than described. {{bite}} We finish by writing one real script: a report over the log from the last lesson, with arguments, a usage message, error handling and a temporary directory it cleans up. About sixty lines. It passes shellcheck, which is also in this lesson. {{finish}} {{title}}",
+          "seconds": 118,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-1vmn3n58", "slug": "a-file-with-a-name", "kind": "reading" },
+    { "id": "se-jh35yh1f", "slug": "variables", "kind": "reading" },
+    { "id": "se-9540sk5p", "slug": "quoting", "kind": "reading" },
+    { "id": "se-x5bhheqy", "slug": "arguments", "kind": "reading" },
+    { "id": "se-72cp1hh9", "slug": "exit-status", "kind": "reading" },
+    { "id": "se-ayx3cf2s", "slug": "conditionals", "kind": "reading" },
+    { "id": "se-fmkcv0w7", "slug": "comparing-things", "kind": "reading" },
+    { "id": "se-n6ztt310", "slug": "case", "kind": "reading" },
+    { "id": "se-jnsw7a3e", "slug": "loops", "kind": "reading" },
+    { "id": "se-767xv6dy", "slug": "reading-input", "kind": "reading" },
+    { "id": "se-4h6cxkd0", "slug": "arrays", "kind": "reading" },
+    { "id": "se-nrw3f4y4", "slug": "functions", "kind": "reading" },
+    { "id": "se-4tyc7xqt", "slug": "substitution", "kind": "reading" },
+    { "id": "se-rdy5hd12", "slug": "parameter-expansion", "kind": "reading" },
+    { "id": "se-4jj2hg6a", "slug": "traps-and-temp-files", "kind": "reading" },
+    { "id": "se-ma4h1k17", "slug": "debugging", "kind": "reading" },
+    {
+      "id": "se-ev7bygh2",
+      "slug": "a-real-script",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-8v1547yw",
+          "version": 1,
+          "script": "One script, written properly, and every piece of it is something from this lesson. The job: take the log from lesson eight and print a report. {{job}} It starts with a shebang and strict mode. env bash rather than bin bash, so it finds whichever bash is first on the path. set minus e u o pipefail: stop on an error, stop on an unset variable, and let a failure in the middle of a pipeline count. Three characters of setting that turn a class of silent wrong answers into a stopped script. {{strict}} Then two functions. usage prints the help, out of a heredoc, so the text is written once. die prints a message to standard error and exits one — because the message belongs on standard error, so that somebody redirecting the report to a file still sees why it did not appear. {{functions}} Then the argument loop: while dollar hash is greater than zero, case on dollar one, shift. Minus t takes a value and shifts twice. Minus h prints usage and exits zero, because asking for help is not an error. Anything else starting with a dash is an error and exits two. {{args}} Then the checks, and this is the part people skip. Is there a logfile. Can I read it. Is the threshold a number. Four lines, each of which turns a confusing failure later into a clear one now — and the one that checks minus t uses the regex match from the comparing section, because a threshold of the word lots must not reach awk. {{checks}} mktemp minus d for a working directory, and immediately after it, trap remove EXIT. Not at the end — immediately after, on the next line, so that every exit from this point on cleans up, including the error exits above it in the file and including a Control C. {{trap}} The body is lesson eight: awk to pull two columns into two files, wc to count, sort and uniq minus c to tally. Then a while read loop over that tally to printf it into columns, because printf minus percent twenty four s lines the paths up and echo does not. {{body}} And the run. Twelve hundred requests, fifteen over a second, and one endpoint with all fifteen. Minus t three thousand, and it is twelve — the same twelve the last lesson found by hand. Minus t ninety nine thousand and it says nothing slow and exits before the second table, and the temporary directory is still gone, because the trap does not care which exit it was. {{run}}",
+          "seconds": 232,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-cf7zmevs",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-v0121qam",
+          "version": 1,
+          "script": "Three things, and one of them is about when not to use any of this. {{three}} The first is quoting. Double quote every expansion, every time, including the ones you are sure about. The bug it prevents does not appear on your machine with your filenames; it appears on a machine where somebody put a space in a directory name in two thousand and nineteen, and it appears as a script that half worked. Dollar at in double quotes, dollar f in double quotes, and the habit costs nothing. {{quote}} The second is that strict mode goes at the top of every script you write from now on. set minus e u o pipefail. It has holes — a failure inside an if condition does not stop anything, and you saw four of them in one script — but the holes are places it does not help, not places it hurts. {{strict}} The third is shellcheck. Install it, run it, and fix what it says before you run the script. It found four real bugs in a nine-line file in this lesson, including a comparison that was silently creating a file called five. It is faster than you are and it does not get bored. {{shellcheck}} And the honest limit. Bash is very good at running other programs in order and reacting to whether they worked. It is bad at arithmetic, bad at anything with a fraction in it, bad at structured data, and has no real error handling. When your script grows a second data structure, or needs to parse JSON, or does arithmetic that matters, it wants to be Python. Nobody has ever regretted that rewrite at two hundred lines; plenty of people have regretted it at eight hundred. {{limit}} Lesson ten is PowerShell — the same job on Windows, with a genuinely different idea underneath: the pipeline carries objects rather than text. {{next}}",
+          "seconds": 152,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-qwzry0nj", "slug": "drill", "kind": "practice" }
+  ]
+}

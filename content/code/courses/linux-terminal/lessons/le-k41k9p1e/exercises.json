@@ -1,0 +1,2118 @@
+[
+  {
+    "id": "ex-mdbfc6ec",
+    "version": 1,
+    "section": "the-three-streams",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ls logs nosuchdir > out.txt` and the error still appears on screen. Why?",
+    "hint": "The command wrote to two places and you redirected one of them.",
+    "choices": [
+      {
+        "text": "The redirection was applied after `ls` had already printed its error",
+        "correct": false,
+        "why": "Redirection is set up before the program starts, which is why it works on every command."
+      },
+      {
+        "text": "`ls` writes errors directly to the terminal device",
+        "correct": false,
+        "why": "It writes to descriptor 2, which happens to be the terminal because nothing changed it."
+      },
+      {
+        "text": "`>` redirects stdout; the error went to stderr",
+        "correct": true,
+        "why": "Right — two streams, and `>` moves one of them."
+      },
+      {
+        "text": "The directory does not exist, so the error had no destination",
+        "correct": false,
+        "why": "The listing of `logs` was redirected successfully; the error is a separate stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fvd0ag5",
+    "version": 1,
+    "section": "the-three-streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ls` printed five names across one line on screen and one per line into a file. What happened?",
+    "hint": "Something asked a question about where its output was going.",
+    "choices": [
+      {
+        "text": "The file has no width, so `ls` used the longest possible line",
+        "correct": false,
+        "why": "`ls` uses one per line for a file, which is the opposite of a long line."
+      },
+      {
+        "text": "`ls` checks whether its output is a terminal",
+        "correct": true,
+        "why": "Right — the `isatty()` question, and `grep` and `ps` do the same thing."
+      },
+      {
+        "text": "The shell reformatted the output on its way to the file",
+        "correct": false,
+        "why": "The shell connects descriptors; it does not touch the bytes."
+      },
+      {
+        "text": "Columns are added by the terminal emulator, not by `ls`",
+        "correct": false,
+        "why": "The terminal draws characters it is given; the spacing came from `ls`."
+      }
+    ]
+  },
+  {
+    "id": "ex-41hze2js",
+    "version": 1,
+    "section": "the-three-streams",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The descriptor number a program writes its error messages to: ____",
+    "hint": "A single digit.",
+    "blanks": [
+      {
+        "accept": [
+          "2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7nmabb8z",
+    "version": 1,
+    "section": "redirection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ls nosuchdir 2>&1 > out.txt` leaves the error on screen and `out.txt` empty. Why?",
+    "hint": "Read the two operators left to right, and ask what descriptor 1 was at each moment.",
+    "choices": [
+      {
+        "text": "`2>&1` is ignored when a `>` follows it on the same line",
+        "correct": false,
+        "why": "Both are applied; the question is what each one saw when it ran."
+      },
+      {
+        "text": "`out.txt` was truncated after the error was written to it",
+        "correct": false,
+        "why": "The error was never written to the file; it went to the terminal."
+      },
+      {
+        "text": "`2>&1` needs `&>`, which is the bash shorthand",
+        "correct": false,
+        "why": "`2>&1` works on its own, in the other order."
+      },
+      {
+        "text": "When `2>&1` ran, descriptor 1 was still the terminal",
+        "correct": true,
+        "why": "Right — `2>&1` copies where 1 points at that moment, and `>` moved 1 afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zmfhg5e",
+    "version": 1,
+    "section": "redirection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sort file.txt > file.txt` leaves the file empty. When did the data go?",
+    "hint": "One of the two things happens before the other.",
+    "choices": [
+      {
+        "text": "The shell truncated the file before `sort` opened it",
+        "correct": true,
+        "why": "Right — `>` empties the target first, so `sort` read an empty file."
+      },
+      {
+        "text": "`sort` failed and wrote no output, leaving the original untouched",
+        "correct": false,
+        "why": "The original is gone, which means something wrote to it."
+      },
+      {
+        "text": "`sort` read the file into memory and crashed before writing",
+        "correct": false,
+        "why": "It did not crash; it read nothing and wrote nothing, successfully."
+      },
+      {
+        "text": "The shell buffered the output and lost it when `sort` exited",
+        "correct": false,
+        "why": "There is no such buffer; output goes to the file as it is produced."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnh4g2ws",
+    "version": 1,
+    "section": "redirection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`some-command | grep error` finds nothing, but you can see the word `error` on your screen. What is happening?",
+    "hint": "A pipe carries one stream.",
+    "choices": [
+      {
+        "text": "`grep` needs `-i`, because the message is capitalised",
+        "correct": false,
+        "why": "Possible and easy to rule out, and it would not explain a message you can see clearly."
+      },
+      {
+        "text": "The command buffers its output, so `grep` sees it late",
+        "correct": false,
+        "why": "Buffering delays output; it does not make `grep` miss it."
+      },
+      {
+        "text": "It is on stderr, which a bare `|` does not carry",
+        "correct": true,
+        "why": "Right — `2>&1 |` is the form that searches both."
+      },
+      {
+        "text": "`grep` reads just the first line of a pipe without `-a`",
+        "correct": false,
+        "why": "`grep` reads the whole stream; `-a` is about binary files."
+      }
+    ]
+  },
+  {
+    "id": "ex-k58d5wy7",
+    "version": 1,
+    "section": "redirection",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Write a command's output to a root-owned file from a pipeline, since your shell cannot: `some-command | sudo ____ /root/out.txt`",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "tee"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y725hde4",
+    "version": 1,
+    "section": "pipes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`grep pattern huge.log | head -5` returns instantly on a ten-gigabyte file. Why?",
+    "hint": "Two programs run at the same time, and one of them stops early.",
+    "choices": [
+      {
+        "text": "`grep` reads the file backwards, so the first hits come first",
+        "correct": false,
+        "why": "`grep` reads forwards; the early return is about the other end of the pipe."
+      },
+      {
+        "text": "`head` exits after five lines and SIGPIPE ends `grep`",
+        "correct": true,
+        "why": "Right — section 93's signal, with the whole pipeline finishing before `grep` is done."
+      },
+      {
+        "text": "The shell runs `head` first and afterwards starts `grep`",
+        "correct": false,
+        "why": "Both start together; that is what a pipe is."
+      },
+      {
+        "text": "`grep` counts matches and stops when `head` has enough",
+        "correct": false,
+        "why": "`grep` has no idea how many `head` wants; the kernel ends it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qw94k0d0",
+    "version": 1,
+    "section": "pipes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two pipelines give the same answer. Which is better, and why?\n\n```\nsort access.log | cut -d\" \" -f9 | uniq -c\ncut -d\" \" -f9 access.log | sort | uniq -c\n```",
+    "hint": "One of them sorts a hundred and fifty characters per line and the other sorts three.",
+    "choices": [
+      {
+        "text": "The first, because sorting whole lines groups related requests",
+        "correct": false,
+        "why": "Grouping by whole line is not what the question asks for, and it costs more."
+      },
+      {
+        "text": "Neither; they do identical work in a different order",
+        "correct": false,
+        "why": "The work differs: one sorts long lines and the other sorts short fields."
+      },
+      {
+        "text": "The second, because `cut` throws away most of each line first",
+        "correct": true,
+        "why": "Right — reduce before you sort, and on a large log that is minutes."
+      },
+      {
+        "text": "The first, because `sort` is faster on its original input order",
+        "correct": false,
+        "why": "Input order does not change what `sort` has to compare."
+      }
+    ]
+  },
+  {
+    "id": "ex-6awdy1ha",
+    "version": 1,
+    "section": "pipes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the pipeline that answers \"which status codes, and how many of each\": `cut -d\" \" -f9 access.log | sort | ____ -c | sort -rn`",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "uniq"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gyee8jc0",
+    "version": 1,
+    "section": "looking-at-a-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You want everything in a CSV except the header line. Which command?",
+    "hint": "One of these counts from the top and the rest count from the bottom.",
+    "choices": [
+      {
+        "text": "`tail -2 f.csv`, taking the last two lines",
+        "correct": false,
+        "why": "That gives the last two lines, which is the opposite end."
+      },
+      {
+        "text": "`head -n -1 file.csv`",
+        "correct": false,
+        "why": "That drops the *last* line, and the header is the first."
+      },
+      {
+        "text": "`tail -n 2 file.csv`",
+        "correct": false,
+        "why": "The same as `tail -2`; the plus sign is what changes the meaning."
+      },
+      {
+        "text": "`tail -n +2 f.csv`",
+        "correct": true,
+        "why": "Right — the `+` means \"from line 2 to the end\"."
+      }
+    ]
+  },
+  {
+    "id": "ex-04k2gjcm",
+    "version": 1,
+    "section": "looking-at-a-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A config file will not parse and every line looks correct. Which command shows you why?",
+    "hint": "The problem is something you cannot see.",
+    "choices": [
+      {
+        "text": "`cat -A file`",
+        "correct": true,
+        "why": "Right — it shows tabs as `^I`, line ends as `$` and carriage returns as `^M`."
+      },
+      {
+        "text": "`cat -n file`",
+        "correct": false,
+        "why": "Numbering the lines helps you report the problem and not find it."
+      },
+      {
+        "text": "`wc -L file`",
+        "correct": false,
+        "why": "The longest line's length rarely explains a parse failure."
+      },
+      {
+        "text": "`file file`",
+        "correct": false,
+        "why": "It reports the file's type, which is already known to be text."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2e62vm8",
+    "version": 1,
+    "section": "looking-at-a-file",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Watch a log as it grows, in a pager you can scroll back in when you stop: `____ +F app.log`",
+    "hint": "Four letters, and it is the pager `man` uses.",
+    "blanks": [
+      {
+        "accept": [
+          "less"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ff09evez",
+    "version": 1,
+    "section": "grep",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`grep -c o` on the single line `hello world` prints `1`. Why not `2`?",
+    "hint": "Read what the flag counts.",
+    "choices": [
+      {
+        "text": "The second `o` is in a different word, and `grep` counts per word",
+        "correct": false,
+        "why": "`grep` has no idea what a word is unless you ask with `-w`."
+      },
+      {
+        "text": "`-c` counts matching lines, and there is one line",
+        "correct": true,
+        "why": "Right — `grep -o | wc -l` is the way to count occurrences."
+      },
+      {
+        "text": "`grep` stops reading a line after the first match",
+        "correct": false,
+        "why": "It stops looking on that line, which is why `-c` is a line count — but the count is the point."
+      },
+      {
+        "text": "Two matches on one line are collapsed into one by default",
+        "correct": false,
+        "why": "Nothing is collapsed; `-o` prints both."
+      }
+    ]
+  },
+  {
+    "id": "ex-6derjk9j",
+    "version": 1,
+    "section": "grep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are searching a log for the IP address `10.0.1.5`. Which is safest?",
+    "hint": "One of these turns the pattern language off.",
+    "choices": [
+      {
+        "text": "`grep 10.0.1.5 access.log`",
+        "correct": false,
+        "why": "The dots are wildcards, so this also matches `10x0y1z5` if such a string existed."
+      },
+      {
+        "text": "`grep -E '10.0.1.5' access.log`",
+        "correct": false,
+        "why": "The same problem: `-E` does not make a dot literal."
+      },
+      {
+        "text": "`grep -w 10.0.1.5 access.log`",
+        "correct": false,
+        "why": "`-w` fixes word boundaries and leaves the dots as wildcards."
+      },
+      {
+        "text": "`grep -F 10.0.1.5 access.log`",
+        "correct": true,
+        "why": "Right — `-F` means no pattern language, so a dot is a dot."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n5jnvt5",
+    "version": 1,
+    "section": "grep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script under `set -e` stops at a `grep` that found nothing. Is that a bug in the script?",
+    "hint": "Section 99 said what a non-zero status means, and what `grep` means by 1.",
+    "choices": [
+      {
+        "text": "Yes — `grep` should exit 0 when it ran successfully",
+        "correct": false,
+        "why": "Its exit status is deliberately the answer to the question, not a report on whether it ran."
+      },
+      {
+        "text": "No — `grep` failing means the file could not be read",
+        "correct": false,
+        "why": "That is status 2; 1 is a clean search that matched nothing."
+      },
+      {
+        "text": "In effect yes: no match is normal, so wrap it in an `if`",
+        "correct": true,
+        "why": "Right — `if grep -q …; then` or `|| true`, depending on what you meant."
+      },
+      {
+        "text": "No — `set -e` does not act on the last command of a pipeline",
+        "correct": false,
+        "why": "It does; the exemptions are conditions and `&&`/`||` chains."
+      }
+    ]
+  },
+  {
+    "id": "ex-zaryjrmb",
+    "version": 1,
+    "section": "grep",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `grep` flag to what it does.",
+    "hint": "Six flags, and one of them inverts the whole question.",
+    "pairs": [
+      {
+        "left": "-v",
+        "right": "print the lines that do not match"
+      },
+      {
+        "left": "-c",
+        "right": "count matching lines"
+      },
+      {
+        "left": "-o",
+        "right": "print each match on its own line"
+      },
+      {
+        "left": "-l",
+        "right": "print only the names of files that matched"
+      },
+      {
+        "left": "-q",
+        "right": "print nothing; the exit status is the answer"
+      },
+      {
+        "left": "-A2",
+        "right": "also print two lines after each match"
+      }
+    ],
+    "right_distractors": [
+      "search case-insensitively",
+      "match whole words only"
+    ]
+  },
+  {
+    "id": "ex-xh2yj14x",
+    "version": 1,
+    "section": "grep",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Count how many times the word `GET` appears in a log, not how many lines contain it: `grep ____ GET access.log | wc -l`",
+    "hint": "One short flag, and it prints each match on its own line.",
+    "blanks": [
+      {
+        "accept": [
+          "-o"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e3sjagc7",
+    "version": 1,
+    "section": "regular-expressions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `grep -E \"c[^o]t\"` not match the line `ct`?",
+    "hint": "Ask how many characters the pattern describes.",
+    "choices": [
+      {
+        "text": "`[^o]` is a character that is not `o`; `ct` has none",
+        "correct": true,
+        "why": "Right — negation is still one character, not zero."
+      },
+      {
+        "text": "`[^o]` matches only letters, and there is nothing to match",
+        "correct": false,
+        "why": "It matches any single character except `o`, letter or not."
+      },
+      {
+        "text": "`^` inside brackets anchors to the start of the line",
+        "correct": false,
+        "why": "Inside brackets `^` is negation; the anchor meaning is outside them."
+      },
+      {
+        "text": "`grep -E` requires at least three characters in a pattern",
+        "correct": false,
+        "why": "Patterns can be one character long."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxxf391f",
+    "version": 1,
+    "section": "regular-expressions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`grep -oE '\".*\"'` on a line with two quoted strings returns one long match. Why, and what is the fix?",
+    "hint": "Quantifiers take as much as they can.",
+    "choices": [
+      {
+        "text": "`grep` matched the longest line; use `-m1` to stop at the first",
+        "correct": false,
+        "why": "`-m1` limits how many lines are printed, not how much of one line matches."
+      },
+      {
+        "text": "`.*` is greedy, so it runs to the last quote; use `[^\"]*`",
+        "correct": true,
+        "why": "Right — \"anything except the delimiter\" is what you meant, and grep has no lazy quantifier."
+      },
+      {
+        "text": "`-o` concatenates adjacent matches; use `-oE` with `-w`",
+        "correct": false,
+        "why": "`-o` prints matches separately; the two were one match."
+      },
+      {
+        "text": "The quotes need escaping; use `\\\"` on both ends",
+        "correct": false,
+        "why": "A quote is not special in a regex, so escaping it changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7bq9q0ax",
+    "version": 1,
+    "section": "regular-expressions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match a line that is exactly four digits, a dash, two digits, a dash and two digits, and nothing else: `grep -E \"____[0-9]{4}-[0-9]{2}-[0-9]{2}$\"`",
+    "hint": "One character: the anchor for the start of a line.",
+    "blanks": [
+      {
+        "accept": [
+          "^"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jrs57jwk",
+    "version": 1,
+    "section": "cut",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cut -d, -f5,2 data.csv` prints field 2 before field 5. How do you get them the other way round?",
+    "hint": "One of the tools in this lesson prints fields in the order you wrote.",
+    "choices": [
+      {
+        "text": "`cut -d, -f5 -f2 data.csv`",
+        "correct": false,
+        "why": "Repeating `-f` does not change the order; `cut` still outputs in file order."
+      },
+      {
+        "text": "`cut -d, --output-order=5,2 data.csv`",
+        "correct": false,
+        "why": "There is no such option; `cut` has no way to reorder."
+      },
+      {
+        "text": "`awk -F, '{print $5, $2}' data.csv`",
+        "correct": true,
+        "why": "Right — `awk` prints the fields in the order you name them."
+      },
+      {
+        "text": "`cut -d, -f5,2 data.csv | sort -t, -k2`",
+        "correct": false,
+        "why": "Sorting reorders rows, not the columns within a row."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfszabrf",
+    "version": 1,
+    "section": "cut",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file's columns are separated by runs of spaces of different widths. What makes `cut -d\" \"` work on it?",
+    "hint": "The delimiter has to become exactly one character wide.",
+    "choices": [
+      {
+        "text": "`tr -s \" \"` first, squeezing runs to one space",
+        "correct": true,
+        "why": "Right, and `awk` is the alternative, since it splits on runs by default."
+      },
+      {
+        "text": "`cut -d\"  \"` with two spaces in the delimiter",
+        "correct": false,
+        "why": "`-d` takes a single character; two is an error."
+      },
+      {
+        "text": "`cut --whitespace`, which treats runs as one",
+        "correct": false,
+        "why": "No such option exists."
+      },
+      {
+        "text": "`sed 's/ //g'` first, to remove the spaces entirely",
+        "correct": false,
+        "why": "That removes the separators entirely and joins the columns together."
+      }
+    ]
+  },
+  {
+    "id": "ex-emwrkzwy",
+    "version": 1,
+    "section": "cut",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Take every field from the third to the end of the line: `cut -d, -f____ data.csv`",
+    "hint": "A digit and one character.",
+    "blanks": [
+      {
+        "accept": [
+          "3-"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b25c85zp",
+    "version": 1,
+    "section": "sort",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sort` on the numbers 26, 31, 109, 113 puts 109 first. What is wrong?",
+    "hint": "It is doing exactly what it was asked.",
+    "choices": [
+      {
+        "text": "The numbers have different widths and need padding to line up",
+        "correct": false,
+        "why": "Padding would fix it and the flag is simpler and does not change the data."
+      },
+      {
+        "text": "`sort` needs `-u` to compare values rather than lines",
+        "correct": false,
+        "why": "`-u` drops duplicates; it has nothing to do with the comparison."
+      },
+      {
+        "text": "The file has trailing whitespace, which sorts before digits",
+        "correct": false,
+        "why": "Possible in general, and here the order is exactly what alphabetical gives."
+      },
+      {
+        "text": "That is alphabetical order; it needs `-n`",
+        "correct": true,
+        "why": "Right — `1` sorts before `2`, correctly, on text that happens to be numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdy7z0tp",
+    "version": 1,
+    "section": "sort",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`sort -t, -k5` sorts by more than field 5. What does `-k5` actually mean?",
+    "hint": "A key is a range, and you gave one end of it.",
+    "choices": [
+      {
+        "text": "Field 5, plus any field that ties with it",
+        "correct": false,
+        "why": "Ties are broken by the whole line unless you say otherwise, which is a different rule."
+      },
+      {
+        "text": "From field 5 onward, to the end of the line",
+        "correct": true,
+        "why": "Right — `-k5,5` is the way to say field 5 alone."
+      },
+      {
+        "text": "Each field up to and including 5",
+        "correct": false,
+        "why": "The range runs the other way, from the named field onwards."
+      },
+      {
+        "text": "Field 5, unless it is empty, in which case field 6",
+        "correct": false,
+        "why": "`sort` does not fall through to the next field."
+      }
+    ]
+  },
+  {
+    "id": "ex-hsgngybw",
+    "version": 1,
+    "section": "sort",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sort `du -h` output so that `2.5M` comes before `1G`: `du -h | sort ____`",
+    "hint": "One short flag, and it is not `-n`.",
+    "blanks": [
+      {
+        "accept": [
+          "-h"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qssks4xe",
+    "version": 1,
+    "section": "uniq",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`printf \"a\\na\\nb\\na\\n\" | uniq` prints three lines. Why not two?",
+    "hint": "The name promises more than the command does.",
+    "choices": [
+      {
+        "text": "`uniq` keeps the first and the last occurrence of a value",
+        "correct": false,
+        "why": "It keeps one per *run*, and there were three runs here."
+      },
+      {
+        "text": "`uniq` needs `-u` to remove duplicates",
+        "correct": false,
+        "why": "`-u` keeps values that appear exactly once, which is a different thing again."
+      },
+      {
+        "text": "It collapses adjacent duplicates; the last `a` was not",
+        "correct": true,
+        "why": "Right — sort first, always."
+      },
+      {
+        "text": "`uniq` compares whole lines including trailing whitespace",
+        "correct": false,
+        "why": "It does, and these lines are identical; adjacency is what separated them."
+      }
+    ]
+  },
+  {
+    "id": "ex-effd4nqd",
+    "version": 1,
+    "section": "uniq",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline reports `5 /` three times in its top four results. What went wrong?",
+    "hint": "The counts are small and the same value appears more than once.",
+    "choices": [
+      {
+        "text": "`uniq -c` ran on unsorted input and counted runs",
+        "correct": true,
+        "why": "Right — each scattered group of five was counted separately."
+      },
+      {
+        "text": "`sort -rn` compared the counts as text, so the order is wrong",
+        "correct": false,
+        "why": "That would misorder the lines; it would not produce the same path three times."
+      },
+      {
+        "text": "`cut` took the wrong field, so the paths are from another column",
+        "correct": false,
+        "why": "The paths are real; the counts are what is wrong."
+      },
+      {
+        "text": "The log genuinely contains three different paths that print the same",
+        "correct": false,
+        "why": "They are identical strings; nothing renders them the same by accident."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6r4e9xe",
+    "version": 1,
+    "section": "uniq",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Find the values that appear more than once in a sorted list: `sort ids.txt | uniq ____`",
+    "hint": "One short flag.",
+    "blanks": [
+      {
+        "accept": [
+          "-d"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9bfk2een",
+    "version": 1,
+    "section": "counting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`wc -l` says 0 and `grep -c .` says 1 on the same one-line file. Which is right?",
+    "hint": "They count different things, and the file is missing something.",
+    "choices": [
+      {
+        "text": "`wc -l`, since a file with no newline has no complete line",
+        "correct": false,
+        "why": "That is a defensible reading and it is not the only one; both answers are correct."
+      },
+      {
+        "text": "Both: one counts newlines, the other non-empty lines",
+        "correct": true,
+        "why": "Right — and the file has text with no newline at the end."
+      },
+      {
+        "text": "`grep -c .`, since `wc -l` struggles with a file lacking a newline",
+        "correct": false,
+        "why": "`wc` read it fine; it counted the newlines it found, which was none."
+      },
+      {
+        "text": "Neither; the file is corrupt and should be rewritten",
+        "correct": false,
+        "why": "A file with no trailing newline is common and perfectly valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8kgv95j",
+    "version": 1,
+    "section": "counting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many *different* addresses are in a log?",
+    "hint": "Two of these count lines and one counts values.",
+    "choices": [
+      {
+        "text": "`wc -l a.log`, which counts the requests",
+        "correct": false,
+        "why": "That counts requests, which is a much larger number."
+      },
+      {
+        "text": "`cut -d\" \" -f1 a.log | wc -l`, repeats included",
+        "correct": false,
+        "why": "That counts the addresses, including every repeat of each one."
+      },
+      {
+        "text": "`grep -c \"^10\\.\" a.log`, for one prefix",
+        "correct": false,
+        "why": "That counts one prefix, and counts repeats."
+      },
+      {
+        "text": "`cut -d\" \" -f1 a.log | sort -u | wc -l`",
+        "correct": true,
+        "why": "Right — `sort -u` collapses repeats, so the count is of distinct values."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcm9zman",
+    "version": 1,
+    "section": "tr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`echo \"cat attack\" | tr cat dog` prints `dog oggodk`. What did `tr` actually do?",
+    "hint": "It has no idea what a word is.",
+    "choices": [
+      {
+        "text": "It replaced the first occurrence of `cat` and mangled the rest",
+        "correct": false,
+        "why": "It never looked for `cat` at all; it looked for the letters separately."
+      },
+      {
+        "text": "It matched `cat` case-insensitively and over-applied the result",
+        "correct": false,
+        "why": "Case had nothing to do with it; all the text was lowercase."
+      },
+      {
+        "text": "It mapped `c` to `d`, `a` to `o` and `t` to `g`, everywhere",
+        "correct": true,
+        "why": "Right — three character-for-character substitutions, applied to every letter."
+      },
+      {
+        "text": "It treated `dog` as a pattern and `cat` as the replacement",
+        "correct": false,
+        "why": "The order is source then destination, and it is not a pattern either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-4z96pg9t",
+    "version": 1,
+    "section": "tr",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Strip the carriage returns from a file that came from Windows: `tr ____ '\\r' < windows.txt > unix.txt`",
+    "hint": "One short flag.",
+    "blanks": [
+      {
+        "accept": [
+          "-d"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m8t03kt0",
+    "version": 1,
+    "section": "sed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sed \"s/cat/dog/\"` on `the cat sat on the cat` leaves the second `cat`. Why?",
+    "hint": "One letter is missing from the command.",
+    "choices": [
+      {
+        "text": "`sed` stops at the first match to avoid overlapping replacements",
+        "correct": false,
+        "why": "Overlap is not the reason; the flag simply was not given."
+      },
+      {
+        "text": "Substitution replaces the first match per line unless `g` is given",
+        "correct": true,
+        "why": "Right — and `g` is not the default, which surprises everybody once."
+      },
+      {
+        "text": "The second `cat` is at the end of the line, where `$` would be needed",
+        "correct": false,
+        "why": "Position does not matter; the same thing happens mid-line."
+      },
+      {
+        "text": "`sed` needs `-E` for a pattern to match more than once",
+        "correct": false,
+        "why": "`-E` changes the pattern syntax, not how many replacements happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-ab7b4px9",
+    "version": 1,
+    "section": "sed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are replacing `/usr/local` with `/opt` in a file. Which command is readable?",
+    "hint": "The separator is whatever character follows the `s`.",
+    "choices": [
+      {
+        "text": "`sed 's/\\/usr\\/local/\\/opt/'`",
+        "correct": false,
+        "why": "That works and nobody can check it by eye, which is the point of the alternative."
+      },
+      {
+        "text": "`sed 's/usr.local/opt/'`",
+        "correct": false,
+        "why": "The unescaped dots are wildcards and the leading slash is gone."
+      },
+      {
+        "text": "`sed -F 's:/usr/local:/opt:'`",
+        "correct": false,
+        "why": "`sed` has no `-F`; that flag belongs to `grep`."
+      },
+      {
+        "text": "`sed 's|/usr/local|/opt|'`",
+        "correct": true,
+        "why": "Right — a different separator, and no escaping at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhr9rzqn",
+    "version": 1,
+    "section": "sed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `sed -n '2,4p'` print, and what would `sed '2,4p'` print instead?",
+    "hint": "One flag turns off something that happens by default.",
+    "choices": [
+      {
+        "text": "Lines 2 to 4; without `-n`, every line with 2 to 4 repeated",
+        "correct": true,
+        "why": "Right — `-n` suppresses the automatic printing that `p` then re-enables selectively."
+      },
+      {
+        "text": "Lines 2 to 4 in both cases; `-n` only affects the exit status",
+        "correct": false,
+        "why": "`-n` changes the output, which is its whole purpose."
+      },
+      {
+        "text": "Lines 2 to 4; without `-n`, nothing, because `p` needs `-n`",
+        "correct": false,
+        "why": "`p` works either way; `-n` decides whether everything else is printed too."
+      },
+      {
+        "text": "Nothing; `-n` and `p` cancel out and `2,4p` prints lines 2 to 4",
+        "correct": false,
+        "why": "The pairing is the other way round: `-n` plus `p` is the selective form."
+      }
+    ]
+  },
+  {
+    "id": "ex-dygsyy1b",
+    "version": 1,
+    "section": "sed",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Edit a file in place and keep a copy of the original: `sed ____ 's/old/new/g' config.txt`",
+    "hint": "Two characters, a dot, and three more.",
+    "blanks": [
+      {
+        "accept": [
+          "-i.bak"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-33rszqz7",
+    "version": 1,
+    "section": "awk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `awk '$9 >= 400'` do something `grep` cannot?",
+    "hint": "One of them compares numbers and the other compares shapes.",
+    "choices": [
+      {
+        "text": "`awk` reads the whole file into memory and `grep` streams it",
+        "correct": false,
+        "why": "Both stream; neither loads the file."
+      },
+      {
+        "text": "`awk` understands the log format and `grep` does not",
+        "correct": false,
+        "why": "Neither knows anything about logs; one was told which field to look at."
+      },
+      {
+        "text": "Arithmetic on a named field, not a text pattern",
+        "correct": true,
+        "why": "Right — `grep` would have to describe the shape of a number and would catch others."
+      },
+      {
+        "text": "`grep` struggles with three-digit numbers unless `-E` is used",
+        "correct": false,
+        "why": "It can, with or without `-E`; matching is not the limitation."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpdsmmzb",
+    "version": 1,
+    "section": "awk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`awk '{print NF}' access.log | sort -u` prints 12, 15, 18 and 20. What does that tell you?",
+    "hint": "Every line looks the same shape and four different counts came back.",
+    "choices": [
+      {
+        "text": "The file is corrupt and some lines are truncated",
+        "correct": false,
+        "why": "The lines are complete; something in them has a variable number of spaces."
+      },
+      {
+        "text": "`awk` is miscounting because the delimiter was not set",
+        "correct": false,
+        "why": "The default splitting on whitespace is what produced these counts, correctly."
+      },
+      {
+        "text": "Four different log formats were concatenated into one file",
+        "correct": false,
+        "why": "One format, with a free-text field in it, produces this on its own."
+      },
+      {
+        "text": "A field holds spaces, so later positional fields drift",
+        "correct": true,
+        "why": "Right — the quoted user-agent, and `$NF` still works because it counts backwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vv9ye1g",
+    "version": 1,
+    "section": "awk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `awk '{c[$7]++} END {for (p in c) print c[p], p}'` do?",
+    "hint": "The array is subscripted by a string.",
+    "choices": [
+      {
+        "text": "Counts each distinct value of field 7",
+        "correct": true,
+        "why": "Right — the same answer as `sort | uniq -c`, in one pass and without sorting."
+      },
+      {
+        "text": "Prints field 7 of each line, numbered",
+        "correct": false,
+        "why": "The number is a count per distinct value, not a line number."
+      },
+      {
+        "text": "Sums field 7 across the file and prints the total",
+        "correct": false,
+        "why": "`++` counts occurrences; summing would be `+= $7`."
+      },
+      {
+        "text": "Prints the seventh field of just the last line",
+        "correct": false,
+        "why": "The `END` block runs once, and the loop walks every key the body collected."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdv926e2",
+    "version": 1,
+    "section": "awk",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each awk variable or block to what it is.",
+    "hint": "Four pieces, two of them variables and two of them blocks that run once.",
+    "pairs": [
+      {
+        "left": "NR",
+        "right": "the line number you are on"
+      },
+      {
+        "left": "NF",
+        "right": "how many fields this line has"
+      },
+      {
+        "left": "BEGIN",
+        "right": "runs once, before the first line"
+      },
+      {
+        "left": "END",
+        "right": "runs once, after the last line"
+      }
+    ],
+    "right_distractors": [
+      "the field separator",
+      "the whole line"
+    ]
+  },
+  {
+    "id": "ex-ge7scey9",
+    "version": 1,
+    "section": "awk",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sum the fifth column of a CSV, skipping the header, in one command: `awk -F, 'NR>1 {s+=$5} ____ {print s}' sales.csv`",
+    "hint": "Three letters, uppercase.",
+    "blanks": [
+      {
+        "accept": [
+          "END"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-734cvg6s",
+    "version": 1,
+    "section": "joining-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You have two sorted lists of usernames and want the ones in the first that are not in the second. Which command?",
+    "hint": "The numbers suppress columns rather than select them.",
+    "choices": [
+      {
+        "text": "`comm -12 a.txt b.txt`",
+        "correct": false,
+        "why": "Suppressing 1 and 2 leaves the third column, which is the ones in both."
+      },
+      {
+        "text": "`comm -23 a.txt b.txt`",
+        "correct": true,
+        "why": "Right — suppress columns 2 and 3, leaving only what is in the first file."
+      },
+      {
+        "text": "`comm -13 a.txt b.txt`",
+        "correct": false,
+        "why": "That leaves the second column: only in the second file."
+      },
+      {
+        "text": "`diff a.txt b.txt`",
+        "correct": false,
+        "why": "That reports changes by position, which is a different question."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymhpk0m4",
+    "version": 1,
+    "section": "joining-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two files contain the same lines in a different order. What do `comm -12` and `diff` say?",
+    "hint": "One of them cares where a line is.",
+    "choices": [
+      {
+        "text": "Both say they are the same, since the contents match",
+        "correct": false,
+        "why": "`diff` compares line by line in order, so a reordering is a long list of changes."
+      },
+      {
+        "text": "Both say they differ, since the files are not byte-identical",
+        "correct": false,
+        "why": "`comm` compares membership on sorted input and finds every line in both."
+      },
+      {
+        "text": "`comm -12` lists every line; `diff` reports many changes",
+        "correct": true,
+        "why": "Right — membership against position, which is the whole difference between them."
+      },
+      {
+        "text": "`comm -12` prints nothing; `diff` prints nothing",
+        "correct": false,
+        "why": "Neither is silent: one finds everything in common, the other finds differences."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e86fmdr",
+    "version": 1,
+    "section": "joining-files",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Turn a column of values into one comma-separated line: `cut -d, -f2 sales.csv | paste ____",
+    "hint": "A dash, one letter, one more letter and a comma.",
+    "blanks": [
+      {
+        "accept": [
+          "-sd,"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bqsadpqy",
+    "version": 1,
+    "section": "xargs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`find . -type f | xargs wc -l` reports `./a: No such file or directory`. What happened?",
+    "hint": "One of the filenames has something in it that `xargs` treats as a separator.",
+    "choices": [
+      {
+        "text": "`find` printed a relative path that `wc` could not resolve",
+        "correct": false,
+        "why": "`wc` resolved `./plain.txt` in the same run, from the same directory."
+      },
+      {
+        "text": "`xargs` ran out of command-line space and split the list badly",
+        "correct": false,
+        "why": "Splitting on the length limit happens between arguments, never inside one."
+      },
+      {
+        "text": "`wc` struggles with a file whose name begins with a dot-slash",
+        "correct": false,
+        "why": "It read `./plain.txt` in the same command."
+      },
+      {
+        "text": "A filename holds a space, and `xargs` split it in two",
+        "correct": true,
+        "why": "Right — `find -print0 | xargs -0` is the fix, and it is the form to type by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7m4wtqw",
+    "version": 1,
+    "section": "xargs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`find . -name '*.tmp' | xargs rm` found nothing. Why is that still dangerous?",
+    "hint": "Think about what the command is run with when the list is empty.",
+    "choices": [
+      {
+        "text": "`rm` with no arguments deletes the current directory",
+        "correct": false,
+        "why": "It refuses and prints usage; the danger is a command that does something instead."
+      },
+      {
+        "text": "`xargs` runs the command once anyway, with no arguments",
+        "correct": true,
+        "why": "Right — harmless for `rm`, and `ls` would have listed everything as if it were a result."
+      },
+      {
+        "text": "`find` prints an error that `rm` reads as a filename",
+        "correct": false,
+        "why": "`find`'s errors go to stderr, which the pipe does not carry."
+      },
+      {
+        "text": "`xargs` waits for input from the terminal when the pipe is empty",
+        "correct": false,
+        "why": "It reads the pipe to end-of-file and then runs; it does not fall back to the terminal."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfynpa62",
+    "version": 1,
+    "section": "xargs",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Make a `find` and `xargs` pipeline safe for filenames containing spaces: `find . -type f ____ | xargs -0 wc -l`",
+    "hint": "Two words after the dash, joined by nothing.",
+    "blanks": [
+      {
+        "accept": [
+          "-print0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8ekjmvny",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put this pipeline's stages in the order that does the least work.",
+    "items": [
+      "grep ' 500 ' access.log",
+      "cut -d' ' -f7",
+      "sort",
+      "uniq -c",
+      "sort -rn"
+    ],
+    "trap": "Throw lines away, then narrow to one field, then group, then count, then order."
+  },
+  {
+    "id": "ex-jym6awyz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pipeline answers \"the ten busiest paths\" correctly?",
+    "hint": "One stage in this pipeline is not optional.",
+    "choices": [
+      {
+        "text": "`cut -d\" \" -f7 a.log | uniq -c | sort -rn | head -10`",
+        "correct": false,
+        "why": "Without a sort first, `uniq -c` counts runs and every number is wrong."
+      },
+      {
+        "text": "`cut -d\" \" -f7 a.log | sort | uniq -c | sort -rn | head`",
+        "correct": true,
+        "why": "Right — group, count, order by count."
+      },
+      {
+        "text": "`cut -d\" \" -f7 a.log | sort -rn | uniq -c | head`",
+        "correct": false,
+        "why": "Sorting paths numerically does nothing, and `uniq -c` then counts before ordering."
+      },
+      {
+        "text": "`sort -u a.log | cut -d\" \" -f7 | uniq -c | sort -rn | head`",
+        "correct": false,
+        "why": "Sorting whole lines does not group equal paths together, and nothing orders by count."
+      }
+    ]
+  },
+  {
+    "id": "ex-prvynz9y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log line ends with a response time in milliseconds. How do you find the slow requests?",
+    "hint": "The user-agent field has spaces in it, so counting fields from the left is unsafe.",
+    "choices": [
+      {
+        "text": "`awk '$NF > 3000' access.log`",
+        "correct": true,
+        "why": "Right — `$NF` counts from the end, past the variable-width user agent."
+      },
+      {
+        "text": "`awk '$12 > 3000' access.log`",
+        "correct": false,
+        "why": "The field number varies line to line, because of the quoted user agent."
+      },
+      {
+        "text": "`grep -E ' [0-9]{4,}$' access.log`",
+        "correct": false,
+        "why": "That finds four-digit numbers at the end, which is close and also catches 1000 to 2999."
+      },
+      {
+        "text": "`cut -d\" \" -f12 access.log | sort -rn | head`",
+        "correct": false,
+        "why": "Same problem as the second, plus it loses the rest of the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-cg0615by",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each question to the tool that answers it.",
+    "hint": "Six questions, six tools, and three of them sound like they overlap.",
+    "pairs": [
+      {
+        "left": "keep the lines that match",
+        "right": "grep"
+      },
+      {
+        "left": "keep some columns",
+        "right": "cut"
+      },
+      {
+        "left": "replace a pattern",
+        "right": "sed"
+      },
+      {
+        "left": "replace or delete characters",
+        "right": "tr"
+      },
+      {
+        "left": "arithmetic on a field",
+        "right": "awk"
+      },
+      {
+        "left": "turn lines into arguments",
+        "right": "xargs"
+      }
+    ],
+    "right_distractors": [
+      "count the lines",
+      "sort by a key"
+    ]
+  },
+  {
+    "id": "ex-c6h5f1f0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script writes a log with `some-command > app.log` and the errors are missing from it. What is the fix?",
+    "hint": "A pipe and a redirect both carry one stream by default.",
+    "choices": [
+      {
+        "text": "`some-command | tee app.log`",
+        "correct": false,
+        "why": "That copies stdout to the file and the screen, and still leaves stderr out."
+      },
+      {
+        "text": "`some-command 2>&1 > app.log`, the other way round",
+        "correct": false,
+        "why": "That is the order that does not work: 2 is copied while 1 is still the terminal."
+      },
+      {
+        "text": "`some-command > app.log 2>&1` in that order",
+        "correct": true,
+        "why": "Right — point 1 at the file first, then make 2 a copy of 1."
+      },
+      {
+        "text": "`some-command 2> app.log`",
+        "correct": false,
+        "why": "That captures the errors and loses the output the script was writing."
+      }
+    ]
+  },
+  {
+    "id": "ex-46ymfb82",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need to replace a path in fifty config files. What do you do first?",
+    "hint": "There is no undo, and there is a way to look before you leap.",
+    "choices": [
+      {
+        "text": "Back up the whole directory with `cp -r`",
+        "correct": false,
+        "why": "Sensible and slower than the thing that shows you the change before making it."
+      },
+      {
+        "text": "Run `sed -i` on one file and check the result",
+        "correct": false,
+        "why": "Better than nothing, and it has already changed a file you may have to restore."
+      },
+      {
+        "text": "Use `-i.bak` so each file keeps a copy",
+        "correct": false,
+        "why": "Worth doing as well, and it still applies the change before you have seen it."
+      },
+      {
+        "text": "Run the `sed` without `-i` and read it",
+        "correct": true,
+        "why": "Right — it changes nothing, costs a second, and shows what the pattern really matched."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzy8pwne",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these silently give a wrong answer rather than an error?",
+    "hint": "Four failures from this lesson; two of them announce themselves.",
+    "choices": [
+      {
+        "text": "`uniq -c` on unsorted input",
+        "correct": true,
+        "why": "Yes — it counts runs and prints plausible small numbers."
+      },
+      {
+        "text": "`sort` on numbers without `-n`",
+        "correct": true,
+        "why": "Yes — the output looks sorted and 109 is before 26."
+      },
+      {
+        "text": "`2>&1 > file` instead of `> file 2>&1`",
+        "correct": true,
+        "why": "Yes — a file is written and the errors are not in it."
+      },
+      {
+        "text": "`cut -d\", \"` with a two-character delimiter",
+        "correct": false,
+        "why": "`cut` refuses: the delimiter must be a single character."
+      },
+      {
+        "text": "`join` on unsorted input",
+        "correct": true,
+        "why": "Yes — unlike `comm`, it does not complain."
+      }
+    ]
+  },
+  {
+    "id": "ex-1v1tnkcq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of investigating an unfamiliar file in order.",
+    "items": [
+      "head -1 file",
+      "wc -l file",
+      "awk '{print NF}' file | sort -u",
+      "build the pipeline on head -20",
+      "run it on the whole file"
+    ],
+    "trap": "See a line, see how much there is, check every line is that shape, test small, then run."
+  },
+  {
+    "id": "ex-j2s5smbp",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Count the distinct values in the first column of a log, in one pipeline: `cut -d\" \" -f1 a.log | sort ____ | wc -l`",
+    "hint": "One short flag, and it drops duplicates.",
+    "blanks": [
+      {
+        "accept": [
+          "-u"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1zjp5hrj",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Make a pipeline report a failure in any stage, not just the last: `set -o ____`",
+    "hint": "One word, eight letters.",
+    "blanks": [
+      {
+        "accept": [
+          "pipefail"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e8h41gvs",
+    "version": 1,
+    "section": "the-three-streams",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Make a command read a file as its standard input, without naming the file to the command: `wc -l ____ app.log`",
+    "hint": "One character.",
+    "blanks": [
+      {
+        "accept": [
+          "<"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bpqe9e4p",
+    "version": 1,
+    "section": "pipes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Read every stage's exit status after a pipeline, not just the last: `echo \"${____[@]}\"`",
+    "hint": "One word in capitals, eleven letters.",
+    "blanks": [
+      {
+        "accept": [
+          "PIPESTATUS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kp8d9254",
+    "version": 1,
+    "section": "looking-at-a-file",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Show the first forty bytes of a file rather than the first forty lines: `head ____ 40 access.log`",
+    "hint": "A dash and one letter.",
+    "blanks": [
+      {
+        "accept": [
+          "-c"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dym1f5f1",
+    "version": 1,
+    "section": "regular-expressions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match a line containing two or more consecutive `a` characters and nothing else: `grep -E \"^a{____}$\"`",
+    "hint": "A digit and a comma.",
+    "blanks": [
+      {
+        "accept": [
+          "2,"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6mnjdrzf",
+    "version": 1,
+    "section": "cut",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Drop a CSV's header before cutting a column: `____ -n +2 sales.csv | cut -d, -f5`",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "tail"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wdxqfb7q",
+    "version": 1,
+    "section": "sort",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Sort by field 5 alone, rather than from field 5 to the end of the line: `sort -t, ____ -rn sales.csv`",
+    "hint": "Two characters, a digit, a comma and the same digit.",
+    "blanks": [
+      {
+        "accept": [
+          "-k5,5"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ssmk27ad",
+    "version": 1,
+    "section": "uniq",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Show the most common values and how many times each appeared: `sort f.txt | uniq ____ | sort -rn`",
+    "hint": "A dash and one letter.",
+    "blanks": [
+      {
+        "accept": [
+          "-c"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ne18z8n9",
+    "version": 1,
+    "section": "counting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Count only the lines of a file, not its words and bytes: `wc ____ access.log`",
+    "hint": "A dash and one letter.",
+    "blanks": [
+      {
+        "accept": [
+          "-l"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ptq8p1ja",
+    "version": 1,
+    "section": "counting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`wc -c` and `wc -m` disagree on a file of Portuguese text. Why?",
+    "hint": "One counts storage and the other counts text.",
+    "choices": [
+      {
+        "text": "The file has a byte-order mark that `-m` skips",
+        "correct": false,
+        "why": "A BOM would be a three-byte difference; the gap here is proportional to the accents."
+      },
+      {
+        "text": "`-m` excludes the newline at the end of each line",
+        "correct": false,
+        "why": "Both count newlines; they are one byte and one character each."
+      },
+      {
+        "text": "An accented character is one character and two bytes",
+        "correct": true,
+        "why": "Right — `ã` is two bytes, so bytes exceed characters."
+      },
+      {
+        "text": "`-c` counts the file's blocks on disk rather than its bytes",
+        "correct": false,
+        "why": "`-c` is bytes; block usage is what `du` reports."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1kvt101",
+    "version": 1,
+    "section": "tr",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which job is `tr` the right tool for?",
+    "hint": "It works on characters and has no pattern language.",
+    "choices": [
+      {
+        "text": "Replacing the word `staging` with `production` in a config",
+        "correct": false,
+        "why": "That is a word, and `tr` would map each letter separately."
+      },
+      {
+        "text": "Turning a comma-separated line into one value per line",
+        "correct": true,
+        "why": "Right — `tr , '\\n'` is the shortest way to say it."
+      },
+      {
+        "text": "Printing just the lines that contain an error",
+        "correct": false,
+        "why": "`tr` has no idea what a line is; that is `grep`."
+      },
+      {
+        "text": "Summing the numbers in the third column",
+        "correct": false,
+        "why": "That is arithmetic on a field, which is `awk`."
+      }
+    ]
+  },
+  {
+    "id": "ex-83hdfrtg",
+    "version": 1,
+    "section": "sed",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Replace every occurrence on each line, not just the first: `sed 's/old/new/____'`",
+    "hint": "One letter.",
+    "blanks": [
+      {
+        "accept": [
+          "g"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ez1xy3cn",
+    "version": 1,
+    "section": "awk",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Print the last field of every line, whatever the field count: `awk '{print $____}'`",
+    "hint": "Two letters, uppercase.",
+    "blanks": [
+      {
+        "accept": [
+          "NF"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5pmx7cc9",
+    "version": 1,
+    "section": "joining-files",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Print the lines that are in both of two sorted files: `comm ____ a.txt b.txt`",
+    "hint": "A dash and two digits.",
+    "blanks": [
+      {
+        "accept": [
+          "-12"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5498ck2t",
+    "version": 1,
+    "section": "xargs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Run the command once per input line instead of packing many onto one command line: `xargs ____ gzip`",
+    "hint": "A dash, one letter and a digit.",
+    "blanks": [
+      {
+        "accept": [
+          "-n1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0bgmcvr2",
+    "version": 1,
+    "section": "grep",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You want every line of a log that is not a health check. Which flag?",
+    "hint": "The question is the inverse of what grep normally does.",
+    "choices": [
+      {
+        "text": "`grep -c health`, counting the matches",
+        "correct": false,
+        "why": "That counts them rather than removing them."
+      },
+      {
+        "text": "`grep -l health`",
+        "correct": false,
+        "why": "That names the files, which you already know."
+      },
+      {
+        "text": "`grep -o health`",
+        "correct": false,
+        "why": "That prints the matched word, repeatedly."
+      },
+      {
+        "text": "`grep -v health`, inverted",
+        "correct": true,
+        "why": "Right — invert the match, and chain it for each thing you want gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdth5xnm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these commands changes a file?",
+    "hint": "Three of the four print to standard output and stop there.",
+    "choices": [
+      {
+        "text": "`grep pattern file`",
+        "correct": false,
+        "why": "It prints matching lines and leaves the file alone."
+      },
+      {
+        "text": "`awk '{print $1}' file`",
+        "correct": false,
+        "why": "It prints a column and leaves the file alone."
+      },
+      {
+        "text": "`sed -i 's/a/b/' file`",
+        "correct": true,
+        "why": "Right — `-i` is the flag that edits in place, with no undo."
+      },
+      {
+        "text": "`sort -n file`",
+        "correct": false,
+        "why": "It prints the sorted lines; the file is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-13a5fpts",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A one-liner has grown to three awk conditions and four variables. What now?",
+    "hint": "The lesson's closing said where the line is.",
+    "choices": [
+      {
+        "text": "Split it into two awk commands joined by a pipe",
+        "correct": false,
+        "why": "That works and leaves the same amount of logic spread across two places."
+      },
+      {
+        "text": "Write it as a script in a file",
+        "correct": true,
+        "why": "Right — it has become a program, and a program belongs in a file with a name."
+      },
+      {
+        "text": "Move it into a shell alias so it is easier to reuse",
+        "correct": false,
+        "why": "An alias makes an unreadable line easier to rerun and no easier to change."
+      },
+      {
+        "text": "Rewrite it in `sed`, which handles multiple commands",
+        "correct": false,
+        "why": "`sed` is less capable here, not more; that direction goes backwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-x21sxtcc",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Send both a command's output and its errors to the same file: `some-command > log.txt ____`",
+    "hint": "Four characters.",
+    "blanks": [
+      {
+        "accept": [
+          "2>&1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-96y0gwe3",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Count how many distinct status codes appear in a log: `cut -d\" \" -f9 a.log | ____ | wc -l`",
+    "hint": "Two words: a command and one short flag.",
+    "blanks": [
+      {
+        "accept": [
+          "sort -u"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6d6kby84",
+    "version": 1,
+    "section": "tr",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Squeeze runs of spaces into one, so `cut -d\" \"` works on padded text: `tr ____ \" \"`",
+    "hint": "A dash and one letter.",
+    "blanks": [
+      {
+        "accept": [
+          "-s"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

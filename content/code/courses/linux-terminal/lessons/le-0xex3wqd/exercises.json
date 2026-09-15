@@ -1,0 +1,2324 @@
+[
+  {
+    "id": "ex-0j6t4tx7",
+    "version": 1,
+    "section": "what-runs-things-later",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A loop does two seconds of work and then sleeps for three. How far apart are the cycles?",
+    "hint": "The measurement in the lesson answers this in three lines.",
+    "choices": [
+      {
+        "text": "Three seconds, because that is the sleep",
+        "correct": false,
+        "why": "The sleep is three; the cycle is not."
+      },
+      {
+        "text": "Two seconds, because the work dominates",
+        "correct": false,
+        "why": "Both parts are inside the loop and both count."
+      },
+      {
+        "text": "Five seconds",
+        "correct": true,
+        "why": "Work plus sleep, every time round — which is why the schedule walks forward all week."
+      },
+      {
+        "text": "It varies with how busy the machine is",
+        "correct": false,
+        "why": "It would, a little, and the five seconds here are the two parts added up."
+      }
+    ]
+  },
+  {
+    "id": "ex-56x8mprf",
+    "version": 1,
+    "section": "what-runs-things-later",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are problems with scheduling work in a `while true` loop?",
+    "hint": "One of the five is not a property of the loop at all.",
+    "choices": [
+      {
+        "text": "The interval drifts, because the work is inside it",
+        "correct": true,
+        "why": "Measured: a three-second interval and two seconds of work gives a five-second cycle."
+      },
+      {
+        "text": "It dies when the terminal closes",
+        "correct": true,
+        "why": "Lesson 6's hangup, unless somebody thought about `nohup`."
+      },
+      {
+        "text": "Nothing restarts it after a reboot",
+        "correct": true,
+        "why": "And nothing notices that it is gone."
+      },
+      {
+        "text": "Colleagues have no file to find it in",
+        "correct": true,
+        "why": "It is in no crontab, no unit, and no directory anybody greps."
+      },
+      {
+        "text": "It cannot run more often than once a minute",
+        "correct": false,
+        "why": "That is cron's limit. A loop can run as often as you like."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vg3fcj5",
+    "version": 1,
+    "section": "what-runs-things-later",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the presence of `/etc/cron.daily/sysstat` tell you about this machine?",
+    "hint": "Lesson 11 used the tool that file belongs to.",
+    "choices": [
+      {
+        "text": "Cron is already running work here",
+        "correct": true,
+        "why": "Which is true of nearly every Linux machine: you are adding a line, not a scheduler."
+      },
+      {
+        "text": "Somebody configured a scheduler for this course",
+        "correct": false,
+        "why": "The file arrived with the package."
+      },
+      {
+        "text": "The `sar` history is collected by a systemd timer",
+        "correct": false,
+        "why": "On this machine it comes from cron, and `/etc/cron.d/sysstat` is the file."
+      },
+      {
+        "text": "Daily jobs are disabled until anacron is removed",
+        "correct": false,
+        "why": "Both are present, and section 218 explains how they share the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8kfk90y",
+    "version": 1,
+    "section": "what-runs-things-later",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each scheduler to the job it is built for.",
+    "hint": "Two of them are about machines that are not always on.",
+    "pairs": [
+      {
+        "left": "cron",
+        "right": "a repeating job on a machine that stays up"
+      },
+      {
+        "left": "anacron",
+        "right": "a daily job on a machine that is switched off"
+      },
+      {
+        "left": "`at`",
+        "right": "once, at a time you name"
+      },
+      {
+        "left": "a systemd timer",
+        "right": "a repeating job that needs the journal and dependencies"
+      }
+    ],
+    "right_distractors": [
+      "a job that must never be missed by more than a second",
+      "a job that runs on every machine in a fleet at the same instant"
+    ]
+  },
+  {
+    "id": "ex-tc04jyar",
+    "version": 1,
+    "section": "crontab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which flag deletes your crontab without asking?",
+    "hint": "It is next to the one you meant to press.",
+    "choices": [
+      {
+        "text": "`crontab -l`",
+        "correct": false,
+        "why": "That lists it."
+      },
+      {
+        "text": "`crontab -e`",
+        "correct": false,
+        "why": "That edits it, which is the one you meant."
+      },
+      {
+        "text": "`crontab -i`, the interactive one",
+        "correct": false,
+        "why": "That deletes it *and asks first*, where the distribution ships it."
+      },
+      {
+        "text": "`crontab -r`",
+        "correct": true,
+        "why": "No prompt, no output, no undo — and one key away from `-e`."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9r4mh7b",
+    "version": 1,
+    "section": "crontab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`EDITOR=/bin/true crontab -e` printed `No modification made`. What does that demonstrate?",
+    "hint": "`/bin/true` exits at once and writes nothing.",
+    "choices": [
+      {
+        "text": "The crontab was empty, so a change had no target",
+        "correct": false,
+        "why": "There were three jobs in it at the time."
+      },
+      {
+        "text": "`crontab -e` edits a copy and compares it on exit",
+        "correct": true,
+        "why": "An editor that changes nothing installs nothing — the `sudoedit` shape from lesson 12."
+      },
+      {
+        "text": "`/bin/true` is rejected because it is not an editor",
+        "correct": false,
+        "why": "It was run, and it behaved like an editor that saved nothing."
+      },
+      {
+        "text": "The `EDITOR` variable is ignored by `crontab`",
+        "correct": false,
+        "why": "It was used; that is how `/bin/true` came to be the editor."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3h0jr1k",
+    "version": 1,
+    "section": "crontab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deploy script pipes a here-document into `crontab -` and the file has no trailing newline. What happens?",
+    "hint": "The lesson ran exactly this.",
+    "choices": [
+      {
+        "text": "It installs nothing and exits 1",
+        "correct": true,
+        "why": "`new crontab file is missing newline before EOF, can't install.` — the old crontab survives."
+      },
+      {
+        "text": "The last line is dropped and the rest installs",
+        "correct": false,
+        "why": "It refuses the whole file rather than truncating it."
+      },
+      {
+        "text": "A newline is added and the file installs cleanly",
+        "correct": false,
+        "why": "That would be friendlier; it is not what happens."
+      },
+      {
+        "text": "The crontab is replaced with an empty one",
+        "correct": false,
+        "why": "The existing crontab is left exactly as it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbaack3m",
+    "version": 1,
+    "section": "crontab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why not edit `/var/spool/cron/crontabs/ana` directly as root?",
+    "hint": "Think about how cron notices that a crontab changed.",
+    "choices": [
+      {
+        "text": "The file is encrypted and needs `crontab` to read it",
+        "correct": false,
+        "why": "It is plain text."
+      },
+      {
+        "text": "Root has no write permission on that directory",
+        "correct": false,
+        "why": "Root does; the restriction is on everybody else."
+      },
+      {
+        "text": "Cron reads the directory's timestamp, not the file's",
+        "correct": true,
+        "why": "So the edit is on disk and cron carries on with the version it has."
+      },
+      {
+        "text": "The spool file is regenerated from `/etc/crontab` each hour",
+        "correct": false,
+        "why": "They are separate files with separate contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmsvntwn",
+    "version": 1,
+    "section": "the-five-fields",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `*/15 * * * *` mean?",
+    "hint": "The step counts from the bottom of the range.",
+    "choices": [
+      {
+        "text": "Fifteen minutes after whenever the job last ran",
+        "correct": false,
+        "why": "Cron does not know when it last ran."
+      },
+      {
+        "text": "At minutes 0, 15, 30 and 45",
+        "correct": true,
+        "why": "Four times an hour — so a job at 12:50 next runs at 13:00, not 13:05."
+      },
+      {
+        "text": "Fifteen minutes after the machine came up, and onwards",
+        "correct": false,
+        "why": "Boot time has nothing to do with a cron field."
+      },
+      {
+        "text": "Fifteen times an hour, spread evenly",
+        "correct": false,
+        "why": "Four times, and the minutes are fixed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c6tk6ys",
+    "version": 1,
+    "section": "the-five-fields",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`0 3 13 * 5` — when does this run?",
+    "hint": "Two jobs and a control were installed to settle this.",
+    "choices": [
+      {
+        "text": "03:00 on Friday the thirteenth",
+        "correct": false,
+        "why": "That is what it looks like, and it is the mistake the measurement was built to catch."
+      },
+      {
+        "text": "Never, because the two day fields conflict",
+        "correct": false,
+        "why": "They do not conflict; they combine."
+      },
+      {
+        "text": "03:00 on the thirteenth, but only in months where it is a Friday",
+        "correct": false,
+        "why": "That is an AND, and cron does not do that here."
+      },
+      {
+        "text": "03:00 on the thirteenth of each month, and on every Friday",
+        "correct": true,
+        "why": "The two day fields are ORed — about sixty-four runs a year."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b30azfy",
+    "version": 1,
+    "section": "the-five-fields",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shortcut that means `0 0 * * *` is spelled with an at-sign: `@_____`",
+    "hint": "Five letters, and `@midnight` is its twin.",
+    "blanks": [
+      {
+        "accept": [
+          "daily"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qwkanncd",
+    "version": 1,
+    "section": "the-five-fields",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson warn about `@reboot` for a program that should always be running?",
+    "hint": "Compare it with what lesson 5 offers.",
+    "choices": [
+      {
+        "text": "`@reboot` runs too early, before the filesystems are mounted",
+        "correct": false,
+        "why": "Timing is a real concern and it is not the argument made."
+      },
+      {
+        "text": "`@reboot` is not supported on Debian and Ubuntu",
+        "correct": false,
+        "why": "It is supported; the entry runs when cron starts."
+      },
+      {
+        "text": "A service gets restarts, logging and ordering",
+        "correct": true,
+        "why": "`@reboot` starts it once and never looks again."
+      },
+      {
+        "text": "`@reboot` fires again when cron restarts, so the program starts twice",
+        "correct": false,
+        "why": "It fires when cron starts, which is a related point and not the one about always-running programs."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t9xyyrq",
+    "version": 1,
+    "section": "where-cron-lives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is in a `/etc/cron.d` line that is not in your own crontab's lines?",
+    "hint": "Count the fields before the command.",
+    "choices": [
+      {
+        "text": "A user name, in the sixth position",
+        "correct": true,
+        "why": "Paste one into `crontab -e` and that name is read as the command."
+      },
+      {
+        "text": "A seventh field for the year",
+        "correct": false,
+        "why": "No cron format has a year field."
+      },
+      {
+        "text": "A priority, so jobs can be ordered",
+        "correct": false,
+        "why": "There is no priority field."
+      },
+      {
+        "text": "A comment marking which package owns it",
+        "correct": false,
+        "why": "Packages often add one, and it is a comment rather than a field."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzavddvc",
+    "version": 1,
+    "section": "where-cron-lives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You put `backup.sh` in `/etc/cron.d` and it never runs. Why?",
+    "hint": "Two identical files, different names, were tested.",
+    "choices": [
+      {
+        "text": "The file has to be executable, and it is not",
+        "correct": false,
+        "why": "That rule is for `/etc/cron.daily`; a `/etc/cron.d` file is a crontab, not a script."
+      },
+      {
+        "text": "The dot in the name makes cron skip the file",
+        "correct": true,
+        "why": "`plainjob` ran and `dotted.job` never did, with nothing logged either way."
+      },
+      {
+        "text": "A file in `/etc/cron.d` needs a `SHELL=` line to be read",
+        "correct": false,
+        "why": "It runs without one, with the same `/bin/sh` as everywhere else."
+      },
+      {
+        "text": "Files there are read once at boot and this one arrived later",
+        "correct": false,
+        "why": "Cron notices new files without a restart."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkpw503v",
+    "version": 1,
+    "section": "where-cron-lives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`run-parts --test /etc/cron.daily` printed four paths. What did it do?",
+    "hint": "The flag is the point of the question.",
+    "choices": [
+      {
+        "text": "Ran each script and reported which succeeded",
+        "correct": false,
+        "why": "`--test` runs nothing at all."
+      },
+      {
+        "text": "Checked each script's syntax",
+        "correct": false,
+        "why": "It does not read the scripts."
+      },
+      {
+        "text": "Listed every file in the directory",
+        "correct": false,
+        "why": "A file with a dot in its name is in the directory and not in the list."
+      },
+      {
+        "text": "Showed the set, and touched none of it",
+        "correct": true,
+        "why": "Which is how you check your script is in the set without waiting a day."
+      }
+    ]
+  },
+  {
+    "id": "ex-16ty6vbc",
+    "version": 1,
+    "section": "where-cron-lives",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`/etc/crontab` runs the daily jobs with `test -x /usr/sbin/anacron || { … }`. What is that for?",
+    "hint": "Both packages are installed on the machine in the lesson.",
+    "choices": [
+      {
+        "text": "It waits for anacron to finish before starting",
+        "correct": false,
+        "why": "There is no waiting in that line."
+      },
+      {
+        "text": "It runs the jobs twice, once through each mechanism",
+        "correct": false,
+        "why": "The `||` makes them mutually exclusive."
+      },
+      {
+        "text": "It stops cron running them when anacron will",
+        "correct": true,
+        "why": "Otherwise both would, and the daily jobs would run twice on a laptop."
+      },
+      {
+        "text": "It checks that anacron is executable before repairing it",
+        "correct": false,
+        "why": "Nothing is repaired; the test decides who runs the jobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6npv2eq",
+    "version": 1,
+    "section": "the-environment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Cron's own mail headers listed `PATH=/usr/bin:/bin`. What follows from that?",
+    "hint": "Compare it with the `PATH` in your interactive shell.",
+    "choices": [
+      {
+        "text": "Cron read `/etc/environment` and used what it found",
+        "correct": false,
+        "why": "It sets that value itself."
+      },
+      {
+        "text": "A command in `~/bin` has to be named by its full path",
+        "correct": true,
+        "why": "`report.sh` came back as `/bin/sh: 1: report.sh: not found`."
+      },
+      {
+        "text": "A crontab can run root's commands and no others",
+        "correct": false,
+        "why": "The job ran as `ana`; the account is not the issue."
+      },
+      {
+        "text": "The `PATH` will be extended once the profile is sourced",
+        "correct": false,
+        "why": "No profile is sourced for a cron job at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwdjv43d",
+    "version": 1,
+    "section": "the-environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a job that works in your terminal do nothing overnight?",
+    "hint": "Four differences, and this section is about one of them.",
+    "choices": [
+      {
+        "text": "Cron runs it with a lower priority and it is starved",
+        "correct": false,
+        "why": "Cron does not renice your job."
+      },
+      {
+        "text": "The terminal caches the command and cron cannot",
+        "correct": false,
+        "why": "There is no such cache."
+      },
+      {
+        "text": "Cron reads none of your startup files",
+        "correct": true,
+        "why": "No `.bashrc`, no `.profile` — so the `PATH`, the virtualenv and the aliases are all absent."
+      },
+      {
+        "text": "Cron rejects commands it has not seen before",
+        "correct": false,
+        "why": "Cron does not inspect the command at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvmnz0k9",
+    "version": 1,
+    "section": "the-environment",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To reproduce cron's environment in your own shell, start the command with the flag that empties it first: `env __ SHELL=/bin/sh PATH=/usr/bin:/bin ...`",
+    "hint": "Two characters, and the letter stands for *ignore*.",
+    "blanks": [
+      {
+        "accept": [
+          "-i"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gvpny90c",
+    "version": 1,
+    "section": "the-environment",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The mail's subject line read `Cron <ana@vm> echo \"ran at $(date +` and the body was a shell syntax error. What went wrong?",
+    "hint": "Look at where the subject line stops.",
+    "choices": [
+      {
+        "text": "The subject line is truncated by the mail system at forty characters",
+        "correct": false,
+        "why": "It is not truncated; it is the whole command cron ran."
+      },
+      {
+        "text": "`date` is not on cron's `PATH`, so the substitution failed",
+        "correct": false,
+        "why": "`date` is in `/usr/bin`, which is on it."
+      },
+      {
+        "text": "The double quotes were stripped before the shell saw them",
+        "correct": false,
+        "why": "The quotes arrived; something else did not."
+      },
+      {
+        "text": "An unescaped `%` ended the command there",
+        "correct": true,
+        "why": "Everything after it became the job's standard input, leaving `$(` unterminated."
+      }
+    ]
+  },
+  {
+    "id": "ex-53yfvdyn",
+    "version": 1,
+    "section": "output-and-failure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cron job writes a line to stdout and exits 0. What happens to the line?",
+    "hint": "The mechanism is from 1975 and it is still the default.",
+    "choices": [
+      {
+        "text": "It is mailed to the crontab's owner",
+        "correct": true,
+        "why": "Which is why a chatty job is annoying and why `>/dev/null 2>&1` gets written."
+      },
+      {
+        "text": "It is written to `/var/log/syslog` next to the `CMD` line",
+        "correct": false,
+        "why": "Syslog gets the command, not its output."
+      },
+      {
+        "text": "It is discarded, because a job that exits 0 is a job that worked",
+        "correct": false,
+        "why": "The exit status changes the subject line, not whether mail is sent."
+      },
+      {
+        "text": "It goes to the journal, where `journalctl` finds it",
+        "correct": false,
+        "why": "That is a systemd timer's job; a cron job's output is mailed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vqn4rjn",
+    "version": 1,
+    "section": "output-and-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with `0 3 * * * backup.sh >/dev/null 2>&1`?",
+    "hint": "Ask what you would have to look at to find out it is failing.",
+    "choices": [
+      {
+        "text": "It hides the output, so the job runs more slowly",
+        "correct": false,
+        "why": "Redirecting costs nothing measurable."
+      },
+      {
+        "text": "It sends the output to the wrong user",
+        "correct": false,
+        "why": "It sends it nowhere at all."
+      },
+      {
+        "text": "A job that fails every night reports nothing",
+        "correct": true,
+        "why": "Both streams are discarded, so the error that names the problem is gone with them."
+      },
+      {
+        "text": "It stops cron recording the job in the system log",
+        "correct": false,
+        "why": "The `CMD` and `END` lines are written either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5v1wgx7",
+    "version": 1,
+    "section": "output-and-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`backup.sh > /tmp/out 2>&1 || cat /tmp/out` — why is this better than discarding the output?",
+    "hint": "Two states, and only one of them should reach you.",
+    "choices": [
+      {
+        "text": "It keeps a copy for a week",
+        "correct": false,
+        "why": "The file is overwritten at the next run."
+      },
+      {
+        "text": "Silence means it worked; mail means read it",
+        "correct": true,
+        "why": "The `||` runs `cat` only on a non-zero exit, and stdout is what cron mails."
+      },
+      {
+        "text": "It halves the amount of output the job produces",
+        "correct": false,
+        "why": "The job produces exactly the same output."
+      },
+      {
+        "text": "It stops the job being mailed when it fails",
+        "correct": false,
+        "why": "It is what causes the mail when it fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pzkkxhs",
+    "version": 1,
+    "section": "output-and-failure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Syslog shows a `CMD` line and an `END` line for last night's job. What have you learned?",
+    "hint": "One of the two questions is answered and the other is not.",
+    "choices": [
+      {
+        "text": "The job ran and succeeded",
+        "correct": false,
+        "why": "`END` is written for a job that exited 1 as well."
+      },
+      {
+        "text": "The job ran and its output was mailed",
+        "correct": false,
+        "why": "The log says nothing about mail."
+      },
+      {
+        "text": "The job was scheduled but the schedule did not match",
+        "correct": false,
+        "why": "`CMD` means the schedule matched and cron started it."
+      },
+      {
+        "text": "It started and finished, and no more than that",
+        "correct": true,
+        "why": "Which is why you need the mail as well when a year-old job stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gn3gxhx",
+    "version": 1,
+    "section": "time-zones-and-dst",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Debian and Ubuntu, what does a `CRON_TZ=America/New_York` line in a crontab do?",
+    "hint": "It was installed and watched for a minute.",
+    "choices": [
+      {
+        "text": "It reschedules the lines below it into that zone",
+        "correct": false,
+        "why": "That is `cronie`, on Red Hat. This cron is not that cron."
+      },
+      {
+        "text": "It is rejected, and cron refuses to load the crontab",
+        "correct": false,
+        "why": "The crontab loaded and the jobs ran."
+      },
+      {
+        "text": "It reaches the jobs as a plain variable",
+        "correct": true,
+        "why": "The job printed `CRON_TZ=[America/New_York]` and ran on the UTC minute."
+      },
+      {
+        "text": "It sets the zone for the timestamps in the system log",
+        "correct": false,
+        "why": "The log's timestamps come from the machine's own clock settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqfrrhwm",
+    "version": 1,
+    "section": "time-zones-and-dst",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job is set for 02:30 daily in a zone that moves its clocks forward at 02:00. What happens on the night of the change?",
+    "hint": "The iterations printed the 6th, the 7th and the 9th.",
+    "choices": [
+      {
+        "text": "It does not run that day at all",
+        "correct": true,
+        "why": "02:30 never exists, so the schedule skips the day entirely."
+      },
+      {
+        "text": "It runs at 03:30, an hour late",
+        "correct": false,
+        "why": "Nothing moves it; the expression is a wall-clock time."
+      },
+      {
+        "text": "It runs twice, once in each offset",
+        "correct": false,
+        "why": "That is what the autumn change risks, not the spring one."
+      },
+      {
+        "text": "It runs at 02:00 instead, when the clocks jump",
+        "correct": false,
+        "why": "There is no fallback to the boundary."
+      }
+    ]
+  },
+  {
+    "id": "ex-vt0fzsee",
+    "version": 1,
+    "section": "time-zones-and-dst",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is the cheap fix the lesson says nobody applies?",
+    "hint": "It costs one edit and removes the problem for every zone at once.",
+    "choices": [
+      {
+        "text": "Put `CRON_TZ` at the top of the crontab",
+        "correct": false,
+        "why": "It is not portable, and on this cron it does nothing."
+      },
+      {
+        "text": "Schedule outside 01:00 to 03:00",
+        "correct": true,
+        "why": "No clock change happens outside that window, so the job runs every day of the year."
+      },
+      {
+        "text": "Run the job twice and let the second one skip",
+        "correct": false,
+        "why": "That is idempotence, which the lesson also wants, for a different reason."
+      },
+      {
+        "text": "Convert the time to UTC in a comment above the line",
+        "correct": false,
+        "why": "Worth doing, and it documents the decision rather than removing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3aa61m1m",
+    "version": 1,
+    "section": "time-zones-and-dst",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which timezone does a plain cron line use?",
+    "hint": "Not the one in your calendar invitation.",
+    "choices": [
+      {
+        "text": "UTC, whatever the machine is set to",
+        "correct": false,
+        "why": "Many servers are UTC because somebody set them that way."
+      },
+      {
+        "text": "The one in the `TZ` variable of the user's shell",
+        "correct": false,
+        "why": "No shell profile is read for a cron job."
+      },
+      {
+        "text": "The one the crontab's owner had when they installed it",
+        "correct": false,
+        "why": "Nothing records that."
+      },
+      {
+        "text": "The machine's own, from `/etc/localtime`",
+        "correct": true,
+        "why": "Which is the argument for setting servers to UTC and being done with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxc9769s",
+    "version": 1,
+    "section": "anacron-and-at",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What question does anacron ask instead of asking the time?",
+    "hint": "Its whole memory is one file per job.",
+    "choices": [
+      {
+        "text": "Is the machine idle enough to start",
+        "correct": false,
+        "why": "That is `batch`, which watches the load average."
+      },
+      {
+        "text": "Has the network come up yet",
+        "correct": false,
+        "why": "Nothing in anacron looks at the network."
+      },
+      {
+        "text": "How long since this job last ran",
+        "correct": true,
+        "why": "The spool file holds the date, and the period field says how many days is too many."
+      },
+      {
+        "text": "Did the previous run of this job succeed",
+        "correct": false,
+        "why": "The status is not what it records."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpf91wk7",
+    "version": 1,
+    "section": "anacron-and-at",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `anacron -d -n` run printed `Normal exit (0 jobs run)`. Why?",
+    "hint": "Look at what the first run wrote into the spool directory.",
+    "choices": [
+      {
+        "text": "Both jobs had already run today, and the spool says so",
+        "correct": true,
+        "why": "The file holds `20260915` — the date, which is anacron's entire memory."
+      },
+      {
+        "text": "The `-n` flag runs each job at most once per invocation",
+        "correct": false,
+        "why": "`-n` means *now*: ignore the delay fields."
+      },
+      {
+        "text": "The jobs failed the first time and anacron gave up on them",
+        "correct": false,
+        "why": "Both reported `terminated (mailing output)`."
+      },
+      {
+        "text": "The anacrontab was consumed by the first run",
+        "correct": false,
+        "why": "The file is read again each time and is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-22bhqfh3",
+    "version": 1,
+    "section": "anacron-and-at",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does an `at` job stop being in the queue?",
+    "hint": "`atq` was empty a minute after it ran.",
+    "choices": [
+      {
+        "text": "At midnight, when the queue is rotated",
+        "correct": false,
+        "why": "The queue is not rotated."
+      },
+      {
+        "text": "When it runs",
+        "correct": true,
+        "why": "A one-shot job is consumed by running: `atq` printed nothing afterwards."
+      },
+      {
+        "text": "When `atd` is restarted",
+        "correct": false,
+        "why": "Queued jobs survive a restart of the daemon."
+      },
+      {
+        "text": "After seven days, when the spool is cleaned",
+        "correct": false,
+        "why": "Nothing expires it on a timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-mr3cq0rf",
+    "version": 1,
+    "section": "anacron-and-at",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`at -c` prints dozens of `export` lines before the command. What does that tell you?",
+    "hint": "Cron does not do this, and it is not straightforwardly an advantage.",
+    "choices": [
+      {
+        "text": "`at` needs those variables to find the command",
+        "correct": false,
+        "why": "It finds the command by the path it was given."
+      },
+      {
+        "text": "The job will be run by your login shell rather than `/bin/sh`",
+        "correct": false,
+        "why": "`at` warns that it uses `/bin/sh`, and the exports are separate from that."
+      },
+      {
+        "text": "It replays the terminal you queued it in",
+        "correct": true,
+        "why": "Including a `JAVA_HOME` from a session you have forgotten — reproducible by nobody else."
+      },
+      {
+        "text": "Those variables are read from the account's profile at run time",
+        "correct": false,
+        "why": "They were captured at queue time, which is why they are written into the job."
+      }
+    ]
+  },
+  {
+    "id": "ex-671k7n23",
+    "version": 1,
+    "section": "systemd-timers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many files does a scheduled job need under systemd, and what are they?",
+    "hint": "One of them is a thing lesson 5 already taught.",
+    "choices": [
+      {
+        "text": "One: a `.timer` holding both the schedule and the command",
+        "correct": false,
+        "why": "A timer starts a unit; it does not hold a command."
+      },
+      {
+        "text": "Three: a service, a timer and an entry in `timers.target`",
+        "correct": false,
+        "why": "The target membership is a line inside the timer, not a third file."
+      },
+      {
+        "text": "Two: a `.service` and a `.timer` that starts it",
+        "correct": true,
+        "why": "Same base name, and the timer finds the service by that convention."
+      },
+      {
+        "text": "Two: a `.timer` and a shell script it calls directly",
+        "correct": false,
+        "why": "A timer can only activate a unit, which is what the service is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pqy5w40",
+    "version": 1,
+    "section": "systemd-timers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Type=oneshot` say about a service?",
+    "hint": "It is the difference from lesson 5's daemons.",
+    "choices": [
+      {
+        "text": "It runs, finishes, and finishing is not a failure",
+        "correct": true,
+        "why": "A job rather than a daemon, which is what a timer starts."
+      },
+      {
+        "text": "It is started a single time, then left alone",
+        "correct": false,
+        "why": "It is started again on every timer activation."
+      },
+      {
+        "text": "It runs before anything else in its target",
+        "correct": false,
+        "why": "Ordering is `Before=` and `After=`, not the type."
+      },
+      {
+        "text": "It is removed from the system after its first run",
+        "correct": false,
+        "why": "Nothing removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z68x5spq",
+    "version": 1,
+    "section": "systemd-timers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You edited a unit file in `/etc/systemd/system` and nothing changed. What did you forget?",
+    "hint": "systemd is still running what it read earlier.",
+    "choices": [
+      {
+        "text": "`systemctl enable` on the service",
+        "correct": false,
+        "why": "Enabling the service is what you should not do for a timer."
+      },
+      {
+        "text": "`systemctl daemon-reload`",
+        "correct": true,
+        "why": "Without it systemd keeps the version it read at boot, and the edit has no effect."
+      },
+      {
+        "text": "`systemctl restart systemd-timesyncd`",
+        "correct": false,
+        "why": "The clock has nothing to do with it."
+      },
+      {
+        "text": "`systemd-analyze verify` on the file",
+        "correct": false,
+        "why": "Worth running, and it checks the file rather than loading it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvxnp698",
+    "version": 1,
+    "section": "systemd-timers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`systemd-analyze verify` on a timer with `OnCalender` misspelt printed two messages. Which one mattered?",
+    "hint": "One of them is a warning about a key systemd throws away.",
+    "choices": [
+      {
+        "text": "`Unknown key name 'OnCalender' in section 'Timer', ignoring`",
+        "correct": false,
+        "why": "That is the warning, and *ignoring* is the word that makes it not an error."
+      },
+      {
+        "text": "`Binding to IPv6 address not available`",
+        "correct": false,
+        "why": "That is the container the lesson ran in, talking about itself."
+      },
+      {
+        "text": "Neither — the unit is valid and would have worked",
+        "correct": false,
+        "why": "It was refused, which is what the second message says."
+      },
+      {
+        "text": "`Timer unit lacks value setting. Refusing.`",
+        "correct": true,
+        "why": "The ignored key left a timer with no schedule at all, and that is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpktjn93",
+    "version": 1,
+    "section": "oncalendar",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `systemd-analyze calendar` give you that a crontab line cannot?",
+    "hint": "Three lines come back and the middle one is the point.",
+    "choices": [
+      {
+        "text": "It installs the timer once the expression parses",
+        "correct": false,
+        "why": "It only reads the expression."
+      },
+      {
+        "text": "It rewrites the expression in cron's five fields",
+        "correct": false,
+        "why": "It normalises it into systemd's own form."
+      },
+      {
+        "text": "The actual dates the expression will fire on",
+        "correct": true,
+        "why": "Not *this parses* — *this is when it runs*, before anybody depends on it."
+      },
+      {
+        "text": "The list of units that already use that expression",
+        "correct": false,
+        "why": "It knows nothing about your units."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvrsf7zj",
+    "version": 1,
+    "section": "oncalendar",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Fri *-*-13` produced 2026-11-13 and then 2027-08-13. What does that show?",
+    "hint": "Compare the same idea written in cron's five fields.",
+    "choices": [
+      {
+        "text": "systemd requires both day fields to match",
+        "correct": true,
+        "why": "Which is genuinely Friday the thirteenth — nine months between those two."
+      },
+      {
+        "text": "systemd picks whichever day field comes first",
+        "correct": false,
+        "why": "Both are applied, and both have to hold."
+      },
+      {
+        "text": "The expression is invalid and was rounded to the nearest match",
+        "correct": false,
+        "why": "It is valid and neither date was rounded."
+      },
+      {
+        "text": "Iterations are capped at one per calendar year",
+        "correct": false,
+        "why": "The cap is the `--iterations` count you asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-0egg9tep",
+    "version": 1,
+    "section": "oncalendar",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`*-02-30 03:00:00` exits 0 and reports `Next elapse: never`. What is the lesson?",
+    "hint": "Compare it with `25:00:00`, which exits 1.",
+    "choices": [
+      {
+        "text": "A calendar expression fails by not parsing",
+        "correct": false,
+        "why": "This one parses and still never runs."
+      },
+      {
+        "text": "The exit status is the reliable check for a bad expression",
+        "correct": false,
+        "why": "It missed this one entirely."
+      },
+      {
+        "text": "February is a special case systemd handles separately",
+        "correct": false,
+        "why": "The same thing happens with any impossible date."
+      },
+      {
+        "text": "A valid expression is not the same as a schedule",
+        "correct": true,
+        "why": "The string to look for is `never`, because the status will not tell you."
+      }
+    ]
+  },
+  {
+    "id": "ex-abdscg3z",
+    "version": 1,
+    "section": "oncalendar",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "systemd normalises `weekly` to `Mon *-*-* 00:00:00`. Why does that matter when porting a crontab?",
+    "hint": "Cron has a shortcut of the same name.",
+    "choices": [
+      {
+        "text": "systemd's version runs weekly and cron's runs fortnightly",
+        "correct": false,
+        "why": "Both are once a week."
+      },
+      {
+        "text": "Cron's `@weekly` is Sunday, so the job moves by a day",
+        "correct": true,
+        "why": "Same word, different day, and nothing warns you about the move."
+      },
+      {
+        "text": "systemd's version needs `Persistent=` to fire",
+        "correct": false,
+        "why": "It fires without it; `Persistent=` is about missed runs."
+      },
+      {
+        "text": "Cron's `@weekly` runs at 00:00 and systemd's at 01:00",
+        "correct": false,
+        "why": "Both are midnight; it is the day that differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1fe2b0c",
+    "version": 1,
+    "section": "monotonic-and-persistent",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `Persistent=true` do?",
+    "hint": "It is the answer to a machine that was switched off.",
+    "choices": [
+      {
+        "text": "It keeps the timer loaded across a `daemon-reload`",
+        "correct": false,
+        "why": "Reloading does not unload timers."
+      },
+      {
+        "text": "It runs a missed job at the next boot",
+        "correct": true,
+        "why": "systemd records the last firing and compares it with the clock — anacron, built in."
+      },
+      {
+        "text": "It stops the job being killed when the session ends",
+        "correct": false,
+        "why": "A unit is not tied to a session."
+      },
+      {
+        "text": "It writes the job's output to disk instead of the journal",
+        "correct": false,
+        "why": "The journal is already on disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhdk1eqn",
+    "version": 1,
+    "section": "monotonic-and-persistent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job takes ninety minutes and the timer says `OnUnitActiveSec=1h`. When does it run?",
+    "hint": "The count starts from the last activation, not from the clock.",
+    "choices": [
+      {
+        "text": "On the hour, with two copies overlapping",
+        "correct": false,
+        "why": "A service that is active is not started again."
+      },
+      {
+        "text": "At ninety-minute gaps, because the job sets the pace",
+        "correct": false,
+        "why": "The interval is added to the start, not to the finish."
+      },
+      {
+        "text": "03:00, then 04:30, then 06:00",
+        "correct": true,
+        "why": "An hour after the last run *started*, so the gap is the job plus the interval."
+      },
+      {
+        "text": "Just once, because the run overruns the interval",
+        "correct": false,
+        "why": "Overrunning does not cancel the timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-8946ec8k",
+    "version": 1,
+    "section": "monotonic-and-persistent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A timer is set for 03:00:00 and fires at 03:00:43. What explains it?",
+    "hint": "There is a setting whose default is one minute.",
+    "choices": [
+      {
+        "text": "`AccuracySec=` defaults to a minute",
+        "correct": true,
+        "why": "It lets the processor stay asleep; `AccuracySec=1s` says you need the second."
+      },
+      {
+        "text": "The machine's clock has drifted by forty-three seconds",
+        "correct": false,
+        "why": "A drifted clock would move every timer, not one."
+      },
+      {
+        "text": "`RandomizedDelaySec=` is on by default",
+        "correct": false,
+        "why": "Its default is zero; you add it deliberately."
+      },
+      {
+        "text": "The service took forty-three seconds to start",
+        "correct": false,
+        "why": "The timestamp is the activation, not the service's startup."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3k039sw",
+    "version": 1,
+    "section": "monotonic-and-persistent",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two hundred machines share one unit file with `OnCalendar=*-*-* 03:00:00`. What does `RandomizedDelaySec=30m` change?",
+    "hint": "Think about what is at the other end of whatever the job talks to.",
+    "choices": [
+      {
+        "text": "Each run is delayed by half an hour",
+        "correct": false,
+        "why": "The delay is a random value between zero and thirty minutes."
+      },
+      {
+        "text": "The job is retried for up to thirty minutes if it fails",
+        "correct": false,
+        "why": "It has nothing to do with failure."
+      },
+      {
+        "text": "Each machine picks a fresh delay at each run",
+        "correct": false,
+        "why": "The delay is fixed per machine per timer, rather than rolled again each night."
+      },
+      {
+        "text": "They stop all arriving in the same second",
+        "correct": true,
+        "why": "Which is the whole point: two hundred simultaneous requests become a spread."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehctm4tn",
+    "version": 1,
+    "section": "listing-and-debugging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A job is scheduled somewhere on this machine and `crontab -l` does not show it. Where do you look first?",
+    "hint": "It is the place nobody put anything by hand.",
+    "choices": [
+      {
+        "text": "`/etc/crontab`, which packages write to",
+        "correct": false,
+        "why": "Packages leave it alone; it is the distribution's own file."
+      },
+      {
+        "text": "`~/.profile`, in case it starts a background loop",
+        "correct": false,
+        "why": "Worth a thought, and it is not where a scheduler keeps things."
+      },
+      {
+        "text": "`/etc/cron.d`, where packages drop files",
+        "correct": true,
+        "why": "Seven places hold schedules, and this is the one people forget to check."
+      },
+      {
+        "text": "`/var/log/syslog`, for lines about a missing job",
+        "correct": false,
+        "why": "The log shows jobs that ran, not ones you have not found yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-0237y3hp",
+    "version": 1,
+    "section": "listing-and-debugging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `systemctl list-timers`, which two columns answer 'did it run?'",
+    "hint": "One of them is the reason to pass `--all`.",
+    "choices": [
+      {
+        "text": "`UNIT` and `ACTIVATES`, which name the pair",
+        "correct": false,
+        "why": "They tell you what, not when."
+      },
+      {
+        "text": "`LEFT` and `PASSED`, which are the two durations",
+        "correct": false,
+        "why": "Those are the same two facts in a friendlier form."
+      },
+      {
+        "text": "`NEXT` and `ACTIVATES`",
+        "correct": false,
+        "why": "One time and one name is half an answer."
+      },
+      {
+        "text": "`NEXT` and `LAST`",
+        "correct": true,
+        "why": "A `LAST` older than the timer's period is a job that did not run, and that is actionable."
+      }
+    ]
+  },
+  {
+    "id": "ex-vj90f7c1",
+    "version": 1,
+    "section": "listing-and-debugging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`grep CRON /var/log/syslog` shows no line at all for last night. What does that rule out?",
+    "hint": "Think about which half of the problem the log covers.",
+    "choices": [
+      {
+        "text": "The job started and failed inside itself",
+        "correct": true,
+        "why": "A `CMD` line is written when cron starts a job, and there is none."
+      },
+      {
+        "text": "The schedule is wrong",
+        "correct": false,
+        "why": "That is one of the two things still on the table."
+      },
+      {
+        "text": "The crontab is on a different account",
+        "correct": false,
+        "why": "Also still on the table, and the commonest answer of all."
+      },
+      {
+        "text": "Cron is running but the machine's clock is wrong",
+        "correct": false,
+        "why": "A wrong clock would still produce a `CMD` line, at the wrong time."
+      }
+    ]
+  },
+  {
+    "id": "ex-g01cysnv",
+    "version": 1,
+    "section": "listing-and-debugging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson's checklist put 'is it in the crontab you think?' before 'is it the environment?'",
+    "hint": "Both are cheap; one of them is the answer more often.",
+    "choices": [
+      {
+        "text": "The environment is checkable after cron has run the job",
+        "correct": false,
+        "why": "`env -i` reproduces it without waiting for cron at all."
+      },
+      {
+        "text": "The account is the answer nine times in ten",
+        "correct": true,
+        "why": "`sudo crontab -u deploy -l` settles it in five seconds."
+      },
+      {
+        "text": "An environment problem needs root to fix",
+        "correct": false,
+        "why": "A `PATH` line in your own crontab needs nobody's permission."
+      },
+      {
+        "text": "The checklist is ordered by how serious each cause is",
+        "correct": false,
+        "why": "It is ordered by how cheap each check is."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p1fv4kh",
+    "version": 1,
+    "section": "overlap-and-locking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A job on `*/5` starts taking seven minutes. What does cron do?",
+    "hint": "Cron has no idea the first one is still going.",
+    "choices": [
+      {
+        "text": "It waits for the running copy to finish, then starts",
+        "correct": false,
+        "why": "Waiting would need cron to know, and it does not."
+      },
+      {
+        "text": "Another copy is launched at the next five-minute mark",
+        "correct": true,
+        "why": "At eleven minutes there are three, and each is slower than the last."
+      },
+      {
+        "text": "It skips the run and notes it in the system log",
+        "correct": false,
+        "why": "Nothing skips it and nothing is noted."
+      },
+      {
+        "text": "It stretches the schedule to seven minutes automatically",
+        "correct": false,
+        "why": "The schedule is fixed by the five fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6hvr7r5",
+    "version": 1,
+    "section": "overlap-and-locking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `flock -E 0 -n` better in a crontab than plain `flock -n`?",
+    "hint": "Think about what a monitoring system sees on a slow afternoon.",
+    "choices": [
+      {
+        "text": "It waits instead of giving up",
+        "correct": false,
+        "why": "Waiting is `-w`; `-E` changes the status."
+      },
+      {
+        "text": "It releases the lock faster when the job finishes",
+        "correct": false,
+        "why": "The kernel releases it either way, at the same moment."
+      },
+      {
+        "text": "A skipped run stops looking like a failed one",
+        "correct": true,
+        "why": "`-n` alone exits 1 when the lock is busy, which alerts on a job that is working."
+      },
+      {
+        "text": "It lets a second copy run while the first holds the lock",
+        "correct": false,
+        "why": "Nothing about it allows two copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-bg7e4fy2",
+    "version": 1,
+    "section": "overlap-and-locking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with a PID file as a lock?",
+    "hint": "Two problems, and one of them is lesson 6's.",
+    "choices": [
+      {
+        "text": "The check and the write are two steps",
+        "correct": true,
+        "why": "Two jobs in the same second both pass the check, and `SIGKILL` runs no trap."
+      },
+      {
+        "text": "A PID file is unreadable by another user",
+        "correct": false,
+        "why": "Permissions are whatever you give it."
+      },
+      {
+        "text": "PIDs are reused, so the file points at the wrong process",
+        "correct": false,
+        "why": "Reuse is real and the two failures here happen long before it."
+      },
+      {
+        "text": "The file has to be on the same filesystem as the script",
+        "correct": false,
+        "why": "It can be anywhere writable."
+      }
+    ]
+  },
+  {
+    "id": "ex-fnkh0nsw",
+    "version": 1,
+    "section": "overlap-and-locking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What happens when a timer activates a `.service` that is already running?",
+    "hint": "This is the argument the lesson calls the strongest for timers.",
+    "choices": [
+      {
+        "text": "A second instance starts, and systemd numbers them",
+        "correct": false,
+        "why": "Instances need a template unit and an `@` in the name."
+      },
+      {
+        "text": "The activation is queued and runs when the first finishes",
+        "correct": false,
+        "why": "It is not queued."
+      },
+      {
+        "text": "systemd kills the running copy and starts a fresh one",
+        "correct": false,
+        "why": "Nothing is killed."
+      },
+      {
+        "text": "Nothing — an active unit is not started again",
+        "correct": true,
+        "why": "No lock file to write, to leak, or to get wrong, and the journal records the activation."
+      }
+    ]
+  },
+  {
+    "id": "ex-gg2225mf",
+    "version": 1,
+    "section": "cron-or-timer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson say to use on a machine you have just been handed?",
+    "hint": "It is not the one with more features.",
+    "choices": [
+      {
+        "text": "A systemd timer, since it is the modern one",
+        "correct": false,
+        "why": "Modern is not the argument, and the next person still has to find it."
+      },
+      {
+        "text": "Cron, since it is on any Unix",
+        "correct": false,
+        "why": "True of cron, and the machine may already be doing everything with units."
+      },
+      {
+        "text": "Whatever is already in use there",
+        "correct": true,
+        "why": "The next person to look finds fifteen jobs in one place, not fourteen and one."
+      },
+      {
+        "text": "Whichever one your team standardised on",
+        "correct": false,
+        "why": "A reasonable policy, and it is about your team rather than this machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-1w9mhf9e",
+    "version": 1,
+    "section": "cron-or-timer",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are reasons the lesson gives for breaking the consistency rule and using a timer?",
+    "hint": "One of the five is something cron does just as well.",
+    "choices": [
+      {
+        "text": "The job must not overlap itself",
+        "correct": true,
+        "why": "Section 223 — systemd will not start an active unit again."
+      },
+      {
+        "text": "The machine is switched off some of the time",
+        "correct": true,
+        "why": "`Persistent=true` catches the missed run up at boot."
+      },
+      {
+        "text": "The job needs the network to be up first",
+        "correct": true,
+        "why": "`After=network-online.target`, which cron cannot express."
+      },
+      {
+        "text": "The job needs to run more often than once a minute",
+        "correct": true,
+        "why": "systemd does seconds; cron's floor is a minute."
+      },
+      {
+        "text": "The job must run as a user other than root",
+        "correct": false,
+        "why": "A user's crontab already runs as that user."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjqy2hjq",
+    "version": 1,
+    "section": "cron-or-timer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container is rescheduled by an orchestrator. What does the lesson say about putting cron in it?",
+    "hint": "There is a third answer that is neither cron nor a timer.",
+    "choices": [
+      {
+        "text": "Use cron, since the container may outlive the orchestrator",
+        "correct": false,
+        "why": "The container is the disposable part by design."
+      },
+      {
+        "text": "Let the orchestrator schedule it instead",
+        "correct": true,
+        "why": "A `CronJob` or a pipeline gives you the run history, the retry and the timeout for free."
+      },
+      {
+        "text": "Use a systemd timer, because containers run systemd now",
+        "correct": false,
+        "why": "Most containers have no init system at all."
+      },
+      {
+        "text": "Put cron in the base image so each container has it",
+        "correct": false,
+        "why": "That multiplies the schedulers rather than removing them."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1w0mgg4",
+    "version": 1,
+    "section": "cron-or-timer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the lesson say survives the choice of scheduler entirely?",
+    "hint": "It is the subject of the section after this one.",
+    "choices": [
+      {
+        "text": "The nine things the job itself needs",
+        "correct": true,
+        "why": "Safe to run twice, loud when it fails, and stopped when it is too slow — the job's problem, not the scheduler's."
+      },
+      {
+        "text": "That the schedule is written in UTC",
+        "correct": false,
+        "why": "Good practice, and a scheduler setting rather than a property of the job."
+      },
+      {
+        "text": "That the job is owned by a service account",
+        "correct": false,
+        "why": "Worth doing, and not the thing the lesson names here."
+      },
+      {
+        "text": "That the schedule lives in version control",
+        "correct": false,
+        "why": "Also worth doing, and again about where the schedule lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k889rga",
+    "version": 1,
+    "section": "a-job-that-survives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The script ran twice and the log's second entry says `already done`. Which of the nine is that?",
+    "hint": "It is the one that makes a catch-up run safe.",
+    "choices": [
+      {
+        "text": "A timeout",
+        "correct": false,
+        "why": "That is `timeout 60` in the crontab line."
+      },
+      {
+        "text": "A lock",
+        "correct": false,
+        "why": "That is `flock`, and it stops two at once rather than the same work twice."
+      },
+      {
+        "text": "Output that goes somewhere you will read",
+        "correct": false,
+        "why": "That is the `exec >>` at the top."
+      },
+      {
+        "text": "Idempotence",
+        "correct": true,
+        "why": "Four lines of guard, and they make a retry, a catch-up and a manual run all harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-10j1tsxm",
+    "version": 1,
+    "section": "a-job-that-survives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the script write `$archive.tmp` and then rename it?",
+    "hint": "Think about a reader arriving halfway through.",
+    "choices": [
+      {
+        "text": "A `.tmp` file is excluded from the backup sweep",
+        "correct": false,
+        "why": "Nothing in the script sweeps anything."
+      },
+      {
+        "text": "`tar` refuses to write to a name that already exists",
+        "correct": false,
+        "why": "`tar` overwrites happily."
+      },
+      {
+        "text": "A rename within one filesystem is atomic",
+        "correct": true,
+        "why": "So nobody sees a half-written archive, and a killed job leaves a `.tmp` rather than something that looks finished."
+      },
+      {
+        "text": "It halves the disk space the archive needs",
+        "correct": false,
+        "why": "It needs the same space either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe5xj0yz",
+    "version": 1,
+    "section": "a-job-that-survives",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which failure does none of the first eight items catch?",
+    "hint": "Silence is also what success looks like.",
+    "choices": [
+      {
+        "text": "A job that fails halfway and leaves a partial file",
+        "correct": false,
+        "why": "The `.tmp` and the rename handle that one."
+      },
+      {
+        "text": "A job that never ran at all",
+        "correct": true,
+        "why": "The crontab was wiped, or the container was rebuilt without it — and nothing reports the absence of a report."
+      },
+      {
+        "text": "A job that runs twice on the same data",
+        "correct": false,
+        "why": "That is idempotence, item seven."
+      },
+      {
+        "text": "A job that hangs and is still there tomorrow",
+        "correct": false,
+        "why": "That is the timeout, item four."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddeq54ma",
+    "version": 1,
+    "section": "a-job-that-survives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a dead-man's switch, in this lesson's sense?",
+    "hint": "It inverts which event is the alarm.",
+    "choices": [
+      {
+        "text": "Something elsewhere notices the silence",
+        "correct": true,
+        "why": "The job reports success; the monitor complains when the report stops, and it is off the machine, so it survives the machine."
+      },
+      {
+        "text": "The job kills itself if it runs past its timeout",
+        "correct": false,
+        "why": "That is `timeout`, and it is item four."
+      },
+      {
+        "text": "A second copy of the job on a standby machine",
+        "correct": false,
+        "why": "Redundancy is a different problem."
+      },
+      {
+        "text": "A lock file that is removed when the process dies",
+        "correct": false,
+        "why": "That is what `flock` does for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncxnth9j",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the 'it did not run' checklist in the order the lesson gives, cheapest first.",
+    "items": [
+      "crontab -l, on the account you think",
+      "systemctl status cron",
+      "grep CRON /var/log/syslog",
+      "check the schedule itself",
+      "check the file's name",
+      "reproduce the environment with env -i"
+    ],
+    "trap": "The environment goes last, and it is where everybody starts."
+  },
+  {
+    "id": "ex-v6pd15dy",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to the thing that caused it.",
+    "hint": "Two of them are about a file being ignored without a word.",
+    "pairs": [
+      {
+        "left": "`/bin/sh: 1: report.sh: not found`",
+        "right": "cron's `PATH` is `/usr/bin:/bin`"
+      },
+      {
+        "left": "the subject line stops at `$(date +`",
+        "right": "an unescaped `%` in the crontab"
+      },
+      {
+        "left": "a `/etc/cron.d` file that never runs",
+        "right": "a dot in its name"
+      },
+      {
+        "left": "`new crontab file is missing newline`",
+        "right": "no final newline in the file"
+      }
+    ],
+    "right_distractors": [
+      "the daemon is not running",
+      "the job is still running from last time"
+    ]
+  },
+  {
+    "id": "ex-9m3d8hyn",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Wrap a crontab command in this, with `-E 0 -n`, so a run that is still going is skipped instead of piling up: `_____`",
+    "hint": "Five letters, and it takes a lock file and a command.",
+    "blanks": [
+      {
+        "accept": [
+          "flock"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-77b8sakw",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before installing a timer, print the dates an expression will actually fire on: `systemd-analyze ________ \"Mon *-*-* 03:00:00\"`",
+    "hint": "Eight letters, and it is not `verify`.",
+    "blanks": [
+      {
+        "accept": [
+          "calendar"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aew12nnt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `30 2 * * 0` mean?",
+    "hint": "The last field is the day of the week, and zero is one end of it.",
+    "choices": [
+      {
+        "text": "02:30 on the thirtieth of each month",
+        "correct": false,
+        "why": "The thirty is minutes; the day fields are further along."
+      },
+      {
+        "text": "At half past each second hour",
+        "correct": false,
+        "why": "That would be `30 */2 * * *`."
+      },
+      {
+        "text": "02:30 on Sundays",
+        "correct": true,
+        "why": "Zero is Sunday, and seven is Sunday again."
+      },
+      {
+        "text": "02:30 on the first day of each week, starting Monday",
+        "correct": false,
+        "why": "Monday is 1 in cron, and systemd's `weekly` is the one that means Monday."
+      }
+    ]
+  },
+  {
+    "id": "ex-e61pp2z1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where would you put a job that belongs to a service rather than to a person?",
+    "hint": "It should survive that person's account being removed.",
+    "choices": [
+      {
+        "text": "A file in `/etc/cron.d`",
+        "correct": true,
+        "why": "One file, one subject, removable by deleting it — and it survives a `crontab -r`."
+      },
+      {
+        "text": "The service account's own crontab",
+        "correct": false,
+        "why": "It disappears with the account, and nobody greps the spool."
+      },
+      {
+        "text": "`/etc/crontab`, edited by hand",
+        "correct": false,
+        "why": "That is the distribution's file, and an upgrade will ask about your changes."
+      },
+      {
+        "text": "Your own crontab, with a comment saying who it is for",
+        "correct": false,
+        "why": "It leaves with you when you change teams."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqmyw0hm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line is safe to put in a crontab?",
+    "hint": "One of the four has a character that ends the command early.",
+    "choices": [
+      {
+        "text": "`0 3 * * * cd /srv/app; ./backup.sh`",
+        "correct": false,
+        "why": "The `;` runs the script even when the `cd` failed."
+      },
+      {
+        "text": "`0 3 * * * backup.sh >/dev/null 2>&1`",
+        "correct": false,
+        "why": "A bare name against cron's `PATH`, and the error thrown away with it."
+      },
+      {
+        "text": "`0 3 * * * echo \"run $(date +%F)\" >> /var/log/b.log`",
+        "correct": false,
+        "why": "The unescaped `%` ends the command at `date +`."
+      },
+      {
+        "text": "`0 3 * * * cd /srv/app && /home/ana/bin/backup.sh`",
+        "correct": true,
+        "why": "Absolute path, and `&&` so a failed `cd` stops the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dwh40rs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A laptop is closed every night and `/etc/cron.daily` still runs its jobs. What is running them?",
+    "hint": "The system crontab has a test that decides between two answers.",
+    "choices": [
+      {
+        "text": "Cron, at 06:25, because the machine wakes for it",
+        "correct": false,
+        "why": "It does not wake, and cron's line has a test in front of it."
+      },
+      {
+        "text": "anacron, once the machine is awake",
+        "correct": true,
+        "why": "It compares today against the date in `/var/spool/anacron`, so a day that was missed is caught up."
+      },
+      {
+        "text": "systemd, from a timer with `Persistent=true`",
+        "correct": false,
+        "why": "That would do the same job, and on this machine anacron is what the crontab defers to."
+      },
+      {
+        "text": "The jobs are skipped until somebody runs them",
+        "correct": false,
+        "why": "They run; the whole point of anacron is that they do."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0f78ge7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these will `systemd-analyze calendar` accept and report as firing `never`?",
+    "hint": "One of them is a date that does not exist.",
+    "choices": [
+      {
+        "text": "`*-*-* 25:00:00`",
+        "correct": false,
+        "why": "That fails to parse, and exits 1."
+      },
+      {
+        "text": "`Mon..Fri 09:00`",
+        "correct": false,
+        "why": "Weekdays at nine, and it fires every week."
+      },
+      {
+        "text": "`*-02-30 03:00:00`",
+        "correct": true,
+        "why": "The thirtieth of February parses, exits 0, and never happens."
+      },
+      {
+        "text": "`*-*-* *:00/15:00`",
+        "correct": false,
+        "why": "Four times an hour, and the iterations print the dates."
+      }
+    ]
+  },
+  {
+    "id": "ex-0y4vmvgy",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these does a systemd timer give you that a crontab line does not?",
+    "hint": "Two of the six are things cron does just as well.",
+    "choices": [
+      {
+        "text": "Output in the journal rather than in mail",
+        "correct": true,
+        "why": "With the unit name, the timestamp and the exit status."
+      },
+      {
+        "text": "A missed run caught up at the next boot",
+        "correct": true,
+        "why": "`Persistent=true`."
+      },
+      {
+        "text": "Refusal to start a job that is already running",
+        "correct": true,
+        "why": "An active unit is not activated again."
+      },
+      {
+        "text": "A random delay to spread a fleet out",
+        "correct": true,
+        "why": "`RandomizedDelaySec=`."
+      },
+      {
+        "text": "Running the job as a named user",
+        "correct": false,
+        "why": "A user crontab does that by existing."
+      },
+      {
+        "text": "A schedule that is written down in a file",
+        "correct": false,
+        "why": "A crontab is a file too."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgxerer2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You inherit `0 3 13 * 5 /home/ana/bin/report.sh` and the author says it is the monthly Friday report. What do you tell them?",
+    "hint": "It was measured with three jobs and a control.",
+    "choices": [
+      {
+        "text": "It runs on the thirteenth and on every Friday",
+        "correct": true,
+        "why": "The two day fields are ORed, so it is about sixty-four runs a year rather than one."
+      },
+      {
+        "text": "It runs only in months where the thirteenth is a Friday",
+        "correct": false,
+        "why": "That is systemd's rule, not cron's."
+      },
+      {
+        "text": "It never runs, because the fields contradict each other",
+        "correct": false,
+        "why": "Both matched in the measurement, separately."
+      },
+      {
+        "text": "It runs on the thirteenth, and the `5` is ignored",
+        "correct": false,
+        "why": "Neither field is ignored; either one firing is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jgjstvs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job has been failing quietly every night for six months. Which single crontab habit caused that?",
+    "hint": "It is the most-copied fragment in any runbook.",
+    "choices": [
+      {
+        "text": "Scheduling it at exactly 03:00 like everything else",
+        "correct": false,
+        "why": "That is a thundering herd, and it is a different problem."
+      },
+      {
+        "text": "`>/dev/null 2>&1` on the end of the line",
+        "correct": true,
+        "why": "Both streams discarded, so the error that names the problem went with them."
+      },
+      {
+        "text": "Using a relative path for the script",
+        "correct": false,
+        "why": "That fails loudly on the first night, with mail."
+      },
+      {
+        "text": "Leaving `MAILTO` unset",
+        "correct": false,
+        "why": "Unset means the crontab's owner, which is where it would have gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-87jrq0p9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The job's log shows it ran and succeeded every night until three weeks ago, and then nothing at all. What is the most useful next command?",
+    "hint": "Something stopped starting it, rather than something failing inside it.",
+    "choices": [
+      {
+        "text": "`journalctl -u backup.service --since '3 weeks ago'`",
+        "correct": false,
+        "why": "Worth running when it is a timer, and this job's record is a log file."
+      },
+      {
+        "text": "`bash -x /home/ana/bin/backup.sh`",
+        "correct": false,
+        "why": "That debugs a job that runs; this one is not running."
+      },
+      {
+        "text": "`ls -l /home/ana/srv/archive/`",
+        "correct": false,
+        "why": "That confirms the absence you already know about."
+      },
+      {
+        "text": "`crontab -l` and `grep CRON /var/log/syslog`",
+        "correct": true,
+        "why": "Is the line still there, and did cron try — which separates a wiped crontab from a job that is failing."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqyx7ekm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these is the one thing this lesson says no scheduler can do for you?",
+    "hint": "Every other item on the list is a line in a file.",
+    "choices": [
+      {
+        "text": "Stop two copies of the job running at once",
+        "correct": false,
+        "why": "`flock` does it in cron, and systemd does it for you."
+      },
+      {
+        "text": "Run the job after the network is up",
+        "correct": false,
+        "why": "`After=network-online.target`."
+      },
+      {
+        "text": "Notice that nothing is scheduling it",
+        "correct": true,
+        "why": "Silence is what success looks like, so the absence has to be noticed from outside."
+      },
+      {
+        "text": "Kill the job when it has run too long",
+        "correct": false,
+        "why": "`timeout`, or `RuntimeMaxSec=`."
+      }
+    ]
+  }
+]

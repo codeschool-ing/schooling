@@ -1,0 +1,1666 @@
+{
+  "ex-rnz2n7fp": {
+    "prompt": "Um serviço escreve um arquivo de log enquanto a máquina roda. Sob qual diretório ele está?",
+    "hint": "Um destes guarda o que muda; os outros guardam o que foi instalado ou configurado.",
+    "choices": [
+      {
+        "text": "/etc",
+        "why": "Configuração mora aqui. É lida enquanto roda, e raramente escrita."
+      },
+      {
+        "text": "/usr",
+        "why": "Programas instalados e os dados deles. O gerenciador de pacotes escreve aqui; um serviço não."
+      },
+      {
+        "text": "/var",
+        "why": "Isso. Logs, filas e dados de trabalho — o que a máquina escreve enquanto roda."
+      },
+      {
+        "text": "/opt",
+        "why": "Software colocado fora do gerenciador de pacotes. Os logs dele ainda pertencem a /var."
+      }
+    ]
+  },
+  "ex-esbvkpg8": {
+    "prompt": "`ls -ld /bin` imprime uma linha que começa com `l` e termina com `-> usr/bin`. O que é `/bin` nesta máquina?",
+    "hint": "O primeiro caractere de uma listagem longa é o tipo.",
+    "choices": [
+      {
+        "text": "Um link simbólico para dentro de /usr",
+        "why": "Sim — o usr merge. /bin/ls e /usr/bin/ls são um arquivo com dois caminhos."
+      },
+      {
+        "text": "Um diretório vazio",
+        "why": "Um diretório vazio apareceria como `d`, sem nada depois do nome."
+      },
+      {
+        "text": "Um diretório montado de outro disco",
+        "why": "Um ponto de montagem aparece como diretório comum. Esta linha diz `l`."
+      },
+      {
+        "text": "Uma entrada quebrada de uma atualização que falhou",
+        "why": "Ele resolve normalmente. A seta é como um link simbólico funcional é desenhado."
+      }
+    ]
+  },
+  "ex-d52mfhsp": {
+    "prompt": "Você compila uma ferramenta e instala na mão. Onde ela deve ficar para o gerenciador de pacotes não encostar?",
+    "hint": "Existe um diretório reservado exatamente para isso, um nível dentro de outro.",
+    "choices": [
+      {
+        "text": "/bin",
+        "why": "Ali ficam os comandos do próprio sistema, geridos por pacotes."
+      },
+      {
+        "text": "/home/voce/bin",
+        "why": "Serve para você sozinho, e fica invisível para o resto da máquina."
+      },
+      {
+        "text": "/var/local",
+        "why": "Este existe, e guarda dados variáveis em vez de programas."
+      },
+      {
+        "text": "/usr/local",
+        "why": "Isso — reservado para software instalado à mão, e intocado pelos pacotes."
+      }
+    ]
+  },
+  "ex-8dqab4s3": {
+    "prompt": "Um programa precisa de um arquivo de rascunho que sobreviva a um reboot. `/tmp` ou `/var/tmp`?",
+    "hint": "Os dois são rascunho. Eles diferem em quanto tempo o rascunho dura.",
+    "choices": [
+      {
+        "text": "/tmp, porque arquivos de rascunho ficam lá por convenção",
+        "why": "Por convenção o /tmp é limpo no boot, que é justamente o que este arquivo tem de sobreviver."
+      },
+      {
+        "text": "/var/tmp, que não é limpo no boot",
+        "why": "Isso. É essa a diferença entre os dois, e a razão de os dois existirem."
+      },
+      {
+        "text": "Tanto faz — os dois diretórios se comportam igual",
+        "why": "Os dois são rascunho, e o tempo de vida difere. Essa diferença é o ponto inteiro."
+      },
+      {
+        "text": "Nenhum; um arquivo desses fica em /run",
+        "why": "O /run também é limpo no boot, e é para sockets e PIDs em vez de dados."
+      }
+    ]
+  },
+  "ex-r2vzt6nf": {
+    "prompt": "Ligue cada diretório ao que é guardado nele.",
+    "hint": "Quatro destes você vai abrir na mão; os distratores descrevem outros diretórios.",
+    "pairs": [
+      {
+        "left": "/etc",
+        "right": "configuração, em texto"
+      },
+      {
+        "left": "/var/log",
+        "right": "o que a máquina escreveu enquanto rodava"
+      },
+      {
+        "left": "/proc",
+        "right": "o kernel e os processos dele, como arquivos"
+      },
+      {
+        "left": "/home",
+        "right": "um diretório por pessoa"
+      }
+    ],
+    "right_distractors": [
+      "mídia removível, montada automaticamente",
+      "a imagem do kernel e o carregador de boot"
+    ]
+  },
+  "ex-d72pyyrg": {
+    "prompt": "Qual destes é um caminho absoluto?",
+    "hint": "Um caractere na frente decide.",
+    "choices": [
+      {
+        "text": "work/src/main.c",
+        "why": "Sem barra inicial, então parte de onde você estiver."
+      },
+      {
+        "text": "/home/ana/work",
+        "why": "Sim. Começa na raiz, então significa a mesma coisa digitado em qualquer lugar."
+      },
+      {
+        "text": "../src/main.c",
+        "why": "Começa subindo a partir daqui, o que o torna relativo."
+      },
+      {
+        "text": "./ledger",
+        "why": "O ponto inicial é 'aqui', então este depende de onde é aqui."
+      }
+    ]
+  },
+  "ex-f4epzw8n": {
+    "prompt": "Uma tarefa do cron roda `tar -czf backup.tar.gz logs/`. Ela termina bem toda noite e os backups não aparecem em lugar nenhum. Por quê?",
+    "hint": "Uma tarefa agendada não começa no diretório em que você escreveu a linha.",
+    "choices": [
+      {
+        "text": "o cron remove caminhos relativos do comando antes de rodar",
+        "why": "O cron repassa a linha. Ele muda onde a linha roda, não o que ela diz."
+      },
+      {
+        "text": "o tar recusa caminhos relativos e escreve num diretório temporário",
+        "why": "O tar aceita caminhos relativos sem reclamar, e escreve exatamente onde foi apontado."
+      },
+      {
+        "text": "Os dois caminhos são relativos, e o cron inicia a tarefa em outro lugar",
+        "why": "Isso. O arquivo está sendo escrito, num diretório em que ninguém pensou em olhar."
+      },
+      {
+        "text": "A tarefa roda como outro usuário e as escritas dela são descartadas em silêncio",
+        "why": "Uma escrita sem permissão falharia alto em vez de sumir."
+      }
+    ]
+  },
+  "ex-kvmwzfvj": {
+    "prompt": "Estando em `/home/ana/work/notes`, escreva o caminho relativo mais curto que alcança `/home/ana/work/src/main.c`.",
+    "hint": "Um nível acima, depois para dentro do diretório irmão."
+  },
+  "ex-8sm1ny2f": {
+    "prompt": "Por que rodar um programa do diretório atual exige `./` na frente do nome?",
+    "hint": "É sobre onde o shell procura por uma palavra pelada, não sobre o arquivo.",
+    "choices": [
+      {
+        "text": "`.` está ausente do $PATH, então uma palavra pelada não é procurada aqui",
+        "why": "Isso, e deixá-lo fora do $PATH é deliberado: senão um `ls` plantado rodaria."
+      },
+      {
+        "text": "Programas no diretório atual são tratados como dados em vez de comandos",
+        "why": "O arquivo é um executável comum. O que muda é como o shell resolve a palavra."
+      },
+      {
+        "text": "O shell precisa do ponto para saber que o arquivo é executável",
+        "why": "Se ele pode rodar está nos bits de permissão, com os quais o ponto não tem relação."
+      },
+      {
+        "text": "O bash quer um separador de caminho na frente de qualquer programa que inicia",
+        "why": "Ele inicia programas por nome pelado o tempo todo — é para isso que serve o $PATH."
+      }
+    ]
+  },
+  "ex-wa0nkwrh": {
+    "prompt": "`ls -di / /. /..` imprime o número 2 três vezes. O que isso te diz?",
+    "hint": "O número é o identificador que o sistema de arquivos usa para uma coisa.",
+    "choices": [
+      {
+        "text": "O diretório raiz contém duas entradas",
+        "why": "Aquele número é um identificador, não uma contagem do que há dentro."
+      },
+      {
+        "text": "Dois dos três caminhos são inválidos",
+        "why": "Foram impressos três números de inode, então três caminhos resolveram."
+      },
+      {
+        "text": "O diretório raiz tem dois níveis de profundidade",
+        "why": "Profundidade não é o que um número de inode mede."
+      },
+      {
+        "text": "São três nomes de um diretório só",
+        "why": "Isso. O pai da raiz é ela mesma, então /.. é /."
+      }
+    ]
+  },
+  "ex-n12pfrnr": {
+    "prompt": "`echo '~/work'` imprime `~/work` em vez de `/home/ana/work`. Por quê?",
+    "hint": "Pergunte quem deveria reescrever o til, e se ele teve chance.",
+    "choices": [
+      {
+        "text": "O echo não entende o til e imprime cru",
+        "why": "O echo nunca entende. Reescrever é tarefa do shell, e as aspas impediram."
+      },
+      {
+        "text": "Aspas simples impediram o shell de expandir",
+        "why": "Isso. Sem aspas, o shell teria substituído antes de o echo rodar."
+      },
+      {
+        "text": "O til expande depois de o comando rodar, então o echo imprime o texto antigo",
+        "why": "A expansão acontece na leitura da linha, que é antes de qualquer coisa rodar."
+      },
+      {
+        "text": "Um til seguido de barra é outro atalho, com significado próprio",
+        "why": "`~/work` é a forma comum. Foram as aspas que mudaram o resultado aqui."
+      }
+    ]
+  },
+  "ex-26zr9x9z": {
+    "prompt": "Você está em `/var/log`, dá `cd /etc`, e depois digita `cd -`. Onde você vai parar?",
+    "hint": "O traço é atalho para um diretório específico.",
+    "choices": [
+      {
+        "text": "/",
+        "why": "O traço não é 'acima' e não é 'a raiz'."
+      },
+      {
+        "text": "No seu diretório pessoal",
+        "why": "Isso é o `cd` sem argumento nenhum."
+      },
+      {
+        "text": "/var/log",
+        "why": "Isso — o diretório anterior, e ele imprime o caminho ao ir."
+      },
+      {
+        "text": "/etc, já que o traço cancela o último cd",
+        "why": "Ele te move, em vez de desfazer o movimento no lugar."
+      }
+    ]
+  },
+  "ex-wvhq6x79": {
+    "prompt": "Qual comando único te leva ao seu diretório pessoal de qualquer lugar, sem argumento?",
+    "hint": "Duas letras."
+  },
+  "ex-fkbecj74": {
+    "prompt": "Você quer que o arquivo mais novo, num diretório com duzentos logs, seja a última linha impressa. Qual listagem?",
+    "hint": "Duas opções, e a segunda inverte a primeira.",
+    "choices": [
+      {
+        "text": "ls -l --sort=size",
+        "why": "Isso ordena por tamanho, maior primeiro."
+      },
+      {
+        "text": "ls -la",
+        "why": "Isso acrescenta os nomes ocultos, e deixa a ordem alfabética."
+      },
+      {
+        "text": "ls -ltr",
+        "why": "Isso: ordene por tempo, depois inverta, e o mais novo fica logo acima do prompt."
+      },
+      {
+        "text": "ls -lt",
+        "why": "Isso é o mais novo primeiro, o que põe o que você quer no topo da rolagem."
+      }
+    ]
+  },
+  "ex-yp56h7kc": {
+    "prompt": "`ls -l logs` imprimiu quatro arquivos. Você queria as permissões do próprio `logs`. O que faltou?",
+    "hint": "Uma letra, e iniciante raramente acha no manual.",
+    "choices": [
+      {
+        "text": "-d",
+        "why": "Isso. Sem ele, um diretório como argumento quer dizer 'mostre o que está dentro'."
+      },
+      {
+        "text": "-a",
+        "why": "Isso acrescenta nomes ocultos à listagem, e ainda lista o conteúdo."
+      },
+      {
+        "text": "-R",
+        "why": "Isso desce mais fundo em vez de parar no diretório."
+      },
+      {
+        "text": "-i",
+        "why": "Isso imprime números de inode ao lado do que já estiver sendo listado."
+      }
+    ]
+  },
+  "ex-k3zsjqz2": {
+    "prompt": "`cd work/README.md` responde `bash: cd: work/README.md: Not a directory`. O que essa mensagem descarta?",
+    "hint": "Compare com as outras duas coisas que o cd diz quando recusa.",
+    "choices": [
+      {
+        "text": "Que você tem permissão de entrar",
+        "why": "Uma recusa por permissão diz `Permission denied`."
+      },
+      {
+        "text": "Que o caminho está errado",
+        "why": "Isso — o caminho resolveu. O que ele alcançou é um arquivo."
+      },
+      {
+        "text": "Que o arquivo existe",
+        "why": "Ele existe. É por isso que a reclamação é sobre o tipo dele."
+      },
+      {
+        "text": "Que quem recusou foi o bash",
+        "why": "O bash é nomeado no início da linha, então quem fala é ele."
+      }
+    ]
+  },
+  "ex-3wz5kn5q": {
+    "prompt": "Por que `man cd` não acha nada enquanto `help cd` funciona?",
+    "hint": "Pense no que aconteceria se o cd fosse um programa separado.",
+    "choices": [
+      {
+        "text": "O cd é pequeno demais para ter ganhado uma página de manual",
+        "why": "Tamanho não é o motivo, e muito comando minúsculo tem página."
+      },
+      {
+        "text": "As páginas de manual dos comandos de shell estão num pacote que você não instalou",
+        "why": "Instalar mais manuais ainda não produziria um, porque não há programa a documentar."
+      },
+      {
+        "text": "O man cobre comandos e o help cobre opções, que é outra pergunta",
+        "why": "O help documenta comandos também — os que são embutidos no shell."
+      },
+      {
+        "text": "O cd é embutido no shell, então não existe programa para o man descrever",
+        "why": "Isso: um programa separado mudando o próprio diretório deixaria o shell onde estava."
+      }
+    ]
+  },
+  "ex-fx4qvsrw": {
+    "prompt": "Uma linha de listagem longa começa com `d`. O que é a entrada?",
+    "hint": "O primeiro caractere é o tipo, e não faz parte das permissões.",
+    "choices": [
+      {
+        "text": "Um dispositivo",
+        "why": "Um dispositivo mostra `c` ou `b` ali, conforme como é lido."
+      },
+      {
+        "text": "Um diretório",
+        "why": "Sim. Os nove caracteres depois dele são as permissões."
+      },
+      {
+        "text": "Um link simbólico",
+        "why": "Um link simbólico mostra `l`, e imprime uma seta depois do nome."
+      },
+      {
+        "text": "Um arquivo que o dono pode apagar",
+        "why": "Apagar é decidido pelo diretório que guarda o nome, não por esta letra."
+      }
+    ]
+  },
+  "ex-gwgxje7v": {
+    "prompt": "`drwxr-xr-x 2 ana ana 4096 Mar 26 2025 logs`. O que o `2` diz sobre `logs`?",
+    "hint": "Num diretório a contagem começa em dois, e a seção 39 disse por quê.",
+    "choices": [
+      {
+        "text": "Há dois arquivos dentro",
+        "why": "A contagem é sobre nomes que apontam para o diretório, não sobre o conteúdo."
+      },
+      {
+        "text": "Duas pessoas podem escrever nele",
+        "why": "Quem pode escrever está nos nove caracteres de permissão, não aqui."
+      },
+      {
+        "text": "Ele não tem subdiretórios",
+        "why": "Isso: o nome dele mais o `.` dele, e o `..` de um subdiretório somaria mais um."
+      },
+      {
+        "text": "Ele foi modificado duas vezes desde que foi criado",
+        "why": "Modificações não são contadas em lugar nenhum de uma listagem."
+      }
+    ]
+  },
+  "ex-jxw0a1h7": {
+    "prompt": "Uma listagem `ls -l` mostra `Mar 22  2025` numa linha e `Sep 14 21:58` em outra. Por que dois formatos?",
+    "hint": "Uma das duas entradas é bem mais recente que a outra.",
+    "choices": [
+      {
+        "text": "Entradas recentes ganham hora, as mais antigas ganham o ano",
+        "why": "Isso — o corte é por volta de seis meses, e o `--full-time` imprime tudo igual."
+      },
+      {
+        "text": "Diretórios ganham o ano e arquivos ganham a hora",
+        "why": "As duas linhas podem ser diretórios. É a idade que decide o formato."
+      },
+      {
+        "text": "Entradas em outro sistema de arquivos são impressas diferente",
+        "why": "Um sistema de arquivos ou vários, o formato segue a idade da entrada."
+      },
+      {
+        "text": "A segunda entrada tem um horário que o sistema de arquivos não conseguiu registrar inteiro",
+        "why": "Os dois horários estão completos. O que está sendo encurtado é a impressão."
+      }
+    ]
+  },
+  "ex-9edhfqbs": {
+    "prompt": "Quatro arquivos de 440, 8, 0 e 31 bytes, e a listagem abre com `total 12`. O que é 12?",
+    "hint": "Não é a contagem, e não é a soma dos tamanhos.",
+    "choices": [
+      {
+        "text": "O número de bytes arredondado para kilobytes",
+        "why": "479 bytes não arredonda para 12 de coisa nenhuma."
+      },
+      {
+        "text": "O número de entradas, incluindo as ocultas",
+        "why": "São quatro entradas, ocultas ou não."
+      },
+      {
+        "text": "O tamanho da lista de nomes do próprio diretório",
+        "why": "Isso é o 4096 que aparece na linha do diretório."
+      },
+      {
+        "text": "Os blocos de 1 KiB que o disco deu a essas entradas",
+        "why": "Isso: três arquivos pegaram um bloco cada, e o vazio não pegou nenhum."
+      }
+    ]
+  },
+  "ex-0st30y0c": {
+    "prompt": "Ponha os campos de uma listagem longa na ordem em que o `ls -l` imprime.",
+    "items": [
+      "tipo",
+      "permissões",
+      "contagem de links",
+      "dono",
+      "grupo",
+      "tamanho",
+      "hora",
+      "nome"
+    ],
+    "trap": "O dono vem antes do grupo, e o tamanho vem antes da data."
+  },
+  "ex-yt7msjjs": {
+    "prompt": "`cp other.txt keep.txt` rodou, e o `keep.txt` já existia. O que aconteceu com o conteúdo antigo?",
+    "hint": "Conte as confirmações e os avisos que você viu.",
+    "choices": [
+      {
+        "text": "Foi para uma lixeira que o shell mantém",
+        "why": "Essa lixeira não existe, e não há um desfazer por trás dela."
+      },
+      {
+        "text": "Foi preservado, porque o cp se recusa a sobrescrever por padrão",
+        "why": "Ele sobrescreve por padrão. O `-i` é o que faz perguntar."
+      },
+      {
+        "text": "Se foi, sem confirmação e sem de onde restaurar",
+        "why": "Isso. Esse silêncio é o acordo, e é por isso que dar `ls` antes vira hábito."
+      },
+      {
+        "text": "Foi acrescentado, então o arquivo agora guarda os dois",
+        "why": "Uma cópia substitui o destino em vez de somar a ele."
+      }
+    ]
+  },
+  "ex-4s530y7t": {
+    "prompt": "`cp archive backup` imprime `cp: -r not specified; omitting directory 'archive'`. Isso é um erro?",
+    "hint": "Olhe o que o comando fez com todo o resto que recebeu.",
+    "choices": [
+      {
+        "text": "Não — é um aviso de que um argumento foi pulado",
+        "why": "Isso, e num comando copiando vinte itens ele passa batido enquanto o resto dá certo."
+      },
+      {
+        "text": "Sim, e a cópia parou naquele ponto",
+        "why": "Ele segue com os argumentos restantes, e é isso que torna fácil não perceber."
+      },
+      {
+        "text": "Sim, e o destino ficou vazio",
+        "why": "Tudo que era arquivo foi copiado. O que ficou para trás foi o diretório."
+      },
+      {
+        "text": "Não — quer dizer que o diretório foi copiado sem o conteúdo",
+        "why": "Nada do diretório foi copiado. O `omitting` é literal."
+      }
+    ]
+  },
+  "ex-707dtmhc": {
+    "prompt": "Mover um arquivo de 4 GB dentro do mesmo sistema de arquivos é instantâneo; movê-lo para outro disco leva minutos. Por quê?",
+    "hint": "Pergunte o que uma renomeação de fato muda em disco.",
+    "choices": [
+      {
+        "text": "O mv comprime o arquivo quando ele atravessa de disco",
+        "why": "Ele copia os bytes como estão, sem comprimir."
+      },
+      {
+        "text": "O segundo disco é mais lento, e a diferença é essa",
+        "why": "Mesmo em discos idênticos, atravessar entre eles copia."
+      },
+      {
+        "text": "O mv confere o sistema de arquivos de destino antes de escrever",
+        "why": "Uma conferência levaria um instante, não minutos."
+      },
+      {
+        "text": "Dentro de um sistema de arquivos é renomear, e não copiar",
+        "why": "Isso — renomear muda qual diretório guarda o nome, e não move dado nenhum."
+      }
+    ]
+  },
+  "ex-whe4ffqz": {
+    "prompt": "Quando o `rmdir` dá certo onde o `rm -r` também daria, e te conta algo que o `rm -r` não contaria?",
+    "hint": "Um dos dois confere uma hipótese para você.",
+    "choices": [
+      {
+        "text": "Quando o diretório vive num sistema de arquivos em que você não escreve",
+        "why": "Nenhum dos dois consegue remover nada ali."
+      },
+      {
+        "text": "Quando ele está vazio, e uma recusa te avisa que não está",
+        "why": "Isso. Use quando o que você acredita é que ele está vazio, e deixe ele conferir."
+      },
+      {
+        "text": "Quando você não tem permissão nos arquivos de dentro",
+        "why": "Aí o rmdir também recusa, pelo mesmo motivo."
+      },
+      {
+        "text": "Quando o diretório tem um ponto de montagem abaixo dele",
+        "why": "Nenhum dos dois remove um diretório com algo montado embaixo."
+      }
+    ]
+  },
+  "ex-8qx6x736": {
+    "prompt": "`rm -rf \"$DIR/\"` está num script e o `DIR` nunca foi definido. O que o shell entrega ao `rm`?",
+    "hint": "Substitua pela string vazia e leia o que sobra.",
+    "choices": [
+      {
+        "text": "Um argumento vazio, então o rm imprime o uso dele e para",
+        "why": "Sobra algo depois da substituição, e é um caminho válido."
+      },
+      {
+        "text": "O texto literal $DIR/, que não existe",
+        "why": "Dentro de aspas duplas a variável é substituída, vazia ou não."
+      },
+      {
+        "text": "Uma barra sozinha, que é a raiz da árvore",
+        "why": "Isso. O rm do GNU recusa essa em específico, e o `set -u` é o conserto de verdade."
+      },
+      {
+        "text": "O diretório atual, porque uma variável sem valor quer dizer aqui",
+        "why": "Uma variável sem valor expande para nada, e não para um ponto."
+      }
+    ]
+  },
+  "ex-5y2z65zf": {
+    "prompt": "Alguém te entrega `data.bin`, e a extensão pode ser mentira. Qual comando responde o que ele de fato contém?",
+    "hint": "Um comando lê os bytes e te diz o que eles são.",
+    "choices": [
+      {
+        "text": "cat data.bin",
+        "why": "Se aqueles bytes forem binários, seu terminal para de desenhar texto direito."
+      },
+      {
+        "text": "file data.bin",
+        "why": "Isso. Ele lê os primeiros bytes e nomeia o formato, diga a extensão o que disser."
+      },
+      {
+        "text": "wc -l data.bin",
+        "why": "Isso conta linhas, o que já supõe uma resposta que você ainda não tem."
+      },
+      {
+        "text": "stat data.bin",
+        "why": "Isso descreve a entrada — tamanho, dono, datas — e nada diz sobre o conteúdo."
+      }
+    ]
+  },
+  "ex-qcdpy0bf": {
+    "prompt": "O `stat` mostra Modify em março e Change hoje. O que mudou hoje?",
+    "hint": "Uma das três marcas de tempo cobre mais do que o conteúdo.",
+    "choices": [
+      {
+        "text": "O conteúdo, e a linha Modify está desatualizada",
+        "why": "Modify é o conteúdo. Ela teria se movido."
+      },
+      {
+        "text": "Alguém leu o arquivo",
+        "why": "Ler move o Access, e deixa o Change quieto."
+      },
+      {
+        "text": "O arquivo foi copiado para outro lugar",
+        "why": "Copiar cria uma entrada nova; não mexe nesta."
+      },
+      {
+        "text": "O nome, a permissão ou o dono",
+        "why": "Isso — o ctime cobre os metadados, e é isso que esse par está te contando."
+      }
+    ]
+  },
+  "ex-tqsb91t5": {
+    "prompt": "`wc logs/app.log` imprime ` 30  80 440`. Que números são esses?",
+    "hint": "Eles vêm em ordem fixa, e o último é o maior por um motivo.",
+    "choices": [
+      {
+        "text": "Linhas, palavras, bytes",
+        "why": "Sim, e `-l`, `-w` ou `-c` pede um deles sozinho."
+      },
+      {
+        "text": "Bytes, palavras, linhas",
+        "why": "A ordem corre ao contrário, da contagem mais grossa para a mais fina."
+      },
+      {
+        "text": "Linhas, caracteres, blocos",
+        "why": "Blocos são assunto do `du`; o wc conta o que está no arquivo."
+      },
+      {
+        "text": "Palavras, linhas, bytes",
+        "why": "Palavras vêm em segundo. Um arquivo com mais linhas que palavras seria estranho."
+      }
+    ]
+  },
+  "ex-jftq8cav": {
+    "prompt": "Você está observando um serviço falhar. Qual comando mostra cada linha nova de log conforme ela é escrita?",
+    "hint": "Um destes continua aberto depois de imprimir.",
+    "choices": [
+      {
+        "text": "cat /var/log/app.log",
+        "why": "Ele imprime o que existe e te devolve ao prompt."
+      },
+      {
+        "text": "head -f /var/log/app.log",
+        "why": "O head não tem essa opção — ele trabalha na outra ponta do arquivo."
+      },
+      {
+        "text": "tail -f /var/log/app.log",
+        "why": "Isso, e o `-F` continua acompanhando quando o log rotaciona de madrugada."
+      },
+      {
+        "text": "cat /var/log/app.log | less",
+        "why": "Ele pagina o que existe; apertar `F` dentro do less é o equivalente."
+      }
+    ]
+  },
+  "ex-0dktpqxm": {
+    "prompt": "Você abriu um paginador sem querer e quer sair. Qual tecla sai do `less`?",
+    "hint": "Uma letra."
+  },
+  "ex-ebykptq8": {
+    "prompt": "Por que o padrão está entre aspas em `find . -name '*.c'`?",
+    "hint": "Dois programas diferentes poderiam fazer a comparação, e as aspas escolhem.",
+    "choices": [
+      {
+        "text": "Porque o find recusa um padrão pelado e pede aspas em volta",
+        "why": "Ele aceita a palavra que receber. O que muda é qual palavra chega."
+      },
+      {
+        "text": "Porque as aspas tornam a comparação sensível a maiúsculas em vez de frouxa",
+        "why": "Maiúsculas são `-name` contra `-iname`, e as aspas não influem nisso."
+      },
+      {
+        "text": "Porque sem aspas o shell expandiria antes de o find rodar",
+        "why": "Isso, e por acaso funciona quando existe um arquivo desses no diretório atual."
+      },
+      {
+        "text": "Porque um padrão com ponto seria lido como um caminho",
+        "why": "Um ponto é um caractere comum num nome de arquivo e não precisa de proteção."
+      }
+    ]
+  },
+  "ex-qrs1tp5y": {
+    "prompt": "`find . -mtime +180` — o que o sinal de mais faz?",
+    "hint": "O sinal é a diferença entre recente e antiquíssimo.",
+    "choices": [
+      {
+        "text": "Seleciona entradas mais velhas que 180 dias",
+        "why": "Isso. O `-180` selecionaria as recentes."
+      },
+      {
+        "text": "Seleciona entradas alteradas nos últimos 180 dias",
+        "why": "Isso é o que o sinal de menos pede."
+      },
+      {
+        "text": "Soma 180 dias à data de comparação",
+        "why": "O número é uma idade, e o sinal diz de que lado dela."
+      },
+      {
+        "text": "Arredonda a idade para dias inteiros",
+        "why": "Dias são a unidade de qualquer jeito; o sinal escolhe a direção."
+      }
+    ]
+  },
+  "ex-5kvbpn91": {
+    "prompt": "`find /etc -name 'hosts'` mistura linhas de `Permission denied` com o resultado. O que as remove?",
+    "hint": "As reclamações e os resultados estão em dois fluxos diferentes.",
+    "choices": [
+      {
+        "text": "Acrescentar -quiet ao find",
+        "why": "O find não tem essa opção, e as mensagens nem são dele para esconder."
+      },
+      {
+        "text": "Rodar com sudo para as reclamações pararem",
+        "why": "Funciona, e é um martelo grande para ler um caminho."
+      },
+      {
+        "text": "Passar a saída por um grep -v denied",
+        "why": "As reclamações não estão na saída que foi para o pipe, então o grep nunca as vê."
+      },
+      {
+        "text": "Acrescentar 2>/dev/null",
+        "why": "Isso: os erros vão para o fluxo 2, e aquilo manda o fluxo 2 embora."
+      }
+    ]
+  },
+  "ex-n8jaknex": {
+    "prompt": "`-exec ls -lh {} +` contra `-exec ls -lh {} \\;` — qual a diferença?",
+    "hint": "Um dos dois inicia o comando uma vez.",
+    "choices": [
+      {
+        "text": "A forma com mais continua após um erro, a com ponto e vírgula para",
+        "why": "As duas continuam. O que muda é quantas vezes o comando é iniciado."
+      },
+      {
+        "text": "A forma com mais inicia o comando uma vez, com todos os resultados",
+        "why": "Isso, e é mais rápida; a com ponto e vírgula é para comandos que aceitam um arquivo."
+      },
+      {
+        "text": "A forma com ponto e vírgula passa os resultados por um pipe",
+        "why": "Não há pipe envolvido: cada resultado é substituído no lugar das chaves."
+      },
+      {
+        "text": "A forma com mais é uma extensão GNU e a com ponto e vírgula é portátil",
+        "why": "As duas são padrão, e a diferença entre elas é sobre agrupamento."
+      }
+    ]
+  },
+  "ex-73w4w6c4": {
+    "prompt": "`locate report.csv` devolve um caminho que não existe mais. O `locate` está quebrado?",
+    "hint": "Pergunte onde o locate olhou.",
+    "choices": [
+      {
+        "text": "Sim — um resultado velho quer dizer que o índice está corrompido",
+        "why": "Um resultado velho quer dizer que o índice está antigo, que é a condição normal dele."
+      },
+      {
+        "text": "Sim — o locate deveria conferir cada resultado antes de imprimir",
+        "why": "Conferir cada resultado custaria a velocidade que é a razão de usá-lo."
+      },
+      {
+        "text": "Não — ele lê um índice, e o disco andou desde então",
+        "why": "Isso. O `updatedb` reconstrói, e o `find` é quem pergunta ao sistema de arquivos."
+      },
+      {
+        "text": "Não — ele estava buscando num sistema de arquivos diferente do que você queria",
+        "why": "Ele indexa a árvore inteira. É a idade que o separa da verdade."
+      }
+    ]
+  },
+  "ex-n654wkgv": {
+    "prompt": "`echo *.txt` imprime `a.txt b.txt`. Quem decidiu quais nomes saíram?",
+    "hint": "O echo imprime o que recebeu. Algo entregou duas palavras a ele.",
+    "choices": [
+      {
+        "text": "O echo, que procura os nomes que casam antes de imprimir",
+        "why": "O echo não faz ideia do que é um nome de arquivo. Ele imprimiu duas palavras que recebeu."
+      },
+      {
+        "text": "O shell, antes de o echo ser iniciado",
+        "why": "Isso — é o globbing, e acontece com todo comando que você digita."
+      },
+      {
+        "text": "O kernel, quando o echo pediu para abrir o padrão",
+        "why": "Nada foi aberto. Os nomes foram substituídos na linha de comando."
+      },
+      {
+        "text": "O terminal, que reescreve padrões enquanto desenha a linha",
+        "why": "O terminal desenha caracteres e envia teclas, e não reescreve nada."
+      }
+    ]
+  },
+  "ex-sb0mp9dj": {
+    "prompt": "`ls nope*` diz `ls: cannot access 'nope*': No such file or directory`. Por que há um asterisco na mensagem?",
+    "hint": "Algo decidiu deixar o padrão em paz.",
+    "choices": [
+      {
+        "text": "O ls imprime o padrão que ele estava buscando",
+        "why": "O ls buscou um nome, e foi esse nome que ele imprimiu."
+      },
+      {
+        "text": "O asterisco foi escapado em algum ponto do caminho",
+        "why": "Ninguém o escapou. Ele chegou intacto por outro motivo."
+      },
+      {
+        "text": "O ls faz a comparação dele e falhou",
+        "why": "O ls nunca comparou um padrão; quem faz isso é o shell, antes de ele iniciar."
+      },
+      {
+        "text": "Um padrão sem correspondência é repassado",
+        "why": "Isso, então o ls recebeu um nome com asterisco e procurou exatamente aquilo."
+      }
+    ]
+  },
+  "ex-1h7f5efr": {
+    "prompt": "Num diretório com `a.txt`, `b.txt`, `c.log` e um subdiretório `sub`, `ls *` imprime duas listagens. Por quê?",
+    "hint": "Descubra quais quatro palavras o shell entregou ao ls.",
+    "choices": [
+      {
+        "text": "Um dos quatro argumentos era um diretório",
+        "why": "Isso. `ls *` são quatro argumentos, e listar um diretório é listar o que há dentro."
+      },
+      {
+        "text": "O asterisco casou duas vezes e o ls rodou uma vez por correspondência",
+        "why": "Ele rodou uma vez, com quatro argumentos. As duas listagens vieram de um deles."
+      },
+      {
+        "text": "O ls desce em subdiretórios quando recebe um padrão",
+        "why": "Ele desce quando recebe `-R`. Aqui ele recebeu o subdiretório pelo nome."
+      },
+      {
+        "text": "O subdiretório foi listado porque o nome dele não tem extensão",
+        "why": "Extensões não querem dizer nada aqui. Ser um diretório é o que causou isso."
+      }
+    ]
+  },
+  "ex-p7hsk6j4": {
+    "prompt": "`echo {jan,feb}-report.csv` imprime dois nomes mesmo sem nenhum dos arquivos existir. Que expansão é essa?",
+    "hint": "Uma das expansões do shell não consulta o disco.",
+    "choices": [
+      {
+        "text": "Globbing, com as chaves agindo como conjunto de caracteres",
+        "why": "Conjunto de caracteres é `[...]`, e ele compara com nomes que existem."
+      },
+      {
+        "text": "Expansão de nome de caminho, que inventa as entradas ausentes",
+        "why": "A expansão de nome de caminho relata o que existe; ela não inventa nada."
+      },
+      {
+        "text": "Expansão de chaves, que é geração de texto",
+        "why": "Isso, e é por isso que ela é a ferramenta para criar, e não para achar."
+      },
+      {
+        "text": "Expansão de til, na forma de vários valores",
+        "why": "A expansão de til transforma `~` num diretório pessoal, e não aceita lista."
+      }
+    ]
+  },
+  "ex-y66vgf56": {
+    "prompt": "Antes de `rm *.log`, você quer ver exatamente em quais nomes o padrão vai virar. Escreva o comando inofensivo que os imprime.",
+    "hint": "Duas palavras. Use o comando que imprime o que recebe."
+  },
+  "ex-mqh9hkjn": {
+    "prompt": "`ln report.txt hardlink.txt`, e a contagem de links nas duas linhas vira 2. O que esse campo conta?",
+    "hint": "Não é sobre tamanho, e não é sobre permissão.",
+    "choices": [
+      {
+        "text": "Quantas vezes os dados foram copiados",
+        "why": "Nada foi copiado. Existe um conjunto de bytes no disco."
+      },
+      {
+        "text": "Quantos processos têm o arquivo aberto",
+        "why": "Descritores abertos existem, e são contados em outro lugar."
+      },
+      {
+        "text": "Quantos nomes apontam para este inode",
+        "why": "Isso, e o `rm` num deles faz a contagem voltar a baixar."
+      },
+      {
+        "text": "Sob quantos diretórios o arquivo aparece",
+        "why": "Dois nomes num diretório só também dariam 2."
+      }
+    ]
+  },
+  "ex-t8g2d9s6": {
+    "prompt": "A linha de um link simbólico diz `size 10` e o alvo dele tem quatro megabytes. Por que 10?",
+    "hint": "Pergunte o que um link simbólico de fato guarda.",
+    "choices": [
+      {
+        "text": "Ele guarda o caminho `report.txt`, que tem dez caracteres",
+        "why": "Isso — um link simbólico é um arquivinho cujo conteúdo é um caminho."
+      },
+      {
+        "text": "Ele guarda uma referência de dez bytes ao inode do alvo",
+        "why": "Isso seria um hard link, e um hard link não tem tamanho próprio."
+      },
+      {
+        "text": "Tamanhos de links simbólicos são arredondados para a dezena abaixo",
+        "why": "Nada os arredonda. O número é o comprimento do texto guardado."
+      },
+      {
+        "text": "Ele guarda os dez primeiros bytes do alvo como prévia",
+        "why": "Ele não guarda parte nenhuma do conteúdo do alvo, e é por isso que pode ficar pendurado."
+      }
+    ]
+  },
+  "ex-dnnn1mx0": {
+    "prompt": "Você apaga um arquivo que tem dois hard links. O que aconteceu com os dados?",
+    "hint": "`unlink` é a chamada de sistema, e o nome dela é honesto.",
+    "choices": [
+      {
+        "text": "Ficaram na fila de remoção para a próxima limpeza do sistema de arquivos",
+        "why": "Essa fila não existe. A contagem é conferida no momento em que o nome sai."
+      },
+      {
+        "text": "Sumiram, e o segundo nome agora fica pendurado",
+        "why": "Nome pendurado é o que um link simbólico deixa. Um hard link é o próprio arquivo."
+      },
+      {
+        "text": "Metade foi liberada, em proporção aos nomes removidos",
+        "why": "Bytes não são repartidos entre nomes desse jeito."
+      },
+      {
+        "text": "Continuam lá, alcançáveis pelo outro nome",
+        "why": "Isso: um nome saiu, a contagem caiu para 1, e os bytes ficaram."
+      }
+    ]
+  },
+  "ex-wsy2b5a1": {
+    "prompt": "Por que um link simbólico pode apontar para um diretório em outro disco e um hard link não?",
+    "hint": "Um dos dois é escrito como caminho e o outro como número.",
+    "choices": [
+      {
+        "text": "Links simbólicos são resolvidos pelo shell, que enxerga a árvore inteira",
+        "why": "Quem resolve os dois é o kernel. O que muda é o que cada um guarda."
+      },
+      {
+        "text": "Um número de inode não significa nada fora do sistema de arquivos dele",
+        "why": "Isso, e o laço que um diretório com hard link permitiria é a outra metade da resposta."
+      },
+      {
+        "text": "Hard links são um recurso do ext4 e os outros sistemas de arquivos não têm",
+        "why": "Quase todo sistema de arquivos do Linux tem. A restrição é de significado, não de suporte."
+      },
+      {
+        "text": "Um hard link teria de copiar o diretório para o segundo disco",
+        "why": "Ele não copia nada. É um segundo nome, e por isso precisa ficar local."
+      }
+    ]
+  },
+  "ex-pjrjtqqn": {
+    "prompt": "Ligue cada comando ao que ele imprime para `rel.txt -> ../soft/report.txt`.",
+    "hint": "Um imprime o texto guardado, outro segue a cadeia até o fim.",
+    "pairs": [
+      {
+        "left": "readlink rel.txt",
+        "right": "../soft/report.txt"
+      },
+      {
+        "left": "readlink -f rel.txt",
+        "right": "/home/ana/soft/report.txt"
+      },
+      {
+        "left": "ls -l rel.txt",
+        "right": "uma linha de tipo l, com a seta"
+      },
+      {
+        "left": "cat rel.txt",
+        "right": "o conteúdo do que ele aponta"
+      }
+    ],
+    "right_distractors": [
+      "o número de inode do próprio link",
+      "um erro, porque o caminho é relativo"
+    ]
+  },
+  "ex-8jwm8cw9": {
+    "prompt": "`df -h /` imprime `/dev/vda` à esquerda e `/` à direita. Que duas coisas são essas?",
+    "hint": "Uma é hardware e a outra é um diretório.",
+    "choices": [
+      {
+        "text": "Dois nomes que o sistema mantém para o mesmo disco",
+        "why": "Um dos dois é um lugar na árvore, e lugares não são discos."
+      },
+      {
+        "text": "O disco e a partição dentro dele",
+        "why": "Os dois estariam sob /dev. A coluna da direita fica em outro lugar."
+      },
+      {
+        "text": "O dispositivo, e onde ele foi pendurado",
+        "why": "Isso — essa pendura é o que montar significa."
+      },
+      {
+        "text": "O dispositivo, e o tipo de sistema de arquivos dele",
+        "why": "O tipo é uma coluna separada, e diz ext4 ou parecido."
+      }
+    ]
+  },
+  "ex-jnk5m2ng": {
+    "prompt": "Um backup noturno vem escrevendo em `/mnt/backups` há meses. O disco que deveria estar ali nunca foi montado. O que aconteceu?",
+    "hint": "Nada recusou a escrita. Pergunte qual sistema de arquivos a recebeu.",
+    "choices": [
+      {
+        "text": "Os backups foram para o sistema de arquivos raiz, enchendo ele em silêncio",
+        "why": "Isso, e se descobre no dia em que alguém precisa de um backup."
+      },
+      {
+        "text": "A tarefa falhou toda noite com erro de permissão",
+        "why": "Um ponto de montagem desmontado é um diretório comum, e escrever nele funciona."
+      },
+      {
+        "text": "Os arquivos foram escritos e descartados no boot seguinte",
+        "why": "O /mnt não é limpo no boot. Os arquivos estão ali."
+      },
+      {
+        "text": "Os dados foram para o disco mesmo assim, porque o kernel resolve o dispositivo",
+        "why": "O kernel escreve onde o caminho leva, e o caminho levou ao disco principal."
+      }
+    ]
+  },
+  "ex-vy0f65wj": {
+    "prompt": "`umount /mnt/backups` diz `target is busy`, e seu prompt está em `root@vm:/mnt/backups#`. O que está segurando?",
+    "hint": "Leia o prompt.",
+    "choices": [
+      {
+        "text": "Uma tarefa em segundo plano sobrando do que você rodou por último",
+        "why": "Possível em geral, e o prompt aponta algo mais simples."
+      },
+      {
+        "text": "O seu próprio shell, sentado lá dentro",
+        "why": "Isso. Um shell sentado num sistema de arquivos está usando ele; `cd /` e tente de novo."
+      },
+      {
+        "text": "O kernel, que não terminou de gravar as escritas",
+        "why": "Dados por gravar atrasam uma desmontagem por um instante, e não são relatados assim."
+      },
+      {
+        "text": "A própria montagem, porque dispositivos de loop ficam ocupados",
+        "why": "Um dispositivo de loop desmonta como qualquer outro quando nada o usa."
+      }
+    ]
+  },
+  "ex-srxr4hyz": {
+    "prompt": "Por que o `/etc/fstab` nomeia um UUID em vez de `/dev/sdb1`?",
+    "hint": "Pense no que acontece quando alguém acrescenta um segundo disco.",
+    "choices": [
+      {
+        "text": "Um UUID é mais curto de digitar que um caminho começando em /dev",
+        "why": "Ele é bem mais longo, e digitar não é o objetivo do fstab."
+      },
+      {
+        "text": "Caminhos sob /dev só podem ser lidos pelo root",
+        "why": "Eles são listados por qualquer um; o que muda é quem pode abri-los."
+      },
+      {
+        "text": "Um UUID permite montar vários discos num ponto só",
+        "why": "É um sistema de arquivos por ponto de montagem de qualquer jeito."
+      },
+      {
+        "text": "Letras de dispositivo mudam quando os discos mudam",
+        "why": "Isso: o UUID pertence ao sistema de arquivos, então sobrevive a um cabo novo ou a um disco novo."
+      }
+    ]
+  },
+  "ex-b8bzbv1y": {
+    "prompt": "Você editou o `/etc/fstab` e quer ensaiar sem reiniciar. Escreva o comando que monta tudo do arquivo que ainda não está montado.",
+    "hint": "Três palavras, e precisa de root."
+  },
+  "ex-n63kb066": {
+    "prompt": "Um disco está cheio. Qual comando te diz qual diretório é o responsável?",
+    "hint": "Um pergunta ao sistema de arquivos quão cheio ele está; o outro soma arquivos.",
+    "choices": [
+      {
+        "text": "df -h, rodado no caminho em questão",
+        "why": "Isso te diz que o sistema de arquivos está cheio, o que você já sabia."
+      },
+      {
+        "text": "du -sh * | sort -h",
+        "why": "Isso, e depois cd no maior e repita até chegar."
+      },
+      {
+        "text": "ls -lSh, rodado no topo da árvore",
+        "why": "Isso ordena o que há num diretório, e ignora tudo que está abaixo."
+      },
+      {
+        "text": "stat no ponto de montagem",
+        "why": "Isso descreve uma entrada, e nada diz sobre a árvore abaixo dela."
+      }
+    ]
+  },
+  "ex-10hwry6n": {
+    "prompt": "`ls -l` diz 440 bytes e `du -sh` diz 4.0K para o mesmo arquivo. Qual dos dois está errado?",
+    "hint": "Eles estão medindo duas coisas diferentes.",
+    "choices": [
+      {
+        "text": "O du, que arredonda um valor para o kilobyte seguinte",
+        "why": "Ele relata blocos inteiros porque blocos inteiros foram entregues."
+      },
+      {
+        "text": "O ls, que está lendo um tamanho velho do diretório",
+        "why": "O tamanho no inode está atual; o du está relatando outra coisa."
+      },
+      {
+        "text": "O du, a menos que o arquivo seja esparso",
+        "why": "Ser esparso faz o du relatar menos, não mais."
+      },
+      {
+        "text": "Nenhum — um conta conteúdo, o outro conta disco",
+        "why": "Isso: um bloco aqui tem 4 KiB, e um arquivo recebe blocos inteiros."
+      }
+    ]
+  },
+  "ex-n459qd17": {
+    "prompt": "O `du` relata 24K e o `df` relata 31M em uso, no mesmo sistema de arquivos, no mesmo instante. O que está acontecendo?",
+    "hint": "Algo ainda segura uma referência que não tem nome.",
+    "choices": [
+      {
+        "text": "Um arquivo apagado continua aberto num processo em execução",
+        "why": "Isso, e o `lsof` imprime ele com `(deleted)` ao lado do nome."
+      },
+      {
+        "text": "O df relata o tamanho antes de a compressão ser aplicada",
+        "why": "O ext4 não está comprimindo nada aqui, e o du veria os mesmos bytes."
+      },
+      {
+        "text": "O du pulou um diretório que ele não tinha permissão de ler",
+        "why": "Isso acontece, e aqui o du percorreu a árvore inteira como root."
+      },
+      {
+        "text": "O sistema de arquivos ainda não gravou as escritas pendentes",
+        "why": "Gravar moveria os dois números no mesmo sentido, com instantes de diferença."
+      }
+    ]
+  },
+  "ex-7ya5pa93": {
+    "prompt": "Um serviço escreve num log que encheu o disco. Você quer o espaço de volta sem reiniciar o serviço. O que você faz?",
+    "hint": "Remover o nome não remove os dados enquanto o arquivo está aberto.",
+    "choices": [
+      {
+        "text": "Dar rm no log e esperar o sistema de arquivos se acertar",
+        "why": "O espaço volta quando o processo fechar o arquivo, coisa que ele não tem motivo para fazer."
+      },
+      {
+        "text": "Dar mv no log para o serviço escrever um novo",
+        "why": "Ele continua escrevendo no mesmo arquivo aberto, agora com outro nome."
+      },
+      {
+        "text": "Truncar no lugar com `: > /var/log/huge.log`",
+        "why": "Isso: o arquivo segue aberto, os blocos são liberados, e o serviço continua."
+      },
+      {
+        "text": "Apagar e criar um arquivo vazio com o mesmo nome",
+        "why": "O nome novo é um inode novo; o antigo segue aberto e ainda segura os blocos."
+      }
+    ]
+  },
+  "ex-qn4gkdg8": {
+    "prompt": "O `df -h` mostra 4% em uso e um programa relata `No space left on device`. O que você confere em seguida?",
+    "hint": "Bytes são uma das duas coisas que um sistema de arquivos esgota.",
+    "choices": [
+      {
+        "text": "df -h em outro ponto de montagem",
+        "why": "Vale fazer, e o programa nomeou um caminho que você já pode conferir."
+      },
+      {
+        "text": "df -i, pela contagem de inodes",
+        "why": "Isso: milhões de arquivinhos esgotam inodes com o disco quase vazio."
+      },
+      {
+        "text": "du -sh / para achar o diretório grande",
+        "why": "Não existe diretório grande; 4% é o número honesto para bytes."
+      },
+      {
+        "text": "A configuração do próprio programa, por um limite de tamanho",
+        "why": "Possível, e a mensagem veio do kernel, não do programa."
+      }
+    ]
+  },
+  "ex-6ar7b4tn": {
+    "prompt": "O que faz do `.bashrc` um arquivo oculto?",
+    "hint": "É mais fino do que as pessoas esperam.",
+    "choices": [
+      {
+        "text": "O nome dele começa com ponto",
+        "why": "Isso — renomeie e ele deixa de estar oculto, sem mais nada a mudar."
+      },
+      {
+        "text": "Um bit de oculto está ligado no inode dele",
+        "why": "Esse bit não existe num sistema de arquivos do Linux."
+      },
+      {
+        "text": "Ele pertence ao root, então o ls o deixa de fora para você",
+        "why": "A propriedade muda quem pode ler, e não se ele é listado."
+      },
+      {
+        "text": "Ele vive num diretório que o ls trata como privado",
+        "why": "Ele fica na sua casa, ao lado de arquivos que são listados normalmente."
+      }
+    ]
+  },
+  "ex-g3yqycdj": {
+    "prompt": "`ls -l /proc/uptime` diz 0 bytes, e `wc -c /proc/uptime` lê 16. Qual dos dois está mentindo?",
+    "hint": "Pergunte onde estava o conteúdo antes de você pedir.",
+    "choices": [
+      {
+        "text": "O ls, que não tem como medir uma entrada gerada",
+        "why": "Ele mediu o que lhe disseram: o kernel respondeu zero."
+      },
+      {
+        "text": "O wc, que contou a quebra de linha e o buffer dele",
+        "why": "Ele contou bytes que leu de verdade."
+      },
+      {
+        "text": "Os dois, já que o arquivo é um link simbólico para outro lugar",
+        "why": "Ele é uma entrada comum num sistema de arquivos gerado, e não um link."
+      },
+      {
+        "text": "Nenhum — o kernel inventa na hora",
+        "why": "Isso. Não há conteúdo guardado para ter tamanho até uma leitura acontecer."
+      }
+    ]
+  },
+  "ex-62s8dje2": {
+    "prompt": "`2>/dev/null` é digitado no fim de comandos o tempo todo. O que está no fim daquele redirecionamento?",
+    "hint": "Olhe o primeiro caractere da linha dele no `ls -l`.",
+    "choices": [
+      {
+        "text": "Uma palavra-chave do shell cuja função é suprimir mensagens de erro",
+        "why": "O shell está redirecionando um fluxo; o destino é um caminho real."
+      },
+      {
+        "text": "Um arquivo vazio que o sistema trunca depois de cada uso",
+        "why": "Ele não guarda nada em momento nenhum, e ninguém o trunca."
+      },
+      {
+        "text": "Um dispositivo de caractere que joga fora o que recebe",
+        "why": "Isso, e ler dele te dá fim de arquivo na hora."
+      },
+      {
+        "text": "Um diretório que o kernel mantém para saída descartada",
+        "why": "A listagem dele começa com `c`, o que descarta essa opção."
+      }
+    ]
+  },
+  "ex-y7ftt7se": {
+    "prompt": "O `ssh` se recusa a usar sua chave e reclama de permissões. O que provavelmente está errado?",
+    "hint": "Existe uma forma que aquele diretório e o conteúdo dele devem ter.",
+    "choices": [
+      {
+        "text": "A chave pertence ao root em vez de a você",
+        "why": "Isso daria outra reclamação, sobre propriedade."
+      },
+      {
+        "text": "O `.ssh` ou a chave pode ser lida por outra pessoa",
+        "why": "Isso: o diretório quer `drwx------` e a chave `-rw-------`."
+      },
+      {
+        "text": "A chave foi copiada com cp em vez de scp",
+        "why": "As duas ferramentas produzem o mesmo arquivo; o que importa é o modo."
+      },
+      {
+        "text": "O `.ssh` está oculto, e o ssh procura um diretório visível",
+        "why": "O ponto faz parte do nome que o ssh procura."
+      }
+    ]
+  },
+  "ex-6ersh81d": {
+    "prompt": "Qual opção do `ls` lista nomes ocultos mas deixa de fora o `.` e o `..`?",
+    "hint": "Uma letra só, e é a maiúscula da mais conhecida."
+  },
+  "ex-ra5nmrf6": {
+    "prompt": "Por que um `.tar.gz` tem duas extensões?",
+    "hint": "Duas operações separadas foram aplicadas, nessa ordem.",
+    "choices": [
+      {
+        "text": "Porque o tar escreve um arquivo de índice ao lado do pacote",
+        "why": "Saiu um arquivo só. Os dois nomes descrevem dois passos aplicados a ele."
+      },
+      {
+        "text": "Porque o tar empacotou os arquivos e o gzip depois encolheu o resultado",
+        "why": "Isso, e é por isso que o gzip sozinho aceita um arquivo em vez de um diretório."
+      },
+      {
+        "text": "Porque o gzip precisa da extensão de dentro para escolher o algoritmo",
+        "why": "O gzip tem um algoritmo, e lê o próprio cabeçalho em vez do nome."
+      },
+      {
+        "text": "Porque o pacote guarda dois formatos e os leitores escolhem o mais novo",
+        "why": "Há um formato lá dentro, embrulhado uma vez."
+      }
+    ]
+  },
+  "ex-dnd5csfv": {
+    "prompt": "Em `tar -czf project.tar.gz src notes`, por que o `f` precisa vir por último entre as letras?",
+    "hint": "Uma das letras aceita um valor.",
+    "choices": [
+      {
+        "text": "Porque o tar lê as letras dele da direita para a esquerda",
+        "why": "Ele lê da esquerda para a direita, como qualquer opção."
+      },
+      {
+        "text": "Porque a letra de compressão tem de ser aplicada antes do nome do arquivo",
+        "why": "A ordem entre c e z é livre; o que importa é qual letra consome uma palavra."
+      },
+      {
+        "text": "Porque o `f` consome a próxima palavra como nome do pacote",
+        "why": "Isso, então `tar -cfz` criaria um pacote chamado `z`."
+      },
+      {
+        "text": "Porque o `f` é uma opção longa abreviada em uma letra",
+        "why": "É uma opção curta comum, e o que importa aqui é o comportamento dela."
+      }
+    ]
+  },
+  "ex-0rr8g8xz": {
+    "prompt": "Você tem um pacote da internet e não sabe como ele está organizado por dentro. O que você roda antes de extrair?",
+    "hint": "Existe uma letra exatamente para isso, e ela não muda nada em disco.",
+    "choices": [
+      {
+        "text": "tar -tf archive.tar.gz",
+        "why": "Isso, e mostra se os caminhos ficam dentro de um diretório ou se espalham."
+      },
+      {
+        "text": "tar -xf archive.tar.gz --dry-run",
+        "why": "O tar não tem essa opção, e a forma de listagem já responde isso."
+      },
+      {
+        "text": "file archive.tar.gz",
+        "why": "Isso nomeia o formato, e nada diz sobre os caminhos lá dentro."
+      },
+      {
+        "text": "gzip -l archive.tar.gz",
+        "why": "Isso relata os tamanhos comprimido e original, e nome nenhum."
+      }
+    ]
+  },
+  "ex-0qsxk04j": {
+    "prompt": "Você vai mandar um diretório para um colega no Windows. `tar` ou `zip`?",
+    "hint": "Um deles abre com um duplo clique lá; o outro preserva coisas de que o Linux se importa.",
+    "choices": [
+      {
+        "text": "tar, porque preserva permissões e propriedade",
+        "why": "Ele preserva, e isso vale pouco numa máquina que não faz uso disso."
+      },
+      {
+        "text": "tar, porque o Windows traz um comando tar desde 2018",
+        "why": "Traz, e seu colega ainda precisa abrir um terminal para usar."
+      },
+      {
+        "text": "Tanto faz — os dois formatos são equivalentes na prática",
+        "why": "Eles diferem no que preservam e no que os abre, que é a pergunta inteira."
+      },
+      {
+        "text": "zip, porque abre com um duplo clique lá",
+        "why": "Isso. Guarde o tar para o que fica no Linux, onde os modos importam."
+      }
+    ]
+  },
+  "ex-zk7mnfqf": {
+    "prompt": "`gzip -k draft.txt` produz um `.gz` maior que o arquivo original de 20 bytes. Isso é um bug?",
+    "hint": "Compressão não é de graça.",
+    "choices": [
+      {
+        "text": "Sim — o gzip deveria deixar em paz um arquivo que ficaria maior",
+        "why": "O `gzip` sozinho escreve o que mandaram escrever; as ferramentas de pacote é que recusam."
+      },
+      {
+        "text": "Não — o cabeçalho do formato pesa mais que a economia de 20 bytes de texto",
+        "why": "Isso, e é por isso que compressão se mede em vez de se supor."
+      },
+      {
+        "text": "Não — os bytes extras são o nome original, guardado para restaurar",
+        "why": "O nome é guardado, e é uma parte pequena de um custo fixo."
+      },
+      {
+        "text": "Sim — o arquivo foi armazenado em vez de comprimido, o que desperdiça o cabeçalho",
+        "why": "Armazenar em vez de comprimir é comportamento do zip, e o cabeçalho ainda seria necessário."
+      }
+    ]
+  },
+  "ex-5zwbz91g": {
+    "prompt": "Ligue cada letra do tar à função dela.",
+    "hint": "Três delas são o modo, e duas são sobre o arquivo.",
+    "pairs": [
+      {
+        "left": "c",
+        "right": "criar um pacote"
+      },
+      {
+        "left": "x",
+        "right": "extrair de um pacote"
+      },
+      {
+        "left": "t",
+        "right": "listar o que há dentro"
+      },
+      {
+        "left": "f",
+        "right": "o nome do pacote vem em seguida"
+      }
+    ],
+    "right_distractors": [
+      "comprimir com gzip",
+      "entrar num diretório antes de trabalhar"
+    ]
+  },
+  "ex-t2za7ve7": {
+    "prompt": "Você está em `/var/log/nginx`. Escreva o caminho absoluto que `../../lib` resolve.",
+    "hint": "Dois acima a partir de nginx, depois para dentro de lib."
+  },
+  "ex-01c9e6nh": {
+    "prompt": "Você está em `/home/ana`. Escreva o caminho relativo mais curto até `/home/bruno/notes.txt`.",
+    "hint": "Um acima, depois dois abaixo."
+  },
+  "ex-cs4vwgh6": {
+    "prompt": "Um diretório tem `a.txt`, `ab.txt`, `b.log` e `.hidden`. O que `echo ?.txt` imprime?",
+    "hint": "A interrogação vale por um caractere, e o asterisco não está envolvido.",
+    "choices": [
+      {
+        "text": "a.txt",
+        "why": "Isso — o `ab.txt` tem dois caracteres antes do ponto, então fica de fora."
+      },
+      {
+        "text": "a.txt ab.txt",
+        "why": "O `ab.txt` precisaria de duas interrogações para casar."
+      },
+      {
+        "text": "a.txt ab.txt b.log",
+        "why": "O padrão termina em `.txt`, o que exclui o log."
+      },
+      {
+        "text": "?.txt",
+        "why": "Ele casou com algo, então o padrão foi substituído em vez de repassado."
+      }
+    ]
+  },
+  "ex-9sqd0bv1": {
+    "prompt": "No mesmo diretório, o que `echo *` imprime?",
+    "hint": "Um dos quatro nomes fica de fora por uma regra da seção 45.",
+    "choices": [
+      {
+        "text": "a.txt ab.txt b.log .hidden",
+        "why": "O asterisco não casa um ponto inicial, que é o que mantém `rm *` sobrevivível."
+      },
+      {
+        "text": "a.txt ab.txt",
+        "why": "O asterisco não liga para extensões; o `b.log` casa com ele também."
+      },
+      {
+        "text": "a.txt ab.txt b.log",
+        "why": "Isso, e o `.hidden` fica de fora por causa do primeiro caractere dele."
+      },
+      {
+        "text": "*",
+        "why": "Três nomes casaram, então o shell substituiu o padrão por eles."
+      }
+    ]
+  },
+  "ex-3zfqpecz": {
+    "prompt": "Onde fica a configuração da própria máquina?",
+    "hint": "É texto, e é lida em vez de escrita enquanto a máquina roda.",
+    "choices": [
+      {
+        "text": "/usr/share",
+        "why": "Dados que não dependem do processador — ícones, manuais, traduções."
+      },
+      {
+        "text": "/var/lib",
+        "why": "Dados de trabalho que um serviço escreve enquanto roda."
+      },
+      {
+        "text": "/opt",
+        "why": "A árvore própria de um fornecedor, para software fora do gerenciador de pacotes."
+      },
+      {
+        "text": "/etc",
+        "why": "Isso, e é texto, então uma mudança é um diff que alguém consegue ler."
+      }
+    ]
+  },
+  "ex-7s9ak02f": {
+    "prompt": "`ls -l secrets` imprime `-rw-r--r-- 1 ana ana 0 Sep 14 09:00 secrets`. O `secrets` é um diretório?",
+    "hint": "Um caractere responde.",
+    "choices": [
+      {
+        "text": "Sim, e está vazio, e é por isso que o tamanho é 0",
+        "why": "Um diretório vazio ainda relata 4096, e a linha dele começa diferente."
+      },
+      {
+        "text": "Não — a linha começa com traço",
+        "why": "Isso, e um diretório mostraria `d` e uma contagem de links de pelo menos 2."
+      },
+      {
+        "text": "Sim — a contagem de links igual a 1 mostra que está vazio por dentro",
+        "why": "A contagem de um diretório começa em 2, por causa da entrada `.` dele."
+      },
+      {
+        "text": "Não há como saber por uma única linha de listagem longa",
+        "why": "O primeiro caractere é o tipo, e ele está em toda linha."
+      }
+    ]
+  },
+  "ex-r8g59914": {
+    "prompt": "Você dá `rm` num arquivo de 2 GB e o `df` não muda. Qual a razão mais provável?",
+    "hint": "A regra da seção 46 sobre nomes, e a demonstração dela na seção 48.",
+    "choices": [
+      {
+        "text": "Um processo ainda tem o arquivo aberto",
+        "why": "Isso — o `lsof` mostra ele com `(deleted)`, e o espaço volta quando aquele processo para."
+      },
+      {
+        "text": "O sistema de arquivos adia liberar até precisar do espaço",
+        "why": "O ext4 libera blocos quando a última referência sai, e não sob demanda."
+      },
+      {
+        "text": "O df guarda a resposta em cache por alguns minutos",
+        "why": "Ele pergunta ao sistema de arquivos toda vez que roda."
+      },
+      {
+        "text": "O arquivo estava noutro sistema de arquivos, não no que o df relatou",
+        "why": "Vale conferir, e a demonstração da seção 48 descartou isso usando um caminho só para os dois."
+      }
+    ]
+  },
+  "ex-rtntjv99": {
+    "prompt": "Escreva o comando que lista o conteúdo de `backup.tar.gz` sem extrair nada.",
+    "hint": "Três letras depois do traço, e o f vai por último."
+  },
+  "ex-regg4zgg": {
+    "prompt": "O script de um colega escreve em `logs/app.log` e roda pelo cron. Qual mudança o torna confiável?",
+    "hint": "Uma tarefa agendada começa num diretório que ninguém escolheu.",
+    "choices": [
+      {
+        "text": "Acrescentar `set -e` no topo para uma falha parar o script",
+        "why": "Útil, e não muda onde um caminho relativo aterrissa."
+      },
+      {
+        "text": "Rodar com mais frequência para uma escrita perdida ser notada antes",
+        "why": "As escritas estão acontecendo. Elas estão caindo num lugar inesperado."
+      },
+      {
+        "text": "Escrever o caminho por extenso, a partir da raiz",
+        "why": "Isso — um caminho absoluto significa o mesmo onde quer que a tarefa comece."
+      },
+      {
+        "text": "Acrescentar um `cd` para o projeto no topo do script",
+        "why": "Funciona, e deixa o conserto a uma linha de distância de quem editar depois."
+      }
+    ]
+  },
+  "ex-1ssssryq": {
+    "prompt": "`find . -name '*.tmp' -delete` está prestes a rodar. Qual é a conferência gratuita?",
+    "hint": "O mesmo comando, menos uma palavra.",
+    "choices": [
+      {
+        "text": "Acrescentar -maxdepth 1 para ele ficar onde está",
+        "why": "Isso muda o que é apagado em vez de te mostrar o que seria."
+      },
+      {
+        "text": "Tirar a última palavra e ler a saída",
+        "why": "Isso: a lista impressa é exatamente o que a remoção tiraria."
+      },
+      {
+        "text": "Rodar com sudo para nenhum arquivo ser pulado",
+        "why": "Isso amplia o alcance, que é o oposto de uma conferência."
+      },
+      {
+        "text": "Acrescentar -type f para diretórios sobreviverem",
+        "why": "Faz sentido, e ainda assim não te mostra a lista antes."
+      }
+    ]
+  },
+  "ex-xebc6p1x": {
+    "prompt": "`ls -l /bin` mostra uma linha e `ls -ld /bin/` mostra outra. Qual a diferença entre os dois comandos?",
+    "hint": "Um deles atravessa alguma coisa.",
+    "choices": [
+      {
+        "text": "O segundo lista o conteúdo e o primeiro lista a entrada",
+        "why": "Ao contrário: o `-d` é que pede a entrada, e o segundo é quem tem ele."
+      },
+      {
+        "text": "O segundo ordenou a saída e o primeiro não",
+        "why": "Ordenar é o padrão nos dois, e saiu uma linha de cada."
+      },
+      {
+        "text": "O primeiro foi recusado e recorreu a descrever o caminho",
+        "why": "Os dois deram certo. Eles descreveram duas coisas diferentes."
+      },
+      {
+        "text": "A barra no final seguiu o link simbólico até o diretório",
+        "why": "Isso — com `-l` sozinho, o ls descreve o link em vez do alvo dele."
+      }
+    ]
+  },
+  "ex-8jysh7mq": {
+    "prompt": "Ponha estes na ordem em que uma pessoa cuidadosa faz, antes de apagar uma árvore de diretórios.",
+    "items": [
+      "rodar pwd",
+      "dar ls -d no caminho que você vai remover",
+      "ler a listagem e confirmar que é a árvore certa",
+      "rodar rm -rf naquele caminho"
+    ],
+    "trap": "Duas conferências vêm antes do comando, e uma delas é sobre onde você está."
+  },
+  "ex-my6dt1hj": {
+    "prompt": "Ligue cada sintoma à causa dele.",
+    "hint": "Cada um dos quatro foi demonstrado nesta aula.",
+    "pairs": [
+      {
+        "left": "o cat diz No such file, o ls mostra a entrada",
+        "right": "um link simbólico cujo alvo sumiu"
+      },
+      {
+        "left": "o du e o df discordam em gigabytes",
+        "right": "um arquivo apagado que um processo ainda segura aberto"
+      },
+      {
+        "left": "um diretório de backup enche o disco raiz",
+        "right": "nada estava montado no ponto de montagem"
+      },
+      {
+        "left": "ls: cannot access 'nope*'",
+        "right": "um padrão que não casou nada, repassado como está"
+      }
+    ],
+    "right_distractors": [
+      "um sistema de arquivos montado em leitura",
+      "um diretório cuja contagem de links é 2"
+    ]
+  },
+  "ex-cezzbm3r": {
+    "prompt": "O `stat` de um arquivo mostra Modify há dois anos e Change há uma hora. O que você conclui?",
+    "hint": "Uma marca de tempo cobre mais do que o conteúdo.",
+    "choices": [
+      {
+        "text": "Os metadados mudaram, e o conteúdo não",
+        "why": "Isso — um rename, um chmod ou um dono novo movem o ctime e deixam o mtime quieto."
+      },
+      {
+        "text": "Alguém editou há uma hora e ajustou a data",
+        "why": "Ajustar o mtime para trás é possível, e moveria o ctime também — o que moveu."
+      },
+      {
+        "text": "Ele foi lido há uma hora",
+        "why": "Ler move o atime, que é a terceira linha."
+      },
+      {
+        "text": "O relógio do sistema de arquivos está errado",
+        "why": "Duas marcas de tempo diferentes são o caso normal, não um sintoma."
+      }
+    ]
+  },
+  "ex-rtrdbndb": {
+    "prompt": "Escreva o redirecionamento que joga fora as mensagens de erro de um comando, deixando os resultados na tela.",
+    "hint": "Um número, um sinal de maior, e um caminho da seção 49."
+  },
+  "ex-fs6kf0r5": {
+    "prompt": "`mv src dest` se comporta diferente dependendo de algo que não está escrito na linha. O quê?",
+    "hint": "A resposta é sobre o destino.",
+    "choices": [
+      {
+        "text": "Se src é arquivo ou diretório",
+        "why": "Um diretório se move como uma coisa só, e um arquivo também."
+      },
+      {
+        "text": "Se os dois estão no mesmo sistema de arquivos",
+        "why": "Isso muda a velocidade, e não o resultado."
+      },
+      {
+        "text": "Se dest existe como diretório",
+        "why": "Isso: se existe, o src cai dentro dele em vez de virar ele."
+      },
+      {
+        "text": "Se você é dono de dest",
+        "why": "A propriedade decide se a mudança é recusada, e não o que ela produz."
+      }
+    ]
+  }
+}

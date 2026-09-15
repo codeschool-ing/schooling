@@ -1,0 +1,62 @@
+{
+  "id": "le-pfg45b4t",
+  "title": "Performance: CPU, memory, disk and I/O",
+  "sections": [
+    {
+      "id": "se-ys7pyrc8",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-q2a99nb8",
+          "version": 1,
+          "script": "Somebody says the machine is slow. That sentence contains no information, and this lesson is about turning it into a number. {{slow}} There are four things a machine can run out of: processor, memory, disk space, and disk throughput. Network is a fifth and it behaves like the fourth. Every performance problem you will meet is one of those, and the skill is not knowing a hundred commands — it is asking the four questions in order and stopping when one of them answers. {{four}} The trap is that the obvious number is usually the wrong one. Load average is not a percentage and does not only count processor. Free memory being low is normal and is not a problem. A disk can be a hundred per cent busy and perfectly healthy. Each of those gets a section, and each is shown being wrong on this machine rather than asserted. {{traps}} Everything here was measured while the machine was actually busy. Four processes spinning on four cores, so the load average really climbs. A gigabyte a second of writes, so iostat really reports ninety three per cent utilisation. And a hundred megabyte memory limit with a program that walks past it, so the out-of-memory killer really fires and the exit status really is one hundred and thirty seven. {{measured}} And one thing this machine teaches for free: it is a container. slash proc slash meminfo says sixteen gigabytes and the control group says fourteen, and every tool in this lesson believes the first one. That has its own section, because it is the most common way a modern performance investigation starts out wrong. {{container}} {{title}}",
+          "seconds": 138,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-qw6n06jr", "slug": "four-resources", "kind": "reading" },
+    { "id": "se-tkj9r83k", "slug": "load-average", "kind": "reading" },
+    { "id": "se-cbdfz4bv", "slug": "cpu", "kind": "reading" },
+    { "id": "se-0nej30c0", "slug": "memory", "kind": "reading" },
+    { "id": "se-74bas544", "slug": "swap", "kind": "reading" },
+    { "id": "se-8489et8g", "slug": "out-of-memory", "kind": "reading" },
+    { "id": "se-btd832hs", "slug": "disk-space", "kind": "reading" },
+    { "id": "se-cg8aftcr", "slug": "disk-io", "kind": "reading" },
+    { "id": "se-jxc8pbqa", "slug": "which-process", "kind": "reading" },
+    { "id": "se-kn5x7p1m", "slug": "network", "kind": "reading" },
+    { "id": "se-e512pese", "slug": "containers-lie", "kind": "reading" },
+    { "id": "se-4wc7g448", "slug": "sampling-and-counters", "kind": "reading" },
+    { "id": "se-mjz9a62y", "slug": "a-method", "kind": "reading" },
+    {
+      "id": "se-p69pmjts",
+      "slug": "an-investigation",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-xqka4kz8",
+          "version": 1,
+          "script": "One investigation, on this machine, while it was genuinely in trouble. The complaint is the usual one: it feels slow. {{start}} First question, uptime. Load average one point three nine. On a four core machine that is nothing — a third of one core's worth if load meant what people think it means. On that number alone you would close the ticket. {{load}} Second question, vmstat one, and throw the first line away because it is an average since boot. The r column is zero: nothing is waiting for a processor. The idle column is seventy two per cent. And then two numbers that do not fit: b is one, and w a is twenty two. One process is blocked, and the machines's processors spent a fifth of their time waiting for a disk. {{vmstat}} So it is not processor. Third question, iostat minus x z, and again the first block is since boot. Percent util: ninety three. Write kilobytes per second: a million — that is a gigabyte every second. Queue depth one point four three. The disk is nearly saturated. {{iostat}} Fourth question, and this is the one people skip: which process. pidstat minus d, one second. Two bash processes writing five hundred and twelve thousand kilobytes a second each, and two dd processes under them. That is the answer, and it took four commands. {{who}} Now look at what the load average told you, which was nothing. One point three nine, because Linux counts processes in the run queue and processes in uninterruptible disk wait, and at any instant only one of those writers was actually blocked. The machine was at ninety three per cent on the resource that mattered and the headline number said a third of a core. {{lesson}} That is why the method is four questions and not one, and why the order is processor, memory, disk, network — because each one rules something out, and the last one you ask is the process, not the first. {{method}}",
+          "seconds": 208,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-h4w2gmne",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-jxsqz4cs",
+          "version": 1,
+          "script": "Four things, and the first three are numbers that mean something other than what they look like. {{four}} Load average is not a percentage and is not a processor measurement. It counts processes that want a processor plus processes stuck in uninterruptible disk wait, averaged over one, five and fifteen minutes. Compare it to the core count, never to a hundred, and when it is high with an idle processor the answer is always in the io columns. {{load}} Free memory being low is what a healthy machine looks like. The kernel fills memory with cached file contents because empty memory does nothing for anybody, and it hands that cache back the instant a program asks. The number to read is available, not free — six hundred megabytes of file cache moved the free column by six hundred and moved available by nothing at all. {{memory}} And a disk at a hundred per cent utilisation is not necessarily a problem, because on anything with a queue that number stopped meaning saturation twenty years ago. Read the await columns instead: how long a request waited. Milliseconds of write await on a machine doing a gigabyte a second is a healthy disk working hard. {{disk}} The fourth thing is the method, and it is the part that survives the tools changing. Ask the four resources in order, use a counter tool to find the resource and a per process tool to find the culprit, and stop when a number is out of range rather than collecting all of them. Four commands found the answer in the investigation, and three of them were ruling things out. {{method}} One more, which this machine taught by being what it is. Inside a container every tool in this lesson reads the host's numbers. slash proc slash meminfo said sixteen gigabytes, the control group said fourteen, and free believed the first one. Before you trust any of this on a modern machine, find out whether you are in a cgroup and what it allows. {{container}} Lesson twelve is the terminal editors: vim, nano and emacs — and how to leave each of them, which is not a joke. {{next}}",
+          "seconds": 200,
+          "locales": []
+        }
+      ]
+    },
+    { "id": "se-4nbrx29f", "slug": "drill", "kind": "practice" }
+  ]
+}
