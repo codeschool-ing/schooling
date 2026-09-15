@@ -31,6 +31,8 @@ import {
   lessonSections,
   putStructure,
   putCourse,
+  courseLoaded,
+  forLanguage,
   structureLoaded as structureIsLoaded,
 } from './lessons.js';
 /* The four types that close on a comparison. Imported here rather than called
@@ -749,6 +751,26 @@ export async function loadCourseContent(courseId) {
   if (!lessons.length) return false;
 
   const locale = wanted();
+
+  /* ONCE PER COURSE PER LANGUAGE, AND IT USED TO BE ONCE PER RENDER.
+
+     Nothing asked whether the course was already here, so every redraw fetched
+     all of it again — and `redrawAll` dispatches TWICE on a language switch,
+     once straight away and once when the catalogue lands. Three rounds for one
+     click.
+
+     That cost nothing while a course was a few sections. `linux-terminal` is
+     228 of them across thirteen lessons: thirteen requests and about 1.2 MB a
+     round, so opening it in Portuguese pulled 5 MB and took the best part of a
+     minute, with Firefox offering to stop the page. It is the biggest course
+     that made a standing defect visible, not a new one.
+
+     `forLanguage` is what keeps the guard honest, and it was written for this
+     and never called: the store holds ONE language at a time, so moving empties
+     it and the next line misses. Without it, a course read in Portuguese would
+     be served from the store to a reader who had switched to English. */
+  forLanguage(locale);
+  if (courseLoaded(courseId)) return true;
 
   /* A REFUSAL IS NOT A FAILURE, AND THIS TREATED THEM AS ONE.
 
