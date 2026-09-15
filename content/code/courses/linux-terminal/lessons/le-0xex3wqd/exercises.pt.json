@@ -1,0 +1,1572 @@
+{
+  "ex-0j6t4tx7": {
+    "prompt": "Um laço faz dois segundos de trabalho e então dorme três. Qual a distância entre os ciclos?",
+    "hint": "A medição da aula responde isso em três linhas.",
+    "choices": [
+      {
+        "text": "Três segundos, porque é esse o sleep",
+        "why": "O sleep é três; o ciclo não é."
+      },
+      {
+        "text": "Dois segundos, porque o trabalho domina",
+        "why": "As duas partes estão dentro do laço e as duas contam."
+      },
+      {
+        "text": "Cinco segundos",
+        "why": "Trabalho mais sleep, a cada volta — que é por que a agenda anda para a frente a semana inteira."
+      },
+      {
+        "text": "Varia com o quanto a máquina está ocupada",
+        "why": "Variaria, um pouco, e os cinco segundos aqui são as duas partes somadas."
+      }
+    ]
+  },
+  "ex-56x8mprf": {
+    "prompt": "Quais destes são problemas de agendar trabalho num laço `while true`?",
+    "hint": "Um dos cinco não é uma propriedade do laço.",
+    "choices": [
+      {
+        "text": "O intervalo desliza, porque o trabalho está dentro dele",
+        "why": "Medido: um intervalo de três segundos com dois segundos de trabalho dá um ciclo de cinco."
+      },
+      {
+        "text": "Ele morre quando o terminal fecha",
+        "why": "O hangup da aula 6, a não ser que alguém tenha pensado no `nohup`."
+      },
+      {
+        "text": "Nada o reinicia depois de um reboot",
+        "why": "E nada percebe que ele sumiu."
+      },
+      {
+        "text": "Os colegas não têm arquivo nenhum onde achá-lo",
+        "why": "Ele não está em nenhum crontab, nenhuma unidade, nenhum diretório que alguém consulte."
+      },
+      {
+        "text": "Ele não pode rodar mais que uma vez por minuto",
+        "why": "Esse é o limite do cron. Um laço pode rodar quantas vezes você quiser."
+      }
+    ]
+  },
+  "ex-5vg3fcj5": {
+    "prompt": "O que a presença de `/etc/cron.daily/sysstat` te diz sobre esta máquina?",
+    "hint": "A aula 11 usou a ferramenta a que aquele arquivo pertence.",
+    "choices": [
+      {
+        "text": "O cron já está rodando trabalho aqui",
+        "why": "O que é verdade em quase toda máquina Linux: você está acrescentando uma linha, não um agendador."
+      },
+      {
+        "text": "Alguém configurou um agendador para este curso",
+        "why": "O arquivo veio com o pacote."
+      },
+      {
+        "text": "O histórico do `sar` é coletado por um timer do systemd",
+        "why": "Nesta máquina ele vem do cron, e o `/etc/cron.d/sysstat` é o arquivo."
+      },
+      {
+        "text": "Jobs diários ficam desligados até o anacron ser removido",
+        "why": "Os dois estão presentes, e a seção 218 explica como dividem o trabalho."
+      }
+    ]
+  },
+  "ex-v8kfk90y": {
+    "prompt": "Ligue cada agendador ao trabalho para o qual ele foi feito.",
+    "hint": "Dois deles são sobre máquinas que não estão sempre ligadas.",
+    "pairs": [
+      {
+        "left": "cron",
+        "right": "um job repetido numa máquina que fica no ar"
+      },
+      {
+        "left": "anacron",
+        "right": "um job diário numa máquina que se desliga"
+      },
+      {
+        "left": "`at`",
+        "right": "uma vez, numa hora que você nomeia"
+      },
+      {
+        "left": "um timer do systemd",
+        "right": "um job repetido que precisa do journal e de dependências"
+      }
+    ],
+    "right_distractors": [
+      "um job que não pode atrasar mais que um segundo",
+      "um job que roda em toda máquina de uma frota no mesmo instante"
+    ]
+  },
+  "ex-tc04jyar": {
+    "prompt": "Qual flag apaga o seu crontab sem perguntar?",
+    "hint": "Ela fica ao lado da que você queria apertar.",
+    "choices": [
+      {
+        "text": "`crontab -l`",
+        "why": "Essa lista."
+      },
+      {
+        "text": "`crontab -e`",
+        "why": "Essa edita, que é a que você queria."
+      },
+      {
+        "text": "`crontab -i`, a interativa",
+        "why": "Essa apaga *e pergunta antes*, onde a distribuição a traz."
+      },
+      {
+        "text": "`crontab -r`",
+        "why": "Sem prompt, sem saída, sem desfazer — e a uma tecla do `-e`."
+      }
+    ]
+  },
+  "ex-b9r4mh7b": {
+    "prompt": "O `EDITOR=/bin/true crontab -e` imprimiu `No modification made`. O que isso demonstra?",
+    "hint": "O `/bin/true` sai na hora e não escreve nada.",
+    "choices": [
+      {
+        "text": "O crontab estava vazio, então a mudança não tinha alvo",
+        "why": "Havia três jobs nele naquele momento."
+      },
+      {
+        "text": "O `crontab -e` edita uma cópia e a compara ao sair",
+        "why": "Um editor que não muda nada não instala nada — o formato do `sudoedit` da aula 12."
+      },
+      {
+        "text": "O `/bin/true` é rejeitado porque não é um editor",
+        "why": "Ele foi executado, e se comportou como um editor que não salvou nada."
+      },
+      {
+        "text": "A variável `EDITOR` é ignorada pelo `crontab`",
+        "why": "Ela foi usada; é assim que o `/bin/true` virou o editor."
+      }
+    ]
+  },
+  "ex-w3h0jr1k": {
+    "prompt": "Um script de deploy canaliza um here-document para o `crontab -` e o arquivo não tem quebra de linha final. O que acontece?",
+    "hint": "A aula rodou exatamente isso.",
+    "choices": [
+      {
+        "text": "Ele não instala nada e sai com 1",
+        "why": "`new crontab file is missing newline before EOF, can't install.` — o crontab antigo sobrevive."
+      },
+      {
+        "text": "A última linha é descartada e o resto é instalado",
+        "why": "Ele recusa o arquivo inteiro em vez de truncá-lo."
+      },
+      {
+        "text": "Uma quebra de linha é acrescentada e o arquivo entra limpo",
+        "why": "Seria mais amigável; não é o que acontece."
+      },
+      {
+        "text": "O crontab é substituído por um vazio",
+        "why": "O crontab existente fica exatamente como estava."
+      }
+    ]
+  },
+  "ex-rbaack3m": {
+    "prompt": "Por que não editar o `/var/spool/cron/crontabs/ana` diretamente como root?",
+    "hint": "Pense em como o cron percebe que um crontab mudou.",
+    "choices": [
+      {
+        "text": "O arquivo é criptografado e precisa do `crontab` para ser lido",
+        "why": "Ele é texto puro."
+      },
+      {
+        "text": "O root não tem permissão de escrita naquele diretório",
+        "why": "O root tem; a restrição é para todo o resto."
+      },
+      {
+        "text": "O cron lê a data do diretório, e não a do arquivo",
+        "why": "Então a edição está em disco e o cron segue com a versão que tem."
+      },
+      {
+        "text": "O arquivo de spool é regerado a partir do `/etc/crontab` a cada hora",
+        "why": "São arquivos separados com conteúdos separados."
+      }
+    ]
+  },
+  "ex-mmsvntwn": {
+    "prompt": "O que quer dizer `*/15 * * * *`?",
+    "hint": "O passo conta a partir do fundo do intervalo.",
+    "choices": [
+      {
+        "text": "Quinze minutos depois de quando quer que o job tenha rodado",
+        "why": "O cron não sabe quando ele rodou pela última vez."
+      },
+      {
+        "text": "Nos minutos 0, 15, 30 e 45",
+        "why": "Quatro vezes por hora — então um job das 12:50 roda em seguida às 13:00, não às 13:05."
+      },
+      {
+        "text": "Quinze minutos depois de a máquina subir, e daí em diante",
+        "why": "A hora do boot não tem nada a ver com um campo do cron."
+      },
+      {
+        "text": "Quinze vezes por hora, distribuídas",
+        "why": "Quatro vezes, e os minutos são fixos."
+      }
+    ]
+  },
+  "ex-2c6tk6ys": {
+    "prompt": "`0 3 13 * 5` — quando isto roda?",
+    "hint": "Dois jobs e um controle foram instalados para resolver isso.",
+    "choices": [
+      {
+        "text": "Às 03:00 na sexta-feira treze",
+        "why": "É o que parece, e é o erro que a medição foi feita para pegar."
+      },
+      {
+        "text": "Nunca, porque os dois campos de dia se contradizem",
+        "why": "Eles não se contradizem; eles se combinam."
+      },
+      {
+        "text": "Às 03:00 no dia treze, mas só nos meses em que é sexta",
+        "why": "Isso é um E, e o cron não faz isso aqui."
+      },
+      {
+        "text": "Às 03:00 no dia treze de cada mês, e em toda sexta-feira",
+        "why": "Os dois campos de dia são combinados com OU — umas sessenta e quatro execuções por ano."
+      }
+    ]
+  },
+  "ex-1b30azfy": {
+    "prompt": "O atalho que quer dizer `0 0 * * *` é escrito com arroba: `@_____`",
+    "hint": "Cinco letras, e o `@midnight` é o gêmeo dele."
+  },
+  "ex-qwkanncd": {
+    "prompt": "Por que a aula avisa sobre o `@reboot` para um programa que deveria estar sempre rodando?",
+    "hint": "Compare com o que a aula 5 oferece.",
+    "choices": [
+      {
+        "text": "O `@reboot` roda cedo demais, antes de os sistemas de arquivos serem montados",
+        "why": "Sincronia é uma preocupação real e não é o argumento feito."
+      },
+      {
+        "text": "O `@reboot` não é suportado no Debian e no Ubuntu",
+        "why": "É suportado; a entrada roda quando o cron inicia."
+      },
+      {
+        "text": "Um serviço ganha reinício, registro e ordenação",
+        "why": "O `@reboot` o inicia uma vez e nunca mais olha."
+      },
+      {
+        "text": "O `@reboot` dispara de novo quando o cron reinicia, então o programa começa duas vezes",
+        "why": "Ele dispara quando o cron inicia, que é um ponto relacionado e não o dos programas sempre no ar."
+      }
+    ]
+  },
+  "ex-5t9xyyrq": {
+    "prompt": "O que existe numa linha do `/etc/cron.d` que não existe nas linhas do seu próprio crontab?",
+    "hint": "Conte os campos antes do comando.",
+    "choices": [
+      {
+        "text": "Um nome de usuário, na sexta posição",
+        "why": "Cole uma no `crontab -e` e aquele nome é lido como o comando."
+      },
+      {
+        "text": "Um sétimo campo para o ano",
+        "why": "Nenhum formato de cron tem campo de ano."
+      },
+      {
+        "text": "Uma prioridade, para os jobs poderem ser ordenados",
+        "why": "Não existe campo de prioridade."
+      },
+      {
+        "text": "Um comentário marcando de qual pacote ele é",
+        "why": "Pacotes muitas vezes põem um, e é um comentário e não um campo."
+      }
+    ]
+  },
+  "ex-hzavddvc": {
+    "prompt": "Você põe o `backup.sh` no `/etc/cron.d` e ele nunca roda. Por quê?",
+    "hint": "Dois arquivos idênticos, com nomes diferentes, foram testados.",
+    "choices": [
+      {
+        "text": "O arquivo tem que ser executável, e não é",
+        "why": "Essa regra é do `/etc/cron.daily`; um arquivo do `/etc/cron.d` é um crontab, não um script."
+      },
+      {
+        "text": "O ponto no nome faz o cron pular o arquivo",
+        "why": "O `plainjob` rodou e o `dotted.job` nunca rodou, sem nada registrado de nenhum lado."
+      },
+      {
+        "text": "Um arquivo ali precisa de uma linha `SHELL=` para ser lido",
+        "why": "Ele roda sem uma, com o mesmo `/bin/sh` de todo lugar."
+      },
+      {
+        "text": "Os arquivos de lá são lidos uma vez no boot e este chegou depois",
+        "why": "O cron percebe arquivos novos sem reiniciar."
+      }
+    ]
+  },
+  "ex-dkpw503v": {
+    "prompt": "O `run-parts --test /etc/cron.daily` imprimiu quatro caminhos. O que ele fez?",
+    "hint": "A flag é o ponto da pergunta.",
+    "choices": [
+      {
+        "text": "Rodou cada script e informou quais deram certo",
+        "why": "O `--test` não roda nada."
+      },
+      {
+        "text": "Conferiu a sintaxe de cada script",
+        "why": "Ele não lê os scripts."
+      },
+      {
+        "text": "Listou todo arquivo do diretório",
+        "why": "Um arquivo com ponto no nome está no diretório e não está na lista."
+      },
+      {
+        "text": "Mostrou o conjunto, e não mexeu em nada dele",
+        "why": "Que é como você confere que o seu script está no conjunto sem esperar um dia."
+      }
+    ]
+  },
+  "ex-16ty6vbc": {
+    "prompt": "O `/etc/crontab` roda os jobs diários com `test -x /usr/sbin/anacron || { … }`. Para que isso serve?",
+    "hint": "Os dois pacotes estão instalados na máquina da aula.",
+    "choices": [
+      {
+        "text": "Faz esperar o anacron terminar antes de começar",
+        "why": "Não há espera naquela linha."
+      },
+      {
+        "text": "Roda os jobs duas vezes, uma por cada mecanismo",
+        "why": "O `||` os torna mutuamente exclusivos."
+      },
+      {
+        "text": "Impede o cron de rodá-los quando o anacron vai rodar",
+        "why": "Senão os dois rodariam, e os jobs diários rodariam duas vezes num laptop."
+      },
+      {
+        "text": "Confere que o anacron é executável antes de consertá-lo",
+        "why": "Nada é consertado; o teste decide quem roda os jobs."
+      }
+    ]
+  },
+  "ex-y6npv2eq": {
+    "prompt": "Os cabeçalhos do próprio e-mail do cron listaram `PATH=/usr/bin:/bin`. O que decorre disso?",
+    "hint": "Compare com o `PATH` do seu shell interativo.",
+    "choices": [
+      {
+        "text": "O cron leu o `/etc/environment` e usou o que achou",
+        "why": "Ele define esse valor sozinho."
+      },
+      {
+        "text": "Um comando em `~/bin` tem que ser nomeado pelo caminho completo",
+        "why": "O `report.sh` voltou como `/bin/sh: 1: report.sh: not found`."
+      },
+      {
+        "text": "Um crontab pode rodar comandos do root e de mais ninguém",
+        "why": "O job rodou como `ana`; a conta não é o problema."
+      },
+      {
+        "text": "O `PATH` vai ser estendido quando o profile for carregado",
+        "why": "Nenhum profile é carregado para um job do cron."
+      }
+    ]
+  },
+  "ex-vwdjv43d": {
+    "prompt": "Por que um job que funciona no seu terminal não faz nada de madrugada?",
+    "hint": "Quatro diferenças, e esta seção é sobre uma delas.",
+    "choices": [
+      {
+        "text": "O cron o roda com prioridade menor e ele fica sem vez",
+        "why": "O cron não muda o nice do seu job."
+      },
+      {
+        "text": "O terminal guarda o comando em cache e o cron não",
+        "why": "Esse cache não existe."
+      },
+      {
+        "text": "O cron não lê nenhum dos seus arquivos de inicialização",
+        "why": "Sem `.bashrc`, sem `.profile` — então o `PATH`, o virtualenv e os aliases estão todos ausentes."
+      },
+      {
+        "text": "O cron recusa comandos que ele nunca viu",
+        "why": "O cron não inspeciona o comando."
+      }
+    ]
+  },
+  "ex-fvmnz0k9": {
+    "prompt": "Para reproduzir o ambiente do cron no seu próprio shell, comece o comando com a flag que o esvazia antes: `env __ SHELL=/bin/sh PATH=/usr/bin:/bin ...`",
+    "hint": "Dois caracteres, e a letra vem de *ignore*."
+  },
+  "ex-gvpny90c": {
+    "prompt": "A linha de assunto do e-mail dizia `Cron <ana@vm> echo \"ran at $(date +` e o corpo era um erro de sintaxe do shell. O que deu errado?",
+    "hint": "Olhe onde a linha de assunto para.",
+    "choices": [
+      {
+        "text": "A linha de assunto é truncada pelo sistema de e-mail em quarenta caracteres",
+        "why": "Ela não é truncada; é o comando inteiro que o cron rodou."
+      },
+      {
+        "text": "O `date` não está no `PATH` do cron, então a substituição falhou",
+        "why": "O `date` está em `/usr/bin`, que está nele."
+      },
+      {
+        "text": "As aspas duplas foram removidas antes de o shell vê-las",
+        "why": "As aspas chegaram; outra coisa não chegou."
+      },
+      {
+        "text": "Um `%` sem escape terminou o comando ali",
+        "why": "Tudo depois dele virou a entrada padrão do job, deixando o `$(` sem fechar."
+      }
+    ]
+  },
+  "ex-53yfvdyn": {
+    "prompt": "Um job do cron escreve uma linha na saída padrão e sai com 0. O que acontece com a linha?",
+    "hint": "O mecanismo é de 1975 e continua sendo o padrão.",
+    "choices": [
+      {
+        "text": "Ela é enviada por e-mail ao dono do crontab",
+        "why": "Que é por que um job tagarela incomoda e por que o `>/dev/null 2>&1` acaba escrito."
+      },
+      {
+        "text": "Ela é escrita no `/var/log/syslog` ao lado da linha `CMD`",
+        "why": "O syslog recebe o comando, não a saída dele."
+      },
+      {
+        "text": "Ela é descartada, porque um job que sai com 0 é um job que funcionou",
+        "why": "O status de saída muda a linha de assunto, não se o e-mail é enviado."
+      },
+      {
+        "text": "Ela vai para o journal, onde o `journalctl` a acha",
+        "why": "Isso é de um timer do systemd; a saída de um job do cron é enviada por e-mail."
+      }
+    ]
+  },
+  "ex-8vqn4rjn": {
+    "prompt": "O que há de errado com `0 3 * * * backup.sh >/dev/null 2>&1`?",
+    "hint": "Pergunte o que você teria que olhar para descobrir que ele está falhando.",
+    "choices": [
+      {
+        "text": "Esconde a saída, então o job roda mais devagar",
+        "why": "Redirecionar não custa nada mensurável."
+      },
+      {
+        "text": "Manda a saída para o usuário errado",
+        "why": "Não manda para lugar nenhum."
+      },
+      {
+        "text": "Um job que falha toda noite não relata nada",
+        "why": "Os dois fluxos são descartados, então o erro que nomeia o problema vai junto."
+      },
+      {
+        "text": "Impede o cron de registrar o job no log do sistema",
+        "why": "As linhas `CMD` e `END` são escritas de qualquer jeito."
+      }
+    ]
+  },
+  "ex-b5v1wgx7": {
+    "prompt": "`backup.sh > /tmp/out 2>&1 || cat /tmp/out` — por que isso é melhor que descartar a saída?",
+    "hint": "Dois estados, e só um deles deve chegar até você.",
+    "choices": [
+      {
+        "text": "Guarda uma cópia por uma semana",
+        "why": "O arquivo é sobrescrito na próxima execução."
+      },
+      {
+        "text": "Silêncio quer dizer que funcionou; e-mail quer dizer leia",
+        "why": "O `||` roda o `cat` só numa saída diferente de zero, e a saída padrão é o que o cron envia."
+      },
+      {
+        "text": "Reduz pela metade a saída que o job produz",
+        "why": "O job produz exatamente a mesma saída."
+      },
+      {
+        "text": "Impede o job de ser enviado por e-mail quando falha",
+        "why": "É ele que causa o e-mail quando falha."
+      }
+    ]
+  },
+  "ex-7pzkkxhs": {
+    "prompt": "O syslog mostra uma linha `CMD` e uma linha `END` do job de ontem à noite. O que você aprendeu?",
+    "hint": "Uma das duas perguntas é respondida e a outra não.",
+    "choices": [
+      {
+        "text": "O job rodou e deu certo",
+        "why": "O `END` é escrito para um job que saiu com 1 também."
+      },
+      {
+        "text": "O job rodou e a saída dele foi enviada por e-mail",
+        "why": "O log não diz nada sobre e-mail."
+      },
+      {
+        "text": "O job estava agendado mas a agenda não casou",
+        "why": "O `CMD` quer dizer que a agenda casou e o cron o iniciou."
+      },
+      {
+        "text": "Ele começou e terminou, e nada além disso",
+        "why": "Que é por que você precisa do e-mail também quando um job de um ano para."
+      }
+    ]
+  },
+  "ex-6gn3gxhx": {
+    "prompt": "No Debian e no Ubuntu, o que uma linha `CRON_TZ=America/New_York` num crontab faz?",
+    "hint": "Ela foi instalada e observada por um minuto.",
+    "choices": [
+      {
+        "text": "Reagenda as linhas abaixo dela naquele fuso",
+        "why": "Isso é o `cronie`, no Red Hat. Este cron não é aquele cron."
+      },
+      {
+        "text": "É rejeitada, e o cron se recusa a carregar o crontab",
+        "why": "O crontab carregou e os jobs rodaram."
+      },
+      {
+        "text": "Ela chega aos jobs como variável comum",
+        "why": "O job imprimiu `CRON_TZ=[America/New_York]` e rodou no minuto UTC."
+      },
+      {
+        "text": "Define o fuso dos horários no log do sistema",
+        "why": "Os horários do log vêm das configurações de relógio da própria máquina."
+      }
+    ]
+  },
+  "ex-qqfrrhwm": {
+    "prompt": "Um job está marcado para 02:30 diariamente num fuso que adianta os relógios às 02:00. O que acontece na noite da mudança?",
+    "hint": "As iterações imprimiram o dia 6, o 7 e o 9.",
+    "choices": [
+      {
+        "text": "Ele não roda naquele dia",
+        "why": "02:30 nunca existe, então a agenda pula o dia inteiro."
+      },
+      {
+        "text": "Ele roda às 03:30, uma hora atrasado",
+        "why": "Nada o move; a expressão é um horário de relógio de parede."
+      },
+      {
+        "text": "Ele roda duas vezes, uma em cada deslocamento",
+        "why": "Isso é o risco da mudança do outono, não da primavera."
+      },
+      {
+        "text": "Ele roda às 02:00, quando os relógios saltam",
+        "why": "Não há recuo para a fronteira."
+      }
+    ]
+  },
+  "ex-vt0fzsee": {
+    "prompt": "Qual destas é a correção barata que a aula diz que ninguém aplica?",
+    "hint": "Ela custa uma edição e remove o problema de todos os fusos de uma vez.",
+    "choices": [
+      {
+        "text": "Pôr `CRON_TZ` no topo do crontab",
+        "why": "Não é portável, e neste cron não faz nada."
+      },
+      {
+        "text": "Agendar fora das 01:00 às 03:00",
+        "why": "Nenhuma mudança de relógio acontece fora dessa janela, então o job roda todo dia do ano."
+      },
+      {
+        "text": "Rodar o job duas vezes e deixar a segunda pular",
+        "why": "Isso é idempotência, que a aula também quer, por outra razão."
+      },
+      {
+        "text": "Converter o horário para UTC num comentário acima da linha",
+        "why": "Vale fazer, e documenta a decisão em vez de removê-la."
+      }
+    ]
+  },
+  "ex-3aa61m1m": {
+    "prompt": "Qual fuso horário uma linha simples de cron usa?",
+    "hint": "Não o do convite na sua agenda.",
+    "choices": [
+      {
+        "text": "UTC, seja qual for a configuração da máquina",
+        "why": "Muitos servidores estão em UTC porque alguém os configurou assim."
+      },
+      {
+        "text": "O da variável `TZ` do shell do usuário",
+        "why": "Nenhum profile de shell é lido para um job do cron."
+      },
+      {
+        "text": "O que o dono do crontab tinha quando instalou",
+        "why": "Nada registra isso."
+      },
+      {
+        "text": "O da própria máquina, do `/etc/localtime`",
+        "why": "Que é o argumento para pôr os servidores em UTC e encerrar o assunto."
+      }
+    ]
+  },
+  "ex-wxc9769s": {
+    "prompt": "Que pergunta o anacron faz em vez de perguntar as horas?",
+    "hint": "A memória inteira dele é um arquivo por job.",
+    "choices": [
+      {
+        "text": "A máquina está ociosa o bastante para começar",
+        "why": "Isso é o `batch`, que olha a carga média."
+      },
+      {
+        "text": "A rede já subiu",
+        "why": "Nada no anacron olha a rede."
+      },
+      {
+        "text": "Há quanto tempo este job rodou pela última vez",
+        "why": "O arquivo de spool guarda a data, e o campo de período diz quantos dias é demais."
+      },
+      {
+        "text": "A execução anterior deste job deu certo",
+        "why": "O status não é o que ele registra."
+      }
+    ]
+  },
+  "ex-kpf91wk7": {
+    "prompt": "A segunda execução do `anacron -d -n` imprimiu `Normal exit (0 jobs run)`. Por quê?",
+    "hint": "Olhe o que a primeira execução escreveu no diretório de spool.",
+    "choices": [
+      {
+        "text": "Os dois jobs já tinham rodado hoje, e o spool diz isso",
+        "why": "O arquivo tem `20260915` — a data, que é a memória inteira do anacron."
+      },
+      {
+        "text": "A flag `-n` roda cada job no máximo uma vez por invocação",
+        "why": "O `-n` quer dizer *agora*: ignore os campos de atraso."
+      },
+      {
+        "text": "Os jobs falharam na primeira vez e o anacron desistiu deles",
+        "why": "Os dois relataram `terminated (mailing output)`."
+      },
+      {
+        "text": "O anacrontab foi consumido pela primeira execução",
+        "why": "O arquivo é lido de novo a cada vez e está inalterado."
+      }
+    ]
+  },
+  "ex-22bhqfh3": {
+    "prompt": "Quando um job do `at` deixa de estar na fila?",
+    "hint": "O `atq` estava vazio um minuto depois de ele rodar.",
+    "choices": [
+      {
+        "text": "À meia-noite, quando a fila é rotacionada",
+        "why": "A fila não é rotacionada."
+      },
+      {
+        "text": "Quando ele roda",
+        "why": "Um job de uma vez só é consumido ao rodar: o `atq` não imprimiu nada depois."
+      },
+      {
+        "text": "Quando o `atd` é reiniciado",
+        "why": "Jobs na fila sobrevivem a um reinício do daemon."
+      },
+      {
+        "text": "Depois de sete dias, quando o spool é limpo",
+        "why": "Nada o expira por tempo."
+      }
+    ]
+  },
+  "ex-mr3cq0rf": {
+    "prompt": "O `at -c` imprime dezenas de linhas `export` antes do comando. O que isso te diz?",
+    "hint": "O cron não faz isso, e não é diretamente uma vantagem.",
+    "choices": [
+      {
+        "text": "O `at` precisa daquelas variáveis para achar o comando",
+        "why": "Ele acha o comando pelo caminho que recebeu."
+      },
+      {
+        "text": "O job vai ser rodado pelo seu shell de login em vez do `/bin/sh`",
+        "why": "O `at` avisa que usa o `/bin/sh`, e os exports são separados disso."
+      },
+      {
+        "text": "Ele repete o terminal em que você o enfileirou",
+        "why": "Incluindo um `JAVA_HOME` de uma sessão esquecida — reproduzível por mais ninguém."
+      },
+      {
+        "text": "Aquelas variáveis são lidas do profile da conta na hora de rodar",
+        "why": "Elas foram capturadas na hora de enfileirar, que é por que estão escritas dentro do job."
+      }
+    ]
+  },
+  "ex-671k7n23": {
+    "prompt": "De quantos arquivos um job agendado precisa sob o systemd, e quais são?",
+    "hint": "Um deles é algo que a aula 5 já ensinou.",
+    "choices": [
+      {
+        "text": "Um: um `.timer` com a agenda e o comando juntos",
+        "why": "Um timer inicia uma unidade; ele não guarda um comando."
+      },
+      {
+        "text": "Três: um serviço, um timer e uma entrada no `timers.target`",
+        "why": "A participação no target é uma linha dentro do timer, não um terceiro arquivo."
+      },
+      {
+        "text": "Dois: um `.service` e um `.timer` que o inicia",
+        "why": "Mesmo nome base, e o timer acha o serviço por essa convenção."
+      },
+      {
+        "text": "Dois: um `.timer` e um script de shell que ele chama direto",
+        "why": "Um timer só consegue ativar uma unidade, que é para isso que o serviço serve."
+      }
+    ]
+  },
+  "ex-0pqy5w40": {
+    "prompt": "O que o `Type=oneshot` diz sobre um serviço?",
+    "hint": "É a diferença para os daemons da aula 5.",
+    "choices": [
+      {
+        "text": "Ele roda, termina, e terminar não é uma falha",
+        "why": "Um job em vez de um daemon, que é o que um timer inicia."
+      },
+      {
+        "text": "Ele é iniciado uma única vez, e depois deixado em paz",
+        "why": "Ele é iniciado de novo a cada ativação do timer."
+      },
+      {
+        "text": "Ele roda antes de tudo mais no target dele",
+        "why": "Ordenação é `Before=` e `After=`, não o tipo."
+      },
+      {
+        "text": "Ele é removido do sistema depois da primeira execução",
+        "why": "Nada o remove."
+      }
+    ]
+  },
+  "ex-z68x5spq": {
+    "prompt": "Você editou um arquivo de unidade em `/etc/systemd/system` e nada mudou. O que você esqueceu?",
+    "hint": "O systemd continua rodando o que ele leu antes.",
+    "choices": [
+      {
+        "text": "O `systemctl enable` no serviço",
+        "why": "Habilitar o serviço é o que você não deve fazer para um timer."
+      },
+      {
+        "text": "O `systemctl daemon-reload`",
+        "why": "Sem ele o systemd mantém a versão que leu no boot, e a edição não tem efeito."
+      },
+      {
+        "text": "O `systemctl restart systemd-timesyncd`",
+        "why": "O relógio não tem nada a ver com isso."
+      },
+      {
+        "text": "O `systemd-analyze verify` no arquivo",
+        "why": "Vale rodar, e ele confere o arquivo em vez de carregá-lo."
+      }
+    ]
+  },
+  "ex-dvxnp698": {
+    "prompt": "O `systemd-analyze verify` num timer com `OnCalender` mal escrito imprimiu duas mensagens. Qual delas importava?",
+    "hint": "Uma delas é um aviso sobre uma chave que o systemd joga fora.",
+    "choices": [
+      {
+        "text": "`Unknown key name 'OnCalender' in section 'Timer', ignoring`",
+        "why": "Esse é o aviso, e *ignoring* é a palavra que faz dele não um erro."
+      },
+      {
+        "text": "`Binding to IPv6 address not available`",
+        "why": "Esse é o contêiner em que a aula rodou, falando de si mesmo."
+      },
+      {
+        "text": "Nenhuma — a unidade é válida e teria funcionado",
+        "why": "Ela foi recusada, que é o que a segunda mensagem diz."
+      },
+      {
+        "text": "`Timer unit lacks value setting. Refusing.`",
+        "why": "A chave ignorada deixou um timer sem agenda nenhuma, e isso é recusado."
+      }
+    ]
+  },
+  "ex-hpktjn93": {
+    "prompt": "O que o `systemd-analyze calendar` te dá que uma linha de crontab não dá?",
+    "hint": "Voltam três linhas e a do meio é o ponto.",
+    "choices": [
+      {
+        "text": "Ele instala o timer assim que a expressão analisa",
+        "why": "Ele só lê a expressão."
+      },
+      {
+        "text": "Ele reescreve a expressão nos cinco campos do cron",
+        "why": "Ele a normaliza na forma do próprio systemd."
+      },
+      {
+        "text": "As datas de verdade em que a expressão vai disparar",
+        "why": "Não *isto analisa* — *é quando isto roda*, antes de alguém depender."
+      },
+      {
+        "text": "A lista de unidades que já usam aquela expressão",
+        "why": "Ele não sabe nada sobre as suas unidades."
+      }
+    ]
+  },
+  "ex-zvrsf7zj": {
+    "prompt": "`Fri *-*-13` produziu 2026-11-13 e depois 2027-08-13. O que isso mostra?",
+    "hint": "Compare a mesma ideia escrita nos cinco campos do cron.",
+    "choices": [
+      {
+        "text": "O systemd exige que os dois campos de dia casem",
+        "why": "Que é genuinamente sexta-feira treze — nove meses entre aquelas duas datas."
+      },
+      {
+        "text": "O systemd escolhe o campo de dia que vier primeiro",
+        "why": "Os dois são aplicados, e os dois têm que valer."
+      },
+      {
+        "text": "A expressão é inválida e foi arredondada para a ocorrência mais próxima",
+        "why": "Ela é válida e nenhuma das datas foi arredondada."
+      },
+      {
+        "text": "As iterações são limitadas a uma por ano civil",
+        "why": "O limite é a contagem de `--iterations` que você pediu."
+      }
+    ]
+  },
+  "ex-0egg9tep": {
+    "prompt": "`*-02-30 03:00:00` sai com 0 e informa `Next elapse: never`. Qual é a lição?",
+    "hint": "Compare com `25:00:00`, que sai com 1.",
+    "choices": [
+      {
+        "text": "Uma expressão de calendário falha não analisando",
+        "why": "Esta analisa e mesmo assim nunca roda."
+      },
+      {
+        "text": "O status de saída é a conferência confiável de uma expressão ruim",
+        "why": "Ele perdeu esta inteiramente."
+      },
+      {
+        "text": "Fevereiro é um caso especial que o systemd trata à parte",
+        "why": "O mesmo acontece com qualquer data impossível."
+      },
+      {
+        "text": "Uma expressão válida não é a mesma coisa que uma agenda",
+        "why": "A palavra a procurar é `never`, porque o status não vai te contar."
+      }
+    ]
+  },
+  "ex-abdscg3z": {
+    "prompt": "O systemd normaliza `weekly` para `Mon *-*-* 00:00:00`. Por que isso importa ao portar um crontab?",
+    "hint": "O cron tem um atalho com o mesmo nome.",
+    "choices": [
+      {
+        "text": "A versão do systemd roda semanalmente e a do cron quinzenalmente",
+        "why": "As duas são uma vez por semana."
+      },
+      {
+        "text": "O `@weekly` do cron é domingo, então o job se move um dia",
+        "why": "Mesma palavra, dia diferente, e nada te avisa da mudança."
+      },
+      {
+        "text": "A versão do systemd depende de `Persistent=` para disparar",
+        "why": "Ela dispara sem isso; o `Persistent=` é sobre execuções perdidas."
+      },
+      {
+        "text": "O `@weekly` do cron roda às 00:00 e o do systemd às 01:00",
+        "why": "Os dois são meia-noite; o que difere é o dia."
+      }
+    ]
+  },
+  "ex-n1fe2b0c": {
+    "prompt": "O que o `Persistent=true` faz?",
+    "hint": "É a resposta para uma máquina que estava desligada.",
+    "choices": [
+      {
+        "text": "Mantém o timer carregado através de um `daemon-reload`",
+        "why": "Recarregar não descarrega timers."
+      },
+      {
+        "text": "Roda um job perdido no próximo boot",
+        "why": "O systemd registra o último disparo e compara com o relógio — o anacron, embutido."
+      },
+      {
+        "text": "Impede o job de ser morto quando a sessão termina",
+        "why": "Uma unidade não está presa a uma sessão."
+      },
+      {
+        "text": "Escreve a saída do job em disco em vez de no journal",
+        "why": "O journal já está em disco."
+      }
+    ]
+  },
+  "ex-xhdk1eqn": {
+    "prompt": "Um job leva noventa minutos e o timer diz `OnUnitActiveSec=1h`. Quando ele roda?",
+    "hint": "A contagem começa da última ativação, não do relógio.",
+    "choices": [
+      {
+        "text": "Na hora cheia, com duas cópias se sobrepondo",
+        "why": "Um serviço que está ativo não é iniciado de novo."
+      },
+      {
+        "text": "Com intervalos de noventa minutos, porque o job dita o ritmo",
+        "why": "O intervalo é somado ao início, não ao fim."
+      },
+      {
+        "text": "03:00, depois 04:30, depois 06:00",
+        "why": "Uma hora depois de a última execução *começar*, então o intervalo é o job mais a hora."
+      },
+      {
+        "text": "Só uma vez, porque a execução ultrapassa o intervalo",
+        "why": "Ultrapassar não cancela o timer."
+      }
+    ]
+  },
+  "ex-8946ec8k": {
+    "prompt": "Um timer está marcado para 03:00:00 e dispara às 03:00:43. O que explica isso?",
+    "hint": "Existe uma configuração cujo padrão é um minuto.",
+    "choices": [
+      {
+        "text": "O `AccuracySec=` tem padrão de um minuto",
+        "why": "Isso deixa o processador dormir; `AccuracySec=1s` diz que você precisa do segundo."
+      },
+      {
+        "text": "O relógio da máquina desviou quarenta e três segundos",
+        "why": "Um relógio desviado moveria todos os timers, não um."
+      },
+      {
+        "text": "O `RandomizedDelaySec=` vem ligado por padrão",
+        "why": "O padrão dele é zero; você o acrescenta de propósito."
+      },
+      {
+        "text": "O serviço levou quarenta e três segundos para iniciar",
+        "why": "A marca de tempo é a ativação, não a inicialização do serviço."
+      }
+    ]
+  },
+  "ex-k3k039sw": {
+    "prompt": "Duzentas máquinas compartilham um arquivo de unidade com `OnCalendar=*-*-* 03:00:00`. O que o `RandomizedDelaySec=30m` muda?",
+    "hint": "Pense no que está do outro lado daquilo com que o job conversa.",
+    "choices": [
+      {
+        "text": "Cada execução é atrasada em meia hora",
+        "why": "O atraso é um valor aleatório entre zero e trinta minutos."
+      },
+      {
+        "text": "O job é repetido por até trinta minutos se falhar",
+        "why": "Não tem nada a ver com falha."
+      },
+      {
+        "text": "Cada máquina escolhe um atraso novo a cada execução",
+        "why": "O atraso é fixo por máquina e por timer, em vez de sorteado de novo toda noite."
+      },
+      {
+        "text": "Elas param de chegar todas no mesmo segundo",
+        "why": "Que é o ponto inteiro: duzentas requisições simultâneas viram uma distribuição."
+      }
+    ]
+  },
+  "ex-ehctm4tn": {
+    "prompt": "Um job está agendado em algum lugar desta máquina e o `crontab -l` não o mostra. Onde você olha primeiro?",
+    "hint": "É o lugar onde ninguém pôs nada à mão.",
+    "choices": [
+      {
+        "text": "O `/etc/crontab`, onde os pacotes escrevem",
+        "why": "Os pacotes não mexem nele; é o arquivo da própria distribuição."
+      },
+      {
+        "text": "O `~/.profile`, caso ele inicie um laço em segundo plano",
+        "why": "Vale um pensamento, e não é onde um agendador guarda coisas."
+      },
+      {
+        "text": "O `/etc/cron.d`, onde os pacotes deixam arquivos",
+        "why": "Sete lugares guardam agendas, e esse é o que as pessoas esquecem de conferir."
+      },
+      {
+        "text": "O `/var/log/syslog`, atrás de linhas sobre um job que falta",
+        "why": "O log mostra jobs que rodaram, não os que você ainda não achou."
+      }
+    ]
+  },
+  "ex-0237y3hp": {
+    "prompt": "No `systemctl list-timers`, quais duas colunas respondem 'ele rodou?'",
+    "hint": "Uma delas é a razão para passar `--all`.",
+    "choices": [
+      {
+        "text": "`UNIT` e `ACTIVATES`, que nomeiam o par",
+        "why": "Elas dizem o quê, não quando."
+      },
+      {
+        "text": "`LEFT` e `PASSED`, que são as duas durações",
+        "why": "Esses são os mesmos dois fatos numa forma mais amigável."
+      },
+      {
+        "text": "`NEXT` e `ACTIVATES`",
+        "why": "Uma hora e um nome são meia resposta."
+      },
+      {
+        "text": "`NEXT` e `LAST`",
+        "why": "Um `LAST` mais velho que o período do timer é um job que não rodou, e isso é acionável."
+      }
+    ]
+  },
+  "ex-vj90f7c1": {
+    "prompt": "O `grep CRON /var/log/syslog` não mostra linha nenhuma de ontem à noite. O que isso descarta?",
+    "hint": "Pense em qual metade do problema o log cobre.",
+    "choices": [
+      {
+        "text": "O job começou e falhou dentro de si mesmo",
+        "why": "Uma linha `CMD` é escrita quando o cron inicia um job, e não há nenhuma."
+      },
+      {
+        "text": "A agenda está errada",
+        "why": "Essa é uma das duas coisas que continuam em aberto."
+      },
+      {
+        "text": "O crontab está em outra conta",
+        "why": "Também em aberto, e a resposta mais comum de todas."
+      },
+      {
+        "text": "O cron está rodando mas o relógio da máquina está errado",
+        "why": "Um relógio errado ainda produziria uma linha `CMD`, na hora errada."
+      }
+    ]
+  },
+  "ex-g01cysnv": {
+    "prompt": "Por que a lista da aula põe 'está no crontab que você acha?' antes de 'é o ambiente?'",
+    "hint": "Os dois são baratos; um deles é a resposta com mais frequência.",
+    "choices": [
+      {
+        "text": "O ambiente é conferível depois de o cron rodar o job",
+        "why": "O `env -i` o reproduz sem esperar o cron."
+      },
+      {
+        "text": "A conta é a resposta nove vezes em dez",
+        "why": "O `sudo crontab -u deploy -l` resolve em cinco segundos."
+      },
+      {
+        "text": "Um problema de ambiente precisa de root para corrigir",
+        "why": "Uma linha de `PATH` no seu próprio crontab não precisa da permissão de ninguém."
+      },
+      {
+        "text": "A lista está ordenada por quão grave é cada causa",
+        "why": "Ela está ordenada por quão barata é cada conferência."
+      }
+    ]
+  },
+  "ex-1p1fv4kh": {
+    "prompt": "Um job em `*/5` passa a levar sete minutos. O que o cron faz?",
+    "hint": "O cron não faz ideia de que o primeiro ainda está indo.",
+    "choices": [
+      {
+        "text": "Espera a cópia em execução terminar, e então inicia",
+        "why": "Esperar exigiria que o cron soubesse, e ele não sabe."
+      },
+      {
+        "text": "Outra cópia é lançada na próxima marca de cinco minutos",
+        "why": "Aos onze minutos são três, e cada uma é mais lenta que a anterior."
+      },
+      {
+        "text": "Pula a execução e anota no log do sistema",
+        "why": "Nada a pula e nada é anotado."
+      },
+      {
+        "text": "Estica a agenda para sete minutos automaticamente",
+        "why": "A agenda é fixada pelos cinco campos."
+      }
+    ]
+  },
+  "ex-d6hvr7r5": {
+    "prompt": "Por que o `flock -E 0 -n` é melhor num crontab que o `flock -n` simples?",
+    "hint": "Pense no que um sistema de monitoramento vê numa tarde lenta.",
+    "choices": [
+      {
+        "text": "Ele espera em vez de desistir",
+        "why": "Esperar é o `-w`; o `-E` muda o status."
+      },
+      {
+        "text": "Ele libera a trava mais rápido quando o job termina",
+        "why": "O kernel a libera de qualquer jeito, no mesmo momento."
+      },
+      {
+        "text": "Uma execução pulada para de parecer uma execução que falhou",
+        "why": "O `-n` sozinho sai com 1 quando a trava está ocupada, o que alerta sobre um job que está funcionando."
+      },
+      {
+        "text": "Ele deixa uma segunda cópia rodar enquanto a primeira segura a trava",
+        "why": "Nada nele permite duas cópias."
+      }
+    ]
+  },
+  "ex-bg7e4fy2": {
+    "prompt": "O que há de errado com um arquivo de PID como trava?",
+    "hint": "Dois problemas, e um deles é da aula 6.",
+    "choices": [
+      {
+        "text": "A conferência e a escrita são dois passos",
+        "why": "Dois jobs no mesmo segundo passam os dois pela conferência, e o `SIGKILL` não roda trap nenhum."
+      },
+      {
+        "text": "Um arquivo de PID é ilegível para outro usuário",
+        "why": "As permissões são as que você der."
+      },
+      {
+        "text": "PIDs são reaproveitados, então o arquivo aponta para o processo errado",
+        "why": "O reaproveitamento é real e as duas falhas aqui acontecem muito antes dele."
+      },
+      {
+        "text": "O arquivo tem que estar no mesmo sistema de arquivos que o script",
+        "why": "Ele pode estar em qualquer lugar gravável."
+      }
+    ]
+  },
+  "ex-fnkh0nsw": {
+    "prompt": "O que acontece quando um timer ativa um `.service` que já está rodando?",
+    "hint": "Este é o argumento que a aula chama de mais forte a favor dos timers.",
+    "choices": [
+      {
+        "text": "Uma segunda instância inicia, e o systemd as numera",
+        "why": "Instâncias precisam de uma unidade de template e um `@` no nome."
+      },
+      {
+        "text": "A ativação é enfileirada e roda quando a primeira termina",
+        "why": "Ela não é enfileirada."
+      },
+      {
+        "text": "O systemd mata a cópia em execução e inicia uma nova",
+        "why": "Nada é morto."
+      },
+      {
+        "text": "Nada — uma unidade ativa não é iniciada de novo",
+        "why": "Sem arquivo de trava para escrever, vazar ou errar, e o journal registra a ativação."
+      }
+    ]
+  },
+  "ex-gg2225mf": {
+    "prompt": "O que a aula diz para usar numa máquina que acabaram de te entregar?",
+    "hint": "Não é a que tem mais recursos.",
+    "choices": [
+      {
+        "text": "Um timer do systemd, já que é o moderno",
+        "why": "Moderno não é o argumento, e a próxima pessoa ainda tem que achar."
+      },
+      {
+        "text": "Cron, já que está em qualquer Unix",
+        "why": "Verdade sobre o cron, e a máquina pode já estar fazendo tudo com unidades."
+      },
+      {
+        "text": "O que já estiver em uso ali",
+        "why": "A próxima pessoa a olhar acha quinze jobs num lugar, não catorze e um."
+      },
+      {
+        "text": "Aquele que o seu time padronizou",
+        "why": "Uma política razoável, e é sobre o seu time em vez desta máquina."
+      }
+    ]
+  },
+  "ex-1w9mhf9e": {
+    "prompt": "Quais destas são razões que a aula dá para quebrar a regra da consistência e usar um timer?",
+    "hint": "Uma das cinco é algo que o cron faz igualmente bem.",
+    "choices": [
+      {
+        "text": "O job não pode se sobrepor",
+        "why": "Seção 223 — o systemd não inicia de novo uma unidade ativa."
+      },
+      {
+        "text": "A máquina fica desligada parte do tempo",
+        "why": "O `Persistent=true` põe a execução perdida em dia no boot."
+      },
+      {
+        "text": "O job precisa que a rede esteja no ar primeiro",
+        "why": "`After=network-online.target`, que o cron não sabe expressar."
+      },
+      {
+        "text": "O job precisa rodar mais de uma vez por minuto",
+        "why": "O systemd faz segundos; o piso do cron é um minuto."
+      },
+      {
+        "text": "O job tem que rodar como um usuário que não é o root",
+        "why": "O crontab de um usuário já roda como aquele usuário."
+      }
+    ]
+  },
+  "ex-xjqy2hjq": {
+    "prompt": "Um contêiner é reagendado por um orquestrador. O que a aula diz sobre pôr cron dentro dele?",
+    "hint": "Existe uma terceira resposta que não é nem cron nem timer.",
+    "choices": [
+      {
+        "text": "Use cron, já que o contêiner pode sobreviver ao orquestrador",
+        "why": "O contêiner é a parte descartável por projeto."
+      },
+      {
+        "text": "Deixe o orquestrador agendar",
+        "why": "Um `CronJob` ou um pipeline te dá o histórico, a retentativa e o tempo limite de graça."
+      },
+      {
+        "text": "Use um timer do systemd, porque contêineres rodam systemd hoje",
+        "why": "A maioria dos contêineres não tem sistema de init nenhum."
+      },
+      {
+        "text": "Ponha cron na imagem base para cada contêiner ter",
+        "why": "Isso multiplica os agendadores em vez de removê-los."
+      }
+    ]
+  },
+  "ex-f1w0mgg4": {
+    "prompt": "O que a aula diz que sobrevive inteiramente à escolha do agendador?",
+    "hint": "É o assunto da seção seguinte a esta.",
+    "choices": [
+      {
+        "text": "As nove coisas de que o próprio job precisa",
+        "why": "Seguro para rodar duas vezes, barulhento ao falhar, e interrompido quando demora demais — problema do job, não do agendador."
+      },
+      {
+        "text": "Que a agenda seja escrita em UTC",
+        "why": "Boa prática, e uma configuração do agendador em vez de uma propriedade do job."
+      },
+      {
+        "text": "Que o job pertença a uma conta de serviço",
+        "why": "Vale fazer, e não é o que a aula nomeia aqui."
+      },
+      {
+        "text": "Que a agenda viva em controle de versão",
+        "why": "Também vale fazer, e de novo é sobre onde a agenda mora."
+      }
+    ]
+  },
+  "ex-4k889rga": {
+    "prompt": "O script rodou duas vezes e a segunda entrada do log diz `already done`. Qual das nove é essa?",
+    "hint": "É a que torna segura uma execução atrasada.",
+    "choices": [
+      {
+        "text": "Um tempo limite",
+        "why": "Isso é o `timeout 60` na linha do crontab."
+      },
+      {
+        "text": "Uma trava",
+        "why": "Isso é o `flock`, e ele impede duas ao mesmo tempo em vez do mesmo trabalho duas vezes."
+      },
+      {
+        "text": "Saída que vai para onde você vai ler",
+        "why": "Isso é o `exec >>` no topo."
+      },
+      {
+        "text": "Idempotência",
+        "why": "Quatro linhas de guarda, e elas tornam inofensivos uma retentativa, uma execução atrasada e uma manual."
+      }
+    ]
+  },
+  "ex-10j1tsxm": {
+    "prompt": "Por que o script escreve `$archive.tmp` e então renomeia?",
+    "hint": "Pense num leitor chegando no meio.",
+    "choices": [
+      {
+        "text": "Um arquivo `.tmp` fica fora da varredura de backup",
+        "why": "Nada no script varre coisa alguma."
+      },
+      {
+        "text": "O `tar` se recusa a escrever num nome que já existe",
+        "why": "O `tar` sobrescreve sem reclamar."
+      },
+      {
+        "text": "Uma renomeação dentro de um sistema de arquivos é atômica",
+        "why": "Então ninguém vê um arquivo pela metade, e um job morto deixa um `.tmp` em vez de algo que parece pronto."
+      },
+      {
+        "text": "Reduz pela metade o espaço em disco de que o arquivo precisa",
+        "why": "Ele precisa do mesmo espaço de qualquer jeito."
+      }
+    ]
+  },
+  "ex-pe5xj0yz": {
+    "prompt": "Qual falha nenhum dos oito primeiros itens pega?",
+    "hint": "Silêncio também é o que o sucesso parece.",
+    "choices": [
+      {
+        "text": "Um job que falha no meio e deixa um arquivo parcial",
+        "why": "O `.tmp` e a renomeação cuidam dessa."
+      },
+      {
+        "text": "Um job que nunca rodou",
+        "why": "O crontab foi apagado, ou o contêiner reconstruído sem ele — e nada relata a ausência de um relato."
+      },
+      {
+        "text": "Um job que roda duas vezes sobre os mesmos dados",
+        "why": "Isso é idempotência, item sete."
+      },
+      {
+        "text": "Um job que trava e ainda está lá amanhã",
+        "why": "Isso é o tempo limite, item quatro."
+      }
+    ]
+  },
+  "ex-ddeq54ma": {
+    "prompt": "O que é um interruptor de homem morto, no sentido desta aula?",
+    "hint": "Ele inverte qual evento é o alarme.",
+    "choices": [
+      {
+        "text": "Alguma coisa em outro lugar percebe o silêncio",
+        "why": "O job informa sucesso; o monitor reclama quando o aviso para, e ele está fora da máquina, então sobrevive a ela."
+      },
+      {
+        "text": "O job se mata se passar do tempo limite",
+        "why": "Isso é o `timeout`, e é o item quatro."
+      },
+      {
+        "text": "Uma segunda cópia do job numa máquina reserva",
+        "why": "Redundância é outro problema."
+      },
+      {
+        "text": "Um arquivo de trava que é removido quando o processo morre",
+        "why": "Isso é o que o `flock` faz por você."
+      }
+    ]
+  },
+  "ex-ncxnth9j": {
+    "prompt": "Ponha a lista do 'não rodou' na ordem que a aula dá, da mais barata para a mais cara.",
+    "items": [
+      "crontab -l, na conta que você acha",
+      "systemctl status cron",
+      "grep CRON /var/log/syslog",
+      "confira a agenda em si",
+      "confira o nome do arquivo",
+      "reproduza o ambiente com env -i"
+    ],
+    "trap": "O ambiente vai por último, e é onde todo mundo começa."
+  },
+  "ex-v6pd15dy": {
+    "prompt": "Ligue cada sintoma à coisa que o causou.",
+    "hint": "Dois deles são sobre um arquivo ser ignorado sem uma palavra.",
+    "pairs": [
+      {
+        "left": "`/bin/sh: 1: report.sh: not found`",
+        "right": "o `PATH` do cron é `/usr/bin:/bin`"
+      },
+      {
+        "left": "a linha de assunto para em `$(date +`",
+        "right": "um `%` sem escape no crontab"
+      },
+      {
+        "left": "um arquivo do `/etc/cron.d` que nunca roda",
+        "right": "um ponto no nome dele"
+      },
+      {
+        "left": "`new crontab file is missing newline`",
+        "right": "nenhuma quebra de linha final no arquivo"
+      }
+    ],
+    "right_distractors": [
+      "o daemon não está rodando",
+      "o job ainda está rodando da vez passada"
+    ]
+  },
+  "ex-9m3d8hyn": {
+    "prompt": "Envolva um comando de crontab nisto, com `-E 0 -n`, para uma execução que ainda está indo ser pulada em vez de empilhar: `_____`",
+    "hint": "Cinco letras, e ele recebe um arquivo de trava e um comando."
+  },
+  "ex-77b8sakw": {
+    "prompt": "Antes de instalar um timer, imprima as datas em que uma expressão vai disparar de verdade: `systemd-analyze ________ \"Mon *-*-* 03:00:00\"`",
+    "hint": "Oito letras, e não é `verify`."
+  },
+  "ex-aew12nnt": {
+    "prompt": "O que quer dizer `30 2 * * 0`?",
+    "hint": "O último campo é o dia da semana, e zero é uma das pontas dele.",
+    "choices": [
+      {
+        "text": "02:30 no dia trinta de cada mês",
+        "why": "O trinta são minutos; os campos de dia vêm depois."
+      },
+      {
+        "text": "À meia hora de cada duas horas",
+        "why": "Isso seria `30 */2 * * *`."
+      },
+      {
+        "text": "02:30 aos domingos",
+        "why": "Zero é domingo, e sete é domingo de novo."
+      },
+      {
+        "text": "02:30 no primeiro dia de cada semana, começando na segunda",
+        "why": "Segunda é 1 no cron, e o `weekly` do systemd é o que quer dizer segunda."
+      }
+    ]
+  },
+  "ex-e61pp2z1": {
+    "prompt": "Onde você poria um job que pertence a um serviço em vez de a uma pessoa?",
+    "hint": "Ele deve sobreviver à remoção da conta dessa pessoa.",
+    "choices": [
+      {
+        "text": "Um arquivo no `/etc/cron.d`",
+        "why": "Um arquivo, um assunto, removível apagando — e ele sobrevive a um `crontab -r`."
+      },
+      {
+        "text": "O crontab da própria conta de serviço",
+        "why": "Ele some com a conta, e ninguém consulta o spool."
+      },
+      {
+        "text": "O `/etc/crontab`, editado à mão",
+        "why": "Esse é o arquivo da distribuição, e uma atualização vai perguntar sobre as suas mudanças."
+      },
+      {
+        "text": "O seu próprio crontab, com um comentário dizendo de quem é",
+        "why": "Ele vai embora com você quando você mudar de time."
+      }
+    ]
+  },
+  "ex-bqmyw0hm": {
+    "prompt": "Qual linha é segura para pôr num crontab?",
+    "hint": "Uma das quatro tem um caractere que termina o comando cedo.",
+    "choices": [
+      {
+        "text": "`0 3 * * * cd /srv/app; ./backup.sh`",
+        "why": "O `;` roda o script mesmo quando o `cd` falhou."
+      },
+      {
+        "text": "`0 3 * * * backup.sh >/dev/null 2>&1`",
+        "why": "Um nome solto contra o `PATH` do cron, e o erro jogado fora junto."
+      },
+      {
+        "text": "`0 3 * * * echo \"run $(date +%F)\" >> /var/log/b.log`",
+        "why": "O `%` sem escape termina o comando em `date +`."
+      },
+      {
+        "text": "`0 3 * * * cd /srv/app && /home/ana/bin/backup.sh`",
+        "why": "Caminho absoluto, e `&&` para um `cd` que falha parar a linha."
+      }
+    ]
+  },
+  "ex-5dwh40rs": {
+    "prompt": "Um laptop é fechado toda noite e o `/etc/cron.daily` ainda roda os jobs dele. Quem está rodando?",
+    "hint": "O crontab do sistema tem um teste que decide entre duas respostas.",
+    "choices": [
+      {
+        "text": "O cron, às 06:25, porque a máquina acorda para isso",
+        "why": "Ela não acorda, e a linha do cron tem um teste na frente."
+      },
+      {
+        "text": "O anacron, assim que a máquina estiver acordada",
+        "why": "Ele compara hoje com a data do `/var/spool/anacron`, então um dia perdido é posto em dia."
+      },
+      {
+        "text": "O systemd, de um timer com `Persistent=true`",
+        "why": "Isso faria o mesmo trabalho, e nesta máquina é ao anacron que o crontab cede."
+      },
+      {
+        "text": "Os jobs são pulados até alguém rodá-los",
+        "why": "Eles rodam; o ponto inteiro do anacron é esse."
+      }
+    ]
+  },
+  "ex-h0f78ge7": {
+    "prompt": "Qual destas o `systemd-analyze calendar` aceita e informa como disparando `never`?",
+    "hint": "Uma delas é uma data que não existe.",
+    "choices": [
+      {
+        "text": "`*-*-* 25:00:00`",
+        "why": "Essa não analisa, e sai com 1."
+      },
+      {
+        "text": "`Mon..Fri 09:00`",
+        "why": "Dias úteis às nove, e dispara toda semana."
+      },
+      {
+        "text": "`*-02-30 03:00:00`",
+        "why": "O dia trinta de fevereiro analisa, sai com 0, e nunca acontece."
+      },
+      {
+        "text": "`*-*-* *:00/15:00`",
+        "why": "Quatro vezes por hora, e as iterações imprimem as datas."
+      }
+    ]
+  },
+  "ex-0y4vmvgy": {
+    "prompt": "Quais destas um timer do systemd te dá que uma linha de crontab não dá?",
+    "hint": "Duas das seis são coisas que o cron faz igualmente bem.",
+    "choices": [
+      {
+        "text": "Saída no journal em vez de no e-mail",
+        "why": "Com o nome da unidade, a hora e o status de saída."
+      },
+      {
+        "text": "Uma execução perdida posta em dia no próximo boot",
+        "why": "`Persistent=true`."
+      },
+      {
+        "text": "Recusa a iniciar um job que já está rodando",
+        "why": "Uma unidade ativa não é ativada de novo."
+      },
+      {
+        "text": "Um atraso aleatório para espalhar uma frota",
+        "why": "`RandomizedDelaySec=`."
+      },
+      {
+        "text": "Rodar o job como um usuário nomeado",
+        "why": "Um crontab de usuário faz isso por existir."
+      },
+      {
+        "text": "Uma agenda escrita num arquivo",
+        "why": "Um crontab também é um arquivo."
+      }
+    ]
+  },
+  "ex-mgxerer2": {
+    "prompt": "Você herda `0 3 13 * 5 /home/ana/bin/report.sh` e o autor diz que é o relatório mensal de sexta. O que você diz a ele?",
+    "hint": "Isso foi medido com três jobs e um controle.",
+    "choices": [
+      {
+        "text": "Roda no dia treze e em toda sexta-feira",
+        "why": "Os dois campos de dia são combinados com OU, então são umas sessenta e quatro execuções por ano em vez de uma."
+      },
+      {
+        "text": "Roda só nos meses em que o dia treze é sexta",
+        "why": "Essa é a regra do systemd, não a do cron."
+      },
+      {
+        "text": "Nunca roda, porque os campos se contradizem",
+        "why": "Os dois casaram na medição, separadamente."
+      },
+      {
+        "text": "Roda no dia treze, e o `5` é ignorado",
+        "why": "Nenhum dos campos é ignorado; qualquer um disparar já basta."
+      }
+    ]
+  },
+  "ex-9jgjstvs": {
+    "prompt": "Um job vem falhando em silêncio toda noite há seis meses. Qual hábito de crontab causou isso?",
+    "hint": "É o fragmento mais copiado de qualquer runbook.",
+    "choices": [
+      {
+        "text": "Agendar às 03:00 em ponto como todo o resto",
+        "why": "Isso é uma manada, e é outro problema."
+      },
+      {
+        "text": "`>/dev/null 2>&1` no fim da linha",
+        "why": "Os dois fluxos descartados, então o erro que nomeia o problema foi junto."
+      },
+      {
+        "text": "Usar um caminho relativo para o script",
+        "why": "Isso falha em voz alta na primeira noite, com e-mail."
+      },
+      {
+        "text": "Deixar o `MAILTO` sem definir",
+        "why": "Sem definir quer dizer o dono do crontab, que é para onde teria ido."
+      }
+    ]
+  },
+  "ex-87jrq0p9": {
+    "prompt": "O log do job mostra que ele rodou e deu certo toda noite até três semanas atrás, e então nada. Qual é o comando seguinte mais útil?",
+    "hint": "Alguma coisa parou de iniciá-lo, em vez de alguma coisa falhar dentro dele.",
+    "choices": [
+      {
+        "text": "`journalctl -u backup.service --since '3 weeks ago'`",
+        "why": "Vale rodar quando é um timer, e o registro deste job é um arquivo de log."
+      },
+      {
+        "text": "`bash -x /home/ana/bin/backup.sh`",
+        "why": "Isso depura um job que roda; este não está rodando."
+      },
+      {
+        "text": "`ls -l /home/ana/srv/archive/`",
+        "why": "Isso confirma a ausência que você já conhece."
+      },
+      {
+        "text": "`crontab -l` e `grep CRON /var/log/syslog`",
+        "why": "A linha ainda está lá, e o cron tentou — que separa um crontab apagado de um job que está falhando."
+      }
+    ]
+  },
+  "ex-jqyx7ekm": {
+    "prompt": "Qual destas é a única coisa que esta aula diz que nenhum agendador faz por você?",
+    "hint": "Todo outro item da lista é uma linha num arquivo.",
+    "choices": [
+      {
+        "text": "Impedir duas cópias do job de rodarem ao mesmo tempo",
+        "why": "O `flock` faz isso no cron, e o systemd faz por você."
+      },
+      {
+        "text": "Rodar o job depois de a rede subir",
+        "why": "`After=network-online.target`."
+      },
+      {
+        "text": "Perceber que nada está agendando o job",
+        "why": "Silêncio é o que o sucesso parece, então a ausência tem que ser percebida de fora."
+      },
+      {
+        "text": "Matar o job quando ele roda demais",
+        "why": "`timeout`, ou `RuntimeMaxSec=`."
+      }
+    ]
+  }
+}
