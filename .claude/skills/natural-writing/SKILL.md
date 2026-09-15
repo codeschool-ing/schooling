@@ -131,9 +131,19 @@ reader. Remove outright.
 
 ### 7. House conventions
 
-Cheap to check and occasionally real: a heading not in sentence case, American spelling in prose, a
-forward reference that says "later" instead of naming a section number, bold used as a list label
+Cheap to check and occasionally real: a heading not in sentence case, American spelling in prose,
+a forward reference that says "later" instead of naming a **lesson**, bold used as a list label
 rather than as a signpost, or a long section carrying no bold signpost at all.
+
+**The forward-reference rule is about lessons, and reading it as "sections" is a trap this skill
+fell into once.** `docs/TEACHING.md` says a forward reference points at a *lesson number*. The
+interface numbers sections **within** a lesson — the lesson screen draws `01`, `02`, `03` down the
+tabs — and never shows a position within the course. So "lesson 13" resolves on the screen,
+"two sections on" resolves by counting tabs, and **"section 184" resolves nowhere**: it is a
+number the reader cannot see anywhere in the product.
+
+Never propose a bare course-wide section number as a fix. Where the course already uses them, the
+convention that works is the one some of `linux-terminal` already writes: *lesson 1 section 04*.
 
 ## What not to flag here
 

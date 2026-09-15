@@ -78,6 +78,24 @@ in their head; material that names the wrong one first replaces it.
 is a promise nobody can hold you to; "lesson 6 gives it a vocabulary" is one a reader can act on
 and a reviewer can verify.
 
+**A lesson number, and never a position in the course.** The lesson screen numbers sections
+**within** a lesson — `ui/app/screens/lesson.js` draws `String(i + 1).padStart(2, '0')` down the
+tabs — and nothing in the interface reports how far into the course a section sits. So "lesson 13"
+resolves, "two sections on" resolves by counting tabs, "lesson 1 section 04" resolves exactly, and
+**"section 184" resolves nowhere**: it is a number the reader cannot see in the product.
+
+`linux-terminal` carries **551 of these, 478 of them bare** — `section 29`, `section 32`,
+`section 184` — against **0 in `web-fundamentals`**, which references lessons and neighbours
+instead. The numbering is internally correct and it was checked against `course.json`, which is
+exactly why it survived three reviews: everything verifiable about it verified. Nobody opened
+the screen.
+
+Leaving them is the current position, and it is a **known cost, not an oversight**: a reader
+meets a precise citation they cannot follow. Two things would settle it — the lesson screen
+learning to show a course-wide number, or those 478 becoming lesson references — and whichever
+is chosen, the measurement above is what it should be argued from. Until then, write new
+references as a lesson, a neighbour, or `lesson N section NN`.
+
 **Do not teach the next lesson's subject.** A section that explains what it was told to introduce
 takes the later lesson's material and leaves it with nothing. The line is that the reader should be
 able to *recognise* the idea and not yet *use* it.
