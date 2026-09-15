@@ -1,0 +1,1336 @@
+{
+  "ex-p4kanqfa": {
+    "prompt": "`ana:x:1001:1002::/home/ana:/bin/bash`. O que é o `x` no segundo campo?",
+    "hint": "Ele já foi outra coisa, e se mudou por um motivo.",
+    "choices": [
+      {
+        "text": "Um marcador de conta sem senha definida",
+        "why": "Uma conta sem senha mostra o campo vazio ali, o que é outra coisa."
+      },
+      {
+        "text": "Uma marca de que a conta está travada",
+        "why": "Travar põe um ponto de exclamação na frente do hash, no outro arquivo."
+      },
+      {
+        "text": "Um ponteiro dizendo que o hash está no /etc/shadow",
+        "why": "Isso, e ele se mudou porque este arquivo precisa continuar legível por todos."
+      },
+      {
+        "text": "O primeiro caractere de um hash de senha truncado",
+        "why": "Nenhuma parte de um hash fica aqui; o campo guarda um caractere e é sempre o mesmo."
+      }
+    ]
+  },
+  "ex-qax609e8": {
+    "prompt": "Por que o `/etc/passwd` é modo 644 e o `/etc/shadow` é 640?",
+    "hint": "Um deles é necessário para um comando que você roda o tempo todo.",
+    "choices": [
+      {
+        "text": "O `ls -l` precisa transformar um UID num nome",
+        "why": "Isso — a separação existe para o mapeamento continuar público e o segredo não."
+      },
+      {
+        "text": "O `/etc/shadow` muda mais, então é protegido contra corrupção",
+        "why": "Permissões decidem quem lê, e nada dizem sobre a frequência de mudança."
+      },
+      {
+        "text": "O `/etc/passwd` é um cache do `/etc/shadow`, com a metade sensível de fora",
+        "why": "Nenhum é cache do outro; eles guardam campos diferentes sobre as mesmas contas."
+      },
+      {
+        "text": "O grupo `shadow` é dono dos dois, e 644 foi o que o pacote trouxe",
+        "why": "Os modos são deliberados, e o `ls -l` mostra um grupo diferente em cada um."
+      }
+    ]
+  },
+  "ex-e2hc0jpq": {
+    "prompt": "O shell de uma conta é `/usr/sbin/nologin`. O que ela ainda consegue fazer?",
+    "hint": "Ela foi criada para alguma coisa, e essa coisa não é digitar.",
+    "choices": [
+      {
+        "text": "Está desabilitada, então arquivos e serviços estão fora do alcance dela",
+        "why": "Ela tem arquivos e roda serviços; o que falta é um jeito de entrar."
+      },
+      {
+        "text": "Entra, e o shell termina depois de imprimir um aviso",
+        "why": "O programa recusa em vez de deixar uma sessão utilizável."
+      },
+      {
+        "text": "Entra por ssh mas não tem shell para uma sessão de console",
+        "why": "A recusa vale para os dois; o ssh recebe o mesmo programa."
+      },
+      {
+        "text": "Ter arquivos e rodar serviços",
+        "why": "Isso — é para isso que servem as vinte e nove contas que não são gente da seção 71."
+      }
+    ]
+  },
+  "ex-ddbdpgdy": {
+    "prompt": "Por que preferir `getent passwd ana` a `grep '^ana:' /etc/passwd`?",
+    "hint": "Pense numa máquina cujas contas vêm de outro lugar.",
+    "choices": [
+      {
+        "text": "O `getent` lê o arquivo mais rápido numa máquina grande",
+        "why": "Velocidade não vem ao caso; numa máquina pequena os dois levam o mesmo tempo."
+      },
+      {
+        "text": "O `getent` pergunta ao serviço de nomes, então acha contas de um diretório também",
+        "why": "Isso — contas de LDAP ou Active Directory estão ausentes do arquivo e presentes no sistema."
+      },
+      {
+        "text": "O `grep` precisa de expressão regular e o `getent` aceita um nome simples",
+        "why": "Os dois aceitam o que você digitar; o que muda é onde eles olham."
+      },
+      {
+        "text": "O `getent` exige root e o `grep` funciona para qualquer um, então é mais confiável",
+        "why": "Os dois funcionam para usuário comum, e nenhum lê o arquivo shadow."
+      }
+    ]
+  },
+  "ex-4wsrp8w7": {
+    "prompt": "Abaixo de qual UID uma distribuição reserva os números para contas de sistema em vez de pessoas?",
+    "hint": "Um número redondo."
+  },
+  "ex-e1db0hsb": {
+    "prompt": "Um colega diz que o time de suporte consegue consultar uma senha esquecida. O que há de errado nisso?",
+    "hint": "Olhe o que o segundo campo de uma linha do shadow de fato guarda.",
+    "choices": [
+      {
+        "text": "O suporte não está no grupo que lê o arquivo",
+        "why": "A participação decide quem lê, e ler ainda não entregaria uma senha."
+      },
+      {
+        "text": "O campo é criptografado, e o suporte não tem a chave",
+        "why": "Não existe chave. É um hash, e hash corre num sentido só."
+      },
+      {
+        "text": "A senha está lá, e imprimir seria contra a política",
+        "why": "Ela não está lá, o que é um fato mais forte que uma política."
+      },
+      {
+        "text": "O que está guardado é um hash, que não pode ser revertido",
+        "why": "Isso, e é por isso que redefinir é normal e recuperar é sinal vermelho."
+      }
+    ]
+  },
+  "ex-vcd2fx5m": {
+    "prompt": "Duas contas escolhem a mesma senha. Por que os hashes guardados diferem?",
+    "hint": "Algo aleatório fica guardado em claro ao lado de cada hash.",
+    "choices": [
+      {
+        "text": "O hash inclui o nome da conta, então difere por usuário",
+        "why": "O nome não faz parte da entrada; um valor aleatório faz."
+      },
+      {
+        "text": "Cada conta ganha um salt aleatório próprio",
+        "why": "Isso, então uma tabela pré-computada teria de ser refeita para cada uma."
+      },
+      {
+        "text": "O algoritmo se semeia com a hora em que a senha foi definida",
+        "why": "A hora está num campo posterior, e não é entrada do hash."
+      },
+      {
+        "text": "Elas são processadas com algoritmos diferentes escolhidos na criação",
+        "why": "O algoritmo é um ajuste do sistema e normalmente é o mesmo para as duas."
+      }
+    ]
+  },
+  "ex-t3mc5q7x": {
+    "prompt": "Você entrega a alguém uma conta nova com senha temporária. O que faz essa pessoa trocar no primeiro login?",
+    "hint": "Um campo diz quando ela foi trocada, e pôr zero ali é o truque.",
+    "choices": [
+      {
+        "text": "passwd -e novousuario",
+        "why": "Essa flag não existe no passwd; quem tem é a ferramenta de envelhecimento."
+      },
+      {
+        "text": "usermod -L novousuario",
+        "why": "Isso trava a conta, que é o oposto de deixar a pessoa entrar."
+      },
+      {
+        "text": "chage -d 0 novousuario",
+        "why": "Isso: a última troca vira a época, então está vencida na hora."
+      },
+      {
+        "text": "chage -M 0 novousuario",
+        "why": "Idade máxima zero é um ajuste diferente e mais estranho."
+      }
+    ]
+  },
+  "ex-kwm8zsaw": {
+    "prompt": "Alguém sai. Você roda `passwd -l` na conta e a pessoa continua entrando. Como?",
+    "hint": "Um caminho de autenticação nunca encosta naquele arquivo.",
+    "choices": [
+      {
+        "text": "Uma chave ssh no authorized_keys dela",
+        "why": "Isso — chaves nunca consultam o arquivo shadow, e é por isso que os dois passos andam juntos."
+      },
+      {
+        "text": "A trava faz efeito no próximo reboot, e não antes",
+        "why": "Ela é escrita na hora; o login usou outro caminho."
+      },
+      {
+        "text": "O `passwd -l` trava a senha e deixa a conta utilizável pelo sudo",
+        "why": "O sudo pede senha também, então uma trava o impediria."
+      },
+      {
+        "text": "A sessão dela estava aberta antes da trava, e sobreviveu",
+        "why": "Uma sessão sobrevivente explicaria uma conexão, e a pessoa entrou de novo."
+      }
+    ]
+  },
+  "ex-p23aje0s": {
+    "prompt": "Qual comando imprime os ajustes de envelhecimento de senha de uma conta como datas legíveis?",
+    "hint": "Duas palavras, e a primeira tem cinco letras."
+  },
+  "ex-61fbj0tv": {
+    "prompt": "`useradd dora` dá certo e `ls -ld /home/dora` diz que o diretório não existe. Algo quebrou?",
+    "hint": "O comando fez exatamente o que pediram e nada além.",
+    "choices": [
+      {
+        "text": "Sim — a conta fica inutilizável até alguém criar o diretório na mão",
+        "why": "Ela entra e cai em / com um erro, o que é ruim e não é a mesma coisa que inutilizável."
+      },
+      {
+        "text": "Sim — o useradd deveria falhar em vez de registrar um caminho que ele não criou",
+        "why": "Ele registra o caminho que mandaram registrar, e criar é uma flag separada."
+      },
+      {
+        "text": "Não — o `-m` é o que cria, e ele foi omitido",
+        "why": "Isso, e o `adduser` é a fachada mais amigável que supõe que você quis `-m`."
+      },
+      {
+        "text": "Não — o diretório aparece no primeiro login da conta",
+        "why": "Nada o cria depois; o login simplesmente não o encontra."
+      }
+    ]
+  },
+  "ex-webw5r5v": {
+    "prompt": "Depois de `userdel dorasilva`, o `ls -ld /home/dora` imprime `1005` onde havia um nome. O que aconteceu?",
+    "hint": "Nada nos arquivos mudou.",
+    "choices": [
+      {
+        "text": "O diretório foi reatribuído à próxima conta livre",
+        "why": "Uma reatribuição imprimiria o nome daquela conta; não há nome para imprimir."
+      },
+      {
+        "text": "A linha que mapeava 1005 para um nome sumiu",
+        "why": "Isso — o sistema de arquivos guardou o número o tempo todo, como disse a seção 60 da aula 4."
+      },
+      {
+        "text": "O `userdel` reescreveu a propriedade para um valor reservado",
+        "why": "Ele não encostou em arquivo nenhum; o campo de dono é o que sempre foi."
+      },
+      {
+        "text": "O diretório perdeu o grupo, então o `ls` recorre a números nas duas colunas",
+        "why": "A coluna de grupo ainda imprime um nome, o que descarta isso."
+      }
+    ]
+  },
+  "ex-94w2qrf8": {
+    "prompt": "Por que apagar uma conta antes de tratar os arquivos dela é um problema numa máquina pequena?",
+    "hint": "Pense no que a próxima conta criada vai receber.",
+    "choices": [
+      {
+        "text": "Os arquivos ficam ilegíveis quando o nome some",
+        "why": "Eles mantêm o modo; um número é dono deles e o modo continua valendo."
+      },
+      {
+        "text": "O `userdel` se recusa a rodar enquanto a conta tiver arquivos em outros lugares",
+        "why": "Ele roda, e nada diz sobre arquivos fora do diretório pessoal."
+      },
+      {
+        "text": "Arquivos órfãos são removidos por uma tarefa noturna",
+        "why": "Essa tarefa não existe; eles ficam ali indefinidamente."
+      },
+      {
+        "text": "A próxima conta recebe o UID liberado e herda os arquivos",
+        "why": "Isso, então quem chega vira dono de arquivos de quem saiu."
+      }
+    ]
+  },
+  "ex-5n32tesm": {
+    "prompt": "Para que serve o `/etc/skel`?",
+    "hint": "Ele explica três arquivos que apareceram num diretório pessoal recém-criado.",
+    "choices": [
+      {
+        "text": "Ele é copiado para dentro de um diretório pessoal novo pelo `useradd -m`",
+        "why": "Isso, e é assim que um padrão da empresa alcança toda conta criada depois."
+      },
+      {
+        "text": "Ele guarda os ajustes padrão a que o shell recorre quando falta uma casa",
+        "why": "O shell recorre aos arquivos do /etc para a máquina inteira, e este não é um deles."
+      },
+      {
+        "text": "É onde o `userdel` arquiva os arquivos de uma conta apagada",
+        "why": "Nada os arquiva; o `-r` apaga e o padrão os deixa em paz."
+      },
+      {
+        "text": "É um modelo reaplicado a cada conta sempre que o sistema inicia",
+        "why": "Ele é copiado uma vez, na criação, e contas existentes nunca são revisitadas."
+      }
+    ]
+  },
+  "ex-n2rztskd": {
+    "prompt": "Escreva a linha do `useradd` que cria a `dora` com diretório pessoal e o bash como shell.",
+    "hint": "Duas flags, e uma delas recebe um caminho."
+  },
+  "ex-mqjgtzd4": {
+    "prompt": "O `who` não imprime nada numa máquina com vários shells rodando. O que isso quer dizer?",
+    "hint": "Aqueles comandos leem um arquivo que alguém precisa escrever.",
+    "choices": [
+      {
+        "text": "Os shells pertencem a contas de sistema, que o who deixa de fora",
+        "why": "Ele lista qualquer conta com sessão; as contas não são o filtro."
+      },
+      {
+        "text": "O who lê a tabela de processos e não achou shell marcado como login",
+        "why": "Ele nunca lê a tabela de processos; ele lê um arquivo de registro."
+      },
+      {
+        "text": "As sessões são mais antigas que a janela de retenção do arquivo",
+        "why": "Sessões atuais ficam no utmp independentemente da idade."
+      },
+      {
+        "text": "Ninguém escreveu um registro de sessão — nenhum login ou sshd participou",
+        "why": "Isso, e é o estado normal de um contêiner."
+      }
+    ]
+  },
+  "ex-bphe0axr": {
+    "prompt": "Um PATH definido no `~/.bashrc` funciona quando você entra e some num `ssh host 'algumcomando'`. Por quê?",
+    "hint": "Essa terceira forma inicia um shell de um tipo que não lê nenhum dos dois arquivos.",
+    "choices": [
+      {
+        "text": "O ssh remove o ambiente antes de rodar um comando remoto",
+        "why": "Ele leva pouca coisa, e o que difere aqui é a inicialização do shell remoto."
+      },
+      {
+        "text": "O `~/.bashrc` é lido por shells de login apenas, e aquele não é um",
+        "why": "É ao contrário: o bashrc é para shells interativos."
+      },
+      {
+        "text": "O shell remoto é não interativo",
+        "why": "Isso — e é por isso que ambiente vai onde um processo filho herda."
+      },
+      {
+        "text": "O comando roda antes de o diretório pessoal ser montado",
+        "why": "A casa está lá; montagem não tem nada a ver."
+      }
+    ]
+  },
+  "ex-2cw1nch2": {
+    "prompt": "O que pertence ao `~/.profile` e não ao `~/.bashrc`?",
+    "hint": "Um dos dois é herdado por processos filhos.",
+    "choices": [
+      {
+        "text": "export EDITOR=vim",
+        "why": "Isso — ambiente, e todo filho recebe."
+      },
+      {
+        "text": "alias ll='ls -la'",
+        "why": "Um alias é conveniência de shell e não é herdado."
+      },
+      {
+        "text": "PS1='\\u@\\h\\$ '",
+        "why": "O prompt só faz sentido num shell interativo."
+      },
+      {
+        "text": "shopt -s histappend",
+        "why": "Uma opção de shell, e ela fica junto com os outros ajustes interativos."
+      }
+    ]
+  },
+  "ex-rxc2tj1a": {
+    "prompt": "O `tty` responde `not a tty`. O que isso te diz?",
+    "hint": "Um programa usa isso para decidir se há alguém olhando.",
+    "choices": [
+      {
+        "text": "O emulador de terminal está mal configurado",
+        "why": "Nada está errado; a entrada do shell simplesmente não é um terminal."
+      },
+      {
+        "text": "A entrada do shell é um pipe ou um script",
+        "why": "Isso, e programas leem isso para decidir sobre cor, perguntas e barras de progresso."
+      },
+      {
+        "text": "Você está conectado por ssh em vez de sentado na máquina",
+        "why": "Uma sessão ssh ganha um pty, e o `tty` imprime o nome dele."
+      },
+      {
+        "text": "Sua conta não tem shell de login registrado no /etc/passwd",
+        "why": "O campo 7 não tem relação; o shell está rodando e respondendo."
+      }
+    ]
+  },
+  "ex-j1ydskp9": {
+    "prompt": "A primeira conexão a um host pede que você confirme uma impressão digital. Digital de quê?",
+    "hint": "A outra ponta também tem identidade.",
+    "choices": [
+      {
+        "text": "Da sua própria chave pública, para o servidor saber qual esperar",
+        "why": "Sua chave vai no authorized_keys; ninguém a resume num hash para você."
+      },
+      {
+        "text": "Da conexão, para uma sessão futura ser casada com esta",
+        "why": "Sessões não são rastreadas assim, e o valor é estável entre conexões."
+      },
+      {
+        "text": "Da chave de host do próprio servidor",
+        "why": "Isso, e aceitar grava a chave no seu known_hosts."
+      },
+      {
+        "text": "Do hash de senha da conta, enviado para o cliente verificar offline",
+        "why": "Um hash de senha nunca sai do servidor, e isto acontece antes de qualquer senha."
+      }
+    ]
+  },
+  "ex-w4zr64z0": {
+    "prompt": "Qual dos dois arquivos que o `ssh-keygen` criou pode ser colado numa mensagem de chat?",
+    "hint": "Um deles tem um sufixo.",
+    "choices": [
+      {
+        "text": "id_ed25519.pub",
+        "why": "Isso — a metade pública é feita para ser copiada."
+      },
+      {
+        "text": "id_ed25519",
+        "why": "Essa é a chave privada, e colá-la entrega a conta."
+      },
+      {
+        "text": "Tanto faz — o par é inútil sem os dois",
+        "why": "A metade privada sozinha já basta para entrar."
+      },
+      {
+        "text": "Nenhum — as duas metades ficam na máquina que as criou",
+        "why": "A metade pública existe justamente para ser entregue."
+      }
+    ]
+  },
+  "ex-2npa4sw9": {
+    "prompt": "Qual a diferença entre o `authorized_keys` e o `known_hosts`?",
+    "hint": "Um é sobre gente entrando, o outro sobre máquinas em que você saiu.",
+    "choices": [
+      {
+        "text": "Um guarda chaves privadas e o outro guarda públicas",
+        "why": "Os dois guardam chaves públicas; o que muda é de quem."
+      },
+      {
+        "text": "Chaves com permissão de entrar, contra servidores que você aceitou",
+        "why": "Isso, e eles respondem perguntas opostas a partir do mesmo diretório."
+      },
+      {
+        "text": "O primeiro é escrito pelo ssh e o segundo pelo ssh-keygen",
+        "why": "Os dois são escritos pelo ssh ou pelos auxiliares dele; autoria não é a distinção."
+      },
+      {
+        "text": "O primeiro vale para esta máquina e o segundo para a rede inteira",
+        "why": "Os dois são só seus, no seu próprio diretório pessoal."
+      }
+    ]
+  },
+  "ex-nt5513zq": {
+    "prompt": "Você recebe o aviso REMOTE HOST IDENTIFICATION HAS CHANGED. Qual o primeiro movimento certo?",
+    "hint": "Três coisas causam isso e elas não são igualmente inocentes.",
+    "choices": [
+      {
+        "text": "Rodar `ssh-keygen -R host` para a conexão passar",
+        "why": "Esse é o conserto do caso inocente, e rodar primeiro pula a decisão de qual caso é."
+      },
+      {
+        "text": "Acrescentar StrictHostKeyChecking=no para não acontecer de novo",
+        "why": "Isso remove a checagem inteira, que é a proteção que o aviso existe para te dar."
+      },
+      {
+        "text": "Conectar com senha, que não usa chaves de host",
+        "why": "Chaves de host são conferidas antes de qualquer método de autenticação ser escolhido."
+      },
+      {
+        "text": "Descobrir se o servidor foi reconstruído",
+        "why": "Isso — reconstruído, outra máquina atrás do nome, ou interceptação, nessa ordem."
+      }
+    ]
+  },
+  "ex-xfemgw7e": {
+    "prompt": "Qual comando copia sua chave pública para o `authorized_keys` de outra conta por você?",
+    "hint": "Três palavras unidas por hifens."
+  },
+  "ex-75dgdndf": {
+    "prompt": "Um programa continua rodando depois de você sair, sem você ter tomado nenhuma providência. O que ele é?",
+    "hint": "Três tipos de processo de longa duração, e um deles pertence ao sistema.",
+    "choices": [
+      {
+        "text": "Uma tarefa em segundo plano, desligada do seu shell",
+        "why": "Essa termina com a sua sessão, a menos que você tome uma providência, que é a condição dada."
+      },
+      {
+        "text": "Um serviço, iniciado pelo sistema de init",
+        "why": "Isso — ele pertence à máquina e não à sua sessão."
+      },
+      {
+        "text": "Uma tarefa agendada, esperando o próximo horário",
+        "why": "Uma tarefa agendada não está rodando entre os disparos; ela é iniciada de novo a cada vez."
+      },
+      {
+        "text": "Um zumbi, deixado para trás porque o pai parou de recolhê-lo",
+        "why": "Um zumbi ocupa uma entrada na tabela e não roda nada."
+      }
+    ]
+  },
+  "ex-rdrnemq9": {
+    "prompt": "Por que um servidor web roda como `www-data` e não como root?",
+    "hint": "Pergunte o que um atacante ganha quando aquele programa é invadido.",
+    "choices": [
+      {
+        "text": "O root é reservado para logins interativos e serviços usam outras contas",
+        "why": "Muitos serviços rodam como root; a razão é sobre consequência, não sobre reserva."
+      },
+      {
+        "text": "Abrir uma porta de rede exige uma conta não root no Linux moderno",
+        "why": "Portas baixas historicamente exigiam root, o que corre no sentido contrário."
+      },
+      {
+        "text": "Uma invasão então entrega aquela conta, e nada além",
+        "why": "Isso — uma conta por serviço é a fronteira mais barata que o sistema tem."
+      },
+      {
+        "text": "Arquivos escritos pelo root ficariam ilegíveis para o serviço depois",
+        "why": "Arquivos do root são legíveis pelo root; propriedade não é a restrição aqui."
+      }
+    ]
+  },
+  "ex-9gze6aev": {
+    "prompt": "Os dados de trabalho de um serviço ficam em disco. Em qual diretório eles devem estar?",
+    "hint": "A seção 37 da aula 3 divide estes pelo que muda.",
+    "choices": [
+      {
+        "text": "/var/lib/<nome>",
+        "why": "Isso — dados que a máquina escreve enquanto roda."
+      },
+      {
+        "text": "/etc/<nome>",
+        "why": "Configuração mora ali, e é lida em vez de escrita."
+      },
+      {
+        "text": "/usr/lib/<nome>",
+        "why": "Arquivos instalados, do gerenciador de pacotes."
+      },
+      {
+        "text": "/opt/<nome>",
+        "why": "A árvore de um fornecedor para software fora do gerenciador de pacotes."
+      }
+    ]
+  },
+  "ex-ge53yfxj": {
+    "prompt": "Por que um programa escrito para o systemd fica em primeiro plano em vez de virar daemon?",
+    "hint": "Outra coisa está fazendo o desligamento agora.",
+    "choices": [
+      {
+        "text": "Processos em primeiro plano recebem prioridade de escalonamento maior",
+        "why": "Prioridade é definida à parte, e não tem relação com desligar-se."
+      },
+      {
+        "text": "O systemd se recusa a iniciar um processo que se bifurca",
+        "why": "O Type=forking existe justamente para programas que fazem isso."
+      },
+      {
+        "text": "Um processo que se desligou ficaria incapaz de escrever no journal",
+        "why": "Ele consegue, pelos fluxos comuns; não foi a coleta que mudou."
+      },
+      {
+        "text": "O systemd faz o desligamento e o acompanhamento ele mesmo",
+        "why": "Isso — e um programa que se bifurca mesmo assim precisa ser declarado com Type=forking."
+      }
+    ]
+  },
+  "ex-81nmbn94": {
+    "prompt": "Quantos programas o kernel inicia diretamente no boot?",
+    "hint": "Todo o resto descende dele.",
+    "choices": [
+      {
+        "text": "Um por target listado no target padrão",
+        "why": "Targets são units que o systemd alcança; o kernel não conhece nenhum."
+      },
+      {
+        "text": "Um por CPU, que depois repartem o trabalho",
+        "why": "A contagem de processadores não decide quantos programas são iniciados."
+      },
+      {
+        "text": "Um",
+        "why": "Isso — o processo 1, e todo outro processo é descendente dele."
+      },
+      {
+        "text": "Dois: um sistema de init e um registrador, para falhas iniciais ficarem gravadas",
+        "why": "O registrador é iniciado pelo sistema de init como todo o resto."
+      }
+    ]
+  },
+  "ex-4z2pxmmd": {
+    "prompt": "`S20nginx` em `/etc/rc3.d` é um link de inicialização do SysV. O que o número faz?",
+    "hint": "Os scripts rodavam numa ordem, e algo tinha de decidi-la.",
+    "choices": [
+      {
+        "text": "É o runlevel a que o script pertence",
+        "why": "O runlevel é o `3` no nome do diretório."
+      },
+      {
+        "text": "É o número de segundos a esperar antes de iniciar",
+        "why": "Nada espera; os scripts rodam um após o outro."
+      },
+      {
+        "text": "É o código de saída que o script deve devolver em caso de sucesso",
+        "why": "Zero é sucesso ali como em toda parte."
+      },
+      {
+        "text": "Ele define a posição na ordem alfabética",
+        "why": "Isso, e aquela ordenação era um palpite sobre dependências em vez de uma declaração delas."
+      }
+    ]
+  },
+  "ex-m4206qb2": {
+    "prompt": "Qual ideia do systemd tornou o `systemctl stop` confiável onde o script de stop do SysV não era?",
+    "hint": "É sobre saber o que você iniciou.",
+    "choices": [
+      {
+        "text": "Os processos de cada serviço são acompanhados num cgroup",
+        "why": "Isso — o kernel mantém a lista, então processos que se bifurcaram para longe também são parados."
+      },
+      {
+        "text": "Units são declarativas, então o caminho de parada é gerado em vez de escrito",
+        "why": "Units declarativas são uma melhoria real e não acompanham um processo em execução."
+      },
+      {
+        "text": "Serviços iniciam em paralelo, então a parada acontece na ordem inversa",
+        "why": "A ordem inversa é real e nada diz sobre quais processos são encontrados."
+      },
+      {
+        "text": "O journal registra os PIDs que um serviço já teve",
+        "why": "O journal registra o que foi dito, e parar não o lê."
+      }
+    ]
+  },
+  "ex-vwe2130s": {
+    "prompt": "O que o `docker run --init` acrescenta, e por que um contêiner precisaria disso?",
+    "hint": "Duas tarefas são do processo um, e um programa de aplicação não faz nenhuma das duas.",
+    "choices": [
+      {
+        "text": "Um shell, para o contêiner ter onde rodar comandos de inicialização",
+        "why": "Um shell roda comandos e não adota nem recolhe nada."
+      },
+      {
+        "text": "Um processo um minúsculo que adota órfãos e os recolhe",
+        "why": "Isso, e sem ele um contêiner vaza zumbis até a tabela dele encher."
+      },
+      {
+        "text": "Um coletor de logs, para a saída do contêiner chegar ao host",
+        "why": "A saída já chega ao host pelos fluxos comuns."
+      },
+      {
+        "text": "Um supervisor que reinicia o programa principal quando ele termina",
+        "why": "Política de reinício é outra flag e outra ideia."
+      }
+    ]
+  },
+  "ex-snp892xx": {
+    "prompt": "Você configurou um serviço, conferiu que estava rodando, reiniciou a máquina, e ele sumiu. O que faltou?",
+    "hint": "Dois verbos, dois momentos.",
+    "choices": [
+      {
+        "text": "`daemon-reload`, então o systemd ainda não tinha lido a unit",
+        "why": "Ele leu a unit; o serviço rodava antes do reboot."
+      },
+      {
+        "text": "`unmask`, já que um serviço mascarado tem o start recusado",
+        "why": "Um serviço mascarado teria se recusado a iniciar já na primeira vez."
+      },
+      {
+        "text": "`systemctl restart`, que torna o estado permanente",
+        "why": "Reiniciar é outro verbo do agora e não muda nada sobre o próximo boot."
+      },
+      {
+        "text": "`systemctl enable`",
+        "why": "Isso — `start` é agora, `enable` é no próximo boot."
+      }
+    ]
+  },
+  "ex-0pc4tc7a": {
+    "prompt": "O `systemctl enable` imprimiu `Created symlink …/multi-user.target.wants/hello.service`. O que ele fez?",
+    "hint": "Leia o caminho que ele criou.",
+    "choices": [
+      {
+        "text": "Acrescentou a unit a uma lista que um target lê no boot",
+        "why": "Isso, e um link simbólico não inicia nada, que é o motivo inteiro de enable não ser start."
+      },
+      {
+        "text": "Copiou a unit para o diretório de onde o systemd carrega",
+        "why": "Ele linkou em vez de copiar, e o original ficou onde estava."
+      },
+      {
+        "text": "Registrou o serviço no journal para a saída dele ser guardada",
+        "why": "A saída é recolhida esteja o serviço habilitado ou não."
+      },
+      {
+        "text": "Iniciou o serviço e registrou que ele deve iniciar de novo",
+        "why": "Nada foi iniciado; o `--now` é a flag que teria feito isso."
+      }
+    ]
+  },
+  "ex-fq8m76pv": {
+    "prompt": "Um servidor web está servindo tráfego e a configuração dele mudou. `restart` ou `reload`?",
+    "hint": "Um dos dois derruba quem está conectado.",
+    "choices": [
+      {
+        "text": "restart, porque um reload deixa a configuração antiga em memória",
+        "why": "Um reload é exatamente uma releitura da configuração."
+      },
+      {
+        "text": "restart, porque reload é uma extensão do Debian e falta em outros lugares",
+        "why": "Ele é padrão, e se um serviço o suporta está no arquivo de unit dele."
+      },
+      {
+        "text": "reload",
+        "why": "Isso — ele relê sem derrubar conexões, e o nginx suporta."
+      },
+      {
+        "text": "Tanto faz — o systemd trata os dois como o mesmo verbo em serviços de rede",
+        "why": "São verbos separados que rodam comandos separados da unit."
+      }
+    ]
+  },
+  "ex-dcrss3pn": {
+    "prompt": "`systemctl is-enabled foo` diz `static`. O que isso quer dizer?",
+    "hint": "Habilitar escreve um link simbólico em algum lugar, e algo precisa dizer onde.",
+    "choices": [
+      {
+        "text": "A unit está compilada dentro do systemd em vez de ser lida de um arquivo",
+        "why": "Toda unit é um arquivo; nada é compilado junto."
+      },
+      {
+        "text": "A unit não tem seção [Install]",
+        "why": "Isso — outra coisa a puxa, e habilitar não teria significado."
+      },
+      {
+        "text": "A unit está ligada a /dev/null, então um start é recusado",
+        "why": "Isso é `masked`, e é outra resposta do mesmo comando."
+      },
+      {
+        "text": "A unit foi habilitada pelo pacote e cabe a você deixá-la em paz",
+        "why": "Uma unit de pacote é desabilitada como qualquer outra; quem decide é o arquivo."
+      }
+    ]
+  },
+  "ex-2yea8574": {
+    "prompt": "Escreva o comando que inicia um serviço agora e também o arranja para o próximo boot, de uma vez, para o `nginx`.",
+    "hint": "Um verbo e uma flag."
+  },
+  "ex-0tp5xktb": {
+    "prompt": "`Active: active (exited)` numa unit. Ela falhou?",
+    "hint": "Algumas units não deixam nada rodando quando dão certo.",
+    "choices": [
+      {
+        "text": "Sim — `exited` é como uma quebra é relatada",
+        "why": "Uma quebra relata `failed`, e esta palavra está do lado ativo da linha."
+      },
+      {
+        "text": "Não — ela rodou, terminou, e era essa a tarefa",
+        "why": "Isso, e uma unit que monta algo ou define um valor tem exatamente esta cara."
+      },
+      {
+        "text": "Sim — o processo saiu, então o serviço deixou de ser observado",
+        "why": "Nada está sendo observado, e esse é o estado final pretendido."
+      },
+      {
+        "text": "Depende de a unit ter uma política de Restart definida",
+        "why": "A política de reinício decide o que acontece depois de uma falha, e esta não é uma."
+      }
+    ]
+  },
+  "ex-63pnt35p": {
+    "prompt": "`Loaded: loaded (…; disabled)` num serviço que está rodando agora. O que isso te conta?",
+    "hint": "Duas palavras na mesma linha, sobre dois momentos diferentes.",
+    "choices": [
+      {
+        "text": "O arquivo de unit foi editado depois de o serviço iniciar",
+        "why": "Edição não é registrada naquela linha; uma unit desatualizada não aparece aqui."
+      },
+      {
+        "text": "O serviço está rodando a partir de um drop-in em vez da unit principal",
+        "why": "Drop-ins são mostrados pelo `systemctl cat`, e não mudam esta palavra."
+      },
+      {
+        "text": "O systemd perdeu o rastro dele, então o estado de habilitado ficou ilegível",
+        "why": "Ele leu uma resposta definida, e essa resposta é `disabled`."
+      },
+      {
+        "text": "Alguém iniciou na mão",
+        "why": "Isso, e é esse par de fatos que a linha existe para mostrar junto."
+      }
+    ]
+  },
+  "ex-zaean2ef": {
+    "prompt": "O status de um serviço está vermelho. Qual linha você lê primeiro?",
+    "hint": "Uma resposta possível torna as outras três irrelevantes.",
+    "choices": [
+      {
+        "text": "`Loaded:` — se a unit está `not-found`, o resto não importa",
+        "why": "Isso: um arquivo de unit ausente ou com nome errado transforma todas as outras linhas em ruído."
+      },
+      {
+        "text": "As linhas do journal no rodapé, já que o programa diz mais",
+        "why": "Elas costumam ter a resposta, e não valem nada se não houver unit."
+      },
+      {
+        "text": "`Main PID:`, para achar o processo e olhar direto nele",
+        "why": "Um serviço que falhou não tem processo para olhar."
+      },
+      {
+        "text": "`Active:`, porque a palavra do Result nomeia o tipo de falha",
+        "why": "Essa é a segunda linha a ler, e a primeira pode descartá-la."
+      }
+    ]
+  },
+  "ex-kw16ep3j": {
+    "prompt": "O que a árvore `CGroup:` de um bloco de status lista?",
+    "hint": "É a terceira ideia da seção 77, tornada visível.",
+    "choices": [
+      {
+        "text": "As units de que este serviço depende",
+        "why": "Dependências estão no arquivo de unit e são mostradas em outro lugar."
+      },
+      {
+        "text": "As threads dentro do processo principal",
+        "why": "Threads são contadas em Tasks; estas linhas têm PIDs próprios."
+      },
+      {
+        "text": "Cada processo que o serviço possui",
+        "why": "Isso, e é o que torna o `systemctl stop` confiável."
+      },
+      {
+        "text": "Os processos que têm os arquivos do serviço abertos",
+        "why": "Isso é o que o lsof responde, e ele listaria processos de outras contas também."
+      }
+    ]
+  },
+  "ex-gt9924sw": {
+    "prompt": "`ExecStart=/usr/bin/foo > /var/log/foo.log` num arquivo de unit. O que acontece?",
+    "hint": "Não há shell lendo aquela linha.",
+    "choices": [
+      {
+        "text": "A saída é redirecionada, como seria num shell",
+        "why": "Um shell faria isso, e o systemd não está rodando um."
+      },
+      {
+        "text": "O systemd se recusa a carregar a unit e relata erro de sintaxe",
+        "why": "Ele carrega tranquilo; a linha é válida e quer dizer outra coisa."
+      },
+      {
+        "text": "O redirecionamento é aplicado e o journal fica vazio",
+        "why": "O journal recebe a saída, porque o redirecionamento nunca aconteceu."
+      },
+      {
+        "text": "O `foo` é iniciado com `>` e o caminho como dois argumentos",
+        "why": "Isso — e `ExecStart=/bin/sh -c '…'` é como se pede um shell de propósito."
+      }
+    ]
+  },
+  "ex-p6cc0wxa": {
+    "prompt": "Você precisa de uma linha alterada numa unit de pacote. Por que `systemctl edit` em vez de copiar o arquivo para o `/etc`?",
+    "hint": "Pergunte o que acontece na próxima atualização do pacote.",
+    "choices": [
+      {
+        "text": "Um drop-in herda o resto, e continua atualizando",
+        "why": "Isso — uma cópia completa no /etc vence para sempre e para de melhorar em silêncio."
+      },
+      {
+        "text": "Uma cópia no /etc tem prioridade menor e seria ignorada",
+        "why": "Ela tem prioridade maior, que é justamente por que vence e por que isso é a armadilha."
+      },
+      {
+        "text": "O `systemctl edit` grava a mudança no próprio arquivo do pacote",
+        "why": "Ele nunca encosta no arquivo do pacote; é esse o objetivo de um drop-in."
+      },
+      {
+        "text": "Uma cópia no /etc precisa ser registrada antes de o systemd lê-la",
+        "why": "Ela é lida por causa de onde está, sem nada a registrar."
+      }
+    ]
+  },
+  "ex-yxxmh2ah": {
+    "prompt": "O `systemd-analyze verify` diz `Unknown key name 'Descriptoin' in section 'Unit', ignoring.` Por que isso é perigoso?",
+    "hint": "Leia a última palavra.",
+    "choices": [
+      {
+        "text": "Quer dizer que a unit inteira foi rejeitada e o serviço fica fora do ar",
+        "why": "A unit carregou; uma linha foi descartada."
+      },
+      {
+        "text": "Quer dizer que a chave foi aplicada com um valor padrão",
+        "why": "Nada foi aplicado; a linha foi descartada."
+      },
+      {
+        "text": "A linha foi descartada e o serviço inicia sem reclamação",
+        "why": "Isso — um erro de digitação num nome de chave é silêncio, não erro, e é para isso que o verify existe."
+      },
+      {
+        "text": "Quer dizer que o cabeçalho da seção está errado e as chaves abaixo se perdem",
+        "why": "Uma chave é nomeada, e a seção que ela nomeia é real."
+      }
+    ]
+  },
+  "ex-n7xwycy6": {
+    "prompt": "Qual `Type=` é o certo para um programa que fica em primeiro plano?",
+    "hint": "O outro é para um programa que se bifurca e deixa o pai terminar.",
+    "choices": [
+      {
+        "text": "forking",
+        "why": "Esse é para um programa que vira daemon sozinho, e faz este aqui travar."
+      },
+      {
+        "text": "simple",
+        "why": "Isso, e é o padrão porque é o caso comum."
+      },
+      {
+        "text": "oneshot",
+        "why": "Esse é para algo que roda e termina de propósito."
+      },
+      {
+        "text": "notify",
+        "why": "Esse é para um programa escrito para avisar ao systemd quando está pronto."
+      }
+    ]
+  },
+  "ex-0wffweef": {
+    "prompt": "Qual comando confere um arquivo de unit em busca de erros sem iniciar nada?",
+    "hint": "Duas palavras, e a primeira é hifenizada."
+  },
+  "ex-xk24ybv2": {
+    "prompt": "Para onde vai a saída impressa por um serviço do systemd?",
+    "hint": "A seção 76 disse que um daemon não tem terminal.",
+    "choices": [
+      {
+        "text": "Para o terminal que rodou o `systemctl start`",
+        "why": "Aquele terminal some no instante em que o comando retorna."
+      },
+      {
+        "text": "Para um arquivo com o nome da unit em /var/log",
+        "why": "Alguns serviços escrevem lá sozinhos; o systemd não põe ali."
+      },
+      {
+        "text": "Para o journal, que a recolhe",
+        "why": "Isso, e é por isso que uma unit deve imprimir em vez de administrar um arquivo de log."
+      },
+      {
+        "text": "Para lugar nenhum, a menos que a unit defina StandardOutput explicitamente",
+        "why": "O padrão já manda para o journal."
+      }
+    ]
+  },
+  "ex-bs8vbn6j": {
+    "prompt": "`journalctl -u nginx` não imprime nada quando você roda como usuário comum. Qual a razão provável?",
+    "hint": "Dois grupos concedem o acesso.",
+    "choices": [
+      {
+        "text": "Você não está no `systemd-journal` nem no `adm`",
+        "why": "Isso — tente com sudo antes de concluir que o serviço não disse nada."
+      },
+      {
+        "text": "O nginx escreve em /var/log em vez de no journal",
+        "why": "Vale conferir, e um resultado vazio para um usuário e não para outro aponta noutra direção."
+      },
+      {
+        "text": "O journal foi podado e as entradas sumiram",
+        "why": "A poda remove entradas antigas para todo mundo, não para uma conta."
+      },
+      {
+        "text": "O `-u` casa o nome da unit exatamente e o seu é nginx.service",
+        "why": "O sufixo é presumido, e falharia igual para o root."
+      }
+    ]
+  },
+  "ex-pevm5arh": {
+    "prompt": "O journal de uma máquina está vazio depois de cada reboot. O que falta?",
+    "hint": "Ele tem duas casas possíveis, e uma delas é em memória.",
+    "choices": [
+      {
+        "text": "Um ajuste Storage= nos arquivos de unit de cada serviço",
+        "why": "Storage é um ajuste do journald, e não é por serviço."
+      },
+      {
+        "text": "O grupo `adm`, sem o qual entradas antigas ficam escondidas",
+        "why": "A participação no grupo decide quem lê, não quanto tempo as entradas duram."
+      },
+      {
+        "text": "Uma política de poda, que está mantendo o journal com tamanho zero",
+        "why": "A poda remove entradas antigas e deixa as recentes."
+      },
+      {
+        "text": "O diretório /var/log/journal",
+        "why": "Isso — sem ele o journal mora num tmpfs e some no boot."
+      }
+    ]
+  },
+  "ex-eeabe4q7": {
+    "prompt": "Um serviço falhou porque algo de que ele depende falhou antes. O `journalctl -u aquelesservico` mostra só a confusão dele. E agora?",
+    "hint": "Uma flag mostra a máquina em vez da unit.",
+    "choices": [
+      {
+        "text": "journalctl -u aquelesservico -n 200, para ver mais do mesmo",
+        "why": "Mais linhas de uma unit é mais da mesma confusão."
+      },
+      {
+        "text": "journalctl -b, que mostra o boot em ordem",
+        "why": "Isso — a primeira falha fica acima da segunda, e a cascata fica legível."
+      },
+      {
+        "text": "systemctl status aquelesservico, pelos campos que faltam ao journal",
+        "why": "O bloco de status dele imprime as mesmas dez linhas que você já leu."
+      },
+      {
+        "text": "journalctl --disk-usage, para descartar um journal truncado",
+        "why": "Vale uma olhada, e truncar teria removido entradas antigas em vez da causa."
+      }
+    ]
+  },
+  "ex-cb7xrhq6": {
+    "prompt": "Escreva o journalctl que acompanha o log de um serviço conforme ele é escrito, para o `nginx`.",
+    "hint": "Duas flags, e a segunda é uma letra."
+  },
+  "ex-jkw5fkpt": {
+    "prompt": "O que é um target?",
+    "hint": "Ele não tem ExecStart.",
+    "choices": [
+      {
+        "text": "Um serviço que inicia outros serviços em sequência",
+        "why": "Ele não roda programa nenhum, coisa que um serviço faz."
+      },
+      {
+        "text": "Um grupo nomeado de units",
+        "why": "Isso — um nome para um estado, e habilitar põe um serviço no diretório wants dele."
+      },
+      {
+        "text": "Um número de runlevel reescrito como palavra",
+        "why": "Vários targets não têm equivalente de runlevel, e targets se compõem."
+      },
+      {
+        "text": "A unit que o systemd carrega primeiro quando o kernel entrega o controle",
+        "why": "A primeira unit é o target padrão, e esse é um target entre vários."
+      }
+    ]
+  },
+  "ex-p0j4vh9z": {
+    "prompt": "Uma unit tem `After=network.target` e ainda assim falha no boot, funcionando na mão. Por quê?",
+    "hint": "Aquele target é alcançado antes do que as pessoas supõem.",
+    "choices": [
+      {
+        "text": "`After=` quer dizer antes, e os dois estão trocados",
+        "why": "Ele quer dizer depois, e a ordem é a que está escrita."
+      },
+      {
+        "text": "A unit precisa de Requires= também, ou o After= é ignorado",
+        "why": "O After= vale sozinho; ordem e dependência são separadas."
+      },
+      {
+        "text": "Aquele target quer dizer configurada, e não alcançável",
+        "why": "Isso — o `network-online.target`, com um Wants=, é a versão honesta."
+      },
+      {
+        "text": "Targets são respeitados apenas para serviços iniciados na mão",
+        "why": "É com eles que a ordem de boot é decidida, para começar."
+      }
+    ]
+  },
+  "ex-nmcagbkb": {
+    "prompt": "Um boot te deixa em `Give root password for maintenance`. Qual a causa mais provável?",
+    "hint": "A seção 47 da aula 3 te deu o ensaio para isto.",
+    "choices": [
+      {
+        "text": "Um sistema de arquivos do /etc/fstab não pôde ser montado",
+        "why": "Isso, e o `sudo mount -a` antes de reiniciar é o ensaio que evita."
+      },
+      {
+        "text": "O target padrão foi definido como rescue por engano",
+        "why": "Isso te daria um shell de resgate sem perguntar sobre sistema de arquivos."
+      },
+      {
+        "text": "Um serviço com Restart=on-failure está falhando em laço",
+        "why": "Um serviço em laço não para o boot; ele falha em segundo plano."
+      },
+      {
+        "text": "A conta root não tem senha, então o login é recusado",
+        "why": "Isso é por que o prompt pode ser irrespondível, e não é o que o causou."
+      }
+    ]
+  },
+  "ex-d7n46456": {
+    "prompt": "Dois subcomandos do systemd-analyze: um ordena units por duração, o outro segue o que o total estava esperando. Qual responde 'por que o boot demorou tanto'?",
+    "hint": "Um lista o que foi lento; o outro lista o que foi esperado.",
+    "choices": [
+      {
+        "text": "blame, porque ordena por duração",
+        "why": "Ele ordena por duração, e uma unit lenta que ninguém esperou não custou nada."
+      },
+      {
+        "text": "Tanto faz — os dois imprimem as mesmas units em ordem diferente",
+        "why": "Eles selecionam diferente, e não apenas ordenam diferente."
+      },
+      {
+        "text": "blame, depois de subtrair as units que rodaram em paralelo",
+        "why": "Não existe essa subtração para fazer na mão."
+      },
+      {
+        "text": "critical-chain",
+        "why": "Isso — ele mostra a cadeia que o total de fato estava esperando."
+      }
+    ]
+  },
+  "ex-7ztpt0kf": {
+    "prompt": "Qual subcomando do systemctl imprime as units que o systemd está esperando agora, num boot travado?",
+    "hint": "Duas palavras, e a segunda é um substantivo no plural."
+  },
+  "ex-ghm599mb": {
+    "prompt": "Você chega numa máquina que alguém diz estar quebrada. Qual comando você roda primeiro?",
+    "hint": "Um destes imprime uma lista curta e normalmente ela é a resposta.",
+    "choices": [
+      {
+        "text": "journalctl -b",
+        "why": "Um boot inteiro de log, antes de você saber o que procura."
+      },
+      {
+        "text": "systemctl list-units --type=service",
+        "why": "Várias centenas de linhas, a maioria saudável."
+      },
+      {
+        "text": "systemctl --failed",
+        "why": "Isso — os serviços que tentaram e não conseguiram, normalmente uma linha."
+      },
+      {
+        "text": "systemctl status",
+        "why": "Sem um nome de unit isso imprime o estado geral da máquina, que é mais vago."
+      }
+    ]
+  },
+  "ex-7hmw3vp0": {
+    "prompt": "Qual campo do `/etc/passwd` decide se uma conta consegue um shell? Dê o número.",
+    "hint": "Conte os dois-pontos; é o último campo."
+  },
+  "ex-py58bnd5": {
+    "prompt": "Um serviço está `active (running)` e `Loaded: … disabled`. O que acontece no próximo reboot?",
+    "hint": "Duas palavras, dois momentos.",
+    "choices": [
+      {
+        "text": "Ele não volta",
+        "why": "Isso, e nada te avisa até o reboot acontecer."
+      },
+      {
+        "text": "Ele volta, porque estava rodando quando a máquina caiu",
+        "why": "Nada registra o que estava rodando; quem decide é o estado de habilitado."
+      },
+      {
+        "text": "Ele volta num estado degradado e registra um aviso",
+        "why": "Esse meio-termo não existe; ou ele inicia ou não."
+      },
+      {
+        "text": "Ele volta, porque `disabled` se refere ao arquivo de unit e não ao boot",
+        "why": "A palavra se refere exatamente à pergunta do boot."
+      }
+    ]
+  },
+  "ex-1sv0bwj0": {
+    "prompt": "Alguém sai da empresa. Você trava a senha da pessoa. O que mais precisa acontecer para a conta estar de fato fechada?",
+    "hint": "Um caminho de autenticação nunca lê o arquivo de senha.",
+    "choices": [
+      {
+        "text": "O grupo primário dela precisa ser alterado",
+        "why": "A participação em grupo decide acesso a arquivo, e não deixa ninguém entrar."
+      },
+      {
+        "text": "O diretório pessoal dela precisa ser removido",
+        "why": "Remover te custa os arquivos dela e não impede login nenhum."
+      },
+      {
+        "text": "O shell dela precisa virar nologin",
+        "why": "Um bom passo, e uma sessão por chave ainda pode ser barrada antes noutro lugar."
+      },
+      {
+        "text": "O authorized_keys dela precisa sumir",
+        "why": "Isso — chaves nunca consultam o arquivo shadow, que é o aviso da seção 75."
+      }
+    ]
+  },
+  "ex-fj2brggk": {
+    "prompt": "Escreva o comando que mostra um arquivo de unit junto com cada drop-in aplicado por cima, para o `nginx`.",
+    "hint": "Duas palavras e um nome."
+  },
+  "ex-6s5df32w": {
+    "prompt": "Você edita o `/etc/systemd/system/foo.service` na mão e reinicia o serviço. A mudança não tem efeito. O que faltou?",
+    "hint": "O systemd leu a unit uma vez, no boot.",
+    "choices": [
+      {
+        "text": "`systemctl enable`, que relê o arquivo",
+        "why": "Habilitar escreve um link simbólico e não relê nada."
+      },
+      {
+        "text": "`systemctl daemon-reload`",
+        "why": "Isso, e o `systemctl edit` faz por você, que é uma razão para preferi-lo."
+      },
+      {
+        "text": "`systemd-analyze verify`, que carrega a versão nova",
+        "why": "Ele confere um arquivo e nada muda no systemd em execução."
+      },
+      {
+        "text": "Um reboot, já que arquivos de unit são lidos apenas no boot",
+        "why": "Um reload basta, e um reboot funcionaria pelo mesmo motivo."
+      }
+    ]
+  },
+  "ex-r092159n": {
+    "prompt": "Ponha estes na ordem em que você investigaria um serviço que não está rodando.",
+    "items": [
+      "systemctl --failed",
+      "systemctl status aquelesservico",
+      "journalctl -u aquelesservico -n 50",
+      "journalctl -b -p err"
+    ],
+    "trap": "Estreite até o serviço, leia o que o systemd acha, depois o que o programa disse, depois a máquina."
+  },
+  "ex-x68sxe4w": {
+    "prompt": "Ligue cada comando ao momento em que ele age.",
+    "hint": "Dois são sobre agora e dois são sobre o próximo boot.",
+    "pairs": [
+      {
+        "left": "systemctl start",
+        "right": "agora, e some depois de um reboot"
+      },
+      {
+        "left": "systemctl enable",
+        "right": "o próximo boot, e nada agora"
+      },
+      {
+        "left": "systemctl reload",
+        "right": "agora, sem derrubar conexões"
+      },
+      {
+        "left": "systemctl set-default",
+        "right": "em que estado a máquina dá boot"
+      }
+    ],
+    "right_distractors": [
+      "para tudo que não está no target nomeado",
+      "confere um arquivo de unit sem iniciá-lo"
+    ]
+  },
+  "ex-rw01n8np": {
+    "prompt": "Uma conta é criada com `useradd -r` em vez de sem flag. O que muda?",
+    "hint": "Uma flag decide de que lado de uma linha numérica o UID cai.",
+    "choices": [
+      {
+        "text": "Ela recebe uma senha aleatória em vez de um campo vazio",
+        "why": "Nenhuma das formas define senha; isso é trabalho do passwd."
+      },
+      {
+        "text": "Ela é criada sem um grupo próprio",
+        "why": "Um grupo é criado de qualquer jeito, a menos que você diga o contrário."
+      },
+      {
+        "text": "Ela recebe um UID abaixo de 1000 e nenhum diretório pessoal",
+        "why": "Isso — uma conta de sistema, que é o que as vinte e nove da seção 71 são."
+      },
+      {
+        "text": "Ela é criada travada, então ninguém a usa até ser destravada",
+        "why": "Ela fica sem senha definida, o que impede um login por senha sem ser uma trava."
+      }
+    ]
+  },
+  "ex-bz6a5s78": {
+    "prompt": "Qual arquivo lista quem pode entrar como você nesta máquina, sem digitar senha?",
+    "hint": "Está no seu próprio diretório `.ssh`.",
+    "choices": [
+      {
+        "text": "~/.ssh/authorized_keys",
+        "why": "Isso — uma chave por linha, e o ssh-copy-id acrescenta nele."
+      },
+      {
+        "text": "~/.ssh/known_hosts",
+        "why": "Esse guarda chaves de servidores que você aceitou, que é a direção oposta."
+      },
+      {
+        "text": "~/.ssh/id_ed25519.pub",
+        "why": "Essa é a sua chave pública, que vai para o primeiro arquivo noutra máquina."
+      },
+      {
+        "text": "/etc/ssh/ssh_host_ed25519_key.pub",
+        "why": "Essa é a identidade desta máquina para os clientes dos outros."
+      }
+    ]
+  },
+  "ex-ht3kcn5k": {
+    "prompt": "Uma tarefa noturna escreve num diretório e os arquivos saem com a permissão errada. Seu `~/.bashrc` define uma umask. Por que ela não vale?",
+    "hint": "A seção 62 da aula 4 disse onde mora a umask de um serviço.",
+    "choices": [
+      {
+        "text": "A tarefa roda como outra conta, então seu dotfile é irrelevante",
+        "why": "Verdade e não é o mecanismo: mesmo como você, uma tarefa agendada não lê nenhum dos dotfiles."
+      },
+      {
+        "text": "A tarefa é iniciada por um agendador, e não por um shell seu",
+        "why": "Isso, e o `UMask=` de uma unit é onde isso mora."
+      },
+      {
+        "text": "Uma umask num dotfile vale no login e expira com a sessão",
+        "why": "Ela vale para aquele shell e os filhos dele, e não expira."
+      },
+      {
+        "text": "O bit setgid do diretório sobrepõe a umask nos arquivos novos",
+        "why": "O setgid decide o grupo e a umask continua decidindo os bits."
+      }
+    ]
+  },
+  "ex-s60dwhm3": {
+    "prompt": "Escreva o journalctl que mostra apenas erros e piores do boot atual.",
+    "hint": "Duas flags, e uma delas recebe um valor de três letras."
+  },
+  "ex-2fpdb00k": {
+    "prompt": "`systemctl isolate multi-user.target` num servidor em produção. Qual o risco?",
+    "hint": "O verbo não é start.",
+    "choices": [
+      {
+        "text": "Ele reinicia a máquina naquele target",
+        "why": "Nada reinicia; a mudança é imediata e no lugar."
+      },
+      {
+        "text": "Ele muda em que target a máquina dá boot daqui em diante",
+        "why": "Isso é o set-default, e ele não muda nada agora."
+      },
+      {
+        "text": "Ele recusa se o target já não estiver ativo",
+        "why": "Ele roda, e é esse o problema."
+      },
+      {
+        "text": "Ele para tudo que não está naquele target",
+        "why": "Isso — útil num console de resgate, alarmante por ssh."
+      }
+    ]
+  },
+  "ex-2trmr9px": {
+    "prompt": "O que o `d` no fim de `sshd`, `crond` e `systemd` significa?",
+    "hint": "É a palavra mais antiga para serviço.",
+    "choices": [
+      {
+        "text": "daily, das tarefas agendadas de que esses programas nasceram",
+        "why": "Nenhum dos três é agendado; eles rodam continuamente."
+      },
+      {
+        "text": "distributed, da época em que rodavam em várias máquinas",
+        "why": "Eles rodam numa máquina, como qualquer outro programa."
+      },
+      {
+        "text": "daemon",
+        "why": "Isso, e é a palavra Unix para um programa sem terminal."
+      },
+      {
+        "text": "driver, já que ficam entre os programas e o kernel",
+        "why": "Drivers são código de kernel; estes são programas comuns."
+      }
+    ]
+  }
+}

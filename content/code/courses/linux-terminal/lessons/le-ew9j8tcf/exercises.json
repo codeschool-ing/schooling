@@ -1,0 +1,2092 @@
+[
+  {
+    "id": "ex-p4kanqfa",
+    "version": 1,
+    "section": "what-a-user-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ana:x:1001:1002::/home/ana:/bin/bash`. What is the `x` in the second field?",
+    "hint": "It used to be something else, and it moved for a reason.",
+    "choices": [
+      {
+        "text": "A placeholder for an account that has no password set",
+        "correct": false,
+        "why": "An account with no password shows an empty field there, which is a different thing."
+      },
+      {
+        "text": "A flag marking the account as locked",
+        "correct": false,
+        "why": "Locking puts an exclamation mark in front of the hash, in the other file."
+      },
+      {
+        "text": "A pointer saying the hash is in /etc/shadow",
+        "correct": true,
+        "why": "Right, and it moved because this file has to stay readable by everybody."
+      },
+      {
+        "text": "The first character of a truncated password hash",
+        "correct": false,
+        "why": "No part of a hash is kept here; the field holds one character and it is always the same one."
+      }
+    ]
+  },
+  {
+    "id": "ex-qax609e8",
+    "version": 1,
+    "section": "what-a-user-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `/etc/passwd` mode 644 while `/etc/shadow` is 640?",
+    "hint": "One of them is needed by a command you run constantly.",
+    "choices": [
+      {
+        "text": "`ls -l` has to turn a UID into a name",
+        "correct": true,
+        "why": "Right — the split exists so the mapping stays public and the secret does not."
+      },
+      {
+        "text": "`/etc/shadow` changes more often, so it is protected against corruption",
+        "correct": false,
+        "why": "Permissions decide who reads it, and they say nothing about how often it changes."
+      },
+      {
+        "text": "`/etc/passwd` is a cache of `/etc/shadow`, with the sensitive half left out",
+        "correct": false,
+        "why": "Neither is a cache of the other; they hold different fields about the same accounts."
+      },
+      {
+        "text": "The group `shadow` owns both, and 644 is what the package happened to ship",
+        "correct": false,
+        "why": "The modes are deliberate, and `ls -l` shows a different group on each."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2hc0jpq",
+    "version": 1,
+    "section": "what-a-user-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An account's shell is `/usr/sbin/nologin`. What can it still do?",
+    "hint": "It was created for something, and that something is not typing.",
+    "choices": [
+      {
+        "text": "It is disabled, so files and services are out of reach for it",
+        "correct": false,
+        "why": "It owns files and runs services; what it lacks is a way in."
+      },
+      {
+        "text": "It logs in, and the shell exits after printing a warning",
+        "correct": false,
+        "why": "The program refuses rather than leaving a usable session behind."
+      },
+      {
+        "text": "It logs in over ssh but has no shell for a console session",
+        "correct": false,
+        "why": "The refusal applies to both; ssh gets the same program."
+      },
+      {
+        "text": "Own files and run services",
+        "correct": true,
+        "why": "Right — that is what the twenty-nine non-people accounts in section 71 are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddbdpgdy",
+    "version": 1,
+    "section": "what-a-user-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why prefer `getent passwd ana` over `grep '^ana:' /etc/passwd`?",
+    "hint": "Think about a machine whose accounts come from somewhere else.",
+    "choices": [
+      {
+        "text": "`getent` reads the file faster on a large machine",
+        "correct": false,
+        "why": "Speed is beside the point; on a small machine they take the same time."
+      },
+      {
+        "text": "`getent` asks the name service, so it finds accounts from a directory too",
+        "correct": true,
+        "why": "Right — LDAP or Active Directory accounts are absent from the file and present in the system."
+      },
+      {
+        "text": "`grep` needs a regular expression and `getent` takes a plain name",
+        "correct": false,
+        "why": "Both take what you type; what differs is where they look."
+      },
+      {
+        "text": "`getent` requires root while `grep` works for anybody, so it is more trustworthy",
+        "correct": false,
+        "why": "Both work for an ordinary user, and neither reads the shadow file."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wsrp8w7",
+    "version": 1,
+    "section": "what-a-user-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Below which UID does a distribution reserve the numbers for system accounts rather than people?",
+    "hint": "A round number.",
+    "blanks": [
+      {
+        "accept": [
+          "1000"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e1db0hsb",
+    "version": 1,
+    "section": "shadow-and-passwords",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A colleague says the support team can look up a forgotten password. What is wrong with that?",
+    "hint": "Look at what the second field of a shadow line actually holds.",
+    "choices": [
+      {
+        "text": "Support lacks the group membership to read the file",
+        "correct": false,
+        "why": "Membership decides who reads it, and reading it would still not yield a password."
+      },
+      {
+        "text": "The field is encrypted, and support has no key",
+        "correct": false,
+        "why": "There is no key. It is a hash, and hashing runs one way."
+      },
+      {
+        "text": "The password is there, and printing it would be against policy",
+        "correct": false,
+        "why": "It is not there at all, which is a stronger fact than a policy."
+      },
+      {
+        "text": "What is stored is a hash, which cannot be run backwards",
+        "correct": true,
+        "why": "Right, and that is why resetting is normal and retrieving is a red flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcd2fx5m",
+    "version": 1,
+    "section": "shadow-and-passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two accounts choose the same password. Why do their stored hashes differ?",
+    "hint": "Something random is stored in the clear beside each hash.",
+    "choices": [
+      {
+        "text": "The hash includes the account name, so it differs per user",
+        "correct": false,
+        "why": "The name is not part of the input; a random value is."
+      },
+      {
+        "text": "Each account gets its own random salt",
+        "correct": true,
+        "why": "Right, so a precomputed table would have to be rebuilt for each one."
+      },
+      {
+        "text": "The algorithm seeds itself from the time the password was set",
+        "correct": false,
+        "why": "The time is in a later field, and it is not an input to the hash."
+      },
+      {
+        "text": "They are hashed with different algorithms chosen at account creation",
+        "correct": false,
+        "why": "The algorithm is a system setting and is normally the same for both."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3mc5q7x",
+    "version": 1,
+    "section": "shadow-and-passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You hand somebody a new account with a temporary password. What makes them change it at first login?",
+    "hint": "One field says when it was last changed, and setting it to zero is the trick.",
+    "choices": [
+      {
+        "text": "passwd -e newuser",
+        "correct": false,
+        "why": "That is not a flag passwd has; the ageing tool is the one with it."
+      },
+      {
+        "text": "usermod -L newuser",
+        "correct": false,
+        "why": "That locks the account, which is the opposite of letting them in."
+      },
+      {
+        "text": "chage -d 0 newuser",
+        "correct": true,
+        "why": "Right: last changed becomes the epoch, so it is overdue immediately."
+      },
+      {
+        "text": "chage -M 0 newuser",
+        "correct": false,
+        "why": "A maximum age of zero is a different and stranger setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwm8zsaw",
+    "version": 1,
+    "section": "shadow-and-passwords",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody leaves. You run `passwd -l` on their account and they still log in. How?",
+    "hint": "One authentication path never touches that file.",
+    "choices": [
+      {
+        "text": "An ssh key in their authorized_keys",
+        "correct": true,
+        "why": "Right — keys never consult the shadow file, which is why the two steps go together."
+      },
+      {
+        "text": "The lock takes effect at the next reboot, and not before",
+        "correct": false,
+        "why": "It is written immediately; the login used a different path."
+      },
+      {
+        "text": "`passwd -l` locks the password and leaves the account usable by sudo",
+        "correct": false,
+        "why": "sudo asks for a password too, so a lock would stop it."
+      },
+      {
+        "text": "Their session was open before the lock, and it survived",
+        "correct": false,
+        "why": "A surviving session would explain one connection, and they logged in afresh."
+      }
+    ]
+  },
+  {
+    "id": "ex-p23aje0s",
+    "version": 1,
+    "section": "shadow-and-passwords",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command prints an account's password ageing settings as readable dates?",
+    "hint": "Two words, and the first is five letters.",
+    "blanks": [
+      {
+        "accept": [
+          "chage -l"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-61fbj0tv",
+    "version": 1,
+    "section": "managing-users",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`useradd dora` succeeds and `ls -ld /home/dora` says no such directory. Is something broken?",
+    "hint": "The command did exactly what it was asked and nothing more.",
+    "choices": [
+      {
+        "text": "Yes — the account is unusable until the directory is created by hand",
+        "correct": false,
+        "why": "It logs in and lands in / with an error, which is bad and is not the same as unusable."
+      },
+      {
+        "text": "Yes — useradd should have failed rather than record a path it did not create",
+        "correct": false,
+        "why": "It records the path it was told to record, and creating it is a separate flag."
+      },
+      {
+        "text": "No — `-m` is what creates it, and it was left out",
+        "correct": true,
+        "why": "Right, and `adduser` is the friendlier front end that assumes you meant `-m`."
+      },
+      {
+        "text": "No — the directory appears at the account's first login",
+        "correct": false,
+        "why": "Nothing creates it later; the login just fails to find it."
+      }
+    ]
+  },
+  {
+    "id": "ex-webw5r5v",
+    "version": 1,
+    "section": "managing-users",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `userdel dorasilva`, `ls -ld /home/dora` prints `1005` where a name used to be. What happened?",
+    "hint": "Nothing about the files changed.",
+    "choices": [
+      {
+        "text": "The directory was reassigned to the next free account",
+        "correct": false,
+        "why": "Reassignment would print that account's name; there is nothing to print."
+      },
+      {
+        "text": "The line that mapped 1005 to a name is gone",
+        "correct": true,
+        "why": "Right — the filesystem stored the number all along, as lesson 4 section 60 said."
+      },
+      {
+        "text": "`userdel` rewrote the ownership to a reserved value",
+        "correct": false,
+        "why": "It touched no files; the owner field is what it always was."
+      },
+      {
+        "text": "The directory lost its group, so `ls` falls back to numbers for both columns",
+        "correct": false,
+        "why": "The group column still prints a name, which rules that out."
+      }
+    ]
+  },
+  {
+    "id": "ex-94w2qrf8",
+    "version": 1,
+    "section": "managing-users",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is deleting an account before dealing with its files a problem on a small machine?",
+    "hint": "Think about what the next account created will be given.",
+    "choices": [
+      {
+        "text": "The files become unreadable once the name is gone",
+        "correct": false,
+        "why": "They keep their mode; a number owns them and the mode still applies."
+      },
+      {
+        "text": "`userdel` refuses to run while the account owns files elsewhere",
+        "correct": false,
+        "why": "It runs, and it says nothing about files outside the home directory."
+      },
+      {
+        "text": "Orphaned files are removed by a nightly job",
+        "correct": false,
+        "why": "No such job exists; they sit there indefinitely."
+      },
+      {
+        "text": "The next account gets the freed UID and inherits them",
+        "correct": true,
+        "why": "Right, so somebody who arrives owns files belonging to somebody who left."
+      }
+    ]
+  },
+  {
+    "id": "ex-5n32tesm",
+    "version": 1,
+    "section": "managing-users",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `/etc/skel` for?",
+    "hint": "It explains three files that appeared in a brand-new home directory.",
+    "choices": [
+      {
+        "text": "It is copied into a new home directory by `useradd -m`",
+        "correct": true,
+        "why": "Right, and it is how a company default reaches every account made afterwards."
+      },
+      {
+        "text": "It holds the default settings the shell falls back on when a home is missing",
+        "correct": false,
+        "why": "The shell falls back on the system-wide files in /etc, and this is not one of them."
+      },
+      {
+        "text": "It is where `userdel` archives a deleted account's files",
+        "correct": false,
+        "why": "Nothing archives them; `-r` deletes and the default leaves them alone."
+      },
+      {
+        "text": "It is a template reapplied to each account whenever the system starts",
+        "correct": false,
+        "why": "It is copied once, at creation, and existing accounts are never revisited."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2rztskd",
+    "version": 1,
+    "section": "managing-users",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Write the `useradd` line that creates `dora` with a home directory and bash as her shell.",
+    "hint": "Two flags, and one of them takes a path.",
+    "blanks": [
+      {
+        "accept": [
+          "useradd -m -s /bin/bash dora",
+          "useradd -s /bin/bash -m dora",
+          "sudo useradd -m -s /bin/bash dora"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mqjgtzd4",
+    "version": 1,
+    "section": "login-and-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`who` prints nothing on a machine where several shells are running. What does that mean?",
+    "hint": "Those commands read a file that something has to write.",
+    "choices": [
+      {
+        "text": "The shells belong to system accounts, which who leaves out",
+        "correct": false,
+        "why": "It lists any account with a session; the accounts are not the filter."
+      },
+      {
+        "text": "who reads the process table and found no shell marked as a login",
+        "correct": false,
+        "why": "It never reads the process table; it reads a record file."
+      },
+      {
+        "text": "The sessions are older than the file's retention window",
+        "correct": false,
+        "why": "Current sessions are in utmp regardless of age."
+      },
+      {
+        "text": "Nothing wrote a session record — no login or sshd was involved",
+        "correct": true,
+        "why": "Right, and it is the normal state of a container."
+      }
+    ]
+  },
+  {
+    "id": "ex-bphe0axr",
+    "version": 1,
+    "section": "login-and-sessions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A PATH set in `~/.bashrc` works when you log in and is missing in `ssh host 'somecommand'`. Why?",
+    "hint": "That third form starts a shell of a kind that reads neither file.",
+    "choices": [
+      {
+        "text": "ssh strips the environment before running a remote command",
+        "correct": false,
+        "why": "It carries little across, and the remote shell's own startup is what differs here."
+      },
+      {
+        "text": "`~/.bashrc` is read by login shells alone, and that is not one",
+        "correct": false,
+        "why": "It is the other way round: bashrc is for interactive shells."
+      },
+      {
+        "text": "The remote shell is non-interactive",
+        "correct": true,
+        "why": "Right — and it is why an environment belongs where a child process inherits it."
+      },
+      {
+        "text": "The command runs before the home directory is mounted",
+        "correct": false,
+        "why": "The home is there; nothing about mounting is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cw1nch2",
+    "version": 1,
+    "section": "login-and-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belongs in `~/.profile` rather than in `~/.bashrc`?",
+    "hint": "One of the two is inherited by child processes.",
+    "choices": [
+      {
+        "text": "export EDITOR=vim",
+        "correct": true,
+        "why": "Right — environment, and every child gets it."
+      },
+      {
+        "text": "alias ll='ls -la'",
+        "correct": false,
+        "why": "An alias is a shell convenience and is not inherited at all."
+      },
+      {
+        "text": "PS1='\\u@\\h\\$ '",
+        "correct": false,
+        "why": "The prompt is only meaningful in an interactive shell."
+      },
+      {
+        "text": "shopt -s histappend",
+        "correct": false,
+        "why": "A shell option, and it belongs with the other interactive settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxc2tj1a",
+    "version": 1,
+    "section": "login-and-sessions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tty` answers `not a tty`. What is that telling you?",
+    "hint": "A program uses this to decide whether somebody is watching.",
+    "choices": [
+      {
+        "text": "The terminal emulator is misconfigured",
+        "correct": false,
+        "why": "Nothing is wrong; the shell's input is simply not a terminal."
+      },
+      {
+        "text": "The shell's input is a pipe or a script",
+        "correct": true,
+        "why": "Right, and programs read it to decide about colour, prompts and progress bars."
+      },
+      {
+        "text": "You are connected over ssh rather than sitting at the machine",
+        "correct": false,
+        "why": "An ssh session gets a pty, and `tty` prints its name."
+      },
+      {
+        "text": "Your account has no login shell recorded in /etc/passwd",
+        "correct": false,
+        "why": "Field 7 has nothing to do with it; the shell is running and answering."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1ydskp9",
+    "version": 1,
+    "section": "ssh",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first connection to a host asks you to confirm a fingerprint. What is it a fingerprint of?",
+    "hint": "The other end has an identity too.",
+    "choices": [
+      {
+        "text": "Your own public key, so the server knows which to expect",
+        "correct": false,
+        "why": "Your key goes in authorized_keys; nothing hashes it at you."
+      },
+      {
+        "text": "The connection, so a later session can be matched to this one",
+        "correct": false,
+        "why": "Sessions are not tracked that way, and the value is stable across connections."
+      },
+      {
+        "text": "The server's own host key",
+        "correct": true,
+        "why": "Right, and accepting it writes the key into your known_hosts."
+      },
+      {
+        "text": "The account's password hash, sent so the client can verify it offline",
+        "correct": false,
+        "why": "A password hash never leaves the server, and this happens before any password."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4zr64z0",
+    "version": 1,
+    "section": "ssh",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the two files `ssh-keygen` made is safe to paste into a chat message?",
+    "hint": "One of them has a suffix.",
+    "choices": [
+      {
+        "text": "id_ed25519.pub",
+        "correct": true,
+        "why": "Right — the public half is meant to be copied around."
+      },
+      {
+        "text": "id_ed25519",
+        "correct": false,
+        "why": "That is the private key, and pasting it hands over the account."
+      },
+      {
+        "text": "Either — the pair is useless without both",
+        "correct": false,
+        "why": "The private half alone is enough to log in."
+      },
+      {
+        "text": "Neither — both halves have to stay on the machine that made them",
+        "correct": false,
+        "why": "The public half exists precisely to be given away."
+      }
+    ]
+  },
+  {
+    "id": "ex-2npa4sw9",
+    "version": 1,
+    "section": "ssh",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `authorized_keys` and `known_hosts`?",
+    "hint": "One is about people coming in, the other about machines you went out to.",
+    "choices": [
+      {
+        "text": "One holds private keys and the other holds public ones",
+        "correct": false,
+        "why": "Both hold public keys; what differs is whose."
+      },
+      {
+        "text": "Keys allowed in, against servers you accepted",
+        "correct": true,
+        "why": "Right, and they answer opposite questions from the same directory."
+      },
+      {
+        "text": "The first is written by ssh and the second by ssh-keygen",
+        "correct": false,
+        "why": "Both are written by ssh or its helpers; authorship is not the distinction."
+      },
+      {
+        "text": "The first applies to this machine and the second to the whole network",
+        "correct": false,
+        "why": "Both are yours alone, in your own home directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt5513zq",
+    "version": 1,
+    "section": "ssh",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You get the REMOTE HOST IDENTIFICATION HAS CHANGED banner. What is the right first move?",
+    "hint": "Three things cause it and they are not equally innocent.",
+    "choices": [
+      {
+        "text": "Run `ssh-keygen -R host` so the connection goes through",
+        "correct": false,
+        "why": "That is the fix for the innocent case, and running it first skips deciding which case it is."
+      },
+      {
+        "text": "Add StrictHostKeyChecking=no to stop it happening again",
+        "correct": false,
+        "why": "That removes the check entirely, which is the protection the banner exists to give you."
+      },
+      {
+        "text": "Connect with a password instead, which does not use host keys",
+        "correct": false,
+        "why": "Host keys are checked before any authentication method is chosen."
+      },
+      {
+        "text": "Find out whether the server was rebuilt",
+        "correct": true,
+        "why": "Right — rebuilt, a different machine behind the name, or interception, in that order."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfemgw7e",
+    "version": 1,
+    "section": "ssh",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command copies your public key into another account's `authorized_keys` for you?",
+    "hint": "Three words joined by hyphens.",
+    "blanks": [
+      {
+        "accept": [
+          "ssh-copy-id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-75dgdndf",
+    "version": 1,
+    "section": "what-a-service-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program keeps running after you log out, without you taking any special step. What is it?",
+    "hint": "Three kinds of long-running process, and one of them belongs to the system.",
+    "choices": [
+      {
+        "text": "A background job, detached from your shell",
+        "correct": false,
+        "why": "That one ends with your session unless you take a step, which is the stated condition."
+      },
+      {
+        "text": "A service, started by the init system",
+        "correct": true,
+        "why": "Right — it belongs to the machine rather than to your session."
+      },
+      {
+        "text": "A scheduled job, waiting for its next time",
+        "correct": false,
+        "why": "A scheduled job is not running between firings; it is started fresh each time."
+      },
+      {
+        "text": "A zombie, left behind because its parent stopped collecting it",
+        "correct": false,
+        "why": "A zombie holds a table entry and runs nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdrnemq9",
+    "version": 1,
+    "section": "what-a-service-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a web server run as `www-data` rather than as root?",
+    "hint": "Ask what an attacker gets when that program is broken into.",
+    "choices": [
+      {
+        "text": "Root is reserved for interactive logins and services use other accounts",
+        "correct": false,
+        "why": "Plenty of services do run as root; the reason is about consequence rather than reservation."
+      },
+      {
+        "text": "Binding a network port requires a non-root account on modern Linux",
+        "correct": false,
+        "why": "Low ports historically needed root, which runs the other way."
+      },
+      {
+        "text": "A break-in then yields that account, and no more",
+        "correct": true,
+        "why": "Right — one account per service is the cheapest boundary the system has."
+      },
+      {
+        "text": "Files written by root would be unreadable to the service later",
+        "correct": false,
+        "why": "root's files are readable by root; ownership is not the constraint here."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gze6aev",
+    "version": 1,
+    "section": "what-a-service-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service's working data is on disk. Which directory should it be in?",
+    "hint": "Lesson 3 section 37 divides these by what changes.",
+    "choices": [
+      {
+        "text": "/var/lib/<name>",
+        "correct": true,
+        "why": "Right — data the machine writes while running."
+      },
+      {
+        "text": "/etc/<name>",
+        "correct": false,
+        "why": "Configuration lives there, and it is read rather than written."
+      },
+      {
+        "text": "/usr/lib/<name>",
+        "correct": false,
+        "why": "Installed files, owned by the package manager."
+      },
+      {
+        "text": "/opt/<name>",
+        "correct": false,
+        "why": "A vendor's tree for software outside the package manager."
+      }
+    ]
+  },
+  {
+    "id": "ex-ge53yfxj",
+    "version": 1,
+    "section": "what-a-service-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a program written for systemd stay in the foreground instead of daemonising?",
+    "hint": "Something else is now doing the detaching.",
+    "choices": [
+      {
+        "text": "Foreground processes are given a higher scheduling priority",
+        "correct": false,
+        "why": "Priority is set separately, and it has nothing to do with detaching."
+      },
+      {
+        "text": "systemd refuses to start a process that forks",
+        "correct": false,
+        "why": "Type=forking exists precisely for programs that do."
+      },
+      {
+        "text": "A process that detached would be unable to write to the journal",
+        "correct": false,
+        "why": "It can, through the ordinary streams; collection is not what changed."
+      },
+      {
+        "text": "systemd does the detaching and tracking itself",
+        "correct": true,
+        "why": "Right — and a program that forks anyway has to be declared with Type=forking."
+      }
+    ]
+  },
+  {
+    "id": "ex-81nmbn94",
+    "version": 1,
+    "section": "init-and-pid-1",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many programs does the kernel start directly at boot?",
+    "hint": "Everything else descends from it.",
+    "choices": [
+      {
+        "text": "One per target listed in the default target",
+        "correct": false,
+        "why": "Targets are units systemd reaches; the kernel knows about none of them."
+      },
+      {
+        "text": "One per CPU, which then share out the work",
+        "correct": false,
+        "why": "Processor count decides nothing about how many programs are started."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right — process 1, and every other process is a descendant of it."
+      },
+      {
+        "text": "Two: an init system and a logger, so early failures are recorded",
+        "correct": false,
+        "why": "The logger is started by the init system like everything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-4z2pxmmd",
+    "version": 1,
+    "section": "init-and-pid-1",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`S20nginx` in `/etc/rc3.d` is a SysV startup link. What does the number do?",
+    "hint": "The scripts were run in one order, and something had to decide it.",
+    "choices": [
+      {
+        "text": "It is the runlevel the script belongs to",
+        "correct": false,
+        "why": "The runlevel is the `3` in the directory name."
+      },
+      {
+        "text": "It is the number of seconds to wait before starting",
+        "correct": false,
+        "why": "Nothing waits; the scripts run one after another."
+      },
+      {
+        "text": "It is the exit status the script should return on success",
+        "correct": false,
+        "why": "Zero is success there as everywhere."
+      },
+      {
+        "text": "It sets the position in the alphabetical order",
+        "correct": true,
+        "why": "Right, and that ordering was a guess at dependencies rather than a statement of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4206qb2",
+    "version": 1,
+    "section": "init-and-pid-1",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which systemd idea made `systemctl stop` reliable where SysV's stop script was not?",
+    "hint": "It is about knowing what you started.",
+    "choices": [
+      {
+        "text": "Each service's processes are tracked in a cgroup",
+        "correct": true,
+        "why": "Right — the kernel keeps the list, so processes that forked away are stopped too."
+      },
+      {
+        "text": "Units are declarative, so the stop path is generated rather than written",
+        "correct": false,
+        "why": "Declarative units are a real improvement and they do not track a running process."
+      },
+      {
+        "text": "Services start in parallel, so stopping happens in reverse order",
+        "correct": false,
+        "why": "Reverse ordering is real and says nothing about which processes are found."
+      },
+      {
+        "text": "The journal records each PID a service has had",
+        "correct": false,
+        "why": "The journal records what was said, and stopping does not read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwe2130s",
+    "version": 1,
+    "section": "init-and-pid-1",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `docker run --init` add, and why would a container need it?",
+    "hint": "Two jobs belong to process one, and an application program does neither.",
+    "choices": [
+      {
+        "text": "A shell, so the container has somewhere to run startup commands",
+        "correct": false,
+        "why": "A shell runs commands and does not adopt or reap anything."
+      },
+      {
+        "text": "A tiny process one that adopts orphans and reaps them",
+        "correct": true,
+        "why": "Right, and without it a container leaks zombies until its table fills."
+      },
+      {
+        "text": "A logging collector, so the container's output reaches the host",
+        "correct": false,
+        "why": "Output already reaches the host through the ordinary streams."
+      },
+      {
+        "text": "A supervisor that restarts the main program when it exits",
+        "correct": false,
+        "why": "Restart policy is a separate flag and a separate idea."
+      }
+    ]
+  },
+  {
+    "id": "ex-snp892xx",
+    "version": 1,
+    "section": "systemctl",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You set a service up, checked it was running, rebooted, and it is gone. What was missed?",
+    "hint": "Two verbs, two moments.",
+    "choices": [
+      {
+        "text": "`daemon-reload`, so systemd had yet to read the unit",
+        "correct": false,
+        "why": "It read the unit; the service ran before the reboot."
+      },
+      {
+        "text": "`unmask`, since a masked service is refused a start",
+        "correct": false,
+        "why": "A masked service would have refused to start in the first place."
+      },
+      {
+        "text": "`systemctl restart`, which makes the state permanent",
+        "correct": false,
+        "why": "Restarting is another now-verb and changes nothing about the next boot."
+      },
+      {
+        "text": "`systemctl enable`",
+        "correct": true,
+        "why": "Right — `start` is now, `enable` is at the next boot."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pc4tc7a",
+    "version": 1,
+    "section": "systemctl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`systemctl enable` printed `Created symlink …/multi-user.target.wants/hello.service`. What did it do?",
+    "hint": "Read the path it made.",
+    "choices": [
+      {
+        "text": "Added the unit to a list a target reads at boot",
+        "correct": true,
+        "why": "Right, and a symlink starts nothing, which is the whole of why enable is not start."
+      },
+      {
+        "text": "Copied the unit into the directory systemd loads from",
+        "correct": false,
+        "why": "It linked rather than copied, and the original stays where it was."
+      },
+      {
+        "text": "Registered the service with the journal so its output is kept",
+        "correct": false,
+        "why": "Output is collected whether or not a service is enabled."
+      },
+      {
+        "text": "Started the service and recorded that it should start again",
+        "correct": false,
+        "why": "Nothing was started; `--now` is the flag that would have."
+      }
+    ]
+  },
+  {
+    "id": "ex-fq8m76pv",
+    "version": 1,
+    "section": "systemctl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A web server is serving traffic and its configuration changed. `restart` or `reload`?",
+    "hint": "One of the two drops what is connected.",
+    "choices": [
+      {
+        "text": "restart, because a reload leaves the old configuration in memory",
+        "correct": false,
+        "why": "A reload is exactly a re-read of the configuration."
+      },
+      {
+        "text": "restart, because reload is a Debian extension and is missing elsewhere",
+        "correct": false,
+        "why": "It is standard, and whether a service supports it is in its own unit file."
+      },
+      {
+        "text": "reload",
+        "correct": true,
+        "why": "Right — it re-reads without dropping connections, and nginx supports it."
+      },
+      {
+        "text": "Either — systemd treats them as the same verb for network services",
+        "correct": false,
+        "why": "They are separate verbs that run separate commands from the unit."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcrss3pn",
+    "version": 1,
+    "section": "systemctl",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`systemctl is-enabled foo` says `static`. What does that mean?",
+    "hint": "Enabling writes a symlink somewhere, and something has to say where.",
+    "choices": [
+      {
+        "text": "The unit is compiled into systemd rather than read from a file",
+        "correct": false,
+        "why": "Every unit is a file; nothing is compiled in."
+      },
+      {
+        "text": "The unit has no [Install] section",
+        "correct": true,
+        "why": "Right — something else pulls it in, and enabling it would have no meaning."
+      },
+      {
+        "text": "The unit is linked to /dev/null, so a start is refused",
+        "correct": false,
+        "why": "That is `masked`, and it is a different answer from the same command."
+      },
+      {
+        "text": "The unit was enabled by the package and is yours to leave alone",
+        "correct": false,
+        "why": "A packaged unit is disabled like any other; the file decides, not the packager."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yea8574",
+    "version": 1,
+    "section": "systemctl",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Write the command that starts a service now and also arranges for it at the next boot, in one go, for `nginx`.",
+    "hint": "One verb and one flag.",
+    "blanks": [
+      {
+        "accept": [
+          "sudo systemctl enable --now nginx",
+          "systemctl enable --now nginx"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0tp5xktb",
+    "version": 1,
+    "section": "reading-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Active: active (exited)` on a unit. Did it fail?",
+    "hint": "Some units have nothing left running when they succeed.",
+    "choices": [
+      {
+        "text": "Yes — `exited` is how a crash is reported",
+        "correct": false,
+        "why": "A crash reports `failed`, and this word is on the active side of the line."
+      },
+      {
+        "text": "No — it ran, finished, and that was the job",
+        "correct": true,
+        "why": "Right, and a unit that mounts something or sets a value looks exactly like this."
+      },
+      {
+        "text": "Yes — the process left, so the service is no longer being watched",
+        "correct": false,
+        "why": "Nothing is being watched, and that is the intended end state."
+      },
+      {
+        "text": "It depends on whether the unit has a Restart policy set",
+        "correct": false,
+        "why": "The restart policy decides what happens after a failure, and this is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-63pnt35p",
+    "version": 1,
+    "section": "reading-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Loaded: loaded (…; disabled)` on a service that is currently running. What does that tell you?",
+    "hint": "Two words on the same line, about two different moments.",
+    "choices": [
+      {
+        "text": "The unit file was edited after the service started",
+        "correct": false,
+        "why": "Editing is not recorded on that line; a stale unit shows nothing here."
+      },
+      {
+        "text": "The service is running from a drop-in rather than the main unit",
+        "correct": false,
+        "why": "Drop-ins are shown by `systemctl cat`, and they do not change this word."
+      },
+      {
+        "text": "systemd lost track of it, so the enabled state is unreadable",
+        "correct": false,
+        "why": "It read a definite answer, and that answer is `disabled`."
+      },
+      {
+        "text": "Somebody started it by hand",
+        "correct": true,
+        "why": "Right, and that is the pair of facts the line exists to show together."
+      }
+    ]
+  },
+  {
+    "id": "ex-zaean2ef",
+    "version": 1,
+    "section": "reading-status",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service's status is red. Which line do you read first?",
+    "hint": "One possible answer makes the other three irrelevant.",
+    "choices": [
+      {
+        "text": "`Loaded:` — if the unit is `not-found`, nothing else matters",
+        "correct": true,
+        "why": "Right: a missing or misnamed unit file makes every other line noise."
+      },
+      {
+        "text": "The journal lines at the bottom, since the program says most",
+        "correct": false,
+        "why": "They usually hold the answer, and they are worth nothing if there is no unit."
+      },
+      {
+        "text": "`Main PID:`, to find the process and look at it directly",
+        "correct": false,
+        "why": "A failed service has no process left to look at."
+      },
+      {
+        "text": "`Active:`, because the Result word names the kind of failure",
+        "correct": false,
+        "why": "That is the second line to read, and the first one can rule it out."
+      }
+    ]
+  },
+  {
+    "id": "ex-kw16ep3j",
+    "version": 1,
+    "section": "reading-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `CGroup:` tree in a status block list?",
+    "hint": "It is section 77's third idea, made visible.",
+    "choices": [
+      {
+        "text": "The units this service depends on",
+        "correct": false,
+        "why": "Dependencies are in the unit file and are shown elsewhere."
+      },
+      {
+        "text": "The threads inside the main process",
+        "correct": false,
+        "why": "Threads are counted in Tasks; these lines have their own PIDs."
+      },
+      {
+        "text": "Each process the service owns",
+        "correct": true,
+        "why": "Right, and it is what makes `systemctl stop` reliable."
+      },
+      {
+        "text": "The processes that have the service's files open",
+        "correct": false,
+        "why": "That is what lsof answers, and it would list other accounts' processes too."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt9924sw",
+    "version": 1,
+    "section": "unit-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ExecStart=/usr/bin/foo > /var/log/foo.log` in a unit file. What happens?",
+    "hint": "There is no shell reading that line.",
+    "choices": [
+      {
+        "text": "The output is redirected, as it would be in a shell",
+        "correct": false,
+        "why": "A shell would do that, and systemd is not running one."
+      },
+      {
+        "text": "systemd refuses to load the unit and reports a syntax error",
+        "correct": false,
+        "why": "It loads happily; the line is valid and means something else."
+      },
+      {
+        "text": "The redirect is applied and the journal is left empty",
+        "correct": false,
+        "why": "The journal receives the output, because the redirect never happened."
+      },
+      {
+        "text": "`foo` is started with `>` and the path as two arguments",
+        "correct": true,
+        "why": "Right — and `ExecStart=/bin/sh -c '…'` is how you ask for a shell on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6cc0wxa",
+    "version": 1,
+    "section": "unit-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need one line changed in a packaged unit. Why `systemctl edit` rather than copying the file to `/etc`?",
+    "hint": "Ask what happens at the next package upgrade.",
+    "choices": [
+      {
+        "text": "A drop-in inherits the rest, and keeps upgrading",
+        "correct": true,
+        "why": "Right — a full copy in /etc wins forever and silently stops improving."
+      },
+      {
+        "text": "A copy in /etc has lower priority and would be ignored",
+        "correct": false,
+        "why": "It has higher priority, which is exactly why it wins and why that is the trap."
+      },
+      {
+        "text": "`systemctl edit` writes the change into the package's own file",
+        "correct": false,
+        "why": "It never touches the packaged file; that is the point of a drop-in."
+      },
+      {
+        "text": "A copy in /etc has to be registered before systemd will read it",
+        "correct": false,
+        "why": "It is read because of where it sits, with nothing to register."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxxmh2ah",
+    "version": 1,
+    "section": "unit-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`systemd-analyze verify` says `Unknown key name 'Descriptoin' in section 'Unit', ignoring.` Why is that dangerous?",
+    "hint": "Read the last word.",
+    "choices": [
+      {
+        "text": "It means the whole unit was rejected and the service stays down",
+        "correct": false,
+        "why": "The unit loaded; one line was dropped."
+      },
+      {
+        "text": "It means the key was applied with a default value",
+        "correct": false,
+        "why": "Nothing was applied; the line was discarded."
+      },
+      {
+        "text": "The line was dropped and the service starts with no complaint",
+        "correct": true,
+        "why": "Right — a typo in a key name is silence, not an error, which is why verify exists."
+      },
+      {
+        "text": "It means the section header is wrong and the keys below it are lost",
+        "correct": false,
+        "why": "One key is named, and the section it names is a real one."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7xwycy6",
+    "version": 1,
+    "section": "unit-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `Type=` is right for a program that stays in the foreground?",
+    "hint": "The other one is for a program that forks and lets the parent exit.",
+    "choices": [
+      {
+        "text": "forking",
+        "correct": false,
+        "why": "That is for a program that daemonises itself, and it makes this one hang."
+      },
+      {
+        "text": "simple",
+        "correct": true,
+        "why": "Right, and it is the default because it is the common case."
+      },
+      {
+        "text": "oneshot",
+        "correct": false,
+        "why": "That is for something that runs and finishes on purpose."
+      },
+      {
+        "text": "notify",
+        "correct": false,
+        "why": "That is for a program written to tell systemd when it is ready."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wffweef",
+    "version": 1,
+    "section": "unit-files",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which command checks a unit file for mistakes without starting anything?",
+    "hint": "Two words, and the first is hyphenated.",
+    "blanks": [
+      {
+        "accept": [
+          "systemd-analyze verify"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xk24ybv2",
+    "version": 1,
+    "section": "journalctl",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a systemd service's printed output go?",
+    "hint": "Section 76 said a daemon has no terminal.",
+    "choices": [
+      {
+        "text": "To the terminal that ran `systemctl start`",
+        "correct": false,
+        "why": "That terminal is gone the moment the command returns."
+      },
+      {
+        "text": "To a file named after the unit in /var/log",
+        "correct": false,
+        "why": "Some services write there themselves; systemd does not put it there."
+      },
+      {
+        "text": "To the journal, which collects it",
+        "correct": true,
+        "why": "Right, and it is why a unit should print rather than manage a log file."
+      },
+      {
+        "text": "Nowhere, unless the unit sets StandardOutput explicitly",
+        "correct": false,
+        "why": "The default already sends it to the journal."
+      }
+    ]
+  },
+  {
+    "id": "ex-bs8vbn6j",
+    "version": 1,
+    "section": "journalctl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`journalctl -u nginx` prints nothing when you run it as an ordinary user. What is the likely reason?",
+    "hint": "Two groups grant the access.",
+    "choices": [
+      {
+        "text": "You are in neither `systemd-journal` nor `adm`",
+        "correct": true,
+        "why": "Right — try it with sudo before concluding the service said nothing."
+      },
+      {
+        "text": "nginx writes to /var/log rather than to the journal",
+        "correct": false,
+        "why": "Worth checking, and an empty result for one user and not another points elsewhere."
+      },
+      {
+        "text": "The journal was vacuumed and the entries are gone",
+        "correct": false,
+        "why": "Vacuuming removes old entries for everybody, not for one account."
+      },
+      {
+        "text": "`-u` matches the unit name exactly and yours is nginx.service",
+        "correct": false,
+        "why": "The suffix is assumed, and it would fail the same way for root."
+      }
+    ]
+  },
+  {
+    "id": "ex-pevm5arh",
+    "version": 1,
+    "section": "journalctl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine's journal is empty after every reboot. What is missing?",
+    "hint": "It has two possible homes, and one of them is in memory.",
+    "choices": [
+      {
+        "text": "A Storage= setting in the unit files of each service",
+        "correct": false,
+        "why": "Storage is a journald setting, and it is not per service."
+      },
+      {
+        "text": "The `adm` group, without which old entries are hidden",
+        "correct": false,
+        "why": "Group membership decides who reads, not how long entries survive."
+      },
+      {
+        "text": "A vacuum policy, which is keeping the journal at zero size",
+        "correct": false,
+        "why": "Vacuuming prunes old entries and leaves recent ones."
+      },
+      {
+        "text": "The directory /var/log/journal",
+        "correct": true,
+        "why": "Right — without it the journal lives on a tmpfs and goes at boot."
+      }
+    ]
+  },
+  {
+    "id": "ex-eeabe4q7",
+    "version": 1,
+    "section": "journalctl",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service failed because something it depends on failed first. `journalctl -u thatservice` shows only its own confusion. What next?",
+    "hint": "One flag shows the machine rather than the unit.",
+    "choices": [
+      {
+        "text": "journalctl -u thatservice -n 200, for more of the same",
+        "correct": false,
+        "why": "More lines of one unit is more of the same confusion."
+      },
+      {
+        "text": "journalctl -b, which shows the boot in order",
+        "correct": true,
+        "why": "Right — the first failure is above the second, and the cascade becomes readable."
+      },
+      {
+        "text": "systemctl status thatservice, for the fields the journal lacks",
+        "correct": false,
+        "why": "Its status block prints the same ten lines you already read."
+      },
+      {
+        "text": "journalctl --disk-usage, to rule out a truncated journal",
+        "correct": false,
+        "why": "Worth a glance, and truncation would have removed old entries rather than the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-cb7xrhq6",
+    "version": 1,
+    "section": "journalctl",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Write the journalctl that follows one service's log as it is written, for `nginx`.",
+    "hint": "Two flags, and the second is one letter.",
+    "blanks": [
+      {
+        "accept": [
+          "journalctl -u nginx -f",
+          "journalctl -f -u nginx",
+          "sudo journalctl -u nginx -f"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jkw5fkpt",
+    "version": 1,
+    "section": "targets-and-boot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a target?",
+    "hint": "It has no ExecStart.",
+    "choices": [
+      {
+        "text": "A service that starts other services in sequence",
+        "correct": false,
+        "why": "It runs no program at all, which a service does."
+      },
+      {
+        "text": "A named group of units",
+        "correct": true,
+        "why": "Right — a name for a state, and enabling puts a service in its wants directory."
+      },
+      {
+        "text": "A runlevel number rewritten as a word",
+        "correct": false,
+        "why": "Several targets have no runlevel equivalent, and targets compose."
+      },
+      {
+        "text": "The unit systemd loads first when the kernel hands over control",
+        "correct": false,
+        "why": "The first unit is the default target, and that is one target among many."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0j4vh9z",
+    "version": 1,
+    "section": "targets-and-boot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A unit has `After=network.target` and still fails at boot while working by hand. Why?",
+    "hint": "That target is reached earlier than people assume.",
+    "choices": [
+      {
+        "text": "`After=` means before, and the two are the wrong way round",
+        "correct": false,
+        "why": "It means after, and the order is what it says."
+      },
+      {
+        "text": "The unit needs Requires= as well, or After= is ignored",
+        "correct": false,
+        "why": "After= applies on its own; ordering and dependency are separate."
+      },
+      {
+        "text": "That target means configured rather than reachable",
+        "correct": true,
+        "why": "Right — `network-online.target`, with a Wants=, is the honest version."
+      },
+      {
+        "text": "Targets are honoured just for services started by hand",
+        "correct": false,
+        "why": "They are how boot order is decided in the first place."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmcagbkb",
+    "version": 1,
+    "section": "targets-and-boot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A boot drops you at `Give root password for maintenance`. What is the most likely cause?",
+    "hint": "Lesson 3 section 47 gave you the rehearsal for this.",
+    "choices": [
+      {
+        "text": "A filesystem in /etc/fstab could not be mounted",
+        "correct": true,
+        "why": "Right, and `sudo mount -a` before rebooting is the rehearsal that avoids it."
+      },
+      {
+        "text": "The default target was set to rescue by mistake",
+        "correct": false,
+        "why": "That would give you a rescue shell without asking about a filesystem."
+      },
+      {
+        "text": "A service with Restart=on-failure is failing in a loop",
+        "correct": false,
+        "why": "A looping service does not stop the boot; it fails in the background."
+      },
+      {
+        "text": "The root account has no password, so login is refused",
+        "correct": false,
+        "why": "That is why the prompt may be unanswerable, and it is not what caused it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7n46456",
+    "version": 1,
+    "section": "targets-and-boot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two systemd-analyze subcommands: one sorts units by duration, the other follows what the total was waiting on. Which answers 'why did the boot take so long'?",
+    "hint": "One lists what was slow; the other lists what was waited on.",
+    "choices": [
+      {
+        "text": "blame, because it sorts by duration",
+        "correct": false,
+        "why": "It sorts by duration, and a slow unit nobody waited for cost nothing."
+      },
+      {
+        "text": "Either — they print the same units in a different order",
+        "correct": false,
+        "why": "They select differently, not merely order differently."
+      },
+      {
+        "text": "blame, once you subtract the units that ran in parallel",
+        "correct": false,
+        "why": "There is no such subtraction to do by hand."
+      },
+      {
+        "text": "critical-chain",
+        "correct": true,
+        "why": "Right — it shows the chain the total was actually waiting on."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ztpt0kf",
+    "version": 1,
+    "section": "targets-and-boot",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which systemctl subcommand prints the units systemd is currently waiting on, for a boot that has hung?",
+    "hint": "Two words, and the second is a plural noun.",
+    "blanks": [
+      {
+        "accept": [
+          "systemctl list-jobs",
+          "list-jobs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ghm599mb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You arrive at a machine somebody says is broken. Which command do you run first?",
+    "hint": "One of these prints a short list and it is usually the answer.",
+    "choices": [
+      {
+        "text": "journalctl -b",
+        "correct": false,
+        "why": "A whole boot of log, before you know what you are looking for."
+      },
+      {
+        "text": "systemctl list-units --type=service",
+        "correct": false,
+        "why": "Several hundred lines, most of them healthy."
+      },
+      {
+        "text": "systemctl --failed",
+        "correct": true,
+        "why": "Right — the services that tried and did not make it, usually one line."
+      },
+      {
+        "text": "systemctl status",
+        "correct": false,
+        "why": "Without a unit name that prints the machine's overall state, which is vaguer."
+      }
+    ]
+  },
+  {
+    "id": "ex-7hmw3vp0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which field of `/etc/passwd` decides whether an account can get a shell? Give its number.",
+    "hint": "Count the colons; it is the last field.",
+    "blanks": [
+      {
+        "accept": [
+          "7",
+          "seven"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-py58bnd5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service is `active (running)` and `Loaded: … disabled`. What happens at the next reboot?",
+    "hint": "Two words, two moments.",
+    "choices": [
+      {
+        "text": "It does not come back",
+        "correct": true,
+        "why": "Right, and nothing warns you until the reboot happens."
+      },
+      {
+        "text": "It comes back, because it was running when the machine went down",
+        "correct": false,
+        "why": "Nothing records what was running; the enabled state is what decides."
+      },
+      {
+        "text": "It comes back in a degraded state and logs a warning",
+        "correct": false,
+        "why": "There is no such halfway state; it either starts or does not."
+      },
+      {
+        "text": "It comes back, because `disabled` refers to the unit file rather than to boot",
+        "correct": false,
+        "why": "The word refers to exactly the boot question."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sv0bwj0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody leaves the company. You lock their password. What else has to happen before the account is really shut?",
+    "hint": "One authentication path never reads the password file.",
+    "choices": [
+      {
+        "text": "Their primary group has to be changed",
+        "correct": false,
+        "why": "Group membership decides file access, and it lets nobody log in."
+      },
+      {
+        "text": "Their home directory has to be removed",
+        "correct": false,
+        "why": "Removing it costs you their files and stops no login."
+      },
+      {
+        "text": "Their shell has to be set to nologin",
+        "correct": false,
+        "why": "A good step, and a key-based session can still be refused elsewhere first."
+      },
+      {
+        "text": "Their authorized_keys has to go",
+        "correct": true,
+        "why": "Right — keys never consult the shadow file, which is section 75's warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-fj2brggk",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Write the command that shows a unit file together with every drop-in applied on top of it, for `nginx`.",
+    "hint": "Two words and a name.",
+    "blanks": [
+      {
+        "accept": [
+          "systemctl cat nginx"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6s5df32w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You edit `/etc/systemd/system/foo.service` by hand and restart the service. The change has no effect. What was missed?",
+    "hint": "systemd read the unit once, at boot.",
+    "choices": [
+      {
+        "text": "`systemctl enable`, which rereads the file",
+        "correct": false,
+        "why": "Enabling writes a symlink and rereads nothing."
+      },
+      {
+        "text": "`systemctl daemon-reload`",
+        "correct": true,
+        "why": "Right, and `systemctl edit` does it for you, which is one reason to prefer it."
+      },
+      {
+        "text": "`systemd-analyze verify`, which loads the new version",
+        "correct": false,
+        "why": "It checks a file and changes nothing in the running systemd."
+      },
+      {
+        "text": "A reboot, since unit files are read at boot alone",
+        "correct": false,
+        "why": "A reload is enough, and a reboot would work for the same reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-r092159n",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order you would work through a service that is not running.",
+    "items": [
+      "systemctl --failed",
+      "systemctl status thatservice",
+      "journalctl -u thatservice -n 50",
+      "journalctl -b -p err"
+    ],
+    "trap": "Narrow to the service, read what systemd thinks, then what the program said, then the machine."
+  },
+  {
+    "id": "ex-x68sxe4w",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each command to the moment it acts on.",
+    "hint": "Two are about now and two are about the next boot.",
+    "pairs": [
+      {
+        "left": "systemctl start",
+        "right": "now, and gone after a reboot"
+      },
+      {
+        "left": "systemctl enable",
+        "right": "the next boot, and nothing right now"
+      },
+      {
+        "left": "systemctl reload",
+        "right": "now, without dropping connections"
+      },
+      {
+        "left": "systemctl set-default",
+        "right": "which state the machine boots into"
+      }
+    ],
+    "right_distractors": [
+      "stops everything not in the named target",
+      "checks a unit file without starting it"
+    ]
+  },
+  {
+    "id": "ex-rw01n8np",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An account is created with `useradd -r` instead of plainly. What differs?",
+    "hint": "One flag decides which side of a number line the UID falls on.",
+    "choices": [
+      {
+        "text": "It is given a random password instead of an empty field",
+        "correct": false,
+        "why": "Neither form sets a password; that is passwd's job."
+      },
+      {
+        "text": "It is created without a group of its own",
+        "correct": false,
+        "why": "A group is made either way unless you say otherwise."
+      },
+      {
+        "text": "It gets a UID below 1000 and no home directory",
+        "correct": true,
+        "why": "Right — a system account, which is what section 71's twenty-nine are."
+      },
+      {
+        "text": "It is created locked, so nobody can use it until it is unlocked",
+        "correct": false,
+        "why": "It has no password set, which stops a password login without being a lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz6a5s78",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file lists who may log in as you on this machine, without typing a password?",
+    "hint": "It is in your own `.ssh` directory.",
+    "choices": [
+      {
+        "text": "~/.ssh/authorized_keys",
+        "correct": true,
+        "why": "Right — one key per line, and ssh-copy-id appends to it."
+      },
+      {
+        "text": "~/.ssh/known_hosts",
+        "correct": false,
+        "why": "That holds server keys you accepted, which is the opposite direction."
+      },
+      {
+        "text": "~/.ssh/id_ed25519.pub",
+        "correct": false,
+        "why": "That is your own public key, which goes into the first file on another machine."
+      },
+      {
+        "text": "/etc/ssh/ssh_host_ed25519_key.pub",
+        "correct": false,
+        "why": "That is this machine's identity to other people's clients."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht3kcn5k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job writes to a directory and the files come out with the wrong permissions. Your `~/.bashrc` sets a umask. Why does it not apply?",
+    "hint": "Lesson 4 section 62 said where a service's umask lives.",
+    "choices": [
+      {
+        "text": "The job runs as a different account, so your dotfile is irrelevant",
+        "correct": false,
+        "why": "True and not the mechanism: even as you, a scheduled job reads neither dotfile."
+      },
+      {
+        "text": "The job is started by a scheduler, not by a shell of yours",
+        "correct": true,
+        "why": "Right, and a unit's `UMask=` is where it belongs."
+      },
+      {
+        "text": "A umask in a dotfile applies at login and expires with the session",
+        "correct": false,
+        "why": "It applies to that shell and its children, and it does not expire."
+      },
+      {
+        "text": "The directory's setgid bit overrides the umask for new files",
+        "correct": false,
+        "why": "setgid decides the group and the umask still decides the bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-s60dwhm3",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Write the journalctl that shows only errors and worse from the current boot.",
+    "hint": "Two flags, and one takes a three-letter value.",
+    "blanks": [
+      {
+        "accept": [
+          "journalctl -b -p err",
+          "journalctl -p err -b",
+          "sudo journalctl -b -p err"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2fpdb00k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`systemctl isolate multi-user.target` on a running server. What is the risk?",
+    "hint": "The verb is not start.",
+    "choices": [
+      {
+        "text": "It reboots the machine into that target",
+        "correct": false,
+        "why": "Nothing reboots; the change is immediate and in place."
+      },
+      {
+        "text": "It changes what the machine boots into from now on",
+        "correct": false,
+        "why": "That is set-default, and it changes nothing right now."
+      },
+      {
+        "text": "It refuses unless the target is already active",
+        "correct": false,
+        "why": "It runs, which is the problem."
+      },
+      {
+        "text": "It stops everything not in that target",
+        "correct": true,
+        "why": "Right — useful in a rescue console, alarming over ssh."
+      }
+    ]
+  },
+  {
+    "id": "ex-2trmr9px",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `d` at the end of `sshd`, `crond` and `systemd` stand for?",
+    "hint": "It is the older word for a service.",
+    "choices": [
+      {
+        "text": "daily, from the scheduled jobs these programs grew out of",
+        "correct": false,
+        "why": "None of the three is scheduled; they run continuously."
+      },
+      {
+        "text": "distributed, from the era when they ran across several machines",
+        "correct": false,
+        "why": "They run on one machine, like any other program."
+      },
+      {
+        "text": "daemon",
+        "correct": true,
+        "why": "Right, and it is the Unix word for a program with no terminal."
+      },
+      {
+        "text": "driver, since they sit between programs and the kernel",
+        "correct": false,
+        "why": "Drivers are kernel code; these are ordinary programs."
+      }
+    ]
+  }
+]
