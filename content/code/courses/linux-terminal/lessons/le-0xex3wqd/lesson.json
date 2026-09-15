@@ -1,0 +1,128 @@
+{
+  "id": "le-0xex3wqd",
+  "title": "Scheduling tasks: cron and systemd timers",
+  "sections": [
+    {
+      "id": "se-62hr1ktw",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-838h99e7",
+          "version": 1,
+          "script": "Something has to happen at three in the morning, and you are not going to be there. That is the whole of this lesson, and everything difficult about it comes from the second half of that sentence. {{premise}} The first thing everybody writes is a loop: do the work, sleep an hour, do the work again. It is wrong in five ways and the first one you can measure in fifteen seconds. A loop with three seconds of sleep and two seconds of work runs every five seconds, not every three, because the work is inside the loop — so an hourly backup that takes four minutes runs at three, then four minutes past, then eight minutes past, and by Friday it is running in the afternoon. And it dies with your terminal, and it does not survive a reboot, and nobody else knows it exists, and there is no record of whether it worked. {{loop}} So: cron, which is a line in a table and has been on every Unix since 1975. systemd timers, which are two files and a great deal more. anacron, for machines that are switched off at three in the morning. And at, for once and then never again. {{four}} Everything in this lesson was run. Cron was installed on this machine, started, given real jobs, and watched: the jobs that worked wrote their files on the minute, and the jobs that were broken mailed back real error messages that you will see quoted with cron's own headers on them. The rule about the two day fields — the one everybody gets wrong — was not looked up, it was measured, with three jobs and a control. {{real}} By the end you will be able to read a schedule, write one, find out why a job did not run, and know the nine things a scheduled job needs whichever of these starts it. That last part is the half that outlives the scheduler. {{plan}}",
+          "seconds": 151,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-p8mhbmqj",
+      "slug": "what-runs-things-later",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ew9kmyhf",
+      "slug": "crontab",
+      "kind": "reading"
+    },
+    {
+      "id": "se-mbbspa32",
+      "slug": "the-five-fields",
+      "kind": "reading"
+    },
+    {
+      "id": "se-gxy12sa7",
+      "slug": "where-cron-lives",
+      "kind": "reading"
+    },
+    {
+      "id": "se-agdxse9t",
+      "slug": "the-environment",
+      "kind": "reading"
+    },
+    {
+      "id": "se-5hyt2bfg",
+      "slug": "output-and-failure",
+      "kind": "reading"
+    },
+    {
+      "id": "se-yq4azrk0",
+      "slug": "time-zones-and-dst",
+      "kind": "reading"
+    },
+    {
+      "id": "se-b69rd1rz",
+      "slug": "anacron-and-at",
+      "kind": "reading"
+    },
+    {
+      "id": "se-96hg9xmg",
+      "slug": "systemd-timers",
+      "kind": "reading"
+    },
+    {
+      "id": "se-c6s22ydn",
+      "slug": "oncalendar",
+      "kind": "reading"
+    },
+    {
+      "id": "se-r7ka094e",
+      "slug": "monotonic-and-persistent",
+      "kind": "reading"
+    },
+    {
+      "id": "se-0s8dzccf",
+      "slug": "listing-and-debugging",
+      "kind": "reading"
+    },
+    {
+      "id": "se-d98vke1c",
+      "slug": "overlap-and-locking",
+      "kind": "reading"
+    },
+    {
+      "id": "se-26gd40ve",
+      "slug": "cron-or-timer",
+      "kind": "reading"
+    },
+    {
+      "id": "se-bfk4p8dd",
+      "slug": "a-job-that-survives",
+      "kind": "reading"
+    },
+    {
+      "id": "se-mhrj82zx",
+      "slug": "a-real-job",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-sj1h17hs",
+          "version": 1,
+          "script": "One job, from nothing to running on a schedule, with every safeguard this lesson has argued for. The job archives yesterday's log files. {{job}} The script first. Shebang, then set minus e u o pipefail, so a failure stops it. A comment at the top saying what it is and when it is scheduled, because the person reading it at three in the morning does not have the crontab open. Then exec, redirecting everything from here on into a log file — once, rather than a redirect on every line. Then cd into the log directory, on its own line, so that under set minus e a missing directory stops the script instead of doing the work somewhere else. {{script}} Then the part that makes it safe: work out yesterday's date, build the archive name, and if that archive already exists, print already done and exit zero. Four lines, and they are what make the job idempotent — safe to run twice, safe to catch up, safe for somebody to run by hand while it is also scheduled. {{guard}} Then tar into a dot tmp file and rename it. A rename inside one filesystem is atomic, so a reader never sees a half-written archive, and a job killed in the middle leaves a dot tmp rather than something that looks finished and is not. {{atomic}} Run it twice by hand: shellcheck clean, exit zero, exit zero, and nothing printed to the terminal either time because it all went to the log. The log says starting, archived, starting, already done. One file in the archive directory. That is idempotence demonstrated rather than claimed. {{twice}} Now the crontab line, and every word of it is one of the nine. Slash usr slash bin slash flock, minus capital E zero minus n, so if the previous run is still going this one gives up quietly and does not report that as a failure. Then timeout sixty, so a hang is not permanent. Then the absolute path to the script. {{line}} And what actually happened, three minutes in a row. The log: twelve forty-eight, starting, archived logs dash two thousand twenty-six dash oh nine dash fourteen dot tar dot gz. Twelve forty-nine, starting, already done. Twelve fifty, starting, already done. One archive file. And in syslog, three CMD lines and three END lines with the whole command in them — cron saying it started the job and the job finished. {{ran}} No mail arrived, because the job printed nothing. Silence is what success looks like — which is exactly why the last thing the lesson asks for is something that notices when the silence goes on too long. {{silence}}",
+          "seconds": 221,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-qc1s7cq6",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-550wxn1r",
+          "version": 1,
+          "script": "Four things, and the last one is the one that is actually hard. {{four}} The first is the five fields, and the rule inside them that is not like the others: if you restrict both the day of the month and the day of the week, cron runs the job when either one matches. Not both. We measured it — a job set for the thirteenth or Tuesday ran on Tuesday the fifteenth, and a job set for the thirteenth or Monday did not run at all. So zero three thirteen star five is not Friday the thirteenth, it is sixty-four days a year. There is no way to write Friday the thirteenth in five fields, and the way it is actually done is to restrict one field in cron and test the other one in the command. {{fields}} The second is that the environment is not yours. Cron gives your job four variables and a shell called slash bin slash sh, and it reads none of your startup files. Nothing you put in bashrc is there. That is why the job works in your terminal and does nothing at three in the morning, and the ten-second test is env minus i with cron's four variables, which reproduces the failure in front of you. And escape your percent signs, because in a crontab an unescaped percent ends the command — you will see it in the subject line of the mail cron sends you, chopped off exactly at the percent. {{environment}} The third is that a timer is two files and buys you real things: the journal instead of mail, catch-up for a machine that was switched off, no overlapping runs without you writing a lock, jitter across a fleet, and a calendar expression you can check before you install it. Systemd analyze calendar tells you the next date it will fire, which cron has no equivalent for at all. But use what the machine already uses — consistency beats the feature list. {{timer}} And the fourth. A scheduled job needs absolute paths, strict mode, a lock, a timeout, output somewhere you will read, a non-zero exit when it fails, and to be safe to run twice. Those are a line each. The hard one is the ninth: knowing when it stops. Everything else tells you about a job that ran and failed; nothing tells you about a job that never ran, because silence is also what success looks like. So turn it around — have the job report success to something outside the machine, and let that something complain when the report does not arrive. {{nine}} That is the course. Thirteen lessons, from what a terminal is to a job you are not there to watch. Everything in it was run on a real machine, and where something could not be, the lesson said so instead of inventing it. {{end}}",
+          "seconds": 232,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-43xyw5h7",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
