@@ -739,6 +739,29 @@ function blocksOf(text) {
       paragraph.push(lines[i]);
       i += 1;
     }
+
+    /* A LINE NO BRANCH CLAIMED AND THIS ONE REFUSES, WHICH USED TO SPIN FOREVER.
+
+       The table above needs its second line to be the `---` rule, so a line
+       that merely STARTS with a pipe is left to the paragraph — and the loop
+       just above refuses a line starting with a pipe. Nothing consumed it,
+       nothing advanced `i`, and the outer loop pushed an empty string until the
+       array could not grow: `RangeError: Invalid array length`, with the whole
+       course behind it.
+
+       One wrapped line did it. A paragraph in `sorting-and-grouping.pt.md`
+       broke after the pipe inside `grep | cut | sort`, so the next line began
+       with one — in Portuguese only, which is why the course opened in English
+       and hung in Portuguese.
+
+       Taking the line as prose is the right reading of it AND it guarantees the
+       loop moves. A parser that can fail to advance on some input is the
+       defect; the line that found it is not. */
+    if (!paragraph.length) {
+      paragraph.push(lines[i]);
+      i += 1;
+    }
+
     out.push(paragraph.join(' '));
   }
   return out;
