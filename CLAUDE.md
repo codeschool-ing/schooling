@@ -336,6 +336,13 @@ sorted without the material, it measures reading habits. **`docs/EXERCISES.md` s
 question worth asking and `tools/check-exercises` refuses the tells a machine can see**; the
 craft of the prose, the diagrams and the spoken scripts is `docs/TEACHING.md`.
 
+Prose has tells of its own, and they are the ones a model leaves rather than the ones a student
+would. `.claude/skills/natural-writing` is the pass that looks for them, and it **audits by
+default rather than rewriting**: the findings are style until the author says otherwise, and the
+one case where the skill is allowed to be certain is a number that no longer matches the capture
+above it. Its voice table is measured from `content/` and carries the command to re-derive it, so
+it ages with the catalogue instead of against it.
+
 ## The catalogue is a mirror, and only one thing writes it
 
 `content/` is the truth; the `catalog_*` tables are derived (C-01). **A test scans the source for
