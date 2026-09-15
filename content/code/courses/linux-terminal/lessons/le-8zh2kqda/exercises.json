@@ -1,0 +1,2486 @@
+[
+  {
+    "id": "ex-jw30gnmw",
+    "version": 1,
+    "section": "what-a-process-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`/usr/bin/sleep` is on the disk and three people are running `sleep 60` right now. How many of each is there?",
+    "hint": "One of these lives on the disk and does not change when it runs.",
+    "choices": [
+      {
+        "text": "Three files and three processes, one pair per person",
+        "correct": false,
+        "why": "Running a program does not copy it; the file on the disk is untouched."
+      },
+      {
+        "text": "One file and one process, shared between the three",
+        "correct": false,
+        "why": "They would interfere with each other's memory, which is the thing a process is designed to prevent."
+      },
+      {
+        "text": "One file and three processes",
+        "correct": true,
+        "why": "Right — the file is unchanged and each run is a separate process with its own memory."
+      },
+      {
+        "text": "Three files and one process, scheduled in turn",
+        "correct": false,
+        "why": "Nothing writes extra copies of a binary to run it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h02jccj",
+    "version": 1,
+    "section": "what-a-process-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You write down a PID, wait ten minutes, then `kill` it. What is the risk?",
+    "hint": "The kernel hands numbers out in order and then starts again.",
+    "choices": [
+      {
+        "text": "The number will have grown, and it can name a newer process",
+        "correct": false,
+        "why": "PIDs are not offsets; an old number stays valid until the kernel wraps round to it again."
+      },
+      {
+        "text": "The number belongs to something else by then",
+        "correct": true,
+        "why": "Right — PIDs are reused after the counter wraps, so a saved one goes stale."
+      },
+      {
+        "text": "Ten minutes is too long, and the kernel may forget the number",
+        "correct": false,
+        "why": "Nothing expires a PID; it is valid for exactly as long as the process lives."
+      },
+      {
+        "text": "The PID will have been renumbered when the process changed state",
+        "correct": false,
+        "why": "A process keeps its number from `fork` to `exit`, whatever it does in between."
+      }
+    ]
+  },
+  {
+    "id": "ex-vn7x4ayn",
+    "version": 1,
+    "section": "what-a-process-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ps aux` shows a row with `[kthreadd]` in square brackets and zeros in the VSZ and RSS columns. What is it?",
+    "hint": "The brackets are `ps` saying there is nothing to print.",
+    "choices": [
+      {
+        "text": "Kernel code with a PID, no command line and no memory",
+        "correct": true,
+        "why": "Right — the brackets mean there is no command line, and the zeros mean no user-space memory."
+      },
+      {
+        "text": "A process whose command line was too long to fit in the column and was dropped",
+        "correct": false,
+        "why": "`ps` truncates long lines instead, and it does not add brackets when it does."
+      },
+      {
+        "text": "A process that has exited and is waiting to be collected",
+        "correct": false,
+        "why": "That one is marked `<defunct>` and shows a `Z` in the state column."
+      },
+      {
+        "text": "A thread of another process, shown because `ps` was asked for threads",
+        "correct": false,
+        "why": "Threads need `-L` or `-H`, and they carry their parent's memory figures rather than zeros."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqc77r6s",
+    "version": 1,
+    "section": "what-a-process-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Expand this to your own shell's process number, in one word: `ps -p ____ -o pid,ppid`",
+    "hint": "Two characters, and the shell substitutes it before `ps` ever sees it.",
+    "blanks": [
+      {
+        "accept": [
+          "$$"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x0fh6zg4",
+    "version": 1,
+    "section": "what-a-process-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `/proc/PID` entry to what reading it tells you.",
+    "hint": "All four are files, and each answers a different question about one process.",
+    "pairs": [
+      {
+        "left": "cmdline",
+        "right": "the arguments it was started with"
+      },
+      {
+        "left": "exe",
+        "right": "which binary it is running"
+      },
+      {
+        "left": "cwd",
+        "right": "the directory it treats as here"
+      },
+      {
+        "left": "fd/",
+        "right": "the numbered files it has open"
+      }
+    ],
+    "right_distractors": [
+      "the account it belongs to",
+      "how much processor it has used"
+    ]
+  },
+  {
+    "id": "ex-qf3y3ee8",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of running `ls` from a shell in order.",
+    "items": [
+      "bash calls fork, and there are two bashes",
+      "the child calls exec and becomes /usr/bin/ls",
+      "bash calls wait and blocks",
+      "ls prints and exits with a status",
+      "bash's wait returns, sets $?, and prints a prompt"
+    ],
+    "trap": "Copy first, replace second; the parent only waits once the child exists."
+  },
+  {
+    "id": "ex-vzy4v5q7",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are `fork` and `exec` two calls rather than one?",
+    "hint": "Think about what has to happen to the copy before the new program starts.",
+    "choices": [
+      {
+        "text": "So that a process can be copied without running anything new",
+        "correct": false,
+        "why": "That happens, but a copy nobody ever `exec`s is the unusual case rather than the reason."
+      },
+      {
+        "text": "Because copying memory is slow and is done in the background",
+        "correct": false,
+        "why": "`fork` does not copy memory eagerly at all; pages are shared until one side writes."
+      },
+      {
+        "text": "Because the kernel has to schedule the child before it can load a program",
+        "correct": false,
+        "why": "The child is schedulable immediately, and loading a program does not wait on the scheduler."
+      },
+      {
+        "text": "So the child can change identity, directory and open files in between",
+        "correct": true,
+        "why": "Right — redirections and a unit file's `User=` both happen in that gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgmzv6qq",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A script does `cd /tmp` and finishes. Your shell's directory is unchanged. Why?",
+    "hint": "The script ran somewhere, and it was not in your shell.",
+    "choices": [
+      {
+        "text": "The script's `cd` was undone when it exited",
+        "correct": false,
+        "why": "Nothing undoes it; there is simply no shared directory to undo."
+      },
+      {
+        "text": "The script is a separate process with its own copy",
+        "correct": true,
+        "why": "Right — which is why `cd` has to be a shell builtin to be useful at all."
+      },
+      {
+        "text": "`cd` inside a script needs `export` to reach the parent",
+        "correct": false,
+        "why": "`export` passes variables down to children; nothing passes a directory back up."
+      },
+      {
+        "text": "The shell puts its directory back once the command has finished",
+        "correct": false,
+        "why": "It does not; a builtin `cd` you type yourself changes it and it stays changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a69yy6w",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parent collects its child's exit status by calling ____ — the other half of `exit`.",
+    "hint": "Four letters, and bash has a builtin with the same name.",
+    "blanks": [
+      {
+        "accept": [
+          "wait"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-40wxjx2c",
+    "version": 1,
+    "section": "states",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ps -eo stat --no-headers | sort | uniq -c` on a healthy machine gives 36 `S`, 24 `I<` and 1 `R`. What does that say?",
+    "hint": "Count how many are actually doing something.",
+    "choices": [
+      {
+        "text": "The machine is starved, with one process hogging the processor",
+        "correct": false,
+        "why": "A single `R` is one process on the run queue, which is the opposite of contention."
+      },
+      {
+        "text": "Something is wrong: just one process has managed to start",
+        "correct": false,
+        "why": "All eighty-five have started; eighty-four of them are waiting for something."
+      },
+      {
+        "text": "It is idle and normal — almost everything is asleep",
+        "correct": true,
+        "why": "Right, and the `I<` rows are kernel workers doing nothing, which is their job."
+      },
+      {
+        "text": "The kernel threads are blocked, which is why the count is high",
+        "correct": false,
+        "why": "`I` is the idle state for a kernel thread; `D` would be the blocked one."
+      }
+    ]
+  },
+  {
+    "id": "ex-shwxwk5b",
+    "version": 1,
+    "section": "states",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A process has been in `D` for four minutes. What do you do about it?",
+    "hint": "Work out first whether a signal would reach it at all.",
+    "choices": [
+      {
+        "text": "Send it `TERM`, wait, then `KILL` if it is still there",
+        "correct": false,
+        "why": "Neither arrives: a signal is delivered on the way back to user space, and it has not come back."
+      },
+      {
+        "text": "`renice` it to 19 so it stops competing for the disk",
+        "correct": false,
+        "why": "Niceness is processor time, and this process is not asking for any."
+      },
+      {
+        "text": "Leave it — a few minutes in `D` is ordinary for a disk read",
+        "correct": false,
+        "why": "An instant is ordinary; four minutes means whatever it is waiting for is not answering."
+      },
+      {
+        "text": "Look underneath: the device it is waiting on",
+        "correct": true,
+        "why": "Right — `D` is a symptom, and the cause is the device that is not answering."
+      }
+    ]
+  },
+  {
+    "id": "ex-3eb61r4x",
+    "version": 1,
+    "section": "states",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You find a `Z` process. `kill -9` does nothing to it. Why not?",
+    "hint": "Ask what is left of it to receive anything.",
+    "choices": [
+      {
+        "text": "It is over; there is nothing left to receive it",
+        "correct": true,
+        "why": "Right — what remains is a table entry holding a number nobody has read."
+      },
+      {
+        "text": "It is a protected process, the way PID 1 is",
+        "correct": false,
+        "why": "No process is protected from `KILL` by the kernel; permission is the only check."
+      },
+      {
+        "text": "It is blocking signals with a trap",
+        "correct": false,
+        "why": "`KILL` cannot be trapped by anything, and a finished process runs no code."
+      },
+      {
+        "text": "It is in uninterruptible sleep inside a call to the kernel",
+        "correct": false,
+        "why": "That is `D`; a zombie is not sleeping, it has finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-jkj5m5vf",
+    "version": 1,
+    "section": "states",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Thousands of zombies have accumulated. What is the actual damage, and what fixes it?",
+    "hint": "A zombie holds one thing, and it is not memory.",
+    "choices": [
+      {
+        "text": "They hold memory; restart the machine to reclaim it",
+        "correct": false,
+        "why": "A zombie holds no memory, no files and no processor; that is what makes it a zombie."
+      },
+      {
+        "text": "They fill the process table; fix the parent",
+        "correct": true,
+        "why": "Right — and when the buggy parent exits, PID 1 collects its zombies at once."
+      },
+      {
+        "text": "They consume processor while spinning; renice the parent",
+        "correct": false,
+        "why": "A finished process is not scheduled at all and uses no processor."
+      },
+      {
+        "text": "They keep their files open, so close the descriptors with `lsof -k`",
+        "correct": false,
+        "why": "Everything a zombie had open was released when it exited."
+      }
+    ]
+  },
+  {
+    "id": "ex-et48xjad",
+    "version": 1,
+    "section": "states",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `STAT` letter to what it means.",
+    "hint": "Five letters, five different reasons a process is not using the processor right now — or is.",
+    "pairs": [
+      {
+        "left": "R",
+        "right": "running, or queued to run"
+      },
+      {
+        "left": "S",
+        "right": "asleep, and a signal would wake it"
+      },
+      {
+        "left": "D",
+        "right": "asleep on the kernel, and no signal will"
+      },
+      {
+        "left": "T",
+        "right": "suspended, holding everything it had"
+      },
+      {
+        "left": "Z",
+        "right": "finished, status not yet collected"
+      }
+    ],
+    "right_distractors": [
+      "swapped out to disk",
+      "waiting for a lock held by root"
+    ]
+  },
+  {
+    "id": "ex-8f389v2q",
+    "version": 1,
+    "section": "states",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ps` writes ____ in place of a command line for a zombie, because there is no program left to name.",
+    "hint": "Nine letters, and `ps` puts it in square brackets.",
+    "blanks": [
+      {
+        "accept": [
+          "<defunct>",
+          "defunct"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dsd365va",
+    "version": 1,
+    "section": "ps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You want to know which account started what. Which of these two, and why?",
+    "hint": "One of the two carries a parent column and the other carries resource columns.",
+    "choices": [
+      {
+        "text": "`ps aux`, because it has the `USER` column",
+        "correct": false,
+        "why": "Both print a user; the question is the parent, and `aux` leaves that out."
+      },
+      {
+        "text": "`ps -ef`, because it prints `PPID` as well",
+        "correct": true,
+        "why": "Right — `-ef` is the who-started-what listing and `aux` is the resource one."
+      },
+      {
+        "text": "`ps aux`, because `-ef` hides processes owned by other accounts",
+        "correct": false,
+        "why": "Both list every process on the machine; neither hides anything by account."
+      },
+      {
+        "text": "`ps -ef`, because `aux` is the older BSD spelling and is deprecated",
+        "correct": false,
+        "why": "Both are current and neither is going away; they differ in columns, not in age."
+      }
+    ]
+  },
+  {
+    "id": "ex-jt4a2ebe",
+    "version": 1,
+    "section": "ps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A process shows `VSZ` of 2.1 GB and `RSS` of 40 MB. How much memory is it using?",
+    "hint": "One column counts what was mapped and the other what was touched.",
+    "choices": [
+      {
+        "text": "2.1 GB, and the RSS figure is the part currently swapped in",
+        "correct": false,
+        "why": "Swap has its own accounting; RSS is what is resident regardless of what swap is doing."
+      },
+      {
+        "text": "Somewhere between the two, and neither column can say",
+        "correct": false,
+        "why": "One of them answers it directly, and it is the smaller one."
+      },
+      {
+        "text": "40 MB of virtual memory and 2.1 GB of address space reserved on disk",
+        "correct": false,
+        "why": "Nothing is reserved on disk by mapping; the terms are the wrong way round here."
+      },
+      {
+        "text": "About 40 MB — `RSS` is what is in physical memory",
+        "correct": true,
+        "why": "Right, and `VSZ` includes everything mapped and never touched."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jfxdx8e",
+    "version": 1,
+    "section": "ps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`%CPU` in `ps` says 92 for a process that `top` shows at 0. Which is lying?",
+    "hint": "The two columns are measured over different windows.",
+    "choices": [
+      {
+        "text": "Neither: `ps` averages over the whole life and `top` samples now",
+        "correct": true,
+        "why": "Right — a process that pinned a core for an hour and then stopped shows exactly this."
+      },
+      {
+        "text": "`top`, because batch mode's first sample reads zero",
+        "correct": false,
+        "why": "That is true of `top -b -n 1` and would not explain a 92 in `ps`."
+      },
+      {
+        "text": "`ps`, because it counts the time of children that have exited",
+        "correct": false,
+        "why": "That needs `cputime` accounting to be asked for; the plain column is this process."
+      },
+      {
+        "text": "`top`, because it divides by the number of processors and `ps` does not",
+        "correct": false,
+        "why": "Both express `%CPU` per processor; the header line is the one that divides."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx3yz7aw",
+    "version": 1,
+    "section": "ps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `pgrep -f sleeper.sh` find the script when `pgrep sleeper.sh` does not?",
+    "hint": "Think about what the program's name actually is when you run a shell script.",
+    "choices": [
+      {
+        "text": "`-f` follows symlinks to the real executable, and the script is one",
+        "correct": false,
+        "why": "`-f` has nothing to do with links; it changes what text is matched."
+      },
+      {
+        "text": "`-f` forces a match even when several processes match at once",
+        "correct": false,
+        "why": "Several matches are fine without it; `pgrep` prints one PID per line."
+      },
+      {
+        "text": "Without `-f` it matches the program name, which is `bash`",
+        "correct": true,
+        "why": "Right — the script is an argument, so only the full command line contains its name."
+      },
+      {
+        "text": "Without `-f` it is limited to processes owned by root",
+        "correct": false,
+        "why": "Ownership is `-u`, and by default `pgrep` looks at every account."
+      }
+    ]
+  },
+  {
+    "id": "ex-xekthr35",
+    "version": 1,
+    "section": "ps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ps aux | grep nginx` prints one row and nginx is not running. What happened?",
+    "hint": "Look at the command line of the thing that matched.",
+    "choices": [
+      {
+        "text": "`ps` matched its own row, which contains the whole nginx pipeline",
+        "correct": false,
+        "why": "`ps` snapshots before the pipe is read and does not list the whole pipeline as one row."
+      },
+      {
+        "text": "`grep` matched itself, as its own arguments contain the word",
+        "correct": true,
+        "why": "Right, and `grep -v grep` is the usual patch on top of it."
+      },
+      {
+        "text": "A cached entry from the last time nginx ran is still in `/proc`",
+        "correct": false,
+        "why": "`/proc` has no cache; a directory disappears the moment the process does."
+      },
+      {
+        "text": "The shell expanded `nginx` from history before `ps` ran",
+        "correct": false,
+        "why": "History expansion needs a `!`, and it would have rewritten the line you see."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvcfj16m",
+    "version": 1,
+    "section": "ps",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Complete the single most useful `ps`, sorted so the heaviest process comes first: `ps -eo pid,comm,%cpu --sort=____ | head`",
+    "hint": "The column name with a sign in front of it to reverse the order.",
+    "blanks": [
+      {
+        "accept": [
+          "-%cpu"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xjqm61vf",
+    "version": 1,
+    "section": "pstree-and-parents",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A script started three background children. You kill the script by its PID. What happens to the children?",
+    "hint": "A signal reaches one process, and the kernel has a rule for what is left over.",
+    "choices": [
+      {
+        "text": "They are killed with it, since they belong to the script",
+        "correct": false,
+        "why": "Belonging does not propagate a signal; each child is its own process."
+      },
+      {
+        "text": "They are suspended until something adopts them",
+        "correct": false,
+        "why": "Nothing suspends them; they carry on at full speed while their parent slot is empty."
+      },
+      {
+        "text": "They keep running, and their PPID becomes 1",
+        "correct": true,
+        "why": "Right — the kernel re-parents an orphan to process one, which collects it later."
+      },
+      {
+        "text": "They are killed, because a process with no parent is removed",
+        "correct": false,
+        "why": "A process with no parent is given one; that is exactly what adoption is."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh0z6ave",
+    "version": 1,
+    "section": "pstree-and-parents",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `pstree` output, `10*[{process_api}]` means what?",
+    "hint": "The braces and the star are two separate notations, and both are in that one entry.",
+    "choices": [
+      {
+        "text": "Ten processes named `process_api`, each with its own PID in `ps`",
+        "correct": false,
+        "why": "The braces mark threads, and `ps` shows all ten as one row rather than ten."
+      },
+      {
+        "text": "A process that has restarted ten times, with the current one in braces",
+        "correct": false,
+        "why": "`pstree` does not track restarts; it draws what exists right now."
+      },
+      {
+        "text": "Ten child processes whose names `pstree` could not read",
+        "correct": false,
+        "why": "An unreadable name would not be repeated ten times with a count in front of it."
+      },
+      {
+        "text": "One process with ten threads, collapsed into a single entry",
+        "correct": true,
+        "why": "Right — the star is the count and the braces mean thread rather than process."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdtasq8b",
+    "version": 1,
+    "section": "pstree-and-parents",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Something unexpected is running and you want to know what started it. One command.",
+    "hint": "You have its number; you want the chain above it.",
+    "choices": [
+      {
+        "text": "`pstree -s PID`",
+        "correct": true,
+        "why": "Right — it prints the chain from that process up to PID 1 in one line."
+      },
+      {
+        "text": "`pstree -p PID`",
+        "correct": false,
+        "why": "That draws what is below it, which is the opposite direction."
+      },
+      {
+        "text": "`pstree -u PID`",
+        "correct": false,
+        "why": "`-u` marks where the account changes; on its own it does not climb."
+      },
+      {
+        "text": "`pstree -n PID`",
+        "correct": false,
+        "why": "`-n` sorts by PID instead of by name, and still draws downward."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfq71e1g",
+    "version": 1,
+    "section": "pstree-and-parents",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ps -ef | awk '$3==1'` lists processes whose parent is gone. The column it is testing is called ____.",
+    "hint": "Four letters, and it is the column right after PID.",
+    "blanks": [
+      {
+        "accept": [
+          "PPID",
+          "ppid"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gn02cgr6",
+    "version": 1,
+    "section": "top-and-htop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`top` shows one process at `100.0` and the header line at `25.0 us`. The machine has four processors. Who is right?",
+    "hint": "The two numbers have different denominators.",
+    "choices": [
+      {
+        "text": "The header; the process column counts threads, so it overstates the machine",
+        "correct": false,
+        "why": "The process column is per process, and threads only appear with `-H`."
+      },
+      {
+        "text": "Both: one is per processor, the other per machine",
+        "correct": true,
+        "why": "Right — one saturated core out of four is 100 in one column and 25 in the other."
+      },
+      {
+        "text": "The process column; the header averages over the last minute and lags",
+        "correct": false,
+        "why": "The load average lags; the `%Cpu(s)` line is a sample of the interval just passed."
+      },
+      {
+        "text": "Neither, because batch mode measures a single frame poorly",
+        "correct": false,
+        "why": "A single frame is measured against the process's whole life, which is a different caveat."
+      }
+    ]
+  },
+  {
+    "id": "ex-9smd589x",
+    "version": 1,
+    "section": "top-and-htop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`load average: 8.10, 8.05, 7.98` on a machine with eight processors. What does it tell you?",
+    "hint": "Compare the number to something, and read the three positions as a shape.",
+    "choices": [
+      {
+        "text": "A spike that started in the last minute and will pass",
+        "correct": false,
+        "why": "A spike shows a high first number and lower later ones; these three barely differ."
+      },
+      {
+        "text": "Eight processes are stuck in uninterruptible sleep",
+        "correct": false,
+        "why": "`D` counts towards load, but nothing here says the load is made of it."
+      },
+      {
+        "text": "The processors are 8% busy, which is comfortable",
+        "correct": false,
+        "why": "Load is a count of what wanted to run, not a percentage of anything."
+      },
+      {
+        "text": "Saturated, and steady for a quarter of an hour",
+        "correct": true,
+        "why": "Right — 8 on eight processors is saturated, and the flat trio means sustained."
+      }
+    ]
+  },
+  {
+    "id": "ex-32w8cqjd",
+    "version": 1,
+    "section": "top-and-htop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A machine reports `0.5 us`, `0.3 sy`, `60.0 wa` and a load of 30. What is wrong with it?",
+    "hint": "Read which column is large, then ask what that column counts.",
+    "choices": [
+      {
+        "text": "The processors are completely saturated and the load confirms it",
+        "correct": false,
+        "why": "The processors are 99% idle; the `us` and `sy` columns are near zero."
+      },
+      {
+        "text": "Thirty processes are spinning in a busy loop",
+        "correct": false,
+        "why": "A busy loop shows up as `us`, and that column is at half a percent."
+      },
+      {
+        "text": "Storage is behind, and the load is the queue for it",
+        "correct": true,
+        "why": "Right — `wa` is I/O wait, and load counts `D` as well as `R`."
+      },
+      {
+        "text": "A hypervisor is taking the machine's time away from it",
+        "correct": false,
+        "why": "That is the `st` column, which is not the one that is large here."
+      }
+    ]
+  },
+  {
+    "id": "ex-41phb3gt",
+    "version": 1,
+    "section": "top-and-htop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`free -h` reports 561 MiB used, 14 GiB free, 892 MiB buff/cache and 15 GiB available. Which number answers 'can I start something big'?",
+    "hint": "One of the four is computed for exactly this question.",
+    "choices": [
+      {
+        "text": "`available`, at 15 GiB",
+        "correct": true,
+        "why": "Right — it counts the cache as reclaimable, which is what the kernel treats it as."
+      },
+      {
+        "text": "`free`, at 14 GiB, because cache is in use",
+        "correct": false,
+        "why": "Cache is handed back the moment a program asks, so counting it as used is pessimistic."
+      },
+      {
+        "text": "`used` subtracted from the total, at around 15.4 GiB",
+        "correct": false,
+        "why": "That ignores the kernel's own overhead, which `available` accounts for."
+      },
+      {
+        "text": "`buff/cache`, at 892 MiB, since that is the part that can be freed",
+        "correct": false,
+        "why": "That is one input to the answer rather than the answer itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygj2fage",
+    "version": 1,
+    "section": "top-and-htop",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `%Cpu(s)` abbreviation to what it counts.",
+    "hint": "Four of the eight, and two of them point at something outside the machine's own programs.",
+    "pairs": [
+      {
+        "left": "us",
+        "right": "your programs, doing their own work"
+      },
+      {
+        "left": "sy",
+        "right": "the kernel, working on their behalf"
+      },
+      {
+        "left": "wa",
+        "right": "time lost waiting for storage"
+      },
+      {
+        "left": "st",
+        "right": "time a hypervisor gave to somebody else"
+      }
+    ],
+    "right_distractors": [
+      "time spent in the scheduler",
+      "memory pressure"
+    ]
+  },
+  {
+    "id": "ex-88pa7kcq",
+    "version": 1,
+    "section": "top-and-htop",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Show every processor on its own line in interactive `top` by pressing ____.",
+    "hint": "A single digit.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f4tq5c01",
+    "version": 1,
+    "section": "signals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which two signals cannot be caught, blocked or ignored?",
+    "hint": "One removes the process and one freezes it, and the kernel handles both itself.",
+    "choices": [
+      {
+        "text": "`TERM` and `INT`, since both mean stop",
+        "correct": false,
+        "why": "Both of those are routinely caught; that is how a program cleans up before leaving."
+      },
+      {
+        "text": "`HUP` and `TERM`, because they come from the terminal",
+        "correct": false,
+        "why": "`HUP` is caught constantly, which is how daemons use it to reload."
+      },
+      {
+        "text": "`KILL` and `QUIT`, because neither lets the program run code",
+        "correct": false,
+        "why": "`QUIT` can be caught; it just writes a core dump by default."
+      },
+      {
+        "text": "`KILL` and `STOP`",
+        "correct": true,
+        "why": "Right — a program that could refuse either would be one you could not manage."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j931bwf",
+    "version": 1,
+    "section": "signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A background job finished with `[1]+ Killed` and its `trap` printed nothing. Which signal did it get?",
+    "hint": "The trap is still in the script. Something did not consult it.",
+    "choices": [
+      {
+        "text": "`TERM`, and the trap had a bug in it",
+        "correct": false,
+        "why": "A `TERM` trap that runs prints something; silence is the evidence it never ran."
+      },
+      {
+        "text": "`HUP`, because the terminal went away",
+        "correct": false,
+        "why": "A hangup reports as `Hangup` rather than `Killed`, and it can be trapped."
+      },
+      {
+        "text": "`KILL`",
+        "correct": true,
+        "why": "Right — `Killed` and a silent trap together are the signature of `kill -9`."
+      },
+      {
+        "text": "`STOP`, which suspended it before the handler could run",
+        "correct": false,
+        "why": "A stopped job reports `Stopped` and is still there afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1fj6bhg",
+    "version": 1,
+    "section": "signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`yes | head -2` ends, and `${PIPESTATUS[0]}` is 141. What does 141 mean?",
+    "hint": "It is above 128, which is a hint about how it is built.",
+    "choices": [
+      {
+        "text": "`yes` was killed by signal 13, which is `SIGPIPE`",
+        "correct": true,
+        "why": "Right — 128 plus the signal number, and `head` had already closed the pipe."
+      },
+      {
+        "text": "`yes` chose to exit with 141 to report a write error",
+        "correct": false,
+        "why": "`yes` has no such convention; the number came from how it died, not from a choice."
+      },
+      {
+        "text": "141 bytes were written before the pipe closed",
+        "correct": false,
+        "why": "An exit status is a status, not a byte count."
+      },
+      {
+        "text": "The shell returned 141 because the pipeline had an unhandled stage",
+        "correct": false,
+        "why": "Bash reports the last stage's status, and `head` exited cleanly with 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft1jtg0c",
+    "version": 1,
+    "section": "signals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`kill -0 PID` returns 1 for two very different situations. Which two, and why does it matter?",
+    "hint": "Read the two messages bash prints; then read the exit status of each.",
+    "choices": [
+      {
+        "text": "Signal blocked, or process stopped — and a stopped one needs `CONT` first",
+        "correct": false,
+        "why": "Blocking does not fail the call, and a stopped process accepts signals normally."
+      },
+      {
+        "text": "Gone, or not yours — and `$?` alone cannot tell them apart",
+        "correct": true,
+        "why": "Right, and the two call for opposite responses, so the message is the part that matters."
+      },
+      {
+        "text": "Zombie, or kernel thread — and neither can be signalled at all",
+        "correct": false,
+        "why": "A zombie and a kernel thread both pass the existence check that `-0` performs."
+      },
+      {
+        "text": "Bad PID syntax, or a PID above the wrap limit — both are argument errors",
+        "correct": false,
+        "why": "Those are usage errors and report differently from a refused or missing process."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xfbqrgm",
+    "version": 1,
+    "section": "signals",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each signal to what sends it or what it is for.",
+    "hint": "Six of the sixty-four, and each one has a distinct occasion.",
+    "pairs": [
+      {
+        "left": "SIGINT",
+        "right": "the Ctrl+C key"
+      },
+      {
+        "left": "SIGTERM",
+        "right": "the polite stop, and kill's default"
+      },
+      {
+        "left": "SIGKILL",
+        "right": "removal, with no chance to clean up"
+      },
+      {
+        "left": "SIGHUP",
+        "right": "the terminal went away, or reload me"
+      },
+      {
+        "left": "SIGCHLD",
+        "right": "a child of yours has exited"
+      },
+      {
+        "left": "SIGSEGV",
+        "right": "the program touched memory it does not own"
+      }
+    ],
+    "right_distractors": [
+      "the disk is full",
+      "a timer you set has expired"
+    ]
+  },
+  {
+    "id": "ex-1hq808ht",
+    "version": 1,
+    "section": "signals",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Catch `SIGTERM` in a bash script and run `cleanup` when it arrives: `____ cleanup TERM`",
+    "hint": "Four letters, and it is a shell builtin.",
+    "blanks": [
+      {
+        "accept": [
+          "trap"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-46m276v2",
+    "version": 1,
+    "section": "kill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`kill 2189` on a root-owned process fails. Does `kill -9 2189` get through?",
+    "hint": "Work out at what point the refusal happens.",
+    "choices": [
+      {
+        "text": "Yes, because `-9` is handled by the kernel rather than the process",
+        "correct": false,
+        "why": "The kernel handles the signal and also performs the permission check, in that order."
+      },
+      {
+        "text": "Yes, for processes that share your session",
+        "correct": false,
+        "why": "Sessions do not grant signalling rights; the account does."
+      },
+      {
+        "text": "No — the permission check runs before any signal is chosen",
+        "correct": true,
+        "why": "Right, so `-9` fails in exactly the way the polite one did."
+      },
+      {
+        "text": "No, but `-9` succeeds once the process stops holding a lock",
+        "correct": false,
+        "why": "Locks have nothing to do with it; the refusal is about ownership."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqgs5akr",
+    "version": 1,
+    "section": "kill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script started three children. `kill $PID` on the script leaves the children running; `kill %1` does not. What is the difference?",
+    "hint": "One of them names a process and the other names something bigger.",
+    "choices": [
+      {
+        "text": "`%1` sends `KILL` while a bare `kill` sends `TERM`",
+        "correct": false,
+        "why": "Both default to `TERM`; the difference is who receives it, not which signal."
+      },
+      {
+        "text": "`%1` names the job's process group, so all of it is signalled",
+        "correct": true,
+        "why": "Right — bash made the group when it started the command, and `%1` refers to the group."
+      },
+      {
+        "text": "`%1` waits for the children to finish before killing the parent",
+        "correct": false,
+        "why": "It waits for nothing; the whole group is signalled at once."
+      },
+      {
+        "text": "`%1` re-parents the children to the shell first, and then kills all of them",
+        "correct": false,
+        "why": "Orphans go to PID 1, and nothing re-parents anything to a shell."
+      }
+    ]
+  },
+  {
+    "id": "ex-vr7f1k1a",
+    "version": 1,
+    "section": "kill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `kill -- -2684` written with two dashes in front of the group number?",
+    "hint": "Ask what bash would make of the number if the dashes were not there.",
+    "choices": [
+      {
+        "text": "`--` tells `kill` to signal the group rather than the leader",
+        "correct": false,
+        "why": "The minus sign in front of the number does that; `--` is about option parsing."
+      },
+      {
+        "text": "`--` suppresses the error message when part of the group is gone",
+        "correct": false,
+        "why": "Nothing is suppressed; the call reports whether it signalled anything."
+      },
+      {
+        "text": "`--` is required whenever the argument comes from a variable",
+        "correct": false,
+        "why": "Variables need no such marker; the problem is the leading minus sign."
+      },
+      {
+        "text": "Without it, `-2684` is read as a signal number",
+        "correct": true,
+        "why": "Right — bash answers with `invalid signal specification`."
+      }
+    ]
+  },
+  {
+    "id": "ex-kd2rm0kn",
+    "version": 1,
+    "section": "kill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`pkill -f watcher` also killed a `tail -f watcher.log` that had nothing to do with it. What is the habit that prevents this?",
+    "hint": "The two commands take the same options for a reason.",
+    "choices": [
+      {
+        "text": "Run the match through `pgrep` first and read the list",
+        "correct": true,
+        "why": "Right — `pgrep` prints what `pkill` would signal, with identical options."
+      },
+      {
+        "text": "Use `pkill -x` so the pattern has to match the whole line",
+        "correct": false,
+        "why": "`-x` requires an exact match of the name, which would then miss the script too."
+      },
+      {
+        "text": "Add `-u` so the match is limited to your own account",
+        "correct": false,
+        "why": "Both processes here belong to the same account, so that changes nothing."
+      },
+      {
+        "text": "Use `killall` instead, which matches the program name",
+        "correct": false,
+        "why": "That helps for this pair and misses scripts entirely, since the program is `bash`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ar0bg4j",
+    "version": 1,
+    "section": "kill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of stopping a process that is not responding in order.",
+    "items": [
+      "kill PID",
+      "wait a few seconds",
+      "kill -0 PID to see whether it is still there",
+      "kill -9 PID"
+    ],
+    "trap": "Ask politely, give it time, check, and only then remove it."
+  },
+  {
+    "id": "ex-5c256z8c",
+    "version": 1,
+    "section": "kill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are real consequences of `kill -9` on a database?",
+    "hint": "The trap never runs. Work forward from there.",
+    "choices": [
+      {
+        "text": "It cannot flush what it was holding, so the next start is a recovery",
+        "correct": true,
+        "why": "Yes — the shutdown code it would have run is the code that flushes."
+      },
+      {
+        "text": "A lock or PID file is left behind and the next start refuses",
+        "correct": true,
+        "why": "Yes, and that is the most common visible symptom the next morning."
+      },
+      {
+        "text": "Its children are left running, because it never got to stop them",
+        "correct": true,
+        "why": "Yes — a signal to one process is a signal to one process."
+      },
+      {
+        "text": "Its files are corrupted at the filesystem level and need fsck",
+        "correct": false,
+        "why": "The filesystem is consistent; what is inconsistent is the application's own data."
+      },
+      {
+        "text": "The kernel refuses if the process holds a lock another process wants",
+        "correct": false,
+        "why": "Nothing checks locks; `KILL` is not refusable on those grounds."
+      }
+    ]
+  },
+  {
+    "id": "ex-222eymep",
+    "version": 1,
+    "section": "kill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ask `killall` to name each process it stops, so you can see what you hit: `killall ____ watcher.sh`",
+    "hint": "One short flag.",
+    "blanks": [
+      {
+        "accept": [
+          "-v",
+          "--verbose"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s95esysg",
+    "version": 1,
+    "section": "jobs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You pressed `Ctrl+Z` on a download an hour ago. How much has it downloaded since?",
+    "hint": "Look up what state `Ctrl+Z` leaves a process in.",
+    "choices": [
+      {
+        "text": "All of it, since suspending only detaches it from the keyboard",
+        "correct": false,
+        "why": "Detaching from the keyboard is what `bg` does; `Ctrl+Z` stops the process."
+      },
+      {
+        "text": "Whatever fits in the kernel's socket buffer, and then nothing",
+        "correct": false,
+        "why": "The buffer fills in moments, so the honest answer rounds to the same as none."
+      },
+      {
+        "text": "About as much as an hour of running, minus scheduling overhead",
+        "correct": false,
+        "why": "A stopped process is not scheduled at all, so it gets no processor and no progress."
+      },
+      {
+        "text": "None — a stopped process is suspended, not backgrounded",
+        "correct": true,
+        "why": "Right, and `bg` is what you needed; `Ctrl+Z` on its own just parks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-p75erp2g",
+    "version": 1,
+    "section": "jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You started a long command in the foreground and want your prompt back without losing it. Which two steps?",
+    "hint": "Two keystrokes and then two letters.",
+    "choices": [
+      {
+        "text": "`Ctrl+Z`, then `bg`",
+        "correct": true,
+        "why": "Right — stop it, then resume it without the terminal."
+      },
+      {
+        "text": "`Ctrl+Z`, then `fg`",
+        "correct": false,
+        "why": "`fg` resumes it in the foreground, which puts you back where you started."
+      },
+      {
+        "text": "`Ctrl+C`, then run it again with `&`",
+        "correct": false,
+        "why": "That throws away whatever it had done and starts over."
+      },
+      {
+        "text": "`Ctrl+Z`, then `disown`",
+        "correct": false,
+        "why": "`disown` forgets the job while it is still stopped, so it stays stopped forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5cgjegx",
+    "version": 1,
+    "section": "jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Ctrl+D` at a shell prompt closes the shell. Which signal does it send?",
+    "hint": "It does not belong in the same list as the other two keys.",
+    "choices": [
+      {
+        "text": "`SIGHUP`, the very signal a closed terminal sends to a shell",
+        "correct": false,
+        "why": "A closed terminal sends that; the key does something else entirely."
+      },
+      {
+        "text": "`SIGQUIT`, which is why no message is printed",
+        "correct": false,
+        "why": "`SIGQUIT` is `Ctrl+\\`, and it writes a core dump rather than exiting quietly."
+      },
+      {
+        "text": "None — it is end of input, and reading it ends bash",
+        "correct": true,
+        "why": "Right, which is why it does nothing at all to a program that is not reading."
+      },
+      {
+        "text": "`SIGINT`, delivered to the foreground process group",
+        "correct": false,
+        "why": "That is `Ctrl+C`, and at a prompt it gives you a new line rather than an exit."
+      }
+    ]
+  },
+  {
+    "id": "ex-ne2tyzvm",
+    "version": 1,
+    "section": "jobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `disown %1`, `jobs` is empty and `ps` still shows the process with the shell as its parent. What did `disown` change?",
+    "hint": "One of those two commands reads the shell's own memory and the other reads the kernel's.",
+    "choices": [
+      {
+        "text": "It detached the process from the terminal, which is why `jobs` is empty",
+        "correct": false,
+        "why": "The terminal is unchanged; a disowned job still writes to your screen."
+      },
+      {
+        "text": "The shell's bookkeeping, so it will not send the job a hangup on exit",
+        "correct": true,
+        "why": "Right — the process is untouched, and what changed is what bash will do later."
+      },
+      {
+        "text": "The process's parent, which is now PID 1",
+        "correct": false,
+        "why": "`ps` in the question shows the shell still as the parent; nothing was re-parented."
+      },
+      {
+        "text": "The job's process group, so the shell no longer signals it as a group",
+        "correct": false,
+        "why": "The group is the kernel's and is unchanged; bash simply stopped tracking the job."
+      }
+    ]
+  },
+  {
+    "id": "ex-havyfza2",
+    "version": 1,
+    "section": "jobs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Show the job list with each job's PID next to it: `jobs ____`",
+    "hint": "One short flag.",
+    "blanks": [
+      {
+        "accept": [
+          "-l"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cmmsaaqn",
+    "version": 1,
+    "section": "surviving-the-hangup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three identical background jobs; after the terminal closed, only the plain one died. Why did the other two survive?",
+    "hint": "One was told to ignore the signal and the other was never sent it.",
+    "choices": [
+      {
+        "text": "Both were re-parented to PID 1 well before the signal was ever delivered",
+        "correct": false,
+        "why": "Adoption happens after the parent exits, which is after the signal goes out."
+      },
+      {
+        "text": "Both had their output redirected, so the hangup could not reach them",
+        "correct": false,
+        "why": "Redirection changes where writes go and nothing about signal delivery."
+      },
+      {
+        "text": "`nohup` ignored the signal; the disowned one was never sent it",
+        "correct": true,
+        "why": "Right — two different mechanisms with the same outcome."
+      },
+      {
+        "text": "Both were started with `&`, which detaches a job from its session",
+        "correct": false,
+        "why": "`&` backgrounds a job and leaves it in the same session; all three used it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sztrvc8n",
+    "version": 1,
+    "section": "surviving-the-hangup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A four-hour job is already running in the foreground and you have to close your laptop. What do you reach for?",
+    "hint": "It is already started, so one of the two is no longer available to you.",
+    "choices": [
+      {
+        "text": "`Ctrl+Z`, `bg`, then `disown`",
+        "correct": true,
+        "why": "Right — `nohup` had to be decided beforehand, and `disown` is the rescue."
+      },
+      {
+        "text": "`nohup` on the running process",
+        "correct": false,
+        "why": "`nohup` wraps a command you are about to start; it cannot be applied afterwards."
+      },
+      {
+        "text": "`setsid` on the running process",
+        "correct": false,
+        "why": "`setsid` also starts something new; it does not move a running process into a session."
+      },
+      {
+        "text": "`systemctl` to adopt it as a service",
+        "correct": false,
+        "why": "systemd starts services from unit files rather than adopting a process you already have."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fxhdjwf",
+    "version": 1,
+    "section": "surviving-the-hangup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The job must survive a reboot, restart if it crashes, and be findable by a colleague. Which of these?",
+    "hint": "Three requirements, and only one of the options meets the first two.",
+    "choices": [
+      {
+        "text": "`nohup` with output to a log file",
+        "correct": false,
+        "why": "It survives a closed terminal and not a reboot, and it restarts nothing."
+      },
+      {
+        "text": "`setsid`, so it has no controlling terminal",
+        "correct": false,
+        "why": "Same limitation: detached is not the same as supervised."
+      },
+      {
+        "text": "A `tmux` session left running on the machine",
+        "correct": false,
+        "why": "A reboot takes tmux with it, and nothing restarts the job afterwards."
+      },
+      {
+        "text": "A systemd unit file",
+        "correct": true,
+        "why": "Right — boot, restart and a name a colleague can look up are what a unit is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr5pmn2r",
+    "version": 1,
+    "section": "surviving-the-hangup",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Name the file `nohup` writes output to when you do not redirect it yourself: ____",
+    "hint": "Two words joined by a dot, in the current directory.",
+    "blanks": [
+      {
+        "accept": [
+          "nohup.out"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p2z1mcg4",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which nice value makes a process step aside for everything else?",
+    "hint": "The name is the right way round: a nice process is a polite one.",
+    "choices": [
+      {
+        "text": "`-20`, the extreme end of the range",
+        "correct": false,
+        "why": "That end is the demanding one, and only root can ask for it."
+      },
+      {
+        "text": "`19`",
+        "correct": true,
+        "why": "Right — the highest value is the most polite, and it runs when nothing else wants to."
+      },
+      {
+        "text": "`0`, which is neutral and therefore yields",
+        "correct": false,
+        "why": "Zero is the default every process already has, so it yields to nothing in particular."
+      },
+      {
+        "text": "`100`, the maximum the scheduler accepts",
+        "correct": false,
+        "why": "The range stops at 19; a larger number is clamped."
+      }
+    ]
+  },
+  {
+    "id": "ex-70znj4re",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You set a process to nice 15, then try `renice -n 5` on it. It is your own process. What happens?",
+    "hint": "Niceness moves freely in one direction for an unprivileged account.",
+    "choices": [
+      {
+        "text": "It works without complaint, since you own the process yourself",
+        "correct": false,
+        "why": "Ownership lets you raise the value; it does not let you lower it again."
+      },
+      {
+        "text": "It works, but just until the process next sleeps",
+        "correct": false,
+        "why": "Niceness does not reset when a process sleeps; it is a property of the process."
+      },
+      {
+        "text": "`Permission denied` — it ratchets upward",
+        "correct": true,
+        "why": "Right, and the account that set it in the first place is refused along with everybody else."
+      },
+      {
+        "text": "It works and the scheduler quietly clamps it back to 15",
+        "correct": false,
+        "why": "Nothing is clamped silently; `renice` reports what it refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-0007v4j0",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two identical busy loops share one pinned processor for thirty seconds, at nice 0 and nice 19. What do their CPU times look like?",
+    "hint": "Ask what a nice value of 19 means when there is competition.",
+    "choices": [
+      {
+        "text": "About thirty seconds and about nothing",
+        "correct": true,
+        "why": "Right — 19 means run when nobody else wants to, and somebody else did the whole time."
+      },
+      {
+        "text": "About fifteen seconds each, since both were runnable throughout",
+        "correct": false,
+        "why": "Equal shares are what you get at equal niceness; the point of 19 is that it is not equal."
+      },
+      {
+        "text": "About twenty and about ten, in proportion to the two values",
+        "correct": false,
+        "why": "Niceness is not a ratio of the numbers; the weighting is far steeper than that."
+      },
+      {
+        "text": "About thirty seconds each, because niceness applies per processor",
+        "correct": false,
+        "why": "Both were pinned to the same processor, so thirty seconds is all there was to share."
+      }
+    ]
+  },
+  {
+    "id": "ex-0afrd61q",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly backup is making the database slow, and `top` shows the backup using almost no processor. Which knob helps?",
+    "hint": "Find out which resource is actually contended before choosing a tool.",
+    "choices": [
+      {
+        "text": "`renice -n 19` on the backup",
+        "correct": false,
+        "why": "Niceness is processor time, and the backup is barely asking for any."
+      },
+      {
+        "text": "`renice -n -5` on the database, so it wins the contest",
+        "correct": false,
+        "why": "It is not a processor contest, and negative values need root as well."
+      },
+      {
+        "text": "`kill -STOP` on the backup until the database is quiet",
+        "correct": false,
+        "why": "That holds the backup's locks and files open, which makes it a diagnostic rather than a plan."
+      },
+      {
+        "text": "`ionice -c 3` on the backup",
+        "correct": true,
+        "why": "Right — the contention is the disk, and idle-class I/O is the matching knob."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8qwqw20",
+    "version": 1,
+    "section": "priority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`nice -n -5 true` as an ordinary user prints `Permission denied` and `$?` is 0. Why is that a trap?",
+    "hint": "Read what the exit status is describing.",
+    "choices": [
+      {
+        "text": "The status is the shell's, and `nice` did not get to run",
+        "correct": false,
+        "why": "`nice` ran and printed the refusal; what it could not do was change the value."
+      },
+      {
+        "text": "`nice` ran the command anyway, so the status is the command's",
+        "correct": true,
+        "why": "Right — a script checking `$?` learns nothing about whether the niceness was applied."
+      },
+      {
+        "text": "`nice` retried at a value it was allowed, so the status reports success",
+        "correct": false,
+        "why": "It does not retry; it keeps the niceness it already had and carries on."
+      },
+      {
+        "text": "`true` overwrote a non-zero status that `nice` had set",
+        "correct": false,
+        "why": "`nice` does not set a status of its own when it goes on to run the command."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkms23pf",
+    "version": 1,
+    "section": "priority",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Start a reindex at the most polite priority there is: `____ -n 19 ./nightly-reindex.sh`",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "nice"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-frwbqj0y",
+    "version": 1,
+    "section": "file-descriptors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `2>&1` actually ask for?",
+    "hint": "Both numbers name entries in one table.",
+    "choices": [
+      {
+        "text": "Send errors to a file called `&1`",
+        "correct": false,
+        "why": "The ampersand is what stops it meaning a file; without it that is exactly what happens."
+      },
+      {
+        "text": "Run the command twice, once per stream",
+        "correct": false,
+        "why": "Nothing is run twice; redirection is set up before the program starts."
+      },
+      {
+        "text": "Make descriptor 2 a copy of descriptor 1",
+        "correct": true,
+        "why": "Right — errors go wherever output is currently going."
+      },
+      {
+        "text": "Merge the two streams into a new descriptor numbered 3",
+        "correct": false,
+        "why": "No new descriptor appears; 2 is pointed at what 1 already refers to."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h0ww0eq",
+    "version": 1,
+    "section": "file-descriptors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log file was deleted, `du` finds nothing large, and `df` still reports the disk full. What is happening?",
+    "hint": "Lesson 3 said `rm` removes a name.",
+    "choices": [
+      {
+        "text": "The filesystem needs `fsck` to release the blocks",
+        "correct": false,
+        "why": "The filesystem is consistent; nothing is waiting to be repaired."
+      },
+      {
+        "text": "`du` is reading a stale cache and needs the directory re-scanned",
+        "correct": false,
+        "why": "`du` walks the tree afresh each time; it has no cache to go stale."
+      },
+      {
+        "text": "The blocks are reserved for root and `df` counts them as used",
+        "correct": false,
+        "why": "Root reserve is a fixed fraction and does not change when a file is deleted."
+      },
+      {
+        "text": "Something holds it open, so the blocks stay allocated",
+        "correct": true,
+        "why": "Right — `lsof +L1` finds it, and the fix is to restart or `HUP` that process."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjwe2wra",
+    "version": 1,
+    "section": "file-descriptors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service logs `Too many open files`. Which limit has it hit, and what usually causes it?",
+    "hint": "Network connections live in the same table as files.",
+    "choices": [
+      {
+        "text": "`ulimit -n`, and the cause is opening without closing",
+        "correct": true,
+        "why": "Right, and `ls -l /proc/PID/fd` normally names the repeated culprit."
+      },
+      {
+        "text": "`ulimit -u`, the process count, since each open file forks a helper",
+        "correct": false,
+        "why": "Opening a file forks nothing; `-u` counts processes."
+      },
+      {
+        "text": "The inode limit of the filesystem, which can count open files too",
+        "correct": false,
+        "why": "Inodes are a filesystem property and are unrelated to how many a process has open."
+      },
+      {
+        "text": "`ulimit -f`, the maximum file size, reached across many files at once",
+        "correct": false,
+        "why": "`-f` limits how large one file may grow, not how many there are."
+      }
+    ]
+  },
+  {
+    "id": "ex-540fdn2p",
+    "version": 1,
+    "section": "file-descriptors",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each descriptor number to what it is by convention.",
+    "hint": "Three numbers every program is handed before it starts.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "standard input"
+      },
+      {
+        "left": "1",
+        "right": "standard output"
+      },
+      {
+        "left": "2",
+        "right": "standard error"
+      }
+    ],
+    "right_distractors": [
+      "the controlling terminal",
+      "the working directory"
+    ]
+  },
+  {
+    "id": "ex-s5egq23b",
+    "version": 1,
+    "section": "file-descriptors",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "List every open file that no longer has a name, in one command: `lsof ____`",
+    "hint": "A plus sign, a letter and a digit.",
+    "blanks": [
+      {
+        "accept": [
+          "+L1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-byhsxt62",
+    "version": 1,
+    "section": "exit-status",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cron job's log ends with status 127. What went wrong?",
+    "hint": "It is one of two numbers about the command itself rather than its work.",
+    "choices": [
+      {
+        "text": "The command ran and reported 127 failures",
+        "correct": false,
+        "why": "A count would be the program's own choice; 127 is reserved for something else."
+      },
+      {
+        "text": "The command was not found",
+        "correct": true,
+        "why": "Right — a typo, or a program that is not installed where cron looked."
+      },
+      {
+        "text": "The command was killed by signal 127",
+        "correct": false,
+        "why": "Signals add to 128, so a killed process reports above it rather than below."
+      },
+      {
+        "text": "The command timed out after 127 seconds of running",
+        "correct": false,
+        "why": "Timeouts report their own status, and nothing encodes a duration in one."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgxtg6z8",
+    "version": 1,
+    "section": "exit-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container keeps restarting and its last status is 137. What killed it?",
+    "hint": "Subtract 128 and look the remainder up.",
+    "choices": [
+      {
+        "text": "The application, which chose 137 as its own error code",
+        "correct": false,
+        "why": "137 above 128 is the kernel's arithmetic rather than a program's choice."
+      },
+      {
+        "text": "The orchestrator's health check, after 137 failed probes",
+        "correct": false,
+        "why": "A probe failure does not put its count into an exit status."
+      },
+      {
+        "text": "A `SIGTERM`, as can happen during a rolling restart",
+        "correct": false,
+        "why": "`TERM` is 15, which gives 143 rather than 137."
+      },
+      {
+        "text": "`SIGKILL` — most often the out-of-memory killer",
+        "correct": true,
+        "why": "Right: 128 plus 9, and nothing polite sends `KILL` on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kxkxgxw",
+    "version": 1,
+    "section": "exit-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`curl https://example.test/x | tar xz` and `$?` is 0, but nothing was extracted. Why did the status not say so?",
+    "hint": "Which stage does a pipeline's status come from?",
+    "choices": [
+      {
+        "text": "`$?` is the last stage only, so `curl` failing is invisible",
+        "correct": true,
+        "why": "Right — and `set -o pipefail` or `PIPESTATUS` is how you see the earlier stage."
+      },
+      {
+        "text": "`tar` swallows errors from standard input and always exits 0",
+        "correct": false,
+        "why": "`tar` reports its own problems; the issue is which status the shell kept."
+      },
+      {
+        "text": "`curl` exits 0 on an HTTP error unless `-f` is given",
+        "correct": false,
+        "why": "That is a real `curl` wart and a different one: here the shell discarded the status."
+      },
+      {
+        "text": "The pipe returns the status of whichever stage failed first",
+        "correct": false,
+        "why": "That is what `pipefail` makes it do; the default is the last stage."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjwwpt8z",
+    "version": 1,
+    "section": "exit-status",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`grep pattern file` returns 1 in a script running under `set -e`, and the script stops. Is that a bug?",
+    "hint": "Ask what `grep`'s 1 means before asking what `set -e` should do about it.",
+    "choices": [
+      {
+        "text": "Yes — `set -e` should ignore a status of 1 and stop above it",
+        "correct": false,
+        "why": "`set -e` treats every non-zero status the same way; there is no threshold."
+      },
+      {
+        "text": "No — a status of 1 from `grep` can mean the file could not be read",
+        "correct": false,
+        "why": "An unreadable file is 2; 1 is a clean search that matched nothing."
+      },
+      {
+        "text": "Yes in effect: 1 means no match, a perfectly normal answer",
+        "correct": true,
+        "why": "Right — put it in an `if`, or append `|| true` when you expect no match."
+      },
+      {
+        "text": "No — `set -e` does not act on the last command of a pipeline anyway",
+        "correct": false,
+        "why": "It acts on it; the exemptions are conditions and commands joined by `&&` or `||`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9h4553e",
+    "version": 1,
+    "section": "exit-status",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each exit status to what produced it.",
+    "hint": "Five numbers, and two of them are about the command rather than its work.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "it worked"
+      },
+      {
+        "left": "1",
+        "right": "grep found no match"
+      },
+      {
+        "left": "126",
+        "right": "found the file, could not execute it"
+      },
+      {
+        "left": "127",
+        "right": "no such command"
+      },
+      {
+        "left": "130",
+        "right": "somebody pressed Ctrl+C"
+      }
+    ],
+    "right_distractors": [
+      "the argument was out of range",
+      "the disk filled up mid-write"
+    ]
+  },
+  {
+    "id": "ex-7t728zga",
+    "version": 1,
+    "section": "exit-status",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Make a pipeline report the last non-zero status instead of the last stage's: `set -o ____`",
+    "hint": "One word, eight letters.",
+    "blanks": [
+      {
+        "accept": [
+          "pipefail"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hxjtxv8q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine is slow. `top` shows `%Cpu(s): 3.0 us, 1.0 sy, 0.0 wa, 96.0 id` and a load average of 0.4. Where do you look next?",
+    "hint": "Every column you have been given is small. That is itself the finding.",
+    "choices": [
+      {
+        "text": "At the process list sorted by `%CPU`, for the runaway",
+        "correct": false,
+        "why": "There is nothing to find: 96% idle and a load under one means nothing is queuing."
+      },
+      {
+        "text": "At `ps` for processes in `D`, since the load is hiding them",
+        "correct": false,
+        "why": "Processes in `D` push the load up, and this load is low."
+      },
+      {
+        "text": "Somewhere other than the processor — memory, network or the application",
+        "correct": true,
+        "why": "Right — this machine is not busy, so the slowness is not a scheduling problem."
+      },
+      {
+        "text": "At the load average over a longer window, since one minute is too short",
+        "correct": false,
+        "why": "All three figures are available in the same line, and none of them is high."
+      }
+    ]
+  },
+  {
+    "id": "ex-hppq86f8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order you would work through an unfamiliar process that is eating the machine.",
+    "items": [
+      "top -b -n 1 -o %CPU | head",
+      "pstree -s PID",
+      "ls -l /proc/PID/cwd /proc/PID/exe",
+      "kill PID",
+      "kill -9 PID"
+    ],
+    "trap": "Find it, find out what started it, find out what it is, ask it to stop, and only then remove it."
+  },
+  {
+    "id": "ex-tc096wy0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service was stopped an hour ago and its port is still in use. `ps` shows no process by that name. What is the most likely explanation?",
+    "hint": "Killing a parent leaves something behind, and it was covered twice in this lesson.",
+    "choices": [
+      {
+        "text": "The kernel holds the port for an hour after the last close",
+        "correct": false,
+        "why": "A closed socket does linger, and in seconds rather than an hour."
+      },
+      {
+        "text": "A child of the service is still running, adopted by PID 1",
+        "correct": true,
+        "why": "Right — `ss -lptn` names the process, and its `PPID` will be `1`."
+      },
+      {
+        "text": "The service left a zombie that still owns the socket",
+        "correct": false,
+        "why": "A zombie holds no files and no sockets; everything was released when it exited."
+      },
+      {
+        "text": "The port is bound by a systemd socket unit rather than the service",
+        "correct": false,
+        "why": "That is a real arrangement and it would be listed under systemd rather than missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-vm0y4c0v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You have a PID and want three things: what it is, what started it, and whether it is yours to signal. Which three commands?",
+    "hint": "One reads `/proc`, one climbs, and one asks without sending anything.",
+    "choices": [
+      {
+        "text": "`ls -l /proc/PID/exe`, `pstree -s PID`, `kill -0 PID`",
+        "correct": true,
+        "why": "Right — the binary, the ancestry, and the permission check that sends nothing."
+      },
+      {
+        "text": "`ps -p PID`, `ps -ef | grep PID`, `kill -9 PID`",
+        "correct": false,
+        "why": "The last one answers the question by acting on it, which is not the same as asking."
+      },
+      {
+        "text": "`lsof -p PID`, `pstree -p PID`, `renice -n 0 -p PID`",
+        "correct": false,
+        "why": "`pstree -p` looks downward, and `renice` changes the process to find out about it."
+      },
+      {
+        "text": "`cat /proc/PID/status`, `pgrep -P PID`, `killall -0 PID`",
+        "correct": false,
+        "why": "`pgrep -P` lists children, and `killall` takes a name rather than a number."
+      }
+    ]
+  },
+  {
+    "id": "ex-vasww4bb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these leave a process running after you close the terminal?",
+    "hint": "Two mechanisms work, one is about the shell's list, and two do nothing for this.",
+    "choices": [
+      {
+        "text": "`nohup cmd &`",
+        "correct": true,
+        "why": "Yes — the signal arrives and is ignored."
+      },
+      {
+        "text": "`cmd &` followed by `disown`",
+        "correct": true,
+        "why": "Yes — bash forgets the job and never sends the signal."
+      },
+      {
+        "text": "`setsid cmd &`",
+        "correct": true,
+        "why": "Yes — there is no controlling terminal to hang up in the first place."
+      },
+      {
+        "text": "`cmd &` on its own",
+        "correct": false,
+        "why": "No — this is the one that died in the experiment."
+      },
+      {
+        "text": "`cmd &` with `renice -n 19`",
+        "correct": false,
+        "why": "Niceness is scheduling; it has nothing to do with hangups."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tsbz549",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague says the machine has 400 processes because `top` said `Tasks: 400`. What would you check?",
+    "hint": "Two of this lesson's sections warned about this same count.",
+    "choices": [
+      {
+        "text": "`ps -e | wc -l`, since `top` counts kernel threads and `ps` does not",
+        "correct": false,
+        "why": "Both include kernel threads; neither hides them."
+      },
+      {
+        "text": "The load average, which counts the same things `Tasks:` does",
+        "correct": false,
+        "why": "Load counts what wanted to run, not what exists."
+      },
+      {
+        "text": "`/proc`, since `top` includes directories left by exited processes",
+        "correct": false,
+        "why": "A `/proc` entry disappears with its process; nothing is left behind."
+      },
+      {
+        "text": "Whether `-H` is on, since that counts threads rather than processes",
+        "correct": true,
+        "why": "Right — the header says `Threads:` instead of `Tasks:` when it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-y61rfkh8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to the thing to reach for first.",
+    "hint": "Six symptoms from across the lesson, each with one first move.",
+    "pairs": [
+      {
+        "left": "one process at 100% on a four-core box",
+        "right": "renice it, then find out why"
+      },
+      {
+        "left": "load 30 with the processors idle",
+        "right": "look at storage and the wa column"
+      },
+      {
+        "left": "thousands of <defunct> entries",
+        "right": "fix the parent that is not reaping"
+      },
+      {
+        "left": "disk full and du finds nothing",
+        "right": "lsof +L1 for a deleted open file"
+      },
+      {
+        "left": "Too many open files in a log",
+        "right": "count /proc/PID/fd and raise LimitNOFILE"
+      },
+      {
+        "left": "a job died when the laptop closed",
+        "right": "nohup or disown, next time"
+      }
+    ],
+    "right_distractors": [
+      "reboot into single-user mode",
+      "clear the page cache by hand"
+    ]
+  },
+  {
+    "id": "ex-4scgy6mt",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One line that answers \"what is eating this machine\": `ps -eo pid,comm,%cpu --sort=-%cpu | ____`",
+    "hint": "Four letters, and it keeps the first few lines.",
+    "blanks": [
+      {
+        "accept": [
+          "head"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xv46ectc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the life of a backgrounded command in order, from the shell to the orphan.",
+    "items": [
+      "bash forks a copy of itself",
+      "the copy execs the program you named",
+      "bash prints [1] and the PID, and does not wait",
+      "you close the terminal and bash sends SIGHUP",
+      "the job is gone, or survives with PPID 1"
+    ],
+    "trap": "Copy, replace, skip the wait, and then the terminal goes away."
+  },
+  {
+    "id": "ex-89bzb2vg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which pair of states means the same thing to the processor — no instructions being run?",
+    "hint": "Four of the five states are not on a processor at all.",
+    "choices": [
+      {
+        "text": "`R` and `S`, since a sleeping process is still scheduled",
+        "correct": false,
+        "why": "`R` is exactly the one that is on or waiting for a processor."
+      },
+      {
+        "text": "`R` and `Z`, since neither is doing useful work",
+        "correct": false,
+        "why": "`R` is doing work by definition; the zombie is the one that is not."
+      },
+      {
+        "text": "`T` and `Z`",
+        "correct": true,
+        "why": "Right — stopped and finished, and neither is given any processor time."
+      },
+      {
+        "text": "`D` and `R`, since both are inside the kernel",
+        "correct": false,
+        "why": "`D` is asleep in the kernel and `R` is runnable; only one of them gets a processor."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqrhdjta",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these actually reduces the time a process spends waiting on a busy disk?",
+    "hint": "Three of the four are about the processor.",
+    "choices": [
+      {
+        "text": "`renice -n 19` on the process",
+        "correct": false,
+        "why": "Niceness is processor time, and a process waiting on a disk is asking for none."
+      },
+      {
+        "text": "`taskset -c 0` to pin it to one processor",
+        "correct": false,
+        "why": "Pinning changes which processor it uses, not how the disk is shared."
+      },
+      {
+        "text": "`kill -STOP` and `kill -CONT` in turn",
+        "correct": false,
+        "why": "That pauses the process entirely and holds its open files while it waits."
+      },
+      {
+        "text": "`ionice -c 3` on the process",
+        "correct": true,
+        "why": "Right — idle-class I/O is the knob for disk contention."
+      }
+    ]
+  },
+  {
+    "id": "ex-acrxqqww",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need a deploy script to stop a service the way `systemctl stop` would. What does it have to do?",
+    "hint": "Lesson 5 described the sequence; this lesson supplied every piece of it.",
+    "choices": [
+      {
+        "text": "`kill -9` the main PID, and then delete its PID file by hand",
+        "correct": false,
+        "why": "That is the sequence `systemctl stop` exists to avoid."
+      },
+      {
+        "text": "`TERM` the group, wait, then `KILL` what is left",
+        "correct": true,
+        "why": "Right — polite first, a deadline, and removal only for what ignored it."
+      },
+      {
+        "text": "`TERM` the main PID and report success once it returns",
+        "correct": false,
+        "why": "`kill` returns as soon as the signal is queued, which says nothing about the children."
+      },
+      {
+        "text": "`STOP` the group, check that it is quiet, then `KILL` it",
+        "correct": false,
+        "why": "A stopped process keeps its locks and files, so this makes the cleanup worse."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0nj88ah",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ps` reports `%CPU` of 0.0 for a process you can see is busy. Which command would show the truth?",
+    "hint": "One column is a lifetime average and the other is a sample.",
+    "choices": [
+      {
+        "text": "`top -b -n 2 -d 1`, whose second frame is an interval",
+        "correct": true,
+        "why": "Right — two frames a second apart give `top` something to measure between."
+      },
+      {
+        "text": "`ps -eo pid,%cpu --sort=-%cpu`, which recomputes the column",
+        "correct": false,
+        "why": "It is the same lifetime average, sorted; sorting does not change what it measures."
+      },
+      {
+        "text": "`pstree -p`, which shows live activity per branch",
+        "correct": false,
+        "why": "`pstree` draws structure and reports no activity at all."
+      },
+      {
+        "text": "`/proc/PID/status`, which holds the current figure",
+        "correct": false,
+        "why": "It holds counters and state; the rate has to be computed from two readings."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc21ss31",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Resume a stopped job in the background, in two letters: `____`",
+    "hint": "It is the opposite of `fg`.",
+    "blanks": [
+      {
+        "accept": [
+          "bg"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yhv4sdv8",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Complete the check that asks whether a process exists and is yours, without sending it anything: `kill ____ $PID`",
+    "hint": "A dash and a digit.",
+    "blanks": [
+      {
+        "accept": [
+          "-0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
