@@ -31,15 +31,19 @@
 import { chromium } from 'playwright';
 import { signUpThroughTheForm } from '../lib/sign-up.mjs';
 
-const BASE = process.env.SCHOOLING_TEST_BASE || 'http://code.example.tld:8099';
-const COURSE = process.env.SCHOOLING_TEST_COURSE || 'linux-terminal';
+const BASE = process.argv[2] || 'http://code.example.tld:8099';
 
 /* A lesson's prose, which is the request this is about. The shape of a course
    (`/lessons?lang=`) is one request for the whole catalogue and is not it. */
 const isLessonProse = (url) => /\/api\/v1\/courses\/[^/]+\/lessons\/le-/.test(url);
 
 const problems = [];
-const browser = await chromium.launch();
+/* THE SCHOOL IS A HOST AND THE RUNNER HAS NEVER HEARD OF IT. The same rule the
+   other browser suites carry; without it this failed with ERR_NAME_NOT_RESOLVED
+   and said nothing about fetching. */
+const browser = await chromium.launch({
+  args: ['--host-resolver-rules=MAP code.example.tld 127.0.0.1'],
+});
 const page = await browser.newPage({ viewportSize: { width: 1280, height: 900 } });
 
 try {
@@ -47,6 +51,42 @@ try {
     name: 'Fetch Once',
     email: `fetch-once-${Date.now()}@example.tld`,
   });
+
+  /* THE BIGGEST COURSE THIS ACCOUNT CAN ACTUALLY READ.
+
+     Naming `linux-terminal` would pass here and fail in CI, where the catalogue
+     is a seven-course fixture — and the claim is not about that course: a
+     screen drawn twice must not ask twice, whatever it is drawing. The biggest
+     one only makes the arithmetic loudest.
+
+     READABLE IS THE OTHER HALF, and it is not decoration. A course outside the
+     plan answers `locked`, stores nothing, and is therefore asked for again on
+     every redraw — which looks exactly like the defect and is not it. The
+     fixture's `html-css` is one, and picking it measured the wrong thing. */
+  const COURSE = await page.evaluate(async () => {
+    const api = await import('/app/api.js');
+    const store = await import('/app/lessons.js');
+    const bySize = (globalThis.COURSES || [])
+      .slice()
+      .sort((a, b) => (b.topics || []).length - (a.topics || []).length);
+    for (const c of bySize) {
+      if (!(c.topics || []).length) continue;
+      if (await api.loadCourseContent(c.id) === true && store.courseLoaded(c.id)) {
+        return c.slug || c.id;
+      }
+    }
+    return null;
+  });
+
+  if (!COURSE) {
+    throw new Error('no course in this catalogue could be read, so there is nothing to count — '
+      + 'the account has no plan, or the catalogue arrived empty');
+  }
+
+  /* FROM AN EMPTY STORE, because choosing the course above filled it. Counting
+     from here would count zero and call the defect fixed. */
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(1200);
 
   let asked = 0;
   page.on('response', (r) => { if (isLessonProse(r.url())) asked += 1; });
