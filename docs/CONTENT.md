@@ -231,6 +231,29 @@ drawn against a different palette and were one command away from shipping exactl
 An inline drawing makes its own file several times larger. That is the price of the diff being per
 paragraph *and* the figure being beside the paragraph it illustrates, and it was paid deliberately.
 
+**A full-screen program is captured rather than drawn.** `htop`, `vim`, `less` — they paint a
+terminal rather than printing lines, so there is no output to redirect and nothing to put in a
+fence. That used to mean a drawing with invented numbers, and lesson 6 of `linux-terminal` carried
+the one this catalogue had. `tools/term-capture` runs the program under a pseudo-terminal and
+writes the screen it had drawn, as a `schooling-figure` like any other:
+
+```sh
+go run ./tools/term-capture -rows 18 -out figure.svg \
+  -label 'A captured htop screen…' \
+  -callout '1:one bar per processor, and this machine has four' \
+  -- htop -u ana
+```
+
+The SVG goes to `-out` and the fence's JSON to stdout. The eight ANSI colours come out as
+`--term-*` tokens from `ui/assets/terminal.css`, so a captured screen follows the theme the way a
+drawn one does. Those are **two sets, a foreground and a `-bg`**, and the reason is htop's header
+bar: a background holds its contrast against the text painted on it, not against the panel behind
+it, so only the foregrounds turn over between themes.
+
+**The tool does not make the capture true.** The machine has to be worth photographing — the load
+staged the way the section stages it, the process list filtered to something a reader should see.
+Photographing the wrong machine is not an improvement on drawing it.
+
 ### `exercises.json`
 
 Every exercise belongs to a lesson, joins by id, and declares the grader that judges it.

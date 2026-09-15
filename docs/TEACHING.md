@@ -133,4 +133,7 @@ mode — or somebody forgot the screen.
   that.
 - **Where illustration stops being authorable.** Conceptual diagrams are SVG and can be written.
   Annotated screenshots and pictorial work (a motherboard, a connector) are not, and the boundary
-  has not been drawn precisely.
+  has not been drawn precisely. One piece of it moved: a **terminal** screenshot is authorable,
+  because `tools/term-capture` runs the program under a pseudo-terminal and writes the screen it
+  painted as SVG. Everything a terminal can show is on the writable side of the line now; a
+  photograph of hardware still is not.

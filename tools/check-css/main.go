@@ -80,7 +80,7 @@ var host = struct {
 	ours   []string // this repository's, in load order
 }{
 	copied: []string{"assets/base.css", "assets/portal.css"},
-	ours:   []string{"assets/exercises.css", "assets/app.css"},
+	ours:   []string{"assets/exercises.css", "assets/terminal.css", "assets/app.css"},
 }
 
 // A LAYOUT PROPERTY IS ONE THAT MOVES SOMETHING ELSE. Colour, weight, opacity
