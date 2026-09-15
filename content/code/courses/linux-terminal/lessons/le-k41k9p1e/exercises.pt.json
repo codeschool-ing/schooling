@@ -1,0 +1,1192 @@
+{
+  "ex-mdbfc6ec": {
+    "prompt": "Um `ls logs nosuchdir > out.txt` e o erro ainda aparece na tela. Por quê?",
+    "hint": "O comando escreveu em dois lugares e você redirecionou um deles.",
+    "choices": [
+      {
+        "text": "O redirecionamento foi aplicado depois de o `ls` já ter imprimido o erro",
+        "why": "O redirecionamento é montado antes de o programa começar, que é por que funciona em todo comando."
+      },
+      {
+        "text": "O `ls` escreve erros direto no dispositivo do terminal",
+        "why": "Ele escreve no descritor 2, que por acaso é o terminal porque nada o mudou."
+      },
+      {
+        "text": "O `>` redireciona a saída padrão; o erro foi para a saída de erro",
+        "why": "Isso — dois fluxos, e o `>` move um deles."
+      },
+      {
+        "text": "O diretório não existe, então o erro não tinha destino",
+        "why": "A listagem de `logs` foi redirecionada com sucesso; o erro é um fluxo separado."
+      }
+    ]
+  },
+  "ex-0fvd0ag5": {
+    "prompt": "O `ls` imprimiu cinco nomes ao longo de uma linha na tela e um por linha num arquivo. O que aconteceu?",
+    "hint": "Algo fez uma pergunta sobre para onde a saída dele estava indo.",
+    "choices": [
+      {
+        "text": "O arquivo não tem largura, então o `ls` usou a linha mais longa possível",
+        "why": "O `ls` usa um por linha para um arquivo, que é o oposto de uma linha longa."
+      },
+      {
+        "text": "O `ls` confere se a saída dele é um terminal",
+        "why": "Isso — a pergunta do `isatty()`, e o `grep` e o `ps` fazem a mesma coisa."
+      },
+      {
+        "text": "O shell reformatou a saída no caminho para o arquivo",
+        "why": "O shell conecta descritores; ele não mexe nos bytes."
+      },
+      {
+        "text": "As colunas são acrescentadas pelo emulador de terminal, não pelo `ls`",
+        "why": "O terminal desenha os caracteres que recebe; o espaçamento veio do `ls`."
+      }
+    ]
+  },
+  "ex-41hze2js": {
+    "prompt": "O número de descritor em que um programa escreve as mensagens de erro: ____",
+    "hint": "Um único dígito."
+  },
+  "ex-7nmabb8z": {
+    "prompt": "O `ls nosuchdir 2>&1 > out.txt` deixa o erro na tela e o `out.txt` vazio. Por quê?",
+    "hint": "Leia os dois operadores da esquerda para a direita, e pergunte o que era o descritor 1 em cada momento.",
+    "choices": [
+      {
+        "text": "O `2>&1` é ignorado quando um `>` vem depois na mesma linha",
+        "why": "Os dois são aplicados; a questão é o que cada um viu quando rodou."
+      },
+      {
+        "text": "O `out.txt` foi truncado depois de o erro ter sido escrito nele",
+        "why": "O erro nunca foi escrito no arquivo; ele foi para o terminal."
+      },
+      {
+        "text": "O `2>&1` precisa do `&>`, que é o atalho do bash",
+        "why": "O `2>&1` funciona sozinho, na outra ordem."
+      },
+      {
+        "text": "Quando o `2>&1` rodou, o descritor 1 ainda era o terminal",
+        "why": "Isso — o `2>&1` copia para onde o 1 aponta naquele momento, e o `>` moveu o 1 depois."
+      }
+    ]
+  },
+  "ex-3zmfhg5e": {
+    "prompt": "O `sort arquivo.txt > arquivo.txt` deixa o arquivo vazio. Quando os dados se foram?",
+    "hint": "Uma das duas coisas acontece antes da outra.",
+    "choices": [
+      {
+        "text": "O shell truncou o arquivo antes de o `sort` abri-lo",
+        "why": "Isso — o `>` esvazia o alvo primeiro, então o `sort` leu um arquivo vazio."
+      },
+      {
+        "text": "O `sort` falhou e não escreveu saída, deixando o original intacto",
+        "why": "O original sumiu, o que quer dizer que algo escreveu nele."
+      },
+      {
+        "text": "O `sort` leu o arquivo para a memória e quebrou antes de escrever",
+        "why": "Ele não quebrou; ele não leu nada e não escreveu nada, com sucesso."
+      },
+      {
+        "text": "O shell bufferizou a saída e a perdeu quando o `sort` saiu",
+        "why": "Não existe esse buffer; a saída vai para o arquivo conforme é produzida."
+      }
+    ]
+  },
+  "ex-vnh4g2ws": {
+    "prompt": "O `some-command | grep error` não acha nada, mas você vê a palavra `error` na sua tela. O que está acontecendo?",
+    "hint": "Um pipe carrega um fluxo.",
+    "choices": [
+      {
+        "text": "O `grep` precisa do `-i`, porque a mensagem está em maiúsculas",
+        "why": "Possível e fácil de descartar, e não explicaria uma mensagem que você vê claramente."
+      },
+      {
+        "text": "O comando bufferiza a saída, então o `grep` a vê tarde",
+        "why": "Buffer atrasa a saída; ele não faz o `grep` perdê-la."
+      },
+      {
+        "text": "Está na saída de erro, que um `|` puro não carrega",
+        "why": "Isso — o `2>&1 |` é a forma que busca nas duas."
+      },
+      {
+        "text": "O `grep` lê apenas a primeira linha de um pipe sem o `-a`",
+        "why": "O `grep` lê o fluxo inteiro; o `-a` é sobre arquivos binários."
+      }
+    ]
+  },
+  "ex-k58d5wy7": {
+    "prompt": "Escreva a saída de um comando num arquivo do root a partir de um pipeline, já que o seu shell não consegue: `some-command | sudo ____ /root/out.txt`",
+    "hint": "Três letras."
+  },
+  "ex-y725hde4": {
+    "prompt": "Um `grep padrão enorme.log | head -5` volta na hora num arquivo de dez gigabytes. Por quê?",
+    "hint": "Dois programas rodam ao mesmo tempo, e um deles para cedo.",
+    "choices": [
+      {
+        "text": "O `grep` lê o arquivo de trás para a frente, então os primeiros achados vêm primeiro",
+        "why": "O `grep` lê para a frente; o retorno rápido é sobre a outra ponta do pipe."
+      },
+      {
+        "text": "O `head` sai depois de cinco linhas e o SIGPIPE encerra o `grep`",
+        "why": "Isso — o sinal da seção 93, com o pipeline inteiro terminando antes de o `grep` acabar."
+      },
+      {
+        "text": "O shell roda o `head` primeiro e depois inicia o `grep`",
+        "why": "Os dois começam juntos; é isso que um pipe é."
+      },
+      {
+        "text": "O `grep` conta correspondências e para quando o `head` tem o bastante",
+        "why": "O `grep` não faz ideia de quantas o `head` quer; o kernel o encerra."
+      }
+    ]
+  },
+  "ex-qw94k0d0": {
+    "prompt": "Dois pipelines dão a mesma resposta. Qual é melhor, e por quê?\n\n```\nsort access.log | cut -d\" \" -f9 | uniq -c\ncut -d\" \" -f9 access.log | sort | uniq -c\n```",
+    "hint": "Um deles ordena cento e cinquenta caracteres por linha e o outro ordena três.",
+    "choices": [
+      {
+        "text": "O primeiro, porque ordenar linhas inteiras agrupa requisições relacionadas",
+        "why": "Agrupar por linha inteira não é o que a pergunta pede, e custa mais."
+      },
+      {
+        "text": "Nenhum; eles fazem trabalho idêntico em ordem diferente",
+        "why": "O trabalho difere: um ordena linhas longas e o outro ordena campos curtos."
+      },
+      {
+        "text": "O segundo, porque o `cut` joga fora a maior parte de cada linha antes",
+        "why": "Isso — reduza antes de ordenar, e num log grande isso são minutos."
+      },
+      {
+        "text": "O primeiro, porque o `sort` é mais rápido na ordem original da entrada",
+        "why": "A ordem de entrada não muda o que o `sort` precisa comparar."
+      }
+    ]
+  },
+  "ex-6awdy1ha": {
+    "prompt": "Complete o pipeline que responde \"quais códigos de status, e quantos de cada\": `cut -d\" \" -f9 access.log | sort | ____ -c | sort -rn`",
+    "hint": "Quatro letras."
+  },
+  "ex-gyee8jc0": {
+    "prompt": "Você quer tudo de um CSV menos a linha de cabeçalho. Qual comando?",
+    "hint": "Um destes conta do topo e o resto conta de baixo.",
+    "choices": [
+      {
+        "text": "`tail -2 f.csv`, pegando as duas últimas linhas",
+        "why": "Isso dá as duas últimas linhas, que é a ponta oposta."
+      },
+      {
+        "text": "`head -n -1 arquivo.csv`",
+        "why": "Isso descarta a *última* linha, e o cabeçalho é a primeira."
+      },
+      {
+        "text": "`tail -n 2 arquivo.csv`",
+        "why": "O mesmo que o `tail -2`; o sinal de mais é o que muda o significado."
+      },
+      {
+        "text": "`tail -n +2 f.csv`",
+        "why": "Isso — o `+` quer dizer \"da linha 2 até o fim\"."
+      }
+    ]
+  },
+  "ex-04k2gjcm": {
+    "prompt": "Um arquivo de configuração não é interpretado e toda linha parece correta. Que comando mostra por quê?",
+    "hint": "O problema é algo que você não consegue ver.",
+    "choices": [
+      {
+        "text": "`cat -A arquivo`",
+        "why": "Isso — ele mostra tabulações como `^I`, fins de linha como `$` e retornos de carro como `^M`."
+      },
+      {
+        "text": "`cat -n arquivo`",
+        "why": "Numerar as linhas ajuda a reportar o problema e não a achá-lo."
+      },
+      {
+        "text": "`wc -L arquivo`",
+        "why": "O comprimento da linha mais longa raramente explica uma falha de interpretação."
+      },
+      {
+        "text": "`file arquivo`",
+        "why": "Ele reporta o tipo do arquivo, que já se sabe ser texto."
+      }
+    ]
+  },
+  "ex-m2e62vm8": {
+    "prompt": "Acompanhe um log enquanto ele cresce, num paginador em que dá para rolar para trás quando você parar: `____ +F app.log`",
+    "hint": "Quatro letras, e é o paginador que o `man` usa."
+  },
+  "ex-ff09evez": {
+    "prompt": "Um `grep -c o` na única linha `hello world` imprime `1`. Por que não `2`?",
+    "hint": "Leia o que a opção conta.",
+    "choices": [
+      {
+        "text": "O segundo `o` está noutra palavra, e o `grep` conta por palavra",
+        "why": "O `grep` não faz ideia do que é uma palavra a menos que você peça com `-w`."
+      },
+      {
+        "text": "O `-c` conta linhas que casam, e há uma linha",
+        "why": "Isso — o `grep -o | wc -l` é o jeito de contar ocorrências."
+      },
+      {
+        "text": "O `grep` para de ler uma linha depois da primeira correspondência",
+        "why": "Ele para de procurar naquela linha, que é por que o `-c` é contagem de linhas — mas a contagem é o ponto."
+      },
+      {
+        "text": "Duas correspondências numa linha são agrupadas numa por padrão",
+        "why": "Nada é agrupado; o `-o` imprime as duas."
+      }
+    ]
+  },
+  "ex-6derjk9j": {
+    "prompt": "Você está buscando num log o endereço IP `10.0.1.5`. Qual é o mais seguro?",
+    "hint": "Um destes desliga a linguagem de padrões.",
+    "choices": [
+      {
+        "text": "`grep 10.0.1.5 access.log`",
+        "why": "Os pontos são curingas, então isso também casa com `10x0y1z5` se tal string existisse."
+      },
+      {
+        "text": "`grep -E '10.0.1.5' access.log`",
+        "why": "O mesmo problema: o `-E` não torna um ponto literal."
+      },
+      {
+        "text": "`grep -w 10.0.1.5 access.log`",
+        "why": "O `-w` conserta limites de palavra e deixa os pontos como curingas."
+      },
+      {
+        "text": "`grep -F 10.0.1.5 access.log`",
+        "why": "Isso — o `-F` quer dizer sem linguagem de padrões, então um ponto é um ponto."
+      }
+    ]
+  },
+  "ex-2n5jnvt5": {
+    "prompt": "Um script sob `set -e` para num `grep` que não achou nada. Isso é um bug no script?",
+    "hint": "A seção 99 disse o que um código diferente de zero quer dizer, e o que o `grep` quer dizer com 1.",
+    "choices": [
+      {
+        "text": "Sim — o `grep` deveria sair com 0 quando rodou com sucesso",
+        "why": "O código de saída dele é deliberadamente a resposta à pergunta, não um relato de se ele rodou."
+      },
+      {
+        "text": "Não — o `grep` falhar quer dizer que o arquivo não pôde ser lido",
+        "why": "Isso é o código 2; o 1 é uma busca limpa que não casou com nada."
+      },
+      {
+        "text": "Na prática sim: sem correspondência é normal, envolva num `if`",
+        "why": "Isso — `if grep -q …; then` ou `|| true`, conforme o que você quis dizer."
+      },
+      {
+        "text": "Não — o `set -e` não age na última etapa de um pipeline",
+        "why": "Ele age; as exceções são condições e cadeias de `&&`/`||`."
+      }
+    ]
+  },
+  "ex-zaryjrmb": {
+    "prompt": "Ligue cada opção do `grep` ao que ela faz.",
+    "hint": "Seis opções, e uma delas inverte a pergunta inteira.",
+    "pairs": [
+      {
+        "left": "-v",
+        "right": "imprimir as linhas que não casam"
+      },
+      {
+        "left": "-c",
+        "right": "contar linhas que casam"
+      },
+      {
+        "left": "-o",
+        "right": "imprimir cada correspondência numa linha"
+      },
+      {
+        "left": "-l",
+        "right": "imprimir só os nomes dos arquivos que casaram"
+      },
+      {
+        "left": "-q",
+        "right": "não imprimir nada; o código de saída é a resposta"
+      },
+      {
+        "left": "-A2",
+        "right": "imprimir também duas linhas depois de cada correspondência"
+      }
+    ],
+    "right_distractors": [
+      "buscar sem diferenciar maiúsculas",
+      "casar só palavras inteiras"
+    ]
+  },
+  "ex-xh2yj14x": {
+    "prompt": "Conte quantas vezes a palavra `GET` aparece num log, não quantas linhas a contêm: `grep ____ GET access.log | wc -l`",
+    "hint": "Uma opção curta, e ela imprime cada correspondência numa linha."
+  },
+  "ex-e3sjagc7": {
+    "prompt": "Por que o `grep -E \"c[^o]t\"` não casa com a linha `ct`?",
+    "hint": "Pergunte quantos caracteres o padrão descreve.",
+    "choices": [
+      {
+        "text": "O `[^o]` é um caractere que não é `o`; o `ct` não tem nenhum",
+        "why": "Isso — negação continua sendo um caractere, e não zero."
+      },
+      {
+        "text": "O `[^o]` casa só com letras, e não há o que casar",
+        "why": "Ele casa com qualquer caractere exceto `o`, letra ou não."
+      },
+      {
+        "text": "O `^` dentro de colchetes ancora no começo da linha",
+        "why": "Dentro de colchetes o `^` é negação; o sentido de âncora é fora deles."
+      },
+      {
+        "text": "O `grep -E` exige pelo menos três caracteres num padrão",
+        "why": "Padrões podem ter um caractere."
+      }
+    ]
+  },
+  "ex-hxxf391f": {
+    "prompt": "Um `grep -oE '\".*\"'` numa linha com duas strings entre aspas devolve uma correspondência longa. Por quê, e qual é o conserto?",
+    "hint": "Quantificadores pegam o máximo que conseguem.",
+    "choices": [
+      {
+        "text": "O `grep` casou a linha mais longa; use `-m1` para parar na primeira",
+        "why": "O `-m1` limita quantas linhas são impressas, não quanto de uma linha casa."
+      },
+      {
+        "text": "O `.*` é guloso, então ele vai até a última aspas; use `[^\"]*`",
+        "why": "Isso — \"qualquer coisa exceto o delimitador\" é o que você quis dizer, e o grep não tem quantificador preguiçoso."
+      },
+      {
+        "text": "O `-o` concatena correspondências adjacentes; use `-oE` com `-w`",
+        "why": "O `-o` imprime correspondências separadamente; as duas eram uma correspondência só."
+      },
+      {
+        "text": "As aspas precisam de escape; use `\\\"` nas duas pontas",
+        "why": "Uma aspas não é especial numa expressão regular, então escapá-la não muda nada."
+      }
+    ]
+  },
+  "ex-7bq9q0ax": {
+    "prompt": "Case uma linha que seja exatamente quatro dígitos, um traço, dois dígitos, um traço e dois dígitos, e nada mais: `grep -E \"____[0-9]{4}-[0-9]{2}-[0-9]{2}$\"`",
+    "hint": "Um caractere: a âncora de começo de linha."
+  },
+  "ex-jrs57jwk": {
+    "prompt": "O `cut -d, -f5,2 dados.csv` imprime o campo 2 antes do campo 5. Como você consegue ao contrário?",
+    "hint": "Uma das ferramentas desta aula imprime campos na ordem em que você escreveu.",
+    "choices": [
+      {
+        "text": "`cut -d, -f5 -f2 dados.csv`",
+        "why": "Repetir o `-f` não muda a ordem; o `cut` continua produzindo na ordem do arquivo."
+      },
+      {
+        "text": "`cut -d, --output-order=5,2 dados.csv`",
+        "why": "Essa opção não existe; o `cut` não tem como reordenar."
+      },
+      {
+        "text": "`awk -F, '{print $5, $2}' dados.csv`",
+        "why": "Isso — o `awk` imprime os campos na ordem em que você os nomeia."
+      },
+      {
+        "text": "`cut -d, -f5,2 dados.csv | sort -t, -k2`",
+        "why": "Ordenar reordena linhas, não as colunas dentro de uma linha."
+      }
+    ]
+  },
+  "ex-nfszabrf": {
+    "prompt": "As colunas de um arquivo são separadas por sequências de espaços de larguras diferentes. O que faz o `cut -d\" \"` funcionar nele?",
+    "hint": "O delimitador precisa virar exatamente um caractere.",
+    "choices": [
+      {
+        "text": "Um `tr -s \" \"` antes, comprimindo sequências num espaço",
+        "why": "Isso, e o `awk` é a alternativa, já que ele divide em sequências por padrão."
+      },
+      {
+        "text": "`cut -d\"  \"` com dois espaços no delimitador",
+        "why": "O `-d` aceita um único caractere; dois é erro."
+      },
+      {
+        "text": "`cut --whitespace`, que trata sequências como uma",
+        "why": "Essa opção não existe."
+      },
+      {
+        "text": "Um `sed 's/ //g'` antes, para remover os espaços por completo",
+        "why": "Isso remove os separadores por completo e gruda as colunas."
+      }
+    ]
+  },
+  "ex-emwrkzwy": {
+    "prompt": "Pegue todo campo do terceiro até o fim da linha: `cut -d, -f____ dados.csv`",
+    "hint": "Um dígito e um caractere."
+  },
+  "ex-b25c85zp": {
+    "prompt": "Um `sort` nos números 26, 31, 109, 113 põe o 109 primeiro. O que está errado?",
+    "hint": "Ele está fazendo exatamente o que foi pedido.",
+    "choices": [
+      {
+        "text": "Os números têm larguras diferentes e precisam de preenchimento para alinhar",
+        "why": "Preencher resolveria e a opção é mais simples e não muda os dados."
+      },
+      {
+        "text": "O `sort` precisa do `-u` para comparar valores em vez de linhas",
+        "why": "O `-u` descarta duplicatas; ele não tem a ver com a comparação."
+      },
+      {
+        "text": "O arquivo tem espaço no fim, que ordena antes de dígitos",
+        "why": "Possível em geral, e aqui a ordem é exatamente a que o alfabético dá."
+      },
+      {
+        "text": "Essa é a ordem alfabética; ela precisa do `-n`",
+        "why": "Isso — o `1` ordena antes do `2`, corretamente, em texto que por acaso são números."
+      }
+    ]
+  },
+  "ex-gdy7z0tp": {
+    "prompt": "O `sort -t, -k5` ordena por mais do que o campo 5. O que o `-k5` quer dizer de fato?",
+    "hint": "Uma chave é uma faixa, e você deu uma ponta dela.",
+    "choices": [
+      {
+        "text": "Campo 5, mais qualquer campo que empate com ele",
+        "why": "Empates são desfeitos pela linha inteira a menos que você diga outra coisa, que é outra regra."
+      },
+      {
+        "text": "Do campo 5 em diante, até o fim da linha",
+        "why": "Isso — o `-k5,5` é o jeito de dizer só o campo 5."
+      },
+      {
+        "text": "Cada campo até o 5, inclusive",
+        "why": "A faixa corre para o outro lado, do campo nomeado em diante."
+      },
+      {
+        "text": "Campo 5, a menos que esteja vazio, aí o campo 6",
+        "why": "O `sort` não cai para o campo seguinte."
+      }
+    ]
+  },
+  "ex-hsgngybw": {
+    "prompt": "Ordene a saída do `du -h` para que `2.5M` venha antes de `1G`: `du -h | sort ____`",
+    "hint": "Uma opção curta, e não é o `-n`."
+  },
+  "ex-qssks4xe": {
+    "prompt": "Um `printf \"a\\na\\nb\\na\\n\" | uniq` imprime três linhas. Por que não duas?",
+    "hint": "O nome promete mais do que o comando faz.",
+    "choices": [
+      {
+        "text": "O `uniq` guarda a primeira e a última ocorrência de um valor",
+        "why": "Ele guarda uma por *sequência*, e aqui havia três sequências."
+      },
+      {
+        "text": "O `uniq` precisa do `-u` para remover duplicatas",
+        "why": "O `-u` guarda valores que aparecem exatamente uma vez, que é outra coisa ainda."
+      },
+      {
+        "text": "Ele agrupa duplicatas adjacentes; o último `a` não era",
+        "why": "Isso — ordene antes, sempre."
+      },
+      {
+        "text": "O `uniq` compara linhas inteiras incluindo espaço no fim",
+        "why": "Ele compara, e estas linhas são idênticas; a adjacência é o que as separou."
+      }
+    ]
+  },
+  "ex-effd4nqd": {
+    "prompt": "Um pipeline reporta `5 /` três vezes nos quatro primeiros resultados. O que deu errado?",
+    "hint": "As contagens são pequenas e o mesmo valor aparece mais de uma vez.",
+    "choices": [
+      {
+        "text": "O `uniq -c` rodou em entrada não ordenada e contou sequências",
+        "why": "Isso — cada grupo espalhado de cinco foi contado separadamente."
+      },
+      {
+        "text": "O `sort -rn` comparou as contagens como texto, então a ordem está errada",
+        "why": "Isso desordenaria as linhas; não produziria o mesmo caminho três vezes."
+      },
+      {
+        "text": "O `cut` pegou o campo errado, então os caminhos são de outra coluna",
+        "why": "Os caminhos são reais; as contagens é que estão erradas."
+      },
+      {
+        "text": "O log de fato contém três caminhos diferentes que imprimem igual",
+        "why": "Eles são strings idênticas; nada os renderiza iguais por acidente."
+      }
+    ]
+  },
+  "ex-v6r4e9xe": {
+    "prompt": "Ache os valores que aparecem mais de uma vez numa lista ordenada: `sort ids.txt | uniq ____`",
+    "hint": "Uma opção curta."
+  },
+  "ex-9bfk2een": {
+    "prompt": "O `wc -l` diz 0 e o `grep -c .` diz 1 no mesmo arquivo de uma linha. Qual está certo?",
+    "hint": "Eles contam coisas diferentes, e falta algo no arquivo.",
+    "choices": [
+      {
+        "text": "O `wc -l`, já que um arquivo sem quebra de linha não tem linha completa",
+        "why": "É uma leitura defensável e não é a única; as duas respostas estão corretas."
+      },
+      {
+        "text": "Os dois: um conta quebras de linha, o outro linhas não vazias",
+        "why": "Isso — e o arquivo tem texto sem quebra de linha no fim."
+      },
+      {
+        "text": "O `grep -c .`, já que o `wc -l` se atrapalha com arquivo sem quebra de linha",
+        "why": "O `wc` leu numa boa; ele contou as quebras que achou, que foram zero."
+      },
+      {
+        "text": "Nenhum; o arquivo está corrompido e deveria ser reescrito",
+        "why": "Um arquivo sem quebra de linha no fim é comum e perfeitamente válido."
+      }
+    ]
+  },
+  "ex-w8kgv95j": {
+    "prompt": "Quantos endereços *diferentes* há num log?",
+    "hint": "Dois destes contam linhas e um conta valores.",
+    "choices": [
+      {
+        "text": "`wc -l access.log`",
+        "why": "Isso conta requisições, que é um número bem maior."
+      },
+      {
+        "text": "`cut -d\" \" -f1 a.log | wc -l`, repetições incluídas",
+        "why": "Isso conta os endereços, incluindo toda repetição de cada um."
+      },
+      {
+        "text": "`grep -c \"^10\\.\" access.log`",
+        "why": "Isso conta um prefixo, e conta repetições."
+      },
+      {
+        "text": "`cut -d\" \" -f1 access.log | sort -u | wc -l`",
+        "why": "Isso — o `sort -u` agrupa repetições, então a contagem é de valores distintos."
+      }
+    ]
+  },
+  "ex-wcm9zman": {
+    "prompt": "O `echo \"cat attack\" | tr cat dog` imprime `dog oggodk`. O que o `tr` fez de fato?",
+    "hint": "Ele não faz ideia do que é uma palavra.",
+    "choices": [
+      {
+        "text": "Ele substituiu a primeira ocorrência de `cat` e estragou o resto",
+        "why": "Ele nunca procurou por `cat`; ele procurou as letras separadamente."
+      },
+      {
+        "text": "Ele casou `cat` sem diferenciar caixa e aplicou demais o resultado",
+        "why": "A caixa não teve nada a ver; todo o texto era minúsculo."
+      },
+      {
+        "text": "Ele mapeou `c` para `d`, `a` para `o` e `t` para `g`, em todo lugar",
+        "why": "Isso — três substituições caractere a caractere, aplicadas a toda letra."
+      },
+      {
+        "text": "Ele tratou `dog` como padrão e `cat` como a substituição",
+        "why": "A ordem é origem e depois destino, e não é padrão de nenhum jeito."
+      }
+    ]
+  },
+  "ex-4z96pg9t": {
+    "prompt": "Tire os retornos de carro de um arquivo que veio do Windows: `tr ____ '\\r' < windows.txt > unix.txt`",
+    "hint": "Uma opção curta."
+  },
+  "ex-m8t03kt0": {
+    "prompt": "Um `sed \"s/cat/dog/\"` em `the cat sat on the cat` deixa o segundo `cat`. Por quê?",
+    "hint": "Falta uma letra no comando.",
+    "choices": [
+      {
+        "text": "O `sed` para na primeira correspondência para evitar substituições sobrepostas",
+        "why": "Sobreposição não é o motivo; a opção simplesmente não foi dada."
+      },
+      {
+        "text": "A substituição troca a primeira correspondência por linha a menos que se dê `g`",
+        "why": "Isso — e o `g` não é o padrão, o que surpreende todo mundo uma vez."
+      },
+      {
+        "text": "O segundo `cat` está no fim da linha, onde o `$` seria necessário",
+        "why": "A posição não importa; a mesma coisa acontece no meio da linha."
+      },
+      {
+        "text": "O `sed` precisa do `-E` para um padrão casar mais de uma vez",
+        "why": "O `-E` muda a sintaxe do padrão, não quantas substituições acontecem."
+      }
+    ]
+  },
+  "ex-ab7b4px9": {
+    "prompt": "Você está substituindo `/usr/local` por `/opt` num arquivo. Qual comando é legível?",
+    "hint": "O separador é o caractere que vier depois do `s`.",
+    "choices": [
+      {
+        "text": "`sed 's/\\/usr\\/local/\\/opt/'`",
+        "why": "Funciona e ninguém consegue conferir a olho, que é o motivo da alternativa."
+      },
+      {
+        "text": "`sed 's/usr.local/opt/'`",
+        "why": "Os pontos sem escape são curingas e a barra inicial sumiu."
+      },
+      {
+        "text": "`sed -F 's:/usr/local:/opt:'`",
+        "why": "O `sed` não tem `-F`; aquela opção é do `grep`."
+      },
+      {
+        "text": "`sed 's|/usr/local|/opt|'`",
+        "why": "Isso — outro separador, e nenhum escape."
+      }
+    ]
+  },
+  "ex-rhr9rzqn": {
+    "prompt": "O que o `sed -n '2,4p'` imprime, e o que o `sed '2,4p'` imprimiria?",
+    "hint": "Uma opção desliga algo que acontece por padrão.",
+    "choices": [
+      {
+        "text": "Linhas 2 a 4; sem o `-n`, toda linha com as 2 a 4 repetidas",
+        "why": "Isso — o `-n` suprime a impressão automática que o `p` então reativa seletivamente."
+      },
+      {
+        "text": "Linhas 2 a 4 nos dois casos; o `-n` só afeta o código de saída",
+        "why": "O `-n` muda a saída, que é a finalidade inteira dele."
+      },
+      {
+        "text": "Linhas 2 a 4; sem o `-n`, nada, porque o `p` precisa do `-n`",
+        "why": "O `p` funciona de qualquer jeito; o `-n` decide se todo o resto também é impresso."
+      },
+      {
+        "text": "Nada; o `-n` e o `p` se cancelam e o `2,4p` imprime as linhas 2 a 4",
+        "why": "O par é ao contrário: o `-n` com o `p` é a forma seletiva."
+      }
+    ]
+  },
+  "ex-dygsyy1b": {
+    "prompt": "Edite um arquivo no lugar e guarde uma cópia do original: `sed ____ 's/old/new/g' config.txt`",
+    "hint": "Dois caracteres, um ponto, e mais três."
+  },
+  "ex-33rszqz7": {
+    "prompt": "Por que o `awk '$9 >= 400'` consegue algo que o `grep` não consegue?",
+    "hint": "Um deles compara números e o outro compara formas.",
+    "choices": [
+      {
+        "text": "O `awk` lê o arquivo inteiro para a memória e o `grep` o transmite",
+        "why": "Os dois transmitem; nenhum carrega o arquivo."
+      },
+      {
+        "text": "O `awk` entende o formato do log e o `grep` não",
+        "why": "Nenhum sabe nada sobre logs; a um foi dito qual campo olhar."
+      },
+      {
+        "text": "Aritmética num campo nomeado, não padrão de texto",
+        "why": "Isso — o `grep` teria que descrever a forma de um número e pegaria outros."
+      },
+      {
+        "text": "O `grep` se atrapalha com números de três dígitos sem o `-E`",
+        "why": "Ele casa, com ou sem `-E`; casar não é a limitação."
+      }
+    ]
+  },
+  "ex-gpdsmmzb": {
+    "prompt": "Um `awk '{print NF}' access.log | sort -u` imprime 12, 15, 18 e 20. O que isso te diz?",
+    "hint": "Toda linha parece ter a mesma forma e vieram quatro contagens diferentes.",
+    "choices": [
+      {
+        "text": "O arquivo está corrompido e algumas linhas estão truncadas",
+        "why": "As linhas estão completas; algo nelas tem um número variável de espaços."
+      },
+      {
+        "text": "O `awk` está contando errado porque o delimitador não foi definido",
+        "why": "A divisão padrão em espaço em branco foi o que produziu essas contagens, corretamente."
+      },
+      {
+        "text": "Quatro formatos de log diferentes foram concatenados num arquivo",
+        "why": "Um formato, com um campo de texto livre nele, produz isso sozinho."
+      },
+      {
+        "text": "Um campo tem espaços, então campos posicionais seguintes desandam",
+        "why": "Isso — o user-agent entre aspas, e o `$NF` continua funcionando porque conta de trás."
+      }
+    ]
+  },
+  "ex-0vv9ye1g": {
+    "prompt": "O que o `awk '{c[$7]++} END {for (p in c) print c[p], p}'` faz?",
+    "hint": "O array é indexado por uma string.",
+    "choices": [
+      {
+        "text": "Conta cada valor distinto do campo 7",
+        "why": "Isso — a mesma resposta do `sort | uniq -c`, numa passagem e sem ordenar."
+      },
+      {
+        "text": "Imprime o campo 7 de cada linha, numerado",
+        "why": "O número é uma contagem por valor distinto, não um número de linha."
+      },
+      {
+        "text": "Soma o campo 7 do arquivo inteiro e imprime o total",
+        "why": "O `++` conta ocorrências; somar seria `+= $7`."
+      },
+      {
+        "text": "Imprime o sétimo campo só da última linha",
+        "why": "O bloco `END` roda uma vez, e o laço percorre toda chave que o corpo coletou."
+      }
+    ]
+  },
+  "ex-zdv926e2": {
+    "prompt": "Ligue cada variável ou bloco do awk ao que ele é.",
+    "hint": "Quatro peças, duas variáveis e dois blocos que rodam uma vez.",
+    "pairs": [
+      {
+        "left": "NR",
+        "right": "o número da linha em que você está"
+      },
+      {
+        "left": "NF",
+        "right": "quantos campos esta linha tem"
+      },
+      {
+        "left": "BEGIN",
+        "right": "roda uma vez, antes da primeira linha"
+      },
+      {
+        "left": "END",
+        "right": "roda uma vez, depois da última linha"
+      }
+    ],
+    "right_distractors": [
+      "o separador de campo",
+      "a linha inteira"
+    ]
+  },
+  "ex-ge7scey9": {
+    "prompt": "Some a quinta coluna de um CSV, pulando o cabeçalho, num comando: `awk -F, 'NR>1 {s+=$5} ____ {print s}' sales.csv`",
+    "hint": "Três letras, maiúsculas."
+  },
+  "ex-734cvg6s": {
+    "prompt": "Você tem duas listas ordenadas de nomes de usuário e quer os que estão na primeira e não na segunda. Qual comando?",
+    "hint": "Os números suprimem colunas em vez de selecioná-las.",
+    "choices": [
+      {
+        "text": "`comm -12 a.txt b.txt`",
+        "why": "Suprimir 1 e 2 deixa a terceira coluna, que são os que estão nos dois."
+      },
+      {
+        "text": "`comm -23 a.txt b.txt`",
+        "why": "Isso — suprima as colunas 2 e 3, deixando só o que está no primeiro arquivo."
+      },
+      {
+        "text": "`comm -13 a.txt b.txt`",
+        "why": "Isso deixa a segunda coluna: só no segundo arquivo."
+      },
+      {
+        "text": "`diff a.txt b.txt`",
+        "why": "Isso reporta mudanças por posição, que é outra pergunta."
+      }
+    ]
+  },
+  "ex-ymhpk0m4": {
+    "prompt": "Dois arquivos contêm as mesmas linhas em ordem diferente. O que o `comm -12` e o `diff` dizem?",
+    "hint": "Um deles se importa com onde uma linha está.",
+    "choices": [
+      {
+        "text": "Os dois dizem que são iguais, já que o conteúdo bate",
+        "why": "O `diff` compara linha a linha em ordem, então uma reordenação é uma lista longa de mudanças."
+      },
+      {
+        "text": "Os dois dizem que diferem, já que os arquivos não são idênticos byte a byte",
+        "why": "O `comm` compara pertencimento em entrada ordenada e acha toda linha nos dois."
+      },
+      {
+        "text": "O `comm -12` lista toda linha; o `diff` reporta muitas mudanças",
+        "why": "Isso — pertencimento contra posição, que é a diferença inteira entre eles."
+      },
+      {
+        "text": "O `comm -12` não imprime nada; o `diff` não imprime nada",
+        "why": "Nenhum fica em silêncio: um acha tudo em comum, o outro acha diferenças."
+      }
+    ]
+  },
+  "ex-4e86fmdr": {
+    "prompt": "Transforme uma coluna de valores numa linha separada por vírgulas: `cut -d, -f2 sales.csv | paste ____",
+    "hint": "Um traço, uma letra, mais uma letra e uma vírgula."
+  },
+  "ex-bqsadpqy": {
+    "prompt": "Um `find . -type f | xargs wc -l` reporta `./a: No such file or directory`. O que aconteceu?",
+    "hint": "Um dos nomes de arquivo tem algo que o `xargs` trata como separador.",
+    "choices": [
+      {
+        "text": "O `find` imprimiu um caminho relativo que o `wc` não conseguiu resolver",
+        "why": "O `wc` resolveu `./plain.txt` na mesma execução, do mesmo diretório."
+      },
+      {
+        "text": "O `xargs` ficou sem espaço de linha de comando e dividiu a lista mal",
+        "why": "A divisão pelo limite de tamanho acontece entre argumentos, nunca dentro de um."
+      },
+      {
+        "text": "O `wc` se atrapalha com um arquivo cujo nome começa com ponto e barra",
+        "why": "Ele leu o `./plain.txt` no mesmo comando."
+      },
+      {
+        "text": "Um nome de arquivo tem um espaço, e o `xargs` o dividiu em dois",
+        "why": "Isso — o `find -print0 | xargs -0` é o conserto, e é a forma a digitar por padrão."
+      }
+    ]
+  },
+  "ex-j7m4wtqw": {
+    "prompt": "Um `find . -name '*.tmp' | xargs rm` não achou nada. Por que isso ainda é perigoso?",
+    "hint": "Pense com o que o comando é rodado quando a lista está vazia.",
+    "choices": [
+      {
+        "text": "O `rm` sem argumentos apaga o diretório atual",
+        "why": "Ele recusa e imprime o uso; o perigo é um comando que faz algo em vez disso."
+      },
+      {
+        "text": "O `xargs` roda o comando uma vez mesmo assim, sem argumentos",
+        "why": "Isso — inofensivo para o `rm`, e o `ls` teria listado tudo como se fosse um resultado."
+      },
+      {
+        "text": "O `find` imprime um erro que o `rm` lê como nome de arquivo",
+        "why": "Os erros do `find` vão para a saída de erro, que o pipe não carrega."
+      },
+      {
+        "text": "O `xargs` espera entrada do terminal quando o pipe está vazio",
+        "why": "Ele lê o pipe até o fim de arquivo e então roda; ele não recorre ao terminal."
+      }
+    ]
+  },
+  "ex-nfynpa62": {
+    "prompt": "Torne um pipeline de `find` e `xargs` seguro para nomes com espaços: `find . -type f ____ | xargs -0 wc -l`",
+    "hint": "Duas palavras depois do traço, unidas por nada."
+  },
+  "ex-8ekjmvny": {
+    "prompt": "Ponha as etapas deste pipeline na ordem que faz menos trabalho.",
+    "items": [
+      "grep ' 500 ' access.log",
+      "cut -d' ' -f7",
+      "sort",
+      "uniq -c",
+      "sort -rn"
+    ],
+    "trap": "Jogue linhas fora, estreite para um campo, agrupe, conte, e ordene."
+  },
+  "ex-jym6awyz": {
+    "prompt": "Qual pipeline responde \"os dez caminhos mais movimentados\" corretamente?",
+    "hint": "Uma etapa deste pipeline não é opcional.",
+    "choices": [
+      {
+        "text": "`cut -d\" \" -f7 a.log | uniq -c | sort -rn | head -10`",
+        "why": "Sem um sort antes, o `uniq -c` conta sequências e todo número está errado."
+      },
+      {
+        "text": "`cut -d\" \" -f7 a.log | sort | uniq -c | sort -rn | head`",
+        "why": "Isso — agrupe, conte, ordene pela contagem."
+      },
+      {
+        "text": "`cut -d\" \" -f7 a.log | sort -rn | uniq -c | head`",
+        "why": "Ordenar caminhos numericamente não faz nada, e o `uniq -c` aí conta antes de ordenar."
+      },
+      {
+        "text": "`sort -u a.log | cut -d\" \" -f7 | uniq -c | sort -rn | head`",
+        "why": "Ordenar linhas inteiras não agrupa caminhos iguais, e nada ordena pela contagem."
+      }
+    ]
+  },
+  "ex-prvynz9y": {
+    "prompt": "Uma linha de log termina com um tempo de resposta em milissegundos. Como você acha as requisições lentas?",
+    "hint": "O campo de user-agent tem espaços, então contar campos da esquerda não é seguro.",
+    "choices": [
+      {
+        "text": "`awk '$NF > 3000' access.log`",
+        "why": "Isso — o `$NF` conta do fim, passando pelo user-agent de largura variável."
+      },
+      {
+        "text": "`awk '$12 > 3000' access.log`",
+        "why": "O número do campo varia de linha para linha, por causa do user-agent entre aspas."
+      },
+      {
+        "text": "`grep -E ' [0-9]{4,}$' access.log`",
+        "why": "Isso acha números de quatro dígitos no fim, o que é perto e também pega 1000 a 2999."
+      },
+      {
+        "text": "`cut -d\" \" -f12 access.log | sort -rn | head`",
+        "why": "O mesmo problema do segundo, e ainda perde o resto da linha."
+      }
+    ]
+  },
+  "ex-cg0615by": {
+    "prompt": "Ligue cada pergunta à ferramenta que a responde.",
+    "hint": "Seis perguntas, seis ferramentas, e três delas parecem se sobrepor.",
+    "pairs": [
+      {
+        "left": "ficar com as linhas que casam",
+        "right": "grep"
+      },
+      {
+        "left": "ficar com algumas colunas",
+        "right": "cut"
+      },
+      {
+        "left": "substituir um padrão",
+        "right": "sed"
+      },
+      {
+        "left": "substituir ou apagar caracteres",
+        "right": "tr"
+      },
+      {
+        "left": "aritmética num campo",
+        "right": "awk"
+      },
+      {
+        "left": "transformar linhas em argumentos",
+        "right": "xargs"
+      }
+    ],
+    "right_distractors": [
+      "contar as linhas",
+      "ordenar por uma chave"
+    ]
+  },
+  "ex-c6h5f1f0": {
+    "prompt": "Um script escreve um log com `some-command > app.log` e os erros não estão nele. Qual é o conserto?",
+    "hint": "Um pipe e um redirecionamento carregam um fluxo por padrão.",
+    "choices": [
+      {
+        "text": "`some-command | tee app.log`",
+        "why": "Isso copia a saída padrão para o arquivo e para a tela, e ainda deixa a de erro de fora."
+      },
+      {
+        "text": "`some-command 2>&1 > app.log`",
+        "why": "Essa é a ordem que não funciona: o 2 é copiado enquanto o 1 ainda é o terminal."
+      },
+      {
+        "text": "`some-command > app.log 2>&1`",
+        "why": "Isso — aponte o 1 para o arquivo primeiro, e então faça o 2 virar cópia do 1."
+      },
+      {
+        "text": "`some-command 2> app.log`",
+        "why": "Isso captura os erros e perde a saída que o script estava escrevendo."
+      }
+    ]
+  },
+  "ex-46ymfb82": {
+    "prompt": "Você precisa substituir um caminho em cinquenta arquivos de configuração. O que faz primeiro?",
+    "hint": "Não há desfazer, e há um jeito de olhar antes de pular.",
+    "choices": [
+      {
+        "text": "Fazer backup do diretório inteiro com `cp -r`",
+        "why": "Sensato e mais lento que a coisa que te mostra a mudança antes de fazê-la."
+      },
+      {
+        "text": "Rodar o `sed -i` num arquivo e conferir o resultado",
+        "why": "Melhor que nada, e já mudou um arquivo que você talvez tenha que restaurar."
+      },
+      {
+        "text": "Usar o `-i.bak` para cada arquivo guardar uma cópia",
+        "why": "Vale fazer também, e ainda assim aplica a mudança antes de você a ter visto."
+      },
+      {
+        "text": "Rodar o `sed` sem o `-i` e ler",
+        "why": "Isso — não muda nada, custa um segundo, e mostra com o que o padrão de fato casou."
+      }
+    ]
+  },
+  "ex-yzy8pwne": {
+    "prompt": "Quais destes dão uma resposta errada em silêncio em vez de um erro?",
+    "hint": "Quatro falhas desta aula; duas delas se anunciam.",
+    "choices": [
+      {
+        "text": "`uniq -c` em entrada não ordenada",
+        "why": "Sim — ele conta sequências e imprime números pequenos plausíveis."
+      },
+      {
+        "text": "`sort` em números sem o `-n`",
+        "why": "Sim — a saída parece ordenada e o 109 vem antes do 26."
+      },
+      {
+        "text": "`2>&1 > arquivo` em vez de `> arquivo 2>&1`",
+        "why": "Sim — um arquivo é escrito e os erros não estão nele."
+      },
+      {
+        "text": "`cut -d\", \"` com um delimitador de dois caracteres",
+        "why": "O `cut` recusa: o delimitador precisa ser um único caractere."
+      },
+      {
+        "text": "`join` em entrada não ordenada",
+        "why": "Sim — diferente do `comm`, ele não reclama."
+      }
+    ]
+  },
+  "ex-1v1tnkcq": {
+    "prompt": "Ponha em ordem os passos de investigar um arquivo desconhecido.",
+    "items": [
+      "head -1 file",
+      "wc -l file",
+      "awk '{print NF}' file | sort -u",
+      "montar o pipeline num head -20",
+      "rodar no arquivo inteiro"
+    ],
+    "trap": "Veja uma linha, veja quanto tem, confira que toda linha tem essa forma, teste pequeno, e rode."
+  },
+  "ex-j2s5smbp": {
+    "prompt": "Conte os valores distintos da primeira coluna de um log, num pipeline: `cut -d\" \" -f1 a.log | sort ____ | wc -l`",
+    "hint": "Uma opção curta, e ela descarta duplicatas."
+  },
+  "ex-1zjp5hrj": {
+    "prompt": "Faça um pipeline reportar falha em qualquer etapa, e não só na última: `set -o ____`",
+    "hint": "Uma palavra, oito letras."
+  },
+  "ex-e8h41gvs": {
+    "prompt": "Faça um comando ler um arquivo como entrada padrão, sem nomear o arquivo ao comando: `wc -l ____ app.log`",
+    "hint": "Um caractere."
+  },
+  "ex-bpqe9e4p": {
+    "prompt": "Leia o código de saída de cada etapa depois de um pipeline, e não só o da última: `echo \"${____[@]}\"`",
+    "hint": "Uma palavra em maiúsculas, onze letras."
+  },
+  "ex-kp8d9254": {
+    "prompt": "Mostre os primeiros quarenta bytes de um arquivo em vez das primeiras quarenta linhas: `head ____ 40 access.log`",
+    "hint": "Um traço e uma letra."
+  },
+  "ex-dym1f5f1": {
+    "prompt": "Case uma linha contendo dois ou mais caracteres `a` consecutivos e nada mais: `grep -E \"^a{____}$\"`",
+    "hint": "Um dígito e uma vírgula."
+  },
+  "ex-6mnjdrzf": {
+    "prompt": "Descarte o cabeçalho de um CSV antes de cortar uma coluna: `____ -n +2 sales.csv | cut -d, -f5`",
+    "hint": "Quatro letras."
+  },
+  "ex-wdxqfb7q": {
+    "prompt": "Ordene só pelo campo 5, em vez de do campo 5 até o fim da linha: `sort -t, ____ -rn sales.csv`",
+    "hint": "Dois caracteres, um dígito, uma vírgula e o mesmo dígito."
+  },
+  "ex-ssmk27ad": {
+    "prompt": "Mostre os valores mais comuns e quantas vezes cada um apareceu: `sort f.txt | uniq ____ | sort -rn`",
+    "hint": "Um traço e uma letra."
+  },
+  "ex-ne18z8n9": {
+    "prompt": "Conte só as linhas de um arquivo, não as palavras e os bytes: `wc ____ access.log`",
+    "hint": "Um traço e uma letra."
+  },
+  "ex-ptq8p1ja": {
+    "prompt": "O `wc -c` e o `wc -m` discordam num arquivo de texto em português. Por quê?",
+    "hint": "Um conta armazenamento e o outro conta texto.",
+    "choices": [
+      {
+        "text": "O arquivo tem uma marca de ordem de bytes que o `-m` pula",
+        "why": "Uma BOM seria diferença de três bytes; a diferença aqui é proporcional aos acentos."
+      },
+      {
+        "text": "O `-m` exclui a quebra de linha no fim de cada linha",
+        "why": "Os dois contam quebras de linha; elas são um byte e um caractere cada."
+      },
+      {
+        "text": "Um caractere acentuado é um caractere e dois bytes",
+        "why": "Isso — o `ã` são dois bytes, então os bytes superam os caracteres."
+      },
+      {
+        "text": "O `-c` conta os blocos do arquivo no disco em vez dos bytes",
+        "why": "O `-c` é bytes; uso de blocos é o que o `du` reporta."
+      }
+    ]
+  },
+  "ex-t1kvt101": {
+    "prompt": "Para qual trabalho o `tr` é a ferramenta certa?",
+    "hint": "Ele trabalha com caracteres e não tem linguagem de padrões.",
+    "choices": [
+      {
+        "text": "Substituir a palavra `staging` por `production` numa configuração",
+        "why": "Isso é uma palavra, e o `tr` mapearia cada letra separadamente."
+      },
+      {
+        "text": "Transformar uma linha separada por vírgulas em um valor por linha",
+        "why": "Isso — o `tr , '\\n'` é o jeito mais curto de dizer isso."
+      },
+      {
+        "text": "Imprimir apenas as linhas que contêm um erro",
+        "why": "O `tr` não faz ideia do que é uma linha; isso é o `grep`."
+      },
+      {
+        "text": "Somar os números da terceira coluna",
+        "why": "Isso é aritmética num campo, que é o `awk`."
+      }
+    ]
+  },
+  "ex-83hdfrtg": {
+    "prompt": "Substitua toda ocorrência de cada linha, e não só a primeira: `sed 's/old/new/____'`",
+    "hint": "Uma letra."
+  },
+  "ex-ez1xy3cn": {
+    "prompt": "Imprima o último campo de toda linha, seja qual for a contagem de campos: `awk '{print $____}'`",
+    "hint": "Duas letras, maiúsculas."
+  },
+  "ex-5pmx7cc9": {
+    "prompt": "Imprima as linhas que estão nos dois arquivos ordenados: `comm ____ a.txt b.txt`",
+    "hint": "Um traço e dois dígitos."
+  },
+  "ex-5498ck2t": {
+    "prompt": "Rode o comando uma vez por linha de entrada em vez de empacotar muitas numa linha de comando: `xargs ____ gzip`",
+    "hint": "Um traço, uma letra e um dígito."
+  },
+  "ex-0bgmcvr2": {
+    "prompt": "Você quer toda linha de um log que não seja uma checagem de saúde. Qual opção?",
+    "hint": "A pergunta é o inverso do que o grep normalmente faz.",
+    "choices": [
+      {
+        "text": "`grep -c health`",
+        "why": "Isso as conta em vez de removê-las."
+      },
+      {
+        "text": "`grep -l health`",
+        "why": "Isso nomeia os arquivos, que você já sabe."
+      },
+      {
+        "text": "`grep -o health`",
+        "why": "Isso imprime a palavra que casou, repetidamente."
+      },
+      {
+        "text": "`grep -v health`",
+        "why": "Isso — inverta a correspondência, e encadeie para cada coisa que você quer fora."
+      }
+    ]
+  },
+  "ex-tdth5xnm": {
+    "prompt": "Qual destes comandos muda um arquivo?",
+    "hint": "Três dos quatro imprimem na saída padrão e param por aí.",
+    "choices": [
+      {
+        "text": "`grep padrão arquivo`",
+        "why": "Ele imprime as linhas que casam e deixa o arquivo em paz."
+      },
+      {
+        "text": "`awk '{print $1}' arquivo`",
+        "why": "Ele imprime uma coluna e deixa o arquivo em paz."
+      },
+      {
+        "text": "`sed -i 's/a/b/' arquivo`",
+        "why": "Isso — o `-i` é a opção que edita no lugar, sem desfazer."
+      },
+      {
+        "text": "`sort -n arquivo`",
+        "why": "Ele imprime as linhas ordenadas; o arquivo fica igual."
+      }
+    ]
+  },
+  "ex-13a5fpts": {
+    "prompt": "Um comando de uma linha cresceu para três condições de awk e quatro variáveis. E agora?",
+    "hint": "O fechamento da aula disse onde fica a linha.",
+    "choices": [
+      {
+        "text": "Dividir em dois comandos awk ligados por um pipe",
+        "why": "Isso funciona e deixa a mesma quantidade de lógica espalhada em dois lugares."
+      },
+      {
+        "text": "Escrever como um script num arquivo",
+        "why": "Isso — ele virou um programa, e um programa pertence a um arquivo com nome."
+      },
+      {
+        "text": "Pôr num alias do shell para ficar mais fácil de reusar",
+        "why": "Um alias torna uma linha ilegível mais fácil de repetir e nada mais fácil de mudar."
+      },
+      {
+        "text": "Reescrever em `sed`, que lida com múltiplos comandos",
+        "why": "O `sed` é menos capaz aqui, não mais; essa direção anda para trás."
+      }
+    ]
+  },
+  "ex-x21sxtcc": {
+    "prompt": "Mande a saída e os erros de um comando para o mesmo arquivo: `some-command > log.txt ____`",
+    "hint": "Quatro caracteres."
+  },
+  "ex-96y0gwe3": {
+    "prompt": "Conte quantos códigos de status distintos aparecem num log: `cut -d\" \" -f9 a.log | ____ | wc -l`",
+    "hint": "Duas palavras: um comando e uma opção curta."
+  },
+  "ex-6d6kby84": {
+    "prompt": "Comprima sequências de espaços em uma só, para o `cut -d\" \"` funcionar em texto com preenchimento: `tr ____ \" \"`",
+    "hint": "Um traço e uma letra."
+  }
+}
