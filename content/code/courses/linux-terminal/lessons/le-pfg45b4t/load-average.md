@@ -87,9 +87,10 @@ procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu----
  0  1      0 14485424  56304 1542856    0    0     0 980992 3815 4290  2  4 72 22  0  0
 ```
 
-**Load 1.39 on a four-core machine, and the disk is at 93% utilisation.** On the
-load average alone you would close the ticket. The `b 1` and the `wa 22` are the
-real story, and they are in the next two sections.
+**Load 1.39 on a four-core machine, and the disk is at 93% utilisation.** That
+93% is `iostat`'s, from section 184; `vmstat` does not carry it. On the load
+average alone you would close the ticket. The `b 1` and the `wa 22` are the real
+story, and they are read in section 179 and section 184.
 
 It goes the other way too. A machine wedged on a dead network filesystem will
 show a load average of 40 with every processor idle, because forty processes are
