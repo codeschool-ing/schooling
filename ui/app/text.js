@@ -349,23 +349,144 @@ export function shuffleWith(seed, list) {
    here went through `esc()`: either the matched snippet, or the text between
    two matches. */
 
-const JS_KEYWORDS = ['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while',
-  'do', 'switch', 'case', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'new',
-  'class', 'extends', 'super', 'this', 'typeof', 'instanceof', 'in', 'of', 'delete', 'void',
-  'import', 'export', 'from', 'default', 'async', 'await', 'yield', 'static', 'get', 'set',
-  'null', 'undefined', 'true', 'false', 'NaN'];
+/* ONE LITERAL, MADE SAFE TO PUT INSIDE AN EXPRESSION. Comment markers and
+   quotes arrive here as text — `//`, `--`, `/*`, `"""` — and most of them are
+   metacharacters. */
+const literal = (s) => s.replace(/[.*+?^${}()|[\]\\/-]/g, '\\$&');
+
+/* The two rules that are the same in every language that has functions and
+   numbers, written once instead of fifteen times. */
+const NUMBER = /\b0[xb][0-9a-f_]+\b|\b\d[\d_]*(?:\.\d+)?(?:e[+-]?\d+)?[a-z_]*\b/i;
+const CALL = /\b[A-Za-z_][\w$]*(?=\s*\()/;
+
+const words = (s) => s.trim().split(/\s+/);
+
+/* ---------- a language is a table ----------
+
+   WRITTEN BY HAND, EACH LANGUAGE IS FIVE EXPRESSIONS TO GET SUBTLY WRONG, and
+   three of the five are the same three every time: where a comment starts, what
+   quotes a string, what a number looks like. What actually differs is small and
+   nameable — Python's triple quote, Go's raw backtick, SQL's `--`, R having no
+   block comment at all — so those are the arguments and the rest is shared.
+
+   The catalogue names eleven languages in course titles today and it will name
+   more. A table entry is what the next one should cost; five hand-written
+   expressions is what makes somebody skip it and ship a grey lesson.
+
+   `long` is quoting that spans lines and it comes FIRST, before the ordinary
+   quotes: `"""` has to win over `"`, or a Python docstring closes on its own
+   second character and everything after it is coloured as if outside a string
+   that in fact never ended. The ordinary quotes stop at the newline for the
+   opposite reason — an apostrophe in an English comment would otherwise colour
+   the next twenty lines. */
+function language({ line = ['//'], block = ['/*', '*/'], quotes = ['"', "'"],
+  long = [], keywords = '' } = {}) {
+  const str = [
+    ...long.map((q) => literal(q) + '[\\s\\S]*?' + literal(q)),
+    ...quotes.map((q) => (q === '`'
+      /* A backtick string spans lines, in JavaScript and in Go both. */
+      ? '`(?:\\\\[\\s\\S]|[^`\\\\])*`'
+      : literal(q) + '(?:\\\\[\\s\\S]|[^' + literal(q) + '\\\\\\n])*' + literal(q))),
+  ];
+  const com = [
+    ...(block ? [literal(block[0]) + '[\\s\\S]*?' + literal(block[1])] : []),
+    ...line.map((l) => literal(l) + '[^\\n]*'),
+  ];
+  const kw = keywords ? ['\\b(?:' + words(keywords).join('|') + ')\\b'] : [];
+  return [['com', com], ['str', str], ['num', [NUMBER.source]], ['kw', kw], ['fun', [CALL.source]]]
+    /* An empty alternative would be an expression that matches the empty string
+       at every position — a span around nothing, at every position, forever. */
+    .filter(([, alts]) => alts.length)
+    .map(([cls, alts]) => [cls, new RegExp(alts.join('|'))]);
+}
+
+const JS_KEYWORDS = `const let var function return if else for while do switch case break
+  continue try catch finally throw new class extends super this typeof instanceof in of
+  delete void import export from default async await yield static get set null undefined
+  true false NaN`;
+
+const TS_KEYWORDS = `${JS_KEYWORDS} interface type enum implements declare namespace abstract
+  readonly public private protected as is keyof satisfies infer never unknown any string
+  number boolean object symbol`;
 
 /* Each language is a list of [class, expression]. The order is the precedence:
    the first one to match at a position wins. The class names are short because
    they reach the DOM as `t-com`, `t-str`, `t-num`… */
 const RULES = {
-  javascript: [
-    ['com', /\/\/[^\n]*|\/\*[\s\S]*?\*\//],
-    ['str', /`(?:\\[\s\S]|[^`\\])*`|"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'/],
-    ['num', /\b\d[\d_]*(?:\.\d+)?(?:e[+-]?\d+)?n?\b/i],
-    ['kw', new RegExp('\\b(?:' + JS_KEYWORDS.join('|') + ')\\b')],
-    ['fun', /\b[A-Za-z_$][\w$]*(?=\s*\()/],
-  ],
+  javascript: language({ quotes: ['`', '"', "'"], keywords: JS_KEYWORDS }),
+  typescript: language({ quotes: ['`', '"', "'"], keywords: TS_KEYWORDS }),
+
+  python: language({
+    line: ['#'],
+    block: null,
+    long: ['"""', "'''"],
+    keywords: `def class return if elif else for while break continue pass import from as
+      with try except finally raise lambda yield global nonlocal assert del in is not and or
+      None True False async await self match case print len range str int float bool list
+      dict set tuple`,
+  }),
+
+  go: language({
+    quotes: ['`', '"', "'"],
+    keywords: `func package import var const type struct interface map chan go defer return
+      if else for range switch case default break continue fallthrough select goto nil true
+      false error string int int8 int16 int32 int64 uint uint8 uint64 float32 float64 bool
+      byte rune make new len cap append copy delete panic recover`,
+  }),
+
+  java: language({
+    keywords: `class interface enum record extends implements public private protected static
+      final abstract sealed void new return if else for while do switch case break continue
+      try catch finally throw throws import package this super null true false int long short
+      double float boolean char byte String var instanceof synchronized volatile transient
+      native default assert`,
+  }),
+
+  kotlin: language({
+    keywords: `fun val var class object interface data sealed enum companion init constructor
+      override open abstract private protected internal public return if else when for while
+      do break continue try catch finally throw import package this super null true false is
+      as in by lazy suspend it typealias vararg reified inline operator`,
+  }),
+
+  swift: language({
+    keywords: `func let var class struct enum protocol extension init deinit subscript guard
+      if else switch case default for in while repeat return break continue throw throws
+      rethrows try catch defer import self super nil true false public private internal
+      fileprivate open static final lazy weak unowned mutating override where async await
+      some any typealias associatedtype`,
+  }),
+
+  sql: language({
+    line: ['--'],
+    quotes: ["'", '"'],
+    keywords: `select from where group by having order limit offset insert into values update
+      set delete create table view index drop alter add column constraint primary key foreign
+      references unique not null default check join inner left right full outer cross on as
+      union all distinct case when then else end exists in between like is asc desc with
+      begin commit rollback transaction grant revoke and or count sum avg min max`,
+  }),
+
+  r: language({
+    line: ['#'],
+    block: null,
+    keywords: `function if else for while repeat break next return TRUE FALSE NULL NA NaN Inf
+      in library require c list data.frame matrix vector factor`,
+  }),
+
+  dockerfile: language({
+    line: ['#'],
+    block: null,
+    keywords: `FROM RUN CMD LABEL EXPOSE ENV ADD COPY ENTRYPOINT VOLUME USER WORKDIR ARG
+      ONBUILD STOPSIGNAL HEALTHCHECK SHELL AS`,
+  }),
+
+  /* ---------- and the ones that are not keyword languages ----------
+
+     CSS, HTML, JSON, YAML and INI have no vocabulary to list: what carries the
+     meaning is a position — before a colon, inside a tag, between brackets — so
+     they are written out, and the factory above would only get in the way. */
+
   css: [
     ['com', /\/\*[\s\S]*?\*\//],
     ['str', /"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'/],
@@ -374,6 +495,7 @@ const RULES = {
     ['fun', /[.#][\w-]+|&?::?[\w-]+(?=[\s,{:])/],
     ['prop', /[-a-z]+(?=\s*:)/],
   ],
+
   html: [
     ['com', /<!--[\s\S]*?-->/],
     /* `<!DOCTYPE` is in the tag alternative rather than a rule of its own,
@@ -385,26 +507,154 @@ const RULES = {
     ['kw', /<!\s*[\w-]+|<\/?[\w-]+|\/?>/],
     ['prop', /\b[\w-]+(?==)/],
   ],
+
+  /* THE KEY BEFORE THE STRING, which is the one thing JSON needs said: a key is
+     a quoted string too, and in the ordinary order every name in the file would
+     be the colour of a value. */
+  json: [
+    ['prop', /"(?:\\[\s\S]|[^"\\\n])*"(?=\s*:)/],
+    ['str', /"(?:\\[\s\S]|[^"\\\n])*"/],
+    ['num', /-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b/i],
+    ['kw', /\b(?:true|false|null)\b/],
+  ],
+
+  yaml: [
+    ['com', /#[^\n]*/],
+    ['prop', /^[ \t]*-?[ \t]*[\w.\/-]+(?=\s*:)/],
+    ['str', /"(?:\\[\s\S]|[^"\\\n])*"|'(?:[^'\n])*'/],
+    ['kw', /^---$|\b(?:true|false|null|yes|no|on|off)\b/],
+    ['num', /\b\d+(?:\.\d+)?\b/],
+  ],
+
+  /* `[Timer]` is a section and `OnCalendar=` is a key, which is what the twelve
+     systemd units of `linux-terminal` are written in. */
+  ini: [
+    ['com', /[;#][^\n]*/],
+    ['kw', /^[ \t]*\[[^\]\n]*\]/],
+    ['prop', /^[ \t]*[\w.-]+(?=\s*=)/],
+    ['str', /"(?:\\[\s\S]|[^"\\\n])*"|'(?:[^'\n])*'/],
+    ['num', /\b\d+(?:\.\d+)?[a-z]*\b/i],
+  ],
+
+  /* VIM'S COMMENT CHARACTER IS A DOUBLE QUOTE, which is why this has no string
+     rule at all: the two cannot be told apart without parsing, and a `.vimrc`
+     is comments and `set` lines. Guessing string would put the rest of a line
+     in the colour of a literal every time somebody explains what a mapping is
+     for. */
+  vim: [
+    ['com', /(?:^|[ \t])"[^\n]*/],
+    ['kw', new RegExp('^[ \\t]*:[\\w!]+|\\b(?:' + words(`set setlocal let map nmap imap vmap
+      noremap nnoremap inoremap vnoremap function endfunction if endif else for endfor while
+      endwhile call execute source autocmd augroup syntax filetype colorscheme highlight
+      command silent echo`).join('|') + ')\\b')],
+    ['num', /\b\d+\b/],
+  ],
+
+  /* ---------- the shell, which is a line and not a file ----------
+
+     A COMMAND IS THE FIRST WORD OF A LINE, and there is no list of commands to
+     put in a table: `iotop`, `journalctl`, `awk`, whatever the machine has
+     installed. So the position is the rule — the start of a line, or the far
+     side of a pipe — and that is why this one is written out rather than named.
+
+     `sudo` AND `time` PASS THROUGH, because the word the reader is looking for
+     is the one after them.
+
+     THE OPERATOR IS PART OF THE MATCH, deliberately: `| grep` is one span
+     rather than two, which is what lets this be written without a lookbehind.
+     Both halves are the same colour anyway — a pipe is structure and so is the
+     command it feeds. */
+  sh: [
+    ['com', /(?:^|[ \t])#[^\n]*/],
+    /* BOTH QUOTES STOP AT THE NEWLINE. A shell string can legally span lines;
+       an unbalanced one cannot be told from a balanced one that does, and
+       guessing the second turns the rest of the block into a literal. */
+    ['str', /"(?:\\[\s\S]|[^"\\\n])*"|'[^'\n]*'/],
+    ['kw', new RegExp('^[ \\t]*(?:sudo |doas |time |env )?[A-Za-z_.\\/][\\w.\\/-]*'
+      + '|[|;&]{1,2}[ \\t]*(?:sudo )?[A-Za-z_.\\/][\\w.\\/-]*'
+      /* A SHORT LIST, AND `local` IS NOT ON IT. A shell keyword is a word with
+         word boundaries either side, and a path is full of those: `/usr/local`
+         came out with an amber word in the middle of a directory name. The ones
+         that open and close a block cannot appear in a path and stay; the ones
+         that could are already covered, because a command at the start of a
+         line or after a `;` is matched above whatever the word happens to be. */
+      + '|\\b(?:' + words(`if then elif else fi for while until do done case esac in
+        function export readonly trap exit`).join('|')
+      + ')\\b|\\$\\{?[\\w?#@*-]+\\}?|[<>]{1,2}')],
+    ['num', /\b\d+(?:\.\d+)?\b/],
+  ],
 };
-RULES.js = RULES.javascript;
+
+/* THE NAME THE AUTHOR WROTE IS NOT ALWAYS THE NAME OF THE TABLE. Fences say
+   ```js, ```py, ```yml, ```bash, and refusing those would be refusing the way
+   everybody writes them. */
+const ALIAS = {
+  js: 'javascript', jsx: 'javascript', mjs: 'javascript', node: 'javascript',
+  ts: 'typescript', tsx: 'typescript',
+  py: 'python', py3: 'python',
+  golang: 'go',
+  kt: 'kotlin',
+  htm: 'html', xml: 'html',
+  yml: 'yaml',
+  toml: 'ini', conf: 'ini', cfg: 'ini', properties: 'ini',
+  vimrc: 'vim',
+  bash: 'sh', zsh: 'sh', shell: 'sh', console: 'sh', terminal: 'sh',
+};
 
 /* One single expression, with the alternatives in groups named after the class.
    Matching once per position is what guarantees the precedence — and it is what
-   stops the word `const` inside a string from becoming a keyword. */
+   stops the word `const` inside a string from becoming a keyword.
+
+   `m` IS SET SO THAT `^` MEANS THE START OF A LINE. Two of these are line-shaped
+   rather than file-shaped — a shell command begins a line, an INI key begins a
+   line — and without it each rule would only ever match the first one in the
+   block. */
 const compile = (rules) => new RegExp(
   rules.map(([cls, re]) => '(?<' + cls + '>' + re.source + ')').join('|'),
-  'gi',
+  'gim',
 );
 
 const COMPILED = Object.fromEntries(
   Object.entries(RULES).map(([lang, rules]) => [lang, compile(rules)]),
 );
 
-function highlight(code, language) {
-  const re = COMPILED[String(language || '').toLowerCase()];
-  const raw = String(code ?? '');
-  if (!re) return esc(raw);           // a language we do not know comes out colourless
+/* Every name a fence may carry. `tools/check-highlight` imports this rather
+   than keeping a list of its own, and says so of a block labelled `pyton`:
+   nothing else in the repository can see a lesson served in one grey. */
+export const LANGUAGES = Object.keys(COMPILED).concat(Object.keys(ALIAS)).sort();
 
+/* ---------- a recording is not a language ----------
+
+   1,391 FENCES IN `linux-terminal` ARE A TRANSCRIPT: a prompt, what the student
+   types, and what the machine answers. They carry no label and should not — a
+   recording of a screen is not written in a language, and `sh` would be a claim
+   about the output that is not true.
+
+   SO THE PROMPT IS THE LABEL. The content already carries it, on the first line
+   of every one of them, in three shapes and no others: `ana@vm:~/work$`,
+   `root@vm:~#`, and PowerShell's `PS /home/ana/work/ps>`. A bare `$ ` counts as
+   well; a bare `# ` deliberately does not, because that is what a comment looks
+   like at the top of a configuration file and there are 374 promptless bare
+   fences in the same course to get wrong.
+
+   THE OUTPUT STAYS PLAIN. `ls` prints file names and `free -h` prints numbers,
+   and colouring them would be inventing a structure the recording does not
+   have — in a screen full of numbers, the one that matters is never the one a
+   rule would find. What is coloured is the line the student typed; the prompt
+   is dimmed to the colour of a comment, because that is what it is, chrome in
+   front of the command. */
+const PROMPT = /^(?:[\w.-]+@[\w.-]+:\S*[$#]|PS [^>\n]*>|\$) /;
+
+function transcript(raw) {
+  return raw.split('\n').map((line) => {
+    const at = PROMPT.exec(line);
+    if (!at) return esc(line);
+    return '<span class="t-com">' + esc(at[0]) + '</span>'
+      + sweep(line.slice(at[0].length), COMPILED.sh);
+  }).join('\n');
+}
+
+function sweep(raw, re) {
   let out = '';
   let last = 0;
   re.lastIndex = 0;
@@ -419,4 +669,13 @@ function highlight(code, language) {
     m = re.exec(raw);
   }
   return out + esc(raw.slice(last));
+}
+
+export function highlight(code, language) {
+  const raw = String(code ?? '');
+  const name = String(language || '').toLowerCase();
+  if (!name) return PROMPT.test(raw) ? transcript(raw) : esc(raw);
+  const re = COMPILED[ALIAS[name] || name];
+  if (!re) return esc(raw);           // a language we do not know comes out colourless
+  return sweep(raw, re);
 }

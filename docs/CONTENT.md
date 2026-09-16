@@ -202,6 +202,32 @@ A diff on this file is a diff per paragraph, which is the entire reason the cata
 and not a row (C-01). A paragraph inside a JSON string reviews badly, so prose never lives in
 JSON.
 
+#### The info string is the language, and an unknown one is an error
+
+A fenced block is coloured by `highlight()` in `ui/app/text.js`, from the name after the
+backticks. These are the names it knows, and `tools/check-highlight` fails the build on any
+other — a label it has never heard of renders perfectly, in one grey, and nothing else in this
+repository can see that:
+
+| what | names |
+|---|---|
+| keyword languages | `javascript` `typescript` `python` `go` `java` `kotlin` `swift` `sql` `r` `dockerfile` |
+| the ones carried by position | `html` `css` `json` `yaml` `ini` `vim` `sh` |
+| aliases | `js` `jsx` `mjs` `node` `ts` `tsx` `py` `golang` `kt` `htm` `xml` `yml` `toml` `conf` `cfg` `properties` `vimrc` `bash` `zsh` `shell` `console` `terminal` |
+
+A language nobody has taught it yet is a table entry in `RULES`: what starts a comment, what
+quotes a string, and the words. Five hand-written expressions is what makes somebody skip it
+and ship a grey lesson, so the ones that are the same everywhere are not written again.
+
+**A terminal recording carries no info string, and should not.** A transcript — a prompt, what
+the student typed, what the machine answered — is not written in a language, and calling it
+`sh` would be a claim about the output that is not true. The prompt is what marks it, and the
+content already carries one on the first line of all 1,391 of them: `ana@vm:~/work$`,
+`root@vm:~#`, PowerShell's `PS /home/ana/work/ps>`, or a bare `$ `. The prompt is dimmed, the
+command is coloured, **and the output is left alone** — colouring it would invent a structure
+the recording does not have. A bare `# ` is deliberately not a prompt: that is what a comment
+looks like at the top of a configuration file.
+
 #### Three things Markdown cannot say, which a fence says instead
 
 The interface renders paragraphs, lists and fenced code from this file. Three blocks have no
