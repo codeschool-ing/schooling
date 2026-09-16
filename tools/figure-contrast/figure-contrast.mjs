@@ -70,78 +70,22 @@ const AA = 4.5;
 /* ==========================================================================
    WHAT IS STILL WRONG, WRITTEN DOWN RATHER THAN WAIVED.
 
-   `web-fundamentals` draws its figures by hand, and 204 runs of text in them
-   are below AA. It is one defect repeated: an ACCENT USED AS BODY TEXT — the
-   brand blue or the brand red, on the panel or on a twenty-per-cent tint of
-   itself — plus `--phosphor-dim`, which is the blue dimmed and reads 2.48:1 as
-   text. Lightening the tints does not answer it: at a tenth instead of a fifth
-   it is still 164, because the shortfall is mostly in the ink.
+   It is empty, and it was not: 204 runs of text in 52 hand-drawn figures of
+   `web-fundamentals` were below AA when this tool was written. One defect
+   repeated — an ACCENT USED AS BODY TEXT, the brand blue or the brand red on a
+   fifth of itself — plus `--phosphor-dim`, which is that blue dimmed and reads
+   2.48:1 as text. The tint and the border carry which kind of box it is; the
+   label does not have to, and is `--paper` now.
 
-   Fixing it is a decision per drawing about which colour that label should have
-   been, in a course this change did not set out to touch, so it is listed here
-   instead of guessed at. `linux-terminal` had two of the same and they are
-   fixed; every captured figure in the catalogue is fixed.
-
-   THE LIST IS A RATCHET AND NOT AN EXCUSE. A file not on it may not fail at
+   THE LIST STAYS BECAUSE THE RATCHET DOES. A file not on it may not fail at
    all. A file on it may not fail MORE than its number. And a file that fails
    FEWER times than its number fails this tool too, with the new number to put
-   here — the same rule `check-css` holds its `deliberate` map to, and for the
-   same reason: an exception that outlived what it excused reads as current.
+   here — which is what emptied it, one entry at a time, rather than somebody
+   remembering to. It is the same rule `check-css` holds its `deliberate` map
+   to, and for the same reason: an exception that outlived what it excused
+   reads as current.
    ========================================================================== */
-const OUTSTANDING = {
-  'content/code/courses/web-fundamentals/lessons/le-5he7q8tg/shared.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-5he7q8tg/shared.pt.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-5he7q8tg/static-hosting.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-5he7q8tg/static-hosting.pt.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-5he7q8tg/vps-dedicated.md': 6,
-  'content/code/courses/web-fundamentals/lessons/le-5he7q8tg/vps-dedicated.pt.md': 6,
-  'content/code/courses/web-fundamentals/lessons/le-61gshrr6/bandwidth.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-61gshrr6/bandwidth.pt.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-61gshrr6/latency.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-61gshrr6/latency.pt.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-88yzj4ty/network.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-88yzj4ty/network.pt.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-hptsw8ct/caching.md': 5,
-  'content/code/courses/web-fundamentals/lessons/le-hptsw8ct/caching.pt.md': 5,
-  'content/code/courses/web-fundamentals/lessons/le-mcwtvwbv/headers.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-mcwtvwbv/headers.pt.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-mcwtvwbv/methods.md': 9,
-  'content/code/courses/web-fundamentals/lessons/le-mcwtvwbv/methods.pt.md': 9,
-  'content/code/courses/web-fundamentals/lessons/le-mcwtvwbv/status.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-mcwtvwbv/status.pt.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-n74cj30g/encapsulation.md': 10,
-  'content/code/courses/web-fundamentals/lessons/le-n74cj30g/encapsulation.pt.md': 10,
-  'content/code/courses/web-fundamentals/lessons/le-n74cj30g/tcp-ip.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-n74cj30g/tcp-ip.pt.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/host.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/host.pt.md': 2,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/many-clients.md': 6,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/many-clients.pt.md': 6,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/peer-to-peer.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/peer-to-peer.pt.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/request-response.md': 10,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/request-response.pt.md': 10,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/roles.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-tt74bvn7/roles.pt.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-v2fa0w8t/frames.md': 5,
-  'content/code/courses/web-fundamentals/lessons/le-v2fa0w8t/frames.pt.md': 5,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/cssom.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/cssom.pt.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/layout-paint.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/layout-paint.pt.md': 1,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/render-tree.md': 5,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/render-tree.pt.md': 5,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/scripts.md': 3,
-  'content/code/courses/web-fundamentals/lessons/le-yw79hrg1/scripts.pt.md': 3,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/records.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/records.pt.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/registration.md': 6,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/registration.pt.md': 6,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/resolution.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/resolution.pt.md': 4,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/ttl.md': 5,
-  'content/code/courses/web-fundamentals/lessons/le-z9qkkeww/ttl.pt.md': 5
-};
+const OUTSTANDING = {};
 
 
 const luminance = (hex) => {
