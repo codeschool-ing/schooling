@@ -208,6 +208,65 @@ func checkFigureFonts(school string, s *catalog.School, families map[string]bool
 }
 
 /*
+A DURATION NO NARRATOR COULD MEET.
+
+	`seconds` is authored beside the script and is what the student reads before
+	deciding to start: `cmd/load`'s `summarise` rounds it up to whole minutes and
+	the lesson screen draws it on the video frame. Nothing measures it — no video
+	in this catalogue has been rendered — so it is a PLAN, and a plan drifts when
+	the script beside it is rewritten and the number is not.
+
+	That is what happened. Ten scripts in `linux-terminal` implied 3.0 to 4.9
+	spoken words a second, against 1.8 to 2.5 everywhere else in the same course.
+	All ten were the intro or the closing of lessons 1 to 6; every intro and
+	closing of lessons 7 to 13 was already inside the band. And it was not a
+	rounding matter: all ten displayed a whole minute short of what they will
+	run.
+
+	THE BAND IS WIDE ON PURPOSE. Continuous narration is about 2.3 to 2.8 words
+	a second, so 3.0 is already brisk and anything past it is a number no voice
+	will match. The floor is low because a demonstration script is mostly
+	silence — a command runs, the screen fills — and `a-first-session` sits
+	legitimately at 1.2. What the band catches is the doubling, which is the
+	shape this defect actually had.
+*/
+func checkNarrationRate(school string, s *catalog.School) []error {
+	const (
+		slowest = 1.0 // below this the video is nearly all silence
+		fastest = 3.0 // above this no narrator will keep up
+	)
+	cue := regexp.MustCompile(`\{\{[^}]*\}\}`)
+
+	var problems []error
+	for _, course := range s.Courses {
+		for _, lesson := range course.Loaded {
+			for _, sec := range lesson.Sections {
+				for _, v := range sec.Videos {
+					// The cues are stage directions for the renderer. Nobody
+					// says them, so they are not part of what has to fit.
+					words := len(strings.Fields(cue.ReplaceAllString(v.Script, " ")))
+					if words == 0 || v.Seconds <= 0 {
+						continue
+					}
+					rate := float64(words) / float64(v.Seconds)
+					if rate >= slowest && rate <= fastest {
+						continue
+					}
+					problems = append(problems, fmt.Errorf(
+						"%s: %s/%s/%s: %d spoken words in %ds is %.2f words a second — "+
+							"outside %.1f to %.1f, which is the range a person can narrate. "+
+							"Either the script grew and the duration did not, or the duration "+
+							"is for a different script",
+						school, course.ID, lesson.ID, sec.ID,
+						words, v.Seconds, rate, slowest, fastest))
+				}
+			}
+		}
+	}
+	return problems
+}
+
+/*
 A SECTION REFERENCE THAT NAMES A NUMBER NO SCREEN SHOWS.
 
 	The interface numbers sections WITHIN a lesson — `ui/app/screens/lesson.js`
@@ -679,6 +738,11 @@ func check(root string) (problems []error, schools int, err error) {
 		// and a course-wide number resolves nowhere — or worse, resolves to the
 		// wrong section without saying so.
 		problems = append(problems, checkSectionReferences(entry.Name(), school)...)
+
+		// AND THAT THE DURATION BESIDE A SCRIPT IS ONE A PERSON COULD SPEAK IN.
+		// See `checkNarrationRate`: ten of these said a whole minute less than
+		// their script will take, on the screen a student reads before starting.
+		problems = append(problems, checkNarrationRate(entry.Name(), school)...)
 
 		// AND THE CHARACTERS THEMSELVES, which is a different question from the
 		// family: a block can name the right font and still be drawn with a
