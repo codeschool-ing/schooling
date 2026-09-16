@@ -5,11 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"encoding/xml"
+	"html"
 	"image/png"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"unicode/utf8"
 )
 
 func aCourse() Course {
@@ -654,5 +656,222 @@ func TestACoursePageCarriesItsCard(t *testing.T) {
 	}
 	if code := get(t, aHandler(), "code.example", "/card/nonsense/linux-terminal", nil).Code; code != http.StatusNotFound {
 		t.Errorf("a card of a kind that does not exist answered %d", code)
+	}
+}
+
+/*
+THE BYTE BUG, WHICH IS THE ONE THAT WOULD HAVE SHIPPED QUIETLY.
+
+	The first version of `shorten` counted with `len` and cut with `s[:160]`, and
+	both are bytes in Go. On Portuguese — where a good share of the words carry
+	an accent — a cut at byte 160 can land between the two bytes of a single
+	rune, and the page then carries a replacement character in the one attribute
+	whose whole job is to be read by a stranger.
+
+	The fixture is built to hit exactly that: one ASCII character and then
+	two-byte runes, so byte 160 falls in the middle of one. It is not a
+	hypothetical, it is arithmetic.
+*/
+func TestADescriptionIsNeverCutThroughALetter(t *testing.T) {
+	// "x" then 200 two-byte runes with no space anywhere: byte 160 is mid-rune.
+	tight := "x" + strings.Repeat("á", 200)
+	// The realistic shape: Portuguese prose, accented, longer than a result.
+	prose := strings.TrimSpace(strings.Repeat("A configuração não é óbvia à primeira vista, e é por isso que ela está aqui. ", 4))
+
+	for _, s := range []string{tight, prose} {
+		got := shorten(s)
+		if !utf8.ValidString(got) {
+			t.Errorf("shorten cut through a letter and left invalid UTF-8: %q", got)
+		}
+		if n := utf8.RuneCountInString(got); n > mostOfADescription+1 { // +1 for the ellipsis
+			t.Errorf("shorten left %d runes, which a result would cut: %q", n, got)
+		}
+	}
+}
+
+func TestADescriptionStopsWhereSomebodyWouldStopReading(t *testing.T) {
+	long := "Run the machines other people's work sits on, from the first login " +
+		"to a server nobody has to think about. It is the track for whoever wants " +
+		"the pager rather than the design tool, and it is long on purpose."
+
+	got := shorten(long)
+	if !strings.HasSuffix(got, ".") {
+		t.Errorf("cut somewhere that is not the end of a sentence: %q", got)
+	}
+	if !strings.HasPrefix(long, got) {
+		t.Errorf("shorten changed the words rather than ending them: %q", got)
+	}
+
+	// Nothing to shorten comes back untouched, ellipsis and all.
+	if short := "A short one."; shorten(short) != short {
+		t.Errorf("a description that already fits was changed to %q", shorten(short))
+	}
+
+	// A line break in the source is not a line break in an attribute.
+	if got := shorten("Two lines\nin the source."); got != "Two lines in the source." {
+		t.Errorf("a newline survived into the attribute: %q", got)
+	}
+}
+
+/*
+EVERY PAGE, BECAUSE EVERY PAGE WAS DOING IT ITS OWN WAY.
+
+	The course page described itself from `.Course.Summary`, the track from
+	`.Track.Goal`, the lesson from a summary it had already cut, and the two lists
+	from nothing at all — while the `og:` and `twitter:` descriptions beside them
+	all came from one field. Two of the four disagreed with themselves and two
+	said nothing.
+
+	A track's goal is the proof: all 38 in the catalogue are over the line, the
+	median is 339 characters, so this fixture is what the real ones look like.
+*/
+func TestEveryPageDescribesItselfOnceAndAtTheLengthAResultShows(t *testing.T) {
+	h := aHandler()
+	h.route = func(_ context.Context, slug, _ string) (*Track, error) {
+		track := aTrack()
+		track.Goal = "Run the machines other people's work sits on: the first login, " +
+			"the network under it, the storage beside it and the alarm that wakes " +
+			"somebody at three in the morning. It is the longest track here and its " +
+			"goal is the longest sentence in the catalogue, which is the whole point."
+		return &track, nil
+	}
+
+	for _, path := range []string{
+		"/course/linux-terminal",
+		"/pt/course/linux-terminal",
+		"/track/infrastructure",
+		"/course/linux-terminal/lesson/1",
+		"/courses",
+		"/pt/tracks",
+	} {
+		body := get(t, h, "code.example", path, nil).Body.String()
+
+		meta := attribute(t, body, `<meta name="description" content="`)
+		if meta == "" {
+			t.Errorf("%s says nothing about itself", path)
+			continue
+		}
+		if n := utf8.RuneCountInString(meta); n > mostOfADescription+1 {
+			t.Errorf("%s describes itself in %d runes, which a result would cut: %q", path, n, meta)
+		}
+
+		// The same words to a search engine and to everything else.
+		for _, other := range []string{
+			`<meta property="og:description" content="`,
+			`<meta name="twitter:description" content="`,
+		} {
+			if got := attribute(t, body, other); got != meta {
+				t.Errorf("%s describes itself two ways:\n  meta %q\n  %s %q", path, meta, other, got)
+			}
+		}
+	}
+}
+
+/*
+attribute reads the value of the first attribute opened by `opens`.
+
+	The pages are written by `html/template`, so a quote inside the value is
+	`&#34;` and the first `"` really is the end.
+
+	IT UNESCAPES, AND THAT MATTERS TO THE COUNT. `html/template` writes an
+	apostrophe as `&#39;` — five runes where a reader sees one — so measuring the
+	attribute as written would call a 160-rune description 172 and fail on
+	perfectly good content. What a result shows is the unescaped text, so that is
+	what is counted.
+*/
+func attribute(t *testing.T, body, opens string) string {
+	t.Helper()
+	at := strings.Index(body, opens)
+	if at < 0 {
+		return ""
+	}
+	rest := body[at+len(opens):]
+	end := strings.Index(rest, `"`)
+	if end < 0 {
+		t.Fatalf("an attribute opened by %q is never closed", opens)
+	}
+	return html.UnescapeString(rest[:end])
+}
+
+/*
+THE TWO LISTS WERE THE PAGES WITH NO PICTURE.
+
+	They are the pages most likely to be pasted into a message — "here is what we
+	teach" is the catalogue, not one course — and they were the only two without
+	`og:image`, because a card is addressed by slug and a list has none. `list`
+	is the `what` and which list is the `slug`, so they need no route of their
+	own.
+*/
+func TestTheListsCarryADescriptionAndACard(t *testing.T) {
+	for _, list := range []struct{ path, card string }{
+		{"/courses", "http://code.example/card/list/courses"},
+		{"/tracks", "http://code.example/card/list/tracks"},
+		{"/pt/courses", "http://code.example/pt/card/list/courses"},
+		{"/pt/tracks", "http://code.example/pt/card/list/tracks"},
+	} {
+		body := get(t, aHandler(), "code.example", list.path, nil).Body.String()
+		want := `<meta property="og:image" content="` + list.card + `">`
+		if !strings.Contains(body, want) {
+			t.Errorf("%s does not carry %s", list.path, want)
+		}
+		if !strings.Contains(body, `<meta name="twitter:card" content="summary_large_image">`) {
+			t.Errorf("%s asks for a small card and points at a wide one", list.path)
+		}
+
+		// And the address it points at is one that answers with an image.
+		w := get(t, aHandler(), "code.example", strings.TrimPrefix(list.card, "http://code.example"), nil)
+		if w.Code != http.StatusOK {
+			t.Errorf("the card %s answers %d", list.card, w.Code)
+			continue
+		}
+		if got := w.Header().Get("Content-Type"); got != "image/png" {
+			t.Errorf("the card %s is %q", list.card, got)
+		}
+		if _, err := png.Decode(bytes.NewReader(w.Body.Bytes())); err != nil {
+			t.Errorf("the card %s is not a PNG: %v", list.card, err)
+		}
+	}
+
+	// A list nobody has is not a card.
+	if code := get(t, aHandler(), "code.example", "/card/list/nonsense", nil).Code; code != http.StatusNotFound {
+		t.Errorf("a card for a list that does not exist answered %d", code)
+	}
+}
+
+// The card says what the page says, in the language the page is in. A card
+// drawn from the English heading and served at `/pt/` would be the defect the
+// topic titles already were.
+func TestAListsCardIsDrawnInItsOwnLanguage(t *testing.T) {
+	en := get(t, aHandler(), "code.example", "/card/list/courses", nil).Body.Bytes()
+	pt := get(t, aHandler(), "code.example", "/pt/card/list/courses", nil).Body.Bytes()
+	if bytes.Equal(en, pt) {
+		t.Error("`Every course` and `Todos os cursos` drew the same pixels")
+	}
+}
+
+/*
+A LEAD-IN IS NOT A DESCRIPTION.
+
+	`prose.Extract` drops code blocks on purpose, so a paragraph that ends in a
+	colon arrives here as a promise with nothing after it — and in a result that
+	reads like a page that was cut off. Three lessons in the real catalogue open
+	exactly that way.
+
+	The fallback is the half worth testing: preferring the next paragraph must
+	not leave a lesson with no description at all when the colon one is all there
+	is.
+*/
+func TestALessonThatOpensWithALeadInIsDescribedByWhatFollowsIt(t *testing.T) {
+	lead := "Every file has an owner and a group, and lesson 3 already showed you both:"
+	body := "Permissions are three bits repeated three times, and the whole of the rest is bookkeeping."
+
+	got := summarise([]Section{{Prose: []Prose{{Text: lead}, {Text: body}}}})
+	if got != body {
+		t.Errorf("described the lesson with the lead-in rather than what follows it:\n  %q", got)
+	}
+
+	// The colon paragraph alone is still better than nothing.
+	if got := summarise([]Section{{Prose: []Prose{{Text: lead}}}}); got != lead {
+		t.Errorf("a lesson whose only paragraph is a lead-in described itself as %q", got)
 	}
 }

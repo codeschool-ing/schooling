@@ -120,6 +120,24 @@ func (h *Handler) card(w http.ResponseWriter, r *http.Request, code string) {
 			return
 		}
 		name = track.Name
+	/* THE TWO LISTS, WHICH HAVE NO SLUG AND SO LOOK LIKE THEY NEED A ROUTE OF
+	   THEIR OWN. They do not: `list` is the `what`, and which list is the
+	   `slug` — `/card/list/courses`. A separate `GET /card/{what}` would be a
+	   second pattern, a second entry in `Patterns`, and a mux deciding between
+	   two wildcards, all to address two fixed things.
+
+	   The name is the heading the page itself shows, so the card and the page
+	   say the same words, which is the rule every other card here follows. */
+	case "list":
+		switch r.PathValue("slug") {
+		case "courses":
+			name = words[code]["everyCourse"]
+		case "tracks":
+			name = words[code]["everyTrack"]
+		default:
+			http.NotFound(w, r)
+			return
+		}
 	default:
 		http.NotFound(w, r)
 		return

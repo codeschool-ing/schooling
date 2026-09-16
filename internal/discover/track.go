@@ -128,9 +128,6 @@ var trackTemplate = template.Must(template.New("track").Parse(`<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Track.Name}}{{if .School}} — {{.School}}{{end}}</title>
-{{- if .Track.Goal}}
-<meta name="description" content="{{.Track.Goal}}">
-{{- end}}
 ` + headTags + `
 ` + sheet + `
 </head>
