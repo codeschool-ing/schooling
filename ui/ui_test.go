@@ -248,6 +248,60 @@ func TestTheShellAsksNobodyElseForAnything(t *testing.T) {
 	}
 }
 
+// THE SHELL DOES NOT CARRY A VERSION, and it carried one for as long as it has
+// existed.
+//
+// `<meta name="version" content="dev" />` came in with the portal's shell and
+// nothing here ever read it: `app/screens/account.js` does not render it, and
+// the release workflow checks the BINARY against the tag, by asking the binary
+// (`./dist/api --version`). So it said `dev` from the day it was pasted in, and
+// the comment above it sent somebody cutting a release to
+// `tools/version/version.js` — a file this repository does not have, because
+// the tag is stamped at link time instead (see `internal/platform/build`).
+//
+// A number in the document would be a second copy of one the binary already
+// knows, and the interface reads the binary's now, at `/version`. This is the
+// line that stops the copy coming back.
+func TestTheShellDoesNotCarryAVersionOfItsOwn(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	ui.Handler("v1.2.3").ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
+
+	// COMMENTS FIRST, because the comment standing where the tag stood names it
+	// — it has to, to say what is not there and why. A scan that could not tell
+	// a tag from a sentence about one would fail on its own explanation.
+	body := withoutComments(recorder.Body.String())
+
+	// Any meta tag naming a version, however it is spelt — the one that was
+	// here wrote `name` before `content`, and the next one might not.
+	for _, spelling := range []string{`name="version"`, `name='version'`, `name=version`} {
+		if at := strings.Index(body, spelling); at >= 0 {
+			t.Errorf("the shell carries a version of its own: %q\n"+
+				"The tag is stamped into the binary and served at /version; a copy here is a "+
+				"second place to forget, and the last one said \"dev\" for months.",
+				excerpt(body, at))
+		}
+	}
+}
+
+// The document with its commentary taken out, so that a check on what it
+// DECLARES is not answered by what it says about itself.
+func withoutComments(document string) string {
+	var out strings.Builder
+	for {
+		open := strings.Index(document, "<!--")
+		if open < 0 {
+			out.WriteString(document)
+			return out.String()
+		}
+		out.WriteString(document[:open])
+		close := strings.Index(document[open:], "-->")
+		if close < 0 {
+			return out.String() // unterminated: there is nothing left to declare
+		}
+		document = document[open+close+len("-->"):]
+	}
+}
+
 // THE TYPE IS ACTUALLY THERE. `fonts.css` is generated, so the list of files it
 // names is not one anybody maintains — which is exactly why nobody would notice
 // it going stale. This asks the handler for each face the stylesheet asks a
