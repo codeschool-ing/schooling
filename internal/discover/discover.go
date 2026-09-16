@@ -183,12 +183,18 @@ type Handler struct {
 	route     Route
 	brand     Brand
 	published Published
+
+	// indexable is whether this deployment may be listed by a search engine.
+	// It reaches only `robots.txt`, which offers a sitemap or explains its
+	// absence; refusing to be listed is `web.NoIndex`'s job and covers every
+	// answer this process writes, not only the pages here.
+	indexable bool
 }
 
 func NewHandler(list List, one One, reading Reading, paths Paths, route Route,
-	brand Brand, published Published) *Handler {
+	brand Brand, published Published, indexable bool) *Handler {
 	return &Handler{list: list, one: one, reading: reading, paths: paths,
-		route: route, brand: brand, published: published}
+		route: route, brand: brand, published: published, indexable: indexable}
 }
 
 // school is the name alone, which is all a page needs.
