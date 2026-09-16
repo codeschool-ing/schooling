@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -251,7 +252,7 @@ func TestReverseVideoBecomesALightBar(t *testing.T) {
 	if _, err := term.Write([]byte("\x1b[7mGNU")); err != nil {
 		t.Fatal(err)
 	}
-	g := read(term, 3, 1)
+	g := read(term, 3, 1, cursorAt{})
 
 	if g[0][0].fg != "black" || g[0][0].bg != "white" {
 		t.Fatalf("reversed with no colours set should read dark on light, got fg=%q bg=%q",
@@ -261,6 +262,107 @@ func TestReverseVideoBecomesALightBar(t *testing.T) {
 	svg := draw(g, 3, 1, "a screen", nil)
 	if !strings.Contains(svg, "var(--term-white-bg)") {
 		t.Errorf("the ground has to be the light token or the bar is invisible on a dark panel; got %s", svg)
+	}
+}
+
+// A BLOCK CURSOR IS THE SAME SWAP, on the one cell the terminal paints it on.
+// Nothing in a cell's style says where the cursor is — the program moves it and
+// the terminal draws it — so a tool that reads cells draws no cursor unless it
+// is told to.
+func TestTheCursorIsDrawnAsABlock(t *testing.T) {
+	term := vt.NewSafeEmulator(3, 1)
+	if _, err := term.Write([]byte("abc")); err != nil {
+		t.Fatal(err)
+	}
+	g := read(term, 3, 1, cursorAt{x: 1, y: 0, shown: true})
+
+	if g[0][1].fg != "black" || g[0][1].bg != "white" {
+		t.Errorf("the cell under the cursor should be the swap, got fg=%q bg=%q",
+			g[0][1].fg, g[0][1].bg)
+	}
+	if g[0][0].fg != "" || g[0][0].bg != "" || g[0][2].bg != "" {
+		t.Error("only the cursor's own cell moves; its neighbours are ordinary text")
+	}
+}
+
+/*
+THE HOLE IN A SELECTION, which is the defect all of this exists for.
+
+	vim leaves the cell under the cursor OUT of a Visual highlight — a block
+	about to be painted over it would hide the highlight anyway — so the cells
+	alone say "eight letters on blue and one letter on nothing". Photograph
+	that and the figure shows a selection with a gap in the middle of it,
+	which is a screen no terminal has ever displayed.
+
+	It shipped: `vim-modes`' visual-line figure went out with an unhighlighted
+	`w` in the middle of `workers`, and it was spotted by somebody reading the
+	published lesson rather than by anything here.
+*/
+func TestTheCursorFillsTheHoleAProgramLeavesInAHighlight(t *testing.T) {
+	// Blue ground, black text — vim's Visual — and then one cell written with
+	// the attributes turned off, which is what vim does where the cursor is.
+	term := vt.NewSafeEmulator(3, 1)
+	if _, err := term.Write([]byte("\x1b[30;44ma\x1b[0mb\x1b[30;44mc")); err != nil {
+		t.Fatal(err)
+	}
+
+	plain := read(term, 3, 1, cursorAt{})
+	if plain[0][1].bg != "" {
+		t.Fatal("the middle cell is the one the program left plain; the rest of this " +
+			"test is about what happens to it")
+	}
+
+	g := read(term, 3, 1, cursorAt{x: 1, y: 0, shown: true})
+	if g[0][1].bg == "" {
+		t.Error("the cursor's cell came out with no ground: the selection still has a " +
+			"hole in it, which is what shipped")
+	}
+}
+
+// A CURSOR ON REVERSED TEXT SWAPS BACK, because two exchanges are none. nano
+// parks one on its title bar, and a block there is upright text on the light
+// ground — which is what a terminal shows.
+func TestACursorOnAReversedBarIsUpright(t *testing.T) {
+	term := vt.NewSafeEmulator(3, 1)
+	if _, err := term.Write([]byte("\x1b[7mGNU")); err != nil {
+		t.Fatal(err)
+	}
+	g := read(term, 3, 1, cursorAt{x: 0, y: 0, shown: true})
+
+	if g[0][0].fg != "" || g[0][0].bg != "" {
+		t.Errorf("reversed twice is not reversed, got fg=%q bg=%q", g[0][0].fg, g[0][0].bg)
+	}
+}
+
+/*
+A CURSOR DRAWN WHERE A PROGRAM HID ONE IS AS INVENTED AS ONE LEFT OUT.
+
+	`CSI ? 25 l` hides it and full-screen programs use it. The emulator tracks
+	the mode and does not expose it, so the sequences are watched going past —
+	and a sequence may carry several modes at once, which is why every
+	parameter is read and not only the first.
+*/
+func TestAHiddenCursorIsNotDrawn(t *testing.T) {
+	for _, hide := range []string{"\x1b[?25l", "\x1b[?25;1049l", "\x1b[?1049;25l"} {
+		term := vt.NewSafeEmulator(3, 1)
+		var shown atomic.Bool
+		watchTheCursor(term, &shown)
+		if !shown.Load() {
+			t.Fatal("DECTCEM's default is visible, and so is this")
+		}
+		if _, err := term.Write([]byte(hide + "abc")); err != nil {
+			t.Fatal(err)
+		}
+		if shown.Load() {
+			t.Errorf("%q hides the cursor", hide)
+		}
+
+		if _, err := term.Write([]byte("\x1b[?25h")); err != nil {
+			t.Fatal(err)
+		}
+		if !shown.Load() {
+			t.Error("and the matching h shows it again")
+		}
 	}
 }
 

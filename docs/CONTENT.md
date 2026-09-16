@@ -305,6 +305,15 @@ go run ./tools/term-capture -send G -quit '\e:q!\r' -out figure.svg -- vim serve
 go run ./tools/term-capture -quit '^X' -out figure.svg -- nano notes.txt
 ```
 
+**What was typed at each published screen is in `tools/term-capture/screens.sh`**, and it is there
+because it was once only in somebody's shell history. When the tool learned to draw the cursor —
+which is on the screen and in no cell, so it had never been photographed — the twenty-seven screens
+already published had to be taken again, and nothing recorded how. They were reconstructed from
+their own captions, and `screens-check.mjs` holds each one to coming back as the figure in the
+lesson, plus its cursor and nothing else. That check found four recipes that were wrong and one
+cause nobody would have guessed: `~/.viminfo` returns vim to the line you last held in a file, so
+the screens depended on the order they were taken in.
+
 **The screen is captured once and drawn once per language.** The callouts are prose and belong
 in the reader's language; the screen behind them is a measurement and must not move between the
 two. Running the program twice gives two screens — the same figure with different numbers in each

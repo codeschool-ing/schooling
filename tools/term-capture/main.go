@@ -21,6 +21,10 @@
 //	vt     resolves cursor moves, erases and repeats into a final screen
 //	svg    one <rect> per coloured background, one <tspan> per colour run
 //
+// The cursor is drawn too, and had to be added: it is the one thing on the
+// screen that is not in any cell, because the program moves it and the terminal
+// paints it. `read` is where that happens, and the comment there is the story.
+//
 // Three details are the whole difficulty, and each was found by getting it
 // wrong first.
 //
@@ -373,6 +377,11 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 
 	term := vt.NewSafeEmulator(cols, rows)
 
+	// Before a byte reaches it, because the first thing a full-screen program
+	// does is set its modes.
+	var cursorShown atomic.Bool
+	watchTheCursor(term, &cursorShown)
+
 	// THE EMULATOR IS NOT CLOSED, AND THAT IS THE LESSER OF TWO THINGS.
 	//
 	// It used to be, on a `defer`, to unblock the reply pump below — and doing
@@ -471,7 +480,10 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 		return nil, err
 	}
 
-	g := read(term, cols, rows)
+	// After the settle and before the quit key, like the screen itself: the
+	// cursor is where the program left it at the moment photographed.
+	at := term.CursorPosition()
+	g := read(term, cols, rows, cursorAt{x: at.X, y: at.Y, shown: cursorShown.Load()})
 
 	// Let it put the terminal back the way it found it. Nothing here reads the
 	// teardown, but a program killed mid-frame can leave a child behind.
@@ -493,7 +505,37 @@ func settle(lastWrite *atomic.Int64, quiet time.Duration) error {
 	return fmt.Errorf("the program never stopped writing for %s; it may be animating", quiet)
 }
 
-func read(term *vt.SafeEmulator, cols, rows int) grid {
+/*
+WHERE THE TERMINAL'S OWN CURSOR IS, WHICH IS PART OF THE SCREEN AND WAS NOT
+BEING PHOTOGRAPHED.
+
+	A block cursor is not a cell the program wrote. The program moves the
+	cursor and the TERMINAL paints it, so it is in no cell's style and this
+	tool — which reads cells — had never drawn one.
+
+	That was invisible for twenty-nine screens, because on an ordinary row the
+	cursor's cell looks exactly like its neighbours. It became visible the
+	first time the cursor landed inside a highlight: vim leaves the cell under
+	the cursor OUT of a Visual selection, deliberately, since a block about to
+	be painted over it would hide the highlight anyway. Photograph the cells
+	and not the cursor and the selection comes out with a hole in it — one
+	unhighlighted letter in the middle of three highlighted lines, which is
+	a screen no terminal has ever shown.
+
+	IT SHIPPED. `vim-modes`' visual-line figure went out with an unhighlighted
+	`w` in the middle of `workers`, and it was found by somebody reading the
+	published lesson rather than by anything here.
+
+	SHOWN IS NOT ALWAYS TRUE. `CSI ? 25 l` hides the cursor and full-screen
+	programs use it — a cursor drawn where the program hid one is as invented
+	as a cursor missing where it did not.
+*/
+type cursorAt struct {
+	x, y  int
+	shown bool
+}
+
+func read(term *vt.SafeEmulator, cols, rows int, cursor cursorAt) grid {
 	g := make(grid, rows)
 	for y := range g {
 		g[y] = make([]cell, cols)
@@ -513,7 +555,18 @@ func read(term *vt.SafeEmulator, cols, rows int) grid {
 			// so is a vim selection: no colour is set, the two are exchanged.
 			// Ignoring it loses the bar entirely — it comes out as ordinary
 			// text on the ordinary ground.
-			if c.Style.Attrs&uv.AttrReverse != 0 {
+			reverse := c.Style.Attrs&uv.AttrReverse != 0
+			// AND A BLOCK CURSOR IS THE SAME SWAP, WHICH IS WHY IT IS HERE AND
+			// NOT A THIRD KIND OF THING. It also means the cursor needs nothing
+			// of the saved-screen format or of `draw`: by the time either sees
+			// the cell, the swap has already happened and it is an ordinary
+			// coloured cell. A cursor sitting ON reversed text — nano parks one
+			// on its title bar — swaps back to upright, which is what a block
+			// cursor looks like there.
+			if cursor.shown && x == cursor.x && y == cursor.y {
+				reverse = !reverse
+			}
+			if reverse {
 				// The defaults have to be named before they can be swapped, and
 				// in the right order: the text is the light one and the ground
 				// is the dark one, so reversing gives dark text on a light bar.
@@ -536,6 +589,35 @@ func read(term *vt.SafeEmulator, cols, rows int) grid {
 		}
 	}
 	return g
+}
+
+/*
+The cursor's visibility, watched as it goes past.
+
+	`CSI ? 25 h` shows it and `CSI ? 25 l` hides it. The emulator tracks the
+	mode and does not expose it, so the sequences are read on their way in.
+	One sequence may carry several modes — `CSI ? 25 ; 1049 l` is one write —
+	so every parameter is looked at rather than only the first.
+
+	The handlers return false: they are here to WATCH, and the emulator still
+	has its own work to do with the mode.
+
+	Visible is the default, because DECTCEM's is.
+*/
+func watchTheCursor(term *vt.SafeEmulator, shown *atomic.Bool) {
+	shown.Store(true)
+	watch := func(to bool) vt.CsiHandler {
+		return func(params ansi.Params) bool {
+			for _, p := range params {
+				if p.Param(0) == 25 {
+					shown.Store(to)
+				}
+			}
+			return false
+		}
+	}
+	term.RegisterCsiHandler(ansi.Command('?', 0, 'h'), watch(true))
+	term.RegisterCsiHandler(ansi.Command('?', 0, 'l'), watch(false))
 }
 
 // token names the CSS custom property a colour becomes, or returns "" for the
