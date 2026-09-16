@@ -164,14 +164,25 @@ export function windowOf(text, language) {
   return { title: name, terminal: SHELLS.has(name.toLowerCase()) };
 }
 
-export function codeBar(text, language) {
+/* `trailing` IS THE COPY BUTTON, in every block that has one. It goes in the
+   same row as the dots and is CENTRED ON THEM: the two are the only things at
+   that end of the bar, and one riding five pixels above the other is the sort
+   of thing you cannot unsee once you have seen it. That is what `.win-right` is
+   for — a line of its own, so the alignment is a property of the row and not
+   arithmetic on two margins and two heights.
+
+   IT IS ALWAYS THERE AND IT IS ALWAYS HERE. A version of this floated it over
+   the code, hidden until the pointer arrived; a course is read block after
+   block, and a control that is in the bar in one and floating in the next is
+   two things to learn for one action. See `assets/code-window.css`. */
+export function codeBar(text, language, trailing) {
   const { title, terminal } = windowOf(text, language);
   return '<div class="code-bar">' +
     (title
       ? '<span class="win-tab"><span class="win-icon" aria-hidden="true">' +
           (terminal ? ICON_TERMINAL : ICON_FILE) + '</span>' + esc(title) + '</span>'
       : '') +
-    WINDOW_DOTS +
+    '<span class="win-right">' + (trailing || '') + WINDOW_DOTS + '</span>' +
   '</div>';
 }
 
@@ -247,11 +258,8 @@ export function prose(body) {
            and a block you cannot copy because its author left the label out
            would be an odd thing to explain. */
         return '<div class="code-block code-win prose-code">' +
-          codeBar(block.text, block.code) +
-          '<div class="code-hold">' +
-            copyButton() +
-            '<pre class="code"><code>' + highlight(block.text, block.code) + '</code></pre>' +
-          '</div>' +
+          codeBar(block.text, block.code, copyButton()) +
+          '<pre class="code"><code>' + highlight(block.text, block.code) + '</code></pre>' +
         '</div>';
       }
     }
@@ -349,12 +357,19 @@ function figure(b) {
    without the sideways alignment tying the two together. */
 function annotatedExample(ex) {
   const parts = ex.parts || [];
-  return '<div class="example">' +
-    '<div class="example-bar">' +
-      '<span class="example-file mono dim">' + esc(ex.file || ex.language || '') + '</span>' +
-      (parts.length ? copyButton() : '') +
-    '</div>' +
+  /* THE BAR MOVED INSIDE THE GRID, and that is the whole of what makes this a
+     window rather than a strip above one. Wide, it is a cell in the CODE column
+     and the frame it opens runs down that column alone, with the notes outside
+     it, in the page. Stacked — which is the default, below 1466px — there is no
+     code column to frame: the file is cut up with prose between its pieces, so
+     the frame holds all of it. One window, around what a column actually is at
+     each width. See `assets/code-window.css`.
+
+     `windowOf('', …)` is given no text on purpose: a `file` is what this block
+     already names itself by, and there is no prompt in a program to read. */
+  return '<div class="example code-win example-win">' +
     '<div class="example-grid">' +
+      codeBar('', ex.file || ex.language, parts.length ? copyButton() : '') +
       parts.map((p) => (
         '<p class="example-note">' + (p.note ? formatted(p.note) : '') + '</p>' +
         '<pre class="example-code"><code>' + highlight(p.code, ex.language) + '</code></pre>'
