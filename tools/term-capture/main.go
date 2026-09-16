@@ -111,6 +111,43 @@ import (
 // bold run is wider than the gaps can give back — htop's function-key bar came
 // out as "F4ilter" and "F9ill", each run's first letter buried under the one
 // before it.
+//
+// # AND `textLength` IS NOT HONOURED EVERYWHERE, WHICH LEAVES THE FIGURE 3% WIDE
+//
+// On the browser this was reported from, the compression does not happen: the
+// ground under a row ends where the arithmetic put it and the text runs past
+// it, which is what a row drawn at its natural width looks like. Whether that
+// is `lengthAdjust` on a `<tspan>` going unimplemented or something narrower
+// was not established — only that the bridge is not there. Reported from
+// a real reader's screen: the red ground under vim's `E37` stops half way
+// through the last letter of `override`, and emacs's `C-h C-a` chip leaves its
+// `-a` on the panel behind it, where that dark blue is invisible.
+//
+// MEASURED, on the same font file, for one 51-cell row:
+//
+//	Chromium, IBM Plex Mono applied     7.0000 per cell   (this constant)
+//	Chromium, the system monospace      7.2247 per cell
+//	Firefox on the live page            7.1900 per cell
+//
+// and `letter-spacing: normal`, `word-spacing: 0px`, the font loaded. Two
+// browsers disagree by 2.7% about the same file, which is its own puzzle and
+// not one this comment settles. The effect is 11.5px over that row, which is
+// the one and a half characters the reader sees.
+//
+// THE FIX, TESTED AND NOT TAKEN: give every character its own `x`, the way a
+// terminal emulator does, instead of writing the row and asking the browser to
+// squeeze it. Simulated by forcing the wider face in Chromium, the closing
+// bracket of that row lands at 390 and ends at 397.23 against a ground that
+// ends at 397 — against 401.22 to 408.47 as it is drawn today.
+//
+// It costs almost nothing in bytes, which was the objection worth checking:
+// 81% of the grid is trailing padding that carries no glyph, so listing the
+// positions up to the last letter adds about 68 KB across the catalogue while
+// dropping that padding removes about 61 KB of it.
+//
+// It was left undone deliberately: 54 figures in 20 files would be redrawn, and
+// this half of the change cannot be verified in the browser that needs it —
+// only Chromium is installed where the tools run.
 const (
 	fontSize   = 12.0
 	charWidth  = fontSize * 7.0 / 12.0
