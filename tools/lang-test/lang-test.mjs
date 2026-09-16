@@ -75,6 +75,18 @@ const dashboard = async () => {
 const resumeTitle = () => page.evaluate(() =>
   document.querySelector('.resume-lesson')?.textContent.trim() || '');
 
+/* THE FRAME, WHICH IS NOT THE SCREEN. `dispatch` rebuilds `#content` and the
+   i18n runtime rebuilds the static nodes; the banners and the account menu are
+   drawn by `main.js` into neither, and were repainted only at boot and on a
+   change of state. They are read as one string because the claim is one claim:
+   a language switch reaches all of it or it has not reached. */
+const frame = () => page.evaluate(() => {
+  const t = (sel) => (document.querySelector(sel)?.innerText || '').replace(/\s+/g, ' ').trim();
+  /* The account menu is behind a button, and a menu nobody opened has its words
+     in it all the same. */
+  return [t('#dev-banner'), t('#verify-banner'), t('#account-menu')].join(' | ');
+});
+
 const openACourse = async () => {
   const link = page.locator('#content a[href*="/lesson/"]').first();
   if (!(await link.count())) return false;
@@ -117,6 +129,7 @@ try {
   await dashboard();
 
   const titleBefore = await resumeTitle();
+  const frameBefore = await frame();
 
   await switchTo('pt');
 
@@ -126,6 +139,7 @@ try {
      and report a pass. What the student described is this exact moment —
      switch, look at the screen, and the card is still in the old language. */
   const titleAfter = await resumeTitle();
+  const frameAfter = await frame();
 
   /* And now the order that used to lose the other half: a course opened AFTER
      the new structure has landed. */
@@ -152,9 +166,23 @@ try {
       + 'the language the student switched away from.');
   }
 
+  /* AND THE FRAME AROUND IT. This one needs no translated content in the
+     fixture: every word of it comes from the interface's own dictionaries,
+     which are complete — `check-interface` fails the build otherwise. */
+  if (!frameBefore.replace(/[\s|]/g, '')) {
+    problems.push('nothing was drawn outside the screen, so the check that it follows the '
+      + 'language has nothing to read — the banners and the account menu are all empty');
+  } else if (frameAfter === frameBefore) {
+    problems.push(`the frame around the screen did not move language: it still reads `
+      + `"${frameBefore.slice(0, 90)}". The banners and the account menu are painted at boot `
+      + 'and on a change of state, and a language switch is neither — so the notice over the '
+      + 'top of the dashboard stays in the language the student left.');
+  }
+
   if (!problems.length) {
     console.log(`${written.length} course(s) kept their sections across the switch, `
-      + `and the dashboard moved from "${titleBefore}" to "${titleAfter}"`);
+      + `the dashboard moved from "${titleBefore}" to "${titleAfter}", `
+      + 'and the frame around it moved with them');
   }
 } finally {
   await browser.close();

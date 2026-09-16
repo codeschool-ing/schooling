@@ -80,6 +80,20 @@ let booted = false;
 globalThis.redrawAll = () => {
   if (!booted) return null;
 
+  /* THE FRAME AROUND THE SCREEN MOVES TOO, AND IT DID NOT.
+
+     `dispatch()` below rebuilds the SCREEN, and the runtime's `applyTexts()`
+     rebuilds the static nodes. Between those two is everything this file draws
+     into the frame — the two banners, the account menu, the stale notice — and
+     nothing was rebuilding any of it: they are painted at boot and again from
+     the store's subscription, and a language switch is neither. So the notice
+     over the top of the dashboard stayed in English while the interface under
+     it was Portuguese, until something unrelated happened to change the state.
+
+     It is `paintFrame` and not five lines here because the next painter added
+     to this file should be wrong in one place rather than in two. */
+  paintFrame();
+
   /* AND THE CATALOGUE ITSELF MOVED LANGUAGE TOO. A course's name and syllabus
      used to be translated in place by the runtime, from a dictionary that
      shipped with the interface; they are the school's own rows now and arrive
@@ -610,6 +624,30 @@ function paintStaleBanner() {
     '<button type="button" class="sb-reload">' + txt('Reload') + '</button>';
 }
 
+/* ---------- everything this file draws outside the screen ----------
+
+   FIVE PAINTERS AND ONE CALLER, because they were called in three places and
+   agreed in none of them. The boot ran four of them, the store's subscription
+   ran four, and the language switch ran none — so switching to Portuguese left
+   the account menu, the notice about this being unfinished, the confirmation
+   nudge and the stale notice in the language before it, on every screen, until
+   something changed the state and repainted them by accident.
+
+   Each one is idempotent and reads the store, so calling all five wherever any
+   of them was wanted costs a few nodes and removes the question of which list
+   this call site should have. */
+function paintFrame() {
+  paintAccount();
+  paintDevBanner();
+  paintVerifyBanner();
+  paintViewingBanner();
+  /* AND THE ONE THAT IS USUALLY NOT THERE. It draws nothing until this tab is
+     found to be behind, which is exactly why it was the easiest to leave out —
+     and the worst to leave stale: a notice asking somebody to reload, in a
+     language they did not choose, is a notice they are entitled to distrust. */
+  paintStaleBanner();
+}
+
 $('#stale-banner').addEventListener('click', (e) => {
   if (!e.target.closest('.sb-reload')) return;
   /* `reload()` AND NOT A CACHE-BUSTING QUERY. Every file this page loaded
@@ -770,10 +808,7 @@ addEventListener('keydown', (e) => {
 subscribe(() => {
   if (now().session) buildRail(rail, currentPath(), routeParams());
   paintContext();
-  paintAccount();
-  paintDevBanner();
-  paintVerifyBanner();
-  paintViewingBanner();
+  paintFrame();
 });
 
 /* THE ID, WHATEVER NAME THE ADDRESS USED. This feeds `toggleLesson`, which
@@ -876,9 +911,12 @@ const restoring = api.restoreSession();
    is what leaves the offline bundle exactly as it was. */
 api.loadLessonStructure().then(() => { if (booted) redrawAll(); });
 
-paintAccount();
-paintVerifyBanner();
-paintViewingBanner();
+/* AND THE WHOLE FRAME AT BOOT, WHICH USED TO BE THREE OF IT. `paintDevBanner`
+   was not in this list and the notice appeared anyway — the session hydrating
+   fires the store's subscription a moment later, which painted it. A first
+   screen that is right by way of a second event is right until the event stops
+   coming. */
+paintFrame();
 booted = true;
 start();
 
