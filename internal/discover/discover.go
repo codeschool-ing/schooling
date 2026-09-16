@@ -123,9 +123,10 @@ type (
 	// may not see it" would be a page, and there is nothing here to show.
 	Reading func(ctx context.Context, slug string, at int, locale string) (*Lesson, error)
 
-	// SchoolName is the school this request arrived at, for the pages to say
-	// whose they are.
-	SchoolName func(ctx context.Context) (string, bool)
+	// Brand is the school this request arrived at: its name, for the pages to
+	// say whose they are, and its accent, which is the ground a shared link's
+	// picture is drawn on.
+	Brand func(ctx context.Context) (name, accent string, ok bool)
 
 	// Published is when this school's catalogue was last loaded, as RFC 3339,
 	// or "" when it has not been loaded since the column existed. It is the
@@ -180,14 +181,20 @@ type Handler struct {
 	reading   Reading
 	paths     Paths
 	route     Route
-	school    SchoolName
+	brand     Brand
 	published Published
 }
 
 func NewHandler(list List, one One, reading Reading, paths Paths, route Route,
-	school SchoolName, published Published) *Handler {
+	brand Brand, published Published) *Handler {
 	return &Handler{list: list, one: one, reading: reading, paths: paths,
-		route: route, school: school, published: published}
+		route: route, brand: brand, published: published}
+}
+
+// school is the name alone, which is all a page needs.
+func (h *Handler) school(ctx context.Context) (string, bool) {
+	name, _, ok := h.brand(ctx)
+	return name, ok
 }
 
 /*
@@ -230,6 +237,7 @@ func (h *Handler) Routes(mux *http.ServeMux) {
 		mux.HandleFunc("GET "+l.at+"/course/{slug}", h.inLanguage(code, h.course))
 		mux.HandleFunc("GET "+l.at+"/course/{slug}/lesson/{at}", h.inLanguage(code, h.lesson))
 		mux.HandleFunc("GET "+l.at+"/track/{slug}", h.inLanguage(code, h.track))
+		mux.HandleFunc("GET "+l.at+"/card/{what}/{slug}", h.inLanguage(code, h.card))
 	}
 }
 
@@ -249,6 +257,7 @@ func patterns() []string {
 			"GET "+l.at+"/course/{slug}",
 			"GET "+l.at+"/course/{slug}/lesson/{at}",
 			"GET "+l.at+"/track/{slug}",
+			"GET "+l.at+"/card/{what}/{slug}",
 		)
 	}
 	return out

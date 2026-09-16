@@ -136,6 +136,8 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request, code string) {
 		data.Lessons = append(data.Lessons, row)
 	}
 
+	data.Card = at + languages[here].at + "/card/course/" + course.Slug
+
 	write(w, r, page, data)
 }
 
