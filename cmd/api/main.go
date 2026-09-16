@@ -1023,10 +1023,19 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			}
 			out := make([]discover.Course, 0, len(listed))
 			for _, c := range listed {
-				out = append(out, discover.Course{
+				one := discover.Course{
 					Slug: c.Slug, Name: c.Name, Summary: c.Summary,
-					Level: c.Level, Hours: c.Hours,
-				})
+					Level: c.Level, Hours: c.Hours, Free: c.Free,
+				}
+				// The sitemap needs a free course's lessons and nothing else
+				// about them; the listing counts them rather than naming them,
+				// so the positions are what there is to give.
+				if c.Free {
+					for at := 1; at <= c.Lessons; at++ {
+						one.Lessons = append(one.Lessons, discover.Lesson{At: at})
+					}
+				}
+				out = append(out, one)
 			}
 			return out, nil
 		},
@@ -1068,8 +1077,56 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			for _, tp := range view.Topics {
 				out.Topics = append(out.Topics, tp.Title)
 			}
-			for _, l := range view.Lessons {
-				out.Lessons = append(out.Lessons, l.Title)
+			out.Free = view.Free
+			for at, l := range view.Lessons {
+				out.Lessons = append(out.Lessons, discover.Lesson{At: at + 1, Title: l.Title})
+			}
+			return out, nil
+		},
+		/* ONE LESSON, ASKED FOR WITH NO PLAN — which is what a crawler is, and
+		   is the whole of the access rule. `Store.Lesson` refuses a course
+		   nobody may open with `ErrLocked`, so a paid course's prose cannot
+		   reach a page here even if this file forgot why it should not. Both
+		   refusals come back as "no lesson": a page that exists to say a reader
+		   may not read it is a page a search engine will index. */
+		func(ctx context.Context, slug string, at int, locale string) (*discover.Lesson, error) {
+			id, ok := tenant.FromContext(ctx)
+			if !ok {
+				return nil, discover.ErrNoLesson
+			}
+			listed, err := courses.Courses(ctx, id.ID, catalog.PlanNone, locale)
+			if err != nil {
+				return nil, err
+			}
+			courseID := ""
+			for _, c := range listed {
+				if c.Slug == slug {
+					courseID = c.ID
+					break
+				}
+			}
+			if courseID == "" {
+				return nil, discover.ErrNoLesson
+			}
+			view, err := courses.Course(ctx, id.ID, courseID, locale, catalog.PlanNone)
+			if err != nil {
+				return nil, err
+			}
+			if at < 1 || at > len(view.Lessons) {
+				return nil, discover.ErrNoLesson
+			}
+			read, err := courses.Lesson(ctx, id.ID, courseID, view.Lessons[at-1].ID, locale, catalog.PlanNone)
+			if errors.Is(err, catalog.ErrLocked) || errors.Is(err, catalog.ErrNotFound) {
+				return nil, discover.ErrNoLesson
+			}
+			if err != nil {
+				return nil, err
+			}
+			out := &discover.Lesson{At: at, Title: read.Title}
+			for _, s := range read.Sections {
+				out.Sections = append(out.Sections, discover.Section{
+					Title: s.Title, Prose: discover.Extract(s.Body),
+				})
 			}
 			return out, nil
 		},
@@ -1080,10 +1137,10 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	)
 	discoverable := http.NewServeMux()
 	pages.Routes(discoverable)
-	for _, at := range []string{
-		"GET /robots.txt", "GET /sitemap.xml",
-		"GET /course/{slug}", "GET /{lang}/course/{slug}",
-	} {
+	// `discover.Patterns` and not a list written again here: the two were the
+	// same list for a while and then were not, and a sitemap advertised pages
+	// that answered 404.
+	for _, at := range discover.Patterns {
 		mux.Handle(at, web.Chain(discoverable, tenant.Resolve(tenant.NewStore(pool))))
 	}
 

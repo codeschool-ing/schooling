@@ -90,8 +90,8 @@ a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 
 {{- if .Course.Lessons}}
   <h2>{{.Words.lessons}}</h2>
-  <ul>{{range .Course.Lessons}}
-    <li>{{.}}</li>{{end}}
+  <ul>{{range .Lessons}}
+    <li>{{if .Href}}<a href="{{.Href}}">{{.Label}}</a>{{else}}{{.Label}}{{end}}</li>{{end}}
   </ul>
 {{- end}}
 

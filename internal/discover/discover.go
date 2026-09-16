@@ -55,6 +55,7 @@ package discover
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
@@ -71,7 +72,27 @@ type Course struct {
 	Hours         int
 	Syllabus      []string
 	Topics        []string
-	Lessons       []string
+	Lessons       []Lesson
+
+	// Free is whether a stranger may read this course's lessons. It is the
+	// store's answer and not a rule this package keeps: the first course of a
+	// track is open to everybody, and the rest is a purchase.
+	Free bool
+}
+
+// Lesson is one lesson of a course. `At` is its position, one-based, and is how
+// it is addressed — see `lesson.go`.
+type Lesson struct {
+	At       int
+	Title    string
+	Sections []Section
+}
+
+// Section is one step of a lesson: its title and, when the lesson may be read,
+// its prose reduced to text. See `prose.go` for why it is text.
+type Section struct {
+	Title string
+	Prose []Prose
 }
 
 // The catalogue, as this package needs to read it. Both take a locale and are
@@ -84,6 +105,12 @@ type (
 
 	// One is a single course by slug, or ErrNoCourse.
 	One func(ctx context.Context, slug, locale string) (*Course, error)
+
+	// Reading is one lesson of a course, with its prose, or ErrNoLesson — which
+	// is also the answer for a lesson nobody may read without paying. That the
+	// two are one answer is deliberate: a page that said "this exists and you
+	// may not see it" would be a page, and there is nothing here to show.
+	Reading func(ctx context.Context, slug string, at int, locale string) (*Lesson, error)
 
 	// SchoolName is the school this request arrived at, for the pages to say
 	// whose they are.
@@ -98,6 +125,14 @@ func (noCourse) Error() string { return "discover: no such course in this school
 
 // ErrNoCourse is the sentinel; compare with errors.Is.
 var ErrNoCourse error = noCourse{}
+
+type noLesson struct{}
+
+func (noLesson) Error() string { return "discover: no such lesson to read here" }
+
+// ErrNoLesson is a lesson this school does not have AND one nobody may read
+// without paying. One answer for both: see `Reading`.
+var ErrNoLesson error = noLesson{}
 
 // The languages the CONTENT exists in, in the order a page lists them. `tag` is
 // what goes in `hreflang` and `<html lang>`; `at` is the path a page of that
@@ -120,13 +155,14 @@ func languageAt(code string) (int, bool) {
 }
 
 type Handler struct {
-	list   List
-	one    One
-	school SchoolName
+	list    List
+	one     One
+	reading Reading
+	school  SchoolName
 }
 
-func NewHandler(list List, one One, school SchoolName) *Handler {
-	return &Handler{list: list, one: one, school: school}
+func NewHandler(list List, one One, reading Reading, school SchoolName) *Handler {
+	return &Handler{list: list, one: one, reading: reading, school: school}
 }
 
 /*
@@ -144,10 +180,41 @@ The routes, and why they are named rather than a catch-all.
 	is the same list written twice.
 */
 func (h *Handler) Routes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /robots.txt", h.robots)
-	mux.HandleFunc("GET /sitemap.xml", h.sitemap)
-	mux.HandleFunc("GET /course/{slug}", h.course)
-	mux.HandleFunc("GET /{lang}/course/{slug}", h.course)
+	for _, at := range Patterns {
+		mux.HandleFunc(at, h.at(at))
+	}
+}
+
+/*
+Patterns is every address this package answers, and it is exported because
+`cmd/api` needs the same list.
+
+	These routes are registered on a mux of their own and reached through
+	`tenant.Resolve`, so the school mux has to forward exactly these paths and
+	no others. Writing that list a second time by hand is what it looks like:
+	the two lesson routes were added here and not there, and the sitemap
+	advertised pages that answered 404. The list exists once now.
+*/
+var Patterns = []string{
+	"GET /robots.txt",
+	"GET /sitemap.xml",
+	"GET /course/{slug}",
+	"GET /{lang}/course/{slug}",
+	"GET /course/{slug}/lesson/{at}",
+	"GET /{lang}/course/{slug}/lesson/{at}",
+}
+
+func (h *Handler) at(pattern string) http.HandlerFunc {
+	switch {
+	case strings.HasSuffix(pattern, "/robots.txt"):
+		return h.robots
+	case strings.HasSuffix(pattern, "/sitemap.xml"):
+		return h.sitemap
+	case strings.HasSuffix(pattern, "/lesson/{at}"):
+		return h.lesson
+	default:
+		return h.course
+	}
 }
 
 // origin is where this request arrived, which is the only address this process

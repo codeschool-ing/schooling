@@ -17,7 +17,11 @@ func aCourse() Course {
 		Prerequisites: "No programming required.",
 		Syllabus:      []string{"Distributions", "Permissions"},
 		Topics:        []string{"ls, cd, pwd"},
-		Lessons:       []string{"The terminal, and why"},
+		Free:          true,
+		Lessons: []Lesson{{At: 1, Title: "The terminal, and why", Sections: []Section{{
+			Title: "Where you are",
+			Prose: []Prose{{Text: "A terminal is a window onto a machine that has no desktop."}},
+		}}}},
 	}
 }
 
@@ -25,15 +29,30 @@ func aHandler(courses ...Course) *Handler {
 	if len(courses) == 0 {
 		courses = []Course{aCourse()}
 	}
+	find := func(slug string) *Course {
+		for i := range courses {
+			if courses[i].Slug == slug {
+				return &courses[i]
+			}
+		}
+		return nil
+	}
 	return NewHandler(
 		func(context.Context, string) ([]Course, error) { return courses, nil },
 		func(_ context.Context, slug, _ string) (*Course, error) {
-			for i := range courses {
-				if courses[i].Slug == slug {
-					return &courses[i], nil
-				}
+			if c := find(slug); c != nil {
+				return c, nil
 			}
 			return nil, ErrNoCourse
+		},
+		func(_ context.Context, slug string, at int, _ string) (*Lesson, error) {
+			c := find(slug)
+			// What the store does: a course nobody may open refuses its
+			// lessons, and refuses them as absent.
+			if c == nil || !c.Free || at < 1 || at > len(c.Lessons) {
+				return nil, ErrNoLesson
+			}
+			return &c.Lessons[at-1], nil
 		},
 		func(context.Context) (string, bool) { return "codeschool", true },
 	)
@@ -173,6 +192,42 @@ func TestTheStructuredDataIsJSON(t *testing.T) {
 	}
 }
 
+/*
+THE ONE PLACE THE TEMPLATE'S ESCAPING IS TURNED OFF, held to its reason.
+
+	`course.go` carries a `//nolint:gosec` saying the structured data cannot
+	close its own `<script>` because `json.Marshal` escapes `<`, `>` and `&`.
+	That is a claim about a standard library, on a line a linter was told to
+	ignore, which is exactly the kind of sentence that stops being true quietly.
+*/
+func TestTheStructuredDataCannotCloseItsOwnScript(t *testing.T) {
+	nasty := aCourse()
+	nasty.Name = `</script><img src=x onerror=alert(1)>`
+	nasty.Summary = `& < > and </SCRIPT >`
+
+	body := get(t, aHandler(nasty), "code.example", "/course/linux-terminal", nil).Body.String()
+	at := strings.Index(body, `<script type="application/ld+json">`)
+	block := body[at+len(`<script type="application/ld+json">`):]
+	end := strings.Index(block, "</script>")
+	if end < 0 {
+		t.Fatal("the structured data never ends")
+	}
+	if strings.Contains(block[:end], "<") || strings.Contains(block[:end], ">") {
+		t.Errorf("an angle bracket survived into the script element: %s", block[:end])
+	}
+	/* The words themselves are ON the page, escaped, and that is right — a
+	   course really is called that. What must not be there is a TAG, so the
+	   assertion is about the bracket and not about the text inside it. The
+	   first version of this looked for `onerror=alert(1)` and failed on the
+	   escaped copy, which is the page working. */
+	if strings.Contains(body, "<img") || strings.Contains(body, "<SCRIPT") {
+		t.Error("a course name became a tag")
+	}
+	if !strings.Contains(body, "&lt;/script&gt;") {
+		t.Error("the name should be on the page as the characters it is")
+	}
+}
+
 func TestRobotsPointsAtThisHostsSitemap(t *testing.T) {
 	body := get(t, aHandler(), "maths.example", "/robots.txt", nil).Body.String()
 	if !strings.Contains(body, "Sitemap: http://maths.example/sitemap.xml") {
@@ -232,5 +287,141 @@ func TestThePortuguesePageIsInPortuguese(t *testing.T) {
 	}
 	if !strings.Contains(body, "O que você vai aprender") {
 		t.Error("the Portuguese page is in English")
+	}
+}
+
+/*
+A COURSE THAT IS SOLD DOES NOT HAVE ITS LESSONS HERE, and this is the test that
+matters most in the file.
+
+	The rule is the store's — a lesson read with no plan refuses — and this
+	package asks with no plan, so it cannot get it wrong by remembering it
+	wrongly. What it CAN do is stop asking, or start showing what it was handed
+	anyway, and that is what this notices.
+
+	A locked lesson answers 404 rather than "you may not read this": a page that
+	exists to say so is a page a search engine will index.
+*/
+func TestALessonOfACourseThatIsSoldIsNotAPage(t *testing.T) {
+	sold := aCourse()
+	sold.Free = false
+
+	w := get(t, aHandler(sold), "code.example", "/course/linux-terminal/lesson/1", nil)
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("a paid course's lesson answered %d", w.Code)
+	}
+	if strings.Contains(w.Body.String(), "A terminal is a window") {
+		t.Fatal("the prose of a paid lesson reached the page")
+	}
+
+	// and its course page names the lessons without linking to any of them
+	body := get(t, aHandler(sold), "code.example", "/course/linux-terminal", nil).Body.String()
+	if !strings.Contains(body, "The terminal, and why") {
+		t.Error("a paid course should still list its lesson titles — that is the shop window")
+	}
+	if strings.Contains(body, "/course/linux-terminal/lesson/1") {
+		t.Error("a paid course links to a lesson page nobody may read")
+	}
+}
+
+func TestAFreeLessonIsAPageAndItsCourseLinksToIt(t *testing.T) {
+	body := get(t, aHandler(), "code.example", "/course/linux-terminal/lesson/1", nil).Body.String()
+	for _, want := range []string{
+		"The terminal, and why",
+		"Where you are",
+		"A terminal is a window onto a machine that has no desktop.",
+		`<link rel="canonical" href="http://code.example/course/linux-terminal/lesson/1">`,
+		`hreflang="pt-BR" href="http://code.example/pt/course/linux-terminal/lesson/1"`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("the lesson page does not carry %q", want)
+		}
+	}
+
+	course := get(t, aHandler(), "code.example", "/course/linux-terminal", nil).Body.String()
+	if !strings.Contains(course, `href="http://code.example/course/linux-terminal/lesson/1"`) {
+		t.Error("a free course should link to the lesson pages it has")
+	}
+}
+
+func TestALessonThatIsNotThereIsNotFound(t *testing.T) {
+	for _, path := range []string{
+		"/course/linux-terminal/lesson/99",
+		"/course/linux-terminal/lesson/0",
+		"/course/linux-terminal/lesson/first",
+		"/course/nothing-here/lesson/1",
+	} {
+		if code := get(t, aHandler(), "code.example", path, nil).Code; code != http.StatusNotFound {
+			t.Errorf("%s answered %d", path, code)
+		}
+	}
+}
+
+/*
+THE PROSE IS TEXT AND NOTHING IS BUILT FROM IT.
+
+	`prose.go` says why at length: the interface has the renderer, a second one
+	kept in step by nobody is the failure `markdown.js` warns about, and this
+	deliberately supports nothing so that it cannot support half of something.
+	These are the shapes a lesson actually contains.
+*/
+func TestTheProseComesOutAsWords(t *testing.T) {
+	for _, c := range []struct {
+		name, in string
+		want     []Prose
+	}{
+		{"a heading and a paragraph", "## Where you are\n\nA terminal is a window.",
+			[]Prose{{Heading: "Where you are"}, {Text: "A terminal is a window."}}},
+		{"bold and code lose their marks", "The **shell** runs `ls` for you.",
+			[]Prose{{Text: "The shell runs ls for you."}}},
+		{"a link keeps its words and drops its address",
+			"See [the manual](https://example.tld/man) for more.",
+			[]Prose{{Text: "See the manual for more."}}},
+		{"a fence is a construction, not prose",
+			"Before.\n\n```sh\nrm -rf /\n```\n\nAfter.",
+			[]Prose{{Text: "Before."}, {Text: "After."}}},
+		{"a figure's JSON never reaches the page",
+			"Look:\n\n```schooling-figure\n{\"svg\": \"<svg/>\"}\n```\n\nThat.",
+			[]Prose{{Text: "Look:"}, {Text: "That."}}},
+		{"a table is dropped rather than flattened",
+			"Two:\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\nDone.",
+			[]Prose{{Text: "Two:"}, {Text: "Done."}}},
+		{"a list item is a sentence without its marker",
+			"- first thing\n- second thing",
+			[]Prose{{Text: "first thing"}, {Text: "second thing"}}},
+		{"a numbered item too", "1. first\n2. second",
+			[]Prose{{Text: "first"}, {Text: "second"}}},
+		{"lines of one paragraph join up", "one line\nand the next\n\nelsewhere",
+			[]Prose{{Text: "one line and the next"}, {Text: "elsewhere"}}},
+		{"an asterisk on its own is an asterisk", "a * b",
+			[]Prose{{Text: "a * b"}}},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			got := Extract(c.in)
+			if len(got) != len(c.want) {
+				t.Fatalf("%d blocks, wanted %d: %#v", len(got), len(c.want), got)
+			}
+			for i := range got {
+				if got[i] != c.want[i] {
+					t.Errorf("block %d is %#v, wanted %#v", i, got[i], c.want[i])
+				}
+			}
+		})
+	}
+}
+
+// A lesson about HTML contains HTML, and `prose.go` does not remove it — the
+// template does, by putting it in a text node. This says so, because the two
+// halves of that sentence live in different files.
+func TestALessonAboutMarkupDoesNotBecomeMarkup(t *testing.T) {
+	c := aCourse()
+	c.Lessons[0].Sections[0].Prose = []Prose{{Text: `A tag looks like <script>alert(1)</script>.`}}
+
+	body := get(t, aHandler(c), "code.example", "/course/linux-terminal/lesson/1", nil).Body.String()
+	if strings.Contains(body, "<script>alert(1)") {
+		t.Fatal("a lesson's own words reached the page as markup")
+	}
+	if !strings.Contains(body, "&lt;script&gt;") {
+		t.Error("the words should be on the page, escaped")
 	}
 }

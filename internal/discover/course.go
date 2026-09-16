@@ -39,6 +39,8 @@ var words = map[string]map[string]string{
 		"prereq": "What you need first", "syllabus": "What you will learn",
 		"topics": "Full topic list", "lessons": "Lessons",
 		"open": "Open this course", "catalogue": "All courses",
+		"read":     "Read this lesson",
+		"inTheApp": "This page is the lesson's words. The figures, the worked examples and the exercises are in the school itself.",
 		"beginner": "beginner", "intermediate": "intermediate", "advanced": "advanced",
 	},
 	"pt": {
@@ -46,6 +48,8 @@ var words = map[string]map[string]string{
 		"prereq": "O que você precisa antes", "syllabus": "O que você vai aprender",
 		"topics": "Lista completa de tópicos", "lessons": "Aulas",
 		"open": "Abrir este curso", "catalogue": "Todos os cursos",
+		"read":     "Ler esta aula",
+		"inTheApp": "Esta página são as palavras da aula. As figuras, os exemplos resolvidos e os exercícios estão na escola.",
 		"beginner": "iniciante", "intermediate": "intermediário", "advanced": "avançado",
 	},
 }
@@ -62,7 +66,11 @@ type pageData struct {
 	OpenAt      string
 	Home        string
 	OtherTongue []link
-	JSONLD      template.JS
+	// Lessons is the course's lessons as links. A free course's lessons have a
+	// page of their own; a course that is sold lists its titles and links
+	// nowhere, because there is nowhere a stranger may go.
+	Lessons []link
+	JSONLD  template.JS
 }
 
 type link struct {
@@ -111,7 +119,15 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 		// second address for a search engine to find.
 		OpenAt: at + "/#/course/" + course.Slug,
 		Home:   at + "/",
-		JSONLD: template.JS(jsonLD(*course, at+languages[here].at+path, languages[here].tag)),
+		/* `gosec` is right that this conversion turns the template's escaping
+		   off, and it cannot see the one thing that makes it safe: the value
+		   comes from `json.Marshal`, which writes `<`, `>` and `&` as `\u003c`,
+		   `\u003e` and `\u0026` — so it cannot close this script element or
+		   open any other tag, whatever a school typed into a course's name.
+		   `TestTheStructuredDataCannotCloseItsOwnScript` is that claim as a
+		   test rather than as this sentence. */
+		JSONLD: template.JS(jsonLD(*course, at+languages[here].at+path, //nolint:gosec // json.Marshal escapes the three characters that could end the element; see the test named above
+			languages[here].tag)),
 	}
 	if name, ok := h.school(r.Context()); ok {
 		data.School = name
@@ -120,6 +136,13 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 		data.Level = l
 	} else {
 		data.Level = course.Level
+	}
+	for _, l := range course.Lessons {
+		row := link{Label: l.Title}
+		if course.Free {
+			row.Href = at + languages[here].at + path + "/lesson/" + strconv.Itoa(l.At)
+		}
+		data.Lessons = append(data.Lessons, row)
 	}
 	for i, l := range languages {
 		data.Alternates = append(data.Alternates, alternate{

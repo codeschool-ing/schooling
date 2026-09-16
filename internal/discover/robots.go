@@ -3,6 +3,7 @@ package discover
 import (
 	"encoding/xml"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/codeschool-ing/schooling/internal/platform/web"
@@ -105,9 +106,20 @@ func (h *Handler) sitemap(w http.ResponseWriter, r *http.Request) {
 	// these pages, and it is still the page every other one is reached from.
 	set.URLs = append(set.URLs, sitemap{Loc: at + "/"})
 	for _, c := range courses {
-		path := "/course/" + c.Slug
-		for _, l := range languages {
-			set.URLs = append(set.URLs, sitemap{Loc: at + l.at + path, Alternates: alternatesOf(path)})
+		paths := []string{"/course/" + c.Slug}
+		// A FREE COURSE'S LESSONS HAVE PAGES AND ARE LISTED; a course that is
+		// sold has none, so there is nothing here to list. The listing is where
+		// that is known, which is why the sitemap reads it and does not ask
+		// again per course.
+		if c.Free {
+			for _, l := range c.Lessons {
+				paths = append(paths, "/course/"+c.Slug+"/lesson/"+strconv.Itoa(l.At))
+			}
+		}
+		for _, path := range paths {
+			for _, l := range languages {
+				set.URLs = append(set.URLs, sitemap{Loc: at + l.at + path, Alternates: alternatesOf(path)})
+			}
 		}
 	}
 
