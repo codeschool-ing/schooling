@@ -321,7 +321,14 @@ jobs:
       # on every element of the copied markup carrying it — it has happened
       # twice, both times on a screen the change was not about, and neither time
       # was it visible in a review of the diff.
-      - name: Our stylesheet does not lay out their elements
+      #
+      # AND, FIRST, THAT EVERY STYLESHEET PARSES TO ITS END. A stray `*/` costs
+      # exactly one rule — the browser swallows the rule below it into a
+      # selector it then finds invalid — and the file is still served, still
+      # parsed and still full of rules. Nothing anywhere reports it. This runs
+      # with no argument on purpose: that reaches the console's stylesheet and
+      # the landing page's too, which the comparison above deliberately does not.
+      - name: Our stylesheets parse, and do not lay out their elements
         run: go run ./tools/check-css
 
       # P-03, which until now was cited in eight files as the reason for a design
