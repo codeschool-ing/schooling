@@ -37,8 +37,8 @@ var words = map[string]map[string]string{
 	"en": {
 		"course": "Course", "hours": "hours", "level": "Level",
 		"prereq": "What you need first", "syllabus": "What you will learn",
-		"topics": "Full topic list", "lessons": "Lessons",
-		"open": "Open this course", "catalogue": "All courses",
+		"lessons": "What is in it",
+		"open":    "Open this course", "catalogue": "All courses",
 		"read":     "Read this lesson",
 		"inTheApp": "This page is the lesson's words. The figures, the worked examples and the exercises are in the school itself.",
 		"beginner": "beginner", "intermediate": "intermediate", "advanced": "advanced",
@@ -46,8 +46,8 @@ var words = map[string]map[string]string{
 	"pt": {
 		"course": "Curso", "hours": "horas", "level": "Nível",
 		"prereq": "O que você precisa antes", "syllabus": "O que você vai aprender",
-		"topics": "Lista completa de tópicos", "lessons": "Aulas",
-		"open": "Abrir este curso", "catalogue": "Todos os cursos",
+		"lessons": "O que tem dentro",
+		"open":    "Abrir este curso", "catalogue": "Todos os cursos",
 		"read":     "Ler esta aula",
 		"inTheApp": "Esta página são as palavras da aula. As figuras, os exemplos resolvidos e os exercícios estão na escola.",
 		"beginner": "iniciante", "intermediate": "intermediário", "advanced": "avançado",
@@ -139,7 +139,10 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, l := range course.Lessons {
 		row := link{Label: l.Title}
-		if course.Free {
+		// A LINK ONLY WHERE THERE IS SOMEWHERE TO GO. `At` is zero for a lesson
+		// the course declares and nobody has written, and a free course is the
+		// only one whose written lessons a stranger may read.
+		if course.Free && l.At > 0 {
 			row.Href = at + languages[here].at + path + "/lesson/" + strconv.Itoa(l.At)
 		}
 		data.Lessons = append(data.Lessons, row)
@@ -178,7 +181,11 @@ schema.org, which is what a course in a search result is made of.
 func jsonLD(c Course, url, tag string) string {
 	teaches := c.Syllabus
 	if len(teaches) == 0 {
-		teaches = c.Topics
+		// A course with no syllabus still declares its contents, and its
+		// lessons are that list.
+		for _, l := range c.Lessons {
+			teaches = append(teaches, l.Title)
+		}
 	}
 	if len(teaches) > 12 {
 		teaches = teaches[:12]
