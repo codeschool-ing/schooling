@@ -24,6 +24,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
@@ -120,6 +121,8 @@ func servedFonts() (map[string]bool, error) {
 
 var (
 	declaresFamily = regexp.MustCompile(`(?i)font-family:\s*'([^']+)'`)
+	declaresRange  = regexp.MustCompile(`(?i)unicode-range:\s*([^;]+);`)
+	faceOf         = regexp.MustCompile(`(?s)@font-face\s*\{.*?\}`)
 
 	/* THE BACKSLASH IS NOT OPTIONAL DECORATION, it is the whole reason the first
 	   version of this check passed on the very files it was written for. A
@@ -266,6 +269,169 @@ func checkPipeLines(school string, s *catalog.School) []error {
 	return problems
 }
 
+// checkFenceGlyphs holds a monospaced block to the characters this interface
+// ships a glyph for.
+//
+// # A MONOSPACED BLOCK IS A GRID OR IT IS NOTHING
+//
+// `linux-terminal` draws 76 screens in box-drawing characters and quotes a
+// `systemctl` line that prints `→`. None of those code points were in `latin`
+// or `latin-ext`, which are the only cuts this interface used to ship — so each
+// one was drawn by whatever mono font the reader's machine happened to have, at
+// whatever width that font gave it, in a block where every other character was
+// ours at 0.6 em.
+//
+// The widths agreed on the machine the drawings were written on and disagreed
+// on a Windows laptop, where the fallback glyph is about 92%% of a cell: a rule
+// of 72 dashes came up six characters short of the corner it was drawn to meet.
+// It shipped, and a reader found it.
+//
+// Nothing could have reported it. The content is valid, the markup is right,
+// axe has no opinion about typefaces, and `checkFigureFonts` below asks which
+// FAMILY a drawing names, which was never the question here — the family was
+// right and the glyph was not in it.
+//
+// # IT READS THE RANGES THE STYLESHEET DECLARES
+//
+// Which is what the browser reads, and what `tools/fonts` is careful to keep
+// honest: that tool asks css2 for the characters by name and refuses a cut
+// whose range comes back wider than what it asked for, precisely so that this
+// check cannot be lied to.
+//
+// PROSE IS NOT CHECKED, and that is a scope and not an oversight. A character
+// the sans font lacks is a glyph in the wrong typeface, which is a blemish; the
+// same character inside a `<pre>` moves every column after it, which is a
+// drawing that no longer means what it says.
+func checkFenceGlyphs(school string, s *catalog.School, mono coverage, used map[rune]bool) []error {
+	var problems []error
+	seen := map[rune]bool{}
+
+	for _, course := range s.Courses {
+		for _, lesson := range course.Loaded {
+			for _, t := range lesson.Text {
+				for _, d := range drawnWith(t.Body, mono) {
+					if seen[d.glyph] {
+						continue
+					}
+					if allowedOutsideTheFont[d.glyph] != "" {
+						used[d.glyph] = true
+						continue
+					}
+					seen[d.glyph] = true
+					problems = append(problems, fmt.Errorf(
+						"%s: %s/%s/%s (%s) line %d draws with %q (U+%04X), which no font this "+
+							"interface serves has a glyph for — inside a `<pre>` that is a cell "+
+							"as wide as the reader's machine decides, and every column after it "+
+							"moves. Add it to `terminalGlyphs` in tools/fonts and re-run the "+
+							"tool, or write it another way",
+						school, course.ID, lesson.ID, t.SectionID, t.Locale, d.line, d.glyph, d.glyph))
+				}
+			}
+		}
+	}
+	return problems
+}
+
+// One character in a fence that the mono family has no glyph for, and the line
+// of the section body it is on.
+type drawn struct {
+	glyph rune
+	line  int
+}
+
+// drawnWith walks a section's markdown and answers every such character.
+//
+// THE MARKER THAT CLOSES A FENCE IS THE ONE THAT OPENS ONE, so a toggle is not
+// enough: `fence = !fence && !schooling` reads the closing ``` of a figure as
+// an OPENING one, and every line after a drawing then looks like code. That is
+// how the first run of this check reported a table row, and it is what the test
+// beside this file holds it to.
+func drawnWith(body string, mono coverage) []drawn {
+	var found []drawn
+	fence, drawing := false, false
+
+	for i, line := range strings.Split(body, "\n") {
+		if strings.HasPrefix(line, "```") {
+			if fence {
+				fence, drawing = false, false
+			} else {
+				// A `schooling-` fence is JSON for a block with a reader of its
+				// own, and `checkFigureFonts` is what looks inside that one.
+				fence = true
+				drawing = strings.HasPrefix(line, "```schooling-")
+			}
+			continue
+		}
+		if !fence || drawing {
+			continue
+		}
+		for _, r := range line {
+			if !mono.has(r) {
+				found = append(found, drawn{glyph: r, line: i + 1})
+			}
+		}
+	}
+	return found
+}
+
+// A CHARACTER THE FONT DOES NOT HAVE AND THE CONTENT CANNOT DROP. One entry so
+// far, and each one is a sentence explaining why the alternative is worse.
+//
+// An entry that stops being needed fails too — see the bottom of `run`. An
+// exception that outlived what it excused reads as current.
+var allowedOutsideTheFont = map[rune]string{
+	'\u25cf': "`systemctl status` prints it as the state dot and IBM Plex Mono has no U+25CF " +
+		"at all, so no cut of it would fix this. It opens a line and nothing is aligned to " +
+		"what follows it, so the width the reader's machine gives it moves nothing that means " +
+		"anything",
+}
+
+// coverage is the set of code points the interface declares a face for.
+type coverage map[rune]bool
+
+func (c coverage) has(r rune) bool { return r == '\t' || c[r] }
+
+// servedGlyphs answers which code points the mono family is declared to cover,
+// read from the same embedded stylesheet as `servedFonts`.
+func servedGlyphs(family string) (coverage, error) {
+	body, err := fs.ReadFile(ui.Files, "assets/fonts/fonts.css")
+	if err != nil {
+		return nil, fmt.Errorf("reading the interface's font faces: %w", err)
+	}
+
+	covered := coverage{}
+	for _, block := range faceOf.FindAllString(string(body), -1) {
+		name := declaresFamily.FindStringSubmatch(block)
+		ranges := declaresRange.FindStringSubmatch(block)
+		if name == nil || ranges == nil || !strings.EqualFold(name[1], family) {
+			continue
+		}
+		for _, part := range strings.Split(ranges[1], ",") {
+			lo, hi, found := strings.Cut(strings.TrimPrefix(strings.ToLower(strings.TrimSpace(part)), "u+"), "-")
+			if !found {
+				hi = lo
+			}
+			from, err := strconv.ParseInt(lo, 16, 32)
+			if err != nil {
+				return nil, fmt.Errorf("the stylesheet declares %q, which is not a code point", part)
+			}
+			to, err := strconv.ParseInt(hi, 16, 32)
+			if err != nil {
+				return nil, fmt.Errorf("the stylesheet declares %q, which is not a code point", part)
+			}
+			for r := from; r <= to; r++ {
+				covered[rune(r)] = true
+			}
+		}
+	}
+
+	if len(covered) == 0 {
+		return nil, fmt.Errorf("the interface's stylesheet declares no range for %s at all, "+
+			"which cannot be right and would fail every block below", family)
+	}
+	return covered, nil
+}
+
 func firstChars(s string) string {
 	if len(s) > 60 {
 		return s[:60] + "…"
@@ -292,6 +458,12 @@ func check(root string) (problems []error, schools int, err error) {
 	if err != nil {
 		return nil, 0, err
 	}
+
+	mono, err := servedGlyphs("IBM Plex Mono")
+	if err != nil {
+		return nil, 0, err
+	}
+	used := map[rune]bool{}
 
 	for _, entry := range entries {
 		if !entry.IsDir() {
@@ -332,6 +504,22 @@ func check(root string) (problems []error, schools int, err error) {
 		// have now lived inside an SVG, where nothing was reading.
 		problems = append(problems, checkFigureFonts(entry.Name(), school, families)...)
 		problems = append(problems, checkPipeLines(entry.Name(), school)...)
+
+		// AND THE CHARACTERS THEMSELVES, which is a different question from the
+		// family: a block can name the right font and still be drawn with a
+		// glyph that font has never had. See `checkFenceGlyphs`.
+		problems = append(problems, checkFenceGlyphs(entry.Name(), school, mono, used)...)
+	}
+
+	// An exception that outlived what it excused reads as current, and the next
+	// person to meet this character would read it as settled rather than as a
+	// thing nobody has had to decide again.
+	for r, why := range allowedOutsideTheFont {
+		if !used[r] {
+			problems = append(problems, fmt.Errorf(
+				"%q (U+%04X) is excused in `allowedOutsideTheFont` — %s — and no block draws "+
+					"with it any more. Delete the entry", r, r, why))
+		}
 	}
 
 	sort.Slice(problems, func(i, j int) bool { return problems[i].Error() < problems[j].Error() })

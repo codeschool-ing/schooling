@@ -234,6 +234,14 @@ with neither — a file's contents, a drawing in box characters — gets no tab 
 window titled `output` when nobody said so is a label claiming to know something. Nothing has
 to be written in the file for any of this: it is read from what is already there.
 
+**A fence may only draw with characters the interface ships a glyph for.** Box drawing
+(`┌ ─ │ ┘`), the block elements and the arrows `systemctl` prints are in
+`ibm-plex-mono-terminal-400.woff2`, cut by `go run ./tools/fonts`; anything else is a cell as
+wide as the reader's machine decides, which moves every column after it. `validate-content`
+fails on one and names the file, the line and the character. A character IBM Plex Mono does not
+have at all — `●`, which `systemctl status` prints — needs an entry in
+`allowedOutsideTheFont` with the argument for why the alternative is worse.
+
 **`schooling-example` is a window too**, and its tab is the one place a title is written rather
 than read: the block's `file` field, falling back to its `language`. Above 1466px the window
 frames the code column alone and the notes stay beside it in the page; below that the two
