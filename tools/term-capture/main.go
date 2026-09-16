@@ -367,10 +367,29 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 	// Typing, when the screen wanted is not the one the program opens on. Each
 	// batch settles before the next, because a program that is still redrawing
 	// has not finished reading either.
+	//
+	// THE CLOCK IS PUT FORWARD AT THE KEYSTROKE, and without that one line none
+	// of this did anything at all. `settle` waits for the program to be quiet
+	// for `quiet` — and a program that has been sitting still through the
+	// warmup is ALREADY quieter than that, so it returned on its first
+	// comparison, before the keystroke had crossed the line discipline. The
+	// screen was then read exactly as it had been before anything was typed.
+	//
+	// IT FAILED SILENTLY, WHICH IS WHAT MADE IT EXPENSIVE. `-send G` produced
+	// the opening screen and reported success; the ruler read `1,1` and the
+	// caption beside it said the cursor had moved. The conclusion drawn from it
+	// in this repository was that a pseudo-terminal could not carry vim's
+	// visual mode — a fact about this tool, mistaken for a fact about
+	// terminals, and taken as a reason not to capture twenty more screens.
+	//
+	// Moving the clock makes the wait mean what its name says: at least `quiet`
+	// after the key was sent, and longer if the program is still drawing when
+	// that runs out.
 	for i, k := range keys {
 		if _, err := master.Write([]byte(k)); err != nil {
 			return nil, fmt.Errorf("typing -send %d: %w", i+1, err)
 		}
+		lastWrite.Store(time.Now().UnixNano())
 		if err := settle(&lastWrite, quiet); err != nil {
 			return nil, fmt.Errorf("after -send %d: %w", i+1, err)
 		}
@@ -385,6 +404,10 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 		if _, err := master.Write([]byte(repaint)); err != nil {
 			return nil, fmt.Errorf("asking for a repaint: %w", err)
 		}
+		// The same clock, for the same reason as the loop above: without it
+		// the wait below can end before the redraw this key asked for has
+		// started, which is the interleaved frame it exists to prevent.
+		lastWrite.Store(time.Now().UnixNano())
 	}
 	if err := settle(&lastWrite, quiet); err != nil {
 		return nil, err
