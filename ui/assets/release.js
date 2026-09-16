@@ -98,8 +98,33 @@ let lastChecked = 0;
 // that has been told twice has been told twice for no reason.
 let behind = false;
 
+/* THE SAME ANSWER, KEPT RATHER THAN REDUCED TO A STRING.
+
+   The comparison above wants one value it can test for equality and throws the
+   shape away. A caller that wants to SHOW which build this is wants the shape —
+   and asking `/version` a second time for a hundred bytes this module already
+   has would be the request `fetch-once` exists to argue against.
+
+   It is what was SERVED, which is the honest thing to put on a screen: a tab
+   open across a deploy is running the build recorded here, not the one the
+   server would answer with now. The banner saying so is the same sentence the
+   stale notice says in more words. */
+let servedBuild = null;
+const waiting = new Set();
+
 const identity = (info) => [info?.version, info?.commit, info?.built]
   .map((s) => String(s || '')).join(' ');
+
+/* What this tab was served, once it is known.
+
+   IT IS A CALLBACK AND NOT A VALUE, because the answer arrives over the network
+   and every caller of it paints before that lands. Registering after the answer
+   is in calls back at once, so a late caller is not a caller that hears
+   nothing. */
+export function whenServed(fn) {
+  if (servedBuild) { fn(servedBuild); return; }
+  waiting.add(fn);
+}
 
 /*
 Ask the server what it is, and answer whether this tab is behind it.
@@ -147,6 +172,12 @@ async function ask(skip) {
 
   if (!running) {
     running = said;
+    servedBuild = info;
+    /* EMPTIED AS IT IS DRAINED. Each caller is told once, and this branch runs
+       once, but a listener kept after it has fired is a listener holding a
+       screen that no longer exists. */
+    for (const fn of waiting) fn(info);
+    waiting.clear();
     return false;
   }
   if (said !== running) behind = true;

@@ -465,6 +465,26 @@ $('#account').addEventListener('click', async (e) => {
    catalogue — and an environment flag would hide the notice precisely there. */
 const UNDER_CONSTRUCTION = true;
 
+/* WHICH BUILD THIS TAB IS RUNNING, once the server has said.
+
+   IT IS NOT TRANSLATED AND IT IS NOT A SENTENCE. `v0.44.0` is the same string
+   in five languages, so it is drawn beside the notice rather than inside it —
+   putting it in the sentence would put a number into four dictionaries and make
+   every release a translation change.
+
+   IT COMES FROM `/version` AND NOT FROM THE DOCUMENT. `<meta name="version">`
+   arrived here with the rest of the portal's shell and was never read by
+   anything: over there Pages served a branch as it was and a file was the only
+   place a number could live, and here the tag is stamped into the binary at
+   link time. A meta tag would be a second copy to forget, and the copy that was
+   already there had been saying `dev` since the day it was pasted in.
+
+   AND IT IS WHAT WAS SERVED, not what the server is now. A tab open across a
+   deploy is running the older one; saying the newer number would be this
+   banner telling a small lie on the one screen that exists to be candid. The
+   stale notice is what says the rest of it. */
+let servedVersion = '';
+
 function paintDevBanner() {
   const el = $('#dev-banner');
   el.hidden = !UNDER_CONSTRUCTION;
@@ -474,8 +494,23 @@ function paintDevBanner() {
   el.innerHTML =
     '<span class="db-text"><strong>' + txt('This platform is being built.') + '</strong> ' +
     txt('Courses are still being written, and accounts and progress may be reset without notice.') +
-    '</span>';
+    '</span>' +
+    /* NOTHING RATHER THAN A PLACEHOLDER while the answer is in flight, and
+       nothing at all in the offline bundle, which has no server to ask. A
+       version that appears a moment late is a version; a dash that never
+       becomes one is a question. */
+    (servedVersion
+      ? '<span class="db-version mono">' + esc(servedVersion) + '</span>'
+      : '');
 }
+
+/* The badge is painted a second time rather than held for: the banner is the
+   first thing on the screen and the request that names the build is one of the
+   last to land. */
+release.whenServed((info) => {
+  servedVersion = String((info && info.version) || '');
+  paintDevBanner();
+});
 
 let bannerDismissed = false;
 function paintVerifyBanner() {
