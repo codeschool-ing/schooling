@@ -13,7 +13,7 @@
    docs already record that as the intended design, not a temporary limitation.
    ========================================================================== */
 
-import { esc, formatted } from '../text.js';
+import { codeBar, esc, formatted } from '../text.js';
 
 const SHOWN_CASES = 2;
 
@@ -37,8 +37,8 @@ export default {
 
     return (
       '<label class="ex-label" for="cod-' + uid + '">' + txt('your solution') + '</label>' +
-      '<div class="code-block code-editor">' +
-        '<div class="code-bar"><span class="code-lang">' + esc(ex.language || '') + '</span></div>' +
+      '<div class="code-block code-win code-editor">' +
+        codeBar(ex.skeleton, ex.language) +
         '<textarea id="cod-' + uid + '" class="ex-field mono code-area" rows="10" spellcheck="false" ' +
           'autocapitalize="off" autocorrect="off">' + esc(ex.skeleton || '') + '</textarea>' +
       '</div>' +

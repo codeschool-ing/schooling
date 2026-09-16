@@ -114,6 +114,67 @@ export const copyButton = () =>
 
 export const COPY_ICONS = { copy: ICON_COPY, copied: ICON_COPIED };
 
+/* ---------- a code block is a window ----------
+
+   THE BAR WAS ALREADY THERE AND HALF OF IT WAS EMPTY: the language on the left,
+   the copy button on the right, and no language at all on the 1,391 terminal
+   recordings of `linux-terminal`. A tab on the left and three dots on the right
+   is what that strip already looked like — see `assets/code-window.css` for why
+   the dots are `--wire` and not another system's red, amber and green.
+
+   THE TITLE IS NOT INVENTED, and that is the part worth reading twice. A
+   terminal tab shows the user, the machine and the directory, and a transcript
+   already carries all three on its first line: `ana@vm:~/work$` becomes
+   `ana@vm: ~/work`. A block with a language shows the language, as the bar did.
+   A block with neither — a file's contents, a drawing in box characters — gets
+   NO TAB, because a window titled `output` when nobody said so is a label that
+   claims to know something.
+
+   THE DOTS ARE `<i>` AND `aria-hidden`. They are the shape of a window, not a
+   control: a student who tabs to a close button that closes nothing has been
+   lied to, and three unlabelled buttons is what a screen reader would otherwise
+   read out before every snippet in the course. */
+const ICON_TERMINAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="m4 17 6-5-6-5"/><path d="M12 19h8"/></svg>';
+
+const ICON_FILE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>' +
+  '<path d="M14 3v5h5"/></svg>';
+
+const WINDOW_DOTS = '<span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>';
+
+/* `user@host:path$ ` and `PS <path>> `, which is every prompt the catalogue
+   writes. The bare `$ ` has no machine in it and falls through to the shell's
+   own name, which is the only true thing left to say about it. */
+const TAB_UNIX = /^([\w.-]+)@([\w.-]+):(\S*?)[$#] /;
+const TAB_POWERSHELL = /^(PS [^>\n]*)> /;
+const SHELLS = new Set(['sh', 'bash', 'zsh', 'shell', 'console', 'terminal']);
+
+export function windowOf(text, language) {
+  const raw = String(text ?? '');
+  const unix = TAB_UNIX.exec(raw);
+  if (unix) return { title: unix[1] + '@' + unix[2] + ': ' + unix[3], terminal: true };
+  const ps = TAB_POWERSHELL.exec(raw);
+  if (ps) return { title: ps[1], terminal: true };
+
+  const name = String(language || '').trim();
+  if (isTranscript(raw)) return { title: name || 'sh', terminal: true };
+  return { title: name, terminal: SHELLS.has(name.toLowerCase()) };
+}
+
+export function codeBar(text, language) {
+  const { title, terminal } = windowOf(text, language);
+  return '<div class="code-bar">' +
+    (title
+      ? '<span class="win-tab"><span class="win-icon" aria-hidden="true">' +
+          (terminal ? ICON_TERMINAL : ICON_FILE) + '</span>' + esc(title) + '</span>'
+      : '') +
+    WINDOW_DOTS +
+  '</div>';
+}
+
 /* The prose of a lesson section. Ten block forms, and nothing beyond them:
 
      'text'                        → paragraph, with `code`, **bold**, *italic*
@@ -182,15 +243,15 @@ export function prose(body) {
            returns, and falls back to plain escaped text for a language it does
            not know, so a block with no label is exactly what it was.
 
-           The bar renders even with no language to show: it carries the copy
-           button, and a block you cannot copy because its author left the label
-           out would be an odd thing to explain. */
-        return '<div class="code-block prose-code">' +
-          '<div class="code-bar">' +
-            '<span class="code-lang">' + esc(block.code || '') + '</span>' +
+           The bar renders even with no language to show: it is the window's,
+           and a block you cannot copy because its author left the label out
+           would be an odd thing to explain. */
+        return '<div class="code-block code-win prose-code">' +
+          codeBar(block.text, block.code) +
+          '<div class="code-hold">' +
             copyButton() +
+            '<pre class="code"><code>' + highlight(block.text, block.code) + '</code></pre>' +
           '</div>' +
-          '<pre class="code"><code>' + highlight(block.text, block.code) + '</code></pre>' +
         '</div>';
       }
     }
@@ -645,6 +706,10 @@ export const LANGUAGES = Object.keys(COMPILED).concat(Object.keys(ALIAS)).sort()
    front of the command. */
 const PROMPT = /^(?:[\w.-]+@[\w.-]+:\S*[$#]|PS [^>\n]*>|\$) /;
 
+/* Read twice: here to decide how to colour the block, and by `codeBar` above to
+   decide what to write on its tab. */
+export const isTranscript = (text) => PROMPT.test(String(text ?? ''));
+
 function transcript(raw) {
   return raw.split('\n').map((line) => {
     const at = PROMPT.exec(line);
@@ -674,7 +739,7 @@ function sweep(raw, re) {
 export function highlight(code, language) {
   const raw = String(code ?? '');
   const name = String(language || '').toLowerCase();
-  if (!name) return PROMPT.test(raw) ? transcript(raw) : esc(raw);
+  if (!name) return isTranscript(raw) ? transcript(raw) : esc(raw);
   const re = COMPILED[ALIAS[name] || name];
   if (!re) return esc(raw);           // a language we do not know comes out colourless
   return sweep(raw, re);
