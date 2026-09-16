@@ -58,7 +58,7 @@ version of this happens:
 What felt like "loading a page" was somewhere between fifteen and a hundred separate exchanges,
 each one with an asker and an answerer, each one complete in itself.
 
-Two things follow, and both matter more than they look:
+Two things follow:
 
 **Your browser is not one client, it is a client many times over.** It holds a dozen exchanges open
 at once and assembles a page out of the answers as they arrive, in whatever order they arrive.

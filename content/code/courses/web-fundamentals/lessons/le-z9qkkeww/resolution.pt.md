@@ -101,8 +101,8 @@ Dois arranjos fecham isso. **DNS sobre TLS** põe a mesma troca dentro de uma co
 porta própria. **DNS sobre HTTPS** põe dentro de tráfego HTTPS comum, então ela não é só ilegível mas
 indistinguível de qualquer outra coisa. Navegadores trazem isso e alguns ligam por padrão.
 
-É genuinamente contestado em vez de simplesmente melhor, e vale conhecer o argumento: mover cada
+É genuinamente contestado em vez de simplesmente melhor, e vale conhecer o argumento. Mover cada
 consulta para dentro de HTTPS a um punhado de grandes provedores concentra em poucas mãos um registro
-que antes ficava espalhado por milhares de provedores de acesso, e tira as consultas da vista de
+que antes ficava espalhado por milhares de provedores de acesso. E tira as consultas da vista de
 operadores de rede que as usavam para bloquear malware e aplicar regras que uma escola ou uma mãe
 pediu. As duas metades disso são verdade ao mesmo tempo.

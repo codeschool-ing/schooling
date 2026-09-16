@@ -42,9 +42,9 @@ A camada 4 entrega a um **programa** em vez de a uma máquina — é isso que um
 suas duas formas comuns, promete que tudo chega e chega em ordem.
 
 As camadas 5 e 6 são onde o modelo é mais frágil, e é mais honesto dizer isso do que inventar
-exemplos. Numa pilha rodando, os trabalhos existem mas não são caixas separadas: a criptografia
+exemplos. Numa pilha rodando, os trabalhos existem mas não são caixas separadas. A criptografia
 que a camada 6 descreve é feita pelo TLS, que um engenheiro chamaria de parte do transporte ou
-parte da aplicação conforme a discussão, e a sessão que a camada 5 descreve costuma ser algo que a
+parte da aplicação conforme a discussão. E a sessão que a camada 5 descreve costuma ser algo que a
 aplicação arranjou sozinha com um cookie.
 
 A camada 7 é o protocolo que seu programa de fato fala, e é a única camada que sabe do que se

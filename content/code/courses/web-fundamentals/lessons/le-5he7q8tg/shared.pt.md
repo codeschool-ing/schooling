@@ -37,7 +37,7 @@ Não há alocação que seja sua; há uma máquina, e quem estiver mais ocupado 
 dela. Este é o problema do vizinho barulhento, e é a queixa mais comum sobre hospedagem
 compartilhada.
 
-**O endereço** é dividido, o que importa mais do que parece. Se um vizinho manda spam ou serve
+**O endereço** é dividido. Se um vizinho manda spam ou serve
 malware, o endereço ganha reputação, e essa reputação fica colada no seu e-mail e às vezes no seu
 site.
 

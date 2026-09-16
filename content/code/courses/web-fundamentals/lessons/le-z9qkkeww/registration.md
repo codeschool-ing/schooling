@@ -103,8 +103,8 @@ The price of a name is set by the registry and marked up by the registrar, and r
 currency units a year to several hundred. The variation says nothing technical: `.com` and a new
 word-shaped TLD behave identically to every piece of software in this course.
 
-Which leaves the choice as something other than a technical one. The two things worth weighing are
-whether the TLD carries a meaning you want — a country's TLD reads as being from that country,
-whether you are or not — and whether the registry has rules about who may hold names under it,
-because some require a local presence or a business registration and will take a name back from
+Which leaves the choice as something other than a technical one. Two things are worth weighing:
+whether the TLD carries a meaning you want, and whether the registry has rules about who may hold
+names under it. A country's TLD reads as being from that country, whether you are or not. And some
+registries require a local presence or a business registration, and will take a name back from
 somebody who does not have one.

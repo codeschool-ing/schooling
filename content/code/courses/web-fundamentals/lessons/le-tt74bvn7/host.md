@@ -117,8 +117,8 @@ Because "the server is down" is three different problems, they are fixed by diff
 | the host is fine, the **endpoint** is not — nothing is listening on that port | an immediate, definite refusal |
 | both are fine and the **answer is an error** | a fast, well-formed response that says it went wrong |
 
-The difference between the first two is worth internalising because it is so useful. **A timeout
-means nobody was there to say no.** Your request went out and nothing came back — the machine is
+The difference between the first two is worth internalising. **A timeout means nobody was there to
+say no.** Your request went out and nothing came back — the machine is
 off, or something between you and it is dropping traffic silently.
 
 **A refusal means something was there and said no.** The machine is up, the network reached it, and

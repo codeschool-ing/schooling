@@ -101,7 +101,7 @@ O preço de um nome é definido pelo registro e remarcado pelo registrador, e va
 de moeda por ano a várias centenas. A variação não diz nada técnico: `.com` e um TLD novo em forma de
 palavra se comportam de maneira idêntica para todo software deste curso.
 
-O que deixa a escolha como algo que não é técnico. As duas coisas que valem peso são se o TLD carrega
-um significado que você quer — o TLD de um país lê-se como sendo daquele país, sendo você de lá ou
-não — e se o registro tem regras sobre quem pode ter nomes debaixo dele, porque alguns exigem
-presença local ou registro empresarial e retomam um nome de quem não tiver.
+O que deixa a escolha como algo que não é técnico. Duas coisas valem peso: se o TLD carrega um
+significado que você quer, e se o registro tem regras sobre quem pode ter nomes debaixo dele. O TLD
+de um país lê-se como sendo daquele país, sendo você de lá ou não. E alguns registros exigem
+presença local ou registro empresarial, e retomam um nome de quem não tiver.

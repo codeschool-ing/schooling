@@ -8,8 +8,8 @@ de uma vez, e esse teto se chama **MTU** — a unidade máxima de transmissão.
 
 Na Ethernet comum ele é de **1500 bytes**. Não é um número redondo, nem uma lei da física: é um
 valor escolhido nos anos 1970, equilibrando o custo do rótulo contra o quanto se perde quando um
-quadro é corrompido, e ele sobreviveu a todos os motivos pelos quais foi escolhido simplesmente por
-ser o que todo o resto já espera.
+quadro é corrompido. Ele sobreviveu a todos os motivos pelos quais foi escolhido por ser o que todo
+o resto já espera.
 
 ## Por que existe um teto
 

@@ -36,7 +36,7 @@ There is no allocation that is yours; there is a machine, and whoever is busiest
 This is the noisy neighbour problem, and it is the single most common complaint about shared
 hosting.
 
-**The address** is shared, which matters more than it sounds. If a neighbour sends spam or serves
+**The address** is shared. If a neighbour sends spam or serves
 malware, the address gets a reputation, and that reputation is attached to your mail and sometimes
 to your site.
 

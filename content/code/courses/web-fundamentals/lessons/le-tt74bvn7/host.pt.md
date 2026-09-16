@@ -118,8 +118,8 @@ Porque "o servidor caiu" são três problemas diferentes, consertados por pessoa
 | o host está bem, o **endpoint** não — nada está escutando naquela porta | uma recusa imediata e definitiva |
 | os dois estão bem e a **resposta é um erro** | uma resposta rápida e bem formada dizendo que deu errado |
 
-A diferença entre os dois primeiros vale ser internalizada porque é muito útil. **Um timeout
-significa que não havia ninguém lá para dizer não.** Sua requisição saiu e nada voltou — a máquina
+A diferença entre os dois primeiros vale ser internalizada. **Um timeout significa que não havia
+ninguém lá para dizer não.** Sua requisição saiu e nada voltou — a máquina
 está desligada, ou algo entre você e ela está descartando tráfego em silêncio.
 
 **Uma recusa significa que havia alguém lá e ele disse não.** A máquina está de pé, a rede chegou

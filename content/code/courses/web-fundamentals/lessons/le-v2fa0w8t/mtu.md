@@ -8,8 +8,8 @@ go, and that ceiling is called the **MTU** — the maximum transmission unit.
 
 On ordinary Ethernet it is **1500 bytes**. Not a round number, and not a law of physics: it is a
 figure chosen in the 1970s, balancing the cost of the label against how much you lose when one
-frame is corrupted, and it has outlived every reason it was picked for by simply being what
-everything else already expects.
+frame is corrupted. It has outlived every reason it was picked for by being what everything else
+already expects.
 
 ## Why a ceiling exists at all
 
