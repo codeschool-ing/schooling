@@ -38,9 +38,9 @@ encerrado.
 
 O `exit status 137` é a única coisa que o shell tem a te dizer, e basta.
 
-**137 = 128 + 9**, e o sinal 9 é o `KILL`. A convenção da seção 99, e a tabela da
-seção 93: um processo terminado por um sinal informa `128 + N`, e o `KILL` é o
-que não pode ser capturado, bloqueado nem ignorado.
+**137 = 128 + 9**, e o sinal 9 é o `KILL`. A convenção da aula 6 seção 14, e a
+tabela da aula 6 seção 08: um processo terminado por um sinal informa `128 + N`,
+e o `KILL` é o que não pode ser capturado, bloqueado nem ignorado.
 
 Então quando um contêiner sai com 137, ou o `kubectl describe pod` diz
 `OOMKilled`, ou um serviço some com `status=9/KILL` no `systemctl`, todos são
@@ -130,10 +130,10 @@ há resposta melhor disponível naquele instante.
 | swap | converte a morte em lentidão. Seção anterior |
 | monitorar o `available` | o único que conserta alguma coisa |
 
-**O `MemoryMax=2G` numa unidade do systemd (seção 80) não impede a morte — ela a
-desloca.** O serviço é morto quando excede o próprio limite em vez de quando a
-máquina excede o dela, o que contém o dano a uma coisa em vez de deixar o kernel
-escolher.
+**O `MemoryMax=2G` numa unidade do systemd (aula 5 seção 11) não impede a morte —
+ela a desloca.** O serviço é morto quando excede o próprio limite em vez de
+quando a máquina excede o dela, o que contém o dano a uma coisa em vez de deixar
+o kernel escolher.
 
 ## O que fazer quando você achar um
 

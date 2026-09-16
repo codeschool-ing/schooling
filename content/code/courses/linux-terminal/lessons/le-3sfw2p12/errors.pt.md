@@ -13,7 +13,7 @@ this line still ran
 ```
 
 **Esse é um erro não terminante.** O cmdlet o informou e o script seguiu, que é o
-padrão e é o `noset.sh` da seção 143 de novo.
+padrão e é o `noset.sh` da aula 9 seção 06 de novo.
 
 ```
 PS /home/ana/work/ps> Get-Content /etc/nosuchfile -ErrorAction Stop; "this line did not"
@@ -37,10 +37,10 @@ Continue
 
 Definir `$ErrorActionPreference = 'Stop'` no topo de um script faz **todo** cmdlet
 parar em erro, que é o mais perto que o PowerShell chega do `set -e`. Ponha ao
-lado do `Set-StrictMode -Version Latest` da seção 167, e o par é o
+lado do `Set-StrictMode -Version Latest` da seção 10, e o par é o
 `set -euo pipefail`.
 
-**O `SilentlyContinue` é o de tomar cuidado.** Ele é o `2>/dev/null` da seção 121,
+**O `SilentlyContinue` é o de tomar cuidado.** Ele é o `2>/dev/null` da aula 8 seção 03,
 com o mesmo problema: ele esconde o erro que você esperava e também o que você não
 esperava.
 
@@ -51,7 +51,7 @@ PS /home/ana/work/ps> try { Get-Content /etc/nosuchfile -ErrorAction Stop } catc
 caught: Cannot find path '/etc/nosuchfile' because it does not exist.
 ```
 
-Tratamento de exceção de verdade, que o bash não tem — o `trap … ERR` da seção 153
+Tratamento de exceção de verdade, que o bash não tem — o `trap … ERR` da aula 9 seção 16
 é a coisa mais próxima e é de outra forma.
 
 **O `-ErrorAction Stop` não é opcional ali:**
@@ -93,7 +93,7 @@ RuntimeException
 finally ran
 ```
 
-O `finally` roda dos dois jeitos, e é **o `trap … EXIT` da seção 153**: o lugar de
+O `finally` roda dos dois jeitos, e é **o `trap … EXIT` da aula 9 seção 16**: o lugar de
 apagar o arquivo temporário, fechar a conexão, devolver a configuração.
 
 O `$Error` é um array de tudo que deu errado nesta sessão, do mais novo para o
@@ -110,7 +110,7 @@ PS /home/ana/work/ps> try { Check /etc/nope } catch { "died: $($_.Exception.Mess
 died: cannot read /etc/nope
 ```
 
-O `throw` levanta um erro terminante com a sua mensagem — o `die()` da seção 150,
+O `throw` levanta um erro terminante com a sua mensagem — o `die()` da aula 9 seção 13,
 embutido, e capturável por quem te chamou, o que o `die()` não é. É a forma certa
 de uma função recusar.
 
@@ -168,4 +168,4 @@ $ErrorActionPreference = 'Stop'
 Duas linhas. A primeira pega a variável que nunca foi definida, a segunda para no
 primeiro cmdlet que falhar. Nenhuma das duas percebe um programa nativo que
 devolveu 1, que é o buraco que você tem que cobrir na mão — a mesma forma de
-lacuna que a seção 143 mediu no `set -e`.
+lacuna que a aula 9 seção 06 mediu no `set -e`.

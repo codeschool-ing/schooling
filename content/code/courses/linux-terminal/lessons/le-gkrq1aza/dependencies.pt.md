@@ -37,7 +37,7 @@ apt-cache rdepends thing           # what needs it — the reverse question
 apt install --dry-run thing        # the whole plan, without doing any of it
 ```
 
-**O `--dry-run` é o hábito que vale formar.** Ele imprime exatamente o parágrafo que a seção 106 te
+**O `--dry-run` é o hábito que vale formar.** Ele imprime exatamente o parágrafo que a seção 04 te
 ensinou a ler, e não muda nada. Numa máquina de produção é a diferença entre saber e descobrir.
 
 O `rdepends` — dependências reversas — responde "o que quebra se eu remover isto", que é a pergunta
@@ -48,7 +48,7 @@ que você quer antes de digitar `apt remove` numa biblioteca.
 ### 1. Meio instalado
 
 Você usou o `dpkg -i` e a dependência não estava lá. O dpkg desempacota e se recusa a configurar,
-deixando o pacote num estado em que os arquivos existem e ele não funciona. A seção 109 é essa por
+deixando o pacote num estado em que os arquivos existem e ele não funciona. A seção 07 é essa por
 inteiro, com o conserto.
 
 ### 2. Segurado
@@ -61,7 +61,7 @@ inteiro, com o conserto.
 exigiria remover outra, e o `upgrade` puro se recusa a remover. O `apt list --upgradable` os nomeia e
 o `apt full-upgrade` tem permissão para fazer isso — depois de você ler o que ele tiraria.
 
-O outro motivo é um hold deliberado, que é a seção 111.
+O outro motivo é um hold deliberado, que é a seção 09.
 
 ### 3. Dependências não satisfeitas
 
@@ -123,7 +123,7 @@ Remv libtext-charwidth-perl [0.04-11build3]
 
 **Pedi um pacote e o plano remove dois.** O `cowsay` depende dele, então tirar a biblioteca quer
 dizer tirar o `cowsay` também — um gerenciador não vai conscientemente deixar um pacote com o
-`Depends` insatisfeito. A seção 112 mostra o `dnf` fazendo a mesma coisa pelo mesmo motivo.
+`Depends` insatisfeito. A seção 10 mostra o `dnf` fazendo a mesma coisa pelo mesmo motivo.
 
 O `--dry-run` é por que isto é um parágrafo e não um incidente. E o `rdepends` é como você pergunta
 antes mesmo de digitar `remove`:

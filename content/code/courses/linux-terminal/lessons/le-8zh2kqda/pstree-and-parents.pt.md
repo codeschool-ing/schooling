@@ -45,10 +45,10 @@ vinte segundos depois, e é justamente do que aquela seção trata.
 ## Por que a árvore importa na prática
 
 **Matar um pai não mata os filhos dele.** Essa é a suposição errada mais comum desta aula. Um sinal
-vai para um processo; os filhos são processos separados e seguem em frente. A seção 94 é sobre as
+vai para um processo; os filhos são processos separados e seguem em frente. A seção 09 é sobre as
 duas formas de alcançar um grupo inteiro.
 
-**Um serviço é uma subárvore.** O bloco `CGroup:` da seção 79 da aula 5 tinha essa forma — o serviço
+**Um serviço é uma subárvore.** O bloco `CGroup:` da seção 10 da aula 5 tinha essa forma — o serviço
 e tudo que ele iniciou. É isso que o systemd acompanha, e é por isso que o `systemctl stop` pega
 processos que um arquivo de PID teria perdido.
 
@@ -57,7 +57,7 @@ costuma explicá-lo. O `ps -ef` te dá o `PPID`; siga para cima até chegar em a
 
 ## Quando o pai morre primeiro
 
-A seção 88 mostrou isso e vale a segunda olhada, porque o resultado não é o que as pessoas esperam:
+A seção 03 mostrou isso e vale a segunda olhada, porque o resultado não é o que as pessoas esperam:
 
 ```
 ana@vm:~/work$ bash -c 'sleep 200 & echo child is $!'
@@ -70,7 +70,8 @@ ana@vm:~/work$ ps -eo pid,ppid,stat,comm | grep -E 'PID|sleep' | grep -v grep
 O `bash` de dentro sumiu. O `sleep` não, e o pai dele agora é o `1`.
 
 **O filho não é morto. Ele é adotado.** O kernel readota um órfão para o processo um — que é o único
-processo garantidamente ainda ali, e que recolhe códigos de saída continuamente (aula 5, seção 77).
+processo garantidamente ainda ali, e que recolhe códigos de saída continuamente (aula 5, aula 5 seção
+08).
 
 Duas consequências que você vai encontrar:
 
@@ -79,7 +80,7 @@ Duas consequências que você vai encontrar:
 lista.
 
 **Fechar um terminal não necessariamente para o que você iniciou nele.** O shell morre, o filho é
-adotado, e ele continua. Se isso acontece ou não depende do sinal de hangup da seção 96 — que é um
+adotado, e ele continua. Se isso acontece ou não depende do sinal de hangup da seção 11 — que é um
 mecanismo diferente da readoção, e os dois são confundidos o tempo todo.
 
 ## Lendo uma árvore de verdade
@@ -104,13 +105,13 @@ nele.
 Quatro coisas para ler de qualquer `pstree`, e as quatro estão nessa saída:
 
 **A raiz é o que quer que o PID 1 seja.** Aqui é o `process_api`, um supervisor de contêiner, pelo
-motivo que a seção 77 da aula 5 deu. Numa máquina que deu boot normalmente a linha de cima diz
+motivo que a seção 08 da aula 5 deu. Numa máquina que deu boot normalmente a linha de cima diz
 `systemd`.
 
 **`N*[nome]`** quer dizer N filhos idênticos, agrupados numa entrada só. `10*[{process_api}]` são
 dez, não um.
 
-**`{nome}` entre chaves** quer dizer uma **thread**, não um processo — as threads da seção 87.
+**`{nome}` entre chaves** quer dizer uma **thread**, não um processo — as threads da seção 02.
 Então `10*[{process_api}]` é um processo com dez threads, e no `ps` ele é uma linha só. Três dos
 processos aqui são multi-thread e custa três linhas dizer isso.
 

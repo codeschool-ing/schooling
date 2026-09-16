@@ -51,7 +51,7 @@ Ele responde, mudando só o campo:
 | quais códigos de status voltaram | `cut -d" " -f9` |
 | quais comandos você mais digita | `history \| awk '{print $2}'` |
 
-**O segundo `sort -rn` é onde o `-n` da seção 127 ganha o salário.** O `uniq -c` põe a contagem
+**O segundo `sort -rn` é onde o `-n` da seção 09 ganha o salário.** O `uniq -c` põe a contagem
 primeiro, então ordenar sem o `-n` poria `100` antes de `99`.
 
 ## O `-d` e o `-u`, que são opostos
@@ -128,4 +128,4 @@ A mesma resposta do topo desta seção, e sem `sort` antes da contagem — entã
 ele é bem mais rápido, e não precisa da entrada agrupada.
 
 **O `sort | uniq -c` é mais fácil de digitar e o `awk` é mais rápido em entradas grandes.** Os dois
-estão corretos; a seção 132 é o segundo.
+estão corretos; a seção 14 é o segundo.

@@ -15,7 +15,7 @@ more than two
 Não há `then`, não há `fi`, e não há `;` antes da chave — a chave é a gramática. O
 `elseif` é uma palavra só.
 
-Diferente do bash (seção 144), **a condição é uma expressão, não um comando**. O
+Diferente do bash (aula 9 seção 07), **a condição é uma expressão, não um comando**. O
 `if (Get-Process pwsh) { }` funciona porque um resultado não vazio é verdadeiro,
 mas o normal é uma comparação.
 
@@ -102,7 +102,7 @@ O `switch` recebe um valor e uma lista de pares `condição { ação }`. Uma con
 pode ser um literal, um curinga (com `-Wildcard`), uma expressão regular (com
 `-Regex`), ou um bloco que devolve booleano, como acima.
 
-E aqui está a diferença para o `case` da seção 146, que vai te pegar uma vez:
+E aqui está a diferença para o `case` da aula 9 seção 09, que vai te pegar uma vez:
 
 ```
 PS /home/ana/work/ps> switch (3) { 1 { "one" } 3 { "three" } 3 { "three again" } default { "other" } }
@@ -144,7 +144,7 @@ InvalidOperation: The variable '$nothing' cannot be retrieved because it has not
 ```
 
 **Sem ele, um nome de variável errado é `$null`, o `$null.Count` é 0, e o ramo do
-`else` roda.** Isso é o `$TARGE` da seção 143 noutra linguagem: nenhum erro, uma
+`else` roda.** Isso é o `$TARGE` da aula 9 seção 06 noutra linguagem: nenhum erro, uma
 decisão tomada sobre um valor que nunca esteve lá.
 
 | | |

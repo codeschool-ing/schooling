@@ -59,8 +59,9 @@ PS /home/ana/work/ps> 'no expansion here: $x'
 no expansion here: $x
 ```
 
-**Aspas duplas expandem, aspas simples não** — a mesma divisão da seção 141, com a
-mesma consequência para expressões regulares e qualquer coisa contendo um `$`.
+**Aspas duplas expandem, aspas simples não** — a mesma divisão da aula 9 seção 04,
+com a mesma consequência para expressões regulares e qualquer coisa contendo um
+`$`.
 
 **O `$( )` dentro de uma string com aspas duplas** roda uma expressão, que é como
 você põe uma propriedade numa mensagem:
@@ -163,7 +164,7 @@ esqueceu os colchetes.
 | `$env:NOME` | uma variável de ambiente |
 
 O `$env:PATH` é como você lê o ambiente, e defini-la com `$env:LEVEL = "debug"` a
-exporta para os filhos — o `export` da seção 140, embutido no nome.
+exporta para os filhos — o `export` da aula 9 seção 03, embutido no nome.
 
 O `$IsLinux` e companhia são como um script multiplataforma se ramifica:
 

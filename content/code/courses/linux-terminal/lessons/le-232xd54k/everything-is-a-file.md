@@ -21,7 +21,7 @@ crw-rw-rw- 1 root root 1, 5 Sep  3 04:53 /dev/zero
 Three entries in `/dev`, listed by the same `ls` you used on your own directory. Two things in
 that output are new.
 
-**The first character is `c`, not `-`.** Section 39 of lesson 3 decodes that column in full; here
+**The first character is `c`, not `-`.** Section 04 of lesson 3 decodes that column in full; here
 it is enough that `-` means an ordinary file and `c` means a **character device** — something the
 kernel hands you a stream from rather than bytes off a disk.
 
@@ -73,7 +73,7 @@ ana@vm:~$ ls /proc/self/fd
 
 Those are the open files of the command you just ran — numbered, because that is how a program
 refers to them. `0`, `1` and `2` are standard input, output and error, which is the whole of
-lesson 8's redirection sitting there as three entries in a directory. Section 93 of lesson 6 comes
+lesson 8's redirection sitting there as three entries in a directory. Section 08 of lesson 6 comes
 back to it.
 
 ## What this actually buys you

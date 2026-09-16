@@ -13,7 +13,7 @@ i=2
 i=3
 ```
 
-`for NAME in WORDS; do … done`. The `;` before `do` is the same rule as `then` in section 144 — a
+`for NAME in WORDS; do … done`. The `;` before `do` is the same rule as `then` in section 07 — a
 newline works too.
 
 ## The list is usually a glob
@@ -181,8 +181,8 @@ gzip *.log                              # the same thing, one process
 ```
 
 **Most commands already take many arguments.** A loop that calls `mv`, `rm`, `chmod` or `gzip` once
-per file is usually a loop that did not need to exist — and section 134's `xargs` covers the case
-where the list is too long or comes from somewhere else.
+per file is usually a loop that did not need to exist — and lesson 8 section 16's `xargs` covers
+the case where the list is too long or comes from somewhere else.
 
 Write the loop when each iteration needs to *do* something different: build a name, check a
 condition, keep a running total. Not when it is the same command with a different argument.

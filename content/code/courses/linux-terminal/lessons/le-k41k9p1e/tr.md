@@ -66,7 +66,7 @@ line one$
 line two$
 ```
 
-A file edited on Windows has `\r\n` at the end of every line. Section 123's `cat -A` shows it as
+A file edited on Windows has `\r\n` at the end of every line. Section 05's `cat -A` shows it as
 `^M$`, and a shell script with those endings fails with an error that names a command you can see
 is spelled correctly — because the command it actually tried to run had an invisible carriage
 return on the end of its name.
@@ -82,7 +82,7 @@ ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
 10.0.1.11 "GET /
 ```
 
-**This is the fix for section 126's one-character delimiter.** `tr -s " "` turns any run of spaces
+**This is the fix for section 08's one-character delimiter.** `tr -s " "` turns any run of spaces
 into a single space, which makes `cut -d" "` work on text that is aligned with padding rather than
 separated by one character.
 
@@ -111,7 +111,7 @@ dog attack
 
 `tr cat dog` turns every `c` into `d`, every `a` into `o` and every `t` into `g`. `cat` does become
 `dog` — which is why this looks like it works until you give it a second word. Replacing a word is
-section 131's `sed`.
+section 13's `sed`.
 
 **It has no patterns.** No `.`, no `*`, no anchors. Sets of characters and nothing else.
 

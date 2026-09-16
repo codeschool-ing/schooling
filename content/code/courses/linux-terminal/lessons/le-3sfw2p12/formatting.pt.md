@@ -83,7 +83,7 @@ cmdlet que produz dados:
 | `ConvertTo-Csv` `Export-Csv` | CSV, para o pipeline ou para um arquivo |
 | `Out-String` | a representação, como string, para quando você quer mesmo o texto |
 | `Out-File` `Set-Content` | para um arquivo |
-| `Out-Null` | para lugar nenhum. O `> /dev/null` da seção 121 |
+| `Out-Null` | para lugar nenhum. O `> /dev/null` da aula 8 seção 03 |
 
 ```
 PS /home/ana/work/ps> Get-ChildItem | Select-Object Name, Length | ConvertTo-Json
@@ -134,7 +134,7 @@ Write-Host   "this goes straight to the screen"
 ```
 
 **O `Write-Output` emite um objeto.** É o que uma função devolve, ele pode ser
-capturado, encanado e redirecionado — a saída padrão da seção 120.
+capturado, encanado e redirecionado — a saída padrão da aula 8 seção 02.
 
 **O `Write-Host` escreve para a aplicação hospedeira**, contornando o pipeline por
 completo:

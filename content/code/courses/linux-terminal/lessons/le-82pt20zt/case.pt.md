@@ -30,7 +30,7 @@ A forma:
 | | |
 |---|---|
 | `case "$x" in` | o valor, entre aspas |
-| `padrão)` | um **glob**, não uma expressão regular — a sintaxe da seção 45 |
+| `padrão)` | um **glob**, não uma expressão regular — a sintaxe da aula 3 seção 10 |
 | `a\|b)` | alternativas, com `\|` |
 | `;;` | fim deste ramo. Fácil de esquecer, e erro de sintaxe quando você esquece |
 | `*)` | o pega-tudo. Ponha por último; ele casa com tudo |
@@ -49,8 +49,8 @@ por completo. (O bash tem `;&` e `;;&` para escorrer, e em vinte anos você não
 
 ## A única coisa que todo mundo escreve com ele
 
-Todo script que recebe opções termina com este laço. Ele é `while` da seção 147, `shift` da seção
-142, e `case`:
+Todo script que recebe opções termina com este laço. Ele é `while` da seção 10, `shift` da seção 05,
+e `case`:
 
 ```
 ana@vm:~/work/scripts$ cat deploy.sh

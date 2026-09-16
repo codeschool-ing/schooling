@@ -3,7 +3,7 @@ title: Three audiences, and only one of them is you
 version: 1
 ---
 
-Every file has an **owner** and a **group**, and section 41 already showed you both:
+Every file has an **owner** and a **group**, and lesson 3 section 06 already showed you both:
 
 ```
 -rw-r----- 1 ana team 13 Sep 14 22:45 teamonly.txt
@@ -103,7 +103,7 @@ locked out, because her row is checked first and her row says `r--`.
 
 It looks like a bug and it is the design. The owner row exists so that an owner can *deliberately*
 give themselves less than everybody else — a file you want to be sure you do not overwrite by
-accident is exactly this. And root ignores the whole thing anyway, which is section 64.
+accident is exactly this. And root ignores the whole thing anyway, which is section 11.
 
 ## What the three letters mean
 
@@ -114,7 +114,7 @@ accident is exactly this. And root ignores the whole thing anyway, which is sect
 | `x` | run it as a program |
 | `-` | not allowed |
 
-On a **directory** the same three letters mean something different, and that is section 59's
+On a **directory** the same three letters mean something different, and that is section 06's
 entire subject. Do not carry the file meanings across; they will mislead you.
 
 ## Two things that are not in the nine characters
@@ -122,7 +122,7 @@ entire subject. Do not carry the file meanings across; they will mislead you.
 **Deleting a file is not controlled by the file's bits.** It is controlled by the **directory's**
 — because removing a file means removing a name from a directory, which is a change to the
 directory. That is why you can delete a file you cannot read, and why `/tmp` needs the extra bit
-in section 63.
+in section 10.
 
 **Nothing here knows about people.** These are user *accounts* and *groups*, matched by number.
-Section 61 is where those numbers come from, and lesson 5 is where accounts actually live.
+Section 08 is where those numbers come from, and lesson 5 is where accounts actually live.

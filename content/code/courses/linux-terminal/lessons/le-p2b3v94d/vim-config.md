@@ -90,8 +90,8 @@ auto-indent to each pasted line and the text arrives shaped like a staircase.
 `:set nopaste` afterwards. (Terminals that support bracketed paste make this
 unnecessary, and plenty do not.)
 
-`:set list` shows tabs as `^I` and line ends as `$` — `cat -A` from section 123,
-inside the editor, and the way to see why a `Makefile` is not working.
+`:set list` shows tabs as `^I` and line ends as `$` — `cat -A` from lesson 8
+section 05, inside the editor, and the way to see why a `Makefile` is not working.
 
 ## Two things that are not configuration
 

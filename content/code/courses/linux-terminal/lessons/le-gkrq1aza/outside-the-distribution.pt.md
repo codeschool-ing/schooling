@@ -12,8 +12,8 @@ remover, e não vai mencionar quando ele for o motivo de algo quebrar.**
 
 ## Repositórios de terceiros
 
-Esta é a opção *boa*, porque o gerenciador de pacotes continua gerenciando. Dois passos, e a seção
-105 mostrou o que eles produzem:
+Esta é a opção *boa*, porque o gerenciador de pacotes continua gerenciando. Dois passos, e a seção 03
+mostrou o que eles produzem:
 
 ```
 root@vm:~# cat /etc/apt/sources.list.d/docker.list
@@ -26,7 +26,7 @@ atualiza o Docker como qualquer outra coisa.
 
 **O risco não é segurança, é sobreposição.** Um repositório de terceiro pode também carregar versões
 de pacotes que a sua distribuição já fornece — uma biblioteca mais nova, um compilador mais novo — e
-uma vez que um seja instalado de lá, aquele repositório passa a ser dono dele. O pin da seção 111 é a
+uma vez que um seja instalado de lá, aquele repositório passa a ser dono dele. O pin da seção 09 é a
 defesa:
 
 ```
@@ -41,7 +41,7 @@ distribuição, isso vale cinco minutos.
 **PPAs no Ubuntu são repositórios de terceiros com um nome mais bonito.** O `add-apt-repository
 ppa:nome/x` escreve o arquivo de fonte e busca a chave por você. A mesma cautela se aplica e mais
 uma: uma PPA é a build de uma pessoa, e quando ela para, aquilo para — e os pacotes que você instalou
-de lá ficam, sem suporte, até você notar. A transcrição da seção 105 tem duas PPAs nesta máquina que
+de lá ficam, sem suporte, até você notar. A transcrição da seção 03 tem duas PPAs nesta máquina que
 não buscam mais nada.
 
 ## Snap e Flatpak
@@ -119,7 +119,7 @@ As respostas certas, em ordem:
 | `pip install --user` | aceitável, e ainda invisível para o `apt` |
 
 A mesma forma se aplica ao `npm -g`, ao `gem install` e ao resto: **instalações globais de um
-gerenciador de linguagem vão para o `/usr/local`, onde a seção 107 mostrou o `dpkg -S` não achando
+gerenciador de linguagem vão para o `/usr/local`, onde a seção 05 mostrou o `dpkg -S` não achando
 nada.**
 
 ## Um binário de uma página de release
@@ -134,7 +134,7 @@ comum e o menos gerenciado:
 
 **Não é errado**, e é como muito software bom é distribuído. O que o torna sobrevivível é anotar o
 que você fez. O `/usr/local` existe justamente para que esse software fique num lugar só, não
-gerenciado, que é o que a aula 3 apontava e o que a resposta vazia do `dpkg -S` da seção 107 demonstra:
+gerenciado, que é o que a aula 3 apontava e o que a resposta vazia do `dpkg -S` da seção 05 demonstra:
 
 ```
 root@vm:~# dpkg -S /usr/local/bin/python3
@@ -146,14 +146,14 @@ o único registro é o próprio arquivo.
 
 ## Contêineres, que são a outra resposta
 
-O motivo de o `docker` aparecer nas transcrições da seção 111 é que contêineres são como muita gente
+O motivo de o `docker` aparecer nas transcrições da seção 09 é que contêineres são como muita gente
 hoje evita esta seção inteira: a aplicação e as dependências dela são empacotadas juntas, nas versões
 que a aplicação escolheu, e o gerenciador de pacotes do host é responsável por exatamente uma coisa —
 o runtime de contêiner.
 
 **Isso não remove o problema, move.** A imagem tem uma distribuição dentro, com um gerenciador de
 pacotes, e o `apt-get install` do Dockerfile dela está sujeito a tudo nesta aula. O
-`--no-install-recommends` da seção 104 está em todo Dockerfile bem escrito por um motivo.
+`--no-install-recommends` da seção 02 está em todo Dockerfile bem escrito por um motivo.
 
 ## O que fazer a respeito
 

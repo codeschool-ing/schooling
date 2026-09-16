@@ -66,7 +66,7 @@ ana@vm:~/work$ grep -c . logs/app.log; wc -l < logs/app.log
 A file of accented Portuguese text will have more bytes than characters, because `ã` is two bytes.
 
 **Use `-c` when you care about disk or transfer size** and `-m` when you care about how much text
-there is. And note that `head -c` from section 123 is bytes too, which is why cutting a UTF-8 file
+there is. And note that `head -c` from section 05 is bytes too, which is why cutting a UTF-8 file
 at an arbitrary byte can split a character in half.
 
 ## Counting things that are not lines
@@ -96,7 +96,7 @@ wc -l logs/app.log       # prints "30 logs/app.log"
 wc -l < logs/app.log     # prints "30"
 ```
 
-Section 120 showed this. In a script, **the second form is the one you want**, because the output
+Section 02 showed this. In a script, **the second form is the one you want**, because the output
 is a number and not a number plus a name you then have to `cut` off.
 
 `$(wc -l < file)` is the idiom, and it is why the redirect is worth the extra character.

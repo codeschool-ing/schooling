@@ -88,7 +88,7 @@ before the file is live, and there is no equivalent for a crontab except
 
 ## How it fits with cron
 
-Look again at the system crontab from section 214:
+Look again at the system crontab from section 05:
 
 ```sh
 25 6 * * * root test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.daily; }
@@ -109,7 +109,7 @@ awake**, rather than at 06:25.
 | a job whose *time* matters | cron or `OnCalendar` — anacron cannot promise one |
 
 **anacron's granularity is a day.** Nothing hourly, nothing at a particular
-minute. Section 221's `Persistent=true` is the same idea with a clock attached,
+minute. Section 12's `Persistent=true` is the same idea with a clock attached,
 which is why anacron matters less on a systemd machine than it used to.
 
 ## `at`, which runs it once
@@ -146,7 +146,7 @@ removed, exit 0
 | `batch` | run it when the machine is idle enough — a load threshold `atd` is started with |
 
 **`warning: commands will be executed using /bin/sh`** is `at` telling you what
-section 215 said: the same `/bin/sh`, the same missing profile.
+section 06 said: the same `/bin/sh`, the same missing profile.
 
 But `at` does something cron does not: it **captures your current environment**
 and replays it. `at -c` prints the job it will run, and the top of it is your

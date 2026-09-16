@@ -60,7 +60,7 @@ without looking anything up.
 
 ## Which to pick
 
-Section 33 argues three cases properly. The compressed version:
+Section 12 argues three cases properly. The compressed version:
 
 - **A server somebody else maintains** — fixed, with the longest window you can get. Boring is the
   feature.

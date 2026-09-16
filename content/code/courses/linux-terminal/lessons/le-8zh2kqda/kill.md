@@ -3,7 +3,7 @@ title: `kill`, and why `-9` is the wrong first move
 version: 1
 ---
 
-Section 93 was what a signal is. This is how to aim one, and there are four ways to name a target:
+Section 08 was what a signal is. This is how to aim one, and there are four ways to name a target:
 by PID, by job, by group, and by name. They fail differently and that is the whole of the section.
 
 ## By PID
@@ -14,7 +14,7 @@ kill -TERM 1234       # the same, spelled out
 kill -9 1234          # KILL
 ```
 
-Exact and unambiguous, and the answer when you already know the number. `pgrep` from section 90 is
+Exact and unambiguous, and the answer when you already know the number. `pgrep` from section 05 is
 usually how you got it.
 
 **And `kill` needs permission.** You can signal processes that are yours; anything else is refused:
@@ -78,7 +78,7 @@ ana@vm:~/work$ ps -o pid,ppid,pgid,comm -p $(pgrep -d, -g $P)
 [1]+  Terminated              ./group-demo.sh
 ```
 
-**The parent is gone and the three children are not.** Their `PPID` is `1` — section 91's adoption,
+**The parent is gone and the three children are not.** Their `PPID` is `1` — section 06's adoption,
 happening for real — and their `PGID` is still `2668`, the group of a process that no longer exists.
 
 That is the failure people hit constantly: the thing you killed is dead, the work it started is
@@ -165,7 +165,7 @@ ana@vm:~/work$ pgrep -f watcher.sh; echo "pgrep exit: $?"
 pgrep exit: 1
 ```
 
-`pkill` takes section 90's `pgrep` options and sends a signal instead of printing. **`0` when it
+`pkill` takes section 05's `pgrep` options and sends a signal instead of printing. **`0` when it
 matched something and `1` when it did not**, which makes it usable in a script.
 
 `killall` is the other one, and it matches the program's name exactly rather than a pattern:
@@ -205,7 +205,7 @@ ana@vm:~/work$ pkill -f watcher
 and `watcher.log` contains the word. Nothing warned anybody.
 
 So: **run the `pgrep` first, read the list, then change `pgrep` to `pkill`.** They take identical
-options for exactly this reason. Section 90 said it from the other side; this is what it prevents.
+options for exactly this reason. Section 05 said it from the other side; this is what it prevents.
 
 On a production machine the list is longer, the mistake is `pkill -f java`, and the thing you did not
 mean to match was somebody else's service.
@@ -213,7 +213,7 @@ mean to match was somebody else's service.
 ## Why not `-9`
 
 `kill -9` is the reflex, and it is the wrong reflex, because **a program cannot clean up after a
-`KILL`.** Section 93 showed the trap never running. What that means in practice:
+`KILL`.** Section 08 showed the trap never running. What that means in practice:
 
 - a database does not flush what it was holding, and the next start is a recovery;
 - a lock file, a PID file or a socket is left behind, and the next start refuses;
@@ -249,11 +249,11 @@ now: 1
 `trap '' TERM` with an empty handler means **ignore**, and this script ignores it completely — after
 the `TERM`, `kill -0` still says `0`. Then `-9`, and it is gone, with `Killed` rather than `Done`.
 
-(The `running as ...` line lands above the `P=$!` you typed, for section 93's reason: the script
+(The `running as ...` line lands above the `P=$!` you typed, for section 08's reason: the script
 printed it the instant it started, and what you type is echoed wherever the cursor is.)
 
 **That sequence is the discipline**: `TERM`, wait a few seconds, check, and only then `-9`. Section
-93's `kill -0` is the check, and it costs nothing.
+08's `kill -0` is the check, and it costs nothing.
 
 `systemctl stop` does exactly this for you, which is one of the things lesson 5 was buying: `TERM`
 to the whole cgroup, wait `TimeoutStopSec`, then `KILL` to whatever is left.

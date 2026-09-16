@@ -137,7 +137,7 @@ reversible.
 
 **Locking the password does not stop an ssh key from working.** That surprises people the day
 somebody leaves: `passwd -l` and the account still logs in over ssh, because keys never touched
-`/etc/shadow`. Section 75 is where that lives; the belt-and-braces version is
+`/etc/shadow`. Section 06 is where that lives; the belt-and-braces version is
 `usermod -L -e 1 user`, which expires the account itself.
 
 Note also that `passwd -l` prints `password changed.` — the one confusing message in this section,

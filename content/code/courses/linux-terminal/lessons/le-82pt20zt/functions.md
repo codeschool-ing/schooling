@@ -64,7 +64,7 @@ That is the mental model, and it is nearly exact.
 | | |
 |---|---|
 | `$1 $2 $#` | **the function's** arguments, not the script's |
-| `"$@"` | the function's arguments, same quoting rule as section 142 |
+| `"$@"` | the function's arguments, same quoting rule as section 05 |
 | `return N` | the function's exit status. `$?` afterwards |
 | `exit N` | **exits the whole script.** Not the function |
 | `$0` | still the script. Functions do not have their own name in `$0` |
@@ -165,7 +165,7 @@ string.
 messages, warnings, anything a human reads — send it to standard error with `>&2`, which is what
 `log()` at the top of this section does.
 
-That is not a workaround. It is what standard error is for (section 120), and it is why a
+That is not a workaround. It is what standard error is for (lesson 8 section 02), and it is why a
 well-behaved script's normal output can be piped into something else without being contaminated.
 
 ## Two things that make functions worth it
@@ -203,5 +203,5 @@ They cannot be called before they are defined, they cannot return anything but a
 **they cannot be exported to a child script** in any way you should rely on — `export -f` exists,
 is bash-only, and was the mechanism behind a famous security hole in 2014.
 
-If two scripts need the same function, put it in a third file and `source` it (section 139). That
+If two scripts need the same function, put it in a third file and `source` it (section 02). That
 is the shell's version of a library, and it is the whole of it.

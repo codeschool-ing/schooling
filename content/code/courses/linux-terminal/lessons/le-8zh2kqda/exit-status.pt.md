@@ -3,7 +3,7 @@ title: Códigos de saída, e o que o `$?` está mesmo te dizendo
 version: 1
 ---
 
-A seção 88 disse que um processo termina entregando um número ao pai. Este é aquele número, e é a
+A seção 03 disse que um processo termina entregando um número ao pai. Este é aquele número, e é a
 única coisa que um programa pode dizer sobre como foi que outro programa consegue usar.
 
 **Zero é sucesso. Todo o resto é falha.** Isso é ao contrário da maioria das coisas e é o jeito certo
@@ -51,10 +51,10 @@ ana@vm:~/work$ bash -c "exit 42"; echo $?
 
 **O `126` e o `127` são os dois que valem decorar**, porque são os dois que você recebe do script em
 vez de da coisa que o script estava tentando fazer. `127` num log é um erro de digitação ou um pacote
-faltando; `126` é um arquivo sem o bit de execução, que é do que a seção 62 da aula 4 tratava.
+faltando; `126` é um arquivo sem o bit de execução, que é do que a seção 09 da aula 4 tratava.
 
 **E o `1` do `grep` não é um erro.** Quer dizer que o padrão não estava lá, o que muitas vezes é a
-resposta que você queria. O `pgrep` da seção 90 usa a mesma convenção pelo mesmo motivo.
+resposta que você queria. O `pgrep` da seção 05 usa a mesma convenção pelo mesmo motivo.
 
 ## Sinais, dentro do código
 
@@ -72,7 +72,7 @@ ana@vm:~/work$ echo $?
 
 **128 mais o número do sinal.** O `TERM` é 15, então 143. O `INT` é 2, então 130 — que é o que você
 recebe toda vez que aperta `Ctrl+C`, e é por isso que o 130 aparece tanto em logs. O `SIGPIPE` da
-seção 93 era 141 pela mesma conta.
+seção 08 era 141 pela mesma conta.
 
 Então um código acima de 128 vale ser lido como uma subtração: **`137` é `128 + 9`, que é `SIGKILL`,
 que muitíssimas vezes é o matador de falta de memória** e não uma pessoa. Esse fato sozinho explicou
@@ -102,7 +102,7 @@ ana@vm:~/work$ false | true; echo $?
 ```
 
 O `PIPESTATUS` é um array com **um código por etapa**, e é o único jeito de descobrir qual etapa
-falhou. A seção 93 o usou para pegar o `yes` sendo morto pelo `SIGPIPE`.
+falhou. A seção 08 o usou para pegar o `yes` sendo morto pelo `SIGPIPE`.
 
 **O `set -o pipefail` muda a regra**: o código do pipeline vira o último diferente de zero. Num
 script que faz qualquer coisa com pipes, esta linha pertence ao topo, e o dia em que você precisa

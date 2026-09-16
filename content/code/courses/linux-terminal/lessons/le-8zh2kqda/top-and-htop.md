@@ -34,7 +34,7 @@ when there is nothing wrong.
 **Line 1 is `uptime`**, word for word — the time, how long the machine has been up, how many users
 are logged in, and three load numbers. The rest of this section is about those three.
 
-**Line 2 counts processes by state**, which is section 89's letters as a tally. `zombie` having its
+**Line 2 counts processes by state**, which is section 04's letters as a tally. `zombie` having its
 own number here is the fastest zombie check there is.
 
 **Line 3 is the processors, as percentages**, and the abbreviations matter:
@@ -43,7 +43,7 @@ own number here is the fastest zombie check there is.
 |---|---|
 | `us` | **user** — your programs, doing their own work |
 | `sy` | **system** — the kernel, working on their behalf |
-| `ni` | user time by processes that were **niced** — section 97 |
+| `ni` | user time by processes that were **niced** — section 12 |
 | `id` | **idle**. The big number on a healthy machine |
 | `wa` | **waiting for I/O**. High here means the disk is the problem, not the processor |
 | `st` | **stolen** — a hypervisor gave your time to somebody else's virtual machine |
@@ -141,7 +141,7 @@ load average: 0.08, 0.03, 0.01
 
 Three numbers: the average over **one, five and fifteen minutes**. And what is averaged is not
 utilisation — it is **the number of processes that wanted to run**, whether or not a processor was
-free. Section 89's `R`, counted over time, plus the ones in `D`.
+free. Section 04's `R`, counted over time, plus the ones in `D`.
 
 Which gives you the rule:
 
@@ -205,7 +205,7 @@ MiB Swap:      0.0 total,      0.0 free,      0.0 used.  15519.7 avail Mem
 processes**. And PIDs 65 and 67 have the same memory figures as PID 1 and different names:
 `vsock-console`, `tokio-rt-worker`. They are threads of process one, which named them.
 
-Section 87 said to ask whether you are counting threads. `-H` is how you ask.
+Section 02 said to ask whether you are counting threads. `-H` is how you ask.
 
 ## The keys, when you run it for real
 
@@ -215,7 +215,7 @@ Section 87 said to ask whether you are counting threads. `-H` is how you ask.
 |---|---|
 | `P` | sort by processor |
 | `M` | sort by memory |
-| `k` | kill — it asks for a PID and a signal, which is section 94 |
+| `k` | kill — it asks for a PID and a signal, which is section 09 |
 | `u` | filter to one user |
 | `1` | show each processor on its own line instead of one average |
 | `q` | quit |
@@ -243,13 +243,13 @@ Four things it gives you that `top` does not:
 **A bar per processor, always.** `top` needs the `1` key; htop starts that way, and the difference
 between one busy core and four is visible without asking.
 
-**`F5`, tree view.** Section 91's `pstree`, live and sorted — which is how you find out that the
+**`F5`, tree view.** Section 06's `pstree`, live and sorted — which is how you find out that the
 process eating the machine is a child of something you recognise.
 
 **`F9`, kill with a menu.** It lists the signals by name, which means you send `TERM` because you
-chose it rather than `KILL` because it is what you remember. Section 94 is about why that matters.
+chose it rather than `KILL` because it is what you remember. Section 09 is about why that matters.
 
-**`F4`, filter as you type.** The `ps aux | grep` from section 90, without the wart.
+**`F4`, filter as you type.** The `ps aux | grep` from section 05, without the wart.
 
 **Use `htop` when you are looking, and `top -b` when you are recording.** A shell script, a cron
 job, a bug report — those want batch mode, and `top -b -n 1` is the line that produces something you

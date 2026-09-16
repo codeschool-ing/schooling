@@ -70,7 +70,7 @@ ana@vm:~$ echo $?
 
 `sleep 30` should have held the prompt for half a minute. `Ctrl+C` took it back immediately. The
 `^C` is the terminal showing you what you sent; the `130` is the exit status, and it is
-specifically the number that means *this program was interrupted*. Section 94 of lesson 6 explains
+specifically the number that means *this program was interrupted*. Section 09 of lesson 6 explains
 where 130 comes from; for now it is the receipt.
 
 **So how do you copy?** `Ctrl+Shift+C` and `Ctrl+Shift+V` in most Linux terminals, `Cmd+C` on a
@@ -121,7 +121,7 @@ and it is safer than `Ctrl+C` for that, because it leaves no doubt about whether
 `clear` is the same thing as a command.
 
 **Ctrl+Z suspends.** The program stops where it is and you get the prompt back — but *it is still
-there*, paused, not finished. Section 90 of lesson 6 is about picking it back up. Until then,
+there*, paused, not finished. Section 05 of lesson 6 is about picking it back up. Until then,
 know that using `Ctrl+Z` to "stop" something leaves it stopped and alive, which is not usually
 what you meant.
 

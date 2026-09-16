@@ -11,7 +11,7 @@ version: 1
 | **where** | every Unix, since 1975 | every systemd machine |
 | **smallest interval** | one minute | one second |
 | **calendar syntax** | five fields | richer, and **checkable** |
-| **both day fields** | OR — section 213 | AND |
+| **both day fields** | OR — section 04 | AND |
 | **missed runs** | lost | `Persistent=true` |
 | **overlapping runs** | yours to prevent | prevented |
 | **output** | mailed, if there is an MTA | the journal |
@@ -39,7 +39,7 @@ would otherwise write by hand and get wrong:
 
 | | |
 |---|---|
-| the job must not overlap itself | section 223 |
+| the job must not overlap itself | section 14 |
 | the machine is off some of the time | `Persistent=true` |
 | the job needs the network, or a mount | `After=network-online.target` |
 | the output matters and there is no MTA | the journal |
@@ -69,7 +69,7 @@ repository rather than on one machine.
 The trade is that the scheduler is now somebody else's system, with its own
 failure modes and its own place to look.
 
-**What does not change is section 225.** Whatever starts the job, the job still
+**What does not change is section 16.** Whatever starts the job, the job still
 has to be safe to run twice, to say something when it fails, and to stop when it
 takes too long. That is the half of this lesson that outlives whichever
 scheduler you are using this year.

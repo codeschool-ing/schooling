@@ -78,7 +78,7 @@ Trinta linhas entram, três saem. O `sort -u` é `sort | uniq` num processo só,
 quando você só quer os valores distintos.
 
 **Não é a escolha certa quando você quer contagens**, porque ele joga fora a informação de que o
-`uniq -c` precisa. Isso é a seção 128.
+`uniq -c` precisa. Isso é a seção 10.
 
 ## Locale, e por que o `sort` às vezes discorda de si mesmo
 
@@ -101,7 +101,7 @@ primeiro comando dá `a A b B` — sem diferenciar caixa, letra por letra — e 
 `A B a b`.
 
 Isso importa em exatamente uma situação e ela é ruim: **um script que compara saída ordenada entre
-duas máquinas.** O `comm` e o `join` da seção 133 exigem que as entradas estejam ordenadas *do mesmo
+duas máquinas.** O `comm` e o `join` da seção 15 exigem que as entradas estejam ordenadas *do mesmo
 jeito*, e duas máquinas com locales diferentes produzem ordens diferentes dos mesmos dados.
 
 O conserto é ser explícito. **`LC_ALL=C sort` num script** torna a ordem determinística, e também é

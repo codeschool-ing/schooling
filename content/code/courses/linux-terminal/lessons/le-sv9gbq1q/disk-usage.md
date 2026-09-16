@@ -42,7 +42,7 @@ Filesystem       Inodes  IUsed    IFree IUse% Mounted on
 /dev/vda       16777216 210406 16566810    2% /
 ```
 
-`-i` counts **inodes** rather than bytes. Section 46 introduced them: one per file, and a
+`-i` counts **inodes** rather than bytes. Section 11 introduced them: one per file, and a
 filesystem is created with a fixed number of them.
 
 So a filesystem can be 4% full and still refuse to create a file, because it has run out of
@@ -90,7 +90,7 @@ ana@vm:~/work$ du -h --max-depth=1 | sort -h
 
 **Run `du` on `/` and you will wait**, because it walks every file on the machine. On a large
 server start at `/var` — which is where things grow — and put `2>/dev/null` after it, for the
-same reason `find` needed it in section 44.
+same reason `find` needed it in section 09.
 
 ## Why the numbers are never quite the sizes
 
@@ -135,7 +135,7 @@ A 30 MB file was created, a program was left reading it, and it was deleted. Now
 24 KB and `df` says 31 MB are in use**, on the same filesystem, at the same moment. Both are
 telling the truth.
 
-Section 46 explained why. `rm` removes a *name*. The data stays until the last reference goes —
+Section 11 explained why. `rm` removes a *name*. The data stays until the last reference goes —
 and an open file handle is a reference, exactly like a name is. `du` walks names, so it cannot see
 this file. The filesystem counts blocks, so it can.
 

@@ -39,7 +39,7 @@ ${p%/*}      # dirname,  without a process
 The hook for remembering which is which: **`#` is to the left of `$` on a keyboard and `%` is to
 the right.** It is a silly mnemonic and it works.
 
-The pattern is a glob, not a regular expression — section 45's syntax, the same as `case`.
+The pattern is a glob, not a regular expression — lesson 3 section 10's syntax, the same as `case`.
 
 ### Extensions
 
@@ -74,7 +74,7 @@ bash: v: the script needs v
 
 `:-` is the everyday one — `rows="${2:-5}"`, `"${LOG_LEVEL:-info}"`.
 
-**`:?` is the one that saves you from section 141's empty path.** Under `set -u` an unset variable
+**`:?` is the one that saves you from section 04's empty path.** Under `set -u` an unset variable
 already errors; `:?` adds your own message and also catches the variable that is set but empty,
 which `-u` does not.
 
@@ -91,7 +91,7 @@ Nothing at all when the variable is unset, the whole flag when it is set — whi
 `curl ${TOKEN:+-H "Authorization: Bearer $TOKEN"} "$url"` sends the header only when there is a
 token.
 
-And remember the colon from section 140: without it, the test is only "unset", and an empty string
+And remember the colon from section 03: without it, the test is only "unset", and an empty string
 counts as a value.
 
 ```
@@ -113,7 +113,7 @@ ana@vm:~/work/scripts$ echo "${p/log/LOG}"; echo "${p//log/LOG}"
 ```
 
 **One slash replaces the first occurrence, two slashes replace all** — the same distinction as
-`sed`'s `g` flag in section 131, and the same order of surprise.
+`sed`'s `g` flag in lesson 8 section 13, and the same order of surprise.
 
 ```
 ana@vm:~/work/scripts$ echo "[${p//log/}]"; s=logfile; echo "[${s/#log/X}] [${s/%file/Y}]"

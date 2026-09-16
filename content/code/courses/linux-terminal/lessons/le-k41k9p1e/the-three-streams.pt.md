@@ -3,7 +3,7 @@ title: Três fluxos, e por que dois deles parecem o mesmo
 version: 1
 ---
 
-A seção 98 te deu os números. Esta é para que eles servem.
+A aula 6 seção 13 te deu os números. Esta é para que eles servem.
 
 Todo programa começa com três conexões já abertas, e ele não precisa pedir nenhuma delas:
 
@@ -71,7 +71,8 @@ l-wx------ 1 ana ana 64 Sep 15 07:23 2 -> /tmp/err.txt
 
 Essa é a transcrição da aula 6, e vale uma segunda olhada agora que os números querem dizer algo.
 **Redirecionar não é um recurso do programa.** O programa escreve no descritor 1; o shell decidiu o
-que o descritor 1 era, antes de o programa começar, na lacuna entre o `fork` e o `exec` da seção 88.
+que o descritor 1 era, antes de o programa começar, na lacuna entre o `fork` e o `exec` da aula 6
+seção 03.
 
 Que é por que o `>` funciona em todo comando que já foi escrito, inclusive naqueles cujos autores
 nunca pensaram em arquivos.

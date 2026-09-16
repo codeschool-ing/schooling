@@ -40,7 +40,7 @@ app handled a request
 
 "From line 29 to the end", rather than "the last 29". **That is how you skip a header** —
 `tail -n +2` on a CSV drops the first line and keeps everything else, which is a pattern you will
-use constantly with section 126's `cut`.
+use constantly with section 08's `cut`.
 
 `head -c 40` counts bytes rather than lines:
 
@@ -117,6 +117,6 @@ about `more`, the older pager it replaced, which could only go forward.
 3. **`head -20` or `less`** — is every line that shape?
 
 **Step three is the one people skip**, and it is where you find out that the file has a header, or a
-blank line between records, or that fifty lines in the middle are a stack trace. Section 132's
+blank line between records, or that fifty lines in the middle are a stack trace. Section 14's
 `awk '{print NF}' | sort -u` is the fast version of that check, and on this log it finds four
 different field counts on lines that all look the same.

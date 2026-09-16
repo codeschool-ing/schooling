@@ -16,7 +16,7 @@ bruno@vm:~$ ls -a
 ```
 
 Um diretório, duas respostas. **Não existe atributo de "oculto".** O `ls` pula nomes que começam
-com `.` a menos que você peça, e o `*` do shell também (seção 45). Nada mais está envolvido:
+com `.` a menos que você peça, e o `*` do shell também (seção 10). Nada mais está envolvido:
 renomeie `notas.txt` para `.notas.txt` e ele está oculto; renomeie de volta e não está.
 
 Essa convenção existe porque seu diretório pessoal seria inutilizável sem ela. Todo programa que
@@ -41,7 +41,7 @@ bruno@vm:~$ cat .gitconfig
         email = bruno@example.com
 ```
 
-Texto puro, como todo o resto. É o ponto que a seção 37 fez sobre o `/etc`, um nível abaixo: **suas
+Texto puro, como todo o resto. É o ponto que a seção 02 fez sobre o `/etc`, um nível abaixo: **suas
 configurações são arquivos que você pode ler, comparar e copiar para outra máquina.**
 
 ### O `.ssh` é o que exige cuidado
@@ -68,7 +68,7 @@ bruno@vm:~$ du -sh .cache
 8.0K    .cache
 ```
 
-Oito kilobytes numa conta nova, e gigabytes numa conta em uso. Quando a caçada da seção 48 leva a
+Oito kilobytes numa conta nova, e gigabytes numa conta em uso. Quando a caçada da seção 13 leva a
 um diretório pessoal, o `~/.cache` costuma ser a resposta, e apagá-lo custa só o tempo de
 reconstruir o que estava lá.
 
@@ -179,7 +179,7 @@ crw-rw-rw- 1 root root 1, 9 Sep 14 21:50 /dev/urandom
 crw-rw-rw- 1 root root 1, 5 Sep 14 21:50 /dev/zero
 ```
 
-`c` na primeira coluna — o campo 1 da seção 41 — de *character device*. E onde estaria o tamanho,
+`c` na primeira coluna — o campo 1 da seção 06 — de *character device*. E onde estaria o tamanho,
 dois números: o major e o minor do dispositivo, que é como o kernel sabe a qual driver entregar a
 requisição.
 
@@ -199,7 +199,7 @@ ana@vm:~$ wc -c < /dev/null
 0
 ```
 
-**O `/dev/null` é o que você vai usar o tempo todo.** O `2>/dev/null` da seção 44 é exatamente
+**O `/dev/null` é o que você vai usar o tempo todo.** O `2>/dev/null` da seção 09 é exatamente
 isso: mande o fluxo de erro para a coisa que joga tudo fora. Não é um recurso especial do shell. É
 um arquivo, e escrever nele por acaso não faz nada.
 
@@ -212,7 +212,7 @@ ana@vm:~$ head -c 8 /dev/urandom | od -An -tx1
 ```
 
 O `/dev/zero` enche coisas: `dd if=/dev/zero of=disk.img bs=1M count=64` é como a imagem de 64 MB
-da seção 47 foi feita. O `/dev/urandom` é de onde todo gerador de senha e todo nome de arquivo
+da seção 12 foi feita. O `/dev/urandom` é de onde todo gerador de senha e todo nome de arquivo
 aleatório desta máquina tira os bytes.
 
 **E eles são infinitos.** `cat /dev/zero > arquivo` não termina; ele para quando o disco enche.

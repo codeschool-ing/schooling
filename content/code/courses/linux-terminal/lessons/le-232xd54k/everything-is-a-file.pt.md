@@ -22,7 +22,7 @@ crw-rw-rw- 1 root root 1, 5 Sep  3 04:53 /dev/zero
 Três entradas em `/dev`, listadas pelo mesmo `ls` que você usou no seu diretório. Duas coisas
 nessa saída são novidade.
 
-**O primeiro caractere é `c`, não `-`.** A seção 39 da aula 3 decodifica essa coluna inteira; aqui
+**O primeiro caractere é `c`, não `-`.** A seção 04 da aula 3 decodifica essa coluna inteira; aqui
 basta que `-` é arquivo comum e `c` é **dispositivo de caractere** — algo de que o kernel te
 entrega um fluxo, em vez de bytes vindos de um disco.
 
@@ -74,7 +74,7 @@ ana@vm:~$ ls /proc/self/fd
 
 Esses são os arquivos abertos do comando que você acabou de rodar — numerados, porque é assim que
 um programa se refere a eles. `0`, `1` e `2` são entrada, saída e erro padrão, que é o
-redirecionamento inteiro da aula 8 sentado ali como três entradas num diretório. A seção 93 da aula
+redirecionamento inteiro da aula 8 sentado ali como três entradas num diretório. A seção 08 da aula
 6 volta nisso.
 
 ## O que isso te compra de fato

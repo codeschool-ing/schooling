@@ -18,7 +18,7 @@ pequena, quando você já está na máquina, e quando o que está instalado lá 
 você tem.
 
 O custo é que a sua configuração de editor não está lá, que é o argumento da
-seção 201 para aprender o editor simples.
+seção 09 para aprender o editor simples.
 
 ## Dois: copiar, editar, copiar de volta
 
@@ -30,8 +30,8 @@ scp nginx.conf web01:/etc/nginx/nginx.conf
 
 **Três passos, e dois deles perdem coisas.** O `scp` escreve o arquivo como você,
 com a sua umask, então o dono e o modo são os da sua máquina e não os de que o
-serviço precisa. O `chown` da seção 60 e a `umask` da seção 62 se aplicam, e
-nenhum dos dois é óbvio depois.
+serviço precisa. O `chown` da aula 4 seção 07 e a `umask` da aula 4 seção 09 se
+aplicam, e nenhum dos dois é óbvio depois.
 
 Tudo bem para um arquivo que é seu e errado para qualquer coisa sob o `/etc`.
 
@@ -90,8 +90,8 @@ instala do lado de lá.
 
 **Por que você está editando um arquivo num servidor à mão, afinal?**
 
-Os arquivos de unidade da seção 80, as crontabs da aula 13, e todo arquivo do
-`/etc` que você está prestes a mudar têm o mesmo problema: a mudança vive numa
+Os arquivos de unidade da aula 5 seção 11, as crontabs da aula 13, e todo arquivo
+do `/etc` que você está prestes a mudar têm o mesmo problema: a mudança vive numa
 máquina, ninguém mais sabe dela, e a próxima reconstrução a perde.
 
 | | |

@@ -3,7 +3,7 @@ title: Provedores — o registro é um drive, e o ambiente também
 version: 1
 ---
 
-A seção 9 disse que tudo no Unix é um arquivo. A versão dessa ideia no PowerShell
+A aula 1 seção 09 disse que tudo no Unix é um arquivo. A versão dessa ideia no PowerShell
 corre ao contrário: **tudo que parece uma árvore vira um drive**, e os mesmos
 quatro cmdlets funcionam em todos.
 
@@ -56,7 +56,7 @@ comandos diferentes com três formatos de saída diferentes.
 
 O `$env:HOME` é o atalho para `Get-Item Env:HOME | Select -Expand Value`, e o
 `$env:LEVEL = "debug"` define uma, exportada para os filhos, que é o `export` da
-seção 140 dobrado dentro do nome.
+aula 9 seção 03 dobrado dentro do nome.
 
 ## No Windows: o registro
 
@@ -129,7 +129,7 @@ PS /home/ana/work/ps> Get-ChildItem | Set-Content /tmp/setc.txt; Get-Content /tm
 O `>` escreveu **a tabela que uma pessoa teria lido**, cabeçalhos e tudo, porque
 redirecionar formata primeiro. O `Set-Content` escreveu os valores. Qual dos dois
 você quis dizer, um daqueles arquivos vai decepcionar o que vier lê-lo em seguida —
-e essa é a regra da seção 164 chegando num lugar em que você não esperava.
+e essa é a regra da seção 07 chegando num lugar em que você não esperava.
 
 ## O `Select-String` é o `grep`
 

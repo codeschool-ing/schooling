@@ -69,7 +69,7 @@ some people prefer for exactly that reason.
 
 ## The patterns are regular expressions
 
-Section 125's syntax, with vim's own dialect on top:
+Lesson 8 section 07's syntax, with vim's own dialect on top:
 
 ```sh
 /^listen              # lines starting with listen
@@ -83,8 +83,8 @@ default vim's "magic" level means `+`, `?`, `(` and `|` need backslashes, which
 is why you will see `\(` and `\|` in other people's patterns.
 
 `\v` at the start of a pattern turns on "very magic" and makes it behave like the
-extended regular expressions of section 125: `/\v(listen|timeout)` rather than
-`/listen\|timeout`.
+extended regular expressions of lesson 8 section 07: `/\v(listen|timeout)` rather
+than `/listen\|timeout`.
 
 ## Case
 
@@ -121,7 +121,8 @@ the next section's `.vimrc`.
 **Read that number.** Four, on two lines. If you expected one, you have just
 learned something before you saved rather than after.
 
-The shape is the same as `sed`'s from section 131, with a range on the front:
+The shape is the same as `sed`'s from lesson 8 section 13, with a range on the
+front:
 
 ```
 :[range]s/pattern/replacement/[flags]
@@ -159,7 +160,8 @@ It is `grep -c` without leaving the editor, and it is the right thing to run
 ## The separator is what you type
 
 `s#…#…#` and `s|…|…|` work the same way, which matters for the same reason as in
-section 131: a path full of slashes inside `s/…/…/` needs every one escaped.
+lesson 8 section 13: a path full of slashes inside `s/…/…/` needs every one
+escaped.
 
 ```sh
 :%s#/usr/local#/opt#g        # readable
@@ -168,7 +170,7 @@ section 131: a path full of slashes inside `s/…/…/` needs every one escaped.
 
 ## When to use `.` instead
 
-`:%s` changes everything at once and reports a number. `.` from section 198
+`:%s` changes everything at once and reports a number. `.` from section 06
 changes one at a time and you watch each one.
 
 **For a file you understand, `:%s/…/…/g`.** For a file somebody else wrote, or a

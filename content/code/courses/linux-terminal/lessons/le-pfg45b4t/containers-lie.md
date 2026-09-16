@@ -94,7 +94,7 @@ from the host's point of view nothing is wrong.
 container is the whole machine's**, including every other tenant.
 
 So a container showing load 40 may be entirely idle, sharing a host with
-somebody having a bad day. And section 178's advice — compare it to the core
+somebody having a bad day. And section 03's advice — compare it to the core
 count — compares the host's load to the host's cores, which is at least
 consistent and tells you nothing about your own container.
 

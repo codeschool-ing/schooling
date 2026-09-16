@@ -59,7 +59,7 @@ depois que você já sabe.
 Separe em três dígitos, e transforme cada um em três caracteres:
 
 **640** → `6` é `rw-`, `4` é `r--`, `0` é `---` → `-rw-r-----`. O dono edita, o grupo lê, todo o
-resto fica de fora. É o `teamonly.txt` da seção 55.
+resto fica de fora. É o `teamonly.txt` da seção 02.
 
 **775** → `rwx`, `rwx`, `r-x` → um diretório em que um grupo inteiro acrescenta coisas e todo mundo
 pode olhar.
@@ -88,12 +88,12 @@ root@vm:~# stat -c '%a %A %n' /usr/bin/passwd /tmp /srv/team
 ```
 
 O dígito da frente são os bits especiais — **4** setuid, **2** setgid, **1** sticky — e eles somam
-do mesmo jeito. Seção 63. Quando você vir um modo com quatro dígitos, o primeiro não faz parte dos
+do mesmo jeito. Seção 10. Quando você vir um modo com quatro dígitos, o primeiro não faz parte dos
 nove.
 
 E repare no que isso implica: **`chmod 755` num arquivo que era `4755` desliga o bit setuid**,
 porque um número de três dígitos quer dizer que o quarto dígito é zero. Isso já quebrou programas
-que funcionavam, e é por isso que a seção 58 recomenda a forma simbólica para uma mudança que você
+que funcionavam, e é por isso que a seção 05 recomenda a forma simbólica para uma mudança que você
 quer cirúrgica.
 
 ## 777 quase nunca é a resposta
@@ -106,8 +106,8 @@ o dono errado, um `x` faltando num diretório dois níveis acima, um grupo em qu
 continua errado; só deixou de importar, e todo o resto também.
 
 Duas coisas a fazer em vez disso, nesta ordem: descobrir **qual bit** faltava, com o `namei -l` da
-seção 56; e, se a resposta for mesmo "estas duas contas precisam compartilhar isto", é para isso
-que servem os grupos (seção 61) e as ACLs (seção 66).
+seção 03; e, se a resposta for mesmo "estas duas contas precisam compartilhar isto", é para isso
+que servem os grupos (seção 08) e as ACLs (seção 13).
 
 Existe um lugar em que `777` está certo, e é o `/tmp` — que é `1777`, e aquele `1` na frente é a
-razão inteira de ele ser seguro. Seção 63.
+razão inteira de ele ser seguro. Seção 10.

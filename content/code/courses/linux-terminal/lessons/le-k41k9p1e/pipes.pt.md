@@ -39,9 +39,9 @@ o `a` tiver produzido até então.
 
 Isso vale saber por dois motivos práticos.
 
-**Um pipeline pode terminar antes do primeiro comando.** O `head` é o exemplo — o `SIGPIPE` da seção
-93, em que `yes | head -2` mata o `yes` em vez de esperar por ele. Então
-`grep algo enorme.log | head -5` volta assim que tiver cinco linhas, por maior que seja o arquivo.
+**Um pipeline pode terminar antes do primeiro comando.** O `head` é o exemplo — o `SIGPIPE` da aula
+6 seção 08, em que `yes | head -2` mata o `yes` em vez de esperar por ele. Então `grep algo
+enorme.log | head -5` volta assim que tiver cinco linhas, por maior que seja o arquivo.
 
 **E a memória não é o limite.** O `sort` num arquivo de dez gigabytes de fato despeja em disco, mas
 um pipeline que só filtra segura alguns kilobytes por vez, por mais que passe por ele. O pipeline
@@ -53,9 +53,9 @@ acima nunca teve mais do que um buffer daquele log na memória.
 false | true; echo $?          # 0 — the status of the LAST command
 ```
 
-A seção 99 cobriu isso e vale repetir aqui porque é em pipelines que isso morde: **o `$?` é o código
-da última etapa**, então uma falha na frente fica invisível. O `PIPESTATUS` tem todos eles, e o
-`set -o pipefail` muda a regra.
+A aula 6 seção 14 cobriu isso e vale repetir aqui porque é em pipelines que isso morde: **o `$?` é o
+código da última etapa**, então uma falha na frente fica invisível. O `PIPESTATUS` tem todos eles, e
+o `set -o pipefail` muda a regra.
 
 ## Reduza primeiro
 
@@ -82,10 +82,10 @@ ler tudo, e por que alguns programas se recusam a trabalhar dentro de um.
 
 **Ele carrega bytes, não registros.** Toda ferramenta desta aula inventa a própria ideia de linha e
 de campo a partir do mesmo fluxo de bytes, que é por que elas se compõem — e também por que um nome
-de arquivo com espaço quebra um pipeline que assumiu que espaço separa coisas. A seção 134 é essa
+de arquivo com espaço quebra um pipeline que assumiu que espaço separa coisas. A seção 16 é essa
 falha, com o conserto.
 
-**E ele carrega só a saída padrão.** Os erros passam por fora, que é o `2>&1 |` da seção 121.
+**E ele carrega só a saída padrão.** Os erros passam por fora, que é o `2>&1 |` da seção 03.
 
 ## O conjunto pequeno que faz quase tudo
 

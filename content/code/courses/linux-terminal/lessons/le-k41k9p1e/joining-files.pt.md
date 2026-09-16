@@ -41,7 +41,7 @@ ana,bruno,carla
 ```
 
 **O `paste -sd,` transforma uma coluna numa linha separada por vírgulas**, que é o oposto exato do
-`tr , '\n'` da seção 130. A seção 126 usou `paste -sd+ | bc` para somar uma coluna, que é o mesmo
+`tr , '\n'` da seção 12. A seção 08 usou `paste -sd+ | bc` para somar uma coluna, que é o mesmo
 truque com outro separador.
 
 ## O `join`
@@ -59,8 +59,8 @@ campo. O `diego` e a `elena` aparecem só num arquivo cada, então não estão n
 
 **Os dois arquivos precisam estar ordenados pelo campo de junção.** O `join` os lê em conjunto, como
 uma intercalação, que é o que o faz funcionar em arquivos maiores que a memória — e o que o faz ficar
-silenciosamente errado em entrada não ordenada. Ordene os dois antes, e o aviso de locale da seção
-127 se aplica: ordene-os do *mesmo* jeito.
+silenciosamente errado em entrada não ordenada. Ordene os dois antes, e o aviso de locale da seção 09
+se aplica: ordene-os do *mesmo* jeito.
 
 O `-a` mantém as linhas sem par, que é um join externo:
 

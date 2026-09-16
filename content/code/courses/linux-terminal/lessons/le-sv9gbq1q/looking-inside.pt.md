@@ -210,7 +210,7 @@ Change: 2026-09-14 21:58:33.143136437 +0000
 Tudo que o `ls -l` mostra e várias coisas que ele não mostra. Duas importam:
 
 **O número do inode** — `573447` — é o nome que o sistema de arquivos dá a estes dados, e a seção
-46 é construída em cima dele.
+11 é construída em cima dele.
 
 **Três marcas de tempo, não uma:**
 

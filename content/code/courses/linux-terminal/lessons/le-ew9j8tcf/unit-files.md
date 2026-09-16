@@ -4,7 +4,7 @@ version: 1
 ---
 
 A unit file is how a service describes itself. It is an ini file — sections in square brackets,
-`Key=Value` lines — and it replaced the shell script section 77 was about.
+`Key=Value` lines — and it replaced the shell script section 08 was about.
 
 Here is a complete one, and it is doing everything a small service needs:
 
@@ -55,7 +55,7 @@ service genuinely cannot work without the other, and `Wants=` when it would mere
 | `simple` | the process you start **is** the service | the default, and almost always right |
 | `exec` | like simple, but wait until it has actually started | slightly safer than simple |
 | `forking` | the program daemonises itself and the **parent exits** | an old-style daemon |
-| `oneshot` | it runs, it finishes, and that is success | a setup job — section 79's `active (exited)` |
+| `oneshot` | it runs, it finishes, and that is success | a setup job — section 10's `active (exited)` |
 | `notify` | the program tells systemd when it is ready | services written for systemd |
 
 **A modern program should not daemonise**, and if it does not, `Type=simple` is correct. Telling
@@ -70,14 +70,14 @@ The rest of what you will write:
 | `ExecReload=` | what `systemctl reload` runs. Absent means reload is refused |
 | `Restart=` | `no`, `on-failure`, `always`, `on-abnormal` |
 | `RestartSec=` | how long to wait first. Without it, a crash loop is a tight one |
-| `User=`, `Group=` | the account to run as — section 76's third property, in one line |
-| `WorkingDirectory=` | lesson 3 section 38's point: a service starts in `/` unless told |
+| `User=`, `Group=` | the account to run as — section 07's third property, in one line |
+| `WorkingDirectory=` | lesson 3 section 03's point: a service starts in `/` unless told |
 | `Environment=` | one variable; `EnvironmentFile=` for a file of them |
-| `UMask=` | lesson 4 section 62 said your dotfile does not reach here. This does |
+| `UMask=` | lesson 4 section 09 said your dotfile does not reach here. This does |
 
 **`ExecStart=` is not a shell command.** That is the mistake everybody makes once: `ExecStart=/usr/bin/foo > /var/log/foo.log`
 does not redirect — it passes `>` and the path as two arguments to `foo`. If you need a shell, say
-so: `ExecStart=/bin/sh -c 'foo > /var/log/foo.log'`. Usually you do not, because section 81's
+so: `ExecStart=/bin/sh -c 'foo > /var/log/foo.log'`. Usually you do not, because section 12's
 journal already collects the output.
 
 ## `[Install]` — what `enable` should do
@@ -88,7 +88,7 @@ WantedBy=multi-user.target
 ```
 
 This section is **only** read by `systemctl enable`, and it says which `.wants` directory the
-symlink goes in. Section 78 showed the symlink being made; this is the line that decided where.
+symlink goes in. Section 09 showed the symlink being made; this is the line that decided where.
 
 **A unit with no `[Install]` section cannot be enabled**, and `systemctl is-enabled` calls it
 `static`. That is intentional for units that something else pulls in.
@@ -116,7 +116,7 @@ root@vm:~# systemd-analyze unit-paths
 | | |
 |---|---|
 | `/usr/lib/systemd/system` | **the package's copy.** An upgrade overwrites it |
-| `/usr/local/lib/systemd/system` | software you installed by hand — lesson 3 section 37's `/usr/local` |
+| `/usr/local/lib/systemd/system` | software you installed by hand — lesson 3 section 02's `/usr/local` |
 | `/etc/systemd/system` | **yours.** Higher priority, and nothing overwrites it |
 
 So a file you put in `/etc/systemd/system/nginx.service` completely replaces the packaged one, and
@@ -143,7 +143,7 @@ RestartSec=10
 Four lines instead of forty, and the package's unit keeps updating underneath.
 
 `systemctl edit --full` gives you the whole file to override instead, when a drop-in will not do.
-And `systemctl edit` runs `daemon-reload` for you afterwards, which is the step section 78 said
+And `systemctl edit` runs `daemon-reload` for you afterwards, which is the step section 09 said
 people forget.
 
 `systemctl cat nginx` prints the unit and every drop-in applied to it, in order — which is how you

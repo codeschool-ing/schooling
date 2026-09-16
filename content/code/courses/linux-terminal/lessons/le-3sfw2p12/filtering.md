@@ -62,7 +62,7 @@ Where-Object { $_.Name -match '^\d{4}-' }     # regex, the same syntax as lesson
 ```
 
 `-match` also fills `$Matches` with the capture groups, the way `[[ =~ ]]` filled
-`BASH_REMATCH` in section 145:
+`BASH_REMATCH` in lesson 9 section 08:
 
 ```
 PS /home/ana/work/ps> "report-2026.log" -match "^(\w+)-(\d{4})"; $Matches[2]
@@ -100,7 +100,7 @@ False
 ```
 
 `"9"` sorts after `"3"`, so as text nine is greater than thirty thousand. It is
-exactly the `[ "10" \> "9" ]` problem from section 145, arriving from the other
+exactly the `[ "10" \> "9" ]` problem from lesson 9 section 08, arriving from the other
 direction — there the shell made you choose an operator, here the operator is the
 same and the *type* decides.
 

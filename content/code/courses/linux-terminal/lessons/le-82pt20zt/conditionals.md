@@ -28,7 +28,7 @@ The part that is not memorisation is what goes between `if` and `then`.
 ## `if` does not take a condition. It takes a command.
 
 **There is no boolean expression in the shell.** `if` runs a command and looks at its exit status:
-zero means then, anything else means else. Section 99's rule, used as control flow.
+zero means then, anything else means else. Lesson 6 section 14's rule, used as control flow.
 
 ```
 ana@vm:~/work/scripts$ test -f /etc/hostname; echo $?
@@ -83,7 +83,7 @@ two say *unary operator expected* because `[` counts its arguments: with two of 
 test like `-f`, and it got `=` in one case and a stray filename in the other.
 
 **It is a command, so its arguments are split and globbed like any command's.** That is the whole
-source of the trouble in section 145.
+source of the trouble in section 08.
 
 ## `&&` and `||`
 
@@ -135,7 +135,7 @@ And three commands that exist only for control flow:
 | `false` | does nothing, fails |
 | `:` | does nothing, succeeds. The shortest way to write "nothing goes here" |
 
-`while true; do …; done` is an infinite loop, `|| true` is section 143's escape hatch, and `:` is
+`while true; do …; done` is an infinite loop, `|| true` is section 06's escape hatch, and `:` is
 what fills a branch you have not written yet — a `then` with nothing in it is a syntax error.
 
 ## Formatting

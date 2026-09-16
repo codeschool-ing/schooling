@@ -55,7 +55,7 @@ Set-Service -Name 'Spooler' -StartupType Disabled
 ```
 
 A forma é a mesma de tudo que você viu: objetos com um `Status`, um `StartMode` e
-um `DisplayName`, filtrados com `Where-Object`. Isso é o `systemctl` da seção 78
+um `DisplayName`, filtrados com `Where-Object`. Isso é o `systemctl` da aula 5 seção 09
 com a análise removida — o `systemctl is-active` te dá uma palavra para comparar,
 o `Get-Service` te dá uma propriedade.
 
@@ -106,7 +106,7 @@ Enter-PSSession -ComputerName web01
 Esta é a que vale entender mesmo de longe, porque é genuinamente diferente do
 `ssh`.
 
-**O `ssh host 'comando'` manda texto e recebe texto.** A seção 75 mostrou
+**O `ssh host 'comando'` manda texto e recebe texto.** A aula 5 seção 06 mostrou
 exatamente isso, e qualquer coisa que você queira fazer com o resultado você
 analisa.
 
@@ -136,7 +136,7 @@ o PowerShell não é opcional numa casa Windows** — não há outra forma supor
 mudar dez mil contas, e a interface gráfica faz uma por vez.
 
 Repare no `-Filter`: ele é entregue ao servidor de diretório, que é o argumento de
-filtrar à esquerda da seção 162 na escala em que ele deixa de ser otimização e vira
+filtrar à esquerda da seção 05 na escala em que ele deixa de ser otimização e vira
 a diferença entre uma consulta e um tempo esgotado.
 
 ## Duas versões, e qual você vai encontrar
@@ -151,6 +151,6 @@ dois podem estar instalados ao mesmo tempo.
 
 **Assuma 5.1 num servidor que você não configurou.** A maior parte desta aula é
 idêntica nele; as diferenças que vão te pegar são o `.Count` num objeto único
-(seção 166), o `ConvertTo-Json -Depth`, os operadores ternário e de coalescência
+(seção 09), o `ConvertTo-Json -Depth`, os operadores ternário e de coalescência
 nula que o 5.1 não tem, e o `Get-WmiObject` ainda estar presente lá e ter sumido
 aqui.

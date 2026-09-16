@@ -43,7 +43,7 @@ Leia esses três modos com a aula 4 na mão. O `/etc/passwd` é `644` — qualqu
 ler. O `/etc/shadow` é `640`, do `root` e do grupo `shadow` — **quem não tem root nem aquele grupo
 não lê de jeito nenhum.** O `x` é um ponteiro dizendo *a coisa de verdade está ao lado*.
 
-A seção 72 é sobre o que há ali dentro.
+A seção 03 é sobre o que há ali dentro.
 
 ## A maioria das contas não é gente
 
@@ -135,8 +135,8 @@ Construa o hábito do `getent` agora, enquanto os dois concordam.
 
 ## Duas coisas que decorrem disso tudo
 
-**Um usuário não é uma sessão.** A linha existe esteja ou não alguém logado, e a seção 74 é sobre a
+**Um usuário não é uma sessão.** A linha existe esteja ou não alguém logado, e a seção 05 é sobre a
 diferença.
 
 **Apagar a linha não apaga os arquivos.** Cada arquivo daquela conta passa a pertencer a um número
-sem nome, e a seção 73 mostra exatamente como isso se parece.
+sem nome, e a seção 04 mostra exatamente como isso se parece.

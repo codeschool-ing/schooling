@@ -99,7 +99,7 @@ of thing.
 
 When `login` or `sshd` accepts you, four things happen, in this order:
 
-1. your **identity** is set — uid, primary group, and the supplementary groups from section 61;
+1. your **identity** is set — uid, primary group, and the supplementary groups from lesson 4 section 08;
 2. a **session** is recorded in `utmp` and `wtmp`;
 3. your shell from `/etc/passwd` field 7 is started, as a **login shell**;
 4. that shell reads the files above, and prints a prompt.
@@ -107,7 +107,7 @@ When `login` or `sshd` accepts you, four things happen, in this order:
 Each of those can fail on its own, and the failure looks different each time. A wrong shell in
 field 7 gets you a connection that closes immediately. A home directory that does not exist gets
 you a shell in `/` complaining. A group added while you were logged in is not in step 1 for this
-session — which is lesson 4 section 61, stated as a sequence.
+session — which is lesson 4 section 08, stated as a sequence.
 
 ## Three questions and the command for each
 

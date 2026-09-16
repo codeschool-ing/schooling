@@ -57,7 +57,7 @@ antigos — e cada entrada é um programa escrito sabendo que rodaria como root.
 **Nunca ligue isso em algo que você escreveu.** Um script setuid é a vulnerabilidade clássica, e o
 Linux ignora o bit em scripts exatamente por isso; um binário setuid que recebe um nome de arquivo
 de você e o abre é um jeito de ler qualquer coisa da máquina. Se você se pegar indo atrás de setuid,
-a resposta que você quer é quase certamente `sudo` com uma regra estreita — seção 64.
+a resposta que você quer é quase certamente `sudo` com uma regra estreita — seção 11.
 
 ## setgid num diretório: o que você vai usar de verdade
 
@@ -102,7 +102,7 @@ Ele também é herdado: um subdiretório criado dentro de um diretório setgid �
 
 ## O sticky bit: por que o `/tmp` não é um desastre
 
-O `/tmp` é `1777` — **qualquer um escreve nele**. A seção 59 disse que um diretório em que você
+O `/tmp` é `1777` — **qualquer um escreve nele**. A seção 06 disse que um diretório em que você
 escreve é um diretório cujos arquivos você apaga, sejam de quem forem. No `/tmp` isso significaria
 que qualquer um apagaria o trabalho de qualquer um.
 
@@ -140,7 +140,7 @@ chmod +t diretorio       # sticky
 chmod 2775 diretorio     # o mesmo que g+s sobre 775
 ```
 
-E a armadilha da seção 57, repetida porque é a que morde: **`chmod 755` num arquivo `4755` limpa o
+E a armadilha da seção 04, repetida porque é a que morde: **`chmod 755` num arquivo `4755` limpa o
 bit setuid.** Um número de três dígitos põe o quarto dígito em zero. Use a forma simbólica quando a
 intenção é mudar só os nove.
 

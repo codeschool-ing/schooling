@@ -24,7 +24,7 @@ o PID do filho.
 
 O filho então chama `exec`, que **joga fora o programa que estava rodando e carrega outro no mesmo
 processo.** O PID não muda. O pai não muda. Os arquivos abertos em boa parte sobrevivem — e é por
-essa porta que os redirecionamentos da seção 98 passam.
+essa porta que os redirecionamentos da seção 13 passam.
 
 Então o `ls` no seu shell é: bifurque uma cópia do bash, e faça a cópia virar `ls`.
 
@@ -40,12 +40,12 @@ coisas, não teria onde pôr nada disso.
 
 ## `exit` e `wait` também são duas metades
 
-Um processo termina chamando `exit` com um número — o código de saída da seção 99. **O número
+Um processo termina chamando `exit` com um número — o código de saída da seção 14. **O número
 precisa ir para algum lugar**, e onde ele vai é o pai, que o recolhe chamando `wait`.
 
 Até o pai recolher, o kernel mantém a entrada do filho na tabela de processos. Ela não tem memória,
 nem arquivos abertos, nem programa: o que sobra é um PID e um número esperando ser lido. **Isso é um
-zumbi**, e a seção 89 cria um de propósito.
+zumbi**, e a seção 04 cria um de propósito.
 
 Então o ciclo completo do `ls` num shell:
 
@@ -56,14 +56,14 @@ Então o ciclo completo do `ls` num shell:
 5. O `wait` do bash retorna com aquele código, põe no `$?`, e imprime um prompt.
 
 **O passo 3 é tudo que o `&` muda.** Pôr um comando em segundo plano quer dizer que o bash não
-espera — seção 95.
+espera — seção 10.
 
 ## Quando o pai não espera
 
 Duas coisas podem dar errado no passo 5, e elas têm nomes diferentes e gravidades diferentes.
 
 **O pai está vivo e não recolhe.** A entrada fica. Repita isso alguns milhares de vezes e a tabela
-de processos enche, e a máquina não consegue iniciar nada. É esse o vazamento que a seção 77 da aula
+de processos enche, e a máquina não consegue iniciar nada. É esse o vazamento que a seção 08 da aula
 5 atribuiu a um entrypoint de contêiner escrito à mão.
 
 **O pai termina primeiro.** O filho agora é um **órfão**, e o kernel o entrega ao PID 1 — que não
@@ -81,13 +81,13 @@ O `bash` de dentro iniciou o `sleep` e terminou. O `sleep` continua rodando, e *
 `1`** — ele foi adotado enquanto ninguém olhava.
 
 **Ficar órfão não é um erro.** É como um daemon passa a pertencer ao sistema — a segunda propriedade
-da seção 76 da aula 5, e agora você viu acontecer.
+da seção 07 da aula 5, e agora você viu acontecer.
 
 ## O que isso explica e nada mais explica
 
 **Por que um filho não muda o diretório do pai.** Um `cd` num script não afeta o shell que rodou o
 script, porque o script é um processo separado com a cópia dele. O `cd` precisa ser embutido no
-shell — a seção 40 da aula 3 disse isso, e este é o motivo.
+shell — a seção 05 da aula 3 disse isso, e este é o motivo.
 
 **Por que uma variável definida num subshell desaparece.** `( VAR=1 )` define numa cópia que depois
 termina. A aula 9 volta a isso.

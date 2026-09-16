@@ -41,7 +41,7 @@ root@vm:~# ls -l /etc/screenrc
 -rw-r--r-- 1 root root 3663 Jun 20  2016 /etc/screenrc
 ```
 
-**`rc`, and the config file is still there.** Read the two letters with section 107's legend:
+**`rc`, and the config file is still there.** Read the two letters with section 05's legend:
 
 | | |
 |---|---|
@@ -118,7 +118,7 @@ removal is how a machine stays the size it should be.
 
 **One caution and it is a real one.** `autoremove` trusts the `auto` mark, and the mark can be
 wrong — you installed A, it pulled in B, and you have since come to depend on B directly.
-`apt-mark manual B` fixes that permanently, and section 108 is where the marks live.
+`apt-mark manual B` fixes that permanently, and section 06 is where the marks live.
 
 The version to be careful with is `apt autoremove --purge`, which removes those packages *and*
 their configuration. It is the right thing on a machine you are cleaning up and the wrong thing to
@@ -134,5 +134,5 @@ rpm -e thing               # the low layer: one package, and it refuses if somet
 
 **There is no `purge`**, because rpm handles configuration differently: a config file you have
 edited is saved as `.rpmsave` when the package is removed, and a config file from a package that
-has been upgraded may appear as `.rpmnew` next to yours. Section 112 says more; the short version is
+has been upgraded may appear as `.rpmnew` next to yours. Section 10 says more; the short version is
 that the rpm side leaves files with new extensions where the Debian side leaves a database row.

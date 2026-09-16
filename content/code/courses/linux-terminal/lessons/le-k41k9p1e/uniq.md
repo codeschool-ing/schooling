@@ -51,7 +51,7 @@ It answers, with only the field changed:
 | which status codes came back | `cut -d" " -f9` |
 | which commands you type most | `history \| awk '{print $2}'` |
 
-**The second `sort -rn` is where section 127's `-n` earns its keep.** `uniq -c` puts the count
+**The second `sort -rn` is where section 09's `-n` earns its keep.** `uniq -c` puts the count
 first, so sorting without `-n` would put `100` before `99`.
 
 ## `-d` and `-u`, which are opposites
@@ -128,4 +128,4 @@ Same answer as the top of this section, and no `sort` before the counting — so
 it is substantially faster, and it does not need the input grouped.
 
 **`sort | uniq -c` is easier to type and `awk` is faster on big inputs.** Both are correct; section
-132 is the second one.
+14 is the second one.

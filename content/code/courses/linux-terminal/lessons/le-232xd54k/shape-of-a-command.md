@@ -65,7 +65,7 @@ drwxr-xr-x 2 ana ana 4096 Sep 14 14:45 folder
 ```
 
 `-a` added `.hidden`, `.` and `..` — three entries the plain listing left out. Section 11 explains
-the dot that hides a file; sections 37 and 47 of lesson 3 explain the other two.
+the dot that hides a file; sections 02 and 12 of lesson 3 explain the other two.
 
 **Not every short option has a long twin, and not every long option has a short one.** `--help`
 usually has no short form worth using. That is a fact about each program, which is what `man` is

@@ -72,7 +72,7 @@ exatamente por isso.
 
 ## O que fazer quando você cair num
 
-Três verificações, nesta ordem, e são o reflexo da seção 32 aplicado a um contêiner:
+Três verificações, nesta ordem, e são o reflexo da seção 11 aplicado a um contêiner:
 
 1. `cat /etc/os-release` — `ID=alpine` é a resposta.
 2. Se um comando está sem uma flag que você espera, você está no busybox. Leia `comando --help`.

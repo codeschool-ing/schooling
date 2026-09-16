@@ -85,7 +85,7 @@ shell to match filenames is a glob.** A pattern given to `grep` is not.
 ## What `*` does *not* match
 
 **It does not cross a `/`.** `*.txt` matches names in the current directory only; `*/*.txt`
-matches one level down; and finding a pattern anywhere below you is `find`'s job (section 44) or
+matches one level down; and finding a pattern anywhere below you is `find`'s job (section 09) or
 `**` with `shopt -s globstar`.
 
 **It does not match a leading dot.** This is the reason `ls *` and `ls -a` disagree:
@@ -146,7 +146,7 @@ directory means listing what is inside it, so it did. **`ls *` is not `ls`.**
 
 ### Quoting hands the pattern to the program
 
-Section 44 said to quote `find`'s pattern, and now the reason is visible:
+Section 09 said to quote `find`'s pattern, and now the reason is visible:
 
 ```
 find . -name '*.c'      # find matches — correct

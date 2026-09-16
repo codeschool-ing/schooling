@@ -18,14 +18,14 @@ Aprenda as famílias e uma distribuição desconhecida deixa de ser desconhecida
 **Debian**, e o descendente enorme dele, o Ubuntu. `apt` e pacotes `.deb`. Tocado por voluntários,
 com uma constituição e um lançamento famosamente lento e cuidadoso. O Ubuntu é o produto de uma
 empresa construído em cima dele, e entre os dois estão a suposição da maioria dos tutoriais. Seção
-25.
+04.
 
 **Red Hat**, e as reconstruções — Rocky e Alma — mais o Fedora rio acima de todas elas. `dnf` e
 pacotes `.rpm`. Esta é a família corporativa: contratos de suporte, certificações, e os fabricantes
-de software que publicam para ela e para mais nada. Seção 26, e ela tem uma história.
+de software que publicam para ela e para mais nada. Seção 05, e ela tem uma história.
 
 **SUSE**, com o openSUSE ao lado. `zypper` e `.rpm`. Menor que as outras duas e forte na Europa de
-língua alemã, na indústria e em ambientes SAP. Seção 27.
+língua alemã, na indústria e em ambientes SAP. Seção 06.
 
 **Arch**, e o Manjaro abaixo dele. `pacman`, lançamento contínuo, e a suposição de que você quer
 montar a máquina você mesmo. A documentação dele — a Arch Wiki — é usada por gente que roda todas
@@ -37,7 +37,7 @@ Algumas distribuições foram escritas do zero em vez de derivadas:
 
 | | por que existe |
 |---|---|
-| **Alpine** | para ser minúsculo. 5 MB, busybox, musl — e a razão de estar em contêiner em todo lugar. Seção 28 |
+| **Alpine** | para ser minúsculo. 5 MB, busybox, musl — e a razão de estar em contêiner em todo lugar. Seção 07 |
 | **Gentoo** | você compila tudo, e escolhe as opções enquanto compila |
 | **NixOS** | a máquina inteira é um arquivo declarativo, e mudanças voltam atrás |
 | **Void, Slackware** | respostas próprias, e o Slackware é mais velho que tudo isso |
@@ -55,7 +55,7 @@ Não é sentimento. Saber a família te diz quatro coisas antes de você olhar q
 3. **As convenções de serviço e caminho** — `apache2` contra `httpd`, e qual diretório guarda.
 4. **O arcabouço de segurança** — AppArmor do lado do Debian, SELinux do Red Hat. Aula 4.
 
-É por isso que o `ID_LIKE` da seção 32 é o campo útil. Uma distribuição que você nunca ouviu falar e
+É por isso que o `ID_LIKE` da seção 11 é o campo útil. Uma distribuição que você nunca ouviu falar e
 que diz `ID_LIKE=debian` é uma cujos comandos você já conhece.
 
 ## Duas coisas que as pessoas acreditam e não são verdade
@@ -65,5 +65,5 @@ instala no Ubuntu. Existem ferramentas para converter; são último recurso e a 
 
 **E derivada não quer dizer idêntica.** O Ubuntu é derivado do Debian e diverge de formas reais —
 ciclo de lançamento próprio, repositórios próprios, snaps, e um `/etc/debian_version` que nomeia um
-lançamento do Debian que você não está rodando. A seção 25 mostra esse arquivo mentindo para você
+lançamento do Debian que você não está rodando. A seção 04 mostra esse arquivo mentindo para você
 numa listagem.

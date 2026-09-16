@@ -72,7 +72,7 @@ for exactly that reason.
 
 ## What to do when you land in one
 
-Three checks, in order, and they are section 32's reflex applied to a container:
+Three checks, in order, and they are section 11's reflex applied to a container:
 
 1. `cat /etc/os-release` — `ID=alpine` is the answer.
 2. If a command is missing a flag you expect, you are in busybox. Read `command --help`.

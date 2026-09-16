@@ -20,7 +20,7 @@ ana@vm:~/work$ awk '{print $9, $7}' logs/access.log | head -3
 em sequências de espaço em branco por padrão — o que já é melhor que o `cut`, já que não precisa de
 `tr -s` em texto com preenchimento.
 
-E o segundo comando reordenou os campos, o que a seção 126 mostrou que o `cut` não consegue fazer.
+E o segundo comando reordenou os campos, o que a seção 08 mostrou que o `cut` não consegue fazer.
 
 ## A forma de um programa
 
@@ -129,7 +129,7 @@ ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv
 573278
 ```
 
-A seção 126 fez isso com quatro processos e o `bc`.
+A seção 08 fez isso com quatro processos e o `bc`.
 
 ## Arrays associativos, que é por que ele substitui o `sort | uniq -c`
 
@@ -150,7 +150,7 @@ Esse é o padrão para guardar. Contar é a mesma coisa com `++`:
 awk '{c[$7]++} END {for (p in c) print c[p], p}' logs/access.log | sort -rn | head
 ```
 
-A seção 128 mostrou aquilo dando a mesma resposta que o `sort | uniq -c`, sem o sort.
+A seção 10 mostrou aquilo dando a mesma resposta que o `sort | uniq -c`, sem o sort.
 
 **A ordem do `for (k in arr)` é indefinida**, que é por que os dois terminam em `| sort`.
 
@@ -186,7 +186,7 @@ ana@vm:~/work$ awk '/api/ {c++} END {print c " api requests"}' logs/access.log
 ```
 
 O `/padrão/` casa com a linha inteira, o `$7 ~ /padrão/` com um campo, e o `!~` é "não casa". A
-linguagem de padrões é a sintaxe estendida da seção 125.
+linguagem de padrões é a sintaxe estendida da seção 07.
 
 ## Quando parar
 

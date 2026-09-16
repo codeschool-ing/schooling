@@ -12,7 +12,7 @@ will not remove, and will not mention when it is the reason something broke.**
 
 ## Third-party repositories
 
-This is the *good* option, because the package manager still manages it. Two steps, and section 105
+This is the *good* option, because the package manager still manages it. Two steps, and section 03
 showed what they produce:
 
 ```
@@ -26,7 +26,7 @@ Docker like anything else.
 
 **The risk is not security, it is overlap.** A third-party repository can also carry versions of
 packages your distribution already provides — a newer library, a newer compiler — and once one is
-installed from there, that repository owns it. Section 111's pin is the defence:
+installed from there, that repository owns it. Section 09's pin is the defence:
 
 ```
 Package: *
@@ -40,7 +40,7 @@ own, this is worth five minutes.
 **PPAs on Ubuntu are third-party repositories with a nicer name.** `add-apt-repository ppa:name/x`
 writes the source file and fetches the key for you. The same caution applies and one more: a PPA is
 one person's build, and when they stop, it stops — and the packages you installed from it stay,
-unsupported, until you notice. Section 105's transcript has two PPAs on this machine that no longer
+unsupported, until you notice. Section 03's transcript has two PPAs on this machine that no longer
 fetch at all.
 
 ## Snap and Flatpak
@@ -117,7 +117,7 @@ The right answers, in order:
 | `pip install --user` | acceptable, and still invisible to `apt` |
 
 The same shape applies to `npm -g`, `gem install` and the rest: **global installs from a language
-manager go into `/usr/local`, where section 107 showed `dpkg -S` finding nothing.**
+manager go into `/usr/local`, where section 05 showed `dpkg -S` finding nothing.**
 
 ## A binary from a release page
 
@@ -131,7 +131,7 @@ the most common and the least managed:
 
 **It is not wrong**, and it is how a lot of good software is distributed. What makes it survivable
 is writing down what you did. `/usr/local` exists precisely so that this software is in one place
-that is not managed, which is what lesson 3 was pointing at and what section 107's empty `dpkg -S`
+that is not managed, which is what lesson 3 was pointing at and what section 05's empty `dpkg -S`
 answer demonstrates:
 
 ```
@@ -144,14 +144,14 @@ and the only record is the file itself.
 
 ## Containers, which are the other answer
 
-The reason `docker` appears in section 111's transcripts is that containers are how a lot of people
+The reason `docker` appears in section 09's transcripts is that containers are how a lot of people
 now avoid this whole section: the application and its dependencies are packaged together, at
 versions the application chose, and the host's package manager is responsible for exactly one thing
 — the container runtime.
 
 **That does not remove the problem, it moves it.** The image has a distribution inside it, with a
 package manager, and the `apt-get install` in its Dockerfile is subject to everything in this
-lesson. `--no-install-recommends` from section 104 is in every well-written Dockerfile for a reason.
+lesson. `--no-install-recommends` from section 02 is in every well-written Dockerfile for a reason.
 
 ## What to do about it
 

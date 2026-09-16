@@ -3,13 +3,13 @@ title: `journalctl`, and a log that survives a reboot
 version: 1
 ---
 
-**The same note as section 79 applies here.** This machine runs a container supervisor as process
+**The same note as section 10 applies here.** This machine runs a container supervisor as process
 one, so there is no journal to read and no transcript to take. The commands below are the ones to
-know, the output shapes are described rather than pasted, and section 77 explains why.
+know, the output shapes are described rather than pasted, and section 08 explains why.
 
 ## Where a service's output goes
 
-Section 76 said a daemon has no terminal, so every line it writes has to be collected by something.
+Section 07 said a daemon has no terminal, so every line it writes has to be collected by something.
 On a systemd machine that something is **the journal**: systemd captures the standard output and
 standard error of everything it starts, and stores it.
 
@@ -23,7 +23,7 @@ you look in both, and `journalctl` first.
 ## The binary log, and the argument about it
 
 The journal is **not a text file.** It is a structured, indexed, binary format, and this is the part
-of systemd that the Unix tradition objects to hardest — section 77 named it.
+of systemd that the Unix tradition objects to hardest — section 08 named it.
 
 What it buys is real: every line carries fields as data rather than as text somebody has to parse
 back out. The service, the PID, the user, the priority, the boot it belongs to. That is why
@@ -47,7 +47,7 @@ journalctl -b                           # this boot, everything, in order
 ```
 
 **`-u` and `-f` together are the pair you will type most.** One terminal following the service,
-another provoking it — the same shape as lesson 3 section 43's `tail -f`, which is deliberate.
+another provoking it — the same shape as lesson 3 section 08's `tail -f`, which is deliberate.
 
 `--since` and `--until` take ordinary English as well as timestamps: `'10 min ago'`,
 `'yesterday'`, `'2026-09-14 09:00'`. That is worth more than it sounds when somebody says *it broke
@@ -74,7 +74,7 @@ journalctl --list-boots
 **This is how you find out why a machine rebooted**, and how you read a failure that happened during
 boot before you could log in.
 
-It is also the answer to the cascade section 79 ended on: a service that failed because something
+It is also the answer to the cascade section 10 ended on: a service that failed because something
 else failed shows you its own confusion, and `journalctl -b` shows the boot in order, so the first
 failure is above the second.
 
@@ -108,9 +108,8 @@ sudo mkdir -p /var/log/journal
 sudo systemctl restart systemd-journald
 ```
 
-`journalctl --vacuum-time=30d` and `--vacuum-size=500M` prune it, and
-`SystemMaxUse=` in `/etc/systemd/journald.conf` sets the ceiling so it never becomes lesson 3
-section 48's full disk.
+`journalctl --vacuum-time=30d` and `--vacuum-size=500M` prune it, and `SystemMaxUse=` in
+`/etc/systemd/journald.conf` sets the ceiling so it never becomes lesson 3 section 13's full disk.
 
 ## Two more worth having
 

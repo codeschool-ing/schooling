@@ -49,7 +49,7 @@ drwxr-xr-x 10 root root 4096 Sep 14 23:22 ..
 | | |
 |---|---|
 | `-m` | make the home directory |
-| `-s` | login shell — section 71's field 7 |
+| `-s` | login shell — section 02's field 7 |
 | `-c` | the comment field, historically the full name |
 | `-G` | supplementary groups at creation |
 | `-u` | a specific UID, when it has to match another machine |
@@ -69,7 +69,7 @@ drwxr-xr-x 75 root root 4096 Sep 14 23:22 ..
 
 **`/etc/skel` is the skeleton**, and `-m` copies it into the new home. Anything you put there
 appears in every account made afterwards — a company `.bashrc`, a default editor setting, a README.
-Note that `ls` without `-a` shows it as empty, which is section 49's dot doing its job.
+Note that `ls` without `-a` shows it as empty, which is lesson 3 section 14's dot doing its job.
 
 It does not apply retroactively. Accounts that already exist keep what they have.
 
@@ -88,7 +88,7 @@ The flags mirror `useradd`'s, plus a few of its own:
 
 | | |
 |---|---|
-| `-aG` | **append** to the supplementary groups — lesson 4 section 61 on why `-a` matters |
+| `-aG` | **append** to the supplementary groups — lesson 4 section 08 on why `-a` matters |
 | `-s` | change the shell |
 | `-L` / `-U` | lock / unlock, the same as `passwd -l` |
 | `-e 2026-12-31` | expire the account on a date |
@@ -105,7 +105,7 @@ drwxr-x--- 2 dorasilva dora 4096 Sep 14 23:22 /home/dora
 ```
 
 The name changed. **The home directory is still `/home/dora`**, and so is the record pointing at
-it. The files still belong to her because they were always uid `1005` — lesson 4 section 60's
+it. The files still belong to her because they were always uid `1005` — lesson 4 section 07's
 point, arriving from the other side. Renaming a person is `usermod -l newname -d /home/newname -m
 oldname`, and the pieces are separate because they can be.
 
@@ -121,14 +121,14 @@ drwxr-x--- 2 1005 dora 4096 Sep 14 23:22 /home/dora
 The account is gone — `getent` prints nothing. **The home directory is still there, and `ls` now
 prints `1005` where a name used to be**, because there is nothing left to look the number up in.
 
-That is the single most visible demonstration of section 71's claim that the filesystem stores
+That is the single most visible demonstration of section 02's claim that the filesystem stores
 numbers. Nothing about those files changed. The mapping did.
 
 `userdel -r` removes the home directory and the mail spool as well — and **it is worth not doing
 by reflex.** The usual sequence when somebody leaves is:
 
 1. lock the account, so nobody logs in as them: `usermod -L -e 1 name`;
-2. remove their ssh keys, because section 75 explains why locking is not enough;
+2. remove their ssh keys, because section 06 explains why locking is not enough;
 3. work out what they owned: `find / -uid 1005 2>/dev/null`;
 4. hand those files to somebody, or archive them;
 5. **then** delete the account.
@@ -146,7 +146,7 @@ gpasswd -a bruno deploy      # add somebody
 gpasswd -d bruno deploy      # remove somebody
 ```
 
-`gpasswd -a` is `usermod -aG` without the way to get it wrong. And lesson 4 section 61's warning
+`gpasswd -a` is `usermod -aG` without the way to get it wrong. And lesson 4 section 08's warning
 applies to all of it: **the change does not reach a shell that is already open.**
 
 ## What to do on a machine with more than a handful of people
@@ -155,5 +155,5 @@ Nothing in this section scales past about twenty accounts on one machine. Beyond
 come from a directory — LDAP, Active Directory, a cloud identity provider — and `useradd` on the
 machine is the wrong place to look.
 
-The tell is `getent passwd` returning somebody who is not in `/etc/passwd`. Section 71 said to
+The tell is `getent passwd` returning somebody who is not in `/etc/passwd`. Section 02 said to
 build that habit for exactly this moment.

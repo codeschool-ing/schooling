@@ -48,9 +48,9 @@ nomes diferem.
 
 | | |
 |---|---|
-| `OnCalendar=` | uma agenda de relógio — seção 220 |
+| `OnCalendar=` | uma agenda de relógio — seção 11 |
 | `RandomizedDelaySec=15m` | espalha a manada: um atraso aleatório de até quinze minutos |
-| `Persistent=true` | se a máquina estava desligada, roda no próximo boot — seção 221 |
+| `Persistent=true` | se a máquina estava desligada, roda no próximo boot — seção 12 |
 | `WantedBy=timers.target` | habilite e ele inicia com o sistema |
 
 ## Instalando um
@@ -115,8 +115,7 @@ arquivos por caminho e não precisa de root.
 
 Esse último par é a razão honesta para preferir um timer para qualquer coisa que
 importa: **sobreposição e execuções perdidas são resolvidas no arquivo em vez de
-no seu script** — que são as seções 223 e 221, e cerca de metade do que a seção
-225 trata.
+no seu script** — que são as seções 14 e 12, e cerca de metade do que a seção 16 trata.
 
 ## O que custa
 

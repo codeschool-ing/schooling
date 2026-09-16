@@ -37,7 +37,7 @@ ana@vm:~/work/scripts$ echo $count+1
 ```
 
 There is no number type. `count` holds the two characters `3`, and `$count+1` is the string `3+1`.
-Arithmetic needs `$(( ))`, which is section 151.
+Arithmetic needs `$(( ))`, which is section 14.
 
 Quotes are only for the shell's benefit — they never end up in the value:
 
@@ -65,7 +65,7 @@ ana@vm:~/work/scripts$ echo $names
 The shell reads a name as far as it can: letters, digits and underscores. Anything else ends it,
 which is why `$name.txt` and `$name/file` work without braces and `${name}s` needs them.
 
-**Braces are also where everything in section 152 hangs off**, so it is not a bad habit to use them
+**Braces are also where everything in section 15 hangs off**, so it is not a bad habit to use them
 always. Both spellings are correct; pick one and be consistent.
 
 ## An unset variable is not an error
@@ -76,7 +76,7 @@ ana@vm:~/work/scripts$ unset name; echo "[${name}]"
 ```
 
 **A name that does not exist expands to nothing at all**, silently. This is the single most
-dangerous behaviour in the shell, it has erased real directories, and section 143 is about turning
+dangerous behaviour in the shell, it has erased real directories, and section 06 is about turning
 it into an error.
 
 Meanwhile there are two defaults:
@@ -114,7 +114,7 @@ Both exist in the shell you typed them in. Only the exported one crossed into th
 
 **`export` is what makes a variable part of the environment**, and the environment is the only
 thing a child process inherits. This is why a script cannot see a variable you set at the prompt
-unless you exported it, and why `source` (section 139) is the other way round the same problem.
+unless you exported it, and why `source` (section 02) is the other way round the same problem.
 
 `env` lists exactly what is exported, which makes it the way to check.
 

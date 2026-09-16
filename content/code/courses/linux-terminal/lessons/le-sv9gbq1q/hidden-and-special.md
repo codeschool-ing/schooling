@@ -16,7 +16,7 @@ bruno@vm:~$ ls -a
 ```
 
 One directory, two answers. **There is no hidden attribute.** `ls` skips names beginning with `.`
-unless you ask, and so does the shell's `*` (section 45). Nothing else is involved: rename
+unless you ask, and so does the shell's `*` (section 10). Nothing else is involved: rename
 `notes.txt` to `.notes.txt` and it is hidden; rename it back and it is not.
 
 That convention exists because your home directory would otherwise be unusable. Every program you
@@ -41,7 +41,7 @@ bruno@vm:~$ cat .gitconfig
         email = bruno@example.com
 ```
 
-Plain text, like everything else. That is the point section 37 made about `/etc`, one level down:
+Plain text, like everything else. That is the point section 02 made about `/etc`, one level down:
 **your settings are files you can read, diff and copy to another machine.**
 
 ### `.ssh` is the one to be careful with
@@ -68,7 +68,7 @@ bruno@vm:~$ du -sh .cache
 8.0K    .cache
 ```
 
-Eight kilobytes on a new account, and gigabytes on a working one. When section 48's hunt leads
+Eight kilobytes on a new account, and gigabytes on a working one. When section 13's hunt leads
 into a home directory, `~/.cache` is usually the answer, and deleting it costs nothing but the
 time to rebuild what was in it.
 
@@ -177,7 +177,7 @@ crw-rw-rw- 1 root root 1, 9 Sep 14 21:50 /dev/urandom
 crw-rw-rw- 1 root root 1, 5 Sep 14 21:50 /dev/zero
 ```
 
-`c` in the first column — section 41's field 1 — for *character device*. And where a size would
+`c` in the first column — section 06's field 1 — for *character device*. And where a size would
 be, two numbers: the major and minor device numbers, which are how the kernel knows which driver
 to hand the request to.
 
@@ -197,7 +197,7 @@ ana@vm:~$ wc -c < /dev/null
 0
 ```
 
-**`/dev/null` is the one you will use constantly.** `2>/dev/null` from section 44 is exactly this:
+**`/dev/null` is the one you will use constantly.** `2>/dev/null` from section 09 is exactly this:
 send the error stream to the thing that throws everything away. It is not a special shell feature.
 It is a file, and writing to it happens to do nothing.
 
@@ -210,7 +210,7 @@ ana@vm:~$ head -c 8 /dev/urandom | od -An -tx1
 ```
 
 `/dev/zero` fills things: `dd if=/dev/zero of=disk.img bs=1M count=64` is how the 64 MB image in
-section 47 was made. `/dev/urandom` is where every password generator and every random filename on
+section 12 was made. `/dev/urandom` is where every password generator and every random filename on
 this machine gets its bytes.
 
 **And they are infinite.** `cat /dev/zero > file` does not finish; it stops when the disk is full.

@@ -65,7 +65,7 @@ ana@vm:/$ ls -di / /.. /.
 2 /  2 /.  2 /..
 ```
 
-`-i` prints the inode number, which is the filesystem's own identifier for a thing (section 46).
+`-i` prints the inode number, which is the filesystem's own identifier for a thing (section 11).
 All three are inode 2. They are one directory with three names.
 
 ## `~` is expanded by the shell
@@ -79,7 +79,7 @@ ana@vm:~$ echo ~root
 
 `echo` prints what it was handed, and it was handed `/home/ana`. **The tilde never reached it.**
 The shell replaced it while parsing the line, which is the same machinery that expands `*` in
-section 45.
+section 10.
 
 | you type | becomes |
 |---|---|
@@ -130,7 +130,7 @@ ana@vm:~/work$ ./ledger
 
 You must write `./` to run a program sitting in the current directory. The reason is security:
 if `.` were searched automatically, dropping a file called `ls` into a shared directory would be
-enough to have the next person run it. Section 38 already made the mechanical point; this is why
+enough to have the next person run it. Section 03 already made the mechanical point; this is why
 nobody has ever fixed it.
 
 ### A trailing `/.` forces "the contents of"
@@ -138,4 +138,4 @@ nobody has ever fixed it.
 `cp -r src dest` and `cp -r src/. dest` behave differently when `dest` already exists, and the
 difference is whether you copy *the directory* or *what is in it*. You will meet this the first
 time a copy produces `dest/src/` when you wanted `dest/`. The reliable habit is to check with `ls`
-straight afterwards rather than to memorise the rule — and section 42 shows the same trap for `mv`.
+straight afterwards rather than to memorise the rule — and section 07 shows the same trap for `mv`.

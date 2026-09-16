@@ -3,7 +3,7 @@ title: Exit statuses, and what `$?` is really telling you
 version: 1
 ---
 
-Section 88 said a process ends by handing a number to its parent. This is that number, and it is
+Section 03 said a process ends by handing a number to its parent. This is that number, and it is
 the only thing a program can say about how it went that another program can act on.
 
 **Zero is success. Everything else is a failure.** That is backwards from most things and it is the
@@ -52,10 +52,10 @@ ana@vm:~/work$ bash -c "exit 42"; echo $?
 
 **`126` and `127` are the two worth memorising**, because they are the two you get from a script
 rather than from the thing the script was trying to do. `127` in a log is a typo or a missing
-package; `126` is a file without its execute bit, which lesson 4 section 62 was about.
+package; `126` is a file without its execute bit, which lesson 4 section 09 was about.
 
 **And `grep`'s `1` is not an error.** It means the pattern was not there, which is frequently the
-answer you wanted. Section 90's `pgrep` uses the same convention for the same reason.
+answer you wanted. Section 05's `pgrep` uses the same convention for the same reason.
 
 ## Signals, in the status
 
@@ -72,7 +72,7 @@ ana@vm:~/work$ echo $?
 ```
 
 **128 plus the signal number.** `TERM` is 15, so 143. `INT` is 2, so 130 — which is what you get
-every time you press `Ctrl+C`, and is why 130 turns up in logs so often. Section 93's `SIGPIPE` was
+every time you press `Ctrl+C`, and is why 130 turns up in logs so often. Section 08's `SIGPIPE` was
 141 for the same arithmetic.
 
 So a status above 128 is worth reading as a subtraction: **`137` is `128 + 9`, which is `SIGKILL`,
@@ -103,7 +103,7 @@ ana@vm:~/work$ false | true; echo $?
 ```
 
 `PIPESTATUS` is an array with **one status per stage**, and it is the only way to find out which
-stage failed. Section 93 used it to catch `yes` being killed by `SIGPIPE`.
+stage failed. Section 08 used it to catch `yes` being killed by `SIGPIPE`.
 
 **`set -o pipefail` changes the rule**: the pipeline's status becomes the last non-zero one. In a
 script that does anything with pipes, this line belongs at the top and the day you need it is the

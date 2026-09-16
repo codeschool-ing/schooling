@@ -42,7 +42,7 @@ Read those three modes with lesson 4 in your hands. `/etc/passwd` is `644` — a
 and they must. `/etc/shadow` is `640`, owned by `root` and the group `shadow` — **nobody without
 root or that group reads it at all.** The `x` is a pointer saying *the real thing is next door*.
 
-Section 72 is what is in there.
+Section 03 is what is in there.
 
 ## Most accounts are not people
 
@@ -133,8 +133,8 @@ Build the `getent` habit now, while the two agree.
 
 ## Two things that follow from all of this
 
-**A user is not a session.** The line exists whether or not anybody is logged in, and section 74 is
+**A user is not a session.** The line exists whether or not anybody is logged in, and section 05 is
 about the difference.
 
 **Deleting the line does not delete the files.** Every file that account owned now belongs to a
-number with no name, and section 73 shows exactly what that looks like.
+number with no name, and section 04 shows exactly what that looks like.

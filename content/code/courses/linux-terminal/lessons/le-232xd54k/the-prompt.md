@@ -48,7 +48,7 @@ prompt spells the path out — `/etc` — and when you go back inside it, it sho
 `~/notes` is `/home/ana/notes`.
 
 **`pwd` and the prompt agree because they are reading the same fact.** If you ever doubt the
-prompt, `pwd` is the direct question. Section 36 of lesson 3 goes further into what "current
+prompt, `pwd` is the direct question. Section 01 of lesson 3 goes further into what "current
 directory" means; here it is enough that the shell is always in one, and always tells you which.
 
 ## The `#` is a warning, not a decoration
@@ -63,7 +63,7 @@ ask you whether you are sure. The system will let you delete the files that make
 
 This is the whole reason the default prompt bothers to distinguish them, and it is worth training
 the reflex now: **look at the last character before you press enter on anything destructive.**
-Section 14 explains why you are not root by default, and section 61 of lesson 4 explains `sudo`,
+Section 14 explains why you are not root by default, and section 08 of lesson 4 explains `sudo`,
 which is how you become root for one command instead of for an evening.
 
 ## The shell writes it, so it is yours to change

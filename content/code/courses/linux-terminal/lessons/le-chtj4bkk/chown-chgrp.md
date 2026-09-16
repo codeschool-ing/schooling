@@ -22,7 +22,7 @@ ana@vm:~$ ls -ln /srv/perm/teamonly.txt
 
 `-n` asks for the raw values, and there they are. **The filesystem stores `1001` and `1004`.** The
 names are looked up when `ls` prints them, from `/etc/passwd` and `/etc/group`, which is section
-61's subject.
+08's subject.
 
 That matters in two places. Copy a disk to a machine where uid 1001 is somebody else, and the files
 now belong to that somebody. And inside a container, the same number maps to a different account
@@ -70,7 +70,7 @@ ana@vm:~/perm$ chgrp team public.txt
 No complaint. Ana owns the file and is a member of `team`, and those are the two conditions:
 **you may set a file's group to any group you belong to, on a file you own.**
 
-That is the whole reason section 61 exists. The group is the part of the model an ordinary user
+That is the whole reason section 08 exists. The group is the part of the model an ordinary user
 controls, and it is how two people share a file without anybody becoming root.
 
 Try it with a group you are not in and it is refused for the same reason `chown` was.
@@ -102,7 +102,8 @@ reasons and is ambiguous when a username contains a dot. Use the colon.
 **`sudo chown -R $USER /`** — somebody trying to fix a permission problem in their home directory,
 with a typo in the path. It rewrites the ownership of the whole system, and the machine does not
 boot. There is no undo; the only recovery is a reinstall or a backup of the metadata. **Check the
-path before you press enter on a recursive `chown`**, exactly as section 42 said for `rm -rf`.
+path before you press enter on a recursive `chown`**, exactly as lesson 3 section 07 said for `rm
+-rf`.
 
 **Changing the owner does not change the mode.** A file that was `-rw-------` and owned by `ana` is
 still `-rw-------` after `chown bruno` — now readable by bruno instead, and by nobody else. The two

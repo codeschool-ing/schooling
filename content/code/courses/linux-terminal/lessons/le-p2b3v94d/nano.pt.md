@@ -52,9 +52,10 @@ O `^O` para salvar é o que as pessoas erram, porque todo outro programa usa
 │                           [ Wrote 3 lines ]                            │
 ```
 
-Mas o `^S` também é a tecla de *parar a saída* do terminal, da seção 8, e num
-arranjo em que o nano não a tomou para si, apertá-la congela a sua tela até você
-apertar `^Q`. **O `^O` funciona em todo lugar**, e é o que vale ter nos dedos.
+Mas o `^S` também é a tecla de *parar a saída* do terminal, da aula 1 seção 08, e
+num arranjo em que o nano não a tomou para si, apertá-la congela a sua tela até
+você apertar `^Q`. **O `^O` funciona em todo lugar**, e é o que vale ter nos
+dedos.
 
 O `M-U` é desfazer mesmo, e diz o que desfez:
 

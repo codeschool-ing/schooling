@@ -96,7 +96,7 @@ O `/proc/loadavg` também não é isolado. **A carga média que você lê dentro
 contêiner é a da máquina inteira**, incluindo todo outro inquilino.
 
 Então um contêiner mostrando carga 40 pode estar completamente ocioso,
-compartilhando um host com alguém tendo um dia ruim. E o conselho da seção 178 —
+compartilhando um host com alguém tendo um dia ruim. E o conselho da seção 03 —
 compare com a contagem de núcleos — compara a carga do host com os núcleos do
 host, o que ao menos é consistente e não te diz nada sobre o seu contêiner.
 

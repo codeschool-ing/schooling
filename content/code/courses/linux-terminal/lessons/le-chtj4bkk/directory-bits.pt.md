@@ -111,11 +111,11 @@ puder escrever no diretório em que ele está. E não consegue apagar um arquivo
 diretório disser não.
 
 Não é bug. Remover um arquivo é remover o nome dele de uma lista, e alterar uma lista é uma escrita
-na lista. A seção 46 já te disse isso pelo outro lado: `rm` é `unlink`.
+na lista. A aula 3 seção 11 já te disse isso pelo outro lado: `rm` é `unlink`.
 
 Isso tem uma consequência grande, e é por ela que o `/tmp` existe no estado em que existe. Um
 diretório em que qualquer um escreve é um diretório em que qualquer um apaga os arquivos dos
-outros — o que tornaria o `/tmp` inútil. O conserto é um bit a mais, e é a seção 63.
+outros — o que tornaria o `/tmp` inútil. O conserto é um bit a mais, e é a seção 10.
 
 ## O que um modo quer dizer, em palavras
 
@@ -125,8 +125,8 @@ outros — o que tornaria o `/tmp` inútil. O conserto é um bit a mais, e é a 
 | `drwxr-x---` | 750 — o dono e o grupo; estranhos não veem nada |
 | `drwx------` | 700 — seu. O `~/.ssh` é este |
 | `drwx--x--x` | 711 — atravessar pelo nome, sem listagem |
-| `drwxrwxrwt` | 1777 — o `/tmp`, e o `t` é a seção 63 |
+| `drwxrwxrwt` | 1777 — o `/tmp`, e o `t` é a seção 10 |
 
 **E um que é quase sempre um engano:** um diretório com `w` e sem `x`. Você pode acrescentar um
 nome a uma lista em que não consegue entrar, o que significa criar arquivos que depois não consegue
-abrir. É o que um `chmod -R` com modo de arquivo produz, e a seção 58 mostrou isso acontecendo.
+abrir. É o que um `chmod -R` com modo de arquivo produz, e a seção 05 mostrou isso acontecendo.

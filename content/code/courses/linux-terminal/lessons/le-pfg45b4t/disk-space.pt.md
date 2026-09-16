@@ -107,7 +107,7 @@ sleep   16238  ana    9w   REG    7,0 20971520     0   12 /mnt/small/big.log (de
 
 **`NLINK 0` e `(deleted)`.** Um processo tem o arquivo aberto; alguém apagou o
 nome; os dados não podem ser liberados até o último descritor fechar. Os links
-físicos da seção 46 e os descritores da seção 98, se encontrando no lugar menos
+físicos da aula 3 seção 11 e os descritores da aula 6 seção 13, se encontrando no lugar menos
 conveniente.
 
 O `lsof +L1` lista arquivos abertos com menos de um link — que é exatamente este

@@ -45,7 +45,7 @@ a case you will not meet: a umask of `7` against a request of `6` gives `0`, not
 
 **Notice what the umask cannot do.** It only removes. A umask of `000` gives you `666` and `777`,
 never a file with `x` on it, because nothing asked for `x` in the first place. That is why a new
-script is not executable and you have to say `chmod +x` — section 58.
+script is not executable and you have to say `chmod +x` — section 05.
 
 ## Changing it, and watching it work
 
@@ -74,7 +74,7 @@ ana@vm:~/um$ ls -l c.txt
 ```
 
 `664` — group can write. That is the umask for working in a shared directory, and it is what the
-setgid bit in section 63 is usually paired with.
+setgid bit in section 10 is usually paired with.
 
 `-S` prints it the other way round, as what is *allowed* rather than what is removed:
 

@@ -15,7 +15,7 @@ more than two
 There is no `then`, no `fi`, and no `;` before the brace — the brace is the
 grammar. `elseif` is one word.
 
-Unlike bash (section 144), **the condition is an expression, not a command**.
+Unlike bash (lesson 9 section 07), **the condition is an expression, not a command**.
 `if (Get-Process pwsh) { }` works because a non-empty result is truthy, but the
 normal thing is a comparison.
 
@@ -103,7 +103,7 @@ a log file
 can be a literal, a wildcard (with `-Wildcard`), a regular expression (with
 `-Regex`), or a block that returns a boolean, as above.
 
-And here is the difference from `case` in section 146, which will catch you once:
+And here is the difference from `case` in lesson 9 section 09, which will catch you once:
 
 ```
 PS /home/ana/work/ps> switch (3) { 1 { "one" } 3 { "three" } 3 { "three again" } default { "other" } }
@@ -144,7 +144,7 @@ InvalidOperation: The variable '$nothing' cannot be retrieved because it has not
 ```
 
 **Without it, a typo'd variable name is `$null`, `$null.Count` is 0, and the
-`else` branch runs.** That is section 143's `$TARGE` in a different language:
+`else` branch runs.** That is lesson 9 section 06's `$TARGE` in a different language:
 no error, a decision taken on a value that was never there.
 
 | | |

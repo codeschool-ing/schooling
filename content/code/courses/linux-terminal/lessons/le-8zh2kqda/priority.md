@@ -41,7 +41,7 @@ prints them as `NI` and `PR`; read `NI` and ignore `PR`, because `NI` is the num
 
 ## Does it actually do anything?
 
-Two copies of section 92's busy loop, pinned to the **same** processor with `taskset` so they have
+Two copies of section 07's busy loop, pinned to the **same** processor with `taskset` so they have
 to share it, one at the default and one at 19:
 
 ```
@@ -122,7 +122,7 @@ for a service, because it survives restarts and a shell command does not.
 **It does not limit memory.** A process at nice 19 that allocates everything still takes the machine
 down. Niceness is about processor time and nothing else.
 
-**It does not help when the problem is I/O.** Section 92's `wa` column: a process stuck waiting on
+**It does not help when the problem is I/O.** Section 07's `wa` column: a process stuck waiting on
 a disk is not competing for the processor at all, so lowering its priority changes nothing. For
 that there is a separate knob:
 

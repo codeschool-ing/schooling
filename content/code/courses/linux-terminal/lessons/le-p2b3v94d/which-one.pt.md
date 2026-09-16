@@ -30,7 +30,7 @@ um shell, numa máquina em que alguém removeu o nano para poupar quatro megabyt
 `Esc`, `:q!`, `:wq`, `u`.
 
 Se você vai mais fundo no vim é uma escolha genuína, com um retorno real e um
-custo real. O retorno está na seção 198 — a gramática, e editar na velocidade em
+custo real. O retorno está na seção 06 — a gramática, e editar na velocidade em
 que você pensa. O custo são as horas, e elas também não são opcionais.
 
 ## Duas razões para escolher o vim que não são estéticas
@@ -39,10 +39,11 @@ que você pensa. O custo são as horas, e elas também não são opcionais.
 instalado. Esse não é um argumento pequeno quando a máquina que você está
 consertando é a que não consegue instalar pacotes.
 
-**As teclas dele estão em todo lugar.** O `less` as usa (seção 43). O `man` usa o
-`less`. O `git log` usa o `less`. O `k9s`, a busca do `htop`, o `psql`, o
-`mysql`, a maioria dos gerenciadores de arquivos, e o modo vim de toda IDE. `j`,
-`k`, `/`, `n`, `q` e `G` são as teclas de ler texto no Unix, e não só as do vim.
+**As teclas dele estão em todo lugar.** O `less` as usa (aula 3 seção 08). O
+`man` usa o `less`. O `git log` usa o `less`. O `k9s`, a busca do `htop`, o
+`psql`, o `mysql`, a maioria dos gerenciadores de arquivos, e o modo vim de toda
+IDE. `j`, `k`, `/`, `n`, `q` e `G` são as teclas de ler texto no Unix, e não só
+as do vim.
 
 ## Duas razões para escolher o nano que não são preguiça
 

@@ -62,7 +62,7 @@ ana@vm:~/work$ find . -empty
 ```
 
 **Quote the pattern.** `find . -name '*.c'` works; `find . -name *.c` may not, and the reason is
-section 45 — the shell expands the star before `find` ever runs. Quoting hands the star to `find`
+section 10 — the shell expands the star before `find` ever runs. Quoting hands the star to `find`
 intact, and `find` does its own matching.
 
 ### The time tests, where the numbers mislead

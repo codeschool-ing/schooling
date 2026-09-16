@@ -48,7 +48,7 @@ job runs `run-parts`, and `run-parts` runs every executable in the directory.
 
 Read the `test -x /usr/sbin/anacron ||` too. **If anacron is installed, the daily
 job does nothing here**, because anacron will run those directories instead —
-section 218.
+section 09.
 
 **The sixth field is a user name.** `/etc/crontab` and `/etc/cron.d` have one and
 your own crontab does not, which is the single commonest mistake when copying a
@@ -98,7 +98,7 @@ making the same judgement in a directory holding an `alpha` and a `beta.sh`: onl
 the first one appears.
 
 **The file needs its `PATH` set**, exactly as `sysstat` does above, because the
-environment is not yours — section 215.
+environment is not yours — section 06.
 
 ## The `run-parts` directories
 

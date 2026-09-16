@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um arquivo de unit é como um serviço se descreve. É um arquivo ini — seções entre colchetes, linhas
-`Chave=Valor` — e ele substituiu o script de shell de que tratou a seção 77.
+`Chave=Valor` — e ele substituiu o script de shell de que tratou a seção 08.
 
 Aqui está um completo, e ele faz tudo de que um serviço pequeno precisa:
 
@@ -55,7 +55,7 @@ genuinamente não funciona sem o outro, e `Wants=` quando ele apenas preferiria.
 | `simple` | o processo que você inicia **é** o serviço | o padrão, e quase sempre certo |
 | `exec` | como o simple, mas espera até ele ter de fato iniciado | um pouco mais seguro que o simple |
 | `forking` | o programa vira daemon sozinho e o **pai termina** | um daemon à moda antiga |
-| `oneshot` | ele roda, termina, e isso é sucesso | uma tarefa de preparação — o `active (exited)` da seção 79 |
+| `oneshot` | ele roda, termina, e isso é sucesso | uma tarefa de preparação — o `active (exited)` da seção 10 |
 | `notify` | o programa avisa ao systemd quando está pronto | serviços escritos para o systemd |
 
 **Um programa moderno não deveria virar daemon**, e se ele não vira, `Type=simple` é o correto.
@@ -70,15 +70,15 @@ O resto do que você vai escrever:
 | `ExecReload=` | o que o `systemctl reload` roda. Ausente quer dizer reload recusado |
 | `Restart=` | `no`, `on-failure`, `always`, `on-abnormal` |
 | `RestartSec=` | quanto esperar antes. Sem isso, um laço de quebra é um laço apertado |
-| `User=`, `Group=` | a conta com que rodar — a terceira propriedade da seção 76, numa linha |
-| `WorkingDirectory=` | o ponto da seção 38 da aula 3: um serviço começa em `/` se não avisarem |
+| `User=`, `Group=` | a conta com que rodar — a terceira propriedade da seção 07, numa linha |
+| `WorkingDirectory=` | o ponto da seção 03 da aula 3: um serviço começa em `/` se não avisarem |
 | `Environment=` | uma variável; `EnvironmentFile=` para um arquivo delas |
-| `UMask=` | a seção 62 da aula 4 disse que seu dotfile não chega aqui. Este chega |
+| `UMask=` | a seção 09 da aula 4 disse que seu dotfile não chega aqui. Este chega |
 
 **`ExecStart=` não é um comando de shell.** É o engano que todo mundo comete uma vez:
 `ExecStart=/usr/bin/foo > /var/log/foo.log` não redireciona — ele passa o `>` e o caminho como dois
 argumentos para o `foo`. Se você precisa de um shell, diga: `ExecStart=/bin/sh -c 'foo >
-/var/log/foo.log'`. Normalmente você não precisa, porque o journal da seção 81 já recolhe a saída.
+/var/log/foo.log'`. Normalmente você não precisa, porque o journal da seção 12 já recolhe a saída.
 
 ## `[Install]` — o que o `enable` deve fazer
 
@@ -88,7 +88,7 @@ WantedBy=multi-user.target
 ```
 
 Esta seção é lida **apenas** pelo `systemctl enable`, e ela diz em qual diretório `.wants` o link
-simbólico vai. A seção 78 mostrou o link sendo criado; esta é a linha que decidiu onde.
+simbólico vai. A seção 09 mostrou o link sendo criado; esta é a linha que decidiu onde.
 
 **Uma unit sem seção `[Install]` não pode ser habilitada**, e o `systemctl is-enabled` a chama de
 `static`. Isso é intencional para units que outra coisa puxa.
@@ -117,7 +117,7 @@ para você:
 | | |
 |---|---|
 | `/usr/lib/systemd/system` | **a cópia do pacote.** Uma atualização sobrescreve |
-| `/usr/local/lib/systemd/system` | software que você instalou na mão — o `/usr/local` da seção 37 da aula 3 |
+| `/usr/local/lib/systemd/system` | software que você instalou na mão — o `/usr/local` da seção 02 da aula 3 |
 | `/etc/systemd/system` | **a sua.** Prioridade maior, e nada sobrescreve |
 
 Então um arquivo que você põe em `/etc/systemd/system/nginx.service` substitui completamente o do
@@ -144,7 +144,7 @@ RestartSec=10
 Quatro linhas em vez de quarenta, e a unit do pacote continua se atualizando por baixo.
 
 O `systemctl edit --full` te dá o arquivo inteiro para sobrepor, quando um drop-in não serve. E o
-`systemctl edit` roda o `daemon-reload` por você depois, que é o passo que a seção 78 disse que as
+`systemctl edit` roda o `daemon-reload` por você depois, que é o passo que a seção 09 disse que as
 pessoas esquecem.
 
 O `systemctl cat nginx` imprime a unit e cada drop-in aplicado a ela, em ordem — que é como se

@@ -37,7 +37,7 @@ apt-cache rdepends thing           # what needs it — the reverse question
 apt install --dry-run thing        # the whole plan, without doing any of it
 ```
 
-**`--dry-run` is the habit worth forming.** It prints exactly the paragraph section 106 taught you
+**`--dry-run` is the habit worth forming.** It prints exactly the paragraph section 04 taught you
 to read, and changes nothing. On a production machine it is the difference between knowing and
 finding out.
 
@@ -49,7 +49,7 @@ you want before typing `apt remove` on a library.
 ### 1. Half installed
 
 You used `dpkg -i` and the dependency was not there. dpkg unpacks and refuses to configure,
-leaving the package in a state where its files exist and it does not work. Section 109 is this one
+leaving the package in a state where its files exist and it does not work. Section 07 is this one
 in full, with the repair.
 
 ### 2. Held back
@@ -62,7 +62,7 @@ in full, with the repair.
 removing another, and plain `upgrade` refuses to remove. `apt list --upgradable` names them and
 `apt full-upgrade` is allowed to do it — after you have read what it would take away.
 
-The other reason is a deliberate hold, which is section 111.
+The other reason is a deliberate hold, which is section 09.
 
 ### 3. Unmet dependencies
 
@@ -123,7 +123,7 @@ Remv libtext-charwidth-perl [0.04-11build3]
 
 **I asked for one package and the plan removes two.** `cowsay` depends on it, so taking the library
 away means taking `cowsay` too — a manager will not knowingly leave a package whose `Depends` is
-unsatisfied. Section 112 shows `dnf` doing the same thing with the same reasoning.
+unsatisfied. Section 10 shows `dnf` doing the same thing with the same reasoning.
 
 `--dry-run` is why this is a paragraph rather than an incident. And `rdepends` is how you ask before
 you even type `remove`:

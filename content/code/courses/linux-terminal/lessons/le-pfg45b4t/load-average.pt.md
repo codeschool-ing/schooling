@@ -23,7 +23,7 @@ de processo alocado.
 | **R** — executável | rodando num núcleo, ou esperando um |
 | **D** — sono ininterruptível | esperando um disco, normalmente |
 
-A seção 89 nomeou esses dois estados. **O D é a parte que surpreende todo
+A aula 6 seção 04 nomeou esses dois estados. **O D é a parte que surpreende todo
 mundo**, e é por que a carga média não é uma métrica de processador: uma máquina
 com processador ocioso e disco saturado tem carga média alta, e uma máquina
 usando todo núcleo sem nada na fila tem carga média igual à contagem de núcleos.
@@ -87,9 +87,9 @@ procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu----
 ```
 
 **Carga 1,39 numa máquina de quatro núcleos, e o disco a 93% de utilização.** Esse
-93% é do `iostat`, na seção 09 desta aula; o `vmstat` não o carrega. Só com a
+93% é do `iostat`, na aula 1 seção 09 desta aula; o `vmstat` não o carrega. Só com a
 carga média você fecharia o chamado. O `b 1` e o `wa 22` são a história de
-verdade, e são lidos nas seções 04 e 09.
+verdade, e são lidos nas aula 1 seções 04 e 09.
 
 O contrário também acontece. Uma máquina emperrada num sistema de arquivos de
 rede morto mostra carga média 40 com todo processador ocioso, porque quarenta

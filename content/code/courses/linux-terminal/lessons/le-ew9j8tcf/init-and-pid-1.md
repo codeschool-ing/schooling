@@ -20,7 +20,7 @@ lrwxrwxrwx 1 root root 22 Jul 28 15:04 /sbin/init -> ../lib/systemd/systemd
 **On this machine PID 1 is not an init system at all.** It is a container runtime's supervisor,
 because this is a container and containers frequently run one program with no init underneath it.
 That is a real and common arrangement, and it is the honest reason several transcripts later in
-this lesson are drawings — the note in section 79 says so where it matters.
+this lesson are drawings — the note in section 10 says so where it matters.
 
 The second line is the interesting one. **`/sbin/init` points at systemd**, exactly as it does on
 any Ubuntu: the software is installed and would be process one if this machine had booted normally.
@@ -79,7 +79,7 @@ alternatives are now the specialist choice. Devuan exists for people who want De
 Alpine uses OpenRC and is why lesson 2 mentioned it; Void uses runit. They are real and you will
 probably not meet one.
 
-**Learn systemd.** It is what is on the machine in front of you. The seven commands in section 78
+**Learn systemd.** It is what is on the machine in front of you. The seven commands in section 09
 are the whole of what you need for a long time.
 
 ## What PID 1 actually does, beyond starting things
@@ -87,13 +87,13 @@ are the whole of what you need for a long time.
 Two jobs that only PID 1 can do, and both turn up later in this course:
 
 **It adopts orphans.** When a process's parent exits, the child is re-parented to PID 1. That is
-how a daemon ends up belonging to the system — section 76's second property — and lesson 6 section
-91 draws it.
+how a daemon ends up belonging to the system — section 07's second property — and lesson 6 section
+06 draws it.
 
 **It reaps them.** A finished process stays in the table until its parent collects its exit status.
 An orphan's parent is PID 1, and PID 1 collects continuously. **An init that does not do this leaks
 zombies**, which is the single most common bug in a hand-written container entrypoint, and lesson 6
-section 89 is where you meet one.
+section 04 is where you meet one.
 
 That is also why `docker run` has `--init`: it inserts a tiny process one whose only job is those
 two things, because the program you actually wanted to run was never written to do them.

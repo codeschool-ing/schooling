@@ -82,7 +82,7 @@ that produces data:
 | `ConvertTo-Csv` `Export-Csv` | CSV, to the pipeline or to a file |
 | `Out-String` | the rendering, as a string, for when you really do want the text |
 | `Out-File` `Set-Content` | to a file |
-| `Out-Null` | to nowhere. The `> /dev/null` of section 121 |
+| `Out-Null` | to nowhere. The `> /dev/null` of lesson 8 section 03 |
 
 ```
 PS /home/ana/work/ps> Get-ChildItem | Select-Object Name, Length | ConvertTo-Json
@@ -133,7 +133,7 @@ Write-Host   "this goes straight to the screen"
 ```
 
 **`Write-Output` emits an object.** It is what a function returns, it can be
-captured, piped and redirected — the standard output of section 120.
+captured, piped and redirected — the standard output of lesson 8 section 02.
 
 **`Write-Host` writes to the host application**, bypassing the pipeline
 altogether:

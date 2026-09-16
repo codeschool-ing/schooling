@@ -3,11 +3,11 @@ title: `zypper`, no SUSE e no openSUSE
 version: 1
 ---
 
-O SUSE usa arquivos `.rpm` e o `rpm` por baixo, exatamente como a seção 112 descreveu — e uma
+O SUSE usa arquivos `.rpm` e o `rpm` por baixo, exatamente como a seção 10 descreveu — e uma
 ferramenta diferente por cima. Tudo o que você aprendeu sobre `rpm -q` se aplica aqui sem mudança; só
 a camada de cima tem palavras novas.
 
-**A mesma ressalva da seção 112**: estas transcrições foram capturadas no Ubuntu com o `zypper`
+**A mesma ressalva da seção 10**: estas transcrições foram capturadas no Ubuntu com o `zypper`
 instalado e o repositório da aula configurado. Os comandos e a saída deles são reais; a distribuição
 não é SUSE, e o único lugar em que isso aparece é apontado abaixo.
 
@@ -121,7 +121,7 @@ e o `v` mostra os números de versão completos antes de você decidir. Digitar 
 **`Checking for file conflicts:`** é um passo que nem o apt nem o dnf anunciam. O zypper verifica que
 nenhum par de pacotes quer escrever o mesmo caminho antes de escrever qualquer coisa.
 
-**Aquelas linhas `rpm:` são o artefato de Ubuntu**, o mesmo aviso de invólucro da seção 112. O zypper
+**Aquelas linhas `rpm:` são o artefato de Ubuntu**, o mesmo aviso de invólucro da seção 10. O zypper
 está chamando o `rpm`, e o `rpm` do Debian está o repreendendo. No SUSE elas não estão lá.
 
 ## Qual pacote possui um arquivo
@@ -141,7 +141,7 @@ O `zypper se --provides --file-list` — normalmente escrito `zypper se --provid
 de arquivos em vez de nomes. **E agora a coluna `S` tem conteúdo**: `i` para o `greet`, que entrou
 como dependência, e `i+` para o `greet-tools`, que foi o pedido.
 
-Aquele `+` é a mesma distinção do `apt-mark showmanual` da seção 108, guardada na listagem onde dá
+Aquele `+` é a mesma distinção do `apt-mark showmanual` da seção 06, guardada na listagem onde dá
 para ver em vez de num comando separado.
 
 O `rpm -qf /usr/bin/greet` também funciona aqui, e é mais curto.
@@ -173,7 +173,7 @@ root@vm:~# greet-twice
 bash: greet-twice: command not found
 ```
 
-Os dois pacotes removidos, pelo motivo que a seção 108 deu, e então **um erro que é desta máquina e
+Os dois pacotes removidos, pelo motivo que a seção 06 deu, e então **um erro que é desta máquina e
 não do zypper**. O `rpmdb2solv` constrói o cache do zypper para o banco de dados de pacotes
 instalados, e ele precisa do `/etc/products.d` — um diretório que descreve quais produtos SUSE estão
 instalados, que uma máquina Ubuntu não tem.
@@ -219,7 +219,7 @@ No core libraries or services have been updated since the last system boot.
 Reboot is probably not necessary.
 ```
 
-Nada a fazer aqui, que é a resposta que você quer — e leia a primeira linha contra a seção 98.
+Nada a fazer aqui, que é a resposta que você quer — e leia a primeira linha contra a aula 6 seção 13.
 **"Processos usando arquivos apagados" é exatamente a situação do descritor aberto num arquivo
 apagado**, e é assim que ela fica quando um gerenciador de pacotes a usa de propósito: uma biblioteca
 substituída no disco enquanto algo ainda tem a antiga aberta é um serviço rodando código que não

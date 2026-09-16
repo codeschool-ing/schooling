@@ -20,7 +20,7 @@ ana@vm:~/work$ awk '{print $9, $7}' logs/access.log | head -3
 of whitespace by default — which is already better than `cut`, since it needs no `tr -s` on padded
 text.
 
-And the second command reordered the fields, which section 126 showed `cut` cannot do.
+And the second command reordered the fields, which section 08 showed `cut` cannot do.
 
 ## The shape of a program
 
@@ -133,7 +133,7 @@ ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv
 573278
 ```
 
-Section 126 did that with four processes and `bc`.
+Section 08 did that with four processes and `bc`.
 
 ## Associative arrays, which is why it replaces `sort | uniq -c`
 
@@ -154,7 +154,7 @@ That is the pattern to keep. Counting is the same thing with `++`:
 awk '{c[$7]++} END {for (p in c) print c[p], p}' logs/access.log | sort -rn | head
 ```
 
-Section 128 showed that giving the same answer as `sort | uniq -c`, without the sort.
+Section 10 showed that giving the same answer as `sort | uniq -c`, without the sort.
 
 **The order of `for (k in arr)` is undefined**, which is why both of those end in `| sort`.
 
@@ -190,7 +190,7 @@ ana@vm:~/work$ awk '/api/ {c++} END {print c " api requests"}' logs/access.log
 ```
 
 `/pattern/` matches against the whole line, `$7 ~ /pattern/` against one field, and `!~` is "does
-not match". The pattern language is section 125's extended syntax.
+not match". The pattern language is section 07's extended syntax.
 
 ## When to stop
 

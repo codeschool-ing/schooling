@@ -20,13 +20,13 @@ veio. O arquivo no disco continua igual e poderia estar rodando cem vezes ao mes
 | | |
 |---|---|
 | **um PID** | o número dele, único enquanto ele vive |
-| **um PPID** | o número do pai dele — seção 91 |
+| **um PPID** | o número do pai dele — seção 06 |
 | **uma identidade** | um uid e um conjunto de gids, da aula 4 |
 | **memória** | um espaço de endereços próprio, em que nenhum outro processo entra |
-| **arquivos abertos** | uma tabela numerada — seção 98 |
-| **um diretório de trabalho** | o "aqui" da seção 38 da aula 3, por processo |
+| **arquivos abertos** | uma tabela numerada — seção 13 |
+| **um diretório de trabalho** | o "aqui" da seção 03 da aula 3, por processo |
 | **um ambiente** | variáveis com que ele começou, e que passa aos filhos |
-| **um estado** | rodando, dormindo, parado — seção 89 |
+| **um estado** | rodando, dormindo, parado — seção 04 |
 
 Cada um desses é legível, de fora, sem ferramenta especial:
 
@@ -38,7 +38,7 @@ ana@vm:~/work$ cat /proc/$FDPID/cmdline | tr '\0' ' '; echo
 tail -f logs/app.log
 ```
 
-A seção 49 da aula 3 disse que o `/proc` tem um diretório por processo e que tudo ali é arquivo.
+A seção 14 da aula 3 disse que o `/proc` tem um diretório por processo e que tudo ali é arquivo.
 **Este é o retorno.** O `exe` é um link simbólico para o programa. O `cwd` é um link simbólico para
 onde ele está rodando. O `cmdline` é como ele foi iniciado — com bytes nulos entre os argumentos, e
 é por isso que o `tr` está ali.
@@ -50,7 +50,7 @@ ordem e dá a volta — normalmente em 4194304 no Linux moderno, 32768 nos mais 
 que você anotou dez minutos atrás pode agora pertencer a outra coisa, e um script que mata um PID
 guardado antes é uma classe real de bug.
 
-**O PID 1 é especial e os outros não são.** A seção 77 da aula 5 tratou do processo um. Nada mais
+**O PID 1 é especial e os outros não são.** A seção 08 da aula 5 tratou do processo um. Nada mais
 num número quer dizer alguma coisa: um PID baixo quer dizer que o processo começou cedo, e é só.
 
 ```
@@ -73,10 +73,10 @@ ana@vm:~/work$ ps -eo pid,ppid,user,%cpu,%mem,etime,comm --sort=-%cpu | head -5
 
 A coluna `USER` não é enfeite. **Tudo que um processo pode fazer é decidido por aquela identidade**
 — quais arquivos ele abre, quais processos ele sinaliza, se o `/etc/shadow` é legível. Um servidor
-web rodando como `www-data` é a frase da seção 76 da aula 5, e esta coluna é onde você a vê.
+web rodando como `www-data` é a frase da seção 07 da aula 5, e esta coluna é onde você a vê.
 
 Ela também decide o que **você** pode fazer com ele. Você sinaliza os seus processos. Sinalizar os
-de outra pessoa exige root, e a seção 94 mostra a recusa.
+de outra pessoa exige root, e a seção 09 mostra a recusa.
 
 ## Threads não são isto
 
@@ -89,7 +89,7 @@ ps -eLf          # uma linha por thread
 ```
 
 Java, navegadores e bancos de dados têm muitas. A contagem `Tasks:` do bloco de status da aula 5 e
-do `top` na seção 92 conta threads, e é por isso que uma máquina com oitenta processos pode relatar
+do `top` na seção 07 conta threads, e é por isso que uma máquina com oitenta processos pode relatar
 várias centenas de tarefas. **Quando uma contagem te surpreender, pergunte se você está contando
 threads.**
 
@@ -108,4 +108,4 @@ Os colchetes querem dizer que não há linha de comando a imprimir, porque não 
 de kernel com um PID para o escalonador conseguir tratá-lo. Ele não tem memória própria, que é o `0`
 nas colunas VSZ e RSS. **Você não administra estes.** Matar um é recusado ou uma tarde muito ruim.
 
-**Um zumbi.** Um processo que terminou e continua na tabela. A seção 89 cria um.
+**Um zumbi.** Um processo que terminou e continua na tabela. A seção 04 cria um.

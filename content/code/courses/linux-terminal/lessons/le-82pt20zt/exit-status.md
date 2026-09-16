@@ -3,8 +3,8 @@ title: Strict mode, and the four places it does not help
 version: 1
 ---
 
-Section 99 established what an exit status is: zero for success, anything else for failure, in
-`$?`. A script has one too, and it is whatever you gave `exit`:
+Lesson 6 section 14 established what an exit status is: zero for success, anything else for
+failure, in `$?`. A script has one too, and it is whatever you gave `exit`:
 
 ```
 ana@vm:~/work/scripts$ cat status.sh; ./status.sh; echo "exit status was $?"

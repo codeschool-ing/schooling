@@ -45,10 +45,10 @@ seconds later, and it is the thing that section is about.
 ## Why the tree matters in practice
 
 **Killing a parent does not kill its children.** That is the single most common wrong assumption in
-this lesson. A signal goes to one process; children are separate processes and carry on. Section 94
+this lesson. A signal goes to one process; children are separate processes and carry on. Section 09
 is about the two ways to reach a whole group.
 
-**A service is a subtree.** Lesson 5 section 79's `CGroup:` block was this shape — the service and
+**A service is a subtree.** Lesson 5 section 10's `CGroup:` block was this shape — the service and
 everything it started. That is what systemd tracks, and it is why `systemctl stop` catches
 processes that a PID file would have missed.
 
@@ -58,7 +58,7 @@ recognise.
 
 ## When the parent dies first
 
-Section 88 showed it and it is worth the second look, because the result is not what people expect:
+Section 03 showed it and it is worth the second look, because the result is not what people expect:
 
 ```
 ana@vm:~/work$ bash -c 'sleep 200 & echo child is $!'
@@ -72,7 +72,7 @@ The inner `bash` is gone. `sleep` is not, and its parent is now `1`.
 
 **The child is not killed. It is adopted.** The kernel re-parents an orphan to process one — which
 is the one process guaranteed to still be there, and which collects exit statuses continuously
-(lesson 5 section 77).
+(lesson 5 section 08).
 
 Two consequences you will meet:
 
@@ -81,7 +81,7 @@ Two consequences you will meet:
 lists them.
 
 **Closing a terminal does not necessarily stop what you started in it.** The shell dies, the child
-is adopted, and it keeps going. Whether that happens depends on the hangup signal in section 96 —
+is adopted, and it keeps going. Whether that happens depends on the hangup signal in section 11 —
 which is a different mechanism from re-parenting, and the two get confused constantly.
 
 ## Reading a real tree
@@ -106,12 +106,12 @@ a dozen services hanging off it instead.
 Four things to read out of any `pstree`, and all four are in that output:
 
 **The root is whatever PID 1 is.** Here it is `process_api`, a container supervisor, for the reason
-lesson 5 section 77 gave. On a normally booted machine the top line says `systemd`.
+lesson 5 section 08 gave. On a normally booted machine the top line says `systemd`.
 
 **`N*[name]`** means N identical children, collapsed into one entry. `10*[{process_api}]` is ten,
 not one.
 
-**`{name}` in braces** means a **thread**, not a process — section 87's threads. So
+**`{name}` in braces** means a **thread**, not a process — section 02's threads. So
 `10*[{process_api}]` is one process with ten threads, and in `ps` it is a single row. Three of the
 processes here are multi-threaded and it costs three lines to say so.
 

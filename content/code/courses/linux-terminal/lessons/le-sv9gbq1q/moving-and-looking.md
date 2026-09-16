@@ -41,7 +41,7 @@ Three different failures, three different words, and the word is the diagnosis:
 
 Note who is speaking: `bash:`, not `cd:`. **`cd` is not a program** — it cannot be, because a
 program changing its own directory would not change the shell's. It is built into the shell, which
-is why `man cd` finds nothing and `help cd` finds everything. Section 16 drew that line.
+is why `man cd` finds nothing and `help cd` finds everything. Lesson 1 section 16 drew that line.
 
 ## `ls`, and the seven options that matter
 
@@ -117,8 +117,8 @@ ana@vm:~/hid$ ls -A
 ```
 
 One directory, three answers. **A name beginning with a dot is hidden**, which is the entire
-mechanism — there is no hidden attribute anywhere, just a convention that `ls` honours. Section 11
-covered the convention; section 49 covers what people keep in those files.
+mechanism — there is no hidden attribute anywhere, just a convention that `ls` honours. Lesson 1
+section 11 covered the convention; section 14 covers what people keep in those files.
 
 `-A` is `-a` without `.` and `..`, and it is usually what you meant.
 
@@ -155,6 +155,6 @@ drwxr-xr-x 2 root root 36864 Mar 31 13:31 /bin/
 it follows it and shows you **the directory**. Same seven characters typed, two different
 questions asked.
 
-Section 46 is about links. The habit to take from here is smaller and immediately useful: **a
+Section 11 is about links. The habit to take from here is smaller and immediately useful: **a
 trailing slash means "through it, into the thing"** — and when a listing surprises you, check
 whether you are looking at a link.

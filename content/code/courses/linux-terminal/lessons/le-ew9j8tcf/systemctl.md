@@ -39,7 +39,7 @@ enabled
 
 **`enable` made a symlink.** That is the whole of it.
 
-Read the path it made: `multi-user.target.wants/`. Section 82 is about targets; for now, the
+Read the path it made: `multi-user.target.wants/`. Section 13 is about targets; for now, the
 directory is a list of *things this target wants running*, and enabling a service is putting it in
 that list. At boot, systemd reaches `multi-user.target`, reads the directory, and starts what is in
 it.
@@ -62,7 +62,7 @@ disabled
 ```
 
 Three entries in that listing, and two of them were not put there by you — that is what an enabled
-service looks like on any machine. Lesson 3 section 46 taught you to read `->`; this is that
+service looks like on any machine. Lesson 3 section 11 taught you to read `->`; this is that
 reading, cashed in.
 
 ## `restart` and `reload` are not the same
@@ -76,7 +76,7 @@ reading, cashed in.
 **Prefer `reload` on anything serving traffic.** Nginx, Apache, Postgres and sshd all support it,
 and a reload is invisible to whoever is connected.
 
-Not every service implements it — the unit file has to say `ExecReload=`, and section 80 shows
+Not every service implements it — the unit file has to say `ExecReload=`, and section 11 shows
 where. `systemctl reload` on a service without one fails and tells you so, which is better than
 silently restarting.
 
@@ -94,7 +94,7 @@ systemctl is-failed nginx     # for a script
 ```
 
 The `is-*` family prints one word and sets an exit status, which makes them the ones to use in a
-script. `status` is for reading, and section 79 takes it apart.
+script. `status` is for reading, and section 10 takes it apart.
 
 `systemctl is-enabled` has four answers and two of them need a word:
 
@@ -134,8 +134,8 @@ you leave the suffix off. Other kinds need it:
 | `.service` | a program to run — the default |
 | `.timer` | a schedule — lesson 13 |
 | `.socket` | a port or socket that starts the service on first connection |
-| `.mount` | a filesystem — lesson 3 section 47, generated from `/etc/fstab` |
-| `.target` | a group of the above — section 82 |
+| `.mount` | a filesystem — lesson 3 section 12, generated from `/etc/fstab` |
+| `.target` | a group of the above — section 13 |
 
 So `systemctl start backup.timer` needs the suffix, and `systemctl start nginx` does not.
 
@@ -148,5 +148,5 @@ systemctl cat nginx               # print the unit file, and any overrides
 
 **`daemon-reload` is the one people forget.** Edit a `.service` file and systemd carries on with
 the version it read at boot until you tell it to re-read. The symptom is a change that has no
-effect and a service that restarts happily into its old behaviour. `systemctl edit` — section 80 —
+effect and a service that restarts happily into its old behaviour. `systemctl edit` — section 11 —
 does the reload for you, which is one of several reasons to prefer it.

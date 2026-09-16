@@ -37,7 +37,7 @@ bruno,Q1,49,4116
 **Não existe `-d ", "`.** O `cut` aceita um único caractere e essa é uma limitação real: um arquivo
 separado por `, ` ou por sequências de espaços não pode ser cortado diretamente.
 
-O conserto de sempre é o `tr -s` da seção 130, que comprime sequências de um caractere em um só:
+O conserto de sempre é o `tr -s` da seção 12, que comprime sequências de um caractere em um só:
 
 ```
 ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
@@ -46,7 +46,7 @@ ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
 ```
 
 O outro conserto é usar o `awk`, que divide em sequências de espaço em branco por padrão e é a seção
-132.
+14.
 
 ## No log
 
@@ -121,7 +121,7 @@ tail -n +2 data/sales.csv | cut -d, -f5      # skip line 1, then cut
 awk -F, 'NR>1 {print $5}' data/sales.csv     # awk knows which line it is on
 ```
 
-**O `tail -n +2` é a opção da seção 123** e é a de pegar com o `cut`. E tendo descartado o cabeçalho,
+**O `tail -n +2` é a opção da seção 05** e é a de pegar com o `cut`. E tendo descartado o cabeçalho,
 dá para acrescentar a aritmética:
 
 ```
@@ -131,7 +131,7 @@ ana@vm:~/work$ cut -d, -f5 data/sales.csv | tail -n +2 | paste -sd+ | bc
 
 Quatro programas para somar uma coluna: pegue o campo, descarte o cabeçalho, junte as linhas com
 sinais de `+`, e entregue a soma resultante a uma calculadora. Funciona, é genuinamente como as
-pessoas fazem isso, e a seção 132 faz a mesma coisa em um:
+pessoas fazem isso, e a seção 14 faz a mesma coisa em um:
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv

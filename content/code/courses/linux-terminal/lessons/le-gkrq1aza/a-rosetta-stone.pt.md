@@ -3,7 +3,7 @@ title: O mesmo comando em três dialetos
 version: 1
 ---
 
-Esta é a página para voltar. Nada aqui é novo; são as seções 106 a 113 postas lado a lado, para que
+Esta é a página para voltar. Nada aqui é novo; são as seções 04 a 11 postas lado a lado, para que
 saber uma coluna signifique conseguir trabalhar nas outras duas.
 
 ## Os comandos do dia a dia
@@ -32,14 +32,14 @@ saber uma coluna signifique conseguir trabalhar nas outras duas.
 | registro de transações | `/var/log/apt/history.log` | `dnf history` | `/var/log/zypp/history` |
 
 **As linhas do `rpm -qf` e do `rpm -ql` se repetem de propósito.** O dnf e o zypper são duas
-interfaces sobre um banco de dados, então toda consulta `rpm` da seção 112 funciona sem mudança no
+interfaces sobre um banco de dados, então toda consulta `rpm` da seção 10 funciona sem mudança no
 SUSE.
 
 ## As quatro diferenças que não são só grafia
 
 **1. O `purge` existe só do lado Debian.** O apt distingue "remova o programa" de "remova o programa
 e a configuração dele", e acompanha o estado intermediário como `rc`. O rpm não tem esse estado: ele
-remove o pacote e deixa arquivos de configuração editados para trás como `.rpmsave`. A seção 110 tem
+remove o pacote e deixa arquivos de configuração editados para trás como `.rpmsave`. A seção 08 tem
 os dois.
 
 **2. O `apt update` é um passo separado e o do `dnf` não é.** O dnf expira os próprios metadados num
@@ -51,7 +51,7 @@ dizer sim. O dnf pergunta `[y/N]` — Enter quer dizer não. **Três ferramentas
 numa delas está errado noutra**, o que vale um instante de cuidado nas primeiras vezes num sistema
 desconhecido.
 
-**4. O `zypper dup` numa versão rolling.** Seção 113: no Tumbleweed a atualização de rotina é o
+**4. O `zypper dup` numa versão rolling.** Seção 11: no Tumbleweed a atualização de rotina é o
 `dup`, não o `up`, e usar o errado por meses produz uma máquina genuinamente quebrada. Não há nada
 parecido nas outras duas.
 

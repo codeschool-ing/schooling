@@ -64,7 +64,7 @@ like they should:
 automatically downgraded** — anything from a repository outranks it at 500, but nothing pushes it
 out in favour of something older.
 
-That `5:` at the front of the Docker versions is the epoch from section 104. Read past it: `29.8.0`
+That `5:` at the front of the Docker versions is the epoch from section 02. Read past it: `29.8.0`
 against `29.3.1`.
 
 ## Holding a version
@@ -139,7 +139,7 @@ Pin-Priority: 100
 
 **That drops every package from that origin below "already installed"**, so nothing from it is
 installed unless you ask by name. It is the standard defence against a third-party repository that
-also carries versions of things your distribution already provides, which is section 115.
+also carries versions of things your distribution already provides, which is section 13.
 
 `apt-cache policy` with no package prints the priorities in force, which is how you check that a
 pin file says what you meant.

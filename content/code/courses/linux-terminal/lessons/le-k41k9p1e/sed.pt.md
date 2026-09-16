@@ -74,7 +74,7 @@ north,bruno,Q1,49,4116
 ```
 
 **O `1d` apaga a primeira linha**, que é a expressão idiomática para descartar cabeçalho ao lado do
-`tail -n +2` da seção 123. Qualquer um serve; o `sed 1d` é mais curto e o `tail -n +2` é mais rápido
+`tail -n +2` da seção 05. Qualquer um serve; o `sed 1d` é mais curto e o `tail -n +2` é mais rápido
 num arquivo grande.
 
 ```
@@ -121,7 +121,7 @@ service handled a request
 ```
 
 **O `-i` edita o arquivo em vez de imprimir na saída padrão**, e é a resposta ao problema do
-`sort arquivo > arquivo` da seção 121.
+`sort arquivo > arquivo` da seção 03.
 
 Ele também é a opção com que se toma cuidado, porque não há desfazer. O `-i.bak` guarda uma cópia:
 

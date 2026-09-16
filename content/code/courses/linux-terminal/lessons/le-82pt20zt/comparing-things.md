@@ -26,7 +26,7 @@ them is the question you asked.
 **The letters are for numbers, the symbols are for strings**, which is exactly backwards from every
 other language and is the reason to say it out loud once.
 
-And the `\` on `\<` is because `<` inside `[ ]` is a redirection — section 154 has that bug caught
+And the `\` on `\<` is because `<` inside `[ ]` is a redirection — section 17 has that bug caught
 in the act.
 
 ## Emptiness
@@ -90,7 +90,7 @@ match
 ```
 
 That is a pattern, not a string. `[[ $host == web* ]]`, `[[ $f == *.tar.gz ]]` — the same syntax as
-`case` in the next section, and the same syntax as globbing in section 45.
+`case` in the next section, and the same syntax as globbing in lesson 3 section 10.
 
 Quote the right-hand side and it becomes a literal again:
 
@@ -146,8 +146,8 @@ ana@vm:/tmp/q$ echo "BASH_REMATCH: ${BASH_REMATCH[0]}"
 BASH_REMATCH: report.log
 ```
 
-`=~` takes an extended regular expression — section 125's syntax — and fills `BASH_REMATCH` with
-the match and its capture groups.
+`=~` takes an extended regular expression — lesson 8 section 07's syntax — and fills `BASH_REMATCH`
+with the match and its capture groups.
 
 **Do not quote the pattern.** The same trap as `==`, and it is quieter, because a quoted regex
 never errors — it just never matches:
@@ -223,6 +223,6 @@ so more precisely than `-f`.
 `&&` and `||` inside it, pattern matching, regular expressions.
 
 Use `[ ]` when the script has `#!/bin/sh` at the top, because `[[` is bash and dash does not have
-it — section 139. That is the only reason.
+it — section 02. That is the only reason.
 
 And whichever you use, quote your variables anyway. The habit is worth more than the exception.

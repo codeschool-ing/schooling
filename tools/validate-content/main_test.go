@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/codeschool-ing/schooling/internal/catalog"
+)
 
 // The mono family covers ASCII and the box-drawing block, which is what
 // `ui/assets/fonts/fonts.css` declares after `go run ./tools/fonts`.
@@ -78,5 +82,112 @@ func TestACharacterNobodyShipsIsFoundWithItsLine(t *testing.T) {
 func TestATabIsNotAMissingGlyph(t *testing.T) {
 	if found := drawnWith("```\nif true; then\n\techo yes\nfi\n```\n", mono()); len(found) != 0 {
 		t.Errorf("a tab is whitespace, not a glyph the font is missing; got %v", found)
+	}
+}
+
+// A course with two lessons: the first has three sections, the second has two.
+// So `section 4` is a number nothing in it can show.
+func twoLessons() *catalog.School {
+	sec := func(n int) []catalog.Section {
+		out := make([]catalog.Section, n)
+		return out
+	}
+	return &catalog.School{Courses: []*catalog.Course{{
+		ID: "co-x",
+		Loaded: []*catalog.Lesson{
+			{ID: "le-1", Sections: sec(3)},
+			{ID: "le-2", Sections: sec(2)},
+		},
+	}}}
+}
+
+func refs(t *testing.T, lesson int, body string) []error {
+	t.Helper()
+	s := twoLessons()
+	s.Courses[0].Loaded[lesson].Text = []catalog.Prose{
+		{SectionID: "se-a", Locale: "en", Body: body},
+	}
+	return checkSectionReferences("code", s)
+}
+
+// THE LOUD HALF: a number no lesson in this course has.
+func TestAReferencePastTheEndOfItsLessonIsReported(t *testing.T) {
+	if got := refs(t, 0, "The rule is in section 4, which explains it."); len(got) != 1 {
+		t.Errorf("lesson 1 has three sections, so `section 4` is unreachable; got %v", got)
+	}
+	if got := refs(t, 0, "The rule is in section 3, which explains it."); len(got) != 0 {
+		t.Errorf("`section 3` is the last section of lesson 1 and resolves; got %v", got)
+	}
+}
+
+// THE QUIET HALF, AND IT IS THE ONE THAT COST SOMETHING. A reference that names
+// a lesson is measured against THAT lesson, not the one it is written in — so a
+// section 3 written in lesson 1 and pointing at lesson 2 is wrong even though
+// lesson 1 has a third section.
+func TestAReferenceIsMeasuredAgainstTheLessonItNames(t *testing.T) {
+	for _, body := range []string{
+		"Covered in section 3 of lesson 2.",
+		"Covered in lesson 2 section 3.",
+	} {
+		if got := refs(t, 0, body); len(got) != 1 {
+			t.Errorf("%q: lesson 2 has two sections; got %v", body, got)
+		}
+	}
+	if got := refs(t, 0, "Covered in lesson 2 section 2."); len(got) != 0 {
+		t.Errorf("lesson 2 has a second section; got %v", got)
+	}
+}
+
+// A list of numbers is a list of references, and the last one is as checkable
+// as the first. `sections 04 and 09` reported only the 04 until this said so.
+func TestEveryNumberInAListIsChecked(t *testing.T) {
+	if got := refs(t, 0, "Both sections 2 and 9 say it."); len(got) != 1 {
+		t.Errorf("the 9 is past the end of lesson 1; got %v", got)
+	}
+	if got := refs(t, 1, "Compare seções 1 a 5 do outro lado."); len(got) != 1 {
+		t.Errorf("Portuguese counts too, and lesson 2 has two sections; got %v", got)
+	}
+}
+
+// A transcript may say anything. `# section 300 of the manual` inside a fence
+// is not a cross-reference and this check has no business reading it.
+func TestAFenceIsNotACrossReference(t *testing.T) {
+	body := "Prose.\n\n```\n$ echo section 300\n```\n\nMore prose.\n"
+	if got := refs(t, 0, body); len(got) != 0 {
+		t.Errorf("the only number here is inside a fence; got %v", got)
+	}
+}
+
+// A NARRATOR SAYS THE NUMBER, and nothing was reading the scripts at all.
+func TestASpokenReferenceIsCheckedToo(t *testing.T) {
+	s := twoLessons()
+	s.Courses[0].Loaded[0].Sections[0] = catalog.Section{
+		ID: "se-v", Kind: catalog.KindVideo,
+		Videos: []catalog.Video{{Script: "Read it the way section four taught you."}},
+	}
+	if got := checkSectionReferences("code", s); len(got) != 1 {
+		t.Errorf("lesson 1 has three sections, so a spoken `section four` is unreachable; got %v", got)
+	}
+
+	s.Courses[0].Loaded[0].Sections[0].Videos[0].Script = "Read it the way section three taught you."
+	if got := checkSectionReferences("code", s); len(got) != 0 {
+		t.Errorf("`section three` is the last section of lesson 1; got %v", got)
+	}
+}
+
+// AND THE LONGER WORD WINS, which is the closing `\b` doing it rather than the
+// order of the alternation. Without the boundary `seven` matches inside
+// `seventeen` and a reference that is fine reads as broken — the Python sketch
+// of this check had no boundary and reported three of its four findings against
+// the word `seven` inside a longer one.
+func TestSeventeenIsNotSeven(t *testing.T) {
+	if got := spellOut("section seventeen"); got != "section 17" {
+		t.Errorf("spellOut(%q) = %q, want %q", "section seventeen", got, "section 17")
+	}
+	if got := spellOut("seção dezessete"); got != "seção 17" {
+		t.Errorf("spellOut(%q) = %q, want %q", "seção dezessete", got, "seção 17")
+	}
+	if got := spellOut("nineteen and ninety"); got != "19 and ninety" {
+		t.Errorf("twenty is the ceiling, so `ninety` stays a word; got %q", got)
 	}
 }

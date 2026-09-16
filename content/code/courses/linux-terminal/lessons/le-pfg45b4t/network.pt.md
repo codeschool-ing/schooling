@@ -84,7 +84,7 @@ ana@vm:~$ ip -s link show eth0
 ```
 
 **Seis pacotes recebidos descartados em 262.464.** Esse é o `E` do método USE da
-seção 177, e é o número que ninguém olha.
+seção 02, e é o número que ninguém olha.
 
 | | |
 |---|---|

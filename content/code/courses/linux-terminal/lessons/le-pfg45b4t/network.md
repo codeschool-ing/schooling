@@ -84,7 +84,7 @@ ana@vm:~$ ip -s link show eth0
 ```
 
 **Six received packets dropped out of 262,464.** That is the `E` of the USE
-method from section 177, and it is the number nobody looks at.
+method from section 02, and it is the number nobody looks at.
 
 | | |
 |---|---|

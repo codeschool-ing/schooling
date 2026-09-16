@@ -34,12 +34,12 @@ keystroke, a packet, a timer or a disk.
 | `R` | **running**, or ready to run. It wants the processor |
 | `S` | **sleeping**, interruptibly — waiting for something, and a signal can wake it |
 | `D` | **uninterruptible sleep** — waiting on the kernel, and a signal will **not** wake it |
-| `T` | **stopped** — suspended by a signal, usually `Ctrl+Z`. Section 95 |
+| `T` | **stopped** — suspended by a signal, usually `Ctrl+Z`. Section 10 |
 | `Z` | **zombie** — finished, and its exit status has not been collected |
 | `I` | **idle** kernel thread. Not a problem, and there are a lot of them |
 
 **`R` does not mean "using the processor right now".** It means it is on the run queue — it would
-use a processor if one were free. That distinction is the whole of the load average in section 92.
+use a processor if one were free. That distinction is the whole of the load average in section 07.
 
 ## The extra letters after the state
 
@@ -48,10 +48,10 @@ The second and third characters are flags, and three of them are worth recognisi
 | | |
 |---|---|
 | `s` | it is a **session leader** — usually a login shell or a daemon |
-| `l` | it is **multi-threaded** — section 87's threads |
-| `<` | high priority, a negative nice value — section 97 |
+| `l` | it is **multi-threaded** — section 02's threads |
+| `<` | high priority, a negative nice value — section 12 |
 | `N` | low priority, a positive nice value |
-| `+` | it is in the **foreground** of its terminal — section 95 |
+| `+` | it is in the **foreground** of its terminal — section 10 |
 
 So `Ss` is a sleeping session leader, which is what your shell is. `SN` is something sleeping and
 politely deprioritised. `I<` is an idle high-priority kernel thread, and there are twenty-four of
@@ -89,7 +89,7 @@ longer a program to name.
 
 The first row is a different script from an earlier attempt, still running, and it is in the output
 only because it has the word `zombie` in its name. **That is what searching processes with `grep`
-gets you**: everything whose command line contains the string, related or not. Section 90's `pgrep`
+gets you**: everything whose command line contains the string, related or not. Section 05's `pgrep`
 is the version that does not do this to you.
 
 **A zombie is not using anything.** No memory, no processor, no open files. What it occupies is one
@@ -126,7 +126,7 @@ for reasons `top` cannot show.
 ## `T` — stopped, and it is waiting for you
 
 A process in `T` has been suspended and is using nothing. `Ctrl+Z` puts your foreground job there,
-and section 95 is about getting it back. `kill -STOP` puts any process there, and `kill -CONT`
+and section 10 is about getting it back. `kill -STOP` puts any process there, and `kill -CONT`
 resumes it.
 
 **A stopped process looks dead and is not.** It holds its memory, its files and its locks, and a

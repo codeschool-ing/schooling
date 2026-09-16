@@ -22,7 +22,7 @@ is called `ana`, which is a convention — Debian and Ubuntu give every user a p
 their own name, so that a shared directory is the exception rather than the default.
 
 **`groups=1002(ana),27(sudo),1004(team)` is the full list**, primary plus supplementary. Ana is in
-`sudo`, which is why section 64 will work for her, and in `team`, which is why she could read
+`sudo`, which is why section 11 will work for her, and in `team`, which is why she could read
 `teamonly.txt`.
 
 **All of them count for permission checks.** When the kernel asks "is this person in the file's
@@ -135,7 +135,7 @@ A machine arrives with twenty or so, and the ones worth recognising:
 
 | | |
 |---|---|
-| `sudo`, or `wheel` on Red Hat | may use `sudo` — section 64 |
+| `sudo`, or `wheel` on Red Hat | may use `sudo` — section 11 |
 | `adm` | may read the logs in `/var/log` |
 | `docker` | may talk to the Docker daemon, **which is root in practice** |
 | `www-data` | the account a web server runs as |

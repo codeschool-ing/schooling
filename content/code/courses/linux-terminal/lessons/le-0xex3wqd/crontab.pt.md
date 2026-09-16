@@ -44,9 +44,9 @@ não instala nada. O que quer dizer:
 se oferece para te devolver ao editor. Um crontab escrito direto no diretório de
 spool não recebe essa conferência.
 
-E o editor é o da seção 205 — `$VISUAL`, depois `$EDITOR`, depois o recurso
-alternativo da distribuição. `EDITOR=nano crontab -e` é a grafia que vale saber
-numa máquina que não é sua.
+E o editor é o da aula 12 seção 13 — `$VISUAL`, depois `$EDITOR`, depois o
+recurso alternativo da distribuição. `EDITOR=nano crontab -e` é a grafia que vale
+saber numa máquina que não é sua.
 
 ## O `-r` fica ao lado do `-e`
 
@@ -102,7 +102,7 @@ no lugar pode deixar o arquivo mudado e o diretório intocado.
 ## Duas coisas que não são óbvias
 
 **O crontab não tem `SHELL` e não tem caminho a não ser que você diga.** A seção
-215 é o assunto inteiro e é o jeito mais comum de um job que funciona no seu
+06 é o assunto inteiro e é o jeito mais comum de um job que funciona no seu
 terminal não fazer nada às três da manhã.
 
 **Um arquivo de crontab precisa de uma quebra de linha final**, e um arquivo

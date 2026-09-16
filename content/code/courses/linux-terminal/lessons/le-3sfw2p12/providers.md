@@ -3,7 +3,7 @@ title: Providers — the registry is a drive, and so is the environment
 version: 1
 ---
 
-Section 9 said everything on Unix is a file. PowerShell's version of that idea
+Lesson 1 section 09 said everything on Unix is a file. PowerShell's version of that idea
 runs the other way: **everything that looks like a tree gets to be a drive**, and
 the same four cmdlets work on all of them.
 
@@ -55,7 +55,7 @@ the equivalents are `env`, `declare -F` and `declare -p` — three different
 commands with three different output formats.
 
 `$env:HOME` is the shorthand for `Get-Item Env:HOME | Select -Expand Value`, and
-`$env:LEVEL = "debug"` sets one, exported to children, which is section 140's
+`$env:LEVEL = "debug"` sets one, exported to children, which is lesson 9 section 03's
 `export` folded into the name.
 
 ## On Windows: the registry
@@ -128,7 +128,7 @@ PS /home/ana/work/ps> Get-ChildItem | Set-Content /tmp/setc.txt; Get-Content /tm
 `>` wrote **the table a person would have read**, headers and all, because
 redirection formats first. `Set-Content` wrote the values. Whichever you meant,
 one of those files is going to disappoint whatever reads it next — and this is
-section 164's rule arriving in a place you did not expect it.
+section 07's rule arriving in a place you did not expect it.
 
 ## `Select-String` is `grep`
 

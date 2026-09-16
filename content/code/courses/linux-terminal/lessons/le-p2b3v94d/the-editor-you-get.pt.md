@@ -50,8 +50,8 @@ editor - auto mode
 ```
 
 No Debian e no Ubuntu existe um `/usr/bin/editor`, gerenciado pelo sistema de
-alternativas da seção 32, e **aqui ele aponta para o nano**. Então um `$EDITOR`
-não definido nesta máquina te dá o nano.
+alternativas da aula 2 seção 11, e **aqui ele aponta para o nano**. Então um
+`$EDITOR` não definido nesta máquina te dá o nano.
 
 No Red Hat e no SUSE não existe uma alternativa `editor` e o recurso alternativo
 normalmente é o `vi`. O mesmo comando, um editor diferente, dependendo da
@@ -68,7 +68,7 @@ EDITOR is now nano
 ```
 
 Isso dura até o shell sair. Para ficar, vai no arquivo de inicialização do seu
-shell — seção 74:
+shell — aula 5 seção 05:
 
 ```sh
 # ~/.bashrc, or ~/.profile
@@ -92,13 +92,13 @@ Duas das ferramentas acima fazem mais do que abrir um arquivo, e as duas existem
 porque editar o arquivo diretamente é perigoso.
 
 **O `visudo`** edita o `/etc/sudoers` e **confere a sintaxe antes de instalar**.
-O aviso da seção 65: um arquivo `sudoers` com erro de sintaxe pode trancar todos
-os usuários para fora do `sudo` naquela máquina, e o `visudo` se recusa a
+O aviso da aula 4 seção 12: um arquivo `sudoers` com erro de sintaxe pode trancar
+todos os usuários para fora do `sudo` naquela máquina, e o `visudo` se recusa a
 instalar um assim.
 
 Ele usa o `$EDITOR` como qualquer outra coisa, e `sudo EDITOR=nano visudo` é a
-grafia que te dá o nano — porque o `sudo` limpa o ambiente por padrão (seção 65),
-então exportar no seu próprio shell não basta.
+grafia que te dá o nano — porque o `sudo` limpa o ambiente por padrão (aula 4
+seção 12), então exportar no seu próprio shell não basta.
 
 **O `sudoedit`** — também escrito `sudo -e` — é o jeito certo de editar um
 arquivo que pertence ao root:
@@ -146,5 +146,5 @@ ana@vm:~$ which editor && readlink -f /usr/bin/editor
 Dois comandos, e entre eles te dizem exatamente o que o `git commit` está prestes
 a abrir: nada está definido, então o recurso alternativo se aplica, e o recurso
 alternativo aqui resolve para o nano. O `${VISUAL:-${EDITOR:-…}}` é a expansão de
-valor padrão da seção 152, aninhada — e é a mesma ordem de preferência que os
-próprios programas usam.
+valor padrão da aula 9 seção 15, aninhada — e é a mesma ordem de preferência que
+os próprios programas usam.

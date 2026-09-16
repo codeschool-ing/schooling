@@ -49,7 +49,7 @@ diretório.
 
 Leia também o `test -x /usr/sbin/anacron ||`. **Se o anacron estiver instalado, o
 job diário não faz nada aqui**, porque o anacron vai rodar aqueles diretórios —
-seção 218.
+seção 09.
 
 **O sexto campo é um nome de usuário.** O `/etc/crontab` e o `/etc/cron.d` têm um
 e o seu próprio crontab não tem, que é o erro mais comum ao copiar uma linha de
@@ -99,7 +99,7 @@ não rodou nenhuma vez**, e nada em lugar nenhum reclamou. A última linha é o
 `beta.sh`: só o primeiro aparece.
 
 **O arquivo precisa do `PATH` definido**, exatamente como o `sysstat` faz acima,
-porque o ambiente não é o seu — seção 215.
+porque o ambiente não é o seu — seção 06.
 
 ## Os diretórios do `run-parts`
 

@@ -48,7 +48,7 @@ prompt escreve o caminho por extenso — `/etc` — e quando você volta para de
 de novo: `~/notas` é `/home/ana/notas`.
 
 **`pwd` e o prompt concordam porque estão lendo o mesmo fato.** Se você duvidar do prompt, o `pwd`
-é a pergunta direta. A seção 36 da aula 3 aprofunda o que "diretório atual" significa; aqui basta
+é a pergunta direta. A seção 01 da aula 3 aprofunda o que "diretório atual" significa; aqui basta
 que o shell está sempre em um, e sempre diz em qual.
 
 ## O `#` é um aviso, não um enfeite
@@ -64,7 +64,7 @@ um sistema.
 
 É essa a razão de o prompt padrão se dar ao trabalho de distinguir os dois, e vale treinar o
 reflexo agora: **olhe o último caractere antes de apertar enter em qualquer coisa destrutiva.** A
-seção 14 explica por que você não é root por padrão, e a seção 61 da aula 4 explica o `sudo`, que é
+seção 14 explica por que você não é root por padrão, e a seção 08 da aula 4 explica o `sudo`, que é
 como se vira root por um comando em vez de por uma noite inteira.
 
 ## Quem escreve é o shell, então ele é seu para mudar

@@ -36,7 +36,7 @@ lr-x------ 1 ana ana 64 Sep 15 07:23 4 -> anon_inode:inotify
 
 **Everything the redirection did is visible as a number.** `1` is `/tmp/out.txt` and `2` is
 `/tmp/err.txt`, because that is what `>` and `2>` are: they set up descriptors before `exec`, in
-section 88's gap between `fork` and `exec`. `0` is `/dev/null` because this was a background job.
+section 03's gap between `fork` and `exec`. `0` is `/dev/null` because this was a background job.
 
 `3` is the file `tail` actually opened — the first free number after the three it was handed. `4` is
 an `inotify` descriptor, which is how `-f` learns the file changed without asking in a loop.
@@ -113,7 +113,7 @@ ana@vm:~/work$ df -h /tmp | tail -1
 Read the three `df` lines. **13G, then 13G after deleting two gigabytes, then 11G after killing a
 process that was not even writing to it.**
 
-Lesson 3 section 45 said `rm` removes a name, not a file. This is the consequence: the directory
+Lesson 3 section 10 said `rm` removes a name, not a file. This is the consequence: the directory
 entry is gone — `ls` cannot find it — and the data is still there because **a descriptor is also a
 reference**. The kernel frees the blocks when the last name and the last open descriptor are both
 gone, and not before.
@@ -131,7 +131,7 @@ lsof -nP | grep deleted   # the same thing, cruder and more portable
 
 And the fix is not `rm` — there is nothing left to remove. **Restart or signal the process that
 holds it**, which for a log is usually `kill -HUP`, telling the daemon to reopen its files. That is
-section 93's hangup used for what it is actually for on a server.
+section 08's hangup used for what it is actually for on a server.
 
 ## Running out of them
 

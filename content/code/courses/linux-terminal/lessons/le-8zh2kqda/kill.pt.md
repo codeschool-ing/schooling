@@ -3,7 +3,7 @@ title: `kill`, e por que o `-9` é a primeira jogada errada
 version: 1
 ---
 
-A seção 93 foi o que é um sinal. Esta é como mirar um, e há quatro jeitos de nomear um alvo: por
+A seção 08 foi o que é um sinal. Esta é como mirar um, e há quatro jeitos de nomear um alvo: por
 PID, por tarefa, por grupo e por nome. Eles falham de formas diferentes e é essa a seção inteira.
 
 ## Por PID
@@ -14,7 +14,7 @@ kill -TERM 1234       # the same, spelled out
 kill -9 1234          # KILL
 ```
 
-Exato e sem ambiguidade, e a resposta quando você já sabe o número. O `pgrep` da seção 90 costuma
+Exato e sem ambiguidade, e a resposta quando você já sabe o número. O `pgrep` da seção 05 costuma
 ser como você chegou nele.
 
 **E o `kill` precisa de permissão.** Você pode sinalizar processos que são seus; qualquer outro é
@@ -79,7 +79,7 @@ ana@vm:~/work$ ps -o pid,ppid,pgid,comm -p $(pgrep -d, -g $P)
 [1]+  Terminated              ./group-demo.sh
 ```
 
-**O pai sumiu e os três filhos não.** O `PPID` deles é `1` — a adoção da seção 91, acontecendo de
+**O pai sumiu e os três filhos não.** O `PPID` deles é `1` — a adoção da seção 06, acontecendo de
 verdade — e o `PGID` deles ainda é `2668`, o grupo de um processo que não existe mais.
 
 Essa é a falha em que as pessoas batem o tempo todo: a coisa que você matou está morta, o trabalho
@@ -166,7 +166,7 @@ ana@vm:~/work$ pgrep -f watcher.sh; echo "pgrep exit: $?"
 pgrep exit: 1
 ```
 
-O `pkill` aceita as opções do `pgrep` da seção 90 e manda um sinal em vez de imprimir. **`0` quando
+O `pkill` aceita as opções do `pgrep` da seção 05 e manda um sinal em vez de imprimir. **`0` quando
 ele casou com algo e `1` quando não casou**, o que o torna usável num script.
 
 O `killall` é o outro, e ele casa com o nome do programa exatamente, em vez de com um padrão:
@@ -206,7 +206,7 @@ ana@vm:~/work$ pkill -f watcher
 comando inteira e `watcher.log` contém a palavra. Nada avisou ninguém.
 
 Então: **rode o `pgrep` primeiro, leia a lista, e depois troque o `pgrep` pelo `pkill`.** Eles aceitam
-opções idênticas exatamente por isso. A seção 90 disse isso do outro lado; é isto que aquilo evita.
+opções idênticas exatamente por isso. A seção 05 disse isso do outro lado; é isto que aquilo evita.
 
 Numa máquina de produção a lista é maior, o erro é `pkill -f java`, e a coisa em que você não queria
 acertar era o serviço de outra pessoa.
@@ -214,7 +214,7 @@ acertar era o serviço de outra pessoa.
 ## Por que não o `-9`
 
 O `kill -9` é o reflexo, e é o reflexo errado, porque **um programa não consegue limpar depois de um
-`KILL`.** A seção 93 mostrou o trap nunca rodando. O que isso quer dizer na prática:
+`KILL`.** A seção 08 mostrou o trap nunca rodando. O que isso quer dizer na prática:
 
 - um banco de dados não descarrega o que estava segurando, e a próxima inicialização é uma
   recuperação;
@@ -252,11 +252,11 @@ now: 1
 O `trap '' TERM` com um tratador vazio quer dizer **ignore**, e este script o ignora completamente —
 depois do `TERM`, o `kill -0` ainda diz `0`. Aí o `-9`, e ele sumiu, com `Killed` em vez de `Done`.
 
-(A linha `running as ...` cai acima do `P=$!` que você digitou, pelo motivo da seção 93: o script a
+(A linha `running as ...` cai acima do `P=$!` que você digitou, pelo motivo da seção 08: o script a
 imprimiu no instante em que começou, e o que você digita é ecoado onde o cursor estiver.)
 
 **Essa sequência é a disciplina**: `TERM`, esperar alguns segundos, conferir, e só então o `-9`. O
-`kill -0` da seção 93 é a conferência, e ele não custa nada.
+`kill -0` da seção 08 é a conferência, e ele não custa nada.
 
 O `systemctl stop` faz exatamente isso por você, que é uma das coisas que a aula 5 estava comprando:
 `TERM` para o cgroup inteiro, esperar o `TimeoutStopSec`, e depois `KILL` no que sobrou.

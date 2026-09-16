@@ -6,7 +6,7 @@ version: 1
 Uma expressão regular é um padrão que descreve um conjunto de strings. Há muita coisa nisso e você
 precisa de umas doze peças, que é o que esta seção é.
 
-Tudo aqui usa `grep -E`. A seção 124 explicou por quê: a sintaxe básica precisa de contrabarra na
+Tudo aqui usa `grep -E`. A seção 06 explicou por quê: a sintaxe básica precisa de contrabarra na
 frente da metade dela, sem benefício.
 
 ## Casando um caractere

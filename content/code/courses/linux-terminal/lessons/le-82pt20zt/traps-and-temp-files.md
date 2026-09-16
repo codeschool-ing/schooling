@@ -30,8 +30,8 @@ drwx------ 2 ana ana 4096 Sep 15 10:22 /tmp/tmp.7WT247IVW4
 -rw------- 1 ana ana    0 Sep 15 10:22 /tmp/tmp.GCpTPnFgyN
 ```
 
-`700` and `600` — section 57's octal. With no template at all it picks the name and the directory
-itself, which is the spelling to use when you do not care where it lands.
+`700` and `600` — lesson 4 section 04's octal. With no template at all it picks the name and the
+directory itself, which is the spelling to use when you do not care where it lands.
 
 **A temporary directory is usually better than a temporary file**, because a script that needs one
 scratch file usually ends up needing three, and one `rm -rf` cleans up all of them.
@@ -115,13 +115,14 @@ thing and then exit. One cleanup, one place, reached however the script ends.
 | `EXIT` | any exit. **The one you want for cleanup** |
 | `INT` | Ctrl-C |
 | `TERM` | `kill`, and what a service manager sends on stop |
-| `HUP` | the terminal went away (section 96) |
+| `HUP` | the terminal went away (lesson 6 section 11) |
 | `ERR` | bash's own: any command that would trip `set -e` |
 
-Section 93's rule still holds: **`KILL` cannot be trapped.** `kill -9` gives your script no chance
-to clean up, which is one more reason to prefer plain `kill`.
+Lesson 6 section 08's rule still holds: **`KILL` cannot be trapped.** `kill -9` gives your script no
+chance to clean up, which is one more reason to prefer plain `kill`.
 
-And 130 as an exit status is not arbitrary: it is 128 plus signal 2, the convention from section 99.
+And 130 as an exit status is not arbitrary: it is 128 plus signal 2, the convention from lesson 6
+section 14.
 
 ## `trap … ERR` for a message
 

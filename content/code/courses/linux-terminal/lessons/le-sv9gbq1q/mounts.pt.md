@@ -203,4 +203,4 @@ em silêncio *antes* de reiniciar. O `mount -a` é o ensaio gratuito.
 | um compartilhamento de rede | NFS ou SMB, montado no diretório que você escolher |
 | o Windows, dentro do WSL | `/mnt/c` — o mesmo mecanismo, e a razão de ser mais lento |
 | um contêiner | o sistema de arquivos dele é todo montagem, e o `-v` do `docker run` acrescenta uma |
-| `/proc`, `/sys`, `/dev` | montados, e em disco nenhum — seção 49 |
+| `/proc`, `/sys`, `/dev` | montados, e em disco nenhum — seção 14 |

@@ -35,12 +35,12 @@ um pacote, um temporizador ou um disco.
 | `R` | **rodando**, ou pronto para rodar. Ele quer o processador |
 | `S` | **dormindo**, de forma interruptível — esperando algo, e um sinal o acorda |
 | `D` | **sono ininterruptível** — esperando o kernel, e um sinal **não** o acorda |
-| `T` | **parado** — suspenso por um sinal, normalmente `Ctrl+Z`. Seção 95 |
+| `T` | **parado** — suspenso por um sinal, normalmente `Ctrl+Z`. Seção 10 |
 | `Z` | **zumbi** — terminou, e o código de saída dele não foi recolhido |
 | `I` | thread de kernel **ociosa**. Não é problema, e existem muitas |
 
 **`R` não quer dizer "usando o processador agora".** Quer dizer que ele está na fila de execução —
-ele usaria um processador se houvesse um livre. Essa distinção é a carga média inteira da seção 92.
+ele usaria um processador se houvesse um livre. Essa distinção é a carga média inteira da seção 07.
 
 ## As letras extras depois do estado
 
@@ -49,10 +49,10 @@ O segundo e o terceiro caractere são marcadores, e três deles vale reconhecer:
 | | |
 |---|---|
 | `s` | é um **líder de sessão** — normalmente um shell de login ou um daemon |
-| `l` | é **multi-thread** — as threads da seção 87 |
-| `<` | prioridade alta, um valor de nice negativo — seção 97 |
+| `l` | é **multi-thread** — as threads da seção 02 |
+| `<` | prioridade alta, um valor de nice negativo — seção 12 |
 | `N` | prioridade baixa, um valor de nice positivo |
-| `+` | está em **primeiro plano** no terminal dele — seção 95 |
+| `+` | está em **primeiro plano** no terminal dele — seção 10 |
 
 Então `Ss` é um líder de sessão dormindo, que é o que o seu shell é. `SN` é algo dormindo e
 educadamente despriorizado. `I<` é uma thread de kernel ociosa de prioridade alta, e há vinte e
@@ -90,7 +90,7 @@ para nomear.
 
 A primeira linha é outro script, de uma tentativa anterior, ainda rodando, e ela está na saída só
 porque tem a palavra `zombie` no nome. **É isso que procurar processos com `grep` te dá**: tudo cuja
-linha de comando contém a string, relacionado ou não. O `pgrep` da seção 90 é a versão que não faz
+linha de comando contém a string, relacionado ou não. O `pgrep` da seção 05 é a versão que não faz
 isso com você.
 
 **Um zumbi não está usando nada.** Nem memória, nem processador, nem arquivos abertos. O que ele
@@ -126,7 +126,7 @@ razões que o `top` não consegue mostrar.
 ## `T` — parado, e ele está esperando você
 
 Um processo em `T` foi suspenso e não está usando nada. O `Ctrl+Z` põe a sua tarefa de primeiro
-plano ali, e a seção 95 é sobre trazê-la de volta. `kill -STOP` põe qualquer processo ali, e
+plano ali, e a seção 10 é sobre trazê-la de volta. `kill -STOP` põe qualquer processo ali, e
 `kill -CONT` o retoma.
 
 **Um processo parado parece morto e não está.** Ele segura a memória, os arquivos e as travas dele, e

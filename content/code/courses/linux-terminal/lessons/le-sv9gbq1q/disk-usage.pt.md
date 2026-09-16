@@ -44,7 +44,7 @@ Filesystem       Inodes  IUsed    IFree IUse% Mounted on
 /dev/vda       16777216 210406 16566810    2% /
 ```
 
-`-i` conta **inodes** em vez de bytes. A seção 46 apresentou: um por arquivo, e um sistema de
+`-i` conta **inodes** em vez de bytes. A seção 11 apresentou: um por arquivo, e um sistema de
 arquivos é criado com uma quantidade fixa deles.
 
 Então um sistema de arquivos pode estar 4% cheio e ainda assim se recusar a criar um arquivo,
@@ -92,7 +92,7 @@ ana@vm:~/work$ du -h --max-depth=1 | sort -h
 
 **Rode `du` em `/` e você vai esperar**, porque ele percorre todo arquivo da máquina. Num servidor
 grande comece por `/var` — que é onde as coisas crescem — e ponha `2>/dev/null` no fim, pelo mesmo
-motivo que o `find` precisou na seção 44.
+motivo que o `find` precisou na seção 09.
 
 ## Por que os números nunca são bem os tamanhos
 
@@ -138,7 +138,7 @@ Um arquivo de 30 MB foi criado, um programa foi deixado lendo, e ele foi apagado
 diz 24 KB e o `df` diz que 31 MB estão em uso**, no mesmo sistema de arquivos, no mesmo instante.
 Os dois estão falando a verdade.
 
-A seção 46 explicou por quê. O `rm` remove um *nome*. Os dados ficam até a última referência sumir
+A seção 11 explicou por quê. O `rm` remove um *nome*. Os dados ficam até a última referência sumir
 — e um descritor de arquivo aberto é uma referência, exatamente como um nome é. O `du` percorre
 nomes, então não tem como ver este arquivo. O sistema de arquivos conta blocos, então tem.
 

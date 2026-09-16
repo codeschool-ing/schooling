@@ -29,7 +29,7 @@ total 8
 573516 -rw-r--r-- 2 ana ana 13 Sep 14 22:20 report.txt
 ```
 
-Dois nomes. **Um inode.** E a contagem de links — o campo 3 da seção 41 — foi de `1` para `2`,
+Dois nomes. **Um inode.** E a contagem de links — o campo 3 da seção 06 — foi de `1` para `2`,
 porque aquele campo é exatamente *quantos nomes apontam para cá*.
 
 Nada foi copiado. Não existe original e cópia; existem dois nomes de mesma estatura, e o sistema de
@@ -76,7 +76,7 @@ total 4
 Três diferenças em relação a um hard link, e cada uma importa:
 
 - **inode próprio**, `573519` — é uma coisa separada no disco;
-- **tipo `l`** na primeira coluna — o campo 1 da seção 41, pagando o aluguel;
+- **tipo `l`** na primeira coluna — o campo 1 da seção 06, pagando o aluguel;
 - **tamanho 10**, que é o comprimento da string `report.txt`. Um link simbólico é só isso: um
   arquivo minúsculo cujo conteúdo é um caminho.
 
@@ -132,7 +132,7 @@ para sempre.
 
 Na prática: **você vai usar links simbólicos, quase sempre.** Hard links aparecem em ferramentas de
 backup que deduplicam, e na resposta para "por que apagar o log não liberou espaço nenhum" — seção
-48.
+13.
 
 ## Relativo e absoluto, de novo
 
@@ -168,7 +168,7 @@ e você se perdeu.
 
 ## Onde você vai encontrá-los de verdade
 
-**`/bin`, `/lib`, `/sbin`.** As setas da seção 37:
+**`/bin`, `/lib`, `/sbin`.** As setas da seção 02:
 
 ```
 ana@vm:~/work$ ls -l /bin
@@ -178,7 +178,7 @@ drwxr-xr-x 2 root root 36864 Mar 31 13:31 /bin/
 ```
 
 Com `-l`, o `ls` descreve o link. Com uma barra no fim, ele atravessa. É o mesmo par de comandos
-que a seção 40 te mostrou, e agora você sabe por que eles diferem.
+que a seção 05 te mostrou, e agora você sabe por que eles diferem.
 
 **Software versionado.** `/usr/lib/libssl.so.3` é real; `/usr/lib/libssl.so` é um link simbólico
 para ele. Atualizar move o link, e nada que se referia ao nome curto precisa mudar.

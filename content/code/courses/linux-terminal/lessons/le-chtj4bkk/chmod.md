@@ -19,7 +19,7 @@ chmod  [ugoa]  [+-=]  [rwx]  file
 ```
 
 **Who**: `u` owner, `g` group, `o` other, `a` all three. Leave it out and it means `a`, filtered by
-your umask — which is section 62, and a good reason to be explicit.
+your umask — which is section 09, and a good reason to be explicit.
 
 **How**: `+` add, `-` remove, `=` set exactly this and clear the rest of that row.
 
@@ -83,7 +83,7 @@ and stating a shape in one word is clearer than arriving at it in three steps.
 **Use symbolic when you want to change one thing.** `chmod +x` on a script you downloaded says
 exactly what you mean and cannot accidentally open the file to the world.
 
-There is one trap worth repeating from section 57: **a three-digit number clears the special
+There is one trap worth repeating from section 04: **a three-digit number clears the special
 bits.** `chmod 755` on a file that was `4755` silently turns setuid off. Symbolic form does not do
 that.
 
@@ -154,5 +154,5 @@ chmod: changing permissions of 'teamonly.txt': Operation not permitted
 Bruno is in `team`. He can read the file. He cannot decide who else may.
 
 Note the wording: **`Operation not permitted`, not `Permission denied`.** The second means the bits
-said no; the first means you are not allowed to attempt this at all. Section 60 is about how
-ownership moves, and section 64 is about the one account that ignores all of it.
+said no; the first means you are not allowed to attempt this at all. Section 07 is about how
+ownership moves, and section 11 is about the one account that ignores all of it.

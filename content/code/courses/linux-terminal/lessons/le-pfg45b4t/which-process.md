@@ -33,12 +33,12 @@ interval, prints plain lines, and has a flag per resource:
 | `pidstat -t` | per **thread**, not per process |
 
 Four columns above are worth naming. `%usr` and `%system` split the work the way
-section 179 did. `%wait` is time the process spent **runnable but not running** —
+section 04 did. `%wait` is time the process spent **runnable but not running** —
 waiting for a core — which is per-process saturation and is not in `top`. And
 `CPU` is which core it was last on.
 
-The `claude` process at 1.98% is this machine being a sandbox, as section 91
-explained: PID 103 is the agent that drives these captures, and it is in every
+The `claude` process at 1.98% is this machine being a sandbox, as lesson 6 section
+06 explained: PID 103 is the agent that drives these captures, and it is in every
 process listing in this course because it is genuinely there.
 
 ## For disk

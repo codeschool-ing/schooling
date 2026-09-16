@@ -41,7 +41,7 @@ você define.
 
 ## Isso faz alguma coisa de verdade?
 
-Duas cópias do laço ocupado da seção 92, presas ao **mesmo** processador com o `taskset` para que
+Duas cópias do laço ocupado da seção 07, presas ao **mesmo** processador com o `taskset` para que
 tenham que dividi-lo, uma no padrão e uma em 19:
 
 ```
@@ -123,7 +123,7 @@ pertence para um serviço, porque ele sobrevive a reinícios e um comando de she
 **Ele não limita memória.** Um processo em nice 19 que aloca tudo derruba a máquina do mesmo jeito. A
 niceness é sobre tempo de processador e nada mais.
 
-**Ele não ajuda quando o problema é entrada e saída.** A coluna `wa` da seção 92: um processo preso
+**Ele não ajuda quando o problema é entrada e saída.** A coluna `wa` da seção 07: um processo preso
 esperando um disco não está competindo por processador nenhum, então baixar a prioridade dele não
 muda nada. Para isso há um botão separado:
 

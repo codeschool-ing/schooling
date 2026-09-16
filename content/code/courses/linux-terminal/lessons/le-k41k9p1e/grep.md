@@ -43,7 +43,7 @@ logs/app.log:app started
 the noise", and `grep -v` chained two or three times is how that gets written.
 
 **`-l` is for finding which file**, not what is in it. `grep -rl TODO src/` gives you a list of
-filenames you can pass to something else — which is section 134's `xargs`.
+filenames you can pass to something else — which is section 16's `xargs`.
 
 And note that `grep -r logs/` printed `logs/app.log:` in front of each line. **`grep` prefixes the
 filename whenever it is searching more than one file**, which is helpful on screen and a nuisance in
@@ -105,8 +105,8 @@ and it is how a script asks "is this in the file":
 if grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config; then ...
 ```
 
-Section 99's warning applies here: under `set -e`, a `grep` that finds nothing stops the script,
-because "no match" is a non-zero status. In an `if`, or with `|| true`, it is fine.
+Lesson 6 section 14's warning applies here: under `set -e`, a `grep` that finds nothing stops the
+script, because "no match" is a non-zero status. In an `if`, or with `|| true`, it is fine.
 
 ## Which grep are you running
 
@@ -135,7 +135,7 @@ tax with no benefit. **Use `-F` when the pattern is user input or contains dots,
 slashes** — searching for an IP address, a version number or a path is the common case, and `-F` is
 both correct and faster.
 
-Section 125 is the pattern language itself.
+Section 07 is the pattern language itself.
 
 ## Two more worth knowing
 

@@ -3,8 +3,8 @@ title: The hierarchy, directory by directory
 version: 1
 ---
 
-Section 13 gave you eight names so you could stop feeling lost. This is the full map, and the
-point of it is not memorisation — it is that **the shape is standardised**, so a directory you
+Lesson 1 section 13 gave you eight names so you could stop feeling lost. This is the full map, and
+the point of it is not memorisation — it is that **the shape is standardised**, so a directory you
 have never seen on a distribution you have never used still tells you what is in it.
 
 The document is called the Filesystem Hierarchy Standard. Nobody reads it. Everybody follows it.
@@ -35,10 +35,10 @@ Before the table, two things that listing just told you for free.
 
 **Four of them are arrows.** `/bin`, `/lib`, `/sbin` and `/lib64` are not directories at all —
 they are symlinks pointing into `/usr`. That is the *usr merge*, finished across every mainstream
-distribution between 2012 and 2023, and section 46 explains what a symlink is. For now: `/bin/ls`
+distribution between 2012 and 2023, and section 11 explains what a symlink is. For now: `/bin/ls`
 and `/usr/bin/ls` are the same file reached by two names.
 
-**`/proc` and `/sys` have size zero.** Not empty — zero. Nothing in them is on a disk. Section 49
+**`/proc` and `/sys` have size zero.** Not empty — zero. Nothing in them is on a disk. Section 14
 is about what they actually are.
 
 ## The whole map

@@ -94,7 +94,7 @@ o arquivo como somente leitura — ele avisou `W10: Warning: Changing a readonly
 file` no instante em que a edição foi feita — e se recusa a salvar.
 
 **O `:w!` passa da opção `readonly` e então falha na permissão**, porque o
-arquivo é do root e você não é (seção 55). As respostas de verdade são:
+arquivo é do root e você não é (aula 4 seção 02). As respostas de verdade são:
 
 ```sh
 sudoedit /etc/hostname        # edits a copy as you, installs it as root
@@ -102,7 +102,7 @@ sudo vim /etc/hostname        # runs the whole editor as root
 :w !sudo tee %                # the famous trick, from inside vim
 ```
 
-**O `sudoedit` é o certo** e está na seção 205. O `sudo vim` roda um editor
+**O `sudoedit` é o certo** e está na seção 13. O `sudo vim` roda um editor
 inteiro, com arquivo de configuração e plugins, como root, que é uma superfície
 maior do que o trabalho pede.
 

@@ -127,7 +127,7 @@ runs twice.
 | set servers to UTC | and stop having this problem |
 | schedule outside 01:00–03:00 | in any zone that changes, that window is the one that breaks |
 | write the zone in a comment | on every line where local time was the point |
-| make the job idempotent | section 225, and the reason a double run is survivable |
+| make the job idempotent | section 16, and the reason a double run is survivable |
 
 **"Outside 01:00–03:00" is the cheap fix nobody applies.** A report at 04:15
 local runs 365 times a year in every zone on earth; the same report at 02:15 runs

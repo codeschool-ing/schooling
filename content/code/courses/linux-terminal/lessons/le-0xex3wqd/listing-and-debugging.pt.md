@@ -88,14 +88,14 @@ Nesta ordem, porque cada item é mais barato que o seguinte:
 3. **O cron tentou?** `grep CRON /var/log/syslog`. Uma linha `CMD` quer dizer que
    o job começou e o problema está dentro dele; nenhuma linha quer dizer que a
    agenda está errada ou que o cron nunca leu o arquivo.
-4. **A agenda é o que você quis dizer?** A regra do OU da seção 213, o `*/15`
+4. **A agenda é o que você quis dizer?** A regra do OU da seção 04, o `*/15`
    contando a partir do zero, e para um timer, o `systemd-analyze calendar` na
    string exata.
 5. **O arquivo tem o nome certo?** Um ponto num nome do `/etc/cron.d`, ou uma
    quebra de linha final faltando, e o arquivo é ignorado sem uma palavra.
-6. **É o ambiente?** O `env -i` da seção 215, que reproduz a falha no seu terminal
+6. **É o ambiente?** O `env -i` da seção 06, que reproduz a falha no seu terminal
    em dez segundos.
-7. **Ele ainda está rodando da vez passada?** Seção 223. Dê um `ps -ef | grep` no
+7. **Ele ainda está rodando da vez passada?** Seção 14. Dê um `ps -ef | grep` no
    comando, e olhe há quanto tempo ele está lá.
 
 **Os passos 3 e 6 juntos cobrem a maior parte**, e os dois levam dez segundos. A

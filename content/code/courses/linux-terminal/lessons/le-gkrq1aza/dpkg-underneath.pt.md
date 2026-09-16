@@ -35,7 +35,7 @@ Errors were encountered while processing:
 ```
 
 Leia na ordem em que aconteceu. **O `Unpacking` deu certo** — os arquivos estão no disco agora. **O
-configurar não**, porque a dependência da seção 104 está faltando. O dpkg diz isso com precisão,
+configurar não**, porque a dependência da seção 02 está faltando. O dpkg diz isso com precisão,
 nomeia o pacote, e para.
 
 O `apt-get download` vale ser notado por si só: ele busca um `.deb` para o diretório atual e não
@@ -49,14 +49,14 @@ root@vm:/tmp# dpkg -l cowsay | tail -1
 iU  cowsay         3.03+dfsg2-8 all          configurable talking cow
 ```
 
-**`iU`**, e as duas letras são os dois passos da seção 106:
+**`iU`**, e as duas letras são os dois passos da seção 04:
 
 | | |
 |---|---|
 | `i` | **desejado**: alguém quer isto instalado |
 | `U` | **estado**: desempacotado, e não configurado |
 
-A legenda da seção 107 soletra isso toda vez que o `dpkg -l` roda, e este é o momento em que ela
+A legenda da seção 05 soletra isso toda vez que o `dpkg -l` roda, e este é o momento em que ela
 ganha as três linhas dela. **Uma segunda letra maiúscula é ruim**, o que a legenda também diz.
 
 ## E meio instalado não é teórico
@@ -143,4 +143,4 @@ A regra prática entre os dois: **`--configure -a` quando nada falta e algo foi 
 `--fix-broken install` quando algo falta.** Rodar o errado primeiro é inofensivo; ele vai te dizer.
 
 O `rpm` é a mesma camada na outra família, com a mesma propriedade — o `rpm -i` também não resolve
-dependências — e a seção 112 o mostra recusando pelo mesmo motivo.
+dependências — e a seção 10 o mostra recusando pelo mesmo motivo.

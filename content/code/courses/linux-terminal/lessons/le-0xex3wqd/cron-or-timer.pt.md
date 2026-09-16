@@ -11,7 +11,7 @@ version: 1
 | **onde** | todo Unix, desde 1975 | toda máquina com systemd |
 | **menor intervalo** | um minuto | um segundo |
 | **sintaxe de calendário** | cinco campos | mais rica, e **conferível** |
-| **os dois campos de dia** | OU — seção 213 | E |
+| **os dois campos de dia** | OU — seção 04 | E |
 | **execuções perdidas** | perdidas | `Persistent=true` |
 | **execuções sobrepostas** | por sua conta | impedidas |
 | **saída** | por e-mail, se houver MTA | o journal |
@@ -39,7 +39,7 @@ coisa que você senão escreveria à mão e erraria:
 
 | | |
 |---|---|
-| o job não pode se sobrepor | seção 223 |
+| o job não pode se sobrepor | seção 14 |
 | a máquina fica desligada parte do tempo | `Persistent=true` |
 | o job precisa da rede, ou de uma montagem | `After=network-online.target` |
 | a saída importa e não há MTA | o journal |
@@ -69,7 +69,7 @@ definição que mora num repositório em vez de numa máquina.
 A troca é que o agendador agora é o sistema de outra pessoa, com os modos de falha
 dele e o lugar dele para olhar.
 
-**O que não muda é a seção 225.** Seja o que for que inicie o job, o job ainda tem
+**O que não muda é a seção 16.** Seja o que for que inicie o job, o job ainda tem
 que ser seguro para rodar duas vezes, dizer alguma coisa quando falha, e parar
 quando demora demais. Essa é a metade desta aula que sobrevive a qualquer
 agendador que você esteja usando neste ano.

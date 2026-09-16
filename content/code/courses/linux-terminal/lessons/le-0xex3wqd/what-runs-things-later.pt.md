@@ -63,7 +63,7 @@ Cada um desses é resolvido, de uma vez, pelos agendadores abaixo.
 
 Esta aula é sobre os quatro primeiros. O quinto importa e é documentação de
 outra pessoa, tirando uma coisa que ele compartilha com todos os outros, que é o
-assunto da seção 225.
+assunto da seção 16.
 
 ## Quais deles estão nesta máquina
 

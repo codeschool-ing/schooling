@@ -15,7 +15,7 @@ drive this**, and the differences are nameable.
 |---|---|
 | **SLE** | SUSE Linux Enterprise. The paid product, with long support — Server is `SLES`, Desktop is `SLED` |
 | **openSUSE Leap** | free, built from the same sources as SLE, and version-aligned with it |
-| **openSUSE Tumbleweed** | free, **rolling** — always current, never a version upgrade. Section 29 |
+| **openSUSE Tumbleweed** | free, **rolling** — always current, never a version upgrade. Section 08 |
 
 Leap and SLE being built from the same sources is the useful part: it is the same relationship
 Rocky has with RHEL, arranged deliberately by SUSE rather than reconstructed by volunteers.

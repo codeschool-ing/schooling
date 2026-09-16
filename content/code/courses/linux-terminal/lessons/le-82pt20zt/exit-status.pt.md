@@ -3,8 +3,8 @@ title: Modo estrito, e os quatro lugares em que ele não ajuda
 version: 1
 ---
 
-A seção 99 estabeleceu o que é um código de saída: zero para sucesso, qualquer outra coisa para
-falha, no `$?`. Um script também tem um, e é o que você deu ao `exit`:
+A aula 6 seção 14 estabeleceu o que é um código de saída: zero para sucesso, qualquer outra coisa
+para falha, no `$?`. Um script também tem um, e é o que você deu ao `exit`:
 
 ```
 ana@vm:~/work/scripts$ cat status.sh; ./status.sh; echo "exit status was $?"

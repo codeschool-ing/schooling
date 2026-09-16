@@ -208,6 +208,175 @@ func checkFigureFonts(school string, s *catalog.School, families map[string]bool
 }
 
 /*
+A SECTION REFERENCE THAT NAMES A NUMBER NO SCREEN SHOWS.
+
+	The interface numbers sections WITHIN a lesson — `ui/app/screens/lesson.js`
+	draws `01`, `02`, `03` down the tabs — and lessons within a course, in
+	`rail.js` and `screens/course.js`. Nothing anywhere renders a course-wide
+	index.
+
+	So prose that says "section 111" names a number the reader cannot find. In
+	`linux-terminal` that was 991 references across both languages, counted
+	course-wide from the first section of the first lesson: the highest was 225,
+	and the course's longest lesson has 21 sections.
+
+	THE QUIET HALF IS WORSE THAN THE LOUD ONE. A reference over the count is
+	unresolvable and at least looks it. A reference UNDER it resolves — to the
+	tab with that number in whatever lesson the reader is in, which is a
+	different section, with no sign that anything went wrong. Fifty-eight of them
+	were in that range.
+
+	The rule is the same for both: a reference may only name a number its lesson
+	actually has. Which lesson that is comes from the sentence when it says
+	("lesson 4 section 08", "section 08 of lesson 4") and from the section it is
+	written in when it does not.
+*/
+func checkSectionReferences(school string, s *catalog.School) []error {
+	var problems []error
+
+	// `section 8`, `sections 04 and 09`, `seção 12`, `seções 04 a 11` — with an
+	// optional trailing "of lesson N" / "da aula N".
+	ref := regexp.MustCompile(`(?i)\b(?:sections?|se[çc][õo]es|se[çc][ãa]o)\s+` +
+		`(\d+(?:\s*(?:and|to|or|e|a|at[ée]|ou|,|&)\s*\d+)*)` +
+		`(?:\s+(?:of|de|da)\s+(?:lesson|aula)\s+(\d+))?`)
+	// The other order, which this catalogue also writes: "lesson 4 section 08".
+	before := regexp.MustCompile(`(?i)(?:lesson|aula)\s+(\d+)\s*$`)
+	digits := regexp.MustCompile(`\d+`)
+
+	for _, course := range s.Courses {
+		// How many sections each lesson has, by its position in the course —
+		// which is the number the rail and the tabs draw.
+		count := make([]int, len(course.Loaded)+1)
+		for i, lesson := range course.Loaded {
+			count[i+1] = len(lesson.Sections)
+		}
+
+		for i, lesson := range course.Loaded {
+			here := i + 1
+
+			// THE SPOKEN SCRIPTS COUNT TOO, and they write the number as a word
+			// because an avatar cannot say "07". A script that said "section
+			// forty" would be exactly the same defect with none of the same
+			// spelling, and nothing was reading them.
+			type passage struct{ where, locale, body string }
+			var passages []passage
+			for _, t := range lesson.Text {
+				passages = append(passages, passage{t.SectionID, t.Locale, withoutFences(t.Body)})
+			}
+			for _, sec := range lesson.Sections {
+				for _, v := range sec.Videos {
+					passages = append(passages, passage{sec.ID, "script", spellOut(v.Script)})
+				}
+			}
+
+			for _, t := range passages {
+				body := t.body
+				for _, m := range ref.FindAllStringSubmatchIndex(body, -1) {
+					named := here
+					if m[4] >= 0 { // ...of lesson N
+						named, _ = strconv.Atoi(body[m[4]:m[5]])
+					} else if lead := before.FindStringSubmatch(
+						body[max(0, m[0]-24):m[0]]); lead != nil { // lesson N section...
+						named, _ = strconv.Atoi(lead[1])
+					}
+					limit := 0
+					if named >= 0 && named < len(count) {
+						limit = count[named]
+					}
+					for _, d := range digits.FindAllString(body[m[2]:m[3]], -1) {
+						n, _ := strconv.Atoi(d)
+						if n <= limit {
+							continue
+						}
+						problems = append(problems, fmt.Errorf(
+							"%s: %s/%s/%s (%s): %q points at section %d of lesson %d, which has %d "+
+								"sections — the tabs are numbered within a lesson and no screen "+
+								"shows a course-wide number, so the reader cannot find it",
+							school, course.ID, lesson.ID, t.where, t.locale,
+							firstChars(body[m[0]:m[1]]), n, named, limit))
+					}
+				}
+			}
+		}
+	}
+	return problems
+}
+
+// A script's spoken numbers, written back as digits so that one rule reads both
+// halves of a lesson.
+//
+// A narrator says "section seventeen", not "section 17", and a check that only
+// knew digits would have read every script as clean.
+//
+// THE CLOSING `\b` IS WHAT STOPS `seven` EATING `seventeen`, and it is worth
+// naming because the obvious guess is wrong. The throwaway version of this in
+// Python had no trailing boundary and reported four spoken references, three of
+// which were the word `seven` inside a longer one. Ordering the alternation
+// longest-first also fixes it, and was what I reached for first — but with the
+// boundary in place the order makes no difference at all, which
+// `TestSeventeenIsNotSeven` is here to keep true:
+//
+//	\b(?:seven|seventeen)\b   -> "seventeen"
+//	\b(?:seven|seventeen)     -> "seven"
+func spellOut(script string) string {
+	return spoken.ReplaceAllStringFunc(script, func(w string) string {
+		if n, ok := spokenNumbers[strings.ToLower(w)]; ok {
+			return strconv.Itoa(n)
+		}
+		return w
+	})
+}
+
+// Twenty is as far as this goes on purpose: the longest lesson in the catalogue
+// has twenty-one sections, and a narrator saying a compound number ("section
+// twenty-two") is naming something that does not exist in any lesson, which the
+// digits either side of it will already have said.
+var spokenNumbers = map[string]int{
+	"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+	"eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+	"fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18,
+	"nineteen": 19, "twenty": 20,
+	"um": 1, "dois": 2, "três": 3, "quatro": 4, "cinco": 5, "seis": 6, "sete": 7,
+	"oito": 8, "nove": 9, "dez": 10, "onze": 11, "doze": 12, "treze": 13,
+	"catorze": 14, "quatorze": 14, "quinze": 15, "dezesseis": 16, "dezessete": 17,
+	"dezoito": 18, "dezenove": 19, "vinte": 20,
+}
+
+var spoken = func() *regexp.Regexp {
+	words := make([]string, 0, len(spokenNumbers))
+	for w := range spokenNumbers {
+		words = append(words, w)
+	}
+	// Sorted so the pattern is the same string on every run: a map's order is
+	// not, and a checker whose regexp differs between two runs is one whose
+	// failures cannot be reproduced. The order does not affect what it matches
+	// — see the note above — only that it is stable.
+	sort.Strings(words)
+	return regexp.MustCompile(`(?i)\b(?:` + strings.Join(words, "|") + `)\b`)
+}()
+
+// The body with its fenced blocks taken out. A transcript may say anything;
+// only the prose around it is this file's business.
+func withoutFences(body string) string {
+	var out strings.Builder
+	fence := false
+	for _, line := range strings.Split(body, "\n") {
+		if strings.HasPrefix(line, "```") {
+			fence = !fence
+			out.WriteString("\n")
+			continue
+		}
+		if fence {
+			out.WriteString("\n")
+			continue
+		}
+		out.WriteString(line)
+		out.WriteString("\n")
+	}
+	return out.String()
+}
+
+/*
 A LINE THAT BEGINS WITH A PIPE AND IS NOT A TABLE.
 
 	`blocksOf` in `ui/app/api.js` reads a table by its SECOND line: the `---`
@@ -504,6 +673,12 @@ func check(root string) (problems []error, schools int, err error) {
 		// have now lived inside an SVG, where nothing was reading.
 		problems = append(problems, checkFigureFonts(entry.Name(), school, families)...)
 		problems = append(problems, checkPipeLines(entry.Name(), school)...)
+
+		// AND THAT A CROSS-REFERENCE POINTS AT SOMETHING THE READER CAN FIND.
+		// See `checkSectionReferences`: the numbering on screen is per lesson,
+		// and a course-wide number resolves nowhere — or worse, resolves to the
+		// wrong section without saying so.
+		problems = append(problems, checkSectionReferences(entry.Name(), school)...)
 
 		// AND THE CHARACTERS THEMSELVES, which is a different question from the
 		// family: a block can name the right font and still be drawn with a

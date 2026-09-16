@@ -114,7 +114,7 @@ rm .server.conf.swp
 
 ## Tela quatro: o terminal, não o vim
 
-Às vezes o vim está bem e o terminal não. Os dois casos da seção 8:
+Às vezes o vim está bem e o terminal não. Os dois casos da aula 1 seção 08:
 
 | | |
 |---|---|

@@ -55,7 +55,7 @@ Set-Service -Name 'Spooler' -StartupType Disabled
 
 The shape is the same as everything you have seen: objects with a `Status`, a
 `StartMode` and a `DisplayName`, filtered with `Where-Object`. This is
-section 78's `systemctl` with the parsing removed — `systemctl is-active` gives
+lesson 5 section 09's `systemctl` with the parsing removed — `systemctl is-active` gives
 you a word to compare, `Get-Service` gives you a property.
 
 ## CIM and WMI — the machine as objects
@@ -105,7 +105,7 @@ Enter-PSSession -ComputerName web01
 This is the one worth understanding even from a distance, because it is genuinely
 different from `ssh`.
 
-**`ssh host 'command'` sends text and receives text.** Section 75 showed exactly
+**`ssh host 'command'` sends text and receives text.** Lesson 5 section 06 showed exactly
 that, and anything you want to do with the result you parse.
 
 **`Invoke-Command` sends a script block and receives objects.** They are
@@ -133,7 +133,7 @@ PowerShell is not optional in a Windows shop** — there is no other supported w
 to change ten thousand accounts, and the GUI does one at a time.
 
 Note `-Filter`: it is handed to the directory server, which is the filtering-left
-argument from section 162 at the scale where it stops being an optimisation and
+argument from section 05 at the scale where it stops being an optimisation and
 becomes the difference between a query and a timeout.
 
 ## Two versions, and which one you will meet
@@ -148,6 +148,6 @@ The executables are even named differently — `powershell.exe` against
 
 **Assume 5.1 on a server you did not set up.** Most of this lesson is identical
 on it; the differences that will catch you are `.Count` on a single object
-(section 166), `ConvertTo-Json -Depth`, ternary and null-coalescing operators
+(section 09), `ConvertTo-Json -Depth`, ternary and null-coalescing operators
 that 5.1 does not have, and `Get-WmiObject` still being present there and gone
 here.

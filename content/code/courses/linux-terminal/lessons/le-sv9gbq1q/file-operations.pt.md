@@ -204,5 +204,5 @@ Se `dest` não existe, `src` é renomeado para `dest`. Se `dest` **existe** e é
 movido *para dentro* dele, e você fica com `dest/src`. O mesmo comando, dois resultados, decididos
 por algo que não está na linha.
 
-Essa é a armadilha que a seção 39 prometeu. A conferência é a mesma de todo o resto desta seção: dê
+Essa é a armadilha que a seção 04 prometeu. A conferência é a mesma de todo o resto desta seção: dê
 `ls` no destino antes.

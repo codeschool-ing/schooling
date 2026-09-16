@@ -38,7 +38,7 @@ ${p%/*}      # dirname,  without a process
 O gancho para lembrar qual é qual: **o `#` fica à esquerda do `$` num teclado e o `%` fica à
 direita.** É um mnemônico bobo e funciona.
 
-O padrão é um glob, não uma expressão regular — a sintaxe da seção 45, a mesma do `case`.
+O padrão é um glob, não uma expressão regular — a sintaxe da aula 3 seção 10, a mesma do `case`.
 
 ### Extensões
 
@@ -73,7 +73,7 @@ bash: v: the script needs v
 
 O `:-` é o do dia a dia — `rows="${2:-5}"`, `"${LOG_LEVEL:-info}"`.
 
-**O `:?` é o que te salva do caminho vazio da seção 141.** Sob `set -u` uma variável não definida já
+**O `:?` é o que te salva do caminho vazio da seção 04.** Sob `set -u` uma variável não definida já
 dá erro; o `:?` acrescenta a sua própria mensagem e também pega a variável que está definida mas
 vazia, o que o `-u` não pega.
 
@@ -89,7 +89,7 @@ ana@vm:~/work/scripts$ T=abc; echo "[${T:+-H \"auth $T\"}]"
 Nada quando a variável não está definida, a opção inteira quando está — que é como
 `curl ${TOKEN:+-H "Authorization: Bearer $TOKEN"} "$url"` manda o cabeçalho só quando há um token.
 
-E lembre dos dois pontos da seção 140: sem eles, o teste é só "não definida", e uma string vazia
+E lembre dos dois pontos da seção 03: sem eles, o teste é só "não definida", e uma string vazia
 conta como valor.
 
 ```
@@ -111,7 +111,7 @@ ana@vm:~/work/scripts$ echo "${p/log/LOG}"; echo "${p//log/LOG}"
 ```
 
 **Uma barra substitui a primeira ocorrência, duas barras substituem todas** — a mesma distinção da
-opção `g` do `sed` na seção 131, e a mesma ordem de surpresa.
+opção `g` do `sed` na aula 8 seção 13, e a mesma ordem de surpresa.
 
 ```
 ana@vm:~/work/scripts$ echo "[${p//log/}]"; s=logfile; echo "[${s/#log/X}] [${s/%file/Y}]"

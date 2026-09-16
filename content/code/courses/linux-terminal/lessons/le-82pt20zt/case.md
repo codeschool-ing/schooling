@@ -30,7 +30,7 @@ The shape:
 | | |
 |---|---|
 | `case "$x" in` | the value, quoted |
-| `pattern)` | a **glob**, not a regular expression — section 45's syntax |
+| `pattern)` | a **glob**, not a regular expression — lesson 3 section 10's syntax |
 | `a\|b)` | alternatives, with `\|` |
 | `;;` | end of this branch. Easy to forget, and a syntax error when you do |
 | `*)` | the catch-all. Put it last; it matches everything |
@@ -50,8 +50,8 @@ need them.)
 
 ## The one thing everybody writes with it
 
-Every script that takes options ends up with this loop. It is `while` from section 147, `shift`
-from section 142, and `case`:
+Every script that takes options ends up with this loop. It is `while` from section 10, `shift`
+from section 05, and `case`:
 
 ```
 ana@vm:~/work/scripts$ cat deploy.sh

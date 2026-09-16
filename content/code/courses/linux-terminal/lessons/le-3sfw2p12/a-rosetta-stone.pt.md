@@ -120,7 +120,7 @@ precisa converter nas duas pontas, e o `ConvertFrom-Json` só ajuda quando o out
 lado fala JSON.
 
 **Ele já está lá.** Toda máquina Linux tem bash; o PowerShell é um download e uma
-decisão. Esse é o mesmo argumento que a seção 115 fez sobre não sair da
+decisão. Esse é o mesmo argumento que a aula 7 seção 13 fez sobre não sair da
 distribuição, e ele se aplica aqui.
 
 **Então a regra não é que um é melhor.** É que no Windows os objetos são a única

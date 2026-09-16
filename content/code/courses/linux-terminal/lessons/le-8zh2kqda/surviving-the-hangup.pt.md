@@ -7,7 +7,7 @@ Você inicia algo longo, fecha a janela, e volta para descobrir que não termino
 descobrir que terminou. **Os dois acontecem, e qual deles você recebe é decidido por um único
 sinal.**
 
-O `SIGHUP` — hangup, "desligar" — é o sinal número 1 da seção 93, e o nome dele é literalmente sobre
+O `SIGHUP` — hangup, "desligar" — é o sinal número 1 da seção 08, e o nome dele é literalmente sobre
 modems: a linha telefônica caiu. O que ele quer dizer hoje é **o terminal a que este processo estava
 preso sumiu**.
 
@@ -61,7 +61,7 @@ $ ps -o pid,ppid,tty,stat,comm -p 2868,2870,2872
 **Duas das três continuam ali e uma sumiu.** A `2868`, a tarefa simples em segundo plano, foi morta
 pelo hangup. O `nohup` e o `disown` sobreviveram aos dois.
 
-E olhe no que as sobreviventes se tornaram: `PPID` igual a `1`, porque o pai delas sumiu e a seção 91
+E olhe no que as sobreviventes se tornaram: `PPID` igual a `1`, porque o pai delas sumiu e a seção 06
 as adotou, e `TT` igual a `?`, porque o terminal a que estavam presas não existe. **Essa é
 exatamente a forma do daemon da aula 5**, alcançada por acidente em vez de de propósito.
 
@@ -94,7 +94,7 @@ nohup ./long-job.sh > job.log 2>&1 &
 ```
 
 **O `disown` tira a tarefa da lista do bash**, então o passo 3 nunca acontece — o bash não manda um
-hangup para uma tarefa que ele esqueceu. A seção 95 mostrou a saída do `jobs` ficando vazia; é para
+hangup para uma tarefa que ele esqueceu. A seção 10 mostrou a saída do `jobs` ficando vazia; é para
 *isso* que ela esvazia.
 
 | | |
@@ -117,7 +117,7 @@ setsid ./long-job.sh > job.log 2>&1 &
 
 O `setsid` inicia o processo numa **sessão nova**, sem terminal de controle nenhum — então não há
 terminal para desligar e nada para herdar. Isso não é um contorno do sinal; é o processo
-genuinamente não estar mais preso ao seu login, que é o que a seção 76 da aula 5 disse que um daemon
+genuinamente não estar mais preso ao seu login, que é o que a seção 07 da aula 5 disse que um daemon
 é.
 
 ## O que usar no lugar de tudo isso

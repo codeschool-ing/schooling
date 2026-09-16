@@ -4,7 +4,7 @@ version: 1
 ---
 
 Uma variável comum guarda uma string. Ponha uma lista de nomes de arquivo numa delas, separados por
-espaços, e você recriou todos os problemas da seção 141. Um array guarda uma lista de valores e
+espaços, e você recriou todos os problemas da seção 04. Um array guarda uma lista de valores e
 preserva as fronteiras.
 
 ```
@@ -39,7 +39,7 @@ Um array que parece ter perdido tudo depois do primeiro item normalmente só per
 
 ## `"${arr[@]}"`, com as aspas
 
-Exatamente a mesma regra do `"$@"` da seção 142, pelo mesmo motivo:
+Exatamente a mesma regra do `"$@"` da seção 05, pelo mesmo motivo:
 
 ```
 ana@vm:/tmp/q2$ for h in "${hosts[@]}"; do echo "[$h]"; done
@@ -84,7 +84,7 @@ ana@vm:/tmp/q2$ cd /tmp/q2 && files=(*.txt); echo "${#files[@]} files: ${files[*
 
 **`files=(*.log)` é a forma segura de guardar uma lista de nomes de arquivo**, porque o shell
 montou a lista e cada nome é um elemento, com quantos espaços tiver. Combinado com o
-`shopt -s nullglob` da seção 147, o `${#files[@]}` é então uma contagem verdadeira, inclusive zero.
+`shopt -s nullglob` da seção 10, o `${#files[@]}` é então uma contagem verdadeira, inclusive zero.
 
 A partir da saída de um comando, a grafia é o `mapfile`:
 
@@ -111,7 +111,7 @@ rsync_opts=(-a --delete --exclude '*.tmp')
 rsync "${rsync_opts[@]}" src/ dst/
 ```
 
-Esta é a resposta ao problema do `cmd $FLAGS` da seção 141. A versão com string quebra no momento
+Esta é a resposta ao problema do `cmd $FLAGS` da seção 04. A versão com string quebra no momento
 em que uma opção tem espaço — o `--exclude '*.tmp'` vira três argumentos — e a versão com array não
 tem como, porque cada elemento continua sendo um argumento.
 

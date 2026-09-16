@@ -105,7 +105,7 @@ Because the failure tells you where to look, and that is most of debugging:
 | `Permission denied` | **the kernel** | the shell found it and asked; the kernel refused |
 | `Killed` | **the kernel** | the kernel stopped the program, usually because memory ran out (lesson 11) |
 | a mangled screen, text in the wrong place | **the terminal** | the drawing is confused, not the command — `reset` usually fixes it |
-| nothing happens, no new prompt | **the program** | it is running and has not finished. `Ctrl+C` is how you say stop, and section 8 explains what that key actually sends |
+| nothing happens, no new prompt | **the program** | it is running and has not finished. `Ctrl+C` is how you say stop, and section 08 explains what that key actually sends |
 
 Read the prefix on an error. `bash:` means bash is telling you. `ls:` means `ls` is telling you.
 `sudo:` means sudo is. The program that printed the message is the program that has a problem, and

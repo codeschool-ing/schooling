@@ -209,7 +209,7 @@ Change: 2026-09-14 21:58:33.143136437 +0000
 
 Everything `ls -l` shows and several things it does not. Two of them matter:
 
-**The inode number** — `573447` — is the filesystem's own name for this data, and section 46 is
+**The inode number** — `573447` — is the filesystem's own name for this data, and section 11 is
 built on it.
 
 **Three timestamps, not one:**

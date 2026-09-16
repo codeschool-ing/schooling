@@ -78,7 +78,7 @@ ii  cowsay         3.03+dfsg2-8 all          configurable talking cow
 
 **Aquelas três primeiras linhas são uma legenda, impressa toda vez, e são a chave do `ii`.** A
 primeira letra é o que você quer, a segunda é o que é verdade, a terceira é se há erro. O `ii` é
-"quer instalado, está instalado, sem erro" — e a seção 110 mostra um `rc` e a seção 109 mostra um
+"quer instalado, está instalado, sem erro" — e a seção 08 mostra um `rc` e a seção 07 mostra um
 `iU`.
 
 ## O que um pacote pôs no disco
@@ -131,10 +131,10 @@ dpkg-query: no path found matching pattern /usr/local/bin/python3
 
 **Nada é dono dele.** A aula 3 disse que o `/usr/local` é para software que você instalou, e esta é
 aquela frase com dentes: um arquivo ali não foi empacotado, não vai ser atualizado, não vai ser
-removido, e não vai ser mencionado por nada desta aula. Ele é seu. A seção 115 é sobre como esses
+removido, e não vai ser mencionado por nada desta aula. Ele é seu. A seção 13 é sobre como esses
 chegam lá.
 
-O `rpm -qf` é a mesma pergunta na outra família, e a seção 112 o usa.
+O `rpm -qf` é a mesma pergunta na outra família, e a seção 10 o usa.
 
 ## O arquivo que você ainda não tem
 

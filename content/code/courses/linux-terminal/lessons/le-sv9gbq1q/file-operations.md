@@ -204,5 +204,5 @@ If `dest` does not exist, `src` is renamed to `dest`. If `dest` **does** exist a
 `src` is moved *inside* it, giving you `dest/src`. Same command, two outcomes, decided by
 something that is not on the line.
 
-This is the trap section 39 promised. The check is the same one as everywhere else in this
+This is the trap section 04 promised. The check is the same one as everywhere else in this
 section: `ls` the destination first.

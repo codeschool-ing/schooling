@@ -5,7 +5,7 @@ version: 1
 
 One terminal, several things running. **A job is the shell's word for one command you started** —
 possibly a pipeline, possibly a script with children, and always a process group, which is why
-section 94's `kill %1` reached all of it.
+section 09's `kill %1` reached all of it.
 
 The whole of job control is three keys and four commands, and it is all in this one transcript:
 
@@ -40,7 +40,7 @@ Line by line, because every line of it is a thing worth knowing.
 `sleep 300` is running in the **foreground**: it has the terminal, and the prompt is not coming back
 until it finishes. `Ctrl+Z` sends `SIGTSTP`, and the shell prints `[1]+ Stopped`.
 
-**Stopped means stopped, not backgrounded.** That is section 89's `T` state — the process is
+**Stopped means stopped, not backgrounded.** That is section 04's `T` state — the process is
 suspended and using no processor at all. A `sleep` does not care. A download does: it is not
 downloading while it is stopped, and people lose an hour to this.
 
@@ -108,7 +108,7 @@ ana@vm:~/work$ sleep 400 &
 ```
 
 `&` at the end starts it backgrounded from the beginning. The shell prints the job number and the
-PID and returns the prompt immediately — section 88's step 3, skipped: **bash does not `wait`.**
+PID and returns the prompt immediately — section 03's step 3, skipped: **bash does not `wait`.**
 
 `$!` is that PID, which is how the rest of this lesson got hold of things to signal.
 
@@ -128,8 +128,8 @@ program that is not reading.
 ## Two things the shell does that surprise people
 
 **A background job still writes to your terminal.** It is not detached from the screen, only from
-the keyboard, so its output lands in the middle of whatever you are typing — section 93's
-interleaving. `> out.txt 2>&1` is the fix, and section 96's `nohup` does it for you.
+the keyboard, so its output lands in the middle of whatever you are typing — section 08's
+interleaving. `> out.txt 2>&1` is the fix, and section 11's `nohup` does it for you.
 
 **Exiting with a stopped job gets you a warning, once:**
 
@@ -170,7 +170,7 @@ perfectly happily, still a child of the same shell.
 
 **`disown` changes the shell's bookkeeping, not the process.** It is not detaching, it is not
 `nohup`, and it does not survive a closed terminal on its own. What it does is stop the shell from
-sending the job a hangup on the way out, which is section 96 and is a different mechanism from
+sending the job a hangup on the way out, which is section 11 and is a different mechanism from
 everything on this page.
 
 ## Where job control does not exist
@@ -184,6 +184,6 @@ long-thing-two &
 wait                  # until both are finished
 ```
 
-That is section 88's `wait`, spelled as a shell builtin, and it is how a script runs two things at
+That is section 03's `wait`, spelled as a shell builtin, and it is how a script runs two things at
 once without losing track of them. `wait $PID` waits for one, and its exit status becomes that
-process's — which is section 99.
+process's — which is section 14.

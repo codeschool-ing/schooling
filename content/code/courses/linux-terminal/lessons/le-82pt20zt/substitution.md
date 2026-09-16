@@ -46,7 +46,7 @@ Three newlines went in, none came out. **`$( )` strips every trailing newline**,
 
 This is nearly always helpful and is worth knowing about when it is not — reading a file into a
 variable to write it back out loses the final newline, and a file without one causes the trouble in
-section 148.
+section 11.
 
 ### Backticks
 
@@ -70,7 +70,7 @@ rules worth taking without argument.
 
 ### It is an expansion, so quote it
 
-`"$(cmd)"`, for the reasons in section 141. Unquoted, the output is split on whitespace and globbed.
+`"$(cmd)"`, for the reasons in section 04. Unquoted, the output is split on whitespace and globbed.
 
 ## `$(( ))` — arithmetic
 
@@ -174,8 +174,8 @@ ana@vm:~/work/scripts$ echo 'scale=3; 7/2' | bc
 3.500
 ```
 
-`$(( ))` cannot do this at all. `bc` can, `awk` can, and section 129 covered both. **If your script
-needs a percentage or an average, one of those is doing the arithmetic**, not bash.
+`$(( ))` cannot do this at all. `bc` can, `awk` can, and lesson 8 section 11 covered both. **If your
+script needs a percentage or an average, one of those is doing the arithmetic**, not bash.
 
 ## `let` and `expr`
 

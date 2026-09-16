@@ -51,7 +51,7 @@ file. Read a value with either `$h["name"]` or `$h.name` — the dot form is
 shorter and fails on a key with a space in it.
 
 **The order is not the insertion order.** `port` came back before `name`, the
-same as bash's associative arrays in section 149. `[ordered]@{ }` keeps it:
+same as bash's associative arrays in lesson 9 section 12. `[ordered]@{ }` keeps it:
 
 ```
 PS /home/ana/work/ps> $h = [ordered]@{ name = "web01"; port = 8080 }; $h.Keys
@@ -134,4 +134,4 @@ three
 ```
 
 `-split` on a regular expression is `awk`'s field splitting and `tr -s ' '` from
-lesson 8 in one operator, and `-join` is `paste -sd,` from section 133.
+lesson 8 in one operator, and `-join` is `paste -sd,` from lesson 8 section 15.
