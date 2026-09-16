@@ -91,6 +91,16 @@ isso.
 Os operadores são os do C: `+ - * / %`, `**` para potência, `++ --`, `+= -=`, `== != < > <= >=`,
 `&& || !`, e o ternário `a ? b : c`.
 
+Comparações produzem 1 e 0:
+
+```
+ana@vm:~/work/scripts$ echo $(( 10 > 3 )) $(( 10 < 3 ))
+1 0
+```
+
+O que é o contrário dos códigos de saída, em que 0 é sucesso — então o `$(( ))` serve para
+calcular números, e o `[ ]` ou o `(( ))` serve para decidir.
+
 O `(( ))` sem o `$` é a forma de instrução. Ele avalia e define o **código de saída**, com zero
 querendo dizer que a expressão foi diferente de zero — então ele se lê naturalmente num `if`:
 
