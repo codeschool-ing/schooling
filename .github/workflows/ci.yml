@@ -102,7 +102,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test|figure-fit|fetch-once)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test|figure-fit|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -512,6 +512,14 @@ jobs:
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
           node-version: 22
+
+      # BEFORE THE BROWSER, BECAUSE IT DOES NOT NEED ONE. It imports the
+      # highlighter's own table and reads every fence in the catalogue against
+      # it — no playwright, no database, a second and a half. A fence labelled
+      # with a language nobody registered renders in one grey with every other
+      # check in this file still green, so this runs as early as node allows.
+      - name: Every fence in a language the highlighter knows
+        run: node tools/check-highlight/check-highlight.mjs content
 
       # `npm ci` and not `npm install`: the lock file is the version that was
       # tested, and a browser suite that silently upgraded its driver would fail
