@@ -30,6 +30,12 @@ type head struct {
 	Description string
 	Alternates  []alternate
 	OtherTongue []link
+
+	// Card is the picture a shared link shows, absolute because the platforms
+	// that fetch it are not on this host and will not resolve a relative one.
+	// Empty where the page has no card — a lesson's card would be the course's,
+	// and a list has no one name to put on one.
+	Card string
 }
 
 // headOf builds the frame for one page at one path, in one language. `path` is
@@ -78,7 +84,13 @@ const headTags = `<link rel="canonical" href="{{.Canonical}}">
 <meta property="og:description" content="{{.Description}}">
 {{- end}}
 <meta property="og:url" content="{{.Canonical}}">
-<meta name="twitter:card" content="summary">
+{{- if .Card}}
+<meta property="og:image" content="{{.Card}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="{{.Card}}">
+{{- end}}
+<meta name="twitter:card" content="{{if .Card}}summary_large_image{{else}}summary{{end}}">
 <meta name="twitter:title" content="{{.Title}}">
 {{- if .Description}}
 <meta name="twitter:description" content="{{.Description}}">

@@ -1176,9 +1176,9 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			out := aTrack(found, named)
 			return &out, nil
 		},
-		func(ctx context.Context) (string, bool) {
+		func(ctx context.Context) (string, string, bool) {
 			s, ok := tenant.FromContext(ctx)
-			return s.Name, ok
+			return s.Name, s.Accent, ok
 		},
 		func(ctx context.Context) string {
 			id, ok := tenant.FromContext(ctx)
