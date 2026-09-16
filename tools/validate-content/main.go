@@ -377,30 +377,100 @@ func checkSectionReferences(school string, s *catalog.School) []error {
 //
 //	\b(?:seven|seventeen)\b   -> "seventeen"
 //	\b(?:seven|seventeen)     -> "seven"
+//
+// # AND IT USED TO STOP AT TWENTY, WHICH IS WHERE THE DEFECT WAS
+//
+// The first version of this carried units and teens and twenty, and said so on
+// purpose: "the longest lesson has twenty-one sections, and a narrator saying a
+// compound number is naming something that does not exist in any lesson".
+//
+// That is true and it is the wrong conclusion. A narrator naming something that
+// does not exist in any lesson is EXACTLY what this check is for — and three of
+// them were already written: "section seventy-eight", "sections seventy-nine and
+// eighty-one", "section ninety-six". Every one was a course-wide number, which
+// is the defect the whole rule exists to catch, and the table stopped one word
+// short of seeing any of them.
+//
+// # "AND" BELONGS TO THE NUMBER ONLY AFTER "HUNDRED"
+//
+// "one hundred and twenty-seven" is one number. "seventy-nine and eighty-one" is
+// two, and reading its "and" as part of a number gives 160 — which is in range
+// for a course of 228 sections and would have passed. So the parser ends a
+// number at "and" unless "hundred" came immediately before it.
 func spellOut(script string) string {
-	return spoken.ReplaceAllStringFunc(script, func(w string) string {
-		if n, ok := spokenNumbers[strings.ToLower(w)]; ok {
-			return strconv.Itoa(n)
+	return spoken.ReplaceAllStringFunc(script, func(run string) string {
+		var out strings.Builder
+		var part int
+		var have bool
+		flush := func() {
+			if have {
+				out.WriteString(strconv.Itoa(part))
+			}
+			part, have = 0, false
 		}
-		return w
+		for _, tok := range spokenPiece.FindAllString(run, -1) {
+			w := strings.ToLower(tok)
+			n, isNumber := spokenNumbers[w]
+			switch {
+			case !isNumber:
+				// Spaces and hyphens inside a number join it — "one hundred",
+				// "seventy-eight". Anything else ends it, which is what makes
+				// the "and" of "seventy-nine and eighty-one" a separator.
+				if have && strings.Trim(tok, " -\t\n") == "" {
+					continue
+				}
+				flush()
+				out.WriteString(tok)
+			case w == "hundred":
+				if part == 0 {
+					part = 1
+				}
+				part, have = part*100, true
+			default:
+				part, have = part+n, true
+			}
+		}
+		flush()
+		return out.String()
 	})
 }
 
-// Twenty is as far as this goes on purpose: the longest lesson in the catalogue
-// has twenty-one sections, and a narrator saying a compound number ("section
-// twenty-two") is naming something that does not exist in any lesson, which the
-// digits either side of it will already have said.
+// The words a narrator says a number with.
+//
+// # "AND" IS ALWAYS A SEPARATOR HERE, AND THAT IS A DELIBERATE SIMPLIFICATION
+//
+// In English it is one only sometimes: "seventy-nine and eighty-one" is two
+// numbers and "one hundred and twenty-seven" is one. Reading the first as a
+// single number gives 160, which is inside a 228-section course and would have
+// passed — so the wrong choice here hides exactly the defect this rule is for.
+//
+// Treating it as a separator gets that case right and splits "one hundred and
+// twenty-seven" into 100 and 27, which is wrong and harmless: the reference
+// pattern only reads the number that follows the word `section`, and no script
+// says "section one hundred and twenty-seven". If one ever does, this comment
+// is where to start.
+//
+// THE PORTUGUESE WORDS ARE CARRIED AND UNUSED. A script is authored in English
+// — `Video.Script` is one field and `Locales` records which narrations exist,
+// not which scripts do — so nothing here has ever met "setenta e nove", which
+// this parser would read as 70 and 9. It is listed rather than removed because
+// the day a Portuguese script is written, a checker that silently passed it
+// would be worse than one that is wrong in a way this paragraph predicts.
 var spokenNumbers = map[string]int{
 	"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
 	"eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
 	"fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18,
-	"nineteen": 19, "twenty": 20,
+	"nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+	"sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90, "hundred": 0,
 	"um": 1, "dois": 2, "três": 3, "quatro": 4, "cinco": 5, "seis": 6, "sete": 7,
 	"oito": 8, "nove": 9, "dez": 10, "onze": 11, "doze": 12, "treze": 13,
 	"catorze": 14, "quatorze": 14, "quinze": 15, "dezesseis": 16, "dezessete": 17,
-	"dezoito": 18, "dezenove": 19, "vinte": 20,
+	"dezoito": 18, "dezenove": 19, "vinte": 20, "trinta": 30, "quarenta": 40,
+	"cinquenta": 50, "sessenta": 60, "setenta": 70, "oitenta": 80, "noventa": 90,
 }
 
+// A whole run of number-words and the hyphens between them — "seventy-eight",
+// "twenty-one", "one hundred".
 var spoken = func() *regexp.Regexp {
 	words := make([]string, 0, len(spokenNumbers))
 	for w := range spokenNumbers {
@@ -411,8 +481,13 @@ var spoken = func() *regexp.Regexp {
 	// failures cannot be reproduced. The order does not affect what it matches
 	// — see the note above — only that it is stable.
 	sort.Strings(words)
-	return regexp.MustCompile(`(?i)\b(?:` + strings.Join(words, "|") + `)\b`)
+	one := `(?:` + strings.Join(words, "|") + `)`
+	return regexp.MustCompile(`(?i)\b` + one + `(?:[\s-]+` + one + `)*\b`)
 }()
+
+// Each word of such a run, and each stretch between them, so that what is not a
+// number comes back unchanged.
+var spokenPiece = regexp.MustCompile(`[A-Za-zÀ-ÿ]+|[^A-Za-zÀ-ÿ]+`)
 
 // The body with its fenced blocks taken out. A transcript may say anything;
 // only the prose around it is this file's business.

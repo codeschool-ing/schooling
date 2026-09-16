@@ -188,8 +188,13 @@ func TestSeventeenIsNotSeven(t *testing.T) {
 	if got := spellOut("seção dezessete"); got != "seção 17" {
 		t.Errorf("spellOut(%q) = %q, want %q", "seção dezessete", got, "seção 17")
 	}
-	if got := spellOut("nineteen and ninety"); got != "19 and ninety" {
-		t.Errorf("twenty is the ceiling, so `ninety` stays a word; got %q", got)
+	// THIS ASSERTION USED TO READ `"19 and ninety"`, because the table stopped at
+	// twenty and the comment above it argued that was enough. It was not: three
+	// compound numbers were already written in the scripts, every one of them a
+	// course-wide reference. The tens are in the table now, and this line is the
+	// one that had to change to say so.
+	if got := spellOut("nineteen and ninety"); got != "19 and 90" {
+		t.Errorf("the tens are read now; got %q", got)
 	}
 }
 
@@ -248,5 +253,55 @@ func TestNothingToMeasureIsNotAProblem(t *testing.T) {
 		if got := checkNarrationRate("code", s); len(got) != 0 {
 			t.Errorf("got %v, want nothing to report", got)
 		}
+	}
+}
+
+// THE HOLE THIS FILE SHIPPED WITH. The first version of `spellOut` carried
+// units, teens and twenty, and argued that a compound number would be naming
+// something no lesson has. That is true, and it is what the rule is FOR: three
+// were already written — "section seventy-eight", "sections seventy-nine and
+// eighty-one", "section ninety-six" — and the table stopped one word short of
+// seeing any of them.
+func TestACompoundSpokenNumberIsRead(t *testing.T) {
+	for _, c := range [][2]string{
+		{"section seventeen", "section 17"},
+		{"section twenty-one", "section 21"},
+		{"section seventy-eight", "section 78"},
+		{"section ninety-six", "section 96"},
+		{"section one hundred", "section 100"},
+		{"seção dezessete", "seção 17"},
+		{"nothing numeric here", "nothing numeric here"},
+	} {
+		if got := spellOut(c[0]); got != c[1] {
+			t.Errorf("spellOut(%q) = %q, want %q", c[0], got, c[1])
+		}
+	}
+}
+
+// AND THE ONE THAT DECIDES WHETHER THE HOLE IS CLOSED OR MOVED. Reading the
+// "and" of "seventy-nine and eighty-one" as part of one number gives 160 —
+// which is inside a 228-section course, so it would pass, and the defect would
+// survive the fix meant to catch it.
+func TestAndSeparatesTwoSpokenNumbers(t *testing.T) {
+	if got := spellOut("sections seventy-nine and eighty-one"); got != "sections 79 and 81" {
+		t.Errorf("got %q, want %q — 160 is in range and would pass", got, "sections 79 and 81")
+	}
+
+	// The cost of that choice, stated where it can be seen: this is wrong, and
+	// harmless, because the rule only reads the number after `section`.
+	if got := spellOut("exit one hundred and twenty-seven"); got != "exit 100 and 27" {
+		t.Errorf("got %q, want the documented %q", got, "exit 100 and 27")
+	}
+}
+
+// A spoken reference is measured against the lesson it is in, like any other.
+func TestASpokenCompoundOutOfRangeIsReported(t *testing.T) {
+	s := twoLessons()
+	s.Courses[0].Loaded[0].Sections[0] = catalog.Section{
+		ID: "se-v", Kind: catalog.KindVideo,
+		Videos: []catalog.Video{{Script: "You saw why in section seventy-eight."}},
+	}
+	if got := checkSectionReferences("code", s); len(got) != 1 {
+		t.Errorf("lesson 1 has three sections; got %v", got)
 	}
 }
