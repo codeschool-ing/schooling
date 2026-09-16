@@ -716,6 +716,18 @@ now fails on exactly that: a layout property, on a class of theirs, with nothing
 in the selector to hold it to our screen — which is why `.view-account .on` is allowed
 and a bare `.steps` is not. A new screen's own element gets a name of its own.
 
+**And before that answer is worth anything, the file has to parse to its end.** A stray
+`*/` is served with a 200, arrives, and leaves rules in `document.styleSheets` — the
+browser reads it as the start of a selector, swallows the rule below it into that
+selector, and drops **that one rule**, out of hundreds, on one screen. An unclosed `/*`
+hides everything below it; an unclosed `{` makes the rules below it *nested*. In all
+three the sheet still has rules in it, which is why the obvious check — every loaded
+stylesheet has a `cssRules.length` above zero — catches none of them and was measured
+and discarded rather than written. `check-css` checks the delimiters instead, over
+**all ten** stylesheets this repository serves and not only the six it compares: a
+comment, a string and a block each have an end, and a file missing one has stopped
+meaning what it reads like from that line down — this tool's own answer included.
+
 **Anything that differs between schools comes from the school, not from a file that
 ships with the application.** Its name, its accent, the address of its own site, what
 a subscription costs there. Each of those was a constant in a copied file first, and
@@ -1513,7 +1525,8 @@ go run ./tools/check-interface    # every string the interface says, in every la
 go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has
                                        # its own tree and its own dictionary
-go run ./tools/check-css          # our stylesheet overrides theirs and never lays it out
+go run ./tools/check-css          # every stylesheet parses to its end, and ours overrides
+                                  # theirs without ever laying it out
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
 ```
 
@@ -1553,6 +1566,13 @@ node tools/landing-test/landing-test.mjs  # a real page, in a real browser, send
 
 node tools/mfa-test/mfa-test.mjs        # enrol a second factor, sign in with it,
                                         # then again with a recovery code
+
+node tools/lang-test/lang-test.mjs      # a language switch reaches the lessons,
+                                        # and nothing that runs after it takes
+                                        # it back
+node tools/frame-test/frame-test.mjs    # and what the frame SAYS: the build the
+                                        # badge names, and the notice that the
+                                        # build has moved on
 
 go run ./tools/bundle -host code.example.tld -out bundle.html
 node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built

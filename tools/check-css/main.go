@@ -48,11 +48,38 @@
 // that stops being needed fails too: an exception that outlived what it excused
 // reads as current, which is worse than never having been written down.
 //
-//	check-css [ui directory]     (default: ui/)
+// # AND BEFORE ANY OF THAT, THE FILE HAS TO PARSE TO ITS END
+//
+// A stylesheet with a stray `*/` in it is served with a 200, arrives, and
+// appears in `document.styleSheets` with rules in it. It is not rejected and
+// nothing is logged. What happens is smaller and much harder to see: the
+// browser reads the `*/` as the start of a selector, swallows the rule that
+// follows it into that selector, finds it invalid and drops it — ONE RULE, out
+// of hundreds, on one screen.
+//
+// Measured rather than assumed, on the three shapes this can take:
+//
+//	.a{}  */  .b{}  .c{}      the browser keeps .a and .c        — .b is gone
+//	.a{}  /* .b{}  .c{}       the browser keeps .a               — the rest is a comment
+//	.a{   .b{}  .c{}          the browser keeps .a, with .c NESTED inside it
+//
+// In all three the sheet still has rules, which is why the obvious check —
+// every loaded stylesheet has a `cssRules.length` above zero — does not catch
+// any of them. That check only fires on a file broken from its first byte, and
+// none of these is.
+//
+// The contract that does catch them is the file's own: comments and blocks
+// close, and a `*/` closes a comment that was opened. A file that fails it has
+// stopped meaning what it reads like, and every answer below it — including
+// this tool's, whose comment-stripping reads a stray `*/` as plain text and
+// carries on — is being computed against a file the browser does not have.
+//
+//	check-css [ui directory]     (default: ui/ and the console's, both)
 package main
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -110,10 +137,35 @@ var deliberate = map[string]string{
 		"they were short",
 }
 
+// EVERY STYLESHEET THIS REPOSITORY SERVES, which is a wider set than the
+// collision check reads. That one is about a relationship between two files and
+// only one host has both halves — see `host` above. This one is about a single
+// file being whole, which is true of the console's stylesheet, of the landing
+// page's and of the font declarations exactly as it is true of a student's.
+var served = []string{"ui", "internal/console/ui"}
+
 func main() {
 	dir := "ui"
+	roots := served
 	if len(os.Args) > 1 {
 		dir = os.Args[1]
+		roots = []string{dir}
+	}
+
+	broken, sheets, err := parses(roots)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	if len(broken) > 0 {
+		for _, p := range broken {
+			fmt.Fprintln(os.Stderr, p)
+		}
+		fmt.Fprintf(os.Stderr, "\n%d stylesheet(s) stop parsing before their last byte. "+
+			"Nothing below this is worth running: the rules after the break are not in the "+
+			"browser, and the answer this tool would give is about a file nobody is served.\n",
+			len(broken))
+		os.Exit(1)
 	}
 
 	problems, rules, err := check(dir, deliberate)
@@ -128,7 +180,135 @@ func main() {
 		fmt.Fprintf(os.Stderr, "\n%d problem(s)\n", len(problems))
 		os.Exit(1)
 	}
-	fmt.Printf("%d of our rules, and none of them lays out an element of theirs\n", rules)
+	fmt.Printf("%d stylesheet(s) parse to their last byte, "+
+		"%d of our rules, and none of them lays out an element of theirs\n", sheets, rules)
+}
+
+// Every `.css` under these roots, walked once and read to the end.
+func parses(roots []string) ([]string, int, error) {
+	var problems []string
+	sheets := 0
+	for _, root := range roots {
+		err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if d.IsDir() || !strings.HasSuffix(d.Name(), ".css") {
+				return nil
+			}
+			b, err := os.ReadFile(path) //nolint:gosec // a path this tool's own walk produced
+			if err != nil {
+				return err
+			}
+			sheets++
+			if line, what := stops(string(b)); line > 0 {
+				problems = append(problems, fmt.Sprintf("%s:%d: %s", filepath.ToSlash(path), line, what))
+			}
+			return nil
+		})
+		if err != nil {
+			return nil, sheets, err
+		}
+	}
+	sort.Strings(problems)
+	return problems, sheets, nil
+}
+
+// The three states a byte of a stylesheet can be in. A `*/` means one thing in
+// the second and something else entirely in the first, which is the whole of
+// what a regular expression over the file cannot know.
+const (
+	code = iota
+	comment
+	quoted
+)
+
+// stops reports where a stylesheet stops meaning what it reads like, as a line
+// number and what went wrong, or 0 when it parses to its last byte.
+//
+// It is a scanner over bytes and not a CSS parser, because the question is not
+// whether every rule is valid — the browser drops a property it has never heard
+// of on purpose, and so should this. The question is whether the DELIMITERS
+// close: a comment, a string and a block each have an end, and a file missing
+// one of them is read from that point as something the author did not write.
+func stops(css string) (int, string) {
+	state, line, commentLine := code, 1, 0
+	var quote byte
+	var open []int // the line each block still standing open was opened on
+
+	for i := 0; i < len(css); i++ {
+		c := css[i]
+
+		if c == '\n' {
+			line++
+			// A CSS STRING DOES NOT SURVIVE A NEWLINE. The browser ends the
+			// declaration there and resumes looking for the next one, so a
+			// quote nobody closed takes the rest of its rule with it — the same
+			// family as the two above, and invisible in the same way.
+			if state == quoted {
+				return line - 1, "a string is opened on this line and never closed on it — " +
+					"a CSS string ends at the newline, and the rest of the rule goes with it"
+			}
+			continue
+		}
+
+		next := byte(0)
+		if i+1 < len(css) {
+			next = css[i+1]
+		}
+
+		switch state {
+		case comment:
+			if c == '*' && next == '/' {
+				state = code
+				i++
+			}
+		case quoted:
+			// A BACKSLASH TAKES THE NEXT BYTE WITH IT, and when that byte is a
+			// newline the string legitimately continues on the line below — so
+			// the count has to follow it there rather than lose a line.
+			switch c {
+			case '\\':
+				if next == '\n' {
+					line++
+				}
+				i++
+			case quote:
+				state = code
+			}
+		default:
+			switch {
+			case c == '/' && next == '*':
+				state, commentLine = comment, line
+				i++
+			case c == '*' && next == '/':
+				return line, "`*/` here closes a comment that was never opened — the browser " +
+					"reads it as the start of a selector, swallows the rule below it into that " +
+					"selector, and drops that rule"
+			case c == '"' || c == '\'':
+				state, quote = quoted, c
+			case c == '{':
+				open = append(open, line)
+			case c == '}':
+				if len(open) == 0 {
+					return line, "`}` here closes a block that was never opened"
+				}
+				open = open[:len(open)-1]
+			}
+		}
+	}
+
+	switch {
+	case state == comment:
+		return commentLine, "a comment is opened here and never closed — everything below it is " +
+			"inside the comment, and the browser has none of it"
+	case state == quoted:
+		return line, "a string is opened here and the file ends inside it"
+	case len(open) > 0:
+		return open[0], "a block is opened here and never closed — the rules below it are read " +
+			"as nested inside it, so they apply to its elements or to nothing at all"
+	}
+	return 0, ""
 }
 
 func check(dir string, allowedTo map[string]string) ([]string, int, error) {

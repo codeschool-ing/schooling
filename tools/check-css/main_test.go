@@ -127,6 +127,84 @@ func TestOursMayOverrideButNotLayOut(t *testing.T) {
 	}
 }
 
+// THE THREE SHAPES, AND WHAT A BROWSER DOES WITH EACH. The comments are not a
+// guess: they are the output of loading exactly these three stylesheets into
+// Chromium and reading `cssRules` back, which is also how the `cssRules.length`
+// check was ruled out — in all three the sheet still has rules in it.
+func TestAFileThatStopsParsingIsFoundAtTheLineItStopsOn(t *testing.T) {
+	for _, c := range []struct {
+		name string
+		css  string
+		line int
+		says string
+	}{
+		// Chromium keeps `.a` and `.c`. `.b` is gone.
+		{"a stray close", ".a{color:red}\n*/\n.b{color:blue}\n.c{color:green}\n", 2, "never opened"},
+		// Chromium keeps `.a` and nothing else.
+		{"a comment nobody closed", ".a{color:red}\n/* oops\n.b{color:blue}\n", 2, "never closed"},
+		// Chromium keeps `.a`, with `.c` NESTED inside it, and drops `.b`.
+		{"a block nobody closed", ".a{color:red\n.b{color:blue}\n.c{color:green}\n", 1, "never closed"},
+		{"a close with no open", ".a{color:red}\n}\n", 2, "never opened"},
+		{"a string nobody closed", ".a{content:\"oops\n.b{color:blue}\n", 1, "never closed on it"},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			line, what := stops(c.css)
+			if line != c.line {
+				t.Errorf("the break is on line %d, the check says line %d (%s)", c.line, line, what)
+			}
+			if !strings.Contains(what, c.says) {
+				t.Errorf("the message has to say what did not close, so there is something to go "+
+					"and fix: %q", what)
+			}
+		})
+	}
+}
+
+// AND THE OTHER DIRECTION, WHICH IS THE ONE THAT MATTERS MORE. A scanner that
+// answers "broken" to everything would pass the test above and fail the
+// repository on its first run; these are the shapes a stylesheet legitimately
+// contains that a naive `*/` or `{` count reads as a break.
+func TestTheShapesAStylesheetLegitimatelyContains(t *testing.T) {
+	const css = `
+/* A comment with a } in it, and an unbalanced { , and even a quote: " */
+.plain{color:red}
+@media (max-width:700px){
+  .inside{display:grid}
+}
+.q[data-x="a } inside a string"]{gap:4px}
+.q[data-y='and a { in the other quote']{gap:4px}
+.escaped::after{content:"he said \"stop\""}
+.continued::after{content:"a string that \
+carries on below"}
+.slash{background-image:url(data:image/svg+xml;utf8,<svg/>)}
+`
+	if line, what := stops(css); line > 0 {
+		t.Errorf("this file parses to its end; the check says it breaks on line %d: %s", line, what)
+	}
+}
+
+// The whole verdict, over a tree: a file that does not parse is named, and the
+// rest of the tool never runs against it.
+func TestTheParsePassNamesTheFile(t *testing.T) {
+	dir := t.TempDir()
+	write(t, dir, "assets/fine.css", ".a{color:red}")
+	write(t, dir, "assets/broken.css", ".a{color:red}\n*/\n.b{color:blue}")
+	// Not a stylesheet, and full of braces that do not balance.
+	write(t, dir, "assets/notes.md", "{{{")
+
+	problems, sheets, err := parses([]string{dir})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sheets != 2 {
+		t.Errorf("two stylesheets under this tree, the walk read %d — it is picking up files "+
+			"that are not stylesheets, or missing one that is", sheets)
+	}
+	if len(problems) != 1 || !strings.Contains(problems[0], "broken.css:2") {
+		t.Fatalf("one file breaks, on line 2, and the message has to name it: %v", problems)
+	}
+}
+
 func parse(t *testing.T, css string) []rule {
 	t.Helper()
 	dir := t.TempDir()
