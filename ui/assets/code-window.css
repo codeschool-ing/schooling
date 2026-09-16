@@ -1,0 +1,94 @@
+/* ==========================================================================
+   A code block is a window.
+
+   THE BAR WAS ALREADY THERE and half of it was empty. `.code-block` has carried
+   a strip above the code since the first practical course: the language on the
+   left, the copy button on the right. But 1,391 of the blocks in
+   `linux-terminal` are terminal recordings, and a recording has no language to
+   name — so on the course where code blocks are most of the screen, that strip
+   was a blank rule with a button at the end of it.
+
+   A window is what the strip already looked like, so this finishes the thought:
+   a TAB on the left naming what is open, and three dots on the right. Nothing
+   is being decorated that was not already drawn; an empty bar is being given
+   something to say.
+
+   THE DOTS DO NOTHING AND ARE `aria-hidden`. They are the shape of a window and
+   not a control — a student who tabs to a close button that cannot close
+   anything has been lied to, and a screen reader announcing three unlabelled
+   buttons has been given three pieces of nothing. They are `<i>` elements, not
+   `<button>`s, for the same reason.
+
+   THEY ARE NOT ANOTHER SYSTEM'S DOTS, either. The red-amber-green of macOS is
+   three colours from outside this palette, on a page whose entire argument is
+   that it has three. These are `--wire`, the same line the block is drawn with.
+
+   THIS FILE EXISTS RATHER THAN A DOZEN LINES IN `portal.css`, because that file
+   and `base.css` came from `portal-frontend` byte for byte and nothing is added
+   to them here. Every selector below carries `.code-win`, which is ours: it
+   cannot reach an element of the copied markup, and `tools/check-css` is what
+   holds that.
+   ========================================================================== */
+
+/* The bar grows a little and its contents sit on the bottom edge, which is what
+   makes the tab look attached to the code rather than floating over it. */
+.code-win .code-bar{
+  align-items:flex-end;
+  padding:6px 7px 0 9px;
+  min-height:34px;
+}
+
+/* A TAB OVERLAPS THE LINE IT SITS ON. `margin-bottom:-1px` puts its own bottom
+   border on top of the bar's, and painting that border in `--panel` — the
+   colour of the code area below — opens the tab into the window. Without it
+   there is a hairline across the mouth of the tab and the whole thing reads as
+   a rectangle with a smaller rectangle on it. */
+.code-win .win-tab{
+  display:flex;align-items:center;gap:7px;
+  margin-bottom:-1px;padding:5px 12px 6px;
+  border:1px solid var(--wire);border-bottom-color:var(--panel);
+  border-radius:5px 5px 0 0;background:var(--panel);
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--paper);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70%;
+}
+.code-win .win-icon{
+  display:grid;place-items:center;flex:0 0 auto;
+  width:13px;height:13px;color:var(--phosphor-dim);
+}
+.code-win .win-icon svg{width:13px;height:13px}
+
+/* `margin-left:auto` AND NOT `space-between`, because the tab is optional: a
+   fence with no language and no prompt has nothing true to write on one, and
+   `space-between` would then put the dots on the left. */
+.code-win .win-dots{
+  display:flex;align-items:center;gap:7px;
+  margin:0 5px 9px auto;
+}
+.code-win .win-dots i{width:10px;height:10px;border-radius:50%;background:var(--wire)}
+
+/* ---------- the copy button, over the code ----------
+
+   IT MOVED OUT OF THE BAR to make room for the tab, and onto the code itself,
+   where every other site that shows a snippet puts it. It is invisible until
+   the pointer is in the block, and it carries its own ground and border so that
+   it never reads as part of a line of code underneath it.
+
+   `:focus-within` IS THE HALF THAT IS NOT DECORATION. A control at `opacity:0`
+   is still in the tab order, so a keyboard reaching it with nothing appearing
+   on screen is a focus nobody can see — the block reveals the button the moment
+   anything inside it takes focus, and `:focus-visible` draws the ring. */
+.code-win .code-hold{position:relative}
+.code-win .code-copy{
+  position:absolute;top:7px;right:7px;z-index:2;opacity:0;
+  background:var(--ink);border:1px solid var(--wire);
+}
+.code-win:hover .code-copy,
+.code-win:focus-within .code-copy,
+.code-win .code-copy:focus-visible{opacity:1}
+
+/* A CONTROL THAT APPEARS ON HOVER DOES NOT EXIST ON A TOUCH SCREEN, and the
+   phone is where copying a command by hand is most annoying to do. There it
+   keeps the quiet, permanent presence it had in the bar. */
+@media (hover:none){
+  .code-win .code-copy{opacity:.55}
+}

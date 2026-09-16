@@ -228,6 +228,12 @@ command is coloured, **and the output is left alone** — colouring it would inv
 the recording does not have. A bare `# ` is deliberately not a prompt: that is what a comment
 looks like at the top of a configuration file.
 
+**The prompt also titles the block's tab.** A code block is drawn as a window, and the tab on
+its bar reads `ana@vm: ~/work` for a recording and the language for everything else. A fence
+with neither — a file's contents, a drawing in box characters — gets no tab at all, because a
+window titled `output` when nobody said so is a label claiming to know something. Nothing has
+to be written in the file for any of this: it is read from what is already there.
+
 #### Three things Markdown cannot say, which a fence says instead
 
 The interface renders paragraphs, lists and fenced code from this file. Three blocks have no

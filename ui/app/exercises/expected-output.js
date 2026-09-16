@@ -15,19 +15,19 @@
    The real grading belongs to the server. Here the answer is only collected.
    ========================================================================== */
 
-import { esc, copyButton } from '../text.js';
+import { esc, codeBar, copyButton } from '../text.js';
 
 export default {
   types: ['expected-output'],
 
   body(ex, uid) {
     return (
-      '<div class="code-block">' +
-        '<div class="code-bar">' +
-          '<span class="code-lang">' + esc(ex.language || 'text') + '</span>' +
+      '<div class="code-block code-win">' +
+        codeBar(ex.givenCode, ex.language || 'text') +
+        '<div class="code-hold">' +
           copyButton() +
+          '<pre class="code"><code>' + esc(ex.givenCode) + '</code></pre>' +
         '</div>' +
-        '<pre class="code"><code>' + esc(ex.givenCode) + '</code></pre>' +
       '</div>' +
       '<label class="ex-label" for="saida-' + uid + '">' + txt('what appears on screen') + '</label>' +
       '<textarea id="saida-' + uid + '" class="ex-field mono" rows="4" spellcheck="false" ' +
