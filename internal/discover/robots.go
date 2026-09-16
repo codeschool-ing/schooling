@@ -66,7 +66,19 @@ type urlset struct {
 }
 
 type sitemap struct {
-	Loc        string      `xml:"loc"`
+	Loc string `xml:"loc"`
+
+	/* `lastmod` IS THE CATALOGUE'S, NOT EACH PAGE'S, and saying so is better
+	   than a date per page that nobody records. Nothing in the mirror carries a
+	   timestamp per course — a load rewrites every row in one transaction, so
+	   what there IS to know is when the catalogue was last published, and that
+	   is the same answer for every page built from it.
+
+	   A crawler uses it to decide what to re-read. One honest date it can
+	   believe is worth more than a page-shaped date that is really the same
+	   date wearing a disguise, and far more than `time.Now()`, which says
+	   everything changed on every crawl and teaches it to ignore the field. */
+	LastMod    string      `xml:"lastmod,omitempty"`
 	Alternates []alternate `xml:"xhtml:link"`
 }
 
@@ -102,9 +114,29 @@ func (h *Handler) sitemap(w http.ResponseWriter, r *http.Request) {
 		NS:    "http://www.sitemaps.org/schemas/sitemap/0.9",
 		XHTML: "http://www.w3.org/1999/xhtml",
 	}
+	when := h.published(r.Context())
+	tracks, err := h.paths(r.Context(), "en")
+	if err != nil {
+		web.LoggerFrom(r.Context()).Error("the sitemap could not be built", "error", err)
+		web.Fail(w, http.StatusServiceUnavailable, web.CodeInternal,
+			"the catalogue cannot be read just now")
+		return
+	}
+
 	// The school's own address first. It is the interface rather than one of
 	// these pages, and it is still the page every other one is reached from.
 	set.URLs = append(set.URLs, sitemap{Loc: at + "/"})
+	for _, path := range []string{"/courses", "/tracks"} {
+		for _, l := range languages {
+			set.URLs = append(set.URLs, sitemap{Loc: at + l.at + path, Alternates: alternatesOf(path)})
+		}
+	}
+	for _, tr := range tracks {
+		path := "/track/" + tr.Slug
+		for _, l := range languages {
+			set.URLs = append(set.URLs, sitemap{Loc: at + l.at + path, Alternates: alternatesOf(path)})
+		}
+	}
 	for _, c := range courses {
 		paths := []string{"/course/" + c.Slug}
 		// A FREE COURSE'S LESSONS HAVE PAGES AND ARE LISTED; a course that is
@@ -125,6 +157,10 @@ func (h *Handler) sitemap(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	w.Header().Set("Cache-Control", "public, max-age=3600")
+	for i := range set.URLs {
+		set.URLs[i].LastMod = when
+	}
+
 	_, _ = w.Write([]byte(xml.Header))
 	enc := xml.NewEncoder(w)
 	enc.Indent("", "  ")

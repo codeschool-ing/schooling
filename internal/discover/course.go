@@ -37,8 +37,10 @@ var words = map[string]map[string]string{
 	"en": {
 		"course": "Course", "hours": "hours", "level": "Level",
 		"prereq": "What you need first", "syllabus": "What you will learn",
-		"lessons": "What is in it",
-		"open":    "Open this course", "catalogue": "All courses",
+		"lessons": "What is in it", "track": "Track", "outcome": "What you can do at the end",
+		"inOrder": "The courses, in order", "everyCourse": "Every course", "everyTrack": "Every track",
+		"tracks": "Tracks", "courses": "Courses",
+		"open": "Open this course", "catalogue": "All courses",
 		"read":     "Read this lesson",
 		"inTheApp": "This page is the lesson's words. The figures, the worked examples and the exercises are in the school itself.",
 		"beginner": "beginner", "intermediate": "intermediate", "advanced": "advanced",
@@ -46,8 +48,10 @@ var words = map[string]map[string]string{
 	"pt": {
 		"course": "Curso", "hours": "horas", "level": "Nível",
 		"prereq": "O que você precisa antes", "syllabus": "O que você vai aprender",
-		"lessons": "O que tem dentro",
-		"open":    "Abrir este curso", "catalogue": "Todos os cursos",
+		"lessons": "O que tem dentro", "track": "Trilha", "outcome": "O que você consegue fazer no fim",
+		"inOrder": "Os cursos, na ordem", "everyCourse": "Todos os cursos", "everyTrack": "Todas as trilhas",
+		"tracks": "Trilhas", "courses": "Cursos",
+		"open": "Abrir este curso", "catalogue": "Todos os cursos",
 		"read":     "Ler esta aula",
 		"inTheApp": "Esta página são as palavras da aula. As figuras, os exemplos resolvidos e os exercícios estão na escola.",
 		"beginner": "iniciante", "intermediate": "intermediário", "advanced": "avançado",
@@ -55,17 +59,13 @@ var words = map[string]map[string]string{
 }
 
 type pageData struct {
-	Lang        string
-	School      string
-	Course      Course
-	Level       string
-	Words       map[string]string
-	Canonical   string
-	Alternates  []alternate
-	XDefault    string
-	OpenAt      string
-	Home        string
-	OtherTongue []link
+	head
+	School string
+	Course Course
+	Level  string
+	Words  map[string]string
+	OpenAt string
+	Home   string
 	// Lessons is the course's lessons as links. A free course's lessons have a
 	// page of their own; a course that is sold lists its titles and links
 	// nowhere, because there is nowhere a stranger may go.
@@ -76,21 +76,11 @@ type pageData struct {
 type link struct {
 	Label string
 	Href  string
+	Note  string // a summary under the name, on the list pages
 	Here  bool
 }
 
-func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
-	code := "en"
-	if given := r.PathValue("lang"); given != "" {
-		if _, ok := languageAt(given); !ok {
-			// A path shaped like a language page in a language nothing is
-			// written in. It is not a page, so it is not found.
-			http.NotFound(w, r)
-			return
-		}
-		code = given
-	}
-
+func (h *Handler) course(w http.ResponseWriter, r *http.Request, code string) {
 	slug := r.PathValue("slug")
 	course, err := h.one(r.Context(), slug, code)
 	if errors.Is(err, ErrNoCourse) {
@@ -106,14 +96,12 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 
 	at := origin(r)
 	path := "/course/" + course.Slug
-	here, _ := languageAt(code)
+	here := languageAt(code)
 
 	data := pageData{
-		Lang:      languages[here].tag,
-		Course:    *course,
-		Words:     words[code],
-		Canonical: at + languages[here].at + path,
-		XDefault:  at + path,
+		head:   headOf(at, path, here, course.Name, course.Summary),
+		Course: *course,
+		Words:  words[code],
 		// The interface's own route for this course. A fragment, because that
 		// is what the interface routes on — this link is the way in, not a
 		// second address for a search engine to find.
@@ -129,7 +117,7 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 		JSONLD: template.JS(jsonLD(*course, at+languages[here].at+path, //nolint:gosec // json.Marshal escapes the three characters that could end the element; see the test named above
 			languages[here].tag)),
 	}
-	if name, ok := h.school(r.Context()); ok {
+	if name, found := h.school(r.Context()); found {
 		data.School = name
 	}
 	if l, ok := words[code][course.Level]; ok {
@@ -147,23 +135,8 @@ func (h *Handler) course(w http.ResponseWriter, r *http.Request) {
 		}
 		data.Lessons = append(data.Lessons, row)
 	}
-	for i, l := range languages {
-		data.Alternates = append(data.Alternates, alternate{
-			Rel: "alternate", HrefLang: l.tag, Href: at + l.at + path,
-		})
-		data.OtherTongue = append(data.OtherTongue, link{
-			Label: l.label, Href: at + l.at + path, Here: i == here,
-		})
-	}
 
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	// A course page changes when the catalogue is republished, which is rare
-	// and is not on a clock. Long enough to be worth caching, short enough that
-	// a correction is out the same day.
-	w.Header().Set("Cache-Control", "public, max-age=1800")
-	if err := page.Execute(w, data); err != nil {
-		web.LoggerFrom(r.Context()).Error("writing a course page", "error", err, "slug", slug)
-	}
+	write(w, r, page, data)
 }
 
 /*

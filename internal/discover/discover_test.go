@@ -24,10 +24,23 @@ func aCourse() Course {
 	}
 }
 
+func aTrack() Track {
+	return Track{
+		Slug: "infrastructure", Name: "Networks and Infrastructure",
+		Goal:    "Run the machines other people's work sits on.",
+		Outcome: "Stand up a server, secure it, and know why it is slow.",
+		Steps: []Step{
+			{Name: "Linux and the Command Line", Slug: "linux-terminal"},
+			{Name: "A course nobody wrote", Slug: ""},
+		},
+	}
+}
+
 func aHandler(courses ...Course) *Handler {
 	if len(courses) == 0 {
 		courses = []Course{aCourse()}
 	}
+	tracks := []Track{aTrack()}
 	find := func(slug string) *Course {
 		for i := range courses {
 			if courses[i].Slug == slug {
@@ -53,7 +66,17 @@ func aHandler(courses ...Course) *Handler {
 			}
 			return &c.Lessons[at-1], nil
 		},
+		func(_ context.Context, _ string) ([]Track, error) { return tracks, nil },
+		func(_ context.Context, slug, _ string) (*Track, error) {
+			for i := range tracks {
+				if tracks[i].Slug == slug {
+					return &tracks[i], nil
+				}
+			}
+			return nil, ErrNoTrack
+		},
 		func(context.Context) (string, bool) { return "codeschool", true },
+		func(context.Context) string { return "2026-09-16T00:00:00Z" },
 	)
 }
 
@@ -442,5 +465,101 @@ func TestALessonAboutMarkupDoesNotBecomeMarkup(t *testing.T) {
 	}
 	if !strings.Contains(body, "&lt;script&gt;") {
 		t.Error("the words should be on the page, escaped")
+	}
+}
+
+/*
+THE ROUTES MUST NOT BE AMBIGUOUS, and this is the test that found out they were.
+
+	`GET /{lang}/courses` and `GET /course/{slug}` both match `/course/courses`
+	and neither is more specific, which `http.ServeMux` answers by PANICKING as
+	it registers — so the server would not have started. The languages are a
+	closed list, so the paths are registered per language instead.
+
+	Registering them is the assertion: a conflict panics, and a panic in a test
+	is a failure.
+*/
+func TestTheRoutesCanAllBeRegistered(t *testing.T) {
+	mux := http.NewServeMux()
+	aHandler().Routes(mux)
+
+	// and `Patterns` is what `cmd/api` forwards, so it has to be the same set
+	registered := http.NewServeMux() // a conflict panics here too
+	for _, p := range Patterns {
+		registered.HandleFunc(p, func(http.ResponseWriter, *http.Request) {})
+	}
+	if len(Patterns) != 2+len(languages)*5 {
+		t.Errorf("%d patterns for %d languages", len(Patterns), len(languages))
+	}
+}
+
+func TestTheListsLinkWhatTheyList(t *testing.T) {
+	for _, c := range []struct{ path, wants string }{
+		{"/courses", "http://code.example/course/linux-terminal"},
+		{"/pt/courses", "http://code.example/pt/course/linux-terminal"},
+		{"/tracks", "http://code.example/track/infrastructure"},
+		{"/pt/tracks", "http://code.example/pt/track/infrastructure"},
+	} {
+		body := get(t, aHandler(), "code.example", c.path, nil).Body.String()
+		if !strings.Contains(body, `href="`+c.wants+`"`) {
+			t.Errorf("%s does not link %s", c.path, c.wants)
+		}
+	}
+}
+
+/*
+A track's page names its courses in order and links the ones that have a page.
+
+	A FORK IS NAMED AND NOT LINKED. A step where the student chooses is a
+	decision rather than a thing, so it has no page of its own; the courses
+	inside it have pages, reached from the catalogue.
+*/
+func TestATrackLinksItsCoursesAndNamesItsForks(t *testing.T) {
+	body := get(t, aHandler(), "code.example", "/pt/track/infrastructure", nil).Body.String()
+	if !strings.Contains(body, `href="http://code.example/pt/course/linux-terminal"`) {
+		t.Error("the track does not link the course it starts with")
+	}
+	if !strings.Contains(body, "A course nobody wrote") {
+		t.Error("a step with no page should still be named")
+	}
+	if strings.Contains(body, `href="http://code.example/pt/course/"`) {
+		t.Error("a step with no course was linked to nowhere")
+	}
+	if !strings.Contains(body, `<link rel="canonical" href="http://code.example/pt/track/infrastructure">`) {
+		t.Error("the track page has no canonical of its own")
+	}
+}
+
+func TestATrackThisSchoolDoesNotPublishIsNotFound(t *testing.T) {
+	if code := get(t, aHandler(), "code.example", "/track/nothing-here", nil).Code; code != http.StatusNotFound {
+		t.Errorf("answered %d for a track this school does not have", code)
+	}
+}
+
+/*
+`lastmod` IS THE CATALOGUE'S DATE OR IT IS ABSENT.
+
+	A school that has not been loaded since the column existed does not know
+	when its catalogue was published, and a sitemap that answered `time.Now()`
+	would tell a crawler everything changed on every crawl — which teaches it to
+	ignore the field on every page, including the ones that did change.
+*/
+func TestTheSitemapCarriesThePublishedDateOrNone(t *testing.T) {
+	body := get(t, aHandler(), "code.example", "/sitemap.xml", nil).Body.String()
+	if !strings.Contains(body, "<lastmod>2026-09-16T00:00:00Z</lastmod>") {
+		t.Error("the sitemap does not carry the date the catalogue was published")
+	}
+
+	quiet := NewHandler(
+		func(context.Context, string) ([]Course, error) { return []Course{aCourse()}, nil },
+		func(context.Context, string, string) (*Course, error) { return nil, ErrNoCourse },
+		func(context.Context, string, int, string) (*Lesson, error) { return nil, ErrNoLesson },
+		func(context.Context, string) ([]Track, error) { return nil, nil },
+		func(context.Context, string, string) (*Track, error) { return nil, ErrNoTrack },
+		func(context.Context) (string, bool) { return "codeschool", true },
+		func(context.Context) string { return "" },
+	)
+	if body := get(t, quiet, "code.example", "/sitemap.xml", nil).Body.String(); strings.Contains(body, "<lastmod>") {
+		t.Error("a school with no published date should have no lastmod, not an invented one")
 	}
 }

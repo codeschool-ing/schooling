@@ -195,6 +195,19 @@ var catalogueTables = []string{
 }
 
 func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.School) error {
+	/* WHEN THIS CATALOGUE WAS PUBLISHED, stamped by the thing that publishes it
+	   and inside the same transaction as the rest. Nothing else can know it:
+	   the mirror is rewritten whole, so every row is as old as this load and no
+	   row can say when its own words last changed.
+
+	   It is what a sitemap's `lastmod` is built from. Read from anywhere else it
+	   would be a guess, and a guessed `lastmod` is worse than none — a crawler
+	   that is told everything changed every time learns to ignore the field. */
+	if _, err := tx.Exec(ctx,
+		`UPDATE tenants SET catalog_published_at = now() WHERE id = $1`, tenantID); err != nil {
+		return fmt.Errorf("stamping when the catalogue was published: %w", err)
+	}
+
 	for _, table := range catalogueTables {
 		// The table names come from this list and from nowhere else, so there
 		// is no interpolation of anything a file could influence.
