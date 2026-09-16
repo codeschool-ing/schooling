@@ -59,7 +59,7 @@ notícias e uma versão aproximada disto acontece:
 O que pareceu "carregar uma página" foram entre quinze e cem trocas separadas, cada uma com quem
 pede e quem responde, cada uma completa em si mesma.
 
-Duas coisas decorrem daí, e as duas importam mais do que parecem:
+Duas coisas decorrem daí:
 
 **Seu navegador não é um cliente, ele é cliente muitas vezes.** Ele mantém uma dúzia de trocas
 abertas ao mesmo tempo e monta a página com as respostas conforme elas chegam, na ordem em que
