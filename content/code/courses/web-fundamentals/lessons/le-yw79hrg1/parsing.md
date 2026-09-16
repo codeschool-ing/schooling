@@ -21,9 +21,9 @@ The nesting in that text is a tree, and the browser builds it as the characters 
 ```
 
 That tree is the **DOM** — the document object model. It is not the HTML file; it is what the file
-produced, and the difference matters more than it sounds. The file is a fixed set of bytes. The
-tree is a live structure that scripts can change, that the browser repairs when the file is wrong,
-and that ends up containing things the file never mentioned.
+produced. The file is a fixed set of bytes. The tree is a live structure that scripts can change,
+that the browser repairs when the file is wrong, and that ends up containing things the file never
+mentioned.
 
 ## It happens as the bytes arrive
 

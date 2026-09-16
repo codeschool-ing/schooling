@@ -21,9 +21,9 @@ O aninhamento naquele texto é uma árvore, e o navegador a constrói conforme o
 ```
 
 Essa árvore é o **DOM** — o modelo de objetos do documento. Ela não é o arquivo HTML; é o que o
-arquivo produziu, e a diferença importa mais do que parece. O arquivo é um conjunto fixo de bytes. A
-árvore é uma estrutura viva que scripts mudam, que o navegador conserta quando o arquivo está
-errado, e que acaba contendo coisas que o arquivo nunca mencionou.
+arquivo produziu. O arquivo é um conjunto fixo de bytes. A árvore é uma estrutura viva que scripts
+mudam, que o navegador conserta quando o arquivo está errado, e que acaba contendo coisas que o
+arquivo nunca mencionou.
 
 ## Isso acontece conforme os bytes chegam
 
