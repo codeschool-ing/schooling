@@ -102,8 +102,8 @@ on a port of its own. **DNS over HTTPS** puts it inside ordinary HTTPS traffic, 
 unreadable but indistinguishable from anything else. Browsers ship this and some enable it by
 default.
 
-It is genuinely contested rather than simply better, and the argument is worth knowing: moving
+It is genuinely contested rather than simply better, and the argument is worth knowing. Moving
 every lookup inside HTTPS to a handful of large providers concentrates in a few hands a record that
-used to be spread across thousands of ISPs, and it takes the lookups out of sight of network
+used to be spread across thousands of ISPs. And it takes the lookups out of sight of network
 operators who were using them to block malware and to enforce rules a school or a parent asked for.
 Both halves of that are true at once.
