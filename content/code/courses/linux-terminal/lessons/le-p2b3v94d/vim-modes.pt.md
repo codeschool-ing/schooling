@@ -57,28 +57,15 @@ tem certeza se as suas teclas estão indo para o arquivo.
 
 E o visual:
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│# the server configuration                                              │
-│listen 8080                                                             │
-│workers 4                                                               │
-│timeout 30                                                              │
-│log_level info                                                          │
-│log_file /var/log/app.log                                               │
-│~                                                                       │
-│~                                                                       │
-│~                                                                       │
-│~                                                                       │
-│~                                                                       │
-│-- VISUAL LINE --                           3         3,1           All │
-└────────────────────────────────────────────────────────────────────────┘
+```schooling-figure
+{"caption": "`V` e então `jj`, capturado de um terminal de verdade. As três linhas destacadas são a seleção; o `3` é quantas.", "svg": "<svg viewBox=\"0 0 754 245\" role=\"img\" aria-label=\"A mesma tela do vim capturada depois de V j j: as três primeiras linhas estão destacadas, e a linha de baixo mostra -- VISUAL LINE -- com 3 como a contagem de linhas selecionadas.\"><rect x=\"26\" y=\"0\" width=\"728\" height=\"245\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"40.00\" y=\"14.00\" width=\"189.00\" height=\"15.50\" fill=\"var(--term-blue-bg)\"/><rect x=\"40.00\" y=\"29.50\" width=\"84.00\" height=\"15.50\" fill=\"var(--term-blue-bg)\"/><rect x=\"47.00\" y=\"45.00\" width=\"63.00\" height=\"15.50\" fill=\"var(--term-blue-bg)\"/><g font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\"><text x=\"40 47 54 61 68 75 82 89 96 103 110 117 124 131 138 145 152 159 166 173 180 187 194 201 208 215 222\" y=\"25.50\" xml:space=\"preserve\"><tspan fill=\"#0a0e14\"># the server configuration </tspan></text><text x=\"40 47 54 61 68 75 82 89 96 103 110 117\" y=\"41.00\" xml:space=\"preserve\"><tspan fill=\"#0a0e14\">listen 8080 </tspan></text><text x=\"40 47 54 61 68 75 82 89 96 103\" y=\"56.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\">w</tspan><tspan fill=\"#0a0e14\">orkers 4 </tspan></text><text x=\"40 47 54 61 68 75 82 89 96 103\" y=\"72.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\">timeout 30</tspan></text><text x=\"40 47 54 61 68 75 82 89 96 103 110 117 124 131\" y=\"87.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\">log_level info</tspan></text><text x=\"40 47 54 61 68 75 82 89 96 103 110 117 124 131 138 145 152 159 166 173 180 187 194 201 208\" y=\"103.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\">log_file /var/log/app.log</tspan></text><text x=\"40\" y=\"118.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\">~</tspan></text><text x=\"40\" y=\"134.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\">~</tspan></text><text x=\"40\" y=\"149.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\">~</tspan></text><text x=\"40\" y=\"165.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\">~</tspan></text><text x=\"40\" y=\"180.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\">~</tspan></text><text x=\"40\" y=\"196.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\">~</tspan></text><text x=\"40\" y=\"211.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\">~</tspan></text><text x=\"40 47 54 61 68 75 82 89 96 103 110 117 124 131 138 145 152 159 166 173 180 187 194 201 208 215 222 229 236 243 250 257 264 271 278 285 292 299 306 313 320 327 334 341 348 355 362 369 376 383 390 397 404 411 418 425 432 439 446 453 460 467 474 481 488 495 502 509 516 523 530 537 544 551 558 565 572 579 586 593 600 607 614 621 628 635 642 649 656 663 670 677 684 691 698 705 712 719 726\" y=\"227.00\" xml:space=\"preserve\"><tspan font-weight=\"600\" fill=\"var(--paper)\">-- VISUAL LINE --</tspan><tspan fill=\"var(--paper)\">                                                       3         3,1           All</tspan></text></g></svg>"}
 ```
 
 `V` e então `jj` — `-- VISUAL LINE --`, e o `3` no meio é quantas linhas estão
-selecionadas. (Num terminal de verdade aquelas três linhas ficam destacadas.
-Esta tela é desenhada em vez de fotografada, ao contrário das duas acima, porque
-a cor de destaque do próprio vim não fica legível o bastante nesta página — então
-a contagem é a parte a ler.)
+selecionadas. (O destaque está azul aqui porque esta tela pediu, com
+`:hi Visual ctermbg=blue`. O padrão do próprio vim é um cinza que dá 4,2:1 com
+texto branco e 3,7:1 com preto — abaixo de 4,5 de qualquer jeito, onde o azul
+dá 6,1:1.)
 
 ## Os seis jeitos de entrar no modo de inserção
 
