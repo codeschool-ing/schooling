@@ -164,12 +164,17 @@ export function windowOf(text, language) {
   return { title: name, terminal: SHELLS.has(name.toLowerCase()) };
 }
 
-/* `trailing` IS FOR A CONTROL THAT BELONGS IN THE BAR, which in practice is the
-   annotated example's copy button. It goes in the same row as the dots and is
-   CENTRED ON THEM: the two are the only things at that end of the bar, and one
-   riding five pixels above the other is the sort of thing you cannot unsee once
-   you have seen it. That is what `.win-right` is for — a line of its own, so
-   the alignment is a property of the row and not arithmetic on two margins. */
+/* `trailing` IS THE COPY BUTTON, in every block that has one. It goes in the
+   same row as the dots and is CENTRED ON THEM: the two are the only things at
+   that end of the bar, and one riding five pixels above the other is the sort
+   of thing you cannot unsee once you have seen it. That is what `.win-right` is
+   for — a line of its own, so the alignment is a property of the row and not
+   arithmetic on two margins and two heights.
+
+   IT IS ALWAYS THERE AND IT IS ALWAYS HERE. A version of this floated it over
+   the code, hidden until the pointer arrived; a course is read block after
+   block, and a control that is in the bar in one and floating in the next is
+   two things to learn for one action. See `assets/code-window.css`. */
 export function codeBar(text, language, trailing) {
   const { title, terminal } = windowOf(text, language);
   return '<div class="code-bar">' +
@@ -253,11 +258,8 @@ export function prose(body) {
            and a block you cannot copy because its author left the label out
            would be an odd thing to explain. */
         return '<div class="code-block code-win prose-code">' +
-          codeBar(block.text, block.code) +
-          '<div class="code-hold">' +
-            copyButton() +
-            '<pre class="code"><code>' + highlight(block.text, block.code) + '</code></pre>' +
-          '</div>' +
+          codeBar(block.text, block.code, copyButton()) +
+          '<pre class="code"><code>' + highlight(block.text, block.code) + '</code></pre>' +
         '</div>';
       }
     }

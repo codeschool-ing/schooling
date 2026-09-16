@@ -72,36 +72,30 @@
 .code-win .win-dots{display:flex;align-items:center;gap:7px;margin:0 3px}
 .code-win .win-dots i{width:10px;height:10px;border-radius:50%;background:var(--wire)}
 
-/* ---------- the copy button, over the code ----------
+/* ---------- the copy button, and where it is NOT ----------
 
-   IT MOVED OUT OF THE BAR to make room for the tab, and onto the code itself,
-   where every other site that shows a snippet puts it. It is invisible until
-   the pointer is in the block, and it carries its own ground and border so that
-   it never reads as part of a line of code underneath it.
+   IT IS IN THE BAR, IN EVERY BLOCK, AND THERE ARE NO RULES FOR IT HERE. That is
+   the point of this comment: `portal.css` already draws it, at .55 opacity,
+   coming up to full on hover or focus anywhere in the block, and that behaviour
+   is right and is left alone.
 
-   `:focus-within` IS THE HALF THAT IS NOT DECORATION. A control at `opacity:0`
-   is still in the tab order, so a keyboard reaching it with nothing appearing
-   on screen is a focus nobody can see — the block reveals the button the moment
-   anything inside it takes focus, and `:focus-visible` draws the ring.
+   A first version of this file floated it over the code, hidden until the
+   pointer arrived. Two things were wrong with that, and the copied stylesheet
+   had written both down before anybody here typed a line:
 
-   EVERY SELECTOR HERE NAMES `.code-hold`, which is the wrapper a block with ONE
-   `<pre>` in it has. The annotated example has no such wrapper and keeps its
-   button in the bar — see the bottom of this file for why. */
-.code-win .code-hold{position:relative}
-.code-win .code-hold .code-copy{
-  position:absolute;top:7px;right:7px;z-index:2;opacity:0;
-  background:var(--ink);border:1px solid var(--wire);
-}
-.code-win:hover .code-hold .code-copy,
-.code-win:focus-within .code-hold .code-copy,
-.code-win .code-hold .code-copy:focus-visible{opacity:1}
+     It never hides completely: a control that appears only on hover does
+     not exist on a touch screen, and the phone is where copying a snippet
+     is most annoying to do by hand.
 
-/* A CONTROL THAT APPEARS ON HOVER DOES NOT EXIST ON A TOUCH SCREEN, and the
-   phone is where copying a command by hand is most annoying to do. There it
-   keeps the quiet, permanent presence it had in the bar. */
-@media (hover:none){
-  .code-win .code-hold .code-copy{opacity:.55}
-}
+   Hiding it meant a `@media (hover:none)` exception to undo the hiding on every
+   device without a pointer — a rule whose whole job was to cancel the rule
+   above it. And in the annotated example the float landed on prose, because
+   that block's column alternates code and notes.
+
+   THE OTHER HALF IS THE STUDENT. A course is read block after block, and a
+   control that is in the bar here and floating there is two things to learn for
+   one action. It is in the bar, it is always there, and the bar is what every
+   block in this interface has. */
 
 /* ==========================================================================
    And the annotated example, which is a window around a file cut into pieces.
@@ -134,16 +128,6 @@
 .example-win .example-code:last-of-type{
   border-bottom:1px solid var(--wire);border-radius:0 0 5px 5px;
 }
-/* IN THE BAR, AND NOT FLOATING over the first snippet the way a code block's
-   does. There the block is one `<pre>` and there is code under the button
-   wherever it lands; here the column alternates code and prose, and floating
-   put it on top of a sentence — the first line of the first note, unreadable
-   behind it, on every narrow screen. */
-.example-win .code-copy{opacity:.55}
-.example-win:hover .code-copy,
-.example-win:focus-within .code-copy,
-.example-win .code-copy:focus-visible{opacity:1}
-
 @media(min-width:1466px){
   /* the bar is a cell of the code column, and the frame opens under it */
   .example-win .code-bar{grid-column:2}
