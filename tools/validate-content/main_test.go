@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
@@ -189,5 +190,63 @@ func TestSeventeenIsNotSeven(t *testing.T) {
 	}
 	if got := spellOut("nineteen and ninety"); got != "19 and ninety" {
 		t.Errorf("twenty is the ceiling, so `ninety` stays a word; got %q", got)
+	}
+}
+
+func oneScript(script string, seconds int) *catalog.School {
+	return &catalog.School{Courses: []*catalog.Course{{
+		ID: "co-x",
+		Loaded: []*catalog.Lesson{{
+			ID: "le-1",
+			Sections: []catalog.Section{{
+				ID: "se-v", Kind: catalog.KindVideo,
+				Videos: []catalog.Video{{Script: script, Seconds: seconds}},
+			}},
+		}},
+	}}}
+}
+
+// Sixty words is a minute at one a second; the band is 1.0 to 3.0.
+func TestADurationNoNarratorCouldMeetIsReported(t *testing.T) {
+	words := strings.Repeat("word ", 300)
+
+	for _, c := range []struct {
+		seconds int
+		want    int
+		why     string
+	}{
+		{seconds: 60, want: 1, why: "5.00 words a second is faster than anyone speaks"},
+		{seconds: 99, want: 1, why: "3.03 is just past the ceiling"},
+		{seconds: 100, want: 0, why: "3.00 is the ceiling exactly, and the band includes it"},
+		{seconds: 150, want: 0, why: "2.00 is ordinary narration"},
+		{seconds: 300, want: 0, why: "1.00 is the floor and a demonstration script sits near it"},
+		{seconds: 400, want: 1, why: "0.75 is a video that is three quarters silence"},
+	} {
+		got := checkNarrationRate("code", oneScript(words, c.seconds))
+		if len(got) != c.want {
+			t.Errorf("%d words in %ds: got %d problem(s), want %d — %s",
+				300, c.seconds, len(got), c.want, c.why)
+		}
+	}
+}
+
+// THE CUES ARE NOT SPOKEN. `{{terminal}}` tells the renderer to cut to a shot;
+// counting it as a word makes a script look longer than it is, and on a short
+// script with many cues that is the difference between passing and failing.
+func TestCuesAreNotCountedAsWords(t *testing.T) {
+	spoken := strings.Repeat("word ", 150)
+	cues := strings.Repeat("{{shot}} ", 150)
+	if got := checkNarrationRate("code", oneScript(spoken+cues, 75)); len(got) != 0 {
+		t.Errorf("150 spoken words in 75s is 2.00 a second; the cues must not count: %v", got)
+	}
+}
+
+// A script with no duration, or a duration with no script, is not this check's
+// to judge — there is no rate to compute.
+func TestNothingToMeasureIsNotAProblem(t *testing.T) {
+	for _, s := range []*catalog.School{oneScript("", 60), oneScript("some words here", 0)} {
+		if got := checkNarrationRate("code", s); len(got) != 0 {
+			t.Errorf("got %v, want nothing to report", got)
+		}
 	}
 }
