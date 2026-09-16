@@ -146,6 +146,6 @@ mpstat -P ALL 1             # is it every core, or one
 pidstat -u 1                # which process
 ```
 
-Three commands, in that order, and the next section after them is
+Three commands, in that order, and the next one after them is
 `perf top` — which is a profiler and beyond this lesson's scope, but is the
 honest answer to "which *line of code*".
