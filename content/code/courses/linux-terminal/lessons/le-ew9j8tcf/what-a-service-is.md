@@ -55,8 +55,8 @@ one:
 | `/run/<name>/` | its PID file and its socket, gone at boot |
 | `/usr/lib/systemd/system/<name>.service` | how it is started — section 11 |
 
-So: **`nginx` is five paths you can guess before you look.** That is the payoff of lesson 3's
-lesson 3 section 02 being a standard rather than a habit.
+So: **`nginx` is five paths you can guess before you look.** That is the payoff of lesson 3
+section 02 being a standard rather than a habit.
 
 ## Three things a service needs that a command does not
 
