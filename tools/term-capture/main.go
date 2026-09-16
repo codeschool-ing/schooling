@@ -335,9 +335,30 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 	}()
 
 	term := vt.NewSafeEmulator(cols, rows)
-	// read-only afterwards; this unblocks the reply pump below
-	defer func() { _ = term.Close() }()
 
+	// THE EMULATOR IS NOT CLOSED, AND THAT IS THE LESSER OF TWO THINGS.
+	//
+	// It used to be, on a `defer`, to unblock the reply pump below — and doing
+	// that is a data race inside the library. `SafeEmulator` guards `Write`,
+	// `Resize` and the rest with a mutex and deliberately does NOT guard `Read`,
+	// because `Read` blocks; `Emulator.Read` and `Emulator.Close` then both
+	// touch the same `closed` field with nothing between them. Closing while the
+	// pump sits inside that Read is exactly the pair, and `-race` says so:
+	//
+	//	Write at 0x…958 by goroutine 18:      vt.(*Emulator).Close()
+	//	Previous read by goroutine 19:        vt.(*Emulator).Read()
+	//
+	// Nothing had ever run this function under `-race`: the CLI is not built
+	// with it and no test reached the pseudo-terminal half. It took the test
+	// this repository added last, and it failed on `main` rather than on the
+	// branch, because the branch's own run was the one that got lucky.
+	//
+	// There is no way to unblock that Read from outside except the Close that
+	// races with it, so the pump is left where it is — blocked, holding one
+	// goroutine, until the process ends. That costs a goroutine per capture in
+	// a program that captures once and exits, and it buys a `go test -race`
+	// that means what it says.
+	//
 	// THE PROGRAM ASKS THE TERMINAL QUESTIONS AND HAS TO GET ANSWERS. vim opens
 	// by querying device attributes; an emulator composes the reply and writes
 	// it to an io.Pipe, which BLOCKS until somebody reads it — while holding the
