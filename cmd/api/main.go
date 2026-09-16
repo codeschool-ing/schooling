@@ -1133,9 +1133,68 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			}
 			return out, nil
 		},
+		func(ctx context.Context, locale string) ([]discover.Track, error) {
+			id, ok := tenant.FromContext(ctx)
+			if !ok {
+				return nil, discover.ErrNoTrack
+			}
+			listed, err := courses.Tracks(ctx, id.ID, locale)
+			if err != nil {
+				return nil, err
+			}
+			out := make([]discover.Track, 0, len(listed))
+			for i := range listed {
+				out = append(out, aTrack(&listed[i], nil))
+			}
+			return out, nil
+		},
+		func(ctx context.Context, slug, locale string) (*discover.Track, error) {
+			id, ok := tenant.FromContext(ctx)
+			if !ok {
+				return nil, discover.ErrNoTrack
+			}
+			listed, err := courses.Tracks(ctx, id.ID, locale)
+			if err != nil {
+				return nil, err
+			}
+			var found *catalog.TrackView
+			for i := range listed {
+				if listed[i].Slug == slug {
+					found = &listed[i]
+					break
+				}
+			}
+			if found == nil {
+				return nil, discover.ErrNoTrack
+			}
+			// A step names a course by id; the page wants its name and its
+			// slug, which is what the course listing has.
+			named, err := courses.Courses(ctx, id.ID, catalog.PlanNone, locale)
+			if err != nil {
+				return nil, err
+			}
+			out := aTrack(found, named)
+			return &out, nil
+		},
 		func(ctx context.Context) (string, bool) {
 			s, ok := tenant.FromContext(ctx)
 			return s.Name, ok
+		},
+		func(ctx context.Context) string {
+			id, ok := tenant.FromContext(ctx)
+			if !ok {
+				return ""
+			}
+			var when *time.Time
+			if err := pool.QueryRow(ctx,
+				`SELECT catalog_published_at FROM tenants WHERE id = $1`, id.ID).Scan(&when); err != nil {
+				web.LoggerFrom(ctx).Error("reading when the catalogue was published", "error", err)
+				return ""
+			}
+			if when == nil {
+				return "" // not loaded since the column existed; say nothing
+			}
+			return when.UTC().Format(time.RFC3339)
 		},
 	)
 	discoverable := http.NewServeMux()
@@ -2403,6 +2462,44 @@ func lessonsOf(view *catalog.CourseView) []discover.Lesson {
 	out := make([]discover.Lesson, 0, len(view.Topics))
 	for _, tp := range view.Topics {
 		out = append(out, discover.Lesson{At: written[tp.ID], Title: tp.Title})
+	}
+	return out
+}
+
+/*
+A track for the public pages.
+
+	A step is a course id, or a CHOICE between courses — a fork the student
+	decides at. A choice has no page of its own, because it is a decision rather
+	than a thing; its courses have pages, and the step is named after the
+	question it asks.
+
+	`named` is the course listing, which is where a step's id becomes a name and
+	a slug. It is nil where the page does not need them — the list of tracks
+	shows names and goals and links no courses, so reading every course to draw
+	it would be a query for nothing.
+*/
+func aTrack(t *catalog.TrackView, named []catalog.Listing) discover.Track {
+	byID := make(map[string]catalog.Listing, len(named))
+	for _, c := range named {
+		byID[c.ID] = c
+	}
+	out := discover.Track{Slug: t.Slug, Name: t.Name, Goal: t.Goal, Outcome: t.Outcome}
+	for _, s := range t.Steps {
+		if s.Course != "" {
+			c := byID[s.Course]
+			name := c.Name
+			if name == "" {
+				name = s.Course
+			}
+			out.Steps = append(out.Steps, discover.Step{Name: name, Slug: c.Slug})
+			continue
+		}
+		step := discover.Step{Name: s.Choice, Choice: s.Choice}
+		for _, o := range s.Options {
+			step.Options = append(step.Options, o.Name)
+		}
+		out.Steps = append(out.Steps, step)
 	}
 	return out
 }

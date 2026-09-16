@@ -38,16 +38,7 @@ One lesson, as a page.
 	comes back. Courses are republished from a snapshot and reordered rarely,
 	and the sitemap is re-read on every crawl.
 */
-func (h *Handler) lesson(w http.ResponseWriter, r *http.Request) {
-	code := "en"
-	if given := r.PathValue("lang"); given != "" {
-		if _, ok := languageAt(given); !ok {
-			http.NotFound(w, r)
-			return
-		}
-		code = given
-	}
-
+func (h *Handler) lesson(w http.ResponseWriter, r *http.Request, code string) {
 	at, err := strconv.Atoi(r.PathValue("at"))
 	if err != nil || at < 1 {
 		http.NotFound(w, r)
@@ -78,51 +69,33 @@ func (h *Handler) lesson(w http.ResponseWriter, r *http.Request) {
 
 	origin := origin(r)
 	path := "/course/" + slug + "/lesson/" + strconv.Itoa(at)
-	here, _ := languageAt(code)
+	here := languageAt(code)
 
+	summary := summarise(lesson.Sections)
 	data := lessonPage{
-		Lang:      languages[here].tag,
-		Lesson:    *lesson,
-		Course:    course.Name,
-		CourseAt:  origin + languages[here].at + "/course/" + slug,
-		Words:     words[code],
-		Canonical: origin + languages[here].at + path,
-		XDefault:  origin + path,
-		OpenAt:    origin + "/#/course/" + slug + "/lesson/" + strconv.Itoa(at),
-		Summary:   summarise(lesson.Sections),
+		head:     headOf(origin, path, here, lesson.Title, summary),
+		Lesson:   *lesson,
+		Course:   course.Name,
+		CourseAt: origin + languages[here].at + "/course/" + slug,
+		Words:    words[code],
+		OpenAt:   origin + "/#/course/" + slug + "/lesson/" + strconv.Itoa(at),
+		Summary:  summary,
 	}
-	if name, ok := h.school(r.Context()); ok {
+	if name, found := h.school(r.Context()); found {
 		data.School = name
 	}
-	for i, l := range languages {
-		data.Alternates = append(data.Alternates, alternate{
-			Rel: "alternate", HrefLang: l.tag, Href: origin + l.at + path,
-		})
-		data.OtherTongue = append(data.OtherTongue, link{
-			Label: l.label, Href: origin + l.at + path, Here: i == here,
-		})
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Header().Set("Cache-Control", "public, max-age=1800")
-	if err := lessonTemplate.Execute(w, data); err != nil {
-		web.LoggerFrom(r.Context()).Error("writing a lesson page", "error", err, "course", slug)
-	}
+	write(w, r, lessonTemplate, data)
 }
 
 type lessonPage struct {
-	Lang        string
-	School      string
-	Course      string
-	CourseAt    string
-	Lesson      Lesson
-	Summary     string
-	Words       map[string]string
-	Canonical   string
-	XDefault    string
-	OpenAt      string
-	Alternates  []alternate
-	OtherTongue []link
+	head
+	School   string
+	Course   string
+	CourseAt string
+	Lesson   Lesson
+	Summary  string
+	Words    map[string]string
+	OpenAt   string
 }
 
 /*
@@ -167,46 +140,16 @@ var lessonTemplate = template.Must(template.New("lesson").Parse(`<!DOCTYPE html>
 {{- if .Summary}}
 <meta name="description" content="{{.Summary}}">
 {{- end}}
-<link rel="canonical" href="{{.Canonical}}">
-{{- range .Alternates}}
-<link rel="alternate" hreflang="{{.HrefLang}}" href="{{.Href}}">
-{{- end}}
-<link rel="alternate" hreflang="x-default" href="{{.XDefault}}">
+` + headTags + `
 <meta property="og:type" content="article">
-<meta property="og:title" content="{{.Lesson.Title}}">
-{{- if .Summary}}
-<meta property="og:description" content="{{.Summary}}">
-{{- end}}
-<meta property="og:url" content="{{.Canonical}}">
 {{- if .School}}
 <meta property="og:site_name" content="{{.School}}">
 {{- end}}
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="{{.Lesson.Title}}">
-<style>
-:root{color-scheme:light dark}
-body{margin:0;font:16px/1.7 system-ui,-apple-system,'Segoe UI',sans-serif}
-main{max-width:42rem;margin:0 auto;padding:2rem 1rem 4rem}
-h1{font-size:1.8rem;line-height:1.25;margin:.2em 0 .6em}
-h2{font-size:1.25rem;margin:2.2em 0 .4em}
-h3{font-size:1.05rem;margin:1.6em 0 .3em}
-a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.eyebrow{opacity:.7;margin:0;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em}
-.tongues{display:flex;gap:1rem;font-size:.85rem;margin-bottom:1.5rem}
-.tongues [aria-current]{font-weight:600}
-.whole{margin:2.5rem 0;padding:1rem;border:1px solid;border-radius:3px}
-.whole p{margin:0}
-.go{display:inline-block;margin-top:.6rem;padding:.6rem 1.1rem;border:1px solid;border-radius:3px}
-</style>
+` + sheet + `
 </head>
 <body>
 <main>
-  <div class="tongues">
-  {{- range .OtherTongue}}
-    <a href="{{.Href}}" {{if .Here}}aria-current="true"{{end}}>{{.Label}}</a>
-  {{- end}}
-  </div>
-
+` + tongues + `
   <p class="eyebrow"><a href="{{.CourseAt}}">{{.Course}}</a>{{if .School}} · {{.School}}{{end}}</p>
   <h1>{{.Lesson.Title}}</h1>
 

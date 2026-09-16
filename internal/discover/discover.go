@@ -55,7 +55,6 @@ package discover
 import (
 	"context"
 	"net/http"
-	"strings"
 
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
@@ -127,6 +126,12 @@ type (
 	// SchoolName is the school this request arrived at, for the pages to say
 	// whose they are.
 	SchoolName func(ctx context.Context) (string, bool)
+
+	// Published is when this school's catalogue was last loaded, as RFC 3339,
+	// or "" when it has not been loaded since the column existed. It is the
+	// sitemap's `lastmod` and there is nothing finer to be had: the mirror is
+	// rewritten whole, so no course has an age of its own.
+	Published func(ctx context.Context) string
 )
 
 // ErrNoCourse is what One returns for a slug this school does not publish,
@@ -157,24 +162,32 @@ var languages = []struct {
 	{code: "pt", tag: "pt-BR", at: "/pt", label: "Português"},
 }
 
-func languageAt(code string) (int, bool) {
+// Where a language sits in the list, which is how a page finds its own tag and
+// its own path prefix. There is no "not found": a route exists per language, so
+// a code that reached a handler is one of these.
+func languageAt(code string) int {
 	for i, l := range languages {
 		if l.code == code {
-			return i, true
+			return i
 		}
 	}
-	return 0, false
+	return 0
 }
 
 type Handler struct {
-	list    List
-	one     One
-	reading Reading
-	school  SchoolName
+	list      List
+	one       One
+	reading   Reading
+	paths     Paths
+	route     Route
+	school    SchoolName
+	published Published
 }
 
-func NewHandler(list List, one One, reading Reading, school SchoolName) *Handler {
-	return &Handler{list: list, one: one, reading: reading, school: school}
+func NewHandler(list List, one One, reading Reading, paths Paths, route Route,
+	school SchoolName, published Published) *Handler {
+	return &Handler{list: list, one: one, reading: reading, paths: paths,
+		route: route, school: school, published: published}
 }
 
 /*
@@ -191,42 +204,61 @@ The routes, and why they are named rather than a catch-all.
 	broad is worth the check; the alternative is one route per language, which
 	is the same list written twice.
 */
-func (h *Handler) Routes(mux *http.ServeMux) {
-	for _, at := range Patterns {
-		mux.HandleFunc(at, h.at(at))
-	}
-}
-
 /*
-Patterns is every address this package answers, and it is exported because
-`cmd/api` needs the same list.
+The routes, one per language rather than one with a language in it.
 
-	These routes are registered on a mux of their own and reached through
-	`tenant.Resolve`, so the school mux has to forward exactly these paths and
-	no others. Writing that list a second time by hand is what it looks like:
-	the two lesson routes were added here and not there, and the sitemap
-	advertised pages that answered 404. The list exists once now.
+	`GET /{lang}/courses` was the obvious shape and it is the wrong one: it
+	matches `/course/courses`, so does `GET /course/{slug}`, and neither is more
+	specific — which `http.ServeMux` answers by PANICKING as it registers, so the
+	server would not have started at all. Caught by a test, which is the only
+	reason it was caught before a deploy.
+
+	The languages are a closed list, so the paths are too. That also removes a
+	check: a language nothing is written in has no route, and the mux answers
+	404 without this package having to recognise the difference.
+
+	These are more specific patterns than `ui`'s `/`, so they win on that mux
+	without taking away its deliberate 404 for everything else.
 */
-var Patterns = []string{
-	"GET /robots.txt",
-	"GET /sitemap.xml",
-	"GET /course/{slug}",
-	"GET /{lang}/course/{slug}",
-	"GET /course/{slug}/lesson/{at}",
-	"GET /{lang}/course/{slug}/lesson/{at}",
+func (h *Handler) Routes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /robots.txt", h.robots)
+	mux.HandleFunc("GET /sitemap.xml", h.sitemap)
+	for _, l := range languages {
+		code := l.code
+		mux.HandleFunc("GET "+l.at+"/courses", h.inLanguage(code, h.everyCourse))
+		mux.HandleFunc("GET "+l.at+"/tracks", h.inLanguage(code, h.everyTrack))
+		mux.HandleFunc("GET "+l.at+"/course/{slug}", h.inLanguage(code, h.course))
+		mux.HandleFunc("GET "+l.at+"/course/{slug}/lesson/{at}", h.inLanguage(code, h.lesson))
+		mux.HandleFunc("GET "+l.at+"/track/{slug}", h.inLanguage(code, h.track))
+	}
 }
 
-func (h *Handler) at(pattern string) http.HandlerFunc {
-	switch {
-	case strings.HasSuffix(pattern, "/robots.txt"):
-		return h.robots
-	case strings.HasSuffix(pattern, "/sitemap.xml"):
-		return h.sitemap
-	case strings.HasSuffix(pattern, "/lesson/{at}"):
-		return h.lesson
-	default:
-		return h.course
+// Patterns is every address this package answers, and it is exported because
+// `cmd/api` forwards exactly these paths to a mux of its own, through
+// `tenant.Resolve`. Writing the list a second time by hand is what it looks
+// like: two lesson routes were once added here and not there, and the sitemap
+// advertised pages that answered 404.
+var Patterns = patterns()
+
+func patterns() []string {
+	out := []string{"GET /robots.txt", "GET /sitemap.xml"}
+	for _, l := range languages {
+		out = append(out,
+			"GET "+l.at+"/courses",
+			"GET "+l.at+"/tracks",
+			"GET "+l.at+"/course/{slug}",
+			"GET "+l.at+"/course/{slug}/lesson/{at}",
+			"GET "+l.at+"/track/{slug}",
+		)
 	}
+	return out
+}
+
+// inLanguage hands a page the language its route is for. The alternative was
+// reading a path segment and validating it, which is the same list of languages
+// written twice and checked once.
+func (h *Handler) inLanguage(code string, page func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) { page(w, r, code) }
 }
 
 // origin is where this request arrived, which is the only address this process
