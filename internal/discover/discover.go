@@ -71,8 +71,19 @@ type Course struct {
 	Level         string
 	Hours         int
 	Syllabus      []string
-	Topics        []string
-	Lessons       []Lesson
+
+	/* THE LESSONS ARE THE COURSE'S `topics`, WHICH IS WHERE THE TITLES ARE
+	   TRANSLATED. A course declares a list of topics, each with the ID OF A
+	   LESSON and a title, and that list is what the interface draws a course
+	   from — `ui/app/catalog.js`'s `courseLessons` maps `topic.title` straight
+	   onto a lesson. `catalog_lessons.title` exists too and is the same English
+	   string with no locale beside it, so reading THAT is how a Portuguese page
+	   ends up with an English heading. This page reads the topic.
+
+	   A topic whose lesson is not written yet has no `At`: 120 of the 122
+	   courses are a catalogue entry with its contents planned and nothing
+	   authored, and their contents are still worth reading. */
+	Lessons []Lesson
 
 	// Free is whether a stranger may read this course's lessons. It is the
 	// store's answer and not a rule this package keeps: the first course of a
@@ -80,8 +91,9 @@ type Course struct {
 	Free bool
 }
 
-// Lesson is one lesson of a course. `At` is its position, one-based, and is how
-// it is addressed — see `lesson.go`.
+// Lesson is one lesson of a course. `At` is its position among the lessons that
+// are WRITTEN, one-based, and is how it is addressed — see `lesson.go`. Zero
+// means the course declares this lesson and nobody has written it.
 type Lesson struct {
 	At       int
 	Title    string

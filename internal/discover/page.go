@@ -88,17 +88,10 @@ a{color:inherit;text-decoration:underline;text-underline-offset:2px}
   </ul>
 {{- end}}
 
-{{- if .Course.Lessons}}
+{{- if .Lessons}}
   <h2>{{.Words.lessons}}</h2>
   <ul>{{range .Lessons}}
     <li>{{if .Href}}<a href="{{.Href}}">{{.Label}}</a>{{else}}{{.Label}}{{end}}</li>{{end}}
-  </ul>
-{{- end}}
-
-{{- if .Course.Topics}}
-  <h2>{{.Words.topics}}</h2>
-  <ul>{{range .Course.Topics}}
-    <li>{{.}}</li>{{end}}
   </ul>
 {{- end}}
 
