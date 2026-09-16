@@ -268,18 +268,40 @@ for (const [path, svg] of drawings) {
     /* A CAPTURE SPLITS ITS ROW INTO RUNS and a DRAWING DOES NOT, and both are
        here. The first version read only `<tspan>`, so every drawn figure in the
        catalogue went unmeasured — thirteen of them in `web-fundamentals` lesson
-       1 alone — and the count said 302 where `figure-fit` said 303. */
-    const runsIn = [...body.matchAll(/<tspan\b[^>]*fill="([^"]+)"[^>]*textLength="([0-9.]+)"[^>]*>([^<]*)<\/tspan>/g)];
-    if (runsIn.length) {
-      let at = 40;             // the gutter plus the padding: where a row starts
-      for (const [, fg, width, text] of runsIn) {
-        const from = at;
-        at += Number(width);
+       1 alone — and the count said 302 where `figure-fit` said 303.
+
+       A CAPTURED ROW CARRIES ONE COORDINATE PER CHARACTER, and reading them is
+       the only way to know where a run is now. The version before this looked
+       for the `textLength` each run used to have; when that stopped being
+       written the regex stopped matching, every captured figure fell through to
+       the drawn path, found no `fill` on the `<text>`, and was skipped. The
+       tool still said every figure was readable — of 1130 runs it had stopped
+       looking at. A checker that passes by not measuring is the thing this file
+       was written against. */
+    const runsIn = [...body.matchAll(/<tspan\b[^>]*fill="([^"]+)"[^>]*>([^<]*)<\/tspan>/g)];
+    const cells = (attr(open, 'x') || '').trim().split(/\s+/).map(Number);
+    /* WHAT SEPARATES THE TWO IS THE RUNS, NOT THE LENGTH OF THE LIST. Requiring
+       more than one coordinate here dropped every row a single character wide —
+       290 of them — into the drawn path, where a `<text>` with no `fill` of its
+       own is skipped. The count said 3830 where the figures hold 4120. */
+    if (runsIn.length && cells.length && !Number.isNaN(cells[0])) {
+      let at = 0;              // in cells, which is what the list is indexed by
+      for (const [, fg, text] of runsIn) {
+        /* AN ENTITY IS ONE CELL. `&#34;` is the quote a vim status line opens
+           with, and counting its five letters walks the rest of the row along. */
         const shown = text.replace(/&#\d+;|&[a-z]+;/g, 'x');
+        const from = at;
+        at += shown.length;
         if (!shown.trim()) continue;   // padding carries no glyph
-        /* The ground a run sits on is whatever covers its middle: a run that
-           straddles two is one the capture would have split. */
-        measure(shown.trim(), fg, [(from + at) / 2, y - 11.5 + 1]);
+        /* THE GROUND A RUN SITS ON IS WHATEVER COVERS ITS MIDDLE, and the middle
+           of the run is not the left edge of its middle CHARACTER. Reading the
+           coordinate straight out of the list put the full stop after emacs's
+           `C-h C-a` on the chip it comes after — a rectangle ends exactly where
+           the next character begins, and both ends of a box count as inside
+           it. The midpoint of the run's own extent has no such edge. */
+        const left = cells[Math.min(from, cells.length - 1)];
+        const right = cells[Math.min(at - 1, cells.length - 1)] + 7;
+        measure(shown.trim(), fg, [(left + right) / 2, y - 11.5 + 1]);
       }
       continue;
     }

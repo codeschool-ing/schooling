@@ -63,35 +63,64 @@ func TestBoldSplitsARunEvenWhenTheColoursMatch(t *testing.T) {
 	}
 }
 
-var tspanOf = regexp.MustCompile(`<tspan[^>]*textLength="([0-9.]+)"[^>]*>([^<]*)</tspan>`)
+var cellList = regexp.MustCompile(`<text x="([^"]*)"`)
 
-// THE FIGURE IS A GRID AND THE FONT IS NOT TRUSTED TO KEEP IT. `ui/assets/fonts`
-// ships weight 400 of the mono only, so a bold run is synthesised by the browser
-// and comes out wider than its cells; the first version of this drew htop's
-// function-key bar as "F4ilter" and "F9ill", each run's first letter buried
-// under the one before it. Every run carries the width its cells are worth.
-func TestEveryRunIsPinnedToTheGrid(t *testing.T) {
+// THE FIGURE IS A GRID AND THE FONT IS NOT TRUSTED TO KEEP IT.
+//
+// It used to be trusted a little: each run carried a `textLength` and the
+// browser was asked to squeeze its glyphs onto the grid. Where that is honoured
+// it is exact, and where it is not the row is laid out at the font's own width
+// and slides off the grounds underneath it — 3% on one reader's screen, which
+// is a letter and a half by the end of a line.
+//
+// So the grid is stated instead of requested: one coordinate per character.
+func TestEveryCharacterSitsOnItsOwnCell(t *testing.T) {
 	g := grid{
 		append(text("ab", "green", ""), text("cde", "", "")...),
 	}
 	svg := draw(g, 5, 1, "a screen", nil)
 
-	found := tspanOf.FindAllStringSubmatch(svg, -1)
-	if len(found) != 2 {
-		t.Fatalf("two runs make two tspans, got %d in %s", len(found), svg)
+	m := cellList.FindStringSubmatch(svg)
+	if m == nil {
+		t.Fatalf("the row carries no coordinates at all: %s", svg)
 	}
-	for _, m := range found {
-		want := float64(len([]rune(m[2]))) * charWidth
-		got, err := strconv.ParseFloat(m[1], 64)
+	at := strings.Fields(m[1])
+	if len(at) != 5 {
+		t.Fatalf("five characters want five coordinates, got %d: %q", len(at), m[1])
+	}
+	for i, v := range at {
+		want := gutter + padding + float64(i)*charWidth
+		got, err := strconv.ParseFloat(v, 64)
 		if err != nil {
-			t.Fatalf("textLength %q does not parse: %v", m[1], err)
+			t.Fatalf("coordinate %d is %q, which does not parse: %v", i, v, err)
 		}
 		if got != want {
-			t.Errorf("run %q should be %v wide, its tspan says %v", m[2], want, got)
+			t.Errorf("character %d belongs at %v, the list says %v", i, want, got)
 		}
 	}
-	if !strings.Contains(svg, `lengthAdjust="spacingAndGlyphs"`) {
-		t.Error("closing the gaps is not enough when the glyphs themselves are too wide")
+
+	// And nothing is left asking the browser to do the same job differently.
+	if strings.Contains(svg, "textLength") || strings.Contains(svg, "lengthAdjust") {
+		t.Error("a length to adjust to, on top of a coordinate per character, is two " +
+			"answers to one question — and the one that is not universally honoured")
+	}
+}
+
+// THE PADDING A ROW ENDS IN IS NOT DRAWN, and across this catalogue it is 81%
+// of the grid. A coordinate for each of those spaces would have made every
+// figure half as big again for nothing on the screen.
+func TestTheTrailingPaddingIsNotGivenCoordinates(t *testing.T) {
+	g := grid{append(text("hi", "", ""), text("        ", "", "")...)}
+	svg := draw(g, 10, 1, "a screen", nil)
+
+	at := strings.Fields(cellList.FindStringSubmatch(svg)[1])
+	if len(at) != 2 {
+		t.Errorf("two letters and eight trailing spaces want two coordinates, got %d", len(at))
+	}
+	// A space BETWEEN letters is a cell like any other.
+	two := draw(grid{text("a b", "", "")}, 3, 1, "a screen", nil)
+	if n := len(strings.Fields(cellList.FindStringSubmatch(two)[1])); n != 3 {
+		t.Errorf("a space between two letters keeps its place; got %d coordinates", n)
 	}
 }
 
@@ -104,8 +133,9 @@ func TestTextIsPlacedWithoutAGroupTransform(t *testing.T) {
 	if strings.Contains(svg, "transform=") {
 		t.Error("figure-fit does not apply transforms, so the coordinates have to be absolute")
 	}
-	if !strings.Contains(svg, `<text x="40.00"`) {
-		t.Errorf("text should start at the gutter plus the padding, 40; got %s", svg)
+	// One coordinate per character, the first at the gutter plus the padding.
+	if !strings.Contains(svg, `<text x="40 47"`) {
+		t.Errorf("every character is placed on its own cell, the first at 40; got %s", svg)
 	}
 }
 
