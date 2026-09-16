@@ -102,7 +102,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|bundle|bundle-test|figure-fit|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|frame-test|bundle|bundle-test|figure-fit|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -643,6 +643,16 @@ jobs:
           # neighbour of the defect above and the opposite failure: that one
           # fetched too often, this one never again.
           node tools/lang-test/lang-test.mjs
+
+          # AND WHAT THE FRAME SAYS, WHICH NOTHING HAS EVER READ. The suite
+          # above asks whether the banners follow a language switch; this one
+          # asks what is written in them. The version badge is the piece whose
+          # content comes from the server rather than a dictionary, and the
+          # stale notice is painted only when two requests minutes apart come
+          # back different — so `/version` is answered from the suite and moved
+          # between them, because every unstamped build answers the same string
+          # and no local server can be behind itself.
+          node tools/frame-test/frame-test.mjs
 
           # AND WHETHER THE INTERFACE CAN REACH THE SECOND FACTOR AT ALL. Every
           # part of it has a Go test against a real Postgres and every one of

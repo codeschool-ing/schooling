@@ -1567,6 +1567,13 @@ node tools/landing-test/landing-test.mjs  # a real page, in a real browser, send
 node tools/mfa-test/mfa-test.mjs        # enrol a second factor, sign in with it,
                                         # then again with a recovery code
 
+node tools/lang-test/lang-test.mjs      # a language switch reaches the lessons,
+                                        # and nothing that runs after it takes
+                                        # it back
+node tools/frame-test/frame-test.mjs    # and what the frame SAYS: the build the
+                                        # badge names, and the notice that the
+                                        # build has moved on
+
 go run ./tools/bundle -host code.example.tld -out bundle.html
 node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built
 
