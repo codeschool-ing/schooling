@@ -80,6 +80,7 @@ import (
 	"html"
 	"image/color"
 	"io"
+	"math"
 	"os"
 	"os/exec"
 	"strconv"
@@ -534,6 +535,64 @@ func colour(name, fallback string, background bool) string {
 	}
 }
 
+// WHAT COLOUR TEXT IS, WHEN THE PROGRAM SET A GROUND FOR IT AND NOT A COLOUR.
+//
+// The obvious answer is the one this drew until now: `var(--paper)`, the
+// terminal's own foreground, which is what a real terminal paints there. It is
+// also unreadable, and provably so rather than as a matter of taste.
+//
+// `--paper` MOVES BETWEEN THEMES AND A CAPTURED BACKGROUND DOES NOT. The `-bg`
+// tokens exist for exactly that reason — `terminal.css` says a background holds
+// its contrast against the text painted on it, so only the foregrounds turn
+// over — and a direct colour a program chose for itself never turns over at
+// all. That leaves a fixed ground under a foreground that is light in one theme
+// and dark in the other, and no such ground exists: one that reads against
+// `#e8e6df` is dark, one that reads against `#20263c` is light, and a middle
+// that half-reads against both reads properly against neither.
+//
+// Measured on vim's visual selection, `#6c6c6c`, which is what found this:
+// 4.20:1 in the dark theme and 2.85:1 in the light one, where AA asks 4.5 — on
+// the three selected lines of a figure whose whole subject is the selection.
+//
+// So the ground decides. Black text or white text, whichever reads better
+// against it, both of them fixed values that do not move; against every direct
+// colour a terminal program is likely to choose, one of the two clears AA.
+//
+// IT ONLY ANSWERS FOR A DIRECT COLOUR, and that limit is deliberate rather than
+// forgotten. A `--term-*-bg` token's value lives in `terminal.css`, and putting
+// the nine of them in here would be a second copy of a palette, drifting from
+// the first with nothing checking. A program that reaches for one of the eight
+// has almost always set both halves — htop's header is black on green, nano's
+// shortcut bar is black on white — and across the twenty-six screens of
+// `linux-terminal` lesson 12, every run left on a token background is padding
+// with no glyphs in it. The one to watch is `grey`, whose background reads
+// 3.87:1 against white and 4.00:1 against black: neither half clears AA, so a
+// program that sets a grey ground and no foreground has no good answer here.
+func over(background string) string {
+	if !strings.HasPrefix(background, "#") || len(background) != 7 {
+		return "var(--paper)"
+	}
+	var rgb [3]float64
+	for i := range rgb {
+		v, err := strconv.ParseUint(background[1+i*2:3+i*2], 16, 8)
+		if err != nil {
+			return "var(--paper)"
+		}
+		c := float64(v) / 255
+		if c <= 0.03928 {
+			rgb[i] = c / 12.92
+		} else {
+			rgb[i] = math.Pow((c+0.055)/1.055, 2.4)
+		}
+	}
+	// WCAG's relative luminance, against its own crossover: 0.179 is where
+	// black and white read equally well on the same ground.
+	if 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2] > 0.179 {
+		return "var(--term-black)"
+	}
+	return "var(--term-white)"
+}
+
 func draw(g grid, cols, rows int, label string, callouts calloutList) string {
 	// Blank rows at the bottom are where the program stopped, not content: a
 	// screen sized for 26 rows and filled to 13 should not draw a box with
@@ -561,7 +620,7 @@ func draw(g grid, cols, rows int, label string, callouts calloutList) string {
 				weight = ` font-weight="600"`
 			}
 			fmt.Fprintf(&spans, `<tspan%s fill="%s" textLength="%.2f" lengthAdjust="spacingAndGlyphs">%s</tspan>`,
-				weight, colour(r.fg, "var(--paper)", false),
+				weight, colour(r.fg, over(colour(r.bg, "", true)), false),
 				float64(len([]rune(r.text)))*charWidth, html.EscapeString(r.text))
 		}
 		fmt.Fprintf(&lines, `<text x="%.2f" y="%.2f" xml:space="preserve">%s</text>`,
