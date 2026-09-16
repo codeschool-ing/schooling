@@ -59,11 +59,17 @@
 
 /* `margin-left:auto` AND NOT `space-between`, because the tab is optional: a
    fence with no language and no prompt has nothing true to write on one, and
-   `space-between` would then put the dots on the left. */
-.code-win .win-dots{
-  display:flex;align-items:center;gap:7px;
-  margin:0 5px 9px auto;
+   `space-between` would then put the dots on the left.
+
+   IT IS A ROW AND NOT ONLY THE DOTS, because the annotated example puts its copy
+   button here too, and the two have to sit on ONE axis. Centred by the row, they
+   always do; left to two bottom margins and their own heights, the button rode
+   five pixels above the dots. */
+.code-win .win-right{
+  display:flex;align-items:center;gap:4px;
+  margin:0 4px 5px auto;
 }
+.code-win .win-dots{display:flex;align-items:center;gap:7px;margin:0 3px}
 .code-win .win-dots i{width:10px;height:10px;border-radius:50%;background:var(--wire)}
 
 /* ---------- the copy button, over the code ----------
@@ -76,19 +82,80 @@
    `:focus-within` IS THE HALF THAT IS NOT DECORATION. A control at `opacity:0`
    is still in the tab order, so a keyboard reaching it with nothing appearing
    on screen is a focus nobody can see — the block reveals the button the moment
-   anything inside it takes focus, and `:focus-visible` draws the ring. */
+   anything inside it takes focus, and `:focus-visible` draws the ring.
+
+   EVERY SELECTOR HERE NAMES `.code-hold`, which is the wrapper a block with ONE
+   `<pre>` in it has. The annotated example has no such wrapper and keeps its
+   button in the bar — see the bottom of this file for why. */
 .code-win .code-hold{position:relative}
-.code-win .code-copy{
+.code-win .code-hold .code-copy{
   position:absolute;top:7px;right:7px;z-index:2;opacity:0;
   background:var(--ink);border:1px solid var(--wire);
 }
-.code-win:hover .code-copy,
-.code-win:focus-within .code-copy,
-.code-win .code-copy:focus-visible{opacity:1}
+.code-win:hover .code-hold .code-copy,
+.code-win:focus-within .code-hold .code-copy,
+.code-win .code-hold .code-copy:focus-visible{opacity:1}
 
 /* A CONTROL THAT APPEARS ON HOVER DOES NOT EXIST ON A TOUCH SCREEN, and the
    phone is where copying a command by hand is most annoying to do. There it
    keeps the quiet, permanent presence it had in the bar. */
 @media (hover:none){
-  .code-win .code-copy{opacity:.55}
+  .code-win .code-hold .code-copy{opacity:.55}
+}
+
+/* ==========================================================================
+   And the annotated example, which is a window around a file cut into pieces.
+
+   THE BLOCK ALREADY TURNS AT 1466px and the frame turns with it. Above that
+   width the notes are a column of their own and the program is a second,
+   continuous column — so the window is THAT column, and the notes stay outside
+   it, in the page, which is what they are: somebody talking beside the file.
+   Below it the two columns become one, the file is cut up with prose between
+   its pieces, and there is no code column left to frame. The window then holds
+   the whole listing, because that is what one column is.
+
+   It is one window either way: the same bar, the same tab, the same dots. What
+   changes is what a column means at each width, and the block had already
+   decided that.
+
+   THE OUTPUT IS OUTSIDE THE FRAME AT BOTH WIDTHS. It is what the program
+   printed, not the program, and a window titled `totals.js` has no business
+   around it. That is why the frame is drawn cell by cell rather than on the
+   grid: the last cell it closes on is the last snippet of code, and whatever
+   the block puts after that is left in the page.
+   ========================================================================== */
+.example-win .code-bar{
+  margin:0;background:var(--ink);
+  border:1px solid var(--wire);border-bottom:0;border-radius:5px 5px 0 0;
+}
+.example-win .example-code{
+  border-left:1px solid var(--wire);border-right:1px solid var(--wire);
+}
+.example-win .example-code:last-of-type{
+  border-bottom:1px solid var(--wire);border-radius:0 0 5px 5px;
+}
+/* IN THE BAR, AND NOT FLOATING over the first snippet the way a code block's
+   does. There the block is one `<pre>` and there is code under the button
+   wherever it lands; here the column alternates code and prose, and floating
+   put it on top of a sentence — the first line of the first note, unreadable
+   behind it, on every narrow screen. */
+.example-win .code-copy{opacity:.55}
+.example-win:hover .code-copy,
+.example-win:focus-within .code-copy,
+.example-win .code-copy:focus-visible{opacity:1}
+
+@media(min-width:1466px){
+  /* the bar is a cell of the code column, and the frame opens under it */
+  .example-win .code-bar{grid-column:2}
+}
+
+@media(max-width:1465px){
+  .example-win .code-bar{grid-column:1}
+  /* The notes are inside the frame here, so they need the padding the code
+     cells already have — against a border, text that starts at the edge reads
+     as a mistake. */
+  .example-win .example-note{
+    border-left:1px solid var(--wire);border-right:1px solid var(--wire);
+    padding-left:14px;padding-right:14px;
+  }
 }

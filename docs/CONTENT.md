@@ -234,6 +234,12 @@ with neither — a file's contents, a drawing in box characters — gets no tab 
 window titled `output` when nobody said so is a label claiming to know something. Nothing has
 to be written in the file for any of this: it is read from what is already there.
 
+**`schooling-example` is a window too**, and its tab is the one place a title is written rather
+than read: the block's `file` field, falling back to its `language`. Above 1466px the window
+frames the code column alone and the notes stay beside it in the page; below that the two
+columns become one and it frames the whole listing. The `output` is outside the frame at both
+widths — it is what the program printed, not the program.
+
 #### Three things Markdown cannot say, which a fence says instead
 
 The interface renders paragraphs, lists and fenced code from this file. Three blocks have no
