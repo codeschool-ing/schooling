@@ -42,7 +42,7 @@ tudo se aplica sem mudança — os comandos são os mesmos — mas os nomes e as
 não.
 
 **E porque o CentOS 7 está fora de suporte.** Acabou em junho de 2024, e máquinas rodando ele
-continuam por aí recebendo nada. A seção 30 é sobre o que isso quer dizer; aqui basta reconhecer o
+continuam por aí recebendo nada. A seção 09 é sobre o que isso quer dizer; aqui basta reconhecer o
 nome como um aviso, e não como um fato neutro.
 
 ## O que você de fato digita

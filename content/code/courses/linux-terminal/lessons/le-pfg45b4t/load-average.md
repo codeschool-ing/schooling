@@ -23,10 +23,10 @@ last process id allocated.
 | **R** — runnable | running on a core, or waiting for one |
 | **D** — uninterruptible sleep | waiting on a disk, usually |
 
-Section 89 named those two states. **The D is the part that surprises everyone**,
-and it is why load average is not a processor metric: a machine with an idle
-processor and a saturated disk has a high load average, and a machine using
-every core with nothing queued has a load average equal to its core count.
+Lesson 6 section 04 named those two states. **The D is the part that surprises
+everyone**, and it is why load average is not a processor metric: a machine with an
+idle processor and a saturated disk has a high load average, and a machine using every
+core with nothing queued has a load average equal to its core count.
 
 Other Unixes do it differently. On Solaris and the BSDs the load average is the
 run queue alone, which makes it a processor number there and not here. If you
@@ -88,9 +88,9 @@ procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu----
 ```
 
 **Load 1.39 on a four-core machine, and the disk is at 93% utilisation.** That
-93% is `iostat`'s, from section 09 of this lesson; `vmstat` does not carry it.
+93% is `iostat`'s, from lesson 1 section 09 of this lesson; `vmstat` does not carry it.
 On the load average alone you would close the ticket. The `b 1` and the `wa 22`
-are the real story, and they are read in sections 04 and 09.
+are the real story, and they are read in lesson 1 sections 04 and 09.
 
 It goes the other way too. A machine wedged on a dead network filesystem will
 show a load average of 40 with every processor idle, because forty processes are

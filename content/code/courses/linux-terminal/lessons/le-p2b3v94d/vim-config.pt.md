@@ -94,8 +94,8 @@ nopaste` depois. (Terminais que suportam colagem entre colchetes tornam isso
 desnecessário, e muitos não suportam.)
 
 `:set list` mostra tabulações como `^I` e fins de linha como `$` — o `cat -A` da
-seção 123, dentro do editor, e o jeito de ver por que um `Makefile` não está
-funcionando.
+aula 8 seção 05, dentro do editor, e o jeito de ver por que um `Makefile` não
+está funcionando.
 
 ## Duas coisas que não são configuração
 

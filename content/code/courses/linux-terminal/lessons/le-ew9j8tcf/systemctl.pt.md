@@ -39,7 +39,7 @@ enabled
 
 **O `enable` criou um link simbólico.** É isso, inteiro.
 
-Leia o caminho que ele criou: `multi-user.target.wants/`. A seção 82 é sobre targets; por ora, o
+Leia o caminho que ele criou: `multi-user.target.wants/`. A seção 13 é sobre targets; por ora, o
 diretório é uma lista de *coisas que este target quer rodando*, e habilitar um serviço é colocá-lo
 naquela lista. No boot, o systemd chega no `multi-user.target`, lê o diretório, e inicia o que está
 nele.
@@ -62,7 +62,7 @@ disabled
 ```
 
 Três entradas naquela listagem, e duas delas não foram postas ali por você — é essa a cara de um
-serviço habilitado em qualquer máquina. A seção 46 da aula 3 te ensinou a ler o `->`; esta é aquela
+serviço habilitado em qualquer máquina. A seção 11 da aula 3 te ensinou a ler o `->`; esta é aquela
 leitura, sendo cobrada.
 
 ## `restart` e `reload` não são a mesma coisa
@@ -76,7 +76,7 @@ leitura, sendo cobrada.
 **Prefira `reload` em qualquer coisa servindo tráfego.** Nginx, Apache, Postgres e sshd suportam, e
 um reload é invisível para quem está conectado.
 
-Nem todo serviço implementa — o arquivo de unit precisa dizer `ExecReload=`, e a seção 80 mostra
+Nem todo serviço implementa — o arquivo de unit precisa dizer `ExecReload=`, e a seção 11 mostra
 onde. Um `systemctl reload` num serviço sem isso falha e te avisa, o que é melhor do que reiniciar
 em silêncio.
 
@@ -94,7 +94,7 @@ systemctl is-failed nginx     # para script
 ```
 
 A família `is-*` imprime uma palavra e define um código de saída, o que faz dela a escolha para
-script. O `status` é para ler, e a seção 79 o desmonta.
+script. O `status` é para ler, e a seção 10 o desmonta.
 
 O `systemctl is-enabled` tem quatro respostas e duas precisam de explicação:
 
@@ -134,8 +134,8 @@ quando você omite o sufixo. Outros tipos precisam dele:
 | `.service` | um programa a rodar — o padrão |
 | `.timer` | um agendamento — aula 13 |
 | `.socket` | uma porta ou socket que inicia o serviço na primeira conexão |
-| `.mount` | um sistema de arquivos — seção 47 da aula 3, gerado do `/etc/fstab` |
-| `.target` | um grupo dos acima — seção 82 |
+| `.mount` | um sistema de arquivos — seção 12 da aula 3, gerado do `/etc/fstab` |
+| `.target` | um grupo dos acima — seção 13 |
 
 Então `systemctl start backup.timer` precisa do sufixo, e `systemctl start nginx` não.
 
@@ -148,5 +148,5 @@ systemctl cat nginx               # imprime o arquivo de unit, e as sobreposiç�
 
 **O `daemon-reload` é o que as pessoas esquecem.** Edite um arquivo `.service` e o systemd segue com
 a versão que leu no boot até você mandar reler. O sintoma é uma mudança sem efeito e um serviço que
-reinicia alegremente no comportamento antigo. O `systemctl edit` — seção 80 — faz o reload por você,
+reinicia alegremente no comportamento antigo. O `systemctl edit` — seção 11 — faz o reload por você,
 que é uma entre várias razões para preferi-lo.

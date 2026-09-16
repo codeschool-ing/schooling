@@ -108,11 +108,11 @@ So you can delete a file you cannot read, cannot write, and do not own — if yo
 directory it is in. And you cannot delete a file you own outright, if the directory says no.
 
 That is not a bug. Removing a file means removing its name from a list, and changing a list is a
-write to the list. Section 46 already told you this from the other side: `rm` is `unlink`.
+write to the list. Lesson 3 section 11 already told you this from the other side: `rm` is `unlink`.
 
 It has one large consequence, and it is why `/tmp` exists in the state it does. A directory anybody
 may write is a directory where anybody may delete anybody's files — which would make `/tmp`
-useless. The fix is one extra bit, and it is section 63.
+useless. The fix is one extra bit, and it is section 10.
 
 ## What a mode means, in words
 
@@ -122,8 +122,8 @@ useless. The fix is one extra bit, and it is section 63.
 | `drwxr-x---` | 750 — the owner and the group; strangers see nothing |
 | `drwx------` | 700 — yours. `~/.ssh` is this |
 | `drwx--x--x` | 711 — pass through by name, no listing |
-| `drwxrwxrwt` | 1777 — `/tmp`, and the `t` is section 63 |
+| `drwxrwxrwt` | 1777 — `/tmp`, and the `t` is section 10 |
 
 **And one that is almost always a mistake:** a directory with `w` but no `x`. You may add a name to
 a list you cannot walk into, which means creating files you then cannot open. It is what `chmod -R`
-with a file mode produces, and section 58 showed it happening.
+with a file mode produces, and section 05 showed it happening.

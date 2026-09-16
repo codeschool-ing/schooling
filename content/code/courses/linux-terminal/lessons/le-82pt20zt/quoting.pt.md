@@ -96,8 +96,8 @@ três:
 
 | | |
 |---|---|
-| `set -u` | seção 143. Uma variável não definida vira erro em vez de string vazia |
-| `${var:?mensagem}` | seção 152. Recuse-se a expandir, com a sua própria mensagem |
+| `set -u` | seção 06. Uma variável não definida vira erro em vez de string vazia |
+| `${var:?mensagem}` | seção 15. Recuse-se a expandir, com a sua própria mensagem |
 | `[ -n "$var" ] \|\| exit 1` | confira você mesmo, cedo |
 
 ## Substituição de comando também é uma expansão
@@ -126,12 +126,12 @@ Há dois lugares em que dá para deixar de fora:
 cmd $FLAGS              # when you deliberately want one variable to become several arguments
 ```
 
-O `[[ ]]` é a seção 145, e as aspas continuam não sendo *erradas* lá — elas só não mudam nada. A
+O `[[ ]]` é a seção 08, e as aspas continuam não sendo *erradas* lá — elas só não mudam nada. A
 segunda linha é uma técnica real e é também como as pessoas se machucam; quando você precisar dela,
-um array (seção 149) faz o mesmo trabalho e preserva as palavras que você quis dizer.
+um array (seção 12) faz o mesmo trabalho e preserva as palavras que você quis dizer.
 
 Repare que o `[ ]` — um colchete — **não** está nessa lista. Ele é um comando comum, os argumentos
-dele são divididos como os de qualquer outro, e a seção 145 mostra o que isso custa.
+dele são divididos como os de qualquer outro, e a seção 08 mostra o que isso custa.
 
-O `shellcheck` (seção 154) aponta toda aspa faltando num arquivo em menos de um segundo, o que é um
+O `shellcheck` (seção 17) aponta toda aspa faltando num arquivo em menos de um segundo, o que é um
 revisor melhor que este parágrafo.

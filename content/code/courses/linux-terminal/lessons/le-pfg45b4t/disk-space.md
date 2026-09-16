@@ -103,8 +103,8 @@ sleep   16238  ana    9w   REG    7,0 20971520     0   12 /mnt/small/big.log (de
 ```
 
 **`NLINK 0` and `(deleted)`.** A process has the file open; somebody deleted the
-name; the data cannot be freed until the last descriptor closes. Section 46's
-hard links and section 98's descriptors, meeting in the least convenient place.
+name; the data cannot be freed until the last descriptor closes. Lesson 3 section 11's
+hard links and lesson 6 section 13's descriptors, meeting in the least convenient place.
 
 `lsof +L1` lists open files with fewer than one link — which is exactly this
 case and nothing else.

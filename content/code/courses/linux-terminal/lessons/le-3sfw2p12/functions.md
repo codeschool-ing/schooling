@@ -17,8 +17,8 @@ cmdlet, because a function **is** one as far as everything else is concerned —
 
 ## `param` is the difference
 
-Section 150's bash functions took `$1` and `$2` and checked nothing. PowerShell's
-`param` block declares names, types and rules, and the shell enforces them
+Lesson 9 section 13's bash functions took `$1` and `$2` and checked nothing.
+PowerShell's `param` block declares names, types and rules, and the shell enforces them
 **before your code runs**:
 
 ```
@@ -89,7 +89,7 @@ needed, and `return $x` means "emit `$x` and stop here" rather than "this is the
 value" — a `return` is not what produces the result.
 
 This is the same as bash's "a function returns data on standard output" from
-section 150, with one big difference: what comes back is **objects**, not text.
+lesson 9 section 13, with one big difference: what comes back is **objects**, not text.
 `$r` is an array of two strings, `$r[1]` is the second one, and nothing was
 parsed.
 
@@ -149,7 +149,7 @@ cmdlets chain without anybody writing glue.
 
 Variables are visible to functions **called from** where they are defined, and
 assignment inside a function creates a local one — the opposite default from
-bash, where section 150 had to say `local` on every line.
+bash, where lesson 9 section 13 had to say `local` on every line.
 
 ```
 PS /home/ana/work/ps> $x = 1; function Set-It { $x = 2 }; Set-It; "x is $x"
@@ -164,11 +164,11 @@ usually a sign the function should return a value instead.**
 ## Where functions live
 
 A `.ps1` file is a script; a `.psm1` file is a module. `Import-Module ./tools.psm1`
-brings its functions in — the `source` of section 139, with a manifest and
+brings its functions in — the `source` of lesson 9 section 02, with a manifest and
 version numbers attached.
 
 **A script file does not need a shebang on Windows** and does need one on Linux —
-`#!/usr/bin/env pwsh`, exactly as section 139 described — and then it is an
+`#!/usr/bin/env pwsh`, exactly as lesson 9 section 02 described — and then it is an
 ordinary executable file, from an ordinary bash prompt:
 
 ```

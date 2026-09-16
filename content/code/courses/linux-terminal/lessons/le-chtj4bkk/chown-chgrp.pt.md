@@ -22,7 +22,7 @@ ana@vm:~$ ls -ln /srv/perm/teamonly.txt
 
 O `-n` pede os valores crus, e ali estão. **O sistema de arquivos guarda `1001` e `1004`.** Os nomes
 são procurados na hora em que o `ls` imprime, em `/etc/passwd` e `/etc/group`, que é o assunto da
-seção 61.
+seção 08.
 
 Isso importa em dois lugares. Copie um disco para uma máquina onde o uid 1001 é outra pessoa, e os
 arquivos passam a pertencer a essa pessoa. E dentro de um contêiner o mesmo número mapeia para uma
@@ -70,7 +70,7 @@ ana@vm:~/perm$ chgrp team public.txt
 Sem reclamação. A ana é dona do arquivo e é membro do `team`, e essas são as duas condições: **você
 pode definir o grupo de um arquivo como qualquer grupo a que você pertença, num arquivo seu.**
 
-Essa é a razão inteira de a seção 61 existir. O grupo é a parte do modelo que um usuário comum
+Essa é a razão inteira de a seção 08 existir. O grupo é a parte do modelo que um usuário comum
 controla, e é como duas pessoas compartilham um arquivo sem ninguém virar root.
 
 Tente com um grupo em que você não está e é recusado pelo mesmo motivo do `chown`.
@@ -103,7 +103,7 @@ razões históricas e é ambíguo quando um nome de usuário contém ponto. Use 
 **`sudo chown -R $USER /`** — alguém tentando consertar uma permissão no próprio diretório pessoal,
 com um erro de digitação no caminho. Isso reescreve a propriedade do sistema inteiro, e a máquina
 não dá boot. Não há desfazer; a recuperação é reinstalar ou ter um backup dos metadados. **Confira
-o caminho antes de apertar enter num `chown` recursivo**, exatamente como a seção 42 disse do
+o caminho antes de apertar enter num `chown` recursivo**, exatamente como a aula 3 seção 07 disse do
 `rm -rf`.
 
 **Mudar o dono não muda o modo.** Um arquivo que era `-rw-------` da `ana` continua `-rw-------`

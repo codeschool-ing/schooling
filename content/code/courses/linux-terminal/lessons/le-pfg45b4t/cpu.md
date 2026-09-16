@@ -62,7 +62,7 @@ us sy id wa st gu
 | `gu` | **guest** — time running a virtual machine, if this machine is a host |
 
 `top` and `mpstat` split out one more, `ni` — user time spent by processes with
-a positive nice value, which is section 97's priority showing up as a column.
+a positive nice value, which is lesson 6 section 12's priority showing up as a column.
 
 Three of these are worth reading carefully.
 
@@ -125,7 +125,7 @@ MiB Swap:      0.0 total,      0.0 free,      0.0 used.  15443.9 avail Mem
     2 root      20   0       0      0      0 S   0.0   0.0   0:00.01 kthreadd
 ```
 
-Section 92 covered reading `top`. Two things for this lesson:
+Lesson 6 section 07 covered reading `top`. Two things for this lesson:
 
 **`top -b -n 1` is the batch form** — one screenful, no cursor addressing — which
 is what you use in a script, over `ssh`, or in a transcript like this one.
@@ -135,7 +135,7 @@ one process using nearly all four cores; it is not a bug and not an error.
 
 And the line `Tasks: 86 total, 4 running` is the same count the load average
 feeds on. PID 1 being `process_api` rather than `systemd` is this machine being
-a sandbox, as section 77 explained — the numbers are real, the process list is
+a sandbox, as lesson 5 section 08 explained — the numbers are real, the process list is
 this container's.
 
 ## When it is the processor

@@ -45,7 +45,7 @@ umask de `7` contra um pedido de `6` dá `0`, e não `-1`.
 
 **Repare no que a umask não consegue fazer.** Ela só remove. Uma umask de `000` te dá `666` e `777`,
 e nunca um arquivo com `x`, porque ninguém pediu `x` em primeiro lugar. É por isso que um script
-novo não é executável e você precisa dizer `chmod +x` — seção 58.
+novo não é executável e você precisa dizer `chmod +x` — seção 05.
 
 ## Mudar, e ver funcionando
 
@@ -74,7 +74,7 @@ ana@vm:~/um$ ls -l c.txt
 ```
 
 `664` — o grupo escreve. É a umask de quem trabalha num diretório compartilhado, e é com o que o
-bit setgid da seção 63 normalmente anda junto.
+bit setgid da seção 10 normalmente anda junto.
 
 O `-S` imprime ao contrário, como o que é *permitido* em vez do que é removido:
 

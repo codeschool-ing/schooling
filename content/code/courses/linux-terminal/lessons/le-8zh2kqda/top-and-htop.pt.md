@@ -34,7 +34,7 @@ quando não há nada errado.
 **A linha 1 é o `uptime`**, palavra por palavra — a hora, há quanto tempo a máquina está de pé,
 quantos usuários estão logados, e três números de carga. O resto desta seção é sobre esses três.
 
-**A linha 2 conta processos por estado**, que são as letras da seção 89 como um placar. O `zombie`
+**A linha 2 conta processos por estado**, que são as letras da seção 04 como um placar. O `zombie`
 ter um número só dele aqui é a checagem de zumbis mais rápida que existe.
 
 **A linha 3 são os processadores, em porcentagem**, e as abreviações importam:
@@ -43,7 +43,7 @@ ter um número só dele aqui é a checagem de zumbis mais rápida que existe.
 |---|---|
 | `us` | **usuário** — os seus programas, fazendo o trabalho deles |
 | `sy` | **sistema** — o kernel, trabalhando em nome deles |
-| `ni` | tempo de usuário de processos que foram **niceados** — seção 97 |
+| `ni` | tempo de usuário de processos que foram **niceados** — seção 12 |
 | `id` | **ocioso**. O número grande numa máquina saudável |
 | `wa` | **esperando entrada e saída**. Alto aqui quer dizer que o problema é o disco, não o processador |
 | `st` | **roubado** — um hipervisor deu o seu tempo para a máquina virtual de outra pessoa |
@@ -140,7 +140,7 @@ load average: 0.08, 0.03, 0.01
 ```
 
 Três números: a média de **um, cinco e quinze minutos**. E o que é feita a média não é utilização —
-é **quantos processos queriam rodar**, havendo processador livre ou não. O `R` da seção 89, contado
+é **quantos processos queriam rodar**, havendo processador livre ou não. O `R` da seção 04, contado
 ao longo do tempo, mais os que estão em `D`.
 
 O que te dá a regra:
@@ -202,7 +202,7 @@ O `-H` mostra threads em vez de processos, e duas coisas mudam. A segunda linha 
 nove processos**. E os PIDs 65 e 67 têm os mesmos números de memória do PID 1 e nomes diferentes:
 `vsock-console`, `tokio-rt-worker`. São threads do processo um, que as nomeou.
 
-A seção 87 disse para perguntar se você está contando threads. O `-H` é como se pergunta.
+A seção 02 disse para perguntar se você está contando threads. O `-H` é como se pergunta.
 
 ## As teclas, quando você o roda de verdade
 
@@ -212,7 +212,7 @@ O `top` sem o `-b` é interativo, e seis teclas dão conta:
 |---|---|
 | `P` | ordenar por processador |
 | `M` | ordenar por memória |
-| `k` | matar — ele pede um PID e um sinal, que é a seção 94 |
+| `k` | matar — ele pede um PID e um sinal, que é a seção 09 |
 | `u` | filtrar por um usuário |
 | `1` | mostrar cada processador numa linha em vez de uma média só |
 | `q` | sair |
@@ -241,13 +241,13 @@ Quatro coisas que ele te dá e o `top` não:
 **Uma barra por processador, sempre.** O `top` precisa da tecla `1`; o htop já começa assim, e a
 diferença entre um núcleo ocupado e quatro fica visível sem que se peça.
 
-**`F5`, visão em árvore.** O `pstree` da seção 91, ao vivo e ordenado — que é como você descobre que
+**`F5`, visão em árvore.** O `pstree` da seção 06, ao vivo e ordenado — que é como você descobre que
 o processo comendo a máquina é filho de algo que você reconhece.
 
 **`F9`, matar com um menu.** Ele lista os sinais por nome, o que quer dizer que você manda `TERM`
-porque escolheu e não `KILL` porque é o que você lembra. A seção 94 é sobre por que isso importa.
+porque escolheu e não `KILL` porque é o que você lembra. A seção 09 é sobre por que isso importa.
 
-**`F4`, filtrar enquanto você digita.** O `ps aux | grep` da seção 90, sem a verruga.
+**`F4`, filtrar enquanto você digita.** O `ps aux | grep` da seção 05, sem a verruga.
 
 **Use o `htop` quando estiver olhando, e o `top -b` quando estiver registrando.** Um script de
 shell, um job de cron, um relatório de bug — esses querem o modo de lote, e `top -b -n 1` é a linha

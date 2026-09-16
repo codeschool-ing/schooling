@@ -26,7 +26,7 @@ só uma delas é a pergunta que você fez.
 **As letras são para números, os símbolos são para strings**, que é exatamente o contrário de toda
 outra linguagem e é o motivo de dizer isso em voz alta uma vez.
 
-E a `\` no `\<` é porque o `<` dentro de `[ ]` é um redirecionamento — a seção 154 tem esse bug
+E a `\` no `\<` é porque o `<` dentro de `[ ]` é um redirecionamento — a seção 17 tem esse bug
 pego em flagrante.
 
 ## Vazio
@@ -91,7 +91,7 @@ match
 ```
 
 Aquilo é um padrão, não uma string. `[[ $host == web* ]]`, `[[ $f == *.tar.gz ]]` — a mesma sintaxe
-do `case` da próxima seção, e a mesma sintaxe do globbing da seção 45.
+do `case` da próxima seção, e a mesma sintaxe do globbing da aula 3 seção 10.
 
 Ponha aspas no lado direito e ele vira literal de novo:
 
@@ -146,7 +146,7 @@ ana@vm:/tmp/q$ echo "BASH_REMATCH: ${BASH_REMATCH[0]}"
 BASH_REMATCH: report.log
 ```
 
-O `=~` recebe uma expressão regular estendida — a sintaxe da seção 125 — e preenche o
+O `=~` recebe uma expressão regular estendida — a sintaxe da aula 8 seção 07 — e preenche o
 `BASH_REMATCH` com o que casou e com os grupos de captura.
 
 **Não ponha aspas no padrão.** A mesma armadilha do `==`, e é mais silenciosa, porque uma regex
@@ -223,6 +223,6 @@ dispositivos e o tipo de coisa que é o `/dev/stdin`. Quando você quer dizer "c
 acidental, `&&` e `||` dentro dele, correspondência de padrões, expressões regulares.
 
 Use o `[ ]` quando o script tiver `#!/bin/sh` no topo, porque o `[[` é bash e o dash não o tem —
-seção 139. Esse é o único motivo.
+seção 02. Esse é o único motivo.
 
 E use qual usar, ponha aspas nas suas variáveis assim mesmo. O hábito vale mais que a exceção.

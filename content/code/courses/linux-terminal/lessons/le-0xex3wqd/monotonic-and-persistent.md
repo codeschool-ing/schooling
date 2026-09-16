@@ -33,7 +33,7 @@ first minute.
 `OnUnitActiveSec=1h` is **an hour after the last run started, not on the hour** —
 so a job that takes twenty minutes runs at 03:00, 04:00, 05:00, and a job that
 takes ninety minutes runs at 03:00, 04:30, 06:00. It cannot pile up the way
-section 223's cron job can.
+section 14's cron job can.
 
 And `OnUnitInactiveSec=1h` is the stricter version: an hour after it **finished**,
 which guarantees a full hour of quiet between runs.
@@ -113,4 +113,4 @@ change and your change does not disappear with the package.
 
 For one setting rather than a whole file, `systemctl edit report.timer` writes a
 drop-in under `/etc/systemd/system/report.timer.d/` — and it opens the editor of
-lesson 12's section 205 to do it.
+lesson 12's lesson 12 section 13 to do it.

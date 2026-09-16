@@ -127,7 +127,7 @@ job roda duas vezes.
 | ponha os servidores em UTC | e pare de ter este problema |
 | agende fora das 01:00–03:00 | em qualquer fuso que muda, essa janela é a que quebra |
 | escreva o fuso num comentário | em toda linha em que o horário local era o ponto |
-| deixe o job idempotente | seção 225, e a razão de uma execução dupla ser sobrevivível |
+| deixe o job idempotente | seção 16, e a razão de uma execução dupla ser sobrevivível |
 
 **"Fora das 01:00–03:00" é a correção barata que ninguém aplica.** Um relatório às
 04:15 locais roda 365 vezes por ano em todo fuso da Terra; o mesmo relatório às

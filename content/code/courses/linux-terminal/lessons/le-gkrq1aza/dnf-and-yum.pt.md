@@ -47,7 +47,7 @@ Esta é a forma de todo arquivo `.repo` do `/etc/yum.repos.d/`:
 
 **O `gpgcheck=0` é o que não copiar.** Ele está aqui porque estes dois pacotes foram construídos
 nesta máquina minutos antes, sem chave. Em qualquer coisa real ele é `1`, com `gpgkey=` nomeando a
-chave — é o lado rpm do `signed-by` da seção 105.
+chave — é o lado rpm do `signed-by` da seção 03.
 
 A equivalência a guardar: **um arquivo `.repo` aqui é um arquivo `.list` ou `.sources` no
 `/etc/apt/sources.list.d/`.** Mesmo trabalho, sintaxe diferente.
@@ -126,7 +126,7 @@ hello from greet 1.2.0
 hello from greet 1.2.0
 ```
 
-Compare aquela tabela com o parágrafo do apt na seção 106. **A mesma informação, disposta em vez de
+Compare aquela tabela com o parágrafo do apt na seção 04. **A mesma informação, disposta em vez de
 escrita**, e com as seções nomeadas: `Installing:` é o que você pediu, `Installing dependencies:` é o
 que veio junto.
 
@@ -191,12 +191,12 @@ error: Failed dependencies:
         greet >= 1.2.0 is needed by greet-tools-0.3.0-1.noarch
 ```
 
-**O `error: Failed dependencies:` é a versão do `rpm` para a mensagem da seção 109**, e há uma
+**O `error: Failed dependencies:` é a versão do `rpm` para a mensagem da seção 07**, e há uma
 diferença que vale notar: o rpm recusa de saída. O dpkg desempacota e deixa o pacote meio instalado;
 o rpm não escreve nada.
 
 Aquelas duas linhas `rpm:` acima do erro são o primeiro dos dois artefatos de Ubuntu que as
-transcrições rpm desta aula carregam; o outro está na seção 113. **O Debian e o Ubuntu trazem um
+transcrições rpm desta aula carregam; o outro está na seção 11. **O Debian e o Ubuntu trazem um
 invólucro em volta do `rpm` que avisa que você está no tipo errado de sistema**, e então o roda assim
 mesmo. No Rocky ou no Fedora elas não estão lá.
 
@@ -225,7 +225,7 @@ Removing dependent packages:
  greet-tools               noarch               0.3.0-1               @teaching                23
 ```
 
-**O `Removing dependent packages:` é o mesmo comportamento que a seção 108 mostrou o apt tendo** —
+**O `Removing dependent packages:` é o mesmo comportamento que a seção 06 mostrou o apt tendo** —
 pedir um e ouvir dois. O `@` em `@teaching` quer dizer "instalado, e veio de lá", que é como o dnf
 marca a origem de um pacote instalado.
 
@@ -242,7 +242,7 @@ dnf autoremove                 dnf clean all
 
 Dois sem equivalente no apt que valem conhecer:
 
-**O `dnf provides` responde à quarta pergunta da seção 107 sem download extra**, porque os metadados
+**O `dnf provides` responde à quarta pergunta da seção 05 sem download extra**, porque os metadados
 de repositório rpm incluem listas de arquivos:
 
 ```

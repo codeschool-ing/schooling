@@ -27,11 +27,11 @@ Existem sessenta e quatro. **Oito valem conhecer**, e os outros você encontra p
 | `SIGTERM` | 15 | **por favor pare.** O educado, e o padrão |
 | `SIGINT` | 2 | **interrupção** — o que o `Ctrl+C` manda |
 | `SIGKILL` | 9 | **pare agora.** Não dá para capturar, bloquear nem ignorar |
-| `SIGSTOP` | 19 | **congele** — também incapturável. O `Ctrl+Z` da seção 95 é primo dele |
+| `SIGSTOP` | 19 | **congele** — também incapturável. O `Ctrl+Z` da seção 10 é primo dele |
 | `SIGCONT` | 18 | **continue** depois de uma parada |
-| `SIGHUP` | 1 | o terminal sumiu — seção 96 |
+| `SIGHUP` | 1 | o terminal sumiu — seção 11 |
 | `SIGQUIT` | 3 | `Ctrl+\`, que para e escreve um core dump |
-| `SIGCHLD` | 17 | mandado ao **pai** quando um filho termina. O `wait` da seção 88 |
+| `SIGCHLD` | 17 | mandado ao **pai** quando um filho termina. O `wait` da seção 03 |
 
 Nomes e números são intercambiáveis, e o shell converte entre eles:
 
@@ -90,7 +90,7 @@ jobs
 **Leia o entrelaçamento antes do resultado, porque ele é real e parece quebrado.** Uma tarefa em
 segundo plano imprime quando quer, e o que você digita é ecoado onde o cursor estiver — então o
 `kill -TERM $PID` aparece sem prompt na frente, na linha depois da saída da tarefa. O terminal não
-está confuso; ele está mostrando duas coisas dividindo uma tela. A seção 95 é sobre mantê-las
+está confuso; ele está mostrando duas coisas dividindo uma tela. A seção 10 é sobre mantê-las
 separadas.
 
 Agora o resultado. O `INT` chegou e o script imprimiu e continuou rodando — o `jobs` ainda o
@@ -115,7 +115,7 @@ ana@vm:~/work$ jobs
 naquele script e nunca foi consultado, porque o `kill -9` não consulta. O processo foi removido.
 
 Essa diferença — `Done` depois de uma mensagem, contra `Killed` em silêncio — é o argumento inteiro
-da seção 94.
+da seção 09.
 
 ## Os que chegam sem ninguém mandar
 
@@ -147,7 +147,7 @@ yes exit: 141
 ninguém do outro lado.
 
 **Esse é o comportamento projetado**, e é por isso que `| head` num comando enorme volta na hora em
-vez de esperar. O `PIPESTATUS` está aí porque o `$?` te daria o código do `head`, que é 0; a seção 99
+vez de esperar. O `PIPESTATUS` está aí porque o `$?` te daria o código do `head`, que é 0; a seção 14
 volta a ele.
 
 ## Mandando um
@@ -186,4 +186,4 @@ importa — um script que só olha o `$?` não consegue distinguir "sumiu" de "n
 pedem respostas opostas.
 
 Essa é também a sua primeira olhada na recusa. O PID 1 é do `root` e a `ana` não pode tocá-lo; a
-seção 94 é o resto dessa regra.
+seção 09 é o resto dessa regra.

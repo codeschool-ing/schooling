@@ -11,7 +11,8 @@ Ten characters, and they are the first thing on every line of a long listing.
 
 ## Character 1: the type, which is not a permission
 
-Section 41 covered it and it is worth repeating, because people count nine characters and find ten:
+Lesson 3 section 06 covered it and it is worth repeating, because people count nine characters and
+find ten:
 
 | | |
 |---|---|
@@ -63,7 +64,7 @@ reads it. Nobody but `ana` changes it.
 may edit it. That combination is what nearly every program in `/usr/bin` looks like.
 
 **`teamonly.txt` — `-rw-r-----`.** A file. `ana` reads and writes. The group `team` reads. Everybody
-else gets nothing, which is the `---` at the end, and it is why carla was refused in section 55.
+else gets nothing, which is the `---` at the end, and it is why carla was refused in section 02.
 
 ## `x` is the one with two meanings
 
@@ -84,7 +85,7 @@ the script ran
 
 The file did not change. One bit did.
 
-On a **directory**, `x` means something else entirely, and section 59 is about it. Carry nothing
+On a **directory**, `x` means something else entirely, and section 06 is about it. Carry nothing
 across.
 
 ## The two extra characters you will meet
@@ -96,7 +97,7 @@ drwxrwxrwt 38 root root 36864 Sep 14 22:45 /tmp
 ```
 
 An `s` where an `x` should be, and a `t` at the end. Those are the special bits, they are section
-63, and for now the thing to notice is only that **they sit in an `x` slot** — so a lowercase `s`
+10, and for now the thing to notice is only that **they sit in an `x` slot** — so a lowercase `s`
 means the special bit is on *and* execute is on, and an uppercase `S` means the special bit is on
 and execute is not, which is almost always a mistake.
 
@@ -107,17 +108,17 @@ And a `+` at the end of the nine:
 ```
 
 That means the file carries an **access control list** — extra permissions that the nine
-characters cannot express. Section 66. When a file's access does not match its mode, look for the
+characters cannot express. Section 13. When a file's access does not match its mode, look for the
 plus.
 
 ## How to answer "may I?" without guessing
 
-Three questions, in order, and section 55 gave you the first two:
+Three questions, in order, and section 02 gave you the first two:
 
 1. **Who am I?** `id` — and read the group list, not just the name.
 2. **Which row applies?** Owner, then group, then other. The first match, and only that one.
 3. **Can I reach it at all?** Every directory on the way needs `x`. This is the one people forget,
-   and section 59 is where it earns its own section.
+   and section 06 is where it earns its own section.
 
 `namei -l` walks a path and prints the mode of every step, which answers all three at once:
 

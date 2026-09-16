@@ -19,7 +19,7 @@ chmod  [ugoa]  [+-=]  [rwx]  arquivo
 ```
 
 **Quem**: `u` dono, `g` grupo, `o` outros, `a` os três. Omita e vale `a`, filtrado pelo seu umask —
-que é a seção 62, e um bom motivo para ser explícito.
+que é a seção 09, e um bom motivo para ser explícito.
 
 **Como**: `+` acrescenta, `-` remove, `=` define exatamente isto e limpa o resto daquela linha.
 
@@ -82,7 +82,7 @@ declarar uma forma numa palavra é mais claro do que chegar nela em três passos
 **Use simbólico quando você quer mudar uma coisa.** `chmod +x` num script que você baixou diz
 exatamente o que você quis dizer e não tem como abrir o arquivo para o mundo por acidente.
 
-Há uma armadilha que vale repetir da seção 57: **um número de três dígitos limpa os bits
+Há uma armadilha que vale repetir da seção 04: **um número de três dígitos limpa os bits
 especiais.** `chmod 755` num arquivo que era `4755` desliga o setuid em silêncio. A forma simbólica
 não faz isso.
 
@@ -156,5 +156,5 @@ O bruno está no `team`. Ele consegue ler o arquivo. Ele não decide quem mais p
 
 Repare na palavra: **`Operation not permitted`, e não `Permission denied`.** A segunda quer dizer
 que os bits disseram não; a primeira quer dizer que você não tem o direito de sequer tentar. A
-seção 60 é sobre como a propriedade muda de mãos, e a seção 64 é sobre a única conta que ignora
+seção 07 é sobre como a propriedade muda de mãos, e a seção 11 é sobre a única conta que ignora
 tudo isso.

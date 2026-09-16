@@ -42,7 +42,7 @@ Setting up cowsay (3.03+dfsg2-8) ...
 part people press `y` through. Four lines of it answer four different questions:
 
 **`The following additional packages will be installed:`** — you asked for one and you are getting
-two. `libtext-charwidth-perl` is `cowsay`'s `Depends` from section 104, resolved.
+two. `libtext-charwidth-perl` is `cowsay`'s `Depends` from section 02, resolved.
 
 **`The following NEW packages will be installed:`** is the full list. On a real machine this is
 where you notice that a small utility is dragging in a display server.
@@ -52,8 +52,8 @@ and the number that matters is the third. **`to remove` should be `0`** unless y
 non-zero there is apt telling you that satisfying your request requires taking something away, and
 it is the single most useful thing on the screen.
 
-The `168 not upgraded` is unrelated to this install: it is how far behind the machine is. Section
-111 is what to do about that number.
+The `168 not upgraded` is unrelated to this install: it is how far behind the machine is. Section 09
+is what to do about that number.
 
 **`After this operation, 135 kB of additional disk space will be used.`** — and it can say `freed`
 instead, or a figure in gigabytes that explains why the disk filled up last time.
@@ -80,7 +80,7 @@ Every package goes through both, and they fail differently:
 | **unpack** | the files are written to the filesystem |
 | **configure** | the package's own setup script runs — users, directories, a service enabled |
 
-A package can be unpacked and not configured, and section 109 shows exactly that state, with the
+A package can be unpacked and not configured, and section 07 shows exactly that state, with the
 program installed and not working. **The two-letter code in `dpkg -l` is these two steps**, one
 letter each.
 
@@ -104,7 +104,7 @@ apt list --installed          # what is on this machine
 ```
 
 Nine commands, and they are most of what anybody types. `remove` against `purge` and what
-`autoremove` is for are section 110.
+`autoremove` is for are section 08.
 
 ## `apt` and `apt-get` are not the same command
 

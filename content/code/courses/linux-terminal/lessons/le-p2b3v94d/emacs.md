@@ -75,8 +75,9 @@ which is most of them over `ssh`.
 abandons the one you are half way through.
 
 `C-s` is worth noticing for a different reason: it is search here, and it is the
-terminal's *stop output* elsewhere (section 8). Emacs takes the key over, which
-works — and is why an emacs user and a nano user disagree about what `C-s` does.
+terminal's *stop output* elsewhere (lesson 1 section 08). Emacs takes the key
+over, which works — and is why an emacs user and a nano user disagree about what
+`C-s` does.
 
 ## Leaving
 
@@ -120,7 +121,7 @@ run inside it:
 | Org mode | notes, outlines, scheduling, and literate documents |
 | `M-x tramp` | edit files on a remote machine **as if they were local** |
 
-That last one is section 206's subject, and it is the one thing in this list
+That last one is section 14's subject, and it is the one thing in this list
 where emacs is straightforwardly better than the alternatives.
 
 ## Where it leaves you

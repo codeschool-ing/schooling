@@ -68,9 +68,9 @@ ana@vm:~$ whoami
 ana
 ```
 
-Repare que o prompt virou `#`, que o `pwd` é `/root`, e que o `$HOME` mudou. A seção 06 te mandou
-olhar aquele último caractere antes de apertar enter em qualquer coisa destrutiva; é este o momento
-em que isso importa.
+Repare que o prompt virou `#`, que o `pwd` é `/root`, e que o `$HOME` mudou. A aula 1 seção 06 te
+mandou olhar aquele último caractere antes de apertar enter em qualquer coisa destrutiva; é este o
+momento em que isso importa.
 
 **`sudo -i` contra `sudo -s` contra `sudo su -`.** O primeiro é um shell de login completo como
 root: ambiente do root, casa do root, `.bashrc` do root. O `sudo -s` mantém o *seu* ambiente com os

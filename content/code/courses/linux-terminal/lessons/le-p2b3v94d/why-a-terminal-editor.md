@@ -6,14 +6,14 @@ version: 1
 You have an editor you like. This lesson is not about it, because these five
 situations do not ask.
 
-**One: the machine is somewhere else.** You are on it over `ssh` (section 75).
-There is no graphical anything, and copying the file down, editing it, and
-copying it back is three steps where one will do — and two of those steps are
-where the permissions get lost.
+**One: the machine is somewhere else.** You are on it over `ssh` (lesson 5
+section 06). There is no graphical anything, and copying the file down, editing
+it, and copying it back is three steps where one will do — and two of those steps
+are where the permissions get lost.
 
-**Two: you are root for ninety seconds.** One line in one configuration file,
-and then out again. Section 64's argument about `sudo` applies: the shorter that
-window is, the better.
+**Two: you are root for ninety seconds.** One line in one configuration file, and
+then out again. Lesson 4 section 11's argument about `sudo` applies: the shorter
+that window is, the better.
 
 **Three: something opened an editor and is waiting for you.**
 
@@ -48,9 +48,9 @@ lrwxrwxrwx 1 root root 20 Mar 10  2026 /usr/bin/vi -> /etc/alternatives/vi
 ```
 
 `vi` is not a program here. It is a symlink into the alternatives system from
-section 32, pointing at `vim.basic` — so typing `vi` gets you vim, with some
-compatibility settings on. On a minimal system it may point at `vim.tiny`, or at
-`busybox vi`, and those are genuinely more limited.
+lesson 2 section 11, pointing at `vim.basic` — so typing `vi` gets you vim, with
+some compatibility settings on. On a minimal system it may point at `vim.tiny`,
+or at `busybox vi`, and those are genuinely more limited.
 
 | | |
 |---|---|

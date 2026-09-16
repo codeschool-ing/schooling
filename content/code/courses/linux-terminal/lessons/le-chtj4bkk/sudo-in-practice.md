@@ -66,9 +66,9 @@ ana@vm:~$ whoami
 ana
 ```
 
-Note the prompt changed to `#`, and `pwd` is `/root`, and `$HOME` moved. Section 06 told you to
-watch that last character before pressing enter on anything destructive; this is the moment it
-matters.
+Note the prompt changed to `#`, and `pwd` is `/root`, and `$HOME` moved. Lesson 1 section 06 told
+you to watch that last character before pressing enter on anything destructive; this is the moment
+it matters.
 
 **`sudo -i` against `sudo -s` against `sudo su -`.** The first is a full login shell as root: root's
 environment, root's home, root's `.bashrc`. `sudo -s` keeps *your* environment with root's

@@ -64,7 +64,7 @@ drwxr-xr-x 2 ana ana 4096 Sep 14 14:45 arquivo
 ```
 
 O `-a` acrescentou `.oculto`, `.` e `..` — três entradas que a listagem simples deixou de fora. A
-seção 11 explica o ponto que esconde um arquivo; as seções 37 e 47 da aula 3 explicam as outras
+seção 11 explica o ponto que esconde um arquivo; as seções 02 e 12 da aula 3 explicam as outras
 duas.
 
 **Nem toda opção curta tem uma gêmea longa, e nem toda longa tem uma curta.** O `--help` em geral

@@ -86,7 +86,7 @@ ana@vm:~$ cat ~/.ssh/id_ed25519.pub
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKHhDDaH171LJb/mce2OhMnKDYo5PArO8BPrVDTHdhd ana@vm
 ```
 
-Publicar aquela linha não te custa nada. Publicar o outro arquivo te custa tudo. A seção 66 da aula
+Publicar aquela linha não te custa nada. Publicar o outro arquivo te custa tudo. A seção 13 da aula
 4 disse que o `.ssh` é o diretório mais sensível que você tem, e é por isso — **o ssh confere as
 permissões e recusa uma chave que outra pessoa poderia ler.**
 
@@ -131,7 +131,7 @@ a metade pública, sem alteração, a mesma string impressa acima. Aquele arquiv
 com permissão de entrar como `bruno`, uma por linha, e dá para editar na mão; o `ssh-copy-id` é uma
 comodidade que acerta as permissões.
 
-Repare no que isso significa para o aviso da seção 72. **`passwd -l bruno` não teria impedido aquele
+Repare no que isso significa para o aviso da seção 03. **`passwd -l bruno` não teria impedido aquele
 login.** Chaves nunca consultam o `/etc/shadow`. Quando alguém sai, a conta é travada *e* o
 `authorized_keys` é esvaziado, e esquecer o segundo é um jeito real de as pessoas manterem acesso
 por anos.
@@ -159,7 +159,7 @@ ssh ana@host 'systemctl is-active nginx'
 O ssh roda um comando e te entrega a saída. É assim que se pergunta a mesma coisa a cinquenta
 máquinas num laço, e é a coisa mais útil que o ssh faz depois de te dar um shell.
 
-**Aquele comando roda num shell não interativo e não de login**, que é a terceira linha da seção 74
+**Aquele comando roda num shell não interativo e não de login**, que é a terceira linha da seção 05
 — então seus aliases estão ausentes e seu `PATH` pode não ser o que você espera. Dê caminhos
 completos, e a surpresa nunca acontece.
 

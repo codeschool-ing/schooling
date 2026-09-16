@@ -14,7 +14,7 @@ produto de empresa e não há de quem comprar suporte — o que é justamente o 
 de uma empresa poder não escolher.
 
 **O hábito que o define é a cautela.** Um lançamento estável entrega versões de um a três anos
-atrás, porque foram testadas por um a três anos. Nada se mexe até ficar sem graça. A seção 29
+atrás, porque foram testadas por um a três anos. Nada se mexe até ficar sem graça. A seção 08
 defende o argumento; por ora, Debian é o que você escolhe quando quer uma máquina que possa
 esquecer.
 
@@ -43,7 +43,7 @@ ID_LIKE=debian
 ```
 
 Leia as duas últimas linhas juntas: **`ID=ubuntu`, `ID_LIKE=debian`.** É uma máquina te dizendo
-qual distribuição ela é e a qual família pertence, e é o assunto inteiro da seção 32.
+qual distribuição ela é e a qual família pertence, e é o assunto inteiro da seção 11.
 
 ## O arquivo que mente
 
@@ -89,4 +89,4 @@ você decidiu confiar**, e a lista vale ser lida quando você herda uma máquina
 Linux Mint, Pop!_OS, Zorin e outras são construídas sobre o Ubuntu, que é construído sobre o
 Debian. Elas trocam o ambiente gráfico e alguns padrões; por baixo, o `apt` funciona, os caminhos
 são os mesmos, e o `ID_LIKE=debian` vale. **Se você dirige Ubuntu, dirige qualquer uma delas** —
-que é exatamente o que a família da seção 24 estava prometendo.
+que é exatamente o que a família da seção 03 estava prometendo.

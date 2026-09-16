@@ -39,7 +39,7 @@ ana@vm:~/work$ sort /tmp/t.txt > /tmp/t.txt; wc -c /tmp/t.txt; cat /tmp/t.txt
 **Zero bytes.** The shell emptied the file while `sort` was still opening it, `sort` read nothing,
 and wrote nothing. No error, no warning, and the data is gone.
 
-The fix is to write somewhere else and move, or use a tool that edits in place. Section 131's
+The fix is to write somewhere else and move, or use a tool that edits in place. Section 13's
 `sed -i` exists for exactly this.
 
 ## Redirecting errors
@@ -73,8 +73,8 @@ empty.log
 error.log
 ```
 
-`2>&1` reads as **"make descriptor 2 a copy of descriptor 1"**, which is section 98's sentence.
-Because 1 already points at `both.txt` by the time it runs, 2 ends up there too.
+`2>&1` reads as **"make descriptor 2 a copy of descriptor 1"**, which is lesson 6 section 13's
+sentence. Because 1 already points at `both.txt` by the time it runs, 2 ends up there too.
 
 ## And that is why the order matters
 
@@ -135,7 +135,7 @@ ana@vm:~/work$ grep -c o <<< "hello world"
 1
 ```
 
-One, because `grep -c` counts **lines that match**, not occurrences — section 124 comes back to
+One, because `grep -c` counts **lines that match**, not occurrences — section 06 comes back to
 that.
 
 And `tee` is the one that is not redirection but solves the same problem — writing to a file **and**

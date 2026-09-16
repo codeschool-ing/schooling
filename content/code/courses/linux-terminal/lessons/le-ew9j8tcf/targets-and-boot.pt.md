@@ -6,7 +6,7 @@ version: 1
 Um **target** é um grupo nomeado de units. Nada mais: ele não roda programa nenhum e não tem
 `ExecStart=`. Ele existe para que "leve a máquina a este estado" seja um nome só.
 
-Você encontrou um na seção 78 sem que te dissessem o que era:
+Você encontrou um na seção 09 sem que te dissessem o que era:
 
 ```
 Created symlink …/etc/systemd/system/multi-user.target.wants/hello.service → /etc/systemd/system/hello.service.
@@ -40,7 +40,7 @@ systemctl isolate rescue.target             # vá para lá agora
 systemctl list-units --type=target          # o que está ativo
 ```
 
-**O `set-default` é um link simbólico**, exatamente como na seção 78: o
+**O `set-default` é um link simbólico**, exatamente como na seção 09: o
 `/etc/systemd/system/default.target` apontando para o que você escolheu. Tudo no systemd é um link
 simbólico em algum lugar, e quando você vê isso o projeto deixa de ser misterioso.
 
@@ -56,7 +56,7 @@ Além dos equivalentes de runlevel, quatro targets aparecem o tempo todo em arqu
 |---|---|
 | `network.target` | a pilha de rede está **configurada**, que não é o mesmo que alcançável |
 | `network-online.target` | algo de fato subiu — e só se um serviço `wait-online` estiver habilitado |
-| `local-fs.target` | tudo do `/etc/fstab` está montado — seção 47 da aula 3 |
+| `local-fs.target` | tudo do `/etc/fstab` está montado — seção 12 da aula 3 |
 | `sysinit.target` | a preparação inicial de baixo nível terminou |
 
 **`After=network.target` não quer dizer que a rede funciona.** Essa é de longe a suposição errada
@@ -67,7 +67,7 @@ serviço `wait-online` habilitado, ou em silêncio não quer dizer nada de novo.
 
 ## Por que o boot é mais rápido, e como ver onde ele foi
 
-A seção 77 disse que o systemd inicia coisas em paralelo resolvendo dependências em vez de rodar uma
+A seção 08 disse que o systemd inicia coisas em paralelo resolvendo dependências em vez de rodar uma
 lista numerada. Dá para observar o resultado:
 
 ```
@@ -93,9 +93,9 @@ casos a informação útil já está na tela ou no journal.
 | trava numa tarefa, com uma contagem regressiva | uma unit esperando algo que não vai chegar — a contagem é o timeout dela |
 | `Give root password for maintenance` | um sistema de arquivos do `/etc/fstab` não pôde ser montado |
 | shell de emergência, nada montado | o próprio sistema de arquivos raiz, ou um `fstab` bem errado |
-| dá boot, e falta um serviço | seção 78: iniciado uma vez na mão, nunca habilitado |
+| dá boot, e falta um serviço | seção 09: iniciado uma vez na mão, nunca habilitado |
 
-**O do `fstab` é de longe o mais comum**, e a seção 47 da aula 3 te contou a defesa: `sudo mount -a`
+**O do `fstab` é de longe o mais comum**, e a seção 12 da aula 3 te contou a defesa: `sudo mount -a`
 depois de editar, e confirmar que saiu em silêncio antes de reiniciar. O `nofail` na coluna de
 opções é a versão com cinto e suspensórios — ele deixa o boot continuar quando aquela montagem
 falha, o que está certo para um disco de dados e errado para a raiz.
@@ -124,7 +124,7 @@ do systemd:
 
 **Uma imagem de resgate ou live** é o outro jeito, e o indicado para um sistema de arquivos raiz que
 não monta. Dê boot nela, monte a raiz de verdade em algum lugar, e conserte o arquivo. O `mount` da
-seção 47 da aula 3 é tudo de que você precisa.
+seção 12 da aula 3 é tudo de que você precisa.
 
 Os dois valem ser lidos agora e tentados uma vez numa máquina que você pode quebrar. A tarde em que
 você precisar deles não é a tarde de aprendê-los.

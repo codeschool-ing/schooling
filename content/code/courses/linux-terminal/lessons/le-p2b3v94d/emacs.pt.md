@@ -77,7 +77,7 @@ maioria deles por `ssh`.
 abandona aquele que você começou pela metade.
 
 O `C-s` vale reparar por outra razão: ele é buscar aqui, e é o *parar a saída* do
-terminal em outros lugares (seção 8). O emacs toma a tecla para si, o que
+terminal em outros lugares (aula 1 seção 08). O emacs toma a tecla para si, o que
 funciona — e é por que um usuário de emacs e um de nano discordam sobre o que o
 `C-s` faz.
 
@@ -123,7 +123,7 @@ que rodam dentro dele:
 | Org mode | notas, tópicos, agendamento e documentos literários |
 | `M-x tramp` | edita arquivos numa máquina remota **como se fossem locais** |
 
-Esse último é o assunto da seção 206, e é a única coisa desta lista em que o
+Esse último é o assunto da seção 14, e é a única coisa desta lista em que o
 emacs é diretamente melhor que as alternativas.
 
 ## Onde isso te deixa

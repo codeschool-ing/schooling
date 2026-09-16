@@ -48,7 +48,7 @@ drwxr-xr-x 10 root root 4096 Sep 14 23:22 ..
 | | |
 |---|---|
 | `-m` | criar o diretório pessoal |
-| `-s` | shell de login — o campo 7 da seção 71 |
+| `-s` | shell de login — o campo 7 da seção 02 |
 | `-c` | o campo de comentário, historicamente o nome completo |
 | `-G` | grupos suplementares já na criação |
 | `-u` | um UID específico, quando ele precisa casar com outra máquina |
@@ -68,8 +68,8 @@ drwxr-xr-x 75 root root 4096 Sep 14 23:22 ..
 
 **O `/etc/skel` é o esqueleto**, e o `-m` copia ele para dentro da casa nova. Qualquer coisa que
 você puser ali aparece em toda conta criada depois — um `.bashrc` da empresa, um editor padrão, um
-README. Repare que o `ls` sem `-a` mostra como vazio, que é o ponto da seção 49 fazendo o trabalho
-dele.
+README. Repare que o `ls` sem `-a` mostra como vazio, que é o ponto da aula 3 seção 14 fazendo o
+trabalho dele.
 
 Ele não se aplica retroativamente. Contas que já existem ficam com o que têm.
 
@@ -88,7 +88,7 @@ As flags espelham as do `useradd`, mais algumas próprias:
 
 | | |
 |---|---|
-| `-aG` | **acrescenta** aos grupos suplementares — a seção 61 da aula 4 diz por que o `-a` importa |
+| `-aG` | **acrescenta** aos grupos suplementares — a seção 08 da aula 4 diz por que o `-a` importa |
 | `-s` | troca o shell |
 | `-L` / `-U` | trava / destrava, igual ao `passwd -l` |
 | `-e 2026-12-31` | expira a conta numa data |
@@ -105,7 +105,7 @@ drwxr-x--- 2 dorasilva dora 4096 Sep 14 23:22 /home/dora
 ```
 
 O nome mudou. **A casa continua sendo `/home/dora`**, e o registro que aponta para ela também. Os
-arquivos continuam dela porque sempre foram do uid `1005` — o ponto da seção 60 da aula 4, chegando
+arquivos continuam dela porque sempre foram do uid `1005` — o ponto da seção 07 da aula 4, chegando
 pelo outro lado. Renomear uma pessoa é `usermod -l nomenovo -d /home/nomenovo -m nomeantigo`, e as
 peças são separadas porque podem ser.
 
@@ -121,14 +121,14 @@ drwxr-x--- 2 1005 dora 4096 Sep 14 23:22 /home/dora
 A conta se foi — o `getent` não imprime nada. **O diretório pessoal continua lá, e o `ls` agora
 imprime `1005` onde havia um nome**, porque não sobrou nada para consultar o número.
 
-Essa é a demonstração mais visível da afirmação da seção 71 de que o sistema de arquivos guarda
+Essa é a demonstração mais visível da afirmação da seção 02 de que o sistema de arquivos guarda
 números. Nada naqueles arquivos mudou. O mapeamento mudou.
 
 O `userdel -r` remove a casa e a caixa de correio também — e **vale não fazer por reflexo.** A
 sequência de sempre quando alguém sai é:
 
 1. travar a conta, para ninguém entrar como ela: `usermod -L -e 1 nome`;
-2. remover as chaves ssh dela, porque a seção 75 explica por que travar não basta;
+2. remover as chaves ssh dela, porque a seção 06 explica por que travar não basta;
 3. descobrir o que ela possuía: `find / -uid 1005 2>/dev/null`;
 4. entregar aqueles arquivos a alguém, ou arquivá-los;
 5. **depois** apagar a conta.
@@ -146,7 +146,7 @@ gpasswd -a bruno deploy      # acrescentar alguém
 gpasswd -d bruno deploy      # remover alguém
 ```
 
-O `gpasswd -a` é o `usermod -aG` sem o jeito de errar. E o aviso da seção 61 da aula 4 vale para
+O `gpasswd -a` é o `usermod -aG` sem o jeito de errar. E o aviso da seção 08 da aula 4 vale para
 tudo isso: **a mudança não alcança um shell que já está aberto.**
 
 ## O que fazer numa máquina com mais do que um punhado de pessoas
@@ -155,5 +155,5 @@ Nada nesta seção escala além de umas vinte contas numa máquina. Passando dis
 diretório — LDAP, Active Directory, um provedor de identidade na nuvem — e o `useradd` na máquina é
 o lugar errado de olhar.
 
-O sinal é o `getent passwd` devolvendo alguém que não está no `/etc/passwd`. A seção 71 mandou
+O sinal é o `getent passwd` devolvendo alguém que não está no `/etc/passwd`. A seção 02 mandou
 construir esse hábito exatamente para este momento.

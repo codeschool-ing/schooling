@@ -3,7 +3,7 @@ title: The same command in three dialects
 version: 1
 ---
 
-This is the page to come back to. Nothing here is new; it is sections 106 to 113 put side by side,
+This is the page to come back to. Nothing here is new; it is sections 04 to 11 put side by side,
 so that knowing one column means you can work in the other two.
 
 ## The daily commands
@@ -32,13 +32,13 @@ so that knowing one column means you can work in the other two.
 | transaction log | `/var/log/apt/history.log` | `dnf history` | `/var/log/zypp/history` |
 
 **The `rpm -qf` and `rpm -ql` rows repeat on purpose.** dnf and zypper are two front ends over one
-database, so every `rpm` query from section 112 works unchanged on SUSE.
+database, so every `rpm` query from section 10 works unchanged on SUSE.
 
 ## The four differences that are not just spelling
 
 **1. `purge` exists only on the Debian side.** apt distinguishes "remove the program" from "remove
 the program and its configuration", and tracks the in-between state as `rc`. rpm has no such state:
-it removes the package and leaves edited config files behind as `.rpmsave`. Section 110 has both.
+it removes the package and leaves edited config files behind as `.rpmsave`. Section 08 has both.
 
 **2. `apt update` is a separate step and `dnf`'s is not.** dnf expires its own metadata on a timer,
 so `dnf install` after a week fetches fresh indexes by itself. There is no equivalent of running
@@ -48,7 +48,7 @@ so `dnf install` after a week fetches fresh indexes by itself. There is no equiv
 dnf asks `[y/N]` — Return means no. **Three tools, and a habit built on one of them is wrong on
 another**, which is worth one moment of care the first few times on an unfamiliar system.
 
-**4. `zypper dup` on a rolling release.** Section 113: on Tumbleweed the routine upgrade is `dup`,
+**4. `zypper dup` on a rolling release.** Section 11: on Tumbleweed the routine upgrade is `dup`,
 not `up`, and using the wrong one for months produces a genuinely broken machine. There is nothing
 like this on the other two.
 

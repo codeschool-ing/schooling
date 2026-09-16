@@ -28,8 +28,8 @@ ana@vm:~/work/src$ pwd
 /home/ana/work/src
 ```
 
-The prompt is showing you the same fact, shortened — section 06 took that apart. `pwd` is the
-direct question, and it is the one to trust when a prompt has been customised into something
+The prompt is showing you the same fact, shortened — lesson 1 section 06 took that apart. `pwd` is
+the direct question, and it is the one to trust when a prompt has been customised into something
 unreadable.
 
 **A relative path is resolved against that directory**, by the kernel, at the moment the command

@@ -3,13 +3,13 @@ title: `journalctl`, e um log que sobrevive ao reboot
 version: 1
 ---
 
-**Vale aqui o mesmo aviso da seção 79.** Esta máquina roda um supervisor de contêiner como processo
+**Vale aqui o mesmo aviso da seção 10.** Esta máquina roda um supervisor de contêiner como processo
 um, então não existe journal para ler nem transcrição para tirar. Os comandos abaixo são os que
-valem conhecer, as formas de saída são descritas em vez de coladas, e a seção 77 explica por quê.
+valem conhecer, as formas de saída são descritas em vez de coladas, e a seção 08 explica por quê.
 
 ## Para onde vai a saída de um serviço
 
-A seção 76 disse que um daemon não tem terminal, então cada linha que ele escreve precisa ser
+A seção 07 disse que um daemon não tem terminal, então cada linha que ele escreve precisa ser
 recolhida por alguma coisa. Numa máquina com systemd essa coisa é **o journal**: o systemd captura a
 saída padrão e a saída de erro de tudo que ele inicia, e guarda.
 
@@ -23,7 +23,7 @@ olha nos dois, e no `journalctl` primeiro.
 ## O log binário, e a discussão sobre ele
 
 O journal **não é um arquivo de texto.** É um formato estruturado, indexado e binário, e essa é a
-parte do systemd a que a tradição Unix mais se opõe — a seção 77 nomeou isso.
+parte do systemd a que a tradição Unix mais se opõe — a seção 08 nomeou isso.
 
 O que ele compra é real: cada linha carrega campos como dados, e não como texto que alguém precisa
 desmontar de volta. O serviço, o PID, o usuário, a prioridade, o boot a que pertence. É por isso que
@@ -48,7 +48,7 @@ journalctl -b                           # este boot, tudo, em ordem
 ```
 
 **`-u` e `-f` juntos são o par que você mais vai digitar.** Um terminal acompanhando o serviço,
-outro provocando — a mesma forma do `tail -f` da seção 43 da aula 3, o que é de propósito.
+outro provocando — a mesma forma do `tail -f` da seção 08 da aula 3, o que é de propósito.
 
 `--since` e `--until` aceitam inglês corrente além de horários: `'10 min ago'`, `'yesterday'`,
 `'2026-09-14 09:00'`. Isso vale mais do que parece quando alguém diz *quebrou lá pelas nove*.
@@ -74,7 +74,7 @@ journalctl --list-boots
 **É assim que se descobre por que uma máquina reiniciou**, e como se lê uma falha que aconteceu
 durante o boot, antes de você conseguir entrar.
 
-É também a resposta para a cascata com que a seção 79 terminou: um serviço que falhou porque outra
+É também a resposta para a cascata com que a seção 10 terminou: um serviço que falhou porque outra
 coisa falhou te mostra a confusão dele, e o `journalctl -b` mostra o boot em ordem, então a primeira
 falha está acima da segunda.
 
@@ -109,7 +109,7 @@ sudo systemctl restart systemd-journald
 ```
 
 `journalctl --vacuum-time=30d` e `--vacuum-size=500M` podam, e o `SystemMaxUse=` no
-`/etc/systemd/journald.conf` define o teto para ele nunca virar o disco cheio da seção 48 da aula 3.
+`/etc/systemd/journald.conf` define o teto para ele nunca virar o disco cheio da seção 13 da aula 3.
 
 ## Mais dois que vale ter
 

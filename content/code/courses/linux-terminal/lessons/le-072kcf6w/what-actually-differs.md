@@ -58,7 +58,7 @@ The list above is short, and that is the useful fact. All of these are the same 
 - SSH, and everything about reaching a machine
 
 **Alpine is the exception that proves the rule**: it differs in the userland and the init system as
-well, which is why section 28 gives it a section of its own rather than a column.
+well, which is why section 07 gives it a section of its own rather than a column.
 
 ## Translating a command you were given
 

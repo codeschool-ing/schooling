@@ -98,7 +98,7 @@ está te contando algo mais sutil do que parece. Leia o `getfacl` quando houver 
 da restauração. Se uma árvore depende de ACLs, a ferramenta que a copia precisa ser avisada.
 
 `setfacl -d -m g:team:rwx /srv/shared` define uma ACL *padrão* — permissões que arquivos novos
-naquele diretório herdam. É a resposta das ACLs ao bit setgid da seção 63, e ela consegue mais,
+naquele diretório herdam. É a resposta das ACLs ao bit setgid da seção 10, e ela consegue mais,
 porque consegue nomear indivíduos.
 
 ## SELinux e AppArmor: outra pergunta

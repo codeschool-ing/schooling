@@ -119,8 +119,8 @@ convert at both ends, and `ConvertFrom-Json` only helps when the other side
 speaks JSON.
 
 **It is already there.** Every Linux machine has bash; PowerShell is a download
-and a decision. That is the same argument section 115 made about not reaching
-outside the distribution, and it applies here.
+and a decision. That is the same argument lesson 7 section 13 made about not
+reaching outside the distribution, and it applies here.
 
 **So the rule is not that one is better.** It is that on Windows the objects are
 the only sane way to work, on Linux the text tools are, and the interesting skill

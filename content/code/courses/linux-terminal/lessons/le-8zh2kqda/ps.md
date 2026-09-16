@@ -72,7 +72,7 @@ are different widths.
 say so. There are dozens of them on any Linux machine and they are not your problem.
 
 **And PID 1 here is `process_api`**, not `systemd`, because these transcripts are captured on a
-sandbox — the same thing lesson 5 section 77 explained. On a machine that booted normally that first
+sandbox — the same thing lesson 5 section 08 explained. On a machine that booted normally that first
 row says `/sbin/init` or `/lib/systemd/systemd`.
 
 Both commands show every process on the machine. The useful difference:
@@ -90,14 +90,14 @@ started what.** That is the whole of choosing between them.
 
 | | |
 |---|---|
-| `PID`, `PPID` | the number and its parent — section 87 |
+| `PID`, `PPID` | the number and its parent — section 02 |
 | `USER` | the identity everything is decided by — lesson 4 |
-| `STAT` | section 89's letters |
+| `STAT` | section 04's letters |
 | `%CPU` | **an average since the process started**, not right now |
 | `%MEM` | the share of physical memory this process holds |
 | `VSZ` | **virtual** size: everything it has mapped, including what it has never touched |
 | `RSS` | **resident** set: what is actually in physical memory. The honest number |
-| `TTY` | which terminal it is attached to. `?` means **none** — section 76's daemon |
+| `TTY` | which terminal it is attached to. `?` means **none** — lesson 5 section 07's daemon |
 | `TIME` | processor time consumed, cumulative |
 | `START`, `ELAPSED` | when it started, and how long ago |
 | `COMMAND` / `CMD` | how it was started |
@@ -105,7 +105,7 @@ started what.** That is the whole of choosing between them.
 **Three of those mislead people, and it is worth being explicit.**
 
 `%CPU` is a lifetime average. A process that pinned a core for an hour and has been idle since will
-show a high number and be doing nothing. For *now*, use `top` — section 92.
+show a high number and be doing nothing. For *now*, use `top` — section 07.
 
 `VSZ` is nearly meaningless as a memory figure. A program that maps a two-gigabyte file it never
 reads has a two-gigabyte VSZ and uses nothing. **RSS is the number to read**, and even RSS
@@ -137,7 +137,7 @@ ana@vm:~/work$ ps -eo pid,ppid,user,%cpu,%mem,etime,comm --sort=-%cpu | head -5
 **`--sort=-%cpu | head` is the single most useful `ps` there is** — it is "what is eating this
 machine", answered in one line. Here the answer is unambiguous: one process at 100% and the next
 one at 4.5%. (The three below it are the sandbox these transcripts are captured on, and `runaway.sh`
-is section 98's deliberate busy loop.)
+is section 13's deliberate busy loop.)
 
 `comm` is the program's name; `cmd` or `args` is the whole command line. Use `comm` when you want a
 narrow column and `args` when you need to tell two `python3` processes apart.
@@ -160,7 +160,7 @@ name, which is how you find a script — because the program is `bash` and the s
 **And the exit status is the point**: `1` when nothing matched, which makes `pgrep` usable in a
 script as a question rather than a source of text to parse.
 
-That last transcript is also the honest way to confirm something is gone. Section 94's `pkill`
+That last transcript is also the honest way to confirm something is gone. Section 09's `pkill`
 takes the same matching options, which is deliberate: **find it with `pgrep`, then run the same
 match through `pkill`.**
 

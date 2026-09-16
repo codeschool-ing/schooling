@@ -40,9 +40,9 @@ ended.
 `exit status 137` is the only thing the shell has to tell you, and it is
 enough.
 
-**137 = 128 + 9**, and signal 9 is `KILL`. Section 99's convention, and section
-93's table: a process terminated by a signal reports `128 + N`, and `KILL` is
-the one that cannot be caught, blocked or ignored.
+**137 = 128 + 9**, and signal 9 is `KILL`. Lesson 6 section 14's convention, and
+lesson 6 section 08's table: a process terminated by a signal reports `128 + N`,
+and `KILL` is the one that cannot be caught, blocked or ignored.
 
 So when a container exits 137, or `kubectl describe pod` says `OOMKilled`, or a
 service disappears with `status=9/KILL` in `systemctl`, they are all this.
@@ -132,10 +132,10 @@ available at that moment.
 | swap | converts the kill into a slowdown. Previous section |
 | monitoring `available` | the only one that fixes anything |
 
-**`MemoryMax=2G` in a systemd unit (section 80) does not stop the kill — it
-moves it.** The service is killed when it exceeds its own limit instead of when
-the machine does, which contains the damage to one thing instead of letting the
-kernel choose.
+**`MemoryMax=2G` in a systemd unit (lesson 5 section 11) does not stop the kill
+— it moves it.** The service is killed when it exceeds its own limit instead of
+when the machine does, which contains the damage to one thing instead of letting
+the kernel choose.
 
 ## What to do when you find one
 

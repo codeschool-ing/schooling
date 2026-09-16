@@ -5,7 +5,7 @@ version: 1
 
 Um terminal, várias coisas rodando. **Tarefa é a palavra do shell para um comando que você
 iniciou** — possivelmente um pipeline, possivelmente um script com filhos, e sempre um grupo de
-processos, que é por que o `kill %1` da seção 94 alcançava tudo aquilo.
+processos, que é por que o `kill %1` da seção 09 alcançava tudo aquilo.
 
 O controle de tarefas inteiro são três teclas e quatro comandos, e está todo nesta transcrição:
 
@@ -40,7 +40,7 @@ Linha por linha, porque cada linha ali é algo que vale saber.
 O `sleep 300` está rodando em **primeiro plano**: ele tem o terminal, e o prompt não volta até ele
 terminar. O `Ctrl+Z` manda `SIGTSTP`, e o shell imprime `[1]+ Stopped`.
 
-**Parado quer dizer parado, não em segundo plano.** Esse é o estado `T` da seção 89 — o processo
+**Parado quer dizer parado, não em segundo plano.** Esse é o estado `T` da seção 04 — o processo
 está suspenso e não usa processador nenhum. Um `sleep` não liga. Um download liga: ele não está
 baixando enquanto está parado, e as pessoas perdem uma hora com isso.
 
@@ -108,7 +108,7 @@ ana@vm:~/work$ sleep 400 &
 ```
 
 O `&` no fim já inicia em segundo plano desde o começo. O shell imprime o número da tarefa e o PID e
-devolve o prompt na hora — o passo 3 da seção 88, pulado: **o bash não dá `wait`.**
+devolve o prompt na hora — o passo 3 da seção 03, pulado: **o bash não dá `wait`.**
 
 O `$!` é aquele PID, que é como o resto desta aula conseguiu pegar coisas para sinalizar.
 
@@ -128,8 +128,8 @@ programa que não está lendo.
 ## Duas coisas que o shell faz e surpreendem
 
 **Uma tarefa em segundo plano ainda escreve no seu terminal.** Ela não está desligada da tela, só do
-teclado, então a saída dela cai no meio do que você estiver digitando — o entrelaçamento da seção 93.
-O `> out.txt 2>&1` é o conserto, e o `nohup` da seção 96 faz isso por você.
+teclado, então a saída dela cai no meio do que você estiver digitando — o entrelaçamento da seção 08.
+O `> out.txt 2>&1` é o conserto, e o `nohup` da seção 11 faz isso por você.
 
 **Sair com uma tarefa parada te dá um aviso, uma vez:**
 
@@ -170,7 +170,7 @@ rodando perfeitamente feliz, ainda filha do mesmo shell.
 
 **O `disown` muda a contabilidade do shell, não o processo.** Ele não é desanexar, não é o `nohup`, e
 sozinho ele não sobrevive a um terminal fechado. O que ele faz é impedir o shell de mandar um hangup
-à tarefa na saída, que é a seção 96 e é um mecanismo diferente de tudo nesta página.
+à tarefa na saída, que é a seção 11 e é um mecanismo diferente de tudo nesta página.
 
 ## Onde o controle de tarefas não existe
 
@@ -183,6 +183,6 @@ long-thing-two &
 wait                  # until both are finished
 ```
 
-Esse é o `wait` da seção 88, escrito como builtin do shell, e é como um script roda duas coisas ao
+Esse é o `wait` da seção 03, escrito como builtin do shell, e é como um script roda duas coisas ao
 mesmo tempo sem perder as duas de vista. O `wait $PID` espera uma só, e o código de saída dele vira
-o daquele processo — que é a seção 99.
+o daquele processo — que é a seção 14.

@@ -99,7 +99,7 @@ desse tipo de coisa.
 
 Quando o `login` ou o `sshd` te aceita, quatro coisas acontecem, nesta ordem:
 
-1. sua **identidade** é definida — uid, grupo primário, e os grupos suplementares da seção 61;
+1. sua **identidade** é definida — uid, grupo primário, e os grupos suplementares da aula 4 seção 08;
 2. uma **sessão** é registrada no `utmp` e no `wtmp`;
 3. seu shell do campo 7 do `/etc/passwd` é iniciado, como **shell de login**;
 4. esse shell lê os arquivos acima, e imprime um prompt.
@@ -107,7 +107,7 @@ Quando o `login` ou o `sshd` te aceita, quatro coisas acontecem, nesta ordem:
 Cada um desses pode falhar sozinho, e a falha parece diferente em cada caso. Um shell errado no
 campo 7 te dá uma conexão que fecha na hora. Um diretório pessoal que não existe te dá um shell em
 `/` reclamando. Um grupo acrescentado enquanto você estava logado não está no passo 1 desta sessão —
-o que é a seção 61 da aula 4, enunciada como sequência.
+o que é a seção 08 da aula 4, enunciada como sequência.
 
 ## Três perguntas e o comando de cada uma
 

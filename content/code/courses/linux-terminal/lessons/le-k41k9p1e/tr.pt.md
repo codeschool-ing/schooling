@@ -67,7 +67,7 @@ line one$
 line two$
 ```
 
-Um arquivo editado no Windows tem `\r\n` no fim de cada linha. O `cat -A` da seção 123 mostra isso
+Um arquivo editado no Windows tem `\r\n` no fim de cada linha. O `cat -A` da seção 05 mostra isso
 como `^M$`, e um script de shell com esses finais falha com um erro que nomeia um comando que você vê
 que está escrito corretamente — porque o comando que ele de fato tentou rodar tinha um retorno de
 carro invisível no fim do nome.
@@ -83,7 +83,7 @@ ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
 10.0.1.11 "GET /
 ```
 
-**Este é o conserto para o delimitador de um caractere da seção 126.** O `tr -s " "` transforma
+**Este é o conserto para o delimitador de um caractere da seção 08.** O `tr -s " "` transforma
 qualquer sequência de espaços num único espaço, o que faz o `cut -d" "` funcionar em texto alinhado
 com preenchimento em vez de separado por um caractere.
 
@@ -112,7 +112,7 @@ dog attack
 
 O `tr cat dog` transforma todo `c` em `d`, todo `a` em `o` e todo `t` em `g`. O `cat` de fato vira
 `dog` — que é por que isso parece funcionar até você dar uma segunda palavra. Substituir uma palavra
-é o `sed` da seção 131.
+é o `sed` da seção 13.
 
 **Ele não tem padrões.** Sem `.`, sem `*`, sem âncoras. Conjuntos de caracteres e nada mais.
 

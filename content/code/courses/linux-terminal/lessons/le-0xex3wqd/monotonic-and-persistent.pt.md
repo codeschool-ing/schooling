@@ -33,7 +33,7 @@ ruim do primeiro minuto.
 O `OnUnitActiveSec=1h` é **uma hora depois de a última execução começar, não na
 hora cheia** — então um job que leva vinte minutos roda às 03:00, 04:00, 05:00, e
 um job que leva noventa minutos roda às 03:00, 04:30, 06:00. Ele não consegue se
-empilhar do jeito que o job do cron da seção 223 consegue.
+empilhar do jeito que o job do cron da seção 14 consegue.
 
 E o `OnUnitInactiveSec=1h` é a versão mais estrita: uma hora depois de ele
 **terminar**, o que garante uma hora cheia de silêncio entre execuções.
@@ -114,4 +114,4 @@ mudança e a sua mudança não some com o pacote.
 
 Para uma configuração só em vez de um arquivo inteiro, o `systemctl edit
 report.timer` escreve um drop-in em `/etc/systemd/system/report.timer.d/` — e ele
-abre o editor da seção 205 da aula 12 para fazer isso.
+abre o editor da seção 13 da aula 12 para fazer isso.

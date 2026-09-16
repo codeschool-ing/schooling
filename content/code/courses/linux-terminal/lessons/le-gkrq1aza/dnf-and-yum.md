@@ -47,7 +47,7 @@ This is the shape of every `.repo` file in `/etc/yum.repos.d/`:
 
 **`gpgcheck=0` is the thing not to copy.** It is here because these two packages were built on this
 machine minutes before, with no key. On anything real it is `1`, with `gpgkey=` naming the key —
-that is the rpm side of section 105's `signed-by`.
+that is the rpm side of section 03's `signed-by`.
 
 The equivalence to keep: **one `.repo` file here is one `.list` or `.sources` file in
 `/etc/apt/sources.list.d/`.** Same job, different syntax.
@@ -126,7 +126,7 @@ hello from greet 1.2.0
 hello from greet 1.2.0
 ```
 
-Compare that table with apt's paragraph in section 106. **The same information, laid out rather than
+Compare that table with apt's paragraph in section 04. **The same information, laid out rather than
 written out**, and with the sections named: `Installing:` is what you asked for, `Installing
 dependencies:` is what came with it.
 
@@ -190,12 +190,12 @@ error: Failed dependencies:
         greet >= 1.2.0 is needed by greet-tools-0.3.0-1.noarch
 ```
 
-**`error: Failed dependencies:` is `rpm`'s version of section 109's message**, and there is one
+**`error: Failed dependencies:` is `rpm`'s version of section 07's message**, and there is one
 difference worth noticing: rpm refuses outright. dpkg unpacks and leaves the package half
 installed; rpm does not write anything at all.
 
 Those two `rpm:` lines above the error are the first of the two Ubuntu artefacts this
-lesson's rpm transcripts carry; the other is in section 113.
+lesson's rpm transcripts carry; the other is in section 11.
 **Debian and Ubuntu ship a wrapper around `rpm` that warns you are on the wrong kind of system**,
 then runs it anyway. On Rocky or Fedora they are not there.
 
@@ -224,7 +224,7 @@ Removing dependent packages:
  greet-tools               noarch               0.3.0-1               @teaching                23
 ```
 
-**`Removing dependent packages:` is the same behaviour section 108 showed apt doing** — asking for
+**`Removing dependent packages:` is the same behaviour section 06 showed apt doing** — asking for
 one and being told two. The `@` in `@teaching` means "installed, and it came from there", which is
 how dnf marks an installed package's origin.
 
@@ -241,7 +241,7 @@ dnf autoremove                 dnf clean all
 
 Two with no apt equivalent worth knowing:
 
-**`dnf provides` answers section 107's fourth question with no extra download**, because rpm
+**`dnf provides` answers section 05's fourth question with no extra download**, because rpm
 repository metadata includes file lists:
 
 ```

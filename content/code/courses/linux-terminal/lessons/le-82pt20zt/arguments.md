@@ -107,7 +107,7 @@ done, $# is 0
 
 **`shift` throws away `$1` and moves everything down**: `$2` becomes `$1`, `$#` drops by one. It is
 how you walk the argument list, and the loop above is the skeleton of every option parser you will
-write — section 146 fills in the middle of it.
+write — section 09 fills in the middle of it.
 
 `shift 2` shifts by two, which is how an option that takes a value consumes both.
 
@@ -137,8 +137,8 @@ exit 2
 
 **The `>&2` is not optional**, and the last run is why. The whole of standard output went into
 `/tmp/out.txt`, and the usage message was still on the screen — because it went to standard error
-(section 120), which the redirect did not touch. Without the `>&2` it would be sitting silently in
-a file the user did not want and is not going to read.
+(lesson 8 section 02), which the redirect did not touch. Without the `>&2` it would be sitting
+silently in a file the user did not want and is not going to read.
 
 And `exit 2` rather than `exit 1` for a usage error is a mild convention worth keeping: it lets a
 caller tell "you invoked me wrongly" from "I ran and failed".
@@ -150,7 +150,7 @@ caller tell "you invoked me wrongly" from "I ran and failed".
 /home/ana/args.sh →  $0 is /home/ana/args.sh
 ```
 
-Use `${0##*/}` (section 152) when you want just the filename for a message. And do not use `$0` to
+Use `${0##*/}` (section 15) when you want just the filename for a message. And do not use `$0` to
 find the script's own directory — it is unreliable in enough cases that the idiom is a line of its
 own, worth copying rather than deriving:
 

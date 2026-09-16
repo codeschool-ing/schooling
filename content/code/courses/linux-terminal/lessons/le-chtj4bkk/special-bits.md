@@ -57,7 +57,7 @@ systems — and every entry is a program that was written knowing it would run a
 **Never set it on something you wrote.** A setuid shell script is the classic vulnerability, and
 Linux ignores the bit on scripts for exactly that reason; a setuid binary that takes a filename
 from you and opens it is a way to read anything on the machine. If you find yourself reaching for
-setuid, the answer you want is almost certainly `sudo` with a narrow rule — section 64.
+setuid, the answer you want is almost certainly `sudo` with a narrow rule — section 11.
 
 ## setgid on a directory: the one you will actually use
 
@@ -102,7 +102,7 @@ tree keeps the behaviour without anybody maintaining it.
 
 ## The sticky bit: why `/tmp` is not a disaster
 
-`/tmp` is `1777` — **anybody may write it**. Section 59 said that a directory you can write is a
+`/tmp` is `1777` — **anybody may write it**. Section 06 said that a directory you can write is a
 directory whose files you can delete, whoever owns them. On `/tmp` that would mean anybody could
 delete anybody's work.
 
@@ -140,7 +140,7 @@ chmod +t directory      # sticky
 chmod 2775 directory    # the same as g+s on 775
 ```
 
-And the trap from section 57, repeated because it is the one that bites: **`chmod 755` on a `4755`
+And the trap from section 04, repeated because it is the one that bites: **`chmod 755` on a `4755`
 file clears the setuid bit.** A three-digit number sets the fourth digit to zero. Use the symbolic
 form when you mean to change only the nine.
 

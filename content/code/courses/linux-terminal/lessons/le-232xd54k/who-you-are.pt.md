@@ -96,5 +96,5 @@ O ganho não é impedir que você faça estrago — você sempre pode pedir. É 
 você tenha dito isso. Um erro de digitação num comando rodado como você mesmo pode destruir os seus
 arquivos. O mesmo erro como root pode destruir a máquina.
 
-A seção 61 da aula 4 é o `sudo`, que é como se pede. Até lá, o reflexo útil é o da seção 06: **olhe
+A seção 08 da aula 4 é o `sudo`, que é como se pede. Até lá, o reflexo útil é o da seção 06: **olhe
 o último caractere do prompt.**

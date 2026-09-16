@@ -3,7 +3,7 @@ title: Three streams, and why two of them look the same
 version: 1
 ---
 
-Section 98 gave you the numbers. This is what they are for.
+Lesson 6 section 13 gave you the numbers. This is what they are for.
 
 Every program starts with three connections already open, and it does not have to ask for any of
 them:
@@ -70,8 +70,8 @@ l-wx------ 1 ana ana 64 Sep 15 07:23 2 -> /tmp/err.txt
 
 That is lesson 6's transcript, and it is worth a second look now that the numbers mean something.
 **Redirection is not a feature of the program.** The program writes to descriptor 1; the shell
-decided what descriptor 1 was, before the program started, in section 88's gap between `fork` and
-`exec`.
+decided what descriptor 1 was, before the program started, in lesson 6 section 03's gap between
+`fork` and `exec`.
 
 Which is why `>` works on every command ever written, including ones whose authors never thought
 about files.

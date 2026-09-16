@@ -36,7 +36,7 @@ lr-x------ 1 ana ana 64 Sep 15 07:23 4 -> anon_inode:inotify
 
 **Tudo que o redirecionamento fez está visível como número.** O `1` é `/tmp/out.txt` e o `2` é
 `/tmp/err.txt`, porque é isso que o `>` e o `2>` são: eles montam descritores antes do `exec`, na
-lacuna entre o `fork` e o `exec` da seção 88. O `0` é `/dev/null` porque esta era uma tarefa em
+lacuna entre o `fork` e o `exec` da seção 03. O `0` é `/dev/null` porque esta era uma tarefa em
 segundo plano.
 
 O `3` é o arquivo que o `tail` de fato abriu — o primeiro número livre depois dos três que ele
@@ -115,7 +115,7 @@ ana@vm:~/work$ df -h /tmp | tail -1
 Leia as três linhas do `df`. **13G, depois 13G depois de apagar dois gigabytes, e depois 11G depois
 de matar um processo que nem estava escrevendo nele.**
 
-A seção 45 da aula 3 disse que o `rm` remove um nome, não um arquivo. Esta é a consequência: a
+A seção 10 da aula 3 disse que o `rm` remove um nome, não um arquivo. Esta é a consequência: a
 entrada de diretório sumiu — o `ls` não a acha — e os dados continuam lá porque **um descritor também
 é uma referência**. O kernel libera os blocos quando o último nome e o último descritor aberto
 sumiram, e não antes.
@@ -133,7 +133,7 @@ lsof -nP | grep deleted   # the same thing, cruder and more portable
 
 E o conserto não é o `rm` — não sobrou nada para remover. **Reinicie ou sinalize o processo que o
 segura**, o que para um log costuma ser um `kill -HUP`, dizendo ao daemon para reabrir os arquivos
-dele. Esse é o hangup da seção 93 usado para o que ele de fato serve num servidor.
+dele. Esse é o hangup da seção 08 usado para o que ele de fato serve num servidor.
 
 ## Ficando sem eles
 

@@ -23,7 +23,7 @@ That is how each side knows which one it is, and it is the entire mechanism.
 
 The child then calls `exec`, which **throws away the program it was running and loads a different
 one in the same process.** The PID does not change. The parent does not change. The open files
-mostly survive — which is the door section 98's redirections walk through.
+mostly survive — which is the door section 13's redirections walk through.
 
 So `ls` in your shell is: fork a copy of bash, and have the copy turn into `ls`.
 
@@ -38,12 +38,12 @@ unit file takes effect. One call that did both would have nowhere to put any of 
 
 ## `exit` and `wait` are also two halves
 
-A process ends by calling `exit` with a number — section 99's exit status. **The number has to go
+A process ends by calling `exit` with a number — section 14's exit status. **The number has to go
 somewhere**, and where it goes is the parent, which collects it by calling `wait`.
 
 Until the parent collects, the kernel keeps the child's entry in the process table. It has no
 memory, no open files and no program: what is left is a PID and a number waiting to be read.
-**That is a zombie**, and section 89 makes one on purpose.
+**That is a zombie**, and section 04 makes one on purpose.
 
 So the complete cycle for `ls` in a shell:
 
@@ -54,7 +54,7 @@ So the complete cycle for `ls` in a shell:
 5. bash's `wait` returns with that status, puts it in `$?`, and prints a prompt.
 
 **Step 3 is the whole of what `&` changes.** Backgrounding a command means bash does not wait —
-section 95.
+section 10.
 
 ## When the parent does not wait
 
@@ -62,7 +62,7 @@ Two things can go wrong with step 5, and they have different names and different
 
 **The parent is alive and does not collect.** The entry stays. Repeat it a few thousand times and
 the process table fills, and the machine cannot start anything at all. That is the leak lesson 5
-section 77 attributed to a hand-written container entrypoint.
+section 08 attributed to a hand-written container entrypoint.
 
 **The parent exits first.** The child is now an **orphan**, and the kernel hands it to PID 1 — which
 is doing nothing but collecting, continuously. Here it is, in one transcript:
@@ -79,13 +79,13 @@ The inner `bash` started `sleep` and then exited. `sleep` is still running, and 
 `1`** — it was adopted while nobody was looking.
 
 **Orphaning is not an error.** It is how a daemon comes to belong to the system — lesson 5 section
-76's second property, and now you have seen it happen.
+07's second property, and now you have seen it happen.
 
 ## What this explains that nothing else does
 
 **Why a child cannot change its parent's directory.** `cd` in a script does not affect the shell
 that ran the script, because the script is a separate process with its own copy. `cd` has to be a
-shell builtin — lesson 3 section 40 said so, and this is why.
+shell builtin — lesson 3 section 05 said so, and this is why.
 
 **Why a variable set in a subshell disappears.** `( VAR=1 )` sets it in a copy that then exits.
 Lesson 9 comes back to this.

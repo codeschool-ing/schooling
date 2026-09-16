@@ -95,7 +95,8 @@ the file read-only — it warned `W10: Warning: Changing a readonly file` the
 moment the edit was made — and refuses to write.
 
 **`:w!` will get past the `readonly` option and then fail on the permission**,
-because the file is root's and you are not (section 55). The real answers are:
+because the file is root's and you are not (lesson 4 section 02). The real answers
+are:
 
 ```sh
 sudoedit /etc/hostname        # edits a copy as you, installs it as root
@@ -103,7 +104,7 @@ sudo vim /etc/hostname        # runs the whole editor as root
 :w !sudo tee %                # the famous trick, from inside vim
 ```
 
-**`sudoedit` is the right one** and is in section 205. `sudo vim` runs an editor
+**`sudoedit` is the right one** and is in section 13. `sudo vim` runs an editor
 with a configuration file and plugins as root, which is a larger surface than
 the job needs.
 

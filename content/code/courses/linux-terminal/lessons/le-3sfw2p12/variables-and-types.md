@@ -60,9 +60,9 @@ PS /home/ana/work/ps> 'no expansion here: $x'
 no expansion here: $x
 ```
 
-**Double quotes expand, single quotes do not** — the same division as section
-141, with the same consequence for regular expressions and anything containing a
-`$`.
+**Double quotes expand, single quotes do not** — the same division as lesson 9
+section 04, with the same consequence for regular expressions and anything
+containing a `$`.
 
 **`$( )` inside a double-quoted string** runs an expression, which is how you get
 a property into a message:
@@ -162,9 +162,9 @@ an optional character — and is otherwise a sign you left the brackets off.
 | `$IsLinux` `$IsWindows` `$IsMacOS` | which platform |
 | `$env:NAME` | an environment variable |
 
-`$env:PATH` is how you read the environment, and setting it with
-`$env:LEVEL = "debug"` exports it to children — the `export` of section 140,
-built into the name.
+`$env:PATH` is how you read the environment, and setting it with `$env:LEVEL =
+"debug"` exports it to children — the `export` of lesson 9 section 03, built into
+the name.
 
 `$IsLinux` and friends are how a cross-platform script branches:
 

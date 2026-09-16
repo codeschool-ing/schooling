@@ -42,7 +42,7 @@ Setting up cowsay (3.03+dfsg2-8) ...
 as pessoas atravessam apertando `y`. Quatro linhas dela respondem quatro perguntas diferentes:
 
 **`The following additional packages will be installed:`** — você pediu um e está recebendo dois. O
-`libtext-charwidth-perl` é o `Depends` do `cowsay` da seção 104, resolvido.
+`libtext-charwidth-perl` é o `Depends` do `cowsay` da seção 02, resolvido.
 
 **`The following NEW packages will be installed:`** é a lista completa. Numa máquina real é aqui que
 você repara que um utilitário pequeno está arrastando um servidor gráfico junto.
@@ -53,7 +53,7 @@ valor diferente ali é o apt te dizendo que atender ao seu pedido exige tirar al
 útil na tela.
 
 O `168 not upgraded` não tem relação com esta instalação: é o quanto a máquina está atrasada. A seção
-111 é sobre o que fazer com esse número.
+09 é sobre o que fazer com esse número.
 
 **`After this operation, 135 kB of additional disk space will be used.`** — e ele pode dizer `freed`
 em vez disso, ou um número em gigabytes que explica por que o disco encheu da última vez.
@@ -80,7 +80,7 @@ Todo pacote passa pelos dois, e eles falham de formas diferentes:
 | **desempacotar** | os arquivos são escritos no sistema de arquivos |
 | **configurar** | o script de instalação do próprio pacote roda — usuários, diretórios, um serviço habilitado |
 
-Um pacote pode estar desempacotado e não configurado, e a seção 109 mostra exatamente esse estado,
+Um pacote pode estar desempacotado e não configurado, e a seção 07 mostra exatamente esse estado,
 com o programa instalado e sem funcionar. **As duas letras do `dpkg -l` são esses dois passos**, uma
 letra cada.
 
@@ -104,7 +104,7 @@ apt list --installed          # what is on this machine
 ```
 
 Nove comandos, e eles são a maior parte do que alguém digita. O `remove` contra o `purge` e para o
-que serve o `autoremove` são a seção 110.
+que serve o `autoremove` são a seção 08.
 
 ## O `apt` e o `apt-get` não são o mesmo comando
 

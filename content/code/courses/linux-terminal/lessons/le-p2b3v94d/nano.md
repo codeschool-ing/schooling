@@ -52,9 +52,9 @@ Control-X.
 │                           [ Wrote 3 lines ]                            │
 ```
 
-But `^S` is also the terminal's own *stop output* key from section 8, and on a
-setup where nano has not taken it over, pressing it freezes your screen until
-you press `^Q`. **`^O` works everywhere**, and is the one to have in your
+But `^S` is also the terminal's own *stop output* key from lesson 1 section 08,
+and on a setup where nano has not taken it over, pressing it freezes your screen
+until you press `^Q`. **`^O` works everywhere**, and is the one to have in your
 fingers.
 
 `M-U` really is undo, and says what it undid:

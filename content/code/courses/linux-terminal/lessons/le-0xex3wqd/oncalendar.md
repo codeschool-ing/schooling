@@ -113,7 +113,7 @@ Normalized form: Fri *-*-13 00:00:00
        From now: 10 months 27 days left
 ```
 
-**systemd ANDs the two day fields where cron ORs them** (section 213). `Fri
+**systemd ANDs the two day fields where cron ORs them** (section 04). `Fri
 *-*-13` really is Friday the thirteenth — and the two dates it prints are nine
 months apart, which is the same schedule cron would have run about sixty-four
 times a year.

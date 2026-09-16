@@ -38,7 +38,7 @@ One line, and every part of it matters:
 
 On Ubuntu's own sources the four components are worth knowing: `main` is supported by Canonical,
 `universe` is maintained by the community, `restricted` is drivers that are not free, `multiverse`
-is everything else. **`cowsay` in section 104 came from `universe`**, which is the honest answer to
+is everything else. **`cowsay` in section 02 came from `universe`**, which is the honest answer to
 "is this supported" for an enormous amount of what people install.
 
 The newer `.sources` files hold the same fields one per line instead of one per file. Same
@@ -134,4 +134,4 @@ will. On a server, run `upgrade`, read what it held back, and decide about those
 
 On the rpm side the same split exists with different words: `dnf check-update` lists, `dnf upgrade`
 acts, and there is no separate `update` step because dnf refreshes its metadata on its own when the
-cache is stale. Section 112 is that difference in full.
+cache is stale. Section 10 is that difference in full.

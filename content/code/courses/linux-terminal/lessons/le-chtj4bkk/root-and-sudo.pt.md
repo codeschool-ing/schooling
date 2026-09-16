@@ -74,7 +74,7 @@ ana sudo team
 
 No Debian e no Ubuntu, estar no grupo `sudo` é o que concede. No Red Hat e na família dele o grupo
 se chama `wheel`. É esse o mecanismo inteiro na maioria das máquinas, e acrescentar alguém é
-`usermod -aG sudo bruno` — com o `-a`, como a seção 61 insistiu.
+`usermod -aG sudo bruno` — com o `-a`, como a seção 08 insistiu.
 
 Quem não está nele recebe isto:
 
@@ -161,5 +161,5 @@ que outra pessoa encosta.
 **Use `sudo` para o comando que precisa, e nada além.**
 
 `sudo apt install nginx` está certo. Virar root e *depois* decidir o que fazer é como um `rm -rf` no
-diretório errado passa de irritante a irrecuperável. A seção 65 é a metade prática — incluindo o
+diretório errado passa de irritante a irrecuperável. A seção 12 é a metade prática — incluindo o
 único `sudo` que não faz o que você espera.

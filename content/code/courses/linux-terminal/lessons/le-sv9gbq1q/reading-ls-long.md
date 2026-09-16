@@ -41,7 +41,7 @@ It is not a dash for decoration. It is the type:
 |---|---|---|
 | `-` | an ordinary file | everywhere |
 | `d` | a directory | everywhere |
-| `l` | a symbolic link | `/bin`, `/lib`, and section 46 |
+| `l` | a symbolic link | `/bin`, `/lib`, and section 11 |
 | `c` | a character device | `/dev/null`, `/dev/tty` |
 | `b` | a block device | `/dev/vda` — a disk |
 | `s` | a socket | `/run`, where services listen |
@@ -76,9 +76,9 @@ list, and only the owner can add to*, which is what a normal directory looks lik
 
 ## Field 3: the link count, and why directories start at 2
 
-For a file it is almost always `1`, and section 46 is about the day it is not.
+For a file it is almost always `1`, and section 11 is about the day it is not.
 
-For a directory it is **never** 1, and the reason is `.` and `..` from section 39. An empty
+For a directory it is **never** 1, and the reason is `.` and `..` from section 04. An empty
 directory has two names pointing at it: its own name in its parent, and the `.` inside itself. Add
 a subdirectory and that subdirectory's `..` points at it too, so the count becomes 3.
 
@@ -111,7 +111,7 @@ drwxr-xr-x 2 ana ana 4.0K Mar 26  2025 build
 
 For a **directory**, the number is not the size of what is inside. `4096` is the size of the
 directory's own list of names — and a directory containing four hundred gigabytes of video will
-still say `4096`. That is section 48's whole subject; the thing to fix now is the expectation.
+still say `4096`. That is section 13's whole subject; the thing to fix now is the expectation.
 
 ## Field 7: the date that changes shape
 
@@ -141,7 +141,7 @@ sort a listing and see two different formats.
 comparing two machines' clocks.
 
 And note *which* time it is: **the last time the contents changed.** Not when the file was made.
-Section 43 gets the other two timestamps out of `stat`.
+Section 08 gets the other two timestamps out of `stat`.
 
 ## And the `total` line
 
@@ -151,5 +151,5 @@ total 12
 
 That is not a file count and not the sum of the sizes. It is **the number of 1-KiB blocks the
 disk gave to these entries** — the space actually occupied, which is why four files of 440, 8, 0
-and 31 bytes add up to 12. Section 48 explains why those numbers do not match; for now, `total` is
+and 31 bytes add up to 12. Section 13 explains why those numbers do not match; for now, `total` is
 about disk, and the size column is about content.

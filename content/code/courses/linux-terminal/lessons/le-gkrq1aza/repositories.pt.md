@@ -38,7 +38,7 @@ Uma linha, e cada parte dela importa:
 
 Nas fontes do próprio Ubuntu os quatro componentes valem ser conhecidos: o `main` tem suporte da
 Canonical, o `universe` é mantido pela comunidade, o `restricted` são drivers não livres, o
-`multiverse` é todo o resto. **O `cowsay` da seção 104 veio do `universe`**, que é a resposta honesta
+`multiverse` é todo o resto. **O `cowsay` da seção 02 veio do `universe`**, que é a resposta honesta
 para "isto tem suporte" numa quantidade enorme do que as pessoas instalam.
 
 Os arquivos `.sources` mais novos guardam os mesmos campos um por linha em vez de um por arquivo.
@@ -135,4 +135,4 @@ mão.
 
 Do lado rpm a mesma divisão existe com outras palavras: o `dnf check-update` lista, o `dnf upgrade`
 age, e não há passo de `update` separado porque o dnf atualiza os metadados sozinho quando o cache
-está velho. A seção 112 é essa diferença por inteiro.
+está velho. A seção 10 é essa diferença por inteiro.

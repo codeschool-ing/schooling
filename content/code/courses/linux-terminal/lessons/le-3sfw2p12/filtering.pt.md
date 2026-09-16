@@ -62,7 +62,7 @@ Where-Object { $_.Name -match '^\d{4}-' }     # regex, the same syntax as lesson
 ```
 
 O `-match` também preenche o `$Matches` com os grupos de captura, do jeito que o
-`[[ =~ ]]` preenchia o `BASH_REMATCH` na seção 145:
+`[[ =~ ]]` preenchia o `BASH_REMATCH` na aula 9 seção 08:
 
 ```
 PS /home/ana/work/ps> "report-2026.log" -match "^(\w+)-(\d{4})"; $Matches[2]
@@ -100,7 +100,7 @@ False
 ```
 
 O `"9"` vem depois do `"3"` na ordenação, então como texto nove é maior que trinta
-mil. É exatamente o problema do `[ "10" \> "9" ]` da seção 145, chegando pelo
+mil. É exatamente o problema do `[ "10" \> "9" ]` da aula 9 seção 08, chegando pelo
 outro lado — lá o shell te obrigava a escolher um operador, aqui o operador é o
 mesmo e quem decide é o *tipo*.
 

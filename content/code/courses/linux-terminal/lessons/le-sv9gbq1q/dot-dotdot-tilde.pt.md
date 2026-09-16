@@ -67,7 +67,7 @@ ana@vm:/$ ls -di / /.. /.
 ```
 
 O `-i` imprime o número do inode, que é o identificador que o próprio sistema de arquivos usa para
-uma coisa (seção 46). Os três são o inode 2. São um diretório com três nomes.
+uma coisa (seção 11). Os três são o inode 2. São um diretório com três nomes.
 
 ## `~` é expandido pelo shell
 
@@ -79,7 +79,7 @@ ana@vm:~$ echo ~root
 ```
 
 `echo` imprime o que recebeu, e recebeu `/home/ana`. **O til nunca chegou até ele.** O shell
-substituiu enquanto lia a linha, que é a mesma maquinaria que expande `*` na seção 45.
+substituiu enquanto lia a linha, que é a mesma maquinaria que expande `*` na seção 10.
 
 | você digita | vira |
 |---|---|
@@ -130,7 +130,7 @@ ana@vm:~/work$ ./ledger
 
 Você precisa escrever `./` para rodar um programa que está no diretório atual. A razão é segurança:
 se `.` fosse procurado automaticamente, deixar um arquivo chamado `ls` num diretório compartilhado
-bastaria para a próxima pessoa rodá-lo. A seção 38 já fez o ponto mecânico; este é o motivo de
+bastaria para a próxima pessoa rodá-lo. A seção 03 já fez o ponto mecânico; este é o motivo de
 ninguém nunca ter "consertado" isso.
 
 ### Um `/.` no final força "o conteúdo de"
@@ -138,4 +138,4 @@ ninguém nunca ter "consertado" isso.
 `cp -r src dest` e `cp -r src/. dest` se comportam diferente quando `dest` já existe, e a diferença
 é se você copia *o diretório* ou *o que está dentro dele*. Você vai encontrar isso na primeira vez
 que uma cópia produzir `dest/src/` quando você queria `dest/`. O hábito confiável é conferir com um
-`ls` logo depois, em vez de decorar a regra — e a seção 42 mostra a mesma armadilha no `mv`.
+`ls` logo depois, em vez de decorar a regra — e a seção 07 mostra a mesma armadilha no `mv`.

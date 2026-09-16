@@ -69,7 +69,7 @@ que algumas pessoas preferem exatamente por essa razão.
 
 ## Os padrões são expressões regulares
 
-A sintaxe da seção 125, com o dialeto próprio do vim por cima:
+A sintaxe da aula 8 seção 07, com o dialeto próprio do vim por cima:
 
 ```sh
 /^listen              # lines starting with listen
@@ -83,8 +83,8 @@ por padrão o nível de "magia" do vim faz com que `+`, `?`, `(` e `|` precisem 
 contrabarras, que é por que você vai ver `\(` e `\|` nos padrões dos outros.
 
 O `\v` no começo de um padrão liga a "very magic" e o faz se comportar como as
-expressões regulares estendidas da seção 125: `/\v(listen|timeout)` em vez de
-`/listen\|timeout`.
+expressões regulares estendidas da aula 8 seção 07: `/\v(listen|timeout)` em vez
+de `/listen\|timeout`.
 
 ## Maiúsculas
 
@@ -121,7 +121,7 @@ expressões regulares estendidas da seção 125: `/\v(listen|timeout)` em vez de
 **Leia esse número.** Quatro, em duas linhas. Se você esperava uma, você acabou
 de aprender uma coisa antes de salvar em vez de depois.
 
-O formato é o mesmo do `sed` da seção 131, com um intervalo na frente:
+O formato é o mesmo do `sed` da aula 8 seção 13, com um intervalo na frente:
 
 ```
 :[intervalo]s/padrão/substituição/[flags]
@@ -159,8 +159,8 @@ substituição em vez de depois.
 ## O separador é o que você digitar
 
 O `s#…#…#` e o `s|…|…|` funcionam do mesmo jeito, o que importa pela mesma razão
-da seção 131: um caminho cheio de barras dentro de `s/…/…/` precisa de todas elas
-escapadas.
+da aula 8 seção 13: um caminho cheio de barras dentro de `s/…/…/` precisa de
+todas elas escapadas.
 
 ```sh
 :%s#/usr/local#/opt#g        # readable
@@ -169,7 +169,7 @@ escapadas.
 
 ## Quando usar o `.` em vez disso
 
-O `:%s` muda tudo de uma vez e informa um número. O `.` da seção 198 muda uma por
+O `:%s` muda tudo de uma vez e informa um número. O `.` da seção 06 muda uma por
 vez e você assiste a cada uma.
 
 **Para um arquivo que você entende, `:%s/…/…/g`.** Para um arquivo que outra

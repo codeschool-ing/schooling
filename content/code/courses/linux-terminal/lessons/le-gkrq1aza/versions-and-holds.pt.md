@@ -63,7 +63,7 @@ O `100` para "já instalado" é o silencioso. **É por isso que um pacote instal
 automaticamente** — qualquer coisa de um repositório o supera em 500, mas nada o empurra para fora em
 favor de algo mais antigo.
 
-Aquele `5:` na frente das versões do Docker é o epoch da seção 104. Leia depois dele: `29.8.0` contra
+Aquele `5:` na frente das versões do Docker é o epoch da seção 02. Leia depois dele: `29.8.0` contra
 `29.3.1`.
 
 ## Segurar uma versão
@@ -139,7 +139,7 @@ Pin-Priority: 100
 
 **Isso põe todo pacote daquela origem abaixo de "já instalado"**, então nada dela é instalado a menos
 que você peça pelo nome. É a defesa padrão contra um repositório de terceiro que também carrega
-versões de coisas que a sua distribuição já fornece, que é a seção 115.
+versões de coisas que a sua distribuição já fornece, que é a seção 13.
 
 O `apt-cache policy` sem pacote imprime as prioridades em vigor, que é como você confere se um
 arquivo de pin diz o que você quis dizer.

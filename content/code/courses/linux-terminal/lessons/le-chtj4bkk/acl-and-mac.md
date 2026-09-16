@@ -99,7 +99,7 @@ is telling you something subtler than it looks. Read `getfacl` when a `+` is pre
 the restore. If a tree depends on ACLs, the tool that copies it has to be told.
 
 `setfacl -d -m g:team:rwx /srv/shared` sets a *default* ACL — permissions that new files in that
-directory inherit. It is the ACL answer to section 63's setgid bit, and it can do more, because it
+directory inherit. It is the ACL answer to section 10's setgid bit, and it can do more, because it
 can name individuals.
 
 ## SELinux and AppArmor: a different question entirely

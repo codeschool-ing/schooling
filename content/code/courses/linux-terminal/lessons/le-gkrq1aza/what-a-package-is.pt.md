@@ -22,7 +22,7 @@ desta aula vem de usar a camada de baixo esperando a de cima.
 | **baixa: `dpkg`, `rpm`** | um pacote, de um arquivo que você já tem. Faz exatamente o que você diz |
 | **alta: `apt`, `dnf`, `zypper`** | conhece os repositórios, resolve dependências, baixa |
 
-O `dpkg -i coisa.deb` não busca nada. Ele não pode: nunca ouviu falar de repositório. A seção 109 é
+O `dpkg -i coisa.deb` não busca nada. Ele não pode: nunca ouviu falar de repositório. A seção 07 é
 essa falha por inteiro, e ela termina com o único comando que a conserta.
 
 ## O que tem de fato dentro de um
@@ -46,7 +46,7 @@ diferença entre perguntar sobre um download e perguntar sobre a máquina.
 
 Instalar faz duas coisas: põe os arquivos onde eles vão, e **anota que fez isso**. Essa segunda
 metade é um banco de dados — `/var/lib/dpkg` no Debian, `/var/lib/rpm` do lado rpm — e é o que torna
-toda pergunta da seção 109 respondível.
+toda pergunta da seção 07 respondível.
 
 ```
 root@vm:~# dpkg --get-selections | wc -l
@@ -88,13 +88,13 @@ APT-Sources: http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages
 | `Depends` | **precisa** estar lá, ou isto não vai ser configurado |
 | `Recommends` | instalado por padrão, e não obrigatório. O `--no-install-recommends` pula |
 | `Suggests` | mencionado e nunca instalado automaticamente |
-| `APT-Sources` | de qual repositório esta versão veio — seção 105 |
+| `APT-Sources` | de qual repositório esta versão veio — seção 03 |
 
 **O `Recommends` é o campo que explica por que uma instalação de uma linha baixou quarenta
 megabytes.** Ele vem ligado por padrão no Debian e no Ubuntu, e desligá-lo é a maior diferença entre
 uma imagem de contêiner pequena e uma grande.
 
-O `Depends: libtext-charwidth-perl` é a promessa que a seção 109 quebra de propósito.
+O `Depends: libtext-charwidth-perl` é a promessa que a seção 07 quebra de propósito.
 
 ## Versões, e por que elas são assim
 
@@ -110,6 +110,6 @@ O `Depends: libtext-charwidth-perl` é a promessa que a seção 109 quebra de pr
 de segurança corrigida e nada mais, que é exatamente para o que a versão estável de uma distribuição
 serve: o número da versão fica parado e as correções chegam por baixo.
 
-O `5:29.3.1-1~ubuntu.24.04~noble` da seção 111 tem uma quarta parte — o `5:` é um **epoch**, um
+O `5:29.3.1-1~ubuntu.24.04~noble` da seção 09 tem uma quarta parte — o `5:` é um **epoch**, um
 número que sobrepõe a comparação normal de versões quando a numeração do upstream andou para trás.
 Você raramente vai escrever um e vai ver vários.

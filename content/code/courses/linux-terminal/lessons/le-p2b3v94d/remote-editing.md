@@ -18,7 +18,7 @@ the change is small, when you are already on the machine, and when what is
 installed there is what you have.
 
 The cost is that your editor configuration is not there, which is the argument in
-section 201 for learning the plain editor.
+section 09 for learning the plain editor.
 
 ## Two: copy it, edit it, copy it back
 
@@ -30,8 +30,8 @@ scp nginx.conf web01:/etc/nginx/nginx.conf
 
 **Three steps, and two of them lose things.** `scp` writes the file as you, with
 your umask, so the owner and the mode are the ones on your machine and not the
-ones the service needs. Section 60's `chown` and section 62's `umask` both apply,
-and neither is obvious afterwards.
+ones the service needs. Lesson 4 section 07's `chown` and lesson 4 section 09's
+`umask` both apply, and neither is obvious afterwards.
 
 It is fine for a file you own and wrong for anything under `/etc`.
 
@@ -89,9 +89,9 @@ on the far end.
 
 **Why are you editing a file on a server by hand at all?**
 
-Section 80's unit files, lesson 13's crontabs, and every `/etc` file you are
-about to change have the same problem: the change lives on one machine, nobody
-else knows about it, and the next rebuild loses it.
+Lesson 5 section 11's unit files, lesson 13's crontabs, and every `/etc` file you
+are about to change have the same problem: the change lives on one machine,
+nobody else knows about it, and the next rebuild loses it.
 
 | | |
 |---|---|

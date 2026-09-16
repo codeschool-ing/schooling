@@ -85,8 +85,8 @@ Nove linhas de script. Ele analisa limpo, o `bash -n` está satisfeito com ele, 
 linha — quatro aspas faltando, crases, iteração sobre `ls`, e uma comparação que não é uma
 comparação.
 
-Cada um desses é algo desta aula. A seção 141 é o `SC2086`, a seção 147 é o `SC2045`, a seção 151 é
-o `SC2006`, e o `SC2071` é a seção 145.
+Cada um desses é algo desta aula. A seção 04 é o `SC2086`, a seção 10 é o `SC2045`, a seção 14 é
+o `SC2006`, e o `SC2071` é a seção 08.
 
 Instale — `apt install shellcheck`, `dnf install ShellCheck` — e rode antes de todo script que você
 rodar pela primeira vez. **Ele não é um verificador de estilo com opiniões; ele acha bugs.**
@@ -180,7 +180,7 @@ declare -p f count >&2
 ```
 
 **Os colchetes são a técnica**, não enfeite — eles te mostram o espaço no fim, a string vazia, a
-quebra de linha que o `echo` sozinho esconderia. O `declare -p` (seção 140) faz isso direito, com
+quebra de linha que o `echo` sozinho esconderia. O `declare -p` (seção 03) faz isso direito, com
 tipos e aspas.
 
 E o `>&2`, para a sua depuração não acabar no arquivo que o script está escrevendo.
@@ -195,5 +195,5 @@ E o `>&2`, para a sua depuração não acabar no arquivo que o script está escr
 | você sabe mais ou menos onde | `echo "…[$var]…" >&2` |
 
 E um hábito que vale mais que os quatro: **rode a versão destrutiva por último.** Ponha um `echo` na
-frente do `rm`, olhe as vinte linhas que ele imprime, e então tire o `echo`. A seção 134 fez o mesmo
-argumento sobre o `xargs`, e é o mesmo argumento aqui.
+frente do `rm`, olhe as vinte linhas que ele imprime, e então tire o `echo`. A aula 8 seção 16 fez o
+mesmo argumento sobre o `xargs`, e é o mesmo argumento aqui.

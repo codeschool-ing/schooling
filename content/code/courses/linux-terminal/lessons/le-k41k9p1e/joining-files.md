@@ -41,8 +41,8 @@ ana,bruno,carla
 ```
 
 **`paste -sd,` turns a column into a comma-separated line**, which is the exact opposite of section
-130's `tr , '\n'`. Section 126 used `paste -sd+ | bc` to add up a column, which is the same trick
-with a different separator.
+12's `tr , '\n'`. Section 08 used `paste -sd+ | bc` to add up a column, which is the same trick with
+a different separator.
 
 ## `join`
 
@@ -59,7 +59,7 @@ field. `diego` and `elena` appear in only one file each, so they are not in the 
 
 **Both files must be sorted on the join field.** `join` reads them in step, like a merge, which is
 what makes it work on files too large for memory — and what makes it silently wrong on unsorted
-input. Sort both first, and section 127's locale warning applies: sort them the *same* way.
+input. Sort both first, and section 09's locale warning applies: sort them the *same* way.
 
 `-a` keeps the unmatched rows, which is an outer join:
 

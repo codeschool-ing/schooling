@@ -71,7 +71,7 @@ ana@vm:~$ echo $?
 
 O `sleep 30` deveria ter segurado o prompt por meio minuto. O `Ctrl+C` o devolveu na hora. O `^C` é
 o terminal te mostrando o que você enviou; o `130` é o status de saída, e é especificamente o número
-que quer dizer *este programa foi interrompido*. A seção 94 da aula 6 explica de onde vem o 130; por
+que quer dizer *este programa foi interrompido*. A seção 09 da aula 6 explica de onde vem o 130; por
 ora, ele é o recibo.
 
 **Então como se copia?** `Ctrl+Shift+C` e `Ctrl+Shift+V` na maioria dos terminais Linux, `Cmd+C` num
@@ -123,7 +123,7 @@ mais seguro que o `Ctrl+C` para isso, porque não deixa dúvida sobre se algo ro
 mesma coisa como comando.
 
 **Ctrl+Z suspende.** O programa para onde está e você recebe o prompt de volta — mas *ele continua
-lá*, pausado, não terminado. A seção 90 da aula 6 é sobre retomá-lo. Até lá, saiba que usar o
+lá*, pausado, não terminado. A seção 05 da aula 6 é sobre retomá-lo. Até lá, saiba que usar o
 `Ctrl+Z` para "parar" algo deixa a coisa parada e viva, o que normalmente não era o que você queria.
 
 **E o Ctrl+S congela o seu terminal.** Nada do que você digita aparece. A máquina parece morta. Não

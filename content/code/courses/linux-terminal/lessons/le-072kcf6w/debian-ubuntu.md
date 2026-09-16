@@ -14,7 +14,7 @@ the reason a business may not choose it.
 
 **Its defining habit is caution.** A stable release ships versions that are one to three years
 old, because they have been tested for one to three years. Nothing moves until it is dull.
-Section 29 argues the case; for now, Debian is what you pick when you want a machine you can
+Section 08 argues the case; for now, Debian is what you pick when you want a machine you can
 forget about.
 
 ## Ubuntu
@@ -42,7 +42,7 @@ ID_LIKE=debian
 
 Read the last two lines together: **`ID=ubuntu`, `ID_LIKE=debian`.** That is a machine telling
 you which distribution it is and which family it belongs to, and it is the whole subject of
-section 32.
+section 11.
 
 ## The file that lies
 
@@ -89,4 +89,4 @@ the risk moved outside the repository, and this directory is where it moved to.
 Linux Mint, Pop!_OS, Zorin and others are built on Ubuntu, which is built on Debian. They change
 the desktop and a few defaults; underneath, `apt` works, the paths are the same, and
 `ID_LIKE=debian` holds. **If you can drive Ubuntu you can drive any of them** — which is exactly
-what the family in section 24 was promising.
+what the family in section 03 was promising.

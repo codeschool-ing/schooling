@@ -61,7 +61,7 @@ ana@vm:~/work$ find . -empty
 ```
 
 **Ponha o padrão entre aspas.** `find . -name '*.c'` funciona; `find . -name *.c` pode não
-funcionar, e o motivo é a seção 45 — o shell expande o asterisco antes de o `find` sequer rodar. As
+funcionar, e o motivo é a seção 10 — o shell expande o asterisco antes de o `find` sequer rodar. As
 aspas entregam o asterisco intacto ao `find`, e o `find` faz a comparação dele.
 
 ### Os testes de tempo, onde os números enganam

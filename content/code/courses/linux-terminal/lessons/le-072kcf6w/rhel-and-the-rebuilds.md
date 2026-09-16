@@ -42,7 +42,7 @@ of it applies unchanged — the commands are the same — but the names and the 
 not.
 
 **And because CentOS 7 is out of support.** It ended in June 2024, and machines running it are
-still out there receiving nothing. Section 30 is about what that means; here it is enough to
+still out there receiving nothing. Section 09 is about what that means; here it is enough to
 recognise the name as a warning rather than a neutral fact.
 
 ## What you actually type

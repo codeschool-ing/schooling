@@ -70,7 +70,7 @@ Two things about it that matter more than they look:
 message is dropped. Cron says so in the system log rather than to you.
 
 **`MAILTO` is not monitoring.** A mail that arrives at 03:04 and is read on
-Thursday is a record, not an alert. Section 225 is about the difference.
+Thursday is a record, not an alert. Section 16 is about the difference.
 
 ## How to know it ran
 

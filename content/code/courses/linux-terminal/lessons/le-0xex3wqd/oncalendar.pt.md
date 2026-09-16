@@ -113,7 +113,7 @@ Normalized form: Fri *-*-13 00:00:00
 ```
 
 **O systemd combina os dois campos de dia com E onde o cron combina com OU**
-(seção 213). `Fri *-*-13` é mesmo sexta-feira treze — e as duas datas que ele
+(seção 04). `Fri *-*-13` é mesmo sexta-feira treze — e as duas datas que ele
 imprime estão a nove meses de distância, que é a mesma agenda que o cron teria
 rodado umas sessenta e quatro vezes por ano.
 

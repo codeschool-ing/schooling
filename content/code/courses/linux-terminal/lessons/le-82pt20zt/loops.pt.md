@@ -13,7 +13,7 @@ i=2
 i=3
 ```
 
-`for NOME in PALAVRAS; do … done`. O `;` antes do `do` é a mesma regra do `then` na seção 144 — uma
+`for NOME in PALAVRAS; do … done`. O `;` antes do `do` é a mesma regra do `then` na seção 07 — uma
 quebra de linha também serve.
 
 ## A lista costuma ser um glob
@@ -181,8 +181,8 @@ gzip *.log                              # the same thing, one process
 ```
 
 **A maioria dos comandos já recebe muitos argumentos.** Um laço que chama `mv`, `rm`, `chmod` ou
-`gzip` uma vez por arquivo geralmente é um laço que não precisava existir — e o `xargs` da seção
-134 cobre o caso em que a lista é longa demais ou vem de outro lugar.
+`gzip` uma vez por arquivo geralmente é um laço que não precisava existir — e o `xargs` da aula 8
+seção 16 cobre o caso em que a lista é longa demais ou vem de outro lugar.
 
 Escreva o laço quando cada iteração precisar *fazer* algo diferente: montar um nome, conferir uma
 condição, manter um total. Não quando é o mesmo comando com outro argumento.

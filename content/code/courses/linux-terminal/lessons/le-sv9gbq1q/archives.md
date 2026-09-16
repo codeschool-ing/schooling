@@ -56,7 +56,7 @@ drwxr-xr-x ana/ana           0 2026-09-14 22:29 notes/
 -rw-r--r-- ana/ana          26 2026-09-14 22:29 notes/2025-02-plan.md
 ```
 
-`-t` lists, `-v` makes the listing long — and it is section 41's listing again, with the owner and
+`-t` lists, `-v` makes the listing long — and it is section 06's listing again, with the owner and
 group written as `ana/ana`. **That is what `tar` preserves and `zip` does not**: permissions,
 ownership, timestamps, symlinks, and the paths exactly as given.
 
@@ -145,7 +145,7 @@ ana@vm:~/ar$ gzip -d notes/draft.txt.gz
 gzip: notes/draft.txt already exists;   not overwritten
 ```
 
-Politer than `cp` was in section 42, and for once you are being asked.
+Politer than `cp` was in section 07, and for once you are being asked.
 
 There is also `zcat`, `zless` and `zgrep`, which read a `.gz` without unpacking it first. On
 `/var/log`, where yesterday's logs are already gzipped, `zgrep` is the difference between
@@ -193,5 +193,5 @@ project.tar.xz: XZ compressed data, checksum CRC64
 project.zip:    Zip archive data, at least v1.0 to extract, compression method=store
 ```
 
-Section 43 said the extension is a hint. Somebody will hand you a `.zip` that is a `.tar.gz`, or a
+Section 08 said the extension is a hint. Somebody will hand you a `.zip` that is a `.tar.gz`, or a
 `.tar.gz` that was never compressed, and `file` is how you stop guessing.

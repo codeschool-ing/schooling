@@ -13,9 +13,9 @@ tudo abaixo é sobre o programa.
 |---|---|
 | 1 | **caminhos absolutos**, para o programa e para todo arquivo que ele toca |
 | 2 | **`set -euo pipefail`**, para que uma falha seja uma falha — aula 9 |
-| 3 | **uma trava**, para que ele não rode duas vezes ao mesmo tempo — seção 223 |
+| 3 | **uma trava**, para que ele não rode duas vezes ao mesmo tempo — seção 14 |
 | 4 | **um tempo limite**, para que um travamento não seja permanente |
-| 5 | **saída que vai para onde você vai ler** — seção 216 |
+| 5 | **saída que vai para onde você vai ler** — seção 07 |
 | 6 | **saída diferente de zero quando falha**, que é do que todo o resto depende |
 | 7 | **idempotência**: rodar duas vezes não causa dano |
 | 8 | **um comentário dizendo por que ele existe** |
@@ -174,7 +174,7 @@ olha quão velho ele está.
 
 **Teste o job do jeito que ele vai rodar**, não do jeito que você está rodando.
 
-O `env -i` da seção 215 para o ambiente; `sudo -u ana` para a conta; `systemctl
+O `env -i` da seção 06 para o ambiente; `sudo -u ana` para a conta; `systemctl
 start report.service` em vez do script à mão. Um job agendado é diferente do
 mesmo comando no seu terminal de quatro jeitos — usuário, ambiente, diretório de
 trabalho e terminal — e cada um deles tem o próprio jeito de falhar às três da

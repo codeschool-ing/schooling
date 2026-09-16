@@ -4,7 +4,7 @@ version: 1
 ---
 
 A plain variable holds one string. Put a list of filenames in one, separated by spaces, and you
-have re-created every problem in section 141. An array holds a list of values and keeps the
+have re-created every problem in section 04. An array holds a list of values and keeps the
 boundaries.
 
 ```
@@ -39,7 +39,7 @@ An array that looks like it lost everything after the first item usually just lo
 
 ## `"${arr[@]}"`, with the quotes
 
-Exactly the same rule as `"$@"` in section 142, for exactly the same reason:
+Exactly the same rule as `"$@"` in section 05, for exactly the same reason:
 
 ```
 ana@vm:/tmp/q2$ for h in "${hosts[@]}"; do echo "[$h]"; done
@@ -84,7 +84,7 @@ ana@vm:/tmp/q2$ cd /tmp/q2 && files=(*.txt); echo "${#files[@]} files: ${files[*
 
 **`files=(*.log)` is the safe way to hold a list of filenames**, because the shell built the list
 and each name is one element however many spaces it contains. Combined with `shopt -s nullglob`
-from section 147, `${#files[@]}` is then a true count, including zero.
+from section 10, `${#files[@]}` is then a true count, including zero.
 
 From a command's output, the spelling is `mapfile`:
 
@@ -110,7 +110,7 @@ rsync_opts=(-a --delete --exclude '*.tmp')
 rsync "${rsync_opts[@]}" src/ dst/
 ```
 
-This is the answer to the `cmd $FLAGS` problem from section 141. The string version breaks the
+This is the answer to the `cmd $FLAGS` problem from section 04. The string version breaks the
 moment one option has a space in it — `--exclude '*.tmp'` becomes three arguments — and the array
 version cannot, because each element stays one argument.
 

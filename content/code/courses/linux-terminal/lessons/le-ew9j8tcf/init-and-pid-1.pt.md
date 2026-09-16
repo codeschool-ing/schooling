@@ -20,7 +20,7 @@ lrwxrwxrwx 1 root root 22 Jul 28 15:04 /sbin/init -> ../lib/systemd/systemd
 **Nesta máquina o PID 1 não é um sistema de init.** É o supervisor de um runtime de contêiner,
 porque isto é um contêiner e contêineres frequentemente rodam um programa sem init por baixo. É um
 arranjo real e comum, e é a razão honesta de várias transcrições mais adiante nesta aula serem
-desenhos — a nota da seção 79 diz isso onde importa.
+desenhos — a nota da seção 10 diz isso onde importa.
 
 A segunda linha é a interessante. **O `/sbin/init` aponta para o systemd**, exatamente como em
 qualquer Ubuntu: o software está instalado e seria o processo um se esta máquina tivesse dado boot
@@ -79,7 +79,7 @@ as alternativas hoje são a escolha de especialista. O Devuan existe para quem q
 Alpine usa OpenRC e é por isso que a aula 2 o mencionou; o Void usa runit. São reais e você
 provavelmente não vai encontrar um.
 
-**Aprenda systemd.** É o que está na máquina à sua frente. Os sete comandos da seção 78 são tudo de
+**Aprenda systemd.** É o que está na máquina à sua frente. Os sete comandos da seção 09 são tudo de
 que você precisa por muito tempo.
 
 ## O que o PID 1 faz, além de iniciar coisas
@@ -87,12 +87,12 @@ que você precisa por muito tempo.
 Duas tarefas que só o PID 1 consegue fazer, e as duas reaparecem neste curso:
 
 **Ele adota órfãos.** Quando o pai de um processo termina, o filho é readotado pelo PID 1. É assim
-que um daemon acaba pertencendo ao sistema — a segunda propriedade da seção 76 — e a seção 91 da
+que um daemon acaba pertencendo ao sistema — a segunda propriedade da seção 07 — e a seção 06 da
 aula 6 desenha isso.
 
 **Ele os recolhe.** Um processo terminado fica na tabela até o pai dele coletar o código de saída. O
 pai de um órfão é o PID 1, e o PID 1 coleta continuamente. **Um init que não faz isso vaza
-zumbis**, que é o bug mais comum num entrypoint de contêiner escrito à mão, e a seção 89 da aula 6 é
+zumbis**, que é o bug mais comum num entrypoint de contêiner escrito à mão, e a seção 04 da aula 6 é
 onde você encontra um.
 
 É também por isso que o `docker run` tem o `--init`: ele insere um processo um minúsculo cuja única

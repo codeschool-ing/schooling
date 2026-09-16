@@ -43,9 +43,9 @@ and installs nothing. Which means:
 offers to put you back in the editor. A crontab written straight to the spool
 directory gets no such check.
 
-And the editor is the one from section 205 — `$VISUAL`, then `$EDITOR`, then
-whatever the distribution's fallback is. `EDITOR=nano crontab -e` is the spelling
-worth knowing on a machine that is not yours.
+And the editor is the one from lesson 12 section 13 — `$VISUAL`, then `$EDITOR`,
+then whatever the distribution's fallback is. `EDITOR=nano crontab -e` is the
+spelling worth knowing on a machine that is not yours.
 
 ## `-r` is next to `-e`
 
@@ -100,7 +100,7 @@ can leave the file changed and the directory untouched.
 
 ## Two things that are not obvious
 
-**The crontab has no `SHELL` and no path unless you say so.** Section 215 is the
+**The crontab has no `SHELL` and no path unless you say so.** Section 06 is the
 whole subject and it is the commonest way a job that works in your terminal does
 nothing at all at three in the morning.
 

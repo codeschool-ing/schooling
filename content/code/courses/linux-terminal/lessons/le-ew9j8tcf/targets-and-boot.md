@@ -6,7 +6,7 @@ version: 1
 A **target** is a named group of units. Nothing more: it runs no program and has no `ExecStart=`.
 It exists so that "bring the machine to this state" is one name.
 
-You met one in section 78 without being told what it was:
+You met one in section 09 without being told what it was:
 
 ```
 Created symlink …/etc/systemd/system/multi-user.target.wants/hello.service → /etc/systemd/system/hello.service.
@@ -40,7 +40,7 @@ systemctl isolate rescue.target             # go there now
 systemctl list-units --type=target          # what is active
 ```
 
-**`set-default` is one symlink**, exactly like section 78's: `/etc/systemd/system/default.target`
+**`set-default` is one symlink**, exactly like section 09's: `/etc/systemd/system/default.target`
 pointing at the one you chose. Everything in systemd is a symlink somewhere, and once you see that
 the design stops being mysterious.
 
@@ -56,7 +56,7 @@ Beyond the runlevel equivalents, four targets turn up in unit files constantly:
 |---|---|
 | `network.target` | the network stack is **configured**, which is not the same as reachable |
 | `network-online.target` | something has actually come up — and only if a `wait-online` service is enabled |
-| `local-fs.target` | everything in `/etc/fstab` is mounted — lesson 3 section 47 |
+| `local-fs.target` | everything in `/etc/fstab` is mounted — lesson 3 section 12 |
 | `sysinit.target` | the early, low-level setup is done |
 
 **`After=network.target` does not mean the network works.** That is the single most common wrong
@@ -67,7 +67,7 @@ to be enabled or it silently means nothing again.
 
 ## Why the boot is faster, and how to see where it went
 
-Section 77 said systemd starts things in parallel by resolving dependencies rather than running a
+Section 08 said systemd starts things in parallel by resolving dependencies rather than running a
 numbered list. You can watch the result:
 
 ```
@@ -92,9 +92,9 @@ cases the useful information is already on the screen or in the journal.
 | hangs on a job, with a countdown | a unit waiting for something that will not arrive — the countdown is its timeout |
 | `Give root password for maintenance` | a filesystem in `/etc/fstab` could not be mounted |
 | emergency shell, nothing mounted | the root filesystem itself, or a badly wrong `fstab` |
-| boots, but a service is missing | section 78: started once by hand, never enabled |
+| boots, but a service is missing | section 09: started once by hand, never enabled |
 
-**The `fstab` one is the most common by far**, and lesson 3 section 47 told you the defence:
+**The `fstab` one is the most common by far**, and lesson 3 section 12 told you the defence:
 `sudo mount -a` after editing, and confirm it is silent before you reboot. `nofail` in the options
 column is the belt-and-braces version — it lets the boot continue when that mount fails, which is
 right for a data disk and wrong for the root.
@@ -121,7 +121,7 @@ exactly the question.
 | `init=/bin/bash` | no init at all. The last resort |
 
 **A rescue or live image** is the other way, and the one for a root filesystem that will not mount.
-Boot it, mount the real root somewhere, and fix the file. Lesson 3 section 47's `mount` is all you
+Boot it, mount the real root somewhere, and fix the file. Lesson 3 section 12's `mount` is all you
 need.
 
 Both of these are worth reading now and trying once on a machine you can afford to break. The

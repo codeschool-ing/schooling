@@ -59,7 +59,7 @@ número: `20.04` é antigo, `24.04` é atual, e dá para ver de relance sem cons
 
 ## Qual escolher
 
-A seção 33 defende três casos direito. A versão comprimida:
+A seção 12 defende três casos direito. A versão comprimida:
 
 - **Um servidor que outra pessoa mantém** — fixo, com a janela mais longa que você conseguir. Sem
   graça é a qualidade.

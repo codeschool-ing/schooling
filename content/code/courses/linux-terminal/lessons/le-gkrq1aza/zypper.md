@@ -3,11 +3,11 @@ title: `zypper`, on SUSE and openSUSE
 version: 1
 ---
 
-SUSE uses `.rpm` files and `rpm` underneath, exactly as section 112 described — and a different
+SUSE uses `.rpm` files and `rpm` underneath, exactly as section 10 described — and a different
 tool on top. Everything you learned about `rpm -q` applies here unchanged; only the high layer has
 new words.
 
-**Same caveat as section 112**: these transcripts were captured on Ubuntu with `zypper` installed
+**Same caveat as section 10**: these transcripts were captured on Ubuntu with `zypper` installed
 and the lesson's own repository configured. The commands and their output are real; the
 distribution is not SUSE, and the one place that shows is pointed out below.
 
@@ -121,7 +121,7 @@ and `v` shows the full version numbers before you decide. Typing `?` lists the r
 **`Checking for file conflicts:`** is a step neither apt nor dnf announces. zypper verifies that no
 two packages want to write the same path before it writes anything.
 
-**Those `rpm:` lines are the Ubuntu artefact**, the same wrapper warning as section 112. zypper is
+**Those `rpm:` lines are the Ubuntu artefact**, the same wrapper warning as section 10. zypper is
 calling `rpm`, and Debian's `rpm` is telling it off. On SUSE they are not there.
 
 ## Which package owns a file
@@ -141,7 +141,7 @@ i+ | greet-tools | Extra commands that need greet                  | package
 rather than names. **And now the `S` column has content**: `i` for `greet`, which came in as a
 dependency, and `i+` for `greet-tools`, which is what was asked for.
 
-That `+` is the same distinction as `apt-mark showmanual` in section 108, kept in the listing where
+That `+` is the same distinction as `apt-mark showmanual` in section 06, kept in the listing where
 you can see it rather than in a separate command.
 
 `rpm -qf /usr/bin/greet` also works here, and is shorter.
@@ -173,7 +173,7 @@ root@vm:~# greet-twice
 bash: greet-twice: command not found
 ```
 
-Both packages removed, for the reason section 108 gave, and then **an error that is this machine
+Both packages removed, for the reason section 06 gave, and then **an error that is this machine
 and not zypper**. `rpmdb2solv` builds zypper's cache of the installed-package database, and it
 needs `/etc/products.d` — a directory that describes which SUSE products are installed, which an
 Ubuntu machine does not have.
@@ -219,9 +219,9 @@ No core libraries or services have been updated since the last system boot.
 Reboot is probably not necessary.
 ```
 
-Nothing to do here, which is the answer you want — and read the first line against section 98.
-**"Processes using deleted files" is exactly the open-descriptor-on-a-deleted-file situation**, and
-this is what it looks like when a package manager uses it deliberately: a library replaced on disk
-while something still has the old one open is a service running code that no longer exists.
+Nothing to do here, which is the answer you want — and read the first line against lesson 6 section
+13. **"Processes using deleted files" is exactly the open-descriptor-on-a-deleted-file situation**,
+and this is what it looks like when a package manager uses it deliberately: a library replaced on
+disk while something still has the old one open is a service running code that no longer exists.
 
 Debian's `needrestart` package does the same job; zypper has it built in.

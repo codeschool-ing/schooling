@@ -31,12 +31,12 @@ is `apache2`, and whose security framework is AppArmor. **You already know how t
 `ID_LIKE` is absent on the family heads — Debian itself has no `ID_LIKE`, because it is not like
 anything else. Its absence is information too.
 
-**`VERSION_ID`** is the third, and it is what you check against section 30's table when you want to
+**`VERSION_ID`** is the third, and it is what you check against section 09's table when you want to
 know whether this machine is still supported.
 
 ## Why this file and not the older ones
 
-Section 25 showed an Ubuntu machine answering the older question:
+Section 04 showed an Ubuntu machine answering the older question:
 
 ```
 ana@vm:~$ cat /etc/debian_version

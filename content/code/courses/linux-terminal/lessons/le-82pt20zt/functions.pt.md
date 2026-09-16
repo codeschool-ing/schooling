@@ -64,7 +64,7 @@ Esse é o modelo mental, e ele é quase exato.
 | | |
 |---|---|
 | `$1 $2 $#` | os argumentos **da função**, não os do script |
-| `"$@"` | os argumentos da função, mesma regra de aspas da seção 142 |
+| `"$@"` | os argumentos da função, mesma regra de aspas da seção 05 |
 | `return N` | o código de saída da função. `$?` depois |
 | `exit N` | **sai do script inteiro.** Não da função |
 | `$0` | ainda é o script. Funções não têm nome próprio no `$0` |
@@ -166,8 +166,8 @@ mensagem de progresso e depois a resposta, e quem chamou recebeu as duas — `[a
 Mensagens de progresso, avisos, qualquer coisa que um humano lê — mande para a saída de erro com
 `>&2`, que é o que o `log()` do começo desta seção faz.
 
-Isso não é uma gambiarra. É para isso que a saída de erro existe (seção 120), e é por isso que a
-saída normal de um script bem-comportado pode ser encanada para outra coisa sem ser contaminada.
+Isso não é uma gambiarra. É para isso que a saída de erro existe (aula 8 seção 02), e é por isso que
+a saída normal de um script bem-comportado pode ser encanada para outra coisa sem ser contaminada.
 
 ## Duas coisas que fazem funções valerem a pena
 
@@ -204,5 +204,5 @@ Elas não podem ser chamadas antes de definidas, não podem devolver nada além 
 podem ser exportadas para um script filho** de nenhum jeito em que você deva confiar — o `export -f`
 existe, é só do bash, e foi o mecanismo por trás de um furo de segurança famoso em 2014.
 
-Se dois scripts precisam da mesma função, ponha num terceiro arquivo e use `source` (seção 139).
+Se dois scripts precisam da mesma função, ponha num terceiro arquivo e use `source` (seção 02).
 Essa é a versão de biblioteca que o shell tem, e é toda ela.

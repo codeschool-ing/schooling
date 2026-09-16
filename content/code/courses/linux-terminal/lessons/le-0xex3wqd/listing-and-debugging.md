@@ -87,13 +87,13 @@ In this order, because each one is cheaper than the next:
 3. **Did cron try?** `grep CRON /var/log/syslog`. A `CMD` line means the job
    started and the problem is inside it; no line at all means the schedule is
    wrong or cron never read the file.
-4. **Is the schedule what you meant?** Section 213's OR rule, `*/15` counting
+4. **Is the schedule what you meant?** Section 04's OR rule, `*/15` counting
    from zero, and for a timer, `systemd-analyze calendar` on the exact string.
 5. **Is the file named right?** A dot in a `/etc/cron.d` name, or a missing
    final newline, and the file is ignored without a word.
-6. **Is it the environment?** `env -i` from section 215, which reproduces the
+6. **Is it the environment?** `env -i` from section 06, which reproduces the
    failure in your terminal in ten seconds.
-7. **Is it still running from last time?** Section 223. `ps -ef | grep` the
+7. **Is it still running from last time?** Section 14. `ps -ef | grep` the
    command, and look at how long it has been there.
 
 **Steps 3 and 6 between them cover most of it**, and they are both ten seconds.

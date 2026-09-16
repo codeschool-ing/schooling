@@ -203,4 +203,4 @@ is silent *before* you reboot. `mount -a` is the free rehearsal.
 | a network share | NFS or SMB, mounted at whatever directory you choose |
 | Windows, inside WSL | `/mnt/c` — the same mechanism, and why it is slower |
 | a container | its whole filesystem is mounts, and `-v` on `docker run` adds one |
-| `/proc`, `/sys`, `/dev` | mounted, and not on any disk at all — section 49 |
+| `/proc`, `/sys`, `/dev` | mounted, and not on any disk at all — section 14 |

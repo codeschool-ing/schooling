@@ -31,12 +31,12 @@ falar e que diz `ID_LIKE=debian` é uma cujo gerenciador de pacotes é o `apt`, 
 O `ID_LIKE` não existe nas cabeças de família — o próprio Debian não tem `ID_LIKE`, porque ele não é
 parecido com mais nada. A ausência dele também é informação.
 
-**`VERSION_ID`** é o terceiro, e é o que você confere contra a tabela da seção 30 quando quer saber
+**`VERSION_ID`** é o terceiro, e é o que você confere contra a tabela da seção 09 quando quer saber
 se aquela máquina ainda tem suporte.
 
 ## Por que este arquivo e não os antigos
 
-A seção 25 mostrou uma máquina Ubuntu respondendo à pergunta antiga:
+A seção 04 mostrou uma máquina Ubuntu respondendo à pergunta antiga:
 
 ```
 ana@vm:~$ cat /etc/debian_version

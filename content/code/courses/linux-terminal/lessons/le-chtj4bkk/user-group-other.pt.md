@@ -3,7 +3,7 @@ title: Três públicos, e só um deles é você
 version: 1
 ---
 
-Todo arquivo tem um **dono** e um **grupo**, e a seção 41 já te mostrou os dois:
+Todo arquivo tem um **dono** e um **grupo**, e a aula 3 seção 06 já te mostrou os dois:
 
 ```
 -rw-r----- 1 ana team 13 Sep 14 22:45 teamonly.txt
@@ -104,7 +104,7 @@ está no `team`, e a ana não consegue escrever.** O bruno consegue. A carla con
 
 Parece bug e é o projeto. A linha do dono existe para que um dono possa *deliberadamente* se dar
 menos que todo mundo — um arquivo que você quer ter certeza de não sobrescrever sem querer é
-exatamente isso. E o root ignora tudo isso de qualquer forma, que é a seção 64.
+exatamente isso. E o root ignora tudo isso de qualquer forma, que é a seção 11.
 
 ## O que as três letras querem dizer
 
@@ -116,14 +116,14 @@ exatamente isso. E o root ignora tudo isso de qualquer forma, que é a seção 6
 | `-` | não pode |
 
 Num **diretório** as mesmas três letras querem dizer outra coisa, e esse é o assunto inteiro da
-seção 59. Não leve os significados de arquivo para lá; eles vão te enganar.
+seção 06. Não leve os significados de arquivo para lá; eles vão te enganar.
 
 ## Duas coisas que não estão nos nove caracteres
 
 **Apagar um arquivo não é controlado pelos bits do arquivo.** É controlado pelos bits do
 **diretório** — porque remover um arquivo é remover um nome de um diretório, o que é uma alteração
 no diretório. É por isso que você consegue apagar um arquivo que não consegue ler, e é por isso que
-o `/tmp` precisa do bit extra da seção 63.
+o `/tmp` precisa do bit extra da seção 10.
 
 **Nada aqui conhece pessoas.** Estas são *contas* de usuário e grupos, casados por número. A seção
-61 é de onde esses números vêm, e a aula 5 é onde as contas de fato moram.
+08 é de onde esses números vêm, e a aula 5 é onde as contas de fato moram.

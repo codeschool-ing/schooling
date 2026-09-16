@@ -50,8 +50,8 @@ editor - auto mode
 ```
 
 On Debian and Ubuntu there is a `/usr/bin/editor`, managed by the alternatives
-system from section 32, and **here it points at nano**. So an unset `$EDITOR` on
-this machine gets you nano.
+system from lesson 2 section 11, and **here it points at nano**. So an unset
+`$EDITOR` on this machine gets you nano.
 
 On Red Hat and SUSE there is no `editor` alternative and the fallback is
 usually `vi`. Same command, different editor, depending on the distribution —
@@ -68,7 +68,7 @@ EDITOR is now nano
 ```
 
 That lasts until the shell exits. For it to stick, it goes in your shell's
-startup file — section 74:
+startup file — lesson 5 section 05:
 
 ```sh
 # ~/.bashrc, or ~/.profile
@@ -92,12 +92,12 @@ Two of the tools above do more than open a file, and both exist because editing
 the file directly is dangerous.
 
 **`visudo`** edits `/etc/sudoers` and **checks the syntax before installing it**.
-Section 65's warning: a `sudoers` file with a syntax error can lock every user
-out of `sudo` on that machine, and `visudo` refuses to install one.
+Lesson 4 section 12's warning: a `sudoers` file with a syntax error can lock
+every user out of `sudo` on that machine, and `visudo` refuses to install one.
 
 It uses `$EDITOR` like anything else, and `sudo EDITOR=nano visudo` is the
 spelling that gets you nano — because `sudo` strips the environment by default
-(section 65), so exporting it in your own shell is not enough.
+(lesson 4 section 12), so exporting it in your own shell is not enough.
 
 **`sudoedit`** — also spelled `sudo -e` — is the right way to edit a root-owned
 file:
@@ -143,5 +143,6 @@ ana@vm:~$ which editor && readlink -f /usr/bin/editor
 
 Two commands, and between them they tell you exactly what `git commit` is about
 to open: nothing is set, so the fallback applies, and the fallback here resolves
-to nano. The `${VISUAL:-${EDITOR:-…}}` is section 152's default-value expansion,
-nested — and it is the same order of preference the programs themselves use.
+to nano. The `${VISUAL:-${EDITOR:-…}}` is lesson 9 section 15's default-value
+expansion, nested — and it is the same order of preference the programs
+themselves use.

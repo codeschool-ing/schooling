@@ -11,7 +11,8 @@ Dez caracteres, e eles são a primeira coisa de cada linha de uma listagem longa
 
 ## Caractere 1: o tipo, que não é permissão
 
-A seção 41 tratou disso e vale repetir, porque as pessoas contam nove caracteres e encontram dez:
+A aula 3 seção 06 tratou disso e vale repetir, porque as pessoas contam nove caracteres e encontram
+dez:
 
 | | |
 |---|---|
@@ -63,7 +64,7 @@ resto não recebe nada. A `ana` e o root, e a lista é essa.
 `ana` pode editar. Essa combinação é a cara de quase todo programa em `/usr/bin`.
 
 **`teamonly.txt` — `-rw-r-----`.** Um arquivo. A `ana` lê e escreve. O grupo `team` lê. Todo o resto
-não recebe nada, que é o `---` no fim, e é por isso que a carla foi recusada na seção 55.
+não recebe nada, que é o `---` no fim, e é por isso que a carla foi recusada na seção 02.
 
 ## O `x` é o que tem dois significados
 
@@ -84,7 +85,7 @@ the script ran
 
 O arquivo não mudou. Um bit mudou.
 
-Num **diretório**, `x` quer dizer outra coisa, e a seção 59 é sobre ela. Não leve nada daqui
+Num **diretório**, `x` quer dizer outra coisa, e a seção 06 é sobre ela. Não leve nada daqui
 para lá.
 
 ## Os dois caracteres extras que você vai encontrar
@@ -95,10 +96,10 @@ drwxrwsr-x 2 root team  4096 Sep 14 22:44 /srv/team
 drwxrwxrwt 38 root root 36864 Sep 14 22:45 /tmp
 ```
 
-Um `s` onde deveria haver um `x`, e um `t` no fim. Esses são os bits especiais, eles são a seção
-63, e por ora o que importa notar é que **eles ocupam uma vaga de `x`** — então um `s` minúsculo
-quer dizer que o bit especial está ligado *e* a execução também, e um `S` maiúsculo quer dizer que
-o bit especial está ligado e a execução não, o que é quase sempre um engano.
+Um `s` onde deveria haver um `x`, e um `t` no fim. Esses são os bits especiais, eles são a seção 10,
+e por ora o que importa notar é que **eles ocupam uma vaga de `x`** — então um `s` minúsculo quer
+dizer que o bit especial está ligado *e* a execução também, e um `S` maiúsculo quer dizer que o bit
+especial está ligado e a execução não, o que é quase sempre um engano.
 
 E um `+` no fim dos nove:
 
@@ -107,17 +108,17 @@ E um `+` no fim dos nove:
 ```
 
 Isso quer dizer que o arquivo carrega uma **lista de controle de acesso** — permissões extras que
-os nove caracteres não conseguem expressar. Seção 66. Quando o acesso a um arquivo não bate com o
+os nove caracteres não conseguem expressar. Seção 13. Quando o acesso a um arquivo não bate com o
 modo dele, procure o mais.
 
 ## Como responder "eu posso?" sem adivinhar
 
-Três perguntas, em ordem, e a seção 55 te deu as duas primeiras:
+Três perguntas, em ordem, e a seção 02 te deu as duas primeiras:
 
 1. **Quem eu sou?** `id` — e leia a lista de grupos, não só o nome.
 2. **Qual linha vale?** Dono, depois grupo, depois outros. A primeira que casa, e só ela.
 3. **Eu consigo chegar lá?** Todo diretório do caminho precisa de `x`. Essa é a que as pessoas
-   esquecem, e a seção 59 é onde ela ganha uma seção própria.
+   esquecem, e a seção 06 é onde ela ganha uma seção própria.
 
 O `namei -l` percorre um caminho e imprime o modo de cada passo, o que responde às três de uma vez:
 

@@ -58,7 +58,7 @@ A lista acima é curta, e esse é o fato útil. Tudo isto é igual em todo lugar
 - SSH, e tudo sobre alcançar uma máquina
 
 **O Alpine é a exceção que confirma a regra**: ele difere também no userland e no sistema de
-inicialização, e é por isso que a seção 28 dá uma seção inteira a ele em vez de uma coluna.
+inicialização, e é por isso que a seção 07 dá uma seção inteira a ele em vez de uma coluna.
 
 ## Traduzindo um comando que te deram
 

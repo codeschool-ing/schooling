@@ -137,7 +137,7 @@ por isso que travar é reversível.
 
 **Travar a senha não impede uma chave ssh de funcionar.** Isso surpreende as pessoas no dia em que
 alguém sai: `passwd -l` e a conta continua entrando por ssh, porque chaves nunca encostaram no
-`/etc/shadow`. A seção 75 é onde isso mora; a versão com cinto e suspensórios é
+`/etc/shadow`. A seção 06 é onde isso mora; a versão com cinto e suspensórios é
 `usermod -L -e 1 usuario`, que expira a própria conta.
 
 Repare também que o `passwd -l` imprime `password changed.` — a única mensagem confusa desta seção,

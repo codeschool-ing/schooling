@@ -47,9 +47,9 @@ by that convention alone — and `Unit=` overrides it when the names differ.
 
 | | |
 |---|---|
-| `OnCalendar=` | a wall-clock schedule — section 220 |
+| `OnCalendar=` | a wall-clock schedule — section 11 |
 | `RandomizedDelaySec=15m` | spread the herd: a random delay up to fifteen minutes |
-| `Persistent=true` | if the machine was off, run it at the next boot — section 221 |
+| `Persistent=true` | if the machine was off, run it at the next boot — section 12 |
 | `WantedBy=timers.target` | enable it and it starts with the system |
 
 ## Installing one
@@ -112,7 +112,7 @@ find out which kind you have. It reads files by path and needs no root.
 
 That last pair is the honest reason to prefer a timer for anything that matters:
 **overlap and missed runs are solved in the file rather than in your script** —
-which is sections 223 and 221, and about half of what section 225 is about.
+which is sections 14 and 12, and about half of what section 16 is about.
 
 ## What it costs
 

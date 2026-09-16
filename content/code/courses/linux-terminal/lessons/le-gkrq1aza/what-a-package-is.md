@@ -23,7 +23,7 @@ this lesson comes from using the low layer and expecting the high one.
 | **high: `apt`, `dnf`, `zypper`** | knows the repositories, resolves dependencies, downloads |
 
 `dpkg -i thing.deb` does not fetch anything. It cannot: it has never heard of a repository. Section
-109 is that failure in full, and it ends with the one command that repairs it.
+07 is that failure in full, and it ends with the one command that repairs it.
 
 ## What is actually in one
 
@@ -46,7 +46,7 @@ the difference between asking about a download and asking about the machine.
 
 Installing does two things: it puts the files where they go, and it **writes down that it did**.
 That second half is a database — `/var/lib/dpkg` on Debian, `/var/lib/rpm` on the rpm side — and it
-is what makes every question in section 109 answerable.
+is what makes every question in section 07 answerable.
 
 ```
 root@vm:~# dpkg --get-selections | wc -l
@@ -88,13 +88,13 @@ APT-Sources: http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages
 | `Depends` | **must** be there, or this will not be configured |
 | `Recommends` | installed by default, and not required. `--no-install-recommends` skips them |
 | `Suggests` | mentioned and never installed automatically |
-| `APT-Sources` | which repository this version came from — section 105 |
+| `APT-Sources` | which repository this version came from — section 03 |
 
 **`Recommends` is the field that explains why a one-line install downloaded forty megabytes.** It is
 on by default on Debian and Ubuntu, and turning it off is the single biggest difference between a
 small container image and a large one.
 
-`Depends: libtext-charwidth-perl` is the promise that section 109 breaks on purpose.
+`Depends: libtext-charwidth-perl` is the promise that section 07 breaks on purpose.
 
 ## Versions, and why they look like that
 
@@ -110,6 +110,6 @@ small container image and a large one.
 patched security hole and nothing else, which is exactly what a distribution's stable release is
 for: the version number stays put and the fixes arrive underneath it.
 
-`5:29.3.1-1~ubuntu.24.04~noble` in section 111 has a fourth part — the `5:` is an **epoch**, a
+`5:29.3.1-1~ubuntu.24.04~noble` in section 09 has a fourth part — the `5:` is an **epoch**, a
 number that overrides normal version comparison when upstream's numbering went backwards. You will
 rarely write one and you will see them.

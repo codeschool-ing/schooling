@@ -128,8 +128,8 @@ On a keyboard where `Esc` is where `Caps Lock` should be, this is fine. On a
 laptop with a touch bar it is not.
 
 **`Ctrl-[` is `Esc`.** Not a substitute — the same byte, 27, which is why the
-terminal cannot tell them apart (section 8). Every vim user who does not remap
-their keyboard uses it.
+terminal cannot tell them apart (lesson 1 section 08). Every vim user who does
+not remap their keyboard uses it.
 
 `Ctrl-c` also leaves insert mode and is not quite the same: it skips some of what
 `Esc` does on the way out, which matters for a handful of plugins and never for

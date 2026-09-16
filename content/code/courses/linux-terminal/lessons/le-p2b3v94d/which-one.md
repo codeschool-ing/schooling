@@ -29,7 +29,7 @@ a machine where somebody removed nano to save four megabytes. `Esc`, `:q!`,
 `:wq`, `u`.
 
 Whether you go further into vim is a genuine choice with a real payoff and a real
-cost. The payoff is in section 198 — the grammar, and editing at the speed you
+cost. The payoff is in section 06 — the grammar, and editing at the speed you
 think. The cost is the hours, and they are not optional either.
 
 ## Two reasons to choose vim that are not aesthetic
@@ -38,8 +38,8 @@ think. The cost is the hours, and they are not optional either.
 installed. That is not a small argument when the machine you are fixing is the
 one that cannot install packages.
 
-**Its keys are everywhere else.** `less` uses them (section 43). `man` uses
-`less`. `git log` uses `less`. `k9s`, `htop`'s search, `psql`, `mysql`, most
+**Its keys are everywhere else.** `less` uses them (lesson 3 section 08). `man`
+uses `less`. `git log` uses `less`. `k9s`, `htop`'s search, `psql`, `mysql`, most
 file managers, and every IDE's vim mode. `j`, `k`, `/`, `n`, `q` and `G` are the
 keys of reading text on Unix, not just of vim.
 

@@ -85,7 +85,7 @@ casar nomes de arquivo é um glob.** Um padrão dado ao `grep` não é.
 ## O que o `*` **não** casa
 
 **Ele não atravessa uma `/`.** `*.txt` casa nomes só do diretório atual; `*/*.txt` casa um nível
-abaixo; e achar um padrão em qualquer lugar abaixo de você é trabalho do `find` (seção 44) ou do
+abaixo; e achar um padrão em qualquer lugar abaixo de você é trabalho do `find` (seção 09) ou do
 `**` com `shopt -s globstar`.
 
 **Ele não casa um ponto inicial.** É por isso que `ls *` e `ls -a` discordam:
@@ -147,7 +147,7 @@ Listar um diretório é listar o que há dentro dele, e foi o que ele fez. **`ls
 
 ### Aspas entregam o padrão ao programa
 
-A seção 44 mandou pôr aspas no padrão do `find`, e agora o motivo está à vista:
+A seção 09 mandou pôr aspas no padrão do `find`, e agora o motivo está à vista:
 
 ```
 find . -name '*.c'      # o find compara — correto

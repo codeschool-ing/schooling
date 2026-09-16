@@ -67,7 +67,7 @@ arquivo de texto em português com acentos vai ter mais bytes do que caracteres,
 bytes.
 
 **Use o `-c` quando você se importa com disco ou tamanho de transferência** e o `-m` quando você se
-importa com quanto texto há. E repare que o `head -c` da seção 123 também é bytes, que é por que
+importa com quanto texto há. E repare que o `head -c` da seção 05 também é bytes, que é por que
 cortar um arquivo UTF-8 num byte arbitrário pode partir um caractere ao meio.
 
 ## Contando coisas que não são linhas
@@ -96,7 +96,7 @@ wc -l logs/app.log       # prints "30 logs/app.log"
 wc -l < logs/app.log     # prints "30"
 ```
 
-A seção 120 mostrou isso. Num script, **a segunda forma é a que você quer**, porque a saída é um
+A seção 02 mostrou isso. Num script, **a segunda forma é a que você quer**, porque a saída é um
 número e não um número mais um nome que você depois tem que cortar.
 
 O `$(wc -l < arquivo)` é a expressão idiomática, e é por isso que o redirecionamento vale o caractere

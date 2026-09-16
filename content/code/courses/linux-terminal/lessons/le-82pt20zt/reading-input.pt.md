@@ -55,7 +55,7 @@ Olhe a segunda linha da mesma saída. `   padded   ` voltou como `padded`.
 **O `read` divide no `$IFS` e remove espaço em branco do começo e do fim** antes de atribuir.
 Definir `IFS=` vazio durante aquele `read` desliga isso, e a linha chega como está no arquivo.
 
-O `IFS=` vai *na frente do `read`*, que é a forma um-comando-uma-variável da seção 140 — ela se
+O `IFS=` vai *na frente do `read`*, que é a forma um-comando-uma-variável da seção 03 — ela se
 aplica àquele `read` e a mais nada, então o resto do script continua com o `IFS` normal.
 
 ## O `IFS=,`, quando você quer a divisão
@@ -79,7 +79,7 @@ sobrou — então `while read -r first rest` é "a primeira palavra e depois a l
 
 Esta é uma alternativa genuína ao `cut` e ao `awk` quando você precisa dos campos num laço de shell
 em vez de num filtro. Também é bem mais lenta — um `read` por linha, no shell — então para um
-arquivo grande a resposta é o `awk` da seção 132.
+arquivo grande a resposta é o `awk` da aula 8 seção 14.
 
 Dois limites que vale conhecer antes de construir um parser de CSV com isso: **ele não entende
 campos entre aspas**, então uma vírgula dentro de `"Smith, Ana"` o quebra, e ele não entende
@@ -109,7 +109,7 @@ A mesma aritmética, os mesmos três números, e o primeiro diz zero.
 
 **Todo estágio de um pipeline roda num subshell**, então o laço à direita do `|` somou
 corretamente — num processo filho, que então saiu e levou o `total` junto. O `./script.sh` versus
-`source` da seção 139 é o mesmo mecanismo.
+`source` da seção 02 é o mesmo mecanismo.
 
 O conserto é `< <(comando)`, que se chama **substituição de processo**. Ela faz a saída de um
 comando parecer um arquivo, então o laço lê de um redirecionamento e continua no shell atual.
@@ -163,7 +163,7 @@ O prompt não estava na tela — ele foi para o arquivo, porque o `2>` o pegou. 
 *padrão* em vez disso e o prompt continua visível, que é o comportamento que você quer: um script
 cuja saída está sendo capturada ainda faz a pergunta no terminal.
 
-O `[[ $answer == [Yy]* ]]` é a correspondência de glob da seção 145, e aceita `y`, `Y`, `yes` e
+O `[[ $answer == [Yy]* ]]` é a correspondência de glob da seção 08, e aceita `y`, `Y`, `yes` e
 `Yes` tratando uma resposta vazia — alguém só apertando enter — como não. **Padrão não** em
 qualquer coisa destrutiva.
 

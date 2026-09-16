@@ -59,7 +59,7 @@ after you have.
 Split into three digits, and turn each into three characters:
 
 **640** → `6` is `rw-`, `4` is `r--`, `0` is `---` → `-rw-r-----`. The owner edits, the group
-reads, everybody else is shut out. That is `teamonly.txt` from section 55.
+reads, everybody else is shut out. That is `teamonly.txt` from section 02.
 
 **775** → `rwx`, `rwx`, `r-x` → a directory a whole group can add to and everybody can look in.
 
@@ -87,12 +87,12 @@ root@vm:~# stat -c '%a %A %n' /usr/bin/passwd /tmp /srv/team
 ```
 
 The leading digit is the special bits — **4** setuid, **2** setgid, **1** sticky — and they add up
-the same way. Section 63. When you see a mode with four digits, the first one is not part of the
+the same way. Section 10. When you see a mode with four digits, the first one is not part of the
 nine.
 
 And note what that implies: **`chmod 755` on a file that was `4755` turns the setuid bit off**,
 because a three-digit number means the fourth digit is zero. That has broken working programs, and
-it is why section 58 recommends the symbolic form for a change you want to be surgical.
+it is why section 05 recommends the symbolic form for a change you want to be surgical.
 
 ## 777 is almost never the answer
 
@@ -104,8 +104,8 @@ wrong — the wrong owner, a missing `x` on a directory two levels up, a group n
 still wrong; it just no longer matters, and neither does anything else.
 
 Two things to do instead, in this order: work out **which bit** was missing, with `namei -l` from
-section 56; and if the answer really is "these two accounts need to share this", that is what
-groups are for (section 61) and what ACLs are for (section 66).
+section 03; and if the answer really is "these two accounts need to share this", that is what
+groups are for (section 08) and what ACLs are for (section 13).
 
 There is one place `777` is correct, and it is `/tmp` — which is `1777`, and the leading `1` is the
-entire reason it is safe. Section 63.
+entire reason it is safe. Section 10.

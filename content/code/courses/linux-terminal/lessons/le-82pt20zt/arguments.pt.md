@@ -108,7 +108,7 @@ done, $# is 0
 
 **O `shift` joga o `$1` fora e move todo o resto para baixo**: o `$2` vira `$1`, o `$#` cai um. É
 assim que você percorre a lista de argumentos, e o laço acima é o esqueleto de todo parser de
-opções que você vai escrever — a seção 146 preenche o miolo dele.
+opções que você vai escrever — a seção 09 preenche o miolo dele.
 
 O `shift 2` desloca dois, que é como uma opção que recebe um valor consome os dois.
 
@@ -137,9 +137,9 @@ exit 2
 ```
 
 **O `>&2` não é opcional**, e a última execução é o motivo. Toda a saída padrão foi para o
-`/tmp/out.txt`, e a mensagem de uso continuou na tela — porque ela foi para a saída de erro (seção
-120), em que o redirecionamento não tocou. Sem o `>&2` ela estaria em silêncio dentro de um arquivo
-que o usuário não quis e não vai ler.
+`/tmp/out.txt`, e a mensagem de uso continuou na tela — porque ela foi para a saída de erro (aula 8
+seção 02), em que o redirecionamento não tocou. Sem o `>&2` ela estaria em silêncio dentro de um
+arquivo que o usuário não quis e não vai ler.
 
 E `exit 2` em vez de `exit 1` para erro de uso é uma convenção leve que vale manter: ela permite a
 quem chamou distinguir "você me invocou errado" de "eu rodei e falhei".
@@ -151,7 +151,7 @@ quem chamou distinguir "você me invocou errado" de "eu rodei e falhei".
 /home/ana/args.sh →  $0 is /home/ana/args.sh
 ```
 
-Use `${0##*/}` (seção 152) quando quiser só o nome do arquivo para uma mensagem. E não use o `$0`
+Use `${0##*/}` (seção 15) quando quiser só o nome do arquivo para uma mensagem. E não use o `$0`
 para achar o diretório do próprio script — ele não é confiável em casos suficientes para que o
 idioma seja uma linha à parte, digna de copiar em vez de deduzir:
 

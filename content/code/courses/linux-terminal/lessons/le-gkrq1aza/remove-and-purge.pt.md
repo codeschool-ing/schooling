@@ -41,7 +41,7 @@ root@vm:~# ls -l /etc/screenrc
 -rw-r--r-- 1 root root 3663 Jun 20  2016 /etc/screenrc
 ```
 
-**`rc`, e o arquivo de configuração continua lá.** Leia as duas letras com a legenda da seção 107:
+**`rc`, e o arquivo de configuração continua lá.** Leia as duas letras com a legenda da seção 05:
 
 | | |
 |---|---|
@@ -118,7 +118,7 @@ O `autoremove` junta todo pacote assim e os remove juntos. Rodá-lo depois de qu
 
 **Uma ressalva, e é real.** O `autoremove` confia na marca `auto`, e a marca pode estar errada — você
 instalou A, ele trouxe B, e você passou a depender de B diretamente. O `apt-mark manual B` conserta
-isso em definitivo, e a seção 108 é onde as marcas moram.
+isso em definitivo, e a seção 06 é onde as marcas moram.
 
 A versão para tomar cuidado é o `apt autoremove --purge`, que remove aqueles pacotes *e* a
 configuração deles. É a coisa certa numa máquina que você está limpando e a coisa errada de rodar sem
@@ -134,6 +134,6 @@ rpm -e thing               # the low layer: one package, and it refuses if somet
 
 **Não há `purge`**, porque o rpm trata a configuração de outro jeito: um arquivo de configuração que
 você editou é salvo como `.rpmsave` quando o pacote é removido, e um arquivo de configuração de um
-pacote que foi atualizado pode aparecer como `.rpmnew` ao lado do seu. A seção 112 diz mais; a versão
+pacote que foi atualizado pode aparecer como `.rpmnew` ao lado do seu. A seção 10 diz mais; a versão
 curta é que o lado rpm deixa arquivos com extensões novas onde o lado Debian deixa uma linha de banco
 de dados.

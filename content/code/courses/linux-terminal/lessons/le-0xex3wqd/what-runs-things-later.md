@@ -63,7 +63,7 @@ Every one of those is solved, once, by the schedulers below.
 
 This lesson is about the first four. The fifth matters and is somebody else's
 documentation, except for one thing it shares with all of them, which is the
-subject of section 225.
+subject of section 16.
 
 ## Which of them is on this machine
 

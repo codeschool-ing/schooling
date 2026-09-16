@@ -15,7 +15,7 @@ version: 1
 
 **A menor unidade é um minuto.** Nada no cron roda mais frequentemente que isso,
 e um job que precisa disso é um job para um serviço que fica rodando — ou para o
-timer do systemd da seção 221, que faz segundos.
+timer do systemd da seção 12, que faz segundos.
 
 | o que você escreve | o que quer dizer |
 |---|---|

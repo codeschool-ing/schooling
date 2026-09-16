@@ -17,7 +17,7 @@ cmdlet, porque uma função **é** um cmdlet no que diz respeito a todo o resto 
 
 ## O `param` é a diferença
 
-As funções de bash da seção 150 recebiam `$1` e `$2` e não conferiam nada. O bloco
+As funções de bash da aula 9 seção 13 recebiam `$1` e `$2` e não conferiam nada. O bloco
 `param` do PowerShell declara nomes, tipos e regras, e o shell as impõe **antes de
 o seu código rodar**:
 
@@ -89,7 +89,7 @@ second
 `return $x` quer dizer "emita `$x` e pare aqui" em vez de "este é o valor" — um
 `return` não é o que produz o resultado.
 
-Isso é o mesmo que o "uma função devolve dados na saída padrão" da seção 150, com
+Isso é o mesmo que o "uma função devolve dados na saída padrão" da aula 9 seção 13, com
 uma diferença grande: o que volta são **objetos**, não texto. O `$r` é um array de
 duas strings, o `$r[1]` é a segunda, e nada foi analisado.
 
@@ -149,7 +149,7 @@ cmdlets se encadeiam sem ninguém escrever cola.
 
 Variáveis são visíveis para funções **chamadas a partir** de onde são definidas, e
 uma atribuição dentro de uma função cria uma local — o padrão oposto ao do bash,
-em que a seção 150 tinha que dizer `local` em toda linha.
+em que a aula 9 seção 13 tinha que dizer `local` em toda linha.
 
 ```
 PS /home/ana/work/ps> $x = 1; function Set-It { $x = 2 }; Set-It; "x is $x"
@@ -163,12 +163,12 @@ normalmente é sinal de que a função deveria devolver um valor.**
 
 ## Onde funções moram
 
-Um arquivo `.ps1` é um script; um `.psm1` é um módulo. O
-`Import-Module ./tools.psm1` traz as funções dele — o `source` da seção 139, com um
-manifesto e números de versão anexados.
+Um arquivo `.ps1` é um script; um `.psm1` é um módulo. O `Import-Module ./tools.psm1`
+traz as funções dele — o `source` da aula 9 seção 02, com um manifesto e números de
+versão anexados.
 
 **Um arquivo de script não precisa de shebang no Windows** e precisa no Linux —
-`#!/usr/bin/env pwsh`, exatamente como a seção 139 descreveu — e então ele é um
+`#!/usr/bin/env pwsh`, exatamente como a aula 9 seção 02 descreveu — e então ele é um
 arquivo executável comum, a partir de um prompt de bash comum:
 
 ```

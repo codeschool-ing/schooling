@@ -13,7 +13,7 @@ this line still ran
 ```
 
 **That is a non-terminating error.** The cmdlet reported it and the script went
-on, which is the default and is section 143's `noset.sh` all over again.
+on, which is the default and is lesson 9 section 06's `noset.sh` all over again.
 
 ```
 PS /home/ana/work/ps> Get-Content /etc/nosuchfile -ErrorAction Stop; "this line did not"
@@ -37,11 +37,11 @@ Continue
 
 Setting `$ErrorActionPreference = 'Stop'` at the top of a script makes **every**
 cmdlet stop on error, which is as close as PowerShell gets to `set -e`. Put it
-next to `Set-StrictMode -Version Latest` from section 167, and the pair is
+next to `Set-StrictMode -Version Latest` from section 10, and the pair is
 `set -euo pipefail`.
 
 **`SilentlyContinue` is the one to be careful with.** It is the `2>/dev/null` of
-section 121, with the same problem: it hides the error you expected and also the
+lesson 8 section 03, with the same problem: it hides the error you expected and also the
 one you did not.
 
 ## `try` / `catch` / `finally`
@@ -51,7 +51,7 @@ PS /home/ana/work/ps> try { Get-Content /etc/nosuchfile -ErrorAction Stop } catc
 caught: Cannot find path '/etc/nosuchfile' because it does not exist.
 ```
 
-Real exception handling, which bash has nothing like — section 153's `trap … ERR`
+Real exception handling, which bash has nothing like — lesson 9 section 16's `trap … ERR`
 is the nearest thing and it is a different shape.
 
 **The `-ErrorAction Stop` is not optional there:**
@@ -93,7 +93,7 @@ RuntimeException
 finally ran
 ```
 
-`finally` runs either way, and is **the `trap … EXIT` of section 153**: the place
+`finally` runs either way, and is **the `trap … EXIT` of lesson 9 section 16**: the place
 to delete the temporary file, close the connection, put the setting back.
 
 `$Error` is an array of everything that has gone wrong this session, newest
@@ -110,9 +110,9 @@ PS /home/ana/work/ps> try { Check /etc/nope } catch { "died: $($_.Exception.Mess
 died: cannot read /etc/nope
 ```
 
-`throw` raises a terminating error with your message — the `die()` of section
-150, built in, and catchable by whoever called you, which `die()` is not. It is
-the right way for a function to refuse.
+`throw` raises a terminating error with your message — the `die()` of lesson 9 section 13, built
+in, and catchable by whoever called you, which `die()` is not. It is the right way for a function
+to refuse.
 
 ## `$?` and `$LASTEXITCODE` are different things
 
@@ -167,4 +167,4 @@ $ErrorActionPreference = 'Stop'
 Two lines. The first catches the variable that was never set, the second stops at
 the first cmdlet that fails. Neither notices a native program that returned 1,
 which is the hole you have to cover by hand — the same shape of gap that
-section 143 measured in `set -e`.
+lesson 9 section 06 measured in `set -e`.

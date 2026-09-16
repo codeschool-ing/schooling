@@ -29,7 +29,7 @@ total 8
 573516 -rw-r--r-- 2 ana ana 13 Sep 14 22:20 report.txt
 ```
 
-Two names. **One inode.** And the link count — field 3 from section 41 — went from `1` to `2`,
+Two names. **One inode.** And the link count — field 3 from section 06 — went from `1` to `2`,
 because that field is exactly *how many names point here*.
 
 Nothing was copied. There is no original and no copy; there are two names of equal standing, and
@@ -76,7 +76,7 @@ total 4
 Three differences from a hard link, and each one matters:
 
 - **its own inode**, `573519` — it is a separate thing on disk;
-- **type `l`** in the first column — section 41's field 1, earning its keep;
+- **type `l`** in the first column — section 06's field 1, earning its keep;
 - **size 10**, which is the length of the string `report.txt`. That is all a symlink is: a tiny
   file whose contents are a path.
 
@@ -130,7 +130,7 @@ filesystem, because an inode number only means something inside one filesystem. 
 a directory is forbidden, because it would let you build a loop that `find` could walk forever.
 
 In practice: **you will use symlinks, nearly always.** Hard links turn up in backup tools that
-deduplicate, and in the answer to "why did deleting the log not free any space" — section 48.
+deduplicate, and in the answer to "why did deleting the log not free any space" — section 13.
 
 ## Relative and absolute, again
 
@@ -166,7 +166,7 @@ deep and you have lost track.
 
 ## Where you will actually meet them
 
-**`/bin`, `/lib`, `/sbin`.** Section 37's arrows:
+**`/bin`, `/lib`, `/sbin`.** Section 02's arrows:
 
 ```
 ana@vm:~/work$ ls -l /bin
@@ -176,7 +176,7 @@ drwxr-xr-x 2 root root 36864 Mar 31 13:31 /bin/
 ```
 
 With `-l`, `ls` describes the link. With a trailing slash, it goes through it. That is the same
-pair of commands section 40 showed you, and now you know why they differ.
+pair of commands section 05 showed you, and now you know why they differ.
 
 **Versioned software.** `/usr/lib/libssl.so.3` is real; `/usr/lib/libssl.so` is a symlink to it.
 Upgrading moves the link, and nothing that referred to the short name has to change.

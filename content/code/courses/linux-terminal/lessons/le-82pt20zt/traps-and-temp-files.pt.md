@@ -29,8 +29,8 @@ drwx------ 2 ana ana 4096 Sep 15 10:22 /tmp/tmp.7WT247IVW4
 -rw------- 1 ana ana    0 Sep 15 10:22 /tmp/tmp.GCpTPnFgyN
 ```
 
-`700` e `600` — o octal da seção 57. Sem modelo nenhum ele escolhe o nome e o diretório sozinho,
-que é a grafia a usar quando você não se importa onde cai.
+`700` e `600` — o octal da aula 4 seção 04. Sem modelo nenhum ele escolhe o nome e o diretório
+sozinho, que é a grafia a usar quando você não se importa onde cai.
 
 **Um diretório temporário costuma ser melhor que um arquivo temporário**, porque um script que
 precisa de um arquivo de rascunho normalmente acaba precisando de três, e um `rm -rf` limpa todos.
@@ -115,13 +115,13 @@ termine.
 | `EXIT` | qualquer saída. **O que você quer para limpeza** |
 | `INT` | Ctrl-C |
 | `TERM` | o `kill`, e o que um gerenciador de serviços manda ao parar |
-| `HUP` | o terminal foi embora (seção 96) |
+| `HUP` | o terminal foi embora (aula 6 seção 11) |
 | `ERR` | o próprio do bash: qualquer comando que dispararia o `set -e` |
 
-A regra da seção 93 continua valendo: **o `KILL` não pode ser capturado.** O `kill -9` não dá ao seu
-script chance nenhuma de limpar, que é mais um motivo para preferir o `kill` simples.
+A regra da aula 6 seção 08 continua valendo: **o `KILL` não pode ser capturado.** O `kill -9` não dá
+ao seu script chance nenhuma de limpar, que é mais um motivo para preferir o `kill` simples.
 
-E 130 como código de saída não é arbitrário: é 128 mais o sinal 2, a convenção da seção 99.
+E 130 como código de saída não é arbitrário: é 128 mais o sinal 2, a convenção da aula 6 seção 14.
 
 ## `trap … ERR` para uma mensagem
 

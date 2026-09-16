@@ -51,7 +51,7 @@ linha num arquivo. Leia um valor com `$h["name"]` ou `$h.name` — a forma com p
 é mais curta e falha numa chave com espaço.
 
 **A ordem não é a de inserção.** O `port` voltou antes do `name`, igual aos arrays
-associativos do bash na seção 149. O `[ordered]@{ }` a mantém:
+associativos do bash na aula 9 seção 12. O `[ordered]@{ }` a mantém:
 
 ```
 PS /home/ana/work/ps> $h = [ordered]@{ name = "web01"; port = 8080 }; $h.Keys
@@ -135,4 +135,4 @@ three
 ```
 
 O `-split` numa expressão regular é a divisão em campos do `awk` e o `tr -s ' '` da
-aula 8 num operador só, e o `-join` é o `paste -sd,` da seção 133.
+aula 8 num operador só, e o `-join` é o `paste -sd,` da aula 8 seção 15.

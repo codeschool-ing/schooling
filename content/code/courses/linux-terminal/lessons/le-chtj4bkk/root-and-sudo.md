@@ -74,7 +74,7 @@ ana sudo team
 
 On Debian and Ubuntu, membership of the group `sudo` is what grants it. On Red Hat and its family
 the group is called `wheel`. That is the whole mechanism for most machines, and adding somebody is
-`usermod -aG sudo bruno` — with the `-a`, as section 61 insisted.
+`usermod -aG sudo bruno` — with the `-a`, as section 08 insisted.
 
 Somebody not in it gets this:
 
@@ -161,5 +161,5 @@ machine somebody else can touch.
 **Use `sudo` for the command that needs it, and nothing more.**
 
 `sudo apt install nginx` is right. Becoming root and *then* deciding what to do is how a `rm -rf`
-in the wrong directory becomes unrecoverable rather than annoying. Section 65 is the practical half
+in the wrong directory becomes unrecoverable rather than annoying. Section 12 is the practical half
 — including the one `sudo` that does not do what you expect.

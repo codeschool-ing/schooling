@@ -96,5 +96,5 @@ The benefit is not that it stops you doing damage — you can always ask. It is 
 you to have said so. A typo in a command you ran as yourself can destroy your own files. The same
 typo as root can destroy the machine.
 
-Section 61 of lesson 4 is `sudo`, which is how you ask. Until then, the useful reflex is the one
+Section 08 of lesson 4 is `sudo`, which is how you ask. Until then, the useful reflex is the one
 from section 06: **look at the last character of the prompt.**

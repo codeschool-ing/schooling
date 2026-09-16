@@ -106,7 +106,7 @@ Porque a falha te diz onde olhar, e isso é a maior parte de depurar:
 | `Permission denied` | **o kernel** | o shell achou e pediu; o kernel recusou |
 | `Killed` | **o kernel** | o kernel parou o programa, normalmente porque a memória acabou (aula 11) |
 | tela embaralhada, texto no lugar errado | **o terminal** | o desenho se perdeu, não o comando — `reset` geralmente resolve |
-| nada acontece, nenhum prompt novo | **o programa** | ele está rodando e não terminou. `Ctrl+C` é como você diz pare, e a seção 8 explica o que essa tecla realmente envia |
+| nada acontece, nenhum prompt novo | **o programa** | ele está rodando e não terminou. `Ctrl+C` é como você diz pare, e a seção 08 explica o que essa tecla realmente envia |
 
 Leia o prefixo de um erro. `bash:` quer dizer que é o bash falando. `ls:` quer dizer que é o `ls`.
 `sudo:` quer dizer que é o sudo. O programa que imprimiu a mensagem é o programa que tem um

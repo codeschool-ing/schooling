@@ -28,8 +28,8 @@ O que não é decorar é o que vai entre o `if` e o `then`.
 ## O `if` não recebe uma condição. Ele recebe um comando.
 
 **Não existe expressão booleana no shell.** O `if` roda um comando e olha o código de saída: zero
-quer dizer then, qualquer outra coisa quer dizer else. A regra da seção 99, usada como controle de
-fluxo.
+quer dizer then, qualquer outra coisa quer dizer else. A regra da aula 6 seção 14, usada como
+controle de fluxo.
 
 ```
 ana@vm:~/work/scripts$ test -f /etc/hostname; echo $?
@@ -85,7 +85,7 @@ duas dizem *unary operator expected* porque o `[` conta os argumentos: com dois,
 teste como `-f`, e recebeu um `=` num caso e um nome de arquivo perdido no outro.
 
 **Ele é um comando, então os argumentos dele são divididos e passados por globbing como os de
-qualquer comando.** É essa a origem inteira do problema da seção 145.
+qualquer comando.** É essa a origem inteira do problema da seção 08.
 
 ## O `&&` e o `||`
 
@@ -137,7 +137,7 @@ E três comandos que existem só para controle de fluxo:
 | `false` | não faz nada, falha |
 | `:` | não faz nada, dá certo. O jeito mais curto de escrever "aqui não vai nada" |
 
-`while true; do …; done` é um laço infinito, `|| true` é a válvula de escape da seção 143, e o `:` é
+`while true; do …; done` é um laço infinito, `|| true` é a válvula de escape da seção 06, e o `:` é
 o que preenche um ramo que você ainda não escreveu — um `then` vazio é erro de sintaxe.
 
 ## Formatação

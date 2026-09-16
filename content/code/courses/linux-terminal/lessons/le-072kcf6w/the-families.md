@@ -17,14 +17,14 @@ Learn the families and an unfamiliar distribution stops being unfamiliar.
 
 **Debian**, and its enormous descendant Ubuntu. `apt` and `.deb` packages. Volunteer-run, with a
 constitution and a famously slow, careful release. Ubuntu is a company's product built on top of
-it, and between them they are what most tutorials assume. Section 25.
+it, and between them they are what most tutorials assume. Section 04.
 
 **Red Hat**, and the rebuilds — Rocky and Alma — plus Fedora upstream of all of them. `dnf` and
 `.rpm` packages. This is the enterprise family: support contracts, certifications, and the
-software vendors who publish for it and nothing else. Section 26, and it has a story.
+software vendors who publish for it and nothing else. Section 05, and it has a story.
 
 **SUSE**, with openSUSE beside it. `zypper` and `.rpm`. Smaller than the other two and strong in
-German-speaking Europe, in manufacturing, and at SAP shops. Section 27.
+German-speaking Europe, in manufacturing, and at SAP shops. Section 06.
 
 **Arch**, and Manjaro below it. `pacman`, rolling release, and an assumption that you want to
 assemble the machine yourself. Its documentation — the Arch Wiki — is used by people running
@@ -36,7 +36,7 @@ Some distributions were written from scratch rather than derived:
 
 | | why it exists |
 |---|---|
-| **Alpine** | to be tiny. 5 MB, busybox, musl — and the reason it is in containers everywhere. Section 28 |
+| **Alpine** | to be tiny. 5 MB, busybox, musl — and the reason it is in containers everywhere. Section 07 |
 | **Gentoo** | you compile everything, and choose the options while doing it |
 | **NixOS** | the whole machine is one declarative file, and changes roll back |
 | **Void, Slackware** | their own answers, and Slackware is older than all of this |
@@ -53,7 +53,7 @@ It is not sentiment. Knowing the family tells you four things before you look at
 3. **The service and path conventions** — `apache2` against `httpd`, and which directory holds it.
 4. **The security framework** — AppArmor on Debian's side, SELinux on Red Hat's. Lesson 4.
 
-That is why section 32's `ID_LIKE` is the useful field. A distribution you have never heard of
+That is why section 11's `ID_LIKE` is the useful field. A distribution you have never heard of
 that says `ID_LIKE=debian` is one whose commands you already know.
 
 ## Two things people believe that are not true
@@ -63,4 +63,4 @@ does not install on Ubuntu. Tools exist to convert; they are a last resort and l
 
 **And derived does not mean identical.** Ubuntu is Debian-derived and diverges in real ways —
 its own release cycle, its own repositories, snaps, and a `/etc/debian_version` that names a
-Debian release you are not running. Section 25 shows that file lying to you in a listing.
+Debian release you are not running. Section 04 shows that file lying to you in a listing.

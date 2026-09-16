@@ -54,7 +54,7 @@ Look at the second line of the same output. `   padded   ` came back as `padded`
 `IFS=` empty for the duration of the `read` turns that off, and the line arrives as it is in the
 file.
 
-The `IFS=` goes *in front of `read`*, which is the one-command-one-variable form from section 140 —
+The `IFS=` goes *in front of `read`*, which is the one-command-one-variable form from section 03 —
 it applies to that `read` and nothing else, so the rest of the script still has its normal `IFS`.
 
 ## `IFS=,`, when you want the splitting
@@ -78,7 +78,7 @@ everything that is left over — so `while read -r first rest` is "the first wor
 
 This is a genuine alternative to `cut` and `awk` when you need the fields in a shell loop rather
 than in a filter. It is also much slower — one `read` per line, in the shell — so for a big file,
-section 132's `awk` is the answer.
+lesson 8 section 14's `awk` is the answer.
 
 Two limits worth knowing before you build a CSV parser with it: **this does not understand quoted
 fields**, so a comma inside `"Smith, Ana"` breaks it, and it does not understand escapes. For real
@@ -107,7 +107,7 @@ after the redirect, total is 60
 Same arithmetic, same three numbers, and the first one says zero.
 
 **Every stage of a pipeline runs in a subshell**, so the loop on the right of the `|` added
-correctly — in a child process, which then exited and took `total` with it. Section 139's
+correctly — in a child process, which then exited and took `total` with it. Section 02's
 `./script.sh` versus `source` is the same mechanism.
 
 The fix is `< <(command)`, which is called **process substitution**. It makes a command's output
@@ -161,7 +161,7 @@ The prompt was not on the screen at all — it went into the file, because `2>` 
 standard *output* instead and the prompt stays visible, which is the behaviour you want: a script
 whose output is being captured still asks its question on the terminal.
 
-`[[ $answer == [Yy]* ]]` is section 145's glob match, and it accepts `y`, `Y`, `yes` and `Yes`
+`[[ $answer == [Yy]* ]]` is section 08's glob match, and it accepts `y`, `Y`, `yes` and `Yes`
 while treating an empty answer — somebody just pressing return — as no. **Default to no** on
 anything destructive.
 

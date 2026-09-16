@@ -37,7 +37,7 @@ ana@vm:~/work/scripts$ echo $count+1
 ```
 
 Não existe tipo numérico. O `count` guarda os dois caracteres `3`, e `$count+1` é a string `3+1`.
-Aritmética precisa do `$(( ))`, que é a seção 151.
+Aritmética precisa do `$(( ))`, que é a seção 14.
 
 Aspas são só para o shell — elas nunca acabam dentro do valor:
 
@@ -65,7 +65,7 @@ imprimiu uma linha em branco. O `${name}s` é a variável `name` seguida de um `
 O shell lê um nome até onde consegue: letras, dígitos e sublinhados. Qualquer outra coisa o
 termina, que é por que `$name.txt` e `$name/file` funcionam sem chaves e `${name}s` precisa delas.
 
-**As chaves também são onde tudo da seção 152 se pendura**, então não é um mau hábito usá-las
+**As chaves também são onde tudo da seção 15 se pendura**, então não é um mau hábito usá-las
 sempre. As duas grafias estão corretas; escolha uma e seja consistente.
 
 ## Uma variável não definida não é um erro
@@ -76,7 +76,7 @@ ana@vm:~/work/scripts$ unset name; echo "[${name}]"
 ```
 
 **Um nome que não existe expande para absolutamente nada**, em silêncio. Este é o comportamento
-mais perigoso do shell, ele já apagou diretórios de verdade, e a seção 143 é sobre transformá-lo
+mais perigoso do shell, ele já apagou diretórios de verdade, e a seção 06 é sobre transformá-lo
 num erro.
 
 Enquanto isso, existem dois padrões:
@@ -114,7 +114,7 @@ As duas existem no shell em que você as digitou. Só a exportada atravessou par
 
 **O `export` é o que faz uma variável virar parte do ambiente**, e o ambiente é a única coisa que
 um processo filho herda. É por isso que um script não enxerga uma variável que você definiu no
-prompt a menos que você a tenha exportado, e por que o `source` (seção 139) é o mesmo problema pelo
+prompt a menos que você a tenha exportado, e por que o `source` (seção 02) é o mesmo problema pelo
 outro lado.
 
 O `env` lista exatamente o que está exportado, o que faz dele a forma de conferir.

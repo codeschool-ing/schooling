@@ -72,7 +72,7 @@ não tem onde pôr, e a mensagem é descartada. O cron diz isso no log do sistem
 vez de dizer a você.
 
 **O `MAILTO` não é monitoramento.** Um e-mail que chega às 03:04 e é lido na
-quinta é um registro, não um alerta. A seção 225 é sobre a diferença.
+quinta é um registro, não um alerta. A seção 16 é sobre a diferença.
 
 ## Como saber que rodou
 

@@ -40,7 +40,7 @@ app handled a request
 
 "Da linha 29 até o fim", em vez de "as últimas 29". **É assim que se pula um cabeçalho** — o
 `tail -n +2` num CSV descarta a primeira linha e mantém o resto, que é um padrão que você vai usar
-o tempo todo com o `cut` da seção 126.
+o tempo todo com o `cut` da seção 08.
 
 O `head -c 40` conta bytes em vez de linhas:
 
@@ -120,5 +120,5 @@ frente.
 
 **O passo três é o que as pessoas pulam**, e é onde você descobre que o arquivo tem cabeçalho, ou
 uma linha em branco entre registros, ou que cinquenta linhas no meio são um stack trace. O
-`awk '{print NF}' | sort -u` da seção 132 é a versão rápida dessa conferência, e neste log ela acha
+`awk '{print NF}' | sort -u` da seção 14 é a versão rápida dessa conferência, e neste log ela acha
 quatro contagens de campo diferentes em linhas que parecem todas iguais.

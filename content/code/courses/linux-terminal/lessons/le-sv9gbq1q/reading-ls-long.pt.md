@@ -41,7 +41,7 @@ Não é um traço de enfeite. É o tipo:
 |---|---|---|
 | `-` | um arquivo comum | em toda parte |
 | `d` | um diretório | em toda parte |
-| `l` | um link simbólico | `/bin`, `/lib`, e a seção 46 |
+| `l` | um link simbólico | `/bin`, `/lib`, e a seção 11 |
 | `c` | um dispositivo de caractere | `/dev/null`, `/dev/tty` |
 | `b` | um dispositivo de bloco | `/dev/vda` — um disco |
 | `s` | um socket | `/run`, onde serviços escutam |
@@ -77,9 +77,9 @@ dono pode acrescentar coisas*, que é a cara de um diretório normal.
 
 ## Campo 3: a contagem de links, e por que diretórios começam em 2
 
-Para um arquivo é quase sempre `1`, e a seção 46 é sobre o dia em que não é.
+Para um arquivo é quase sempre `1`, e a seção 11 é sobre o dia em que não é.
 
-Para um diretório **nunca** é 1, e o motivo são o `.` e o `..` da seção 39. Um diretório vazio tem
+Para um diretório **nunca** é 1, e o motivo são o `.` e o `..` da seção 04. Um diretório vazio tem
 dois nomes apontando para ele: o próprio nome dentro do pai, e o `.` dentro de si mesmo. Acrescente
 um subdiretório e o `..` desse subdiretório também aponta para ele, então a conta vira 3.
 
@@ -112,7 +112,7 @@ drwxr-xr-x 2 ana ana 4.0K Mar 26  2025 build
 
 Para um **diretório**, o número não é o tamanho do que está dentro. `4096` é o tamanho da própria
 lista de nomes do diretório — e um diretório contendo quatrocentos gigabytes de vídeo vai continuar
-dizendo `4096`. Esse é o assunto inteiro da seção 48; o que dá para consertar agora é a
+dizendo `4096`. Esse é o assunto inteiro da seção 13; o que dá para consertar agora é a
 expectativa.
 
 ## Campo 7: a data que muda de forma
@@ -143,7 +143,7 @@ pessoas de surpresa quando elas ordenam uma listagem e veem dois formatos.
 o relógio de duas máquinas.
 
 E repare *qual* hora é: **a última vez em que o conteúdo mudou.** Não quando o arquivo foi criado.
-A seção 43 tira as outras duas marcas de tempo do `stat`.
+A seção 08 tira as outras duas marcas de tempo do `stat`.
 
 ## E a linha `total`
 
@@ -153,5 +153,5 @@ total 12
 
 Não é contagem de arquivos e não é a soma dos tamanhos. É **o número de blocos de 1 KiB que o
 disco deu a essas entradas** — o espaço realmente ocupado, que é por que quatro arquivos de 440, 8,
-0 e 31 bytes somam 12. A seção 48 explica por que esses números não batem; por ora, `total` é sobre
+0 e 31 bytes somam 12. A seção 13 explica por que esses números não batem; por ora, `total` é sobre
 disco, e a coluna de tamanho é sobre conteúdo.

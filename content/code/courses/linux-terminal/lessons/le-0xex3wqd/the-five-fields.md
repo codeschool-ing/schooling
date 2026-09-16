@@ -15,7 +15,7 @@ version: 1
 
 **The smallest unit is one minute.** Nothing in cron runs more often than that,
 and a job that needs to is a job for a service that stays running — or for
-section 221's systemd timer, which can do seconds.
+section 12's systemd timer, which can do seconds.
 
 | what you write | what it means |
 |---|---|

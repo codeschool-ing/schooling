@@ -33,11 +33,11 @@ intervalo, imprime linhas simples, e tem uma opção por recurso:
 | `pidstat -t` | por **thread**, não por processo |
 
 Quatro colunas acima valem nomear. O `%usr` e o `%system` separam o trabalho do
-jeito que a seção 179 fez. O `%wait` é tempo em que o processo ficou **executável
+jeito que a seção 04 fez. O `%wait` é tempo em que o processo ficou **executável
 e sem rodar** — esperando um núcleo — que é saturação por processo e não está no
 `top`. E o `CPU` é em qual núcleo ele esteve por último.
 
-O processo `claude` a 1,98% é esta máquina ser um sandbox, como a seção 91
+O processo `claude` a 1,98% é esta máquina ser um sandbox, como a aula 6 seção 06
 explicou: o PID 103 é o agente que conduz estas capturas, e ele está em toda
 listagem de processos deste curso porque ele está genuinamente lá.
 

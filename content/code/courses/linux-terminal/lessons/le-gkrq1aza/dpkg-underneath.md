@@ -35,7 +35,7 @@ Errors were encountered while processing:
 ```
 
 Read it in the order it happened. **`Unpacking` succeeded** — the files are on the disk now.
-**Configuring did not**, because the dependency from section 104 is missing. dpkg says so precisely,
+**Configuring did not**, because the dependency from section 02 is missing. dpkg says so precisely,
 names the package, and stops.
 
 `apt-get download` is worth noticing on its own: it fetches a `.deb` into the current directory and
@@ -49,14 +49,14 @@ root@vm:/tmp# dpkg -l cowsay | tail -1
 iU  cowsay         3.03+dfsg2-8 all          configurable talking cow
 ```
 
-**`iU`**, and the two letters are the two steps from section 106:
+**`iU`**, and the two letters are the two steps from section 04:
 
 | | |
 |---|---|
 | `i` | **desired**: somebody wants this installed |
 | `U` | **status**: unpacked, and not configured |
 
-Section 107's legend spells this out every time `dpkg -l` runs, and this is the moment it earns its
+Section 05's legend spells this out every time `dpkg -l` runs, and this is the moment it earns its
 three lines. **An uppercase second letter is bad**, which the legend also says.
 
 ## And half installed is not theoretical
@@ -143,4 +143,4 @@ interrupted, `--fix-broken install` when something is missing.** Running the wro
 harmless; it will tell you.
 
 `rpm` is the same layer on the other family, with the same property — `rpm -i` does not resolve
-dependencies either — and section 112 shows it refusing for exactly the same reason.
+dependencies either — and section 10 shows it refusing for exactly the same reason.

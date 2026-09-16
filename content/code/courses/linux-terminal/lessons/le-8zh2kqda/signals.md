@@ -27,11 +27,11 @@ Sixty-four of them exist. **Eight are worth knowing**, and the rest you will mee
 | `SIGTERM` | 15 | **please stop.** The polite one, and the default |
 | `SIGINT` | 2 | **interrupt** — what `Ctrl+C` sends |
 | `SIGKILL` | 9 | **stop now.** Cannot be caught, blocked or ignored |
-| `SIGSTOP` | 19 | **freeze** — also uncatchable. Section 95's `Ctrl+Z` is its cousin |
+| `SIGSTOP` | 19 | **freeze** — also uncatchable. Section 10's `Ctrl+Z` is its cousin |
 | `SIGCONT` | 18 | **carry on** after a stop |
-| `SIGHUP` | 1 | the terminal went away — section 96 |
+| `SIGHUP` | 1 | the terminal went away — section 11 |
 | `SIGQUIT` | 3 | `Ctrl+\`, which stops and writes a core dump |
-| `SIGCHLD` | 17 | sent to a **parent** when a child exits. Section 88's `wait` |
+| `SIGCHLD` | 17 | sent to a **parent** when a child exits. Section 03's `wait` |
 
 Names and numbers are interchangeable, and the shell will convert between them:
 
@@ -90,7 +90,7 @@ jobs
 **Read the interleaving before the result, because it is real and it looks broken.** A background
 job prints whenever it likes, and what you type is echoed wherever the cursor happens to be — so
 `kill -TERM $PID` appears with no prompt in front of it, on the line after the job's output. The
-terminal is not confused; it is showing two things sharing one screen. Section 95 is about keeping
+terminal is not confused; it is showing two things sharing one screen. Section 10 is about keeping
 them apart.
 
 Now the result. `INT` arrived and the script printed and kept running — `jobs` would still list it.
@@ -116,7 +116,7 @@ still in that script and it was never consulted, because `kill -9` does not cons
 removed.
 
 That difference — `Done` after a message, versus `Killed` in silence — is the entire argument of
-section 94.
+section 09.
 
 ## The ones that arrive without anybody sending them
 
@@ -149,7 +149,7 @@ pipe with nobody at the other end.
 
 **That is the designed behaviour**, and it is why `| head` on an enormous command returns instantly
 instead of waiting. `PIPESTATUS` is there because `$?` would give you `head`'s status, which is 0;
-section 99 comes back to it.
+section 14 comes back to it.
 
 ## Sending one
 
@@ -187,7 +187,7 @@ status**, which matters — a script that only checks `$?` cannot tell "gone" fr
 those call for opposite responses.
 
 That is also your first look at the refusal. PID 1 belongs to `root` and `ana` may not touch it;
-section 94 is the rest of that rule.
+section 09 is the rest of that rule.
 
-Section 94 is the rest of `kill`: which process, how to reach a whole group, and what the refusal
+Section 09 is the rest of `kill`: which process, how to reach a whole group, and what the refusal
 looks like when the process is not yours.

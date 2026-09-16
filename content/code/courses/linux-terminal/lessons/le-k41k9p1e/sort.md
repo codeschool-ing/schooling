@@ -77,7 +77,7 @@ Thirty lines in, three out. `sort -u` is `sort | uniq` in one process, and it is
 when you only want the distinct values.
 
 **It is not the right choice when you want counts**, because it throws away the information
-`uniq -c` needs. That is section 128.
+`uniq -c` needs. That is section 10.
 
 ## Locale, and why `sort` sometimes disagrees with itself
 
@@ -99,7 +99,7 @@ byte value, so `LC_ALL=C` changes nothing. On a machine set to `en_US.UTF-8` the
 `a A b B` — case-insensitive, letter by letter — and the second still gives `A B a b`.
 
 That matters in exactly one situation and it is a bad one: **a script that compares sorted output
-between two machines.** `comm` and `join` in section 133 both require their inputs to be sorted *the
+between two machines.** `comm` and `join` in section 15 both require their inputs to be sorted *the
 same way*, and two machines with different locales produce different orders from the same data.
 
 The fix is to be explicit. **`LC_ALL=C sort` in a script** makes the order deterministic, and it is

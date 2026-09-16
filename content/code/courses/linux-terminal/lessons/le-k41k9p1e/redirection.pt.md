@@ -40,7 +40,7 @@ ana@vm:~/work$ sort /tmp/t.txt > /tmp/t.txt; wc -c /tmp/t.txt; cat /tmp/t.txt
 nada, e não escreveu nada. Sem erro, sem aviso, e os dados sumiram.
 
 O conserto é escrever em outro lugar e mover, ou usar uma ferramenta que edita no lugar. O `sed -i`
-da seção 131 existe exatamente para isso.
+da seção 13 existe exatamente para isso.
 
 ## Redirecionando erros
 
@@ -73,8 +73,8 @@ empty.log
 error.log
 ```
 
-O `2>&1` se lê como **"faça o descritor 2 virar uma cópia do descritor 1"**, que é a frase da seção
-98. Como o 1 já aponta para o `both.txt` na hora em que ele roda, o 2 vai parar lá também.
+O `2>&1` se lê como **"faça o descritor 2 virar uma cópia do descritor 1"**, que é a frase da aula 6
+seção 13. Como o 1 já aponta para o `both.txt` na hora em que ele roda, o 2 vai parar lá também.
 
 ## E é por isso que a ordem importa
 
@@ -138,7 +138,7 @@ ana@vm:~/work$ grep -c o <<< "hello world"
 1
 ```
 
-Um, porque o `grep -c` conta **linhas que casam**, não ocorrências — a seção 124 volta a isso.
+Um, porque o `grep -c` conta **linhas que casam**, não ocorrências — a seção 06 volta a isso.
 
 E o `tee` é o que não é redirecionamento e resolve o mesmo problema — escrever num arquivo **e**
 passar o texto adiante:

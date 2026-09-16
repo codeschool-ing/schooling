@@ -85,8 +85,8 @@ Nine lines of script. It parses cleanly, `bash -n` is happy with it, and it has 
 line — four missing quotes, backticks, looping over `ls`, and a comparison that is not a
 comparison.
 
-Every one of those is something from this lesson. Section 141 is `SC2086`, section 147 is `SC2045`,
-section 151 is `SC2006`, and `SC2071` is section 145.
+Every one of those is something from this lesson. Section 04 is `SC2086`, section 10 is `SC2045`,
+section 14 is `SC2006`, and `SC2071` is section 08.
 
 Install it — `apt install shellcheck`, `dnf install ShellCheck` — and run it before every script you
 run for the first time. **It is not a style checker with opinions; it finds bugs.**
@@ -176,7 +176,7 @@ declare -p f count >&2
 ```
 
 **The brackets are the technique**, not decoration — they show you the trailing space, the empty
-string, the newline that `echo` alone would hide. `declare -p` (section 140) does it properly, with
+string, the newline that `echo` alone would hide. `declare -p` (section 03) does it properly, with
 types and quoting.
 
 And `>&2`, so your debugging does not end up in the file the script is writing.
@@ -191,5 +191,5 @@ And `>&2`, so your debugging does not end up in the file the script is writing.
 | you know roughly where | `echo "…[$var]…" >&2` |
 
 And one habit that is worth more than all four: **run the destructive version last.** Put `echo` in
-front of the `rm`, look at the twenty lines it prints, and then take the `echo` away. Section 134
-made the same argument about `xargs`, and it is the same argument here.
+front of the `rm`, look at the twenty lines it prints, and then take the `echo` away. Lesson 8
+section 16 made the same argument about `xargs`, and it is the same argument here.

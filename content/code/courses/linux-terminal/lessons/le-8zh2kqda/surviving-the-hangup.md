@@ -6,7 +6,7 @@ version: 1
 You start something long, you close the window, and you come back to find it did not finish. Or you
 come back to find it did. **Both happen, and which one you get is decided by a single signal.**
 
-`SIGHUP` — hangup — is section 93's signal number 1, and its name is literally about modems: the
+`SIGHUP` — hangup — is section 08's signal number 1, and its name is literally about modems: the
 phone line dropped. What it means now is **the terminal this process was attached to has gone
 away**.
 
@@ -61,7 +61,7 @@ $ ps -o pid,ppid,tty,stat,comm -p 2868,2870,2872
 **Two of the three are still there and one is gone.** `2868`, the plain background job, was killed
 by the hangup. `nohup` and `disown` both survived it.
 
-And look at what the survivors became: `PPID` of `1`, because their parent is gone and section 91
+And look at what the survivors became: `PPID` of `1`, because their parent is gone and section 06
 adopted them, and a `TT` of `?`, because the terminal they were attached to does not exist. **That
 is the exact shape of lesson 5's daemon**, arrived at by accident rather than on purpose.
 
@@ -94,7 +94,7 @@ nohup ./long-job.sh > job.log 2>&1 &
 ```
 
 **`disown` takes the job off bash's list**, so step 3 never happens — bash does not send a hangup to
-a job it has forgotten. Section 95 showed the `jobs` output going empty; this is what that empties
+a job it has forgotten. Section 10 showed the `jobs` output going empty; this is what that empties
 it *for*.
 
 | | |
@@ -117,7 +117,7 @@ setsid ./long-job.sh > job.log 2>&1 &
 
 `setsid` starts the process in a **new session** with no controlling terminal at all — so there is
 no terminal to hang up and nothing to inherit. That is not a workaround for the signal; it is the
-process genuinely not being attached to your login any more, which is what lesson 5 section 76 said
+process genuinely not being attached to your login any more, which is what lesson 5 section 07 said
 a daemon is.
 
 ## What to use instead of all of this

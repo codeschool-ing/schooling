@@ -79,7 +79,7 @@ ii  cowsay         3.03+dfsg2-8 all          configurable talking cow
 
 **Those first three lines are a legend, printed every time, and they are the key to the `ii`.** The
 first letter is what you want, the second is what is true, the third is whether there is an error.
-`ii` is "wanted installed, is installed, no error" — and section 110 shows an `rc` and section 109
+`ii` is "wanted installed, is installed, no error" — and section 08 shows an `rc` and section 07
 shows an `iU`.
 
 ## What a package put on the disk
@@ -132,10 +132,10 @@ dpkg-query: no path found matching pattern /usr/local/bin/python3
 
 **Nothing owns it.** Lesson 3 said `/usr/local` is for software you installed yourself, and this is
 that sentence with teeth: a file there was not packaged, will not be upgraded, will not be removed,
-and will not be mentioned by anything in this lesson. It is yours. Section 115 is about how those
+and will not be mentioned by anything in this lesson. It is yours. Section 13 is about how those
 get there.
 
-`rpm -qf` is the same question on the other family, and section 112 uses it.
+`rpm -qf` is the same question on the other family, and section 10 uses it.
 
 ## The file you do not have yet
 

@@ -113,7 +113,7 @@ rm .server.conf.swp
 
 ## Screen four: the terminal, not vim
 
-Sometimes vim is fine and the terminal is not. Section 8's two cases:
+Sometimes vim is fine and the terminal is not. Lesson 1 section 08's two cases:
 
 | | |
 |---|---|

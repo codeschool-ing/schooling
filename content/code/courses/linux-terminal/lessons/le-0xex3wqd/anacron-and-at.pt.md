@@ -89,7 +89,7 @@ tirando a do `crontab -e`.
 
 ## Como ele se encaixa com o cron
 
-Olhe de novo o crontab do sistema da seção 214:
+Olhe de novo o crontab do sistema da seção 05:
 
 ```sh
 25 6 * * * root test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.daily; }
@@ -111,7 +111,7 @@ estar acordada**, em vez de às 06:25.
 | um job cujo *horário* importa | cron ou `OnCalendar` — o anacron não promete um |
 
 **A granularidade do anacron é um dia.** Nada de hora em hora, nada num minuto
-específico. O `Persistent=true` da seção 221 é a mesma ideia com um relógio
+específico. O `Persistent=true` da seção 12 é a mesma ideia com um relógio
 junto, que é por que o anacron importa menos numa máquina com systemd do que
 importava.
 
@@ -149,7 +149,7 @@ removed, exit 0
 | `batch` | roda quando a máquina estiver ociosa o bastante — um limite de carga com que o `atd` foi iniciado |
 
 **`warning: commands will be executed using /bin/sh`** é o `at` te dizendo o que a
-seção 215 disse: o mesmo `/bin/sh`, o mesmo profile ausente.
+seção 06 disse: o mesmo `/bin/sh`, o mesmo profile ausente.
 
 Mas o `at` faz uma coisa que o cron não faz: ele **captura o seu ambiente atual**
 e o repete. O `at -c` imprime o job que ele vai rodar, e o topo dele é o seu

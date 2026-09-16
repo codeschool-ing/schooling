@@ -88,7 +88,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKHhDDaH171LJb/mce2OhMnKDYo5PArO8BPrVDTHdhd
 ```
 
 Publishing that line costs you nothing. Publishing the other file costs you everything. Lesson 4
-section 66 said `.ssh` is the most sensitive directory you own, and this is why — **ssh checks the
+section 13 said `.ssh` is the most sensitive directory you own, and this is why — **ssh checks the
 permissions and refuses a key that anybody else could read.**
 
 `-t ed25519` is the algorithm to use; it is short, fast and current. `-N ""` means no passphrase,
@@ -132,7 +132,7 @@ No prompt at all. **`ssh-copy-id` appended one line to `~/.ssh/authorized_keys` 
 to log in as `bruno`, one per line, and you can edit it by hand; `ssh-copy-id` is a convenience
 that gets the permissions right.
 
-Note what this means for section 72's warning. **`passwd -l bruno` would not have stopped that
+Note what this means for section 03's warning. **`passwd -l bruno` would not have stopped that
 login.** Keys never consult `/etc/shadow`. When somebody leaves, the account is locked *and*
 `authorized_keys` is emptied, and forgetting the second is a real way people keep access for years.
 
@@ -159,7 +159,7 @@ ssh ana@host 'systemctl is-active nginx'
 ssh will run a command and hand you its output. This is how you ask fifty machines the same
 question from a loop, and it is the single most useful thing ssh does after giving you a shell.
 
-**That command runs in a non-interactive, non-login shell**, which is section 74's third row — so
+**That command runs in a non-interactive, non-login shell**, which is section 05's third row — so
 your aliases are absent and your `PATH` may not be what you expect. Give full paths, and the
 surprise never happens.
 

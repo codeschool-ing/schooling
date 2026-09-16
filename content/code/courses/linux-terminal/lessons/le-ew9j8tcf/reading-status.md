@@ -6,7 +6,7 @@ version: 1
 **A note before the picture.** Every transcript in this course was run on the machine it was
 recorded on. This one could not be: process one here is a container supervisor rather than systemd,
 so there is no `systemctl status` to capture. What follows is a **drawing**, labelled as one, and
-the fields are where a real status block puts them. Section 77 explains why that machine is built
+the fields are where a real status block puts them. Section 08 explains why that machine is built
 the way it is.
 
 ```schooling-figure
@@ -27,7 +27,7 @@ The dot is the summary, and it is coloured:
 | red `●` | **failed** — it tried and did not make it |
 | hollow `○` | stopped, and nobody is complaining |
 
-Then the unit's name and its `Description=` from section 80. **A service you have never heard of
+Then the unit's name and its `Description=` from section 11. **A service you have never heard of
 introduces itself on that line**, which is worth more than it sounds when you are reading
 `systemctl --failed` on a machine somebody else built.
 
@@ -42,8 +42,8 @@ Three facts on one line:
 | | |
 |---|---|
 | `loaded` | systemd read a unit file for it. `not-found` means there is no such service |
-| the path | **which** file, which matters when there are two — section 80 |
-| `enabled` | it will start at the next boot. Section 78's symlink, reported back |
+| the path | **which** file, which matters when there are two — section 11 |
+| `enabled` | it will start at the next boot. Section 09's symlink, reported back |
 
 **`loaded … disabled` on a service that is currently running is a normal and alarming thing to
 see.** It means somebody started it by hand and it will be gone after a reboot.
@@ -66,7 +66,7 @@ see.** It means somebody started it by hand and it will be gone after a reboot.
 loads a firewall ruleset has nothing left running when it succeeds, and that is success.
 
 And the time is the piece people skip. **"Since 2 minutes ago" on a service you did not touch is
-the whole answer** — something restarted it, and section 81's journal will say what.
+the whole answer** — something restarted it, and section 12's journal will say what.
 
 ## `Main PID:` and `CGroup:` connect it to lesson 6
 
@@ -79,7 +79,7 @@ the whole answer** — something restarted it, and section 81's journal will say
 
 The PID is a number you can hand to everything in the next lesson — `ps`, `kill`, `/proc/1284`.
 
-The CGroup tree is section 77's third idea, made visible. **Those are all the processes this
+The CGroup tree is section 08's third idea, made visible. **Those are all the processes this
 service owns**, including the ones it forked, and systemd knows about them because the kernel is
 keeping the list. That is what makes `systemctl stop` reliable where killing a PID file's contents
 was not.
@@ -108,7 +108,7 @@ When the dot is red, four lines answer it and they are in this order on the scre
    matters.
 2. **`Active: failed (Result: …)`** — the `Result` word says *how* it failed: `exit-code`,
    `timeout`, `signal`, `core-dump`.
-3. **`Process: … status=…`** — the exit status the program gave. Lesson 6 section 99 reads those.
+3. **`Process: … status=…`** — the exit status the program gave. Lesson 6 section 14 reads those.
 4. **The journal lines** — what the program itself said before it stopped. This is the one that
    usually contains the answer: a port in use, a file missing, a permission denied.
 
@@ -121,5 +121,5 @@ It shows the service's own log lines, not the machine's. A service that failed b
 *else* failed — the network, a mount, a database it depends on — will show you its own confusion
 rather than the cause.
 
-`journalctl -b` in section 81 shows the boot in order, and that is where a cascade becomes
+`journalctl -b` in section 12 shows the boot in order, and that is where a cascade becomes
 readable.

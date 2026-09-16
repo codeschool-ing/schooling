@@ -6,7 +6,7 @@ version: 1
 A regular expression is a pattern that describes a set of strings. There is a great deal of it and
 you need about a dozen pieces, which is what this section is.
 
-Everything here uses `grep -E`. Section 124 explained why: the basic syntax needs backslashes in
+Everything here uses `grep -E`. Section 06 explained why: the basic syntax needs backslashes in
 front of half of it, for no benefit.
 
 ## Matching one character

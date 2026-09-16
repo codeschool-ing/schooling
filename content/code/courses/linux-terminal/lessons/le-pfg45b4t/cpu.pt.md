@@ -62,7 +62,7 @@ us sy id wa st gu
 | `gu` | **convidado** — tempo rodando uma máquina virtual, se esta for um host |
 
 O `top` e o `mpstat` separam mais uma, o `ni` — tempo de usuário gasto por
-processos com valor de nice positivo, que é a prioridade da seção 97 aparecendo
+processos com valor de nice positivo, que é a prioridade da aula 6 seção 12 aparecendo
 como coluna.
 
 Três destas valem ler com cuidado.
@@ -126,7 +126,7 @@ MiB Swap:      0.0 total,      0.0 free,      0.0 used.  15443.9 avail Mem
     2 root      20   0       0      0      0 S   0.0   0.0   0:00.01 kthreadd
 ```
 
-A seção 92 tratou de ler o `top`. Duas coisas para esta aula:
+A aula 6 seção 07 tratou de ler o `top`. Duas coisas para esta aula:
 
 **O `top -b -n 1` é a forma em lote** — uma tela, sem posicionamento de cursor —
 que é o que você usa num script, por `ssh`, ou numa captura como esta.
@@ -136,7 +136,7 @@ um processo usando quase os quatro núcleos; não é bug nem erro.
 
 E a linha `Tasks: 86 total, 4 running` é a mesma contagem de que a carga média se
 alimenta. O PID 1 ser o `process_api` e não o systemd é esta máquina ser um
-sandbox, como a seção 77 explicou — os números são reais, a lista de processos é
+sandbox, como a aula 5 seção 08 explicou — os números são reais, a lista de processos é
 a deste contêiner.
 
 ## Quando é o processador

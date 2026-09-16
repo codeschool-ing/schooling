@@ -13,9 +13,9 @@ everything below is about the program.
 |---|---|
 | 1 | **absolute paths**, for the program and for every file it touches |
 | 2 | **`set -euo pipefail`**, so a failure is a failure — lesson 9 |
-| 3 | **a lock**, so it cannot run twice at once — section 223 |
+| 3 | **a lock**, so it cannot run twice at once — section 14 |
 | 4 | **a timeout**, so a hang is not permanent |
-| 5 | **output that goes somewhere you will read** — section 216 |
+| 5 | **output that goes somewhere you will read** — section 07 |
 | 6 | **a non-zero exit when it fails**, which is what everything else keys off |
 | 7 | **idempotence**: running it twice does no harm |
 | 8 | **a comment saying why it exists** |
@@ -174,7 +174,7 @@ looks at how old it is.
 
 **Test the job the way it will run**, not the way you are running it.
 
-Section 215's `env -i` for the environment; `sudo -u ana` for the account;
+Section 06's `env -i` for the environment; `sudo -u ana` for the account;
 `systemctl start report.service` rather than the script by hand. A scheduled job
 is different from the same command in your terminal in four ways — user,
 environment, working directory, and terminal — and each of those has its own way

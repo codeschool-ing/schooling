@@ -38,7 +38,7 @@ bruno,Q1,49,4116
 **There is no `-d ", "`.** `cut` takes a single character and that is a real limitation: a file
 separated by `, ` or by runs of spaces cannot be cut directly.
 
-The usual fix is section 130's `tr -s`, which squeezes runs of a character into one:
+The usual fix is section 12's `tr -s`, which squeezes runs of a character into one:
 
 ```
 ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
@@ -46,7 +46,7 @@ ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
 10.0.1.11 "GET /
 ```
 
-The other fix is to use `awk`, which splits on runs of whitespace by default and is section 132.
+The other fix is to use `awk`, which splits on runs of whitespace by default and is section 14.
 
 ## On the log
 
@@ -121,7 +121,7 @@ tail -n +2 data/sales.csv | cut -d, -f5      # skip line 1, then cut
 awk -F, 'NR>1 {print $5}' data/sales.csv     # awk knows which line it is on
 ```
 
-**`tail -n +2` is section 123's flag** and it is the one to reach for with `cut`. And having dropped
+**`tail -n +2` is section 05's flag** and it is the one to reach for with `cut`. And having dropped
 the header, you can add the arithmetic:
 
 ```
@@ -131,7 +131,7 @@ ana@vm:~/work$ cut -d, -f5 data/sales.csv | tail -n +2 | paste -sd+ | bc
 
 Four programs to add up a column: take the field, drop the header, join the lines with `+` signs,
 and hand the resulting sum to a calculator. It works, it is genuinely how people do this, and
-section 132 does the same thing in one:
+section 14 does the same thing in one:
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv

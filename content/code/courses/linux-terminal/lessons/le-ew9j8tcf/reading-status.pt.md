@@ -6,7 +6,7 @@ version: 1
 **Um aviso antes da figura.** Toda transcrição deste curso foi rodada na máquina em que ele foi
 gravado. Esta não pôde ser: o processo um aqui é um supervisor de contêiner e não o systemd, então
 não existe um `systemctl status` para capturar. O que vem a seguir é um **desenho**, rotulado como
-tal, e os campos estão onde um bloco de status de verdade os põe. A seção 77 explica por que aquela
+tal, e os campos estão onde um bloco de status de verdade os põe. A seção 08 explica por que aquela
 máquina é montada assim.
 
 ```schooling-figure
@@ -27,7 +27,7 @@ O ponto é o resumo, e ele é colorido:
 | `●` vermelho | **falhou** — tentou e não conseguiu |
 | `○` vazado | parado, e ninguém está reclamando |
 
-Depois o nome da unit e a `Description=` dela, da seção 80. **Um serviço de que você nunca ouviu
+Depois o nome da unit e a `Description=` dela, da seção 11. **Um serviço de que você nunca ouviu
 falar se apresenta naquela linha**, o que vale mais do que parece quando você está lendo um
 `systemctl --failed` numa máquina que outra pessoa montou.
 
@@ -42,8 +42,8 @@ Três fatos numa linha:
 | | |
 |---|---|
 | `loaded` | o systemd leu um arquivo de unit para ele. `not-found` quer dizer que não existe esse serviço |
-| o caminho | **qual** arquivo, o que importa quando há dois — seção 80 |
-| `enabled` | ele vai iniciar no próximo boot. O link simbólico da seção 78, relatado de volta |
+| o caminho | **qual** arquivo, o que importa quando há dois — seção 11 |
+| `enabled` | ele vai iniciar no próximo boot. O link simbólico da seção 09, relatado de volta |
 
 **`loaded … disabled` num serviço que está rodando agora é uma coisa normal e alarmante de ver.**
 Quer dizer que alguém iniciou na mão e ele vai sumir depois de um reboot.
@@ -66,7 +66,7 @@ Quer dizer que alguém iniciou na mão e ele vai sumir depois de um reboot.
 carrega regras de firewall não tem nada rodando quando dá certo, e isso é sucesso.
 
 E a hora é a parte que as pessoas pulam. **"Desde 2 minutos atrás" num serviço em que você não
-encostou é a resposta inteira** — algo o reiniciou, e o journal da seção 81 vai dizer o quê.
+encostou é a resposta inteira** — algo o reiniciou, e o journal da seção 12 vai dizer o quê.
 
 ## `Main PID:` e `CGroup:` ligam isto à aula 6
 
@@ -79,7 +79,7 @@ encostou é a resposta inteira** — algo o reiniciou, e o journal da seção 81
 
 O PID é um número que você entrega a tudo na próxima aula — `ps`, `kill`, `/proc/1284`.
 
-A árvore de CGroup é a terceira ideia da seção 77, tornada visível. **Aqueles são todos os processos
+A árvore de CGroup é a terceira ideia da seção 08, tornada visível. **Aqueles são todos os processos
 que este serviço possui**, incluindo os que ele bifurcou, e o systemd sabe deles porque o kernel
 mantém a lista. É isso que torna o `systemctl stop` confiável onde matar o conteúdo de um arquivo de
 PID não era.
@@ -107,7 +107,7 @@ Quando o ponto está vermelho, quatro linhas respondem, e elas estão nesta orde
    resto não importa.
 2. **`Active: failed (Result: …)`** — a palavra do `Result` diz *como* falhou: `exit-code`,
    `timeout`, `signal`, `core-dump`.
-3. **`Process: … status=…`** — o código de saída que o programa devolveu. A seção 99 da aula 6 lê
+3. **`Process: … status=…`** — o código de saída que o programa devolveu. A seção 14 da aula 6 lê
    esses.
 4. **As linhas do journal** — o que o próprio programa disse antes de parar. Essa é a que costuma
    conter a resposta: uma porta em uso, um arquivo ausente, uma permissão negada.
@@ -121,4 +121,4 @@ Ele mostra as linhas de log do próprio serviço, não as da máquina. Um servi�
 *outra coisa* falhou — a rede, uma montagem, um banco de dados de que ele depende — vai te mostrar a
 confusão dele em vez da causa.
 
-O `journalctl -b` da seção 81 mostra o boot em ordem, e é ali que uma cascata fica legível.
+O `journalctl -b` da seção 12 mostra o boot em ordem, e é ali que uma cascata fica legível.

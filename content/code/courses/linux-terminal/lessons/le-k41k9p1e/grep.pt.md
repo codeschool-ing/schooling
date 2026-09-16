@@ -43,7 +43,7 @@ logs/app.log:app started
 barulho", e o `grep -v` encadeado duas ou três vezes é como isso se escreve.
 
 **O `-l` é para achar qual arquivo**, não o que tem nele. O `grep -rl TODO src/` te dá uma lista de
-nomes que você pode passar para outra coisa — que é o `xargs` da seção 134.
+nomes que você pode passar para outra coisa — que é o `xargs` da seção 16.
 
 E repare que o `grep -r logs/` imprimiu `logs/app.log:` na frente de cada linha. **O `grep` prefixa o
 nome do arquivo sempre que está buscando em mais de um**, o que ajuda na tela e atrapalha num
@@ -105,8 +105,9 @@ texto**, e é como um script pergunta "isto está no arquivo":
 if grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config; then ...
 ```
 
-O aviso da seção 99 se aplica aqui: sob `set -e`, um `grep` que não acha nada para o script, porque
-"sem correspondência" é um código diferente de zero. Num `if`, ou com `|| true`, está tudo bem.
+O aviso da aula 6 seção 14 se aplica aqui: sob `set -e`, um `grep` que não acha nada para o script,
+porque "sem correspondência" é um código diferente de zero. Num `if`, ou com `|| true`, está tudo
+bem.
 
 ## Qual grep você está rodando
 
@@ -135,7 +136,7 @@ imposto sem benefício. **Use o `-F` quando o padrão é entrada de usuário ou 
 ou barras** — buscar um endereço IP, um número de versão ou um caminho é o caso comum, e o `-F` é ao
 mesmo tempo correto e mais rápido.
 
-A seção 125 é a própria linguagem de padrões.
+A seção 07 é a própria linguagem de padrões.
 
 ## Mais dois que valem
 

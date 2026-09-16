@@ -38,9 +38,9 @@ predate the web.
 
 That is worth knowing for two practical reasons.
 
-**A pipeline can finish before the first command does.** `head` is the example — section 93's
-`SIGPIPE`, where `yes | head -2` kills `yes` rather than waiting for it. So
-`grep something huge.log | head -5` returns as soon as it has five lines, however large the file is.
+**A pipeline can finish before the first command does.** `head` is the example — lesson 6 section
+08's `SIGPIPE`, where `yes | head -2` kills `yes` rather than waiting for it. So `grep something
+huge.log | head -5` returns as soon as it has five lines, however large the file is.
 
 **And memory is not the limit.** `sort` on a ten-gigabyte file does spill to disk, but a pipeline
 that only filters holds a few kilobytes at a time no matter how much passes through it. The
@@ -52,9 +52,9 @@ pipeline above never had more than a buffer's worth of that log in memory.
 false | true; echo $?          # 0 — the status of the LAST command
 ```
 
-Section 99 covered this and it is worth repeating here because pipelines are where it bites:
-**`$?` is the last stage's status**, so a failure at the front is invisible. `PIPESTATUS` has all of
-them, and `set -o pipefail` changes the rule.
+Lesson 6 section 14 covered this and it is worth repeating here because pipelines are where it
+bites: **`$?` is the last stage's status**, so a failure at the front is invisible. `PIPESTATUS` has
+all of them, and `set -o pipefail` changes the rule.
 
 ## Reduce first
 
@@ -81,10 +81,10 @@ the whole thing, and why some programs refuse to work in one.
 
 **It carries bytes, not records.** Every tool in this lesson invents its own idea of a line and a
 field from the same stream of bytes, which is why they compose at all — and also why a filename
-with a space in it breaks a pipeline that assumed whitespace separated things. Section 134 is that
+with a space in it breaks a pipeline that assumed whitespace separated things. Section 16 is that
 failure, with the fix.
 
-**And it carries stdout only.** Errors bypass it, which is section 121's `2>&1 |`.
+**And it carries stdout only.** Errors bypass it, which is section 03's `2>&1 |`.
 
 ## The small set that does most of it
 

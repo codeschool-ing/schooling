@@ -46,7 +46,7 @@ Entraram três quebras de linha, não saiu nenhuma. **O `$( )` remove todas as q
 fim**, que é por que `n=$(wc -l < arquivo)` te dá `1200` e não `1200` seguido de uma quebra.
 
 Isso quase sempre ajuda e vale saber quando não ajuda — ler um arquivo para uma variável e escrevê-
-lo de volta perde a quebra de linha final, e um arquivo sem ela causa o problema da seção 148.
+lo de volta perde a quebra de linha final, e um arquivo sem ela causa o problema da seção 11.
 
 ### Crases
 
@@ -70,7 +70,7 @@ estilo que vale aceitar sem discutir.
 
 ### É uma expansão, então ponha aspas
 
-`"$(cmd)"`, pelos motivos da seção 141. Sem aspas, a saída é dividida no espaço em branco e passa
+`"$(cmd)"`, pelos motivos da seção 04. Sem aspas, a saída é dividida no espaço em branco e passa
 por globbing.
 
 ## `$(( ))` — aritmética
@@ -165,8 +165,8 @@ ana@vm:~/work/scripts$ echo 'scale=3; 7/2' | bc
 3.500
 ```
 
-O `$(( ))` não consegue fazer isso de jeito nenhum. O `bc` consegue, o `awk` consegue, e a seção
-129 tratou dos dois. **Se o seu script precisa de uma porcentagem ou de uma média, quem está
+O `$(( ))` não consegue fazer isso de jeito nenhum. O `bc` consegue, o `awk` consegue, e a aula 8
+seção 11 tratou dos dois. **Se o seu script precisa de uma porcentagem ou de uma média, quem está
 fazendo a aritmética é um deles**, não o bash.
 
 ## O `let` e o `expr`

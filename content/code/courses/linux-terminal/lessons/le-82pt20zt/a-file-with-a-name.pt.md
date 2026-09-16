@@ -34,8 +34,8 @@ Quatro tentativas, três resultados diferentes, e cada um é uma regra.
 
 **O `./` não é enfeite.** Ele é um caminho, e é obrigatório porque o diretório atual está
 deliberadamente fora do `$PATH` — se estivesse nele, um arquivo chamado `ls` largado num diretório
-em que você por acaso entrou rodaria no lugar do de verdade. A seção 39 tratou disso; aqui é onde
-você sente.
+em que você por acaso entrou rodaria no lugar do de verdade. A aula 3 seção 04 tratou disso; aqui é
+onde você sente.
 
 ## O shebang
 

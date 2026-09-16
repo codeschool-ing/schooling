@@ -41,7 +41,7 @@ Três falhas diferentes, três palavras diferentes, e a palavra é o diagnóstic
 
 Repare em quem fala: `bash:`, não `cd:`. **`cd` não é um programa** — não poderia ser, porque um
 programa mudando o próprio diretório não mudaria o do shell. Ele é embutido no shell, e é por isso
-que `man cd` não acha nada e `help cd` acha tudo. A seção 16 traçou essa linha.
+que `man cd` não acha nada e `help cd` acha tudo. A aula 1 seção 16 traçou essa linha.
 
 ## `ls`, e as sete opções que importam
 
@@ -118,7 +118,7 @@ ana@vm:~/hid$ ls -A
 
 Um diretório, três respostas. **Um nome que começa com ponto está oculto**, e esse é o mecanismo
 inteiro — não existe atributo de "oculto" em lugar nenhum, só uma convenção que o `ls` respeita. A
-seção 11 tratou da convenção; a seção 49 trata do que as pessoas guardam nesses arquivos.
+aula 1 seção 11 tratou da convenção; a seção 14 trata do que as pessoas guardam nesses arquivos.
 
 `-A` é o `-a` sem `.` e `..`, e normalmente é o que você queria dizer.
 
@@ -155,6 +155,6 @@ drwxr-xr-x 2 root root 36864 Mar 31 13:31 /bin/
 no final e ele segue o link e mostra **o diretório**. Os mesmos sete caracteres digitados, duas
 perguntas diferentes feitas.
 
-A seção 46 é sobre links. O hábito a levar daqui é menor e imediatamente útil: **uma barra no final
+A seção 11 é sobre links. O hábito a levar daqui é menor e imediatamente útil: **uma barra no final
 quer dizer "através dele, para dentro da coisa"** — e quando uma listagem te surpreender, confira se
 o que você está olhando não é um link.

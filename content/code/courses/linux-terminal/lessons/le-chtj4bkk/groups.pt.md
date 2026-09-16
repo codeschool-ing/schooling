@@ -22,7 +22,7 @@ ana se chama `ana`, o que é convenção — Debian e Ubuntu dão a cada usuári
 próprio nome, para que um diretório compartilhado seja a exceção e não o padrão.
 
 **`groups=1002(ana),27(sudo),1004(team)` é a lista completa**, primário mais suplementares. A ana
-está no `sudo`, e é por isso que a seção 64 vai funcionar para ela, e no `team`, e é por isso que
+está no `sudo`, e é por isso que a seção 11 vai funcionar para ela, e no `team`, e é por isso que
 ela conseguiu ler o `teamonly.txt`.
 
 **Todos eles contam nas checagens de permissão.** Quando o kernel pergunta "esta pessoa está no
@@ -135,7 +135,7 @@ Uma máquina chega com uns vinte, e vale reconhecer estes:
 
 | | |
 |---|---|
-| `sudo`, ou `wheel` no Red Hat | pode usar o `sudo` — seção 64 |
+| `sudo`, ou `wheel` no Red Hat | pode usar o `sudo` — seção 11 |
 | `adm` | pode ler os logs de `/var/log` |
 | `docker` | pode falar com o daemon do Docker, **que na prática é root** |
 | `www-data` | a conta com que um servidor web roda |

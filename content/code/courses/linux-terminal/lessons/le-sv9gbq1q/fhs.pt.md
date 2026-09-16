@@ -3,7 +3,7 @@ title: A hierarquia, diretório por diretório
 version: 1
 ---
 
-A seção 13 te deu oito nomes para você parar de se sentir perdido. Este é o mapa inteiro, e o
+A aula 1 seção 13 te deu oito nomes para você parar de se sentir perdido. Este é o mapa inteiro, e o
 objetivo dele não é decorar — é que **a forma é padronizada**, então um diretório que você nunca
 viu, numa distribuição que você nunca usou, ainda assim te diz o que tem dentro.
 
@@ -35,10 +35,10 @@ Antes da tabela, duas coisas que essa listagem já te contou de graça.
 
 **Quatro deles são setas.** `/bin`, `/lib`, `/sbin` e `/lib64` não são diretórios: são links
 simbólicos apontando para dentro de `/usr`. Isso é o *usr merge*, concluído em todas as
-distribuições de peso entre 2012 e 2023, e a seção 46 explica o que é um link simbólico. Por
+distribuições de peso entre 2012 e 2023, e a seção 11 explica o que é um link simbólico. Por
 enquanto: `/bin/ls` e `/usr/bin/ls` são o mesmo arquivo alcançado por dois nomes.
 
-**`/proc` e `/sys` têm tamanho zero.** Não vazio — zero. Nada ali está em disco. A seção 49 é sobre
+**`/proc` e `/sys` têm tamanho zero.** Não vazio — zero. Nada ali está em disco. A seção 14 é sobre
 o que eles realmente são.
 
 ## O mapa inteiro

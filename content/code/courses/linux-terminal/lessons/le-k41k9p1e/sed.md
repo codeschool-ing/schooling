@@ -73,7 +73,7 @@ north,ana,Q1,171,8721
 north,bruno,Q1,49,4116
 ```
 
-**`1d` deletes the first line**, which is the header-dropping idiom alongside section 123's
+**`1d` deletes the first line**, which is the header-dropping idiom alongside section 05's
 `tail -n +2`. Either is fine; `sed 1d` is shorter and `tail -n +2` is faster on a large file.
 
 ```
@@ -118,7 +118,7 @@ service ready
 service handled a request
 ```
 
-**`-i` edits the file rather than printing to stdout**, and it is the answer to section 121's
+**`-i` edits the file rather than printing to stdout**, and it is the answer to section 03's
 `sort file > file` problem.
 
 It is also the flag to be careful with, because there is no undo. `-i.bak` keeps a copy:

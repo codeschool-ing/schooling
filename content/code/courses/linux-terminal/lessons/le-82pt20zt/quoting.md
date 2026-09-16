@@ -98,8 +98,8 @@ all three:
 
 | | |
 |---|---|
-| `set -u` | section 143. An unset variable becomes an error rather than an empty string |
-| `${var:?message}` | section 152. Refuse to expand, with your own message |
+| `set -u` | section 06. An unset variable becomes an error rather than an empty string |
+| `${var:?message}` | section 15. Refuse to expand, with your own message |
 | `[ -n "$var" ] \|\| exit 1` | check it yourself, early |
 
 ## Command substitution is an expansion too
@@ -128,12 +128,12 @@ There are two places where you can leave them off:
 cmd $FLAGS              # when you deliberately want one variable to become several arguments
 ```
 
-`[[ ]]` is section 145, and the quotes are still not *wrong* there — they just change nothing.
+`[[ ]]` is section 08, and the quotes are still not *wrong* there — they just change nothing.
 The second line is a real technique and is also how people get hurt; when you need it, an array
-(section 149) does the same job and keeps the words you meant.
+(section 12) does the same job and keeps the words you meant.
 
 Note that `[ ]` — one bracket — is **not** on that list. It is an ordinary command, its arguments
-are split like any other command's, and section 145 shows what that costs.
+are split like any other command's, and section 08 shows what that costs.
 
-`shellcheck` (section 154) flags every missing quote in a file in under a second, which is a better
+`shellcheck` (section 17) flags every missing quote in a file in under a second, which is a better
 proofreader than this paragraph.
