@@ -13,10 +13,11 @@
    between a DOM node and what is painted behind it, and a `<tspan>` over a
    `<rect>` is one node over another inside an image.
 
-   So forty-four runs of text shipped below AA, across both courses, and four of
-   them were the same colour as the ground they sat on. `Press ENTER or type
-   command to continue` was 1.24:1. None of it was visible to a person reading
-   the diff either: a figure is one line of JSON with an SVG inside it.
+   So 258 runs of text shipped below AA, across both courses — 46 in the
+   captured figures and 212 in the hand-drawn ones — and four of them were the
+   same colour as the ground they sat on. `Press ENTER or type command to
+   continue` was 1.24:1. None of it was visible to a person reading the diff
+   either: a figure is one line of JSON with an SVG inside it.
 
    # WHAT IT MEASURES
 

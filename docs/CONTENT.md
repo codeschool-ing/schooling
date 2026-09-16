@@ -277,7 +277,7 @@ shipping exactly like that.
 **`tools/figure-contrast` is the check there was not.** It reads every `<tspan>` in every figure
 against whatever is painted behind it, in both themes, at AA — and a token that resolves to
 nothing is one of the things it reports, because a colour that is no colour is the worst reading
-of all. Its first run found 46 runs of text below AA across both courses, four of them the same
+of all. Its first run found 258 runs of text below AA across both courses, four of them the same
 colour as the ground under them. Nothing else was ever going to: axe measures a DOM node against
 what is behind it, and a `<tspan>` over a `<rect>` is both of those inside an image.
 
