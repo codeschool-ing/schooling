@@ -586,7 +586,8 @@ func draw(g grid, cols, rows int, label string, callouts calloutList) string {
 	var rects, lines strings.Builder
 	for y := 0; y < rows; y++ {
 		var spans strings.Builder
-		for _, r := range runs(g[y]) {
+		cells := 0
+		for _, r := range rowRuns(g[y]) {
 			if r.bg != "" {
 				fmt.Fprintf(&rects,
 					`<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="%s"/>`,
@@ -598,12 +599,14 @@ func draw(g grid, cols, rows int, label string, callouts calloutList) string {
 			if r.bold {
 				weight = ` font-weight="600"`
 			}
-			fmt.Fprintf(&spans, `<tspan%s fill="%s" textLength="%.2f" lengthAdjust="spacingAndGlyphs">%s</tspan>`,
+			fmt.Fprintf(&spans, `<tspan%s fill="%s">%s</tspan>`,
 				weight, fill(colour(r.fg, "", false), colour(r.bg, "", true)),
-				float64(len([]rune(r.text)))*charWidth, html.EscapeString(r.text))
+				html.EscapeString(r.text))
+			cells = r.start + len([]rune(r.text))
 		}
-		fmt.Fprintf(&lines, `<text x="%.2f" y="%.2f" xml:space="preserve">%s</text>`,
-			gutter+padding, padding+float64(y)*lineHeight+11.5, spans.String())
+		fmt.Fprintf(&lines, `<text x="%s" y="%.2f" xml:space="preserve">%s</text>`,
+			cellsAcross(cells),
+			padding+float64(y)*lineHeight+11.5, spans.String())
 	}
 
 	var marks, notes strings.Builder
@@ -784,4 +787,79 @@ func openPTY(cols, rows int) (master, slave *os.File, err error) {
 		return closeOnError(err)
 	}
 	return m, s, nil
+}
+
+/*
+EVERY CHARACTER ON ITS OWN CELL, which is what a terminal is.
+
+	The rest of this file places the coloured grounds by arithmetic — cell n
+	starts at n times the advance — and used to hand the browser a whole row of
+	text with a `textLength` and ask it to squeeze the glyphs onto that same
+	grid. Where that is honoured it is exact. Where it is not, the row is laid
+	out at whatever width the font gives and the two slide apart.
+
+	They slide by 3%, measured on one reader's screen: the red ground under
+	vim's `E37` stopped half way through the last letter of `override`, and
+	emacs's `C-h C-a` chip left its `-a` on the panel behind it, invisible.
+	Chromium lays that font out at 7.0000 per cell and Firefox at 7.1900, and
+	`lengthAdjust` was the only thing reconciling them.
+
+	So nothing is asked of the browser: `x` carries one coordinate per
+	character, which is core SVG text layout rather than a feature with corners.
+	A glyph wider than its cell now overlaps its neighbour by a fraction of a
+	pixel instead of pushing the whole row along — which is also what fixes the
+	synthesised bold this file's header describes, and by the same argument.
+*/
+func cellsAcross(cells int) string {
+	var b strings.Builder
+	for i := 0; i < cells; i++ {
+		if i > 0 {
+			b.WriteByte(' ')
+		}
+		b.WriteString(strconv.FormatFloat(gutter+padding+float64(i)*charWidth, 'f', -1, 64))
+	}
+	if cells == 0 {
+		// An empty row still needs somewhere to be, and the browser wants a
+		// number rather than an empty attribute.
+		b.WriteString(strconv.FormatFloat(gutter+padding, 'f', -1, 64))
+	}
+	return b.String()
+}
+
+/*
+The runs of a row, with the padding it ends in dropped.
+
+	A captured row is as wide as the terminal, so most of it is the spaces after
+	the last letter — 81% of the grid across this catalogue. They carry no
+	glyph: a coloured ground is a `<rect>` drawn separately, and a space over it
+	paints nothing. Writing a coordinate for each of them would have made the
+	figures half as big again for no mark on the screen.
+
+	Only the tail goes, and only where it is painting nothing. A space BETWEEN
+	two letters is a cell like any other and keeps its place in the list — and a
+	run of spaces ON A COLOURED GROUND is a drawn thing, which is what htop's
+	function-key bar is made of. The first version of this trimmed those too and
+	took the bar with them; `TestABlankRowWithABackgroundIsKept` said so, which
+	is the whole reason it was written.
+*/
+func rowRuns(row []cell) []run {
+	all := runs(row)
+	for len(all) > 0 {
+		last := all[len(all)-1]
+		if last.bg != "" {
+			break
+		}
+		trimmed := strings.TrimRight(last.text, " ")
+		if trimmed == last.text {
+			break
+		}
+		if trimmed == "" {
+			all = all[:len(all)-1]
+			continue
+		}
+		last.text = trimmed
+		all[len(all)-1] = last
+		break
+	}
+	return all
 }
