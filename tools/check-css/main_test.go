@@ -76,11 +76,16 @@ func TestOnlyLayoutPropertiesCount(t *testing.T) {
 func TestOursMayOverrideButNotLayOut(t *testing.T) {
 	dir := t.TempDir()
 	write(t, dir, "assets/base.css", ".on{color:blue}")
-	write(t, dir, "assets/portal.css", ".steps{display:flex;flex-wrap:wrap}")
+	write(t, dir, "assets/portal.css", ".steps{display:flex;flex-wrap:wrap}\n.code-bar{display:flex}")
 	write(t, dir, "assets/exercises.css", ".choice{color:red}")
 	// Tokens and nothing else, which is what a palette file is: no selector of
 	// theirs, so nothing here can move one of their elements.
 	write(t, dir, "assets/terminal.css", ":root{--term-green:#3ddc84}")
+	// AND THE SHAPE THE WAY OUT ACTUALLY HAS. `.code-bar` is theirs and this
+	// moves what is inside it, which is the defect — except that `.code-win` is
+	// ours and is in the selector, so the rule cannot reach a bar this
+	// repository did not draw.
+	write(t, dir, "assets/code-window.css", ".code-win .code-bar{align-items:flex-end}")
 
 	// A colour on their class, and a layout property held to a screen of ours.
 	write(t, dir, "assets/app.css", ".steps{color:red}\n.view-account .on{display:flex}")
