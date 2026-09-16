@@ -28,6 +28,7 @@ import (
 	"github.com/codeschool-ing/schooling/internal/catalog"
 	"github.com/codeschool-ing/schooling/internal/certificate"
 	"github.com/codeschool-ing/schooling/internal/console"
+	"github.com/codeschool-ing/schooling/internal/discover"
 	"github.com/codeschool-ing/schooling/internal/event"
 	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/identity"
@@ -988,6 +989,161 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	}
 	mux.Handle("/", ui.Handler(interfaceVersion))
 
+	/* ---------- the pages a search engine can read ----------
+
+	   The interface routes on fragments, so nothing after a `#` ever reaches
+	   this process and a school's whole catalogue sits behind one address. These
+	   are a second, server-rendered surface beside it — `/course/<slug>`, its
+	   Portuguese twin, a sitemap and a robots.txt — and they are registered
+	   BEFORE the interface's `/` for the same reason the favicon is: a more
+	   specific pattern wins, and `ui` goes on answering 404 for what it does not
+	   know.
+
+	   `tenant.Resolve` IN FRONT OF THEM, and it is what makes them safe as well
+	   as correct. Every address on these pages is built from the host the
+	   request arrived at — a school is a subdomain and the platform's domain is
+	   a setting — so a host nobody serves must never reach a page that would
+	   then declare itself canonical at it. Resolve answers 404 for exactly that,
+	   which is the allowlist this would otherwise have to keep by hand.
+
+	   The plan is `catalog.PlanNone`: nobody is signed in on a page a crawler
+	   fetched. It is enough, because what these pages show is what the store
+	   calls the shop window — a locked course answers with its name, its
+	   summary, its syllabus and the titles of its lessons, and only the prose is
+	   behind the paywall. */
+	pages := discover.NewHandler(
+		func(ctx context.Context, locale string) ([]discover.Course, error) {
+			id, ok := tenant.FromContext(ctx)
+			if !ok {
+				return nil, discover.ErrNoCourse
+			}
+			listed, err := courses.Courses(ctx, id.ID, catalog.PlanNone, locale)
+			if err != nil {
+				return nil, err
+			}
+			out := make([]discover.Course, 0, len(listed))
+			for _, c := range listed {
+				one := discover.Course{
+					Slug: c.Slug, Name: c.Name, Summary: c.Summary,
+					Level: c.Level, Hours: c.Hours, Free: c.Free,
+				}
+				// The sitemap needs a free course's lessons and nothing else
+				// about them; the listing counts them rather than naming them,
+				// so the positions are what there is to give.
+				if c.Free {
+					for at := 1; at <= c.Lessons; at++ {
+						one.Lessons = append(one.Lessons, discover.Lesson{At: at})
+					}
+				}
+				out = append(out, one)
+			}
+			return out, nil
+		},
+		func(ctx context.Context, slug, locale string) (*discover.Course, error) {
+			id, ok := tenant.FromContext(ctx)
+			if !ok {
+				return nil, discover.ErrNoCourse
+			}
+			// The store reads by id and the address carries a slug, so the
+			// listing is what turns one into the other. It is also what keeps a
+			// draft unreachable here without this knowing what a draft is: a
+			// draft is not in the listing.
+			listed, err := courses.Courses(ctx, id.ID, catalog.PlanNone, locale)
+			if err != nil {
+				return nil, err
+			}
+			found := ""
+			for _, c := range listed {
+				if c.Slug == slug {
+					found = c.ID
+					break
+				}
+			}
+			if found == "" {
+				return nil, discover.ErrNoCourse
+			}
+			view, err := courses.Course(ctx, id.ID, found, locale, catalog.PlanNone)
+			if errors.Is(err, catalog.ErrNotFound) {
+				return nil, discover.ErrNoCourse
+			}
+			if err != nil {
+				return nil, err
+			}
+			out := &discover.Course{
+				Slug: slug, Name: view.Name, Summary: view.Summary,
+				Prerequisites: view.Prerequisites, Level: view.Level, Hours: view.Hours,
+				Syllabus: view.Syllabus,
+			}
+			for _, tp := range view.Topics {
+				out.Topics = append(out.Topics, tp.Title)
+			}
+			out.Free = view.Free
+			for at, l := range view.Lessons {
+				out.Lessons = append(out.Lessons, discover.Lesson{At: at + 1, Title: l.Title})
+			}
+			return out, nil
+		},
+		/* ONE LESSON, ASKED FOR WITH NO PLAN — which is what a crawler is, and
+		   is the whole of the access rule. `Store.Lesson` refuses a course
+		   nobody may open with `ErrLocked`, so a paid course's prose cannot
+		   reach a page here even if this file forgot why it should not. Both
+		   refusals come back as "no lesson": a page that exists to say a reader
+		   may not read it is a page a search engine will index. */
+		func(ctx context.Context, slug string, at int, locale string) (*discover.Lesson, error) {
+			id, ok := tenant.FromContext(ctx)
+			if !ok {
+				return nil, discover.ErrNoLesson
+			}
+			listed, err := courses.Courses(ctx, id.ID, catalog.PlanNone, locale)
+			if err != nil {
+				return nil, err
+			}
+			courseID := ""
+			for _, c := range listed {
+				if c.Slug == slug {
+					courseID = c.ID
+					break
+				}
+			}
+			if courseID == "" {
+				return nil, discover.ErrNoLesson
+			}
+			view, err := courses.Course(ctx, id.ID, courseID, locale, catalog.PlanNone)
+			if err != nil {
+				return nil, err
+			}
+			if at < 1 || at > len(view.Lessons) {
+				return nil, discover.ErrNoLesson
+			}
+			read, err := courses.Lesson(ctx, id.ID, courseID, view.Lessons[at-1].ID, locale, catalog.PlanNone)
+			if errors.Is(err, catalog.ErrLocked) || errors.Is(err, catalog.ErrNotFound) {
+				return nil, discover.ErrNoLesson
+			}
+			if err != nil {
+				return nil, err
+			}
+			out := &discover.Lesson{At: at, Title: read.Title}
+			for _, s := range read.Sections {
+				out.Sections = append(out.Sections, discover.Section{
+					Title: s.Title, Prose: discover.Extract(s.Body),
+				})
+			}
+			return out, nil
+		},
+		func(ctx context.Context) (string, bool) {
+			s, ok := tenant.FromContext(ctx)
+			return s.Name, ok
+		},
+	)
+	discoverable := http.NewServeMux()
+	pages.Routes(discoverable)
+	// `discover.Patterns` and not a list written again here: the two were the
+	// same list for a while and then were not, and a sitemap advertised pages
+	// that answered 404.
+	for _, at := range discover.Patterns {
+		mux.Handle(at, web.Chain(discoverable, tenant.Resolve(tenant.NewStore(pool))))
+	}
+
 	/* AND THE ONE ASSET THAT IS THE SCHOOL'S OWN.
 
 	   A more specific pattern than `/` above, so it wins on this mux and only
@@ -1717,6 +1873,9 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	// without a role also cannot tell somebody that they need one — so the
 	// shell is served to anybody who asks, and its first request to the API
 	// behind the gate is how it finds out who is here.
+	// Staff software. A `noindex` on the page only works once a crawler has
+	// fetched it; this is the answer to whether it should.
+	consoleMux.Handle("GET /robots.txt", discover.Disallow())
 	consoleMux.Handle("/", console.Interface(interfaceVersion))
 
 	/* AND WHICH BUILD IS ANSWERING, which the console's own interface asks.
@@ -1814,6 +1973,8 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   price of a click on the one screen where somebody is already done. */
 	mineMux.Handle("GET /confirm/{token}", confirmed(accounts, events, log))
 	mineMux.Handle("GET /change/{token}", changed(accounts, notifier, events, log))
+	// One student's own place, for the same reason.
+	mineMux.Handle("GET /robots.txt", discover.Disallow())
 	mineMux.Handle("/", ui.Mine(interfaceVersion))
 
 	/* ---------- and the front door, at the bare domain ----------
@@ -1837,6 +1998,9 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   none here, so the arrival is recorded with no school on it rather than
 	   with a guessed one. */
 	frontMux := http.NewServeMux()
+	// The one address on this platform that wants to be found, and the only
+	// robots.txt here that says so.
+	frontMux.Handle("GET /robots.txt", discover.Allow())
 	frontMux.Handle("/", ui.Front(interfaceVersion))
 
 	atConsole := console.Is(console.Settings{Host: console.HostOf(cfg.PlatformDomain)}, tenant.Normalise)
