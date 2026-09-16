@@ -24,21 +24,8 @@ command — press it twice.
 
 ## Screen one: it will not let you quit
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│listen 8080                                                             │
-│workers 4                                                               │
-│timeout 30                                                              │
-│log_level info                                                          │
-│log_file /var/log/app.log                                               │
-│~                                                                       │
-│~                                                                       │
-│~                                                                       │
-│~                                                                       │
-│~                                                                       │
-│E37: No write since last change (add ! to override)                     │
-│Press ENTER or type command to continue                                 │
-└────────────────────────────────────────────────────────────────────────┘
+```schooling-figure
+{"caption": "A line deleted, then `:q`. Vim will not leave until the change is dealt with.", "svg": "<svg viewBox=\"0 0 754 245\" role=\"img\" aria-label=\"A captured vim screen refusing to quit: five lines of server.conf and E37: No write since last change (add ! to override) on the bottom line.\"><rect x=\"26\" y=\"0\" width=\"728\" height=\"245\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"40.00\" y=\"215.50\" width=\"357.00\" height=\"15.50\" fill=\"var(--term-red-bg)\"/><g font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\"><text x=\"40.00\" y=\"25.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\"> the server configuration                                                                           </tspan></text><text x=\"40.00\" y=\"41.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">listen 8080                                                                                         </tspan></text><text x=\"40.00\" y=\"56.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">workers 4                                                                                           </tspan></text><text x=\"40.00\" y=\"72.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">timeout 30                                                                                          </tspan></text><text x=\"40.00\" y=\"87.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">log_level info                                                                                      </tspan></text><text x=\"40.00\" y=\"103.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">log_file /var/log/app.log                                                                           </tspan></text><text x=\"40.00\" y=\"118.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                                                   </tspan></text><text x=\"40.00\" y=\"134.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                                                   </tspan></text><text x=\"40.00\" y=\"149.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                                                   </tspan></text><text x=\"40.00\" y=\"165.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                                                   </tspan></text><text x=\"40.00\" y=\"180.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                                                   </tspan></text><text x=\"40.00\" y=\"196.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                                                   </tspan></text><text x=\"40.00\" y=\"211.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-blue)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">~                                                                                                   </tspan></text><text x=\"40.00\" y=\"227.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-white)\" textLength=\"357.00\" lengthAdjust=\"spacingAndGlyphs\">E37: No write since last change (add ! to override)</tspan><tspan fill=\"var(--paper)\" textLength=\"343.00\" lengthAdjust=\"spacingAndGlyphs\">                               1,1           All </tspan></text></g></svg>"}
 ```
 
 **`E37` is vim protecting you**, not vim being difficult. You changed something
@@ -49,9 +36,10 @@ and asked to leave without saving.
 | `:wq` | you meant to keep it |
 | `:q!` | you did not |
 
-Notice the file lost a character — the top of the screen starts at `listen`,
-because the two-line message pushed the view down, and the `#` line is above it.
-The screen scrolling is not the file changing.
+Notice the first line. It read `# the server configuration` and now begins with
+a space, because that is where the `x` landed. One character is the whole of what
+vim is refusing to lose here, and it is refusing just as hard as it would for a
+day's work.
 
 ## Screen two: `Press ENTER`
 
@@ -61,23 +49,8 @@ with consequences; vim is waiting for you to have read the line.
 
 ## Screen three: the swap file
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│E325: ATTENTION                                                             │
-│Found a swap file by the name ".server.conf.swp"                            │
-│          owned by: ana   dated: Tue Sep 15 11:59:56 2026                   │
-│         file name: ~ana/work/edit/server.conf                              │
-│          modified: YES                                                     │
-│         user name: ana   host name: vm                                     │
-│        process ID: 18031                                                   │
-│While opening file "server.conf"                                            │
-│             dated: Tue Sep 15 11:59:54 2026                                │
-│                                                                            │
-│(1) Another program may be editing the same file.  If this is the case,     │
-│    be careful not to end up with two different instances of the same       │
-│    file when making changes.  Quit, or continue with caution.              │
-│-- More --                                                                  │
-└────────────────────────────────────────────────────────────────────────────┘
+```schooling-figure
+{"caption": "A vim was opened, a line was added, and the process was killed. This is what the next vim shows.", "svg": "<svg viewBox=\"0 0 754 245\" role=\"img\" aria-label=\"A captured vim screen reporting a swap file: E325: ATTENTION, the swap file&#39;s owner, date, process ID and the file it belongs to, and -- More -- at the foot.\"><rect x=\"26\" y=\"0\" width=\"728\" height=\"245\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"40.00\" y=\"14.00\" width=\"105.00\" height=\"15.50\" fill=\"var(--term-red-bg)\"/><g font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\"><text x=\"40.00\" y=\"25.50\" xml:space=\"preserve\"><tspan fill=\"var(--term-white)\" textLength=\"105.00\" lengthAdjust=\"spacingAndGlyphs\">E325: ATTENTION</tspan><tspan fill=\"var(--paper)\" textLength=\"595.00\" lengthAdjust=\"spacingAndGlyphs\">                                                                                     </tspan></text><text x=\"40.00\" y=\"41.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">Found a swap file by the name &#34;.server.conf.swp&#34;                                                    </tspan></text><text x=\"40.00\" y=\"56.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">          owned by: ana   dated: Wed Sep 16 14:27:36 2026                                           </tspan></text><text x=\"40.00\" y=\"72.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">         file name: ~ana/work/edit/server.conf                                                      </tspan></text><text x=\"40.00\" y=\"87.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">          modified: YES                                                                             </tspan></text><text x=\"40.00\" y=\"103.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">         user name: ana   host name: vm                                                             </tspan></text><text x=\"40.00\" y=\"118.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">        process ID: 7985                                                                            </tspan></text><text x=\"40.00\" y=\"134.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">While opening file &#34;server.conf&#34;                                                                    </tspan></text><text x=\"40.00\" y=\"149.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">             dated: Wed Sep 16 14:27:34 2026                                                        </tspan></text><text x=\"40.00\" y=\"165.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">                                                                                                    </tspan></text><text x=\"40.00\" y=\"180.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">(1) Another program may be editing the same file.  If this is the case,                             </tspan></text><text x=\"40.00\" y=\"196.00\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">    be careful not to end up with two different instances of the same                               </tspan></text><text x=\"40.00\" y=\"211.50\" xml:space=\"preserve\"><tspan fill=\"var(--paper)\" textLength=\"700.00\" lengthAdjust=\"spacingAndGlyphs\">    file when making changes.  Quit, or continue with caution.                                      </tspan></text><text x=\"40.00\" y=\"227.00\" xml:space=\"preserve\"><tspan fill=\"var(--term-green)\" textLength=\"70.00\" lengthAdjust=\"spacingAndGlyphs\">-- More --</tspan><tspan fill=\"var(--paper)\" textLength=\"630.00\" lengthAdjust=\"spacingAndGlyphs\">                                                                                          </tspan></text></g></svg>"}
 ```
 
 That is real: a vim was opened, a line was added, and the process was killed.
@@ -89,7 +62,7 @@ which:
 
 | | |
 |---|---|
-| `process ID: 18031` **still running** | somebody else has this file open. Press `q` and go and ask |
+| `process ID: 7985` **still running** | somebody else has this file open. Press `q` and go and ask |
 | that process is gone | vim or the machine died. Your unsaved work is in the swap file |
 
 Press Enter past the `-- More --` and the choices appear. The ones that matter:
