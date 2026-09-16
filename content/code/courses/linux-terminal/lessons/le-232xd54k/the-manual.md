@@ -3,7 +3,7 @@ title: How to answer your own question
 version: 1
 ---
 
-This course covers 223 sections and it will not cover everything. **The skill that outlasts it is
+This course covers 228 sections and it will not cover everything. **The skill that outlasts it is
 knowing how to ask the machine**, because the machine came with its documentation and answers
 faster than a search engine.
 

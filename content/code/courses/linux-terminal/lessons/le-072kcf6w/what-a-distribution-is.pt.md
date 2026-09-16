@@ -26,10 +26,10 @@ As duas primeiras são quase iguais em todo lugar, e é por isso que este curso 
 "Padrões e política" parece a categoria mole. É a que decide como é conviver com uma máquina:
 
 - **Quão novo é o software?** O Debian entrega versões de anos atrás e muito bem testadas. O Arch
-  entrega o que saiu esta semana. Nenhum está errado; são respostas a perguntas diferentes, e o
-  `release-models` daqui a duas seções é sobre essa troca.
+  entrega o que saiu esta semana. Nenhum está errado; são respostas a perguntas diferentes, e
+  a seção 08 é sobre essa troca.
 - **Por quanto tempo tem suporte?** Cinco anos, dez anos, ou até o próximo lançamento daqui a seis
-  meses. O `lifecycles` é sobre o que acontece quando essa janela fecha.
+  meses. A seção 09 é sobre o que acontece quando essa janela fecha.
 - **O que vem ligado?** Um firewall, ou não. SELinux em modo obrigatório, ou AppArmor, ou nada.
 - **Onde os arquivos ficam?** Quase sempre igual — o padrão da seção 13 da aula 1 — e não
   inteiramente. A configuração do Apache é `/etc/apache2` no Debian e `/etc/httpd` no Red Hat.

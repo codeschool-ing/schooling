@@ -29,9 +29,9 @@ like to live with:
 
 - **How new is the software?** Debian ships versions that are years old and very well tested.
   Arch ships what was released this week. Neither is wrong; they are answers to different
-  questions, and `release-models` two sections from now is about the trade.
+  questions, and section 08 is about the trade.
 - **How long is it supported?** Five years, ten years, or until the next release six months from
-  now. `lifecycles` is about what happens when that window closes.
+  now. Section 09 is about what happens when that window closes.
 - **What is on by default?** A firewall, or not. SELinux enforcing, or AppArmor, or nothing.
 - **Where do files go?** Mostly the same — the standard of lesson 1 section 13 — and not entirely.
   Apache's configuration is `/etc/apache2` on Debian and `/etc/httpd` on Red Hat.

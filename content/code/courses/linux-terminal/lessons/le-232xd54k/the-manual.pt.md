@@ -3,7 +3,7 @@ title: Como responder às suas próprias perguntas
 version: 1
 ---
 
-Este curso cobre 223 seções e não vai cobrir tudo. **A habilidade que sobrevive a ele é saber
+Este curso cobre 228 seções e não vai cobrir tudo. **A habilidade que sobrevive a ele é saber
 perguntar à máquina**, porque a máquina veio com a documentação dela e responde mais rápido que um
 buscador.
 
