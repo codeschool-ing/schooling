@@ -270,9 +270,16 @@ screenshots and not for diagrams.
 **The palette is this application's, and there is no check that it is.** `paper`, `paper-dim`,
 `panel`, `scan`, `wire`, `phosphor`, `phosphor-dim`, `amber` and `ink` — where **`ink` is the
 ground and `paper` is what is written on it**, which catches everybody once. A token that does not
-exist resolves to nothing and the figure renders invisible, with every check in this repository
-still green: nothing reads inside an SVG. The thirteen figures of `web-fundamentals` lesson 1 were
-drawn against a different palette and were one command away from shipping exactly like that.
+exist resolves to nothing and the figure renders invisible. The thirteen figures of
+`web-fundamentals` lesson 1 were drawn against a different palette and were one command away from
+shipping exactly like that.
+
+**`tools/figure-contrast` is the check there was not.** It reads every `<tspan>` in every figure
+against whatever is painted behind it, in both themes, at AA — and a token that resolves to
+nothing is one of the things it reports, because a colour that is no colour is the worst reading
+of all. Its first run found 46 runs of text below AA across both courses, four of them the same
+colour as the ground under them. Nothing else was ever going to: axe measures a DOM node against
+what is behind it, and a `<tspan>` over a `<rect>` is both of those inside an image.
 
 An inline drawing makes its own file several times larger. That is the price of the diff being per
 paragraph *and* the figure being beside the paragraph it illustrates, and it was paid deliberately.
@@ -313,6 +320,14 @@ The SVG goes to `-out` and the fence's JSON to stdout. The eight ANSI colours co
 drawn one does. Those are **two sets, a foreground and a `-bg`**, and the reason is htop's header
 bar: a background holds its contrast against the text painted on it, not against the panel behind
 it, so only the foregrounds turn over between themes.
+
+**Which is why the text on a captured ground is a value and not a token.** The ground does not
+turn over and a token does, so a pair that reads in one theme is dark-on-dark in the other — and
+on the panel it is the other way round, because the panel turns over and no single value reads
+against both `#111721` and `#ffffff`. `fill` in `term-capture` answers both cases, and a colour
+that cannot be read either way is moved: on a ground, along its own lightness; on the panel, to
+the nearest of the eight by hue. Same rule `ui/assets/accent.js` applies to a school's colour, and
+the same argument — here accessibility is a rule rather than a preference.
 
 **The tool does not make the capture true.** The machine has to be worth photographing — the load
 staged the way the section stages it, the process list filtered to something a reader should see.
