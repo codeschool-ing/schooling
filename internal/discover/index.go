@@ -51,7 +51,8 @@ func (h *Handler) everyCourse(w http.ResponseWriter, r *http.Request, code strin
 		Other: link{Label: words[code]["everyTrack"], Href: at + languages[here].at + "/tracks"},
 	}
 	data.Heading = words[code]["everyCourse"]
-	data.head = headOf(at, "/courses", here, data.Heading, "")
+	data.head = headOf(at, "/courses", here, data.Heading, words[code]["coursesAre"])
+	data.Card = at + languages[here].at + "/card/list/courses"
 	if name, found := h.school(r.Context()); found {
 		data.School = name
 		data.Title = data.Heading + " — " + name
@@ -82,7 +83,8 @@ func (h *Handler) everyTrack(w http.ResponseWriter, r *http.Request, code string
 		Other: link{Label: words[code]["everyCourse"], Href: at + languages[here].at + "/courses"},
 	}
 	data.Heading = words[code]["everyTrack"]
-	data.head = headOf(at, "/tracks", here, data.Heading, "")
+	data.head = headOf(at, "/tracks", here, data.Heading, words[code]["tracksAre"])
+	data.Card = at + languages[here].at + "/card/list/tracks"
 	if name, found := h.school(r.Context()); found {
 		data.School = name
 		data.Title = data.Heading + " — " + name
@@ -104,6 +106,10 @@ var listTemplate = template.Must(template.New("list").Parse(`<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Title}}</title>
 ` + headTags + `
+<meta property="og:type" content="website">
+{{- if .School}}
+<meta property="og:site_name" content="{{.School}}">
+{{- end}}
 ` + sheet + `
 </head>
 <body>

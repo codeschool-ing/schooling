@@ -22,7 +22,6 @@ var page = template.Must(template.New("course").Parse(`<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Course.Name}}{{if .School}} — {{.School}}{{end}}</title>
-<meta name="description" content="{{.Course.Summary}}">
 ` + headTags + `
 <meta property="og:type" content="website">
 {{- if .School}}

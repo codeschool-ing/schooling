@@ -3,6 +3,8 @@ package discover
 import (
 	"html/template"
 	"net/http"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
@@ -40,14 +42,16 @@ type head struct {
 
 // headOf builds the frame for one page at one path, in one language. `path` is
 // the address WITHOUT a language prefix — the prefix is this function's to add,
-// which is what keeps the set consistent.
+// which is what keeps the set consistent. The description is shortened HERE, for
+// the same reason: it is the one place every page's description passes through,
+// so no page can be given one that a result will cut.
 func headOf(origin, path string, here int, title, description string) head {
 	h := head{
 		Lang:        languages[here].tag,
 		Canonical:   origin + languages[here].at + path,
 		XDefault:    origin + path,
 		Title:       title,
-		Description: description,
+		Description: shorten(description),
 	}
 	for i, l := range languages {
 		h.Alternates = append(h.Alternates, alternate{
@@ -60,6 +64,69 @@ func headOf(origin, path string, here int, title, description string) head {
 	return h
 }
 
+/*
+A description is the length a result shows, and it is cut on a sentence.
+
+	EVERY TRACK ON THE AIR WAS OVER THE LINE, which is how this was found: a
+	track's goal is between 220 and 529 characters, median 339, in both
+	languages and in all 38 of them, and it went into `<meta name="description">`
+	whole. Roughly 160 is what a result renders, so every one of those pages was
+	being cut by the search engine, mid-word, and shown with an ellipsis nobody
+	chose. Twelve per cent of course summaries were the same.
+
+	Cutting it here rather than there is not about the ellipsis. It is that WE
+	choose where the sentence ends: the last full stop if there is one late
+	enough to be worth reading, a word boundary otherwise, so the description is
+	a thing somebody wrote rather than the first 160 characters of it.
+
+	# IN RUNES, AND THAT IS THE BUG THIS ALSO FIXES
+
+	The first version of this counted with `len` and cut with `s[:160]`, which in
+	Go are BYTES. On Portuguese that is about 150 characters rather than 160 —
+	and worse, a cut at byte 160 can land in the middle of a multi-byte rune and
+	produce a string that is not valid UTF-8. The page would have carried a
+	replacement character in its description, in the language where every other
+	word carries an accent. `TestADescriptionIsNeverCutThroughALetter` is that as
+	a test.
+
+	THE BODY OF THE PAGE STILL SHOWS THE WHOLE THING. This is the description a
+	search engine and a chat client read; a reader who has arrived gets the text
+	its author wrote, at full length.
+*/
+func shorten(s string) string {
+	// Collapsed first: a description is one attribute on one line, and a goal
+	// that was authored with a line break in it would otherwise carry it.
+	s = strings.Join(strings.Fields(s), " ")
+	if utf8.RuneCountInString(s) <= mostOfADescription {
+		return s
+	}
+
+	cut := string([]rune(s)[:mostOfADescription])
+	// `.`, `!` and `?` are ASCII, so a byte index of one of them is a rune
+	// boundary and slicing just after it is safe.
+	if at := strings.LastIndexAny(cut, ".!?"); at >= 0 {
+		if whole := cut[:at+1]; utf8.RuneCountInString(whole) >= leastOfADescription {
+			return whole
+		}
+	}
+	if at := strings.LastIndex(cut, " "); at > 0 {
+		return strings.TrimRight(cut[:at], " ,;:—-") + "…"
+	}
+	return cut + "…"
+}
+
+const (
+	// What a result renders before it stops. Google has never published a
+	// number and measures pixels rather than characters; 160 is the figure
+	// every tool that checks this uses, and being a little under is free.
+	mostOfADescription = 160
+
+	// Below this a sentence is a stub — "Run the machines." — and the words
+	// that follow it are worth more than the full stop. Then it is cut on a
+	// word instead.
+	leastOfADescription = 60
+)
+
 // write sends a page. The cache is short on purpose: these are built from a
 // catalogue that is republished rather than edited, and a correction should be
 // out the same day rather than at the end of the week.
@@ -71,10 +138,25 @@ func write(w http.ResponseWriter, r *http.Request, t *template.Template, data an
 	}
 }
 
-// The head's tags, which are the same on every page and are why this file
-// exists. `og:type` is `website` for a thing and `article` for a lesson, so it
-// is the one the page decides; everything else is the frame.
-const headTags = `<link rel="canonical" href="{{.Canonical}}">
+/*
+The head's tags, which are the same on every page and are why this file exists.
+
+	`og:type` is `website` for a thing and `article` for a lesson, so it is the
+	one the page decides; everything else is the frame.
+
+	THE DESCRIPTION IS HERE NOW, AND IT WAS IN THREE TEMPLATES. Each wrote its
+	own `<meta name="description">` from its own field — the course from
+	`.Course.Summary`, the track from `.Track.Goal`, the lesson from a summary it
+	had already cut — while `og:description` and `twitter:description` beside them
+	came from `.Description`. So two of the three pages described themselves one
+	way to a search engine and another way to everything else, and the list pages,
+	which set no field at all, described themselves to neither. One source now,
+	shortened once, in `headOf`.
+*/
+const headTags = `{{- if .Description}}
+<meta name="description" content="{{.Description}}">
+{{- end}}
+<link rel="canonical" href="{{.Canonical}}">
 {{- range .Alternates}}
 <link rel="alternate" hreflang="{{.HrefLang}}" href="{{.Href}}">
 {{- end}}

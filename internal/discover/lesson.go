@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/codeschool-ing/schooling/internal/platform/web"
 )
@@ -71,15 +72,13 @@ func (h *Handler) lesson(w http.ResponseWriter, r *http.Request, code string) {
 	path := "/course/" + slug + "/lesson/" + strconv.Itoa(at)
 	here := languageAt(code)
 
-	summary := summarise(lesson.Sections)
 	data := lessonPage{
-		head:     headOf(origin, path, here, lesson.Title, summary),
+		head:     headOf(origin, path, here, lesson.Title, summarise(lesson.Sections)),
 		Lesson:   *lesson,
 		Course:   course.Name,
 		CourseAt: origin + languages[here].at + "/course/" + slug,
 		Words:    words[code],
 		OpenAt:   origin + "/#/course/" + slug + "/lesson/" + strconv.Itoa(at),
-		Summary:  summary,
 	}
 	if name, found := h.school(r.Context()); found {
 		data.School = name
@@ -93,42 +92,55 @@ type lessonPage struct {
 	Course   string
 	CourseAt string
 	Lesson   Lesson
-	Summary  string
 	Words    map[string]string
 	OpenAt   string
 }
 
 /*
-The description, which is the lesson's own first sentences.
+The description, which is the lesson's own opening words.
 
 	A `<meta name="description">` written by a program is usually the first
 	hundred characters of whatever it found, and reads like it. This takes the
 	first paragraph the lesson actually opens with — which an author wrote to be
-	read first — and stops at a sentence rather than mid-word.
+	read first.
 
-	160 characters because that is roughly what a result shows; being cut by the
-	search engine instead is the same text with an ellipsis nobody chose.
+	IT NO LONGER DOES THE CUTTING. `headOf` shortens every page's description,
+	which is where the cut belongs: this used to be the only page that trimmed to
+	a length, and the course and track pages went out whole and were cut by the
+	search engine instead. Choosing the paragraph is this function's job; how long
+	a description may be is the frame's.
+
+	A heading is skipped because it is a title rather than a sentence, and a very
+	short paragraph because a lesson that opens with "Let us begin." has said
+	nothing a result should show.
 */
 func summarise(sections []Section) string {
+	first := ""
 	for _, s := range sections {
 		for _, p := range s.Prose {
-			if p.Heading != "" || len(p.Text) < 40 {
+			if p.Heading != "" || utf8.RuneCountInString(p.Text) < 40 {
 				continue
 			}
-			if len(p.Text) <= 160 {
-				return p.Text
+			if first == "" {
+				first = p.Text
 			}
-			cut := p.Text[:160]
-			if at := strings.LastIndexAny(cut, ".!?"); at > 60 {
-				return cut[:at+1]
+			/* A PARAGRAPH THAT ENDS IN A COLON IS INTRODUCING SOMETHING THIS
+			   PAGE DOES NOT HAVE. `prose.Extract` drops code blocks and tables
+			   deliberately, so "…and lesson 3 already showed you both:" arrives
+			   here as a promise with nothing after it — which in a result reads
+			   like a page that was cut off. Three lessons in the catalogue open
+			   that way; the paragraph after is what they are about.
+
+			   It is a preference and not a filter: `first` keeps the colon one,
+			   so a lesson whose only paragraph ends that way still describes
+			   itself rather than saying nothing. */
+			if strings.HasSuffix(strings.TrimSpace(p.Text), ":") {
+				continue
 			}
-			if at := strings.LastIndex(cut, " "); at > 0 {
-				return cut[:at] + "…"
-			}
-			return cut
+			return p.Text
 		}
 	}
-	return ""
+	return first
 }
 
 var lessonTemplate = template.Must(template.New("lesson").Parse(`<!DOCTYPE html>
@@ -137,9 +149,6 @@ var lessonTemplate = template.Must(template.New("lesson").Parse(`<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Lesson.Title}} — {{.Course}}</title>
-{{- if .Summary}}
-<meta name="description" content="{{.Summary}}">
-{{- end}}
 ` + headTags + `
 <meta property="og:type" content="article">
 {{- if .School}}
