@@ -278,3 +278,35 @@ func (r *recorder) Write(b []byte) (int, error) {
 	r.wrote = true
 	return r.ResponseWriter.Write(b)
 }
+
+// SchemeOf is how a request arrived, which is how whoever made it will arrive
+// again — the scheme of a link this process writes, or of a canonical it
+// declares about itself.
+//
+// It moved here from the console when the school's public pages needed the same
+// answer. A second copy would have been two chances to disagree about what a
+// proxy said, in the two places that write absolute addresses.
+//
+// IT IS NOT HARD-CODED TO `https`, and the first version of this was. In
+// production it would have been right and nowhere else: the local stack is
+// `docker compose` over plain http, and a link that insisted on TLS would be a
+// feature that works only where nobody develops it.
+//
+// `X-Forwarded-Proto` FIRST BECAUSE THE SERVER IS BEHIND SOMETHING. Cloud Run
+// terminates TLS and hands this process a plain request, so `r.TLS` is nil on
+// every production request there is — reading it alone would get this exactly
+// backwards.
+func SchemeOf(r *http.Request) string {
+	if said := r.Header.Get("X-Forwarded-Proto"); said != "" {
+		if i := strings.IndexByte(said, ','); i >= 0 {
+			said = said[:i] // a chain of proxies; the first is the client's
+		}
+		if s := strings.TrimSpace(said); s == "http" || s == "https" {
+			return s
+		}
+	}
+	if r.TLS != nil {
+		return "https"
+	}
+	return "http"
+}

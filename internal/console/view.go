@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/google/uuid"
 
@@ -186,7 +185,7 @@ func (h *ViewHandler) start(w http.ResponseWriter, r *http.Request) {
 	   browser has to make the request itself. The token is in the URL for exactly
 	   one hop and is spent on arrival — see `identity.RedeemViewing`. */
 	web.JSON(w, http.StatusOK, map[string]any{
-		"link":    schemeOf(r) + "://" + host + "/view?t=" + url.QueryEscape(token),
+		"link":    web.SchemeOf(r) + "://" + host + "/view?t=" + url.QueryEscape(token),
 		"school":  school.Name,
 		"host":    host,
 		"student": student.String(),
@@ -208,31 +207,4 @@ func label(name, email string) string {
 		return "<" + email + ">"
 	}
 	return name + " <" + email + ">"
-}
-
-// schemeOf is how the operator reached the console, which is how they will reach
-// the school.
-//
-// IT IS NOT HARD-CODED TO `https`, and the first version of this was. In
-// production it would have been right and nowhere else: the local stack is
-// `docker compose` over plain http, and a link that insisted on TLS would be a
-// feature that works only where nobody develops it.
-//
-// `X-Forwarded-Proto` FIRST BECAUSE THE SERVER IS BEHIND SOMETHING. Cloud Run
-// terminates TLS and hands this process a plain request, so `r.TLS` is nil on
-// every production request there is — reading it alone would get this exactly
-// backwards.
-func schemeOf(r *http.Request) string {
-	if said := r.Header.Get("X-Forwarded-Proto"); said != "" {
-		if i := strings.IndexByte(said, ','); i >= 0 {
-			said = said[:i] // a chain of proxies; the first is the client's
-		}
-		if s := strings.TrimSpace(said); s == "http" || s == "https" {
-			return s
-		}
-	}
-	if r.TLS != nil {
-		return "https"
-	}
-	return "http"
 }
