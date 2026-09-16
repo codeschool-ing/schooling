@@ -43,9 +43,9 @@ Layer 4 delivers to a **program** rather than a machine — that is what a port 
 its two common forms, promises that everything arrives and arrives in order.
 
 Layers 5 and 6 are where the model is at its weakest, and it is more honest to say so than to
-invent examples. In a running stack, the jobs are real but they are not separate boxes: the
+invent examples. In a running stack, the jobs are real but they are not separate boxes. The
 encryption that layer 6 describes is done by TLS, which a working engineer would sooner call part
-of transport or part of the application depending on the argument, and the session that layer 5
+of transport or part of the application depending on the argument. And the session that layer 5
 describes is usually something the application arranged for itself with a cookie.
 
 Layer 7 is the protocol your program actually speaks, and it is the only layer that knows what any
