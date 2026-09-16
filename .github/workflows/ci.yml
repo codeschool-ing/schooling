@@ -102,7 +102,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|bundle|bundle-test|figure-fit|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|bundle|bundle-test|figure-fit|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -625,6 +625,17 @@ jobs:
           # before the screen appeared. A unit test could not see it: the defect
           # is in how often a correct function is called.
           node tools/fetch-once/fetch-once.mjs
+
+          # AND THAT THE SWITCH THAT DROPS THAT STORE IS NOT UNDONE BY WHAT RUNS
+          # AFTER IT. The store holds one language and `forLanguage` moves it;
+          # the function that FILLS the store did not, so filling it for English
+          # and then opening a course emptied it again — and nothing asked for
+          # it back, because the language on record already matched the screen.
+          # `linux-terminal` reported 13 sections where it has 228, and the
+          # dashboard kept drawing the words from before the switch. It is the
+          # neighbour of the defect above and the opposite failure: that one
+          # fetched too often, this one never again.
+          node tools/lang-test/lang-test.mjs
 
           # AND WHETHER THE INTERFACE CAN REACH THE SECOND FACTOR AT ALL. Every
           # part of it has a Go test against a real Postgres and every one of

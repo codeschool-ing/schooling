@@ -327,6 +327,35 @@ $prose$
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
 
+/* ---------- AND THE SAME SECTION IN A SECOND LANGUAGE ----------
+
+   THIS FIXTURE SPOKE ONE LANGUAGE, WHICH IS WHY A LANGUAGE DEFECT COULD NOT BE
+   CAUGHT IN IT. Every browser suite switched languages and every one of them
+   watched the same English words stay on screen, correctly — there was nothing
+   else for the server to send. So a store that kept the language the student
+   had just left looked exactly like a fixture with no translation in it, and
+   the difference is the whole of what `lang-test` is about.
+
+   `Structure` COALESCEs the asked-for title over the English one, section by
+   section, so one translated row is enough to tell a screen that moved from one
+   that did not. It is the section the resume card points at, which is the
+   screen a student is looking at when they change languages.
+
+   THE BODY IS SHORT ON PURPOSE. The English row above is the union of every
+   construct the content writes, because `lessonProseRenders` asserts each one
+   arrives as an element; nothing asserts that in Portuguese, and a second copy
+   of that list would be a second thing to keep in step for no claim at all.
+   What is checked here is that the WORDS MOVE. */
+INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
+SELECT id, :'wf', :'les', :'sec', 'pt', 'Os dois papéis',
+$prose$As palavras **cliente** e **servidor** nomeiam um momento, não uma máquina.
+
+Quem pergunta é o cliente. Quem responde é o servidor. O papel pertence à
+*troca*, e **nunca à *máquina* em que ela roda**.
+$prose$
+FROM tenants WHERE slug = :'slug'
+ON CONFLICT DO NOTHING;
+
 /* ---------- an exam to sit ----------
 
    One question of every type the interface can render, because the exam screen

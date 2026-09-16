@@ -537,6 +537,33 @@ export async function loadLessonStructure() {
   const locale = wanted();
   const answer = await get(`/api/v1/lessons?lang=${enc(locale)}`).catch(() => null);
   if (!answer) return false;
+
+  /* THE STORE'S LANGUAGE MOVES HERE, one line before the structure it belongs
+     to is written, AND IT USED TO MOVE IN `loadCourseContent` INSTEAD.
+
+     `forLanguage` empties the store — that is how a language change reaches the
+     lessons — and it was reached only by opening a course. So the two halves of
+     one switch were not ordered against each other:
+
+       switch to English    this function fetches and calls `putStructure`,
+                            and the store's language is still Portuguese
+       open any course      `loadCourseContent` calls `forLanguage('en')`,
+                            which throws the English structure away
+
+     Nothing put it back. `structureLocale` already said `en`, so
+     `languageChanged()` was false and no redraw ever asked again, and every
+     course whose prose was not in the store fell to the placeholder rule — ONE
+     SECTION PER LESSON. `linux-terminal` reported 13 sections instead of 228,
+     with the track's total short by exactly the difference, until the tab was
+     reloaded.
+
+     Adopting the language at the moment the structure lands closes it: the
+     `forLanguage` in `loadCourseContent` is then a no-op, because the store is
+     already in the language being asked for. That call stays as the fallback
+     for the case this line cannot cover — the offline bundle, where there is no
+     server to answer and the store's language is adopted by the first course
+     opened. */
+  forLanguage(locale);
   structureLocale = locale;
 
   /* The store is keyed by the lesson's ID, because that is what `courseLessons`
@@ -791,7 +818,14 @@ export async function loadCourseContent(courseId) {
      `forLanguage` is what keeps the guard honest, and it was written for this
      and never called: the store holds ONE language at a time, so moving empties
      it and the next line misses. Without it, a course read in Portuguese would
-     be served from the store to a reader who had switched to English. */
+     be served from the store to a reader who had switched to English.
+
+     IT IS THE FALLBACK AND NO LONGER THE PLACE THE LANGUAGE MOVES.
+     `loadLessonStructure` adopts it as the structure lands, which is what stops
+     this line throwing that structure away; see the long note there. What is
+     left for it is the case with no server behind it — the offline bundle,
+     where the structure never arrives and the first course opened is the only
+     thing that can say which language the store is holding. */
   forLanguage(locale);
   if (courseLoaded(courseId)) return true;
 
