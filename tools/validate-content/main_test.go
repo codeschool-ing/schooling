@@ -157,3 +157,37 @@ func TestAFenceIsNotACrossReference(t *testing.T) {
 		t.Errorf("the only number here is inside a fence; got %v", got)
 	}
 }
+
+// A NARRATOR SAYS THE NUMBER, and nothing was reading the scripts at all.
+func TestASpokenReferenceIsCheckedToo(t *testing.T) {
+	s := twoLessons()
+	s.Courses[0].Loaded[0].Sections[0] = catalog.Section{
+		ID: "se-v", Kind: catalog.KindVideo,
+		Videos: []catalog.Video{{Script: "Read it the way section four taught you."}},
+	}
+	if got := checkSectionReferences("code", s); len(got) != 1 {
+		t.Errorf("lesson 1 has three sections, so a spoken `section four` is unreachable; got %v", got)
+	}
+
+	s.Courses[0].Loaded[0].Sections[0].Videos[0].Script = "Read it the way section three taught you."
+	if got := checkSectionReferences("code", s); len(got) != 0 {
+		t.Errorf("`section three` is the last section of lesson 1; got %v", got)
+	}
+}
+
+// AND THE LONGER WORD WINS, which is the closing `\b` doing it rather than the
+// order of the alternation. Without the boundary `seven` matches inside
+// `seventeen` and a reference that is fine reads as broken — the Python sketch
+// of this check had no boundary and reported three of its four findings against
+// the word `seven` inside a longer one.
+func TestSeventeenIsNotSeven(t *testing.T) {
+	if got := spellOut("section seventeen"); got != "section 17" {
+		t.Errorf("spellOut(%q) = %q, want %q", "section seventeen", got, "section 17")
+	}
+	if got := spellOut("seção dezessete"); got != "seção 17" {
+		t.Errorf("spellOut(%q) = %q, want %q", "seção dezessete", got, "seção 17")
+	}
+	if got := spellOut("nineteen and ninety"); got != "19 and ninety" {
+		t.Errorf("twenty is the ceiling, so `ninety` stays a word; got %q", got)
+	}
+}

@@ -253,8 +253,24 @@ func checkSectionReferences(school string, s *catalog.School) []error {
 
 		for i, lesson := range course.Loaded {
 			here := i + 1
+
+			// THE SPOKEN SCRIPTS COUNT TOO, and they write the number as a word
+			// because an avatar cannot say "07". A script that said "section
+			// forty" would be exactly the same defect with none of the same
+			// spelling, and nothing was reading them.
+			type passage struct{ where, locale, body string }
+			var passages []passage
 			for _, t := range lesson.Text {
-				body := withoutFences(t.Body)
+				passages = append(passages, passage{t.SectionID, t.Locale, withoutFences(t.Body)})
+			}
+			for _, sec := range lesson.Sections {
+				for _, v := range sec.Videos {
+					passages = append(passages, passage{sec.ID, "script", spellOut(v.Script)})
+				}
+			}
+
+			for _, t := range passages {
+				body := t.body
 				for _, m := range ref.FindAllStringSubmatchIndex(body, -1) {
 					named := here
 					if m[4] >= 0 { // ...of lesson N
@@ -276,7 +292,7 @@ func checkSectionReferences(school string, s *catalog.School) []error {
 							"%s: %s/%s/%s (%s): %q points at section %d of lesson %d, which has %d "+
 								"sections — the tabs are numbered within a lesson and no screen "+
 								"shows a course-wide number, so the reader cannot find it",
-							school, course.ID, lesson.ID, t.SectionID, t.Locale,
+							school, course.ID, lesson.ID, t.where, t.locale,
 							firstChars(body[m[0]:m[1]]), n, named, limit))
 					}
 				}
@@ -285,6 +301,59 @@ func checkSectionReferences(school string, s *catalog.School) []error {
 	}
 	return problems
 }
+
+// A script's spoken numbers, written back as digits so that one rule reads both
+// halves of a lesson.
+//
+// A narrator says "section seventeen", not "section 17", and a check that only
+// knew digits would have read every script as clean.
+//
+// THE CLOSING `\b` IS WHAT STOPS `seven` EATING `seventeen`, and it is worth
+// naming because the obvious guess is wrong. The throwaway version of this in
+// Python had no trailing boundary and reported four spoken references, three of
+// which were the word `seven` inside a longer one. Ordering the alternation
+// longest-first also fixes it, and was what I reached for first — but with the
+// boundary in place the order makes no difference at all, which
+// `TestSeventeenIsNotSeven` is here to keep true:
+//
+//	\b(?:seven|seventeen)\b   -> "seventeen"
+//	\b(?:seven|seventeen)     -> "seven"
+func spellOut(script string) string {
+	return spoken.ReplaceAllStringFunc(script, func(w string) string {
+		if n, ok := spokenNumbers[strings.ToLower(w)]; ok {
+			return strconv.Itoa(n)
+		}
+		return w
+	})
+}
+
+// Twenty is as far as this goes on purpose: the longest lesson in the catalogue
+// has twenty-one sections, and a narrator saying a compound number ("section
+// twenty-two") is naming something that does not exist in any lesson, which the
+// digits either side of it will already have said.
+var spokenNumbers = map[string]int{
+	"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+	"eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+	"fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18,
+	"nineteen": 19, "twenty": 20,
+	"um": 1, "dois": 2, "três": 3, "quatro": 4, "cinco": 5, "seis": 6, "sete": 7,
+	"oito": 8, "nove": 9, "dez": 10, "onze": 11, "doze": 12, "treze": 13,
+	"catorze": 14, "quatorze": 14, "quinze": 15, "dezesseis": 16, "dezessete": 17,
+	"dezoito": 18, "dezenove": 19, "vinte": 20,
+}
+
+var spoken = func() *regexp.Regexp {
+	words := make([]string, 0, len(spokenNumbers))
+	for w := range spokenNumbers {
+		words = append(words, w)
+	}
+	// Sorted so the pattern is the same string on every run: a map's order is
+	// not, and a checker whose regexp differs between two runs is one whose
+	// failures cannot be reproduced. The order does not affect what it matches
+	// — see the note above — only that it is stable.
+	sort.Strings(words)
+	return regexp.MustCompile(`(?i)\b(?:` + strings.Join(words, "|") + `)\b`)
+}()
 
 // The body with its fenced blocks taken out. A transcript may say anything;
 // only the prose around it is this file's business.
