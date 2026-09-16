@@ -336,9 +336,30 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 	}()
 
 	term := vt.NewSafeEmulator(cols, rows)
-	// read-only afterwards; this unblocks the reply pump below
-	defer func() { _ = term.Close() }()
 
+	// THE EMULATOR IS NOT CLOSED, AND THAT IS THE LESSER OF TWO THINGS.
+	//
+	// It used to be, on a `defer`, to unblock the reply pump below — and doing
+	// that is a data race inside the library. `SafeEmulator` guards `Write`,
+	// `Resize` and the rest with a mutex and deliberately does NOT guard `Read`,
+	// because `Read` blocks; `Emulator.Read` and `Emulator.Close` then both
+	// touch the same `closed` field with nothing between them. Closing while the
+	// pump sits inside that Read is exactly the pair, and `-race` says so:
+	//
+	//	Write at 0x…958 by goroutine 18:      vt.(*Emulator).Close()
+	//	Previous read by goroutine 19:        vt.(*Emulator).Read()
+	//
+	// Nothing had ever run this function under `-race`: the CLI is not built
+	// with it and no test reached the pseudo-terminal half. It took the test
+	// this repository added last, and it failed on `main` rather than on the
+	// branch, because the branch's own run was the one that got lucky.
+	//
+	// There is no way to unblock that Read from outside except the Close that
+	// races with it, so the pump is left where it is — blocked, holding one
+	// goroutine, until the process ends. That costs a goroutine per capture in
+	// a program that captures once and exits, and it buys a `go test -race`
+	// that means what it says.
+	//
 	// THE PROGRAM ASKS THE TERMINAL QUESTIONS AND HAS TO GET ANSWERS. vim opens
 	// by querying device attributes; an emulator composes the reply and writes
 	// it to an io.Pipe, which BLOCKS until somebody reads it — while holding the
@@ -368,10 +389,29 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 	// Typing, when the screen wanted is not the one the program opens on. Each
 	// batch settles before the next, because a program that is still redrawing
 	// has not finished reading either.
+	//
+	// THE CLOCK IS PUT FORWARD AT THE KEYSTROKE, and without that one line none
+	// of this did anything at all. `settle` waits for the program to be quiet
+	// for `quiet` — and a program that has been sitting still through the
+	// warmup is ALREADY quieter than that, so it returned on its first
+	// comparison, before the keystroke had crossed the line discipline. The
+	// screen was then read exactly as it had been before anything was typed.
+	//
+	// IT FAILED SILENTLY, WHICH IS WHAT MADE IT EXPENSIVE. `-send G` produced
+	// the opening screen and reported success; the ruler read `1,1` and the
+	// caption beside it said the cursor had moved. The conclusion drawn from it
+	// in this repository was that a pseudo-terminal could not carry vim's
+	// visual mode — a fact about this tool, mistaken for a fact about
+	// terminals, and taken as a reason not to capture twenty more screens.
+	//
+	// Moving the clock makes the wait mean what its name says: at least `quiet`
+	// after the key was sent, and longer if the program is still drawing when
+	// that runs out.
 	for i, k := range keys {
 		if _, err := master.Write([]byte(k)); err != nil {
 			return nil, fmt.Errorf("typing -send %d: %w", i+1, err)
 		}
+		lastWrite.Store(time.Now().UnixNano())
 		if err := settle(&lastWrite, quiet); err != nil {
 			return nil, fmt.Errorf("after -send %d: %w", i+1, err)
 		}
@@ -386,6 +426,10 @@ func capture(argv []string, cols, rows int, warmup, quiet time.Duration,
 		if _, err := master.Write([]byte(repaint)); err != nil {
 			return nil, fmt.Errorf("asking for a repaint: %w", err)
 		}
+		// The same clock, for the same reason as the loop above: without it
+		// the wait below can end before the redraw this key asked for has
+		// started, which is the interleaved frame it exists to prevent.
+		lastWrite.Store(time.Now().UnixNano())
 	}
 	if err := settle(&lastWrite, quiet); err != nil {
 		return nil, err

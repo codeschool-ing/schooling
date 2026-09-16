@@ -7,16 +7,26 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/charmbracelet/x/ansi"
 	"github.com/charmbracelet/x/vt"
 )
 
-// What is tested here is the half that has no pseudo-terminal in it. The other
-// half — a program started, warmed up, asked to repaint and read while it is
-// still running — needs a real `htop` and four seconds, and its failures are
-// visible in the figure rather than subtle. This is the arithmetic, which is
-// where the figure went wrong twice.
+// Most of what is tested here is the half that has no pseudo-terminal in it:
+// the arithmetic, which is where the figure went wrong twice.
+//
+// IT USED TO SAY THAT THE OTHER HALF NEEDED NO TEST, because "its failures are
+// visible in the figure rather than subtle". That was wrong in the one way that
+// costs the most. `-send` did nothing at all — the wait after a keystroke could
+// end before the program had read it — and what came out was not a broken
+// picture but a PERFECTLY GOOD ONE of the wrong screen: the file vim opens on,
+// under a caption saying the cursor had moved. Nothing in a figure says which
+// keys were pressed to reach it.
+//
+// So there is one pty test now, below, and it uses `cat` rather than an editor:
+// the claim is that a keystroke arrives before the screen is read, and the
+// smallest program that can answer it is the one that echoes.
 
 func row(cells ...cell) []cell { return cells }
 
@@ -295,5 +305,49 @@ func TestARunWithAGroundIsDrawnWithAFixedFill(t *testing.T) {
 	plain := draw(grid{text("ab", "", "")}, 2, 1, "a screen", nil)
 	if !strings.Contains(plain, `fill="var(--paper)"`) {
 		t.Errorf("text on the panel is the panel's foreground, which follows the theme; got %s", plain)
+	}
+}
+
+// A KEYSTROKE HAS TO ARRIVE BEFORE THE SCREEN IS READ, and for a while none
+// did.
+//
+// `settle` waits for the program to stop writing for `quiet`. A program that
+// has sat still through the warmup is already quieter than that, so the wait
+// after a `-send` returned on its first comparison — before the bytes had
+// crossed the line discipline, let alone been drawn. Every capture came back as
+// the screen the program opened on.
+//
+// It is checked with `cat`, which answers a keystroke the way a terminal makes
+// it answer: the line discipline echoes what was typed, and then the program
+// prints it. Two lines, and a screen with neither is a screen read too early.
+func TestAKeystrokeArrivesBeforeTheScreenIsRead(t *testing.T) {
+	screen, err := capture(
+		[]string{"cat"}, 40, 6,
+		300*time.Millisecond, // warmup: long enough for `cat` to be waiting
+		200*time.Millisecond, // quiet
+		[]string{"hello\r"},  // -send
+		"",                   // -repaint: `cat` has no redraw to ask for
+		"\x04",               // -quit: end of file
+	)
+	if err != nil {
+		t.Fatalf("capturing `cat`: %v", err)
+	}
+
+	var lines []string
+	for _, r := range screen {
+		var b strings.Builder
+		for _, c := range r {
+			b.WriteString(c.text)
+		}
+		if s := strings.TrimRight(b.String(), " "); s != "" {
+			lines = append(lines, s)
+		}
+	}
+
+	if len(lines) != 2 || lines[0] != "hello" || lines[1] != "hello" {
+		t.Errorf("`cat` sent `hello` echoes it and then prints it, so the screen is two "+
+			"identical lines; it reads %q. An empty screen is the failure this test exists "+
+			"for: the keystroke was written and the screen was read without waiting for "+
+			"anything to happen to it.", lines)
 	}
 }
