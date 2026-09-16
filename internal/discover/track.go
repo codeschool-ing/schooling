@@ -108,6 +108,8 @@ func (h *Handler) track(w http.ResponseWriter, r *http.Request, code string) {
 		data.Course = append(data.Course, row)
 	}
 
+	data.Card = at + languages[here].at + "/card/track/" + track.Slug
+
 	write(w, r, trackTemplate, data)
 }
 

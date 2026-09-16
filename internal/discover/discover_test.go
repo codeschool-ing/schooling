@@ -1,9 +1,11 @@
 package discover
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"encoding/xml"
+	"image/png"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -75,7 +77,7 @@ func aHandler(courses ...Course) *Handler {
 			}
 			return nil, ErrNoTrack
 		},
-		func(context.Context) (string, bool) { return "codeschool", true },
+		func(context.Context) (string, string, bool) { return "codeschool", "#14a06a", true },
 		func(context.Context) string { return "2026-09-16T00:00:00Z" },
 	)
 }
@@ -488,7 +490,7 @@ func TestTheRoutesCanAllBeRegistered(t *testing.T) {
 	for _, p := range Patterns {
 		registered.HandleFunc(p, func(http.ResponseWriter, *http.Request) {})
 	}
-	if len(Patterns) != 2+len(languages)*5 {
+	if len(Patterns) != 2+len(languages)*6 {
 		t.Errorf("%d patterns for %d languages", len(Patterns), len(languages))
 	}
 }
@@ -556,10 +558,101 @@ func TestTheSitemapCarriesThePublishedDateOrNone(t *testing.T) {
 		func(context.Context, string, int, string) (*Lesson, error) { return nil, ErrNoLesson },
 		func(context.Context, string) ([]Track, error) { return nil, nil },
 		func(context.Context, string, string) (*Track, error) { return nil, ErrNoTrack },
-		func(context.Context) (string, bool) { return "codeschool", true },
+		func(context.Context) (string, string, bool) { return "codeschool", "#14a06a", true },
 		func(context.Context) string { return "" },
 	)
 	if body := get(t, quiet, "code.example", "/sitemap.xml", nil).Body.String(); strings.Contains(body, "<lastmod>") {
 		t.Error("a school with no published date should have no lastmod, not an invented one")
+	}
+}
+
+/*
+THE INK MOVES, NOT THE SCHOOL'S COLOUR.
+
+	A school picks its own accent and some of them are pale. White on a pale
+	yellow is a card nobody can read, and the yellow is the school's choice —
+	so the text goes dark instead. Checked by reading the pixel a letter is
+	drawn on rather than by trusting the arithmetic.
+*/
+func TestTheCardsTextIsReadableOnWhateverColourASchoolPicked(t *testing.T) {
+	for _, c := range []struct {
+		accent string
+		dark   bool // is the ink expected to be the dark one
+	}{
+		{"#14a06a", false}, // the seeded green
+		{"#0a0e14", false}, // nearly black
+		{"#ffe680", true},  // a pale yellow
+		{"#ffffff", true},  // white
+		{"not a colour", false},
+	} {
+		body, err := drawCard("Linux", "codeschool", c.accent)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := png.Decode(bytes.NewReader(body))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// the darkest pixel on the card is the ink, whatever the ground is
+		darkest := 1.0
+		b := got.Bounds()
+		for y := b.Min.Y; y < b.Max.Y; y += 2 {
+			for x := b.Min.X; x < b.Max.X; x += 2 {
+				r, g, bl, _ := got.At(x, y).RGBA()
+				if v := float64(r+g+bl) / (3 * 65535); v < darkest {
+					darkest = v
+				}
+			}
+		}
+		if c.dark && darkest > 0.2 {
+			t.Errorf("%s: nothing dark was drawn, so the text is pale on pale", c.accent)
+		}
+		if !c.dark && darkest > 0.9 {
+			t.Errorf("%s: nothing was drawn at all", c.accent)
+		}
+	}
+}
+
+// A card is 1200x630 whatever the name is, because that is the size every
+// platform crops to and a card of another shape is cropped by somebody else.
+func TestACardIsAlwaysTheSameSize(t *testing.T) {
+	for _, name := range []string{
+		"Go",
+		"Git and Teamwork: Versioning, Review and Process",
+		strings.Repeat("a very long name indeed ", 40),
+	} {
+		body, err := drawCard(name, "codeschool", "#14a06a")
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := png.DecodeConfig(bytes.NewReader(body))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got.Width != 1200 || got.Height != 630 {
+			t.Errorf("%dx%d for %q", got.Width, got.Height, name[:min(20, len(name))])
+		}
+	}
+}
+
+// The page points at a card that exists, in its own language, and says the size
+// every platform wants told rather than discovered.
+func TestACoursePageCarriesItsCard(t *testing.T) {
+	body := get(t, aHandler(), "code.example", "/pt/course/linux-terminal", nil).Body.String()
+	for _, want := range []string{
+		`<meta property="og:image" content="http://code.example/pt/card/course/linux-terminal">`,
+		`<meta property="og:image:width" content="1200">`,
+		`<meta name="twitter:card" content="summary_large_image">`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("the page does not carry %s", want)
+		}
+	}
+	if code := get(t, aHandler(), "code.example", "/pt/card/course/linux-terminal", nil).Code; code != http.StatusOK {
+		t.Errorf("the card the page points at answers %d", code)
+	}
+	if code := get(t, aHandler(), "code.example", "/card/nonsense/linux-terminal", nil).Code; code != http.StatusNotFound {
+		t.Errorf("a card of a kind that does not exist answered %d", code)
 	}
 }
