@@ -16,7 +16,6 @@ func aCourse() Course {
 		Level: "beginner", Summary: "The system that runs the internet.",
 		Prerequisites: "No programming required.",
 		Syllabus:      []string{"Distributions", "Permissions"},
-		Topics:        []string{"ls, cd, pwd"},
 		Free:          true,
 		Lessons: []Lesson{{At: 1, Title: "The terminal, and why", Sections: []Section{{
 			Title: "Where you are",
@@ -287,6 +286,26 @@ func TestThePortuguesePageIsInPortuguese(t *testing.T) {
 	}
 	if !strings.Contains(body, "O que você vai aprender") {
 		t.Error("the Portuguese page is in English")
+	}
+}
+
+/*
+A LESSON THE COURSE DECLARES AND NOBODY HAS WRITTEN IS NAMED AND NOT LINKED.
+
+	120 of the 122 courses are exactly that: a catalogue entry with its contents
+	planned and no lesson authored. The contents are worth reading and there is
+	nowhere to go from them.
+*/
+func TestAnUnwrittenLessonIsListedWithoutALink(t *testing.T) {
+	planned := aCourse()
+	planned.Lessons = append(planned.Lessons, Lesson{At: 0, Title: "Permissions, and the three of them"})
+
+	body := get(t, aHandler(planned), "code.example", "/course/linux-terminal", nil).Body.String()
+	if !strings.Contains(body, "Permissions, and the three of them") {
+		t.Error("a planned lesson should still be on the page")
+	}
+	if strings.Contains(body, "/lesson/0") {
+		t.Error("a lesson nobody has written was linked")
 	}
 }
 

@@ -1072,14 +1072,8 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			out := &discover.Course{
 				Slug: slug, Name: view.Name, Summary: view.Summary,
 				Prerequisites: view.Prerequisites, Level: view.Level, Hours: view.Hours,
-				Syllabus: view.Syllabus,
-			}
-			for _, tp := range view.Topics {
-				out.Topics = append(out.Topics, tp.Title)
-			}
-			out.Free = view.Free
-			for at, l := range view.Lessons {
-				out.Lessons = append(out.Lessons, discover.Lesson{At: at + 1, Title: l.Title})
+				Syllabus: view.Syllabus, Free: view.Free,
+				Lessons: lessonsOf(view),
 			}
 			return out, nil
 		},
@@ -1122,7 +1116,16 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			if err != nil {
 				return nil, err
 			}
+			// THE TITLE IS THE TOPIC'S, not `read.Title`. Both name the same
+			// lesson and only the topic is translated — which is why the
+			// interface titles a lesson from `topic.title` too. Reading the
+			// other one puts an English heading over Portuguese prose.
 			out := &discover.Lesson{At: at, Title: read.Title}
+			for _, l := range lessonsOf(view) {
+				if l.At == at && l.Title != "" {
+					out.Title = l.Title
+				}
+			}
 			for _, s := range read.Sections {
 				out.Sections = append(out.Sections, discover.Section{
 					Title: s.Title, Prose: discover.Extract(s.Body),
@@ -2376,6 +2379,34 @@ func schoolOf(ctx context.Context) (uuid.UUID, string, bool) {
 // schoolID is schoolOf with the parts `catalog` does not need. Two shapes
 // rather than one that covers both: a consumer defines what it uses, and a
 // package that took a slug it never reads would have to be given one.
+/*
+A course's lessons for the public pages, which are its TOPICS.
+
+	A course declares `topics`: a list carrying the ID OF A LESSON and a title,
+	and it is the list the interface draws a course from — `ui/app/catalog.js`
+	maps `topic.title` onto a lesson directly. The title is translated there and
+	only there: `catalog_lessons.title` is the same English string with no
+	locale beside it, so a page that reads it shows an English heading to a
+	Portuguese reader.
+
+	`At` is the lesson's position among the ones that are WRITTEN, because that
+	is what addresses it, and it is zero for a topic nobody has written yet —
+	120 of the 122 courses are exactly that, a catalogue entry whose contents
+	are planned. Matched by id rather than by position, so the two lists may
+	diverge without this quietly titling one lesson with another's name.
+*/
+func lessonsOf(view *catalog.CourseView) []discover.Lesson {
+	written := map[string]int{}
+	for i, l := range view.Lessons {
+		written[l.ID] = i + 1
+	}
+	out := make([]discover.Lesson, 0, len(view.Topics))
+	for _, tp := range view.Topics {
+		out = append(out, discover.Lesson{At: written[tp.ID], Title: tp.Title})
+	}
+	return out
+}
+
 func schoolID(ctx context.Context) (uuid.UUID, bool) {
 	s, ok := tenant.FromContext(ctx)
 	return s.ID, ok
