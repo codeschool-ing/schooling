@@ -113,4 +113,4 @@ change and your change does not disappear with the package.
 
 For one setting rather than a whole file, `systemctl edit report.timer` writes a
 drop-in under `/etc/systemd/system/report.timer.d/` — and it opens the editor of
-lesson 12's lesson 12 section 13 to do it.
+lesson 12 section 13 to do it.

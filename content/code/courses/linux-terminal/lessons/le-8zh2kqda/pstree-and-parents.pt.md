@@ -70,8 +70,7 @@ ana@vm:~/work$ ps -eo pid,ppid,stat,comm | grep -E 'PID|sleep' | grep -v grep
 O `bash` de dentro sumiu. O `sleep` não, e o pai dele agora é o `1`.
 
 **O filho não é morto. Ele é adotado.** O kernel readota um órfão para o processo um — que é o único
-processo garantidamente ainda ali, e que recolhe códigos de saída continuamente (aula 5, aula 5 seção
-08).
+processo garantidamente ainda ali, e que recolhe códigos de saída continuamente (aula 5 seção 08).
 
 Duas consequências que você vai encontrar:
 

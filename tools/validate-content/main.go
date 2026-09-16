@@ -267,6 +267,50 @@ func checkNarrationRate(school string, s *catalog.School) []error {
 }
 
 /*
+A REFERENCE THAT NAMES ITS LESSON TWICE.
+
+	"the payoff of lesson 3's lesson 3 section 02 being a standard" is not a
+	sentence anybody wrote. It is what a mechanical renumbering produced: the
+	pass that turned course-wide numbers into within-lesson ones matched the
+	adjacent form `lesson 3 section 36` and rewrote it in place, and missed the
+	possessive `lesson 3's section 36` — so the general rule saw a bare
+	`section 36`, found it pointed at a lesson other than this one, and named
+	that lesson a second time.
+
+	Three of them shipped. Two more were caught during the pass itself, by
+	reading the diff rather than by anything automatic, which is why this is
+	here: the shape is unmistakable and nothing else produces it.
+
+	IT IS NARROW ON PURPOSE. `Lesson 6 section 14's convention, and lesson 6
+	section 08's table` names the same lesson twice and is correct — two
+	references, two sections, one sentence. Only the immediately repeated
+	prefix, with nothing between it but a possessive or a comma, is the defect.
+*/
+func checkDoubledLesson(school string, s *catalog.School) []error {
+	var problems []error
+	doubled := regexp.MustCompile(
+		`(?i)\b(lesson|aula)\s+(\d+)('s)?,?\s+(?:lesson|aula)\s+(\d+)\s+(?:sections?|se[çc][ãa]o)`)
+
+	for _, course := range s.Courses {
+		for _, lesson := range course.Loaded {
+			for _, t := range lesson.Text {
+				for _, m := range doubled.FindAllStringSubmatch(withoutFences(t.Body), -1) {
+					if m[2] != m[4] {
+						continue // two different lessons is two references
+					}
+					problems = append(problems, fmt.Errorf(
+						"%s: %s/%s/%s (%s): %q names its lesson twice — a renumbering pass "+
+							"that could not see past the possessive prefixed a reference that "+
+							"already had one",
+						school, course.ID, lesson.ID, t.SectionID, t.Locale, firstChars(m[0])))
+				}
+			}
+		}
+	}
+	return problems
+}
+
+/*
 A SECTION REFERENCE THAT NAMES A NUMBER NO SCREEN SHOWS.
 
 	The interface numbers sections WITHIN a lesson — `ui/app/screens/lesson.js`
@@ -818,6 +862,10 @@ func check(root string) (problems []error, schools int, err error) {
 		// See `checkNarrationRate`: ten of these said a whole minute less than
 		// their script will take, on the screen a student reads before starting.
 		problems = append(problems, checkNarrationRate(entry.Name(), school)...)
+
+		// AND THAT A RENUMBERING DID NOT LEAVE ITS OWN MARK. See
+		// `checkDoubledLesson`: three sentences named their lesson twice.
+		problems = append(problems, checkDoubledLesson(entry.Name(), school)...)
 
 		// AND THE CHARACTERS THEMSELVES, which is a different question from the
 		// family: a block can name the right font and still be drawn with a

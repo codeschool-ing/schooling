@@ -305,3 +305,35 @@ func TestASpokenCompoundOutOfRangeIsReported(t *testing.T) {
 		t.Errorf("lesson 1 has three sections; got %v", got)
 	}
 }
+
+// THE MARK A RENUMBERING LEFT. Three of these shipped, and the shape is one
+// nobody writes: the prefix repeated with only a possessive between it and the
+// reference that already had one.
+func TestALessonNamedTwiceIsReported(t *testing.T) {
+	say := func(body string) []error {
+		s := twoLessons()
+		s.Courses[0].Loaded[0].Text = []catalog.Prose{{SectionID: "se-a", Locale: "en", Body: body}}
+		return checkDoubledLesson("code", s)
+	}
+
+	for _, body := range []string{
+		"That is the payoff of lesson 2's lesson 2 section 01 being a standard.",
+		"It opens the editor of lesson 2 lesson 2 section 01 to do it.",
+		"Recolhe códigos de saída continuamente (aula 2, aula 2 seção 01).",
+	} {
+		if got := say(body); len(got) != 1 {
+			t.Errorf("%q names its lesson twice; got %v", body, got)
+		}
+	}
+
+	// AND THE ONE IT MUST NOT TOUCH: the same lesson named twice, correctly,
+	// because there are two references and two sections.
+	for _, body := range []string{
+		"Lesson 2 section 01's convention, and lesson 2 section 02's table.",
+		"Covered in lesson 1 section 03 and in lesson 2 section 01.",
+	} {
+		if got := say(body); len(got) != 0 {
+			t.Errorf("%q is two references, not a doubled prefix; got %v", body, got)
+		}
+	}
+}
