@@ -307,6 +307,9 @@ func TestAKeystrokeArrivesBeforeTheScreenIsRead(t *testing.T) {
 			"identical lines; it reads %q. An empty screen is the failure this test exists "+
 			"for: the keystroke was written and the screen was read without waiting for "+
 			"anything to happen to it.", lines)
+	}
+}
+
 // TEXT ON A GROUND CANNOT BORROW A COLOUR THAT MOVES.
 //
 // `--paper` is light in the dark theme and dark in the light one; a captured
