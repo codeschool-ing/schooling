@@ -140,9 +140,11 @@ func TestTheEightAreTokensAndTheRestKeepTheirOwnValue(t *testing.T) {
 	if got := token(ansi.BasicColor(10)); got != "green" {
 		t.Errorf("the bright half names the same eight; got %q", got)
 	}
-	// A program that reached past the eight chose that colour itself.
+	// A program that reached past the eight chose that colour itself, and this
+	// function reports it as it is. Whether it survives to the figure is
+	// `fill`'s question and is asked in `readable_test.go`.
 	if got := token(color.RGBA{R: 0x8a, G: 0x6a, B: 0x0a, A: 0xff}); got != "#8a6a0a" {
-		t.Errorf("a direct colour is not ours to reinterpret; got %q", got)
+		t.Errorf("a direct colour is reported as itself here; got %q", got)
 	}
 }
 
@@ -263,48 +265,6 @@ func TestASavedScreenDrawsAgainUnchanged(t *testing.T) {
 	if first == "" || first != again {
 		t.Errorf("the screen has to survive the round trip byte for byte, or the two languages "+
 			"carry different numbers under the same figure:\n first: %s\n again: %s", first, again)
-	}
-}
-
-// TEXT ON A GROUND CANNOT BORROW A COLOUR THAT MOVES.
-//
-// `--paper` is light in the dark theme and dark in the light one; a captured
-// background is a fixed value in both. A ground that reads against both a light
-// and a dark foreground does not exist, so text left on `var(--paper)` over a
-// background is unreadable in one theme by construction — 2.85:1 in the light
-// theme over vim's visual selection, which is how this was found.
-func TestTextOnAGroundDoesNotTakeAColourThatMoves(t *testing.T) {
-	for _, c := range []struct{ ground, want string }{
-		{"#f5f5f5", "var(--term-black)"}, // emacs' menu bar
-		{"#6c6c6c", "var(--term-white)"}, // vim's visual selection
-		{"#bfbfbf", "var(--term-black)"}, // emacs' mode line
-		{"#000000", "var(--term-white)"},
-		{"#ffffff", "var(--term-black)"},
-		// A token's value lives in `terminal.css` and not here — see `over`.
-		{"var(--term-green-bg)", "var(--paper)"},
-		{"", "var(--paper)"},
-		{"#zzz", "var(--paper)"}, // not a colour; not this function's to guess
-	} {
-		if got := over(c.ground); got != c.want {
-			t.Errorf("text on %q should be %s, got %s", c.ground, c.want, got)
-		}
-	}
-}
-
-// And the whole of it, through `draw`: a run with a background and no colour of
-// its own comes out with a fixed fill rather than the one that moves.
-func TestARunWithAGroundIsDrawnWithAFixedFill(t *testing.T) {
-	svg := draw(grid{text("ab", "", "#6c6c6c")}, 2, 1, "a screen", nil)
-	if !strings.Contains(svg, `fill="var(--term-white)"`) {
-		t.Errorf("a run on a dark ground is drawn in white and stays white in both themes; got %s", svg)
-	}
-	if strings.Contains(svg, `<tspan fill="var(--paper)"`) {
-		t.Error("`--paper` moves between themes and the ground under it does not")
-	}
-	// And a run with no ground at all is still the terminal's own foreground.
-	plain := draw(grid{text("ab", "", "")}, 2, 1, "a screen", nil)
-	if !strings.Contains(plain, `fill="var(--paper)"`) {
-		t.Errorf("text on the panel is the panel's foreground, which follows the theme; got %s", plain)
 	}
 }
 
