@@ -1,0 +1,1118 @@
+[
+  {
+    "id": "ex-petf51yt",
+    "version": 1,
+    "section": "create-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is CREATE TABLE IF NOT EXISTS usually the wrong choice in a migration?",
+    "hint": "Ask what it checks and what it does not.",
+    "choices": [
+      {
+        "text": "It checks the name, not the shape",
+        "correct": true,
+        "why": "A table with a different shape passes silently and your code runs against it."
+      },
+      {
+        "text": "It is refused inside a transaction block",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "It is slower than a plain CREATE TABLE",
+        "correct": false,
+        "why": "The catalogue lookup is nothing."
+      },
+      {
+        "text": "It refuses to create a table that has an index",
+        "correct": false,
+        "why": "Indexes are separate objects and irrelevant here."
+      }
+    ]
+  },
+  {
+    "id": "ex-k261mvwg",
+    "version": 1,
+    "section": "create-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "CREATE TABLE Invoices works and so does CREATE TABLE \"Invoices\". What is the difference?",
+    "hint": "One of them is folded and one is not.",
+    "choices": [
+      {
+        "text": "They are the same statement written two ways",
+        "correct": false,
+        "why": "They produce two tables with different names."
+      },
+      {
+        "text": "The quoted one is refused by the parser",
+        "correct": false,
+        "why": "It is perfectly legal, which is the problem."
+      },
+      {
+        "text": "Two tables; one needs quotes forever",
+        "correct": true,
+        "why": "Unquoted identifiers are folded to lower case; quoted ones are not."
+      },
+      {
+        "text": "The quoted one creates a temporary table instead",
+        "correct": false,
+        "why": "Quoting says nothing about lifetime."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pfcbh1d",
+    "version": 1,
+    "section": "create-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A foreign key is declared on invoices.customer_id. What does that NOT give you?",
+    "hint": "Two different things are being confused.",
+    "choices": [
+      {
+        "text": "A refusal when the customer is deleted, under RESTRICT",
+        "correct": false,
+        "why": "Also what it gives you."
+      },
+      {
+        "text": "A fast way to search by that column",
+        "correct": true,
+        "why": "A reference is a rule about what may be stored, not a way to search."
+      },
+      {
+        "text": "A record of which table the column points at",
+        "correct": false,
+        "why": "It is in the catalogue and in \\d output."
+      },
+      {
+        "text": "A refusal when the customer does not exist",
+        "correct": false,
+        "why": "That is exactly what it gives you."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xgfntpd",
+    "version": 1,
+    "section": "create-table",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The convention that lets you tell a date from a moment without looking: a date column ends in ___ and a timestamp column ends in ___.",
+    "hint": "Two short words, each two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "_on",
+          "on"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "_at",
+          "at"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-564g2593",
+    "version": 1,
+    "section": "numbers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does money go?",
+    "hint": "One of these stores an approximation of what you wrote.",
+    "choices": [
+      {
+        "text": "numeric",
+        "correct": true,
+        "why": "It stores digits, so a thousand additions are exact."
+      },
+      {
+        "text": "bigint, in cents",
+        "correct": false,
+        "why": "Defensible in some systems, and it moves the scale into every piece of code that reads it."
+      },
+      {
+        "text": "double precision",
+        "correct": false,
+        "why": "Binary approximation; the total drifts by cents over a thousand rows."
+      },
+      {
+        "text": "real",
+        "correct": false,
+        "why": "The same approximation with less room."
+      }
+    ]
+  },
+  {
+    "id": "ex-17kgywpd",
+    "version": 1,
+    "section": "numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SELECT 7 / 2 returns 3. Why?",
+    "hint": "Look at the types of both operands.",
+    "choices": [
+      {
+        "text": "SQL performs no decimal division on literals",
+        "correct": false,
+        "why": "It has, as soon as one operand is decimal."
+      },
+      {
+        "text": "Integer over integer is integer; the rest is dropped",
+        "correct": true,
+        "why": "Not rounded — discarded. 7 / 2.0 gives 3.5."
+      },
+      {
+        "text": "The column type decides, and there is no column here",
+        "correct": false,
+        "why": "The literals decide, and both are integers."
+      },
+      {
+        "text": "The result is rounded to the nearest integer",
+        "correct": false,
+        "why": "Rounding would give 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygkxkrmc",
+    "version": 1,
+    "section": "numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table of events inserts and deletes a million rows a day and holds a few million. Which key type?",
+    "hint": "Ids are not reused when a row is deleted.",
+    "choices": [
+      {
+        "text": "smallint, because the table stays small",
+        "correct": false,
+        "why": "It exhausts in under a minute."
+      },
+      {
+        "text": "integer, because the table stays a few million",
+        "correct": false,
+        "why": "That is the reasoning that produces the outage."
+      },
+      {
+        "text": "uuid, because the range is unbounded",
+        "correct": false,
+        "why": "It is, and it costs 16 bytes in every index for a problem bigint solves."
+      },
+      {
+        "text": "bigint, because integer runs out in about six years",
+        "correct": true,
+        "why": "The size of the table is not what exhausts the range; the insert count is."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xptyzrs",
+    "version": 1,
+    "section": "numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ids in a table read 1, 2, 5, 6. What does that mean?",
+    "hint": "Where does a number go when a transaction rolls back?",
+    "choices": [
+      {
+        "text": "Nothing is wrong; rollbacks kept their numbers",
+        "correct": true,
+        "why": "Any code assuming contiguous ids was wrong the day it was written."
+      },
+      {
+        "text": "The table was loaded from a file with gaps in it",
+        "correct": false,
+        "why": "Also possible, and not what a gap means."
+      },
+      {
+        "text": "The sequence is corrupt and wants resetting",
+        "correct": false,
+        "why": "It is behaving as designed."
+      },
+      {
+        "text": "Two rows were deleted and should be restored",
+        "correct": false,
+        "why": "Possibly, and the gap cannot tell you."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4c2vw44",
+    "version": 1,
+    "section": "numbers",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The clause that makes the database own an id column and refuse one you supply: GENERATED ___ AS IDENTITY.",
+    "hint": "One word, and its opposite is BY DEFAULT.",
+    "blanks": [
+      {
+        "accept": [
+          "always"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s04d8wcy",
+    "version": 1,
+    "section": "text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In PostgreSQL, what does varchar(50) buy you over text?",
+    "hint": "Measure the two and you find one difference.",
+    "choices": [
+      {
+        "text": "Less disk space per row",
+        "correct": false,
+        "why": "Identical."
+      },
+      {
+        "text": "A length rule, and nothing else",
+        "correct": true,
+        "why": "No speed, no space. The storage is identical."
+      },
+      {
+        "text": "An index that fits in memory more often",
+        "correct": false,
+        "why": "The index holds the same bytes either way."
+      },
+      {
+        "text": "Faster comparisons on short strings",
+        "correct": false,
+        "why": "They are the same operation on the same representation."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehr9kw3p",
+    "version": 1,
+    "section": "text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A UNIQUE email column stores ana@example.com. An insert of Ana@Example.com arrives. What happens?",
+    "hint": "Equality on text is equality of bytes.",
+    "choices": [
+      {
+        "text": "It is accepted and silently lowercased",
+        "correct": false,
+        "why": "Nothing rewrites your value."
+      },
+      {
+        "text": "It is refused as a duplicate",
+        "correct": false,
+        "why": "Only if the column folds case, which text does not."
+      },
+      {
+        "text": "Accepted — two rows for one person",
+        "correct": true,
+        "why": "Which is why the fold belongs at write time or in citext."
+      },
+      {
+        "text": "It is refused because of the capitals in it",
+        "correct": false,
+        "why": "Capitals are ordinary characters."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcmpydjh",
+    "version": 1,
+    "section": "text",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Why is char(n) a type to avoid?",
+    "hint": "Ask what happens to a value shorter than n.",
+    "choices": [
+      {
+        "text": "It refuses non-ASCII characters",
+        "correct": false,
+        "why": "It accepts them like any text type."
+      },
+      {
+        "text": "It has a smaller maximum length than varchar",
+        "correct": false,
+        "why": "The maximum is not the issue."
+      },
+      {
+        "text": "An index on it is refused",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "It pads, so lengths and comparisons disagree",
+        "correct": true,
+        "why": "'PT' in a char(5) is 'PT   ' and the spaces follow it around."
+      }
+    ]
+  },
+  {
+    "id": "ex-axvg9vh0",
+    "version": 1,
+    "section": "time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does timestamptz store?",
+    "hint": "The name is misleading about one detail.",
+    "choices": [
+      {
+        "text": "An absolute moment, converted on read",
+        "correct": true,
+        "why": "It does not store a zone; it stores the instant."
+      },
+      {
+        "text": "The session's timezone at the time of insert",
+        "correct": false,
+        "why": "The session decides how it is read, not what is stored."
+      },
+      {
+        "text": "A moment and the timezone it was written in",
+        "correct": false,
+        "why": "The zone is not kept, which surprises people."
+      },
+      {
+        "text": "Digits, like timestamp, with a label attached",
+        "correct": false,
+        "why": "That would be timestamp with extra text."
+      }
+    ]
+  },
+  {
+    "id": "ex-29z8agw1",
+    "version": 1,
+    "section": "time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is 01:30 on the morning clocks go back a problem for a timestamp column?",
+    "hint": "Count how many times that reading occurs.",
+    "choices": [
+      {
+        "text": "It happens twice and the digits cannot say which",
+        "correct": true,
+        "why": "Two different moments, one value, and sorting them is wrong."
+      },
+      {
+        "text": "That reading does not occur that morning",
+        "correct": false,
+        "why": "That is the spring transition, not the autumn one."
+      },
+      {
+        "text": "It is stored as UTC and shifts by an hour",
+        "correct": false,
+        "why": "That is what timestamptz does, and it is the fix."
+      },
+      {
+        "text": "The database refuses to store it",
+        "correct": false,
+        "why": "It stores it happily, which is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2bjr8q5",
+    "version": 1,
+    "section": "time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside one transaction, now() is called three times a second apart. What comes back?",
+    "hint": "It is named for the transaction, not the clock.",
+    "choices": [
+      {
+        "text": "Three values a second apart",
+        "correct": false,
+        "why": "That is clock_timestamp()."
+      },
+      {
+        "text": "The session's start time",
+        "correct": false,
+        "why": "The transaction's, not the session's."
+      },
+      {
+        "text": "An error, since now() is callable once",
+        "correct": false,
+        "why": "It may be called freely."
+      },
+      {
+        "text": "The same value: the transaction's start",
+        "correct": true,
+        "why": "Which makes every row of one insert coherent."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bt896mt",
+    "version": 1,
+    "section": "time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belongs in a date column rather than a timestamptz?",
+    "hint": "Ask whether the thing has a moment at all.",
+    "choices": [
+      {
+        "text": "A date of birth",
+        "correct": true,
+        "why": "The same day everywhere; storing it as a moment moves it in another zone."
+      },
+      {
+        "text": "When a parcel was delivered",
+        "correct": false,
+        "why": "An instant somebody rounded, and the rounding decides which day's report it lands in."
+      },
+      {
+        "text": "When an invoice was paid",
+        "correct": false,
+        "why": "An instant."
+      },
+      {
+        "text": "When a session expires",
+        "correct": false,
+        "why": "An instant, and one that must be compared precisely."
+      }
+    ]
+  },
+  {
+    "id": "ex-6y2vmn84",
+    "version": 1,
+    "section": "time",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The one rule this section carries, in one word: use ___ rather than timestamp.",
+    "hint": "One word, and it is a type name.",
+    "blanks": [
+      {
+        "accept": [
+          "timestamptz"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t7w1hhfc",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "is_paid boolean against paid_at timestamptz. Why prefer the second?",
+    "hint": "Count the questions each can answer.",
+    "choices": [
+      {
+        "text": "It takes less space on disk per row",
+        "correct": false,
+        "why": "It takes more."
+      },
+      {
+        "text": "A boolean allows three states",
+        "correct": false,
+        "why": "Only if you forget NOT NULL, which is a separate fix."
+      },
+      {
+        "text": "Whether and when, in one column",
+        "correct": true,
+        "why": "And WHERE paid_at IS NOT NULL reads perfectly well."
+      },
+      {
+        "text": "A boolean index is of little use",
+        "correct": false,
+        "why": "They can, and that is not the argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4ygjbaz",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When has a jsonb column been used to avoid designing a table?",
+    "hint": "Four symptoms, and they are all about asking questions of it.",
+    "choices": [
+      {
+        "text": "It holds more than about ten distinct keys",
+        "correct": false,
+        "why": "Size is not the criterion."
+      },
+      {
+        "text": "It came from another system's API",
+        "correct": false,
+        "why": "That is the case where jsonb is right."
+      },
+      {
+        "text": "You index a key inside it, or count rows",
+        "correct": true,
+        "why": "Those are the questions a table answers and a blob does not."
+      },
+      {
+        "text": "Two rows have different keys",
+        "correct": false,
+        "why": "Expected of a payload, which is what it is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-j69ktke6",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A status list needs a display name in two languages. What does that tell you?",
+    "hint": "Something wants to be stored next to the value.",
+    "choices": [
+      {
+        "text": "The column should be jsonb",
+        "correct": false,
+        "why": "That stores the labels somewhere nothing can join to."
+      },
+      {
+        "text": "A CHECK constraint should list both languages",
+        "correct": false,
+        "why": "A CHECK tests a value; it cannot carry one."
+      },
+      {
+        "text": "It was data, so it is a table",
+        "correct": true,
+        "why": "The moment a value needs properties of its own, an ENUM or a CHECK is the wrong home."
+      },
+      {
+        "text": "The ENUM should be given more values",
+        "correct": false,
+        "why": "More values is not what is being asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-s249z48s",
+    "version": 1,
+    "section": "defaults-and-generated",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column has DEFAULT 'draft'. An insert supplies NULL for it explicitly. What is stored?",
+    "hint": "A default fills a gap, and a value was supplied.",
+    "choices": [
+      {
+        "text": "An empty string is stored instead",
+        "correct": false,
+        "why": "Nothing converts NULL to anything."
+      },
+      {
+        "text": "NULL, or a refusal under NOT NULL",
+        "correct": true,
+        "why": "The default applies only when the column is left out."
+      },
+      {
+        "text": "'draft', because that is the default",
+        "correct": false,
+        "why": "Supplying NULL is supplying a value."
+      },
+      {
+        "text": "An error about conflicting values",
+        "correct": false,
+        "why": "No conflict is detected."
+      }
+    ]
+  },
+  {
+    "id": "ex-gswreyc7",
+    "version": 1,
+    "section": "defaults-and-generated",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a generated column the one safe place in this course to store a derived value?",
+    "hint": "Recall lesson 2's fourth gate.",
+    "choices": [
+      {
+        "text": "An index on one is refused, so nothing depends",
+        "correct": false,
+        "why": "They can be indexed."
+      },
+      {
+        "text": "They are recomputed each time a row is read",
+        "correct": false,
+        "why": "STORED ones are computed on write."
+      },
+      {
+        "text": "Generated columns are faster to read",
+        "correct": false,
+        "why": "Speed is not what makes a copy safe."
+      },
+      {
+        "text": "The database maintains it, and only it",
+        "correct": true,
+        "why": "No trigger to write, no code path to remember, no way to drift."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pqgsz3v",
+    "version": 1,
+    "section": "defaults-and-generated",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can updated_at not be a generated column?",
+    "hint": "Look at the rule about the expression.",
+    "choices": [
+      {
+        "text": "Generated columns may not be timestamps",
+        "correct": false,
+        "why": "They may be any type."
+      },
+      {
+        "text": "It would conflict with the created_at column",
+        "correct": false,
+        "why": "The two are independent columns."
+      },
+      {
+        "text": "now() is not deterministic; the expression must be",
+        "correct": true,
+        "why": "Which leaves a trigger as the only correct mechanism."
+      },
+      {
+        "text": "It would be too slow on a large table",
+        "correct": false,
+        "why": "Speed is not the obstacle."
+      }
+    ]
+  },
+  {
+    "id": "ex-s99sx2hc",
+    "version": 1,
+    "section": "defaults-and-generated",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One line separates the two: ___ sets a value once and the row owns it afterwards; GENERATED computes it forever and the row never owns it.",
+    "hint": "One word, and it is a SQL keyword.",
+    "blanks": [
+      {
+        "accept": [
+          "default"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2epca2js",
+    "version": 1,
+    "section": "naming-things",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table has two CHECK constraints on one column and you did not name them. What is the risk?",
+    "hint": "Look at the second generated name.",
+    "choices": [
+      {
+        "text": "Two checks on a single column are refused",
+        "correct": false,
+        "why": "They are perfectly legal."
+      },
+      {
+        "text": "The second check goes unevaluated",
+        "correct": false,
+        "why": "Both are evaluated on every write."
+      },
+      {
+        "text": "The trailing number is positional and moves",
+        "correct": true,
+        "why": "The application's message is attached to a name that moved."
+      },
+      {
+        "text": "The names collide and one is dropped",
+        "correct": false,
+        "why": "They do not collide; that is what the number is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vccgejh",
+    "version": 1,
+    "section": "naming-things",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a named CHECK beat a generated one for the person who hits it?",
+    "hint": "The name is a message, one layer removed.",
+    "choices": [
+      {
+        "text": "Named constraints are checked faster",
+        "correct": false,
+        "why": "The check is identical."
+      },
+      {
+        "text": "A named one is disableable and a generated one is not",
+        "correct": false,
+        "why": "Neither can be disabled."
+      },
+      {
+        "text": "One name says what is wrong; the other says which",
+        "correct": true,
+        "why": "It is the error message the user's user eventually sees."
+      },
+      {
+        "text": "Generated names are not stable across PostgreSQL versions",
+        "correct": false,
+        "why": "A real problem, and it is the migration one rather than this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ev38bhk",
+    "version": 1,
+    "section": "naming-things",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "When does naming constraints stop being optional?",
+    "hint": "Three cases, and they all become true eventually.",
+    "choices": [
+      {
+        "text": "When migrations run on several databases",
+        "correct": true,
+        "why": "A generated name can differ between them, so the migration passes on one and fails on another."
+      },
+      {
+        "text": "When the schema is kept in version control",
+        "correct": false,
+        "why": "Every schema should be, named or not."
+      },
+      {
+        "text": "When the table has more than ten columns",
+        "correct": false,
+        "why": "Column count decides nothing."
+      },
+      {
+        "text": "When the table is larger than a million rows",
+        "correct": false,
+        "why": "Size decides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrz2bekh",
+    "version": 1,
+    "section": "alter-table",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each ALTER TABLE to how much work it is.",
+    "hint": "One touches only the catalogue, one reads every row, one writes every row.",
+    "pairs": [
+      {
+        "left": "RENAME COLUMN",
+        "right": "Catalogue only, instant at any size"
+      },
+      {
+        "left": "SET NOT NULL",
+        "right": "Reads every row, writes none"
+      },
+      {
+        "left": "ALTER COLUMN TYPE integer to bigint",
+        "right": "Writes every row, and needs the free disk for it"
+      }
+    ],
+    "right_distractors": [
+      "Runs in the background without a lock",
+      "Refused unless the table is empty"
+    ]
+  },
+  {
+    "id": "ex-sx5d0jwc",
+    "version": 1,
+    "section": "alter-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A one-second ALTER TABLE takes the site down. What happened?",
+    "hint": "It was not the ALTER that was slow.",
+    "choices": [
+      {
+        "text": "A trigger fired once per row of the table",
+        "correct": false,
+        "why": "ALTER TABLE fires no row triggers."
+      },
+      {
+        "text": "The rewrite ran out of disk",
+        "correct": false,
+        "why": "A real failure, and it would fail rather than block."
+      },
+      {
+        "text": "It queued behind a long SELECT, and so did the rest",
+        "correct": true,
+        "why": "A patient statement blocks every fast one that arrives after it."
+      },
+      {
+        "text": "The lock escalated to the whole database",
+        "correct": false,
+        "why": "Locks are per table."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rgrfdrz",
+    "version": 1,
+    "section": "alter-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does SET lock_timeout before an ALTER TABLE buy you?",
+    "hint": "Think about the outcome you want when the lock is busy.",
+    "choices": [
+      {
+        "text": "It lets the ALTER run without a lock",
+        "correct": false,
+        "why": "Nothing removes the lock."
+      },
+      {
+        "text": "It cancels whichever query is holding the lock",
+        "correct": false,
+        "why": "It cancels yours, not theirs."
+      },
+      {
+        "text": "It makes the ALTER run faster",
+        "correct": false,
+        "why": "The work is the same."
+      },
+      {
+        "text": "It gives up rather than blocking everything",
+        "correct": true,
+        "why": "And you try again when the long query has finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8fafzbg",
+    "version": 1,
+    "section": "alter-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "DROP TABLE invoices CASCADE. What does CASCADE do?",
+    "hint": "It is not what ON DELETE CASCADE does.",
+    "choices": [
+      {
+        "text": "Drops each of the tables in the schema",
+        "correct": false,
+        "why": "Only what depends on this one."
+      },
+      {
+        "text": "Deletes the rows in tables that reference it",
+        "correct": false,
+        "why": "That is ON DELETE CASCADE, and a different thing."
+      },
+      {
+        "text": "Refuses if any referencing table has rows",
+        "correct": false,
+        "why": "CASCADE is what stops it refusing."
+      },
+      {
+        "text": "Drops the constraints, leaves their data",
+        "correct": true,
+        "why": "The data survives, the rule does not, and nobody is told."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pek177e",
+    "version": 1,
+    "section": "changing-a-live-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does NOT VALID on a new constraint mean?",
+    "hint": "It splits one statement into two decisions.",
+    "choices": [
+      {
+        "text": "Apply it from now on; skip what is there",
+        "correct": true,
+        "why": "New rows are the ones you control; the old ones you fix at your own speed."
+      },
+      {
+        "text": "The constraint is checked but violations are logged",
+        "correct": false,
+        "why": "Nothing is logged; violations are refused."
+      },
+      {
+        "text": "The constraint lapses at the next restart",
+        "correct": false,
+        "why": "It is permanent."
+      },
+      {
+        "text": "The constraint is stored and left unenforced",
+        "correct": false,
+        "why": "It is enforced on every new row."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq2ajv4m",
+    "version": 1,
+    "section": "changing-a-live-table",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the four steps of making a column NOT NULL on a live table in order.",
+    "hint": "The last step is instant only because of what the ones before it proved.",
+    "items": [
+      "Add a CHECK … IS NOT NULL constraint, NOT VALID",
+      "Backfill the existing nulls in batches",
+      "VALIDATE the constraint, which scans without blocking writes",
+      "SET NOT NULL, which is now instant, and drop the helper constraint"
+    ],
+    "trap": "The common swap is validating before backfilling — validation of a table that still holds nulls fails, and you are back where you started with a wasted scan."
+  },
+  {
+    "id": "ex-tyrpvbt8",
+    "version": 1,
+    "section": "changing-a-live-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Renaming a column is instant and takes almost no lock. Why is it still a three-deploy change?",
+    "hint": "Two versions of the application run at once during a deploy.",
+    "choices": [
+      {
+        "text": "The old name stays reserved for a while after",
+        "correct": false,
+        "why": "Nothing reserves it."
+      },
+      {
+        "text": "Indexes on the column have to be rebuilt",
+        "correct": false,
+        "why": "They follow the rename."
+      },
+      {
+        "text": "The rename rewrites the table in the background",
+        "correct": false,
+        "why": "It does not; it is catalogue only."
+      },
+      {
+        "text": "Old code still running selects the old name",
+        "correct": true,
+        "why": "The statement is fast and the deploy is broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8zx77dy",
+    "version": 1,
+    "section": "changing-a-live-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "CREATE INDEX CONCURRENTLY failed halfway. What do you have to check?",
+    "hint": "It leaves something behind, and it is not obvious.",
+    "choices": [
+      {
+        "text": "Whether the constraint it supported got dropped",
+        "correct": false,
+        "why": "It supported none."
+      },
+      {
+        "text": "Whether the table was locked and is still locked",
+        "correct": false,
+        "why": "The lock is released when the statement ends."
+      },
+      {
+        "text": "Whether an invalid index was left behind",
+        "correct": true,
+        "why": "SELECT indexrelid::regclass FROM pg_index WHERE NOT indisvalid."
+      },
+      {
+        "text": "Whether rows were lost during the build",
+        "correct": false,
+        "why": "An index build never touches rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-23ch81jt",
+    "version": 1,
+    "section": "changing-a-live-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these cannot be undone?",
+    "hint": "Two of these are reversible and two are not.",
+    "choices": [
+      {
+        "text": "DROP COLUMN",
+        "correct": true,
+        "why": "The data is gone with it."
+      },
+      {
+        "text": "ADD COLUMN",
+        "correct": false,
+        "why": "Drop it."
+      },
+      {
+        "text": "RENAME COLUMN",
+        "correct": false,
+        "why": "Rename it back."
+      },
+      {
+        "text": "SET NOT NULL",
+        "correct": false,
+        "why": "Drop the constraint."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgbzcy8h",
+    "version": 1,
+    "section": "changing-a-live-table",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The pattern for a change no single step can make safely, in two words: ___ and ___.",
+    "hint": "Add the new thing first; remove the old thing last.",
+    "blanks": [
+      {
+        "accept": [
+          "expand"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "contract"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
