@@ -81,6 +81,7 @@ func aHandler(courses ...Course) *Handler {
 		},
 		func(context.Context) (string, string, bool) { return "codeschool", "#14a06a", true },
 		func(context.Context) string { return "2026-09-16T00:00:00Z" },
+		true,
 	)
 }
 
@@ -562,6 +563,7 @@ func TestTheSitemapCarriesThePublishedDateOrNone(t *testing.T) {
 		func(context.Context, string, string) (*Track, error) { return nil, ErrNoTrack },
 		func(context.Context) (string, string, bool) { return "codeschool", "#14a06a", true },
 		func(context.Context) string { return "" },
+		true,
 	)
 	if body := get(t, quiet, "code.example", "/sitemap.xml", nil).Body.String(); strings.Contains(body, "<lastmod>") {
 		t.Error("a school with no published date should have no lastmod, not an invented one")
@@ -873,5 +875,46 @@ func TestALessonThatOpensWithALeadInIsDescribedByWhatFollowsIt(t *testing.T) {
 	// The colon paragraph alone is still better than nothing.
 	if got := summarise([]Section{{Prose: []Prose{{Text: lead}}}}); got != lead {
 		t.Errorf("a lesson whose only paragraph is a lead-in described itself as %q", got)
+	}
+}
+
+/*
+A DEPLOYMENT THAT MAY NOT BE LISTED STILL LETS ITSELF BE CRAWLED.
+
+	This is the mistake the whole arrangement is built to avoid, and it is the
+	tempting one: `Disallow: /` reads like the strongest possible "stay away"
+	and is in fact the weakest. `robots.txt` answers whether a page may be
+	FETCHED; the header answers whether it may be LISTED — and a header nobody
+	is allowed to fetch is a header nobody reads, which leaves the pages
+	listable from anybody else's link, with no description, because the crawler
+	was never permitted to look.
+
+	So this asserts the absence of a line rather than its presence, which is
+	unusual enough to say why: somebody tidying this file later will reach for
+	`Disallow: /`, and this is the test that stops them.
+*/
+func TestALabIsNotListedAndIsStillCrawlable(t *testing.T) {
+	quiet := aHandler()
+	quiet.indexable = false
+
+	body := get(t, quiet, "code.example", "/robots.txt", nil).Body.String()
+
+	if strings.Contains(body, "Disallow: /\n") {
+		t.Errorf("robots.txt blocks the crawl, which hides the noindex header:\n%s", body)
+	}
+	if !strings.Contains(body, "Allow: /") {
+		t.Errorf("robots.txt does not allow the crawl that the header needs:\n%s", body)
+	}
+	if strings.Contains(body, "Sitemap:") {
+		t.Errorf("a deployment that may not be listed is offering a sitemap:\n%s", body)
+	}
+	if !strings.Contains(body, "X-Robots-Tag") {
+		t.Errorf("robots.txt does not say where the refusal actually lives:\n%s", body)
+	}
+
+	// And the one that may be listed still offers it.
+	loud := get(t, aHandler(), "code.example", "/robots.txt", nil).Body.String()
+	if !strings.Contains(loud, "Sitemap: http://code.example/sitemap.xml") {
+		t.Errorf("an indexable deployment stopped offering its sitemap:\n%s", loud)
 	}
 }

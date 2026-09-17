@@ -16,6 +16,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -158,6 +159,29 @@ type Config struct {
 	   to close, moved one step later. */
 	SupportEmail string
 
+	/* Indexable is whether a search engine may LIST this deployment's pages.
+
+	   IT EXISTS BECAUSE A LABORATORY IS NOT A REHEARSAL, IT IS A SECOND SITE.
+	   `discover` gives a school 335 addresses that are meant to be found, and it
+	   has no idea which host it is answering at — by design, since a school is a
+	   subdomain and every address is the request's. So a lab host serves exactly
+	   the same indexable catalogue the real one will, and the day the real domain
+	   arrives the same pages exist twice, with the lab already indexed. That is
+	   duplicate content; the redirect afterwards is slow and lossy; and none of
+	   it is visible until months later.
+
+	   NOT INDEXABLE UNLESS SOMEBODY SAYS SO, and the asymmetry is the argument.
+	   A real deployment left un-indexed is noticed in days and fixed by setting
+	   one variable; a lab left indexed is noticed in months and costs a
+	   migration. The cheap mistake is the one this default makes.
+
+	   IT IS ITS OWN VARIABLE AND NOT READ OFF `SCHOOLING_ENV`. A lab is
+	   configured as production in every other respect — real database, real
+	   payments, real mail — and that is what makes it a useful lab. Folding this
+	   into the environment would mean the only way to exercise production's
+	   behaviour is to be indexed. */
+	Indexable bool
+
 	Environment Environment
 }
 
@@ -240,6 +264,23 @@ func Load() (Config, error) {
 			"SCHOOLING_MAIL_HOOK_PASSWORD is %d characters — it is the only thing "+
 				"standing between the delivery hook and anybody who finds it, so it wants "+
 				"at least 32. Generate one rather than choosing one", n))
+	}
+
+	/* AN UNREADABLE VALUE IS A PROBLEM AND NOT A FALSE. `SCHOOLING_INDEXABLE=ture`
+	   would otherwise leave a real deployment silently invisible to every search
+	   engine, which is the one failure this setting has that nothing reports:
+	   there is no error, no log line and no screen — just no traffic, for as
+	   long as it takes somebody to wonder. Empty is the default and says
+	   nothing; anything present has to parse. */
+	if raw := strings.TrimSpace(os.Getenv("SCHOOLING_INDEXABLE")); raw != "" {
+		yes, err := strconv.ParseBool(raw)
+		if err != nil {
+			problems = append(problems, fmt.Errorf(
+				"SCHOOLING_INDEXABLE is %q — it has to be true or false, and being unset "+
+					"means false, so a value that cannot be read is a deployment nobody "+
+					"can find and nothing complains about", raw))
+		}
+		cfg.Indexable = yes
 	}
 
 	switch cfg.Environment {

@@ -258,6 +258,42 @@ func NoStore(next http.Handler) http.Handler {
 	})
 }
 
+/*
+NoIndex keeps a whole deployment out of every search engine's results.
+
+	IT IS A HEADER AND NOT A META TAG, and that is why it is here rather than in
+	four templates. A `<meta name="robots">` has to be added to each one and
+	remembered for the next — and it only reaches HTML, so the shared-link cards,
+	the sitemap and every other answer would be left claiming nothing. One
+	middleware, mounted once, covers every response this process writes,
+	including the page types nobody has written yet. Google reads the two the
+	same way.
+
+	IT DOES NOT DISALLOW CRAWLING, AND MUST NOT. `robots.txt` answers "may this
+	be fetched" and this answers "may this be listed" — a distinction
+	`discover.Disallow` already makes in its own comment. Blocking the crawl
+	would mean the crawler never READS this header, and a page it cannot fetch
+	can still be listed from a link somewhere else, with no description, because
+	it was never allowed to look. Refusing to be indexed requires being fetched.
+
+	`nofollow` travels with it because every link on these pages points back into
+	the same deployment, so the reason not to list this one is the reason not to
+	walk it.
+
+	A PAGE THAT ASKS TO BE INDEXED DOES NOT OVERRIDE THIS, and one does ask:
+	`ui/front/index.html` carries `<meta name="robots" content="index, follow">`
+	deliberately, because "a door nobody can find is a wall". Conflicting robots
+	directives are read at their most restrictive, so the refusal wins — which is
+	a claim about somebody else's crawler and therefore lives in a test,
+	`TestTheFrontDoorIsRefusedTooOnALab`, rather than only in this sentence.
+*/
+func NoIndex(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Robots-Tag", "noindex, nofollow")
+		next.ServeHTTP(w, r)
+	})
+}
+
 // recorder remembers the status so it can be logged after the fact.
 type recorder struct {
 	http.ResponseWriter

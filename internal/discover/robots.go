@@ -23,7 +23,7 @@ to be obeyed.
 	which is why it names the host the request arrived at, and no other.
 */
 func (h *Handler) robots(w http.ResponseWriter, r *http.Request) {
-	body := strings.Join([]string{
+	lines := []string{
 		"User-agent: *",
 		"Allow: /",
 		"",
@@ -34,9 +34,31 @@ func (h *Handler) robots(w http.ResponseWriter, r *http.Request) {
 		"# not ours to hand around.",
 		"Disallow: /view",
 		"",
-		"Sitemap: " + origin(r) + "/sitemap.xml",
-		"",
-	}, "\n")
+	}
+
+	/* A DEPLOYMENT THAT MAY NOT BE LISTED STILL SAYS `Allow: /`, AND THAT IS NOT
+	   A CONTRADICTION. `web.NoIndex` answers whether these pages may be listed,
+	   with a header on every response, and a header has to be FETCHED to be
+	   read. Disallowing the crawl here would hide the very answer — and a page
+	   that cannot be fetched can still be listed from somebody else's link, with
+	   no description, because the crawler was never allowed to look.
+
+	   What DOES go is the sitemap line. It is an invitation to read 335 pages,
+	   and inviting a crawler to pages this deployment has just told it not to
+	   list is asking for work nobody wants done. The comment is there because a
+	   person reading this file deserves to know why it is missing rather than
+	   suspect it was forgotten. */
+	if h.indexable {
+		lines = append(lines, "Sitemap: "+origin(r)+"/sitemap.xml", "")
+	} else {
+		lines = append(lines,
+			"# No sitemap: this deployment is not to be listed, and every answer",
+			"# it gives says so with `X-Robots-Tag: noindex`. Crawling is still",
+			"# allowed, because that header has to be fetched to be obeyed.",
+			"")
+	}
+
+	body := strings.Join(lines, "\n")
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	// Short, because it names the host and a school may be given another one.

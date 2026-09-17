@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"log/slog"
@@ -476,5 +477,70 @@ func TestEveryParameterCarriesItsArgument(t *testing.T) {
 				t.Errorf("falls back to a value it would refuse: %v", err)
 			}
 		})
+	}
+}
+
+/*
+THE REFUSAL IS THE PROCESS'S AND NOT ONE MUX'S.
+
+	A school, the console and the platform's own address are one deployment, and
+	"is this the real one" has one answer for all three. Mounting this per mux
+	would be three places for it to be different, and a lab whose console is
+	hidden and whose catalogue is indexed is the confusing half of both.
+
+	`/version` is the route under test because it is the one that answers with a
+	nil pool — what is being checked is the header, which is set before any
+	handler runs, so the cheapest route proves it for all of them.
+*/
+func TestALabRefusesToBeIndexedAndTheRealOneDoesNot(t *testing.T) {
+	ask := func(srv http.Handler) string {
+		rec := httptest.NewRecorder()
+		srv.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/version", nil))
+		return rec.Header().Get("X-Robots-Tag")
+	}
+
+	// config.Config{} is a deployment nobody has said anything about, which is
+	// exactly the case the default is for.
+	if got := ask(testRouter(t)); got != "noindex, nofollow" {
+		t.Errorf("a deployment nobody configured carries X-Robots-Tag %q, want a refusal", got)
+	}
+
+	indexed := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
+		config.Config{Indexable: true}, nil, nil)
+	if got := ask(indexed); got != "" {
+		t.Errorf("a deployment that asked to be found carries X-Robots-Tag %q", got)
+	}
+}
+
+/*
+AND THE ONE PAGE THAT ARGUES BACK.
+
+	`ui/front/index.html` carries `<meta name="robots" content="index, follow">`
+	on purpose — "a door nobody can find is a wall", and there is a test of its
+	own defending it. On a lab that page therefore says one thing in its head and
+	the header says the opposite.
+
+	It resolves correctly: conflicting robots directives are read at their most
+	restrictive, so the refusal wins. That is a claim about somebody else's
+	crawler, though, and the kind of claim that belongs in a test rather than in
+	a sentence — if it ever stopped being true, the front door would be the one
+	page of a lab that got indexed, and it is the page most likely to be linked.
+*/
+func TestTheFrontDoorIsRefusedTooOnALab(t *testing.T) {
+	srv := router(nil, slog.New(slog.NewTextHandler(io.Discard, nil)),
+		config.Config{PlatformDomain: "example.tld"}, nil, nil)
+
+	r := httptest.NewRequest(http.MethodGet, "/", nil)
+	r.Host = "example.tld"
+	rec := httptest.NewRecorder()
+	srv.ServeHTTP(rec, r)
+
+	if !bytes.Contains(rec.Body.Bytes(), []byte(`content="index, follow"`)) {
+		t.Fatal("the front door no longer asks to be indexed — this test is about " +
+			"the case where it does, so it is now testing nothing")
+	}
+	if got := rec.Header().Get("X-Robots-Tag"); got != "noindex, nofollow" {
+		t.Errorf("the front door of a lab carries X-Robots-Tag %q, and its own head "+
+			"asks to be indexed — nothing is refusing it", got)
 	}
 }
