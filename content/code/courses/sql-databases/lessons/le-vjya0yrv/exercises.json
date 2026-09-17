@@ -1,0 +1,1581 @@
+[
+  {
+    "id": "ex-qnfqzdmg",
+    "version": 1,
+    "section": "finding-the-slow-ones",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pg_stat_statements shows WHERE email = $1 rather than the address that was looked up. Why?",
+    "hint": "Ask what one row of that table stands for.",
+    "choices": [
+      {
+        "text": "The addresses are personal data, and the extension redacts them before storing",
+        "correct": false,
+        "why": "Nothing is redacted for privacy; the literal is gone for a different reason."
+      },
+      {
+        "text": "The application sent a bind parameter, so the server did not see the value",
+        "correct": false,
+        "why": "The server saw it; the statement was normalised afterwards so that lookups by any address share a row."
+      },
+      {
+        "text": "The tool counts by query, and four hundred addresses are one query",
+        "correct": true,
+        "why": "Which is what you want when the question is what the application is doing."
+      },
+      {
+        "text": "The tool records prepared statements, whose values travel separately from the text",
+        "correct": false,
+        "why": "It sees every statement, prepared or not, and normalises the literals out of each."
+      }
+    ]
+  },
+  {
+    "id": "ex-rznxsf09",
+    "version": 1,
+    "section": "finding-the-slow-ones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One query ran 30 times at 29.7 ms each; another ran once at 114.7 ms. Which cost the server more?",
+    "hint": "Multiply before you compare.",
+    "choices": [
+      {
+        "text": "The single one: it is the slowest per call, and the mean list ranks it first",
+        "correct": false,
+        "why": "Slowest per call is the mean list, and it answers a different question."
+      },
+      {
+        "text": "The thirty-times one: 890 ms in total against 115",
+        "correct": true,
+        "why": "Sort by total to find what the server is spending its time on."
+      },
+      {
+        "text": "Neither: both are under a second, which is below any sensible log threshold",
+        "correct": false,
+        "why": "The log threshold is for catching the occasional slow one; it says nothing about cost."
+      },
+      {
+        "text": "The single one, because a slow statement holds the fast ones waiting behind it",
+        "correct": false,
+        "why": "A read blocks no other read; the cost is the time itself, and it adds up."
+      }
+    ]
+  },
+  {
+    "id": "ex-52at2zaa",
+    "version": 1,
+    "section": "finding-the-slow-ones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query is fast a thousand times a day and took ten seconds once, for one customer. Which tool tells you which customer?",
+    "hint": "One of the two tools keeps the literals and the other throws them away.",
+    "choices": [
+      {
+        "text": "The log, which writes the statement with its literals when it crosses the threshold",
+        "correct": true,
+        "why": "log_min_duration_statement, and the ten-second run is in there with the customer's value."
+      },
+      {
+        "text": "pg_stat_statements, whose row for the query carries the slowest parameter",
+        "correct": false,
+        "why": "Its rows are normalised; the value is exactly what it does not keep."
+      },
+      {
+        "text": "EXPLAIN ANALYZE on the query with $1, since the plan names the value",
+        "correct": false,
+        "why": "A plan for a placeholder is a plan for nobody in particular; you need the value to run it with."
+      },
+      {
+        "text": "The mean in pg_stat_statements, which ten seconds pulls up enough to see",
+        "correct": false,
+        "why": "Ten seconds over a thousand fast runs moves the mean by ten milliseconds, and says nothing about who."
+      }
+    ]
+  },
+  {
+    "id": "ex-p97s5bee",
+    "version": 1,
+    "section": "finding-the-slow-ones",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The total-time list is topped by a 0.1 ms lookup run a million times; the mean list by a 2 s report run twice a day. Support is full of complaints about waiting. Which do you work first?",
+    "hint": "Ask which list a person's experience lives in.",
+    "choices": [
+      {
+        "text": "The lookup: it costs the server ten times more, and the server is the thing you are paid to run",
+        "correct": false,
+        "why": "True, and it is the list to work when the machine is busy; nobody is complaining about the machine."
+      },
+      {
+        "text": "Both at once, since the two lists disagree and neither can be trusted alone",
+        "correct": false,
+        "why": "They disagree more often than not; that is why there are two, and why you pick by the question."
+      },
+      {
+        "text": "Neither until the log confirms which of the two crossed the threshold",
+        "correct": false,
+        "why": "A 2 s report is already above any sensible threshold; the log adds the literals, not the decision."
+      },
+      {
+        "text": "The report: people are stuck on it, and the mean list is where a wait shows",
+        "correct": true,
+        "why": "Two lists, two questions; the complaints answer which question is being asked today."
+      }
+    ]
+  },
+  {
+    "id": "ex-7c4m9v81",
+    "version": 1,
+    "section": "finding-the-slow-ones",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pg_stat_statements has to be named in ___ before the server starts, or it records nothing.",
+    "hint": "A configuration setting, and it is the reason the extension cannot simply be created on a running server.",
+    "blanks": [
+      {
+        "accept": [
+          "shared_preload_libraries"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-06zb55mc",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does EXPLAIN, without ANALYZE, do with the query you give it?",
+    "hint": "One verb, and it is not \"run\".",
+    "choices": [
+      {
+        "text": "Plans it and prints the plan; nothing runs, and every number is a prediction",
+        "correct": true,
+        "why": "Every number in the output is a prediction, which is what makes ANALYZE necessary."
+      },
+      {
+        "text": "Runs it and prints the plan with timings beside each step",
+        "correct": false,
+        "why": "That is EXPLAIN ANALYZE; plain EXPLAIN executes nothing."
+      },
+      {
+        "text": "Runs it without returning rows, so that it is safe to measure",
+        "correct": false,
+        "why": "Rows are not returned under ANALYZE either, and plain EXPLAIN does not run the query at all."
+      },
+      {
+        "text": "Checks the syntax and lists the tables the query names",
+        "correct": false,
+        "why": "It goes further: it decides how each table would be read and joined."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmkxnbwv",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "cost=0.00..19966.00 on a Seq Scan. What are the two numbers?",
+    "hint": "Neither is a time, and they are read as a start and an end.",
+    "choices": [
+      {
+        "text": "The minimum and the maximum time, in milliseconds",
+        "correct": false,
+        "why": "Cost is in the planner's own unit, where one sequential page read is 1; nothing is a clock."
+      },
+      {
+        "text": "The cost of reading the index and the cost of reading the table",
+        "correct": false,
+        "why": "There is no index in a Seq Scan; the pair describes one node's start and finish."
+      },
+      {
+        "text": "The cost as estimated and the cost as measured on the last run",
+        "correct": false,
+        "why": "Both are estimates; measurements appear in a second group only under ANALYZE."
+      },
+      {
+        "text": "The cost to the first row, and the cost to the last",
+        "correct": true,
+        "why": "A scan starts at once and finishes when the table ends; an index scan pays a little to start."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4wn2gnp",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between a Filter line and an Index Cond line under a node?",
+    "hint": "One of them names a condition the index answered; ask when the other one is applied.",
+    "choices": [
+      {
+        "text": "Filter is a condition from the WHERE clause and Index Cond one from the JOIN",
+        "correct": false,
+        "why": "Both come from the WHERE; the difference is who answered them."
+      },
+      {
+        "text": "Index Cond was answered by the index; Filter is checked on fetched rows",
+        "correct": true,
+        "why": "A column sitting in a Filter with no Index Cond naming it is what \"the index is not used\" looks like."
+      },
+      {
+        "text": "Index Cond is the estimated condition and Filter is the one that was measured",
+        "correct": false,
+        "why": "Both are conditions, not numbers; the estimate and the actual sit in the parentheses."
+      },
+      {
+        "text": "Filter is applied after the sort and Index Cond before the sort runs",
+        "correct": false,
+        "why": "Neither has anything to do with a sort; both belong to the scan they sit under."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffvv3eq4",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "rows=11 on a Seq Scan of a million-row table. What is eleven?",
+    "hint": "Not what the node reads.",
+    "choices": [
+      {
+        "text": "How many rows the node will read from the table before filtering",
+        "correct": false,
+        "why": "It reads the million; eleven is what it expects to keep."
+      },
+      {
+        "text": "How many pages of the table the scan is expected to touch",
+        "correct": false,
+        "why": "Pages are in the cost and, under BUFFERS, in their own line."
+      },
+      {
+        "text": "How many rows the planner expects it to pass upwards, from the statistics",
+        "correct": true,
+        "why": "An estimate, from the statistics; comparing it with the actual is the habit the lesson builds."
+      },
+      {
+        "text": "How many rows actually came back when the statement was run",
+        "correct": false,
+        "why": "Nothing ran; the actual count appears in a second group under ANALYZE."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0mfs500",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an indented plan, which node does the executor work on first?",
+    "hint": "Think about which way the rows flow.",
+    "choices": [
+      {
+        "text": "The root, which then calls each child in turn from top to bottom",
+        "correct": false,
+        "why": "The root asks its children for rows, and cannot produce anything until they have."
+      },
+      {
+        "text": "The first line printed, since the output is in execution order",
+        "correct": false,
+        "why": "The first line printed is the root, which finishes last."
+      },
+      {
+        "text": "The nodes together, in parallel, each on its own process",
+        "correct": false,
+        "why": "Parallel plans exist and are marked with Gather; an ordinary tree runs one node's work inside another's."
+      },
+      {
+        "text": "The deepest child; rows flow upwards",
+        "correct": true,
+        "why": "Each node pulls from its children and pushes to its parent, so the bottom of the deepest branch runs first."
+      }
+    ]
+  },
+  {
+    "id": "ex-ftctf85c",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A one-customer join shows Seq Scan on orders with rows=1000000 under a Hash Join. What does the plan tell you that the SQL did not?",
+    "hint": "Thirteen orders were wanted. Ask how many were read to find them.",
+    "choices": [
+      {
+        "text": "No index on the foreign key: every order was read to find thirteen",
+        "correct": true,
+        "why": "Lesson 9's missing foreign-key index, seen from the plan's side; nothing in the SQL is wrong."
+      },
+      {
+        "text": "The join condition was written the wrong way round, so the planner reversed it",
+        "correct": false,
+        "why": "A join condition has no direction; the planner reads it either way."
+      },
+      {
+        "text": "The index on customers.email is missing, so the customer was found by scanning",
+        "correct": false,
+        "why": "It is there and it was used: the Index Scan under the Hash found the one customer."
+      },
+      {
+        "text": "A hash join reads both sides in full whatever indexes exist on them",
+        "correct": false,
+        "why": "It reads the probe side in full when nothing narrows it; with the index, the planner picks a nested loop instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9acmgvr",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "EXPLAIN ANALYZE DELETE FROM orders WHERE placed_at < DATE '2020-01-01'. What happens?",
+    "hint": "The one word of caution in the section, and it is the first thing it says.",
+    "choices": [
+      {
+        "text": "The plan is printed and the rows stay, since EXPLAIN does not write",
+        "correct": false,
+        "why": "Plain EXPLAIN does not; ANALYZE runs the statement, and a DELETE that runs deletes."
+      },
+      {
+        "text": "The delete is simulated against a private copy of the table and discarded",
+        "correct": false,
+        "why": "There is no copy; it is the table, and the rows are gone."
+      },
+      {
+        "text": "The rows are deleted; BEGIN and ROLLBACK around it would have kept them",
+        "correct": true,
+        "why": "ANALYZE executes whatever it is given, and a transaction is the only thing between you and the result."
+      },
+      {
+        "text": "It is refused, because ANALYZE is accepted on a SELECT and not on a DELETE",
+        "correct": false,
+        "why": "It is accepted, which is exactly the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wmebdgx",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "(actual time=0.002..0.003 rows=3 loops=2984). What does rows=3 mean?",
+    "hint": "Every number on that line is per something.",
+    "choices": [
+      {
+        "text": "Three rows per loop, so about three times 2984 in total across the run",
+        "correct": true,
+        "why": "Multiply before you believe a per-loop number; the time on that line is per loop too."
+      },
+      {
+        "text": "Three rows in total, spread across the whole run of 2984 loops",
+        "correct": false,
+        "why": "That would make 2984 loops for three rows; the count is per execution of the node."
+      },
+      {
+        "text": "Three rows on the last loop, which is the one the line reports",
+        "correct": false,
+        "why": "It is an average across the loops, not the last one."
+      },
+      {
+        "text": "Three rows per millisecond, which is the node's throughput",
+        "correct": false,
+        "why": "The time and the rows are separate measurements; neither is a rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbvqz9zf",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Buffers: shared hit=7466 and no read= on the line. What does it say?",
+    "hint": "Two words, hit and read, and one of them is missing.",
+    "choices": [
+      {
+        "text": "7466 rows were returned straight from the cache without a scan",
+        "correct": false,
+        "why": "Buffers count pages of 8 kB, not rows."
+      },
+      {
+        "text": "Every page came from memory; no disk was read",
+        "correct": true,
+        "why": "A read= entry would be the disk; its absence is the difference between slow by work and slow by disk."
+      },
+      {
+        "text": "The table was read 7466 times over, once per matching row",
+        "correct": false,
+        "why": "Once; 7466 is how many pages it has."
+      },
+      {
+        "text": "7466 pages were written back to disk at the end of the statement",
+        "correct": false,
+        "why": "A SELECT writes nothing; hit means found in the shared buffer cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhme6j43",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same EXPLAIN ANALYZE reports 80 ms the first time and 47 ms the second, with nothing changed. What happened?",
+    "hint": "Ask what the first run left behind for the second.",
+    "choices": [
+      {
+        "text": "The planner learnt from the first run and chose a better plan for the second",
+        "correct": false,
+        "why": "The plan was identical; the planner keeps no memory of executions."
+      },
+      {
+        "text": "The statistics were refreshed by the first run, improving the estimate",
+        "correct": false,
+        "why": "Statistics change on ANALYZE the command, not on a query being executed."
+      },
+      {
+        "text": "The second run skipped the Filter because the matching rows were known",
+        "correct": false,
+        "why": "Every row was filtered again; nothing about the work changed, only where the pages came from."
+      },
+      {
+        "text": "The first run pulled pages into the cache for the second",
+        "correct": true,
+        "why": "Run it twice, and compare second runs or compare BUFFERS."
+      }
+    ]
+  },
+  {
+    "id": "ex-6054tb92",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report takes four minutes and you want to know why. EXPLAIN or EXPLAIN ANALYZE first, and why?",
+    "hint": "One of them costs what the report costs.",
+    "choices": [
+      {
+        "text": "ANALYZE, since a plan without timings is not worth the time it takes to read",
+        "correct": false,
+        "why": "The shape alone often names the problem, and it costs nothing to look at."
+      },
+      {
+        "text": "EXPLAIN first: it is instant, and the shape names most problems",
+        "correct": true,
+        "why": "Reach for ANALYZE when the plan looks fine and the query is not, because that gap is what only a measurement closes."
+      },
+      {
+        "text": "EXPLAIN, since ANALYZE would send four minutes' worth of rows to the client",
+        "correct": false,
+        "why": "ANALYZE returns no rows; what it costs is the four minutes of work on the server."
+      },
+      {
+        "text": "ANALYZE with TIMING OFF, which drops the run time along with the clock",
+        "correct": false,
+        "why": "TIMING OFF drops the clock overhead; the query still runs, for as long as it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvffgw2r",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To keep the row counts and drop the clock's overhead: EXPLAIN (ANALYZE, ___ OFF).",
+    "hint": "The option that controls the per-node timing.",
+    "blanks": [
+      {
+        "accept": [
+          "TIMING"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-14tgmttg",
+    "version": 1,
+    "section": "the-scans",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "WHERE status = 'paid' matches 60% of orders, an index on status exists, and the plan is a Seq Scan. Is that a problem to fix?",
+    "hint": "Lesson 9's argument about selectivity, with the plan in front of you.",
+    "choices": [
+      {
+        "text": "Yes: an index exists on the column and the planner has ignored it",
+        "correct": false,
+        "why": "It priced both plans; following the index to most of the pages would touch them all in a worse order."
+      },
+      {
+        "text": "Yes: the statistics have gone stale, or the index would have been used",
+        "correct": false,
+        "why": "The estimate of 599 900 against 600 336 actual says the statistics are fine."
+      },
+      {
+        "text": "No: text columns are not indexable, so the index there is a no-op",
+        "correct": false,
+        "why": "Text indexes work perfectly well; the same index serves the cancelled and pending queries."
+      },
+      {
+        "text": "No: sequential beats pointer-chasing to most of the pages",
+        "correct": true,
+        "why": "A Seq Scan keeping most of the table is the right plan, and its Filter line is not a finding."
+      }
+    ]
+  },
+  {
+    "id": "ex-jz8zb672",
+    "version": 1,
+    "section": "the-scans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Heap Fetches: 0 on an Index Only Scan. What does it say?",
+    "hint": "Heap is PostgreSQL's word for the table's own storage.",
+    "choices": [
+      {
+        "text": "No row was fetched from the table; the index answered everything",
+        "correct": true,
+        "why": "The covering index of lesson 9, working as intended: the index answered everything."
+      },
+      {
+        "text": "The table is empty, so there was no row to fetch",
+        "correct": false,
+        "why": "Thirteen rows came back; the table was simply not consulted for them."
+      },
+      {
+        "text": "The index is being rebuilt, so the heap was unavailable",
+        "correct": false,
+        "why": "A rebuild would not change the plan's shape; this line counts table visits."
+      },
+      {
+        "text": "The scan used no memory from the process heap",
+        "correct": false,
+        "why": "Heap here is storage, not the process's memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-xc0wx96z",
+    "version": 1,
+    "section": "the-scans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Bitmap Index Scan reports width=0. Why?",
+    "hint": "Ask what that node hands to the node above it.",
+    "choices": [
+      {
+        "text": "The index has no columns of its own to return",
+        "correct": false,
+        "why": "It has the indexed column; width is about what the node returns, and it returns no rows."
+      },
+      {
+        "text": "The estimate was wrong, so the width could not be computed",
+        "correct": false,
+        "why": "Width is an average row size, and there is no row to size."
+      },
+      {
+        "text": "It returns a bitmap of pages, not rows",
+        "correct": true,
+        "why": "One bit per page of the table, set where the index says a matching row lives."
+      },
+      {
+        "text": "width is zero on each scan that goes through an index",
+        "correct": false,
+        "why": "An Index Scan reports the width of the rows it returns; only the bitmap builder returns none."
+      }
+    ]
+  },
+  {
+    "id": "ex-yw7y9xfh",
+    "version": 1,
+    "section": "the-scans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a Bitmap Heap Scan carry a Recheck Cond?",
+    "hint": "Ask what a bitmap knows and what it does not.",
+    "choices": [
+      {
+        "text": "The rows may have changed between the index being read and the page being fetched",
+        "correct": false,
+        "why": "Visibility is handled separately; the recheck is about precision, not time."
+      },
+      {
+        "text": "A bitmap marks pages, not rows, so rows on a marked page are checked",
+        "correct": true,
+        "why": "Which is also why exact= appears beside Heap Blocks: those pages were marked precisely."
+      },
+      {
+        "text": "The planner rechecks estimates it does not trust against the real rows",
+        "correct": false,
+        "why": "Estimates are never re-examined at run time; the recheck is a condition on rows."
+      },
+      {
+        "text": "Recheck is what the Filter line is called when the index is partial",
+        "correct": false,
+        "why": "A partial index does not change the line's name; the bitmap does."
+      }
+    ]
+  },
+  {
+    "id": "ex-b94tqv9h",
+    "version": 1,
+    "section": "the-scans",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Index Only Scan on a table written all day shows Heap Fetches close to its row count. What is the fix?",
+    "hint": "Nothing in the query changed, and lesson 9 named the structure that went stale.",
+    "choices": [
+      {
+        "text": "Add the fetched columns to the index with INCLUDE",
+        "correct": false,
+        "why": "They are already in the index; the fetch is to check visibility, not to get columns."
+      },
+      {
+        "text": "REINDEX, because the index has bloated with dead entries",
+        "correct": false,
+        "why": "Bloat makes an index bigger; it does not make an index-only scan visit the table."
+      },
+      {
+        "text": "Force a Bitmap Heap Scan with a planner setting",
+        "correct": false,
+        "why": "That would fetch every row on purpose, which is the cost you are trying to remove."
+      },
+      {
+        "text": "VACUUM: the visibility map is stale, so the index alone cannot prove visibility",
+        "correct": true,
+        "why": "An index-only scan on a heavily written table stops being index-only until vacuum catches up."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7a48tcq",
+    "version": 1,
+    "section": "the-scans",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each scan to the situation it is the answer to.",
+    "hint": "Think about how many rows the query wants and where they are.",
+    "pairs": [
+      {
+        "left": "Seq Scan",
+        "right": "Most of the table is wanted"
+      },
+      {
+        "left": "Index Scan",
+        "right": "A handful of rows, in the index's order"
+      },
+      {
+        "left": "Index Only Scan",
+        "right": "Every column the query needs is in the index"
+      },
+      {
+        "left": "Bitmap Heap Scan",
+        "right": "Many rows, fetched in page order"
+      }
+    ],
+    "right_distractors": [
+      "The rows are wanted sorted by a column with no index",
+      "The statistics are out of date"
+    ]
+  },
+  {
+    "id": "ex-4n3fhawa",
+    "version": 1,
+    "section": "the-joins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Nested Loop with an index scan on its inner side. When is that the right plan?",
+    "hint": "One side runs once; the other runs once per row of the first.",
+    "choices": [
+      {
+        "text": "Both sides are large and neither fits in memory",
+        "correct": false,
+        "why": "Then the inner side runs a large number of times; that is the hash join's case."
+      },
+      {
+        "text": "A small outer side and an indexed inner side",
+        "correct": true,
+        "why": "A few outer rows, each looked up in constant time; one customer's orders, for instance."
+      },
+      {
+        "text": "Neither side has an index on the join column",
+        "correct": false,
+        "why": "Without an index the inner side is a Seq Scan per outer row, which is the shape that is wrong."
+      },
+      {
+        "text": "The join column is already sorted on both sides",
+        "correct": false,
+        "why": "That is the merge join's case."
+      }
+    ]
+  },
+  {
+    "id": "ex-aejpj4er",
+    "version": 1,
+    "section": "the-joins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Nested Loop whose inner child is a Seq Scan, with 5000 rows on the outer side. What is happening?",
+    "hint": "Count how many times the inner table is read.",
+    "choices": [
+      {
+        "text": "The inner table is read in full 5000 times; an index is missing",
+        "correct": true,
+        "why": "The single most common finding in a slow join, and the plan names the column."
+      },
+      {
+        "text": "The inner table is hashed once and probed 5000 times from memory",
+        "correct": false,
+        "why": "That would be a Hash Join; a Nested Loop repeats its inner child."
+      },
+      {
+        "text": "Both tables are read once each and merged on the join column",
+        "correct": false,
+        "why": "That is the Merge Join's shape, and it needs both inputs sorted."
+      },
+      {
+        "text": "The outer table is read 5000 times to match each inner row",
+        "correct": false,
+        "why": "The outer runs once; it is the inner that repeats, once per outer row."
+      }
+    ]
+  },
+  {
+    "id": "ex-6w381eft",
+    "version": 1,
+    "section": "the-joins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Hash Join reports Batches: 8. What does it mean?",
+    "hint": "Ask what has to fit in memory for a hash join, and what happens when it does not.",
+    "choices": [
+      {
+        "text": "The join was split across eight parallel workers under a Gather node",
+        "correct": false,
+        "why": "Workers appear under a Gather node; batches are about memory."
+      },
+      {
+        "text": "Eight indexes were combined into the hash before the probe side was read",
+        "correct": false,
+        "why": "A hash join uses no index at all; the hash is built from rows."
+      },
+      {
+        "text": "The hashed side did not fit in work_mem and spilled in eight pieces",
+        "correct": true,
+        "why": "Still a hash join, still perhaps the cheapest plan, and eight passes instead of one."
+      },
+      {
+        "text": "The probe side was read eight times from the cache to match the hash",
+        "correct": false,
+        "why": "The probe side is read once; it is the hashed side that is processed in pieces."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyxhfwjy",
+    "version": 1,
+    "section": "the-joins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which side of a join does the planner choose to hash?",
+    "hint": "The hash has to fit somewhere.",
+    "choices": [
+      {
+        "text": "The one written first in the FROM clause",
+        "correct": false,
+        "why": "The order in the SQL is not the order in the plan; the planner reorders freely."
+      },
+      {
+        "text": "The one with an index on the join column",
+        "correct": false,
+        "why": "A hash join does not use the index; that is the nested loop's business."
+      },
+      {
+        "text": "The one with more rows, so the probe is short",
+        "correct": false,
+        "why": "The reverse: the probe side is scanned once whatever its size, and the hashed side is the one held in memory."
+      },
+      {
+        "text": "The one it estimates smaller, so that the hash fits in memory",
+        "correct": true,
+        "why": "So that the hash fits in memory; a hash built on the wrong side points at a wrong estimate on one child."
+      }
+    ]
+  },
+  {
+    "id": "ex-w51sppz2",
+    "version": 1,
+    "section": "the-joins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan hashes a million-row table and probes it with a hundred rows. What went wrong, and where do you look?",
+    "hint": "The planner hashes the side it thinks is smaller.",
+    "choices": [
+      {
+        "text": "work_mem: it was too small to hold the right side, so the planner hashed the other one instead",
+        "correct": false,
+        "why": "Memory decides batches, not which side is chosen; a hundred rows fit anywhere."
+      },
+      {
+        "text": "An estimate: it thought the hundred-row side was larger; compare rows= on both children",
+        "correct": true,
+        "why": "The plan did the right thing for its numbers; one of the numbers is off by orders of magnitude."
+      },
+      {
+        "text": "The join order in the SQL, which the planner follows when both sides are indexed",
+        "correct": false,
+        "why": "The planner ignores the written order; nothing in the SQL decides which side is hashed."
+      },
+      {
+        "text": "The index on the hundred-row side, which forced it to become the probe",
+        "correct": false,
+        "why": "Indexes play no part in a hash join's choice of sides."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycpbwssa",
+    "version": 1,
+    "section": "the-joins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "loops=3 on a node under a Gather with Workers Launched: 2. What is three?",
+    "hint": "Count the processes.",
+    "choices": [
+      {
+        "text": "The node ran three times because its estimate was wrong each time",
+        "correct": false,
+        "why": "Loops under a Gather are processes, not retries."
+      },
+      {
+        "text": "Three retries after the two workers failed and the leader took over",
+        "correct": false,
+        "why": "A failed worker fails the query; nothing is retried."
+      },
+      {
+        "text": "The leader and two workers, each reporting its own share of the rows",
+        "correct": true,
+        "why": "A node under a Gather reports per worker, and there are three processes doing the work."
+      },
+      {
+        "text": "Three batches of the hash, one per process",
+        "correct": false,
+        "why": "Batches have their own line; loops count executions of the node."
+      }
+    ]
+  },
+  {
+    "id": "ex-26k1mzc7",
+    "version": 1,
+    "section": "estimates-against-actuals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "WHERE date(placed_at) = DATE '2025-03-01' estimated 5000 rows and returned 1834. Why 5000?",
+    "hint": "Ask what the planner has statistics about, and what it does not.",
+    "choices": [
+      {
+        "text": "The statistics said 5000 orders were placed that day, and they were out of date",
+        "correct": false,
+        "why": "There are no statistics for that day or any other, because there are none for date(placed_at)."
+      },
+      {
+        "text": "There are no statistics for a function's result, so a default fraction was used",
+        "correct": true,
+        "why": "Half a percent of a million, whatever the table holds; the rewrite as a range fixes it."
+      },
+      {
+        "text": "5000 is the planner's estimate for any equality condition on a large table",
+        "correct": false,
+        "why": "An equality on a bare column is estimated from that column's distribution; this one had none."
+      },
+      {
+        "text": "The index on placed_at reported 5000 entries for that date, before it was refused",
+        "correct": false,
+        "why": "No index was consulted; a function around the column rules it out, and the plan is a Seq Scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgk8x5e9",
+    "version": 1,
+    "section": "estimates-against-actuals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table that has never been analysed: after loading 200 000 rows, EXPLAIN says rows=754 for a condition that matches a quarter of them. What fixes the estimate?",
+    "hint": "One statement, and the planner goes from guessing to knowing.",
+    "choices": [
+      {
+        "text": "ANALYZE the table",
+        "correct": true,
+        "why": "Statistics are collected on demand or by autovacuum, and neither had run since the load."
+      },
+      {
+        "text": "VACUUM FULL, to rebuild the statistics with the table",
+        "correct": false,
+        "why": "VACUUM FULL rewrites the table; it is ANALYZE that collects statistics, and the FULL costs a lock for nothing here."
+      },
+      {
+        "text": "CREATE INDEX on the filtered column",
+        "correct": false,
+        "why": "An index changes how rows are found, not how many the planner expects."
+      },
+      {
+        "text": "Wait: the estimate corrects itself on the next query",
+        "correct": false,
+        "why": "A query executing changes no statistics; autovacuum will get to it eventually, and the bad plans live in the gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrsrf5qq",
+    "version": 1,
+    "section": "estimates-against-actuals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading the estimates on a deep plan, where do you start and where do you stop?",
+    "hint": "Every node above a mistake inherits it.",
+    "choices": [
+      {
+        "text": "From the root, since the total time is there",
+        "correct": false,
+        "why": "The root's estimate is the product of every mistake below it; it cannot say where the first one was."
+      },
+      {
+        "text": "At the join, since a scan's estimate comes straight from the statistics",
+        "correct": false,
+        "why": "Scans are where two of the commonest misestimates live: a function around the column, and a table never analysed."
+      },
+      {
+        "text": "At the node with the largest actual time, which is the one costing the most",
+        "correct": false,
+        "why": "The slowest node is often a correct plan for a wrong estimate made further down."
+      },
+      {
+        "text": "From the bottom, stopping at the first node where the two numbers disagree by a large factor",
+        "correct": true,
+        "why": "A factor of two is noise; a factor of a hundred is the finding, and everything above it inherited it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh27tmxx",
+    "version": 1,
+    "section": "estimates-against-actuals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE city = 'Manaus' AND state = 'AM' is estimated far too low, though each column alone is estimated well. Why, and what fixes it?",
+    "hint": "The planner has an assumption about two conditions, and these two break it.",
+    "choices": [
+      {
+        "text": "The two columns need a composite index before the planner will estimate them together",
+        "correct": false,
+        "why": "An index changes how rows are found; the estimate would be just as wrong with one."
+      },
+      {
+        "text": "The string comparison is case-sensitive and misses the rows in other spellings",
+        "correct": false,
+        "why": "Nothing is missed; the rows come back, and only the prediction of how many is wrong."
+      },
+      {
+        "text": "The planner multiplies the two selectivities; CREATE STATISTICS on the pair",
+        "correct": true,
+        "why": "After that it has a joint distribution, and an address in Manaus is no longer allowed to be in any state."
+      },
+      {
+        "text": "ANALYZE, which collects the joint distribution of each column pair by default",
+        "correct": false,
+        "why": "ANALYZE collects per-column statistics; the pair has to be declared before it will look at both together."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ak7jvyh",
+    "version": 1,
+    "section": "estimates-against-actuals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query is fast in psql with a literal and slow from the application, which sends a placeholder. First suspect?",
+    "hint": "Ask which value the application's plan was made for.",
+    "choices": [
+      {
+        "text": "A generic plan built for the average value",
+        "correct": true,
+        "why": "A plan for $1 is a plan for the average, and the average status is paid, at sixty percent; wrong for a rare value."
+      },
+      {
+        "text": "The application's connection is slower than psql's, so the rows take longer",
+        "correct": false,
+        "why": "The connection carries the rows; a slow plan is slow on any connection."
+      },
+      {
+        "text": "The driver strips the index hint that psql keeps in the statement",
+        "correct": false,
+        "why": "PostgreSQL has no index hints to strip; the plan is chosen from statistics either way."
+      },
+      {
+        "text": "psql caches the result of the query and the application does not",
+        "correct": false,
+        "why": "Neither caches results; the cache that exists holds pages, and both benefit from it alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffgz2ep2",
+    "version": 1,
+    "section": "estimates-against-actuals",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PostgreSQL 10 and later can be told that two columns are related, with CREATE ___.",
+    "hint": "The object that gives the planner a joint distribution.",
+    "blanks": [
+      {
+        "accept": [
+          "STATISTICS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tkzg28mw",
+    "version": 1,
+    "section": "sorts-and-aggregates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Sort Method: top-N heapsort  Memory: 26kB, on a million rows with LIMIT 10. How did a million rows sort in 26 kB?",
+    "hint": "The sort knew something from the node above it.",
+    "choices": [
+      {
+        "text": "The rows were already nearly in order, so little had to move",
+        "correct": false,
+        "why": "Order does not change the memory a full sort needs; the trick is what was kept."
+      },
+      {
+        "text": "The sort ran on disk, and 26 kB is the index it kept in memory",
+        "correct": false,
+        "why": "Disk would say external merge and name the size; this one stayed in memory."
+      },
+      {
+        "text": "It kept a heap of ten and dropped the rest as it read",
+        "correct": true,
+        "why": "The Limit above it said only ten would ever be wanted, and that is why LIMIT is cheap."
+      },
+      {
+        "text": "Just ten rows were read from the table, so ten were sorted",
+        "correct": false,
+        "why": "The Seq Scan below it returned a million; the sort is what threw them away."
+      }
+    ]
+  },
+  {
+    "id": "ex-avq44m6h",
+    "version": 1,
+    "section": "sorts-and-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sort Method: external merge  Disk: 38576kB. Which word matters, and what does it say?",
+    "hint": "One word in that line is the finding.",
+    "choices": [
+      {
+        "text": "merge: the sort was done by a Merge Join rather than a Sort node",
+        "correct": false,
+        "why": "No join is involved; merge describes how the sorted runs were combined."
+      },
+      {
+        "text": "Disk: the rows exceeded work_mem and were sorted in runs on disk",
+        "correct": true,
+        "why": "A sort that spills is the commonest reason a query fine at ten thousand rows is slow at a million."
+      },
+      {
+        "text": "external: the sort was handed to the operating system's own sort",
+        "correct": false,
+        "why": "External means outside memory; the database did the sorting, on its own temporary files."
+      },
+      {
+        "text": "38576kB: the size of the result that was sent back to the client",
+        "correct": false,
+        "why": "It is the temporary space the sort used, and ANALYZE sends no result at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-0drre2rh",
+    "version": 1,
+    "section": "sorts-and-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three fixes for a sort that spills: fewer rows, an index to read from, more work_mem. Why is work_mem the last to try?",
+    "hint": "Ask who else gets the same allowance.",
+    "choices": [
+      {
+        "text": "Changing it needs a restart of the server, which is a maintenance window",
+        "correct": false,
+        "why": "It can be set per session and per role; the trouble is not how it is changed."
+      },
+      {
+        "text": "It applies to hash joins and not to sorts, so the sort would spill anyway",
+        "correct": false,
+        "why": "It applies to both, which makes the multiplication worse rather than better."
+      },
+      {
+        "text": "A bigger work_mem makes the planner prefer sequential scans over indexes",
+        "correct": false,
+        "why": "It changes what fits in memory; it does not turn index scans into sequential ones."
+      },
+      {
+        "text": "It is granted per sort in every connection, and multiplies under load",
+        "correct": true,
+        "why": "A per-sort allowance, multiplied by every sort running at once, and a number that fixes one report exhausts the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-zg3n638d",
+    "version": 1,
+    "section": "sorts-and-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "HashAggregate or GroupAggregate: when does the second one appear?",
+    "hint": "One of them needs its input in a particular order.",
+    "choices": [
+      {
+        "text": "When the input is already sorted, or there are too many groups to hash",
+        "correct": true,
+        "why": "It counts each run as it passes; neither is better, and the line beside the node says whether it fit."
+      },
+      {
+        "text": "When the GROUP BY names more than one column and the groups nest",
+        "correct": false,
+        "why": "Either aggregate handles any number of grouping columns."
+      },
+      {
+        "text": "When a HAVING clause is present, since a hash has no way to filter groups",
+        "correct": false,
+        "why": "HAVING filters groups after either aggregate has made them."
+      },
+      {
+        "text": "When the query also has an ORDER BY on the grouping column",
+        "correct": false,
+        "why": "The city report has an ORDER BY and hashed anyway, sorting the ten groups afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2e0x6ee",
+    "version": 1,
+    "section": "sorts-and-aggregates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Sort node appears in a plan whose query has no ORDER BY. Which of these is NOT a possible reason?",
+    "hint": "Three nodes need their input ordered, and one does not.",
+    "choices": [
+      {
+        "text": "A Merge Join needing both inputs ordered",
+        "correct": false,
+        "why": "A real reason: both sides have to be sorted on the join column."
+      },
+      {
+        "text": "A HashAggregate needing its input sorted before it groups",
+        "correct": true,
+        "why": "A hash aggregate needs no order at all; that is what the hash is for."
+      },
+      {
+        "text": "A GroupAggregate needing its groups adjacent",
+        "correct": false,
+        "why": "A real reason: it counts runs, so equal keys must sit together."
+      },
+      {
+        "text": "A DISTINCT done by sorting the rows",
+        "correct": false,
+        "why": "A real reason: sort, then drop each row equal to the one before it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hefdm15e",
+    "version": 1,
+    "section": "fixing-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The plan shows Seq Scan with Filter: (lower(email) = …), and a unique index on email exists. What do you try first?",
+    "hint": "The first item on the list is not an index.",
+    "choices": [
+      {
+        "text": "Add a second index on email, since the first one is being ignored",
+        "correct": false,
+        "why": "The second would be ignored for the same reason: the query asks about lower(email), and neither holds that."
+      },
+      {
+        "text": "Rewrite the query, or index the expression, so the two name the same thing",
+        "correct": true,
+        "why": "So that the query and the index name the same thing; nothing here needed a new index of the ordinary kind."
+      },
+      {
+        "text": "Raise work_mem so that the filter can run in memory",
+        "correct": false,
+        "why": "A filter does not use work_mem; it checks each row as it passes, and the rows are the cost."
+      },
+      {
+        "text": "Run ANALYZE so that the planner notices the index exists",
+        "correct": false,
+        "why": "The planner sees the index; it cannot use it for an expression the index does not hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqgsckht",
+    "version": 1,
+    "section": "fixing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "OFFSET 500000 LIMIT 20 read 500 020 rows through the index; WHERE id > 500000 LIMIT 20 read twenty. Why the difference?",
+    "hint": "Ask where in the index each version is able to start.",
+    "choices": [
+      {
+        "text": "Keyset paging uses a smaller index, which fits in the cache",
+        "correct": false,
+        "why": "Both used the same primary key index; the difference is where they began in it."
+      },
+      {
+        "text": "OFFSET disables the index and forces a sequential scan of the table",
+        "correct": false,
+        "why": "The plan shows an Index Scan for both; OFFSET walks the index and throws rows away."
+      },
+      {
+        "text": "The keyset version starts in the index at the right place",
+        "correct": true,
+        "why": "OFFSET has to walk past everything it skips; keyset paging costs the same on page one and page twenty-five thousand."
+      },
+      {
+        "text": "The keyset version returns fewer columns, so fewer pages are read",
+        "correct": false,
+        "why": "Both are SELECT *; the columns are identical."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfaxg0kk",
+    "version": 1,
+    "section": "fixing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SELECT * became SELECT customer_id, and the scan turned index-only. What is the general lesson?",
+    "hint": "Lesson 4's argument, with a plan attached.",
+    "choices": [
+      {
+        "text": "SELECT * is slower because the star has to be expanded at run time",
+        "correct": false,
+        "why": "Expansion is at planning time and costs nothing; the pages fetched are the cost."
+      },
+      {
+        "text": "Single-column queries are planned by a different, simpler algorithm",
+        "correct": false,
+        "why": "Same planner, same algorithm; the index simply covered what was asked."
+      },
+      {
+        "text": "customer_id is cached and the other columns of the row are not",
+        "correct": false,
+        "why": "Caching is by page, not by column; the other columns live in the table pages that were not read."
+      },
+      {
+        "text": "Unneeded columns cost pages read, and the plan shows it",
+        "correct": true,
+        "why": "Three columns needed and twenty asked for is seventeen columns' worth of row fetches."
+      }
+    ]
+  },
+  {
+    "id": "ex-8n2tdwmb",
+    "version": 1,
+    "section": "fixing-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "enable_seqscan = off fixed the slow query in your session. Do you put it in postgresql.conf?",
+    "hint": "Ask what the setting does to every other query on the server.",
+    "choices": [
+      {
+        "text": "No: the planner would misprice every query on the server",
+        "correct": true,
+        "why": "Including the ones that were fine; the settings exist for seeing an alternative plan in a session, never for shipping one."
+      },
+      {
+        "text": "Yes, since the plan is now the correct one for this query",
+        "correct": false,
+        "why": "It is the correct plan for this query and a lie told to the planner about every other."
+      },
+      {
+        "text": "Yes, with enable_indexscan = on beside it so the rest stays as it is",
+        "correct": false,
+        "why": "Index scans are already on; the harm is in what was switched off."
+      },
+      {
+        "text": "No: the setting has no effect outside a psql session",
+        "correct": false,
+        "why": "It affects every session that has it, which in the configuration file is all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-07axzavc",
+    "version": 1,
+    "section": "fixing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report runs once a month and would be fast with a new index on a table taking a million inserts a day. What do you do?",
+    "hint": "Lesson 9's tax, and pg_stat_statements says how often the query runs.",
+    "choices": [
+      {
+        "text": "Add the index: a slow report is a slow report, and the writes will cope",
+        "correct": false,
+        "why": "It would be maintained on a million writes a day to save one query a month."
+      },
+      {
+        "text": "Add it CONCURRENTLY, which makes it free to build and cheap to maintain",
+        "correct": false,
+        "why": "CONCURRENTLY is about building without a lock; maintenance costs the same afterwards."
+      },
+      {
+        "text": "Leave the table alone; a materialised view or a replica is the place",
+        "correct": true,
+        "why": "Changing the shape of the work, which is the last item on the list for the queries that do a lot correctly."
+      },
+      {
+        "text": "Add it before each run and drop it afterwards, so the writes do not pay",
+        "correct": false,
+        "why": "Building it reads the whole table, which is the report's own cost again, with a lock or two passes on top."
+      }
+    ]
+  },
+  {
+    "id": "ex-ajvr9trg",
+    "version": 1,
+    "section": "fixing-it",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the five things to change in the order the lesson says to try them.",
+    "hint": "The cheap ones come first because they make the expensive ones unnecessary.",
+    "items": [
+      "Rewrite the query so the index that exists can apply",
+      "Add the index the plan is asking for, concurrently",
+      "Ask for fewer columns and fewer rows",
+      "Fix the estimate: ANALYZE, or extended statistics",
+      "Change the shape of the work: a materialised view or a replica"
+    ],
+    "trap": "The common swap is adding an index before checking whether the query refuses one it already has — a permanent cost on writes to fix what a rewrite would have fixed for nothing."
+  },
+  {
+    "id": "ex-p0gw4m62",
+    "version": 1,
+    "section": "the-other-engines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "MySQL's EXPLAIN shows type: ALL on a row. What is it?",
+    "hint": "The column says how the table is accessed.",
+    "choices": [
+      {
+        "text": "A full table scan, which is the Seq Scan of this lesson",
+        "correct": true,
+        "why": "The Seq Scan of this lesson; on any row but the first it is the missing-index shape, the whole table read once per outer row."
+      },
+      {
+        "text": "The table is accessed through each of its indexes",
+        "correct": false,
+        "why": "The index used is in the key column; ALL means none was."
+      },
+      {
+        "text": "The join keeps the whole table's rows",
+        "correct": false,
+        "why": "type describes access, not what the join returns."
+      },
+      {
+        "text": "The row count is unknown",
+        "correct": false,
+        "why": "rows is its own column; ALL is about how, not how many."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yw02hkh",
+    "version": 1,
+    "section": "the-other-engines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Using filesort appears in MySQL's Extra column. What does it mean?",
+    "hint": "The line people misread, and the word file is the reason.",
+    "choices": [
+      {
+        "text": "The sort was written to a temporary file on disk",
+        "correct": false,
+        "why": "It may have stayed in memory; the name is older than the behaviour."
+      },
+      {
+        "text": "The rows were sorted by the file system rather than the server",
+        "correct": false,
+        "why": "The server sorts; the file system stores."
+      },
+      {
+        "text": "The query sorts by a column that is not in the SELECT list",
+        "correct": false,
+        "why": "Sorting by an unselected column is allowed and says nothing about filesort."
+      },
+      {
+        "text": "A sort happened because no index supplied the order",
+        "correct": true,
+        "why": "In memory or not: MySQL's spelling of a Sort node with no index under it, and the fix is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryphf6t5",
+    "version": 1,
+    "section": "the-other-engines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In what order does MySQL's EXPLAIN list its rows?",
+    "hint": "One row per table, and the order says something about how the join runs.",
+    "choices": [
+      {
+        "text": "Alphabetically by table name, which makes the rows easy to find",
+        "correct": false,
+        "why": "The order carries meaning; alphabetical would carry none."
+      },
+      {
+        "text": "The order the tables appear in the FROM clause, as written",
+        "correct": false,
+        "why": "The planner reorders joins freely, and the output shows what it chose."
+      },
+      {
+        "text": "The join order, driving table first",
+        "correct": true,
+        "why": "Top to bottom, the way a nested loop runs; type: ALL below the first row is the missing index."
+      },
+      {
+        "text": "Largest table first, since that is the one the planner reads first",
+        "correct": false,
+        "why": "Size is one input to the choice; the output is the order chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6jynth1",
+    "version": 1,
+    "section": "the-other-engines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SQLite's EXPLAIN QUERY PLAN prints SCAN orders. What does it mean?",
+    "hint": "Two words make up its whole vocabulary.",
+    "choices": [
+      {
+        "text": "The bytecode for reading the orders table",
+        "correct": false,
+        "why": "Bytecode is what plain EXPLAIN prints, and it is not what anybody wants."
+      },
+      {
+        "text": "A full read of the table, with no index used",
+        "correct": true,
+        "why": "SEARCH … USING INDEX would be the index lookup; that pair is the vocabulary, and the fix is in it."
+      },
+      {
+        "text": "The table is being analysed for statistics",
+        "correct": false,
+        "why": "ANALYZE is a separate command in SQLite, and it prints nothing like this."
+      },
+      {
+        "text": "An index on orders is being scanned in full",
+        "correct": false,
+        "why": "An index would be named after USING INDEX; SCAN alone is the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0f6qg8y",
+    "version": 1,
+    "section": "the-other-engines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A SQLite database grew tenfold over a year and its plans are now bad. Why, unlike PostgreSQL, and what do you do?",
+    "hint": "Ask who collects the statistics in each engine.",
+    "choices": [
+      {
+        "text": "SQLite keeps no planner statistics of any kind, so the fix is to rebuild the indexes",
+        "correct": false,
+        "why": "It has them; they come from ANALYZE, and rebuilding an index collects none."
+      },
+      {
+        "text": "SQLite plans from the size of the file, so VACUUM the file down",
+        "correct": false,
+        "why": "VACUUM compacts the file; the planner's numbers come from ANALYZE."
+      },
+      {
+        "text": "SQLite lacks EXPLAIN ANALYZE, so its plans are not improvable once they go bad",
+        "correct": false,
+        "why": "Measurement is what SQLite lacks; the statistics that decide a plan are one command away."
+      },
+      {
+        "text": "SQLite has no autovacuum to collect statistics; run ANALYZE yourself",
+        "correct": true,
+        "why": "A database that grew a lot since it was last analysed is planning on old numbers until somebody runs the command."
+      }
+    ]
+  }
+]
