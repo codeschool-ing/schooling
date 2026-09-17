@@ -1,0 +1,962 @@
+{
+  "ex-7mzqq66p": {
+    "prompt": "Em uma frase, o que um mapeador objeto-relacional faz?",
+    "hint": "Uma classe, uma instância e uma chamada de método de um lado; uma tabela, uma linha e uma instrução do outro.",
+    "choices": [
+      {
+        "text": "Traduz entre os objetos da linguagem e as tabelas e instruções do banco",
+        "why": "Uma classe representa uma tabela, uma instância uma linha, uma chamada de método uma instrução."
+      },
+      {
+        "text": "Guarda os objetos da linguagem direto em disco, então um banco à parte se torna dispensável",
+        "why": "O banco continua lá; o mapeador emite SQL para ele a cada chamada."
+      },
+      {
+        "text": "Cacheia resultados de consulta para a mesma consulta rodar uma vez",
+        "why": "Alguns mapeadores cacheiam dentro de uma sessão, mas não é para isso que um mapeador serve."
+      },
+      {
+        "text": "Substitui o SQL por uma linguagem de consulta própria mais rápida",
+        "why": "Ele emite SQL; não há outra linguagem por baixo, e não é mais rápido."
+      }
+    ]
+  },
+  "ex-6h6s7c8f": {
+    "prompt": "Qual destas é a regra sobre a qual a aula inteira se apoia?",
+    "hint": "É sobre o que acontece com a instrução que o mapeador produz.",
+    "choices": [
+      {
+        "text": "O ORM cuida do banco por você, então o material sobre instruções das aulas 4 a 10 já não se aplica",
+        "why": "O contrário: elas se aplicam à instrução emitida exatamente como se você a tivesse digitado."
+      },
+      {
+        "text": "O ORM emite SQL, e tudo sobre uma instrução se aplica a ela tenha quem tiver escrito",
+        "why": "Um ORDER BY que falta, uma junção sem índice, um N+1: o mapeador não os isenta."
+      },
+      {
+        "text": "Um bom ORM não vai emitir uma consulta lenta",
+        "why": "Ele emite o que o código pede, e o N+1 é o contraexemplo mais claro."
+      },
+      {
+        "text": "Você precisa de SQL apenas para as consultas que um ORM tem dificuldade de expressar",
+        "why": "Você precisa dele para ler o que o ORM emite, que é toda consulta."
+      }
+    ]
+  },
+  "ex-wbr47920": {
+    "prompt": "Active Record e Data Mapper diferem em quê?",
+    "hint": "Pergunte onde mora o conhecimento do banco.",
+    "choices": [
+      {
+        "text": "Data Mapper não usa SQL",
+        "why": "Os dois emitem SQL; organizam o código em torno dele de formas diferentes."
+      },
+      {
+        "text": "Active Record é o padrão que você usa para leituras, e Data Mapper o que você usa para escritas",
+        "why": "Os dois fazem os dois; a diferença não é a direção do tráfego."
+      },
+      {
+        "text": "No Active Record o objeto é a linha e sabe do banco; no Data Mapper o objeto é simples",
+        "why": "Uma sessão ou repositório à parte move o objeto simples de e para uma tabela."
+      },
+      {
+        "text": "Active Record é mais rápido porque cacheia mais",
+        "why": "Velocidade não é o eixo; onde o mapeamento mora é."
+      }
+    ]
+  },
+  "ex-8q3z9wpr": {
+    "prompt": "Um query builder não é um mapeador. O que ele é?",
+    "hint": "Ele compõe algo a partir de chamadas de método e devolve linhas.",
+    "choices": [
+      {
+        "text": "Um mapeador com os objetos removidos",
+        "why": "Ele nunca teve objetos; monta instruções, não instâncias."
+      },
+      {
+        "text": "Um cache na frente do banco",
+        "why": "Ele emite instruções; não lembra os resultados delas."
+      },
+      {
+        "text": "A parte do ORM que lê suas classes de modelo e gera os arquivos de migração",
+        "why": "Migrações são um mecanismo à parte; um query builder monta SELECTs e afins."
+      },
+      {
+        "text": "Uma ferramenta que compõe SQL a partir de chamadas de método, mantendo a instrução sua e parametrizada",
+        "why": "select().from().where(): a instrução continua SQL, parametrizada, componível."
+      }
+    ]
+  },
+  "ex-rvn4ce0c": {
+    "prompt": "A habilidade que esta aula ensina não é a API do ORM. É o hábito de saber o que ele ___.",
+    "hint": "Uma palavra: o que o mapeador faz com SQL a cada chamada.",
+    "blanks": [
+      {
+        "accept": [
+          "emite",
+          "emitiu",
+          "manda",
+          "mandou"
+        ]
+      }
+    ]
+  },
+  "ex-8qzy3mx1": {
+    "prompt": "O log de SQL do próprio ORM mostra o que ele acha que mandou. Por que isso não basta sozinho?",
+    "hint": "Pergunte o que fica entre o ORM e o servidor.",
+    "choices": [
+      {
+        "text": "Um pool, um driver ou uma instrução preparada reescreve o que de fato chega ao servidor",
+        "why": "O log do ORM não tem o que uma camada abaixo dele acrescentou; o log do servidor tem."
+      },
+      {
+        "text": "Ele mostra o plano que o servidor escolheu, e não o texto da instrução que foi mandada",
+        "why": "Ele mostra a instrução; o plano vem do EXPLAIN."
+      },
+      {
+        "text": "Ele registra apenas as instruções que falharam",
+        "why": "Ele registra o que mandou, tenham dado certo ou não; a lacuna são as camadas abaixo."
+      },
+      {
+        "text": "O log é lento e enche o disco",
+        "why": "Esse é o log por instrução do servidor em zero, não o do próprio ORM."
+      }
+    ]
+  },
+  "ex-b6pmzcr5": {
+    "prompt": "No pg_stat_statements, uma consulta tem calls=50 e outra calls=1. O que esse padrão costuma significar?",
+    "hint": "Uma contagem que é múltiplo de outra contagem.",
+    "choices": [
+      {
+        "text": "A consulta com cinquenta chamadas é a lenta, e a de uma chamada é a rápida",
+        "why": "Calls é uma contagem de execuções, não uma medida de velocidade."
+      },
+      {
+        "text": "A consulta de 50 está sendo rodada num laço sobre as linhas da de 1: um N+1",
+        "why": "Cinquenta clientes, uma consulta cada, mais a que os buscou."
+      },
+      {
+        "text": "A consulta de 50 foi cacheada 50 vezes",
+        "why": "Calls conta execuções que chegaram ao servidor, não acertos de cache."
+      },
+      {
+        "text": "Cinquenta usuários rodaram a consulta uma vez cada",
+        "why": "A ferramenta conta execuções, e esta forma é uma requisição emitindo cinquenta."
+      }
+    ]
+  },
+  "ex-3xws1610": {
+    "prompt": "log_min_duration_statement = 0 em produção. Qual é a objeção?",
+    "hint": "Zero quer dizer toda instrução, não só as lentas.",
+    "choices": [
+      {
+        "text": "Ele desliga o pg_stat_statements",
+        "why": "Os dois são independentes; um registra, o outro resume."
+      },
+      {
+        "text": "Ele ritma cada consulta até o limiar",
+        "why": "Ele não ritma consultas; registra as acima do limiar, e zero são todas."
+      },
+      {
+        "text": "Ele escreve uma linha por instrução, enchendo o disco num servidor movimentado",
+        "why": "É uma configuração de desenvolvimento: ponha, olhe, e volte."
+      },
+      {
+        "text": "Ele registra o plano completo de cada instrução, e esses planos são grandes em disco",
+        "why": "Ele registra instruções com seus literais, não planos."
+      }
+    ]
+  },
+  "ex-zbw80xmc": {
+    "prompt": "Duas perguntas valem ser feitas de qualquer linha que um ORM emite. Qual par?",
+    "hint": "As duas são lugares em que a saída de um mapeador difere do que uma pessoa escreveria.",
+    "choices": [
+      {
+        "text": "De qual tabela ele lê, e por qual chave primária ele busca a linha?",
+        "why": "Essas já estão no código; as surpresas são as colunas e a contagem."
+      },
+      {
+        "text": "Qual índice, e qual plano?",
+        "why": "Esses vêm do EXPLAIN, e são a mesma pergunta para qualquer instrução."
+      },
+      {
+        "text": "Qual usuário, e qual conexão?",
+        "why": "Nenhum muda o que a instrução é; as colunas e a contagem mudam."
+      },
+      {
+        "text": "Quais colunas ele pediu, e quantas vezes rodou?",
+        "why": "Toda coluna por padrão, e uma contagem que um laço pode multiplicar."
+      }
+    ]
+  },
+  "ex-fwvhtvpw": {
+    "prompt": "A coluna do pg_stat_statements que acha um N+1 é ___.",
+    "hint": "Não é o tempo; é o número de execuções.",
+    "blanks": [
+      {
+        "accept": [
+          "calls"
+        ]
+      }
+    ]
+  },
+  "ex-8jdz5jbg": {
+    "prompt": "Uma página carrega 50 clientes e, num laço, os pedidos de cada cliente. Quantas consultas?",
+    "hint": "Uma para os clientes, e uma por cliente.",
+    "choices": [
+      {
+        "text": "51",
+        "why": "Uma consulta para os cinquenta clientes, e uma por cliente: N mais um."
+      },
+      {
+        "text": "Duas, uma para os clientes e uma para os pedidos deles, buscados juntos",
+        "why": "Dois é a versão corrigida, com os pedidos carregados numa consulta; o laço é cinquenta e um."
+      },
+      {
+        "text": "50",
+        "why": "Isso deixa de fora a consulta que buscou os clientes."
+      },
+      {
+        "text": "1",
+        "why": "Um é uma junção única, não um laço que busca pedidos por cliente."
+      }
+    ]
+  },
+  "ex-22b2hes4": {
+    "prompt": "Por que um N+1 passa na revisão de código e passa na máquina de quem desenvolve?",
+    "hint": "Cada consulta é rápida, e N é pequeno num laptop.",
+    "choices": [
+      {
+        "text": "Ele aparece sob um nível de isolamento específico",
+        "why": "Isolamento não tem nada a ver; é carregamento preguiçoso num laço."
+      },
+      {
+        "text": "Cada consulta é rápida, e ele escala com o dado e não com o código",
+        "why": "Cinquenta linhas rápidas num laptop; cinco mil e uma em produção, e as quatro linhas não mudaram."
+      },
+      {
+        "text": "O revisor que aprovou não sabia SQL o bastante para notar as instruções emitidas",
+        "why": "É invisível saiba o revisor SQL ou não; nada nas quatro linhas diz cinquenta e uma."
+      },
+      {
+        "text": "O ORM o esconde do log",
+        "why": "O log o mostra claramente; a graça é que ninguém olha até ficar lento."
+      }
+    ]
+  },
+  "ex-wt7ezqg8": {
+    "prompt": "Qual destes NÃO é um esconderijo de N+1?",
+    "hint": "Três rodam uma consulta por linha sem um laço visível; um não tem relação.",
+    "choices": [
+      {
+        "text": "Um serializador percorrendo a relação de cada objeto para JSON",
+        "why": "Uma consulta por objeto, dentro do laço do serializador."
+      },
+      {
+        "text": "Um método de modelo que roda uma consulta, chamado uma vez por linha de relatório",
+        "why": "O laço é o relatório; a consulta é o método."
+      },
+      {
+        "text": "Uma restrição CHECK na tabela orders",
+        "why": "Uma restrição roda em escritas e não toca relação nenhuma; não é um N+1."
+      },
+      {
+        "text": "Um template escrevendo order.customer.name em cada linha",
+        "why": "O laço está no template, a consulta no acesso à propriedade."
+      }
+    ]
+  },
+  "ex-v1tygmjs": {
+    "prompt": "Clientes, cada um com pedidos, cada um com linhas, carregados preguiçosamente. Quantas consultas para C clientes com média de M pedidos?",
+    "hint": "Uma no topo, uma por cliente, uma por pedido.",
+    "choices": [
+      {
+        "text": "1 + C + M, contando as linhas uma vez no total em vez de por pedido",
+        "why": "As linhas são por pedido, não uma vez no total, então é C·M e não M."
+      },
+      {
+        "text": "C · M",
+        "why": "Isso deixa de fora a consulta de clientes e as consultas de pedidos por cliente."
+      },
+      {
+        "text": "3",
+        "why": "Três é a versão corrigida, uma consulta por nível; o carregamento preguiçoso é o produto."
+      },
+      {
+        "text": "1 + C + C·M",
+        "why": "N+1 dentro de N+1; o produto é o que faz a página estourar o tempo."
+      }
+    ]
+  },
+  "ex-01jb3w05": {
+    "prompt": "O N+1 é a causa mais comum de \"o banco está lento\". Qual destes o conserta?",
+    "hint": "A aula 2 disse três coisas que ele não é.",
+    "choices": [
+      {
+        "text": "Carregar a relação de uma vez, antes do laço",
+        "why": "Uma consulta por nível ou uma junção; a próxima seção é as duas formas."
+      },
+      {
+        "text": "Desnormalizar os pedidos na linha do cliente para nenhuma segunda consulta ser preciso",
+        "why": "A aula 2 disse que essa não é a correção; as idas e voltas permanecem."
+      },
+      {
+        "text": "Um servidor maior",
+        "why": "A aula 10 disse que um servidor maior não ajuda um problema cujo custo é ida e volta."
+      },
+      {
+        "text": "Cachear os pedidos de cada cliente",
+        "why": "Um cache esconde a contagem de uma requisição e não da próxima; o laço continua lá."
+      }
+    ]
+  },
+  "ex-fgas0nhm": {
+    "prompt": "As duas formas de SQL que consertam um N+1 são uma junção, e qual?",
+    "hint": "A outra carrega uma instrução por nível, não por linha.",
+    "choices": [
+      {
+        "text": "Um cache chaveado pelo id do cliente",
+        "why": "Um cache não é uma das duas formas; as duas formas são instruções."
+      },
+      {
+        "text": "Uma consulta por nível, buscando todo filho cujo pai está no conjunto",
+        "why": "WHERE customer_id = ANY(os ids), entregue aos pais em memória."
+      },
+      {
+        "text": "Uma subconsulta correlacionada por cliente, rodada dentro do banco em vez de na aplicação",
+        "why": "Isso ainda é uma consulta por cliente, movida mas não removida."
+      },
+      {
+        "text": "Uma view materializada atualizada toda noite",
+        "why": "Essa é outra ferramenta para outro problema; a correção é uma instrução por nível."
+      }
+    ]
+  },
+  "ex-nf22k33v": {
+    "prompt": "Para uma relação para-muitos com pais largos, por que preferir a consulta à parte à junção?",
+    "hint": "Pergunte o que a junção faz com as colunas do pai.",
+    "choices": [
+      {
+        "text": "A consulta à parte não usa índice",
+        "why": "Ela usa o índice na chave estrangeira, como o plano mostrou."
+      },
+      {
+        "text": "A junção devolve as linhas erradas",
+        "why": "As duas devolvem as mesmas linhas; a diferença é a repetição, não a correção."
+      },
+      {
+        "text": "A junção repete toda coluna do pai em toda linha de filho",
+        "why": "Um cliente com cem pedidos são cem cópias do cliente; a consulta à parte devolve cada pai uma vez."
+      },
+      {
+        "text": "A junção com o conjunto de pais não pode ser parametrizada, então os ids entram como texto",
+        "why": "Pode; as duas formas são parametrizadas."
+      }
+    ]
+  },
+  "ex-kgttrh88": {
+    "prompt": "Para uma relação para-um, o cliente de um pedido, qual forma cabe?",
+    "hint": "Algumas colunas a mais por linha, nada repetido.",
+    "choices": [
+      {
+        "text": "A consulta à parte com o conjunto de ids, uma instrução por nível",
+        "why": "Essa cabe para para-muitos; para um cliente por pedido a junção é mais simples e barata."
+      },
+      {
+        "text": "Nenhuma; uma relação para-um não tem N+1",
+        "why": "Tem: um cliente buscado por pedido num laço é a mesma forma."
+      },
+      {
+        "text": "Uma view materializada",
+        "why": "Exagero para uma junção para-um que o banco faz numa instrução."
+      },
+      {
+        "text": "A junção",
+        "why": "O cliente de cada pedido acrescenta algumas colunas à linha do pedido e não repete nada."
+      }
+    ]
+  },
+  "ex-ct6c45fa": {
+    "prompt": "Carregar ansiosamente três relações para-muitos de uma vez, com uma junção única. O que dá errado?",
+    "hint": "A multiplicação da aula 5, chegando num ORM.",
+    "choices": [
+      {
+        "text": "As linhas multiplicam: pedidos × endereços × itens por cliente",
+        "why": "Um resultado correto e enorme; consultas à parte por relação evitam isso."
+      },
+      {
+        "text": "A junção é recusada porque uma instrução junta no máximo duas tabelas",
+        "why": "Uma instrução junta qualquer número de tabelas; o problema é a contagem de linhas."
+      },
+      {
+        "text": "Apenas a primeira relação é carregada",
+        "why": "As três carregam; o problema é que juntas elas multiplicam."
+      },
+      {
+        "text": "Os parâmetros acabam",
+        "why": "Não há limite de parâmetro em questão; é o produto cartesiano dos filhos."
+      }
+    ]
+  },
+  "ex-7z7tkrhh": {
+    "prompt": "Onde a instrução de carga ansiosa pertence: no modelo, ou na consulta?",
+    "hint": "Uma tela quer os pedidos; outra quer só o nome.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum; o ORM decide sozinho",
+        "why": "Ele assume carga preguiçosa, que é o N+1; a instrução é sua para pôr."
+      },
+      {
+        "text": "Na consulta, porque uma configuração no modelo carrega os pedidos em toda tela",
+        "why": "Inclusive as que mostram um nome e mais nada: o peça menos da aula 10, desfeito globalmente."
+      },
+      {
+        "text": "No modelo, para o N+1 ser consertado em todo lugar de uma vez",
+        "why": "Isso carrega a relação em toda tela, inclusive as que não a querem."
+      },
+      {
+        "text": "Na migração, para o esquema aplicar",
+        "why": "Carregar é uma decisão de consulta, não de esquema; uma migração não a expressa."
+      }
+    ]
+  },
+  "ex-zyn0tmxt": {
+    "prompt": "WHERE email = $1. O que é o $1?",
+    "hint": "A instrução e o valor chegaram em partes separadas da mensagem.",
+    "choices": [
+      {
+        "text": "Uma convenção de exibição que o pg_stat_statements inventou",
+        "why": "É como a instrução de fato chegou; a ferramenta mostra o que foi mandado."
+      },
+      {
+        "text": "Uma variável que o banco preenche com um padrão",
+        "why": "O cliente a fornece na execução; o banco não a preenche."
+      },
+      {
+        "text": "Um marcador; o valor viaja separado do texto da instrução",
+        "why": "A forma é fixada antes de o valor chegar, então o valor não pode mudá-la."
+      },
+      {
+        "text": "A primeira coluna do conjunto de resultados que a instrução devolve",
+        "why": "É uma posição de ligação no WHERE, não uma referência de coluna."
+      }
+    ]
+  },
+  "ex-dh9wbj79": {
+    "prompt": "Um valor que parece SQL é mandado como parâmetro para WHERE email = $1. O que acontece?",
+    "hint": "A forma foi fixada quando a instrução foi preparada.",
+    "choices": [
+      {
+        "text": "É analisado e executado como SQL, acrescentado depois da cláusula WHERE",
+        "why": "Um parâmetro é dado; nunca é analisado como parte da instrução."
+      },
+      {
+        "text": "A instrução é rejeitada como malformada",
+        "why": "Ela roda; o valor é comparado, não analisado."
+      },
+      {
+        "text": "Derruba a tabela nomeada nele",
+        "why": "É exatamente o que os parâmetros impedem; o valor não é código."
+      },
+      {
+        "text": "É comparado com a coluna email como texto e não casa com nada",
+        "why": "O valor não pode mudar a forma da instrução, então é só um texto que nenhuma linha iguala."
+      }
+    ]
+  },
+  "ex-et6k5zan": {
+    "prompt": "Como injeção de SQL alcança uma aplicação que usa um ORM?",
+    "hint": "O ORM nunca cola um valor, mas ele tem uma porta que recebe uma string.",
+    "choices": [
+      {
+        "text": "Pela saída de emergência de consulta crua, quando um valor é formatado na string",
+        "why": "A saída de emergência também aceita parâmetros; o valor vai lá, nunca na string."
+      },
+      {
+        "text": "Pelos métodos comuns de save e find do ORM, que montam o WHERE a partir da entrada do usuário",
+        "why": "Esses parametrizam por construção; injeção não os alcança."
+      },
+      {
+        "text": "Pelos arquivos de migração",
+        "why": "Migrações são mudanças de esquema que o time escreve, não entrada de usuário."
+      },
+      {
+        "text": "Não alcança; um ORM descarta a injeção",
+        "why": "A saída de consulta crua a reabre se um valor for montado na string."
+      }
+    ]
+  },
+  "ex-0x1knftg": {
+    "prompt": "Para qual destes um marcador NÃO pode servir?",
+    "hint": "Um marcador representa um valor, e só um valor.",
+    "choices": [
+      {
+        "text": "Uma data",
+        "why": "Um valor como qualquer outro."
+      },
+      {
+        "text": "Um nome de coluna",
+        "why": "Um nome de coluna não é um valor; um vindo de usuário passa por uma lista, nunca pelo texto."
+      },
+      {
+        "text": "Um endereço de email",
+        "why": "Um valor; exatamente para o que um marcador serve."
+      },
+      {
+        "text": "Um id inteiro",
+        "why": "Um valor, e ainda um parâmetro mesmo quando você confia nele."
+      }
+    ]
+  },
+  "ex-xgvahw4x": {
+    "prompt": "WHERE id IN ($1) com uma lista como valor. Por que não funciona?",
+    "hint": "Um parâmetro guarda um valor.",
+    "choices": [
+      {
+        "text": "A lista é longa demais para caber num único marcador de parâmetro numa mensagem só",
+        "why": "Tamanho não é o problema; o marcador único é um valor por definição."
+      },
+      {
+        "text": "IN exige uma subconsulta, não uma lista",
+        "why": "IN aceita uma lista ou uma subconsulta; o problema aqui é um marcador para muitos valores."
+      },
+      {
+        "text": "$1 é um valor, não uma lista, então IN compara com um item só",
+        "why": "= ANY($1) com um array é a forma que guarda uma lista num parâmetro."
+      },
+      {
+        "text": "IN se recusa a ser parametrizado",
+        "why": "Ele aceita, com um marcador por item, ou = ANY com um array."
+      }
+    ]
+  },
+  "ex-rn25x437": {
+    "prompt": "Customer.find(42) sem projeção. Quais colunas o SELECT pede?",
+    "hint": "O objeto sendo montado tem todo campo.",
+    "choices": [
+      {
+        "text": "Só a coluna da chave primária, porque é ela que identifica a linha",
+        "why": "O objeto tem todo campo, então a instrução pede toda coluna."
+      },
+      {
+        "text": "Só as colunas indexadas",
+        "why": "Indexar não decide a lista do SELECT; os campos do objeto decidem."
+      },
+      {
+        "text": "Só as colunas que o código lê depois",
+        "why": "O ORM não sabe disso de antemão; ele busca a linha inteira."
+      },
+      {
+        "text": "Toda coluna da tabela",
+        "why": "É por isso que uma coluna bio de dez kilobytes é buscada numa tela que mostra nomes."
+      }
+    ]
+  },
+  "ex-p6zdcw4c": {
+    "prompt": "Um DEFAULT dispara quando a coluna está ausente do INSERT. Um ORM que manda todo campo insere o quê para um campo que o código nunca definiu?",
+    "hint": "Ausente não é o mesmo que não definido no objeto.",
+    "choices": [
+      {
+        "text": "NULL, que é um valor, então o default nunca dispara",
+        "why": "Uma coluna NOT NULL o recusa; sem a restrição a linha é guardada sem o default."
+      },
+      {
+        "text": "O valor DEFAULT da coluna, porque o campo nunca foi definido no objeto",
+        "why": "O campo é mandado como NULL, que está presente, então o default é pulado."
+      },
+      {
+        "text": "Uma string vazia",
+        "why": "Ele manda NULL para um campo não definido, e NULL não é o default também."
+      },
+      {
+        "text": "Nada; o ORM omite campos não definidos",
+        "why": "Alguns omitem; os que mandam tudo mandam NULL, que é o caso aqui."
+      }
+    ]
+  },
+  "ex-wg8z5e69": {
+    "prompt": "Uma lista numa tela fica estável por meses, depois embaralha após um deploy que não mudou nada nela. Qual comportamento escondido é este?",
+    "hint": "Uma consulta sem ORDER BY devolve linhas na ordem que o banco achou conveniente.",
+    "choices": [
+      {
+        "text": "O default disparou diferente",
+        "why": "Defaults definem valores no insert; não ordenam um SELECT."
+      },
+      {
+        "text": "Customer.all() emite sem ORDER BY, e o plano mudou",
+        "why": "Aula 4: sem ordem a ordem conveniente do banco pode mudar após um update, um vacuum ou um plano novo."
+      },
+      {
+        "text": "O identity map cacheou a ordenação antiga das linhas de uma requisição anterior",
+        "why": "O cache devolve o mesmo objeto, não uma ordem diferente entre requisições."
+      },
+      {
+        "text": "Uma migração reordenou a tabela",
+        "why": "Uma migração muda o esquema, não a ordem de linhas que uma consulta sem ORDER BY devolve."
+      }
+    ]
+  },
+  "ex-edzmnxe7": {
+    "prompt": "Um handler de requisição carrega um pedido numa sessão de unidade de trabalho, chama uma API de pagamento por dois segundos, e então salva. Qual é o custo no banco?",
+    "hint": "A transação fica aberta da primeira leitura ao commit.",
+    "choices": [
+      {
+        "text": "A chamada de API é revertida se falhar",
+        "why": "Uma chamada de rede não faz parte do rollback da transação; só o trabalho no banco faz."
+      },
+      {
+        "text": "O nível de isolamento padrão evita qualquer custo",
+        "why": "Isolamento não encurta uma transação aberta; o tempo aberto é o custo."
+      },
+      {
+        "text": "Por dois segundos a transação segura os bloqueios e trava o VACUUM",
+        "why": "Um handler não é nada; mil por minuto enchem o banco de versões de linha que ninguém limpa."
+      },
+      {
+        "text": "Pouco, porque uma leitura pega um bloqueio leve",
+        "why": "A unidade de trabalho é uma transação aberta pelo handler inteiro, inclusive a espera."
+      }
+    ]
+  },
+  "ex-xjvyxpm6": {
+    "prompt": "Um worker de fundo segura uma sessão por uma hora. Por que ele lê dado velho?",
+    "hint": "O identity map responde uma segunda busca da memória.",
+    "choices": [
+      {
+        "text": "A conexão do worker com o banco caiu e reconectou em silêncio",
+        "why": "Uma conexão caída dá erro; não devolve linhas velhas em silêncio."
+      },
+      {
+        "text": "O banco está numa réplica antiga",
+        "why": "A obsolescência é o cache da sessão, não o servidor de que leu."
+      },
+      {
+        "text": "O nível de isolamento padrão é serializable",
+        "why": "A causa é o identity map, não o nível de isolamento de uma consulta nova."
+      },
+      {
+        "text": "O identity map da sessão devolve a linha como foi carregada primeiro",
+        "why": "O isolamento da aula 8 reimplementado uma camada acima; sessões curtas, uma por unidade de trabalho, é a regra."
+      }
+    ]
+  },
+  "ex-8vtdwrsh": {
+    "prompt": "O que é uma migração?",
+    "hint": "Uma mudança no esquema, aplicada um número definido de vezes a cada banco.",
+    "choices": [
+      {
+        "text": "Uma mudança de esquema, escrita como arquivo, versionada com o código, aplicada uma vez a cada banco",
+        "why": "Uma pasta de arquivos mais uma tabela que registra quais rodaram."
+      },
+      {
+        "text": "Um backup do banco inteiro, tirado automaticamente na frente de um deploy",
+        "why": "Isso é um backup; uma migração é uma mudança para a frente no esquema."
+      },
+      {
+        "text": "Uma cópia do dado movida para um servidor novo",
+        "why": "Isso é mover dado; uma migração de esquema muda a forma, não o servidor."
+      },
+      {
+        "text": "Uma ferramenta que ajusta o planejador de consultas",
+        "why": "Nada a ver com o planejador; ela muda o esquema."
+      }
+    ]
+  },
+  "ex-r6yp8rfs": {
+    "prompt": "Por que uma migração aplicada em qualquer lugar nunca é editada?",
+    "hint": "Editá-la deixa dois bancos que ambos alegam a mesma versão.",
+    "choices": [
+      {
+        "text": "A ferramenta faz checksum e se recusa a subir",
+        "why": "Algumas avisam, mas a razão da regra é a divergência silenciosa de esquema."
+      },
+      {
+        "text": "Dois bancos registrariam ela aplicada e teriam esquemas diferentes, sem detecção",
+        "why": "A correção é a próxima migração, que roda em todo lugar em que não rodou."
+      },
+      {
+        "text": "O arquivo é travado pela ferramenta depois que roda",
+        "why": "Você ainda pode editar o arquivo; a regra é sobre o que editar causa."
+      },
+      {
+        "text": "Editá-la roda de novo pelos bancos",
+        "why": "Uma migração roda uma vez; editar não a roda de novo, que é o problema."
+      }
+    ]
+  },
+  "ex-3r5sf1cc": {
+    "prompt": "Por que produção anda para a frente em vez de rodar o down de uma migração?",
+    "hint": "Um down de uma migração de um mês nunca foi testado contra as linhas que chegaram desde então.",
+    "choices": [
+      {
+        "text": "Down é mais lento que up",
+        "why": "Velocidade não é a razão; correção contra dado que mudou desde então é."
+      },
+      {
+        "text": "Produção não tem tabela de migração",
+        "why": "Tem; é assim que ela sabe o que rolar para a frente."
+      },
+      {
+        "text": "Um down não restaura dado apagado, e não foi testado contra linhas mais novas",
+        "why": "A correção de uma migração ruim é outra migração; down é para a máquina de quem desenvolve."
+      },
+      {
+        "text": "Ferramentas de migração deixam o passo down de fora quando rodam contra produção",
+        "why": "A maioria suporta; a graça é que down é pouco confiável em produção, não ausente."
+      }
+    ]
+  },
+  "ex-p2eb6wyw": {
+    "prompt": "Uma migração roda CREATE INDEX CONCURRENTLY dentro da transação por migração da ferramenta. O que acontece, e qual é o desfecho bom?",
+    "hint": "A exceção da aula 9, encontrando a ferramenta de migração.",
+    "choices": [
+      {
+        "text": "Roda, e a transação torna a construção atômica",
+        "why": "CONCURRENTLY não pode rodar num bloco de transação, então é recusado antes de rodar."
+      },
+      {
+        "text": "Confirma o índice antes do resto da migração",
+        "why": "Uma instrução dentro de uma transação não confirma sozinha."
+      },
+      {
+        "text": "Constrói o índice em silêncio com um bloqueio",
+        "why": "Esse é o desfecho ruim que o erro impede; a ferramenta tem que ser avisada para não envolver."
+      },
+      {
+        "text": "Dá erro na hora do deploy; a migração tem que ser marcada para não ser envolvida",
+        "why": "O desfecho bom, contra uma ferramenta que deixa cair o CONCURRENTLY em silêncio e pega o bloqueio."
+      }
+    ]
+  },
+  "ex-xjvkbvx3": {
+    "prompt": "Ponha em ordem os passos de renomear uma coluna numa tabela viva com segurança, ao longo de deploys.",
+    "hint": "Em momento nenhum uma versão do código em execução pode nomear uma coluna que não existe.",
+    "items": [
+      "Acrescentar a coluna nova, e escrever nas duas a partir do código",
+      "Preencher as linhas antigas na coluna nova",
+      "Mudar o código para ler a coluna nova",
+      "Parar de escrever na coluna antiga e derrubá-la"
+    ],
+    "trap": "A troca comum é um único ALTER TABLE … RENAME: entre a renomeação e o código novo rodando, toda requisição nomeia uma coluna que já foi."
+  },
+  "ex-m5zycezj": {
+    "prompt": "Por que manter uma migração de dados fora da migração de esquema que um deploy roda?",
+    "hint": "Uma é um UPDATE sobre milhões de linhas numa transação só.",
+    "choices": [
+      {
+        "text": "Uma migração de dados é uma transação longa que o deploy síncrono ficaria esperando",
+        "why": "Ela é escrita em lotes, poder rodar de novo, na linguagem do app; a mudança de esquema não."
+      },
+      {
+        "text": "Migrações de dados não podem mudar linhas",
+        "why": "Mudar linhas é exatamente o trabalho delas; a graça é onde rodam."
+      },
+      {
+        "text": "A tabela de migração registra um tipo de mudança",
+        "why": "Ela registra qualquer migração; a razão é o deploy esperando milhões de linhas."
+      },
+      {
+        "text": "Uma migração de esquema roda fora de uma transação",
+        "why": "A maioria roda dentro de uma; é o tamanho da migração de dados que é o problema."
+      }
+    ]
+  },
+  "ex-j9yees3p": {
+    "prompt": "Um Choice de status é mantido só na classe do modelo, não como CHECK. Uma carga em massa insere um status inválido. O que acontece?",
+    "hint": "Uma regra que o banco não conhece é uma regra que algumas linhas não seguem.",
+    "choices": [
+      {
+        "text": "A carga falha com erro de restrição",
+        "why": "Não há restrição; a regra mora só na classe."
+      },
+      {
+        "text": "É guardado: a classe valida os saves deste código, não o insert de outro escritor",
+        "why": "O ponto da aula 1; ponha a regra na tabela se todo escritor tem que obedecer."
+      },
+      {
+        "text": "É recusado, porque o modelo se aplica em todo lugar",
+        "why": "O modelo se aplica só quando este código salva este objeto; uma carga em massa o contorna."
+      },
+      {
+        "text": "É corrigido para o valor válido mais próximo",
+        "why": "Nada o corrige; é guardado como escrito."
+      }
+    ]
+  },
+  "ex-y90d61xk": {
+    "prompt": "Três coisas a conferir num esquema que um ORM gerou. Qual é uma delas?",
+    "hint": "A frase mais valiosa da aula 9 é sobre isso.",
+    "choices": [
+      {
+        "text": "Se o pool de conexões é grande o bastante",
+        "why": "Uma configuração de execução, não algo no DDL gerado."
+      },
+      {
+        "text": "Se as consultas usam parâmetros de ligação",
+        "why": "O ORM parametriza na hora da consulta; não é uma propriedade do esquema gerado."
+      },
+      {
+        "text": "Se um índice foi criado em cada chave estrangeira",
+        "why": "O PostgreSQL não cria; alguns geradores acrescentam e alguns não, e o que falta é a exclusão de quatro minutos."
+      },
+      {
+        "text": "Se as tabelas geradas já estão na terceira forma normal",
+        "why": "Normalização é a aula 2, e não o que os padrões de um gerador erram."
+      }
+    ]
+  },
+  "ex-pzjsj9j1": {
+    "prompt": "Um time gera o esquema a partir do modelo, depois edita o esquema à mão. O que dá errado?",
+    "hint": "Duas fontes de verdade para uma coisa.",
+    "choices": [
+      {
+        "text": "O modelo para de compilar",
+        "why": "Ele compila; o conflito é entre o gerador e a edição manual."
+      },
+      {
+        "text": "O banco recusa a edição",
+        "why": "O banco a aplica; o problema vem na próxima geração."
+      },
+      {
+        "text": "A tabela de migração é corrompida",
+        "why": "A tabela está bem; os esquemas divergem da ideia que o modelo tem deles."
+      },
+      {
+        "text": "A próxima migração gerada tenta desfazer a edição manual",
+        "why": "Escolha uma direção e deixe a outra ser derivada."
+      }
+    ]
+  },
+  "ex-0h0gkz54": {
+    "prompt": "Por que uma restrição na tabela é mais forte que a mesma regra na classe do modelo?",
+    "hint": "Uma aplicação é substituída; um banco é migrado.",
+    "choices": [
+      {
+        "text": "A restrição da tabela obriga toda aplicação que algum dia abrir o banco",
+        "why": "A regra da classe obriga só esta aplicação; as linhas a sobrevivem."
+      },
+      {
+        "text": "A classe de modelo não tem como expressar restrição de tipo nenhum",
+        "why": "Consegue; a graça é que a regra dela alcança só este código."
+      },
+      {
+        "text": "Uma restrição de tabela roda mais rápido",
+        "why": "Velocidade não é o argumento; alcance entre aplicações é."
+      },
+      {
+        "text": "A regra do modelo é conferida menos vezes",
+        "why": "Ela é conferida nos saves deste código; a lacuna são os outros escritores, não a frequência."
+      }
+    ]
+  },
+  "ex-sa3e6341": {
+    "prompt": "Um relatório de receita por cidade por mês com total acumulado. ORM ou SQL?",
+    "hint": "As aulas 6 e 7 construíram essa forma; um mapeador a expressa mal.",
+    "choices": [
+      {
+        "text": "O ORM, porque ele parametriza por você",
+        "why": "A saída crua e o query builder também parametrizam, e produzem SQL legível."
+      },
+      {
+        "text": "SQL, pela saída de consulta crua com parâmetros ou por um query builder",
+        "why": "Revisável, passível de EXPLAIN, indexável; lido em registros simples em vez de objetos do modelo."
+      },
+      {
+        "text": "Os métodos de modelo do ORM, com uma chamada separada para cada agregação que você precisa calcular",
+        "why": "Isso é várias consultas e um laço fazendo a agregação que o banco faria numa passada."
+      },
+      {
+        "text": "Uma view materializada, seja qual for o relatório",
+        "why": "Isso pode ajudar depois; a resposta imediata é escrever o SQL e ler o plano."
+      }
+    ]
+  },
+  "ex-cexktfdm": {
+    "prompt": "Uma tela de busca com vários filtros opcionais. Qual é a camada certa?",
+    "hint": "O SQL tem que mudar de forma com a entrada, que é onde a concatenação de strings nasce.",
+    "choices": [
+      {
+        "text": "Uma consulta salva à parte por combinação de filtros",
+        "why": "As combinações explodem; um builder as compõe de um conjunto de cláusulas."
+      },
+      {
+        "text": "Uma view materializada de cada resultado possível",
+        "why": "Não há resultado fixo a materializar; os filtros variam por requisição."
+      },
+      {
+        "text": "Um query builder: cada filtro acrescenta uma cláusula e recebe um parâmetro",
+        "why": "Uma instrução que o servidor planeja como um todo, parametrizada por inteiro."
+      },
+      {
+        "text": "Concatenação de strings, já que o SQL é dinâmico",
+        "why": "É exatamente o que um query builder substitui, e de onde a injeção vem."
+      }
+    ]
+  },
+  "ex-p76mj3xd": {
+    "prompt": "Criar um cliente, atualizar um endereço, apagar uma nota. Qual camada, e por quê?",
+    "hint": "As instruções com mais repetição, em que os presentes do mapeador pagam toda vez.",
+    "choices": [
+      {
+        "text": "SQL cru, por controle",
+        "why": "Essas são as instruções que o mapeador escreve melhor; SQL cru aqui é repetição à mão."
+      },
+      {
+        "text": "Um query builder, por componibilidade",
+        "why": "Não há nada dinâmico a compor; um save simples é trabalho do mapeador."
+      },
+      {
+        "text": "Um procedimento armazenado por operação",
+        "why": "Exagero para as escritas óbvias que o mapeador já escreve uma vez."
+      },
+      {
+        "text": "O ORM: parâmetros, tipos que combinam, as instruções óbvias escritas uma vez",
+        "why": "O caminho de escrita é a casa do mapeador, e a unidade de trabalho agrupa as escritas relacionadas."
+      }
+    ]
+  },
+  "ex-xyzcafqj": {
+    "prompt": "Ligue cada tarefa à camada que a aula recomenda.",
+    "hint": "O caminho de escrita, o relatório e o filtro variável cada um tem uma casa.",
+    "pairs": [
+      {
+        "left": "Inserir um pedido com suas linhas",
+        "right": "o ORM"
+      },
+      {
+        "left": "Receita por cidade com total acumulado",
+        "right": "SQL cru ou um query builder"
+      },
+      {
+        "left": "Uma tela de busca com filtros opcionais",
+        "right": "um query builder"
+      }
+    ],
+    "right_distractors": [
+      "um procedimento armazenado",
+      "concatenação de strings"
+    ]
+  },
+  "ex-t4sdx7n5": {
+    "prompt": "Qual destes NÃO é uma das regras da aula que valem seja o que for que emita a instrução?",
+    "hint": "Três são sobre ler e escrever SQL; uma contradiz a aula.",
+    "choices": [
+      {
+        "text": "Uma regra que o dado tem que seguir pertence à classe do modelo, não à tabela",
+        "why": "A regra é o contrário: uma restrição pertence à tabela, diga a classe o que disser."
+      },
+      {
+        "text": "Uma consulta lenta é um plano a ler, tenha quem tiver escrito",
+        "why": "As ferramentas da aula 10 leem a instrução emitida do mesmo jeito."
+      },
+      {
+        "text": "Uma consulta que roda muitas vezes só é uma contagem a conferir quando você mesmo a escreveu",
+        "why": "É uma contagem a conferir seja qual for a camada que a pôs no laço."
+      },
+      {
+        "text": "Um valor vai num parâmetro, através de toda camada",
+        "why": "Pelo ORM, pelo builder e pela saída crua igualmente."
+      }
+    ]
+  }
+}

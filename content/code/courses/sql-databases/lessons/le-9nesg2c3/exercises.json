@@ -1,0 +1,1400 @@
+[
+  {
+    "id": "ex-7mzqq66p",
+    "version": 1,
+    "section": "what-an-orm-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In one sentence, what does an object-relational mapper do?",
+    "hint": "A class, an instance and a method call, on one side; a table, a row and a statement on the other.",
+    "choices": [
+      {
+        "text": "Translates between the language's objects and the database's tables and statements",
+        "correct": true,
+        "why": "A class stands for a table, an instance for a row, a method call for a statement."
+      },
+      {
+        "text": "Stores the language's objects on disk directly, so a separate database becomes unnecessary",
+        "correct": false,
+        "why": "The database is still there; the mapper emits SQL to it on every call."
+      },
+      {
+        "text": "Caches query results so the same query runs once",
+        "correct": false,
+        "why": "Some mappers cache within a session, but that is not what a mapper is for."
+      },
+      {
+        "text": "Replaces SQL with a faster query language of its own",
+        "correct": false,
+        "why": "It emits SQL; there is no other language underneath, and it is not faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h6s7c8f",
+    "version": 1,
+    "section": "what-an-orm-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is the rule the whole lesson rests on?",
+    "hint": "It is about what happens to the statement the mapper produces.",
+    "choices": [
+      {
+        "text": "The ORM handles the database for you, so the material about statements in lessons 4 to 10 no longer applies",
+        "correct": false,
+        "why": "The reverse: they apply to the emitted statement exactly as if you had typed it."
+      },
+      {
+        "text": "The ORM emits SQL, and everything about a statement applies to it whoever wrote it",
+        "correct": true,
+        "why": "A missing ORDER BY, an unindexed join, an N+1: the mapper does not exempt them."
+      },
+      {
+        "text": "A good ORM will not emit a slow query",
+        "correct": false,
+        "why": "It emits whatever the code asks for, and the N+1 is the clearest counter-example."
+      },
+      {
+        "text": "You need SQL just for the queries an ORM struggles to express",
+        "correct": false,
+        "why": "You need it to read what the ORM emits, which is every query."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbr47920",
+    "version": 1,
+    "section": "what-an-orm-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Active Record and Data Mapper differ in what?",
+    "hint": "Ask where the knowledge of the database lives.",
+    "choices": [
+      {
+        "text": "Data Mapper does not use SQL",
+        "correct": false,
+        "why": "Both emit SQL; they organise the code around it differently."
+      },
+      {
+        "text": "Active Record is the pattern you use for reads, and Data Mapper the one you use for writes",
+        "correct": false,
+        "why": "Both do both; the difference is not the direction of the traffic."
+      },
+      {
+        "text": "In Active Record the object is the row and knows the database; in Data Mapper the object is plain",
+        "correct": true,
+        "why": "A separate session or repository moves the plain object to and from a table."
+      },
+      {
+        "text": "Active Record is faster because it caches more",
+        "correct": false,
+        "why": "Speed is not the axis; where the mapping lives is."
+      }
+    ]
+  },
+  {
+    "id": "ex-8q3z9wpr",
+    "version": 1,
+    "section": "what-an-orm-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query builder is not a mapper. What is it?",
+    "hint": "It composes something from method calls and hands back rows.",
+    "choices": [
+      {
+        "text": "A mapper with the objects removed",
+        "correct": false,
+        "why": "It never had objects; it builds statements, not instances."
+      },
+      {
+        "text": "A cache in front of the database",
+        "correct": false,
+        "why": "It emits statements; it does not remember their results."
+      },
+      {
+        "text": "The part of the ORM that reads your model classes and generates the migration files",
+        "correct": false,
+        "why": "Migrations are a separate mechanism; a query builder builds SELECTs and the like."
+      },
+      {
+        "text": "A tool that composes SQL from method calls, keeping the statement yours and parameterised",
+        "correct": true,
+        "why": "select().from().where(): the statement is still SQL, still parameterised, still composable."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvn4ce0c",
+    "version": 1,
+    "section": "what-an-orm-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The skill this lesson teaches is not the ORM's API. It is the habit of knowing what it ___.",
+    "hint": "One word: what the mapper does with SQL on every call.",
+    "blanks": [
+      {
+        "accept": [
+          "emits",
+          "emitted",
+          "sends",
+          "sent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8qzy3mx1",
+    "version": 1,
+    "section": "what-it-emits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ORM's own SQL log shows what it thinks it sent. Why is that not enough on its own?",
+    "hint": "Ask what sits between the ORM and the server.",
+    "choices": [
+      {
+        "text": "A pool, a driver or a prepared statement rewrites what actually reaches the server",
+        "correct": true,
+        "why": "The ORM's log does not have what a layer below it added; the server's log does."
+      },
+      {
+        "text": "It shows the query plan the server chose, rather than the statement text that was sent",
+        "correct": false,
+        "why": "It shows the statement; the plan comes from EXPLAIN."
+      },
+      {
+        "text": "It logs just the statements that failed",
+        "correct": false,
+        "why": "It logs what it sent, whether they succeeded or not; the gap is the layers below it."
+      },
+      {
+        "text": "The log is slow and fills the disk",
+        "correct": false,
+        "why": "That is the server's per-statement log at zero, not the ORM's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6pmzcr5",
+    "version": 1,
+    "section": "what-it-emits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In pg_stat_statements, one query has calls=50 and another calls=1. What does that pattern usually mean?",
+    "hint": "A count that is a multiple of another count.",
+    "choices": [
+      {
+        "text": "The query with fifty calls is the slow one, and the query with one call is the fast one",
+        "correct": false,
+        "why": "Calls is a count of executions, not a measure of speed."
+      },
+      {
+        "text": "The 50 query is being run in a loop over the 1 query's rows: an N+1",
+        "correct": true,
+        "why": "Fifty customers, one query each, plus the one that fetched them."
+      },
+      {
+        "text": "The 50 query has been cached 50 times",
+        "correct": false,
+        "why": "Calls counts executions that reached the server, not cache hits."
+      },
+      {
+        "text": "Fifty users ran the query once each",
+        "correct": false,
+        "why": "The tool counts executions, and this shape is one request emitting fifty."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xws1610",
+    "version": 1,
+    "section": "what-it-emits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "log_min_duration_statement = 0 in production. What is the objection?",
+    "hint": "Zero means every statement, not just the slow ones.",
+    "choices": [
+      {
+        "text": "It disables pg_stat_statements",
+        "correct": false,
+        "why": "The two are independent; one logs, the other summarises."
+      },
+      {
+        "text": "It paces each query down to the threshold",
+        "correct": false,
+        "why": "It does not pace queries; it records the ones over the threshold, and zero is all of them."
+      },
+      {
+        "text": "It writes a line per statement, filling the disk on a busy server",
+        "correct": true,
+        "why": "It is a development setting: set it, look, and put it back."
+      },
+      {
+        "text": "It records the full query plan of each statement, and those plans are large on disk",
+        "correct": false,
+        "why": "It logs statements with their literals, not plans."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbw80xmc",
+    "version": 1,
+    "section": "what-it-emits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two questions are worth asking of any line an ORM emits. Which pair?",
+    "hint": "Both are places a mapper's output differs from what a person would write.",
+    "choices": [
+      {
+        "text": "Which table does it read from, and which primary key does it look the row up by?",
+        "correct": false,
+        "why": "Those are in the code already; the surprises are the columns and the count."
+      },
+      {
+        "text": "Which index, and which plan?",
+        "correct": false,
+        "why": "Those come from EXPLAIN, and are the same question for any statement."
+      },
+      {
+        "text": "Which user, and which connection?",
+        "correct": false,
+        "why": "Neither changes what the statement is; the columns and the count do."
+      },
+      {
+        "text": "Which columns did it ask for, and how many times did it run?",
+        "correct": true,
+        "why": "Every column by default, and a count that a loop can multiply."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwvhtvpw",
+    "version": 1,
+    "section": "what-it-emits",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The column in pg_stat_statements that finds an N+1 is ___.",
+    "hint": "Not the time; the number of executions.",
+    "blanks": [
+      {
+        "accept": [
+          "calls"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8jdz5jbg",
+    "version": 1,
+    "section": "the-n-plus-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A page loads 50 customers and, in a loop, each customer's orders. How many queries?",
+    "hint": "One for the customers, and one per customer.",
+    "choices": [
+      {
+        "text": "51",
+        "correct": true,
+        "why": "One query for the fifty customers, then one per customer: N plus one."
+      },
+      {
+        "text": "Two, one for the customers and one for their orders, fetched together",
+        "correct": false,
+        "why": "Two is the fixed version, with the orders loaded in one query; the loop is fifty-one."
+      },
+      {
+        "text": "50",
+        "correct": false,
+        "why": "That leaves out the query that fetched the customers."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "One is a single join, not a loop that fetches orders per customer."
+      }
+    ]
+  },
+  {
+    "id": "ex-22b2hes4",
+    "version": 1,
+    "section": "the-n-plus-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an N+1 pass code review and pass on the developer's machine?",
+    "hint": "Each query is fast, and N is small on a laptop.",
+    "choices": [
+      {
+        "text": "It appears under one specific isolation level",
+        "correct": false,
+        "why": "Isolation has nothing to do with it; it is lazy loading in a loop."
+      },
+      {
+        "text": "Each query is fast, and it scales with the data rather than the code",
+        "correct": true,
+        "why": "Fifty fast lines on a laptop; five thousand and one on production, and the four lines are unchanged."
+      },
+      {
+        "text": "The reviewer who approved it did not know enough SQL to spot the emitted statements",
+        "correct": false,
+        "why": "It is invisible whether or not the reviewer knows SQL; nothing in the four lines says fifty-one."
+      },
+      {
+        "text": "The ORM hides it from the log",
+        "correct": false,
+        "why": "The log shows it plainly; the point is that nobody looks until it is slow."
+      }
+    ]
+  },
+  {
+    "id": "ex-wt7ezqg8",
+    "version": 1,
+    "section": "the-n-plus-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is NOT a hiding place for an N+1?",
+    "hint": "Three run a query per row without a visible loop; one is unrelated.",
+    "choices": [
+      {
+        "text": "A serialiser walking each object's relationship into JSON",
+        "correct": false,
+        "why": "One query per object, inside the serialiser's loop."
+      },
+      {
+        "text": "A model method that runs a query, called once per report row",
+        "correct": false,
+        "why": "The loop is the report; the query is the method."
+      },
+      {
+        "text": "A CHECK constraint on the orders table",
+        "correct": true,
+        "why": "A constraint runs on writes and touches no relationship; it is not an N+1."
+      },
+      {
+        "text": "A template writing order.customer.name on each row",
+        "correct": false,
+        "why": "The loop is in the template, the query in the property access."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1tygmjs",
+    "version": 1,
+    "section": "the-n-plus-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customers, each with orders, each with lines, loaded lazily. How many queries for C customers averaging M orders?",
+    "hint": "One at the top, one per customer, one per order.",
+    "choices": [
+      {
+        "text": "1 + C + M, counting the lines once overall rather than per order",
+        "correct": false,
+        "why": "The lines are per order, not once overall, so it is C·M and not M."
+      },
+      {
+        "text": "C · M",
+        "correct": false,
+        "why": "That leaves out the customer query and the per-customer order queries."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "Three is the fixed version, one query per level; lazy loading is the product."
+      },
+      {
+        "text": "1 + C + C·M",
+        "correct": true,
+        "why": "N+1 inside N+1; the product is what makes the page time out."
+      }
+    ]
+  },
+  {
+    "id": "ex-01jb3w05",
+    "version": 1,
+    "section": "the-n-plus-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The N+1 is the most common cause of \"the database is slow\". Which of these fixes it?",
+    "hint": "Lesson 2 said three things it is not.",
+    "choices": [
+      {
+        "text": "Loading the relationship in one go, before the loop",
+        "correct": true,
+        "why": "One query per level or one join; the next section is the two shapes."
+      },
+      {
+        "text": "Denormalising the orders onto the customer row so no second query is needed",
+        "correct": false,
+        "why": "Lesson 2 said this is not the fix; the round trips remain."
+      },
+      {
+        "text": "A bigger server",
+        "correct": false,
+        "why": "Lesson 10 said a bigger server does not help a problem whose cost is round trips."
+      },
+      {
+        "text": "Caching each customer's orders",
+        "correct": false,
+        "why": "A cache hides the count for one request and not the next; the loop is still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgas0nhm",
+    "version": 1,
+    "section": "loading-in-one-go",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The two SQL shapes that fix an N+1 are a join, and what?",
+    "hint": "The other loads one statement per level, not per row.",
+    "choices": [
+      {
+        "text": "A cache keyed by customer id",
+        "correct": false,
+        "why": "A cache is not one of the two shapes; both shapes are statements."
+      },
+      {
+        "text": "One query per level, fetching every child whose parent is in the set",
+        "correct": true,
+        "why": "WHERE customer_id = ANY(the ids), handed back to the parents in memory."
+      },
+      {
+        "text": "A correlated subquery per customer, run inside the database instead of in the application",
+        "correct": false,
+        "why": "That is still a query per customer, moved but not removed."
+      },
+      {
+        "text": "A materialised view refreshed nightly",
+        "correct": false,
+        "why": "That is a different tool for a different problem; the fix is one statement per level."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf22k33v",
+    "version": 1,
+    "section": "loading-in-one-go",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a to-many relationship with wide parents, why prefer the separate query over the join?",
+    "hint": "Ask what the join does to the parent's columns.",
+    "choices": [
+      {
+        "text": "The separate query uses no index",
+        "correct": false,
+        "why": "It uses the index on the foreign key, as the plan showed."
+      },
+      {
+        "text": "The join returns the wrong rows",
+        "correct": false,
+        "why": "Both return the same rows; the difference is the repetition, not correctness."
+      },
+      {
+        "text": "The join repeats every parent column on every child row",
+        "correct": true,
+        "why": "A customer with a hundred orders is a hundred copies of the customer; the separate query returns each parent once."
+      },
+      {
+        "text": "The join with the parent set cannot be parameterised, so the ids go in as text",
+        "correct": false,
+        "why": "It can; both shapes are parameterised."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgttrh88",
+    "version": 1,
+    "section": "loading-in-one-go",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a to-one relationship, an order's customer, which shape fits?",
+    "hint": "A few columns added per row, nothing repeated.",
+    "choices": [
+      {
+        "text": "The separate query with the set of ids, one statement per level",
+        "correct": false,
+        "why": "That fits to-many; for one customer per order the join is simpler and cheaper."
+      },
+      {
+        "text": "Neither; a to-one relationship has no N+1",
+        "correct": false,
+        "why": "It does: a customer fetched per order in a loop is the same shape."
+      },
+      {
+        "text": "A materialised view",
+        "correct": false,
+        "why": "Overkill for a to-one join that the database does in one statement."
+      },
+      {
+        "text": "The join",
+        "correct": true,
+        "why": "Each order's customer adds a few columns to the order's row and repeats nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ct6c45fa",
+    "version": 1,
+    "section": "loading-in-one-go",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Eager-loading three to-many relationships at once, with a single join. What goes wrong?",
+    "hint": "Lesson 5's multiplication, arriving in an ORM.",
+    "choices": [
+      {
+        "text": "The rows multiply: orders × addresses × items per customer",
+        "correct": true,
+        "why": "A correct result and an enormous one; separate queries per relationship avoid it."
+      },
+      {
+        "text": "The join is refused because a statement can join at most two tables",
+        "correct": false,
+        "why": "A statement joins any number of tables; the trouble is the row count."
+      },
+      {
+        "text": "Just the first relationship is loaded",
+        "correct": false,
+        "why": "The three of them load; the problem is that together they multiply."
+      },
+      {
+        "text": "The parameters run out",
+        "correct": false,
+        "why": "There is no parameter limit at issue; it is the Cartesian product of the children."
+      }
+    ]
+  },
+  {
+    "id": "ex-7z7tkrhh",
+    "version": 1,
+    "section": "loading-in-one-go",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the eager-loading instruction belong: on the model, or at the query?",
+    "hint": "One screen wants the orders; another wants the name alone.",
+    "choices": [
+      {
+        "text": "Nowhere; the ORM decides on its own",
+        "correct": false,
+        "why": "It defaults to lazy loading, which is the N+1; the instruction is yours to place."
+      },
+      {
+        "text": "At the query, because a model-wide setting loads the orders on every screen",
+        "correct": true,
+        "why": "Including the ones that show a name and nothing else: lesson 10's ask for less, undone globally."
+      },
+      {
+        "text": "On the model, so the N+1 is fixed everywhere at once",
+        "correct": false,
+        "why": "That loads the relationship on every screen, including the ones that do not want it."
+      },
+      {
+        "text": "In the migration, so the schema enforces it",
+        "correct": false,
+        "why": "Loading is a query decision, not a schema one; a migration cannot express it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyn0tmxt",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "WHERE email = $1. What is the $1?",
+    "hint": "The statement and the value arrived in separate parts of the message.",
+    "choices": [
+      {
+        "text": "A display convention pg_stat_statements invented",
+        "correct": false,
+        "why": "It is how the statement actually arrived; the tool shows what was sent."
+      },
+      {
+        "text": "A variable the database fills in with a default",
+        "correct": false,
+        "why": "The client supplies it on execution; the database does not default it."
+      },
+      {
+        "text": "A placeholder; the value travels separately from the statement's text",
+        "correct": true,
+        "why": "The shape is fixed before the value arrives, so the value cannot change it."
+      },
+      {
+        "text": "The first column of the result set the statement returns",
+        "correct": false,
+        "why": "It is a bind position in the WHERE, not a column reference."
+      }
+    ]
+  },
+  {
+    "id": "ex-dh9wbj79",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A value that looks like SQL is sent as a parameter to WHERE email = $1. What happens?",
+    "hint": "The shape was fixed when the statement was prepared.",
+    "choices": [
+      {
+        "text": "It is parsed and executed as SQL, appended after the WHERE clause",
+        "correct": false,
+        "why": "A parameter is data; it is never parsed as part of the statement."
+      },
+      {
+        "text": "The statement is rejected as malformed",
+        "correct": false,
+        "why": "It runs; the value is compared, not parsed."
+      },
+      {
+        "text": "It drops the table named in it",
+        "correct": false,
+        "why": "That is exactly what parameters prevent; the value is not code."
+      },
+      {
+        "text": "It is compared against the email column as a string and matches nothing",
+        "correct": true,
+        "why": "The value cannot change the statement's shape, so it is just a string that no row equals."
+      }
+    ]
+  },
+  {
+    "id": "ex-et6k5zan",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does SQL injection reach an application that uses an ORM?",
+    "hint": "The ORM never glues a value in, but it has one door that takes a string.",
+    "choices": [
+      {
+        "text": "Through the raw-query escape hatch, when a value is formatted into the string",
+        "correct": true,
+        "why": "The escape hatch also takes parameters; the value goes there, never in the string."
+      },
+      {
+        "text": "Through the ORM's ordinary save and find methods, which build the WHERE from user input",
+        "correct": false,
+        "why": "Those parameterise by construction; injection cannot reach them."
+      },
+      {
+        "text": "Through the migration files",
+        "correct": false,
+        "why": "Migrations are schema changes the team writes, not user input."
+      },
+      {
+        "text": "It does not; an ORM rules injection out",
+        "correct": false,
+        "why": "The raw-query hatch reopens it if a value is built into the string."
+      }
+    ]
+  },
+  {
+    "id": "ex-0x1knftg",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can a placeholder NOT stand for?",
+    "hint": "A placeholder stands for a value, and only a value.",
+    "choices": [
+      {
+        "text": "A date",
+        "correct": false,
+        "why": "A value like any other."
+      },
+      {
+        "text": "A column name",
+        "correct": true,
+        "why": "A column name is not a value; a user-supplied one goes through an allow-list, never the text."
+      },
+      {
+        "text": "An email address",
+        "correct": false,
+        "why": "A value; exactly what a placeholder is for."
+      },
+      {
+        "text": "An integer id",
+        "correct": false,
+        "why": "A value, and still a parameter even when you trust it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgvahw4x",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE id IN ($1) with a list as the value. Why does it not work?",
+    "hint": "One parameter holds one value.",
+    "choices": [
+      {
+        "text": "The list is too long to fit inside a single parameter placeholder in one message",
+        "correct": false,
+        "why": "Length is not the issue; the single placeholder is one value by definition."
+      },
+      {
+        "text": "IN requires a subquery, not a list",
+        "correct": false,
+        "why": "IN takes a list or a subquery; the problem here is one placeholder for many values."
+      },
+      {
+        "text": "$1 is one value, not a list, so IN compares against a single item",
+        "correct": true,
+        "why": "= ANY($1) with an array is the shape that holds a list in one parameter."
+      },
+      {
+        "text": "IN refuses to be parameterised",
+        "correct": false,
+        "why": "It accepts it, with one placeholder per item, or = ANY with an array."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn25x437",
+    "version": 1,
+    "section": "what-it-hides",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Customer.find(42) with no projection. Which columns does the SELECT ask for?",
+    "hint": "The object being built has every field.",
+    "choices": [
+      {
+        "text": "Only the primary key column, because that is what identifies the row",
+        "correct": false,
+        "why": "The object has every field, so the statement asks for every column."
+      },
+      {
+        "text": "Only the indexed columns",
+        "correct": false,
+        "why": "Indexing does not decide the SELECT list; the object's fields do."
+      },
+      {
+        "text": "Only the columns the code later reads",
+        "correct": false,
+        "why": "The ORM cannot know that in advance; it fetches the whole row."
+      },
+      {
+        "text": "Every column of the table",
+        "correct": true,
+        "why": "Which is why a bio column of ten kilobytes is fetched on a screen that shows names."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6zdcw4c",
+    "version": 1,
+    "section": "what-it-hides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A DEFAULT fires when the column is absent from the INSERT. An ORM that sends every field inserts what for a field the code never set?",
+    "hint": "Absent is not the same as unset in the object.",
+    "choices": [
+      {
+        "text": "NULL, which is a value, so the default never fires",
+        "correct": true,
+        "why": "A NOT NULL column refuses it; without the constraint the row is stored with no default."
+      },
+      {
+        "text": "The column's DEFAULT value, because the field was never set on the object",
+        "correct": false,
+        "why": "The field is sent as NULL, which is present, so the default is skipped."
+      },
+      {
+        "text": "An empty string",
+        "correct": false,
+        "why": "It sends NULL for an unset field, and NULL is not the default either."
+      },
+      {
+        "text": "Nothing; the ORM omits unset fields",
+        "correct": false,
+        "why": "Some do; the ones that send everything send NULL, which is the case here."
+      }
+    ]
+  },
+  {
+    "id": "ex-wg8z5e69",
+    "version": 1,
+    "section": "what-it-hides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A list on a screen is stable for months, then shuffles after a deploy that changed nothing about it. Which hidden behaviour is this?",
+    "hint": "A query with no ORDER BY returns rows in the order the engine found convenient.",
+    "choices": [
+      {
+        "text": "The default fired differently",
+        "correct": false,
+        "why": "Defaults set values on insert; they do not order a SELECT."
+      },
+      {
+        "text": "Customer.all() emits no ORDER BY, and the plan changed",
+        "correct": true,
+        "why": "Lesson 4: with no order the engine's convenient order can change after an update, a vacuum or a new plan."
+      },
+      {
+        "text": "The identity map cached the old ordering of the rows from a previous request",
+        "correct": false,
+        "why": "The cache returns the same object, not a different order across requests."
+      },
+      {
+        "text": "A migration reordered the table",
+        "correct": false,
+        "why": "A migration changes the schema, not the row order a query with no ORDER BY returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-edzmnxe7",
+    "version": 1,
+    "section": "what-it-hides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request handler loads an order in a unit-of-work session, calls a payment API for two seconds, then saves. What is the database cost?",
+    "hint": "The transaction is open from the first read to the commit.",
+    "choices": [
+      {
+        "text": "The API call is rolled back if it fails",
+        "correct": false,
+        "why": "A network call is not part of the transaction's rollback; only the database work is."
+      },
+      {
+        "text": "The default isolation level prevents any cost",
+        "correct": false,
+        "why": "Isolation does not shorten an open transaction; the open time is the cost."
+      },
+      {
+        "text": "For two seconds the transaction holds its locks and blocks VACUUM",
+        "correct": true,
+        "why": "One handler is nothing; a thousand a minute fills the database with row versions nobody can clean."
+      },
+      {
+        "text": "Little, because a read takes a light lock",
+        "correct": false,
+        "why": "The unit of work is one transaction open for the whole handler, including the wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjvyxpm6",
+    "version": 1,
+    "section": "what-it-hides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A background worker holds one session for an hour. Why does it read stale data?",
+    "hint": "The identity map answers a second fetch from memory.",
+    "choices": [
+      {
+        "text": "The worker's connection to the database was dropped and silently reconnected",
+        "correct": false,
+        "why": "A dropped connection errors; it does not silently return old rows."
+      },
+      {
+        "text": "The database is on an old replica",
+        "correct": false,
+        "why": "The staleness is the session's cache, not the server it read from."
+      },
+      {
+        "text": "The default isolation level is serializable",
+        "correct": false,
+        "why": "The cause is the identity map, not the isolation level of a fresh query."
+      },
+      {
+        "text": "The session's identity map returns the row as it was first loaded",
+        "correct": true,
+        "why": "Lesson 8's isolation reimplemented a layer up; short sessions, one per unit of work, is the rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vtdwrsh",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a migration?",
+    "hint": "One change to the schema, applied a set number of times to each database.",
+    "choices": [
+      {
+        "text": "One schema change, written as a file, versioned with the code, applied once to each database",
+        "correct": true,
+        "why": "A folder of files plus a table recording which have run."
+      },
+      {
+        "text": "A backup of the whole database, taken automatically ahead of a deploy",
+        "correct": false,
+        "why": "That is a backup; a migration is a forward change to the schema."
+      },
+      {
+        "text": "A copy of the data moved to a new server",
+        "correct": false,
+        "why": "That is a data move; a schema migration changes the shape, not the host."
+      },
+      {
+        "text": "A tool that tunes the query planner",
+        "correct": false,
+        "why": "Nothing to do with the planner; it changes the schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6yp8rfs",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a migration that has been applied anywhere never edited?",
+    "hint": "Editing it leaves two databases that both claim the same version.",
+    "choices": [
+      {
+        "text": "The tool checksums it and refuses to start",
+        "correct": false,
+        "why": "Some tools do warn, but the reason for the rule is the silent schema divergence."
+      },
+      {
+        "text": "Two databases would both record it applied and have different schemas, undetected",
+        "correct": true,
+        "why": "The fix is the next migration, which runs everywhere it has not."
+      },
+      {
+        "text": "The file is locked by the tool after it runs",
+        "correct": false,
+        "why": "You can still edit the file; the rule is about what editing causes."
+      },
+      {
+        "text": "Editing it re-runs it across the databases",
+        "correct": false,
+        "why": "A migration runs once; editing does not re-run it, which is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-3r5sf1cc",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does production roll forward rather than run a migration's down?",
+    "hint": "A down for a month-old migration was never tested against the rows that arrived since.",
+    "choices": [
+      {
+        "text": "Down is slower than up",
+        "correct": false,
+        "why": "Speed is not the reason; correctness against data that has since changed is."
+      },
+      {
+        "text": "Production has no migration table",
+        "correct": false,
+        "why": "It has one; that is how it knows what to roll forward."
+      },
+      {
+        "text": "A down cannot restore dropped data, and was not tested against newer rows",
+        "correct": true,
+        "why": "The fix for a bad migration is another migration; down is for a developer's machine."
+      },
+      {
+        "text": "Migration tools leave the down step out when they run against production",
+        "correct": false,
+        "why": "Most support it; the point is that down is unreliable in production, not absent."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2eb6wyw",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration runs CREATE INDEX CONCURRENTLY inside the tool's per-migration transaction. What happens, and what is the good outcome?",
+    "hint": "Lesson 9's exception, meeting the migration tool.",
+    "choices": [
+      {
+        "text": "It runs, and the transaction makes the build atomic",
+        "correct": false,
+        "why": "CONCURRENTLY cannot run in a transaction block, so it is refused before running."
+      },
+      {
+        "text": "It commits the index before the rest of the migration",
+        "correct": false,
+        "why": "A statement inside a transaction does not commit on its own."
+      },
+      {
+        "text": "It silently builds the index with a lock",
+        "correct": false,
+        "why": "That is the bad outcome the error prevents; the tool must be told not to wrap it."
+      },
+      {
+        "text": "It errors at deploy time; the migration must be marked not to be wrapped",
+        "correct": true,
+        "why": "The good outcome, versus a tool that silently drops CONCURRENTLY and takes the lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjvkbvx3",
+    "version": 1,
+    "section": "migrations",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of renaming a column on a live table safely, across deploys, in order.",
+    "hint": "At no point may a running version of the code name a column that does not exist.",
+    "items": [
+      "Add the new column, and write to both from the code",
+      "Backfill the old rows into the new column",
+      "Change the code to read the new column",
+      "Stop writing the old column and drop it"
+    ],
+    "trap": "The common swap is a single ALTER TABLE … RENAME: between the rename and the new code running, every request names a column that is gone."
+  },
+  {
+    "id": "ex-m5zycezj",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep a data migration out of the schema migration a deploy runs?",
+    "hint": "One is an UPDATE over millions of rows in one transaction.",
+    "choices": [
+      {
+        "text": "A data migration is a long transaction the synchronous deploy would wait on",
+        "correct": true,
+        "why": "It is written in batches, re-runnable, in the app's language; the schema change is not."
+      },
+      {
+        "text": "Data migrations are not allowed to change rows",
+        "correct": false,
+        "why": "Changing rows is exactly their job; the point is where they run."
+      },
+      {
+        "text": "The migration table records one kind of change",
+        "correct": false,
+        "why": "It records any migration; the reason is the deploy waiting on millions of rows."
+      },
+      {
+        "text": "A schema migration runs outside a transaction",
+        "correct": false,
+        "why": "Most run inside one; it is the data migration's length that is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9yees3p",
+    "version": 1,
+    "section": "who-owns-the-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A status Choice is kept only in the model class, not as a CHECK. A bulk load inserts an invalid status. What happens?",
+    "hint": "A rule the database does not know is a rule some rows do not follow.",
+    "choices": [
+      {
+        "text": "The load fails with a constraint error",
+        "correct": false,
+        "why": "There is no constraint; the rule lives only in the class."
+      },
+      {
+        "text": "It is stored: the class validates this code's saves, not another writer's insert",
+        "correct": true,
+        "why": "Lesson 1's point; put the rule on the table if every writer must obey it."
+      },
+      {
+        "text": "It is refused, because the model applies everywhere",
+        "correct": false,
+        "why": "The model applies only when this code saves this object; a bulk load bypasses it."
+      },
+      {
+        "text": "It is corrected to the nearest valid value",
+        "correct": false,
+        "why": "Nothing corrects it; it is stored as written."
+      }
+    ]
+  },
+  {
+    "id": "ex-y90d61xk",
+    "version": 1,
+    "section": "who-owns-the-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three things to check on a schema an ORM generated. Which is one of them?",
+    "hint": "Lesson 9's most valuable sentence is about it.",
+    "choices": [
+      {
+        "text": "Whether the connection pool is large enough",
+        "correct": false,
+        "why": "A runtime setting, not something in the generated DDL."
+      },
+      {
+        "text": "Whether the queries use bind parameters",
+        "correct": false,
+        "why": "The ORM parameterises at query time; it is not a property of the generated schema."
+      },
+      {
+        "text": "Whether an index was created on each foreign key",
+        "correct": true,
+        "why": "PostgreSQL does not; some generators add it and some do not, and the missing one is the four-minute delete."
+      },
+      {
+        "text": "Whether the generated tables are already in third normal form",
+        "correct": false,
+        "why": "Normalisation is lesson 2, and not what a generator's defaults get wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzjsj9j1",
+    "version": 1,
+    "section": "who-owns-the-schema",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team generates the schema from the model, then edits the schema by hand. What goes wrong?",
+    "hint": "Two sources of truth for one thing.",
+    "choices": [
+      {
+        "text": "The model stops compiling",
+        "correct": false,
+        "why": "It compiles; the conflict is between the generator and the manual edit."
+      },
+      {
+        "text": "The database refuses the edit",
+        "correct": false,
+        "why": "The database applies it; the trouble comes at the next generation."
+      },
+      {
+        "text": "The migration table is corrupted",
+        "correct": false,
+        "why": "The table is fine; the schemas diverge from the model's idea of them."
+      },
+      {
+        "text": "The next generated migration tries to undo the hand edit",
+        "correct": true,
+        "why": "Pick one direction and let the other be derived."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h0gkz54",
+    "version": 1,
+    "section": "who-owns-the-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a constraint in the table stronger than the same rule in the model class?",
+    "hint": "An application is replaced; a database is migrated.",
+    "choices": [
+      {
+        "text": "The table's constraint binds every application that ever opens the database",
+        "correct": true,
+        "why": "The class's rule binds only this application; the rows outlive it."
+      },
+      {
+        "text": "The model class has no way to express a constraint of any kind",
+        "correct": false,
+        "why": "It can; the point is that its rule reaches only this code."
+      },
+      {
+        "text": "A table constraint runs faster",
+        "correct": false,
+        "why": "Speed is not the argument; reach across applications is."
+      },
+      {
+        "text": "The model's rule is checked less often",
+        "correct": false,
+        "why": "It is checked on this code's saves; the gap is the other writers, not the frequency."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa3e6341",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A revenue-by-city-by-month report with a running total. ORM or SQL?",
+    "hint": "Lessons 6 and 7 built this shape; a mapper expresses it badly.",
+    "choices": [
+      {
+        "text": "The ORM, because it parameterises for you",
+        "correct": false,
+        "why": "The raw hatch and the query builder parameterise too, and produce readable SQL."
+      },
+      {
+        "text": "SQL, through the raw-query hatch with parameters or a query builder",
+        "correct": true,
+        "why": "Reviewable, EXPLAIN-able, indexable; read into plain records rather than model objects."
+      },
+      {
+        "text": "The ORM's model methods, with one separate call for each aggregate you need computed",
+        "correct": false,
+        "why": "That is several queries and a loop doing the aggregation the database would do in one pass."
+      },
+      {
+        "text": "A materialised view, whatever the report",
+        "correct": false,
+        "why": "That may help later; the immediate answer is to write the SQL and read the plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-cexktfdm",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A search screen with several optional filters. What is the right layer?",
+    "hint": "The SQL has to change shape with the input, which is where string concatenation is born.",
+    "choices": [
+      {
+        "text": "A separate saved query per combination of filters",
+        "correct": false,
+        "why": "The combinations explode; a builder composes them from one set of clauses."
+      },
+      {
+        "text": "A materialised view of each possible result",
+        "correct": false,
+        "why": "There is no fixed result to materialise; the filters vary per request."
+      },
+      {
+        "text": "A query builder: each filter adds a clause and takes a parameter",
+        "correct": true,
+        "why": "One statement the server plans as a whole, parameterised throughout."
+      },
+      {
+        "text": "String concatenation, since the SQL is dynamic",
+        "correct": false,
+        "why": "That is exactly what a query builder replaces, and where injection comes from."
+      }
+    ]
+  },
+  {
+    "id": "ex-p76mj3xd",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Create a customer, update an address, delete a note. Which layer, and why?",
+    "hint": "The statements with the most repetition, where the mapper's gifts pay every time.",
+    "choices": [
+      {
+        "text": "Raw SQL, for control",
+        "correct": false,
+        "why": "These are the statements the mapper writes best; raw SQL here is repetition by hand."
+      },
+      {
+        "text": "A query builder, for composability",
+        "correct": false,
+        "why": "There is nothing dynamic to compose; a plain save is the mapper's job."
+      },
+      {
+        "text": "A stored procedure per operation",
+        "correct": false,
+        "why": "Overkill for the obvious writes the mapper already writes once."
+      },
+      {
+        "text": "The ORM: parameters, matching types, the obvious statements written once",
+        "correct": true,
+        "why": "The write path is the mapper's home, and the unit of work groups the related writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-xyzcafqj",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each task to the layer the lesson recommends.",
+    "hint": "The write path, the report, and the varying filter each have a home.",
+    "pairs": [
+      {
+        "left": "Insert an order with its lines",
+        "right": "the ORM"
+      },
+      {
+        "left": "Revenue by city with a running total",
+        "right": "raw SQL or a query builder"
+      },
+      {
+        "left": "A search screen with optional filters",
+        "right": "a query builder"
+      }
+    ],
+    "right_distractors": [
+      "a stored procedure",
+      "string concatenation"
+    ]
+  },
+  {
+    "id": "ex-t4sdx7n5",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these is NOT one of the lesson's rules that hold whatever emits the statement?",
+    "hint": "Three are about reading and writing SQL; one contradicts the lesson.",
+    "choices": [
+      {
+        "text": "A rule the data must follow belongs in the model class, not the table",
+        "correct": true,
+        "why": "The reverse is the rule: a constraint belongs in the table, whatever the class says."
+      },
+      {
+        "text": "A slow query is a plan to read, whoever wrote it",
+        "correct": false,
+        "why": "Lesson 10's tools read the emitted statement the same way."
+      },
+      {
+        "text": "A query run many times is only a count to check when you wrote it yourself",
+        "correct": false,
+        "why": "It is a count to check whichever layer put it in the loop."
+      },
+      {
+        "text": "A value goes in a parameter, through every layer",
+        "correct": false,
+        "why": "Through the ORM, the builder and the raw hatch alike."
+      }
+    ]
+  }
+]
