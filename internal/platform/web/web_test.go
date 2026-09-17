@@ -87,3 +87,20 @@ func TestLocaleServesEnglishWhenNobodyAsked(t *testing.T) {
 		}
 	}
 }
+
+// NoIndex covers whatever it wraps, which is the reason it is a header: the
+// shared-link cards are PNGs and the sitemap is XML, and neither can carry a
+// `<meta>` tag.
+func TestNoIndexRefusesOnEveryKindOfAnswer(t *testing.T) {
+	for _, kind := range []string{"text/html", "image/png", "application/xml"} {
+		rec := httptest.NewRecorder()
+		web.NoIndex(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", kind)
+			w.WriteHeader(http.StatusOK)
+		})).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/anything", nil))
+
+		if got := rec.Header().Get("X-Robots-Tag"); got != "noindex, nofollow" {
+			t.Errorf("a %s answer carries X-Robots-Tag %q", kind, got)
+		}
+	}
+}

@@ -479,6 +479,45 @@ The migration and the catalogue load are gates that a deploy waits for; this is
 a thing the clock does, and executing it on every release would put a second set
 of numbers into the same night for no reason but that somebody cut a tag.
 
+## Nothing here is in Google yet, and that is set here
+
+**`indexable` defaults to `false`, and `code.schooling.lab.aleogr.dev` is a
+laboratory.** `discover` gives a school 335 addresses built to be found, and it
+cannot tell one deployment from another — every address it writes is the
+request's, because a school is a subdomain and there is no such thing as "the
+site's address". So a lab serves exactly the catalogue the real domain will, and
+left alone it gets indexed first. When the real domain arrives the same pages
+exist twice, the lab is the one Google already knows, and the redirect afterwards
+is slow and lossy.
+
+The mistakes are not symmetric, which is what picks the default: **a real
+deployment left un-indexed is noticed in days** and fixed by flipping one
+variable; **a lab left indexed is noticed in months** and costs a migration.
+
+It refuses with `X-Robots-Tag: noindex` on every answer — pages, shared-link
+cards, the sitemap — and **not** with `Disallow: /` in `robots.txt`. A crawler
+has to be allowed to FETCH a page to read that it may not list it; blocking the
+crawl hides the refusal and leaves the address listable from somebody else's
+link, with no description. `robots.txt` says so in a comment where the `Sitemap:`
+line would be, and `web.NoIndex` carries the argument in full.
+
+The start-up log says which it is, on every boot:
+
+```
+{"message":"search engines","indexable":false,"knob":"SCHOOLING_INDEXABLE"}
+```
+
+**The day the real domain serves**, and not before:
+
+```sh
+echo 'indexable = true' >> infra/terraform.tfvars
+terraform -chdir=infra apply
+```
+
+The apply is enough — the variable is on the service, not in the image, so no
+release is needed. Then submit `https://<the real domain>/sitemap.xml` to Search
+Console, which nothing here does for you.
+
 ## The address
 
 The service answers on its own `run.app` URL as soon as it is deployed. A school

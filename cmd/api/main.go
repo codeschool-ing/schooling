@@ -1196,6 +1196,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			}
 			return when.UTC().Format(time.RFC3339)
 		},
+		cfg.Indexable,
 	)
 	discoverable := http.NewServeMux()
 	pages.Routes(discoverable)
@@ -2089,7 +2090,31 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 		mux.ServeHTTP(w, r)
 	})
 
-	return web.Chain(byHost,
+	/* AND WHETHER ANY OF IT MAY BE LISTED, WHICH IS ONE LINE FOR EVERY HOST.
+
+	   Outside the split above for the same reason its two neighbours are: a
+	   school, the console and the platform's own address are one deployment, and
+	   "is this the real one" has one answer for all three. A lab whose console
+	   is hidden and whose catalogue is indexed would be the confusing half of
+	   both.
+
+	   `discover` is deliberately incapable of answering this itself — every
+	   address it writes is the request's, because a school is a subdomain and
+	   there is no such thing as "the site's address". So which deployment this
+	   is cannot be derived down there. It is a fact of the process, and this is
+	   where a process's facts are.
+
+	   IT SAYS SO AT START-UP, like the mail line above it. A deployment that is
+	   invisible to every search engine and does not mention it is a deployment
+	   whose absence from Google looks like an SEO problem for as long as it
+	   takes somebody to read this file. */
+	log.Info("search engines", "indexable", cfg.Indexable, "knob", "SCHOOLING_INDEXABLE")
+	var everything http.Handler = byHost
+	if !cfg.Indexable {
+		everything = web.NoIndex(byHost)
+	}
+
+	return web.Chain(everything,
 		web.RequestID,
 		web.Logger(log),
 

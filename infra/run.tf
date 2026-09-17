@@ -431,6 +431,18 @@ resource "google_cloud_run_v2_service" "api" {
         name  = "SCHOOLING_PLATFORM_DOMAIN"
         value = var.platform_domain
       }
+
+      /* WHETHER THIS DEPLOYMENT MAY BE FOUND, DECLARED RATHER THAN LEFT OUT.
+
+         Unset means `false` in `config.Load`, so this line changes nothing
+         today — and that is the reason to write it. A knob that only exists as
+         an absence is a knob nobody diffs and nobody finds the day the real
+         domain goes up. It is on the SERVICE and on none of the four jobs,
+         because a job answers no request and has nothing to be listed. */
+      env {
+        name  = "SCHOOLING_INDEXABLE"
+        value = tostring(var.indexable)
+      }
       env {
         name = "SCHOOLING_DATABASE_URL"
         value_source {

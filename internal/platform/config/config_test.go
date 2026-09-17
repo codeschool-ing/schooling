@@ -67,3 +67,60 @@ func TestTheDomainIsAHostAndNotAURL(t *testing.T) {
 		}
 	}
 }
+
+/*
+NOT INDEXABLE UNLESS SOMEBODY SAYS SO, AND LOUD WHEN NOBODY CAN TELL.
+
+	The default is the asymmetry: a real deployment left un-indexed is noticed
+	in days and fixed by setting one variable, and a lab left indexed is noticed
+	in months and costs a domain migration.
+
+	The typo case is the one worth a test of its own. `SCHOOLING_INDEXABLE=ture`
+	falling back to false would leave a real deployment invisible to every search
+	engine with no error, no log line and no screen saying so — the only way to
+	find it is to wonder why there is no traffic.
+*/
+func TestADeploymentIsNotIndexableUntilItSaysSo(t *testing.T) {
+	sane := func(t *testing.T) {
+		t.Helper()
+		t.Setenv("SCHOOLING_DATABASE_URL", "postgres://user:pass@localhost:5432/schooling")
+		t.Setenv("SCHOOLING_PLATFORM_DOMAIN", "example.tld")
+		t.Setenv("SCHOOLING_ENV", "production")
+	}
+
+	for _, c := range []struct {
+		set  string
+		want bool
+	}{
+		{"", false},      // unset: a laptop, CI, and a lab that nobody configured
+		{"true", true},   // the real domain, saying so
+		{"1", true},      // and the other spelling of it
+		{"false", false}, // said out loud, which is also fine
+	} {
+		t.Run("SCHOOLING_INDEXABLE="+c.set, func(t *testing.T) {
+			sane(t)
+			t.Setenv("SCHOOLING_INDEXABLE", c.set)
+
+			cfg, err := config.Load()
+			if err != nil {
+				t.Fatalf("did not load: %v", err)
+			}
+			if cfg.Indexable != c.want {
+				t.Errorf("Indexable = %v, want %v", cfg.Indexable, c.want)
+			}
+		})
+	}
+
+	t.Run("a value nobody can read refuses to start", func(t *testing.T) {
+		sane(t)
+		t.Setenv("SCHOOLING_INDEXABLE", "ture")
+
+		_, err := config.Load()
+		if err == nil {
+			t.Fatal("a misspelled SCHOOLING_INDEXABLE loaded, silently meaning false")
+		}
+		if !strings.Contains(err.Error(), "SCHOOLING_INDEXABLE") {
+			t.Errorf("the report does not name the variable:\n%s", err)
+		}
+	})
+}

@@ -152,3 +152,26 @@ variable "mail_hook_user" {
   type        = string
   default     = ""
 }
+
+/* Whether a search engine may LIST this deployment's pages.
+
+   THE DEFAULT IS `false` AND THAT IS THE WHOLE VALUE OF THE VARIABLE. A lab
+   host serves the same 335 indexable addresses the real domain will —
+   `discover` builds every one of them from the request, so it cannot know which
+   deployment it is — and the day the real domain arrives, the same catalogue
+   exists twice with the lab already indexed. The redirect afterwards is slow
+   and lossy, and none of it is visible until months later.
+
+   The mistakes are not symmetric: a real deployment left un-indexed is noticed
+   in days and fixed by flipping this; a lab left indexed is noticed in months
+   and costs a migration.
+
+   SET IT TO `true` IN `terraform.tfvars` WHEN THE REAL DOMAIN IS SERVING, and
+   not before. It refuses to be listed with a header on every answer rather than
+   with `Disallow:` in `robots.txt` — a crawler has to be allowed to FETCH a
+   page to read that it may not list it. See `web.NoIndex`. */
+variable "indexable" {
+  description = "Whether search engines may list this deployment. False for a lab; true only for the real domain."
+  type        = bool
+  default     = false
+}
