@@ -286,6 +286,38 @@ NoIndex keeps a whole deployment out of every search engine's results.
 	directives are read at their most restrictive, so the refusal wins — which is
 	a claim about somebody else's crawler and therefore lives in a test,
 	`TestTheFrontDoorIsRefusedTooOnALab`, rather than only in this sentence.
+
+	# IT COSTS THE LINK PREVIEWS TOO, AND THAT WAS A SURPRISE
+
+	A link from a deployment carrying this header, pasted into WhatsApp, comes
+	out as the bare host repeated twice: no card, no title, no description. The
+	page is serving all of it — `og:title`, `og:description`, `og:image`, checked
+	by fetching it AS `facebookexternalhit`, which gets the complete set. Meta's
+	crawler reads `noindex` as "do not make a preview of this either", and the
+	tags it was handed make no difference.
+
+	SO IT IS WRITTEN HERE RATHER THAN REDISCOVERED BY PASTING A LINK. The
+	expectation, stated out loud before it was measured, was that a preview bot
+	obeys `robots.txt` and ignores a directive about indexing. That is true of
+	some of them and false of the one most people use.
+
+	IT IS A COST AND NOT A DEFECT TO FIX. `X-Robots-Tag` can name an agent —
+	`googlebot: noindex` — which would leave the previews working, and the list
+	is what makes it the wrong trade: a crawler nobody thought to add indexes the
+	address this deployment exists to keep out of an index.
+
+	It also cuts the right way. A preview that does not render discourages
+	sharing a laboratory's links, and a shared link is exactly what gets an
+	address listed from somebody else's page despite all of this. The friction is
+	on the correct side.
+
+	A CARD IS STILL CHECKABLE WITHOUT A PREVIEW, which is the part that would
+	otherwise be lost. It has an address of its own:
+
+	    curl -sS https://<host>/pt/card/course/git -o card.png
+
+	The day a deployment sets `SCHOOLING_INDEXABLE=true`, the index and the
+	previews come back together.
 */
 func NoIndex(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
