@@ -402,12 +402,30 @@ Keyed by the question's id, and carrying **only what a student reads**.
 
 The translatable fields are `prompt`, `hint`, `trap`, `choices[].{text,why}`, `items`,
 `pairs[].{left,right}`, `right_distractors` and `labels` — a list of texts, because a label's
-coordinates are not a translator's business.
+coordinates are not a translator's business — plus `blanks[].accept` and a `numeric`'s `unit`
+and `accept_units`, which are the next paragraph.
 
-**Nothing that decides an answer is nameable here.** `correct`, `accept`, `value`, `tolerance`,
-the coordinates: a file that mentions one is refused on the pull request, because a translation
-that could reach the key would mark the same answer differently in two languages, and nobody
-would find it — both screens read perfectly well on their own.
+**An answer somebody TYPES is language, and it has to be translated.** A `cloze` asks for a word
+and compares what was typed against `accept`; leave that in English and the Portuguese question
+marks every Portuguese answer wrong, which is a defect no screen shows — both read perfectly on
+their own. Same for a `numeric`'s unit, which is a word the student picks from a menu and hands
+back with the number. `internal/catalog`'s `TestAClozeIsGradedInTheLanguageItWasAsked` is that
+rule end to end.
+
+**Nothing that decides WHETHER an answer is right is nameable here.** `correct`, `value`,
+`tolerance`, `relative`, `ignore_case`, `ignore_accents`, the coordinates: a file that mentions
+one is refused on the pull request. The line between the two paragraphs is `A-15`'s — **a
+quantity means the same thing in every language, and a word somebody types does not.** So the
+accepted *words* move and the accepted *range* does not; and `ignore_case` stays put because
+whether the difference between `SELECT` and `select` is the point is a property of the question,
+not of the language it is asked in. A translation that could loosen it would be a translation
+that makes a question easier.
+
+**This paragraph listed `accept` among the forbidden until it was written against the code.** It
+was wrong in the direction that matters: every `cloze` in `web-fundamentals` already carries a
+translated `accept`, CI passes them, and `catalog.BlankText` exists for no other purpose — so the
+file was refusing on paper what the format does in practice, and a reader planning against it
+would have shipped a drill that fails its Portuguese students silently.
 
 **The lists are matched by position**, which this project forbids almost everywhere. Inside an
 exercise a position is already the identity — the key is `choices[2]` and a student's answer
