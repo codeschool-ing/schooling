@@ -1,0 +1,1191 @@
+[
+  {
+    "id": "ex-t6rkwrs5",
+    "version": 1,
+    "section": "the-order-it-runs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which clause does the database evaluate first?",
+    "hint": "Nothing can be discarded before it is known what there is.",
+    "choices": [
+      {
+        "text": "SELECT, since it is the first thing you type",
+        "correct": false,
+        "why": "Written first, evaluated near the end of the whole sequence."
+      },
+      {
+        "text": "ORDER BY, so the rows arrive already arranged",
+        "correct": false,
+        "why": "It runs after the output columns have been computed."
+      },
+      {
+        "text": "WHERE, since filtering comes before anything else",
+        "correct": false,
+        "why": "It comes second, once the rows to filter are assembled."
+      },
+      {
+        "text": "FROM",
+        "correct": true,
+        "why": "The rows have to exist before anything can be thrown away."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqd80stk",
+    "version": 1,
+    "section": "the-order-it-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SELECT price * 1.23 AS gross … WHERE gross > 100 fails. Why?",
+    "hint": "One of the two clauses had not run yet.",
+    "choices": [
+      {
+        "text": "Multiplication is not allowed in a SELECT list",
+        "correct": false,
+        "why": "It is, and that is where the alias came from."
+      },
+      {
+        "text": "An alias may not be compared with a number",
+        "correct": false,
+        "why": "Aliases compare with anything their value compares with."
+      },
+      {
+        "text": "The alias needs double quotes around it to be used",
+        "correct": false,
+        "why": "Quoting changes the case rule, not when the name exists."
+      },
+      {
+        "text": "WHERE ran before the alias existed",
+        "correct": true,
+        "why": "SELECT invents the name, and SELECT is later in the sequence."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3k8qb9x",
+    "version": 1,
+    "section": "the-order-it-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same alias works in ORDER BY. What does that tell you about the sequence?",
+    "hint": "It is not a special case; it is a position.",
+    "choices": [
+      {
+        "text": "ORDER BY is evaluated by the client and not the server",
+        "correct": false,
+        "why": "Sorting happens in the database like everything else."
+      },
+      {
+        "text": "Aliases are resolved twice, once for each clause",
+        "correct": false,
+        "why": "They are created once, by SELECT."
+      },
+      {
+        "text": "ORDER BY re-reads the table and can see everything",
+        "correct": false,
+        "why": "It arranges what the query already produced."
+      },
+      {
+        "text": "ORDER BY runs after SELECT",
+        "correct": true,
+        "why": "By the time it looks for the name, SELECT has created it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb2kp0n2",
+    "version": 1,
+    "section": "the-order-it-runs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Does rearranging the clauses of a query make it faster?",
+    "hint": "Separate what a query means from what it costs.",
+    "choices": [
+      {
+        "text": "No",
+        "correct": true,
+        "why": "The order is logical; the planner does the work however it likes, and the answer is the same."
+      },
+      {
+        "text": "Yes, when the query has an ORDER BY in it",
+        "correct": false,
+        "why": "Sorting is planned like everything else in the statement."
+      },
+      {
+        "text": "Yes, because clauses are executed strictly top to bottom",
+        "correct": false,
+        "why": "They are not, and that is what the logical order is for."
+      },
+      {
+        "text": "Yes, putting the cheapest condition first lets it stop earlier",
+        "correct": false,
+        "why": "The planner reorders conditions by its own estimates regardless of how you wrote them."
+      }
+    ]
+  },
+  {
+    "id": "ex-aaa8swvk",
+    "version": 1,
+    "section": "the-order-it-runs",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the clauses in the order the database evaluates them.",
+    "hint": "The one you write first is not the one that runs first.",
+    "items": [
+      "FROM",
+      "WHERE",
+      "GROUP BY",
+      "SELECT",
+      "ORDER BY",
+      "LIMIT"
+    ],
+    "trap": "The common swap is putting SELECT before WHERE, because that is the order they are written — and it is exactly the swap that makes the alias error look mysterious."
+  },
+  {
+    "id": "ex-me274ayd",
+    "version": 1,
+    "section": "choosing-columns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is SELECT * the right thing to write?",
+    "hint": "One of these is a person looking, and the rest are programs.",
+    "choices": [
+      {
+        "text": "In a view, so the view follows the table",
+        "correct": false,
+        "why": "A view's columns are fixed when it is created, which surprises people."
+      },
+      {
+        "text": "At a terminal, exploring a table you have not seen",
+        "correct": true,
+        "why": "Everywhere else you get whatever the table happens to have today."
+      },
+      {
+        "text": "In a report that has to include any column added later",
+        "correct": false,
+        "why": "That is the failure, not the feature: the report grows a column nobody asked for."
+      },
+      {
+        "text": "In an application query, so a schema change passes through",
+        "correct": false,
+        "why": "A schema change silently changes what the parser receives."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpp7jgqk",
+    "version": 1,
+    "section": "choosing-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which cost of SELECT * is the one lesson 9 will explain?",
+    "hint": "One of them is about how the answer is found rather than what is sent.",
+    "choices": [
+      {
+        "text": "It transfers text columns nobody reads",
+        "correct": false,
+        "why": "True, and it is about the network rather than the plan."
+      },
+      {
+        "text": "It prevents an index-only scan",
+        "correct": true,
+        "why": "A query asking only for indexed columns can skip the table entirely."
+      },
+      {
+        "text": "It picks up columns added after the query was written",
+        "correct": false,
+        "why": "True, and it is about the result rather than the cost."
+      },
+      {
+        "text": "It hides which columns a query depends on",
+        "correct": false,
+        "why": "True, and it is about the codebase rather than the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cz2rtq7",
+    "version": 1,
+    "section": "choosing-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An expression in the SELECT list is given no alias. What is it called in the result?",
+    "hint": "The database picks something, and it is not useful.",
+    "choices": [
+      {
+        "text": "The text of the expression itself, such as price * 1.23",
+        "correct": false,
+        "why": "Some clients show that; the column's actual name is not it."
+      },
+      {
+        "text": "The name of the first column the expression mentions",
+        "correct": false,
+        "why": "Nothing borrows a name from an operand."
+      },
+      {
+        "text": "An empty string, which the client then fills in",
+        "correct": false,
+        "why": "The name is not empty; it is a placeholder."
+      },
+      {
+        "text": "?column?",
+        "correct": true,
+        "why": "Every client displays it and no program can rely on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gv59nsz",
+    "version": 1,
+    "section": "choosing-columns",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The function that returns the first of its arguments that is not null, often used to give a missing value a display form: ___.",
+    "hint": "One word, eight letters, and it is not a keyword.",
+    "blanks": [
+      {
+        "accept": [
+          "coalesce"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ghke278h",
+    "version": 1,
+    "section": "where",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE created_at BETWEEN '2026-03-01' AND '2026-03-31' misses rows. Which?",
+    "hint": "A bare date is a moment, and the moment is midnight.",
+    "choices": [
+      {
+        "text": "Almost all of the 31st",
+        "correct": true,
+        "why": "The upper bound is 2026-03-31 00:00:00, so the rest of that day is outside it."
+      },
+      {
+        "text": "Nothing — BETWEEN is inclusive and the range is correct",
+        "correct": false,
+        "why": "Inclusive of a moment that is midnight, which is the trap."
+      },
+      {
+        "text": "The whole of the 1st, because the lower bound is exclusive",
+        "correct": false,
+        "why": "BETWEEN is inclusive at both ends, so the 1st is included."
+      },
+      {
+        "text": "Rows whose created_at falls on a weekend in that range",
+        "correct": false,
+        "why": "Nothing about BETWEEN knows which day of the week a date is."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yh7va1d",
+    "version": 1,
+    "section": "where",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE a = 'x' OR a = 'y' AND price < 50 — what did it mean?",
+    "hint": "One of the two operators binds more tightly.",
+    "choices": [
+      {
+        "text": "Either x or y, and in both cases under 50",
+        "correct": false,
+        "why": "That is the parenthesised version, and it is what was intended."
+      },
+      {
+        "text": "The two are equivalent; the parentheses are decoration",
+        "correct": false,
+        "why": "They are different queries returning different rows."
+      },
+      {
+        "text": "x at any price, or y under 50",
+        "correct": true,
+        "why": "AND binds tighter than OR, which is almost never what somebody writing this meant."
+      },
+      {
+        "text": "It is a syntax error until parentheses are added",
+        "correct": false,
+        "why": "It parses perfectly, which is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-395aphmw",
+    "version": 1,
+    "section": "where",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can use an index on created_at?",
+    "hint": "One of them leaves the column bare.",
+    "choices": [
+      {
+        "text": "to_char(created_at, 'YYYY') = '2026'",
+        "correct": false,
+        "why": "The same problem again, and it also compares text."
+      },
+      {
+        "text": "date_trunc('year', created_at) = '2026-01-01'",
+        "correct": false,
+        "why": "The same problem in a different function."
+      },
+      {
+        "text": "extract(year FROM created_at) = 2026",
+        "correct": false,
+        "why": "The index knows the column's values, not the function's results."
+      },
+      {
+        "text": "created_at >= '2026-01-01' AND created_at < '2027-01-01'",
+        "correct": true,
+        "why": "A range of values the index is already sorted by."
+      }
+    ]
+  },
+  {
+    "id": "ex-ay7h9ea8",
+    "version": 1,
+    "section": "where",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The always-correct shape for a date range, in two operators: created_at ___ the start AND created_at ___ the start of the next period.",
+    "hint": "The first is inclusive; the second is strict.",
+    "blanks": [
+      {
+        "accept": [
+          ">=",
+          "gte"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "<",
+          "lt"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8pk93p0e",
+    "version": 1,
+    "section": "matching-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pattern can use an ordinary index?",
+    "hint": "An index is sorted by the beginning of the value.",
+    "choices": [
+      {
+        "text": "LIKE '%kettle%'",
+        "correct": false,
+        "why": "The match can begin anywhere, so there is nothing to look up."
+      },
+      {
+        "text": "~ 'kettle'",
+        "correct": false,
+        "why": "A regular expression, and not indexable in the general case."
+      },
+      {
+        "text": "ILIKE '%kettle%'",
+        "correct": false,
+        "why": "Same problem, and the case folding on top of it."
+      },
+      {
+        "text": "LIKE 'Kettle%'",
+        "correct": true,
+        "why": "Values that start alike sort together, so it is a range lookup."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdfk3dyr",
+    "version": 1,
+    "section": "matching-text",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A search box passes what the user typed straight into a LIKE pattern. What goes wrong?",
+    "hint": "Two of the characters they might type are not ordinary characters.",
+    "choices": [
+      {
+        "text": "The search becomes case sensitive without warning",
+        "correct": false,
+        "why": "LIKE was always case sensitive; that is not caused by the input."
+      },
+      {
+        "text": "Typing % or _ changes what the pattern means",
+        "correct": true,
+        "why": "A % matches everything and nobody can reproduce the report."
+      },
+      {
+        "text": "The query is refused when the input contains a quote",
+        "correct": false,
+        "why": "A quote is a quoting problem and a different one."
+      },
+      {
+        "text": "The pattern is truncated at the first space",
+        "correct": false,
+        "why": "Spaces are ordinary characters in a pattern."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv3z4btj",
+    "version": 1,
+    "section": "matching-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Where does a format rule such as a SKU shape really belong?",
+    "hint": "Ask whether you would rather refuse it or filter it.",
+    "choices": [
+      {
+        "text": "In the application, validated before the insert is sent",
+        "correct": false,
+        "why": "Which holds until the import script, as lesson 1 argued."
+      },
+      {
+        "text": "In a CHECK constraint",
+        "correct": true,
+        "why": "Checking once at write time is cheaper and stronger than filtering at read time."
+      },
+      {
+        "text": "In a trigger that rewrites malformed values",
+        "correct": false,
+        "why": "Rewriting somebody's data silently is worse than refusing it."
+      },
+      {
+        "text": "In a regular expression, repeated in each query",
+        "correct": false,
+        "why": "Which has to be remembered by everyone who writes a query."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmg2zabf",
+    "version": 1,
+    "section": "null-in-a-query",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ten products, three with no category. = 'kitchen' gives 4 and <> 'kitchen' gives 3. Where are the rest?",
+    "hint": "WHERE keeps a row when the condition is true.",
+    "choices": [
+      {
+        "text": "In the second, since they are certainly not kitchen",
+        "correct": false,
+        "why": "Nobody knows what they are, so the condition is unknown rather than true."
+      },
+      {
+        "text": "In both, counted once each",
+        "correct": false,
+        "why": "They are counted zero times, not twice."
+      },
+      {
+        "text": "Excluded by the database as invalid rows",
+        "correct": false,
+        "why": "They are valid rows with one unknown column."
+      },
+      {
+        "text": "In neither result",
+        "correct": true,
+        "why": "Unknown is not true, so the row fails both conditions."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cqtbz3z",
+    "version": 1,
+    "section": "null-in-a-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE NOT (price > 100). What happens to a row whose price is unknown?",
+    "hint": "NOT of unknown is still unknown.",
+    "choices": [
+      {
+        "text": "It is kept, because an unknown price is not over 100",
+        "correct": false,
+        "why": "That reasoning is a person's; the database says unknown."
+      },
+      {
+        "text": "The query is refused for comparing with an unknown",
+        "correct": false,
+        "why": "It is valid SQL and returns an answer."
+      },
+      {
+        "text": "It is dropped",
+        "correct": true,
+        "why": "Negating a condition gives the rows where it was definitely false, not the ones it excluded."
+      },
+      {
+        "text": "It is kept, because NOT flips the failure into a pass",
+        "correct": false,
+        "why": "NOT unknown is unknown, and unknown is not true."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fmebc0f",
+    "version": 1,
+    "section": "null-in-a-query",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A subquery inside NOT IN returns one NULL among its values. What comes back?",
+    "hint": "Unfold the NOT IN into a chain of ANDs.",
+    "choices": [
+      {
+        "text": "An error naming the null in the subquery",
+        "correct": false,
+        "why": "No error is raised, which is what makes it dangerous."
+      },
+      {
+        "text": "Every row, since NULL matches nothing",
+        "correct": false,
+        "why": "It matches nothing and poisons the chain instead."
+      },
+      {
+        "text": "No rows at all",
+        "correct": true,
+        "why": "The unknown term makes the whole AND unable to be true, and nothing is reported."
+      },
+      {
+        "text": "The rows that are not in the non-null values",
+        "correct": false,
+        "why": "That is what people expect and not what happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dcd5046",
+    "version": 1,
+    "section": "null-in-a-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which operator answers true or false even when one side is null?",
+    "hint": "It treats null as a value that is simply different.",
+    "choices": [
+      {
+        "text": "IS DISTINCT FROM",
+        "correct": true,
+        "why": "Ordinary <> says unknown; this one commits to an answer."
+      },
+      {
+        "text": "<> with a COALESCE wrapped around the column",
+        "correct": false,
+        "why": "That works and it also hides the index, which is a separate cost."
+      },
+      {
+        "text": "BETWEEN, which brackets the value on both sides",
+        "correct": false,
+        "why": "Bracketing an unknown is still unknown."
+      },
+      {
+        "text": "NOT IN, once the list has no nulls in it",
+        "correct": false,
+        "why": "A condition on the list, and it does not help the column being null."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ye0va4s",
+    "version": 1,
+    "section": "null-in-a-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the three-valued logic, what is false AND unknown?",
+    "hint": "One operand already settles the question.",
+    "choices": [
+      {
+        "text": "false",
+        "correct": true,
+        "why": "The unknown does not always spread; here the answer is known either way."
+      },
+      {
+        "text": "true",
+        "correct": false,
+        "why": "Nothing here could make it true."
+      },
+      {
+        "text": "An error, since unknown is not a boolean",
+        "correct": false,
+        "why": "It is one of the three truth values."
+      },
+      {
+        "text": "unknown",
+        "correct": false,
+        "why": "It would be, if the other operand left the question open."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxgdp3gq",
+    "version": 1,
+    "section": "null-in-a-query",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "= NULL is valid SQL that is never true. The two operators that ask about the state instead are IS NULL and IS ___ NULL.",
+    "hint": "One short word.",
+    "blanks": [
+      {
+        "accept": [
+          "not"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d2cwva3h",
+    "version": 1,
+    "section": "order-by",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A query has no ORDER BY. What order do the rows come back in?",
+    "hint": "A table is a set.",
+    "choices": [
+      {
+        "text": "It is not defined",
+        "correct": true,
+        "why": "And it changes when the table grows, an index appears or the planner picks another route."
+      },
+      {
+        "text": "Insertion order, unless rows have been deleted",
+        "correct": false,
+        "why": "Common on a small table, which is what makes the habit dangerous."
+      },
+      {
+        "text": "Primary key order, because the index is read",
+        "correct": false,
+        "why": "Only if the plan happens to read that index, which is not promised."
+      },
+      {
+        "text": "Whatever order the previous run produced",
+        "correct": false,
+        "why": "Nothing remembers the previous run."
+      }
+    ]
+  },
+  {
+    "id": "ex-rycb1t33",
+    "version": 1,
+    "section": "order-by",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ORDER BY a, b DESC. Which direction is a sorted in?",
+    "hint": "Each key carries its own direction.",
+    "choices": [
+      {
+        "text": "Descending, because DESC applies to the whole clause",
+        "correct": false,
+        "why": "It applies to the key it follows."
+      },
+      {
+        "text": "Descending for a and ascending for b",
+        "correct": false,
+        "why": "That is the reverse of what was written."
+      },
+      {
+        "text": "Ascending",
+        "correct": true,
+        "why": "DESC applies to b alone, which catches people who expect it to cover both."
+      },
+      {
+        "text": "It is ambiguous and the planner chooses",
+        "correct": false,
+        "why": "Nothing about a sort direction is left to the planner."
+      }
+    ]
+  },
+  {
+    "id": "ex-n21fb31y",
+    "version": 1,
+    "section": "order-by",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ORDER BY category LIMIT 10, with twenty rows in that category. Which ten come back?",
+    "hint": "The sort says nothing about ties.",
+    "choices": [
+      {
+        "text": "The ten inserted first",
+        "correct": false,
+        "why": "Insertion order is not recorded anywhere."
+      },
+      {
+        "text": "It is undefined, and differs between runs",
+        "correct": true,
+        "why": "Which is why the sort has to end on something unique."
+      },
+      {
+        "text": "Ten chosen at random, differently each time by design",
+        "correct": false,
+        "why": "Nothing randomises; it is simply not settled."
+      },
+      {
+        "text": "The ten with the lowest primary key",
+        "correct": false,
+        "why": "Only by accident of the plan, and not by promise."
+      }
+    ]
+  },
+  {
+    "id": "ex-h62bfvgz",
+    "version": 1,
+    "section": "order-by",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where do nulls sort in PostgreSQL, ascending?",
+    "hint": "It treats them as larger than everything.",
+    "choices": [
+      {
+        "text": "First, since an absent value comes before any value",
+        "correct": false,
+        "why": "That is MySQL's choice, which is why the difference matters."
+      },
+      {
+        "text": "Wherever the index happens to hold them",
+        "correct": false,
+        "why": "The order is defined by the language, not the index."
+      },
+      {
+        "text": "Last",
+        "correct": true,
+        "why": "And first descending — and MySQL chooses the opposite, so say NULLS LAST."
+      },
+      {
+        "text": "They are excluded from a sorted result",
+        "correct": false,
+        "why": "Sorting never drops rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-nw8q512w",
+    "version": 1,
+    "section": "order-by",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "ORDER BY (price > 100) DESC, name. What does that produce?",
+    "hint": "A boolean sorts false before true.",
+    "choices": [
+      {
+        "text": "The cheap ones first, since false sorts before true",
+        "correct": false,
+        "why": "DESC reverses that, which is why it is there."
+      },
+      {
+        "text": "Products over 100, sorted by name",
+        "correct": false,
+        "why": "Nothing is filtered; an ORDER BY does not discard."
+      },
+      {
+        "text": "An error, since a boolean is a poor sort key",
+        "correct": false,
+        "why": "Booleans sort like any other type."
+      },
+      {
+        "text": "The expensive ones first, then the rest by name",
+        "correct": true,
+        "why": "Which is how you say these first, then everything else, in one query."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmh3yn55",
+    "version": 1,
+    "section": "limit-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does OFFSET 100000 actually do?",
+    "hint": "There is no way to know which row is the hundred-thousandth without producing the ones before it.",
+    "choices": [
+      {
+        "text": "Reads backwards from the end when the offset is large",
+        "correct": false,
+        "why": "It has no notion of how far from the end it is."
+      },
+      {
+        "text": "Reads 100,020 rows and discards 100,000",
+        "correct": true,
+        "why": "Which is why page 1 is instant and page 5,000 times out."
+      },
+      {
+        "text": "Jumps to the hundred-thousandth entry of the index",
+        "correct": false,
+        "why": "Nothing records a row's position in an order."
+      },
+      {
+        "text": "Asks the planner for a starting point and reads from there",
+        "correct": false,
+        "why": "There is no such starting point to ask for."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4eedmfw",
+    "version": 1,
+    "section": "limit-and-paging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody reads page 1 and a row is inserted that sorts above everything. They click page 2. What do they see?",
+    "hint": "Everything below the insert shifted by one.",
+    "choices": [
+      {
+        "text": "The new row at the top of their page 2",
+        "correct": false,
+        "why": "It sorts above everything, so it is on page 1 now."
+      },
+      {
+        "text": "An error, because the result changed under them",
+        "correct": false,
+        "why": "Nothing detects that."
+      },
+      {
+        "text": "Page 2 as it would have been before the insert",
+        "correct": false,
+        "why": "The offset counts from the current state, not from when they loaded page 1."
+      },
+      {
+        "text": "A row they already saw, and one they never will",
+        "correct": true,
+        "why": "No error, nothing in a log, and it depends on somebody else's timing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rp5ajs3",
+    "version": 1,
+    "section": "limit-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does keyset pagination cost the same on page 20,000 as on page 2?",
+    "hint": "It never counts anything.",
+    "choices": [
+      {
+        "text": "The database caches the previous pages",
+        "correct": false,
+        "why": "Nothing is cached between statements."
+      },
+      {
+        "text": "It jumps into the index and walks twenty entries",
+        "correct": true,
+        "why": "The cursor is a value, not a position, so there is nothing to skip."
+      },
+      {
+        "text": "It reads the table backwards from the end",
+        "correct": false,
+        "why": "Direction is not what makes it cheap."
+      },
+      {
+        "text": "It fetches the result once and pages in memory",
+        "correct": false,
+        "why": "Each page is its own statement over the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-3w8fa7dk",
+    "version": 1,
+    "section": "limit-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does keyset pagination give up?",
+    "hint": "One thing people object to, and it is worth asking what it costs.",
+    "choices": [
+      {
+        "text": "Jumping to an arbitrary page number",
+        "correct": true,
+        "why": "A page is defined by where the last one ended rather than by a count."
+      },
+      {
+        "text": "Using an index for the sort",
+        "correct": false,
+        "why": "It depends on one more than offset paging does."
+      },
+      {
+        "text": "Working on a table that is being written to",
+        "correct": false,
+        "why": "That is the case it is built for."
+      },
+      {
+        "text": "Being able to go backwards through the pages",
+        "correct": false,
+        "why": "It goes both ways; the comparison is simply reversed."
+      }
+    ]
+  },
+  {
+    "id": "ex-emzzphcg",
+    "version": 1,
+    "section": "limit-and-paging",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Comparing several sort keys at once, standard SQL lets you compare the whole ___: (created_at, id) < ('…', 4711).",
+    "hint": "One word for a fixed-length group of values compared left to right.",
+    "blanks": [
+      {
+        "accept": [
+          "tuple",
+          "row"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w7ryz3fx",
+    "version": 1,
+    "section": "distinct",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "SELECT DISTINCT category, name FROM products removes almost nothing. Why?",
+    "hint": "It applies to something wider than one column.",
+    "choices": [
+      {
+        "text": "The rows differ in columns that are not selected",
+        "correct": false,
+        "why": "Only the selected columns are compared."
+      },
+      {
+        "text": "It deduplicates whole rows",
+        "correct": true,
+        "why": "Distinct pairs, and name is nearly unique, so almost every pair is."
+      },
+      {
+        "text": "It deduplicates just the first column listed",
+        "correct": false,
+        "why": "It considers all of them together."
+      },
+      {
+        "text": "DISTINCT is ignored when more than one column is selected",
+        "correct": false,
+        "why": "It is applied, to the combination."
+      }
+    ]
+  },
+  {
+    "id": "ex-xxtzpye2",
+    "version": 1,
+    "section": "distinct",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "SELECT DISTINCT c.name FROM customers c JOIN orders o ON … — what does the DISTINCT hide?",
+    "hint": "Ask where the duplicates came from.",
+    "choices": [
+      {
+        "text": "Two customers genuinely share a name",
+        "correct": false,
+        "why": "Possible, and then DISTINCT is wrong rather than wasteful."
+      },
+      {
+        "text": "The orders table has duplicate rows in it",
+        "correct": false,
+        "why": "The rows are distinct; the join repeats the customer."
+      },
+      {
+        "text": "The join multiplied each customer by their orders",
+        "correct": true,
+        "why": "Add a column or a count and the duplication returns in a form DISTINCT no longer hides."
+      },
+      {
+        "text": "It hides a defect, and it is the standard spelling",
+        "correct": false,
+        "why": "EXISTS is, and it creates no duplication to remove."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvb0wrhy",
+    "version": 1,
+    "section": "distinct",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "DISTINCT ON (customer_id) … ORDER BY customer_id, ordered_on DESC. Which row survives per customer?",
+    "hint": "First means first in the ORDER BY.",
+    "choices": [
+      {
+        "text": "An arbitrary one, since DISTINCT ON does not promise which",
+        "correct": false,
+        "why": "It promises the first in the stated order, exactly."
+      },
+      {
+        "text": "The most recent order",
+        "correct": true,
+        "why": "Change DESC to ASC and you get their first one instead."
+      },
+      {
+        "text": "The one with the lowest id, as a tie-break",
+        "correct": false,
+        "why": "Nothing brings the id in unless the ORDER BY does."
+      },
+      {
+        "text": "Each of them, collapsed into a row of arrays",
+        "correct": false,
+        "why": "It keeps one whole row and discards the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3a4d1x3",
+    "version": 1,
+    "section": "distinct",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "UNION against UNION ALL — which is the expensive one?",
+    "hint": "One of them has to compare rows with each other.",
+    "choices": [
+      {
+        "text": "UNION",
+        "correct": true,
+        "why": "It deduplicates, so the plain spelling is the costly one."
+      },
+      {
+        "text": "The one that keeps duplicates, since it returns more",
+        "correct": false,
+        "why": "More rows out, and no comparison work to produce them."
+      },
+      {
+        "text": "They cost the same and differ in the result",
+        "correct": false,
+        "why": "The deduplication is real work."
+      },
+      {
+        "text": "It depends on whether the two sides are indexed",
+        "correct": false,
+        "why": "Indexes help each side; the deduplication happens after."
+      }
+    ]
+  },
+  {
+    "id": "ex-5wcf4jvk",
+    "version": 1,
+    "section": "building-a-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You add a condition and the count does not change. What does that tell you?",
+    "hint": "The technique works because you added one thing.",
+    "choices": [
+      {
+        "text": "The query is now correct",
+        "correct": false,
+        "why": "Nothing about an unchanged count says the answer is right."
+      },
+      {
+        "text": "The condition is redundant and should be removed",
+        "correct": false,
+        "why": "It might be intentional, and it might be a typo that matches everything."
+      },
+      {
+        "text": "That condition is discarding nothing",
+        "correct": true,
+        "why": "Either it is wrong, or every row already satisfied it."
+      },
+      {
+        "text": "The table is too small for the filter to matter",
+        "correct": false,
+        "why": "Size is not what the count is telling you."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxkgjgw2",
+    "version": 1,
+    "section": "building-a-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading somebody else's query, what is worth looking for first?",
+    "hint": "One thing on that list is a bug rather than a style question.",
+    "choices": [
+      {
+        "text": "Whether the columns are listed alphabetically",
+        "correct": false,
+        "why": "A preference nobody has to share."
+      },
+      {
+        "text": "A LIMIT over a sort that ties",
+        "correct": true,
+        "why": "Intermittent, unreproducible on a small table, and it shows a row twice."
+      },
+      {
+        "text": "How many conditions the WHERE clause has",
+        "correct": false,
+        "why": "A count says nothing about whether they are right."
+      },
+      {
+        "text": "Whether table aliases are single letters",
+        "correct": false,
+        "why": "Style, and readable either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bb5s519",
+    "version": 1,
+    "section": "building-a-query",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each habit to the failure it prevents.",
+    "hint": "Each of the three is a rule from this lesson.",
+    "pairs": [
+      {
+        "left": "Naming the columns",
+        "right": "A column added later changing what a program receives"
+      },
+      {
+        "left": "Ending ORDER BY on the key",
+        "right": "A page showing one row twice and skipping another"
+      },
+      {
+        "left": "Leaving the column bare in a comparison",
+        "right": "A filter that cannot use the index that exists"
+      }
+    ],
+    "right_distractors": [
+      "Two tables both having a column called id",
+      "A transaction holding a lock for too long"
+    ]
+  }
+]
