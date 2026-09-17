@@ -507,6 +507,34 @@ The start-up log says which it is, on every boot:
 {"message":"search engines","indexable":false,"knob":"SCHOOLING_INDEXABLE"}
 ```
 
+### It costs the link previews, and that is not a defect
+
+**A link from this deployment pasted into WhatsApp comes out bare** — the host
+repeated twice, no card, no title, no description. The page is serving all of
+it; fetching it as `facebookexternalhit` returns the complete set of `og:` tags.
+Meta's crawler reads `noindex` as "do not make a preview of this either".
+
+It was expected to go the other way, and measuring is what settled it:
+
+```sh
+curl -sS -A 'facebookexternalhit/1.1' https://<host>/pt/course/git \
+  | grep -E 'og:title|og:image|og:description'      # all three are there
+```
+
+`X-Robots-Tag` can name an agent — `googlebot: noindex` — which would leave the
+previews working, and the list is what makes it the wrong trade: a crawler
+nobody thought to add indexes the address this whole arrangement exists to keep
+out of an index. It also cuts the right way, because a preview that does not
+render discourages sharing a laboratory's links, and a shared link is exactly
+what gets an address listed from somebody else's page despite all of this.
+
+**A card is still checkable without a preview**, which is the part that would
+otherwise be lost. It has an address of its own:
+
+```sh
+curl -sS https://<host>/pt/card/course/git -o card.png
+```
+
 **The day the real domain serves**, and not before:
 
 ```sh
@@ -515,8 +543,9 @@ terraform -chdir=infra apply
 ```
 
 The apply is enough — the variable is on the service, not in the image, so no
-release is needed. Then submit `https://<the real domain>/sitemap.xml` to Search
-Console, which nothing here does for you.
+release is needed. The index and the link previews come back together. Then
+submit `https://<the real domain>/sitemap.xml` to Search Console, which nothing
+here does for you.
 
 ## The address
 

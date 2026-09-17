@@ -32,6 +32,14 @@ The picture a shared link shows.
 	smallest thing that is not that: the page's own words, large, on the
 	school's own colour.
 
+	AND ON A DEPLOYMENT THAT MAY NOT BE INDEXED, NONE OF IT RENDERS — which is
+	worth knowing here, because this is the file somebody opens when a paste
+	comes out bare. Meta's crawler reads `X-Robots-Tag: noindex` as "no preview
+	either", so a laboratory shows the host and nothing else however good the
+	card is. It is a cost that was measured rather than a defect; `web.NoIndex`
+	carries the argument. The card itself is still checkable at its own address,
+	which is the reason it has one.
+
 	# WHY IT IS DRAWN AND NOT A FILE
 
 	There is one image in the entire catalogue and it is a diagram inside a
