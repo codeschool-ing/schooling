@@ -1,0 +1,1717 @@
+[
+  {
+    "id": "ex-tnd64wn9",
+    "version": 1,
+    "section": "what-an-index-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "CREATE INDEX ON customers (email). What does that statement physically produce?",
+    "hint": "The section's first sentence after the code is the answer, and it names a structure.",
+    "choices": [
+      {
+        "text": "A note in the catalogue telling the planner to prefer that column",
+        "correct": false,
+        "why": "The planner reads the index because it is there to be read; nothing is preferred."
+      },
+      {
+        "text": "A sorted second copy of the column, with a pointer beside each value to its row",
+        "correct": true,
+        "why": "A structure on disk, which is why it has to be written and kept up to date."
+      },
+      {
+        "text": "A rearrangement of the table itself so that its rows are stored on disk in email order",
+        "correct": false,
+        "why": "The table stays where it is; MySQL does that for the primary key, and for nothing else."
+      },
+      {
+        "text": "A cache holding the rows most recently looked up by email",
+        "correct": false,
+        "why": "A cache remembers what was asked; an index holds every value whether asked or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-ey7espq7",
+    "version": 1,
+    "section": "what-an-index-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Finding one value in a sorted copy of a thousand rows takes about ten steps. About how many for a billion?",
+    "hint": "Each step throws away half of what is left.",
+    "choices": [
+      {
+        "text": "About 30",
+        "correct": true,
+        "why": "A thousand times more data costs ten more steps, twice over; that gap is what an index buys."
+      },
+      {
+        "text": "About 300",
+        "correct": false,
+        "why": "That would be a step per hundred-thousandth of a million; halving is far better than that."
+      },
+      {
+        "text": "About 10 000",
+        "correct": false,
+        "why": "Ten steps per thousand rows scales like that if the steps grow with the data, and they do not."
+      },
+      {
+        "text": "About a million",
+        "correct": false,
+        "why": "That is the scan's cost against the index's, and it is exactly the comparison to keep in mind."
+      }
+    ]
+  },
+  {
+    "id": "ex-03qr9ykt",
+    "version": 1,
+    "section": "what-an-index-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An ordinary B-tree index on email. Which of these does it answer badly?",
+    "hint": "Ask which one needs something in order that the sorted copy does not keep in order.",
+    "choices": [
+      {
+        "text": "WHERE email LIKE 'ana%'",
+        "correct": false,
+        "why": "A prefix is a range: everything from 'ana' up to 'anb' sits together."
+      },
+      {
+        "text": "WHERE email > 'm'",
+        "correct": false,
+        "why": "Find the position of 'm' and read forwards; that is what sorted is for."
+      },
+      {
+        "text": "ORDER BY email",
+        "correct": false,
+        "why": "Reading the copy in order supplies the order, with no sort step at all."
+      },
+      {
+        "text": "WHERE email LIKE '%ana'",
+        "correct": true,
+        "why": "The copy is sorted by the start of the string, and the ends are scattered from A to Z."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rj11sef",
+    "version": 1,
+    "section": "what-an-index-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the sorted copy kept as a B-tree rather than as one flat sorted list?",
+    "hint": "Think about what an insert into the middle of each one costs.",
+    "choices": [
+      {
+        "text": "A tree holds more values in the same space than a list does",
+        "correct": false,
+        "why": "It holds the same values with extra structure; the space is slightly worse, not better."
+      },
+      {
+        "text": "A flat list would be rewritten on each insert into its middle",
+        "correct": true,
+        "why": "An insert goes into one block, and a block splits when it is full; the tree stays balanced."
+      },
+      {
+        "text": "A list has no way of being searched by halving, and a tree does",
+        "correct": false,
+        "why": "A sorted list is exactly what halving searches; the trouble with it is keeping it sorted."
+      },
+      {
+        "text": "A tree stays correct without having to be kept in order",
+        "correct": false,
+        "why": "It is in order at every level; that is what lets each level be one block read."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9j4j73x",
+    "version": 1,
+    "section": "what-an-index-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SELECT * FROM customers WHERE email = 'ana@example.com', with an index on email. Which step is the random read that costs the most on a query returning many rows?",
+    "hint": "The entry holds a value and a pointer, and one of the two has to be followed.",
+    "choices": [
+      {
+        "text": "Descending the tree from the root to the leaf block",
+        "correct": false,
+        "why": "Three or four block reads, and the top levels are in memory anyway."
+      },
+      {
+        "text": "Comparing the value against the entries in the leaf block",
+        "correct": false,
+        "why": "That is work inside a block already read, and it is cheap."
+      },
+      {
+        "text": "Fetching the row the entry points at",
+        "correct": true,
+        "why": "One such fetch per matching row, each landing on a different page; the covering index exists to skip it."
+      },
+      {
+        "text": "Writing the row into the index for the next lookup",
+        "correct": false,
+        "why": "A read writes nothing to the index; entries are maintained on writes to the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-pbz7tr4x",
+    "version": 1,
+    "section": "what-an-index-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Because the copy is sorted, LIKE 'ana%' is a ___ scan: everything from 'ana' up to 'anb'.",
+    "hint": "The same word describes BETWEEN, and it is what the sorted copy is good at.",
+    "blanks": [
+      {
+        "accept": [
+          "range"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dkt84s0g",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A table has six indexes. What does one INSERT cost?",
+    "hint": "Count the sorted structures that need a new entry put in the right place.",
+    "choices": [
+      {
+        "text": "The row, plus an entry in whichever index the planner chooses",
+        "correct": false,
+        "why": "The planner chooses at read time; on a write there is no choosing, only maintaining."
+      },
+      {
+        "text": "The row, and the indexes are refreshed later by a background job",
+        "correct": false,
+        "why": "An index that lagged its table would answer wrongly; each is updated inside the write."
+      },
+      {
+        "text": "The row, plus the six indexes rebuilt from the start",
+        "correct": false,
+        "why": "A B-tree insert is a few block reads and a write into one block; nothing is rebuilt."
+      },
+      {
+        "text": "The row, plus an entry in each of the six structures",
+        "correct": true,
+        "why": "Seven pieces of work for one statement, and nothing in a query plan shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6hj8xxx",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "UPDATE customers SET last_seen = now() WHERE id = 7, on PostgreSQL. Four indexes, none on last_seen. How much index work is usual?",
+    "hint": "Ask where the new version of the row is written.",
+    "choices": [
+      {
+        "text": "Zero entries, since no indexed column changed",
+        "correct": false,
+        "why": "That is what the heap-only tuple optimisation buys, and it is best-effort rather than the rule."
+      },
+      {
+        "text": "One entry, in the primary key index, pointing at the new version",
+        "correct": false,
+        "why": "The primary key is no different from the other three; each points at a row location."
+      },
+      {
+        "text": "Four entries, written later by autovacuum once the old version is cleaned up",
+        "correct": false,
+        "why": "Vacuum cleans up old versions; it does not point indexes at new ones."
+      },
+      {
+        "text": "One entry in each of the four, pointing at the new row version",
+        "correct": true,
+        "why": "An update writes a new version of the whole row, and each index has to find it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpph9qp6",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE active matches 600 000 of a million rows. There is an index on active, and the planner reads the whole table. Why?",
+    "hint": "Count the pointer follows, and remember what kind of read each one is.",
+    "choices": [
+      {
+        "text": "The index has not finished building yet",
+        "correct": false,
+        "why": "A build in progress is visible in the catalogue; this is a finished index being declined."
+      },
+      {
+        "text": "A boolean is a type that a B-tree refuses to index",
+        "correct": false,
+        "why": "It indexes booleans without complaint; the trouble is what the values are worth."
+      },
+      {
+        "text": "Six hundred thousand random fetches cost more than one sequential read",
+        "correct": true,
+        "why": "The planner priced both plans and picked the cheaper one; it is not ignoring anything."
+      },
+      {
+        "text": "The statistics are stale, so the planner does not know the index exists",
+        "correct": false,
+        "why": "Statistics describe the data; the index is in the catalogue whether they are fresh or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e1ysvqv",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these indexes is the pure loss?",
+    "hint": "One of them serves no query that another index on the same table does not already serve.",
+    "choices": [
+      {
+        "text": "(customer_id) beside (customer_id, placed_at)",
+        "correct": true,
+        "why": "The wider one serves every query the narrow one would, for the leftmost-prefix reason."
+      },
+      {
+        "text": "(placed_at) beside (customer_id, placed_at)",
+        "correct": false,
+        "why": "The composite does nothing for placed_at alone, so this one earns its place if that query runs."
+      },
+      {
+        "text": "(created_at) WHERE status = 'pending' beside (status)",
+        "correct": false,
+        "why": "Different rows and a different column; the partial one is the section that repays the trouble."
+      },
+      {
+        "text": "(lower(email)) beside (email)",
+        "correct": false,
+        "why": "Two different expressions, and a query on lower(email) uses the first and not the second."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk3ste1c",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An index that no query has used in a year sits on a busy table. Beyond the writes it slows, what does it cost while the database is running?",
+    "hint": "Think about what the database keeps in memory, and what gets pushed out to make room.",
+    "choices": [
+      {
+        "text": "Planning time on each query, because the planner has to rule it out",
+        "correct": false,
+        "why": "That cost is real and small; it is not the one that shows up as slow reads elsewhere."
+      },
+      {
+        "text": "Cache: its pages evict pages that queries somebody runs would have used",
+        "correct": true,
+        "why": "The working set now includes an index nobody reads, and something useful is pushed out for it."
+      },
+      {
+        "text": "Lock contention, because reads have to wait for it to be updated",
+        "correct": false,
+        "why": "Index maintenance happens inside the write; readers are not queued behind it."
+      },
+      {
+        "text": "A rebuild on each restart, because unused indexes are not persisted",
+        "correct": false,
+        "why": "An index is on disk like the table; it survives a restart untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-k576cqvh",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An index pays when it eliminates ___ of the table, and stops paying when it does not.",
+    "hint": "One word, and it is the reason a column with two values earns nothing from an ordinary index.",
+    "blanks": [
+      {
+        "accept": [
+          "most"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-344zytxf",
+    "version": 1,
+    "section": "when-it-is-not-used",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "WHERE lower(email) = 'ana@example.com', with an index on (email). Why is the index unused?",
+    "hint": "Ask what values the sorted copy holds, and whether the query is asking about those.",
+    "choices": [
+      {
+        "text": "lower returns a different type from the column, and the types have to agree",
+        "correct": false,
+        "why": "Both are text; the type is fine and the values are the problem."
+      },
+      {
+        "text": "A function anywhere in the WHERE turns the index off for the whole statement",
+        "correct": false,
+        "why": "Another condition on a bare column in the same WHERE would use its index perfectly well."
+      },
+      {
+        "text": "The planner reads a function call as a range, and this one has no bounds",
+        "correct": false,
+        "why": "There is no range being read; there is a value it has no sorted copy of."
+      },
+      {
+        "text": "The copy holds email in order, and where lower(email) would sort is not in it",
+        "correct": true,
+        "why": "Which is the scan you were trying to avoid. Index the expression, or keep the column bare."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1ar61gr",
+    "version": 1,
+    "section": "when-it-is-not-used",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE date(created_at) = DATE '2026-03-01', with an index on (created_at). Which rewrite uses the index you already have and stays correct?",
+    "hint": "Keep the column bare on its side, and cover the whole day without naming its last instant.",
+    "choices": [
+      {
+        "text": "WHERE created_at >= DATE '2026-03-01' AND created_at < DATE '2026-03-02'",
+        "correct": true,
+        "why": "A range on the bare column: the index finds the start and reads until the end, and no last second is guessed at."
+      },
+      {
+        "text": "WHERE created_at::date = DATE '2026-03-01'",
+        "correct": false,
+        "why": "A cast is a function by another spelling, and the sorted copy holds the timestamps, not their dates."
+      },
+      {
+        "text": "WHERE created_at BETWEEN DATE '2026-03-01' AND '2026-03-01 23:59:59'",
+        "correct": false,
+        "why": "It uses the index, and it drops the last second's fractions; the half-open range has no such edge."
+      },
+      {
+        "text": "CREATE INDEX ON t (date(created_at)) and leave the query exactly as it was",
+        "correct": false,
+        "why": "That works, and it is a second index to maintain when the one you have was enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnn5dshq",
+    "version": 1,
+    "section": "when-it-is-not-used",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE phone = 5551234, where phone is a text column, on MySQL. What happens?",
+    "hint": "Which side of the comparison gets converted decides everything.",
+    "choices": [
+      {
+        "text": "The literal is converted to text and the index is used",
+        "correct": false,
+        "why": "That is the side you would want converted, and it is not the one MySQL picks for a number against a string column."
+      },
+      {
+        "text": "Each row's phone is converted to a number, so the index is out and the scan is in",
+        "correct": true,
+        "why": "One missing pair of quotes, invisible in code review, and it is a full scan."
+      },
+      {
+        "text": "The comparison is refused because the types differ",
+        "correct": false,
+        "why": "It runs; an engine that refused would at least have told you something."
+      },
+      {
+        "text": "The index is used, and any row whose phone fails to parse as a number is skipped over",
+        "correct": false,
+        "why": "The rows are compared after conversion, and conversion is what forces the scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybvdmr6q",
+    "version": 1,
+    "section": "when-it-is-not-used",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE price * 1.1 > 100, with an index on (price). Which rewrite keeps the column bare and asks the same question?",
+    "hint": "Move the arithmetic to the other side of the operator, and check that it is still the same inequality.",
+    "choices": [
+      {
+        "text": "WHERE price > 100 * 1.1",
+        "correct": false,
+        "why": "The index applies, and this asks whether price exceeds 110 rather than 90.9; a different question, answered fast."
+      },
+      {
+        "text": "WHERE (price * 1.1) > 100",
+        "correct": false,
+        "why": "Parentheses change nothing; the sorted values are still price and not price times 1.1."
+      },
+      {
+        "text": "WHERE round(price * 1.1) > 100",
+        "correct": false,
+        "why": "A function around arithmetic around the column is the first reason on the list wrapped around the fourth."
+      },
+      {
+        "text": "WHERE price > 100 / 1.1",
+        "correct": true,
+        "why": "Same rows, and the sorted copy of price now answers it."
+      }
+    ]
+  },
+  {
+    "id": "ex-89t2nd1n",
+    "version": 1,
+    "section": "when-it-is-not-used",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query was fast on Tuesday. On Wednesday, after an overnight import of thirty million rows, it is slow, and nothing about it or its index changed. What do you check first?",
+    "hint": "The planner does not count rows. Ask what it uses instead, and when that was last refreshed.",
+    "choices": [
+      {
+        "text": "Whether the import dropped and recreated the index without CONCURRENTLY",
+        "correct": false,
+        "why": "A recreated index is still an index; the plan would use it as before."
+      },
+      {
+        "text": "Whether the new rows have a different type in the indexed column",
+        "correct": false,
+        "why": "A column has one type, and an import that violated it would have failed rather than slowed."
+      },
+      {
+        "text": "Whether the statistics were recollected since the import, with ANALYZE",
+        "correct": true,
+        "why": "The data changed shape faster than the estimates did, and the plan follows the estimates."
+      },
+      {
+        "text": "Whether the disk filled up, forcing the index out of memory",
+        "correct": false,
+        "why": "A full disk fails writes; it does not turn a plan from an index scan into a sequential one."
+      }
+    ]
+  },
+  {
+    "id": "ex-bb97m4yy",
+    "version": 1,
+    "section": "when-it-is-not-used",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE email = 'a@b.c' OR phone = '555', an index on each column, on an engine that gives up on OR and scans. What lets each index do its job?",
+    "hint": "Two conditions that each narrow the answer on their own, joined by something other than OR.",
+    "choices": [
+      {
+        "text": "One composite index on (email, phone) instead of the two",
+        "correct": false,
+        "why": "A composite serves its first column and then its first and second; phone alone gets nothing from it."
+      },
+      {
+        "text": "Two queries, one per condition, joined with UNION",
+        "correct": true,
+        "why": "Each half uses its own index; it reads worse and it runs better."
+      },
+      {
+        "text": "The same query with AND, since AND is what indexes are for",
+        "correct": false,
+        "why": "That asks for rows matching both, which is a different set of rows."
+      },
+      {
+        "text": "Wrapping both columns in coalesce so the planner treats them as one",
+        "correct": false,
+        "why": "A function around the column is the first reason on the list, and now there are two of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwgdjs2j",
+    "version": 1,
+    "section": "when-it-is-not-used",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each condition to the reason its index goes unused.",
+    "hint": "Two of them are about what the sorted copy holds, one is about a conversion, and one is the planner being right.",
+    "pairs": [
+      {
+        "left": "WHERE lower(email) = 'ana@example.com'",
+        "right": "A function wraps the column, and the copy is sorted by the bare value"
+      },
+      {
+        "left": "WHERE name LIKE '%ana'",
+        "right": "The copy is sorted by the start of the string, and the end is scattered"
+      },
+      {
+        "left": "WHERE phone = 5551234, on a text column",
+        "right": "The column is converted to the literal's type, one row at a time"
+      },
+      {
+        "left": "WHERE active, true on six rows in ten",
+        "right": "The planner priced a scan cheaper than following the pointers"
+      }
+    ],
+    "right_distractors": [
+      "The index was declared with its columns in the wrong order",
+      "The statistics were collected before the table was loaded"
+    ]
+  },
+  {
+    "id": "ex-beyn3c1w",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An index on (customer_id, placed_at). Which WHERE gets nothing from it?",
+    "hint": "The copy is sorted by the first column, and by the second only inside each value of the first.",
+    "choices": [
+      {
+        "text": "WHERE customer_id = 2",
+        "correct": false,
+        "why": "One contiguous run of entries; the first column alone is the simplest case the index serves."
+      },
+      {
+        "text": "WHERE placed_at > DATE '2026-01-01'",
+        "correct": true,
+        "why": "Across the whole index the dates are scattered, one run per customer; there is nothing contiguous to read."
+      },
+      {
+        "text": "WHERE customer_id = 2 AND placed_at > DATE '2026-01-01'",
+        "correct": false,
+        "why": "A shorter run inside customer 2's run, and it is what the index was built for."
+      },
+      {
+        "text": "WHERE customer_id = 2 ORDER BY placed_at",
+        "correct": false,
+        "why": "The run for customer 2 is already in date order, so no sort step is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1sm5gq9",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE status = 'paid' AND placed_at > DATE '2026-01-01'. Which column order, and why?",
+    "hint": "Once the index hits a range, the columns after it are checked rather than searched.",
+    "choices": [
+      {
+        "text": "(placed_at, status): the date narrows more rows, so it should go first",
+        "correct": false,
+        "why": "It jumps to January and then walks every row since, checking each status, because within a date range the statuses are in no order."
+      },
+      {
+        "text": "(status, placed_at): jump to the paid block and read the dates forward as one run",
+        "correct": true,
+        "why": "Equality first, then the range; the run stops when the dates run out."
+      },
+      {
+        "text": "Either order, since both columns are in the index and the rows come out the same",
+        "correct": false,
+        "why": "The rows are the same; the work is not, and the work is what the index is for."
+      },
+      {
+        "text": "(placed_at, status): a range column has to come first for the index to be able to search it",
+        "correct": false,
+        "why": "A range column is searchable in any position that follows equalities; it is what comes after it that stops being."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0pgtxh4",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An index on (a, b, c). Which of these queries use it? Choose all that apply.",
+    "hint": "The leftmost prefix rule, and one of them is about the order things are written in the WHERE rather than in the index.",
+    "choices": [
+      {
+        "text": "WHERE a = 1",
+        "correct": true,
+        "why": "The first column alone is a leftmost prefix."
+      },
+      {
+        "text": "WHERE b = 2",
+        "correct": false,
+        "why": "b is sorted only within each a; on its own it is scattered through the index."
+      },
+      {
+        "text": "WHERE b = 2 AND a = 1",
+        "correct": true,
+        "why": "The order in the WHERE is not the order in the index; the planner sees a and b, which is a prefix."
+      },
+      {
+        "text": "WHERE c = 3 AND b = 2",
+        "correct": false,
+        "why": "Neither column is the first; without a there is no run to find."
+      },
+      {
+        "text": "WHERE a = 1 AND b = 2 ORDER BY c",
+        "correct": true,
+        "why": "a and b find the run, and within it c is already in order."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vv71q42",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SELECT * FROM orders WHERE customer_id = 2 ORDER BY placed_at DESC LIMIT 10, with (customer_id, placed_at). What does the database do?",
+    "hint": "An index can be read backwards for free, and LIMIT is cheap when the order asked for is one the index has.",
+    "choices": [
+      {
+        "text": "Walks to customer 2's run, reads its last ten entries backwards, and stops",
+        "correct": true,
+        "why": "Small at ten rows and enormous at ten thousand; it is what makes paging cheap."
+      },
+      {
+        "text": "Finds each order for customer 2, sorts them by date, and keeps ten",
+        "correct": false,
+        "why": "That is the plan without the index; with it there is nothing to sort."
+      },
+      {
+        "text": "Refuses to read the index backwards, because it was declared ascending",
+        "correct": false,
+        "why": "Reading backwards is free; (a, b) serves a DESC, b DESC exactly as it serves a, b."
+      },
+      {
+        "text": "Reads the whole index from the end until it has ten entries for customer 2",
+        "correct": false,
+        "why": "It goes straight to the customer's run; the rest of the index is not read."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3nbrtzw",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You have (customer_id, placed_at), and a query wants ORDER BY customer_id, placed_at DESC. Does the index supply that order?",
+    "hint": "Backwards is free. Mixed is not.",
+    "choices": [
+      {
+        "text": "Yes: reading an index backwards is free, so any direction is served",
+        "correct": false,
+        "why": "Backwards reverses both columns together; it is asked to reverse one and not the other."
+      },
+      {
+        "text": "Yes: the first column is ascending, and the first column is what matters",
+        "correct": false,
+        "why": "Within each customer the dates would have to come out descending, and the run is stored ascending."
+      },
+      {
+        "text": "No: an index supplies an ORDER BY on one column at most",
+        "correct": false,
+        "why": "It supplies both columns happily in either single direction; the mix is the trouble."
+      },
+      {
+        "text": "No: mixed directions need the index declared with placed_at DESC",
+        "correct": true,
+        "why": "CREATE INDEX ON orders (customer_id, placed_at DESC) is the index for that query."
+      }
+    ]
+  },
+  {
+    "id": "ex-h82twg71",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You have (customer_id, placed_at). A ticket asks for an index on (customer_id). What do you do?",
+    "hint": "Ask which queries the narrow one would serve that the wide one does not.",
+    "choices": [
+      {
+        "text": "Add it: a single-column index is faster for a single-column lookup",
+        "correct": false,
+        "why": "The wide one finds customer 2's run in the same number of steps; the extra column costs a little width and nothing else."
+      },
+      {
+        "text": "Add it and drop the composite, since one index per column is the tidy arrangement",
+        "correct": false,
+        "why": "That loses the date range and the free ORDER BY, which the composite was there for."
+      },
+      {
+        "text": "Close the ticket: the wider index already serves every query the narrow one would",
+        "correct": true,
+        "why": "It is one of the two duplicates from the section on cost, and nobody measures the second half."
+      },
+      {
+        "text": "Replace both with (placed_at, customer_id), so that each column is served",
+        "correct": false,
+        "why": "That serves placed_at alone and drops customer_id alone, which is the query the ticket is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7rmr7w2",
+    "version": 1,
+    "section": "covering-indexes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An index on (customer_id, placed_at). SELECT customer_id, placed_at FROM orders WHERE customer_id = 2. What gets read?",
+    "hint": "Every column the query needs is somewhere; ask where.",
+    "choices": [
+      {
+        "text": "The index alone; the table is never touched",
+        "correct": true,
+        "why": "PostgreSQL calls it an index-only scan, and it shows under that name in the plan."
+      },
+      {
+        "text": "The index, then one row fetch per entry to confirm the values",
+        "correct": false,
+        "why": "The values are in the entries already; there is nothing in the row the query still needs."
+      },
+      {
+        "text": "The table alone, because a SELECT list is always served from the table",
+        "correct": false,
+        "why": "A SELECT list is served from wherever its columns are, and here they are in the index."
+      },
+      {
+        "text": "Both, so that the entries can be checked against their rows",
+        "correct": false,
+        "why": "Checking is not needed for correctness; the entries are the same values the rows hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8d9d0a0",
+    "version": 1,
+    "section": "covering-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Add total to that SELECT list and the same query is several times slower. Why?",
+    "hint": "The WHERE did not change. Ask what the extra column forces for each entry.",
+    "choices": [
+      {
+        "text": "total is not in the index, so each entry now needs its row fetched",
+        "correct": true,
+        "why": "Same index, same WHERE, and a column in the SELECT list is not where anybody looks for a performance change."
+      },
+      {
+        "text": "Three columns exceed what one index entry is able to return",
+        "correct": false,
+        "why": "An entry returns whatever it holds; the limit is what was indexed, not a count."
+      },
+      {
+        "text": "The planner switches to a sequential scan whenever a column is added",
+        "correct": false,
+        "why": "It switches when the plan gets cheaper, and the fetches are what changed the price."
+      },
+      {
+        "text": "total is numeric, and numeric columns are slow to read from disk",
+        "correct": false,
+        "why": "The type is beside the point; an included total would be read from the index just as fast."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6jbqs8p",
+    "version": 1,
+    "section": "covering-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You want that query covered, and total is never searched or sorted by. On PostgreSQL 11 or later, which index?",
+    "hint": "Separate the columns you search on from the ones you merely return.",
+    "choices": [
+      {
+        "text": "CREATE INDEX ON orders (customer_id, placed_at, total)",
+        "correct": false,
+        "why": "It covers the query, and it makes the key wider, each comparison three values, and implies a sort order nobody wants."
+      },
+      {
+        "text": "CREATE INDEX ON orders (customer_id, placed_at) INCLUDE (total)",
+        "correct": true,
+        "why": "total is stored in the index and kept out of the key; the index behaves as a two-column one for every other purpose."
+      },
+      {
+        "text": "CREATE INDEX ON orders (total), kept beside the existing one",
+        "correct": false,
+        "why": "Two indexes do not combine into one covering read; total would still be fetched from the row."
+      },
+      {
+        "text": "CREATE INDEX ON orders (total, customer_id, placed_at)",
+        "correct": false,
+        "why": "total first breaks the leftmost prefix for the query's WHERE, which searches on customer_id."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvj7ns0e",
+    "version": 1,
+    "section": "covering-indexes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On MySQL with InnoDB, an index on (customer_id) answers SELECT id, customer_id FROM orders WHERE customer_id = 2 without touching the table. Why?",
+    "hint": "Ask what a secondary index entry holds instead of a physical pointer.",
+    "choices": [
+      {
+        "text": "InnoDB copies each column of the table into each secondary index",
+        "correct": false,
+        "why": "Then every index would be the size of the table; it copies one thing, and it is not the row."
+      },
+      {
+        "text": "id is small enough to be cached beside the index in memory",
+        "correct": false,
+        "why": "Caching is not what puts the value in the entry; the entry's structure does."
+      },
+      {
+        "text": "The primary key index is read instead, since it is the table in key order",
+        "correct": false,
+        "why": "The clustered index would be walked on a lookup, and here no lookup is needed."
+      },
+      {
+        "text": "Each secondary entry holds the primary key rather than a physical pointer",
+        "correct": true,
+        "why": "Which also makes a wide primary key expensive twice: copied into every index, and walked on every lookup."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jtfcgby",
+    "version": 1,
+    "section": "covering-indexes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A PostgreSQL index-only scan was fast for weeks. Now the plan shows it fetching rows again, and the query has not changed. Likeliest cause?",
+    "hint": "The index does not know which rows are visible to you. Something else does, and something maintains it.",
+    "choices": [
+      {
+        "text": "The index has bloated with dead entries and needs a REINDEX",
+        "correct": false,
+        "why": "Bloat makes the index bigger and slower to walk; it does not turn an index-only scan into a fetching one."
+      },
+      {
+        "text": "A long-open transaction is holding VACUUM back, and the visibility map has gone stale",
+        "correct": true,
+        "why": "Pages no longer marked all-visible mean each entry's row has to be fetched to check it; nothing in the query changed."
+      },
+      {
+        "text": "A column was added to the table, widening its rows",
+        "correct": false,
+        "why": "Row width changes what a fetch costs, not whether one happens."
+      },
+      {
+        "text": "Statistics were recollected and the planner now prefers the table",
+        "correct": false,
+        "why": "Fresh statistics change which plan is picked; the symptom here is the same plan doing more work."
+      }
+    ]
+  },
+  {
+    "id": "ex-84vd712t",
+    "version": 1,
+    "section": "covering-indexes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PostgreSQL's name for a scan that reads the index and never the table is an ___ scan.",
+    "hint": "Two words joined by a hyphen, and it is what you look for in the plan.",
+    "blanks": [
+      {
+        "accept": [
+          "index-only",
+          "index only"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-smf7mknt",
+    "version": 1,
+    "section": "partial-and-expression",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "CREATE INDEX ON jobs (created_at) WHERE status = 'pending', on a table with fifty million finished rows and four hundred pending. What does the index hold?",
+    "hint": "The WHERE is part of the index, not of a query.",
+    "choices": [
+      {
+        "text": "Four hundred entries, and a finished row never enters it",
+        "correct": true,
+        "why": "It fits in memory, the lookup is instant, and the writes to the other fifty million rows do not touch it."
+      },
+      {
+        "text": "Fifty million entries, with the pending ones flagged",
+        "correct": false,
+        "why": "A flag would still cost an entry per row; the point is that the other rows are not in it at all."
+      },
+      {
+        "text": "Four hundred entries now, growing as the finished rows are indexed lazily",
+        "correct": false,
+        "why": "Nothing is deferred: a row enters when it becomes pending and leaves when it stops being."
+      },
+      {
+        "text": "One entry per status value, each pointing at its rows",
+        "correct": false,
+        "why": "That is a description of an ordinary index on status, and it earns nothing on three values."
+      }
+    ]
+  },
+  {
+    "id": "ex-fhn0xa57",
+    "version": 1,
+    "section": "partial-and-expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these queries is able to use that partial index?",
+    "hint": "The planner has to prove the query's condition is the index's condition, at planning time.",
+    "choices": [
+      {
+        "text": "WHERE status = 'pending'",
+        "correct": true,
+        "why": "Recognisably the index's own condition, which is what the planner needs."
+      },
+      {
+        "text": "WHERE status = $1",
+        "correct": false,
+        "why": "The value is not known when the plan is made, so nothing can be proved about it."
+      },
+      {
+        "text": "WHERE status <> 'done'",
+        "correct": false,
+        "why": "Not the same condition: a row that is 'running' matches this and is not in the index."
+      },
+      {
+        "text": "WHERE status IN ('pending', 'running')",
+        "correct": false,
+        "why": "Half the rows this asks for are not in the index, so the index is not an answer to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4gqr406",
+    "version": 1,
+    "section": "partial-and-expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "\"An email must be unique among the users who are not deleted.\" How do you enforce that against every connection, at every isolation level?",
+    "hint": "Lesson 8 showed what an application-side check is. The database has a one-line way to say this.",
+    "choices": [
+      {
+        "text": "A UNIQUE constraint on (email, deleted_at)",
+        "correct": false,
+        "why": "Two active users both have deleted_at null, and nulls do not collide; the rule is not enforced where it matters."
+      },
+      {
+        "text": "Check for an existing active user in application code before inserting",
+        "correct": false,
+        "why": "Two requests in the same second both find nobody and both insert; that is write skew."
+      },
+      {
+        "text": "CREATE UNIQUE INDEX ON users (email) WHERE deleted_at IS NULL",
+        "correct": true,
+        "why": "A partial unique index says exactly this, and the engine enforces it on every write."
+      },
+      {
+        "text": "A CHECK constraint comparing the email against the other rows",
+        "correct": false,
+        "why": "A CHECK sees one row; it has no view of the others to compare against."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pdynw77",
+    "version": 1,
+    "section": "partial-and-expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index on (lower(email)). The query says WHERE lower(trim(email)) = 'ana@example.com'. Is the index used?",
+    "hint": "Compare the two expressions character by character.",
+    "choices": [
+      {
+        "text": "Yes: trim makes no difference to which rows match",
+        "correct": false,
+        "why": "Whether the rows match is not what the planner compares; it compares the expressions, and they differ."
+      },
+      {
+        "text": "No: the expressions are spelt differently, and an expression index matches its own spelling",
+        "correct": true,
+        "why": "This is the commonest reason an expression index looks broken."
+      },
+      {
+        "text": "Yes: the planner recognises trim as harmless and strips it",
+        "correct": false,
+        "why": "It recognises nothing about what a function does; it matches text against text."
+      },
+      {
+        "text": "No: an expression index serves equality on the bare column, not on a function",
+        "correct": false,
+        "why": "The reverse: it serves the function it was built on and not the bare column."
+      }
+    ]
+  },
+  {
+    "id": "ex-vayemtr7",
+    "version": 1,
+    "section": "partial-and-expression",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "PostgreSQL refuses CREATE INDEX ON events ((created_at::date)) on a timestamptz column, saying the expression is not immutable. What is it telling you?",
+    "hint": "An index is a record of an answer. Ask whether that answer could change without the row changing.",
+    "choices": [
+      {
+        "text": "A date is too narrow a type to be indexed, so index the timestamp column instead",
+        "correct": false,
+        "why": "Dates index perfectly well; the type of the result is not the complaint."
+      },
+      {
+        "text": "The cast needs a second pair of parentheses around the whole expression",
+        "correct": false,
+        "why": "The syntax is fine; it is the meaning of the expression that is refused."
+      },
+      {
+        "text": "The conversion depends on the session's time zone, so one input has two answers",
+        "correct": true,
+        "why": "An index holding an answer that has since changed would be wrong silently; the refusal is telling you something true about your data."
+      },
+      {
+        "text": "Expression indexes accept functions but not casts",
+        "correct": false,
+        "why": "A cast to a type that does not depend on the session is accepted without complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-s65gttc3",
+    "version": 1,
+    "section": "partial-and-expression",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which engines have partial indexes?",
+    "hint": "Two of the four in this course, and MySQL is not one of them.",
+    "choices": [
+      {
+        "text": "PostgreSQL and SQLite",
+        "correct": true,
+        "why": "MySQL and MariaDB have none; a generated column is the nearest thing there."
+      },
+      {
+        "text": "PostgreSQL and MySQL",
+        "correct": false,
+        "why": "MySQL has functional indexes since version 8, and no partial ones."
+      },
+      {
+        "text": "PostgreSQL alone",
+        "correct": false,
+        "why": "SQLite has them too, and they are as useful there as anywhere."
+      },
+      {
+        "text": "The four of them",
+        "correct": false,
+        "why": "It is the kind of feature that decides a design, and two of the four lack it."
+      }
+    ]
+  },
+  {
+    "id": "ex-581wvd6q",
+    "version": 1,
+    "section": "partial-and-expression",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "CREATE UNIQUE INDEX ON users (lower(email)) WHERE deleted_at IS NULL says: no two ___ users may share an email, whatever case they typed it in.",
+    "hint": "The word for a user whose deleted_at is null.",
+    "blanks": [
+      {
+        "accept": [
+          "active",
+          "live",
+          "undeleted",
+          "non-deleted"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y038ye4t",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem to the index type built for it.",
+    "hint": "Three problems a sorted list does not answer, and two types on the right that answer something else.",
+    "pairs": [
+      {
+        "left": "Rows whose tags array includes 'sql'",
+        "right": "GIN"
+      },
+      {
+        "left": "Two reservations of a room must not overlap",
+        "right": "GiST"
+      },
+      {
+        "left": "A date range on an append-only log of a billion rows",
+        "right": "BRIN"
+      }
+    ],
+    "right_distractors": [
+      "B-tree",
+      "hash"
+    ]
+  },
+  {
+    "id": "ex-1hc5thnt",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A BRIN index on created_at eliminates almost nothing on a table whose rows were loaded in random order. Why?",
+    "hint": "Ask what BRIN stores per block range, and what those two numbers become when the order is gone.",
+    "choices": [
+      {
+        "text": "BRIN stores a hash per block, and hashes do not survive reordering",
+        "correct": false,
+        "why": "It stores no hashes; it stores the smallest and largest value in each range of blocks."
+      },
+      {
+        "text": "Each block range's minimum and maximum then span the whole column, so no range is skipped",
+        "correct": true,
+        "why": "It works when the column correlates with the physical order, which an append-only log has and a shuffled table does not."
+      },
+      {
+        "text": "BRIN needs the table clustered by its primary key, which loading undoes",
+        "correct": false,
+        "why": "The primary key is beside the point; the correlation it needs is with the indexed column."
+      },
+      {
+        "text": "The index is rebuilt on each insert and falls behind the table",
+        "correct": false,
+        "why": "It is tiny and cheap to maintain; falling behind is not its failure mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-2my08bec",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is GIN's trade against a B-tree?",
+    "hint": "One row produces how many entries?",
+    "choices": [
+      {
+        "text": "Larger on disk, because it stores each whole value twice",
+        "correct": false,
+        "why": "It stores elements, not whole values; size is not the trade that bites."
+      },
+      {
+        "text": "Slower to update, because one row produces many entries",
+        "correct": true,
+        "why": "It is a search structure, and it suits data read far more than it is written."
+      },
+      {
+        "text": "Unable to be used from inside a transaction",
+        "correct": false,
+        "why": "It is an index like any other as far as transactions are concerned."
+      },
+      {
+        "text": "Slower to read, because each element has to be hashed on lookup",
+        "correct": false,
+        "why": "Reading is what it is good at; that is why the trade is worth making for search."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzsbxd9e",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You are designing \"no two bookings of a room may overlap\", and the product will run on MySQL. What do you need to know before the design is settled?",
+    "hint": "The rule is enforced by an exclusion constraint, and that constraint needs a particular index type.",
+    "choices": [
+      {
+        "text": "MySQL's SPATIAL index enforces overlap rules on time ranges",
+        "correct": false,
+        "why": "SPATIAL is for geometry, and it enforces nothing; a constraint would have to, and there is none for this."
+      },
+      {
+        "text": "A UNIQUE constraint on (room_id, start_at) is equivalent",
+        "correct": false,
+        "why": "Two bookings starting a minute apart and overlapping for an hour pass that constraint."
+      },
+      {
+        "text": "The exclusion constraint that enforces it needs GiST, and MySQL has no GiST",
+        "correct": true,
+        "why": "Which means locking, or serialisation, or an application check with lesson 8's caveats; better to know now than after the feature ships."
+      },
+      {
+        "text": "A B-tree on (room_id, start_at, end_at) makes the overlap check a single lookup",
+        "correct": false,
+        "why": "Overlap is not equality or a range on one column; no B-tree arrangement answers it directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-7q63bbxz",
+    "version": 1,
+    "section": "the-other-types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When somebody says \"an index\" with no qualifier, which type do they mean?",
+    "hint": "It is the default everywhere in this course, and nearly always the answer.",
+    "choices": [
+      {
+        "text": "B-tree",
+        "correct": true,
+        "why": "Equality, ranges, ordering and prefixes, in every engine in this course."
+      },
+      {
+        "text": "hash",
+        "correct": false,
+        "why": "Equality on a long value and nothing else; rarely worth it."
+      },
+      {
+        "text": "GIN",
+        "correct": false,
+        "why": "For elements inside a value; a search structure, not the default."
+      },
+      {
+        "text": "BRIN",
+        "correct": false,
+        "why": "For enormous tables whose order matches the column; a special case."
+      }
+    ]
+  },
+  {
+    "id": "ex-33bc1028",
+    "version": 1,
+    "section": "uniqueness-and-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "CREATE TABLE customers (id integer PRIMARY KEY, email text UNIQUE). How many indexes exist before you create any?",
+    "hint": "A uniqueness rule has to be checked on every insert, and checking by scanning would be unusable.",
+    "choices": [
+      {
+        "text": "Zero: a constraint is a rule and an index is a structure",
+        "correct": false,
+        "why": "The rule is implemented as the structure; they are one object seen from two sides."
+      },
+      {
+        "text": "One, on the primary key",
+        "correct": false,
+        "why": "UNIQUE is checked the same way, and gets the same structure."
+      },
+      {
+        "text": "One, covering both columns together",
+        "correct": false,
+        "why": "One index over both would allow two rows with the same email and different ids."
+      },
+      {
+        "text": "Two, one per uniqueness rule",
+        "correct": true,
+        "why": "Which is why adding your own index on either column is pure waste."
+      }
+    ]
+  },
+  {
+    "id": "ex-be02n4na",
+    "version": 1,
+    "section": "uniqueness-and-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two rows are inserted with a NULL email into a column declared UNIQUE. Is the second accepted?",
+    "hint": "Lesson 1 settled whether two unknowns are known to be equal.",
+    "choices": [
+      {
+        "text": "Yes: two unknowns are not known to be equal, so they do not collide",
+        "correct": true,
+        "why": "A nullable unique column permits any number of nulls; NULLS NOT DISTINCT is how PostgreSQL 15 says otherwise."
+      },
+      {
+        "text": "No: a unique column refuses the second identical value",
+        "correct": false,
+        "why": "Identical is the word doing the damage; null is not a value, and two of them are not identical."
+      },
+      {
+        "text": "Yes, with a warning that the constraint was skipped for that row",
+        "correct": false,
+        "why": "Nothing was skipped; the rule was checked and the rows do not violate it."
+      },
+      {
+        "text": "Yes in MySQL and no in PostgreSQL",
+        "correct": false,
+        "why": "Both accept it; the engines agree on this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6yx6ce6",
+    "version": 1,
+    "section": "uniqueness-and-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "orders.customer_id REFERENCES customers (id), on PostgreSQL. What index does that create on orders?",
+    "hint": "The most valuable sentence in the lesson is about this, and it names two engines.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "The parent side is indexed because customers.id is a primary key; the child's column has no index until you add one."
+      },
+      {
+        "text": "One on customer_id",
+        "correct": false,
+        "why": "That is what MySQL does; PostgreSQL leaves it to you."
+      },
+      {
+        "text": "One on (id, customer_id)",
+        "correct": false,
+        "why": "No index is created on the child at all, composite or otherwise."
+      },
+      {
+        "text": "One on customer_id, but not unique",
+        "correct": false,
+        "why": "It would not be unique, and it also is not there."
+      }
+    ]
+  },
+  {
+    "id": "ex-mksp625r",
+    "version": 1,
+    "section": "uniqueness-and-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "DELETE FROM customers WHERE id = 7 takes four minutes. Where is the time going?",
+    "hint": "The answer is never in the DELETE. Ask what the database has to prove before it removes the row.",
+    "choices": [
+      {
+        "text": "The primary key index on customers being rebuilt after the removal",
+        "correct": false,
+        "why": "An index is not rebuilt for one deletion; the entry is marked dead and that is all."
+      },
+      {
+        "text": "Proving no order references the customer, by reading all of orders",
+        "correct": true,
+        "why": "Deleting a hundred customers reads the table a hundred times; index your foreign keys."
+      },
+      {
+        "text": "The row's disk space being reclaimed before the statement returns",
+        "correct": false,
+        "why": "Space is reclaimed later by vacuum; the statement does not wait for it."
+      },
+      {
+        "text": "Autocommit writing the change to the log synchronously",
+        "correct": false,
+        "why": "A log write is milliseconds; four minutes is a scan of something large."
+      }
+    ]
+  },
+  {
+    "id": "ex-1z2b8p86",
+    "version": 1,
+    "section": "uniqueness-and-keys",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of adding a UNIQUE constraint on email to a live customers table, without blocking writes, in order.",
+    "hint": "The build fails on production if something is true of the data that was not true of staging.",
+    "items": [
+      "Find existing duplicates with GROUP BY email HAVING count(*) > 1 and settle them",
+      "CREATE UNIQUE INDEX CONCURRENTLY customers_email_key ON customers (email)",
+      "Check pg_index for an invalid index the build may have left behind",
+      "ALTER TABLE customers ADD CONSTRAINT customers_email_key UNIQUE USING INDEX customers_email_key"
+    ],
+    "trap": "The common swap is building before finding the duplicates — a unique build on data that has them fails, and it fails on production rather than on the empty staging database you rehearsed on."
+  },
+  {
+    "id": "ex-tx93xghc",
+    "version": 1,
+    "section": "uniqueness-and-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Swapping two rows' position values under UNIQUE (position): the first UPDATE is rejected even though the end state is fine. What fixes it?",
+    "hint": "Make the intermediate state invisible to the rule, the way a transaction makes it invisible to everybody else.",
+    "choices": [
+      {
+        "text": "Run both updates in one transaction, which hides the intermediate state from the constraint",
+        "correct": false,
+        "why": "A transaction hides it from other connections; the constraint is checked at each statement unless told otherwise."
+      },
+      {
+        "text": "Use ON CONFLICT DO UPDATE so the second row is moved first",
+        "correct": false,
+        "why": "ON CONFLICT is for inserts meeting an existing row; it does not reorder two updates."
+      },
+      {
+        "text": "Declare the constraint DEFERRABLE, and SET CONSTRAINTS … DEFERRED inside the transaction",
+        "correct": true,
+        "why": "The check moves to COMMIT, where the end state is what is examined and it passes."
+      },
+      {
+        "text": "Drop the constraint, swap, and add it back",
+        "correct": false,
+        "why": "It works, and for the duration nothing stops a third connection creating a duplicate."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xarxvwt",
+    "version": 1,
+    "section": "uniqueness-and-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In PostgreSQL, which of these does a unique INDEX do that a UNIQUE constraint does not?",
+    "hint": "The table in the section has two rows where the index wins, and this is one of them.",
+    "choices": [
+      {
+        "text": "Be the target of a foreign key",
+        "correct": false,
+        "why": "That is the constraint's side of the table; a foreign key needs a constraint to point at."
+      },
+      {
+        "text": "Appear as a constraint in the catalogue",
+        "correct": false,
+        "why": "An index is an index in the catalogue; promoting it with ADD CONSTRAINT … USING INDEX is what makes it a constraint."
+      },
+      {
+        "text": "Refuse two rows with equal values",
+        "correct": false,
+        "why": "Both do that; it is the job they share."
+      },
+      {
+        "text": "Apply to some rows only, with a WHERE",
+        "correct": true,
+        "why": "\"Unique among the rows that are not deleted\" is sayable as an index and not as a constraint."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nxbmaj4",
+    "version": 1,
+    "section": "maintaining-them",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "CREATE INDEX on a large table, with PostgreSQL's defaults. What is blocked while it builds?",
+    "hint": "Lesson 3's queue forms behind it, and it is made of one kind of statement.",
+    "choices": [
+      {
+        "text": "Reads and writes to that table, until the build finishes",
+        "correct": false,
+        "why": "Reads carry on; it is the other half that waits."
+      },
+      {
+        "text": "Writes to that table, for the whole build",
+        "correct": true,
+        "why": "Minutes on a large table, and everything arriving afterwards waits behind the writes that are waiting."
+      },
+      {
+        "text": "Neither: the build runs in the background and the table is untouched",
+        "correct": false,
+        "why": "That is what CONCURRENTLY buys, at a price, and it is not the default."
+      },
+      {
+        "text": "Writes to each table in the database, since the catalogue is locked",
+        "correct": false,
+        "why": "The lock is on the one table being indexed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jgt07jb",
+    "version": 1,
+    "section": "maintaining-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is not a cost of CREATE INDEX CONCURRENTLY?",
+    "hint": "Three are real and each has caught somebody; one is what the option is there to avoid.",
+    "choices": [
+      {
+        "text": "Two passes over the table, so roughly twice the build time",
+        "correct": false,
+        "why": "Real; it is the price of building without the lock."
+      },
+      {
+        "text": "It waits for each transaction that started before it to finish",
+        "correct": false,
+        "why": "Real; one long-running transaction from lesson 8 holds the build open indefinitely."
+      },
+      {
+        "text": "It holds the same write lock as the default, for twice as long",
+        "correct": true,
+        "why": "Not holding that lock is the whole point; writes carry on while it builds."
+      },
+      {
+        "text": "A failed build leaves an invalid index behind, maintained and unused",
+        "correct": false,
+        "why": "Real; it has to be found and dropped by hand, which is why the check is in the migration checklist."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnb3depj",
+    "version": 1,
+    "section": "maintaining-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your migration tool wraps each migration in a transaction, and one of them says CREATE INDEX CONCURRENTLY. What happens?",
+    "hint": "One of the restrictions in the section is about exactly this.",
+    "choices": [
+      {
+        "text": "It runs, and the transaction makes the build atomic as a bonus",
+        "correct": false,
+        "why": "It is refused before it runs; there is no bonus to collect."
+      },
+      {
+        "text": "It runs, silently dropping CONCURRENTLY and taking the lock",
+        "correct": false,
+        "why": "An engine that silently took the lock would be worse than one that refused, and this one refuses."
+      },
+      {
+        "text": "It is refused, and that one has to be marked as an exception to the wrapping",
+        "correct": true,
+        "why": "Every tool has a way to say so, and finding it before the deploy is easier than during it."
+      },
+      {
+        "text": "It runs, and commits the index before the rest of the migration",
+        "correct": false,
+        "why": "A statement inside a transaction does not commit on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-emfd9m9h",
+    "version": 1,
+    "section": "maintaining-them",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An index showed zero scans on the primary, backed no constraint, and the counters were months old. You dropped it, and that night the reporting jobs fell over. What did you miss?",
+    "hint": "Three caveats in the section, and this is the one that turns a cleanup into an incident.",
+    "choices": [
+      {
+        "text": "The reports needed the index's statistics rather than the index itself",
+        "correct": false,
+        "why": "Statistics belong to the table and survive the index; the reports needed the structure."
+      },
+      {
+        "text": "Dropping an index on the primary invalidates the other indexes on the replica",
+        "correct": false,
+        "why": "The drop replicates as itself; nothing else is touched."
+      },
+      {
+        "text": "The primary's counter is a sum across replicas, so a zero there was impossible",
+        "correct": false,
+        "why": "It is the opposite: the counter is local, which is the trap."
+      },
+      {
+        "text": "Replicas keep their own counters, and the reports ran on a read replica",
+        "correct": true,
+        "why": "If you have replicas, look at all of them before believing a zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6fw9ask",
+    "version": 1,
+    "section": "maintaining-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index keeps growing while the table's row count does not. What is happening, and what is the fix on PostgreSQL 12 or later?",
+    "hint": "Indexes accumulate dead entries for the same reason tables do.",
+    "choices": [
+      {
+        "text": "Stale statistics are inflating its reported size; ANALYZE the table",
+        "correct": false,
+        "why": "ANALYZE changes estimates, not bytes; the growth here is real."
+      },
+      {
+        "text": "The visibility map is missing, so entries are duplicated; VACUUM FULL",
+        "correct": false,
+        "why": "The map decides whether rows are fetched; it does not duplicate entries."
+      },
+      {
+        "text": "Dead entries from updates are bloating it; REINDEX INDEX CONCURRENTLY",
+        "correct": true,
+        "why": "Before version 12 the reindex held a lock, and the workaround was a new index built concurrently and the old one dropped."
+      },
+      {
+        "text": "The index is being built again on each insert; DROP it and CREATE it without CONCURRENTLY",
+        "correct": false,
+        "why": "Nothing rebuilds an index per insert, and losing the concurrent build is not a fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-147c5qdy",
+    "version": 1,
+    "section": "maintaining-them",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four steps of the workflow for adding an index in order.",
+    "hint": "The first step is the one people skip, and the last is the one they forget.",
+    "items": [
+      "EXPLAIN the slow query and find out what it is doing",
+      "Add the index, concurrently, with equality columns before the range",
+      "EXPLAIN the same query again and confirm the index is used",
+      "Come back later and check whether it is still on the used list"
+    ],
+    "trap": "The common swap is adding the index before measuring — which is adding it because it seems likely to help, and the whole lesson is an argument against that."
+  }
+]

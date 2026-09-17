@@ -1,0 +1,1182 @@
+{
+  "ex-tnd64wn9": {
+    "prompt": "CREATE INDEX ON customers (email). O que essa instrução produz fisicamente?",
+    "hint": "A primeira frase da seção depois do código é a resposta, e ela nomeia uma estrutura.",
+    "choices": [
+      {
+        "text": "Uma anotação no catálogo dizendo ao planejador para preferir aquela coluna",
+        "why": "O planejador lê o índice porque ele está lá para ser lido; nada é preferido."
+      },
+      {
+        "text": "Uma segunda cópia da coluna email, mantida ordenada, com um ponteiro ao lado de cada valor para a linha dele",
+        "why": "Uma estrutura em disco, e é por isso que tem que ser escrita e mantida em dia."
+      },
+      {
+        "text": "Um rearranjo da tabela para que as linhas fiquem guardadas em ordem de email",
+        "why": "A tabela fica onde está; o MySQL faz isso para a chave primária, e para mais nada."
+      },
+      {
+        "text": "Um cache com as linhas buscadas por email mais recentemente",
+        "why": "Um cache lembra o que foi pedido; um índice guarda todo valor, pedido ou não."
+      }
+    ]
+  },
+  "ex-ey7espq7": {
+    "prompt": "Achar um valor numa cópia ordenada de mil linhas leva uns dez passos. Quantos para um bilhão?",
+    "hint": "Cada passo joga fora metade do que sobrou.",
+    "choices": [
+      {
+        "text": "Uns 30",
+        "why": "Mil vezes mais dado custa dez passos a mais, duas vezes; essa diferença é o que um índice compra."
+      },
+      {
+        "text": "Uns 300",
+        "why": "Isso seria um passo a cada cem-milésimo de um milhão; dividir ao meio é muito melhor que isso."
+      },
+      {
+        "text": "Uns 10 000",
+        "why": "Dez passos por mil linhas escalaria assim se os passos crescessem com o dado, e não crescem."
+      },
+      {
+        "text": "Um milhão, mais ou menos",
+        "why": "Esse é o custo da varredura contra o do índice, e é exatamente a comparação a ter em mente."
+      }
+    ]
+  },
+  "ex-03qr9ykt": {
+    "prompt": "Um índice B-tree comum em email. Qual destes ele responde mal?",
+    "hint": "Pergunte qual deles precisa de algo em ordem que a cópia ordenada não mantém em ordem.",
+    "choices": [
+      {
+        "text": "WHERE email LIKE 'ana%'",
+        "why": "Um prefixo é uma faixa: tudo de 'ana' até 'anb' fica junto."
+      },
+      {
+        "text": "WHERE email > 'm'",
+        "why": "Ache a posição de 'm' e leia para a frente; é para isso que serve estar ordenado."
+      },
+      {
+        "text": "ORDER BY email",
+        "why": "Ler a cópia em ordem fornece a ordem, sem passo de ordenação nenhum."
+      },
+      {
+        "text": "WHERE email LIKE '%ana'",
+        "why": "A cópia é ordenada pelo começo da string, e os finais estão espalhados de A a Z."
+      }
+    ]
+  },
+  "ex-5rj11sef": {
+    "prompt": "Por que a cópia ordenada é mantida como árvore B em vez de uma lista ordenada plana?",
+    "hint": "Pense no que custa inserir no meio de cada uma.",
+    "choices": [
+      {
+        "text": "Uma árvore guarda mais valores no mesmo espaço que uma lista",
+        "why": "Ela guarda os mesmos valores com estrutura extra; o espaço é um pouco pior, não melhor."
+      },
+      {
+        "text": "Uma lista plana teria que ser deslocada ou reescrita a cada inserção no meio dela",
+        "why": "Uma inserção entra num bloco, e um bloco se divide quando está cheio; a árvore fica balanceada."
+      },
+      {
+        "text": "Uma lista não tem como ser buscada dividindo ao meio",
+        "why": "Uma lista ordenada é exatamente o que a busca por metades percorre; o problema dela é mantê-la ordenada."
+      },
+      {
+        "text": "Uma árvore continua correta sem precisar ser mantida em ordem",
+        "why": "Ela está em ordem em todo nível; é isso que faz cada nível ser uma leitura de bloco."
+      }
+    ]
+  },
+  "ex-h9j4j73x": {
+    "prompt": "SELECT * FROM customers WHERE email = 'ana@example.com', com índice em email. Qual passo é a leitura aleatória que mais custa numa consulta que devolve muitas linhas?",
+    "hint": "A entrada guarda um valor e um ponteiro, e um dos dois tem que ser seguido.",
+    "choices": [
+      {
+        "text": "Descer a árvore da raiz até o bloco folha",
+        "why": "Três ou quatro leituras de bloco, e os níveis de cima estão em memória de qualquer forma."
+      },
+      {
+        "text": "Comparar o valor com as entradas do bloco folha",
+        "why": "Isso é trabalho dentro de um bloco já lido, e é barato."
+      },
+      {
+        "text": "Buscar a linha para a qual a entrada aponta, em outro lugar do disco",
+        "why": "Uma busca dessas por linha casada, cada uma caindo numa página diferente; o índice de cobertura existe para pular isso."
+      },
+      {
+        "text": "Escrever a linha no índice para a próxima busca",
+        "why": "Uma leitura não escreve nada no índice; as entradas são mantidas nas escritas à tabela."
+      }
+    ]
+  },
+  "ex-pbz7tr4x": {
+    "prompt": "Como a cópia é ordenada, LIKE 'ana%' é uma varredura de ___: tudo de 'ana' até 'anb'.",
+    "hint": "A mesma palavra descreve BETWEEN, e é no que a cópia ordenada é boa.",
+    "blanks": [
+      {
+        "accept": [
+          "faixa",
+          "intervalo"
+        ]
+      }
+    ]
+  },
+  "ex-dkt84s0g": {
+    "prompt": "Uma tabela tem seis índices. O que custa um INSERT?",
+    "hint": "Conte as estruturas ordenadas que precisam de uma entrada nova no lugar certo.",
+    "choices": [
+      {
+        "text": "A linha, mais uma entrada no índice que o planejador escolher",
+        "why": "O planejador escolhe na leitura; numa escrita não há escolha, só manutenção."
+      },
+      {
+        "text": "A linha, e os índices são atualizados depois por um processo de fundo",
+        "why": "Um índice atrasado em relação à tabela responderia errado; cada um é atualizado dentro da escrita."
+      },
+      {
+        "text": "A linha, mais os seis índices reconstruídos do início",
+        "why": "Uma inserção em árvore B é umas poucas leituras de bloco e uma escrita num bloco; nada é reconstruído."
+      },
+      {
+        "text": "A linha, mais uma entrada posta em cada uma das seis estruturas",
+        "why": "Sete pedaços de trabalho para uma instrução, e nada num plano de consulta mostra isso."
+      }
+    ]
+  },
+  "ex-e6hj8xxx": {
+    "prompt": "UPDATE customers SET last_seen = now() WHERE id = 7, no PostgreSQL. Quatro índices, nenhum em last_seen. Quanto trabalho de índice é o normal?",
+    "hint": "Pergunte onde a nova versão da linha é escrita.",
+    "choices": [
+      {
+        "text": "Zero entradas, já que nenhuma coluna indexada mudou",
+        "why": "É o que a otimização de heap-only tuple compra, e ela é de melhor esforço, não a regra."
+      },
+      {
+        "text": "Uma entrada, no índice da chave primária, apontando para a nova versão",
+        "why": "A chave primária não difere dos outros três; cada um aponta para a posição de uma linha."
+      },
+      {
+        "text": "Quatro entradas escritas depois pelo autovacuum",
+        "why": "O vacuum limpa versões antigas; não aponta índices para novas."
+      },
+      {
+        "text": "Uma entrada em cada um dos quatro, sempre que a nova versão da linha cai em outra página",
+        "why": "Um update escreve uma versão nova da linha inteira, e cada índice tem que encontrá-la."
+      }
+    ]
+  },
+  "ex-dpph9qp6": {
+    "prompt": "WHERE active casa 600 000 de um milhão de linhas. Há um índice em active, e o planejador lê a tabela inteira. Por quê?",
+    "hint": "Conte os ponteiros seguidos, e lembre que tipo de leitura cada um é.",
+    "choices": [
+      {
+        "text": "O índice ainda não terminou de ser construído",
+        "why": "Uma construção em andamento aparece no catálogo; isto é um índice pronto sendo recusado."
+      },
+      {
+        "text": "Booleano é um tipo que a árvore B se recusa a indexar",
+        "why": "Ela indexa booleanos sem reclamar; o problema é quanto os valores valem."
+      },
+      {
+        "text": "Seiscentas mil buscas aleatórias custam mais que uma leitura sequencial da tabela",
+        "why": "O planejador precificou os dois planos e escolheu o mais barato; não está ignorando nada."
+      },
+      {
+        "text": "As estatísticas estão velhas, então o planejador não sabe que o índice existe",
+        "why": "Estatísticas descrevem o dado; o índice está no catálogo estejam elas frescas ou não."
+      }
+    ]
+  },
+  "ex-0e1ysvqv": {
+    "prompt": "Qual destes índices é perda pura?",
+    "hint": "Um deles não serve a nenhuma consulta que outro índice da mesma tabela já não sirva.",
+    "choices": [
+      {
+        "text": "(customer_id) ao lado de (customer_id, placed_at)",
+        "why": "O mais largo serve a toda consulta que o estreito serviria, pela razão do prefixo à esquerda."
+      },
+      {
+        "text": "(placed_at) ao lado de (customer_id, placed_at)",
+        "why": "O composto não faz nada por placed_at sozinho, então este ganha o lugar se essa consulta roda."
+      },
+      {
+        "text": "(created_at) WHERE status = 'pending' ao lado de (status)",
+        "why": "Linhas diferentes e coluna diferente; o parcial é a seção que compensa o trabalho."
+      },
+      {
+        "text": "(lower(email)) ao lado de (email)",
+        "why": "Duas expressões diferentes, e uma consulta por lower(email) usa o primeiro e não o segundo."
+      }
+    ]
+  },
+  "ex-qk3ste1c": {
+    "prompt": "Um índice que nenhuma consulta usou num ano fica numa tabela movimentada. Além das escritas que ele atrasa, o que ele custa enquanto o banco está rodando?",
+    "hint": "Pense no que o banco mantém em memória, e no que é empurrado para fora para abrir espaço.",
+    "choices": [
+      {
+        "text": "Tempo de planejamento a cada consulta, porque o planejador tem que descartá-lo",
+        "why": "Esse custo é real e pequeno; não é o que aparece como leitura lenta em outro lugar."
+      },
+      {
+        "text": "Cache: as páginas dele expulsam páginas que consultas de alguém teriam usado",
+        "why": "O conjunto de trabalho agora inclui um índice que ninguém lê, e algo útil é empurrado para fora por ele."
+      },
+      {
+        "text": "Disputa de bloqueio, porque leituras têm que esperar ele ser atualizado",
+        "why": "A manutenção do índice acontece dentro da escrita; leitores não ficam na fila atrás dela."
+      },
+      {
+        "text": "Uma reconstrução a cada reinício, porque índices não usados não são persistidos",
+        "why": "Um índice está em disco como a tabela; ele sobrevive a um reinício intocado."
+      }
+    ]
+  },
+  "ex-k576cqvh": {
+    "prompt": "Um índice compensa quando elimina a ___ da tabela, e para de compensar quando não elimina.",
+    "hint": "Uma expressão, e é a razão de uma coluna com dois valores não ganhar nada com um índice comum.",
+    "blanks": [
+      {
+        "accept": [
+          "maior parte",
+          "maioria"
+        ]
+      }
+    ]
+  },
+  "ex-344zytxf": {
+    "prompt": "WHERE lower(email) = 'ana@example.com', com índice em (email). Por que o índice não é usado?",
+    "hint": "Pergunte que valores a cópia ordenada guarda, e se a consulta está perguntando sobre eles.",
+    "choices": [
+      {
+        "text": "lower devolve um tipo diferente do da coluna, e os tipos têm que concordar",
+        "why": "Os dois são texto; o tipo está bem e os valores são o problema."
+      },
+      {
+        "text": "Uma função em qualquer lugar do WHERE desliga o índice para a instrução inteira",
+        "why": "Outra condição sobre uma coluna nua no mesmo WHERE usaria o índice dela perfeitamente."
+      },
+      {
+        "text": "O planejador lê uma chamada de função como uma faixa, e esta não tem limites",
+        "why": "Não há faixa sendo lida; há um valor do qual ele não tem cópia ordenada."
+      },
+      {
+        "text": "A cópia é ordenada por email, e onde lower(email) se ordenaria é desconhecido sem calcular linha a linha",
+        "why": "Que é a varredura que você tentava evitar. Indexe a expressão, ou deixe a coluna nua."
+      }
+    ]
+  },
+  "ex-q1ar61gr": {
+    "prompt": "WHERE date(created_at) = DATE '2026-03-01', com índice em (created_at). Qual reescrita usa o índice que você já tem e continua correta?",
+    "hint": "Deixe a coluna nua do lado dela, e cubra o dia inteiro sem nomear o último instante.",
+    "choices": [
+      {
+        "text": "WHERE created_at >= DATE '2026-03-01' AND created_at < DATE '2026-03-02'",
+        "why": "Uma faixa sobre a coluna nua: o índice acha o começo e lê até o fim, e nenhum último segundo é chutado."
+      },
+      {
+        "text": "WHERE created_at::date = DATE '2026-03-01'",
+        "why": "Um cast é uma função com outra grafia, e a cópia ordenada guarda os timestamps, não as datas deles."
+      },
+      {
+        "text": "WHERE created_at BETWEEN DATE '2026-03-01' AND '2026-03-01 23:59:59'",
+        "why": "Usa o índice, e deixa cair as frações do último segundo; a faixa semiaberta não tem essa borda."
+      },
+      {
+        "text": "CREATE INDEX ON t (date(created_at)) e deixar a consulta como está",
+        "why": "Funciona, e é um segundo índice a manter quando o que você tinha bastava."
+      }
+    ]
+  },
+  "ex-rnn5dshq": {
+    "prompt": "WHERE phone = 5551234, onde phone é uma coluna de texto, no MySQL. O que acontece?",
+    "hint": "Qual lado da comparação é convertido decide tudo.",
+    "choices": [
+      {
+        "text": "O literal é convertido para texto e o índice é usado",
+        "why": "É o lado que você gostaria que fosse convertido, e não é o que o MySQL escolhe para um número contra uma coluna de texto."
+      },
+      {
+        "text": "O phone de cada linha é convertido para número para comparar, então o índice sai e a varredura entra",
+        "why": "Um par de aspas faltando, invisível na revisão de código, e é uma varredura completa."
+      },
+      {
+        "text": "A comparação é recusada porque os tipos diferem",
+        "why": "Ela roda; um banco que recusasse pelo menos teria dito algo."
+      },
+      {
+        "text": "O índice é usado, e linhas cujo phone não vira número são puladas",
+        "why": "As linhas são comparadas depois da conversão, e a conversão é o que força a varredura."
+      }
+    ]
+  },
+  "ex-ybvdmr6q": {
+    "prompt": "WHERE price * 1.1 > 100, com índice em (price). Qual reescrita deixa a coluna nua e faz a mesma pergunta?",
+    "hint": "Mova a aritmética para o outro lado do operador, e confira se ainda é a mesma desigualdade.",
+    "choices": [
+      {
+        "text": "WHERE price > 100 * 1.1",
+        "why": "O índice se aplica, e isto pergunta se price passa de 110 em vez de 90,9; outra pergunta, respondida rápido."
+      },
+      {
+        "text": "WHERE (price * 1.1) > 100",
+        "why": "Parênteses não mudam nada; os valores ordenados continuam sendo price e não price vezes 1,1."
+      },
+      {
+        "text": "WHERE round(price * 1.1) > 100",
+        "why": "Uma função em volta de aritmética em volta da coluna é a primeira razão da lista embrulhando a quarta."
+      },
+      {
+        "text": "WHERE price > 100 / 1.1",
+        "why": "As mesmas linhas, e a cópia ordenada de price agora responde."
+      }
+    ]
+  },
+  "ex-89t2nd1n": {
+    "prompt": "Uma consulta era rápida na terça. Na quarta, depois de uma importação noturna de trinta milhões de linhas, ela está lenta, e nada nela ou no índice mudou. O que você confere primeiro?",
+    "hint": "O planejador não conta linhas. Pergunte o que ele usa no lugar, e quando isso foi renovado pela última vez.",
+    "choices": [
+      {
+        "text": "Se a importação derrubou e recriou o índice sem CONCURRENTLY",
+        "why": "Um índice recriado continua sendo um índice; o plano o usaria como antes."
+      },
+      {
+        "text": "Se as linhas novas têm um tipo diferente na coluna indexada",
+        "why": "Uma coluna tem um tipo, e uma importação que o violasse teria falhado em vez de ficar lenta."
+      },
+      {
+        "text": "Se as estatísticas foram recolhidas de novo desde a importação, com ANALYZE",
+        "why": "O dado mudou de forma mais rápido que as estimativas, e o plano segue as estimativas."
+      },
+      {
+        "text": "Se o disco encheu, forçando o índice para fora da memória",
+        "why": "Disco cheio faz escritas falharem; não transforma um plano de índice numa varredura sequencial."
+      }
+    ]
+  },
+  "ex-bb97m4yy": {
+    "prompt": "WHERE email = 'a@b.c' OR phone = '555', um índice em cada coluna, num banco que desiste do OR e varre. O que deixa cada índice fazer seu trabalho?",
+    "hint": "Duas condições que estreitam a resposta sozinhas, ligadas por algo que não é OR.",
+    "choices": [
+      {
+        "text": "Um índice composto em (email, phone) no lugar dos dois",
+        "why": "Um composto serve à primeira coluna e depois à primeira com a segunda; phone sozinho não ganha nada dele."
+      },
+      {
+        "text": "Duas consultas, uma por condição, unidas com UNION",
+        "why": "Cada metade usa o próprio índice; lê pior e roda melhor."
+      },
+      {
+        "text": "A mesma consulta com AND, já que AND é para o que índices servem",
+        "why": "Isso pede linhas que casam com os dois, que é outro conjunto de linhas."
+      },
+      {
+        "text": "Embrulhar as duas colunas em coalesce para o planejador tratá-las como uma",
+        "why": "Uma função em volta da coluna é a primeira razão da lista, e agora são duas."
+      }
+    ]
+  },
+  "ex-cwgdjs2j": {
+    "prompt": "Ligue cada condição à razão de o índice dela ficar sem uso.",
+    "hint": "Duas são sobre o que a cópia ordenada guarda, uma é sobre uma conversão, e uma é o planejador tendo razão.",
+    "pairs": [
+      {
+        "left": "WHERE lower(email) = 'ana@example.com'",
+        "right": "Uma função embrulha a coluna, e a cópia é ordenada pelo valor nu"
+      },
+      {
+        "left": "WHERE name LIKE '%ana'",
+        "right": "A cópia é ordenada pelo começo da string, e o final está espalhado"
+      },
+      {
+        "left": "WHERE phone = 5551234, numa coluna de texto",
+        "right": "A coluna é convertida para o tipo do literal, uma linha por vez"
+      },
+      {
+        "left": "WHERE active, verdadeiro em seis linhas de dez",
+        "right": "O planejador precificou uma varredura mais barata que seguir os ponteiros"
+      }
+    ],
+    "right_distractors": [
+      "O índice foi declarado com as colunas na ordem errada",
+      "As estatísticas foram recolhidas antes de a tabela ser carregada"
+    ]
+  },
+  "ex-beyn3c1w": {
+    "prompt": "Um índice em (customer_id, placed_at). Qual WHERE não ganha nada dele?",
+    "hint": "A cópia é ordenada pela primeira coluna, e pela segunda só dentro de cada valor da primeira.",
+    "choices": [
+      {
+        "text": "WHERE customer_id = 2",
+        "why": "Uma sequência contígua de entradas; a primeira coluna sozinha é o caso mais simples que o índice atende."
+      },
+      {
+        "text": "WHERE placed_at > DATE '2026-01-01'",
+        "why": "Pelo índice inteiro as datas estão espalhadas, uma sequência por cliente; não há nada contíguo para ler."
+      },
+      {
+        "text": "WHERE customer_id = 2 AND placed_at > DATE '2026-01-01'",
+        "why": "Uma sequência menor dentro da do cliente 2, e é para isso que o índice foi feito."
+      },
+      {
+        "text": "WHERE customer_id = 2 ORDER BY placed_at",
+        "why": "A sequência do cliente 2 já está em ordem de data, então nenhum passo de ordenação é preciso."
+      }
+    ]
+  },
+  "ex-c1sm5gq9": {
+    "prompt": "WHERE status = 'paid' AND placed_at > DATE '2026-01-01'. Qual ordem de colunas, e por quê?",
+    "hint": "Quando o índice chega numa faixa, as colunas depois dela são conferidas em vez de buscadas.",
+    "choices": [
+      {
+        "text": "(placed_at, status): a data estreita mais linhas, então deve vir primeiro",
+        "why": "Ele pula para janeiro e depois percorre toda linha desde então, conferindo cada status, porque dentro de uma faixa de datas os status não estão em ordem nenhuma."
+      },
+      {
+        "text": "(status, placed_at): pular para o bloco dos pagos e ler as datas para a frente numa sequência só",
+        "why": "Igualdade primeiro, depois a faixa; a sequência para quando as datas acabam."
+      },
+      {
+        "text": "Qualquer ordem, já que as duas colunas estão no índice e as linhas saem iguais",
+        "why": "As linhas são as mesmas; o trabalho não, e o trabalho é para o que o índice serve."
+      },
+      {
+        "text": "(placed_at, status): uma coluna de faixa tem que vir primeiro para ser buscável",
+        "why": "Uma coluna de faixa é buscável em qualquer posição depois das igualdades; o que vem depois dela é que deixa de ser."
+      }
+    ]
+  },
+  "ex-e0pgtxh4": {
+    "prompt": "Um índice em (a, b, c). Quais destas consultas o usam? Marque todas que se aplicam.",
+    "hint": "A regra do prefixo à esquerda, e uma delas é sobre a ordem em que as coisas estão escritas no WHERE e não no índice.",
+    "choices": [
+      {
+        "text": "WHERE a = 1",
+        "why": "A primeira coluna sozinha é um prefixo à esquerda."
+      },
+      {
+        "text": "WHERE b = 2",
+        "why": "b está ordenado só dentro de cada a; sozinho está espalhado pelo índice."
+      },
+      {
+        "text": "WHERE b = 2 AND a = 1",
+        "why": "A ordem no WHERE não é a ordem no índice; o planejador vê a e b, que é um prefixo."
+      },
+      {
+        "text": "WHERE c = 3 AND b = 2",
+        "why": "Nenhuma das duas é a primeira; sem a não há sequência para achar."
+      },
+      {
+        "text": "WHERE a = 1 AND b = 2 ORDER BY c",
+        "why": "a e b acham a sequência, e dentro dela c já está em ordem."
+      }
+    ]
+  },
+  "ex-6vv71q42": {
+    "prompt": "SELECT * FROM orders WHERE customer_id = 2 ORDER BY placed_at DESC LIMIT 10, com (customer_id, placed_at). O que o banco faz?",
+    "hint": "Um índice pode ser lido de trás para a frente de graça, e LIMIT é barato quando a ordem pedida é uma que o índice tem.",
+    "choices": [
+      {
+        "text": "Vai até a sequência do cliente 2, lê as últimas dez entradas de trás para a frente e para",
+        "why": "Pequeno em dez linhas e enorme em dez mil; é o que faz paginação ser barata."
+      },
+      {
+        "text": "Acha todo pedido do cliente 2, ordena por data e fica com dez",
+        "why": "Esse é o plano sem o índice; com ele não há o que ordenar."
+      },
+      {
+        "text": "Recusa-se a ler o índice de trás para a frente, porque foi declarado ascendente",
+        "why": "Ler de trás para a frente é de graça; (a, b) serve a DESC, b DESC exatamente como serve a, b."
+      },
+      {
+        "text": "Lê o índice inteiro do fim até ter dez entradas do cliente 2",
+        "why": "Ele vai direto à sequência do cliente; o resto do índice não é lido."
+      }
+    ]
+  },
+  "ex-y3nbrtzw": {
+    "prompt": "Você tem (customer_id, placed_at), e uma consulta quer ORDER BY customer_id, placed_at DESC. O índice fornece essa ordem?",
+    "hint": "De trás para a frente é de graça. Misturado não.",
+    "choices": [
+      {
+        "text": "Sim: ler um índice de trás para a frente é de graça, então qualquer direção é atendida",
+        "why": "De trás para a frente inverte as duas colunas juntas; pediram para inverter uma e não a outra."
+      },
+      {
+        "text": "Sim: a primeira coluna é ascendente, e a primeira coluna é o que importa",
+        "why": "Dentro de cada cliente as datas teriam que sair descendentes, e a sequência está guardada ascendente."
+      },
+      {
+        "text": "Não: um índice fornece ORDER BY sobre uma coluna no máximo",
+        "why": "Ele fornece as duas colunas sem problema em qualquer direção única; a mistura é o problema."
+      },
+      {
+        "text": "Não: direções misturadas precisam do índice declarado com placed_at DESC",
+        "why": "CREATE INDEX ON orders (customer_id, placed_at DESC) é o índice para essa consulta."
+      }
+    ]
+  },
+  "ex-h82twg71": {
+    "prompt": "Você tem (customer_id, placed_at). Um chamado pede um índice em (customer_id). O que você faz?",
+    "hint": "Pergunte a quais consultas o estreito serviria que o largo não serve.",
+    "choices": [
+      {
+        "text": "Acrescenta: um índice de uma coluna é mais rápido para uma busca de uma coluna",
+        "why": "O largo acha a sequência do cliente 2 no mesmo número de passos; a coluna extra custa um pouco de largura e mais nada."
+      },
+      {
+        "text": "Acrescenta e derruba o composto, já que um índice por coluna é o arranjo arrumado",
+        "why": "Isso perde a faixa de datas e o ORDER BY de graça, para os quais o composto existia."
+      },
+      {
+        "text": "Fecha o chamado: o índice mais largo já serve a toda consulta que o estreito serviria",
+        "why": "É um dos dois duplicados da seção sobre custo, e ninguém mede a segunda metade."
+      },
+      {
+        "text": "Troca os dois por (placed_at, customer_id), para que cada coluna seja atendida",
+        "why": "Isso atende placed_at sozinho e deixa cair customer_id sozinho, que é a consulta de que o chamado trata."
+      }
+    ]
+  },
+  "ex-h7rmr7w2": {
+    "prompt": "Um índice em (customer_id, placed_at). SELECT customer_id, placed_at FROM orders WHERE customer_id = 2. O que é lido?",
+    "hint": "Toda coluna de que a consulta precisa está em algum lugar; pergunte onde.",
+    "choices": [
+      {
+        "text": "Só o índice; a tabela nunca é tocada",
+        "why": "O PostgreSQL chama isso de index-only scan, e aparece com esse nome no plano."
+      },
+      {
+        "text": "O índice, e depois uma busca de linha por entrada para confirmar os valores",
+        "why": "Os valores já estão nas entradas; não há nada na linha de que a consulta ainda precise."
+      },
+      {
+        "text": "Só a tabela, porque uma lista de SELECT é sempre servida pela tabela",
+        "why": "Uma lista de SELECT é servida de onde estiverem as colunas, e aqui elas estão no índice."
+      },
+      {
+        "text": "Os dois, para que as entradas sejam conferidas contra as linhas",
+        "why": "Conferir não é preciso para a correção; as entradas são os mesmos valores que as linhas guardam."
+      }
+    ]
+  },
+  "ex-w8d9d0a0": {
+    "prompt": "Acrescente total àquela lista de SELECT e a mesma consulta fica várias vezes mais lenta. Por quê?",
+    "hint": "O WHERE não mudou. Pergunte o que a coluna extra força para cada entrada.",
+    "choices": [
+      {
+        "text": "total não está no índice, então cada entrada agora precisa da linha buscada",
+        "why": "Mesmo índice, mesmo WHERE, e uma coluna na lista de SELECT não é onde alguém procura uma mudança de desempenho."
+      },
+      {
+        "text": "Três colunas passam do que uma entrada de índice consegue devolver",
+        "why": "Uma entrada devolve o que guarda; o limite é o que foi indexado, não uma contagem."
+      },
+      {
+        "text": "O planejador troca para varredura sequencial sempre que uma coluna é acrescentada",
+        "why": "Ele troca quando o plano fica mais barato, e as buscas foram o que mudou o preço."
+      },
+      {
+        "text": "total é numeric, e colunas numeric são lentas de ler do disco",
+        "why": "O tipo não vem ao caso; um total incluído seria lido do índice na mesma velocidade."
+      }
+    ]
+  },
+  "ex-p6jbqs8p": {
+    "prompt": "Você quer aquela consulta coberta, e total nunca é buscado nem usado para ordenar. No PostgreSQL 11 ou posterior, qual índice?",
+    "hint": "Separe as colunas pelas quais você busca das que você só devolve.",
+    "choices": [
+      {
+        "text": "CREATE INDEX ON orders (customer_id, placed_at, total)",
+        "why": "Cobre a consulta, e deixa a chave mais larga, cada comparação com três valores, e sugere uma ordem que ninguém quer."
+      },
+      {
+        "text": "CREATE INDEX ON orders (customer_id, placed_at) INCLUDE (total)",
+        "why": "total é guardado no índice e fica fora da chave; o índice se comporta como um de duas colunas para todo outro fim."
+      },
+      {
+        "text": "CREATE INDEX ON orders (total), mantido ao lado do existente",
+        "why": "Dois índices não se combinam numa leitura coberta; total ainda seria buscado na linha."
+      },
+      {
+        "text": "CREATE INDEX ON orders (total, customer_id, placed_at)",
+        "why": "total primeiro quebra o prefixo à esquerda para o WHERE da consulta, que busca por customer_id."
+      }
+    ]
+  },
+  "ex-xvj7ns0e": {
+    "prompt": "No MySQL com InnoDB, um índice em (customer_id) responde SELECT id, customer_id FROM orders WHERE customer_id = 2 sem tocar a tabela. Por quê?",
+    "hint": "Pergunte o que uma entrada de índice secundário guarda no lugar de um ponteiro físico.",
+    "choices": [
+      {
+        "text": "O InnoDB copia cada coluna da tabela para cada índice secundário",
+        "why": "Então todo índice teria o tamanho da tabela; ele copia uma coisa, e não é a linha."
+      },
+      {
+        "text": "id é pequeno o bastante para ficar em cache ao lado do índice na memória",
+        "why": "Cache não é o que põe o valor na entrada; a estrutura da entrada é."
+      },
+      {
+        "text": "O índice da chave primária é lido no lugar, já que ele é a tabela em ordem de chave",
+        "why": "O índice agrupado seria percorrido numa busca, e aqui nenhuma busca é precisa."
+      },
+      {
+        "text": "Cada entrada secundária guarda a chave primária em vez de um ponteiro físico, então id já está na entrada",
+        "why": "O que também torna uma chave primária larga cara duas vezes: copiada em todo índice, e percorrida em toda busca."
+      }
+    ]
+  },
+  "ex-4jtfcgby": {
+    "prompt": "Um index-only scan no PostgreSQL foi rápido por semanas. Agora o plano mostra ele buscando linhas de novo, e a consulta não mudou. Causa mais provável?",
+    "hint": "O índice não sabe quais linhas são visíveis para você. Outra coisa sabe, e algo a mantém.",
+    "choices": [
+      {
+        "text": "O índice inchou com entradas mortas e precisa de REINDEX",
+        "why": "Inchaço deixa o índice maior e mais lento de percorrer; não transforma um index-only scan num que busca linhas."
+      },
+      {
+        "text": "Uma transação aberta há muito tempo está segurando o VACUUM, e o mapa de visibilidade envelheceu",
+        "why": "Páginas que já não estão marcadas como todas visíveis obrigam a buscar a linha de cada entrada para conferir; nada na consulta mudou."
+      },
+      {
+        "text": "Uma coluna foi acrescentada à tabela, alargando as linhas",
+        "why": "A largura da linha muda quanto custa uma busca, não se ela acontece."
+      },
+      {
+        "text": "As estatísticas foram recolhidas de novo e o planejador agora prefere a tabela",
+        "why": "Estatísticas frescas mudam qual plano é escolhido; o sintoma aqui é o mesmo plano fazendo mais trabalho."
+      }
+    ]
+  },
+  "ex-84vd712t": {
+    "prompt": "O nome que o PostgreSQL dá a uma leitura que percorre o índice e nunca a tabela é ___ scan.",
+    "hint": "Duas palavras em inglês unidas por hífen, e é o que você procura no plano.",
+    "blanks": [
+      {
+        "accept": [
+          "index-only",
+          "index only"
+        ]
+      }
+    ]
+  },
+  "ex-smf7mknt": {
+    "prompt": "CREATE INDEX ON jobs (created_at) WHERE status = 'pending', numa tabela com cinquenta milhões de linhas terminadas e quatrocentas pendentes. O que o índice guarda?",
+    "hint": "O WHERE faz parte do índice, não de uma consulta.",
+    "choices": [
+      {
+        "text": "Quatrocentas entradas, e uma linha terminada nunca entra nele",
+        "why": "Cabe em memória, a busca é instantânea, e as escritas nas outras cinquenta milhões de linhas não o tocam."
+      },
+      {
+        "text": "Cinquenta milhões de entradas, com as pendentes marcadas",
+        "why": "Uma marca ainda custaria uma entrada por linha; a graça é que as outras linhas não estão nele de jeito nenhum."
+      },
+      {
+        "text": "Quatrocentas entradas agora, crescendo conforme as terminadas são indexadas aos poucos",
+        "why": "Nada é adiado: uma linha entra quando fica pendente e sai quando deixa de ser."
+      },
+      {
+        "text": "Uma entrada por valor de status, cada uma apontando para as linhas dele",
+        "why": "Isso descreve um índice comum em status, e ele não ganha nada com três valores."
+      }
+    ]
+  },
+  "ex-fhn0xa57": {
+    "prompt": "Qual destas consultas consegue usar esse índice parcial?",
+    "hint": "O planejador tem que provar que a condição da consulta é a condição do índice, na hora de planejar.",
+    "choices": [
+      {
+        "text": "WHERE status = 'pending'",
+        "why": "Reconhecivelmente a condição do próprio índice, que é o que o planejador precisa."
+      },
+      {
+        "text": "WHERE status = $1",
+        "why": "O valor não é conhecido quando o plano é feito, então nada pode ser provado sobre ele."
+      },
+      {
+        "text": "WHERE status <> 'done'",
+        "why": "Não é a mesma condição: uma linha 'running' casa com isto e não está no índice."
+      },
+      {
+        "text": "WHERE status IN ('pending', 'running')",
+        "why": "Metade das linhas que isto pede não está no índice, então o índice não é resposta para ela."
+      }
+    ]
+  },
+  "ex-q4gqr406": {
+    "prompt": "\"Um email tem que ser único entre os usuários que não foram apagados.\" Como você garante isso contra toda conexão, em todo nível de isolamento?",
+    "hint": "A aula 8 mostrou o que é uma checagem do lado da aplicação. O banco tem um jeito de uma linha de dizer isso.",
+    "choices": [
+      {
+        "text": "Uma restrição UNIQUE em (email, deleted_at)",
+        "why": "Dois usuários ativos têm deleted_at nulo, e nulos não colidem; a regra não é aplicada onde importa."
+      },
+      {
+        "text": "Conferir se existe um usuário ativo em código de aplicação antes de inserir",
+        "why": "Duas requisições no mesmo segundo não acham ninguém e as duas inserem; isso é write skew."
+      },
+      {
+        "text": "CREATE UNIQUE INDEX ON users (email) WHERE deleted_at IS NULL",
+        "why": "Um índice único parcial diz exatamente isso, e o banco aplica em toda escrita."
+      },
+      {
+        "text": "Uma restrição CHECK comparando o email com as outras linhas",
+        "why": "Um CHECK vê uma linha; não tem visão das outras para comparar."
+      }
+    ]
+  },
+  "ex-9pdynw77": {
+    "prompt": "Um índice em (lower(email)). A consulta diz WHERE lower(trim(email)) = 'ana@example.com'. O índice é usado?",
+    "hint": "Compare as duas expressões caractere por caractere.",
+    "choices": [
+      {
+        "text": "Sim: trim não muda nada sobre quais linhas casam",
+        "why": "Se as linhas casam não é o que o planejador compara; ele compara as expressões, e elas diferem."
+      },
+      {
+        "text": "Não: as expressões estão escritas de forma diferente, e um índice de expressão casa com a própria grafia",
+        "why": "Esta é a razão mais comum de um índice de expressão parecer quebrado."
+      },
+      {
+        "text": "Sim: o planejador reconhece trim como inofensivo e o remove",
+        "why": "Ele não reconhece nada sobre o que uma função faz; ele casa texto com texto."
+      },
+      {
+        "text": "Não: um índice de expressão serve a igualdade na coluna nua, não numa função",
+        "why": "O contrário: ele serve à função sobre a qual foi construído e não à coluna nua."
+      }
+    ]
+  },
+  "ex-vayemtr7": {
+    "prompt": "O PostgreSQL recusa CREATE INDEX ON events ((created_at::date)) numa coluna timestamptz, dizendo que a expressão não é imutável. O que ele está lhe dizendo?",
+    "hint": "Um índice é um registro de uma resposta. Pergunte se essa resposta poderia mudar sem a linha mudar.",
+    "choices": [
+      {
+        "text": "Date é um tipo estreito demais para indexar; indexe o timestamp",
+        "why": "Datas se indexam perfeitamente; o tipo do resultado não é a reclamação."
+      },
+      {
+        "text": "O cast precisa de um segundo par de parênteses em volta da expressão inteira",
+        "why": "A sintaxe está bem; é o significado da expressão que é recusado."
+      },
+      {
+        "text": "A conversão depende do fuso da sessão, então a mesma entrada poderia indexar diferente em dois dias",
+        "why": "Um índice guardando uma resposta que já mudou estaria errado em silêncio; a recusa diz algo verdadeiro sobre seu dado."
+      },
+      {
+        "text": "Índices de expressão aceitam funções mas não casts",
+        "why": "Um cast para um tipo que não depende da sessão é aceito sem reclamação."
+      }
+    ]
+  },
+  "ex-s65gttc3": {
+    "prompt": "Quais bancos têm índices parciais?",
+    "hint": "Dois dos quatro deste curso, e o MySQL não é um deles.",
+    "choices": [
+      {
+        "text": "PostgreSQL e SQLite",
+        "why": "MySQL e MariaDB não têm; uma coluna gerada é o mais próximo lá."
+      },
+      {
+        "text": "PostgreSQL e MySQL",
+        "why": "O MySQL tem índices funcionais desde a versão 8, e nenhum parcial."
+      },
+      {
+        "text": "Só o PostgreSQL",
+        "why": "O SQLite também tem, e eles são tão úteis lá quanto em qualquer lugar."
+      },
+      {
+        "text": "Os quatro",
+        "why": "É o tipo de recurso que decide um projeto, e dois dos quatro não o têm."
+      }
+    ]
+  },
+  "ex-581wvd6q": {
+    "prompt": "CREATE UNIQUE INDEX ON users (lower(email)) WHERE deleted_at IS NULL diz: dois usuários ___ não podem ter o mesmo email, seja qual for a caixa em que o digitaram.",
+    "hint": "A palavra para um usuário cujo deleted_at é nulo.",
+    "blanks": [
+      {
+        "accept": [
+          "ativos",
+          "vivos",
+          "não apagados",
+          "nao apagados"
+        ]
+      }
+    ]
+  },
+  "ex-y038ye4t": {
+    "prompt": "Ligue cada problema ao tipo de índice feito para ele.",
+    "hint": "Três problemas que uma lista ordenada não responde, e dois tipos à direita que respondem outra coisa.",
+    "pairs": [
+      {
+        "left": "Linhas cujo array tags inclui 'sql'",
+        "right": "GIN"
+      },
+      {
+        "left": "Duas reservas de uma sala não podem se sobrepor",
+        "right": "GiST"
+      },
+      {
+        "left": "Uma faixa de datas num log só de acréscimos com um bilhão de linhas",
+        "right": "BRIN"
+      }
+    ],
+    "right_distractors": [
+      "B-tree",
+      "hash"
+    ]
+  },
+  "ex-1hc5thnt": {
+    "prompt": "Um índice BRIN em created_at elimina quase nada numa tabela cujas linhas foram carregadas em ordem aleatória. Por quê?",
+    "hint": "Pergunte o que o BRIN guarda por faixa de blocos, e no que esses dois números viram quando a ordem some.",
+    "choices": [
+      {
+        "text": "O BRIN guarda um hash por bloco, e hashes não sobrevivem a reordenação",
+        "why": "Ele não guarda hash nenhum; guarda o menor e o maior valor em cada faixa de blocos."
+      },
+      {
+        "text": "O mínimo e o máximo de cada faixa de blocos passam a cobrir a coluna inteira, então nenhuma faixa é pulada",
+        "why": "Funciona quando a coluna acompanha a ordem física, que um log só de acréscimos tem e uma tabela embaralhada não."
+      },
+      {
+        "text": "O BRIN precisa da tabela agrupada pela chave primária, o que a carga desfaz",
+        "why": "A chave primária não vem ao caso; a correlação de que ele precisa é com a coluna indexada."
+      },
+      {
+        "text": "O índice é reconstruído a cada inserção e fica atrás da tabela",
+        "why": "Ele é minúsculo e barato de manter; ficar para trás não é o modo de falha dele."
+      }
+    ]
+  },
+  "ex-2my08bec": {
+    "prompt": "Qual é a troca do GIN contra uma árvore B?",
+    "hint": "Uma linha produz quantas entradas?",
+    "choices": [
+      {
+        "text": "Maior em disco, porque guarda cada valor inteiro duas vezes",
+        "why": "Ele guarda elementos, não valores inteiros; tamanho não é a troca que morde."
+      },
+      {
+        "text": "Mais lento de atualizar, porque uma linha produz muitas entradas",
+        "why": "É uma estrutura de busca, e serve a dado lido muito mais do que escrito."
+      },
+      {
+        "text": "Impossível de usar de dentro de uma transação",
+        "why": "É um índice como qualquer outro no que diz respeito a transações."
+      },
+      {
+        "text": "Mais lento de ler, porque cada elemento tem que ser hasheado na busca",
+        "why": "Ler é no que ele é bom; é por isso que a troca vale a pena para busca."
+      }
+    ]
+  },
+  "ex-jzsbxd9e": {
+    "prompt": "Você está projetando \"duas reservas de uma sala não podem se sobrepor\", e o produto vai rodar em MySQL. O que você precisa saber antes de fechar o projeto?",
+    "hint": "A regra é aplicada por uma restrição de exclusão, e essa restrição precisa de um tipo de índice específico.",
+    "choices": [
+      {
+        "text": "O índice SPATIAL do MySQL aplica regras de sobreposição em faixas de tempo",
+        "why": "SPATIAL é para geometria, e não aplica nada; uma restrição teria que aplicar, e não há nenhuma para isso."
+      },
+      {
+        "text": "Uma restrição UNIQUE em (room_id, start_at) é equivalente",
+        "why": "Duas reservas começando com um minuto de diferença e sobrepostas por uma hora passam nessa restrição."
+      },
+      {
+        "text": "A restrição de exclusão que aplica isso precisa de GiST, que o MySQL não tem, então é aplicada de outro jeito",
+        "why": "O que significa bloqueio, ou serialização, ou uma checagem na aplicação com as ressalvas da aula 8; melhor saber agora do que depois de o recurso sair."
+      },
+      {
+        "text": "Uma árvore B em (room_id, start_at, end_at) torna a checagem de sobreposição uma busca só",
+        "why": "Sobreposição não é igualdade nem faixa numa coluna só; nenhum arranjo de árvore B responde isso diretamente."
+      }
+    ]
+  },
+  "ex-7q63bbxz": {
+    "prompt": "Quando alguém diz \"um índice\" sem qualificar, de que tipo está falando?",
+    "hint": "É o padrão em todo lugar neste curso, e quase sempre a resposta.",
+    "choices": [
+      {
+        "text": "B-tree",
+        "why": "Igualdade, faixas, ordenação e prefixos, em todo banco deste curso."
+      },
+      {
+        "text": "hash",
+        "why": "Igualdade num valor longo e mais nada; raramente vale a pena."
+      },
+      {
+        "text": "GIN",
+        "why": "Para elementos dentro de um valor; uma estrutura de busca, não o padrão."
+      },
+      {
+        "text": "BRIN",
+        "why": "Para tabelas enormes cuja ordem acompanha a coluna; um caso especial."
+      }
+    ]
+  },
+  "ex-33bc1028": {
+    "prompt": "CREATE TABLE customers (id integer PRIMARY KEY, email text UNIQUE). Quantos índices existem antes de você criar algum?",
+    "hint": "Uma regra de unicidade tem que ser conferida a cada inserção, e conferir varrendo seria inutilizável.",
+    "choices": [
+      {
+        "text": "Zero: uma restrição é uma regra e um índice é uma estrutura",
+        "why": "A regra é implementada como a estrutura; são um objeto visto de dois lados."
+      },
+      {
+        "text": "Um, na chave primária",
+        "why": "UNIQUE é conferido do mesmo jeito, e ganha a mesma estrutura."
+      },
+      {
+        "text": "Um, cobrindo as duas colunas juntas",
+        "why": "Um índice sobre as duas permitiria duas linhas com o mesmo email e ids diferentes."
+      },
+      {
+        "text": "Dois, um por regra de unicidade",
+        "why": "É por isso que acrescentar seu próprio índice em qualquer das colunas é desperdício puro."
+      }
+    ]
+  },
+  "ex-be02n4na": {
+    "prompt": "Duas linhas são inseridas com email NULL numa coluna declarada UNIQUE. A segunda é aceita?",
+    "hint": "A aula 1 resolveu se dois desconhecidos são sabidamente iguais.",
+    "choices": [
+      {
+        "text": "Sim: dois desconhecidos não são sabidamente iguais, então não colidem",
+        "why": "Uma coluna única anulável permite quantos nulos quiser; NULLS NOT DISTINCT é como o PostgreSQL 15 diz o contrário."
+      },
+      {
+        "text": "Não: uma coluna única recusa o segundo valor idêntico",
+        "why": "Idêntico é a palavra que faz o estrago; nulo não é valor, e dois deles não são idênticos."
+      },
+      {
+        "text": "Sim, com um aviso de que a restrição foi pulada para aquela linha",
+        "why": "Nada foi pulado; a regra foi conferida e as linhas não a violam."
+      },
+      {
+        "text": "Sim no MySQL e não no PostgreSQL",
+        "why": "Os dois aceitam; os bancos concordam nesta."
+      }
+    ]
+  },
+  "ex-r6yx6ce6": {
+    "prompt": "orders.customer_id REFERENCES customers (id), no PostgreSQL. Que índice isso cria em orders?",
+    "hint": "A frase mais valiosa da aula é sobre isto, e ela nomeia dois bancos.",
+    "choices": [
+      {
+        "text": "Nenhum",
+        "why": "O lado pai é indexado porque customers.id é chave primária; a coluna do filho não tem índice até você acrescentar um."
+      },
+      {
+        "text": "Um em customer_id",
+        "why": "É o que o MySQL faz; o PostgreSQL deixa para você."
+      },
+      {
+        "text": "Um em (id, customer_id)",
+        "why": "Nenhum índice é criado no filho, composto ou não."
+      },
+      {
+        "text": "Um em customer_id, mas não único",
+        "why": "Não seria único, e também não está lá."
+      }
+    ]
+  },
+  "ex-mksp625r": {
+    "prompt": "DELETE FROM customers WHERE id = 7 leva quatro minutos. Para onde vai o tempo?",
+    "hint": "A resposta nunca está no DELETE. Pergunte o que o banco tem que provar antes de remover a linha.",
+    "choices": [
+      {
+        "text": "O índice da chave primária de customers sendo reconstruído depois da remoção",
+        "why": "Um índice não é reconstruído por uma exclusão; a entrada é marcada morta e é só."
+      },
+      {
+        "text": "Provar que nenhum pedido referencia o cliente, lendo orders inteira porque customer_id não tem índice",
+        "why": "Apagar cem clientes lê a tabela cem vezes; indexe suas chaves estrangeiras."
+      },
+      {
+        "text": "O espaço em disco da linha sendo recuperado antes de a instrução retornar",
+        "why": "O espaço é recuperado depois pelo vacuum; a instrução não espera por isso."
+      },
+      {
+        "text": "O autocommit escrevendo a mudança no log de forma síncrona",
+        "why": "Uma escrita no log são milissegundos; quatro minutos é uma varredura de algo grande."
+      }
+    ]
+  },
+  "ex-1z2b8p86": {
+    "prompt": "Ponha em ordem os passos de acrescentar uma restrição UNIQUE em email a uma tabela customers viva, sem bloquear escritas.",
+    "hint": "A construção falha em produção se algo é verdade sobre o dado que não era verdade em homologação.",
+    "items": [
+      "Achar duplicados existentes com GROUP BY email HAVING count(*) > 1 e resolvê-los",
+      "CREATE UNIQUE INDEX CONCURRENTLY customers_email_key ON customers (email)",
+      "Conferir em pg_index se a construção deixou um índice inválido para trás",
+      "ALTER TABLE customers ADD CONSTRAINT customers_email_key UNIQUE USING INDEX customers_email_key"
+    ],
+    "trap": "A troca comum é construir antes de achar os duplicados — uma construção única sobre dado que os tem falha, e falha em produção em vez de no banco de homologação vazio em que você ensaiou."
+  },
+  "ex-tx93xghc": {
+    "prompt": "Trocar os valores de position de duas linhas sob UNIQUE (position): o primeiro UPDATE é rejeitado embora o estado final esteja bem. O que resolve?",
+    "hint": "Torne o estado intermediário invisível à regra, do jeito que uma transação o torna invisível a todo mundo.",
+    "choices": [
+      {
+        "text": "Rodar os dois updates numa transação só, que esconde o estado intermediário da restrição",
+        "why": "Uma transação o esconde das outras conexões; a restrição é conferida a cada instrução a menos que se diga o contrário."
+      },
+      {
+        "text": "Usar ON CONFLICT DO UPDATE para que a segunda linha seja movida primeiro",
+        "why": "ON CONFLICT é para inserções que encontram uma linha existente; não reordena dois updates."
+      },
+      {
+        "text": "Declarar a restrição DEFERRABLE, e SET CONSTRAINTS … DEFERRED dentro da transação",
+        "why": "A conferência vai para o COMMIT, onde o estado final é o que é examinado, e ela passa."
+      },
+      {
+        "text": "Derrubar a restrição, trocar e acrescentá-la de volta",
+        "why": "Funciona, e durante esse tempo nada impede uma terceira conexão de criar um duplicado."
+      }
+    ]
+  },
+  "ex-6xarxvwt": {
+    "prompt": "No PostgreSQL, qual destas coisas um ÍNDICE único faz que uma restrição UNIQUE não faz?",
+    "hint": "A tabela da seção tem duas linhas em que o índice ganha, e esta é uma delas.",
+    "choices": [
+      {
+        "text": "Ser o alvo de uma chave estrangeira",
+        "why": "Esse é o lado da restrição na tabela; uma chave estrangeira precisa de uma restrição para apontar."
+      },
+      {
+        "text": "Aparecer como restrição no catálogo",
+        "why": "Um índice é índice no catálogo; promovê-lo com ADD CONSTRAINT … USING INDEX é o que o torna restrição."
+      },
+      {
+        "text": "Recusar duas linhas com valores iguais",
+        "why": "Os dois fazem isso; é o trabalho que compartilham."
+      },
+      {
+        "text": "Aplicar-se só a algumas linhas, com um WHERE",
+        "why": "\"Único entre as linhas que não foram apagadas\" é dizível como índice e não como restrição."
+      }
+    ]
+  },
+  "ex-4nxbmaj4": {
+    "prompt": "CREATE INDEX numa tabela grande, com os padrões do PostgreSQL. O que fica bloqueado enquanto ele constrói?",
+    "hint": "A fila da aula 3 se forma atrás dele, e ela é feita de um tipo de instrução.",
+    "choices": [
+      {
+        "text": "Leituras e escritas naquela tabela, até a construção terminar",
+        "why": "Leituras seguem; é a outra metade que espera."
+      },
+      {
+        "text": "Escritas naquela tabela, pela construção inteira",
+        "why": "Minutos numa tabela grande, e tudo que chega depois espera atrás das escritas que estão esperando."
+      },
+      {
+        "text": "Nenhum dos dois: a construção roda em segundo plano e a tabela não é tocada",
+        "why": "É o que CONCURRENTLY compra, a um preço, e não é o padrão."
+      },
+      {
+        "text": "Escritas em toda tabela do banco, já que o catálogo fica travado",
+        "why": "O bloqueio é na única tabela sendo indexada."
+      }
+    ]
+  },
+  "ex-7jgt07jb": {
+    "prompt": "Qual destes não é um custo de CREATE INDEX CONCURRENTLY?",
+    "hint": "Três são reais e cada um já pegou alguém; um é o que a opção existe para evitar.",
+    "choices": [
+      {
+        "text": "Duas passagens pela tabela, então mais ou menos o dobro do tempo de construção",
+        "why": "Real; é o preço de construir sem o bloqueio."
+      },
+      {
+        "text": "Ele espera cada transação que começou antes dele terminar",
+        "why": "Real; uma transação longa da aula 8 segura a construção indefinidamente."
+      },
+      {
+        "text": "Ele segura o mesmo bloqueio de escrita do padrão, pelo dobro do tempo",
+        "why": "Não segurar esse bloqueio é a graça toda; escritas seguem enquanto ele constrói."
+      },
+      {
+        "text": "Uma construção que falha deixa um índice inválido para trás, mantido e sem uso",
+        "why": "Real; tem que ser achado e derrubado à mão, e é por isso que a checagem está na lista da migração."
+      }
+    ]
+  },
+  "ex-jnb3depj": {
+    "prompt": "Sua ferramenta de migração envolve cada migração numa transação, e uma delas diz CREATE INDEX CONCURRENTLY. O que acontece?",
+    "hint": "Uma das restrições da seção é sobre exatamente isto.",
+    "choices": [
+      {
+        "text": "Roda, e a transação torna a construção atômica de brinde",
+        "why": "É recusado antes de rodar; não há brinde a receber."
+      },
+      {
+        "text": "Roda, deixando cair o CONCURRENTLY em silêncio e pegando o bloqueio",
+        "why": "Um banco que pegasse o bloqueio em silêncio seria pior que um que recusasse, e este recusa."
+      },
+      {
+        "text": "É recusado: CONCURRENTLY não pode rodar dentro de um bloco de transação, então essa migração tem que ser marcada como exceção",
+        "why": "Toda ferramenta tem um jeito de dizer isso, e achá-lo antes do deploy é mais fácil do que durante."
+      },
+      {
+        "text": "Roda, e confirma o índice antes do resto da migração",
+        "why": "Uma instrução dentro de uma transação não confirma sozinha."
+      }
+    ]
+  },
+  "ex-emfd9m9h": {
+    "prompt": "Um índice mostrava zero varreduras no primário, não sustentava restrição nenhuma, e os contadores tinham meses. Você o derrubou, e naquela noite os relatórios caíram. O que você deixou passar?",
+    "hint": "Três ressalvas na seção, e esta é a que transforma uma limpeza num incidente.",
+    "choices": [
+      {
+        "text": "Os relatórios precisavam das estatísticas do índice e não do índice em si",
+        "why": "Estatísticas pertencem à tabela e sobrevivem ao índice; os relatórios precisavam da estrutura."
+      },
+      {
+        "text": "Derrubar um índice no primário invalida os outros índices na réplica",
+        "why": "A derrubada replica como ela mesma; nada mais é tocado."
+      },
+      {
+        "text": "O contador do primário é uma soma entre réplicas, então um zero lá era impossível",
+        "why": "É o contrário: o contador é local, e essa é a armadilha."
+      },
+      {
+        "text": "Réplicas mantêm os próprios contadores, e os relatórios rodavam numa réplica de leitura onde ele era usado toda noite",
+        "why": "Se você tem réplicas, olhe todas antes de acreditar num zero."
+      }
+    ]
+  },
+  "ex-v6fw9ask": {
+    "prompt": "Um índice continua crescendo enquanto a contagem de linhas da tabela não. O que está acontecendo, e qual é a solução no PostgreSQL 12 ou posterior?",
+    "hint": "Índices acumulam entradas mortas pela mesma razão que tabelas.",
+    "choices": [
+      {
+        "text": "Estatísticas velhas estão inflando o tamanho relatado; ANALYZE na tabela",
+        "why": "ANALYZE muda estimativas, não bytes; o crescimento aqui é real."
+      },
+      {
+        "text": "O mapa de visibilidade está faltando, então entradas se duplicam; VACUUM FULL",
+        "why": "O mapa decide se linhas são buscadas; ele não duplica entradas."
+      },
+      {
+        "text": "Entradas mortas de updates estão inchando o índice; REINDEX INDEX CONCURRENTLY",
+        "why": "Antes da versão 12 o reindex segurava um bloqueio, e a saída era construir um índice novo concorrentemente e derrubar o velho."
+      },
+      {
+        "text": "O índice está sendo construído de novo a cada inserção; DROP e CREATE sem CONCURRENTLY",
+        "why": "Nada reconstrói um índice por inserção, e perder a construção concorrente não é solução."
+      }
+    ]
+  },
+  "ex-147c5qdy": {
+    "prompt": "Ponha em ordem os quatro passos do fluxo para acrescentar um índice.",
+    "hint": "O primeiro passo é o que as pessoas pulam, e o último é o que esquecem.",
+    "items": [
+      "EXPLAIN na consulta lenta e descobrir o que ela está fazendo",
+      "Acrescentar o índice, concorrentemente, com as colunas de igualdade antes da faixa",
+      "EXPLAIN na mesma consulta de novo e confirmar que o índice é usado",
+      "Voltar mais tarde e conferir se ele ainda está na lista dos usados"
+    ],
+    "trap": "A troca comum é acrescentar o índice antes de medir — que é acrescentá-lo porque parece provável que ajude, e a aula inteira é um argumento contra isso."
+  }
+}
