@@ -1,0 +1,1433 @@
+[
+  {
+    "id": "ex-0xj7ry71",
+    "version": 1,
+    "section": "the-aggregates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ten reviews, three of which have no rating yet. What does count(rating) return?",
+    "hint": "One of the two counting functions has an argument that can be missing.",
+    "choices": [
+      {
+        "text": "Ten, since a review is a row whether it carries a rating or not",
+        "correct": false,
+        "why": "That is count(*), which has no argument and so has nothing to be missing."
+      },
+      {
+        "text": "Three, which is the number the missing ratings account for",
+        "correct": false,
+        "why": "Nothing counts absences; you would have to ask for those separately."
+      },
+      {
+        "text": "Seven",
+        "correct": true,
+        "why": "It skips the rows where its argument is null, as every aggregate but count(*) does."
+      },
+      {
+        "text": "Ten, with each missing rating contributing a zero to the tally",
+        "correct": false,
+        "why": "No aggregate substitutes a value for an unknown unless you write coalesce."
+      }
+    ]
+  },
+  {
+    "id": "ex-g44yeb0x",
+    "version": 1,
+    "section": "the-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sum(rating) is 28 over ten reviews, three of which have no rating. What is avg(rating)?",
+    "hint": "Work out what the average divides by before you divide.",
+    "choices": [
+      {
+        "text": "2.8, the total spread evenly across the ten rows",
+        "correct": false,
+        "why": "That is what you get from coalesce, and it is a different claim about the data."
+      },
+      {
+        "text": "4.0",
+        "correct": true,
+        "why": "It divides by the seven ratings that exist rather than by the ten rows."
+      },
+      {
+        "text": "NULL, because three of the values going into it are unknown",
+        "correct": false,
+        "why": "Only an aggregate over no values at all is null; these have seven."
+      },
+      {
+        "text": "2.8, since avg and sum are the same computation with a divisor",
+        "correct": false,
+        "why": "They agree on the numerator and disagree on the denominator, which is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-h17db5jq",
+    "version": 1,
+    "section": "the-aggregates",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression to what it counts.",
+    "hint": "Two of them differ only in whether the argument can be missing.",
+    "pairs": [
+      {
+        "left": "count(*)",
+        "right": "Every row"
+      },
+      {
+        "left": "count(rating)",
+        "right": "The rows where a rating was given"
+      },
+      {
+        "left": "count(DISTINCT rating)",
+        "right": "The different ratings that were given"
+      }
+    ],
+    "right_distractors": [
+      "The rows where a rating is still missing",
+      "Every row, with a missing rating counted as zero"
+    ]
+  },
+  {
+    "id": "ex-73evxgx5",
+    "version": 1,
+    "section": "the-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between count(1) and count(*)?",
+    "hint": "Somebody will tell you one of them is quicker.",
+    "choices": [
+      {
+        "text": "count(1) skips the rows whose first column happens to be null",
+        "correct": false,
+        "why": "Nothing about the literal 1 refers to a column of the table."
+      },
+      {
+        "text": "count(*) counts rows while count(1) counts the distinct values",
+        "correct": false,
+        "why": "Neither of them deduplicates anything without the word DISTINCT."
+      },
+      {
+        "text": "There is none",
+        "correct": true,
+        "why": "The planner treats them identically, so write the one that says what it means."
+      },
+      {
+        "text": "count(1) is quicker, as there is no column for it to inspect",
+        "correct": false,
+        "why": "A claim that was never true in any database still receiving maintenance."
+      }
+    ]
+  },
+  {
+    "id": "ex-1edcq1f5",
+    "version": 1,
+    "section": "the-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An aggregate query with no GROUP BY, over a WHERE that matched nothing. How many rows come back?",
+    "hint": "Think about what a dashboard needs to render.",
+    "choices": [
+      {
+        "text": "Zero, since no row of the table satisfied the condition",
+        "correct": false,
+        "why": "That is how every other kind of query behaves, and this is the exception."
+      },
+      {
+        "text": "One for each aggregate function named in the SELECT list",
+        "correct": false,
+        "why": "Aggregates are columns of a row, never rows of their own."
+      },
+      {
+        "text": "It depends on whether the table itself is empty",
+        "correct": false,
+        "why": "An empty table and an empty filter give the same single row."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Zero rows in, one row out: count is 0 and every other aggregate is null."
+      }
+    ]
+  },
+  {
+    "id": "ex-mthq26zs",
+    "version": 1,
+    "section": "the-aggregates",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sum over a customer with no orders returns ___ rather than zero, and the function that turns it into a zero is ___.",
+    "hint": "One of these two is a word you type and the other is a word you read in the output.",
+    "blanks": [
+      {
+        "accept": [
+          "NULL",
+          "null"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "coalesce"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kewbfea3",
+    "version": 1,
+    "section": "group-by",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does adding another column to GROUP BY do?",
+    "hint": "The pile is the combination of everything you named.",
+    "choices": [
+      {
+        "text": "It leaves the groups as they are, unless the column is in the SELECT list",
+        "correct": false,
+        "why": "The grouping decides the piles whether you display the column or not."
+      },
+      {
+        "text": "It adds a column to each existing row without changing their number",
+        "correct": false,
+        "why": "That would be a join or a window, not a change of grouping."
+      },
+      {
+        "text": "It makes the result shorter, because more has been specified",
+        "correct": false,
+        "why": "More specification narrows each group rather than the set of them."
+      },
+      {
+        "text": "It makes the groups smaller",
+        "correct": true,
+        "why": "A finer combination means more piles, so the result gets longer."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3ydw6ta",
+    "version": 1,
+    "section": "group-by",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"column must appear in the GROUP BY clause\" an error rather than a value chosen for you?",
+    "hint": "Count how many of that column the pile contains.",
+    "choices": [
+      {
+        "text": "The pile holds more than one of it",
+        "correct": true,
+        "why": "Picking one without being told which would be a guess, so the query is refused."
+      },
+      {
+        "text": "The column is not part of any index the grouping could read from",
+        "correct": false,
+        "why": "Indexes decide how the work is done, never which questions have an answer."
+      },
+      {
+        "text": "The parser needs each selected column listed before it can resolve the name",
+        "correct": false,
+        "why": "Resolution is not the difficulty; a question with several answers is."
+      },
+      {
+        "text": "An aggregate function is what a GROUP BY admits beside itself",
+        "correct": false,
+        "why": "The grouping columns themselves are selectable, and so is anything determined by them."
+      }
+    ]
+  },
+  {
+    "id": "ex-db569qn5",
+    "version": 1,
+    "section": "group-by",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Group by a nullable column. What happens to the rows where it is null?",
+    "hint": "Here the grouping deliberately departs from how the equals sign behaves.",
+    "choices": [
+      {
+        "text": "They are dropped, since a group without a label has no row to print",
+        "correct": false,
+        "why": "Nothing is dropped, and the label printed for that pile is NULL."
+      },
+      {
+        "text": "Each of them becomes its own group, since no two nulls are equal",
+        "correct": false,
+        "why": "That is the rule for comparison, and grouping is the place it does not apply."
+      },
+      {
+        "text": "They form one group",
+        "correct": true,
+        "why": "GROUP BY puts every null in the same pile, which = would never do."
+      },
+      {
+        "text": "They join the pile belonging to the smallest value that is present",
+        "correct": false,
+        "why": "Nulls sort somewhere in an ORDER BY, but they never merge into another group."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwk9pxxe",
+    "version": 1,
+    "section": "group-by",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Revenue per month out of a timestamp column, in PostgreSQL, is GROUP BY ___('month', placed_at).",
+    "hint": "It cuts the timestamp down to the start of the period.",
+    "blanks": [
+      {
+        "accept": [
+          "date_trunc"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4n616m5x",
+    "version": 1,
+    "section": "group-by",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Grouping by a table's primary key lets PostgreSQL accept its other columns in the SELECT. Why?",
+    "hint": "Ask whether the pile can contain two different names.",
+    "choices": [
+      {
+        "text": "PostgreSQL takes the value from whichever row of the pile it read first",
+        "correct": false,
+        "why": "That is the old MySQL behaviour the standard exists to prevent."
+      },
+      {
+        "text": "Those columns are copied into the grouping key behind the scenes",
+        "correct": false,
+        "why": "Nothing is added to the grouping; the analysis is about what follows from it."
+      },
+      {
+        "text": "The key already determines them",
+        "correct": true,
+        "why": "One id is one row, so there is no second value for the query to choose between."
+      },
+      {
+        "text": "It does not, and the query is accepted once they are aggregated too",
+        "correct": false,
+        "why": "It is accepted as written, and MySQL 8 does the same analysis."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1t6c4cg",
+    "version": 1,
+    "section": "having",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the clauses in the order the database evaluates them.",
+    "hint": "Two of them throw things away, and what they throw away is different.",
+    "items": [
+      "FROM",
+      "WHERE",
+      "GROUP BY",
+      "HAVING",
+      "SELECT",
+      "ORDER BY"
+    ],
+    "trap": "The common swap is HAVING before GROUP BY, which would leave it with no groups to filter — and that is exactly why an aggregate in WHERE is an error."
+  },
+  {
+    "id": "ex-44e1rghe",
+    "version": 1,
+    "section": "having",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WHERE count(*) > 3 is refused. What is the reason?",
+    "hint": "Ask what WHERE is looking at when it runs.",
+    "choices": [
+      {
+        "text": "The comparison would require the whole table to be held in memory",
+        "correct": false,
+        "why": "Memory is never what makes a clause legal or illegal."
+      },
+      {
+        "text": "count belongs in the SELECT list of a query",
+        "correct": false,
+        "why": "It is welcome in HAVING and in ORDER BY as well, so the list is not the rule."
+      },
+      {
+        "text": "No group exists yet",
+        "correct": true,
+        "why": "WHERE sees one row at a time, and the count of one row is not a question."
+      },
+      {
+        "text": "It is accepted when a GROUP BY follows later in the query",
+        "correct": false,
+        "why": "The GROUP BY is already there in the query that produces this error."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jvd5ac1",
+    "version": 1,
+    "section": "having",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "\"Customers with more than three orders in 2026.\" Where does the condition on the year go?",
+    "hint": "Decide whether the year is a property of one row or of a pile.",
+    "choices": [
+      {
+        "text": "Either of the two, since both conditions narrow the same result",
+        "correct": false,
+        "why": "Moving a condition between them changes the meaning, not the style."
+      },
+      {
+        "text": "WHERE",
+        "correct": true,
+        "why": "The year belongs to an order, so it decides which rows go into the pile at all."
+      },
+      {
+        "text": "ORDER BY, because it is about which part of the report is shown",
+        "correct": false,
+        "why": "Sorting never removes a row from an answer."
+      },
+      {
+        "text": "HAVING, so that it is applied once the groups have been counted",
+        "correct": false,
+        "why": "By then the individual dates are gone and only the aggregates remain."
+      }
+    ]
+  },
+  {
+    "id": "ex-r98zxkxb",
+    "version": 1,
+    "section": "having",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "HAVING customer_id <> 7, with no aggregate in it, gives the right answer. What is wrong with it?",
+    "hint": "Follow what the database did before it discarded the group.",
+    "choices": [
+      {
+        "text": "It is invalid, because HAVING requires an aggregate in the expression",
+        "correct": false,
+        "why": "It is perfectly legal, which is why it survives review."
+      },
+      {
+        "text": "It changes the answer, since filtering after grouping drops other piles too",
+        "correct": false,
+        "why": "Each group is judged on its own, so no other group is affected."
+      },
+      {
+        "text": "It stops the database from using the GROUP BY clause",
+        "correct": false,
+        "why": "The grouping happens exactly as written, and that is the cost."
+      },
+      {
+        "text": "It does work a WHERE would have skipped",
+        "correct": true,
+        "why": "The pile is built and counted, then thrown away; a WHERE never reads those rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t8m9pk2",
+    "version": 1,
+    "section": "having",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "SELECT sum(total) FROM orders HAVING sum(total) > 1000, with no GROUP BY. What can come back?",
+    "hint": "With no grouping, how many groups are there?",
+    "choices": [
+      {
+        "text": "One row for every order whose own total is above a thousand",
+        "correct": false,
+        "why": "There is no per-order total left once the sum has been taken."
+      },
+      {
+        "text": "An error, because HAVING is meaningless without a GROUP BY clause",
+        "correct": false,
+        "why": "It is legal, and it is the one way an aggregate query returns nothing."
+      },
+      {
+        "text": "Always one row, holding a null when the threshold is not reached",
+        "correct": false,
+        "why": "Nothing substitutes a null for a group that the HAVING discarded."
+      },
+      {
+        "text": "One row or none",
+        "correct": true,
+        "why": "The whole table is one group, and that group either clears the threshold or goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-0txkbtgy",
+    "version": 1,
+    "section": "counting-correctly",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "LEFT JOIN customers to orders, group by customer, count(*). What does a customer with no orders show?",
+    "hint": "The unmatched customer is still in the result. Count what is actually there.",
+    "choices": [
+      {
+        "text": "The customer is absent, since an unmatched row does not survive",
+        "correct": false,
+        "why": "Surviving unmatched rows is the entire purpose of a LEFT JOIN."
+      },
+      {
+        "text": "Null, in the way the other columns of the right-hand table are",
+        "correct": false,
+        "why": "count never returns null: over no values at all it still returns zero."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "The unmatched row is one row with nulls in it, and count(*) counts rows."
+      },
+      {
+        "text": "Zero, because the join found no order on the right to pair with",
+        "correct": false,
+        "why": "That is what you wanted, and it is what count(o.id) gives instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jskg0dt",
+    "version": 1,
+    "section": "counting-correctly",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which column is safe to count after that LEFT JOIN?",
+    "hint": "It has to be null in exactly the unmatched rows and nowhere else.",
+    "choices": [
+      {
+        "text": "orders.shipped_at, which comes from the right-hand table as well",
+        "correct": false,
+        "why": "It is null on unshipped orders too, so you would be counting something else."
+      },
+      {
+        "text": "Any of them, since the join has already settled which rows exist",
+        "correct": false,
+        "why": "The join settled the rows; the nulls inside them are what the count reacts to."
+      },
+      {
+        "text": "customers.id, which is populated in each row of this query",
+        "correct": false,
+        "why": "Which is why it counts the unmatched row as well and gives you one again."
+      },
+      {
+        "text": "orders.id",
+        "correct": true,
+        "why": "A primary key is never null in a matched row, so the count is the number of matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-yc2kefyf",
+    "version": 1,
+    "section": "counting-correctly",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An order with 3 lines and 2 payments, joined to both. What does sum(l.quantity) give?",
+    "hint": "Work out how many rows the pairing produced before anything was added up.",
+    "choices": [
+      {
+        "text": "The right total, because the GROUP BY collapses the repeated rows",
+        "correct": false,
+        "why": "Grouping collapses rows after the sum has already added each of them."
+      },
+      {
+        "text": "An error, since two one-to-many joins may not both be aggregated",
+        "correct": false,
+        "why": "It is accepted, and that is precisely why the wrong number reaches a report."
+      },
+      {
+        "text": "Twice the real quantity",
+        "correct": true,
+        "why": "Six rows come out of the pairing, so every line appears once per payment."
+      },
+      {
+        "text": "Three times the real quantity, once for each line of the order",
+        "correct": false,
+        "why": "Each line is repeated by the payments, not by the other lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1ysvkwh",
+    "version": 1,
+    "section": "counting-correctly",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "count(DISTINCT l.id) repairs the count. What repairs the sum?",
+    "hint": "The repair is a change of shape rather than a change of function.",
+    "choices": [
+      {
+        "text": "Adding DISTINCT to the SELECT list of the query as a whole",
+        "correct": false,
+        "why": "That deduplicates output rows, long after the sum has been computed."
+      },
+      {
+        "text": "sum(DISTINCT l.quantity), which is the matching form of the same idea",
+        "correct": false,
+        "why": "Distinct values is not distinct rows: two lines of quantity 2 would become one."
+      },
+      {
+        "text": "Aggregating each side on its own",
+        "correct": true,
+        "why": "A subquery per side is one row per order, so neither can multiply the other."
+      },
+      {
+        "text": "Dividing the total afterwards by the number of payments",
+        "correct": false,
+        "why": "It happens to work for one order and fails the moment the counts differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-e163374e",
+    "version": 1,
+    "section": "counting-correctly",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To catch a fan-out, compare count(*) on the joined query with count(*) on the table you think you are reporting on. If the first is ___ and you did not expect it, the multiplication is why.",
+    "hint": "One number against the other, and only one direction is the symptom.",
+    "blanks": [
+      {
+        "accept": [
+          "bigger",
+          "larger",
+          "greater",
+          "higher"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sgpz14ty",
+    "version": 1,
+    "section": "conditional-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) return?",
+    "hint": "Ask what count does with the value the ELSE supplies.",
+    "choices": [
+      {
+        "text": "The number of paid orders, as the CASE expression intends",
+        "correct": false,
+        "why": "That is what it looks like, and it is why the bug survives a review."
+      },
+      {
+        "text": "An error, since count takes a column rather than an expression",
+        "correct": false,
+        "why": "Any expression is welcome; the trouble is which of its values are null."
+      },
+      {
+        "text": "The number of rows",
+        "correct": true,
+        "why": "Zero is not null, so it is counted, and every row therefore contributes one."
+      },
+      {
+        "text": "Zero, because the expression returns a number rather than a null",
+        "correct": false,
+        "why": "It never returns null, and count counts everything that is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-6n8v5wc0",
+    "version": 1,
+    "section": "conditional-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which engines have no FILTER clause?",
+    "hint": "It is standard SQL, so the question is who has not implemented it.",
+    "choices": [
+      {
+        "text": "PostgreSQL and SQLite, which prefer their own conditional forms",
+        "correct": false,
+        "why": "Both have it, and PostgreSQL is where most people first meet it."
+      },
+      {
+        "text": "MySQL and MariaDB",
+        "correct": true,
+        "why": "PostgreSQL has it, and SQLite has had it since version 3.30."
+      },
+      {
+        "text": "SQLite alone, which offers no conditional aggregation",
+        "correct": false,
+        "why": "Every engine here can do it with CASE, whatever else it lacks."
+      },
+      {
+        "text": "SQLite and MariaDB, which share a good deal of their heritage",
+        "correct": false,
+        "why": "SQLite has had it for years, and they share nothing of the sort."
+      }
+    ]
+  },
+  {
+    "id": "ex-trrsqd88",
+    "version": 1,
+    "section": "conditional-aggregates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "avg(CASE WHEN status = 'paid' THEN 1.0 END), written without the ELSE. What comes back?",
+    "hint": "Two sections of this lesson meet here: what CASE returns, and what avg ignores.",
+    "choices": [
+      {
+        "text": "1.0",
+        "correct": true,
+        "why": "The unpaid rows become null, avg ignores them, and only ones are left to average."
+      },
+      {
+        "text": "NULL, because most of the rows contribute no value to it",
+        "correct": false,
+        "why": "An aggregate is null only when no value at all reaches it."
+      },
+      {
+        "text": "An error, since avg needs a value in each row it is given",
+        "correct": false,
+        "why": "Missing values are ordinary for an aggregate; they are simply skipped."
+      },
+      {
+        "text": "0.62, the share of the orders that were paid, as intended",
+        "correct": false,
+        "why": "That needs the ELSE, which is the opposite of what count wanted."
+      }
+    ]
+  },
+  {
+    "id": "ex-yepceqww",
+    "version": 1,
+    "section": "conditional-aggregates",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these count the paid orders correctly? Choose all that apply.",
+    "hint": "Look at what each row that is not paid contributes, and whether the function counts it.",
+    "choices": [
+      {
+        "text": "count(CASE WHEN status = 'paid' THEN 1 END)",
+        "correct": true,
+        "why": "No ELSE means null on the other rows, and count skips them."
+      },
+      {
+        "text": "sum(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)",
+        "correct": true,
+        "why": "Here the zero is right, because adding it changes nothing."
+      },
+      {
+        "text": "count(*) FILTER (WHERE status = 'paid')",
+        "correct": true,
+        "why": "The clause narrows this one aggregate, and the standard says so."
+      },
+      {
+        "text": "count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)",
+        "correct": false,
+        "why": "Zero is not null, so this counts every row in the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6h2tkvc",
+    "version": 1,
+    "section": "conditional-aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a pivot have its columns written out by hand?",
+    "hint": "Ask when the shape of a result is decided.",
+    "choices": [
+      {
+        "text": "They do not have to be, as long as you group by the column as well",
+        "correct": false,
+        "why": "Grouping by it gives you rows, which is the other shape and not a pivot."
+      },
+      {
+        "text": "A query's columns are fixed before it runs",
+        "correct": true,
+        "why": "So a status nobody predicted never appears, and no error mentions it."
+      },
+      {
+        "text": "The FILTER clause accepts a single condition per aggregate function",
+        "correct": false,
+        "why": "Several aggregates may each carry their own, which is how the pivot is built."
+      },
+      {
+        "text": "Databases refuse to create columns while a statement runs, for safety",
+        "correct": false,
+        "why": "It is not a policy; a result set has a shape the client is told in advance."
+      }
+    ]
+  },
+  {
+    "id": "ex-51g9mwz2",
+    "version": 1,
+    "section": "subtotals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many groupings does GROUP BY ROLLUP (region, month) compute?",
+    "hint": "Write out the list it is shorthand for.",
+    "choices": [
+      {
+        "text": "Four, one for each combination the two columns can make",
+        "correct": false,
+        "why": "That is CUBE, which adds the grouping by month alone."
+      },
+      {
+        "text": "Two, which are the detail rows and the grand total at the end",
+        "correct": false,
+        "why": "The region subtotal sits between them and is the reason to use ROLLUP at all."
+      },
+      {
+        "text": "One for each distinct region, with a total row added underneath",
+        "correct": false,
+        "why": "Groupings are not groups: each grouping produces however many rows it produces."
+      },
+      {
+        "text": "Three",
+        "correct": true,
+        "why": "The full grouping, the region on its own, and the empty set for the grand total."
+      }
+    ]
+  },
+  {
+    "id": "ex-be1z1s4g",
+    "version": 1,
+    "section": "subtotals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A ROLLUP row has NULL in the region column. What does it mean?",
+    "hint": "There are two things it could be, which is the problem.",
+    "choices": [
+      {
+        "text": "Either, and the row cannot say which",
+        "correct": true,
+        "why": "A subtotal and a genuinely unknown region print the same character."
+      },
+      {
+        "text": "A subtotal over every region, which is what ROLLUP was asked for",
+        "correct": false,
+        "why": "It is one of the two possibilities, and nothing in the row distinguishes them."
+      },
+      {
+        "text": "A group of rows whose region was never recorded in the data",
+        "correct": false,
+        "why": "Also one of the two, and equally indistinguishable without help."
+      },
+      {
+        "text": "A fault in the grouping, since NULL is not a valid group label",
+        "correct": false,
+        "why": "NULL is a perfectly ordinary group label, which is the whole difficulty."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kt9678n",
+    "version": 1,
+    "section": "subtotals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does GROUPING(region) tell you?",
+    "hint": "It answers the question the null on its own cannot.",
+    "choices": [
+      {
+        "text": "The position the column occupies in the ROLLUP list you wrote",
+        "correct": false,
+        "why": "It takes the column as an argument but reports nothing about the ordering."
+      },
+      {
+        "text": "Whether the column was rolled up",
+        "correct": true,
+        "why": "One for a subtotal row, zero when the null belongs to the data itself."
+      },
+      {
+        "text": "How many distinct groups that column produced in the result",
+        "correct": false,
+        "why": "Counting groups is not what it does; it reports on the row you are looking at."
+      },
+      {
+        "text": "Whether the column's value is null, for whatever reason it is null",
+        "correct": false,
+        "why": "That is what makes it useful: it distinguishes two nulls the eye cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-j05carrg",
+    "version": 1,
+    "section": "subtotals",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the ORDER BY terms in the order that lands every subtotal under the rows it summarises.",
+    "hint": "Each flag has to come before the column it belongs to.",
+    "items": [
+      "GROUPING(region)",
+      "region",
+      "GROUPING(month)",
+      "month"
+    ],
+    "trap": "The common swap is region before GROUPING(region), which sorts the grand total in among the regions by whatever its null sorts as."
+  },
+  {
+    "id": "ex-6jj6pwcm",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Over a thousand orders, how many rows does sum(total) OVER (PARTITION BY customer_id) return?",
+    "hint": "The word in the section title says what it does not do.",
+    "choices": [
+      {
+        "text": "A thousand",
+        "correct": true,
+        "why": "A window function computes a value for each row and removes none of them."
+      },
+      {
+        "text": "One, because a window with a sum in it totals the whole result",
+        "correct": false,
+        "why": "An empty OVER () would still return every row, each carrying the total."
+      },
+      {
+        "text": "As many as there are customers with at least one order recorded",
+        "correct": false,
+        "why": "Partitioning decides which rows a value is computed from, not which survive."
+      },
+      {
+        "text": "One per customer, since the partition names exactly that group",
+        "correct": false,
+        "why": "That is what the same word does in GROUP BY, and it is the difference here."
+      }
+    ]
+  },
+  {
+    "id": "ex-avnr2atf",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does OVER () with empty parentheses mean?",
+    "hint": "Nothing was named, so nothing divides the rows.",
+    "choices": [
+      {
+        "text": "The window holds no rows, so the function returns null",
+        "correct": false,
+        "why": "Empty parentheses withhold a division, not the rows themselves."
+      },
+      {
+        "text": "The whole result is one partition",
+        "correct": true,
+        "why": "Every row sees the same value, which is how a share of the total is computed."
+      },
+      {
+        "text": "The partition is inherited from whatever the query's GROUP BY said",
+        "correct": false,
+        "why": "A window is defined where it is written, and never picked up from elsewhere."
+      },
+      {
+        "text": "Each row is a partition of its own and sees itself alone",
+        "correct": false,
+        "why": "That would make sum(total) OVER () the row's own total, which it is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-1egras42",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "WHERE r <= 10, where r is a rank() defined in the same SELECT, is an error. Why?",
+    "hint": "Put the two of them on the running order and see which comes first.",
+    "choices": [
+      {
+        "text": "WHERE runs first",
+        "correct": true,
+        "why": "No window function has run when WHERE is evaluated, so there is no r to compare."
+      },
+      {
+        "text": "HAVING is the clause that filters window functions, rather than WHERE",
+        "correct": false,
+        "why": "HAVING has finished by then as well; both run before any window does."
+      },
+      {
+        "text": "The rank has ties in it, so a comparison with <= has no meaning",
+        "correct": false,
+        "why": "Ties give two rows the same number, which compares perfectly well."
+      },
+      {
+        "text": "A window function may not be written in a SELECT list",
+        "correct": false,
+        "why": "The SELECT list is the only place one may be written, along with ORDER BY."
+      }
+    ]
+  },
+  {
+    "id": "ex-j846vcj1",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a query with GROUP BY customer_id, what is the outer sum in sum(sum(total)) OVER ()?",
+    "hint": "Windows run at a point where only one kind of row is left.",
+    "choices": [
+      {
+        "text": "A sum over the original rows, taken before the grouping happened",
+        "correct": false,
+        "why": "Nothing in a query can reach back to rows the grouping has already consumed."
+      },
+      {
+        "text": "A typing error that the parser happens to tolerate without complaint",
+        "correct": false,
+        "why": "It is meaningful, and it gives each customer their share of the whole."
+      },
+      {
+        "text": "A window over the grouped rows",
+        "correct": true,
+        "why": "Windows run after grouping, so one row per customer is all there is by then."
+      },
+      {
+        "text": "The same aggregate applied a second time for numeric precision",
+        "correct": false,
+        "why": "Summing a number twice changes nothing about precision or anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3x1aba2",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With WHERE customer_id = 7 in the query, what does sum(total) OVER () total?",
+    "hint": "The running order decides which rows the window can still see.",
+    "choices": [
+      {
+        "text": "The orders of each customer, since OVER () names the result as a whole",
+        "correct": false,
+        "why": "It names the whole of what is left, and the filter ran two steps earlier."
+      },
+      {
+        "text": "Null, because empty parentheses define no partition to total over",
+        "correct": false,
+        "why": "Empty parentheses define one partition holding everything, not none."
+      },
+      {
+        "text": "Customer 7's orders",
+        "correct": true,
+        "why": "Windows see the rows that survived WHERE, and never the table behind them."
+      },
+      {
+        "text": "Whichever rows the ORDER BY admits, as that decides the frame",
+        "correct": false,
+        "why": "There is no ORDER BY here, and a frame narrows within a partition anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-c38v1rqj",
+    "version": 1,
+    "section": "windows",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The clause that defines a window once so several aggregates can share it is ___, and it sits between HAVING and ORDER BY.",
+    "hint": "It is named after the thing it defines.",
+    "blanks": [
+      {
+        "accept": [
+          "WINDOW"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-54zesxjx",
+    "version": 1,
+    "section": "frames",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Adding ORDER BY inside OVER changes the number the function returns. Why?",
+    "hint": "It does two jobs, and only one of them is about order.",
+    "choices": [
+      {
+        "text": "It makes the function run once per ordering key instead of once per row",
+        "correct": false,
+        "why": "A window function still produces exactly one value for every row."
+      },
+      {
+        "text": "It turns the partition into one group for each distinct ordering value",
+        "correct": false,
+        "why": "That is what RANGE does with peers, and it is not what the ORDER BY does."
+      },
+      {
+        "text": "It changes the default frame",
+        "correct": true,
+        "why": "With an ORDER BY the frame ends at the current row, so the total accumulates."
+      },
+      {
+        "text": "It sorts the rows, and a sum follows whatever order the rows are in",
+        "correct": false,
+        "why": "A sum over a set does not depend on the order the set is read in."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3c5qas2",
+    "version": 1,
+    "section": "frames",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these gives a running total rather than the partition's total?",
+    "hint": "One of them inherits a default and the rest do not.",
+    "choices": [
+      {
+        "text": "OVER (ORDER BY placed_at)",
+        "correct": true,
+        "why": "The ORDER BY brings a frame that ends at the current row along with it."
+      },
+      {
+        "text": "OVER (PARTITION BY customer_id ORDER BY placed_at ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)",
+        "correct": false,
+        "why": "The frame is written out and it covers the partition, so the ORDER BY only orders."
+      },
+      {
+        "text": "OVER (PARTITION BY customer_id)",
+        "correct": false,
+        "why": "No ORDER BY means the frame is the whole partition, so the value never moves."
+      },
+      {
+        "text": "OVER ()",
+        "correct": false,
+        "why": "The whole result is one partition and the frame covers all of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fd7qt2zt",
+    "version": 1,
+    "section": "frames",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two rows share the same ORDER BY value. What does a RANGE running total give them?",
+    "hint": "RANGE counts values rather than rows, and tied rows are peers.",
+    "choices": [
+      {
+        "text": "Different numbers, in whatever order the database happened to store them",
+        "correct": false,
+        "why": "That is ROWS, and inventing an order the data does not have is its weakness."
+      },
+      {
+        "text": "The same number",
+        "correct": true,
+        "why": "The frame ends at the end of the tie, so both rows see both of the tied values."
+      },
+      {
+        "text": "An error, because RANGE requires the ordering values to be distinct",
+        "correct": false,
+        "why": "Ties are exactly the case RANGE was designed to treat deliberately."
+      },
+      {
+        "text": "Different numbers, with the tie broken by the table's primary key",
+        "correct": false,
+        "why": "Nothing adds a tiebreaker you did not write yourself."
+      }
+    ]
+  },
+  {
+    "id": "ex-e95790f2",
+    "version": 1,
+    "section": "frames",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ROWS 6 PRECEDING against RANGE INTERVAL '7 days' PRECEDING. When do the two disagree?",
+    "hint": "Imagine a quiet week in the data.",
+    "choices": [
+      {
+        "text": "They do not, because the two are alternative spellings of one idea",
+        "correct": false,
+        "why": "One counts rows and the other counts an interval of the ordering value."
+      },
+      {
+        "text": "When the column named in the ORDER BY has no index built over it",
+        "correct": false,
+        "why": "An index changes how fast the answer arrives, never what the answer is."
+      },
+      {
+        "text": "When a day has no rows",
+        "correct": true,
+        "why": "ROWS reaches back six rows whatever their dates, so it crosses the gap."
+      },
+      {
+        "text": "When two rows fall on the same date, which RANGE counts once",
+        "correct": false,
+        "why": "RANGE includes both of them: peers are in the frame together, not merged."
+      }
+    ]
+  },
+  {
+    "id": "ex-8705efqm",
+    "version": 1,
+    "section": "frames",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A four-row moving average, on the first row of a partition. What is it averaging?",
+    "hint": "Count how many rows the frame can actually reach.",
+    "choices": [
+      {
+        "text": "One value",
+        "correct": true,
+        "why": "There are no earlier rows, so the frame holds the current one alone."
+      },
+      {
+        "text": "Four values, with the three that are missing treated as zeroes",
+        "correct": false,
+        "why": "Nothing invents a value for a row that is not there."
+      },
+      {
+        "text": "The last three rows of the partition that came before this one",
+        "correct": false,
+        "why": "A frame never reaches outside the partition it belongs to."
+      },
+      {
+        "text": "No value, which is why the first three rows of a partition come back null",
+        "correct": false,
+        "why": "A partial frame still has values in it, so the average is a real number."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvqc4678",
+    "version": 1,
+    "section": "ranking-and-neighbours",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Scores of 90, 85, 85 and 70. What does rank() give the fourth row?",
+    "hint": "Two rows used up a place between them.",
+    "choices": [
+      {
+        "text": "It depends on the tiebreaker written into the ORDER BY clause",
+        "correct": false,
+        "why": "A tiebreaker would separate the tied rows; this row is not one of them."
+      },
+      {
+        "text": "4",
+        "correct": true,
+        "why": "Ties share a number, and the next rank skips the places the tie consumed."
+      },
+      {
+        "text": "3, because three distinct scores were recorded ahead of it",
+        "correct": false,
+        "why": "That is dense_rank, which is the one that does not skip."
+      },
+      {
+        "text": "2, which is the number the two tied rows are sharing",
+        "correct": false,
+        "why": "That is the number given to the ties themselves, not to what follows."
+      }
+    ]
+  },
+  {
+    "id": "ex-had64eva",
+    "version": 1,
+    "section": "ranking-and-neighbours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your page has room for exactly three rows. Which function gives the top three?",
+    "hint": "One of them can hand you a fourth row without warning.",
+    "choices": [
+      {
+        "text": "dense_rank(), because it skips no number in the sequence",
+        "correct": false,
+        "why": "It does not skip, and it still repeats, which is the problem here."
+      },
+      {
+        "text": "rank(), which is how a leaderboard is normally presented",
+        "correct": false,
+        "why": "Two rows sharing third place would give you four rows for the top three."
+      },
+      {
+        "text": "row_number()",
+        "correct": true,
+        "why": "It never repeats a number, so a cut at three returns three rows."
+      },
+      {
+        "text": "ntile(3), which divides the rows into three groups of equal size",
+        "correct": false,
+        "why": "That gives you a third of the table rather than three rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-zea6kyj2",
+    "version": 1,
+    "section": "ranking-and-neighbours",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "last_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at). What does it return?",
+    "hint": "The frame is doing something the function's name does not admit to.",
+    "choices": [
+      {
+        "text": "The customer's most recent total, which is what the name suggests",
+        "correct": false,
+        "why": "That needs a frame that reaches to the end of the partition, written out."
+      },
+      {
+        "text": "Null on each row except the last of a customer's partition",
+        "correct": false,
+        "why": "Every row gets a value; it is simply the value of that row itself."
+      },
+      {
+        "text": "The largest total in the partition, since the rows are in order",
+        "correct": false,
+        "why": "Ordering by a date says nothing about which total is the largest."
+      },
+      {
+        "text": "The current row's own total",
+        "correct": true,
+        "why": "The default frame ends at the current row, so that is the last row it can see."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rqv7rgr",
+    "version": 1,
+    "section": "ranking-and-neighbours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the two ways to fix last_value, why prefer first_value with the ORDER BY reversed?",
+    "hint": "Think about what a later reader can delete without noticing.",
+    "choices": [
+      {
+        "text": "It is the one of the two that handles ties in the ordering column",
+        "correct": false,
+        "why": "Ties are handled identically by both, and neither resolves them for you."
+      },
+      {
+        "text": "It is the one of the two that works where frames are unsupported",
+        "correct": false,
+        "why": "Every engine with window functions has the frame clause as well."
+      },
+      {
+        "text": "It is quicker, since reversing an order costs less than widening a frame",
+        "correct": false,
+        "why": "Both read the same partition, and neither is meaningfully cheaper."
+      },
+      {
+        "text": "It needs no frame clause",
+        "correct": true,
+        "why": "There is nothing for somebody to drop, and nothing for a reader to verify."
+      }
+    ]
+  },
+  {
+    "id": "ex-zt9440ve",
+    "version": 1,
+    "section": "ranking-and-neighbours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Deduplicating with row_number(): what do you PARTITION BY?",
+    "hint": "The partition names the thing that should never have repeated.",
+    "choices": [
+      {
+        "text": "The primary key, which is the column that identifies a row",
+        "correct": false,
+        "why": "Every row has its own, so every partition would hold exactly one row."
+      },
+      {
+        "text": "The column in the ORDER BY, so that the numbering comes out stable",
+        "correct": false,
+        "why": "Ordering and partitioning answer different questions here."
+      },
+      {
+        "text": "No column, since one numbering across the whole table is enough",
+        "correct": false,
+        "why": "That numbers the table from one to a million and matches nothing."
+      },
+      {
+        "text": "What should have been unique",
+        "correct": true,
+        "why": "Order by the one you want to keep, and every row after the first goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-cekm9spd",
+    "version": 1,
+    "section": "ranking-and-neighbours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does lag(revenue) OVER (ORDER BY month) beat joining the table to itself on month - 1?",
+    "hint": "Imagine a month in which nothing was sold.",
+    "choices": [
+      {
+        "text": "A self-join has to be wrapped in a subquery to be written",
+        "correct": false,
+        "why": "It can, and people do; the trouble is what it does with a gap."
+      },
+      {
+        "text": "It avoids reading the table, which the self-join has to do twice",
+        "correct": false,
+        "why": "It reads the table once, which is a real gain and not the important one."
+      },
+      {
+        "text": "It is the one of the two that can compute a difference",
+        "correct": false,
+        "why": "A self-join computes differences perfectly well when the rows are all there."
+      },
+      {
+        "text": "It works when a month is missing",
+        "correct": true,
+        "why": "lag takes the previous row that exists, where the join finds nothing to pair."
+      }
+    ]
+  }
+]

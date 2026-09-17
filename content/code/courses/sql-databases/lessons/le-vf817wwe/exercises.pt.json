@@ -1,0 +1,978 @@
+{
+  "ex-0xj7ry71": {
+    "prompt": "Dez avaliações, três delas ainda sem nota. O que count(rating) devolve?",
+    "hint": "Uma das duas funções de contagem tem um argumento que pode faltar.",
+    "choices": [
+      {
+        "text": "Dez, já que uma avaliação é uma linha tendo nota ou não",
+        "why": "Isso é count(*), que não tem argumento e portanto não tem o que faltar."
+      },
+      {
+        "text": "Três, que é o número correspondente às notas ausentes",
+        "why": "Nada conta ausências; você teria que pedir por elas separadamente."
+      },
+      {
+        "text": "Sete",
+        "why": "Ela pula as linhas em que o argumento é nulo, como toda agregação menos count(*)."
+      },
+      {
+        "text": "Dez, com cada nota ausente contribuindo com um zero para a conta",
+        "why": "Nenhuma agregação substitui um valor por um desconhecido sem você escrever coalesce."
+      }
+    ]
+  },
+  "ex-g44yeb0x": {
+    "prompt": "sum(rating) é 28 sobre dez avaliações, três delas sem nota. Quanto é avg(rating)?",
+    "hint": "Descubra por quanto a média divide antes de dividir.",
+    "choices": [
+      {
+        "text": "2,8, o total distribuído por igual pelas dez linhas",
+        "why": "É o que se obtém com coalesce, e é outra afirmação sobre os dados."
+      },
+      {
+        "text": "4,0",
+        "why": "Ela divide pelas sete notas que existem, e não pelas dez linhas."
+      },
+      {
+        "text": "NULL, porque três dos valores que entram nela são desconhecidos",
+        "why": "Só uma agregação sobre nenhum valor é nula; esta tem sete."
+      },
+      {
+        "text": "2,8, já que avg e sum são o mesmo cálculo com um divisor",
+        "why": "Elas concordam no numerador e discordam no denominador, que é o ponto."
+      }
+    ]
+  },
+  "ex-h17db5jq": {
+    "prompt": "Ligue cada expressão ao que ela conta.",
+    "hint": "Duas delas diferem só em se o argumento pode faltar.",
+    "pairs": [
+      {
+        "left": "count(*)",
+        "right": "Toda linha"
+      },
+      {
+        "left": "count(rating)",
+        "right": "As linhas em que uma nota foi dada"
+      },
+      {
+        "left": "count(DISTINCT rating)",
+        "right": "As notas diferentes que foram dadas"
+      }
+    ],
+    "right_distractors": [
+      "As linhas em que a nota ainda falta",
+      "Toda linha, com uma nota ausente contando como zero"
+    ]
+  },
+  "ex-73evxgx5": {
+    "prompt": "Qual a diferença entre count(1) e count(*)?",
+    "hint": "Alguém vai lhe dizer que um deles é mais rápido.",
+    "choices": [
+      {
+        "text": "count(1) pula as linhas cuja primeira coluna por acaso é nula",
+        "why": "Nada no literal 1 se refere a uma coluna da tabela."
+      },
+      {
+        "text": "count(*) conta linhas enquanto count(1) conta os valores distintos",
+        "why": "Nenhum dos dois remove duplicatas sem a palavra DISTINCT."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "O planejador trata os dois igual, então escreva o que diz o que quer dizer."
+      },
+      {
+        "text": "count(1) é mais rápido, pois não há coluna para ele inspecionar",
+        "why": "Afirmação que nunca foi verdade em nenhum banco que ainda receba manutenção."
+      }
+    ]
+  },
+  "ex-1edcq1f5": {
+    "prompt": "Uma consulta com agregação e sem GROUP BY, sobre um WHERE que não casou nada. Quantas linhas voltam?",
+    "hint": "Pense no que um painel precisa para desenhar.",
+    "choices": [
+      {
+        "text": "Zero, já que nenhuma linha da tabela satisfez a condição",
+        "why": "É como todo outro tipo de consulta se comporta, e esta é a exceção."
+      },
+      {
+        "text": "Uma para cada função de agregação nomeada na lista do SELECT",
+        "why": "Agregações são colunas de uma linha, nunca linhas próprias."
+      },
+      {
+        "text": "Depende de a tabela em si estar vazia",
+        "why": "Uma tabela vazia e um filtro vazio dão a mesma linha única."
+      },
+      {
+        "text": "Uma",
+        "why": "Zero linhas entram, uma linha sai: count é 0 e toda outra agregação é nula."
+      }
+    ]
+  },
+  "ex-mthq26zs": {
+    "prompt": "Uma soma sobre um cliente sem pedidos devolve ___ em vez de zero, e a função que transforma isso num zero é ___.",
+    "hint": "Um destes dois é uma palavra que você digita e o outro é uma palavra que você lê na saída.",
+    "blanks": [
+      {
+        "accept": [
+          "NULL",
+          "null"
+        ]
+      },
+      {
+        "accept": [
+          "coalesce"
+        ]
+      }
+    ]
+  },
+  "ex-kewbfea3": {
+    "prompt": "O que acrescentar mais uma coluna ao GROUP BY faz?",
+    "hint": "A pilha é a combinação de tudo o que você nomeou.",
+    "choices": [
+      {
+        "text": "Deixa os grupos como estão, a menos que a coluna esteja no SELECT",
+        "why": "O agrupamento decide as pilhas quer você exiba a coluna ou não."
+      },
+      {
+        "text": "Acrescenta uma coluna a cada linha existente sem mudar o número delas",
+        "why": "Isso seria uma junção ou uma janela, não uma mudança de agrupamento."
+      },
+      {
+        "text": "Deixa o resultado mais curto, porque mais coisa foi especificada",
+        "why": "Mais especificação estreita cada grupo, e não o conjunto deles."
+      },
+      {
+        "text": "Deixa os grupos menores",
+        "why": "Uma combinação mais fina significa mais pilhas, então o resultado fica mais longo."
+      }
+    ]
+  },
+  "ex-z3ydw6ta": {
+    "prompt": "Por que \"column must appear in the GROUP BY clause\" é um erro, e não um valor escolhido para você?",
+    "hint": "Conte quantos daquela coluna a pilha contém.",
+    "choices": [
+      {
+        "text": "A pilha tem mais de um dele",
+        "why": "Escolher um sem lhe dizerem qual seria um chute, então a consulta é recusada."
+      },
+      {
+        "text": "A coluna não faz parte de nenhum índice de que o agrupamento possa ler",
+        "why": "Índices decidem como o trabalho é feito, nunca quais perguntas têm resposta."
+      },
+      {
+        "text": "O parser precisa de cada coluna selecionada listada para resolver o nome",
+        "why": "Resolver não é a dificuldade; uma pergunta com várias respostas é."
+      },
+      {
+        "text": "Uma função de agregação é o que um GROUP BY admite ao lado de si",
+        "why": "As próprias colunas do agrupamento são selecionáveis, e o que elas determinam também."
+      }
+    ]
+  },
+  "ex-db569qn5": {
+    "prompt": "Agrupe por uma coluna anulável. O que acontece com as linhas em que ela é nula?",
+    "hint": "Aqui o agrupamento se afasta de propósito de como o sinal de igual se comporta.",
+    "choices": [
+      {
+        "text": "São descartadas, já que um grupo sem rótulo não tem linha para imprimir",
+        "why": "Nada é descartado, e o rótulo impresso para aquela pilha é NULL."
+      },
+      {
+        "text": "Cada uma vira o próprio grupo, já que dois nulos não são iguais",
+        "why": "Essa é a regra da comparação, e o agrupamento é onde ela não se aplica."
+      },
+      {
+        "text": "Elas formam um grupo só",
+        "why": "GROUP BY põe todo nulo na mesma pilha, o que o = nunca faria."
+      },
+      {
+        "text": "Entram na pilha do menor valor que estiver presente",
+        "why": "Nulos se ordenam em algum lugar num ORDER BY, mas nunca se fundem a outro grupo."
+      }
+    ]
+  },
+  "ex-zwk9pxxe": {
+    "prompt": "Receita por mês a partir de uma coluna de timestamp, no PostgreSQL, é GROUP BY ___('month', placed_at).",
+    "hint": "Ela corta o timestamp até o início do período.",
+    "blanks": [
+      {
+        "accept": [
+          "date_trunc"
+        ]
+      }
+    ]
+  },
+  "ex-4n616m5x": {
+    "prompt": "Agrupar pela chave primária de uma tabela faz o PostgreSQL aceitar as outras colunas dela no SELECT. Por quê?",
+    "hint": "Pergunte se a pilha pode conter dois nomes diferentes.",
+    "choices": [
+      {
+        "text": "O PostgreSQL pega o valor da linha da pilha que ele leu primeiro",
+        "why": "Esse é o comportamento antigo do MySQL que o padrão existe para impedir."
+      },
+      {
+        "text": "Essas colunas são copiadas para a chave de agrupamento nos bastidores",
+        "why": "Nada é acrescentado ao agrupamento; a análise é sobre o que decorre dele."
+      },
+      {
+        "text": "A chave já as determina",
+        "why": "Um id é uma linha, então não há um segundo valor entre os quais a consulta escolher."
+      },
+      {
+        "text": "Não faz, e a consulta é aceita quando elas também são agregadas",
+        "why": "Ela é aceita como está, e o MySQL 8 faz a mesma análise."
+      }
+    ]
+  },
+  "ex-f1t6c4cg": {
+    "prompt": "Ponha as cláusulas na ordem em que o banco as avalia.",
+    "hint": "Duas delas jogam coisas fora, e o que elas jogam fora é diferente.",
+    "items": [
+      "FROM",
+      "WHERE",
+      "GROUP BY",
+      "HAVING",
+      "SELECT",
+      "ORDER BY"
+    ],
+    "trap": "A troca comum é pôr HAVING antes de GROUP BY, o que o deixaria sem grupos para filtrar — e é exatamente por isso que uma agregação no WHERE é erro."
+  },
+  "ex-44e1rghe": {
+    "prompt": "WHERE count(*) > 3 é recusado. Qual é a razão?",
+    "hint": "Pergunte para o que o WHERE está olhando quando roda.",
+    "choices": [
+      {
+        "text": "A comparação exigiria manter a tabela inteira em memória",
+        "why": "Memória nunca é o que torna uma cláusula legal ou ilegal."
+      },
+      {
+        "text": "count pertence à lista do SELECT de uma consulta",
+        "why": "Ele é bem-vindo no HAVING e no ORDER BY também, então a lista não é a regra."
+      },
+      {
+        "text": "Nenhum grupo existe ainda",
+        "why": "O WHERE vê uma linha por vez, e a contagem de uma linha não é uma pergunta."
+      },
+      {
+        "text": "É aceito quando um GROUP BY vem depois na consulta",
+        "why": "O GROUP BY já está lá na consulta que produz este erro."
+      }
+    ]
+  },
+  "ex-3jvd5ac1": {
+    "prompt": "\"Clientes com mais de três pedidos em 2026.\" Onde vai a condição sobre o ano?",
+    "hint": "Decida se o ano é propriedade de uma linha ou de uma pilha.",
+    "choices": [
+      {
+        "text": "Qualquer um dos dois, já que ambas as condições estreitam o mesmo resultado",
+        "why": "Mudar uma condição de um para o outro muda o sentido, não o estilo."
+      },
+      {
+        "text": "WHERE",
+        "why": "O ano pertence a um pedido, então decide quais linhas entram na pilha."
+      },
+      {
+        "text": "ORDER BY, porque trata de qual parte do relatório é exibida",
+        "why": "Ordenar nunca remove uma linha de uma resposta."
+      },
+      {
+        "text": "HAVING, para ser aplicada quando os grupos já foram contados",
+        "why": "A essa altura as datas individuais sumiram e só restam as agregações."
+      }
+    ]
+  },
+  "ex-r98zxkxb": {
+    "prompt": "HAVING customer_id <> 7, sem agregação nenhuma, dá a resposta certa. O que há de errado nele?",
+    "hint": "Acompanhe o que o banco fez antes de descartar o grupo.",
+    "choices": [
+      {
+        "text": "É inválido, porque HAVING exige uma agregação na expressão",
+        "why": "É perfeitamente legal, que é por que sobrevive à revisão."
+      },
+      {
+        "text": "Muda a resposta, já que filtrar depois de agrupar derruba outras pilhas",
+        "why": "Cada grupo é julgado por si, então nenhum outro grupo é afetado."
+      },
+      {
+        "text": "Impede o banco de usar a cláusula GROUP BY",
+        "why": "O agrupamento acontece exatamente como escrito, e é esse o custo."
+      },
+      {
+        "text": "Faz trabalho que um WHERE teria pulado",
+        "why": "A pilha é montada e contada, e depois jogada fora; um WHERE nunca lê essas linhas."
+      }
+    ]
+  },
+  "ex-5t8m9pk2": {
+    "prompt": "SELECT sum(total) FROM orders HAVING sum(total) > 1000, sem GROUP BY. O que pode voltar?",
+    "hint": "Sem agrupamento, quantos grupos existem?",
+    "choices": [
+      {
+        "text": "Uma linha para cada pedido cujo próprio total passe de mil",
+        "why": "Não sobra total por pedido depois que a soma foi tirada."
+      },
+      {
+        "text": "Um erro, porque HAVING não faz sentido sem uma cláusula GROUP BY",
+        "why": "É legal, e é o único jeito de uma consulta com agregação não devolver nada."
+      },
+      {
+        "text": "Sempre uma linha, com um nulo quando o limite não é alcançado",
+        "why": "Nada substitui por nulo um grupo que o HAVING descartou."
+      },
+      {
+        "text": "Uma linha ou nenhuma",
+        "why": "A tabela inteira é um grupo, e esse grupo passa do limite ou vai embora."
+      }
+    ]
+  },
+  "ex-0txkbtgy": {
+    "prompt": "LEFT JOIN de customers com orders, agrupado por cliente, count(*). O que um cliente sem pedidos mostra?",
+    "hint": "O cliente sem par continua no resultado. Conte o que está de fato lá.",
+    "choices": [
+      {
+        "text": "O cliente fica ausente, já que uma linha sem par não sobrevive",
+        "why": "Fazer linhas sem par sobreviverem é o propósito inteiro de um LEFT JOIN."
+      },
+      {
+        "text": "Nulo, do mesmo jeito que as outras colunas da tabela da direita",
+        "why": "count nunca devolve nulo: sobre nenhum valor ele ainda devolve zero."
+      },
+      {
+        "text": "Um",
+        "why": "A linha sem par é uma linha com nulos, e count(*) conta linhas."
+      },
+      {
+        "text": "Zero, porque a junção não achou pedido à direita para parear",
+        "why": "É o que você queria, e é o que count(o.id) dá em vez disso."
+      }
+    ]
+  },
+  "ex-7jskg0dt": {
+    "prompt": "Qual coluna é segura de contar depois desse LEFT JOIN?",
+    "hint": "Ela tem que ser nula exatamente nas linhas sem par e em mais lugar nenhum.",
+    "choices": [
+      {
+        "text": "orders.shipped_at, que também vem da tabela da direita",
+        "why": "Ela é nula em pedidos não enviados também, então você contaria outra coisa."
+      },
+      {
+        "text": "Qualquer uma, já que a junção decidiu quais linhas existem",
+        "why": "A junção decidiu as linhas; os nulos dentro delas é a que a contagem reage."
+      },
+      {
+        "text": "customers.id, que está preenchida em cada linha desta consulta",
+        "why": "Que é por que ela conta a linha sem par também e lhe dá um de novo."
+      },
+      {
+        "text": "orders.id",
+        "why": "Uma chave primária nunca é nula numa linha pareada, então a contagem é o número de pares."
+      }
+    ]
+  },
+  "ex-yc2kefyf": {
+    "prompt": "Um pedido com 3 itens e 2 pagamentos, juntado aos dois. O que sum(l.quantity) dá?",
+    "hint": "Descubra quantas linhas o pareamento produziu antes de somar qualquer coisa.",
+    "choices": [
+      {
+        "text": "O total certo, porque o GROUP BY colapsa as linhas repetidas",
+        "why": "Agrupar colapsa linhas depois que a soma já somou cada uma delas."
+      },
+      {
+        "text": "Um erro, já que duas junções um-para-muitos não podem ser agregadas",
+        "why": "É aceito, e é exatamente por isso que o número errado chega a um relatório."
+      },
+      {
+        "text": "O dobro da quantidade real",
+        "why": "Seis linhas saem do pareamento, então todo item aparece uma vez por pagamento."
+      },
+      {
+        "text": "O triplo da quantidade real, uma vez para cada item do pedido",
+        "why": "Cada item é repetido pelos pagamentos, não pelos outros itens."
+      }
+    ]
+  },
+  "ex-b1ysvkwh": {
+    "prompt": "count(DISTINCT l.id) conserta a contagem. O que conserta a soma?",
+    "hint": "O conserto é uma mudança de formato, e não de função.",
+    "choices": [
+      {
+        "text": "Acrescentar DISTINCT à lista do SELECT da consulta inteira",
+        "why": "Isso remove linhas duplicadas de saída, muito depois de a soma ter sido calculada."
+      },
+      {
+        "text": "sum(DISTINCT l.quantity), que é a forma correspondente da mesma ideia",
+        "why": "Valores distintos não é linhas distintas: dois itens de quantidade 2 virariam um."
+      },
+      {
+        "text": "Agregar cada lado por conta própria",
+        "why": "Uma subconsulta por lado é uma linha por pedido, então nenhuma multiplica a outra."
+      },
+      {
+        "text": "Dividir o total depois pelo número de pagamentos",
+        "why": "Funciona por acaso num pedido e falha no instante em que as contagens diferem."
+      }
+    ]
+  },
+  "ex-e163374e": {
+    "prompt": "Para pegar um leque, compare count(*) na consulta juntada com count(*) na tabela sobre a qual você acha que está reportando. Se o primeiro for ___ e você não esperava, a multiplicação é o motivo.",
+    "hint": "Um número contra o outro, e só uma direção é o sintoma.",
+    "blanks": [
+      {
+        "accept": [
+          "maior"
+        ]
+      }
+    ]
+  },
+  "ex-sgpz14ty": {
+    "prompt": "O que count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) devolve?",
+    "hint": "Pergunte o que o count faz com o valor que o ELSE fornece.",
+    "choices": [
+      {
+        "text": "O número de pedidos pagos, como a expressão CASE pretende",
+        "why": "É o que parece, e é por isso que o bug sobrevive a uma revisão."
+      },
+      {
+        "text": "Um erro, já que count recebe uma coluna e não uma expressão",
+        "why": "Qualquer expressão é bem-vinda; o problema é quais valores dela são nulos."
+      },
+      {
+        "text": "O número de linhas",
+        "why": "Zero não é nulo, então é contado, e toda linha portanto contribui com um."
+      },
+      {
+        "text": "Zero, porque a expressão devolve um número em vez de um nulo",
+        "why": "Ela nunca devolve nulo, e count conta tudo o que não é."
+      }
+    ]
+  },
+  "ex-6n8v5wc0": {
+    "prompt": "Quais bancos não têm a cláusula FILTER?",
+    "hint": "É SQL padrão, então a pergunta é quem não implementou.",
+    "choices": [
+      {
+        "text": "PostgreSQL e SQLite, que preferem as formas condicionais próprias",
+        "why": "Os dois têm, e o PostgreSQL é onde a maioria encontra pela primeira vez."
+      },
+      {
+        "text": "MySQL e MariaDB",
+        "why": "O PostgreSQL tem, e o SQLite tem desde a versão 3.30."
+      },
+      {
+        "text": "O SQLite sozinho, que não oferece agregação condicional",
+        "why": "Todo banco daqui consegue com CASE, seja lá o que mais lhe falte."
+      },
+      {
+        "text": "SQLite e MariaDB, que compartilham boa parte da origem",
+        "why": "O SQLite tem há anos, e eles não compartilham nada disso."
+      }
+    ]
+  },
+  "ex-trrsqd88": {
+    "prompt": "avg(CASE WHEN status = 'paid' THEN 1.0 END), escrito sem o ELSE. O que volta?",
+    "hint": "Duas seções desta aula se encontram aqui: o que CASE devolve e o que avg ignora.",
+    "choices": [
+      {
+        "text": "1,0",
+        "why": "As linhas não pagas viram nulas, avg as ignora, e só sobram uns para a média."
+      },
+      {
+        "text": "NULL, porque a maioria das linhas não contribui com valor",
+        "why": "Uma agregação é nula só quando nenhum valor chega a ela."
+      },
+      {
+        "text": "Um erro, já que avg precisa de um valor em cada linha que recebe",
+        "why": "Valores ausentes são comuns para uma agregação; são simplesmente pulados."
+      },
+      {
+        "text": "0,62, a fatia dos pedidos que foram pagos, como se pretendia",
+        "why": "Isso precisa do ELSE, que é o oposto do que o count queria."
+      }
+    ]
+  },
+  "ex-yepceqww": {
+    "prompt": "Quais destes contam os pedidos pagos corretamente? Marque todos que se aplicam.",
+    "hint": "Veja com o que cada linha não paga contribui, e se a função a conta.",
+    "choices": [
+      {
+        "text": "count(CASE WHEN status = 'paid' THEN 1 END)",
+        "why": "Sem ELSE significa nulo nas outras linhas, e count as pula."
+      },
+      {
+        "text": "sum(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)",
+        "why": "Aqui o zero está certo, porque somá-lo não muda nada."
+      },
+      {
+        "text": "count(*) FILTER (WHERE status = 'paid')",
+        "why": "A cláusula estreita esta agregação só, e o padrão diz isso."
+      },
+      {
+        "text": "count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)",
+        "why": "Zero não é nulo, então isto conta toda linha da tabela."
+      }
+    ]
+  },
+  "ex-g6h2tkvc": {
+    "prompt": "Por que um pivô tem as colunas escritas à mão?",
+    "hint": "Pergunte quando o formato de um resultado é decidido.",
+    "choices": [
+      {
+        "text": "Não precisam ser, desde que você agrupe pela coluna também",
+        "why": "Agrupar por ela dá linhas, que é o outro formato e não um pivô."
+      },
+      {
+        "text": "As colunas de uma consulta são fixadas antes de ela rodar",
+        "why": "Então um status que ninguém previu nunca aparece, e nenhum erro menciona isso."
+      },
+      {
+        "text": "A cláusula FILTER aceita uma única condição por função de agregação",
+        "why": "Várias agregações podem levar cada uma a sua, que é como o pivô é montado."
+      },
+      {
+        "text": "Bancos se recusam a criar colunas durante uma instrução, por segurança",
+        "why": "Não é política; um conjunto de resultado tem um formato anunciado ao cliente antes."
+      }
+    ]
+  },
+  "ex-51g9mwz2": {
+    "prompt": "Quantos agrupamentos GROUP BY ROLLUP (region, month) calcula?",
+    "hint": "Escreva a lista de que ele é atalho.",
+    "choices": [
+      {
+        "text": "Quatro, um para cada combinação que as duas colunas podem fazer",
+        "why": "Isso é CUBE, que acrescenta o agrupamento só por mês."
+      },
+      {
+        "text": "Dois, que são as linhas de detalhe e o total geral no fim",
+        "why": "O subtotal por região fica entre eles e é a razão de usar ROLLUP."
+      },
+      {
+        "text": "Um para cada região distinta, com uma linha de total embaixo",
+        "why": "Agrupamentos não são grupos: cada agrupamento produz as linhas que produzir."
+      },
+      {
+        "text": "Três",
+        "why": "O agrupamento completo, a região sozinha, e o conjunto vazio para o total geral."
+      }
+    ]
+  },
+  "ex-be1z1s4g": {
+    "prompt": "Uma linha de ROLLUP tem NULL na coluna de região. O que ela quer dizer?",
+    "hint": "Há duas coisas que pode ser, que é justamente o problema.",
+    "choices": [
+      {
+        "text": "Qualquer uma, e a linha não consegue dizer qual",
+        "why": "Um subtotal e uma região genuinamente desconhecida imprimem o mesmo caractere."
+      },
+      {
+        "text": "Um subtotal sobre todas as regiões, que é o que se pediu ao ROLLUP",
+        "why": "É uma das duas possibilidades, e nada na linha as distingue."
+      },
+      {
+        "text": "Um grupo de linhas cuja região nunca foi registrada nos dados",
+        "why": "Também uma das duas, e igualmente indistinguível sem ajuda."
+      },
+      {
+        "text": "Uma falha no agrupamento, já que NULL não é rótulo de grupo válido",
+        "why": "NULL é um rótulo de grupo perfeitamente comum, que é a dificuldade inteira."
+      }
+    ]
+  },
+  "ex-0kt9678n": {
+    "prompt": "O que GROUPING(region) lhe diz?",
+    "hint": "Ele responde à pergunta que o nulo sozinho não consegue.",
+    "choices": [
+      {
+        "text": "A posição que a coluna ocupa na lista de ROLLUP que você escreveu",
+        "why": "Ele recebe a coluna como argumento mas não reporta nada sobre a ordenação."
+      },
+      {
+        "text": "Se a coluna foi agregada",
+        "why": "Um para linha de subtotal, zero quando o nulo é do próprio dado."
+      },
+      {
+        "text": "Quantos grupos distintos aquela coluna produziu no resultado",
+        "why": "Contar grupos não é o que ele faz; ele reporta sobre a linha que você olha."
+      },
+      {
+        "text": "Se o valor da coluna é nulo, seja qual for a razão de ser",
+        "why": "É justamente isso que o torna útil: ele distingue dois nulos que o olho não."
+      }
+    ]
+  },
+  "ex-j05carrg": {
+    "prompt": "Ponha os termos do ORDER BY na ordem que põe cada subtotal embaixo das linhas que ele resume.",
+    "hint": "Cada indicador tem que vir antes da coluna a que pertence.",
+    "items": [
+      "GROUPING(region)",
+      "region",
+      "GROUPING(month)",
+      "month"
+    ],
+    "trap": "A troca comum é pôr region antes de GROUPING(region), o que ordena o total geral no meio das regiões conforme o nulo dele se ordenar."
+  },
+  "ex-6jj6pwcm": {
+    "prompt": "Sobre mil pedidos, quantas linhas sum(total) OVER (PARTITION BY customer_id) devolve?",
+    "hint": "A palavra no título da seção diz o que ela não faz.",
+    "choices": [
+      {
+        "text": "Mil",
+        "why": "Uma função de janela calcula um valor para cada linha e não remove nenhuma."
+      },
+      {
+        "text": "Uma, porque uma janela com uma soma totaliza o resultado inteiro",
+        "why": "Um OVER () vazio ainda devolveria toda linha, cada uma levando o total."
+      },
+      {
+        "text": "Tantas quantos forem os clientes com pelo menos um pedido registrado",
+        "why": "Particionar decide de quais linhas um valor é calculado, não quais sobrevivem."
+      },
+      {
+        "text": "Uma por cliente, já que a partição nomeia exatamente esse grupo",
+        "why": "É o que a mesma palavra faz no GROUP BY, e é a diferença aqui."
+      }
+    ]
+  },
+  "ex-avnr2atf": {
+    "prompt": "O que OVER () com parênteses vazios quer dizer?",
+    "hint": "Nada foi nomeado, então nada divide as linhas.",
+    "choices": [
+      {
+        "text": "A janela não tem linhas, então a função devolve nulo",
+        "why": "Parênteses vazios retêm uma divisão, não as linhas."
+      },
+      {
+        "text": "O resultado inteiro é uma partição",
+        "why": "Toda linha vê o mesmo valor, que é como se calcula uma fatia do total."
+      },
+      {
+        "text": "A partição é herdada do que o GROUP BY da consulta disser",
+        "why": "Uma janela é definida onde é escrita, e nunca pega de outro lugar."
+      },
+      {
+        "text": "Cada linha é uma partição própria e vê a si mesma apenas",
+        "why": "Isso faria sum(total) OVER () ser o total da própria linha, o que não é."
+      }
+    ]
+  },
+  "ex-1egras42": {
+    "prompt": "WHERE r <= 10, com r sendo um rank() definido no mesmo SELECT, é erro. Por quê?",
+    "hint": "Ponha os dois na ordem de execução e veja qual vem primeiro.",
+    "choices": [
+      {
+        "text": "O WHERE roda primeiro",
+        "why": "Nenhuma função de janela rodou quando o WHERE é avaliado, então não há r a comparar."
+      },
+      {
+        "text": "HAVING é a cláusula que filtra funções de janela, e não WHERE",
+        "why": "O HAVING também já terminou; os dois rodam antes de qualquer janela."
+      },
+      {
+        "text": "O ranking tem empates, então uma comparação com <= não tem sentido",
+        "why": "Empates dão o mesmo número a duas linhas, o que se compara perfeitamente."
+      },
+      {
+        "text": "Uma função de janela não pode ser escrita numa lista de SELECT",
+        "why": "A lista do SELECT é o único lugar onde uma pode ser escrita, junto do ORDER BY."
+      }
+    ]
+  },
+  "ex-j846vcj1": {
+    "prompt": "Numa consulta com GROUP BY customer_id, o que é a soma de fora em sum(sum(total)) OVER ()?",
+    "hint": "Janelas rodam num ponto em que só um tipo de linha sobrou.",
+    "choices": [
+      {
+        "text": "Uma soma sobre as linhas originais, tirada antes de o agrupamento acontecer",
+        "why": "Nada numa consulta alcança de volta as linhas que o agrupamento já consumiu."
+      },
+      {
+        "text": "Um erro de digitação que o parser por acaso tolera sem reclamar",
+        "why": "É significativo, e dá a cada cliente a fatia dele no todo."
+      },
+      {
+        "text": "Uma janela sobre as linhas agrupadas",
+        "why": "Janelas rodam depois do agrupamento, então uma linha por cliente é tudo o que há."
+      },
+      {
+        "text": "A mesma agregação aplicada uma segunda vez por precisão numérica",
+        "why": "Somar um número duas vezes não muda nada sobre precisão nem sobre o resto."
+      }
+    ]
+  },
+  "ex-g3x1aba2": {
+    "prompt": "Com WHERE customer_id = 7 na consulta, o que sum(total) OVER () totaliza?",
+    "hint": "A ordem de execução decide quais linhas a janela ainda consegue ver.",
+    "choices": [
+      {
+        "text": "Os pedidos de cada cliente, já que OVER () nomeia o resultado inteiro",
+        "why": "Ele nomeia o inteiro do que sobrou, e o filtro rodou dois passos antes."
+      },
+      {
+        "text": "Nulo, porque parênteses vazios não definem partição para totalizar",
+        "why": "Parênteses vazios definem uma partição contendo tudo, e não nenhuma."
+      },
+      {
+        "text": "Os pedidos do cliente 7",
+        "why": "Janelas veem as linhas que sobreviveram ao WHERE, e nunca a tabela atrás delas."
+      },
+      {
+        "text": "As linhas que o ORDER BY admitir, já que é ele quem decide a moldura",
+        "why": "Não há ORDER BY aqui, e uma moldura estreita dentro de uma partição de todo modo."
+      }
+    ]
+  },
+  "ex-c38v1rqj": {
+    "prompt": "A cláusula que define uma janela uma vez para várias agregações compartilharem é ___, e fica entre o HAVING e o ORDER BY.",
+    "hint": "Ela leva o nome da coisa que define.",
+    "blanks": [
+      {
+        "accept": [
+          "WINDOW"
+        ]
+      }
+    ]
+  },
+  "ex-54zesxjx": {
+    "prompt": "Acrescentar ORDER BY dentro do OVER muda o número que a função devolve. Por quê?",
+    "hint": "Ele faz dois trabalhos, e só um deles é sobre ordem.",
+    "choices": [
+      {
+        "text": "Ele faz a função rodar uma vez por chave de ordenação e não por linha",
+        "why": "Uma função de janela ainda produz exatamente um valor para cada linha."
+      },
+      {
+        "text": "Ele transforma a partição num grupo por valor distinto de ordenação",
+        "why": "É o que RANGE faz com pares, e não é o que o ORDER BY faz."
+      },
+      {
+        "text": "Ele muda a moldura padrão",
+        "why": "Com um ORDER BY a moldura termina na linha atual, então o total acumula."
+      },
+      {
+        "text": "Ele ordena as linhas, e uma soma segue a ordem em que as linhas estão",
+        "why": "Uma soma sobre um conjunto não depende da ordem em que ele é lido."
+      }
+    ]
+  },
+  "ex-q3c5qas2": {
+    "prompt": "Qual destes dá um total acumulado em vez do total da partição?",
+    "hint": "Um deles herda um padrão e os outros não.",
+    "choices": [
+      {
+        "text": "OVER (ORDER BY placed_at)",
+        "why": "O ORDER BY traz junto uma moldura que termina na linha atual."
+      },
+      {
+        "text": "OVER (PARTITION BY customer_id ORDER BY placed_at ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)",
+        "why": "A moldura está escrita e cobre a partição, então o ORDER BY só ordena."
+      },
+      {
+        "text": "OVER (PARTITION BY customer_id)",
+        "why": "Sem ORDER BY a moldura é a partição inteira, então o valor nunca se move."
+      },
+      {
+        "text": "OVER ()",
+        "why": "O resultado inteiro é uma partição e a moldura cobre tudo dela."
+      }
+    ]
+  },
+  "ex-fd7qt2zt": {
+    "prompt": "Duas linhas compartilham o mesmo valor de ORDER BY. O que um acumulado com RANGE dá a elas?",
+    "hint": "RANGE conta valores e não linhas, e linhas empatadas são pares.",
+    "choices": [
+      {
+        "text": "Números diferentes, na ordem em que o banco por acaso as guardou",
+        "why": "Isso é ROWS, e inventar uma ordem que o dado não tem é a fraqueza dele."
+      },
+      {
+        "text": "O mesmo número",
+        "why": "A moldura termina no fim do empate, então as duas linhas veem os dois valores."
+      },
+      {
+        "text": "Um erro, porque RANGE exige que os valores de ordenação sejam distintos",
+        "why": "Empates são exatamente o caso que RANGE foi feito para tratar de propósito."
+      },
+      {
+        "text": "Números diferentes, com o empate desfeito pela chave primária da tabela",
+        "why": "Nada acrescenta um critério de desempate que você mesmo não escreveu."
+      }
+    ]
+  },
+  "ex-e95790f2": {
+    "prompt": "ROWS 6 PRECEDING contra RANGE INTERVAL '7 days' PRECEDING. Quando os dois discordam?",
+    "hint": "Imagine uma semana parada nos dados.",
+    "choices": [
+      {
+        "text": "Não discordam, porque os dois são grafias alternativas de uma ideia só",
+        "why": "Um conta linhas e o outro conta um intervalo do valor de ordenação."
+      },
+      {
+        "text": "Quando a coluna nomeada no ORDER BY não tem índice construído sobre ela",
+        "why": "Um índice muda a velocidade da resposta, nunca qual é a resposta."
+      },
+      {
+        "text": "Quando um dia não tem linhas",
+        "why": "ROWS volta seis linhas quaisquer que sejam as datas, então atravessa a lacuna."
+      },
+      {
+        "text": "Quando duas linhas caem na mesma data, que RANGE conta uma vez",
+        "why": "RANGE inclui as duas: pares ficam juntos na moldura, não fundidos."
+      }
+    ]
+  },
+  "ex-8705efqm": {
+    "prompt": "Uma média móvel de quatro linhas, na primeira linha de uma partição. De que ela tira a média?",
+    "hint": "Conte quantas linhas a moldura consegue alcançar de fato.",
+    "choices": [
+      {
+        "text": "Um valor",
+        "why": "Não há linhas anteriores, então a moldura contém só a atual."
+      },
+      {
+        "text": "Quatro valores, com os três que faltam tratados como zeros",
+        "why": "Nada inventa um valor para uma linha que não está lá."
+      },
+      {
+        "text": "Das três últimas linhas da partição que veio antes desta",
+        "why": "Uma moldura nunca alcança fora da partição a que pertence."
+      },
+      {
+        "text": "De valor nenhum, que é por que as três primeiras linhas vêm nulas",
+        "why": "Uma moldura parcial ainda tem valores, então a média é um número de verdade."
+      }
+    ]
+  },
+  "ex-jvqc4678": {
+    "prompt": "Pontuações de 90, 85, 85 e 70. Que número rank() dá à quarta linha?",
+    "hint": "Duas linhas consumiram um lugar entre elas.",
+    "choices": [
+      {
+        "text": "Depende do critério de desempate escrito na cláusula ORDER BY",
+        "why": "Um desempate separaria as linhas empatadas; esta não é uma delas."
+      },
+      {
+        "text": "4",
+        "why": "Empatados dividem um número, e o próximo posto pula os lugares que o empate consumiu."
+      },
+      {
+        "text": "3, porque três pontuações distintas foram registradas antes dela",
+        "why": "Isso é dense_rank, que é o que não pula."
+      },
+      {
+        "text": "2, que é o número que as duas linhas empatadas dividem",
+        "why": "Esse é o número dado aos próprios empatados, e não ao que vem depois."
+      }
+    ]
+  },
+  "ex-had64eva": {
+    "prompt": "Sua página tem espaço para exatamente três linhas. Qual função dá os três primeiros?",
+    "hint": "Uma delas pode lhe entregar uma quarta linha sem avisar.",
+    "choices": [
+      {
+        "text": "dense_rank(), porque não pula número na sequência",
+        "why": "Ele não pula, e ainda assim repete, que é o problema aqui."
+      },
+      {
+        "text": "rank(), que é como um ranking normalmente é apresentado",
+        "why": "Duas linhas dividindo o terceiro lugar dariam quatro linhas para os três primeiros."
+      },
+      {
+        "text": "row_number()",
+        "why": "Ele nunca repete um número, então um corte em três devolve três linhas."
+      },
+      {
+        "text": "ntile(3), que divide as linhas em três grupos de tamanho igual",
+        "why": "Isso lhe dá um terço da tabela em vez de três linhas."
+      }
+    ]
+  },
+  "ex-zea6kyj2": {
+    "prompt": "last_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at). O que ele devolve?",
+    "hint": "A moldura está fazendo algo que o nome da função não admite.",
+    "choices": [
+      {
+        "text": "O total mais recente do cliente, que é o que o nome sugere",
+        "why": "Isso precisa de uma moldura que alcance o fim da partição, escrita à mão."
+      },
+      {
+        "text": "Nulo em cada linha menos a última da partição de um cliente",
+        "why": "Toda linha recebe um valor; é só que o valor é o da própria linha."
+      },
+      {
+        "text": "O maior total da partição, já que as linhas estão em ordem",
+        "why": "Ordenar por data não diz nada sobre qual total é o maior."
+      },
+      {
+        "text": "O total da própria linha atual",
+        "why": "A moldura padrão termina na linha atual, então é a última linha que ela vê."
+      }
+    ]
+  },
+  "ex-1rqv7rgr": {
+    "prompt": "Dos dois jeitos de consertar last_value, por que preferir first_value com o ORDER BY invertido?",
+    "hint": "Pense no que um leitor futuro pode apagar sem perceber.",
+    "choices": [
+      {
+        "text": "É o dos dois que trata empates na coluna de ordenação",
+        "why": "Empates são tratados igual pelos dois, e nenhum os resolve por você."
+      },
+      {
+        "text": "É o dos dois que funciona onde molduras não são suportadas",
+        "why": "Todo banco com funções de janela tem a cláusula de moldura também."
+      },
+      {
+        "text": "É mais rápido, já que inverter uma ordem custa menos que alargar uma moldura",
+        "why": "Os dois leem a mesma partição, e nenhum é sensivelmente mais barato."
+      },
+      {
+        "text": "Ele não precisa de cláusula de moldura",
+        "why": "Não há o que alguém derrubar, e não há o que um leitor conferir."
+      }
+    ]
+  },
+  "ex-zt9440ve": {
+    "prompt": "Removendo duplicatas com row_number(): por que você faz PARTITION BY?",
+    "hint": "A partição nomeia a coisa que nunca deveria ter se repetido.",
+    "choices": [
+      {
+        "text": "A chave primária, que é a coluna que identifica uma linha",
+        "why": "Toda linha tem a sua, então toda partição teria exatamente uma linha."
+      },
+      {
+        "text": "A coluna do ORDER BY, para a numeração sair estável",
+        "why": "Ordenar e particionar respondem a perguntas diferentes aqui."
+      },
+      {
+        "text": "Por coluna nenhuma, já que uma numeração sobre a tabela inteira basta",
+        "why": "Isso numera a tabela de um a um milhão e não casa com nada."
+      },
+      {
+        "text": "O que deveria ter sido único",
+        "why": "Ordene pela que você quer manter, e toda linha depois da primeira vai embora."
+      }
+    ]
+  },
+  "ex-cekm9spd": {
+    "prompt": "Por que lag(revenue) OVER (ORDER BY month) é melhor que juntar a tabela com ela mesma em month - 1?",
+    "hint": "Imagine um mês em que nada foi vendido.",
+    "choices": [
+      {
+        "text": "Uma auto-junção precisa ser envolvida numa subconsulta para ser escrita",
+        "why": "Pode, e as pessoas escrevem; o problema é o que ela faz com uma lacuna."
+      },
+      {
+        "text": "Evita ler a tabela, o que a auto-junção precisa fazer duas vezes",
+        "why": "Ela lê a tabela uma vez, o que é um ganho real e não o importante."
+      },
+      {
+        "text": "É o dos dois que consegue calcular uma diferença",
+        "why": "Uma auto-junção calcula diferenças muito bem quando as linhas estão todas lá."
+      },
+      {
+        "text": "Funciona quando falta um mês",
+        "why": "lag pega a linha anterior que existe, onde a junção não acha o que parear."
+      }
+    ]
+  }
+}
