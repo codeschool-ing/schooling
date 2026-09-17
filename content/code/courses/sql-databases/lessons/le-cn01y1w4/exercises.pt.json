@@ -1,0 +1,854 @@
+{
+  "ex-byk6vv67": {
+    "prompt": "O que uma junção produz?",
+    "hint": "A palavra no título da seção é a resposta.",
+    "choices": [
+      {
+        "text": "Uma linha por linha da maior das duas tabelas",
+        "why": "Nada sobre tamanho decide quantas linhas saem."
+      },
+      {
+        "text": "Uma linha por linha da tabela da esquerda, decorada",
+        "why": "Isso descreve um muitos-para-um, e não é o que uma junção é em geral."
+      },
+      {
+        "text": "Uma linha por par sobrevivente",
+        "why": "Cada uma carrega todas as colunas dos dois lados, de onde decorre o resto."
+      },
+      {
+        "text": "Uma tabela com as colunas das duas, fundidas",
+        "why": "Fundir implicaria uma linha por coisa, e há uma por par."
+      }
+    ]
+  },
+  "ex-exf18zzv": {
+    "prompt": "O customer_id de um pedido é NULL. Com qual cliente ele pareia numa junção interna?",
+    "hint": "Toda comparação contra um desconhecido é desconhecida.",
+    "choices": [
+      {
+        "text": "O primeiro cliente, como alternativa que a junção aplica",
+        "why": "Nada fornece alternativa."
+      },
+      {
+        "text": "Todo cliente, já que NULL casa com qualquer coisa",
+        "why": "Não casa com nada."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Desconhecido não é verdadeiro, então nenhum par sobrevive e o pedido fica ausente."
+      },
+      {
+        "text": "O cliente cujo id também é NULL, se houver",
+        "why": "Dois desconhecidos não são conhecidos como iguais, da aula 1."
+      }
+    ]
+  },
+  "ex-sf7xggnn": {
+    "prompt": "Três clientes e cinco pedidos, juntados pela chave estrangeira. Quantas linhas voltam?",
+    "hint": "Não é decidido pelo tamanho de nenhuma das tabelas.",
+    "choices": [
+      {
+        "text": "Cinco, uma por pedido",
+        "why": "Só se todo pedido tiver cliente correspondente, o que é fato sobre os dados."
+      },
+      {
+        "text": "Quinze, cada um com cada",
+        "why": "Isso é uma junção cruzada, que não precisa de condição."
+      },
+      {
+        "text": "Depende dos dados",
+        "why": "Um cliente com cinco pedidos dá cinco; três sem nenhum dá zero."
+      },
+      {
+        "text": "Três, uma por cliente",
+        "why": "Só se cada cliente tiver exatamente um pedido."
+      }
+    ]
+  },
+  "ex-xw6ksq5s": {
+    "prompt": "Por que FROM a, b WHERE a.x = b.x é pior que um JOIN explícito?",
+    "hint": "Pergunte o que acontece quando alguém esquece uma linha.",
+    "choices": [
+      {
+        "text": "Ela não tem como expressar uma junção externa",
+        "why": "Verdade, e é o menor dos dois problemas."
+      },
+      {
+        "text": "Não é válido no PostgreSQL",
+        "why": "É válido em todo lugar, que é por que sobrevive em código antigo."
+      },
+      {
+        "text": "É mais lento que uma junção explícita",
+        "why": "O planejador trata as duas igual."
+      },
+      {
+        "text": "Esquecer a condição não é erro",
+        "why": "Você recebe todo par, e em tabelas reais o banco vai tentar."
+      }
+    ]
+  },
+  "ex-36yzj611": {
+    "prompt": "As duas tabelas têm uma coluna chamada id e você escreve SELECT id. O que acontece?",
+    "hint": "Um desfecho é o caso bom e o outro é o perigoso.",
+    "choices": [
+      {
+        "text": "O da chave primária ganha do da estrangeira",
+        "why": "Nenhum papel afeta a resolução de nomes."
+      },
+      {
+        "text": "Os dois voltam, com nomes gerados",
+        "why": "A consulta é recusada em vez de adivinhar."
+      },
+      {
+        "text": "Um erro sobre referência ambígua",
+        "why": "O caso bom: você é avisado. O ruim é quando só uma tabela tem hoje."
+      },
+      {
+        "text": "O id da tabela da esquerda é usado",
+        "why": "Nada prefere um lado."
+      }
+    ]
+  },
+  "ex-4cc41az9": {
+    "prompt": "A Ana tem três pedidos. Quantas vezes o nome dela aparece no resultado juntado?",
+    "hint": "Uma linha por par.",
+    "choices": [
+      {
+        "text": "Três",
+        "why": "Ela está em três pares, e cada um carrega uma cópia completa da linha dela."
+      },
+      {
+        "text": "Quatro, uma por pedido e uma para ela",
+        "why": "Não existe linha de um cliente sozinho numa junção interna."
+      },
+      {
+        "text": "Uma, com os pedidos reunidos ao lado",
+        "why": "Uma junção não reúne; isso é a agregação da aula 6."
+      },
+      {
+        "text": "Uma por valor distinto entre os pedidos dela",
+        "why": "Nada deduplica a menos que você peça."
+      }
+    ]
+  },
+  "ex-ztrxvcr0": {
+    "prompt": "SELECT sum(c.credit_limit) FROM customers c JOIN orders o ON … O que há de errado?",
+    "hint": "Conte quantas vezes a linha de cada cliente está presente.",
+    "choices": [
+      {
+        "text": "A junção precisa de um GROUP BY para ser válida",
+        "why": "É válida, e agrupar não removeria a duplicação."
+      },
+      {
+        "text": "Limites de crédito resistem a ser somados entre clientes",
+        "why": "Podem; o problema é quantas vezes cada um aparece."
+      },
+      {
+        "text": "sum ignora nulos e alguns limites são nulos",
+        "why": "Preocupação real da aula 1, e não este defeito."
+      },
+      {
+        "text": "Cada limite é somado uma vez por pedido",
+        "why": "O número não significa nada e parece totalmente comum, e por isso chega a um relatório."
+      }
+    ]
+  },
+  "ex-89a8e6j9": {
+    "prompt": "Um pedido tem 3 linhas e 2 pagamentos. Juntar os dois a orders dá quantas linhas para ele?",
+    "hint": "Dois um-para-muitos a partir da mesma tabela.",
+    "choices": [
+      {
+        "text": "Cinco, três mais dois",
+        "why": "Junções pareiam; elas não concatenam."
+      },
+      {
+        "text": "Seis",
+        "why": "Toda quantidade contada duas vezes e todo pagamento três, e nenhum total é obviamente errado."
+      },
+      {
+        "text": "Duas, já que os pagamentos são a granularidade mais grossa",
+        "why": "O lado mais grosso não ganha; os dois multiplicam."
+      },
+      {
+        "text": "Três, já que as linhas são a granularidade mais fina",
+        "why": "Os pagamentos multiplicam as linhas em vez de caber dentro delas."
+      }
+    ]
+  },
+  "ex-krtecw34": {
+    "prompt": "Como somar dois lados um-para-muitos sem multiplicá-los?",
+    "hint": "Cada lado tem que chegar já com uma linha por pedido.",
+    "choices": [
+      {
+        "text": "Acrescente DISTINCT na consulta externa",
+        "why": "Ele remove linhas idênticas, e as somas dobradas não são linhas idênticas."
+      },
+      {
+        "text": "Agregue cada um na própria subconsulta antes",
+        "why": "Nenhum multiplica o outro quando os dois são uma linha por pedido."
+      },
+      {
+        "text": "Use LEFT JOIN em vez de JOIN",
+        "why": "Junções externas multiplicam exatamente como as internas."
+      },
+      {
+        "text": "Agrupe por cada coluna do pedido",
+        "why": "Agrupar não desfaz uma soma que já contou duas vezes."
+      }
+    ]
+  },
+  "ex-etyawg4j": {
+    "prompt": "A pergunta a fazer de qualquer resultado de junção, e a dizer em voz alta: o que é uma ___ deste resultado?",
+    "hint": "Uma palavra, e dizê-la como par é o que torna o problema audível.",
+    "blanks": [
+      {
+        "accept": [
+          "linha"
+        ]
+      }
+    ]
+  },
+  "ex-bxkqqxda": {
+    "prompt": "O que o LEFT JOIN mantém que o JOIN não mantém?",
+    "hint": "As linhas sem nada com que parear.",
+    "choices": [
+      {
+        "text": "Linhas em que a condição é desconhecida e não falsa",
+        "why": "Desconhecido e falso se comportam igual aqui."
+      },
+      {
+        "text": "Pares duplicados que uma junção interna remove",
+        "why": "Nenhuma das duas remove duplicatas."
+      },
+      {
+        "text": "Linhas da direita sem parceiro",
+        "why": "Isso é o que trocar as tabelas, ou o RIGHT, manteria."
+      },
+      {
+        "text": "Linhas da esquerda sem parceiro",
+        "why": "Preenchidas com nulos à direita, que é como zero vira resposta."
+      }
+    ]
+  },
+  "ex-dn6c4kk1": {
+    "prompt": "o.total é NOT NULL na tabela, e depois de um LEFT JOIN está nulo. De onde veio isso?",
+    "hint": "Nada foi lido da tabela para aquela linha.",
+    "choices": [
+      {
+        "text": "A restrição não é imposta durante uma junção",
+        "why": "Ela é imposta na escrita e não tem o que dizer aqui."
+      },
+      {
+        "text": "A junção inventou",
+        "why": "Não havia linha de onde tirar valor, então toda regra sobre nulos se aplica."
+      },
+      {
+        "text": "A coluna foi derrubada e recriada aceitando nulo",
+        "why": "Nada numa consulta altera uma tabela."
+      },
+      {
+        "text": "Uma linha em orders viola a restrição",
+        "why": "A tabela está bem; o nulo está no resultado."
+      }
+    ]
+  },
+  "ex-g4g742ed": {
+    "prompt": "Depois de um LEFT JOIN, quanto count(*) dá para um cliente sem pedidos?",
+    "hint": "Existe uma linha para ele, e é a inventada.",
+    "choices": [
+      {
+        "text": "1",
+        "why": "Que é por que count(o.id) — zero — é o que alguém queria."
+      },
+      {
+        "text": "Um erro, porque a linha está incompleta",
+        "why": "A linha está completa; algumas colunas dela são nulas."
+      },
+      {
+        "text": "NULL, já que as colunas da direita são nulas",
+        "why": "count nunca devolve nulo."
+      },
+      {
+        "text": "0, já que ele não tem pedidos",
+        "why": "count(*) conta linhas, e ele tem uma."
+      }
+    ]
+  },
+  "ex-znjbha25": {
+    "prompt": "Um LEFT JOIN com WHERE o.ordered_on >= '2026-03-01' perde os clientes que nunca pediram. Por quê?",
+    "hint": "Leia a ordem em que as cláusulas rodam.",
+    "choices": [
+      {
+        "text": "Comparação de data é recusada numa coluna juntada",
+        "why": "Aplica-se, e é aplicada."
+      },
+      {
+        "text": "O LEFT JOIN foi escrito como junção interna por engano",
+        "why": "É um LEFT JOIN; o WHERE o desfez."
+      },
+      {
+        "text": "Eles pediram, e não em março",
+        "why": "Alguns não pediram nada, e sumiram também."
+      },
+      {
+        "text": "O ordered_on deles é nulo, então o teste é desconhecido",
+        "why": "A junção produziu a linha e o WHERE descartou."
+      }
+    ]
+  },
+  "ex-8d21vtb9": {
+    "prompt": "Onde aquela condição pertence, então?",
+    "hint": "Uma cláusula decide quais pares são feitos e a outra quais linhas sobrevivem.",
+    "choices": [
+      {
+        "text": "Na lista do SELECT, como expressão condicional",
+        "why": "Isso muda o que é mostrado, não quais linhas existem."
+      },
+      {
+        "text": "Numa subconsulta que substitui a tabela de pedidos",
+        "why": "Funciona e é muito mais do que o necessário."
+      },
+      {
+        "text": "No ON",
+        "why": "O cliente então simplesmente não ganha parceiro, e mantém a linha nula inventada."
+      },
+      {
+        "text": "Num HAVING depois de agrupar",
+        "why": "HAVING filtra grupos, e não há agrupamento aqui."
+      }
+    ]
+  },
+  "ex-tt1k8x35": {
+    "prompt": "Numa INNER JOIN, mover uma condição entre ON e WHERE muda o resultado?",
+    "hint": "Não há linha inventada para perder.",
+    "choices": [
+      {
+        "text": "Sim, o WHERE alcança um índice e o ON não",
+        "why": "Os dois usam; indexar não tem relação com a cláusula."
+      },
+      {
+        "text": "Não",
+        "why": "Que é exatamente por que o bug sobrevive: aprende-se em junção interna e leva-se o hábito."
+      },
+      {
+        "text": "Sim, quando a condição menciona as duas tabelas",
+        "why": "Uma condição sobre as duas se comporta igual de qualquer jeito."
+      },
+      {
+        "text": "Sim, o ON é aplicado antes de as linhas serem lidas",
+        "why": "Os dois são aplicados pelo mesmo plano, aos mesmos pares."
+      }
+    ]
+  },
+  "ex-s3yqqhmq": {
+    "prompt": "A regra numa linha: num LEFT JOIN, condições sobre a tabela da direita vão no ___, e condições sobre a tabela da esquerda vão no ___.",
+    "hint": "Duas palavras-chave de cláusula.",
+    "blanks": [
+      {
+        "accept": [
+          "on"
+        ]
+      },
+      {
+        "accept": [
+          "where"
+        ]
+      }
+    ]
+  },
+  "ex-p0g43raz": {
+    "prompt": "Por que preferir trocar as tabelas a escrever RIGHT JOIN?",
+    "hint": "Pense em alguém lendo uma consulta de cinco tabelas de cima para baixo.",
+    "choices": [
+      {
+        "text": "RIGHT JOIN é mais lento que LEFT JOIN",
+        "why": "O planejador trata os dois igual."
+      },
+      {
+        "text": "A consulta então começa por aquilo de que ela trata",
+        "why": "Um RIGHT três tabelas adiante põe o assunto mais embaixo na lista."
+      },
+      {
+        "text": "RIGHT JOIN é recusado junto com um WHERE",
+        "why": "Combina com tudo que o LEFT combina."
+      },
+      {
+        "text": "RIGHT JOIN não é suportado em todo lugar",
+        "why": "É suportado onde o LEFT for."
+      }
+    ]
+  },
+  "ex-mm5j8c8d": {
+    "prompt": "Para que o FULL JOIN é genuinamente bom?",
+    "hint": "Dois sistemas que deveriam concordar e não concordam.",
+    "choices": [
+      {
+        "text": "Acelerar uma consulta que junta duas tabelas grandes",
+        "why": "Ele faz mais trabalho que qualquer junção de um lado."
+      },
+      {
+        "text": "Substituir um UNION de dois selects",
+        "why": "Um union empilha linhas; uma junção completa as pareia."
+      },
+      {
+        "text": "Reconciliar duas fontes",
+        "why": "Ele acha linhas só nossas, só deles, e as que os dois têm e discordam."
+      },
+      {
+        "text": "Evitar nulos no resultado",
+        "why": "Ele produz nulos dos dois lados em vez de um."
+      }
+    ]
+  },
+  "ex-ydz2tm1q": {
+    "prompt": "Numa anti-junção, qual coluna o teste IS NULL deve nomear?",
+    "hint": "Nulo tem que significar uma coisa e só uma.",
+    "choices": [
+      {
+        "text": "Uma que não possa ser nula na tabela",
+        "why": "Teste uma que aceita nulo e você também pega linhas que existem, que é outra pergunta."
+      },
+      {
+        "text": "A que a condição de junção usa",
+        "why": "Funciona e é coincidência e não a regra."
+      },
+      {
+        "text": "Uma coluna da tabela da esquerda",
+        "why": "Essas nunca são nulas pela junção."
+      },
+      {
+        "text": "Qualquer coluna da tabela da direita",
+        "why": "Uma que aceita nulo produz uma resposta errada plausível."
+      }
+    ]
+  },
+  "ex-vkbhcs2p": {
+    "prompt": "NOT IN sobre subconsulta numa coluna que aceita nulo devolve nada. Qual alternativa é segura?",
+    "hint": "Uma delas não compara com uma lista.",
+    "choices": [
+      {
+        "text": "Um CROSS JOIN filtrado depois",
+        "why": "Ele constrói todo par para descartar quase todos."
+      },
+      {
+        "text": "NOT IN com um DISTINCT na subconsulta",
+        "why": "Deduplicar não remove o nulo."
+      },
+      {
+        "text": "NOT EXISTS",
+        "why": "Correto havendo nulos ou não, e não exige que quem lê confira."
+      },
+      {
+        "text": "NOT IN com um ORDER BY na subconsulta",
+        "why": "Ordenar não muda nada na comparação."
+      }
+    ]
+  },
+  "ex-d67wxhe1": {
+    "prompt": "A pergunta é se existe pelo menos um pedido. O que você deve escrever?",
+    "hint": "Você quer saber, não ler as colunas da outra tabela.",
+    "choices": [
+      {
+        "text": "Uma junção com GROUP BY e HAVING count(*) > 0",
+        "why": "Ela agrega linhas que não precisava construir."
+      },
+      {
+        "text": "Uma junção com DISTINCT",
+        "why": "Ela constrói uma linha por pedido e depois descarta a maioria."
+      },
+      {
+        "text": "EXISTS",
+        "why": "Ele para no primeiro casamento e não cria duplicação para remover."
+      },
+      {
+        "text": "Um LEFT JOIN com IS NOT NULL",
+        "why": "Funciona e é o formato da anti-junção usado ao contrário."
+      }
+    ]
+  },
+  "ex-ddnbzv88": {
+    "prompt": "LEFT JOIN orders, depois JOIN order_lines. O que acontece com um cliente sem pedidos?",
+    "hint": "A linha inventada tem id nulo, e nada pareia com ela.",
+    "choices": [
+      {
+        "text": "Ele é descartado",
+        "why": "Uma junção interna depois de uma externa a desfaz, exatamente como um WHERE."
+      },
+      {
+        "text": "Ele é mantido, com nulos das duas tabelas",
+        "why": "Só se a segunda junção também for LEFT."
+      },
+      {
+        "text": "A consulta é recusada como inconsistente",
+        "why": "Ela é válida e devolve uma resposta errada plausível."
+      },
+      {
+        "text": "Ele aparece uma vez por linha de pedido da tabela",
+        "why": "Nada pareia o nulo dele com coisa alguma."
+      }
+    ]
+  },
+  "ex-5qrd85r7": {
+    "prompt": "Uma auto-junção de produtos por preço igual usa b.id > a.id. O que a desigualdade faz?",
+    "hint": "Ela faz dois trabalhos, e os dois importam.",
+    "choices": [
+      {
+        "text": "Impede o par consigo mesmo e corta as duplicatas pela metade",
+        "why": "Sem ela todo produto pareia consigo e cada par aparece duas vezes."
+      },
+      {
+        "text": "Faz a junção usar um índice em id",
+        "why": "Indexar não é para o que a condição serve."
+      },
+      {
+        "text": "Restringe os pares a produtos acrescentados depois",
+        "why": "Ordem de id não é ordem de chegada de forma confiável."
+      },
+      {
+        "text": "Ordena o resultado por id",
+        "why": "Uma condição de junção não ordena nada."
+      }
+    ]
+  },
+  "ex-a1ghqtqq": {
+    "prompt": "Por que NATURAL JOIN nunca deve ser escrito?",
+    "hint": "Pergunte o que acontece quando uma migração acrescenta uma coluna nas duas tabelas.",
+    "choices": [
+      {
+        "text": "Ele é limitado a duas tabelas por vez",
+        "why": "Pode, o que o torna pior e não melhor."
+      },
+      {
+        "text": "Não é suportado fora do PostgreSQL",
+        "why": "Está no padrão e é amplamente implementado."
+      },
+      {
+        "text": "É mais lento que uma junção explícita",
+        "why": "O plano é o mesmo depois que a condição é resolvida."
+      },
+      {
+        "text": "A condição depende de nomes que ela não controla",
+        "why": "Acrescente created_at nas duas e a junção passa a significar outra coisa."
+      }
+    ]
+  },
+  "ex-vh48dc5r": {
+    "prompt": "Um relatório está sem os dias em que nada foi vendido. Qual junção resolve?",
+    "hint": "Você precisa de linhas que o dado não contém.",
+    "choices": [
+      {
+        "text": "LEFT JOIN a partir da tabela de vendas",
+        "why": "Os dias faltantes não estão naquela tabela para serem mantidos."
+      },
+      {
+        "text": "Uma segunda consulta, unida à primeira",
+        "why": "Possível, e é a gambiarra e não a ferramenta."
+      },
+      {
+        "text": "FULL JOIN entre vendas e lojas",
+        "why": "Nenhum dos lados guarda os dias sem venda."
+      },
+      {
+        "text": "CROSS JOIN, contra uma lista de dias gerada",
+        "why": "Uma linha para toda loja em todo dia, tendo acontecido algo ou não."
+      }
+    ]
+  },
+  "ex-3t4s8geq": {
+    "prompt": "Qual junção deixa o lado direito se referir à linha da esquerda?",
+    "hint": "É o que top N por grupo precisa.",
+    "choices": [
+      {
+        "text": "CROSS JOIN",
+        "why": "Ele pareia tudo e não se refere a nada."
+      },
+      {
+        "text": "LATERAL",
+        "why": "Uma junção comum não tem como dizer por linha da tabela da esquerda."
+      },
+      {
+        "text": "USING",
+        "why": "É atalho para uma igualdade e mais nada."
+      },
+      {
+        "text": "FULL JOIN",
+        "why": "Ele mantém os dois lados e ainda avalia uma condição."
+      }
+    ]
+  },
+  "ex-1s3nkkxz": {
+    "prompt": "Ligue cada junção ao que ela mantém.",
+    "hint": "Três delas diferem só em quais órfãos sobrevivem.",
+    "pairs": [
+      {
+        "left": "JOIN",
+        "right": "Só os pares que satisfazem a condição"
+      },
+      {
+        "left": "LEFT JOIN",
+        "right": "Toda linha da primeira tabela, pareada onde der"
+      },
+      {
+        "left": "FULL JOIN",
+        "right": "Toda linha das duas, pareadas onde der"
+      }
+    ],
+    "right_distractors": [
+      "Toda combinação das duas tabelas, sem condição",
+      "Só as linhas que aparecem idênticas nas duas tabelas"
+    ]
+  },
+  "ex-ahmvaz2p": {
+    "prompt": "Lendo uma junção, o que você deve dizer que é uma linha do resultado?",
+    "hint": "Diga como par e o resto fica óbvio.",
+    "choices": [
+      {
+        "text": "Um pedido, já que a tabela de pedidos é a maior",
+        "why": "Tamanho não decide o que uma linha significa."
+      },
+      {
+        "text": "O que a lista do SELECT por acaso nomeia",
+        "why": "As colunas mostradas não mudam o que a linha é."
+      },
+      {
+        "text": "Um cliente, com os pedidos dele anexados",
+        "why": "Isso descreve um formato que uma junção não produz."
+      },
+      {
+        "text": "Um cliente pareado com um dos pedidos dele",
+        "why": "Dizer assim é o que torna a multiplicação audível."
+      }
+    ]
+  },
+  "ex-fpf8qrgg": {
+    "prompt": "Qual palavra-chave é o padrão e quase nunca é escrita?",
+    "hint": "Três destas precisam ser escritas para valer.",
+    "choices": [
+      {
+        "text": "FULL",
+        "why": "Precisa ser escrito, e mantém os dois conjuntos de órfãos."
+      },
+      {
+        "text": "LEFT",
+        "why": "Precisa ser escrito, e muda quais linhas sobrevivem."
+      },
+      {
+        "text": "INNER",
+        "why": "JOIN sozinho significa a mesma coisa."
+      },
+      {
+        "text": "CROSS",
+        "why": "Precisa ser escrito, e não recebe condição."
+      }
+    ]
+  },
+  "ex-p1nvntfb": {
+    "prompt": "count(*) sobre customers juntado a orders dá 4. O que é 4?",
+    "hint": "Não é nenhum dos dois números que alguém queria.",
+    "choices": [
+      {
+        "text": "O número de pedidos com cliente",
+        "why": "Por acaso é 4 aqui e não é o que count(*) significa."
+      },
+      {
+        "text": "O número de clientes que pediram",
+        "why": "Esse é 2, e precisa de count(DISTINCT c.id)."
+      },
+      {
+        "text": "O número de pares",
+        "why": "Não os clientes, que são 3, nem os que pediram, que são 2."
+      },
+      {
+        "text": "O número de clientes na tabela",
+        "why": "Esse é 3, e um deles está ausente da junção."
+      }
+    ]
+  },
+  "ex-ggxeeg9k": {
+    "prompt": "Qual tabela deve ficar à esquerda de um LEFT JOIN?",
+    "hint": "Uma delas é o conjunto de linhas de que a resposta trata.",
+    "choices": [
+      {
+        "text": "A com menos colunas que aceitam nulo",
+        "why": "Nulabilidade da origem não tem a ver."
+      },
+      {
+        "text": "A de que a pergunta trata",
+        "why": "Toda linha dela sobrevive, que é o ponto de escrever LEFT."
+      },
+      {
+        "text": "A menor das duas",
+        "why": "Tamanho é assunto do planejador e não de significado."
+      },
+      {
+        "text": "A que tem a chave estrangeira",
+        "why": "Qualquer lado pode tê-la, e isso não decide a pergunta."
+      }
+    ]
+  },
+  "ex-s89h0fbm": {
+    "prompt": "sum(o.total) para um cliente sem pedidos devolve o quê?",
+    "hint": "Soma de nada não é zero.",
+    "choices": [
+      {
+        "text": "O valor da tabela inteira",
+        "why": "O agrupamento mantém os clientes separados."
+      },
+      {
+        "text": "NULL",
+        "why": "Que é por que o coalesce normalmente é posto em volta antes de mostrar."
+      },
+      {
+        "text": "0",
+        "why": "É o que as pessoas esperam e o que o coalesce tem que fornecer."
+      },
+      {
+        "text": "Um erro, já que o conjunto somado é vazio",
+        "why": "Agregados sobre conjunto vazio são definidos."
+      }
+    ]
+  },
+  "ex-vb6tkc9c": {
+    "prompt": "Qual WHERE numa coluna da direita é deliberado e não o bug?",
+    "hint": "Ele transforma a junção externa num filtro de ausência.",
+    "choices": [
+      {
+        "text": "Uma comparação contra uma constante",
+        "why": "Esse é o bug, e é o comum."
+      },
+      {
+        "text": "IS NOT NULL",
+        "why": "Descarta as linhas sem par, que é uma junção interna escrita por extenso."
+      },
+      {
+        "text": "IS NULL",
+        "why": "Mantém exatamente as linhas em que a junção não achou nada — uma anti-junção."
+      },
+      {
+        "text": "Uma comparação contra uma coluna da esquerda",
+        "why": "Também o bug, e mais difícil de ver."
+      }
+    ]
+  },
+  "ex-2kycxskm": {
+    "prompt": "Como pegar esse bug contando?",
+    "hint": "Um número não deveria ter se mexido.",
+    "choices": [
+      {
+        "text": "Conte os nulos no resultado",
+        "why": "Uma junção externa correta tem muitos."
+      },
+      {
+        "text": "Compare as contagens das duas tabelas entre si",
+        "why": "Os tamanhos delas nunca deveriam concordar."
+      },
+      {
+        "text": "Compare a contagem da tabela da esquerda com a do resultado",
+        "why": "Três clientes entrando e duas linhas saindo significa que um se perdeu."
+      },
+      {
+        "text": "Conte as condições do WHERE",
+        "why": "Uma contagem de condições nada diz sobre quais estão erradas."
+      }
+    ]
+  },
+  "ex-3v7adyvh": {
+    "prompt": "O MySQL não tem FULL JOIN. Qual é a solução padrão?",
+    "hint": "Duas junções de um lado, empilhadas.",
+    "choices": [
+      {
+        "text": "Um CROSS JOIN filtrado depois",
+        "why": "Ele constrói todo par e ainda não inventa as linhas órfãs."
+      },
+      {
+        "text": "Um LEFT JOIN unido a um RIGHT JOIN",
+        "why": "UNION e não UNION ALL, porque as linhas pareadas aparecem nas duas metades."
+      },
+      {
+        "text": "Um LEFT JOIN com a condição movida para o ON",
+        "why": "Isso muda quais pares são feitos, não qual lado é mantido."
+      },
+      {
+        "text": "Dois LEFT JOIN unidos",
+        "why": "O segundo manteria os órfãos do mesmo lado que o primeiro."
+      }
+    ]
+  },
+  "ex-s2078ckr": {
+    "prompt": "Para uma pergunta sobre ausência que é segura havendo nulos ou não, escreva NOT ___.",
+    "hint": "Uma palavra, seis letras, e é palavra-chave.",
+    "blanks": [
+      {
+        "accept": [
+          "exists"
+        ]
+      }
+    ]
+  },
+  "ex-kjtzvj42": {
+    "prompt": "Acrescentar uma junção faz count(*) cair de 5 para 4. O que isso significa?",
+    "hint": "Uma linha não achou parceiro.",
+    "choices": [
+      {
+        "text": "Uma linha não teve casamento",
+        "why": "O que é ou um problema de dado ou um LEFT JOIN que você ainda não escreveu."
+      },
+      {
+        "text": "A junção está errada e deve ser removida",
+        "why": "Uma linha perdida é informação, não veredito."
+      },
+      {
+        "text": "Uma duplicata foi removida pela junção",
+        "why": "Junções nunca removem duplicatas."
+      },
+      {
+        "text": "A tabela nova tem menos linhas que a primeira",
+        "why": "Tamanhos de tabela não decidem quantos pares há."
+      }
+    ]
+  },
+  "ex-fqw0c2jp": {
+    "prompt": "Empregados juntados consigo mesmos para achar gerentes. Por que LEFT e não JOIN?",
+    "hint": "Quem está no topo não tem ninguém acima.",
+    "choices": [
+      {
+        "text": "O presidente não tem gerente",
+        "why": "Uma junção interna o descartaria, em silêncio."
+      },
+      {
+        "text": "A tabela é juntada consigo e precisa de apelidos",
+        "why": "Apelidos são necessários de qualquer jeito."
+      },
+      {
+        "text": "Gerentes ficam em outra tabela",
+        "why": "Ficam na mesma, que é o ponto."
+      },
+      {
+        "text": "Um gerente pode ter vários subordinados",
+        "why": "Isso multiplica linhas e não é para o que o LEFT serve."
+      }
+    ]
+  },
+  "ex-az9z3zey": {
+    "prompt": "O que USING (customer_id) faz que o ON não faz?",
+    "hint": "Olhe as colunas do resultado.",
+    "choices": [
+      {
+        "text": "A coluna juntada aparece uma vez",
+        "why": "E pode ser referida sem qualificação."
+      },
+      {
+        "text": "Permite que as duas colunas tenham nomes diferentes",
+        "why": "Ele exige o mesmo nome, que é o limite dele."
+      },
+      {
+        "text": "Torna a junção externa",
+        "why": "Ele nada diz sobre quais linhas são mantidas."
+      },
+      {
+        "text": "Remove linhas duplicadas do resultado",
+        "why": "Deduplicar é trabalho do DISTINCT."
+      }
+    ]
+  }
+}
