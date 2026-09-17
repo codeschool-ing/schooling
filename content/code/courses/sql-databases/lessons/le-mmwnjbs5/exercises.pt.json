@@ -1,0 +1,1025 @@
+{
+  "ex-v9wsvy7k": {
+    "prompt": "Uma subconsulta na lista do SELECT, onde se espera um valor, casa duas linhas. O que acontece?",
+    "hint": "Um dos dois modos de falha é barulhento e o outro é silencioso.",
+    "choices": [
+      {
+        "text": "As duas linhas voltam, então a consulta de fora ganha uma linha",
+        "why": "Uma posição escalar recebe um valor; não tem como virar duas linhas."
+      },
+      {
+        "text": "Os dois valores são juntados num pedaço de texto",
+        "why": "Banco nenhum concatena por você, e os tipos raramente permitiriam."
+      },
+      {
+        "text": "Um erro",
+        "why": "O banco recusa em vez de escolher uma, e lhe diz que uma suposição estava errada."
+      },
+      {
+        "text": "A primeira linha é usada, na ordem em que a tabela as tiver",
+        "why": "Escolher em silêncio é justamente sobre o que você iria querer ser avisado."
+      }
+    ]
+  },
+  "ex-pnnqm3ns": {
+    "prompt": "A mesma subconsulta não casa linha nenhuma. O que acontece então?",
+    "hint": "Compare com o que duas linhas fizeram.",
+    "choices": [
+      {
+        "text": "A linha de fora é descartada do resultado",
+        "why": "Uma subconsulta na lista do SELECT produz um valor e não decide nada sobre linhas."
+      },
+      {
+        "text": "O valor é NULL",
+        "why": "Caladamente, sem mensagem, e a seção da aula 4 sobre desconhecidos passa a valer."
+      },
+      {
+        "text": "Zero, que faz as vezes de uma subconsulta vazia",
+        "why": "Substituir por zero seria uma afirmação sobre os dados que ninguém fez."
+      },
+      {
+        "text": "Um erro, do mesmo jeito que duas linhas é erro",
+        "why": "Linhas demais é conferido; de menos é um resultado vazio perfeitamente comum."
+      }
+    ]
+  },
+  "ex-mryhsmhe": {
+    "prompt": "Por que uma subconsulta no FROM precisa de apelido?",
+    "hint": "Pense em como você escreveria uma coluna dela na consulta de fora.",
+    "choices": [
+      {
+        "text": "O planejador o lê para decidir se materializa o resultado",
+        "why": "A decisão sai do formato da consulta, e um nome não carrega dica nenhuma."
+      },
+      {
+        "text": "Sem ele a subconsulta seria tratada como correlacionada",
+        "why": "Correlação é referir-se para fora, e uma tabela derivada não pode de todo modo."
+      },
+      {
+        "text": "Ele marca a subconsulta como independente da consulta em volta",
+        "why": "A independência decorre do que a subconsulta menciona, não de ter nome."
+      },
+      {
+        "text": "As colunas dela são alcançadas por ele",
+        "why": "PostgreSQL e MySQL recusam sem nome; escreva onde o SQLite deixaria pular."
+      }
+    ]
+  },
+  "ex-s6td1jhh": {
+    "prompt": "Uma subconsulta escrita onde se espera um único valor tem que devolver uma linha e uma ___.",
+    "hint": "Duas palavras descrevem o formato permitido, e você já tem uma delas.",
+    "blanks": [
+      {
+        "accept": [
+          "coluna"
+        ]
+      }
+    ]
+  },
+  "ex-mj3gfnek": {
+    "prompt": "Onde uma subconsulta não pode ser escrita, em nenhum banco que você vá encontrar?",
+    "hint": "É a cláusula que decide as pilhas.",
+    "choices": [
+      {
+        "text": "GROUP BY",
+        "why": "O que se quer ali é uma tabela derivada com a expressão dentro e o agrupamento fora."
+      },
+      {
+        "text": "HAVING, que recebe uma agregação e não um conjunto",
+        "why": "Ele recebe uma condição sobre um grupo, e essa condição pode conter subconsulta."
+      },
+      {
+        "text": "ORDER BY, que roda depois de as linhas serem escolhidas",
+        "why": "Uma subconsulta é bem-vinda ali, e uma correlacionada é jeito comum de ordenar."
+      },
+      {
+        "text": "A cláusula ON de uma junção, que recebe uma condição",
+        "why": "Uma condição pode conter subconsulta como qualquer outra condição pode."
+      }
+    ]
+  },
+  "ex-gjvg54v2": {
+    "prompt": "Para o que o EXISTS olha na lista do SELECT da subconsulta dele?",
+    "hint": "Há uma razão para SELECT 1 e SELECT * se comportarem igual.",
+    "choices": [
+      {
+        "text": "Para o número de colunas, que precisa casar com a expressão de fora",
+        "why": "Não há expressão de fora para casar: EXISTS não recebe lado esquerdo."
+      },
+      {
+        "text": "Para a primeira coluna, comparada com o valor de fora",
+        "why": "É o que o IN faz, e é a diferença entre os dois."
+      },
+      {
+        "text": "Para nada",
+        "why": "Alguma coisa tem que ser escrita ali, e todo planejador a descarta."
+      },
+      {
+        "text": "Para o tipo da coluna, para decidir como comparar",
+        "why": "Nenhuma comparação é feita aqui fora, então nenhum tipo precisa ser acordado."
+      }
+    ]
+  },
+  "ex-wdsan9j7": {
+    "prompt": "Por que category_id NOT IN (1, 2, NULL) não devolve linha nenhuma, tenha a tabela o que tiver?",
+    "hint": "Desdobre nas três comparações que isso representa.",
+    "choices": [
+      {
+        "text": "Um AND com um desconhecido dentro não é verdadeiro",
+        "why": "A terceira comparação é desconhecida para qualquer valor, então a conjunção não vale."
+      },
+      {
+        "text": "A lista está malformada, então a condição rende um conjunto vazio",
+        "why": "É SQL válido e é avaliado exatamente como escrito."
+      },
+      {
+        "text": "Um nulo casa com qualquer valor, então a exclusão cobre a tabela",
+        "why": "Um nulo não casa com valor nenhum, que é a direção oposta."
+      },
+      {
+        "text": "O banco para no primeiro desconhecido e retorna cedo",
+        "why": "Ele avalia a condição por linha e devolve o que a lógica disser."
+      }
+    ]
+  },
+  "ex-fhys655e": {
+    "prompt": "Qual destes é imune a essa armadilha?",
+    "hint": "Pergunte onde a comparação de fato acontece em cada um.",
+    "choices": [
+      {
+        "text": "NOT IN com a subconsulta envolvida numa tabela derivada",
+        "why": "Envolver não muda nada na lógica do teste de pertinência."
+      },
+      {
+        "text": "NOT IN com coalesce em volta da coluna de fora",
+        "why": "O nulo está no conjunto, e não na coluna que está sendo testada."
+      },
+      {
+        "text": "A grafia explícita do NOT IN com um operador de comparação",
+        "why": "Ela soletra e herda o comportamento junto."
+      },
+      {
+        "text": "NOT EXISTS",
+        "why": "A comparação está dentro, uma linha por vez, e existência é verdadeira ou falsa."
+      }
+    ]
+  },
+  "ex-42zfrssj": {
+    "prompt": "x > ALL (SELECT …) com a subconsulta devolvendo nenhuma linha. Qual é o resultado?",
+    "hint": "Conjuntos vazios são onde esses operadores se separam da intuição.",
+    "choices": [
+      {
+        "text": "NULL, igual ao que a grafia com agregação devolve",
+        "why": "A forma com agregação devolve nulo ali, e é essa a divergência."
+      },
+      {
+        "text": "Verdadeiro",
+        "why": "Não existe linha que falhe a comparação, então a condição vale."
+      },
+      {
+        "text": "Um erro, porque o operador precisa de uma linha para comparar",
+        "why": "Um conjunto vazio é uma entrada comum, e o operador tem resposta para ele."
+      },
+      {
+        "text": "Falso, já que nenhuma linha satisfez a comparação",
+        "why": "Não havia linha para satisfazer, e o operador lê isso como nada falhando."
+      }
+    ]
+  },
+  "ex-n5hdmr2h": {
+    "prompt": "Ligue cada forma ao que um nulo no conjunto faz com ela.",
+    "hint": "Duas das três comparam uma linha por vez.",
+    "pairs": [
+      {
+        "left": "NOT IN (subconsulta)",
+        "right": "Um nulo no conjunto esvazia a resposta"
+      },
+      {
+        "left": "NOT EXISTS (correlacionada)",
+        "right": "Seguro: a comparação acontece por linha"
+      },
+      {
+        "left": "LEFT JOIN … WHERE … IS NULL",
+        "right": "Seguro: o pareamento falha e a linha é mantida"
+      }
+    ],
+    "right_distractors": [
+      "Seguro: o banco reescreve como NOT EXISTS para você",
+      "Um nulo no conjunto é descartado antes da comparação"
+    ]
+  },
+  "ex-g7k9sc8w": {
+    "prompt": "Alguém lhe diz que EXISTS é mais rápido que IN. Qual é a resposta honesta?",
+    "hint": "A afirmação foi verdade de alguma coisa, uma vez.",
+    "choices": [
+      {
+        "text": "IN ganha, porque o conjunto é montado uma vez e reaproveitado",
+        "why": "Um planejador que monta um conjunto o faz para qualquer das grafias."
+      },
+      {
+        "text": "Eles diferem por banco, então escreva EXISTS por portabilidade",
+        "why": "Os dois são igualmente portáveis, e portabilidade não era o assunto."
+      },
+      {
+        "text": "Meça",
+        "why": "No PostgreSQL os dois viram a mesma semijunção; o MySQL era ruim com IN antes da 8."
+      },
+      {
+        "text": "EXISTS ganha, porque para no primeiro par que encontra",
+        "why": "Semijunções param cedo seja qual for a grafia da consulta."
+      }
+    ]
+  },
+  "ex-4y5jc6gn": {
+    "prompt": "O que torna uma subconsulta correlacionada?",
+    "hint": "Tente rodá-la sozinha e veja o que impede.",
+    "choices": [
+      {
+        "text": "Ela devolve uma linha para cada linha da consulta de fora",
+        "why": "É uma consequência que se espera, e não é a definição."
+      },
+      {
+        "text": "Ela é escrita com EXISTS em vez de IN",
+        "why": "EXISTS costuma ser correlacionado por hábito, e IN também pode ser."
+      },
+      {
+        "text": "Ela fica na cláusula WHERE e não no FROM",
+        "why": "As duas cláusulas aceitam os dois tipos, então a posição não decide nada."
+      },
+      {
+        "text": "Ela nomeia a consulta de fora",
+        "why": "Cole num cliente sozinha e é erro de sintaxe."
+      }
+    ]
+  },
+  "ex-pjbrhd0e": {
+    "prompt": "Três subconsultas correlacionadas sobre a mesma tabela, numa lista de SELECT. Qual é a reescrita?",
+    "hint": "Elas perguntam sobre as mesmas linhas três vezes.",
+    "choices": [
+      {
+        "text": "Um UNION das três, pivotado de volta em colunas depois",
+        "why": "É mais trabalho de escrever e mais trabalho de rodar que a junção."
+      },
+      {
+        "text": "Três tabelas derivadas, juntadas à consulta de fora",
+        "why": "Melhor que três correlacionadas e ainda são três passadas pela tabela."
+      },
+      {
+        "text": "Um LEFT JOIN com um GROUP BY",
+        "why": "Três números numa passada, e count(o.id) em vez de count(*) pela razão da aula 6."
+      },
+      {
+        "text": "Uma subconsulta correlacionada que devolve três colunas",
+        "why": "Uma posição escalar recebe um valor, então três colunas não têm onde ir."
+      }
+    ]
+  },
+  "ex-3g9826dq": {
+    "prompt": "Uma subconsulta correlacionada é rápida em desenvolvimento e lenta em produção. Qual é a razão usual?",
+    "hint": "Algo que estava acontecendo em silêncio deixou de acontecer.",
+    "choices": [
+      {
+        "text": "As estatísticas estão velhas, então a subconsulta devolve mais linhas",
+        "why": "Estatísticas velhas mudam planos, e não mudam quantas linhas casam."
+      },
+      {
+        "text": "O planejador parou de reescrevê-la",
+        "why": "Se o laço vira junção depende do banco, da versão e da consulta."
+      },
+      {
+        "text": "Produção tem linhas mais largas, então cada iteração copia mais dado",
+        "why": "Largura de linha é um fator constante pequeno, e este defeito é de formato."
+      },
+      {
+        "text": "A rede é mais lenta, então cada iteração custa uma ida e volta",
+        "why": "A subconsulta roda dentro do banco, então iteração nenhuma cruza a rede."
+      }
+    ]
+  },
+  "ex-3y2ffwzd": {
+    "prompt": "UPDATE customers SET last_order_at = (SELECT max(…) …), sem WHERE. Qual é o risco?",
+    "hint": "Pense nos clientes para os quais a subconsulta não acha linha.",
+    "choices": [
+      {
+        "text": "Linhas sem par são sobrescritas",
+        "why": "Um cliente cujos pedidos foram arquivados recebe nulo sobre um valor que era verdadeiro."
+      },
+      {
+        "text": "Linhas sem par são puladas, então a coluna fica desatualizada",
+        "why": "Toda linha é atualizada; a questão é para o quê as sem par são atualizadas."
+      },
+      {
+        "text": "A instrução falha quando a subconsulta não devolve linhas",
+        "why": "Uma agregação sobre nenhuma linha é nula, e escrever nulo não é falha."
+      },
+      {
+        "text": "A subconsulta roda uma vez, então cada cliente recebe a mesma data",
+        "why": "Ela menciona a linha de fora, então é avaliada contra cada cliente."
+      }
+    ]
+  },
+  "ex-8scm82k7": {
+    "prompt": "Uma aplicação que percorre clientes e roda uma consulta por cliente. Como isso se relaciona com esta seção?",
+    "hint": "O formato é idêntico e a altitude é diferente.",
+    "choices": [
+      {
+        "text": "Não tem relação: uma é consulta e a outra é fluxo de programa",
+        "why": "O fluxo é o mesmo laço, movido para onde cada passo fica muito mais caro."
+      },
+      {
+        "text": "É mais seguro, porque cada consulta roda em transação própria",
+        "why": "Transações separadas deixam o conjunto de resultados inconsistente, não seguro."
+      },
+      {
+        "text": "É a mesma coisa através da rede",
+        "why": "A aula 11 chama de N+1; o banco ao menos tem um planejador que talvez resgate."
+      },
+      {
+        "text": "É mais rápido, porque a aplicação pode cachear entre iterações",
+        "why": "Um cache pode ajudar e as idas e voltas é que dominam."
+      }
+    ]
+  },
+  "ex-577ggggs": {
+    "prompt": "Por que uma subconsulta no FROM não pode se referir a uma coluna da consulta em volta?",
+    "hint": "Descubra a ordem em que as duas são avaliadas.",
+    "choices": [
+      {
+        "text": "O apelido dela encobre os nomes de fora e os esconde",
+        "why": "Um apelido nomeia a tabela derivada e não tira nada da de fora."
+      },
+      {
+        "text": "Ela é avaliada primeiro",
+        "why": "A tabela de fora ainda não existe quando ela roda, e é isso que o LATERAL muda."
+      },
+      {
+        "text": "A referência deixaria o resultado de fora ambíguo",
+        "why": "Não há ambiguidade na referência; simplesmente ainda não existe tal tabela."
+      },
+      {
+        "text": "As linhas dela são materializadas, então um valor de fora chegaria tarde",
+        "why": "Materializar é escolha do planejador, e a restrição vale de qualquer jeito."
+      }
+    ]
+  },
+  "ex-qabm7n83": {
+    "prompt": "O que o LATERAL faz?",
+    "hint": "Ele remove a restrição de que a pergunta anterior tratava.",
+    "choices": [
+      {
+        "text": "Roda por linha de fora",
+        "why": "Com os valores daquela linha disponíveis, que é como N por grupo ganha um LIMIT."
+      },
+      {
+        "text": "Materializa a tabela derivada para ser calculada uma vez",
+        "why": "É o oposto: a consulta de dentro é avaliada de novo para cada linha de fora."
+      },
+      {
+        "text": "Deixa a consulta de fora ver as colunas da tabela derivada",
+        "why": "Ela já consegue: é para isso o apelido, e é a outra direção."
+      },
+      {
+        "text": "Junta os dois lados sem condição, como uma junção cruzada",
+        "why": "CROSS JOIN LATERAL parece isso e a consulta de dentro vê a linha de fora."
+      }
+    ]
+  },
+  "ex-5shyb5de": {
+    "prompt": "Um filtro fora de uma tabela derivada em geral é empurrado para dentro. Onde o empurrão para?",
+    "hint": "Ele para onde atravessar mudaria a resposta.",
+    "choices": [
+      {
+        "text": "Num GROUP BY, porque a essa altura os grupos foram formados",
+        "why": "Um filtro sobre coluna de agrupamento atravessa um GROUP BY numa boa."
+      },
+      {
+        "text": "Numa junção, porque agora há duas tabelas envolvidas",
+        "why": "Filtros atravessam junções rotineiramente, e para os dois lados."
+      },
+      {
+        "text": "Numa função de janela",
+        "why": "Também num DISTINCT e num LIMIT, pela mesma razão em cada caso."
+      },
+      {
+        "text": "Num ORDER BY, que já fixou a ordem das linhas",
+        "why": "Ordenar não decide quais linhas existem, então um filtro atravessa em segurança."
+      }
+    ]
+  },
+  "ex-n8x19keh": {
+    "prompt": "Uma consulta aninhada em três níveis diz a mesma coisa, e lê muito melhor, quando os passos são nomeados com ___.",
+    "hint": "Uma palavra-chave, e ela abre a próxima seção.",
+    "blanks": [
+      {
+        "accept": [
+          "WITH"
+        ]
+      }
+    ]
+  },
+  "ex-da36e9sq": {
+    "prompt": "Por que escrever count(*) AS orders em vez de count(*) dentro de uma tabela derivada?",
+    "hint": "Pergunte o que a consulta de fora tem que digitar para alcançá-la.",
+    "choices": [
+      {
+        "text": "Sem ele a coluna fica de fora do SELECT *",
+        "why": "Ela aparece na expansão da estrela com o nome que tiver recebido."
+      },
+      {
+        "text": "Uma agregação sem nome é rejeitada dentro de uma tabela derivada",
+        "why": "É aceita; o problema chega depois, quando algo se refere a ela."
+      },
+      {
+        "text": "A coluna precisa de um nome escolhido por você",
+        "why": "Senão é o que o banco chamar, e uma atualização de versão pode renomear."
+      },
+      {
+        "text": "O apelido é o que diz ao planejador que ele pode empurrar um filtro",
+        "why": "O empurrão é decidido pelo formato da consulta, e nomes não entram nisso."
+      }
+    ]
+  },
+  "ex-w9b38ms7": {
+    "prompt": "A quais outros CTEs uma definição dentro de um WITH pode se referir?",
+    "hint": "É uma sequência, lida na ordem em que está escrita.",
+    "choices": [
+      {
+        "text": "A um CTE da instrução que chamou esta",
+        "why": "Instruções não chamam umas às outras, e um WITH vive dentro de uma instrução."
+      },
+      {
+        "text": "Aos definidos antes dela",
+        "why": "Um nome posterior não é visível a uma definição anterior, então os passos vão num sentido."
+      },
+      {
+        "text": "A qualquer outro do mesmo WITH, nas duas direções",
+        "why": "Referir-se para a frente tornaria a ordem da lista irrelevante."
+      },
+      {
+        "text": "À instrução final, que é o que o consome",
+        "why": "A instrução usa os CTEs; não é algo de que eles possam ler."
+      }
+    ]
+  },
+  "ex-e7w3d8ae": {
+    "prompt": "O que um WITH calcula que uma tabela derivada não calcula?",
+    "hint": "Compare as duas versões da mesma consulta na seção.",
+    "choices": [
+      {
+        "text": "Um resultado cacheado que instruções seguintes da sessão reusam",
+        "why": "Ele dura uma instrução, e nada o leva para a próxima."
+      },
+      {
+        "text": "Um resultado calculado antes de a consulta de fora ser planejada",
+        "why": "O planejamento cobre a instrução inteira de uma vez, passos nomeados incluídos."
+      },
+      {
+        "text": "A mesma coisa",
+        "why": "A diferença é legibilidade, e poder reusar um passo sem escrevê-lo duas vezes."
+      },
+      {
+        "text": "Um resultado intermediário materializado, mantido pela instrução",
+        "why": "Se é materializado é decisão do planejador, e não da palavra-chave."
+      }
+    ]
+  },
+  "ex-521ebjk2": {
+    "prompt": "Uma instrução no PostgreSQL tem um DELETE … RETURNING num CTE e um SELECT em outro. O que o SELECT vê?",
+    "hint": "Eles parecem passos e não são.",
+    "choices": [
+      {
+        "text": "O que a ordem das definições no WITH decidir",
+        "why": "O layout sugere uma sequência e o banco não promete uma."
+      },
+      {
+        "text": "As linhas que o DELETE removeu, já que ele vem escrito antes",
+        "why": "Ordem escrita não é ordem de execução, e a de execução é indefinida."
+      },
+      {
+        "text": "Os dados como estavam antes de qualquer um rodar",
+        "why": "Toda parte vê um instantâneo; duas partes que modificam a mesma linha não se explicam."
+      },
+      {
+        "text": "Um erro, porque duas partes de uma instrução tocam uma tabela",
+        "why": "É aceito, que é o que faz a regra do instantâneo valer a pena saber."
+      }
+    ]
+  },
+  "ex-q0g4y46y": {
+    "prompt": "Quais bancos recusam INSERT, UPDATE e DELETE dentro de um WITH?",
+    "hint": "Um deles é onde o recurso é mais conhecido.",
+    "choices": [
+      {
+        "text": "MariaDB sozinho, que adotou o WITH depois dos outros",
+        "why": "O MariaDB tem desde a 10.2, e não é o diferente aqui."
+      },
+      {
+        "text": "MySQL e SQLite",
+        "why": "Ali são duas instruções numa transação, que é a próxima aula."
+      },
+      {
+        "text": "PostgreSQL e SQLite, que restringem o WITH a leituras",
+        "why": "O PostgreSQL é o banco em que o recurso é mais desenvolvido."
+      },
+      {
+        "text": "Cada um deles, já que um CTE tem que ser um SELECT",
+        "why": "Um CTE tem que ser uma consulta, e no PostgreSQL uma que escreve conta."
+      }
+    ]
+  },
+  "ex-rgnrxt3m": {
+    "prompt": "Os passos de um WITH se chamam t1, t2 e sub. O que foi abandonado?",
+    "hint": "Os nomes eram o recurso.",
+    "choices": [
+      {
+        "text": "A razão de escrevê-lo",
+        "why": "Se a lista de nomes não descreve a consulta, é uma consulta aninhada com rótulos."
+      },
+      {
+        "text": "A capacidade de o planejador embuti-los, que lê os nomes",
+        "why": "Embutir é decidido pelo formato e pela contagem de referências, não pela grafia."
+      },
+      {
+        "text": "A capacidade de referenciar um passo mais de uma vez",
+        "why": "Um passo mal nomeado ainda pode ser referenciado duas vezes."
+      },
+      {
+        "text": "Benefício real nenhum, já que os nomes não chegam ao banco",
+        "why": "Não chegam ao banco, e o banco nunca foi para quem eles eram."
+      }
+    ]
+  },
+  "ex-w1ap7exk": {
+    "prompt": "Quais são as duas metades de um CTE recursivo?",
+    "hint": "Uma diz onde começar e a outra diz como ir adiante.",
+    "choices": [
+      {
+        "text": "Um caso base e um valor de retorno, como numa função",
+        "why": "Nada chama a si mesmo aqui; o nome engana e o formato é um laço."
+      },
+      {
+        "text": "Um SELECT e um INSERT correspondente no mesmo nome",
+        "why": "Nenhuma linha é inserida: o resultado são as rodadas empilhadas."
+      },
+      {
+        "text": "Uma âncora e um passo",
+        "why": "Com UNION ALL entre elas, e o passo junta contra o que veio antes."
+      },
+      {
+        "text": "Uma passada para a frente e uma para trás pela árvore",
+        "why": "Uma direção é tudo o que uma consulta percorre; inverter é outra consulta."
+      }
+    ]
+  },
+  "ex-ta0b9k2y": {
+    "prompt": "Cada rodada da recursão junta contra quais linhas?",
+    "hint": "É esta a razão de a consulta terminar.",
+    "choices": [
+      {
+        "text": "As linhas da âncora, avaliadas de novo a cada rodada",
+        "why": "A âncora roda uma vez; juntar contra ela de novo não passaria do nível dois."
+      },
+      {
+        "text": "A tabela inteira, estreitada pela profundidade alcançada",
+        "why": "A junção é contra o nome recursivo, e esse nome guarda uma rodada."
+      },
+      {
+        "text": "Tudo o que foi achado até ali, acumulado pelas rodadas",
+        "why": "Isso revisitaria as mesmas linhas para sempre numa árvore de qualquer altura."
+      },
+      {
+        "text": "As da rodada anterior",
+        "why": "Uma rodada que não acrescenta linha encerra, e as rodadas empilhadas são o resultado."
+      }
+    ]
+  },
+  "ex-1a38h35j": {
+    "prompt": "Como transformar \"tudo abaixo desta categoria\" em \"tudo acima dela\"?",
+    "hint": "Uma linha da consulta muda.",
+    "choices": [
+      {
+        "text": "Remover duplicatas das rodadas com UNION",
+        "why": "Isso muda como duplicatas são tratadas e deixa a direção quieta."
+      },
+      {
+        "text": "Inverter o ORDER BY no fim da consulta",
+        "why": "Ordenar as mesmas linhas de outro jeito não traz outro conjunto de linhas."
+      },
+      {
+        "text": "Negar a cláusula WHERE da âncora",
+        "why": "A âncora diz onde começar, e as duas direções começam no mesmo lugar."
+      },
+      {
+        "text": "Trocar os lados da condição de junção",
+        "why": "a.parent_id = c.id em vez de c.parent_id = t.id, e o resto fica."
+      }
+    ]
+  },
+  "ex-n0taqv0k": {
+    "prompt": "Por que UNION no lugar de UNION ALL é uma defesa fraca contra um ciclo?",
+    "hint": "Ele para a consulta, sim. Pergunte o que custa e o que ensina.",
+    "choices": [
+      {
+        "text": "Ele não é suportado numa consulta recursiva",
+        "why": "É suportado, e o padrão descreve as duas formas."
+      },
+      {
+        "text": "Ele esconde que o dado tem um ciclo",
+        "why": "E remover duplicatas a cada rodada é caro numa árvore grande."
+      },
+      {
+        "text": "Ele não faz a consulta terminar mais cedo",
+        "why": "Remover duplicatas é exatamente o que a faz terminar, e por isso recorrem a ele."
+      },
+      {
+        "text": "Ele muda quais linhas a âncora produz",
+        "why": "A âncora não é afetada; a remoção se aplica ao que as rodadas acrescentam."
+      }
+    ]
+  },
+  "ex-6g7q55at": {
+    "prompt": "Por que um relatório geraria uma linha por dia com um CTE recursivo antes de juntar os dados?",
+    "hint": "A aula 6 disse algo sobre um grupo sem linhas.",
+    "choices": [
+      {
+        "text": "Porque agrupar por data não é determinístico",
+        "why": "Agrupar por data é tão determinístico quanto agrupar por qualquer coisa."
+      },
+      {
+        "text": "Porque date_trunc não tem como produzir um mês sem pedidos",
+        "why": "O truncamento trabalha nas linhas que recebe, e não é o que falta aqui."
+      },
+      {
+        "text": "Para a consulta poder usar um índice na coluna de data",
+        "why": "Um índice acha linhas que existem, e o problema são as que não existem."
+      },
+      {
+        "text": "Para um dia parado mostrar um zero",
+        "why": "Um grupo é feito de linhas, então um dia sem vendas não tem grupo em que aparecer."
+      }
+    ]
+  },
+  "ex-b68myphq": {
+    "prompt": "Para ordenar uma árvore com cada filho logo abaixo do pai, carregue um ___ acumulado pela recursão e ordene por ele.",
+    "hint": "Um array no PostgreSQL, uma string em todo o resto.",
+    "blanks": [
+      {
+        "accept": [
+          "caminho"
+        ]
+      }
+    ]
+  },
+  "ex-eqp31s85": {
+    "prompt": "O que o PostgreSQL fazia com um CTE antes da versão 12?",
+    "hint": "Era conhecido como cerca, o que é uma dica sobre o que ele impedia.",
+    "choices": [
+      {
+        "text": "Decidia pelo número de vezes que ele era referenciado",
+        "why": "Essa regra é a nova, e antes dela não havia decisão a tomar."
+      },
+      {
+        "text": "Recusava, a menos que a instrução também tivesse um GROUP BY",
+        "why": "Não existiu essa restrição em versão nenhuma."
+      },
+      {
+        "text": "Materializava",
+        "why": "Então nenhum filtro de fora entrava, e uma busca lia a tabela inteira."
+      },
+      {
+        "text": "Embutia, e depois replanejava a instrução como um todo",
+        "why": "Embutir é o que a versão 12 trouxe como caso usual."
+      }
+    ]
+  },
+  "ex-7zh7y43j": {
+    "prompt": "A partir do PostgreSQL 12, quando um CTE é embutido?",
+    "hint": "Três condições, e uma delas é de contagem.",
+    "choices": [
+      {
+        "text": "Quando a consulta de fora tem um filtro que poderia descer",
+        "why": "O empurrão é o benefício de embutir, e não o teste para isso."
+      },
+      {
+        "text": "Quando não contém função de agregação",
+        "why": "Agregações são comuns, e um CTE cheio delas é embutido como qualquer outro."
+      },
+      {
+        "text": "Quando é usado uma vez",
+        "why": "E não é recursivo, e não modifica dados; caso contrário é materializado."
+      },
+      {
+        "text": "Quando é declarado com a palavra-chave MATERIALIZED",
+        "why": "Essa palavra-chave pede o oposto de embutir."
+      }
+    ]
+  },
+  "ex-7sf3d4md": {
+    "prompt": "Um CTE referenciado duas vezes, no PostgreSQL 15. O corpo dele é calculado duas vezes?",
+    "hint": "Aplique a regra da pergunta anterior e veja o que decorre.",
+    "choices": [
+      {
+        "text": "Não, ele é materializado",
+        "why": "Embutir o calcularia duas vezes, então a regra o deixa — consequência, não promessa."
+      },
+      {
+        "text": "Sim, uma por referência, porque embutir é o padrão agora",
+        "why": "Embutir vale para um CTE referenciado uma vez, e este é referenciado duas."
+      },
+      {
+        "text": "Depende de as duas referências estarem na mesma cláusula",
+        "why": "A contagem é o que a regra olha, e onde elas aparecem não entra nisso."
+      },
+      {
+        "text": "Sim, a menos que NOT MATERIALIZED esteja escrito na definição",
+        "why": "Essa palavra-chave pede embutir, que é a versão que o calcularia duas vezes."
+      }
+    ]
+  },
+  "ex-k14t7c5e": {
+    "prompt": "Você quer um passo cercado da consulta de fora, de propósito. O que você escreve?",
+    "hint": "Diga o que quer dizer em vez de contar com o padrão de uma versão.",
+    "choices": [
+      {
+        "text": "MATERIALIZED",
+        "why": "E um comentário dizendo por quê, ou a próxima pessoa reescreve e o plano muda."
+      },
+      {
+        "text": "NOT MATERIALIZED, que impede o embutimento",
+        "why": "Ele pede embutir, que é justamente o que uma cerca quer evitar."
+      },
+      {
+        "text": "Um CTE recursivo, que é cercado por definição",
+        "why": "Verdade, e reescrever um passo como recursão para ter cerca é troca ruim."
+      },
+      {
+        "text": "Palavra-chave nenhuma: um CTE é cerca em qualquer versão",
+        "why": "Era no PostgreSQL 11 e não é no PostgreSQL 12."
+      }
+    ]
+  },
+  "ex-5ytj61wr": {
+    "prompt": "Um conselho sobre desempenho de CTE escrito em 2017 descreve o quê?",
+    "hint": "Pergunte o que mudou, e quando.",
+    "choices": [
+      {
+        "text": "O mesmo comportamento, já que a regra ficou estável o tempo todo",
+        "why": "A regra que ele descreve foi substituída, e por isso o conselho soa tão seguro."
+      },
+      {
+        "text": "O MySQL, que é onde o conselho começou",
+        "why": "O MySQL não tinha CTE nenhum até a 8.0, que chegou em 2018."
+      },
+      {
+        "text": "Outro banco",
+        "why": "A versão 12 mudou o padrão em 2019, e nada na internet é revisado."
+      },
+      {
+        "text": "CTEs recursivos, que eram o caso lento e continuam",
+        "why": "Um CTE recursivo é materializado nas duas eras, então nada nele mudou."
+      }
+    ]
+  },
+  "ex-p84wnbfv": {
+    "prompt": "O que CREATE VIEW guarda?",
+    "hint": "A palavra no título da seção é a resposta.",
+    "choices": [
+      {
+        "text": "As linhas que a consulta devolveu no dia em que foi criada",
+        "why": "Isso descreve o outro tipo, que é a última seção desta aula."
+      },
+      {
+        "text": "As linhas, mantidas em dia conforme a tabela de base muda",
+        "why": "Manter uma cópia atual é trabalho que alguma coisa teria que estar fazendo."
+      },
+      {
+        "text": "Uma consulta",
+        "why": "Ela é substituída e rodada toda vez, contra os dados como estão naquele momento."
+      },
+      {
+        "text": "Um plano, para a instrução não precisar ser planejada de novo",
+        "why": "Planos são feitos por instrução, e uma view é expandida antes do planejamento."
+      }
+    ]
+  },
+  "ex-ypw5a5he": {
+    "prompt": "CREATE VIEW v AS SELECT * FROM products, e depois uma coluna é acrescentada a products. O que SELECT * FROM v mostra?",
+    "hint": "Pergunte quando a estrela virou uma lista.",
+    "choices": [
+      {
+        "text": "As colunas que ela tinha naquele dia",
+        "why": "A estrela foi expandida na criação, e não há erro nem aviso."
+      },
+      {
+        "text": "A coluna nova, a partir da próxima leitura da view",
+        "why": "Não existe momento em que a view reexpanda a própria estrela."
+      },
+      {
+        "text": "A coluna nova também, já que view é consulta e não cópia",
+        "why": "É uma consulta cuja lista de colunas ficou fixa quando a consulta foi guardada."
+      },
+      {
+        "text": "Um erro, porque a definição da view não bate mais",
+        "why": "Nada é conferido na leitura, e é por isso que passa batido."
+      }
+    ]
+  },
+  "ex-b3xkbppe": {
+    "prompt": "Um UPDATE através de uma view põe um valor que o WHERE da própria view exclui. O que acontece por padrão?",
+    "hint": "Existe uma cláusula que você pode acrescentar para mudar isso, o que já diz qual é o padrão.",
+    "choices": [
+      {
+        "text": "Dá certo",
+        "why": "A linha sai da view, e WITH CHECK OPTION é o que recusa em vez disso."
+      },
+      {
+        "text": "É rejeitado, já que a linha ficaria fora da view",
+        "why": "Esse é o comportamento que você escolhe, e não o que vem de graça."
+      },
+      {
+        "text": "Dá certo e a view é reconstruída a partir da definição",
+        "why": "Uma view não tem o que reconstruir: ela guarda uma definição e nenhuma linha."
+      },
+      {
+        "text": "Muda a view e deixa a tabela de baixo em paz",
+        "why": "Não há outro lugar para a escrita pousar."
+      }
+    ]
+  },
+  "ex-j0h3a3pn": {
+    "prompt": "SELECT * FROM summary_view WHERE id = 7 leva nove segundos. Qual é a razão provável?",
+    "hint": "A mesma coisa que impede um filtro de entrar numa tabela derivada.",
+    "choices": [
+      {
+        "text": "A view não tem índice próprio para buscar",
+        "why": "Índices pertencem às tabelas de baixo, e uma view rápida os usa."
+      },
+      {
+        "text": "A view está sendo atualizada enquanto você lê",
+        "why": "Views comuns não guardam linhas, então não há o que atualizar."
+      },
+      {
+        "text": "Um muro dentro da view",
+        "why": "Um DISTINCT, uma janela ou um GROUP BY que a condição não atravessa."
+      },
+      {
+        "text": "Uma view é planejada do zero a cada chamada, e é esse o custo",
+        "why": "Planejar uma instrução são milissegundos, e a expansão é rotina."
+      }
+    ]
+  },
+  "ex-we30a9fv": {
+    "prompt": "Qual é o argumento mais forte a favor de uma view?",
+    "hint": "Ele tem pouco a ver com o banco.",
+    "choices": [
+      {
+        "text": "Guardar uma cópia da tabela à parte para relatórios",
+        "why": "Uma view não guarda cópia, então não há nada à parte."
+      },
+      {
+        "text": "Deixar uma agregação cara barata de ler",
+        "why": "Isso é o outro tipo de view, e vem com defasagem junto."
+      },
+      {
+        "text": "Uma definição compartilhada",
+        "why": "\"Cliente ativo\" escrito em quatro relatórios é escrito de quatro jeitos."
+      },
+      {
+        "text": "Guardar um plano que o otimizador possa reusar depois",
+        "why": "Planos não são o que uma view guarda, e são baratos de fazer."
+      }
+    ]
+  },
+  "ex-prx7d11t": {
+    "prompt": "Uma view comum é usada para esconder colunas de um papel. O que ainda pode vazar linhas?",
+    "hint": "Algo que quem lê pode pôr no WHERE e que roda antes das condições da própria view.",
+    "choices": [
+      {
+        "text": "Uma função barata no WHERE",
+        "why": "O planejador pode avaliá-la primeiro; security_barrier ou RLS é a resposta."
+      },
+      {
+        "text": "Um ORDER BY numa coluna que a view deixa de fora",
+        "why": "Uma coluna que a view não expõe não pode ser nomeada na consulta de fora."
+      },
+      {
+        "text": "Conceder na view em vez de na tabela de baixo",
+        "why": "É esse o arranjo que está sendo descrito, e é a graça dele."
+      },
+      {
+        "text": "Uma junção acrescentada à consulta de fora, alargando o resultado",
+        "why": "Uma junção alcança outras tabelas, e as permissões delas são conferidas."
+      }
+    ]
+  },
+  "ex-1rkp880n": {
+    "prompt": "O que uma view materializada tem de diferente?",
+    "hint": "Uma palavra mudou na instrução CREATE.",
+    "choices": [
+      {
+        "text": "Ela é recalculada sempre que uma tabela de base muda",
+        "why": "Nada vigia as tabelas de base; uma atualização é algo que alguém roda."
+      },
+      {
+        "text": "Ela recusa escritas, onde uma view comum as aceita",
+        "why": "Algumas views comuns aceitam escritas e outras não, o que é outra questão."
+      },
+      {
+        "text": "Ela é planejada uma vez e o plano é guardado para depois",
+        "why": "Planos não são o que nenhum dos dois tipos de view guarda."
+      },
+      {
+        "text": "Ela guarda linhas",
+        "why": "Ler dela é ler dado guardado, por mais que a consulta de baixo tenha demorado."
+      }
+    ]
+  },
+  "ex-0yrt132z": {
+    "prompt": "REFRESH MATERIALIZED VIEW, sem CONCURRENTLY. O que acontece com quem está lendo?",
+    "hint": "A instrução toma um bloqueio exclusivo.",
+    "choices": [
+      {
+        "text": "Espera",
+        "why": "Numa view grande isso são minutos de um painel sem nada."
+      },
+      {
+        "text": "Recebe um erro pedindo para tentar de novo",
+        "why": "A leitura é segurada em vez de recusada."
+      },
+      {
+        "text": "Vê conteúdo parcial conforme as linhas novas chegam",
+        "why": "Quem lê nunca recebe um resultado meio construído."
+      },
+      {
+        "text": "Continua vendo o conteúdo anterior até a troca",
+        "why": "É isso que o CONCURRENTLY compra, e é o que falta à forma simples."
+      }
+    ]
+  },
+  "ex-69c4x044": {
+    "prompt": "O que REFRESH … CONCURRENTLY exige?",
+    "hint": "Ele precisa descobrir quais linhas mudaram.",
+    "choices": [
+      {
+        "text": "Uma chave primária na tabela de que a view lê",
+        "why": "O índice tem que ser na própria view, que é onde o casamento acontece."
+      },
+      {
+        "text": "Um índice único",
+        "why": "Sem ele não tem como casar linhas velhas com novas; é mais lento e vale."
+      },
+      {
+        "text": "Que a view tenha sido criada WITH NO DATA",
+        "why": "Essa opção rege o primeiro preenchimento e não influi aqui."
+      },
+      {
+        "text": "Um bloqueio exclusivo tomado antes da instrução",
+        "why": "Evitar esse bloqueio é o propósito inteiro da opção."
+      }
+    ]
+  },
+  "ex-jfhrg0e5": {
+    "prompt": "Três perguntas a fazer de uma view materializada. Qual é a que as pessoas esquecem?",
+    "hint": "As outras duas são feitas enquanto a coisa está sendo construída.",
+    "choices": [
+      {
+        "text": "O que acontece quando a atualização falha",
+        "why": "Servir o número da terça passada como o de hoje ganha de número nenhum até alguém conferir."
+      },
+      {
+        "text": "Qual tarefa a atualiza, e com que frequência",
+        "why": "Essa é feita, porque algo tem que ser escrito para acontecer."
+      },
+      {
+        "text": "Qual das colunas dela deve levar um índice",
+        "why": "Pergunta justa, e é sobre velocidade e não sobre verdade."
+      },
+      {
+        "text": "Quão defasados os números podem estar, em minutos",
+        "why": "Essa é feita, e é respondida por quem lê o relatório."
+      }
+    ]
+  },
+  "ex-yw4v42db": {
+    "prompt": "Uma consulta está lenta. O que vem antes de guardar a resposta dela numa view materializada?",
+    "hint": "Duas aulas são nomeadas na seção, numa ordem.",
+    "choices": [
+      {
+        "text": "Acrescentar CONCURRENTLY para a atualização não bloquear quem lê",
+        "why": "Isso melhora o cache que você ainda não justificou construir."
+      },
+      {
+        "text": "Reduzir com que frequência o relatório é rodado",
+        "why": "Reduz o sintoma para quem o percebe e não muda mais nada."
+      },
+      {
+        "text": "Dividi-la em CTEs para cada passo ficar menor",
+        "why": "Nomear os passos ajuda quem lê e não tira trabalho da máquina."
+      },
+      {
+        "text": "Descobrir por quê",
+        "why": "Um índice faltando custa uma instrução; um cache custa uma tarefa, uma defasagem e um modo de falha."
+      }
+    ]
+  }
+}
