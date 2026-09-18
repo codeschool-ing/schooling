@@ -65,7 +65,7 @@ Refer to the same step twice without writing it twice:
 
 ```sql
 WITH monthly AS (
-    SELECT date_trunc('month', placed_at) AS month, sum(total) AS revenue
+    SELECT date_trunc('month', ordered_on) AS month, sum(total) AS revenue
     FROM   orders
     GROUP BY 1
 )

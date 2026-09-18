@@ -44,7 +44,7 @@ match instead of counting.
 
 ```sql
 SELECT c.name,
-       (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id) AS last_order
+       (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id) AS last_order
 FROM   customers c;
 ```
 
@@ -58,7 +58,7 @@ Add two more columns and the shape turns on you:
 ```sql
 SELECT c.name,
        (SELECT count(*)         FROM orders o WHERE o.customer_id = c.id) AS orders,
-       (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id) AS last_order,
+       (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id) AS last_order,
        (SELECT sum(o.total)     FROM orders o WHERE o.customer_id = c.id) AS spent
 FROM   customers c;
 ```
@@ -67,7 +67,7 @@ Three subqueries over the same table, asking about the same rows, three times. O
 a `GROUP BY` does the lot in one pass:
 
 ```sql
-SELECT   c.name, count(o.id) AS orders, max(o.placed_at) AS last_order,
+SELECT   c.name, count(o.id) AS orders, max(o.ordered_on) AS last_order,
          coalesce(sum(o.total), 0) AS spent
 FROM     customers c
 LEFT JOIN orders o ON o.customer_id = c.id
@@ -99,7 +99,7 @@ over no rows is `0`, which is what you want. Change the aggregate and it stops b
 
 ```sql
 UPDATE customers c
-SET    last_order_at = (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id);
+SET    last_order_at = (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id);
 ```
 
 A customer with no orders is now set to `NULL`, which may be right, and a customer whose orders
@@ -108,7 +108,7 @@ to touch only the rows that have a match, say so:
 
 ```sql
 UPDATE customers c
-SET    last_order_at = (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id)
+SET    last_order_at = (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id)
 WHERE  EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id);
 ```
 

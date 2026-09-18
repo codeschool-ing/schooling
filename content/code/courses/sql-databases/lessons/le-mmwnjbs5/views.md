@@ -9,7 +9,7 @@ SELECT c.*
 FROM   customers c
 WHERE  c.deleted_at IS NULL
   AND  EXISTS (SELECT 1 FROM orders o
-               WHERE o.customer_id = c.id AND o.placed_at > now() - INTERVAL '1 year');
+               WHERE o.customer_id = c.id AND o.ordered_on > now() - INTERVAL '1 year');
 ```
 
 ```sql

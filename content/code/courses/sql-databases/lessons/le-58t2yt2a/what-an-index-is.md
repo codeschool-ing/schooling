@@ -13,6 +13,14 @@ sorted, with a pointer beside each value to the row it came from.**
 Not a setting. Not a hint to the planner. A structure, on disk, that has to be written and kept up
 to date, and which is why everything else in this lesson is a trade rather than a free improvement.
 
+> **The `orders` table changes shape from here on.** Lessons 1 to 7 ran against a shop with a few
+> rows in it, where `ordered_on` is a `date` and every query returns instantly — which is the point
+> when what is being taught is what a join means. An index is only visible against volume, so this
+> lesson and the two after it run against the same shop with a million orders in it and a
+> `placed_at timestamptz` in place of `ordered_on`. The captured output from here on is that
+> database. Nothing about the SQL changes; what changes is that a scan now costs something you can
+> read off the clock.
+
 ## Why sorted is the whole trick
 
 Without it, finding `ana@example.com` in a million rows means reading a million rows. There is no

@@ -6,9 +6,9 @@ version: 1
 Acrescente um `ORDER BY` dentro do `OVER` e o número muda. Não a ordem das linhas — o número:
 
 ```sql
-SELECT id, placed_at, total,
+SELECT id, ordered_on, total,
        sum(total) OVER (PARTITION BY customer_id)                    AS a,
-       sum(total) OVER (PARTITION BY customer_id ORDER BY placed_at) AS b
+       sum(total) OVER (PARTITION BY customer_id ORDER BY ordered_on) AS b
 FROM   orders;
 ```
 
@@ -35,7 +35,7 @@ duas palavras, e é por isso que esta é a seção a que as pessoas voltam.
 Se você quer a ordem e **não** o acúmulo, diga a moldura você mesmo:
 
 ```sql
-sum(total) OVER (PARTITION BY customer_id ORDER BY placed_at
+sum(total) OVER (PARTITION BY customer_id ORDER BY ordered_on
                  ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 ```
 
@@ -53,7 +53,7 @@ FOLLOWING`. As duas que você mais vai escrever:
 
 ```sql
 -- um total acumulado, dito em voz alta em vez de herdado de um padrão
-sum(total) OVER (ORDER BY placed_at ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+sum(total) OVER (ORDER BY ordered_on ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
 
 -- uma média móvel de quatro dias: esta linha e as três anteriores
 avg(total) OVER (ORDER BY day ROWS BETWEEN 3 PRECEDING AND CURRENT ROW)
@@ -92,7 +92,7 @@ a questão não se coloca.
 `RANGE` também aceita um deslocamento, e este é o caso em que ele é claramente a ferramenta certa:
 
 ```sql
-sum(total) OVER (ORDER BY placed_at
+sum(total) OVER (ORDER BY ordered_on
                  RANGE BETWEEN INTERVAL '7 days' PRECEDING AND CURRENT ROW)
 ```
 

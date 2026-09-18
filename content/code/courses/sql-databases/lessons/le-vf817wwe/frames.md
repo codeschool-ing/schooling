@@ -7,9 +7,9 @@ Add an `ORDER BY` inside the `OVER` and the number changes. Not the order of the
 number:
 
 ```sql
-SELECT id, placed_at, total,
+SELECT id, ordered_on, total,
        sum(total) OVER (PARTITION BY customer_id)                    AS a,
-       sum(total) OVER (PARTITION BY customer_id ORDER BY placed_at) AS b
+       sum(total) OVER (PARTITION BY customer_id ORDER BY ordered_on) AS b
 FROM   orders;
 ```
 
@@ -36,7 +36,7 @@ two words, and it is why this is the section people come back to.
 If you want the order and **not** the accumulation, say the frame yourself:
 
 ```sql
-sum(total) OVER (PARTITION BY customer_id ORDER BY placed_at
+sum(total) OVER (PARTITION BY customer_id ORDER BY ordered_on
                  ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 ```
 
@@ -54,7 +54,7 @@ FOLLOWING`. The two you will write most:
 
 ```sql
 -- a running total, said out loud rather than inherited from a default
-sum(total) OVER (ORDER BY placed_at ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+sum(total) OVER (ORDER BY ordered_on ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
 
 -- a four-day moving average: this row and the three before it
 avg(total) OVER (ORDER BY day ROWS BETWEEN 3 PRECEDING AND CURRENT ROW)
@@ -93,7 +93,7 @@ question does not arise.
 `RANGE` also takes an offset, and this is the case where it is clearly the right tool:
 
 ```sql
-sum(total) OVER (ORDER BY placed_at
+sum(total) OVER (ORDER BY ordered_on
                  RANGE BETWEEN INTERVAL '7 days' PRECEDING AND CURRENT ROW)
 ```
 

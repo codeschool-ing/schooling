@@ -5,7 +5,7 @@ version: 1
 
 ```sql
 CREATE MATERIALIZED VIEW monthly_revenue AS
-SELECT   date_trunc('month', placed_at) AS month,
+SELECT   date_trunc('month', ordered_on) AS month,
          sum(total)                     AS revenue,
          count(*)                       AS orders
 FROM     orders

@@ -14,6 +14,14 @@ Não é uma configuração. Não é uma dica para o planejador. É uma estrutura
 escrita e mantida em dia, e é por isso que todo o resto desta aula é uma troca e não uma melhoria de
 graça.
 
+> **A tabela `orders` muda de forma daqui em diante.** As aulas 1 a 7 rodaram contra uma loja com
+> algumas linhas, onde `ordered_on` é um `date` e toda consulta responde na hora — que é o certo
+> quando o que se ensina é o que um join significa. Um índice só aparece contra volume, então esta
+> aula e as duas seguintes rodam contra a mesma loja com um milhão de pedidos e um
+> `placed_at timestamptz` no lugar de `ordered_on`. A saída capturada daqui em diante é desse
+> banco. Nada muda no SQL; o que muda é que uma varredura passa a custar algo que dá para ler no
+> relógio.
+
 ## Por que estar em ordem é o truque inteiro
 
 Sem ela, achar `ana@example.com` em um milhão de linhas significa ler um milhão de linhas. Não há

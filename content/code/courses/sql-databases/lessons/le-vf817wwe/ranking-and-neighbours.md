@@ -46,7 +46,7 @@ subquery. Here it is properly:
 ```sql
 SELECT * FROM (
     SELECT o.*,
-           row_number() OVER (PARTITION BY customer_id ORDER BY placed_at DESC) AS n
+           row_number() OVER (PARTITION BY customer_id ORDER BY ordered_on DESC) AS n
     FROM   orders o
 ) t
 WHERE t.n <= 3;
@@ -120,8 +120,8 @@ of a session.
 ## `first_value`, `last_value`, and the trap in the second one
 
 ```sql
-first_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at)   -- their first order
-last_value (total) OVER (PARTITION BY customer_id ORDER BY placed_at)   -- NOT their last one
+first_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- their first order
+last_value (total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- NOT their last one
 ```
 
 `last_value` returns the current row's own total, every time. It is the frame default again: with
@@ -130,10 +130,10 @@ an `ORDER BY` the frame ends at the current row, so the last row it can see **is
 Two fixes, and the second is the one to prefer:
 
 ```sql
-last_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at
+last_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on
                         ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 
-first_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at DESC)
+first_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on DESC)
 ```
 
 The second says what it means without a frame clause, and is harder to get wrong later.

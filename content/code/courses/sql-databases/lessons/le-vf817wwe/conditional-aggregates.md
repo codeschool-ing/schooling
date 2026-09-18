@@ -16,7 +16,7 @@ SELECT count(*)                                   AS orders,
        count(*) FILTER (WHERE status = 'cancelled') AS cancelled,
        sum(total) FILTER (WHERE status = 'paid')  AS revenue
 FROM   orders
-WHERE  placed_at >= DATE '2026-01-01';
+WHERE  ordered_on >= DATE '2026-01-01';
 ```
 
 The `WHERE` at the bottom chooses the rows the query is about. Each `FILTER` narrows further, for
