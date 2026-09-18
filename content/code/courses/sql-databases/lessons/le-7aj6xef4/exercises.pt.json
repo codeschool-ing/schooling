@@ -915,15 +915,26 @@
     ]
   },
   "ex-981s2txc": {
-    "prompt": "Ponha em ordem os passos de uma atualização de versão maior do PostgreSQL, como a aula descreve.",
+    "prompt": "Um cluster PostgreSQL vai de 16.2 para 16.4, e outro vai de 16 para 17. O que é diferente no segundo?",
     "hint": "O formato em disco muda entre versões maiores, e é por isso que um restart não basta.",
-    "items": [
-      "Tirar um backup e confirmar que você consegue restaurá-lo",
-      "Instalar a nova versão maior ao lado da antiga",
-      "Rodar o pg_upgrade, com a indisponibilidade que isso implica",
-      "Subir a versão nova e conferir a aplicação contra ela"
-    ],
-    "trap": "Uma versão menor é um restart, e tratar uma maior do mesmo jeito é como um cluster acaba dois anos além da janela de suporte."
+    "choices": [
+      {
+        "text": "Nenhum dos dois — cada um é atualizar o pacote e reiniciar",
+        "why": "Isso é a atualização menor, e tratar uma maior do mesmo jeito é como um cluster acaba dois anos além da janela de suporte."
+      },
+      {
+        "text": "Ele muda o formato em disco, então é `pg_upgrade` e indisponibilidade",
+        "why": "Correto, e a indisponibilidade é o que faz isso ser adiado até a versão sair de suporte."
+      },
+      {
+        "text": "Tem que ser um dump e uma recarga, sem outro caminho disponível",
+        "why": "Dump e recarga é um caminho. O `pg_upgrade` é o usual, e a replicação lógica evita a indisponibilidade."
+      },
+      {
+        "text": "Ele é recusado enquanto a versão maior antiga ainda tiver suporte",
+        "why": "Nada recusa. A janela de cinco anos diz quando você precisa, não quando você pode."
+      }
+    ]
   },
   "ex-zq770m33": {
     "prompt": "Qual motor manteve o formato de arquivo compatível para trás desde 2004, com a intenção declarada de mantê-lo assim até 2050?",
