@@ -31,6 +31,9 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"unicode"
+
+	"golang.org/x/text/unicode/norm"
 
 	"github.com/codeschool-ing/schooling/internal/catalog"
 )
@@ -130,13 +133,28 @@ type choice struct {
 	Correct bool   `json:"correct"`
 }
 
+type blank struct {
+	Accept        []string `json:"accept"`
+	IgnoreCase    bool     `json:"ignore_case"`
+	IgnoreAccents bool     `json:"ignore_accents"`
+}
+
+type pair struct {
+	Left  string `json:"left"`
+	Right string `json:"right"`
+}
+
 type exercise struct {
-	ID         string   `json:"id"`
-	Section    string   `json:"section"`
-	Type       string   `json:"type"`
-	Difficulty string   `json:"difficulty"`
-	Prompt     string   `json:"prompt"`
-	Choices    []choice `json:"choices"`
+	ID               string   `json:"id"`
+	Section          string   `json:"section"`
+	Type             string   `json:"type"`
+	Difficulty       string   `json:"difficulty"`
+	Prompt           string   `json:"prompt"`
+	Choices          []choice `json:"choices"`
+	Blanks           []blank  `json:"blanks"`
+	Items            []string `json:"items"`
+	Pairs            []pair   `json:"pairs"`
+	RightDistractors []string `json:"right_distractors"`
 }
 
 // RankShareCeiling is how often the correct option may sit at any ONE rank by
@@ -366,6 +384,8 @@ func checkLesson(at string, lang *language, exs []exercise) (problems []string, 
 	var absent skew
 
 	for _, e := range exs {
+		problems = append(problems, checkTyped(at, e)...)
+
 		if e.Type != "quiz" && e.Type != "multiple-choice" {
 			continue
 		}
@@ -532,6 +552,123 @@ func (s skew) String() string {
 	}
 	return fmt.Sprintf("; an absolute sits in %.0f%% of the wrong options and %.0f%% of the "+
 		"right ones", float64(s.inWrong)/float64(s.wrong)*100, float64(s.inRight)/float64(s.right)*100)
+}
+
+/*
+checkTyped is the part of this tool that looks at the types it used to walk past.
+
+`docs/EXERCISES.md` listed the gap under its own heading: only `quiz` and
+`multiple-choice` were examined, and `ordering`, `matching`, `cloze`, `numeric`
+and `labelling` went through untouched — 429 of the catalogue's 2022 questions,
+21% of it, with tells of their own that nothing looked for.
+
+WHAT IS HERE IS WHAT MEASURED AS A TELL, and the two that did not are worth more
+than the two that did:
+
+  - AN `ordering` WHOSE ITEMS ARE ALREADY SORTED BY LENGTH, or alphabetically,
+    reads like row 1 arriving for another type. It is not one. For four items
+    the chance of either is 2/4!, so 54 orderings should throw about four and a
+    half by luck alone — and the catalogue has four of one and five of the
+    other. There is nothing there to find, and a check would have reported
+    coincidence in a sentence that reads like a finding.
+  - A `matching` PAIR SHARING AN UNCOMMON WORD with its own right-hand side is a
+    real tell — `Get-Command -Noun X` against *every command that works on X* is
+    matched by a reader who has never opened a shell. But the catalogue's four
+    hits include a question whose whole subject is the mapping between two
+    vocabularies, where every pair shares a word BY DESIGN and the overlap is
+    what is being taught. Two real against two by construction is too thin to
+    refuse on, and separating them takes a rule invented from two examples.
+    The one real one was repaired by hand instead.
+
+So: the echo, for `cloze`. And the floor under how much guessing is worth,
+for `ordering` and `matching`, which finds nothing today and is the same rule
+`MinimumChoices` already applies to a quiz.
+*/
+func checkTyped(at string, e exercise) (problems []string) {
+	switch e.Type {
+	case "cloze":
+		for _, b := range e.Blanks {
+			if word, found := copiedFromPrompt(e.Prompt, b); found {
+				problems = append(problems, fmt.Sprintf(
+					"%s/%s accepts %q, which is a word of its own prompt — the blank is filled "+
+						"by copying rather than by knowing", at, e.ID, word))
+			}
+		}
+
+	// An ordering of two is one comparison, and a matching of two pairs with no
+	// distractor is one swap. Both are the coin flip `MinimumChoices` refuses
+	// for a quiz, arriving in another shape: grading is binary, so what matters
+	// is the chance of getting the WHOLE arrangement right, and at two that is
+	// one in two.
+	case "ordering":
+		if n := len(e.Items); n > 0 && n < 3 {
+			problems = append(problems, fmt.Sprintf(
+				"%s/%s orders %d items — guessing puts the whole arrangement right one time "+
+					"in two", at, e.ID, n))
+		}
+	case "matching":
+		if p, r := len(e.Pairs), len(e.Pairs)+len(e.RightDistractors); p == 2 && r == 2 {
+			problems = append(problems, fmt.Sprintf(
+				"%s/%s matches %d pairs against %d right-hand sides — guessing puts both right "+
+					"one time in two", at, e.ID, p, r))
+		}
+	}
+	return problems
+}
+
+// copiedFromPrompt answers whether the student can fill the blank with a word
+// they can see in the question, and which word that is.
+//
+// IT OBEYS THE BLANK'S OWN NORMALISATION, which is the difference between a
+// finding and a guess. `docs/CONTENT.md` makes case and accents a property of
+// the question rather than of the grader, so whether the prompt's `with` fills
+// a blank that accepts `WITH` is not this tool's opinion — the blank says. Every
+// one of the twenty-one this found on its first run has `ignore_case`, so every one
+// of them really is answerable by typing back a word of the prompt.
+//
+// THREE LETTERS IS THE FLOOR, and the number was measured rather than picked.
+// At four the check misses `old` in a prompt that writes *one old TTL* and
+// accepts `old`, which is as plain a copy as any here. At two it starts
+// reporting `is` and `on` — the `is` being half of `IS NULL`, in a question that
+// shows `IS NOT NULL` on purpose so the reader can see the shape of the pair.
+// Three costs one real finding to gain and three particles to avoid.
+func copiedFromPrompt(prompt string, b blank) (string, bool) {
+	text := code.ReplaceAllString(prompt, " ")
+	if b.IgnoreAccents {
+		text = unaccent(text)
+	}
+	for _, want := range b.Accept {
+		if b.IgnoreAccents {
+			want = unaccent(want)
+		}
+		if len([]rune(want)) < 3 {
+			continue
+		}
+		pattern := `(?:^|[^\p{L}\p{N}_])` + regexp.QuoteMeta(want) + `(?:$|[^\p{L}\p{N}_])`
+		if b.IgnoreCase {
+			pattern = "(?i)" + pattern
+		}
+		if regexp.MustCompile(pattern).MatchString(text) {
+			return want, true
+		}
+	}
+	return "", false
+}
+
+// code is a span the student reads as a symbol rather than as a word. A prompt
+// that writes `IS NOT NULL` inside backticks is showing the shape of an answer,
+// which is a teaching device; the same words loose in the sentence are the
+// answer lying in the open.
+var code = regexp.MustCompile("`[^`]*`")
+
+func unaccent(s string) string {
+	var b strings.Builder
+	for _, r := range norm.NFD.String(s) {
+		if !unicode.Is(unicode.Mn, r) {
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }
 
 // chance is what pure guessing scores on these questions, which is the number
