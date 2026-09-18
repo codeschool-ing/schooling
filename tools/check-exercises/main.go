@@ -58,19 +58,57 @@ type exercise struct {
 	Choices    []choice `json:"choices"`
 }
 
-// LongestShareCeiling is how often the correct option may be the longest one
-// before the length itself is the answer.
+// RankShareCeiling is how often the correct option may sit at any ONE rank by
+// length — longest, second, third, shortest — before the ruler is the answer.
 //
 // IT IS A SHARE ACROSS A LESSON AND NOT A RULE PER QUESTION. One question whose
 // correct option happens to be longest is nothing; a lesson where it is true of
 // half of them is a lesson that can be passed with a ruler. The ceiling is set
 // a little above what chance produces for four options — 0.25 — so that
 // ordinary variation is not a failure and a habit is.
-const LongestShareCeiling = 0.40
+//
+// IT REPLACED A ONE-DIRECTIONAL CHECK, and that is the whole point of it.
+// `docs/EXERCISES.md` row 1 has always named the tell as LENGTH; the constant
+// here asked only whether the correct option was the LONGEST, and the code
+// narrowed what the document said. A lesson whose correct option is reliably
+// the SHORTEST is passed with the same ruler held the other way up, and three
+// lessons of this catalogue shipped at 97%, 100% and 100% shortest with this
+// tool calling them clean.
+//
+// The narrowing is worse than a blind spot, because it steers the repair.
+// Trimming the correct option until it stops being longest does not remove the
+// habit, it moves it: one such rewrite took a lesson from 39% longest to 0%,
+// and to 90% SECOND-longest in the same pass. A number that only falls when
+// the tell moves somewhere unmeasured is a number that rewards moving it.
+//
+// So the question this asks is not which end. It is whether length says
+// anything at all.
+//
+// THE NUMBER IS 0.45 BECAUSE THE PEAK OF FOUR IS NOT THE MEAN OF ONE. Taking
+// the largest of four shares inflates it even when nothing is wrong: simulating
+// a lesson whose correct option lands at a uniformly random rank puts the
+// median peak at 31–35% and the 95th percentile at 40–46%, depending on how
+// many questions the lesson has. A ceiling of 0.40 would therefore fail about
+// one clean lesson in twelve, and one short one in six — and a check that
+// cries wolf teaches whoever reads it to skip the output that would one day
+// name a real one. At 0.45 that falls to roughly one in fifty, and the
+// catalogue this was written against separates cleanly: every lesson with a
+// real habit sits at 48% or above, and the ones between 37% and 42% are noise.
+//
+// It is the same number as GuessCeiling, and for the same reason rather than by
+// coincidence — picking the option at rank k scores exactly the share at rank
+// k, so the two constants are one measurement seen from two directions.
+const RankShareCeiling = 0.45
 
-// GuessCeiling is how well the strategy below may score before the questions
-// are measuring the wrong thing. A student who has not read anything should do
-// no better than chance, and chance for these questions is about a third.
+// GuessCeiling is how well the BEST of the strategies below may score before
+// the questions are measuring the wrong thing. A student who has not read
+// anything should do no better than chance, and chance for these questions is
+// about a third.
+//
+// THE BEST OF THEM, RATHER THAN ONE OF THEM. A student does not use the rule
+// this tool happens to imagine; they use whichever rule works on the paper in
+// front of them, and they find it by trying. Scoring one strategy measures our
+// imagination. Scoring the family and reporting its maximum measures the paper.
 const GuessCeiling = 0.45
 
 // MinimumChoices is the floor under a question's option count. Two options is a
@@ -149,7 +187,8 @@ func where(f string) string {
 
 func checkLesson(at string, exs []exercise) (problems []string, report string) {
 	var picked []exercise
-	longest, single := 0, 0
+	single, ranked := 0, 0
+	byRank := map[int]int{}
 	position := map[int]int{}
 
 	for _, e := range exs {
@@ -166,12 +205,13 @@ func checkLesson(at string, exs []exercise) (problems []string, report string) {
 
 		correct, wrong := split(e.Choices)
 
-		// 1 · length
-		if len(correct) == 1 && isLongest(e.Choices, correct[0]) {
-			longest++
+		// 1 · length, at either end and in the middle
+		if len(correct) == 1 {
 			single++
-		} else if len(correct) == 1 {
-			single++
+			if rank, unique := lengthRank(e.Choices, correct[0]); unique {
+				ranked++
+				byRank[rank]++
+			}
 		}
 
 		// 2 · absolutes in the wrong options, hedges in the right one
@@ -229,11 +269,21 @@ func checkLesson(at string, exs []exercise) (problems []string, report string) {
 		}
 	}
 
-	if single >= 6 && float64(longest)/float64(single) > LongestShareCeiling {
-		problems = append(problems, fmt.Sprintf(
-			"%s: the correct option is the longest in %d of %d single-answer questions (%.0f%%) — "+
-				"over the %.0f%% ceiling, and a student can pass with a ruler",
-			at, longest, single, float64(longest)/float64(single)*100, LongestShareCeiling*100))
+	if ranked >= 6 {
+		ranks := make([]int, 0, len(byRank))
+		for r := range byRank {
+			ranks = append(ranks, r)
+		}
+		sort.Ints(ranks)
+		for _, r := range ranks {
+			if share := float64(byRank[r]) / float64(ranked); share > RankShareCeiling {
+				problems = append(problems, fmt.Sprintf(
+					"%s: the correct option is %s in %d of %d questions where the options differ "+
+						"in length (%.0f%%) — over the %.0f%% ceiling, and a student can pass "+
+						"with a ruler",
+					at, nameRank(r), byRank[r], ranked, share*100, RankShareCeiling*100))
+			}
+		}
 	}
 
 	if n := len(picked); n >= 6 {
@@ -246,18 +296,19 @@ func checkLesson(at string, exs []exercise) (problems []string, report string) {
 		}
 	}
 
-	// And the whole point, measured end to end: what does the strategy score?
-	if hit, total := guess(picked); total >= 8 {
+	// And the whole point, measured end to end: what does the best of them score?
+	if name, hit, total := guess(picked); total >= 8 {
 		share := float64(hit) / float64(total)
-		report = fmt.Sprintf("%s: reading nothing scores %d of %d (%.0f%%); chance is %.0f%%; "+
-			"the correct option is longest in %d of %d (%.0f%%)",
-			at, hit, total, share*100, chance(picked)*100,
-			longest, single, float64(longest)/float64(single)*100)
+		worst, worstShare := bestRank(byRank, ranked)
+		report = fmt.Sprintf("%s: reading nothing scores %d of %d (%.0f%%) by picking %s; "+
+			"chance is %.0f%%; the correct option is %s in %.0f%% of the %d questions whose "+
+			"options differ in length",
+			at, hit, total, share*100, name, chance(picked)*100,
+			nameRank(worst), worstShare*100, ranked)
 		if share > GuessCeiling {
 			problems = append(problems, fmt.Sprintf(
-				"%s: a student who read nothing and picks the longest option without an absolute "+
-					"scores %d of %d (%.0f%%), over the %.0f%% ceiling",
-				at, hit, total, share*100, GuessCeiling*100))
+				"%s: a student who read nothing and picks %s scores %d of %d (%.0f%%), over the "+
+					"%.0f%% ceiling", at, name, hit, total, share*100, GuessCeiling*100))
 		}
 	}
 
@@ -293,13 +344,60 @@ func split(cs []choice) (correct, wrong []int) {
 	return
 }
 
-func isLongest(cs []choice, i int) bool {
+// lengthRank is how many options are strictly longer than the one at i, and
+// whether i's length is its own among the options.
+//
+// A TIE IS NOT A TELL, so a question where the correct option shares its length
+// with another is counted at no rank at all. A ruler cannot separate two
+// options of the same length, and a question whose four options are all one
+// length is the ideal rather than a failure — this catalogue has one written
+// that way on purpose, and the old check counted it as a habit.
+func lengthRank(cs []choice, i int) (rank int, unique bool) {
+	n := len([]rune(cs[i].Text))
+	unique = true
 	for j, c := range cs {
-		if j != i && len([]rune(c.Text)) >= len([]rune(cs[i].Text)) {
-			return false
+		if j == i {
+			continue
+		}
+		switch m := len([]rune(c.Text)); {
+		case m > n:
+			rank++
+		case m == n:
+			unique = false
 		}
 	}
-	return true
+	return rank, unique
+}
+
+func nameRank(r int) string {
+	switch r {
+	case 0:
+		return "the longest"
+	case 1:
+		return "the second-longest"
+	case 2:
+		return "the third-longest"
+	}
+	return fmt.Sprintf("%dth by length", r+1)
+}
+
+// bestRank is the rank the correct option lands on most often, which is the one
+// a reader of the report wants named.
+func bestRank(byRank map[int]int, ranked int) (rank int, share float64) {
+	if ranked == 0 {
+		return 0, 0
+	}
+	ranks := make([]int, 0, len(byRank))
+	for r := range byRank {
+		ranks = append(ranks, r)
+	}
+	sort.Ints(ranks)
+	for _, r := range ranks {
+		if s := float64(byRank[r]) / float64(ranked); s > share {
+			rank, share = r, s
+		}
+	}
+	return rank, share
 }
 
 func echoes(prompt string, cs []choice, i int) bool {
@@ -337,43 +435,96 @@ func overlap(a, b map[string]bool) int {
 	return n
 }
 
-// guess scores the strategy the whole document is written against: pick the
-// longest option that contains no absolute. It is only run over single-answer
-// questions, because a strategy for choosing a SET is a different thing and
-// this one would flatter itself.
+// guess scores the family of strategies a student who did not study can reach
+// for, and returns the best of them by name.
 //
-// IT IS DETERMINISTIC, and that is the point rather than a shortcut. A student
+// IT IS ONLY RUN OVER SINGLE-ANSWER QUESTIONS, because a strategy for choosing
+// a SET is a different thing and this one would flatter itself.
+//
+// EACH IS DETERMINISTIC, and that is the point rather than a shortcut. A student
 // reading tells is not rolling dice — they apply the rule and get one answer —
 // so the score has to be reproducible or a lesson would pass on one run and
-// fail on the next. Where every option carries an absolute the rule has nothing
-// to eliminate, and it falls back to the half of it that still applies: take
-// the longest.
-func guess(exs []exercise) (hit, total int) {
+// fail on the next.
+//
+// THE FAMILY IS SMALL ON PURPOSE. Every strategy here is one a person could
+// arrive at by sitting two papers and noticing something: the long answer, the
+// short answer, the long answer that does not overclaim, the one just under the
+// longest. Adding strategies until something scores would turn this into a
+// search for an accusation, and the number it reported would only ever rise.
+var strategies = []struct {
+	name string
+	pick func(cs []choice) int
+}{
+	{"the longest option without an absolute", pickLongestClean},
+	{"the longest option", func(cs []choice) int { return byLength(cs, 0) }},
+	{"the shortest option", func(cs []choice) int { return byLength(cs, len(cs)-1) }},
+	{"the second-longest option", func(cs []choice) int { return byLength(cs, 1) }},
+}
+
+func guess(exs []exercise) (name string, hit, total int) {
+	var single []exercise
 	for _, e := range exs {
-		if e.Type != "quiz" || len(e.Choices) < 2 {
-			continue
-		}
-		total++
-		var candidates []int
-		for i, c := range e.Choices {
-			if !absolutes.MatchString(c.Text) {
-				candidates = append(candidates, i)
-			}
-		}
-		if len(candidates) == 0 {
-			for i := range e.Choices {
-				candidates = append(candidates, i)
-			}
-		}
-		best := candidates[0]
-		for _, i := range candidates {
-			if len([]rune(e.Choices[i].Text)) > len([]rune(e.Choices[best].Text)) {
-				best = i
-			}
-		}
-		if e.Choices[best].Correct {
-			hit++
+		if e.Type == "quiz" && len(e.Choices) >= 2 {
+			single = append(single, e)
 		}
 	}
-	return
+	total = len(single)
+	if total == 0 {
+		return "", 0, 0
+	}
+	for _, s := range strategies {
+		n := 0
+		for _, e := range single {
+			if e.Choices[s.pick(e.Choices)].Correct {
+				n++
+			}
+		}
+		if n > hit || name == "" {
+			name, hit = s.name, n
+		}
+	}
+	return name, hit, total
+}
+
+// byLength picks the option at position k of the options sorted longest first.
+// Ties are broken by the order they were written in, so the answer does not
+// move when two options happen to match.
+func byLength(cs []choice, k int) int {
+	order := make([]int, len(cs))
+	for i := range cs {
+		order[i] = i
+	}
+	sort.SliceStable(order, func(a, b int) bool {
+		return len([]rune(cs[order[a]].Text)) > len([]rune(cs[order[b]].Text))
+	})
+	if k < 0 {
+		k = 0
+	}
+	if k >= len(order) {
+		k = len(order) - 1
+	}
+	return order[k]
+}
+
+// pickLongestClean is the rule `docs/EXERCISES.md` opens with: the longest
+// option that does not say "never" or "always". Where every option carries an
+// absolute the rule has nothing to eliminate, and it falls back to the half of
+// it that still applies.
+func pickLongestClean(cs []choice) int {
+	var candidates []int
+	for i, c := range cs {
+		if !absolutes.MatchString(c.Text) {
+			candidates = append(candidates, i)
+		}
+	}
+	if len(candidates) == 0 {
+		return byLength(cs, 0)
+	}
+	best := candidates[0]
+	for _, i := range candidates {
+		if len([]rune(cs[i].Text)) > len([]rune(cs[best].Text)) {
+			best = i
+		}
+	}
+	return best
 }

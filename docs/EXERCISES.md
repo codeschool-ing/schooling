@@ -67,7 +67,7 @@ see it, because the ones a machine can see are checked rather than remembered.
 
 | | the tell | checked |
 |---|---|---|
-| 1 | **Length.** The correct option is the longest, or the most qualified. | **the longest, across a lesson** |
+| 1 | **Length.** The correct option is the longest, or the most qualified. | **its rank by length, across a lesson** |
 | 2 | **Absolutes in the wrong options** — *never, always, only, all, must, none*. And the mirror: hedges (*usually, often, can, tends to*) concentrated in the correct one. | **yes** |
 | 3 | **Two options.** A coin flip floors the score at 50%. | **yes** |
 | 4 | **Furniture** — an option nobody would choose. | no |
@@ -89,8 +89,28 @@ one, not a weak one. It was an aspiration in a column that reads as a fact, whic
 this whole document exists to name, committed in the document itself.
 
 **Row 1 is a share across a lesson, never a rule per question.** One question whose correct option
-happens to be longest is not flagged and should not be — see `LongestShareCeiling`. And *"the most
+happens to be longest is not flagged and should not be — see `RankShareCeiling`. And *"the most
 qualified"* is not measured at all: the closest thing to it is row 2's hedge rule.
+
+**And it is the rank rather than the end, which it was not until it cost something.** The check
+asked only whether the correct option was the LONGEST, while this row has always said the tell is
+*length*. The code was narrower than the document, and three lessons of this catalogue shipped with
+the correct option the SHORTEST in 97%, 100% and 100% of their questions — passed with the same
+ruler held the other way up, and reported clean on every run.
+
+The narrowing was worse than a blind spot, because it steered the repair. Trimming the correct
+option until it stops being longest does not remove the habit; it moves it. One such pass took a
+lesson from 39% longest to 0%, and to 90% SECOND-longest in the same edit — an improvement by the
+only number anybody was measuring, and a worse paper. What is counted now is how often the correct
+option lands on any ONE rank, at either end or in the middle, and a question whose options tie in
+length is counted at no rank at all, because a ruler separates none of them.
+
+**`guess` scores a family of strategies and reports the best**, for the same reason. A student does
+not use the rule this tool imagined; they use whichever rule works on the paper in front of them,
+and they find it by trying. Scoring one strategy measured our imagination. The family is small on
+purpose — the long answer, the short one, the long one that does not overclaim, the one just under
+the longest — because adding strategies until something scores would turn the check into a search
+for an accusation.
 
 **Row 6 counts words of six letters or more,** which is a proxy for rare and not the thing itself.
 A prompt and an option sharing "database" three times reads as an echo to it; a shared *rare short*
