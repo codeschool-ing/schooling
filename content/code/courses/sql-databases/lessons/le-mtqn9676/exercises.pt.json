@@ -1038,5 +1038,240 @@
         "why": "Velocidade não é o que está em jogo num documento."
       }
     ]
+  },
+  "ex-g622fbyr": {
+    "prompt": "Um sistema de suporte tem uma tabela só: `tickets (ticket_id PRIMARY KEY, customer_email, customer_name, agent, agent_team, opened_on)`. Qual é a primeira forma normal que ela quebra?",
+    "hint": "Veja do que cada forma precisa para poder ser quebrada.",
+    "choices": [
+      {
+        "text": "A primeira, porque um chamado guarda vários fatos",
+        "why": "A primeira forma normal fala de vários valores numa célula, não de vários fatos numa linha."
+      },
+      {
+        "text": "A segunda, porque o nome é do cliente",
+        "why": "A segunda forma normal só se quebra com chave que tem partes, e esta chave é uma coluna."
+      },
+      {
+        "text": "A terceira, porque colunas comuns determinam outras colunas comuns",
+        "why": "O email determina o nome e o agente determina o time, ambos por meio de uma coluna que não é a chave."
+      },
+      {
+        "text": "Nenhuma; ela está na terceira forma normal e só é larga",
+        "why": "Mude um agente de time e várias linhas têm que mudar juntas."
+      }
+    ]
+  },
+  "ex-f8y4hm9b": {
+    "prompt": "Uma folha de pagamento guarda `tax_rate` em cada holerite, e também mantém a alíquota atual numa tabela `tax_rates`. O governo aumenta a alíquota em julho. Os holerites emitidos em junho deveriam mudar?",
+    "hint": "Diga os dois fatos em voz alta, um depois do outro.",
+    "choices": [
+      {
+        "text": "Não, então a alíquota no holerite é um instantâneo e fica onde está",
+        "why": "O que foi cobrado é um fato sobre junho e não se mexe quando a alíquota muda."
+      },
+      {
+        "text": "Sim, então a alíquota no holerite é uma cópia e deve sair",
+        "why": "Aí os holerites do ano passado se recalculariam sozinhos a cada mudança de alíquota."
+      },
+      {
+        "text": "Não, mas o holerite deveria juntar e filtrar por data",
+        "why": "Isso só funciona enquanto toda alíquota antiga for guardada e ninguém editar nenhuma."
+      },
+      {
+        "text": "Sim, porque um fato nunca pode ser guardado duas vezes",
+        "why": "São dois fatos: qual é a alíquota, e qual foi aplicada num dia."
+      }
+    ]
+  },
+  "ex-83fz55gt": {
+    "prompt": "Um app de podcasts guarda `show_name` em cada linha de episódio, ao lado de uma tabela `shows` que também guarda o nome. Um programa é renomeado. Qual é a leitura certa?",
+    "hint": "Pergunte se o valor guardado deveria seguir a origem.",
+    "choices": [
+      {
+        "text": "Um instantâneo, como o preço na linha do pedido",
+        "why": "Um episódio não pertence ao nome antigo do jeito que uma venda pertence ao preço do dia."
+      },
+      {
+        "text": "Uma cópia, e ela tem que sair",
+        "why": "O episódio é do programa que foi renomeado, então o nome guardado deveria segui-lo e pode ficar para trás."
+      },
+      {
+        "text": "Nenhum dos dois; duas tabelas podem guardar o mesmo texto",
+        "why": "Podem guardar o mesmo valor só quando são dois fatos. Aqui é um."
+      },
+      {
+        "text": "Uma cópia, mas guardar sai de graça porque nomes mudam pouco",
+        "why": "Pouco é o que torna isso caro: a divergência aparece muito depois da renomeação."
+      }
+    ]
+  },
+  "ex-zhvp6sma": {
+    "prompt": "`warehouse_stock (sku, warehouse_code, warehouse_city, quantity)` tem a chave `(sku, warehouse_code)`. O que está errado, e o que a correção produz?",
+    "hint": "Pergunte do que cada coluna precisa para ser conhecida.",
+    "choices": [
+      {
+        "text": "Nada; a cidade descreve onde o estoque está",
+        "why": "Ela descreve onde o depósito está, e é escrita uma vez por produto guardado ali."
+      },
+      {
+        "text": "`quantity` depende de parte da chave; leve para uma tabela própria",
+        "why": "A quantidade é a única coluna que precisa das duas metades. Está exatamente onde deve."
+      },
+      {
+        "text": "`warehouse_city` depende de metade da chave; aparece uma tabela `warehouses`",
+        "why": "Uma dependência parcial, então a cidade vai para uma tabela com chave no depósito."
+      },
+      {
+        "text": "A chave deveria ser um id gerado, e isso resolve",
+        "why": "Isso esconde a dependência. A cidade continuaria escrita uma vez por produto."
+      }
+    ]
+  },
+  "ex-j42skth9": {
+    "prompt": "Uma clínica copia o telefone do paciente para cada consulta no momento da marcação, para a recepção poder ligar. Depois o paciente troca de número. O telefone copiado é um instantâneo?",
+    "hint": "Pergunte para que o número está ali.",
+    "choices": [
+      {
+        "text": "Sim, porque registra o número como ele era no dia",
+        "why": "Ninguém precisa disso. Ninguém vai querer ligar para o número que o paciente tinha antes."
+      },
+      {
+        "text": "Não, porque a clínica tem que ligar para o número de agora",
+        "why": "O valor guardado deveria seguir a origem, o que faz dele uma cópia e uma anomalia à espera."
+      },
+      {
+        "text": "Sim, porque a consulta aconteceu num momento",
+        "why": "A consulta aconteceu. O telefone não é um fato sobre aquele momento."
+      },
+      {
+        "text": "Não, e a correção é copiar de novo sempre que mudar",
+        "why": "Esse é o problema do mecanismo, e é a razão de manter uma cópia só em vez de várias."
+      }
+    ]
+  },
+  "ex-e041cgk7": {
+    "prompt": "Um `comment_count` guardado é mantido por um gatilho, e também por um job noturno que reconta e conserta. Por que ter os dois é pior que ter um?",
+    "hint": "Pergunte o que acontece no dia em que os dois dão números diferentes.",
+    "choices": [
+      {
+        "text": "O job noturno é mais lento que o gatilho",
+        "why": "É, e isso é um custo, não o defeito."
+      },
+      {
+        "text": "Dois mecanismos é o estado em que eles discordam",
+        "why": "Quando o número está errado, nada diz qual dos dois deveria estar certo."
+      },
+      {
+        "text": "Gatilhos não conseguem contar linhas de outra tabela",
+        "why": "Conseguem. É o que os torna um mecanismo viável aqui."
+      },
+      {
+        "text": "Uma contagem que pode ser recalculada nunca deveria ser guardada",
+        "why": "Poder ser recalculada é o que a torna verificável, e isso conta a favor."
+      }
+    ]
+  },
+  "ex-crznf4t5": {
+    "prompt": "`teacher_id` aparece como 1, 2, 1, 1 na coluna da tabela `courses` depois de toda a decomposição. Quando repetir um valor numa coluna está certo?",
+    "hint": "Duas coisas podem se repetir, e só uma delas consegue discordar de si mesma.",
+    "choices": [
+      {
+        "text": "Quando é um ponteiro, e não a cópia de um fato",
+        "why": "Cada linha aponta para o único lugar onde o fato mora, então não há nada para sair de sintonia."
+      },
+      {
+        "text": "Quando a tabela é pequena o bastante para não importar",
+        "why": "Tamanho não decide nada aqui; a mesma tabela com dez milhões de linhas está igualmente certa."
+      },
+      {
+        "text": "Quando a coluna tem índice",
+        "why": "Índice é sobre achar linhas e não diz nada sobre onde um fato está guardado."
+      },
+      {
+        "text": "Quando ninguém reclamou ainda",
+        "why": "É assim que as anomalias entram, não uma razão para elas não estarem lá."
+      }
+    ]
+  },
+  "ex-zj1rgpe1": {
+    "prompt": "Uma autoescola: um aluno tem um instrutor por categoria de habilitação, e cada instrutor dá aula de uma categoria só. Uma tabela guarda `(pupil, category, instructor)`. Qual dependência a terceira forma normal não pega?",
+    "hint": "Olhe qual lado de cada seta faz parte da chave.",
+    "choices": [
+      {
+        "text": "`pupil, category → instructor`",
+        "why": "Essa é a partir da chave inteira, que é o caso saudável."
+      },
+      {
+        "text": "`instructor → category`",
+        "why": "Uma coluna comum determinando uma coluna da chave, coisa sobre a qual a terceira forma normal não diz nada e a regra de Boyce e Codd diz."
+      },
+      {
+        "text": "`pupil → category`",
+        "why": "Um aluno pode fazer mais de uma categoria, então isso não é dependência nenhuma."
+      },
+      {
+        "text": "`category → instructor`",
+        "why": "Uma categoria tem muitos instrutores, então saber a categoria não diz qual."
+      }
+    ]
+  },
+  "ex-72zj4zbz": {
+    "prompt": "Uma tabela `shipments` guarda o endereço de destino copiado do cliente no despacho. O cliente se muda, e alguém atualiza os envios antigos para o endereço novo. O que isso destruiu?",
+    "hint": "Pergunte do que aquelas linhas eram o registro.",
+    "choices": [
+      {
+        "text": "Nada; o endereço agora está certo em todo lugar",
+        "why": "Agora está igual em toda linha e errado na maioria delas."
+      },
+      {
+        "text": "O registro de para onde cada encomenda foi de fato enviada",
+        "why": "O endereço de um envio é um fato sobre aquele despacho, e não sobrou nada de onde recuperá-lo."
+      },
+      {
+        "text": "A chave estrangeira para o cliente",
+        "why": "Ela está intacta. O ponteiro nunca foi o problema."
+      },
+      {
+        "text": "O índice da coluna de endereço",
+        "why": "Uma atualização mantém os índices dela; nada deles se perde."
+      }
+    ]
+  },
+  "ex-1282gdzf": {
+    "prompt": "A chave determina o agente, e o agente determina o time, então a chave chega ao time por meio de uma coluna comum. Escreva a palavra para esse tipo de dependência.",
+    "hint": "Ela nomeia o passo do meio.",
+    "blanks": [
+      {
+        "accept": [
+          "transitiva",
+          "transitivo"
+        ]
+      }
+    ]
+  },
+  "ex-ttt32e3t": {
+    "prompt": "Uma tabela cuja chave primária é um id gerado não consegue quebrar uma das três formas normais, não importa o que as colunas guardem. Escreva o número dessa forma.",
+    "hint": "É a que se define contra as partes de uma chave.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "2fn",
+          "segunda",
+          "dois"
+        ]
+      }
+    ]
+  },
+  "ex-7866v1s2": {
+    "prompt": "Alguém propõe guardar um total que poderia ser somado. Ponha os quatro portões na ordem em que devem ser tentados.",
+    "hint": "Três deles podem significar que você nunca desnormaliza.",
+    "items": [
+      "Estabelecer que a consulta é lenta com dados do tamanho de produção",
+      "Tentar um índice na chave estrangeira",
+      "Tentar escrever a consulta de outro jeito",
+      "Decidir que mecanismo vai manter o valor guardado verdadeiro"
+    ],
+    "trap": "O portão que as pessoas pulam é o último, e é o que transforma um total guardado num bug com hora marcada."
   }
 }

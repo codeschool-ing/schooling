@@ -1114,5 +1114,345 @@
         "ignore_accents": true
       }
     ]
+  },
+  {
+    "id": "ex-s68v3rv6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bike-share system declares four columns. Which one is the only sound choice?",
+    "hint": "Three of them are named in this lesson as mistakes, each for a different reason.",
+    "choices": [
+      {
+        "text": "`fare numeric(6,2)`",
+        "correct": true,
+        "why": "Money in an exact type, and the scale comes from the currency."
+      },
+      {
+        "text": "`docked_at date`",
+        "correct": false,
+        "why": "Docking happens at an instant; truncating it to a day decides the wrong report at ten to midnight."
+      },
+      {
+        "text": "`bike_code char(6)`",
+        "correct": false,
+        "why": "It pads with spaces, so comparisons and lengths disagree about whether they are there."
+      },
+      {
+        "text": "`is_returned boolean`",
+        "correct": false,
+        "why": "A timestamp answers whether and when, in the same column, for nothing extra."
+      }
+    ]
+  },
+  {
+    "id": "ex-m86jzwv0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard has shown `0` for the returned share since the day it was built. The query is `SELECT count(*) FILTER (WHERE returned_at IS NOT NULL) / count(*) FROM trips`. What is wrong?",
+    "hint": "Look at what the two sides of the division are.",
+    "choices": [
+      {
+        "text": "`FILTER` cannot be used with `count`",
+        "correct": false,
+        "why": "It can, and that half is doing exactly what it looks like."
+      },
+      {
+        "text": "Both counts are integers, so the remainder is thrown away",
+        "correct": true,
+        "why": "Integer over integer is integer, and anything below one comes out as nought."
+      },
+      {
+        "text": "`count(*)` skips the rows where `returned_at` is empty",
+        "correct": false,
+        "why": "`count(*)` counts rows and looks at no column at all."
+      },
+      {
+        "text": "The table needs an index for the filter to work",
+        "correct": false,
+        "why": "An index changes how fast an answer arrives, never what it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6b83a91",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these will PostgreSQL accept as a `GENERATED ALWAYS AS (…) STORED` column?",
+    "hint": "Two rules: the same row only, and the same answer every time.",
+    "choices": [
+      {
+        "text": "`(now() + interval '30 days')`",
+        "correct": false,
+        "why": "Not deterministic, so it is refused: the same row would compute differently tomorrow."
+      },
+      {
+        "text": "`(SELECT count(*) FROM trips WHERE trips.bike_id = bikes.id)`",
+        "correct": false,
+        "why": "It reads another table, which a generated column may not do."
+      },
+      {
+        "text": "`(lower(email))`",
+        "correct": true,
+        "why": "One column of the same row, one answer every time, and one place the folding happens."
+      },
+      {
+        "text": "`(random() * 100)`",
+        "correct": false,
+        "why": "A different value on every write is the definition of what this refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ypqxtqb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ALTER TABLE invoices ADD COLUMN archived boolean NOT NULL DEFAULT false` on eighty million rows. What does it cost?",
+    "hint": "Ask whether every row needs a different value.",
+    "choices": [
+      {
+        "text": "A full rewrite, because every row gains a column",
+        "correct": false,
+        "why": "That was true before PostgreSQL 11, and the old advice is still repeated everywhere."
+      },
+      {
+        "text": "Almost nothing: the default is constant and lives in the catalogue",
+        "correct": true,
+        "why": "Existing rows are told about it as they are read, so the table is not touched."
+      },
+      {
+        "text": "A full scan, because `NOT NULL` must be checked",
+        "correct": false,
+        "why": "There is nothing to check: no existing row can be empty in a column that did not exist."
+      },
+      {
+        "text": "It is refused until the column is backfilled",
+        "correct": false,
+        "why": "Nothing refuses it. That workaround is what the constant default replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqeagqj4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A migration runs on staging and fails in production with `constraint \"invoices_total_check1\" does not exist`. What is behind it?",
+    "hint": "Ask where that name came from.",
+    "choices": [
+      {
+        "text": "Production is on an older PostgreSQL than staging",
+        "correct": false,
+        "why": "It can make the numbering differ, and it is not what made a generated name load-bearing."
+      },
+      {
+        "text": "The constraints were never named, so the number depends on the order they were added",
+        "correct": true,
+        "why": "A migration that dropped and re-added one on staging renumbered them there and nowhere else."
+      },
+      {
+        "text": "The constraint was dropped by an earlier migration",
+        "correct": false,
+        "why": "Then staging would have failed too, and it did not."
+      },
+      {
+        "text": "Production has more rows, so the check was never valid",
+        "correct": false,
+        "why": "A row count decides nothing about whether a constraint exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dhvwjhy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One of these needs roughly twice the table's size in free disk while it runs. Which?",
+    "hint": "Ask which one writes every row again.",
+    "choices": [
+      {
+        "text": "`ADD COLUMN notes text`",
+        "correct": false,
+        "why": "Catalogue only. The rows are not read."
+      },
+      {
+        "text": "`RENAME COLUMN notes TO remarks`",
+        "correct": false,
+        "why": "Also catalogue only, and it is instant at any size."
+      },
+      {
+        "text": "`ALTER COLUMN id TYPE bigint`",
+        "correct": true,
+        "why": "A rewrite: every row is written again, and every foreign key pointing at it follows."
+      },
+      {
+        "text": "`ALTER COLUMN status SET NOT NULL`",
+        "correct": false,
+        "why": "A full scan, which reads every row and rewrites none."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0wxfp20",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A migration tool wraps every migration in one transaction. A migration containing `CREATE INDEX CONCURRENTLY` fails before it starts. Why?",
+    "hint": "The word `CONCURRENTLY` buys one thing and gives up another.",
+    "choices": [
+      {
+        "text": "It must run on its own, outside any block, and be excepted by hand",
+        "correct": true,
+        "why": "It is the price of letting writes carry on while the index is built."
+      },
+      {
+        "text": "Concurrent index builds need the table to be empty",
+        "correct": false,
+        "why": "They are for exactly the case where it is not."
+      },
+      {
+        "text": "The tool has to hold an ACCESS EXCLUSIVE lock first",
+        "correct": false,
+        "why": "Avoiding that lock is the whole point of the word."
+      },
+      {
+        "text": "An index may not be created in the same migration as a column",
+        "correct": false,
+        "why": "There is no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ymsx4bn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A lookup by name finds nothing, and the name is on the screen in front of you. `SELECT length(name), octet_length(name)` returns `3` and `4`. What have you found?",
+    "hint": "Three characters and four bytes.",
+    "choices": [
+      {
+        "text": "A trailing space nobody can see",
+        "correct": false,
+        "why": "A space is one character and one byte, so both numbers would have moved together."
+      },
+      {
+        "text": "The column is `char(n)` and has been padded",
+        "correct": false,
+        "why": "Padding adds characters as well as bytes, so the two would still agree."
+      },
+      {
+        "text": "A character that is not ASCII and looks exactly like one that is",
+        "correct": true,
+        "why": "One letter takes two bytes, and the two strings are genuinely different values."
+      },
+      {
+        "text": "The wrong collation is being used for the comparison",
+        "correct": false,
+        "why": "Collation changes sorting, not whether two strings are equal byte for byte."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ymr47r4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parcel is scanned at 23:50 and the column keeps only the day, so nothing can say which side of midnight it landed on. Write the type that would have kept it.",
+    "hint": "One word, and it is the type this lesson tells you to reach for by default.",
+    "blanks": [
+      {
+        "accept": [
+          "timestamptz",
+          "timestamp with time zone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kgq5atgs",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before altering a table that matters, you set one parameter so that a patient statement cannot queue the whole application behind it. Write its name.",
+    "hint": "It is set in the same session, just above the statement.",
+    "blanks": [
+      {
+        "accept": [
+          "lock_timeout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pgwhnkbm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column must be renamed on a table the application never stops using. Put the four steps in order.",
+    "hint": "At no point may a running copy of the application be wrong.",
+    "items": [
+      "Add the new column; write both and read the old one",
+      "Backfill the new column from the old one",
+      "Read the new column, still writing both",
+      "Stop writing the old column, then drop it"
+    ],
+    "trap": "The tempting shortcut is to read the new column as soon as it exists — but it is empty for every row written before the backfill."
+  },
+  {
+    "id": "ex-eckk3jca",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A car park. Match each column to the type it should have.",
+    "hint": "One is money, one is a moment, one is a string with no rule about its length.",
+    "pairs": [
+      {
+        "left": "fare_charged",
+        "right": "numeric(6,2)"
+      },
+      {
+        "left": "entered_at",
+        "right": "timestamptz"
+      },
+      {
+        "left": "plate",
+        "right": "text"
+      }
+    ],
+    "right_distractors": [
+      "double precision",
+      "char(8)"
+    ]
   }
 ]

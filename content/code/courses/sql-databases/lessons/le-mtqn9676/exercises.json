@@ -1518,5 +1518,351 @@
         "why": "Speed is not what is at stake in a document."
       }
     ]
+  },
+  {
+    "id": "ex-g622fbyr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A support system has one table: `tickets (ticket_id PRIMARY KEY, customer_email, customer_name, agent, agent_team, opened_on)`. Which is the first normal form it breaks?",
+    "hint": "Check what each form needs in order to be breakable at all.",
+    "choices": [
+      {
+        "text": "First, because a ticket holds several facts",
+        "correct": false,
+        "why": "First normal form is about several values in one cell, not several facts in one row."
+      },
+      {
+        "text": "Second, because the name belongs to the customer",
+        "correct": false,
+        "why": "Second normal form can only be broken by a key with parts, and this key is one column."
+      },
+      {
+        "text": "Third, because ordinary columns determine other ordinary columns",
+        "correct": true,
+        "why": "The email determines the name and the agent determines the team, both by way of a column that is not the key."
+      },
+      {
+        "text": "None; it is in third normal form and merely wide",
+        "correct": false,
+        "why": "Move an agent to another team and several rows have to change together."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8y4hm9b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payroll system stores `tax_rate` on every payslip, and also keeps the current rate in a `tax_rates` table. The government raises the rate in July. Should the payslips issued in June change?",
+    "hint": "Say the two facts out loud, one after the other.",
+    "choices": [
+      {
+        "text": "No, so the rate on the payslip is a snapshot and belongs there",
+        "correct": true,
+        "why": "What was charged is a fact about June and does not move when the rate does."
+      },
+      {
+        "text": "Yes, so the rate on the payslip is a copy and should be removed",
+        "correct": false,
+        "why": "Then last year's payslips would silently re-compute themselves every time a rate changed."
+      },
+      {
+        "text": "No, but the payslip should join and filter by date instead",
+        "correct": false,
+        "why": "That works only while every past rate is kept and nobody ever edits one."
+      },
+      {
+        "text": "Yes, because one fact must never be stored twice",
+        "correct": false,
+        "why": "These are two facts: what the rate is, and what was applied on a day."
+      }
+    ]
+  },
+  {
+    "id": "ex-83fz55gt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A podcast app stores `show_name` on every episode row, next to a `shows` table that holds the name too. A show is renamed. What is the right reading?",
+    "hint": "Ask whether the stored value should follow the source.",
+    "choices": [
+      {
+        "text": "A snapshot, like the price on an order line",
+        "correct": false,
+        "why": "An episode does not belong to the old name the way a sale belongs to the day's price."
+      },
+      {
+        "text": "A copy, and it should come out",
+        "correct": true,
+        "why": "The episode is of the show that was renamed, so the stored name should follow it and can be left behind."
+      },
+      {
+        "text": "Neither; two tables may hold the same text",
+        "correct": false,
+        "why": "They may hold the same value only when they are two facts. Here it is one."
+      },
+      {
+        "text": "A copy, but keeping it is free because names rarely change",
+        "correct": false,
+        "why": "Rarely is what makes it expensive: the drift is found long after the rename."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhvp6sma",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`warehouse_stock (sku, warehouse_code, warehouse_city, quantity)` has the key `(sku, warehouse_code)`. What is wrong, and what does the fix produce?",
+    "hint": "Ask what each column needs in order to be known.",
+    "choices": [
+      {
+        "text": "Nothing; the city describes where the stock is",
+        "correct": false,
+        "why": "It describes where the warehouse is, and it is written once per product held there."
+      },
+      {
+        "text": "`quantity` depends on part of the key; move it to a table of its own",
+        "correct": false,
+        "why": "The quantity is the one column that needs both halves. It is exactly where it belongs."
+      },
+      {
+        "text": "`warehouse_city` depends on half the key; a `warehouses` table appears",
+        "correct": true,
+        "why": "A partial dependency, so the city moves to a table keyed by the warehouse."
+      },
+      {
+        "text": "The key should be a generated id, which settles it",
+        "correct": false,
+        "why": "That hides the dependency. The city would still be written once per product."
+      }
+    ]
+  },
+  {
+    "id": "ex-j42skth9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A clinic copies the patient's phone number onto every appointment at the moment it is booked, so staff can call them. The patient later changes their number. Is the copied number a snapshot?",
+    "hint": "Ask what the number is there to do.",
+    "choices": [
+      {
+        "text": "Yes, because it records the number as it was on the day",
+        "correct": false,
+        "why": "Nothing needs that. Nobody will ever want to ring the number the patient used to have."
+      },
+      {
+        "text": "No, because the clinic should ring the number they have now",
+        "correct": true,
+        "why": "The stored value should follow the source, which makes it a copy and an anomaly waiting."
+      },
+      {
+        "text": "Yes, because the appointment happened at a moment",
+        "correct": false,
+        "why": "The appointment did. The phone number is not a fact about that moment."
+      },
+      {
+        "text": "No, and the fix is to copy it again whenever it changes",
+        "correct": false,
+        "why": "That is the mechanism problem, and it is the reason to keep one copy rather than many."
+      }
+    ]
+  },
+  {
+    "id": "ex-e041cgk7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stored `comment_count` is maintained by a trigger, and also by a nightly job that recounts and repairs it. Why is having both worse than having one?",
+    "hint": "Ask what happens on the day the two produce different numbers.",
+    "choices": [
+      {
+        "text": "The nightly job is slower than the trigger",
+        "correct": false,
+        "why": "It is, and that is a cost rather than the defect."
+      },
+      {
+        "text": "Two mechanisms is the state in which they disagree",
+        "correct": true,
+        "why": "When the number is wrong, nothing says which of the two was meant to be right."
+      },
+      {
+        "text": "Triggers cannot count rows in another table",
+        "correct": false,
+        "why": "They can. That is what makes them a workable mechanism here."
+      },
+      {
+        "text": "A count that can be recomputed should never be stored",
+        "correct": false,
+        "why": "Being recomputable is what makes it checkable, and it is a point in its favour."
+      }
+    ]
+  },
+  {
+    "id": "ex-crznf4t5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`teacher_id` runs 1, 2, 1, 1 down the `courses` table after the whole decomposition. When is a value repeated down a column fine?",
+    "hint": "Two things can repeat, and only one of them can disagree with itself.",
+    "choices": [
+      {
+        "text": "When it is a pointer rather than a copy of a fact",
+        "correct": true,
+        "why": "Every row points at the one place the fact lives, so there is nothing to fall out of step."
+      },
+      {
+        "text": "When the table is small enough for it not to matter",
+        "correct": false,
+        "why": "Size decides nothing here; the same table at ten million rows is equally fine."
+      },
+      {
+        "text": "When the column is indexed",
+        "correct": false,
+        "why": "An index is about finding rows and says nothing about where a fact is stored."
+      },
+      {
+        "text": "When nobody has complained about it yet",
+        "correct": false,
+        "why": "That is how the anomalies get in, not a reason they are absent."
+      }
+    ]
+  },
+  {
+    "id": "ex-zj1rgpe1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A driving school: a pupil has one instructor per licence category, and each instructor teaches only one category. One table holds `(pupil, category, instructor)`. Which dependency is the one the third normal form does not catch?",
+    "hint": "Look at which side of each arrow is part of the key.",
+    "choices": [
+      {
+        "text": "`pupil, category → instructor`",
+        "correct": false,
+        "why": "That one is from the whole key, which is the healthy case."
+      },
+      {
+        "text": "`instructor → category`",
+        "correct": true,
+        "why": "An ordinary column determining a key column, which third normal form says nothing about and the fourth rule of Boyce and Codd does."
+      },
+      {
+        "text": "`pupil → category`",
+        "correct": false,
+        "why": "A pupil may take more than one category, so that is not a dependency at all."
+      },
+      {
+        "text": "`category → instructor`",
+        "correct": false,
+        "why": "A category has many instructors, so knowing it tells you nothing about which."
+      }
+    ]
+  },
+  {
+    "id": "ex-72zj4zbz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `shipments` table stores the destination address copied from the customer at dispatch. The customer moves, and somebody updates the old shipments to the new address. What did that destroy?",
+    "hint": "Ask what those rows were the record of.",
+    "choices": [
+      {
+        "text": "Nothing; the address is now correct everywhere",
+        "correct": false,
+        "why": "It is now the same in every row and wrong in most of them."
+      },
+      {
+        "text": "The record of where each parcel was actually sent",
+        "correct": true,
+        "why": "The address on a shipment is a fact about that dispatch, and there is nothing left to recover it from."
+      },
+      {
+        "text": "The foreign key to the customer",
+        "correct": false,
+        "why": "That is untouched. The pointer was never the problem."
+      },
+      {
+        "text": "The index on the address column",
+        "correct": false,
+        "why": "An update maintains its indexes; nothing about them is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-1282gdzf",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The key determines the agent, and the agent determines the team, so the key reaches the team by way of an ordinary column. Write the one word for that kind of dependency.",
+    "hint": "It names the step in the middle.",
+    "blanks": [
+      {
+        "accept": [
+          "transitive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ttt32e3t",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A table whose primary key is one generated id cannot break one of the three normal forms, whatever its columns hold. Write that form's number.",
+    "hint": "It is the one defined against the parts of a key.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "2nf",
+          "second",
+          "two"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7866v1s2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody proposes storing a total that could be summed. Put the four gates in the order they should be tried.",
+    "hint": "Three of them might mean you never denormalise at all.",
+    "items": [
+      "Establish that the query is slow on production-sized data",
+      "Try an index on the foreign key",
+      "Try writing the query differently",
+      "Decide what mechanism will keep the stored value true"
+    ],
+    "trap": "The gate people skip is the last one, and it is the one that turns a stored total into a bug with a schedule."
   }
 ]
