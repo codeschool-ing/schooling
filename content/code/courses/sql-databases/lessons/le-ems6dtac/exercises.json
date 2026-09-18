@@ -10,22 +10,22 @@
     "hint": "Ask who opened the transaction that statement was running in.",
     "choices": [
       {
-        "text": "As it was before",
+        "text": "As it was before the UPDATE started",
         "correct": true,
         "why": "A single statement is atomic on its own: autocommit wrapped it in a transaction."
       },
       {
-        "text": "Updated as far as the last checkpoint the engine had written",
+        "text": "Updated as far as the last checkpoint",
         "correct": false,
         "why": "Checkpoints decide what has to be replayed, and not what counts as done."
       },
       {
-        "text": "Half updated, since there was no BEGIN written to protect it",
+        "text": "Half updated, with no BEGIN to protect it",
         "correct": false,
         "why": "The BEGIN was supplied for you, which is what autocommit means."
       },
       {
-        "text": "Locked, until somebody clears the interrupted statement by hand",
+        "text": "Locked until somebody clears it",
         "correct": false,
         "why": "Recovery finishes or undoes the work, and it needs no help to do it."
       }
@@ -42,22 +42,22 @@
     "hint": "Three of them are about when things happen, and one is about whether they are right.",
     "choices": [
       {
-        "text": "Two statements taking effect together, or neither of them",
+        "text": "Two statements taking effect together, or neither",
         "correct": false,
         "why": "That is atomicity, and it is the first thing a transaction is for."
       },
       {
-        "text": "The ability to discard everything you have done with ROLLBACK",
+        "text": "The ability to discard everything with ROLLBACK",
         "correct": false,
         "why": "Until it commits, its work is visible to nobody and can be thrown away."
       },
       {
-        "text": "Some degree of separation from another connection's unfinished work",
+        "text": "Separation from another connection's unfinished work",
         "correct": false,
         "why": "How much is a setting, and the rest of the lesson is about that setting."
       },
       {
-        "text": "A guarantee that the result makes sense",
+        "text": "A guarantee the result makes business sense",
         "correct": true,
         "why": "Constraints do that; a transaction makes two statements happen together."
       }
@@ -74,22 +74,22 @@
     "hint": "There is a message about commands being ignored.",
     "choices": [
       {
-        "text": "Reads, since a SELECT changes no data",
+        "text": "Reads, since a SELECT changes nothing",
         "correct": false,
         "why": "The block covers every statement, whether it writes or not."
       },
       {
-        "text": "Any statement you like: the failed one is skipped",
+        "text": "Anything: the failed statement is skipped",
         "correct": false,
         "why": "MySQL behaves that way, and application code is often written against it."
       },
       {
-        "text": "Nothing until you roll back",
+        "text": "Nothing at all until you roll back",
         "correct": true,
         "why": "Every later statement is refused; a SAVEPOINT beforehand is how you carry on."
       },
       {
-        "text": "The same statement again, which the server retries for you",
+        "text": "The same statement, retried by the server",
         "correct": false,
         "why": "Retrying is the application's job, and it is the last section of this lesson."
       }
@@ -106,7 +106,7 @@
     "hint": "There is no such thing underneath.",
     "choices": [
       {
-        "text": "A savepoint",
+        "text": "A savepoint inside the one transaction",
         "correct": true,
         "why": "With ROLLBACK TO to undo part of the work without abandoning the whole."
       },
@@ -116,12 +116,12 @@
         "why": "That would be a separate transaction, unable to see the first one's work."
       },
       {
-        "text": "A queue of statements held back until the outer commit",
+        "text": "A queue of statements held to the outer commit",
         "correct": false,
         "why": "Statements run as they are sent; holding them back would change what they read."
       },
       {
-        "text": "A transaction whose commit is deferred to the outer one",
+        "text": "A transaction whose commit is deferred",
         "correct": false,
         "why": "Deferring a commit is not something the protocol offers."
       }
@@ -157,22 +157,22 @@
     "hint": "Three are mechanisms. One depends on what you wrote down.",
     "choices": [
       {
-        "text": "D, because durability depends on the storage you bought",
+        "text": "D, for durability",
         "correct": false,
         "why": "Hardware can undermine it, which is a different thing from you declaring it."
       },
       {
-        "text": "I, because you are the one who chooses the isolation level",
+        "text": "I, for isolation",
         "correct": false,
         "why": "You choose the level, and each level is then enforced for you."
       },
       {
-        "text": "C",
+        "text": "C, for consistency",
         "correct": true,
         "why": "The database keeps the constraints you declared and has no opinion about the rest."
       },
       {
-        "text": "A, because atomicity depends on how you grouped the statements",
+        "text": "A, for atomicity",
         "correct": false,
         "why": "Grouping decides the scope; the guarantee inside that scope is the engine's."
       }
@@ -189,22 +189,22 @@
     "hint": "Ask where that rule is written down.",
     "choices": [
       {
-        "text": "Yes at SERIALIZABLE, which checks the invariants as it goes",
+        "text": "Yes, at SERIALIZABLE",
         "correct": false,
         "why": "That level checks for orderings, and it has no idea what your rule is."
       },
       {
-        "text": "Yes, provided both writes are inside the same transaction",
+        "text": "Yes, if both writes share a transaction",
         "correct": false,
         "why": "They will happen together, whether or not the numbers agree."
       },
       {
-        "text": "Yes, because keeping the data consistent is the C in ACID",
+        "text": "Yes, that is the C in ACID",
         "correct": false,
         "why": "That letter means the rules you declared, and this one was not declared."
       },
       {
-        "text": "No",
+        "text": "No, not unless it is a constraint",
         "correct": true,
         "why": "Unless it is a constraint, the rule lives in application code and nothing enforces it."
       }
@@ -221,22 +221,22 @@
     "hint": "Durability says what it says, and it says it about one machine.",
     "choices": [
       {
-        "text": "Has it, because a commit waits for the replicas to acknowledge",
+        "text": "It has it: the commit waited for the replica",
         "correct": false,
         "why": "It does when configured to, and that configuration is the trade being described."
       },
       {
-        "text": "Recovers it from the primary's log when the primary comes back",
+        "text": "It recovers it from the primary's log",
         "correct": false,
         "why": "The primary is gone, and so is the log entry that was only there."
       },
       {
-        "text": "Does not have it",
+        "text": "It does not have it",
         "correct": true,
         "why": "Synchronous replication widens the promise and costs latency on every commit."
       },
       {
-        "text": "Represents a violation of the D, which exists to prevent this",
+        "text": "It is a violation of the D",
         "correct": false,
         "why": "The D is about surviving a crash of the machine that committed."
       }
@@ -253,22 +253,22 @@
     "hint": "Either order of the two lines has a failure that lies.",
     "choices": [
       {
-        "text": "Inside the transaction, with a handler that undoes it on rollback",
+        "text": "Sent to the queue inside the transaction",
         "correct": false,
         "why": "A message already delivered is not something a rollback can reach."
       },
       {
-        "text": "In a table, inside the transaction",
+        "text": "Written to a table in the transaction",
         "correct": true,
         "why": "A separate process delivers it afterwards, and the row is covered by the commit."
       },
       {
-        "text": "Just after the COMMIT, so it is sent when the write succeeded",
+        "text": "Sent to the queue just after the COMMIT",
         "correct": false,
         "why": "If the process dies in between, the message is never sent and nobody knows."
       },
       {
-        "text": "Just before the COMMIT, so the data is ready when it arrives",
+        "text": "Sent to the queue just before the COMMIT",
         "correct": false,
         "why": "If the commit then fails, the message describes something that did not happen."
       }
@@ -285,7 +285,7 @@
     "hint": "The database can only wait for an answer; it cannot check that the answer was honest.",
     "choices": [
       {
-        "text": "An isolation level below REPEATABLE READ, which weakens the commit",
+        "text": "An isolation level below REPEATABLE READ",
         "correct": false,
         "why": "Isolation governs visibility between transactions and touches durability not at all."
       },
@@ -295,12 +295,12 @@
         "why": "Some consumer hardware, some virtual machines, a filesystem mounted wrongly."
       },
       {
-        "text": "A long transaction holding the write-ahead log open",
+        "text": "A long transaction holding the log open",
         "correct": false,
         "why": "That costs disk and slows recovery; the committed data is still committed."
       },
       {
-        "text": "A crash during a checkpoint, which loses the most recent batch",
+        "text": "A crash during a checkpoint",
         "correct": false,
         "why": "A checkpoint is an optimisation for recovery, and the log already has the data."
       }
@@ -317,12 +317,12 @@
     "hint": "A product answers them one at a time, and so does a configuration file.",
     "choices": [
       {
-        "text": "Whether it is relational, which settles the matter",
+        "text": "Whether it is relational",
         "correct": false,
         "why": "Several document and key-value stores now offer real transactions."
       },
       {
-        "text": "Whether it supports two-phase commit across several nodes",
+        "text": "Whether it supports two-phase commit",
         "correct": false,
         "why": "A specialised protocol, and needing it is rarer than the slogan suggests."
       },
@@ -332,7 +332,7 @@
         "why": "A good question, and it answers one of the four rather than all of them."
       },
       {
-        "text": "The four, separately",
+        "text": "What each of the four letters means here",
         "correct": true,
         "why": "What happens if this half fails, which rules are enforced, what others see, what survives."
       }
@@ -349,22 +349,22 @@
     "hint": "The word points at work that has not been finished.",
     "choices": [
       {
-        "text": "Reading a value that a constraint would have rejected",
+        "text": "Reading a value a constraint would reject",
         "correct": false,
         "why": "A constraint rejects at write time, so such a value is not in the table."
       },
       {
-        "text": "Reading a row that somebody deletes immediately afterwards",
+        "text": "Reading a row somebody deletes next",
         "correct": false,
         "why": "The row was really there when it was read, which is an ordinary race."
       },
       {
-        "text": "Reading a row while somebody else is in the middle of writing it",
+        "text": "Reading a row while another writes it",
         "correct": false,
         "why": "Writers do not block readers, and the reader sees a committed version."
       },
       {
-        "text": "Reading uncommitted work",
+        "text": "Reading work that is not yet committed",
         "correct": true,
         "why": "And then the other transaction rolls back, so the value never existed at all."
       }
@@ -386,17 +386,17 @@
         "why": "Both involve committed data; neither of them is a dirty read."
       },
       {
-        "text": "One changed, one arrived",
+        "text": "One row changed under you, one row appeared",
         "correct": true,
         "why": "A row you saw changing, against a row appearing inside a range you counted."
       },
       {
-        "text": "One is possible at READ COMMITTED and the other is not",
+        "text": "One is possible at READ COMMITTED and one is not",
         "correct": false,
         "why": "Both are possible there, which is what the standard's table says."
       },
       {
-        "text": "One happens in a SELECT and the other during an UPDATE",
+        "text": "One happens in a SELECT, one in an UPDATE",
         "correct": false,
         "why": "Both are noticed by reading, which is what makes them reads."
       }
@@ -413,7 +413,7 @@
     "hint": "Two sales went through and the stock moved by one.",
     "choices": [
       {
-        "text": "A phantom, since a sale disappeared from the total",
+        "text": "A phantom read",
         "correct": false,
         "why": "A phantom is a row appearing in a range, and no row appeared here."
       },
@@ -423,12 +423,12 @@
         "why": "Each read a true value and wrote a correct consequence of it, and one sale vanished."
       },
       {
-        "text": "A write skew, since two transactions wrote at once",
+        "text": "A write skew",
         "correct": false,
         "why": "Write skew is two transactions writing different rows; these wrote one."
       },
       {
-        "text": "A dirty read, since each one acted on the other's intent",
+        "text": "A dirty read",
         "correct": false,
         "why": "Neither saw the other at all, which is precisely the problem."
       }
@@ -450,17 +450,17 @@
         "why": "On PostgreSQL that turns it into an aborted transaction you then have to retry."
       },
       {
-        "text": "Do the arithmetic in SQL",
+        "text": "Do the arithmetic inside the UPDATE",
         "correct": true,
         "why": "stock = stock - 1 reads and writes in one statement, and the row is locked for it."
       },
       {
-        "text": "Read the row a second time and compare the two values",
+        "text": "Read the row again before writing",
         "correct": false,
         "why": "The second read can be overtaken as easily as the first was."
       },
       {
-        "text": "Put both statements inside a single transaction",
+        "text": "Put both statements in one transaction",
         "correct": false,
         "why": "They probably already are, and the two transactions still do not see each other."
       }
@@ -477,22 +477,22 @@
     "hint": "Compare which rows each transaction wrote.",
     "choices": [
       {
-        "text": "Because the two transactions read different rows",
+        "text": "The two transactions read different rows",
         "correct": false,
         "why": "They read the same rows, and that is where the shared premise comes from."
       },
       {
-        "text": "Because it happens at SERIALIZABLE and the other does not",
+        "text": "It shows up at SERIALIZABLE",
         "correct": false,
         "why": "SERIALIZABLE is the level that prevents it, rather than the one that produces it."
       },
       {
-        "text": "The rows written are different",
+        "text": "The two transactions write different rows",
         "correct": true,
         "why": "Nothing collided, so there is no overwrite and no conflict to detect."
       },
       {
-        "text": "Because one of the two transactions is rolled back",
+        "text": "One of the two transactions is rolled back",
         "correct": false,
         "why": "Both commit happily, which is what makes the pair so hard to notice."
       }
@@ -537,17 +537,17 @@
     "hint": "It is not the same as MySQL's, which is the point of the section.",
     "choices": [
       {
-        "text": "READ UNCOMMITTED, which is fastest to provide",
+        "text": "READ UNCOMMITTED",
         "correct": false,
         "why": "PostgreSQL cannot produce a dirty read at all, so the level buys nothing."
       },
       {
-        "text": "REPEATABLE READ, as MySQL uses",
+        "text": "REPEATABLE READ",
         "correct": false,
         "why": "That is MySQL's default, and running the same code on both is how people find out."
       },
       {
-        "text": "SERIALIZABLE, which is the safe choice to default to",
+        "text": "SERIALIZABLE",
         "correct": false,
         "why": "It would hand every application a retry loop it had not written."
       },
@@ -569,22 +569,22 @@
     "hint": "One default against another.",
     "choices": [
       {
-        "text": "Whether a single statement is atomic on its own",
+        "text": "Whether a single statement is atomic",
         "correct": false,
         "why": "It is on both, which is what autocommit means in each."
       },
       {
-        "text": "Whether a deadlock is detected and resolved",
+        "text": "Whether a deadlock is detected",
         "correct": false,
         "why": "Both detect deadlocks; they differ in how quickly they look."
       },
       {
-        "text": "Whether transactions are atomic in the first place",
+        "text": "Whether a transaction is atomic as a unit",
         "correct": false,
         "why": "Both give atomicity, and neither makes it optional."
       },
       {
-        "text": "The isolation level",
+        "text": "The isolation level you get by default",
         "correct": true,
         "why": "READ COMMITTED against REPEATABLE READ, so a bug impossible on one is routine on the other."
       }
@@ -601,22 +601,22 @@
     "hint": "Think about what the storage keeps when a row is updated.",
     "choices": [
       {
-        "text": "No",
+        "text": "No, and not at any other level",
         "correct": true,
         "why": "Old versions are kept rather than overwritten, so there is no uncommitted one to read."
       },
       {
-        "text": "Yes, which is the entire purpose of asking for that level",
+        "text": "Yes, that is what the level does",
         "correct": false,
         "why": "The level is accepted as a spelling and behaves as READ COMMITTED."
       },
       {
-        "text": "Yes, but from another session working on the same table",
+        "text": "Yes, from another session",
         "correct": false,
         "why": "Sessions are what isolation is between, so that changes nothing here."
       },
       {
-        "text": "Yes, unless the row happens to be locked at the time",
+        "text": "Yes, unless the row is locked",
         "correct": false,
         "why": "A lock affects writers, and the visibility rule is decided elsewhere."
       }
@@ -638,17 +638,17 @@
         "why": "So a transaction can write from a value of 12 that it never saw."
       },
       {
-        "text": "The snapshot, so it sees the same 10 the SELECT saw",
+        "text": "The snapshot the SELECT saw",
         "correct": false,
         "why": "That is what the level's name suggests, and it is what the writes do not do."
       },
       {
-        "text": "Whichever of the two is older, for consistency",
+        "text": "Whichever version is older",
         "correct": false,
         "why": "Nothing prefers the older version; the write wants the current one."
       },
       {
-        "text": "Neither: it fails with a serialization error",
+        "text": "Neither, it fails with an error",
         "correct": false,
         "why": "PostgreSQL raises one there; MySQL takes a lock and proceeds."
       }
@@ -670,17 +670,17 @@
         "why": "Two transactions reading the same rows and writing different ones are not detected."
       },
       {
-        "text": "Dirty read, which Oracle prevents at no level",
+        "text": "Dirty read",
         "correct": false,
         "why": "Oracle prevents it everywhere; it has no READ UNCOMMITTED to offer."
       },
       {
-        "text": "Phantom read, which the standard's table allows there",
+        "text": "Phantom read",
         "correct": false,
         "why": "Snapshot isolation prevents phantoms, which is more than the table requires."
       },
       {
-        "text": "Lost update, which locking alone can prevent",
+        "text": "Lost update",
         "correct": false,
         "why": "A conflicting write is detected and one transaction is refused."
       }
@@ -697,22 +697,22 @@
     "hint": "The name describes the thing it is good at.",
     "choices": [
       {
-        "text": "When throughput matters more than the answers being exact",
+        "text": "When throughput matters more than exactness",
         "correct": false,
         "why": "Raising the level costs throughput rather than buying it."
       },
       {
-        "text": "When one transaction reads twice",
+        "text": "When one transaction reads more than once",
         "correct": true,
         "why": "A report of several queries, an export, a reconciliation: one view throughout."
       },
       {
-        "text": "When a decision depends on rows somebody else is writing",
+        "text": "When a decision depends on rows others write",
         "correct": false,
         "why": "That is the write-skew shape, and it needs the level above."
       },
       {
-        "text": "When two transactions write the same row at once",
+        "text": "When two transactions write the same row",
         "correct": false,
         "why": "A conflicting write is handled at the lower level too, by waiting."
       }
@@ -729,7 +729,7 @@
     "hint": "Ask what it is looking for.",
     "choices": [
       {
-        "text": "The reads were not yet committed when they happened",
+        "text": "The reads were not committed",
         "correct": false,
         "why": "Both read committed data, and both readings were true at the time."
       },
@@ -739,12 +739,12 @@
         "why": "It detects two transactions writing the same row, and these wrote two."
       },
       {
-        "text": "The check was run outside the transaction by mistake",
+        "text": "The check ran outside the transaction",
         "correct": false,
         "why": "It was inside, which is what makes the example worth teaching."
       },
       {
-        "text": "One of the two transactions had an out-of-date snapshot",
+        "text": "One snapshot was out of date",
         "correct": false,
         "why": "Both snapshots were current and correct when they were taken."
       }
@@ -761,22 +761,22 @@
     "hint": "Two transactions can each find it free.",
     "choices": [
       {
-        "text": "Correct, provided both statements are in one transaction",
+        "text": "Correct as written",
         "correct": false,
         "why": "The transaction makes them happen together and stops neither of them."
       },
       {
-        "text": "Write skew",
+        "text": "A write skew",
         "correct": true,
-        "why": "Which is why the pattern is unsafe even inside a transaction; a unique index is the fix."
+        "why": "So the pattern is unsafe even inside a transaction; a unique index is the fix."
       },
       {
-        "text": "A phantom read, because a row appears where there was not one",
+        "text": "A phantom read",
         "correct": false,
         "why": "A phantom is the symptom here, and it does not name the bug."
       },
       {
-        "text": "A lost update, because two inserts collide on one row",
+        "text": "A lost update",
         "correct": false,
         "why": "Nothing collides: two rows are inserted and both succeed."
       }
@@ -793,22 +793,22 @@
     "hint": "Two of these need you to have identified the rule first.",
     "choices": [
       {
-        "text": "SELECT … FOR UPDATE on the rows you read",
+        "text": "FOR UPDATE on the rows you read",
         "correct": false,
         "why": "It works, and you have to know which reads to protect before you protect them."
       },
       {
-        "text": "A unique index on the column being checked",
+        "text": "A unique index on that column",
         "correct": false,
         "why": "Excellent where the rule is uniqueness, and it has to be the rule you spotted."
       },
       {
-        "text": "SERIALIZABLE",
+        "text": "The SERIALIZABLE level",
         "correct": true,
         "why": "It tracks what was read as well as written, so it catches shapes nobody enumerated."
       },
       {
-        "text": "An exclusion constraint over the overlapping range",
+        "text": "An exclusion constraint",
         "correct": false,
         "why": "The right tool for that family, once you know the family is the problem."
       }
@@ -825,22 +825,22 @@
     "hint": "It is a unique index generalised past equality.",
     "choices": [
       {
-        "text": "A CHECK constraint comparing the two time ranges",
+        "text": "A CHECK on the time range",
         "correct": false,
         "why": "A CHECK sees one row, and an overlap is a fact about a pair."
       },
       {
-        "text": "A unique index on the room and the start time",
+        "text": "A unique index on room and start time",
         "correct": false,
         "why": "Two bookings that overlap without starting at the same minute slip through."
       },
       {
-        "text": "A trigger that runs the overlap query again on insert",
+        "text": "A trigger re-running the overlap query",
         "correct": false,
         "why": "It re-runs the same check that two transactions can each pass."
       },
       {
-        "text": "An exclusion constraint",
+        "text": "An exclusion constraint using gist",
         "correct": true,
         "why": "EXCLUDE USING gist: no two rows with the same room and overlapping ranges."
       }
@@ -857,22 +857,22 @@
     "hint": "Read the HINT on the error it produces.",
     "choices": [
       {
-        "text": "The loss of phantom protection, traded for the new guarantee",
+        "text": "The loss of phantom protection",
         "correct": false,
         "why": "It prevents phantoms as well, along with everything below it."
       },
       {
-        "text": "A lock on each row your transaction reads",
+        "text": "A lock on each row you read",
         "correct": false,
         "why": "It takes no such locks; it tracks the reads and checks them at commit."
       },
       {
-        "text": "Writing a retry loop",
+        "text": "Writing a retry loop yourself",
         "correct": true,
         "why": "The level hands you an error meaning try again, and answering it is your job."
       },
       {
-        "text": "Longer transactions, since there is more to check",
+        "text": "Longer transactions to check",
         "correct": false,
         "why": "The checking is not what makes a transaction long."
       }
@@ -889,22 +889,22 @@
     "hint": "Ask what the storage does when a row is written.",
     "choices": [
       {
-        "text": "Yes, until the reading transaction commits or rolls back",
+        "text": "Yes, until the reader commits",
         "correct": false,
         "why": "That is how a database without multiversion storage would have to behave."
       },
       {
-        "text": "Yes from REPEATABLE READ upwards, where reads are held",
+        "text": "Yes, at REPEATABLE READ and above",
         "correct": false,
         "why": "The level decides which version is read, and not whether a lock is taken."
       },
       {
-        "text": "No",
+        "text": "No, at no isolation level",
         "correct": true,
         "why": "Old versions are kept, so the reader reads one while the writer writes another."
       },
       {
-        "text": "Yes, unless the SELECT is written with FOR SHARE",
+        "text": "Yes, if FOR SHARE",
         "correct": false,
         "why": "FOR SHARE adds a lock; a plain SELECT takes none."
       }
@@ -921,22 +921,22 @@
     "hint": "It is the same lock, taken earlier.",
     "choices": [
       {
-        "text": "The lock an UPDATE would take",
+        "text": "An UPDATE's own lock",
         "correct": true,
         "why": "Taken at the moment you read, so the decision you make from it holds."
       },
       {
-        "text": "A guarantee that you will not delete the row yourself",
+        "text": "A guarantee you will not delete the row",
         "correct": false,
         "why": "Your own transaction was never the risk being managed."
       },
       {
-        "text": "A promise the value will not change before the next statement",
+        "text": "A promise the value will not change",
         "correct": false,
         "why": "It stops other writers for the whole transaction, not for one statement."
       },
       {
-        "text": "A faster path, because the row has already been fetched",
+        "text": "A faster path to the row",
         "correct": false,
         "why": "Fetching is not what the clause changes."
       }
@@ -953,12 +953,12 @@
     "hint": "They all want the same first row.",
     "choices": [
       {
-        "text": "They each get the row, and the work is done ten times",
+        "text": "Each gets the row, ten times over",
         "correct": false,
         "why": "The lock is exclusive, so nine of them wait rather than proceed."
       },
       {
-        "text": "They deadlock, because ten transactions want one lock",
+        "text": "They deadlock on the one lock",
         "correct": false,
         "why": "Waiting for one lock is a queue; a deadlock needs a cycle."
       },
@@ -968,7 +968,7 @@
         "why": "So the queue processes one job at a time, whatever the worker count is."
       },
       {
-        "text": "They each take a different row, which is the default behaviour",
+        "text": "Each takes a different row",
         "correct": false,
         "why": "Nothing hands out different rows unless the query asks to skip the locked ones."
       }
@@ -985,22 +985,22 @@
     "hint": "No error was raised, so the count is the whole signal.",
     "choices": [
       {
-        "text": "The version column is missing an index",
+        "text": "The version column needs an index",
         "correct": false,
         "why": "An index changes the speed and never the number of rows matched."
       },
       {
-        "text": "The transaction has to be retried at a higher isolation level",
+        "text": "The transaction needs a higher level",
         "correct": false,
         "why": "The level is not what decided this; the WHERE clause is."
       },
       {
-        "text": "The row was deleted, which is the one cause of a zero here",
+        "text": "The row was deleted",
         "correct": false,
         "why": "A possible cause, and a rarer one than the conflict the pattern exists for."
       },
       {
-        "text": "Somebody else saved",
+        "text": "Somebody else saved first",
         "correct": true,
         "why": "The row is at a later version, and treating zero as a conflict is the part people forget."
       }
@@ -1017,22 +1017,22 @@
     "hint": "There is no row to lock.",
     "choices": [
       {
-        "text": "Locking a row before it has been inserted",
+        "text": "Locking a row before it exists",
         "correct": false,
         "why": "A row that does not exist has nothing for a lock to attach to."
       },
       {
-        "text": "Advising the planner which rows the transaction will write",
+        "text": "Telling the planner what you will write",
         "correct": false,
         "why": "The planner takes no hints from locks, and locks give it none."
       },
       {
-        "text": "Something that is not a row",
+        "text": "Locking something that is not a row",
         "correct": true,
         "why": "One importer at a time, say: the thing being protected is a process."
       },
       {
-        "text": "Locking a whole table without writing an ALTER",
+        "text": "Locking a table without an ALTER",
         "correct": false,
         "why": "Table-level locks exist and have their own statement."
       }
@@ -1049,17 +1049,17 @@
     "hint": "One of them is released for you and one is not.",
     "choices": [
       {
-        "text": "Neither, because advisory locks are unusable with a pool",
+        "text": "Neither, they are unusable with a pool",
         "correct": false,
         "why": "The transaction-scoped form is safe, which is why it is the one to prefer."
       },
       {
-        "text": "The session-scoped one, which survives a rollback",
+        "text": "The session-scoped one",
         "correct": false,
         "why": "Surviving a rollback is exactly the property that makes it dangerous here."
       },
       {
-        "text": "Either one, since the pool releases locks when a connection returns",
+        "text": "Either, the pool releases them",
         "correct": false,
         "why": "A pool hands back a connection; it does not audit what that connection holds."
       },
@@ -1081,22 +1081,22 @@
     "hint": "Draw the arrows of who is waiting for whom.",
     "choices": [
       {
-        "text": "A transaction that has waited too long for a lock",
+        "text": "A transaction waiting too long for a lock",
         "correct": false,
         "why": "That is a lock wait timeout, and it has a different fix."
       },
       {
-        "text": "A cycle of waits",
+        "text": "A cycle of transactions each waiting",
         "correct": true,
         "why": "Each holds what the other needs, and waiting longer resolves nothing."
       },
       {
-        "text": "A lock the database failed to release after a commit",
+        "text": "A lock not released after a commit",
         "correct": false,
         "why": "Locks are released at the end of the transaction that took them."
       },
       {
-        "text": "A row that two transactions wrote at the same instant",
+        "text": "Two transactions writing one row at once",
         "correct": false,
         "why": "One of them waits at its UPDATE, which is ordinary and fine."
       }
@@ -1113,7 +1113,7 @@
     "hint": "The word in the error is detected, not corrupted.",
     "choices": [
       {
-        "text": "Both are held until an administrator steps in",
+        "text": "Both are held until somebody intervenes",
         "correct": false,
         "why": "The detection exists precisely so that nobody has to step in."
       },
@@ -1123,12 +1123,12 @@
         "why": "Cleanly, and the other proceeds; it is neither corruption nor a crash."
       },
       {
-        "text": "The rows involved stay locked until the server restarts",
+        "text": "The rows stay locked until restart",
         "correct": false,
         "why": "The victim's locks go with the victim's transaction."
       },
       {
-        "text": "Both are rolled back, since neither can be preferred",
+        "text": "Both are rolled back",
         "correct": false,
         "why": "Rolling back one is enough to break the cycle, so one is what goes."
       }
@@ -1145,22 +1145,22 @@
     "hint": "The cycle needs the two transactions to disagree about an order.",
     "choices": [
       {
-        "text": "Raise the isolation level to SERIALIZABLE",
+        "text": "Raise the level to SERIALIZABLE",
         "correct": false,
         "why": "A higher level produces more aborts here rather than fewer."
       },
       {
-        "text": "Lock in ascending id order",
+        "text": "Lock the rows in ascending order of their id",
         "correct": true,
         "why": "Whichever takes row 1 also takes row 2, so the other waits and then proceeds."
       },
       {
-        "text": "Run each account's update on its own, with no transaction",
+        "text": "Update each account without a transaction",
         "correct": false,
         "why": "That gives up the atomicity the transfer needed in the first place."
       },
       {
-        "text": "Wrap each transfer in a savepoint before the second update",
+        "text": "Add a savepoint before the second update",
         "correct": false,
         "why": "A savepoint marks a place to return to and takes no locks."
       }
@@ -1177,7 +1177,7 @@
     "hint": "Each of them needs the other to let go of something first.",
     "choices": [
       {
-        "text": "A share lock is held until the commit, whatever happens",
+        "text": "A share lock is held to the commit",
         "correct": false,
         "why": "True, and it is the second half of the explanation rather than the first."
       },
@@ -1187,14 +1187,14 @@
         "why": "Take FOR UPDATE at the start, when you already know you intend to write."
       },
       {
-        "text": "The update is blocked by the snapshot rather than by a lock",
+        "text": "The snapshot blocks the update, not a lock",
         "correct": false,
         "why": "A snapshot decides what is read; a lock decides who waits."
       },
       {
-        "text": "FOR SHARE and UPDATE may not be used in one transaction",
+        "text": "FOR SHARE and UPDATE do not mix",
         "correct": false,
-        "why": "They may, and doing so in that order is what produces the cycle."
+        "why": "They do, and doing so in that order is what produces the cycle."
       }
     ]
   },
@@ -1209,17 +1209,17 @@
     "hint": "One of the two can never resolve itself.",
     "choices": [
       {
-        "text": "A rollback against something you are meant to retry",
+        "text": "A rollback against a retry",
         "correct": false,
         "why": "Both roll something back, and both are worth retrying once."
       },
       {
-        "text": "A bug in your code against a problem with the configuration",
+        "text": "Your bug against a configuration fault",
         "correct": false,
         "why": "Both are usually your code, and neither is a configuration fault."
       },
       {
-        "text": "MySQL's name for it against PostgreSQL's name for it",
+        "text": "MySQL's name against PostgreSQL's",
         "correct": false,
         "why": "Both engines report both conditions, with their own numbers."
       },
@@ -1241,22 +1241,22 @@
     "hint": "Rare is not the same as gone.",
     "choices": [
       {
-        "text": "A retry",
+        "text": "To retry on a deadlock",
         "correct": true,
         "why": "A new query or a batch job somebody adds is a new pair of orderings."
       },
       {
-        "text": "A lock table large enough to hold the locks it takes",
+        "text": "A bigger lock table",
         "correct": false,
         "why": "Running out of lock space is a different failure with a different message."
       },
       {
-        "text": "A lower deadlock_timeout, so that they are caught sooner",
+        "text": "A lower deadlock_timeout",
         "correct": false,
         "why": "Catching them sooner spends more on checking and prevents none of them."
       },
       {
-        "text": "SERIALIZABLE, which prevents cycles from forming",
+        "text": "To move to SERIALIZABLE",
         "correct": false,
         "why": "That level adds a second reason to abort rather than removing this one."
       }
@@ -1278,17 +1278,17 @@
         "why": "It can only reclaim versions older than the oldest running transaction."
       },
       {
-        "text": "Reclaiming rows in the tables that transaction touched",
+        "text": "Reclaiming rows in the tables it touched",
         "correct": false,
         "why": "The horizon is global: tables it never read are affected too."
       },
       {
-        "text": "Running at any point while a transaction is open",
+        "text": "Running at any point",
         "correct": false,
         "why": "It runs, and finds nothing it is allowed to remove."
       },
       {
-        "text": "Refreshing the statistics the planner depends on",
+        "text": "Refreshing the planner's statistics",
         "correct": false,
         "why": "Analysing is a separate job from reclaiming, and it is unaffected."
       }
@@ -1305,22 +1305,22 @@
     "hint": "The query it ran finished in a millisecond.",
     "choices": [
       {
-        "text": "A connection, and no other resource worth counting",
+        "text": "A connection, and little else",
         "correct": false,
         "why": "The connection is the cheapest of the things it is holding."
       },
       {
-        "text": "A snapshot, which is free until somebody reads from it",
+        "text": "A snapshot, which is free",
         "correct": false,
         "why": "The snapshot is what pins the row versions, whether it is read again or not."
       },
       {
-        "text": "Locks and row versions",
+        "text": "Locks and old row versions",
         "correct": true,
         "why": "Nobody committed, so everything the transaction took is still taken."
       },
       {
-        "text": "A query that is still executing, slowly",
+        "text": "A query still executing",
         "correct": false,
         "why": "Its state would say active if a query were running."
       }
@@ -1337,22 +1337,22 @@
     "hint": "The provider decides how long your locks are held.",
     "choices": [
       {
-        "text": "Inside, so that a failure rolls the row back with it",
+        "text": "Inside, so a failure rolls it back",
         "correct": false,
         "why": "A charge that has left your building is not something a rollback reaches."
       },
       {
-        "text": "Outside the transaction",
+        "text": "Outside the transaction entirely",
         "correct": true,
         "why": "Its latency becomes the length of your transaction, and your locks wait for it."
       },
       {
-        "text": "Inside, at the very end, just before the COMMIT",
+        "text": "Inside, just before the COMMIT",
         "correct": false,
         "why": "The transaction is open for the whole call wherever in it the call sits."
       },
       {
-        "text": "Inside, with a savepoint wrapped around it",
+        "text": "Inside, wrapped in a savepoint",
         "correct": false,
         "why": "A savepoint undoes database work, and the call was not database work."
       }
@@ -1369,19 +1369,19 @@
     "hint": "The reason the batching helps is the reason something is lost.",
     "choices": [
       {
-        "text": "Very little, since batching is better in each respect",
+        "text": "Little, batching is better",
         "correct": false,
         "why": "The atomicity you had over the whole run is a real thing to have given up."
       },
       {
-        "text": "Durability, since each batch commits separately",
+        "text": "Durability, one commit per batch",
         "correct": false,
         "why": "Each commit is as durable as any other; committing more often loses nothing."
       },
       {
-        "text": "Isolation, since other transactions can see the batches",
+        "text": "Isolation, others see the batches",
         "correct": false,
-        "why": "They can, and that is the same visibility any committed work has."
+        "why": "They do, and that is the same visibility any committed work has."
       },
       {
         "text": "Atomicity over the whole job",
@@ -1401,17 +1401,17 @@
     "hint": "The result is meant to be noticed.",
     "choices": [
       {
-        "text": "Writes a warning to the log without acting on it",
+        "text": "Writes a warning to the log",
         "correct": false,
         "why": "There is a separate setting for warning, and this one acts."
       },
       {
-        "text": "Commits whatever the transaction had done so far",
+        "text": "Commits what was done",
         "correct": false,
         "why": "Committing work nobody asked to commit would be a far worse default."
       },
       {
-        "text": "Rolls the transaction back and leaves the session connected",
+        "text": "Rolls back but stays connected",
         "correct": false,
         "why": "Leaving it connected would let the same code open another one immediately."
       },
@@ -1433,22 +1433,22 @@
     "hint": "It is the transaction rollback class.",
     "choices": [
       {
-        "text": "23, which covers the integrity constraints",
+        "text": "23, integrity constraints",
         "correct": false,
         "why": "A duplicate row is still a duplicate on the second attempt."
       },
       {
-        "text": "08, which covers the connection",
+        "text": "08, connection",
         "correct": false,
         "why": "Reconnecting is reasonable, and it is a different kind of recovery."
       },
       {
-        "text": "42, which covers syntax and access",
+        "text": "42, syntax and access",
         "correct": false,
         "why": "A query with a syntax error will have one for ever."
       },
       {
-        "text": "40",
+        "text": "40, transaction rollback",
         "correct": true,
         "why": "Nothing was written, nobody is at fault, and a second attempt may well succeed."
       }
@@ -1465,22 +1465,22 @@
     "hint": "Think about why the first attempt was refused.",
     "choices": [
       {
-        "text": "The first statement of a transaction is the one that may be repeated",
+        "text": "The first statement may be repeated",
         "correct": false,
         "why": "Position is not what decides it; the reads the decision rests on are."
       },
       {
-        "text": "The failed statement is cached and would return the same result",
+        "text": "The failed statement is cached",
         "correct": false,
         "why": "Nothing caches a statement's result between attempts."
       },
       {
-        "text": "It has to decide again",
+        "text": "The decision has to be made again",
         "correct": true,
         "why": "The premise it read turned out to be false, so the reads have to happen again."
       },
       {
-        "text": "The database refuses to accept the same statement twice",
+        "text": "The database refuses it twice",
         "correct": false,
         "why": "It accepts it happily, which is what makes the wrong version so easy to write."
       }
@@ -1502,17 +1502,17 @@
         "why": "A wait that grows, with a random component, turns a collision into a queue."
       },
       {
-        "text": "One wins, since by definition the loser is the one that waits",
+        "text": "One wins and one waits",
         "correct": false,
         "why": "Both were rolled back only to start again at the same moment."
       },
       {
-        "text": "Both succeed, because the locks were released by the rollback",
+        "text": "Both succeed",
         "correct": false,
-        "why": "They were, and both transactions want them again in the same order."
+        "why": "The rollback did release them, and both transactions want them again in the same order."
       },
       {
-        "text": "The database spaces the two of them out on its own",
+        "text": "The database spaces them out",
         "correct": false,
         "why": "Nothing schedules retries; the retry is entirely the application's."
       }

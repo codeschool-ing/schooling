@@ -4,19 +4,19 @@
     "hint": "Pergunte quem abriu a transação em que aquela instrução rodava.",
     "choices": [
       {
-        "text": "Como estava antes",
+        "text": "Como estava antes de o UPDATE começar",
         "why": "Uma instrução sozinha é atômica: o autocommit a envolveu numa transação."
       },
       {
-        "text": "Atualizada até o último checkpoint que o banco tinha escrito",
+        "text": "Atualizada até o último checkpoint",
         "why": "Checkpoints decidem o que precisa ser reaplicado, e não o que conta como feito."
       },
       {
-        "text": "Metade atualizada, já que nenhum BEGIN foi escrito para proteger",
+        "text": "Metade atualizada, sem um BEGIN protegendo",
         "why": "O BEGIN foi fornecido para você, que é o que autocommit quer dizer."
       },
       {
-        "text": "Travada, até alguém limpar a instrução interrompida à mão",
+        "text": "Travada até alguém limpar",
         "why": "A recuperação termina ou desfaz o trabalho, e não precisa de ajuda."
       }
     ]
@@ -26,19 +26,19 @@
     "hint": "Três deles são sobre quando as coisas acontecem, e um é sobre se elas estão certas.",
     "choices": [
       {
-        "text": "Duas instruções tendo efeito juntas, ou nenhuma delas",
+        "text": "Duas instruções tendo efeito juntas, ou nenhuma",
         "why": "É a atomicidade, e é a primeira coisa para que uma transação serve."
       },
       {
-        "text": "A capacidade de descartar tudo o que você fez com ROLLBACK",
+        "text": "A capacidade de descartar tudo com ROLLBACK",
         "why": "Até confirmar, o trabalho dela não é visível a ninguém e pode ser jogado fora."
       },
       {
-        "text": "Algum grau de separação do trabalho inacabado de outra conexão",
+        "text": "Separação do trabalho inacabado de outra conexão",
         "why": "Quanto é uma configuração, e o resto da aula trata dessa configuração."
       },
       {
-        "text": "Garantia de que o resultado faz sentido",
+        "text": "Garantia de que o resultado faz sentido de negócio",
         "why": "Restrições fazem isso; uma transação faz duas instruções acontecerem juntas."
       }
     ]
@@ -48,19 +48,19 @@
     "hint": "Há uma mensagem sobre comandos serem ignorados.",
     "choices": [
       {
-        "text": "Leituras, já que um SELECT não muda dado",
+        "text": "Leituras, já que um SELECT não muda nada",
         "why": "O bloqueio cobre toda instrução, escreva ela ou não."
       },
       {
-        "text": "Qualquer instrução: a que falhou é pulada",
+        "text": "Qualquer coisa: a instrução que falhou é pulada",
         "why": "O MySQL se comporta assim, e o código de aplicação costuma ser escrito para isso."
       },
       {
-        "text": "Nada, até desfazer",
+        "text": "Nada, até você desfazer a transação",
         "why": "Toda instrução seguinte é recusada; um SAVEPOINT antes é como se segue."
       },
       {
-        "text": "A mesma instrução de novo, que o servidor repete por você",
+        "text": "A mesma instrução, repetida pelo servidor",
         "why": "Repetir é trabalho da aplicação, e é a última seção desta aula."
       }
     ]
@@ -70,7 +70,7 @@
     "hint": "Não existe tal coisa por baixo.",
     "choices": [
       {
-        "text": "Um savepoint",
+        "text": "Um savepoint dentro da mesma transação",
         "why": "Com ROLLBACK TO para desfazer parte do trabalho sem abandonar o todo."
       },
       {
@@ -82,7 +82,7 @@
         "why": "Instruções rodam quando enviadas; segurá-las mudaria o que elas leem."
       },
       {
-        "text": "Uma transação cujo commit é adiado para o de fora",
+        "text": "Uma transação cujo commit é adiado",
         "why": "Adiar um commit não é algo que o protocolo ofereça."
       }
     ]
@@ -103,19 +103,19 @@
     "hint": "Três são mecanismos. Uma depende do que você escreveu.",
     "choices": [
       {
-        "text": "D, porque a durabilidade depende do armazenamento que você comprou",
+        "text": "D, de durabilidade",
         "why": "Hardware pode minar isso, o que é diferente de você declarar algo."
       },
       {
-        "text": "I, porque é você quem escolhe o nível de isolamento",
+        "text": "I, de isolamento",
         "why": "Você escolhe o nível, e cada nível passa a ser imposto por você."
       },
       {
-        "text": "C",
+        "text": "C, de consistência",
         "why": "O banco cumpre as restrições que você declarou e não tem opinião sobre o resto."
       },
       {
-        "text": "A, porque a atomicidade depende de como você agrupou as instruções",
+        "text": "A, de atomicidade",
         "why": "O agrupamento decide o escopo; a garantia dentro dele é do banco."
       }
     ]
@@ -125,19 +125,19 @@
     "hint": "Pergunte onde essa regra está escrita.",
     "choices": [
       {
-        "text": "Sim no SERIALIZABLE, que confere as invariantes conforme anda",
+        "text": "Sim, no SERIALIZABLE",
         "why": "Esse nível confere ordenações, e não faz ideia de qual é a sua regra."
       },
       {
-        "text": "Sim, desde que as duas escritas estejam na mesma transação",
+        "text": "Sim, se as duas escritas dividirem uma transação",
         "why": "Elas vão acontecer juntas, batendo os números ou não."
       },
       {
-        "text": "Sim, porque manter o dado consistente é o C do ACID",
+        "text": "Sim, isso é o C do ACID",
         "why": "Essa letra quer dizer as regras que você declarou, e esta não foi."
       },
       {
-        "text": "Não",
+        "text": "Não, a menos que seja uma restrição",
         "why": "A menos que seja uma restrição, a regra vive no código e nada a impõe."
       }
     ]
@@ -147,19 +147,19 @@
     "hint": "Durabilidade diz o que diz, e diz sobre uma máquina.",
     "choices": [
       {
-        "text": "A tem, porque um commit espera as réplicas confirmarem",
+        "text": "Ela a tem: o commit esperou a réplica",
         "why": "Espera quando configurado assim, e essa configuração é a troca descrita."
       },
       {
-        "text": "A recupera do log do primário quando ele voltar",
+        "text": "Ela a recupera do log do primário",
         "why": "O primário se foi, e com ele a entrada de log que só estava lá."
       },
       {
-        "text": "Não a tem",
+        "text": "Ela não a tem",
         "why": "Replicação síncrona amplia a promessa e custa latência em todo commit."
       },
       {
-        "text": "Representa uma violação do D, que existe para impedir isso",
+        "text": "É uma violação do D",
         "why": "O D trata de sobreviver a uma queda da máquina que confirmou."
       }
     ]
@@ -169,19 +169,19 @@
     "hint": "Qualquer ordem das duas linhas tem uma falha que mente.",
     "choices": [
       {
-        "text": "Dentro da transação, com um tratador que a desfaz no rollback",
+        "text": "Enviada à fila dentro da transação",
         "why": "Uma mensagem já entregue não é algo que um rollback alcance."
       },
       {
-        "text": "Numa tabela, dentro da transação",
+        "text": "Gravada numa tabela dentro da transação",
         "why": "Um processo separado entrega depois, e a linha é coberta pelo commit."
       },
       {
-        "text": "Logo depois do COMMIT, para ser mandada quando a escrita deu certo",
+        "text": "Enviada à fila logo depois do COMMIT",
         "why": "Se o processo morrer no meio, a mensagem nunca é mandada e ninguém sabe."
       },
       {
-        "text": "Logo antes do COMMIT, para o dado estar pronto quando chegar",
+        "text": "Enviada à fila logo antes do COMMIT",
         "why": "Se o commit falhar, a mensagem descreve algo que não aconteceu."
       }
     ]
@@ -191,19 +191,19 @@
     "hint": "O banco só consegue esperar uma resposta; ele não consegue conferir se ela foi honesta.",
     "choices": [
       {
-        "text": "Um nível de isolamento abaixo de REPEATABLE READ, que enfraquece o commit",
+        "text": "Um nível de isolamento abaixo de REPEATABLE READ",
         "why": "Isolamento rege visibilidade entre transações e não toca a durabilidade."
       },
       {
-        "text": "Armazenamento que mente sobre ter descarregado",
+        "text": "Armazenamento que mente sobre descarregar",
         "why": "Certo hardware de consumo, certas máquinas virtuais, um sistema de arquivos mal montado."
       },
       {
-        "text": "Uma transação longa segurando o log de escrita antecipada aberto",
+        "text": "Uma transação longa segurando o log aberto",
         "why": "Isso custa disco e atrasa a recuperação; o dado confirmado segue confirmado."
       },
       {
-        "text": "Uma queda durante um checkpoint, que perde o lote mais recente",
+        "text": "Uma queda durante um checkpoint",
         "why": "Um checkpoint é otimização de recuperação, e o log já tem o dado."
       }
     ]
@@ -213,11 +213,11 @@
     "hint": "Um produto responde a elas uma por vez, e um arquivo de configuração também.",
     "choices": [
       {
-        "text": "Se ele é relacional, o que resolve a questão",
+        "text": "Se ele é relacional",
         "why": "Vários bancos de documentos e chave-valor hoje oferecem transações de verdade."
       },
       {
-        "text": "Se ele suporta commit em duas fases entre vários nós",
+        "text": "Se ele suporta commit em duas fases",
         "why": "Protocolo especializado, e precisar dele é mais raro do que o slogan sugere."
       },
       {
@@ -225,7 +225,7 @@
         "why": "Boa pergunta, e responde a uma das quatro em vez de todas."
       },
       {
-        "text": "As quatro, separadamente",
+        "text": "O que cada uma das quatro letras significa aqui",
         "why": "O que acontece se esta metade falhar, quais regras são impostas, o que outros veem, o que sobrevive."
       }
     ]
@@ -235,19 +235,19 @@
     "hint": "A palavra aponta para trabalho que não foi terminado.",
     "choices": [
       {
-        "text": "Ler um valor que uma restrição teria rejeitado",
+        "text": "Ler um valor que uma restrição rejeitaria",
         "why": "Uma restrição rejeita na escrita, então tal valor não está na tabela."
       },
       {
-        "text": "Ler uma linha que alguém apaga logo depois",
+        "text": "Ler uma linha que alguém apaga em seguida",
         "why": "A linha estava mesmo lá quando foi lida, o que é uma corrida comum."
       },
       {
-        "text": "Ler uma linha enquanto outra pessoa está no meio da escrita dela",
+        "text": "Ler uma linha enquanto outra a escreve",
         "why": "Escritores não bloqueiam leitores, e o leitor vê uma versão confirmada."
       },
       {
-        "text": "Ler trabalho não confirmado",
+        "text": "Ler trabalho que ainda não foi confirmado",
         "why": "E então a outra transação desfaz, de modo que o valor nunca existiu."
       }
     ]
@@ -261,7 +261,7 @@
         "why": "As duas envolvem dado confirmado; nenhuma delas é leitura suja."
       },
       {
-        "text": "Uma mudou, a outra chegou",
+        "text": "Uma linha mudou sob você, outra linha apareceu",
         "why": "Uma linha que você viu mudando, contra uma surgindo dentro de uma faixa contada."
       },
       {
@@ -269,7 +269,7 @@
         "why": "As duas são possíveis ali, que é o que a tabela do padrão diz."
       },
       {
-        "text": "Uma acontece num SELECT e a outra durante um UPDATE",
+        "text": "Uma acontece num SELECT, a outra num UPDATE",
         "why": "As duas são percebidas lendo, que é o que as torna leituras."
       }
     ]
@@ -279,19 +279,19 @@
     "hint": "Duas vendas passaram e o estoque andou um.",
     "choices": [
       {
-        "text": "Fantasma, já que uma venda desapareceu do total",
+        "text": "Uma leitura fantasma",
         "why": "Fantasma é uma linha surgindo numa faixa, e nenhuma linha surgiu aqui."
       },
       {
-        "text": "Atualização perdida",
+        "text": "Uma atualização perdida",
         "why": "Cada uma leu um valor verdadeiro e escreveu uma consequência correta, e uma venda sumiu."
       },
       {
-        "text": "Desvio de escrita, já que duas transações escreveram ao mesmo tempo",
+        "text": "Um desvio de escrita",
         "why": "Desvio de escrita é escreverem linhas diferentes; estas escreveram uma."
       },
       {
-        "text": "Leitura suja, já que cada uma agiu sobre a intenção da outra",
+        "text": "Uma leitura suja",
         "why": "Nenhuma viu a outra, que é justamente o problema."
       }
     ]
@@ -305,15 +305,15 @@
         "why": "No PostgreSQL isso vira uma transação abortada que você depois tem que repetir."
       },
       {
-        "text": "Fazer a aritmética em SQL",
+        "text": "Fazer a aritmética dentro do UPDATE",
         "why": "stock = stock - 1 lê e escreve numa instrução, e a linha fica bloqueada nela."
       },
       {
-        "text": "Ler a linha uma segunda vez e comparar os dois valores",
+        "text": "Ler a linha de novo antes de escrever",
         "why": "A segunda leitura pode ser ultrapassada tão fácil quanto a primeira foi."
       },
       {
-        "text": "Pôr as duas instruções dentro de uma única transação",
+        "text": "Pôr as duas instruções numa transação",
         "why": "Provavelmente já estão, e as duas transações continuam sem se ver."
       }
     ]
@@ -323,19 +323,19 @@
     "hint": "Compare em quais linhas cada transação escreveu.",
     "choices": [
       {
-        "text": "Porque as duas transações leram linhas diferentes",
+        "text": "As duas transações leram linhas diferentes",
         "why": "Elas leram as mesmas linhas, e é daí que vem a premissa compartilhada."
       },
       {
-        "text": "Porque ele acontece no SERIALIZABLE e a outra não",
+        "text": "Ele aparece no SERIALIZABLE",
         "why": "O SERIALIZABLE é o nível que o impede, e não o que o produz."
       },
       {
-        "text": "As linhas escritas são diferentes",
+        "text": "As duas transações escrevem linhas diferentes",
         "why": "Nada colidiu, então não há sobrescrita e não há conflito a detectar."
       },
       {
-        "text": "Porque uma das duas transações é desfeita",
+        "text": "Uma das duas transações é desfeita",
         "why": "As duas confirmam numa boa, que é o que torna o par tão difícil de notar."
       }
     ]
@@ -367,15 +367,15 @@
     "hint": "Não é o mesmo do MySQL, que é a graça da seção.",
     "choices": [
       {
-        "text": "READ UNCOMMITTED, que é o mais barato de fornecer",
+        "text": "READ UNCOMMITTED",
         "why": "O PostgreSQL não consegue produzir leitura suja, então o nível não compra nada."
       },
       {
-        "text": "REPEATABLE READ, como o MySQL usa",
+        "text": "REPEATABLE READ",
         "why": "Esse é o padrão do MySQL, e rodar o mesmo código nos dois é como se descobre."
       },
       {
-        "text": "SERIALIZABLE, que é a escolha segura para padrão",
+        "text": "SERIALIZABLE",
         "why": "Ele entregaria a toda aplicação um laço de repetição que ela não escreveu."
       },
       {
@@ -393,15 +393,15 @@
         "why": "É nos dois, que é o que autocommit quer dizer em cada um."
       },
       {
-        "text": "Se um deadlock é detectado e resolvido",
+        "text": "Se um deadlock é detectado",
         "why": "Os dois detectam deadlocks; diferem em com que rapidez procuram."
       },
       {
-        "text": "Se as transações são atômicas para começo de conversa",
+        "text": "Se uma transação é atômica como unidade",
         "why": "Os dois dão atomicidade, e nenhum a torna opcional."
       },
       {
-        "text": "O nível de isolamento",
+        "text": "O nível de isolamento que você pega por padrão",
         "why": "READ COMMITTED contra REPEATABLE READ, então um bug impossível num é rotina no outro."
       }
     ]
@@ -411,19 +411,19 @@
     "hint": "Pense no que o armazenamento guarda quando uma linha é atualizada.",
     "choices": [
       {
-        "text": "Não",
+        "text": "Não, e em nenhum outro nível",
         "why": "Versões antigas são guardadas em vez de sobrescritas, então não há não confirmada a ler."
       },
       {
-        "text": "Sim, que é o propósito inteiro de pedir esse nível",
+        "text": "Sim, é o que o nível faz",
         "why": "O nível é aceito como grafia e se comporta como READ COMMITTED."
       },
       {
-        "text": "Sim, mas de outra sessão trabalhando na mesma tabela",
+        "text": "Sim, de outra sessão",
         "why": "Sessões são entre o que o isolamento fica, então isso não muda nada."
       },
       {
-        "text": "Sim, a menos que a linha esteja bloqueada na hora",
+        "text": "Sim, a menos que a linha esteja bloqueada",
         "why": "Um bloqueio afeta escritores, e a regra de visibilidade é decidida em outro lugar."
       }
     ]
@@ -437,15 +437,15 @@
         "why": "Então uma transação pode escrever a partir de um valor 12 que nunca viu."
       },
       {
-        "text": "Do instantâneo, vendo o mesmo 10 que o SELECT viu",
+        "text": "Do instantâneo que o SELECT viu",
         "why": "É o que o nome do nível sugere, e é o que as escritas não fazem."
       },
       {
-        "text": "Da mais antiga das duas, por consistência",
+        "text": "Da versão mais antiga",
         "why": "Nada prefere a versão antiga; a escrita quer a atual."
       },
       {
-        "text": "De nenhuma: ele falha com um erro de serialização",
+        "text": "De nenhuma: falha com um erro",
         "why": "O PostgreSQL levanta um ali; o MySQL toma um bloqueio e segue."
       }
     ]
@@ -459,15 +459,15 @@
         "why": "Duas transações lendo as mesmas linhas e escrevendo em outras não são detectadas."
       },
       {
-        "text": "Leitura suja, que a Oracle não impede em nível nenhum",
+        "text": "Leitura suja",
         "why": "Ela impede em todos; não tem READ UNCOMMITTED a oferecer."
       },
       {
-        "text": "Leitura fantasma, que a tabela do padrão permite ali",
+        "text": "Leitura fantasma",
         "why": "Isolamento por instantâneo impede fantasmas, o que é mais do que a tabela exige."
       },
       {
-        "text": "Atualização perdida, que só bloqueio consegue impedir",
+        "text": "Atualização perdida",
         "why": "Uma escrita conflitante é detectada e uma transação é recusada."
       }
     ]
@@ -477,19 +477,19 @@
     "hint": "O nome descreve aquilo em que ele é bom.",
     "choices": [
       {
-        "text": "Quando a vazão importa mais que as respostas serem exatas",
+        "text": "Quando a vazão importa mais que a exatidão",
         "why": "Subir o nível custa vazão em vez de comprá-la."
       },
       {
-        "text": "Quando uma transação lê duas vezes",
+        "text": "Quando uma transação lê mais de uma vez",
         "why": "Um relatório de várias consultas, uma exportação, uma conciliação: uma visão."
       },
       {
-        "text": "Quando uma decisão depende de linhas que outra pessoa escreve",
+        "text": "Quando uma decisão depende de linhas que outros escrevem",
         "why": "Esse é o formato do desvio de escrita, e precisa do nível de cima."
       },
       {
-        "text": "Quando duas transações escrevem na mesma linha ao mesmo tempo",
+        "text": "Quando duas transações escrevem a mesma linha",
         "why": "Uma escrita conflitante é tratada no nível de baixo também, esperando."
       }
     ]
@@ -499,7 +499,7 @@
     "hint": "Pergunte o que ele está procurando.",
     "choices": [
       {
-        "text": "As leituras ainda não estavam confirmadas quando aconteceram",
+        "text": "As leituras não estavam confirmadas",
         "why": "As duas leram dado confirmado, e as duas leituras eram verdadeiras."
       },
       {
@@ -507,11 +507,11 @@
         "why": "Ele detecta duas transações escrevendo na mesma linha, e estas escreveram em duas."
       },
       {
-        "text": "A conferência rodou fora da transação por engano",
+        "text": "A conferência rodou fora da transação",
         "why": "Estava dentro, que é o que faz o exemplo valer a pena."
       },
       {
-        "text": "Uma das duas transações tinha um instantâneo desatualizado",
+        "text": "Um dos instantâneos estava desatualizado",
         "why": "Os dois instantâneos eram atuais e corretos quando foram tirados."
       }
     ]
@@ -521,19 +521,19 @@
     "hint": "Duas transações podem cada uma achá-lo livre.",
     "choices": [
       {
-        "text": "Correto, desde que as duas instruções estejam numa transação",
+        "text": "Correto como está",
         "why": "A transação as faz acontecer juntas e não impede nenhuma das duas."
       },
       {
-        "text": "Desvio de escrita",
-        "why": "Por isso o padrão é inseguro mesmo dentro de uma transação; um índice único corrige."
+        "text": "Um desvio de escrita",
+        "why": "Então o padrão é inseguro mesmo dentro de uma transação; um índice único corrige."
       },
       {
-        "text": "Leitura fantasma, porque uma linha aparece onde não existia uma",
+        "text": "Uma leitura fantasma",
         "why": "Fantasma é o sintoma aqui, e não dá nome ao bug."
       },
       {
-        "text": "Atualização perdida, porque dois inserts colidem numa linha",
+        "text": "Uma atualização perdida",
         "why": "Nada colide: duas linhas são inseridas e as duas dão certo."
       }
     ]
@@ -543,19 +543,19 @@
     "hint": "Duas destas exigem que você já tenha identificado a regra.",
     "choices": [
       {
-        "text": "SELECT … FOR UPDATE nas linhas que você lê",
+        "text": "FOR UPDATE nas linhas que você lê",
         "why": "Funciona, e você precisa saber quais leituras proteger antes de protegê-las."
       },
       {
-        "text": "Um índice único na coluna que está sendo conferida",
+        "text": "Um índice único nessa coluna",
         "why": "Ótimo onde a regra é unicidade, e tem que ser a regra que você percebeu."
       },
       {
-        "text": "SERIALIZABLE",
+        "text": "O nível SERIALIZABLE",
         "why": "Ele rastreia o que foi lido além do escrito, então pega formatos que ninguém listou."
       },
       {
-        "text": "Uma restrição de exclusão sobre a faixa que se sobrepõe",
+        "text": "Uma restrição de exclusão",
         "why": "A ferramenta certa para essa família, uma vez que você sabe que é o problema."
       }
     ]
@@ -565,7 +565,7 @@
     "hint": "É um índice único generalizado para além da igualdade.",
     "choices": [
       {
-        "text": "Uma restrição CHECK comparando as duas faixas de horário",
+        "text": "Um CHECK na faixa de horário",
         "why": "Um CHECK vê uma linha, e sobreposição é um fato sobre um par."
       },
       {
@@ -573,11 +573,11 @@
         "why": "Duas reservas que se sobrepõem sem começar no mesmo minuto passam."
       },
       {
-        "text": "Um gatilho que roda a consulta de sobreposição de novo no insert",
+        "text": "Um gatilho repetindo a consulta de sobreposição",
         "why": "Ele repete a mesma conferência que duas transações podem passar."
       },
       {
-        "text": "Uma restrição de exclusão",
+        "text": "Uma restrição de exclusão com gist",
         "why": "EXCLUDE USING gist: duas linhas não podem ter a mesma sala e faixas sobrepostas."
       }
     ]
@@ -587,19 +587,19 @@
     "hint": "Leia a dica no erro que ele produz.",
     "choices": [
       {
-        "text": "A perda da proteção contra fantasmas, trocada pela nova garantia",
+        "text": "A perda da proteção contra fantasmas",
         "why": "Ele impede fantasmas também, junto de tudo o que está abaixo."
       },
       {
-        "text": "Um bloqueio em cada linha que a sua transação lê",
+        "text": "Um bloqueio em cada linha que você lê",
         "why": "Ele não toma esses bloqueios; ele rastreia as leituras e confere no commit."
       },
       {
-        "text": "Escrever um laço de repetição",
+        "text": "Escrever você mesmo um laço de repetição",
         "why": "O nível lhe entrega um erro que quer dizer tente de novo, e responder é seu trabalho."
       },
       {
-        "text": "Transações mais longas, já que há mais a conferir",
+        "text": "Transações mais longas a conferir",
         "why": "A conferência não é o que deixa uma transação longa."
       }
     ]
@@ -609,19 +609,19 @@
     "hint": "Pergunte o que o armazenamento faz quando uma linha é escrita.",
     "choices": [
       {
-        "text": "Sim, até a transação que lê confirmar ou desfazer",
+        "text": "Sim, até quem lê confirmar",
         "why": "É como um banco sem armazenamento multiversão teria que se comportar."
       },
       {
-        "text": "Sim de REPEATABLE READ para cima, onde as leituras são seguradas",
+        "text": "Sim, em REPEATABLE READ e acima",
         "why": "O nível decide qual versão é lida, e não se um bloqueio é tomado."
       },
       {
-        "text": "Não",
+        "text": "Não, em nível de isolamento nenhum",
         "why": "Versões antigas são guardadas, então quem lê lê uma e quem escreve escreve outra."
       },
       {
-        "text": "Sim, a menos que o SELECT seja escrito com FOR SHARE",
+        "text": "Sim, se for FOR SHARE",
         "why": "FOR SHARE acrescenta um bloqueio; um SELECT simples não toma nenhum."
       }
     ]
@@ -631,19 +631,19 @@
     "hint": "É o mesmo bloqueio, tomado antes.",
     "choices": [
       {
-        "text": "O bloqueio que um UPDATE tomaria",
+        "text": "O próprio bloqueio de um UPDATE",
         "why": "Tomado no momento em que você lê, então a decisão que você toma dele vale."
       },
       {
-        "text": "Garantia de que você não vai apagar a linha você mesmo",
+        "text": "Garantia de que você não apaga a linha",
         "why": "A sua própria transação nunca foi o risco sendo administrado."
       },
       {
-        "text": "Promessa de que o valor não muda antes da próxima instrução",
+        "text": "Promessa de que o valor não muda",
         "why": "Ele impede outros escritores pela transação inteira, não por uma instrução."
       },
       {
-        "text": "Um caminho mais rápido, porque a linha já foi buscada",
+        "text": "Um caminho mais rápido até a linha",
         "why": "Buscar não é o que a cláusula muda."
       }
     ]
@@ -653,11 +653,11 @@
     "hint": "Todos querem a mesma primeira linha.",
     "choices": [
       {
-        "text": "Cada um pega a linha, e o trabalho é feito dez vezes",
+        "text": "Cada um pega a linha, dez vezes",
         "why": "O bloqueio é exclusivo, então nove esperam em vez de seguir."
       },
       {
-        "text": "Eles dão deadlock, porque dez transações querem um bloqueio",
+        "text": "Eles dão deadlock no único bloqueio",
         "why": "Esperar por um bloqueio é uma fila; um deadlock precisa de um ciclo."
       },
       {
@@ -665,7 +665,7 @@
         "why": "Então a fila processa uma tarefa por vez, seja qual for o número de trabalhadores."
       },
       {
-        "text": "Cada um pega uma linha diferente, que é o comportamento padrão",
+        "text": "Cada um pega uma linha diferente",
         "why": "Nada distribui linhas diferentes sem a consulta pedir para pular as bloqueadas."
       }
     ]
@@ -675,19 +675,19 @@
     "hint": "Nenhum erro foi levantado, então a contagem é o sinal inteiro.",
     "choices": [
       {
-        "text": "Falta um índice na coluna de versão",
+        "text": "A coluna de versão precisa de um índice",
         "why": "Um índice muda a velocidade e nunca o número de linhas casadas."
       },
       {
-        "text": "A transação precisa ser repetida num nível de isolamento mais alto",
+        "text": "A transação precisa de um nível mais alto",
         "why": "O nível não decidiu isto; a cláusula WHERE decidiu."
       },
       {
-        "text": "A linha foi apagada, que é a causa de um zero aqui",
+        "text": "A linha foi apagada",
         "why": "Causa possível, e mais rara que o conflito para o qual o padrão existe."
       },
       {
-        "text": "Outra pessoa salvou",
+        "text": "Outra pessoa salvou antes",
         "why": "A linha está numa versão posterior, e tratar zero como conflito é a parte que se esquece."
       }
     ]
@@ -697,19 +697,19 @@
     "hint": "Não há linha a bloquear.",
     "choices": [
       {
-        "text": "Para bloquear uma linha antes de ela ser inserida",
+        "text": "Bloquear uma linha antes de ela existir",
         "why": "Uma linha que não existe não tem a que um bloqueio se prender."
       },
       {
-        "text": "Para avisar o planejador de quais linhas a transação vai escrever",
+        "text": "Dizer ao planejador o que você vai escrever",
         "why": "O planejador não recebe dicas de bloqueios, e bloqueios não dão nenhuma."
       },
       {
-        "text": "Para algo que não é uma linha",
+        "text": "Bloquear algo que não é uma linha",
         "why": "Um importador por vez, digamos: o que se protege é um processo."
       },
       {
-        "text": "Para bloquear uma tabela inteira sem escrever um ALTER",
+        "text": "Bloquear uma tabela sem um ALTER",
         "why": "Bloqueios de tabela existem e têm instrução própria."
       }
     ]
@@ -719,15 +719,15 @@
     "hint": "Um deles é liberado para você e o outro não.",
     "choices": [
       {
-        "text": "Nenhum, porque bloqueios consultivos são inutilizáveis com um pool",
+        "text": "Nenhum, são inutilizáveis com um pool",
         "why": "A forma de transação é segura, e é por isso que é a preferida."
       },
       {
-        "text": "O de sessão, que sobrevive a um rollback",
+        "text": "O de escopo de sessão",
         "why": "Sobreviver a um rollback é justamente o que o torna perigoso aqui."
       },
       {
-        "text": "Qualquer um, já que o pool libera bloqueios quando uma conexão volta",
+        "text": "Qualquer um, o pool os libera",
         "why": "Um pool devolve uma conexão; ele não audita o que ela segura."
       },
       {
@@ -741,19 +741,19 @@
     "hint": "Desenhe as setas de quem espera por quem.",
     "choices": [
       {
-        "text": "Uma transação que esperou demais por um bloqueio",
+        "text": "Uma transação esperando demais por um bloqueio",
         "why": "Isso é um lock wait timeout, e tem outra correção."
       },
       {
-        "text": "Um ciclo de esperas",
+        "text": "Um ciclo de transações esperando umas pelas outras",
         "why": "Cada um segura o que o outro precisa, e esperar mais não resolve nada."
       },
       {
-        "text": "Um bloqueio que o banco não conseguiu liberar depois de um commit",
+        "text": "Um bloqueio não liberado após um commit",
         "why": "Bloqueios são liberados no fim da transação que os tomou."
       },
       {
-        "text": "Uma linha que duas transações escreveram no mesmo instante",
+        "text": "Duas transações escrevendo uma linha ao mesmo tempo",
         "why": "Uma delas espera no UPDATE dela, o que é comum e está tudo bem."
       }
     ]
@@ -763,7 +763,7 @@
     "hint": "A palavra no erro é detectado, não corrompido.",
     "choices": [
       {
-        "text": "As duas ficam seguradas até um administrador intervir",
+        "text": "As duas ficam seguradas até alguém intervir",
         "why": "A detecção existe justamente para ninguém precisar intervir."
       },
       {
@@ -771,11 +771,11 @@
         "why": "Limpamente, e a outra segue; não é corrupção nem queda."
       },
       {
-        "text": "As linhas envolvidas ficam bloqueadas até o servidor reiniciar",
+        "text": "As linhas ficam bloqueadas até reiniciar",
         "why": "Os bloqueios da vítima vão junto com a transação dela."
       },
       {
-        "text": "As duas são desfeitas, já que nenhuma pode ser preferida",
+        "text": "As duas são desfeitas",
         "why": "Desfazer uma basta para quebrar o ciclo, então uma é o que vai."
       }
     ]
@@ -785,19 +785,19 @@
     "hint": "O ciclo precisa que as duas transações discordem de uma ordem.",
     "choices": [
       {
-        "text": "Subir o nível de isolamento para SERIALIZABLE",
+        "text": "Subir o nível para SERIALIZABLE",
         "why": "Um nível mais alto produz mais abortos aqui, e não menos."
       },
       {
-        "text": "Bloquear em ordem crescente de id",
+        "text": "Bloquear as linhas em ordem crescente do id delas",
         "why": "Quem pegar a linha 1 pega a 2, então a outra espera e depois segue."
       },
       {
-        "text": "Rodar o update de cada conta sozinho, sem transação",
+        "text": "Atualizar cada conta sem transação",
         "why": "Isso abre mão da atomicidade de que a transferência precisava."
       },
       {
-        "text": "Envolver cada transferência num savepoint antes do segundo update",
+        "text": "Pôr um savepoint antes do segundo update",
         "why": "Um savepoint marca um ponto de retorno e não toma bloqueios."
       }
     ]
@@ -807,7 +807,7 @@
     "hint": "Cada uma precisa que a outra solte algo primeiro.",
     "choices": [
       {
-        "text": "Um bloqueio compartilhado é segurado até o commit, aconteça o que acontecer",
+        "text": "Um bloqueio compartilhado dura até o commit",
         "why": "Verdade, e é a segunda metade da explicação e não a primeira."
       },
       {
@@ -815,12 +815,12 @@
         "why": "Tome FOR UPDATE no começo, quando já sabe que pretende escrever."
       },
       {
-        "text": "O update é barrado pelo instantâneo e não por um bloqueio",
+        "text": "O instantâneo barra o update, não um bloqueio",
         "why": "Um instantâneo decide o que é lido; um bloqueio decide quem espera."
       },
       {
-        "text": "FOR SHARE e UPDATE não podem ser usados numa transação",
-        "why": "Podem, e fazê-lo nessa ordem é o que produz o ciclo."
+        "text": "FOR SHARE e UPDATE não combinam",
+        "why": "Combinam, e fazê-lo nessa ordem é o que produz o ciclo."
       }
     ]
   },
@@ -829,15 +829,15 @@
     "hint": "Um dos dois nunca se resolve sozinho.",
     "choices": [
       {
-        "text": "Um rollback contra algo que você deve repetir",
+        "text": "Um rollback contra uma repetição",
         "why": "Os dois desfazem algo, e os dois valem uma repetição."
       },
       {
-        "text": "Um bug no seu código contra um problema de configuração",
+        "text": "Um bug seu contra uma falha de configuração",
         "why": "Os dois em geral são o seu código, e nenhum é falha de configuração."
       },
       {
-        "text": "O nome do MySQL contra o nome do PostgreSQL",
+        "text": "O nome do MySQL contra o do PostgreSQL",
         "why": "Os dois bancos reportam as duas condições, com números próprios."
       },
       {
@@ -851,19 +851,19 @@
     "hint": "Raro não é a mesma coisa que acabado.",
     "choices": [
       {
-        "text": "De repetir",
+        "text": "Repetir quando der deadlock",
         "why": "Uma consulta nova ou uma tarefa em lote que alguém acrescenta é um novo par de ordens."
       },
       {
-        "text": "De uma tabela de bloqueios grande o bastante para o que ele toma",
+        "text": "Uma tabela de bloqueios maior",
         "why": "Ficar sem espaço de bloqueio é outra falha com outra mensagem."
       },
       {
-        "text": "De um deadlock_timeout menor, para eles serem pegos antes",
+        "text": "Um deadlock_timeout menor",
         "why": "Pegá-los antes gasta mais em conferência e não impede nenhum."
       },
       {
-        "text": "De SERIALIZABLE, que impede ciclos de se formarem",
+        "text": "Passar para SERIALIZABLE",
         "why": "Esse nível acrescenta um segundo motivo para abortar em vez de remover este."
       }
     ]
@@ -877,15 +877,15 @@
         "why": "Ele só pode recuperar versões mais velhas que a transação mais antiga em execução."
       },
       {
-        "text": "Recuperar linhas nas tabelas que aquela transação tocou",
+        "text": "Recuperar linhas nas tabelas que ela tocou",
         "why": "O horizonte é global: tabelas que ela nunca leu são afetadas também."
       },
       {
-        "text": "Rodar em algum momento enquanto uma transação está aberta",
+        "text": "Rodar em algum momento",
         "why": "Ele roda, e não acha nada que tenha permissão de remover."
       },
       {
-        "text": "Atualizar as estatísticas de que o planejador depende",
+        "text": "Atualizar as estatísticas do planejador",
         "why": "Analisar é um trabalho separado de recuperar, e não é afetado."
       }
     ]
@@ -895,19 +895,19 @@
     "hint": "A consulta que ela rodou terminou num milissegundo.",
     "choices": [
       {
-        "text": "Uma conexão, e nenhum outro recurso que valha contar",
+        "text": "Uma conexão, e pouco mais",
         "why": "A conexão é a mais barata das coisas que ela segura."
       },
       {
-        "text": "Um instantâneo, que é de graça até alguém ler dele",
+        "text": "Um instantâneo, que é de graça",
         "why": "O instantâneo é o que prende as versões de linha, seja ele lido de novo ou não."
       },
       {
-        "text": "Bloqueios e versões de linha",
+        "text": "Bloqueios e versões antigas de linha",
         "why": "Ninguém confirmou, então tudo o que a transação tomou continua tomado."
       },
       {
-        "text": "Uma consulta que ainda está executando, devagar",
+        "text": "Uma consulta ainda executando",
         "why": "O estado dela diria active se uma consulta estivesse rodando."
       }
     ]
@@ -917,19 +917,19 @@
     "hint": "O provedor decide por quanto tempo os seus bloqueios são segurados.",
     "choices": [
       {
-        "text": "Dentro, para uma falha desfazer a linha junto",
+        "text": "Dentro, para uma falha desfazer junto",
         "why": "Uma cobrança que saiu do seu prédio não é algo que um rollback alcance."
       },
       {
-        "text": "Fora da transação",
+        "text": "Inteiramente fora da transação",
         "why": "A latência dele vira a duração da sua transação, e os seus bloqueios esperam."
       },
       {
-        "text": "Dentro, bem no fim, logo antes do COMMIT",
+        "text": "Dentro, logo antes do COMMIT",
         "why": "A transação fica aberta durante a chamada inteira, onde quer que ela esteja."
       },
       {
-        "text": "Dentro, com um savepoint em volta",
+        "text": "Dentro, envolvida num savepoint",
         "why": "Um savepoint desfaz trabalho de banco, e a chamada não era trabalho de banco."
       }
     ]
@@ -939,19 +939,19 @@
     "hint": "A razão de o lote ajudar é a razão de algo se perder.",
     "choices": [
       {
-        "text": "De muito pouco, já que lotes são melhores em cada aspecto",
+        "text": "Pouco, lotes são melhores",
         "why": "A atomicidade que você tinha sobre a corrida inteira é algo real a perder."
       },
       {
-        "text": "Da durabilidade, já que cada lote confirma separado",
+        "text": "Durabilidade, um commit por lote",
         "why": "Cada commit é tão durável quanto outro; confirmar mais vezes não perde nada."
       },
       {
-        "text": "Do isolamento, já que outras transações veem os lotes",
+        "text": "Isolamento, outros veem os lotes",
         "why": "Veem, e é a mesma visibilidade que qualquer trabalho confirmado tem."
       },
       {
-        "text": "Da atomicidade sobre o trabalho inteiro",
+        "text": "Atomicidade sobre o trabalho inteiro",
         "why": "Metade fica atualizada se parar, então o trabalho tem que ser retomável."
       }
     ]
@@ -961,15 +961,15 @@
     "hint": "O resultado é para ser notado.",
     "choices": [
       {
-        "text": "Escreve um aviso no log sem agir",
+        "text": "Escreve um aviso no log",
         "why": "Existe outra configuração para avisar, e esta age."
       },
       {
-        "text": "Confirma o que a transação tiver feito até ali",
+        "text": "Confirma o que foi feito",
         "why": "Confirmar trabalho que ninguém pediu para confirmar seria um padrão bem pior."
       },
       {
-        "text": "Desfaz a transação e deixa a sessão conectada",
+        "text": "Desfaz mas continua conectada",
         "why": "Deixá-la conectada permitiria ao mesmo código abrir outra na hora."
       },
       {
@@ -983,19 +983,19 @@
     "hint": "É a classe de desfazimento de transação.",
     "choices": [
       {
-        "text": "23, que cobre as restrições de integridade",
+        "text": "23, restrições de integridade",
         "why": "Uma linha duplicada continua duplicada na segunda tentativa."
       },
       {
-        "text": "08, que cobre a conexão",
+        "text": "08, conexão",
         "why": "Reconectar é razoável, e é outro tipo de recuperação."
       },
       {
-        "text": "42, que cobre sintaxe e acesso",
+        "text": "42, sintaxe e acesso",
         "why": "Uma consulta com erro de sintaxe vai ter esse erro para sempre."
       },
       {
-        "text": "40",
+        "text": "40, rollback de transação",
         "why": "Nada foi escrito, ninguém tem culpa, e uma segunda tentativa bem pode dar certo."
       }
     ]
@@ -1005,19 +1005,19 @@
     "hint": "Pense em por que a primeira tentativa foi recusada.",
     "choices": [
       {
-        "text": "A primeira instrução de uma transação é a que pode ser repetida",
+        "text": "A primeira instrução é a que pode repetir",
         "why": "A posição não decide isso; as leituras em que a decisão se apoia decidem."
       },
       {
-        "text": "A instrução que falhou está em cache e devolveria o mesmo",
+        "text": "A instrução que falhou está em cache",
         "why": "Nada guarda o resultado de uma instrução entre tentativas."
       },
       {
-        "text": "Ela tem que decidir de novo",
+        "text": "A decisão tem que ser tomada de novo",
         "why": "A premissa que ela leu acabou sendo falsa, então as leituras têm que ocorrer de novo."
       },
       {
-        "text": "O banco se recusa a aceitar a mesma instrução duas vezes",
+        "text": "O banco a recusa duas vezes",
         "why": "Ele aceita numa boa, que é o que torna a versão errada tão fácil de escrever."
       }
     ]
@@ -1031,15 +1031,15 @@
         "why": "Uma espera que cresce, com um componente aleatório, transforma colisão em fila."
       },
       {
-        "text": "Uma ganha, já que por definição a perdedora é a que espera",
+        "text": "Uma ganha e a outra espera",
         "why": "As duas foram desfeitas só para começar de novo no mesmo instante."
       },
       {
-        "text": "As duas dão certo, porque o rollback liberou os bloqueios",
-        "why": "Liberou, e as duas transações os querem de novo na mesma ordem."
+        "text": "As duas dão certo",
+        "why": "O rollback liberou mesmo, e as duas transações os querem de novo na mesma ordem."
       },
       {
-        "text": "O banco espaça as duas por conta própria",
+        "text": "O banco as espaça sozinho",
         "why": "Nada agenda repetições; repetir é inteiramente da aplicação."
       }
     ]
