@@ -74,7 +74,7 @@
     "hint": "Ask where the knowledge of the database lives.",
     "choices": [
       {
-        "text": "Data Mapper does not use SQL",
+        "text": "Data Mapper does not emit SQL of its own",
         "correct": false,
         "why": "Both emit SQL; they organise the code around it differently."
       },
@@ -84,7 +84,7 @@
         "why": "Both do both; the difference is not the direction of the traffic."
       },
       {
-        "text": "In Active Record the object is the row and knows the database; in Data Mapper the object is plain",
+        "text": "In Active Record the object is the row; in Data Mapper it is plain",
         "correct": true,
         "why": "A separate session or repository moves the plain object to and from a table."
       },
@@ -121,7 +121,7 @@
         "why": "Migrations are a separate mechanism; a query builder builds SELECTs and the like."
       },
       {
-        "text": "A tool that composes SQL from method calls, keeping the statement yours and parameterised",
+        "text": "A tool that composes SQL from method calls; the statement stays yours",
         "correct": true,
         "why": "select().from().where(): the statement is still SQL, still parameterised, still composable."
       }
@@ -600,12 +600,12 @@
         "why": "It defaults to lazy loading, which is the N+1; the instruction is yours to place."
       },
       {
-        "text": "At the query, because a model-wide setting loads the orders on every screen",
+        "text": "At the query; a model-wide setting loads orders on every screen",
         "correct": true,
         "why": "Including the ones that show a name and nothing else: lesson 10's ask for less, undone globally."
       },
       {
-        "text": "On the model, so the N+1 is fixed everywhere at once",
+        "text": "On the model, so the N+1 is fixed everywhere at once and for good",
         "correct": false,
         "why": "That loads the relationship on every screen, including the ones that do not want it."
       },
@@ -637,7 +637,7 @@
         "why": "The client supplies it on execution; the database does not default it."
       },
       {
-        "text": "A placeholder; the value travels separately from the statement's text",
+        "text": "A placeholder; the value travels separately",
         "correct": true,
         "why": "The shape is fixed before the value arrives, so the value cannot change it."
       },
@@ -674,7 +674,7 @@
         "why": "That is exactly what parameters prevent; the value is not code."
       },
       {
-        "text": "It is compared against the email column as a string and matches nothing",
+        "text": "It is compared as a string, and matches nothing",
         "correct": true,
         "why": "The value cannot change the statement's shape, so it is just a string that no row equals."
       }
@@ -893,12 +893,12 @@
         "why": "Isolation does not shorten an open transaction; the open time is the cost."
       },
       {
-        "text": "For two seconds the transaction holds its locks and blocks VACUUM",
+        "text": "For two seconds it holds its locks and blocks VACUUM",
         "correct": true,
         "why": "One handler is nothing; a thousand a minute fills the database with row versions nobody can clean."
       },
       {
-        "text": "Little, because a read takes a light lock",
+        "text": "Little, because reading takes a lighter lock than writing",
         "correct": false,
         "why": "The unit of work is one transaction open for the whole handler, including the wait."
       }
@@ -947,7 +947,7 @@
     "hint": "One change to the schema, applied a set number of times to each database.",
     "choices": [
       {
-        "text": "One schema change, written as a file, versioned with the code, applied once to each database",
+        "text": "One schema change, in a file, versioned with the code, applied once",
         "correct": true,
         "why": "A folder of files plus a table recording which have run."
       },
@@ -979,12 +979,12 @@
     "hint": "Editing it leaves two databases that both claim the same version.",
     "choices": [
       {
-        "text": "The tool checksums it and refuses to start",
+        "text": "The tool checksums the applied files and refuses to start",
         "correct": false,
         "why": "Some tools do warn, but the reason for the rule is the silent schema divergence."
       },
       {
-        "text": "Two databases would both record it applied and have different schemas, undetected",
+        "text": "Both databases record it applied and silently differ",
         "correct": true,
         "why": "The fix is the next migration, which runs everywhere it has not."
       },
@@ -1021,7 +1021,7 @@
         "why": "It has one; that is how it knows what to roll forward."
       },
       {
-        "text": "A down cannot restore dropped data, and was not tested against newer rows",
+        "text": "A down cannot restore dropped data, and was never tested",
         "correct": true,
         "why": "The fix for a bad migration is another migration; down is for a developer's machine."
       },
@@ -1048,7 +1048,7 @@
         "why": "CONCURRENTLY cannot run in a transaction block, so it is refused before running."
       },
       {
-        "text": "It commits the index before the rest of the migration",
+        "text": "It commits the index before the rest of the migration runs",
         "correct": false,
         "why": "A statement inside a transaction does not commit on its own."
       },
@@ -1058,7 +1058,7 @@
         "why": "That is the bad outcome the error prevents; the tool must be told not to wrap it."
       },
       {
-        "text": "It errors at deploy time; the migration must be marked not to be wrapped",
+        "text": "It errors; the migration must be marked not to be wrapped",
         "correct": true,
         "why": "The good outcome, versus a tool that silently drops CONCURRENTLY and takes the lock."
       }
@@ -1092,12 +1092,12 @@
     "hint": "One is an UPDATE over millions of rows in one transaction.",
     "choices": [
       {
-        "text": "A data migration is a long transaction the synchronous deploy would wait on",
+        "text": "It is a long transaction the deploy would wait on",
         "correct": true,
         "why": "It is written in batches, re-runnable, in the app's language; the schema change is not."
       },
       {
-        "text": "Data migrations are not allowed to change rows",
+        "text": "A data migration is not permitted to touch existing rows",
         "correct": false,
         "why": "Changing rows is exactly their job; the point is where they run."
       },
@@ -1129,12 +1129,12 @@
         "why": "There is no constraint; the rule lives only in the class."
       },
       {
-        "text": "It is stored: the class validates this code's saves, not another writer's insert",
+        "text": "It is stored: the class validates this code's saves only",
         "correct": true,
         "why": "Lesson 1's point; put the rule on the table if every writer must obey it."
       },
       {
-        "text": "It is refused, because the model applies everywhere",
+        "text": "It is refused, because the model's rule applies everywhere",
         "correct": false,
         "why": "The model applies only when this code saves this object; a bulk load bypasses it."
       },
@@ -1198,12 +1198,12 @@
         "why": "The database applies it; the trouble comes at the next generation."
       },
       {
-        "text": "The migration table is corrupted",
+        "text": "The migration table now records a change nobody made",
         "correct": false,
         "why": "The table is fine; the schemas diverge from the model's idea of them."
       },
       {
-        "text": "The next generated migration tries to undo the hand edit",
+        "text": "The next generated migration undoes the hand edit",
         "correct": true,
         "why": "Pick one direction and let the other be derived."
       }
@@ -1220,7 +1220,7 @@
     "hint": "An application is replaced; a database is migrated.",
     "choices": [
       {
-        "text": "The table's constraint binds every application that ever opens the database",
+        "text": "It binds every application that ever opens the database",
         "correct": true,
         "why": "The class's rule binds only this application; the rows outlive it."
       },
@@ -1289,12 +1289,12 @@
         "why": "The combinations explode; a builder composes them from one set of clauses."
       },
       {
-        "text": "A materialised view of each possible result",
+        "text": "A materialised view of each possible combination of results",
         "correct": false,
         "why": "There is no fixed result to materialise; the filters vary per request."
       },
       {
-        "text": "A query builder: each filter adds a clause and takes a parameter",
+        "text": "A query builder: each filter adds a clause and a parameter",
         "correct": true,
         "why": "One statement the server plans as a whole, parameterised throughout."
       },
@@ -1316,22 +1316,22 @@
     "hint": "The statements with the most repetition, where the mapper's gifts pay every time.",
     "choices": [
       {
-        "text": "Raw SQL, for control",
+        "text": "Raw SQL, for control over the statement",
         "correct": false,
         "why": "These are the statements the mapper writes best; raw SQL here is repetition by hand."
       },
       {
-        "text": "A query builder, for composability",
+        "text": "A query builder, for composability across the filters and sorts",
         "correct": false,
         "why": "There is nothing dynamic to compose; a plain save is the mapper's job."
       },
       {
-        "text": "A stored procedure per operation",
+        "text": "A stored procedure for each of the operations",
         "correct": false,
         "why": "Overkill for the obvious writes the mapper already writes once."
       },
       {
-        "text": "The ORM: parameters, matching types, the obvious statements written once",
+        "text": "The ORM: parameters, types and the obvious statements",
         "correct": true,
         "why": "The write path is the mapper's home, and the unit of work groups the related writes."
       }

@@ -48,7 +48,7 @@
     "hint": "Pergunte onde mora o conhecimento do banco.",
     "choices": [
       {
-        "text": "Data Mapper não usa SQL",
+        "text": "Data Mapper não emite SQL próprio",
         "why": "Os dois emitem SQL; organizam o código em torno dele de formas diferentes."
       },
       {
@@ -56,7 +56,7 @@
         "why": "Os dois fazem os dois; a diferença não é a direção do tráfego."
       },
       {
-        "text": "No Active Record o objeto é a linha e sabe do banco; no Data Mapper o objeto é simples",
+        "text": "No Active Record o objeto é a linha; no Data Mapper ele é simples",
         "why": "Uma sessão ou repositório à parte move o objeto simples de e para uma tabela."
       },
       {
@@ -82,7 +82,7 @@
         "why": "Migrações são um mecanismo à parte; um query builder monta SELECTs e afins."
       },
       {
-        "text": "Uma ferramenta que compõe SQL a partir de chamadas de método, mantendo a instrução sua e parametrizada",
+        "text": "Uma ferramenta que compõe SQL a partir de chamadas de método; a instrução continua sua",
         "why": "select().from().where(): a instrução continua SQL, parametrizada, componível."
       }
     ]
@@ -407,11 +407,11 @@
         "why": "Ele assume carga preguiçosa, que é o N+1; a instrução é sua para pôr."
       },
       {
-        "text": "Na consulta, porque uma configuração no modelo carrega os pedidos em toda tela",
+        "text": "Na consulta; uma configuração no modelo carrega pedidos em toda tela",
         "why": "Inclusive as que mostram um nome e mais nada: o peça menos da aula 10, desfeito globalmente."
       },
       {
-        "text": "No modelo, para o N+1 ser consertado em todo lugar de uma vez",
+        "text": "No modelo, para o N+1 ser consertado em todo lugar de uma vez e para sempre",
         "why": "Isso carrega a relação em toda tela, inclusive as que não a querem."
       },
       {
@@ -433,7 +433,7 @@
         "why": "O cliente a fornece na execução; o banco não a preenche."
       },
       {
-        "text": "Um marcador; o valor viaja separado do texto da instrução",
+        "text": "Um marcador; o valor viaja separado",
         "why": "A forma é fixada antes de o valor chegar, então o valor não pode mudá-la."
       },
       {
@@ -459,7 +459,7 @@
         "why": "É exatamente o que os parâmetros impedem; o valor não é código."
       },
       {
-        "text": "É comparado com a coluna email como texto e não casa com nada",
+        "text": "É comparado como texto, e não casa com nada",
         "why": "O valor não pode mudar a forma da instrução, então é só um texto que nenhuma linha iguala."
       }
     ]
@@ -609,11 +609,11 @@
         "why": "Isolamento não encurta uma transação aberta; o tempo aberto é o custo."
       },
       {
-        "text": "Por dois segundos a transação segura os bloqueios e trava o VACUUM",
+        "text": "Por dois segundos ela segura os bloqueios e trava o VACUUM",
         "why": "Um handler não é nada; mil por minuto enchem o banco de versões de linha que ninguém limpa."
       },
       {
-        "text": "Pouco, porque uma leitura pega um bloqueio leve",
+        "text": "Pouco, porque ler pega um bloqueio mais leve que escrever",
         "why": "A unidade de trabalho é uma transação aberta pelo handler inteiro, inclusive a espera."
       }
     ]
@@ -645,7 +645,7 @@
     "hint": "Uma mudança no esquema, aplicada um número definido de vezes a cada banco.",
     "choices": [
       {
-        "text": "Uma mudança de esquema, escrita como arquivo, versionada com o código, aplicada uma vez a cada banco",
+        "text": "Uma mudança de esquema, num arquivo, versionada com o código, aplicada uma vez",
         "why": "Uma pasta de arquivos mais uma tabela que registra quais rodaram."
       },
       {
@@ -667,11 +667,11 @@
     "hint": "Editá-la deixa dois bancos que ambos alegam a mesma versão.",
     "choices": [
       {
-        "text": "A ferramenta faz checksum e se recusa a subir",
+        "text": "A ferramenta faz checksum dos arquivos aplicados e se recusa a subir",
         "why": "Algumas avisam, mas a razão da regra é a divergência silenciosa de esquema."
       },
       {
-        "text": "Dois bancos registrariam ela aplicada e teriam esquemas diferentes, sem detecção",
+        "text": "Os dois bancos registram ela aplicada e divergem em silêncio",
         "why": "A correção é a próxima migração, que roda em todo lugar em que não rodou."
       },
       {
@@ -697,7 +697,7 @@
         "why": "Tem; é assim que ela sabe o que rolar para a frente."
       },
       {
-        "text": "Um down não restaura dado apagado, e não foi testado contra linhas mais novas",
+        "text": "Um down não restaura dado apagado, e nunca foi testado",
         "why": "A correção de uma migração ruim é outra migração; down é para a máquina de quem desenvolve."
       },
       {
@@ -715,7 +715,7 @@
         "why": "CONCURRENTLY não pode rodar num bloco de transação, então é recusado antes de rodar."
       },
       {
-        "text": "Confirma o índice antes do resto da migração",
+        "text": "Confirma o índice antes do resto da migração rodar",
         "why": "Uma instrução dentro de uma transação não confirma sozinha."
       },
       {
@@ -723,7 +723,7 @@
         "why": "Esse é o desfecho ruim que o erro impede; a ferramenta tem que ser avisada para não envolver."
       },
       {
-        "text": "Dá erro na hora do deploy; a migração tem que ser marcada para não ser envolvida",
+        "text": "Dá erro; a migração tem que ser marcada para não ser envolvida",
         "why": "O desfecho bom, contra uma ferramenta que deixa cair o CONCURRENTLY em silêncio e pega o bloqueio."
       }
     ]
@@ -744,11 +744,11 @@
     "hint": "Uma é um UPDATE sobre milhões de linhas numa transação só.",
     "choices": [
       {
-        "text": "Uma migração de dados é uma transação longa que o deploy síncrono ficaria esperando",
+        "text": "É uma transação longa que o deploy ficaria esperando",
         "why": "Ela é escrita em lotes, poder rodar de novo, na linguagem do app; a mudança de esquema não."
       },
       {
-        "text": "Migrações de dados não podem mudar linhas",
+        "text": "Uma migração de dados não tem permissão de tocar linhas existentes",
         "why": "Mudar linhas é exatamente o trabalho delas; a graça é onde rodam."
       },
       {
@@ -770,11 +770,11 @@
         "why": "Não há restrição; a regra mora só na classe."
       },
       {
-        "text": "É guardado: a classe valida os saves deste código, não o insert de outro escritor",
+        "text": "É guardado: a classe valida só os saves deste código",
         "why": "O ponto da aula 1; ponha a regra na tabela se todo escritor tem que obedecer."
       },
       {
-        "text": "É recusado, porque o modelo se aplica em todo lugar",
+        "text": "É recusado, porque a regra do modelo se aplica em todo lugar",
         "why": "O modelo se aplica só quando este código salva este objeto; uma carga em massa o contorna."
       },
       {
@@ -818,11 +818,11 @@
         "why": "O banco a aplica; o problema vem na próxima geração."
       },
       {
-        "text": "A tabela de migração é corrompida",
+        "text": "A tabela de migração passa a registrar uma mudança que ninguém fez",
         "why": "A tabela está bem; os esquemas divergem da ideia que o modelo tem deles."
       },
       {
-        "text": "A próxima migração gerada tenta desfazer a edição manual",
+        "text": "A próxima migração gerada desfaz a edição manual",
         "why": "Escolha uma direção e deixe a outra ser derivada."
       }
     ]
@@ -832,7 +832,7 @@
     "hint": "Uma aplicação é substituída; um banco é migrado.",
     "choices": [
       {
-        "text": "A restrição da tabela obriga toda aplicação que algum dia abrir o banco",
+        "text": "Ela obriga toda aplicação que algum dia abrir o banco",
         "why": "A regra da classe obriga só esta aplicação; as linhas a sobrevivem."
       },
       {
@@ -880,11 +880,11 @@
         "why": "As combinações explodem; um builder as compõe de um conjunto de cláusulas."
       },
       {
-        "text": "Uma view materializada de cada resultado possível",
+        "text": "Uma view materializada de cada combinação possível de resultados",
         "why": "Não há resultado fixo a materializar; os filtros variam por requisição."
       },
       {
-        "text": "Um query builder: cada filtro acrescenta uma cláusula e recebe um parâmetro",
+        "text": "Um query builder: cada filtro acrescenta uma cláusula e um parâmetro",
         "why": "Uma instrução que o servidor planeja como um todo, parametrizada por inteiro."
       },
       {
@@ -898,19 +898,19 @@
     "hint": "As instruções com mais repetição, em que os presentes do mapeador pagam toda vez.",
     "choices": [
       {
-        "text": "SQL cru, por controle",
+        "text": "SQL cru, por controle sobre a instrução",
         "why": "Essas são as instruções que o mapeador escreve melhor; SQL cru aqui é repetição à mão."
       },
       {
-        "text": "Um query builder, por componibilidade",
+        "text": "Um query builder, por componibilidade entre os filtros e as ordenações",
         "why": "Não há nada dinâmico a compor; um save simples é trabalho do mapeador."
       },
       {
-        "text": "Um procedimento armazenado por operação",
+        "text": "Um procedimento armazenado para cada uma das operações",
         "why": "Exagero para as escritas óbvias que o mapeador já escreve uma vez."
       },
       {
-        "text": "O ORM: parâmetros, tipos que combinam, as instruções óbvias escritas uma vez",
+        "text": "O ORM: parâmetros, tipos e as instruções óbvias",
         "why": "O caminho de escrita é a casa do mapeador, e a unidade de trabalho agrupa as escritas relacionadas."
       }
     ]
