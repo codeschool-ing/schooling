@@ -31,18 +31,98 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/codeschool-ing/schooling/internal/catalog"
 )
 
 // The words that make an option look wrong to somebody who has learned how
 // questions are written. An absolute in a distractor is the oldest tell there
 // is, and the mirror — hedges concentrated in the correct option — is the same
 // leak from the other side.
-var (
-	absolutes = regexp.MustCompile(`(?i)\b(never|always|only|all|must|none|every|cannot|nothing|no one)\b`)
-	hedges    = regexp.MustCompile(`(?i)\b(usually|often|can|may|tends? to|generally|sometimes|typically)\b`)
-	rareWord  = regexp.MustCompile(`(?i)[a-z]{6,}`)
-	aboveAll  = regexp.MustCompile(`(?i)\b(all|none) of the above\b`)
-)
+//
+// A tell is a property of the words a student reads, so the words this tool
+// knows have to be the words in front of them.
+//
+// THE LISTS WERE ENGLISH AND THE CATALOGUE IS NOT. `docs/EXERCISES.md` said so
+// in as many words — "the day a question is authored in Portuguese, three of
+// the checkable rows score zero and the run still says no tell above its
+// threshold, which is worse than not running, because it answers with
+// confidence". That was written as a known limit and it was already true: every
+// lesson here ships a `exercises.pt.json`, and it is the file most of these
+// students actually read.
+//
+// EACH LIST IS THE OTHER ONE TRANSLATED, NOT A SECOND JUDGEMENT. Word for word:
+// never → nunca, only → somente/apenas/só, all → todo/todos, none → nenhum,
+// cannot → não pode, no one → ninguém. Writing a longer Portuguese list because
+// Portuguese has more ways to overclaim would make the two languages measure
+// different things, and a lesson would then pass or fail on which half of the
+// file somebody edited.
+//
+// A LOCALE WITH NO LIST IS REFUSED RATHER THAN MEASURED HALFWAY. Three of the
+// checkable rows would score zero and the run would still print a number, which
+// is the exact failure the paragraph above describes. So `unknownLocale` is a
+// problem with the words to write in it, raised on the day somebody adds the
+// third language — which is the day somebody is already thinking about it.
+type language struct {
+	absolutes *regexp.Regexp
+	hedges    *regexp.Regexp
+	aboveAll  *regexp.Regexp
+
+	// Forms where an absolute CONTAINS a hedge, blanked before the hedge is
+	// looked for. English splits them into two words — `can` and `cannot` — and
+	// Portuguese does not: `não pode` carries `pode` inside it, and without this
+	// every refusal in the catalogue would be reported as a hedge. A check that
+	// fires on the commonest phrase in the language is one nobody reads twice.
+	negations *regexp.Regexp
+}
+
+var languages = map[string]*language{
+	"en": {
+		absolutes: anyOf("never", "always", "only", "all", "must", "none", "every", "cannot", "nothing", "no one"),
+		hedges:    anyOf("usually", "often", "can", "may", "tends to", "tend to", "generally", "sometimes", "typically"),
+		aboveAll:  anyOf("all of the above", "none of the above"),
+	},
+	"pt": {
+		absolutes: anyOf("nunca", "jamais", "sempre", "somente", "apenas", "só", "todo", "toda", "todos", "todas",
+			"nenhum", "nenhuma", "nada", "ninguém", "deve", "devem", "não pode", "não podem", "impossível"),
+		hedges: anyOf("geralmente", "normalmente", "em geral", "frequentemente", "muitas vezes", "pode", "podem",
+			"tende a", "tendem a", "costuma", "costumam", "às vezes", "tipicamente"),
+		aboveAll: anyOf("todas as anteriores", "nenhuma das anteriores", "todas as acima", "nenhuma das acima",
+			"todas as alternativas acima", "nenhuma das alternativas acima"),
+		negations: anyOf("não pode", "não podem", "não é possível"),
+	},
+}
+
+// anyOf builds the pattern that matches any of them as a whole word.
+//
+// IT IS NOT `\b`, AND THAT IS NOT A STYLE CHOICE. Go's `\b` is ASCII, so `\bsó\b`
+// never matches: `ó` is not a word character to it, and the boundary it wants
+// after the word is therefore already there before it. The tool would have
+// reported a clean lesson for every Portuguese absolute carrying an accent — one
+// of the four ways this could have been half-built and looked finished.
+func anyOf(list ...string) *regexp.Regexp {
+	const edge = `[^\p{L}\p{N}_]`
+	quoted := make([]string, len(list))
+	for i, w := range list {
+		quoted[i] = regexp.QuoteMeta(w)
+	}
+	return regexp.MustCompile(`(?i)(?:^|` + edge + `)(?:` + strings.Join(quoted, "|") + `)(?:$|` + edge + `)`)
+}
+
+// hedged answers whether the text hedges, having first removed the absolutes
+// that contain a hedge word — see `language.negations`.
+func (l *language) hedged(s string) bool {
+	if l.negations != nil {
+		s = l.negations.ReplaceAllString(s, " ")
+	}
+	return l.hedges.MatchString(s)
+}
+
+// rareWord counts a long word, which is the proxy `docs/EXERCISES.md` row 6
+// admits to. It is `\p{L}` rather than `[a-z]` so that `instalação` is one word
+// and not `instala` — the ASCII class cut every accented word short and made the
+// echo check measure a different thing in each language.
+var rareWord = regexp.MustCompile(`\p{L}{6,}`)
 
 type choice struct {
 	Text    string `json:"text"`
@@ -135,7 +215,7 @@ func main() {
 
 	var problems []string
 	var report []string
-	lessons := 0
+	lessons, locales := 0, map[string]bool{}
 	for _, f := range files {
 		body, err := os.ReadFile(f) //nolint:gosec // a path from this tool's own glob
 		if err != nil {
@@ -148,12 +228,31 @@ func main() {
 			continue
 		}
 		lessons++
-		found, line := checkLesson(where(f), exs)
-		problems = append(problems, found...)
-		if line != "" {
-			report = append(report, line)
+
+		versions, err := everyLanguage(f, body, exs)
+		if err != nil {
+			problems = append(problems, fmt.Sprintf("%s: %v", f, err))
+			continue
+		}
+		for _, v := range versions {
+			locales[v.locale] = true
+			at := fmt.Sprintf("%s [%s]", where(f), v.locale)
+			if v.lang == nil {
+				problems = append(problems, fmt.Sprintf(
+					"%s: no word list for %q, so the absolutes, the hedges and \"all of the "+
+						"above\" would score zero and the run would still print a number — add "+
+						"%q to `languages` in this tool with the English list translated",
+					at, v.locale, v.locale))
+				continue
+			}
+			found, line := checkLesson(at, v.lang, v.exercises)
+			problems = append(problems, found...)
+			if line != "" {
+				report = append(report, line)
+			}
 		}
 	}
+	sort.Strings(report)
 
 	// The score is printed whether or not it is over the ceiling, because the
 	// number is the evidence and "nothing to report" is only an assertion. A
@@ -170,11 +269,84 @@ func main() {
 		for _, p := range problems {
 			fmt.Println(" - " + p)
 		}
-		fmt.Printf("\n%d problem(s) across %d lesson(s). A tell is not a style note: it is a "+
-			"student passing without reading.\n", len(problems), lessons)
+		fmt.Printf("\n%d problem(s) across %d lesson(s) in %d language(s). A tell is not a "+
+			"style note: it is a student passing without reading.\n",
+			len(problems), lessons, len(locales))
 		os.Exit(1)
 	}
-	fmt.Printf("%d lesson(s), no tell above its threshold\n", lessons)
+	fmt.Printf("%d lesson(s) in %d language(s), no tell above its threshold\n", lessons, len(locales))
+}
+
+// version is one lesson's questions as one language's students read them.
+type version struct {
+	locale    string
+	lang      *language
+	exercises []exercise
+}
+
+// everyLanguage answers the lesson in English and in each `exercises.<locale>.json`
+// beside it.
+//
+// THE MERGE IS `catalog.Translated` AND NOT A SECOND ONE WRITTEN HERE. The
+// mirror holds a complete payload per locale because merging in every reader is
+// how a screen ends up half translated; a checker with its own merge is a reader
+// that would have drifted the same way, and it would drift towards passing —
+// a field this tool forgot to take from the translation is a field it measures
+// in English while the student reads Portuguese.
+//
+// A LESSON WITH NO TRANSLATION IS ONE VERSION, NOT A FAILURE. Whether every
+// question is translated is `validate-content`'s question and it asks it
+// already; this tool has nothing to say about a file that is not there.
+func everyLanguage(f string, body []byte, exs []exercise) ([]version, error) {
+	out := []version{{locale: "en", lang: languages["en"], exercises: exs}}
+
+	var raws []json.RawMessage
+	if err := json.Unmarshal(body, &raws); err != nil {
+		return nil, err
+	}
+
+	dir := filepath.Dir(f)
+	others, err := filepath.Glob(filepath.Join(dir, "exercises.*.json"))
+	if err != nil {
+		return nil, err
+	}
+	sort.Strings(others)
+
+	for _, o := range others {
+		locale := strings.TrimSuffix(strings.TrimPrefix(filepath.Base(o), "exercises."), ".json")
+		lang, known := languages[locale]
+		if !known {
+			out = append(out, version{locale: locale})
+			continue
+		}
+		translated, err := os.ReadFile(o) //nolint:gosec // a path from this tool's own glob
+		if err != nil {
+			return nil, err
+		}
+		var text map[string]catalog.ExerciseText
+		if err := json.Unmarshal(translated, &text); err != nil {
+			return nil, fmt.Errorf("%s: %w", filepath.Base(o), err)
+		}
+		read := make([]exercise, 0, len(raws))
+		for i, raw := range raws {
+			t, ok := text[exs[i].ID]
+			if !ok {
+				read = append(read, exs[i])
+				continue
+			}
+			merged, err := catalog.Translated(raw, t)
+			if err != nil {
+				return nil, fmt.Errorf("%s/%s: %w", filepath.Base(o), exs[i].ID, err)
+			}
+			var e exercise
+			if err := json.Unmarshal(merged, &e); err != nil {
+				return nil, fmt.Errorf("%s/%s: %w", filepath.Base(o), exs[i].ID, err)
+			}
+			read = append(read, e)
+		}
+		out = append(out, version{locale: locale, lang: lang, exercises: read})
+	}
+	return out, nil
 }
 
 func where(f string) string {
@@ -185,11 +357,12 @@ func where(f string) string {
 	return f
 }
 
-func checkLesson(at string, exs []exercise) (problems []string, report string) {
+func checkLesson(at string, lang *language, exs []exercise) (problems []string, report string) {
 	var picked []exercise
 	single, ranked := 0, 0
 	byRank := map[int]int{}
 	position := map[int]int{}
+	var absent skew
 
 	for _, e := range exs {
 		if e.Type != "quiz" && e.Type != "multiple-choice" {
@@ -214,28 +387,24 @@ func checkLesson(at string, exs []exercise) (problems []string, report string) {
 			}
 		}
 
-		// 2 · absolutes in the wrong options, hedges in the right one
-		var absWrong, absRight int
+		// 2 · absolutes in the wrong options, counted across the lesson rather
+		//     than refused per question — see `skew`
 		for _, i := range wrong {
-			if absolutes.MatchString(e.Choices[i].Text) {
-				absWrong++
+			absent.wrong++
+			if lang.absolutes.MatchString(e.Choices[i].Text) {
+				absent.inWrong++
 			}
 		}
 		for _, i := range correct {
-			if absolutes.MatchString(e.Choices[i].Text) {
-				absRight++
+			absent.right++
+			if lang.absolutes.MatchString(e.Choices[i].Text) {
+				absent.inRight++
 			}
 		}
-		if absWrong > 0 && absRight == 0 && len(wrong) > 0 {
-			problems = append(problems, fmt.Sprintf(
-				"%s/%s puts an absolute (never/always/only/…) in %d of its %d wrong options and "+
-					"none in the right one — eliminating them is a strategy that works without "+
-					"the lesson", at, e.ID, absWrong, len(wrong)))
-		}
-		if len(correct) == 1 && hedges.MatchString(e.Choices[correct[0]].Text) {
+		if len(correct) == 1 && lang.hedged(e.Choices[correct[0]].Text) {
 			hedged := 0
 			for _, i := range wrong {
-				if hedges.MatchString(e.Choices[i].Text) {
+				if lang.hedged(e.Choices[i].Text) {
 					hedged++
 				}
 			}
@@ -255,7 +424,7 @@ func checkLesson(at string, exs []exercise) (problems []string, report string) {
 
 		// 8 · all/none of the above
 		for _, c := range e.Choices {
-			if aboveAll.MatchString(c.Text) {
+			if lang.aboveAll.MatchString(c.Text) {
 				problems = append(problems, fmt.Sprintf(
 					"%s/%s uses \"all/none of the above\", which is answerable from one option "+
 						"a student is sure about", at, e.ID))
@@ -297,14 +466,14 @@ func checkLesson(at string, exs []exercise) (problems []string, report string) {
 	}
 
 	// And the whole point, measured end to end: what does the best of them score?
-	if name, hit, total := guess(picked); total >= 8 {
+	if name, hit, total := guess(lang, picked); total >= 8 {
 		share := float64(hit) / float64(total)
 		worst, worstShare := bestRank(byRank, ranked)
 		report = fmt.Sprintf("%s: reading nothing scores %d of %d (%.0f%%) by picking %s; "+
 			"chance is %.0f%%; the correct option is %s in %.0f%% of the %d questions whose "+
-			"options differ in length",
+			"options differ in length%s",
 			at, hit, total, share*100, name, chance(picked)*100,
-			nameRank(worst), worstShare*100, ranked)
+			nameRank(worst), worstShare*100, ranked, absent.String())
 		if share > GuessCeiling {
 			problems = append(problems, fmt.Sprintf(
 				"%s: a student who read nothing and picks %s scores %d of %d (%.0f%%), over the "+
@@ -313,6 +482,55 @@ func checkLesson(at string, exs []exercise) (problems []string, report string) {
 	}
 
 	return problems, report
+}
+
+/*
+skew is how much more often an absolute sits in a wrong option than in a right
+one, across a whole lesson.
+
+IT REPLACED A REFUSAL PER QUESTION, and the measurement is why. The rule used to
+fail any question with an absolute among its distractors and none in its key,
+which reads as the row-2 tell and is not it: the words are also the ordinary
+vocabulary of a short factual answer. Run over this catalogue's Portuguese for
+the first time it raised 156 of them, and they were `Nada, sem saber do disco`,
+`Nenhum — a versão é antiga demais para ter suporte`, `Nunca, porque os dois
+campos de dia se contradizem`. Correct answers, all three, and each one the whole
+answer.
+
+THE TELL IS A HABIT AND A HABIT IS A RATE. If absolutes are written without
+regard to which option is correct, the rate in the wrong options and the rate in
+the right ones are the same number; the tell is the gap between them. Over the
+57 lesson-languages here with enough absolutes to measure at all, the largest gap
+is five points and most are NEGATIVE — the keys carry them slightly more often.
+There was no habit to find, in either language, and 156 sentences were being
+asked to change to hide a word.
+
+It is the same amendment `RankShareCeiling` already carries, for the same reason
+and stated in `docs/EXERCISES.md` row 1: one question whose correct option
+happens to be longest is nothing, and one distractor saying `never` is nothing.
+
+WHICH LEAVES THE REFUSAL SOMEWHERE BETTER. Eliminating the absolutes is a
+STRATEGY, and a strategy is scored end to end against `GuessCeiling` rather than
+guessed at per question — `pickLongestClean` has always been in the family and
+`pickShortestClean` is its mirror, added here so that elimination is measured at
+both ends of the ruler rather than only the end the tool imagined. A lesson whose
+distractors all overclaim is a lesson where those two score near 100%, which
+fails, and says so with a number.
+
+So this prints and does not refuse. The number is the evidence; the verdict is
+the score above it.
+*/
+type skew struct {
+	wrong, inWrong int
+	right, inRight int
+}
+
+func (s skew) String() string {
+	if s.inWrong+s.inRight == 0 || s.wrong == 0 || s.right == 0 {
+		return ""
+	}
+	return fmt.Sprintf("; an absolute sits in %.0f%% of the wrong options and %.0f%% of the "+
+		"right ones", float64(s.inWrong)/float64(s.wrong)*100, float64(s.inRight)/float64(s.right)*100)
 }
 
 // chance is what pure guessing scores on these questions, which is the number
@@ -453,15 +671,16 @@ func overlap(a, b map[string]bool) int {
 // search for an accusation, and the number it reported would only ever rise.
 var strategies = []struct {
 	name string
-	pick func(cs []choice) int
+	pick func(lang *language, cs []choice) int
 }{
 	{"the longest option without an absolute", pickLongestClean},
-	{"the longest option", func(cs []choice) int { return byLength(cs, 0) }},
-	{"the shortest option", func(cs []choice) int { return byLength(cs, len(cs)-1) }},
-	{"the second-longest option", func(cs []choice) int { return byLength(cs, 1) }},
+	{"the shortest option without an absolute", pickShortestClean},
+	{"the longest option", func(_ *language, cs []choice) int { return byLength(cs, 0) }},
+	{"the shortest option", func(_ *language, cs []choice) int { return byLength(cs, len(cs)-1) }},
+	{"the second-longest option", func(_ *language, cs []choice) int { return byLength(cs, 1) }},
 }
 
-func guess(exs []exercise) (name string, hit, total int) {
+func guess(lang *language, exs []exercise) (name string, hit, total int) {
 	var single []exercise
 	for _, e := range exs {
 		if e.Type == "quiz" && len(e.Choices) >= 2 {
@@ -475,7 +694,7 @@ func guess(exs []exercise) (name string, hit, total int) {
 	for _, s := range strategies {
 		n := 0
 		for _, e := range single {
-			if e.Choices[s.pick(e.Choices)].Correct {
+			if e.Choices[s.pick(lang, e.Choices)].Correct {
 				n++
 			}
 		}
@@ -510,19 +729,37 @@ func byLength(cs []choice, k int) int {
 // option that does not say "never" or "always". Where every option carries an
 // absolute the rule has nothing to eliminate, and it falls back to the half of
 // it that still applies.
-func pickLongestClean(cs []choice) int {
+func pickLongestClean(lang *language, cs []choice) int {
+	return pickClean(lang, cs, true)
+}
+
+// pickShortestClean is the same elimination with the ruler held the other way
+// up, and it is here because the length checks learned this lesson first: a rule
+// that only watches one end does not remove a habit, it moves it. Eliminating
+// the absolutes and then taking the SHORTEST of what is left is the same student
+// on a paper whose keys are bare — which is most of this catalogue, where the
+// answer is a command or a name.
+func pickShortestClean(lang *language, cs []choice) int {
+	return pickClean(lang, cs, false)
+}
+
+func pickClean(lang *language, cs []choice, longest bool) int {
 	var candidates []int
 	for i, c := range cs {
-		if !absolutes.MatchString(c.Text) {
+		if !lang.absolutes.MatchString(c.Text) {
 			candidates = append(candidates, i)
 		}
 	}
 	if len(candidates) == 0 {
-		return byLength(cs, 0)
+		if longest {
+			return byLength(cs, 0)
+		}
+		return byLength(cs, len(cs)-1)
 	}
 	best := candidates[0]
 	for _, i := range candidates {
-		if len([]rune(cs[i].Text)) > len([]rune(cs[best].Text)) {
+		n, m := len([]rune(cs[i].Text)), len([]rune(cs[best].Text))
+		if (longest && n > m) || (!longest && n < m) {
 			best = i
 		}
 	}
