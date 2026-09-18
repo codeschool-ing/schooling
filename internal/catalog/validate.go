@@ -592,6 +592,38 @@ func checkExercises(s *School) []error {
 				sections[sec.ID] = true
 			}
 			check(c.Slug+"/"+l.ID, sections, pictures, l.Exercises)
+
+			/* AND A PRACTICE SECTION WITH NOTHING FILED UNDER IT, which is the
+			   other direction again and the one that had already shipped.
+
+			   A lesson's last section is where it closes, and the interface
+			   draws the DECLARED one as the assessment — keeping its id, its
+			   title and its place — rather than appending a synthetic one. So
+			   a practice section with no question of its own is a heading, a
+			   frame, and nothing inside it. The count beside it is the LESSON's
+			   total, which is the number the server sends, so the screen does
+			   not even believe it is empty: it draws a box and waits.
+
+			   Every one of `sql-databases`'s thirteen lessons was in that state
+			   for as long as the course existed. Its 632 questions were all on
+			   the reading sections, `check-exercises` measured them and found
+			   nothing to say, and the tells this catalogue does look for are
+			   all about a question that IS there. Nobody was counting the
+			   sections that had none. */
+			for _, sec := range l.Sections {
+				if sec.Kind != "practice" {
+					continue
+				}
+				if !slices.ContainsFunc(l.Exercises, func(e Exercise) bool {
+					return e.Section == sec.ID
+				}) {
+					problems = append(problems, fmt.Errorf(
+						"%s/%s/%s is a practice section with no question filed under it — it is "+
+							"the section a lesson closes with, and it draws as an empty frame "+
+							"rather than as anything a student can tell is unfinished",
+						c.Slug, l.ID, sec.Slug))
+				}
+			}
 		}
 		check(c.Slug+"/exam", nil, pictures, c.Exam)
 
