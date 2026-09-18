@@ -1187,5 +1187,345 @@
       "Two tables both having a column called id",
       "A transaction holding a lock for too long"
     ]
+  },
+  {
+    "id": "ex-r6qpqeyy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An arrivals board: `SELECT flight, delay_minutes AS late FROM arrivals WHERE late > 15 ORDER BY late DESC`. What happens?",
+    "hint": "The same name is used twice, and only one of the two places has it.",
+    "choices": [
+      {
+        "text": "Both uses fail, since an alias is only for display",
+        "correct": false,
+        "why": "One of them works, and knowing which is the point."
+      },
+      {
+        "text": "The filter fails; the sort would have been fine",
+        "correct": true,
+        "why": "Filtering happens before the output columns are computed, and arranging happens after."
+      },
+      {
+        "text": "The sort fails; the filter would have been fine",
+        "correct": false,
+        "why": "It is the other way round, and that is what the running order says."
+      },
+      {
+        "text": "Both work; PostgreSQL resolves the name for you",
+        "correct": false,
+        "why": "Then there would be no error to explain, and there is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-vms9q9f4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WHERE date_trunc('month', closed_at) = '2026-03-01'` finds exactly the right rows and cannot use the index on `closed_at`. Which rewrite fixes that?",
+    "hint": "One side of the comparison has to be the column and nothing else.",
+    "choices": [
+      {
+        "text": "`WHERE closed_at >= '2026-03-01' AND closed_at < '2026-04-01'`",
+        "correct": true,
+        "why": "The column is bare, so the index is a range the database can walk into."
+      },
+      {
+        "text": "`WHERE closed_at::date = '2026-03-01'`",
+        "correct": false,
+        "why": "Still a function around the column, and it now finds one day instead of a month."
+      },
+      {
+        "text": "`WHERE closed_at BETWEEN '2026-03-01' AND '2026-03-31'`",
+        "correct": false,
+        "why": "Bare at last, and it loses almost all of the thirty-first, whose rows are after midnight."
+      },
+      {
+        "text": "`WHERE extract(month FROM closed_at) = 3`",
+        "correct": false,
+        "why": "Another function, and it now matches every March there has ever been."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qmhw6ez",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SELECT DISTINCT a.name FROM artists a JOIN tracks t ON t.artist_id = a.id` answers \"artists with at least one track\" correctly today. What breaks it?",
+    "hint": "Ask what the duplicates were, and whether they went away or were hidden.",
+    "choices": [
+      {
+        "text": "An artist with no tracks, who will be missing",
+        "correct": false,
+        "why": "They should be missing. That is what the question asked."
+      },
+      {
+        "text": "Adding a `count(*)`, which counts tracks and calls them artists",
+        "correct": true,
+        "why": "The join still multiplies the rows; the word only hid it from a list of names."
+      },
+      {
+        "text": "An index on `artist_id`, which changes the row order",
+        "correct": false,
+        "why": "Order is not what the word removes, and this query never promised one."
+      },
+      {
+        "text": "Nothing; it is the standard way to write it",
+        "correct": false,
+        "why": "It is the common way. It does more work than asking whether one track exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-ha8cbt7y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A feed uses keyset paging with `ORDER BY created_at DESC` and nothing else. A hundred rows share one second. What goes wrong?",
+    "hint": "Ask what the cursor is able to say about where it stopped.",
+    "choices": [
+      {
+        "text": "Nothing; the cursor is a timestamp and timestamps are unique enough",
+        "correct": false,
+        "why": "A hundred rows in this table say otherwise, and it is the busy seconds that matter."
+      },
+      {
+        "text": "Rows inside that second are shown twice or skipped",
+        "correct": true,
+        "why": "The arrangement inside the second is undefined, so \"what comes after\" names no particular row."
+      },
+      {
+        "text": "The query becomes slower on the deep pages",
+        "correct": false,
+        "why": "That is the defect of counting rows to skip, and this does not count them."
+      },
+      {
+        "text": "The feed stops at the second and cannot go past it",
+        "correct": false,
+        "why": "It goes past; it simply cannot say which of those rows it already showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rxbv8g1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue must show the overdue tickets first and then everything else oldest first, in one query. Which `ORDER BY` does it?",
+    "hint": "A boolean sorts false before true.",
+    "choices": [
+      {
+        "text": "`ORDER BY due_at, opened_at`",
+        "correct": false,
+        "why": "That sorts by the deadline itself, which mixes the overdue in among the rest."
+      },
+      {
+        "text": "`ORDER BY (due_at < now()) DESC, opened_at`",
+        "correct": true,
+        "why": "True comes first descending, and the second key arranges each block."
+      },
+      {
+        "text": "`ORDER BY (due_at < now()), opened_at`",
+        "correct": false,
+        "why": "Ascending puts false first, so the overdue ones land at the bottom."
+      },
+      {
+        "text": "`ORDER BY overdue DESC, opened_at` with `overdue` computed in the select list",
+        "correct": false,
+        "why": "That one does work — and it is the same sort, written with a name."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bv64dp8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly report has returned zero rows for a month and raised no error. Its condition is `WHERE category_id NOT IN (SELECT id FROM categories WHERE archived)`. What is the likeliest cause?",
+    "hint": "Ask what one particular value among the subquery's results would do.",
+    "choices": [
+      {
+        "text": "Every category was archived",
+        "correct": false,
+        "why": "Then the report would be right, and it would have been noticed a month ago."
+      },
+      {
+        "text": "One of the ids the subquery returns is empty",
+        "correct": true,
+        "why": "The chain of inequalities then contains an unknown, which no row can ever make true."
+      },
+      {
+        "text": "The subquery is evaluated once and cached",
+        "correct": false,
+        "why": "It is evaluated per run, and caching would not make an answer empty."
+      },
+      {
+        "text": "`NOT IN` cannot take a subquery",
+        "correct": false,
+        "why": "It can, and that is exactly where the empty value comes from."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yqjpzke",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A list of names sorts one way on a developer's machine and another way in production. The rows are identical. What is it?",
+    "hint": "Something about the database itself, decided when it was created.",
+    "choices": [
+      {
+        "text": "The collation the two databases were created with",
+        "correct": true,
+        "why": "Accented letters sort among their plain forms under one and after Z under byte order."
+      },
+      {
+        "text": "Production has an index on the column and the laptop does not",
+        "correct": false,
+        "why": "An index changes the route to an answer, never the answer."
+      },
+      {
+        "text": "The two are on different PostgreSQL versions",
+        "correct": false,
+        "why": "They may be, and the sort order does not come from the version."
+      },
+      {
+        "text": "Production has more rows, so the sort spills to disk",
+        "correct": false,
+        "why": "Spilling changes where the work happens, not the order it produces."
+      }
+    ]
+  },
+  {
+    "id": "ex-v68cm29c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program shows \"the latest arrivals\" with `SELECT * FROM arrivals LIMIT 100`. What is wrong with it?",
+    "hint": "Ask what decides which hundred.",
+    "choices": [
+      {
+        "text": "`LIMIT` is slower than fetching everything and cutting in the program",
+        "correct": false,
+        "why": "It is faster, and speed is not the defect."
+      },
+      {
+        "text": "With no arrangement, it is an arbitrary hundred of an arbitrary order",
+        "correct": true,
+        "why": "Nothing in it mentions time, so \"latest\" is a claim the query never makes."
+      },
+      {
+        "text": "`LIMIT` must always be written with `OFFSET`",
+        "correct": false,
+        "why": "It need not, and adding one would not make these rows the latest."
+      },
+      {
+        "text": "A hundred is too many rows to return at once",
+        "correct": false,
+        "why": "A hundred rows is nothing, and the count is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcesdjaf",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `tracks` table holds 1000 rows. `WHERE rating = 5` counts 96 and `WHERE rating <> 5` counts 812. Write how many tracks have no rating.",
+    "hint": "The two conditions are opposites and still do not cover the table.",
+    "blanks": [
+      {
+        "accept": [
+          "92"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wksn1kjd",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A list is read while rows are being inserted above it, so counting rows to skip shows some twice. Write the one word naming the technique that asks instead for what follows the last row shown.",
+    "hint": "It is named after what the cursor carries.",
+    "blanks": [
+      {
+        "accept": [
+          "keyset"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7w61rcs5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the five steps of building a query outwards in the order that tells you soonest which part is wrong.",
+    "hint": "Each step should move one number you can watch.",
+    "items": [
+      "Look at ten rows of the table to check it is what you think",
+      "Count the rows one condition keeps",
+      "Add the next condition and watch the number move",
+      "Name the columns you actually want",
+      "Add the arrangement and the limit together"
+    ],
+    "trap": "Naming the columns early feels like progress and tells you nothing — a count moves when a condition is wrong, and a column list does not."
+  },
+  {
+    "id": "ex-37p5pe2c",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to what is behind it.",
+    "hint": "One is about time, one is about an unknown, one is about where a match may start.",
+    "pairs": [
+      {
+        "left": "A row appears on two consecutive pages",
+        "right": "Counting rows to skip while rows are inserted above"
+      },
+      {
+        "left": "Zero rows for a month, and no error",
+        "right": "An unknown among the values an exclusion compares against"
+      },
+      {
+        "left": "Instant in development, minutes in production",
+        "right": "A pattern that may match starting anywhere"
+      }
+    ],
+    "right_distractors": [
+      "A column that was dropped and not replaced",
+      "Two clients on different time zones"
+    ]
   }
 ]
