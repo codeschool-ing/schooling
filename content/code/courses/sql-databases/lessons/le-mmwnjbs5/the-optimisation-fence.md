@@ -62,7 +62,7 @@ once is materialised.
 Only when it is materialised. Take a CTE referenced twice:
 
 ```sql
-WITH monthly AS (SELECT date_trunc('month', placed_at) AS month, sum(total) AS revenue
+WITH monthly AS (SELECT date_trunc('month', ordered_on) AS month, sum(total) AS revenue
                  FROM orders GROUP BY 1)
 SELECT this.month, this.revenue, prev.revenue
 FROM   monthly this LEFT JOIN monthly prev ON prev.month = this.month - INTERVAL '1 month';

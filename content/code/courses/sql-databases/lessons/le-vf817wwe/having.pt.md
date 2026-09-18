@@ -51,15 +51,15 @@ porque uma é sobre uma linha e a outra é sobre uma pilha:
 ```sql
 SELECT   customer_id, count(*) AS orders_2026
 FROM     orders
-WHERE    placed_at >= DATE '2026-01-01'
-  AND    placed_at <  DATE '2027-01-01'
+WHERE    ordered_on >= DATE '2026-01-01'
+  AND    ordered_on <  DATE '2027-01-01'
 GROUP BY customer_id
 HAVING   count(*) > 3;
 ```
 
 O ano é uma propriedade de um pedido, então é `WHERE`. A contagem é uma propriedade da pilha do
 cliente, então é `HAVING`. Troque os dois e um deles é erro e o outro é outra pergunta inteiramente
-— `HAVING max(placed_at) >= DATE '2026-01-01'` daria os clientes com mais de três pedidos **na
+— `HAVING max(ordered_on) >= DATE '2026-01-01'` daria os clientes com mais de três pedidos **na
 vida**, que também compraram pelo menos uma vez em 2026. É uma pergunta de verdade, e não é a de
 cima.
 

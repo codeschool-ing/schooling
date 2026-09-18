@@ -44,7 +44,7 @@ em vez de contar.
 
 ```sql
 SELECT c.name,
-       (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id) AS last_order
+       (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id) AS last_order
 FROM   customers c;
 ```
 
@@ -58,7 +58,7 @@ Acrescente mais duas colunas e o formato se volta contra você:
 ```sql
 SELECT c.name,
        (SELECT count(*)         FROM orders o WHERE o.customer_id = c.id) AS orders,
-       (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id) AS last_order,
+       (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id) AS last_order,
        (SELECT sum(o.total)     FROM orders o WHERE o.customer_id = c.id) AS spent
 FROM   customers c;
 ```
@@ -67,7 +67,7 @@ Três subconsultas sobre a mesma tabela, perguntando sobre as mesmas linhas, tr�
 `LEFT JOIN` com um `GROUP BY` faz tudo numa passada:
 
 ```sql
-SELECT   c.name, count(o.id) AS orders, max(o.placed_at) AS last_order,
+SELECT   c.name, count(o.id) AS orders, max(o.ordered_on) AS last_order,
          coalesce(sum(o.total), 0) AS spent
 FROM     customers c
 LEFT JOIN orders o ON o.customer_id = c.id
@@ -99,7 +99,7 @@ Está correto e atualiza todo cliente, inclusive os sem pedidos — onde `count(
 
 ```sql
 UPDATE customers c
-SET    last_order_at = (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id);
+SET    last_order_at = (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id);
 ```
 
 Um cliente sem pedidos agora fica `NULL`, o que pode estar certo, e um cliente cujos pedidos foram
@@ -108,7 +108,7 @@ queria tocar só as linhas que têm par, diga isso:
 
 ```sql
 UPDATE customers c
-SET    last_order_at = (SELECT max(o.placed_at) FROM orders o WHERE o.customer_id = c.id)
+SET    last_order_at = (SELECT max(o.ordered_on) FROM orders o WHERE o.customer_id = c.id)
 WHERE  EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id);
 ```
 

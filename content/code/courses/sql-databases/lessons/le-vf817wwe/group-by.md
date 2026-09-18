@@ -72,15 +72,15 @@ The group does not have to be a column, and this is how every time series you wi
 made:
 
 ```sql
-SELECT   date_trunc('month', placed_at) AS month, sum(total)
+SELECT   date_trunc('month', ordered_on) AS month, sum(total)
 FROM     orders
-GROUP BY date_trunc('month', placed_at)
+GROUP BY date_trunc('month', ordered_on)
 ORDER BY month;
 ```
 
 Revenue per month, from a table that knows nothing about months. The same shape gives you per week,
-per day, per hour. Other engines spell the truncation differently — MySQL's `DATE_FORMAT(placed_at,
-'%Y-%m')`, SQLite's `strftime('%Y-%m', placed_at)` — and the idea is identical.
+per day, per hour. Other engines spell the truncation differently — MySQL's `DATE_FORMAT(ordered_on,
+'%Y-%m')`, SQLite's `strftime('%Y-%m', ordered_on)` — and the idea is identical.
 
 Repeating the expression in both clauses is tiresome, and PostgreSQL, MySQL and SQLite all let you
 write `GROUP BY month`, naming the output column instead. That is an extension rather than standard

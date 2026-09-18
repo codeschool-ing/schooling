@@ -46,7 +46,7 @@ subconsulta correlacionada. Eis ela feita direito:
 ```sql
 SELECT * FROM (
     SELECT o.*,
-           row_number() OVER (PARTITION BY customer_id ORDER BY placed_at DESC) AS n
+           row_number() OVER (PARTITION BY customer_id ORDER BY ordered_on DESC) AS n
     FROM   orders o
 ) t
 WHERE t.n <= 3;
@@ -120,8 +120,8 @@ E o `lead` é como você encontra lacunas: uma linha cujo `lead(at)` esteja a ma
 ## `first_value`, `last_value`, e a armadilha da segunda
 
 ```sql
-first_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at)   -- o primeiro pedido dele
-last_value (total) OVER (PARTITION BY customer_id ORDER BY placed_at)   -- NÃO o último
+first_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- o primeiro pedido dele
+last_value (total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- NÃO o último
 ```
 
 `last_value` devolve o total da própria linha atual, todas as vezes. É a moldura padrão de novo: com
@@ -131,10 +131,10 @@ linha atual.
 Duas correções, e a segunda é a que se deve preferir:
 
 ```sql
-last_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at
+last_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on
                         ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 
-first_value(total) OVER (PARTITION BY customer_id ORDER BY placed_at DESC)
+first_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on DESC)
 ```
 
 A segunda diz o que quer dizer sem cláusula de moldura, e é mais difícil de errar depois.

@@ -51,15 +51,15 @@ clauses, because one is about a row and the other is about a pile:
 ```sql
 SELECT   customer_id, count(*) AS orders_2026
 FROM     orders
-WHERE    placed_at >= DATE '2026-01-01'
-  AND    placed_at <  DATE '2027-01-01'
+WHERE    ordered_on >= DATE '2026-01-01'
+  AND    ordered_on <  DATE '2027-01-01'
 GROUP BY customer_id
 HAVING   count(*) > 3;
 ```
 
 The year is a property of an order, so it is a `WHERE`. The count is a property of the customer's
 pile, so it is a `HAVING`. Swap them and one of the two is an error and the other is a different
-question entirely — `HAVING max(placed_at) >= DATE '2026-01-01'` would give you customers with more
+question entirely — `HAVING max(ordered_on) >= DATE '2026-01-01'` would give you customers with more
 than three orders **ever**, who also ordered at least once in 2026. That is a real question, and it
 is not the one above.
 

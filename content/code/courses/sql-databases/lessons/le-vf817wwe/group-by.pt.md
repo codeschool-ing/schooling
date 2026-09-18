@@ -72,15 +72,15 @@ O grupo não precisa ser uma coluna, e é assim que toda série temporal que voc
 feita:
 
 ```sql
-SELECT   date_trunc('month', placed_at) AS month, sum(total)
+SELECT   date_trunc('month', ordered_on) AS month, sum(total)
 FROM     orders
-GROUP BY date_trunc('month', placed_at)
+GROUP BY date_trunc('month', ordered_on)
 ORDER BY month;
 ```
 
 Receita por mês, a partir de uma tabela que não sabe nada sobre meses. O mesmo formato dá por
 semana, por dia, por hora. Outros bancos escrevem o truncamento de outro jeito — `DATE_FORMAT
-(placed_at, '%Y-%m')` no MySQL, `strftime('%Y-%m', placed_at)` no SQLite — e a ideia é idêntica.
+(ordered_on, '%Y-%m')` no MySQL, `strftime('%Y-%m', ordered_on)` no SQLite — e a ideia é idêntica.
 
 Repetir a expressão nas duas cláusulas é chato, e PostgreSQL, MySQL e SQLite deixam você escrever
 `GROUP BY month`, nomeando a coluna de saída. Isso é uma extensão, e não SQL padrão, então vale
