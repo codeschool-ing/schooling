@@ -1396,5 +1396,361 @@
         "why": "Through the ORM, the builder and the raw hatch alike."
       }
     ]
+  },
+  {
+    "id": "ex-gwct9kb8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WHERE id IN ($1)` with a list as the value does not work, because a placeholder stands for one value. What is the shape that takes a whole list in one parameter?",
+    "hint": "The same operator the set-loading section used against an array.",
+    "choices": [
+      {
+        "text": "`WHERE id = ANY($1)`, with the array as the value",
+        "correct": true,
+        "why": "One parameter of any length, and the statement's text never changes with the number of items."
+      },
+      {
+        "text": "`WHERE id IN ($1, $2, $3)`, built to the length of the list",
+        "correct": false,
+        "why": "It works, and it is a different statement per length, so each one is planned and counted apart."
+      },
+      {
+        "text": "`WHERE id IN (SELECT unnest($1))`",
+        "correct": false,
+        "why": "It also works and is the long way round the operator that says it directly."
+      },
+      {
+        "text": "Joining the list into a comma-separated string",
+        "correct": false,
+        "why": "That is the value back in the text, which is the thing parameters exist to prevent."
+      }
+    ]
+  },
+  {
+    "id": "ex-akxy30hd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A mapper emits one joined statement for a relationship on some pages and two separate ones on others, deciding by whether the filter mentions the other table. What does that mean for you?",
+    "hint": "The decision is real and it is not in your code.",
+    "choices": [
+      {
+        "text": "Nothing; it picks correctly either way",
+        "correct": false,
+        "why": "It picks reasonably, and which one it picked decides how many rows came back."
+      },
+      {
+        "text": "The shape has to be read per page rather than per model",
+        "correct": true,
+        "why": "The same instruction produces different statements, so only the log says which one this screen got."
+      },
+      {
+        "text": "The relationship should be marked always-eager",
+        "correct": false,
+        "why": "That loads it on every screen, including the ones that show a name."
+      },
+      {
+        "text": "The filter should be moved into the application",
+        "correct": false,
+        "why": "That trades one statement for rows fetched and discarded."
+      }
+    ]
+  },
+  {
+    "id": "ex-9x9kjmg7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under a migration tool, `CREATE TABLE IF NOT EXISTS` removes a check and hides nothing. Why?",
+    "hint": "Ask what it would mean for that table to already be there.",
+    "choices": [
+      {
+        "text": "The tool creates the tables itself and ignores the file",
+        "correct": false,
+        "why": "It runs what the file says; that is the whole mechanism."
+      },
+      {
+        "text": "A migration is applied once, so finding the table means the database is not where its version says",
+        "correct": true,
+        "why": "That deserves a loud failure, and the clause turns it into a silent pass."
+      },
+      {
+        "text": "The clause is not supported inside a transaction",
+        "correct": false,
+        "why": "It is; the statement is ordinary."
+      },
+      {
+        "text": "The tool records the version before running the file",
+        "correct": false,
+        "why": "It records it after, and either way the clause still swallows the signal."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzbs4nje",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two databases both record migration `0003` as applied and their schemas differ. Nothing reports a problem. What happened?",
+    "hint": "The record says which files ran, and not what they contained.",
+    "choices": [
+      {
+        "text": "One of them ran the migrations out of order",
+        "correct": false,
+        "why": "The tool applies them in order, and doing otherwise would show as a missing version rather than a matching one."
+      },
+      {
+        "text": "The file was edited after one of them had run it",
+        "correct": true,
+        "why": "The version table records a name, so two different contents can both be recorded under it."
+      },
+      {
+        "text": "One of them ran a down migration and then the up again",
+        "correct": false,
+        "why": "That would end at the same schema, which is what a reversible pair means."
+      },
+      {
+        "text": "One of them applied it twice",
+        "correct": false,
+        "why": "The table is what makes that impossible, and a second run does nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-df9qm169",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A paged list shows one row on two pages and skips another. The mapper emitted no arrangement at all. Why does a correct page number not fix it?",
+    "hint": "Ask what each page is a slice of.",
+    "choices": [
+      {
+        "text": "Because the page size is not a multiple of the row count",
+        "correct": false,
+        "why": "No page size rescues a slice of something that has no order."
+      },
+      {
+        "text": "Because each page is a slice of a fresh arbitrary arrangement",
+        "correct": true,
+        "why": "Taking rows twenty to forty of an order nobody fixed says nothing about which rows those are."
+      },
+      {
+        "text": "Because rows were inserted while the list was read",
+        "correct": false,
+        "why": "That happens too, and it is the defect of counting rows to skip rather than of having no order."
+      },
+      {
+        "text": "Because the mapper caches the first page",
+        "correct": false,
+        "why": "A cache would repeat a page rather than mix two of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-haaxnfkj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An eager-loading fix was deployed and the page is no faster. What do you look at before changing any more code?",
+    "hint": "The fix was meant to change one number.",
+    "choices": [
+      {
+        "text": "The time the slowest statement took",
+        "correct": false,
+        "why": "Each of them was fast before the fix; the count was the problem."
+      },
+      {
+        "text": "How many times the related query was called",
+        "correct": true,
+        "why": "If it is still once per row, the instruction was put on a different relationship from the one the loop touches."
+      },
+      {
+        "text": "The plan of the query that loads the parents",
+        "correct": false,
+        "why": "It was one statement before and is one now."
+      },
+      {
+        "text": "Whether an index on the foreign key exists",
+        "correct": false,
+        "why": "Worth having, and it makes fifty fast queries rather than one."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9y1b9mm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A screen that shows nothing but names transfers ten kilobytes for every row. What is the mapper doing?",
+    "hint": "Ask what it is building, and what that thing has.",
+    "choices": [
+      {
+        "text": "Fetching every column, one of which is large",
+        "correct": true,
+        "why": "It builds an object with every field, so the statement names every column whatever the screen shows."
+      },
+      {
+        "text": "Fetching each row in its own statement",
+        "correct": false,
+        "why": "That costs round trips and would not make one row larger."
+      },
+      {
+        "text": "Keeping every loaded row in memory for the session",
+        "correct": false,
+        "why": "It does, and that is memory rather than what crosses the wire."
+      },
+      {
+        "text": "Converting the columns to the language's own types",
+        "correct": false,
+        "why": "That happens after the bytes arrive and does not decide how many there were."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvea38ag",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `created_at` column has a database default. Rows written at a prompt have a timestamp; rows written by the application are empty, or refused. What is the mapper doing?",
+    "hint": "Ask exactly when a default fires.",
+    "choices": [
+      {
+        "text": "Naming it in the statement with nothing in it",
+        "correct": true,
+        "why": "A default fills a column left out of the insert, and a column named with an empty value was not left out."
+      },
+      {
+        "text": "Opening a transaction that the default cannot see",
+        "correct": false,
+        "why": "A default is evaluated per row as it is written, inside whatever transaction that is."
+      },
+      {
+        "text": "Writing through a view that drops the column",
+        "correct": false,
+        "why": "Nothing here involves a view, and one would fail rather than empty a column."
+      },
+      {
+        "text": "Converting the timestamp to the wrong time zone",
+        "correct": false,
+        "why": "That would give a wrong time rather than none."
+      }
+    ]
+  },
+  {
+    "id": "ex-98zdjhxe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sort column arrives in the request's query string. Why can it not travel as a parameter, and what takes its place?",
+    "hint": "A placeholder stands for one kind of thing.",
+    "choices": [
+      {
+        "text": "It can, as long as it is escaped first",
+        "correct": false,
+        "why": "Escaping is the mechanism parameters replaced, and it is not what makes a name legal here."
+      },
+      {
+        "text": "A placeholder stands for a value, so a name goes through a list of the ones you accept",
+        "correct": true,
+        "why": "Nothing about a name is data, and an allow-list is the only thing that keeps it out of the text."
+      },
+      {
+        "text": "It can, because a column name is a string like any other",
+        "correct": false,
+        "why": "The statement's shape is fixed before the value arrives, which is precisely why a name cannot be one."
+      },
+      {
+        "text": "It cannot, so the sorting belongs in the application",
+        "correct": false,
+        "why": "That fetches every row to arrange a page of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-faq05ana",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A relationship that is fetched the first time something touches it, rather than with its parent, has a two-word name. Write it.",
+    "hint": "It is the default in nearly every mapper, and it is right whenever nothing touches the relationship.",
+    "blanks": [
+      {
+        "accept": [
+          "lazy loading",
+          "lazy-loading",
+          "lazy load"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fc101254",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A session that collects every change made to its objects and writes them all at the end, in one transaction, is named after a pattern of three words. Write them.",
+    "hint": "It is why the transaction is open from the first read.",
+    "blanks": [
+      {
+        "accept": [
+          "unit of work"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r7bwk16x",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each case to the loading shape that fits it.",
+    "hint": "One repeats nothing, one would repeat the parent, one would multiply.",
+    "pairs": [
+      {
+        "left": "Each order's one customer",
+        "right": "A single statement with a join"
+      },
+      {
+        "left": "Each customer's many orders, with a wide customer row",
+        "right": "A second statement over the set of parent keys"
+      },
+      {
+        "left": "Three to-many relationships of the same parent",
+        "right": "One statement per relationship, never one join"
+      }
+    ],
+    "right_distractors": [
+      "A statement per parent row, run inside the loop",
+      "A stored answer refreshed on a schedule"
+    ]
   }
 ]
