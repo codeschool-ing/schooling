@@ -1543,5 +1543,363 @@
         "ignore_accents": true
       }
     ]
+  },
+  {
+    "id": "ex-x2ppd726",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`PRAGMA journal_mode = WAL;` printed `delete`. What has happened?",
+    "hint": "The line it prints is an answer rather than a repetition of what you typed.",
+    "choices": [
+      {
+        "text": "The switch did not happen, and the old mode is still in force",
+        "correct": true,
+        "why": "It prints the mode it ended in, so anything but the one you asked for means it was refused."
+      },
+      {
+        "text": "It worked, and the next statement will report the new mode",
+        "correct": false,
+        "why": "There is nothing deferred about it; asking again would print the same thing."
+      },
+      {
+        "text": "The mode was set and then reset by another connection",
+        "correct": false,
+        "why": "It is a property of the file, and one connection does not flip it back for the next statement."
+      },
+      {
+        "text": "The database has no journal, so the setting is ignored",
+        "correct": false,
+        "why": "Every mode is a journal of some kind, and the word printed names the one in use."
+      }
+    ]
+  },
+  {
+    "id": "ex-d292f2w8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A busy timeout is set, so a second writer waits instead of failing. When does that stop being enough?",
+    "hint": "Ask what the waiting turned the problem into.",
+    "choices": [
+      {
+        "text": "When two processes write to different tables at once",
+        "correct": false,
+        "why": "That is already the one-writer rule, and waiting handles it exactly as it handles the rest."
+      },
+      {
+        "text": "When they arrive faster than a single one finishes them",
+        "correct": true,
+        "why": "The wait made a queue, and a queue holds only while it drains at least as fast as it fills."
+      },
+      {
+        "text": "When the database file grows past a few gigabytes",
+        "correct": false,
+        "why": "Size is not what the limit is about; it handles far more than most systems hold."
+      },
+      {
+        "text": "When readers outnumber writers",
+        "correct": false,
+        "why": "Readers do not contend with the writer once the logging mode is on."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ajpx57z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs its test suite on SQLite and production on PostgreSQL. Which direction does a bug escape in?",
+    "hint": "Ask which of the two accepts more.",
+    "choices": [
+      {
+        "text": "Neither; the same statements run on both",
+        "correct": false,
+        "why": "They do, and what each one does with a bad value is where the two part company."
+      },
+      {
+        "text": "A row the tests stored happily is refused in production",
+        "correct": true,
+        "why": "The permissive engine is the one under the tests, so the strict one meets the value first in front of a user."
+      },
+      {
+        "text": "A row production stores is refused by the tests",
+        "correct": false,
+        "why": "That would fail the build, which is the outcome anybody would want."
+      },
+      {
+        "text": "Only queries differ; writes behave the same",
+        "correct": false,
+        "why": "Writes are precisely where the two differ most."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ar9hn5m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three application servers sit behind a load balancer, and somebody proposes keeping the SQLite file on a shared network drive so all three can reach it. Why is it still out?",
+    "hint": "Ask what the one-writer rule is actually built on.",
+    "choices": [
+      {
+        "text": "The file would be too slow to read over a network",
+        "correct": false,
+        "why": "It might be, and slowness is not what makes this unsafe."
+      },
+      {
+        "text": "Its locking rests on file locks that such filesystems implement unreliably",
+        "correct": true,
+        "why": "The guarantee the single writer depends on is the one the shared drive does not keep."
+      },
+      {
+        "text": "Three processes would need three copies of the library",
+        "correct": false,
+        "why": "Each links its own and that is fine; the library is not the shared thing."
+      },
+      {
+        "text": "A network drive cannot hold a file that large",
+        "correct": false,
+        "why": "Size is not the difficulty, and the file need not be large."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4c81y6z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team writes its schema carefully so that it uses nothing either MySQL or MariaDB lacks. What have they bought?",
+    "hint": "Ask how often a team moves between those two.",
+    "choices": [
+      {
+        "text": "A schema written for a move that will probably never happen",
+        "correct": true,
+        "why": "They gave up what the engine they are on can do, in exchange for a portability nobody will spend."
+      },
+      {
+        "text": "A schema that will also run on PostgreSQL",
+        "correct": false,
+        "why": "The two they avoided things for share a dialect that the third does not."
+      },
+      {
+        "text": "Protection from the divergences that cost performance",
+        "correct": false,
+        "why": "Avoiding a type does not make the one they use behave the same on both."
+      },
+      {
+        "text": "A simpler schema, which is worth it on its own",
+        "correct": false,
+        "why": "Narrower is not simpler, and the constraints they skipped were doing work."
+      }
+    ]
+  },
+  {
+    "id": "ex-20sec4vr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An engine is being argued for on the strength of a benchmark from 2012. What does this lesson say about that?",
+    "hint": "Compare the size of the claimed difference with something from lesson 9.",
+    "choices": [
+      {
+        "text": "It is the strongest input, since it was measured",
+        "correct": false,
+        "why": "It measured other versions, other hardware and somebody else's workload."
+      },
+      {
+        "text": "On ordinary workloads the gap is smaller than one missing index",
+        "correct": true,
+        "why": "Which puts the argument in the wrong lesson entirely."
+      },
+      {
+        "text": "Benchmarks favour whichever engine published them",
+        "correct": false,
+        "why": "Often true, and not the reason this one decides nothing."
+      },
+      {
+        "text": "It holds if the versions have not changed since",
+        "correct": false,
+        "why": "All of them have changed enormously, so the condition is never met."
+      }
+    ]
+  },
+  {
+    "id": "ex-en3pnws2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One statement groups by city and also selects a name. On one engine it returns one customer's city beside another's name; on its neighbour it is an error. Which is which?",
+    "hint": "One of the pair turned a setting on by default and the other did not.",
+    "choices": [
+      {
+        "text": "MySQL 8 returns the pairing; MariaDB refuses",
+        "correct": false,
+        "why": "It is the other way round, and the default is what decides it."
+      },
+      {
+        "text": "MariaDB returns the pairing; MySQL 8 refuses",
+        "correct": true,
+        "why": "The stricter grouping mode is on by default on one of them and not on the other."
+      },
+      {
+        "text": "Both return it; only PostgreSQL refuses",
+        "correct": false,
+        "why": "One of the two does refuse, which is the difference being asked about."
+      },
+      {
+        "text": "Both refuse; the pairing comes from an older version",
+        "correct": false,
+        "why": "An older version would explain it, and here the two current ones disagree."
+      }
+    ]
+  },
+  {
+    "id": "ex-9efz07q0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the four has no users, no roles and no grants at all?",
+    "hint": "Ask which one has no process to authenticate against.",
+    "choices": [
+      {
+        "text": "MariaDB, which inherits the others' model",
+        "correct": false,
+        "why": "It has the same accounts and grants as the engine it forked from."
+      },
+      {
+        "text": "SQLite, where the file's own permissions are the whole model",
+        "correct": true,
+        "why": "There is no server to log in to, so whoever can open the file can do everything."
+      },
+      {
+        "text": "MySQL, where access is decided by the host",
+        "correct": false,
+        "why": "The host is part of an account there, and accounts exist."
+      },
+      {
+        "text": "PostgreSQL, where roles replaced users",
+        "correct": false,
+        "why": "A role is what a user is there; they were not removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6137nsr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody rules SQLite out of a project because the dataset will reach forty gigabytes. Is that the right question?",
+    "hint": "One of the two numbers in play decides it and the other does not.",
+    "choices": [
+      {
+        "text": "Yes; that is beyond what one file should hold",
+        "correct": false,
+        "why": "It handles far more than that, and the lesson's read-heavy example is exactly this size."
+      },
+      {
+        "text": "No; what decides it is how many processes write",
+        "correct": true,
+        "why": "Size is comfortable and a second writing machine is not, whatever the tuning."
+      },
+      {
+        "text": "Yes, unless the logging mode is turned on",
+        "correct": false,
+        "why": "That helps contention and says nothing about how much the file holds."
+      },
+      {
+        "text": "No; nothing rules it out, given a busy timeout",
+        "correct": false,
+        "why": "Something does, and it is in the other answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-fbwvg860",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Not one per table and not one per row, but one for the whole file at a time. Write the number of writers SQLite permits.",
+    "hint": "The mitigation makes them queue rather than raising it.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jkkhnygg",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "MySQL 8 has a grouping mode on by default that MariaDB 10.11 leaves off, and it is the one that refuses a column belonging to no group. Write its name.",
+    "hint": "It is what you check first on an inherited server of either kind.",
+    "blanks": [
+      {
+        "accept": [
+          "only_full_group_by"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y2tftd2x",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The differences between the engines fall into four groups. Match each symptom to its group.",
+    "hint": "One is about a value being stored, one about two strings, one about spelling, one about people.",
+    "pairs": [
+      {
+        "left": "A word was accepted into a column of whole numbers",
+        "right": "What the engine refuses"
+      },
+      {
+        "left": "An address in capitals found the row stored in lower case",
+        "right": "How text is compared"
+      },
+      {
+        "left": "Two bars joined two strings on one engine and produced a number on another",
+        "right": "The dialect"
+      },
+      {
+        "left": "Promoting a standby is not built in",
+        "right": "How it is run"
+      }
+    ],
+    "right_distractors": [
+      "What the planner estimates",
+      "Which isolation level is the default"
+    ]
   }
 ]
