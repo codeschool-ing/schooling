@@ -1678,5 +1678,359 @@
       "Add a CHECK wherever you would write a comment"
     ],
     "trap": "The common swap is deciding nullability before the relationships exist — a foreign key you have not created yet cannot be made mandatory."
+  },
+  {
+    "id": "ex-1md0nk19",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A library keeps one table called `member_loans`, holding the member's name, the member's email, the book's title and the day it went out. Which test does that table fail?",
+    "hint": "Try saying out loud what one row of it is.",
+    "choices": [
+      {
+        "text": "Its columns are in an order nobody agreed on",
+        "correct": false,
+        "why": "Columns have no order that matters, any more than rows do."
+      },
+      {
+        "text": "\"Each row is one ______\" cannot be finished with one noun",
+        "correct": true,
+        "why": "A row is a member and a loan at once, so nothing in it is the member for anything else to point at."
+      },
+      {
+        "text": "It declares no primary key",
+        "correct": false,
+        "why": "It may well declare one. That would not mend a table holding two kinds of thing."
+      },
+      {
+        "text": "A title is text where it should be a number",
+        "correct": false,
+        "why": "A title is a fine fact about a book. What is wrong is that the book is not a row anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkb6bepw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The library is split into `members`, `books` and `loans`. A member borrows many books over the years, and a copy of a book is lent to many members. Where do the foreign keys go?",
+    "hint": "Ask \"can this one have several of those?\" in both directions.",
+    "choices": [
+      {
+        "text": "`book_id` on `members` and `member_id` on `books`",
+        "correct": false,
+        "why": "A column holds one value, and each of those sides has many."
+      },
+      {
+        "text": "`member_id` on `books`, since a book is out to one person at a time",
+        "correct": false,
+        "why": "That records the loan happening now and forgets every loan before it."
+      },
+      {
+        "text": "Both on `loans`, which is the relationship and carries the dates",
+        "correct": true,
+        "why": "Both directions answer yes, so the pairing is a thing, and the dates are facts about the pairing."
+      },
+      {
+        "text": "`member_id` on `loans`; the book is found by matching its title",
+        "correct": false,
+        "why": "Joining on a title is the copied fact this whole lesson is against."
+      }
+    ]
+  },
+  {
+    "id": "ex-1r5m7nes",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A school has `students`, `courses` and `enrolments`, and every enrolment ends in a grade. Which table does `grade` belong on?",
+    "hint": "Ask which noun the number is about.",
+    "choices": [
+      {
+        "text": "`students`, because the grade is the student's",
+        "correct": false,
+        "why": "A student has one grade per course, and a column holds one value."
+      },
+      {
+        "text": "`courses`, because the course awards it",
+        "correct": false,
+        "why": "A course awards many of them, one per student."
+      },
+      {
+        "text": "Either end will do; it is one number",
+        "correct": false,
+        "why": "It belongs to neither end. It is true of the pairing and of nothing else."
+      },
+      {
+        "text": "`enrolments`, because it is a fact about one student in one course",
+        "correct": true,
+        "why": "That is the test for a column on a join table, and the reason `unit_price` sits on the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-devt02ec",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new invoicing system needs a column for the amount due. Which type, and why?",
+    "hint": "One of these is the mistake this lesson calls the most expensive in a table.",
+    "choices": [
+      {
+        "text": "`double precision`, which is fast and has plenty of range",
+        "correct": false,
+        "why": "It stores approximations. Add a thousand invoices and the total is out by a few cents."
+      },
+      {
+        "text": "`numeric(10,2)`, which stores the decimal exactly",
+        "correct": true,
+        "why": "Money goes here. The value that comes back is the value that went in."
+      },
+      {
+        "text": "`real`, since two decimal places need very little precision",
+        "correct": false,
+        "why": "The count of decimals is not the problem. Binary cannot represent a tenth at all."
+      },
+      {
+        "text": "`text`, so the amount reads back exactly as it was typed",
+        "correct": false,
+        "why": "Then nothing can add two of them, and sorting puts 100 before 99."
+      }
+    ]
+  },
+  {
+    "id": "ex-za5kxw4m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `deliveries` table has `delivered_on date` and no `NOT NULL`. A weekly report counts the rows `WHERE delivered_on <> current_date`. What does it leave out every week, without ever failing?",
+    "hint": "Add up what the two opposite conditions return.",
+    "choices": [
+      {
+        "text": "Nothing; `<>` is the opposite of `=`",
+        "correct": false,
+        "why": "It is, for values. An unknown is a value in neither answer."
+      },
+      {
+        "text": "Only the deliveries made today",
+        "correct": false,
+        "why": "Those are the ones it means to leave out."
+      },
+      {
+        "text": "Every delivery that has not happened yet",
+        "correct": true,
+        "why": "Their date is unknown, so the comparison is unknown, and `WHERE` keeps only what is true."
+      },
+      {
+        "text": "Every delivery older than a week",
+        "correct": false,
+        "why": "Nothing in that condition mentions how old a row is."
+      }
+    ]
+  },
+  {
+    "id": "ex-deqrajj5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`invoice_lines` references `invoices`, and `invoices` references `currencies`. Which `ON DELETE` belongs on each?",
+    "hint": "For each child, ask whether it is a part or a record of something that occurred.",
+    "choices": [
+      {
+        "text": "`CASCADE` on both",
+        "correct": false,
+        "why": "Deleting a currency would then delete every invoice ever issued in it."
+      },
+      {
+        "text": "`RESTRICT` on both",
+        "correct": false,
+        "why": "An invoice could then never be deleted until somebody removed its lines by hand."
+      },
+      {
+        "text": "`CASCADE` on the line's invoice, `RESTRICT` on the invoice's currency",
+        "correct": true,
+        "why": "A line means nothing without its invoice; an invoice is a record, and its currency cannot be un-chosen."
+      },
+      {
+        "text": "`SET NULL` on both, so nothing is ever lost",
+        "correct": false,
+        "why": "A line with no invoice and an invoice with no currency are rows that say nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wwfnd4r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes `email` as the primary key of `customers`, since it is unique anyway. Which is the argument against it?",
+    "hint": "Two questions decide a candidate key. It passes one of them.",
+    "choices": [
+      {
+        "text": "An email is too long to be efficient as a key",
+        "correct": false,
+        "why": "Length is a performance detail, and it is not the objection."
+      },
+      {
+        "text": "Two customers might share an address",
+        "correct": false,
+        "why": "They might, and a `UNIQUE` column already forbids it. The problem is the other question."
+      },
+      {
+        "text": "Most databases will not accept text as a primary key",
+        "correct": false,
+        "why": "They will. Nothing about the type is the objection."
+      },
+      {
+        "text": "A key must never change, and an address changes",
+        "correct": true,
+        "why": "It is unique and it is not stable, and a key needs both."
+      }
+    ]
+  },
+  {
+    "id": "ex-bsg5bvkm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A blog's `posts` table has a `tags text` column holding `'sql, databases'`. Somebody asks how many posts are tagged `sql`. Why is that hard to answer correctly?",
+    "hint": "Say what the search would actually have to look for.",
+    "choices": [
+      {
+        "text": "Searching for text inside text matches `nosql` as well",
+        "correct": true,
+        "why": "It is a list hiding in a string, and the search cannot tell where one tag ends."
+      },
+      {
+        "text": "The posts have no primary key to count by",
+        "correct": false,
+        "why": "They may have one. The tags would still be a list in a string."
+      },
+      {
+        "text": "The column should be `varchar` rather than `text`",
+        "correct": false,
+        "why": "In PostgreSQL that changes nothing whatever."
+      },
+      {
+        "text": "Tags come back in no order, so a count is unreliable",
+        "correct": false,
+        "why": "No count depends on an order, and rows have none anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-zr3hwn4p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `bookings` table declares `UNIQUE (room_id, starts_at)` and leaves `room_id` nullable. Two rows arrive with an empty `room_id` and the same `starts_at`. What does the database do?",
+    "hint": "Ask what comparing two unknowns answers.",
+    "choices": [
+      {
+        "text": "Refuses the second, since the pair repeats",
+        "correct": false,
+        "why": "The pair repeats only if the empty halves are equal, and nothing knows that they are."
+      },
+      {
+        "text": "Refuses the second, because a `UNIQUE` column may not be empty",
+        "correct": false,
+        "why": "That is `NOT NULL`. `UNIQUE` says nothing about emptiness."
+      },
+      {
+        "text": "Accepts both, and warns about the repeated time",
+        "correct": false,
+        "why": "There is no warning. It is an ordinary insert breaking no rule."
+      },
+      {
+        "text": "Accepts both, because two unknowns are not known to be equal",
+        "correct": true,
+        "why": "The same reason a `UNIQUE` column takes any number of empty rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmf87f3e",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `deliveries` table holds 60 rows. `WHERE delivered_on = '2026-03-02'` counts 12 of them, and `WHERE delivered_on <> '2026-03-02'` counts 40. Write how many rows are in neither count.",
+    "hint": "The two opposite conditions do not have to add up.",
+    "blanks": [
+      {
+        "accept": [
+          "8",
+          "eight"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fz5j7rch",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are handed a schema you have never seen. Put the five passes over it in the order that gets you oriented fastest.",
+    "hint": "Each pass answers a question the next one needs.",
+    "items": [
+      "Say out loud what one row of each table is",
+      "Find the tables whose primary key is two foreign keys",
+      "Read the NOT NULLs as what this system requires",
+      "Read the ON DELETEs as what this system treats as disposable",
+      "Look for the constraints that are not there"
+    ],
+    "trap": "The common swap is hunting for missing constraints first — you cannot say what is missing from a table until you know what the table is."
+  },
+  {
+    "id": "ex-m3f8dq86",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A school with `students`, `courses` and `enrolments`. Match each column to what it is a fact about.",
+    "hint": "One of the three belongs to neither end of the relationship.",
+    "pairs": [
+      {
+        "left": "grade",
+        "right": "One student in one course"
+      },
+      {
+        "left": "email",
+        "right": "A student"
+      },
+      {
+        "left": "syllabus",
+        "right": "A course"
+      }
+    ],
+    "right_distractors": [
+      "The school, written once",
+      "Every student who ever enrolled"
+    ]
   }
 ]

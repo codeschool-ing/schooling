@@ -1,4 +1,4 @@
 ---
-title: Pick the field, filter it, count it
+title: Putting it together
 version: 1
 ---

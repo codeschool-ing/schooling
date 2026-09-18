@@ -1,4 +1,4 @@
 ---
-title: A mode and a user: what happens
+title: Putting it together
 version: 1
 ---

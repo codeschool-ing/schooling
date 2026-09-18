@@ -1,4 +1,4 @@
 ---
-title: Um modo e um usuário: o que acontece
+title: Juntando tudo
 version: 1
 ---

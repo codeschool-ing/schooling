@@ -1,4 +1,4 @@
 ---
-title: Quote it, test it, loop over it
+title: Putting it together
 version: 1
 ---

@@ -1,4 +1,4 @@
 ---
-title: Nomeie o pacote do arquivo, leia o plano, escolha o verbo
+title: Juntando tudo
 version: 1
 ---

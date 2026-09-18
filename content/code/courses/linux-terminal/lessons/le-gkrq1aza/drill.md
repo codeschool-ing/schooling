@@ -1,4 +1,4 @@
 ---
-title: Name the file's package, read the plan, pick the verb
+title: Putting it together
 version: 1
 ---

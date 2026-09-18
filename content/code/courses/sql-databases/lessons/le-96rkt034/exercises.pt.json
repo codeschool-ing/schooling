@@ -1147,5 +1147,249 @@
       "Acrescente um CHECK onde você escreveria um comentário"
     ],
     "trap": "A troca comum é decidir nulabilidade antes de as relações existirem — uma chave estrangeira que você ainda não criou não pode ser tornada obrigatória."
+  },
+  "ex-1md0nk19": {
+    "prompt": "Uma biblioteca mantém uma tabela só, `member_loans`, com o nome do membro, o email do membro, o título do livro e o dia em que ele saiu. Em que teste essa tabela falha?",
+    "hint": "Tente dizer em voz alta o que é uma linha dela.",
+    "choices": [
+      {
+        "text": "As colunas estão numa ordem que ninguém combinou",
+        "why": "Colunas não têm ordem que importe, assim como as linhas."
+      },
+      {
+        "text": "\"Cada linha é um ______\" não se completa com um substantivo só",
+        "why": "Uma linha é um membro e um empréstimo ao mesmo tempo, então nada nela é o membro para outra coisa apontar."
+      },
+      {
+        "text": "Ela não declara chave primária",
+        "why": "Pode até declarar. Isso não conserta uma tabela que guarda dois tipos de coisa."
+      },
+      {
+        "text": "Um título é texto onde deveria ser um número",
+        "why": "Um título é um fato perfeitamente bom sobre um livro. O errado é o livro não ser linha em lugar nenhum."
+      }
+    ]
+  },
+  "ex-nkb6bepw": {
+    "prompt": "A biblioteca está separada em `members`, `books` e `loans`. Um membro pega muitos livros ao longo dos anos, e um livro é emprestado a muitos membros. Onde ficam as chaves estrangeiras?",
+    "hint": "Pergunte \"este aqui pode ter vários daqueles?\" nas duas direções.",
+    "choices": [
+      {
+        "text": "`book_id` em `members` e `member_id` em `books`",
+        "why": "Uma coluna guarda um valor, e cada um desses lados tem vários."
+      },
+      {
+        "text": "`member_id` em `books`, já que um livro está com uma pessoa de cada vez",
+        "why": "Isso registra o empréstimo de agora e esquece todos os anteriores."
+      },
+      {
+        "text": "As duas em `loans`, que é a relação e carrega as datas",
+        "why": "As duas direções respondem sim, então o par é uma coisa, e as datas são fatos sobre o par."
+      },
+      {
+        "text": "`member_id` em `loans`; o livro se acha pelo título",
+        "why": "Juntar por título é o fato copiado contra o qual esta aula inteira é escrita."
+      }
+    ]
+  },
+  "ex-1r5m7nes": {
+    "prompt": "Uma escola tem `students`, `courses` e `enrolments`, e toda matrícula termina numa nota. Em que tabela fica `grade`?",
+    "hint": "Pergunte sobre qual substantivo o número fala.",
+    "choices": [
+      {
+        "text": "`students`, porque a nota é do aluno",
+        "why": "Um aluno tem uma nota por curso, e uma coluna guarda um valor."
+      },
+      {
+        "text": "`courses`, porque é o curso que atribui",
+        "why": "Um curso atribui várias, uma por aluno."
+      },
+      {
+        "text": "Qualquer uma das pontas serve; é um número só",
+        "why": "Não é de nenhuma das pontas. É verdade sobre o par e sobre mais nada."
+      },
+      {
+        "text": "`enrolments`, porque é um fato sobre um aluno num curso",
+        "why": "Esse é o teste para uma coluna de tabela de junção, e a razão de `unit_price` ficar na linha."
+      }
+    ]
+  },
+  "ex-devt02ec": {
+    "prompt": "Um sistema de faturas novo precisa de uma coluna para o valor devido. Qual tipo, e por quê?",
+    "hint": "Um destes é o erro que esta aula chama de o mais caro numa tabela.",
+    "choices": [
+      {
+        "text": "`double precision`, que é rápido e tem folga de sobra",
+        "why": "Ele guarda aproximações. Some mil faturas e o total sai errado por alguns centavos."
+      },
+      {
+        "text": "`numeric(10,2)`, que guarda o decimal exato",
+        "why": "Dinheiro vai aqui. O valor que volta é o valor que entrou."
+      },
+      {
+        "text": "`real`, já que duas casas decimais exigem pouquíssima precisão",
+        "why": "A quantidade de casas não é o problema. Binário não representa um décimo de jeito nenhum."
+      },
+      {
+        "text": "`text`, para o valor voltar exatamente como foi digitado",
+        "why": "Aí nada soma dois deles, e a ordenação põe 100 antes de 99."
+      }
+    ]
+  },
+  "ex-za5kxw4m": {
+    "prompt": "Uma tabela `deliveries` tem `delivered_on date` e nenhum `NOT NULL`. Um relatório semanal conta as linhas `WHERE delivered_on <> current_date`. O que ele deixa de fora toda semana, sem nunca falhar?",
+    "hint": "Some o que as duas condições opostas devolvem.",
+    "choices": [
+      {
+        "text": "Nada; `<>` é o oposto de `=`",
+        "why": "É, para valores. Um desconhecido é um valor em nenhuma das duas respostas."
+      },
+      {
+        "text": "Só as entregas feitas hoje",
+        "why": "Essas são justamente as que ele quer deixar de fora."
+      },
+      {
+        "text": "Toda entrega que ainda não aconteceu",
+        "why": "A data delas é desconhecida, então a comparação é desconhecida, e o `WHERE` só guarda o que é verdadeiro."
+      },
+      {
+        "text": "Toda entrega com mais de uma semana",
+        "why": "Nada naquela condição fala da idade de uma linha."
+      }
+    ]
+  },
+  "ex-deqrajj5": {
+    "prompt": "`invoice_lines` referencia `invoices`, e `invoices` referencia `currencies`. Qual `ON DELETE` vai em cada uma?",
+    "hint": "Para cada filho, pergunte se ele é uma parte ou o registro de algo que aconteceu.",
+    "choices": [
+      {
+        "text": "`CASCADE` nas duas",
+        "why": "Apagar uma moeda apagaria toda fatura já emitida nela."
+      },
+      {
+        "text": "`RESTRICT` nas duas",
+        "why": "Uma fatura nunca poderia ser apagada até alguém remover as linhas dela na mão."
+      },
+      {
+        "text": "`CASCADE` na fatura da linha, `RESTRICT` na moeda da fatura",
+        "why": "Uma linha não significa nada sem a fatura; uma fatura é um registro, e a moeda dela não se desescolhe."
+      },
+      {
+        "text": "`SET NULL` nas duas, para nunca se perder nada",
+        "why": "Uma linha sem fatura e uma fatura sem moeda são linhas que não dizem nada."
+      }
+    ]
+  },
+  "ex-1wwfnd4r": {
+    "prompt": "Um colega propõe `email` como chave primária de `customers`, já que é único de qualquer forma. Qual é o argumento contra?",
+    "hint": "Duas perguntas decidem uma chave candidata. Ela passa em uma delas.",
+    "choices": [
+      {
+        "text": "Um email é longo demais para ser eficiente como chave",
+        "why": "Tamanho é detalhe de desempenho, e não é a objeção."
+      },
+      {
+        "text": "Dois clientes podem dividir um endereço",
+        "why": "Podem, e uma coluna `UNIQUE` já proíbe isso. O problema é a outra pergunta."
+      },
+      {
+        "text": "A maioria dos bancos não aceita texto como chave primária",
+        "why": "Aceita. Nada sobre o tipo é a objeção."
+      },
+      {
+        "text": "Uma chave nunca pode mudar, e um endereço muda",
+        "why": "Ele é único e não é estável, e uma chave precisa das duas coisas."
+      }
+    ]
+  },
+  "ex-bsg5bvkm": {
+    "prompt": "A tabela `posts` de um blog tem uma coluna `tags text` guardando `'sql, databases'`. Alguém pergunta quantos posts têm a tag `sql`. Por que isso é difícil de responder direito?",
+    "hint": "Diga o que a busca teria mesmo que procurar.",
+    "choices": [
+      {
+        "text": "Procurar texto dentro de texto acha `nosql` também",
+        "why": "É uma lista escondida numa string, e a busca não sabe onde uma tag termina."
+      },
+      {
+        "text": "Os posts não têm chave primária para contar",
+        "why": "Podem ter. As tags continuariam sendo uma lista numa string."
+      },
+      {
+        "text": "A coluna deveria ser `varchar` em vez de `text`",
+        "why": "No PostgreSQL isso não muda absolutamente nada."
+      },
+      {
+        "text": "As tags voltam sem ordem, então a contagem não é confiável",
+        "why": "Nenhuma contagem depende de ordem, e linhas não têm ordem mesmo."
+      }
+    ]
+  },
+  "ex-zr3hwn4p": {
+    "prompt": "Uma tabela `bookings` declara `UNIQUE (room_id, starts_at)` e deixa `room_id` anulável. Chegam duas linhas com `room_id` vazio e o mesmo `starts_at`. O que o banco faz?",
+    "hint": "Pergunte o que comparar dois desconhecidos responde.",
+    "choices": [
+      {
+        "text": "Recusa a segunda, já que o par se repete",
+        "why": "O par só se repete se as metades vazias forem iguais, e nada sabe que são."
+      },
+      {
+        "text": "Recusa a segunda, porque coluna `UNIQUE` não pode ficar vazia",
+        "why": "Isso é `NOT NULL`. `UNIQUE` não diz nada sobre vazio."
+      },
+      {
+        "text": "Aceita as duas, e avisa sobre o horário repetido",
+        "why": "Não há aviso nenhum. É uma inserção comum que não quebra regra."
+      },
+      {
+        "text": "Aceita as duas, porque dois desconhecidos não são sabidamente iguais",
+        "why": "A mesma razão pela qual uma coluna `UNIQUE` aceita quantas linhas vazias forem."
+      }
+    ]
+  },
+  "ex-xmf87f3e": {
+    "prompt": "Uma tabela `deliveries` tem 60 linhas. `WHERE delivered_on = '2026-03-02'` conta 12 delas, e `WHERE delivered_on <> '2026-03-02'` conta 40. Escreva quantas linhas não estão em nenhuma das duas contas.",
+    "hint": "As duas condições opostas não precisam fechar a conta.",
+    "blanks": [
+      {
+        "accept": [
+          "8",
+          "oito"
+        ]
+      }
+    ]
+  },
+  "ex-fz5j7rch": {
+    "prompt": "Puseram na sua frente um esquema que você nunca viu. Ponha as cinco passadas na ordem que orienta você mais rápido.",
+    "hint": "Cada passada responde a uma pergunta de que a seguinte precisa.",
+    "items": [
+      "Dizer em voz alta o que é uma linha de cada tabela",
+      "Achar as tabelas cuja chave primária são duas chaves estrangeiras",
+      "Ler os NOT NULL como aquilo que este sistema exige",
+      "Ler os ON DELETE como aquilo que este sistema trata como descartável",
+      "Procurar as restrições que não estão lá"
+    ],
+    "trap": "A troca comum é caçar restrições faltando primeiro — não dá para dizer o que falta numa tabela antes de saber o que ela é."
+  },
+  "ex-m3f8dq86": {
+    "prompt": "Uma escola com `students`, `courses` e `enrolments`. Ligue cada coluna àquilo sobre o que ela é um fato.",
+    "hint": "Uma das três não é de nenhuma das pontas da relação.",
+    "pairs": [
+      {
+        "left": "grade",
+        "right": "Um aluno num curso"
+      },
+      {
+        "left": "email",
+        "right": "Um aluno"
+      },
+      {
+        "left": "syllabus",
+        "right": "Um curso"
+      }
+    ],
+    "right_distractors": [
+      "A escola, escrita uma vez",
+      "Todo aluno que já se matriculou"
+    ]
   }
 }

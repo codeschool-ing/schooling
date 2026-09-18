@@ -1,4 +1,4 @@
 ---
-title: Select it, filter it, group it, format it last
+title: Putting it together
 version: 1
 ---
