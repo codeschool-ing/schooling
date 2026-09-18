@@ -88,6 +88,27 @@ Three rows carried a stronger word than the code earns, and this is what they sa
 one, not a weak one. It was an aspiration in a column that reads as a fact, which is the failure
 this whole document exists to name, committed in the document itself.
 
+**And it was measured before being written, which is why it is still not written.** The tell needs a
+stem that runs grammatically into the option. *The result of a `SELECT` is a ___*, with three
+masculine options and one feminine, is answered by somebody who knows no SQL.
+
+Counted over the catalogue's 1593 `quiz` and `multiple-choice` questions, the stems that could carry
+it are **none**. Not few, none: zero in English, and the two the count found in Portuguese are *em
+vez de uma?* and *em vez de um?*, where the word is a pronoun ending a finished sentence rather than
+an article left hanging.
+
+The other shape is a plural stem against a single plural option, and it turned up eight candidates.
+**In five of the eight, the option it singles out is a distractor rather than the key.** Of the
+three left, two are choose-all-that-apply with three correct options each, and the last is one
+question in eight, which is what chance looks like. A rule that points at a wrong answer five times
+out of eight is not a rule.
+
+The reason is structural rather than lucky: this catalogue writes prompts as complete interrogative
+sentences — *"Why does `expandtab` break a `Makefile`?"* — and never as a blank that the option
+finishes. A tell that needs a sentence this style does not write has nothing to find here, and a
+check for it would be a hundred lines that can only ever print nothing. The day the house style
+changes is the day to measure again.
+
 **Row 1 is a share across a lesson, never a rule per question.** One question whose correct option
 happens to be longest is not flagged and should not be — see `RankShareCeiling`. And *"the most
 qualified"* is not measured at all: the closest thing to it is row 2's hedge rule.
@@ -248,6 +269,34 @@ matches — the boundary it wants after the word is already there — and every 
 absolute would have been invisible; the patterns are built against `\p{L}` instead. And `não pode`
 carries `pode` inside it, where English splits `cannot` from `can`, so the commonest refusal in the
 language would have been reported as a hedge on every question that used it.
+
+### What the third language costs, and the one that costs more
+
+Adding Spanish, French or Italian is three word lists, each the English one translated, and nothing
+else: length, position, option count, the end-to-end score and the `cloze` echo are arithmetic over
+whatever text the student reads.
+
+**A language that does not put spaces between words is a different matter, and it fails quietly.**
+Row 6 stands on a proxy — a run of six letters or more is treated as an uncommon word — and that
+proxy is about Latin script rather than about language. Run it and the failure is visible:
+
+```
+the database refuses the transaction    → ["database" "refuses" "transaction"]
+o banco recusa a transação              → ["recusa" "transação"]
+データベースはトランザクションを拒否します           → ["データベースはトランザクションを拒否します"]
+数据库拒绝该事务                              → ["数据库拒绝该事务"]
+```
+
+In Japanese and in Chinese **the whole sentence comes back as one word**. Nothing errors. The echo
+check compares sentences instead of words, finds an overlap of zero every time, and prints a number
+that measured nothing. That is the shape of defect the refusal above exists to prevent, arriving
+through the one door it does not cover. German is milder and still real: compounds make six letters
+mean something else there.
+
+So the fence needs one more plank before that language and not before a Latin one: a locale should
+have to declare what a word is, the way it already declares its absolutes, and be refused until it
+does. It is a small change and it is deliberately not made here — the right time is with a real
+language in hand to measure the proxy against, rather than a guess about which one arrives.
 
 ---
 
