@@ -10,8 +10,8 @@ you will use are unremarkable:
 SELECT count(*)      AS orders,
        sum(total)    AS revenue,
        avg(total)    AS average,
-       min(placed_at) AS first_order,
-       max(placed_at) AS last_order
+       min(ordered_on) AS first_order,
+       max(ordered_on) AS last_order
 FROM   orders;
 ```
 
@@ -19,7 +19,7 @@ One row comes back. Not one row per order — **one row, for the whole table**, 
 `GROUP BY` and the next section is what happens when there is.
 
 `min` and `max` are not only for numbers: they work on anything the database can order, which
-includes text and dates. `min(name)` is the alphabetically first name, and `max(placed_at)` is the
+includes text and dates. `min(name)` is the alphabetically first name, and `max(ordered_on)` is the
 most recent order, which is how you ask "when did this customer last buy" without sorting anything
 yourself.
 

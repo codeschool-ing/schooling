@@ -1321,20 +1321,32 @@
   },
   {
     "id": "ex-981s2txc",
-    "version": 1,
+    "version": 2,
     "section": "running-it",
-    "type": "ordering",
+    "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Put the steps of a PostgreSQL major-version upgrade in order, as the lesson describes it.",
+    "prompt": "One PostgreSQL cluster is going from 16.2 to 16.4, and another from 16 to 17. What is different about the second?",
     "hint": "The on-disk format changes between major versions, which is why a restart is not enough.",
-    "items": [
-      "Take a backup and confirm you can restore it",
-      "Install the new major version alongside the old one",
-      "Run pg_upgrade, with the downtime that implies",
-      "Start the new version and check the application against it"
-    ],
-    "trap": "A minor version is a restart, and treating a major one the same way is how a cluster ends up two years past its support window."
+    "choices": [
+      {
+        "text": "Neither — each is a package upgrade and a restart",
+        "why": "That is the minor upgrade, and treating a major one the same way is how a cluster ends up two years past its support window."
+      },
+      {
+        "text": "It changes the on-disk format, so it is `pg_upgrade` and downtime",
+        "why": "Correct, and the downtime is what gets it postponed until the release is out of support.",
+        "correct": true
+      },
+      {
+        "text": "It has to be a dump and a reload, with no other route available",
+        "why": "A dump and reload is one route. `pg_upgrade` is the usual one and logical replication avoids the downtime."
+      },
+      {
+        "text": "It is refused while the older major version is still supported",
+        "why": "Nothing refuses it. The five-year window says when you must, not when you may."
+      }
+    ]
   },
   {
     "id": "ex-zq770m33",

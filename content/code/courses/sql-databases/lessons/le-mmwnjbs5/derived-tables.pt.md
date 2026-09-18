@@ -26,7 +26,7 @@ de filtrar por uma função de **janela**, pela razão de ordem de execução qu
 
 ```sql
 SELECT * FROM (
-    SELECT o.*, row_number() OVER (PARTITION BY customer_id ORDER BY placed_at DESC) AS n
+    SELECT o.*, row_number() OVER (PARTITION BY customer_id ORDER BY ordered_on DESC) AS n
     FROM   orders o
 ) t
 WHERE t.n <= 3;
@@ -70,7 +70,7 @@ um do outro. Calcule uma vez, agrupe por fora.
 ```sql
 SELECT c.name, t.last
 FROM   customers c
-JOIN  (SELECT max(placed_at) AS last FROM orders WHERE customer_id = c.id) t ON true;
+JOIN  (SELECT max(ordered_on) AS last FROM orders WHERE customer_id = c.id) t ON true;
 ```
 
 ```
@@ -86,9 +86,9 @@ A menos que você diga `LATERAL`, que a aula 5 mencionou e deixou para esta aula
 SELECT c.name, t.*
 FROM   customers c
 CROSS JOIN LATERAL (
-    SELECT o.id, o.placed_at FROM orders o
+    SELECT o.id, o.ordered_on FROM orders o
     WHERE  o.customer_id = c.id
-    ORDER BY o.placed_at DESC
+    ORDER BY o.ordered_on DESC
     LIMIT  3
 ) t;
 ```
@@ -117,7 +117,7 @@ menos linhas é outro `row_number()`. Então isto:
 
 ```sql
 SELECT * FROM (
-    SELECT o.*, row_number() OVER (ORDER BY placed_at) AS n FROM orders o
+    SELECT o.*, row_number() OVER (ORDER BY ordered_on) AS n FROM orders o
 ) t
 WHERE t.customer_id = 7;
 ```

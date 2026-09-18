@@ -10,8 +10,8 @@ você vai usar não têm nada de notável:
 SELECT count(*)      AS orders,
        sum(total)    AS revenue,
        avg(total)    AS average,
-       min(placed_at) AS first_order,
-       max(placed_at) AS last_order
+       min(ordered_on) AS first_order,
+       max(ordered_on) AS last_order
 FROM   orders;
 ```
 
@@ -19,7 +19,7 @@ Volta uma linha. Não uma linha por pedido — **uma linha, para a tabela inteir
 `GROUP BY`, e a próxima seção é o que acontece quando há.
 
 `min` e `max` não são só para números: funcionam com qualquer coisa que o banco saiba ordenar, o que
-inclui texto e datas. `min(name)` é o primeiro nome em ordem alfabética, e `max(placed_at)` é o
+inclui texto e datas. `min(name)` é o primeiro nome em ordem alfabética, e `max(ordered_on)` é o
 pedido mais recente, que é como você pergunta "quando esse cliente comprou pela última vez" sem
 ordenar nada com as próprias mãos.
 

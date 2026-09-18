@@ -132,7 +132,7 @@ WITH RECURSIVE days AS (
 )
 SELECT d.day, coalesce(sum(o.total), 0) AS revenue
 FROM   days d
-LEFT JOIN orders o ON o.placed_at::date = d.day
+LEFT JOIN orders o ON o.ordered_on = d.day
 GROUP BY d.day
 ORDER BY d.day;
 ```
