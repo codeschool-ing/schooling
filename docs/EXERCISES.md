@@ -68,7 +68,7 @@ see it, because the ones a machine can see are checked rather than remembered.
 | | the tell | checked |
 |---|---|---|
 | 1 | **Length.** The correct option is the longest, or the most qualified. | **its rank by length, across a lesson** |
-| 2 | **Absolutes in the wrong options** — *never, always, only, all, must, none*. And the mirror: hedges (*usually, often, can, tends to*) concentrated in the correct one. | **yes** |
+| 2 | **Absolutes in the wrong options** — *never, always, only, all, must, none*. And the mirror: hedges (*usually, often, can, tends to*) concentrated in the correct one. | **as a strategy, scored; the hedges per question** |
 | 3 | **Two options.** A coin flip floors the score at 50%. | **yes** |
 | 4 | **Furniture** — an option nobody would choose. | no |
 | 5 | **Convergence.** Three options say the same thing in different words and one stands apart; the one that stands apart is the answer. | no |
@@ -116,13 +116,32 @@ for an accusation.
 A prompt and an option sharing "database" three times reads as an echo to it; a shared *rare short*
 word does not.
 
+**Row 2's absolutes are scored and no longer refused per question**, and the measurement is the
+argument. The rule failed any question with an absolute among its distractors and none in its key
+— which reads as this row and is not it, because those words are also the ordinary vocabulary of a
+short factual answer. Run over this catalogue's Portuguese for the first time it raised 156 of
+them, and they were *"Nada, sem saber do disco"*, *"Nenhum — a versão é antiga demais para ter
+suporte"*, *"Nunca, porque os dois campos de dia se contradizem"*: correct answers, each one the
+whole answer, each asked to change to hide a word.
+
+A habit is a rate. If absolutes are written without regard to which option is correct, the rate in
+the wrong options and the rate in the right ones are the same number, and the tell is the gap. Over
+the 57 lesson-languages here with enough absolutes to measure at all, the largest gap is **five
+points**, and most are negative — the keys carry them slightly more often. So the rate is printed
+beside the score as evidence, and the refusal moved to where it belongs: **eliminating the
+absolutes is a strategy**, `pickLongestClean` and `pickShortestClean` are it at both ends of the
+ruler, and a lesson whose distractors all overclaim is one where those two score near 100% and fail
+against `GuessCeiling` with a number attached. The hedge rule stays per question, because the same
+run raised four of those rather than 156: a key that says *geralmente* is hedging, and a key that
+says *nada* is answering.
+
 ---
 
-## Four things the check does not look at at all
+## Two things the check does not look at at all
 
 Rows 4, 5 and 10 are honest limits, and they are why this document is longer than the check: no
 machine separates an option somebody believes from one nobody would pick. Row 7 is not a limit, it
-is unwritten. And the four below are neither — they are places the check does not reach at all, so
+is unwritten. And the two below are neither — they are places the check does not reach at all, so
 a question can carry every tell in the table and pass because it sits in one of them.
 
 **Only `quiz` and `multiple-choice` are examined.** `ordering`, `matching`, `cloze`, `numeric`,
@@ -131,21 +150,52 @@ questions of 36. Those types have their own tells — a `cloze` whose blank acce
 prose used four times, an `ordering` whose items are already in order in the material — and nothing
 looks for them.
 
-**The word lists are English.** `absolutes` and `hedges` are English words, and so is
-`all of the above`. The day a question is authored in Portuguese, three of the checkable rows score
-zero and the run still says "no tell above its threshold" — which is worse than not running, because
-it answers with confidence.
-
-**`exercises.pt.json` is never read.** The glob is literal on `exercises.json`. A translation can
-reintroduce every tell in the table — lengthen the correct option, drop the absolutes from the
-distractors — and nothing objects.
-
 **The aggregate rows need a quorum.** Position and length need six questions, the end-to-end score
 needs eight. A section with four questions is invisible to the three checks that matter most, and a
 lesson can stay under the threshold by being short.
 
-None of these is hard to fix and none is fixed. They are written down so that the next person to
-read a green run knows what green does not mean.
+Two more used to stand here and were the same defect twice: the word lists were English, and
+`exercises.pt.json` was never read. Both are closed — see *Every language, because a student reads
+one of them* below — and they are worth remembering for what they cost. Every lesson in this
+catalogue ships a Portuguese translation, every one of these students reads it, and the first run
+that looked at one found six lessons over the ruler ceiling that were clean in English, three of
+them in a pull request that had just repaired the English of those same lessons.
+
+Neither of the two above is hard to fix and neither is fixed. They are written down so that the
+next person to read a green run knows what green does not mean.
+
+---
+
+## Every language, because a student reads one of them
+
+A tell is a property of the words in front of somebody, and half of these students have Portuguese
+in front of them. The check reads `exercises.json` **and every `exercises.<locale>.json` beside
+it**, merging each one the way `cmd/load` does — through `catalog.Translated`, so that a checker
+with its own merge cannot drift towards passing by forgetting a field the translation carries.
+
+Each language is reported and refused on its own line, labelled `[en]` or `[pt]`, because a lesson
+is not one paper: it is one paper per language, and they fail differently.
+
+**Length, position, option count and the end-to-end score are arithmetic on whatever text the
+student reads,** so they run in every language unchanged — and they are where the damage was. A
+translation is written free, its options come out at different lengths from the English, and the
+ruler works again on a battery that had just been repaired.
+
+**The word rows need a list per language, and each list is the other one translated** — never,
+only, all, none, cannot, no one → nunca, somente, todos, nenhum, não pode, ninguém. A longer
+Portuguese list because Portuguese has more ways to overclaim would make the two languages measure
+different things, and a lesson would then pass or fail on which half of the file somebody edited.
+
+**A locale with no list is refused, not measured halfway.** Three of the checkable rows would score
+zero and the run would still print a number — the failure this document names in its own first
+paragraph about limits. So the third language fails the build on the day it is added, with the
+words to write in the message, which is the day somebody is already thinking about it.
+
+*Two details that would each have shipped looking finished.* Go's `\b` is ASCII, so `\bsó\b` never
+matches — the boundary it wants after the word is already there — and every accented Portuguese
+absolute would have been invisible; the patterns are built against `\p{L}` instead. And `não pode`
+carries `pode` inside it, where English splits `cannot` from `can`, so the commonest refusal in the
+language would have been reported as a hedge on every question that used it.
 
 ---
 
