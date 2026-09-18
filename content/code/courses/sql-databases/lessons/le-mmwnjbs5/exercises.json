@@ -1491,5 +1491,349 @@
         "why": "A missing index costs one statement; a cache costs a job, a staleness window and a failure mode."
       }
     ]
+  },
+  {
+    "id": "ex-pktxqe8t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column is renamed and two versions of the application run side by side during the deploy. Which tool lets the old copies keep reading while the new ones use the new name?",
+    "hint": "Something that stores no rows and can present a column under another name.",
+    "choices": [
+      {
+        "text": "A view carrying the old name",
+        "correct": true,
+        "why": "It is a query with a name, so it can select the renamed column and alias it back."
+      },
+      {
+        "text": "A materialised view of the table",
+        "correct": false,
+        "why": "That would serve the rows as they were at its last refresh, which is worse than a stale name."
+      },
+      {
+        "text": "A CTE in each of the old queries",
+        "correct": false,
+        "why": "It would have to be added to the old code, which is the code you cannot change."
+      },
+      {
+        "text": "A trigger keeping the two columns equal",
+        "correct": false,
+        "why": "There is only one column after a rename; there is nothing to keep equal."
+      }
+    ]
+  },
+  {
+    "id": "ex-29e1zg9y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A view's third column has the wrong name. Why will `CREATE OR REPLACE VIEW` not fix it?",
+    "hint": "Ask what that statement is allowed to change about the shape.",
+    "choices": [
+      {
+        "text": "It refuses any change once something reads the view",
+        "correct": false,
+        "why": "Nothing about a reader blocks it; the limit is on the shape itself."
+      },
+      {
+        "text": "It only appends columns",
+        "correct": true,
+        "why": "Changing the shape means dropping and recreating, and everything depending on it first."
+      },
+      {
+        "text": "It needs the underlying table to be locked first",
+        "correct": false,
+        "why": "No lock on the table is involved in redefining a query."
+      },
+      {
+        "text": "Views may not be replaced at all, only dropped",
+        "correct": false,
+        "why": "They may be replaced, which is what makes the restriction worth knowing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhme8brh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A materialised view is created `WITH NO DATA` and somebody reads it before the first refresh. It raises an error rather than returning nothing. Why is that the better behaviour?",
+    "hint": "Ask what an empty result would have been mistaken for.",
+    "choices": [
+      {
+        "text": "An error is cheaper than scanning an empty table",
+        "correct": false,
+        "why": "Reading nothing costs nothing either; this is not about speed."
+      },
+      {
+        "text": "An empty answer reads as a quiet month",
+        "correct": true,
+        "why": "A screen saying nought would be read as a finding rather than as a view nobody filled."
+      },
+      {
+        "text": "An empty view cannot be indexed",
+        "correct": false,
+        "why": "It can, and an index on it is how a concurrent refresh works at all."
+      },
+      {
+        "text": "The definition is not stored until the first refresh",
+        "correct": false,
+        "why": "It is stored when the view is created; only the rows are missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-8x3agrjv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dashboard served last Tuesday's revenue as today's for a week, because the refresh job had been failing. What one column in the view's definition would have made that visible on the screen?",
+    "hint": "Something computed at the moment the rows were built.",
+    "choices": [
+      {
+        "text": "A row count, to compare with the table",
+        "correct": false,
+        "why": "It moves with the data and says nothing about when the data was gathered."
+      },
+      {
+        "text": "When the rows were computed",
+        "correct": true,
+        "why": "Printed beside the figure, it turns a silent staleness into something a reader can see."
+      },
+      {
+        "text": "The name of the job that refreshes it",
+        "correct": false,
+        "why": "That is worth writing down and it does not change when the job stops running."
+      },
+      {
+        "text": "A checksum of the source table",
+        "correct": false,
+        "why": "It would change on every write and tell a reader nothing they could act on."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6c10ym0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly refresh of four years of monthly revenue takes longer every month. What does a summary table maintained by hand do that a refresh cannot?",
+    "hint": "Ask how many of those months can possibly have changed since yesterday.",
+    "choices": [
+      {
+        "text": "Serve readers while it is being rebuilt",
+        "correct": false,
+        "why": "A concurrent refresh does that too, and it still recomputes everything."
+      },
+      {
+        "text": "Touch only the months that moved",
+        "correct": true,
+        "why": "A refresh recomputes the whole query, including years that cannot have changed."
+      },
+      {
+        "text": "Be indexed, which a materialised view cannot",
+        "correct": false,
+        "why": "A materialised view takes indexes, and needs a unique one to refresh concurrently."
+      },
+      {
+        "text": "Stay correct without a scheduled job",
+        "correct": false,
+        "why": "It is a stored copy either way, and it needs a mechanism just the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hvh4tcw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One statement has an `UPDATE … RETURNING` in one named step and, in a sibling step, a `SELECT` over the same rows. What does the `SELECT` see?",
+    "hint": "Ask whether these are steps in a program or parts of one statement.",
+    "choices": [
+      {
+        "text": "The updated rows, since its step is written after",
+        "correct": false,
+        "why": "The order they are written in does not decide the order they run in."
+      },
+      {
+        "text": "The state from before it began",
+        "correct": true,
+        "why": "Every part of the statement reads one snapshot, so a sibling's write is invisible to it."
+      },
+      {
+        "text": "An error, because two steps touch one table",
+        "correct": false,
+        "why": "Nothing refuses it, which is what makes the arrangement worth understanding."
+      },
+      {
+        "text": "Whichever version the planner reached first",
+        "correct": false,
+        "why": "That would make the answer unreasonable; the snapshot rule is what stops it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqvjhd0f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every customer, each with their three most recent orders, and customers who have never ordered must still appear. Which shape?",
+    "hint": "Two decisions: run it per outer row, and keep the outer row when it finds none.",
+    "choices": [
+      {
+        "text": "`CROSS JOIN LATERAL (…)`",
+        "correct": false,
+        "why": "That drops a customer whose inner query returns nothing, which is the case being asked for."
+      },
+      {
+        "text": "`LEFT JOIN LATERAL (…) ON true`",
+        "correct": true,
+        "why": "Per outer row, and the outer row survives when the inner query is empty."
+      },
+      {
+        "text": "A derived table joined on the customer",
+        "correct": false,
+        "why": "A derived table cannot see the outer row, so it has no way to take three per customer."
+      },
+      {
+        "text": "`JOIN (…) ON true`",
+        "correct": false,
+        "why": "Without the lateral keyword the subquery may not name the customer at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qkc85jw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A recursive query over a category tree ran until the disk filled. Besides carrying the path and refusing to revisit, what single condition makes it fail in a second instead?",
+    "hint": "Something about how far down it is allowed to go.",
+    "choices": [
+      {
+        "text": "A limit on the depth it carries",
+        "correct": true,
+        "why": "A tree twenty levels deep is a defect anyway, so the query may as well say so quickly."
+      },
+      {
+        "text": "A limit on the rows the statement may return",
+        "correct": false,
+        "why": "The rows are produced before anything is returned, so the disk fills first."
+      },
+      {
+        "text": "Deduplicating each round instead of stacking them",
+        "correct": false,
+        "why": "That terminates and hides the cycle, and it costs a comparison on every round."
+      },
+      {
+        "text": "A foreign key that forbids a loop",
+        "correct": false,
+        "why": "A key to the same table is perfectly happy with a loop; no constraint can say this."
+      }
+    ]
+  },
+  {
+    "id": "ex-henxvhvh",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A named step used once and doing nothing recursive is folded into the query around it, and you want it walled off instead. Write the one word added to its definition.",
+    "hint": "It is the opposite of being inlined, and it became a choice in PostgreSQL 12.",
+    "blanks": [
+      {
+        "accept": [
+          "materialized",
+          "materialised"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c77e2t9z",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The two halves of a recursive query are stacked by an operator of two words, and the deduplicating spelling of it is the one to avoid. Write the two words.",
+    "hint": "The second word is what stops it comparing every round with itself.",
+    "blanks": [
+      {
+        "accept": [
+          "union all"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tb02xczw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report is slow and somebody proposes storing its answer. Put the four steps in the order they should be taken.",
+    "hint": "Three of them may mean nothing is stored at all.",
+    "items": [
+      "Find out where the time actually goes",
+      "Add the index the plan says is missing",
+      "Rewrite the query if the plan says the shape is wrong",
+      "Agree how stale the stored answer may be, and what refreshes it"
+    ],
+    "trap": "Storing the answer first is the tempting order, and it buys a scheduled job and a staleness window in exchange for a problem one index would have removed."
+  },
+  {
+    "id": "ex-qgc2wwrv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to the job it is for.",
+    "hint": "Only one of them stores anything.",
+    "pairs": [
+      {
+        "left": "A subquery in FROM",
+        "right": "One step of one statement"
+      },
+      {
+        "left": "A named step before the statement",
+        "right": "Laying the steps out so a person can read them"
+      },
+      {
+        "left": "A stored query with a name",
+        "right": "One definition of a rule, shared by everybody"
+      },
+      {
+        "left": "A stored answer with a name",
+        "right": "An expensive result that may be a little old"
+      }
+    ],
+    "right_distractors": [
+      "A copy of a table kept on another machine",
+      "A rule the database refuses to break"
+    ]
   }
 ]
