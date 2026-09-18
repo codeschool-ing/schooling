@@ -25,7 +25,7 @@
         "why": "Right — two layers, and `apt` runs `dpkg` underneath."
       },
       {
-        "text": "`dpkg` is for system packages and `apt` for ones you install by hand",
+        "text": "`dpkg` is for system packages alone",
         "correct": false,
         "why": "Both work on any package; the split is about fetching and resolving, not about who asked."
       }
@@ -42,22 +42,22 @@
     "hint": "One of the relationship fields is installed by default and is not required.",
     "choices": [
       {
-        "text": "`Depends`, since a utility can require a lot",
+        "text": "`Depends`, necessarily",
         "correct": false,
         "why": "It can, and `Depends` is the required set, which is not what the flag below turns off."
       },
       {
-        "text": "`Suggests`, which apt installs unless told otherwise",
+        "text": "`Suggests`, when asked for",
         "correct": false,
         "why": "`Suggests` is mentioned and never installed automatically."
       },
       {
-        "text": "`Pre-Depends`, which pulls in a whole configured chain",
+        "text": "`Pre-Depends`, first",
         "correct": false,
         "why": "Pre-Depends changes the ordering, not the size of the set."
       },
       {
-        "text": "`Recommends`, which is on by default",
+        "text": "`Recommends`, on by default",
         "correct": true,
         "why": "Right — and `--no-install-recommends` is the flag that turns it off."
       }
@@ -84,12 +84,12 @@
         "why": "The upstream version is the `3.03` at the front, and it is the same."
       },
       {
-        "text": "Little that matters; the trailing number is a build counter",
+        "text": "Little; it is a build counter",
         "correct": false,
         "why": "It counts packaging attempts, and a new one is frequently a backported security fix."
       },
       {
-        "text": "The distribution removed something not redistributable",
+        "text": "The distribution removed something",
         "correct": false,
         "why": "That is what the `+dfsg2` marker records, and it did not change either."
       }
@@ -125,22 +125,22 @@
     "hint": "One command downloads a catalogue and the other acts on it.",
     "choices": [
       {
-        "text": "`apt full-upgrade`, since plain upgrade refuses to remove",
+        "text": "`apt full-upgrade`, to allow removals",
         "correct": false,
         "why": "That matters when packages are held back, and here nothing was even offered."
       },
       {
-        "text": "`apt update`, so the indexes are current",
+        "text": "`apt update`, for current indexes",
         "correct": true,
         "why": "Right — `upgrade` acted on yesterday's catalogue, correctly."
       },
       {
-        "text": "`apt-mark unhold`, since the package is probably held",
+        "text": "`apt-mark unhold`, in case of a hold",
         "correct": false,
         "why": "A hold is possible, and the first thing to rule out costs one command and no guessing."
       },
       {
-        "text": "`apt clean`, since the old package is cached",
+        "text": "`apt clean`, to drop the cached one",
         "correct": false,
         "why": "The cache holds downloaded files and is not consulted to decide what is available."
       }
@@ -162,7 +162,7 @@
         "why": "That is one cause of several, and `apt-key` is the deprecated tool it is not checked with."
       },
       {
-        "text": "Whether the repository still exists, by opening the URL in a browser",
+        "text": "Whether the repository still exists",
         "correct": false,
         "why": "Worth doing eventually, and apt already printed the server's answer."
       },
@@ -189,17 +189,17 @@
     "hint": "Think about what a key in the old global keyring could do.",
     "choices": [
       {
-        "text": "It encrypts the connection to that repository",
+        "text": "It encrypts the connection",
         "correct": false,
         "why": "HTTPS does that, and it is a different property from a signature."
       },
       {
-        "text": "It signs the packages you install from that repository",
+        "text": "It signs packages from there",
         "correct": false,
         "why": "The repository's publisher signs them; your machine only verifies."
       },
       {
-        "text": "It records which key was used, for auditing",
+        "text": "It records the key used",
         "correct": false,
         "why": "It is consulted at every update rather than written down after the fact."
       },
@@ -274,17 +274,17 @@
         "why": "Right — satisfying the request needs four packages gone, and that is worth reading before `y`."
       },
       {
-        "text": "`168 not upgraded`, since the machine is far behind",
+        "text": "`168 not upgraded`",
         "correct": false,
         "why": "It is, and that is a separate job; it has nothing to do with this install."
       },
       {
-        "text": "`2 newly installed`, since you asked for one package",
+        "text": "`2 newly installed`",
         "correct": false,
         "why": "That is normal: the extra one is a dependency, listed above."
       },
       {
-        "text": "`0 upgraded`, since an install should upgrade dependencies",
+        "text": "`0 upgraded`, which is wrong",
         "correct": false,
         "why": "An install only upgrades a dependency when the requested version needs it to."
       }
@@ -301,7 +301,7 @@
     "hint": "Two commands do this job and only one of them promises not to change.",
     "choices": [
       {
-        "text": "Because piping apt's output is unsupported",
+        "text": "Because piping apt's output is unsupported entirely",
         "correct": false,
         "why": "It works; the warning is about relying on the exact text in the long term."
       },
@@ -384,17 +384,17 @@
     "hint": "The package manager wrote down what it installed.",
     "choices": [
       {
-        "text": "`apt search` with part of the filename",
+        "text": "`apt search`, by name",
         "correct": false,
         "why": "`apt search` matches names and descriptions of packages, not the files inside them."
       },
       {
-        "text": "`apt-file search /etc/thatfile`",
+        "text": "`apt-file search` on the path",
         "correct": false,
         "why": "That asks the repositories about packages you have not installed, which is the other direction."
       },
       {
-        "text": "`find / -newer` to see what changed at the same time",
+        "text": "`find / -newer`",
         "correct": false,
         "why": "That finds files with similar timestamps and never names a package."
       },
@@ -416,7 +416,7 @@
     "hint": "Lesson 3 named that directory for a reason.",
     "choices": [
       {
-        "text": "The dpkg database is out of date and needs `dpkg --configure -a`",
+        "text": "The dpkg database is out of date",
         "correct": false,
         "why": "The database is fine; it simply has no row for that path, which is an answer."
       },
@@ -458,12 +458,12 @@
         "why": "`which` finds nothing, so there is no path to look up."
       },
       {
-        "text": "`apt search pdftotext`, since the description will mention it",
+        "text": "`apt search pdftotext`",
         "correct": false,
         "why": "Sometimes it does, and a file that is not in any description is not found at all."
       },
       {
-        "text": "`dpkg -L poppler-utils`, once you have guessed the package",
+        "text": "`dpkg -L poppler-utils`, if you guessed",
         "correct": false,
         "why": "That works after the guess, and the guess is the part you needed help with."
       }
@@ -531,7 +531,7 @@
     "hint": "Two commands answer it; one asks the repositories and one asks this machine.",
     "choices": [
       {
-        "text": "`apt-cache depends libfoo` on the library you are about to remove",
+        "text": "`apt-cache depends libfoo`",
         "correct": false,
         "why": "That lists what the library itself needs, which is the wrong direction."
       },
@@ -546,7 +546,7 @@
         "why": "Right — it prints the exact plan, including anything that comes with it, and changes nothing."
       },
       {
-        "text": "`apt-mark showauto` to see whether it was a dependency",
+        "text": "`apt-mark showauto`",
         "correct": false,
         "why": "That says how it got there rather than what depends on it now."
       }
@@ -627,22 +627,22 @@
     "hint": "Read the two version numbers, and ask where each one came from.",
     "choices": [
       {
-        "text": "A package built for a different release",
+        "text": "A package built for another release",
         "correct": true,
         "why": "Right — a `.deb` for a newer version, or a third-party repository assuming another base."
       },
       {
-        "text": "An interrupted install, which `--fix-broken` will repair",
+        "text": "An interrupted install, which `--fix-broken` repairs",
         "correct": false,
         "why": "That produces unconfigured packages rather than an unsatisfiable version constraint."
       },
       {
-        "text": "A held package, which `apt-mark unhold` will release",
+        "text": "A held package",
         "correct": false,
         "why": "A hold keeps a package where it is and does not create this message."
       },
       {
-        "text": "A stale index, which `apt update` will refresh",
+        "text": "A stale index needing `apt update`",
         "correct": false,
         "why": "Worth ruling out first, and a fresh index rarely turns 1.9 into 2.0."
       }
@@ -759,7 +759,7 @@
     "hint": "Two commands repair two different causes.",
     "choices": [
       {
-        "text": "`apt-get --fix-broken install`",
+        "text": "`apt-get --fix-broken install` first",
         "correct": false,
         "why": "That fetches what is missing, and by the premise nothing is."
       },
@@ -769,12 +769,12 @@
         "why": "That works and throws away configuration you did not have to lose."
       },
       {
-        "text": "`dpkg -i` the packages again from the cache",
+        "text": "`dpkg -i` the packages again",
         "correct": false,
         "why": "Reinstalling repeats the unpack, and the unpack is not the step that failed."
       },
       {
-        "text": "`dpkg --configure -a`",
+        "text": "`dpkg --configure -a`, to finish",
         "correct": true,
         "why": "Right — it retries the configuration step for everything that is half done."
       }
@@ -820,7 +820,7 @@
         "why": "Right — `remove` was used, so `/etc` still has its settings."
       },
       {
-        "text": "The program, with its configuration removed",
+        "text": "The program, minus its config",
         "correct": false,
         "why": "That is not a state dpkg can be in; the files go together with the package."
       },
@@ -884,7 +884,7 @@
         "why": "Nothing in apt looks at access times; many filesystems do not record them usefully."
       },
       {
-        "text": "Whether the package is in any repository's index",
+        "text": "Whether it is in any index",
         "correct": false,
         "why": "A package missing from the indexes is a different situation and is not removed for it."
       },
@@ -925,22 +925,22 @@
     "hint": "Something can make apt skip a package silently.",
     "choices": [
       {
-        "text": "`apt policy thatpackage`, to see the candidate",
+        "text": "`apt policy`, to see the candidate",
         "correct": false,
         "why": "Worth running second; it shows what is offered without saying why it is being skipped."
       },
       {
-        "text": "`apt update`, in case the index is stale",
+        "text": "`apt update`, for a stale index",
         "correct": false,
         "why": "Cheap and worth doing, and a stale index would affect every package rather than one."
       },
       {
-        "text": "`apt-mark showhold`",
+        "text": "`apt-mark showhold`, to see holds",
         "correct": true,
         "why": "Right — a hold makes `upgrade` skip it without a word, and this is the only way to see one."
       },
       {
-        "text": "`apt-cache rdepends thatpackage`, for something blocking it",
+        "text": "`apt-cache rdepends`, for blockers",
         "correct": false,
         "why": "That lists what depends on it, and a blocked upgrade is reported as `not upgraded` rather than silence."
       }
@@ -989,7 +989,7 @@
     "hint": "Repositories are 500. Ask what 500 beats and what it does not.",
     "choices": [
       {
-        "text": "It stops the package from being removed by a routine autoremove run",
+        "text": "It stops a routine autoremove",
         "correct": false,
         "why": "The auto mark decides that; priorities are about which version wins."
       },
@@ -1040,12 +1040,12 @@
     "hint": "Look up what `yum` is on a current Red Hat family system.",
     "choices": [
       {
-        "text": "Yes — `yum` was removed and the command will fail",
+        "text": "Yes — `yum` was removed",
         "correct": false,
         "why": "It is still there and still works; it was kept precisely so notes like these keep working."
       },
       {
-        "text": "Yes — `yum` works but resolves dependencies differently",
+        "text": "Yes — `yum` resolves them differently",
         "correct": false,
         "why": "There is one resolver, and both names reach it."
       },
@@ -1055,7 +1055,7 @@
         "why": "Right, and typing either is fine."
       },
       {
-        "text": "No — `yum` is for RHEL and `dnf` is for Fedora",
+        "text": "No — RHEL against Fedora",
         "correct": false,
         "why": "Both names work on both; the split is historical rather than by distribution."
       }
@@ -1072,22 +1072,22 @@
     "hint": "One of the two refreshes itself.",
     "choices": [
       {
-        "text": "Because dnf downloads the package list on each install",
+        "text": "dnf downloads the list each time",
         "correct": false,
         "why": "It uses a cache; re-downloading each time would make every command slow."
       },
       {
-        "text": "Because dnf reads the repositories directly rather than caching",
+        "text": "dnf reads the repositories live",
         "correct": false,
         "why": "It caches; the difference is when the cache is considered stale."
       },
       {
-        "text": "Because dnf has no index, and resolves against the server",
+        "text": "dnf has no index",
         "correct": false,
         "why": "It has metadata, and `dnf makecache` is the command that builds it."
       },
       {
-        "text": "Because dnf expires its own metadata on a timer",
+        "text": "dnf expires its own metadata",
         "correct": true,
         "why": "Right — `Last metadata expiration check` is the line that reports it."
       }
@@ -1204,12 +1204,12 @@
     "hint": "rpm does not ask about configuration the way Debian does; it leaves something instead.",
     "choices": [
       {
-        "text": "Packages in the `rc` state, with `rpm -qa | grep rc`",
+        "text": "Packages in the `rc` state",
         "correct": false,
         "why": "`rc` is a dpkg status and has no rpm equivalent."
       },
       {
-        "text": "Config files with no owner, using `rpm -qf` on each",
+        "text": "Config files with no owner",
         "correct": false,
         "why": "Worth doing once in a while, and it is not what an upgrade leaves behind."
       },
@@ -1219,7 +1219,7 @@
         "why": "Right — the packagers' new version beside yours, or yours moved aside."
       },
       {
-        "text": "Files newer than the upgrade, using `find /etc -newer`",
+        "text": "Files newer than the upgrade itself",
         "correct": false,
         "why": "That finds everything the upgrade touched, including the many files with no decision to make."
       }
@@ -1319,22 +1319,22 @@
     "hint": "Section 98's open descriptors, used on purpose.",
     "choices": [
       {
-        "text": "Processes still using files the upgrade replaced",
+        "text": "Processes using files that were replaced",
         "correct": true,
         "why": "Right — they are running code that no longer exists on disk, and need restarting."
       },
       {
-        "text": "Processes started by packages the upgrade installed",
+        "text": "Processes the upgrade started",
         "correct": false,
         "why": "Being newly installed does not make a process interesting; still holding old files does."
       },
       {
-        "text": "Packages whose services failed to restart after the upgrade",
+        "text": "Packages whose services failed to restart",
         "correct": false,
         "why": "That is `systemctl --failed`, and it is a different question."
       },
       {
-        "text": "Processes that are blocking the package database lock",
+        "text": "Processes holding the database lock",
         "correct": false,
         "why": "A held lock is reported when zypper cannot start, with a different message."
       }
@@ -1470,22 +1470,22 @@
     "hint": "Ask which directory it writes into, and who else writes there.",
     "choices": [
       {
-        "text": "A system tool in python, at the next upgrade",
+        "text": "A system tool in python, eventually",
         "correct": true,
         "why": "Right — two package managers disagreeing about one directory, and the loser is usually not your project."
       },
       {
-        "text": "Your own project, immediately, because the version is wrong",
+        "text": "Your own project, at once",
         "correct": false,
         "why": "Your project gets the version you asked for; the damage lands elsewhere."
       },
       {
-        "text": "Little, as long as the version matches the system package",
+        "text": "Little, if the versions match",
         "correct": false,
         "why": "The versions drift on the next upgrade, which is when it arrives."
       },
       {
-        "text": "pip itself, for want of write access to a root-owned directory",
+        "text": "pip itself, for want of write access",
         "correct": false,
         "why": "With `sudo` it writes fine, which is the whole problem."
       }
@@ -1638,7 +1638,7 @@
     "hint": "Two of the four remove things that might matter.",
     "choices": [
       {
-        "text": "`apt purge` on each package left in the `rc` state",
+        "text": "`apt purge` on the `rc` packages",
         "correct": false,
         "why": "It does free space, and it also throws away configuration for software you may reinstall."
       },
@@ -1648,12 +1648,12 @@
         "why": "Useful and worth reading first; it removes packages, which is more than nothing."
       },
       {
-        "text": "`apt clean`",
+        "text": "`apt clean`, the cache alone",
         "correct": true,
         "why": "Right — it empties the cache of downloaded `.deb` files, which can be fetched again."
       },
       {
-        "text": "`apt-mark showhold` and unhold everything",
+        "text": "`apt-mark showhold`, then unhold",
         "correct": false,
         "why": "That changes nothing on disk and lets held packages upgrade, which uses more space."
       }
@@ -1774,7 +1774,7 @@
     "hint": "It resolved dependencies in the direction you did not ask about.",
     "choices": [
       {
-        "text": "Those forty are unused dependencies it is tidying up",
+        "text": "Forty unused dependencies",
         "correct": false,
         "why": "That is `autoremove`, and it is a separate command with a separate list."
       },
@@ -1945,7 +1945,7 @@
     "hint": "One layer is shared between dnf and zypper, and one is not shared with Debian at all.",
     "choices": [
       {
-        "text": "The install command, if you use the low layer on both",
+        "text": "The install command, low layer",
         "correct": false,
         "why": "`dpkg -i` and `rpm -i` are different commands with different options and different behaviour on failure."
       },
@@ -1955,12 +1955,12 @@
         "why": "Right — verb, target, scope, dry-run, and a table to look the spelling up in."
       },
       {
-        "text": "The queries, since `rpm -qf` works on Debian too",
+        "text": "The queries themselves",
         "correct": false,
         "why": "`rpm` can be installed on Debian and its database is empty of Debian packages."
       },
       {
-        "text": "The repository files, since both use the same format",
+        "text": "The repository file format",
         "correct": false,
         "why": "`.repo` and `.list` are different formats with different field names."
       }
