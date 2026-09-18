@@ -974,5 +974,260 @@
         "why": "lag pega a linha anterior que existe, onde a junção não acha o que parear."
       }
     ]
+  },
+  "ex-0vsms03w": {
+    "prompt": "\"Vendas por região\" é agrupado por região e duas regiões somem do relatório por completo. Por que nenhuma mudança no agrupamento as traz de volta?",
+    "hint": "Pergunte do que uma pilha é feita.",
+    "choices": [
+      {
+        "text": "Elas estão lá com rótulo vazio, mais abaixo",
+        "why": "Isso acontece com linhas cuja região é desconhecida, e estas regiões não têm linha nenhuma."
+      },
+      {
+        "text": "Um grupo é feito de linhas, e elas não têm nenhuma",
+        "why": "Só uma junção a partir da tabela que lista todas as regiões produz uma linha para elas."
+      },
+      {
+        "text": "A coluna de agrupamento precisa ser declarada não nula",
+        "why": "Uma restrição muda o que pode ser escrito, nunca o que um resumo inventa."
+      },
+      {
+        "text": "Elas foram filtradas antes de o agrupamento rodar",
+        "why": "Vale conferir, e aqui não há mesmo o que filtrar."
+      }
+    ]
+  },
+  "ex-y0htyj86": {
+    "prompt": "Um pivô conta pedidos por status, por região, sobre um `LEFT JOIN` a partir de `regions`. O que uma região sem pedidos mostra na coluna `paid`?",
+    "hint": "Pergunte qual é o status da linha inventada, e o que a condição diz sobre ele.",
+    "choices": [
+      {
+        "text": "Um valor vazio, porque não há o que contar",
+        "why": "Uma contagem começa em zero e fica lá; quem volta desconhecido é a soma."
+      },
+      {
+        "text": "`1`, porque a junção inventou uma linha para ela",
+        "why": "Existe uma linha, e a condição sobre ela não é verdadeira, então este contador nunca a vê."
+      },
+      {
+        "text": "`0`, que está correto",
+        "why": "A linha inventada tem status desconhecido, o filtro não é verdadeiro sobre ela, e nada é contado."
+      },
+      {
+        "text": "A região some, como sumiria numa junção interna",
+        "why": "Mantê-la é exatamente para o que a junção externa serve."
+      }
+    ]
+  },
+  "ex-ztfzsvzv": {
+    "prompt": "As tags de um artigo são juntadas numa string com `string_agg(tag, ', ')`, e saem em ordens diferentes em execuções diferentes. O que conserta?",
+    "hint": "A função que monta uma lista pode ser instruída sobre como montar.",
+    "choices": [
+      {
+        "text": "Um `ORDER BY` dentro dos parênteses",
+        "why": "Sem ele a ordem é a que o banco achou conveniente, e ela pode mudar."
+      },
+      {
+        "text": "Um `ORDER BY` no fim da consulta",
+        "why": "Isso arruma as linhas que saem, não os pedaços dentro de uma delas."
+      },
+      {
+        "text": "Ordenar a tabela de tags por nome",
+        "why": "Uma tabela não tem ordem para ser ordenada, que é a aula 1 inteira sobre o assunto."
+      },
+      {
+        "text": "`string_agg(DISTINCT tag, ', ')`",
+        "why": "Isso tira repetições e não diz nada sobre a sequência."
+      }
+    ]
+  },
+  "ex-r55cepf7": {
+    "prompt": "Clientes são divididos com `ntile(4) OVER (ORDER BY spent DESC)`. Dois clientes que gastaram quase o mesmo caem em quartis diferentes. A função está quebrada?",
+    "hint": "Pergunte o que ela está dividindo em quatro.",
+    "choices": [
+      {
+        "text": "Está; a fronteira de um quartil tem que cair num valor",
+        "why": "Essa é outra ferramenta, calculada a partir dos próprios valores."
+      },
+      {
+        "text": "Está, a menos que a ordenação seja tornada única",
+        "why": "Um critério de desempate decide qual das duas vem antes, e a fronteira continuaria caindo entre elas."
+      },
+      {
+        "text": "Não; ela divide as linhas por igual, não os valores",
+        "why": "Quatro grupos de tamanho igual, então o corte cai onde as contagens o põem."
+      },
+      {
+        "text": "Não; os dois valores devem diferir mais do que parecem",
+        "why": "Podem estar a um centavo um do outro, e os baldes os separariam mesmo assim."
+      }
+    ]
+  },
+  "ex-ptcp88f9": {
+    "prompt": "`SELECT sum(quantity) / count(*) FROM order_lines` informa 3 itens por linha onde o número honesto é 3,5. Qual é a correção mais curta?",
+    "hint": "Os dois lados da divisão são números inteiros.",
+    "choices": [
+      {
+        "text": "Arredondar o resultado para uma casa decimal",
+        "why": "A casa decimal foi descartada antes de o arredondamento poder vê-la."
+      },
+      {
+        "text": "Usar `avg(quantity)`",
+        "why": "Ela promove para um tipo decimal sozinha, e é por isso que dividir na mão é o caminho longo."
+      },
+      {
+        "text": "Agrupar por pedido e somar os grupos",
+        "why": "Isso responde outra pergunta e divide dois inteiros do mesmo jeito."
+      },
+      {
+        "text": "Declarar `quantity` como `numeric`",
+        "why": "Uma contagem de itens é um inteiro, e mudar a coluna para esconder uma regra de aritmética é o conserto errado."
+      }
+    ]
+  },
+  "ex-c79ed62x": {
+    "prompt": "Uma sessão termina quando passa mais de uma hora até o evento seguinte. Qual função acha o último evento de cada sessão?",
+    "hint": "Você precisa enxergar para a frente a partir da linha em que está.",
+    "choices": [
+      {
+        "text": "`lag`, comparando com o evento anterior",
+        "why": "Isso acha o primeiro evento de uma sessão, que é a outra ponta do mesmo intervalo."
+      },
+      {
+        "text": "`lead`, que olha a linha da frente",
+        "why": "Uma linha cujo evento seguinte está a mais de uma hora é onde uma sessão parou."
+      },
+      {
+        "text": "`last_value`, sobre a partição do usuário",
+        "why": "Isso dá o último evento da partição inteira, e há um por usuário."
+      },
+      {
+        "text": "`max`, agrupado por usuário",
+        "why": "Também uma linha por usuário, e não enxerga um intervalo no meio."
+      }
+    ]
+  },
+  "ex-skamsxtc": {
+    "prompt": "Contatos duplicados foram removidos numerando as linhas dentro de cada endereço e apagando todo número acima de um. O que precisa acontecer em seguida, ou aquilo se repete?",
+    "hint": "Pergunte o que deixou as duplicatas entrarem.",
+    "choices": [
+      {
+        "text": "A numeração tem que ser guardada nas linhas",
+        "why": "Ela era andaime para um apagamento e não significa nada depois."
+      },
+      {
+        "text": "Uma regra de unicidade tem que ser declarada na coluna",
+        "why": "Nada recusou a segunda linha, e nada vai recusar a próxima."
+      },
+      {
+        "text": "O apagamento tem que ser agendado para rodar toda noite",
+        "why": "Isso aceita o estado ruim e arruma depois, o que é arranjo e não garantia."
+      },
+      {
+        "text": "Um índice tem que ser criado para o apagamento ficar rápido",
+        "why": "Velocidade não foi o que deixou duas linhas entrarem."
+      }
+    ]
+  },
+  "ex-xjsnx3zn": {
+    "prompt": "Uma academia quer listar toda reserva, cada uma ao lado da frequência média da turma dela. Por que um `GROUP BY` não produz isso?",
+    "hint": "Conte de quantas linhas cada um dos dois números precisa.",
+    "choices": [
+      {
+        "text": "Uma média não pode ser calculada por turma",
+        "why": "Pode, e essa metade é exatamente para o que agrupar serve."
+      },
+      {
+        "text": "Agrupar não deixa linha nenhuma para segurar o valor por reserva",
+        "why": "Um número é do monte e o outro é de uma linha, e o monte substituiu as linhas."
+      },
+      {
+        "text": "As reservas teriam que ser unidas a si mesmas",
+        "why": "Essa é uma das gambiarras antigas, não a razão de a forma simples falhar."
+      },
+      {
+        "text": "Uma média e uma contagem não podem aparecer na mesma seleção",
+        "why": "Podem, e muitas consultas têm as duas."
+      }
+    ]
+  },
+  "ex-kse5yk21": {
+    "prompt": "A coluna \"total da estação\" de um boletim era constante semana passada e agora cresce página abaixo. Uma coisa foi acrescentada dentro do `OVER (…)`. Qual?",
+    "hint": "Duas palavras que fazem um segundo serviço que ninguém menciona.",
+    "choices": [
+      {
+        "text": "Uma partição, que estreitou o que a função enxerga",
+        "why": "Isso muda quais linhas são somadas, e a coluna continuaria constante dentro de cada uma."
+      },
+      {
+        "text": "Uma ordenação, que trocou a moldura padrão",
+        "why": "Dizer em que ordem as linhas estão também diz que a soma termina na linha sendo calculada."
+      },
+      {
+        "text": "Um filtro, que tirou linhas do meio",
+        "why": "Menos linhas dão um total menor, não um total que cresce."
+      },
+      {
+        "text": "Uma moldura de `UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING`",
+        "why": "Essa é a escrita que devolve a constante."
+      }
+    ]
+  },
+  "ex-mtfj6xd8": {
+    "prompt": "Uma página mostra vinte linhas e tem que dizer também quantas linhas existem ao todo. Como obter as duas coisas de uma consulta só?",
+    "hint": "Um par de parênteses vazio depois da função.",
+    "choices": [
+      {
+        "text": "Rodar uma segunda consulta para a contagem",
+        "why": "É o que a maioria das aplicações faz, e a pergunta pediu uma só."
+      },
+      {
+        "text": "`count(*) OVER ()` ao lado das colunas",
+        "why": "Uma janela vazia é o resultado inteiro, então toda linha carrega o total."
+      },
+      {
+        "text": "`count(*)` sem agrupamento",
+        "why": "Isso colapsa as vinte linhas em uma, e a página precisa delas."
+      },
+      {
+        "text": "`count(*)` num `HAVING`",
+        "why": "Isso decide quais pilhas sobrevivem e não devolve coluna extra."
+      }
+    ]
+  },
+  "ex-t35a6sa8": {
+    "prompt": "Notas de 90, 85, 85 e 70, da maior para a menor. Escreva o número que `dense_rank()` dá para a quarta linha.",
+    "hint": "É a das três que não deixa buraco depois de um empate.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "três",
+          "tres"
+        ]
+      }
+    ]
+  },
+  "ex-5s4s3hak": {
+    "prompt": "Ligue cada pergunta àquilo que a responde.",
+    "hint": "Uma olha de lado para a pilha, uma olha o lugar de uma linha, uma olha para trás.",
+    "pairs": [
+      {
+        "left": "Cada pedido, ao lado do gasto total do cliente dele",
+        "right": "Um agregado com partição e sem ordenação"
+      },
+      {
+        "left": "Os três mais recentes de cada cliente",
+        "right": "Um número de linha dentro da partição, filtrado por fora"
+      },
+      {
+        "left": "Quanto tempo desde o evento anterior deste usuário",
+        "right": "O valor da linha que precede na ordenação"
+      }
+    ],
+    "right_distractors": [
+      "Uma contagem dos valores distintos da coluna",
+      "Um agrupamento com condição sobre a pilha"
+    ]
   }
 }
