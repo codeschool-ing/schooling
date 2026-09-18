@@ -241,3 +241,67 @@ func TestARefusalIsNotAHedge(t *testing.T) {
 		t.Fatal("`pode` on its own is a hedge and was not found")
 	}
 }
+
+// The types the tool used to walk past. `docs/EXERCISES.md` had the gap under
+// its own heading, and 429 of the catalogue's 2022 questions sat inside it.
+
+func typed(t *testing.T, e exercise) []string {
+	t.Helper()
+	return checkTyped("at", e)
+}
+
+func cloze(prompt string, b blank) exercise {
+	return exercise{ID: "ex-test", Type: "cloze", Prompt: prompt, Blanks: []blank{b}}
+}
+
+// The plainest one in the catalogue on the first run: the prompt said *before
+// you paste a block of text* and the blank accepted `paste`.
+func TestABlankFilledByCopyingThePromptIsCaught(t *testing.T) {
+	e := cloze("Before you paste a block of text, run :set _____ so vim stops indenting.",
+		blank{Accept: []string{"paste"}, IgnoreCase: true})
+	if len(typed(t, e)) == 0 {
+		t.Fatal("a blank whose answer is a word of its own prompt was reported clean")
+	}
+}
+
+// A prompt showing `IS NOT NULL` is showing the shape of an answer, which is a
+// teaching device rather than the answer lying in the open.
+func TestAnAnswerInsideBackticksIsNotAnEcho(t *testing.T) {
+	e := cloze("Write the operator that asks about the state: ___ ___ and `IS NOT NULL`.",
+		blank{Accept: []string{"null"}, IgnoreCase: true})
+	if p := typed(t, e); len(p) != 0 {
+		t.Fatalf("a code span was read as a word of the prompt: %v", p)
+	}
+}
+
+// Whether the prompt's `with` fills a blank that accepts `WITH` is the blank's
+// decision and not this tool's — so a blank that cares about case is measured
+// with case.
+func TestABlankThatCaresAboutCaseIsMeasuredWithIt(t *testing.T) {
+	prompt := "The steps are named with ___."
+	if p := typed(t, cloze(prompt, blank{Accept: []string{"WITH"}})); len(p) != 0 {
+		t.Fatalf("case was ignored where the blank does not ignore it: %v", p)
+	}
+	if len(typed(t, cloze(prompt, blank{Accept: []string{"WITH"}, IgnoreCase: true}))) == 0 {
+		t.Fatal("case was respected where the blank ignores it")
+	}
+}
+
+// Two is the coin flip `MinimumChoices` refuses for a quiz, arriving as an
+// arrangement rather than as a list of options.
+func TestTwoItemsOrTwoPairsAreACoinFlip(t *testing.T) {
+	if len(typed(t, exercise{ID: "ex-test", Type: "ordering", Items: []string{"a", "b"}})) == 0 {
+		t.Fatal("an ordering of two items was reported clean")
+	}
+	if p := typed(t, exercise{ID: "ex-test", Type: "ordering", Items: []string{"a", "b", "c"}}); len(p) != 0 {
+		t.Fatalf("an ordering of three items was flagged: %v", p)
+	}
+	two := []pair{{Left: "a", Right: "1"}, {Left: "b", Right: "2"}}
+	if len(typed(t, exercise{ID: "ex-test", Type: "matching", Pairs: two})) == 0 {
+		t.Fatal("a matching of two pairs against two rights was reported clean")
+	}
+	withOne := exercise{ID: "ex-test", Type: "matching", Pairs: two, RightDistractors: []string{"3"}}
+	if p := typed(t, withOne); len(p) != 0 {
+		t.Fatalf("a distractor takes the chance to one in six, and it was flagged anyway: %v", p)
+	}
+}

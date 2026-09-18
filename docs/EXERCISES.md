@@ -72,7 +72,7 @@ see it, because the ones a machine can see are checked rather than remembered.
 | 3 | **Two options.** A coin flip floors the score at 50%. | **yes** |
 | 4 | **Furniture** — an option nobody would choose. | no |
 | 5 | **Convergence.** Three options say the same thing in different words and one stands apart; the one that stands apart is the answer. | no |
-| 6 | **Echo.** The correct option repeats the rare words of the prompt. | **long words, not rare ones** |
+| 6 | **Echo.** The correct option repeats the rare words of the prompt, or a blank accepts one. | **long words, not rare ones; and a `cloze` blank the prompt fills** |
 | 7 | **Grammar.** Article, number or tense agreeing with the stem in only one option. | no |
 | 8 | **"All of the above", "none of the above".** | **yes** |
 | 9 | **Position.** The correct option sitting in the same place across a lesson. | **yes** |
@@ -137,32 +137,84 @@ says *nada* is answering.
 
 ---
 
-## Two things the check does not look at at all
+## What the check does not look at
 
 Rows 4, 5 and 10 are honest limits, and they are why this document is longer than the check: no
 machine separates an option somebody believes from one nobody would pick. Row 7 is not a limit, it
-is unwritten. And the two below are neither — they are places the check does not reach at all, so
-a question can carry every tell in the table and pass because it sits in one of them.
-
-**Only `quiz` and `multiple-choice` are examined.** `ordering`, `matching`, `cloze`, `numeric`,
-`labelling` and `expression-answer` go through untouched. In the first lesson written that is 7
-questions of 36. Those types have their own tells — a `cloze` whose blank accepts one word the
-prose used four times, an `ordering` whose items are already in order in the material — and nothing
-looks for them.
+is unwritten. The one below is neither — it is a place the check does not reach at all, so a
+question can carry every tell in the table and pass because it sits in it.
 
 **The aggregate rows need a quorum.** Position and length need six questions, the end-to-end score
 needs eight. A section with four questions is invisible to the three checks that matter most, and a
 lesson can stay under the threshold by being short.
 
-Two more used to stand here and were the same defect twice: the word lists were English, and
+Three more used to stand here. Two were the same defect twice: the word lists were English, and
 `exercises.pt.json` was never read. Both are closed — see *Every language, because a student reads
 one of them* below — and they are worth remembering for what they cost. Every lesson in this
 catalogue ships a Portuguese translation, every one of these students reads it, and the first run
 that looked at one found six lessons over the ruler ceiling that were clean in English, three of
 them in a pull request that had just repaired the English of those same lessons.
 
-Neither of the two above is hard to fix and neither is fixed. They are written down so that the
-next person to read a green run knows what green does not mean.
+The third was that **only `quiz` and `multiple-choice` were examined** — `ordering`, `matching`,
+`cloze`, `numeric` and `labelling` went through untouched, which is 429 of the catalogue's 2022
+questions, 21% of it. Part of that is closed; see *The types the table used to walk past* below,
+which is also where the two checks that were measured and NOT written are recorded.
+
+The quorum above is not hard to fix and is not fixed. It is written down so that the next person to
+read a green run knows what green does not mean.
+
+---
+
+## The types the table used to walk past
+
+`quiz` and `multiple-choice` are 1593 of the catalogue's 2022 questions. The other 429 — `cloze`,
+`matching`, `ordering`, `numeric`, `labelling` — went through the check untouched, and this is what
+came of looking at them.
+
+**Row 6 now covers a `cloze`.** A blank whose accepted answer is a word of its own prompt is filled
+by copying, and the first run found **twenty-one** of them. Three existed only in Portuguese, which
+is the per-language reading above earning its place a second time: the English of one asks for *the
+___ key* and accepts `whole`, and the Portuguese opens with *toda coluna não-chave* and accepts
+`toda`.
+
+Two details decide what counts:
+
+- **The blank's own normalisation decides, not the tool's.** Whether the prompt's `with` fills a
+  blank accepting `WITH` is a property of the question — `CONTENT.md` puts case and accents there —
+  so the check reads `ignore_case` and `ignore_accents` off the blank. Every one of the twenty-one
+  has `ignore_case`, so every one really is answerable by typing back a word of the prompt.
+- **A word inside backticks is a symbol, not a word.** A prompt that writes `` `IS NOT NULL` `` is
+  showing the shape of an answer, which is a teaching device. The same words loose in the sentence
+  are the answer lying in the open.
+
+**Three letters is the floor, and the number was measured.** At four the check misses `old` in a
+prompt that writes *one old TTL*. At two it starts reporting `is` and `on`. Three costs one real
+finding to gain and three particles to avoid.
+
+**Row 3 reaches two more types.** An `ordering` of two items is one comparison and a `matching` of
+two pairs with no distractor is one swap: grading is binary, so what matters is the chance of
+getting the whole arrangement right, and at two that is one in two. It finds nothing today, which
+is the point of writing it now rather than after.
+
+### And the two that were measured and not written
+
+They are recorded because a check that was considered and rejected is worth more to the next person
+than one that was never thought of.
+
+**An `ordering` whose items are already sorted by length, or alphabetically,** reads like row 1
+arriving for another type. It is not one. For four items the chance of either is 2/4!, so 54
+orderings should throw about four and a half by luck alone — and the catalogue has four of one and
+five of the other. There is nothing there, and the check would have reported coincidence in a
+sentence that reads like a finding.
+
+**A `matching` pair sharing an uncommon word with its own right-hand side** is a real tell:
+`Get-Command -Noun X` against *every command that works on X* is matched by somebody who has never
+opened a shell, and three of that question's four pairs gave themselves away. But the catalogue's
+other hits are questions whose whole subject is the mapping between two vocabularies — `NESTED
+LOOPS` against *a nested loop join*, `count(rating)` against *the rows where a rating was given* —
+where the overlap is what is being taught. Two real against two by construction is too thin to
+refuse on, and separating them takes a rule invented from two examples. The real one was repaired
+by hand instead.
 
 ---
 
