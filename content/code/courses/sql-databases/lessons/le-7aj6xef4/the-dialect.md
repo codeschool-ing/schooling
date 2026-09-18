@@ -56,27 +56,31 @@ Create Table: CREATE TABLE `orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `customer_id` int NOT NULL,
   `ordered_on` date NOT NULL DEFAULT (curdate()),
+  `total` decimal(10,2) NOT NULL,
   `status` varchar(10) NOT NULL DEFAULT 'placed',
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE RESTRICT,
-  CONSTRAINT `orders_chk_1` CHECK ((`status` in (_latin1'placed',_latin1'shipped',_latin1'cancelled')))
+  CONSTRAINT `orders_chk_1` CHECK ((`total` >= 0)),
+  CONSTRAINT `orders_chk_2` CHECK ((`status` in (_latin1'placed',_latin1'shipped',_latin1'cancelled')))
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 ```
 
 ```
 shop=# \d orders
-                            Table "public.orders"
-   Column    |  Type   | Collation | Nullable |           Default            
--------------+---------+-----------+----------+------------------------------
- id          | integer |           | not null | generated always as identity
- customer_id | integer |           | not null | 
- ordered_on  | date    |           | not null | CURRENT_DATE
- status      | text    |           | not null | 'placed'::text
+                               Table "public.orders"
+   Column    |     Type      | Collation | Nullable |           Default            
+-------------+---------------+-----------+----------+------------------------------
+ id          | integer       |           | not null | generated always as identity
+ customer_id | integer       |           | not null | 
+ ordered_on  | date          |           | not null | CURRENT_DATE
+ total       | numeric(10,2) |           | not null | 
+ status      | text          |           | not null | 'placed'::text
 Indexes:
     "orders_pkey" PRIMARY KEY, btree (id)
 Check constraints:
     "orders_status_check" CHECK (status = ANY (ARRAY['placed'::text, 'shipped'::text, 'cancelled'::text]))
+    "orders_total_check" CHECK (total >= 0::numeric)
 Foreign-key constraints:
     "orders_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE RESTRICT
 Referenced by:
