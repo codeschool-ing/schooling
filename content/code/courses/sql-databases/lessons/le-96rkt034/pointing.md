@@ -9,7 +9,8 @@ The primary key gives a row a name. The **foreign key** is how another row uses 
 CREATE TABLE orders (
     id          integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     customer_id integer NOT NULL REFERENCES customers (id),
-    ordered_on  date    NOT NULL
+    ordered_on  date    NOT NULL,
+    total       numeric(10,2) NOT NULL
 );
 ```
 
@@ -26,7 +27,7 @@ elsewhere.
 Declaring the reference buys something a comment could not:
 
 ```sql
-INSERT INTO orders (customer_id, ordered_on) VALUES (77, '2026-03-09');
+INSERT INTO orders (customer_id, ordered_on, total) VALUES (77, '2026-03-09', 39.90);
 ```
 
 ```

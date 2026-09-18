@@ -68,7 +68,7 @@ SELECT id, customer_id, ordered_on FROM orders WHERE status = 'cancelled';
 disparar:
 
 ```
-shop=# INSERT INTO orders (customer_id) VALUES (3) RETURNING id, ordered_on, status;
+shop=# INSERT INTO orders (customer_id, total) VALUES (3, 39.90) RETURNING id, ordered_on, status;
  id | ordered_on | status 
 ----+------------+--------
   5 | 2026-09-18 | placed
@@ -138,7 +138,7 @@ atrito:
 ```
 shop=# UPDATE orders SET status = 'enviado' WHERE id = 1;
 ERROR:  new row for relation "orders" violates check constraint "orders_status_check"
-DETAIL:  Failing row contains (1, 1, 2026-03-02, enviado).
+DETAIL:  Failing row contains (1, 1, 2026-03-02, 1499.00, enviado).
 ```
 
 Ela recusou um status que nenhum outro código do sistema sabe ler. A aula 3 disse que uma restrição

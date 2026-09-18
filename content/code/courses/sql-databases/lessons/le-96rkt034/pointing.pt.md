@@ -9,7 +9,8 @@ A chave primária dá um nome a uma linha. A **chave estrangeira** é como outra
 CREATE TABLE orders (
     id          integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     customer_id integer NOT NULL REFERENCES customers (id),
-    ordered_on  date    NOT NULL
+    ordered_on  date    NOT NULL,
+    total       numeric(10,2) NOT NULL
 );
 ```
 
@@ -25,7 +26,7 @@ outro lugar.
 Declarar a referência compra algo que um comentário não compraria:
 
 ```sql
-INSERT INTO orders (customer_id, ordered_on) VALUES (77, '2026-03-09');
+INSERT INTO orders (customer_id, ordered_on, total) VALUES (77, '2026-03-09', 39.90);
 ```
 
 ```

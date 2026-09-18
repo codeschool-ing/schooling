@@ -67,7 +67,7 @@ SELECT id, customer_id, ordered_on FROM orders WHERE status = 'cancelled';
 fire:
 
 ```
-shop=# INSERT INTO orders (customer_id) VALUES (3) RETURNING id, ordered_on, status;
+shop=# INSERT INTO orders (customer_id, total) VALUES (3, 39.90) RETURNING id, ordered_on, status;
  id | ordered_on | status 
 ----+------------+--------
   5 | 2026-09-18 | placed
@@ -137,7 +137,7 @@ feature rather than the friction:
 ```
 shop=# UPDATE orders SET status = 'enviado' WHERE id = 1;
 ERROR:  new row for relation "orders" violates check constraint "orders_status_check"
-DETAIL:  Failing row contains (1, 1, 2026-03-02, enviado).
+DETAIL:  Failing row contains (1, 1, 2026-03-02, 1499.00, enviado).
 ```
 
 It refused a status no other code in the system knows how to read. Lesson 3 said a constraint is a
