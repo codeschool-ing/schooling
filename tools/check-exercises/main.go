@@ -79,8 +79,9 @@ type language struct {
 var languages = map[string]*language{
 	"en": {
 		absolutes: anyOf("never", "always", "only", "all", "must", "none", "every", "cannot", "nothing", "no one"),
-		hedges:    anyOf("usually", "often", "can", "may", "tends to", "tend to", "generally", "sometimes", "typically"),
-		aboveAll:  anyOf("all of the above", "none of the above"),
+		hedges: anyOf("usually", "often", "frequently", "can", "may", "tends to", "tend to",
+			"generally", "sometimes", "typically"),
+		aboveAll: anyOf("all of the above", "none of the above"),
 	},
 	"pt": {
 		absolutes: anyOf("nunca", "jamais", "sempre", "somente", "apenas", "só", "todo", "toda", "todos", "todas",
