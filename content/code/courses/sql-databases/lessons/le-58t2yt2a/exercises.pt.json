@@ -8,7 +8,7 @@
         "why": "O planejador lê o índice porque ele está lá para ser lido; nada é preferido."
       },
       {
-        "text": "Uma segunda cópia da coluna email, mantida ordenada, com um ponteiro ao lado de cada valor para a linha dele",
+        "text": "Uma segunda cópia ordenada da coluna, com um ponteiro ao lado de cada valor para a linha dele",
         "why": "Uma estrutura em disco, e é por isso que tem que ser escrita e mantida em dia."
       },
       {
@@ -74,7 +74,7 @@
         "why": "Ela guarda os mesmos valores com estrutura extra; o espaço é um pouco pior, não melhor."
       },
       {
-        "text": "Uma lista plana teria que ser deslocada ou reescrita a cada inserção no meio dela",
+        "text": "Uma lista plana seria reescrita a cada inserção no meio dela",
         "why": "Uma inserção entra num bloco, e um bloco se divide quando está cheio; a árvore fica balanceada."
       },
       {
@@ -100,7 +100,7 @@
         "why": "Isso é trabalho dentro de um bloco já lido, e é barato."
       },
       {
-        "text": "Buscar a linha para a qual a entrada aponta, em outro lugar do disco",
+        "text": "Buscar a linha para a qual a entrada aponta",
         "why": "Uma busca dessas por linha casada, cada uma caindo numa página diferente; o índice de cobertura existe para pular isso."
       },
       {
@@ -156,11 +156,11 @@
         "why": "A chave primária não difere dos outros três; cada um aponta para a posição de uma linha."
       },
       {
-        "text": "Quatro entradas escritas depois pelo autovacuum",
+        "text": "Quatro entradas, escritas depois pelo autovacuum quando a versão antiga for limpa",
         "why": "O vacuum limpa versões antigas; não aponta índices para novas."
       },
       {
-        "text": "Uma entrada em cada um dos quatro, sempre que a nova versão da linha cai em outra página",
+        "text": "Uma entrada em cada um dos quatro, apontando para a nova versão da linha",
         "why": "Um update escreve uma versão nova da linha inteira, e cada índice tem que encontrá-la."
       }
     ]
@@ -178,7 +178,7 @@
         "why": "Ela indexa booleanos sem reclamar; o problema é quanto os valores valem."
       },
       {
-        "text": "Seiscentas mil buscas aleatórias custam mais que uma leitura sequencial da tabela",
+        "text": "Seiscentas mil buscas aleatórias custam mais que uma leitura sequencial",
         "why": "O planejador precificou os dois planos e escolheu o mais barato; não está ignorando nada."
       },
       {
@@ -260,7 +260,7 @@
         "why": "Não há faixa sendo lida; há um valor do qual ele não tem cópia ordenada."
       },
       {
-        "text": "A cópia é ordenada por email, e onde lower(email) se ordenaria é desconhecido sem calcular linha a linha",
+        "text": "A cópia guarda email em ordem, e onde lower(email) se ordenaria não está nela",
         "why": "Que é a varredura que você tentava evitar. Indexe a expressão, ou deixe a coluna nua."
       }
     ]
@@ -296,7 +296,7 @@
         "why": "É o lado que você gostaria que fosse convertido, e não é o que o MySQL escolhe para um número contra uma coluna de texto."
       },
       {
-        "text": "O phone de cada linha é convertido para número para comparar, então o índice sai e a varredura entra",
+        "text": "O phone de cada linha é convertido para número, então o índice sai e a varredura entra",
         "why": "Um par de aspas faltando, invisível na revisão de código, e é uma varredura completa."
       },
       {
@@ -476,7 +476,7 @@
     "hint": "Um índice pode ser lido de trás para a frente de graça, e LIMIT é barato quando a ordem pedida é uma que o índice tem.",
     "choices": [
       {
-        "text": "Vai até a sequência do cliente 2, lê as últimas dez entradas de trás para a frente e para",
+        "text": "Vai até a sequência do cliente 2, lê suas dez últimas entradas ao contrário e para",
         "why": "Pequeno em dez linhas e enorme em dez mil; é o que faz paginação ser barata."
       },
       {
@@ -620,7 +620,7 @@
         "why": "O índice agrupado seria percorrido numa busca, e aqui nenhuma busca é precisa."
       },
       {
-        "text": "Cada entrada secundária guarda a chave primária em vez de um ponteiro físico, então id já está na entrada",
+        "text": "Cada entrada secundária guarda a chave primária em vez de um ponteiro físico",
         "why": "O que também torna uma chave primária larga cara duas vezes: copiada em todo índice, e percorrida em toda busca."
       }
     ]
@@ -634,7 +634,7 @@
         "why": "Inchaço deixa o índice maior e mais lento de percorrer; não transforma um index-only scan num que busca linhas."
       },
       {
-        "text": "Uma transação aberta há muito tempo está segurando o VACUUM, e o mapa de visibilidade envelheceu",
+        "text": "Uma transação aberta há muito segura o VACUUM, e o mapa de visibilidade envelheceu",
         "why": "Páginas que já não estão marcadas como todas visíveis obrigam a buscar a linha de cada entrada para conferir; nada na consulta mudou."
       },
       {
@@ -734,7 +734,7 @@
         "why": "Se as linhas casam não é o que o planejador compara; ele compara as expressões, e elas diferem."
       },
       {
-        "text": "Não: as expressões estão escritas de forma diferente, e um índice de expressão casa com a própria grafia",
+        "text": "Não: as expressões estão escritas diferente, e um índice de expressão casa com a própria grafia",
         "why": "Esta é a razão mais comum de um índice de expressão parecer quebrado."
       },
       {
@@ -760,7 +760,7 @@
         "why": "A sintaxe está bem; é o significado da expressão que é recusado."
       },
       {
-        "text": "A conversão depende do fuso da sessão, então a mesma entrada poderia indexar diferente em dois dias",
+        "text": "A conversão depende do fuso da sessão, então uma entrada tem duas respostas",
         "why": "Um índice guardando uma resposta que já mudou estaria errado em silêncio; a recusa diz algo verdadeiro sobre seu dado."
       },
       {
@@ -836,7 +836,7 @@
         "why": "Ele não guarda hash nenhum; guarda o menor e o maior valor em cada faixa de blocos."
       },
       {
-        "text": "O mínimo e o máximo de cada faixa de blocos passam a cobrir a coluna inteira, então nenhuma faixa é pulada",
+        "text": "O mínimo e o máximo de cada faixa passam a cobrir a coluna inteira, e nenhuma é pulada",
         "why": "Funciona quando a coluna acompanha a ordem física, que um log só de acréscimos tem e uma tabela embaralhada não."
       },
       {
@@ -884,7 +884,7 @@
         "why": "Duas reservas começando com um minuto de diferença e sobrepostas por uma hora passam nessa restrição."
       },
       {
-        "text": "A restrição de exclusão que aplica isso precisa de GiST, que o MySQL não tem, então é aplicada de outro jeito",
+        "text": "A restrição de exclusão que aplica isso precisa de GiST, e o MySQL não tem GiST",
         "why": "O que significa bloqueio, ou serialização, ou uma checagem na aplicação com as ressalvas da aula 8; melhor saber agora do que depois de o recurso sair."
       },
       {
@@ -990,7 +990,7 @@
         "why": "Um índice não é reconstruído por uma exclusão; a entrada é marcada morta e é só."
       },
       {
-        "text": "Provar que nenhum pedido referencia o cliente, lendo orders inteira porque customer_id não tem índice",
+        "text": "Provar que nenhum pedido referencia o cliente, lendo orders inteira",
         "why": "Apagar cem clientes lê a tabela cem vezes; indexe suas chaves estrangeiras."
       },
       {
@@ -1115,7 +1115,7 @@
         "why": "Um banco que pegasse o bloqueio em silêncio seria pior que um que recusasse, e este recusa."
       },
       {
-        "text": "É recusado: CONCURRENTLY não pode rodar dentro de um bloco de transação, então essa migração tem que ser marcada como exceção",
+        "text": "É recusado, e essa migração tem que ser marcada como exceção ao envolvimento",
         "why": "Toda ferramenta tem um jeito de dizer isso, e achá-lo antes do deploy é mais fácil do que durante."
       },
       {
@@ -1141,7 +1141,7 @@
         "why": "É o contrário: o contador é local, e essa é a armadilha."
       },
       {
-        "text": "Réplicas mantêm os próprios contadores, e os relatórios rodavam numa réplica de leitura onde ele era usado toda noite",
+        "text": "Réplicas mantêm os próprios contadores, e os relatórios rodavam numa réplica de leitura",
         "why": "Se você tem réplicas, olhe todas antes de acreditar num zero."
       }
     ]
