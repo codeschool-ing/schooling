@@ -1087,5 +1087,225 @@
         "why": "Rodá-la de novo usa os valores lidos antes de a premissa mudar."
       }
     ]
+  },
+  "ex-bmqqkbmm": {
+    "prompt": "INSERT INTO customers VALUES ('Xico', 'xico@example.com', 'Porto') é recusado pela loja. Por quê?",
+    "hint": "Conte as colunas que a tabela declara, e em que ordem.",
+    "choices": [
+      {
+        "text": "Três valores dados, e a tabela tem quatro",
+        "why": "Um valor faltando no fim pegaria o default daquela coluna em vez de falhar."
+      },
+      {
+        "text": "O primeiro valor foi casado com id",
+        "why": "Sem lista é por posição, e a posição um é a chave de identidade."
+      },
+      {
+        "text": "Uma cidade tem que existir antes de ser usada",
+        "why": "city é texto puro, sem nada declarado por trás."
+      },
+      {
+        "text": "VALUES não é legal sem os nomes",
+        "why": "É perfeitamente legal sem eles, que é justamente o problema."
+      }
+    ]
+  },
+  "ex-y8qnnyjp": {
+    "prompt": "INSERT INTO orders (customer_id) VALUES (3) RETURNING id, ordered_on, status. Dois dos três nunca foram enviados. De onde vieram?",
+    "hint": "A aula 3 declarou os dois na própria tabela.",
+    "choices": [
+      {
+        "text": "Da linha inserida logo antes dela",
+        "why": "Nada passa de uma instrução para outra; cada linha é preenchida sozinha."
+      },
+      {
+        "text": "Do driver, que preenche as lacunas",
+        "why": "Um driver manda o que você deu e não inventa nada."
+      },
+      {
+        "text": "Do que as colunas declaram",
+        "why": "A identidade fornece um e o DEFAULT fornece o outro."
+      },
+      {
+        "text": "Chegam vazios e esperam um update",
+        "why": "Chegam preenchidos, que é para isso que serve um default."
+      }
+    ]
+  },
+  "ex-d9vqcy4m": {
+    "prompt": "DELETE FROM customers WHERE email = 'ana@example.com' é recusado, e a Ana tem três pedidos. O que recusou?",
+    "hint": "Leia as duas últimas palavras do esquema de orders na aula 1.",
+    "choices": [
+      {
+        "text": "A chave estrangeira em orders, declarada RESTRICT",
+        "why": "Exatamente ela, e a linha DETAIL nomeia a chave que ainda aponta para a Ana."
+      },
+      {
+        "text": "Uma restrição CHECK em customers",
+        "why": "Nenhum check daquela tabela olha para outra; um check não consegue."
+      },
+      {
+        "text": "O índice único atrás de email",
+        "why": "A unicidade governa o que entra, e não diz nada sobre remoção."
+      },
+      {
+        "text": "Um gatilho escrito por alguém",
+        "why": "O esquema carrega isso, e gatilho nenhum foi escrito aqui."
+      }
+    ]
+  },
+  "ex-g3s44yye": {
+    "prompt": "DELETE FROM orders WHERE id = 3 responde DELETE 1, e order_lines tinha duas linhas daquele pedido. O que sobrou delas?",
+    "hint": "order_lines declara ON DELETE CASCADE no order_id dela.",
+    "choices": [
+      {
+        "text": "Duas, até uma rotina depois limpar",
+        "why": "Nada depois entra nisso; a mesma instrução levou as duas."
+      },
+      {
+        "text": "Nenhuma das duas — o cascade seguiu",
+        "why": "O cascade remove as linhas que apontavam para a que você nomeou."
+      },
+      {
+        "text": "Uma, já que um cascade vai um nível",
+        "why": "Cascade não se conta em níveis, e ele levou as duas."
+      },
+      {
+        "text": "Duas, e o delete devia ter falhado",
+        "why": "Falhar é RESTRICT, que é a outra escolha e não esta."
+      }
+    ]
+  },
+  "ex-14v1y7sr": {
+    "prompt": "UPDATE products SET price = price * 1.10 roda contra quatro linhas. Qual preço cada linha multiplica?",
+    "hint": "O lado direito de um SET é avaliado por linha.",
+    "choices": [
+      {
+        "text": "A média das quatro, depois repartida",
+        "why": "Não há agregado nenhum aqui; cada linha está por sua conta."
+      },
+      {
+        "text": "O próprio preço, como estava antes",
+        "why": "Uma passada, cada linha calculada do valor que já tinha."
+      },
+      {
+        "text": "O preço da primeira linha, reaproveitado",
+        "why": "Não há primeira linha num conjunto, e nada é reaproveitado."
+      },
+      {
+        "text": "O preço que vai ter quando isto acabar",
+        "why": "Seria circular, e o motor lê o valor antigo."
+      }
+    ]
+  },
+  "ex-g3b0zxve": {
+    "prompt": "UPDATE products SET price = price * 1.10 é digitado sem o WHERE, contra quatro linhas. O que é relatado?",
+    "hint": "Pergunte se a instrução está malformada ou apenas errada.",
+    "choices": [
+      {
+        "text": "Um erro, porque UPDATE quer um WHERE",
+        "why": "O WHERE é opcional, e deixá-lo de fora quer dizer todas as linhas."
+      },
+      {
+        "text": "Um aviso nomeando a cláusula que falta",
+        "why": "Nada avisa; a instrução é exatamente o que se pediu."
+      },
+      {
+        "text": "UPDATE 4, e mais nada",
+        "why": "Um relato verdadeiro e completo do que aconteceu."
+      },
+      {
+        "text": "Nada, até a transação ser fechada",
+        "why": "A contagem volta assim que a instrução termina."
+      }
+    ]
+  },
+  "ex-e40gw28e": {
+    "prompt": "Todo preço subiu dez por cento sem querer. Você corrige a instrução e roda a certa. Como fica o catálogo?",
+    "hint": "Pergunte o que a primeira instrução deixou para trás quando a segunda rodou.",
+    "choices": [
+      {
+        "text": "Certo, já que a segunda sobrescreveu a primeira",
+        "why": "A segunda escreveu uma linha; não voltou nas outras três."
+      },
+      {
+        "text": "Dez por cento mais caro, com a correção por cima",
+        "why": "Dois enganos onde um SELECT não teria deixado nenhum."
+      },
+      {
+        "text": "De volta aos preços antigos, restaurados pela correção",
+        "why": "Nada aqui restaura; um write não roda de novo."
+      },
+      {
+        "text": "Igual, porque a primeira estava defeituosa",
+        "why": "A primeira era SQL válido e teve efeito."
+      }
+    ]
+  },
+  "ex-zyr1jc68": {
+    "prompt": "O que rodar a mesma condição como um SELECT, antes do UPDATE, de fato compra?",
+    "hint": "É sobre a condição, e não sobre a mudança.",
+    "choices": [
+      {
+        "text": "Aquece o cache, então o write fica mais rápido",
+        "why": "Qualquer ganho aí é ruído, e não é por isso que se faz."
+      },
+      {
+        "text": "Segura as linhas para ninguém mexer nelas",
+        "why": "Um SELECT simples não pega bloqueio que faça isso."
+      },
+      {
+        "text": "Você vê quais linhas a condição casa",
+        "why": "E vê enquanto a tabela ainda está intocada."
+      },
+      {
+        "text": "Guarda os valores antigos para um rollback",
+        "why": "Um rollback precisa de transação, que é a próxima seção."
+      }
+    ]
+  },
+  "ex-hkjvsfyw": {
+    "prompt": "Uma rotina noturna tem que registrar as linhas que mudou, e não só quantas. O que dá isso a ela?",
+    "hint": "Um destes devolve as próprias linhas.",
+    "choices": [
+      {
+        "text": "RETURNING, com as linhas como ficaram",
+        "why": "Uma instrução, uma passada, e as linhas depois da mudança."
+      },
+      {
+        "text": "A contagem, lida de volta do driver",
+        "why": "A contagem diz quantas e nunca diz quais."
+      },
+      {
+        "text": "Um SELECT depois, na mesma condição",
+        "why": "Depois do update a condição não casa mais as mesmas linhas."
+      },
+      {
+        "text": "O log de instruções, onde houver um",
+        "why": "Aquilo registra a instrução e não as linhas que ela tocou."
+      }
+    ]
+  },
+  "ex-ah6p7vjr": {
+    "prompt": "A mesma rotina roda também no MySQL, onde RETURNING não existe. O que ela tem lá?",
+    "hint": "A aula 12 é onde moram as diferenças entre motores.",
+    "choices": [
+      {
+        "text": "Uma tabela temporária que o servidor preenche",
+        "why": "Ninguém preenche uma para você; essa seria sua de escrever."
+      },
+      {
+        "text": "A mesma cláusula com outro nome",
+        "why": "O MariaDB tem para duas instruções; o MySQL não tem nada do tipo."
+      },
+      {
+        "text": "Quantas linhas a instrução mudou",
+        "why": "Que é o que você tem, e por que a contagem merece ser lida."
+      },
+      {
+        "text": "Nada, então a rotina não dá para escrever",
+        "why": "Dá, com um registro mais estreito do que ela fez."
+      }
+    ]
   }
 }

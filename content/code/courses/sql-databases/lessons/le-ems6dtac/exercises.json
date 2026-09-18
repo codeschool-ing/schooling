@@ -1581,5 +1581,325 @@
         "why": "Re-running it uses the values read before the premise changed."
       }
     ]
+  },
+  {
+    "id": "ex-bmqqkbmm",
+    "version": 1,
+    "section": "changing-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "INSERT INTO customers VALUES ('Xico', 'xico@example.com', 'Porto') is refused by the shop. Why?",
+    "hint": "Count the columns the table declares, and in what order.",
+    "choices": [
+      {
+        "text": "Three values given, and the table holds four",
+        "correct": false,
+        "why": "A value left off the end would take that column's default rather than fail."
+      },
+      {
+        "text": "The first value was matched to id",
+        "correct": true,
+        "why": "No list means by position, and position one is the identity key."
+      },
+      {
+        "text": "A city has to exist before it can be used",
+        "correct": false,
+        "why": "city is plain text with nothing declared behind it."
+      },
+      {
+        "text": "VALUES is not legal without the names",
+        "correct": false,
+        "why": "It is perfectly legal without them, which is the whole trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8qnnyjp",
+    "version": 1,
+    "section": "changing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "INSERT INTO orders (customer_id) VALUES (3) RETURNING id, ordered_on, status. Two of those three were never sent. Where did they come from?",
+    "hint": "Lesson 3 declared both of them on the table itself.",
+    "choices": [
+      {
+        "text": "From the row inserted just before it",
+        "correct": false,
+        "why": "Nothing carries over between statements; each row is filled on its own."
+      },
+      {
+        "text": "From the driver, which fills the gaps",
+        "correct": false,
+        "why": "A driver sends what you gave it and invents nothing."
+      },
+      {
+        "text": "From what the columns declare",
+        "correct": true,
+        "why": "The identity supplies one and DEFAULT supplies the other."
+      },
+      {
+        "text": "They arrive empty and wait for an update",
+        "correct": false,
+        "why": "They arrive filled, which is what a default is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9vqcy4m",
+    "version": 1,
+    "section": "changing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "DELETE FROM customers WHERE email = 'ana@example.com' is refused, and Ana has three orders. What refused it?",
+    "hint": "Read the last two words of the orders schema in lesson 1.",
+    "choices": [
+      {
+        "text": "The foreign key in orders, declared RESTRICT",
+        "correct": true,
+        "why": "Exactly that, and the DETAIL line names the key still pointing at her."
+      },
+      {
+        "text": "A check constraint on customers",
+        "correct": false,
+        "why": "No check on that table looks at another one; a check cannot."
+      },
+      {
+        "text": "The unique index behind email",
+        "correct": false,
+        "why": "Uniqueness governs what goes in, and says nothing about removal."
+      },
+      {
+        "text": "A trigger written by somebody",
+        "correct": false,
+        "why": "The schema carries it, and no trigger was ever written here."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3s44yye",
+    "version": 1,
+    "section": "changing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "DELETE FROM orders WHERE id = 3 answers DELETE 1, and order_lines held two rows for that order. What is left of those two?",
+    "hint": "order_lines declares ON DELETE CASCADE on its order_id.",
+    "choices": [
+      {
+        "text": "Two, until a later job clears them",
+        "correct": false,
+        "why": "Nothing later is involved; the same statement took them."
+      },
+      {
+        "text": "Neither of them — the cascade followed",
+        "correct": true,
+        "why": "The cascade removes the rows that pointed at the one you named."
+      },
+      {
+        "text": "One, since a cascade goes one level",
+        "correct": false,
+        "why": "A cascade is not counted in levels, and it took both."
+      },
+      {
+        "text": "Two, and the delete ought to have failed",
+        "correct": false,
+        "why": "Failing is RESTRICT, which is the other choice and not this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-14v1y7sr",
+    "version": 1,
+    "section": "changing-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "UPDATE products SET price = price * 1.10 runs against four rows. Which price does each row multiply?",
+    "hint": "The right-hand side of a SET is evaluated per row.",
+    "choices": [
+      {
+        "text": "The average of the four, then shared out",
+        "correct": false,
+        "why": "No aggregate is involved; each row is on its own."
+      },
+      {
+        "text": "Its own price, as it stood beforehand",
+        "correct": true,
+        "why": "One pass, each row computed from the value it already held."
+      },
+      {
+        "text": "The first row's price, reused",
+        "correct": false,
+        "why": "There is no first row in a set, and none is reused."
+      },
+      {
+        "text": "The price it will hold once this ends",
+        "correct": false,
+        "why": "That would be circular, and the engine reads the old value."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3b0zxve",
+    "version": 1,
+    "section": "a-write-does-not-rerun",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "UPDATE products SET price = price * 1.10 is typed without its WHERE, against four rows. What is reported?",
+    "hint": "Ask whether the statement is malformed or simply wrong.",
+    "choices": [
+      {
+        "text": "An error, because UPDATE wants a WHERE",
+        "correct": false,
+        "why": "A WHERE is optional, and leaving it out means every row."
+      },
+      {
+        "text": "A warning that names the missing clause",
+        "correct": false,
+        "why": "Nothing warns; the statement is exactly what was asked for."
+      },
+      {
+        "text": "UPDATE 4, and nothing else",
+        "correct": true,
+        "why": "A true and complete report of what happened."
+      },
+      {
+        "text": "Nothing until the transaction is closed",
+        "correct": false,
+        "why": "The count comes back as soon as the statement finishes."
+      }
+    ]
+  },
+  {
+    "id": "ex-e40gw28e",
+    "version": 1,
+    "section": "a-write-does-not-rerun",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every price went up ten per cent by accident. You correct the statement and run the right one. What is the catalogue then?",
+    "hint": "Ask what the first statement left behind when the second ran.",
+    "choices": [
+      {
+        "text": "Right, since the second overwrote the first",
+        "correct": false,
+        "why": "The second wrote one row; it did not revisit the other three."
+      },
+      {
+        "text": "Ten per cent high, with the correction on top of it",
+        "correct": true,
+        "why": "Two mistakes where a SELECT would have left none."
+      },
+      {
+        "text": "Back at the old prices, restored by the fix",
+        "correct": false,
+        "why": "Nothing here restores; a write does not rerun."
+      },
+      {
+        "text": "Unchanged, because the first one was faulty",
+        "correct": false,
+        "why": "The first one was valid SQL and it took effect."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyr1jc68",
+    "version": 1,
+    "section": "a-write-does-not-rerun",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does running the same condition as a SELECT, before the UPDATE, actually buy you?",
+    "hint": "It is about the condition, and not about the change.",
+    "choices": [
+      {
+        "text": "It warms the cache, so the write is quicker",
+        "correct": false,
+        "why": "Any gain there is noise, and is not why anybody does it."
+      },
+      {
+        "text": "It holds the rows so nobody else moves them",
+        "correct": false,
+        "why": "A plain SELECT takes no lock that would do that."
+      },
+      {
+        "text": "You see which rows the condition matches",
+        "correct": true,
+        "why": "And you see it while the table is still untouched."
+      },
+      {
+        "text": "It keeps the old values for a rollback",
+        "correct": false,
+        "why": "A rollback needs a transaction, which is the next section."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkjvsfyw",
+    "version": 1,
+    "section": "a-write-does-not-rerun",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly job has to record the rows it changed, and not merely how many. What gives it those?",
+    "hint": "One of these hands back the rows themselves.",
+    "choices": [
+      {
+        "text": "RETURNING, with the rows as they ended up",
+        "correct": true,
+        "why": "One statement, one pass, and the rows after the change."
+      },
+      {
+        "text": "The count, read back from the driver",
+        "correct": false,
+        "why": "The count says how many and never says which."
+      },
+      {
+        "text": "A SELECT afterwards on the same condition",
+        "correct": false,
+        "why": "After the update the condition no longer matches the same rows."
+      },
+      {
+        "text": "The statement log, where one is enabled",
+        "correct": false,
+        "why": "That logs the statement and not the rows it touched."
+      }
+    ]
+  },
+  {
+    "id": "ex-ah6p7vjr",
+    "version": 1,
+    "section": "a-write-does-not-rerun",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same job also runs on MySQL, where RETURNING does not exist at all. What does it have there?",
+    "hint": "Lesson 12 is where the differences between engines live.",
+    "choices": [
+      {
+        "text": "A temporary table the server fills",
+        "correct": false,
+        "why": "Nothing fills one for you; that would be yours to write."
+      },
+      {
+        "text": "The same clause under another name",
+        "correct": false,
+        "why": "MariaDB has it for two statements; MySQL has nothing of the kind."
+      },
+      {
+        "text": "How many rows the statement changed",
+        "correct": true,
+        "why": "Which is what you have, and why the count is worth reading."
+      },
+      {
+        "text": "Nothing, so the job cannot be written",
+        "correct": false,
+        "why": "It can, with a narrower record of what it did."
+      }
+    ]
   }
 ]
