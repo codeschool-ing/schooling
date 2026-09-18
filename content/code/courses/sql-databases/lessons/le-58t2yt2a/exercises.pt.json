@@ -1178,5 +1178,250 @@
       "Voltar mais tarde e conferir se ele ainda está na lista dos usados"
     ],
     "trap": "A troca comum é acrescentar o índice antes de medir — que é acrescentá-lo porque parece provável que ajude, e a aula inteira é um argumento contra isso."
+  },
+  "ex-gkvrkdvk": {
+    "prompt": "Uma migração que cria um índice único passa numa homologação vazia e falha em produção. O que deveria ter vindo antes?",
+    "hint": "O comando está certo. Algo nas linhas não está.",
+    "choices": [
+      {
+        "text": "As duplicatas deveriam ter sido achadas e decididas",
+        "why": "Um agrupamento com contagem acima de um as lista, e o que fazer com elas é uma decisão, não um passo de migração."
+      },
+      {
+        "text": "O índice deveria ter sido criado sem bloquear escritas",
+        "why": "Vale fazer e não tem relação: teria falhado com a mesma certeza, mais devagar."
+      },
+      {
+        "text": "A homologação deveria ter recebido as mesmas estatísticas",
+        "why": "Estatísticas guiam um plano e não decidem se uma regra vale."
+      },
+      {
+        "text": "A coluna deveria ter sido declarada não nula",
+        "why": "Valores vazios são justamente o que um índice único deixa passar várias vezes."
+      }
+    ]
+  },
+  "ex-v97e73ha": {
+    "prompt": "Existe um índice em `jobs (created_at) WHERE status = 'pending'`, e a consulta da aplicação diz `WHERE status = $1 AND created_at < …`. O índice nunca é usado. Por quê?",
+    "hint": "Pergunte quando o plano é feito, e o que se sabe naquele momento.",
+    "choices": [
+      {
+        "text": "Um parâmetro não pode ser comparado com coluna de texto",
+        "why": "Pode; essa comparação é comum e funciona."
+      },
+      {
+        "text": "Índices parciais só servem consultas sem parâmetro nenhum",
+        "why": "Um parâmetro em outro lugar da consulta não atrapalha; é este que importa."
+      },
+      {
+        "text": "Nada prova a condição com o valor desconhecido",
+        "why": "O planejador precisa mostrar que a consulta pede um subconjunto das linhas indexadas, e não consegue quando o valor chega depois."
+      },
+      {
+        "text": "O índice está inválido e nunca foi terminado",
+        "why": "Vale conferir depois de uma construção que falha, e isso falharia para toda consulta em vez desta."
+      }
+    ]
+  },
+  "ex-5g7z9d4e": {
+    "prompt": "Uma coluna precisa permitir no máximo uma linha sem valor, e uma declaração `UNIQUE` deixa várias passarem. O que diz o contrário?",
+    "hint": "Uma expressão acrescentada ao índice, sobre como ele trata as ausentes.",
+    "choices": [
+      {
+        "text": "`NULLS NOT DISTINCT` no índice",
+        "why": "Ela manda o índice tratar duas ausências como iguais, que é o oposto da regra de sempre."
+      },
+      {
+        "text": "Declarar a coluna `NOT NULL`",
+        "why": "Isso não permite nenhuma, e a pergunta pediu uma."
+      },
+      {
+        "text": "Uma checagem de que a coluna não está vazia",
+        "why": "Mesmo efeito da anterior, por outro caminho."
+      },
+      {
+        "text": "Um índice parcial sobre as linhas que têm valor",
+        "why": "Isso indexa as outras e não diz nada sobre quantas vazias pode haver."
+      }
+    ]
+  },
+  "ex-0b5zmbxf": {
+    "prompt": "No MySQL com InnoDB, uma chave primária larga custa caro duas vezes. Onde cai o segundo custo?",
+    "hint": "Pergunte o que uma entrada secundária guarda, e o que acontece depois de lê-la.",
+    "choices": [
+      {
+        "text": "Ela é copiada para todo índice secundário",
+        "why": "Esse é o primeiro custo, e a pergunta é sobre o outro."
+      },
+      {
+        "text": "A busca secundária desce uma segunda árvore",
+        "why": "A entrada devolve uma chave e não uma localização, então a linha é achada percorrendo o índice agrupado."
+      },
+      {
+        "text": "A tabela tem que ser reescrita sempre que cresce",
+        "why": "Nada sobre a largura da chave força uma reescrita."
+      },
+      {
+        "text": "A unicidade dela é conferida duas vezes a cada inserção",
+        "why": "É conferida uma vez, na estrutura que guarda a tabela."
+      }
+    ]
+  },
+  "ex-vs9jhj2f": {
+    "prompt": "\"Dois usuários que não foram apagados não podem dividir um email, seja qual for a caixa em que digitaram.\" Que comando único diz isso?",
+    "hint": "Duas ferramentas desta aula numa linha.",
+    "choices": [
+      {
+        "text": "Uma restrição de unicidade sobre a coluna normalizada",
+        "why": "Uma restrição não aceita expressão nem condição, e isto precisa das duas."
+      },
+      {
+        "text": "Um índice único na coluna normalizada, só nas vivas",
+        "why": "Uma expressão para a caixa e uma condição para os apagados, num objeto que o banco faz valer."
+      },
+      {
+        "text": "Uma checagem de que nenhuma outra linha tem o mesmo email",
+        "why": "Uma checagem enxerga uma linha e não consegue contar outras."
+      },
+      {
+        "text": "Um gatilho que procura um igual antes de cada inserção",
+        "why": "Olhar-e-então-escrever é a forma por onde dois cadastros simultâneos passam direto."
+      }
+    ]
+  },
+  "ex-z3mb2zw9": {
+    "prompt": "Um índice grande tem que sair de uma tabela movimentada sem bloquear as escritas. O que você escreve?",
+    "hint": "A mesma palavra que torna uma construção não bloqueante.",
+    "choices": [
+      {
+        "text": "`DROP INDEX CONCURRENTLY`",
+        "why": "Remover também toma bloqueio, e tem a mesma escrita não bloqueante com as mesmas restrições."
+      },
+      {
+        "text": "`DROP INDEX` dentro de uma transação",
+        "why": "Uma transação não suaviza o bloqueio, e a forma não bloqueante não roda dentro de uma."
+      },
+      {
+        "text": "`REINDEX` e depois remover",
+        "why": "Isso reconstrói justamente o que você está removendo."
+      },
+      {
+        "text": "Marcá-lo como inválido e deixá-lo lá",
+        "why": "Um índice inválido continua sendo mantido a cada escrita, que é o custo que você queria tirar."
+      }
+    ]
+  },
+  "ex-pf6dwk6c": {
+    "prompt": "Uma construção de índice não bloqueante está rodando há seis horas numa tabela que leva vinte minutos para ser varrida duas vezes. O que a está segurando?",
+    "hint": "Ela precisa saber que nada mais antigo que ela ainda está olhando.",
+    "choices": [
+      {
+        "text": "As escritas que chegam durante a construção",
+        "why": "Ela foi feita para aceitá-las; é para isso que a forma existe."
+      },
+      {
+        "text": "Uma transação mais antiga que não terminou",
+        "why": "Ela espera toda transação mais antiga acabar, então uma deixada aberta a segura sem prazo."
+      },
+      {
+        "text": "Um bloqueio do coletor de estatísticas",
+        "why": "Colher estatísticas não toma bloqueio que trave isso."
+      },
+      {
+        "text": "A segunda passada, que é sempre muito mais lenta",
+        "why": "Duas passadas é cerca do dobro do trabalho, não dezoito vezes."
+      }
+    ]
+  },
+  "ex-yapjf110": {
+    "prompt": "`WHERE active` casa com seiscentas mil de um milhão de linhas, e um índice comum nela não rende nada. O que rende?",
+    "hint": "Pergunte qual dos dois valores alguém realmente procura.",
+    "choices": [
+      {
+        "text": "Um índice de espalhamento, que é menor",
+        "why": "Tamanho não é a dificuldade; continua não havendo um conjunto pequeno de linhas para onde saltar."
+      },
+      {
+        "text": "Um índice restrito ao valor raro",
+        "why": "Ele é seletivo por construção, e as escritas das outras linhas nunca o tocam."
+      },
+      {
+        "text": "Um índice composto com a coluna na frente",
+        "why": "Liderar por uma coluna de dois valores deixa a mesma meia mil indivisa."
+      },
+      {
+        "text": "Um índice de expressão sobre a mesma coluna",
+        "why": "A expressão teria os mesmos dois valores da coluna."
+      }
+    ]
+  },
+  "ex-473zfzjb": {
+    "prompt": "Um time de produto pede uma busca que ache um pedaço de texto em qualquer posição de um nome, em um milhão de linhas, e o banco é SQLite. O que você diz a eles?",
+    "hint": "Pergunte quais tipos de índice aquele motor tem.",
+    "choices": [
+      {
+        "text": "Criar um índice de trigramas, como no PostgreSQL",
+        "why": "Aquela extensão é de outro motor e não tem equivalente aqui."
+      },
+      {
+        "text": "Não há índice para isso aqui",
+        "why": "A lista ali tem uma entrada só, e busca textual chega como módulo separado em vez de tipo de índice."
+      },
+      {
+        "text": "Normalizar a coluna e indexar o resultado",
+        "why": "Isso resolve caixa e deixa o curinga inicial exatamente onde estava."
+      },
+      {
+        "text": "Declarar a coluna única para que ela seja indexada",
+        "why": "Uma cópia ordenada é ordenada pelo começo do valor, seja quem for que a criou."
+      }
+    ]
+  },
+  "ex-gx1x9ec1": {
+    "prompt": "Um índice pode ser construído sobre apenas algumas linhas de uma tabela, escolhidas por uma condição escrita dentro dele. Escreva a palavra para esse tipo.",
+    "hint": "É a ferramenta para uma coluna cujo valor interessante é raro.",
+    "blanks": [
+      {
+        "accept": [
+          "parcial",
+          "partial"
+        ]
+      }
+    ]
+  },
+  "ex-f9yw3acy": {
+    "prompt": "Uma construção não bloqueante que falha deixa algo para trás: presente no catálogo, mantido a cada escrita, usado por nada. Escreva a palavra com que o catálogo o marca.",
+    "hint": "O oposto dela é o que uma construção terminada é.",
+    "blanks": [
+      {
+        "accept": [
+          "inválido",
+          "invalido",
+          "invalid"
+        ]
+      }
+    ]
+  },
+  "ex-sp8b42dx": {
+    "prompt": "O índice existe e o plano lê a tabela inteira assim mesmo. Ligue cada circunstância ao que fazer a respeito.",
+    "hint": "Uma é sobre a estimativa, uma sobre a forma da condição, uma sobre quantas linhas casam.",
+    "pairs": [
+      {
+        "left": "Aconteceu na manhã seguinte a uma carga em massa",
+        "right": "Recolher as estatísticas e olhar de novo"
+      },
+      {
+        "left": "A condição embrulha a coluna numa função",
+        "right": "Indexar a expressão, ou reescrever como faixa"
+      },
+      {
+        "left": "A coluna tem dois valores e a maioria das linhas tem este",
+        "right": "Construir um só sobre o valor raro"
+      }
+    ],
+    "right_distractors": [
+      "Reconstruir o índice para tirar as entradas mortas",
+      "Acrescentar a coluna à chave primária"
+    ]
   }
 }

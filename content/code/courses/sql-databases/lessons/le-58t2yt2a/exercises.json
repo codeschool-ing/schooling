@@ -1713,5 +1713,359 @@
       "Come back later and check whether it is still on the used list"
     ],
     "trap": "The common swap is adding the index before measuring — which is adding it because it seems likely to help, and the whole lesson is an argument against that."
+  },
+  {
+    "id": "ex-gkvrkdvk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration that adds a unique index passes on an empty staging database and fails in production. What should have happened first?",
+    "hint": "The statement is fine. Something about the rows is not.",
+    "choices": [
+      {
+        "text": "The duplicates should have been found and decided about",
+        "correct": true,
+        "why": "A grouping with a count above one lists them, and what to do with them is a decision, not a migration step."
+      },
+      {
+        "text": "The index should have been built without blocking writes",
+        "correct": false,
+        "why": "Worth doing and unrelated: it would have failed just as certainly, more slowly."
+      },
+      {
+        "text": "Staging should have been given the same statistics",
+        "correct": false,
+        "why": "Statistics steer a plan and decide nothing about whether a rule holds."
+      },
+      {
+        "text": "The column should have been made not null",
+        "correct": false,
+        "why": "Empty values are the one thing a unique index does let through several times."
+      }
+    ]
+  },
+  {
+    "id": "ex-v97e73ha",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "There is an index on `jobs (created_at) WHERE status = 'pending'`, and the application's query says `WHERE status = $1 AND created_at < …`. The index is never used. Why?",
+    "hint": "Ask when the plan is made, and what is known at that moment.",
+    "choices": [
+      {
+        "text": "A parameter cannot be compared with a text column",
+        "correct": false,
+        "why": "It can; that comparison is ordinary and works."
+      },
+      {
+        "text": "Partial indexes only serve queries with no parameters at all",
+        "correct": false,
+        "why": "A parameter elsewhere in the query is fine; it is this one that matters."
+      },
+      {
+        "text": "Nothing proves the condition holds while the value is unknown",
+        "correct": true,
+        "why": "The planner has to show the query asks for a subset of the indexed rows, and it cannot when the value arrives later."
+      },
+      {
+        "text": "The index is invalid and was never finished",
+        "correct": false,
+        "why": "Worth checking after a failed build, and it would fail for every query rather than this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-5g7z9d4e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column must allow at most one row with no value in it, and a `UNIQUE` declaration lets several through. What says otherwise?",
+    "hint": "A phrase added to the index, about how it treats the absent ones.",
+    "choices": [
+      {
+        "text": "`NULLS NOT DISTINCT` on the index",
+        "correct": true,
+        "why": "It tells the index to treat two absences as equal, which is the opposite of the usual rule."
+      },
+      {
+        "text": "Declaring the column `NOT NULL`",
+        "correct": false,
+        "why": "That allows none at all, and the question asked for one."
+      },
+      {
+        "text": "A check that the column is not empty",
+        "correct": false,
+        "why": "Same effect as the last one, by another route."
+      },
+      {
+        "text": "A partial index on the rows that have a value",
+        "correct": false,
+        "why": "That indexes the others and says nothing about how many empties there may be."
+      }
+    ]
+  },
+  {
+    "id": "ex-0b5zmbxf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On MySQL with InnoDB, a wide primary key is expensive twice over. Where does the second cost land?",
+    "hint": "Ask what a secondary entry holds, and what happens after it is read.",
+    "choices": [
+      {
+        "text": "It is copied into every secondary index",
+        "correct": false,
+        "why": "That is the first cost, and the question asks for the other."
+      },
+      {
+        "text": "A secondary lookup then descends a second tree",
+        "correct": true,
+        "why": "The entry hands back a key rather than a location, so the row is found by walking the clustered index."
+      },
+      {
+        "text": "The table has to be rewritten whenever it grows",
+        "correct": false,
+        "why": "Nothing about key width forces a rewrite."
+      },
+      {
+        "text": "Its uniqueness is checked twice on every insert",
+        "correct": false,
+        "why": "It is checked once, in the structure that holds the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-vs9jhj2f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "\"No two users who have not been deleted may share an email, whatever case they typed it in.\" Which one statement says that?",
+    "hint": "Two of this lesson's tools in one line.",
+    "choices": [
+      {
+        "text": "A unique constraint on the folded column",
+        "correct": false,
+        "why": "A constraint takes neither an expression nor a condition, which is what this needs both of."
+      },
+      {
+        "text": "A unique index on the folded column, over the live rows",
+        "correct": true,
+        "why": "An expression for the case and a condition for the deleted, in one object the database enforces."
+      },
+      {
+        "text": "A check that no other row has the same email",
+        "correct": false,
+        "why": "A check sees one row and cannot count others."
+      },
+      {
+        "text": "A trigger that looks for a match before each insert",
+        "correct": false,
+        "why": "Look-then-write is the shape two simultaneous signups walk straight through."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3mb2zw9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A large index has to come off a busy table without blocking the writes. What do you write?",
+    "hint": "The same word that makes a build non-blocking.",
+    "choices": [
+      {
+        "text": "`DROP INDEX CONCURRENTLY`",
+        "correct": true,
+        "why": "Removal takes a lock too, and it has the same non-blocking spelling with the same restrictions."
+      },
+      {
+        "text": "`DROP INDEX` inside a transaction",
+        "correct": false,
+        "why": "A transaction does not soften the lock, and the non-blocking form cannot run in one."
+      },
+      {
+        "text": "`REINDEX` and then drop it",
+        "correct": false,
+        "why": "That rebuilds the thing you are removing."
+      },
+      {
+        "text": "Mark it invalid and leave it in place",
+        "correct": false,
+        "why": "An invalid index is still maintained on every write, which is the cost you were removing."
+      }
+    ]
+  },
+  {
+    "id": "ex-pf6dwk6c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A non-blocking index build has been running for six hours on a table that takes twenty minutes to scan twice. What is holding it?",
+    "hint": "It has to know that nothing older than it is still looking.",
+    "choices": [
+      {
+        "text": "The writes arriving during the build",
+        "correct": false,
+        "why": "It is built to accept those; that is what the form is for."
+      },
+      {
+        "text": "An older transaction that has not ended",
+        "correct": true,
+        "why": "It waits for every older transaction to finish, so one left open holds it indefinitely."
+      },
+      {
+        "text": "A lock held by the statistics collector",
+        "correct": false,
+        "why": "Gathering statistics takes no lock that would block this."
+      },
+      {
+        "text": "The second pass, which is always much slower",
+        "correct": false,
+        "why": "Two passes is roughly twice the work, not eighteen times."
+      }
+    ]
+  },
+  {
+    "id": "ex-yapjf110",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WHERE active` matches six hundred thousand of a million rows, and an ordinary index on it earns nothing. What earns something?",
+    "hint": "Ask which of the two values anybody actually searches for.",
+    "choices": [
+      {
+        "text": "A hash index, which is smaller",
+        "correct": false,
+        "why": "Size is not the difficulty; there is still no small set of rows to jump to."
+      },
+      {
+        "text": "An index restricted to the rare value",
+        "correct": true,
+        "why": "It is selective by construction, and the writes of the other rows never touch it."
+      },
+      {
+        "text": "A composite index with the column first",
+        "correct": false,
+        "why": "Leading on a column with two values leaves the same undivided half a million."
+      },
+      {
+        "text": "An expression index over the same column",
+        "correct": false,
+        "why": "The expression would have the same two values as the column."
+      }
+    ]
+  },
+  {
+    "id": "ex-473zfzjb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A product team asks for a search box that finds a substring anywhere in a name, on a million rows, and the database is SQLite. What do you tell them?",
+    "hint": "Ask which index types that engine has at all.",
+    "choices": [
+      {
+        "text": "Add a trigram index, as on PostgreSQL",
+        "correct": false,
+        "why": "That extension belongs to another engine and has no counterpart here."
+      },
+      {
+        "text": "There is no index for it here",
+        "correct": true,
+        "why": "The list there is one entry long, and full-text search arrives as a separate module rather than an index."
+      },
+      {
+        "text": "Fold the column and index the result",
+        "correct": false,
+        "why": "That fixes case and leaves the leading wildcard exactly where it was."
+      },
+      {
+        "text": "Declare the column unique so it is indexed",
+        "correct": false,
+        "why": "A sorted copy is sorted from the start of the value, whatever put it there."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx1x9ec1",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index may be built over only some of a table's rows, chosen by a condition written into it. Write the one word for that kind.",
+    "hint": "It is the tool for a column whose interesting value is rare.",
+    "blanks": [
+      {
+        "accept": [
+          "partial"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f9yw3acy",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A non-blocking build that fails leaves something behind: present in the catalogue, maintained on every write, used by nothing. Write the one word the catalogue marks it with.",
+    "hint": "Its opposite is what a finished one is.",
+    "blanks": [
+      {
+        "accept": [
+          "invalid"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sp8b42dx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The index exists and the plan reads the whole table anyway. Match each circumstance to what to do about it.",
+    "hint": "One is about the estimate, one about the condition's shape, one about how many rows match.",
+    "pairs": [
+      {
+        "left": "It happened the morning after a bulk import",
+        "right": "Recollect the statistics and look again"
+      },
+      {
+        "left": "The condition wraps the column in a function",
+        "right": "Index the expression, or rewrite it as a range"
+      },
+      {
+        "left": "The column holds two values and most rows have this one",
+        "right": "Build one over the rare value only"
+      }
+    ],
+    "right_distractors": [
+      "Rebuild the index to remove its dead entries",
+      "Add the column to the primary key"
+    ]
   }
 ]
