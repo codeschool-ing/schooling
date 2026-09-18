@@ -1,0 +1,1085 @@
+{
+  "ex-qnfqzdmg": {
+    "prompt": "O pg_stat_statements mostra WHERE email = $1 em vez do endereço que foi buscado. Por quê?",
+    "hint": "Pergunte o que uma linha dessa tabela representa.",
+    "choices": [
+      {
+        "text": "São dados pessoais",
+        "why": "Nada é ocultado por privacidade; o literal some por outra razão."
+      },
+      {
+        "text": "A aplicação mandou um parâmetro",
+        "why": "O servidor viu; a instrução foi normalizada depois para que buscas por qualquer endereço dividam uma linha."
+      },
+      {
+        "text": "Quatrocentos endereços são uma consulta",
+        "why": "Que é o que você quer quando a pergunta é o que a aplicação está fazendo."
+      },
+      {
+        "text": "Ela registra instruções preparadas",
+        "why": "Ela vê toda instrução, preparada ou não, e normaliza os literais de cada uma."
+      }
+    ]
+  },
+  "ex-rznxsf09": {
+    "prompt": "Uma consulta rodou 30 vezes a 29,7 ms cada; outra rodou uma vez a 114,7 ms. Qual custou mais ao servidor?",
+    "hint": "Multiplique antes de comparar.",
+    "choices": [
+      {
+        "text": "A única: a mais lenta por chamada",
+        "why": "Mais lenta por chamada é a lista da média, e ela responde outra pergunta."
+      },
+      {
+        "text": "A de trinta: 890 ms contra 115",
+        "why": "Ordene pelo total para achar em que o servidor está gastando o tempo."
+      },
+      {
+        "text": "Nenhuma, as duas abaixo de um segundo",
+        "why": "O limiar do log serve para pegar a lenta ocasional; não diz nada sobre custo."
+      },
+      {
+        "text": "A única; ela trava as outras",
+        "why": "Uma leitura não bloqueia outra leitura; o custo é o próprio tempo, e ele soma."
+      }
+    ]
+  },
+  "ex-52at2zaa": {
+    "prompt": "Uma consulta é rápida mil vezes por dia e levou dez segundos uma vez, para um cliente. Qual ferramenta diz qual cliente?",
+    "hint": "Uma das duas ferramentas guarda os literais e a outra os joga fora.",
+    "choices": [
+      {
+        "text": "O log, que escreve os literais",
+        "why": "log_min_duration_statement, e a rodada de dez segundos está lá com o valor do cliente."
+      },
+      {
+        "text": "O parâmetro mais lento",
+        "why": "As linhas dele são normalizadas; o valor é exatamente o que ele não guarda."
+      },
+      {
+        "text": "EXPLAIN ANALYZE na consulta",
+        "why": "Um plano para um marcador é um plano para ninguém em particular; você precisa do valor para rodar com ele."
+      },
+      {
+        "text": "A média no pg_stat_statements",
+        "why": "Dez segundos sobre mil rodadas rápidas movem a média em dez milissegundos, e não dizem nada sobre quem."
+      }
+    ]
+  },
+  "ex-p97s5bee": {
+    "prompt": "A lista de tempo total é liderada por uma busca de 0,1 ms rodada um milhão de vezes; a de média, por um relatório de 2 s rodado duas vezes por dia. O suporte está cheio de reclamações de espera. Qual você ataca primeiro?",
+    "hint": "Pergunte em qual lista mora a experiência de uma pessoa.",
+    "choices": [
+      {
+        "text": "A busca; ela custa mais ao servidor",
+        "why": "Verdade, e é a lista a trabalhar quando a máquina está ocupada; ninguém está reclamando da máquina."
+      },
+      {
+        "text": "Os dois de uma vez; as listas discordam",
+        "why": "Elas discordam mais vezes do que concordam; é por isso que há duas, e por isso você escolhe pela pergunta."
+      },
+      {
+        "text": "Nenhum, até o log confirmar qual",
+        "why": "Um relatório de 2 s já está acima de qualquer limiar razoável; o log acrescenta os literais, não a decisão."
+      },
+      {
+        "text": "O relatório; há gente presa nele",
+        "why": "Duas listas, duas perguntas; as reclamações respondem qual pergunta está sendo feita hoje."
+      }
+    ]
+  },
+  "ex-7c4m9v81": {
+    "prompt": "O pg_stat_statements precisa ser nomeado em ___ antes de o servidor subir, ou não registra nada.",
+    "hint": "Uma configuração, e é a razão de a extensão não poder simplesmente ser criada num servidor rodando.",
+    "blanks": [
+      {
+        "accept": [
+          "shared_preload_libraries"
+        ]
+      }
+    ]
+  },
+  "ex-06zb55mc": {
+    "prompt": "O que o EXPLAIN, sem ANALYZE, faz com a consulta que você lhe dá?",
+    "hint": "Um verbo, e não é \"rodar\".",
+    "choices": [
+      {
+        "text": "Ele planeja; nada roda",
+        "why": "Todo número da saída é uma previsão, que é o que torna o ANALYZE necessário."
+      },
+      {
+        "text": "Ele roda e cronometra cada passo",
+        "why": "Isso é EXPLAIN ANALYZE; o EXPLAIN puro não executa nada."
+      },
+      {
+        "text": "Ele roda sem devolver linhas",
+        "why": "Linhas também não voltam sob ANALYZE, e o EXPLAIN puro não roda a consulta de jeito nenhum."
+      },
+      {
+        "text": "Ele confere a sintaxe",
+        "why": "Ele vai além: decide como cada tabela seria lida e juntada."
+      }
+    ]
+  },
+  "ex-kmkxnbwv": {
+    "prompt": "cost=0.00..19966.00 num Seq Scan. O que são os dois números?",
+    "hint": "Nenhum é tempo, e eles se leem como um começo e um fim.",
+    "choices": [
+      {
+        "text": "O tempo mínimo e o máximo",
+        "why": "Custo está na unidade do próprio planejador, em que uma leitura sequencial de página vale 1; nada é relógio."
+      },
+      {
+        "text": "O custo do índice e o da tabela",
+        "why": "Não há índice num Seq Scan; o par descreve o começo e o fim de um nó."
+      },
+      {
+        "text": "A estimativa e a medição",
+        "why": "Os dois são estimativas; medições aparecem num segundo grupo só sob ANALYZE."
+      },
+      {
+        "text": "O custo da primeira linha e o da última",
+        "why": "Uma varredura começa na hora e termina quando a tabela acaba; um index scan paga um pouco para começar."
+      }
+    ]
+  },
+  "ex-v4wn2gnp": {
+    "prompt": "Qual é a diferença entre uma linha Filter e uma linha Index Cond sob um nó?",
+    "hint": "Uma delas nomeia uma condição que o índice respondeu; pergunte quando a outra é aplicada.",
+    "choices": [
+      {
+        "text": "Uma vem do WHERE, a outra do JOIN",
+        "why": "As duas vêm do WHERE; a diferença é quem as respondeu."
+      },
+      {
+        "text": "O índice respondeu uma das duas",
+        "why": "Uma coluna numa Filter sem nenhuma Index Cond nomeando ela é como \"o índice não é usado\" aparece."
+      },
+      {
+        "text": "Uma é estimada, a outra medida",
+        "why": "As duas são condições, não números; a estimativa e o real ficam nos parênteses."
+      },
+      {
+        "text": "Uma roda depois da ordenação, a outra antes",
+        "why": "Nenhuma tem a ver com ordenação; as duas pertencem à varredura sob a qual estão."
+      }
+    ]
+  },
+  "ex-ffvv3eq4": {
+    "prompt": "rows=11 num Seq Scan de uma tabela de um milhão de linhas. O que é onze?",
+    "hint": "Não é o que o nó lê.",
+    "choices": [
+      {
+        "text": "As linhas lidas antes de filtrar",
+        "why": "Ele lê o milhão; onze é o que ele espera manter."
+      },
+      {
+        "text": "As páginas que a varredura vai tocar",
+        "why": "Páginas estão no custo e, sob BUFFERS, numa linha própria."
+      },
+      {
+        "text": "As linhas que o planejador espera na saída",
+        "why": "Uma estimativa, das estatísticas; compará-la com o real é o hábito que a aula constrói."
+      },
+      {
+        "text": "As linhas que de fato voltaram",
+        "why": "Nada rodou; a contagem real aparece num segundo grupo sob ANALYZE."
+      }
+    ]
+  },
+  "ex-q0mfs500": {
+    "prompt": "Num plano indentado, em qual nó o executor trabalha primeiro?",
+    "hint": "Pense em que direção as linhas fluem.",
+    "choices": [
+      {
+        "text": "A raiz, chamando cada filho",
+        "why": "A raiz pede linhas aos filhos, e não produz nada até eles produzirem."
+      },
+      {
+        "text": "A primeira linha impressa",
+        "why": "A primeira linha impressa é a raiz, que termina por último."
+      },
+      {
+        "text": "Os nós juntos, cada um em paralelo",
+        "why": "Planos paralelos existem e são marcados com Gather; uma árvore comum roda o trabalho de um nó dentro do de outro."
+      },
+      {
+        "text": "O filho mais fundo, as linhas fluindo para cima",
+        "why": "Cada nó puxa dos filhos e empurra para o pai, então o fundo do ramo mais profundo roda primeiro."
+      }
+    ]
+  },
+  "ex-ftctf85c": {
+    "prompt": "Uma junção de um cliente mostra Seq Scan on orders com rows=1000000 sob um Hash Join. O que o plano diz que o SQL não disse?",
+    "hint": "Treze pedidos eram desejados. Pergunte quantos foram lidos para achá-los.",
+    "choices": [
+      {
+        "text": "A chave estrangeira não está indexada",
+        "why": "O índice de chave estrangeira que falta, da aula 9, visto do lado do plano; nada no SQL está errado."
+      },
+      {
+        "text": "A condição da junção está invertida",
+        "why": "Uma condição de junção não tem direção; o planejador a lê dos dois jeitos."
+      },
+      {
+        "text": "O índice de email está faltando",
+        "why": "Ele está lá e foi usado: o Index Scan sob o Hash achou o único cliente."
+      },
+      {
+        "text": "Um hash join lê os dois lados inteiros",
+        "why": "Ele lê o lado sondado inteiro quando nada o estreita; com o índice, o planejador escolhe um nested loop."
+      }
+    ]
+  },
+  "ex-s9acmgvr": {
+    "prompt": "EXPLAIN ANALYZE DELETE FROM orders WHERE placed_at < DATE '2020-01-01'. O que acontece?",
+    "hint": "A única palavra de cautela da seção, e é a primeira coisa que ela diz.",
+    "choices": [
+      {
+        "text": "As linhas ficam",
+        "why": "O EXPLAIN puro não escreve; ANALYZE roda a instrução, e um DELETE que roda apaga."
+      },
+      {
+        "text": "É simulado numa cópia",
+        "why": "Não há cópia; é a tabela, e as linhas se foram."
+      },
+      {
+        "text": "As linhas são apagadas de verdade",
+        "why": "ANALYZE executa o que receber, e uma transação é a única coisa entre você e o resultado."
+      },
+      {
+        "text": "É recusado para um DELETE",
+        "why": "É aceito, que é exatamente o problema."
+      }
+    ]
+  },
+  "ex-4wmebdgx": {
+    "prompt": "(actual time=0.002..0.003 rows=3 loops=2984). O que rows=3 quer dizer?",
+    "hint": "Todo número dessa linha é por alguma coisa.",
+    "choices": [
+      {
+        "text": "Três por volta, então uns 9000",
+        "why": "Multiplique antes de acreditar num número por volta; o tempo nessa linha também é por volta."
+      },
+      {
+        "text": "Três no total, na rodada inteira",
+        "why": "Isso seriam 2984 voltas para três linhas; a contagem é por execução do nó."
+      },
+      {
+        "text": "Três na última volta do nó",
+        "why": "É uma média entre as voltas, não a última."
+      },
+      {
+        "text": "Três por milissegundo de execução",
+        "why": "O tempo e as linhas são medições separadas; nenhuma é taxa."
+      }
+    ]
+  },
+  "ex-rbvqz9zf": {
+    "prompt": "Buffers: shared hit=7466 e nenhum read= na linha. O que isso diz?",
+    "hint": "Duas palavras, hit e read, e uma delas está faltando.",
+    "choices": [
+      {
+        "text": "7466 linhas vieram do cache",
+        "why": "Buffers contam páginas de 8 kB, não linhas."
+      },
+      {
+        "text": "Toda página já estava em memória",
+        "why": "Uma entrada read= seria o disco; a ausência dela é a diferença entre lento por trabalho e lento por disco."
+      },
+      {
+        "text": "A tabela foi lida 7466 vezes",
+        "why": "Uma vez; 7466 é quantas páginas ela tem."
+      },
+      {
+        "text": "7466 páginas foram escritas em disco",
+        "why": "Um SELECT não escreve nada; hit quer dizer encontrada no cache compartilhado."
+      }
+    ]
+  },
+  "ex-qhme6j43": {
+    "prompt": "O mesmo EXPLAIN ANALYZE relata 80 ms na primeira vez e 47 ms na segunda, sem nada mudar. O que aconteceu?",
+    "hint": "Pergunte o que a primeira rodada deixou para a segunda.",
+    "choices": [
+      {
+        "text": "O planejador aprendeu e replanejou",
+        "why": "O plano foi idêntico; o planejador não guarda memória de execuções."
+      },
+      {
+        "text": "As estatísticas foram renovadas por ela",
+        "why": "Estatísticas mudam com o comando ANALYZE, não com uma consulta sendo executada."
+      },
+      {
+        "text": "A segunda rodada pulou o Filter",
+        "why": "Toda linha foi filtrada de novo; nada no trabalho mudou, só de onde as páginas vieram."
+      },
+      {
+        "text": "A primeira rodada aqueceu o cache",
+        "why": "Rode duas vezes, e compare segundas rodadas ou compare BUFFERS."
+      }
+    ]
+  },
+  "ex-6054tb92": {
+    "prompt": "Um relatório leva quatro minutos e você quer saber por quê. EXPLAIN ou EXPLAIN ANALYZE primeiro, e por quê?",
+    "hint": "Um deles custa o que o relatório custa.",
+    "choices": [
+      {
+        "text": "ANALYZE; um plano sem tempos é inútil",
+        "why": "A forma sozinha muitas vezes nomeia o problema, e não custa nada olhar."
+      },
+      {
+        "text": "EXPLAIN primeiro; é instantâneo",
+        "why": "Recorra ao ANALYZE quando o plano parece bom e a consulta não, porque essa distância é o que só uma medição fecha."
+      },
+      {
+        "text": "EXPLAIN; ANALYZE mandaria as linhas",
+        "why": "ANALYZE não devolve linhas; o que ele custa são os quatro minutos de trabalho no servidor."
+      },
+      {
+        "text": "ANALYZE com TIMING OFF",
+        "why": "TIMING OFF dispensa a sobrecarga do relógio; a consulta ainda roda, pelo tempo que rodar."
+      }
+    ]
+  },
+  "ex-zvffgw2r": {
+    "prompt": "Para manter as contagens de linhas e dispensar a sobrecarga do relógio: EXPLAIN (ANALYZE, ___ OFF).",
+    "hint": "A opção que controla a medição de tempo por nó.",
+    "blanks": [
+      {
+        "accept": [
+          "TIMING"
+        ]
+      }
+    ]
+  },
+  "ex-14tgmttg": {
+    "prompt": "WHERE status = 'paid' casa 60% dos pedidos, existe índice em status, e o plano é um Seq Scan. Isso é um problema a corrigir?",
+    "hint": "O argumento da aula 9 sobre seletividade, com o plano na sua frente.",
+    "choices": [
+      {
+        "text": "Sim; o índice existe e é ignorado",
+        "why": "Ele precificou os dois planos; seguir o índice até a maioria das páginas tocaria todas numa ordem pior."
+      },
+      {
+        "text": "Sim; as estatísticas envelheceram",
+        "why": "A estimativa de 599 900 contra 600 336 reais diz que as estatísticas estão boas."
+      },
+      {
+        "text": "Não; texto não é indexável",
+        "why": "Índices em texto funcionam perfeitamente; o mesmo índice atende às consultas de cancelados e pendentes."
+      },
+      {
+        "text": "Não; sequencial vence os ponteiros",
+        "why": "Um Seq Scan que mantém a maior parte da tabela é o plano certo, e a linha Filter dele não é um achado."
+      }
+    ]
+  },
+  "ex-jz8zb672": {
+    "prompt": "Heap Fetches: 0 num Index Only Scan. O que isso diz?",
+    "hint": "Heap é a palavra do PostgreSQL para o armazenamento da própria tabela.",
+    "choices": [
+      {
+        "text": "Nenhuma linha foi buscada na tabela",
+        "why": "O índice de cobertura da aula 9, funcionando como planejado: o índice respondeu tudo."
+      },
+      {
+        "text": "A tabela está vazia",
+        "why": "Treze linhas voltaram; a tabela simplesmente não foi consultada para elas."
+      },
+      {
+        "text": "O índice está sendo reconstruído agora",
+        "why": "Uma reconstrução não mudaria a forma do plano; essa linha conta visitas à tabela."
+      },
+      {
+        "text": "A varredura não usou heap do processo",
+        "why": "Heap aqui é armazenamento, não a memória do processo."
+      }
+    ]
+  },
+  "ex-xc0wx96z": {
+    "prompt": "Um Bitmap Index Scan relata width=0. Por quê?",
+    "hint": "Pergunte o que esse nó entrega ao nó acima dele.",
+    "choices": [
+      {
+        "text": "O índice não tem colunas para devolver",
+        "why": "Ele tem a coluna indexada; width é sobre o que o nó devolve, e ele não devolve linhas."
+      },
+      {
+        "text": "A estimativa estava errada",
+        "why": "Width é um tamanho médio de linha, e não há linha para medir."
+      },
+      {
+        "text": "Ele devolve páginas, não linhas",
+        "why": "Um bit por página da tabela, ligado onde o índice diz que mora uma linha que casa."
+      },
+      {
+        "text": "width é zero em qualquer varredura por índice",
+        "why": "Um Index Scan relata a largura das linhas que devolve; só o montador do bitmap não devolve nenhuma."
+      }
+    ]
+  },
+  "ex-yw7y9xfh": {
+    "prompt": "Por que um Bitmap Heap Scan carrega uma Recheck Cond?",
+    "hint": "Pergunte o que um bitmap sabe e o que não sabe.",
+    "choices": [
+      {
+        "text": "As linhas podem ter mudado",
+        "why": "Visibilidade é tratada à parte; a reconferência é sobre precisão, não tempo."
+      },
+      {
+        "text": "Um bitmap marca páginas, não linhas",
+        "why": "É também por isso que exact= aparece ao lado de Heap Blocks: aquelas páginas foram marcadas com precisão."
+      },
+      {
+        "text": "O planejador reconfere as estimativas dele",
+        "why": "Estimativas nunca são reexaminadas em execução; a reconferência é uma condição sobre linhas."
+      },
+      {
+        "text": "Recheck é o Filter sob um índice parcial",
+        "why": "Um índice parcial não muda o nome da linha; o bitmap muda."
+      }
+    ]
+  },
+  "ex-b94tqv9h": {
+    "prompt": "Um Index Only Scan numa tabela escrita o dia todo mostra Heap Fetches perto da contagem de linhas. Qual é a correção?",
+    "hint": "Nada na consulta mudou, e a aula 9 nomeou a estrutura que envelheceu.",
+    "choices": [
+      {
+        "text": "Acrescentar as colunas com INCLUDE",
+        "why": "Elas já estão no índice; a busca é para conferir visibilidade, não para obter colunas."
+      },
+      {
+        "text": "REINDEX; o índice inchou",
+        "why": "Inchaço deixa um índice maior; não faz um index-only scan visitar a tabela."
+      },
+      {
+        "text": "Forçar um Bitmap Heap Scan",
+        "why": "Isso buscaria toda linha de propósito, que é o custo que você está tentando remover."
+      },
+      {
+        "text": "VACUUM, pelo mapa de visibilidade",
+        "why": "Um index-only scan numa tabela muito escrita deixa de ser index-only até o vacuum alcançar."
+      }
+    ]
+  },
+  "ex-g7a48tcq": {
+    "prompt": "Ligue cada varredura à situação para a qual ela é a resposta.",
+    "hint": "Pense em quantas linhas a consulta quer e onde elas estão.",
+    "pairs": [
+      {
+        "left": "Seq Scan",
+        "right": "A maior parte da tabela é desejada"
+      },
+      {
+        "left": "Index Scan",
+        "right": "Um punhado de linhas, na ordem do índice"
+      },
+      {
+        "left": "Index Only Scan",
+        "right": "Toda coluna de que a consulta precisa está no índice"
+      },
+      {
+        "left": "Bitmap Heap Scan",
+        "right": "Muitas linhas, buscadas em ordem de página"
+      }
+    ],
+    "right_distractors": [
+      "As linhas são desejadas ordenadas por uma coluna sem índice",
+      "As estatísticas estão desatualizadas"
+    ]
+  },
+  "ex-4n3fhawa": {
+    "prompt": "Um Nested Loop com um index scan no lado interno. Quando esse é o plano certo?",
+    "hint": "Um lado roda uma vez; o outro roda uma vez por linha do primeiro.",
+    "choices": [
+      {
+        "text": "Os dois lados são grandes e nenhum cabe em memória",
+        "why": "Aí o lado interno roda um número grande de vezes; esse é o caso do hash join."
+      },
+      {
+        "text": "Um lado externo pequeno e um lado interno indexado",
+        "why": "Poucas linhas externas, cada uma buscada em tempo constante; os pedidos de um cliente, por exemplo."
+      },
+      {
+        "text": "Nenhum dos lados tem índice na coluna da junção",
+        "why": "Sem índice o lado interno é um Seq Scan por linha externa, que é a forma errada."
+      },
+      {
+        "text": "A coluna da junção já está ordenada nos dois lados",
+        "why": "Esse é o caso do merge join."
+      }
+    ]
+  },
+  "ex-aejpj4er": {
+    "prompt": "Um Nested Loop cujo filho interno é um Seq Scan, com 5000 linhas do lado externo. O que está acontecendo?",
+    "hint": "Conte quantas vezes a tabela interna é lida.",
+    "choices": [
+      {
+        "text": "A tabela interna é lida 5000 vezes",
+        "why": "O achado mais comum numa junção lenta, e o plano nomeia a coluna."
+      },
+      {
+        "text": "Ela é hasheada uma vez e sondada 5000 vezes",
+        "why": "Isso seria um Hash Join; um Nested Loop repete o filho interno."
+      },
+      {
+        "text": "As duas são lidas uma vez e intercaladas",
+        "why": "Essa é a forma do Merge Join, e ela precisa das duas entradas ordenadas."
+      },
+      {
+        "text": "A tabela externa é lida 5000 vezes",
+        "why": "A externa roda uma vez; é a interna que repete, uma vez por linha externa."
+      }
+    ]
+  },
+  "ex-6w381eft": {
+    "prompt": "Um Hash Join relata Batches: 8. O que isso quer dizer?",
+    "hint": "Pergunte o que precisa caber em memória num hash join, e o que acontece quando não cabe.",
+    "choices": [
+      {
+        "text": "A junção rodou em oito workers",
+        "why": "Workers aparecem sob um nó Gather; batches são sobre memória."
+      },
+      {
+        "text": "Oito índices entraram no hash",
+        "why": "Um hash join não usa índice nenhum; o hash é montado a partir de linhas."
+      },
+      {
+        "text": "O hash vazou em oito pedaços",
+        "why": "Ainda um hash join, ainda talvez o plano mais barato, e oito passadas em vez de uma."
+      },
+      {
+        "text": "O lado sondado foi lido 8 vezes",
+        "why": "O lado sondado é lido uma vez; é o lado hasheado que é processado em pedaços."
+      }
+    ]
+  },
+  "ex-pyxhfwjy": {
+    "prompt": "Qual lado de uma junção o planejador escolhe hashear?",
+    "hint": "O hash tem que caber em algum lugar.",
+    "choices": [
+      {
+        "text": "O escrito primeiro no FROM",
+        "why": "A ordem no SQL não é a ordem no plano; o planejador reordena à vontade."
+      },
+      {
+        "text": "O que tem índice na coluna",
+        "why": "Um hash join não usa o índice; isso é assunto do nested loop."
+      },
+      {
+        "text": "O que tem mais linhas",
+        "why": "O contrário: o lado sondado é varrido uma vez seja qual for o tamanho, e o hasheado é o mantido em memória."
+      },
+      {
+        "text": "O que ele estima menor",
+        "why": "Um hash montado do lado errado aponta para uma estimativa errada num dos filhos."
+      }
+    ]
+  },
+  "ex-w51sppz2": {
+    "prompt": "Um plano hasheia uma tabela de um milhão de linhas e a sonda com cem linhas. O que deu errado, e onde você olha?",
+    "hint": "O planejador hasheia o lado que ele acha menor.",
+    "choices": [
+      {
+        "text": "work_mem era pequeno demais",
+        "why": "Memória decide batches, não qual lado é escolhido; cem linhas cabem em qualquer lugar."
+      },
+      {
+        "text": "Uma estimativa; compare rows= nos dois",
+        "why": "O plano fez a coisa certa para os números dele; um dos números está errado por ordens de grandeza."
+      },
+      {
+        "text": "A ordem da junção como escrita no SQL",
+        "why": "O planejador ignora a ordem escrita; nada no SQL decide qual lado é hasheado."
+      },
+      {
+        "text": "O índice do lado pequeno",
+        "why": "Índices não participam da escolha de lados de um hash join."
+      }
+    ]
+  },
+  "ex-ycpbwssa": {
+    "prompt": "loops=3 num nó sob um Gather com Workers Launched: 2. O que é três?",
+    "hint": "Conte os processos.",
+    "choices": [
+      {
+        "text": "O nó rodou três vezes separadas",
+        "why": "Voltas sob um Gather são processos, não repetições."
+      },
+      {
+        "text": "Três tentativas após duas falhas",
+        "why": "Um worker que falha derruba a consulta; nada é repetido."
+      },
+      {
+        "text": "O líder e os dois workers dele",
+        "why": "Um nó sob um Gather relata por worker, e há três processos fazendo o trabalho."
+      },
+      {
+        "text": "Três batches do hash, um para cada",
+        "why": "Batches têm linha própria; loops contam execuções do nó."
+      }
+    ]
+  },
+  "ex-26k1mzc7": {
+    "prompt": "WHERE date(placed_at) = DATE '2025-03-01' estimou 5000 linhas e devolveu 1834. Por que 5000?",
+    "hint": "Pergunte sobre o que o planejador tem estatísticas, e sobre o que não tem.",
+    "choices": [
+      {
+        "text": "As estatísticas estavam velhas",
+        "why": "Não há estatísticas para aquele dia nem para nenhum outro, porque não há nenhuma para date(placed_at)."
+      },
+      {
+        "text": "Não há estatísticas para o resultado de uma função",
+        "why": "Meio por cento de um milhão, seja o que for que a tabela guarde; a reescrita como faixa conserta."
+      },
+      {
+        "text": "5000 é o padrão do planejador para igualdade",
+        "why": "Uma igualdade numa coluna nua é estimada pela distribuição daquela coluna; esta não tinha nenhuma."
+      },
+      {
+        "text": "O índice relatou 5000 entradas",
+        "why": "Nenhum índice foi consultado; uma função em volta da coluna o exclui, e o plano é um Seq Scan."
+      }
+    ]
+  },
+  "ex-hgk8x5e9": {
+    "prompt": "Uma tabela que nunca foi analisada: depois de carregar 200 000 linhas, o EXPLAIN diz rows=754 para uma condição que casa com um quarto delas. O que conserta a estimativa?",
+    "hint": "Uma instrução, e o planejador passa de chutar a saber.",
+    "choices": [
+      {
+        "text": "Rodar ANALYZE na tabela",
+        "why": "Estatísticas são recolhidas sob demanda ou pelo autovacuum, e nenhum dos dois tinha rodado desde a carga."
+      },
+      {
+        "text": "Rodar VACUUM FULL",
+        "why": "VACUUM FULL reescreve a tabela; é o ANALYZE que recolhe estatísticas, e o FULL custa um bloqueio à toa aqui."
+      },
+      {
+        "text": "Criar um índice na coluna",
+        "why": "Um índice muda como as linhas são achadas, não quantas o planejador espera."
+      },
+      {
+        "text": "Esperar, vai se corrigir",
+        "why": "Uma consulta executando não muda estatística nenhuma; o autovacuum chega lá um dia, e os planos ruins moram nesse intervalo."
+      }
+    ]
+  },
+  "ex-hrsrf5qq": {
+    "prompt": "Lendo as estimativas num plano profundo, onde você começa e onde para?",
+    "hint": "Todo nó acima de um erro o herda.",
+    "choices": [
+      {
+        "text": "Pela raiz, onde está o tempo total",
+        "why": "A estimativa da raiz é o produto de todo erro abaixo dela; não diz onde o primeiro estava."
+      },
+      {
+        "text": "Na junção, não numa varredura",
+        "why": "Varreduras são onde moram dois dos erros mais comuns: uma função em volta da coluna, e uma tabela nunca analisada."
+      },
+      {
+        "text": "No nó que mais leva tempo",
+        "why": "O nó mais lento muitas vezes é um plano correto para uma estimativa errada feita mais embaixo."
+      },
+      {
+        "text": "Pelo fundo, na primeira diferença grande",
+        "why": "Um fator de dois é ruído; um fator de cem é o achado, e tudo acima dele o herdou."
+      }
+    ]
+  },
+  "ex-gh27tmxx": {
+    "prompt": "WHERE city = 'Manaus' AND state = 'AM' é estimado baixo demais, embora cada coluna sozinha seja bem estimada. Por quê, e o que conserta?",
+    "hint": "O planejador tem uma suposição sobre duas condições, e estas duas a quebram.",
+    "choices": [
+      {
+        "text": "O par precisa de um índice composto",
+        "why": "Um índice muda como as linhas são achadas; a estimativa estaria igualmente errada com um."
+      },
+      {
+        "text": "A comparação de texto diferencia maiúsculas",
+        "why": "Nada é perdido; as linhas voltam, e só a previsão de quantas está errada."
+      },
+      {
+        "text": "Ele as multiplica; CREATE STATISTICS",
+        "why": "Depois disso ele tem uma distribuição conjunta, e um endereço em Manaus já não pode estar em qualquer estado."
+      },
+      {
+        "text": "ANALYZE recolhe distribuições conjuntas por padrão",
+        "why": "ANALYZE recolhe estatísticas por coluna; o par tem que ser declarado antes de ele olhar as duas juntas."
+      }
+    ]
+  },
+  "ex-0ak7jvyh": {
+    "prompt": "Uma consulta é rápida no psql com um literal e lenta vinda da aplicação, que manda um marcador. Primeira suspeita?",
+    "hint": "Pergunte para qual valor o plano da aplicação foi feito.",
+    "choices": [
+      {
+        "text": "Um plano genérico para o valor médio",
+        "why": "Um plano para $1 é um plano para a média, e o status médio é paid, com sessenta por cento; errado para um valor raro."
+      },
+      {
+        "text": "A conexão da aplicação é mais lenta",
+        "why": "A conexão carrega as linhas; um plano lento é lento em qualquer conexão."
+      },
+      {
+        "text": "O driver remove uma dica de índice",
+        "why": "O PostgreSQL não tem dicas de índice para remover; o plano vem das estatísticas de qualquer jeito."
+      },
+      {
+        "text": "O psql guarda o resultado em cache",
+        "why": "Nenhum dos dois guarda resultados; o cache que existe guarda páginas, e os dois se beneficiam dele igual."
+      }
+    ]
+  },
+  "ex-ffgz2ep2": {
+    "prompt": "O PostgreSQL 10 em diante aceita ser avisado de que duas colunas se relacionam, com CREATE ___.",
+    "hint": "O objeto que dá ao planejador uma distribuição conjunta.",
+    "blanks": [
+      {
+        "accept": [
+          "STATISTICS"
+        ]
+      }
+    ]
+  },
+  "ex-tkzg28mw": {
+    "prompt": "Sort Method: top-N heapsort  Memory: 26kB, num milhão de linhas com LIMIT 10. Como um milhão de linhas se ordenou em 26 kB?",
+    "hint": "A ordenação sabia algo pelo nó acima dela.",
+    "choices": [
+      {
+        "text": "As linhas já estavam quase em ordem",
+        "why": "Ordem não muda a memória que uma ordenação completa precisa; o truque é o que foi mantido."
+      },
+      {
+        "text": "A ordenação rodou em disco",
+        "why": "Disco diria external merge e nomearia o tamanho; esta ficou em memória."
+      },
+      {
+        "text": "Ela guardou só as dez melhores",
+        "why": "O Limit acima dela disse que só dez seriam desejadas, e é por isso que LIMIT é barato."
+      },
+      {
+        "text": "Só dez linhas foram lidas da tabela",
+        "why": "O Seq Scan abaixo devolveu um milhão; a ordenação é o que as jogou fora."
+      }
+    ]
+  },
+  "ex-avq44m6h": {
+    "prompt": "Sort Method: external merge  Disk: 38576kB. Qual palavra importa, e o que ela diz?",
+    "hint": "Uma palavra nessa linha é o achado.",
+    "choices": [
+      {
+        "text": "merge: a ordenação foi feita por um Merge Join em vez de um nó Sort",
+        "why": "Nenhuma junção está envolvida; merge descreve como os trechos ordenados foram combinados."
+      },
+      {
+        "text": "Disk: as linhas passaram do work_mem e foram ordenadas em trechos no disco",
+        "why": "Uma ordenação que vaza é a razão mais comum de uma consulta boa com dez mil linhas ficar lenta com um milhão."
+      },
+      {
+        "text": "external: a ordenação foi entregue à ordenação do sistema operacional",
+        "why": "Externa quer dizer fora da memória; o banco fez a ordenação, nos próprios arquivos temporários."
+      },
+      {
+        "text": "38576kB: o tamanho do resultado que foi mandado de volta ao cliente",
+        "why": "É o espaço temporário que a ordenação usou, e ANALYZE não envia resultado nenhum."
+      }
+    ]
+  },
+  "ex-0drre2rh": {
+    "prompt": "Três correções para uma ordenação que vaza: menos linhas, um índice para ler, mais work_mem. Por que work_mem é a última a tentar?",
+    "hint": "Pergunte quem mais recebe a mesma cota.",
+    "choices": [
+      {
+        "text": "Exige reiniciar o servidor",
+        "why": "Ele pode ser definido por sessão e por papel; o problema não é como se muda."
+      },
+      {
+        "text": "Ele vale para hash joins, não ordenações",
+        "why": "Aplica-se aos dois, o que piora a multiplicação em vez de melhorar."
+      },
+      {
+        "text": "Faz o planejador preferir varreduras sequenciais",
+        "why": "Ele muda o que cabe em memória; não transforma index scans em sequenciais."
+      },
+      {
+        "text": "É por ordenação, por conexão",
+        "why": "Uma cota por ordenação, multiplicada por toda ordenação rodando ao mesmo tempo, e um número que conserta um relatório esgota o servidor."
+      }
+    ]
+  },
+  "ex-zg3n638d": {
+    "prompt": "HashAggregate ou GroupAggregate: quando o segundo aparece?",
+    "hint": "Um deles precisa da entrada numa ordem específica.",
+    "choices": [
+      {
+        "text": "Quando a entrada já está ordenada",
+        "why": "Ele conta cada sequência conforme passa; nenhum é melhor, e a linha ao lado do nó diz se coube."
+      },
+      {
+        "text": "Quando o GROUP BY nomeia duas colunas",
+        "why": "Qualquer das agregações lida com qualquer número de colunas de agrupamento."
+      },
+      {
+        "text": "Quando há uma cláusula HAVING",
+        "why": "HAVING filtra grupos depois de qualquer das agregações os ter formado."
+      },
+      {
+        "text": "Quando também há um ORDER BY",
+        "why": "O relatório por cidade tem ORDER BY e hasheou mesmo assim, ordenando os dez grupos depois."
+      }
+    ]
+  },
+  "ex-f2e0x6ee": {
+    "prompt": "Um nó Sort aparece num plano cuja consulta não tem ORDER BY. Qual destes NÃO é uma razão possível?",
+    "hint": "Três nós precisam da entrada ordenada, e um não.",
+    "choices": [
+      {
+        "text": "Um Merge Join precisando das duas entradas ordenadas",
+        "why": "Uma razão real: os dois lados têm que estar ordenados pela coluna da junção."
+      },
+      {
+        "text": "Um HashAggregate precisando da entrada ordenada",
+        "why": "Uma agregação por hash não precisa de ordem nenhuma; é para isso que o hash serve."
+      },
+      {
+        "text": "Um GroupAggregate precisando dos grupos adjacentes",
+        "why": "Uma razão real: ele conta sequências, então chaves iguais têm que ficar juntas."
+      },
+      {
+        "text": "Um DISTINCT feito ordenando as linhas",
+        "why": "Uma razão real: ordenar, depois descartar cada linha igual à anterior."
+      }
+    ]
+  },
+  "ex-hefdm15e": {
+    "prompt": "O plano mostra Seq Scan com Filter: (lower(email) = …), e existe um índice único em email. O que você tenta primeiro?",
+    "hint": "O primeiro item da lista não é um índice.",
+    "choices": [
+      {
+        "text": "Acrescentar um segundo índice em email",
+        "why": "O segundo seria ignorado pela mesma razão: a consulta pergunta sobre lower(email), e nenhum dos dois guarda isso."
+      },
+      {
+        "text": "Reescrever, ou indexar a expressão",
+        "why": "Para a consulta e o índice nomearem a mesma coisa; nada aqui precisava de um índice novo do tipo comum."
+      },
+      {
+        "text": "Aumentar o work_mem",
+        "why": "Um filtro não usa work_mem; ele confere cada linha conforme passa, e as linhas são o custo."
+      },
+      {
+        "text": "Rodar ANALYZE na tabela",
+        "why": "O planejador vê o índice; ele não consegue usá-lo para uma expressão que o índice não guarda."
+      }
+    ]
+  },
+  "ex-aqgsckht": {
+    "prompt": "OFFSET 500000 LIMIT 20 leu 500 020 linhas pelo índice; WHERE id > 500000 LIMIT 20 leu vinte. Por que a diferença?",
+    "hint": "Pergunte onde no índice cada versão consegue começar.",
+    "choices": [
+      {
+        "text": "Paginação por chave usa um índice menor",
+        "why": "As duas usaram o mesmo índice da chave primária; a diferença é onde começaram nele."
+      },
+      {
+        "text": "OFFSET desliga o índice por completo",
+        "why": "O plano mostra um Index Scan nas duas; OFFSET percorre o índice e joga linhas fora."
+      },
+      {
+        "text": "A por chave começa no lugar certo",
+        "why": "OFFSET tem que passar por tudo que pula; paginação por chave custa o mesmo na página um e na página vinte e cinco mil."
+      },
+      {
+        "text": "A por chave devolve menos colunas da linha",
+        "why": "As duas são SELECT *; as colunas são idênticas."
+      }
+    ]
+  },
+  "ex-bfaxg0kk": {
+    "prompt": "SELECT * virou SELECT customer_id, e a varredura virou index-only. Qual é a lição geral?",
+    "hint": "O argumento da aula 4, com um plano anexado.",
+    "choices": [
+      {
+        "text": "O asterisco é expandido em execução",
+        "why": "A expansão é no planejamento e não custa nada; as páginas buscadas são o custo."
+      },
+      {
+        "text": "Consultas de uma coluna planejam diferente",
+        "why": "Mesmo planejador, mesmo algoritmo; o índice simplesmente cobriu o que foi pedido."
+      },
+      {
+        "text": "customer_id está em cache, o resto não",
+        "why": "O cache é por página, não por coluna; as outras colunas moram nas páginas da tabela que não foram lidas."
+      },
+      {
+        "text": "Colunas de que você não precisa custam páginas",
+        "why": "Três colunas necessárias e vinte pedidas são dezessete colunas de buscas de linha."
+      }
+    ]
+  },
+  "ex-8n2tdwmb": {
+    "prompt": "enable_seqscan = off consertou a consulta lenta na sua sessão. Você põe isso no postgresql.conf?",
+    "hint": "Pergunte o que a configuração faz com toda outra consulta do servidor.",
+    "choices": [
+      {
+        "text": "Não; precificaria errado toda consulta",
+        "why": "Inclusive as que iam bem; as configurações existem para ver um plano alternativo numa sessão, nunca para entregar um."
+      },
+      {
+        "text": "Sim; o plano agora está certo",
+        "why": "É o plano correto para esta consulta e uma mentira contada ao planejador sobre toda outra."
+      },
+      {
+        "text": "Sim, com enable_indexscan = on",
+        "why": "Index scans já estão ligados; o dano está no que foi desligado."
+      },
+      {
+        "text": "Não; fora do psql não faz nada",
+        "why": "Ela afeta toda sessão que a tem, o que no arquivo de configuração são todas."
+      }
+    ]
+  },
+  "ex-07axzavc": {
+    "prompt": "Um relatório roda uma vez por mês e ficaria rápido com um índice novo numa tabela que recebe um milhão de inserções por dia. O que você faz?",
+    "hint": "O imposto da aula 9, e o pg_stat_statements diz com que frequência a consulta roda.",
+    "choices": [
+      {
+        "text": "Acrescentar o índice; as escritas aguentam",
+        "why": "Ele seria mantido num milhão de escritas por dia para poupar uma consulta por mês."
+      },
+      {
+        "text": "Acrescentar com CONCURRENTLY",
+        "why": "CONCURRENTLY é sobre construir sem bloqueio; a manutenção custa o mesmo depois."
+      },
+      {
+        "text": "Uma view materializada ou uma réplica",
+        "why": "Mudar a forma do trabalho, que é o último item da lista para as consultas que fazem muito, corretamente."
+      },
+      {
+        "text": "Acrescentar antes de cada rodada e derrubar depois",
+        "why": "Construí-lo lê a tabela inteira, que é o custo do próprio relatório de novo, com um bloqueio ou duas passadas por cima."
+      }
+    ]
+  },
+  "ex-ajvr9trg": {
+    "prompt": "Ponha as cinco coisas a mudar na ordem em que a aula diz para tentá-las.",
+    "hint": "As baratas vêm primeiro porque tornam as caras desnecessárias.",
+    "items": [
+      "Reescrever a consulta para o índice que existe poder se aplicar",
+      "Acrescentar o índice que o plano está pedindo, concorrentemente",
+      "Pedir menos colunas e menos linhas",
+      "Consertar a estimativa: ANALYZE, ou estatísticas estendidas",
+      "Mudar a forma do trabalho: uma view materializada ou uma réplica"
+    ],
+    "trap": "A troca comum é acrescentar um índice antes de conferir se a consulta recusa um que já tem — um custo permanente sobre escritas para consertar o que uma reescrita teria consertado de graça."
+  },
+  "ex-p0gw4m62": {
+    "prompt": "O EXPLAIN do MySQL mostra type: ALL numa linha. O que é?",
+    "hint": "A coluna diz como a tabela é acessada.",
+    "choices": [
+      {
+        "text": "Varredura completa, o Seq Scan",
+        "why": "O Seq Scan desta aula; em qualquer linha que não a primeira é a forma de índice faltando, a tabela inteira lida uma vez por linha externa."
+      },
+      {
+        "text": "A tabela é lida por cada índice",
+        "why": "O índice usado está na coluna key; ALL quer dizer que nenhum foi."
+      },
+      {
+        "text": "A junção mantém a tabela inteira",
+        "why": "type descreve acesso, não o que a junção devolve."
+      },
+      {
+        "text": "A contagem de linhas é desconhecida",
+        "why": "rows é uma coluna própria; ALL é sobre como, não quantas."
+      }
+    ]
+  },
+  "ex-5yw02hkh": {
+    "prompt": "Using filesort aparece na coluna Extra do MySQL. O que quer dizer?",
+    "hint": "A linha que as pessoas leem errado, e a palavra file é o motivo.",
+    "choices": [
+      {
+        "text": "A ordenação foi escrita num arquivo temporário",
+        "why": "Ela pode ter ficado em memória; o nome é mais velho que o comportamento."
+      },
+      {
+        "text": "O sistema de arquivos fez a ordenação",
+        "why": "O servidor ordena; o sistema de arquivos guarda."
+      },
+      {
+        "text": "Ordena por uma coluna não selecionada",
+        "why": "Ordenar por uma coluna não selecionada é permitido e não diz nada sobre filesort."
+      },
+      {
+        "text": "Ordenou; nenhum índice deu a ordem",
+        "why": "Em memória ou não: a grafia do MySQL para um nó Sort sem índice embaixo, e a correção é a mesma."
+      }
+    ]
+  },
+  "ex-ryphf6t5": {
+    "prompt": "Em que ordem o EXPLAIN do MySQL lista as linhas dele?",
+    "hint": "Uma linha por tabela, e a ordem diz algo sobre como a junção roda.",
+    "choices": [
+      {
+        "text": "Em ordem alfabética pelo nome da tabela",
+        "why": "A ordem carrega significado; alfabética não carregaria nenhum."
+      },
+      {
+        "text": "Na ordem em que o FROM as lista",
+        "why": "O planejador reordena junções à vontade, e a saída mostra o que ele escolheu."
+      },
+      {
+        "text": "A ordem da junção, tabela condutora primeiro",
+        "why": "De cima para baixo, do jeito que um nested loop roda; type: ALL abaixo da primeira linha é o índice que falta."
+      },
+      {
+        "text": "A maior tabela primeiro",
+        "why": "Tamanho é uma das entradas da escolha; a saída é a ordem escolhida."
+      }
+    ]
+  },
+  "ex-k6jynth1": {
+    "prompt": "O EXPLAIN QUERY PLAN do SQLite imprime SCAN orders. O que quer dizer?",
+    "hint": "Duas palavras compõem o vocabulário inteiro dele.",
+    "choices": [
+      {
+        "text": "O bytecode para ler orders",
+        "why": "Bytecode é o que o EXPLAIN puro imprime, e não é o que ninguém quer."
+      },
+      {
+        "text": "Uma leitura completa, sem índice",
+        "why": "SEARCH … USING INDEX seria a busca por índice; esse par é o vocabulário, e a correção está nele."
+      },
+      {
+        "text": "A tabela é analisada",
+        "why": "ANALYZE é um comando à parte no SQLite, e não imprime nada parecido."
+      },
+      {
+        "text": "Um índice está sendo varrido inteiro",
+        "why": "Um índice seria nomeado depois de USING INDEX; SCAN sozinho é a tabela."
+      }
+    ]
+  },
+  "ex-y0f6qg8y": {
+    "prompt": "Um banco SQLite cresceu dez vezes num ano e os planos agora são ruins. Por quê, ao contrário do PostgreSQL, e o que você faz?",
+    "hint": "Pergunte quem recolhe as estatísticas em cada banco.",
+    "choices": [
+      {
+        "text": "O SQLite não guarda estatísticas",
+        "why": "Ele tem; vêm do ANALYZE, e reconstruir um índice não recolhe nenhuma."
+      },
+      {
+        "text": "O SQLite planeja pelo tamanho do arquivo",
+        "why": "VACUUM compacta o arquivo; os números do planejador vêm do ANALYZE."
+      },
+      {
+        "text": "O SQLite não tem EXPLAIN ANALYZE",
+        "why": "Medição é o que o SQLite não tem; as estatísticas que decidem um plano estão a um comando de distância."
+      },
+      {
+        "text": "Sem autovacuum: rode ANALYZE à mão",
+        "why": "Um banco que cresceu muito desde a última análise está planejando com números velhos até alguém rodar o comando."
+      }
+    ]
+  }
+}

@@ -30,15 +30,15 @@
         "why": "Isso — a separação existe para o mapeamento continuar público e o segredo não."
       },
       {
-        "text": "O `/etc/shadow` muda mais, então é protegido contra corrupção",
+        "text": "O `/etc/shadow` muda mais",
         "why": "Permissões decidem quem lê, e nada dizem sobre a frequência de mudança."
       },
       {
-        "text": "O `/etc/passwd` é um cache do `/etc/shadow`, com a metade sensível de fora",
+        "text": "O `/etc/passwd` faz cache do outro",
         "why": "Nenhum é cache do outro; eles guardam campos diferentes sobre as mesmas contas."
       },
       {
-        "text": "O grupo `shadow` é dono dos dois, e 644 foi o que o pacote trouxe",
+        "text": "O grupo `shadow` é dono dos dois",
         "why": "Os modos são deliberados, e o `ls -l` mostra um grupo diferente em cada um."
       }
     ]
@@ -48,15 +48,15 @@
     "hint": "Ela foi criada para alguma coisa, e essa coisa não é digitar.",
     "choices": [
       {
-        "text": "Está desabilitada, então arquivos e serviços estão fora do alcance dela",
+        "text": "Está desabilitada, fora de alcance",
         "why": "Ela tem arquivos e roda serviços; o que falta é um jeito de entrar."
       },
       {
-        "text": "Entra, e o shell termina depois de imprimir um aviso",
+        "text": "Entra, e depois sai fora",
         "why": "O programa recusa em vez de deixar uma sessão utilizável."
       },
       {
-        "text": "Entra por ssh mas não tem shell para uma sessão de console",
+        "text": "Entra por ssh e não vai além disso",
         "why": "A recusa vale para os dois; o ssh recebe o mesmo programa."
       },
       {
@@ -82,7 +82,7 @@
         "why": "Os dois aceitam o que você digitar; o que muda é onde eles olham."
       },
       {
-        "text": "O `getent` exige root e o `grep` funciona para qualquer um, então é mais confiável",
+        "text": "O `getent` exige root",
         "why": "Os dois funcionam para usuário comum, e nenhum lê o arquivo shadow."
       }
     ]
@@ -104,7 +104,7 @@
         "why": "Não existe chave. É um hash, e hash corre num sentido só."
       },
       {
-        "text": "A senha está lá, e imprimir seria contra a política",
+        "text": "A senha está lá, mas a política proíbe",
         "why": "Ela não está lá, o que é um fato mais forte que uma política."
       },
       {
@@ -118,7 +118,7 @@
     "hint": "Algo aleatório fica guardado em claro ao lado de cada hash.",
     "choices": [
       {
-        "text": "O hash inclui o nome da conta, então difere por usuário",
+        "text": "O hash inclui o nome da conta",
         "why": "O nome não faz parte da entrada; um valor aleatório faz."
       },
       {
@@ -126,11 +126,11 @@
         "why": "Isso, então uma tabela pré-computada teria de ser refeita para cada uma."
       },
       {
-        "text": "O algoritmo se semeia com a hora em que a senha foi definida",
+        "text": "O algoritmo se semeia com o relógio",
         "why": "A hora está num campo posterior, e não é entrada do hash."
       },
       {
-        "text": "Elas são processadas com algoritmos diferentes escolhidos na criação",
+        "text": "Algoritmos diferentes por conta",
         "why": "O algoritmo é um ajuste do sistema e normalmente é o mesmo para as duas."
       }
     ]
@@ -166,15 +166,15 @@
         "why": "Isso — chaves nunca consultam o arquivo shadow, e é por isso que os dois passos andam juntos."
       },
       {
-        "text": "A trava faz efeito no próximo reboot, e não antes",
+        "text": "A trava espera o próximo reboot",
         "why": "Ela é escrita na hora; o login usou outro caminho."
       },
       {
-        "text": "O `passwd -l` trava a senha e deixa a conta utilizável pelo sudo",
+        "text": "O `passwd -l` deixa a conta utilizável",
         "why": "O sudo pede senha também, então uma trava o impediria."
       },
       {
-        "text": "A sessão dela estava aberta antes da trava, e sobreviveu",
+        "text": "A sessão dela já estava aberta antes",
         "why": "Uma sessão sobrevivente explicaria uma conexão, e a pessoa entrou de novo."
       }
     ]
@@ -188,19 +188,19 @@
     "hint": "O comando fez exatamente o que pediram e nada além.",
     "choices": [
       {
-        "text": "Sim — a conta fica inutilizável até alguém criar o diretório na mão",
+        "text": "Sim — fica inutilizável até criarem",
         "why": "Ela entra e cai em / com um erro, o que é ruim e não é a mesma coisa que inutilizável."
       },
       {
-        "text": "Sim — o useradd deveria falhar em vez de registrar um caminho que ele não criou",
+        "text": "Sim — o useradd deveria ter falhado",
         "why": "Ele registra o caminho que mandaram registrar, e criar é uma flag separada."
       },
       {
-        "text": "Não — o `-m` é o que cria, e ele foi omitido",
+        "text": "Não — o `-m` cria, e foi omitido",
         "why": "Isso, e o `adduser` é a fachada mais amigável que supõe que você quis `-m`."
       },
       {
-        "text": "Não — o diretório aparece no primeiro login da conta",
+        "text": "Não — aparece no primeiro login",
         "why": "Nada o cria depois; o login simplesmente não o encontra."
       }
     ]
@@ -210,7 +210,7 @@
     "hint": "Nada nos arquivos mudou.",
     "choices": [
       {
-        "text": "O diretório foi reatribuído à próxima conta livre",
+        "text": "O diretório foi reatribuído",
         "why": "Uma reatribuição imprimiria o nome daquela conta; não há nome para imprimir."
       },
       {
@@ -218,11 +218,11 @@
         "why": "Isso — o sistema de arquivos guardou o número o tempo todo, como disse a seção 60 da aula 4."
       },
       {
-        "text": "O `userdel` reescreveu a propriedade para um valor reservado",
+        "text": "O `userdel` reescreveu a propriedade",
         "why": "Ele não encostou em arquivo nenhum; o campo de dono é o que sempre foi."
       },
       {
-        "text": "O diretório perdeu o grupo, então o `ls` recorre a números nas duas colunas",
+        "text": "O diretório perdeu o grupo",
         "why": "A coluna de grupo ainda imprime um nome, o que descarta isso."
       }
     ]
@@ -236,7 +236,7 @@
         "why": "Eles mantêm o modo; um número é dono deles e o modo continua valendo."
       },
       {
-        "text": "O `userdel` se recusa a rodar enquanto a conta tiver arquivos em outros lugares",
+        "text": "O `userdel` se recusa a rodar",
         "why": "Ele roda, e nada diz sobre arquivos fora do diretório pessoal."
       },
       {
@@ -254,19 +254,19 @@
     "hint": "Ele explica três arquivos que apareceram num diretório pessoal recém-criado.",
     "choices": [
       {
-        "text": "Ele é copiado para dentro de um diretório pessoal novo pelo `useradd -m`",
+        "text": "Ele é copiado pelo `useradd -m`",
         "why": "Isso, e é assim que um padrão da empresa alcança toda conta criada depois."
       },
       {
-        "text": "Ele guarda os ajustes padrão a que o shell recorre quando falta uma casa",
+        "text": "Ele guarda os ajustes padrão",
         "why": "O shell recorre aos arquivos do /etc para a máquina inteira, e este não é um deles."
       },
       {
-        "text": "É onde o `userdel` arquiva os arquivos de uma conta apagada",
+        "text": "É onde o `userdel` arquiva",
         "why": "Nada os arquiva; o `-r` apaga e o padrão os deixa em paz."
       },
       {
-        "text": "É um modelo reaplicado a cada conta sempre que o sistema inicia",
+        "text": "É reaplicado a cada boot",
         "why": "Ele é copiado uma vez, na criação, e contas existentes nunca são revisitadas."
       }
     ]
@@ -284,7 +284,7 @@
         "why": "Ele lista qualquer conta com sessão; as contas não são o filtro."
       },
       {
-        "text": "O who lê a tabela de processos e não achou shell marcado como login",
+        "text": "O who lê a tabela de processos",
         "why": "Ele nunca lê a tabela de processos; ele lê um arquivo de registro."
       },
       {
@@ -302,19 +302,19 @@
     "hint": "Essa terceira forma inicia um shell de um tipo que não lê nenhum dos dois arquivos.",
     "choices": [
       {
-        "text": "O ssh remove o ambiente antes de rodar um comando remoto",
+        "text": "O ssh remove o ambiente",
         "why": "Ele leva pouca coisa, e o que difere aqui é a inicialização do shell remoto."
       },
       {
-        "text": "O `~/.bashrc` é lido por shells de login apenas, e aquele não é um",
+        "text": "O `~/.bashrc` é para shells de login",
         "why": "É ao contrário: o bashrc é para shells interativos."
       },
       {
-        "text": "O shell remoto é não interativo",
+        "text": "O shell remoto não é um shell interativo",
         "why": "Isso — e é por isso que ambiente vai onde um processo filho herda."
       },
       {
-        "text": "O comando roda antes de o diretório pessoal ser montado",
+        "text": "A casa ainda não está montada",
         "why": "A casa está lá; montagem não tem nada a ver."
       }
     ]
@@ -368,19 +368,19 @@
     "hint": "A outra ponta também tem identidade.",
     "choices": [
       {
-        "text": "Da sua própria chave pública, para o servidor saber qual esperar",
+        "text": "Da sua própria chave pública, para o servidor",
         "why": "Sua chave vai no authorized_keys; ninguém a resume num hash para você."
       },
       {
-        "text": "Da conexão, para uma sessão futura ser casada com esta",
+        "text": "Da conexão, para casar depois",
         "why": "Sessões não são rastreadas assim, e o valor é estável entre conexões."
       },
       {
-        "text": "Da chave de host do próprio servidor",
+        "text": "Da chave de host do servidor",
         "why": "Isso, e aceitar grava a chave no seu known_hosts."
       },
       {
-        "text": "Do hash de senha da conta, enviado para o cliente verificar offline",
+        "text": "Do hash de senha da conta",
         "why": "Um hash de senha nunca sai do servidor, e isto acontece antes de qualquer senha."
       }
     ]
@@ -412,19 +412,19 @@
     "hint": "Um é sobre gente entrando, o outro sobre máquinas em que você saiu.",
     "choices": [
       {
-        "text": "Um guarda chaves privadas e o outro guarda públicas",
+        "text": "Um é privado, o outro público",
         "why": "Os dois guardam chaves públicas; o que muda é de quem."
       },
       {
-        "text": "Chaves com permissão de entrar, contra servidores que você aceitou",
+        "text": "Chaves com permissão de entrar, contra servidores aceitos",
         "why": "Isso, e eles respondem perguntas opostas a partir do mesmo diretório."
       },
       {
-        "text": "O primeiro é escrito pelo ssh e o segundo pelo ssh-keygen",
+        "text": "Um é escrito pelo ssh-keygen",
         "why": "Os dois são escritos pelo ssh ou pelos auxiliares dele; autoria não é a distinção."
       },
       {
-        "text": "O primeiro vale para esta máquina e o segundo para a rede inteira",
+        "text": "Um vale aqui, o outro na rede",
         "why": "Os dois são só seus, no seu próprio diretório pessoal."
       }
     ]
@@ -434,15 +434,15 @@
     "hint": "Três coisas causam isso e elas não são igualmente inocentes.",
     "choices": [
       {
-        "text": "Rodar `ssh-keygen -R host` para a conexão passar",
+        "text": "Rodar `ssh-keygen -R host`",
         "why": "Esse é o conserto do caso inocente, e rodar primeiro pula a decisão de qual caso é."
       },
       {
-        "text": "Acrescentar StrictHostKeyChecking=no para não acontecer de novo",
+        "text": "Acrescentar StrictHostKeyChecking=no",
         "why": "Isso remove a checagem inteira, que é a proteção que o aviso existe para te dar."
       },
       {
-        "text": "Conectar com senha, que não usa chaves de host",
+        "text": "Conectar com senha em vez disso",
         "why": "Chaves de host são conferidas antes de qualquer método de autenticação ser escolhido."
       },
       {
@@ -460,19 +460,19 @@
     "hint": "Três tipos de processo de longa duração, e um deles pertence ao sistema.",
     "choices": [
       {
-        "text": "Uma tarefa em segundo plano, desligada do seu shell",
+        "text": "Uma tarefa em segundo plano",
         "why": "Essa termina com a sua sessão, a menos que você tome uma providência, que é a condição dada."
       },
       {
-        "text": "Um serviço, iniciado pelo sistema de init",
+        "text": "Um serviço, iniciado pelo init",
         "why": "Isso — ele pertence à máquina e não à sua sessão."
       },
       {
-        "text": "Uma tarefa agendada, esperando o próximo horário",
+        "text": "Uma tarefa agendada",
         "why": "Uma tarefa agendada não está rodando entre os disparos; ela é iniciada de novo a cada vez."
       },
       {
-        "text": "Um zumbi, deixado para trás porque o pai parou de recolhê-lo",
+        "text": "Um zumbi, deixado sem recolher",
         "why": "Um zumbi ocupa uma entrada na tabela e não roda nada."
       }
     ]
@@ -482,19 +482,19 @@
     "hint": "Pergunte o que um atacante ganha quando aquele programa é invadido.",
     "choices": [
       {
-        "text": "O root é reservado para logins interativos e serviços usam outras contas",
+        "text": "O root é para logins interativos",
         "why": "Muitos serviços rodam como root; a razão é sobre consequência, não sobre reserva."
       },
       {
-        "text": "Abrir uma porta de rede exige uma conta não root no Linux moderno",
+        "text": "Abrir uma porta exige não root",
         "why": "Portas baixas historicamente exigiam root, o que corre no sentido contrário."
       },
       {
-        "text": "Uma invasão então entrega aquela conta, e nada além",
+        "text": "Uma invasão entrega só aquela conta",
         "why": "Isso — uma conta por serviço é a fronteira mais barata que o sistema tem."
       },
       {
-        "text": "Arquivos escritos pelo root ficariam ilegíveis para o serviço depois",
+        "text": "Os arquivos do root ficariam ilegíveis depois",
         "why": "Arquivos do root são legíveis pelo root; propriedade não é a restrição aqui."
       }
     ]
@@ -548,19 +548,19 @@
     "hint": "Todo o resto descende dele.",
     "choices": [
       {
-        "text": "Um por target listado no target padrão",
+        "text": "Um por target",
         "why": "Targets são units que o systemd alcança; o kernel não conhece nenhum."
       },
       {
-        "text": "Um por CPU, que depois repartem o trabalho",
+        "text": "Um por CPU",
         "why": "A contagem de processadores não decide quantos programas são iniciados."
       },
       {
-        "text": "Um",
+        "text": "Um, e só um",
         "why": "Isso — o processo 1, e todo outro processo é descendente dele."
       },
       {
-        "text": "Dois: um sistema de init e um registrador, para falhas iniciais ficarem gravadas",
+        "text": "Dois: init e um registrador",
         "why": "O registrador é iniciado pelo sistema de init como todo o resto."
       }
     ]
@@ -614,19 +614,19 @@
     "hint": "Duas tarefas são do processo um, e um programa de aplicação não faz nenhuma das duas.",
     "choices": [
       {
-        "text": "Um shell, para o contêiner ter onde rodar comandos de inicialização",
+        "text": "Um shell, para comandos de inicialização",
         "why": "Um shell roda comandos e não adota nem recolhe nada."
       },
       {
-        "text": "Um processo um minúsculo que adota órfãos e os recolhe",
+        "text": "Um processo um minúsculo que adota órfãos",
         "why": "Isso, e sem ele um contêiner vaza zumbis até a tabela dele encher."
       },
       {
-        "text": "Um coletor de logs, para a saída do contêiner chegar ao host",
+        "text": "Um coletor de logs",
         "why": "A saída já chega ao host pelos fluxos comuns."
       },
       {
-        "text": "Um supervisor que reinicia o programa principal quando ele termina",
+        "text": "Um supervisor que reinicia o programa",
         "why": "Política de reinício é outra flag e outra ideia."
       }
     ]
@@ -636,15 +636,15 @@
     "hint": "Dois verbos, dois momentos.",
     "choices": [
       {
-        "text": "`daemon-reload`, então o systemd ainda não tinha lido a unit",
+        "text": "`daemon-reload`",
         "why": "Ele leu a unit; o serviço rodava antes do reboot."
       },
       {
-        "text": "`unmask`, já que um serviço mascarado tem o start recusado",
+        "text": "`unmask`",
         "why": "Um serviço mascarado teria se recusado a iniciar já na primeira vez."
       },
       {
-        "text": "`systemctl restart`, que torna o estado permanente",
+        "text": "`systemctl restart`",
         "why": "Reiniciar é outro verbo do agora e não muda nada sobre o próximo boot."
       },
       {
@@ -658,19 +658,19 @@
     "hint": "Leia o caminho que ele criou.",
     "choices": [
       {
-        "text": "Acrescentou a unit a uma lista que um target lê no boot",
+        "text": "Acrescentou a uma lista que um target lê",
         "why": "Isso, e um link simbólico não inicia nada, que é o motivo inteiro de enable não ser start."
       },
       {
-        "text": "Copiou a unit para o diretório de onde o systemd carrega",
+        "text": "Copiou a unit para o lugar",
         "why": "Ele linkou em vez de copiar, e o original ficou onde estava."
       },
       {
-        "text": "Registrou o serviço no journal para a saída dele ser guardada",
+        "text": "Registrou o serviço no journal",
         "why": "A saída é recolhida esteja o serviço habilitado ou não."
       },
       {
-        "text": "Iniciou o serviço e registrou que ele deve iniciar de novo",
+        "text": "Iniciou e registrou isso",
         "why": "Nada foi iniciado; o `--now` é a flag que teria feito isso."
       }
     ]
@@ -680,19 +680,19 @@
     "hint": "Um dos dois derruba quem está conectado.",
     "choices": [
       {
-        "text": "restart, porque um reload deixa a configuração antiga em memória",
+        "text": "restart; reload deixa velho",
         "why": "Um reload é exatamente uma releitura da configuração."
       },
       {
-        "text": "restart, porque reload é uma extensão do Debian e falta em outros lugares",
+        "text": "restart; reload é do Debian",
         "why": "Ele é padrão, e se um serviço o suporta está no arquivo de unit dele."
       },
       {
-        "text": "reload",
+        "text": "reload, que basta aqui",
         "why": "Isso — ele relê sem derrubar conexões, e o nginx suporta."
       },
       {
-        "text": "Tanto faz — o systemd trata os dois como o mesmo verbo em serviços de rede",
+        "text": "Tanto faz — são a mesma coisa",
         "why": "São verbos separados que rodam comandos separados da unit."
       }
     ]
@@ -702,7 +702,7 @@
     "hint": "Habilitar escreve um link simbólico em algum lugar, e algo precisa dizer onde.",
     "choices": [
       {
-        "text": "A unit está compilada dentro do systemd em vez de ser lida de um arquivo",
+        "text": "A unit está compilada dentro",
         "why": "Toda unit é um arquivo; nada é compilado junto."
       },
       {
@@ -710,11 +710,11 @@
         "why": "Isso — outra coisa a puxa, e habilitar não teria significado."
       },
       {
-        "text": "A unit está ligada a /dev/null, então um start é recusado",
+        "text": "A unit está ligada a /dev/null, mascarada",
         "why": "Isso é `masked`, e é outra resposta do mesmo comando."
       },
       {
-        "text": "A unit foi habilitada pelo pacote e cabe a você deixá-la em paz",
+        "text": "O pacote já a habilitou",
         "why": "Uma unit de pacote é desabilitada como qualquer outra; quem decide é o arquivo."
       }
     ]
@@ -750,15 +750,15 @@
     "hint": "Duas palavras na mesma linha, sobre dois momentos diferentes.",
     "choices": [
       {
-        "text": "O arquivo de unit foi editado depois de o serviço iniciar",
+        "text": "O arquivo de unit foi editado depois",
         "why": "Edição não é registrada naquela linha; uma unit desatualizada não aparece aqui."
       },
       {
-        "text": "O serviço está rodando a partir de um drop-in em vez da unit principal",
+        "text": "Ele roda de um drop-in",
         "why": "Drop-ins são mostrados pelo `systemctl cat`, e não mudam esta palavra."
       },
       {
-        "text": "O systemd perdeu o rastro dele, então o estado de habilitado ficou ilegível",
+        "text": "O systemd perdeu o rastro dele",
         "why": "Ele leu uma resposta definida, e essa resposta é `disabled`."
       },
       {
@@ -772,7 +772,7 @@
     "hint": "Uma resposta possível torna as outras três irrelevantes.",
     "choices": [
       {
-        "text": "`Loaded:` — se a unit está `not-found`, o resto não importa",
+        "text": "`Loaded:` — se a unit está `not-found`, nada mais importa",
         "why": "Isso: um arquivo de unit ausente ou com nome errado transforma todas as outras linhas em ruído."
       },
       {
@@ -794,11 +794,11 @@
     "hint": "É a terceira ideia da seção 77, tornada visível.",
     "choices": [
       {
-        "text": "As units de que este serviço depende",
+        "text": "As units de que ele depende",
         "why": "Dependências estão no arquivo de unit e são mostradas em outro lugar."
       },
       {
-        "text": "As threads dentro do processo principal",
+        "text": "As threads no processo principal",
         "why": "Threads são contadas em Tasks; estas linhas têm PIDs próprios."
       },
       {
@@ -806,7 +806,7 @@
         "why": "Isso, e é o que torna o `systemctl stop` confiável."
       },
       {
-        "text": "Os processos que têm os arquivos do serviço abertos",
+        "text": "Os processos que seguram os arquivos dele",
         "why": "Isso é o que o lsof responde, e ele listaria processos de outras contas também."
       }
     ]
@@ -846,11 +846,11 @@
         "why": "Ela tem prioridade maior, que é justamente por que vence e por que isso é a armadilha."
       },
       {
-        "text": "O `systemctl edit` grava a mudança no próprio arquivo do pacote",
+        "text": "O `systemctl edit` grava no arquivo do pacote",
         "why": "Ele nunca encosta no arquivo do pacote; é esse o objetivo de um drop-in."
       },
       {
-        "text": "Uma cópia no /etc precisa ser registrada antes de o systemd lê-la",
+        "text": "Uma cópia no /etc precisa ser registrada",
         "why": "Ela é lida por causa de onde está, sem nada a registrar."
       }
     ]
@@ -920,7 +920,7 @@
         "why": "Isso, e é por isso que uma unit deve imprimir em vez de administrar um arquivo de log."
       },
       {
-        "text": "Para lugar nenhum, a menos que a unit defina StandardOutput explicitamente",
+        "text": "Para lugar nenhum, sem StandardOutput",
         "why": "O padrão já manda para o journal."
       }
     ]
@@ -934,7 +934,7 @@
         "why": "Isso — tente com sudo antes de concluir que o serviço não disse nada."
       },
       {
-        "text": "O nginx escreve em /var/log em vez de no journal",
+        "text": "O nginx escreve em /var/log",
         "why": "Vale conferir, e um resultado vazio para um usuário e não para outro aponta noutra direção."
       },
       {
@@ -952,15 +952,15 @@
     "hint": "Ele tem duas casas possíveis, e uma delas é em memória.",
     "choices": [
       {
-        "text": "Um ajuste Storage= nos arquivos de unit de cada serviço",
+        "text": "Um ajuste Storage= nas units",
         "why": "Storage é um ajuste do journald, e não é por serviço."
       },
       {
-        "text": "O grupo `adm`, sem o qual entradas antigas ficam escondidas",
+        "text": "O grupo `adm`",
         "why": "A participação no grupo decide quem lê, não quanto tempo as entradas duram."
       },
       {
-        "text": "Uma política de poda, que está mantendo o journal com tamanho zero",
+        "text": "Uma política de poda em zero",
         "why": "A poda remove entradas antigas e deixa as recentes."
       },
       {
@@ -974,7 +974,7 @@
     "hint": "Uma flag mostra a máquina em vez da unit.",
     "choices": [
       {
-        "text": "journalctl -u aquelesservico -n 200, para ver mais do mesmo",
+        "text": "journalctl -u aquelesservico -n 200",
         "why": "Mais linhas de uma unit é mais da mesma confusão."
       },
       {
@@ -986,7 +986,7 @@
         "why": "O bloco de status dele imprime as mesmas dez linhas que você já leu."
       },
       {
-        "text": "journalctl --disk-usage, para descartar um journal truncado",
+        "text": "journalctl --disk-usage",
         "why": "Vale uma olhada, e truncar teria removido entradas antigas em vez da causa."
       }
     ]
@@ -1000,7 +1000,7 @@
     "hint": "Ele não tem ExecStart.",
     "choices": [
       {
-        "text": "Um serviço que inicia outros serviços em sequência",
+        "text": "Um serviço que inicia outros",
         "why": "Ele não roda programa nenhum, coisa que um serviço faz."
       },
       {
@@ -1008,11 +1008,11 @@
         "why": "Isso — um nome para um estado, e habilitar põe um serviço no diretório wants dele."
       },
       {
-        "text": "Um número de runlevel reescrito como palavra",
+        "text": "Um runlevel como palavra",
         "why": "Vários targets não têm equivalente de runlevel, e targets se compõem."
       },
       {
-        "text": "A unit que o systemd carrega primeiro quando o kernel entrega o controle",
+        "text": "A primeira unit que o systemd carrega",
         "why": "A primeira unit é o target padrão, e esse é um target entre vários."
       }
     ]
@@ -1026,7 +1026,7 @@
         "why": "Ele quer dizer depois, e a ordem é a que está escrita."
       },
       {
-        "text": "A unit precisa de Requires= também, ou o After= é ignorado",
+        "text": "A unit precisa de Requires= também",
         "why": "O After= vale sozinho; ordem e dependência são separadas."
       },
       {
@@ -1066,15 +1066,15 @@
     "hint": "Um lista o que foi lento; o outro lista o que foi esperado.",
     "choices": [
       {
-        "text": "blame, porque ordena por duração",
+        "text": "blame",
         "why": "Ele ordena por duração, e uma unit lenta que ninguém esperou não custou nada."
       },
       {
-        "text": "Tanto faz — os dois imprimem as mesmas units em ordem diferente",
+        "text": "Tanto faz",
         "why": "Eles selecionam diferente, e não apenas ordenam diferente."
       },
       {
-        "text": "blame, depois de subtrair as units que rodaram em paralelo",
+        "text": "blame, menos as paralelas",
         "why": "Não existe essa subtração para fazer na mão."
       },
       {
@@ -1118,19 +1118,19 @@
     "hint": "Duas palavras, dois momentos.",
     "choices": [
       {
-        "text": "Ele não volta",
+        "text": "Ele simplesmente não volta",
         "why": "Isso, e nada te avisa até o reboot acontecer."
       },
       {
-        "text": "Ele volta, porque estava rodando quando a máquina caiu",
+        "text": "Ele volta; estava rodando",
         "why": "Nada registra o que estava rodando; quem decide é o estado de habilitado."
       },
       {
-        "text": "Ele volta num estado degradado e registra um aviso",
+        "text": "Ele volta degradado",
         "why": "Esse meio-termo não existe; ou ele inicia ou não."
       },
       {
-        "text": "Ele volta, porque `disabled` se refere ao arquivo de unit e não ao boot",
+        "text": "Ele volta; `disabled` é sobre o arquivo",
         "why": "A palavra se refere exatamente à pergunta do boot."
       }
     ]
@@ -1144,7 +1144,7 @@
         "why": "A participação em grupo decide acesso a arquivo, e não deixa ninguém entrar."
       },
       {
-        "text": "O diretório pessoal dela precisa ser removido",
+        "text": "A casa dela precisa sumir",
         "why": "Remover te custa os arquivos dela e não impede login nenhum."
       },
       {
@@ -1166,7 +1166,7 @@
     "hint": "O systemd leu a unit uma vez, no boot.",
     "choices": [
       {
-        "text": "`systemctl enable`, que relê o arquivo",
+        "text": "`systemctl enable`",
         "why": "Habilitar escreve um link simbólico e não relê nada."
       },
       {
@@ -1174,11 +1174,11 @@
         "why": "Isso, e o `systemctl edit` faz por você, que é uma razão para preferi-lo."
       },
       {
-        "text": "`systemd-analyze verify`, que carrega a versão nova",
+        "text": "`systemd-analyze verify` antes",
         "why": "Ele confere um arquivo e nada muda no systemd em execução."
       },
       {
-        "text": "Um reboot, já que arquivos de unit são lidos apenas no boot",
+        "text": "Um reboot",
         "why": "Um reload basta, e um reboot funcionaria pelo mesmo motivo."
       }
     ]
@@ -1280,7 +1280,7 @@
         "why": "Ela vale para aquele shell e os filhos dele, e não expira."
       },
       {
-        "text": "O bit setgid do diretório sobrepõe a umask nos arquivos novos",
+        "text": "O bit setgid sobrepõe a umask",
         "why": "O setgid decide o grupo e a umask continua decidindo os bits."
       }
     ]
@@ -1294,7 +1294,7 @@
     "hint": "O verbo não é start.",
     "choices": [
       {
-        "text": "Ele reinicia a máquina naquele target",
+        "text": "Ele reinicia naquele target",
         "why": "Nada reinicia; a mudança é imediata e no lugar."
       },
       {
@@ -1316,19 +1316,19 @@
     "hint": "É a palavra mais antiga para serviço.",
     "choices": [
       {
-        "text": "daily, das tarefas agendadas de que esses programas nasceram",
+        "text": "daily, de tarefas agendadas",
         "why": "Nenhum dos três é agendado; eles rodam continuamente."
       },
       {
-        "text": "distributed, da época em que rodavam em várias máquinas",
+        "text": "distributed, de várias máquinas",
         "why": "Eles rodam numa máquina, como qualquer outro programa."
       },
       {
-        "text": "daemon",
+        "text": "daemon, da grafia antiga",
         "why": "Isso, e é a palavra Unix para um programa sem terminal."
       },
       {
-        "text": "driver, já que ficam entre os programas e o kernel",
+        "text": "driver, entre kernel e programas",
         "why": "Drivers são código de kernel; estes são programas comuns."
       }
     ]

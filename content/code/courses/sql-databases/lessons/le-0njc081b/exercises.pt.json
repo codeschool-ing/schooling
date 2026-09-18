@@ -1,0 +1,762 @@
+{
+  "ex-petf51yt": {
+    "prompt": "Por que CREATE TABLE IF NOT EXISTS normalmente é a escolha errada numa migração?",
+    "hint": "Pergunte o que ele confere e o que não confere.",
+    "choices": [
+      {
+        "text": "Ele confere o nome, não o formato",
+        "why": "Uma tabela com outro formato passa em silêncio e seu código roda contra ela."
+      },
+      {
+        "text": "É recusado dentro de um bloco de transação",
+        "why": "Pode."
+      },
+      {
+        "text": "É mais lento que um CREATE TABLE comum",
+        "why": "A consulta ao catálogo não é nada."
+      },
+      {
+        "text": "Recusa criar uma tabela que tem índice",
+        "why": "Índices são objetos separados e irrelevantes aqui."
+      }
+    ]
+  },
+  "ex-k261mvwg": {
+    "prompt": "CREATE TABLE Invoices funciona e CREATE TABLE \"Invoices\" também. Qual é a diferença?",
+    "hint": "Um deles é rebaixado e o outro não.",
+    "choices": [
+      {
+        "text": "São o mesmo comando escrito de dois jeitos",
+        "why": "Produzem duas tabelas com nomes diferentes."
+      },
+      {
+        "text": "O com aspas é recusado pelo parser",
+        "why": "É perfeitamente legal, que é o problema."
+      },
+      {
+        "text": "Duas tabelas; uma precisa de aspas para sempre",
+        "why": "Identificadores sem aspas são rebaixados para minúsculas; com aspas, não."
+      },
+      {
+        "text": "A com aspas cria uma tabela temporária",
+        "why": "Aspas nada dizem sobre tempo de vida."
+      }
+    ]
+  },
+  "ex-2pfcbh1d": {
+    "prompt": "Uma chave estrangeira é declarada em invoices.customer_id. O que ela NÃO te dá?",
+    "hint": "Duas coisas diferentes estão sendo confundidas.",
+    "choices": [
+      {
+        "text": "Recusa quando o cliente é apagado, sob RESTRICT",
+        "why": "Também é o que ela te dá."
+      },
+      {
+        "text": "Um jeito rápido de buscar por aquela coluna",
+        "why": "Uma referência é regra sobre o que pode ser guardado, não jeito de buscar."
+      },
+      {
+        "text": "Registro de para qual tabela a coluna aponta",
+        "why": "Está no catálogo e na saída do \\d."
+      },
+      {
+        "text": "Recusa quando o cliente não existe",
+        "why": "É exatamente o que ela te dá."
+      }
+    ]
+  },
+  "ex-8xgfntpd": {
+    "prompt": "A convenção que deixa distinguir uma data de um momento sem consultar: uma coluna de data termina em ___ e uma de timestamp termina em ___.",
+    "hint": "Duas palavrinhas, de duas letras cada.",
+    "blanks": [
+      {
+        "accept": [
+          "_on",
+          "on"
+        ]
+      },
+      {
+        "accept": [
+          "_at",
+          "at"
+        ]
+      }
+    ]
+  },
+  "ex-564g2593": {
+    "prompt": "Onde dinheiro vai?",
+    "hint": "Um destes guarda uma aproximação do que você escreveu.",
+    "choices": [
+      {
+        "text": "numeric",
+        "why": "Guarda dígitos, então mil somas são exatas."
+      },
+      {
+        "text": "bigint, em centavos",
+        "why": "Defensável em alguns sistemas, e move a escala para todo pedaço de código que lê."
+      },
+      {
+        "text": "double precision",
+        "why": "Aproximação binária; o total desvia centavos ao longo de mil linhas."
+      },
+      {
+        "text": "real",
+        "why": "A mesma aproximação com menos espaço."
+      }
+    ]
+  },
+  "ex-17kgywpd": {
+    "prompt": "SELECT 7 / 2 devolve 3. Por quê?",
+    "hint": "Olhe os tipos dos dois operandos.",
+    "choices": [
+      {
+        "text": "SQL não faz divisão decimal sobre literais",
+        "why": "Tem, assim que um operando é decimal."
+      },
+      {
+        "text": "Inteiro sobre inteiro é inteiro; o resto cai",
+        "why": "Não arredondado — descartado. 7 / 2.0 dá 3.5."
+      },
+      {
+        "text": "O tipo da coluna decide, e não há coluna aqui",
+        "why": "Os literais decidem, e os dois são inteiros."
+      },
+      {
+        "text": "O resultado é arredondado para o inteiro mais próximo",
+        "why": "Arredondar daria 4."
+      }
+    ]
+  },
+  "ex-ygkxkrmc": {
+    "prompt": "Uma tabela de eventos insere e apaga um milhão de linhas por dia e guarda alguns milhões. Qual tipo de chave?",
+    "hint": "Ids não são reaproveitados quando uma linha é apagada.",
+    "choices": [
+      {
+        "text": "smallint, porque a tabela fica pequena",
+        "why": "Esgota em menos de um minuto."
+      },
+      {
+        "text": "integer, porque a tabela fica em alguns milhões",
+        "why": "É esse raciocínio que produz a queda."
+      },
+      {
+        "text": "uuid, porque o alcance é ilimitado",
+        "why": "É, e custa 16 bytes em todo índice para um problema que bigint resolve."
+      },
+      {
+        "text": "bigint, porque integer acaba em uns seis anos",
+        "why": "O tamanho da tabela não é o que esgota o alcance; a contagem de inserções é."
+      }
+    ]
+  },
+  "ex-1xptyzrs": {
+    "prompt": "Os ids de uma tabela são 1, 2, 5, 6. O que isso significa?",
+    "hint": "Para onde vai um número quando uma transação é desfeita?",
+    "choices": [
+      {
+        "text": "Nada está errado; rollbacks ficaram com os números",
+        "why": "Todo código que supõe ids contíguos estava errado no dia em que foi escrito."
+      },
+      {
+        "text": "A tabela foi carregada de um arquivo com buracos",
+        "why": "Também possível, e não é o que um buraco significa."
+      },
+      {
+        "text": "A sequência está corrompida e pede reinício",
+        "why": "Está se comportando como projetada."
+      },
+      {
+        "text": "Duas linhas foram apagadas e devem ser restauradas",
+        "why": "Possivelmente, e o buraco não diz."
+      }
+    ]
+  },
+  "ex-f4c2vw44": {
+    "prompt": "A cláusula que faz o banco ser dono de uma coluna de id e recusar um valor que você forneça: GENERATED ___ AS IDENTITY.",
+    "hint": "Uma palavra, e o oposto dela é BY DEFAULT.",
+    "blanks": [
+      {
+        "accept": [
+          "always"
+        ]
+      }
+    ]
+  },
+  "ex-s04d8wcy": {
+    "prompt": "No PostgreSQL, o que varchar(50) te dá além do text?",
+    "hint": "Meça os dois e você acha uma diferença.",
+    "choices": [
+      {
+        "text": "Menos espaço em disco por linha",
+        "why": "Idêntico."
+      },
+      {
+        "text": "Uma regra de tamanho, e mais nada",
+        "why": "Sem velocidade, sem espaço. O armazenamento é idêntico."
+      },
+      {
+        "text": "Um índice que cabe na memória mais vezes",
+        "why": "O índice guarda os mesmos bytes de qualquer jeito."
+      },
+      {
+        "text": "Comparações mais rápidas em strings curtas",
+        "why": "É a mesma operação sobre a mesma representação."
+      }
+    ]
+  },
+  "ex-ehr9kw3p": {
+    "prompt": "Uma coluna UNIQUE de email guarda ana@example.com. Chega uma inserção de Ana@Example.com. O que acontece?",
+    "hint": "Igualdade em texto é igualdade de bytes.",
+    "choices": [
+      {
+        "text": "É aceita e silenciosamente rebaixada",
+        "why": "Nada reescreve seu valor."
+      },
+      {
+        "text": "É recusada como duplicata",
+        "why": "Só se a coluna rebaixar caixa, o que text não faz."
+      },
+      {
+        "text": "Aceita — duas linhas para uma pessoa",
+        "why": "Que é por que o rebaixamento pertence à escrita ou ao citext."
+      },
+      {
+        "text": "É recusada por causa das maiúsculas que tem",
+        "why": "Maiúsculas são caracteres comuns."
+      }
+    ]
+  },
+  "ex-xcmpydjh": {
+    "prompt": "Por que char(n) é um tipo a evitar?",
+    "hint": "Pergunte o que acontece com um valor menor que n.",
+    "choices": [
+      {
+        "text": "Recusa caracteres não-ASCII",
+        "why": "Aceita como qualquer tipo de texto."
+      },
+      {
+        "text": "Tem comprimento máximo menor que varchar",
+        "why": "O máximo não é a questão."
+      },
+      {
+        "text": "Um índice sobre ele é recusado",
+        "why": "Pode."
+      },
+      {
+        "text": "Ele preenche, então comprimentos e comparações discordam",
+        "why": "'PT' num char(5) é 'PT   ' e os espaços o acompanham."
+      }
+    ]
+  },
+  "ex-axvg9vh0": {
+    "prompt": "O que timestamptz guarda?",
+    "hint": "O nome engana num detalhe.",
+    "choices": [
+      {
+        "text": "Um momento absoluto, convertido na leitura",
+        "why": "Ele não guarda fuso; guarda o instante."
+      },
+      {
+        "text": "O fuso da sessão no momento da inserção",
+        "why": "A sessão decide como é lido, não o que é guardado."
+      },
+      {
+        "text": "Um momento e o fuso em que foi escrito",
+        "why": "O fuso não é mantido, o que surpreende."
+      },
+      {
+        "text": "Dígitos, como timestamp, com um rótulo",
+        "why": "Isso seria timestamp com texto extra."
+      }
+    ]
+  },
+  "ex-29z8agw1": {
+    "prompt": "Por que 01:30 na madrugada em que os relógios voltam é problema para uma coluna timestamp?",
+    "hint": "Conte quantas vezes aquela leitura ocorre.",
+    "choices": [
+      {
+        "text": "Acontece duas vezes e os dígitos não dizem qual",
+        "why": "Dois momentos diferentes, um valor, e ordená-los dá errado."
+      },
+      {
+        "text": "Aquela leitura não ocorre naquela madrugada",
+        "why": "Essa é a transição da primavera, não a do outono."
+      },
+      {
+        "text": "É guardado como UTC e desloca uma hora",
+        "why": "Isso é o que timestamptz faz, e é o conserto."
+      },
+      {
+        "text": "O banco recusa guardar",
+        "why": "Ele guarda sem reclamar, que é o problema."
+      }
+    ]
+  },
+  "ex-y2bjr8q5": {
+    "prompt": "Dentro de uma transação, now() é chamado três vezes com um segundo de intervalo. O que volta?",
+    "hint": "Ele leva o nome da transação, não do relógio.",
+    "choices": [
+      {
+        "text": "Três valores com um segundo de diferença",
+        "why": "Isso é clock_timestamp()."
+      },
+      {
+        "text": "A hora de início da sessão",
+        "why": "Da transação, não da sessão."
+      },
+      {
+        "text": "Um erro, já que now() é chamável uma vez",
+        "why": "Pode ser chamado à vontade."
+      },
+      {
+        "text": "O mesmo valor: o início da transação",
+        "why": "O que torna coerente toda linha de uma inserção."
+      }
+    ]
+  },
+  "ex-5bt896mt": {
+    "prompt": "O que pertence a uma coluna date e não a um timestamptz?",
+    "hint": "Pergunte se a coisa tem um momento.",
+    "choices": [
+      {
+        "text": "Uma data de nascimento",
+        "why": "O mesmo dia em todo lugar; guardá-la como momento a desloca em outro fuso."
+      },
+      {
+        "text": "Quando uma encomenda foi entregue",
+        "why": "Um instante que alguém arredondou, e o arredondamento decide em que relatório cai."
+      },
+      {
+        "text": "Quando uma fatura foi paga",
+        "why": "Um instante."
+      },
+      {
+        "text": "Quando uma sessão expira",
+        "why": "Um instante, e um que precisa ser comparado com precisão."
+      }
+    ]
+  },
+  "ex-6y2vmn84": {
+    "prompt": "A única regra que esta seção carrega, numa palavra: use ___ em vez de timestamp.",
+    "hint": "Uma palavra, e é um nome de tipo.",
+    "blanks": [
+      {
+        "accept": [
+          "timestamptz"
+        ]
+      }
+    ]
+  },
+  "ex-t7w1hhfc": {
+    "prompt": "is_paid boolean contra paid_at timestamptz. Por que preferir o segundo?",
+    "hint": "Conte as perguntas que cada um responde.",
+    "choices": [
+      {
+        "text": "Ocupa menos espaço em disco por linha",
+        "why": "Ocupa mais."
+      },
+      {
+        "text": "Um booleano permite três estados",
+        "why": "Só se você esquecer o NOT NULL, que é outro conserto."
+      },
+      {
+        "text": "Se e quando, numa coluna",
+        "why": "E WHERE paid_at IS NOT NULL lê perfeitamente bem."
+      },
+      {
+        "text": "Um índice booleano é de pouca utilidade",
+        "why": "Podem, e não é esse o argumento."
+      }
+    ]
+  },
+  "ex-z4ygjbaz": {
+    "prompt": "Quando uma coluna jsonb foi usada para evitar projetar uma tabela?",
+    "hint": "Quatro sintomas, e todos são sobre fazer perguntas a ela.",
+    "choices": [
+      {
+        "text": "Ela guarda mais de umas dez chaves distintas",
+        "why": "Tamanho não é critério."
+      },
+      {
+        "text": "Veio da API de outro sistema",
+        "why": "Esse é o caso em que jsonb é certo."
+      },
+      {
+        "text": "Você indexa uma chave dentro, ou conta linhas",
+        "why": "São as perguntas que uma tabela responde e um blob não."
+      },
+      {
+        "text": "Duas linhas têm chaves diferentes",
+        "why": "Esperado de um payload, que é para o que serve."
+      }
+    ]
+  },
+  "ex-j69ktke6": {
+    "prompt": "Uma lista de status precisa de um nome de exibição em dois idiomas. O que isso te diz?",
+    "hint": "Algo quer ser guardado ao lado do valor.",
+    "choices": [
+      {
+        "text": "A coluna deveria ser jsonb",
+        "why": "Isso guarda os rótulos onde nada consegue se juntar."
+      },
+      {
+        "text": "Uma restrição CHECK deveria listar os dois idiomas",
+        "why": "Um CHECK testa um valor; não consegue carregar um."
+      },
+      {
+        "text": "Era dado, então é uma tabela",
+        "why": "No momento em que um valor precisa de propriedades próprias, ENUM ou CHECK é a casa errada."
+      },
+      {
+        "text": "O ENUM deveria receber mais valores",
+        "why": "Mais valores não é o que está sendo pedido."
+      }
+    ]
+  },
+  "ex-s249z48s": {
+    "prompt": "Uma coluna tem DEFAULT 'draft'. Uma inserção fornece NULL explicitamente para ela. O que é guardado?",
+    "hint": "Um default preenche um vazio, e um valor foi fornecido.",
+    "choices": [
+      {
+        "text": "Uma string vazia é guardada no lugar",
+        "why": "Nada converte NULL em coisa alguma."
+      },
+      {
+        "text": "NULL, ou recusa sob NOT NULL",
+        "why": "O default se aplica só quando a coluna é omitida."
+      },
+      {
+        "text": "'draft', porque é o default",
+        "why": "Fornecer NULL é fornecer um valor."
+      },
+      {
+        "text": "Um erro sobre valores conflitantes",
+        "why": "Nenhum conflito é detectado."
+      }
+    ]
+  },
+  "ex-gswreyc7": {
+    "prompt": "Por que uma coluna gerada é o único lugar seguro deste curso para guardar valor derivado?",
+    "hint": "Lembre do quarto portão da aula 2.",
+    "choices": [
+      {
+        "text": "Um índice sobre uma é recusado, então nada depende",
+        "why": "Podem ser indexadas."
+      },
+      {
+        "text": "São recalculadas a cada leitura de linha",
+        "why": "As STORED são calculadas na escrita."
+      },
+      {
+        "text": "Colunas geradas são mais rápidas de ler",
+        "why": "Velocidade não é o que torna uma cópia segura."
+      },
+      {
+        "text": "O banco a mantém, e só ele",
+        "why": "Nenhum gatilho para escrever, nenhum caminho para lembrar, nenhum jeito de desviar."
+      }
+    ]
+  },
+  "ex-7pqgsz3v": {
+    "prompt": "Por que updated_at não pode ser uma coluna gerada?",
+    "hint": "Olhe a regra sobre a expressão.",
+    "choices": [
+      {
+        "text": "Colunas geradas não podem ser timestamps",
+        "why": "Podem ser de qualquer tipo."
+      },
+      {
+        "text": "Conflitaria com a coluna created_at",
+        "why": "As duas são colunas independentes."
+      },
+      {
+        "text": "now() não é determinístico; a expressão precisa ser",
+        "why": "O que deixa um gatilho como único mecanismo correto."
+      },
+      {
+        "text": "Seria lento demais numa tabela grande",
+        "why": "Velocidade não é o obstáculo."
+      }
+    ]
+  },
+  "ex-s99sx2hc": {
+    "prompt": "Uma linha separa os dois: ___ define um valor uma vez e a linha passa a ser dona; GENERATED calcula para sempre e a linha nunca é dona.",
+    "hint": "Uma palavra, e é uma palavra-chave do SQL.",
+    "blanks": [
+      {
+        "accept": [
+          "default"
+        ]
+      }
+    ]
+  },
+  "ex-2epca2js": {
+    "prompt": "Uma tabela tem duas restrições CHECK numa coluna e você não as nomeou. Qual é o risco?",
+    "hint": "Olhe o segundo nome gerado.",
+    "choices": [
+      {
+        "text": "Dois checks numa única coluna são recusados",
+        "why": "São perfeitamente legais."
+      },
+      {
+        "text": "O segundo check fica sem ser avaliado",
+        "why": "Os dois são avaliados em toda escrita."
+      },
+      {
+        "text": "O número no fim é posicional e se move",
+        "why": "A mensagem da aplicação fica presa a um nome que se moveu."
+      },
+      {
+        "text": "Os nomes colidem e um é derrubado",
+        "why": "Não colidem; é para isso que o número serve."
+      }
+    ]
+  },
+  "ex-9vccgejh": {
+    "prompt": "Por que um CHECK nomeado ganha de um gerado para quem esbarra nele?",
+    "hint": "O nome é uma mensagem, uma camada adiante.",
+    "choices": [
+      {
+        "text": "Restrições nomeadas são verificadas mais rápido",
+        "why": "A verificação é idêntica."
+      },
+      {
+        "text": "Uma nomeada é desativável e uma gerada não",
+        "why": "Nenhuma pode ser desativada."
+      },
+      {
+        "text": "Um nome diz o que está errado; o outro diz qual",
+        "why": "É a mensagem de erro que o usuário do seu usuário acaba vendo."
+      },
+      {
+        "text": "Nomes gerados não são estáveis entre versões do PostgreSQL",
+        "why": "Problema real, e é o das migrações e não este."
+      }
+    ]
+  },
+  "ex-8ev38bhk": {
+    "prompt": "Quando nomear restrições deixa de ser opcional?",
+    "hint": "Três casos, e todos viram verdade em algum momento.",
+    "choices": [
+      {
+        "text": "Quando migrações rodam em vários bancos",
+        "why": "Um nome gerado pode diferir entre eles, então a migração passa num e falha no outro."
+      },
+      {
+        "text": "Quando o esquema é mantido em controle de versão",
+        "why": "Todo esquema deveria estar, nomeado ou não."
+      },
+      {
+        "text": "Quando a tabela tem mais de dez colunas",
+        "why": "Contagem de colunas não decide nada."
+      },
+      {
+        "text": "Quando a tabela passa de um milhão de linhas",
+        "why": "Tamanho não decide nada."
+      }
+    ]
+  },
+  "ex-nrz2bekh": {
+    "prompt": "Ligue cada ALTER TABLE a quanto trabalho ele é.",
+    "hint": "Um toca só o catálogo, um lê toda linha, um escreve toda linha.",
+    "pairs": [
+      {
+        "left": "RENAME COLUMN",
+        "right": "Só catálogo, instantâneo em qualquer tamanho"
+      },
+      {
+        "left": "SET NOT NULL",
+        "right": "Lê toda linha, não escreve nenhuma"
+      },
+      {
+        "left": "ALTER COLUMN TYPE de integer para bigint",
+        "right": "Escreve toda linha, e precisa do disco livre para isso"
+      }
+    ],
+    "right_distractors": [
+      "Roda em segundo plano sem lock",
+      "Recusado a menos que a tabela esteja vazia"
+    ]
+  },
+  "ex-sx5d0jwc": {
+    "prompt": "Um ALTER TABLE de um segundo derruba o site. O que aconteceu?",
+    "hint": "Não foi o ALTER que estava lento.",
+    "choices": [
+      {
+        "text": "Um gatilho disparou uma vez por linha da tabela",
+        "why": "ALTER TABLE não dispara gatilhos de linha."
+      },
+      {
+        "text": "A reescrita ficou sem disco",
+        "why": "Falha real, e ela falharia em vez de bloquear."
+      },
+      {
+        "text": "Entrou na fila atrás de um SELECT longo, e o resto também",
+        "why": "Um comando paciente bloqueia toda consulta rápida que chega depois."
+      },
+      {
+        "text": "O lock escalou para o banco inteiro",
+        "why": "Locks são por tabela."
+      }
+    ]
+  },
+  "ex-1rgrfdrz": {
+    "prompt": "O que SET lock_timeout antes de um ALTER TABLE te dá?",
+    "hint": "Pense no resultado que você quer quando o lock está ocupado.",
+    "choices": [
+      {
+        "text": "Deixa o ALTER rodar sem lock",
+        "why": "Nada remove o lock."
+      },
+      {
+        "text": "Cancela a consulta que estiver segurando o lock",
+        "why": "Cancela a sua, não a dela."
+      },
+      {
+        "text": "Faz o ALTER rodar mais rápido",
+        "why": "O trabalho é o mesmo."
+      },
+      {
+        "text": "Ele desiste em vez de bloquear tudo",
+        "why": "E você tenta de novo quando a consulta longa terminar."
+      }
+    ]
+  },
+  "ex-j8fafzbg": {
+    "prompt": "DROP TABLE invoices CASCADE. O que o CASCADE faz?",
+    "hint": "Não é o que o ON DELETE CASCADE faz.",
+    "choices": [
+      {
+        "text": "Derruba cada uma das tabelas do esquema",
+        "why": "Só o que depende desta."
+      },
+      {
+        "text": "Apaga as linhas nas tabelas que a referenciam",
+        "why": "Isso é ON DELETE CASCADE, e é outra coisa."
+      },
+      {
+        "text": "Recusa se alguma tabela referenciadora tiver linhas",
+        "why": "CASCADE é o que impede a recusa."
+      },
+      {
+        "text": "Derruba as restrições, deixa o dado delas",
+        "why": "O dado sobrevive, a regra não, e ninguém é avisado."
+      }
+    ]
+  },
+  "ex-5pek177e": {
+    "prompt": "O que NOT VALID numa restrição nova significa?",
+    "hint": "Ele divide um comando em duas decisões.",
+    "choices": [
+      {
+        "text": "Aplique de agora em diante; pule o que está lá",
+        "why": "Linhas novas são as que você controla; as antigas você conserta no seu ritmo."
+      },
+      {
+        "text": "A restrição é verificada mas violações são registradas",
+        "why": "Nada é registrado; violações são recusadas."
+      },
+      {
+        "text": "A restrição caduca no próximo reinício",
+        "why": "É permanente."
+      },
+      {
+        "text": "A restrição é guardada e fica sem ser imposta",
+        "why": "É imposta em toda linha nova."
+      }
+    ]
+  },
+  "ex-tq2ajv4m": {
+    "prompt": "Ponha em ordem os quatro passos de tornar uma coluna NOT NULL numa tabela viva.",
+    "hint": "O último passo só é instantâneo por causa do que os anteriores provaram.",
+    "items": [
+      "Acrescente uma restrição CHECK … IS NOT NULL, NOT VALID",
+      "Preencha os nulos existentes em lotes",
+      "VALIDATE a restrição, que varre sem bloquear escritas",
+      "SET NOT NULL, que agora é instantâneo, e derrube a restrição auxiliar"
+    ],
+    "trap": "A troca comum é validar antes de preencher — validar uma tabela que ainda tem nulos falha, e você volta ao começo com uma varredura desperdiçada."
+  },
+  "ex-tyrpvbt8": {
+    "prompt": "Renomear uma coluna é instantâneo e quase não pega lock. Por que ainda são três deploys?",
+    "hint": "Duas versões da aplicação rodam ao mesmo tempo durante um deploy.",
+    "choices": [
+      {
+        "text": "O nome antigo fica reservado por um tempo depois",
+        "why": "Nada o reserva."
+      },
+      {
+        "text": "Índices na coluna têm que ser reconstruídos",
+        "why": "Eles acompanham o rename."
+      },
+      {
+        "text": "O rename reescreve a tabela em segundo plano",
+        "why": "Não reescreve; é só catálogo."
+      },
+      {
+        "text": "Código antigo ainda rodando seleciona o nome antigo",
+        "why": "O comando é rápido e o deploy está quebrado."
+      }
+    ]
+  },
+  "ex-k8zx77dy": {
+    "prompt": "CREATE INDEX CONCURRENTLY falhou no meio. O que você tem que conferir?",
+    "hint": "Ele deixa algo para trás, e não é óbvio.",
+    "choices": [
+      {
+        "text": "Se a restrição que ele sustentava foi derrubada",
+        "why": "Ele não sustentava nenhuma."
+      },
+      {
+        "text": "Se a tabela ficou travada e continua travada",
+        "why": "O lock é liberado quando o comando termina."
+      },
+      {
+        "text": "Se ficou um índice inválido para trás",
+        "why": "SELECT indexrelid::regclass FROM pg_index WHERE NOT indisvalid."
+      },
+      {
+        "text": "Se linhas se perderam durante a construção",
+        "why": "Construir índice nunca toca linhas."
+      }
+    ]
+  },
+  "ex-23ch81jt": {
+    "prompt": "Qual destes não pode ser desfeito?",
+    "hint": "Dois destes são reversíveis e dois não.",
+    "choices": [
+      {
+        "text": "DROP COLUMN",
+        "why": "O dado vai junto."
+      },
+      {
+        "text": "ADD COLUMN",
+        "why": "Derrube-a."
+      },
+      {
+        "text": "RENAME COLUMN",
+        "why": "Renomeie de volta."
+      },
+      {
+        "text": "SET NOT NULL",
+        "why": "Derrube a restrição."
+      }
+    ]
+  },
+  "ex-wgbzcy8h": {
+    "prompt": "O padrão para uma mudança que nenhum passo único faz com segurança, em duas palavras: ___ e ___.",
+    "hint": "Acrescente o novo primeiro; remova o antigo por último.",
+    "blanks": [
+      {
+        "accept": [
+          "expandir"
+        ]
+      },
+      {
+        "accept": [
+          "contrair"
+        ]
+      }
+    ]
+  }
+}
