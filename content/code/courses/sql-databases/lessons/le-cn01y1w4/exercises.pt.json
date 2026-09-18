@@ -850,5 +850,238 @@
         "why": "Deduplicar é trabalho do DISTINCT."
       }
     ]
+  },
+  "ex-scxpzhky": {
+    "prompt": "Um painel informa o ticket médio com `SELECT avg(o.total) FROM orders o JOIN order_lines l ON l.order_id = o.id`. Por que o número está errado?",
+    "hint": "Diga em voz alta o que é uma linha daquele resultado.",
+    "choices": [
+      {
+        "text": "`avg` ignora as linhas em que o total está vazio",
+        "why": "Ignora os desconhecidos mesmo, e aqui todo total está presente."
+      },
+      {
+        "text": "O total de um pedido entra na média uma vez por item",
+        "why": "Uma linha por item significa que um pedido de seis itens contribui seis vezes com o total dele."
+      },
+      {
+        "text": "`avg` sobre `numeric` perde precisão",
+        "why": "`numeric` é exato, e é por isso que dinheiro mora nele."
+      },
+      {
+        "text": "Pedidos sem itens ficam de fora",
+        "why": "Ficam, e tirar um pedido vazio mexe muito menos numa média do que contar um cheio seis vezes."
+      }
+    ]
+  },
+  "ex-fs9m87kp": {
+    "prompt": "Uma reconciliação usa `FULL JOIN` entre o nosso livro e o extrato deles, e seleciona `coalesce(a.reference, b.reference)`. Por que não só `a.reference`?",
+    "hint": "Pergunte quais linhas esta consulta existe para achar.",
+    "choices": [
+      {
+        "text": "Porque `coalesce` é mais rápido que ler uma coluna",
+        "why": "É uma função sobre dois valores e custa um pouco mais, não menos."
+      },
+      {
+        "text": "As linhas que só eles têm não trazem nada nosso",
+        "why": "Uma junção completa inventa vazios do lado que não teve par, e qualquer um dos dois pode ser o que falta."
+      },
+      {
+        "text": "Porque as duas referências podem estar escritas de formas diferentes",
+        "why": "Se estivessem, a condição da junção não as teria pareado."
+      },
+      {
+        "text": "Porque `a.reference` não entraria na lista de seleção de outro jeito",
+        "why": "Entraria sozinha sem problema, e ficaria vazia em metade das divergências."
+      }
+    ]
+  },
+  "ex-kxf8xz90": {
+    "prompt": "\"Pacientes nunca internados\" foi escrito como `LEFT JOIN` para `admissions` com `WHERE a.discharged_at IS NULL`. A lista está longa demais. O que está errado?",
+    "hint": "Pergunte o que um valor vazio naquela coluna significa para uma linha que existe.",
+    "choices": [
+      {
+        "text": "A junção deveria ser `FULL JOIN`",
+        "why": "Nada aqui pergunta sobre internações sem paciente."
+      },
+      {
+        "text": "`IS NULL` deveria ser `= NULL`",
+        "why": "Essa forma nunca é verdadeira, então a lista viria vazia em vez de longa."
+      },
+      {
+        "text": "A coluna testada é anulável",
+        "why": "Uma antijunção tem que testar uma coluna que não pode estar vazia na tabela, como a chave."
+      },
+      {
+        "text": "A condição pertence ao `ON` e não ao `WHERE`",
+        "why": "Esta é a exceção deliberada: testar ausência é justamente o que vai ali."
+      }
+    ]
+  },
+  "ex-ffygz4s8": {
+    "prompt": "Uma consulta que funcionou por um ano passou a não devolver nada. A única mudança foi uma migração que acrescentou `created_at` a duas tabelas, e que não mencionou esta consulta. O que há nela?",
+    "hint": "Algo que decide em que parear lendo o esquema em vez da consulta.",
+    "choices": [
+      {
+        "text": "Um `NATURAL JOIN`",
+        "why": "Ele pareia por todo nome que as duas tabelas dividem, então uma coluna criada nas duas passou a parear pelo instante também."
+      },
+      {
+        "text": "Um `CROSS JOIN`",
+        "why": "Esse devolve mais linhas, não nenhuma, e uma coluna nova não muda nada nele."
+      },
+      {
+        "text": "Uma cláusula `USING`",
+        "why": "Ela nomeia as colunas, então ninguém acrescenta uma a ela."
+      },
+      {
+        "text": "Uma subconsulta `LATERAL`",
+        "why": "Ela se refere à linha da esquerda pelo nome, e uma coluna nova não entra ali."
+      }
+    ]
+  },
+  "ex-ps0c7vak": {
+    "prompt": "As três viagens mais recentes de cada motorista, numa consulta só. Por que uma junção comum não produz isso?",
+    "hint": "Pergunte o que o lado direito tem permissão de saber.",
+    "choices": [
+      {
+        "text": "Uma junção comum não consegue ordenar a tabela da direita",
+        "why": "Ordenar não é a dificuldade; decidir um limite por motorista é."
+      },
+      {
+        "text": "Uma junção comum não aceita limite nenhum",
+        "why": "A consulta inteira pode ser limitada. O que não pode é limitar dentro de cada grupo."
+      },
+      {
+        "text": "Ela não tem como dizer \"por linha da tabela da esquerda\"",
+        "why": "A condição dela é sobre um par, então nada ali conta três de coisa alguma para um motorista."
+      },
+      {
+        "text": "A tabela de viagens teria que ser unida a si mesma",
+        "why": "Essa é uma forma de contornar, e não o que impede a junção simples."
+      }
+    ]
+  },
+  "ex-qdhdh9g8": {
+    "prompt": "Uma biblioteca informa que todo sócio pegou pelo menos um livro. Alguns sócios não pegaram nenhum. A consulta é um `LEFT JOIN` para `loans`, agrupado por sócio. Qual expressão produziu isso?",
+    "hint": "Pergunte o que é a linha inventada, e o que cada contador conta.",
+    "choices": [
+      {
+        "text": "`count(l.id)`",
+        "why": "Esse conta empréstimos e ignora os vazios, o que dá zero onde zero está certo."
+      },
+      {
+        "text": "`count(*)`",
+        "why": "Ele conta linhas, e um sócio sem nada ainda tem a linha que a junção inventou."
+      },
+      {
+        "text": "`sum(1) FILTER (WHERE l.id IS NOT NULL)`",
+        "why": "Esse pergunta pela coluna e responde zero para eles também."
+      },
+      {
+        "text": "`count(DISTINCT l.id)`",
+        "why": "Distinto sobre uma coluna vazia não conta nada, o que de novo é a resposta certa."
+      }
+    ]
+  },
+  "ex-hdnfa1qb": {
+    "prompt": "Um pedido é unido a `price_history` por `o.ordered_on BETWEEN p.valid_from AND p.valid_to`. Duas linhas do histórico se sobrepõem em um único dia. O que acontece com os pedidos feitos naquele dia?",
+    "hint": "Todo par que satisfaz a condição vira uma linha.",
+    "choices": [
+      {
+        "text": "O banco recusa a junção por ambiguidade",
+        "why": "Nada recusa. Uma condição que duas linhas satisfazem faz dois pares."
+      },
+      {
+        "text": "A linha mais recente do histórico vence, como numa atualização",
+        "why": "Não há vencer. Uma junção não tem noção de casamento mais recente."
+      },
+      {
+        "text": "Cada um aparece duas vezes, e os totais dobram",
+        "why": "Uma linha por par, e a sobreposição cria um segundo par só naquele dia."
+      },
+      {
+        "text": "Eles somem, já que o casamento não é único",
+        "why": "Isso ao menos seria visível. Ser contado duas vezes não é."
+      }
+    ]
+  },
+  "ex-rzraegb6": {
+    "prompt": "Uma consulta com `LEFT JOIN` devolve 3 linhas, e a tabela da esquerda tem 3 linhas. Um colega conclui que nada se perdeu. Ele tem razão?",
+    "hint": "Pergunte o que uma junção à esquerda pode fazer com a contagem em cada direção.",
+    "choices": [
+      {
+        "text": "Tem; uma junção à esquerda nunca devolve menos linhas que a tabela da esquerda",
+        "why": "Sozinha não devolve, e uma condição mais adiante na consulta devolve."
+      },
+      {
+        "text": "Não; uma perdida e uma duplicada dá o mesmo total",
+        "why": "Uma contagem é um número só, e dois erros opostos caem no mesmo."
+      },
+      {
+        "text": "Tem, desde que a condição da junção seja uma igualdade",
+        "why": "A condição não decide nada sobre o que uma cláusula posterior descarta."
+      },
+      {
+        "text": "Não; uma junção à esquerda sempre devolve mais linhas que a tabela da esquerda",
+        "why": "Ela devolve o mesmo número quando nenhuma linha da esquerda tem mais de um par."
+      }
+    ]
+  },
+  "ex-fvy8s5km": {
+    "prompt": "Três clientes e cinco pedidos pareados pela chave estrangeira deram quatro linhas. Escreva quantas linhas voltam se as duas tabelas forem pareadas sem condição nenhuma.",
+    "hint": "É a única junção cuja contagem de linhas dá para calcular antes de rodar.",
+    "blanks": [
+      {
+        "accept": [
+          "15",
+          "quinze"
+        ]
+      }
+    ]
+  },
+  "ex-kfcvaa1b": {
+    "prompt": "Uma palavra-chave deixa o lado direito de uma junção ler as colunas da linha da esquerda com que está sendo pareado. Escreva qual é.",
+    "hint": "É o que torna possível \"os três mais recentes de cada\".",
+    "blanks": [
+      {
+        "accept": [
+          "lateral"
+        ]
+      }
+    ]
+  },
+  "ex-amhrn0k6": {
+    "prompt": "Você está lendo rápido a consulta de cinco tabelas de outra pessoa. Ponha as cinco verificações na ordem que chega mais rápido ao significado.",
+    "hint": "Duas são sobre o que o resultado é; três são sobre o que pode estar errado nele.",
+    "items": [
+      "Achar a primeira tabela, que é o assunto da consulta",
+      "Ler cada condição de pareamento como uma frase",
+      "Anotar cada junção externa e conferir que nada depois dela é interna",
+      "Dizer em voz alta o que é uma linha do resultado",
+      "Ler os filtros, procurando uma coluna da direita"
+    ],
+    "trap": "Ler os filtros primeiro é tentador porque é onde mora a regra de negócio — e uma coluna da direita ali não diz nada enquanto você não souber qual lado é qual."
+  },
+  "ex-ef7f62n3": {
+    "prompt": "Ligue cada sintoma de junção mal feita à causa dele.",
+    "hint": "Uma inventa linhas, uma descarta linhas, uma multiplica linhas.",
+    "pairs": [
+      {
+        "left": "Um total está várias vezes maior",
+        "right": "Uma linha por par, e uma coluna do lado único somada sobre todas elas"
+      },
+      {
+        "left": "As linhas sem nada do outro lado sumiram",
+        "right": "Uma condição sobre a tabela da direita, aplicada depois do pareamento"
+      },
+      {
+        "left": "Todo mundo tem pelo menos um, inclusive quem não tem nenhum",
+        "right": "Contar linhas em vez da coluna que ficaria vazia"
+      }
+    ],
+    "right_distractors": [
+      "Um índice faltando na chave estrangeira",
+      "Duas tabelas ordenadas com colações diferentes"
+    ]
   }
 }
