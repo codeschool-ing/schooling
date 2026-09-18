@@ -10,22 +10,22 @@
     "hint": "One of the two failure modes is loud and the other is silent.",
     "choices": [
       {
-        "text": "Both rows come back, so the outer query grows an extra row",
+        "text": "Both rows come back",
         "correct": false,
         "why": "A scalar position takes a value; it has no way to become two rows."
       },
       {
-        "text": "The two values are joined into one piece of text",
+        "text": "The two values are concatenated",
         "correct": false,
         "why": "No engine concatenates on your behalf, and the types would rarely allow it."
       },
       {
-        "text": "An error",
+        "text": "The query fails with an error",
         "correct": true,
         "why": "The database refuses rather than picking one, and tells you an assumption was wrong."
       },
       {
-        "text": "The first row is used, in whatever order the table holds them",
+        "text": "The first row is used",
         "correct": false,
         "why": "Picking silently is what you would want to be warned about, so nobody does it."
       }
@@ -42,22 +42,22 @@
     "hint": "Compare it with what two rows did.",
     "choices": [
       {
-        "text": "The outer row is dropped from the result",
+        "text": "The outer row is dropped",
         "correct": false,
         "why": "A subquery in the SELECT list produces a value and decides nothing about rows."
       },
       {
-        "text": "The value is NULL",
+        "text": "The value is NULL instead",
         "correct": true,
         "why": "Quietly, with no message, and lesson 4's section about unknowns then applies to it."
       },
       {
-        "text": "Zero, which stands in for an empty subquery",
+        "text": "Zero stands in for it",
         "correct": false,
         "why": "Substituting a zero would be a claim about the data that nobody made."
       },
       {
-        "text": "An error, in the same way that two rows is an error",
+        "text": "An error, as with two rows",
         "correct": false,
         "why": "Too many rows is checked; too few is a perfectly ordinary empty result."
       }
@@ -74,22 +74,22 @@
     "hint": "Think about how you would write one of its columns in the outer query.",
     "choices": [
       {
-        "text": "The planner reads it to decide whether to materialise the result",
+        "text": "The planner reads it to plan",
         "correct": false,
         "why": "The decision is made from the shape of the query, and a name carries no hint."
       },
       {
-        "text": "Without one the subquery would be treated as correlated",
+        "text": "Without one it would be correlated",
         "correct": false,
         "why": "Correlation is about referring outward, and a derived table may not do that anyway."
       },
       {
-        "text": "It marks the subquery as independent of the query around it",
+        "text": "It marks the subquery as independent",
         "correct": false,
         "why": "Independence follows from what the subquery mentions, not from having a name."
       },
       {
-        "text": "Its columns are reached through it",
+        "text": "Its columns are named through it",
         "correct": true,
         "why": "PostgreSQL and MySQL refuse one without a name; write it where SQLite would let you skip."
       }
@@ -130,17 +130,17 @@
         "why": "What you want there is a derived table with the expression inside and the grouping outside."
       },
       {
-        "text": "HAVING, which takes an aggregate rather than a set",
+        "text": "HAVING",
         "correct": false,
         "why": "It takes a condition on a group, and that condition may contain a subquery."
       },
       {
-        "text": "ORDER BY, which runs after the rows have been chosen",
+        "text": "ORDER BY",
         "correct": false,
         "why": "A subquery is welcome there, and a correlated one is a common way to sort."
       },
       {
-        "text": "The ON clause of a join, which takes a condition",
+        "text": "The ON clause of a join",
         "correct": false,
         "why": "A condition may contain a subquery like any other condition can."
       }
@@ -157,22 +157,22 @@
     "hint": "There is a reason SELECT 1 and SELECT * behave identically.",
     "choices": [
       {
-        "text": "The number of columns, which has to match the outer expression",
+        "text": "The number of columns",
         "correct": false,
         "why": "There is no outer expression to match: EXISTS takes no left-hand side."
       },
       {
-        "text": "The first column, which is compared against the outer value",
+        "text": "The first column",
         "correct": false,
         "why": "That is what IN does, and it is the difference between the two."
       },
       {
-        "text": "Nothing at all",
+        "text": "Nothing that it contains",
         "correct": true,
         "why": "Something has to be written there, and every planner discards it."
       },
       {
-        "text": "The type of the column, to decide how to compare it",
+        "text": "The type of the column",
         "correct": false,
         "why": "No comparison is made out here, so no type has to be agreed."
       }
@@ -189,22 +189,22 @@
     "hint": "Unfold it into the three comparisons it stands for.",
     "choices": [
       {
-        "text": "An AND with an unknown in it is not true",
+        "text": "An AND with an unknown is not true",
         "correct": true,
         "why": "The third comparison is unknown for any value, so the conjunction can never hold."
       },
       {
-        "text": "The list is malformed, so the condition yields an empty set",
+        "text": "The list is not valid SQL",
         "correct": false,
         "why": "It is valid SQL and it is evaluated exactly as written."
       },
       {
-        "text": "A null matches any value, so the exclusion covers the table",
+        "text": "A null matches any value",
         "correct": false,
         "why": "A null matches no value at all, which is the opposite direction."
       },
       {
-        "text": "The database stops at the first unknown and returns early",
+        "text": "The database stops at the first unknown",
         "correct": false,
         "why": "It evaluates the condition per row and returns what the logic says."
       }
@@ -221,22 +221,22 @@
     "hint": "Ask where the comparison actually happens in each one.",
     "choices": [
       {
-        "text": "NOT IN with the subquery wrapped in a derived table",
+        "text": "NOT IN wrapped in a derived table",
         "correct": false,
         "why": "Wrapping changes nothing about the logic of the membership test."
       },
       {
-        "text": "NOT IN with coalesce around the outer column",
+        "text": "NOT IN with coalesce on the column",
         "correct": false,
         "why": "The null is in the set, not in the column being tested."
       },
       {
-        "text": "The explicit spelling of NOT IN with a comparison operator",
+        "text": "NOT IN spelled out",
         "correct": false,
         "why": "It spells it out and inherits the behaviour along with it."
       },
       {
-        "text": "NOT EXISTS",
+        "text": "NOT EXISTS, correlated",
         "correct": true,
         "why": "The comparison is inside, one row at a time, and existence is true or false."
       }
@@ -253,7 +253,7 @@
     "hint": "Empty sets are where these operators part company with intuition.",
     "choices": [
       {
-        "text": "NULL, matching what the aggregate spelling returns",
+        "text": "NULL",
         "correct": false,
         "why": "The aggregate form does return null there, and that is the disagreement."
       },
@@ -263,12 +263,12 @@
         "why": "There is no row that fails the comparison, so the condition holds."
       },
       {
-        "text": "An error, because the operator needs a row to compare against",
+        "text": "An error",
         "correct": false,
         "why": "An empty set is an ordinary input, and the operator has an answer for it."
       },
       {
-        "text": "False, since no row satisfied the comparison",
+        "text": "False",
         "correct": false,
         "why": "There was no row to satisfy it, and the operator reads that as nothing failing."
       }
@@ -313,22 +313,22 @@
     "hint": "The claim was true of something, once.",
     "choices": [
       {
-        "text": "IN wins, because the set is built once and then reused",
+        "text": "IN wins, the set is built once",
         "correct": false,
         "why": "A planner that builds a set does so for either spelling."
       },
       {
-        "text": "They differ by engine, so write EXISTS for portability",
+        "text": "They differ by engine, so write EXISTS",
         "correct": false,
         "why": "They are equally portable, and portability is not what the claim was about."
       },
       {
-        "text": "Measure it",
+        "text": "Measure it, engine by engine",
         "correct": true,
         "why": "In PostgreSQL both usually become the same semi-join; MySQL was bad at IN before 8."
       },
       {
-        "text": "EXISTS wins, because it stops at the first match it finds",
+        "text": "EXISTS wins, it stops early",
         "correct": false,
         "why": "Semi-joins stop early whichever way the query was written."
       }
@@ -345,22 +345,22 @@
     "hint": "Try running it on its own and see what stops you.",
     "choices": [
       {
-        "text": "It returns one row for each row of the outer query",
+        "text": "It returns one row per outer row",
         "correct": false,
         "why": "That is a consequence people expect, and it is not the definition."
       },
       {
-        "text": "It is written with EXISTS rather than with IN",
+        "text": "It is written with EXISTS",
         "correct": false,
         "why": "EXISTS is usually correlated by habit, and IN can be correlated too."
       },
       {
-        "text": "It sits in the WHERE clause rather than in FROM",
+        "text": "It sits in WHERE rather than FROM",
         "correct": false,
         "why": "Both clauses take either kind, so position decides nothing."
       },
       {
-        "text": "It names the outer query",
+        "text": "It refers to the outer query",
         "correct": true,
         "why": "Paste it into a client by itself and it is a syntax error."
       }
@@ -377,12 +377,12 @@
     "hint": "They are asking about the same rows three times.",
     "choices": [
       {
-        "text": "A UNION of the three, pivoted back into columns afterwards",
+        "text": "A UNION of the three, pivoted back",
         "correct": false,
         "why": "That is more work to write and more work to run than the join."
       },
       {
-        "text": "Three derived tables, joined to the outer query",
+        "text": "Three derived tables",
         "correct": false,
         "why": "Better than three correlated ones and still three passes over the table."
       },
@@ -392,7 +392,7 @@
         "why": "Three numbers in one pass, and count(o.id) rather than count(*) for lesson 6's reason."
       },
       {
-        "text": "One correlated subquery that returns three columns",
+        "text": "One correlated subquery returning three columns",
         "correct": false,
         "why": "A scalar position takes one value, so three columns have nowhere to go."
       }
@@ -409,7 +409,7 @@
     "hint": "Something that was happening quietly stopped happening.",
     "choices": [
       {
-        "text": "Statistics are stale, so the subquery returns more rows than it should",
+        "text": "The statistics have gone stale",
         "correct": false,
         "why": "Stale statistics change plans, and they do not change how many rows match."
       },
@@ -419,12 +419,12 @@
         "why": "Whether the loop becomes a join depends on the engine, the version and the query."
       },
       {
-        "text": "Production has wider rows, so each iteration copies more data",
+        "text": "Production rows are much wider",
         "correct": false,
         "why": "Row width is a small constant factor, and this defect is a change of shape."
       },
       {
-        "text": "The network is slower, so each iteration costs a round trip",
+        "text": "The network between them is slower",
         "correct": false,
         "why": "The subquery runs inside the database, so no iteration crosses a network."
       }
@@ -446,17 +446,17 @@
         "why": "A customer whose orders were archived gets a null written over a value that was true."
       },
       {
-        "text": "Rows with no match are skipped, so the column drifts out of date",
+        "text": "Rows with no match are skipped instead",
         "correct": false,
         "why": "Every row is updated; the question is what the unmatched ones are updated to."
       },
       {
-        "text": "The statement fails when the subquery returns no rows",
+        "text": "The statement fails outright",
         "correct": false,
         "why": "An aggregate over no rows is null, and writing a null is not a failure."
       },
       {
-        "text": "The subquery runs once, so each customer gets the same date",
+        "text": "The subquery runs just once",
         "correct": false,
         "why": "It mentions the outer row, so it is evaluated against each customer."
       }
@@ -473,12 +473,12 @@
     "hint": "The shape is identical and the altitude is different.",
     "choices": [
       {
-        "text": "It is unrelated: one is a query and the other is program flow",
+        "text": "Unrelated: one is program flow",
         "correct": false,
         "why": "The flow is the same loop, moved somewhere that makes each step far dearer."
       },
       {
-        "text": "It is safer, because each query runs in a transaction of its own",
+        "text": "It is safer, one transaction each",
         "correct": false,
         "why": "Separate transactions make the set of results inconsistent rather than safe."
       },
@@ -488,7 +488,7 @@
         "why": "Lesson 11 calls it N+1; the database at least has a planner that might rescue its version."
       },
       {
-        "text": "It is quicker, because the application can cache between iterations",
+        "text": "It is quicker, the application can cache",
         "correct": false,
         "why": "A cache can help and the round trips are what dominates."
       }
@@ -505,22 +505,22 @@
     "hint": "Work out the order in which the two are evaluated.",
     "choices": [
       {
-        "text": "Its alias shadows the outer names and hides them",
+        "text": "Its alias shadows the outer names",
         "correct": false,
         "why": "An alias names the derived table and takes nothing away from the outer one."
       },
       {
-        "text": "It is evaluated first",
+        "text": "It is evaluated before them",
         "correct": true,
         "why": "The outer table does not exist yet when it runs, which is what LATERAL changes."
       },
       {
-        "text": "The reference would make the outer result ambiguous",
+        "text": "A reference would be ambiguous",
         "correct": false,
         "why": "There is no ambiguity in the reference; there is simply no such table yet."
       },
       {
-        "text": "Its rows are materialised, so an outer value would arrive too late",
+        "text": "Its rows are materialised",
         "correct": false,
         "why": "Materialisation is a choice the planner makes, and the restriction holds either way."
       }
@@ -537,22 +537,22 @@
     "hint": "It removes the restriction the previous question was about.",
     "choices": [
       {
-        "text": "Runs it per outer row",
+        "text": "Runs the inner query per outer row",
         "correct": true,
         "why": "With that row's values available, which is how top N per group gets a LIMIT."
       },
       {
-        "text": "Materialises the derived table so that it is computed once",
+        "text": "Materialises the derived table",
         "correct": false,
         "why": "It is the opposite: the inner query is evaluated again for each outer row."
       },
       {
-        "text": "Lets the outer query see the derived table's columns",
+        "text": "Lets the outer query see its columns",
         "correct": false,
         "why": "It already can: that is what the alias is for, and it is the other direction."
       },
       {
-        "text": "Joins the two sides with no condition, as a cross join does",
+        "text": "Joins the two sides with no condition",
         "correct": false,
         "why": "CROSS JOIN LATERAL looks like that and the inner query does see the outer row."
       }
@@ -569,12 +569,12 @@
     "hint": "It stops wherever pushing it through would change the answer.",
     "choices": [
       {
-        "text": "At a GROUP BY, because the groups have been formed by then",
+        "text": "At a GROUP BY or a HAVING",
         "correct": false,
         "why": "A filter on a grouping column is pushed through a GROUP BY quite happily."
       },
       {
-        "text": "At a join, because two tables are now involved",
+        "text": "At a join",
         "correct": false,
         "why": "Filters are pushed through joins routinely, and into either side."
       },
@@ -584,7 +584,7 @@
         "why": "Also at DISTINCT and at LIMIT, for the same reason in each case."
       },
       {
-        "text": "At an ORDER BY, which has fixed the order of the rows",
+        "text": "At an ORDER BY",
         "correct": false,
         "why": "Sorting does not decide which rows exist, so a filter crosses it safely."
       }
@@ -625,7 +625,7 @@
         "why": "It appears in the star expansion under whatever name it was given."
       },
       {
-        "text": "An unnamed aggregate is rejected inside a derived table",
+        "text": "An unnamed aggregate is rejected",
         "correct": false,
         "why": "It is accepted; the trouble arrives later, when something refers to it."
       },
@@ -635,7 +635,7 @@
         "why": "Otherwise it is whatever the engine calls it, and an upgrade can rename it."
       },
       {
-        "text": "The alias is what tells the planner it may push a filter through",
+        "text": "The alias is what allows the pushdown",
         "correct": false,
         "why": "Pushdown is decided by the shape of the query, and names play no part."
       }
@@ -652,7 +652,7 @@
     "hint": "It is a sequence, read in the order it is written.",
     "choices": [
       {
-        "text": "A CTE from the statement that called this one",
+        "text": "One from the calling statement",
         "correct": false,
         "why": "Statements do not call each other, and a WITH lives inside one statement."
       },
@@ -662,12 +662,12 @@
         "why": "A later name is not visible to an earlier definition, so the steps go one way."
       },
       {
-        "text": "Any other in the same WITH, in either direction",
+        "text": "Any other, in either direction",
         "correct": false,
         "why": "Referring forwards would make the order of the list meaningless."
       },
       {
-        "text": "The final statement, which is what consumes it",
+        "text": "The final statement",
         "correct": false,
         "why": "The statement uses the CTEs; it is not something they can read from."
       }
@@ -684,22 +684,22 @@
     "hint": "Compare the two versions of the same query in the section.",
     "choices": [
       {
-        "text": "A cached result that later statements in the session reuse",
+        "text": "A result cached for the session",
         "correct": false,
         "why": "It lasts for one statement, and nothing carries it to the next."
       },
       {
-        "text": "A result computed before the outer query is planned",
+        "text": "A result computed before planning",
         "correct": false,
         "why": "Planning covers the whole statement at once, including the named steps."
       },
       {
-        "text": "The same thing",
+        "text": "Nothing at all: the same thing",
         "correct": true,
         "why": "The difference is readability, and being able to reuse a step without writing it twice."
       },
       {
-        "text": "A materialised intermediate result, held for the statement",
+        "text": "A materialised intermediate result",
         "correct": false,
         "why": "Whether it is materialised is the planner's decision, not the keyword's."
       }
@@ -716,12 +716,12 @@
     "hint": "They look like steps and they are not.",
     "choices": [
       {
-        "text": "Whatever the order of the definitions in the WITH decides",
+        "text": "Whatever the order in the WITH decides",
         "correct": false,
         "why": "The layout suggests a sequence and the engine does not promise one."
       },
       {
-        "text": "The rows the DELETE removed, since it is written first",
+        "text": "The rows the DELETE removed",
         "correct": false,
         "why": "Written order is not run order, and the run order is undefined."
       },
@@ -731,7 +731,7 @@
         "why": "Every part sees one snapshot; two parts that modify the same row are unreasonable."
       },
       {
-        "text": "An error, because two parts of one statement touch a table",
+        "text": "An error from the engine",
         "correct": false,
         "why": "It is accepted, which is what makes the snapshot rule worth knowing."
       }
@@ -748,22 +748,22 @@
     "hint": "One of them is where the feature is best known.",
     "choices": [
       {
-        "text": "MariaDB by itself, which adopted WITH later than the rest",
+        "text": "MariaDB alone",
         "correct": false,
         "why": "MariaDB had it from 10.2, and it is not the odd one out here."
       },
       {
-        "text": "MySQL and SQLite",
+        "text": "MySQL and SQLite alone",
         "correct": true,
         "why": "There it is two statements in a transaction, which is the next lesson."
       },
       {
-        "text": "PostgreSQL and SQLite, which restrict WITH to reads",
+        "text": "PostgreSQL and SQLite",
         "correct": false,
         "why": "PostgreSQL is the engine where the feature is most developed."
       },
       {
-        "text": "Each of them, since a CTE has to be a SELECT",
+        "text": "The four engines here",
         "correct": false,
         "why": "A CTE has to be a query, and in PostgreSQL a writing statement counts."
       }
@@ -785,17 +785,17 @@
         "why": "If the list of names does not describe the query, it is a nested query with labels."
       },
       {
-        "text": "The planner's ability to inline them, which reads the names",
+        "text": "The planner's ability to inline",
         "correct": false,
         "why": "Inlining is decided from the shape and the reference count, not the spelling."
       },
       {
-        "text": "The ability to reference a step more than once",
+        "text": "Referencing a step twice",
         "correct": false,
         "why": "A badly named step can still be referenced twice."
       },
       {
-        "text": "No real benefit, since the names do not reach the engine",
+        "text": "Little of substance",
         "correct": false,
         "why": "They do not reach the engine, and the engine was never who they were for."
       }
@@ -812,22 +812,22 @@
     "hint": "One says where to begin and one says how to go further.",
     "choices": [
       {
-        "text": "A base case and a return value, as in a function",
+        "text": "A base case and a return value",
         "correct": false,
         "why": "Nothing calls itself here; the name is misleading and the shape is a loop."
       },
       {
-        "text": "A SELECT and a matching INSERT into the same name",
+        "text": "A SELECT and an INSERT",
         "correct": false,
         "why": "No rows are inserted anywhere: the result is the rounds stacked together."
       },
       {
-        "text": "An anchor and a step",
+        "text": "An anchor and a repeating step",
         "correct": true,
         "why": "With UNION ALL between them, and the step joins against what came before."
       },
       {
-        "text": "A forward pass and a backward pass over the tree",
+        "text": "A forward pass and a backward pass",
         "correct": false,
         "why": "One direction is all a given query walks; reversing it is a different query."
       }
@@ -844,22 +844,22 @@
     "hint": "This is the reason the query terminates.",
     "choices": [
       {
-        "text": "The anchor's rows, evaluated again on each round",
+        "text": "The anchor's rows, again each round",
         "correct": false,
         "why": "The anchor runs once; joining against it again would never go past level two."
       },
       {
-        "text": "The whole table, narrowed by the depth reached so far",
+        "text": "The whole table",
         "correct": false,
         "why": "The join is against the recursive name, and that name holds one round."
       },
       {
-        "text": "Everything found so far, accumulated across the rounds",
+        "text": "Everything found so far",
         "correct": false,
         "why": "That would revisit the same rows for ever on a tree of any depth."
       },
       {
-        "text": "The previous round's",
+        "text": "The previous round's rows",
         "correct": true,
         "why": "A round that adds no rows ends the query, and the rounds are stacked as the result."
       }
@@ -876,22 +876,22 @@
     "hint": "One line of the query changes.",
     "choices": [
       {
-        "text": "Deduplicate the rounds with UNION instead",
+        "text": "Deduplicate the rounds instead",
         "correct": false,
         "why": "That changes how duplicates are treated and leaves the direction alone."
       },
       {
-        "text": "Reverse the ORDER BY at the end of the query",
+        "text": "Reverse the ORDER BY",
         "correct": false,
         "why": "Sorting the same rows differently does not fetch a different set of rows."
       },
       {
-        "text": "Negate the WHERE clause in the anchor",
+        "text": "Negate the anchor's WHERE",
         "correct": false,
         "why": "The anchor says where to start, and both directions start at the same place."
       },
       {
-        "text": "Swap the sides of the join condition",
+        "text": "Swap the sides of the join",
         "correct": true,
         "why": "a.parent_id = c.id instead of c.parent_id = t.id, and the rest stands."
       }
@@ -918,12 +918,12 @@
         "why": "And deduplicating every round is expensive on a large tree."
       },
       {
-        "text": "It does not make the query terminate any sooner",
+        "text": "It does not make it terminate sooner",
         "correct": false,
         "why": "Deduplicating is exactly what makes it terminate, which is why people reach for it."
       },
       {
-        "text": "It changes which rows the anchor produces",
+        "text": "It changes the anchor",
         "correct": false,
         "why": "The anchor is unaffected; the deduplication applies to what the rounds add."
       }
@@ -940,22 +940,22 @@
     "hint": "Lesson 6 said something about a group with no rows.",
     "choices": [
       {
-        "text": "Because grouping on a date is not deterministic",
+        "text": "Grouping on a date is not deterministic",
         "correct": false,
         "why": "Grouping on a date is as deterministic as grouping on anything else."
       },
       {
-        "text": "Because date_trunc has no way to produce a month with no orders",
+        "text": "date_trunc will not invent a month",
         "correct": false,
         "why": "Truncation works on the rows it is given, and it is not what is missing here."
       },
       {
-        "text": "So the query can use an index on the date column",
+        "text": "So an index on the date is used",
         "correct": false,
         "why": "An index is about finding rows that exist, and the trouble is the ones that do not."
       },
       {
-        "text": "So a quiet day shows a zero",
+        "text": "So a day with no sales shows a zero",
         "correct": true,
         "why": "A group is made of rows, so a day with no sales has no group to appear as."
       }
@@ -991,22 +991,22 @@
     "hint": "It was known as a fence, which is a hint about what it stopped.",
     "choices": [
       {
-        "text": "Decided from how many times it was referenced",
+        "text": "Decided by the reference count",
         "correct": false,
         "why": "That rule is the new one, and before it there was no decision to make."
       },
       {
-        "text": "Refused it unless the statement also had a GROUP BY",
+        "text": "Refused it without a GROUP BY",
         "correct": false,
         "why": "There was no such restriction in any version."
       },
       {
-        "text": "Materialised it",
+        "text": "Materialised it without exception",
         "correct": true,
         "why": "So no filter from outside could be pushed in, and a lookup read the whole table."
       },
       {
-        "text": "Inlined it, and then re-planned the statement as a whole",
+        "text": "Inlined it and re-planned",
         "correct": false,
         "why": "Inlining is what version 12 introduced as the usual case."
       }
@@ -1023,22 +1023,22 @@
     "hint": "Three conditions, and one of them is about counting.",
     "choices": [
       {
-        "text": "When the outer query has a filter that could be pushed down",
+        "text": "When a filter could be pushed down",
         "correct": false,
         "why": "The pushdown is the benefit of inlining, and it is not the test for it."
       },
       {
-        "text": "When it contains no aggregate function",
+        "text": "When it has no aggregate",
         "correct": false,
         "why": "Aggregates are ordinary, and a CTE full of them is inlined like any other."
       },
       {
-        "text": "When it is used once",
+        "text": "When used just once",
         "correct": true,
         "why": "And is not recursive, and modifies no data; otherwise it is materialised."
       },
       {
-        "text": "When it is declared with the MATERIALIZED keyword",
+        "text": "When MATERIALIZED is written",
         "correct": false,
         "why": "That keyword asks for the opposite of inlining."
       }
@@ -1055,22 +1055,22 @@
     "hint": "Apply the rule from the previous question and see what falls out.",
     "choices": [
       {
-        "text": "No, it is materialised",
+        "text": "No, it is materialised once",
         "correct": true,
         "why": "Inlining would compute it twice, so the rule leaves it alone — a consequence, not a promise."
       },
       {
-        "text": "Yes, once per reference, because inlining is the default now",
+        "text": "Yes, once for each reference",
         "correct": false,
         "why": "Inlining applies to a CTE referenced once, and this one is referenced twice."
       },
       {
-        "text": "It depends on whether the two references sit in the same clause",
+        "text": "It depends where they sit",
         "correct": false,
         "why": "The count is what the rule looks at, and where they appear does not enter it."
       },
       {
-        "text": "Yes, unless NOT MATERIALIZED is written on the definition",
+        "text": "Yes, unless NOT MATERIALIZED",
         "correct": false,
         "why": "That keyword asks for inlining, which is the version that would compute it twice."
       }
@@ -1087,22 +1087,22 @@
     "hint": "Say what you mean rather than relying on a version's default.",
     "choices": [
       {
-        "text": "MATERIALIZED",
+        "text": "The MATERIALIZED keyword",
         "correct": true,
         "why": "And a comment saying why, or the next person rewrites it and the plan changes."
       },
       {
-        "text": "NOT MATERIALIZED, which stops the inlining",
+        "text": "NOT MATERIALIZED",
         "correct": false,
         "why": "It asks for inlining, which is the thing a fence is meant to prevent."
       },
       {
-        "text": "A recursive CTE, which is fenced by definition",
+        "text": "A recursive CTE",
         "correct": false,
         "why": "True, and rewriting a step as a recursion to get a fence is a poor trade."
       },
       {
-        "text": "No keyword: a CTE is a fence in any version",
+        "text": "No keyword: a CTE is a fence",
         "correct": false,
         "why": "It was in PostgreSQL 11 and it is not in PostgreSQL 12."
       }
@@ -1119,12 +1119,12 @@
     "hint": "Ask what changed, and when.",
     "choices": [
       {
-        "text": "The same behaviour, since the rule has been stable throughout",
+        "text": "The same behaviour as today",
         "correct": false,
         "why": "The rule it describes was replaced, which is why the advice reads so confidently."
       },
       {
-        "text": "MySQL, which is where the advice started",
+        "text": "MySQL, where it started",
         "correct": false,
         "why": "MySQL had no CTEs at all until 8.0, which arrived in 2018."
       },
@@ -1134,7 +1134,7 @@
         "why": "Version 12 changed the default in 2019, and nothing on the internet is revised."
       },
       {
-        "text": "Recursive CTEs, which were the slow case then and are now",
+        "text": "Recursive CTEs, slow then and now",
         "correct": false,
         "why": "A recursive CTE is materialised in either era, so nothing about it changed."
       }
@@ -1151,22 +1151,22 @@
     "hint": "The word in the section title is the answer.",
     "choices": [
       {
-        "text": "The rows the query returned on the day it was created",
+        "text": "The rows from that day",
         "correct": false,
         "why": "That describes the other kind, which is the last section of this lesson."
       },
       {
-        "text": "The rows, kept up to date as the base table changes",
+        "text": "The rows, refreshed as data changes",
         "correct": false,
         "why": "Keeping a copy current is work that something would have to be doing."
       },
       {
-        "text": "A query",
+        "text": "The query as it was written",
         "correct": true,
         "why": "It is substituted and run every time, against the data as it is at that moment."
       },
       {
-        "text": "A plan, so the statement does not have to be planned again",
+        "text": "A plan for the statement",
         "correct": false,
         "why": "Plans are made per statement, and a view is expanded before planning."
       }
@@ -1188,17 +1188,17 @@
         "why": "The star was expanded at creation, and there is no error and no notice."
       },
       {
-        "text": "The new column, from the next time the view is read",
+        "text": "The new column, from next read",
         "correct": false,
         "why": "There is no moment at which the view re-expands its own star."
       },
       {
-        "text": "The new column too, since a view is a query rather than a copy",
+        "text": "The new column too",
         "correct": false,
         "why": "It is a query whose column list was fixed when the query was stored."
       },
       {
-        "text": "An error, because the view's definition no longer matches",
+        "text": "An error about the definition",
         "correct": false,
         "why": "Nothing is checked at read time, which is why this is easy to miss."
       }
@@ -1215,22 +1215,22 @@
     "hint": "There is a clause you can add to change this, which tells you the default.",
     "choices": [
       {
-        "text": "It succeeds",
+        "text": "It succeeds and the row leaves",
         "correct": true,
-        "why": "The row leaves the view, and WITH CHECK OPTION is what refuses it instead."
+        "why": "It is no longer visible through the view, and WITH CHECK OPTION is what refuses it instead."
       },
       {
-        "text": "It is rejected, since the row would fall outside the view",
+        "text": "It is rejected outright",
         "correct": false,
         "why": "That is the behaviour you opt into, and it is not what you get for free."
       },
       {
-        "text": "It succeeds and the view is rebuilt from its definition",
+        "text": "It succeeds and the view rebuilds",
         "correct": false,
         "why": "A view has nothing to rebuild: it holds a definition and no rows."
       },
       {
-        "text": "It changes the view and leaves the table underneath alone",
+        "text": "The view changes, not the table",
         "correct": false,
         "why": "There is nowhere else for the write to land."
       }
@@ -1247,12 +1247,12 @@
     "hint": "The same thing that stops a filter reaching into a derived table.",
     "choices": [
       {
-        "text": "The view has no index of its own to search",
+        "text": "The view has no index of its own",
         "correct": false,
         "why": "Indexes belong to the tables underneath, and a fast view uses them."
       },
       {
-        "text": "The view is being refreshed while you read it",
+        "text": "The view is being refreshed",
         "correct": false,
         "why": "Plain views hold no rows, so there is nothing to refresh."
       },
@@ -1262,7 +1262,7 @@
         "why": "A DISTINCT, a window or a GROUP BY that the condition cannot be pushed through."
       },
       {
-        "text": "A view is planned from scratch on each call, which is the cost",
+        "text": "It is planned from scratch each time",
         "correct": false,
         "why": "Planning a statement is milliseconds, and the expansion is routine."
       }
@@ -1279,12 +1279,12 @@
     "hint": "It has little to do with the database.",
     "choices": [
       {
-        "text": "Keeping a copy of a table aside for reporting",
+        "text": "Keeping a copy aside for reporting",
         "correct": false,
         "why": "A view keeps no copy, so there is nothing set aside."
       },
       {
-        "text": "Making an expensive aggregate cheap to read",
+        "text": "Making an expensive aggregate cheap",
         "correct": false,
         "why": "That is the other kind of view, and it comes with staleness attached."
       },
@@ -1294,7 +1294,7 @@
         "why": "\"Active customer\" written into four reports is written four different ways."
       },
       {
-        "text": "Storing a plan that the optimiser can reuse later",
+        "text": "Storing a plan to reuse",
         "correct": false,
         "why": "Plans are not what a view holds, and they are cheap to make."
       }
@@ -1316,17 +1316,17 @@
         "why": "The planner may evaluate it first; security_barrier or row-level security is the answer."
       },
       {
-        "text": "An ORDER BY on a column the view leaves out",
+        "text": "An ORDER BY on a hidden one",
         "correct": false,
         "why": "A column the view does not expose cannot be named in the outer query."
       },
       {
-        "text": "Granting on the view rather than on the table underneath",
+        "text": "Granting on the view, not the table",
         "correct": false,
         "why": "That is the arrangement being described, and it is the point of it."
       },
       {
-        "text": "A join added to the outer query, widening the result",
+        "text": "A join added to the outer query",
         "correct": false,
         "why": "A join reaches other tables, and the grants on those are checked as usual."
       }
@@ -1343,22 +1343,22 @@
     "hint": "One word changed in the CREATE statement.",
     "choices": [
       {
-        "text": "It is recomputed whenever a base table changes",
+        "text": "It recomputes when a base table changes",
         "correct": false,
         "why": "Nothing watches the base tables; a refresh is something somebody runs."
       },
       {
-        "text": "It refuses writes, where an ordinary view accepts them",
+        "text": "It refuses writes",
         "correct": false,
         "why": "Some ordinary views accept writes and some do not, which is a separate question."
       },
       {
-        "text": "It is planned once and the plan is kept for later",
+        "text": "It keeps a plan for later",
         "correct": false,
         "why": "Plans are not what either kind of view keeps."
       },
       {
-        "text": "It stores rows",
+        "text": "It stores rows itself",
         "correct": true,
         "why": "Reading it reads stored data, however long the query underneath took to run."
       }
@@ -1375,22 +1375,22 @@
     "hint": "The statement takes an exclusive lock.",
     "choices": [
       {
-        "text": "They wait",
+        "text": "They wait for it to finish",
         "correct": true,
         "why": "On a big view that is minutes of a dashboard with nothing on it."
       },
       {
-        "text": "They are given an error telling them to try again",
+        "text": "They are given an error",
         "correct": false,
         "why": "The read is held rather than refused."
       },
       {
-        "text": "They see partial contents as the new rows arrive",
+        "text": "They see partial contents",
         "correct": false,
         "why": "A reader is never shown a half-built result."
       },
       {
-        "text": "They keep seeing the previous contents until the swap",
+        "text": "They see the previous contents",
         "correct": false,
         "why": "That is what CONCURRENTLY buys, and it is what the plain form lacks."
       }
@@ -1407,22 +1407,22 @@
     "hint": "It has to work out which rows changed.",
     "choices": [
       {
-        "text": "A primary key on the table the view reads from",
+        "text": "A primary key on the base table",
         "correct": false,
         "why": "The index has to be on the view itself, where the matching happens."
       },
       {
-        "text": "A unique index",
+        "text": "A unique index on the view",
         "correct": true,
         "why": "Without one it has no way to match old rows against new; it is slower and worth it."
       },
       {
-        "text": "The view to have been created WITH NO DATA",
+        "text": "A view created WITH NO DATA",
         "correct": false,
         "why": "That option governs the first population and has no bearing here."
       },
       {
-        "text": "An exclusive lock taken in advance of the statement",
+        "text": "An exclusive lock first",
         "correct": false,
         "why": "Avoiding that lock is the entire purpose of the option."
       }
@@ -1449,12 +1449,12 @@
         "why": "It gets asked, because something has to be written for it to happen at all."
       },
       {
-        "text": "Which of its columns should carry an index",
+        "text": "Which column should carry an index",
         "correct": false,
         "why": "A fair question, and it is about speed rather than about truth."
       },
       {
-        "text": "How stale the numbers may be, in minutes",
+        "text": "How stale the numbers may be",
         "correct": false,
         "why": "It gets asked, and it is answered by whoever reads the report."
       }
@@ -1471,22 +1471,22 @@
     "hint": "Two lessons are named in the section, in an order.",
     "choices": [
       {
-        "text": "Adding CONCURRENTLY so that the refresh does not block readers",
+        "text": "Adding CONCURRENTLY to the refresh",
         "correct": false,
         "why": "That improves the cache you have not yet justified building."
       },
       {
-        "text": "Reducing how often the report is run",
+        "text": "Running the report less often",
         "correct": false,
         "why": "It reduces the symptom for the people who notice it and changes nothing else."
       },
       {
-        "text": "Splitting it into CTEs so that each step is smaller",
+        "text": "Splitting it into CTEs",
         "correct": false,
         "why": "Naming the steps helps a reader and moves no work off the machine."
       },
       {
-        "text": "Finding out why",
+        "text": "Finding out why it is slow",
         "correct": true,
         "why": "A missing index costs one statement; a cache costs a job, a staleness window and a failure mode."
       }
