@@ -47,17 +47,17 @@
         "why": "Right — the split exists so the mapping stays public and the secret does not."
       },
       {
-        "text": "`/etc/shadow` changes more often, so it is protected against corruption",
+        "text": "`/etc/shadow` changes more often",
         "correct": false,
         "why": "Permissions decide who reads it, and they say nothing about how often it changes."
       },
       {
-        "text": "`/etc/passwd` is a cache of `/etc/shadow`, with the sensitive half left out",
+        "text": "`/etc/passwd` caches the other",
         "correct": false,
         "why": "Neither is a cache of the other; they hold different fields about the same accounts."
       },
       {
-        "text": "The group `shadow` owns both, and 644 is what the package happened to ship",
+        "text": "The group `shadow` owns them both",
         "correct": false,
         "why": "The modes are deliberate, and `ls -l` shows a different group on each."
       }
@@ -74,17 +74,17 @@
     "hint": "It was created for something, and that something is not typing.",
     "choices": [
       {
-        "text": "It is disabled, so files and services are out of reach for it",
+        "text": "It is disabled, out of reach",
         "correct": false,
         "why": "It owns files and runs services; what it lacks is a way in."
       },
       {
-        "text": "It logs in, and the shell exits after printing a warning",
+        "text": "It logs in, and then exits",
         "correct": false,
         "why": "The program refuses rather than leaving a usable session behind."
       },
       {
-        "text": "It logs in over ssh but has no shell for a console session",
+        "text": "It logs in over ssh and no further",
         "correct": false,
         "why": "The refusal applies to both; ssh gets the same program."
       },
@@ -121,7 +121,7 @@
         "why": "Both take what you type; what differs is where they look."
       },
       {
-        "text": "`getent` requires root while `grep` works for anybody, so it is more trustworthy",
+        "text": "`getent` requires root",
         "correct": false,
         "why": "Both work for an ordinary user, and neither reads the shadow file."
       }
@@ -167,7 +167,7 @@
         "why": "There is no key. It is a hash, and hashing runs one way."
       },
       {
-        "text": "The password is there, and printing it would be against policy",
+        "text": "The password is there, but policy forbids it",
         "correct": false,
         "why": "It is not there at all, which is a stronger fact than a policy."
       },
@@ -189,7 +189,7 @@
     "hint": "Something random is stored in the clear beside each hash.",
     "choices": [
       {
-        "text": "The hash includes the account name, so it differs per user",
+        "text": "The hash includes the account name",
         "correct": false,
         "why": "The name is not part of the input; a random value is."
       },
@@ -199,12 +199,12 @@
         "why": "Right, so a precomputed table would have to be rebuilt for each one."
       },
       {
-        "text": "The algorithm seeds itself from the time the password was set",
+        "text": "The algorithm seeds from the clock",
         "correct": false,
         "why": "The time is in a later field, and it is not an input to the hash."
       },
       {
-        "text": "They are hashed with different algorithms chosen at account creation",
+        "text": "Different algorithms per account",
         "correct": false,
         "why": "The algorithm is a system setting and is normally the same for both."
       }
@@ -258,17 +258,17 @@
         "why": "Right — keys never consult the shadow file, which is why the two steps go together."
       },
       {
-        "text": "The lock takes effect at the next reboot, and not before",
+        "text": "The lock waits for the next reboot",
         "correct": false,
         "why": "It is written immediately; the login used a different path."
       },
       {
-        "text": "`passwd -l` locks the password and leaves the account usable by sudo",
+        "text": "`passwd -l` leaves the account usable",
         "correct": false,
         "why": "sudo asks for a password too, so a lock would stop it."
       },
       {
-        "text": "Their session was open before the lock, and it survived",
+        "text": "Their session was open beforehand",
         "correct": false,
         "why": "A surviving session would explain one connection, and they logged in afresh."
       }
@@ -304,22 +304,22 @@
     "hint": "The command did exactly what it was asked and nothing more.",
     "choices": [
       {
-        "text": "Yes — the account is unusable until the directory is created by hand",
+        "text": "Yes — it is unusable until created",
         "correct": false,
         "why": "It logs in and lands in / with an error, which is bad and is not the same as unusable."
       },
       {
-        "text": "Yes — useradd should have failed rather than record a path it did not create",
+        "text": "Yes — useradd should have failed",
         "correct": false,
         "why": "It records the path it was told to record, and creating it is a separate flag."
       },
       {
-        "text": "No — `-m` is what creates it, and it was left out",
+        "text": "No — `-m` creates it, and was left out",
         "correct": true,
         "why": "Right, and `adduser` is the friendlier front end that assumes you meant `-m`."
       },
       {
-        "text": "No — the directory appears at the account's first login",
+        "text": "No — it appears at first login",
         "correct": false,
         "why": "Nothing creates it later; the login just fails to find it."
       }
@@ -336,22 +336,22 @@
     "hint": "Nothing about the files changed.",
     "choices": [
       {
-        "text": "The directory was reassigned to the next free account",
+        "text": "The directory was reassigned",
         "correct": false,
         "why": "Reassignment would print that account's name; there is nothing to print."
       },
       {
-        "text": "The line that mapped 1005 to a name is gone",
+        "text": "The line mapping 1005 to a name is gone",
         "correct": true,
         "why": "Right — the filesystem stored the number all along, as lesson 4 section 60 said."
       },
       {
-        "text": "`userdel` rewrote the ownership to a reserved value",
+        "text": "`userdel` rewrote the ownership",
         "correct": false,
         "why": "It touched no files; the owner field is what it always was."
       },
       {
-        "text": "The directory lost its group, so `ls` falls back to numbers for both columns",
+        "text": "The directory lost its group",
         "correct": false,
         "why": "The group column still prints a name, which rules that out."
       }
@@ -373,7 +373,7 @@
         "why": "They keep their mode; a number owns them and the mode still applies."
       },
       {
-        "text": "`userdel` refuses to run while the account owns files elsewhere",
+        "text": "`userdel` refuses to run",
         "correct": false,
         "why": "It runs, and it says nothing about files outside the home directory."
       },
@@ -400,22 +400,22 @@
     "hint": "It explains three files that appeared in a brand-new home directory.",
     "choices": [
       {
-        "text": "It is copied into a new home directory by `useradd -m`",
+        "text": "It is copied in by `useradd -m`",
         "correct": true,
         "why": "Right, and it is how a company default reaches every account made afterwards."
       },
       {
-        "text": "It holds the default settings the shell falls back on when a home is missing",
+        "text": "It holds the fallback settings",
         "correct": false,
         "why": "The shell falls back on the system-wide files in /etc, and this is not one of them."
       },
       {
-        "text": "It is where `userdel` archives a deleted account's files",
+        "text": "It is where `userdel` archives",
         "correct": false,
         "why": "Nothing archives them; `-r` deletes and the default leaves them alone."
       },
       {
-        "text": "It is a template reapplied to each account whenever the system starts",
+        "text": "It is reapplied at each boot",
         "correct": false,
         "why": "It is copied once, at creation, and existing accounts are never revisited."
       }
@@ -458,7 +458,7 @@
         "why": "It lists any account with a session; the accounts are not the filter."
       },
       {
-        "text": "who reads the process table and found no shell marked as a login",
+        "text": "who reads the process table",
         "correct": false,
         "why": "It never reads the process table; it reads a record file."
       },
@@ -485,12 +485,12 @@
     "hint": "That third form starts a shell of a kind that reads neither file.",
     "choices": [
       {
-        "text": "ssh strips the environment before running a remote command",
+        "text": "ssh strips the environment",
         "correct": false,
         "why": "It carries little across, and the remote shell's own startup is what differs here."
       },
       {
-        "text": "`~/.bashrc` is read by login shells alone, and that is not one",
+        "text": "`~/.bashrc` is for login shells",
         "correct": false,
         "why": "It is the other way round: bashrc is for interactive shells."
       },
@@ -500,7 +500,7 @@
         "why": "Right — and it is why an environment belongs where a child process inherits it."
       },
       {
-        "text": "The command runs before the home directory is mounted",
+        "text": "The home is not mounted yet",
         "correct": false,
         "why": "The home is there; nothing about mounting is involved."
       }
@@ -581,12 +581,12 @@
     "hint": "The other end has an identity too.",
     "choices": [
       {
-        "text": "Your own public key, so the server knows which to expect",
+        "text": "Your own public key, for the server",
         "correct": false,
         "why": "Your key goes in authorized_keys; nothing hashes it at you."
       },
       {
-        "text": "The connection, so a later session can be matched to this one",
+        "text": "The connection, for later matching",
         "correct": false,
         "why": "Sessions are not tracked that way, and the value is stable across connections."
       },
@@ -596,7 +596,7 @@
         "why": "Right, and accepting it writes the key into your known_hosts."
       },
       {
-        "text": "The account's password hash, sent so the client can verify it offline",
+        "text": "The account's password hash",
         "correct": false,
         "why": "A password hash never leaves the server, and this happens before any password."
       }
@@ -645,22 +645,22 @@
     "hint": "One is about people coming in, the other about machines you went out to.",
     "choices": [
       {
-        "text": "One holds private keys and the other holds public ones",
+        "text": "One is private, one public",
         "correct": false,
         "why": "Both hold public keys; what differs is whose."
       },
       {
-        "text": "Keys allowed in, against servers you accepted",
+        "text": "Keys allowed in, against servers accepted",
         "correct": true,
         "why": "Right, and they answer opposite questions from the same directory."
       },
       {
-        "text": "The first is written by ssh and the second by ssh-keygen",
+        "text": "One is written by ssh-keygen",
         "correct": false,
         "why": "Both are written by ssh or its helpers; authorship is not the distinction."
       },
       {
-        "text": "The first applies to this machine and the second to the whole network",
+        "text": "One applies here, one network-wide",
         "correct": false,
         "why": "Both are yours alone, in your own home directory."
       }
@@ -677,22 +677,22 @@
     "hint": "Three things cause it and they are not equally innocent.",
     "choices": [
       {
-        "text": "Run `ssh-keygen -R host` so the connection goes through",
+        "text": "Run `ssh-keygen -R host`",
         "correct": false,
         "why": "That is the fix for the innocent case, and running it first skips deciding which case it is."
       },
       {
-        "text": "Add StrictHostKeyChecking=no to stop it happening again",
+        "text": "Add StrictHostKeyChecking=no",
         "correct": false,
         "why": "That removes the check entirely, which is the protection the banner exists to give you."
       },
       {
-        "text": "Connect with a password instead, which does not use host keys",
+        "text": "Connect with a password instead",
         "correct": false,
         "why": "Host keys are checked before any authentication method is chosen."
       },
       {
-        "text": "Find out whether the server was rebuilt",
+        "text": "Find out if the server was rebuilt",
         "correct": true,
         "why": "Right — rebuilt, a different machine behind the name, or interception, in that order."
       }
@@ -728,22 +728,22 @@
     "hint": "Three kinds of long-running process, and one of them belongs to the system.",
     "choices": [
       {
-        "text": "A background job, detached from your shell",
+        "text": "A background job",
         "correct": false,
         "why": "That one ends with your session unless you take a step, which is the stated condition."
       },
       {
-        "text": "A service, started by the init system",
+        "text": "A service, started by init",
         "correct": true,
         "why": "Right — it belongs to the machine rather than to your session."
       },
       {
-        "text": "A scheduled job, waiting for its next time",
+        "text": "A scheduled job",
         "correct": false,
         "why": "A scheduled job is not running between firings; it is started fresh each time."
       },
       {
-        "text": "A zombie, left behind because its parent stopped collecting it",
+        "text": "A zombie, left uncollected",
         "correct": false,
         "why": "A zombie holds a table entry and runs nothing at all."
       }
@@ -760,22 +760,22 @@
     "hint": "Ask what an attacker gets when that program is broken into.",
     "choices": [
       {
-        "text": "Root is reserved for interactive logins and services use other accounts",
+        "text": "Root is for interactive logins",
         "correct": false,
         "why": "Plenty of services do run as root; the reason is about consequence rather than reservation."
       },
       {
-        "text": "Binding a network port requires a non-root account on modern Linux",
+        "text": "Binding a port needs non-root",
         "correct": false,
         "why": "Low ports historically needed root, which runs the other way."
       },
       {
-        "text": "A break-in then yields that account, and no more",
+        "text": "A break-in yields that account alone",
         "correct": true,
         "why": "Right — one account per service is the cheapest boundary the system has."
       },
       {
-        "text": "Files written by root would be unreadable to the service later",
+        "text": "Root's files would be unreadable later",
         "correct": false,
         "why": "root's files are readable by root; ownership is not the constraint here."
       }
@@ -856,22 +856,22 @@
     "hint": "Everything else descends from it.",
     "choices": [
       {
-        "text": "One per target listed in the default target",
+        "text": "One per target",
         "correct": false,
         "why": "Targets are units systemd reaches; the kernel knows about none of them."
       },
       {
-        "text": "One per CPU, which then share out the work",
+        "text": "One per CPU",
         "correct": false,
         "why": "Processor count decides nothing about how many programs are started."
       },
       {
-        "text": "One",
+        "text": "One, and one only",
         "correct": true,
         "why": "Right — process 1, and every other process is a descendant of it."
       },
       {
-        "text": "Two: an init system and a logger, so early failures are recorded",
+        "text": "Two: init and a logger",
         "correct": false,
         "why": "The logger is started by the init system like everything else."
       }
@@ -952,22 +952,22 @@
     "hint": "Two jobs belong to process one, and an application program does neither.",
     "choices": [
       {
-        "text": "A shell, so the container has somewhere to run startup commands",
+        "text": "A shell, for startup commands",
         "correct": false,
         "why": "A shell runs commands and does not adopt or reap anything."
       },
       {
-        "text": "A tiny process one that adopts orphans and reaps them",
+        "text": "A tiny process one adopting orphans",
         "correct": true,
         "why": "Right, and without it a container leaks zombies until its table fills."
       },
       {
-        "text": "A logging collector, so the container's output reaches the host",
+        "text": "A logging collector",
         "correct": false,
         "why": "Output already reaches the host through the ordinary streams."
       },
       {
-        "text": "A supervisor that restarts the main program when it exits",
+        "text": "A supervisor that restarts the program",
         "correct": false,
         "why": "Restart policy is a separate flag and a separate idea."
       }
@@ -984,17 +984,17 @@
     "hint": "Two verbs, two moments.",
     "choices": [
       {
-        "text": "`daemon-reload`, so systemd had yet to read the unit",
+        "text": "`daemon-reload`",
         "correct": false,
         "why": "It read the unit; the service ran before the reboot."
       },
       {
-        "text": "`unmask`, since a masked service is refused a start",
+        "text": "`unmask`",
         "correct": false,
         "why": "A masked service would have refused to start in the first place."
       },
       {
-        "text": "`systemctl restart`, which makes the state permanent",
+        "text": "`systemctl restart`",
         "correct": false,
         "why": "Restarting is another now-verb and changes nothing about the next boot."
       },
@@ -1016,22 +1016,22 @@
     "hint": "Read the path it made.",
     "choices": [
       {
-        "text": "Added the unit to a list a target reads at boot",
+        "text": "Added it to a list a target reads",
         "correct": true,
         "why": "Right, and a symlink starts nothing, which is the whole of why enable is not start."
       },
       {
-        "text": "Copied the unit into the directory systemd loads from",
+        "text": "Copied the unit into place",
         "correct": false,
         "why": "It linked rather than copied, and the original stays where it was."
       },
       {
-        "text": "Registered the service with the journal so its output is kept",
+        "text": "Registered the service with the journal",
         "correct": false,
         "why": "Output is collected whether or not a service is enabled."
       },
       {
-        "text": "Started the service and recorded that it should start again",
+        "text": "Started it and recorded that",
         "correct": false,
         "why": "Nothing was started; `--now` is the flag that would have."
       }
@@ -1048,22 +1048,22 @@
     "hint": "One of the two drops what is connected.",
     "choices": [
       {
-        "text": "restart, because a reload leaves the old configuration in memory",
+        "text": "restart; reload leaves it stale",
         "correct": false,
         "why": "A reload is exactly a re-read of the configuration."
       },
       {
-        "text": "restart, because reload is a Debian extension and is missing elsewhere",
+        "text": "restart; reload is Debian's",
         "correct": false,
         "why": "It is standard, and whether a service supports it is in its own unit file."
       },
       {
-        "text": "reload",
+        "text": "reload, which is enough here",
         "correct": true,
         "why": "Right — it re-reads without dropping connections, and nginx supports it."
       },
       {
-        "text": "Either — systemd treats them as the same verb for network services",
+        "text": "Either — they are the same",
         "correct": false,
         "why": "They are separate verbs that run separate commands from the unit."
       }
@@ -1080,7 +1080,7 @@
     "hint": "Enabling writes a symlink somewhere, and something has to say where.",
     "choices": [
       {
-        "text": "The unit is compiled into systemd rather than read from a file",
+        "text": "The unit is compiled in",
         "correct": false,
         "why": "Every unit is a file; nothing is compiled in."
       },
@@ -1090,12 +1090,12 @@
         "why": "Right — something else pulls it in, and enabling it would have no meaning."
       },
       {
-        "text": "The unit is linked to /dev/null, so a start is refused",
+        "text": "The unit is linked to /dev/null, masked",
         "correct": false,
         "why": "That is `masked`, and it is a different answer from the same command."
       },
       {
-        "text": "The unit was enabled by the package and is yours to leave alone",
+        "text": "The package enabled it already",
         "correct": false,
         "why": "A packaged unit is disabled like any other; the file decides, not the packager."
       }
@@ -1164,17 +1164,17 @@
     "hint": "Two words on the same line, about two different moments.",
     "choices": [
       {
-        "text": "The unit file was edited after the service started",
+        "text": "The unit file was edited afterwards",
         "correct": false,
         "why": "Editing is not recorded on that line; a stale unit shows nothing here."
       },
       {
-        "text": "The service is running from a drop-in rather than the main unit",
+        "text": "It runs from a drop-in",
         "correct": false,
         "why": "Drop-ins are shown by `systemctl cat`, and they do not change this word."
       },
       {
-        "text": "systemd lost track of it, so the enabled state is unreadable",
+        "text": "systemd lost track of it",
         "correct": false,
         "why": "It read a definite answer, and that answer is `disabled`."
       },
@@ -1228,12 +1228,12 @@
     "hint": "It is section 77's third idea, made visible.",
     "choices": [
       {
-        "text": "The units this service depends on",
+        "text": "The units it depends on",
         "correct": false,
         "why": "Dependencies are in the unit file and are shown elsewhere."
       },
       {
-        "text": "The threads inside the main process",
+        "text": "The threads in the main process",
         "correct": false,
         "why": "Threads are counted in Tasks; these lines have their own PIDs."
       },
@@ -1243,7 +1243,7 @@
         "why": "Right, and it is what makes `systemctl stop` reliable."
       },
       {
-        "text": "The processes that have the service's files open",
+        "text": "The processes holding its files",
         "correct": false,
         "why": "That is what lsof answers, and it would list other accounts' processes too."
       }
@@ -1302,12 +1302,12 @@
         "why": "It has higher priority, which is exactly why it wins and why that is the trap."
       },
       {
-        "text": "`systemctl edit` writes the change into the package's own file",
+        "text": "`systemctl edit` writes to the package file",
         "correct": false,
         "why": "It never touches the packaged file; that is the point of a drop-in."
       },
       {
-        "text": "A copy in /etc has to be registered before systemd will read it",
+        "text": "A copy in /etc needs registering",
         "correct": false,
         "why": "It is read because of where it sits, with nothing to register."
       }
@@ -1422,7 +1422,7 @@
         "why": "Right, and it is why a unit should print rather than manage a log file."
       },
       {
-        "text": "Nowhere, unless the unit sets StandardOutput explicitly",
+        "text": "Nowhere, without StandardOutput",
         "correct": false,
         "why": "The default already sends it to the journal."
       }
@@ -1444,7 +1444,7 @@
         "why": "Right — try it with sudo before concluding the service said nothing."
       },
       {
-        "text": "nginx writes to /var/log rather than to the journal",
+        "text": "nginx writes to /var/log",
         "correct": false,
         "why": "Worth checking, and an empty result for one user and not another points elsewhere."
       },
@@ -1471,17 +1471,17 @@
     "hint": "It has two possible homes, and one of them is in memory.",
     "choices": [
       {
-        "text": "A Storage= setting in the unit files of each service",
+        "text": "A Storage= setting in the units",
         "correct": false,
         "why": "Storage is a journald setting, and it is not per service."
       },
       {
-        "text": "The `adm` group, without which old entries are hidden",
+        "text": "The `adm` group",
         "correct": false,
         "why": "Group membership decides who reads, not how long entries survive."
       },
       {
-        "text": "A vacuum policy, which is keeping the journal at zero size",
+        "text": "A vacuum policy at zero",
         "correct": false,
         "why": "Vacuuming prunes old entries and leaves recent ones."
       },
@@ -1503,7 +1503,7 @@
     "hint": "One flag shows the machine rather than the unit.",
     "choices": [
       {
-        "text": "journalctl -u thatservice -n 200, for more of the same",
+        "text": "journalctl -u thatservice -n 200",
         "correct": false,
         "why": "More lines of one unit is more of the same confusion."
       },
@@ -1518,7 +1518,7 @@
         "why": "Its status block prints the same ten lines you already read."
       },
       {
-        "text": "journalctl --disk-usage, to rule out a truncated journal",
+        "text": "journalctl --disk-usage",
         "correct": false,
         "why": "Worth a glance, and truncation would have removed old entries rather than the cause."
       }
@@ -1556,7 +1556,7 @@
     "hint": "It has no ExecStart.",
     "choices": [
       {
-        "text": "A service that starts other services in sequence",
+        "text": "A service that starts others",
         "correct": false,
         "why": "It runs no program at all, which a service does."
       },
@@ -1566,12 +1566,12 @@
         "why": "Right — a name for a state, and enabling puts a service in its wants directory."
       },
       {
-        "text": "A runlevel number rewritten as a word",
+        "text": "A runlevel as a word",
         "correct": false,
         "why": "Several targets have no runlevel equivalent, and targets compose."
       },
       {
-        "text": "The unit systemd loads first when the kernel hands over control",
+        "text": "The first unit systemd loads",
         "correct": false,
         "why": "The first unit is the default target, and that is one target among many."
       }
@@ -1593,7 +1593,7 @@
         "why": "It means after, and the order is what it says."
       },
       {
-        "text": "The unit needs Requires= as well, or After= is ignored",
+        "text": "The unit needs Requires= too",
         "correct": false,
         "why": "After= applies on its own; ordering and dependency are separate."
       },
@@ -1652,17 +1652,17 @@
     "hint": "One lists what was slow; the other lists what was waited on.",
     "choices": [
       {
-        "text": "blame, because it sorts by duration",
+        "text": "blame",
         "correct": false,
         "why": "It sorts by duration, and a slow unit nobody waited for cost nothing."
       },
       {
-        "text": "Either — they print the same units in a different order",
+        "text": "Either",
         "correct": false,
         "why": "They select differently, not merely order differently."
       },
       {
-        "text": "blame, once you subtract the units that ran in parallel",
+        "text": "blame, minus the parallel ones",
         "correct": false,
         "why": "There is no such subtraction to do by hand."
       },
@@ -1756,22 +1756,22 @@
     "hint": "Two words, two moments.",
     "choices": [
       {
-        "text": "It does not come back",
+        "text": "It simply does not come back",
         "correct": true,
         "why": "Right, and nothing warns you until the reboot happens."
       },
       {
-        "text": "It comes back, because it was running when the machine went down",
+        "text": "It comes back; it was running",
         "correct": false,
         "why": "Nothing records what was running; the enabled state is what decides."
       },
       {
-        "text": "It comes back in a degraded state and logs a warning",
+        "text": "It comes back degraded",
         "correct": false,
         "why": "There is no such halfway state; it either starts or does not."
       },
       {
-        "text": "It comes back, because `disabled` refers to the unit file rather than to boot",
+        "text": "It comes back; `disabled` is about the file",
         "correct": false,
         "why": "The word refers to exactly the boot question."
       }
@@ -1793,7 +1793,7 @@
         "why": "Group membership decides file access, and it lets nobody log in."
       },
       {
-        "text": "Their home directory has to be removed",
+        "text": "Their home has to go",
         "correct": false,
         "why": "Removing it costs you their files and stops no login."
       },
@@ -1839,7 +1839,7 @@
     "hint": "systemd read the unit once, at boot.",
     "choices": [
       {
-        "text": "`systemctl enable`, which rereads the file",
+        "text": "`systemctl enable`",
         "correct": false,
         "why": "Enabling writes a symlink and rereads nothing."
       },
@@ -1849,12 +1849,12 @@
         "why": "Right, and `systemctl edit` does it for you, which is one reason to prefer it."
       },
       {
-        "text": "`systemd-analyze verify`, which loads the new version",
+        "text": "`systemd-analyze verify` first",
         "correct": false,
         "why": "It checks a file and changes nothing in the running systemd."
       },
       {
-        "text": "A reboot, since unit files are read at boot alone",
+        "text": "A reboot",
         "correct": false,
         "why": "A reload is enough, and a reboot would work for the same reason."
       }
@@ -1998,7 +1998,7 @@
         "why": "It applies to that shell and its children, and it does not expire."
       },
       {
-        "text": "The directory's setgid bit overrides the umask for new files",
+        "text": "The setgid bit overrides the umask",
         "correct": false,
         "why": "setgid decides the group and the umask still decides the bits."
       }
@@ -2036,7 +2036,7 @@
     "hint": "The verb is not start.",
     "choices": [
       {
-        "text": "It reboots the machine into that target",
+        "text": "It reboots into that target",
         "correct": false,
         "why": "Nothing reboots; the change is immediate and in place."
       },
@@ -2068,22 +2068,22 @@
     "hint": "It is the older word for a service.",
     "choices": [
       {
-        "text": "daily, from the scheduled jobs these programs grew out of",
+        "text": "daily, from scheduled jobs",
         "correct": false,
         "why": "None of the three is scheduled; they run continuously."
       },
       {
-        "text": "distributed, from the era when they ran across several machines",
+        "text": "distributed, from many machines",
         "correct": false,
         "why": "They run on one machine, like any other program."
       },
       {
-        "text": "daemon",
+        "text": "daemon, from the old spelling",
         "correct": true,
         "why": "Right, and it is the Unix word for a program with no terminal."
       },
       {
-        "text": "driver, since they sit between programs and the kernel",
+        "text": "driver, between kernel and programs",
         "correct": false,
         "why": "Drivers are kernel code; these are ordinary programs."
       }
