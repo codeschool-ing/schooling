@@ -348,9 +348,11 @@ HOW MANY PEOPLE IT TAKES IS ARITHMETIC, AND IT IS SAID BEFORE ANYTHING IS WRITTE
 	afterwards.
 
 	AND IT ONLY APPLIES WHERE THERE IS AN EXAM. `planted` is the question this
-	run will plant an inverted key on, and it is empty for a school with no exam
-	questions at all — which is every school this platform has today, because the
-	content pipeline has not written one. Asked for fifty seeded people there,
+	run will plant an inverted key on, and it is empty where the course this
+	command reaches has no exam — which was every school this platform had until
+	`sql-databases` got a pool, and is STILL every school, because that course is
+	position 3 or worse in every track that shows it and this command only ever
+	looks at position 0. Asked for fifty seeded people there,
 	the first version refused, and cited a minimum sample for an analysis that
 	cannot run on a school with nothing to analyse. The arithmetic was right and
 	the reason was one that could not apply, which is the harder kind of wrong to
@@ -375,8 +377,27 @@ func enough(people int, planted string) error {
 
 func verify(ctx context.Context, pool *pgxpool.Pool, shape shape, out io.Writer) error {
 	if shape.broken == "" {
-		say(out, "%s\n", "this school has no exam questions, so there was nothing to plant "+
-			"a broken key on and item analysis has nothing to find")
+		/* NAMING WHAT WAS LOOKED AT, because the sentence that used to be here
+		   named the school and was false the day a course got a pool.
+
+		   The exam is looked for in ONE course: the first of the first track,
+		   which is the free tier and the only thing a seeded population is
+		   certain to be able to open. A school can therefore hold a hundred
+		   exam questions and still be reported as holding none — which is
+		   exactly what happened, and the reader is sent to look in the wrong
+		   place by a line that reads as authoritative. */
+		say(out, "%s has no exam questions, and that is the only course this command looks "+
+			"in: the first of the first track, which is the free tier and the one thing a "+
+			"seeded population can certainly open\n", shape.courseSlug)
+		if shape.examElsewhere > 0 {
+			say(out, "this school has %d exam question(s) in OTHER courses, which this "+
+				"command cannot reach — so the broken key was not planted and item analysis "+
+				"has nothing to find, and that is a limit of the seeder rather than of the "+
+				"catalogue\n", shape.examElsewhere)
+		} else {
+			say(out, "%s\n", "nor has any other course in this school, so there was nothing "+
+				"to plant a broken key on and item analysis has nothing to find")
+		}
 		return nil
 	}
 

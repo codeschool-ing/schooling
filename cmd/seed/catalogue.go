@@ -56,6 +56,21 @@ type shape struct {
 	// broken is the exercise this run plants an inverted key on. Empty when the
 	// course has no exam.
 	broken string
+
+	/* AND WHAT THE SCHOOL HAS THAT THIS COMMAND CANNOT REACH.
+
+	   `courseSlug` is the course the exam is looked for in, and `examElsewhere`
+	   counts the exam questions this school holds in every OTHER course. Both
+	   exist for one sentence at the end of a run, and that sentence used to be
+	   wrong: it said "this school has no exam questions" while naming nothing,
+	   so a school with a hundred of them in the third course of a track read as
+	   a school with none.
+
+	   A message that names the wrong scope is worse than one that says nothing,
+	   because it is believed and it sends whoever read it to look in a place
+	   where there is nothing to find. */
+	courseSlug    string
+	examElsewhere int
 }
 
 // question is one exam question, with how easy this seeder will make it.
@@ -145,6 +160,17 @@ func shapeOf(ctx context.Context, pool *pgxpool.Pool, slug string) (shape, error
 			return s, fmt.Errorf("reading the sections of %s: %w", s.lesson, err)
 		}
 	}
+
+	// The course's own name, for the sentence at the end of a run.
+	_ = pool.QueryRow(ctx,
+		`SELECT slug FROM catalog_courses WHERE tenant_id = $1 AND id = $2`,
+		s.id, s.course).Scan(&s.courseSlug)
+
+	// AND WHAT IS OUT OF REACH, counted so the run can say so by name.
+	_ = pool.QueryRow(ctx, `
+		SELECT count(*) FROM catalog_exercises
+		WHERE tenant_id = $1 AND exam AND course_id IS DISTINCT FROM $2
+	`, s.id, s.course).Scan(&s.examElsewhere)
 
 	questions, err := pool.Query(ctx, `
 		SELECT id, version, type FROM catalog_exercises
