@@ -970,3 +970,57 @@ func TestTwoSectionsCannotShareAnID(t *testing.T) {
 		t.Errorf("the complaint does not name both sections: %s", said)
 	}
 }
+
+/*
+AN EXAM QUESTION MARKED DRILLABLE IS REFUSED, and the reason is one layer away
+from this package.
+
+	`CONTENT.md` says the exam is drawn from a sealed pool that never reaches
+	the practice globals, and nothing held it. The drill queue selects on
+	`drillable` and nothing else — there is no `AND NOT exam` in either of its
+	queries — so the word `true` in an `exam.json` would have put the paper's
+	own questions into practice, where the key comes back WITH the verdict
+	because revealing it is what a drill is for. The pool leaks one card at a
+	time, to the students who practise most, with every screen working as
+	designed and no row anywhere looking wrong.
+
+	Refused at the door and not filtered at the query, because `cmd/load`
+	writes nothing when anything fails: a question the mirror never receives
+	cannot be drawn by a reader that forgot about it.
+*/
+func TestAnExamQuestionMayNotBeDrillable(t *testing.T) {
+	problems := school(t, write("courses/angular/exam.json", `[
+	  {
+	    "id": "ex-9x4m2kp7", "version": 1, "type": "quiz", "drillable": true,
+	    "prompt": "Which of these is a directive?",
+	    "choices": [
+	      {"text": "ngIf", "correct": true, "why": "It is."},
+	      {"text": "ngPipe", "correct": false, "why": "No such thing."},
+	      {"text": "ngClassName", "correct": false, "why": "No such thing."}
+	    ]
+	  }
+	]`))
+	if !says(problems, "is an exam question marked drillable", "one card at a time") {
+		t.Errorf("an exam question was accepted into the drill queue:\n%s", report(t, problems))
+	}
+}
+
+// AND THE ORDINARY ONE PASSES, which is what says the check above is about the
+// word and not about an exam existing at all. A course with a pool is the state
+// every finished course is meant to be in.
+func TestACourseExamThatIsNotDrillableIsAccepted(t *testing.T) {
+	problems := school(t, write("courses/angular/exam.json", `[
+	  {
+	    "id": "ex-3b7ndt5q", "version": 1, "type": "quiz",
+	    "prompt": "Which of these is a directive?",
+	    "choices": [
+	      {"text": "ngIf", "correct": true, "why": "It is."},
+	      {"text": "ngPipe", "correct": false, "why": "No such thing."},
+	      {"text": "ngClassName", "correct": false, "why": "No such thing."}
+	    ]
+	  }
+	]`))
+	if len(problems) > 0 {
+		t.Errorf("a course exam was refused:\n%s", report(t, problems))
+	}
+}

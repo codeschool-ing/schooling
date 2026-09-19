@@ -438,6 +438,15 @@ Exams do not belong to a lesson, so they do not live in one: the course exam is
 `courses/<id>/exam.json` and the track exam is `tracks/<id>-exam.json`. Same exercise shape,
 drawn from a sealed pool that never reaches the practice globals.
 
+**"Sealed" was an assertion and is now a refusal.** The drill queue selects on `drillable` and
+nothing else — there is no `AND NOT exam` in either of its queries — so one `"drillable": true`
+in an exam file would have put the paper's own questions into practice, where the key comes back
+WITH the verdict because revealing it is what a drill is for. The pool would have leaked a card
+at a time, to the students who practise most, with every screen working as designed. It is
+refused by `validate-content` rather than filtered by the queue, because `cmd/load` writes
+nothing when anything fails: a question the mirror never receives cannot be drawn by a reader
+that forgot about it.
+
 **The pool holds five times what a paper draws** (`A-11`) — a hundred questions against the
 default draw of twenty. A paper is a sample of this file and never the whole of it, and that is
 what makes an uncapped retake something other than a memory test. A pool shorter than the draw is
