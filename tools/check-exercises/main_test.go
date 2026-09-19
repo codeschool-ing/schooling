@@ -305,3 +305,119 @@ func TestTwoItemsOrTwoPairsAreACoinFlip(t *testing.T) {
 		t.Fatalf("a distractor takes the chance to one in six, and it was flagged anyway: %v", p)
 	}
 }
+
+/*
+THE EXAM WAS OUTSIDE THE GLOB, and these three hold the two halves of the gap.
+
+	The tool looked only at a lesson's `exercises.json` for as long as it
+	existed, so a course exam and a track final were checked for whether their
+	keys GRADE — which is `validate-content` — and by nothing asking whether the
+	key can be FOUND. That is the whole of `EXERCISES.md`, and the exam is the
+	one paper where guessing the longest option buys a certificate (A-08).
+
+	It could not be noticed by running the tool, because `content/` holds no
+	exam in any course or any track: a glob that never matched one never failed
+	to, and a check with nothing to check prints exactly like a check with
+	nothing to say. So the first test asks about the GLOB rather than about a
+	verdict.
+*/
+func TestTheExamIsOneOfTheFilesThisToolReads(t *testing.T) {
+	dir := t.TempDir()
+	for _, at := range []string{
+		"code/courses/sql/lessons/le-1",
+		"code/courses/sql",
+		"code/tracks",
+	} {
+		if err := os.MkdirAll(filepath.Join(dir, at), 0o750); err != nil {
+			t.Fatal(err)
+		}
+	}
+	one := []map[string]any{{"id": "ex-1", "type": "quiz", "prompt": "p"}}
+	for _, at := range []string{
+		"code/courses/sql/lessons/le-1/exercises.json",
+		"code/courses/sql/exam.json",
+		"code/tracks/data-exam.json",
+
+		// NOT questions, and the reason the track glob carries its suffix: a
+		// track is a JSON file in the same directory as its final.
+		"code/tracks/data.json",
+	} {
+		write(t, filepath.Join(dir, at), one)
+	}
+
+	found, err := batteries(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var read []string
+	for _, f := range found {
+		read = append(read, where(f))
+	}
+	want := []string{"sql/exam", "sql/lessons/le-1", "tracks/data-exam"}
+	if strings.Join(read, " ") != strings.Join(want, " ") {
+		t.Errorf("this tool reads %v; it has to read %v — a track that is not a final is\n"+
+			"not questions, and an exam outside the glob is the file with the most at stake\n"+
+			"being the file with no measurement", read, want)
+	}
+}
+
+// AND A LESSON IS NOT CALLED AN EXAM. `courses` sits above `lessons` in every
+// one of these paths, so a lookup answering on whichever segment came first
+// named every lesson in the catalogue after its course's exam — in a line that
+// reads perfectly and sends whoever is fixing it to the wrong file.
+func TestALessonIsNotNamedAfterItsCoursesExam(t *testing.T) {
+	at := where(filepath.Join("content", "code", "courses", "sql", "lessons", "le-9", "exercises.json"))
+	if at != "sql/lessons/le-9" {
+		t.Errorf("a lesson is reported as %q, which is not where it is", at)
+	}
+}
+
+/*
+AND THE EXAM'S TRANSLATION IS OPENED, which is the half that would have failed
+quietly.
+
+	The translation glob was the literal word `exercises`, so an exam beside its
+	`exam.pt.json` had no translation this tool could see — and a battery with
+	no translation is not an error here, deliberately. It would have measured
+	the English pool, reported one green line, and never opened the Portuguese
+	one, which is where a ruler reintroduced by a translator lives.
+
+	So the English pool below is the ideal — every option one length — and only
+	the Portuguese is guessable. A tool reading the stem finds one tell; a tool
+	reading the word `exercises` finds none and says so cheerfully.
+*/
+func TestAnExamsTranslationIsMeasuredToo(t *testing.T) {
+	dir := t.TempDir()
+
+	var en []map[string]any
+	pt := map[string]any{}
+	for i := 0; i < 40; i++ {
+		id := fmt.Sprintf("ex-%02d", i)
+		en = append(en, map[string]any{
+			"id": id, "type": "quiz", "prompt": "which one",
+			"choices": []map[string]any{
+				{"text": strings.Repeat("a", 40), "correct": true},
+				{"text": strings.Repeat("b", 40)},
+				{"text": strings.Repeat("c", 40)},
+			},
+		})
+		pt[id] = map[string]any{"choices": []map[string]any{
+			{"text": strings.Repeat("a", 90)},
+			{"text": strings.Repeat("b", 20)},
+			{"text": strings.Repeat("c", 20)},
+		}}
+	}
+	write(t, filepath.Join(dir, "exam.json"), en)
+	write(t, filepath.Join(dir, "exam.pt.json"), pt)
+
+	read := versions(t, filepath.Join(dir, "exam.json"))
+	if len(read) != 2 {
+		t.Fatalf("an exam beside its translation reads as %d version(s), not 2 — the "+
+			"Portuguese pool was never opened", len(read))
+	}
+	problems, _ := checkLesson("sql/exam [pt]", languages["pt"], read[1].exercises)
+	if len(problems) == 0 {
+		t.Error("the Portuguese pool makes the correct option the longest every time and " +
+			"nothing was reported — the English was measured twice")
+	}
+}
