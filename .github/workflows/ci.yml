@@ -286,6 +286,24 @@ jobs:
       - name: A student who read nothing cannot pass
         run: go run ./tools/check-exercises
 
+      # THE THIRD, asking whether what was written is what was designed.
+      #
+      # `docs/design/` holds one sheet per course, all 122, written before any
+      # of their material — and nothing compared them to `content/`. A sheet
+      # could name a course that does not exist, carry an id belonging to
+      # another one, or design thirteen lessons for a course whose structure
+      # says sixteen, and every step above would pass: they read the catalogue
+      # and have never heard of a sheet, and a sheet is prose that renders
+      # perfectly whatever it says.
+      #
+      # It refuses a disagreement of FACT and only reports a budget. A course
+      # being written has fewer sections than it will have, and a check that
+      # failed on that would be red from the day a course is started until the
+      # day it is finished — which is a check nobody can keep green, and one
+      # whose output everybody learns to skip.
+      - name: What was written is what was designed
+        run: go run ./tools/check-design
+
       # The same job, on the interface rather than on the content. A string
       # added without its Portuguese works perfectly — in the wrong language,
       # for half the students, until one of them mentions it. Nothing else in

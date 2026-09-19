@@ -7,6 +7,20 @@ that does not exist yet.
 [`../CONTENT.md`](../CONTENT.md) says what a course *is*. These say what each particular one
 *will be*.
 
+**And `tools/check-design` now compares them to `content/`**, which nothing did for as long as
+they existed. A sheet is prose: it renders perfectly whatever it says, `validate-content` reads
+the catalogue and has never heard of one, and so a sheet naming a course that does not exist, an
+id belonging to another course, or thirteen lessons for a course whose structure declares
+sixteen would have passed every check in this repository. Same failure shape as the privacy
+policy against the registry, one layer along.
+
+The tool **refuses a disagreement of fact** — an id, a slug, a lesson count, the sheet format —
+and **only reports a budget**. A course being written has fewer sections than it will have; a
+check that failed on that would be red from the day a course is started until the day it is
+finished, which is a check nobody can keep green and therefore one whose output everybody learns
+to skip. The counts are printed on every run instead, because the count is the evidence and *it
+is coming along* is an assertion.
+
 ---
 
 ## Why they exist at all

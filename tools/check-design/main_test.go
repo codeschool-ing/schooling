@@ -1,0 +1,192 @@
+package main
+
+import (
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+func says(problems []string, fragments ...string) bool {
+	for _, p := range problems {
+		all := true
+		for _, f := range fragments {
+			if !strings.Contains(p, f) {
+				all = false
+				break
+			}
+		}
+		if all {
+			return true
+		}
+	}
+	return false
+}
+
+func listed(t *testing.T, problems []string) string {
+	t.Helper()
+	if len(problems) == 0 {
+		return "  (none)"
+	}
+	return "  - " + strings.Join(problems, "\n  - ")
+}
+
+// one sheet and one course that agree about everything, which each test then
+// breaks in exactly one place.
+func agreeing() ([]sheet, []course) {
+	return []sheet{{
+			file: "sql-databases.md", slug: "sql-databases", format: "5",
+			id: "co-1y7mkp4n", lessons: 13, sections: 150, exercises: 700, diagrams: 45,
+		}}, []course{{
+			school: "code", slug: "sql-databases", id: "co-1y7mkp4n",
+			topics: 13, lessons: 13, sections: 145, written: 788, exam: 100, figures: 10,
+		}}
+}
+
+func TestASheetAndItsCourseAgreeing(t *testing.T) {
+	s, c := agreeing()
+	if problems := compare(s, c); len(problems) > 0 {
+		t.Errorf("a sheet that agrees with its course was refused:\n%s", listed(t, problems))
+	}
+}
+
+/*
+AN ID IS WRITTEN DOWN AND NEVER WORKED OUT, so two documents naming different
+ones means somebody typed one of them.
+
+	It is the failure with the least visible symptom of any here: both files
+	render, both read correctly, and the id in the sheet is never resolved
+	against anything — so it can name another course entirely, or a course that
+	was deleted, for as long as the repository exists.
+*/
+func TestASheetNamingAnotherCoursesIDIsRefused(t *testing.T) {
+	s, c := agreeing()
+	s[0].id = "co-8k2p91xz"
+	problems := compare(s, c)
+	if !says(problems, "names the id co-8k2p91xz", "one of these two was typed") {
+		t.Errorf("a sheet naming the wrong id was accepted:\n%s", listed(t, problems))
+	}
+}
+
+// THE LESSON COUNT IS COMPARED AGAINST `topics`, which is the design, and a
+// disagreement there is two documents describing different courses.
+func TestADifferentLessonCountIsRefused(t *testing.T) {
+	s, c := agreeing()
+	c[0].topics = 16
+	problems := compare(s, c)
+	if !says(problems, "designs 13 lessons", "declares 16 topics") {
+		t.Errorf("a sheet designing a different course was accepted:\n%s", listed(t, problems))
+	}
+}
+
+/*
+AND BEING HALF WRITTEN IS NOT A DISAGREEMENT, which is the line this whole tool
+is arranged around.
+
+	A course with four of its thirteen lessons written, a fifth of its sections
+	and none of its exercises is a course somebody is working on. Refusing it
+	would make this tool red from the day a course is started until the day it
+	is finished — and a check nobody can keep green is one whose output
+	everybody learns to skip, including on the day it names something real.
+*/
+func TestACourseHalfWrittenIsNotADisagreement(t *testing.T) {
+	s, c := agreeing()
+	c[0].lessons, c[0].sections, c[0].written, c[0].figures, c[0].exam = 4, 30, 0, 0, 0
+	if problems := compare(s, c); len(problems) > 0 {
+		t.Errorf("a course that is being written was reported as broken:\n%s",
+			listed(t, problems))
+	}
+}
+
+// A COURSE WITH NO SHEET IS THE ONE THAT ACTUALLY HAPPENS. Nothing downstream
+// needs a sheet, so writing one is the step that gets skipped — and then the
+// sweep `docs/design/README.md` describes quietly stops being about all of them.
+func TestACourseWithNoSheetIsRefused(t *testing.T) {
+	s, c := agreeing()
+	c = append(c, course{school: "code", slug: "rust", id: "co-000rust0", topics: 9})
+	problems := compare(s, c)
+	if !says(problems, "code/rust has no design sheet") {
+		t.Errorf("a course nobody designed was accepted:\n%s", listed(t, problems))
+	}
+}
+
+// AND THE OTHER DIRECTION: a sheet for a course that is not there is either a
+// rename that stopped halfway or a design for something nobody built.
+func TestASheetForNoCourseIsRefused(t *testing.T) {
+	s, c := agreeing()
+	s = append(s, sheet{file: "rust.md", slug: "rust", format: "5", id: "co-000rust0", lessons: 9})
+	problems := compare(s, c)
+	if !says(problems, "there is no such course in content/") {
+		t.Errorf("a sheet for nothing was accepted:\n%s", listed(t, problems))
+	}
+}
+
+// ONE FORMAT ACROSS ALL OF THEM, because a revision that stopped halfway leaves
+// two kinds of document that read alike.
+func TestASheetAtAnotherFormatIsRefused(t *testing.T) {
+	s, c := agreeing()
+	s = append(s, sheet{file: "linux-terminal.md", slug: "linux-terminal", format: "4",
+		id: "co-7mr8mhy8", lessons: 13})
+	c = append(c, course{school: "code", slug: "linux-terminal", id: "co-7mr8mhy8", topics: 13})
+	problems := compare(s, c)
+	if !says(problems, "is format 4", "format 5") {
+		t.Errorf("a sheet at an older format was accepted:\n%s", listed(t, problems))
+	}
+}
+
+/*
+THE HEADLINE WRAPS IN THREE OF THEM, and that is not a formatting preference to
+tidy away: a title can be long and these files are read as text.
+
+	This is the test that would have caught the first version, which matched the
+	headline on one line and reported three sheets as having none — where "no
+	headline" is the message meaning *nothing about this sheet can be checked at
+	all*, so three courses would have been silently unchecked by a run that
+	still exited non-zero for a reason that looked like a formatting complaint.
+*/
+func TestAWrappedHeadlineIsStillRead(t *testing.T) {
+	dir := t.TempDir()
+	body := "---\nformat: 5\ncourse: git\n---\n\n# git\n\n" +
+		"**Git and Teamwork: Version Control, Review and Process** · `co-g2dkab2w` · 40 h declared\n" +
+		"· beginner · 19 lessons · `foundations` · paid\n"
+	if err := os.WriteFile(filepath.Join(dir, "git.md"), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	sheets, problems := readSheets(dir)
+	if len(problems) > 0 {
+		t.Fatalf("a sheet whose headline wraps was reported as broken:\n%s", listed(t, problems))
+	}
+	if len(sheets) != 1 || sheets[0].id != "co-g2dkab2w" || sheets[0].lessons != 19 {
+		t.Errorf("the wrapped headline read as %+v, and it says co-g2dkab2w and 19 lessons",
+			sheets[0])
+	}
+}
+
+// AND A BUDGET ROW IS PROSE, so the first number is the budget and the rest is
+// commentary — `~890, floor 700` and `~150, about 11.5 a lesson` are both real.
+func TestTheDesignedCountWinsOverTheRuleOfThumb(t *testing.T) {
+	dir := t.TempDir()
+	body := "---\nformat: 5\ncourse: linux-terminal\n---\n\n" +
+		"**Linux** · `co-7mr8mhy8` · 70 h declared · beginner · 13 lessons · `infra` · **free**\n\n" +
+		"| section budget | ~150, about 11.5 a lesson — **and 223 are designed** |\n" +
+		"| sections | **223** — 170 reading, 40 video, 13 practice |\n" +
+		"| exercises | ~890, floor 700 |\n" +
+		"| diagrams to draw | ~28 — the filesystem tree, the permission bits |\n"
+	if err := os.WriteFile(filepath.Join(dir, "linux-terminal.md"), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	sheets, _ := readSheets(dir)
+	if len(sheets) != 1 {
+		t.Fatalf("read %d sheets", len(sheets))
+	}
+	got := sheets[0]
+	if got.sections != 223 {
+		t.Errorf("the section budget read as %d — the sheet revised its own rule of thumb to "+
+			"223 and reporting against 150 would call a finished course 50%% over", got.sections)
+	}
+	if got.exercises != 890 || got.diagrams != 28 {
+		t.Errorf("exercises %d and diagrams %d, from `~890, floor 700` and `~28 — …`",
+			got.exercises, got.diagrams)
+	}
+}
