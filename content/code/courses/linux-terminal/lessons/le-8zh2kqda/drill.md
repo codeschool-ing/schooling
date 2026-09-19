@@ -1,4 +1,4 @@
 ---
-title: Find it, read its state, choose a signal
+title: Putting it together
 version: 1
 ---

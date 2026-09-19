@@ -1901,5 +1901,345 @@
         "why": "It can, with a narrower record of what it did."
       }
     ]
+  },
+  {
+    "id": "ex-96xjyxwg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody clicks edit on a record a colleague already has open, and watches a spinner for ninety seconds. Which clause turns that into a message?",
+    "hint": "Waiting is the default, and there are two ways to refuse to.",
+    "choices": [
+      {
+        "text": "`NOWAIT`",
+        "correct": true,
+        "why": "It fails at once, so the screen can say that somebody else has it open."
+      },
+      {
+        "text": "`SKIP LOCKED`",
+        "correct": false,
+        "why": "That leaves the row out silently, which on an edit screen means the record vanishes."
+      },
+      {
+        "text": "`FOR SHARE`",
+        "correct": false,
+        "why": "It waits too, and it invites a deadlock when both holders decide to write."
+      },
+      {
+        "text": "`FOR KEY SHARE`",
+        "correct": false,
+        "why": "A weaker lock still waits for whatever conflicts with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbyta7aw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two transactions each insert a child row under a different parent, in opposite orders, and they deadlock. Neither statement names a parent row. What are they contending over?",
+    "hint": "Ask what has to be checked before a child row may exist.",
+    "choices": [
+      {
+        "text": "The index on the child table's key",
+        "correct": false,
+        "why": "Two different children take two different entries there."
+      },
+      {
+        "text": "A lock on each parent, taken to check the reference",
+        "correct": true,
+        "why": "The parent must still be there when the child lands, so inserting one locks it."
+      },
+      {
+        "text": "The sequence that generates the children's ids",
+        "correct": false,
+        "why": "A sequence is deliberately outside the transaction and never blocks."
+      },
+      {
+        "text": "The table itself, which both are writing to",
+        "correct": false,
+        "why": "Two inserts into one table do not queue behind each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4s6qx9r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On MySQL, two inserts that touch no row in common deadlock anyway. What explains it?",
+    "hint": "At its default level it has to stop a row appearing inside a range somebody read.",
+    "choices": [
+      {
+        "text": "Its detector reports a cycle that is not there",
+        "correct": false,
+        "why": "It reports a real cycle; what is not there is a shared row."
+      },
+      {
+        "text": "It locks the spaces between index entries, and those overlap",
+        "correct": true,
+        "why": "Two keys with nothing between them can still fall in one gap."
+      },
+      {
+        "text": "Its transactions escalate to a table lock above a threshold",
+        "correct": false,
+        "why": "That is a different engine's behaviour, and it would make them queue rather than cycle."
+      },
+      {
+        "text": "Inserts there take a lock on the whole index",
+        "correct": false,
+        "why": "They take entries and gaps, not the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh6j07f2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A retry loop catches every error and runs the transaction again. Which of these turns it into a loop that never ends well?",
+    "hint": "Ask which failures a second attempt could not change.",
+    "choices": [
+      {
+        "text": "A deadlock, detected and rolled back",
+        "correct": false,
+        "why": "Nothing was written and the other order may well work next time."
+      },
+      {
+        "text": "A serialization failure under the strictest level",
+        "correct": false,
+        "why": "That error exists in order to be retried."
+      },
+      {
+        "text": "A unique violation on a row that is genuinely a duplicate",
+        "correct": true,
+        "why": "The second attempt inserts the same row and is refused the same way, for ever."
+      },
+      {
+        "text": "A lock wait that timed out once",
+        "correct": false,
+        "why": "Worth one more attempt, and worth investigating if it repeats."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gccdsv0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A transaction has been open for three weeks on a busy PostgreSQL system. Beyond the bloat, what does it eventually do?",
+    "hint": "Something about the numbers the database gives transactions.",
+    "choices": [
+      {
+        "text": "It fills the write-ahead log until the disk is full",
+        "correct": false,
+        "why": "An idle transaction writes nothing, so there is nothing accumulating there."
+      },
+      {
+        "text": "It makes the database refuse new writes, to protect itself",
+        "correct": true,
+        "why": "It holds a place in the transaction numbering, and the database stops rather than pass the wraparound."
+      },
+      {
+        "text": "It is rolled back automatically after a week",
+        "correct": false,
+        "why": "Nothing rolls it back on its own, which is why the timeout setting exists."
+      },
+      {
+        "text": "It forces every index to be rebuilt on the next restart",
+        "correct": false,
+        "why": "A restart does not rebuild indexes, and bloat survives it intact."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfsz341q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A transaction has been succeeding on its fourth attempt every single time, for a year, and nobody knew. What was missing from the loop?",
+    "hint": "It works, so nothing errors, so nothing is written down.",
+    "choices": [
+      {
+        "text": "A cap on the number of attempts",
+        "correct": false,
+        "why": "There was one, and it was never reached."
+      },
+      {
+        "text": "A count of the attempts, reported somewhere",
+        "correct": true,
+        "why": "A retry that works is invisible, and a rate is what turns it into a design problem somebody can see."
+      },
+      {
+        "text": "A longer wait between attempts",
+        "correct": false,
+        "why": "That would hide it more comfortably rather than reveal it."
+      },
+      {
+        "text": "A check of the error's class before retrying",
+        "correct": false,
+        "why": "Worth having, and it would not have said anything about a loop that succeeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-na12njhc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report that takes twenty minutes is moved to a replica so it stops bothering the main machine. What can it still hold up there?",
+    "hint": "The replica is not only serving readers.",
+    "choices": [
+      {
+        "text": "Nothing; a replica is read-only and isolated",
+        "correct": false,
+        "why": "It is read-only and it is not isolated from the stream it is applying."
+      },
+      {
+        "text": "Its own catching up with the stream it receives",
+        "correct": true,
+        "why": "Its replay waits for the reader, or the reader is cancelled; either way one machine reaches the other."
+      },
+      {
+        "text": "The main machine's own vacuuming, always",
+        "correct": false,
+        "why": "Only when the replica is configured to make it wait, which is a separate setting."
+      },
+      {
+        "text": "Writes on the main machine, which queue behind it",
+        "correct": false,
+        "why": "Writes there do not wait for a reader on another machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9p34qhc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A ten-million-row backfill is split into batches that each commit, and it stops at batch 400. What must it have been written with, or it cannot simply be started again?",
+    "hint": "Ask what the first batch would do on a second run.",
+    "choices": [
+      {
+        "text": "A condition that skips the rows already done",
+        "correct": true,
+        "why": "Atomicity over the whole job was given up on purpose, so the job has to know where it got to."
+      },
+      {
+        "text": "A lock held across the batches",
+        "correct": false,
+        "why": "Holding one across all of them is the single long transaction the batching exists to avoid."
+      },
+      {
+        "text": "A count of how many rows it has changed",
+        "correct": false,
+        "why": "A number is not a position, and the rows are not in an order it can trust."
+      },
+      {
+        "text": "A rollback of the batches that succeeded",
+        "correct": false,
+        "why": "They committed, and undoing good work is not what resuming means."
+      }
+    ]
+  },
+  {
+    "id": "ex-95ftyxmp",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Errors whose code begins with two particular digits all mean the same thing: nothing was written, nobody is at fault, and the same work may well succeed if run again. Write those two digits.",
+    "hint": "It is the class the standard set aside for transaction rollbacks.",
+    "blanks": [
+      {
+        "accept": [
+          "40"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-frkhn3kr",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A connection whose query finished in a millisecond has held everything for two hours because nobody committed. Write the setting that kills it after a minute.",
+    "hint": "Its name says the state it is watching for.",
+    "blanks": [
+      {
+        "accept": [
+          "idle_in_transaction_session_timeout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q8p1bgp0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A transaction comes back with a serialization failure. Put the five steps of answering it in order.",
+    "hint": "One of them is the reason the whole block has to be inside the loop.",
+    "items": [
+      "Roll back, since nothing after the failure will run",
+      "Wait a short interval that grows and carries some randomness",
+      "Begin again and read everything afresh",
+      "Decide what to write from what was just read",
+      "Give up loudly once the capped number of attempts is spent"
+    ],
+    "trap": "The tempting shortcut is to re-run only the statement that failed, which writes a decision made from values that have since stopped being true."
+  },
+  {
+    "id": "ex-wqx665tc",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to what it asks of you.",
+    "hint": "Two of them are worth a second attempt and one of them never will be.",
+    "pairs": [
+      {
+        "left": "A cycle in which nobody can proceed",
+        "right": "Take the locks in a consistent order"
+      },
+      {
+        "left": "An ordinary wait that ran out of patience",
+        "right": "Shorten whatever is holding the lock"
+      },
+      {
+        "left": "A row that is genuinely a duplicate",
+        "right": "Do not run it again; the answer will not change"
+      }
+    ],
+    "right_distractors": [
+      "Raise the isolation level for that transaction",
+      "Add an index to the table being written"
+    ]
   }
 ]

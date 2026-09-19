@@ -1,4 +1,4 @@
 ---
-title: Ache, leia o estado, escolha um sinal
+title: Juntando tudo
 version: 1
 ---

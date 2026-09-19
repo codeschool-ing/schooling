@@ -1021,5 +1021,242 @@
         "why": "Um índice faltando custa uma instrução; um cache custa uma tarefa, uma defasagem e um modo de falha."
       }
     ]
+  },
+  "ex-pktxqe8t": {
+    "prompt": "Uma coluna é renomeada e duas versões da aplicação rodam lado a lado durante o deploy. Qual ferramenta deixa as cópias antigas continuarem lendo enquanto as novas usam o nome novo?",
+    "hint": "Algo que não guarda linha nenhuma e consegue apresentar uma coluna com outro nome.",
+    "choices": [
+      {
+        "text": "Uma visão carregando o nome antigo",
+        "why": "Ela é uma consulta com nome, então seleciona a coluna renomeada e a apelida de volta."
+      },
+      {
+        "text": "Uma visão materializada da tabela",
+        "why": "Ela serviria as linhas como estavam na última atualização, o que é pior que um nome velho."
+      },
+      {
+        "text": "Um passo nomeado em cada consulta antiga",
+        "why": "Teria que ser acrescentado ao código antigo, que é justamente o que não dá para mudar."
+      },
+      {
+        "text": "Um gatilho mantendo as duas colunas iguais",
+        "why": "Depois de uma renomeação existe uma coluna só; não há o que manter igual."
+      }
+    ]
+  },
+  "ex-29e1zg9y": {
+    "prompt": "A terceira coluna de uma visão está com o nome errado. Por que `CREATE OR REPLACE VIEW` não resolve?",
+    "hint": "Pergunte o que aquele comando pode mudar na forma.",
+    "choices": [
+      {
+        "text": "Ele recusa qualquer mudança depois que alguém lê a visão",
+        "why": "Nada sobre leitores bloqueia; o limite é sobre a forma."
+      },
+      {
+        "text": "Ele só acrescenta colunas",
+        "why": "Mudar a forma exige remover e recriar, e antes disso tudo que depende dela."
+      },
+      {
+        "text": "Ele precisa travar a tabela de baixo primeiro",
+        "why": "Redefinir uma consulta não envolve travar tabela nenhuma."
+      },
+      {
+        "text": "Visões não podem ser substituídas, só removidas",
+        "why": "Podem ser substituídas, e é isso que torna a restrição digna de nota."
+      }
+    ]
+  },
+  "ex-nhme8brh": {
+    "prompt": "Uma visão materializada é criada `WITH NO DATA` e alguém a lê antes da primeira atualização. Ela levanta erro em vez de devolver nada. Por que esse é o comportamento melhor?",
+    "hint": "Pergunte com o que um resultado vazio seria confundido.",
+    "choices": [
+      {
+        "text": "Um erro é mais barato que varrer uma tabela vazia",
+        "why": "Ler nada também não custa nada; isto não é sobre velocidade."
+      },
+      {
+        "text": "Uma resposta vazia se lê como um mês parado",
+        "why": "Uma tela dizendo zero seria lida como constatação, e não como visão que ninguém encheu."
+      },
+      {
+        "text": "Uma visão vazia não pode receber índice",
+        "why": "Pode, e um índice nela é o que permite a atualização concorrente."
+      },
+      {
+        "text": "A definição só é guardada na primeira atualização",
+        "why": "Ela é guardada na criação; o que falta são as linhas."
+      }
+    ]
+  },
+  "ex-8x3agrjv": {
+    "prompt": "Um painel serviu a receita de terça passada como sendo a de hoje por uma semana, porque o job de atualização estava falhando. Que coluna na definição da visão teria deixado isso visível na tela?",
+    "hint": "Algo calculado no momento em que as linhas foram montadas.",
+    "choices": [
+      {
+        "text": "Uma contagem de linhas, para comparar com a tabela",
+        "why": "Ela anda junto com os dados e não diz nada sobre quando foram colhidos."
+      },
+      {
+        "text": "Quando as linhas foram calculadas",
+        "why": "Impresso ao lado do número, transforma uma defasagem silenciosa em algo que o leitor vê."
+      },
+      {
+        "text": "O nome do job que a atualiza",
+        "why": "Vale anotar e não muda quando o job para de rodar."
+      },
+      {
+        "text": "Uma soma de verificação da tabela de origem",
+        "why": "Mudaria a cada escrita e não diria ao leitor nada sobre o que fazer."
+      }
+    ]
+  },
+  "ex-c6c10ym0": {
+    "prompt": "Uma atualização noturna de quatro anos de receita mensal demora mais a cada mês. O que uma tabela de resumo mantida na mão faz que uma atualização não faz?",
+    "hint": "Pergunte quantos daqueles meses podem ter mudado desde ontem.",
+    "choices": [
+      {
+        "text": "Atender leitores enquanto é reconstruída",
+        "why": "Uma atualização concorrente também faz isso, e mesmo assim recalcula tudo."
+      },
+      {
+        "text": "Mexer só nos meses que mudaram",
+        "why": "Uma atualização recalcula a consulta inteira, inclusive anos que não podem ter mudado."
+      },
+      {
+        "text": "Receber índice, o que uma visão materializada não recebe",
+        "why": "Ela recebe índices, e precisa de um único para atualizar de forma concorrente."
+      },
+      {
+        "text": "Ficar correta sem job agendado",
+        "why": "É uma cópia guardada de qualquer jeito, e precisa de um mecanismo igual."
+      }
+    ]
+  },
+  "ex-4hvh4tcw": {
+    "prompt": "Um comando tem um `UPDATE … RETURNING` num passo nomeado e, num passo irmão, um `SELECT` sobre as mesmas linhas. O que o `SELECT` enxerga?",
+    "hint": "Pergunte se aquilo são passos de um programa ou partes de um comando.",
+    "choices": [
+      {
+        "text": "As linhas atualizadas, já que o passo dele vem depois",
+        "why": "A ordem em que foram escritos não decide a ordem em que rodam."
+      },
+      {
+        "text": "O estado de antes de tudo começar",
+        "why": "Toda parte do comando lê um mesmo instantâneo, então a escrita do irmão é invisível."
+      },
+      {
+        "text": "Um erro, porque dois passos tocam uma tabela",
+        "why": "Nada recusa, e é isso que torna o arranjo digno de ser entendido."
+      },
+      {
+        "text": "A versão que o planejador alcançar primeiro",
+        "why": "Isso tornaria a resposta impossível de raciocinar; a regra do instantâneo é o que impede."
+      }
+    ]
+  },
+  "ex-qqvjhd0f": {
+    "prompt": "Todo cliente, cada um com seus três pedidos mais recentes, e quem nunca pediu ainda tem que aparecer. Qual forma?",
+    "hint": "Duas decisões: rodar por linha de fora, e manter a linha de fora quando não achar nada.",
+    "choices": [
+      {
+        "text": "`CROSS JOIN LATERAL (…)`",
+        "why": "Isso derruba o cliente cuja consulta interna não devolve nada, que é o caso pedido."
+      },
+      {
+        "text": "`LEFT JOIN LATERAL (…) ON true`",
+        "why": "Por linha de fora, e a linha de fora sobrevive quando a consulta interna vem vazia."
+      },
+      {
+        "text": "Uma tabela derivada unida pelo cliente",
+        "why": "Uma tabela derivada não enxerga a linha de fora, então não tem como pegar três por cliente."
+      },
+      {
+        "text": "`JOIN (…) ON true`",
+        "why": "Sem a palavra lateral a subconsulta não pode sequer nomear o cliente."
+      }
+    ]
+  },
+  "ex-1qkc85jw": {
+    "prompt": "Uma consulta recursiva sobre uma árvore de categorias rodou até encher o disco. Além de carregar o caminho e recusar revisitar, que condição faz ela falhar em um segundo?",
+    "hint": "Algo sobre até onde ela pode descer.",
+    "choices": [
+      {
+        "text": "Um limite na profundidade que ela carrega",
+        "why": "Uma árvore de vinte níveis já é um defeito, então a consulta pode muito bem dizer isso rápido."
+      },
+      {
+        "text": "Um limite nas linhas que o comando devolve",
+        "why": "As linhas são produzidas antes de qualquer devolução, então o disco enche antes."
+      },
+      {
+        "text": "Remover duplicatas a cada rodada em vez de empilhar",
+        "why": "Isso termina e esconde o ciclo, e custa uma comparação a cada rodada."
+      },
+      {
+        "text": "Uma chave estrangeira que proíba laços",
+        "why": "Uma chave para a mesma tabela convive muito bem com um laço; restrição nenhuma diz isso."
+      }
+    ]
+  },
+  "ex-henxvhvh": {
+    "prompt": "Um passo nomeado usado uma vez e sem nada de recursivo é embutido na consulta em volta, e você quer isolá-lo. Escreva a palavra acrescentada à definição dele.",
+    "hint": "É o oposto de ser embutido, e virou uma escolha no PostgreSQL 12.",
+    "blanks": [
+      {
+        "accept": [
+          "materializado",
+          "materializada",
+          "materialized"
+        ]
+      }
+    ]
+  },
+  "ex-c77e2t9z": {
+    "prompt": "As duas metades de uma consulta recursiva são empilhadas por um operador de duas palavras, e a forma dele que remove duplicatas é a de evitar. Escreva as duas palavras.",
+    "hint": "A segunda palavra é o que impede a comparação de cada rodada consigo mesma.",
+    "blanks": [
+      {
+        "accept": [
+          "union all"
+        ]
+      }
+    ]
+  },
+  "ex-tb02xczw": {
+    "prompt": "Um relatório está lento e alguém propõe guardar a resposta dele. Ponha os quatro passos na ordem em que devem ser dados.",
+    "hint": "Três deles podem significar que nada é guardado.",
+    "items": [
+      "Descobrir para onde o tempo vai de fato",
+      "Criar o índice que o plano diz estar faltando",
+      "Reescrever a consulta se o plano disser que a forma está errada",
+      "Combinar quão velha a resposta guardada pode ficar, e o que a atualiza"
+    ],
+    "trap": "Guardar a resposta primeiro é a ordem tentadora, e compra um job agendado e uma janela de defasagem em troca de um problema que um índice teria removido."
+  },
+  "ex-qgc2wwrv": {
+    "prompt": "Ligue cada ferramenta ao serviço para o qual ela existe.",
+    "hint": "Só uma delas guarda alguma coisa.",
+    "pairs": [
+      {
+        "left": "Uma subconsulta no FROM",
+        "right": "Um passo de um comando"
+      },
+      {
+        "left": "Um passo nomeado antes do comando",
+        "right": "Dispor os passos para uma pessoa conseguir ler"
+      },
+      {
+        "left": "Uma consulta guardada com nome",
+        "right": "Uma definição de regra, compartilhada por todos"
+      },
+      {
+        "left": "Uma resposta guardada com nome",
+        "right": "Um resultado caro que pode estar um pouco velho"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia da tabela mantida em outra máquina",
+      "Uma regra que o banco se recusa a quebrar"
+    ]
   }
 }

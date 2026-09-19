@@ -1,4 +1,4 @@
 ---
-title: Read a status, choose a verb, find the log
+title: Putting it together
 version: 1
 ---

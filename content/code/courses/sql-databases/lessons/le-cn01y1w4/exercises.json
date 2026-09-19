@@ -1242,5 +1242,346 @@
         "why": "Deduplication is DISTINCT's job."
       }
     ]
+  },
+  {
+    "id": "ex-scxpzhky",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard reports the average basket with `SELECT avg(o.total) FROM orders o JOIN order_lines l ON l.order_id = o.id`. Why is the number wrong?",
+    "hint": "Say out loud what one row of that result is.",
+    "choices": [
+      {
+        "text": "`avg` ignores the rows where the total is empty",
+        "correct": false,
+        "why": "It does ignore unknowns, and every total here is present."
+      },
+      {
+        "text": "An order's total is averaged once per line",
+        "correct": true,
+        "why": "One row per line means an order of six lines contributes its total six times."
+      },
+      {
+        "text": "`avg` over `numeric` loses precision",
+        "correct": false,
+        "why": "`numeric` is exact, which is why money lives in it."
+      },
+      {
+        "text": "Orders with no lines are excluded",
+        "correct": false,
+        "why": "They are, and removing an empty order changes an average far less than counting a full one six times."
+      }
+    ]
+  },
+  {
+    "id": "ex-fs9m87kp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reconciliation uses a `FULL JOIN` between our ledger and their statement, and selects `coalesce(a.reference, b.reference)`. Why not just `a.reference`?",
+    "hint": "Ask which rows this query exists to find.",
+    "choices": [
+      {
+        "text": "Because `coalesce` is faster than reading a column",
+        "correct": false,
+        "why": "It is a function over two values and costs slightly more, not less."
+      },
+      {
+        "text": "The rows only they have carry nothing of ours",
+        "correct": true,
+        "why": "A full join invents nulls on whichever side had no partner, and both sides can be the missing one."
+      },
+      {
+        "text": "Because the two references may be spelled differently",
+        "correct": false,
+        "why": "If they were, the join condition would not have paired them at all."
+      },
+      {
+        "text": "Because `a.reference` is not in the select list otherwise",
+        "correct": false,
+        "why": "It could be selected on its own perfectly well, and would be empty on half the findings."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxf8xz90",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "\"Patients never admitted\" is written as a `LEFT JOIN` to `admissions` with `WHERE a.discharged_at IS NULL`. The list is far too long. What is wrong?",
+    "hint": "Ask what an empty value in that column means for a row that does exist.",
+    "choices": [
+      {
+        "text": "The join should have been a `FULL JOIN`",
+        "correct": false,
+        "why": "Nothing here asks about admissions with no patient."
+      },
+      {
+        "text": "`IS NULL` should be `= NULL`",
+        "correct": false,
+        "why": "That form is never true, so the list would be empty rather than long."
+      },
+      {
+        "text": "The tested column is nullable",
+        "correct": true,
+        "why": "An anti-join has to test a column that cannot be empty in the table, such as the key."
+      },
+      {
+        "text": "The condition belongs in `ON` rather than `WHERE`",
+        "correct": false,
+        "why": "This is the one deliberate exception: testing for absence is exactly what belongs there."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffygz4s8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query that worked for a year now returns nothing. The only change was a migration that added `created_at` to two tables, and it did not mention this query. What is in the query?",
+    "hint": "Something that decides what to pair on by reading the schema rather than the query.",
+    "choices": [
+      {
+        "text": "A `NATURAL JOIN`",
+        "correct": true,
+        "why": "It pairs on every name the two tables share, so a column added to both silently joined on the instant as well."
+      },
+      {
+        "text": "A `CROSS JOIN`",
+        "correct": false,
+        "why": "That one returns more rows rather than none, and a new column changes nothing about it."
+      },
+      {
+        "text": "A `USING` clause",
+        "correct": false,
+        "why": "It names its columns, so a new one is not added to it by anybody."
+      },
+      {
+        "text": "A `LATERAL` subquery",
+        "correct": false,
+        "why": "It refers to the left-hand row by name, and a new column does not enter it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps0c7vak",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The three most recent trips of every driver, in one query. Why can an ordinary join not produce that?",
+    "hint": "Ask what the right-hand side is allowed to know.",
+    "choices": [
+      {
+        "text": "An ordinary join cannot sort its right-hand table",
+        "correct": false,
+        "why": "Sorting is not the difficulty; deciding a limit per driver is."
+      },
+      {
+        "text": "An ordinary join cannot be given a limit at all",
+        "correct": false,
+        "why": "The whole query can be limited. What cannot is limiting inside each group."
+      },
+      {
+        "text": "It has no way to say \"per row of the left table\"",
+        "correct": true,
+        "why": "Its condition is about a pair, so nothing in it can count three of anything for one driver."
+      },
+      {
+        "text": "The trips table would have to be joined to itself",
+        "correct": false,
+        "why": "That is one workaround shape and not what stops the plain join."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdhdh9g8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library reports that every member has borrowed at least one book. Some members have borrowed nothing. The query is a `LEFT JOIN` to `loans`, grouped by member. Which expression produced that?",
+    "hint": "Ask what the invented row is, and what each counter is counting.",
+    "choices": [
+      {
+        "text": "`count(l.id)`",
+        "correct": false,
+        "why": "That counts loans and ignores the empty ones, which gives nought where nought is right."
+      },
+      {
+        "text": "`count(*)`",
+        "correct": true,
+        "why": "It counts rows, and a member with nothing still has the one row the join invented."
+      },
+      {
+        "text": "`sum(1) FILTER (WHERE l.id IS NOT NULL)`",
+        "correct": false,
+        "why": "That asks about the column and answers nought for them too."
+      },
+      {
+        "text": "`count(DISTINCT l.id)`",
+        "correct": false,
+        "why": "Distinct over an empty column counts none, which is again the right answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdnfa1qb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An order is joined to `price_history` on `o.ordered_on BETWEEN p.valid_from AND p.valid_to`. Two history rows overlap by a single day. What happens to the orders placed that day?",
+    "hint": "Every pair that satisfies the condition becomes a row.",
+    "choices": [
+      {
+        "text": "The database refuses the join as ambiguous",
+        "correct": false,
+        "why": "Nothing refuses it. A condition that two rows satisfy makes two pairs."
+      },
+      {
+        "text": "The later history row wins, as it does in an update",
+        "correct": false,
+        "why": "There is no winning. A join has no notion of a most recent match."
+      },
+      {
+        "text": "Each appears twice, and totals over them double",
+        "correct": true,
+        "why": "One row per pair, and the overlap creates a second pair for that day alone."
+      },
+      {
+        "text": "They are dropped, since the match is not unique",
+        "correct": false,
+        "why": "That would at least be visible. Being counted twice is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzraegb6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `LEFT JOIN` query returns 3 rows, and the left-hand table has 3 rows. A colleague concludes that nothing was lost. Are they right?",
+    "hint": "Ask what a left join is allowed to do to the count in each direction.",
+    "choices": [
+      {
+        "text": "Yes; a left join can never return fewer rows than the left table",
+        "correct": false,
+        "why": "On its own it cannot, and a condition further down the query can."
+      },
+      {
+        "text": "No; one lost and one duplicated leaves the total",
+        "correct": true,
+        "why": "A count is one number, and two opposite mistakes land on the same one."
+      },
+      {
+        "text": "Yes, provided the join condition is an equality",
+        "correct": false,
+        "why": "The condition decides nothing about what a later clause discards."
+      },
+      {
+        "text": "No; a left join always returns more rows than the left table",
+        "correct": false,
+        "why": "It returns the same number when no left row has more than one partner."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvy8s5km",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three customers and five orders paired on the foreign key gave four rows. Write how many rows come back if the two tables are paired with no condition at all.",
+    "hint": "It is the one join whose row count you can work out before running it.",
+    "blanks": [
+      {
+        "accept": [
+          "15",
+          "fifteen"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kfcvaa1b",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One keyword lets the right-hand side of a join read the columns of the left-hand row it is being paired with. Write it.",
+    "hint": "It is what makes \"the three most recent of each\" possible.",
+    "blanks": [
+      {
+        "accept": [
+          "lateral"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-amhrn0k6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are reading somebody else's five-table query at speed. Put the five checks in the order that gets you to the meaning fastest.",
+    "hint": "Two of them are about what the result is; three are about what could be wrong with it.",
+    "items": [
+      "Find the first table, which is what the query is about",
+      "Read each pairing condition as a sentence",
+      "Note every outer join and check nothing after it is inner",
+      "Say out loud what one row of the result is",
+      "Read the filters, looking for a right-hand column"
+    ],
+    "trap": "Reading the filters first is tempting because that is where the business rule lives — and a right-hand column there means nothing until you know which side is which."
+  },
+  {
+    "id": "ex-ef7f62n3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom of a join gone wrong to what caused it.",
+    "hint": "One invents rows, one discards them, one multiplies them.",
+    "pairs": [
+      {
+        "left": "A total is several times too large",
+        "right": "One row per pair, and a column of the one-sided table summed over all of them"
+      },
+      {
+        "left": "Rows with nothing on the other side have vanished",
+        "right": "A condition on the right-hand table, applied after the pairing"
+      },
+      {
+        "left": "Everybody has at least one, including those who have none",
+        "right": "Counting rows rather than the column that would be empty"
+      }
+    ],
+    "right_distractors": [
+      "A missing index on the foreign key",
+      "Two tables sorted with different collations"
+    ]
   }
 ]

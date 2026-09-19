@@ -811,5 +811,237 @@
       "Duas tabelas terem ambas uma coluna chamada id",
       "Uma transação segurando um lock por tempo demais"
     ]
+  },
+  "ex-r6qpqeyy": {
+    "prompt": "Um painel de chegadas: `SELECT flight, delay_minutes AS late FROM arrivals WHERE late > 15 ORDER BY late DESC`. O que acontece?",
+    "hint": "O mesmo nome é usado duas vezes, e só um dos dois lugares o tem.",
+    "choices": [
+      {
+        "text": "Os dois usos falham, já que um apelido serve só para exibir",
+        "why": "Um dos dois funciona, e saber qual é o ponto."
+      },
+      {
+        "text": "O filtro falha; a ordenação teria funcionado",
+        "why": "Filtrar acontece antes de as colunas de saída serem calculadas, e ordenar acontece depois."
+      },
+      {
+        "text": "A ordenação falha; o filtro teria funcionado",
+        "why": "É ao contrário, e é isso que a ordem de execução diz."
+      },
+      {
+        "text": "Os dois funcionam; o PostgreSQL resolve o nome para você",
+        "why": "Aí não haveria erro a explicar, e há um."
+      }
+    ]
+  },
+  "ex-vms9q9f4": {
+    "prompt": "`WHERE date_trunc('month', closed_at) = '2026-03-01'` acha exatamente as linhas certas e não consegue usar o índice de `closed_at`. Qual reescrita conserta isso?",
+    "hint": "Um lado da comparação tem que ser a coluna e mais nada.",
+    "choices": [
+      {
+        "text": "`WHERE closed_at >= '2026-03-01' AND closed_at < '2026-04-01'`",
+        "why": "A coluna está sozinha, então o índice vira uma faixa em que o banco consegue entrar."
+      },
+      {
+        "text": "`WHERE closed_at::date = '2026-03-01'`",
+        "why": "Continua sendo função em volta da coluna, e agora acha um dia em vez de um mês."
+      },
+      {
+        "text": "`WHERE closed_at BETWEEN '2026-03-01' AND '2026-03-31'`",
+        "why": "Enfim sozinha, e perde quase todo o dia trinta e um, cujas linhas são depois da meia-noite."
+      },
+      {
+        "text": "`WHERE extract(month FROM closed_at) = 3`",
+        "why": "Outra função, e agora casa com todo março que já existiu."
+      }
+    ]
+  },
+  "ex-7qmhw6ez": {
+    "prompt": "`SELECT DISTINCT a.name FROM artists a JOIN tracks t ON t.artist_id = a.id` responde \"artistas com pelo menos uma faixa\" corretamente hoje. O que quebra isso?",
+    "hint": "Pergunte o que eram as duplicatas, e se elas sumiram ou foram escondidas.",
+    "choices": [
+      {
+        "text": "Um artista sem faixas, que vai ficar de fora",
+        "why": "Ele tem que ficar de fora. Foi isso que a pergunta pediu."
+      },
+      {
+        "text": "Acrescentar um `count(*)`, que conta faixas e chama de artistas",
+        "why": "A junção continua multiplicando as linhas; a palavra só escondia isso de uma lista de nomes."
+      },
+      {
+        "text": "Um índice em `artist_id`, que muda a ordem das linhas",
+        "why": "Ordem não é o que a palavra remove, e essa consulta nunca prometeu uma."
+      },
+      {
+        "text": "Nada; é o jeito padrão de escrever",
+        "why": "É o jeito comum. Ele faz mais trabalho do que perguntar se existe uma faixa."
+      }
+    ]
+  },
+  "ex-ha8cbt7y": {
+    "prompt": "Um feed usa paginação por cursor com `ORDER BY created_at DESC` e mais nada. Cem linhas dividem o mesmo segundo. O que dá errado?",
+    "hint": "Pergunte o que o cursor consegue dizer sobre onde parou.",
+    "choices": [
+      {
+        "text": "Nada; o cursor é um instante e instantes são únicos o bastante",
+        "why": "Cem linhas desta tabela dizem o contrário, e são os segundos cheios que importam."
+      },
+      {
+        "text": "Algumas delas aparecem duas vezes e outras somem",
+        "why": "A ordem dentro daquele intervalo é indefinida, então \"o que vem depois\" não nomeia linha nenhuma."
+      },
+      {
+        "text": "A consulta fica mais lenta nas páginas profundas",
+        "why": "Esse é o defeito de contar linhas para pular, e isto não as conta."
+      },
+      {
+        "text": "O feed para naquele segundo e não passa dele",
+        "why": "Ele passa; só não consegue dizer quais daquelas linhas já mostrou."
+      }
+    ]
+  },
+  "ex-3rxbv8g1": {
+    "prompt": "Uma fila tem que mostrar os chamados vencidos primeiro e depois todo o resto do mais antigo ao mais novo, numa consulta só. Qual `ORDER BY` faz isso?",
+    "hint": "Um booleano ordena falso antes de verdadeiro.",
+    "choices": [
+      {
+        "text": "`ORDER BY due_at, opened_at`",
+        "why": "Isso ordena pelo prazo em si, o que mistura os vencidos no meio do resto."
+      },
+      {
+        "text": "`ORDER BY (due_at < now()) DESC, opened_at`",
+        "why": "Verdadeiro vem primeiro em ordem decrescente, e a segunda chave arruma cada bloco."
+      },
+      {
+        "text": "`ORDER BY (due_at < now()), opened_at`",
+        "why": "Crescente põe falso primeiro, então os vencidos caem no fim."
+      },
+      {
+        "text": "`ORDER BY overdue DESC, opened_at` com `overdue` calculado na lista de seleção",
+        "why": "Essa funciona mesmo — e é a mesma ordenação, escrita com um nome."
+      }
+    ]
+  },
+  "ex-9bv64dp8": {
+    "prompt": "Um relatório noturno devolve zero linhas há um mês e não levanta erro nenhum. A condição dele é `WHERE category_id NOT IN (SELECT id FROM categories WHERE archived)`. Qual a causa mais provável?",
+    "hint": "Pergunte o que um valor específico entre os resultados da subconsulta faria.",
+    "choices": [
+      {
+        "text": "Todas as categorias foram arquivadas",
+        "why": "Aí o relatório estaria certo, e teria sido notado há um mês."
+      },
+      {
+        "text": "Um dos ids que a subconsulta devolve está vazio",
+        "why": "A corrente de desigualdades passa a conter um desconhecido, que linha nenhuma torna verdadeiro."
+      },
+      {
+        "text": "A subconsulta é avaliada uma vez e guardada em cache",
+        "why": "Ela é avaliada a cada execução, e cache não deixaria uma resposta vazia."
+      },
+      {
+        "text": "`NOT IN` não aceita subconsulta",
+        "why": "Aceita, e é exatamente de lá que vem o valor vazio."
+      }
+    ]
+  },
+  "ex-8yqjpzke": {
+    "prompt": "Uma lista de nomes ordena de um jeito na máquina de quem desenvolve e de outro em produção. As linhas são idênticas. O que é?",
+    "hint": "Algo do próprio banco, decidido quando ele foi criado.",
+    "choices": [
+      {
+        "text": "A colação com que os dois bancos foram criados",
+        "why": "Letras acentuadas ficam junto das sem acento numa, e depois do Z na ordem de bytes."
+      },
+      {
+        "text": "Produção tem índice na coluna e o laptop não",
+        "why": "Um índice muda o caminho até uma resposta, nunca a resposta."
+      },
+      {
+        "text": "Os dois estão em versões diferentes do PostgreSQL",
+        "why": "Podem estar, e a ordem não vem da versão."
+      },
+      {
+        "text": "Produção tem mais linhas, então a ordenação vai para o disco",
+        "why": "Ir para o disco muda onde o trabalho acontece, não a ordem que ele produz."
+      }
+    ]
+  },
+  "ex-v68cm29c": {
+    "prompt": "Um programa mostra \"as chegadas mais recentes\" com `SELECT * FROM arrivals LIMIT 100`. O que há de errado?",
+    "hint": "Pergunte o que decide quais cem.",
+    "choices": [
+      {
+        "text": "`LIMIT` é mais lento que trazer tudo e cortar no programa",
+        "why": "É mais rápido, e velocidade não é o defeito."
+      },
+      {
+        "text": "Sem arrumação, são cem linhas quaisquer de uma ordem qualquer",
+        "why": "Nada ali menciona tempo, então \"mais recentes\" é uma afirmação que a consulta nunca faz."
+      },
+      {
+        "text": "`LIMIT` sempre tem que vir com `OFFSET`",
+        "why": "Não tem, e acrescentar um não tornaria estas linhas as mais recentes."
+      },
+      {
+        "text": "Cem é linha demais para devolver de uma vez",
+        "why": "Cem linhas não é nada, e a quantidade não é o problema."
+      }
+    ]
+  },
+  "ex-bcesdjaf": {
+    "prompt": "Uma tabela `tracks` tem 1000 linhas. `WHERE rating = 5` conta 96 e `WHERE rating <> 5` conta 812. Escreva quantas faixas não têm nota.",
+    "hint": "As duas condições são opostas e mesmo assim não cobrem a tabela.",
+    "blanks": [
+      {
+        "accept": [
+          "92"
+        ]
+      }
+    ]
+  },
+  "ex-wksn1kjd": {
+    "prompt": "Uma lista é lida enquanto linhas são inseridas acima dela, então contar linhas para pular mostra algumas duas vezes. Escreva a palavra que nomeia a técnica que pergunta, em vez disso, o que vem depois da última linha mostrada.",
+    "hint": "O nome vem daquilo que o cursor carrega.",
+    "blanks": [
+      {
+        "accept": [
+          "keyset"
+        ]
+      }
+    ]
+  },
+  "ex-7w61rcs5": {
+    "prompt": "Ponha os cinco passos de construir uma consulta de fora para dentro na ordem que diz mais cedo qual parte está errada.",
+    "hint": "Cada passo deve mexer num número que dá para acompanhar.",
+    "items": [
+      "Olhar dez linhas da tabela para conferir que ela é o que você pensa",
+      "Contar as linhas que uma condição mantém",
+      "Acrescentar a condição seguinte e ver o número mexer",
+      "Nomear as colunas que você quer de fato",
+      "Acrescentar a arrumação e o limite juntos"
+    ],
+    "trap": "Nomear as colunas cedo parece progresso e não diz nada — uma contagem mexe quando uma condição está errada, e uma lista de colunas não."
+  },
+  "ex-37p5pe2c": {
+    "prompt": "Ligue cada sintoma ao que está por trás dele.",
+    "hint": "Um é sobre tempo, um é sobre um desconhecido, um é sobre onde um casamento pode começar.",
+    "pairs": [
+      {
+        "left": "Uma linha aparece em duas páginas seguidas",
+        "right": "Contar linhas para pular enquanto linhas são inseridas acima"
+      },
+      {
+        "left": "Zero linhas por um mês, e nenhum erro",
+        "right": "Um desconhecido entre os valores com que uma exclusão compara"
+      },
+      {
+        "left": "Instantâneo em desenvolvimento, minutos em produção",
+        "right": "Um padrão que pode casar começando em qualquer lugar"
+      }
+    ],
+    "right_distractors": [
+      "Uma coluna que foi removida e não substituída",
+      "Dois clientes em fusos diferentes"
+    ]
   }
 }

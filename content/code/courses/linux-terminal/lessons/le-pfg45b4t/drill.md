@@ -1,4 +1,4 @@
 ---
-title: Which resource, which number, which process
+title: Putting it together
 version: 1
 ---

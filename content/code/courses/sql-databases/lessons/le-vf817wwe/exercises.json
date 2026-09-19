@@ -1429,5 +1429,373 @@
         "why": "lag takes the previous row that exists, where the join finds nothing to pair."
       }
     ]
+  },
+  {
+    "id": "ex-0vsms03w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "\"Sales per region\" is grouped by region and two regions are missing from the report entirely. Why can no change to the grouping bring them back?",
+    "hint": "Ask what a pile is made out of.",
+    "choices": [
+      {
+        "text": "They are there with an empty label, further down",
+        "correct": false,
+        "why": "That happens for rows whose region is unknown, and these regions have no rows at all."
+      },
+      {
+        "text": "A group is made of rows, and they have none",
+        "correct": true,
+        "why": "Only a join from the table that does list every region can produce a row for them."
+      },
+      {
+        "text": "The grouping column needs to be declared not null",
+        "correct": false,
+        "why": "A constraint changes what may be written, never what a summary invents."
+      },
+      {
+        "text": "They were filtered out before the grouping ran",
+        "correct": false,
+        "why": "That is worth checking, and here there is genuinely nothing to filter."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0htyj86",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pivot counts orders per status, per region, over a `LEFT JOIN` from `regions`. What does a region with no orders show in the `paid` column?",
+    "hint": "Ask what the invented row's status is, and what the condition says about it.",
+    "choices": [
+      {
+        "text": "An empty value, because there is nothing to count",
+        "correct": false,
+        "why": "A count starts at zero and stays there; it is sums that come back unknown."
+      },
+      {
+        "text": "`1`, because the join invented a row for it",
+        "correct": false,
+        "why": "There is a row, and the condition on it is not true, so this counter never sees it."
+      },
+      {
+        "text": "`0`, which is correct",
+        "correct": true,
+        "why": "The invented row has an unknown status, the filter is not true of it, and nothing is counted."
+      },
+      {
+        "text": "The region is absent, as it would be with an inner join",
+        "correct": false,
+        "why": "Keeping it is exactly what the outer join was for."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztfzsvzv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An article's tags are gathered into one string with `string_agg(tag, ', ')`, and they come out in a different order on different runs. What fixes it?",
+    "hint": "The function that builds a list can be told how to build it.",
+    "choices": [
+      {
+        "text": "An `ORDER BY` inside the parentheses",
+        "correct": true,
+        "why": "Without one the order is whatever the database found convenient, which is free to change."
+      },
+      {
+        "text": "An `ORDER BY` at the end of the query",
+        "correct": false,
+        "why": "That arranges the rows that come out, not the pieces inside one of them."
+      },
+      {
+        "text": "Sorting the tags table by name",
+        "correct": false,
+        "why": "A table has no order to sort it into, which is the whole of lesson 1 on the matter."
+      },
+      {
+        "text": "`string_agg(DISTINCT tag, ', ')`",
+        "correct": false,
+        "why": "That removes repeats and says nothing about the sequence."
+      }
+    ]
+  },
+  {
+    "id": "ex-r55cepf7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customers are bucketed with `ntile(4) OVER (ORDER BY spent DESC)`. Two customers who spent almost the same amount land in different quartiles. Is the function broken?",
+    "hint": "Ask what it is dividing into four.",
+    "choices": [
+      {
+        "text": "Yes; a quartile boundary must fall at a value",
+        "correct": false,
+        "why": "That is a different tool, computed from the values themselves."
+      },
+      {
+        "text": "Yes, unless the sort is made unique",
+        "correct": false,
+        "why": "A tiebreaker decides which of two tied rows goes first, and the boundary would still fall between them."
+      },
+      {
+        "text": "No; it divides the rows evenly, not the values",
+        "correct": true,
+        "why": "Four groups of equal size, so the cut lands wherever the counts put it."
+      },
+      {
+        "text": "No; the two amounts must differ by more than they appear to",
+        "correct": false,
+        "why": "They may be a cent apart, and the buckets would still split them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptcp88f9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SELECT sum(quantity) / count(*) FROM order_lines` reports 3 items per line where the honest figure is 3.5. What is the shortest correct fix?",
+    "hint": "Both sides of the division are whole numbers.",
+    "choices": [
+      {
+        "text": "Round the result to one decimal place",
+        "correct": false,
+        "why": "The decimal was discarded before rounding could see it."
+      },
+      {
+        "text": "Use `avg(quantity)`",
+        "correct": true,
+        "why": "It promotes to a decimal type on its own, which is why dividing by hand is the longer road."
+      },
+      {
+        "text": "Group by the order and sum the groups",
+        "correct": false,
+        "why": "That answers a different question and divides two integers just the same."
+      },
+      {
+        "text": "Declare `quantity` as `numeric`",
+        "correct": false,
+        "why": "A whole count of items is an integer, and changing the column to hide an arithmetic rule is the wrong repair."
+      }
+    ]
+  },
+  {
+    "id": "ex-c79ed62x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session ends when more than an hour passes before the next event. Which function finds the last event of each session?",
+    "hint": "You need to see forwards from the row you are on.",
+    "choices": [
+      {
+        "text": "`lag`, comparing with the event before",
+        "correct": false,
+        "why": "That finds the first event of a session, which is the other end of the same gap."
+      },
+      {
+        "text": "`lead`, which looks at the row ahead",
+        "correct": true,
+        "why": "A row whose following event is more than an hour away is where a session stopped."
+      },
+      {
+        "text": "`last_value`, over the user's partition",
+        "correct": false,
+        "why": "That gives the last event of the whole partition, of which there is one per user."
+      },
+      {
+        "text": "`max`, grouped by user",
+        "correct": false,
+        "why": "Also one row per user, and it cannot see a gap in the middle."
+      }
+    ]
+  },
+  {
+    "id": "ex-skamsxtc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Duplicate contacts have been removed by numbering the rows within each address and deleting every number above one. What has to happen next, or it happens again?",
+    "hint": "Ask what allowed the duplicates in.",
+    "choices": [
+      {
+        "text": "The numbering has to be stored on the rows",
+        "correct": false,
+        "why": "It was scaffolding for one delete and means nothing afterwards."
+      },
+      {
+        "text": "A uniqueness rule has to be declared on the column",
+        "correct": true,
+        "why": "Nothing refused the second row, and nothing will refuse the next one either."
+      },
+      {
+        "text": "The delete has to be scheduled to run nightly",
+        "correct": false,
+        "why": "That accepts the bad state and tidies it up, which is the arrangement rather than the guarantee."
+      },
+      {
+        "text": "An index has to be added to make the delete faster",
+        "correct": false,
+        "why": "Speed is not what let two rows in."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjsnx3zn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A gym wants every booking listed, each beside the average attendance of its class. Why can a `GROUP BY` not produce that?",
+    "hint": "Count how many rows each of the two numbers needs.",
+    "choices": [
+      {
+        "text": "An average cannot be computed per class",
+        "correct": false,
+        "why": "It can, and that half is exactly what grouping is for."
+      },
+      {
+        "text": "Grouping leaves no rows to hold the per-booking value",
+        "correct": true,
+        "why": "One number is a property of the pile and the other of a row, and the pile replaced the rows."
+      },
+      {
+        "text": "The bookings would have to be joined to themselves",
+        "correct": false,
+        "why": "That is one of the old workarounds, not the reason the simple form fails."
+      },
+      {
+        "text": "An average and a count may not appear in one select list",
+        "correct": false,
+        "why": "They may, and plenty of queries have both."
+      }
+    ]
+  },
+  {
+    "id": "ex-kse5yk21",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A weather report's \"station total\" column was constant last week and now climbs down the page. One thing was added inside the `OVER (…)`. What?",
+    "hint": "Two words that do a second job nobody mentions.",
+    "choices": [
+      {
+        "text": "A partition, which narrowed what the function sees",
+        "correct": false,
+        "why": "That changes which rows are summed, and the column would still be constant within each."
+      },
+      {
+        "text": "An arrangement, which switched the default frame",
+        "correct": true,
+        "why": "Saying what order the rows are in also says that the sum ends at the row being computed."
+      },
+      {
+        "text": "A filter, which removed rows from the middle",
+        "correct": false,
+        "why": "Fewer rows make a smaller total, not a growing one."
+      },
+      {
+        "text": "A frame of `UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING`",
+        "correct": false,
+        "why": "That is the spelling that puts the constant back."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtfj6xd8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page shows twenty rows and must also say how many rows there are altogether. How do you get both from one query?",
+    "hint": "An empty pair of parentheses after the function.",
+    "choices": [
+      {
+        "text": "Run a second query for the count",
+        "correct": false,
+        "why": "It is what most applications do, and the question asked for one."
+      },
+      {
+        "text": "`count(*) OVER ()` beside the columns",
+        "correct": true,
+        "why": "An empty window is the whole result, so every row carries the total."
+      },
+      {
+        "text": "`count(*)` with no grouping",
+        "correct": false,
+        "why": "That collapses the twenty rows into one, and the page needs them."
+      },
+      {
+        "text": "`count(*)` in a `HAVING`",
+        "correct": false,
+        "why": "That decides which piles survive and returns no extra column."
+      }
+    ]
+  },
+  {
+    "id": "ex-t35a6sa8",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Scores of 90, 85, 85 and 70, arranged highest first. Write the number `dense_rank()` gives the fourth row.",
+    "hint": "This is the one of the three that does not leave a hole after a tie.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "three"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5s4s3hak",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the thing that answers it.",
+    "hint": "One looks sideways at the pile, one looks at a row's place, one looks backwards.",
+    "pairs": [
+      {
+        "left": "Each order, beside its customer's total spend",
+        "right": "An aggregate with a partition and no arrangement"
+      },
+      {
+        "left": "The three most recent of each customer",
+        "right": "A row number within the partition, filtered outside"
+      },
+      {
+        "left": "How long since this user's previous event",
+        "right": "The value of the preceding row in the arrangement"
+      }
+    ],
+    "right_distractors": [
+      "A count of the distinct values in the column",
+      "A grouping with a condition on the pile"
+    ]
   }
 ]

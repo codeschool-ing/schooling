@@ -1,4 +1,4 @@
 ---
-title: Get out, then get the edit right
+title: Putting it together
 version: 1
 ---

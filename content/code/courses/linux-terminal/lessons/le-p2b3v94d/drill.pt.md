@@ -1,4 +1,4 @@
 ---
-title: Saia, e então acerte a edição
+title: Juntando tudo
 version: 1
 ---

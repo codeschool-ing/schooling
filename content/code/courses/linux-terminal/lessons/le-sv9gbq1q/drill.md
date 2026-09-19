@@ -1,4 +1,4 @@
 ---
-title: Resolve it in your head
+title: Putting it together
 version: 1
 ---

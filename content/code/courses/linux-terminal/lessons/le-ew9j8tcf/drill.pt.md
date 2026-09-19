@@ -1,4 +1,4 @@
 ---
-title: Leia um status, escolha um verbo, ache o log
+title: Juntando tudo
 version: 1
 ---

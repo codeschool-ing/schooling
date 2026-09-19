@@ -1307,5 +1307,237 @@
         "why": "Dá, com um registro mais estreito do que ela fez."
       }
     ]
+  },
+  "ex-96xjyxwg": {
+    "prompt": "Alguém clica em editar um registro que um colega já tem aberto, e fica noventa segundos olhando um carregando. Qual cláusula transforma isso numa mensagem?",
+    "hint": "Esperar é o padrão, e há duas formas de recusar.",
+    "choices": [
+      {
+        "text": "`NOWAIT`",
+        "why": "Falha na hora, então a tela pode dizer que outra pessoa está com o registro."
+      },
+      {
+        "text": "`SKIP LOCKED`",
+        "why": "Isso deixa a linha de fora em silêncio, o que numa tela de edição significa o registro sumir."
+      },
+      {
+        "text": "`FOR SHARE`",
+        "why": "Também espera, e convida um impasse quando os dois detentores resolvem escrever."
+      },
+      {
+        "text": "`FOR KEY SHARE`",
+        "why": "Um bloqueio mais fraco continua esperando o que conflita com ele."
+      }
+    ]
+  },
+  "ex-sbyta7aw": {
+    "prompt": "Duas transações inserem, cada uma, uma linha filha sob um pai diferente, em ordens opostas, e travam uma na outra. Nenhum dos comandos nomeia uma linha pai. Pelo que elas estão disputando?",
+    "hint": "Pergunte o que precisa ser conferido antes de uma linha filha poder existir.",
+    "choices": [
+      {
+        "text": "O índice da chave da tabela filha",
+        "why": "Duas filhas diferentes ocupam duas entradas diferentes."
+      },
+      {
+        "text": "Um bloqueio em cada pai, tomado para conferir a referência",
+        "why": "O pai tem que continuar lá quando a filha chega, então inserir uma o bloqueia."
+      },
+      {
+        "text": "A sequência que gera os ids das filhas",
+        "why": "Uma sequência fica de propósito fora da transação e nunca bloqueia."
+      },
+      {
+        "text": "A própria tabela, em que as duas escrevem",
+        "why": "Duas inserções numa tabela não ficam uma atrás da outra."
+      }
+    ]
+  },
+  "ex-g4s6qx9r": {
+    "prompt": "No MySQL, duas inserções que não tocam nenhuma linha em comum travam uma na outra mesmo assim. O que explica?",
+    "hint": "No nível padrão dele é preciso impedir que uma linha apareça dentro de uma faixa que alguém leu.",
+    "choices": [
+      {
+        "text": "O detector dele informa um ciclo que não existe",
+        "why": "Ele informa um ciclo real; o que não existe é uma linha em comum."
+      },
+      {
+        "text": "Ele bloqueia os espaços entre entradas do índice, e eles se sobrepõem",
+        "why": "Duas chaves sem nada entre elas ainda caem no mesmo espaço."
+      },
+      {
+        "text": "As transações dele sobem para bloqueio de tabela acima de um limite",
+        "why": "Isso é comportamento de outro motor, e faria as duas enfileirarem em vez de ciclar."
+      },
+      {
+        "text": "Inserções ali bloqueiam o índice inteiro",
+        "why": "Elas tomam entradas e espaços, não o índice."
+      }
+    ]
+  },
+  "ex-zh6j07f2": {
+    "prompt": "Um laço de repetição captura qualquer erro e roda a transação de novo. Qual destes o transforma num laço que nunca termina bem?",
+    "hint": "Pergunte quais falhas uma segunda tentativa não mudaria.",
+    "choices": [
+      {
+        "text": "Um impasse, detectado e desfeito",
+        "why": "Nada foi escrito e a outra ordem pode muito bem funcionar da próxima vez."
+      },
+      {
+        "text": "Uma falha de serialização no nível mais estrito",
+        "why": "Esse erro existe justamente para ser repetido."
+      },
+      {
+        "text": "Uma violação de unicidade numa linha que é mesmo duplicada",
+        "why": "A segunda tentativa insere a mesma linha e é recusada igual, para sempre."
+      },
+      {
+        "text": "Uma espera por bloqueio que estourou uma vez",
+        "why": "Vale mais uma tentativa, e vale investigar se repetir."
+      }
+    ]
+  },
+  "ex-9gccdsv0": {
+    "prompt": "Uma transação está aberta há três semanas num PostgreSQL movimentado. Além do inchaço, o que ela acaba provocando?",
+    "hint": "Algo sobre os números que o banco dá às transações.",
+    "choices": [
+      {
+        "text": "Enche o log de escrita adiantada até o disco acabar",
+        "why": "Uma transação parada não escreve nada, então não há o que acumular ali."
+      },
+      {
+        "text": "Faz o banco recusar escritas novas, para se proteger",
+        "why": "Ela segura um lugar na numeração das transações, e o banco para em vez de passar do ponto de volta."
+      },
+      {
+        "text": "É desfeita automaticamente depois de uma semana",
+        "why": "Nada a desfaz sozinho, e é por isso que existe o parâmetro de tempo limite."
+      },
+      {
+        "text": "Obriga a reconstruir todo índice no próximo reinício",
+        "why": "Um reinício não reconstrói índices, e o inchaço sobrevive a ele inteiro."
+      }
+    ]
+  },
+  "ex-cfsz341q": {
+    "prompt": "Uma transação vinha dando certo na quarta tentativa toda vez, por um ano, e ninguém soube. O que faltava no laço?",
+    "hint": "Funciona, então nada dá erro, então nada é registrado.",
+    "choices": [
+      {
+        "text": "Um teto no número de tentativas",
+        "why": "Havia um, e ele nunca foi atingido."
+      },
+      {
+        "text": "Uma contagem das tentativas, informada em algum lugar",
+        "why": "Uma repetição que dá certo é invisível, e uma taxa é o que a torna um problema de projeto visível."
+      },
+      {
+        "text": "Uma espera maior entre as tentativas",
+        "why": "Isso esconderia melhor em vez de revelar."
+      },
+      {
+        "text": "Uma conferência da classe do erro antes de repetir",
+        "why": "Vale ter, e não teria dito nada sobre um laço que dá certo."
+      }
+    ]
+  },
+  "ex-na12njhc": {
+    "prompt": "Um relatório de vinte minutos é movido para uma réplica para parar de atrapalhar a máquina principal. O que ele ainda consegue segurar lá?",
+    "hint": "A réplica não está só atendendo leitores.",
+    "choices": [
+      {
+        "text": "Nada; uma réplica é somente leitura e isolada",
+        "why": "Ela é somente leitura e não é isolada do fluxo que está aplicando."
+      },
+      {
+        "text": "O próprio acompanhamento do fluxo que ela recebe",
+        "why": "A aplicação espera o leitor, ou o leitor é cancelado; de um jeito ou de outro uma máquina alcança a outra."
+      },
+      {
+        "text": "A limpeza da própria máquina principal, sempre",
+        "why": "Só quando a réplica está configurada para fazê-la esperar, o que é outro parâmetro."
+      },
+      {
+        "text": "As escritas na máquina principal, que enfileiram atrás dele",
+        "why": "Escritas lá não esperam um leitor de outra máquina."
+      }
+    ]
+  },
+  "ex-j9p34qhc": {
+    "prompt": "Um preenchimento de dez milhões de linhas é dividido em lotes que confirmam um a um, e para no lote 400. Com o que ele precisa ter sido escrito, ou não dá simplesmente para começar de novo?",
+    "hint": "Pergunte o que o primeiro lote faria numa segunda execução.",
+    "choices": [
+      {
+        "text": "Uma condição que pula as linhas já feitas",
+        "why": "A atomicidade sobre o trabalho inteiro foi abandonada de propósito, então o trabalho tem que saber onde parou."
+      },
+      {
+        "text": "Um bloqueio segurado ao longo dos lotes",
+        "why": "Segurar um por todos eles é a transação longa que o loteamento existe para evitar."
+      },
+      {
+        "text": "Uma contagem de quantas linhas ele mudou",
+        "why": "Um número não é uma posição, e as linhas não estão numa ordem em que ele possa confiar."
+      },
+      {
+        "text": "Um desfazimento dos lotes que deram certo",
+        "why": "Eles confirmaram, e desfazer trabalho bom não é o que retomar significa."
+      }
+    ]
+  },
+  "ex-95ftyxmp": {
+    "prompt": "Erros cujo código começa com dois dígitos específicos significam todos a mesma coisa: nada foi escrito, ninguém tem culpa, e o mesmo trabalho pode muito bem dar certo se rodar de novo. Escreva esses dois dígitos.",
+    "hint": "É a classe que o padrão reservou para desfazimentos de transação.",
+    "blanks": [
+      {
+        "accept": [
+          "40"
+        ]
+      }
+    ]
+  },
+  "ex-frkhn3kr": {
+    "prompt": "Uma conexão cuja consulta terminou em um milissegundo está segurando tudo há duas horas porque ninguém confirmou. Escreva o parâmetro que a mata depois de um minuto.",
+    "hint": "O nome dele diz o estado que ele vigia.",
+    "blanks": [
+      {
+        "accept": [
+          "idle_in_transaction_session_timeout"
+        ]
+      }
+    ]
+  },
+  "ex-q8p1bgp0": {
+    "prompt": "Uma transação volta com falha de serialização. Ponha os cinco passos da resposta em ordem.",
+    "hint": "Um deles é a razão de o bloco inteiro ter que ficar dentro do laço.",
+    "items": [
+      "Desfazer, já que nada depois da falha vai rodar",
+      "Esperar um intervalo curto que cresce e carrega alguma aleatoriedade",
+      "Começar de novo e reler tudo",
+      "Decidir o que escrever a partir do que acabou de ser lido",
+      "Desistir com alarde quando o teto de tentativas se esgotar"
+    ],
+    "trap": "O atalho tentador é repetir só o comando que falhou, o que grava uma decisão tomada a partir de valores que desde então deixaram de ser verdade."
+  },
+  "ex-wqx665tc": {
+    "prompt": "Ligue cada falha ao que ela pede de você.",
+    "hint": "Duas delas merecem uma segunda tentativa e uma nunca vai merecer.",
+    "pairs": [
+      {
+        "left": "Um ciclo em que ninguém consegue avançar",
+        "right": "Tomar os bloqueios numa ordem consistente"
+      },
+      {
+        "left": "Uma espera comum que perdeu a paciência",
+        "right": "Encurtar o que estiver segurando o bloqueio"
+      },
+      {
+        "left": "Uma linha que é mesmo duplicada",
+        "right": "Não rodar de novo; a resposta não vai mudar"
+      }
+    ],
+    "right_distractors": [
+      "Subir o nível de isolamento daquela transação",
+      "Criar um índice na tabela em que se escreve"
+    ]
   }
 }

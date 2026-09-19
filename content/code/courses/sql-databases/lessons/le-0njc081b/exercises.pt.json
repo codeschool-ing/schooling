@@ -758,5 +758,237 @@
         ]
       }
     ]
+  },
+  "ex-s68v3rv6": {
+    "prompt": "Um sistema de bicicletas compartilhadas declara quatro colunas. Qual é a única escolha sólida?",
+    "hint": "Três delas são citadas nesta aula como erros, cada uma por um motivo diferente.",
+    "choices": [
+      {
+        "text": "`fare numeric(6,2)`",
+        "why": "Dinheiro num tipo exato, e a escala vem da moeda."
+      },
+      {
+        "text": "`docked_at date`",
+        "why": "A devolução acontece num instante; truncar para o dia decide o relatório errado dez para a meia-noite."
+      },
+      {
+        "text": "`bike_code char(6)`",
+        "why": "Ele completa com espaços, então comparações e comprimentos discordam sobre eles estarem lá."
+      },
+      {
+        "text": "`is_returned boolean`",
+        "why": "Um timestamp responde se e quando, na mesma coluna, sem custo nenhum a mais."
+      }
+    ]
+  },
+  "ex-m86jzwv0": {
+    "prompt": "Um painel mostra `0` para a fatia de devolvidas desde o dia em que foi feito. A consulta é `SELECT count(*) FILTER (WHERE returned_at IS NOT NULL) / count(*) FROM trips`. O que está errado?",
+    "hint": "Olhe o que são os dois lados da divisão.",
+    "choices": [
+      {
+        "text": "`FILTER` não pode ser usado com `count`",
+        "why": "Pode, e essa metade faz exatamente o que parece."
+      },
+      {
+        "text": "As duas contagens são inteiras, então o resto é jogado fora",
+        "why": "Inteiro sobre inteiro é inteiro, e qualquer coisa abaixo de um sai como zero."
+      },
+      {
+        "text": "`count(*)` pula as linhas em que `returned_at` está vazio",
+        "why": "`count(*)` conta linhas e não olha coluna nenhuma."
+      },
+      {
+        "text": "A tabela precisa de um índice para o filtro funcionar",
+        "why": "Um índice muda a rapidez de uma resposta, nunca qual ela é."
+      }
+    ]
+  },
+  "ex-z6b83a91": {
+    "prompt": "Qual destas o PostgreSQL aceita como coluna `GENERATED ALWAYS AS (…) STORED`?",
+    "hint": "Duas regras: só a mesma linha, e a mesma resposta sempre.",
+    "choices": [
+      {
+        "text": "`(now() + interval '30 days')`",
+        "why": "Não é determinística, então é recusada: a mesma linha daria outro resultado amanhã."
+      },
+      {
+        "text": "`(SELECT count(*) FROM trips WHERE trips.bike_id = bikes.id)`",
+        "why": "Ela lê outra tabela, coisa que uma coluna gerada não pode fazer."
+      },
+      {
+        "text": "`(lower(email))`",
+        "why": "Uma coluna da mesma linha, uma resposta sempre, e um lugar só onde a normalização acontece."
+      },
+      {
+        "text": "`(random() * 100)`",
+        "why": "Um valor diferente a cada escrita é a definição do que isso recusa."
+      }
+    ]
+  },
+  "ex-3ypqxtqb": {
+    "prompt": "`ALTER TABLE invoices ADD COLUMN archived boolean NOT NULL DEFAULT false` em oitenta milhões de linhas. Quanto custa?",
+    "hint": "Pergunte se cada linha precisa de um valor diferente.",
+    "choices": [
+      {
+        "text": "Uma reescrita inteira, porque cada linha ganha uma coluna",
+        "why": "Isso era verdade antes do PostgreSQL 11, e o conselho antigo ainda é repetido em todo lugar."
+      },
+      {
+        "text": "Quase nada: o padrão é constante e mora no catálogo",
+        "why": "As linhas existentes são informadas dele conforme são lidas, então a tabela não é tocada."
+      },
+      {
+        "text": "Uma varredura inteira, porque o `NOT NULL` tem que ser checado",
+        "why": "Não há o que checar: nenhuma linha existente pode estar vazia numa coluna que não existia."
+      },
+      {
+        "text": "É recusado até a coluna ser preenchida",
+        "why": "Nada recusa. Essa gambiarra é o que o padrão constante substituiu."
+      }
+    ]
+  },
+  "ex-yqeagqj4": {
+    "prompt": "Uma migração roda em homologação e falha em produção com `constraint \"invoices_total_check1\" does not exist`. O que está por trás?",
+    "hint": "Pergunte de onde veio aquele nome.",
+    "choices": [
+      {
+        "text": "Produção está num PostgreSQL mais antigo que homologação",
+        "why": "Isso pode mudar a numeração, e não é o que fez um nome gerado virar peça de apoio."
+      },
+      {
+        "text": "As restrições nunca foram nomeadas, então o número depende da ordem em que foram criadas",
+        "why": "Uma migração que removeu e recriou uma delas renumerou em homologação e em lugar nenhum mais."
+      },
+      {
+        "text": "A restrição foi removida por uma migração anterior",
+        "why": "Aí homologação também teria falhado, e não falhou."
+      },
+      {
+        "text": "Produção tem mais linhas, então a checagem nunca foi válida",
+        "why": "Contagem de linhas não decide nada sobre uma restrição existir."
+      }
+    ]
+  },
+  "ex-2dhvwjhy": {
+    "prompt": "Uma destas precisa de mais ou menos o dobro do tamanho da tabela em disco livre enquanto roda. Qual?",
+    "hint": "Pergunte qual delas escreve cada linha de novo.",
+    "choices": [
+      {
+        "text": "`ADD COLUMN notes text`",
+        "why": "Só catálogo. As linhas não são lidas."
+      },
+      {
+        "text": "`RENAME COLUMN notes TO remarks`",
+        "why": "Também só catálogo, e é instantânea em qualquer tamanho."
+      },
+      {
+        "text": "`ALTER COLUMN id TYPE bigint`",
+        "why": "Uma reescrita: cada linha é escrita de novo, e cada chave estrangeira que aponta para ela vai junto."
+      },
+      {
+        "text": "`ALTER COLUMN status SET NOT NULL`",
+        "why": "Uma varredura inteira, que lê cada linha e reescreve nenhuma."
+      }
+    ]
+  },
+  "ex-g0wxfp20": {
+    "prompt": "Uma ferramenta de migração envolve cada migração numa transação. Uma migração com `CREATE INDEX CONCURRENTLY` falha antes de começar. Por quê?",
+    "hint": "A palavra `CONCURRENTLY` compra uma coisa e abre mão de outra.",
+    "choices": [
+      {
+        "text": "Ele precisa rodar sozinho, fora de qualquer bloco, e ser excetuado na mão",
+        "why": "É o preço de deixar as escritas seguirem enquanto o índice é construído."
+      },
+      {
+        "text": "Construção concorrente de índice exige a tabela vazia",
+        "why": "Ela existe justamente para o caso em que não está."
+      },
+      {
+        "text": "A ferramenta precisa pegar um bloqueio ACCESS EXCLUSIVE antes",
+        "why": "Evitar esse bloqueio é o sentido inteiro da palavra."
+      },
+      {
+        "text": "Um índice não pode ser criado na mesma migração que uma coluna",
+        "why": "Não existe essa regra."
+      }
+    ]
+  },
+  "ex-9ymsx4bn": {
+    "prompt": "Uma busca por nome não acha nada, e o nome está na tela na sua frente. `SELECT length(name), octet_length(name)` devolve `3` e `4`. O que você achou?",
+    "hint": "Três caracteres e quatro bytes.",
+    "choices": [
+      {
+        "text": "Um espaço no fim que ninguém vê",
+        "why": "Um espaço é um caractere e um byte, então os dois números teriam andado juntos."
+      },
+      {
+        "text": "A coluna é `char(n)` e foi completada com espaços",
+        "why": "O preenchimento acrescenta caracteres além de bytes, então os dois continuariam batendo."
+      },
+      {
+        "text": "Um caractere que não é ASCII e se parece exatamente com um que é",
+        "why": "Uma letra ocupa dois bytes, e as duas strings são valores genuinamente diferentes."
+      },
+      {
+        "text": "A comparação está usando a colação errada",
+        "why": "Colação muda ordenação, não se duas strings são iguais byte a byte."
+      }
+    ]
+  },
+  "ex-1ymr47r4": {
+    "prompt": "Uma encomenda é bipada às 23:50 e a coluna guarda só o dia, então nada consegue dizer de que lado da meia-noite ela caiu. Escreva o tipo que teria guardado isso.",
+    "hint": "Uma palavra, e é o tipo que esta aula manda usar por padrão.",
+    "blanks": [
+      {
+        "accept": [
+          "timestamptz",
+          "timestamp with time zone"
+        ]
+      }
+    ]
+  },
+  "ex-kgq5atgs": {
+    "prompt": "Antes de alterar uma tabela que importa, você define um parâmetro para que uma instrução paciente não enfileire a aplicação inteira atrás dela. Escreva o nome dele.",
+    "hint": "É definido na mesma sessão, logo acima da instrução.",
+    "blanks": [
+      {
+        "accept": [
+          "lock_timeout"
+        ]
+      }
+    ]
+  },
+  "ex-pgwhnkbm": {
+    "prompt": "Uma coluna precisa ser renomeada numa tabela que a aplicação nunca para de usar. Ponha os quatro passos em ordem.",
+    "hint": "Em nenhum momento uma cópia rodando da aplicação pode estar errada.",
+    "items": [
+      "Criar a coluna nova; escrever nas duas e ler a antiga",
+      "Preencher a coluna nova a partir da antiga",
+      "Ler a coluna nova, ainda escrevendo nas duas",
+      "Parar de escrever na antiga, e então removê-la"
+    ],
+    "trap": "O atalho tentador é ler a coluna nova assim que ela existe — mas ela está vazia em toda linha escrita antes do preenchimento."
+  },
+  "ex-eckk3jca": {
+    "prompt": "Um estacionamento. Ligue cada coluna ao tipo que ela deve ter.",
+    "hint": "Uma é dinheiro, uma é um instante, uma é texto sem regra de tamanho.",
+    "pairs": [
+      {
+        "left": "fare_charged",
+        "right": "numeric(6,2)"
+      },
+      {
+        "left": "entered_at",
+        "right": "timestamptz"
+      },
+      {
+        "left": "plate",
+        "right": "text"
+      }
+    ],
+    "right_distractors": [
+      "double precision",
+      "char(8)"
+    ]
   }
 }

@@ -1081,5 +1081,248 @@
         "why": "Um banco que cresceu muito desde a última análise está planejando com números velhos até alguém rodar o comando."
       }
     ]
+  },
+  "ex-67xkgm59": {
+    "prompt": "Um plano mostra um `BitmapAnd` sobre dois índices: um devolveu 2 984 entradas e o outro 194 554, e montar o segundo mapa levou quase todo o tempo. O que acha essas linhas diretamente?",
+    "hint": "Uma estrutura em vez de duas, com as colunas numa ordem específica.",
+    "choices": [
+      {
+        "text": "Um índice sobre as duas colunas, a de igualdade na frente",
+        "why": "Ele salta para os valores iguais e lê adiante pela faixa, em vez de montar um mapa de um quinto da tabela."
+      },
+      {
+        "text": "Um índice sobre as duas colunas, a de faixa na frente",
+        "why": "Aí ele percorre cada linha da faixa conferindo a outra coluna, que é o trabalho de que se reclama."
+      },
+      {
+        "text": "Remover o menos seletivo dos dois índices",
+        "why": "Isso deixa uma condição para ser conferida linha a linha, e a consulta fica mais lenta."
+      },
+      {
+        "text": "Um índice sobre a expressão que o filtro usa",
+        "why": "Nenhuma das condições embrulha sua coluna em coisa alguma."
+      }
+    ]
+  },
+  "ex-4bxrzhkn": {
+    "prompt": "Toda varredura de um plano estima suas linhas com alguns por cento de diferença do que devolveu, e o nó acima da junção erra por um fator de duzentos. Onde está o problema?",
+    "hint": "As varreduras estão certas, então as estatísticas das colunas estão certas.",
+    "choices": [
+      {
+        "text": "As estatísticas nunca foram colhidas",
+        "why": "Aí as varreduras também errariam, e elas acertaram."
+      },
+      {
+        "text": "Quantos pares esperava-se que a junção produzisse",
+        "why": "A seletividade dela é um palpite à parte do de cada lado, e os nós acima herdam esse palpite."
+      },
+      {
+        "text": "Uma função em volta de uma coluna no filtro",
+        "why": "Isso apareceria como estimativa ruim na varredura em que ela está."
+      },
+      {
+        "text": "O plano foi feito para um marcador em vez de um valor",
+        "why": "Isso distorceria as estimativas das varreduras, que são justamente as que acertaram."
+      }
+    ]
+  },
+  "ex-k4jwfp5g": {
+    "prompt": "Uma varredura por mapa de bits numa tabela de 7 466 páginas informa `Heap Blocks: exact=7466`. O que isso diz sobre as linhas que ela queria?",
+    "hint": "Conte quantas páginas ela teve que visitar contra quantas existem.",
+    "choices": [
+      {
+        "text": "Não havia parte alguma que desse para pular",
+        "why": "Ela não pulou nenhuma, então o índice estreitou as linhas e não as páginas."
+      },
+      {
+        "text": "Estão todas juntas no fim da tabela",
+        "why": "Aí ela teria visitado um punhado de páginas e dito isso."
+      },
+      {
+        "text": "O mapa transbordou e virou aproximado",
+        "why": "Isso apareceria como `lossy` em vez de `exact`."
+      },
+      {
+        "text": "O índice está inválido e foi ignorado",
+        "why": "A varredura de índice abaixo do nó é o que montou o mapa."
+      }
+    ]
+  },
+  "ex-11m1vf3s": {
+    "prompt": "Uma consulta informa um tempo de planejamento várias vezes maior que o de execução. É raro. O que costuma ser?",
+    "hint": "Algo sobre quantos arranjos havia para precificar.",
+    "choices": [
+      {
+        "text": "Um índice que o planejador teve que ler antes de decidir",
+        "why": "Ler um pedaço de índice faz parte de executar, não de escolher."
+      },
+      {
+        "text": "Uma junção larga com muitas ordens possíveis a considerar",
+        "why": "O número de arranjos cresce rápido com as tabelas, e precificá-los é o planejamento."
+      },
+      {
+        "text": "Estatísticas grandes demais para serem lidas",
+        "why": "Elas são amostradas e pequenas, e lê-las não é para onde o tempo vai."
+      },
+      {
+        "text": "Um cache de planos limpo pelo último deploy",
+        "why": "Um cache frio custa um planejamento, e este é informado toda vez."
+      }
+    ]
+  },
+  "ex-hwsefv9s": {
+    "prompt": "Dois planos devolvem a mesma quantidade de linhas e um pede muito mais memória para ordená-las. Que número do plano previa isso?",
+    "hint": "É o quarto dos quatro do primeiro par de parênteses.",
+    "choices": [
+      {
+        "text": "`cost`, cuja segunda metade precifica o nó inteiro",
+        "why": "Ele precifica o trabalho e não é de onde a memória é reservada."
+      },
+      {
+        "text": "`rows`, que os dois planos têm igual",
+        "why": "O enunciado diz que são iguais, então não pode ser o que difere."
+      },
+      {
+        "text": "`width`, o tamanho médio de uma linha em bytes",
+        "why": "A mesma quantidade de linhas mais largas precisa de mais espaço, o que é mais um argumento contra pedir colunas que ninguém lê."
+      },
+      {
+        "text": "`loops`, que multiplica tudo na linha",
+        "why": "Ele diz quantas vezes um nó rodou, e nenhum destes rodou duas vezes."
+      }
+    ]
+  },
+  "ex-dwp1nk5d": {
+    "prompt": "Um relatório mensal une todo pedido a todo cliente e agrupa por cidade. As duas tabelas são lidas inteiras e nenhum índice muda isso. Quais são as opções honestas?",
+    "hint": "A consulta não está errada; ela é grande.",
+    "choices": [
+      {
+        "text": "Um índice composto sobre as colunas do agrupamento",
+        "why": "O relatório quer toda linha, então nada do que um índice estreita é estreitado."
+      },
+      {
+        "text": "Uma resposta guardada, um resumo corrente, ou outra máquina",
+        "why": "Cada uma das três move o custo em vez de removê-lo, que é o que uma consulta corretamente grande permite."
+      },
+      {
+        "text": "Desligar varreduras sequenciais naquela sessão",
+        "why": "Isso faz o planejador mentir para si mesmo e não deixa o trabalho menor."
+      },
+      {
+        "text": "Aumentar a memória disponível para ordenações",
+        "why": "Vale conferir se ela transborda, e não transforma duas leituras inteiras em menos."
+      }
+    ]
+  },
+  "ex-mg8358d2": {
+    "prompt": "Uma tabela recebeu duzentas mil linhas uma hora atrás e uma consulta sobre ela tem um plano que não faz sentido. O que você roda antes de acreditar em qualquer outra coisa do plano?",
+    "hint": "O planejador está trabalhando com números anteriores à carga.",
+    "choices": [
+      {
+        "text": "Uma reconstrução dos índices da tabela",
+        "why": "Eles estão em dia; nada numa carga os deixa defasados."
+      },
+      {
+        "text": "Uma coleta das estatísticas da tabela",
+        "why": "As estimativas dela são escaladas do que a tabela era, e um comando substitui o palpite."
+      },
+      {
+        "text": "Uma limpeza da tabela",
+        "why": "Vale pelo mapa de visibilidade, e uma carga nova tem poucas linhas mortas a recolher."
+      },
+      {
+        "text": "A consulta uma segunda vez, para o cache quente",
+        "why": "Isso muda os tempos e não a forma que as estimativas produziram."
+      }
+    ]
+  },
+  "ex-d94wjecq": {
+    "prompt": "Uma mudança foi feita e a consulta agora roda em um terço do tempo. Que medida diz que a mudança fez o que você pensa, em vez de o cache estar quente?",
+    "hint": "Algo que não se mexe quando a página já está na memória.",
+    "choices": [
+      {
+        "text": "O tempo de execução numa segunda rodada",
+        "why": "Uma segunda rodada também está quente, então os dois números concordam e nenhum resolve."
+      },
+      {
+        "text": "O tempo de planejamento",
+        "why": "Ele diz quanto demorou escolher e nada sobre o trabalho."
+      },
+      {
+        "text": "A contagem de páginas que a consulta tocou",
+        "why": "Uma mudança que lê menos páginas fez algo; uma que lê o mesmo tanto mexeu no cache."
+      },
+      {
+        "text": "O custo estimado do nó do topo",
+        "why": "É uma previsão na unidade do próprio planejador, e ela não rodou nada."
+      }
+    ]
+  },
+  "ex-2a95rhat": {
+    "prompt": "Um nó informa `rows=13` e, abaixo dele, `Rows Removed by Filter: 999987`. Qual é a constatação?",
+    "hint": "Compare o que ele guardou com o que ele leu.",
+    "choices": [
+      {
+        "text": "A condição está errada, já que descarta quase tudo",
+        "why": "Descartar quase tudo é o que uma condição seletiva faz; é o objetivo dela."
+      },
+      {
+        "text": "Um milhão de linhas foi lido para guardar treze",
+        "why": "A condição é seletiva e nada estreitou a leitura, que é o argumento por um índice em uma linha."
+      },
+      {
+        "text": "A estimativa errou por um fator de um milhão",
+        "why": "Aquela linha conta linhas jogadas fora, não linhas esperadas."
+      },
+      {
+        "text": "A tabela precisa de limpeza",
+        "why": "Linhas mortas não são o que um filtro remove, e são contadas em outro lugar."
+      }
+    ]
+  },
+  "ex-9gy1892y": {
+    "prompt": "Um nó dentro de uma junção informa `rows=3 loops=2984`, e todo número de uma linha dessas é por volta. Escreva quantas linhas ele produziu ao todo.",
+    "hint": "Multiplique antes de acreditar num número.",
+    "blanks": [
+      {
+        "accept": [
+          "8952",
+          "8.952"
+        ]
+      }
+    ]
+  },
+  "ex-yvmtntpb": {
+    "prompt": "Um plano conta as vezes em que o índice sozinho não bastou e a linha teve que ser buscada no armazenamento da própria tabela. Escreva o nome de uma palavra que o PostgreSQL dá a esse armazenamento.",
+    "hint": "Ele aparece na linha que conta essas buscas.",
+    "blanks": [
+      {
+        "accept": [
+          "heap"
+        ]
+      }
+    ]
+  },
+  "ex-xjkvg3z5": {
+    "prompt": "A estimativa e o real discordam por um fator de cem. Ligue cada circunstância à causa habitual.",
+    "hint": "Uma é sobre uma expressão, uma sobre quando a tabela foi carregada, uma sobre duas colunas.",
+    "pairs": [
+      {
+        "left": "O filtro embrulha a coluna numa função",
+        "right": "Não há estatística para um valor calculado"
+      },
+      {
+        "left": "A tabela foi preenchida uma hora atrás",
+        "right": "Nada colheu estatísticas desde então"
+      },
+      {
+        "left": "Duas colunas são comparadas e cada uma sozinha é bem estimada",
+        "right": "Elas andam juntas, e supôs-se independência"
+      }
+    ],
+    "right_distractors": [
+      "O índice acumulou entradas mortas",
+      "A consulta rodou com o cache frio"
+    ]
   }
 }

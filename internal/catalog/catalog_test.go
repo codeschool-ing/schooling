@@ -36,6 +36,7 @@ const (
 
 	rolesQuiz    = "ex-spr8rdb4" // the quiz about the roles
 	rolesDiagram = "ex-q6xgt936" // the labelling question about request.png
+	drillQuiz    = "ex-vd8k03hr" // the one question filed under the drill section
 )
 
 // school loads testdata/good, optionally mutated, and answers every problem.
@@ -162,6 +163,26 @@ func TestAReadingSectionWithNoProseIsRefused(t *testing.T) {
 
 	if !says(problems, "there is no packets.md", "opens it and finds nothing") {
 		t.Errorf("a reading section with no prose was accepted:\n%s", report(t, problems))
+	}
+}
+
+// THE OTHER DIRECTION, and the one that had already shipped.
+//
+// Every lesson of `sql-databases` declared a practice section and filed no
+// question under it, for as long as the course existed. The screen draws the
+// declared section as the lesson's assessment and takes its count from the
+// LESSON's total, so an empty one is not drawn as empty — it is a heading with
+// a frame under it, and a student cannot tell it from a section that has not
+// loaded.
+//
+// Moving the fixture's only drill question to a reading section is exactly the
+// state those thirteen lessons were in.
+func TestAPracticeSectionWithNoQuestionsIsRefused(t *testing.T) {
+	problems := school(t, sectionOf(drillQuiz, "roles"))
+
+	if !says(problems, "drill is a practice section with no question filed under it",
+		"empty frame") {
+		t.Errorf("a practice section with nothing in it was accepted:\n%s", report(t, problems))
 	}
 }
 

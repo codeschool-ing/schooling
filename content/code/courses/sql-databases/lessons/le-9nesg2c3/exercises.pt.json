@@ -958,5 +958,251 @@
         "why": "Pelo ORM, pelo builder e pela saída crua igualmente."
       }
     ]
+  },
+  "ex-gwct9kb8": {
+    "prompt": "`WHERE id IN ($1)` com uma lista como valor não funciona, porque um marcador representa um valor. Qual é a forma que recebe a lista inteira num parâmetro só?",
+    "hint": "O mesmo operador que a seção de carga por conjunto usou contra um arranjo.",
+    "choices": [
+      {
+        "text": "`WHERE id = ANY($1)`, com o arranjo como valor",
+        "why": "Um parâmetro de qualquer tamanho, e o texto do comando não muda com a quantidade de itens."
+      },
+      {
+        "text": "`WHERE id IN ($1, $2, $3)`, montado no tamanho da lista",
+        "why": "Funciona, e é um comando diferente por tamanho, então cada um é planejado e contado à parte."
+      },
+      {
+        "text": "`WHERE id IN (SELECT unnest($1))`",
+        "why": "Também funciona e é o caminho longo até o operador que diz isso direto."
+      },
+      {
+        "text": "Juntar a lista numa string separada por vírgulas",
+        "why": "Isso é o valor de volta no texto, que é justamente o que parâmetros existem para impedir."
+      }
+    ]
+  },
+  "ex-akxy30hd": {
+    "prompt": "Um mapeador emite um comando com junção para uma relação em algumas telas e dois comandos separados em outras, decidindo pelo filtro mencionar ou não a outra tabela. O que isso significa para você?",
+    "hint": "A decisão é real e não está no seu código.",
+    "choices": [
+      {
+        "text": "Nada; ele escolhe certo dos dois jeitos",
+        "why": "Ele escolhe de forma razoável, e qual escolheu decide quantas linhas voltaram."
+      },
+      {
+        "text": "A forma tem que ser lida por tela, e não por modelo",
+        "why": "A mesma instrução produz comandos diferentes, então só o log diz qual desta vez."
+      },
+      {
+        "text": "A relação deveria ser marcada como sempre ansiosa",
+        "why": "Isso a carrega em toda tela, inclusive nas que mostram um nome."
+      },
+      {
+        "text": "O filtro deveria ir para a aplicação",
+        "why": "Isso troca um comando por linhas buscadas e descartadas."
+      }
+    ]
+  },
+  "ex-9x9kjmg7": {
+    "prompt": "Sob uma ferramenta de migração, `CREATE TABLE IF NOT EXISTS` remove uma checagem e não esconde nada. Por quê?",
+    "hint": "Pergunte o que significaria aquela tabela já estar lá.",
+    "choices": [
+      {
+        "text": "A ferramenta cria as tabelas sozinha e ignora o arquivo",
+        "why": "Ela roda o que o arquivo diz; esse é o mecanismo inteiro."
+      },
+      {
+        "text": "Uma migração é aplicada uma vez, então achar a tabela significa que o banco não está onde a versão dele diz",
+        "why": "Isso merece uma falha barulhenta, e a cláusula transforma em passagem silenciosa."
+      },
+      {
+        "text": "A cláusula não é aceita dentro de transação",
+        "why": "É aceita; o comando é comum."
+      },
+      {
+        "text": "A ferramenta registra a versão antes de rodar o arquivo",
+        "why": "Ela registra depois, e de todo modo a cláusula engole o sinal."
+      }
+    ]
+  },
+  "ex-bzbs4nje": {
+    "prompt": "Dois bancos registram a migração `0003` como aplicada e os esquemas deles diferem. Nada acusa problema. O que aconteceu?",
+    "hint": "O registro diz quais arquivos rodaram, e não o que eles continham.",
+    "choices": [
+      {
+        "text": "Um deles rodou as migrações fora de ordem",
+        "why": "A ferramenta as aplica em ordem, e o contrário apareceria como versão faltando e não como versão igual."
+      },
+      {
+        "text": "O arquivo foi editado depois de um deles tê-lo rodado",
+        "why": "A tabela de versões registra um nome, então dois conteúdos diferentes podem ser registrados sob ele."
+      },
+      {
+        "text": "Um deles rodou a migração de volta e depois a de ida",
+        "why": "Isso terminaria no mesmo esquema, que é o que um par reversível significa."
+      },
+      {
+        "text": "Um deles a aplicou duas vezes",
+        "why": "A tabela é o que torna isso impossível, e uma segunda execução não faz nada."
+      }
+    ]
+  },
+  "ex-df9qm169": {
+    "prompt": "Uma lista paginada mostra uma linha em duas páginas e pula outra. O mapeador não emitiu arrumação nenhuma. Por que um número de página correto não resolve?",
+    "hint": "Pergunte de que cada página é uma fatia.",
+    "choices": [
+      {
+        "text": "Porque o tamanho da página não é múltiplo da contagem de linhas",
+        "why": "Tamanho de página nenhum salva uma fatia de algo que não tem ordem."
+      },
+      {
+        "text": "Porque cada página é a fatia de um arranjo qualquer, refeito",
+        "why": "Pegar as linhas vinte a quarenta de uma ordem que ninguém fixou não diz quais linhas são essas."
+      },
+      {
+        "text": "Porque linhas foram inseridas enquanto a lista era lida",
+        "why": "Isso também acontece, e é o defeito de contar linhas para pular, não o de não ter ordem."
+      },
+      {
+        "text": "Porque o mapeador guarda a primeira página em cache",
+        "why": "Um cache repetiria uma página em vez de misturar duas."
+      }
+    ]
+  },
+  "ex-haaxnfkj": {
+    "prompt": "Uma correção de carga antecipada foi para produção e a tela não ficou mais rápida. O que você olha antes de mexer em mais código?",
+    "hint": "A correção deveria mudar um número.",
+    "choices": [
+      {
+        "text": "O tempo do comando mais lento",
+        "why": "Cada um deles já era rápido antes da correção; o problema era a contagem."
+      },
+      {
+        "text": "Quantas vezes a consulta da relação foi chamada",
+        "why": "Se ainda é uma por linha, a instrução foi posta numa relação diferente da que o laço toca."
+      },
+      {
+        "text": "O plano da consulta que carrega os pais",
+        "why": "Era um comando antes e é um comando agora."
+      },
+      {
+        "text": "Se existe índice na chave estrangeira",
+        "why": "Vale ter, e ele deixa cinquenta consultas rápidas em vez de uma."
+      }
+    ]
+  },
+  "ex-y9y1b9mm": {
+    "prompt": "Uma tela que mostra só nomes transfere dez kilobytes por linha. O que o mapeador está fazendo?",
+    "hint": "Pergunte o que ele está montando, e o que aquilo tem.",
+    "choices": [
+      {
+        "text": "Buscando toda coluna, e uma delas é grande",
+        "why": "Ele monta um objeto com todos os campos, então o comando nomeia toda coluna seja qual for a tela."
+      },
+      {
+        "text": "Buscando cada linha num comando próprio",
+        "why": "Isso custa idas e voltas e não deixaria uma linha maior."
+      },
+      {
+        "text": "Guardando em memória toda linha carregada na sessão",
+        "why": "Guarda mesmo, e isso é memória e não o que atravessa a rede."
+      },
+      {
+        "text": "Convertendo as colunas para os tipos da linguagem",
+        "why": "Isso acontece depois de os bytes chegarem e não decide quantos eram."
+      }
+    ]
+  },
+  "ex-jvea38ag": {
+    "prompt": "Uma coluna `created_at` tem valor padrão no banco. Linhas escritas no prompt têm data; linhas escritas pela aplicação vêm vazias, ou são recusadas. O que o mapeador está fazendo?",
+    "hint": "Pergunte exatamente quando um padrão dispara.",
+    "choices": [
+      {
+        "text": "Nomeando-a no comando sem nada dentro",
+        "why": "Um padrão preenche coluna deixada de fora da inserção, e coluna nomeada com valor vazio não ficou de fora."
+      },
+      {
+        "text": "Abrindo uma transação que o padrão não enxerga",
+        "why": "Um padrão é avaliado por linha conforme ela é escrita, dentro da transação que for."
+      },
+      {
+        "text": "Escrevendo por uma visão que derruba a coluna",
+        "why": "Nada aqui envolve visão, e uma visão falharia em vez de esvaziar uma coluna."
+      },
+      {
+        "text": "Convertendo o instante para o fuso errado",
+        "why": "Isso daria uma hora errada em vez de nenhuma."
+      }
+    ]
+  },
+  "ex-98zdjhxe": {
+    "prompt": "Uma coluna de ordenação chega na string de consulta da requisição. Por que ela não pode viajar como parâmetro, e o que entra no lugar?",
+    "hint": "Um marcador representa um tipo de coisa.",
+    "choices": [
+      {
+        "text": "Pode, desde que seja escapada antes",
+        "why": "Escapar é o mecanismo que parâmetros substituíram, e não é o que torna um nome legítimo aqui."
+      },
+      {
+        "text": "Um marcador representa um valor, então um nome passa por uma lista dos que você aceita",
+        "why": "Nada num nome é dado, e uma lista de permitidos é a única coisa que o mantém fora do texto."
+      },
+      {
+        "text": "Pode, porque nome de coluna é string como outra qualquer",
+        "why": "A forma do comando é fixada antes de o valor chegar, e é justamente por isso que um nome não pode ser um."
+      },
+      {
+        "text": "Não pode, então a ordenação vai para a aplicação",
+        "why": "Isso busca toda linha para arrumar uma página delas."
+      }
+    ]
+  },
+  "ex-faq05ana": {
+    "prompt": "Uma relação buscada na primeira vez em que algo a toca, e não junto com o pai, tem um nome de duas palavras. Escreva.",
+    "hint": "É o padrão em quase todo mapeador, e está certo sempre que nada toca a relação.",
+    "blanks": [
+      {
+        "accept": [
+          "lazy loading",
+          "carga preguiçosa",
+          "carga preguicosa",
+          "lazy load"
+        ]
+      }
+    ]
+  },
+  "ex-fc101254": {
+    "prompt": "Uma sessão que junta toda mudança feita nos objetos dela e escreve tudo no fim, numa transação, leva o nome de um padrão de três palavras. Escreva.",
+    "hint": "É por isso que a transação fica aberta desde a primeira leitura.",
+    "blanks": [
+      {
+        "accept": [
+          "unit of work",
+          "unidade de trabalho"
+        ]
+      }
+    ]
+  },
+  "ex-r7bwk16x": {
+    "prompt": "Ligue cada caso à forma de carga que serve para ele.",
+    "hint": "Uma não repete nada, uma repetiria o pai, uma multiplicaria.",
+    "pairs": [
+      {
+        "left": "O cliente único de cada pedido",
+        "right": "Um comando só, com junção"
+      },
+      {
+        "left": "Os muitos pedidos de cada cliente, com linha de cliente larga",
+        "right": "Um segundo comando sobre o conjunto de chaves dos pais"
+      },
+      {
+        "left": "Três relações de muitos do mesmo pai",
+        "right": "Um comando por relação, nunca uma junção só"
+      }
+    ],
+    "right_distractors": [
+      "Um comando por linha de pai, rodado dentro do laço",
+      "Uma resposta guardada e atualizada por agenda"
+    ]
   }
 }

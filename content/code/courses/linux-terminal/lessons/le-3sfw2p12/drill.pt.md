@@ -1,4 +1,4 @@
 ---
-title: Selecione, filtre, agrupe, formate por último
+title: Juntando tudo
 version: 1
 ---

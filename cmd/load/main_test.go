@@ -92,9 +92,10 @@ func TestLoadingWritesTheWholeCatalogue(t *testing.T) {
 		"catalog_courses":       4,
 		"catalog_lessons":       4,
 		"catalog_sections":      6,
-		// Two in a lesson — a quiz and the question about the diagram — and two
-		// in the track's final, which belongs to a track and to no course.
-		"catalog_exercises": 4,
+		// Three in a lesson — a quiz, the question about the diagram, and the
+		// one under its drill section — and two in the track's final, which
+		// belongs to a track and to no course.
+		"catalog_exercises": 5,
 		// The diagram that second question is asked about. It rides in with the
 		// rest of the catalogue: there is no content directory beside the
 		// deployed binary, so a picture that stayed on disk would not be there.

@@ -1577,5 +1577,360 @@
         "why": "A database that grew a lot since it was last analysed is planning on old numbers until somebody runs the command."
       }
     ]
+  },
+  {
+    "id": "ex-67xkgm59",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan shows a `BitmapAnd` over two index scans: one returned 2 984 entries and the other 194 554, and building the second bitmap took most of the time. What finds those rows directly?",
+    "hint": "One structure instead of two, with the columns in a particular order.",
+    "choices": [
+      {
+        "text": "One index over both columns, the equality one first",
+        "correct": true,
+        "why": "It jumps to the equal values and reads forward through the range, instead of building a bitmap of a fifth of the table."
+      },
+      {
+        "text": "One index over both columns, the range one first",
+        "correct": false,
+        "why": "Then it walks every row in the range checking the other column, which is the work being complained about."
+      },
+      {
+        "text": "Dropping the less selective of the two indexes",
+        "correct": false,
+        "why": "That leaves one condition to be checked row by row, and the query gets slower."
+      },
+      {
+        "text": "An index over the expression the filter uses",
+        "correct": false,
+        "why": "Neither condition wraps its column in anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bxrzhkn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every scan in a plan estimates its rows within a few per cent of what it returned, and the node above the join is out by a factor of two hundred. Where is the problem?",
+    "hint": "The scans are fine, so the statistics about the columns are fine.",
+    "choices": [
+      {
+        "text": "The statistics were never collected",
+        "correct": false,
+        "why": "Then the scans would be wrong too, and they are right."
+      },
+      {
+        "text": "How many pairs the join was expected to produce",
+        "correct": true,
+        "why": "Its selectivity is a separate guess from either side's, and the nodes above inherit it."
+      },
+      {
+        "text": "A function around a column in the filter",
+        "correct": false,
+        "why": "That would show up as a bad estimate on the scan it sits in."
+      },
+      {
+        "text": "The plan was made for a placeholder rather than a value",
+        "correct": false,
+        "why": "That would skew the scan estimates, which are the ones that came out right."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4jwfp5g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bitmap heap scan on a table of 7 466 pages reports `Heap Blocks: exact=7466`. What does that tell you about the rows it wanted?",
+    "hint": "Count how many pages it had to visit against how many there are.",
+    "choices": [
+      {
+        "text": "There was no part that could be skipped",
+        "correct": true,
+        "why": "It skipped nothing, so the index narrowed the rows and not the pages."
+      },
+      {
+        "text": "They all sit together at the end of the table",
+        "correct": false,
+        "why": "Then it would have visited a handful of pages and said so."
+      },
+      {
+        "text": "The bitmap overflowed and became approximate",
+        "correct": false,
+        "why": "That would show as `lossy` rather than `exact`."
+      },
+      {
+        "text": "The index is invalid and was ignored",
+        "correct": false,
+        "why": "The index scan under the node is what built the bitmap."
+      }
+    ]
+  },
+  {
+    "id": "ex-11m1vf3s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query reports a planning time many times its execution time. It is rare. What is it usually?",
+    "hint": "Something about how many arrangements there were to price.",
+    "choices": [
+      {
+        "text": "An index the planner had to read before deciding",
+        "correct": false,
+        "why": "Reading a little of an index is part of executing, not of choosing."
+      },
+      {
+        "text": "A wide join with many possible orders to consider",
+        "correct": true,
+        "why": "The number of arrangements grows fast with the tables, and pricing them is the planning."
+      },
+      {
+        "text": "Statistics that have grown too large to read",
+        "correct": false,
+        "why": "They are sampled and small, and reading them is not where the time goes."
+      },
+      {
+        "text": "A plan cache that was cleared by the last deploy",
+        "correct": false,
+        "why": "A cold cache costs one planning, and this one is reported every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwsefv9s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two plans return the same number of rows and one asks for far more memory to sort them. Which number in the plan predicted that?",
+    "hint": "It is the fourth of the four in the first pair of brackets.",
+    "choices": [
+      {
+        "text": "`cost`, whose second half prices the whole node",
+        "correct": false,
+        "why": "It prices the work and is not what memory is reserved from."
+      },
+      {
+        "text": "`rows`, which the two plans share",
+        "correct": false,
+        "why": "The question says they are the same, so it cannot be what differs."
+      },
+      {
+        "text": "`width`, the average size of a row in bytes",
+        "correct": true,
+        "why": "The same count of wider rows needs more space, which is one more argument against asking for columns nobody reads."
+      },
+      {
+        "text": "`loops`, which multiplies everything on the line",
+        "correct": false,
+        "why": "It says how many times a node ran, and neither of these ran twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwp1nk5d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A monthly report joins every order to every customer and groups by city. Both tables are read in full and no index changes that. What are the honest options?",
+    "hint": "The query is not wrong; it is large.",
+    "choices": [
+      {
+        "text": "A composite index over the grouping columns",
+        "correct": false,
+        "why": "The report wants every row, so nothing an index narrows is narrowed."
+      },
+      {
+        "text": "A stored answer, a running summary, or another machine",
+        "correct": true,
+        "why": "Each of the three moves the cost rather than removing it, which is what a query that is correctly large allows."
+      },
+      {
+        "text": "Turning off sequential scans for that session",
+        "correct": false,
+        "why": "That makes the planner lie to itself and does not make the work smaller."
+      },
+      {
+        "text": "Raising the memory available to sorts",
+        "correct": false,
+        "why": "Worth checking if it spills, and it does not turn two full reads into fewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-mg8358d2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table was loaded with two hundred thousand rows an hour ago and a query on it has a plan that makes no sense. What do you run before believing anything else in the plan?",
+    "hint": "The planner is working from numbers that predate the load.",
+    "choices": [
+      {
+        "text": "A rebuild of the table's indexes",
+        "correct": false,
+        "why": "They are current; nothing about a load leaves them stale."
+      },
+      {
+        "text": "A collection of the table's statistics",
+        "correct": true,
+        "why": "Its estimates are scaled from what the table used to be, and one statement replaces the guess."
+      },
+      {
+        "text": "A vacuum of the table",
+        "correct": false,
+        "why": "Worth doing for the visibility map, and a fresh load has few dead rows to reclaim."
+      },
+      {
+        "text": "The query a second time, for a warm cache",
+        "correct": false,
+        "why": "That changes the timings and not the shape the estimates produced."
+      }
+    ]
+  },
+  {
+    "id": "ex-d94wjecq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A change was made and the query now runs in a third of the time. Which measurement says the change did what you think, rather than the cache being warm?",
+    "hint": "Something that does not move when a page is already in memory.",
+    "choices": [
+      {
+        "text": "The execution time on a second run",
+        "correct": false,
+        "why": "A second run is warm too, so both numbers agree and neither settles it."
+      },
+      {
+        "text": "The planning time",
+        "correct": false,
+        "why": "It says how long choosing took and nothing about the work."
+      },
+      {
+        "text": "The count of pages the query touched",
+        "correct": true,
+        "why": "A change that reads fewer pages did something; one that reads the same number moved the cache."
+      },
+      {
+        "text": "The estimated cost of the top node",
+        "correct": false,
+        "why": "It is a prediction in the planner's own unit, and it never ran anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a95rhat",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A node reports `rows=13` and, beneath it, `Rows Removed by Filter: 999987`. What is the finding?",
+    "hint": "Compare what it kept with what it read.",
+    "choices": [
+      {
+        "text": "The condition is wrong, since it discards nearly everything",
+        "correct": false,
+        "why": "Discarding nearly everything is what a selective condition does; that is the point of it."
+      },
+      {
+        "text": "A million rows were read to keep thirteen",
+        "correct": true,
+        "why": "The condition is selective and nothing narrowed the reading, which is the case for an index in one line."
+      },
+      {
+        "text": "The estimate was too low by a factor of a million",
+        "correct": false,
+        "why": "That line counts rows thrown away, not rows expected."
+      },
+      {
+        "text": "The table needs vacuuming",
+        "correct": false,
+        "why": "Dead rows are not what a filter removes, and they are counted elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gy1892y",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A node inside a join reports `rows=3 loops=2984`, and every number on such a line is per loop. Write how many rows it produced in total.",
+    "hint": "Multiply before believing a number.",
+    "blanks": [
+      {
+        "accept": [
+          "8952",
+          "8,952"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yvmtntpb",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plan counts the times an index alone was not enough and the row had to be fetched from the table's own storage. Write PostgreSQL's one-word name for that storage.",
+    "hint": "It appears in the line that counts those fetches.",
+    "blanks": [
+      {
+        "accept": [
+          "heap"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xjkvg3z5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The estimate and the actual disagree by a hundred. Match each circumstance to its usual cause.",
+    "hint": "One is about an expression, one about when the table was loaded, one about two columns.",
+    "pairs": [
+      {
+        "left": "The filter wraps its column in a function",
+        "right": "There are no statistics for a computed value"
+      },
+      {
+        "left": "The table was filled an hour ago",
+        "right": "Nothing has gathered statistics since"
+      },
+      {
+        "left": "Two columns are compared and each alone is estimated well",
+        "right": "They move together, and independence was assumed"
+      }
+    ],
+    "right_distractors": [
+      "The index has accumulated dead entries",
+      "The query was run with the cache cold"
+    ]
   }
 ]

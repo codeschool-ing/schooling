@@ -460,8 +460,8 @@ func TestALessonSaysHowManyQuestionsItAsks(t *testing.T) {
 	if fromCourse == nil {
 		t.Fatalf("the course does not carry %s", clientAndServer)
 	}
-	if fromCourse.Questions != 2 {
-		t.Errorf("the course's copy says %d questions, and the fixture writes 2",
+	if fromCourse.Questions != 3 {
+		t.Errorf("the course's copy says %d questions, and the fixture writes 3",
 			fromCourse.Questions)
 	}
 
