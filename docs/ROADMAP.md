@@ -626,18 +626,42 @@ arrive separately. What it settled and numbered is `C-21` to `C-24`, `N-11`, `K-
 *Done when: a course exists end to end — prose, figures, exercises, exam and script — with every
 check that stands in for a reviewer passing on it, and item analysis reports no inverted key.*
 
-- [ ] ~~The generator writes prose, exercises, exams **and the spoken script** into `content/`~~ — **there is no generator** (`C-14`). A course is written by a person with an agent, on demand, into `content/`; what runs without a person is the checking, because that is the half standing in for the reviewer nobody is going to be. The item that remains is the material: **a course written end to end, prose to script**, and not one of the 122 is.
+- [ ] ~~The generator writes prose, exercises, exams **and the spoken script** into `content/`~~ — **there is no generator** (`C-14`). A course is written by a person with an agent, on demand, into `content/`; what runs without a person is the checking, because that is the half standing in for the reviewer nobody is going to be. The item that remains is the material: **a course written end to end, prose to script** — and `sql-databases` now is, which is written out below.
 
   **WHAT THE COUNT ACTUALLY IS, measured rather than remembered** (2026-09-19). Three courses of
   122 have prose and exercises in both languages — `linux-terminal` (13 lessons), `sql-databases`
-  (13) and `web-fundamentals` (11). None has a spoken script, and one `images/` directory exists
-  in the whole tree.
+  (13) and `web-fundamentals` (11), with one `images/` directory in the whole tree.
+
+  *This paragraph said "none has a spoken script" and that was FALSE WHEN IT WAS WRITTEN. All 74
+  video sections across the three courses carry one, every one of them inside the narration band
+  `validate-content` measures — a check that exists because ten scripts once drifted out of it.
+  The figures and the exams here were counted; the script was asserted from memory, in the same
+  sentence, and nothing about the sentence showed which half was which. It is the exact failure
+  this file's audit note describes, committed by the person writing the audit note.*
 
   That is the honest shape of this phase, and it is the opposite of what the commit log suggests:
   the phase with the most work in it is furthest from its own `Done when`, because the condition
   asks for ONE course complete — prose, figures, exercises, exam and script — and what has been
   built is most of three. The next thing this phase needs is not another course; it is the rest
   of one of the three that exist.
+
+  **AND `sql-databases` IS NOW END TO END**, which is what this item asks for. Measured against
+  the five the `Done when` names: 145 sections of prose with no declared section missing its file,
+  35 figures, 788 exercises in the lessons and 100 in the exam pool, and a script on all 13 of its
+  video sections. All four checks that stand in for a reviewer pass on it — `validate-content`,
+  `check-exercises`, `check-design` and `check-figures`.
+
+  The figure count is short of the sheet's ~45 and that is a decision rather than a gap: the
+  remaining sections are ones whose prose, table or captured output already does the work, and
+  each is named in the commit that stopped. `check-design` reports a budget instead of failing on
+  one precisely so the number cannot become a quota — drawing to reach 45 would be drawing for
+  the report.
+
+  **What the phase still waits on is the other half of its own `Done when`**: item analysis
+  reporting no inverted key on this course. That needs real students. The machinery is proved —
+  `cmd/seed` plants a broken key on this pool and `analysis` calls it `inverted` at −0.25 to −0.63
+  across seeds — but a seeded population cannot answer whether a question a person wrote is sound.
+  Same shape as phase 4's second clause, and for the same reason.
 
   **THE EXAM WAS THE FIRST OF THOSE AND IT IS WRITTEN.** The sentence above said, on the morning
   it was written, that there was not one exam file anywhere in `content/`, for any course or any
