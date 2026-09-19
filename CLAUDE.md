@@ -526,11 +526,18 @@ lesson to put it in. The price of the convention is that `tracks/<x>-exam.json` 
 
 **A course's pictures live in its `images/`, and belong to the COURSE rather than the lesson.**
 That is not where a file naturally wants to sit — a diagram belongs beside the words it
-illustrates — and the reason is who renders a question: today, only the exam paper. A lesson's
-exercises are in the model and in the mirror and on no screen at all, so a picture scoped to a
-lesson would have been a picture no student could ever reach, and `labelling` would have shipped
-unreachable. An exam question belongs to a course and to no lesson; scoping the picture to the
-course covers both, and lets two lessons share a diagram.
+illustrates — and the reason is who renders a question. Two readers do: an exam paper, which
+belongs to a course and to no lesson, and a lesson's own questions, which `internal/lesson`
+presents and marks. The course is the one scope both of them reach, and it lets two lessons share
+a diagram.
+
+**This used to rest on a lesson's questions reaching no screen at all**, and on `labelling` having
+shipped unreachable if the picture had been scoped to a lesson. That was true when it was written
+and stopped being true when `internal/lesson` was built; the decision outlived its premise, which
+is the good case. The failure it predicted then arrived from the other side anyway: the client
+knew the picture's file name and not its course, so `asset()` answered with an empty string and a
+`labelling` question inside a lesson drew *"this question needs a picture that is not here"* with
+the picture in the mirror the whole time.
 
 The bytes go into `catalog_images` and out again as a response body, because the deployed image
 is a `scratch` container with no content directory beside it — and because the offline bundle has

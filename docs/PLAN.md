@@ -446,14 +446,19 @@ Migration of what already works: the catalogue in files with its load job, the g
 edge-crossing test at six viewport sizes, sidebar, search, course and track exams, certificates,
 the seven question types. No new content.
 
-**One thing here is not migration and is not done: answering the questions inside a lesson.** An
-exam can be sat and a card can be drilled, both on a screen; `lessonExercises()` returns an empty
-list. It is absent rather than unticked, which is the orphan failure again — nothing looks wrong,
-the item simply is not there, and every neighbouring box is ticked. What it needs is the
-present-then-mark pair the drill already uses (A-09) scoped to a lesson, because a lesson's
-questions cannot be served with their answers in them; the drill's own routes cannot be reused
-because they check `drillable`, which is precisely what keeps an exam question out of reach. Under
-A-10 the marking returns the chosen option's `why` and stores no score.
+**One thing here was not migration, and it is now built: answering the questions inside a
+lesson.** It stood in this paragraph for a long time as absent rather than unticked — an exam
+could be sat and a card drilled, both on a screen, while a lesson's questions were in the model,
+in the mirror and nowhere a student could reach. `internal/lesson` is the present-then-mark pair
+the drill uses (A-09), scoped to a lesson: `GET …/lessons/{lesson}/exercises` hands them over with
+the key removed and the order shuffled, and `POST …/exercises/{exercise}/answered` marks one,
+returning the chosen option's `why` and storing no score (A-10). The drill's own routes could not
+be reused, because they check `drillable` — which is precisely what keeps an exam question out of
+reach.
+
+*This paragraph described the gap for longer than the gap existed, which is the failure the rest
+of this file keeps naming: a claim nothing holds. It was found by reading `ui/app/screens/lesson.js`
+after a screenshot showed a lesson's questions on a screen.*
 
 *Done when: a student walks a whole track of `code` on the new platform — which includes answering
 the questions in a lesson, not only sitting its course's exam.*
