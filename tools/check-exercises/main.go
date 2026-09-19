@@ -225,12 +225,11 @@ func main() {
 		return
 	}
 
-	files, err := filepath.Glob(filepath.Join(dir, "*", "courses", "*", "lessons", "*", "exercises.json"))
+	files, err := batteries(dir)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	sort.Strings(files)
 
 	var problems []string
 	var report []string
@@ -288,12 +287,64 @@ func main() {
 		for _, p := range problems {
 			fmt.Println(" - " + p)
 		}
-		fmt.Printf("\n%d problem(s) across %d lesson(s) in %d language(s). A tell is not a "+
+		fmt.Printf("\n%d problem(s) across %d file(s) in %d language(s). A tell is not a "+
 			"style note: it is a student passing without reading.\n",
 			len(problems), lessons, len(locales))
 		os.Exit(1)
 	}
-	fmt.Printf("%d lesson(s) in %d language(s), no tell above its threshold\n", lessons, len(locales))
+	fmt.Printf("%d file(s) of questions in %d language(s), no tell above its threshold\n",
+		lessons, len(locales))
+}
+
+/*
+batteries is every file of questions this tool measures, which is not only a
+lesson's.
+
+	# THE EXAM WAS NOT MEASURED BY ANYTHING, AND IT IS THE FILE THAT MATTERS MOST
+
+	This glob was a lesson's `exercises.json` and nothing else for as long as the
+	tool existed, so a course exam and a track final were read by
+	`validate-content` — which checks that a key GRADES — and by no ruler asking
+	whether the key can be FOUND. Those are different questions, and
+	`EXERCISES.md` is entirely about the second one.
+
+	The gap ran the wrong way round. A lesson's questions are practice: a
+	student who guesses one learns nothing and loses nothing, and the lesson is
+	still in front of them. An exam is the only moment this platform asserts
+	that somebody knows something, a certificate rests on it (A-08), and it is
+	the one paper where guessing the longest option is worth doing. The file
+	with the most at stake was the file with no measurement.
+
+	It was invisible for the ordinary reason: `content/` has no exam in it, in
+	any course or any track, so the glob that could not have matched one never
+	failed to. A check with nothing to check reports exactly like a check with
+	nothing to say.
+
+	THE RULERS ARE THE SAME ONES AND THAT IS NOT LAZINESS. Rank-by-length,
+	the guessing family, the absolutes and the hedges are properties of how a
+	question is WRITTEN, not of what it is for — and a pool of a hundred is a
+	larger sample than a lesson's forty, so the same ceiling is if anything
+	firmer here. What changes is only the consequence of crossing it.
+*/
+func batteries(dir string) ([]string, error) {
+	var out []string
+	for _, pattern := range [][]string{
+		{"*", "courses", "*", "lessons", "*", "exercises.json"},
+		{"*", "courses", "*", "exam.json"},
+
+		// A track's final, which lives beside the track because a track has no
+		// lesson to put it in. `tracks/<slug>.json` is the track itself and is
+		// not questions; only the `-exam` suffix is.
+		{"*", "tracks", "*-exam.json"},
+	} {
+		found, err := filepath.Glob(filepath.Join(append([]string{dir}, pattern...)...))
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, found...)
+	}
+	sort.Strings(out)
+	return out, nil
 }
 
 // version is one lesson's questions as one language's students read them.
@@ -324,15 +375,24 @@ func everyLanguage(f string, body []byte, exs []exercise) ([]version, error) {
 		return nil, err
 	}
 
+	/* THE STEM IS THE FILE'S OWN NAME AND NOT THE WORD `exercises`. A lesson's
+	   battery is `exercises.json` beside `exercises.pt.json`; a course exam is
+	   `exam.json` beside `exam.pt.json`; a track final is
+	   `frontend-exam.json` beside `frontend-exam.pt.json`. Hard-coding the one
+	   name would have read every exam as untranslated — which is not a failure
+	   here, so the tool would have measured the English pool twice, reported
+	   two green lines and never opened the Portuguese one. */
+	stem := strings.TrimSuffix(filepath.Base(f), ".json")
+
 	dir := filepath.Dir(f)
-	others, err := filepath.Glob(filepath.Join(dir, "exercises.*.json"))
+	others, err := filepath.Glob(filepath.Join(dir, stem+".*.json"))
 	if err != nil {
 		return nil, err
 	}
 	sort.Strings(others)
 
 	for _, o := range others {
-		locale := strings.TrimSuffix(strings.TrimPrefix(filepath.Base(o), "exercises."), ".json")
+		locale := strings.TrimSuffix(strings.TrimPrefix(filepath.Base(o), stem+"."), ".json")
 		lang, known := languages[locale]
 		if !known {
 			out = append(out, version{locale: locale})
@@ -368,10 +428,30 @@ func everyLanguage(f string, body []byte, exs []exercise) ([]version, error) {
 	return out, nil
 }
 
+// where is how a battery is named in the output: enough to find the file and
+// nothing that repeats on every line. A lesson is its course and its id; an exam
+// is its course and the word, because a course has one.
 func where(f string) string {
 	parts := strings.Split(filepath.ToSlash(f), "/")
-	if len(parts) >= 3 {
-		return strings.Join(parts[len(parts)-4:len(parts)-1], "/")
+
+	/* A LESSON IS LOOKED FOR FIRST, because `courses` sits ABOVE `lessons` in
+	   every one of these paths — a loop that answered on whichever came first
+	   would call every lesson in the catalogue an exam, and say so in a line
+	   that reads perfectly. It did, for one run. */
+	for i, p := range parts {
+		if p == "lessons" && i > 0 && i+1 < len(parts) {
+			return parts[i-1] + "/lessons/" + parts[i+1]
+		}
+	}
+	for i, p := range parts {
+		switch {
+		case p == "courses" && i+1 < len(parts)-1:
+			// `courses/<slug>/exam.json`, with the file itself left off: a
+			// course has one exam, so the word is the whole of the name.
+			return parts[i+1] + "/exam"
+		case p == "tracks" && i+1 < len(parts):
+			return "tracks/" + strings.TrimSuffix(parts[i+1], ".json")
+		}
 	}
 	return f
 }

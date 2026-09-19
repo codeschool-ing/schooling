@@ -1,0 +1,2871 @@
+[
+  {
+    "id": "ex-9mxjq2jb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A table has a column `email` that is unique and never null, and a column `id` that is the primary key. What is `email` called?",
+    "hint": "The word is about the possibility, not about which one was chosen.",
+    "choices": [
+      {
+        "text": "A candidate key",
+        "correct": true,
+        "why": "Any column set that could have been the primary key is a candidate key; one of them was chosen."
+      },
+      {
+        "text": "A foreign key",
+        "correct": false,
+        "why": "A foreign key points at another table's key. Nothing here points anywhere."
+      },
+      {
+        "text": "A surrogate key",
+        "correct": false,
+        "why": "That is `id`: a value with no meaning outside the database, invented to be the key."
+      },
+      {
+        "text": "A partial key",
+        "correct": false,
+        "why": "There is no such thing in the relational model."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6cvhjbd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does `NULL = NULL` evaluate to unknown rather than to true?",
+    "hint": "Think about what the value is standing in for.",
+    "choices": [
+      {
+        "text": "Because the comparison is deferred to the index",
+        "correct": false,
+        "why": "Nothing about this involves an index."
+      },
+      {
+        "text": "A null is an absence, not a value",
+        "correct": true,
+        "why": "Two unknown ages are not an assertion that the ages match, so the comparison has nothing to stand on."
+      },
+      {
+        "text": "Because the standard reserves the case",
+        "correct": false,
+        "why": "It falls out of three-valued logic rather than being a special case."
+      },
+      {
+        "text": "Because SQL compares nulls by identity",
+        "correct": false,
+        "why": "There is no identity to compare; there is no value."
+      }
+    ]
+  },
+  {
+    "id": "ex-na0k08wk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An `orders.customer_id` foreign key is declared `ON DELETE RESTRICT`. A customer with three orders is deleted. What happens?",
+    "hint": "Two of these describe a different clause.",
+    "choices": [
+      {
+        "text": "The orders are deleted with the customer",
+        "correct": false,
+        "why": "That is CASCADE."
+      },
+      {
+        "text": "The `customer_id` on the three orders becomes null",
+        "correct": false,
+        "why": "That is SET NULL."
+      },
+      {
+        "text": "The orders are kept and point at a customer that is gone",
+        "correct": false,
+        "why": "That is precisely the state a foreign key exists to prevent."
+      },
+      {
+        "text": "The delete is refused",
+        "correct": true,
+        "why": "RESTRICT refuses while a child row still points at the parent."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d217vxg",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each constraint to what it refuses.",
+    "hint": "One of them is about a row's relationship with another table.",
+    "pairs": [
+      {
+        "left": "PRIMARY KEY",
+        "right": "A repeated or missing identifier"
+      },
+      {
+        "left": "FOREIGN KEY",
+        "right": "A reference to a row that is not there"
+      },
+      {
+        "left": "CHECK",
+        "right": "A value outside a rule you wrote"
+      },
+      {
+        "left": "UNIQUE",
+        "right": "A second row with the same value"
+      }
+    ],
+    "right_distractors": [
+      "A write while another transaction reads",
+      "A column added to a full table"
+    ]
+  },
+  {
+    "id": "ex-t0nywk66",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A junction table records which students are enrolled on which courses, one row per enrolment. What should its primary key be?",
+    "hint": "What makes one row of this table different from another?",
+    "choices": [
+      {
+        "text": "`student_id` alone",
+        "correct": false,
+        "why": "A student takes more than one course."
+      },
+      {
+        "text": "An added `id` column",
+        "correct": false,
+        "why": "It permits the same pair twice, which is the one thing this table must not allow."
+      },
+      {
+        "text": "The pair `(student_id, course_id)`",
+        "correct": true,
+        "why": "The pair is what a row asserts, so the pair is the identity."
+      },
+      {
+        "text": "`course_id` alone",
+        "correct": false,
+        "why": "A course has more than one student."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3ywcmnz",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In the relational model the formal word for a table is a ___, and the formal word for one of its rows is a ___.",
+    "hint": "One names the set; the other names a member of it.",
+    "blanks": [
+      {
+        "accept": [
+          "relation",
+          "relação",
+          "relacao"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "tuple",
+          "tupla"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z0z7df8g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You are told a natural key — the citizen's tax number — is better than a surrogate `id` because it carries meaning. What is the strongest argument against it?",
+    "hint": "Think about what happens after the row is written.",
+    "choices": [
+      {
+        "text": "It is refused as a unique constraint on a large table",
+        "correct": false,
+        "why": "It is accepted as one."
+      },
+      {
+        "text": "Every row pointing at it moves too",
+        "correct": true,
+        "why": "A tax number entered wrongly is corrected sometimes, and a key that carries meaning inherits every correction that meaning needs."
+      },
+      {
+        "text": "It is slower to index, and the index can be large",
+        "correct": false,
+        "why": "Marginal, and not the reason."
+      },
+      {
+        "text": "It is longer to type, so it tends to be mistyped",
+        "correct": false,
+        "why": "True and trivial."
+      }
+    ]
+  },
+  {
+    "id": "ex-vc4j798c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does it mean to say a relational table has no inherent order?",
+    "hint": "What has to be written for an order to exist?",
+    "choices": [
+      {
+        "text": "An ORDER BY is applied to every query automatically",
+        "correct": false,
+        "why": "It is not."
+      },
+      {
+        "text": "Rows come back in the order they were inserted, unless a page was reused",
+        "correct": false,
+        "why": "That is common and never promised, which is worse than it being false."
+      },
+      {
+        "text": "Without ORDER BY, no order is promised",
+        "correct": true,
+        "why": "Any order you observe is an accident of the plan and may change with the data or the version."
+      },
+      {
+        "text": "Rows are stored alphabetically until an index says otherwise",
+        "correct": false,
+        "why": "Nothing stores them alphabetically."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xedh0v3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A table of orders stores `customer_id`, `customer_name` and `customer_city`. Which normal form does this break, and why?",
+    "hint": "The customer's name depends on which customer, not on which order.",
+    "choices": [
+      {
+        "text": "First, because a column holds more than one value",
+        "correct": false,
+        "why": "Each of these holds one value."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "The repetition here is exactly what third normal form is about."
+      },
+      {
+        "text": "Second, because part of a composite key determines a column",
+        "correct": false,
+        "why": "That needs a composite key, and this table has a single-column one."
+      },
+      {
+        "text": "Third: a non-key column determines another",
+        "correct": true,
+        "why": "`customer_id` determines the name and the city, and it is not the key of this table."
+      }
+    ]
+  },
+  {
+    "id": "ex-5s3kg4sz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A `phones` column holds the string `'11 9999-0000, 11 8888-1111'`. Which normal form is broken?",
+    "hint": "Count the values in one cell.",
+    "choices": [
+      {
+        "text": "The first",
+        "correct": true,
+        "why": "A cell holds one value, and this holds two."
+      },
+      {
+        "text": "The second",
+        "correct": false,
+        "why": "That is about partial dependency on a composite key."
+      },
+      {
+        "text": "Boyce-Codd",
+        "correct": false,
+        "why": "That is a stricter version of the third, about overlapping candidate keys."
+      },
+      {
+        "text": "The third",
+        "correct": false,
+        "why": "That is about a non-key column determining another."
+      }
+    ]
+  },
+  {
+    "id": "ex-sb38swss",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An invoice line stores the product's price at the time of sale, and the product table also has a price. A reviewer calls this a third normal form violation. Are they right?",
+    "hint": "Ask whether the two numbers are the same fact.",
+    "choices": [
+      {
+        "text": "No — the third normal form applies to keys rather than to values",
+        "correct": false,
+        "why": "It applies to every non-key column."
+      },
+      {
+        "text": "Yes — any repeated column breaks the third normal form",
+        "correct": false,
+        "why": "Normal forms are about dependency, not about a column name appearing twice."
+      },
+      {
+        "text": "Yes — the price is derivable from the product",
+        "correct": false,
+        "why": "Today's price is. The price on a sale from last March is not."
+      },
+      {
+        "text": "No — the two are different facts",
+        "correct": true,
+        "why": "The price on the line is what was charged; the price on the product is what it costs today. One is history and cannot be recomputed from the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n6baye5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a deliberate denormalisation cost that a normalised design does not?",
+    "hint": "Think about what happens on a write.",
+    "choices": [
+      {
+        "text": "Every write has to update the copy too",
+        "correct": true,
+        "why": "A missed one is a lie nothing reports: the duplicate is yours to keep true, on every path that writes, forever."
+      },
+      {
+        "text": "A slower read on the duplicated column",
+        "correct": false,
+        "why": "The read is what it buys, not what it costs."
+      },
+      {
+        "text": "More disk, and the backup time that comes with it",
+        "correct": false,
+        "why": "Disk is the cheap half."
+      },
+      {
+        "text": "The loss of foreign keys on the table",
+        "correct": false,
+        "why": "Nothing about a copy removes a constraint."
+      }
+    ]
+  },
+  {
+    "id": "ex-5sjvbx0v",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put these four states of one table in order, from least normalised to most.",
+    "items": [
+      "A `tags` column holding a comma-separated list",
+      "One row per tag, with the article's title repeated on each",
+      "One row per tag, with the article's id and its title",
+      "A `tags` table and a junction table, with no title copied"
+    ],
+    "trap": "The middle two look interchangeable: both have one row per tag, and the difference is whether what is repeated is the key or the words."
+  },
+  {
+    "id": "ex-9gpvksna",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A reporting query joins seven tables and takes four seconds. Which is the honest first question before denormalising?",
+    "hint": "One of these is free to answer and the rest are work.",
+    "choices": [
+      {
+        "text": "Whether to move to a wider machine",
+        "correct": false,
+        "why": "Hardware buys a constant factor and hides the reason."
+      },
+      {
+        "text": "Whether the indexes the plan wants are there",
+        "correct": true,
+        "why": "Most seven-table joins are slow because one of them is a sequential scan, and reading the plan says which."
+      },
+      {
+        "text": "Whether to cache the result for five minutes",
+        "correct": false,
+        "why": "That makes the report stale rather than fast."
+      },
+      {
+        "text": "Whether to add a summary table",
+        "correct": false,
+        "why": "That is a decision to take after you know why it is slow."
+      }
+    ]
+  },
+  {
+    "id": "ex-emh4sfvw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why should money be stored as `numeric` rather than as `float`?",
+    "hint": "Ask what the type promises about arithmetic.",
+    "choices": [
+      {
+        "text": "A float is slower to add",
+        "correct": false,
+        "why": "It is faster, which is the temptation."
+      },
+      {
+        "text": "A float is refused in a CHECK constraint on a money column",
+        "correct": false,
+        "why": "It is accepted."
+      },
+      {
+        "text": "A float has no exact 0.10, so sums drift",
+        "correct": true,
+        "why": "Binary floating point cannot represent a tenth, and the error accumulates across a ledger until a total is visibly wrong."
+      },
+      {
+        "text": "A float is limited to six digits",
+        "correct": false,
+        "why": "A double carries about fifteen."
+      }
+    ]
+  },
+  {
+    "id": "ex-kg1gtrzy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A column is `timestamp without time zone` and the application writes local times from two countries. What has been lost?",
+    "hint": "Two readings of one number.",
+    "choices": [
+      {
+        "text": "The ability to sort the column",
+        "correct": false,
+        "why": "It sorts. It sorts wrongly, which is the problem."
+      },
+      {
+        "text": "The ability to index the column",
+        "correct": false,
+        "why": "It indexes."
+      },
+      {
+        "text": "Which instant each row is about",
+        "correct": true,
+        "why": "Without the offset, 09:00 in São Paulo and 09:00 in Lisbon are the same stored number and different moments."
+      },
+      {
+        "text": "The precision below the second",
+        "correct": false,
+        "why": "Precision is a separate property and is still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqzjwr24",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each ALTER TABLE to the work it does on a large table.",
+    "hint": "One only writes a line in the catalogue.",
+    "pairs": [
+      {
+        "left": "ADD COLUMN with no default",
+        "right": "Catalogue only"
+      },
+      {
+        "left": "ADD COLUMN with a volatile default",
+        "right": "Rewrites every row"
+      },
+      {
+        "left": "SET NOT NULL",
+        "right": "Reads every row and writes none"
+      },
+      {
+        "left": "DROP COLUMN",
+        "right": "Marks it dead and reclaims the space later"
+      }
+    ],
+    "right_distractors": [
+      "Runs without any lock at all",
+      "Is refused while the table has rows"
+    ]
+  },
+  {
+    "id": "ex-drrn44n5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A constraint added as NOT VALID skips the check on the rows that are already there. To check them afterwards without blocking writes you run ALTER TABLE … ___ CONSTRAINT.",
+    "hint": "One word, and it is not `CHECK`.",
+    "blanks": [
+      {
+        "accept": [
+          "validate",
+          "validar"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kdswzb6r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is the difference between `varchar(50)` and `text` in PostgreSQL?",
+    "hint": "One of them refuses something.",
+    "choices": [
+      {
+        "text": "`text` cannot be indexed without an operator class",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "`varchar` is stored inline and `text` out of line",
+        "correct": false,
+        "why": "Both follow the same rule, decided by size rather than by type."
+      },
+      {
+        "text": "`varchar` is faster for short strings",
+        "correct": false,
+        "why": "It is not measurably faster."
+      },
+      {
+        "text": "The length limit, and nothing else",
+        "correct": true,
+        "why": "They share one storage format; the limit is a constraint expressed inside the type rather than a different way of keeping the bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c1kee55",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A CHECK constraint and application-level validation both express one rule. Why keep the CHECK?",
+    "hint": "Count the ways a row can arrive.",
+    "choices": [
+      {
+        "text": "Other writers reach the table too",
+        "correct": true,
+        "why": "A migration, a script and a second service each write here, and the constraint is the only rule all of them meet."
+      },
+      {
+        "text": "The CHECK is faster than the application's test",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "The CHECK gives a better error message",
+        "correct": false,
+        "why": "It usually gives a worse one."
+      },
+      {
+        "text": "The CHECK lets the planner skip rows it knows cannot match",
+        "correct": false,
+        "why": "A CHECK can inform the planner, and that is a side effect rather than the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-mrqfzq58",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`WHERE status <> 'shipped'` returns fewer rows than expected. What is the most likely reason?",
+    "hint": "Something in the column is neither equal nor unequal.",
+    "choices": [
+      {
+        "text": "A case difference in the stored values",
+        "correct": false,
+        "why": "That would be a reason, and it would change which rows match rather than silently dropping a class of them."
+      },
+      {
+        "text": "Rows where `status` is null",
+        "correct": true,
+        "why": "A null compares to nothing, so `<>` is unknown and the row is dropped."
+      },
+      {
+        "text": "A missing index on `status`",
+        "correct": false,
+        "why": "An index changes speed and never the result."
+      },
+      {
+        "text": "A trailing space in the literal",
+        "correct": false,
+        "why": "Possible, and it would not single out a whole group of rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekfrw96y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A page of results uses `ORDER BY created_at LIMIT 20 OFFSET 40`. Two rows share the same `created_at`. What can go wrong?",
+    "hint": "What decides the order between the two of them?",
+    "choices": [
+      {
+        "text": "A row appears twice, or not at all",
+        "correct": true,
+        "why": "The tie is broken by the plan, which may differ between the two queries that fetch the two pages."
+      },
+      {
+        "text": "The query is refused as ambiguous by the planner",
+        "correct": false,
+        "why": "It runs."
+      },
+      {
+        "text": "The second page is always empty",
+        "correct": false,
+        "why": "It is not."
+      },
+      {
+        "text": "The rows come back in insertion order",
+        "correct": false,
+        "why": "Nothing promises that."
+      }
+    ]
+  },
+  {
+    "id": "ex-62z778rx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which of these WHERE clauses lets an index on `created_at` be used?",
+    "hint": "One side of the comparison has to be the bare column.",
+    "choices": [
+      {
+        "text": "`WHERE date(created_at) = '2026-03-01'`",
+        "correct": false,
+        "why": "The function wraps the column, so the index on the raw value no longer matches."
+      },
+      {
+        "text": "`WHERE created_at >= '2026-03-01' AND created_at < '2026-03-02'`",
+        "correct": true,
+        "why": "The column stands alone, so the index range applies."
+      },
+      {
+        "text": "`WHERE extract(year from created_at) = 2026`",
+        "correct": false,
+        "why": "Same problem: the column is inside a function."
+      },
+      {
+        "text": "`WHERE created_at + interval '1 day' > now()`",
+        "correct": false,
+        "why": "The arithmetic is on the column rather than on the constant."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzcvb65q",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "To bring back rows whose `name` starts with the letters `an` and ignores what follows, you write WHERE name LIKE ___ — and the wildcard for a single character is ___.",
+    "hint": "Two symbols, and one of them is a single character.",
+    "blanks": [
+      {
+        "accept": [
+          "'an%'",
+          "an%"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "_",
+          "underscore",
+          "underline"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p45x3vsx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does `SELECT DISTINCT a, b` do?",
+    "hint": "Read it as one thing rather than two.",
+    "choices": [
+      {
+        "text": "Removes repeated values of `a` only",
+        "correct": false,
+        "why": "That would need a different construct."
+      },
+      {
+        "text": "Removes repeats in each column separately",
+        "correct": false,
+        "why": "That would produce columns of different lengths, which is not a table."
+      },
+      {
+        "text": "Sorts the result and removes neighbouring repeats",
+        "correct": false,
+        "why": "A sort is one way to implement it and is not promised."
+      },
+      {
+        "text": "Removes repeated pairs of `a` and `b`",
+        "correct": true,
+        "why": "DISTINCT applies to the whole row the select produces, not to one column."
+      }
+    ]
+  },
+  {
+    "id": "ex-6w57w83w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`ORDER BY name` puts `Ana` before `ana` on one server and after it on another. What explains it?",
+    "hint": "Something about the database decides what order letters are in.",
+    "choices": [
+      {
+        "text": "The client's locale",
+        "correct": false,
+        "why": "The sort happens on the server."
+      },
+      {
+        "text": "Whether an index exists on `name`",
+        "correct": false,
+        "why": "An index follows the collation rather than deciding it."
+      },
+      {
+        "text": "The collation it was created with",
+        "correct": true,
+        "why": "Ordering text is a property of the collation, and two servers can be set up with different ones."
+      },
+      {
+        "text": "The version of the SQL standard each one follows",
+        "correct": false,
+        "why": "The standard leaves this to the collation."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kmv9m19",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A LEFT JOIN is written with the filter on the right table in the WHERE clause instead of in the ON clause. What does that do?",
+    "hint": "Ask when each of the two is applied.",
+    "choices": [
+      {
+        "text": "It is refused by the parser as ambiguous",
+        "correct": false,
+        "why": "It runs without a word of complaint."
+      },
+      {
+        "text": "It leaves the result the same on both sides",
+        "correct": false,
+        "why": "That is true of an inner join and false here."
+      },
+      {
+        "text": "It turns the join into an inner join",
+        "correct": true,
+        "why": "The unmatched rows come back with nulls and the WHERE then drops them, which is what an inner join does."
+      },
+      {
+        "text": "It makes the join faster on a large table",
+        "correct": false,
+        "why": "It changes the result, which is worse than changing the speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywqrqz3t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Table A has 3 rows, table B has 4, and each A row matches exactly 2 B rows. How many rows does an inner join produce?",
+    "hint": "Count per row of A.",
+    "choices": [
+      {
+        "text": "7",
+        "correct": false,
+        "why": "That adds the two counts instead of multiplying the matches."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "That is the size of B."
+      },
+      {
+        "text": "12",
+        "correct": false,
+        "why": "That is the cross join, which is every pair."
+      },
+      {
+        "text": "6",
+        "correct": true,
+        "why": "Three rows of A, two matches each."
+      }
+    ]
+  },
+  {
+    "id": "ex-y16m6spb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A report joins `orders` to `order_items` and sums `orders.total`. The totals come out far too high. What happened?",
+    "hint": "Think about how many times each order row appears.",
+    "choices": [
+      {
+        "text": "Some orders have a null total",
+        "correct": false,
+        "why": "A null would pull the sum down rather than up."
+      },
+      {
+        "text": "The order's total is counted once per item",
+        "correct": true,
+        "why": "The join repeats the order row for every item, and the sum adds each copy."
+      },
+      {
+        "text": "The totals are stored in cents",
+        "correct": false,
+        "why": "That would be a constant factor of a hundred and the same every time."
+      },
+      {
+        "text": "The join lost the rows with no items",
+        "correct": false,
+        "why": "That would lower the total."
+      }
+    ]
+  },
+  {
+    "id": "ex-hymj9fb7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each join to which unmatched rows it keeps.",
+    "hint": "One of them keeps none.",
+    "pairs": [
+      {
+        "left": "INNER JOIN",
+        "right": "Neither side's"
+      },
+      {
+        "left": "LEFT JOIN",
+        "right": "The left table's"
+      },
+      {
+        "left": "RIGHT JOIN",
+        "right": "The right table's"
+      },
+      {
+        "left": "FULL JOIN",
+        "right": "Both tables'"
+      }
+    ],
+    "right_distractors": [
+      "Only the ones with a null key",
+      "Only the first match of each"
+    ]
+  },
+  {
+    "id": "ex-57cj5mah",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You want customers who have never placed an order. Which of these gets it wrong?",
+    "hint": "One of them behaves differently when a null turns up in the subquery.",
+    "choices": [
+      {
+        "text": "`WHERE id NOT IN (SELECT customer_id FROM orders)`",
+        "correct": true,
+        "why": "One null `customer_id` makes NOT IN return no rows at all, silently."
+      },
+      {
+        "text": "A LEFT JOIN with `WHERE o.id IS NULL`",
+        "correct": false,
+        "why": "The anti-join written by hand, and it is correct."
+      },
+      {
+        "text": "`WHERE NOT EXISTS (SELECT 1 FROM orders WHERE customer_id = c.id)`",
+        "correct": false,
+        "why": "EXISTS is about whether a row is there, so a null is simply a row that does not match."
+      },
+      {
+        "text": "`WHERE id NOT IN (SELECT customer_id FROM orders WHERE customer_id IS NOT NULL)`",
+        "correct": false,
+        "why": "The null is excluded, so NOT IN behaves."
+      }
+    ]
+  },
+  {
+    "id": "ex-8b8jb3pk",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A join of a table with itself needs each side to be given a different name. The keyword for that name is ___, and the join that produces every possible pair is called a ___ join.",
+    "hint": "The second one is two words in some dialects and one here.",
+    "blanks": [
+      {
+        "accept": [
+          "alias",
+          "apelido"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "cross",
+          "cruzada",
+          "cartesian",
+          "cartesiano"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jxvvwdhq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the difference between WHERE and HAVING?",
+    "hint": "One of them can see the aggregate.",
+    "choices": [
+      {
+        "text": "HAVING is the older spelling of WHERE",
+        "correct": false,
+        "why": "They are different clauses at different stages."
+      },
+      {
+        "text": "HAVING filters rows, WHERE filters groups",
+        "correct": false,
+        "why": "The two are the other way round."
+      },
+      {
+        "text": "WHERE filters rows, HAVING filters groups",
+        "correct": true,
+        "why": "WHERE runs before the grouping, so it cannot see a count; HAVING runs after."
+      },
+      {
+        "text": "WHERE is refused when GROUP BY is present",
+        "correct": false,
+        "why": "It is accepted, and it is usually what you want."
+      }
+    ]
+  },
+  {
+    "id": "ex-h68j1s0d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A column holds 10 rows, three of them null. What do `count(*)` and `count(column)` return?",
+    "hint": "One of them counts rows and the other counts values.",
+    "choices": [
+      {
+        "text": "10 and 10",
+        "correct": false,
+        "why": "That would make the two spellings the same."
+      },
+      {
+        "text": "7 and 10",
+        "correct": false,
+        "why": "The two are the other way round."
+      },
+      {
+        "text": "7 and 7",
+        "correct": false,
+        "why": "The star is not affected by a null in any column."
+      },
+      {
+        "text": "10 and 7",
+        "correct": true,
+        "why": "The star counts rows; the column counts the values that are there."
+      }
+    ]
+  },
+  {
+    "id": "ex-q33xx1fa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What does a window function do that GROUP BY does not?",
+    "hint": "Count the rows that come back.",
+    "choices": [
+      {
+        "text": "It can be used inside a WHERE clause",
+        "correct": false,
+        "why": "It cannot: the window is computed after the WHERE."
+      },
+      {
+        "text": "It keeps every row",
+        "correct": true,
+        "why": "A group collapses its rows into one; a window leaves them and computes the aggregate over a frame beside each."
+      },
+      {
+        "text": "It computes faster over a large table",
+        "correct": false,
+        "why": "Speed is not the distinction and often goes the other way."
+      },
+      {
+        "text": "It works without an ORDER BY in the query",
+        "correct": false,
+        "why": "So does a GROUP BY."
+      }
+    ]
+  },
+  {
+    "id": "ex-rj53snpy",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Match each ranking function to how it numbers a tie of two rows followed by a third.",
+    "hint": "Two of them agree on the tie and disagree on what comes next.",
+    "pairs": [
+      {
+        "left": "ROW_NUMBER()",
+        "right": "1, 2, 3"
+      },
+      {
+        "left": "RANK()",
+        "right": "1, 1, 3"
+      },
+      {
+        "left": "DENSE_RANK()",
+        "right": "1, 1, 2"
+      }
+    ],
+    "right_distractors": [
+      "1, 2, 2",
+      "2, 2, 3"
+    ]
+  },
+  {
+    "id": "ex-v34dr9h8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`SELECT department, name, count(*) FROM staff GROUP BY department` is refused. Why?",
+    "hint": "One column is neither grouped nor aggregated.",
+    "choices": [
+      {
+        "text": "`name` is neither grouped nor aggregated",
+        "correct": true,
+        "why": "The group holds many names and the query does not say which one to show."
+      },
+      {
+        "text": "A GROUP BY needs at least two columns to be valid",
+        "correct": false,
+        "why": "One is fine."
+      },
+      {
+        "text": "`department` has to be repeated in an ORDER BY",
+        "correct": false,
+        "why": "Ordering is a separate matter."
+      },
+      {
+        "text": "`count(*)` needs an alias before it can be selected",
+        "correct": false,
+        "why": "An alias is a convenience."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx3vnx9x",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A table of 1000 sales has 4 regions. A query groups by region and takes the average. How many rows does it return?",
+    "hint": "One per group.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "rows",
+    "accept_units": [
+      "row",
+      "linhas",
+      "linha"
+    ]
+  },
+  {
+    "id": "ex-6t32bnbw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What distinguishes a correlated subquery from an uncorrelated one?",
+    "hint": "Ask how many times it has to be evaluated.",
+    "choices": [
+      {
+        "text": "It appears in the FROM clause",
+        "correct": false,
+        "why": "That is a derived table and is a separate thing."
+      },
+      {
+        "text": "It returns more than one column",
+        "correct": false,
+        "why": "Either kind can."
+      },
+      {
+        "text": "It refers to a column of the outer query",
+        "correct": true,
+        "why": "That reference is what ties it to each outer row, so it is evaluated per row."
+      },
+      {
+        "text": "It is written with the EXISTS keyword",
+        "correct": false,
+        "why": "EXISTS is common there and is not the definition."
+      }
+    ]
+  },
+  {
+    "id": "ex-83rn8b0n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A view is described as 'a stored query, not stored data'. What follows from that?",
+    "hint": "Ask what happens when the underlying table changes.",
+    "choices": [
+      {
+        "text": "Reading it runs the query again",
+        "correct": true,
+        "why": "So it is always current and never faster: there is nothing stored to go stale and nothing stored to read quickly."
+      },
+      {
+        "text": "It cannot be used inside another query or another view",
+        "correct": false,
+        "why": "It is used exactly like a table."
+      },
+      {
+        "text": "It has to be refreshed after a write",
+        "correct": false,
+        "why": "That is a materialised view."
+      },
+      {
+        "text": "Reading it is faster because the plan is kept",
+        "correct": false,
+        "why": "That is closer to a materialised view, and even there the plan is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-5y97cnhf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A recursive CTE is written to walk a tree of categories and never finishes. What is the most likely cause?",
+    "hint": "Something about the data rather than about the SQL.",
+    "choices": [
+      {
+        "text": "The UNION ALL should have been UNION",
+        "correct": false,
+        "why": "UNION would mask a cycle by removing duplicates, which is a patch rather than the cause."
+      },
+      {
+        "text": "A cycle in the parent references",
+        "correct": true,
+        "why": "A category that is its own ancestor makes the recursion produce rows for ever."
+      },
+      {
+        "text": "A missing index on the parent column",
+        "correct": false,
+        "why": "That makes it slow and not endless."
+      },
+      {
+        "text": "The base case selects too many rows",
+        "correct": false,
+        "why": "A large base case finishes."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5n85faa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "When is a materialised view the right answer rather than a plain view?",
+    "hint": "Two conditions have to hold together.",
+    "choices": [
+      {
+        "text": "The underlying tables are small and rarely written",
+        "correct": false,
+        "why": "Then the plain view is already fast."
+      },
+      {
+        "text": "The data is allowed to be old, whatever the query costs",
+        "correct": false,
+        "why": "A cheap query gains nothing and adds a refresh to maintain."
+      },
+      {
+        "text": "The query is expensive, whatever the freshness requirement",
+        "correct": false,
+        "why": "Serving stale numbers to somebody who needs current ones is worse than being slow."
+      },
+      {
+        "text": "The query is expensive and the data is allowed to be a little old",
+        "correct": true,
+        "why": "Both halves are needed: the cost is what it buys back, and the staleness is what it costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-606p8scm",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each letter of ACID to what it promises.",
+    "hint": "One is about other transactions and one is about the power going out.",
+    "pairs": [
+      {
+        "left": "Atomicity",
+        "right": "All of it happens, or none of it"
+      },
+      {
+        "left": "Consistency",
+        "right": "The rules hold before and after"
+      },
+      {
+        "left": "Isolation",
+        "right": "Concurrent work does not leak in"
+      },
+      {
+        "left": "Durability",
+        "right": "A commit survives a crash"
+      }
+    ],
+    "right_distractors": [
+      "Writes are spread across replicas",
+      "Reads never block a writer"
+    ]
+  },
+  {
+    "id": "ex-4n5xt4d3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two transactions each read a balance of 100 and each write 100 minus their own withdrawal. One withdrawal is lost. Which anomaly is this?",
+    "hint": "Both read before either wrote.",
+    "choices": [
+      {
+        "text": "A lost update",
+        "correct": true,
+        "why": "The second write is computed from a value the first write already replaced."
+      },
+      {
+        "text": "A non-repeatable read",
+        "correct": false,
+        "why": "Close, and that names re-reading a row rather than losing a write."
+      },
+      {
+        "text": "A dirty read",
+        "correct": false,
+        "why": "Neither read anything uncommitted."
+      },
+      {
+        "text": "A phantom read",
+        "correct": false,
+        "why": "That is about rows appearing in a repeated range query."
+      }
+    ]
+  },
+  {
+    "id": "ex-gd4jmpbq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does READ COMMITTED promise that READ UNCOMMITTED does not?",
+    "hint": "One word about what you are allowed to see.",
+    "choices": [
+      {
+        "text": "A row you read twice gives the same answer",
+        "correct": false,
+        "why": "That is REPEATABLE READ."
+      },
+      {
+        "text": "You never see another transaction's uncommitted writes",
+        "correct": true,
+        "why": "That is the dirty read, and it is the one anomaly this level removes."
+      },
+      {
+        "text": "Your writes are never blocked by a reader",
+        "correct": false,
+        "why": "That is a property of the concurrency mechanism rather than of the level."
+      },
+      {
+        "text": "A range query returns the same rows twice",
+        "correct": false,
+        "why": "That is about phantoms, one level further up."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7kv97ys",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two transactions update the same two rows in opposite order and both stop. What does the database do?",
+    "hint": "Waiting for ever is not one of the options it takes.",
+    "choices": [
+      {
+        "text": "It merges the two updates in commit order",
+        "correct": false,
+        "why": "There is nothing to merge; neither can proceed."
+      },
+      {
+        "text": "It refuses the second transaction at its first statement",
+        "correct": false,
+        "why": "The first statement of each succeeds; the cycle closes at the second."
+      },
+      {
+        "text": "It detects the cycle and aborts one of them",
+        "correct": true,
+        "why": "A deadlock is a cycle in the wait graph, and the only way out is to end one side."
+      },
+      {
+        "text": "It waits until one of them times out on the client",
+        "correct": false,
+        "why": "That would make a deadlock look like a hang."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7wcsey8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the simplest discipline that makes deadlocks rare in application code?",
+    "hint": "It is about the order, not about the level.",
+    "choices": [
+      {
+        "text": "Keep transactions open longer so they finish together",
+        "correct": false,
+        "why": "Longer transactions collide more."
+      },
+      {
+        "text": "Retry the whole transaction on any error",
+        "correct": false,
+        "why": "Retrying is the fallback after the discipline, and on its own it hides the cause."
+      },
+      {
+        "text": "Raise the isolation level to SERIALIZABLE",
+        "correct": false,
+        "why": "That produces more aborts rather than fewer."
+      },
+      {
+        "text": "Take locks on rows in a consistent order everywhere",
+        "correct": true,
+        "why": "A cycle needs two paths taking the same locks in opposite orders; one order removes the cycle."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m39dn3f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A long-running transaction is left open by mistake on a busy table. What is the cost?",
+    "hint": "Think about what the database cannot throw away.",
+    "choices": [
+      {
+        "text": "Old row versions cannot be cleaned up",
+        "correct": true,
+        "why": "Cleanup cannot pass the oldest open snapshot, so the table and its indexes grow for as long as it is left open."
+      },
+      {
+        "text": "Queries on other tables begin to fail",
+        "correct": false,
+        "why": "They carry on."
+      },
+      {
+        "text": "The write-ahead log stops being written",
+        "correct": false,
+        "why": "It keeps being written, which is part of the pressure."
+      },
+      {
+        "text": "Indexes on the table are dropped automatically",
+        "correct": false,
+        "why": "Nothing drops an index on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-vytmn52h",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the four isolation levels in order, from the one that permits most anomalies to the one that permits fewest.",
+    "items": [
+      "READ UNCOMMITTED",
+      "READ COMMITTED",
+      "REPEATABLE READ",
+      "SERIALIZABLE"
+    ],
+    "trap": "The two in the middle are the ones people swap: committed data can still change between two reads, and that is what the third level closes."
+  },
+  {
+    "id": "ex-55qmsvev",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An index exists on `(country, city)`. Which query cannot use it?",
+    "hint": "The leftmost prefix rule.",
+    "choices": [
+      {
+        "text": "`WHERE country = 'BR'`",
+        "correct": false,
+        "why": "The first column alone is a leftmost prefix."
+      },
+      {
+        "text": "`WHERE city = 'Recife' AND country = 'BR'`",
+        "correct": false,
+        "why": "The order in the WHERE does not matter; the planner reads it as a set."
+      },
+      {
+        "text": "`WHERE city = 'Recife'`",
+        "correct": true,
+        "why": "City is sorted only within each country, so on its own it is scattered through the index."
+      },
+      {
+        "text": "`WHERE country = 'BR' AND city = 'Recife'`",
+        "correct": false,
+        "why": "Both columns, in the index's order."
+      }
+    ]
+  },
+  {
+    "id": "ex-aes0165g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What makes an index 'covering' for a particular query?",
+    "hint": "Ask whether the table has to be opened at all.",
+    "choices": [
+      {
+        "text": "The index is larger than the table",
+        "correct": false,
+        "why": "Size is a consequence rather than a definition."
+      },
+      {
+        "text": "The index is the primary key's",
+        "correct": false,
+        "why": "A primary key index covers a query only if it happens to hold the columns."
+      },
+      {
+        "text": "The index is declared UNIQUE",
+        "correct": false,
+        "why": "Uniqueness is a constraint and says nothing about which columns are read."
+      },
+      {
+        "text": "The index holds every column the query reads",
+        "correct": true,
+        "why": "Then the answer is assembled from the index and the table is never visited."
+      }
+    ]
+  },
+  {
+    "id": "ex-af7ffzd2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does an extra index make writes slower?",
+    "hint": "Count what has to be kept in step.",
+    "choices": [
+      {
+        "text": "The table is locked while the index is read",
+        "correct": false,
+        "why": "Reading an index does not lock the table."
+      },
+      {
+        "text": "Every insert and update has to maintain it too",
+        "correct": true,
+        "why": "An index is a second ordered copy, and it is kept in step inside the same transaction."
+      },
+      {
+        "text": "The planner has more options to consider",
+        "correct": false,
+        "why": "Planning cost is real and tiny beside the write."
+      },
+      {
+        "text": "The write-ahead log is disabled for indexed tables",
+        "correct": false,
+        "why": "It is not disabled anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fxv6r4h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A query filters on a boolean column where 95% of rows are true. Why might the planner ignore an index on it?",
+    "hint": "Compare the cost of the two ways of reading almost everything.",
+    "choices": [
+      {
+        "text": "Most of the table is cheaper to scan",
+        "correct": true,
+        "why": "Each index hit is a jump to a page; at ninety-five per cent the jumps cost more than reading the pages in order."
+      },
+      {
+        "text": "Boolean columns are not indexable on their own",
+        "correct": false,
+        "why": "They are."
+      },
+      {
+        "text": "The index is too small for the planner to consider",
+        "correct": false,
+        "why": "Size is not the objection."
+      },
+      {
+        "text": "The planner ignores indexes on columns with two values",
+        "correct": false,
+        "why": "It weighs the cost rather than applying a rule about the type."
+      }
+    ]
+  },
+  {
+    "id": "ex-50p4v9qc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a partial index give you that a full one does not?",
+    "hint": "It is defined with a WHERE.",
+    "choices": [
+      {
+        "text": "It allows duplicate values where a full index would not",
+        "correct": false,
+        "why": "Uniqueness is a separate declaration."
+      },
+      {
+        "text": "It updates itself less often than a full index",
+        "correct": false,
+        "why": "It updates whenever an indexed row changes."
+      },
+      {
+        "text": "It can be used by queries that do not mention its condition",
+        "correct": false,
+        "why": "The planner has to prove the query implies the condition."
+      },
+      {
+        "text": "It indexes only the rows you care about, so it is smaller",
+        "correct": true,
+        "why": "A predicate on the index keeps out the rows no query asks for, which is most of them in a status column."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7j96ce4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Creating an index normally blocks writes for as long as it takes. The PostgreSQL option that builds it without that block is CREATE INDEX ___, and it pays for that by scanning the table ___ times.",
+    "hint": "The number is small and is not one.",
+    "blanks": [
+      {
+        "accept": [
+          "concurrently",
+          "concorrentemente"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "two",
+          "2",
+          "duas",
+          "dois"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5dhetwsv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the difference between EXPLAIN and EXPLAIN ANALYZE?",
+    "hint": "One of them runs the query.",
+    "choices": [
+      {
+        "text": "ANALYZE updates the table statistics first",
+        "correct": false,
+        "why": "That is the separate ANALYZE command, and the collision of names is the trap."
+      },
+      {
+        "text": "ANALYZE shows the plan in more detail without running it",
+        "correct": false,
+        "why": "It runs it, which matters on an UPDATE."
+      },
+      {
+        "text": "ANALYZE executes it and reports what actually happened",
+        "correct": true,
+        "why": "The plain form shows the plan and the estimates; ANALYZE adds the real rows and the real time."
+      },
+      {
+        "text": "ANALYZE forces the planner to pick the cheapest plan",
+        "correct": false,
+        "why": "The planner already tries to."
+      }
+    ]
+  },
+  {
+    "id": "ex-63v7ffv4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A plan estimates 12 rows and the actual count is 480,000. What does that most often mean?",
+    "hint": "The planner chose its method using the estimate.",
+    "choices": [
+      {
+        "text": "The table is missing a primary key",
+        "correct": false,
+        "why": "Estimates do not depend on there being one."
+      },
+      {
+        "text": "The statistics no longer describe the data",
+        "correct": true,
+        "why": "They are stale, or the predicate is one they cannot express — and a wrong estimate makes the planner pick a nested loop for a huge set."
+      },
+      {
+        "text": "The row count is reported in kilobytes rather than in rows",
+        "correct": false,
+        "why": "It is a count of rows."
+      },
+      {
+        "text": "The query has a syntax error the planner tolerated",
+        "correct": false,
+        "why": "A syntax error never runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej6a8mej",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Match each join method to the shape of input it suits.",
+    "hint": "One of them wants both sides already in order.",
+    "pairs": [
+      {
+        "left": "Nested loop",
+        "right": "A small outer side and an index on the inner"
+      },
+      {
+        "left": "Hash join",
+        "right": "One side small enough to hold in memory"
+      },
+      {
+        "left": "Merge join",
+        "right": "Both sides sorted on the join key"
+      }
+    ],
+    "right_distractors": [
+      "A table with no statistics collected",
+      "Both sides on separate disks"
+    ]
+  },
+  {
+    "id": "ex-72a1kkh9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A sequential scan appears in a plan. When is that the right thing to see?",
+    "hint": "Ask what fraction of the table the query wants.",
+    "choices": [
+      {
+        "text": "When the query reads a large share of the table",
+        "correct": true,
+        "why": "Reading pages in order beats jumping to most of them through an index."
+      },
+      {
+        "text": "When the table has an index on the filtered column",
+        "correct": false,
+        "why": "Then the question is which is cheaper, and the index usually wins for a small share."
+      },
+      {
+        "text": "When the query has an ORDER BY",
+        "correct": false,
+        "why": "An ordering may favour an index rather than a scan."
+      },
+      {
+        "text": "When the table was written to recently",
+        "correct": false,
+        "why": "Recency is not part of the choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zmfgqr8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a plan, what does a node's `loops` count tell you?",
+    "hint": "It multiplies something else on the same line.",
+    "choices": [
+      {
+        "text": "How many rows it returned in total",
+        "correct": false,
+        "why": "That is the rows figure, and it is also per loop."
+      },
+      {
+        "text": "How many times the planner reconsidered the node",
+        "correct": false,
+        "why": "Planning happens once, before execution."
+      },
+      {
+        "text": "How many workers were used in parallel",
+        "correct": false,
+        "why": "Workers are reported separately."
+      },
+      {
+        "text": "How many times the node ran",
+        "correct": true,
+        "why": "Its time and its rows are per loop, so a node showing 0.1 ms with 40,000 loops took four seconds and the line looks fast."
+      }
+    ]
+  },
+  {
+    "id": "ex-nak9qvrr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the N+1 problem?",
+    "hint": "Count the round trips, not the rows.",
+    "choices": [
+      {
+        "text": "One query returning N times too many rows",
+        "correct": false,
+        "why": "That is a join fan-out, which is a different mistake."
+      },
+      {
+        "text": "N queries running at once and exhausting the pool",
+        "correct": false,
+        "why": "That is pool exhaustion."
+      },
+      {
+        "text": "One query for the list, then one per item",
+        "correct": true,
+        "why": "The loop over the list issues a query each time, so a page of fifty costs fifty-one."
+      },
+      {
+        "text": "A query retried N times after a deadlock",
+        "correct": false,
+        "why": "That is a retry storm."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcgrgk0v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which fixes an N+1 without changing what the code reads?",
+    "hint": "The word is about when the related rows are fetched.",
+    "choices": [
+      {
+        "text": "Raising the connection pool size",
+        "correct": false,
+        "why": "That serves the same problem with more connections."
+      },
+      {
+        "text": "Eager loading the association in one extra query",
+        "correct": true,
+        "why": "The related rows are fetched once for the whole list rather than per item."
+      },
+      {
+        "text": "Caching each row after the first read",
+        "correct": false,
+        "why": "That helps on the second page and not on the first."
+      },
+      {
+        "text": "Adding an index on the foreign key",
+        "correct": false,
+        "why": "That makes each of the fifty queries faster and leaves fifty of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-0sp0t7t5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why should a migration be written so that the old code still works after it runs?",
+    "hint": "Think about the minutes during a deploy.",
+    "choices": [
+      {
+        "text": "Both versions are live while the deploy rolls",
+        "correct": true,
+        "why": "The migration lands before every instance has been replaced, so the old code meets the new schema."
+      },
+      {
+        "text": "It makes the rollback script shorter",
+        "correct": false,
+        "why": "A rollback is a consequence rather than the reason."
+      },
+      {
+        "text": "It lets the migration run inside a transaction",
+        "correct": false,
+        "why": "That depends on the statements rather than on compatibility."
+      },
+      {
+        "text": "It avoids locking the table during the change",
+        "correct": false,
+        "why": "Locking is a separate concern with its own techniques."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctf3177z",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Put the four deploys of an online column rename in order.",
+    "items": [
+      "Add the new column and write to both",
+      "Backfill the old rows into the new column",
+      "Move every read to the new column",
+      "Stop writing the old column and drop it"
+    ],
+    "trap": "Moving the reads before the backfill is the swap that looks harmless: the new column is being written, so it looks populated, and every row older than the deploy comes back empty."
+  },
+  {
+    "id": "ex-ypzp7gs1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An ORM is described as a leaky abstraction. What does that mean in practice here?",
+    "hint": "Ask what you still have to know.",
+    "choices": [
+      {
+        "text": "It cannot express a join",
+        "correct": false,
+        "why": "Every ORM can."
+      },
+      {
+        "text": "It requires a specific database",
+        "correct": false,
+        "why": "Most support several."
+      },
+      {
+        "text": "You still have to know what SQL it emits",
+        "correct": true,
+        "why": "The abstraction saves the typing and not the understanding; the plan is still yours to read."
+      },
+      {
+        "text": "It loses rows under concurrency",
+        "correct": false,
+        "why": "That would be a defect rather than a leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mbdw0pe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is a migration that both changes the schema and backfills data in one statement a bad shape on a large table?",
+    "hint": "Think about how long one lock is held.",
+    "choices": [
+      {
+        "text": "It cannot be rolled back at all",
+        "correct": false,
+        "why": "In a transactional DDL database it can."
+      },
+      {
+        "text": "It holds a lock for the whole backfill",
+        "correct": true,
+        "why": "Schema changes take a strong lock, and a backfill of millions of rows keeps it for minutes."
+      },
+      {
+        "text": "It is refused when the table has an index",
+        "correct": false,
+        "why": "It is accepted."
+      },
+      {
+        "text": "The backfill runs before the schema change",
+        "correct": false,
+        "why": "Statements run in the order written."
+      }
+    ]
+  },
+  {
+    "id": "ex-y07fgm5p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which of these is the strongest reason to choose SQLite for an application?",
+    "hint": "Think about where the database runs.",
+    "choices": [
+      {
+        "text": "It replicates across machines out of the box",
+        "correct": false,
+        "why": "That needs something on top."
+      },
+      {
+        "text": "It handles many concurrent writers well",
+        "correct": false,
+        "why": "That is the one thing it is not for."
+      },
+      {
+        "text": "It has the richest set of index types available",
+        "correct": false,
+        "why": "PostgreSQL has more."
+      },
+      {
+        "text": "The data lives beside the program",
+        "correct": true,
+        "why": "It is a library in the process rather than a server, and its writing is serialised — one writer is the shape it is built for."
+      }
+    ]
+  },
+  {
+    "id": "ex-ka5dm19t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "MySQL and MariaDB share a history. What is the honest summary of the difference today?",
+    "hint": "One of them is governed differently from the other.",
+    "choices": [
+      {
+        "text": "One supports transactions and the other does not",
+        "correct": false,
+        "why": "Both do, through InnoDB and its descendants."
+      },
+      {
+        "text": "A fork that has drifted apart",
+        "correct": true,
+        "why": "They began identical and have diverged in features and in who decides them, so a feature is no longer assumed to exist in both."
+      },
+      {
+        "text": "The same code released under two different names",
+        "correct": false,
+        "why": "They were, and are no longer."
+      },
+      {
+        "text": "One is a column store and the other a row store",
+        "correct": false,
+        "why": "Both store rows by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-rja0wq4x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team picks a database because it is what they know. When is that the right call?",
+    "hint": "Compare the cost of learning against the cost of the mismatch.",
+    "choices": [
+      {
+        "text": "Only for a prototype that will be thrown away",
+        "correct": false,
+        "why": "Prototypes are kept, and the argument is better than this."
+      },
+      {
+        "text": "Never — the workload decides on its own",
+        "correct": false,
+        "why": "Operating a database you do not know is a cost nobody counts until the first incident."
+      },
+      {
+        "text": "Whenever the team is under a deadline",
+        "correct": false,
+        "why": "A deadline makes the wrong engine more expensive rather than less."
+      },
+      {
+        "text": "When the workload asks for nothing else",
+        "correct": true,
+        "why": "Familiarity is a real advantage, and it stops paying the moment a requirement needs what the other engine offers."
+      }
+    ]
+  },
+  {
+    "id": "ex-dry33dn7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each engine to the property most often given as its reason.",
+    "hint": "Two of these are servers and one is not.",
+    "pairs": [
+      {
+        "left": "PostgreSQL",
+        "right": "Breadth of types, indexes and extensions"
+      },
+      {
+        "left": "MySQL",
+        "right": "Ubiquity in shared hosting and old stacks"
+      },
+      {
+        "left": "SQLite",
+        "right": "No server at all, a file beside the program"
+      }
+    ],
+    "right_distractors": [
+      "Built-in sharding across machines",
+      "A licence that forbids commercial use"
+    ]
+  },
+  {
+    "id": "ex-jcf1n6xj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Oracle licensing is usually counted per processor. What makes the number hard to predict?",
+    "hint": "The count is not the number of chips.",
+    "choices": [
+      {
+        "text": "Cores are multiplied by a published factor",
+        "correct": true,
+        "why": "The factor depends on the chip, so two machines that look identical need different counts."
+      },
+      {
+        "text": "The price changes with the number of users",
+        "correct": false,
+        "why": "That is the other metric, and it is chosen instead of this one."
+      },
+      {
+        "text": "It is counted per database rather than per machine",
+        "correct": false,
+        "why": "The processor metric is about the hardware."
+      },
+      {
+        "text": "Virtual machines are always excluded from the count",
+        "correct": false,
+        "why": "Virtualisation makes the count harder rather than removing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hsgnmhhz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "PL/SQL code is often described as the thing that keeps a company on Oracle. Why?",
+    "hint": "Ask where the business rules ended up.",
+    "choices": [
+      {
+        "text": "It runs faster than any application language",
+        "correct": false,
+        "why": "Speed is not what holds the company."
+      },
+      {
+        "text": "The code is encrypted on disk and cannot be read back",
+        "correct": false,
+        "why": "It can be read, and wrapping is optional and rare."
+      },
+      {
+        "text": "The business logic lives in the database",
+        "correct": true,
+        "why": "Years of it, with no equivalent elsewhere: moving the data is a week and moving the procedures is a rewrite nobody budgeted."
+      },
+      {
+        "text": "The licence forbids porting it",
+        "correct": false,
+        "why": "The obstacle is the work rather than the terms."
+      }
+    ]
+  },
+  {
+    "id": "ex-raqsr9c9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Oracle's default isolation behaves differently from PostgreSQL's in one respect worth knowing before a migration. Which?",
+    "hint": "One of them never makes a reader wait.",
+    "choices": [
+      {
+        "text": "Readers are served from an undo image",
+        "correct": true,
+        "why": "Both engines avoid blocking readers; Oracle rebuilds the older image from undo where PostgreSQL keeps row versions in the table."
+      },
+      {
+        "text": "Oracle commits every statement on its own",
+        "correct": false,
+        "why": "That is a client setting elsewhere, and Oracle's default is an explicit commit."
+      },
+      {
+        "text": "Oracle has no concept of a transaction at all",
+        "correct": false,
+        "why": "It has."
+      },
+      {
+        "text": "Oracle takes a table lock on every UPDATE",
+        "correct": false,
+        "why": "It locks rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvfeec5x",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A server has one socket of 24 physical cores, with a core factor of 0.5. How many processor licences does it need?",
+    "hint": "Cores times the factor, rounded up.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "licences",
+    "accept_units": [
+      "licence",
+      "license",
+      "licenses",
+      "licenças",
+      "licenca"
+    ]
+  },
+  {
+    "id": "ex-zx50g6tg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does a UNIQUE constraint allow that a PRIMARY KEY does not?",
+    "hint": "One value is treated specially by one of them.",
+    "choices": [
+      {
+        "text": "A column of a type that cannot be compared",
+        "correct": false,
+        "why": "Both need a comparable type."
+      },
+      {
+        "text": "More than one column in the declaration",
+        "correct": false,
+        "why": "Both can be declared over several columns."
+      },
+      {
+        "text": "A null, and in most engines more than one",
+        "correct": true,
+        "why": "A primary key refuses nulls; unique treats each null as distinct from every other."
+      },
+      {
+        "text": "Two rows carrying the very same value",
+        "correct": false,
+        "why": "That is what both of them refuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-9214evvz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is `SELECT *` discouraged in application code?",
+    "hint": "Think about what happens when somebody adds a column.",
+    "choices": [
+      {
+        "text": "It prevents the use of any index",
+        "correct": false,
+        "why": "Indexes are chosen from the WHERE and the ORDER BY."
+      },
+      {
+        "text": "It is slower to parse than a column list",
+        "correct": false,
+        "why": "Parsing is not where the cost is."
+      },
+      {
+        "text": "It is refused by most database drivers",
+        "correct": false,
+        "why": "Every driver accepts it."
+      },
+      {
+        "text": "The set of columns changes under the code",
+        "correct": true,
+        "why": "A column added tomorrow arrives unannounced, and one removed breaks a read nothing warned about."
+      }
+    ]
+  },
+  {
+    "id": "ex-wy7ygjet",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An UPDATE with no WHERE is run by mistake on a production table inside an open transaction. What is the correct next action?",
+    "hint": "The transaction has not ended yet.",
+    "choices": [
+      {
+        "text": "Run the reverse UPDATE from memory",
+        "correct": false,
+        "why": "The old values are gone from the session and only the rollback still has them."
+      },
+      {
+        "text": "ROLLBACK, before anything else",
+        "correct": true,
+        "why": "Nothing is durable until the commit, so the whole statement can still be undone."
+      },
+      {
+        "text": "COMMIT and then restore from the backup",
+        "correct": false,
+        "why": "That makes the mistake permanent and then undoes it expensively."
+      },
+      {
+        "text": "Close the client and let the server decide",
+        "correct": false,
+        "why": "It rolls back, and doing it by accident is not a procedure."
+      }
+    ]
+  },
+  {
+    "id": "ex-ap9f7n0s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which is the honest description of what an index is?",
+    "hint": "It is not a copy of the table.",
+    "choices": [
+      {
+        "text": "A compressed copy of the whole table",
+        "correct": false,
+        "why": "It holds the indexed columns rather than the row."
+      },
+      {
+        "text": "A hint telling the planner which rows to prefer",
+        "correct": false,
+        "why": "It is a structure that is read, not advice."
+      },
+      {
+        "text": "An ordered structure over some columns, plus pointers",
+        "correct": true,
+        "why": "The order is what allows a search to discard most of the table without reading it."
+      },
+      {
+        "text": "A cache of the rows most recently read",
+        "correct": false,
+        "why": "That is the buffer pool."
+      }
+    ]
+  },
+  {
+    "id": "ex-8j62bjwb",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A query that groups sales by month and gives each row its group's total without collapsing the rows is written with the keyword ___, and the clause that defines which rows the calculation sees is ___ BY.",
+    "hint": "The second word also appears in a different clause of the same query.",
+    "blanks": [
+      {
+        "accept": [
+          "over",
+          "sobre"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "partition",
+          "particao",
+          "partição"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t48e84qw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A `status` column is a free-text string and three spellings of 'cancelled' are in the table. What would have prevented it?",
+    "hint": "Something that refuses a value at the moment it is written.",
+    "choices": [
+      {
+        "text": "A nightly job normalising the values",
+        "correct": false,
+        "why": "That cleans up after the fact and never catches up."
+      },
+      {
+        "text": "A NOT NULL on the column",
+        "correct": false,
+        "why": "That refuses absence rather than a spelling."
+      },
+      {
+        "text": "An index on the column",
+        "correct": false,
+        "why": "An index orders values and refuses none."
+      },
+      {
+        "text": "A CHECK listing the values, or a lookup table",
+        "correct": true,
+        "why": "Either refuses the fourth spelling at the write, where the fix is cheap."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqv3g3n8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two services write to one table and a third reads it. Where does the rule that the status may only move forwards belong?",
+    "hint": "Count how many places would have to agree.",
+    "choices": [
+      {
+        "text": "In the database, where every writer meets it",
+        "correct": true,
+        "why": "A rule in one service is a rule the other one does not have, and nothing reports the difference."
+      },
+      {
+        "text": "In the reader, which can ignore bad rows",
+        "correct": false,
+        "why": "By then the row is written and the history is wrong."
+      },
+      {
+        "text": "In a shared library both services import",
+        "correct": false,
+        "why": "Better, and it still depends on both importing the same version."
+      },
+      {
+        "text": "In whichever service writes most often",
+        "correct": false,
+        "why": "The other writer is the one that breaks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-js6ead85",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does `LIMIT 10` without an `ORDER BY` return?",
+    "hint": "Ten of which rows?",
+    "choices": [
+      {
+        "text": "An error, because the order is undefined",
+        "correct": false,
+        "why": "It runs without complaint, which is the problem."
+      },
+      {
+        "text": "Ten rows, and which ten is not promised",
+        "correct": true,
+        "why": "Without an order there is nothing to be first, so the plan decides and may decide differently tomorrow."
+      },
+      {
+        "text": "The ten rows inserted first",
+        "correct": false,
+        "why": "Common, never promised, and the difference matters."
+      },
+      {
+        "text": "The ten rows with the lowest primary key",
+        "correct": false,
+        "why": "That happens when the plan uses that index, which is an accident."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hzhnezh",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each symptom to the mistake behind it.",
+    "hint": "Two of them are about a join and they are not the same join.",
+    "pairs": [
+      {
+        "left": "A sum far larger than expected",
+        "right": "A join multiplying the rows"
+      },
+      {
+        "left": "Rows missing from a LEFT JOIN",
+        "right": "A filter in WHERE instead of ON"
+      },
+      {
+        "left": "An empty result from NOT IN",
+        "right": "A null inside the subquery"
+      },
+      {
+        "left": "A page repeating one row",
+        "right": "An ORDER BY with no tiebreaker"
+      }
+    ],
+    "right_distractors": [
+      "A missing index on the sorted column",
+      "A transaction left open by a client"
+    ]
+  },
+  {
+    "id": "ex-y4zvq5xk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A table grows to 400 million rows and one report is slow. Which is the wrong first move?",
+    "hint": "One of these is expensive and answers nothing.",
+    "choices": [
+      {
+        "text": "Checking whether the statistics are current",
+        "correct": false,
+        "why": "Cheap, and a common cause."
+      },
+      {
+        "text": "Looking at which indexes the report could use",
+        "correct": false,
+        "why": "The usual answer at any size."
+      },
+      {
+        "text": "Partitioning the table",
+        "correct": true,
+        "why": "It is a large change that helps a particular access pattern, and nobody has read the plan yet."
+      },
+      {
+        "text": "Reading the plan for the slow report",
+        "correct": false,
+        "why": "Free, and it names the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bj279yr",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the clauses in the order the database evaluates them.",
+    "items": [
+      "FROM and the joins",
+      "WHERE",
+      "GROUP BY",
+      "HAVING",
+      "SELECT",
+      "ORDER BY"
+    ],
+    "trap": "SELECT is written first and evaluated late, which is why an alias defined there cannot be used in the WHERE and can be used in the ORDER BY."
+  },
+  {
+    "id": "ex-rj93x0jq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why can an alias defined in SELECT be used in ORDER BY but not in WHERE?",
+    "hint": "The answer is the order of evaluation.",
+    "choices": [
+      {
+        "text": "WHERE runs before SELECT and ORDER BY after it",
+        "correct": true,
+        "why": "The alias does not exist yet when the filter is applied and does exist by the time the rows are sorted."
+      },
+      {
+        "text": "ORDER BY is applied on the client",
+        "correct": false,
+        "why": "It is applied on the server."
+      },
+      {
+        "text": "WHERE accepts only column names",
+        "correct": false,
+        "why": "It accepts expressions of every kind."
+      },
+      {
+        "text": "The alias is a string and not an expression",
+        "correct": false,
+        "why": "It is a name for an expression."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrzagmpy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is the difference between DELETE and TRUNCATE?",
+    "hint": "One of them can have a WHERE.",
+    "choices": [
+      {
+        "text": "TRUNCATE removes chosen rows; DELETE empties the table",
+        "correct": false,
+        "why": "The two are the other way round."
+      },
+      {
+        "text": "TRUNCATE also removes the table's indexes",
+        "correct": false,
+        "why": "The indexes stay and are emptied with it."
+      },
+      {
+        "text": "DELETE drops the table and recreates it",
+        "correct": false,
+        "why": "That is DROP followed by CREATE."
+      },
+      {
+        "text": "DELETE removes chosen rows; TRUNCATE empties the table",
+        "correct": true,
+        "why": "TRUNCATE takes no condition and does its work without walking the rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cn65vhh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A soft delete is implemented with a `deleted_at` column. What does every query now have to remember?",
+    "hint": "The rows are still there.",
+    "choices": [
+      {
+        "text": "To join the audit table for the reason",
+        "correct": false,
+        "why": "A reason is optional and separate."
+      },
+      {
+        "text": "To exclude the deleted rows, every single time",
+        "correct": true,
+        "why": "One query that forgets shows a customer something they deleted, and it reads as a bug in the wrong place."
+      },
+      {
+        "text": "To read the column as a boolean",
+        "correct": false,
+        "why": "It is a timestamp, and its absence is the live state."
+      },
+      {
+        "text": "To take a lock before reading",
+        "correct": false,
+        "why": "Nothing about a soft delete needs one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ny4fwv1c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What makes `UPSERT` — insert, or update if the row is there — safer written as one statement than as a check followed by an insert?",
+    "hint": "Think about two clients arriving together.",
+    "choices": [
+      {
+        "text": "Another writer slips in between the two",
+        "correct": true,
+        "why": "Between the two statements a second client inserts the row, and the first one fails or duplicates."
+      },
+      {
+        "text": "One statement is parsed faster",
+        "correct": false,
+        "why": "Parsing is not the issue."
+      },
+      {
+        "text": "The single statement avoids the index",
+        "correct": false,
+        "why": "It relies on the index to find the conflict."
+      },
+      {
+        "text": "The check cannot be written in SQL",
+        "correct": false,
+        "why": "It can, and that is the temptation."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6hpe9bv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A backup is taken every night and has never been restored. What is the honest status of that backup?",
+    "hint": "What has actually been demonstrated?",
+    "choices": [
+      {
+        "text": "Working, since the job reports success",
+        "correct": false,
+        "why": "The job reports that it wrote a file."
+      },
+      {
+        "text": "Unknown — a backup is proved by a restore",
+        "correct": true,
+        "why": "Until one has been restored and checked, what exists is a file nobody has read."
+      },
+      {
+        "text": "Unnecessary, given a replica",
+        "correct": false,
+        "why": "A replica copies a mistake faithfully."
+      },
+      {
+        "text": "Working, since the file size is right",
+        "correct": false,
+        "why": "A truncated dump has a plausible size."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhkj7csq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A foreign key is declared but no index exists on the referencing column. What suffers?",
+    "hint": "Think about what happens when the parent row is touched.",
+    "choices": [
+      {
+        "text": "The constraint stops being enforced",
+        "correct": false,
+        "why": "It is enforced either way, and that is the cost."
+      },
+      {
+        "text": "Inserting into the child is refused",
+        "correct": false,
+        "why": "It is accepted; the parent is found by its own key."
+      },
+      {
+        "text": "Deleting or updating the parent scans the child",
+        "correct": true,
+        "why": "The database has to check that no child points at the row, and with no index that is a full scan every time."
+      },
+      {
+        "text": "The parent table doubles in size",
+        "correct": false,
+        "why": "Nothing about it changes the parent."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5q0fde9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two rows have to be updated together or not at all, and the application does them in two statements without a transaction. What is the failure?",
+    "hint": "The window is small and it is not zero.",
+    "choices": [
+      {
+        "text": "The two run in an undefined order",
+        "correct": false,
+        "why": "They run in the order written."
+      },
+      {
+        "text": "Neither statement is durable until a commit",
+        "correct": false,
+        "why": "With autocommit each one commits on its own, which is the problem rather than the safeguard."
+      },
+      {
+        "text": "The second statement overwrites the first",
+        "correct": false,
+        "why": "They touch different rows."
+      },
+      {
+        "text": "A crash between the two leaves half the change",
+        "correct": true,
+        "why": "Atomicity is what a transaction buys, and without one the half-applied state is durable."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2xa1gnp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does `COALESCE(a, b, 0)` return?",
+    "hint": "It walks the list.",
+    "choices": [
+      {
+        "text": "The first argument that is not null",
+        "correct": true,
+        "why": "It stops at the first one that has a value, and the zero is the fallback."
+      },
+      {
+        "text": "The sum of the arguments that are not null",
+        "correct": false,
+        "why": "It does no arithmetic."
+      },
+      {
+        "text": "Null whenever any argument is null",
+        "correct": false,
+        "why": "That is what it exists to avoid."
+      },
+      {
+        "text": "Zero whenever either `a` or `b` is null",
+        "correct": false,
+        "why": "It falls through only when both are."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnnxvtgs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A column stores an enumeration as a small integer to save space. What is the cost that shows up later?",
+    "hint": "Ask what a person reading the table sees.",
+    "choices": [
+      {
+        "text": "The values cannot be constrained",
+        "correct": false,
+        "why": "A CHECK works on an integer."
+      },
+      {
+        "text": "The column cannot be indexed",
+        "correct": false,
+        "why": "An integer indexes well."
+      },
+      {
+        "text": "Comparisons become slower than on text",
+        "correct": false,
+        "why": "They are faster."
+      },
+      {
+        "text": "The meaning lives outside the database",
+        "correct": true,
+        "why": "Every reader needs the mapping, and a query written in psql answers with numbers nobody can check."
+      }
+    ]
+  },
+  {
+    "id": "ex-ak8qexv7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Keyset pagination is offered as a replacement for OFFSET. What does it give up?",
+    "hint": "Think about what a page number lets you do.",
+    "choices": [
+      {
+        "text": "The use of an index on the sort key",
+        "correct": false,
+        "why": "It depends on exactly that index."
+      },
+      {
+        "text": "Jumping straight to an arbitrary page",
+        "correct": true,
+        "why": "It reads from where the last page ended, so there is no way to ask for page forty without walking there."
+      },
+      {
+        "text": "The ability to sort by more than one column",
+        "correct": false,
+        "why": "It handles several, with the comparison written as a tuple."
+      },
+      {
+        "text": "A stable order across pages",
+        "correct": false,
+        "why": "That is what it buys rather than what it gives up."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr9k407v",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A statement that reads rows and intends to change them can reserve them against other transactions by ending with SELECT … FOR ___. The variant that lets other readers through but no other writer is FOR NO KEY ___.",
+    "hint": "The same word fills both blanks.",
+    "blanks": [
+      {
+        "accept": [
+          "update"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "update"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xrpw9438",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is `EXPLAIN ANALYZE` dangerous to run on an UPDATE in production?",
+    "hint": "Read the word ANALYZE literally.",
+    "choices": [
+      {
+        "text": "It rewrites the table's statistics",
+        "correct": false,
+        "why": "That is the separate ANALYZE command."
+      },
+      {
+        "text": "It disables the planner's cost model",
+        "correct": false,
+        "why": "The model is used exactly as usual."
+      },
+      {
+        "text": "It executes the statement",
+        "correct": true,
+        "why": "The rows are really updated, so it belongs inside a transaction that is rolled back."
+      },
+      {
+        "text": "It takes an exclusive lock on the table",
+        "correct": false,
+        "why": "It takes whatever the statement takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3kw1e8w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is the practical difference between UNION and UNION ALL?",
+    "hint": "One of them does extra work.",
+    "choices": [
+      {
+        "text": "UNION works on two queries and UNION ALL on more",
+        "correct": false,
+        "why": "Both chain to any number."
+      },
+      {
+        "text": "UNION ALL removes duplicates and UNION keeps them",
+        "correct": false,
+        "why": "The two are the other way round."
+      },
+      {
+        "text": "UNION removes duplicates and UNION ALL keeps them",
+        "correct": true,
+        "why": "Removing them costs a sort or a hash, which is why ALL is the default choice when you know there are none."
+      },
+      {
+        "text": "UNION requires the same column names",
+        "correct": false,
+        "why": "Both require compatible types; the names come from the first query."
+      }
+    ]
+  },
+  {
+    "id": "ex-s37039p4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A denormalised `order.item_count` drifts from the real count of items. Which repair is durable rather than cosmetic?",
+    "hint": "Ask what will still be true next year.",
+    "choices": [
+      {
+        "text": "Add an index on the column",
+        "correct": false,
+        "why": "An index has nothing to do with the value being wrong."
+      },
+      {
+        "text": "Run a script now to recompute every row",
+        "correct": false,
+        "why": "That fixes today and leaves the cause."
+      },
+      {
+        "text": "Drop the column and count on every read",
+        "correct": false,
+        "why": "Defensible, and it undoes the decision rather than repairing it."
+      },
+      {
+        "text": "Make one path own the write, and check it against the truth",
+        "correct": true,
+        "why": "A single writer plus a periodic comparison means a drift is found rather than discovered by a customer."
+      }
+    ]
+  },
+  {
+    "id": "ex-txbnamqx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A query works on the developer's machine and is slow in production. What is the most common reason?",
+    "hint": "The SQL is the same in both places.",
+    "choices": [
+      {
+        "text": "The data is a different size and shape",
+        "correct": true,
+        "why": "A plan chosen for a thousand rows is the wrong plan for ten million, and the query text says nothing about it."
+      },
+      {
+        "text": "The network is slower to the database",
+        "correct": false,
+        "why": "That adds a constant and does not explain a slow query."
+      },
+      {
+        "text": "Production runs an older SQL dialect",
+        "correct": false,
+        "why": "Usually the same version."
+      },
+      {
+        "text": "Indexes behave differently under load",
+        "correct": false,
+        "why": "They behave the same; the plan is what differs."
+      }
+    ]
+  }
+]

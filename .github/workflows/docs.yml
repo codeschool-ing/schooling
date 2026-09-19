@@ -95,114 +95,19 @@ jobs:
           print(f'OK — every document under docs/ is named in README.md')
           PY
 
-      # THE CURRENT FORMAT IS WHATEVER THE NEWEST SHEET DECLARES, and there is
-      # deliberately no constant anywhere saying which one that is. A constant
-      # would be a second place to state the same fact, and it would disagree
-      # with the sheets the first time somebody bumped one file and stopped.
+      # THE DESIGN SHEETS ARE `tools/check-design`, and this step was them.
       #
-      # So raising the format on one sheet is what fails the others, by name.
-      # That is the point rather than a side effect: a sheet left at an older
-      # format looks finished and is missing fields nobody remembers.
+      # It was a Python heredoc here: the front matter, the format register, a
+      # sheet naming a course that is not in `content/`, and a sheet's section
+      # list against its own `Shape` total. Every one of those is still checked
+      # and none of them is checked here, because the tool that replaced it also
+      # compares a sheet to the COURSE — the id, the lesson count against
+      # `topics` — and two of the rules were then being made twice, in two
+      # languages, in two files.
       #
-      # Coverage is REPORTED AND NOT ENFORCED. The sweep is partial on purpose
-      # for a long time, and a check that failed on the courses without a sheet
-      # would be a red build describing a plan working as intended.
-      - name: Every design sheet is at the current format
-        run: |
-          python3 - <<'PY'
-          import json, pathlib, re, sys
-
-          sheets = sorted(pathlib.Path('docs/design').glob('*.md'))
-          sheets = [s for s in sheets if s.name != 'README.md']
-          if not sheets:
-              print('no design sheets'); raise SystemExit(0)
-
-          courses = {json.loads(p.read_text())['slug']
-                     for p in pathlib.Path('content').rglob('courses/*/course.json')
-                     if not p.name.endswith('.pt.json')}
-
-          FRONT = re.compile(r'\A---\n(.*?)\n---\n', re.S)
-          problems, seen, formats = [], {}, {}
-
-          for sheet in sheets:
-              text = sheet.read_text()
-              m = FRONT.match(text)
-              if not m:
-                  problems.append(f'{sheet}: no front matter — a sheet with no format '
-                                  f'cannot be told apart from a current one')
-                  continue
-              front = dict(
-                  (k.strip(), v.strip())
-                  for k, _, v in (l.partition(':') for l in m.group(1).splitlines() if l.strip()))
-
-              for key in ('format', 'course'):
-                  if key not in front:
-                      problems.append(f'{sheet}: front matter has no `{key}`')
-              if 'format' in front:
-                  if not front['format'].isdigit():
-                      problems.append(f'{sheet}: format {front["format"]!r} is not a whole number')
-                  else:
-                      formats[sheet] = int(front['format'])
-              if 'course' in front:
-                  slug = front['course']
-                  if slug not in courses:
-                      problems.append(f'{sheet}: names the course {slug!r}, which is not in '
-                                      f'content/ — a sheet for a course that was renamed is a '
-                                      f'sheet nobody will find')
-                  if slug in seen:
-                      problems.append(f'{sheet}: names {slug!r}, and so does {seen[slug]}')
-                  seen[slug] = sheet
-
-          if formats:
-              current = max(formats.values())
-              behind = sorted(s for s, f in formats.items() if f < current)
-              if behind:
-                  problems.append(
-                      f'the current format is {current}, and these are behind it — bring them up '
-                      f'or the register is half migrated:')
-                  problems += [f'    {s}  (format {formats[s]})' for s in behind]
-
-              # A SHEET WHOSE SECTIONS ARE DESIGNED STATES THEM TWICE — once as
-              # a numbered list and once as a total in `Shape` — and two
-              # statements of one fact drift. So they are compared, along with
-              # the numbering itself: a gap or a repeat in 1..N is the silent
-              # kind of defect, since the list still reads as a list.
-              SECTION = re.compile(r'^\| (\d+) \| `[^`]+` \| (\w+) \|', re.M)
-              SHAPE = re.compile(r'\| sections \| \*\*(\d+)\*\* — (\d+) reading, '
-                                 r'(\d+) video, (\d+) practice')
-
-              for sheet in sheets:
-                  rows = SECTION.findall(sheet.read_text())
-                  if not rows:
-                      continue
-                  numbers = [int(n) for n, _ in rows]
-                  if numbers != list(range(1, len(numbers) + 1)):
-                      missing = [i for i in range(1, len(numbers) + 1) if i not in numbers]
-                      repeated = sorted({n for n in numbers if numbers.count(n) > 1})
-                      problems.append(
-                          f'{sheet}: the section numbering is not 1..{len(numbers)} — '
-                          f'missing {missing or "nothing"}, repeated {repeated or "nothing"}')
-
-                  shape = SHAPE.search(sheet.read_text())
-                  if not shape:
-                      problems.append(f'{sheet}: has a section list and no `sections` line in '
-                                      f'Shape to check it against')
-                      continue
-                  said = tuple(int(g) for g in shape.groups())
-                  kinds = [k for _, k in rows]
-                  counted = (len(rows), kinds.count('reading'),
-                             kinds.count('video'), kinds.count('practice'))
-                  if said != counted:
-                      problems.append(
-                          f'{sheet}: Shape says {said[0]} sections '
-                          f'({said[1]} reading, {said[2]} video, {said[3]} practice) and the '
-                          f'list holds {counted[0]} ({counted[1]}, {counted[2]}, {counted[3]})')
-
-          if problems:
-              print('design sheets:')
-              print('\n'.join('  ' + p for p in problems))
-              sys.exit(1)
-
-          print(f'OK — {len(sheets)} design sheet(s) at format {max(formats.values())}; '
-                f'{len(courses) - len(seen)} of {len(courses)} courses have none yet')
-          PY
+      # WHAT MOVING THEM BOUGHT is that they can be run before pushing. A
+      # heredoc inside a workflow answers only after a push, carries no test and
+      # cannot be pointed at a directory; `go run ./tools/check-design` is in
+      # `CLAUDE.md`'s list and has nine tests, four of them proved by breaking
+      # the real tree. It runs in `ci.yml` beside the other content checks,
+      # which is where a check over `content/` belongs.

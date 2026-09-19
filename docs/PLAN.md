@@ -155,7 +155,7 @@ contradicts the founding constraint.
 | C-02 | The cross-repository bridge dies; the file survives | The snapshot step existed only to cross the boundary the monorepo removes. A load job remains. |
 | C-03 | Prose in Markdown; structure and exercises in JSON | What a person might want to read, in Markdown — a diff per paragraph. What only the machine reads, in JSON, which wants strict validation. |
 | C-04 | Publication state: draft and published | Generate, verify, look at the diff, publish. Without a draft state, generating is publishing. |
-| C-05 | Provenance: which run produced what, at which verification level | When a wrong answer key surfaces, the question is not who wrote it — it is what else came out of the same run. |
+| C-05 | Provenance: which run produced what, at which verification level | When a wrong answer key surfaces, the question is not who wrote it — it is what else came out of the same run. **Amended:** the concern is right and the mechanism was a pipeline's. `C-14` puts the state in git, so a RUN is a commit — and `git log -S '<exercise id>'` finds the one that wrote a question while `git show` gives everything else that came out of it, with the message, the author, the date and the diff. A `provenance` column would be a second place recording what the commit already records, and it would record LESS: it can say *run 47* and cannot say what changed. The VERIFICATION LEVEL went the same way for a different reason. Three levels per item presumes something producing items at different depths; CI runs every check over the whole tree on every pull request, so a per-item level would hold one value in every row, which is a constant with a schema. The real per-item difference is elsewhere and is binary: a `code` or `expected-output` key cannot be executed while no sandbox exists, `validate-content` reports that on every run rather than skipping it, and `EXECUTOR.md` renders such a question `correct: null` — *unjudged never becomes failed*. That is derived from the type and needs no column. What survives whole is `RELEASES.md`'s use of it: a RELEASE records which checks passed, which is one row per release rather than per item. |
 | C-06 | Item analysis is the reviewer | Attempts, percentage correct, mean time and a discrimination index. A question everyone gets wrong is either excellent or broken; one that everyone gets right measures nothing; one the strong students fail and the weak ones pass is **inverted**, which happens with automatic generation. |
 | C-07 | The database is a derived mirror, and only the load job writes it | The server does not read files per request — it joins sections with progress, computes the free set, counts denominators. If they disagree, the file wins. The console reads the catalogue and never writes it. |
 | C-09 | Nothing joins by prose or position — only by a stable id | The predecessor joined exercises to lessons by the title text and keyed translations by array position. Both detach silently on an edit, and one of them shipped. With a machine rewriting titles they stop being hazards and become certainties. |
@@ -446,14 +446,19 @@ Migration of what already works: the catalogue in files with its load job, the g
 edge-crossing test at six viewport sizes, sidebar, search, course and track exams, certificates,
 the seven question types. No new content.
 
-**One thing here is not migration and is not done: answering the questions inside a lesson.** An
-exam can be sat and a card can be drilled, both on a screen; `lessonExercises()` returns an empty
-list. It is absent rather than unticked, which is the orphan failure again — nothing looks wrong,
-the item simply is not there, and every neighbouring box is ticked. What it needs is the
-present-then-mark pair the drill already uses (A-09) scoped to a lesson, because a lesson's
-questions cannot be served with their answers in them; the drill's own routes cannot be reused
-because they check `drillable`, which is precisely what keeps an exam question out of reach. Under
-A-10 the marking returns the chosen option's `why` and stores no score.
+**One thing here was not migration, and it is now built: answering the questions inside a
+lesson.** It stood in this paragraph for a long time as absent rather than unticked — an exam
+could be sat and a card drilled, both on a screen, while a lesson's questions were in the model,
+in the mirror and nowhere a student could reach. `internal/lesson` is the present-then-mark pair
+the drill uses (A-09), scoped to a lesson: `GET …/lessons/{lesson}/exercises` hands them over with
+the key removed and the order shuffled, and `POST …/exercises/{exercise}/answered` marks one,
+returning the chosen option's `why` and storing no score (A-10). The drill's own routes could not
+be reused, because they check `drillable` — which is precisely what keeps an exam question out of
+reach.
+
+*This paragraph described the gap for longer than the gap existed, which is the failure the rest
+of this file keeps naming: a claim nothing holds. It was found by reading `ui/app/screens/lesson.js`
+after a screenshot showed a lesson's questions on a screen.*
 
 *Done when: a student walks a whole track of `code` on the new platform — which includes answering
 the questions in a lesson, not only sitting its course's exam.*
@@ -479,22 +484,29 @@ restores access with progress intact.*
 ### 4 — The console, complete
 
 What the phase-0 events made possible: the world map with per-country statistics, presence, item
-analysis, generation provenance, the reported-content queue, email deliverability, the nightly
+analysis, the reported-content queue, email deliverability, the nightly
 rollup — and full cohorts and funnels, verified against synthetic history generated on purpose
 with abandonment, returns and refunds.
 
 *Done when: a question with a broken answer key is found by the statistics, and the funnel shows
 a drop at a step nobody suspected.*
 
-### 5 — The pipeline and the content
+### 5 — The content, and what stands in for a reviewer
 
-The last component of the system, and the first batch of what it produces: the generator writing
-material, exercises and exams, at three verification levels with provenance recorded. `code`
-first — starting with the seven entry courses that currently open onto an empty room — then
-`math`.
+The last component of the system, and the first batch of what it produces. `code` first —
+starting with the seven entry courses that currently open onto an empty room — then `math`.
 
-*Done when: a course is born end to end without anyone writing a sentence, and item analysis
-reports no inverted key.*
+**THIS PARAGRAPH DESCRIBED THE GENERATOR `C-14` REFUSES**, and its `Done when` was *"a course is
+born end to end without anyone writing a sentence"* — which is not a condition this system is
+trying to meet, it is the thing the decision below rules out. `ROADMAP.md` corrected its own
+half of it and said so; this half went on reading as the shape, which is the worse direction,
+because this file is the one the other cites.
+
+Generation is a person with an agent, on demand, into `content/`. What runs without a person is
+the CHECKING, because that is the half standing in for the reviewer nobody is going to be.
+
+*Done when: a course exists end to end — prose, figures, exercises, exam and script — with every
+check that stands in for a reviewer passing on it, and item analysis reports no inverted key.*
 
 ### 6 — Video and scale
 

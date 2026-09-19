@@ -11,6 +11,7 @@ import (
 
 	"github.com/codeschool-ing/schooling/internal/analysis"
 	"github.com/codeschool-ing/schooling/internal/event"
+	"github.com/codeschool-ing/schooling/internal/exam"
 	"github.com/codeschool-ing/schooling/internal/platform/device"
 )
 
@@ -110,8 +111,67 @@ enoughPeople is the smallest population this command will run for.
 */
 const readableMultiple = 3
 
-var enoughPeople = int(math.Ceil(
-	readableMultiple * float64(analysis.MinimumSample.Fallback) / reachesTheExam))
+/*
+AND THE POOL IS PART OF THE SUM, which it was not while a pool was six.
+
+	`enoughPeople` was a constant because the paper was the pool: every sitter
+	answered every question, so the answers on any one of them were exactly the
+	sitters. A real course carries a hundred and the paper draws twenty, and
+	then the answers on a question are the sitters times twenty over a hundred —
+	a fifth. A constant cannot say that, so this is a function of the pool and
+	the old constant is the value it returns for a pool at or under the draw.
+
+	IT ROUNDS UP TWICE ON PURPOSE. A population is people and a paper is
+	questions; asking for the fraction of either is asking for something nobody
+	can supply, and rounding down would make the promise this command refuses
+	below by a hair too small to keep.
+
+	MEASURED AT THE SHAPE A REAL COURSE HAS, over twenty seeds with a pool of a
+	hundred drawn twenty at a time: at the 834 this used to return the planted
+	key came back `inverted` NONE of the twenty times, every seed reporting
+	`insufficient` on about eight answers a question; at two thousand, twelve
+	times; at the five thousand and ninety-three it returns now, twenty out of
+	twenty, with a mean discrimination of −0.51.
+
+	AND THE SHORTER PAPER IS NOT THE WEAKER ONE. The worry was the opposite,
+	because `brokenSlope` below was calibrated on a six-question fixture and the
+	index was once wrong for short papers — but an attempt on a twenty-question
+	paper is ranked by nineteen other items where the fixture's is ranked by
+	five, so the effect measures STRONGER here than there (−0.51 against −0.38).
+	The length the correction was made for is six, and nothing this platform
+	draws is that short.
+*/
+func paperOf(pool int) int {
+	if pool > 0 && pool < exam.QuestionsPerAttempt.Fallback {
+		return pool
+	}
+	return exam.QuestionsPerAttempt.Fallback
+}
+
+// answersEach is how many answers each question of the pool collects when this
+// many people sit a paper drawn from it.
+func answersEach(sitters, pool int) int {
+	if pool <= 0 {
+		return 0
+	}
+	return int(float64(sitters) * float64(paperOf(pool)) / float64(pool))
+}
+
+// enoughPeopleFor is the smallest population this command will run for, given
+// the pool the school's exam actually holds.
+func enoughPeopleFor(pool int) int {
+	perQuestion := readableMultiple * float64(analysis.MinimumSample.Fallback)
+	spread := 1.0
+	if pool > paperOf(pool) {
+		spread = float64(pool) / float64(paperOf(pool))
+	}
+	return int(math.Ceil(math.Ceil(perQuestion*spread) / reachesTheExam))
+}
+
+// enoughPeople is what that answers where the paper is the whole pool, which is
+// every fixture in this package's tests and was every school until one course
+// carried more questions than a paper draws.
+var enoughPeople = enoughPeopleFor(exam.QuestionsPerAttempt.Fallback)
 
 /*
 How steeply the planted key inverts, and why it is steeper than it was.
@@ -560,9 +620,38 @@ func sit(r *rand.Rand, s shape, l *life, at *time.Time, to time.Time,
 	}
 	attempt := uuid.NewString()
 
-	right := make([]bool, len(s.questions))
+	/* THE PAPER IS A SAMPLE OF THE POOL, and it was the whole pool until a real
+	   one existed.
+
+	   Every sitter used to answer every question. That is what an exam looks
+	   like when the pool is the fixture's six, and it is not what one looks
+	   like when a course carries a hundred and `exam.QuestionsPerAttempt` draws
+	   twenty. Two things were wrong with modelling it that way and both run in
+	   the direction that flatters:
+
+	   ANSWERS PER QUESTION ARE A FIFTH OF WHAT THEY LOOKED LIKE. `enough` sized
+	   the population by counting SITTERS against the minimum sample, which is
+	   the same number only while every sitter answers everything. At a hundred
+	   and twenty, forty-five sitters give nine answers a question — the
+	   analysis says `insufficient` about the lot, and the run would have
+	   reported success.
+
+	   AND THE INDEX IS A DIFFERENT NUMBER ON A SHORT PAPER. Discrimination
+	   ranks each attempt by the REST of the paper, so the ranking is built from
+	   nineteen items rather than ninety-nine and is that much noisier. This is
+	   the regime the whole correction exists for — a backwards key scored +0.03
+	   on six questions and only reached `inverted` at twenty-four — so a
+	   demonstration that runs at a hundred is a demonstration in the one length
+	   where the old defect would also have passed.
+
+	   A POOL SHORTER THAN THE DRAW IS ASKED IN FULL, which is the catalogue's
+	   rule and keeps every fixture that has fewer questions than the draw
+	   behaving exactly as it did. */
+	asked := drawn(r, s.questions)
+
+	right := make([]bool, len(asked))
 	score := 0
-	for i, q := range s.questions {
+	for i, q := range asked {
 		var chance float64
 		if q.id == s.broken {
 			/* THE PLANTED KEY. The chance of getting it right goes DOWN with
@@ -581,24 +670,24 @@ func sit(r *rand.Rand, s shape, l *life, at *time.Time, to time.Time,
 		}
 	}
 
-	of := len(s.questions)
+	of := len(asked)
 	passMark := (of*60 + 99) / 100 // 60%, rounded up, as an integer of questions
 	passedIt := score >= passMark
 
 	l.moments = append(l.moments, moment{
 		name: "exam.submitted", at: *at, visitor: browser, account: 0, plan: plan,
 		payload: map[string]any{
-			"scope": "course", "exam": s.course,
+			"scope": "course", "exam": s.examCourse,
 			"score": score, "of": of, "pass_mark": passMark, "passed": passedIt,
 		},
 	})
 
-	for i, q := range s.questions {
+	for i, q := range asked {
 		*at = at.Add(time.Second)
 		l.moments = append(l.moments, moment{
 			name: event.ItemAnswered, at: *at, visitor: browser, account: 0, plan: plan,
 			payload: map[string]any{
-				"scope": "course", "exam": s.course,
+				"scope": "course", "exam": s.examCourse,
 				"exercise": q.id, "version": q.version, "type": q.kind,
 				"correct": right[i], "attempt": attempt,
 				"score": score, "of": of,
@@ -786,4 +875,32 @@ func studies(money *rand.Rand, s shape, l *life, from, until, to time.Time, brow
 			},
 		})
 	}
+}
+
+/*
+drawn is the paper: `exam.QuestionsPerAttempt` questions taken from the pool.
+
+	THE SHIPPED NUMBER AND NOT THE DEPLOYMENT'S, for the reason `enoughPeople`
+	already gives about the minimum sample: a seeder that read a console would
+	plant a different fixture on two machines running one command, and would
+	need a database open to answer a question about how many questions to ask.
+
+	IT IS A FRESH DRAW PER ATTEMPT, including a resit. That is what the platform
+	does — a paper is a sample of the pool and never the whole of it, which is
+	what makes an uncapped retake something other than a memory test — and it is
+	also what spreads the answers over the pool rather than concentrating them.
+
+	A POOL AT OR UNDER THE DRAW IS RETURNED WHOLE, in its own order, so every
+	fixture with fewer questions than the draw behaves exactly as it did before
+	the draw existed. `A pool smaller than the number is still asked in full`.
+*/
+func drawn(r *rand.Rand, pool []question) []question {
+	n := exam.QuestionsPerAttempt.Fallback
+	if len(pool) <= n {
+		return pool
+	}
+	picked := make([]question, len(pool))
+	copy(picked, pool)
+	r.Shuffle(len(picked), func(i, j int) { picked[i], picked[j] = picked[j], picked[i] })
+	return picked[:n]
 }

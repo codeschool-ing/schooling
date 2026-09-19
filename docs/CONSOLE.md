@@ -171,8 +171,17 @@ that section is first in the list, which is what makes it the landing route: the
   everything behind a VPN comes from, and hiding it would make the percentages lies
 - The failed job queue, with retry. Every attempt is a row, written before the work and closed
   after it — so a job that was killed leaves the one trace it will ever leave, and after an hour
-  the reader calls it **adrift** rather than busy. The retry is the part that is not built: it
-  would mean this console holding the right to start a job
+  the reader calls it **adrift** rather than busy. **The retry is built**, and what this line
+  said was missing is what it needed: the console holding the right to start a job, which is an
+  identity and a network path. It has both — `roles/run.invoker` ON THE JOB rather than on the
+  project, and a token the instance mints for itself from the metadata server, so there is no key
+  and nothing configured. What may be started is a **closed list of one**: the migration and the
+  catalogue load sit in the same project behind the same permission, one path parameter away, and
+  a route that passed the name through would be a general-purpose Cloud Run trigger wearing a
+  console's clothes. A deployment that cannot start a job at all — every laptop, and CI — gets no
+  button rather than one that always fails, and an **adrift** run does not block a start: adrift
+  is what a killed job leaves behind, nothing rewrites it, and treating it as busy would make a
+  job unstartable until somebody edited the database
   - and the same runs once as a strip, a bar per run, oldest at the left and as tall as the run
     took. It answers the two things the list cannot: **three failures scattered and three in a
     row are the same three rows and different diagnoses**, and a job that used to take forty

@@ -397,7 +397,7 @@ AND THAT REFUSAL IS ABOUT ITEM ANALYSIS, SO IT ONLY APPLIES WHERE THERE IS AN EX
 	is why it is here and not beside the run that found it.
 */
 func TestASchoolWithNoExamIsNotRefusedForItsSampleSize(t *testing.T) {
-	if err := enough(1, ""); err != nil {
+	if err := enough(1, "", 0); err != nil {
 		t.Errorf("one person was refused on a school with no exam question to plant a "+
 			"key on: %v — the funnel, the cohorts, presence and the map all want a "+
 			"population and none of them wants an exam", err)
@@ -405,11 +405,11 @@ func TestASchoolWithNoExamIsNotRefusedForItsSampleSize(t *testing.T) {
 
 	// AND WHERE THERE IS AN EXAM IT STILL REFUSES, which is the half that was
 	// already right and must stay right: the stream cannot be un-written.
-	if err := enough(1, "the-planted-question"); err == nil {
+	if err := enough(1, "the-planted-question", 6); err == nil {
 		t.Error("one person was accepted for a school with an exam, and item analysis " +
 			"says nothing below thirty answers to a question")
 	}
-	if err := enough(enoughPeople, "the-planted-question"); err != nil {
+	if err := enough(enoughPeople, "the-planted-question", 6); err != nil {
 		t.Errorf("%d people is the number this command computes as enough and it was "+
 			"refused: %v", enoughPeople, err)
 	}
@@ -945,4 +945,127 @@ func TestTheSeededDevicesAreTheFourThePlatformKnows(t *testing.T) {
 				what, many, seen[device.Unknown], device.Unknown)
 		}
 	}
+}
+
+/*
+AND THE SAME PROMISE AT THE SHAPE A REAL COURSE HAS, which is not the shape of
+every fixture above.
+
+	The two tests above use a pool of six, where `exam.QuestionsPerAttempt`
+	draws the whole thing and every sitter answers every question. That was
+	every school this platform had, so it was the only shape there was to test
+	— and it is the one shape in which the sizing arithmetic cannot be wrong,
+	because the answers on a question ARE the sitters.
+
+	`sql-databases` carries a hundred and the paper draws twenty. Measured over
+	twenty seeds at the population the command used to allow, the planted key
+	came back `inverted` ZERO times out of twenty: every seed said
+	`insufficient`, on about eight answers a question, because the sitters were
+	being counted as though each had answered the pool. The old check passed
+	that population and the run would then have failed on the analysis — which
+	is the loud half of the failure and the misleading half, because the
+	sentence blames the index for a population that was a fifth of what it
+	needed.
+
+	At two thousand it is found twelve times in twenty, which is the middle
+	`readableMultiple` exists to keep this command out of. At the number it now
+	computes it is found on every seed, with a mean discrimination of −0.51.
+
+	THE INDEX IS NOT WEAKER ON THE SHORTER PAPER, which is worth writing down
+	because the opposite was the worry: ranking an attempt by the rest of a
+	twenty-question paper uses nineteen items where the six-question fixture
+	uses five, and the effect comes out STRONGER here (−0.51 against −0.38).
+	The regime the correction was made for is six, not twenty.
+*/
+func TestThePlantedKeyIsFoundAtTheShapeARealCourseHas(t *testing.T) {
+	const pool = 100
+	missed := plantedKeyOver(t, pool, enoughPeopleFor(pool))
+	if len(missed) > 0 {
+		t.Errorf("at a pool of %d drawn %d at a time, the planted key was missed on %d "+
+			"seed(s) — and this is the population the command refuses below, so it is the "+
+			"promise it makes:\n  %s",
+			pool, paperOf(pool), len(missed), strings.Join(missed, "\n  "))
+	}
+}
+
+// AND THE POPULATION IT REFUSES IS REFUSED FOR THE RIGHT REASON. A pool of a
+// hundred needs five times the people a pool of twenty does, and the old
+// constant said they were the same number.
+func TestAWiderPoolNeedsMorePeople(t *testing.T) {
+	narrow, wide := enoughPeopleFor(20), enoughPeopleFor(100)
+	if wide < narrow*4 {
+		t.Errorf("a pool of 100 asks for %d people and a pool of 20 for %d — a paper draws "+
+			"twenty of either, so the wider pool spreads the same sitters over five times "+
+			"the questions and has to ask for about five times as many", wide, narrow)
+	}
+	if err := enough(narrow, "the-planted-question", 100); err == nil {
+		t.Errorf("%d people was accepted for a pool of 100, where it puts about %d answers "+
+			"on each question and item analysis says nothing below %d",
+			narrow, answersEach(int(float64(narrow)*reachesTheExam), 100),
+			analysis.MinimumSample.Fallback)
+	}
+}
+
+// plantedKeyOver runs the model over twenty-five seeds at one pool size and
+// answers which of them failed to call the planted question inverted.
+func plantedKeyOver(t *testing.T, pool, people int) []string {
+	t.Helper()
+	to := time.Now().UTC()
+	from := to.AddDate(0, -6, 0)
+
+	const seeds = 25
+	var missed []string
+	for seed := int64(1); seed <= seeds; seed++ {
+		s := shape{
+			id: uuid.New(), slug: "seeded", track: "tr-one", course: "co-one",
+			examCourse: "co-one", lesson: "le-one",
+			sections: []string{"se-1", "se-2", "se-3"},
+			broken:   "ex-1",
+		}
+		for i := 1; i <= pool; i++ {
+			id := fmt.Sprintf("ex-%d", i)
+			s.questions = append(s.questions,
+				question{id: id, version: 1, kind: "quiz", ease: easeOf(id)})
+		}
+		lives := populate(
+			rand.New(rand.NewSource(seed)),   //nolint:gosec // repeatable on purpose
+			rand.New(rand.NewSource(seed+1)), //nolint:gosec // the same
+			rand.New(rand.NewSource(seed+2)), //nolint:gosec // the same again
+			s, from, to, people)
+
+		got, err := analysis.Summarise(answersTo(lives, s.broken), analysis.MinimumSample.Fallback)
+		if err != nil {
+			t.Fatalf("summarising seed %d: %v", seed, err)
+		}
+		if got.Verdict != analysis.VerdictInverted {
+			missed = append(missed, fmt.Sprintf("seed %d: %s (%d answers, discrimination %+.2f)",
+				seed, got.Verdict, got.Attempts, got.Discrimination))
+		}
+	}
+	return missed
+}
+
+// answersTo collects one question's answers out of a seeded population.
+func answersTo(lives []life, id string) []analysis.Answer {
+	var out []analysis.Answer
+	for _, l := range lives {
+		for _, m := range l.moments {
+			if m.name != event.ItemAnswered {
+				continue
+			}
+			at, _ := m.payload["exercise"].(string)
+			if at != id {
+				continue
+			}
+			correct, _ := m.payload["correct"].(bool)
+			attempt, _ := m.payload["attempt"].(string)
+			score, _ := m.payload["score"].(int)
+			of, _ := m.payload["of"].(int)
+			out = append(out, analysis.Answer{
+				ExerciseID: id, Version: 1, Type: "quiz", AttemptID: attempt,
+				Correct: correct, Score: score, Of: of, AnsweredAt: m.at,
+			})
+		}
+	}
+	return out
 }

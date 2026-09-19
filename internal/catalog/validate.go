@@ -487,9 +487,13 @@ func checkExercises(s *School) []error {
 	// checked, which is the same scope the pictures themselves have.
 	used := map[string]bool{}
 
-	// `pictures` is nil only for a TRACK final: a track is one JSON file with
-	// nowhere to keep an image. A course exam has its course's.
-	check := func(where string, sections, pictures map[string]bool, exercises []Exercise) {
+	/* `pictures` is nil only for a TRACK final: a track is one JSON file with
+	   nowhere to keep an image. A course exam has its course's.
+
+	   `exam` is passed rather than read off `sections == nil`, which is already
+	   true of exactly the same files. One flag standing for two decisions is
+	   how the second one gets changed by somebody fixing the first. */
+	check := func(where string, exam bool, sections, pictures map[string]bool, exercises []Exercise) {
 		for _, e := range exercises {
 			problems = append(problems, checkID(e.ID, "ex", "the exercise in "+where)...)
 
@@ -513,6 +517,31 @@ func checkExercises(s *School) []error {
 			}
 			if strings.TrimSpace(e.Prompt) == "" {
 				problems = append(problems, fmt.Errorf("%s/%s has no prompt", where, e.ID))
+			}
+
+			/* AN EXAM QUESTION IS NOT A DRILL CARD, and nothing below this file
+			   would have said so.
+
+			   `CONTENT.md` calls the pool "sealed" and says it never reaches
+			   the practice globals. Nothing held that: the drill queue selects
+			   on `drillable` ALONE — there is no `AND NOT exam` in either query
+			   — so a `true` written here would have put the paper's own
+			   questions into practice, where `grade.Expected` hands the key
+			   back with the verdict because revealing it is what a drill is
+			   FOR. The pool would leak one card at a time, to the students who
+			   drill most, and every screen involved would be working exactly as
+			   designed.
+
+			   It is refused here rather than filtered there, because this is
+			   the door: `cmd/load` validates first and writes nothing if
+			   anything is wrong, so a question the mirror never receives cannot
+			   be drawn by a query that forgot about it. A reader that has to
+			   remember is the arrangement this catches. */
+			if exam && e.Drillable {
+				problems = append(problems, fmt.Errorf(
+					"%s/%s is an exam question marked drillable — the drill reveals the key "+
+						"with the verdict, so this would hand out the paper one card at a "+
+						"time to whoever practises most", where, e.ID))
 			}
 
 			// sections is nil for an exam, which belongs to no lesson.
@@ -591,7 +620,7 @@ func checkExercises(s *School) []error {
 			for _, sec := range l.Sections {
 				sections[sec.ID] = true
 			}
-			check(c.Slug+"/"+l.ID, sections, pictures, l.Exercises)
+			check(c.Slug+"/"+l.ID, false, sections, pictures, l.Exercises)
 
 			/* AND A PRACTICE SECTION WITH NOTHING FILED UNDER IT, which is the
 			   other direction again and the one that had already shipped.
@@ -625,7 +654,7 @@ func checkExercises(s *School) []error {
 				}
 			}
 		}
-		check(c.Slug+"/exam", nil, pictures, c.Exam)
+		check(c.Slug+"/exam", true, nil, pictures, c.Exam)
 
 		// AND THE OTHER DIRECTION, for pictures as it already is for prose. A
 		// file nothing asks about is work that was done and forgotten: it sits
@@ -650,7 +679,7 @@ func checkExercises(s *School) []error {
 	// by the same rules — an exam that belongs to a track rather than a course is
 	// a different place to look for it, not a different kind of question (A-08).
 	for _, t := range s.Tracks {
-		check(t.Slug+"/exam", nil, nil, t.Exam)
+		check(t.Slug+"/exam", true, nil, nil, t.Exam)
 	}
 
 	return problems

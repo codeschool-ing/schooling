@@ -166,7 +166,7 @@ func run(args []string, out io.Writer) error {
 		return err
 	}
 
-	if err := enough(o.people, shape.broken); err != nil {
+	if err := enough(o.people, shape.broken, len(shape.questions)); err != nil {
 		return err
 	}
 
@@ -348,9 +348,11 @@ HOW MANY PEOPLE IT TAKES IS ARITHMETIC, AND IT IS SAID BEFORE ANYTHING IS WRITTE
 	afterwards.
 
 	AND IT ONLY APPLIES WHERE THERE IS AN EXAM. `planted` is the question this
-	run will plant an inverted key on, and it is empty for a school with no exam
-	questions at all — which is every school this platform has today, because the
-	content pipeline has not written one. Asked for fifty seeded people there,
+	run will plant an inverted key on, and it is empty where the course this
+	command reaches has no exam — which was every school this platform had until
+	`sql-databases` got a pool, and is STILL every school, because that course is
+	position 3 or worse in every track that shows it and this command only ever
+	looks at position 0. Asked for fifty seeded people there,
 	the first version refused, and cited a minimum sample for an analysis that
 	cannot run on a school with nothing to analyse. The arithmetic was right and
 	the reason was one that could not apply, which is the harder kind of wrong to
@@ -359,26 +361,54 @@ HOW MANY PEOPLE IT TAKES IS ARITHMETIC, AND IT IS SAID BEFORE ANYTHING IS WRITTE
 	A population that size is still worth having. It is the funnel, the cohorts,
 	presence and the map, none of which need an exam.
 */
-func enough(people int, planted string) error {
+func enough(people int, planted string, pool int) error {
 	if planted == "" {
 		return nil
 	}
-	if sitters := int(float64(people) * reachesTheExam); sitters < analysis.MinimumSample.Fallback {
+
+	/* SITTERS ARE NOT ANSWERS PER QUESTION, and counting them as if they were
+	   is how this refusal came to be wrong by the ratio of the pool to the
+	   paper.
+
+	   It compared sitters against the minimum sample, which is the same number
+	   only while every sitter answers every question — true of a fixture whose
+	   pool is six and false of a course whose pool is a hundred and whose paper
+	   draws twenty. There, forty-five sitters put nine answers on each
+	   question, item analysis says `insufficient` about all of them, and this
+	   check passed. The arithmetic was right about a shape that no longer
+	   exists, which is the same failure this comment block already records
+	   once. */
+	sitters := int(float64(people) * reachesTheExam)
+	if got := answersEach(sitters, pool); got < readableMultiple*analysis.MinimumSample.Fallback {
 		return fmt.Errorf(
-			"%d people would put about %d of them through an exam, and item analysis says "+
-				"nothing below %d answers to a question — ask for at least %d people, or accept "+
-				"a population nothing can be read from",
-			people, sitters, analysis.MinimumSample.Fallback, enoughPeople)
+			"%d people would put about %d of them through an exam, and a paper of %d drawn "+
+				"from a pool of %d puts about %d answers on each question — item analysis "+
+				"says nothing below %d, and this command sizes for %d so the demonstration "+
+				"works rather than works half the time. Ask for at least %d people, or "+
+				"accept a population nothing can be read from",
+			people, sitters, paperOf(pool), pool, got,
+			analysis.MinimumSample.Fallback, readableMultiple*analysis.MinimumSample.Fallback,
+			enoughPeopleFor(pool))
 	}
 	return nil
 }
 
 func verify(ctx context.Context, pool *pgxpool.Pool, shape shape, out io.Writer) error {
 	if shape.broken == "" {
-		say(out, "%s\n", "this school has no exam questions, so there was nothing to plant "+
-			"a broken key on and item analysis has nothing to find")
+		/* NAMING WHAT WAS LOOKED IN, because the sentence that used to be here
+		   named the SCHOOL and described one course. It said "this school has
+		   no exam questions" while the school held a hundred of them in the
+		   third course of a track, and a line that reads as authoritative sends
+		   whoever believes it to look where there is nothing to find. Every
+		   course in the school is searched now, so the sentence is true again
+		   — and it says so rather than assuming the reader knows. */
+		say(out, "no course in this school has an exam, so there was nothing to plant a "+
+			"broken key on and item analysis has nothing to find\n")
 		return nil
 	}
+
+	// AND WHERE IT HAD TO GO TO FIND ONE, which is the liberty this run took.
+	say(out, "the exam is %s's: %s\n", shape.examCourseSlug, shape.examWhere)
 
 	answers, err := event.NewStore(pool).ItemAnswers(ctx, shape.id, time.Time{},
 		event.CountingSeeded)
