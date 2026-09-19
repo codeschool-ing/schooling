@@ -630,17 +630,36 @@ check that stands in for a reviewer passing on it, and item analysis reports no 
 
   **WHAT THE COUNT ACTUALLY IS, measured rather than remembered** (2026-09-19). Three courses of
   122 have prose and exercises in both languages — `linux-terminal` (13 lessons), `sql-databases`
-  (13) and `web-fundamentals` (11). **None of the three has an `exam.json`**: there is not one
-  exam file anywhere in `content/`, for any course or any track. None has a spoken script. One
-  `images/` directory exists in the whole tree.
+  (13) and `web-fundamentals` (11). None has a spoken script, and one `images/` directory exists
+  in the whole tree.
 
   That is the honest shape of this phase, and it is the opposite of what the commit log suggests:
   the phase with the most work in it is furthest from its own `Done when`, because the condition
-  asks for ONE course complete — prose, figures, exercises, **exam** and script — and what has
-  been built is the first two thirds of three. The next thing this phase needs is not another
-  course. It is the missing third of one of the three that exist, and the exam is the half of it
-  that the certificate, the item analysis and the whole of phase 4's `Done when` rest on: the
-  machinery that finds a broken answer key has never had a real answer key to read
+  asks for ONE course complete — prose, figures, exercises, exam and script — and what has been
+  built is most of three. The next thing this phase needs is not another course; it is the rest
+  of one of the three that exist.
+
+  **THE EXAM WAS THE FIRST OF THOSE AND IT IS WRITTEN.** The sentence above said, on the morning
+  it was written, that there was not one exam file anywhere in `content/`, for any course or any
+  track — which was true, and was the sharpest thing in the paragraph, because a certificate
+  rests on an exam (A-08) and the machinery that finds a broken answer key had never had a real
+  key to read. `sql-databases` now carries a hundred, which is the five-to-one `A-11` asks for
+  against the default draw of twenty, in both languages and across all thirteen lessons.
+
+  Two things had to be built before the questions could be trusted, and each was a claim nothing
+  held. `check-exercises` measured a lesson's battery and nothing else, so the exam — the one
+  paper where guessing the longest option buys a certificate — was the file with the most at
+  stake and no ruler over it; it could not be noticed by running the tool, because a glob that
+  never matched an exam never failed to. And `CONTENT.md` called the pool *sealed* while the
+  drill queue selected on `drillable` alone, so one word in an exam file would have handed the
+  paper out a card at a time to whoever practises most.
+
+  The ruler then did its work on the author. It found the correct option as the longest in 86%
+  of one batch and 52% of another, the correct option first in fifteen of twenty, three prompt
+  echoes and three hedges living only in the right answer — none of which reading would have
+  caught. What fixed most of it was not mechanical: **an option states the claim and the `why`
+  explains it**, and writing both in the option is exactly what makes the right answer the
+  longest
 - [ ] Three verification levels recorded per item — structure, execution, critiqued
 - [ ] Provenance recorded on everything written
 - [ ] ~~It is resumable: it knows what it has already written and does not start over~~ — **the question does not exist.** `C-14` puts the state in git: what has been written is what is committed, and a rewrite is a diff somebody reads. Resumability is a property of a long-running job, and there is no job
