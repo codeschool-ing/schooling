@@ -267,12 +267,26 @@ and the rest of the palette resolve and the drawing is right in both themes. An 
 background that is wrong on half the visits — which is why `image` is for photographs and
 screenshots and not for diagrams.
 
-**The palette is this application's, and there is no check that it is.** `paper`, `paper-dim`,
-`panel`, `scan`, `wire`, `phosphor`, `phosphor-dim`, `amber` and `ink` — where **`ink` is the
-ground and `paper` is what is written on it**, which catches everybody once. A token that does not
-exist resolves to nothing and the figure renders invisible. The thirteen figures of
-`web-fundamentals` lesson 1 were drawn against a different palette and were one command away from
-shipping exactly like that.
+**The palette is this application's, and `tools/check-figures` is now the check that it is.**
+`paper`, `paper-dim`, `panel`, `scan`, `wire`, `phosphor`, `phosphor-dim`, `amber` and `ink` —
+where **`ink` is the ground and `paper` is what is written on it**, which catches everybody once.
+A token that does not exist resolves to nothing and the figure renders invisible. The thirteen
+figures of `web-fundamentals` lesson 1 were drawn against a different palette and were one
+command away from shipping exactly like that.
+
+That sentence said *there is no check* for as long as the figures existed, which made it the
+clearest statement of a gap in this file and the least likely to be acted on — a document that
+names its own hole reads as a document in control of it. The tool reads the tokens **out of
+`base.css` and `terminal.css`** rather than listing them, so a colour added to either is
+available to a figure the same day; it reads the translations too, because a token broken while
+translating takes the drawing away from the Portuguese reader and from nobody else; and it names
+the token somebody probably meant, since a typo is the whole population of this failure.
+
+**A literal colour is counted and not refused**, and the count is printed on every run. A
+captured terminal carries fixed values on purpose — `term-capture` writes them and this file's
+own `--term-*` paragraph says at what contrast — so a rule against them would be a rule against
+91 correct drawings. Saying *counted and not judged* out loud is the difference between a check
+with a known edge and one that quietly found nothing.
 
 **`tools/figure-contrast` is the check there was not.** It reads every `<tspan>` in every figure
 against whatever is painted behind it, in both themes, at AA — and a token that resolves to

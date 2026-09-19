@@ -1530,6 +1530,8 @@ go run ./tools/validate-content   # the answer keys, not only the schema
 go run ./tools/check-exercises    # and whether the keys can be found without the material
 go run ./tools/check-design       # and whether what was written is what the sheet designed —
                                   # it refuses a disagreement of fact and only reports a budget
+go run ./tools/check-figures       # and whether every diagram names a colour that exists: a
+                                  # token nothing defines renders the shape invisible
 go run ./tools/check-interface    # every string the interface says, in every language it claims
 go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has
