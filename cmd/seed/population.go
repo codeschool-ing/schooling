@@ -588,7 +588,7 @@ func sit(r *rand.Rand, s shape, l *life, at *time.Time, to time.Time,
 	l.moments = append(l.moments, moment{
 		name: "exam.submitted", at: *at, visitor: browser, account: 0, plan: plan,
 		payload: map[string]any{
-			"scope": "course", "exam": s.course,
+			"scope": "course", "exam": s.examCourse,
 			"score": score, "of": of, "pass_mark": passMark, "passed": passedIt,
 		},
 	})
@@ -598,7 +598,7 @@ func sit(r *rand.Rand, s shape, l *life, at *time.Time, to time.Time,
 		l.moments = append(l.moments, moment{
 			name: event.ItemAnswered, at: *at, visitor: browser, account: 0, plan: plan,
 			payload: map[string]any{
-				"scope": "course", "exam": s.course,
+				"scope": "course", "exam": s.examCourse,
 				"exercise": q.id, "version": q.version, "type": q.kind,
 				"correct": right[i], "attempt": attempt,
 				"score": score, "of": of,

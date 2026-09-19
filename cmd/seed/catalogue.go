@@ -57,20 +57,33 @@ type shape struct {
 	// course has no exam.
 	broken string
 
-	/* AND WHAT THE SCHOOL HAS THAT THIS COMMAND CANNOT REACH.
+	/* AND WHICH COURSE'S EXAM IS BEING SAT, which is not always this track's.
 
-	   `courseSlug` is the course the exam is looked for in, and `examElsewhere`
-	   counts the exam questions this school holds in every OTHER course. Both
-	   exist for one sentence at the end of a run, and that sentence used to be
-	   wrong: it said "this school has no exam questions" while naming nothing,
-	   so a school with a hundred of them in the third course of a track read as
-	   a school with none.
+	   The command used to look in ONE course — the first of the first track —
+	   and report "this school has no exam questions" when it found none. That
+	   sentence named the school and described a course, so a school holding a
+	   hundred of them in the third course of a track read as a school holding
+	   none. A message that names the wrong scope is worse than one that says
+	   nothing: it is believed, and it sends whoever read it to look where there
+	   is nothing to find.
 
-	   A message that names the wrong scope is worse than one that says nothing,
-	   because it is believed and it sends whoever read it to look in a place
-	   where there is nothing to find. */
-	courseSlug    string
-	examElsewhere int
+	   It now takes the SHALLOWEST course that has a pool — the free one, then
+	   the one a subscription buys, then anywhere in the school — because a
+	   catalogue writes its material in the order somebody has time for rather
+	   than in the order the tracks declare, and the one finished course is
+	   position 3 or worse in every track that shows it.
+
+	   THE COST IS SAID OUT LOUD RATHER THAN HIDDEN. Where the exam is not the
+	   free course's, the seeded population sits a paper for a course whose
+	   lessons it never opened: the funnel and the exam are then about different
+	   courses, which is incoherent as a portrait of a student and is exactly
+	   right as a fixture for item analysis, whose whole input is the answers.
+	   The run says which course it used and how far down it had to go. */
+	courseSlug string
+
+	examCourse     string
+	examCourseSlug string
+	examWhere      string
 }
 
 // question is one exam question, with how easy this seeder will make it.
@@ -166,31 +179,32 @@ func shapeOf(ctx context.Context, pool *pgxpool.Pool, slug string) (shape, error
 		`SELECT slug FROM catalog_courses WHERE tenant_id = $1 AND id = $2`,
 		s.id, s.course).Scan(&s.courseSlug)
 
-	// AND WHAT IS OUT OF REACH, counted so the run can say so by name.
-	_ = pool.QueryRow(ctx, `
-		SELECT count(*) FROM catalog_exercises
-		WHERE tenant_id = $1 AND exam AND course_id IS DISTINCT FROM $2
-	`, s.id, s.course).Scan(&s.examElsewhere)
+	if err := examCourseOf(ctx, pool, &s); err != nil {
+		return s, err
+	}
+	if s.examCourse == "" {
+		return s, nil // no pool anywhere: `verify` says so and the run is still worth having
+	}
 
 	questions, err := pool.Query(ctx, `
 		SELECT id, version, type FROM catalog_exercises
 		WHERE tenant_id = $1 AND course_id = $2 AND exam
 		ORDER BY id
-	`, s.id, s.course)
+	`, s.id, s.examCourse)
 	if err != nil {
-		return s, fmt.Errorf("reading the exam of %s: %w", s.course, err)
+		return s, fmt.Errorf("reading the exam of %s: %w", s.examCourseSlug, err)
 	}
 	defer questions.Close()
 	for questions.Next() {
 		var q question
 		if err := questions.Scan(&q.id, &q.version, &q.kind); err != nil {
-			return s, fmt.Errorf("reading the exam of %s: %w", s.course, err)
+			return s, fmt.Errorf("reading the exam of %s: %w", s.examCourseSlug, err)
 		}
 		q.ease = easeOf(q.id)
 		s.questions = append(s.questions, q)
 	}
 	if err := questions.Err(); err != nil {
-		return s, fmt.Errorf("reading the exam of %s: %w", s.course, err)
+		return s, fmt.Errorf("reading the exam of %s: %w", s.examCourseSlug, err)
 	}
 
 	/* THE BROKEN ONE IS THE FIRST BY ID, which is a choice with no meaning and
@@ -258,4 +272,81 @@ func paidLessonOf(ctx context.Context, pool *pgxpool.Pool, s *shape) error {
 		s.paidSections = append(s.paidSections, id)
 	}
 	return rows.Err()
+}
+
+/*
+examCourseOf picks the course whose exam this run plants a broken key on.
+
+	IN ORDER OF HOW FAR IT IS FROM THE STUDENT THIS RUN INVENTED. The free
+	course first, because that is the paper the seeded population would really
+	have sat; then the course a subscription buys, which the same population
+	reaches and pays for; then the shallowest course in the school that has a
+	pool at all, which is none of their story and is still the only way item
+	analysis gets anything to read.
+
+	THE ORDER IS THE ARGUMENT. Taking the first course with a pool by id would
+	work identically for the analysis and would say nothing about how big a
+	liberty was taken — and the liberty is the thing worth reporting, because
+	it is what makes the funnel and the exam describe different courses.
+
+	"Shallowest" is the smallest (track position, course position) the course
+	holds anywhere, so a course that is fourth in one track and ninth in another
+	is judged on the fourth. A course in no track sorts last rather than being
+	refused: it is unreachable by a student and its questions are still answers.
+*/
+func examCourseOf(ctx context.Context, pool *pgxpool.Pool, s *shape) error {
+	has := func(course string) (bool, error) {
+		if course == "" {
+			return false, nil
+		}
+		var n int
+		err := pool.QueryRow(ctx, `
+			SELECT count(*) FROM catalog_exercises
+			WHERE tenant_id = $1 AND course_id = $2 AND exam
+		`, s.id, course).Scan(&n)
+		return n > 0, err
+	}
+
+	for _, at := range []struct {
+		course, where string
+	}{
+		{s.course, "the free course, which is the paper this population would have sat"},
+		{s.paidCourse, "the course a subscription buys, which this population reaches and pays for"},
+	} {
+		found, err := has(at.course)
+		if err != nil {
+			return fmt.Errorf("looking for an exam in %s: %w", at.course, err)
+		}
+		if found {
+			s.examCourse, s.examWhere = at.course, at.where
+			return pool.QueryRow(ctx,
+				`SELECT slug FROM catalog_courses WHERE tenant_id = $1 AND id = $2`,
+				s.id, at.course).Scan(&s.examCourseSlug)
+		}
+	}
+
+	switch err := pool.QueryRow(ctx, `
+		SELECT c.id, c.slug
+		FROM catalog_courses c
+		WHERE c.tenant_id = $1
+		  AND EXISTS (
+		      SELECT 1 FROM catalog_exercises e
+		      WHERE e.tenant_id = c.tenant_id AND e.course_id = c.id AND e.exam)
+		ORDER BY (
+		    SELECT min(ARRAY[t.position, tc.position])
+		    FROM catalog_track_courses tc
+		    JOIN catalog_tracks t ON t.tenant_id = tc.tenant_id AND t.id = tc.track_id
+		    WHERE tc.tenant_id = c.tenant_id AND tc.course_id = c.id
+		) NULLS LAST, c.slug
+		LIMIT 1
+	`, s.id).Scan(&s.examCourse, &s.examCourseSlug); {
+	case err == nil:
+		s.examWhere = "neither of those, so this population sits a paper for a course whose " +
+			"lessons it never opened — the funnel and the exam are about different courses here"
+		return nil
+	case errors.Is(err, pgx.ErrNoRows):
+		return nil // no pool anywhere in the school
+	default:
+		return fmt.Errorf("looking for a course with an exam: %w", err)
+	}
 }

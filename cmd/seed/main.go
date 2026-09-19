@@ -377,29 +377,20 @@ func enough(people int, planted string) error {
 
 func verify(ctx context.Context, pool *pgxpool.Pool, shape shape, out io.Writer) error {
 	if shape.broken == "" {
-		/* NAMING WHAT WAS LOOKED AT, because the sentence that used to be here
-		   named the school and was false the day a course got a pool.
-
-		   The exam is looked for in ONE course: the first of the first track,
-		   which is the free tier and the only thing a seeded population is
-		   certain to be able to open. A school can therefore hold a hundred
-		   exam questions and still be reported as holding none — which is
-		   exactly what happened, and the reader is sent to look in the wrong
-		   place by a line that reads as authoritative. */
-		say(out, "%s has no exam questions, and that is the only course this command looks "+
-			"in: the first of the first track, which is the free tier and the one thing a "+
-			"seeded population can certainly open\n", shape.courseSlug)
-		if shape.examElsewhere > 0 {
-			say(out, "this school has %d exam question(s) in OTHER courses, which this "+
-				"command cannot reach — so the broken key was not planted and item analysis "+
-				"has nothing to find, and that is a limit of the seeder rather than of the "+
-				"catalogue\n", shape.examElsewhere)
-		} else {
-			say(out, "%s\n", "nor has any other course in this school, so there was nothing "+
-				"to plant a broken key on and item analysis has nothing to find")
-		}
+		/* NAMING WHAT WAS LOOKED IN, because the sentence that used to be here
+		   named the SCHOOL and described one course. It said "this school has
+		   no exam questions" while the school held a hundred of them in the
+		   third course of a track, and a line that reads as authoritative sends
+		   whoever believes it to look where there is nothing to find. Every
+		   course in the school is searched now, so the sentence is true again
+		   — and it says so rather than assuming the reader knows. */
+		say(out, "no course in this school has an exam, so there was nothing to plant a "+
+			"broken key on and item analysis has nothing to find\n")
 		return nil
 	}
+
+	// AND WHERE IT HAD TO GO TO FIND ONE, which is the liberty this run took.
+	say(out, "the exam is %s's: %s\n", shape.examCourseSlug, shape.examWhere)
 
 	answers, err := event.NewStore(pool).ItemAnswers(ctx, shape.id, time.Time{},
 		event.CountingSeeded)
