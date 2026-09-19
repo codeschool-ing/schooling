@@ -282,6 +282,13 @@ available to a figure the same day; it reads the translations too, because a tok
 translating takes the drawing away from the Portuguese reader and from nobody else; and it names
 the token somebody probably meant, since a typo is the whole population of this failure.
 
+**And `tools/figure-shot` renders one to a PNG in both themes, so somebody can look at it.**
+The two tools answer different questions and neither covers the other: `check-figures` asks
+whether a colour names a token that exists, which is the failure with no symptom, and cannot ask
+whether two things overlap or a label runs off the edge — all three are perfectly valid SVG. The
+first figure drawn after that tool existed had a note at the right-hand edge sitting on the last
+block's own text, and every check in this repository passed it. It took one render to see.
+
 **A literal colour is counted and not refused**, and the count is printed on every run. A
 captured terminal carries fixed values on purpose — `term-capture` writes them and this file's
 own `--term-*` paragraph says at what contrast — so a rule against them would be a rule against
