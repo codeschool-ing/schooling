@@ -67,6 +67,20 @@ type Handler struct {
 	// are functions for that reason, arrived at from three directions.
 	passMark func(ctx context.Context) int
 
+	/* examQuestions is how many a paper draws, and it is here for the sentence
+	   right above it, one number along.
+
+	   The card at the foot of a course prints "N questions drawn · minimum M%"
+	   before any exam has been started, so there is no paper to read either
+	   number off. `passMark` was handed in for exactly that; N was a
+	   `COURSE_QUESTIONS = 10` written into the interface, which is the same two
+	   copies of one decision — and it disagreed with the server, which draws
+	   twenty. A student read ten on the card and was given twenty on the paper.
+
+	   A FUNCTION FOR THE THIRD FIELD'S REASON: `0046` made it a declared
+	   parameter, so it moves on a console screen while this process runs. */
+	examQuestions func(ctx context.Context) int
+
 	// instalments is the most parts a card sale may be split into.
 	//
 	// HANDED IN FOR passMark's REASON EXACTLY: `billing` owns it and a module may
@@ -136,11 +150,11 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark, instalments, pixDiscount func(ctx context.Context) int,
+func NewHandler(passMark, examQuestions, instalments, pixDiscount func(ctx context.Context) int,
 	offer Offer) *Handler {
 
 	return &Handler{
-		passMark: passMark, instalments: instalments,
+		passMark: passMark, examQuestions: examQuestions, instalments: instalments,
 		pixDiscount: pixDiscount, offer: offer,
 	}
 }
@@ -183,6 +197,26 @@ func (h *Handler) theMark(ctx context.Context) int {
 		return mark
 	}
 	return 100
+}
+
+/*
+theDraw is how many questions a course card says its paper will hold.
+
+	AN UNWIRED HANDLER SAYS ZERO, and that is the only one of these four whose
+	safe answer is nothing rather than a number. The card reads it as "the
+	server has not said", and says the exam is there without claiming a length —
+	where a made-up length is a promise the paper then breaks. The other three
+	guard a number because their wire formats cannot say nothing; this one can,
+	which is why it is `omitempty`.
+*/
+func (h *Handler) theDraw(ctx context.Context) int {
+	if h.examQuestions == nil {
+		return 0
+	}
+	if n := h.examQuestions(ctx); n > 0 {
+		return n
+	}
+	return 0
 }
 
 /*
@@ -252,6 +286,12 @@ type schoolBody struct {
 	// "no minimum" would say an exam is passed by answering nothing.
 	PassMark int `json:"passMark"`
 
+	// How many questions a paper draws. `omitempty` HERE AND NOWHERE ELSE in
+	// this body: absent means the server did not say, and a card that then
+	// prints no number is honest, where the three fields above have no way to
+	// say nothing and so must carry a safe one. See theDraw.
+	ExamQuestions int `json:"examQuestions,omitempty"`
+
 	// The most parts a card sale may be split into. NOT `omitempty` for
 	// `passMark`'s reason: zero is not a policy anybody set, and a screen
 	// reading a missing key as "no limit" would draw a picker the server
@@ -306,9 +346,10 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 
 	web.JSON(w, http.StatusOK, schoolBody{
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
-		Plans:       plans,
-		PassMark:    h.theMark(r.Context()),
-		Instalments: h.mostInstalments(r.Context()),
-		PixDiscount: h.pixOff(r.Context()),
+		Plans:         plans,
+		PassMark:      h.theMark(r.Context()),
+		ExamQuestions: h.theDraw(r.Context()),
+		Instalments:   h.mostInstalments(r.Context()),
+		PixDiscount:   h.pixOff(r.Context()),
 	})
 }

@@ -102,6 +102,18 @@ function courseFrom(c) {
     free: c.free,
     locked: c.locked,
     sections: c.sections,
+    /* HOW MANY QUESTIONS ITS EXAM HOLDS, and it is here because this function
+       is where the field would otherwise be lost.
+
+       The card at the foot of a course used to decide whether there was an exam
+       by dealing a paper in the browser out of `window.SAMPLE_EXERCISES` — the
+       predecessor's sample data, empty wherever there is a server — so every
+       course announced an exam "in preparation" whatever the school held. The
+       server had been answering this all along, one level up on a view nothing
+       fetches. A field dropped HERE is a field no screen can read, which is the
+       same sentence `api.js` writes about the lesson adapter below it, on its
+       fifth occurrence. */
+    examPool: c.examPool || 0,
   };
 }
 
@@ -146,6 +158,8 @@ export async function load(api) {
        drew fourteen edges where the vitrine draws seventeen. */
     links: t.links || {},
     continues: t.continues || null,
+    // `courseFrom`'s twin, for the card at the foot of a track.
+    examPool: t.examPool || 0,
   }));
 
   school = about || null;

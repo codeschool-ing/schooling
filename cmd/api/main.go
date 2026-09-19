@@ -469,10 +469,12 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   the same one — and it exists because the interface prints "minimum to
 	   pass" on a course card, before any paper exists to carry it. It printed a
 	   constant of its own until now. */
-	/* THE THREE NUMBERS A SCHOOL STATES THAT ARE NOT ITS OWN. Each belongs to
+	/* THE FOUR NUMBERS A SCHOOL STATES THAT ARE NOT ITS OWN. Each belongs to
 	   another module and none may be imported by `tenant` (X-02), so this is the
 	   one line saying they are the same numbers. (It said TWO until the Pix
-	   discount joined them, and the count had been wrong since.)
+	   discount joined them, and the count had been wrong since; the fourth is
+	   how long a paper is, added when the card printed a length of its own that
+	   was half the real one.)
 
 	   ALL THREE ARE FUNCTIONS NOW, and this comment has said "two" and "one" on
 	   its way here — each time because a number that used to be settled at
@@ -483,7 +485,8 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   quoting it drifting from whatever is actually applied — which is the
 	   failure `passMark` was handed in to end, on the day it was still a
 	   constant. */
-	tenant.NewHandler(settings.Reads(exam.PassMark), settings.Reads(billing.MostInstalments),
+	tenant.NewHandler(settings.Reads(exam.PassMark), settings.Reads(exam.QuestionsPerAttempt),
+		settings.Reads(billing.MostInstalments),
 		/* AN ERROR IS NO DISCOUNT. The school still describes itself; the
 		   invitation simply draws no struck-through figure, which is what it
 		   did before there was a discount at all. */

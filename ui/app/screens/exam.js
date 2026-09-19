@@ -231,8 +231,14 @@ export function examCard({ key, href, scope, count, progress, ready = true }) {
       (ready
         /* THE SCHOOL'S OWN, because this card is painted before any exam has
            been started and so before any paper exists to carry it. That is the
-           reason `/api/v1/school` answers with it at all. */
-        ? '<p>' + count + ' ' + txt('questions drawn') + ' · ' + txt('minimum') + ' ' + passMark() + '% · ' +
+           reason `/api/v1/school` answers with both of these at all.
+
+           A LENGTH OF ZERO IS DROPPED RATHER THAN PRINTED. It means no school
+           has said how long the paper is, and "0 questions drawn" beside a
+           working exam is worse than a sentence that does not mention the
+           number — the minimum and the rule are true either way. */
+        ? '<p>' + (count ? count + ' ' + txt('questions drawn') + ' · ' : '') +
+          txt('minimum') + ' ' + passMark() + '% · ' +
           txt('result only at the end') + '</p>'
         : '<p>' + txt('in preparation — not enough exercises yet') + '</p>') +
       (ready && r

@@ -128,6 +128,10 @@ func offering(pool *pgxpool.Pool) tenant.Offer {
 // made it a declared parameter, for the reason the two below are functions.
 func seventy(context.Context) int { return 70 }
 
+// twenty is how long a paper is, handed in the same way and for the same
+// reason: the card names the length before any paper exists to carry it.
+func twenty(context.Context) int { return 20 }
+
 func twelve(context.Context) int { return 12 }
 
 // fivePerCent is the Pix discount as `cmd/api` hands it in, for the reason
@@ -141,7 +145,7 @@ func fivePerCent(context.Context) int { return 500 }
 func server(t *testing.T, pool *pgxpool.Pool) *httptest.Server {
 	t.Helper()
 	scoped := http.NewServeMux()
-	tenant.NewHandler(seventy, twelve, fivePerCent, offering(pool)).Routes(scoped)
+	tenant.NewHandler(seventy, twenty, twelve, fivePerCent, offering(pool)).Routes(scoped)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))
@@ -339,7 +343,7 @@ func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	mux := http.NewServeMux()
 	// NOTHING PRICED, said by the seam answering an empty list — which is also
 	// what a deployment with no `billing` wired in looks like.
-	tenant.NewHandler(seventy, twelve, fivePerCent, nil).Routes(mux)
+	tenant.NewHandler(seventy, twenty, twelve, fivePerCent, nil).Routes(mux)
 
 	rec := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)

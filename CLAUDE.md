@@ -949,6 +949,19 @@ records each answer as it is made, and hands in. It keeps no copy of the questio
 computes no mark, and cannot know which answer is right — that is the whole point of a
 question being *presented* rather than sent.
 
+**And whether there IS one to sit is the server's too.** The card at the foot of a course
+decided by dealing a paper in the browser, out of `window.SAMPLE_EXERCISES` — the
+predecessor's static sample data, which is empty wherever there is a server. So every
+course, in every school, announced an exam *"in preparation — not enough exercises yet"*
+whatever the catalogue held. It survived because it was TRUE: no course had an exam, so
+the sentence was right by accident, and it became a lie the day one got a hundred
+questions — with the exam screen one click away working the whole time. The catalogue
+listing carries the pool now, and it is a COUNT rather than a yes, because the exam
+screen refuses a paper too thin to be passed without perfection and a card offering a
+button to a screen that refuses is the same disagreement one click along. `tools/exam-offer-test`
+fails on the disagreement rather than on either answer alone, which is the only place
+either could be checked against the other.
+
 **Every answer is sent as it is made**, not collected and posted at the end. A closed
 tab, a lost connection or a flat battery costs the questions that were not answered,
 not the ones that were — and it is what makes resuming real. Reopening a paper puts the
@@ -1584,6 +1597,11 @@ node tools/lang-test/lang-test.mjs      # a language switch reaches the lessons,
 node tools/frame-test/frame-test.mjs    # and what the frame SAYS: the build the
                                         # badge names, and the notice that the
                                         # build has moved on
+node tools/exam-offer-test/exam-offer-test.mjs  # and whether the course screen
+                                        # offers the exam the school has: the
+                                        # card decided by dealing a paper in the
+                                        # browser, out of a global that is empty
+                                        # wherever there is a server
 
 go run ./tools/bundle -host code.example.tld -out bundle.html
 node tools/bundle-test/bundle-test.mjs bundle.html   # opened, not merely built
