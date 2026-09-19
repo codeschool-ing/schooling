@@ -304,6 +304,21 @@ jobs:
       - name: What was written is what was designed
         run: go run ./tools/check-design
 
+      # AND THE FOURTH, on the one failure shape that has no symptom.
+      #
+      # A figure asking for a colour token nothing defines does not break: the
+      # shape renders INVISIBLE, in a document that still renders, still
+      # validates and still passes every step above. `CONTENT.md` recorded that
+      # thirteen figures of `web-fundamentals` lesson 1 were drawn against a
+      # different palette and were one command away from shipping exactly so,
+      # and recorded it beside the words "there is no check that it is".
+      #
+      # It reads the tokens out of the stylesheets rather than listing them,
+      # and it reads the translations, where a broken token takes the drawing
+      # away from one language's readers and nobody else's.
+      - name: Every diagram names a colour that exists
+        run: go run ./tools/check-figures
+
       # The same job, on the interface rather than on the content. A string
       # added without its Portuguese works perfectly — in the wrong language,
       # for half the students, until one of them mentions it. Nothing else in
