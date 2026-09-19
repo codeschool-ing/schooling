@@ -257,7 +257,7 @@ has written yet, and one `switch` in `api.js` to read them.
 
 | fence | what it is |
 |---|---|
-| `schooling-figure` | `{"svg": "<svg…>", "caption": "…"}`, or `{"image": "…", "alt": "…", "caption": "…"}` |
+| `schooling-figure` | `{"svg": "<svg…>", "caption": "…"}`, or `{"image": "…", "alt": "…", "caption": "…"}`. A TRANSLATED figure may add `"same": ["…"]` — see below |
 | `schooling-example` | annotated code, Go-By-Example style: the program on one side, the commentary beside the line it explains |
 | `schooling-block` | any other block the renderer knows, passed through as it is |
 
@@ -281,6 +281,34 @@ names its own hole reads as a document in control of it. The tool reads the toke
 available to a figure the same day; it reads the translations too, because a token broken while
 translating takes the drawing away from the Portuguese reader and from nobody else; and it names
 the token somebody probably meant, since a typo is the whole population of this failure.
+
+**A TRANSLATED FIGURE HAS TO SAY SOMETHING IN ITS OWN LANGUAGE, and `check-figures` now asks.**
+Nine Portuguese figures drew `the row on disk`, `one lookup per row` and `walked once, together`
+in English, and everything here passed them, because **every check in this repository reads one
+file**. Two held side by side is the only place the question exists — which is exactly what
+`check-interface` does for the dictionaries, one layer out, where the strings are written instead
+of drawn.
+
+**What is asked about is decided by the drawing rather than by a guess.** Most labels in these
+figures are SQL, plan nodes, header names and table rows, identical in every language and
+correctly so; asking about all of them puts 238 findings in front of somebody of which thirty are
+real, and a check that cries wolf is one nobody reads — this file's neighbour says the same about
+the console's dictionary test, and measured it. So the discriminator is the one an author already
+writes down: **code is drawn in `IBM Plex Mono` and prose in `IBM Plex Sans`**, and only the sans
+face is asked about. A capture is skipped whole, because `term-capture` writes the bytes a real
+terminal produced and they are the same in every language by construction — the `--term-*`
+palette names one. A label with no letter in it has nothing to translate.
+
+**And a label that IS the same word gets an entry saying so**: `"same": ["Debian", "Seq Scan"]` on
+the TRANSLATED figure. It is `check-interface`'s rule — *an entry says somebody decided, where an
+absence says nobody looked* — and it lives on the figure rather than in a list per school, because
+a list is how this gets weakened: one `the row` added once and every figure in the catalogue may
+carry it in English. An entry no label of that figure says any more fails, like a stale
+dictionary entry.
+
+**Its known edge is prose drawn in the mono face**, which goes unasked. That is the safe
+direction — a word missed, rather than correct figures reported until somebody stops reading the
+output — and it is written in the tool beside the rule.
 
 **And `tools/figure-shot` renders one to a PNG in both themes, so somebody can look at it.**
 The two tools answer different questions and neither covers the other: `check-figures` asks

@@ -56,6 +56,18 @@ type figure struct {
 	Image   string `json:"image"`
 	Alt     string `json:"alt"`
 	Caption string `json:"caption"`
+
+	/* Same is the labels of a TRANSLATED figure that are the same word in that
+	   language, written down because somebody decided rather than because
+	   nobody looked.
+
+	   IT IS THE `check-interface` RULE, ONE LAYER IN: *a string that is the
+	   same in both languages gets an entry mapping to itself*. Here the entry
+	   lives on the translated figure and not in a list per school, because a
+	   list is how this gets weakened — one `the row` added once and every
+	   figure in the catalogue may carry it in English. A figure states its own,
+	   and an entry that matches nothing fails. */
+	Same []string `json:"same,omitempty"`
 }
 
 var (
@@ -69,6 +81,13 @@ var (
 
 	// Text, and the token it is painted in.
 	inked = regexp.MustCompile(`<(?:text|tspan)[^>]*fill="var\(\s*--([a-zA-Z0-9-]+)`)
+
+	// One drawn label: its attributes, and what it says.
+	drawn  = regexp.MustCompile(`(?s)<text([^>]*)>(.*?)</text>`)
+	markup = regexp.MustCompile(`<[^>]*>`)
+	spaces = regexp.MustCompile(`\s+`)
+	speaks = regexp.MustCompile(`aria-label="([^"]*)"`)
+	letter = regexp.MustCompile(`\p{L}`)
 )
 
 /*
@@ -107,13 +126,19 @@ func main() {
 	figures, literals, found := readFigures(content, palette)
 	problems = append(problems, found...)
 
-	fmt.Printf("%d figure(s) against %d palette token(s) from %s\n",
-		figures, len(palette), strings.Join(styles, " and "))
+	pairs, translated := readTranslations(content)
+	problems = append(problems, translated...)
+
+	fmt.Printf("%d figure(s) against %d palette token(s) from %s, and %d of them against their "+
+		"own translation\n", figures, len(palette), strings.Join(styles, " and "), pairs)
 	if literals > 0 {
 		fmt.Printf("%d colour(s) written into a drawing rather than taken from the palette. "+
 			"COUNTED AND NOT JUDGED: a captured terminal carries fixed values on purpose — "+
 			"`term-capture` writes them and `terminal.css` says at what contrast — and this "+
-			"tool cannot tell a capture from a drawing from the outside\n", literals)
+			"tool cannot tell WHICH LITERAL belongs to which from the outside. (It can name a "+
+			"capture: one is painted in the `--term-*` palette, which is how the translation "+
+			"pass below leaves them alone. What it cannot do is attribute a single "+
+			"`fill=\"#…\"` to the capture around it rather than to a drawing.)\n", literals)
 	}
 
 	if len(problems) > 0 {
@@ -126,7 +151,8 @@ func main() {
 			len(problems))
 		os.Exit(1)
 	}
-	fmt.Println("every figure names a token that exists, and says what it draws")
+	fmt.Println("every figure names a token that exists, says what it draws, and its " +
+		"translations say it in their own language")
 }
 
 // readPalette is every custom property the two stylesheets define, which is the
@@ -311,4 +337,234 @@ func where(f string) string {
 		}
 	}
 	return f
+}
+
+/*
+readTranslations asks whether a translated figure was translated.
+
+	# A LABEL LEFT IN ENGLISH IS INVISIBLE TO EVERY OTHER CHECK HERE
+
+	Each of them reads ONE file. `validate-content` reads the shape,
+	`check-figures` above reads the palette of a drawing, `figure-contrast`
+	reads what can be read, `figure-fit` reads what fits. None of them has ever
+	held two files side by side — so a Portuguese lesson drawing *"the row on
+	disk"* and *"one lookup per row"* passes all of them, and reads perfectly
+	well to anybody who happens to know English.
+
+	It is the same failure the dictionaries were given a tool for and the same
+	remedy: `check-interface` fails on a string with no translation AND on a
+	translation nothing says any more. This is that, one layer in, where the
+	strings are drawn instead of written.
+
+	# WHAT IS ASKED ABOUT IS DECIDED BY THE DRAWING, NOT BY A GUESS
+
+	Most labels in these figures are SQL, plan nodes, header names, file paths
+	and table rows — identical in every language, correctly. A check that
+	reported them would report 238 things of which some thirty are real, and a
+	check that cries wolf teaches whoever reads it to skip the output that would
+	one day name a real one; this repository says exactly that about the
+	console's dictionary test, and measured it.
+
+	So the discriminator is one the author already wrote down: **code is drawn
+	in the mono face and prose in the sans face.** `IBM Plex Sans` is the
+	question; `IBM Plex Mono` is not asked about at all. That is a fact stated
+	in the figure rather than a heuristic applied to it, and it takes the
+	question from 238 to 86 with every real one still in.
+
+	Two more exemptions, both mechanical rather than decided:
+
+	  - **A capture is not a drawing.** `term-capture` writes the bytes a real
+	    terminal produced, painted with the `--term-*` palette, and those bytes
+	    are the same in every language BY CONSTRUCTION. The tokens name it, so
+	    this is structural and not a judgement about content.
+	  - **A label with no letter in it cannot be translated** — `1`, `×`, a
+	    step number. Nothing to decide.
+
+	# WHAT IT CANNOT SEE, SAID OUT LOUD
+
+	A label drawn in the mono face that IS prose. The rule buys its silence with
+	a class of miss, and the miss is in the safe direction — a word goes
+	unasked, rather than a correct figure being reported until somebody stops
+	reading the output. The way to close it is the lesson's own code fences: a
+	word that appears in one is code and a word that does not is not. That is
+	the next version, if this one earns it.
+*/
+func readTranslations(dir string) (pairs int, problems []string) {
+	files, err := filepath.Glob(filepath.Join(dir, "*", "courses", "*", "lessons", "*", "*.md"))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	sort.Strings(files)
+
+	for _, source := range files {
+		// `<name>.md` is the source; `<name>.<locale>.md` is a translation of
+		// it. A file with a locale in its own name is never a source.
+		base := strings.TrimSuffix(filepath.Base(source), ".md")
+		if strings.Contains(base, ".") {
+			continue
+		}
+		for _, translated := range translationsOf(source, base) {
+			n, found := comparable(source, translated)
+			pairs += n
+			problems = append(problems, found...)
+		}
+	}
+	return pairs, problems
+}
+
+// translationsOf is every `<name>.<locale>.md` beside `<name>.md`.
+func translationsOf(source, base string) []string {
+	matches, err := filepath.Glob(filepath.Join(filepath.Dir(source), base+".*.md"))
+	if err != nil {
+		return nil
+	}
+	sort.Strings(matches)
+	return matches
+}
+
+// comparable reads both files and walks their figures in step.
+func comparable(source, translated string) (pairs int, problems []string) {
+	from, err := figuresIn(source)
+	if err != nil {
+		return 0, []string{err.Error()}
+	}
+	into, err := figuresIn(translated)
+	if err != nil {
+		return 0, []string{err.Error()}
+	}
+
+	/* A TRANSLATION CARRIES THE SAME DRAWINGS. A different number of them is
+	   not a translation question — it is a figure added to one language and not
+	   the other, and every comparison below would be against the wrong figure. */
+	if len(from) != len(into) {
+		return 0, []string{fmt.Sprintf(
+			"%s draws %d figure(s) and %s draws %d — they are the same drawings in two "+
+				"languages, so one of them has gained or lost one",
+			where(source), len(from), where(translated), len(into))}
+	}
+
+	locale := localeOf(translated)
+	for i := range from {
+		at := fmt.Sprintf("%s figure %d [%s]", where(source), i+1, locale)
+		problems = append(problems, untranslated(at, from[i], into[i])...)
+		pairs++
+	}
+	return pairs, problems
+}
+
+// localeOf reads `pt` out of `frames.pt.md`.
+func localeOf(path string) string {
+	parts := strings.Split(filepath.Base(path), ".")
+	if len(parts) < 3 {
+		return "?"
+	}
+	return parts[len(parts)-2]
+}
+
+func figuresIn(path string) ([]figure, error) {
+	body, err := os.ReadFile(path) //nolint:gosec // a path from this tool's own glob
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", where(path), err)
+	}
+	var out []figure
+	for _, m := range fence.FindAllStringSubmatch(string(body), -1) {
+		var fig figure
+		// A fence that is not JSON is reported by the pass above; here it is one
+		// figure with nothing in it, so the two sides still line up by position.
+		_ = json.Unmarshal([]byte(m[1]), &fig)
+		out = append(out, fig)
+	}
+	return out, nil
+}
+
+// untranslated is one figure against its translation.
+func untranslated(at string, from, into figure) (problems []string) {
+	decided := map[string]bool{}
+	for _, s := range into.Same {
+		decided[s] = true
+	}
+	met := map[string]bool{}
+
+	ask := func(what, english, other string) {
+		english, other = strings.TrimSpace(english), strings.TrimSpace(other)
+		if english == "" || english != other {
+			return
+		}
+		if decided[english] {
+			met[english] = true
+			return
+		}
+		problems = append(problems, fmt.Sprintf(
+			"%s: the %s is still %q. If that IS the word in this language, say so in the "+
+				"translated figure's `same` — an entry there says somebody decided, where an "+
+				"absence says nobody looked", at, what, english))
+	}
+
+	/* THE THREE THAT ARE ALWAYS PROSE, asked with no filter at all. A caption
+	   is a sentence under the drawing, an `alt` is what an image is announced
+	   as, and an `aria-label` is what a screen reader says INSTEAD of a
+	   diagram — the whole figure, for the reader who cannot see it. */
+	ask("caption", from.Caption, into.Caption)
+	ask("alt text", from.Alt, into.Alt)
+	ask("aria-label", spoken(from.SVG), spoken(into.SVG))
+
+	// A capture is bytes a real terminal produced. See the note above.
+	if strings.Contains(from.SVG, "var(--term-") {
+		return problems
+	}
+
+	english, translated := prose(from.SVG), prose(into.SVG)
+	if len(english) != len(translated) {
+		problems = append(problems, fmt.Sprintf(
+			"%s draws %d label(s) in the prose face and its translation draws %d, so they "+
+				"cannot be compared one to one — a translation redraws nothing",
+			at, len(english), len(translated)))
+		return problems
+	}
+	for i := range english {
+		ask("label", english[i], translated[i])
+	}
+
+	/* AND AN ENTRY NOTHING SAYS ANY MORE. A `same` left behind by a rewritten
+	   label reads as a decision somebody made about this figure and is about a
+	   figure that no longer exists — which is `check-interface`'s stale entry,
+	   and it is why that tool checks both directions. */
+	for _, s := range into.Same {
+		if !met[s] {
+			problems = append(problems, fmt.Sprintf(
+				"%s: `same` carries %q and no label of this figure says it — an entry left "+
+					"behind by a rewrite reads as current", at, s))
+		}
+	}
+	return problems
+}
+
+// spoken is the sentence a screen reader is given instead of the drawing.
+func spoken(svg string) string {
+	if m := speaks.FindStringSubmatch(svg); m != nil {
+		return m[1]
+	}
+	return ""
+}
+
+/*
+prose is every label drawn in the sans face, in order.
+
+	The mono face is code and is not asked about; a label with no letter in it
+	cannot be translated. Both are named in the note above `readTranslations`.
+*/
+func prose(svg string) []string {
+	var out []string
+	for _, m := range drawn.FindAllStringSubmatch(svg, -1) {
+		if !strings.Contains(m[1], "Plex Sans") {
+			continue
+		}
+		text := strings.TrimSpace(spaces.ReplaceAllString(markup.ReplaceAllString(m[2], ""), " "))
+		if text == "" || !letter.MatchString(text) {
+			continue
+		}
+		out = append(out, text)
+	}
+	return out
 }

@@ -805,6 +805,20 @@ real string goes missing, which fails as a dictionary entry nothing says; blank 
 little and a commented example is counted, which fails as a string with no translation.
 There is no arrangement of mistakes there that passes quietly.*
 
+**A LABEL INSIDE A FIGURE IS TRANSLATED TOO, and nothing asked until it had shipped.** Nine
+Portuguese figures drew `the row on disk`, `one lookup per row` and `walked once, together` in
+English. Every check here passed them for the same reason: each reads ONE file, and this question
+only exists with two held side by side. `check-figures` compares a figure with its translation —
+the caption, the `alt`, the `aria-label` and the labels drawn in the prose face. **Which labels
+get asked about is decided by the drawing, not by a guess**: code is drawn in `IBM Plex Mono` and
+prose in `IBM Plex Sans`, so only the sans face is a question, a capture is skipped whole (the
+`--term-*` palette names one, and the bytes a terminal produced are the same in every language),
+and a label with no letter has nothing to translate. Without that the tool would report 238 things
+of which thirty are real, and a check that cries wolf is one nobody reads. **A label that IS the
+same word carries a `same` entry on the translated figure** — `check-interface`'s rule, one layer
+in — and it sits on the figure rather than in a list per school, because a list is how this gets
+weakened one word at a time. A `same` nothing says any more fails.
+
 **A dictionary translates the INTERFACE and never the catalogue.** The dictionaries
 carry the words this application says — buttons, headings, the sentence above a form.
 A course's name, summary, syllabus and topics belong to a school, and they come from
@@ -1544,7 +1558,9 @@ go run ./tools/check-exercises    # and whether the keys can be found without th
 go run ./tools/check-design       # and whether what was written is what the sheet designed —
                                   # it refuses a disagreement of fact and only reports a budget
 go run ./tools/check-figures       # and whether every diagram names a colour that exists: a
-                                  # token nothing defines renders the shape invisible
+                                  # token nothing defines renders the shape invisible — and
+                                  # whether a translated figure says anything in its own
+                                  # language, which is the one question that needs two files
 go run ./tools/check-interface    # every string the interface says, in every language it claims
 go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has
