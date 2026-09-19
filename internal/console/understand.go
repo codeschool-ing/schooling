@@ -446,18 +446,36 @@ func when(t time.Time) string {
    they signed up and follows each group forward, so August's intake can be
    compared with July's AT THE SAME AGE.
 
-   # ONE HALF OF THE ROADMAP'S ITEM, AND THE OTHER SAYS WHY NOT
+   # BOTH HALVES OF THE ROADMAP'S ITEM, AND THEY ARE DIFFERENT QUESTIONS
 
-   It asks for two: by signup and by subscription start. Nothing writes a
-   subscription into the stream — there is no payment gateway — so the second
-   would be grouping by a moment nothing records. It comes back saying so, the
-   way the funnel's unmeasured steps do, rather than as an empty table that reads
-   as "nobody ever subscribed".
+   It asks for two: by signup and by subscription start. By signup is *does the
+   product hold the people it attracts*; by subscription start is *does it hold
+   the people who PAID*, which is a different population and the one whose
+   retention costs money to get wrong — a school where signups stay and
+   subscribers leave has a problem no signup cohort can show.
+
+   THIS PARAGRAPH SAID THE SECOND COULD NOT BE BUILT, and went on saying it
+   after it was. Nothing wrote a subscription into the stream while there was no
+   gateway, so grouping by one meant grouping by a moment nothing recorded, and
+   the answer came back saying so the way the funnel's unmeasured steps do.
+   Billing emits `subscription.started` now; the code below took the second
+   basis and this comment did not, which is the shape every stale claim in this
+   repository has — true when written, still reading as a description of now.
+
+   `grouping` is the word that chooses, and a word this does not know is
+   REFUSED rather than defaulted: the SQL would answer it with real people, and
+   a table of signups under a heading naming subscribers is the one failure a
+   plausible number hides best.
 */
 
 // Cohort is one month's intake as this screen shows it.
 type Cohort struct {
-	// Month is the month they signed up, first instant, UTC.
+	// Month is the first instant of the month this row is about, UTC. WHICH
+	// month depends on the basis: the month they signed up, or the month they
+	// first started paying. The field cannot say which and the answer carries
+	// `grouping` for exactly that reason — a column headed "the month they
+	// signed up" over a table of subscriptions contradicts its own numbers,
+	// which is worse than a vague heading because it is specific.
 	Month time.Time
 
 	// People is how many signed up that month — the denominator of every cell.

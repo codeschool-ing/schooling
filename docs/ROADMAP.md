@@ -94,11 +94,29 @@ being so on 28 August, when the first two purchases settled through the very end
 called absent. Phase 3 was audited, was right, and went stale anyway — which is what an audit is:
 a statement about a day, not a property the file acquires.*
 
-***Phase 4 has never had a pass of any kind.** Every box in it was ticked after 2026-08-20, and what
-stands behind each is its own paragraph rather than anybody having checked them together against a
-test, a tool run or a screen. That is not a claim that any of them is wrong; it is the difference
-between a claim nobody has audited and one somebody has, and the audit above says nothing about
-this phase.*
+*Phase 4 had never had a pass of any kind, and **it has one now: audited against the code on
+2026-09-19.** Every box in it had been ticked after 2026-08-20, with its own paragraph standing
+behind it and nobody having checked them together — which is not a claim that any was wrong, but
+the difference between a claim nobody has audited and one somebody has. **All nineteen are true**,
+each against a named package, route or screen, and the one that reads like an exception is not
+one: e-mail deliverability is ticked on the mechanism, says so in its own line, and `CONSOLE.md`
+still lists the screen among what is not built.*
+
+*What the pass found was on the other side, and both findings are the failures this section
+names rather than new ones. One capability was **done and unticked** — the server-rendered
+surface a crawler reads, three commits and no line here — and it is written into phase 1 above by
+this pass rather than by the branch that earned it. And two DESCRIPTIONS had gone stale in the
+direction a description goes: `docs/CONSOLE.md` said the job retry "is not built" after it was
+built, and `internal/console/understand.go` opened by saying no subscription reaches the stream
+because there is no gateway, 130 lines above its own comment recording that billing writes them
+now. Both are corrected in the same pass. **A stale sentence in a design document is the cheap
+half of this; a stale sentence in a package comment is read by whoever is about to change the
+code.***
+
+*The two audits together say the thing this file keeps learning. Phase 3 was audited, was right,
+and went stale in eight days. Phase 4 was never audited, and was right. **Being checked is not
+what makes a claim true — it is what makes it findable when it stops being true**, and the
+interval between passes is the whole of the exposure.*
 
 ---
 
@@ -172,6 +190,15 @@ student cannot do today and which every ticked box below was consistent with.*
 ### What the student sees
 
 - [x] The interface served from the same binary and the same origin, with no build step — fragment routes, so the offline bundle is a packaging job and not a second router
+- [x] **A surface a crawler can read, beside the fragment router** — `robots.txt`, `sitemap.xml`, and a server-rendered page per language for every course, every track and every lesson a stranger may already read, plus the cards a link preview needs. It is the consequence of the item above that nobody chose: **everything after a `#` is never sent to the server**, so a school's whole catalogue — every course, every lesson title — sat behind one address that says nothing but the name of the school. It is a second, small surface and not a rewrite: the interface goes on being the interface, and these are the pages that can be linked to, shared and found.
+
+  **What is public was already decided, and not by this package.** A lesson is asked for with NO PLAN, which is what a crawler is, so a paid course refuses here by the same call that refuses the API and nothing here has to remember the rule; a draft answers exactly as a course that does not exist, because the store answers it that way. Giving away a page of a course that is sold would be a product decision, and a search-engine feature does not get to take one.
+
+  **Every address is derived and none is written down.** A school is a subdomain, so there is no such thing as "the site's address" — there are as many as there are schools, and the platform's own domain is a setting that will change. A canonical naming a host is a canonical that will one day be wrong, which is the one failure worse than having none, so the origin is the request's own. The single line that must be absolute is the sitemap protocol's `Sitemap:`, and it names the host the request arrived at and no other.
+
+  `0052` is the date those pages needed and nothing recorded: the mirror is rewritten whole on every load, so no row in it has an age of its own and there was nothing honest to put in a `lastmod`. `time.Now()` tells a crawler that everything changed on every crawl, which teaches it to ignore the field; a per-page date would be that same date in disguise. The column is nullable on purpose — a school not loaded since it existed leaves `lastmod` out rather than inventing one
+
+  **This box was written by the audit below, not by the branch that earned it.** The work merged in three commits and no line here named it, which is the "done and unticked" failure the preamble describes: it costs a rediscovery rather than stopping a search, which is why it is the cheaper of the two and still a cost
 - [x] Nothing loaded from another origin, the type included — a student's browser tells no third party which school they are reading, and the two machines that render this interface finally measure the same cards
 - [x] `track → course → lesson → section`, with `requires` and `links` distinct
 - [x] The track graph, with edge routing that avoids the cards — Sugiyama's ordering, and a router that takes a line around a card when it can see one in the way
@@ -599,7 +626,21 @@ arrive separately. What it settled and numbered is `C-21` to `C-24`, `N-11`, `K-
 *Done when: a course exists end to end — prose, figures, exercises, exam and script — with every
 check that stands in for a reviewer passing on it, and item analysis reports no inverted key.*
 
-- [ ] ~~The generator writes prose, exercises, exams **and the spoken script** into `content/`~~ — **there is no generator** (`C-14`). A course is written by a person with an agent, on demand, into `content/`; what runs without a person is the checking, because that is the half standing in for the reviewer nobody is going to be. The item that remains is the material: **a course written end to end, prose to script**, which is one of 122 today
+- [ ] ~~The generator writes prose, exercises, exams **and the spoken script** into `content/`~~ — **there is no generator** (`C-14`). A course is written by a person with an agent, on demand, into `content/`; what runs without a person is the checking, because that is the half standing in for the reviewer nobody is going to be. The item that remains is the material: **a course written end to end, prose to script**, and not one of the 122 is.
+
+  **WHAT THE COUNT ACTUALLY IS, measured rather than remembered** (2026-09-19). Three courses of
+  122 have prose and exercises in both languages — `linux-terminal` (13 lessons), `sql-databases`
+  (13) and `web-fundamentals` (11). **None of the three has an `exam.json`**: there is not one
+  exam file anywhere in `content/`, for any course or any track. None has a spoken script. One
+  `images/` directory exists in the whole tree.
+
+  That is the honest shape of this phase, and it is the opposite of what the commit log suggests:
+  the phase with the most work in it is furthest from its own `Done when`, because the condition
+  asks for ONE course complete — prose, figures, exercises, **exam** and script — and what has
+  been built is the first two thirds of three. The next thing this phase needs is not another
+  course. It is the missing third of one of the three that exist, and the exam is the half of it
+  that the certificate, the item analysis and the whole of phase 4's `Done when` rest on: the
+  machinery that finds a broken answer key has never had a real answer key to read
 - [ ] Three verification levels recorded per item — structure, execution, critiqued
 - [ ] Provenance recorded on everything written
 - [ ] ~~It is resumable: it knows what it has already written and does not start over~~ — **the question does not exist.** `C-14` puts the state in git: what has been written is what is committed, and a rewrite is a diff somebody reads. Resumability is a property of a long-running job, and there is no job
