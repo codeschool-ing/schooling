@@ -166,7 +166,7 @@ func run(args []string, out io.Writer) error {
 		return err
 	}
 
-	if err := enough(o.people, shape.broken); err != nil {
+	if err := enough(o.people, shape.broken, len(shape.questions)); err != nil {
 		return err
 	}
 
@@ -361,16 +361,34 @@ HOW MANY PEOPLE IT TAKES IS ARITHMETIC, AND IT IS SAID BEFORE ANYTHING IS WRITTE
 	A population that size is still worth having. It is the funnel, the cohorts,
 	presence and the map, none of which need an exam.
 */
-func enough(people int, planted string) error {
+func enough(people int, planted string, pool int) error {
 	if planted == "" {
 		return nil
 	}
-	if sitters := int(float64(people) * reachesTheExam); sitters < analysis.MinimumSample.Fallback {
+
+	/* SITTERS ARE NOT ANSWERS PER QUESTION, and counting them as if they were
+	   is how this refusal came to be wrong by the ratio of the pool to the
+	   paper.
+
+	   It compared sitters against the minimum sample, which is the same number
+	   only while every sitter answers every question — true of a fixture whose
+	   pool is six and false of a course whose pool is a hundred and whose paper
+	   draws twenty. There, forty-five sitters put nine answers on each
+	   question, item analysis says `insufficient` about all of them, and this
+	   check passed. The arithmetic was right about a shape that no longer
+	   exists, which is the same failure this comment block already records
+	   once. */
+	sitters := int(float64(people) * reachesTheExam)
+	if got := answersEach(sitters, pool); got < readableMultiple*analysis.MinimumSample.Fallback {
 		return fmt.Errorf(
-			"%d people would put about %d of them through an exam, and item analysis says "+
-				"nothing below %d answers to a question — ask for at least %d people, or accept "+
-				"a population nothing can be read from",
-			people, sitters, analysis.MinimumSample.Fallback, enoughPeople)
+			"%d people would put about %d of them through an exam, and a paper of %d drawn "+
+				"from a pool of %d puts about %d answers on each question — item analysis "+
+				"says nothing below %d, and this command sizes for %d so the demonstration "+
+				"works rather than works half the time. Ask for at least %d people, or "+
+				"accept a population nothing can be read from",
+			people, sitters, paperOf(pool), pool, got,
+			analysis.MinimumSample.Fallback, readableMultiple*analysis.MinimumSample.Fallback,
+			enoughPeopleFor(pool))
 	}
 	return nil
 }
