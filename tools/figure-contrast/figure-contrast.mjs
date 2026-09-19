@@ -154,7 +154,15 @@ for (const [path, svg] of drawings) {
   for (const r of svg.matchAll(/<rect\b[^>]*>/g)) {
     const [x, y, w, h] = ['x', 'y', 'width', 'height'].map((k) => Number(attr(r[0], k)));
     const fill = attr(r[0], 'fill');
-    if (!fill || [x, y, w, h].some(Number.isNaN)) continue;
+    /* `fill="none"` IS NOT A GROUND, AND READING IT AS ONE IS A FALSE REPORT.
+       A rect drawn for its outline alone — the nested resolutions of lesson 3
+       of `computing-essentials` are three of them — paints nothing inside
+       itself, so what is behind a label there is whatever the rect is over.
+       Kept as a ground it resolved to nothing and this tool said the label was
+       "drawn in no colour at all", of a label drawn in `paper` on the panel.
+       The attribute is skipped for the same reason a missing one is: neither
+       puts a colour on that point. */
+    if (!fill || fill === 'none' || [x, y, w, h].some(Number.isNaN)) continue;
     const alpha = Number(attr(r[0], 'fill-opacity') ?? attr(r[0], 'opacity') ?? 1);
     rects.push([x, y, w, h, fill, Number.isNaN(alpha) ? 1 : alpha]);
   }
