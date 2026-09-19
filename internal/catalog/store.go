@@ -74,6 +74,36 @@ type Listing struct {
 	Free   bool   `json:"free"`
 	Locked bool   `json:"locked"`
 	Reason string `json:"reason,omitempty"`
+
+	/* ExamPool is how many questions the set behind this course holds, and it is
+	   ON THE LISTING because the interface never asks for anything else.
+
+	   It was on the course view alone, where `hasExam` says why a screen needs
+	   telling: starting an exam that does not exist is a 404, so a screen with
+	   no way to ask either offers a button that sometimes fails or hides one
+	   that should be there. What that reasoning missed is that NOTHING FETCHES
+	   THE COURSE VIEW. The course screen is built from this listing plus one
+	   request per lesson, so the field was answered and never read — and the
+	   card at the foot of every course decided instead from
+	   `window.SAMPLE_EXERCISES`, the predecessor's sample data, which is empty
+	   wherever there is a server. Every course announced an exam "in
+	   preparation" whatever it had.
+
+	   IT SURVIVED BECAUSE IT WAS TRUE. No course had an exam, so a card saying
+	   so was right by accident, and the first one that got a set of a hundred
+	   questions is what made it a lie. The track list beside this one already
+	   states the rule: a field left out of the one answer the interface reads is
+	   a field no screen ever sees.
+
+	   IT IS A COUNT AND NOT A YES, because the screen behind the card applies
+	   arithmetic to the length: a paper of three at a pass mark of seventy can
+	   only be passed perfectly, which is not the exam the rules beside it
+	   describe, so the exam screen refuses it. A boolean would have let the card
+	   offer a button to a screen that then says "in preparation" — the same
+	   disagreement this whole change is about, moved one click along. The card
+	   takes the smaller of this and the school's draw, which is the paper's real
+	   length: a pool under the draw is asked in full. */
+	ExamPool int `json:"examPool"`
 }
 
 // Courses lists what a student may see, with each door decided for this plan.
@@ -128,7 +158,12 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 		          LEFT JOIN catalog_course_topic_text tt
 		                 ON tt.tenant_id = tp.tenant_id AND tt.course_id = tp.course_id
 		                AND tt.topic_id = tp.topic_id AND tt.locale = $2
-		         WHERE tp.tenant_id = c.tenant_id AND tp.course_id = c.id)
+		         WHERE tp.tenant_id = c.tenant_id AND tp.course_id = c.id),
+		       -- A scalar subquery like the two counts above, and for the same
+		       -- reason: joined in against catalog_course_requires it would
+		       -- multiply. (No backticks in here: this is a raw string.)
+		       (SELECT count(*) FROM catalog_exercises x
+		         WHERE x.tenant_id = c.tenant_id AND x.course_id = c.id AND x.exam)
 		FROM catalog_courses c
 		LEFT JOIN catalog_course_requires r
 		       ON r.tenant_id = c.tenant_id AND r.course_id = c.id
@@ -153,7 +188,7 @@ func (s *Store) Courses(ctx context.Context, tenantID uuid.UUID,
 		var topics []byte
 		if err := rows.Scan(&l.ID, &l.Slug, &l.Name, &l.Category, &l.Level, &l.Hours,
 			&l.Summary, &l.Requires, &l.Lessons, &l.Sections,
-			&l.Syllabus, &topics); err != nil {
+			&l.Syllabus, &topics, &l.ExamPool); err != nil {
 			return nil, fmt.Errorf("catalog: listing the courses: %w", err)
 		}
 		if err := json.Unmarshal(topics, &l.Topics); err != nil {
@@ -774,8 +809,19 @@ type TrackView struct {
 	// the interface reads it with no translation.
 	Links map[string][]LinkTarget `json:"links,omitempty"`
 
-	// Whether the track has a final. Empty on the list, which does not ask.
+	/* Whether the track has a final.
+
+	   IT IS ON THE LIST TOO NOW, as `ExamPool` beside it. This said "empty on the list, which does not
+	   ask", and the paragraph a few lines down in `Tracks` is the refutation:
+	   the interface fills its whole catalogue from that one answer and never
+	   asks again, so a field left out of it is a field no screen ever sees. The
+	   track card decided from the predecessor's empty sample data instead — see
+	   `Listing.ExamPool`, which had the same hole with a course behind it. */
 	Exam bool `json:"exam"`
+
+	// How many questions the track's final holds — `Listing.ExamPool`'s twin,
+	// for the same card and the same arithmetic.
+	ExamPool int `json:"examPool"`
 }
 
 // StepView is one position in a track. A step with options is a fork; a step
@@ -797,7 +843,9 @@ func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID,
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT c.id, c.slug, coalesce(t.name, c.name), coalesce(t.goal, c.goal),
-		       coalesce(t.outcome, c.outcome), c.continues
+		       coalesce(t.outcome, c.outcome), c.continues,
+		       (SELECT count(*) FROM catalog_exercises x
+		         WHERE x.tenant_id = c.tenant_id AND x.track_id = c.id AND x.exam)
 		FROM catalog_tracks c
 		LEFT JOIN catalog_track_text t
 		       ON t.tenant_id = c.tenant_id AND t.track_id = c.id AND t.locale = $2
@@ -811,7 +859,8 @@ func (s *Store) Tracks(ctx context.Context, tenantID uuid.UUID,
 	var out []TrackView
 	for rows.Next() {
 		var t TrackView
-		if err := rows.Scan(&t.ID, &t.Slug, &t.Name, &t.Goal, &t.Outcome, &t.Continues); err != nil {
+		if err := rows.Scan(&t.ID, &t.Slug, &t.Name, &t.Goal, &t.Outcome, &t.Continues,
+			&t.ExamPool); err != nil {
 			return nil, fmt.Errorf("catalog: listing the tracks: %w", err)
 		}
 		out = append(out, t)

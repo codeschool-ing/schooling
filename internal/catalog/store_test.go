@@ -493,3 +493,98 @@ func TestALessonSaysHowManyQuestionsItAsks(t *testing.T) {
 		}
 	}
 }
+
+// A COURSE SAYS HOW MANY EXAM QUESTIONS IT HAS, AND THAT IS ON THE LISTING.
+//
+// THE DEFECT THIS PINS SHIPPED. The course screen's exam card decided whether
+// there was an exam to sit by dealing a paper in the BROWSER, out of a global
+// the predecessor filled and nothing here does — empty wherever there is a
+// server. `sql-databases` went to production with a hundred questions, sittable
+// at its own address, under a card reading "in preparation — not enough
+// exercises yet". The server had been answering the question all along, on the
+// course VIEW, which nothing fetches: the interface builds a course screen from
+// this listing and one request per lesson.
+//
+// IT IS A COUNT AND NOT A YES for the screen behind the card: a paper of three
+// at a pass mark of seventy can only be passed perfectly, so the exam screen
+// refuses it — and a card that offered a button to a screen that refuses is the
+// same disagreement one click along.
+func TestTheListingSaysHowManyExamQuestionsACourseHas(t *testing.T) {
+	pool := testPool(t)
+	school := loaded(t, pool, write("courses/web-fundamentals/exam.json", `[
+	  {"id": "ex-7q3m5p2t", "version": 1, "type": "quiz", "difficulty": "medium",
+	   "prompt": "Which end of an exchange asks?",
+	   "choices": [{"text": "The client", "correct": true, "why": "Whoever asks is the client."},
+	               {"text": "The server", "correct": false, "why": "The server answers."},
+	               {"text": "Neither", "correct": false, "why": "One of them asks."}]},
+	  {"id": "ex-9dk4wz6b", "version": 1, "type": "quiz", "difficulty": "medium",
+	   "prompt": "What does a port identify?",
+	   "choices": [{"text": "A program on a host", "correct": true, "why": "It picks the listener."},
+	               {"text": "A host on a network", "correct": false, "why": "That is the address."},
+	               {"text": "A cable", "correct": false, "why": "Ports are not physical here."}]}
+	]`))
+
+	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull, "en")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	seen := map[string]int{}
+	for _, c := range courses {
+		seen[c.ID] = c.ExamPool
+	}
+
+	if seen[webFundamentals] != 2 {
+		t.Errorf("a course with two exam questions reports a pool of %d; the card that reads "+
+			"this decides whether a student is offered the exam at all", seen[webFundamentals])
+	}
+
+	// AND A COURSE WITHOUT ONE SAYS ZERO rather than inheriting a neighbour's.
+	// The card draws "coming soon" from this, and a button that 404s is worse
+	// than a sentence saying it is coming.
+	if seen[htmlCSS] != 0 {
+		t.Errorf("a course with no exam reports a pool of %d", seen[htmlCSS])
+	}
+}
+
+// AND THE POOL DOES NOT MULTIPLY AGAINST THE PREREQUISITES EITHER.
+//
+// It is the third scalar subquery on that query and it is one for the reason
+// written above the other two: joined in beside `catalog_course_requires` the
+// rows multiply, and a course with two prerequisites would report twice the
+// questions it has. Invisible in a fixture where every course has exactly one,
+// which is why this gives one course two — the same trap, caught the same way.
+func TestTheExamPoolDoesNotMultiplyAgainstThePrerequisites(t *testing.T) {
+	pool := testPool(t)
+	school := loaded(t, pool,
+		patchJSON("courses/react-ts/course.json", func(d map[string]any) {
+			d["requires"] = []any{"html-css", "web-fundamentals"}
+		}),
+		write("courses/react-ts/exam.json", `[
+		  {"id": "ex-2w8vt6hq", "version": 1, "type": "quiz", "difficulty": "medium",
+		   "prompt": "What does a component return?",
+		   "choices": [{"text": "A description of what to draw", "correct": true, "why": "It describes."},
+		               {"text": "A DOM node it inserted", "correct": false, "why": "It does not insert."},
+		               {"text": "Nothing", "correct": false, "why": "It returns a description."}]}
+		]`))
+
+	courses, err := catalog.NewStore(pool).Courses(context.Background(), school, catalog.PlanFull, "en")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, c := range courses {
+		if c.ID != reactTS {
+			continue
+		}
+		if len(c.Requires) != 2 {
+			t.Fatalf("the course under test has %d prerequisites, want the two this test set",
+				len(c.Requires))
+		}
+		if c.ExamPool != 1 {
+			t.Errorf("one exam question under two prerequisites counted as %d", c.ExamPool)
+		}
+		return
+	}
+	t.Fatal("the course under test is not in the catalogue")
+}

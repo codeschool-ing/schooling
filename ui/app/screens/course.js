@@ -11,7 +11,7 @@ import { courseLessons, courseById, courseAddress, tracksWithCourse, unlockedBy 
 import { lessonSections, courseMaterials } from '../lessons.js';
 import { courseProgress, lessonProgress, lessonDone, someLessonDone } from '../state.js';
 import { courseState } from '../graph.js';
-import { courseExam, examReady } from '../exams.js';
+import { courseExam, courseExamOffered, examPaper } from '../exams.js';
 import { examCard } from './exam.js';
 import { materialList } from '../materials.js';
 import { bar, empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
@@ -99,10 +99,19 @@ export default async function course({ id }) {
 
       /* The exam closes the lesson column, not the sidebar: it is the last step
          of the course, and its place is after the last lesson. It is rendered
-         whether or not the exercises for it exist yet — see examCard. */
+         whether or not the exercises for it exist yet — see examCard.
+
+         WHETHER IT CAN BE SAT IS THE SERVER'S ANSWER AND NOT A DRAW HERE. It
+         was `examReady(exam)` — a paper dealt in the browser out of a bank that
+         is empty wherever there is a server — so this card said "in
+         preparation" for every course whatever the school held. See
+         `courseExamOffered`. `exam` is still drawn because the offline bundle
+         has nothing else, and its length is still what the card falls back to
+         when no school has answered. */
       examCard({
         key: exam.key, href: '#/course/' + esc(courseAddress(id)) + '/exam', scope: 'course',
-        count: exam.items.length, progress: p.pct, ready: examReady(exam),
+        count: examPaper(c.examPool) || exam.items.length, progress: p.pct,
+        ready: courseExamOffered(id),
       }) +
 
       /* ---------- and what they thought of it ----------

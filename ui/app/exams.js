@@ -16,12 +16,13 @@
    verdict held back until the end. Without it, an exam would just be a long
    assessment.
 
-   WHERE THE QUESTIONS COME FROM
-   From the lessons' own exercise bank, drawn at random. There is no separate
-   bank of "exam questions", and there should not be one while the pipeline emits
-   one file per topic: keeping two banks aligned is recurring work, and what it
-   would buy — unseen questions — the draw already gives, because nobody does all
-   1,503 exercises of a track before the exam.
+   WHERE THE QUESTIONS COME FROM — AND THIS PARAGRAPH DESCRIBES THE HALF WITH NO
+   SERVER. It said the bank is the lessons' own exercises and that there should
+   be no separate set of exam questions. That is still true of the offline
+   bundle, which draws and grades in the page. It stopped being true of the
+   school: a course carries `exam.json`, a set of its own, and the server draws
+   and seals from it — `sql-databases` is a hundred questions nobody meets in a
+   lesson. Everything below about seeds and gradable types is the offline draw.
 
    THE DRAW IS SEEDED BY THE ATTEMPT. Leaving the screen and coming back gives
    the SAME exam (otherwise closing the tab by accident would become a new exam,
@@ -91,6 +92,65 @@ export const MIN_QUESTIONS = (() => {
   return n;
 })();
 export const examReady = (exam) => exam.items.length >= MIN_QUESTIONS;
+
+/* WHETHER THERE IS AN EXAM TO SIT, ASKED OF WHOEVER KNOWS.
+
+   THE CARD USED TO DECIDE THIS BY DRAWING A PAPER IN THE BROWSER, and the bank
+   it drew from is `window.SAMPLE_EXERCISES` — the predecessor's static sample
+   data, loaded by script tags this interface does not have. It is EMPTY
+   wherever there is a server, so the draw came back with nothing and every
+   course, in every school, announced an exam "in preparation — not enough
+   exercises yet". The route behind the card worked the whole time; the card
+   never asked it. This is the fifth field in a row that the server sends and
+   this client dropped — `api.js` counts four of them in one comment.
+
+   IT SURVIVED BECAUSE IT WAS TRUE. No course had an exam, so "in preparation"
+   was right by accident. `sql-databases` got a hundred questions and the
+   sentence became a lie on a screen with a working exam one address away.
+
+   WITH NO SERVER IT STILL DRAWS. The bundle has no exercise global either, so
+   the answer there is the same "in preparation" it has always given — and the
+   bundle cannot sit an exam at all, by design. Nothing about that changed
+   here; what changed is that a school now answers for itself. */
+export function courseExamOffered(courseId) {
+  if (!api.examOnServer()) return examReady(courseExam(courseId));
+  return examPaper((courseById(courseId) || {}).examPool) >= MIN_QUESTIONS;
+}
+
+export function trackExamOffered(track, option) {
+  if (!api.examOnServer()) return examReady(trackExam(track, option));
+  return examPaper(track && track.examPool) >= MIN_QUESTIONS;
+}
+
+/* HOW LONG THE PAPER WILL ACTUALLY BE, which is the smaller of the two numbers.
+
+   The school says how many a paper draws; the catalogue says how many there are
+   to draw from. `exam.QuestionsPerAttempt` is explicit that a pool under the
+   draw is asked in full, so the paper is the minimum of the two — and it has to
+   be, because the card and the exam screen apply `MIN_QUESTIONS` to it and a
+   card offering a button to a screen that refuses is the defect this replaced.
+
+   WITH NO DRAW IT IS THE POOL. A school that has not said how long a paper is
+   has not said the pool is shorter either, so the honest reading of silence is
+   the whole set. */
+export const examPaper = (pool) => {
+  const held = typeof pool === 'number' && pool > 0 ? pool : 0;
+  const draw = examDraw();
+  return draw > 0 ? Math.min(held, draw) : held;
+};
+
+/* HOW LONG THE PAPER IS, which the card prints before any paper exists.
+
+   Exactly `passMark`'s argument one number along, and it was the same defect:
+   the card said `COURSE_QUESTIONS` — ten — and the server draws twenty. A
+   student read one number on the card and was handed twice it.
+
+   ZERO MEANS THE SERVER DID NOT SAY, and the card then names no length rather
+   than inventing one. A wrong number here is a promise the paper breaks. */
+export const examDraw = () => {
+  const said = source.school && source.school.examQuestions;
+  return typeof said === 'number' && said > 0 ? said : 0;
+};
 
 /* Every exercise in a course, each one knowing which lesson it came from — the
    wizard stores the answer under `progress[course].lessons[ix]`, and an exam that

@@ -102,7 +102,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|frame-test|bundle|bundle-test|figure-fit|figure-contrast|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|frame-test|exam-offer-test|bundle|bundle-test|figure-fit|figure-contrast|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -694,6 +694,19 @@ jobs:
           # between them, because every unstamped build answers the same string
           # and no local server can be behind itself.
           node tools/frame-test/frame-test.mjs
+
+          # AND WHETHER THE SCREEN OFFERS THE EXAM THE SCHOOL ACTUALLY HAS.
+          # `sql-databases` reached production with a hundred exam questions,
+          # loaded by the deploy and sittable at its own address, under a card
+          # reading "in preparation — not enough exercises yet" with no link:
+          # the card dealt a paper in the browser out of a global that is empty
+          # wherever there is a server, and had never asked. Every check in this
+          # file was green, `a11y-test` drew that card and measured the contrast
+          # of the words "coming soon", and the exam screen one click away
+          # worked. It fails on the DISAGREEMENT between the catalogue and the
+          # screen, which is the only place either could be checked against the
+          # other.
+          node tools/exam-offer-test/exam-offer-test.mjs
 
           # AND WHETHER THE INTERFACE CAN REACH THE SECOND FACTOR AT ALL. Every
           # part of it has a Go test against a real Postgres and every one of

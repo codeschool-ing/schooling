@@ -15,7 +15,7 @@ import { activeOption, courseDone } from '../state.js';
 import { trackPath } from '../catalog.js';
 import * as api from '../api.js';
 import { goTo } from '../routes.js';
-import { trackExam, examReady } from '../exams.js';
+import { trackExam, trackExamOffered, examPaper } from '../exams.js';
 import { examCard } from './exam.js';
 import { studentTrack, trackProgress, empty } from './common.js';
 import { ratingBlock, wireRating } from '../rate.js';
@@ -37,8 +37,12 @@ export default async function track() {
     const exam = trackExam(t, activeOption);
     return examCard({
       key: exam.key, href: '#/track/exam', scope: 'track',
-      count: exam.items.length, progress: trackProgress(t).pct,
-      ready: examReady(exam),
+      count: examPaper(t.examPool) || exam.items.length, progress: trackProgress(t).pct,
+      /* The school's answer, for the reason written out in `course.js`: the
+         draw above happens in the browser against a bank that is empty here.
+         No track has a final yet, so this card has been right by accident —
+         which is precisely how the course one survived to become wrong. */
+      ready: trackExamOffered(t, activeOption),
     });
   };
   /* ---------- and what they thought of the track ----------
