@@ -66,7 +66,36 @@ var (
 	// A colour written into the drawing rather than taken from the palette.
 	// Counted and reported; see the package comment for why it is not refused.
 	literal = regexp.MustCompile(`(?:fill|stroke|stop-color)="(#[0-9a-fA-F]{3,8}|rgba?\([^)]*\))"`)
+
+	// Text, and the token it is painted in.
+	inked = regexp.MustCompile(`<(?:text|tspan)[^>]*fill="var\(\s*--([a-zA-Z0-9-]+)`)
 )
+
+/*
+surfaces are the tokens that are a ground or a hairline, never an ink.
+
+	NOT A MATTER OF TASTE, AND MEASURED RATHER THAN ASSUMED. Against the two
+	things a figure is ever drawn on, in both themes: `wire` reaches between
+	1.35 and 1.49 to one, and `scan` between 1.09 and 1.24. AA asks for 4.5. A
+	label painted in either is invisible everywhere, and it is invisible in a
+	way no other check here can see — `check-figures` asks whether a token
+	exists and `axe` never loads the page, because these live inside a JSON
+	string in a Markdown file.
+
+	It caught the author of this rule: the FALSE box of lesson 1's three-valued
+	logic figure was drawn with `wire` as both its border and its text, which is
+	the whole mistake in one line — a border colour and an ink are different
+	jobs and the palette names them apart.
+
+	`ink` AND `panel` ARE DELIBERATELY NOT HERE. Dark text on a bright ground is
+	a real thing and a captured terminal does exactly that, with `term-capture`
+	measuring the pair it writes. A rule against them would refuse correct
+	drawings, which is how a check teaches people to ignore it.
+*/
+var surfaces = map[string]string{
+	"wire": "a hairline, at most 1.49:1 against a panel",
+	"scan": "a faint ground, at most 1.24:1 against a panel",
+}
 
 func main() {
 	content, styles := "content", []string{"ui/assets/base.css", "ui/assets/terminal.css"}
@@ -196,6 +225,20 @@ func check(at string, fig figure, palette map[string]bool) (literals int, proble
 	}
 	if fig.Image != "" && strings.TrimSpace(fig.Alt) == "" {
 		problems = append(problems, fmt.Sprintf("%s is an image with no `alt`", at))
+	}
+
+	// AND IT HAS TO BE AN INK. A ground or a hairline used as text is invisible,
+	// in both themes, against everything a figure is drawn on.
+	said := map[string]bool{}
+	for _, m := range inked.FindAllStringSubmatch(fig.SVG, -1) {
+		why, ground := surfaces[m[1]]
+		if !ground || said[m[1]] {
+			continue
+		}
+		said[m[1]] = true
+		problems = append(problems, fmt.Sprintf(
+			"%s paints text in `--%s`, which is %s — the words are there and nobody can read "+
+				"them, in either theme", at, m[1], why))
 	}
 
 	// THE TOKEN HAS TO EXIST. This is the rule the tool was written for.

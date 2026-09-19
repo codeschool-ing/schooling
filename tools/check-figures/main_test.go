@@ -197,3 +197,36 @@ func TestTheRealPaletteHoldsBothFamilies(t *testing.T) {
 		}
 	}
 }
+
+/*
+A GROUND OR A HAIRLINE USED AS TEXT IS INVISIBLE, and this rule caught its own
+author.
+
+	The FALSE box of lesson 1's three-valued logic figure was drawn with `wire`
+	as both its border and its text. A border colour and an ink are different
+	jobs; the palette names them apart and nothing was checking. Measured
+	against the two grounds a figure is drawn on, in both themes, `wire` reaches
+	at most 1.49 to one and `scan` at most 1.24, where AA asks 4.5.
+
+	No other check here could see it. This tool asks whether a token exists, and
+	axe never loads these: they live inside a JSON string in a Markdown file.
+*/
+func TestTextPaintedInAGroundIsRefused(t *testing.T) {
+	for _, token := range []string{"wire", "scan"} {
+		fig := drawing(`<text fill="var(--` + token + `)">FALSE</text>`)
+		_, problems := check("at", fig, map[string]bool{token: true, "panel": true})
+		if !says(problems, "paints text in `--"+token+"`", "nobody can read them") {
+			t.Errorf("text painted in `--%s` was accepted:\n%s", token, listed(problems))
+		}
+	}
+}
+
+// AND A GROUND USED AS A GROUND IS FINE, which is what keeps the rule about
+// text rather than about the token.
+func TestAGroundUsedAsAFillIsNotRefused(t *testing.T) {
+	fig := drawing(`<rect fill="var(--scan)" stroke="var(--wire)"/>` +
+		`<text fill="var(--paper)">x</text>`)
+	if _, problems := check("at", fig, nine); len(problems) > 0 {
+		t.Errorf("a rectangle filled with a ground was refused:\n%s", listed(problems))
+	}
+}
