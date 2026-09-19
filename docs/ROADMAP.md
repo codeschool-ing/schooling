@@ -660,8 +660,30 @@ check that stands in for a reviewer passing on it, and item analysis reports no 
   caught. What fixed most of it was not mechanical: **an option states the claim and the `why`
   explains it**, and writing both in the option is exactly what makes the right answer the
   longest
-- [ ] Three verification levels recorded per item — structure, execution, critiqued
-- [ ] Provenance recorded on everything written
+- [ ] ~~Three verification levels recorded per item — structure, execution, critiqued~~ — **a
+  per-item level would hold one value in every row.** Three depths presumes something producing
+  items at different ones; CI runs every check over the whole tree on every pull request, so
+  every item in `content/` is verified identically and a column recording that is a constant with
+  a schema.
+
+  **The real per-item difference is elsewhere and is binary.** A `code` or an `expected-output`
+  key cannot be executed while no sandbox exists — `validate-content` REPORTS that on every run
+  rather than skipping it, because silence would read as a pass, and `EXECUTOR.md` renders such a
+  question `correct: null` on the screen, where *unjudged never becomes failed*. It is derived
+  from the type and from whether an executor exists, so there is nothing to record: a stored copy
+  could only go stale on the day the sandbox is built.
+
+  What survives whole is `RELEASES.md`'s use of it (`C-05`): a RELEASE carries which checks
+  passed, which is one row per release and is in this phase's list below
+- [ ] ~~Provenance recorded on everything written~~ — **git already answers it, and answers more.**
+  `C-05` asks the right question — *when a wrong answer key surfaces, what else came out of the
+  same run* — and a run is a commit (`C-14`). `git log -S '<exercise id>'` finds the one that
+  wrote a question and `git show` gives everything else it carried, with the author, the date, the
+  message and the diff. A `provenance` column would be a second place recording what the commit
+  already records, and it would record less: it can say *run 47* and cannot say what changed.
+
+  It is the same shape as the resumability item two lines down, and it was found the same way —
+  by reading the decision against `C-14` rather than by trying to build it
 - [ ] ~~It is resumable: it knows what it has already written and does not start over~~ — **the question does not exist.** `C-14` puts the state in git: what has been written is what is committed, and a rewrite is a diff somebody reads. Resumability is a property of a long-running job, and there is no job
 - [ ] The regeneration loop — item analysis flags a question, it is rewritten, and the new version is compared against the old. The flagging is automatic (`cmd/analyse`, nightly) and the rewriting is not, which is `C-14` again: what a machine decides is that a question is bad, never what replaces it
 - [ ] A course is published as one versioned set, its level computed from what moved rather than declared

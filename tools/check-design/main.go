@@ -74,6 +74,25 @@ type sheet struct {
 	sections  int
 	exercises int
 	diagrams  int
+
+	/* AND WHAT THE SHEET SAYS ABOUT ITSELF TWICE.
+
+	   A sheet whose sections are designed states them as a numbered list AND as
+	   a total in `Shape`, and two statements of one fact drift. `listed` counts
+	   the rows of that list by kind and `said` is the total row; where both
+	   exist they are compared, along with the numbering itself, because a gap
+	   or a repeat in 1..N is the silent kind of defect — the list still reads
+	   as a list. */
+	listed, said sectionCounts
+	numbering    []int
+}
+
+// sectionCounts is a sheet's section list, or its `Shape` row, by kind.
+type sectionCounts struct{ total, reading, video, practice int }
+
+func (c sectionCounts) String() string {
+	return fmt.Sprintf("%d (%d reading, %d video, %d practice)",
+		c.total, c.reading, c.video, c.practice)
 }
 
 // course is what `content/` holds for one of them.
@@ -201,6 +220,9 @@ func readSheets(dir string) ([]sheet, []string) {
 					"the only place the sheet and the catalogue say the same things, so "+
 					"without it nothing about this sheet can be checked at all", s.file))
 		}
+
+		readSelf(&s, text)
+		problems = append(problems, consistent(s)...)
 
 		for _, m := range budget.FindAllStringSubmatch(text, -1) {
 			n, _ := strconv.Atoi(m[2])
@@ -366,26 +388,49 @@ func compare(sheets []sheet, courses []course) []string {
 	}
 	seen := map[string]bool{}
 
-	format := ""
+	/* THE CURRENT FORMAT IS WHATEVER THE NEWEST SHEET DECLARES, and there is
+	   deliberately no constant anywhere saying which one that is: a constant
+	   would be a second place stating the same fact and would disagree with the
+	   sheets the first time somebody bumped one file and stopped.
+
+	   So raising the format on one sheet is what fails the others, by name.
+	   That is the point rather than a side effect — a sheet left at an older
+	   format looks finished and is missing fields nobody remembers. */
+	current := 0
+	for _, s := range sheets {
+		if n, err := strconv.Atoi(s.format); err == nil && n > current {
+			current = n
+		}
+	}
+
+	named := map[string]string{}
 	for _, s := range sheets {
 		seen[s.slug] = true
 
-		/* ONE FORMAT ACROSS ALL OF THEM. A sheet at an older format is a
-		   revision that was started and not finished, and the half that was
-		   revised reads exactly like the half that was not. */
-		switch {
+		switch n, err := strconv.Atoi(s.format); {
 		case s.format == "":
 			problems = append(problems, fmt.Sprintf(
-				"%s declares no `format:`, so nothing says which revision of the sheet "+
-					"format it was written against", s.file))
-		case format == "":
-			format = s.format
-		case s.format != format:
+				"%s declares no `format:`, so a sheet at an older revision cannot be told "+
+					"apart from a current one", s.file))
+		case err != nil:
 			problems = append(problems, fmt.Sprintf(
-				"%s is format %s where the sheets before it are format %s — a revision that "+
-					"stopped halfway leaves two kinds of document that read alike",
-				s.file, s.format, format))
+				"%s declares format %q, which is not a whole number", s.file, s.format))
+		case n < current:
+			problems = append(problems, fmt.Sprintf(
+				"%s is at format %d and the newest sheet is at %d — bring it up or the "+
+					"register is half migrated, with both halves reading as finished",
+				s.file, n, current))
 		}
+
+		/* AND TWO SHEETS FOR ONE COURSE, which the loop below cannot see: the
+		   second silently replaces the first in the map, so the one nobody is
+		   reading goes on passing every check there is. */
+		if at, taken := named[s.slug]; taken {
+			problems = append(problems, fmt.Sprintf(
+				"%s and %s are both sheets for %q, and only one of them is ever read",
+				at, s.file, s.slug))
+		}
+		named[s.slug] = s.file
 
 		c, ok := byslug[s.slug]
 		if !ok {
@@ -503,4 +548,111 @@ func pool(n int) string {
 		return "none"
 	}
 	return strconv.Itoa(n)
+}
+
+// A row of a sheet's own section list, and the `Shape` row that totals it.
+var sectionRow = regexp.MustCompile("(?m)^\\| (\\d+) \\| `[^`]+` \\| (\\w+) \\|")
+var sectionSaid = regexp.MustCompile(
+	`\| sections \| \*\*(\d+)\*\* — (\d+) reading, (\d+) video, (\d+) practice`)
+
+// readSelf fills in what a sheet says about its own sections, in both places it
+// says it.
+func readSelf(s *sheet, text string) {
+	for _, m := range sectionRow.FindAllStringSubmatch(text, -1) {
+		n, _ := strconv.Atoi(m[1])
+		s.numbering = append(s.numbering, n)
+		s.listed.total++
+		switch m[2] {
+		case "reading":
+			s.listed.reading++
+		case "video":
+			s.listed.video++
+		case "practice":
+			s.listed.practice++
+		}
+	}
+	if m := sectionSaid.FindStringSubmatch(text); m != nil {
+		s.said.total, _ = strconv.Atoi(m[1])
+		s.said.reading, _ = strconv.Atoi(m[2])
+		s.said.video, _ = strconv.Atoi(m[3])
+		s.said.practice, _ = strconv.Atoi(m[4])
+	}
+}
+
+/*
+consistent is a sheet against itself, which is the half that needs no catalogue.
+
+	These rules were a Python heredoc in `docs.yml` until `check-design` existed,
+	and two of them were then being made twice — once there and once here. Two
+	checks of one thing is the arrangement where the strictness of the pair is
+	whichever of them somebody edits last, so they are one now.
+
+	WHAT MOVING THEM BOUGHT is that they can be run before pushing. A heredoc
+	inside a workflow answers only after a push, has no test, and cannot be
+	pointed at a directory — which is why the version in `CLAUDE.md`'s list is
+	the version that gets run.
+*/
+func consistent(s sheet) []string {
+	var problems []string
+	if s.listed.total == 0 {
+		return nil // most sheets do not lay their sections out, which is not a defect
+	}
+
+	/* THE NUMBERING IS 1..N, and a gap or a repeat is the silent kind: the list
+	   still reads as a list, and the section somebody meant to write is the one
+	   that is not there. */
+	if missing, repeated := offBy(s.numbering); len(missing)+len(repeated) > 0 {
+		problems = append(problems, fmt.Sprintf(
+			"%s numbers its sections 1..%d with %v missing and %v repeated — a gap or a "+
+				"repeat leaves a list that still reads as a list",
+			s.file, len(s.numbering), or(missing), or(repeated)))
+	}
+
+	switch {
+	case s.said == (sectionCounts{}):
+		problems = append(problems, fmt.Sprintf(
+			"%s lays its sections out and has no `sections` line in Shape to check the list "+
+				"against — the total is then stated once and drifts alone", s.file))
+	case s.said != s.listed:
+		problems = append(problems, fmt.Sprintf(
+			"%s says %s in Shape and lists %s — two statements of one fact, and they differ",
+			s.file, s.said, s.listed))
+	}
+	return problems
+}
+
+/*
+offBy answers what a numbering of 1..N is missing and what it repeats.
+
+	NAMED RATHER THAN DUMPED. The first version printed the whole list and said
+	which position was wrong, which on a sheet of 223 sections is a screenful of
+	numbers hiding the two that matter — and a message somebody scrolls past is
+	a message that did not arrive.
+*/
+func offBy(numbering []int) (missing, repeated []int) {
+	seen := map[int]int{}
+	for _, n := range numbering {
+		seen[n]++
+	}
+	for i := 1; i <= len(numbering); i++ {
+		if seen[i] == 0 {
+			missing = append(missing, i)
+		}
+	}
+	for n, count := range seen {
+		if count > 1 {
+			repeated = append(repeated, n)
+		}
+	}
+	sort.Ints(repeated)
+	return missing, repeated
+}
+
+// or prints an empty list as a word, because `[]` beside `[5]` reads as a second
+// number somebody has to decode.
+func or(ns []int) any {
+	if len(ns) == 0 {
+		return "nothing"
+	}
+	return ns
 }

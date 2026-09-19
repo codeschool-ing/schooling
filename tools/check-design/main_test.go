@@ -129,7 +129,7 @@ func TestASheetAtAnotherFormatIsRefused(t *testing.T) {
 		id: "co-7mr8mhy8", lessons: 13})
 	c = append(c, course{school: "code", slug: "linux-terminal", id: "co-7mr8mhy8", topics: 13})
 	problems := compare(s, c)
-	if !says(problems, "is format 4", "format 5") {
+	if !says(problems, "is at format 4", "newest sheet is at 5") {
 		t.Errorf("a sheet at an older format was accepted:\n%s", listed(t, problems))
 	}
 }
@@ -188,5 +188,61 @@ func TestTheDesignedCountWinsOverTheRuleOfThumb(t *testing.T) {
 	if got.exercises != 890 || got.diagrams != 28 {
 		t.Errorf("exercises %d and diagrams %d, from `~890, floor 700` and `~28 — …`",
 			got.exercises, got.diagrams)
+	}
+}
+
+// TWO SHEETS FOR ONE COURSE is the duplicate the comparison itself cannot see:
+// the second replaces the first in the map, and the one nobody reads goes on
+// passing every check there is.
+func TestTwoSheetsForOneCourseAreRefused(t *testing.T) {
+	s, c := agreeing()
+	s = append(s, sheet{file: "sql.md", slug: "sql-databases", format: "5",
+		id: "co-1y7mkp4n", lessons: 13})
+	problems := compare(s, c)
+	if !says(problems, "are both sheets for", "only one of them is ever read") {
+		t.Errorf("a second sheet for one course was accepted:\n%s", listed(t, problems))
+	}
+}
+
+/*
+A SHEET STATES ITS SECTIONS TWICE, and two statements of one fact drift.
+
+	These three rules were a Python heredoc inside `docs.yml` until this tool
+	existed, and two of the ones beside them were then being made twice — once
+	there and once here. A pair of checks over one thing is an arrangement whose
+	strictness is whichever of the two somebody edited last.
+
+	Moving them here is what makes them runnable before a push: a heredoc in a
+	workflow answers only after one, carries no test, and cannot be pointed at a
+	directory.
+*/
+func TestASheetsSectionListIsCheckedAgainstItsOwnTotal(t *testing.T) {
+	s := sheet{file: "x.md",
+		listed:    sectionCounts{total: 4, reading: 2, video: 1, practice: 1},
+		said:      sectionCounts{total: 4, reading: 3, video: 0, practice: 1},
+		numbering: []int{1, 2, 3, 4}}
+	if !says(consistent(s), "says 4 (3 reading, 0 video, 1 practice)", "lists 4 (2 reading") {
+		t.Errorf("a Shape row disagreeing with its own list was accepted:\n%s",
+			listed(t, consistent(s)))
+	}
+}
+
+func TestAGapInTheSectionNumberingIsRefused(t *testing.T) {
+	s := sheet{file: "x.md",
+		listed:    sectionCounts{total: 3, reading: 3},
+		said:      sectionCounts{total: 3, reading: 3},
+		numbering: []int{1, 2, 4}}
+	if !says(consistent(s), "[3] missing", "still reads as a list") {
+		t.Errorf("a numbering with a gap was accepted:\n%s", listed(t, consistent(s)))
+	}
+}
+
+// AND A SHEET THAT DOES NOT LAY ITS SECTIONS OUT IS NOT INCOMPLETE. Most of the
+// 122 give a budget and no list, which is the sheet doing its job at the stage
+// the course is at.
+func TestASheetWithNoSectionListIsFine(t *testing.T) {
+	if problems := consistent(sheet{file: "x.md", sections: 150}); len(problems) > 0 {
+		t.Errorf("a sheet that budgets its sections without listing them was refused:\n%s",
+			listed(t, problems))
 	}
 }
