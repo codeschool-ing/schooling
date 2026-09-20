@@ -158,7 +158,24 @@ var headline = regexp.MustCompile(
 // A budget row of the shape table. The value is prose — `~890, floor 700` and
 // `~150, about 11.5 a lesson` are both real — so the FIRST number is taken and
 // the rest is commentary, which is the only rule that holds across all of them.
-var budget = regexp.MustCompile(`(?m)^\| (?:\*\*)?([a-z ]+?)(?:\*\*)? \| ~?\*{0,2}(\d+)`)
+//
+// THE WHOLE CELL IS CAPTURED AND THE NUMBER FOUND INSIDE IT, rather than
+// matched at its start. The pattern used to read `~?\*{0,2}(\d+)`, which is the
+// rule with an order imposed on it: a tilde, then emphasis, then the digits. A
+// sheet writing `**~85**` puts them the other way round and matched nothing, so
+// the row was read as no budget at all — and `diagrams to draw` is printed as
+// `?` when it is zero, which looks like a sheet that declined to say rather
+// than a tool that could not read. Seven sheets wrote it that way, and they are
+// not a random seven: a sheet bolds the number when the load is remarkable
+// ("the most of any course swept so far", "and they are the course"), so the
+// reading failed on exactly the courses where the figure budget carries the
+// most information.
+var budget = regexp.MustCompile(`(?m)^\| (?:\*\*)?([a-z ]+?)(?:\*\*)? \| ([^|\n]*)`)
+
+// The first number in a budget cell, whatever decorates it. Safe because no
+// budget row in `docs/design/` opens with prose ahead of its number — the four
+// keys this tool reads all begin the cell with the figure, decorated or bare.
+var firstNumber = regexp.MustCompile(`\d+`)
 
 var frontCourse = regexp.MustCompile(`(?m)^course:\s*(\S+)\s*$`)
 var frontFormat = regexp.MustCompile(`(?m)^format:\s*(\S+)\s*$`)
@@ -225,7 +242,7 @@ func readSheets(dir string) ([]sheet, []string) {
 		problems = append(problems, consistent(s)...)
 
 		for _, m := range budget.FindAllStringSubmatch(text, -1) {
-			n, _ := strconv.Atoi(m[2])
+			n, _ := strconv.Atoi(firstNumber.FindString(m[2]))
 			switch strings.TrimSpace(m[1]) {
 			/* `sections` WINS OVER `section budget`, and both rows exist on
 			   purpose. The budget is the rule of thumb the sheet started from
