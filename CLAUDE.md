@@ -1541,6 +1541,33 @@ The workflow refuses the tag, runs the same checks main is gated by (it *calls* 
 rather than repeating its steps), stamps the binaries, **asks the binary what version it is**
 and compares that with the tag, and only then creates the release.
 
+**Every action is pinned to a commit, carries the version it was cut from, and runs on a runtime
+that is still supported** — `tools/check-actions`. The pin is the supply chain: a moving tag is
+somebody else's repository deciding what runs with credentials that reach Google, and the comment
+beside it is the only thing that makes the pin legible to whoever is deciding whether it is old.
+
+The runtime is the half that had gone quiet. `v0.51.0` deployed green with a warning under it:
+two actions declared `node20`, which GitHub has deprecated, and the runner forced them onto
+Node 24 rather than failing. **It was five and the warning named two** — a warning is emitted by
+the job that ran the action, so the other three sat at the foot of jobs nobody had read. What
+breaks when the forcing stops is `Deploy`, the one job that cannot be rehearsed, after the images
+are already pushed.
+
+**The runtime is READ, never asserted.** Recording `node24` beside the pin and checking the token
+offline is the cheap version, and it is a claim written by the same hand, in the same edit, as the
+pin it describes — green while wrong. The tool fetches the pinned commit's own `action.yml`
+instead, which makes it the second thing here that touches the network after `tools/fonts`;
+`-offline` drops to the pinning half. What it deliberately does not check is whether a pin is
+merely OLD: a deprecation has a date on it, "there is a newer version" does not, and a check that
+failed on the latter would go red on the morning of every upstream release and be silenced by
+lunchtime.
+
+*This also closed a gap in `ci.yml` that was nothing to do with actions: the file-change
+detector named `.github/workflows/ci.yml` and no other workflow, so a pull request touching only
+`release.yml` matched none of the three patterns and went green having run no job at all — on the
+file that deploys, and against the paragraph directly above it saying a detector that guesses
+wrong should waste a runner rather than skip a suite.*
+
 The API is versioned at `/api/v1/`. This is not ceremony: the **offline bundle** is a client that
 may be months old and that nobody can update. (P-10)
 
@@ -1567,6 +1594,10 @@ go run ./tools/check-interface ui/my   # and the same for the student's own plac
                                        # its own tree and its own dictionary
 go run ./tools/check-css          # every stylesheet parses to its end, and ours overrides
                                   # theirs without ever laying it out
+go run ./tools/check-actions      # every action pinned to a commit with its version beside
+                                  # it, and none on a Node the runner is only still humouring.
+                                  # It fetches each pinned `action.yml` — `-offline` drops to
+                                  # the pinning half, which needs nobody's server
 go test -race ./...          # needs SCHOOLING_TEST_DATABASE_URL and a real Postgres
 ```
 
