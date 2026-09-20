@@ -246,3 +246,53 @@ func TestASheetWithNoSectionListIsFine(t *testing.T) {
 			listed(t, problems))
 	}
 }
+
+// A BUDGET THE SHEET BOLDED IS STILL A BUDGET. `~85` and `**~85**` are one
+// number written two ways, and the pattern used to require the tilde before the
+// emphasis — so the second read as no budget at all and `diagrams to draw`
+// printed `?`, which is what the tool prints for a sheet that declined to say.
+// Seven sheets write it bolded, and a sheet bolds the number precisely when the
+// load is remarkable, so the unreadable ones were the informative ones.
+func TestABoldedBudgetIsRead(t *testing.T) {
+	dir := t.TempDir()
+	body := "---\nformat: 5\ncourse: computing-essentials\n---\n\n" +
+		"**Computing** · `co-4t9wqm2h` · 60 h declared · beginner · 16 lessons · `it` · **free**\n\n" +
+		"| section budget | ~129, about 8.1 a lesson |\n" +
+		"| exercises | **719**, counted after the course was written |\n" +
+		"| diagrams to draw | **~85** |\n"
+	if err := os.WriteFile(filepath.Join(dir, "computing-essentials.md"), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	sheets, _ := readSheets(dir)
+	if len(sheets) != 1 {
+		t.Fatalf("read %d sheets", len(sheets))
+	}
+	if got := sheets[0].diagrams; got != 85 {
+		t.Errorf("`**~85**` read as %d diagrams — a budget nobody can read is printed as `?`, "+
+			"which reads as a sheet that said nothing rather than a tool that saw nothing", got)
+	}
+	if got := sheets[0].exercises; got != 719 {
+		t.Errorf("`**719**, counted after…` read as %d exercises", got)
+	}
+}
+
+// AND A CELL WITH NO NUMBER IS STILL NO BUDGET. The row exists, says something
+// in words, and means the sheet declined to put a figure on it — which has to
+// stay distinct from a number the tool failed to read, or widening the reading
+// would turn every prose row into a budget of zero.
+func TestABudgetRowWithNoNumberSaysNothing(t *testing.T) {
+	dir := t.TempDir()
+	body := "---\nformat: 5\ncourse: git\n---\n\n" +
+		"**Git** · `co-g2dkab2w` · 40 h declared · beginner · 19 lessons · `foundations` · paid\n\n" +
+		"| diagrams to draw | to be decided once the lessons are laid out |\n"
+	if err := os.WriteFile(filepath.Join(dir, "git.md"), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	sheets, _ := readSheets(dir)
+	if len(sheets) != 1 {
+		t.Fatalf("read %d sheets", len(sheets))
+	}
+	if got := sheets[0].diagrams; got != 0 {
+		t.Errorf("a budget row with no figure in it read as %d", got)
+	}
+}

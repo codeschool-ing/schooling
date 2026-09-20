@@ -94,7 +94,13 @@ jobs:
           # `ui/` is in the Go set because the API embeds it and
           # `check-interface` reads it — a string added without its Portuguese
           # is a Go failure here, not a browser one.
-          go='^(internal/|cmd/|tools/|migrations/|content/|ui/|go\.(mod|sum)$|\.golangci\.yml$|\.github/workflows/ci\.yml$)'
+          # EVERY WORKFLOW AND NOT ONLY THIS ONE. It used to name `ci.yml`
+          # alone, so a pull request that touched only `release.yml` matched
+          # nothing in any of the three lines and went green having run no job
+          # at all — against the paragraph above, on the file that deploys.
+          # `check-actions` also reads all of them, so a pin changed in
+          # `release.yml` has to reach the job that checks pins.
+          go='^(internal/|cmd/|tools/|migrations/|content/|ui/|go\.(mod|sum)$|\.golangci\.yml$|\.github/workflows/)'
 
           # The browser suite renders the interface against a real schema, so
           # it wants everything that reaches a screen. `tools/lib/` is in the
@@ -371,6 +377,25 @@ jobs:
       # appears in a diff as a decision — it appears as a font.
       - name: Nothing the browser fetches leaves the origin
         run: go run ./tools/check-origin
+
+      # THE DEPLOY'S OWN SUPPLY CHAIN, WHICH NOTHING HERE READ UNTIL NOW.
+      # `v0.51.0` deployed green with a warning under it: two of its actions
+      # declared `node20`, which GitHub has deprecated, and the runner forced
+      # them onto Node 24 rather than failing. It was five actions and the
+      # warning named two, because a warning is emitted by the job that ran the
+      # action and the other three were at the foot of jobs nobody had read.
+      #
+      # The day the forcing stops, the job that breaks is `Deploy` — the one
+      # that cannot be rehearsed, and that breaks after the images are pushed.
+      #
+      # IT READS THE RUNTIME RATHER THAN BELIEVING A COMMENT. The cheap version
+      # records `node24` beside the pin and checks the token offline, which is a
+      # claim written by the same hand, in the same edit, as the pin it
+      # describes. This fetches the pinned commit's own `action.yml`. `-offline`
+      # drops to the half that needs nobody's server, and is what a contributor
+      # without the network runs.
+      - name: Every action is pinned, and none on a runtime that is going away
+        run: go run ./tools/check-actions
 
       - name: The tests, with a database behind them
         run: go test -race ./...
