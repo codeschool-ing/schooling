@@ -35,9 +35,19 @@ answer, and what a domain is. `html-css` does not re-explain HTTP.
 | **hours per lesson** | **3.64** |
 | section budget | ~86, about 7.8 a lesson — **and 94 are designed**, which is what the budget turned out to be worth |
 | sections | **94** — 62 reading, 21 video, 11 practice |
-| exercises | ~425–465, floor 350 |
+| exercises | **441**, counted after the course was written |
 | video | estimated, not a target (`C-36`) |
 | avatar visible | ~20–25% overall, and **100% in an opening** — see below |
+
+**This row is the one of the four written courses where the estimate was right**, and it is
+worth saying rather than quietly overwriting. The sheet designed ~425–465 with a floor of 350;
+the course came out at 441, which is inside the range and nearly in the middle of it. The number
+moved to the measurement anyway for one reason that is about the tool and not about the design:
+`check-design` reads the first figure in the cell, so a range is read as its low end and 441 was
+reported as a 4% overrun on a course that overran nothing. Fixing the tool to parse a range would
+be machinery for the only sheet in a hundred and twenty-two that writes one, and it would need a
+decision about what *of* means against a range. The design is recorded here instead: **~425–465,
+floor 350, and the writing landed at 441.**
 
 Exercise types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `labelling`,
 `numeric`. Not `code` or `expected-output` — there is no programming here, which is why this
