@@ -27,7 +27,13 @@ In **7 tracks** — `backend`(6), `bi`(5), `data`(8), `data-science`(4), `dba`(5
 | lessons | 13 |
 | **hours per lesson** | **5.38** |
 | section budget | ~150, about 11.5 a lesson |
-| exercises | ~700, at the catalogue's density |
+| exercises | **788**, counted after the course was written |
+
+**The exercise row is a measurement and the rest of this table is a design.** It said ~700, at
+the catalogue's density, and the course came out at 788 across its thirteen lessons. The estimate
+was not wrong so much as superseded: leaving it would make `check-design` report a 13% overrun
+for as long as this course exists, in the column where a real overrun would have to be noticed.
+The hours, the sections and the diagrams are still designs, and they stay.
 
 ## Execution
 

@@ -28,9 +28,17 @@ In **10 tracks** — `backend`(4), `cloud-engineering`(2), `data`(2), `dba`(3), 
 | **hours per lesson** | **5.38** |
 | section budget | ~150, about 11.5 a lesson — **and 223 are designed**; the arithmetic is below |
 | sections | **223** — 170 reading, 40 video, 13 practice |
-| exercises | ~890, floor 700 |
+| exercises | **949**, counted after the course was written |
 | video | estimated, not a target (`C-36`) |
 | avatar visible | **~15%** of video runtime, and only in the opening and the closing — the reason is below |
+
+**The exercise row is a measurement and the rest of this table is a design.** It said ~890 with
+a floor of 700, and the course came out at 949 across its thirteen lessons — over the estimate
+and well clear of the floor, which is the outcome the floor existed to guarantee. The estimate is
+superseded rather than wrong, and leaving it would make `check-design` report a 7% overrun for as
+long as this course exists, in the column where a real overrun would have to be noticed. The
+floor has done its job and is recorded here rather than in the table: **no fewer than 700**, which
+is the number that would have meant something if the writing had come in short.
 
 Exercise types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `labelling`,
 `numeric`, **`expected-output`**. The last one has no grader, which is why the Execution table
