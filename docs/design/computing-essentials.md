@@ -32,8 +32,15 @@ it can be designed without reference to anything else.
 | lessons | 16 |
 | **hours per lesson** | **3.75** |
 | section budget | ~129, about 8.1 a lesson |
-| exercises | ~600, at the catalogue's density |
+| exercises | **719**, counted after the course was written |
 | video | estimated, and the number depends on flag 1 |
+
+**The exercise row is a measurement and the rest of this table is a design.** It said ~600, at
+the catalogue's density, which was the right thing to write before anybody had written a
+question; the course came out at 719 across its sixteen lessons. The estimate was not wrong so
+much as superseded, and leaving it would make `check-design` report a 20% overrun for as long
+as this course exists — a number nobody can act on, in the column where a real overrun would
+have to be noticed. The hours, the sections and the diagrams are still designs, and they stay.
 
 `labelling` carries more weight here than anywhere else in the catalogue: motherboard, ports,
 connectors, peripherals are all diagrams with names on them, and the type has a grader.
