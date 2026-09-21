@@ -85,7 +85,34 @@ type sheet struct {
 	   as a list. */
 	listed, said sectionCounts
 	numbering    []int
+
+	/* AND THE LIST BY IDENTITY RATHER THAN BY COUNT.
+
+	   The totals above answer "how many", which is the question that misses the
+	   one that matters. `linux-terminal` designed 223 sections and 228 were
+	   written, so this tool reported five — and underneath those five, seven of
+	   its thirteen lessons had been written against a different arrangement
+	   entirely: fifty-five section names the sheet did not have, and fifty-three
+	   the sheet had and the course did not. A difference of five hid a
+	   difference of fifty-five, because a total cannot see a rename.
+
+	   `web-fundamentals` is why this is checkable rather than a guess: its sheet
+	   and its course share every slug, 74 of 74, so the slug in the sheet IS the
+	   slug in `content/` and always was. */
+	enumerated []lessonList
 }
+
+// lessonList is one lesson's sections in order, from a sheet or from
+// `content/`. The two are compared element by element.
+type lessonList struct {
+	lesson string // `le-…`, which is what the two sides join by
+	rows   []sectionRef
+}
+
+// sectionRef is what both sides state about a section: its slug and its kind.
+// The sheet's `covers` column is prose for a person and has no counterpart in
+// `content/`, so it is deliberately not compared.
+type sectionRef struct{ slug, kind string }
 
 // sectionCounts is a sheet's section list, or its `Shape` row, by kind.
 type sectionCounts struct{ total, reading, video, practice int }
@@ -106,6 +133,14 @@ type course struct {
 	written  int // exercises in its lessons
 	exam     int // exercises in its exam pool
 	figures  int
+
+	// Each written lesson's sections in order, for the comparison by identity.
+	lists []lessonList
+
+	// Every lesson this course declares, written or not — so a sheet naming a
+	// lesson that belongs to nothing can be told apart from one naming a lesson
+	// nobody has written yet. The first is a defect; the second is progress.
+	declares map[string]bool
 }
 
 func main() {
@@ -306,7 +341,15 @@ func readCourses(dir string) ([]course, []string) {
 		}
 		c.id, c.lessons, c.topics = declared.ID, len(declared.Lessons), len(declared.Topics)
 
-		c.sections = countSections(d, declared.Lessons)
+		c.declares = map[string]bool{}
+		for _, t := range declared.Topics {
+			c.declares[t.ID] = true
+		}
+		for _, id := range declared.Lessons {
+			c.declares[id] = true
+		}
+
+		c.sections, c.lists = countSections(d, declared.Lessons)
 		c.written = countExercises(filepath.Join(d, "lessons", "*", "exercises.json"))
 		c.exam = countExercises(filepath.Join(d, "exam.json"))
 		c.figures = countFigures(d)
@@ -319,23 +362,36 @@ func readCourses(dir string) ([]course, []string) {
 // its directory: order is declared, never inferred from the filesystem (C-10),
 // and a `.md` nobody references is `validate-content`'s finding and not this
 // tool's.
-func countSections(dir string, lessons []string) int {
+func countSections(dir string, lessons []string) (int, []lessonList) {
 	n := 0
+	var lists []lessonList
 	for _, id := range lessons {
 		var lesson struct {
 			Sections []struct {
-				ID string `json:"id"`
+				ID   string `json:"id"`
+				Slug string `json:"slug"`
+				Kind string `json:"kind"`
 			} `json:"sections"`
 		}
 		body, err := os.ReadFile(filepath.Join(dir, "lessons", id, "lesson.json")) //nolint:gosec // composed from a declared id
 		if err != nil {
+			// A LESSON NOT WRITTEN YET, which is not a disagreement: a course is
+			// written one lesson at a time and the sheet designs all of them.
+			// It is left out of `lists` so the comparison below has nothing to
+			// say about it.
 			continue
 		}
-		if json.Unmarshal(body, &lesson) == nil {
-			n += len(lesson.Sections)
+		if json.Unmarshal(body, &lesson) != nil {
+			continue
 		}
+		n += len(lesson.Sections)
+		list := lessonList{lesson: id}
+		for _, sec := range lesson.Sections {
+			list.rows = append(list.rows, sectionRef{slug: sec.Slug, kind: sec.Kind})
+		}
+		lists = append(lists, list)
 	}
-	return n
+	return n, lists
 }
 
 func countExercises(pattern string) int {
@@ -476,6 +532,8 @@ func compare(sheets []sheet, courses []course) []string {
 					"lesson somebody has not written yet, so these are two statements of one "+
 					"number and they differ", s.file, s.lessons, c.slug, c.topics))
 		}
+
+		problems = append(problems, sameSections(s, c)...)
 	}
 
 	/* AND THE OTHER DIRECTION, which is the one that actually happens. A course
@@ -569,6 +627,13 @@ func pool(n int) string {
 
 // A row of a sheet's own section list, and the `Shape` row that totals it.
 var sectionRow = regexp.MustCompile("(?m)^\\| (\\d+) \\| `[^`]+` \\| (\\w+) \\|")
+
+// A lesson heading in a sheet that lays its sections out, and the rows under
+// it. The heading carries the lesson id, which is what the sheet and
+// `content/` join by — a title would be joining by prose (C-09), and the
+// position would break the moment somebody inserts a lesson.
+var lessonHead = regexp.MustCompile("(?m)^\\*\\*Lesson \\d+ · [^\\n]*?`(le-[0-9a-z]{8})`[^\\n]*$")
+var listRow = regexp.MustCompile("(?m)^\\| \\d+ \\| `([^`]+)` \\| (\\w+) \\|")
 var sectionSaid = regexp.MustCompile(
 	`\| sections \| \*\*(\d+)\*\* — (\d+) reading, (\d+) video, (\d+) practice`)
 
@@ -588,6 +653,22 @@ func readSelf(s *sheet, text string) {
 			s.listed.practice++
 		}
 	}
+	/* THE LIST GROUPED BY LESSON. Everything from one lesson's heading to the
+	   next belongs to that lesson, which is how the sheet already reads to a
+	   person — so nothing here asks an author to write anything new. */
+	heads := lessonHead.FindAllStringSubmatchIndex(text, -1)
+	for i, h := range heads {
+		end := len(text)
+		if i+1 < len(heads) {
+			end = heads[i+1][0]
+		}
+		list := lessonList{lesson: text[h[2]:h[3]]}
+		for _, m := range listRow.FindAllStringSubmatch(text[h[1]:end], -1) {
+			list.rows = append(list.rows, sectionRef{slug: m[1], kind: m[2]})
+		}
+		s.enumerated = append(s.enumerated, list)
+	}
+
 	if m := sectionSaid.FindStringSubmatch(text); m != nil {
 		s.said.total, _ = strconv.Atoi(m[1])
 		s.said.reading, _ = strconv.Atoi(m[2])
@@ -672,4 +753,88 @@ func or(ns []int) any {
 		return "nothing"
 	}
 	return ns
+}
+
+/*
+sameSections is the sheet's section list against the course's, by identity.
+
+	THE TOTAL CANNOT SEE A RENAME, and that is not hypothetical. This tool
+	reported `linux-terminal` as 228 sections against 223 — five. Underneath the
+	five, seven of its thirteen lessons had been written against a different
+	arrangement of sections altogether: fifty-five names the sheet did not have,
+	fifty-three it had and the course did not. The difference of five was the
+	only symptom, and it read as a course that had grown slightly.
+
+	IT IS CHECKABLE BECAUSE THE SLUG IS ALREADY THE SAME STRING. `web-fundamentals`
+	shares every slug with its sheet, 74 of 74, which is what makes this a
+	measurement rather than a convention somebody is now being asked to adopt.
+
+	WHAT IS COMPARED IS THE SLUG AND THE KIND, in order. The `covers` column is
+	prose written for a person and has nothing in `content/` to be compared with;
+	the number in the first column is checked separately, as a numbering of 1..N.
+
+	AND ONLY WHERE BOTH SIDES HAVE THE LESSON. A sheet designs every lesson and a
+	course is written one at a time, so a lesson with no `lesson.json` yet is
+	progress rather than a disagreement — it is left out. A lesson the sheet
+	names and the course does not DECLARE is the other thing entirely, and says
+	so.
+*/
+func sameSections(s sheet, c course) []string {
+	if len(s.enumerated) == 0 {
+		return nil // most sheets do not lay their sections out
+	}
+
+	written := map[string][]sectionRef{}
+	for _, l := range c.lists {
+		written[l.lesson] = l.rows
+	}
+
+	var problems []string
+	for _, listed := range s.enumerated {
+		if !c.declares[listed.lesson] {
+			problems = append(problems, fmt.Sprintf(
+				"%s lays out sections for %s and %s/course.json does not declare that lesson "+
+					"at all — a sheet designing a lesson nothing will ever read",
+				s.file, listed.lesson, c.slug))
+			continue
+		}
+		rows, ok := written[listed.lesson]
+		if !ok {
+			continue // designed, not written yet
+		}
+		if where, why := firstDifference(listed.rows, rows); why != "" {
+			problems = append(problems, fmt.Sprintf(
+				"%s and %s/%s disagree at section %d: %s. The sheet lists %d sections there "+
+					"and the lesson declares %d — a total cannot see a rename, so a lesson "+
+					"rewritten under new names can agree on the count and share nothing",
+				s.file, c.slug, listed.lesson, where+1, why,
+				len(listed.rows), len(rows)))
+		}
+	}
+	return problems
+}
+
+// firstDifference names ONE disagreement rather than printing both lists. A
+// lesson holds twenty sections and a sheet holds two hundred; a message that
+// dumps them is a message somebody scrolls past, which is the same lesson
+// `offBy` learnt one column over.
+func firstDifference(listed, written []sectionRef) (int, string) {
+	for i := range listed {
+		if i >= len(written) {
+			return i, fmt.Sprintf("the sheet has `%s` and the lesson ends", listed[i].slug)
+		}
+		switch {
+		case listed[i].slug != written[i].slug:
+			return i, fmt.Sprintf("the sheet says `%s` and the lesson says `%s`",
+				listed[i].slug, written[i].slug)
+		case listed[i].kind != written[i].kind:
+			return i, fmt.Sprintf("`%s` is %s on the sheet and %s in the lesson",
+				listed[i].slug, listed[i].kind, written[i].kind)
+		}
+	}
+	if len(written) > len(listed) {
+		return len(listed), fmt.Sprintf("the lesson has `%s` and the sheet ends",
+			written[len(listed)].slug)
+	}
+	return 0, ""
 }

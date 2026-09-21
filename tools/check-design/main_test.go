@@ -296,3 +296,131 @@ func TestABudgetRowWithNoNumberSaysNothing(t *testing.T) {
 		t.Errorf("a budget row with no figure in it read as %d", got)
 	}
 }
+
+// laid is a sheet and a course that enumerate the same two-section lesson, for
+// the tests below to break in one place each.
+func laid() (sheet, course) {
+	s := sheet{file: "sql-databases.md", slug: "sql-databases", format: "5",
+		id: "co-1y7mkp4n", lessons: 13,
+		enumerated: []lessonList{{lesson: "le-5he7q8tg", rows: []sectionRef{
+			{slug: "intro", kind: "video"},
+			{slug: "the-tree", kind: "reading"},
+		}}}}
+	c := course{school: "code", slug: "sql-databases", id: "co-1y7mkp4n", topics: 13,
+		declares: map[string]bool{"le-5he7q8tg": true},
+		lists: []lessonList{{lesson: "le-5he7q8tg", rows: []sectionRef{
+			{slug: "intro", kind: "video"},
+			{slug: "the-tree", kind: "reading"},
+		}}}}
+	return s, c
+}
+
+func TestASheetAndItsCourseListingTheSameSections(t *testing.T) {
+	s, c := laid()
+	if problems := sameSections(s, c); len(problems) > 0 {
+		t.Errorf("two lists that agree were reported:\n%s", listed(t, problems))
+	}
+}
+
+// THE FAILURE THIS WAS WRITTEN FOR, and the only shape of it that matters: the
+// counts agree and the sections are different. `linux-terminal` had seven
+// lessons in this state and the tool reported a difference of five, because a
+// total cannot see a rename.
+func TestARenamedSectionIsRefusedEvenWhenTheCountAgrees(t *testing.T) {
+	s, c := laid()
+	c.lists[0].rows[1].slug = "the-filesystem"
+
+	problems := sameSections(s, c)
+	if !says(problems, "the sheet says `the-tree`", "the lesson says `the-filesystem`") {
+		t.Errorf("a renamed section with the count unchanged was not reported:\n%s",
+			listed(t, problems))
+	}
+	if len(s.enumerated[0].rows) != len(c.lists[0].rows) {
+		t.Fatal("this test is only worth anything while both sides have two sections")
+	}
+}
+
+// AND A KIND IS HALF OF WHAT A SECTION IS. A reading written where the sheet
+// designed a video is the same defect one column across, and the slug agreeing
+// is what would hide it.
+func TestASectionOfAnotherKindIsRefused(t *testing.T) {
+	s, c := laid()
+	c.lists[0].rows[1].kind = "video"
+
+	if problems := sameSections(s, c); !says(problems, "`the-tree` is reading on the sheet") {
+		t.Errorf("a kind that changed was not reported:\n%s", listed(t, problems))
+	}
+}
+
+// A LESSON DESIGNED AND NOT YET WRITTEN IS PROGRESS. A sheet designs every
+// lesson of a course and the course is written one at a time, so comparing
+// against what exists would fail every course that has been started.
+func TestALessonNotWrittenYetIsNotADisagreement(t *testing.T) {
+	s, c := laid()
+	s.enumerated = append(s.enumerated, lessonList{lesson: "le-9999zzzz",
+		rows: []sectionRef{{slug: "intro", kind: "video"}}})
+	c.declares["le-9999zzzz"] = true // declared as a topic, no lesson.json yet
+
+	if problems := sameSections(s, c); len(problems) > 0 {
+		t.Errorf("a lesson designed and not written was reported:\n%s", listed(t, problems))
+	}
+}
+
+// AND A LESSON THE COURSE DOES NOT DECLARE IS THE OTHER THING ENTIRELY: the
+// sheet is designing sections for something nothing will ever read, which is
+// indistinguishable from the case above unless the two are told apart.
+func TestASheetLayingOutALessonTheCourseDoesNotDeclareIsRefused(t *testing.T) {
+	s, c := laid()
+	s.enumerated = append(s.enumerated, lessonList{lesson: "le-9999zzzz",
+		rows: []sectionRef{{slug: "intro", kind: "video"}}})
+
+	if problems := sameSections(s, c); !says(problems, "does not declare that lesson") {
+		t.Errorf("a sheet designing a lesson of no course was not reported:\n%s",
+			listed(t, problems))
+	}
+}
+
+// A SHEET THAT LAYS NOTHING OUT SAYS NOTHING, which is most of them: 120 of the
+// 122 give a section budget and no list, and reading that as "zero sections
+// designed" would fail every one of them.
+func TestASheetWithNoListIsNotCompared(t *testing.T) {
+	_, c := laid()
+	if problems := sameSections(sheet{file: "git.md", slug: "git"}, c); len(problems) > 0 {
+		t.Errorf("a sheet with no section list was reported:\n%s", listed(t, problems))
+	}
+}
+
+// AND THE LIST IS READ OUT OF A REAL SHEET, grouped by the lesson heading —
+// because everything above takes the parsed lists as given, and the parsing is
+// where a heading that stops matching would silently produce no lists at all
+// and pass every test on this page.
+func TestTheSectionListIsReadGroupedByLesson(t *testing.T) {
+	dir := t.TempDir()
+	body := "---\nformat: 5\ncourse: linux-terminal\n---\n\n" +
+		"**Linux** · `co-7mr8mhy8` · 70 h declared · beginner · 13 lessons · `infra` · **free**\n\n" +
+		"**Lesson 1 · Where you are** — `le-232xd54k`\n\n" +
+		"| | slug | kind | covers |\n|---|---|---|---|\n" +
+		"| 01 | `intro` | video | opening |\n" +
+		"| 02 | `the-prompt` | reading | reading `user@host:~$` |\n\n" +
+		"**Lesson 2 · The tree** — `le-072kcf6w`\n\n" +
+		"| | slug | kind | covers |\n|---|---|---|---|\n" +
+		"| 03 | `paths` | reading | absolute and relative |\n"
+	if err := os.WriteFile(filepath.Join(dir, "linux-terminal.md"), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	sheets, _ := readSheets(dir)
+	if len(sheets) != 1 {
+		t.Fatalf("read %d sheets", len(sheets))
+	}
+	got := sheets[0].enumerated
+	if len(got) != 2 {
+		t.Fatalf("two lesson headings produced %d lists", len(got))
+	}
+	if got[0].lesson != "le-232xd54k" || len(got[0].rows) != 2 {
+		t.Errorf("lesson 1 read as %+v", got[0])
+	}
+	if got[1].lesson != "le-072kcf6w" || len(got[1].rows) != 1 ||
+		got[1].rows[0].slug != "paths" {
+		t.Errorf("lesson 2 read as %+v", got[1])
+	}
+}
