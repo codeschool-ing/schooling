@@ -1,0 +1,1614 @@
+[
+  {
+    "id": "ex-8ppnphez",
+    "version": 1,
+    "section": "the-iterator-protocol",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a `for` loop call, and how many times?",
+    "hint": "Once, and then repeatedly.",
+    "choices": [
+      {
+        "text": "`iter` once, then `next` until `StopIteration`",
+        "correct": true,
+        "why": "Right — and every surprise in this lesson follows from that."
+      },
+      {
+        "text": "`iter` once per item, which is why a list can be walked twice",
+        "correct": false,
+        "why": "A fresh walk asks for a fresh iterator, and not once per item."
+      },
+      {
+        "text": "`__getitem__` with an increasing index, as in older Python",
+        "correct": false,
+        "why": "That fallback exists and is not what a modern `for` does first."
+      },
+      {
+        "text": "`next` once per item, with no `iter` at all",
+        "correct": false,
+        "why": "Something has to hand back the iterator first, and that is `iter`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfh4r01t",
+    "version": 1,
+    "section": "the-iterator-protocol",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `__next__` raise when there is nothing left?",
+    "hint": "It is a signal rather than a failure.",
+    "choices": [
+      {
+        "text": "`StopIteration`",
+        "correct": true,
+        "why": "Right — and the `for` loop swallows it."
+      },
+      {
+        "text": "`ValueError`",
+        "correct": false,
+        "why": "Nothing about the value is wrong."
+      },
+      {
+        "text": "Nothing; it returns `None`",
+        "correct": false,
+        "why": "Then `None` would be a legal value to yield and be confused with the end."
+      },
+      {
+        "text": "`IndexError`",
+        "correct": false,
+        "why": "That is a sequence being indexed past its end."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqqe7233",
+    "version": 1,
+    "section": "the-iterator-protocol",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`next(it, None)` differs from `next(it)` how?",
+    "hint": "One of them raises.",
+    "choices": [
+      {
+        "text": "It works on an iterable rather than an iterator",
+        "correct": false,
+        "why": "Both need an iterator."
+      },
+      {
+        "text": "It returns the default instead of raising",
+        "correct": true,
+        "why": "Right — which is what you want when asking for one value."
+      },
+      {
+        "text": "It resets the iterator first",
+        "correct": false,
+        "why": "Nothing rewinds."
+      },
+      {
+        "text": "It skips to the second item",
+        "correct": false,
+        "why": "It takes the first, as usual."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5crs4en",
+    "version": 1,
+    "section": "the-iterator-protocol",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the protocol exist at all?",
+    "hint": "Think about what `for` has to know.",
+    "choices": [
+      {
+        "text": "So Python can optimise loops over lists",
+        "correct": false,
+        "why": "Lists were already fast; the protocol is about generality."
+      },
+      {
+        "text": "So `for` works with anything that implements two methods",
+        "correct": true,
+        "why": "Right — a list, a file, a cursor, and something you write tomorrow."
+      },
+      {
+        "text": "So an iterator can be reset",
+        "correct": false,
+        "why": "Nothing in the protocol resets."
+      },
+      {
+        "text": "So `len` works on every collection",
+        "correct": false,
+        "why": "`len` is a different protocol and many iterators have none."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xqzjszg",
+    "version": 1,
+    "section": "the-iterator-protocol",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ask an object for its iterator: `______(items)`",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "iter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zk69w8gm",
+    "version": 1,
+    "section": "iterable-against-iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sum(g)` twice on a generator gives `6` then what?",
+    "hint": "It is not an error.",
+    "choices": [
+      {
+        "text": "`0`",
+        "correct": true,
+        "why": "Right — no values came, and `sum` returned its starting value."
+      },
+      {
+        "text": "A `ValueError` about an empty sequence",
+        "correct": false,
+        "why": "That is `max`, and this is `sum`."
+      },
+      {
+        "text": "A `StopIteration`",
+        "correct": false,
+        "why": "The `sum` swallows that, as a `for` does."
+      },
+      {
+        "text": "`6` again",
+        "correct": false,
+        "why": "That is a list, which hands out a fresh iterator each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-6yzh8585",
+    "version": 1,
+    "section": "iterable-against-iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between an iterable and an iterator?",
+    "hint": "One can produce the other.",
+    "choices": [
+      {
+        "text": "An iterable produces iterators; an iterator produces values, once",
+        "correct": true,
+        "why": "Right — and an iterator is also an iterable, which is what makes a generator work in a `for`."
+      },
+      {
+        "text": "An iterable is a built-in type and an iterator is one you write",
+        "correct": false,
+        "why": "`zip` and `map` return iterators and nobody wrote them here."
+      },
+      {
+        "text": "An iterable holds its values and an iterator computes them",
+        "correct": false,
+        "why": "A generator computes and a `range` does not hold, so neither half is the rule."
+      },
+      {
+        "text": "An iterator can be walked twice and an iterable cannot",
+        "correct": false,
+        "why": "That is the two of them swapped."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfgv6326",
+    "version": 1,
+    "section": "iterable-against-iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function walks its argument twice. What breaks?",
+    "hint": "It depends what was passed.",
+    "choices": [
+      {
+        "text": "Nothing; Python rewinds automatically",
+        "correct": false,
+        "why": "Nothing rewinds."
+      },
+      {
+        "text": "A list passed to it",
+        "correct": false,
+        "why": "A list gives a fresh iterator each time."
+      },
+      {
+        "text": "A generator passed to it, silently",
+        "correct": true,
+        "why": "Right — the second walk gets nothing at all."
+      },
+      {
+        "text": "The function raises `StopIteration` on the second pass",
+        "correct": false,
+        "why": "The `for` swallows that and the body simply does not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf684110",
+    "version": 1,
+    "section": "iterable-against-iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do you walk a generator twice?",
+    "hint": "You do not.",
+    "choices": [
+      {
+        "text": "Use `itertools.tee`, which is free",
+        "correct": false,
+        "why": "It keeps what one has seen and the other has not, which is a list with steps."
+      },
+      {
+        "text": "Call `iter` on it again",
+        "correct": false,
+        "why": "That gives you the same exhausted iterator."
+      },
+      {
+        "text": "Build a list from it, or go back to the source",
+        "correct": true,
+        "why": "Right — there is no rewind, and `tee` only keeps what one copy has not seen yet."
+      },
+      {
+        "text": "Use `reversed`",
+        "correct": false,
+        "why": "That needs a sequence with a length."
+      }
+    ]
+  },
+  {
+    "id": "ex-g485v2d2",
+    "version": 1,
+    "section": "iterable-against-iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`iter(it) is it` for an iterator answers what?",
+    "hint": "It is its own iterator.",
+    "choices": [
+      {
+        "text": "`True`",
+        "correct": true,
+        "why": "Right — which is why a generator goes straight into a `for`."
+      },
+      {
+        "text": "It depends on the iterator",
+        "correct": false,
+        "why": "The protocol requires it."
+      },
+      {
+        "text": "A `TypeError`",
+        "correct": false,
+        "why": "An iterator implements `__iter__` precisely so this works."
+      },
+      {
+        "text": "`False`",
+        "correct": false,
+        "why": "Then a generator would need wrapping to be looped."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fern3ws",
+    "version": 1,
+    "section": "generator-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens when you CALL a generator function?",
+    "hint": "None of the body.",
+    "choices": [
+      {
+        "text": "The whole body runs and the yields are collected into a list",
+        "correct": false,
+        "why": "Then there would be no memory saving at all."
+      },
+      {
+        "text": "The body runs until the first `yield` and pauses",
+        "correct": false,
+        "why": "That is what the first `next` does, not the call."
+      },
+      {
+        "text": "You get a generator object, and nothing runs",
+        "correct": true,
+        "why": "Right — the first `next` runs the body up to the first `yield`."
+      },
+      {
+        "text": "It raises unless it is used in a `for` loop",
+        "correct": false,
+        "why": "It is an ordinary call."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3reszb0",
+    "version": 1,
+    "section": "generator-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What survives between two `next` calls on a generator?",
+    "hint": "Everything the function had.",
+    "choices": [
+      {
+        "text": "Nothing; it starts again",
+        "correct": false,
+        "why": "Then a loop inside it could never make progress."
+      },
+      {
+        "text": "The arguments only",
+        "correct": false,
+        "why": "The locals too, including ones assigned inside a loop."
+      },
+      {
+        "text": "Only the value it last yielded",
+        "correct": false,
+        "why": "The frame is kept, not just one value."
+      },
+      {
+        "text": "Its local variables and its position in the body",
+        "correct": true,
+        "why": "Right — which is the whole of what a class with a counter was doing."
+      }
+    ]
+  },
+  {
+    "id": "ex-88q3dn4r",
+    "version": 1,
+    "section": "generator-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a bare `return` inside a generator do?",
+    "hint": "It is not the same as in an ordinary function.",
+    "choices": [
+      {
+        "text": "Is a syntax error inside a generator",
+        "correct": false,
+        "why": "It is legal."
+      },
+      {
+        "text": "Ends it",
+        "correct": true,
+        "why": "Right — and the caller sees `StopIteration`."
+      },
+      {
+        "text": "Yields `None`",
+        "correct": false,
+        "why": "Nothing is yielded."
+      },
+      {
+        "text": "Restarts it from the top",
+        "correct": false,
+        "why": "Nothing restarts."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xg46xzz",
+    "version": 1,
+    "section": "generator-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `yield from a` do?",
+    "hint": "It hands over.",
+    "choices": [
+      {
+        "text": "Yields `a` itself as one value",
+        "correct": false,
+        "why": "That is a plain `yield a`."
+      },
+      {
+        "text": "Yields the first value of `a` only",
+        "correct": false,
+        "why": "It hands over completely."
+      },
+      {
+        "text": "Yields every value of `a`, until it is exhausted",
+        "correct": true,
+        "why": "Right — the same as a `for` with a `yield` in it, and shorter."
+      },
+      {
+        "text": "Copies `a` into a list and yields that",
+        "correct": false,
+        "why": "Nothing is copied."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dhv1bbt",
+    "version": 1,
+    "section": "generator-functions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The keyword that makes a function a generator: `______ value`",
+    "hint": "Five letters.",
+    "blanks": [
+      {
+        "accept": [
+          "yield"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sehm5qe5",
+    "version": 1,
+    "section": "generator-functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A generator function whose body starts with an expensive call. When does that call run?",
+    "hint": "Not when you think.",
+    "choices": [
+      {
+        "text": "Once per `next`",
+        "correct": false,
+        "why": "It runs once, where it sits in the body."
+      },
+      {
+        "text": "When the generator is garbage collected",
+        "correct": false,
+        "why": "Nothing runs then except cleanup."
+      },
+      {
+        "text": "At the call, as in any function",
+        "correct": false,
+        "why": "A generator function runs none of its body at the call."
+      },
+      {
+        "text": "On the first `next`",
+        "correct": true,
+        "why": "Right — and never, if it is never iterated."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ktfy5cv",
+    "version": 1,
+    "section": "generator-expressions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`(x * 2 for x in xs)` against `[x * 2 for x in xs]`?",
+    "hint": "One of them has already done the work.",
+    "choices": [
+      {
+        "text": "The first has done nothing at all",
+        "correct": true,
+        "why": "Right — and the second walked `xs` and built a list."
+      },
+      {
+        "text": "The first is a tuple",
+        "correct": false,
+        "why": "A tuple comprehension does not exist; that syntax is a generator."
+      },
+      {
+        "text": "They are the same, with different punctuation",
+        "correct": false,
+        "why": "One builds and one does not."
+      },
+      {
+        "text": "The first is faster and otherwise identical",
+        "correct": false,
+        "why": "It is different in what exists afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2qt8dc3",
+    "version": 1,
+    "section": "generator-expressions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a generator expression the wrong choice?",
+    "hint": "What happens next decides.",
+    "choices": [
+      {
+        "text": "When it feeds into `sum`",
+        "correct": false,
+        "why": "That is exactly where it is right."
+      },
+      {
+        "text": "When you are going to keep it, index it, or walk it twice",
+        "correct": true,
+        "why": "Right — a generator you immediately call `list()` on is a comprehension with extra words."
+      },
+      {
+        "text": "When the collection is small",
+        "correct": false,
+        "why": "Size is not the test."
+      },
+      {
+        "text": "When it has a condition in it",
+        "correct": false,
+        "why": "Conditions are ordinary in both."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewg3tjh9",
+    "version": 1,
+    "section": "generator-expressions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sum((x for x in xs))` — what is wrong with it?",
+    "hint": "Count the brackets.",
+    "choices": [
+      {
+        "text": "`sum` cannot take a generator",
+        "correct": false,
+        "why": "It can, and that is the point of the line."
+      },
+      {
+        "text": "It builds a list first",
+        "correct": false,
+        "why": "It does not; it is still a generator."
+      },
+      {
+        "text": "The extra parentheses are unnecessary",
+        "correct": true,
+        "why": "Right — the call already has a pair."
+      },
+      {
+        "text": "It is a syntax error",
+        "correct": false,
+        "why": "It is legal, just noisy."
+      }
+    ]
+  },
+  {
+    "id": "ex-kd5ng7re",
+    "version": 1,
+    "section": "generator-expressions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`any(r[\"city\"] == \"Porto\" for r in rows)` on a million rows. What does it read?",
+    "hint": "It short-circuits.",
+    "choices": [
+      {
+        "text": "The first ten, then gives up",
+        "correct": false,
+        "why": "Nothing gives up."
+      },
+      {
+        "text": "None, until the result is used",
+        "correct": false,
+        "why": "`any` consumes immediately."
+      },
+      {
+        "text": "All of them, then stops",
+        "correct": false,
+        "why": "That is the list-comprehension version."
+      },
+      {
+        "text": "Up to the first match",
+        "correct": true,
+        "why": "Right — with a list comprehension inside, all million would be built first."
+      }
+    ]
+  },
+  {
+    "id": "ex-vp230nbv",
+    "version": 1,
+    "section": "generator-expressions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`len(gen)` does what?",
+    "hint": "It does not know one.",
+    "choices": [
+      {
+        "text": "Raises a `TypeError`",
+        "correct": true,
+        "why": "Right — `sum(1 for _ in gen)` counts it, and spends it."
+      },
+      {
+        "text": "Consumes the generator and returns the count",
+        "correct": false,
+        "why": "Nothing consumes it here."
+      },
+      {
+        "text": "Returns 0",
+        "correct": false,
+        "why": "There is no length to be zero."
+      },
+      {
+        "text": "Returns the number of yields written in the body",
+        "correct": false,
+        "why": "Nothing counts the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-k188nxx3",
+    "version": 1,
+    "section": "laziness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `while True: yield n` safe in a generator?",
+    "hint": "Nothing runs on its own.",
+    "choices": [
+      {
+        "text": "Python detects the infinite loop and stops it",
+        "correct": false,
+        "why": "Nothing detects anything."
+      },
+      {
+        "text": "It is not safe, and `islice` is a workaround",
+        "correct": false,
+        "why": "It is safe, and `islice` is how you take a piece."
+      },
+      {
+        "text": "Nothing runs until somebody asks for a value",
+        "correct": true,
+        "why": "Right — which is what makes an infinite generator ordinary."
+      },
+      {
+        "text": "The `yield` puts a limit on the loop",
+        "correct": false,
+        "why": "It pauses; it does not limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dg50rx0",
+    "version": 1,
+    "section": "laziness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does NOT need the whole collection?",
+    "hint": "Three of them do.",
+    "choices": [
+      {
+        "text": "`sum`",
+        "correct": true,
+        "why": "Right — along with `max`, `any` and `all`, one value at a time."
+      },
+      {
+        "text": "`len(list(...))`",
+        "correct": false,
+        "why": "The `list` inside is the part that needs it."
+      },
+      {
+        "text": "`list`",
+        "correct": false,
+        "why": "It builds the whole thing by definition."
+      },
+      {
+        "text": "`sorted`",
+        "correct": false,
+        "why": "It needs everything before it can order anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfewz5z6",
+    "version": 1,
+    "section": "laziness",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `parse` error appears at the `for` loop, fifty lines from `parse`. Why?",
+    "hint": "The work happened late.",
+    "choices": [
+      {
+        "text": "The generator ran there for the first time",
+        "correct": true,
+        "why": "Right — the traceback points at the consumer, not at the construction."
+      },
+      {
+        "text": "The generator kept the exception and raised it later deliberately",
+        "correct": false,
+        "why": "Nothing was kept; the code simply had not run."
+      },
+      {
+        "text": "The loop re-raises an exception it caught",
+        "correct": false,
+        "why": "Nothing catches anything."
+      },
+      {
+        "text": "`parse` was inlined by the interpreter",
+        "correct": false,
+        "why": "Nothing inlines it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rf2mf62",
+    "version": 1,
+    "section": "laziness",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A generator that opens a file with `with` and is abandoned half-way. What happens to the file?",
+    "hint": "The block was never left.",
+    "choices": [
+      {
+        "text": "It is closed at the first `yield`",
+        "correct": false,
+        "why": "The `with` block is still running."
+      },
+      {
+        "text": "It never closes at all",
+        "correct": false,
+        "why": "Collection does close it, eventually."
+      },
+      {
+        "text": "It stays open until the generator is collected",
+        "correct": true,
+        "why": "Right — which is later than you think."
+      },
+      {
+        "text": "It is closed when the loop that abandoned it ends",
+        "correct": false,
+        "why": "Nothing connects the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-0axpd6bd",
+    "version": 1,
+    "section": "laziness",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does laziness make possible that eagerness does not?",
+    "hint": "Something with no end.",
+    "choices": [
+      {
+        "text": "Sorting a very large file",
+        "correct": false,
+        "why": "Sorting needs everything, lazily or not."
+      },
+      {
+        "text": "Reading a file twice from one handle",
+        "correct": false,
+        "why": "Nothing rewinds."
+      },
+      {
+        "text": "Counting without a loop",
+        "correct": false,
+        "why": "Counting still walks."
+      },
+      {
+        "text": "A stream with no end",
+        "correct": true,
+        "why": "Right — a log being written, a sequence, a poll."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9njq703",
+    "version": 1,
+    "section": "itertools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`islice(rows, 10)` on a million-row file reads how many?",
+    "hint": "It is slicing for things you cannot index.",
+    "choices": [
+      {
+        "text": "It depends on the file",
+        "correct": false,
+        "why": "The count is what you asked for."
+      },
+      {
+        "text": "Ten",
+        "correct": true,
+        "why": "Right — `list(rows)[:10]` reads a million."
+      },
+      {
+        "text": "A million",
+        "correct": false,
+        "why": "That is the list version."
+      },
+      {
+        "text": "Ten, then one more to know it is done",
+        "correct": false,
+        "why": "It stops at ten."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3z1m67n",
+    "version": 1,
+    "section": "itertools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `chain(a, b, c)` build?",
+    "hint": "Nothing.",
+    "choices": [
+      {
+        "text": "A list of the three concatenated",
+        "correct": false,
+        "why": "Nothing is concatenated."
+      },
+      {
+        "text": "A tuple of the three",
+        "correct": false,
+        "why": "It is an iterator, not a container."
+      },
+      {
+        "text": "A generator of three lists",
+        "correct": false,
+        "why": "It yields items, not lists."
+      },
+      {
+        "text": "Nothing — it walks the three as one",
+        "correct": true,
+        "why": "Right — and `from_iterable` flattens one level, also lazily."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxzcws36",
+    "version": 1,
+    "section": "itertools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must the input to `groupby` be sorted by the same key?",
+    "hint": "It groups something specific.",
+    "choices": [
+      {
+        "text": "It groups consecutive equal keys",
+        "correct": true,
+        "why": "Right — unsorted input gives the same key several times, silently."
+      },
+      {
+        "text": "It uses the sort order to build an index",
+        "correct": false,
+        "why": "It builds nothing."
+      },
+      {
+        "text": "It does not; the sort is a convention",
+        "correct": false,
+        "why": "The sort is what makes the answer right."
+      },
+      {
+        "text": "Because it needs a length",
+        "correct": false,
+        "why": "It needs neither length nor order beyond adjacency."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwy3a8tz",
+    "version": 1,
+    "section": "itertools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`zip(count(1), rows)` stops when?",
+    "hint": "One of the two is infinite.",
+    "choices": [
+      {
+        "text": "When `rows` raises `StopIteration` and `zip` re-raises it",
+        "correct": false,
+        "why": "`zip` ends rather than re-raising."
+      },
+      {
+        "text": "After the number of items `count` was given",
+        "correct": false,
+        "why": "It was given a start, not a length."
+      },
+      {
+        "text": "Never, because `count` is infinite",
+        "correct": false,
+        "why": "`zip` stops when either does."
+      },
+      {
+        "text": "When `rows` runs out",
+        "correct": true,
+        "why": "Right — `zip` stops at the shorter one."
+      }
+    ]
+  },
+  {
+    "id": "ex-28mzavx7",
+    "version": 1,
+    "section": "itertools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`takewhile` differs from `filter` how?",
+    "hint": "One of them stops.",
+    "choices": [
+      {
+        "text": "It ends at the first failure rather than skipping it",
+        "correct": true,
+        "why": "Right — on a sorted file that is the difference between reading part of it and all of it."
+      },
+      {
+        "text": "It builds a list and `filter` does not",
+        "correct": false,
+        "why": "Both are lazy."
+      },
+      {
+        "text": "It takes a count rather than a predicate",
+        "correct": false,
+        "why": "That is `islice`."
+      },
+      {
+        "text": "It tests the opposite condition",
+        "correct": false,
+        "why": "That is `filterfalse`."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7n8x7ej",
+    "version": 1,
+    "section": "itertools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `cycle` keep?",
+    "hint": "It has to repeat something.",
+    "choices": [
+      {
+        "text": "A count of how many times it has gone round",
+        "correct": false,
+        "why": "Nothing is counted."
+      },
+      {
+        "text": "A copy of the sequence",
+        "correct": true,
+        "why": "Right — which matters if it is big."
+      },
+      {
+        "text": "Only the last item",
+        "correct": false,
+        "why": "It repeats all of them."
+      },
+      {
+        "text": "Nothing; it re-reads the source",
+        "correct": false,
+        "why": "The source may be an iterator that is spent."
+      }
+    ]
+  },
+  {
+    "id": "ex-530fa693",
+    "version": 1,
+    "section": "a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four generator stages chained. How much memory?",
+    "hint": "One value per stage.",
+    "choices": [
+      {
+        "text": "One row's worth",
+        "correct": true,
+        "why": "Right — nothing accumulates anywhere."
+      },
+      {
+        "text": "It depends on the slowest stage",
+        "correct": false,
+        "why": "Speed is not what decides memory here."
+      },
+      {
+        "text": "The whole file, once",
+        "correct": false,
+        "why": "Nothing builds it."
+      },
+      {
+        "text": "Four rows per stage",
+        "correct": false,
+        "why": "Each holds one at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys0yambe",
+    "version": 1,
+    "section": "a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sum(durations(errors(lines(path))))` — remove the `sum`. What happens?",
+    "hint": "Nothing pulls.",
+    "choices": [
+      {
+        "text": "A `StopIteration` propagates immediately",
+        "correct": false,
+        "why": "Nothing is iterated to raise it."
+      },
+      {
+        "text": "The file is never opened",
+        "correct": true,
+        "why": "Right — three generator objects are built and nothing runs."
+      },
+      {
+        "text": "The first line is read, to prime the pipeline",
+        "correct": false,
+        "why": "Nothing is primed."
+      },
+      {
+        "text": "The file is read and the results discarded",
+        "correct": false,
+        "why": "Nothing reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3vf2xhv",
+    "version": 1,
+    "section": "a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should each stage take an iterable rather than a path?",
+    "hint": "Two reasons, and one of them is a test.",
+    "choices": [
+      {
+        "text": "So the file is opened once per stage",
+        "correct": false,
+        "why": "Opening it four times is the thing this avoids."
+      },
+      {
+        "text": "So it can be tested with a list of three strings, and reused on another source",
+        "correct": true,
+        "why": "Right — only the first stage knows about a file."
+      },
+      {
+        "text": "So the stages can run in parallel",
+        "correct": false,
+        "why": "They do not run in parallel."
+      },
+      {
+        "text": "Because a generator cannot take a string argument",
+        "correct": false,
+        "why": "It can take anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0zyy91r",
+    "version": 1,
+    "section": "a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line in a pipeline is usually the one that accumulates?",
+    "hint": "It needs everything before it can answer.",
+    "choices": [
+      {
+        "text": "The transform",
+        "correct": false,
+        "why": "One value in, one value out."
+      },
+      {
+        "text": "The sort",
+        "correct": true,
+        "why": "Right — and `heapq.nlargest` is the version that holds ten."
+      },
+      {
+        "text": "The read",
+        "correct": false,
+        "why": "One line at a time."
+      },
+      {
+        "text": "The filter",
+        "correct": false,
+        "why": "It passes items through one at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-19n87rch",
+    "version": 1,
+    "section": "writing-one-as-a-class",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the class version, what corresponds to the generator's local variable?",
+    "hint": "It has to live somewhere between calls.",
+    "choices": [
+      {
+        "text": "`__iter__`",
+        "correct": false,
+        "why": "That hands back the iterator; it holds nothing."
+      },
+      {
+        "text": "`self.n`",
+        "correct": true,
+        "why": "Right — the generator keeps the same state in its frame instead."
+      },
+      {
+        "text": "The `for` loop's variable",
+        "correct": false,
+        "why": "That is outside the object entirely."
+      },
+      {
+        "text": "The `StopIteration`",
+        "correct": false,
+        "why": "That is the end signal."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm9rw15m",
+    "version": 1,
+    "section": "writing-one-as-a-class",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `__iter__` return `self` in an iterator class?",
+    "hint": "So a `for` loop can take it.",
+    "choices": [
+      {
+        "text": "Because `__next__` requires it",
+        "correct": false,
+        "why": "`__next__` does not call it."
+      },
+      {
+        "text": "So the object can be copied",
+        "correct": false,
+        "why": "Nothing is copied."
+      },
+      {
+        "text": "To reset the position",
+        "correct": false,
+        "why": "Nothing is reset, which is the trap."
+      },
+      {
+        "text": "Because an iterator must also be an iterable",
+        "correct": true,
+        "why": "Right — and it is also why the object is spent after one pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-s145e8bm",
+    "version": 1,
+    "section": "writing-one-as-a-class",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the bug shape the class version has and the generator cannot?",
+    "hint": "It has to work out where it was.",
+    "choices": [
+      {
+        "text": "It cannot hold more than one variable",
+        "correct": false,
+        "why": "It can hold as many as you like."
+      },
+      {
+        "text": "It cannot be used in a `for` loop",
+        "correct": false,
+        "why": "It can, which is the whole point of `__iter__`."
+      },
+      {
+        "text": "It cannot raise `StopIteration`",
+        "correct": false,
+        "why": "It raises it explicitly, which is the mechanism."
+      },
+      {
+        "text": "`__next__` reconstructs its position on every call",
+        "correct": true,
+        "why": "Right — and that reconstruction is the hard part the moment there are two loops."
+      }
+    ]
+  },
+  {
+    "id": "ex-0yampe8s",
+    "version": 1,
+    "section": "writing-one-as-a-class",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`class Rows` with `__iter__` as a generator function and no `__next__`. What is it?",
+    "hint": "It can be walked twice.",
+    "choices": [
+      {
+        "text": "An iterator, spent after one pass",
+        "correct": false,
+        "why": "That would need `__next__` and a `return self`."
+      },
+      {
+        "text": "An iterable, fresh each time",
+        "correct": true,
+        "why": "Right — the shape for something reusable backed by a reopenable source."
+      },
+      {
+        "text": "A generator",
+        "correct": false,
+        "why": "The object is not; its `__iter__` produces one."
+      },
+      {
+        "text": "Invalid, because `__iter__` must return `self`",
+        "correct": false,
+        "why": "It must return an iterator, and a generator is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvxpe4xn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sum(g)` returned 0 on a generator that worked yesterday. What happened?",
+    "hint": "Somebody consumed it first.",
+    "choices": [
+      {
+        "text": "The values were all zero",
+        "correct": false,
+        "why": "Then it would have worked yesterday too."
+      },
+      {
+        "text": "The generator raised and the exception was swallowed",
+        "correct": false,
+        "why": "Nothing swallows an exception there."
+      },
+      {
+        "text": "It had already been iterated",
+        "correct": true,
+        "why": "Right — and nothing says so."
+      },
+      {
+        "text": "`sum` needs a list",
+        "correct": false,
+        "why": "It takes any iterable."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsnzxm62",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Delegate to another iterable inside a generator: `yield ______ other`",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "from"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0meg1km5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these can be walked twice?",
+    "hint": "Only one hands out a fresh iterator.",
+    "choices": [
+      {
+        "text": "An open file",
+        "correct": false,
+        "why": "It has a position, and it is at the end afterwards."
+      },
+      {
+        "text": "A generator expression",
+        "correct": false,
+        "why": "Spent after one pass."
+      },
+      {
+        "text": "A `zip` object",
+        "correct": false,
+        "why": "Also an iterator."
+      },
+      {
+        "text": "A list",
+        "correct": true,
+        "why": "Right — a generator, a `zip` and a file object cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygxgzwjh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You need the first ten rows of a huge file. Which?",
+    "hint": "One of them reads ten.",
+    "choices": [
+      {
+        "text": "`islice(rows, 10)`",
+        "correct": true,
+        "why": "Right — the others read everything first."
+      },
+      {
+        "text": "`rows[:10]`",
+        "correct": false,
+        "why": "A generator cannot be sliced at all."
+      },
+      {
+        "text": "`list(rows)[:10]`",
+        "correct": false,
+        "why": "That reads the whole file."
+      },
+      {
+        "text": "`sorted(rows)[:10]`",
+        "correct": false,
+        "why": "That reads everything and sorts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2pcjvp8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function with a `yield` in it, called but never iterated. What ran?",
+    "hint": "Count the lines.",
+    "choices": [
+      {
+        "text": "Everything, with the yields discarded",
+        "correct": false,
+        "why": "Nothing runs at all."
+      },
+      {
+        "text": "None of it",
+        "correct": true,
+        "why": "Right — and an exception it would have raised never happens."
+      },
+      {
+        "text": "Everything up to the first `yield`",
+        "correct": false,
+        "why": "That is what the first `next` does."
+      },
+      {
+        "text": "The arguments were evaluated, which is all",
+        "correct": false,
+        "why": "That happened at the call site, before the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t0q6xkh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the memory arrive in a lazy pipeline?",
+    "hint": "At one particular kind of call.",
+    "choices": [
+      {
+        "text": "At the first `yield`",
+        "correct": false,
+        "why": "One value."
+      },
+      {
+        "text": "Evenly, across the stages",
+        "correct": false,
+        "why": "Each stage holds one value."
+      },
+      {
+        "text": "At the first thing that needs the whole collection",
+        "correct": true,
+        "why": "Right — a `sorted`, a `list`, a second pass."
+      },
+      {
+        "text": "At the file read",
+        "correct": false,
+        "why": "One line."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqd4kc18",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`max(gen)` and then `min(gen)` on the same generator?",
+    "hint": "One of them gets nothing.",
+    "choices": [
+      {
+        "text": "The second raises `ValueError`",
+        "correct": true,
+        "why": "Right — an empty sequence, because the first spent it."
+      },
+      {
+        "text": "The second returns the same value",
+        "correct": false,
+        "why": "There is nothing left to return."
+      },
+      {
+        "text": "The second returns `None`",
+        "correct": false,
+        "why": "`min` raises on empty."
+      },
+      {
+        "text": "Both work",
+        "correct": false,
+        "why": "The generator is gone after the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtkn57pn",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Count a generator's values, spending it in the process: `sum(1 for _ in ______)`",
+    "hint": "Three letters, the usual name.",
+    "blanks": [
+      {
+        "accept": [
+          "gen"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-53vret1n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `zip(a, b)` in Python 3?",
+    "hint": "Not what it was in Python 2.",
+    "choices": [
+      {
+        "text": "A list of tuples",
+        "correct": false,
+        "why": "That is Python 2, and `list(zip(...))` here."
+      },
+      {
+        "text": "A tuple of lists",
+        "correct": false,
+        "why": "Neither, in either version."
+      },
+      {
+        "text": "An iterator",
+        "correct": true,
+        "why": "Right — spent after one pass, and with no length."
+      },
+      {
+        "text": "A generator function",
+        "correct": false,
+        "why": "It is a built-in returning an iterator."
+      }
+    ]
+  },
+  {
+    "id": "ex-5c5826n9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which replaces a class that holds a position?",
+    "hint": "Three lines rather than nine.",
+    "choices": [
+      {
+        "text": "A `while` loop at the call site",
+        "correct": false,
+        "why": "Then the caller holds the position."
+      },
+      {
+        "text": "A generator function",
+        "correct": true,
+        "why": "Right — the frame holds the state for you."
+      },
+      {
+        "text": "A dataclass",
+        "correct": false,
+        "why": "That holds fields and no position."
+      },
+      {
+        "text": "A closure over a list",
+        "correct": false,
+        "why": "That is state with more machinery, not less."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nvj8zqy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A generator is passed to a function that loops over it twice. What does the second loop see?",
+    "hint": "Nothing was said.",
+    "choices": [
+      {
+        "text": "Nothing, and no error",
+        "correct": true,
+        "why": "Right — the body simply does not run."
+      },
+      {
+        "text": "A `StopIteration`",
+        "correct": false,
+        "why": "The `for` swallows it."
+      },
+      {
+        "text": "The same values",
+        "correct": false,
+        "why": "Only a fresh iterator gives those."
+      },
+      {
+        "text": "A `RuntimeError` about reuse",
+        "correct": false,
+        "why": "Nothing detects the reuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-542tn728",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do `sorted`, `list` and `len` have in common on a generator?",
+    "hint": "One property.",
+    "choices": [
+      {
+        "text": "Each raises a `TypeError`",
+        "correct": false,
+        "why": "Only `len` does."
+      },
+      {
+        "text": "Each returns an iterator",
+        "correct": false,
+        "why": "Each returns a finished answer."
+      },
+      {
+        "text": "Each needs every value before it answers",
+        "correct": true,
+        "why": "Right — which is where the laziness ends and the memory arrives."
+      },
+      {
+        "text": "Each leaves the generator usable",
+        "correct": false,
+        "why": "Each spends it."
+      }
+    ]
+  }
+]

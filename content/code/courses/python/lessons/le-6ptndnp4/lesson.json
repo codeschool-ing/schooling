@@ -1,0 +1,93 @@
+{
+  "id": "le-6ptndnp4",
+  "title": "Iterators and generators: producing one value at a time",
+  "sections": [
+    {
+      "id": "se-h0npqd4y",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-vwjs4f8m",
+          "version": 1,
+          "script": "A ten-million-line file, and memory for one line. That is what this lesson is about, and everything else in it is machinery for that sentence.\n\n{{already}} You have been using iterators since lesson 4 without the word. `for line in f:` is one. `range(1_000_000)` is one — it does not build a million numbers, it produces them. `zip`, `enumerate`, `map`, `filter` and every generator expression are the same idea.\n\n{{protocol}} Underneath there is a protocol, and it is two methods. `__iter__` gives you the thing that produces values; `__next__` produces the next one, and raises `StopIteration` when there are none left. A `for` loop is a `while` loop around those two calls, and knowing that explains every surprise in this lesson.\n\n{{spent}} The first surprise is the one that catches everybody: **an iterator is spent after one pass.** A list can be looped twice; a generator cannot. The second loop gets nothing at all — no error, no warning, an empty result — and a sum that comes out zero.\n\n{{yield}} Then `yield`, which is how you write one. A function with a `yield` in it does not run when you call it: it hands you a generator, and each `next` runs the body up to the next `yield` and PAUSES there, with all its local variables intact. That is a function that remembers where it was, and it replaces a class with a counter in it.\n\n{{lazy}} Which brings the real point: nothing is computed until somebody asks for it. That is what lets a generator be infinite, what lets `islice` read ten rows out of a million, and what makes a chain of generators a pipeline that never holds more than one row anywhere.\n\n{{pipeline}} Six of `itertools` are worth the import, and then the shape this lesson exists for: generators chained end to end, reading a file, filtering it, transforming it, and summing — one row at a time, all the way through, with nothing built in memory at any point.\n\n{{class}} And at the end, the same thing written as a class with `__iter__` and `__next__`, once, so that you can see what `yield` is doing — and then never write it that way again.",
+          "seconds": 154,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-syrj88xy",
+      "slug": "the-iterator-protocol",
+      "kind": "reading"
+    },
+    {
+      "id": "se-242g8my7",
+      "slug": "iterable-against-iterator",
+      "kind": "reading"
+    },
+    {
+      "id": "se-sd2403tq",
+      "slug": "generator-functions",
+      "kind": "reading"
+    },
+    {
+      "id": "se-e5svkp9p",
+      "slug": "generator-expressions",
+      "kind": "reading"
+    },
+    {
+      "id": "se-pxyxvf8q",
+      "slug": "laziness",
+      "kind": "reading"
+    },
+    {
+      "id": "se-yttef413",
+      "slug": "itertools",
+      "kind": "reading"
+    },
+    {
+      "id": "se-fzty80px",
+      "slug": "a-pipeline",
+      "kind": "reading"
+    },
+    {
+      "id": "se-3j8s5a9w",
+      "slug": "writing-one-as-a-class",
+      "kind": "reading"
+    },
+    {
+      "id": "se-pp9xdhpp",
+      "slug": "one-file-two-ways",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-3vsezf66",
+          "version": 1,
+          "script": "The same file, ten million lines, read two ways. I have a memory meter on the right.\n\n{{list}} First: `rows = f.readlines()`, then a loop. The meter climbs — one gigabyte, two, three — and the count at the end is correct. It took eleven seconds and it needed more memory than the file is big, because every line is a Python object with overhead of its own.\n\n{{kill}} Now the same thing on a machine with less memory than this one. The meter climbs, and the process is killed. Not an exception — killed, by the operating system, with no traceback and no message in my program. **That is what running out of memory looks like**, and it is why this is worth a video.\n\n{{lazy}} Second: `for line in f:`. The meter does not move. It stays at a few megabytes for the whole run — one line at a time, the previous one collected as soon as nothing refers to it. Same answer, same eleven seconds, and it runs on a machine with a gigabyte.\n\n{{pipeline}} Now the interesting version. Three generators: one that reads the lines, one that keeps the ones matching a pattern, one that pulls out a field and converts it. Then `sum` over the last of them.\n\n{{memory}} The meter does not move there either — and there are three generators chained. Nothing accumulates, because each one holds exactly one value at a time and passes it on. The whole pipeline is a few megabytes, whatever the file is.\n\n{{point}} And the last thing to see: I change the `sum` to `sorted`. The meter climbs again, immediately, because sorting needs everything. **The laziness survives exactly as far as the first thing that needs the whole collection** — and knowing where that line is, in your own program, is the skill this lesson is teaching.",
+          "seconds": 130,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-rjhztgzk",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-3hwt55hj",
+          "version": 1,
+          "script": "Yield when you can, and remember that an iterator is spent.\n\n{{protocol}} A `for` loop calls `iter` once and `next` until `StopIteration`. Every surprise here follows from that, including the one where a second loop gets nothing.\n\n{{spent}} **A list is iterable and can be walked again; a generator is an iterator and cannot.** If you need it twice, build a list deliberately — and if it is too big to keep, you need two passes over the source rather than one over the generator.\n\n{{yield}} `yield` is the way to write one. The function pauses, its locals survive, and the next `next` continues from there. Anything you would have written as a class holding a position is this instead.\n\n{{lazy}} Nothing happens until something asks. That is what makes an infinite generator legal, what makes `islice` cheap, and what makes a chain of generators cost one row of memory rather than a file's worth.\n\n{{stops}} And laziness ends where something needs the whole thing: `sorted`, `len`, `max` on a generator you also wanted to iterate, a list built for a second pass. Know where that line is, because that is where the memory arrives.",
+          "seconds": 81,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-qy0ht0sh",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
