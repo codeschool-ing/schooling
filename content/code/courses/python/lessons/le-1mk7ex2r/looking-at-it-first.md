@@ -16,7 +16,7 @@ otherwise surface as a wrong number three hours later.
 
 ## `info()` is the one that earns its place
 
-```text
+```sh
  #   Column    Non-Null Count  Dtype
 ---  ------    --------------  -----
  0   id        8 non-null      int64
@@ -32,7 +32,7 @@ line.
 
 ## `describe()`
 
-```text
+```sh
             id         cents
 count  8.00000      7.000000
 mean   4.50000  10141.428571
@@ -47,7 +47,7 @@ and `max`, which is where a negative price or a date in 1970 shows up.
 
 ## `value_counts()`
 
-```text
+```sh
 country
 BR    4
 PT    2

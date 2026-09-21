@@ -16,7 +16,7 @@ milissegundos e instalou cinco em cinco.
 
 ## `uv add`
 
-```text
+```sh
 $ uv add "requests>=2.31"
 Using CPython 3.11.15 interpreter at: /usr/local/bin/python3
 Creating virtual environment at: .venv
@@ -40,7 +40,7 @@ uv remove requests           # fora do arquivo, do ambiente e da trava
 
 ## `uv run`
 
-```text
+```sh
 $ rm -rf .venv
 $ uv run main.py
 Creating virtual environment at: .venv
@@ -57,7 +57,7 @@ rodando contra um ambiente velho.
 
 ## `uv sync`, que não é `install`
 
-```text
+```sh
 $ uv sync --no-dev
 Resolved 12 packages in 3ms
 Uninstalled 5 packages in 4ms
@@ -78,7 +78,7 @@ uv lock --check     # reprova se a trava não bate com o pyproject.toml
 uv sync --frozen    # instala da trava sem resolver de novo
 ```
 
-```text
+```sh
 $ uv lock --check
 The lockfile at `uv.lock` needs to be updated, but `--locked` was provided.
 ```
@@ -89,7 +89,7 @@ resolver para outra coisa.
 
 ## `uv tree`
 
-```text
+```sh
 rates v0.1.0
 ├── requests v2.34.2
 │   ├── certifi v2026.7.22

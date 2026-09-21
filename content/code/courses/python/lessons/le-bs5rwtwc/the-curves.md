@@ -28,7 +28,7 @@ for a in rows:
 
 ## `O(log n)` is the one that feels wrong
 
-```text
+```sh
 n = 1,000        10 steps
 n = 1,000,000    20 steps
 n = 1,000,000,000  30 steps
@@ -40,7 +40,7 @@ enough to free** that the difference between it and `O(1)` almost never decides 
 
 ## `O(n log n)` is what sorting costs
 
-```text
+```sh
 sorted, n =   1,000    0.088 ms
 sorted, n =  10,000    1.277 ms      ← 10× the data, 14× the time
 sorted, n = 100,000   18.112 ms      ← 10× the data, 14× the time

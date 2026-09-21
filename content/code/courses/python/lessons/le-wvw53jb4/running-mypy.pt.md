@@ -10,7 +10,7 @@ mypy -p app               # o pacote, pelo nome
 mypy app/                 # o diretório
 ```
 
-```text
+```sh
 app/report.py:4: error: Argument 1 to "find" has incompatible type "int"; expected "str"  [arg-type]
 Found 1 error in 1 file (checked 3 source files)
 ```
@@ -26,7 +26,7 @@ em `disable_error_code`. A frase é para você; o código é para a ferramenta.
 
 ## A linha de resumo conta duas coisas diferentes
 
-```text
+```sh
 Found 1 error in 1 file (checked 3 source files)
 ```
 
@@ -40,7 +40,7 @@ para entendê-los.**
 mypy app/rates.py
 ```
 
-```text
+```sh
 Success: no issues found in 1 source file
 ```
 
@@ -57,7 +57,7 @@ dados = json.load(f)
 reveal_type(dados)
 ```
 
-```text
+```sh
 note: Revealed type is "Any"
 ```
 

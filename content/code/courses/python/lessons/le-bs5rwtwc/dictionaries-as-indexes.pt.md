@@ -16,7 +16,7 @@ por_id = {c["id"]: c for c in clientes}   # uma passagem, construída uma vez
 out = [(por_id[p["cliente_id"]]["nome"], p["centavos"]) for p in pedidos]
 ```
 
-```text
+```sh
 lento    0,5485s   5000 linhas
 rápido   0,0030s   5000 linhas
 mesma resposta: True

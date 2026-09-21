@@ -16,7 +16,7 @@ by_id = {c["id"]: c for c in customers}   # one pass, built once
 out = [(by_id[o["customer_id"]]["name"], o["cents"]) for o in orders]
 ```
 
-```text
+```sh
 slow     0.5485s   5000 rows
 fast     0.0030s   5000 rows
 same answer: True

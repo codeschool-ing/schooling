@@ -41,7 +41,7 @@ the versions claim and nothing checks that until an install fails somewhere else
 
 ## `install` against `sync`
 
-```text
+```sh
 $ uv sync --no-dev
 Uninstalled 5 packages in 4ms
  - pytest==9.1.1
@@ -71,7 +71,7 @@ uv lock --check        # is the lock consistent with pyproject.toml?
 uv sync --frozen       # install from the lock, do not resolve
 ```
 
-```text
+```sh
 The lockfile at `uv.lock` needs to be updated, but `--locked` was provided.
 ```
 

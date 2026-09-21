@@ -3,7 +3,7 @@ title: `site-packages`, `sys.path`, e o import que achou a cópia errada
 version: 1
 ---
 
-```text
+```sh
 $ python -c "import sys; [print(repr(p)) for p in sys.path]"
 ''
 '/usr/lib/python311.zip'
@@ -26,7 +26,7 @@ isolamento.
 print("isto não é a biblioteca padrão")
 ```
 
-```text
+```sh
 $ python -c "import json; print(json.__file__)"
 isto não é a biblioteca padrão
 /tmp/projeto/json.py
@@ -43,7 +43,7 @@ com aquele nome ao seu lado antes de qualquer outra coisa.
 
 ## `pip show -f`
 
-```text
+```sh
 $ python -m pip show -f requests
 Location: /tmp/projeto/.venv/lib/python3.11/site-packages
 Files:

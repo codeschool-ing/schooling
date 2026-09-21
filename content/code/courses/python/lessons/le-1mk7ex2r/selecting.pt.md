@@ -17,7 +17,7 @@ um Series; passar uma lista dá uma tabela.
 df["centavos"] > 10000
 ```
 
-```text
+```sh
 0     True
 1    False
 2    False
@@ -63,13 +63,13 @@ inteiros, como numa lista.
 us = df[df["pais"] == "US"]
 ```
 
-```text
+```sh
    id cliente pais    centavos
 3   4   diego   US     23000.0
 6   7  gisele   US     15000.0
 ```
 
-```text
+```sh
 >>> us.iloc[0]["cliente"]
 'diego'
 >>> us.loc[0]

@@ -7,7 +7,7 @@ version: 1
 df.groupby("pais")["centavos"].sum()
 ```
 
-```text
+```sh
 pais
 BR    23990.0
 PT     9000.0
@@ -28,7 +28,7 @@ df.groupby("pais").agg(
 )
 ```
 
-```text
+```sh
       pedidos    total         media
 pais
 BR          4  23990.0   7996.666667

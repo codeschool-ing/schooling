@@ -10,7 +10,7 @@ def somar(a, b):
 somar("x", 3)
 ```
 
-```text
+```sh
 Success: no issues found in 1 source file
 ```
 
@@ -26,7 +26,7 @@ A reação honesta a uma primeira passagem limpa numa base sem anotações não 
 somar(1, 2, 3)
 ```
 
-```text
+```sh
 error: Too many arguments for "add"  [call-arg]
 ```
 
@@ -40,7 +40,7 @@ não está fazendo nada.
 mypy --strict app/
 ```
 
-```text
+```sh
 error: Function is missing a type annotation  [no-untyped-def]
 error: Call to untyped function "add" in typed context  [no-untyped-call]
 error: Returning Any from function declared to return "dict[Any, Any]"  [no-any-return]
@@ -69,7 +69,7 @@ def total(itens):
     return n
 ```
 
-```text
+```sh
 note: By default the bodies of untyped functions are not checked,
       consider using --check-untyped-defs  [annotation-unchecked]
 ```

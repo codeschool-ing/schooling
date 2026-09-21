@@ -3,13 +3,13 @@ title: `NaN`, e a média que pulou os dados caladinha
 version: 1
 ---
 
-```text
+```sh
 >>> c = df["centavos"]
 >>> len(c), c.count(), c.isna().sum()
 8, 7, 1
 ```
 
-```text
+```sh
 >>> c.mean()
 10141.43      ← a soma dividida por 7
 >>> c.sum() / len(c)
@@ -24,7 +24,7 @@ decisão por você, e as decisões não são a mesma.
 
 ## `NaN` compara falso com tudo
 
-```text
+```sh
 >>> np.nan == np.nan
 False
 >>> (df["centavos"] > 0).sum()

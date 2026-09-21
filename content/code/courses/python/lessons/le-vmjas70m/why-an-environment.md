@@ -7,7 +7,7 @@ version: 1
 /usr/bin/python3 -m pip install requests
 ```
 
-```text
+```sh
 error: externally-managed-environment
 
 × This environment is externally managed
@@ -28,7 +28,7 @@ later, with no connection anybody could see between the two.
 
 ## And the other reason, which is yours
 
-```text
+```sh
 project-a/   needs requests 2.26
 project-b/   needs requests 2.31
 ```

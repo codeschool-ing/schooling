@@ -7,7 +7,7 @@ version: 1
 python -m timeit -s "data = list(range(100_000))" "99_999 in data"
 ```
 
-```text
+```sh
 500 loops, best of 5: 866 usec per loop
 ```
 
@@ -33,7 +33,7 @@ pure expression you can repeat.
 python -m cProfile -s tottime report.py
 ```
 
-```text
+```sh
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
     17145   13.879    0.001   13.879    0.001 report.py:15(find_customer)
     20000    0.490    0.000    0.490    0.000 report.py:12(allowed)
@@ -48,7 +48,7 @@ python -m cProfile -s tottime report.py
 
 ## The profile is per function, and that is a limit
 
-```text
+```sh
         1   18.307   18.307   18.317   18.317 report.py:12(report)
 ```
 
@@ -67,7 +67,7 @@ worse than it is. Read the profile for the shape, then time the fix without it.
 
 ## The one rule
 
-```text
+```sh
 first fix, the obvious one:   9.0s → 8.4s     7%
 second fix, the profiled one: 8.4s → 0.0166s  544×
 ```

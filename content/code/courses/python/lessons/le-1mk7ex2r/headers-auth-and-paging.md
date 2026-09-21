@@ -31,7 +31,7 @@ mode is a repository somebody makes public two years later.
 
 ## The rate limit is a header
 
-```text
+```sh
 >>> {k: v for k, v in r.headers.items() if k.lower().startswith("x-rate")}
 {'X-RateLimit-Limit': '60', 'X-RateLimit-Remaining': '59'}
 ```
@@ -63,7 +63,7 @@ while url:
     url = page["next"]
 ```
 
-```text
+```sh
 followed next: 3 pages, 25 rows
 ```
 

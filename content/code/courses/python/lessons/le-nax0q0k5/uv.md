@@ -16,7 +16,7 @@ milliseconds and installed five in five.
 
 ## `uv add`
 
-```text
+```sh
 $ uv add "requests>=2.31"
 Using CPython 3.11.15 interpreter at: /usr/local/bin/python3
 Creating virtual environment at: .venv
@@ -40,7 +40,7 @@ uv remove requests           # out of the file, out of the environment, out of t
 
 ## `uv run`
 
-```text
+```sh
 $ rm -rf .venv
 $ uv run main.py
 Creating virtual environment at: .venv
@@ -57,7 +57,7 @@ That is the argument for using it rather than activating: `uv run pytest`, `uv r
 
 ## `uv sync`, which is not `install`
 
-```text
+```sh
 $ uv sync --no-dev
 Resolved 12 packages in 3ms
 Uninstalled 5 packages in 4ms
@@ -78,7 +78,7 @@ uv lock --check     # fail if the lock does not match pyproject.toml
 uv sync --frozen    # install from the lock without re-resolving
 ```
 
-```text
+```sh
 $ uv lock --check
 The lockfile at `uv.lock` needs to be updated, but `--locked` was provided.
 ```
@@ -89,7 +89,7 @@ something else.
 
 ## `uv tree`
 
-```text
+```sh
 rates v0.1.0
 ├── requests v2.34.2
 │   ├── certifi v2026.7.22

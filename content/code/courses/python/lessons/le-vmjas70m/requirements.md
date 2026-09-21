@@ -3,7 +3,7 @@ title: `requirements.txt`, and why `pip freeze` does not write one
 version: 1
 ---
 
-```text
+```sh
 # requirements.txt
 requests==2.31.0
 ```
@@ -17,7 +17,7 @@ line. Comments start with `#`, and `-r other.txt` includes another file.
 
 ## What `pip freeze` gives you instead
 
-```text
+```sh
 $ python -m pip freeze
 certifi==2026.7.22
 charset-normalizer==3.5.1
@@ -47,7 +47,7 @@ transitive pin blocks an upgrade, working out which line may be deleted takes an
 
 ## Write it by hand
 
-```text
+```sh
 # requirements.txt — what this project asks for
 requests==2.31.0        # HTTP; pinned, 2.32 changed the retry behaviour
 pandas~=2.2.0           # tables; patch releases are fine
@@ -58,7 +58,7 @@ the pin is not obvious. It is a short file, it stays short, and it says somethin
 
 ## Two files, when there are development tools
 
-```text
+```sh
 # requirements.txt
 requests==2.31.0
 

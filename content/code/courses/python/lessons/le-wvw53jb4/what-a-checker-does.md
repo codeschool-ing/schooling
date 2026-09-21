@@ -13,7 +13,7 @@ def total(amount: float, code: str) -> float:
     return amount * find(code)
 ```
 
-```text
+```sh
 a.py:7: error: Unsupported operand types for * ("float" and "None")  [operator]
 a.py:7: note: Right operand is of type "float | None"
 ```
@@ -27,7 +27,7 @@ is absent, and looked at what line 7 does with the result.
 A test finds what you thought to try. A checker follows every call in the program, including the
 branch nobody has taken and the caller in the file you were not looking at.
 
-```text
+```sh
 error: Argument 1 to "totals" has incompatible type "list[str]"; expected "list[int]"  [arg-type]
 error: Incompatible return value type (got "int", expected "str")  [return-value]
 error: Item "None" of "Row | None" has no attribute "city"  [union-attr]
@@ -60,7 +60,7 @@ row = {"city": "Recife", "code": "BR"}
 print(row["citty"])
 ```
 
-```text
+```sh
 Success: no issues found in 1 source file
 ```
 

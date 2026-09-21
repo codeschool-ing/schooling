@@ -7,7 +7,7 @@ version: 1
 pytest --cov=app --cov-report=term-missing
 ```
 
-```text
+```sh
 Name              Stmts   Miss  Cover   Missing
 -----------------------------------------------
 app/__init__.py       0      0   100%
@@ -31,7 +31,7 @@ def test_total_runs():
     assert result is not None
 ```
 
-```text
+```sh
 app/invoice.py        7      0   100%
 1 passed
 ```
@@ -53,7 +53,7 @@ gap it finds is usually an error path somebody wrote and never exercised.
 pytest --cov=app --cov-branch --cov-report=term-missing
 ```
 
-```text
+```sh
 Name              Stmts   Miss Branch BrPart  Cover   Missing
 -------------------------------------------------------------
 app/guard.py          4      1      2      1    67%   4

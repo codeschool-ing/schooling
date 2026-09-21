@@ -7,7 +7,7 @@ version: 1
 no topo desta aula está certa hoje, e a equivalente a ela já esteve errada duas vezes nos últimos
 cinco anos.
 
-```text
+```sh
 setup.py + requirements.txt    o arranjo de que tudo partiu
 pipenv                         recomendado pelo guia oficial de empacotamento
 poetry                         o que a maior parte dos projetos novos usou depois

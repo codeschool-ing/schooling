@@ -3,7 +3,7 @@ title: `requirements.txt`, e por que o `pip freeze` não escreve um
 version: 1
 ---
 
-```text
+```sh
 # requirements.txt
 requests==2.31.0
 ```
@@ -18,7 +18,7 @@ arquivo.
 
 ## O que o `pip freeze` dá no lugar
 
-```text
+```sh
 $ python -m pip freeze
 certifi==2026.7.22
 charset-normalizer==3.5.1
@@ -48,7 +48,7 @@ leva uma tarde.
 
 ## Escreva à mão
 
-```text
+```sh
 # requirements.txt — o que este projeto pede
 requests==2.31.0        # HTTP; fixado, o 2.32 mudou o comportamento de retentativa
 pandas~=2.2.0           # tabelas; versões de correção estão bem
@@ -59,7 +59,7 @@ onde a fixação não é óbvia. É um arquivo curto, ele continua curto, e ele 
 
 ## Dois arquivos, quando há ferramentas de desenvolvimento
 
-```text
+```sh
 # requirements.txt
 requests==2.31.0
 

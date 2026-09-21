@@ -15,7 +15,7 @@ def load_rates(path, cache={}):
     return cache[path]
 ```
 
-```text
+```sh
 >>> load("a.json"); load("b.json")
 >>> load.__defaults__
 ({'a.json': {...}, 'b.json': {...}},)
@@ -52,7 +52,7 @@ for i in range(3):
 [f() for f in out]        # [2, 2, 2]
 ```
 
-```text
+```sh
 B023 Function definition does not bind loop variable `i`
 ```
 

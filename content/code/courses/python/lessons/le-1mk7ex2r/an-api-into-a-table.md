@@ -16,7 +16,7 @@ while url:
 df = pd.DataFrame(rows)
 ```
 
-```text
+```sh
    id country  cents
 0   1      US   1137
 1   2      PT   1274
@@ -33,7 +33,7 @@ tabulate, ask.
 [{"id": 1, "cents": 12990, "customer": {"name": "ana", "country": "BR"}}]
 ```
 
-```text
+```sh
 >>> pd.DataFrame(nested)
    id  cents                          customer
 0   1  12990  {'name': 'ana', 'country': 'BR'}
@@ -41,7 +41,7 @@ tabulate, ask.
 
 The whole dictionary lands in one cell, which is almost never useful.
 
-```text
+```sh
 >>> pd.json_normalize(nested)
    id  cents customer.name customer.country
 0   1  12990           ana               BR

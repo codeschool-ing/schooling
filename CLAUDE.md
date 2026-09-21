@@ -1607,6 +1607,12 @@ go run ./tools/check-figures       # and whether every diagram names a colour th
                                   # token nothing defines renders the shape invisible — and
                                   # whether a translated figure says anything in its own
                                   # language, which is the one question that needs two files
+node tools/check-highlight/check-highlight.mjs content   # every fenced block labelled with a
+                                  # language the highlighter knows. `docs/CONTENT.md` lists the
+                                  # names; a label it has never heard of — `text` is the one
+                                  # everybody reaches for — renders perfectly, in one grey, and
+                                  # nothing else here can see that. CI runs it and this list did
+                                  # not, which is how 234 of them reached a pull request
 go run ./tools/check-interface    # every string the interface says, in every language it claims
 go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has

@@ -3,13 +3,13 @@ title: `NaN`, and the mean that quietly skipped it
 version: 1
 ---
 
-```text
+```sh
 >>> c = df["cents"]
 >>> len(c), c.count(), c.isna().sum()
 8, 7, 1
 ```
 
-```text
+```sh
 >>> c.mean()
 10141.43      ← the sum divided by 7
 >>> c.sum() / len(c)
@@ -25,7 +25,7 @@ choice on your behalf, and the choices are not the same.
 
 ## `NaN` compares false with everything
 
-```text
+```sh
 >>> np.nan == np.nan
 False
 >>> (df["cents"] > 0).sum()

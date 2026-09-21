@@ -8,7 +8,7 @@ def test_keeps_punctuation():
     assert slugify("Hello, World") == "hello-world"
 ```
 
-```text
+```sh
 =================================== FAILURES ===================================
 ____________________________ test_keeps_punctuation ____________________________
 
@@ -38,7 +38,7 @@ character that differs. The last line is the location.
 
 ## And the summary at the bottom
 
-```text
+```sh
 =========================== short test summary info ============================
 FAILED test_slug.py::test_keeps_punctuation - AssertionError: assert 'hello,...
 ========================= 1 failed, 1 passed in 0.02s ==========================
@@ -55,7 +55,7 @@ def test_float():
     assert 0.1 + 0.2 == 0.3
 ```
 
-```text
+```sh
 E       assert (0.1 + 0.2) == 0.3
 ```
 

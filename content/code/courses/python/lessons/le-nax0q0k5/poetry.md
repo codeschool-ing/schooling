@@ -44,7 +44,7 @@ That third one is the difference you will actually hit.
 
 ## The environment is not in the project
 
-```text
+```sh
 $ poetry env info -p
 /root/.cache/pypoetry/virtualenvs/rates-mFpQSSuL-py3.11
 ```
@@ -61,7 +61,7 @@ poetry config virtualenvs.in-project true
 
 ## The error everybody meets on their first day
 
-```text
+```sh
 $ poetry install
 Error: The current project could not be installed: No file/folder found for package rates
 If you do not want to install the current project use --no-root.

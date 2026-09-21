@@ -23,7 +23,7 @@ Um erro de digitação no próprio teste levanta `KeyError` também, e uma busca
 quadros abaixo, que não tem nada a ver com o caso, igualmente. `match` recebe uma expressão
 regular procurada na mensagem:
 
-```text
+```sh
 E       AssertionError: Regex pattern did not match.
 E         Expected regex: 'no such currency'
 E         Actual message: "'unknown currency XYZ'"
@@ -59,7 +59,7 @@ def test_float_approx():
 `approx` compara dentro de uma tolerância — relativa de `1e-6` por padrão, e `abs=` ou `rel=`
 quando você precisa da sua. Ele também relata melhor:
 
-```text
+```sh
 E       assert 0.30000000000000004 == 0.4 ± 4.0e-07
 ```
 

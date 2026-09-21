@@ -17,7 +17,7 @@ Series; passing a list gives a table.
 df["cents"] > 10000
 ```
 
-```text
+```sh
 0     True
 1    False
 2    False
@@ -63,13 +63,13 @@ a list.
 us = df[df["country"] == "US"]
 ```
 
-```text
+```sh
    id customer country    cents
 3   4    diego      US  23000.0
 6   7   gisele      US  15000.0
 ```
 
-```text
+```sh
 >>> us.iloc[0]["customer"]
 'diego'
 >>> us.loc[0]

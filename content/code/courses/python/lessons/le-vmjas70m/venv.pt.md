@@ -7,7 +7,7 @@ version: 1
 python3 -m venv .venv
 ```
 
-```text
+```sh
 .venv/
   bin/          activate  python  python3  pip  pip3
   lib/python3.11/site-packages/
@@ -41,7 +41,7 @@ bibliotecas da máquina também, o que ocasionalmente é o que se quer e nunca �
 deactivate
 ```
 
-```text
+```sh
 $ which python
 /tmp/projeto/.venv/bin/python
 $ python -c "import sys; print(sys.prefix)"
@@ -54,7 +54,7 @@ unidade do systemd deve usar, porque nenhum dos dois tem um shell que rodou o se
 
 ## O diretório nunca é comitado
 
-```text
+```sh
 # .gitignore
 .venv/
 ```

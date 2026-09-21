@@ -3,7 +3,7 @@ title: `==`, `>=`, `~=`, and what a version number promises
 version: 1
 ---
 
-```text
+```sh
 MAJOR . MINOR . PATCH
   2   .  31   .   0
 ```
@@ -14,7 +14,7 @@ things. Everything below rests on that promise being kept, and most of the time 
 
 ## The specifiers, resolved in a fresh environment
 
-```text
+```sh
 requests==2.31.0    →  2.31.0
 requests~=2.31.0    →  2.31.0
 requests~=2.31      →  2.34.2
@@ -35,7 +35,7 @@ of components you wrote, which is easy to mistype and produces no error.
 
 ## The other two
 
-```text
+```sh
 requests>=2.26,<3        a range, written out
 requests!=2.32.0         everything except a release that was broken
 ```
@@ -45,12 +45,12 @@ precisely because it cannot be misread.
 
 ## What a specifier does not pin
 
-```text
+```sh
 $ python -m pip show requests
 Requires: certifi, charset-normalizer, idna, urllib3
 ```
 
-```text
+```sh
 requests 2.31.0 asks for:
   urllib3 (<3, >=1.21.1)
   charset-normalizer (<4, >=2)

@@ -66,7 +66,7 @@ for word in words:
 s = "".join(words)
 ```
 
-```text
+```sh
 += over 10,000 words   0.515 ms       join over 10,000   0.077 ms
 += over 20,000 words   1.023 ms       join over 20,000   0.148 ms
 += over 40,000 words   2.046 ms       join over 40,000   0.298 ms

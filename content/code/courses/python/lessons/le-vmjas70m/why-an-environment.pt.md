@@ -7,7 +7,7 @@ version: 1
 /usr/bin/python3 -m pip install requests
 ```
 
-```text
+```sh
 error: externally-managed-environment
 
 × This environment is externally managed
@@ -28,7 +28,7 @@ funcionar uma hora depois, sem nenhuma ligação que alguém enxergasse entre as
 
 ## E a outra razão, que é sua
 
-```text
+```sh
 projeto-a/   precisa de requests 2.26
 projeto-b/   precisa de requests 2.31
 ```

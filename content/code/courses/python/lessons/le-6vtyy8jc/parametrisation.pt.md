@@ -14,7 +14,7 @@ def test_slugify(titulo, esperado):
     assert slugify(titulo) == esperado
 ```
 
-```text
+```sh
 test_slug.py::test_slugify[Hello World-hello-world] PASSED               [ 25%]
 test_slug.py::test_slugify[ALL CAPS-all-caps] PASSED                     [ 50%]
 test_slug.py::test_slugify[already-done-already-done] PASSED             [ 75%]

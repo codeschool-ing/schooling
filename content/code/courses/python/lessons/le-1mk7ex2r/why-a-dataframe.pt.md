@@ -26,7 +26,7 @@ df.apply(lambda l: l["centavos"] * l["taxa"], axis=1)   # uma chamada Python por
 [l["centavos"] * l["taxa"] for _, l in df.iterrows()]   # um Series montado por linha
 ```
 
-```text
+```sh
 500.000 linhas
   iterrows   11,200 s
   apply       2,771 s
@@ -52,7 +52,7 @@ mão explica a maior parte das mensagens de erro.
 
 ## O índice
 
-```text
+```sh
    id cliente pais    centavos
 3   4   diego   US     23000.0
 6   7  gisele   US     15000.0

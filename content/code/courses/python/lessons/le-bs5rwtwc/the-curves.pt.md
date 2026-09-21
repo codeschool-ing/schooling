@@ -29,7 +29,7 @@ for a in linhas:
 
 ## `O(log n)` é a que parece errada
 
-```text
+```sh
 n = 1.000             10 passos
 n = 1.000.000         20 passos
 n = 1.000.000.000     30 passos
@@ -41,7 +41,7 @@ perto o bastante de grátis** para a diferença entre ele e `O(1)` quase nunca d
 
 ## `O(n log n)` é o que ordenar custa
 
-```text
+```sh
 sorted, n =   1.000    0,088 ms
 sorted, n =  10.000    1,277 ms      ← 10× os dados, 14× o tempo
 sorted, n = 100.000   18,112 ms      ← 10× os dados, 14× o tempo

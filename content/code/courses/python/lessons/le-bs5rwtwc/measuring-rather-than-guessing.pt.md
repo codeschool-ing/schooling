@@ -7,7 +7,7 @@ version: 1
 python -m timeit -s "data = list(range(100_000))" "99_999 in data"
 ```
 
-```text
+```sh
 500 loops, best of 5: 866 usec per loop
 ```
 
@@ -33,7 +33,7 @@ pura que você pode repetir.
 python -m cProfile -s tottime relatorio.py
 ```
 
-```text
+```sh
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
     17145   13.879    0.001   13.879    0.001 report.py:15(find_customer)
     20000    0.490    0.000    0.490    0.000 report.py:12(allowed)
@@ -49,7 +49,7 @@ python -m cProfile -s tottime relatorio.py
 
 ## O profile é por função, e isso é um limite
 
-```text
+```sh
         1   18.307   18.307   18.317   18.317 report.py:12(report)
 ```
 
@@ -70,7 +70,7 @@ ele.
 
 ## A única regra
 
-```text
+```sh
 primeiro conserto, o óbvio:      9,0s → 8,4s     7%
 segundo conserto, o do profile:  8,4s → 0,0166s  544×
 ```

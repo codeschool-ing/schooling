@@ -3,7 +3,7 @@ title: Layout, `build-system`, and installing it with `-e`
 version: 1
 ---
 
-```text
+```sh
 rates/
   pyproject.toml
   src/
@@ -35,7 +35,7 @@ what to do.
 
 ## Building
 
-```text
+```sh
 $ uv build
 Successfully built dist/rates-0.1.0.tar.gz
 Successfully built dist/rates-0.1.0-py3-none-any.whl
@@ -44,7 +44,7 @@ Successfully built dist/rates-0.1.0-py3-none-any.whl
 Two artefacts. The **sdist** (`.tar.gz`) is the source, and the **wheel** (`.whl`) is the
 installable one — a zip file with a fixed layout:
 
-```text
+```sh
 rates/__init__.py
 rates/cli.py
 rates-0.1.0.dist-info/METADATA
@@ -62,7 +62,7 @@ parts has a name like `cp311-cp311-manylinux_2_17_x86_64` instead, and there is 
 pip install -e .
 ```
 
-```text
+```sh
 $ python -c "import rates; print(rates.__file__)"
 /tmp/rates/src/rates/__init__.py
 

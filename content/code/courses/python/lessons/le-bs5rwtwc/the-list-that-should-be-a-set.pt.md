@@ -22,7 +22,7 @@ Uma palavra, uma linha, e o laço agora são vinte mil buscas por hash.
 
 ## Quanto isso vale
 
-```text
+```sh
 $ python -m timeit -s "data = list(range(100_000))" "99_999 in data"
 500 loops, best of 5: 866 usec per loop
 

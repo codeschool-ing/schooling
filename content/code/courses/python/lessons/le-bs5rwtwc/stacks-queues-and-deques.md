@@ -20,7 +20,7 @@ queue.append(x)      # enqueue   O(1)
 queue.pop(0)         # dequeue   O(n)  ← everything shifts
 ```
 
-```text
+```sh
 draining 100,000 items from the front
   list.pop(0):        0.7216s
   deque.popleft():    0.0048s
@@ -44,7 +44,7 @@ q.pop()              # O(1)
 A double-ended queue: constant time at **both** ends, because it is a linked sequence of blocks
 rather than one contiguous run.
 
-```text
+```sh
 list.insert(0, x):    33,428 ns
 deque.appendleft(x):      29 ns
 ```

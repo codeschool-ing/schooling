@@ -3,7 +3,7 @@ title: `tests/`, `conftest.py`, and the import that fails
 version: 1
 ---
 
-```text
+```sh
 project/
   pyproject.toml
   conftest.py            <- empty, and load-bearing
@@ -19,7 +19,7 @@ project/
 from app.rates import total
 ```
 
-```text
+```sh
 E   ModuleNotFoundError: No module named 'app'
 =========================== short test summary info ============================
 ERROR tests/test_rates.py

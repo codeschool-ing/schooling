@@ -7,7 +7,7 @@ version: 1
 df.groupby("country")["cents"].sum()
 ```
 
-```text
+```sh
 country
 BR    23990.0
 PT     9000.0
@@ -28,7 +28,7 @@ df.groupby("country").agg(
 )
 ```
 
-```text
+```sh
          orders    total           avg
 country
 BR            4  23990.0   7996.666667

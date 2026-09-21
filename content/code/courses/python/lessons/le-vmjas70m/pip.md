@@ -23,7 +23,7 @@ because the library went somewhere else.
 
 ## `list` and `show`
 
-```text
+```sh
 $ python -m pip list
 Package            Version
 ------------------ ---------
@@ -37,7 +37,7 @@ urllib3            2.8.0
 Five packages after installing one. The other four are what `requests` needs, and this is the
 first sight of the distinction the next two sections are about.
 
-```text
+```sh
 $ python -m pip show requests
 Location: /tmp/project/.venv/lib/python3.11/site-packages
 Requires: certifi, charset-normalizer, idna, urllib3

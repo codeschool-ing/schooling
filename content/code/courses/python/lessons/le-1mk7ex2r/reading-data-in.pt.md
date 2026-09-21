@@ -8,13 +8,13 @@ import pandas as pd
 df = pd.read_csv("pedidos.csv")
 ```
 
-```text
+```sh
 id,cliente,pais,centavos,pago_em
 1,ana,BR,12990,2026-01-04
 2,bruno,BR,,2026-01-05          ← uma célula vazia
 ```
 
-```text
+```sh
 >>> df.dtypes
 id            int64
 cliente         str
@@ -36,7 +36,7 @@ comparar igual a um inteiro.
 df = pd.read_csv("pedidos.csv", dtype={"centavos": "Int64"})
 ```
 
-```text
+```sh
 >>> df["centavos"].tolist()
 [12990, <NA>, 4500, 23000, 4500, 7800, 15000, 3200]
 ```
@@ -53,7 +53,7 @@ importe — um id só de dígitos vira inteiro e perde os zeros à esquerda de o
 df = pd.read_csv("pedidos.csv", parse_dates=["pago_em"])
 ```
 
-```text
+```sh
 >>> df["pago_em"].dtype
 datetime64[us]
 ```

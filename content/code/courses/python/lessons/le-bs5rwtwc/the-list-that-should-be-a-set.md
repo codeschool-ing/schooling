@@ -22,7 +22,7 @@ One word, one line, and the loop is now twenty thousand hash lookups.
 
 ## What it is worth
 
-```text
+```sh
 $ python -m timeit -s "data = list(range(100_000))" "99_999 in data"
 500 loops, best of 5: 866 usec per loop
 

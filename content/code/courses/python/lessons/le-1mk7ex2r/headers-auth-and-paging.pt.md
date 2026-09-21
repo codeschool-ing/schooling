@@ -32,7 +32,7 @@ repositório que alguém torna público dois anos depois.
 
 ## O limite de taxa é um cabeçalho
 
-```text
+```sh
 >>> {k: v for k, v in r.headers.items() if k.lower().startswith("x-rate")}
 {'X-RateLimit-Limit': '60', 'X-RateLimit-Remaining': '59'}
 ```
@@ -64,7 +64,7 @@ while url:
     url = pagina["next"]
 ```
 
-```text
+```sh
 seguiu o next: 3 páginas, 25 linhas
 ```
 

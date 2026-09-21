@@ -8,13 +8,13 @@ import pandas as pd
 df = pd.read_csv("orders.csv")
 ```
 
-```text
+```sh
 id,customer,country,cents,paid_at
 1,ana,BR,12990,2026-01-04
 2,bruno,BR,,2026-01-05          ← one empty cell
 ```
 
-```text
+```sh
 >>> df.dtypes
 id            int64
 customer        str
@@ -35,7 +35,7 @@ compare equal to an integer.
 df = pd.read_csv("orders.csv", dtype={"cents": "Int64"})
 ```
 
-```text
+```sh
 >>> df["cents"].tolist()
 [12990, <NA>, 4500, 23000, 4500, 7800, 15000, 3200]
 ```
@@ -52,7 +52,7 @@ care about — an id that is all digits becomes an integer and loses its leading
 df = pd.read_csv("orders.csv", parse_dates=["paid_at"])
 ```
 
-```text
+```sh
 >>> df["paid_at"].dtype
 datetime64[us]
 ```

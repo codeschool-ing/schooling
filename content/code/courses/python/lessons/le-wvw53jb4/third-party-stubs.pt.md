@@ -7,7 +7,7 @@ version: 1
 import yaml
 ```
 
-```text
+```sh
 error: Library stubs not installed for "yaml"  [import-untyped]
 note: Hint: "python3 -m pip install types-PyYAML"
 note: (or run "mypy --install-types" to install all missing stub packages)
@@ -20,7 +20,7 @@ silêncio.
 
 ## Duas mensagens diferentes
 
-```text
+```sh
 error: Library stubs not installed for "yaml"      [import-untyped]
 error: Cannot find implementation or library stub for module named "wibblelib"  [import-not-found]
 ```
@@ -52,7 +52,7 @@ aparecer no ano que vem quando alguém editá-la.
 n: int = "a"  # type: ignore[arg-type]
 ```
 
-```text
+```sh
 error: Incompatible types in assignment ...  [assignment]
 note: Error code "assignment" not covered by "type: ignore" comment
 ```
@@ -66,7 +66,7 @@ estreito que deixa de casar volta a relatar.
 mypy --warn-unused-ignores app/
 ```
 
-```text
+```sh
 error: Unused "type: ignore" comment  [unused-ignore]
 ```
 

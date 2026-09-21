@@ -7,7 +7,7 @@ version: 1
 ruff check app/
 ```
 
-```text
+```sh
 F401 [*] `os` imported but unused
 B006 Do not use mutable data structures for argument defaults
 E722 Do not use bare `except`
@@ -43,14 +43,14 @@ faltam, `PT` de estilo de pytest.
 ruff check --fix app/
 ```
 
-```text
+```sh
 Found 7 errors (4 fixed, 3 remaining).
 ```
 
 `[*]` marca uma regra com um conserto que o `ruff` considera **seguro**: um que não muda o que o
 programa faz. Remover um import sem uso é seguro. Ordenar imports é seguro.
 
-```text
+```sh
 1 hidden fix can be enabled with the `--unsafe-fixes` option
 ```
 

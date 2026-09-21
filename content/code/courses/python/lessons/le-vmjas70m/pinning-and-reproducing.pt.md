@@ -3,11 +3,11 @@ title: A instalação que funcionou ontem
 version: 1
 ---
 
-```text
+```sh
 requirements.txt:  requests==2.31.0
 ```
 
-```text
+```sh
 segunda:  urllib3 2.8.0
 quinta:   urllib3 2.9.0        ← ninguém mudou nada
 ```
@@ -26,7 +26,7 @@ Um segundo arquivo, gerado, listando **todo** pacote — direto e transitivo —
 em geral com um hash do arquivo que foi baixado. Ele não é escrito à mão e não é o arquivo que
 você edita.
 
-```text
+```sh
 requirements.in     o que você pede           ← editado por uma pessoa
 requirements.txt    no que isso resolve       ← gerado, comitado
 ```
@@ -36,7 +36,7 @@ pip-compile requirements.in          # escreve requirements.txt, todo fixado
 pip-sync requirements.txt            # faz o ambiente bater exatamente com ele
 ```
 
-```text
+```sh
 # requirements.txt — gerado pelo pip-compile
 certifi==2026.7.22
     # via requests
@@ -69,7 +69,7 @@ transitivo, que é exatamente a mudança que você quer conseguir enxergar.
 
 ## `--require-hashes`
 
-```text
+```sh
 requests==2.31.0 \
     --hash=sha256:58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f
 ```

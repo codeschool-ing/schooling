@@ -3,7 +3,7 @@ title: `site-packages`, `sys.path`, and the import that found the wrong copy
 version: 1
 ---
 
-```text
+```sh
 $ python -c "import sys; [print(repr(p)) for p in sys.path]"
 ''
 '/usr/lib/python311.zip'
@@ -25,7 +25,7 @@ Inside an environment the list is short: the current directory, the standard lib
 print("this is not the standard library")
 ```
 
-```text
+```sh
 $ python -c "import json; print(json.__file__)"
 this is not the standard library
 /tmp/project/json.py
@@ -42,7 +42,7 @@ you before anything else.
 
 ## `pip show -f`
 
-```text
+```sh
 $ python -m pip show -f requests
 Location: /tmp/project/.venv/lib/python3.11/site-packages
 Files:

@@ -7,7 +7,7 @@ version: 1
 recommendation at the top of this lesson is right today and has been wrong twice in the last five
 years.
 
-```text
+```sh
 setup.py + requirements.txt    the arrangement everything started from
 pipenv                         recommended by the official packaging guide
 poetry                         what most new projects used next

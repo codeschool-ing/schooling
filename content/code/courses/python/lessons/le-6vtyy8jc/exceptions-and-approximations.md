@@ -23,7 +23,7 @@ A typo in the test itself raises `KeyError` too, and so does a dictionary lookup
 down that has nothing to do with the case. `match` takes a regular expression searched against
 the message:
 
-```text
+```sh
 E       AssertionError: Regex pattern did not match.
 E         Expected regex: 'no such currency'
 E         Actual message: "'unknown currency XYZ'"
@@ -59,7 +59,7 @@ def test_float_approx():
 `approx` compares within a tolerance — relative `1e-6` by default, and `abs=` or `rel=` when you
 need your own. It also reports better:
 
-```text
+```sh
 E       assert 0.30000000000000004 == 0.4 ± 4.0e-07
 ```
 

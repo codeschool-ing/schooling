@@ -3,7 +3,7 @@ title: O conjunto padrão, e a família que ele deixa de fora
 version: 1
 ---
 
-```text
+```sh
 padrão: E4, E7, E9, F
 ```
 
@@ -19,7 +19,7 @@ def load_rates(path, cache = {}):
     ...
 ```
 
-```text
+```sh
 (regras padrão)  Found 0 errors.
 (com B)          B006 Do not use mutable data structures for argument defaults
 ```

@@ -26,7 +26,7 @@ df.apply(lambda r: r["cents"] * r["rate"], axis=1)    # a Python call per row
 [r["cents"] * r["rate"] for _, r in df.iterrows()]    # a Series built per row
 ```
 
-```text
+```sh
 500,000 rows
   iterrows   11.200 s
   apply       2.771 s
@@ -52,7 +52,7 @@ explains most error messages.
 
 ## The index
 
-```text
+```sh
    id customer country    cents
 3   4    diego      US  23000.0
 6   7   gisele      US  15000.0

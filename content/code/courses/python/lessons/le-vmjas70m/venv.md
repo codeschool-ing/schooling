@@ -7,7 +7,7 @@ version: 1
 python3 -m venv .venv
 ```
 
-```text
+```sh
 .venv/
   bin/          activate  python  python3  pip  pip3
   lib/python3.11/site-packages/
@@ -42,7 +42,7 @@ default.
 deactivate
 ```
 
-```text
+```sh
 $ which python
 /tmp/project/.venv/bin/python
 $ python -c "import sys; print(sys.prefix)"
@@ -55,7 +55,7 @@ job or a systemd unit should use, because neither of those has a shell that ran 
 
 ## The directory is never committed
 
-```text
+```sh
 # .gitignore
 .venv/
 ```

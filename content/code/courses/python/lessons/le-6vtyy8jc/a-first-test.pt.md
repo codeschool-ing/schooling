@@ -15,7 +15,7 @@ def test_espacos_viram_hifens():
 pytest
 ```
 
-```text
+```sh
 test_slug.py .                                                           [100%]
 ============================== 1 passed in 0.02s ===============================
 ```
@@ -32,7 +32,7 @@ imports, constantes — e fica em paz.
 
 ## O ponto
 
-```text
+```sh
 test_slug.py .F                                                          [100%]
 ```
 

@@ -16,7 +16,7 @@ outro jeito aparecem como um número errado três horas depois.
 
 ## O `info()` é o que merece o lugar
 
-```text
+```sh
  #   Column    Non-Null Count  Dtype
 ---  ------    --------------  -----
  0   id        8 non-null      int64
@@ -31,7 +31,7 @@ e tem sete de oito — os dois problemas da seção anterior, visíveis numa lin
 
 ## `describe()`
 
-```text
+```sh
             id      centavos
 count  8.00000      7.000000
 mean   4.50000  10141.428571
@@ -47,7 +47,7 @@ O `df.describe(include="all")` acrescenta as colunas de texto, com `unique` e `t
 
 ## `value_counts()`
 
-```text
+```sh
 pais
 BR    4
 PT    2

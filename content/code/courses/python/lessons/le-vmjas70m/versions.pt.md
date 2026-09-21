@@ -3,7 +3,7 @@ title: `==`, `>=`, `~=`, e o que um número de versão promete
 version: 1
 ---
 
-```text
+```sh
 MAIOR . MENOR . CORREÇÃO
   2   .  31   .     0
 ```
@@ -14,7 +14,7 @@ quebrar coisas. Tudo abaixo se apoia nessa promessa ser cumprida, e na maior par
 
 ## Os especificadores, resolvidos num ambiente novo
 
-```text
+```sh
 requests==2.31.0    →  2.31.0
 requests~=2.31.0    →  2.31.0
 requests~=2.31      →  2.34.2
@@ -36,7 +36,7 @@ componentes que você escreveu, que é fácil de digitar errado e não produz er
 
 ## Os outros dois
 
-```text
+```sh
 requests>=2.26,<3        uma faixa, escrita por extenso
 requests!=2.32.0         tudo menos uma versão que saiu quebrada
 ```
@@ -46,12 +46,12 @@ não poder ser mal lida.
 
 ## O que um especificador não fixa
 
-```text
+```sh
 $ python -m pip show requests
 Requires: certifi, charset-normalizer, idna, urllib3
 ```
 
-```text
+```sh
 o requests 2.31.0 pede:
   urllib3 (<3, >=1.21.1)
   charset-normalizer (<4, >=2)

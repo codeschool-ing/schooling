@@ -3,7 +3,7 @@ title: The default set, and the family it leaves out
 version: 1
 ---
 
-```text
+```sh
 default: E4, E7, E9, F
 ```
 
@@ -19,7 +19,7 @@ def load_rates(path, cache = {}):
     ...
 ```
 
-```text
+```sh
 (default rules)  Found 0 errors.
 (with B)         B006 Do not use mutable data structures for argument defaults
 ```

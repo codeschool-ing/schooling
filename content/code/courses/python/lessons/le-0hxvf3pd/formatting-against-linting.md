@@ -18,7 +18,7 @@ reports them and leaves the fixing to you.
 
 ## Why they are two tools and not one
 
-```text
+```sh
 black rewrote 22 lines of the demonstration module.
 ruff reported the same 4 findings before and after.
 ```

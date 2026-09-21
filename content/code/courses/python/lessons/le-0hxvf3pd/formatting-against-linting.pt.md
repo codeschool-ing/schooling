@@ -18,7 +18,7 @@ relata e deixa o conserto com você.
 
 ## Por que são duas ferramentas e não uma
 
-```text
+```sh
 o black reescreveu 22 linhas do módulo da demonstração.
 o ruff relatou os mesmos 4 achados antes e depois.
 ```

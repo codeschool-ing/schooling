@@ -8,7 +8,7 @@ data.sort()               # sorts in place, returns None
 new = sorted(data)        # returns a new list, leaves data alone
 ```
 
-```text
+```sh
 >>> d = [3, 1, 2]
 >>> d.sort()
 >>> d
@@ -33,7 +33,7 @@ The function is called **once per element**, and the results are what get compar
 by its first item, then the second, which is how a secondary sort is written on one line — and
 negating a number reverses that component on its own.
 
-```text
+```sh
 sorted with key=lambda,  n=100,000    27.5 ms
 sorted with itemgetter,  n=100,000    25.3 ms
 sorted, no key,          n=100,000    18.1 ms
@@ -44,7 +44,7 @@ and not by enough to matter.
 
 ## Stability
 
-```text
+```sh
 >>> rows = [("b", 2), ("a", 1), ("b", 1), ("a", 2)]
 >>> sorted(rows, key=lambda r: r[0])
 [('a', 1), ('a', 2), ('b', 2), ('b', 1)]
@@ -55,7 +55,7 @@ was, and nothing about the sort disturbed it.
 
 That is a guarantee, and it is what makes two sorts work:
 
-```text
+```sh
 >>> sorted(sorted(rows, key=lambda r: r[1]), key=lambda r: r[0])
 [('a', 1), ('a', 2), ('b', 1), ('b', 2)]
 ```
@@ -77,7 +77,7 @@ max(rows, key=lambda r: r["cents"])              # O(n), not O(n log n)
 heapq.nlargest(10, rows, key=lambda r: r["cents"])
 ```
 
-```text
+```sh
 at n = 1,000,000 floats
   sorted(data)[-10:]     349.6 ms
   heapq.nlargest(10, …)   15.2 ms

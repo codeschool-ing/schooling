@@ -3,7 +3,7 @@ title: O outro, e onde os dois discordam de propósito
 version: 1
 ---
 
-```text
+```sh
 mypy:    error: Incompatible types in assignment (expression has type "str",
                 variable has type "int")  [assignment]
 pyright: error: Type "Literal['no']" is not assignable to declared type "int"

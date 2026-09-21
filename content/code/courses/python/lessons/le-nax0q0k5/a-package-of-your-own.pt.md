@@ -3,7 +3,7 @@ title: Layout, `build-system`, e instalar com `-e`
 version: 1
 ---
 
-```text
+```sh
 rates/
   pyproject.toml
   src/
@@ -35,7 +35,7 @@ fazer.
 
 ## Construir
 
-```text
+```sh
 $ uv build
 Successfully built dist/rates-0.1.0.tar.gz
 Successfully built dist/rates-0.1.0-py3-none-any.whl
@@ -44,7 +44,7 @@ Successfully built dist/rates-0.1.0-py3-none-any.whl
 Dois artefatos. O **sdist** (`.tar.gz`) é o fonte, e a **wheel** (`.whl`) é a instalável — um
 arquivo zip com um layout fixo:
 
-```text
+```sh
 rates/__init__.py
 rates/cli.py
 rates-0.1.0.dist-info/METADATA
@@ -63,7 +63,7 @@ plataforma.
 pip install -e .
 ```
 
-```text
+```sh
 $ python -c "import rates; print(rates.__file__)"
 /tmp/rates/src/rates/__init__.py
 

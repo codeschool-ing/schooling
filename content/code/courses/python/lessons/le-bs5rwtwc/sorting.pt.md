@@ -8,7 +8,7 @@ dados.sort()               # ordena no lugar, devolve None
 novo = sorted(dados)       # devolve uma lista nova, deixa dados em paz
 ```
 
-```text
+```sh
 >>> d = [3, 1, 2]
 >>> d.sort()
 >>> d
@@ -33,7 +33,7 @@ A função é chamada **uma vez por elemento**, e os resultados é que são comp
 ordena pelo primeiro item, depois pelo segundo, que é como uma ordenação secundária se escreve
 numa linha — e negar um número inverte aquele componente sozinho.
 
-```text
+```sh
 sorted com key=lambda,  n=100.000    27,5 ms
 sorted com itemgetter,  n=100.000    25,3 ms
 sorted sem key,         n=100.000    18,1 ms
@@ -44,7 +44,7 @@ lambda e não o bastante para importar.
 
 ## Estabilidade
 
-```text
+```sh
 >>> linhas = [("b", 2), ("a", 1), ("b", 1), ("a", 2)]
 >>> sorted(linhas, key=lambda l: l[0])
 [('a', 1), ('a', 2), ('b', 2), ('b', 1)]
@@ -55,7 +55,7 @@ estava, e nada na ordenação mexeu nisso.
 
 Isso é uma garantia, e é o que faz duas ordenações funcionarem:
 
-```text
+```sh
 >>> sorted(sorted(linhas, key=lambda l: l[1]), key=lambda l: l[0])
 [('a', 1), ('a', 2), ('b', 1), ('b', 2)]
 ```
@@ -77,7 +77,7 @@ max(linhas, key=lambda l: l["centavos"])              # O(n), não O(n log n)
 heapq.nlargest(10, linhas, key=lambda l: l["centavos"])
 ```
 
-```text
+```sh
 em n = 1.000.000 floats
   sorted(data)[-10:]     349,6 ms
   heapq.nlargest(10, …)   15,2 ms

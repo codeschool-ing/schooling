@@ -13,7 +13,7 @@ def total(valor: float, codigo: str) -> float:
     return valor * achar(codigo)
 ```
 
-```text
+```sh
 a.py:7: error: Unsupported operand types for * ("float" and "None")  [operator]
 a.py:7: note: Right operand is of type "float | None"
 ```
@@ -27,7 +27,7 @@ verificador leu as anotações, seguiu `achar` até o seu `return`, viu que `dic
 Um teste acha o que você pensou em tentar. Um verificador segue toda chamada do programa,
 inclusive a ramificação que ninguém tomou e o chamador no arquivo que você não estava olhando.
 
-```text
+```sh
 error: Argument 1 to "totals" has incompatible type "list[str]"; expected "list[int]"  [arg-type]
 error: Incompatible return value type (got "int", expected "str")  [return-value]
 error: Item "None" of "Row | None" has no attribute "city"  [union-attr]
@@ -61,7 +61,7 @@ linha = {"cidade": "Recife", "codigo": "BR"}
 print(linha["ciidade"])
 ```
 
-```text
+```sh
 Success: no issues found in 1 source file
 ```
 

@@ -21,7 +21,7 @@ fila.append(x)      # enfileirar    O(1)
 fila.pop(0)         # desenfileirar O(n)  ← tudo desloca
 ```
 
-```text
+```sh
 drenando 100.000 itens pela frente
   list.pop(0):        0,7216s
   deque.popleft():    0,0048s
@@ -45,7 +45,7 @@ f.pop()              # O(1)
 Uma fila de duas pontas: tempo constante nas **duas**, porque ela é uma sequência encadeada de
 blocos em vez de um trecho contíguo.
 
-```text
+```sh
 list.insert(0, x):    33.428 ns
 deque.appendleft(x):      29 ns
 ```

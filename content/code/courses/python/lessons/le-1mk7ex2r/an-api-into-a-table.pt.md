@@ -16,7 +16,7 @@ while url:
 df = pd.DataFrame(linhas)
 ```
 
-```text
+```sh
    id pais  centavos
 0   1   US      1137
 1   2   PT      1274
@@ -33,7 +33,7 @@ buscar, reunir, tabular, perguntar.
 [{"id": 1, "centavos": 12990, "cliente": {"nome": "ana", "pais": "BR"}}]
 ```
 
-```text
+```sh
 >>> pd.DataFrame(aninhado)
    id  centavos                        cliente
 0   1     12990  {'nome': 'ana', 'pais': 'BR'}
@@ -41,7 +41,7 @@ buscar, reunir, tabular, perguntar.
 
 O dicionário inteiro cai numa célula, o que quase nunca é útil.
 
-```text
+```sh
 >>> pd.json_normalize(aninhado)
    id  centavos cliente.nome cliente.pais
 0   1     12990          ana           BR

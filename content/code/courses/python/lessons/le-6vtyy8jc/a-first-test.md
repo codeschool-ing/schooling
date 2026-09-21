@@ -15,7 +15,7 @@ def test_spaces_become_hyphens():
 pytest
 ```
 
-```text
+```sh
 test_slug.py .                                                           [100%]
 ============================== 1 passed in 0.02s ===============================
 ```
@@ -32,7 +32,7 @@ imports, constants — and is left alone.
 
 ## The dot
 
-```text
+```sh
 test_slug.py .F                                                          [100%]
 ```
 

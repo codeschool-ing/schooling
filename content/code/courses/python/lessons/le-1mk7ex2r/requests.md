@@ -11,7 +11,7 @@ r.raise_for_status()
 data = r.json()
 ```
 
-```text
+```sh
 >>> r.status_code, r.ok
 (200, True)
 >>> data["info"]["version"]
@@ -27,7 +27,7 @@ requests.get(url)              # waits forever, by default
 requests.get(url, timeout=10)  # raises after ten seconds
 ```
 
-```text
+```sh
 >>> requests.get("http://127.0.0.1:8099/slow", timeout=2)
 requests.exceptions.ReadTimeout: … Read timed out. (read timeout=2)
 ```
@@ -42,7 +42,7 @@ requests.get(url, timeout=(3, 10))   # 3s to connect, 10s to read
 
 ## `raise_for_status`
 
-```text
+```sh
 >>> r2 = requests.get("https://pypi.org/pypi/no-such-package-xyzzy/json", timeout=10)
 >>> r2.status_code, bool(r2)
 (404, False)
@@ -63,7 +63,7 @@ better.
 requests.get(url, params={"a": "1 2", "b": "x&y"})
 ```
 
-```text
+```sh
 >>> r.url
 'https://pypi.org/simple/?a=1+2&b=x%26y'
 ```

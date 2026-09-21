@@ -8,7 +8,7 @@ def test_mantem_pontuacao():
     assert slugify("Hello, World") == "hello-world"
 ```
 
-```text
+```sh
 =================================== FAILURES ===================================
 ____________________________ test_mantem_pontuacao _____________________________
 
@@ -38,7 +38,7 @@ difere. A última linha é a localização.
 
 ## E o resumo lá embaixo
 
-```text
+```sh
 =========================== short test summary info ============================
 FAILED test_slug.py::test_mantem_pontuacao - AssertionError: assert 'hello,...
 ========================= 1 failed, 1 passed in 0.02s ==========================
@@ -54,7 +54,7 @@ def test_float():
     assert 0.1 + 0.2 == 0.3
 ```
 
-```text
+```sh
 E       assert (0.1 + 0.2) == 0.3
 ```
 
