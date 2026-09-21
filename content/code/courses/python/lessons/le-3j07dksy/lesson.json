@@ -1,0 +1,98 @@
+{
+  "id": "le-3j07dksy",
+  "title": "Type hints: annotating arguments, returns and collections",
+  "sections": [
+    {
+      "id": "se-he065p6j",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-a5ms9xd1",
+          "version": 1,
+          "script": "You have known the type of every argument you have ever written. {{head}} You knew `path` was a string, you knew `rows` was a list of dictionaries, and you knew what the function gave back. That knowledge has been in your head and in nothing else.\n\n{{file}} A type hint puts it in the file. `def load(path: str) -> list[dict]` says the same three things you already knew, in a place where a reader, an editor and a checker can all see them.\n\n{{runtime}} And the first thing to be clear about, because it surprises everybody: **Python does not check any of it while the program runs.** `load(3)` is not refused. The annotation is a note, stored on the function and read by other tools — the checker in lesson 15, your editor, and a person.\n\n{{why}} So what is it for? Three things. A reader who does not have to guess. An editor that can complete and rename properly. And a checker that reads the whole program and finds the call you got wrong in a file you were not looking at.\n\n{{collections}} Most of the lesson is vocabulary. `list[int]` for a list of integers, `dict[str, int]` for a dictionary from strings to integers, `tuple[int, str]` for a pair of two different things — and `tuple[int, ...]` for an unknown number of the same one, which is a different type and looks almost identical.\n\n{{none}} Then the one that matters most in practice, because it is the bug everybody ships: a value that is sometimes missing. `str | None` says so, and it is the annotation that makes a checker point at the line where you used it without asking.\n\n{{widest}} There is a habit worth learning with the vocabulary, and it is about arguments: take the WIDEST type you can accept. A function that only iterates its argument should say `Iterable[str]`, not `list[str]` — and then a set, a generator and a tuple all work, for free.\n\n{{own}} At the end: your own classes as types, an alias for the shape you keep writing out, and a `Protocol` — which says what an object must DO rather than what it must BE, and is the most Pythonic idea in the lesson.",
+          "seconds": 155,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-hhv7js8m",
+      "slug": "the-syntax",
+      "kind": "reading"
+    },
+    {
+      "id": "se-bknt62qy",
+      "slug": "the-built-ins",
+      "kind": "reading"
+    },
+    {
+      "id": "se-kz5gshtn",
+      "slug": "collections",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ke9denj9",
+      "slug": "optional-and-unions",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7zdz3fmc",
+      "slug": "any-and-object",
+      "kind": "reading"
+    },
+    {
+      "id": "se-zpvwyt42",
+      "slug": "callables-and-generics",
+      "kind": "reading"
+    },
+    {
+      "id": "se-4z9t5azk",
+      "slug": "your-own-types",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ve19q515",
+      "slug": "protocols",
+      "kind": "reading"
+    },
+    {
+      "id": "se-1pvyeaj6",
+      "slug": "where-to-put-them",
+      "kind": "reading"
+    },
+    {
+      "id": "se-tkf7pp4s",
+      "slug": "an-api-annotated",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-v7d095z5",
+          "version": 1,
+          "script": "One module, before and after. Two hundred lines, no annotations, and it works.\n\n{{first}} I annotate the public functions first — five of them, arguments and returns. That is twenty minutes, and the checker says nothing at all. The annotations are correct and the module is fine.\n\n{{second}} Then the helpers, and the checker finds the first bug. `find_rate` returns a `float` on one path and `None` on the other — I annotated it `-> float`, because that is what I remembered. The checker disagrees, and it is right: there is a `return None` on line forty.\n\n{{use}} So I change the annotation to `-> float | None`, and the checker moves. Now it says nothing about the function and points at the CALLER instead: `total * find_rate(code)` on line ninety — *unsupported operand types for star, float and None*, with a note underneath saying the right operand is `float | None`. That line has been there for two years, and the `None` path is reached whenever a code is not in the table.\n\n{{fix}} I add the check that was missing, and both go quiet. Notice which order that happened in: the wrong annotation hid the real bug, and correcting the annotation is what uncovered it.\n\n{{second-bug}} The second bug is smaller and better. A function annotated `-> list[str]` returns `sorted(counts)`, which on a dictionary gives a list of its KEYS — correct here, because the keys are strings. Three lines down another one returns `sorted(counts.items())`, which is a list of TUPLES, with the same annotation. The checker names what it actually got — *incompatible type* `dict_items[str, int]` — which is more specific than anything I would have written in a comment.\n\n{{point}} Neither bug needed a test. Neither needed the program to run. **They were both visible in the file, to something that reads the whole file at once** — which is what the annotations are for.",
+          "seconds": 133,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-z73wed2m",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-5rk7rhc3",
+          "version": 1,
+          "script": "Annotate the boundary. The body usually speaks for itself.\n\n{{where}} Public functions first — the ones another module calls. Then anything taking or returning a collection, because `list` alone says nothing about what is inside it. The two-line private helper usually needs nothing, and a checker can work most of it out anyway.\n\n{{runtime}} Python does not enforce any of it. `load(3)` runs and fails somewhere further in. The annotation is for the reader, the editor and the checker.\n\n{{none}} `X | None` is the one that earns its keep first. A value that is sometimes missing is the most common bug there is, and this is the annotation that makes a tool point at the line you forgot to check.\n\n{{wide}} Take the widest type you can accept and return the most specific one you can promise. `Iterable[str]` in, `list[str]` out — that is the shape that makes a function usable from everywhere.\n\n{{any}} `Any` turns the checker off for that value. It is occasionally right and it is always worth a comment saying why, because an `Any` spreads quietly through everything it touches.\n\n{{protocol}} And a `Protocol` says what an object must DO. Nothing has to inherit from it, nothing has to know it exists, and it is how you annotate duck typing without giving it up.",
+          "seconds": 91,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-22ryzxjq",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
