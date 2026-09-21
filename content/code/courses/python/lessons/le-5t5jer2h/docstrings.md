@@ -39,6 +39,6 @@ not a change to the first one.
 ## What reads it
 
 `help()` at the interpreter. Your editor, on hover and at the call site. `pydoc`. And in lesson
-15, `doctest` — which takes the examples written inside a docstring and RUNS them, so a
+16, `doctest` — which takes the examples written inside a docstring and RUNS them, so a
 docstring that has drifted from the code fails the test suite rather than misleading whoever
 reads it.

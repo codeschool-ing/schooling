@@ -38,6 +38,6 @@ depois não seja uma mudança na primeira.
 
 ## O que lê isso
 
-O `help()` no interpretador. O seu editor, ao passar o mouse e na chamada. O `pydoc`. E na aula 15,
+O `help()` no interpretador. O seu editor, ao passar o mouse e na chamada. O `pydoc`. E na aula 16,
 o `doctest` — que pega os exemplos escritos dentro de uma docstring e os RODA, então uma docstring
 que se descolou do código reprova a suíte em vez de enganar quem lê.

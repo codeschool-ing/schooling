@@ -45,7 +45,7 @@ A verb, and what it acts on: `load_rows`, `is_valid`, `send_invoice`. `process_d
 nothing at all; `get_` in front of everything says nothing either.
 
 **A function that needs "and" in its name is two functions.** `validate_and_save` is the shape
-that makes testing awkward, and lesson 15 is where that bill arrives.
+that makes testing awkward, and lesson 16 is where that bill arrives.
 
 ## Calling before defining
 

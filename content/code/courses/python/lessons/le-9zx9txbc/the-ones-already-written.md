@@ -60,7 +60,7 @@ with redirect_stdout(buffer):
     noisy_library_call()
 ```
 
-For the library that prints and has no option not to. Lesson 15 uses it to test something that
+For the library that prints and has no option not to. Lesson 16 uses it to test something that
 was written to print.
 
 ## And the shape they share

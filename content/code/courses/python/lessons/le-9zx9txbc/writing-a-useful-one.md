@@ -48,7 +48,7 @@ def setting(obj, name, value):
 ```
 
 Remember the old value, set the new one, put it back. This is the shape behind most of what a
-test framework calls a "patch", and lesson 15 uses `unittest.mock.patch`, which is this with more
+test framework calls a "patch", and lesson 16 uses `unittest.mock.patch`, which is this with more
 features.
 
 ## What the three have in common

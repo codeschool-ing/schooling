@@ -59,7 +59,7 @@ with redirect_stdout(buffer):
     biblioteca_barulhenta()
 ```
 
-Para a biblioteca que imprime e não tem opção de não imprimir. A aula 15 o usa para testar algo
+Para a biblioteca que imprime e não tem opção de não imprimir. A aula 16 o usa para testar algo
 que foi escrito para imprimir.
 
 ## E a forma que eles compartilham
