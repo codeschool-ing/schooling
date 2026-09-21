@@ -45,7 +45,7 @@ Um verbo, e aquilo sobre o que ele age: `carregar_linhas`, `eh_valido`, `enviar_
 `processar_dados` não diz nada; um `obter_` na frente de tudo também não diz nada.
 
 **Uma função que precisa de um "e" no nome são duas funções.** `validar_e_salvar` é a forma que
-deixa o teste desconfortável, e a aula 15 é onde essa conta chega.
+deixa o teste desconfortável, e a aula 16 é onde essa conta chega.
 
 ## Chamar antes de definir
 

@@ -48,7 +48,7 @@ def ajuste(obj, nome, valor):
 ```
 
 Lembrar o valor antigo, definir o novo, devolver. Esta é a forma por trás da maior parte do que um
-framework de testes chama de "patch", e a aula 15 usa o `unittest.mock.patch`, que é isto com mais
+framework de testes chama de "patch", e a aula 16 usa o `unittest.mock.patch`, que é isto com mais
 recursos.
 
 ## O que os três têm em comum

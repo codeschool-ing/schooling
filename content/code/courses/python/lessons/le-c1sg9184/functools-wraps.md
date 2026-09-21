@@ -36,7 +36,7 @@ wrapped function onto the wrapper, and sets `__wrapped__` so the original is sti
 
 - a log line that says `wrapper` nine times and does not say which
 - `help()` and an editor's tooltip describing the machinery
-- `doctest` in lesson 15 finding no docstrings at all
+- `doctest` in lesson 16 finding no docstrings at all
 - a test framework that collects by name finding nine functions called `wrapper`
 - `pickle` failing on the decorated function, which is a strange afternoon
 

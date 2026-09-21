@@ -35,7 +35,7 @@ um decorador de três camadas como o da seção anterior.
 
 ## `@pytest.fixture` e companhia
 
-O framework de testes da aula 15 usa decoradores para registrar coisas: esta função fornece uma
+O framework de testes da aula 16 usa decoradores para registrar coisas: esta função fornece uma
 fixture, esta é um teste, rode esta três vezes com estes argumentos. **O trabalho do decorador ali
 é o registro** — ele põe a função numa lista que o framework lê depois, que é a nota do "aplicado
 na definição" de antes fazendo trabalho de verdade.

@@ -34,7 +34,7 @@ it a three-layer decorator like the previous section.
 
 ## `@pytest.fixture` and friends
 
-Lesson 15's testing framework uses decorators to register things: this function provides a
+Lesson 16's testing framework uses decorators to register things: this function provides a
 fixture, this one is a test, run this one three times with these arguments. **The decorator's job
 there is the registry** — it puts the function in a list the framework reads later, which is the
 "applied at definition" note from earlier doing real work.

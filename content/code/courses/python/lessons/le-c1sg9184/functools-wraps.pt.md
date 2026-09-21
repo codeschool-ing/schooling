@@ -36,7 +36,7 @@ envolvida para o wrapper, e define `__wrapped__` para a original continuar alcan
 
 - uma linha de log que diz `wrapper` nove vezes e não diz qual
 - o `help()` e a dica do editor descrevendo a maquinaria
-- o `doctest` da aula 15 não achando docstring nenhuma
+- o `doctest` da aula 16 não achando docstring nenhuma
 - um framework de testes que coleta por nome achando nove funções chamadas `wrapper`
 - o `pickle` falhando na função decorada, que é uma tarde estranha
 
