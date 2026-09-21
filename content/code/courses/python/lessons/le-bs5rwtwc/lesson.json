@@ -1,0 +1,98 @@
+{
+  "id": "le-bs5rwtwc",
+  "title": "Data structures and a sense of complexity (Big-O)",
+  "sections": [
+    {
+      "id": "se-a03zrv21",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-ayv0az8t",
+          "version": 1,
+          "script": "The same answer, a thousand times slower. {{comment}} Two programs that produce identical output, on identical data, and one of them takes nine seconds where the other takes ten milliseconds.\n\n{{not}} Nothing in this lesson is about writing clever code. The slow version is the obvious one — a loop inside a loop, written by somebody being careful — and the fast one is shorter.\n\n{{count}} What separates them is how the work GROWS. Not how many seconds it takes on your laptop, which depends on the machine, the day and what else is running, but how the number of operations changes when the data gets bigger.\n\n{{curves}} There are about five shapes worth knowing and they are very far apart. At a million items, something constant does one operation, a binary search does twenty, a single pass does a million, a sort does twenty million — and a loop inside a loop does **a million million**.\n\n{{table}} Then a small table of what Python's own structures cost, because most real fixes are one line: `in` on a list against `in` on a set. Measured here at a hundred thousand items: eight hundred and sixty-six microseconds against thirty-five nanoseconds.\n\n{{index}} And the one that turns up in every codebase — searching a list inside a loop over another list. Building a dictionary once first turns it from a loop inside a loop into two passes, and that single change is worth five hundred times in the demonstration at the end.\n\n{{measure}} Last, and this is the part people skip: **measure rather than guess.** `timeit` for a small thing, `cProfile` for a program. The demonstration profiles the slow version before changing anything, and the first fix — the obvious one — turns out to save seven per cent.\n\n{{why}} Which is the reason to do it in that order. The thing that looks wrong and the thing that is slow are usually not the same line.",
+          "seconds": 135,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-gznhefq3",
+      "slug": "counting-work",
+      "kind": "reading"
+    },
+    {
+      "id": "se-63yn3chx",
+      "slug": "the-curves",
+      "kind": "reading"
+    },
+    {
+      "id": "se-gsak5cy5",
+      "slug": "what-python-costs",
+      "kind": "reading"
+    },
+    {
+      "id": "se-snrcvbth",
+      "slug": "the-list-that-should-be-a-set",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ftz59gj5",
+      "slug": "dictionaries-as-indexes",
+      "kind": "reading"
+    },
+    {
+      "id": "se-8h08s84e",
+      "slug": "sorting",
+      "kind": "reading"
+    },
+    {
+      "id": "se-q2yr6yzp",
+      "slug": "stacks-queues-and-deques",
+      "kind": "reading"
+    },
+    {
+      "id": "se-8n03hk7b",
+      "slug": "measuring-rather-than-guessing",
+      "kind": "reading"
+    },
+    {
+      "id": "se-cgd9kh4m",
+      "slug": "nested-loops-again",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ejepp6v5",
+      "slug": "one-function-made-fast",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-ds30dre9",
+          "version": 1,
+          "script": "A report that takes nine seconds. {{comment}} Twenty thousand orders, twenty thousand customers, three countries out.\n\n{{profile}} First, no changes: `python -m cProfile -s tottime report.py`. The output names `report`, which is the whole program, and that is not a finding. So I split it into three functions and ran it again — and now the profile says `find_customer`, thirteen point nine seconds out of fourteen.\n\n{{what}} `find_customer` walks the whole customer list looking for one id. Called once per order, that is twenty thousand walks of twenty thousand items: a loop inside a loop, written as two functions so it does not look like one.\n\n{{first}} The first fix is the one I would have made without profiling. There is a `BLOCKED` list and `o[\"customer_id\"] in BLOCKED` runs on every order — `in` on a list, which the reading before this one is about. Making it a set: **nine point zero seconds to eight point four.** Seven per cent, and it was the thing that looked wrong.\n\n{{second}} Now the one the profile pointed at. `BY_ID = {c[\"id\"]: c for c in CUSTOMERS}`, built once, and the inner loop becomes `BY_ID[o[\"customer_id\"]]`. Eight point four seconds to **sixteen milliseconds**. Five hundred and forty-four times.\n\n{{third}} One more, for a smaller reason. The totals were computed with a pass over every row per country — three countries, so three passes. A `defaultdict(int)` and one pass: sixteen milliseconds to **ten**.\n\n{{end}} Nine seconds to ten milliseconds, eight hundred and seventy-nine times, and the output is identical at every step. Two of the three changes are one line. **The one that mattered was not the one that looked worst**, and the profile is how you tell the difference.",
+          "seconds": 118,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-3eyxknx7",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-e6236yb2",
+          "version": 1,
+          "script": "Know the shape of the growth, then measure.\n\n{{shape}} The shape first, because it is the half you can see by reading. A loop inside a loop over the same data is n squared, and at a million that is a million million operations — a number no machine makes acceptable.\n\n{{table}} Then the small table. `in` on a list is a walk; on a set or a dict it is one step. `append` is cheap and `insert(0, …)` is not, because everything after it moves. A `list` is a bad queue and a `deque` is a good one.\n\n{{index}} And the rewrite that turns up most: searching a list inside a loop is a dictionary built once, outside it. That is O(n²) becoming O(n), it is usually three lines, and it is the single most valuable thing in this lesson.\n\n{{measure}} Then measure, because the shape tells you what is POSSIBLE and not what is happening. `timeit` for one expression, `cProfile` for a program — and split a fat function before profiling it, or the profile names the function you already knew about.\n\n{{not}} And know when not to. A loop over forty rows is a loop over forty rows; making it a dictionary costs a reader's attention and saves nothing measurable. The numbers in this lesson are large because `n` is large.\n\n{{end}} Read for the shape. Measure to find the line. Fix the line the profile blames, not the one that looks worst.",
+          "seconds": 102,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-459719hr",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
