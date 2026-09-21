@@ -1,0 +1,93 @@
+{
+  "id": "le-nax0q0k5",
+  "title": "uv, Poetry and pyproject.toml: how a project declares itself today",
+  "sections": [
+    {
+      "id": "se-cyve7nb7",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-cpja8rzt",
+          "version": 1,
+          "script": "The project says what it is, in one file. {{comment}} That is the whole change, and everything in this lesson is a consequence of it.\n\n{{before}} Before it there were four: `setup.py` to build, `requirements.txt` to install, `setup.cfg` for the tools that could not read `setup.py`, and a `MANIFEST.in` for the files neither of them mentioned. Each was read by a different program and none of them agreed.\n\n{{now}} `pyproject.toml` is one file, in one format, that every tool reads. The `[project]` table is a standard — a name, a version, what Python it needs, and what it depends on — and the tables underneath it are where `ruff`, `pytest`, `mypy` and `black` keep their own settings.\n\n{{two}} Two tools manage it. `uv` is the fast one, written in Rust, and it does environments, installs, locking and running. `poetry` is the older one and it does the same things with different words.\n\n{{same}} **They have converged**, and that is news: Poetry version 2 writes the same standard `[project]` table that `uv` does. Two projects set up this afternoon, one with each, differ in about four lines.\n\n{{lock}} Both write a lock file, and both commit it. It names every package — the ones you asked for and the ones those asked for — at one exact version, with a hash. That is the thing `requirements.txt` could not do on its own, and it is the reason to use either of these.\n\n{{sync}} And both have a verb that `pip` does not: **sync**. `install` adds what is missing. `sync` makes the environment match the file, which means it also REMOVES what should not be there.\n\n{{churn}} One warning. This is the part of the course that ages fastest — the tools have changed twice in five years and will again. The file will not, and that is what to learn.",
+          "seconds": 128,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-w48dvhac",
+      "slug": "pyproject-toml",
+      "kind": "reading"
+    },
+    {
+      "id": "se-1ezt0kg9",
+      "slug": "declaring-dependencies",
+      "kind": "reading"
+    },
+    {
+      "id": "se-aaqxapbh",
+      "slug": "uv",
+      "kind": "reading"
+    },
+    {
+      "id": "se-0qke6p2g",
+      "slug": "poetry",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7emv8xzq",
+      "slug": "which-one",
+      "kind": "reading"
+    },
+    {
+      "id": "se-4we9xrjh",
+      "slug": "lock-files",
+      "kind": "reading"
+    },
+    {
+      "id": "se-4twmsks1",
+      "slug": "a-package-of-your-own",
+      "kind": "reading"
+    },
+    {
+      "id": "se-nb8130qy",
+      "slug": "the-churn",
+      "kind": "reading"
+    },
+    {
+      "id": "se-1mq9ms2n",
+      "slug": "the-same-project-twice",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-sbhgzew6",
+          "version": 1,
+          "script": "The same project, twice, side by side. {{comment}} A directory with `uv`, a directory with `poetry`, and the same one dependency.\n\n{{uv}} `uv init`, then `uv add \"requests>=2.31\"`. It writes `dependencies = [\"requests>=2.31\"]` into `pyproject.toml`, creates `.venv` **inside the project**, installs five packages and writes `uv.lock` — two hundred lines, every wheel with its URL and its hash.\n\n{{poetry}} `poetry init`, then `poetry add \"requests>=2.31\"`. Almost the same file: `dependencies = [\"requests (>=2.31)\"]`, in parentheses. `poetry.lock`, three hundred lines, same versions. And the environment is **not in the project** — `poetry env info -p` says it is under `~/.cache/pypoetry/virtualenvs/`, with a hash of the path in its name.\n\n{{dev}} A development dependency in each. `uv add --dev pytest` and `poetry add --group dev pytest` both write a `[dependency-groups]` table, which is the same standard in both files.\n\n{{diff}} So the two `pyproject.toml` files differ in: the parentheses, Poetry's `[build-system]` block, and the upper bound it added to `pytest` that `uv` did not. **Four lines.** Five years ago these two tools had nothing in common.\n\n{{run}} `uv run main.py` and `poetry run python main.py` both print `requests 2.34.2`. I then deleted `.venv` and ran `uv run main.py` again: it built the environment, installed ten packages and ran the script, in one command and under a second.\n\n{{sync}} And the verb. `uv sync --no-dev` **uninstalled** `pytest` and its four dependencies, because the file says they are not in that set. Nothing in `pip` does that, and it is why the lock file means something.",
+          "seconds": 104,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-mp6j50zg",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-egd32gxw",
+          "version": 1,
+          "script": "Declare it in `pyproject.toml`, commit the lock, and read before you install.\n\n{{file}} The file is what lasts. `[project]` is a standard rather than a tool's format, so a project that declares itself properly can be handed to whichever tool is current in three years without an edit.\n\n{{lock}} Commit the lock file, always, and never edit it by hand. It is the difference between \"the same libraries\" and \"libraries that satisfy the same ranges\", and only one of those two is reproducible.\n\n{{sync}} Use `sync` rather than `install` where you have it. An environment that merely has enough in it is how a dependency somebody removed last month is still installed on one machine.\n\n{{read}} On somebody else's repository, look before you type. `uv.lock` means `uv`. `poetry.lock` means Poetry. `requirements.txt` on its own means `pip` and a `venv`, which is the previous lesson. All three are common and you will meet all three.\n\n{{ci}} And in CI, fail on a stale lock: `uv lock --check` answers `the lockfile needs to be updated` and exits non-zero, which catches the pull request that changed a dependency and did not relock.\n\n{{churn}} The tools will change again. What this lesson is really teaching is one file and two verbs, and those have outlived three generations of the programs that read them.",
+          "seconds": 91,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-yz8qc6qn",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

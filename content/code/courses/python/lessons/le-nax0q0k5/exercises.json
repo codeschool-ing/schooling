@@ -1,0 +1,1537 @@
+[
+  {
+    "id": "ex-qbn2xtqt",
+    "version": 1,
+    "section": "pyproject-toml",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which four files does `pyproject.toml` replace?",
+    "hint": "One built, one installed, one configured, one listed.",
+    "choices": [
+      {
+        "text": "`setup.py`, `setup.cfg`, `tox.ini` and `.flake8`, which were where the tools were configured",
+        "correct": false,
+        "why": "Two of those are tool configuration, and the packaging half is what was replaced."
+      },
+      {
+        "text": "`Pipfile`, `Pipfile.lock`, `poetry.lock` and `uv.lock`",
+        "correct": false,
+        "why": "Lock files are written per tool and none of them lives in `pyproject.toml`."
+      },
+      {
+        "text": "`requirements.txt`, `requirements-dev.txt`, `constraints.txt` and a lock file",
+        "correct": false,
+        "why": "Those are all one idea, and a lock file is still a separate file today."
+      },
+      {
+        "text": "`setup.py`, `requirements.txt`, `setup.cfg` and `MANIFEST.in`",
+        "correct": true,
+        "why": "Each was read by a different program and none of them agreed with the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-ry9m1ec2",
+    "version": 1,
+    "section": "pyproject-toml",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes `[project]` different from `[tool.ruff]`?",
+    "hint": "One of them is defined somewhere else.",
+    "choices": [
+      {
+        "text": "`[project]` is defined by a specification; `[tool.<name>]` belongs to whichever tool it names",
+        "correct": true,
+        "why": "That is why a project declaring itself properly can be handed from one tool to another without an edit."
+      },
+      {
+        "text": "`[project]` is read at install time and `[tool.<name>]` at build time",
+        "correct": false,
+        "why": "Tool tables are read whenever that tool runs, which is usually neither."
+      },
+      {
+        "text": "`[project]` may appear once and a tool table may be repeated",
+        "correct": false,
+        "why": "Neither may be repeated, and `[[…]]` is a different construct."
+      },
+      {
+        "text": "`[project]` is required and `[tool.<name>]` is optional in every file",
+        "correct": false,
+        "why": "Both are optional: a file that only configures `ruff` has no `[project]` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1wjgd17",
+    "version": 1,
+    "section": "pyproject-toml",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`[project.scripts]` with `rates = \"rates.cli:main\"`. What does installing the package do?",
+    "hint": "Something appears on the `PATH`.",
+    "choices": [
+      {
+        "text": "It makes `python -m rates` work, running `main()` as the module's entry point instead",
+        "correct": false,
+        "why": "That is `__main__.py`, which is a separate arrangement."
+      },
+      {
+        "text": "It puts a `rates` command on the `PATH` that calls `main()` in `rates.cli`",
+        "correct": true,
+        "why": "That is how every command-line tool you have installed with `pip` got its name."
+      },
+      {
+        "text": "It marks `main()` as the function the test runner should call first",
+        "correct": false,
+        "why": "No test runner reads this table."
+      },
+      {
+        "text": "It registers `rates` as an import alias for the `rates.cli` module",
+        "correct": false,
+        "why": "Import names are not what this table configures."
+      }
+    ]
+  },
+  {
+    "id": "ex-673aaxta",
+    "version": 1,
+    "section": "pyproject-toml",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Everything under `[______.<name>]` belongs to that program and is ignored by the rest",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "tool"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-22mv1vka",
+    "version": 1,
+    "section": "pyproject-toml",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `requires-python = \">=3.11\"` buy at install time?",
+    "hint": "Something refuses.",
+    "choices": [
+      {
+        "text": "The dependency resolver is restricted to packages released after that version",
+        "correct": false,
+        "why": "Release date has nothing to do with which versions are considered."
+      },
+      {
+        "text": "The package is built separately for each version in the range",
+        "correct": false,
+        "why": "One wheel covers the whole range unless there is compiled code."
+      },
+      {
+        "text": "`pip` refuses to install on an older interpreter, naming the requirement",
+        "correct": true,
+        "why": "A better failure than installing and then failing on the first piece of syntax it cannot parse."
+      },
+      {
+        "text": "The interpreter is downloaded if the machine does not have a matching one",
+        "correct": false,
+        "why": "`pip` installs packages; fetching an interpreter is something `uv` does."
+      }
+    ]
+  },
+  {
+    "id": "ex-1anbpne6",
+    "version": 1,
+    "section": "declaring-dependencies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the difference between `[dependency-groups]` and `[project.optional-dependencies]`?",
+    "hint": "One of them is visible to somebody who installs your package.",
+    "choices": [
+      {
+        "text": "One is for working on the project; the other is a feature the package advertises",
+        "correct": true,
+        "why": "Somebody installs an optional set by naming it in brackets. A development group is invisible to them."
+      },
+      {
+        "text": "A group may hold only tools and an optional dependency only libraries",
+        "correct": false,
+        "why": "Both hold ordinary packages; what differs is who they are for."
+      },
+      {
+        "text": "A group is installed by default and an optional dependency is not",
+        "correct": false,
+        "why": "Neither is installed by default when somebody installs your package."
+      },
+      {
+        "text": "A group is pinned exactly and an optional dependency carries a range",
+        "correct": false,
+        "why": "Both take the same specifiers."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6ckny7b",
+    "version": 1,
+    "section": "declaring-dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What ships to everybody who installs your library if `pytest` is in the wrong table?",
+    "hint": "One of the two is part of the interface.",
+    "choices": [
+      {
+        "text": "A failed install, because `pytest` conflicts with the package's own dependencies",
+        "correct": false,
+        "why": "There is no conflict; it simply does not belong there."
+      },
+      {
+        "text": "The whole development group, since extras and groups are merged at build time",
+        "correct": false,
+        "why": "They are separate tables and neither is merged into the other."
+      },
+      {
+        "text": "Nothing — an extra is only installed when it is asked for by name",
+        "correct": false,
+        "why": "It is only installed when asked for, and it is now advertised as a feature of the package."
+      },
+      {
+        "text": "A test framework, advertised as an optional extra and installable by name",
+        "correct": true,
+        "why": "Getting the two the wrong way round is the common mistake and this is what it produces."
+      }
+    ]
+  },
+  {
+    "id": "ex-87d29dmq",
+    "version": 1,
+    "section": "declaring-dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`uv sync --no-dev`. What is installed?",
+    "hint": "One table and not the other.",
+    "choices": [
+      {
+        "text": "`dependencies` plus any group that is not named `dev`",
+        "correct": false,
+        "why": "`--no-dev` leaves out the default group, and other groups are selected explicitly."
+      },
+      {
+        "text": "Nothing at all, since `--no-dev` narrows an already empty selection",
+        "correct": false,
+        "why": "`dependencies` is the selection it is narrowing."
+      },
+      {
+        "text": "Everything in the lock file, since the lock has no concept of a group",
+        "correct": false,
+        "why": "The lock records which group each package belongs to."
+      },
+      {
+        "text": "`dependencies`, and not one of the dependency groups declared beside them",
+        "correct": true,
+        "why": "That is what a production install is: the package's own requirements and nothing you needed to work on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-psaw8e89",
+    "version": 1,
+    "section": "declaring-dependencies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a wide `requires-python = \">=3.8\"` sometimes hold a library back several versions?",
+    "hint": "The resolver has to satisfy the whole range.",
+    "choices": [
+      {
+        "text": "`pip` installs the oldest version compatible with the lowest interpreter named",
+        "correct": false,
+        "why": "It takes the newest that fits; what constrains it is the range as a whole."
+      },
+      {
+        "text": "Older interpreters have no wheels, so everything is built from source and pinned",
+        "correct": false,
+        "why": "Building from source does not pin anything."
+      },
+      {
+        "text": "The metadata is rejected by the index for any range spanning four versions",
+        "correct": false,
+        "why": "The index has no opinion about the width of the range."
+      },
+      {
+        "text": "It has to pick dependency versions that work on every interpreter inside the range",
+        "correct": true,
+        "why": "A library that dropped 3.8 last year cannot be chosen at all while that bound is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-gm2scmz5",
+    "version": 1,
+    "section": "declaring-dependencies",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The standard table both uv and Poetry write a development group into: `[______]`",
+    "hint": "Two words joined by a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "dependency-groups"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p0r1egqe",
+    "version": 1,
+    "section": "uv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`uv add \"requests>=2.31\"` in a directory with no environment. What does it do?",
+    "hint": "More than one thing.",
+    "choices": [
+      {
+        "text": "Installs into the interpreter it was run with, since no environment exists yet",
+        "correct": false,
+        "why": "It refuses to touch the interpreter it was run with and makes an environment."
+      },
+      {
+        "text": "Finds an interpreter, creates `.venv`, resolves, installs, and writes the line into `pyproject.toml`",
+        "correct": true,
+        "why": "There was no environment to activate first — it made one, in the project directory."
+      },
+      {
+        "text": "Writes the line into `pyproject.toml` and leaves the installing to a later `uv sync` of its own",
+        "correct": false,
+        "why": "It installs as part of the same command."
+      },
+      {
+        "text": "Fails, asking for `uv venv` to be run first",
+        "correct": false,
+        "why": "`uv venv` exists and is not required before `uv add`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9bp64fj",
+    "version": 1,
+    "section": "uv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You delete `.venv` and run `uv run main.py`. What happens?",
+    "hint": "It checks something before running.",
+    "choices": [
+      {
+        "text": "It runs against the system interpreter, since there is no environment to prefer",
+        "correct": false,
+        "why": "It never falls back to the machine's interpreter."
+      },
+      {
+        "text": "It runs after printing a warning that the environment was missing",
+        "correct": false,
+        "why": "It reports what it installed rather than warning."
+      },
+      {
+        "text": "It fails, since the environment the lock describes is no longer there",
+        "correct": false,
+        "why": "The lock is what lets it rebuild; nothing is lost by deleting the directory."
+      },
+      {
+        "text": "It rebuilds the environment from the lock and then runs the script, in one command",
+        "correct": true,
+        "why": "`uv run` checks the environment against the lock first, which is why nothing can be running against a stale one."
+      }
+    ]
+  },
+  {
+    "id": "ex-gfw65g66",
+    "version": 1,
+    "section": "uv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `uv sync` do that `pip install -r` cannot?",
+    "hint": "One verb adds; the other makes equal.",
+    "choices": [
+      {
+        "text": "Install the development dependencies as well as the runtime ones",
+        "correct": false,
+        "why": "Two requirements files do that, which is lesson 18's arrangement."
+      },
+      {
+        "text": "Install into an environment that does not exist yet",
+        "correct": false,
+        "why": "It does that too, and `pip` can be pointed at a fresh environment as easily."
+      },
+      {
+        "text": "Resolve a version range rather than installing an exact pin",
+        "correct": false,
+        "why": "`pip install -r` resolves ranges all the time."
+      },
+      {
+        "text": "Remove the packages that ought not to be there at all",
+        "correct": true,
+        "why": "Measured: `uv sync --no-dev` uninstalled five packages, because the set it was asked for does not contain them."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnha0923",
+    "version": 1,
+    "section": "uv",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which flag belongs in a deployment, and why?",
+    "hint": "It must not resolve.",
+    "choices": [
+      {
+        "text": "`uv sync --frozen`, because it installs from the lock without re-resolving",
+        "correct": true,
+        "why": "It installs exactly what was tested and cannot resolve to something else on the day the index changes."
+      },
+      {
+        "text": "`uv lock --check`, because it proves the lock and the file agree",
+        "correct": false,
+        "why": "That belongs in CI; it installs nothing."
+      },
+      {
+        "text": "`uv sync --no-dev`, because production has no use for the development group",
+        "correct": false,
+        "why": "Also right, and it does not stop a re-resolution."
+      },
+      {
+        "text": "`uv add --frozen`, because a deployment should add nothing",
+        "correct": false,
+        "why": "A deployment runs no `add` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-mchxnsx1",
+    "version": 1,
+    "section": "uv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`uv lock --check` prints `the lockfile at uv.lock needs to be updated`. What has happened?",
+    "hint": "Two files disagree.",
+    "choices": [
+      {
+        "text": "Somebody changed `pyproject.toml` and did not relock",
+        "correct": true,
+        "why": "That is exactly the pull request this check exists to fail."
+      },
+      {
+        "text": "The lock was written by a different version of `uv`",
+        "correct": false,
+        "why": "A version bump of the tool is reported differently."
+      },
+      {
+        "text": "The environment has drifted from what the lock describes",
+        "correct": false,
+        "why": "That is what `uv sync` fixes, and it is a different comparison."
+      },
+      {
+        "text": "A dependency released a new version inside a declared range",
+        "correct": false,
+        "why": "The lock stays valid; it names the version that was chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-4f70y48m",
+    "version": 1,
+    "section": "poetry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`poetry install` on an application answers `No file/folder found for package rates`. Why?",
+    "hint": "Poetry assumes something about the project.",
+    "choices": [
+      {
+        "text": "The project name and the directory name differ, which Poetry requires to match",
+        "correct": false,
+        "why": "They may differ, and `packages` is how you say so."
+      },
+      {
+        "text": "It assumes the project is a package to be built, and there is no `rates/` to install",
+        "correct": true,
+        "why": "For a web service, a script or a data pipeline there is nothing to install, and `package-mode = false` says so."
+      },
+      {
+        "text": "The `src/` layout hides the package, which Poetry does not look inside",
+        "correct": false,
+        "why": "It looks in `src/` as well; the error is that there is no package at all."
+      },
+      {
+        "text": "The lock file is missing, so there is nothing describing what to install",
+        "correct": false,
+        "why": "A missing lock produces a different message and is resolved by locking."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0da4zjr",
+    "version": 1,
+    "section": "poetry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does Poetry put its virtual environment by default?",
+    "hint": "Not beside your code.",
+    "choices": [
+      {
+        "text": "In the interpreter's own `site-packages`, with a prefix per project",
+        "correct": false,
+        "why": "It creates a real virtual environment rather than a prefix."
+      },
+      {
+        "text": "In a central cache, named after the project path and a hash of it",
+        "correct": true,
+        "why": "`poetry env info -p` prints the path. `uv` puts `.venv` in the project instead."
+      },
+      {
+        "text": "Wherever `VIRTUAL_ENV` points, falling back to the project directory",
+        "correct": false,
+        "why": "It creates its own rather than adopting one."
+      },
+      {
+        "text": "In `.venv` inside the project, like every other tool",
+        "correct": false,
+        "why": "That is what `virtualenvs.in-project true` switches it to."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm1nbw5n",
+    "version": 1,
+    "section": "poetry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Poetry 2 writes `[project]`. What does that change?",
+    "hint": "Compare the two files.",
+    "choices": [
+      {
+        "text": "The old `[tool.poetry]` tables are rejected, so old projects have to migrate",
+        "correct": false,
+        "why": "They still work; conversion is mechanical and not forced."
+      },
+      {
+        "text": "`^` becomes a valid specifier for every tool, since Poetry's syntax is standard now",
+        "correct": false,
+        "why": "`^` is Poetry's and does not appear in a `[project]` table."
+      },
+      {
+        "text": "The two tools now produce very nearly the same `pyproject.toml`, on the same commands",
+        "correct": true,
+        "why": "Measured on the same two commands, the files differ in about four lines: parentheses, an upper bound, and a `[build-system]` table."
+      },
+      {
+        "text": "Poetry can now read a `uv.lock`, since both use the same metadata",
+        "correct": false,
+        "why": "The lock formats are unrelated and neither reads the other's."
+      }
+    ]
+  },
+  {
+    "id": "ex-0194gk52",
+    "version": 1,
+    "section": "poetry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the `uv` equivalent of `poetry install --only main`?",
+    "hint": "Production, from the lock.",
+    "choices": [
+      {
+        "text": "`uv install --main`, which is the direct translation of the words",
+        "correct": false,
+        "why": "`uv` has no `install` subcommand of that shape."
+      },
+      {
+        "text": "`uv sync --frozen`, which installs exactly what the lock names",
+        "correct": false,
+        "why": "That controls re-resolution rather than which groups are chosen."
+      },
+      {
+        "text": "`uv run --no-dev`, which runs without the development packages",
+        "correct": false,
+        "why": "`uv run` runs a command; the selection is made by the sync."
+      },
+      {
+        "text": "`uv sync --no-dev`",
+        "correct": true,
+        "why": "The verbs differ and the file does not, which is most of this section."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fm160wf",
+    "version": 1,
+    "section": "poetry",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Tell Poetry your project is an application rather than a package: `package-mode = ______`",
+    "hint": "Five letters.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-95dtpwnf",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A repository has a `pyproject.toml` and nothing else. What does that tell you?",
+    "hint": "All three arrangements have one.",
+    "choices": [
+      {
+        "text": "That it predates lock files, and the dependencies are ranges",
+        "correct": false,
+        "why": "Nothing about the file says when it was written."
+      },
+      {
+        "text": "That it is a package rather than an application, since applications need no metadata",
+        "correct": false,
+        "why": "Applications declare their dependencies in it as well."
+      },
+      {
+        "text": "That it is managed by `uv`, which is the only tool that needs no lock",
+        "correct": false,
+        "why": "`uv` writes a lock and commits it."
+      },
+      {
+        "text": "Almost nothing — it might be managed by any of them, or by none",
+        "correct": true,
+        "why": "A project that only uses it to configure `ruff` has one too. The lock file is what settles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjvk8rhk",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`^2.31` in a dependency list. What is it and what does it mean?",
+    "hint": "It belongs to one tool.",
+    "choices": [
+      {
+        "text": "A shorthand for an exact pin, used where a lock file is absent",
+        "correct": false,
+        "why": "It is a range rather than a pin."
+      },
+      {
+        "text": "A standard specifier, equivalent to `~=2.31` in every tool",
+        "correct": false,
+        "why": "`~=2.31` is the standard form; `^` is not standard at all."
+      },
+      {
+        "text": "A `uv` extension, meaning the newest version at lock time",
+        "correct": false,
+        "why": "`uv` does not define it either."
+      },
+      {
+        "text": "Poetry's own syntax for a range, meaning `>=2.31,<3`",
+        "correct": true,
+        "why": "It does not appear in a `[project]` table and `pip` does not understand it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc1bz6z7",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You clone a repository with `poetry.lock` in it. What do you run?",
+    "hint": "Use the tool that wrote it.",
+    "choices": [
+      {
+        "text": "`poetry install`",
+        "correct": true,
+        "why": "Running the other tool writes a second lock file that somebody has to delete."
+      },
+      {
+        "text": "`pip install -r requirements.txt`, generated from the lock first",
+        "correct": false,
+        "why": "That is a migration rather than a way to work on the project."
+      },
+      {
+        "text": "`uv sync`, which reads any lock format and is faster",
+        "correct": false,
+        "why": "It reads its own and would write a second one."
+      },
+      {
+        "text": "`poetry lock` first, since a cloned lock may be stale",
+        "correct": false,
+        "why": "Relocking on arrival is how you end up committing an upgrade nobody asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jj9k0w4",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `[build-system]` name?",
+    "hint": "Not the tool you type.",
+    "choices": [
+      {
+        "text": "The index the build dependencies are fetched from",
+        "correct": false,
+        "why": "The index is configured elsewhere."
+      },
+      {
+        "text": "The interpreter the package will be compiled against",
+        "correct": false,
+        "why": "Compilation targets come from the wheel tags rather than from here."
+      },
+      {
+        "text": "The backend that turns the source into a wheel",
+        "correct": true,
+        "why": "A project can be managed with `uv` and built with `hatchling`, or managed with Poetry and built with `poetry-core`."
+      },
+      {
+        "text": "The tool that manages dependencies day to day",
+        "correct": false,
+        "why": "That is independent of it, which is the point of this section."
+      }
+    ]
+  },
+  {
+    "id": "ex-6akjns1f",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with adding a `uv.lock` to a repository that already has a `poetry.lock`?",
+    "hint": "Two answers to one question.",
+    "choices": [
+      {
+        "text": "Git cannot merge two generated files in the same directory",
+        "correct": false,
+        "why": "It merges them as badly as it merges one, and that is not the objection."
+      },
+      {
+        "text": "The two formats conflict and `uv` refuses to write beside a `poetry.lock`",
+        "correct": false,
+        "why": "It writes happily, which is the problem."
+      },
+      {
+        "text": "The versions they pin would have to be identical, which is not achievable",
+        "correct": false,
+        "why": "They would usually be identical; the problem is that nobody knows which is read."
+      },
+      {
+        "text": "Nobody finds out which is being used until a deployment differs from a laptop",
+        "correct": true,
+        "why": "Propose a migration as a conversation rather than as a commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkbgj9kj",
+    "version": 1,
+    "section": "lock-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a lock file contain that `pyproject.toml` does not?",
+    "hint": "It is longer for a reason.",
+    "choices": [
+      {
+        "text": "The order the packages must be installed in, worked out by the resolver",
+        "correct": false,
+        "why": "Install order is recomputed and not recorded."
+      },
+      {
+        "text": "Every transitive package, at one exact version, with the hash of the file",
+        "correct": true,
+        "why": "Two hundred lines for a project with one dependency and one development tool."
+      },
+      {
+        "text": "The specifiers, resolved into the narrowest range that still satisfies them",
+        "correct": false,
+        "why": "It holds exact versions rather than ranges."
+      },
+      {
+        "text": "The development groups, which `pyproject.toml` deliberately leaves out",
+        "correct": false,
+        "why": "`pyproject.toml` declares the groups; the lock records what they resolved to."
+      }
+    ]
+  },
+  {
+    "id": "ex-018hsww0",
+    "version": 1,
+    "section": "lock-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do you resolve a merge conflict in a lock file?",
+    "hint": "It is generated.",
+    "choices": [
+      {
+        "text": "Keep your side, since your environment is the one that was tested",
+        "correct": false,
+        "why": "That discards whatever the other side added."
+      },
+      {
+        "text": "Merge it line by line, keeping the newer version of each package",
+        "correct": false,
+        "why": "That produces a set nobody resolved and hashes that may not match."
+      },
+      {
+        "text": "Take the other side's `pyproject.toml` and then regenerate the lock from it",
+        "correct": true,
+        "why": "A hand edit is the one thing that breaks the guarantee, because the hashes stop matching what the versions claim."
+      },
+      {
+        "text": "Delete it and let the next install write a fresh one",
+        "correct": false,
+        "why": "Deleting it loses the pins from both sides at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-mw84hw8s",
+    "version": 1,
+    "section": "lock-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`uv lock --upgrade` against `uv lock --upgrade-package requests`. Which belongs in a routine pull request?",
+    "hint": "Think about the diff somebody has to read.",
+    "choices": [
+      {
+        "text": "The second, because moving one package at a time is a small and reviewable change",
+        "correct": true,
+        "why": "Upgrading everything is a diff nobody reads, and it belongs in a pull request of its own with the tests run against it."
+      },
+      {
+        "text": "Neither, since a lock should only change when `pyproject.toml` does",
+        "correct": false,
+        "why": "Then security fixes in transitive packages would never arrive."
+      },
+      {
+        "text": "The first, because a partial upgrade leaves the lock internally inconsistent",
+        "correct": false,
+        "why": "A single-package upgrade resolves the whole graph and stays consistent."
+      },
+      {
+        "text": "Either, since both produce the same result within the declared ranges",
+        "correct": false,
+        "why": "One moves one package and the other moves all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfrz80s5",
+    "version": 1,
+    "section": "lock-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the difference between `install` and `sync`, stated precisely?",
+    "hint": "One is a subset relation and the other is equality.",
+    "choices": [
+      {
+        "text": "`install` reads `pyproject.toml` and `sync` reads the lock file",
+        "correct": false,
+        "why": "Both read the lock when there is one."
+      },
+      {
+        "text": "`install` makes sure the file's contents are present; `sync` makes the environment equal to the file",
+        "correct": true,
+        "why": "The difference is a dependency somebody deleted three months ago that is still installed on one machine."
+      },
+      {
+        "text": "`install` works on a package and `sync` on an application",
+        "correct": false,
+        "why": "Neither cares which the project is."
+      },
+      {
+        "text": "`install` resolves and `sync` uses whatever is already resolved",
+        "correct": false,
+        "why": "Both can do either, depending on the flags."
+      }
+    ]
+  },
+  {
+    "id": "ex-pver3bvj",
+    "version": 1,
+    "section": "lock-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the lock file committed?",
+    "hint": "Think about two machines.",
+    "choices": [
+      {
+        "text": "So that two installs, on two machines, produce exactly the same bytes",
+        "correct": true,
+        "why": "`pyproject.toml` says `requests>=2.31`, which was true of 2.31.0 in March and is true of 2.34.2 today; the lock says which."
+      },
+      {
+        "text": "So that the resolver can be skipped, which is what makes `sync` fast",
+        "correct": false,
+        "why": "Speed is a consequence rather than the reason."
+      },
+      {
+        "text": "So that an install works without reaching the index",
+        "correct": false,
+        "why": "The files still have to be fetched; the lock records which ones."
+      },
+      {
+        "text": "So that a reviewer can see which ranges were declared",
+        "correct": false,
+        "why": "The ranges are in `pyproject.toml`, which is the reviewable file."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0b1h4vq",
+    "version": 1,
+    "section": "a-package-of-your-own",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the argument for the `src/` layout?",
+    "hint": "Think about what a test imports.",
+    "choices": [
+      {
+        "text": "It keeps the tests and the package in separate directories, which git merges better",
+        "correct": false,
+        "why": "`tests/` is separate in both layouts."
+      },
+      {
+        "text": "The project root is off `sys.path`, so a test imports the installed copy",
+        "correct": true,
+        "why": "The tests then exercise what a user gets, rather than the directory sitting beside them."
+      },
+      {
+        "text": "It shortens the import paths, since `src` is stripped from the package name",
+        "correct": false,
+        "why": "`src` was never part of the package name."
+      },
+      {
+        "text": "It is required by `hatchling`, which does not look for a package at the root",
+        "correct": false,
+        "why": "Backends support both layouts."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9sj5e7d",
+    "version": 1,
+    "section": "a-package-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `[build-system]` make possible?",
+    "hint": "Without it, one command does not know what to do.",
+    "choices": [
+      {
+        "text": "Publishing to an index, which needs the table and not building",
+        "correct": false,
+        "why": "Publishing uploads what was built, which needs the table."
+      },
+      {
+        "text": "`pip install -e .` only, since a normal install needs no backend",
+        "correct": false,
+        "why": "Both go through the backend."
+      },
+      {
+        "text": "Declaring the dependencies, which the backend reads from it",
+        "correct": false,
+        "why": "Dependencies are declared in `[project]`."
+      },
+      {
+        "text": "`pip install .` — it names the backend that turns the source into a wheel",
+        "correct": true,
+        "why": "`hatchling`, `setuptools`, `poetry-core` and `flit` all do it, and for a straightforward package the choice barely matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3xbw733",
+    "version": 1,
+    "section": "a-package-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rates-0.1.0-py3-none-any.whl`. What do the three middle parts say?",
+    "hint": "Interpreter, ABI, platform.",
+    "choices": [
+      {
+        "text": "Built by Python 3, unsigned, and not yet published",
+        "correct": false,
+        "why": "Nothing in the tags is about signing or publication."
+      },
+      {
+        "text": "Python 3 only, no dependencies, any architecture",
+        "correct": false,
+        "why": "Dependencies are in the metadata rather than in the filename."
+      },
+      {
+        "text": "Any Python 3, no compiled ABI, and any platform the interpreter runs on",
+        "correct": true,
+        "why": "A package with compiled parts has a name like `cp311-cp311-manylinux_2_17_x86_64` instead, and there is one per platform."
+      },
+      {
+        "text": "Three build attempts, of which none produced a platform-specific artefact",
+        "correct": false,
+        "why": "The tags are a specification rather than a count."
+      }
+    ]
+  },
+  {
+    "id": "ex-yydxzy13",
+    "version": 1,
+    "section": "a-package-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `pip install -e .`, `rates.__file__` points at your source tree. What follows?",
+    "hint": "Something you do not have to do again.",
+    "choices": [
+      {
+        "text": "Other environments on the machine see the edit as well",
+        "correct": false,
+        "why": "The editable install belongs to one environment."
+      },
+      {
+        "text": "The wheel in `dist/` is regenerated whenever the source changes",
+        "correct": false,
+        "why": "Nothing regenerates it; an editable install builds no wheel to keep."
+      },
+      {
+        "text": "The package cannot be imported from outside the project directory",
+        "correct": false,
+        "why": "It can: the install put the path on `sys.path` for that environment."
+      },
+      {
+        "text": "An edit takes effect on the next run, with no reinstall",
+        "correct": true,
+        "why": "Measured: changing one line in `cli.py` and running the command again printed the new text."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcan56pw",
+    "version": 1,
+    "section": "a-package-of-your-own",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The two artefacts a build produces are the wheel and the source distribution, or `______`",
+    "hint": "Five letters.",
+    "blanks": [
+      {
+        "accept": [
+          "sdist"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pb2vdgvd",
+    "version": 1,
+    "section": "the-churn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What has stayed the same across every tool named in this lesson?",
+    "hint": "One file and five verbs.",
+    "choices": [
+      {
+        "text": "The command names, which all of them inherited from `pip`",
+        "correct": false,
+        "why": "The verbs are the same ideas under different names, which is the point."
+      },
+      {
+        "text": "The lock file format, which every tool has agreed on since it was standardised",
+        "correct": false,
+        "why": "There are four formats for one idea and none of them reads another's."
+      },
+      {
+        "text": "The environment's location, which has been `.venv` in the project throughout",
+        "correct": false,
+        "why": "Poetry keeps its environments in a central cache."
+      },
+      {
+        "text": "The `[project]` table, and the verbs: add, resolve, lock, sync, run",
+        "correct": true,
+        "why": "A project that declares itself in the standard table has survived every one of those changes without an edit."
+      }
+    ]
+  },
+  {
+    "id": "ex-sj660k3p",
+    "version": 1,
+    "section": "the-churn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A project works, is on Poetry, and `uv` is faster. What does this lesson say to do?",
+    "hint": "Weigh the two costs.",
+    "choices": [
+      {
+        "text": "Migrate, since a repository on an older tool is one nobody new will know",
+        "correct": false,
+        "why": "Both are common and both are readable; the migration is the expensive part."
+      },
+      {
+        "text": "Run both, and keep the faster one when the results agree",
+        "correct": false,
+        "why": "Running both writes two locks and proves nothing."
+      },
+      {
+        "text": "Leave it — a migration costs a day and a class of deployment bug, and the speed saves seconds",
+        "correct": true,
+        "why": "The current tool is for a new project; the cost of being on the old one is paid later, by whoever joins."
+      },
+      {
+        "text": "Migrate the lock file and keep the rest, so the two can be compared",
+        "correct": false,
+        "why": "Two lock files is two answers to one question."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dh8mmrx",
+    "version": 1,
+    "section": "the-churn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say to be suspicious of an undated packaging tutorial?",
+    "hint": "Half of it was right once.",
+    "choices": [
+      {
+        "text": "The specifications change, so older advice describes a file that no longer parses",
+        "correct": false,
+        "why": "The file has been the stable half; it is the tools that moved."
+      },
+      {
+        "text": "An undated tutorial cannot be checked against the version you have installed",
+        "correct": false,
+        "why": "You can check it against what you have; the problem is knowing that you should."
+      },
+      {
+        "text": "Half the packaging advice is correct for a year that has passed, and none of it says which",
+        "correct": true,
+        "why": "Every row of the sequence in this section was the sensible recommendation while it lasted."
+      },
+      {
+        "text": "Packaging tutorials are usually written by tool authors, so they are partial",
+        "correct": false,
+        "why": "Many are, and that is a different objection."
+      }
+    ]
+  },
+  {
+    "id": "ex-e32yyv4e",
+    "version": 1,
+    "section": "the-churn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the honest caveat this lesson puts on its own recommendation?",
+    "hint": "Who owns it, and how old is it.",
+    "choices": [
+      {
+        "text": "`uv` has no build backend of its own, so a package still needs a second tool",
+        "correct": false,
+        "why": "It builds with whatever `[build-system]` names, which is by design."
+      },
+      {
+        "text": "`uv` is the newest of them and is owned by one company, and the last three answers were good too",
+        "correct": true,
+        "why": "The file is the bet worth making; the tool is a choice you may have to make again."
+      },
+      {
+        "text": "`uv` cannot read a Poetry project, so the recommendation is only for new work",
+        "correct": false,
+        "why": "That is true and it is stated elsewhere; it is not the caveat about the recommendation itself."
+      },
+      {
+        "text": "`uv` is written in Rust, so a bug in it cannot be fixed by a Python developer",
+        "correct": false,
+        "why": "The implementation language is not the concern raised."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2zsxqn3",
+    "version": 1,
+    "section": "the-churn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is the thing to learn, according to this section?",
+    "hint": "It outlives the programs that read it.",
+    "choices": [
+      {
+        "text": "The file",
+        "correct": true,
+        "why": "`[project]` is a specification and it will outlive whatever you install this week."
+      },
+      {
+        "text": "The command names, since they are what you type every day",
+        "correct": false,
+        "why": "They differ per tool and are the part that transfers least."
+      },
+      {
+        "text": "The fastest tool, since the others will converge on what it does",
+        "correct": false,
+        "why": "The last three answers were also the fastest on the day."
+      },
+      {
+        "text": "The lock format, since reproducibility is what all of this is for",
+        "correct": false,
+        "why": "The lock format changes with the tool, which is what makes a migration a migration."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1v95nfm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You clone a repository. `ls` shows `pyproject.toml`, `uv.lock` and `requirements.txt`. What do you run?",
+    "hint": "One of the three files was written by a tool.",
+    "choices": [
+      {
+        "text": "`poetry install`, since `pyproject.toml` is Poetry's file",
+        "correct": false,
+        "why": "It is a standard file that every tool reads."
+      },
+      {
+        "text": "Both, so the environment satisfies each of the two files",
+        "correct": false,
+        "why": "That is two answers to one question, resolved by neither."
+      },
+      {
+        "text": "`pip install -r requirements.txt`, which needs no tool to be installed first",
+        "correct": false,
+        "why": "It installs something, and what it installs is not what the lock describes."
+      },
+      {
+        "text": "`uv sync`",
+        "correct": true,
+        "why": "`uv.lock` means `uv`, and the `requirements.txt` is probably an export somebody keeps for a deployment."
+      }
+    ]
+  },
+  {
+    "id": "ex-5901fe4q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pull request adds a dependency to `pyproject.toml` and does not touch `uv.lock`. What fails, and where?",
+    "hint": "A comparison between two files.",
+    "choices": [
+      {
+        "text": "Nothing, until a deployment where the dependency is missing",
+        "correct": false,
+        "why": "That is the outcome the check exists to prevent."
+      },
+      {
+        "text": "The build, since `pyproject.toml` and the lock have to be committed together",
+        "correct": false,
+        "why": "Nothing enforces that without the check."
+      },
+      {
+        "text": "`uv sync` on the next machine, which resolves the new dependency anyway",
+        "correct": false,
+        "why": "It would install from the lock and quietly leave the new package out."
+      },
+      {
+        "text": "`uv lock --check` in CI",
+        "correct": true,
+        "why": "It answers `the lockfile needs to be updated` and exits non-zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g1wt08t",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The uv command that installs from the lock without resolving again: `uv sync --______`",
+    "hint": "Six letters.",
+    "blanks": [
+      {
+        "accept": [
+          "frozen"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nnm025a3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dependencies = [\"requests (>=2.31)\"]` with parentheses. Which tool wrote it?",
+    "hint": "One of them writes them and the other does not.",
+    "choices": [
+      {
+        "text": "Either — the parentheses are required by the specification",
+        "correct": false,
+        "why": "They are optional, which is why the two tools differ."
+      },
+      {
+        "text": "`uv`, which parenthesises to keep the TOML unambiguous",
+        "correct": false,
+        "why": "It writes the bare form."
+      },
+      {
+        "text": "`pip freeze`, exporting a `pyproject.toml` from an environment",
+        "correct": false,
+        "why": "`pip freeze` writes `requirements.txt` lines, not a TOML table."
+      },
+      {
+        "text": "Poetry",
+        "correct": true,
+        "why": "`uv` writes `\"requests>=2.31\"`. Both are valid and both are read by either tool."
+      }
+    ]
+  },
+  {
+    "id": "ex-1y7ap18w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An environment has a package the lock does not mention. Which command removes it?",
+    "hint": "One verb makes the environment equal to the file.",
+    "choices": [
+      {
+        "text": "`uv run`, which rebuilds the environment before each command",
+        "correct": false,
+        "why": "It checks the environment against the lock and is not how you would do this deliberately."
+      },
+      {
+        "text": "`uv lock`, which rewrites the lock to describe the environment",
+        "correct": false,
+        "why": "The lock is generated from `pyproject.toml` rather than from the environment."
+      },
+      {
+        "text": "`uv sync`",
+        "correct": true,
+        "why": "`install` makes sure the file's contents are present; `sync` makes the environment equal to it."
+      },
+      {
+        "text": "`uv remove`, which takes the package out of the project",
+        "correct": false,
+        "why": "The package is not in the project, which is why it is unmentioned."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvdtdzd2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does `pytest` belong for a library you publish?",
+    "hint": "Think about who installs it.",
+    "choices": [
+      {
+        "text": "In `project.optional-dependencies`, under a `test` extra",
+        "correct": false,
+        "why": "That advertises a test framework as a feature of your library."
+      },
+      {
+        "text": "In `[build-system].requires`, since the tests run before the wheel is built",
+        "correct": false,
+        "why": "That table is for what builds the package."
+      },
+      {
+        "text": "In a dependency group, which is invisible to whoever installs it",
+        "correct": true,
+        "why": "It is invisible to anybody who installs the package, which is what you want."
+      },
+      {
+        "text": "In `dependencies`, since the tests are part of the source distribution",
+        "correct": false,
+        "why": "Then everybody who installs the library installs `pytest` too."
+      }
+    ]
+  },
+  {
+    "id": "ex-jv261reh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these files is edited by a person?",
+    "hint": "One is generated.",
+    "choices": [
+      {
+        "text": "`uv.lock`, when a transitive version has to be held back",
+        "correct": false,
+        "why": "That is `--upgrade-package` or a constraint, not an edit."
+      },
+      {
+        "text": "`pyproject.toml`, which is where the decisions a person makes are written",
+        "correct": true,
+        "why": "The lock is generated, and a hand edit is the one thing that breaks its guarantee."
+      },
+      {
+        "text": "Both, since the lock records decisions a person makes",
+        "correct": false,
+        "why": "The decisions go in `pyproject.toml` and the lock records the resolution."
+      },
+      {
+        "text": "`poetry.lock`, to resolve a merge conflict line by line",
+        "correct": false,
+        "why": "A conflict is resolved by regenerating."
+      }
+    ]
+  },
+  {
+    "id": "ex-mk0h10n5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A project is managed with `uv` and `[build-system]` says `hatchling`. Is that a mistake?",
+    "hint": "The two tables answer different questions.",
+    "choices": [
+      {
+        "text": "Yes — a `uv` project has to use `uv_build` for the lock to be valid",
+        "correct": false,
+        "why": "The lock has nothing to do with the build backend."
+      },
+      {
+        "text": "Yes — `uv` builds with its own backend and the table should name it",
+        "correct": false,
+        "why": "`uv` has no backend of its own and calls whatever is named."
+      },
+      {
+        "text": "Only for a library; an application may name any backend",
+        "correct": false,
+        "why": "An application often needs no `[build-system]` at all."
+      },
+      {
+        "text": "No — the day-to-day manager and the build backend are independent of each other",
+        "correct": true,
+        "why": "`[build-system]` names what turns the source into a wheel, and `uv` is happy to call it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xa0xn9r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Poetry 2 and `uv` were each given the same two commands. How far apart are the two `pyproject.toml` files?",
+    "hint": "It was measured.",
+    "choices": [
+      {
+        "text": "A whole table each, since Poetry still writes `[tool.poetry.dependencies]`",
+        "correct": false,
+        "why": "Poetry 2 writes `[project]`, which is the change this lesson is about."
+      },
+      {
+        "text": "About four lines apart, measured on exactly the same two commands",
+        "correct": true,
+        "why": "The parentheses, the upper bound Poetry added to `pytest`, and the `[build-system]` table it wrote."
+      },
+      {
+        "text": "Nothing — the two files are byte for byte identical",
+        "correct": false,
+        "why": "They differ in the three places named above."
+      },
+      {
+        "text": "Most of the file, since the group syntax has no standard form yet",
+        "correct": false,
+        "why": "`[dependency-groups]` is standard and both write it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvjpgqwm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`^3.11` appears in a file you have been asked to convert. What does it become?",
+    "hint": "Write the bound out.",
+    "choices": [
+      {
+        "text": ">=3.11,<4",
+        "correct": true,
+        "why": "`^` is Poetry's. It does not appear in a `[project]` table and `pip` does not understand it."
+      },
+      {
+        "text": ">=3.11,<3.12, since the caret pins the minor version",
+        "correct": false,
+        "why": "That is `~3.11` in Poetry's syntax."
+      },
+      {
+        "text": "==3.11, since a caret on an interpreter version means exactly that one",
+        "correct": false,
+        "why": "It is a range in every reading."
+      },
+      {
+        "text": "~=3.11.0, which is the standard spelling of the same rule",
+        "correct": false,
+        "why": "That means `>=3.11.0,<3.12`. The two-component `~=3.11` happens to match here and `~=3.11.0` does not."
+      }
+    ]
+  }
+]
