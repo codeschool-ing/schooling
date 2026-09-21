@@ -63,4 +63,4 @@ def analisar(dados: dict[str, Any]) -> Linha: ... # diz o que você de fato sabe
 ```
 
 Se a forma é genuinamente irregular, diga `dict[str, Any]` e siga — e se ela é regular, o
-`TypedDict` numa seção adiante lhe dá um nome.
+`TypedDict`, na seção `your-own-types` desta aula, lhe dá um nome.

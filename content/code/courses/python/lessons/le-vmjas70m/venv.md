@@ -49,9 +49,9 @@ $ python -c "import sys; print(sys.prefix)"
 /tmp/project/.venv
 ```
 
-`activate` is a shell script that edits `PATH` and sets `VIRTUAL_ENV`. It is not magic and it is
-not required: `.venv/bin/python script.py` works with nothing activated, and that is what a cron
-job or a systemd unit should use, because neither of those has a shell that ran your `activate`.
+`activate` is a shell script that edits `PATH` and sets `VIRTUAL_ENV`. It is not required:
+`.venv/bin/python script.py` works with nothing activated, and that is what a cron job or a
+systemd unit should use, because neither of those has a shell that ran your `activate`.
 
 ## The directory is never committed
 

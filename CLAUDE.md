@@ -362,6 +362,22 @@ one case where the skill is allowed to be certain is a number that no longer mat
 above it. Its voice table is measured from `content/` and carries the command to re-derive it, so
 it ages with the catalogue instead of against it.
 
+**Every section written here goes through it, and that means the SPOKEN SCRIPT as well as the
+reading prose.** The two are not in the same place and that is what hid one of them: a reading
+section is its `.md`, and a video section's script is a string in `lesson.json` under
+`sections[].videos[].script`, with the `.md` beside it holding a title and nothing else. The skill
+walked `**/*.md` for its corpus, its measured voice and its audit, so 39,428 words — every word
+this catalogue says out loud — were outside all three, and a pass could report a course clean
+having never opened them.
+
+**They are measured apart, because they are different prose.** A spoken sentence runs to a median
+of 13 words against the reading prose's 19, and a script carries 1.3 bold spans per thousand words
+against 14.8 — bold is a signpost for an eye that scans back and a script is heard once, in order.
+One averaged table would pass a spoken sentence far outside its own register and would report all
+153 scripts as sections with no signpost. **And bold is not the only signpost**: ALL-CAPS is the
+other, 560 runs across the catalogue, and a check that does not know it calls a signposted section
+bare.
+
 ## The catalogue is a mirror, and only one thing writes it
 
 `content/` is the truth; the `catalog_*` tables are derived (C-01). **A test scans the source for

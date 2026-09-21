@@ -63,4 +63,4 @@ def parse(data: dict[str, Any]) -> Row: ... # says what you actually know
 ```
 
 If the shape is genuinely irregular, say `dict[str, Any]` and move on — and if it is regular,
-`TypedDict` in a later section gives it a name.
+`TypedDict`, in this lesson's `your-own-types` section, gives it a name.
