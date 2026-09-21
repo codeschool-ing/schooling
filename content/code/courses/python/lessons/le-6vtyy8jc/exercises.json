@@ -1,0 +1,1723 @@
+[
+  {
+    "id": "ex-p4nc7jjp",
+    "version": 1,
+    "section": "a-first-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pytest` need in order to find and run a test function?",
+    "hint": "Two names and nothing else.",
+    "choices": [
+      {
+        "text": "A file named `test_*.py` and, inside it, a function whose name also starts with `test_`",
+        "correct": true,
+        "why": "No base class, no registration, no decorator — the two names are the whole of it."
+      },
+      {
+        "text": "A decorator from `pytest` on each function, so that collection can see it",
+        "correct": false,
+        "why": "Decorators exist for parametrising and marking, and finding a test is done by name."
+      },
+      {
+        "text": "An entry in `pyproject.toml` listing the modules that hold tests",
+        "correct": false,
+        "why": "`testpaths` narrows where it looks and does not list functions."
+      },
+      {
+        "text": "A class inheriting from `unittest.TestCase`, with the test written as a method on it",
+        "correct": false,
+        "why": "That works and is the older framework's requirement; `pytest` runs those too and asks for neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bbdpk0t",
+    "version": 1,
+    "section": "a-first-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`test_slug.py .F` — what does the `F` say?",
+    "hint": "One character per test.",
+    "choices": [
+      {
+        "text": "Two tests ran and the file finished with a failure summary appended",
+        "correct": false,
+        "why": "Each character is one test, in the order they ran."
+      },
+      {
+        "text": "The file itself failed to be collected and was reported as one unit",
+        "correct": false,
+        "why": "A collection failure is an `ERROR` line and the file gets no progress characters."
+      },
+      {
+        "text": "The second test failed",
+        "correct": true,
+        "why": "`.` passed, `F` failed, `E` raised before the body started, `s` was skipped."
+      },
+      {
+        "text": "The second test raised before its body began, in a fixture or at import",
+        "correct": false,
+        "why": "That is `E`, which is reported as an error rather than a failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfd9m3gp",
+    "version": 1,
+    "section": "a-first-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You have thirty failures and want the first one only, then to rerun just what failed. Which two flags?",
+    "hint": "One stops early, one remembers.",
+    "choices": [
+      {
+        "text": "`-x` and `--lf`",
+        "correct": true,
+        "why": "`-x` stops at the first failure and `--lf` runs only the ones that failed last time."
+      },
+      {
+        "text": "`-q` and `-v`, which shorten and lengthen what is printed",
+        "correct": false,
+        "why": "Those change the report's verbosity and run the same tests."
+      },
+      {
+        "text": "`-k` and `--tb=short`, which select by name and trim the traceback",
+        "correct": false,
+        "why": "`-k` is a name filter and the traceback flag is about presentation."
+      },
+      {
+        "text": "`--ff` and `--sw`, which reorder and step through the suite",
+        "correct": false,
+        "why": "`--ff` puts last failures first and `--sw` steps; neither is the pair described."
+      }
+    ]
+  },
+  {
+    "id": "ex-fnrayddv",
+    "version": 1,
+    "section": "a-first-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does CI actually read from a `pytest` run?",
+    "hint": "One number.",
+    "choices": [
+      {
+        "text": "A JUnit XML file, which `pytest` writes on every run",
+        "correct": false,
+        "why": "It writes one with `--junitxml=` and not by default."
+      },
+      {
+        "text": "The count on the last line, compared against the expected total",
+        "correct": false,
+        "why": "The expected total is not something CI knows."
+      },
+      {
+        "text": "The `short test summary info` block, parsed for `FAILED` lines",
+        "correct": false,
+        "why": "A pipeline could parse it, and it does not have to: the exit code already says."
+      },
+      {
+        "text": "The exit code",
+        "correct": true,
+        "why": "0 when everything passed and non-zero otherwise. The rest of the output is for a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn24ggzx",
+    "version": 1,
+    "section": "a-first-test",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Run every test whose name contains `slug`, and nothing else: `pytest -______ slug`",
+    "hint": "One letter.",
+    "blanks": [
+      {
+        "accept": [
+          "k"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c1ve8gge",
+    "version": 1,
+    "section": "reading-a-failure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a bare `assert` produce a useful report under `pytest` and a useless one everywhere else?",
+    "hint": "Something happens at import.",
+    "choices": [
+      {
+        "text": "`pytest` rewrites the assertions in the files it collects, keeping the operands",
+        "correct": true,
+        "why": "A bare `AssertionError` carries no message, so the rewriting is where both values come from."
+      },
+      {
+        "text": "`pytest` catches the `AssertionError` and re-executes the line to see the values",
+        "correct": false,
+        "why": "Re-executing a failed line would run its side effects a second time."
+      },
+      {
+        "text": "Python stores both operands on the exception object, and `pytest` reads them off it",
+        "correct": false,
+        "why": "`AssertionError` carries nothing but an optional message."
+      },
+      {
+        "text": "`pytest` reads the source file and reconstructs the values from the text",
+        "correct": false,
+        "why": "The text alone gives the expression, and the values come from the rewriting."
+      }
+    ]
+  },
+  {
+    "id": "ex-snbgqrmk",
+    "version": 1,
+    "section": "reading-a-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a failure block, what do `-` and `+` mean in the diff under the `E` lines?",
+    "hint": "One of them is yours.",
+    "choices": [
+      {
+        "text": "`-` is the expected value and `+` is the one that arrived",
+        "correct": true,
+        "why": "The `?` line below them points at the character that differs."
+      },
+      {
+        "text": "`-` is what was removed from the string and `+` what was added to it",
+        "correct": false,
+        "why": "Nothing was removed or added; the two are separate values being compared."
+      },
+      {
+        "text": "`-` is the left operand of the comparison and `+` is the right one",
+        "correct": false,
+        "why": "The diff is oriented by expected against actual, not by which side was written first."
+      },
+      {
+        "text": "`-` marks a line that failed and `+` a line that passed",
+        "correct": false,
+        "why": "Both lines belong to one failed assertion."
+      }
+    ]
+  },
+  {
+    "id": "ex-dq1a013w",
+    "version": 1,
+    "section": "reading-a-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why read a `pytest` report from the bottom?",
+    "hint": "Think about thirty failures at once.",
+    "choices": [
+      {
+        "text": "The timing line at the bottom is what tells you whether the run was complete",
+        "correct": false,
+        "why": "Completeness is the exit code and the counts, and the timing is a duration."
+      },
+      {
+        "text": "Failures are printed in reverse order, so the bottom is the earliest one",
+        "correct": false,
+        "why": "They are printed in the order they ran."
+      },
+      {
+        "text": "The top of the report is the collection phase, which is not about your tests at all",
+        "correct": false,
+        "why": "Collection errors are at the top and are very much about your tests."
+      },
+      {
+        "text": "The summary lists every failure in a few lines; the top is only the first one",
+        "correct": true,
+        "why": "The first failure is rarely the interesting one, and scrolling to find the others costs more than reading four lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps4theth",
+    "version": 1,
+    "section": "reading-a-failure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`assert 0.1 + 0.2 == 0.3` fails with `E assert (0.1 + 0.2) == 0.3`. What is missing from that report?",
+    "hint": "The number that explains the failure.",
+    "choices": [
+      {
+        "text": "The type of the exception, which was swallowed by the rewriting",
+        "correct": false,
+        "why": "`AssertionError` is named where the exception type is reported."
+      },
+      {
+        "text": "The name of the test, which appears only in the summary at the bottom",
+        "correct": false,
+        "why": "It is in the heading of the failure block as well."
+      },
+      {
+        "text": "The line number, which a rewritten assertion does not carry",
+        "correct": false,
+        "why": "The location is printed on the line beneath the `E` block."
+      },
+      {
+        "text": "The value that was actually produced, which is `0.30000000000000004`",
+        "correct": true,
+        "why": "The rewriting shows the expression here rather than the sum, which is exactly the case `approx` reports better."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhvv613w",
+    "version": 1,
+    "section": "reading-a-failure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `>` mark in a failure block?",
+    "hint": "One line out of the function.",
+    "choices": [
+      {
+        "text": "The exact line on which the failure happened, inside the test body",
+        "correct": true,
+        "why": "The lines above it are the rest of the function body, printed for context."
+      },
+      {
+        "text": "The start of the rewritten assertion, which spans the lines below it",
+        "correct": false,
+        "why": "The rewriting is invisible in the report; what is printed is your source."
+      },
+      {
+        "text": "The expected value in the comparison that failed",
+        "correct": false,
+        "why": "The values are on the `E` lines."
+      },
+      {
+        "text": "The entry point of the traceback, with the deeper frames below",
+        "correct": false,
+        "why": "Deeper frames are printed as their own blocks with their own markers."
+      }
+    ]
+  },
+  {
+    "id": "ex-08ecxcy0",
+    "version": 1,
+    "section": "what-to-assert",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `test_slugify_works` a worse name than `test_punctuation_is_removed_from_a_slug`?",
+    "hint": "Read it when CI is red and you are tired.",
+    "choices": [
+      {
+        "text": "The first will collide with another test of the same name in another file",
+        "correct": false,
+        "why": "Two files may hold the same test name without collision."
+      },
+      {
+        "text": "The second is longer, and a longer name is matched by `-k` more precisely",
+        "correct": false,
+        "why": "`-k` matching is a side effect; the report is the reason."
+      },
+      {
+        "text": "The first hides which parametrised row failed when the table grows",
+        "correct": false,
+        "why": "The row id is appended in brackets whatever the function is called."
+      },
+      {
+        "text": "The second says what broke, so nobody has to open the file to find out which behaviour it was",
+        "correct": true,
+        "why": "A suite's output becomes a list of sentences about the system, and a failure names one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-kamarw33",
+    "version": 1,
+    "section": "what-to-assert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with one test that asserts six facts about `slugify`?",
+    "hint": "Think about what you learn from one run.",
+    "choices": [
+      {
+        "text": "The first failing line hides the five below it, so you learn one fact per run",
+        "correct": true,
+        "why": "You fix one, run again, find the next, and learn the state of the function one round trip at a time."
+      },
+      {
+        "text": "A test with six assertions is not rewritten, so the values are not printed",
+        "correct": false,
+        "why": "Every assertion in a collected file is rewritten."
+      },
+      {
+        "text": "The coverage number counts it once, so the report understates what was exercised",
+        "correct": false,
+        "why": "Coverage counts lines of the module under test, not assertions."
+      },
+      {
+        "text": "Six assertions in a row is slower than six functions, since the module reloads",
+        "correct": false,
+        "why": "The module is imported once either way, and speed is not the objection."
+      }
+    ]
+  },
+  {
+    "id": "ex-06vr71mv",
+    "version": 1,
+    "section": "what-to-assert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`assert result is not None` after calling `total`. What does the test prove?",
+    "hint": "What values fail that check?",
+    "choices": [
+      {
+        "text": "Almost nothing — the check is true of nearly every value a function could possibly return",
+        "correct": true,
+        "why": "Every line of the module ran and coverage says one hundred per cent, and a doubled tax passes underneath it."
+      },
+      {
+        "text": "That the function returned rather than raising, which is a real assertion",
+        "correct": false,
+        "why": "It does prove that much, and the report will read as a test of the arithmetic, which it is not."
+      },
+      {
+        "text": "That the function returned a number, since `None` is the alternative",
+        "correct": false,
+        "why": "A string, a list and an empty dictionary each pass it too."
+      },
+      {
+        "text": "That the arithmetic produced something, which is the first thing to check",
+        "correct": false,
+        "why": "It is the first thing and it is not what the name of such a test claims."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdwyq0dv",
+    "version": 1,
+    "section": "what-to-assert",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `assert mailer.send.called` a worse assertion than `assert sent == [(\"a@b.c\", \"Welcome\")]`?",
+    "hint": "Think about what each one goes red for.",
+    "choices": [
+      {
+        "text": "It goes red when you rename the helper and green when the message is wrong",
+        "correct": true,
+        "why": "A test coupled to the implementation makes refactoring expensive and finds nothing, which is the worst of both halves."
+      },
+      {
+        "text": "It depends on a mock, and a mock is slower to construct than a list",
+        "correct": false,
+        "why": "Construction cost is irrelevant at this scale."
+      },
+      {
+        "text": "It asserts a boolean, which the rewriting cannot print usefully",
+        "correct": false,
+        "why": "The rewriting prints it fine; what it prints is just not informative about behaviour."
+      },
+      {
+        "text": "It reads a private attribute of the double, which a later version may rename",
+        "correct": false,
+        "why": "`called` is part of the documented interface of a `Mock`."
+      }
+    ]
+  },
+  {
+    "id": "ex-32sjht1c",
+    "version": 1,
+    "section": "what-to-assert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is the most valuable thing to add a test for?",
+    "hint": "Think about where the code was written from a picture of the ordinary case.",
+    "choices": [
+      {
+        "text": "The boundary — an empty list, a zero, a single element, the last day of a month",
+        "correct": true,
+        "why": "Those are exactly the inputs the author was not imagining while writing the body."
+      },
+      {
+        "text": "A second ordinary input, which confirms the behaviour was not a coincidence of one value",
+        "correct": false,
+        "why": "It raises confidence a little and exercises the same path the first one did."
+      },
+      {
+        "text": "A getter that returns a stored attribute, for the sake of the number",
+        "correct": false,
+        "why": "That is a line touched for coverage rather than a behaviour anybody doubted."
+      },
+      {
+        "text": "The private helper, so that a change made inside it is reported immediately",
+        "correct": false,
+        "why": "Testing a private helper is the implementation-coupled test one section up."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvggy2k6",
+    "version": 1,
+    "section": "fixtures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a test say which fixture it wants?",
+    "hint": "Look at the signature.",
+    "choices": [
+      {
+        "text": "By importing it from the `conftest.py` it is defined in",
+        "correct": false,
+        "why": "Nothing imports a `conftest.py`; `pytest` finds it by name and position."
+      },
+      {
+        "text": "By listing it in a `@pytest.mark.usefixtures` decorator",
+        "correct": false,
+        "why": "That exists and is for fixtures whose value the test does not need."
+      },
+      {
+        "text": "By calling it, the way any other function is called",
+        "correct": false,
+        "why": "Calling a fixture function directly is an error in modern `pytest`."
+      },
+      {
+        "text": "By taking its name as an argument",
+        "correct": true,
+        "why": "`pytest` finds the fixture with that name, runs it, and passes what it returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t7n1w5s",
+    "version": 1,
+    "section": "fixtures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What runs after a fixture's `yield`, and when?",
+    "hint": "Two questions, and the second is the interesting one.",
+    "choices": [
+      {
+        "text": "The next test's setting up, since the fixture is reused across the scope",
+        "correct": false,
+        "why": "A new scope builds the fixture again from the top."
+      },
+      {
+        "text": "The tearing down, provided the test passed and made no unhandled exception",
+        "correct": false,
+        "why": "It runs after a failure too, which is the whole point of it being there."
+      },
+      {
+        "text": "Nothing — the `yield` form exists to make a fixture a generator and is finished there",
+        "correct": false,
+        "why": "Everything after the `yield` is the teardown and does run."
+      },
+      {
+        "text": "The tearing down, and it runs whether the test passed or failed",
+        "correct": true,
+        "why": "That is the part a `try`/`finally` written into every test would get wrong eventually."
+      }
+    ]
+  },
+  {
+    "id": "ex-67a4c0br",
+    "version": 1,
+    "section": "fixtures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A fixture is `scope=\"module\"` instead of the default. What have you bought and what have you risked?",
+    "hint": "One build instead of many.",
+    "choices": [
+      {
+        "text": "Speed, at the cost of one test being able to leave state behind for the one that runs next",
+        "correct": true,
+        "why": "A row inserted, a file written, a counter advanced — take the narrowest scope that is fast enough."
+      },
+      {
+        "text": "Parallelism, since a module-scoped fixture may be built on its own worker",
+        "correct": false,
+        "why": "Distributing tests is a plugin's job and is not what a scope decides."
+      },
+      {
+        "text": "Isolation, since the tests in a module no longer share the fixture",
+        "correct": false,
+        "why": "It is the opposite: a module scope is where they start sharing it."
+      },
+      {
+        "text": "Ordering, since `pytest` now runs the module's tests in declaration order",
+        "correct": false,
+        "why": "Declaration order is the default already and a scope does not change it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngw2rn5q",
+    "version": 1,
+    "section": "fixtures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which built-in fixture gives a test a fresh directory named after it?",
+    "hint": "It is one word.",
+    "choices": [
+      {
+        "text": "`tmp_path`",
+        "correct": true,
+        "why": "It hands back a `pathlib.Path` under `/tmp/pytest-of-you/pytest-0/<test name>0/`."
+      },
+      {
+        "text": "`monkeypatch`, whose `chdir` puts the test in a directory of its own",
+        "correct": false,
+        "why": "`chdir` moves you into a directory and does not create one."
+      },
+      {
+        "text": "`caplog`, which collects the records written during the test",
+        "correct": false,
+        "why": "`caplog` is about log records."
+      },
+      {
+        "text": "`capsys`, which captures what the test wrote and where it wrote it",
+        "correct": false,
+        "why": "`capsys` captures standard output and error, not a directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9vd5rsk",
+    "version": 1,
+    "section": "fixtures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A fixture takes another fixture as an argument. What does `pytest` do?",
+    "hint": "The same thing it does for a test.",
+    "choices": [
+      {
+        "text": "It passes the fixture function itself, uncalled, for the fixture to use",
+        "correct": false,
+        "why": "It passes the value, exactly as it does to a test."
+      },
+      {
+        "text": "It refuses, because a fixture may only be requested by a test function",
+        "correct": false,
+        "why": "Fixtures request fixtures the same way tests do."
+      },
+      {
+        "text": "It builds the dependency first and passes it in, working out the order itself",
+        "correct": true,
+        "why": "That is how a chain of setting up is written once and reused, and `pytest` works out the order."
+      },
+      {
+        "text": "It builds it once per session regardless of the scopes declared on either of them",
+        "correct": false,
+        "why": "Each fixture is built according to its own scope."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0946mhc",
+    "version": 1,
+    "section": "parametrisation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Four rows in a `parametrize` decorator. How many tests run?",
+    "hint": "Count the rows.",
+    "choices": [
+      {
+        "text": "Four",
+        "correct": true,
+        "why": "Each row runs on its own, gets its own bracketed name, and fails on its own."
+      },
+      {
+        "text": "One, with four assertions inside it and one name in the report",
+        "correct": false,
+        "why": "That is the loop this decorator exists to replace."
+      },
+      {
+        "text": "Five — the four rows plus the undecorated function itself",
+        "correct": false,
+        "why": "The undecorated function is not collected separately."
+      },
+      {
+        "text": "Four if they all pass, and one failure entry covering every row that did not",
+        "correct": false,
+        "why": "Each row reports its own result."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fy2eb9c",
+    "version": 1,
+    "section": "parametrisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a `for` loop over a table of cases cost you that the decorator does not?",
+    "hint": "Think about the second bad row.",
+    "choices": [
+      {
+        "text": "It cannot use fixtures, since the loop body is not a test function",
+        "correct": false,
+        "why": "The enclosing test takes its fixtures normally and the body may use them."
+      },
+      {
+        "text": "It stops at the first bad row and tells you nothing at all about any of the ones after it",
+        "correct": true,
+        "why": "The decorator reports each row separately, which is the whole reason to write it this way."
+      },
+      {
+        "text": "It is slower, since the assertions inside a loop are not rewritten",
+        "correct": false,
+        "why": "Assertions inside a loop in a collected file are rewritten too."
+      },
+      {
+        "text": "It runs the cases in an order the report does not record anywhere",
+        "correct": false,
+        "why": "The order is the order of the table in both arrangements."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr71j7y2",
+    "version": 1,
+    "section": "parametrisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pytest \"test_slug.py::test_slugify[ALL CAPS-all-caps]\"`. Why the quotes?",
+    "hint": "Think about what runs the command.",
+    "choices": [
+      {
+        "text": "Brackets and spaces belong to the shell if nothing protects them",
+        "correct": true,
+        "why": "The bracketed id is a real address and the quoting is what gets it through intact."
+      },
+      {
+        "text": "`pytest` requires an argument containing `::` to be quoted",
+        "correct": false,
+        "why": "The separator is fine unquoted; brackets and spaces are the problem."
+      },
+      {
+        "text": "Without them the id is read as a file path and the run reports nothing found",
+        "correct": false,
+        "why": "It would be mangled by the shell before `pytest` saw it at all."
+      },
+      {
+        "text": "The id contains a regular expression, which the shell would expand",
+        "correct": false,
+        "why": "The id is a literal, and the shell's globbing is what the brackets trigger."
+      }
+    ]
+  },
+  {
+    "id": "ex-3h9bhc74",
+    "version": 1,
+    "section": "parametrisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two stacked `parametrize` decorators, one with two values and one with three. How many tests?",
+    "hint": "It is not five.",
+    "choices": [
+      {
+        "text": "Six — every combination",
+        "correct": true,
+        "why": "It multiplies, so three of these is a suite nobody meant to write."
+      },
+      {
+        "text": "Five, since the rows of the two tables are run one after the other",
+        "correct": false,
+        "why": "Stacking produces a product rather than a concatenation."
+      },
+      {
+        "text": "Three, since the shorter table is padded out to match the longer one",
+        "correct": false,
+        "why": "Nothing is padded."
+      },
+      {
+        "text": "Two, since the outer decorator decides how many times the inner one runs",
+        "correct": false,
+        "why": "Both decorators apply and the result is their product."
+      }
+    ]
+  },
+  {
+    "id": "ex-svm3339h",
+    "version": 1,
+    "section": "parametrisation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When should a case come out of the `parametrize` table and become its own test?",
+    "hint": "Watch the body.",
+    "choices": [
+      {
+        "text": "When the table passes ten rows, which is where the ids stop being readable",
+        "correct": false,
+        "why": "`id=` fixes unreadable ids and row count on its own decides nothing."
+      },
+      {
+        "text": "When the arguments are objects rather than strings and numbers",
+        "correct": false,
+        "why": "Objects are fine as arguments and only their generated ids need naming."
+      },
+      {
+        "text": "When a row is expected to fail, since the decorator has no way to say so",
+        "correct": false,
+        "why": "`pytest.param(..., marks=pytest.mark.xfail)` says exactly that."
+      },
+      {
+        "text": "When the body grows an `if` about which of the rows it is running",
+        "correct": true,
+        "why": "A row that needs its own setting up, or whose assertion is a different sentence, has stopped being a row."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkd3tzvg",
+    "version": 1,
+    "section": "exceptions-and-approximations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens if you call code that raises, without wrapping it in `pytest.raises`?",
+    "hint": "The exception has to go somewhere.",
+    "choices": [
+      {
+        "text": "The test fails, with the exception printed underneath as the reason that it failed",
+        "correct": false,
+        "why": "It is reported as a failure only when an assertion is what raised."
+      },
+      {
+        "text": "The test passes, since raising is what the code was expected to do",
+        "correct": false,
+        "why": "`pytest` has no way to know that was expected unless the test says so."
+      },
+      {
+        "text": "The exception escapes the test and the run reports it as an error rather than a failure",
+        "correct": true,
+        "why": "Which looks like a broken test rather than a proven behaviour."
+      },
+      {
+        "text": "The test is skipped, and the exception raised is attached to the skip reason as its cause",
+        "correct": false,
+        "why": "Skipping is something a test asks for explicitly."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jxtahgy",
+    "version": 1,
+    "section": "exceptions-and-approximations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `pytest.raises(KeyError)` with no `match` a weak assertion?",
+    "hint": "Think about where else that exception comes from.",
+    "choices": [
+      {
+        "text": "A typo in the test raises the same exception, and so does an unrelated lookup three frames down",
+        "correct": true,
+        "why": "`match` takes a regular expression searched against the message, which is what makes the assertion about this case."
+      },
+      {
+        "text": "`KeyError` is raised by too much of the standard library to be caught at all",
+        "correct": false,
+        "why": "It can be caught; the point is that catching it proves less than it looks."
+      },
+      {
+        "text": "Without a `match` the block catches every exception rather than that one type",
+        "correct": false,
+        "why": "It catches the type it was given and its subclasses."
+      },
+      {
+        "text": "The block passes even when nothing raised, since there is nothing to compare",
+        "correct": false,
+        "why": "A block where nothing raised fails with `DID NOT RAISE`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6p1rz2n",
+    "version": 1,
+    "section": "exceptions-and-approximations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`with pytest.raises(ValueError) as e:` — where do the assertions about `e.value` go?",
+    "hint": "Think about what runs after the raising line.",
+    "choices": [
+      {
+        "text": "Inside the block, before the call, using the exception's declared type",
+        "correct": false,
+        "why": "There is no exception to look at before the call."
+      },
+      {
+        "text": "In a `finally` attached to the `with`, since the block swallows the exception",
+        "correct": false,
+        "why": "A `with` takes no `finally` and the exception is available afterwards."
+      },
+      {
+        "text": "Outside the block",
+        "correct": true,
+        "why": "Inside it, nothing after the line that raised is reached."
+      },
+      {
+        "text": "Inside the block, immediately after the call that raises",
+        "correct": false,
+        "why": "That line is never reached, so the assertion never runs and the test passes hollow."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2n4gbav",
+    "version": 1,
+    "section": "exceptions-and-approximations",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`0.1 + 0.2` does not equal `0.3`, so compare with a tolerance: `assert 0.1 + 0.2 == pytest.______(0.3)`",
+    "hint": "Six letters.",
+    "blanks": [
+      {
+        "accept": [
+          "approx"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wzg5v9k5",
+    "version": 1,
+    "section": "exceptions-and-approximations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What should you NOT use `approx` for?",
+    "hint": "One kind of number compares exactly on purpose.",
+    "choices": [
+      {
+        "text": "A conversion between two units with a fractional factor in it",
+        "correct": false,
+        "why": "A fractional factor produces the representation error `approx` absorbs."
+      },
+      {
+        "text": "The mean of a column of measurements taken from a sensor",
+        "correct": false,
+        "why": "A mean is a division and comparing it exactly is the mistake `approx` prevents."
+      },
+      {
+        "text": "A rate read from an external service and multiplied out",
+        "correct": false,
+        "why": "That has been through a division and is exactly what `approx` is for."
+      },
+      {
+        "text": "Money, which is integer cents",
+        "correct": true,
+        "why": "Reaching for a tolerance there is agreeing in advance to be a cent out."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnt9rthc",
+    "version": 1,
+    "section": "test-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`from app.rates import total` in `tests/test_rates.py` gives `ModuleNotFoundError: No module named 'app'`. What fixes it?",
+    "hint": "A file with nothing in it.",
+    "choices": [
+      {
+        "text": "Moving `tests/` inside `app/`, so the import becomes a relative one",
+        "correct": false,
+        "why": "That ships the suite with the application and changes how it imports."
+      },
+      {
+        "text": "An empty `conftest.py` sitting at the project root, beside `pyproject.toml`",
+        "correct": true,
+        "why": "`pytest` treats the directory holding the topmost `conftest.py` as the root and puts it on `sys.path`."
+      },
+      {
+        "text": "A `PYTHONPATH=.` in front of the command, which is what a CI pipeline usually does",
+        "correct": false,
+        "why": "It works and it leaves the bare `pytest` broken for everybody running it by hand."
+      },
+      {
+        "text": "An `__init__.py` in `tests/`, which makes the suite a package",
+        "correct": false,
+        "why": "That fixes basename collisions between test files and does not put the root on the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-5srggqnt",
+    "version": 1,
+    "section": "test-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a `conftest.py` for, beyond that?",
+    "hint": "Something more than one file needs.",
+    "choices": [
+      {
+        "text": "Fixtures that the test files under its directory share",
+        "correct": true,
+        "why": "One in `tests/` is visible to everything under `tests/`; one in `tests/api/` to that subdirectory only."
+      },
+      {
+        "text": "Configuration, which is what its name is short for",
+        "correct": false,
+        "why": "Configuration lives in `pyproject.toml` or `pytest.ini`; this file holds code."
+      },
+      {
+        "text": "Imports that every test file needs, collected in one place",
+        "correct": false,
+        "why": "Each test file does its own importing; what is shared here are fixtures and hooks."
+      },
+      {
+        "text": "Registering the test files, so that collection knows where to look",
+        "correct": false,
+        "why": "Collection is by name and position and needs no registration."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnj5s9cd",
+    "version": 1,
+    "section": "test-layout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You leave `__init__.py` out of `tests/`. What breaks?",
+    "hint": "Two files, one name.",
+    "choices": [
+      {
+        "text": "The suite can no longer import the application at all, since the root is not on the path",
+        "correct": false,
+        "why": "That is what the root `conftest.py` settles, and it is a different question."
+      },
+      {
+        "text": "Parametrised ids stop being unique, since two tables may generate the same one",
+        "correct": false,
+        "why": "Ids are scoped to their function."
+      },
+      {
+        "text": "`tests/api/test_rates.py` and `tests/db/test_rates.py` collide on one module name",
+        "correct": true,
+        "why": "Without the package, both want the module name `test_rates`, and collection is interrupted."
+      },
+      {
+        "text": "Fixtures in `tests/conftest.py` stop being visible to the subdirectories",
+        "correct": false,
+        "why": "A `conftest.py` applies by position and needs no package around it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s53e2zb",
+    "version": 1,
+    "section": "test-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `--strict-markers` change?",
+    "hint": "Think about a marker nobody registered.",
+    "choices": [
+      {
+        "text": "A misspelled `@pytest.mark.slwo` becomes an error rather than a marker nothing selects",
+        "correct": true,
+        "why": "Without it the decorator is accepted, selects nothing, and the tests it was meant to tag run with everything else."
+      },
+      {
+        "text": "Markers may no longer be applied to a whole module or class",
+        "correct": false,
+        "why": "Module- and class-level markers are unaffected."
+      },
+      {
+        "text": "A marker without a reason string is rejected at collection",
+        "correct": false,
+        "why": "Reasons belong to `skip` and `xfail` and are not what this flag is about."
+      },
+      {
+        "text": "Built-in markers stop being available unless they are listed in the config",
+        "correct": false,
+        "why": "Built-ins are registered already."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m0mg3cp",
+    "version": 1,
+    "section": "test-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `tests/` usually sit beside `app/` rather than inside it?",
+    "hint": "Think about what gets published.",
+    "choices": [
+      {
+        "text": "A suite inside the package would be collected twice, once per path",
+        "correct": false,
+        "why": "It would be collected once."
+      },
+      {
+        "text": "The suite is not shipped with the application, and it imports it the way a user does",
+        "correct": true,
+        "why": "An import from outside is the same import your users write, so the packaging is exercised by the suite."
+      },
+      {
+        "text": "Coverage would count the test files themselves, inflating the number",
+        "correct": false,
+        "why": "`--cov=app` decides what is measured regardless of where the tests are."
+      },
+      {
+        "text": "Test files inside a package cannot use a `conftest.py`",
+        "correct": false,
+        "why": "They can; `conftest.py` works anywhere in the tree."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nf3rggv",
+    "version": 1,
+    "section": "doubles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`monkeypatch.setattr` versus a plain `setattr` in the test. What does the fixture add?",
+    "hint": "Think about the test after this one.",
+    "choices": [
+      {
+        "text": "It checks that the attribute exists before replacing it, catching a typo",
+        "correct": false,
+        "why": "It does check that, and the undoing is what a plain `setattr` cannot offer at all."
+      },
+      {
+        "text": "It records each of the calls made to the replacement, for an assertion later on",
+        "correct": false,
+        "why": "Recording calls is what a `Mock` is for."
+      },
+      {
+        "text": "It makes the replacement visible to every other module that imported the name earlier",
+        "correct": false,
+        "why": "Both change the same attribute on the same module object."
+      },
+      {
+        "text": "It undoes the change when the test ends, whatever happened while it was running",
+        "correct": true,
+        "why": "A hand-rolled `setattr` leaves the replacement in place for everything that runs afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6k92p1g",
+    "version": 1,
+    "section": "doubles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`patch(\"app.mailer.send\")` — why that target and not `app.email.send` where it is defined?",
+    "hint": "Think about which name the code looks up.",
+    "choices": [
+      {
+        "text": "Because `patch` cannot reach into a module that the test did not import",
+        "correct": false,
+        "why": "It imports whatever the target string names."
+      },
+      {
+        "text": "Because the definition is a function object and the target must be an attribute",
+        "correct": false,
+        "why": "Both are attributes of their respective modules."
+      },
+      {
+        "text": "Because that is the name the code under test looks up",
+        "correct": true,
+        "why": "`notify` resolves `send` in its own module's namespace, so that is the binding that has to change."
+      },
+      {
+        "text": "Because patching at the definition would change it for every other test too",
+        "correct": false,
+        "why": "`patch` undoes itself either way; the reason is which name is actually read."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p12jdd6",
+    "version": 1,
+    "section": "doubles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with `with patch(\"app.mailer.notify\") as m:` in a test of `notify`?",
+    "hint": "What is left to test?",
+    "choices": [
+      {
+        "text": "The function under test has been replaced, so what is left of the test only proves the mock",
+        "correct": true,
+        "why": "Green forever, demonstrating that a `Mock` returns what it was told to."
+      },
+      {
+        "text": "The mock has no `return_value` until one is set, so the assertion fails",
+        "correct": false,
+        "why": "The test sets one, and that is part of the problem rather than a fix for it."
+      },
+      {
+        "text": "Patching a name in the module being tested leaks into the tests that follow",
+        "correct": false,
+        "why": "`patch` used as a context manager undoes itself at the end of the block."
+      },
+      {
+        "text": "The patch target is a module attribute rather than a method on a class",
+        "correct": false,
+        "why": "`patch` handles both."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gv562px",
+    "version": 1,
+    "section": "doubles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`send.called_once_with(\"nothing\", \"like it\")` passes. Why?",
+    "hint": "What does a `Mock` do with a name it has not heard of?",
+    "choices": [
+      {
+        "text": "A `Mock` answers any attribute with another `Mock`, so the line records a call and asserts nothing",
+        "correct": true,
+        "why": "Python catches near-misses that start like an assertion; `called_once_with` starts with `c` and gets through."
+      },
+      {
+        "text": "The arguments happen to match what was called, so the assertion is satisfied",
+        "correct": false,
+        "why": "They do not match, and nothing compared them."
+      },
+      {
+        "text": "`called_once_with` is a deprecated alias that no longer checks anything",
+        "correct": false,
+        "why": "It is not an alias of anything; it is a name the mock invented on the spot."
+      },
+      {
+        "text": "The assertion ran inside the `with` and its result was discarded by the patch",
+        "correct": false,
+        "why": "The block discards nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9femtgg",
+    "version": 1,
+    "section": "doubles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `patch(..., autospec=True)` catch that a bare `patch` does not?",
+    "hint": "Think about the real function growing an argument.",
+    "choices": [
+      {
+        "text": "A call whose arguments do not match the real function's signature",
+        "correct": true,
+        "why": "A bare `Mock` accepts any arguments, so a test keeps passing after the real one grows a required parameter."
+      },
+      {
+        "text": "A call made after the patch has been undone by the context manager",
+        "correct": false,
+        "why": "Calling the restored original is not an error to detect."
+      },
+      {
+        "text": "An attribute read on the mock that the real object does not have",
+        "correct": false,
+        "why": "It catches that too, and the signature is the failure this question is about."
+      },
+      {
+        "text": "A return value of a type the real function is annotated as not returning",
+        "correct": false,
+        "why": "`autospec` copies signatures rather than checking annotations on returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-91g5ej6k",
+    "version": 1,
+    "section": "coverage",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which column of a `term-missing` coverage report is worth reading first?",
+    "hint": "One of them is a place to look.",
+    "choices": [
+      {
+        "text": "`Stmts`, which says how large the module is and therefore how much is at stake",
+        "correct": false,
+        "why": "Module size is context rather than a finding."
+      },
+      {
+        "text": "`Miss`, which counts the lines and is what the percentage is computed from",
+        "correct": false,
+        "why": "The count tells you how many and not which ones."
+      },
+      {
+        "text": "`Missing`",
+        "correct": true,
+        "why": "A percentage is a headline; the line numbers are somewhere to go."
+      },
+      {
+        "text": "`Cover`, which is the number the team agreed to hold above a floor",
+        "correct": false,
+        "why": "It is the one everybody reads and it names no line."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez2n5s4g",
+    "version": 1,
+    "section": "coverage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A module reports 100% coverage and contains a doubled tax that the suite does not catch. How?",
+    "hint": "Coverage measures one thing.",
+    "choices": [
+      {
+        "text": "Every line ran, and the only assertion made was one that is true of nearly every value there is",
+        "correct": true,
+        "why": "Coverage measures execution and cannot see an assertion, so a proven line and a line that merely happened look the same."
+      },
+      {
+        "text": "The test imported the module rather than calling it, which counts as covered",
+        "correct": false,
+        "why": "An import runs the definitions and would leave the bodies uncovered."
+      },
+      {
+        "text": "The coverage tool does not instrument arithmetic expressions inside a return",
+        "correct": false,
+        "why": "It instruments the statement, and the statement did run."
+      },
+      {
+        "text": "The doubled line was reported as partially covered and the report was rounded up",
+        "correct": false,
+        "why": "A partial branch would show as `BrPart`, and this is a plain statement."
+      }
+    ]
+  },
+  {
+    "id": "ex-450janj7",
+    "version": 1,
+    "section": "coverage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is coverage genuinely good at?",
+    "hint": "The other direction from a high number.",
+    "choices": [
+      {
+        "text": "Ranking modules by how well they are tested, so effort goes where it matters",
+        "correct": false,
+        "why": "Execution is not how well tested something is, which is this section's subject."
+      },
+      {
+        "text": "Listing the lines no test has ever run",
+        "correct": true,
+        "why": "That list is reliable and specific, and it is usually an error path somebody wrote and never exercised."
+      },
+      {
+        "text": "Showing which tests are worth keeping and which duplicate each other",
+        "correct": false,
+        "why": "It attributes nothing to a particular test by default."
+      },
+      {
+        "text": "Proving that a refactoring changed no behaviour, since the number is unchanged",
+        "correct": false,
+        "why": "The number is unchanged by a great many behaviour changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvqawcts",
+    "version": 1,
+    "section": "coverage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `--cov-branch` add?",
+    "hint": "Think about an `if` whose body always ran.",
+    "choices": [
+      {
+        "text": "It counts each branch as a statement of its own, which lowers the percentage honestly",
+        "correct": false,
+        "why": "It adds `Branch` and `BrPart` columns rather than reclassifying statements."
+      },
+      {
+        "text": "It reports a branch that was taken one way and never the other way through",
+        "correct": true,
+        "why": "Without it that `if` counts as covered even though the other way through it never ran."
+      },
+      {
+        "text": "It follows branches into the libraries the module calls",
+        "correct": false,
+        "why": "What is measured is decided by `--cov=`."
+      },
+      {
+        "text": "It reports which test took which branch, so a gap can be attributed",
+        "correct": false,
+        "why": "Attribution to a test is a separate feature."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8n8csah",
+    "version": 1,
+    "section": "coverage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `fail_under` defensible where a coverage target is not?",
+    "hint": "One stops something and the other asks for something.",
+    "choices": [
+      {
+        "text": "A floor applies to the whole project and a target is applied per module",
+        "correct": false,
+        "why": "Either can be scoped either way."
+      },
+      {
+        "text": "A floor is checked by the tool and a target has to be checked by a person",
+        "correct": false,
+        "why": "Both can be checked by the tool; what differs is the behaviour each one produces."
+      },
+      {
+        "text": "A floor is a build failure and a target is a warning nobody reads",
+        "correct": false,
+        "why": "A target can fail a build too, which is part of why it works as an incentive."
+      },
+      {
+        "text": "A floor stops the number falling; a target makes people write tests that touch lines",
+        "correct": true,
+        "why": "`assert result is not None` is what a target produces, and it is the assertion that proves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bpsny2g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bug report arrives. What is the first thing to write?",
+    "hint": "Before the fix, and before reading the module.",
+    "choices": [
+      {
+        "text": "The test that fails, from the report",
+        "correct": true,
+        "why": "A test written after the fix is one you cannot watch fail, and a test you have never seen fail is one you have not checked."
+      },
+      {
+        "text": "The fix, since the report already says what the wrong behaviour is",
+        "correct": false,
+        "why": "Then the test that follows is written against a module you have just changed."
+      },
+      {
+        "text": "A note on the issue naming the module that is probably responsible",
+        "correct": false,
+        "why": "That is a guess recorded before anything ran."
+      },
+      {
+        "text": "A parametrised table of the inputs around the one in the report",
+        "correct": false,
+        "why": "That is worth having and it is not the thing that turns a report into something that runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgsjbrjd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which failure does a type checker find and a test suite typically not?",
+    "hint": "Think about what each one covers.",
+    "choices": [
+      {
+        "text": "A discount applied twice on one code path through the module",
+        "correct": false,
+        "why": "Both values are numbers, so the types agree and a test is what catches it."
+      },
+      {
+        "text": "A caller in a file nobody wrote a test for, passing the wrong type",
+        "correct": true,
+        "why": "A checker reads everywhere; a suite reads where somebody pointed it."
+      },
+      {
+        "text": "A report that totals the wrong column of an otherwise correct table",
+        "correct": false,
+        "why": "Both columns are integers and the answer is wrong."
+      },
+      {
+        "text": "A retry loop that gives up one attempt earlier than it should",
+        "correct": false,
+        "why": "An off-by-one is correct in every type."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mv5x5sg",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The file, empty and at the project root, that makes `from app.rates import total` work from `tests/`: `______`",
+    "hint": "Its name ends in `.py`.",
+    "blanks": [
+      {
+        "accept": [
+          "conftest.py"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r99vd83r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fixture is changed from the default scope to `session`. Two tests that passed now fail when run together and pass alone. What happened?",
+    "hint": "One of them left something behind.",
+    "choices": [
+      {
+        "text": "The session scope builds the fixture lazily, so the second test gets `None`",
+        "correct": false,
+        "why": "It is built on first request and passed to every later one."
+      },
+      {
+        "text": "A session-scoped fixture may not be requested by more than one module",
+        "correct": false,
+        "why": "It may be requested by everything in the session, which is the point of it."
+      },
+      {
+        "text": "They are sharing one built object, and the first of them changed it",
+        "correct": true,
+        "why": "A wider scope is faster and it means one test can leave state behind for the next."
+      },
+      {
+        "text": "`pytest` reorders tests to group them by fixture, changing which ran first",
+        "correct": false,
+        "why": "It does group by fixture for efficiency, and the failure here is the shared state rather than the order."
+      }
+    ]
+  },
+  {
+    "id": "ex-s81g2gzr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these tests would survive a rename of a private helper inside the module?",
+    "hint": "One of them names the helper.",
+    "choices": [
+      {
+        "text": "One asserting the value that came back",
+        "correct": true,
+        "why": "A test coupled to the implementation goes red on a rename and green when the answer is wrong."
+      },
+      {
+        "text": "One asserting that the helper was called once with the right arguments",
+        "correct": false,
+        "why": "That is the implementation-coupled test, and the rename breaks it."
+      },
+      {
+        "text": "One patching the helper and asserting the patched version was reached",
+        "correct": false,
+        "why": "The patch target names the helper, so the rename breaks it too."
+      },
+      {
+        "text": "One asserting the helper's own return value through a direct call",
+        "correct": false,
+        "why": "It calls the helper by name, which the rename changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyn66hrx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`0.1 + 0.2 == 0.3` fails and `0.1 + 0.2 == pytest.approx(0.3)` passes. What is the second one worth beyond passing?",
+    "hint": "Look at what each prints when it fails.",
+    "choices": [
+      {
+        "text": "A readable failure: `assert 0.30000000000000004 == 0.4 ± 4.0e-07`",
+        "correct": true,
+        "why": "The plain assertion printed the expression and hid the value that mattered."
+      },
+      {
+        "text": "A tolerance that is recomputed from the magnitude of both operands",
+        "correct": false,
+        "why": "The default is relative to the expected value, and that is not the reporting difference."
+      },
+      {
+        "text": "An assertion that the checker in lesson 15 can verify statically",
+        "correct": false,
+        "why": "No checker reads a tolerance."
+      },
+      {
+        "text": "A comparison that does not depend on the platform's floating point",
+        "correct": false,
+        "why": "It depends on it and absorbs the difference."
+      }
+    ]
+  },
+  {
+    "id": "ex-yahqmx20",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A suite of four hundred tests takes nine minutes and one fixture connects to a database. What is the first thing to look at?",
+    "hint": "Think about how many times it is built.",
+    "choices": [
+      {
+        "text": "The fixture's scope",
+        "correct": true,
+        "why": "A `function` scope builds it four hundred times; a wider one builds it once per module or session."
+      },
+      {
+        "text": "The number of parametrised rows, which multiply faster than anybody expects",
+        "correct": false,
+        "why": "They do multiply, and four hundred tests is not by itself the problem here."
+      },
+      {
+        "text": "Whether assertions are being rewritten, which costs time at import",
+        "correct": false,
+        "why": "Rewriting happens once per file and is measured in milliseconds."
+      },
+      {
+        "text": "The `--cov` flag, which instruments every line of the module under test",
+        "correct": false,
+        "why": "Coverage does cost time, and a per-test database connection costs more."
+      }
+    ]
+  },
+  {
+    "id": "ex-zghba5wh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belongs in `pyproject.toml` rather than in the command you type?",
+    "hint": "Think about the bare `pytest` somebody else runs.",
+    "choices": [
+      {
+        "text": "`testpaths`, so a bare `pytest` does not walk the virtual environment",
+        "correct": true,
+        "why": "Settings in the file are what make your terminal and CI run the same thing."
+      },
+      {
+        "text": "`--lf`, so a rerun always picks up where the last one stopped",
+        "correct": false,
+        "why": "That would make a fresh full run something you have to ask for explicitly."
+      },
+      {
+        "text": "`-x`, so that a failing suite stops early for everybody working on the team",
+        "correct": false,
+        "why": "Stopping early is a choice about one run rather than a project setting."
+      },
+      {
+        "text": "`-k`, so that the slower tests are left out of whatever the default run is",
+        "correct": false,
+        "why": "Selecting by name in the config hides tests from everybody who forgets it is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-x88rstvy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test patches the clock, the network and the database, and asserts one thing. What is the risk?",
+    "hint": "Count what is left of the real system.",
+    "choices": [
+      {
+        "text": "A patched clock makes the test's timing assertions unreliable",
+        "correct": false,
+        "why": "A patched clock makes them deterministic, which is why it gets patched."
+      },
+      {
+        "text": "Three patches in one test is slower than three tests with one patch each",
+        "correct": false,
+        "why": "Speed is not the objection."
+      },
+      {
+        "text": "The patches may not be undone in the order they were applied",
+        "correct": false,
+        "why": "They are undone in reverse order and that is handled."
+      },
+      {
+        "text": "Almost nothing real is being exercised, so the test can pass while the system is broken",
+        "correct": true,
+        "why": "Reach for a double at a genuine boundary, and prefer a simple object you wrote over patching a name."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1qfr913",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `E` in a progress line like `..E.` mean?",
+    "hint": "Something happened before the test body.",
+    "choices": [
+      {
+        "text": "A test raised before its body started, as a fixture does when it fails",
+        "correct": true,
+        "why": "It is reported as an error rather than a failure, because no assertion was reached."
+      },
+      {
+        "text": "A test failed on an assertion, which is what an error in a suite is",
+        "correct": false,
+        "why": "That is `F`; an error is something that went wrong before the assertions."
+      },
+      {
+        "text": "A test was expected to fail and did, which `pytest` records separately",
+        "correct": false,
+        "why": "That is `x` for `xfail`."
+      },
+      {
+        "text": "A file could not be collected, which stops the run at that point",
+        "correct": false,
+        "why": "A collection failure is an `ERROR` line with no progress character."
+      }
+    ]
+  }
+]

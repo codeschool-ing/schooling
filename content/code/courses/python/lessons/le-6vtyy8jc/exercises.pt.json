@@ -1,0 +1,1158 @@
+{
+  "ex-p4nc7jjp": {
+    "prompt": "De que o `pytest` precisa para achar e rodar uma função de teste?",
+    "hint": "Dois nomes e nada mais.",
+    "choices": [
+      {
+        "text": "Um arquivo chamado `test_*.py` e, dentro dele, uma função cujo nome também começa com `test_`",
+        "why": "Nenhuma classe-base, nenhum registro, nenhum decorador — os dois nomes são tudo."
+      },
+      {
+        "text": "Um decorador do `pytest` em cada função, para a coleta conseguir enxergá-la",
+        "why": "Decoradores existem para parametrizar e marcar, e achar um teste é feito pelo nome."
+      },
+      {
+        "text": "Uma entrada no `pyproject.toml` listando os módulos que guardam testes",
+        "why": "`testpaths` estreita onde ele olha e não lista funções."
+      },
+      {
+        "text": "Uma classe herdando de `unittest.TestCase`, com o teste escrito como um método nela",
+        "why": "Isso funciona e é a exigência do framework mais antigo; o `pytest` roda essas também e não pede nenhuma das duas."
+      }
+    ]
+  },
+  "ex-3bbdpk0t": {
+    "prompt": "`test_slug.py .F` — o que o `F` diz?",
+    "hint": "Um caractere por teste.",
+    "choices": [
+      {
+        "text": "Dois testes rodaram e o arquivo terminou com um resumo de falha anexado",
+        "why": "Cada caractere é um teste, na ordem em que rodaram."
+      },
+      {
+        "text": "O arquivo em si não pôde ser coletado e foi relatado como uma unidade",
+        "why": "Uma falha de coleta é uma linha `ERROR` e o arquivo não ganha caractere de progresso."
+      },
+      {
+        "text": "O segundo teste falhou",
+        "why": "`.` passou, `F` falhou, `E` levantou antes de o corpo começar, `s` foi pulado."
+      },
+      {
+        "text": "O segundo teste levantou antes de o corpo começar, numa fixture ou no import",
+        "why": "Isso é `E`, que é relatado como erro e não como falha."
+      }
+    ]
+  },
+  "ex-rfd9m3gp": {
+    "prompt": "Você tem trinta falhas e quer só a primeira, e depois rodar de novo apenas o que falhou. Quais duas flags?",
+    "hint": "Uma para cedo, uma lembra.",
+    "choices": [
+      {
+        "text": "`-x` e `--lf`",
+        "why": "`-x` para na primeira falha e `--lf` roda só os que falharam da última vez."
+      },
+      {
+        "text": "`-q` e `-v`, que encurtam e alongam o que é impresso",
+        "why": "Essas mudam o detalhe do relatório e rodam os mesmos testes."
+      },
+      {
+        "text": "`-k` e `--tb=short`, que selecionam por nome e aparam o traceback",
+        "why": "`-k` é um filtro de nome e a flag do traceback é sobre apresentação."
+      },
+      {
+        "text": "`--ff` e `--sw`, que reordenam e percorrem a suíte passo a passo",
+        "why": "`--ff` põe as últimas falhas na frente e `--sw` anda passo a passo; nenhuma é o par descrito."
+      }
+    ]
+  },
+  "ex-fnrayddv": {
+    "prompt": "O que a CI de fato lê de uma rodada do `pytest`?",
+    "hint": "Um número.",
+    "choices": [
+      {
+        "text": "Um arquivo JUnit XML, que o `pytest` escreve em toda rodada",
+        "why": "Ele escreve um com `--junitxml=` e não por padrão."
+      },
+      {
+        "text": "A contagem na última linha, comparada com o total esperado",
+        "why": "O total esperado não é coisa que a CI saiba."
+      },
+      {
+        "text": "O bloco `short test summary info`, analisado em busca de linhas `FAILED`",
+        "why": "Um pipeline poderia analisar, e não precisa: o código de saída já diz."
+      },
+      {
+        "text": "O código de saída",
+        "why": "0 quando tudo passou e diferente de zero caso contrário. O resto da saída é para uma pessoa."
+      }
+    ]
+  },
+  "ex-hn24ggzx": {
+    "prompt": "Rode todo teste cujo nome contém `slug`, e nada mais: `pytest -______ slug`",
+    "hint": "Uma letra."
+  },
+  "ex-c1ve8gge": {
+    "prompt": "Por que um `assert` pelado produz um relatório útil sob o `pytest` e inútil em todo o resto?",
+    "hint": "Alguma coisa acontece no import.",
+    "choices": [
+      {
+        "text": "O `pytest` reescreve as asserções dos arquivos que coleta, segurando os operandos",
+        "why": "Um `AssertionError` pelado não carrega mensagem, então a reescrita é de onde vêm os dois valores."
+      },
+      {
+        "text": "O `pytest` captura o `AssertionError` e reexecuta a linha para ver os valores",
+        "why": "Reexecutar uma linha que falhou rodaria os efeitos colaterais dela uma segunda vez."
+      },
+      {
+        "text": "O Python guarda os dois operandos no objeto da exceção, e o `pytest` os lê de lá",
+        "why": "`AssertionError` não carrega nada além de uma mensagem opcional."
+      },
+      {
+        "text": "O `pytest` lê o arquivo-fonte e reconstrói os valores a partir do texto",
+        "why": "O texto sozinho dá a expressão, e os valores vêm da reescrita."
+      }
+    ]
+  },
+  "ex-snbgqrmk": {
+    "prompt": "Num bloco de falha, o que `-` e `+` querem dizer no diff sob as linhas `E`?",
+    "hint": "Um dos dois é seu.",
+    "choices": [
+      {
+        "text": "`-` é o valor esperado e `+` é o que chegou",
+        "why": "A linha `?` abaixo deles aponta o caractere que difere."
+      },
+      {
+        "text": "`-` é o que foi removido da string e `+` o que foi acrescentado a ela",
+        "why": "Nada foi removido nem acrescentado; os dois são valores distintos sendo comparados."
+      },
+      {
+        "text": "`-` é o operando da esquerda da comparação e `+` o da direita",
+        "why": "O diff é orientado por esperado contra obtido, não por qual lado foi escrito primeiro."
+      },
+      {
+        "text": "`-` marca uma linha que falhou e `+` uma linha que passou",
+        "why": "As duas linhas pertencem a uma asserção que falhou."
+      }
+    ]
+  },
+  "ex-dq1a013w": {
+    "prompt": "Por que ler um relatório do `pytest` de baixo para cima?",
+    "hint": "Pense em trinta falhas de uma vez.",
+    "choices": [
+      {
+        "text": "A linha de tempo no fundo é o que diz se a rodada foi completa",
+        "why": "Completude é o código de saída e as contagens, e o tempo é uma duração."
+      },
+      {
+        "text": "As falhas são impressas na ordem inversa, então o fundo é a mais antiga",
+        "why": "Elas são impressas na ordem em que rodaram."
+      },
+      {
+        "text": "O topo do relatório é a fase de coleta, que não é sobre os seus testes",
+        "why": "Erros de coleta ficam no topo e são muito sobre os seus testes."
+      },
+      {
+        "text": "O resumo lista toda falha em poucas linhas; o topo é só a primeira",
+        "why": "A primeira falha raramente é a interessante, e rolar para achar as outras custa mais que ler quatro linhas."
+      }
+    ]
+  },
+  "ex-ps4theth": {
+    "prompt": "`assert 0.1 + 0.2 == 0.3` falha com `E assert (0.1 + 0.2) == 0.3`. O que falta nesse relatório?",
+    "hint": "O número que explica a falha.",
+    "choices": [
+      {
+        "text": "O tipo da exceção, que foi engolido pela reescrita",
+        "why": "`AssertionError` é nomeado onde o tipo da exceção é relatado."
+      },
+      {
+        "text": "O nome do teste, que está só no resumo lá embaixo",
+        "why": "Ele está no cabeçalho do bloco de falha também."
+      },
+      {
+        "text": "O número da linha, que uma asserção reescrita não carrega",
+        "why": "A localização é impressa na linha abaixo do bloco `E`."
+      },
+      {
+        "text": "O valor que foi de fato produzido, que é `0.30000000000000004`",
+        "why": "A reescrita mostra a expressão aqui em vez da soma, que é exatamente o caso que o `approx` relata melhor."
+      }
+    ]
+  },
+  "ex-mhvv613w": {
+    "prompt": "O que o `>` marca num bloco de falha?",
+    "hint": "Uma linha entre as da função.",
+    "choices": [
+      {
+        "text": "A linha exata em que a falha aconteceu, dentro do corpo do teste",
+        "why": "As linhas acima dela são o resto do corpo da função, impressas como contexto."
+      },
+      {
+        "text": "O início da asserção reescrita, que ocupa as linhas abaixo dela",
+        "why": "A reescrita é invisível no relatório; o que é impresso é o seu código-fonte."
+      },
+      {
+        "text": "O valor esperado na comparação que falhou",
+        "why": "Os valores estão nas linhas `E`."
+      },
+      {
+        "text": "O ponto de entrada do traceback, com os quadros mais fundos abaixo",
+        "why": "Quadros mais fundos são impressos como blocos próprios com marcadores próprios."
+      }
+    ]
+  },
+  "ex-08ecxcy0": {
+    "prompt": "Por que `test_slugify_funciona` é um nome pior que `test_pontuacao_e_removida_de_um_slug`?",
+    "hint": "Leia-o com a CI vermelha e você cansado.",
+    "choices": [
+      {
+        "text": "O primeiro vai colidir com outro teste de mesmo nome em outro arquivo",
+        "why": "Dois arquivos podem guardar o mesmo nome de teste sem colisão."
+      },
+      {
+        "text": "O segundo é mais longo, e um nome mais longo é casado pelo `-k` com mais precisão",
+        "why": "O casamento com `-k` é efeito colateral; o relatório é a razão."
+      },
+      {
+        "text": "O primeiro esconde qual linha parametrizada falhou quando a tabela cresce",
+        "why": "O id da linha é acrescentado entre colchetes seja qual for o nome da função."
+      },
+      {
+        "text": "O segundo diz o que quebrou, então ninguém precisa abrir o arquivo para descobrir qual comportamento era",
+        "why": "A saída de uma suíte vira uma lista de frases sobre o sistema, e uma falha nomeia uma delas."
+      }
+    ]
+  },
+  "ex-kamarw33": {
+    "prompt": "O que há de errado com um teste que afirma seis fatos sobre `slugify`?",
+    "hint": "Pense no que você aprende de uma rodada.",
+    "choices": [
+      {
+        "text": "A primeira linha que falha esconde as cinco abaixo dela, então você aprende um fato por rodada",
+        "why": "Você conserta uma, roda de novo, acha a seguinte, e aprende o estado da função uma ida e volta por vez."
+      },
+      {
+        "text": "Um teste com seis asserções não é reescrito, então os valores não são impressos",
+        "why": "Toda asserção num arquivo coletado é reescrita."
+      },
+      {
+        "text": "A cobertura o conta uma vez, então o relatório subestima o que foi exercitado",
+        "why": "A cobertura conta linhas do módulo sob teste, não asserções."
+      },
+      {
+        "text": "Seis asserções seguidas é mais lento que seis funções, já que o módulo recarrega",
+        "why": "O módulo é importado uma vez de qualquer jeito, e velocidade não é a objeção."
+      }
+    ]
+  },
+  "ex-06vr71mv": {
+    "prompt": "`assert resultado is not None` depois de chamar `total`. O que o teste prova?",
+    "hint": "Que valores reprovam nessa checagem?",
+    "choices": [
+      {
+        "text": "Quase nada — a checagem é verdade sobre quase todo valor que uma função poderia devolver",
+        "why": "Toda linha do módulo rodou e a cobertura diz cem por cento, e um imposto dobrado passa por baixo."
+      },
+      {
+        "text": "Que a função voltou em vez de levantar, que é uma asserção de verdade",
+        "why": "Ela prova isso mesmo, e o relatório vai ler como um teste da aritmética, que ele não é."
+      },
+      {
+        "text": "Que a função devolveu um número, já que `None` é a alternativa",
+        "why": "Uma string, uma lista e um dicionário vazio passam também."
+      },
+      {
+        "text": "Que a aritmética produziu alguma coisa, que é a primeira coisa a conferir",
+        "why": "É a primeira coisa e não é o que o nome de um teste desses afirma."
+      }
+    ]
+  },
+  "ex-jdwyq0dv": {
+    "prompt": "Por que `assert mailer.send.called` é uma asserção pior que `assert enviados == [(\"a@b.c\", \"Welcome\")]`?",
+    "hint": "Pense no que cada uma fica vermelha.",
+    "choices": [
+      {
+        "text": "Fica vermelha quando você renomeia o auxiliar e verde quando a mensagem está errada",
+        "why": "Um teste acoplado à implementação encarece a refatoração e não acha nada, que é o pior das duas metades."
+      },
+      {
+        "text": "Depende de um mock, e um mock é mais lento de construir que uma lista",
+        "why": "O custo de construção é irrelevante nessa escala."
+      },
+      {
+        "text": "Afirma um booleano, que a reescrita não consegue imprimir de forma útil",
+        "why": "A reescrita imprime bem; o que ela imprime é que não informa nada sobre comportamento."
+      },
+      {
+        "text": "Lê um atributo privado do dublê, que uma versão futura pode renomear",
+        "why": "`called` faz parte da interface documentada de um `Mock`."
+      }
+    ]
+  },
+  "ex-32sjht1c": {
+    "prompt": "Qual destes é a coisa mais valiosa para a qual acrescentar um teste?",
+    "hint": "Pense em onde o código foi escrito a partir de um retrato do caso comum.",
+    "choices": [
+      {
+        "text": "A borda — uma lista vazia, um zero, um elemento só, o último dia de um mês",
+        "why": "Essas são exatamente as entradas que o autor não estava imaginando enquanto escrevia o corpo."
+      },
+      {
+        "text": "Uma segunda entrada comum, que confirma que o comportamento não foi coincidência de um valor",
+        "why": "Isso aumenta um pouco a confiança e exercita o mesmo caminho que a primeira."
+      },
+      {
+        "text": "Um getter que devolve um atributo guardado, por causa do número",
+        "why": "Isso é uma linha tocada por cobertura e não um comportamento de que alguém duvidava."
+      },
+      {
+        "text": "O auxiliar privado, para uma mudança dentro dele ser relatada na hora",
+        "why": "Testar um auxiliar privado é o teste acoplado à implementação de uma seção acima."
+      }
+    ]
+  },
+  "ex-wvggy2k6": {
+    "prompt": "Como um teste diz qual fixture ele quer?",
+    "hint": "Olhe a assinatura.",
+    "choices": [
+      {
+        "text": "Importando-a do `conftest.py` em que ela está definida",
+        "why": "Nada importa um `conftest.py`; o `pytest` o acha pelo nome e pela posição."
+      },
+      {
+        "text": "Listando-a num decorador `@pytest.mark.usefixtures`",
+        "why": "Isso existe e é para fixtures cujo valor o teste não precisa."
+      },
+      {
+        "text": "Chamando-a, do jeito que qualquer outra função é chamada",
+        "why": "Chamar uma função de fixture direto é um erro no `pytest` moderno."
+      },
+      {
+        "text": "Recebendo o nome dela como argumento",
+        "why": "O `pytest` acha a fixture com aquele nome, roda, e passa o que ela devolveu."
+      }
+    ]
+  },
+  "ex-6t7n1w5s": {
+    "prompt": "O que roda depois do `yield` de uma fixture, e quando?",
+    "hint": "Duas perguntas, e a segunda é a interessante.",
+    "choices": [
+      {
+        "text": "A montagem do teste seguinte, já que a fixture é reaproveitada no escopo",
+        "why": "Um escopo novo monta a fixture de novo desde o topo."
+      },
+      {
+        "text": "A desmontagem, desde que o teste tenha passado e não tenha levantado exceção",
+        "why": "Ela roda depois de uma falha também, que é o ponto inteiro de estar ali."
+      },
+      {
+        "text": "Nada — a forma com `yield` existe para a fixture ser um gerador e termina ali",
+        "why": "Tudo depois do `yield` é a desmontagem e roda mesmo."
+      },
+      {
+        "text": "A desmontagem, e ela roda tendo o teste passado ou falhado",
+        "why": "É a parte que um `try`/`finally` escrito em cada teste erraria uma hora."
+      }
+    ]
+  },
+  "ex-67a4c0br": {
+    "prompt": "Uma fixture está com `scope=\"module\"` em vez do padrão. O que você comprou e o que arriscou?",
+    "hint": "Uma montagem em vez de muitas.",
+    "choices": [
+      {
+        "text": "Velocidade, ao custo de um teste poder deixar estado para aquele que roda em seguida",
+        "why": "Uma linha inserida, um arquivo escrito, um contador avançado — pegue o escopo mais estreito que seja rápido o bastante."
+      },
+      {
+        "text": "Paralelismo, já que uma fixture de escopo de módulo pode ser montada num trabalhador próprio",
+        "why": "Distribuir testes é trabalho de um plugin e não é o que um escopo decide."
+      },
+      {
+        "text": "Isolamento, já que os testes de um módulo deixam de compartilhar a fixture",
+        "why": "É o contrário: um escopo de módulo é onde eles começam a compartilhá-la."
+      },
+      {
+        "text": "Ordem, já que o `pytest` passa a rodar os testes do módulo na ordem de declaração",
+        "why": "A ordem de declaração já é o padrão e um escopo não muda isso."
+      }
+    ]
+  },
+  "ex-ngw2rn5q": {
+    "prompt": "Qual fixture embutida dá a um teste um diretório novo com o nome dele?",
+    "hint": "É uma palavra.",
+    "choices": [
+      {
+        "text": "`tmp_path`",
+        "why": "Ela devolve um `pathlib.Path` sob `/tmp/pytest-of-voce/pytest-0/<nome do teste>0/`."
+      },
+      {
+        "text": "`monkeypatch`, cujo `chdir` põe o teste num diretório próprio",
+        "why": "`chdir` leva você para dentro de um diretório e não cria um."
+      },
+      {
+        "text": "`caplog`, que recolhe os registros escritos durante o teste",
+        "why": "`caplog` é sobre registros de log."
+      },
+      {
+        "text": "`capsys`, que captura o que o teste escreveu e onde ele escreveu",
+        "why": "`capsys` captura a saída padrão e a de erro, não um diretório."
+      }
+    ]
+  },
+  "ex-s9vd5rsk": {
+    "prompt": "Uma fixture recebe outra fixture como argumento. O que o `pytest` faz?",
+    "hint": "A mesma coisa que faz para um teste.",
+    "choices": [
+      {
+        "text": "Ele passa a própria função da fixture, sem chamar, para a fixture usar",
+        "why": "Ele passa o valor, exatamente como faz para um teste."
+      },
+      {
+        "text": "Ele recusa, porque uma fixture só pode ser pedida por uma função de teste",
+        "why": "Fixtures pedem fixtures do mesmo jeito que testes pedem."
+      },
+      {
+        "text": "Ele monta a dependência primeiro e a passa adiante, descobrindo a ordem sozinho",
+        "why": "É assim que uma cadeia de montagem é escrita uma vez e reaproveitada."
+      },
+      {
+        "text": "Ele a monta uma vez por sessão seja qual for o escopo declarado em qualquer uma delas",
+        "why": "Cada fixture é montada conforme o escopo dela."
+      }
+    ]
+  },
+  "ex-z0946mhc": {
+    "prompt": "Quatro linhas num decorador `parametrize`. Quantos testes rodam?",
+    "hint": "Conte as linhas.",
+    "choices": [
+      {
+        "text": "Quatro",
+        "why": "Cada linha roda por conta própria, ganha o próprio nome entre colchetes, e falha por conta própria."
+      },
+      {
+        "text": "Um, com quatro asserções dentro e um nome no relatório",
+        "why": "Esse é o laço que este decorador existe para substituir."
+      },
+      {
+        "text": "Cinco — as quatro linhas mais a própria função sem decorador",
+        "why": "A função sem decorador não é coletada à parte."
+      },
+      {
+        "text": "Quatro se todas passarem, e uma entrada de falha cobrindo toda linha que não passou",
+        "why": "Cada linha relata o próprio resultado."
+      }
+    ]
+  },
+  "ex-0fy2eb9c": {
+    "prompt": "O que um laço `for` sobre uma tabela de casos custa a você e o decorador não?",
+    "hint": "Pense na segunda linha ruim.",
+    "choices": [
+      {
+        "text": "Ele não consegue usar fixtures, já que o corpo do laço não é uma função de teste",
+        "why": "O teste que o contém recebe as fixtures normalmente e o corpo pode usá-las."
+      },
+      {
+        "text": "Ele para na primeira linha ruim e não te conta nada sobre nenhuma das seguintes",
+        "why": "O decorador relata cada linha à parte, que é a razão inteira de escrever assim."
+      },
+      {
+        "text": "Ele é mais lento, já que asserções dentro de um laço não são reescritas",
+        "why": "Asserções dentro de um laço num arquivo coletado são reescritas também."
+      },
+      {
+        "text": "Ele roda os casos numa ordem que o relatório não registra em lugar nenhum",
+        "why": "A ordem é a ordem da tabela nos dois arranjos."
+      }
+    ]
+  },
+  "ex-yr71j7y2": {
+    "prompt": "`pytest \"test_slug.py::test_slugify[ALL CAPS-all-caps]\"`. Por que as aspas?",
+    "hint": "Pense em quem roda o comando.",
+    "choices": [
+      {
+        "text": "Colchetes e espaços pertencem ao shell se nada os proteger",
+        "why": "O id entre colchetes é um endereço de verdade e as aspas são o que o entrega inteiro."
+      },
+      {
+        "text": "O `pytest` exige que um argumento contendo `::` venha entre aspas",
+        "why": "O separador passa sem aspas; colchetes e espaços é que são o problema."
+      },
+      {
+        "text": "Sem elas o id é lido como caminho de arquivo e a rodada não acha nada",
+        "why": "Ele seria desfigurado pelo shell antes de o `pytest` sequer vê-lo."
+      },
+      {
+        "text": "O id contém uma expressão regular, que o shell expandiria",
+        "why": "O id é literal, e o globbing do shell é o que os colchetes disparam."
+      }
+    ]
+  },
+  "ex-3h9bhc74": {
+    "prompt": "Dois decoradores `parametrize` empilhados, um com dois valores e outro com três. Quantos testes?",
+    "hint": "Não são cinco.",
+    "choices": [
+      {
+        "text": "Seis — toda combinação",
+        "why": "Isso multiplica, então três deles é uma suíte que ninguém quis escrever."
+      },
+      {
+        "text": "Cinco, já que as linhas das duas tabelas rodam uma depois da outra",
+        "why": "Empilhar produz um produto e não uma concatenação."
+      },
+      {
+        "text": "Três, já que a tabela mais curta é completada até casar com a mais longa",
+        "why": "Nada é completado."
+      },
+      {
+        "text": "Dois, já que o decorador de fora decide quantas vezes o de dentro roda",
+        "why": "Os dois se aplicam e o resultado é o produto deles."
+      }
+    ]
+  },
+  "ex-svm3339h": {
+    "prompt": "Quando um caso deve sair da tabela do `parametrize` e virar um teste próprio?",
+    "hint": "Olhe o corpo.",
+    "choices": [
+      {
+        "text": "Quando a tabela passa de dez linhas, que é onde os ids deixam de ser legíveis",
+        "why": "`id=` conserta ids ilegíveis e a contagem de linhas sozinha não decide nada."
+      },
+      {
+        "text": "Quando os argumentos são objetos em vez de strings e números",
+        "why": "Objetos servem como argumento e só os ids gerados deles precisam de nome."
+      },
+      {
+        "text": "Quando espera-se que uma linha falhe, já que o decorador não tem como dizer isso",
+        "why": "`pytest.param(..., marks=pytest.mark.xfail)` diz exatamente isso."
+      },
+      {
+        "text": "Quando o corpo ganha um `if` sobre qual das linhas ele está rodando",
+        "why": "Uma linha que precisa da própria montagem, ou cuja asserção é outra frase, deixou de ser uma linha."
+      }
+    ]
+  },
+  "ex-bkd3tzvg": {
+    "prompt": "O que acontece se você chamar código que levanta, sem envolver num `pytest.raises`?",
+    "hint": "A exceção tem de ir a algum lugar.",
+    "choices": [
+      {
+        "text": "O teste falha, com a exceção impressa embaixo como a razão de ele ter falhado",
+        "why": "Ele é relatado como falha só quando foi uma asserção que levantou."
+      },
+      {
+        "text": "O teste passa, já que levantar era o que o código devia fazer",
+        "why": "O `pytest` não tem como saber que isso era esperado a menos que o teste diga."
+      },
+      {
+        "text": "A exceção escapa do teste e a rodada a relata como erro e não como falha",
+        "why": "O que parece um teste quebrado em vez de um comportamento provado."
+      },
+      {
+        "text": "O teste é pulado, e a exceção levantada é anexada à razão do pulo como causa",
+        "why": "Pular é coisa que um teste pede explicitamente."
+      }
+    ]
+  },
+  "ex-4jxtahgy": {
+    "prompt": "Por que `pytest.raises(KeyError)` sem `match` é uma asserção fraca?",
+    "hint": "Pense de onde mais essa exceção vem.",
+    "choices": [
+      {
+        "text": "Um erro de digitação no teste levanta a mesma exceção, e uma busca sem relação três quadros abaixo também",
+        "why": "`match` recebe uma expressão regular procurada na mensagem, que é o que torna a asserção sobre este caso."
+      },
+      {
+        "text": "`KeyError` é levantada por tanta coisa da biblioteca padrão que nem dá para capturar",
+        "why": "Dá para capturar; o ponto é que capturar prova menos do que parece."
+      },
+      {
+        "text": "Sem um `match` o bloco captura toda exceção em vez daquele tipo",
+        "why": "Ele captura o tipo que recebeu e as subclasses dele."
+      },
+      {
+        "text": "O bloco passa mesmo quando nada levantou, já que não há o que comparar",
+        "why": "Um bloco em que nada levantou falha com `DID NOT RAISE`."
+      }
+    ]
+  },
+  "ex-y6p1rz2n": {
+    "prompt": "`with pytest.raises(ValueError) as e:` — onde vão as asserções sobre `e.value`?",
+    "hint": "Pense no que roda depois da linha que levanta.",
+    "choices": [
+      {
+        "text": "Dentro do bloco, antes da chamada, usando o tipo declarado da exceção",
+        "why": "Não há exceção para olhar antes da chamada."
+      },
+      {
+        "text": "Num `finally` ligado ao `with`, já que o bloco engole a exceção",
+        "why": "Um `with` não recebe `finally` e a exceção fica disponível depois."
+      },
+      {
+        "text": "Fora do bloco",
+        "why": "Dentro dele, nada depois da linha que levantou é alcançado."
+      },
+      {
+        "text": "Dentro do bloco, logo depois da chamada que levanta",
+        "why": "Aquela linha nunca é alcançada, então a asserção nunca roda e o teste passa oco."
+      }
+    ]
+  },
+  "ex-j2n4gbav": {
+    "prompt": "`0.1 + 0.2` não é igual a `0.3`, então compare com uma tolerância: `assert 0.1 + 0.2 == pytest.______(0.3)`",
+    "hint": "Seis letras."
+  },
+  "ex-wzg5v9k5": {
+    "prompt": "Para o que você NÃO deve usar o `approx`?",
+    "hint": "Um tipo de número compara exatamente de propósito.",
+    "choices": [
+      {
+        "text": "Uma conversão entre duas unidades com um fator fracionário dentro",
+        "why": "Um fator fracionário produz o erro de representação que o `approx` absorve."
+      },
+      {
+        "text": "A média de uma coluna de medidas tiradas de um sensor",
+        "why": "Uma média é uma divisão e compará-la exatamente é o engano que o `approx` evita."
+      },
+      {
+        "text": "Uma taxa lida de um serviço externo e multiplicada",
+        "why": "Isso passou por uma divisão e é exatamente para o que o `approx` serve."
+      },
+      {
+        "text": "Dinheiro, que é centavo inteiro",
+        "why": "Recorrer a uma tolerância ali é concordar de antemão em errar por um centavo."
+      }
+    ]
+  },
+  "ex-dnt9rthc": {
+    "prompt": "`from app.rates import total` em `tests/test_rates.py` dá `ModuleNotFoundError: No module named 'app'`. O que conserta?",
+    "hint": "Um arquivo sem nada dentro.",
+    "choices": [
+      {
+        "text": "Mover `tests/` para dentro de `app/`, para o import virar um relativo",
+        "why": "Isso publica a suíte com a aplicação e muda como ela importa."
+      },
+      {
+        "text": "Um `conftest.py` vazio na raiz do projeto, ao lado do `pyproject.toml`",
+        "why": "O `pytest` trata o diretório que contém o `conftest.py` mais alto como a raiz e o põe no `sys.path`."
+      },
+      {
+        "text": "Um `PYTHONPATH=.` na frente do comando, que é o que um pipeline de CI costuma fazer",
+        "why": "Funciona e deixa o `pytest` pelado quebrado para todo mundo que roda na mão."
+      },
+      {
+        "text": "Um `__init__.py` em `tests/`, que faz da suíte um pacote",
+        "why": "Isso conserta colisões de nome de base entre arquivos de teste e não põe a raiz no caminho."
+      }
+    ]
+  },
+  "ex-5srggqnt": {
+    "prompt": "Para que serve um `conftest.py`, além disso?",
+    "hint": "Alguma coisa de que mais de um arquivo precisa.",
+    "choices": [
+      {
+        "text": "Fixtures que os arquivos de teste sob o diretório dele compartilham",
+        "why": "Um em `tests/` é visível para tudo sob `tests/`; um em `tests/api/` só para aquele subdiretório."
+      },
+      {
+        "text": "Configuração, que é para o que o nome dele é abreviação",
+        "why": "Configuração mora no `pyproject.toml` ou no `pytest.ini`; este arquivo guarda código."
+      },
+      {
+        "text": "Imports de que todo arquivo de teste precisa, reunidos num lugar",
+        "why": "Cada arquivo de teste faz os próprios imports; o que se compartilha aqui são fixtures e ganchos."
+      },
+      {
+        "text": "Registrar os arquivos de teste, para a coleta saber onde olhar",
+        "why": "A coleta é por nome e posição e não precisa de registro."
+      }
+    ]
+  },
+  "ex-mnj5s9cd": {
+    "prompt": "Você deixa o `__init__.py` de fora de `tests/`. O que quebra?",
+    "hint": "Dois arquivos, um nome.",
+    "choices": [
+      {
+        "text": "A suíte deixa de conseguir importar a aplicação, já que a raiz não está no caminho",
+        "why": "Isso é o que o `conftest.py` da raiz resolve, e é outra questão."
+      },
+      {
+        "text": "Ids parametrizados deixam de ser únicos, já que duas tabelas podem gerar o mesmo",
+        "why": "Ids são limitados à função deles."
+      },
+      {
+        "text": "`tests/api/test_rates.py` e `tests/db/test_rates.py` colidem num nome de módulo",
+        "why": "Sem o pacote, os dois querem o nome de módulo `test_rates`, e a coleta é interrompida."
+      },
+      {
+        "text": "Fixtures em `tests/conftest.py` deixam de ser visíveis para os subdiretórios",
+        "why": "Um `conftest.py` se aplica pela posição e não precisa de pacote em volta."
+      }
+    ]
+  },
+  "ex-0s53e2zb": {
+    "prompt": "O que o `--strict-markers` muda?",
+    "hint": "Pense num marcador que ninguém registrou.",
+    "choices": [
+      {
+        "text": "Um `@pytest.mark.slwo` escrito errado vira erro em vez de um marcador que nada seleciona",
+        "why": "Sem ele o decorador é aceito, não seleciona nada, e os testes que ele devia marcar rodam com todos os outros."
+      },
+      {
+        "text": "Marcadores deixam de poder ser aplicados a um módulo ou a uma classe inteira",
+        "why": "Marcadores de módulo e de classe não são afetados."
+      },
+      {
+        "text": "Um marcador sem uma razão em texto é recusado na coleta",
+        "why": "Razões pertencem a `skip` e `xfail` e não são o assunto desta flag."
+      },
+      {
+        "text": "Marcadores embutidos deixam de existir a menos que sejam listados na configuração",
+        "why": "Os embutidos já vêm registrados."
+      }
+    ]
+  },
+  "ex-0m0mg3cp": {
+    "prompt": "Por que `tests/` em geral fica ao lado de `app/` e não dentro dele?",
+    "hint": "Pense no que é publicado.",
+    "choices": [
+      {
+        "text": "Uma suíte dentro do pacote seria coletada duas vezes, uma por caminho",
+        "why": "Ela seria coletada uma vez."
+      },
+      {
+        "text": "A suíte não é publicada com a aplicação, e a importa do jeito que um usuário importa",
+        "why": "Um import de fora é o mesmo que os seus usuários escrevem, então o empacotamento é exercitado pela suíte."
+      },
+      {
+        "text": "A cobertura contaria os próprios arquivos de teste, inflando o número",
+        "why": "`--cov=app` decide o que é medido seja onde for que os testes estejam."
+      },
+      {
+        "text": "Arquivos de teste dentro de um pacote não podem usar um `conftest.py`",
+        "why": "Podem; `conftest.py` funciona em qualquer ponto da árvore."
+      }
+    ]
+  },
+  "ex-8nf3rggv": {
+    "prompt": "`monkeypatch.setattr` contra um `setattr` comum no teste. O que a fixture acrescenta?",
+    "hint": "Pense no teste depois deste.",
+    "choices": [
+      {
+        "text": "Ela confere que o atributo existe antes de substituir, pegando um erro de digitação",
+        "why": "Ela confere isso mesmo, e desfazer é o que um `setattr` comum não oferece de jeito nenhum."
+      },
+      {
+        "text": "Ela registra cada uma das chamadas feitas à substituição, para uma asserção depois",
+        "why": "Registrar chamadas é para o que serve um `Mock`."
+      },
+      {
+        "text": "Ela torna a substituição visível para todo outro módulo que importou o nome antes",
+        "why": "Os dois mudam o mesmo atributo no mesmo objeto de módulo."
+      },
+      {
+        "text": "Ela desfaz a mudança quando o teste acaba, seja lá o que houve enquanto ele rodava",
+        "why": "Um `setattr` na mão deixa a substituição no lugar para tudo o que rodar depois."
+      }
+    ]
+  },
+  "ex-c6k92p1g": {
+    "prompt": "`patch(\"app.mailer.send\")` — por que esse alvo e não `app.email.send`, onde ela é definida?",
+    "hint": "Pense em qual nome o código procura.",
+    "choices": [
+      {
+        "text": "Porque o `patch` não alcança um módulo que o teste não importou",
+        "why": "Ele importa o que quer que o texto do alvo nomeie."
+      },
+      {
+        "text": "Porque a definição é um objeto função e o alvo precisa ser um atributo",
+        "why": "Os dois são atributos dos respectivos módulos."
+      },
+      {
+        "text": "Porque é esse o nome que o código sob teste procura",
+        "why": "`notify` resolve `send` no espaço de nomes do próprio módulo, então é essa a ligação que tem de mudar."
+      },
+      {
+        "text": "Porque trocar na definição mudaria para todo outro teste também",
+        "why": "O `patch` se desfaz dos dois jeitos; a razão é qual nome é de fato lido."
+      }
+    ]
+  },
+  "ex-7p12jdd6": {
+    "prompt": "O que há de errado com `with patch(\"app.mailer.notify\") as m:` num teste de `notify`?",
+    "hint": "O que sobrou para testar?",
+    "choices": [
+      {
+        "text": "A função sob teste foi substituída, então o que sobra do teste só prova o mock",
+        "why": "Verde para sempre, demonstrando que um `Mock` devolve o que mandaram."
+      },
+      {
+        "text": "O mock não tem `return_value` até um ser definido, então a asserção falha",
+        "why": "O teste define um, e isso é parte do problema e não um conserto."
+      },
+      {
+        "text": "Trocar um nome no módulo sob teste vaza para os testes seguintes",
+        "why": "O `patch` usado como gerenciador de contexto se desfaz no fim do bloco."
+      },
+      {
+        "text": "O alvo do patch é um atributo de módulo e não um método de uma classe",
+        "why": "O `patch` dá conta dos dois."
+      }
+    ]
+  },
+  "ex-6gv562px": {
+    "prompt": "`send.called_once_with(\"nada\", \"parecido\")` passa. Por quê?",
+    "hint": "O que um `Mock` faz com um nome de que nunca ouviu falar?",
+    "choices": [
+      {
+        "text": "Um `Mock` responde qualquer atributo com outro `Mock`, então a linha registra uma chamada e não afirma nada",
+        "why": "O Python pega quase-acertos que começam como uma asserção; `called_once_with` começa com `c` e passa."
+      },
+      {
+        "text": "Os argumentos por acaso casam com o que foi chamado, então a asserção se satisfaz",
+        "why": "Eles não casam, e nada os comparou."
+      },
+      {
+        "text": "`called_once_with` é um apelido obsoleto que já não confere nada",
+        "why": "Não é apelido de nada; é um nome que o mock inventou na hora."
+      },
+      {
+        "text": "A asserção rodou dentro do `with` e o resultado dela foi descartado pelo patch",
+        "why": "O bloco não descarta nada."
+      }
+    ]
+  },
+  "ex-p9femtgg": {
+    "prompt": "O que `patch(..., autospec=True)` pega que um `patch` pelado não pega?",
+    "hint": "Pense na função de verdade ganhando um argumento.",
+    "choices": [
+      {
+        "text": "Uma chamada cujos argumentos não casam com a assinatura da função de verdade",
+        "why": "Um `Mock` pelado aceita quaisquer argumentos, então um teste segue passando depois de a de verdade ganhar um parâmetro obrigatório."
+      },
+      {
+        "text": "Uma chamada feita depois de o patch ter sido desfeito pelo gerenciador de contexto",
+        "why": "Chamar o original restaurado não é um erro a detectar."
+      },
+      {
+        "text": "Um atributo lido no mock que o objeto de verdade não tem",
+        "why": "Ele pega isso também, e a assinatura é a falha de que esta questão trata."
+      },
+      {
+        "text": "Um valor de retorno de um tipo que a função de verdade está anotada como não devolvendo",
+        "why": "`autospec` copia assinaturas em vez de conferir anotações de retorno."
+      }
+    ]
+  },
+  "ex-91g5ej6k": {
+    "prompt": "Qual coluna de um relatório de cobertura `term-missing` vale ler primeiro?",
+    "hint": "Uma delas é um lugar onde olhar.",
+    "choices": [
+      {
+        "text": "`Stmts`, que diz o tamanho do módulo e portanto o quanto está em jogo",
+        "why": "Tamanho de módulo é contexto e não um achado."
+      },
+      {
+        "text": "`Miss`, que conta as linhas e é de onde a porcentagem é calculada",
+        "why": "A contagem diz quantas e não quais."
+      },
+      {
+        "text": "`Missing`",
+        "why": "Uma porcentagem é manchete; os números de linha são um lugar aonde ir."
+      },
+      {
+        "text": "`Cover`, que é o número que a equipe combinou manter acima de um piso",
+        "why": "É o que todo mundo lê e não nomeia linha nenhuma."
+      }
+    ]
+  },
+  "ex-ez2n5s4g": {
+    "prompt": "Um módulo relata 100% de cobertura e contém um imposto dobrado que a suíte não pega. Como?",
+    "hint": "A cobertura mede uma coisa.",
+    "choices": [
+      {
+        "text": "Toda linha rodou, e a única asserção feita foi uma que é verdade sobre quase todo valor que existe",
+        "why": "A cobertura mede execução e não enxerga asserção, então uma linha provada e uma linha que apenas aconteceu são iguais para ela."
+      },
+      {
+        "text": "O teste importou o módulo em vez de chamá-lo, o que já conta como coberto",
+        "why": "Um import roda as definições e deixaria os corpos descobertos."
+      },
+      {
+        "text": "A ferramenta de cobertura não instrumenta expressões aritméticas dentro de um return",
+        "why": "Ela instrumenta a instrução, e a instrução rodou."
+      },
+      {
+        "text": "A linha dobrada foi relatada como parcialmente coberta e o relatório arredondou",
+        "why": "Um ramo parcial apareceria como `BrPart`, e esta é uma instrução comum."
+      }
+    ]
+  },
+  "ex-450janj7": {
+    "prompt": "Para o que a cobertura é genuinamente boa?",
+    "hint": "A direção oposta a um número alto.",
+    "choices": [
+      {
+        "text": "Ordenar módulos por quão bem testados são, para o esforço ir onde importa",
+        "why": "Execução não é quão bem testado algo é, que é o assunto desta seção."
+      },
+      {
+        "text": "Listar as linhas que teste nenhum jamais rodou",
+        "why": "Essa lista é confiável e específica, e em geral é um caminho de erro que alguém escreveu e nunca exercitou."
+      },
+      {
+        "text": "Mostrar quais testes valem ser mantidos e quais se duplicam",
+        "why": "Ela não atribui nada a um teste em particular por padrão."
+      },
+      {
+        "text": "Provar que uma refatoração não mudou comportamento, já que o número não mudou",
+        "why": "O número não muda com uma grande quantidade de mudanças de comportamento."
+      }
+    ]
+  },
+  "ex-fvqawcts": {
+    "prompt": "O que o `--cov-branch` acrescenta?",
+    "hint": "Pense num `if` cujo corpo sempre rodou.",
+    "choices": [
+      {
+        "text": "Ele conta cada ramo como uma instrução própria, o que baixa a porcentagem honestamente",
+        "why": "Ele acrescenta as colunas `Branch` e `BrPart` em vez de reclassificar instruções."
+      },
+      {
+        "text": "Ele relata um ramo que foi tomado num sentido e nunca no outro",
+        "why": "Sem ele aquele `if` conta como coberto mesmo que o outro caminho por ele nunca tenha rodado."
+      },
+      {
+        "text": "Ele segue ramos para dentro das bibliotecas que o módulo chama",
+        "why": "O que é medido é decidido pelo `--cov=`."
+      },
+      {
+        "text": "Ele relata qual teste tomou qual ramo, para uma lacuna poder ser atribuída",
+        "why": "Atribuir a um teste é outro recurso."
+      }
+    ]
+  },
+  "ex-m8n8csah": {
+    "prompt": "Por que `fail_under` é defensável onde uma meta de cobertura não é?",
+    "hint": "Um impede alguma coisa e o outro pede alguma coisa.",
+    "choices": [
+      {
+        "text": "Um piso vale para o projeto inteiro e uma meta é aplicada por módulo",
+        "why": "Qualquer um dos dois pode ser delimitado de qualquer jeito."
+      },
+      {
+        "text": "Um piso é conferido pela ferramenta e uma meta tem de ser conferida por uma pessoa",
+        "why": "Os dois podem ser conferidos pela ferramenta; o que difere é o comportamento que cada um produz."
+      },
+      {
+        "text": "Um piso é uma falha de build e uma meta é um aviso que ninguém lê",
+        "why": "Uma meta pode reprovar um build também, que é parte de por que ela funciona como incentivo."
+      },
+      {
+        "text": "Um piso impede o número de cair; uma meta faz as pessoas escreverem testes que tocam linhas",
+        "why": "`assert resultado is not None` é o que uma meta produz, e é a asserção que não prova nada."
+      }
+    ]
+  },
+  "ex-5bpsny2g": {
+    "prompt": "Chega um relato de defeito. Qual é a primeira coisa a escrever?",
+    "hint": "Antes do conserto, e antes de ler o módulo.",
+    "choices": [
+      {
+        "text": "O teste que falha, a partir do relato",
+        "why": "Um teste escrito depois do conserto é um que você não pode ver falhar, e um teste que você nunca viu falhar é um que você não conferiu."
+      },
+      {
+        "text": "O conserto, já que o relato diz qual é o comportamento errado",
+        "why": "Aí o teste que vem depois é escrito contra um módulo que você acabou de mudar."
+      },
+      {
+        "text": "Uma nota na issue nomeando o módulo que provavelmente é o responsável",
+        "why": "Isso é um palpite registrado antes de qualquer coisa ter rodado."
+      },
+      {
+        "text": "Uma tabela parametrizada das entradas em volta da que está no relato",
+        "why": "Isso vale ter e não é o que transforma um relato em algo que roda."
+      }
+    ]
+  },
+  "ex-cgsjbrjd": {
+    "prompt": "Qual falha um verificador de tipos acha e uma suíte de testes tipicamente não?",
+    "hint": "Pense no que cada um cobre.",
+    "choices": [
+      {
+        "text": "Um desconto aplicado duas vezes num caminho pelo módulo",
+        "why": "Os dois valores são números, então os tipos encaixam e um teste é o que pega."
+      },
+      {
+        "text": "Um chamador num arquivo para o qual ninguém escreveu teste, passando o tipo errado",
+        "why": "Um verificador lê em toda parte; uma suíte lê onde alguém apontou."
+      },
+      {
+        "text": "Um relatório que soma a coluna errada de uma tabela por outro lado correta",
+        "why": "As duas colunas são inteiros e a resposta está errada."
+      },
+      {
+        "text": "Um laço de repetição que desiste uma tentativa antes do que devia",
+        "why": "Um erro de um está correto em todo tipo."
+      }
+    ]
+  },
+  "ex-3mv5x5sg": {
+    "prompt": "O arquivo, vazio e na raiz do projeto, que faz `from app.rates import total` funcionar a partir de `tests/`: `______`",
+    "hint": "O nome dele termina em `.py`."
+  },
+  "ex-r99vd83r": {
+    "prompt": "Uma fixture passa do escopo padrão para `session`. Dois testes que passavam agora falham juntos e passam sozinhos. O que houve?",
+    "hint": "Um deles deixou alguma coisa para trás.",
+    "choices": [
+      {
+        "text": "O escopo de sessão monta a fixture preguiçosamente, então o segundo teste recebe `None`",
+        "why": "Ela é montada no primeiro pedido e passada a todos os seguintes."
+      },
+      {
+        "text": "Uma fixture de escopo de sessão não pode ser pedida por mais de um módulo",
+        "why": "Ela pode ser pedida por tudo na sessão, que é o ponto dela."
+      },
+      {
+        "text": "Eles estão compartilhando um objeto montado, e o primeiro deles o mudou",
+        "why": "Um escopo mais largo é mais rápido e quer dizer que um teste pode deixar estado para o seguinte."
+      },
+      {
+        "text": "O `pytest` reordena os testes para agrupá-los por fixture, mudando qual rodou primeiro",
+        "why": "Ele agrupa por fixture por eficiência, e a falha aqui é o estado compartilhado e não a ordem."
+      }
+    ]
+  },
+  "ex-s81g2gzr": {
+    "prompt": "Qual destes testes sobreviveria à renomeação de um auxiliar privado dentro do módulo?",
+    "hint": "Um deles nomeia o auxiliar.",
+    "choices": [
+      {
+        "text": "Um que afirma o valor que voltou",
+        "why": "Um teste acoplado à implementação fica vermelho numa renomeação e verde quando a resposta está errada."
+      },
+      {
+        "text": "Um que afirma que o auxiliar foi chamado uma vez com os argumentos certos",
+        "why": "Esse é o teste acoplado à implementação, e a renomeação o quebra."
+      },
+      {
+        "text": "Um que troca o auxiliar e afirma que a versão trocada foi alcançada",
+        "why": "O alvo do patch nomeia o auxiliar, então a renomeação o quebra também."
+      },
+      {
+        "text": "Um que afirma o valor de retorno do próprio auxiliar por chamada direta",
+        "why": "Ele chama o auxiliar pelo nome, que a renomeação muda."
+      }
+    ]
+  },
+  "ex-zyn66hrx": {
+    "prompt": "`0.1 + 0.2 == 0.3` falha e `0.1 + 0.2 == pytest.approx(0.3)` passa. O que o segundo vale além de passar?",
+    "hint": "Olhe o que cada um imprime quando falha.",
+    "choices": [
+      {
+        "text": "Uma falha legível: `assert 0.30000000000000004 == 0.4 ± 4.0e-07`",
+        "why": "A asserção comum imprimiu a expressão e escondeu o valor que importava."
+      },
+      {
+        "text": "Uma tolerância recalculada a partir da magnitude dos dois operandos",
+        "why": "O padrão é relativo ao valor esperado, e não é essa a diferença de relatório."
+      },
+      {
+        "text": "Uma asserção que o verificador da aula 15 consegue conferir estaticamente",
+        "why": "Verificador nenhum lê uma tolerância."
+      },
+      {
+        "text": "Uma comparação que não depende do ponto flutuante da plataforma",
+        "why": "Ela depende e absorve a diferença."
+      }
+    ]
+  },
+  "ex-yahqmx20": {
+    "prompt": "Uma suíte de quatrocentos testes leva nove minutos e uma fixture conecta a um banco. Qual é a primeira coisa a olhar?",
+    "hint": "Pense em quantas vezes ela é montada.",
+    "choices": [
+      {
+        "text": "O escopo da fixture",
+        "why": "Um escopo `function` a monta quatrocentas vezes; um mais largo a monta uma vez por módulo ou por sessão."
+      },
+      {
+        "text": "A quantidade de linhas parametrizadas, que multiplicam mais rápido do que se espera",
+        "why": "Elas multiplicam mesmo, e quatrocentos testes não são por si o problema aqui."
+      },
+      {
+        "text": "Se as asserções estão sendo reescritas, o que custa tempo no import",
+        "why": "A reescrita acontece uma vez por arquivo e é medida em milissegundos."
+      },
+      {
+        "text": "A flag `--cov`, que instrumenta toda linha do módulo sob teste",
+        "why": "A cobertura custa tempo mesmo, e uma conexão de banco por teste custa mais."
+      }
+    ]
+  },
+  "ex-zghba5wh": {
+    "prompt": "Qual destes pertence ao `pyproject.toml` e não ao comando que você digita?",
+    "hint": "Pense no `pytest` pelado que outra pessoa roda.",
+    "choices": [
+      {
+        "text": "`testpaths`, para um `pytest` pelado não andar pelo ambiente virtual",
+        "why": "Ajustes no arquivo são o que faz o seu terminal e a CI rodarem a mesma coisa."
+      },
+      {
+        "text": "`--lf`, para uma nova rodada sempre continuar de onde a última parou",
+        "why": "Isso faria de uma rodada completa nova algo que você tem de pedir explicitamente."
+      },
+      {
+        "text": "`-x`, para que uma suíte que falha pare cedo para todo mundo da equipe",
+        "why": "Parar cedo é uma escolha sobre uma rodada e não um ajuste de projeto."
+      },
+      {
+        "text": "`-k`, para que os testes mais lentos fiquem de fora do que for a rodada padrão",
+        "why": "Selecionar por nome na configuração esconde testes de todo mundo que esquecer que aquilo está ali."
+      }
+    ]
+  },
+  "ex-x88rstvy": {
+    "prompt": "Um teste troca o relógio, a rede e o banco, e afirma uma coisa. Qual é o risco?",
+    "hint": "Conte o que sobrou de sistema de verdade.",
+    "choices": [
+      {
+        "text": "Um relógio trocado torna as asserções de tempo do teste pouco confiáveis",
+        "why": "Um relógio trocado as torna determinísticas, que é por que ele é trocado."
+      },
+      {
+        "text": "Três patches num teste é mais lento que três testes com um patch cada",
+        "why": "Velocidade não é a objeção."
+      },
+      {
+        "text": "Os patches podem não ser desfeitos na ordem em que foram aplicados",
+        "why": "Eles são desfeitos na ordem inversa e isso está resolvido."
+      },
+      {
+        "text": "Quase nada de verdade está sendo exercitado, então o teste pode passar com o sistema quebrado",
+        "why": "Recorra a um dublê numa fronteira de verdade, e prefira um objeto simples que você escreveu a trocar um nome."
+      }
+    ]
+  },
+  "ex-a1qfr913": {
+    "prompt": "O que o `E` numa linha de progresso como `..E.` quer dizer?",
+    "hint": "Alguma coisa aconteceu antes do corpo do teste.",
+    "choices": [
+      {
+        "text": "Um teste levantou antes de o corpo começar, como uma fixture faz quando falha",
+        "why": "É relatado como erro e não como falha, porque nenhuma asserção foi alcançada."
+      },
+      {
+        "text": "Um teste falhou numa asserção, que é o que um erro numa suíte é",
+        "why": "Isso é `F`; um erro é algo que deu errado antes das asserções."
+      },
+      {
+        "text": "Esperava-se que um teste falhasse e ele falhou, o que o `pytest` registra à parte",
+        "why": "Isso é `x`, de `xfail`."
+      },
+      {
+        "text": "Um arquivo não pôde ser coletado, o que para a rodada naquele ponto",
+        "why": "Uma falha de coleta é uma linha `ERROR` sem caractere de progresso."
+      }
+    ]
+  }
+}
