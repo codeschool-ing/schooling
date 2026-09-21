@@ -1,0 +1,98 @@
+{
+  "id": "le-1mk7ex2r",
+  "title": "pandas for tables and requests for consuming APIs",
+  "sections": [
+    {
+      "id": "se-5j6tew8a",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-fa265zqn",
+          "version": 1,
+          "script": "Two libraries, and you will reach for both of them on the first day of whatever comes next. {{comment}} `pandas` for anything shaped like a table and `requests` for anything that arrives over HTTP — which between them is most of the work.\n\n{{pandas}} `pandas` gives you a table as ONE OBJECT. A column is a thing you can add to, filter on and group by, and the loop over rows that you would otherwise write is the thing this lesson is mostly about not writing.\n\n{{how}} How much that matters is measurable. Multiplying two columns of half a million rows: a loop over `iterrows` takes eleven seconds, `apply` takes two point eight, and `df[\"a\"] * df[\"b\"]` takes **two milliseconds**.\n\n{{look}} Before any of that, five minutes of looking. `head`, `info`, `describe`, `shape`, `value_counts` — and the reason is that a column read from a CSV is very often not the type you assumed. One missing value in a column of integers makes the whole column a float, and nothing says so.\n\n{{nan}} Which is the other half. Missing data is a value called `NaN` that compares false with everything including itself, and the arithmetic quietly SKIPS it. The mean of a column with one gap in eight rows came out fourteen per cent higher than the mean anybody meant.\n\n{{requests}} Then `requests`. `get`, a query string built for you, `raise_for_status` so a 404 stops being a success, `.json()`, and a **timeout** — which is not optional, because without one a request waits forever and takes your program with it.\n\n{{auth}} A token goes in a header, not in the URL, and a `Session` sends it on every call without your remembering. The rate limit comes back in a header too, and reading it is how you find out before you are cut off rather than after.\n\n{{pages}} And paging: the endpoint gives you ten rows and a `next`, and the loop that follows it until there is none is six lines and the same six lines every time.\n\n{{end}} Two pages of JSON into a DataFrame, and a question answered. That is the shape of most of the data work there is.",
+          "seconds": 151,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-ggmds996",
+      "slug": "why-a-dataframe",
+      "kind": "reading"
+    },
+    {
+      "id": "se-qmwgcg2c",
+      "slug": "reading-data-in",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7wpqjths",
+      "slug": "looking-at-it-first",
+      "kind": "reading"
+    },
+    {
+      "id": "se-k8x44jd8",
+      "slug": "selecting",
+      "kind": "reading"
+    },
+    {
+      "id": "se-6z9cj1v9",
+      "slug": "missing-data",
+      "kind": "reading"
+    },
+    {
+      "id": "se-9ppggj00",
+      "slug": "grouping",
+      "kind": "reading"
+    },
+    {
+      "id": "se-vkrdg68b",
+      "slug": "requests",
+      "kind": "reading"
+    },
+    {
+      "id": "se-6k9pyaw9",
+      "slug": "headers-auth-and-paging",
+      "kind": "reading"
+    },
+    {
+      "id": "se-rx6kzgn4",
+      "slug": "an-api-into-a-table",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ykwnerw7",
+      "slug": "a-small-piece-of-work",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-8jyr1drp",
+          "version": 1,
+          "script": "An endpoint, a table, a question. {{comment}} Twenty-five orders behind an API that hands out ten at a time.\n\n{{first}} The first call: `requests.get(url, timeout=5)`. Status 200, and the headers carry `X-RateLimit-Limit: 60` and `X-RateLimit-Remaining: 59` — so I know I have fifty-nine calls left before anything goes wrong, and I know it now rather than on the fifty-ninth.\n\n{{page}} The body is `{\"results\": [...], \"next\": \"…?page=2\"}`. Ten rows and an address. So: a `while url` loop, `raise_for_status`, append the results, take the `next`, stop when it is null. **Three pages, twenty-five rows**, and the loop did not need to know that in advance.\n\n{{frame}} `pd.DataFrame(rows)` — and the list of dictionaries is a table with three columns and twenty-five rows, typed. Nothing was parsed, nothing was converted, and there is no loop anywhere.\n\n{{question}} Now the question: what did each country spend? `df.groupby(\"country\")[\"cents\"].agg([\"count\", \"sum\"])`. One line. BR: eight orders, 22,796. PT: eight, 21,700. US: nine, 25,029.\n\n{{look}} Worth stopping on `count` there. It counts NON-MISSING values, not rows — so when a real feed has gaps, that column is the first place the gap shows, and it is free.\n\n{{nested}} One complication, because real JSON has it. If the customer arrives as a nested object, `pd.DataFrame` puts the whole dictionary in a cell. `pd.json_normalize` flattens it instead, into `customer.name` and `customer.country`, which is what you wanted.\n\n{{end}} Nine lines of `requests`, one line of `pandas`, and a number somebody asked for. **No loop over rows anywhere in it**, which is the whole point of both libraries.",
+          "seconds": 106,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-esqrt5yw",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-qjs5yvg8",
+          "version": 1,
+          "script": "Vectorise rather than loop, and always set a timeout.\n\n{{loop}} The loop over rows is the thing to unlearn. `df[\"a\"] * df[\"b\"]` on half a million rows took two milliseconds where `iterrows` took eleven seconds — and `apply` with `axis=1`, which looks like the pandas way of doing it, took two point eight. If you are writing `for _, row in df.iterrows()`, there is almost always a column operation that does it.\n\n{{look}} Look at the data before analysing it. `info` for the types and the gaps, `describe` for the ranges, `value_counts` for the categories. Five minutes, and it catches the column that came in as text and the one that is a float because something was missing.\n\n{{nan}} Missing data is a decision, not a detail. `mean` skips it, `sum` treats it as zero, `dropna()` with no arguments throws away any row with a gap ANYWHERE, and none of the three announces itself. Decide per column, and write down which you chose.\n\n{{timeout}} Every request gets a timeout. Every one. A request without one waits as long as the other end feels like, and the thing that hangs is your job at three in the morning.\n\n{{status}} And `raise_for_status`, because a 404 with a JSON body looks exactly like success until you index into it.\n\n{{token}} A token goes in a header and comes from the environment. Not in the URL, where it lands in every log on the way, and not in the file, where it lands in git.\n\n{{end}} That is the last lesson. What comes next is the same work with a bigger table and somebody waiting for the answer.",
+          "seconds": 114,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-3pajkdf7",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

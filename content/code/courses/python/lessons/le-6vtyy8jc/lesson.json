@@ -1,0 +1,98 @@
+{
+  "id": "le-6vtyy8jc",
+  "title": "Testing with pytest: assertions, fixtures, parametrisation and coverage",
+  "sections": [
+    {
+      "id": "se-y9wnr175",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-21tdgnwk",
+          "version": 1,
+          "script": "A question you ask once, and a machine that asks it forever. {{comment}} That is the whole of what a test is, and every other thing said about testing is downstream of it.\n\n{{shape}} The shape is small. A file whose name starts with `test_`, a function whose name starts with `test_`, and a bare `assert` inside it. No class to inherit from, no method called `assertEqual`, no registration anywhere. You run `pytest` and it finds them.\n\n{{assert}} The bare `assert` is the reason to use this one. `pytest` rewrites your assertions as it imports them, so `assert slugify(\"Hello, World\") == \"hello-world\"` fails with **both values printed and the difference marked**. Other frameworks make you name the comparison; here the comparison is ordinary Python and the report is better anyway.\n\n{{fixture}} A fixture is a function that builds what a test needs. You ask for it **by writing its name as an argument**, which reads oddly for about a day and then stops. What comes after its `yield` is the tearing down, and it runs whether the test passed or failed.\n\n{{param}} Parametrisation is the one that changes how much you write. Nine tests that differ in two values become one function and a table of nine rows, and each row is reported under its own name.\n\n{{checker}} Lesson 15 was the other half of this. A checker reads everywhere and knows nothing about behaviour; a test knows about behaviour and only where you pointed it. **Neither one replaces the other**, and a codebase with one and not the other is missing a specific and nameable set of failures.\n\n{{coverage}} And at the end, the number everybody argues about. Coverage says which lines ran. It does not say which lines were CHECKED, and the distance between those two is where this lesson finishes — with a module at a hundred per cent, a deliberate bug inside it, and a suite that stays green.",
+          "seconds": 134,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-qgj0zs8v",
+      "slug": "a-first-test",
+      "kind": "reading"
+    },
+    {
+      "id": "se-p5erxpzr",
+      "slug": "reading-a-failure",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7ajzk19k",
+      "slug": "what-to-assert",
+      "kind": "reading"
+    },
+    {
+      "id": "se-t1vfxjg3",
+      "slug": "fixtures",
+      "kind": "reading"
+    },
+    {
+      "id": "se-hfate8rw",
+      "slug": "parametrisation",
+      "kind": "reading"
+    },
+    {
+      "id": "se-99xdbq6s",
+      "slug": "exceptions-and-approximations",
+      "kind": "reading"
+    },
+    {
+      "id": "se-k2jyzvcy",
+      "slug": "test-layout",
+      "kind": "reading"
+    },
+    {
+      "id": "se-yntywtk5",
+      "slug": "doubles",
+      "kind": "reading"
+    },
+    {
+      "id": "se-brhv92j0",
+      "slug": "coverage",
+      "kind": "reading"
+    },
+    {
+      "id": "se-eskj1caa",
+      "slug": "a-bug-caught",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-xf8cjtq2",
+          "version": 1,
+          "script": "A bug report: an invoice for two items came out with twice the tax. {{comment}} The report is one sentence and the module is eighty lines.\n\n{{first}} The first thing is not to read the module. It is to write the test that fails, from the report, before knowing why.\n\n{{write}} `def test_tax_is_charged_once():` — two lines of ten reais, a rate of ten per cent, and `assert total(lines, 0.1) == 22.0`. Run it. `E  assert 24.0 == 22.0`. Red, and the report is now a thing that runs.\n\n{{narrow}} Now narrow it. `subtotal` on its own gives twenty, which is right. `tax(20, 0.1)` gives four. Two lines, both correct in every type the checker reads, and the second one is the defect: `amount * rate * 2`, from an edit that meant to double something else.\n\n{{fix}} Fix, run, green. Two tests now — the one that was already there and this one — and the new one is a sentence somebody wrote once that will be asked on every commit from here on.\n\n{{regression}} **That is the shape worth copying.** A bug report becomes a failing test BEFORE it becomes a fix, because a test written afterwards is a test you cannot watch fail — and a test you have never seen fail is a test you have not checked.\n\n{{coverage}} One more thing about this module. Before the bug was found, coverage said one hundred per cent. Every line ran. The test that ran them asserted `result is not None`, which is true of almost everything, and the doubled tax passed underneath it for as long as it existed.",
+          "seconds": 112,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-6k0y2gwn",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-xtmy5z9c",
+          "version": 1,
+          "script": "One behaviour, a name that says it, and a failure you can read.\n\n{{name}} The name is the part people rush. `test_slugify_works` tells you nothing when it goes red at half past five. `test_punctuation_is_removed_from_a_slug` tells you what broke without opening the file, and the suite's output becomes a list of sentences about the system.\n\n{{one}} One behaviour per test, so a failure names one thing. A test asserting six facts goes red on the first and hides the other five until you have fixed it.\n\n{{assert}} Assert the behaviour, never the implementation. A test that checks a helper was called is a test that fails when you rename the helper and passes when the answer is wrong.\n\n{{double}} Which is the same trap as a double one layer along. Patch the thing at the edge — the network, the clock, the mailer — and never the function you are testing, or the test proves the mock.\n\n{{fixture}} Fixtures by name, teardown after the `yield`, and the narrowest scope that works. A `module` scope is faster and it means one test can leave state behind for the next one.\n\n{{coverage}} And the number: coverage tells you what RAN. It finds the branch nobody exercised, which is worth having, and it says nothing about whether anything was checked. A hundred per cent with a bug in it is not a hypothetical — it is the module in the demonstration.\n\n{{end}} Write the failing test first. Watch it go red. Then make it green.",
+          "seconds": 104,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-4jzh5v10",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

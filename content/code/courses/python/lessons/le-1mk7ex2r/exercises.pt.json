@@ -1,0 +1,1140 @@
+{
+  "ex-pnp24y3d": {
+    "prompt": "Multiplicar duas colunas de 500.000 linhas: `iterrows` 11,2 s, `apply(axis=1)` 2,8 s, `df[\"a\"] * df[\"b\"]` 0,002 s. Por que a última está tão à frente?",
+    "hint": "Onde o trabalho acontece?",
+    "choices": [
+      {
+        "text": "Ela roda em código compilado sobre um bloco contíguo de memória, sem um objeto Python por linha",
+        "why": "O `iterrows` monta um objeto `Series` para cada linha antes de você tocá-la."
+      },
+      {
+        "text": "Ela usa vários núcleos onde as outras duas usam um",
+        "why": "Ela é de uma linha de execução só; a diferença é o objeto por linha e o interpretador."
+      },
+      {
+        "text": "Ela reaproveita um resultado em cache, já que exatamente as mesmas duas colunas foram multiplicadas antes",
+        "why": "Nada é guardado em cache entre as três rodadas."
+      },
+      {
+        "text": "Ela é preguiçosa, então a multiplicação não aconteceu quando o cronômetro parou",
+        "why": "O resultado é materializado; nada é adiado."
+      }
+    ]
+  },
+  "ex-03ny2gv6": {
+    "prompt": "`df.apply(lambda l: …, axis=1)` parece o jeito pandas de fazer isso. O que é de fato?",
+    "hint": "Conte as chamadas Python.",
+    "choices": [
+      {
+        "text": "Um mapa paralelo sobre as linhas, limitado pela quantidade de núcleos",
+        "why": "Ele é sequencial."
+      },
+      {
+        "text": "Uma chamada de função Python por linha, com o objeto da linha ainda sendo montado",
+        "why": "Mediu 2,8 segundos contra 2 milissegundos da operação de coluna."
+      },
+      {
+        "text": "Uma operação vetorizada com um despacho um pouco mais lento",
+        "why": "Nada nele é vetorizado quando `axis=1`."
+      },
+      {
+        "text": "Um laço compilado sobre as linhas, que é por que ele bate o `iterrows` em cerca de quatro vezes",
+        "why": "Ele bate o `iterrows` por pular algum custo e não por ser compilado."
+      }
+    ]
+  },
+  "ex-mq2dc48b": {
+    "prompt": "Qual é a diferença entre `df[\"centavos\"]` e `df[[\"centavos\"]]`?",
+    "hint": "Um dos dois recebeu uma lista.",
+    "choices": [
+      {
+        "text": "O primeiro é uma cópia e o segundo é uma visão da original",
+        "why": "Nenhum dos dois é confiavelmente um ou outro, e não é isso que os colchetes decidem."
+      },
+      {
+        "text": "O primeiro é um Series e o segundo é um DataFrame de uma coluna",
+        "why": "Os colchetes duplos são uma lista de nomes de coluna e não uma sintaxe especial."
+      },
+      {
+        "text": "O primeiro levanta se a coluna não existe e o segundo devolve vazio",
+        "why": "Os dois levantam `KeyError`."
+      },
+      {
+        "text": "O primeiro mantém o índice e o segundo o reinicia",
+        "why": "Os dois mantêm o índice."
+      }
+    ]
+  },
+  "ex-b563qxxx": {
+    "prompt": "Depois de `us = df[df[\"pais\"] == \"US\"]`, as linhas estão rotuladas 3 e 6. O que isso diz a você?",
+    "hint": "Rótulos não são posições.",
+    "choices": [
+      {
+        "text": "O índice vai se renumerar na próxima vez que a tabela for usada",
+        "why": "Ele fica até alguma coisa reiniciá-lo."
+      },
+      {
+        "text": "A tabela foi ordenada pelo índice, o que pulou os rótulos ausentes",
+        "why": "Nada ordenou; as duas linhas que casaram mantiveram os rótulos delas."
+      },
+      {
+        "text": "O índice é um rótulo, mantido da tabela original, e não uma posição",
+        "why": "É a surpresa mais comum do pandas, e `loc` contra `iloc` é exatamente sobre ela."
+      },
+      {
+        "text": "O filtro devolveu uma visão, então os rótulos pertencem à tabela-mãe",
+        "why": "Seriam os mesmos rótulos de qualquer jeito; o índice é simplesmente preservado."
+      }
+    ]
+  },
+  "ex-jzxbmk7m": {
+    "prompt": "Quando uma lista de dicts comum é a escolha melhor?",
+    "hint": "Pense em tamanho e formato.",
+    "choices": [
+      {
+        "text": "Cem linhas lidas uma vez, ou dados que não cabem numa tabela",
+        "why": "O `pandas` custa uma dependência, alguma memória e uma curva de aprendizado, e abaixo de alguns milhares de linhas uma lista de dicts está honestamente bem."
+      },
+      {
+        "text": "Sempre que os dados vêm de uma API e não de um arquivo",
+        "why": "As linhas de uma API vão para um DataFrame exatamente como as de um arquivo."
+      },
+      {
+        "text": "Sempre que o resultado da análise tem de ser escrito de volta como JSON",
+        "why": "O `to_json` dá conta disso numa linha."
+      },
+      {
+        "text": "Sempre que as colunas têm tipos misturados dentro de uma coluna",
+        "why": "Uma coluna de tipos misturados é chata nos dois e não é a pergunta que decide."
+      }
+    ]
+  },
+  "ex-mep6pxqt": {
+    "prompt": "Uma coluna CSV de números inteiros tem uma célula vazia. Que dtype o `read_csv` dá a ela?",
+    "hint": "O tipo inteiro clássico não guarda uma lacuna.",
+    "choices": [
+      {
+        "text": "`int64`, com a lacuna preenchida por zero",
+        "why": "Nada é preenchido; uma lacuna vira `NaN`, que um `int64` não guarda."
+      },
+      {
+        "text": "`str`, porque um valor não pôde ser analisado como número",
+        "why": "Uma célula vazia é lida como faltante e não como texto."
+      },
+      {
+        "text": "`Int64`, que é o tipo inteiro anulável",
+        "why": "É o que você recebe ao pedir, e não o que é inferido."
+      },
+      {
+        "text": "`float64`",
+        "why": "Aparece depois como `12990.0` num relatório, ou como um total que não compara igual a um inteiro."
+      }
+    ]
+  },
+  "ex-v4v1bk62": {
+    "prompt": "Como você mantém números inteiros e ainda permite uma lacuna?",
+    "hint": "Uma letra difere.",
+    "choices": [
+      {
+        "text": "`df[\"centavos\"].astype(int)` depois de ler",
+        "why": "Ele levanta no `NaN`."
+      },
+      {
+        "text": "`dtype={\"centavos\": \"Int64\"}` — com I maiúsculo",
+        "why": "O tipo inteiro anulável guarda números inteiros e um `<NA>` de verdade para a lacuna."
+      },
+      {
+        "text": "`na_values=[0]`, para as lacunas serem lidas como zeros",
+        "why": "Isso diz que a string `0` quer dizer faltante, que é o contrário."
+      },
+      {
+        "text": "`dtype={\"centavos\": \"int64\"}`, que é o tipo inteiro comum",
+        "why": "É esse o que não consegue representar um valor faltando."
+      }
+    ]
+  },
+  "ex-239kw28b": {
+    "prompt": "Por que passar `parse_dates=[\"pago_em\"]`?",
+    "hint": "Senão é texto.",
+    "choices": [
+      {
+        "text": "Sem isso a coluna é uma string, e ordená-la funciona só por sorte",
+        "why": "Datas ISO por acaso ordenam certo como texto e nenhum outro formato ordena."
+      },
+      {
+        "text": "Sem isso as datas são lidas na ordem americana e não na local",
+        "why": "Elas não são interpretadas de jeito nenhum; ficam como escritas."
+      },
+      {
+        "text": "Sem isso a coluna ocupa quatro vezes a memória",
+        "why": "Memória é efeito colateral e não a razão."
+      },
+      {
+        "text": "Sem isso o `describe()` se recusa a rodar na tabela",
+        "why": "Ele roda e deixa colunas de texto de fora por padrão."
+      }
+    ]
+  },
+  "ex-tbga1my9": {
+    "prompt": "Um arquivo de 40 colunas é grande demais para abrir. Quais dois argumentos ajudam mais?",
+    "hint": "Leia menos dele.",
+    "choices": [
+      {
+        "text": "`sep` e `decimal`, que impedem o analisador de ler errado",
+        "why": "Esses são sobre o formato e não sobre o tamanho."
+      },
+      {
+        "text": "`dtype` e `na_values`, que impedem a inferência de tipo",
+        "why": "Eles deixam o resultado correto e não o deixam menor."
+      },
+      {
+        "text": "`usecols` e `nrows`",
+        "why": "Leia mil linhas primeiro, olhe, e aí decida o que carregar."
+      },
+      {
+        "text": "`chunksize` e `compression`, que transmitem o arquivo",
+        "why": "O `chunksize` transmite mesmo, e o par nomeado aqui é o primeiro movimento mais simples."
+      }
+    ]
+  },
+  "ex-yzssvgaf": {
+    "prompt": "Transforme uma coluna de strings em números, com o que falhar virando `NaN`: `pd.to_numeric(s, errors=\"______\")`",
+    "hint": "Seis letras."
+  },
+  "ex-jgc5w5c9": {
+    "prompt": "Qual comando dá de uma vez o tipo de cada coluna e quantos valores estão presentes?",
+    "hint": "Uma linha por coluna.",
+    "choices": [
+      {
+        "text": "`df.describe()`, que relata contagem e dtype por coluna",
+        "why": "Ele relata estatísticas das colunas numéricas e dtype nenhum."
+      },
+      {
+        "text": "`df.info()`",
+        "why": "O `centavos` ser um float e ter sete de oito são dois problemas visíveis numa linha."
+      },
+      {
+        "text": "`df.dtypes`, que lista os tipos e as contagens de nulos",
+        "why": "Ele lista só os tipos."
+      },
+      {
+        "text": "`df.shape`, que são linhas e colunas",
+        "why": "São dois números para a tabela inteira."
+      }
+    ]
+  },
+  "ex-9s912kbw": {
+    "prompt": "No `describe()`, qual linha você lê primeiro?",
+    "hint": "Antes da média.",
+    "choices": [
+      {
+        "text": "`mean`, já que é o resumo que todo mundo pede",
+        "why": "Ela é calculada sobre o que o `count` disser, que é por que ele vem primeiro."
+      },
+      {
+        "text": "`50%`, que é a mediana e é robusta a pontos fora da curva",
+        "why": "É robusta e não é o que se confere primeiro."
+      },
+      {
+        "text": "`count`",
+        "why": "7 contra 8 linhas é uma lacuna, e toda estatística abaixo foi calculada sobre as 7."
+      },
+      {
+        "text": "`std`, que revela um ponto fora da curva mais rápido que os extremos",
+        "why": "O `min` e o `max` mostram um ponto fora da curva mais diretamente."
+      }
+    ]
+  },
+  "ex-tp5xvrc2": {
+    "prompt": "Por que o `value_counts(dropna=False)` vale virar hábito?",
+    "hint": "O padrão esconde algo.",
+    "choices": [
+      {
+        "text": "O padrão ordena os valores alfabeticamente, o que esconde a maior categoria de todas",
+        "why": "Ele ordena por contagem, do maior para o menor."
+      },
+      {
+        "text": "O padrão conta só os dez valores mais comuns",
+        "why": "Ele conta todos."
+      },
+      {
+        "text": "O padrão levanta numa coluna com qualquer valor faltando",
+        "why": "Ele roda e caladamente os omite."
+      },
+      {
+        "text": "O padrão deixa de fora os valores faltantes, que são as linhas prestes a surpreender você",
+        "why": "É também onde `\"BR\"`, `\"br\"` e `\" BR\"` aparecem como três países."
+      }
+    ]
+  },
+  "ex-g5qy6mbx": {
+    "prompt": "`df.duplicated().sum()` responde o quê?",
+    "hint": "Linhas inteiras.",
+    "choices": [
+      {
+        "text": "Quantas linhas compartilham um rótulo de índice",
+        "why": "Ele compara os valores e não o índice."
+      },
+      {
+        "text": "Quantos valores em cada coluna aparecem mais de uma vez",
+        "why": "Isso é por coluna e isto é por linha."
+      },
+      {
+        "text": "Quantas linhas são cópias exatas de uma linha anterior",
+        "why": "Barato de perguntar e caro de descobrir a resposta depois."
+      },
+      {
+        "text": "Quantas colunas guardam os mesmos dados que outra coluna",
+        "why": "Ele trabalha ao longo das linhas por padrão."
+      }
+    ]
+  },
+  "ex-yx2e8z9e": {
+    "prompt": "O que o `df.describe(include=\"all\")` acrescenta?",
+    "hint": "As colunas que o padrão deixa de fora.",
+    "choices": [
+      {
+        "text": "Os dtypes, que a versão padrão omite",
+        "why": "Nenhuma das formas relata dtypes; o `info` relata."
+      },
+      {
+        "text": "As colunas de texto, com `unique` e `top` em vez de `mean`",
+        "why": "O padrão relata só as colunas numéricas."
+      },
+      {
+        "text": "Os valores faltantes, contados e relatados como uma linha própria na tabela",
+        "why": "O `count` já relata o que está presente."
+      },
+      {
+        "text": "O índice, descrito como se fosse uma coluna",
+        "why": "O índice não é incluído de nenhum jeito."
+      }
+    ]
+  },
+  "ex-bx2920f8": {
+    "prompt": "`df[(df[\"pais\"] == \"BR\") and (df[\"centavos\"] > 5000)]`. O que está errado?",
+    "hint": "Uma palavra-chave trabalha sobre um valor.",
+    "choices": [
+      {
+        "text": "Uma comparação contra uma string precisa de `.eq()` e não de `==`",
+        "why": "O `==` numa coluna funciona e dá uma máscara."
+      },
+      {
+        "text": "O `and` trabalha sobre um valor de verdade; uma coluna precisa de `&`",
+        "why": "`&`, `|` e `~` operam elemento a elemento, e os parênteses são obrigatórios porque o `&` liga mais forte que o `>`."
+      },
+      {
+        "text": "As duas máscaras têm índices diferentes e não podem ser combinadas",
+        "why": "Elas vêm da mesma tabela e compartilham um índice."
+      },
+      {
+        "text": "Os parênteses são desnecessários e confundem o analisador",
+        "why": "Eles são obrigatórios, que é a outra metade da mesma regra."
+      }
+    ]
+  },
+  "ex-54vtdn43": {
+    "prompt": "`us.loc[0]` levanta `KeyError: 0` numa tabela filtrada. Por quê?",
+    "hint": "Os rótulos vieram junto da original.",
+    "choices": [
+      {
+        "text": "O `loc` não recebe um inteiro, só um nome de coluna",
+        "why": "Ele recebe rótulos de índice, que muitas vezes são inteiros."
+      },
+      {
+        "text": "A tabela está vazia, então qualquer rótulo levanta",
+        "why": "Ela tem duas linhas, rotuladas 3 e 6."
+      },
+      {
+        "text": "O filtro manteve os rótulos originais, e não existe mais linha rotulada 0",
+        "why": "O `iloc[0]` dá a primeira linha, e o `reset_index(drop=True)` faz os dois concordarem."
+      },
+      {
+        "text": "O `loc` precisa de ser dado tanto uma linha quanto uma coluna, e um dos dois faltou",
+        "why": "Um argumento sozinho seleciona uma linha e é válido."
+      }
+    ]
+  },
+  "ex-t1hrsx90": {
+    "prompt": "Qual é a diferença entre `loc` e `iloc`, numa frase?",
+    "hint": "Duas coisas diferentes vão nos colchetes.",
+    "choices": [
+      {
+        "text": "O `loc` é para um valor só e o `iloc` é para uma faixa",
+        "why": "Os dois recebem valores únicos, listas, faixas e máscaras."
+      },
+      {
+        "text": "O `loc` trabalha em linhas e o `iloc` trabalha em colunas",
+        "why": "Os dois recebem um seletor de linha e um de coluna opcional."
+      },
+      {
+        "text": "O `loc` recebe rótulos — valores de índice e nomes de coluna; o `iloc` recebe posições",
+        "why": "Eles concordam até alguma coisa filtrar ou ordenar, e aí não concordam mais."
+      },
+      {
+        "text": "O `loc` devolve uma cópia das linhas e o `iloc` devolve uma visão da original",
+        "why": "Nenhum dos dois é confiavelmente um ou outro."
+      }
+    ]
+  },
+  "ex-rxh2bzq7": {
+    "prompt": "`df[df[\"pais\"] == \"BR\"][\"centavos\"] = 0`. O que acontece com o `df` no pandas 3?",
+    "hint": "O passo do meio montou algo.",
+    "choices": [
+      {
+        "text": "O todo da coluna `centavos` vai a zero, que é por que a forma é desencorajada",
+        "why": "Só as linhas selecionadas eram o alvo, e nenhuma delas mudou."
+      },
+      {
+        "text": "As quatro linhas BR vão a zero, com um aviso sobre o encadeamento",
+        "why": "O aviso está lá e os valores não mudaram."
+      },
+      {
+        "text": "Um `SettingWithCopyWarning` é levantado como erro e nada é atribuído",
+        "why": "É um aviso e não uma exceção, e o nome dele é outro agora."
+      },
+      {
+        "text": "Nada — a atribuição foi para uma cópia, e um aviso `ChainedAssignmentError` foi emitido",
+        "why": "Medido: as quatro linhas BR mantiveram os valores que tinham. Escreva a atribuição pelo `loc`."
+      }
+    ]
+  },
+  "ex-9599dhcs": {
+    "prompt": "Selecione com uma máscara e nomeie uma coluna num passo: `df.______[df[\"pais\"] == \"BR\", \"centavos\"]`",
+    "hint": "Três letras."
+  },
+  "ex-1g3mw9q1": {
+    "prompt": "Uma coluna de 8 linhas tem uma lacuna. O `mean()` deu 10141,43 e o `sum()/len()` deu 8873,75. Por quê?",
+    "hint": "Dois denominadores diferentes.",
+    "choices": [
+      {
+        "text": "O `mean()` foi calculado antes de a coluna ser lida por inteiro",
+        "why": "Os dois foram calculados sobre a mesma coluna carregada."
+      },
+      {
+        "text": "O `sum()` pulou a lacuna e o `mean()` a contou como zero",
+        "why": "É ao contrário: o `sum` a trata como zero e o `mean` a pula."
+      },
+      {
+        "text": "O `mean()` divide pelos 7 valores que estão presentes",
+        "why": "Catorze por cento de diferença, e nada disse nada."
+      },
+      {
+        "text": "O `len()` contou a linha de cabeçalho, que o `mean()` não contou",
+        "why": "O cabeçalho não é uma linha."
+      }
+    ]
+  },
+  "ex-0ncyx24g": {
+    "prompt": "`(df[\"centavos\"] > 0).sum()` é 7 numa tabela de 8 linhas. Para onde foi a oitava?",
+    "hint": "`NaN` compara falso.",
+    "choices": [
+      {
+        "text": "O valor faltante comparou falso, então a linha dele não está na máscara de jeito nenhum",
+        "why": "`np.nan == np.nan` é `False`, e toda comparação contra ele também é."
+      },
+      {
+        "text": "A comparação levantou uma exceção naquela linha e o resultado dela foi descartado",
+        "why": "Nada levantou; a comparação é definida e dá `False`."
+      },
+      {
+        "text": "O `sum()` numa máscara booleana pula a linha com a lacuna",
+        "why": "A máscara tem um `False` ali, e o `sum` o contou como zero corretamente."
+      },
+      {
+        "text": "A oitava linha tem um zero, que não é maior que zero",
+        "why": "A oitava linha não tem valor nenhum."
+      }
+    ]
+  },
+  "ex-7y0b1ejt": {
+    "prompt": "`df.dropna()` sem argumentos na tabela de oito linhas deixou seis. Por que essa é a armadilha?",
+    "hint": "O que faltava na segunda?",
+    "choices": [
+      {
+        "text": "Ele descarta qualquer linha com lacuna em QUALQUER coluna, inclusive as que a análise nem toca",
+        "why": "Uma das duas linhas descartadas estava sem `pago_em`, que não tinha nada a ver com a pergunta."
+      },
+      {
+        "text": "Ele modifica a tabela no lugar, então a original se foi",
+        "why": "Ele devolve uma tabela nova a menos que se peça o contrário."
+      },
+      {
+        "text": "Ele descarta as colunas e não as linhas, a menos que se dê o `axis`",
+        "why": "O padrão são linhas; `axis=1` descarta colunas."
+      },
+      {
+        "text": "Ele descarta linhas em que toda coluna está faltando, que quase nunca é o pretendido",
+        "why": "Isso é `how=\"all\"`; o padrão é `how=\"any\"`."
+      }
+    ]
+  },
+  "ex-ya15bnzg": {
+    "prompt": "`fillna(0)` numa coluna de preço. O que isso afirma?",
+    "hint": "Um zero é um valor.",
+    "choices": [
+      {
+        "text": "Que o pedido foi de graça",
+        "why": "Cada preenchimento é uma afirmação diferente sobre o mundo, e nenhum é seguro de fazer sem dizer por quê."
+      },
+      {
+        "text": "Que a linha deveria ser excluída das agregações",
+        "why": "Ela é incluída, como um zero."
+      },
+      {
+        "text": "Que o valor é desconhecido, que é o que um zero convencionalmente quer dizer",
+        "why": "Um zero é um número e entra em toda média como um."
+      },
+      {
+        "text": "Que o valor vai ser preenchido depois por quem for dono dos dados",
+        "why": "Nada registra essa intenção."
+      }
+    ]
+  },
+  "ex-y9m7bgqk": {
+    "prompt": "O que deve ficar ao lado de uma decisão sobre dados faltantes?",
+    "hint": "Uma linha cada.",
+    "choices": [
+      {
+        "text": "Um `dropna()` logo em seguida, para pegar o que o preenchimento deixou passar",
+        "why": "Isso desfaria a intenção do preenchimento nas outras colunas."
+      },
+      {
+        "text": "Um comentário dizendo por que aquela escolha e não outra",
+        "why": "Duas linhas e um comentário cada; a alternativa é um número catorze por cento errado que parece certo."
+      },
+      {
+        "text": "Um teste afirmando que a quantidade de lacunas permanece a mesma",
+        "why": "A contagem de lacunas muda com os dados legitimamente."
+      },
+      {
+        "text": "Uma conversão para `Int64`, para as lacunas não poderem voltar",
+        "why": "O tipo não registra a decisão."
+      }
+    ]
+  },
+  "ex-0ntsrfxp": {
+    "prompt": "Quais são os três passos que um `groupby` executa?",
+    "hint": "Um deles é a aritmética.",
+    "choices": [
+      {
+        "text": "Indexar pela coluna, juntar a tabela com ela mesma, e agregar",
+        "why": "Não há junção envolvida."
+      },
+      {
+        "text": "Ordenar pela coluna, contar as sequências, e emitir uma linha por sequência",
+        "why": "Isso é o que o pipeline do shell faz; o `groupby` não precisa de ordenação."
+      },
+      {
+        "text": "Filtrar para cada valor distinto de cada vez e concatenar todas as respostas",
+        "why": "Isso é a descrição de um laço sobre grupos, que é mais lento e não é como funciona."
+      },
+      {
+        "text": "Dividir por uma coluna, aplicar uma função a cada grupo, juntar os resultados",
+        "why": "É o mesmo modelo do `sort | uniq -c` com a contagem trocada por qualquer aritmética que você queira."
+      }
+    ]
+  },
+  "ex-fjp42pd1": {
+    "prompt": "Por que preferir `agg(total=(\"centavos\", \"sum\"))` à forma antiga com lista?",
+    "hint": "Olhe a saída.",
+    "choices": [
+      {
+        "text": "Ela aceita uma lambda onde a forma antiga aceita só strings",
+        "why": "As duas aceitam um chamável."
+      },
+      {
+        "text": "Ela agrupa por várias colunas onde a forma antiga aceita uma",
+        "why": "Agrupar por várias colunas é propriedade do `groupby` e não do `agg`."
+      },
+      {
+        "text": "Ela é mais rápida, porque a forma antiga calcula toda estatística",
+        "why": "As duas calculam só o que foi pedido."
+      },
+      {
+        "text": "Ela nomeia as colunas de saída",
+        "why": "E ela se lê como a tabela que produz."
+      }
+    ]
+  },
+  "ex-qagjngwj": {
+    "prompt": "Um país tem 4 pedidos e um deles não tem valor. O que o `count` da coluna de valor diz?",
+    "hint": "Ele conta o que está presente.",
+    "choices": [
+      {
+        "text": "3",
+        "why": "Um `count` da coluna que você está somando diz de quanto de cada grupo a soma é feita, e sai de graça."
+      },
+      {
+        "text": "0, já que qualquer lacuna torna a agregação indefinida",
+        "why": "Os outros três são contados normalmente."
+      },
+      {
+        "text": "4, com o faltante contado como zero",
+        "why": "O `sum` o trata como zero; o `count` não o conta de jeito nenhum."
+      },
+      {
+        "text": "4, já que o `count` conta as linhas do grupo",
+        "why": "Ele conta valores não faltantes da coluna nomeada."
+      }
+    ]
+  },
+  "ex-v4csk42z": {
+    "prompt": "Você quer cada linha carregando o total do grupo dela ao lado. O que você usa?",
+    "hint": "Uma linha por linha original.",
+    "choices": [
+      {
+        "text": "`agg`, seguido de um merge de volta na tabela original",
+        "why": "Isso funciona e são dois passos onde um resolve."
+      },
+      {
+        "text": "`apply`, com uma função que devolve o grupo",
+        "why": "Dá para fazer funcionar e é mais lento e mais difícil de ler."
+      },
+      {
+        "text": "`filter`, que mantém os grupos que casam com uma condição",
+        "why": "Ele seleciona grupos em vez de calcular um valor por linha."
+      },
+      {
+        "text": "`transform`",
+        "why": "O `agg` dá uma linha por grupo; o `transform` dá uma por linha original, com a resposta do grupo repetida."
+      }
+    ]
+  },
+  "ex-kv0m2jpk": {
+    "prompt": "`df.groupby([\"pais\", \"cliente\"])[\"centavos\"].sum()`. O que você em geral faz em seguida?",
+    "hint": "O resultado tem dois níveis.",
+    "choices": [
+      {
+        "text": "`.reset_index()`, para achatar o índice de volta em colunas comuns",
+        "why": "Que é quase sempre o que você quer antes de escrever ou de plotar."
+      },
+      {
+        "text": "`.to_frame()`, já que o resultado é um Series e não pode ser escrito",
+        "why": "Um Series é escrito sem problema."
+      },
+      {
+        "text": "`.sort_index()`, já que um índice de vários níveis não tem ordem",
+        "why": "Ele volta ordenado pelas chaves de agrupamento."
+      },
+      {
+        "text": "`.unstack()`, que é o único jeito de ler um resultado de dois níveis",
+        "why": "É um jeito de remodelá-lo e não uma exigência."
+      }
+    ]
+  },
+  "ex-3k06r0mn": {
+    "prompt": "O que o `requests.get(url)` faz quando o servidor aceita a conexão e depois não diz nada?",
+    "hint": "Não existe padrão.",
+    "choices": [
+      {
+        "text": "Ele desiste depois do padrão do sistema operacional, uns trinta segundos",
+        "why": "Nenhum padrão é aplicado em nenhuma camada que encerraria isso."
+      },
+      {
+        "text": "Ele levanta na hora, já que a resposta ainda não tem cabeçalhos",
+        "why": "Ele espera por eles."
+      },
+      {
+        "text": "Ele espera indefinidamente, porque o `requests` não define timeout nenhum",
+        "why": "Num trabalho agendado, isso é um processo ainda sentado ali de manhã."
+      },
+      {
+        "text": "Ele tenta três vezes e aí levanta um ConnectionError",
+        "why": "Ele não repete a menos que um adaptador seja configurado."
+      }
+    ]
+  },
+  "ex-c2nh00zs": {
+    "prompt": "Uma requisição devolve 404. O que o `requests` faz a respeito?",
+    "hint": "A requisição HTTP deu certo.",
+    "choices": [
+      {
+        "text": "Ele repete uma vez e aí levanta se a segunda tentativa também falhar",
+        "why": "Ele não repete."
+      },
+      {
+        "text": "Ele devolve `None` em vez de um objeto de resposta",
+        "why": "Ele devolve uma resposta com `status_code` 404."
+      },
+      {
+        "text": "Nada — é uma requisição bem-sucedida, e o `raise_for_status` é o que a transforma num erro",
+        "why": "Sem ele a sua próxima linha chama `.json()` num documento de erro e falha em algum lugar confuso."
+      },
+      {
+        "text": "Ele levanta um `HTTPError`, que é por que um `try` costuma ser escrito em volta de uma chamada `get`",
+        "why": "Ele levanta só quando você pede."
+      }
+    ]
+  },
+  "ex-ksn5t3zw": {
+    "prompt": "`requests.get(url, params={\"b\": \"x&y\"})`. O que é enviado?",
+    "hint": "O e comercial é um separador numa query string.",
+    "choices": [
+      {
+        "text": "`?b=x` e o resto descartado, já que o `&` encerra o valor",
+        "why": "Nada é descartado; ele é escapado."
+      },
+      {
+        "text": "`?b=x%26y` — o e comercial foi codificado",
+        "why": "Montar a query string na mão é como um valor com um `&` dentro caladamente vira dois parâmetros."
+      },
+      {
+        "text": "`?b=x&y`, já que o `params` passa o valor adiante sem mudar",
+        "why": "Ele codifica, que é a razão de usá-lo."
+      },
+      {
+        "text": "Um 400, porque o valor contém um caractere reservado",
+        "why": "A requisição é bem formada."
+      }
+    ]
+  },
+  "ex-yq0wpv9h": {
+    "prompt": "Qual é a diferença entre `json=` e `data=` num `post`?",
+    "hint": "Dois tipos de conteúdo diferentes.",
+    "choices": [
+      {
+        "text": "O `json=` codifica um dicionário para você e o `data=` exige uma string própria",
+        "why": "O `data=` recebe um dicionário também e o codifica como formulário."
+      },
+      {
+        "text": "O `json=` comprime o corpo e o `data=` não",
+        "why": "Nenhum dos dois comprime por padrão."
+      },
+      {
+        "text": "O `json=` é para uma resposta e o `data=` é para uma requisição",
+        "why": "Os dois são argumentos de requisição."
+      },
+      {
+        "text": "O `json=` manda um corpo JSON e define o cabeçalho; o `data=` manda um formulário",
+        "why": "Escolher o errado é um 400 com uma mensagem sobre o corpo que se lê como um defeito nos seus dados."
+      }
+    ]
+  },
+  "ex-fmsve3yc": {
+    "prompt": "O único argumento que tem de estar em toda requisição que você escreve: `______=10`",
+    "hint": "Sete letras."
+  },
+  "ex-8h6nakdq": {
+    "prompt": "Por que um token pertence a um cabeçalho e não à query string?",
+    "hint": "Pense no que registra uma URL.",
+    "choices": [
+      {
+        "text": "Uma query string tem um limite de comprimento que um token excederia",
+        "why": "A maioria dos tokens cabe confortavelmente; a objeção é o registro."
+      },
+      {
+        "text": "Cabeçalhos são criptografados e a URL não é",
+        "why": "Sob TLS os dois são criptografados em trânsito; o registro acontece nas pontas."
+      },
+      {
+        "text": "Uma URL é registrada por todo proxy, todo servidor e pelo seu próprio histórico de shell",
+        "why": "Um token num desses é um token em todos eles."
+      },
+      {
+        "text": "Uma query string é guardada em cache pelo navegador onde um cabeçalho de mesmo valor não é",
+        "why": "Cache é decidido por cabeçalhos, e isto não é um navegador."
+      }
+    ]
+  },
+  "ex-45g0mt3t": {
+    "prompt": "O que uma `requests.Session` dá além de um `get` pelado?",
+    "hint": "Duas coisas, e uma é desempenho.",
+    "choices": [
+      {
+        "text": "Cabeçalhos enviados em toda requisição, e uma conexão TCP reaproveitada",
+        "why": "Então o token é escrito uma vez, e algumas centenas de chamadas custam menos."
+      },
+      {
+        "text": "Autenticação negociada uma vez e guardada como cookie",
+        "why": "Só se a API funcionar assim; a sessão guarda cookies e não negocia nada."
+      },
+      {
+        "text": "Repetições automáticas em 5xx, que um `get` pelado não faz",
+        "why": "Repetições precisam de um adaptador montado na sessão; não são automáticas."
+      },
+      {
+        "text": "Um timeout padrão aplicado a toda chamada que passa por ela",
+        "why": "Não existe timeout padrão de sessão."
+      }
+    ]
+  },
+  "ex-ngs845xg": {
+    "prompt": "`X-RateLimit-Remaining: 59` voltou na primeira chamada. Para que isso serve?",
+    "hint": "Ele avisa antes, não depois.",
+    "choices": [
+      {
+        "text": "Dizer quantos segundos faltam para o limite reiniciar",
+        "why": "Isso é o `X-RateLimit-Reset`."
+      },
+      {
+        "text": "Relatar quantas repetições o adaptador ainda tem",
+        "why": "Ele vem do servidor e não tem nada a ver com a sua política de repetição."
+      },
+      {
+        "text": "Saber onde você está antes de ser cortado",
+        "why": "Quando você é cortado é um 429, muitas vezes com um `Retry-After` dizendo quanto tempo."
+      },
+      {
+        "text": "Dizer quantas linhas faltam buscar",
+        "why": "Ele conta chamadas e não linhas."
+      }
+    ]
+  },
+  "ex-vkz2n2kk": {
+    "prompt": "Uma resposta é `{\"results\": [...], \"next\": \"…?page=2\"}`. Como fica o laço?",
+    "hint": "Ele para sozinho.",
+    "choices": [
+      {
+        "text": "Um `while True` com um `break` quando `results` vier vazio",
+        "why": "Essa é a outra convenção, para APIs que incrementam um número de página."
+      },
+      {
+        "text": "Uma função recursiva, já que cada página nomeia a seguinte",
+        "why": "Funciona e custa um quadro de pilha por página à toa."
+      },
+      {
+        "text": "Um `for pagina in range(1, total)`, depois de ler a contagem da primeira resposta",
+        "why": "Este formato não relata um total, que é por que o `next` existe."
+      },
+      {
+        "text": "`while url:` — busca, junta, pega o `next`, e para quando ele é nulo",
+        "why": "Seis linhas, e as mesmas seis linhas toda vez. O laço não precisa saber quantas páginas existem."
+      }
+    ]
+  },
+  "ex-v141b855": {
+    "prompt": "Qual destes NÃO deve ser repetido?",
+    "hint": "Ele vai dizer a mesma coisa de novo.",
+    "choices": [
+      {
+        "text": "Um 429, quando um cabeçalho `Retry-After` diz quanto esperar",
+        "why": "Esperar e repetir é o que o cabeçalho está instruindo."
+      },
+      {
+        "text": "Um 503, que quer dizer que o serviço está temporariamente indisponível",
+        "why": "É exatamente para isso que serve uma repetição com espera crescente."
+      },
+      {
+        "text": "Um 404",
+        "why": "Um 400 é o mesmo: a requisição está errada e vai estar errada na próxima. E nunca repita um POST que não seja idempotente."
+      },
+      {
+        "text": "Uma conexão cortada antes de qualquer resposta chegar",
+        "why": "Nada foi processado, então repetir é seguro."
+      }
+    ]
+  },
+  "ex-t3cjj25y": {
+    "prompt": "Uma lista de dicionários vinda de uma API. Como ela vira uma tabela?",
+    "hint": "Uma chamada.",
+    "choices": [
+      {
+        "text": "`pd.concat([pd.DataFrame([l]) for l in linhas])`",
+        "why": "Ele monta uma tabela por linha e as concatena."
+      },
+      {
+        "text": "Um laço que acrescenta cada dicionário com `df.loc[len(df)] = linha`",
+        "why": "Isso realoca a cada linha e é o jeito mais lento que existe."
+      },
+      {
+        "text": "`pd.read_json(json.dumps(linhas))`, que passa pelo leitor de arquivo",
+        "why": "Funciona e dá uma volta por uma string à toa."
+      },
+      {
+        "text": "`pd.DataFrame(linhas)`",
+        "why": "Nada foi analisado, nada foi convertido, e as colunas são tipadas a partir dos valores."
+      }
+    ]
+  },
+  "ex-f51wm2tk": {
+    "prompt": "Uma linha tem `{\"cliente\": {\"nome\": \"ana\", \"pais\": \"BR\"}}`. O que o `pd.DataFrame` faz com ela?",
+    "hint": "O dicionário é um valor.",
+    "choices": [
+      {
+        "text": "Ele o achata automaticamente em duas colunas",
+        "why": "É para isso que serve o `json_normalize`."
+      },
+      {
+        "text": "Ele descarta a coluna, já que o tipo não pode ser inferido",
+        "why": "Nada é descartado."
+      },
+      {
+        "text": "Ele levanta, porque uma célula não guarda um dicionário",
+        "why": "Ela guarda qualquer objeto."
+      },
+      {
+        "text": "Ele põe o dicionário inteiro numa célula",
+        "why": "O `pd.json_normalize` o achata em `cliente.nome` e `cliente.pais` no lugar."
+      }
+    ]
+  },
+  "ex-nw2fw28g": {
+    "prompt": "O que o `errors=\"coerce\"` faz, e por que é útil aqui?",
+    "hint": "Ele não levanta.",
+    "choices": [
+      {
+        "text": "Levanta um aviso por valor ruim em vez de uma exceção",
+        "why": "Ele é silencioso, que é por que a contagem depois importa."
+      },
+      {
+        "text": "Transforma o que não converter em `NaN`, para o `isna().sum()` poder contá-los",
+        "why": "Esse par — converter forçando, depois contar — é como você descobre o que o feed está de fato mandando."
+      },
+      {
+        "text": "Repete a conversão com um analisador mais frouxo",
+        "why": "Há uma tentativa só."
+      },
+      {
+        "text": "Converte o que consegue e deixa todo o resto como strings na mesma coluna",
+        "why": "Uma coluna não pode ser meio convertida; as falhas viram `NaN`."
+      }
+    ]
+  },
+  "ex-wdg1tawj": {
+    "prompt": "Por que `df.to_csv(caminho, index=False)`?",
+    "hint": "Olhe a primeira coluna da saída.",
+    "choices": [
+      {
+        "text": "Senão o índice é escrito como primeira coluna e lido de volta como índice",
+        "why": "Ele é escrito e lido de volta como uma coluna comum sem nome."
+      },
+      {
+        "text": "Senão o arquivo ganha uma coluna de números de linha sem cabeçalho",
+        "why": "Quem abrir depois tem de descobrir o que ela quer dizer."
+      },
+      {
+        "text": "Senão as linhas são escritas na ordem do índice e não na ordem da tabela",
+        "why": "São a mesma ordem."
+      },
+      {
+        "text": "Senão o arquivo não pode ser lido pelo `read_csv` de jeito nenhum",
+        "why": "Ele lê sem problema, com uma coluna a mais."
+      }
+    ]
+  },
+  "ex-f8jw62pt": {
+    "prompt": "Uma API manda um número como string em algumas linhas. Onde isso aparece?",
+    "hint": "No mesmo lugar em que a de um CSV apareceria.",
+    "choices": [
+      {
+        "text": "No `info()`, como uma coluna do tipo errado",
+        "why": "Uma API não é mais limpa que um CSV; são os mesmos problemas noutra embalagem."
+      },
+      {
+        "text": "Em lugar nenhum — o pandas converte uma string numérica na entrada",
+        "why": "Ele infere um tipo por coluna, e uma string deixa a coluna como texto."
+      },
+      {
+        "text": "No `r.json()`, que levanta num tipo que ele não esperava",
+        "why": "Ele analisa qualquer JSON válido que chegue."
+      },
+      {
+        "text": "No `raise_for_status`, que confere o corpo contra o esquema",
+        "why": "Ele confere o código de status e não lê corpo nenhum."
+      }
+    ]
+  },
+  "ex-tj0xzyk5": {
+    "prompt": "`df.loc[df[\"pais\"] == \"BR\", \"centavos\"].sum()`. O que cada pedaço está fazendo?",
+    "hint": "Três passos numa linha.",
+    "choices": [
+      {
+        "text": "A máscara seleciona colunas e `\"centavos\"` seleciona linhas por rótulo",
+        "why": "É ao contrário."
+      },
+      {
+        "text": "O `loc` ordena por país e o `sum` totaliza o primeiro grupo",
+        "why": "Nada é ordenado e um grupo é selecionado pela máscara."
+      },
+      {
+        "text": "O `loc` filtra as linhas por rótulo e a comparação nomeia a coluna que é somada",
+        "why": "A comparação monta uma máscara de booleanos; o nome da coluna é o segundo argumento."
+      },
+      {
+        "text": "Uma máscara seleciona as linhas, o `loc` pega uma coluna delas, e o `sum` agrega",
+        "why": "É esse o mecanismo inteiro, e todo o resto são combinações dele."
+      }
+    ]
+  },
+  "ex-v89w2zk4": {
+    "prompt": "Você precisa de um número: o total gasto por clientes BR. Qual está certo?",
+    "hint": "Um deles foi medido em dois milissegundos.",
+    "choices": [
+      {
+        "text": "`iterrows`, com um `if` e um total corrente",
+        "why": "Onze segundos contra dois milissegundos em meio milhão de linhas."
+      },
+      {
+        "text": "`apply(axis=1)` devolvendo o valor ou zero, e aí `sum`",
+        "why": "Uma chamada Python por linha, medida em 2,8 segundos."
+      },
+      {
+        "text": "Uma máscara e um `sum` sobre a coluna",
+        "why": "A operação de coluna roda em código compilado; o laço monta um objeto por linha."
+      },
+      {
+        "text": "Um `groupby` sobre todo país, e aí indexar o resultado",
+        "why": "Funciona e calcula os outros países que você não pediu."
+      }
+    ]
+  },
+  "ex-sx5myca6": {
+    "prompt": "Achate `{\"cliente\": {\"nome\": …}}` em `cliente.nome`: `pd.json_______(linhas)`",
+    "hint": "Nove letras."
+  },
+  "ex-qc7023nd": {
+    "prompt": "Aponte a requisição sem timeout.",
+    "hint": "Leia os argumentos.",
+    "choices": [
+      {
+        "text": "`requests.post(url, json=payload, timeout=5)`",
+        "why": "Cinco segundos."
+      },
+      {
+        "text": "`requests.get(url, timeout=(3, 10))`",
+        "why": "Três segundos para conectar e dez para ler."
+      },
+      {
+        "text": "`requests.get(url, params={\"page\": 2})`",
+        "why": "Não existe padrão, então essa espera o tempo que a outra ponta quiser."
+      },
+      {
+        "text": "`session.get(url, timeout=10)`",
+        "why": "Dez segundos."
+      }
+    ]
+  },
+  "ex-a8afevn7": {
+    "prompt": "Um valor médio de pedido saiu catorze por cento acima do esperado. O que você confere primeiro?",
+    "hint": "Um denominador.",
+    "choices": [
+      {
+        "text": "Se a coluna tem valores faltantes, já que o `mean` divide pelo que está presente",
+        "why": "O `sum()/len()` e o `mean()` diferem exatamente pelas lacunas."
+      },
+      {
+        "text": "Se uns poucos pontos fora da curva estão puxando a média para cima, o que a mediana mostraria",
+        "why": "Vale conferir, e a lacuna é o que explica um deslocamento sistemático."
+      },
+      {
+        "text": "Se a coluna foi lida como float, o que perde precisão",
+        "why": "Um float guarda esses valores exatamente e não deslocaria uma média em catorze por cento."
+      },
+      {
+        "text": "Se as linhas foram filtradas antes de a agregação rodar",
+        "why": "Vale conferir, e isso mudaria o `len` junto com o `mean`."
+      }
+    ]
+  },
+  "ex-7fy5zyta": {
+    "prompt": "Qual agregação diz quão completo cada grupo está, de graça?",
+    "hint": "Ela conta o que está lá.",
+    "choices": [
+      {
+        "text": "`sum`, comparado com o total esperado",
+        "why": "Não existe um total esperado com que comparar."
+      },
+      {
+        "text": "`size`, que é a quantidade de linhas do grupo",
+        "why": "Ele conta linhas e não diz nada sobre lacunas."
+      },
+      {
+        "text": "`count` da coluna que está sendo somada",
+        "why": "Se um pedido BR não tivesse valor, o `count` diria 3 onde o grupo tem 4 linhas."
+      },
+      {
+        "text": "`nunique`, que conta os valores distintos",
+        "why": "Dois valores idênticos contariam uma vez."
+      }
+    ]
+  },
+  "ex-kmh45t2s": {
+    "prompt": "`us = df[df[\"pais\"] == \"US\"]`, e aí `us.iloc[0]` funciona e `us.loc[0]` levanta. Por quê?",
+    "hint": "Duas coisas diferentes nos colchetes.",
+    "choices": [
+      {
+        "text": "O `iloc` copiou as linhas e as renumerou, e o `loc` não",
+        "why": "O `iloc` seleciona; ele não renumera nada."
+      },
+      {
+        "text": "O `iloc` é por posição e o `loc` é por rótulo, e os rótulos vieram da tabela original",
+        "why": "O `reset_index(drop=True)` é o que faz os dois concordarem de novo."
+      },
+      {
+        "text": "O `loc` precisa de uma coluna também quando o índice não é único",
+        "why": "O índice é único aqui."
+      },
+      {
+        "text": "`us` é uma visão da original, então o `loc` lê através para a mãe e erra",
+        "why": "Uma visão carregaria os mesmos rótulos assim mesmo."
+      }
+    ]
+  },
+  "ex-qgd042cz": {
+    "prompt": "Um endpoint devolve dez linhas e um endereço `next`. De quantas páginas o seu laço precisa saber de antemão?",
+    "hint": "Ele para numa condição.",
+    "choices": [
+      {
+        "text": "Uma, já que a primeira resposta relata o total",
+        "why": "Este formato não relata total, que é por que o `next` existe."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Ele busca, junta, pega o `next`, e para quando ele é nulo — três páginas e vinte e cinco linhas aqui."
+      },
+      {
+        "text": "Todas, que é por que a contagem vem na primeira resposta",
+        "why": "Ela não vem."
+      },
+      {
+        "text": "Duas, já que o laço precisa ver uma página vazia para parar",
+        "why": "Ele para num `next` nulo sem buscar uma página vazia."
+      }
+    ]
+  },
+  "ex-24r4b8p6": {
+    "prompt": "Qual destes é uma decisão que alguém tem de escrever?",
+    "hint": "Os outros são mecânicos.",
+    "choices": [
+      {
+        "text": "Se pôr um timeout na requisição",
+        "why": "Isso é sempre sim."
+      },
+      {
+        "text": "Se passar `index=False` quando a tabela é escrita como CSV",
+        "why": "Isso é sempre sim, a menos que o índice carregue significado."
+      },
+      {
+        "text": "Se usar `loc` ou `iloc` para selecionar as linhas",
+        "why": "Isso decorre de você ter rótulos ou posições."
+      },
+      {
+        "text": "Se um preço faltando quer dizer zero ou quer dizer que a linha é excluída",
+        "why": "Cada preenchimento é uma afirmação diferente sobre o mundo, e nenhum é seguro de fazer sem dizer por quê."
+      }
+    ]
+  },
+  "ex-eb815yng": {
+    "prompt": "A última linha do curso inteiro, em quatro linhas de código. O que falta em `linhas = buscar_tudo(url); df = pd.DataFrame(linhas); print(df.groupby(\"pais\").sum())`?",
+    "hint": "Entre buscar e agrupar.",
+    "choices": [
+      {
+        "text": "Um olhar nos dados — `info`, `describe`, e uma conversão das colunas cujo tipo importa",
+        "why": "Uma API não é mais limpa que um CSV, e um número mandado como string chega como texto."
+      },
+      {
+        "text": "Um `sort_values`, já que o `groupby` devolve os grupos sem ordem",
+        "why": "Ele os devolve ordenados pela chave de agrupamento."
+      },
+      {
+        "text": "Um `reset_index`, já que um resultado agrupado não pode ser impresso",
+        "why": "Ele imprime; o reset é para escrever depois."
+      },
+      {
+        "text": "Um laço sobre as linhas, validando cada uma delas antes de qualquer coisa ser tabulada",
+        "why": "Esse é o laço que as duas bibliotecas existem para remover."
+      }
+    ]
+  }
+}

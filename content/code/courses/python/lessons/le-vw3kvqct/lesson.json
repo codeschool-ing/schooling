@@ -1,0 +1,98 @@
+{
+  "id": "le-vw3kvqct",
+  "title": "Object orientation: classes, inheritance and special methods",
+  "sections": [
+    {
+      "id": "se-ccetbfwt",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-q1ctg0t0",
+          "version": 1,
+          "script": "You have been carrying data and the operations on it separately for five lessons. A dictionary with a person in it, and a handful of functions that each take that dictionary. {{apart}} That works, and it works until there are eleven of those functions and nothing says they belong together.\n\n{{class}} A class puts them in one place. The data is on the instance and the operations are methods beside it, and the thing you pass around answers questions about itself.\n\n{{self}} There is one idea to get past first, and it is smaller than its reputation. `self` is not magic and it is not a keyword. A method is an ordinary function whose first parameter is the instance, and `person.greet()` is Python calling `Person.greet(person)`. That is the whole of it. Everything that looks mysterious in this lesson comes back to that sentence.\n\n{{init}} `__init__` is where the attributes are set, and it is worth being strict about: every attribute a class has should be set there, where a reader can see the shape of the object without hunting through the methods.\n\n{{special}} Then the special methods, which are the useful part people learn last. `__repr__` decides what you see in the interpreter and in a log — and a class without one prints as an address in memory, which is information about nothing. `__eq__` decides what `==` means. `__len__` makes `len()` work. **The language already knows how to call these**; you are filling in an interface it has been holding open.\n\n{{dataclass}} And then the honest part: most classes people write are a name and three fields and nothing else. `@dataclass` writes the `__init__`, the `__repr__` and the `__eq__` for those, correctly, in one line. There is a section on it and it is the one you will use most.\n\n{{not}} Finally, the two shapes that should not have been classes at all — the one with a single method, which was a function, and the one with no state, which was a module. Knowing when not to reach for this is half of using it well.",
+          "seconds": 145,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-cv9jx0xv",
+      "slug": "a-class-and-an-instance",
+      "kind": "reading"
+    },
+    {
+      "id": "se-yp9mtn96",
+      "slug": "methods",
+      "kind": "reading"
+    },
+    {
+      "id": "se-8e95fazf",
+      "slug": "class-against-instance",
+      "kind": "reading"
+    },
+    {
+      "id": "se-zw7yzfq9",
+      "slug": "inheritance",
+      "kind": "reading"
+    },
+    {
+      "id": "se-e1z5aaga",
+      "slug": "special-methods",
+      "kind": "reading"
+    },
+    {
+      "id": "se-h33wzc83",
+      "slug": "dataclasses",
+      "kind": "reading"
+    },
+    {
+      "id": "se-1kqffxfx",
+      "slug": "composition",
+      "kind": "reading"
+    },
+    {
+      "id": "se-t16hgppd",
+      "slug": "properties",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ss5ffpj1",
+      "slug": "when-not-a-class",
+      "kind": "reading"
+    },
+    {
+      "id": "se-196xxbed",
+      "slug": "two-designs",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-95r6dfst",
+          "version": 1,
+          "script": "The same problem, twice. Inheritance on the left, composition on the right.\n\n{{problem}} I need three kinds of notification — e-mail, SMS, and a line in a log. Each formats a message and sends it somewhere.\n\n{{inherit}} By inheritance: a `Notifier` base class with a `send`, and three subclasses overriding it. It reads well, and the shared formatting lives in the base where nobody repeats it.\n\n{{crack}} Now the requirement arrives that always arrives. The SMS one needs to retry, the log one must never retry, and the e-mail one retries twice with a delay. Retrying is not a kind of notification — it is a thing that happens around one. So it goes in the base with a flag, and the base now has a branch in it for a subclass that is not supposed to matter to it.\n\n{{compose}} By composition: a `Notifier` that HOLDS a transport. The transport has one method, `deliver`. Retrying is a `RetryingTransport` that holds another transport and calls it again. Nothing inherits from anything, and the log one gets no retry because nobody wrapped it.\n\n{{test}} And the test is the tell. On the left, testing the e-mail subclass means testing its base. On the right, I hand it a transport that records what it was given, and the notifier does not know the difference.\n\n{{rule}} The question that decides it: is this a KIND of that thing, or does it HAVE one? Kind is inheritance. Has is composition. Most of the time it is has, and inheritance was reached for because it was taught first.",
+          "seconds": 109,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-9dx8fr27",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-pz5smfnv",
+          "version": 1,
+          "script": "Three things to carry out of this lesson.\n\n{{self}} `self` is the instance, passed as the first argument. `p.greet()` is `Person.greet(p)`. Nothing else about methods is unusual, and the moment that sentence is comfortable, `@classmethod` and `super()` stop being strange.\n\n{{repr}} Write a `__repr__`. It costs one line and it pays every time you print a list of these, read a log or stop in a debugger. A class without one shows an address in memory, which tells you the type and nothing else — at the exact moment you wanted to know what was in it.\n\n{{dataclass}} And if the class is a name and some fields, make it a `@dataclass`. It writes the `__init__`, the `__repr__` and the `__eq__`, and it writes them correctly. Use `field(default_factory=list)` for the mutable default, which is lesson 5's trap in a new costume, and `frozen=True` when the thing should not change after it is made.\n\n{{last}} The rest of this course is mostly not classes. Functions, modules and the standard library carry more of it — and knowing when a class is not the answer is what this lesson leaves you with.",
+          "seconds": 79,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-cfw4q48k",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

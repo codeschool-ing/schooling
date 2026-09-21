@@ -1,0 +1,93 @@
+{
+  "id": "le-x5k33vhd",
+  "title": "Regular expressions: matching, groups and substitution",
+  "sections": [
+    {
+      "id": "se-78wa8fdk",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-pwcra2gg",
+          "version": 1,
+          "script": "A regular expression is a small language for describing a SHAPE of text. Not a particular string — a shape: three digits, then a dash, then four more. A word at the start of a line. Anything between two brackets.\n\n{{power}} It is the most powerful thing in this course per character typed, and it is the thing most likely to be reached for when something simpler would have done. So this lesson starts with when NOT to use one, and that section is not filler.\n\n{{simple}} Three jobs a string method already does better: does this contain that, does it start with that, split on a comma. `in`, `startswith`, `split`. Each of those has a regular expression that also works, is slower, and is harder to read.\n\n{{html}} And one that a regular expression cannot do at all, however clever you are: parse HTML. Nested tags are not a shape a regular expression can describe, and the attempt is the most famous wrong answer in programming. Lesson 21 has the library that does it.\n\n{{shape}} What is left is where it is unbeatable. A log line with a timestamp, a level and a message. A phone number in six different formats. Every URL in a page of text. A date somebody typed. Those are shapes with variation in them, and describing the variation is exactly what this language is for.\n\n{{pieces}} The pattern language is three questions, and every expression you read is those three interleaved. WHAT character — a literal, a class, a dot. HOW MANY of them — star, plus, question mark, braces. And WHERE — the start of the line, the end, a word boundary.\n\n{{greedy}} One of those will bite you today, and it is the how-many. `.*` is GREEDY: it takes as much as it can and gives back only when forced. A pattern to match one tag matches the whole line, and the fix is one character.\n\n{{groups}} Then groups, which is how you get something back rather than a yes. And substitution, which is find-and-replace with the shape in it — including a replacement that is a function, which is where this stops being a search tool and starts being a program.\n\n{{raw}} Finally the two mechanical things: write every pattern as a raw string, and compile the one you use in a loop.",
+          "seconds": 163,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-5vngv9ng",
+      "slug": "when-not-to",
+      "kind": "reading"
+    },
+    {
+      "id": "se-a856t5km",
+      "slug": "matching-one-character",
+      "kind": "reading"
+    },
+    {
+      "id": "se-scznrq8w",
+      "slug": "how-many",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ne9fyfr0",
+      "slug": "where",
+      "kind": "reading"
+    },
+    {
+      "id": "se-mkwdph1e",
+      "slug": "groups",
+      "kind": "reading"
+    },
+    {
+      "id": "se-447yqgdp",
+      "slug": "the-re-module",
+      "kind": "reading"
+    },
+    {
+      "id": "se-6vsee42n",
+      "slug": "substitution",
+      "kind": "reading"
+    },
+    {
+      "id": "se-2w6m5hv1",
+      "slug": "raw-strings-and-compiling",
+      "kind": "reading"
+    },
+    {
+      "id": "se-v5c2sr8a",
+      "slug": "a-pattern-built-up",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-s3xzvvpq",
+          "version": 1,
+          "script": "One log line, matched wrongly four times, then right. The line:\n\n`2026-09-21 14:03:11 ERROR  db: connection refused after 3 attempts`\n\nI want the timestamp, the level and the message.\n\n{{first}} First attempt: `(.*) (.*) (.*)`. Three groups, three spaces — and it matches, which is the dangerous part. Group one is the date AND the time AND the level AND most of the message, because `.*` is greedy and takes everything it can while still leaving room for the rest. I get `2026-09-21 14:03:11 ERROR  db: connection refused after`, then `3`, then `attempts` — the last two groups were squeezed down to one word each.\n\n{{second}} Second: make them lazy — `(.*?) (.*?) (.*)`. Now group one is `2026-09-21`, which is half the timestamp. Lazy took as little as it could, and as little as possible was the date.\n\n{{third}} Third: describe the shape instead of the length. `(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) (\\w+) +(.*)`. The timestamp is digits and separators, the level is word characters, and the `+` after the space handles the two spaces that are there. That works — on this line.\n\n{{fourth}} Fourth: the next line has a level of `WARN` and only one space, and another has a message containing a colon. Both still work, because I described the shape rather than the layout. But a line with no level at all matches nothing, and `search` returns `None` — and `None.group(1)` is lesson 8's `AttributeError` about `NoneType`.\n\n{{right}} So the last change is not to the pattern. It is `if m is None: continue`, and a count of the lines that did not match, printed at the end. A parser that silently drops a tenth of its input is worse than one that crashes.\n\n{{named}} And one readability change: named groups. `(?P<level>\\w+)` and then `m[\"level\"]`, because `m.group(2)` is a number somebody will have to count.",
+          "seconds": 128,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-xvf5mhze",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-m1rt9573",
+          "version": 1,
+          "script": "Describe the shape, capture what you want, and stop before HTML.\n\n{{not}} The first question is still whether you need one. `in`, `startswith`, `split` and `replace` cover most of what people reach for a pattern to do, and they say what they mean.\n\n{{three}} The language is three questions interleaved: what character, how many, and where. Everything else is notation on top of that.\n\n{{greedy}} `*` and `+` are greedy. `*?` and `+?` are lazy. When a pattern matches far more than you meant, that is the first thing to look at — and describing the shape properly is usually better than either.\n\n{{groups}} Parentheses capture. Name them when there are more than two, because `m.group(3)` is a number somebody has to count, and `m[\"level\"]` is not. `(?:…)` groups without capturing, for when you only wanted the parentheses.\n\n{{none}} `search` returns `None` when it does not match, and `None.group()` is the traceback you will get for not checking. Check it every time, and count what did not match.\n\n{{sub}} `sub` replaces, and its replacement can be a function — which is how you do something to every match rather than replacing it with a constant.\n\n{{raw}} And always write the pattern as `r\"...\"`. Every backslash in this lesson is one character to the regular expression and two to Python without it.",
+          "seconds": 91,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-0a355wgc",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

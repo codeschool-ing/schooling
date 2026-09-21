@@ -1,0 +1,920 @@
+{
+  "ex-77yzyy7h": {
+    "prompt": "`pip install requests` no interpretador do sistema responde `error: externally-managed-environment`. O que isso protege?",
+    "hint": "Quem mais importa daquele interpretador?",
+    "choices": [
+      {
+        "text": "O índice de pacotes em si, que limita instalações feitas fora de um ambiente",
+        "why": "A recusa é local e acontece antes de qualquer coisa ser baixada."
+      },
+      {
+        "text": "Espaço em disco em `/usr`, que uma distribuição reserva para os próprios arquivos",
+        "why": "A checagem é sobre de quem é a instalação e não sobre espaço."
+      },
+      {
+        "text": "Programas que fazem parte do sistema operacional e importam do mesmo Python",
+        "why": "Gerenciadores de pacote, configuração de impressora e ferramentas de firewall são escritos nele, e atualizar uma biblioteca embaixo deles muda o que eles importam."
+      },
+      {
+        "text": "O seu próprio projeto, que senão receberia uma versão que não pediu",
+        "why": "O seu projeto não é instalado no interpretador do sistema de jeito nenhum."
+      }
+    ]
+  },
+  "ex-w2r8fzyn": {
+    "prompt": "Dois projetos numa máquina precisam de versões diferentes da mesma biblioteca. Por que uma instalação global não resolve?",
+    "hint": "Conte quantas versões cabem.",
+    "choices": [
+      {
+        "text": "O `pip` recusa instalar uma biblioteca já presente em outra versão",
+        "why": "O `--upgrade` a substitui sem reclamar, que é como isso acontece caladamente."
+      },
+      {
+        "text": "Os dois projetos compartilhariam um `__pycache__`, que é indexado por versão",
+        "why": "Caches de bytecode ficam ao lado do fonte e não são disso que se trata."
+      },
+      {
+        "text": "Ela guarda uma versão, então um projeto fica quebrado e qual depende da ordem de instalação",
+        "why": "É esse o problema inteiro que um ambiente por projeto resolve."
+      },
+      {
+        "text": "Os imports ficariam ambíguos, e o Python levanta no ponto do segundo import dele",
+        "why": "Não há nada de ambíguo: uma cópia está instalada e os dois projetos recebem ela."
+      }
+    ]
+  },
+  "ex-rke7fwse": {
+    "prompt": "O que um ambiente virtual isola?",
+    "hint": "Uma coisa, e é estreita.",
+    "choices": [
+      {
+        "text": "Quais bibliotecas a instrução `import` consegue achar, e nada mais",
+        "why": "Não é um sandbox: o sistema de arquivos, a rede e os processos são da máquina, e essa é a única coisa de que este problema trata."
+      },
+      {
+        "text": "O sistema de arquivos, para um script não ler fora do diretório do projeto",
+        "why": "Um script dentro de um ambiente lê qualquer coisa que o usuário consiga ler."
+      },
+      {
+        "text": "O interpretador, do qual ele guarda uma cópia compilada própria",
+        "why": "Ele guarda uma ligação para um; o `pyvenv.cfg` diz qual."
+      },
+      {
+        "text": "A rede, para uma instalação ter de ser aprovada antes de alcançar o índice",
+        "why": "Instalações saem direto como sempre saíram."
+      }
+    ]
+  },
+  "ex-bwg2a08z": {
+    "prompt": "Quando `--break-system-packages` é defensável?",
+    "hint": "Algo que você vai jogar fora.",
+    "choices": [
+      {
+        "text": "Num contêiner que você mesmo montou e está prestes a jogar fora no fim do build",
+        "why": "Numa máquina em que você trabalha, um ambiente custa cinco segundos e esta flag custa uma tarde mais adiante no ano."
+      },
+      {
+        "text": "Quando o gerenciador do sistema não tem build da biblioteca em questão",
+        "why": "Essa é a razão usual de recorrerem a ela, e um ambiente responde melhor."
+      },
+      {
+        "text": "Quando você é o único usuário da máquina e tem direitos administrativos",
+        "why": "Poder fazer é o que a flag já pressupõe."
+      },
+      {
+        "text": "Quando a biblioteca a instalar é Python puro, sem partes compiladas",
+        "why": "Se ela compila ou não nada tem a ver com em qual instalação ela cai."
+      }
+    ]
+  },
+  "ex-30s3ae22": {
+    "prompt": "A especificação por trás da recusa `externally-managed-environment`: `PEP ______`",
+    "hint": "Três dígitos."
+  },
+  "ex-zj105ytm": {
+    "prompt": "O que `include-system-site-packages = false` no `pyvenv.cfg` faz?",
+    "hint": "É a linha que faz o isolamento.",
+    "choices": [
+      {
+        "text": "Impede o ambiente de ser criado dentro de um diretório do sistema",
+        "why": "O lugar do diretório é decidido pelo argumento que você deu."
+      },
+      {
+        "text": "Mantém as bibliotecas da própria máquina fora do `sys.path` deste ambiente",
+        "why": "Com `--system-site-packages` ela fica `true`, o que ocasionalmente é o que se quer e nunca é o padrão."
+      },
+      {
+        "text": "Impede o `pip` de instalar no interpretador do sistema por engano",
+        "why": "O `pip` instala no ambiente que estiver ativo independentemente desta linha."
+      },
+      {
+        "text": "Faz o ambiente copiar o interpretador em vez de ligar-se a ele",
+        "why": "Isso é o `--copies`, e é outra escolha."
+      }
+    ]
+  },
+  "ex-1qpf5jey": {
+    "prompt": "O que existe dentro de um ambiente virtual que NÃO está lá?",
+    "hint": "Ele toma algo emprestado.",
+    "choices": [
+      {
+        "text": "Um diretório `site-packages`, que é criado na primeira instalação",
+        "why": "Ele é criado junto com o ambiente, vazio."
+      },
+      {
+        "text": "Um interpretador Python próprio",
+        "why": "O `pyvenv.cfg` registra `home` e `executable`, que nomeiam o interpretador que ele toma emprestado."
+      },
+      {
+        "text": "Os scripts de ativação, que são gerados pelo shell sob demanda",
+        "why": "O `bin/activate` e as variantes são escritos na criação."
+      },
+      {
+        "text": "Uma cópia do `pip`, que é baixada quando ele é usado pela primeira vez",
+        "why": "O `pip` é instalado no ambiente conforme ele é criado."
+      }
+    ]
+  },
+  "ex-xvtganfb": {
+    "prompt": "Uma unidade do systemd roda um script de um projeto com ambiente virtual. O que ela invoca?",
+    "hint": "Não há shell para rodar o `activate`.",
+    "choices": [
+      {
+        "text": "`source .venv/bin/activate && python script.py`, como uma string de comando",
+        "why": "Uma unidade roda um programa e não um shell, a menos que se peça um explicitamente."
+      },
+      {
+        "text": "`.venv/bin/python script.py`, direto, sem ativação nenhuma",
+        "why": "O `activate` é um script de shell, e uma unidade não tem um shell que o rodou."
+      },
+      {
+        "text": "`python -m venv .venv && python script.py` a cada início",
+        "why": "Recriar o ambiente a cada início não reinstala nada e desperdiça o boot."
+      },
+      {
+        "text": "`python script.py` com `VIRTUAL_ENV` definido no ambiente da unidade",
+        "why": "A variável é um marcador; o que seleciona o interpretador é qual deles roda."
+      }
+    ]
+  },
+  "ex-0xe6zw89": {
+    "prompt": "Por que `.venv/` fica no `.gitignore`?",
+    "hint": "Pense no que tem dentro.",
+    "choices": [
+      {
+        "text": "O conteúdo dele muda a cada execução, então todo commit carregaria um diff",
+        "why": "Ele é estável entre instalações; a objeção é o tamanho e ser específico de uma máquina."
+      },
+      {
+        "text": "O git não rastreia links simbólicos, e o ambiente é montado a partir deles",
+        "why": "O git rastreia links simbólicos; a objeção é o que o diretório é."
+      },
+      {
+        "text": "É artefato de build — extensões compiladas para uma máquina, caminhos absolutos, uma cópia de cada biblioteca",
+        "why": "Ele é reproduzido em segundos a partir de um arquivo de texto, e comitá-lo põe centenas de megabytes num histórico que nunca mais consegue perdê-los."
+      },
+      {
+        "text": "Ele contém credenciais, já que o `pip` guarda autenticação de índice dentro dele",
+        "why": "Credenciais de índice moram em `~/.pip` ou no ambiente, não no diretório."
+      }
+    ]
+  },
+  "ex-8768tr5g": {
+    "prompt": "Alguma coisa no ambiente está errada e ninguém sabe dizer o quê. Qual é a primeira coisa a tentar?",
+    "hint": "Ele é descartável de propósito.",
+    "choices": [
+      {
+        "text": "Apagar o ambiente inteiro e reconstruí-lo a partir do arquivo de requisitos, num comando",
+        "why": "A resposta para quase todo 'na minha máquina funciona' sobre dependências."
+      },
+      {
+        "text": "Recriá-lo com `--system-site-packages`, para uma biblioteca faltante ser achada",
+        "why": "Isso remove o isolamento para esconder um sintoma."
+      },
+      {
+        "text": "Comparar o `pip list` com o de um colega e instalar as diferenças",
+        "why": "Funciona, à mão, e a reconstrução faz isso num comando."
+      },
+      {
+        "text": "`pip install --upgrade` em cada pacote, para levar o ambiente a um estado só",
+        "why": "Isso produz um estado que ninguém testou em vez daquele que o arquivo descreve."
+      }
+    ]
+  },
+  "ex-rcngy4np": {
+    "prompt": "Por que escrever `python -m pip install` e não `pip install`?",
+    "hint": "Em qual interpretador cada um instala?",
+    "choices": [
+      {
+        "text": "`python -m pip` instala no `python` que você acabou de rodar; `pip` é o script que o `PATH` achou",
+        "why": "A falha que isso evita é silenciosa: a instalação relata sucesso e o import falha, porque a biblioteca foi para outro lugar."
+      },
+      {
+        "text": "`python -m pip` resolve dependências antes de baixar e o `pip` não resolve",
+        "why": "São o mesmo programa e resolvem de forma idêntica."
+      },
+      {
+        "text": "`pip` está descontinuado como comando e imprime um aviso a cada execução",
+        "why": "Ele não está descontinuado e não imprime aviso nenhum desses."
+      },
+      {
+        "text": "`python -m pip` lê a configuração do projeto e um `pip` pelado não lê",
+        "why": "Os dois leem os mesmos arquivos de configuração."
+      }
+    ]
+  },
+  "ex-ckx3xyty": {
+    "prompt": "Você instala um pacote e o `pip list` mostra cinco. O que são os outros quatro?",
+    "hint": "Alguma coisa pediu por eles.",
+    "choices": [
+      {
+        "text": "Dependências daquele que você instalou",
+        "why": "O `pip show` os nomeia em `Requires`, e o `Required-by` vazio é como você sabe qual pacote você escolheu."
+      },
+      {
+        "text": "Dependências de build, guardadas para o pacote poder ser reconstruído sem rede",
+        "why": "Dependências de build são descartadas depois que a wheel é montada."
+      },
+      {
+        "text": "Extras opcionais, instalados porque o ambiente não tinha arquivo de restrição",
+        "why": "Extras são instalados só quando pedidos pelo nome entre colchetes."
+      },
+      {
+        "text": "Pacotes com que todo ambiente é criado, como `pip` e `setuptools`",
+        "why": "Esses estão lá também, e não são os quatro desta lista."
+      }
+    ]
+  },
+  "ex-q8wem71j": {
+    "prompt": "`python -m pip uninstall requests`. O que fica para trás?",
+    "hint": "Ele remove uma coisa.",
+    "choices": [
+      {
+        "text": "Os diretórios `dist-info`, que registram o que foi instalado para limpeza futura",
+        "why": "Esses vão junto com o pacote que descrevem."
+      },
+      {
+        "text": "Nada — o `pip` remove um pacote e as dependências de que só ele precisava",
+        "why": "Esse comportamento precisaria de um grafo de dependências que o `pip` não mantém."
+      },
+      {
+        "text": "`certifi`, `idna`, `charset-normalizer` e `urllib3` — os quatro, intactos",
+        "why": "O `pip` não tem conceito de 'não é mais necessário', então um ambiente acumula uma camada de coisas que nada usa."
+      },
+      {
+        "text": "Só os pacotes de que outra coisa no ambiente também precisa",
+        "why": "Ele não faz checagem nenhuma dessas; remove exatamente o que foi nomeado."
+      }
+    ]
+  },
+  "ex-be4wz73z": {
+    "prompt": "Qual campo do `pip show` responde 'isto é algo que eu pedi'?",
+    "hint": "Olhe a direção da seta.",
+    "choices": [
+      {
+        "text": "`Location`, que difere entre uma instalação direta e uma transitiva",
+        "why": "Tudo instalado no ambiente cai no mesmo diretório."
+      },
+      {
+        "text": "`Requires`, que fica vazio para um pacote folha que você instalou direto",
+        "why": "`Requires` lista do que ele precisa, e o `requests` precisa de quatro coisas."
+      },
+      {
+        "text": "`Required-by`, que fica vazio para um pacote que você instalou você mesmo",
+        "why": "`Requires` é a outra direção: o de que este pacote precisa."
+      },
+      {
+        "text": "`Installer`, que registra se foi uma pessoa ou um resolvedor que pediu por ele",
+        "why": "Ele registra qual ferramenta fez a instalação, não quem queria."
+      }
+    ]
+  },
+  "ex-zj076ds2": {
+    "prompt": "Por que não existe um `pip upgrade-everything`?",
+    "hint": "Pense no que um comando desses decide.",
+    "choices": [
+      {
+        "text": "Porque a decisão é sua — o `pip list --outdated` relata, e você escolhe",
+        "why": "Atualizar tudo de uma vez produz um estado que ninguém testou e uma falha sem causa única."
+      },
+      {
+        "text": "Porque o `pip` não consegue resolver um ambiente inteiro de uma vez, só um pedido por vez",
+        "why": "Ele resolve o que for pedido, inclusive um arquivo de requisitos inteiro."
+      },
+      {
+        "text": "Porque um índice de pacotes não expõe a versão mais nova de cada pacote de uma vez",
+        "why": "O `pip list --outdated` pede exatamente isso a ele."
+      },
+      {
+        "text": "Porque atualizar uma dependência transitiva quebraria o pacote acima dela",
+        "why": "Às vezes quebraria e muitas vezes não; a objeção é que é uma escolha."
+      }
+    ]
+  },
+  "ex-qwhq89at": {
+    "prompt": "`requests~=2.31.0` e `requests~=2.31`. Querem dizer a mesma coisa?",
+    "hint": "Conte os componentes.",
+    "choices": [
+      {
+        "text": "Não — o último componente é o que se move, então um permite correções e o outro permite menores",
+        "why": "Num ambiente novo eles resolveram para 2.31.0 e 2.34.2."
+      },
+      {
+        "text": "Sim — o `~=` lê a versão maior e permite qualquer coisa abaixo da seguinte",
+        "why": "Aí os dois teriam dado a mesma resposta, e não deram."
+      },
+      {
+        "text": "Sim — zeros ao final são descartados antes de o especificador ser comparado",
+        "why": "A quantidade de componentes é exatamente o que muda o significado."
+      },
+      {
+        "text": "Não — a forma mais curta é recusada, já que o `~=` exige três componentes",
+        "why": "Ela é aceita e quer dizer outra coisa."
+      }
+    ]
+  },
+  "ex-eg1k0zn5": {
+    "prompt": "O que `>=2.26` permite que `~=2.26` não permite?",
+    "hint": "Um deles tem limite superior.",
+    "choices": [
+      {
+        "text": "Uma versão de outro índice, que a forma compatível restringe",
+        "why": "Nenhuma das duas diz nada sobre qual índice é usado."
+      },
+      {
+        "text": "A versão 2.25 e abaixo, quando nada mais novo satisfaz o resto do arquivo",
+        "why": "Nenhuma das duas permite nada abaixo de 2.26."
+      },
+      {
+        "text": "Uma pré-versão, que a forma de versão compatível exclui por padrão",
+        "why": "As duas excluem pré-versões a menos que se passe `--pre`."
+      },
+      {
+        "text": "A versão 3 e qualquer coisa acima dela, que tinha permissão de quebrar você",
+        "why": "`~=2.26` é o `>=2.26,<3` explícito, e escrevê-lo por extenso vale a pena justamente por não poder ser mal lido."
+      }
+    ]
+  },
+  "ex-b1dr12hh": {
+    "prompt": "`requests==2.31.0` está fixado exatamente. Quantos pacotes estão fixados agora?",
+    "hint": "Olhe o que o próprio `requests` pede.",
+    "choices": [
+      {
+        "text": "Dois — o pacote e aquilo de que ele declara uma versão exata",
+        "why": "Ele não declara versão exata nenhuma; as dependências dele são todas faixas."
+      },
+      {
+        "text": "Um",
+        "why": "Ele declara `urllib3 (<3, >=1.21.1)` e `certifi (>=2017.4.17)`, então esses podem ser qualquer coisa dentro de uma faixa que você não escolheu."
+      },
+      {
+        "text": "Nenhum, até o ambiente ser reconstruído e a resolução registrada",
+        "why": "A fixação vale na próxima instalação, e vale para um pacote."
+      },
+      {
+        "text": "Cinco — a fixação se propaga para tudo de que o pacote precisa",
+        "why": "Uma fixação vale para o pacote que ela nomeia e nada além."
+      }
+    ]
+  },
+  "ex-fy1fefw6": {
+    "prompt": "O que é uma vírgula em `requests>=2.26,<3`?",
+    "hint": "Ela junta duas condições.",
+    "choices": [
+      {
+        "text": "Um separador entre dois pacotes numa linha",
+        "why": "Dois pacotes seriam duas linhas, ou dois argumentos."
+      },
+      {
+        "text": "Uma ordem de preferência, tentada da esquerda para a direita",
+        "why": "Não existe ordem de preferência dentro de um especificador."
+      },
+      {
+        "text": "Um `e` — as duas têm de valer",
+        "why": "É a forma explícita de `~=2.26`, e a explicitude é o argumento a favor dela."
+      },
+      {
+        "text": "Um `ou` — qualquer uma pode valer, e o `pip` prefere a primeira",
+        "why": "Um especificador satisfeito de dois jeitos não seria restrição nenhuma."
+      }
+    ]
+  },
+  "ex-ej9xn4ms": {
+    "prompt": "Fixe de modo que só o componente de correção possa se mover, na forma mais curta: `requests______2.31.0`",
+    "hint": "Dois caracteres."
+  },
+  "ex-fgjy8szr": {
+    "prompt": "Por que `pip freeze > requirements.txt` é o jeito errado de escrever um?",
+    "hint": "Olhe o que a saída contém.",
+    "choices": [
+      {
+        "text": "Ele lista tudo o que está instalado, sem nada dizendo quais pacotes o projeto pediu",
+        "why": "Daqui a um ano ninguém consegue dizer se o `idna` é dependência do projeto ou sobra de algo desinstalado."
+      },
+      {
+        "text": "Ele escreve os pacotes em ordem alfabética, perdendo a ordem de instalação",
+        "why": "Ordem de instalação não carrega informação que valha guardar."
+      },
+      {
+        "text": "Ele omite pacotes instalados com `--editable`, então um pacote local some",
+        "why": "Ele os inclui, numa forma que nomeia o caminho."
+      },
+      {
+        "text": "Ele fixa na versão instalada e não na que foi testada",
+        "why": "São a mesma versão, que é a única coisa em que ele acerta."
+      }
+    ]
+  },
+  "ex-tq6ts26j": {
+    "prompt": "Um projeto remove uma biblioteca. O que a saída do `pip freeze` dele faz?",
+    "hint": "Desinstalar remove uma coisa.",
+    "choices": [
+      {
+        "text": "Encolhe uma linha, que é a biblioteca que foi removida",
+        "why": "Os quatro pacotes que ela trouxe continuam instalados e continuam impressos."
+      },
+      {
+        "text": "Marca os pacotes órfãos com um comentário nomeando o que os exigia",
+        "why": "O `freeze` não escreve anotação nenhuma."
+      },
+      {
+        "text": "Fica inalterada até o ambiente ser reconstruído a partir daquele mesmo arquivo de novo",
+        "why": "Ele relata o ambiente vivo a cada execução."
+      },
+      {
+        "text": "Segue imprimindo as dependências da biblioteca, então o arquivo cresce e nunca encolhe",
+        "why": "O `pip uninstall` remove exatamente o que foi nomeado, e o `freeze` relata o que está lá."
+      }
+    ]
+  },
+  "ex-9tn142fn": {
+    "prompt": "O que pertence ao `requirements-dev.txt` e não ao `requirements.txt`?",
+    "hint": "Pense no que roda em produção.",
+    "choices": [
+      {
+        "text": "`pytest` e `ruff`",
+        "why": "Instalá-los em produção manda um framework de testes e um linter para um servidor que não roda nenhum dos dois."
+      },
+      {
+        "text": "As versões fixadas de tudo, deixando o arquivo principal com faixas",
+        "why": "A divisão é por do que o código precisa, não por quão apertada é a fixação."
+      },
+      {
+        "text": "Qualquer coisa importada só dentro de um bloco `if TYPE_CHECKING:`",
+        "why": "Essas são necessárias para o verificador e não são para o que esta divisão serve."
+      },
+      {
+        "text": "As dependências transitivas, para o arquivo principal ficar curto e legível",
+        "why": "Dependências transitivas pertencem a um arquivo de trava, e são necessárias em produção."
+      }
+    ]
+  },
+  "ex-pb519n0y": {
+    "prompt": "A primeira linha do `requirements-dev.txt`, puxando o outro arquivo: `______ requirements.txt`",
+    "hint": "Dois caracteres."
+  },
+  "ex-7m0yfefd": {
+    "prompt": "O que um arquivo de requisitos escrito à mão carrega que um congelado não carrega?",
+    "hint": "Algo que uma pessoa acrescenta.",
+    "choices": [
+      {
+        "text": "Os hashes dos arquivos baixados, que o `freeze` omite",
+        "why": "Hashes vêm de uma ferramenta de trava e poderiam ser acrescentados a qualquer um dos dois."
+      },
+      {
+        "text": "As versões exatas, que o `freeze` relata como faixas",
+        "why": "O `freeze` relata versões exatas; é a única coisa em que ele é bom."
+      },
+      {
+        "text": "Um comentário dizendo por que uma fixação está onde está",
+        "why": "Uma linha por dependência direta, com a versão contra a qual você testou, e uma razão onde a fixação não é óbvia."
+      },
+      {
+        "text": "O índice de onde os pacotes vieram, que o `freeze` não registra",
+        "why": "O índice é configuração e não propriedade do requisito."
+      }
+    ]
+  },
+  "ex-t56nkjqc": {
+    "prompt": "O `requirements.txt` diz `requests==2.31.0` e a instalação de quinta difere da de segunda. Como?",
+    "hint": "A fixação cobre um pacote.",
+    "choices": [
+      {
+        "text": "O `pip` resolveu o mesmo requisito diferente porque o cache de download dele tinha expirado",
+        "why": "O cache muda a velocidade e não qual versão é escolhida."
+      },
+      {
+        "text": "Uma dependência transitiva lançou uma versão dentro da faixa que o `requests` declara",
+        "why": "`urllib3 (<3, >=1.21.1)` quer dizer que o `pip` pega o que quer que o índice guardasse no momento em que você rodou."
+      },
+      {
+        "text": "A máquina de build estava rodando um Python mais novo, o que muda qual wheel é escolhida",
+        "why": "Mudaria, e nada na máquina mudou entre segunda e quinta."
+      },
+      {
+        "text": "O índice serviu um arquivo diferente sob o mesmo número de versão",
+        "why": "É contra isso que o `--require-hashes` protege, e é raro."
+      }
+    ]
+  },
+  "ex-zdsvraps": {
+    "prompt": "O que tem num arquivo de trava que não tem num arquivo de requisitos?",
+    "hint": "Ele cobre mais do que você pediu.",
+    "choices": [
+      {
+        "text": "Os pacotes que o projeto pediu, com uma razão ao lado de cada",
+        "why": "Esse é o arquivo de entrada, que uma pessoa edita."
+      },
+      {
+        "text": "O índice de onde cada pacote veio, para uma instalação poder ser repetida offline",
+        "why": "O índice é configuração; um arquivo de trava registra versões."
+      },
+      {
+        "text": "Todo pacote, direto e transitivo igualmente, fixado numa versão exata, com o hash dele",
+        "why": "Ele é gerado em vez de editado."
+      },
+      {
+        "text": "A ordem em que os pacotes têm de ser instalados, que o resolvedor apurou",
+        "why": "A ordem de instalação é recalculada e não é registrada."
+      }
+    ]
+  },
+  "ex-rgw327a5": {
+    "prompt": "O `pip-compile` anota a saída com `# via requests` e `# via -r requirements.in`. Por que isso importa?",
+    "hint": "Pense na objeção ao `pip freeze`.",
+    "choices": [
+      {
+        "text": "Marca quais linhas podem ser atualizadas sem recompilar o arquivo",
+        "why": "Qualquer mudança quer dizer recompilar, que é o ponto do arquivo de entrada."
+      },
+      {
+        "text": "Registra a ordem em que o resolvedor visitou os pacotes, para depurar um conflito",
+        "why": "A anotação nomeia quem exigiu e não uma ordem."
+      },
+      {
+        "text": "Permite ao `pip-sync` desinstalar primeiro os pacotes anotados",
+        "why": "O `pip-sync` faz o ambiente bater com o arquivo e não usa anotação nenhuma."
+      },
+      {
+        "text": "Diz qual pacote é seu e qual foi arrastado, então uma linha pode ser apagada com segurança",
+        "why": "O `pip freeze` não consegue produzir isso, e é a diferença entre um arquivo que uma pessoa lê e uma lista."
+      }
+    ]
+  },
+  "ex-20993z62": {
+    "prompt": "O `requirements.in` e o `requirements.txt` gerado são os dois comitados. O que o segundo compra?",
+    "hint": "Pense em duas máquinas.",
+    "choices": [
+      {
+        "text": "Duas máquinas instalam exatamente o mesmo código, pacotes transitivos incluídos",
+        "why": "E um pull request que muda o arquivo gerado sem mudar a entrada é uma atualização transitiva, que é exatamente a mudança que você quer enxergar."
+      },
+      {
+        "text": "Proteção contra um pacote ser removido do índice",
+        "why": "Nenhum dos dois arquivos guarda o pacote em si."
+      },
+      {
+        "text": "Um registro de quando cada uma das dependências foi acrescentada, que a entrada perde",
+        "why": "Nenhum dos dois arquivos registra data; é para isso que serve o histórico."
+      },
+      {
+        "text": "Uma instalação mais rápida, já que o resolvedor não tem mais o que apurar",
+        "why": "É mais rápida, e isso é efeito colateral e não a razão de comitá-lo."
+      }
+    ]
+  },
+  "ex-56am394f": {
+    "prompt": "O que o `--require-hashes` impede?",
+    "hint": "Pense em bytes e não em números de versão.",
+    "choices": [
+      {
+        "text": "Uma dependência se mover dentro de uma faixa que você não escolheu",
+        "why": "As fixações exatas do arquivo de trava fazem isso; os hashes são sobre os bytes."
+      },
+      {
+        "text": "Um pacote ser instalado de um índice que o projeto não configurou",
+        "why": "Isso é o `--index-url` e os ajustes de host confiável."
+      },
+      {
+        "text": "Uma versão ser retirada do índice depois de você depender dela",
+        "why": "Uma versão retirada continua instalável quando fixada exatamente."
+      },
+      {
+        "text": "Um arquivo diferente ser servido sob o mesmo número de versão",
+        "why": "Com hashes no arquivo, o `pip` recusa qualquer coisa cujos bytes não batam, e vale ligar para qualquer coisa que vai para produção."
+      }
+    ]
+  },
+  "ex-awnzdf4y": {
+    "prompt": "O `sys.path` dentro de um ambiente começa com `''`. Que entrada é essa?",
+    "hint": "É um diretório sem nome.",
+    "choices": [
+      {
+        "text": "O diretório em que o script está, ou o diretório de trabalho no REPL e para o `-c`",
+        "why": "Ela vem antes da biblioteca padrão, que é por que um arquivo com o nome de um módulo o sombreia."
+      },
+      {
+        "text": "Uma vaga vazia reservada ao `PYTHONPATH`, preenchida quando a variável é definida",
+        "why": "Entradas de `PYTHONPATH` são inseridas como caminhos de verdade."
+      },
+      {
+        "text": "O `site-packages` do ambiente, abreviado por ser o padrão",
+        "why": "Esse está escrito por extenso, no fim da lista."
+      },
+      {
+        "text": "A raiz do sistema de arquivos, de onde imports absolutos resolvem",
+        "why": "Imports não resolvem a partir da raiz."
+      }
+    ]
+  },
+  "ex-kr3dv9tx": {
+    "prompt": "Um arquivo chamado `json.py` está no diretório do seu projeto. O que `import json` recebe?",
+    "hint": "O primeiro que casa ganha.",
+    "choices": [
+      {
+        "text": "O seu arquivo",
+        "why": "O erro em geral aparece três imports adiante, dentro de uma biblioteca que importou `json` e recebeu o seu."
+      },
+      {
+        "text": "Um `ImportError` nomeando a ambiguidade entre os dois",
+        "why": "Nada detecta ambiguidade; a busca para no primeiro que casa."
+      },
+      {
+        "text": "O que foi modificado mais recentemente, já que o cache de bytecode decide",
+        "why": "O cache nunca escolhe entre dois arquivos diferentes."
+      },
+      {
+        "text": "A biblioteca padrão, já que a biblioteca padrão é procurada primeiro",
+        "why": "O diretório atual é o primeiro, que é a seção inteira."
+      }
+    ]
+  },
+  "ex-txakhtag": {
+    "prompt": "Uma biblioteca se comporta como uma versão diferente da que você instalou. Quais são as duas primeiras linhas a rodar?",
+    "hint": "Pergunte ao próprio módulo.",
+    "choices": [
+      {
+        "text": "`print(lib.__version__, lib.__file__)`",
+        "why": "Na maior parte das vezes o arquivo está num lugar inesperado — uma instalação de usuário sob `~/.local`, ou a cópia do sistema, porque o ambiente não estava ativo."
+      },
+      {
+        "text": "`pip install --force-reinstall`, que resolve substituindo a cópia",
+        "why": "Isso muda o ambiente sem dizer qual cópia estava sendo importada."
+      },
+      {
+        "text": "`python -v` e uma leitura do rastro de import, que nomeia cada arquivo tentado",
+        "why": "Funciona e são centenas de linhas onde duas bastariam."
+      },
+      {
+        "text": "`pip list` e `pip check`, que relatam o estado do ambiente",
+        "why": "Eles relatam o que o `pip` instalou, que não é necessariamente o que o import achou."
+      }
+    ]
+  },
+  "ex-00ca70nw": {
+    "prompt": "Qual campo do `pip show -f` você compara com `__file__`?",
+    "hint": "Onde ele caiu.",
+    "choices": [
+      {
+        "text": "`Installer`, que registra como a cópia foi parar ali",
+        "why": "Ele diz `pip`, o que não localiza nada."
+      },
+      {
+        "text": "`Files`, que lista cada caminho que o pacote instalou",
+        "why": "Esses são relativos ao `Location`, que é o que se compara."
+      },
+      {
+        "text": "`Location`",
+        "why": "Comparar os dois encerra a discussão numa linha."
+      },
+      {
+        "text": "`Requires`, que nomeia as dependências que talvez tenham trazido uma cópia",
+        "why": "Uma dependência não traz uma segunda cópia do próprio pacote."
+      }
+    ]
+  },
+  "ex-deyssvfg": {
+    "prompt": "Quando vale apagar o `__pycache__` à mão?",
+    "hint": "Algo que deveria ter sumido não sumiu.",
+    "choices": [
+      {
+        "text": "Quando um `.py` que você apagou continua importável",
+        "why": "O `.pyc` dele ainda está lá, e é o único caso em que o cache é visível no dia a dia."
+      },
+      {
+        "text": "Depois de todo `pip install`, para uma compilação velha não ser reaproveitada",
+        "why": "O cache é indexado pelo fonte e é invalidado quando ele muda."
+      },
+      {
+        "text": "Ao trocar entre versões do Python, já que o cache é compartilhado por elas",
+        "why": "Arquivos em cache são nomeados por versão de interpretador e coexistem."
+      },
+      {
+        "text": "Antes de comitar, já que o diretório é rastreado de outra forma",
+        "why": "Ele pertence ao `.gitignore` e não é rastreado."
+      }
+    ]
+  },
+  "ex-zxytv03r": {
+    "prompt": "Preveja a resolução: ambiente novo, `pip install requests~=2.31`. Qual é instalada?",
+    "hint": "Qual componente pode se mover?",
+    "choices": [
+      {
+        "text": "A versão mais nova de qualquer versão, já que o `~=` não tem limite superior",
+        "why": "Ele tem um: o componente antes do último não pode se mover."
+      },
+      {
+        "text": "A 2.x mais nova, porque o componente menor é o último escrito",
+        "why": "Medido: resolveu para 2.34.2, enquanto `~=2.31.0` resolveu para 2.31.0."
+      },
+      {
+        "text": "A versão mais antiga que satisfaz o especificador, que é a escolha reprodutível",
+        "why": "O `pip` pega a coisa mais nova que cabe."
+      },
+      {
+        "text": "Exatamente a 2.31.0, já que o `~=` fixa o que está escrito e só permite correções",
+        "why": "Isso é o `~=2.31.0`, que tem um componente a mais."
+      }
+    ]
+  },
+  "ex-4a599fph": {
+    "prompt": "O `pip freeze` imprimiu cinco linhas para um projeto que instalou um pacote. Qual linha pertence ao `requirements.txt`?",
+    "hint": "Uma delas foi escolhida.",
+    "choices": [
+      {
+        "text": "Todas as cinco, já que menos que isso torna a instalação irreprodutível",
+        "why": "Reprodutibilidade é trabalho de um arquivo de trava, e o de requisitos diz o que foi pedido."
+      },
+      {
+        "text": "As quatro transitivas, já que a direta está implícita no código",
+        "why": "Nada implica uma dependência a partir do código; o arquivo é como ela é declarada."
+      },
+      {
+        "text": "A do pacote que alguém escolheu",
+        "why": "As outras quatro são transitivas, e um arquivo de trava é onde elas pertencem."
+      },
+      {
+        "text": "Nenhuma — um arquivo de requisitos guarda faixas e o `freeze` emite fixações exatas",
+        "why": "Um arquivo de requisitos pode guardar uma fixação exata, e muitas vezes deve."
+      }
+    ]
+  },
+  "ex-zcsfw2v3": {
+    "prompt": "Monte um ambiente no lugar convencional, a partir de qualquer diretório: `python3 -m venv ______`",
+    "hint": "Cinco caracteres, e o primeiro é um ponto."
+  },
+  "ex-yh6rjc95": {
+    "prompt": "Uma instalação funciona e o import falha. O comando foi `pip install requests`. Qual é a causa provável?",
+    "hint": "Qual `pip` rodou?",
+    "choices": [
+      {
+        "text": "A instalação precisava de `--upgrade`, e uma cópia velha ficou no lugar",
+        "why": "Uma cópia velha importaria, na versão errada."
+      },
+      {
+        "text": "O pacote instalou um espaço de nomes que o import escreveu diferente",
+        "why": "O `requests` é importado pelo nome sob o qual ele instala."
+      },
+      {
+        "text": "O `pip` era de outro ambiente, então a biblioteca caiu em outro lugar",
+        "why": "`python -m pip` é a versão que não tem como estar apontando para outro lugar."
+      },
+      {
+        "text": "O ambiente foi criado sem `--system-site-packages`",
+        "why": "Isso esconderia as bibliotecas da máquina, e nada foi instalado lá."
+      }
+    ]
+  },
+  "ex-jx1bynx9": {
+    "prompt": "Qual destes pertence ao git?",
+    "hint": "Um deles é um fato e o resto são artefatos.",
+    "choices": [
+      {
+        "text": "`__pycache__/`, para o primeiro import de cada módulo ser mais rápido",
+        "why": "Bytecode é regerado em milissegundos e é atrelado ao interpretador."
+      },
+      {
+        "text": "`.venv/`, para uma máquina nova não precisar de passo de instalação nenhum",
+        "why": "Ele guarda extensões compiladas para uma máquina e centenas de megabytes de cópias."
+      },
+      {
+        "text": "`~/.cache/pip`, para uma máquina offline conseguir reinstalar a partir dele",
+        "why": "Ele fica fora do projeto e é um cache de downloads."
+      },
+      {
+        "text": "`requirements.txt`",
+        "why": "O diretório e os caches são artefatos de build; o arquivo de texto é o que os reproduz."
+      }
+    ]
+  },
+  "ex-bv6agg05": {
+    "prompt": "O que um arquivo de trava garante que um `requirements.txt` fixado não garante?",
+    "hint": "Conte quão fundo as fixações vão.",
+    "choices": [
+      {
+        "text": "Que as dependências transitivas também estão nas mesmas versões",
+        "why": "Um arquivo de requisitos fixa o que você nomeou; os pacotes de que esses precisam são faixas que você não escolheu."
+      },
+      {
+        "text": "Que os pacotes vêm do índice que o projeto configurou",
+        "why": "O índice é configuração e qualquer um dos dois pode ser instalado de qualquer um."
+      },
+      {
+        "text": "Que uma instalação funciona sem rede, já que os arquivos estão registrados nele",
+        "why": "Ele registra versões e hashes; os arquivos ainda têm de ser buscados."
+      },
+      {
+        "text": "Que nenhum pacote foi retirado desde que o arquivo foi escrito",
+        "why": "Uma retirada não é detectável a partir do arquivo."
+      }
+    ]
+  },
+  "ex-p7d0yqgf": {
+    "prompt": "Um cron roda o script de um projeto. O que há de errado com `source .venv/bin/activate && python script.py` no crontab?",
+    "hint": "Pense no shell que o cron dá a você.",
+    "choices": [
+      {
+        "text": "`source` é um builtin de shell que o shell que o cron inicia não necessariamente tem",
+        "why": "`.venv/bin/python script.py` não precisa de recurso de shell nenhum, que é por que é isso que uma unidade ou um crontab deve carregar."
+      },
+      {
+        "text": "O `activate` não pode ser carregado a partir de um shell não interativo",
+        "why": "Pode; o problema é qual shell o cron inicia e que builtin ele tem."
+      },
+      {
+        "text": "O diretório de trabalho não é o projeto, então o caminho relativo falha",
+        "why": "Esse é um problema à parte e real, resolvido por um caminho absoluto de qualquer jeito."
+      },
+      {
+        "text": "`VIRTUAL_ENV` ficaria definido para todo cron posterior da máquina",
+        "why": "Cada tarefa ganha o próprio processo e o próprio ambiente."
+      }
+    ]
+  },
+  "ex-2sd6wy08": {
+    "prompt": "Qual destes NÃO é resolvido por um ambiente virtual?",
+    "hint": "Pense no que ele isola.",
+    "choices": [
+      {
+        "text": "Dois projetos precisando de versões diferentes de uma biblioteca",
+        "why": "É o problema para o qual ele existe."
+      },
+      {
+        "text": "Uma instalação mudando a versão que uma ferramenta do sistema importa",
+        "why": "Nada é instalado no interpretador do sistema."
+      },
+      {
+        "text": "Um script lendo um arquivo a que não deveria ter acesso",
+        "why": "Um ambiente isola quais bibliotecas o `import` acha, e nada mais."
+      },
+      {
+        "text": "Uma atualização de biblioteca num projeto alcançando outro na mesma máquina",
+        "why": "Cada projeto lê só o próprio `site-packages`."
+      }
+    ]
+  },
+  "ex-pz90bgt6": {
+    "prompt": "`requirements.in` e `requirements.txt` são os dois comitados. O pull request de alguém muda só o segundo. O que houve?",
+    "hint": "A entrada não se moveu.",
+    "choices": [
+      {
+        "text": "O arquivo foi regerado numa máquina com outro Python",
+        "why": "Acontece e mudaria mais de uma linha, com um cabeçalho junto."
+      },
+      {
+        "text": "Um pacote foi removido e as dependências dele ficaram para trás",
+        "why": "Uma remoção é uma edição no arquivo de entrada."
+      },
+      {
+        "text": "Uma dependência transitiva foi atualizada",
+        "why": "Que é exatamente a mudança que você quer conseguir enxergar numa revisão."
+      },
+      {
+        "text": "Uma dependência direta foi fixada mais apertada que antes",
+        "why": "Isso é uma edição na entrada, que apareceria no diff."
+      }
+    ]
+  },
+  "ex-k2djbsz3": {
+    "prompt": "Um import se comporta de modo impossível e nada no código explica. O que você procura primeiro?",
+    "hint": "Ao seu lado.",
+    "choices": [
+      {
+        "text": "Um import circular, que resolve para um módulo que só foi metade inicializado",
+        "why": "Isso produz um `ImportError` específico que nomeia o ciclo."
+      },
+      {
+        "text": "Um arquivo no diretório do projeto com o nome de um módulo da biblioteca padrão",
+        "why": "`random.py`, `email.py`, `types.py`, `test.py`, `token.py` e `queue.py` são os que as pessoas escrevem sem querer."
+      },
+      {
+        "text": "Um `.pyc` velho de um módulo cujo fonte mudou desde então",
+        "why": "O cache é invalidado pelo tamanho e pela data do fonte."
+      },
+      {
+        "text": "Um segundo ambiente que está ativo em outro terminal",
+        "why": "Um ambiente afeta o processo em que ele começou."
+      }
+    ]
+  }
+}

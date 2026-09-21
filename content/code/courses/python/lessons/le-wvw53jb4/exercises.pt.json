@@ -1,0 +1,946 @@
+{
+  "ex-rj1w43r1": {
+    "prompt": "Um verificador relata `Unsupported operand types for * (\"float\" and \"None\")` numa linha que rodou mil vezes em produção. O que ele leu para saber disso?",
+    "hint": "Ele seguiu alguma coisa até o `return` dela.",
+    "choices": [
+      {
+        "text": "O banco ao qual ele se conecta, para ver quais códigos de moeda estão presentes na tabela de taxas",
+        "why": "Ele não abriu arquivo nenhum e não fez conexão nenhuma."
+      },
+      {
+        "text": "As anotações, e o `return` da função cujo resultado cai ali",
+        "why": "Ele seguiu `achar` até o `return`, viu que `dict.get` responde `None` para uma chave ausente, e olhou a linha 7."
+      },
+      {
+        "text": "Um log das mil rodadas, em que um `None` apareceu uma vez",
+        "why": "Ele não leu log nenhum e dado nenhum — é isso que estático quer dizer."
+      },
+      {
+        "text": "A suíte de testes, que cobre a linha com um caso que falha",
+        "why": "Ele não rodou teste nenhum. A linha não tem caso que falhe, que é exatamente por que ninguém tinha achado isto."
+      }
+    ]
+  },
+  "ex-eg3335wz": {
+    "prompt": "Qual destes um verificador acha num arquivo sem anotação nenhuma dentro?",
+    "hint": "Dois dos erros desta aula não precisam de tipo.",
+    "choices": [
+      {
+        "text": "Uma multiplicação por algo que acabou sendo `None`",
+        "why": "Isso precisa da anotação dizendo que o valor é `float | None`."
+      },
+      {
+        "text": "Uma chamada com mais argumentos do que a função recebe",
+        "why": "Aridade é estrutural: `Too many arguments` é relatado sejam quais forem os tipos."
+      },
+      {
+        "text": "Uma função devolvendo string num ramo e inteiro em outro",
+        "why": "Um tipo de retorno precisa ser declarado antes que um valor devolvido discorde dele."
+      },
+      {
+        "text": "Um `dict` cujos valores são strings onde se esperava inteiros",
+        "why": "Sem nada anotado não há expectativa contra a qual comparar."
+      }
+    ]
+  },
+  "ex-67e9jp4y": {
+    "prompt": "`def media(valores: list[float]) -> float: return sum(valores) * len(valores)`. O que um verificador diz?",
+    "hint": "Todo tipo ali dentro encaixa.",
+    "choices": [
+      {
+        "text": "Ele avisa que `*` aparece onde `/` era o pretendido, e nomeia a linha em que está escrito",
+        "why": "Isso exigiria saber o que é uma média, que está fora do que um tipo diz."
+      },
+      {
+        "text": "Nada — os tipos estão certos e a aritmética não é assunto dele",
+        "why": "`sum` de floats vezes um inteiro é um float, então a anotação se sustenta. A fórmula está errada e nenhum verificador tem opinião sobre isso."
+      },
+      {
+        "text": "`Unsupported operand types for * (\"float\" and \"int\")`, relatado na linha do retorno",
+        "why": "Multiplicar um float por um inteiro é aritmética comum e o verificador sabe disso."
+      },
+      {
+        "text": "`Incompatible return value type (got \"int\", expected \"float\")`",
+        "why": "Um float vezes um inteiro é um float, então o tipo de retorno está satisfeito."
+      }
+    ]
+  },
+  "ex-scdcd3x8": {
+    "prompt": "`linha = {\"cidade\": \"Recife\"}` e depois `linha[\"ciidade\"]`. O `mypy` responde `Success: no issues found`. Por quê?",
+    "hint": "Qual é o tipo declarado de `linha`?",
+    "choices": [
+      {
+        "text": "Chaves de texto são comparadas depois de normalizadas, então as duas grafias casam",
+        "why": "Nenhuma normalização acontece em lugar nenhum, e as duas grafias são chaves diferentes."
+      },
+      {
+        "text": "O literal de dicionário é curto demais para o verificador inferir um tipo de chave dele por inteiro",
+        "why": "Ele inferiu `dict[str, str]` do literal sem dificuldade."
+      },
+      {
+        "text": "Indexar está fora do que um verificador estático olha",
+        "why": "Indexar é verificado — num `TypedDict` a mesma linha é relatada pelo nome."
+      },
+      {
+        "text": "Um `dict[str, str]` aceita qualquer string como chave, então o erro de digitação é uma expressão válida",
+        "why": "O tipo diz que as chaves são strings, e `\"ciidade\"` é uma string. Levanta `KeyError` em tempo de execução."
+      }
+    ]
+  },
+  "ex-a68qew7r": {
+    "prompt": "A mesma busca, com `Row` declarada como um `TypedDict`. O que é relatado?",
+    "hint": "Vem com uma sugestão embaixo.",
+    "choices": [
+      {
+        "text": "`TypedDict \"Row\" has no key \"citty\"`, com uma nota `Did you mean \"city\"?`",
+        "why": "Um `TypedDict` nomeia as suas chaves, então o verificador tem contra o que comparar a grafia."
+      },
+      {
+        "text": "Um aviso em vez de um erro, já que a chave pode ser acrescentada depois",
+        "why": "É um erro, com o código `typeddict-item`."
+      },
+      {
+        "text": "`\"Row\" has no attribute \"citty\"`, porque um `TypedDict` é uma classe",
+        "why": "Acesso a atributo e acesso a chave são erros diferentes; este é `typeddict-item`."
+      },
+      {
+        "text": "O mesmo `Success` — um `TypedDict` é um `dict` em tempo de execução",
+        "why": "É um `dict` em tempo de execução, e a anotação existe para o verificador, que a lê."
+      }
+    ]
+  },
+  "ex-qaxvafs0": {
+    "prompt": "`app/report.py:4: error: Argument 1 to \"find\" has incompatible type \"int\"; expected \"str\"  [arg-type]`. Qual parte vai dentro de um `# type: ignore[...]`?",
+    "hint": "A parte entre colchetes no fim.",
+    "choices": [
+      {
+        "text": "`arg-type`",
+        "why": "O código do erro entre colchetes é o que `# type: ignore[...]`, `disable_error_code` e um buscador recebem."
+      },
+      {
+        "text": "`Argument 1 to \"find\"`, que identifica o que está sendo ignorado",
+        "why": "A frase é para quem lê; o código entre colchetes é o que a ferramenta analisa."
+      },
+      {
+        "text": "`incompatible type`, que é a categoria da falha",
+        "why": "Isso é prosa dentro da frase, não um código de erro."
+      },
+      {
+        "text": "`report.py:4`, que identifica a linha a ser silenciada",
+        "why": "O comentário vai na linha, então a localização já é conhecida."
+      }
+    ]
+  },
+  "ex-7xhwfzpw": {
+    "prompt": "`Found 1 error in 1 file (checked 3 source files)`. Que arquivos são os outros dois?",
+    "hint": "Alguma coisa teve de ser lida para entender aquele sobre o qual você perguntou.",
+    "choices": [
+      {
+        "text": "Arquivos do cache da rodada anterior, reverificados para confirmar que não mudaram",
+        "why": "O cache evita trabalho; ele não acrescenta arquivos à contagem."
+      },
+      {
+        "text": "Os dois arquivos de stub que vieram com os módulos da biblioteca padrão em uso",
+        "why": "Stubs da biblioteca padrão são lidos e não entram nesta contagem de fontes."
+      },
+      {
+        "text": "Arquivos com erros suprimidos por um comentário de silenciar em algum lugar",
+        "why": "Um erro suprimido não elevaria a contagem de verificados."
+      },
+      {
+        "text": "Módulos que ele importou, lidos para o verificador saber o que os nomes querem dizer",
+        "why": "Erros são relatados no que você perguntou; as importações são lidas para entendê-lo."
+      }
+    ]
+  },
+  "ex-z2wy6zjp": {
+    "prompt": "Você roda `mypy app/rates.py` e recebe `Success: no issues found in 1 source file`. O projeto tem um erro de tipo de verdade. Onde ele está?",
+    "hint": "Quem chama `rates`?",
+    "choices": [
+      {
+        "text": "Num arquivo de stub, que é relatado à parte do código-fonte",
+        "why": "Erros em stub apareceriam na saída assim mesmo."
+      },
+      {
+        "text": "Em lugar nenhum ainda — o erro aparece depois que o cache é limpo",
+        "why": "O cache muda a velocidade, não os vereditos."
+      },
+      {
+        "text": "Num arquivo que chama alguma coisa de `rates.py` com o tipo errado",
+        "why": "O `rates.py` é internamente coerente. A discordância está na chamada, num arquivo sobre o qual você não perguntou."
+      },
+      {
+        "text": "Dentro de `rates.py`, num corpo de função que o verificador pulou",
+        "why": "Isso é possível em princípio, e aqui o erro está em `report.py`, que a rodada não cobriu."
+      }
+    ]
+  },
+  "ex-s4qetgzf": {
+    "prompt": "O que `reveal_type(dados)` exige que você importe para o verificador responder?",
+    "hint": "O verificador reconhece o nome puro.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "O verificador trata o nome puro de modo especial e responde com um `note`. Em tempo de execução o nome puro levanta `NameError`."
+      },
+      {
+        "text": "`from typing import reveal_type`, que é o que a define",
+        "why": "Esse import dá uma função de verdade para tempo de execução; o verificador não precisa de import."
+      },
+      {
+        "text": "`import typing`, e depois o nome qualificado",
+        "why": "A forma qualificada funciona em tempo de execução e não é o que o verificador exige."
+      },
+      {
+        "text": "`from mypy import reveal_type`, que vem com o verificador",
+        "why": "Esse import não existe."
+      }
+    ]
+  },
+  "ex-698h3fzg": {
+    "prompt": "O diretório em que o `mypy` escreve os seus resultados incrementais, e que pertence ao `.gitignore`: `______/`",
+    "hint": "Tem o nome da ferramenta."
+  },
+  "ex-2wvkfr9f": {
+    "prompt": "`def somar(a, b): return a + b` e depois `somar(\"x\", 3)`. Configuração padrão. O que é relatado?",
+    "hint": "O que o verificador sabe sobre `a`?",
+    "choices": [
+      {
+        "text": "Nada — uma função sem anotação é uma sobre a qual o verificador não tem opinião",
+        "why": "Sem anotação não há expectativa a violar, então a chamada fica sem julgamento."
+      },
+      {
+        "text": "`Unsupported operand types for + (\"str\" and \"int\")`",
+        "why": "Isso exigiria os parâmetros anotados."
+      },
+      {
+        "text": "Uma nota de que os argumentos são de tipos diferentes",
+        "why": "O verificador não tem tipos declarados aqui para comparar."
+      },
+      {
+        "text": "`Function is missing a type annotation`, já que a chamada forçou a questão",
+        "why": "Isso é `no-untyped-def`, que chega com `disallow_untyped_defs`."
+      }
+    ]
+  },
+  "ex-849dpqv3": {
+    "prompt": "O mesmo `somar` sem anotação, mas a chamada é `somar(1, 2, 3)`. Configuração padrão.",
+    "hint": "Uma coisa é estrutural.",
+    "choices": [
+      {
+        "text": "Nada, pelo mesmo motivo que a chamada anterior ficou sem julgamento",
+        "why": "Os tipos ficaram sem julgamento; a quantidade de argumentos é outra questão, e estrutural."
+      },
+      {
+        "text": "`Argument 3 has incompatible type \"int\"`, nomeando o que sobrou",
+        "why": "Não há um terceiro parâmetro contra o qual ele teria um tipo."
+      },
+      {
+        "text": "`Too many arguments for \"add\"`",
+        "why": "Aridade é verificada sejam quais forem os tipos: três argumentos em dois parâmetros está errado por si."
+      },
+      {
+        "text": "Uma nota sugerindo `*args`, que é o que aceitaria três",
+        "why": "O verificador não sugere reescrita aqui."
+      }
+    ]
+  },
+  "ex-bbqrepba": {
+    "prompt": "Qual flag do `--strict` impede uma função anotada de se apoiar numa sem anotação?",
+    "hint": "É sobre chamadas, não sobre definições.",
+    "choices": [
+      {
+        "text": "`disallow_untyped_calls`",
+        "why": "Ela relata `Call to untyped function \"…\" in typed context`, que é o que impede a metade verificada de se apoiar caladamente na não verificada."
+      },
+      {
+        "text": "`disallow_untyped_defs`, que exige toda função anotada",
+        "why": "Essa é sobre a definição. A chamada é outra flag e outro código de erro."
+      },
+      {
+        "text": "`disallow_any_generics`, que recusa um `dict` ou `list` pelado",
+        "why": "Essa é sobre parâmetros de tipo faltando num genérico."
+      },
+      {
+        "text": "`warn_return_any`, que recusa devolver algo sem tipo",
+        "why": "Essa é sobre o que uma função devolve, não sobre o que ela chama."
+      }
+    ]
+  },
+  "ex-yft0n244": {
+    "prompt": "`def load(path: str) -> dict: return json.load(f)`. Que dois erros o `--strict` acrescenta?",
+    "hint": "Um é o `dict` pelado, o outro é o que o `json.load` devolve.",
+    "choices": [
+      {
+        "text": "`type-arg` no `dict` pelado, e `no-any-return`",
+        "why": "`disallow_any_generics` quer `dict[str, int]`, e `warn_return_any` recusa deixar `Any` virar o retorno declarado em silêncio."
+      },
+      {
+        "text": "`Missing type parameters` e `Call to untyped function \"load\"`",
+        "why": "`load` está anotada, então `no-untyped-call` não se aplica a ela."
+      },
+      {
+        "text": "`Function is missing a type annotation` e `Returning Any`",
+        "why": "A função está anotada, então `no-untyped-def` não dispara."
+      },
+      {
+        "text": "`Incompatible return value type (got \"Any\", expected \"dict\")`",
+        "why": "O código deste erro é `no-any-return` e a redação dele é `Returning Any from function declared to return`."
+      }
+    ]
+  },
+  "ex-1q51skjr": {
+    "prompt": "O que faz de `check_untyped_defs` a flag mais barata de ligar numa base existente?",
+    "hint": "Pense no que ela pede que alguém escreva.",
+    "choices": [
+      {
+        "text": "Ela silencia quaisquer erros dentro de funções sem anotação até que alguém as anote",
+        "why": "Ela faz o contrário: por padrão esses corpos são pulados, e isto os liga."
+      },
+      {
+        "text": "Ela infere anotações para as funções sem anotação e as escreve de volta no arquivo",
+        "why": "Ela não escreve nada. Inferir para um relatório não é reescrever o seu código."
+      },
+      {
+        "text": "Ela verifica dentro de corpos que já existem e não pede anotação a ninguém",
+        "why": "As assinaturas ficam como estão, e os erros que ela acha são defeitos em vez de papelada."
+      },
+      {
+        "text": "Ela limita a rodada aos módulos que já carregam anotações por todos os seus corpos",
+        "why": "Ela alarga o que é verificado em vez de estreitar."
+      }
+    ]
+  },
+  "ex-b30y9e1s": {
+    "prompt": "Por que os ajustes pertencem ao `pyproject.toml` e não ao comando que você digita?",
+    "hint": "Três lugares rodam o verificador.",
+    "choices": [
+      {
+        "text": "Porque uma flag na linha de comando é ignorada quando existe um arquivo de configuração",
+        "why": "Uma flag na linha de comando tem precedência sobre o arquivo, que é parte do problema."
+      },
+      {
+        "text": "Para o seu editor, o seu terminal e a CI rodarem a mesma verificação",
+        "why": "Uma flag passada numa máquina e não na CI é um build verde num lugar e vermelho no outro, para o mesmo commit."
+      },
+      {
+        "text": "Porque a linha de comando não tem equivalente para a maioria dos ajustes",
+        "why": "Quase todo ajuste tem uma flag correspondente; o ponto é a concordância entre os lugares que rodam."
+      },
+      {
+        "text": "Porque o cache é indexado pelo arquivo e é descartado quando uma flag difere",
+        "why": "Invalidar cache é consequência aqui, não o motivo de manter os ajustes num arquivo."
+      }
+    ]
+  },
+  "ex-8q7ty7dn": {
+    "prompt": "O que `python_version = \"3.12\"` decide?",
+    "hint": "É sobre o que o verificador acredita que existe.",
+    "choices": [
+      {
+        "text": "Qual interpretador o verificador lança para importar e inspecionar os seus módulos",
+        "why": "Ele não lança interpretador e não importa nada — ele lê arquivos."
+      },
+      {
+        "text": "Quais arquivos marcadores `py.typed` entre as suas dependências são honrados",
+        "why": "O marcador é honrado ou não por si, seja qual for a versão-alvo."
+      },
+      {
+        "text": "Qual versão do `mypy` é instalada pelo `pip install mypy`",
+        "why": "A versão do próprio verificador é escolhida por quem a fixa, não por este ajuste."
+      },
+      {
+        "text": "Em qual sintaxe e em quais assinaturas da biblioteca padrão o verificador acredita",
+        "why": "Ponha o que você implanta, ou o verificador julga o seu código contra uma linguagem diferente da que vai rodar."
+      }
+    ]
+  },
+  "ex-jsnp2554": {
+    "prompt": "A tabela de colchetes duplos no `pyproject.toml` que afrouxa uma flag para módulos nomeados: `[[tool.mypy.______]]`",
+    "hint": "O TOML chama esta forma de array de tabelas."
+  },
+  "ex-0zfg1h24": {
+    "prompt": "Estrito no topo, `disallow_untyped_defs = false` numa exceção nomeando `app.legacy.*`. O que acontece com `app/legacy/old.py`?",
+    "hint": "A exceção desliga uma flag num lugar.",
+    "choices": [
+      {
+        "text": "Ele continua verificado, e a anotação que falta deixa de ser erro ali",
+        "why": "Todas as outras flags continuam valendo para ele, e o resto do pacote segue estrito."
+      },
+      {
+        "text": "Ele é pulado, então nada dentro dele é relatado",
+        "why": "Pular é o que o `exclude` faz. Uma exceção muda uma flag e mantém o módulo verificado."
+      },
+      {
+        "text": "Ele é verificado e os seus erros viram linhas `note`",
+        "why": "Não existe mecanismo de rebaixamento; a flag está desligada e aquele erro não é produzido."
+      },
+      {
+        "text": "Ele é verificado apenas quando outra coisa o importa",
+        "why": "Ele está em `files`, então é verificado por direito próprio."
+      }
+    ]
+  },
+  "ex-9jycv4jg": {
+    "prompt": "Por que `exclude` é a ferramenta errada para um diretório que você não está pronto para verificar?",
+    "hint": "Um módulo excluído ainda tem relação com o resto.",
+    "choices": [
+      {
+        "text": "`exclude` recebe uma expressão regular, que é fácil de escrever errado",
+        "why": "Ele recebe mesmo, e uma expressão correta ainda deixa você com o problema da importação."
+      },
+      {
+        "text": "Um módulo excluído continua sendo importado pelos que você verifica",
+        "why": "Você fica com um relatório confuso em vez de menor. Uma exceção com flags afrouxadas o mantém verificado num nível em que ele passa."
+      },
+      {
+        "text": "`exclude` e `files` se contradizem e o verificador recusa iniciar",
+        "why": "Os dois se combinam sem reclamação."
+      },
+      {
+        "text": "`exclude` é aplicado depois de o cache ser escrito, então a rodada não fica mais rápida",
+        "why": "Velocidade não é a objeção aqui."
+      }
+    ]
+  },
+  "ex-rdxgzb6k": {
+    "prompt": "`def total(itens):` com uma atribuição ruim no corpo. O `mypy` emite uma nota; o `pyright` relata um erro. Por quê?",
+    "hint": "Um dos dois pula alguma coisa por padrão.",
+    "choices": [
+      {
+        "text": "O `mypy` trata um parâmetro sem anotação como `Any`, o que absorve o erro",
+        "why": "`Any` no parâmetro não explica: a atribuição tem um tipo declarado próprio."
+      },
+      {
+        "text": "O `mypy` pula os corpos de funções sem anotação por padrão e o `pyright` os verifica",
+        "why": "`check_untyped_defs` é a flag que faz os dois concordarem sobre este arquivo."
+      },
+      {
+        "text": "O `pyright` infere anotações para os parâmetros, coisa que o `mypy` se recusa a fazer",
+        "why": "Os dois inferem dentro de um corpo; a diferença é que um deles se recusa a olhar este corpo."
+      },
+      {
+        "text": "O `pyright` está em modo estrito e o `mypy` no padrão dele",
+        "why": "A rodada do `pyright` aqui está no modo `standard`, que é o padrão dele."
+      }
+    ]
+  },
+  "ex-616r59gg": {
+    "prompt": "A mesma atribuição. O `mypy` diz `variable has type \"int\"`; o `pyright` diz `Type \"Literal['no']\"`. Qual é a diferença?",
+    "hint": "Um está contando mais sobre o valor.",
+    "choices": [
+      {
+        "text": "O `pyright` estreita até o valor exato na mensagem, onde o `mypy` nomeia o tipo mais largo",
+        "why": "Os dois vereditos são o mesmo; um relatório carrega mais informação sobre o que estava do lado direito."
+      },
+      {
+        "text": "`Literal['no']` é o tipo declarado e `int` é o que foi inferido",
+        "why": "É ao contrário: o nome mais estreito descreve a expressão à direita."
+      },
+      {
+        "text": "O `mypy` ainda não leu a atribuição e está relatando só a declaração",
+        "why": "Ele leu a atribuição — é isso que ele está relatando."
+      },
+      {
+        "text": "O `pyright` está relatando outro erro, em outra linha do mesmo arquivo, ao mesmo tempo",
+        "why": "Mesma linha, mesmo arquivo, mesmo erro."
+      }
+    ]
+  },
+  "ex-ty2pcr94": {
+    "prompt": "Que valores `typeCheckingMode` aceita, e qual é o padrão?",
+    "hint": "São quatro, e o padrão não é o mais frouxo nem o mais estrito.",
+    "choices": [
+      {
+        "text": "`off`, `basic`, `standard` e `strict`, com `standard` como padrão",
+        "why": "Cada regra embaixo também tem nome próprio e pode ser posta em `error`, `warning` ou `none`."
+      },
+      {
+        "text": "`off`, `basic` e `strict`, com `basic` como padrão",
+        "why": "`standard` fica entre `basic` e `strict` e é o padrão."
+      },
+      {
+        "text": "`none`, `warning` e `error`, com `warning` como padrão",
+        "why": "Esses três são os ajustes de uma regra individual, não do modo."
+      },
+      {
+        "text": "`lenient`, `standard` e `pedantic`, com `standard` como padrão",
+        "why": "Esses nomes não pertencem a nenhum verificador aqui."
+      }
+    ]
+  },
+  "ex-vax8ardf": {
+    "prompt": "Um arquivo tem `# pyright: ignore[reportAssignmentType]` numa linha de que os dois verificadores não gostam. O que o `mypy` faz?",
+    "hint": "Um dos dois não conhece essa sintaxe.",
+    "choices": [
+      {
+        "text": "Relata o erro, porque aquele comentário não quer dizer nada para ele",
+        "why": "Se um projeto roda os dois, o comentário portátil é `# type: ignore[code]`, que ambos honram."
+      },
+      {
+        "text": "Honra o comentário, já que os dois leem a mesma sintaxe de supressão",
+        "why": "O `mypy` lê `# type: ignore`; a forma `pyright:` não é sintaxe dele."
+      },
+      {
+        "text": "Relata o próprio comentário como uma diretiva não reconhecida",
+        "why": "Ele trata a linha como um comentário comum e não diz nada sobre ela."
+      },
+      {
+        "text": "Rebaixa o erro a uma nota, tendo visto que alguém decidiu",
+        "why": "Esse rebaixamento não existe."
+      }
+    ]
+  },
+  "ex-kva5g3pp": {
+    "prompt": "O que faz do `pyright` o do editor?",
+    "hint": "Alguma coisa já está rodando enquanto você digita.",
+    "choices": [
+      {
+        "text": "Ele não escreve diretório de cache próprio, então deixa a árvore de trabalho limpa para você",
+        "why": "Um diretório de cache no `.gitignore` não é o que decide qual verificador um editor roda."
+      },
+      {
+        "text": "É o verificador com implementação própria do protocolo de servidor de linguagem, pronta de fábrica",
+        "why": "Existe um servidor de linguagem para o outro também; velocidade e empacotamento padrão decidiram isto."
+      },
+      {
+        "text": "É o que o Pylance roda, e responde rápido o bastante para relatar enquanto você digita",
+        "why": "Ele também relata `linha:coluna`, então um erro cai na metade certa de uma linha longa."
+      },
+      {
+        "text": "Ele lê o `pyproject.toml` que os editores já analisam para outras ferramentas",
+        "why": "Os dois leem o `pyproject.toml`, então isso não resolve nada entre eles."
+      }
+    ]
+  },
+  "ex-4v4azyfr": {
+    "prompt": "`error: Library stubs not installed for \"yaml\"  [import-untyped]`. Qual é a primeira coisa a tentar?",
+    "hint": "A linha seguinte da saída diz.",
+    "choices": [
+      {
+        "text": "Anotar como `Any` os valores que saem da biblioteca em cada chamada",
+        "why": "Isso joga fora a verificação exatamente na fronteira em que ela estava disponível."
+      },
+      {
+        "text": "Pôr `ignore_missing_imports = true` no topo da configuração",
+        "why": "Isso silencia a mensagem para tudo, inclusive para a importação que você escreveu errado."
+      },
+      {
+        "text": "Acrescentar `# type: ignore[import-untyped]` na linha do import",
+        "why": "Funciona e compra um silêncio onde um pacote de stub teria comprado tipos."
+      },
+      {
+        "text": "Instalar o pacote `types-PyYAML` que a dica embaixo nomeia",
+        "why": "Centenas de bibliotecas têm um pacote `types-…` escrito por outras pessoas, e ele dá tipos de verdade em vez de um silêncio."
+      }
+    ]
+  },
+  "ex-7k4qx4bc": {
+    "prompt": "Qual é a diferença entre `[import-untyped]` e `[import-not-found]`?",
+    "hint": "Uma das duas bibliotecas está instalada.",
+    "choices": [
+      {
+        "text": "A primeira quer dizer instalada sem tipos; a segunda, que o módulo não foi achado",
+        "why": "A segunda em geral é um erro de digitação, uma instalação que faltou, ou um `PYTHONPATH` que o verificador não compartilha."
+      },
+      {
+        "text": "A primeira é um aviso e a segunda é um erro",
+        "why": "As duas são erros."
+      },
+      {
+        "text": "A primeira nomeia um pacote de stub que existe e a segunda nomeia um pacote de fonte que não existe",
+        "why": "As duas nomeiam um módulo; a diferença é se o verificador o achou."
+      },
+      {
+        "text": "A primeira aparece sob `--strict` e a segunda na configuração padrão",
+        "why": "As duas aparecem na configuração padrão."
+      }
+    ]
+  },
+  "ex-cd6x4ep6": {
+    "prompt": "O arquivo marcador vazio que uma biblioteca põe no diretório do pacote para as próprias anotações serem honradas: `______`",
+    "hint": "Duas palavras unidas por um ponto."
+  },
+  "ex-v1e2crqr": {
+    "prompt": "`n: int = \"a\"  # type: ignore[arg-type]` onde o código do erro de verdade é `assignment`. O que é relatado?",
+    "hint": "O comentário estreito não casou.",
+    "choices": [
+      {
+        "text": "O erro, mais uma nota dizendo que o código não é coberto pelo comentário",
+        "why": "Um silêncio estreito que deixa de casar volta a relatar, e a nota nomeia a divergência."
+      },
+      {
+        "text": "Nada — um comentário com qualquer código dentro silencia a linha",
+        "why": "Um `# type: ignore` pelado silencia a linha; um com código silencia aquele código."
+      },
+      {
+        "text": "Um erro sobre o comentário nomear um código que não se aplica",
+        "why": "A queixa é o erro original; a divergência chega como nota embaixo dele."
+      },
+      {
+        "text": "O erro, rebaixado a aviso porque alguém tinha decidido sobre a linha",
+        "why": "Ele continua erro."
+      }
+    ]
+  },
+  "ex-gjzj40wa": {
+    "prompt": "O que `warn_unused_ignores` relata, e por que ele merece o lugar dele antes do resto do `--strict`?",
+    "hint": "Pense num comentário cujo motivo já se foi.",
+    "choices": [
+      {
+        "text": "Um `# type: ignore` numa linha que uma edição posterior moveu",
+        "why": "O comentário se move junto com a linha em que está."
+      },
+      {
+        "text": "`Unused \"type: ignore\" comment` — uma supressão que não silencia nada e distorce o arquivo",
+        "why": "O stub foi corrigido ou o código mudou, e o comentário ficou para trás mentindo sobre o estado do arquivo."
+      },
+      {
+        "text": "Um `# type: ignore` escrito sem um código de erro entre colchetes",
+        "why": "Isso é outra preocupação e esta flag não diz nada a respeito."
+      },
+      {
+        "text": "Um `# type: ignore` cujo código está escrito errado",
+        "why": "Isso produz a nota `not covered by` sobre o erro original."
+      }
+    ]
+  },
+  "ex-75695wrc": {
+    "prompt": "Vinte mil linhas, nenhuma anotação. O que entra na CI no primeiro dia?",
+    "hint": "Pense no que precisa existir antes de uma régua poder subir.",
+    "choices": [
+      {
+        "text": "O verificador com quase nada ligado, relatando quase nada",
+        "why": "O pipeline passa a ter um passo que pode ficar vermelho, e todo passo seguinte sobe a régua de algo que já roda."
+      },
+      {
+        "text": "`--strict`, para o tamanho do problema ficar visível desde o começo",
+        "why": "Quatro mil erros é um número sobre o qual ninguém age, e o passo seguinte costuma ser um silêncio no topo de cada arquivo."
+      },
+      {
+        "text": "O verificador sobre um módulo, com o resto excluído da rodada",
+        "why": "Um módulo excluído continua sendo importado pelos que você verifica, então os erros dele voltam assim mesmo."
+      },
+      {
+        "text": "Nada ainda — anote um primeiro módulo, e aí acrescente o passo",
+        "why": "Isso deixa o passo para ser acrescentado numa tarde em que alguém lembrar."
+      }
+    ]
+  },
+  "ex-24q8evz1": {
+    "prompt": "Qual flag é a importante para impedir a metade sem anotação de crescer?",
+    "hint": "É mais sobre código novo do que sobre código velho.",
+    "choices": [
+      {
+        "text": "`check_untyped_defs`, que começa a verificar dentro dos corpos de função que já existem",
+        "why": "É o primeiro ganho mais barato e não diz nada sobre código novo ser anotado."
+      },
+      {
+        "text": "`disallow_untyped_defs`, ligada por padrão com os módulos não prontos listados como exceções",
+        "why": "Todo módulo novo passa a ser verificado direito desde a primeira linha, e a lista de exceções só pode encolher."
+      },
+      {
+        "text": "`ignore_missing_imports`, que aquieta primeiro o barulho vindo das bibliotecas de terceiros",
+        "why": "Ela tira barulho do relatório e não tem relação com o seu próprio código novo."
+      },
+      {
+        "text": "`warn_return_any`, que impede `Any` de escapar por um retorno",
+        "why": "Uma boa flag, e ela não decide se uma função nova está anotada."
+      }
+    ]
+  },
+  "ex-cf9kjyx9": {
+    "prompt": "Por que \"frouxo por padrão, estrito numa lista de módulos prontos\" é ao contrário?",
+    "hint": "Qual arranjo muda de cor quando alguém acrescenta um módulo sem anotação?",
+    "choices": [
+      {
+        "text": "O verificador lê as exceções antes dos ajustes de topo",
+        "why": "A ordem de precedência é definida e não é a objeção aqui."
+      },
+      {
+        "text": "Estrito por módulo não é exprimível na tabela de exceções",
+        "why": "É exprimível dos dois jeitos, e é isso que faz da escolha uma escolha de verdade."
+      },
+      {
+        "text": "A lista de módulos prontos cresce mais rápido do que alguém a mantém",
+        "why": "Uma lista de módulos prontos crescendo é progresso; o problema é o que acontece fora dela."
+      },
+      {
+        "text": "A metade sem anotação cresce toda semana e nada muda de cor quando isso acontece",
+        "why": "Escrito do outro jeito, um módulo novo sem anotação reprova o build no dia em que é escrito."
+      }
+    ]
+  },
+  "ex-1p7bbw0a": {
+    "prompt": "Você está anotando um módulo. O que vem primeiro?",
+    "hint": "Um dos dois já vem quase resolvido.",
+    "choices": [
+      {
+        "text": "As assinaturas — parâmetros e tipos de retorno",
+        "why": "Com elas no lugar os locais em grande parte são inferidos, então anotá-los acrescenta pouco."
+      },
+      {
+        "text": "Os locais, para o verificador ter algo concreto de onde partir",
+        "why": "Os locais são inferidos do que é atribuído a eles; a assinatura é o que o verificador não tem como adivinhar."
+      },
+      {
+        "text": "Os `# type: ignore`, para a rodada ficar quieta enquanto você trabalha",
+        "why": "Isso esconde o trabalho que você está prestes a fazer da ferramenta que o faz com você."
+      },
+      {
+        "text": "Os imports, reescritos para puxar tipos do `typing` em vez dos embutidos",
+        "why": "Os genéricos embutidos são a grafia atual e não precisam de reescrita."
+      }
+    ]
+  },
+  "ex-qr4z8mds": {
+    "prompt": "Qual é a única regra do processo inteiro de adoção?",
+    "hint": "É sobre o que um merge pode acrescentar.",
+    "choices": [
+      {
+        "text": "Nenhuma supressão nova sem um motivo escrito ao lado",
+        "why": "O estado a evitar é uma base cheia de comentários mandando um verificador ficar quieto em que ninguém lembra quais sustentam alguma coisa."
+      },
+      {
+        "text": "Nenhuma flag ligada fora de um pull request próprio",
+        "why": "Uma flag por pull request é boa prática para o último passo e não é a regra que sustenta o processo."
+      },
+      {
+        "text": "Nenhum merge enquanto algum módulo estiver na lista de exceções",
+        "why": "A lista encolhe ao longo de meses; travar merges nela pararia o trabalho."
+      },
+      {
+        "text": "Nenhuma supressão, já que cada uma é um defeito deixado no lugar",
+        "why": "Algumas são legítimas — um stub que mente — e o requisito é o motivo ao lado delas."
+      }
+    ]
+  },
+  "ex-djbv8k54": {
+    "prompt": "Qual destes é trabalho de um verificador e não de um teste?",
+    "hint": "Um deles é sobre todo chamador do programa.",
+    "choices": [
+      {
+        "text": "Achar que um relatório soma a coluna errada da tabela",
+        "why": "As duas colunas são inteiros, então os tipos encaixam e a resposta está errada."
+      },
+      {
+        "text": "Achar o chamador em outro arquivo que passa o tipo errado",
+        "why": "Um verificador segue toda chamada, inclusive a ramificação que ninguém toma e o arquivo que você não estava olhando."
+      },
+      {
+        "text": "Achar que um desconto é aplicado duas vezes num caminho",
+        "why": "Isso é comportamento, e um teste é o que afirma isso."
+      },
+      {
+        "text": "Achar que um laço de repetição desiste uma tentativa cedo demais",
+        "why": "Uma contagem fora por um está correta em todo tipo."
+      }
+    ]
+  },
+  "ex-4wsqxd23": {
+    "prompt": "Uma equipe liga o verificador e a primeira rodada diz `Success: no issues found in 240 source files`. Qual é a leitura razoável?",
+    "hint": "O que uma função sem anotação quer dizer para a configuração padrão?",
+    "choices": [
+      {
+        "text": "Pouco foi verificado, porque funções sem anotação são funções sobre as quais ele não tem opinião",
+        "why": "Uma primeira rodada limpa numa base sem anotações é uma medida de quanto foi pulado."
+      },
+      {
+        "text": "A base está em forma melhor do que a equipe esperava",
+        "why": "Ela diz que o verificador não achou discordância entre anotações que em grande parte não estão lá."
+      },
+      {
+        "text": "A configuração está quebrada, já que uma base de verdade tem erros",
+        "why": "A configuração está fazendo exatamente o que os padrões dela dizem."
+      },
+      {
+        "text": "O cache está velho e a rodada reaproveitou um veredito anterior",
+        "why": "Um cache velho é invalidado pelo conteúdo dos arquivos, e este resultado é o que os padrões produzem."
+      }
+    ]
+  },
+  "ex-m45wp509": {
+    "prompt": "A flag que faz o `mypy` olhar dentro de funções que não têm anotação: `--______`",
+    "hint": "Três palavras unidas por hifens."
+  },
+  "ex-3z2hf9nw": {
+    "prompt": "Onde você põe uma supressão para o `mypy` e o `pyright` honrarem os dois?",
+    "hint": "Uma sintaxe é entendida pelos dois.",
+    "choices": [
+      {
+        "text": "`# type: ignore[code]`",
+        "why": "O `pyright` também aceita. A forma `# pyright: ignore` fica para a regra que só o `pyright` tem."
+      },
+      {
+        "text": "`# pyright: ignore[rule]`, que nomeia a regra com precisão",
+        "why": "É preciso, e o `mypy` trata como comentário comum, então o erro segue relatado."
+      },
+      {
+        "text": "`# noqa: code`, que os linters e os verificadores compartilham",
+        "why": "`# noqa` pertence aos linters e nenhum dos verificadores o lê."
+      },
+      {
+        "text": "`# mypy: ignore[code]`, a contraparte da forma do `pyright`",
+        "why": "Essa não é a sintaxe; o `mypy` lê `# type: ignore`."
+      }
+    ]
+  },
+  "ex-xsnwsk84": {
+    "prompt": "Uma rodada relata `Item \"None\" of \"Row | None\" has no attribute \"city\"` numa linha que nunca falhou. Qual é a conclusão honesta?",
+    "hint": "Pense em qual ramo os dados tomaram até agora.",
+    "choices": [
+      {
+        "text": "O ramo que produz `None` ainda não foi alcançado, e a linha levanta quando for",
+        "why": "A busca responde `None` para uma linha que falha na validação, e os dados de teste nunca falham."
+      },
+      {
+        "text": "A anotação da busca é larga demais e deveria ser estreitada para `Row`",
+        "why": "Estreitar a anotação para caber nos dados que você viu é como o relatório deixa de mencionar um caso real."
+      },
+      {
+        "text": "O verificador não enxerga a guarda acima da linha e relata um falso positivo",
+        "why": "Uma guarda acima estreitaria o tipo e removeria o erro, então a ausência dela é o achado."
+      },
+      {
+        "text": "A linha é inalcançável, que é por que ela nunca falhou",
+        "why": "Código inalcançável é relatado de outro jeito e esta linha é alcançada com uma linha não-`None`."
+      }
+    ]
+  },
+  "ex-8yrkxgw6": {
+    "prompt": "Qual destes transforma um `Success` num veredito honesto sem pedir anotação a ninguém?",
+    "hint": "Ela alarga o que é olhado, não o que é exigido.",
+    "choices": [
+      {
+        "text": "`warn_unused_ignores`, que acha as supressões que venceram",
+        "why": "Uma flag útil que não diz nada sobre corpos não verificados."
+      },
+      {
+        "text": "`disallow_untyped_defs`, que relata cada função a que falta uma",
+        "why": "Ela relata o que precisa ser escrito, que é a papelada em vez dos defeitos."
+      },
+      {
+        "text": "`check_untyped_defs`",
+        "why": "Ela verifica dentro de corpos que já existem, então os erros que acha são defeitos em vez de papelada."
+      },
+      {
+        "text": "`strict`, que é o atalho para a lista inteira",
+        "why": "Ela inclui a flag que exige anotações, junto com uma dúzia de outras."
+      }
+    ]
+  },
+  "ex-2c9g810m": {
+    "prompt": "`mypy app/rates.py` está limpo; `mypy -p app` não está. O que isso diz sobre onde apontá-lo?",
+    "hint": "A discordância é entre dois arquivos.",
+    "choices": [
+      {
+        "text": "Ao pacote, porque um erro mora entre uma definição e quem a chama",
+        "why": "O arquivo que você mudou é internamente coerente; o arquivo que o chama é onde a discordância aparece."
+      },
+      {
+        "text": "Ao arquivo, já que uma rodada de pacote relata erros das dependências também",
+        "why": "Erros são relatados no que você perguntou; as importações são lidas em vez de relatadas."
+      },
+      {
+        "text": "A qualquer um, já que os mesmos erros são achados nos dois e só a contagem difere",
+        "why": "A rodada de um arquivo não relatou erro nenhum."
+      },
+      {
+        "text": "Ao arquivo primeiro e ao pacote na CI, para as rodadas locais ficarem rápidas",
+        "why": "O cache é o que mantém as rodadas rápidas, e uma rodada local que perde o erro não ajudou você."
+      }
+    ]
+  },
+  "ex-x5vv3ajw": {
+    "prompt": "`json.load` devolve este tipo, que é como um retorno declarado se perde sem ninguém reparar: `______`",
+    "hint": "Três letras, A maiúsculo."
+  },
+  "ex-fv9cz45m": {
+    "prompt": "Uma exceção no `pyproject.toml` põe `disallow_untyped_defs = false` para `app.legacy.*`. Um módulo novo `app/billing/rates.py` tem uma função sem anotação. O que acontece?",
+    "hint": "Que módulos a exceção nomeia?",
+    "choices": [
+      {
+        "text": "É relatado, pois aquela exceção nomeia outro pacote",
+        "why": "É o arranjo funcionando: a lista de exceções é explícita e código novo cai fora dela."
+      },
+      {
+        "text": "É aceito, já que o padrão de topo vale para módulos acrescentados depois",
+        "why": "O ajuste de topo é o estrito; a exceção é o que afrouxa."
+      },
+      {
+        "text": "É aceito até o módulo ser acrescentado a `files`",
+        "why": "Ele está sob `app`, que `files` já nomeia."
+      },
+      {
+        "text": "É relatado como aviso e não como erro enquanto o módulo for novo",
+        "why": "Não existe período de carência para um módulo novo."
+      }
+    ]
+  },
+  "ex-yb5ca39g": {
+    "prompt": "Por que um verificador não diz nada sobre `total = sum(precos) * len(precos)` quando uma média era o pretendido?",
+    "hint": "Considere o que cada um dos dois operadores produz.",
+    "choices": [
+      {
+        "text": "Aritmética entre números está fora do que um verificador examina",
+        "why": "Ele examina aritmética de perto — `float * None` é relatado."
+      },
+      {
+        "text": "`sum` devolve `Any`, então nada abaixo dele é verificado",
+        "why": "`sum` sobre um `list[float]` devolve um float, não `Any`."
+      },
+      {
+        "text": "Um float vezes um inteiro é um float, que é o que a anotação prometeu",
+        "why": "Os tipos encaixam e a fórmula está errada, e um tipo não é onde essa distinção mora."
+      },
+      {
+        "text": "`len` devolve um valor sem tipo, que absorve a multiplicação",
+        "why": "`len` está anotada como devolvendo um inteiro."
+      }
+    ]
+  },
+  "ex-a4bq1gnp": {
+    "prompt": "Qual destes pertence ao `.gitignore`?",
+    "hint": "Um deles é escrito por uma rodada, não por uma pessoa.",
+    "choices": [
+      {
+        "text": "`pyrightconfig.json`, já que duplica o `pyproject.toml`",
+        "why": "É configuração que alguém escreveu e pertence ao repositório."
+      },
+      {
+        "text": "`py.typed`, já que é um arquivo vazio sem conteúdo a versionar",
+        "why": "A presença dele é o conteúdo: é o marcador dizendo que as anotações são para ser lidas."
+      },
+      {
+        "text": "`.mypy_cache/`",
+        "why": "Ele guarda o que foi apurado sobre cada módulo e é o que faz a segunda rodada ser uma fração da primeira."
+      },
+      {
+        "text": "`[[tool.mypy.overrides]]`, já que a lista muda a cada merge",
+        "why": "É um bloco dentro de um arquivo versionado, e encolher é o registro do trabalho."
+      }
+    ]
+  },
+  "ex-dzsyd7ax": {
+    "prompt": "Um verificador e um teste são descritos como metades do mesmo trabalho. O que a metade do verificador cobre?",
+    "hint": "Uma delas escala sobre o programa inteiro.",
+    "choices": [
+      {
+        "text": "Se as peças encaixam, em toda parte, inclusive onde ninguém olhou",
+        "why": "Ela não diz nada sobre a coisa que elas montam ser a coisa que você queria, que é a outra metade."
+      },
+      {
+        "text": "Se o programa produz a resposta certa para uma entrada escolhida",
+        "why": "Isso é o que um teste afirma."
+      },
+      {
+        "text": "Se os caminhos que um teste exercitou se comportam como o relatório descreve",
+        "why": "Um verificador não lê teste nenhum nem relatório de um."
+      },
+      {
+        "text": "Se as anotações que alguém escreveu casam com os dados em produção",
+        "why": "Ele não lê dado nenhum; ele compara anotações com o código em volta delas."
+      }
+    ]
+  }
+}

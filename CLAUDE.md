@@ -336,6 +336,25 @@ sorted without the material, it measures reading habits. **`docs/EXERCISES.md` s
 question worth asking and `tools/check-exercises` refuses the tells a machine can see**; the
 craft of the prose, the diagrams and the spoken scripts is `docs/TEACHING.md`.
 
+**A design sheet is a claim about a course, and `tools/check-design` holds it.** `docs/design/`
+is one sheet per course — 122 of them — and it is prose that renders perfectly whatever it says,
+so nothing else in this repository would ever mention a sheet that has stopped being true. The
+tool compares the two on every fact they both state: the id, the lesson count against the topics,
+the section total, the exercise count. What it REPORTS rather than refuses is a budget, because a
+budget is a target and an overrun is a thing to notice rather than a thing to stop for.
+
+**And where a sheet lays its sections out, they are compared by identity and not by count.** Two
+of the 122 enumerate every section with its slug and kind; the rest give a budget and no list.
+`web-fundamentals` shares every slug with its course, 74 of 74, which is what makes the slug in
+the sheet the same string as the slug in `content/` — a measurement rather than a convention
+being introduced. **A total cannot see a rename**, and that is not hypothetical: `linux-terminal`
+designed 223 sections and 228 were written, so the tool reported five — while seven of its
+thirteen lessons had been written against a different arrangement altogether, fifty-five section
+names the sheet did not have. Two of those seven agreed on the count exactly and shared nothing.
+The join is the lesson id, never the title or the position (C-09), and a lesson the sheet designs
+with no `lesson.json` yet is progress rather than a disagreement — a course is written one lesson
+at a time.
+
 Prose has tells of its own, and they are the ones a model leaves rather than the ones a student
 would. `.claude/skills/natural-writing` is the pass that looks for them, and it **audits by
 default rather than rewriting**: the findings are style until the author says otherwise, and the
@@ -1588,6 +1607,12 @@ go run ./tools/check-figures       # and whether every diagram names a colour th
                                   # token nothing defines renders the shape invisible — and
                                   # whether a translated figure says anything in its own
                                   # language, which is the one question that needs two files
+node tools/check-highlight/check-highlight.mjs content   # every fenced block labelled with a
+                                  # language the highlighter knows. `docs/CONTENT.md` lists the
+                                  # names; a label it has never heard of — `text` is the one
+                                  # everybody reaches for — renders perfectly, in one grey, and
+                                  # nothing else here can see that. CI runs it and this list did
+                                  # not, which is how 234 of them reached a pull request
 go run ./tools/check-interface    # every string the interface says, in every language it claims
 go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has

@@ -1,0 +1,88 @@
+{
+  "id": "le-0hxvf3pd",
+  "title": "Formatting and linting with black and ruff",
+  "sections": [
+    {
+      "id": "se-wt8tjda8",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-t9jqhad2",
+          "version": 1,
+          "script": "Stop having the opinion. Have the tool. {{comment}} Whether a dictionary gets a space after the colon is a question with no right answer, and every hour anybody has ever spent on it in review was an hour spent on nothing.\n\n{{two}} There are two tools here and they do different things, which is the first thing to get straight. A **formatter** rewrites the file. A **linter** reads it and reports. One changes bytes and says nothing; the other says a lot and changes nothing unless you ask.\n\n{{black}} `black` is the formatter, and its design decision is that it has almost no options. That is not an oversight — a formatter with settings is a formatter you can argue about, and the argument is the thing being removed.\n\n{{ruff}} `ruff` is the linter, and it replaced about six tools that used to be installed separately. It is also a formatter now, and on the file in this lesson's demonstration it produces **the same bytes** as `black`.\n\n{{rules}} Its rules come in families with letters — `F` from pyflakes, `E` from pycodestyle, `B` from bugbear, `SIM`, `UP`, `I`. The default set is small and safe, and it leaves out the family that contains most of the real bugs.\n\n{{fix}} `--fix` rewrites what it is certain about. What it is not certain about it leaves, and says so — `1 hidden fix can be enabled with the --unsafe-fixes option`, which is a sentence worth reading rather than an invitation.\n\n{{bugs}} Because some findings are style and some are defects, and the tool does not sort them for you. An unused import is tidiness. A mutable default argument is a bug that will be reported as data appearing from nowhere, eighteen months from now.\n\n{{ci}} And all of it belongs in the pipeline rather than in a review comment, with `--check`, which changes nothing and exits non-zero. Then the diff is settled once, by a program, and nobody has the opinion again.",
+          "seconds": 137,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-gpeeasd9",
+      "slug": "formatting-against-linting",
+      "kind": "reading"
+    },
+    {
+      "id": "se-aces3549",
+      "slug": "black",
+      "kind": "reading"
+    },
+    {
+      "id": "se-r9r32bdp",
+      "slug": "ruff",
+      "kind": "reading"
+    },
+    {
+      "id": "se-wy4x4zda",
+      "slug": "choosing-rules",
+      "kind": "reading"
+    },
+    {
+      "id": "se-5a63zz03",
+      "slug": "configuring-both",
+      "kind": "reading"
+    },
+    {
+      "id": "se-vs9krfnf",
+      "slug": "in-the-editor-and-in-ci",
+      "kind": "reading"
+    },
+    {
+      "id": "se-byg1sxhs",
+      "slug": "the-rules-worth-reading",
+      "kind": "reading"
+    },
+    {
+      "id": "se-jeacmt0g",
+      "slug": "a-file-run-through-both",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-00s62fnt",
+          "version": 1,
+          "script": "A module of eighty-five lines, working, in production. {{comment}} Through the formatter and the linter, one after the other.\n\n{{black}} `black` first. Twenty-two lines rewritten: single quotes to double, spaces around a default argument's `=` removed, a dictionary literal spaced out, a long call exploded one argument per line with a trailing comma. **Nothing about it is a decision.** The diff is large, it is reviewed once, and it is never reviewed again.\n\n{{four}} Now `ruff`, with `E`, `F`, `B`, `SIM`, `UP`, `I` and `A` selected. Four findings, and they are worth taking one at a time because two are tidiness and two are defects.\n\n{{f401}} `F401 os imported but unused`. Tidiness. Somebody deleted the code that used it. `--fix` removes the line and nothing else happens.\n\n{{b006}} `B006 Do not use mutable data structures for argument defaults` — `def load_rates(path, cache={})`. **That is a bug**, and a bad one: the dictionary is created once, at definition, so the cache outlives every call and is shared by all of them. It was written as a cache and it works, right up to the test that loads a second file and gets the first one's rates.\n\n{{e722}} `E722 Do not use bare except`. A bug of a different shape: it catches `KeyboardInterrupt` and `SystemExit` as well as a bad JSON file, so the process cannot be stopped while it is in that block and a bug in the `with` becomes an empty dictionary.\n\n{{a002}} `A002 Function argument filter is shadowing a Python builtin`. Tidiness, mostly — until somebody inside that function wants the real `filter` and gets the argument.\n\n{{again}} One more thing. The four findings are **the same before and after** the formatter ran. That is what being two tools buys: rewriting the file changed twenty-two lines and not one verdict.",
+          "seconds": 125,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-ydfh9kax",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-dtgyyv4a",
+          "version": 1,
+          "script": "Format everything, lint what matters, argue about neither.\n\n{{format}} The formatter goes on every file, with no exceptions and no per-directory settings. The moment there are two styles in one repository, every diff carries the difference between them and somebody has to decide which one this file is.\n\n{{once}} Run it over everything in one commit, on its own, so the reformat is not mixed in with a change anybody has to read. Most teams then add that commit to `.git-blame-ignore-revs`, and `git blame` stops pointing at it.\n\n{{lint}} The linter is where you make choices, and the default set is not enough — it leaves out `B`, which is where the mutable default and the loop variable captured by a closure live. Turn on `B` on the first day.\n\n{{noqa}} Silence a rule on one line with `# noqa: RULE`, the code named. A bare `# noqa` silences every rule on that line including the one that arrives next year, and `RUF100` is what finds the ones that stopped applying.\n\n{{ci}} Both in CI, with `--check`, so the pipeline fails and nobody writes the review comment. And both in the editor, on save, so the pipeline never has to.\n\n{{end}} None of this finds whether the code is right. It finds what a machine can see, which is a specific and useful set — and it removes an entire category of conversation from every review you will ever do.",
+          "seconds": 100,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-25r72v4k",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

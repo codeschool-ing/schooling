@@ -1,0 +1,88 @@
+{
+  "id": "le-wvw53jb4",
+  "title": "mypy and pyright: the checker that reads the annotations",
+  "sections": [
+    {
+      "id": "se-zpqv1xn1",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-z94getf5",
+          "version": 1,
+          "script": "An annotation is a comment until something reads it. {{comment}} Lesson 14 wrote them and Python ignored every one; this lesson is the thing that does not.\n\n{{static}} A type checker is STATIC: it reads your files and runs none of them. No test data, no database, no network, and no waiting. It follows every call in the program and asks whether the types line up — including the call in the file you were not looking at, on the branch nobody has taken yet.\n\n{{finds}} What that finds is a specific and useful set. The `None` that reaches a multiplication. The attribute you spelled wrongly. The function you renamed in one place. The argument in the wrong order, when the types differ. The branch that returns a string where every other branch returns an integer.\n\n{{not}} And what it does not find is just as worth knowing. It cannot tell you the logic is wrong, that the formula is backwards, or that the file you are reading is the wrong file. **A checker is not a test**, and lesson 16 is the other half.\n\n{{two}} There are two of them and both are worth knowing. `mypy` is the reference, it is what CI usually runs, and it is the one whose messages this lesson reads. `pyright` is faster, it is what your editor is probably already running, and it disagrees with `mypy` in a few places on purpose.\n\n{{default}} The first surprise is that the default settings pass almost anything. An unannotated function is not an error — it is simply unchecked. So a first run on a real codebase often says nothing at all, and the honest reaction to that is not relief.\n\n{{strict}} `--strict` is the other end: every function must be annotated, and `Any` may not quietly become the answer. Between the two are a dozen flags, and the useful ones are worth naming because you will turn them on one at a time.\n\n{{adopt}} Which is the last thing, and the one that matters on real code: how to start on twenty thousand lines that have no annotations at all, without a week of silence and without giving up on the third day.",
+          "seconds": 153,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-ky86b5qy",
+      "slug": "what-a-checker-does",
+      "kind": "reading"
+    },
+    {
+      "id": "se-hh9fv4c8",
+      "slug": "running-mypy",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ytp8s49k",
+      "slug": "strictness",
+      "kind": "reading"
+    },
+    {
+      "id": "se-38rnjjeb",
+      "slug": "configuring-it",
+      "kind": "reading"
+    },
+    {
+      "id": "se-0txytpyf",
+      "slug": "pyright",
+      "kind": "reading"
+    },
+    {
+      "id": "se-k6tt1ezn",
+      "slug": "third-party-stubs",
+      "kind": "reading"
+    },
+    {
+      "id": "se-v9hnky27",
+      "slug": "adopting-it-on-what-exists",
+      "kind": "reading"
+    },
+    {
+      "id": "se-43p7k9f9",
+      "slug": "two-bugs-found",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-g316g29w",
+          "version": 1,
+          "script": "A checker run over a module that works. Four hundred lines, in production, no failures reported.\n\n{{first}} I add annotations to the public functions and run `mypy --strict`. Fourteen errors, and eleven are the same sentence — `Call to untyped function \"…\" in typed context`, from helpers I have not reached yet. Those are noise from my own half-finished work, and they go away as I keep going.\n\n{{real}} Three are real. The first: `Unsupported operand types for * (\"float\" and \"None\")`, with a note underneath saying the right operand is `float | None`. The multiplication is on line ninety; the `None` comes from a lookup forty lines away that returns nothing when a code is missing.\n\n{{never}} I check the data. Every code in the file is in the table — that is why this has never failed. The lookup returns `None` for a code that has not appeared yet, and the day it does, this line raises `TypeError` in the middle of a report.\n\n{{second}} The second: `Item \"None\" of \"Row | None\" has no attribute \"city\"`. Same shape, one layer in, on a branch reached only when a row fails validation — which the test data never does.\n\n{{third}} The third is not a `None`. `Argument 1 to \"summarise\" has incompatible type \"list[str]\"; expected \"list[int]\"`, on a call that has been correct since it was written — because the function it calls was CHANGED last month, and this caller was not. Nothing tests that path; the module still imports; the error was already there.\n\n{{point}} Three bugs, no code run, and none of them would have been found by a test that does not exist. **That is what the checker is for**, and it is also why the first run on a real module is worth a whole afternoon.",
+          "seconds": 126,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-jgja5w1w",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-xnx9kee7",
+          "version": 1,
+          "script": "A checker that runs is worth more than annotations that are right.\n\n{{run}} Annotations nobody checks drift away from the code in a month, and then they are worse than nothing — a comment that looks authoritative and is wrong. Put the checker in CI on the first day.\n\n{{default}} The default settings pass almost anything, and a clean first run usually means nothing was checked. `--strict` is the other end and is a lot to take at once on existing code.\n\n{{gradual}} So: start loose, turn on `disallow_untyped_defs` for ONE module, fix it, and add the next. The important flag is the one that stops the untyped half from growing while you work on the typed half.\n\n{{ignore}} `# type: ignore[code]` with the code named and a comment saying why. A bare ignore is a place where a checker was told to be quiet and nobody remembers the reason.\n\n{{stubs}} For a library with no annotations, look for a `types-` package before you reach for `Any`. Somebody has usually done the work.\n\n{{not}} And the boundary: a checker cannot tell you the logic is wrong. It reads types and it reads them everywhere, which is exactly the half a test is worst at — and lesson 16 is the other half.",
+          "seconds": 88,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-w33wsxtm",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

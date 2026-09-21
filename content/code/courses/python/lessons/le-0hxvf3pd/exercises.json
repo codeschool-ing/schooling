@@ -1,0 +1,1403 @@
+[
+  {
+    "id": "ex-a1t83v5c",
+    "version": 1,
+    "section": "formatting-against-linting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A formatter rewrote 22 lines of a module. How many of the linter's four findings changed?",
+    "hint": "Think about what each tool looks at.",
+    "choices": [
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Layout is not evidence. A finding that moved when the file was reformatted would be a finding about the formatting."
+      },
+      {
+        "text": "Two — the ones about whitespace, which the formatter settled on its way through",
+        "correct": false,
+        "why": "Whitespace rules are turned off precisely so this cannot happen."
+      },
+      {
+        "text": "All four, since the line numbers moved and each finding is anchored to one",
+        "correct": false,
+        "why": "The findings are re-derived from the new file and still name the same four things."
+      },
+      {
+        "text": "One — the unused import, which the formatter removed while tidying the block",
+        "correct": false,
+        "why": "A formatter removes nothing; deleting an import changes what the program does."
+      }
+    ]
+  },
+  {
+    "id": "ex-p55nb2b9",
+    "version": 1,
+    "section": "formatting-against-linting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why turn `E501` off when a formatter is in use?",
+    "hint": "Who decided the line width?",
+    "choices": [
+      {
+        "text": "`E501` has no automatic fix, so every finding needs a person",
+        "correct": false,
+        "why": "Neither does `E722`, and that one stays on."
+      },
+      {
+        "text": "`E501` counts characters rather than display columns, so it is wrong about tabs",
+        "correct": false,
+        "why": "It counts characters and that is not the objection here."
+      },
+      {
+        "text": "A formatter emits lines longer than the limit whenever a string cannot be split",
+        "correct": false,
+        "why": "That is a real and narrow case, and not the general reason."
+      },
+      {
+        "text": "The formatter already chose the width, so a report about it is a report about the formatter's decision",
+        "correct": true,
+        "why": "Let the formatter win on layout and keep the linter's rules that are about meaning."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6p4hhme",
+    "version": 1,
+    "section": "formatting-against-linting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a formatter's decision and not a linter's?",
+    "hint": "One has no right answer.",
+    "choices": [
+      {
+        "text": "Whether an import at the top of the file is used anywhere below",
+        "correct": false,
+        "why": "That is a fact about the program and belongs to the linter."
+      },
+      {
+        "text": "Whether a default argument is a list that outlives the call",
+        "correct": false,
+        "why": "That is a defect and no formatter touches it."
+      },
+      {
+        "text": "Whether a long call is written on one line or one argument per line",
+        "correct": true,
+        "why": "There is no right answer to it, which is exactly why handing it to a program costs nothing."
+      },
+      {
+        "text": "Whether a `try` block catches every exception or a named one",
+        "correct": false,
+        "why": "That has a right answer, so it is reported rather than rewritten."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgn08kmb",
+    "version": 1,
+    "section": "formatting-against-linting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ruff format` and `black` were run over the same module. What came out?",
+    "hint": "It was measured with `diff`.",
+    "choices": [
+      {
+        "text": "The same bytes",
+        "correct": true,
+        "why": "That is the claim `ruff format` makes, and it is one you can check on your own code before switching."
+      },
+      {
+        "text": "The same layout with different quote characters on the string literals",
+        "correct": false,
+        "why": "Both normalise to double quotes."
+      },
+      {
+        "text": "Output that differs on long calls, where the two wrap differently",
+        "correct": false,
+        "why": "They wrapped the long call identically here."
+      },
+      {
+        "text": "Output that differs in blank lines around definitions at the top level",
+        "correct": false,
+        "why": "The blank lines were the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-exstkkwp",
+    "version": 1,
+    "section": "formatting-against-linting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a formatter change and a linter not?",
+    "hint": "One of the two writes to the file.",
+    "choices": [
+      {
+        "text": "The bytes of the file",
+        "correct": true,
+        "why": "A linter reports and changes nothing unless you ask it to with `--fix`."
+      },
+      {
+        "text": "The meaning of the program, in the narrow cases where a rewrite is safe",
+        "correct": false,
+        "why": "A formatter is not allowed to change meaning at all."
+      },
+      {
+        "text": "The order of the imports, which is a layout question like any other",
+        "correct": false,
+        "why": "Import order is `ruff`'s `I` family, on the linter's side."
+      },
+      {
+        "text": "The set of names the module exports, when an unused one is removed",
+        "correct": false,
+        "why": "Removing an import is a linter's `--fix`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bjpqm0v",
+    "version": 1,
+    "section": "black",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`black` reformatted a file and left `if result.ok == True:` exactly as it was. Why?",
+    "hint": "Which tool has an opinion about that?",
+    "choices": [
+      {
+        "text": "`== True` is already formatted correctly, with the spaces `black` would put there",
+        "correct": false,
+        "why": "It removed the space before the `:` on that very line, so it did touch it."
+      },
+      {
+        "text": "A comparison to `True` is a linter's finding and a formatter has no opinion about it",
+        "correct": true,
+        "why": "`E712` reports it. Rewriting it could change behaviour, which a formatter may never do."
+      },
+      {
+        "text": "It is inside an `if`, and `black` leaves whole conditions alone to avoid changing branches",
+        "correct": false,
+        "why": "It reformats conditions freely; what it will not do is change what one means."
+      },
+      {
+        "text": "`black` skips any line that a linter rule already covers",
+        "correct": false,
+        "why": "It knows nothing about the linter's rules."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvfqfvn8",
+    "version": 1,
+    "section": "black",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the argument for `black` having almost no options?",
+    "hint": "Think about what the options would be used for.",
+    "choices": [
+      {
+        "text": "Fewer options means a smaller program, which is why it runs as fast as it does",
+        "correct": false,
+        "why": "Speed comes from the implementation rather than from the size of the option list."
+      },
+      {
+        "text": "A formatter with settings is one a team can argue about, and removing the argument is the product",
+        "correct": true,
+        "why": "`88` is a strange number and it is the default, which is the only property of it that matters."
+      },
+      {
+        "text": "Each option would double the number of layouts the test suite has to cover",
+        "correct": false,
+        "why": "That is a cost to its authors and not the reason given for the design."
+      },
+      {
+        "text": "Options would make the output depend on a config file that may not be committed",
+        "correct": false,
+        "why": "It reads `pyproject.toml`, which is committed like anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3y4q10z",
+    "version": 1,
+    "section": "black",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You leave a trailing comma inside a call that would fit on one line. What does `black` do?",
+    "hint": "The comma is a message.",
+    "choices": [
+      {
+        "text": "It keeps the comma and the single line, since both are valid",
+        "correct": false,
+        "why": "The comma is read as a request to explode."
+      },
+      {
+        "text": "It reports the comma as redundant and leaves the layout alone",
+        "correct": false,
+        "why": "It reports nothing; it is a formatter."
+      },
+      {
+        "text": "It removes the comma and joins the call onto one line",
+        "correct": false,
+        "why": "It removes the comma only when the call is already on one line."
+      },
+      {
+        "text": "It keeps the call exploded, one argument per line, with the comma still there",
+        "correct": true,
+        "why": "The magic trailing comma is the one place you get to overrule it, and it is useful for a list that will grow."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccx9nakc",
+    "version": 1,
+    "section": "black",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fail the build when a file is not formatted, and rewrite nothing: `black --______ app/`",
+    "hint": "Five letters.",
+    "blanks": [
+      {
+        "accept": [
+          "check"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n4jwwdpb",
+    "version": 1,
+    "section": "black",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first `black` run rewrites the whole repository. What goes with that commit?",
+    "hint": "Think about `git blame` the week after.",
+    "choices": [
+      {
+        "text": "Its hash in `.git-blame-ignore-revs`, with `blame.ignoreRevsFile` pointed at the file",
+        "correct": true,
+        "why": "Otherwise `git blame` answers 'the formatting commit' for every line in the project."
+      },
+      {
+        "text": "A `.gitattributes` entry marking the reformatted files as generated",
+        "correct": false,
+        "why": "That changes how diffs are displayed and does nothing for `blame`."
+      },
+      {
+        "text": "A revert commit prepared in advance, in case the reformat broke something",
+        "correct": false,
+        "why": "A formatter does not change behaviour, so there is nothing to revert."
+      },
+      {
+        "text": "A tag, so the release before the reformat can still be built",
+        "correct": false,
+        "why": "The reformat does not affect whether an older commit builds."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjq10h6x",
+    "version": 1,
+    "section": "ruff",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`[*] 3 fixable with the --fix option (1 hidden fix can be enabled with --unsafe-fixes)`. What is the hidden one?",
+    "hint": "Think about what a fix is allowed to change.",
+    "choices": [
+      {
+        "text": "A fix that `ruff` cannot prove leaves the program's behaviour unchanged",
+        "correct": true,
+        "why": "`result.ok == True` becoming `result.ok` is the example: `1 == True` is true and `1` is not `True`."
+      },
+      {
+        "text": "A fix for a rule that is not in the selected set, which would be applied silently",
+        "correct": false,
+        "why": "A rule that is not selected produces no finding to fix at all."
+      },
+      {
+        "text": "A fix that would conflict with another fix on the same line",
+        "correct": false,
+        "why": "Conflicting fixes are applied over several passes rather than hidden."
+      },
+      {
+        "text": "A fix that rewrites more than one file, which needs the flag to be allowed",
+        "correct": false,
+        "why": "Every fix here is within one file."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdvp8ch1",
+    "version": 1,
+    "section": "ruff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which family holds most of the findings that are actual defects?",
+    "hint": "It is named after an insect.",
+    "choices": [
+      {
+        "text": "`B`",
+        "correct": true,
+        "why": "flake8-bugbear: mutable defaults, a loop variable captured by a closure, an `assert` on a tuple."
+      },
+      {
+        "text": "`E`, which is pycodestyle and is the largest family by rule count",
+        "correct": false,
+        "why": "It is about whitespace and layout, which a formatter now owns."
+      },
+      {
+        "text": "`SIM`, which finds code that could be written more directly",
+        "correct": false,
+        "why": "Those are simplifications and the code they name is correct."
+      },
+      {
+        "text": "`UP`, which rewrites syntax older than the target version",
+        "correct": false,
+        "why": "Old syntax still runs; it is tidiness with a deadline."
+      }
+    ]
+  },
+  {
+    "id": "ex-509persc",
+    "version": 1,
+    "section": "ruff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should you run first on a codebase that has never been linted?",
+    "hint": "The full output is thousands of lines.",
+    "choices": [
+      {
+        "text": "`ruff check --diff`, which shows what a fix would change without changing it",
+        "correct": false,
+        "why": "Useful and still thousands of lines on a first run."
+      },
+      {
+        "text": "`ruff check --fix`, so the easy half is gone before anybody reads the list",
+        "correct": false,
+        "why": "A large unreviewed rewrite is a poor first commit even when every fix is safe."
+      },
+      {
+        "text": "`ruff check --select ALL`, so the size of the problem is known",
+        "correct": false,
+        "why": "That turns on every family including the contradictory ones."
+      },
+      {
+        "text": "`ruff check --statistics`",
+        "correct": true,
+        "why": "A count per rule is twenty lines and tells you what kind of problem you have."
+      }
+    ]
+  },
+  {
+    "id": "ex-t934rwm9",
+    "version": 1,
+    "section": "ruff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six tools are named as living inside `ruff`. What did it do with them?",
+    "hint": "Not a wrapper.",
+    "choices": [
+      {
+        "text": "Reimplemented their rules, which is why it runs over a large repository in under a second",
+        "correct": true,
+        "why": "`flake8`, `isort`, `pyupgrade`, `pydocstyle`, `autoflake` and most of `pylint`."
+      },
+      {
+        "text": "Vendored them, so each one still runs as its own process behind one command",
+        "correct": false,
+        "why": "Six processes would be slower than the six tools were."
+      },
+      {
+        "text": "Wrapped their command-line interfaces behind a single configuration file",
+        "correct": false,
+        "why": "A shared config would not make it faster."
+      },
+      {
+        "text": "Translated their configuration formats, leaving the checks to the originals",
+        "correct": false,
+        "why": "The checks are its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-d0wbm8mp",
+    "version": 1,
+    "section": "ruff",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `[*]` beside a rule code mean?",
+    "hint": "It is about what may be done automatically.",
+    "choices": [
+      {
+        "text": "The rule was matched more than once in the file being reported",
+        "correct": false,
+        "why": "Each occurrence is printed on its own."
+      },
+      {
+        "text": "The rule is in the default set and needs no `select` entry",
+        "correct": false,
+        "why": "Default membership is not marked in the output."
+      },
+      {
+        "text": "The rule was turned on by an `extend-select` rather than by `select`",
+        "correct": false,
+        "why": "The output does not say where a rule came from."
+      },
+      {
+        "text": "The rule has a fix `ruff` considers safe",
+        "correct": true,
+        "why": "Safe means it cannot change what the program does — removing an unused import, sorting imports."
+      }
+    ]
+  },
+  {
+    "id": "ex-q881p4r0",
+    "version": 1,
+    "section": "choosing-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A config says `select = [\"B\"]`. What is checked?",
+    "hint": "Read the verb.",
+    "choices": [
+      {
+        "text": "Bugbear, and nothing else — `select` replaces the default rather than adding to it",
+        "correct": true,
+        "why": "An unused import in the same file is reported by nothing, because `F` was turned off by that line."
+      },
+      {
+        "text": "Bugbear plus the default set, since a family is added to what was already on",
+        "correct": false,
+        "why": "Adding to the default is `extend-select`."
+      },
+      {
+        "text": "Bugbear plus `F`, since undefined names can never be switched off",
+        "correct": false,
+        "why": "Every rule including `F` can be switched off."
+      },
+      {
+        "text": "Nothing, since a `select` naming one family is rejected as too narrow",
+        "correct": false,
+        "why": "It is accepted and does exactly what it says."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2mdwp0q",
+    "version": 1,
+    "section": "choosing-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The default rule set is `E4, E7, E9, F`. What does that leave out that matters most?",
+    "hint": "One family holds the defects.",
+    "choices": [
+      {
+        "text": "`I`, so the imports are never sorted and every diff touches the block",
+        "correct": false,
+        "why": "Unsorted imports are untidy rather than a defect."
+      },
+      {
+        "text": "`B`, and with it the mutable default argument that shares state",
+        "correct": true,
+        "why": "`def load_rates(path, cache={})` passes the default set and is a cache shared by every call the process makes."
+      },
+      {
+        "text": "`E501`, so a file with very long lines passes without comment",
+        "correct": false,
+        "why": "Line length belongs to the formatter and is deliberately left out."
+      },
+      {
+        "text": "`UP`, so the codebase keeps syntax older than the version it runs on",
+        "correct": false,
+        "why": "Old syntax still runs correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-d01sbq43",
+    "version": 1,
+    "section": "choosing-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `\"__init__.py\" = [\"F401\"]` belong in `per-file-ignores` rather than as a `# noqa` on each line?",
+    "hint": "Think about what is being described.",
+    "choices": [
+      {
+        "text": "It is a property of that kind of file rather than a mistake on a line",
+        "correct": true,
+        "why": "A package's `__init__.py` imports names so others can import them from there, and each looks unused."
+      },
+      {
+        "text": "`# noqa` does not work on an import statement, so the config is the only way",
+        "correct": false,
+        "why": "It works on any line, imports included."
+      },
+      {
+        "text": "`F401` cannot be silenced on a line, only for a whole file",
+        "correct": false,
+        "why": "It can be silenced either way; the question is which says the right thing."
+      },
+      {
+        "text": "A `# noqa` in `__init__.py` is removed by `--fix` along with the import",
+        "correct": false,
+        "why": "`--fix` leaves a suppressed finding alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-vc9zc7rn",
+    "version": 1,
+    "section": "choosing-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`import json  # noqa: E501`, where the actual finding on that line is `F401`. What happens?",
+    "hint": "The code named has to match.",
+    "choices": [
+      {
+        "text": "Nothing is reported, since any `noqa` comment covers the line",
+        "correct": false,
+        "why": "That is what a bare `# noqa` does, and this one names a code."
+      },
+      {
+        "text": "The `F401` is reported",
+        "correct": true,
+        "why": "A `noqa` with a code silences that code. A bare `# noqa` silences every rule on the line, including next year's."
+      },
+      {
+        "text": "The line is skipped entirely, including by the formatter",
+        "correct": false,
+        "why": "The formatter reads no `noqa` comments."
+      },
+      {
+        "text": "`ruff` reports that the named code does not apply to this line",
+        "correct": false,
+        "why": "`RUF100` reports an unused directive, and it has to be turned on."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6rynvcz",
+    "version": 1,
+    "section": "choosing-rules",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rule that reports a suppression comment whose reason has gone: `______`",
+    "hint": "Three letters and three digits.",
+    "blanks": [
+      {
+        "accept": [
+          "RUF100"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ynemjb09",
+    "version": 1,
+    "section": "configuring-both",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both tools take `line-length`. What goes wrong if the two numbers differ?",
+    "hint": "One wraps and one reports.",
+    "choices": [
+      {
+        "text": "Whichever runs last wins, so the result depends on the order in CI",
+        "correct": false,
+        "why": "The formatter's output does not depend on the linter having run."
+      },
+      {
+        "text": "The linter rewraps the lines the formatter wrote, and the two fight on every save",
+        "correct": false,
+        "why": "`ruff check` rewrites nothing about line width."
+      },
+      {
+        "text": "The formatter refuses to run, since it reads the linter's table as well",
+        "correct": false,
+        "why": "Each reads its own table and neither checks the other."
+      },
+      {
+        "text": "The formatter produces lines the linter complains about, on files nobody touched",
+        "correct": true,
+        "why": "Set them to the same value, and then turn `E501` off anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-awm1y7vt",
+    "version": 1,
+    "section": "configuring-both",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `target-version` decide, for each of the two tools?",
+    "hint": "Two different things from one number.",
+    "choices": [
+      {
+        "text": "Which syntax the formatter is allowed to emit, and what the `UP` family suggests",
+        "correct": true,
+        "why": "With `py312`, `Optional[int]` becomes `int | None` and `typing.List` becomes `list`."
+      },
+      {
+        "text": "Which Python the tools are run under, since each spawns its own interpreter",
+        "correct": false,
+        "why": "Both read files and neither runs your code."
+      },
+      {
+        "text": "Which version of each of the two tools is installed, resolved from the value given",
+        "correct": false,
+        "why": "Tool versions are pinned by whatever installs them."
+      },
+      {
+        "text": "Which standard-library signatures the linter believes in when checking calls",
+        "correct": false,
+        "why": "Neither tool checks calls against signatures; that is a type checker's work."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jszvspe",
+    "version": 1,
+    "section": "configuring-both",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`select` is written in `[tool.ruff]` instead of `[tool.ruff.lint]`. What happens?",
+    "hint": "It is not an error.",
+    "choices": [
+      {
+        "text": "`ruff` refuses to start until that table is corrected",
+        "correct": false,
+        "why": "It starts and runs."
+      },
+      {
+        "text": "The setting applies to the formatter as well, which then rejects it",
+        "correct": false,
+        "why": "The formatter has its own table and reads nothing from this one."
+      },
+      {
+        "text": "A deprecation warning, and the setting still applies",
+        "correct": true,
+        "why": "Which is how it goes unnoticed: nothing fails and the outer table keeps working."
+      },
+      {
+        "text": "The setting is ignored silently and the default rule set is used",
+        "correct": false,
+        "why": "It is honoured, with a warning printed alongside."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a5xpbkm",
+    "version": 1,
+    "section": "configuring-both",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belongs in `exclude`?",
+    "hint": "Whose file is it?",
+    "choices": [
+      {
+        "text": "The test suite, which has its own conventions about asserts and fixtures",
+        "correct": false,
+        "why": "Those are a `per-file-ignores` entry rather than an exclusion."
+      },
+      {
+        "text": "A module with a long list of findings, until somebody has time for it",
+        "correct": false,
+        "why": "That is the directory that stops being checked and never comes back."
+      },
+      {
+        "text": "A package's `__init__.py`, whose imports are all reported as unused",
+        "correct": false,
+        "why": "Also a `per-file-ignores` entry, naming `F401`."
+      },
+      {
+        "text": "A directory of machine-written files, such as migrations or generated clients",
+        "correct": true,
+        "why": "Everything else is yours, and a directory excluded because it is inconvenient never comes back."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjep4q5c",
+    "version": 1,
+    "section": "configuring-both",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the configuration belong in `pyproject.toml` rather than in the command?",
+    "hint": "Three places run these tools.",
+    "choices": [
+      {
+        "text": "Because a flag cannot express a rule family, only a single rule code",
+        "correct": false,
+        "why": "`--select B` works on the command line."
+      },
+      {
+        "text": "Because `pyproject.toml` is the only place a per-file table can be written",
+        "correct": false,
+        "why": "The per-file table could live in a `ruff.toml`; the reason is agreement."
+      },
+      {
+        "text": "Because both tools ignore command-line flags when a config file exists",
+        "correct": false,
+        "why": "A flag overrides the file, which is part of the problem."
+      },
+      {
+        "text": "So that the editor, the terminal and the pipeline all do the same thing",
+        "correct": true,
+        "why": "A tool configured on one machine's command line is a green check in one place and a red one in the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb739zyz",
+    "version": 1,
+    "section": "in-the-editor-and-in-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does CI run `--check` rather than the formatter itself?",
+    "hint": "Think about what a pipeline is allowed to do to a branch.",
+    "choices": [
+      {
+        "text": "Formatting in CI is slower than checking, since the files have to be written back",
+        "correct": false,
+        "why": "Writing a few files is not what makes a pipeline slow."
+      },
+      {
+        "text": "A pipeline has no write access to the repository, so a rewrite would fail anyway",
+        "correct": false,
+        "why": "Many pipelines do have write access, which is what makes the restraint a choice."
+      },
+      {
+        "text": "`--check` is the only mode that reports which files would change",
+        "correct": false,
+        "why": "`--diff` reports that too, in more detail."
+      },
+      {
+        "text": "It reports the disagreement and does not quietly commit a fix into somebody's branch",
+        "correct": true,
+        "why": "`--check` rewrites nothing and exits non-zero, which is the whole of the review comment nobody has to write."
+      }
+    ]
+  },
+  {
+    "id": "ex-a58qyjde",
+    "version": 1,
+    "section": "in-the-editor-and-in-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pre-commit hook runs both tools. Why keep the CI check as well?",
+    "hint": "Where does the hook live?",
+    "choices": [
+      {
+        "text": "A hook runs on staged files only, so a file committed with `-a` is missed",
+        "correct": false,
+        "why": "It runs on the files being committed, which includes those."
+      },
+      {
+        "text": "A hook's version of the tool is pinned and CI's is not, so they drift",
+        "correct": false,
+        "why": "Both should be pinned, and that is an argument for pinning rather than for keeping the check."
+      },
+      {
+        "text": "A hook lives on each person's machine, is easy to skip, and is missing on a new one",
+        "correct": true,
+        "why": "CI is what is true. The hook is what is convenient."
+      },
+      {
+        "text": "A hook cannot run the formatter, only the linter with `--fix`",
+        "correct": false,
+        "why": "It runs both; the sample config has one entry for each."
+      }
+    ]
+  },
+  {
+    "id": "ex-26cakcvk",
+    "version": 1,
+    "section": "in-the-editor-and-in-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the right order to adopt these tools in?",
+    "hint": "Something has to be able to go red first.",
+    "choices": [
+      {
+        "text": "The formatter everywhere and its `--check` in CI, then the linter's defaults, then one family at a time",
+        "correct": true,
+        "why": "Doing it the other way round produces four thousand findings and a team that turns the tool off."
+      },
+      {
+        "text": "The pre-commit hook first, since it stops new problems arriving",
+        "correct": false,
+        "why": "It stops them on the machines that have it installed."
+      },
+      {
+        "text": "The linter with every family on, so the size of the problem is known from the start",
+        "correct": false,
+        "why": "That is the four thousand findings, and `--select ALL` also turns on contradictory rules."
+      },
+      {
+        "text": "The editor integration first, so the code improves before any pipeline is touched",
+        "correct": false,
+        "why": "Then the repository is half formatted and nothing says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m7b4fnk",
+    "version": 1,
+    "section": "in-the-editor-and-in-ci",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why put the formatter's check before the linter's in the pipeline?",
+    "hint": "Think about what an unformatted file reports.",
+    "choices": [
+      {
+        "text": "A merely unformatted file then fails on the sentence that says so",
+        "correct": true,
+        "why": "Rather than on a list of `E` findings that are all consequences of the same thing."
+      },
+      {
+        "text": "The linter reads the formatter's output, so it has to run second",
+        "correct": false,
+        "why": "Each reads the files in the repository; neither reads the other's output."
+      },
+      {
+        "text": "Running them the other way round applies fixes the formatter then undoes",
+        "correct": false,
+        "why": "Neither step changes a file when `--check` is used."
+      },
+      {
+        "text": "The formatter's check is faster, so a failing build fails sooner",
+        "correct": false,
+        "why": "Both are fast, and the ordering argument is about which message is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsbk3v1y",
+    "version": 1,
+    "section": "in-the-editor-and-in-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does format-on-save buy that a CI check does not?",
+    "hint": "Think about the file you are editing right now.",
+    "choices": [
+      {
+        "text": "It applies the linter's safe fixes as well, which CI is not allowed to do",
+        "correct": false,
+        "why": "Organising imports on save is a separate editor setting."
+      },
+      {
+        "text": "The repository is already formatted, so the pipeline never has to say so",
+        "correct": true,
+        "why": "A formatter you have to remember to run is one half the repository has not been through."
+      },
+      {
+        "text": "It catches findings before they are committed, unlike a check that runs after",
+        "correct": false,
+        "why": "Formatting produces no findings; that is the linter's half."
+      },
+      {
+        "text": "It formats files the CI check is configured to exclude",
+        "correct": false,
+        "why": "Both honour the same `exclude` list from `pyproject.toml`."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2hd8h5q",
+    "version": 1,
+    "section": "the-rules-worth-reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`def load_rates(path, cache={})`. When is the dictionary created?",
+    "hint": "Think about what the `def` statement does.",
+    "choices": [
+      {
+        "text": "Once, when the `def` runs",
+        "correct": true,
+        "why": "It is attached to the function object and lives as long as the process, shared by every caller including the tests."
+      },
+      {
+        "text": "Once per call, which is why it works as a cache within one request",
+        "correct": false,
+        "why": "Then it would empty between calls and cache nothing at all."
+      },
+      {
+        "text": "Once per module import, so a reimport in a test gives a fresh one",
+        "correct": false,
+        "why": "A module is imported once per process and the default would survive anyway."
+      },
+      {
+        "text": "Lazily, on the first call that does not pass the argument",
+        "correct": false,
+        "why": "It is built when the `def` is executed, before any call."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cnw7mam",
+    "version": 1,
+    "section": "the-rules-worth-reading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the fix for `B006` on `cache={}`?",
+    "hint": "The default has to be something immutable.",
+    "choices": [
+      {
+        "text": "`cache=None`, and `if cache is None: cache = {}` as the first line of the body",
+        "correct": true,
+        "why": "The sentinel is built once and the dictionary is built per call, which is what was meant."
+      },
+      {
+        "text": "`cache=dict()`, which constructs a new one rather than reusing a literal",
+        "correct": false,
+        "why": "It is still evaluated once at definition; the call happens there, not per invocation."
+      },
+      {
+        "text": "`cache=frozenset()`, which cannot be mutated and so cannot accumulate",
+        "correct": false,
+        "why": "A frozen set cannot hold the mapping the function needs."
+      },
+      {
+        "text": "Moving the argument after a `*`, so it has to be passed by keyword",
+        "correct": false,
+        "why": "That changes how it is called and leaves the shared object exactly where it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbb8pb13",
+    "version": 1,
+    "section": "the-rules-worth-reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`except:` with nothing after it. What does it catch that `except Exception:` does not?",
+    "hint": "Two of them are how a process stops.",
+    "choices": [
+      {
+        "text": "`SyntaxError`, which is raised while the module is being read",
+        "correct": false,
+        "why": "A syntax error in the module never reaches a `try` inside it, and it is an `Exception` anyway."
+      },
+      {
+        "text": "Errors raised inside a C extension, which do not inherit from `Exception`",
+        "correct": false,
+        "why": "An extension raises ordinary Python exceptions."
+      },
+      {
+        "text": "`GeneratorExit` alone, which is the only other `BaseException` subclass",
+        "correct": false,
+        "why": "There are several, and the two that matter here are the ones that stop a process."
+      },
+      {
+        "text": "`KeyboardInterrupt` and `SystemExit`",
+        "correct": true,
+        "why": "So Ctrl-C inside that block is swallowed, and the process cannot be stopped while it is in there."
+      }
+    ]
+  },
+  {
+    "id": "ex-54rte50a",
+    "version": 1,
+    "section": "the-rules-worth-reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`for i in range(3): out.append(lambda: i)` then `[f() for f in out]`. What comes back?",
+    "hint": "The closures share something.",
+    "choices": [
+      {
+        "text": "`[2, 2, 2]`",
+        "correct": true,
+        "why": "They share the variable rather than its value, and the loop finished with it at `2`."
+      },
+      {
+        "text": "`[0, 1, 2]`, since each lambda was built while `i` held a different value",
+        "correct": false,
+        "why": "Each lambda reads `i` when it is called, not when it was built."
+      },
+      {
+        "text": "`[None, None, None]`, since `i` is out of scope once the loop ends",
+        "correct": false,
+        "why": "A loop variable in Python outlives the loop."
+      },
+      {
+        "text": "A `NameError`, since `i` is not bound inside the lambda's own scope",
+        "correct": false,
+        "why": "It resolves to the enclosing scope, which is the whole problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1t0z2en",
+    "version": 1,
+    "section": "the-rules-worth-reading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`def summarise(rows, type=None)` and a later line calls `type(x)`. What happens?",
+    "hint": "The name was taken.",
+    "choices": [
+      {
+        "text": "A `NameError`, since the parameter hid the built-in without replacing it",
+        "correct": false,
+        "why": "The parameter is bound; it is bound to `None`."
+      },
+      {
+        "text": "Nothing — `type` is looked up in the builtins namespace before the locals",
+        "correct": false,
+        "why": "Locals are looked up first, which is the rule this finding is about."
+      },
+      {
+        "text": "`TypeError: 'NoneType' object is not callable`, from the line that calls it",
+        "correct": true,
+        "why": "Inside that function the built-in is unreachable, in a function that has not itself changed."
+      },
+      {
+        "text": "The built-in is used, since a parameter does not shadow it at module level",
+        "correct": false,
+        "why": "A parameter is a local name and local names win inside the function."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkjzwqjt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these four findings is tidiness rather than a defect?",
+    "hint": "Three of them will produce a wrong answer at run time.",
+    "choices": [
+      {
+        "text": "`B023` — a function that does not bind the loop variable",
+        "correct": false,
+        "why": "Every closure in the list does the last iteration's work."
+      },
+      {
+        "text": "`E722` — a bare `except` around a JSON read",
+        "correct": false,
+        "why": "It swallows Ctrl-C and turns a `NameError` into an empty dictionary."
+      },
+      {
+        "text": "`B006` — a mutable data structure as an argument default",
+        "correct": false,
+        "why": "That is a cache shared by every call the process makes."
+      },
+      {
+        "text": "`F401` — an import nobody uses",
+        "correct": true,
+        "why": "Somebody deleted the code that used it. `--fix` removes the line and nothing else happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqnsk0y6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Predict the reformat: `d = {'a':1,'b':2}` on a line that fits. What does `black` produce?",
+    "hint": "Two kinds of change, both mechanical.",
+    "choices": [
+      {
+        "text": "`d = {\"a\": 1, \"b\": 2}`",
+        "correct": true,
+        "why": "Double quotes, and a space after each colon. It fits, so it stays on one line."
+      },
+      {
+        "text": "The same dictionary exploded one key per line with a trailing comma",
+        "correct": false,
+        "why": "It explodes only what does not fit, or what carries a magic trailing comma."
+      },
+      {
+        "text": "`d = dict(a=1, b=2)`, which is the form it prefers for string keys",
+        "correct": false,
+        "why": "It never rewrites one construct into another."
+      },
+      {
+        "text": "`d = {'a': 1, 'b': 2}`, with the spacing fixed and the quotes left alone",
+        "correct": false,
+        "why": "It normalises to double quotes as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kh45p5k",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Turn the formatter into a build step that changes nothing and fails: `ruff format --______ .`",
+    "hint": "Five letters.",
+    "blanks": [
+      {
+        "accept": [
+          "check"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j2n5xjha",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team turns on a new rule family and gets four hundred findings. What is the reasonable next step?",
+    "hint": "The family is already on.",
+    "choices": [
+      {
+        "text": "Run `--fix --unsafe-fixes` and review the result as one diff",
+        "correct": false,
+        "why": "Unsafe fixes can change behaviour and four hundred of them is not a reviewable diff."
+      },
+      {
+        "text": "Run `--statistics`, then fix or ignore rule by rule, in a pull request of its own",
+        "correct": true,
+        "why": "One family per pull request is what keeps the diff reviewable and the tool switched on."
+      },
+      {
+        "text": "Add the family to `ignore` until somebody has time to work through it",
+        "correct": false,
+        "why": "Ignoring a family you have just selected leaves the config claiming something untrue."
+      },
+      {
+        "text": "Exclude the directories with the most findings and keep the rest",
+        "correct": false,
+        "why": "Those directories then stop being checked and never come back."
+      }
+    ]
+  },
+  {
+    "id": "ex-dykhzazm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `result.ok == True` becoming `result.ok` classed as an unsafe fix?",
+    "hint": "The two are not the same test.",
+    "choices": [
+      {
+        "text": "They differ for anything whose `__eq__` is unusual — `1 == True` is true and `1` is not `True`",
+        "correct": true,
+        "why": "Read an unsafe fix's diff before taking it; that is what the flag is for."
+      },
+      {
+        "text": "`result.ok` may be `None`, which is falsy where `== True` would raise",
+        "correct": false,
+        "why": "Comparing `None` to `True` raises nothing; it is simply false."
+      },
+      {
+        "text": "The rewrite moves the comparison into the `if`, changing where an exception surfaces",
+        "correct": false,
+        "why": "Both forms evaluate `result.ok` in the same place."
+      },
+      {
+        "text": "`ruff` cannot tell whether `ok` is a property with a side effect",
+        "correct": false,
+        "why": "Both forms read the attribute exactly once."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxzctq0s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A repository has `# noqa` with no code on eleven lines. What is the argument for naming codes instead?",
+    "hint": "Think about next year.",
+    "choices": [
+      {
+        "text": "A bare comment applies to the whole block rather than to one line",
+        "correct": false,
+        "why": "It applies to its own line."
+      },
+      {
+        "text": "A bare comment is rejected by `ruff` unless `--preview` is passed",
+        "correct": false,
+        "why": "It is accepted and does what it says."
+      },
+      {
+        "text": "A bare comment is slower to process, since every rule has to be checked against it",
+        "correct": false,
+        "why": "The cost is not measurable and is not the argument."
+      },
+      {
+        "text": "A bare comment also silences the rule that starts applying to that line later",
+        "correct": true,
+        "why": "And `RUF100` can then report the ones whose reason has gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewn705a3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which tool finds that a function returns the wrong value for an input nobody tried?",
+    "hint": "Neither of this lesson's two.",
+    "choices": [
+      {
+        "text": "Neither of the two — that is a test's job, and lesson 16 is where that half lives",
+        "correct": true,
+        "why": "A linter finds what a machine can see in the text, which is a specific and useful set and not this."
+      },
+      {
+        "text": "The linter, if the `B` family and the simplification rules are both on",
+        "correct": false,
+        "why": "Those describe shapes of code rather than the answers it produces."
+      },
+      {
+        "text": "The formatter, since a rewrite that changed the answer would be reported",
+        "correct": false,
+        "why": "A formatter never changes the answer and reports nothing."
+      },
+      {
+        "text": "The linter with `--unsafe-fixes`, which evaluates the expressions it rewrites",
+        "correct": false,
+        "why": "It evaluates nothing; unsafe means it cannot prove the rewrite is equivalent."
+      }
+    ]
+  },
+  {
+    "id": "ex-th35n001",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`select = [\"E\", \"F\", \"B\", \"SIM\", \"UP\", \"I\", \"A\"]` and `ignore = [\"E501\"]`. What is the effect of the second line?",
+    "hint": "It subtracts from the first.",
+    "choices": [
+      {
+        "text": "Line-length findings are dropped and the rest of `E` stays on",
+        "correct": true,
+        "why": "The formatter owns the line width, so a report about it is a report about its decision."
+      },
+      {
+        "text": "The whole `E` family is dropped, since a code in `ignore` disables its prefix",
+        "correct": false,
+        "why": "`ignore` takes codes and prefixes, and `E501` is one code."
+      },
+      {
+        "text": "Lines longer than the limit are reported as warnings rather than errors",
+        "correct": false,
+        "why": "`ruff` has no warning level for a selected rule; it is on or off."
+      },
+      {
+        "text": "The formatter stops wrapping at the configured width",
+        "correct": false,
+        "why": "The formatter reads its own settings and ignores the linter's table."
+      }
+    ]
+  },
+  {
+    "id": "ex-qaetj0gs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is in `.git-blame-ignore-revs` and why?",
+    "hint": "One commit, and what it did.",
+    "choices": [
+      {
+        "text": "The hash of the commit that reformatted everything, so `blame` looks past it",
+        "correct": true,
+        "why": "Otherwise the history stops being usable on the day the tool was adopted."
+      },
+      {
+        "text": "The hashes of every commit made by an automated fix, so that blame names a person",
+        "correct": false,
+        "why": "The file is for commits that touched everything without changing anything."
+      },
+      {
+        "text": "A list of branches whose commits should not be blamed, such as release branches",
+        "correct": false,
+        "why": "It holds revisions rather than branches."
+      },
+      {
+        "text": "The hash of the last release, so blame stops at the current cycle",
+        "correct": false,
+        "why": "Blame would then be useless for anything older."
+      }
+    ]
+  },
+  {
+    "id": "ex-jemytma1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two people disagree about where a long call should break. What does this lesson say to do?",
+    "hint": "Neither of them is right.",
+    "choices": [
+      {
+        "text": "Run the formatter over the file and stop having the conversation at all",
+        "correct": true,
+        "why": "There is no right answer to it, which is exactly why handing it to a program costs nothing."
+      },
+      {
+        "text": "Write it out one argument per line, which is what most teams settle on",
+        "correct": false,
+        "why": "That is a preference, and a preference is what the formatter removes."
+      },
+      {
+        "text": "Add a rule to the linter so the repository has one answer on record",
+        "correct": false,
+        "why": "The linter would then report on layout, which is the formatter's half."
+      },
+      {
+        "text": "Follow whatever the surrounding file does, so the diff stays small",
+        "correct": false,
+        "why": "Then the file's style is whatever its first author preferred."
+      }
+    ]
+  }
+]

@@ -1,0 +1,1162 @@
+{
+  "ex-pb91351s": {
+    "prompt": "O que `with open(caminho) as f:` garante que `f = open(caminho)` não garante?",
+    "hint": "Pense na linha lá dentro que levanta erro.",
+    "choices": [
+      {
+        "text": "O arquivo é aberto sob demanda, e nada acontece até a primeira leitura",
+        "why": "Ele é aberto na hora, exatamente como na outra forma."
+      },
+      {
+        "text": "A codificação é detectada pelos primeiros bytes do arquivo",
+        "why": "Nada detecta codificação; você a nomeia ou a plataforma decide."
+      },
+      {
+        "text": "O arquivo é travado contra outros processos enquanto o bloco roda",
+        "why": "Nada no `with` trava coisa nenhuma."
+      },
+      {
+        "text": "O arquivo é fechado mesmo quando o bloco levanta erro",
+        "why": "Isso — é o `try`/`finally` da aula 8, já escrito para você."
+      }
+    ]
+  },
+  "ex-d7fcg819": {
+    "prompt": "O que abrir um arquivo no modo `\"w\"` faz antes de qualquer coisa ser gravada?",
+    "hint": "Acontece no `open`.",
+    "choices": [
+      {
+        "text": "Esvazia",
+        "why": "Isso — e uma queda depois disso deixa você sem o arquivo velho e sem o novo."
+      },
+      {
+        "text": "Faz uma cópia com sufixo `.bak`",
+        "why": "Nada é copiado."
+      },
+      {
+        "text": "Recusa se o arquivo existir",
+        "why": "Isso é o `\"x\"`."
+      },
+      {
+        "text": "Nada até a primeira chamada a `write`",
+        "why": "O esvaziamento é no open."
+      }
+    ]
+  },
+  "ex-cd69r256": {
+    "prompt": "Que modo cria um arquivo e falha se ele já estiver lá?",
+    "hint": "Uma letra, e não é o `w`.",
+    "choices": [
+      {
+        "text": "`\"x\"`",
+        "why": "Isso — e ele existe justamente porque o `\"w\"` destrói."
+      },
+      {
+        "text": "`\"a\"`",
+        "why": "Esse acrescenta ao que estiver lá."
+      },
+      {
+        "text": "`\"w\"`",
+        "why": "Esse esvazia o que estiver lá."
+      },
+      {
+        "text": "`\"r+\"`",
+        "why": "Esse abre para leitura e escrita, e exige que o arquivo exista."
+      }
+    ]
+  },
+  "ex-695jznrm": {
+    "prompt": "`f = open(caminho)`, e aí `processar(f)` levanta erro. O que aconteceu com o arquivo?",
+    "hint": "A linha do `close` está abaixo da que levantou.",
+    "choices": [
+      {
+        "text": "O Python o fecha quando a exceção sobe",
+        "why": "Nada o fecha na passagem."
+      },
+      {
+        "text": "Ele é fechado mas as gravações se perdem",
+        "why": "Ele não é fechado de jeito nenhum."
+      },
+      {
+        "text": "Ele fica aberto até o processo terminar",
+        "why": "Isso — e no Windows ele então não dá para renomear nem apagar."
+      },
+      {
+        "text": "Ele é fechado e o buffer é descarregado",
+        "why": "Nenhuma das duas coisas acontece."
+      }
+    ]
+  },
+  "ex-dqbqfxma": {
+    "prompt": "Quando o `with` é a escolha errada para um arquivo?",
+    "hint": "Pense num caso.",
+    "choices": [
+      {
+        "text": "Quando dois arquivos estão abertos ao mesmo tempo",
+        "why": "Um `with` pega os dois."
+      },
+      {
+        "text": "Nunca",
+        "why": "Isso — e precisar do descritor além do bloco quer dizer que uma função deveria recebê-lo."
+      },
+      {
+        "text": "Quando o arquivo é muito grande",
+        "why": "Tamanho não muda nada sobre fechar."
+      },
+      {
+        "text": "Quando o arquivo é aberto para gravação",
+        "why": "A garantia importa mais ali."
+      }
+    ]
+  },
+  "ex-c34zw6wk": {
+    "prompt": "O que deixar o `encoding=` de fora do `open` faz?",
+    "hint": "Isso é decidido em outro lugar que não o seu código.",
+    "choices": [
+      {
+        "text": "Detecta a codificação pelo conteúdo, como um editor de texto faz ao abrir um arquivo",
+        "why": "Nada detecta nada."
+      },
+      {
+        "text": "Usa o padrão da plataforma, que muda de máquina para máquina",
+        "why": "Isso — a pior forma de defeito: funciona aqui e falha no servidor."
+      },
+      {
+        "text": "Usa sempre UTF-8, que é com o que toda plataforma já concordou há alguns anos",
+        "why": "É UTF-8 em muitas máquinas e não em todas."
+      },
+      {
+        "text": "Lê o arquivo como bytes e deixa a decodificação para quem quiser o texto",
+        "why": "Isso é o modo `\"rb\"`."
+      }
+    ]
+  },
+  "ex-37gbt2cn": {
+    "prompt": "`'utf-8' codec can't decode byte 0xe7 in position 14`. Qual é a causa provável?",
+    "hint": "`0xe7` sozinho é uma letra numa codificação mais antiga.",
+    "choices": [
+      {
+        "text": "O arquivo é UTF-16 e precisa do codec `utf-16`, que lê dois bytes por caractere",
+        "why": "Isso falha de outro jeito, em geral já nos primeiros bytes."
+      },
+      {
+        "text": "O arquivo está corrompido naquele byte e não dá para ler, seja qual for o codec",
+        "why": "Ele lê perfeitamente sob a codificação certa."
+      },
+      {
+        "text": "A posição 14 está depois do fim do arquivo, e não havia nada ali para decodificar",
+        "why": "Ele nomeia onde o byte está, então há um byte ali."
+      },
+      {
+        "text": "O arquivo é Latin-1 ou cp1252, provavelmente de uma planilha",
+        "why": "Isso — `0xe7` é `ç` ali, e `encoding=\"latin-1\"` o lê."
+      }
+    ]
+  },
+  "ex-65p8q6cb": {
+    "prompt": "O que o `errors=\"replace\"` custa?",
+    "hint": "O erro para de acontecer. Outra coisa não sobrevive.",
+    "choices": [
+      {
+        "text": "O dado",
+        "why": "Isso — bom para um log que você está filtrando, ruim para qualquer coisa gravada de volta."
+      },
+      {
+        "text": "Nada; ele é o padrão correto",
+        "why": "Ele nunca é padrão e ele sempre perde bytes."
+      },
+      {
+        "text": "Velocidade",
+        "why": "A diferença não é mensurável."
+      },
+      {
+        "text": "A possibilidade de gravar o arquivo depois",
+        "why": "Você ainda pode gravá-lo, com o estrago dentro."
+      }
+    ]
+  },
+  "ex-zvr9acrj": {
+    "prompt": "Um cabeçalho sai como `\"\\ufeffname\"` e compara diferente de `\"name\"`. O que é isso?",
+    "hint": "Três bytes invisíveis no começo do arquivo.",
+    "choices": [
+      {
+        "text": "Um BOM, de um editor do Windows ou do Excel",
+        "why": "Isso — e `encoding=\"utf-8-sig\"` o come e é inofensivo quando ele não está lá."
+      },
+      {
+        "text": "Um caractere de tabulação que o exportador acrescentou",
+        "why": "Uma tabulação é visível e não é aquele escape."
+      },
+      {
+        "text": "Um byte nulo, querendo dizer que o arquivo é binário",
+        "why": "Um byte nulo é `\\x00`."
+      },
+      {
+        "text": "Um artefato de aspas do módulo CSV",
+        "why": "O módulo teria removido as aspas dele mesmo."
+      }
+    ]
+  },
+  "ex-47gkrm0w": {
+    "prompt": "Por que `encoding=\"utf-8-sig\"` é a escolha mais segura para uma exportação de planilha?",
+    "hint": "Ele trata os dois casos.",
+    "choices": [
+      {
+        "text": "Ele grava um BOM na frente para outras ferramentas reconhecerem o arquivo como UTF-8",
+        "why": "Isso é o que ele faz ao GRAVAR, e a pergunta é sobre ler."
+      },
+      {
+        "text": "Ele remove um BOM se houver um e não muda nada se não houver",
+        "why": "Isso — e por isso não custa nada usá-lo ali."
+      },
+      {
+        "text": "Ele ignora erros de decodificação em qualquer ponto do arquivo e põe um caractere substituto",
+        "why": "Isso é o `errors=`, e não é isto."
+      },
+      {
+        "text": "Ele tenta várias codificações em sequência e pega a que ler o arquivo inteiro",
+        "why": "Ele é um codec, e não uma busca."
+      }
+    ]
+  },
+  "ex-t2hfpmgw": {
+    "prompt": "Qual das três formas de ler escala para um arquivo de quatro gigabytes?",
+    "hint": "Duas delas põem tudo na memória.",
+    "choices": [
+      {
+        "text": "`for linha in f:`",
+        "why": "Isso — uma linha de memória, por maior que seja o arquivo."
+      },
+      {
+        "text": "`f.read()`",
+        "why": "Quatro gigabytes de string."
+      },
+      {
+        "text": "`f.readlines()`, e depois um laço sobre a lista",
+        "why": "O mesmo, mais uma lista."
+      },
+      {
+        "text": "`list(f)`",
+        "why": "Isso é o `readlines` escrito de outro jeito."
+      }
+    ]
+  },
+  "ex-xedbydgr": {
+    "prompt": "Por que uma linha de um arquivo mantém o `\\n` dela?",
+    "hint": "Alguma coisa precisa ser distinguível.",
+    "choices": [
+      {
+        "text": "Porque o `readline` não sabe onde a linha acaba sem ele",
+        "why": "Ele já encontrou o fim; a pergunta é o que ele devolve."
+      },
+      {
+        "text": "Para uma linha em branco ser diferente do fim do arquivo",
+        "why": "Isso — e o `rstrip(\"\\n\")` é como se tira."
+      },
+      {
+        "text": "Não mantém; o Python o remove",
+        "why": "Ele não remove."
+      },
+      {
+        "text": "Porque o arquivo é lido em binário e nunca decodificado",
+        "why": "Ele é decodificado; a quebra é um caractere do texto."
+      }
+    ]
+  },
+  "ex-k2cwtr0r": {
+    "prompt": "O que `f.writelines(linhas)` acrescenta entre as strings?",
+    "hint": "O nome engana.",
+    "choices": [
+      {
+        "text": "Um espaço",
+        "why": "Nada é inserido."
+      },
+      {
+        "text": "O separador de linha da plataforma",
+        "why": "Ele não acrescenta separador nenhum."
+      },
+      {
+        "text": "Uma quebra de linha depois de cada uma",
+        "why": "É o que o nome sugere e não é o que ele faz."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso — as quebras precisam já estar nas strings."
+      }
+    ]
+  },
+  "ex-gw8dej4m": {
+    "prompt": "`f.read()` e depois `for linha in f:`. O que o laço dá?",
+    "hint": "Um arquivo tem uma posição.",
+    "choices": [
+      {
+        "text": "Só a última linha",
+        "why": "Não sobrou nada."
+      },
+      {
+        "text": "Nada, e nenhum erro",
+        "why": "Isso — a posição já está no fim."
+      },
+      {
+        "text": "Um `ValueError` sobre arquivo fechado",
+        "why": "O arquivo está aberto e apenas esgotado."
+      },
+      {
+        "text": "Toda linha, desde o começo",
+        "why": "Isso precisaria de um `f.seek(0)` antes."
+      }
+    ]
+  },
+  "ex-4wgj72yw": {
+    "prompt": "Qual grava uma string E uma quebra de linha?",
+    "hint": "Uma delas é a função conhecida.",
+    "choices": [
+      {
+        "text": "`f.append(texto)`",
+        "why": "Não existe esse método num arquivo."
+      },
+      {
+        "text": "`f.write(texto)`",
+        "why": "Ele não acrescenta nada."
+      },
+      {
+        "text": "`f.writelines([texto])`",
+        "why": "Também nada."
+      },
+      {
+        "text": "`print(texto, file=f)`",
+        "why": "Isso — e é um jeito perfeitamente bom de gravar um arquivo de texto."
+      }
+    ]
+  },
+  "ex-xe8037f3": {
+    "prompt": "`open(\"dados/linhas.csv\")` é relativo a quê?",
+    "hint": "Não ao arquivo em que você escreveu isso.",
+    "choices": [
+      {
+        "text": "Ao diretório em que o terminal estava",
+        "why": "Isso — e por isso ele falha quando rodado de outro lugar."
+      },
+      {
+        "text": "Ao diretório do script",
+        "why": "Isso é o que o `__file__` dá, deliberadamente."
+      },
+      {
+        "text": "Ao diretório do usuário",
+        "why": "Nada faz do `~` a base."
+      },
+      {
+        "text": "Ao diretório do interpretador Python",
+        "why": "Esse é onde o Python está instalado."
+      }
+    ]
+  },
+  "ex-f60zvmes": {
+    "prompt": "O caminho do módulo que está rodando, que é como se encontra o arquivo ao lado dele: `Path(________)`",
+    "hint": "Oito caracteres, com dois sublinhados em cada ponta."
+  },
+  "ex-rqy8mqxw": {
+    "prompt": "`open(\"~/dados.csv\")` faz o quê?",
+    "hint": "Quem expande o til?",
+    "choices": [
+      {
+        "text": "Cria um diretório chamado `~` no diretório atual e abre o arquivo dentro dele",
+        "why": "Abrir para leitura não cria nada."
+      },
+      {
+        "text": "Funciona, porque o Python expande o `~` para o diretório do usuário como o shell faz",
+        "why": "Ele não expande."
+      },
+      {
+        "text": "Falha — quem expande o `~` é o shell, e o Python não",
+        "why": "Isso — `Path(\"~/dados.csv\").expanduser()` é a versão que funciona."
+      },
+      {
+        "text": "Funciona só no Linux e no macOS, onde o diretório do usuário tem um caminho próprio",
+        "why": "Não funciona em lugar nenhum; o caractere é tomado ao pé da letra."
+      }
+    ]
+  },
+  "ex-yv62qnbn": {
+    "prompt": "Por que resolver um caminho antes de imprimi-lo numa mensagem de erro?",
+    "hint": "Quem lê não sabe onde você estava.",
+    "choices": [
+      {
+        "text": "A classe de erro exige um caminho absoluto, e recusa um relativo como argumento",
+        "why": "Nada exige isso."
+      },
+      {
+        "text": "Um caminho relativo num erro não diz nada sobre a que diretório ele era relativo",
+        "why": "Isso — e a mensagem deixa de ser um enigma."
+      },
+      {
+        "text": "Um caminho não resolvido pode conter um laço de link, que a própria impressão seguiria",
+        "why": "Esse é outro problema e ele levantaria erro."
+      },
+      {
+        "text": "O `print` recusa um objeto `Path`, e algo precisa transformá-lo em string antes",
+        "why": "Ele imprime um sem reclamar."
+      }
+    ]
+  },
+  "ex-nb79yrp1": {
+    "prompt": "O que o `s` em `loads` e `dumps` quer dizer?",
+    "hint": "É a nomenclatura inteira.",
+    "choices": [
+      {
+        "text": "String",
+        "why": "Isso — o `load` e o `dump` recebem um arquivo."
+      },
+      {
+        "text": "Safe",
+        "why": "Nada neles é mais seguro que o outro par."
+      },
+      {
+        "text": "Serialise",
+        "why": "Os dois pares serializam; o `s` os distingue pela entrada."
+      },
+      {
+        "text": "Strict",
+        "why": "Nenhum é mais estrito que o outro."
+      }
+    ]
+  },
+  "ex-j6kedgaw": {
+    "prompt": "Um `null` do JSON vira o quê no Python?",
+    "hint": "Um dos singletons.",
+    "choices": [
+      {
+        "text": "Um dicionário vazio",
+        "why": "Isso seria `{}` no arquivo."
+      },
+      {
+        "text": "`\"null\"`",
+        "why": "Não é uma string."
+      },
+      {
+        "text": "`0`",
+        "why": "Nada o converte num número."
+      },
+      {
+        "text": "`None`",
+        "why": "Isso — e `true` e `false` viram `True` e `False`."
+      }
+    ]
+  },
+  "ex-85nf5t5s": {
+    "prompt": "`json.dumps` num valor que contém um `datetime` faz o quê?",
+    "hint": "Não existe data no JSON.",
+    "choices": [
+      {
+        "text": "Grava o `str()` dele automaticamente, já que todo objeto dá para imprimir de algum jeito",
+        "why": "Não existe esse recurso automático."
+      },
+      {
+        "text": "Grava `null` no lugar, já que o JSON não tem como expressar uma data própria",
+        "why": "Perder o valor em silêncio seria pior que levantar erro."
+      },
+      {
+        "text": "Levanta um `TypeError` dizendo que aquilo não é serializável em JSON",
+        "why": "Isso — e `.isoformat()` na saída é a resposta de sempre."
+      },
+      {
+        "text": "Grava como o número de segundos desde 1970, do jeito que um carimbo costuma ser guardado",
+        "why": "Nada o converte; você decide."
+      }
+    ]
+  },
+  "ex-2myc5f99": {
+    "prompt": "O que `indent=2`, `ensure_ascii=False` e `sort_keys=True` compram juntos?",
+    "hint": "Três leitores diferentes.",
+    "choices": [
+      {
+        "text": "Um arquivo menor que analisa mais rápido",
+        "why": "Ele é maior, e a análise não muda."
+      },
+      {
+        "text": "Proteção contra um valor malformado chegar ao arquivo e quebrar o próximo leitor",
+        "why": "Nenhum dos três valida nada."
+      },
+      {
+        "text": "Compatibilidade com analisadores JSON antigos, que rejeitam o que é escrito numa linha só",
+        "why": "Os três produzem JSON comum."
+      },
+      {
+        "text": "Um arquivo que uma pessoa lê, com os acentos, que duas rodadas produzem idêntico",
+        "why": "Isso — e o terceiro é o que impede um arquivo de parecer alterado sem estar."
+      }
+    ]
+  },
+  "ex-v0kbc3a6": {
+    "prompt": "Um arquivo JSON com vírgula sobrando levanta o quê, e o que captura isso?",
+    "hint": "O erro tem uma classe base conhecida.",
+    "choices": [
+      {
+        "text": "Nada; vírgula sobrando é permitida",
+        "why": "Não é JSON."
+      },
+      {
+        "text": "`json.JSONDecodeError`, que um `except ValueError` captura",
+        "why": "Isso — e ele nomeia a linha e a coluna."
+      },
+      {
+        "text": "`TypeError`, capturado por `except TypeError`, porque a vírgula não tem valor depois",
+        "why": "Esse é o lado de gravar, e não o de ler."
+      },
+      {
+        "text": "`SyntaxError`, que só um `except` pelado captura, já que ele não está sob `Exception`",
+        "why": "Esse é para código-fonte Python, e não para dado."
+      }
+    ]
+  },
+  "ex-zk8043fc": {
+    "prompt": "`registro.get(\"address\", {}).get(\"city\", \"\")` — para que serve o `{}` do meio?",
+    "hint": "Alguma coisa precisa ser válida para se chamar `.get` nela.",
+    "choices": [
+      {
+        "text": "Ele mantém o segundo `get` válido quando o `address` falta",
+        "why": "Isso — a forma da aula 3, uma camada abaixo."
+      },
+      {
+        "text": "Ele é sintaxe obrigatória para um `get` encadeado",
+        "why": "Nada o exige; o código só quebra sem ele."
+      },
+      {
+        "text": "Ele torna a busca insensível a maiúsculas, e `Address` e `address` acham os dois",
+        "why": "Nada muda a caixa."
+      },
+      {
+        "text": "Ele é o valor guardado no registro quando a chave acaba faltando",
+        "why": "O `get` não guarda nada."
+      }
+    ]
+  },
+  "ex-baret75h": {
+    "prompt": "`{\"city\": null}` contra `{}`. O que `registro.get(\"city\", \"\")` dá para cada um?",
+    "hint": "O padrão só cobre um dos dois.",
+    "choices": [
+      {
+        "text": "`\"\"` e `\"\"`",
+        "why": "A primeira chave existe, então o valor dela volta."
+      },
+      {
+        "text": "`None` e `\"\"`",
+        "why": "Isso — o `null` está presente, então o padrão não é usado."
+      },
+      {
+        "text": "`None` e `None`",
+        "why": "O segundo não tem a chave, então o padrão vale."
+      },
+      {
+        "text": "Um `KeyError` e `\"\"`",
+        "why": "O `get` nunca levanta erro."
+      }
+    ]
+  },
+  "ex-rjqws7pb": {
+    "prompt": "Qual é a armadilha em `registro.get(\"city\") or \"\"`?",
+    "hint": "Dois outros valores também são falsos.",
+    "choices": [
+      {
+        "text": "Ele levanta erro quando a chave falta",
+        "why": "O `get` devolve `None` em vez disso."
+      },
+      {
+        "text": "Ele grava o padrão de volta no dicionário",
+        "why": "Nada é gravado."
+      },
+      {
+        "text": "Ele só funciona com strings",
+        "why": "Ele funciona com qualquer valor, que é o problema."
+      },
+      {
+        "text": "`0` e `False` também viram `\"\"`",
+        "why": "Isso — e um `if valor is None` explícito diz o que quer dizer."
+      }
+    ]
+  },
+  "ex-27ckscdr": {
+    "prompt": "`for linha in dados: linha[\"name\"]` onde `dados` é um dict. O que falha, e onde?",
+    "hint": "Iterar um dicionário dá chaves.",
+    "choices": [
+      {
+        "text": "Nada dá errado; um dicionário itera os valores dele, e `linha` é o objeto de dentro",
+        "why": "Ele itera as chaves."
+      },
+      {
+        "text": "Um `KeyError` nomeando `name`, levantado logo no primeiro registro do arquivo",
+        "why": "Nada está sendo buscado num dicionário aqui."
+      },
+      {
+        "text": "Um `TypeError` sobre índices de string, três linhas longe do problema de verdade",
+        "why": "Isso — `linha` é uma chave, que é uma string."
+      },
+      {
+        "text": "Um `AttributeError` em `linha`",
+        "why": "Uma string dá para indexar; é o tipo do índice que está errado."
+      }
+    ]
+  },
+  "ex-53et6fez": {
+    "prompt": "O que uma conferência `isinstance` na fronteira compra?",
+    "hint": "Toda falha posterior muda de assunto.",
+    "choices": [
+      {
+        "text": "Conversão automática do valor para o tipo que a conferência nomeou, antes de ele ser usado",
+        "why": "Nada converte."
+      },
+      {
+        "text": "As falhas posteriores passam a ser sobre o dado em vez de sobre a forma",
+        "why": "Isso — e a mensagem pode nomear o arquivo e o que chegou."
+      },
+      {
+        "text": "Proteção contra uma chave ausente mais adiante, já que a forma foi resolvida",
+        "why": "Isso é o `get`, e é outra pergunta."
+      },
+      {
+        "text": "Uma análise mais rápida",
+        "why": "A análise já aconteceu."
+      }
+    ]
+  },
+  "ex-7g771j3b": {
+    "prompt": "`Ada,\"Porto, Portugal\",91` dividido pela vírgula dá quantos pedaços?",
+    "hint": "As aspas não significam nada para o `split`.",
+    "choices": [
+      {
+        "text": "Três, porque as aspas protegem a vírgula",
+        "why": "O `split` não sabe de aspas."
+      },
+      {
+        "text": "Levanta erro, porque as aspas estão desbalanceadas",
+        "why": "O `split` não levanta erro por nada."
+      },
+      {
+        "text": "Quatro",
+        "why": "Isso — e a coluna da nota então guarda `Portugal\"`."
+      },
+      {
+        "text": "Dois",
+        "why": "Há três vírgulas na linha."
+      }
+    ]
+  },
+  "ex-d3xwn67c": {
+    "prompt": "O que o `csv.DictReader` dá por linha?",
+    "hint": "Ele leu o cabeçalho.",
+    "choices": [
+      {
+        "text": "Um objeto com as colunas como atributos",
+        "why": "Isso seria uma dataclass que você construiu."
+      },
+      {
+        "text": "Um dicionário indexado pelos nomes das colunas",
+        "why": "Isso — e assim uma coluna inserida no meio não quebra nada."
+      },
+      {
+        "text": "Uma tupla na ordem do arquivo",
+        "why": "Nenhum dos leitores dá tuplas."
+      },
+      {
+        "text": "Uma lista de strings",
+        "why": "Isso é o `csv.reader`."
+      }
+    ]
+  },
+  "ex-dcwsqsk2": {
+    "prompt": "Por que todo `open` para `csv` precisa de `newline=\"\"`?",
+    "hint": "Um campo pode conter uma quebra de linha.",
+    "choices": [
+      {
+        "text": "Porque um arquivo não dá para iterar de outro jeito",
+        "why": "Dá, e errado."
+      },
+      {
+        "text": "Porque o módulo cuida das quebras ele mesmo, e a tradução do modo texto o atrapalha",
+        "why": "Isso — e o sintoma é uma linha em branco entre cada linha de verdade."
+      },
+      {
+        "text": "Porque o leitor precisa saber o separador, e o modo texto o esconde dele",
+        "why": "Isso é o `delimiter=`."
+      },
+      {
+        "text": "Porque arquivos CSV sempre usam quebras do Windows e o Python as traduziria duas vezes",
+        "why": "Eles usam várias, que é o ponto."
+      }
+    ]
+  },
+  "ex-8sx5a1h9": {
+    "prompt": "Que tipo é `linha[\"nota\"]` vindo de um `DictReader`?",
+    "hint": "Não há informação de tipo no arquivo.",
+    "choices": [
+      {
+        "text": "O que o cabeçalho declarar",
+        "why": "Um cabeçalho declara nomes, e não tipos."
+      },
+      {
+        "text": "`int`, quando a coluna guarda números",
+        "why": "Nada inspeciona os valores."
+      },
+      {
+        "text": "`str`",
+        "why": "Isso — um número, uma data e uma célula vazia chegam todos como strings."
+      },
+      {
+        "text": "`None` para uma célula vazia",
+        "why": "Uma célula vazia é `\"\"`."
+      }
+    ]
+  },
+  "ex-xt4wx80p": {
+    "prompt": "Onde o `int(linha[\"nota\"])` deveria ficar, e o que a falha deveria dizer?",
+    "hint": "Um lugar, e ela nomeia algo.",
+    "choices": [
+      {
+        "text": "Na fronteira, num erro nomeando o arquivo, a linha e o valor",
+        "why": "Isso — porque nada mais adiante sabe de onde a linha veio."
+      },
+      {
+        "text": "Em lugar nenhum; o `sum` converte strings que parecem números",
+        "why": "Ele levanta erro nelas."
+      },
+      {
+        "text": "Onde o número for usado primeiro, deixando o `ValueError` subir",
+        "why": "Aí o traceback nomeia uma linha de código e não uma linha do arquivo."
+      },
+      {
+        "text": "Dentro do `DictReader`, passando um conversor",
+        "why": "Ele não recebe conversor."
+      }
+    ]
+  },
+  "ex-4st0q4b7": {
+    "prompt": "O `csv.Sniffer` num arquivo que você não olhou é o quê?",
+    "hint": "Ele adivinha.",
+    "choices": [
+      {
+        "text": "O jeito recomendado de abrir qualquer CSV, já que poupa nomear o dialeto à mão",
+        "why": "Ele é uma conveniência para um arquivo desconhecido, olhado antes."
+      },
+      {
+        "text": "Um leitor mais rápido para arquivos grandes, já que decide o dialeto uma vez e o reaproveita",
+        "why": "Ele lê uma amostra e não decide nada sobre velocidade."
+      },
+      {
+        "text": "Um validador do cabeçalho, conferindo os nomes contra o que você espera",
+        "why": "Ele adivinha o dialeto, e não as colunas."
+      },
+      {
+        "text": "Como um script decide que um ponto e vírgula é dado",
+        "why": "Isso — olhe o arquivo, e então nomeie o delimitador."
+      }
+    ]
+  },
+  "ex-yv2khgx5": {
+    "prompt": "O que o `DictWriter` faz que o `\",\".join(...)` não faz?",
+    "hint": "Um valor tem uma vírgula dentro.",
+    "choices": [
+      {
+        "text": "Abre o arquivo para você",
+        "why": "Você o abre, com `newline=\"\"`."
+      },
+      {
+        "text": "Põe aspas no que precisa de aspas",
+        "why": "Isso — e uma coluna deslocada numa linha em onze mil é a alternativa."
+      },
+      {
+        "text": "Escreve o cabeçalho automaticamente",
+        "why": "Isso é o `writeheader`, que você chama."
+      },
+      {
+        "text": "Converte números em strings",
+        "why": "Ele faz isso também, e não é o argumento."
+      }
+    ]
+  },
+  "ex-ddybz7vf": {
+    "prompt": "Por que um CSV feito à mão é pior do que um JSON feito à mão é?",
+    "hint": "Considere o que acontece quando ele é lido de volta.",
+    "choices": [
+      {
+        "text": "Nenhum dos dois importa, porque os dois são lidos por máquinas",
+        "why": "Uma máquina lendo um arquivo quebrado é a falha sendo descrita."
+      },
+      {
+        "text": "Nenhum dos dois é aceitável, e os dois falham em silêncio em vez de alto",
+        "why": "Isso — uma coluna deslocada e um escape quebrado parecem dado."
+      },
+      {
+        "text": "O CSV não tem escape nenhum, e um valor com vírgula não dá para gravar corretamente",
+        "why": "Ele tem regras de aspas, que é exatamente o que a biblioteca conhece."
+      },
+      {
+        "text": "O JSON é seguro de construir à mão porque não tem separadores para confundir",
+        "why": "Ele tem aspas, barras invertidas e caracteres de controle a escapar."
+      }
+    ]
+  },
+  "ex-dpc91cyj": {
+    "prompt": "Gravar num temporário e renomear. O que isso protege?",
+    "hint": "Uma queda no meio.",
+    "choices": [
+      {
+        "text": "O disco de encher enquanto duas cópias do arquivo existem ao mesmo tempo",
+        "why": "Ele usa um pouco mais de espaço, e não menos."
+      },
+      {
+        "text": "O arquivo de ser lido por outro processo enquanto está pela metade da gravação",
+        "why": "Nada o trava."
+      },
+      {
+        "text": "A codificação de ser adivinhada errado pela ferramenta que abrir o arquivo depois",
+        "why": "Não tem relação."
+      },
+      {
+        "text": "Quem lê vê o arquivo velho ou o novo, e nunca metade de um",
+        "why": "Isso — o `\"w\"` esvazia antes do primeiro byte ser gravado."
+      }
+    ]
+  },
+  "ex-0bfez8xt": {
+    "prompt": "Faça duas gravações do mesmo dado produzirem os mesmos bytes: `json.dump(d, f, ______=True)`",
+    "hint": "Nove letras, com um sublinhado."
+  },
+  "ex-ajnx59sk": {
+    "prompt": "Que argumento mantém `ção` fora de `\\u00e7\\u00e3o`?",
+    "hint": "É sobre o que o escritor escapa.",
+    "choices": [
+      {
+        "text": "`encoding=\"utf-8\"`",
+        "why": "Isso é o arquivo, e o escape acontece antes dele."
+      },
+      {
+        "text": "`indent=2`, que espalha o objeto por várias linhas",
+        "why": "Isso é leiaute."
+      },
+      {
+        "text": "`ensure_ascii=False`",
+        "why": "Isso — e o arquivo continua sendo JSON perfeitamente válido."
+      },
+      {
+        "text": "`sort_keys=True`",
+        "why": "Isso é ordem."
+      }
+    ]
+  },
+  "ex-c0as4k1d": {
+    "prompt": "`b\"a\" == \"a\"` responde o quê?",
+    "hint": "Dois tipos que nunca se encontram.",
+    "choices": [
+      {
+        "text": "`None`",
+        "why": "Uma comparação dá um booleano."
+      },
+      {
+        "text": "`True`",
+        "why": "São tipos diferentes com valores diferentes."
+      },
+      {
+        "text": "`False`",
+        "why": "Isso — e eles também nunca concatenam."
+      },
+      {
+        "text": "Um `TypeError`",
+        "why": "Igualdade entre tipos responde em vez de levantar erro."
+      }
+    ]
+  },
+  "ex-rk44q0bv": {
+    "prompt": "Onde um `.decode()` pertence?",
+    "hint": "Um lugar, e tudo depois dele é texto.",
+    "choices": [
+      {
+        "text": "Na fronteira em que os bytes chegam",
+        "why": "Isso — decodifique na entrada, codifique na saída, e `str` no meio."
+      },
+      {
+        "text": "Em lugar nenhum; o Python decodifica automaticamente",
+        "why": "Ele não decodifica, e é por isso que os dois nunca comparam iguais."
+      },
+      {
+        "text": "Dentro de toda função que toca o valor",
+        "why": "Aí o valor é bytes o tempo todo."
+      },
+      {
+        "text": "Onde uma comparação com uma string falhar",
+        "why": "É ali que você nota, e é adiantado demais."
+      }
+    ]
+  },
+  "ex-0nhezqh6": {
+    "prompt": "Qual destes precisa mesmo de modo binário?",
+    "hint": "Três dos quatro são texto.",
+    "choices": [
+      {
+        "text": "Uma configuração JSON",
+        "why": "Texto também."
+      },
+      {
+        "text": "Um arquivo de log",
+        "why": "Texto, e em geral UTF-8."
+      },
+      {
+        "text": "Um arquivo zip",
+        "why": "Isso — junto com uma imagem, um PDF e qualquer coisa comprimida."
+      },
+      {
+        "text": "Uma exportação CSV",
+        "why": "Texto, com uma codificação."
+      }
+    ]
+  },
+  "ex-dhny1h6z": {
+    "prompt": "O `hashlib` quer o quê, e devolve o quê?",
+    "hint": "Os tipos de cada lado diferem.",
+    "choices": [
+      {
+        "text": "Um `str` na entrada, e bytes tanto do `digest()` quanto do `hexdigest()`",
+        "why": "São os dois lados invertidos."
+      },
+      {
+        "text": "Bytes na entrada e bytes na saída em todo caso, e quem chama codifica e decodifica em volta",
+        "why": "O `digest()` dá bytes e o `hexdigest()` dá uma string."
+      },
+      {
+        "text": "Qualquer um dos dois, já que ele decodifica uma string para você antes de hashear",
+        "why": "Ele recusa um `str` de saída."
+      },
+      {
+        "text": "Bytes na entrada, e um `str` do `hexdigest()`",
+        "why": "Isso — então `texto.encode(\"utf-8\")` na entrada."
+      }
+    ]
+  },
+  "ex-1jwaw7rc": {
+    "prompt": "Que linha lê um arquivo grande sem carregá-lo?",
+    "hint": "Uma linha por vez.",
+    "choices": [
+      {
+        "text": "`for linha in f:`",
+        "why": "Isso — e a memória é uma linha, seja qual for o tamanho."
+      },
+      {
+        "text": "`open(caminho).read().splitlines()`",
+        "why": "O arquivo inteiro duas vezes."
+      },
+      {
+        "text": "`f.readlines()`, e depois um laço sobre a lista",
+        "why": "O arquivo inteiro, mais uma lista."
+      },
+      {
+        "text": "`f.read()`",
+        "why": "O arquivo inteiro como uma string."
+      }
+    ]
+  },
+  "ex-97szah0x": {
+    "prompt": "Um script funciona aqui e levanta `UnicodeDecodeError` no servidor. O que falta?",
+    "hint": "Um argumento.",
+    "choices": [
+      {
+        "text": "`newline=\"\"` no `open`",
+        "why": "Essa é a preocupação do CSV, e ela não decodifica."
+      },
+      {
+        "text": "`encoding=\"utf-8\"` no `open`",
+        "why": "Isso — o padrão é o da máquina, e as máquinas diferem."
+      },
+      {
+        "text": "`errors=\"strict\"`, que é o que faz um byte ruim levantar erro em vez de ser substituído",
+        "why": "Esse já é o padrão."
+      },
+      {
+        "text": "Modo binário",
+        "why": "Isso o lê e te deixa com bytes para decodificar do mesmo jeito."
+      }
+    ]
+  },
+  "ex-qsemdh5e": {
+    "prompt": "Transforme uma string JSON em Python: `json.______(texto)`",
+    "hint": "Cinco letras, e a última quer dizer string."
+  },
+  "ex-0gf15dvp": {
+    "prompt": "`linha[\"nota\"]` de um CSV, somado com `sum`. O que acontece?",
+    "hint": "Tudo que vem de um CSV é de um tipo só.",
+    "choices": [
+      {
+        "text": "As strings são concatenadas num número longo",
+        "why": "O `sum` começa em 0, então ele levanta erro em vez de concatenar."
+      },
+      {
+        "text": "Funciona, porque o Python converte strings numéricas",
+        "why": "Ele não converte."
+      },
+      {
+        "text": "As células vazias são puladas e o resto soma",
+        "why": "Nada é pulado."
+      },
+      {
+        "text": "Um `TypeError`, porque elas são strings",
+        "why": "Isso — converta na fronteira."
+      }
+    ]
+  },
+  "ex-t30qhbbz": {
+    "prompt": "Que leitor sobrevive a uma coluna inserida no meio do arquivo?",
+    "hint": "Um deles casa por nome.",
+    "choices": [
+      {
+        "text": "`csv.reader`",
+        "why": "O `linha[2]` agora é outra coluna."
+      },
+      {
+        "text": "`linha.split(\",\")`",
+        "why": "O mesmo, e ele ainda quebra numa vírgula entre aspas."
+      },
+      {
+        "text": "`json.load`",
+        "why": "Isso não é ler um CSV."
+      },
+      {
+        "text": "`csv.DictReader`",
+        "why": "Isso — o `linha[\"nota\"]` se move junto com o cabeçalho."
+      }
+    ]
+  },
+  "ex-zwp9ej5t": {
+    "prompt": "Um arquivo JSON que uma pessoa vai ler e uma ferramenta vai comparar. Quais argumentos?",
+    "hint": "Três deles, por três razões.",
+    "choices": [
+      {
+        "text": "`default=str`",
+        "why": "Esse é para tipos que o JSON não tem."
+      },
+      {
+        "text": "`indent=2`, `ensure_ascii=False`, `sort_keys=True`",
+        "why": "Isso — legível, acentuado, e idêntico entre rodadas."
+      },
+      {
+        "text": "`separators=(\",\", \":\")`, que remove os espaços que o escritor põe por padrão",
+        "why": "Essa é a forma compacta, que é o oposto."
+      },
+      {
+        "text": "`allow_nan=False`",
+        "why": "Esse é sobre infinitos, e não tem relação."
+      }
+    ]
+  },
+  "ex-5zqch9ct": {
+    "prompt": "Onde o arquivo que viaja com o seu script deveria morar, e como ele é encontrado?",
+    "hint": "Não relativo ao terminal.",
+    "choices": [
+      {
+        "text": "Ao lado do script, por `Path(__file__).resolve().parent`",
+        "why": "Isso — e aí ele funciona de qualquer diretório."
+      },
+      {
+        "text": "No diretório do usuário, encontrado com um `~` no caminho como um shell faria",
+        "why": "O Python não expande o `~`."
+      },
+      {
+        "text": "Em `/tmp`, encontrado por um caminho absoluto",
+        "why": "Nada é distribuído para o `/tmp`."
+      },
+      {
+        "text": "No diretório atual, pelo nome puro, que é de onde um script costuma ser rodado",
+        "why": "Isso depende de onde o terminal estava."
+      }
+    ]
+  },
+  "ex-s55mrnjf": {
+    "prompt": "O que o `\"w\"` faz que o `\"a\"` não faz?",
+    "hint": "Um dos dois mantém o que estava lá.",
+    "choices": [
+      {
+        "text": "Esvazia o arquivo",
+        "why": "Isso — no open, antes de qualquer coisa ser gravada."
+      },
+      {
+        "text": "Cria o arquivo se ele faltar",
+        "why": "Os dois criam."
+      },
+      {
+        "text": "Permite ler também",
+        "why": "Nenhum dos dois permite; isso é o `\"r+\"`."
+      },
+      {
+        "text": "Grava bytes em vez de texto",
+        "why": "Isso é o sufixo `b`."
+      }
+    ]
+  },
+  "ex-ygf9k5v6": {
+    "prompt": "Impeça um BOM de virar parte do seu primeiro campo: `encoding=\"________\"`",
+    "hint": "Onze caracteres, e ele termina em três letras depois de um hífen."
+  },
+  "ex-rdyzh0rn": {
+    "prompt": "Um dicionário onde se esperava uma lista, descoberto três funções adiante. O que teria ajudado?",
+    "hint": "Uma linha, na borda.",
+    "choices": [
+      {
+        "text": "Um tratamento de `KeyError` em volta das três funções, nomeando a chave que falta",
+        "why": "A falha é um `TypeError` sobre a forma."
+      },
+      {
+        "text": "Uma conferência `isinstance` onde o arquivo foi lido",
+        "why": "Isso — e um erro nomeando o arquivo e o que chegou em vez disso."
+      },
+      {
+        "text": "Convertê-lo com `list(dados)` antes de a primeira das três funções o ver",
+        "why": "Isso dá as chaves, que é pior."
+      },
+      {
+        "text": "Um `try` em volta de cada uso do valor, e cada um relata a própria confusão",
+        "why": "Aí cada uso relata a mesma confusão separadamente."
+      }
+    ]
+  },
+  "ex-e3cqx4rc": {
+    "prompt": "Qual par de conversões vai em qual direção?",
+    "hint": "Um dos nomes fica do lado do arquivo.",
+    "choices": [
+      {
+        "text": "O `decode` faz texto a partir de bytes; o `encode` faz bytes a partir de texto",
+        "why": "Isso — decodifique na entrada, codifique na saída."
+      },
+      {
+        "text": "O `encode` faz texto a partir de bytes; o `decode` faz bytes a partir de texto",
+        "why": "É o par trocado."
+      },
+      {
+        "text": "Os dois fazem texto, a partir de fontes diferentes",
+        "why": "Um deles produz bytes."
+      },
+      {
+        "text": "Os dois fazem bytes, em codificações diferentes",
+        "why": "Um deles produz uma string."
+      }
+    ]
+  },
+  "ex-qvg348tg": {
+    "prompt": "O que fecha o arquivo quando a linha dentro do bloco levanta erro?",
+    "hint": "É uma palavra-chave.",
+    "choices": [
+      {
+        "text": "`with`",
+        "why": "Isso — e não existe caso em que ele seja a escolha errada."
+      },
+      {
+        "text": "O coletor de lixo, na hora",
+        "why": "Em algum momento, de forma imprevisível, e não em toda implementação."
+      },
+      {
+        "text": "`close`",
+        "why": "Essa é a linha que não rodou."
+      },
+      {
+        "text": "`try`",
+        "why": "Só com um `finally` escrito embaixo."
+      }
+    ]
+  }
+}

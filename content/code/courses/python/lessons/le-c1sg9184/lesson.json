@@ -1,0 +1,93 @@
+{
+  "id": "le-c1sg9184",
+  "title": "Decorators: the function that wraps another function",
+  "sections": [
+    {
+      "id": "se-yps21k5y",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-yf1czs1k",
+          "version": 1,
+          "script": "Nine functions in a module, and the same three lines at the top of each: start a timer, run the thing, log how long it took. {{copy}} Nine copies of the same idea, and a tenth function that somebody will forget to add them to.\n\n{{what}} A decorator is the answer, and it is smaller than its reputation. **It is a function that takes a function and returns a function.** That is the whole definition. Everything that looks strange about the syntax comes from that sentence and nothing else.\n\n{{at}} The `@` is not a feature. `@timed` above a `def` means exactly `f = timed(f)` written underneath it, and the lesson writes both forms side by side until that stops being surprising. There is no magic in the symbol — it is two characters that save one line.\n\n{{closure}} What makes it work is lesson 5's last section: a function is a value, and a function defined inside another one remembers the variables around it. The wrapper remembers WHICH function it is wrapping, because that was an argument to the thing that built it.\n\n{{args}} Then the two mechanical pieces. A wrapper has to accept anything, so it takes `*args, **kwargs` — and it has to give back what the wrapped function gave back, so it returns the result. Forget the return and every decorated function starts returning `None`, which is a bug that looks like the function being broken.\n\n{{wraps}} And `functools.wraps`, which is one line and is not optional. Without it the decorated function's name becomes `wrapper`, its docstring is gone, and `help()` describes the machinery instead of the code — in every function you decorated.\n\n{{three}} There is one genuinely awkward part, and it is the decorator that takes an argument. `@retry(times=3)` needs a third layer, because `retry(times=3)` has to RETURN a decorator before the `@` can apply it. Everybody looks that one up, including people who write them often.\n\n{{meet}} By the end, five decorators you have already seen become readable rather than magic — `@property`, `@staticmethod`, `@classmethod`, `@cache` and the ones a test framework gives you.",
+          "seconds": 146,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-y7n6f9y5",
+      "slug": "a-function-that-takes-a-function",
+      "kind": "reading"
+    },
+    {
+      "id": "se-dx77fq95",
+      "slug": "the-at-sign",
+      "kind": "reading"
+    },
+    {
+      "id": "se-qeav7sxx",
+      "slug": "arguments-and-returns",
+      "kind": "reading"
+    },
+    {
+      "id": "se-3wn80c71",
+      "slug": "functools-wraps",
+      "kind": "reading"
+    },
+    {
+      "id": "se-g551jqjf",
+      "slug": "a-decorator-with-arguments",
+      "kind": "reading"
+    },
+    {
+      "id": "se-kamrmh0z",
+      "slug": "the-ones-you-will-meet",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7qmczpch",
+      "slug": "stacking",
+      "kind": "reading"
+    },
+    {
+      "id": "se-sbrqj0dx",
+      "slug": "when-not-to",
+      "kind": "reading"
+    },
+    {
+      "id": "se-at54mj48",
+      "slug": "timing-nine-functions",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-zt6ade9d",
+          "version": 1,
+          "script": "One decorator, written wrong twice, then applied to a module.\n\n{{first}} First attempt. `def timed(func)`, an inner `wrapper` that records the time, calls `func`, prints the duration. I apply it to a function that returns a total, and the total is now `None`.\n\n{{why1}} The wrapper called the function and threw the result away. A decorated function returns whatever the WRAPPER returns, and mine returned nothing. One line — `return result` — and it works.\n\n{{second}} Second attempt, on a function that takes arguments. `TypeError: timed.<locals>.wrapper() takes 0 positional arguments but 2 were given` — and the qualified name is itself the clue, because it says which decorator built the thing that was called. The wrapper is what gets called, so the wrapper is what has to accept them: `*args, **kwargs` on the way in, and the same on the way through to `func`.\n\n{{third}} Now it works on everything. I apply it to all nine functions and run the module — and the log is nine lines of `wrapper took 0.4 seconds`, nine times, with no way to tell which is which.\n\n{{wraps}} `@functools.wraps(func)` on the inner function, one line, and the names come back. It copies `__name__`, `__doc__` and a few others from the wrapped function onto the wrapper. Now the log says which function, and `help()` describes the function rather than my machinery.\n\n{{point}} Three defects, and each one is invisible until you look at the right thing: the return value, the arguments, and the name. **A decorator that is wrong in any of the three still runs**, which is what makes them worth writing carefully once and reusing.",
+          "seconds": 113,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-enhtvs6w",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-54mbwa9w",
+          "version": 1,
+          "script": "It is a function that takes a function. Everything else is consequence.\n\n{{at}} `@d` above a `def` is `f = d(f)` underneath it. When a decorator confuses you, write it the second way and the confusion usually goes.\n\n{{wrapper}} The wrapper takes `*args, **kwargs` so it fits any function, passes them through, and RETURNS the result. Forgetting the return gives you a function that quietly answers `None`.\n\n{{wraps}} `@functools.wraps(func)` on the inner function, every time. Without it you have replaced the name, the docstring and the signature of everything you decorated, and the first sign is a log or a traceback naming `wrapper`.\n\n{{layers}} A decorator with an argument has three layers, because the call has to return the decorator before the `@` applies it. Read it from the inside out, and do not feel obliged to remember it.\n\n{{order}} Stacked decorators apply from the bottom up and run from the top down. That is worth knowing once, and worth avoiding in code somebody else has to read.\n\n{{when}} And the rule for when not to: a decorator that changes what a function DOES rather than what happens around it is a branch somebody cannot see. Wrapping, timing, retrying, caching, checking — yes. Deciding the answer — no.",
+          "seconds": 86,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-qf9tb22s",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

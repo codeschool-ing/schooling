@@ -1,0 +1,1443 @@
+[
+  {
+    "id": "ex-rj1w43r1",
+    "version": 1,
+    "section": "what-a-checker-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A checker reports `Unsupported operand types for * (\"float\" and \"None\")` on a line that has run a thousand times in production. What did it read to know that?",
+    "hint": "It followed something to its `return`.",
+    "choices": [
+      {
+        "text": "A log of the thousand runs, where a `None` appeared once",
+        "correct": false,
+        "why": "It read no log and no data at all — that is what static means."
+      },
+      {
+        "text": "The annotations, and the `return` of the function whose result lands there",
+        "correct": true,
+        "why": "It followed `find` to its `return`, saw `dict.get` answers `None` for a missing key, and looked at line 7."
+      },
+      {
+        "text": "The database it connects to, to see which currency codes are present in the rates table",
+        "correct": false,
+        "why": "It opened no file and made no connection."
+      },
+      {
+        "text": "The test suite, which covers the line with one case that fails",
+        "correct": false,
+        "why": "It ran no test. The line has no failing case, which is precisely why nobody had found this."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg3335wz",
+    "version": 1,
+    "section": "what-a-checker-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a checker find in a file with no annotations in it at all?",
+    "hint": "Two of the errors in this lesson need no types.",
+    "choices": [
+      {
+        "text": "A multiplication by something that turned out to be `None`",
+        "correct": false,
+        "why": "That needs the annotation saying the value is `float | None`."
+      },
+      {
+        "text": "A call with more arguments than the function takes",
+        "correct": true,
+        "why": "Arity is structural: `Too many arguments` is reported whatever the types are."
+      },
+      {
+        "text": "A function returning a string on one branch and an integer on another",
+        "correct": false,
+        "why": "A return type has to be declared before a return value disagrees with it."
+      },
+      {
+        "text": "A `dict` whose values are strings where integers were expected",
+        "correct": false,
+        "why": "With nothing annotated there is no expectation to compare against."
+      }
+    ]
+  },
+  {
+    "id": "ex-67e9jp4y",
+    "version": 1,
+    "section": "what-a-checker-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`def average(values: list[float]) -> float: return sum(values) * len(values)`. What does a checker say?",
+    "hint": "Every type in it lines up.",
+    "choices": [
+      {
+        "text": "It warns that `*` appears where `/` was meant, and names the line it is written on",
+        "correct": false,
+        "why": "That would require knowing what an average is, which is outside what a type says."
+      },
+      {
+        "text": "Nothing — the types are right and the arithmetic is not its subject",
+        "correct": true,
+        "why": "`sum` of floats times an integer is a float, so the annotation holds. The formula is wrong and no checker has an opinion about that."
+      },
+      {
+        "text": "`Unsupported operand types for * (\"float\" and \"int\")`, reported on the return line",
+        "correct": false,
+        "why": "Multiplying a float by an integer is ordinary arithmetic and the checker knows it."
+      },
+      {
+        "text": "`Incompatible return value type (got \"int\", expected \"float\")`",
+        "correct": false,
+        "why": "A float times an integer is a float, so the return type is satisfied."
+      }
+    ]
+  },
+  {
+    "id": "ex-scdcd3x8",
+    "version": 1,
+    "section": "what-a-checker-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`row = {\"city\": \"Recife\"}` then `row[\"citty\"]`. `mypy` answers `Success: no issues found`. Why?",
+    "hint": "What is the declared type of `row`?",
+    "choices": [
+      {
+        "text": "String keys are compared after normalisation, so the two spellings match",
+        "correct": false,
+        "why": "No normalisation happens anywhere, and the two spellings are different keys."
+      },
+      {
+        "text": "The dictionary literal is too short for the checker to infer a key type from it at all",
+        "correct": false,
+        "why": "It inferred `dict[str, str]` from the literal without difficulty."
+      },
+      {
+        "text": "Subscripting is outside what a static checker looks at",
+        "correct": false,
+        "why": "Subscripting is checked — on a `TypedDict` the same line is reported by name."
+      },
+      {
+        "text": "A `dict[str, str]` accepts any string as a key, so the typo is a valid expression",
+        "correct": true,
+        "why": "The type says the keys are strings, and `\"citty\"` is a string. It raises `KeyError` at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-a68qew7r",
+    "version": 1,
+    "section": "what-a-checker-does",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same lookup, with `Row` declared as a `TypedDict`. What is reported?",
+    "hint": "It gets a suggestion underneath.",
+    "choices": [
+      {
+        "text": "`TypedDict \"Row\" has no key \"citty\"`, with a `Did you mean \"city\"?` note",
+        "correct": true,
+        "why": "A `TypedDict` names its keys, so the checker has something to compare the spelling against."
+      },
+      {
+        "text": "A warning rather than an error, since the key might be added later",
+        "correct": false,
+        "why": "It is an error with the code `typeddict-item`."
+      },
+      {
+        "text": "`\"Row\" has no attribute \"citty\"`, because a `TypedDict` is a class",
+        "correct": false,
+        "why": "Attribute access and key access are different errors; this one is `typeddict-item`."
+      },
+      {
+        "text": "The same `Success` — a `TypedDict` is a `dict` at run time",
+        "correct": false,
+        "why": "It is a `dict` at run time, and the annotation exists for the checker, which reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qaxvafs0",
+    "version": 1,
+    "section": "running-mypy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`app/report.py:4: error: Argument 1 to \"find\" has incompatible type \"int\"; expected \"str\"  [arg-type]`. Which part do you put inside a `# type: ignore[...]`?",
+    "hint": "The part in brackets at the end.",
+    "choices": [
+      {
+        "text": "`arg-type`",
+        "correct": true,
+        "why": "The bracketed error code is what `# type: ignore[...]`, `disable_error_code` and a search engine all take."
+      },
+      {
+        "text": "`Argument 1 to \"find\"`, which identifies what is being ignored",
+        "correct": false,
+        "why": "The sentence is for the reader; the bracketed code is what the tool parses."
+      },
+      {
+        "text": "`incompatible type`, which is the category of the failure",
+        "correct": false,
+        "why": "That is prose inside the sentence, not an error code."
+      },
+      {
+        "text": "`report.py:4`, which identifies the line being silenced",
+        "correct": false,
+        "why": "The comment goes on the line, so the location is already known."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xhwfzpw",
+    "version": 1,
+    "section": "running-mypy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Found 1 error in 1 file (checked 3 source files)`. What are the other two files?",
+    "hint": "Something had to be read to understand the one you asked about.",
+    "choices": [
+      {
+        "text": "Files in the cache from the previous run, re-checked to confirm they are unchanged",
+        "correct": false,
+        "why": "The cache avoids work; it does not add files to the count."
+      },
+      {
+        "text": "The two stub files that shipped with the standard library modules in use",
+        "correct": false,
+        "why": "Standard-library stubs are read and are not counted as source files here."
+      },
+      {
+        "text": "Files with errors that were suppressed by an ignore comment somewhere",
+        "correct": false,
+        "why": "A suppressed error would not raise the checked count."
+      },
+      {
+        "text": "Modules it imported, read so the checker knows what the names mean",
+        "correct": true,
+        "why": "Errors are reported in what you asked about; imports are read to understand it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2wy6zjp",
+    "version": 1,
+    "section": "running-mypy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You run `mypy app/rates.py` and get `Success: no issues found in 1 source file`. The project has a real type error. Where is it?",
+    "hint": "Who calls `rates`?",
+    "choices": [
+      {
+        "text": "In a stub file, which is reported separately from source",
+        "correct": false,
+        "why": "Stub errors would still appear in the output."
+      },
+      {
+        "text": "Nowhere yet — the error appears after the cache is cleared",
+        "correct": false,
+        "why": "The cache changes speed, not verdicts."
+      },
+      {
+        "text": "In a file that calls something in `rates.py` with the wrong type",
+        "correct": true,
+        "why": "`rates.py` is internally consistent. The disagreement is at the call site, in a file you did not ask about."
+      },
+      {
+        "text": "Inside `rates.py`, in a function body the checker skipped",
+        "correct": false,
+        "why": "That is possible in principle, and here the error is in `report.py`, which the run did not cover."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4qetgzf",
+    "version": 1,
+    "section": "running-mypy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `reveal_type(data)` require you to import for the checker to answer?",
+    "hint": "The checker recognises the bare name.",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "The checker treats the bare name specially and replies with a `note`. At run time the bare name raises `NameError`."
+      },
+      {
+        "text": "`from typing import reveal_type`, which is what defines it",
+        "correct": false,
+        "why": "That import gives you a real function for run time; the checker needs no import."
+      },
+      {
+        "text": "`import typing`, and then the qualified name",
+        "correct": false,
+        "why": "The qualified form works at run time and is not what the checker requires."
+      },
+      {
+        "text": "`from mypy import reveal_type`, which is shipped with the checker",
+        "correct": false,
+        "why": "No such import exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-698h3fzg",
+    "version": 1,
+    "section": "running-mypy",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The directory `mypy` writes its incremental results into, which belongs in `.gitignore`: `______/`",
+    "hint": "It is named after the tool.",
+    "blanks": [
+      {
+        "accept": [
+          "mypy_cache",
+          ".mypy_cache"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2wvkfr9f",
+    "version": 1,
+    "section": "strictness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`def add(a, b): return a + b` and then `add(\"x\", 3)`. Default settings. What is reported?",
+    "hint": "What does the checker know about `a`?",
+    "choices": [
+      {
+        "text": "Nothing — an unannotated function is one the checker has no opinion about",
+        "correct": true,
+        "why": "With no annotation there is no expectation to violate, so the call is unjudged."
+      },
+      {
+        "text": "`Unsupported operand types for + (\"str\" and \"int\")`",
+        "correct": false,
+        "why": "That would need the parameters annotated."
+      },
+      {
+        "text": "A note that the arguments are of differing types",
+        "correct": false,
+        "why": "The checker has no declared types here to compare."
+      },
+      {
+        "text": "`Function is missing a type annotation`, since the call forced the issue",
+        "correct": false,
+        "why": "That is `no-untyped-def`, which arrives with `disallow_untyped_defs`."
+      }
+    ]
+  },
+  {
+    "id": "ex-849dpqv3",
+    "version": 1,
+    "section": "strictness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Same unannotated `add`, but the call is `add(1, 2, 3)`. Default settings.",
+    "hint": "One thing is structural.",
+    "choices": [
+      {
+        "text": "Nothing, for the same reason the previous call was unjudged",
+        "correct": false,
+        "why": "Types were unjudged; the number of arguments is a separate and structural question."
+      },
+      {
+        "text": "`Argument 3 has incompatible type \"int\"`, naming the extra one",
+        "correct": false,
+        "why": "There is no third parameter for it to have a type against."
+      },
+      {
+        "text": "`Too many arguments for \"add\"`",
+        "correct": true,
+        "why": "Arity is checked whatever the types are: three arguments into two parameters is wrong on its face."
+      },
+      {
+        "text": "A note suggesting `*args`, which is what would accept three",
+        "correct": false,
+        "why": "The checker suggests no rewrite here."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbqrepba",
+    "version": 1,
+    "section": "strictness",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which `--strict` flag stops a typed function from resting on an unannotated one?",
+    "hint": "It is about calls, not definitions.",
+    "choices": [
+      {
+        "text": "`disallow_untyped_calls`",
+        "correct": true,
+        "why": "It reports `Call to untyped function \"…\" in typed context`, which is what keeps the checked half from quietly leaning on the unchecked half."
+      },
+      {
+        "text": "`disallow_untyped_defs`, which requires every function to be annotated",
+        "correct": false,
+        "why": "That is about the definition. The call is a separate flag and a separate error code."
+      },
+      {
+        "text": "`disallow_any_generics`, which rejects a bare `dict` or `list`",
+        "correct": false,
+        "why": "That is about missing type parameters on a generic."
+      },
+      {
+        "text": "`warn_return_any`, which rejects handing back something untyped",
+        "correct": false,
+        "why": "That is about what a function returns, not about what it calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-yft0n244",
+    "version": 1,
+    "section": "strictness",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`def load(path: str) -> dict: return json.load(f)`. Which two errors does `--strict` add?",
+    "hint": "One is the bare `dict`, one is what `json.load` gives back.",
+    "choices": [
+      {
+        "text": "`type-arg` on the bare `dict`, and `no-any-return`",
+        "correct": true,
+        "why": "`disallow_any_generics` wants `dict[str, int]`, and `warn_return_any` refuses to let `Any` become the declared return silently."
+      },
+      {
+        "text": "`Missing type parameters` and `Call to untyped function \"load\"`",
+        "correct": false,
+        "why": "`load` is annotated, so `no-untyped-call` does not apply to it."
+      },
+      {
+        "text": "`Function is missing a type annotation` and `Returning Any`",
+        "correct": false,
+        "why": "The function is annotated, so `no-untyped-def` does not fire."
+      },
+      {
+        "text": "`Incompatible return value type (got \"Any\", expected \"dict\")`",
+        "correct": false,
+        "why": "The error code for this is `no-any-return` and its wording is `Returning Any from function declared to return`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1q51skjr",
+    "version": 1,
+    "section": "strictness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes `check_untyped_defs` the cheapest flag to turn on across an existing codebase?",
+    "hint": "Think about what it asks somebody to write.",
+    "choices": [
+      {
+        "text": "It silences whatever errors are inside unannotated functions until somebody annotates them",
+        "correct": false,
+        "why": "It does the opposite: by default those bodies are skipped, and this turns them on."
+      },
+      {
+        "text": "It infers annotations for the unannotated functions and writes them back into the file",
+        "correct": false,
+        "why": "It writes nothing. Inference for a report is not a rewrite of your source."
+      },
+      {
+        "text": "It checks inside bodies that already exist and asks nobody to write an annotation",
+        "correct": true,
+        "why": "The signatures stay as they are, and the errors it finds are defects rather than paperwork."
+      },
+      {
+        "text": "It limits the run to the modules that already carry annotations throughout their bodies",
+        "correct": false,
+        "why": "It widens what is checked rather than narrowing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b30y9e1s",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the settings belong in `pyproject.toml` rather than in the command you type?",
+    "hint": "Three places run the checker.",
+    "choices": [
+      {
+        "text": "Because a flag on the command line is ignored when a config file exists",
+        "correct": false,
+        "why": "A command-line flag takes precedence over the file, which is part of the problem."
+      },
+      {
+        "text": "So your editor, your terminal and CI run the same check",
+        "correct": true,
+        "why": "A flag passed on one machine and not in CI is a green build in one place and a red one in the other, for the same commit."
+      },
+      {
+        "text": "Because the command line has no equivalent for most of the settings",
+        "correct": false,
+        "why": "Almost every setting has a matching flag; the point is agreement between the places that run it."
+      },
+      {
+        "text": "Because the cache is keyed by the file and is discarded when a flag differs",
+        "correct": false,
+        "why": "Cache invalidation is a consequence here, not the reason to keep settings in a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-8q7ty7dn",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `python_version = \"3.12\"` decide?",
+    "hint": "It is about what the checker believes exists.",
+    "choices": [
+      {
+        "text": "Which interpreter the checker launches in order to import and inspect your modules",
+        "correct": false,
+        "why": "It launches no interpreter and imports nothing — it reads files."
+      },
+      {
+        "text": "Which `py.typed` marker files among your installed dependencies are honoured",
+        "correct": false,
+        "why": "The marker is honoured or not on its own, regardless of the target version."
+      },
+      {
+        "text": "Which version of `mypy` is installed by `pip install mypy`",
+        "correct": false,
+        "why": "The checker's own version is chosen by whatever pins it, not by this setting."
+      },
+      {
+        "text": "Which syntax and which standard-library signatures the checker believes in",
+        "correct": true,
+        "why": "Set it to what you deploy on, or the checker judges your code against a different language than the one that will run it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsnp2554",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The double-bracket table in `pyproject.toml` that loosens a flag for named modules: `[[tool.mypy.______]]`",
+    "hint": "TOML calls this shape an array of tables.",
+    "blanks": [
+      {
+        "accept": [
+          "overrides"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0zfg1h24",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Strict at the top, `disallow_untyped_defs = false` in an override naming `app.legacy.*`. What happens to `app/legacy/old.py`?",
+    "hint": "The override turns one flag off for one place.",
+    "choices": [
+      {
+        "text": "It is still checked, and the missing annotation is no longer an error there",
+        "correct": true,
+        "why": "Every other flag still applies to it, and the rest of the package stays strict."
+      },
+      {
+        "text": "It is skipped, so nothing inside it is reported",
+        "correct": false,
+        "why": "Skipping is what `exclude` does. An override changes a flag and keeps the module checked."
+      },
+      {
+        "text": "It is checked and its errors are downgraded to `note` lines",
+        "correct": false,
+        "why": "There is no downgrade mechanism; the flag is off and that error is not produced."
+      },
+      {
+        "text": "It is checked only when something else imports it",
+        "correct": false,
+        "why": "It is in `files`, so it is checked in its own right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jycv4jg",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `exclude` the wrong tool for a directory you are not ready to check?",
+    "hint": "An excluded module still has a relationship with the rest.",
+    "choices": [
+      {
+        "text": "`exclude` takes a regular expression, which is easy to write wrongly",
+        "correct": false,
+        "why": "It does take one, and a correct expression still leaves you with the import problem."
+      },
+      {
+        "text": "An excluded module is still imported by the ones you check",
+        "correct": true,
+        "why": "You end up with a report that is confusing rather than smaller. An override with loosened flags keeps it checked at a level it passes."
+      },
+      {
+        "text": "`exclude` and `files` contradict each other and the checker refuses to start",
+        "correct": false,
+        "why": "They combine without complaint."
+      },
+      {
+        "text": "`exclude` is applied after the cache is written, so the run is no faster",
+        "correct": false,
+        "why": "Speed is not the objection here."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdxgzb6k",
+    "version": 1,
+    "section": "pyright",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`def total(items):` with a bad assignment in its body. `mypy` emits a note; `pyright` reports an error. Why?",
+    "hint": "One of them skips something by default.",
+    "choices": [
+      {
+        "text": "`mypy` treats an unannotated parameter as `Any`, which absorbs the error",
+        "correct": false,
+        "why": "`Any` in the parameter does not explain it: the assignment has a declared type of its own."
+      },
+      {
+        "text": "`mypy` skips the bodies of unannotated functions by default and `pyright` checks them",
+        "correct": true,
+        "why": "`check_untyped_defs` is the flag that makes the two agree on this file."
+      },
+      {
+        "text": "`pyright` infers annotations for the parameters, which `mypy` declines to do",
+        "correct": false,
+        "why": "Both infer within a body; the difference is that one of them declines to look at this body at all."
+      },
+      {
+        "text": "`pyright` is running in strict mode and `mypy` in its default",
+        "correct": false,
+        "why": "The `pyright` run here is in its default `standard` mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-616r59gg",
+    "version": 1,
+    "section": "pyright",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same assignment. `mypy` says `variable has type \"int\"`; `pyright` says `Type \"Literal['no']\"`. What is the difference?",
+    "hint": "One is telling you more about the value.",
+    "choices": [
+      {
+        "text": "`pyright` narrows to the exact value in its message where `mypy` names the wider type",
+        "correct": true,
+        "why": "Both verdicts are the same; one report carries more information about what was on the right-hand side."
+      },
+      {
+        "text": "`Literal['no']` is the declared type and `int` is the one that was inferred",
+        "correct": false,
+        "why": "It is the other way round: the narrower name describes the expression on the right."
+      },
+      {
+        "text": "`mypy` has not read the assignment yet and is reporting the declaration alone",
+        "correct": false,
+        "why": "It read the assignment — that is what it is reporting."
+      },
+      {
+        "text": "`pyright` is reporting a different error, on a different line of the same file, at the same time",
+        "correct": false,
+        "why": "Same line, same file, same error."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty2pcr94",
+    "version": 1,
+    "section": "pyright",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which values may `typeCheckingMode` take, and which is the default?",
+    "hint": "There are four, and the default is not the loosest or the strictest.",
+    "choices": [
+      {
+        "text": "`off`, `basic`, `standard` and `strict`, with `standard` as the default",
+        "correct": true,
+        "why": "Each rule underneath also has a name of its own and can be set to `error`, `warning` or `none`."
+      },
+      {
+        "text": "`off`, `basic` and `strict`, with `basic` as the default",
+        "correct": false,
+        "why": "`standard` sits between `basic` and `strict` and is the default."
+      },
+      {
+        "text": "`none`, `warning` and `error`, with `warning` as the default",
+        "correct": false,
+        "why": "Those three are the settings for an individual rule, not for the mode."
+      },
+      {
+        "text": "`lenient`, `standard` and `pedantic`, with `standard` as the default",
+        "correct": false,
+        "why": "Those names belong to no checker here."
+      }
+    ]
+  },
+  {
+    "id": "ex-vax8ardf",
+    "version": 1,
+    "section": "pyright",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file carries `# pyright: ignore[reportAssignmentType]` on a line both checkers dislike. What does `mypy` do?",
+    "hint": "One of them does not know that syntax.",
+    "choices": [
+      {
+        "text": "It reports the error, because that comment means nothing to it",
+        "correct": true,
+        "why": "If a project runs both, the portable comment is `# type: ignore[code]`, which both honour."
+      },
+      {
+        "text": "It honours the comment, since both read the same suppression syntax",
+        "correct": false,
+        "why": "`mypy` reads `# type: ignore`; the `pyright:` form is not its syntax."
+      },
+      {
+        "text": "It reports the comment itself as an unrecognised directive",
+        "correct": false,
+        "why": "It treats the line as an ordinary comment and says nothing about it."
+      },
+      {
+        "text": "It downgrades the error to a note, having seen that somebody decided",
+        "correct": false,
+        "why": "There is no such downgrade."
+      }
+    ]
+  },
+  {
+    "id": "ex-kva5g3pp",
+    "version": 1,
+    "section": "pyright",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes `pyright` the one in the editor?",
+    "hint": "Something is already running as you type.",
+    "choices": [
+      {
+        "text": "It writes no cache directory of its own, so it leaves the working tree clean for you",
+        "correct": false,
+        "why": "A cache directory in `.gitignore` is not what decides which checker an editor runs."
+      },
+      {
+        "text": "It is the checker with a language-server protocol implementation of its own, shipped ready",
+        "correct": false,
+        "why": "A language server exists for the other one too; speed and default packaging decided this."
+      },
+      {
+        "text": "It is what Pylance runs, and it answers fast enough to report while you type",
+        "correct": true,
+        "why": "It also reports `line:column`, so an error lands on the right half of a long line."
+      },
+      {
+        "text": "It reads the `pyproject.toml` that editors already parse for other tooling",
+        "correct": false,
+        "why": "Both read `pyproject.toml`, so that settles nothing between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-4v4azyfr",
+    "version": 1,
+    "section": "third-party-stubs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`error: Library stubs not installed for \"yaml\"  [import-untyped]`. What is the first thing to try?",
+    "hint": "The next line of the output tells you.",
+    "choices": [
+      {
+        "text": "Annotate the values coming out of the library as `Any` at each call",
+        "correct": false,
+        "why": "That throws away the checking at exactly the boundary where it was available."
+      },
+      {
+        "text": "Add `ignore_missing_imports = true` at the top of the config",
+        "correct": false,
+        "why": "That silences the message for everything, including an import you misspelled."
+      },
+      {
+        "text": "Add `# type: ignore[import-untyped]` to the import line",
+        "correct": false,
+        "why": "It works and it buys a silence where a stub package would have bought types."
+      },
+      {
+        "text": "Install the `types-PyYAML` package that the hint underneath names",
+        "correct": true,
+        "why": "Hundreds of libraries have a `types-…` package written by other people, and it gives you real types rather than a silence."
+      }
+    ]
+  },
+  {
+    "id": "ex-7k4qx4bc",
+    "version": 1,
+    "section": "third-party-stubs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `[import-untyped]` and `[import-not-found]`?",
+    "hint": "One of the two libraries is installed.",
+    "choices": [
+      {
+        "text": "The first means it is installed with no types; the second means the module was not found",
+        "correct": true,
+        "why": "The second is usually a typo, a missing install, or a `PYTHONPATH` the checker does not share."
+      },
+      {
+        "text": "The first is a warning and the second is an error",
+        "correct": false,
+        "why": "Both are errors."
+      },
+      {
+        "text": "The first names a stub package that exists and the second names a source package that does not",
+        "correct": false,
+        "why": "Both name a module; the difference is whether the checker found it at all."
+      },
+      {
+        "text": "The first appears under `--strict` and the second in the default settings",
+        "correct": false,
+        "why": "Both appear in the default settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd6x4ep6",
+    "version": 1,
+    "section": "third-party-stubs",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The empty marker file a library puts in its package directory so its own annotations are honoured: `______`",
+    "hint": "Two words joined by a dot.",
+    "blanks": [
+      {
+        "accept": [
+          "py.typed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v1e2crqr",
+    "version": 1,
+    "section": "third-party-stubs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`n: int = \"a\"  # type: ignore[arg-type]` where the real error code is `assignment`. What is reported?",
+    "hint": "The narrow comment did not match.",
+    "choices": [
+      {
+        "text": "The error, plus a note saying the code is not covered by the comment",
+        "correct": true,
+        "why": "A narrow ignore that stops matching starts reporting again, and the note names the mismatch."
+      },
+      {
+        "text": "Nothing — a comment with any code in it silences the line",
+        "correct": false,
+        "why": "A bare `# type: ignore` silences the line; one with a code silences that code."
+      },
+      {
+        "text": "An error about the comment naming a code that does not apply",
+        "correct": false,
+        "why": "The complaint is the original error; the mismatch arrives as a note beneath it."
+      },
+      {
+        "text": "The error, downgraded to a warning because somebody had decided about the line",
+        "correct": false,
+        "why": "It stays an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjzj40wa",
+    "version": 1,
+    "section": "third-party-stubs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `warn_unused_ignores` report, and why does it earn its place before the rest of `--strict`?",
+    "hint": "Think about a comment whose reason has gone.",
+    "choices": [
+      {
+        "text": "A `# type: ignore` on a line that a later edit moved",
+        "correct": false,
+        "why": "The comment moves with the line it is on."
+      },
+      {
+        "text": "`Unused \"type: ignore\" comment` — a suppression that silences nothing and misrepresents the file",
+        "correct": true,
+        "why": "The stub was fixed or the code changed, and the comment stayed behind lying about the state of the file."
+      },
+      {
+        "text": "A `# type: ignore` written without a bracketed error code",
+        "correct": false,
+        "why": "That is a separate concern and this flag says nothing about it."
+      },
+      {
+        "text": "A `# type: ignore` whose code is spelled wrongly",
+        "correct": false,
+        "why": "That produces the `not covered by` note on the original error instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-75695wrc",
+    "version": 1,
+    "section": "adopting-it-on-what-exists",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twenty thousand lines, no annotations. What goes into CI on day one?",
+    "hint": "Think about what has to exist before a bar can be raised.",
+    "choices": [
+      {
+        "text": "The checker with almost nothing turned on, reporting almost nothing",
+        "correct": true,
+        "why": "The pipeline now has a step that can go red, and every later step raises the bar on something that already runs."
+      },
+      {
+        "text": "`--strict`, so the size of the problem is visible from the start",
+        "correct": false,
+        "why": "Four thousand errors is a number nobody acts on, and the usual next step is an ignore at the top of each file."
+      },
+      {
+        "text": "The checker over one module, with the rest excluded from the run",
+        "correct": false,
+        "why": "An excluded module is still imported by the ones you check, so its errors come back anyway."
+      },
+      {
+        "text": "Nothing yet — annotate a first module, then add the step",
+        "correct": false,
+        "why": "That leaves the step to be added on an afternoon when somebody remembers."
+      }
+    ]
+  },
+  {
+    "id": "ex-24q8evz1",
+    "version": 1,
+    "section": "adopting-it-on-what-exists",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which flag is the important one for stopping the untyped half from growing?",
+    "hint": "It is about new code more than old code.",
+    "choices": [
+      {
+        "text": "`check_untyped_defs`, which starts checking inside the function bodies that already exist",
+        "correct": false,
+        "why": "It is the cheapest first win and it says nothing about whether new code is annotated."
+      },
+      {
+        "text": "`disallow_untyped_defs`, on by default with the unready modules listed as exceptions",
+        "correct": true,
+        "why": "Every new module is then checked properly from its first line, and the list of exceptions can only shrink."
+      },
+      {
+        "text": "`ignore_missing_imports`, which quiets the noise coming out of the third-party libraries first",
+        "correct": false,
+        "why": "It removes noise from the report and has no bearing on your own new code."
+      },
+      {
+        "text": "`warn_return_any`, which stops `Any` escaping through a return",
+        "correct": false,
+        "why": "A good flag, and it does not decide whether a new function is annotated."
+      }
+    ]
+  },
+  {
+    "id": "ex-cf9kjyx9",
+    "version": 1,
+    "section": "adopting-it-on-what-exists",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is \"loose by default, strict on a list of ready modules\" the wrong way round?",
+    "hint": "Which arrangement changes colour when somebody adds an unannotated module?",
+    "choices": [
+      {
+        "text": "The checker reads the overrides before the top-level settings",
+        "correct": false,
+        "why": "Order of precedence is defined and is not the objection here."
+      },
+      {
+        "text": "Per-module strictness is not expressible in the override table",
+        "correct": false,
+        "why": "It is expressible either way round; that is what makes the choice a real one."
+      },
+      {
+        "text": "The list of ready modules grows faster than anybody maintains it",
+        "correct": false,
+        "why": "A growing list of ready modules is progress; the problem is what happens outside it."
+      },
+      {
+        "text": "The untyped half grows every week and nothing changes colour when it does",
+        "correct": true,
+        "why": "Written the other way, a new unannotated module fails the build on the day it is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p7bbw0a",
+    "version": 1,
+    "section": "adopting-it-on-what-exists",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are annotating a module. What comes first?",
+    "hint": "One of the two is mostly worked out for you.",
+    "choices": [
+      {
+        "text": "The signatures — parameters and return types",
+        "correct": true,
+        "why": "With those in place the locals are mostly inferred, so annotating them adds little."
+      },
+      {
+        "text": "The locals, so the checker has something concrete to start from",
+        "correct": false,
+        "why": "Locals are inferred from what is assigned to them; the signature is what the checker has no way to guess."
+      },
+      {
+        "text": "The `# type: ignore` comments, so the run is quiet while you work",
+        "correct": false,
+        "why": "That hides the work you are about to do from the tool doing it with you."
+      },
+      {
+        "text": "The imports, rewritten to pull types from `typing` rather than built-ins",
+        "correct": false,
+        "why": "Built-in generics are the current spelling and need no rewrite."
+      }
+    ]
+  },
+  {
+    "id": "ex-qr4z8mds",
+    "version": 1,
+    "section": "adopting-it-on-what-exists",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the one rule for the whole adoption process?",
+    "hint": "It is about what a merge is allowed to add.",
+    "choices": [
+      {
+        "text": "No new suppression without a reason written beside it",
+        "correct": true,
+        "why": "The state to avoid is a codebase full of comments telling a checker to be quiet where nobody remembers which are load-bearing."
+      },
+      {
+        "text": "No flag turned on outside a pull request of its own",
+        "correct": false,
+        "why": "One flag per pull request is good practice for the last step and is not the rule that holds the process together."
+      },
+      {
+        "text": "No merge while any module is still in the override list",
+        "correct": false,
+        "why": "The list shrinks over months; blocking merges on it would stop the work."
+      },
+      {
+        "text": "No suppression at all, since each one is a defect left in place",
+        "correct": false,
+        "why": "Some are legitimate — a stub that lies — and the requirement is the reason beside them."
+      }
+    ]
+  },
+  {
+    "id": "ex-djbv8k54",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a checker's job and not a test's?",
+    "hint": "One of them is about every caller in the program.",
+    "choices": [
+      {
+        "text": "Finding that a report totals the wrong column of the table",
+        "correct": false,
+        "why": "Both columns are integers, so the types agree and the answer is wrong."
+      },
+      {
+        "text": "Finding the caller in another file that passes the wrong type",
+        "correct": true,
+        "why": "A checker follows every call, including the branch nobody takes and the file you were not looking at."
+      },
+      {
+        "text": "Finding that a discount is applied twice on one code path",
+        "correct": false,
+        "why": "That is behaviour, and a test is what asserts it."
+      },
+      {
+        "text": "Finding that a retry loop gives up one attempt too early",
+        "correct": false,
+        "why": "A count that is off by one is correct in every type."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wsqxd23",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team turns the checker on and the first run says `Success: no issues found in 240 source files`. What is the reasonable reading?",
+    "hint": "What does an unannotated function mean to the default settings?",
+    "choices": [
+      {
+        "text": "Little was checked, because unannotated functions are ones it has no opinion about",
+        "correct": true,
+        "why": "A clean first run on a codebase with no annotations is a measurement of how much was skipped."
+      },
+      {
+        "text": "The codebase is in better shape than the team expected",
+        "correct": false,
+        "why": "It says the checker found no disagreement between annotations that mostly are not there."
+      },
+      {
+        "text": "The configuration is broken, since a real codebase has errors",
+        "correct": false,
+        "why": "The configuration is doing exactly what its defaults say."
+      },
+      {
+        "text": "The cache is stale and the run reused an earlier verdict",
+        "correct": false,
+        "why": "A stale cache is invalidated by the file contents, and this result is what the defaults produce."
+      }
+    ]
+  },
+  {
+    "id": "ex-m45wp509",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The flag that makes `mypy` look inside functions that have no annotations: `--______`",
+    "hint": "Three words joined by hyphens.",
+    "blanks": [
+      {
+        "accept": [
+          "check-untyped-defs",
+          "check_untyped_defs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3z2hf9nw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where do you put a suppression so that both `mypy` and `pyright` honour it?",
+    "hint": "One syntax is understood by both.",
+    "choices": [
+      {
+        "text": "`# type: ignore[code]`",
+        "correct": true,
+        "why": "`pyright` accepts it too. The `# pyright: ignore` form is for a rule only `pyright` has."
+      },
+      {
+        "text": "`# pyright: ignore[rule]`, which names the rule precisely",
+        "correct": false,
+        "why": "It is precise and `mypy` treats it as an ordinary comment, so the error is still reported."
+      },
+      {
+        "text": "`# noqa: code`, which the linters and the checkers share",
+        "correct": false,
+        "why": "`# noqa` belongs to the linters and neither checker reads it."
+      },
+      {
+        "text": "`# mypy: ignore[code]`, the counterpart of the `pyright` form",
+        "correct": false,
+        "why": "That is not the syntax; `mypy` reads `# type: ignore`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsnwsk84",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A run reports `Item \"None\" of \"Row | None\" has no attribute \"city\"` on a line that has never failed. What is the honest conclusion?",
+    "hint": "Think about which branch the data has taken so far.",
+    "choices": [
+      {
+        "text": "The branch that produces `None` has not been reached yet, and the line raises when it is",
+        "correct": true,
+        "why": "The lookup answers `None` for a row that fails validation, and the test data never does."
+      },
+      {
+        "text": "The annotation on the lookup is too wide and should be narrowed to `Row`",
+        "correct": false,
+        "why": "Narrowing the annotation to fit the data you have seen is how the report stops mentioning a real case."
+      },
+      {
+        "text": "The checker cannot see the guard above the line and is reporting a false positive",
+        "correct": false,
+        "why": "A guard above it would narrow the type and remove the error, so its absence is the finding."
+      },
+      {
+        "text": "The line is unreachable, which is why it has never failed",
+        "correct": false,
+        "why": "Unreachable code is reported differently and this line is reached with a non-`None` row."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yrkxgw6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these turns a `Success` into an honest verdict without asking anybody to write an annotation?",
+    "hint": "It widens what is looked at, not what is required.",
+    "choices": [
+      {
+        "text": "`warn_unused_ignores`, which finds the suppressions that expired",
+        "correct": false,
+        "why": "A useful flag that says nothing about unchecked bodies."
+      },
+      {
+        "text": "`disallow_untyped_defs`, which reports each function that lacks one",
+        "correct": false,
+        "why": "It reports what has to be written, which is the paperwork rather than the defects."
+      },
+      {
+        "text": "`check_untyped_defs`",
+        "correct": true,
+        "why": "It checks inside bodies that already exist, so the errors it finds are defects rather than paperwork."
+      },
+      {
+        "text": "`strict`, which is the shorthand for the whole list",
+        "correct": false,
+        "why": "It includes the flag that demands annotations, along with a dozen others."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c9g810m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`mypy app/rates.py` is clean; `mypy -p app` is not. What does that tell you about where to point it?",
+    "hint": "The disagreement is between two files.",
+    "choices": [
+      {
+        "text": "At the package, because an error lives between a definition and its caller",
+        "correct": true,
+        "why": "The file you changed is internally consistent; the file that calls it is where the disagreement shows."
+      },
+      {
+        "text": "At the file, since a package run reports errors from dependencies too",
+        "correct": false,
+        "why": "Errors are reported in what you asked about; imports are read rather than reported."
+      },
+      {
+        "text": "At either, since the same errors are found in both and only the count differs",
+        "correct": false,
+        "why": "The single-file run reported no error at all."
+      },
+      {
+        "text": "At the file first and the package in CI, so local runs stay fast",
+        "correct": false,
+        "why": "The cache is what keeps runs fast, and a local run that misses the error has not helped you."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5vv3ajw",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`json.load` gives back this type, which is how a declared return is lost without anybody noticing: `______`",
+    "hint": "Three letters, capital A.",
+    "blanks": [
+      {
+        "accept": [
+          "Any"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fv9cz45m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An override in `pyproject.toml` sets `disallow_untyped_defs = false` for `app.legacy.*`. A new module `app/billing/rates.py` has an unannotated function. What happens?",
+    "hint": "Which modules does the override name?",
+    "choices": [
+      {
+        "text": "It is reported, since that exception names a different package",
+        "correct": true,
+        "why": "That is the arrangement working: the exception list is explicit and new code falls outside it."
+      },
+      {
+        "text": "It is accepted, since the top-level default applies to modules added later",
+        "correct": false,
+        "why": "The top-level setting is the strict one; the override is what loosens it."
+      },
+      {
+        "text": "It is accepted until the module is added to `files`",
+        "correct": false,
+        "why": "It is under `app`, which `files` already names."
+      },
+      {
+        "text": "It is reported as a warning rather than an error while the module is new",
+        "correct": false,
+        "why": "There is no grace period for a new module."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb5ca39g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a checker say nothing about `total = sum(prices) * len(prices)` when an average was intended?",
+    "hint": "Consider what each of the two operators produces.",
+    "choices": [
+      {
+        "text": "Arithmetic between numbers is outside what a checker examines",
+        "correct": false,
+        "why": "It examines arithmetic closely — `float * None` is reported."
+      },
+      {
+        "text": "`sum` returns `Any`, so nothing downstream of it is checked",
+        "correct": false,
+        "why": "`sum` over a `list[float]` returns a float, not `Any`."
+      },
+      {
+        "text": "A float times an integer is a float, which is what the annotation promised",
+        "correct": true,
+        "why": "The types line up and the formula is wrong, and a type is not where that distinction lives."
+      },
+      {
+        "text": "`len` returns an untyped value, which absorbs the multiplication",
+        "correct": false,
+        "why": "`len` is annotated as returning an integer."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4bq1gnp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these belongs in `.gitignore`?",
+    "hint": "One of them is written by a run, not by a person.",
+    "choices": [
+      {
+        "text": "`pyrightconfig.json`, since it duplicates the `pyproject.toml`",
+        "correct": false,
+        "why": "It is configuration somebody wrote and it belongs in the repository."
+      },
+      {
+        "text": "`py.typed`, since it is an empty file with no content to track",
+        "correct": false,
+        "why": "Its presence is the content: it is the marker saying the annotations are meant to be read."
+      },
+      {
+        "text": "`.mypy_cache/`",
+        "correct": true,
+        "why": "It holds what was worked out about each module and is what makes the second run a fraction of the first."
+      },
+      {
+        "text": "`[[tool.mypy.overrides]]`, since the list changes on every merge",
+        "correct": false,
+        "why": "It is a block inside a tracked file, and its shrinking is the record of the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzsyd7ax",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A checker and a test are described as halves of the same job. What does the checker half cover?",
+    "hint": "One of them scales over the whole program.",
+    "choices": [
+      {
+        "text": "Whether the pieces fit together, everywhere, including where nobody looked",
+        "correct": true,
+        "why": "It says nothing about whether the thing they build is the thing you wanted, which is the other half."
+      },
+      {
+        "text": "Whether the program produces the right answer for a chosen input",
+        "correct": false,
+        "why": "That is what a test asserts."
+      },
+      {
+        "text": "Whether the code paths a test exercised behave as the report describes",
+        "correct": false,
+        "why": "A checker reads no test and no report of one."
+      },
+      {
+        "text": "Whether the annotations somebody wrote match the data in production",
+        "correct": false,
+        "why": "It reads no data; it compares annotations with the code around them."
+      }
+    ]
+  }
+]

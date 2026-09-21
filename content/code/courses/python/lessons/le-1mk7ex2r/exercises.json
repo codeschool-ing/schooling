@@ -1,0 +1,1710 @@
+[
+  {
+    "id": "ex-pnp24y3d",
+    "version": 1,
+    "section": "why-a-dataframe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Multiplying two columns of 500,000 rows: `iterrows` 11.2 s, `apply(axis=1)` 2.8 s, `df[\"a\"] * df[\"b\"]` 0.002 s. Why is the last one so far ahead?",
+    "hint": "Where does the work happen?",
+    "choices": [
+      {
+        "text": "It runs in compiled code over a contiguous block of memory, with no Python object per row",
+        "correct": true,
+        "why": "`iterrows` builds a `Series` object for every row before you touch it."
+      },
+      {
+        "text": "It uses several cores where the other two use one",
+        "correct": false,
+        "why": "It is single-threaded; the difference is the per-row object and the interpreter."
+      },
+      {
+        "text": "It reuses a cached result, since exactly the same two columns were multiplied before",
+        "correct": false,
+        "why": "Nothing is cached between the three runs."
+      },
+      {
+        "text": "It is lazy, so the multiplication has not happened when the timer stops",
+        "correct": false,
+        "why": "The result is materialised; nothing is deferred."
+      }
+    ]
+  },
+  {
+    "id": "ex-03ny2gv6",
+    "version": 1,
+    "section": "why-a-dataframe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`df.apply(lambda r: …, axis=1)` looks like the pandas way to do it. What is it actually?",
+    "hint": "Count the Python calls.",
+    "choices": [
+      {
+        "text": "A parallel map across the rows, limited by the number of cores",
+        "correct": false,
+        "why": "It is sequential."
+      },
+      {
+        "text": "A Python function call per row, with the row object still being built",
+        "correct": true,
+        "why": "It measured 2.8 seconds against 2 milliseconds for the column operation."
+      },
+      {
+        "text": "A vectorised operation with a slightly slower dispatch",
+        "correct": false,
+        "why": "Nothing about it is vectorised when `axis=1`."
+      },
+      {
+        "text": "A compiled loop over the rows, which is why it beats `iterrows` by about four times",
+        "correct": false,
+        "why": "It beats `iterrows` because it skips some overhead and it is not compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-mq2dc48b",
+    "version": 1,
+    "section": "why-a-dataframe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `df[\"cents\"]` and `df[[\"cents\"]]`?",
+    "hint": "One of them got a list.",
+    "choices": [
+      {
+        "text": "The first is a copy and the second is a view of the original",
+        "correct": false,
+        "why": "Neither is reliably one or the other, and that is not what the brackets decide."
+      },
+      {
+        "text": "The first is a Series and the second is a DataFrame with one column",
+        "correct": true,
+        "why": "The double brackets are a list of column names rather than special syntax."
+      },
+      {
+        "text": "The first raises if the column is missing and the second returns empty",
+        "correct": false,
+        "why": "Both raise a `KeyError`."
+      },
+      {
+        "text": "The first keeps the index and the second resets it",
+        "correct": false,
+        "why": "Both keep the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-b563qxxx",
+    "version": 1,
+    "section": "why-a-dataframe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `us = df[df[\"country\"] == \"US\"]`, the rows are labelled 3 and 6. What does that tell you?",
+    "hint": "Labels are not positions.",
+    "choices": [
+      {
+        "text": "The index will renumber itself the next time the table is used",
+        "correct": false,
+        "why": "It stays until something resets it."
+      },
+      {
+        "text": "The table has been sorted by the index, which skipped over the missing labels",
+        "correct": false,
+        "why": "Nothing sorted; the two matching rows kept their own labels."
+      },
+      {
+        "text": "The index is a label, kept from the original table, and not a position",
+        "correct": true,
+        "why": "It is the single most common surprise in pandas, and `loc` against `iloc` is about exactly it."
+      },
+      {
+        "text": "The filter returned a view, so the labels belong to the parent",
+        "correct": false,
+        "why": "They would be the same labels either way; the index is simply preserved."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzxbmk7m",
+    "version": 1,
+    "section": "why-a-dataframe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a plain list of dicts the better choice?",
+    "hint": "Think about size and shape.",
+    "choices": [
+      {
+        "text": "A hundred rows read once, or data that does not fit a table",
+        "correct": true,
+        "why": "`pandas` costs a dependency, some memory and a learning curve, and below a few thousand rows a list of dicts is honestly fine."
+      },
+      {
+        "text": "Whenever the data comes from an API rather than a file",
+        "correct": false,
+        "why": "An API's rows go into a DataFrame exactly as a file's do."
+      },
+      {
+        "text": "Whenever the result of the analysis has to be written back out as JSON",
+        "correct": false,
+        "why": "`to_json` handles that in one line."
+      },
+      {
+        "text": "Whenever the columns have mixed types within a column",
+        "correct": false,
+        "why": "A column of mixed types is awkward in both and is not the deciding question."
+      }
+    ]
+  },
+  {
+    "id": "ex-mep6pxqt",
+    "version": 1,
+    "section": "reading-data-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CSV column of whole numbers has one empty cell. What dtype does `read_csv` give it?",
+    "hint": "The classic integer type cannot hold a gap.",
+    "choices": [
+      {
+        "text": "`int64`, with the gap filled by zero",
+        "correct": false,
+        "why": "Nothing is filled; a gap becomes `NaN`, which an `int64` cannot hold."
+      },
+      {
+        "text": "`str`, because one value could not be parsed as a number",
+        "correct": false,
+        "why": "An empty cell is read as missing rather than as text."
+      },
+      {
+        "text": "`Int64`, which is the nullable integer type",
+        "correct": false,
+        "why": "That is what you get by asking for it, and not what is inferred."
+      },
+      {
+        "text": "`float64`",
+        "correct": true,
+        "why": "It surfaces later as `12990.0` in a report, or as a total that will not compare equal to an integer."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4v1bk62",
+    "version": 1,
+    "section": "reading-data-in",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How do you keep whole numbers and still allow a gap?",
+    "hint": "One letter differs.",
+    "choices": [
+      {
+        "text": "`df[\"cents\"].astype(int)` after reading",
+        "correct": false,
+        "why": "It raises on the `NaN`."
+      },
+      {
+        "text": "`dtype={\"cents\": \"Int64\"}` — with a capital I",
+        "correct": true,
+        "why": "The nullable integer type holds whole numbers and a real `<NA>` for the gap."
+      },
+      {
+        "text": "`na_values=[0]`, so the gaps are read as zeros",
+        "correct": false,
+        "why": "That says the string `0` means missing, which is the opposite."
+      },
+      {
+        "text": "`dtype={\"cents\": \"int64\"}`, which is the ordinary integer type",
+        "correct": false,
+        "why": "That is the one that cannot represent a missing value."
+      }
+    ]
+  },
+  {
+    "id": "ex-239kw28b",
+    "version": 1,
+    "section": "reading-data-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why pass `parse_dates=[\"paid_at\"]`?",
+    "hint": "Otherwise it is text.",
+    "choices": [
+      {
+        "text": "Without it the column is a string, and sorting it works only by luck",
+        "correct": true,
+        "why": "ISO dates happen to sort correctly as text and no other format does."
+      },
+      {
+        "text": "Without it the dates are read in the American order rather than the local one",
+        "correct": false,
+        "why": "They are not interpreted at all; they stay as written."
+      },
+      {
+        "text": "Without it the column takes four times the memory",
+        "correct": false,
+        "why": "Memory is a side effect rather than the reason."
+      },
+      {
+        "text": "Without it `describe()` refuses to run on the table",
+        "correct": false,
+        "why": "It runs and leaves text columns out by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbga1my9",
+    "version": 1,
+    "section": "reading-data-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 40-column file is too large to open. Which two arguments help most?",
+    "hint": "Read less of it.",
+    "choices": [
+      {
+        "text": "`sep` and `decimal`, which stop the parser from misreading",
+        "correct": false,
+        "why": "Those are about the format rather than the size."
+      },
+      {
+        "text": "`dtype` and `na_values`, which stop the type inference",
+        "correct": false,
+        "why": "They make the result correct and do not make it smaller."
+      },
+      {
+        "text": "`usecols` and `nrows`",
+        "correct": true,
+        "why": "Read a thousand rows first, look at them, then decide what to load."
+      },
+      {
+        "text": "`chunksize` and `compression`, which stream the file",
+        "correct": false,
+        "why": "`chunksize` does stream it, and the pair named here is the simpler first move."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzssvgaf",
+    "version": 1,
+    "section": "reading-data-in",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Turn a column of strings into numbers, with whatever fails becoming `NaN`: `pd.to_numeric(s, errors=\"______\")`",
+    "hint": "Six letters.",
+    "blanks": [
+      {
+        "accept": [
+          "coerce"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jgc5w5c9",
+    "version": 1,
+    "section": "looking-at-it-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which one command gives you both the type of every column and how many values are present?",
+    "hint": "One line per column.",
+    "choices": [
+      {
+        "text": "`df.describe()`, which reports count and dtype per column",
+        "correct": false,
+        "why": "It reports statistics for the numeric columns and no dtypes."
+      },
+      {
+        "text": "`df.info()`",
+        "correct": true,
+        "why": "`cents` being a float and having seven of eight is two problems visible in one line."
+      },
+      {
+        "text": "`df.dtypes`, which lists the types and the null counts",
+        "correct": false,
+        "why": "It lists types only."
+      },
+      {
+        "text": "`df.shape`, which is rows and columns",
+        "correct": false,
+        "why": "It is two numbers for the whole table."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s912kbw",
+    "version": 1,
+    "section": "looking-at-it-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `describe()`, which row do you read first?",
+    "hint": "Before the mean.",
+    "choices": [
+      {
+        "text": "`mean`, since it is the summary everybody asks for",
+        "correct": false,
+        "why": "It is computed over whatever `count` says, which is why that comes first."
+      },
+      {
+        "text": "`50%`, which is the median and is robust to outliers",
+        "correct": false,
+        "why": "It is robust and it is not what you check first."
+      },
+      {
+        "text": "`count`",
+        "correct": true,
+        "why": "7 against 8 rows is a gap, and every statistic beneath it was computed over the 7."
+      },
+      {
+        "text": "`std`, which reveals an outlier faster than the extremes do",
+        "correct": false,
+        "why": "`min` and `max` show an outlier more directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-tp5xvrc2",
+    "version": 1,
+    "section": "looking-at-it-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `value_counts(dropna=False)` worth making a habit?",
+    "hint": "The default hides something.",
+    "choices": [
+      {
+        "text": "The default sorts the values alphabetically, which hides the largest category of all",
+        "correct": false,
+        "why": "It sorts by count, largest first."
+      },
+      {
+        "text": "The default counts only the ten most common values",
+        "correct": false,
+        "why": "It counts all of them."
+      },
+      {
+        "text": "The default raises on a column with any missing values",
+        "correct": false,
+        "why": "It runs and silently omits them."
+      },
+      {
+        "text": "The default leaves out the missing values, which are the rows about to surprise you",
+        "correct": true,
+        "why": "It is also where `\"BR\"`, `\"br\"` and `\" BR\"` show up as three countries."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5qy6mbx",
+    "version": 1,
+    "section": "looking-at-it-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`df.duplicated().sum()` answers what?",
+    "hint": "Whole rows.",
+    "choices": [
+      {
+        "text": "How many rows share an index label",
+        "correct": false,
+        "why": "It compares the values rather than the index."
+      },
+      {
+        "text": "How many values in each column appear more than once",
+        "correct": false,
+        "why": "That is per column and this is per row."
+      },
+      {
+        "text": "How many rows are exact copies of an earlier row",
+        "correct": true,
+        "why": "Cheap to ask and expensive to discover the answer to later."
+      },
+      {
+        "text": "How many columns hold the same data as another column",
+        "correct": false,
+        "why": "It works along rows by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-yx2e8z9e",
+    "version": 1,
+    "section": "looking-at-it-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `df.describe(include=\"all\")` add?",
+    "hint": "The columns the default leaves out.",
+    "choices": [
+      {
+        "text": "The dtypes, which the default version omits",
+        "correct": false,
+        "why": "Neither form reports dtypes; `info` does."
+      },
+      {
+        "text": "The text columns, with `unique` and `top` instead of `mean`",
+        "correct": true,
+        "why": "The default reports the numeric columns only."
+      },
+      {
+        "text": "The missing values, counted and reported as a row of their own in the table",
+        "correct": false,
+        "why": "`count` already reports what is present."
+      },
+      {
+        "text": "The index, described as though it were a column",
+        "correct": false,
+        "why": "The index is not included either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx2920f8",
+    "version": 1,
+    "section": "selecting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`df[(df[\"country\"] == \"BR\") and (df[\"cents\"] > 5000)]`. What is wrong?",
+    "hint": "One keyword works on one value.",
+    "choices": [
+      {
+        "text": "A comparison against a string needs `.eq()` rather than `==`",
+        "correct": false,
+        "why": "`==` on a column works and gives a mask."
+      },
+      {
+        "text": "`and` works on a single truth value; a column needs `&`",
+        "correct": true,
+        "why": "`&`, `|` and `~` operate element by element, and the parentheses are required because `&` binds tighter than `>`."
+      },
+      {
+        "text": "The two masks have different indexes and cannot be combined",
+        "correct": false,
+        "why": "They come from the same table and share an index."
+      },
+      {
+        "text": "The parentheses are unnecessary and confuse the parser",
+        "correct": false,
+        "why": "They are required, which is the other half of the same rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-54vtdn43",
+    "version": 1,
+    "section": "selecting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`us.loc[0]` raises `KeyError: 0` on a filtered table. Why?",
+    "hint": "Labels came along from the original.",
+    "choices": [
+      {
+        "text": "`loc` cannot take an integer, only a column name",
+        "correct": false,
+        "why": "It takes index labels, which are often integers."
+      },
+      {
+        "text": "The table is empty, so any label raises",
+        "correct": false,
+        "why": "It has two rows, labelled 3 and 6."
+      },
+      {
+        "text": "The filter kept the original labels, and there is no row labelled 0 any more",
+        "correct": true,
+        "why": "`iloc[0]` gives the first row, and `reset_index(drop=True)` makes the two agree."
+      },
+      {
+        "text": "`loc` needs to be given both a row and a column, and one of the two was missing",
+        "correct": false,
+        "why": "A single argument selects a row and is valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1hrsx90",
+    "version": 1,
+    "section": "selecting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `loc` and `iloc`, in one sentence?",
+    "hint": "Two different things go in the brackets.",
+    "choices": [
+      {
+        "text": "`loc` is for a single value and `iloc` is for a range",
+        "correct": false,
+        "why": "Both take single values, lists, ranges and masks."
+      },
+      {
+        "text": "`loc` works on rows and `iloc` works on columns",
+        "correct": false,
+        "why": "Both take a row selector and an optional column selector."
+      },
+      {
+        "text": "`loc` takes labels — index values and column names; `iloc` takes positions",
+        "correct": true,
+        "why": "They agree until something filters or sorts, and then they do not."
+      },
+      {
+        "text": "`loc` returns a copy of the rows and `iloc` returns a view onto the original",
+        "correct": false,
+        "why": "Neither is reliably one or the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxh2bzq7",
+    "version": 1,
+    "section": "selecting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`df[df[\"country\"] == \"BR\"][\"cents\"] = 0`. What happens to `df` in pandas 3?",
+    "hint": "The middle step made something.",
+    "choices": [
+      {
+        "text": "The whole of the `cents` column is set to zero, which is why the form is discouraged",
+        "correct": false,
+        "why": "Only the selected rows were targeted, and none of them changed."
+      },
+      {
+        "text": "The four BR rows are set to zero, with a warning about chaining",
+        "correct": false,
+        "why": "The warning is there and the values did not change."
+      },
+      {
+        "text": "A `SettingWithCopyWarning` is raised as an error and nothing is assigned",
+        "correct": false,
+        "why": "It is a warning rather than an exception, and its name is different now."
+      },
+      {
+        "text": "Nothing — the assignment went into a copy, and a `ChainedAssignmentError` warning was emitted",
+        "correct": true,
+        "why": "Measured: the four BR rows kept the values they had. Write the assignment through `loc`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9599dhcs",
+    "version": 1,
+    "section": "selecting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Select on a mask and name a column in one step: `df.______[df[\"country\"] == \"BR\", \"cents\"]`",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "loc"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1g3mw9q1",
+    "version": 1,
+    "section": "missing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column of 8 rows has one gap. `mean()` gave 10141.43 and `sum()/len()` gave 8873.75. Why?",
+    "hint": "Two different denominators.",
+    "choices": [
+      {
+        "text": "`mean()` was computed before the column was read fully",
+        "correct": false,
+        "why": "Both were computed on the same loaded column."
+      },
+      {
+        "text": "`sum()` skipped the gap and `mean()` counted it as zero",
+        "correct": false,
+        "why": "It is the other way round: `sum` treats it as zero and `mean` skips it."
+      },
+      {
+        "text": "`mean()` divides by the 7 values that are present",
+        "correct": true,
+        "why": "Fourteen per cent apart, and nothing said so."
+      },
+      {
+        "text": "`len()` counted the header row, which `mean()` did not",
+        "correct": false,
+        "why": "The header is not a row."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ncyx24g",
+    "version": 1,
+    "section": "missing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`(df[\"cents\"] > 0).sum()` is 7 on a table of 8 rows. Where did the eighth go?",
+    "hint": "`NaN` compares false.",
+    "choices": [
+      {
+        "text": "The missing value compared false, so its row is not in the mask either way",
+        "correct": true,
+        "why": "`np.nan == np.nan` is `False`, and every comparison against it is too."
+      },
+      {
+        "text": "The comparison raised an exception on that row and the result of it was dropped",
+        "correct": false,
+        "why": "Nothing raised; the comparison is defined and gives `False`."
+      },
+      {
+        "text": "`sum()` on a boolean mask skips the row with the gap",
+        "correct": false,
+        "why": "The mask has a `False` there, and `sum` counted it as zero correctly."
+      },
+      {
+        "text": "The eighth row has a zero, which is not greater than zero",
+        "correct": false,
+        "why": "The eighth row has no value at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7y0b1ejt",
+    "version": 1,
+    "section": "missing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`df.dropna()` with no arguments on the eight-row table left six rows. Why is that the trap?",
+    "hint": "What was missing in the second one?",
+    "choices": [
+      {
+        "text": "It drops any row with a gap in ANY column, including ones the analysis never touches",
+        "correct": true,
+        "why": "One of the two dropped rows was missing `paid_at`, which had nothing to do with the question."
+      },
+      {
+        "text": "It modifies the table in place, so the original is gone",
+        "correct": false,
+        "why": "It returns a new table unless told otherwise."
+      },
+      {
+        "text": "It drops the columns rather than the rows unless `axis` is given",
+        "correct": false,
+        "why": "The default is rows; `axis=1` drops columns."
+      },
+      {
+        "text": "It drops rows where every column is missing, which is almost never what you meant",
+        "correct": false,
+        "why": "That is `how=\"all\"`; the default is `how=\"any\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ya15bnzg",
+    "version": 1,
+    "section": "missing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fillna(0)` on a price column. What does that claim?",
+    "hint": "A zero is a value.",
+    "choices": [
+      {
+        "text": "That the order was free",
+        "correct": true,
+        "why": "Each fill is a different claim about the world, and neither is safe to do without saying why."
+      },
+      {
+        "text": "That the row should be excluded from aggregations",
+        "correct": false,
+        "why": "It is included, as a zero."
+      },
+      {
+        "text": "That the value is unknown, which is what a zero conventionally means",
+        "correct": false,
+        "why": "A zero is a number and enters every average as one."
+      },
+      {
+        "text": "That the value will be filled in later by whoever owns the data",
+        "correct": false,
+        "why": "Nothing records that intention."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9m7bgqk",
+    "version": 1,
+    "section": "missing-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should go beside a decision about missing data?",
+    "hint": "One line each.",
+    "choices": [
+      {
+        "text": "A `dropna()` immediately afterwards, to catch what the fill missed",
+        "correct": false,
+        "why": "That would undo the fill's intent on other columns."
+      },
+      {
+        "text": "A comment saying why that choice and not another",
+        "correct": true,
+        "why": "Two lines and a comment each; the alternative is a number fourteen per cent wrong that looks right."
+      },
+      {
+        "text": "A test asserting the number of gaps stays the same",
+        "correct": false,
+        "why": "The count of gaps changes with the data legitimately."
+      },
+      {
+        "text": "A conversion to `Int64`, so the gaps cannot come back",
+        "correct": false,
+        "why": "The type does not record the decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ntsrfxp",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What are the three steps a `groupby` performs?",
+    "hint": "One of them is the arithmetic.",
+    "choices": [
+      {
+        "text": "Index by the column, join the table to itself, and aggregate",
+        "correct": false,
+        "why": "There is no join involved."
+      },
+      {
+        "text": "Sort by the column, count the runs, and emit one row per run",
+        "correct": false,
+        "why": "That is what the shell pipeline does; `groupby` needs no sort."
+      },
+      {
+        "text": "Filter down to each distinct value in turn and concatenate all of the answers",
+        "correct": false,
+        "why": "That is a description of a loop over groups, which is slower and is not how it works."
+      },
+      {
+        "text": "Split by a column, apply a function to each group, combine the results",
+        "correct": true,
+        "why": "It is the same model as `sort | uniq -c` with the counting replaced by any arithmetic you like."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjp42pd1",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why prefer `agg(total=(\"cents\", \"sum\"))` over the older list form?",
+    "hint": "Look at the output.",
+    "choices": [
+      {
+        "text": "It accepts a lambda where the older form takes only strings",
+        "correct": false,
+        "why": "Both accept a callable."
+      },
+      {
+        "text": "It groups by several columns where the older form takes one",
+        "correct": false,
+        "why": "Grouping by several columns is a property of `groupby`, not of `agg`."
+      },
+      {
+        "text": "It is faster, because the older form computes every statistic",
+        "correct": false,
+        "why": "Both compute only what is asked for."
+      },
+      {
+        "text": "It names the output columns",
+        "correct": true,
+        "why": "And it reads like the table it produces."
+      }
+    ]
+  },
+  {
+    "id": "ex-qagjngwj",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A country has 4 orders and one of them has no amount. What does `count` of the amount column say?",
+    "hint": "It counts what is present.",
+    "choices": [
+      {
+        "text": "3",
+        "correct": true,
+        "why": "A `count` of the column you are summing tells you how much of each group the sum is made of, and it is free."
+      },
+      {
+        "text": "0, since any gap makes the aggregation undefined",
+        "correct": false,
+        "why": "The other three are counted normally."
+      },
+      {
+        "text": "4, with the missing one counted as a zero",
+        "correct": false,
+        "why": "`sum` treats it as zero; `count` does not count it at all."
+      },
+      {
+        "text": "4, since `count` counts the rows in the group",
+        "correct": false,
+        "why": "It counts non-missing values of the named column."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4csk42z",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You want each row to carry its group's total beside it. What do you use?",
+    "hint": "One row per original row.",
+    "choices": [
+      {
+        "text": "`agg`, followed by a merge back onto the original table",
+        "correct": false,
+        "why": "That works and is two steps where one does it."
+      },
+      {
+        "text": "`apply`, with a function that returns the group",
+        "correct": false,
+        "why": "It can be made to work and is slower and harder to read."
+      },
+      {
+        "text": "`filter`, which keeps the groups that match a condition",
+        "correct": false,
+        "why": "It selects groups rather than computing a value per row."
+      },
+      {
+        "text": "`transform`",
+        "correct": true,
+        "why": "`agg` gives one row per group; `transform` gives one per original row, with the group's answer repeated."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv0m2jpk",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`df.groupby([\"country\", \"customer\"])[\"cents\"].sum()`. What do you usually do next?",
+    "hint": "The result has two levels.",
+    "choices": [
+      {
+        "text": "`.reset_index()`, to flatten the index back into ordinary columns",
+        "correct": true,
+        "why": "Which is almost always what you want before writing it out or plotting it."
+      },
+      {
+        "text": "`.to_frame()`, since the result is a Series and cannot be written",
+        "correct": false,
+        "why": "A Series writes out fine."
+      },
+      {
+        "text": "`.sort_index()`, since a multi-level index is unordered",
+        "correct": false,
+        "why": "It comes back sorted by the grouping keys."
+      },
+      {
+        "text": "`.unstack()`, which is the only way to read a two-level result",
+        "correct": false,
+        "why": "It is one way to reshape it and not a requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k06r0mn",
+    "version": 1,
+    "section": "requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `requests.get(url)` do when the server accepts the connection and then says nothing?",
+    "hint": "There is no default.",
+    "choices": [
+      {
+        "text": "It gives up after the operating system's default, about thirty seconds",
+        "correct": false,
+        "why": "No default is applied at any layer that would end this."
+      },
+      {
+        "text": "It raises immediately, since the response has no headers yet",
+        "correct": false,
+        "why": "It waits for them."
+      },
+      {
+        "text": "It waits indefinitely, because `requests` sets no timeout of its own",
+        "correct": true,
+        "why": "In a scheduled job that is a process still sitting there in the morning."
+      },
+      {
+        "text": "It retries three times and then raises a ConnectionError",
+        "correct": false,
+        "why": "It performs no retries unless an adapter is configured."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2nh00zs",
+    "version": 1,
+    "section": "requests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A request returns 404. What does `requests` do about it?",
+    "hint": "The HTTP request succeeded.",
+    "choices": [
+      {
+        "text": "It retries once and then raises if the second attempt also fails",
+        "correct": false,
+        "why": "It does not retry."
+      },
+      {
+        "text": "It returns `None` instead of a response object",
+        "correct": false,
+        "why": "It returns a response with `status_code` 404."
+      },
+      {
+        "text": "Nothing — it is a successful request, and `raise_for_status` is what turns it into an error",
+        "correct": true,
+        "why": "Without it your next line calls `.json()` on an error document and fails somewhere confusing."
+      },
+      {
+        "text": "It raises an `HTTPError`, which is why a `try` is usually written around a `get` call",
+        "correct": false,
+        "why": "It raises only when you ask it to."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksn5t3zw",
+    "version": 1,
+    "section": "requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`requests.get(url, params={\"b\": \"x&y\"})`. What is sent?",
+    "hint": "The ampersand is a separator in a query string.",
+    "choices": [
+      {
+        "text": "`?b=x` and the rest dropped, since `&` ends the value",
+        "correct": false,
+        "why": "Nothing is dropped; it is escaped."
+      },
+      {
+        "text": "`?b=x%26y` — the ampersand was encoded",
+        "correct": true,
+        "why": "Building the query string yourself is how a value containing `&` silently becomes two parameters."
+      },
+      {
+        "text": "`?b=x&y`, since `params` passes the value through unchanged",
+        "correct": false,
+        "why": "It encodes, which is the reason to use it."
+      },
+      {
+        "text": "A 400, because the value contains a reserved character",
+        "correct": false,
+        "why": "The request is well-formed."
+      }
+    ]
+  },
+  {
+    "id": "ex-yq0wpv9h",
+    "version": 1,
+    "section": "requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `json=` and `data=` on a `post`?",
+    "hint": "Two different content types.",
+    "choices": [
+      {
+        "text": "`json=` encodes a dictionary for you and `data=` requires a string of its own",
+        "correct": false,
+        "why": "`data=` takes a dictionary too and encodes it as a form."
+      },
+      {
+        "text": "`json=` compresses the body and `data=` does not",
+        "correct": false,
+        "why": "Neither compresses by default."
+      },
+      {
+        "text": "`json=` is for a response and `data=` is for a request",
+        "correct": false,
+        "why": "Both are request arguments."
+      },
+      {
+        "text": "`json=` sends a JSON body and sets the header; `data=` sends a form",
+        "correct": true,
+        "why": "Choosing the wrong one is a 400 with a message about the body that reads like a bug in your data."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmsve3yc",
+    "version": 1,
+    "section": "requests",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The one argument that must be on every request you write: `______=10`",
+    "hint": "Seven letters.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8h6nakdq",
+    "version": 1,
+    "section": "headers-auth-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a token belong in a header rather than in the query string?",
+    "hint": "Think about what records a URL.",
+    "choices": [
+      {
+        "text": "A query string has a length limit that a token would exceed",
+        "correct": false,
+        "why": "Most tokens fit comfortably; the objection is the logging."
+      },
+      {
+        "text": "Headers are encrypted and the URL is not",
+        "correct": false,
+        "why": "Under TLS both are encrypted in transit; the logging happens at the ends."
+      },
+      {
+        "text": "A URL is logged by every proxy, every server and your own shell history",
+        "correct": true,
+        "why": "A token in one of those is a token in all of them."
+      },
+      {
+        "text": "A query string is cached by the browser where a header of the same value is not",
+        "correct": false,
+        "why": "Caching is decided by headers, and this is not a browser."
+      }
+    ]
+  },
+  {
+    "id": "ex-45g0mt3t",
+    "version": 1,
+    "section": "headers-auth-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a `requests.Session` give you beyond a bare `get`?",
+    "hint": "Two things, and one is performance.",
+    "choices": [
+      {
+        "text": "Headers sent on every request, and a reused TCP connection",
+        "correct": true,
+        "why": "So the token is written once, and a few hundred calls cost less."
+      },
+      {
+        "text": "Authentication negotiated once and cached as a cookie",
+        "correct": false,
+        "why": "Only if the API works that way; the session stores cookies and negotiates nothing."
+      },
+      {
+        "text": "Automatic retries on any 5xx, which a bare `get` does not ever do",
+        "correct": false,
+        "why": "Retries need an adapter mounted on the session; they are not automatic."
+      },
+      {
+        "text": "A default timeout applied to every call through it",
+        "correct": false,
+        "why": "There is no session-level default timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngs845xg",
+    "version": 1,
+    "section": "headers-auth-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`X-RateLimit-Remaining: 59` came back on the first call. What is it for?",
+    "hint": "It tells you before, not after.",
+    "choices": [
+      {
+        "text": "Saying how many seconds until the limit resets",
+        "correct": false,
+        "why": "That is `X-RateLimit-Reset`."
+      },
+      {
+        "text": "Reporting how many retries the adapter has left",
+        "correct": false,
+        "why": "It comes from the server and has nothing to do with your retry policy."
+      },
+      {
+        "text": "Knowing where you stand before you are cut off",
+        "correct": true,
+        "why": "When you are cut off it is a 429, often with a `Retry-After` header saying how long."
+      },
+      {
+        "text": "Telling you how many rows are left to fetch",
+        "correct": false,
+        "why": "It counts calls rather than rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkz2n2kk",
+    "version": 1,
+    "section": "headers-auth-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A response is `{\"results\": [...], \"next\": \"…?page=2\"}`. What does the loop look like?",
+    "hint": "It stops on its own.",
+    "choices": [
+      {
+        "text": "A `while True` with a `break` when `results` is empty",
+        "correct": false,
+        "why": "That is the other convention, for APIs that increment a page number."
+      },
+      {
+        "text": "A recursive function, since each page names the next one",
+        "correct": false,
+        "why": "It works and it costs a stack frame per page for no reason."
+      },
+      {
+        "text": "A `for page in range(1, total_pages)`, after reading the count from the first response",
+        "correct": false,
+        "why": "This shape does not report a total, which is why `next` exists."
+      },
+      {
+        "text": "`while url:` — fetch, collect, take `next`, and stop when it is null",
+        "correct": true,
+        "why": "Six lines, and the same six lines every time. The loop does not need to know how many pages there are."
+      }
+    ]
+  },
+  {
+    "id": "ex-v141b855",
+    "version": 1,
+    "section": "headers-auth-and-paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should NOT be retried?",
+    "hint": "It will say the same thing again.",
+    "choices": [
+      {
+        "text": "A 429, when a `Retry-After` header says how long to wait",
+        "correct": false,
+        "why": "Waiting and retrying is what the header is instructing."
+      },
+      {
+        "text": "A 503, which means the service is temporarily unavailable",
+        "correct": false,
+        "why": "That is exactly what a retry with backoff is for."
+      },
+      {
+        "text": "A 404",
+        "correct": true,
+        "why": "A 400 is the same: the request is wrong and will be wrong next time. And never retry a POST that is not idempotent."
+      },
+      {
+        "text": "A connection reset before any response arrived",
+        "correct": false,
+        "why": "Nothing was processed, so retrying is safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3cjj25y",
+    "version": 1,
+    "section": "an-api-into-a-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A list of dictionaries from an API. How does it become a table?",
+    "hint": "One call.",
+    "choices": [
+      {
+        "text": "`pd.concat([pd.DataFrame([r]) for r in rows])`",
+        "correct": false,
+        "why": "It builds one table per row and concatenates them."
+      },
+      {
+        "text": "A loop that appends each dictionary with `df.loc[len(df)] = row`",
+        "correct": false,
+        "why": "That reallocates on every row and is the slowest way there is."
+      },
+      {
+        "text": "`pd.read_json(json.dumps(rows))`, which goes through the file reader",
+        "correct": false,
+        "why": "It works and takes a round trip through a string for no reason."
+      },
+      {
+        "text": "`pd.DataFrame(rows)`",
+        "correct": true,
+        "why": "Nothing was parsed, nothing was converted, and the columns are typed from the values."
+      }
+    ]
+  },
+  {
+    "id": "ex-f51wm2tk",
+    "version": 1,
+    "section": "an-api-into-a-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A row has `{\"customer\": {\"name\": \"ana\", \"country\": \"BR\"}}`. What does `pd.DataFrame` do with it?",
+    "hint": "The dictionary is a value.",
+    "choices": [
+      {
+        "text": "It flattens it automatically into two columns",
+        "correct": false,
+        "why": "That is what `json_normalize` is for."
+      },
+      {
+        "text": "It drops the column, since the type cannot be inferred",
+        "correct": false,
+        "why": "Nothing is dropped."
+      },
+      {
+        "text": "It raises, because a cell cannot hold a dictionary",
+        "correct": false,
+        "why": "It can hold any object."
+      },
+      {
+        "text": "It puts the whole dictionary in one cell",
+        "correct": true,
+        "why": "`pd.json_normalize` flattens it into `customer.name` and `customer.country` instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-nw2fw28g",
+    "version": 1,
+    "section": "an-api-into-a-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `errors=\"coerce\"` do, and why is it useful here?",
+    "hint": "It does not raise.",
+    "choices": [
+      {
+        "text": "It raises a warning per bad value rather than an exception",
+        "correct": false,
+        "why": "It is silent, which is why the count afterwards matters."
+      },
+      {
+        "text": "It turns whatever will not convert into `NaN`, so `isna().sum()` can count them",
+        "correct": true,
+        "why": "That pair — coerce, then count — is how you find out what the feed is actually sending."
+      },
+      {
+        "text": "It retries the conversion with a looser parser",
+        "correct": false,
+        "why": "There is one attempt."
+      },
+      {
+        "text": "It converts whatever it can and leaves all of the rest as strings in the same column",
+        "correct": false,
+        "why": "A column cannot be half converted; the failures become `NaN`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdg1tawj",
+    "version": 1,
+    "section": "an-api-into-a-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why `df.to_csv(path, index=False)`?",
+    "hint": "Look at the first column of the output.",
+    "choices": [
+      {
+        "text": "Otherwise the index is written as the first column and read back as the index",
+        "correct": false,
+        "why": "It is written and read back as an ordinary unnamed column."
+      },
+      {
+        "text": "Otherwise the file gets a column of row numbers with no header",
+        "correct": true,
+        "why": "Whoever opens it next has to work out what it means."
+      },
+      {
+        "text": "Otherwise the rows are written in index order rather than table order",
+        "correct": false,
+        "why": "Those are the same order."
+      },
+      {
+        "text": "Otherwise the file cannot be read by `read_csv` at all",
+        "correct": false,
+        "why": "It reads fine, with an extra column."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8jw62pt",
+    "version": 1,
+    "section": "an-api-into-a-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An API sends a number as a string in some rows. Where does that surface?",
+    "hint": "In the same place a CSV's would.",
+    "choices": [
+      {
+        "text": "In `info()`, as a column of the wrong type",
+        "correct": true,
+        "why": "An API is not cleaner than a CSV; it is the same problems in a different wrapper."
+      },
+      {
+        "text": "Nowhere — pandas converts a numeric string on the way in",
+        "correct": false,
+        "why": "It infers a type per column, and one string makes the column text."
+      },
+      {
+        "text": "In `r.json()`, which raises on a type it did not expect",
+        "correct": false,
+        "why": "It parses whatever valid JSON arrives."
+      },
+      {
+        "text": "In `raise_for_status`, which checks the body against the schema",
+        "correct": false,
+        "why": "It checks the status code and reads no body."
+      }
+    ]
+  },
+  {
+    "id": "ex-tj0xzyk5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`df.loc[df[\"country\"] == \"BR\", \"cents\"].sum()`. What is each piece doing?",
+    "hint": "Three steps in one line.",
+    "choices": [
+      {
+        "text": "The mask selects columns and `\"cents\"` selects rows by label",
+        "correct": false,
+        "why": "It is the other way round."
+      },
+      {
+        "text": "`loc` sorts by country and `sum` totals the first group",
+        "correct": false,
+        "why": "Nothing is sorted and one group is selected by the mask."
+      },
+      {
+        "text": "`loc` filters the rows by label and the comparison names the column that is summed",
+        "correct": false,
+        "why": "The comparison builds a mask of booleans; the column name is the second argument."
+      },
+      {
+        "text": "A mask selects the rows, `loc` takes one column from them, and `sum` aggregates",
+        "correct": true,
+        "why": "That is the whole mechanism, and everything else is combinations of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-v89w2zk4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need one number: the total spent by BR customers. Which is right?",
+    "hint": "One of them was measured at two milliseconds.",
+    "choices": [
+      {
+        "text": "`iterrows`, with an `if` and a running total",
+        "correct": false,
+        "why": "Eleven seconds against two milliseconds on half a million rows."
+      },
+      {
+        "text": "`apply(axis=1)` returning the amount or zero, then `sum`",
+        "correct": false,
+        "why": "A Python call per row, measured at 2.8 seconds."
+      },
+      {
+        "text": "A mask and a `sum` over the column",
+        "correct": true,
+        "why": "The column operation runs in compiled code; the loop builds an object per row."
+      },
+      {
+        "text": "A `groupby` over every country, then indexing the result",
+        "correct": false,
+        "why": "It works and computes the other countries you did not ask for."
+      }
+    ]
+  },
+  {
+    "id": "ex-sx5myca6",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Flatten `{\"customer\": {\"name\": …}}` into `customer.name`: `pd.json_______(rows)`",
+    "hint": "Nine letters.",
+    "blanks": [
+      {
+        "accept": [
+          "normalize"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qc7023nd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Spot the request with no timeout.",
+    "hint": "Read the arguments.",
+    "choices": [
+      {
+        "text": "`requests.post(url, json=payload, timeout=5)`",
+        "correct": false,
+        "why": "Five seconds."
+      },
+      {
+        "text": "`requests.get(url, timeout=(3, 10))`",
+        "correct": false,
+        "why": "Three seconds to connect and ten to read."
+      },
+      {
+        "text": "`requests.get(url, params={\"page\": 2})`",
+        "correct": true,
+        "why": "There is no default, so this one waits as long as the other end feels like."
+      },
+      {
+        "text": "`session.get(url, timeout=10)`",
+        "correct": false,
+        "why": "Ten seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8afevn7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An average order value came out fourteen per cent higher than expected. What do you check first?",
+    "hint": "A denominator.",
+    "choices": [
+      {
+        "text": "Whether the column has missing values, since `mean` divides by what is present",
+        "correct": true,
+        "why": "`sum()/len()` and `mean()` differ by exactly the gaps."
+      },
+      {
+        "text": "Whether a few outliers are dragging the mean upwards, which the median would show",
+        "correct": false,
+        "why": "Worth checking, and the gap is the thing that explains a systematic shift."
+      },
+      {
+        "text": "Whether the column was read as a float, which loses precision",
+        "correct": false,
+        "why": "A float holds these values exactly and would not shift a mean by fourteen per cent."
+      },
+      {
+        "text": "Whether the rows were filtered before the aggregation ran",
+        "correct": false,
+        "why": "Worth checking, and it would change `len` as well as `mean`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fy5zyta",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which aggregation tells you how complete each group is, for free?",
+    "hint": "It counts what is there.",
+    "choices": [
+      {
+        "text": "`sum`, compared against the expected total",
+        "correct": false,
+        "why": "There is no expected total to compare against."
+      },
+      {
+        "text": "`size`, which is the number of rows in the group",
+        "correct": false,
+        "why": "It counts rows and says nothing about gaps."
+      },
+      {
+        "text": "`count` of the column being summed",
+        "correct": true,
+        "why": "Had one BR order lacked an amount, `count` would say 3 where the group has 4 rows."
+      },
+      {
+        "text": "`nunique`, which counts the distinct values",
+        "correct": false,
+        "why": "Two identical amounts would count once."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmh45t2s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`us = df[df[\"country\"] == \"US\"]`, then `us.iloc[0]` works and `us.loc[0]` raises. Why?",
+    "hint": "Two different things in the brackets.",
+    "choices": [
+      {
+        "text": "`iloc` copied the rows and renumbered them, and `loc` did not",
+        "correct": false,
+        "why": "`iloc` selects; it does not renumber anything."
+      },
+      {
+        "text": "`iloc` is by position and `loc` is by label, and the labels came from the original table",
+        "correct": true,
+        "why": "`reset_index(drop=True)` is what makes the two agree again."
+      },
+      {
+        "text": "`loc` needs a column as well when the index is not unique",
+        "correct": false,
+        "why": "The index is unique here."
+      },
+      {
+        "text": "`us` is a view onto the original, so `loc` reads through to the parent and misses it",
+        "correct": false,
+        "why": "A view would still carry the same labels."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgd042cz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An endpoint returns ten rows and a `next` address. How many pages does your loop need to know about in advance?",
+    "hint": "It stops on a condition.",
+    "choices": [
+      {
+        "text": "One, since the first response reports the total",
+        "correct": false,
+        "why": "This shape reports no total, which is why `next` exists."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "It fetches, collects, takes `next`, and stops when it is null — three pages and twenty-five rows here."
+      },
+      {
+        "text": "All of them, which is why the count is in the first response",
+        "correct": false,
+        "why": "It is not."
+      },
+      {
+        "text": "Two, since the loop has to see an empty page to stop",
+        "correct": false,
+        "why": "It stops on a null `next` without fetching an empty page."
+      }
+    ]
+  },
+  {
+    "id": "ex-24r4b8p6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a decision somebody has to write down?",
+    "hint": "The others are mechanical.",
+    "choices": [
+      {
+        "text": "Whether to set a timeout on the request",
+        "correct": false,
+        "why": "That is always yes."
+      },
+      {
+        "text": "Whether to pass `index=False` when the table is written out as a CSV",
+        "correct": false,
+        "why": "That is always yes unless the index carries meaning."
+      },
+      {
+        "text": "Whether to use `loc` or `iloc` to select the rows",
+        "correct": false,
+        "why": "That follows from whether you have labels or positions."
+      },
+      {
+        "text": "Whether a missing price means zero or means the row is excluded",
+        "correct": true,
+        "why": "Each fill is a different claim about the world, and neither is safe to do without saying why."
+      }
+    ]
+  },
+  {
+    "id": "ex-eb815yng",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The last line of the whole course, in four lines of code. What is missing from `rows = fetch_all(url); df = pd.DataFrame(rows); print(df.groupby(\"country\").sum())`?",
+    "hint": "Between fetching and grouping.",
+    "choices": [
+      {
+        "text": "A look at the data — `info`, `describe`, and a conversion of the columns whose type matters",
+        "correct": true,
+        "why": "An API is not cleaner than a CSV, and a number sent as a string arrives as text."
+      },
+      {
+        "text": "A `sort_values`, since `groupby` returns the groups unordered",
+        "correct": false,
+        "why": "It returns them sorted by the grouping key."
+      },
+      {
+        "text": "A `reset_index`, since a grouped result cannot be printed",
+        "correct": false,
+        "why": "It prints; the reset is for writing it out afterwards."
+      },
+      {
+        "text": "A loop over the rows, validating each one of them before any of it is tabulated",
+        "correct": false,
+        "why": "That is the loop both libraries exist to remove."
+      }
+    ]
+  }
+]
