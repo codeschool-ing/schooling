@@ -1,0 +1,98 @@
+{
+  "id": "le-1xv5mzwc",
+  "title": "Files, JSON and CSV",
+  "sections": [
+    {
+      "id": "se-ax5f6hvw",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-7198955m",
+          "version": 1,
+          "script": "Everything so far has been values you made up inside the program. Real work starts when the data is on disk — and the first thing to notice is that its shape is not yours. {{shape}} Somebody else chose the columns, the encoding and where the commas went, and your program has to meet it where it is.\n\n{{three}} Three things stand between a file and a Python value, and this lesson is those three.\n\n{{with}} First, opening it. `open` gives you a file object and you must close it — and the way you close it is by not writing `close` at all. `with open(...) as f:` closes it on the way out, including when the line inside raises. That is lesson 8's `finally`, written for you, and it is why every example in this lesson uses it.\n\n{{encoding}} Second, the encoding. A file on disk is bytes; a string in Python is text; something has to say which bytes mean which characters. **Write `encoding=\"utf-8\"` every time.** Left out, Python uses whatever the machine's default is — which is UTF-8 on your laptop and something else on the server, and the failure is a `UnicodeDecodeError` naming a byte, on a file that reads perfectly here.\n\n{{format}} Third, the format. JSON and CSV both have libraries in the standard library, and you will be tempted to skip them — JSON looks like a dictionary, CSV looks like `split(\",\")`. It is not. A comma inside a quoted field, a newline inside a value, a `null`, a number that is a string: each of those is a bug in the hand-written version and a non-event in the library one.\n\n{{theirs}} And the half that is really about other people's data: what arrives is never quite what the documentation said. A key missing, a `null` where a list was promised, a single object where you expected an array of them. There is a section on reading data you did not produce, and it is the difference between a script that works on the sample and one that runs on Monday.\n\n{{binary}} Finally, bytes — for the case where the file is not text at all, and for the one line that tells you when you need them.",
+          "seconds": 156,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-syzar8n4",
+      "slug": "opening-a-file",
+      "kind": "reading"
+    },
+    {
+      "id": "se-d8xz2td2",
+      "slug": "text-and-encoding",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ep5xg858",
+      "slug": "reading-and-writing",
+      "kind": "reading"
+    },
+    {
+      "id": "se-2kxpc9r3",
+      "slug": "paths-again",
+      "kind": "reading"
+    },
+    {
+      "id": "se-vmre5tj0",
+      "slug": "json",
+      "kind": "reading"
+    },
+    {
+      "id": "se-v0x69a48",
+      "slug": "json-that-is-not-yours",
+      "kind": "reading"
+    },
+    {
+      "id": "se-3sqgbnwj",
+      "slug": "csv",
+      "kind": "reading"
+    },
+    {
+      "id": "se-2w7vwrtp",
+      "slug": "writing-data-back",
+      "kind": "reading"
+    },
+    {
+      "id": "se-bthz4dar",
+      "slug": "binary-and-bytes",
+      "kind": "reading"
+    },
+    {
+      "id": "se-trxrqqdq",
+      "slug": "a-file-read-three-ways",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-672dhhhv",
+          "version": 1,
+          "script": "One CSV, read three ways. Six lines, three columns: name, city, score.\n\n{{by-hand}} First, by hand. Open the file, split each line on the comma, take the pieces. It works, and I have written this a hundred times.\n\n{{comma}} Now I add one row: a city written `\"Porto, Portugal\"` — quoted, with a comma in it. The hand-written version splits it into four pieces and puts `Portugal\"` in the score column. It does not raise. The total at the end is wrong, and nothing anywhere says so.\n\n{{reader}} Second, `csv.reader`. The same file, and the quoted comma stays inside its field, because the reader knows the format has quoting in it. Three lines shorter, too. But I am still saying `row[2]` and remembering that 2 is the score.\n\n{{dict}} Third, `csv.DictReader`. It takes the header row and hands me a dictionary per row — `row[\"score\"]`, by name. Now a column inserted in the middle of the file breaks nothing, and the code says what it means.\n\n{{numbers}} One thing all three share and it is worth saying out loud: every value comes out a STRING. `row[\"score\"]` is `\"91\"`, not 91, and `sum` over those is a `TypeError` — or worse, a concatenation. Converting is your job, and it is the line where a bad row will announce itself.\n\n{{point}} Three versions, one file. The first is the one that is wrong and does not say so.",
+          "seconds": 98,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-qxpy9te3",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-q1fvh3jd",
+          "version": 1,
+          "script": "Use `with`, name the encoding, and let a library parse the format.\n\n{{with}} Every file you open goes in a `with`. It is shorter than remembering `close`, and it closes the file when the line inside raises — which is the case nobody tests and everybody eventually hits.\n\n{{encoding}} `encoding=\"utf-8\"` in every `open` and every `read_text`. The default is the machine's, the machines differ, and the failure arrives on the one you cannot debug.\n\n{{iterate}} To read a large file, iterate the file object. `for line in f:` reads one line at a time, so a four-gigabyte file costs you one line of memory — and `f.read()` costs you four gigabytes.\n\n{{library}} `json` and `csv` are in the standard library. Use them. A JSON writer you wrote yourself will escape a quote wrongly on the day the data contains one, and a CSV you built by joining commas is broken the first time a value has a comma in it.\n\n{{theirs}} And for data that is not yours: `get` with a default, check the type before you index, and let the row that makes no sense name itself in the error. **A file is a promise somebody else made** — read it as though they meant it and handle it as though they did not.",
+          "seconds": 89,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-697q5bc2",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

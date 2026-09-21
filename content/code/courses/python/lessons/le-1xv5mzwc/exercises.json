@@ -1,0 +1,1742 @@
+[
+  {
+    "id": "ex-pb91351s",
+    "version": 1,
+    "section": "opening-a-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `with open(path) as f:` guarantee that `f = open(path)` does not?",
+    "hint": "Think about the line inside that raises.",
+    "choices": [
+      {
+        "text": "The file is opened lazily, so nothing happens until the first read",
+        "correct": false,
+        "why": "It is opened immediately, exactly as the other form is."
+      },
+      {
+        "text": "The encoding is detected from the first few bytes of the file",
+        "correct": false,
+        "why": "Nothing detects an encoding; you name it or the platform decides."
+      },
+      {
+        "text": "The file is locked against other processes while the block runs",
+        "correct": false,
+        "why": "Nothing about `with` takes a lock on anything."
+      },
+      {
+        "text": "The file is closed even when the block raises",
+        "correct": true,
+        "why": "Right — it is lesson 8's `try`/`finally`, written for you already."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7fcg819",
+    "version": 1,
+    "section": "opening-a-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does opening a file in `\"w\"` mode do before anything is written?",
+    "hint": "It happens at the `open`.",
+    "choices": [
+      {
+        "text": "Empties it",
+        "correct": true,
+        "why": "Right — and a crash after that leaves neither the old file nor the new."
+      },
+      {
+        "text": "Makes a backup with a `.bak` suffix",
+        "correct": false,
+        "why": "Nothing is backed up."
+      },
+      {
+        "text": "Refuses if the file exists",
+        "correct": false,
+        "why": "That is `\"x\"`."
+      },
+      {
+        "text": "Nothing until the first `write` call",
+        "correct": false,
+        "why": "The truncation is at the open."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd69r256",
+    "version": 1,
+    "section": "opening-a-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which mode creates a file and fails if it is already there?",
+    "hint": "One letter, and it is not `w`.",
+    "choices": [
+      {
+        "text": "`\"x\"`",
+        "correct": true,
+        "why": "Right — and it exists precisely because `\"w\"` destroys."
+      },
+      {
+        "text": "`\"a\"`",
+        "correct": false,
+        "why": "That appends to whatever is there."
+      },
+      {
+        "text": "`\"w\"`",
+        "correct": false,
+        "why": "That empties whatever is there."
+      },
+      {
+        "text": "`\"r+\"`",
+        "correct": false,
+        "why": "That opens for reading and writing, and requires the file to exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-695jznrm",
+    "version": 1,
+    "section": "opening-a-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`f = open(path)`, then `process(f)` raises. What happened to the file?",
+    "hint": "The `close` line is below the one that raised.",
+    "choices": [
+      {
+        "text": "Python closes it when the exception propagates",
+        "correct": false,
+        "why": "Nothing closes it on the way past."
+      },
+      {
+        "text": "It is closed but the writes are lost",
+        "correct": false,
+        "why": "It is not closed at all."
+      },
+      {
+        "text": "It stays open until the process ends",
+        "correct": true,
+        "why": "Right — and on Windows it then cannot be renamed or deleted."
+      },
+      {
+        "text": "It is closed and the buffer is flushed",
+        "correct": false,
+        "why": "Neither happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqbqfxma",
+    "version": 1,
+    "section": "opening-a-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is `with` the wrong choice for a file?",
+    "hint": "Think of a case.",
+    "choices": [
+      {
+        "text": "When two files are open at once",
+        "correct": false,
+        "why": "One `with` takes both."
+      },
+      {
+        "text": "Never",
+        "correct": true,
+        "why": "Right — and needing the handle beyond a block means a function should take it."
+      },
+      {
+        "text": "When the file is very large",
+        "correct": false,
+        "why": "Size changes nothing about closing."
+      },
+      {
+        "text": "When the file is opened for writing",
+        "correct": false,
+        "why": "The guarantee matters more there."
+      }
+    ]
+  },
+  {
+    "id": "ex-c34zw6wk",
+    "version": 1,
+    "section": "text-and-encoding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does leaving `encoding=` out of `open` do?",
+    "hint": "It is decided somewhere other than your code.",
+    "choices": [
+      {
+        "text": "Detects the encoding from the content, the way a text editor does when it opens a file",
+        "correct": false,
+        "why": "Nothing detects anything."
+      },
+      {
+        "text": "Uses the platform's default, which differs between machines",
+        "correct": true,
+        "why": "Right — the worst shape of bug: it works here and fails on the server."
+      },
+      {
+        "text": "Always uses UTF-8, which is what every platform has agreed on for some years now",
+        "correct": false,
+        "why": "It is UTF-8 on many machines and not on all of them."
+      },
+      {
+        "text": "Reads the file as bytes and leaves the decoding to whoever wants the text",
+        "correct": false,
+        "why": "That is the `\"rb\"` mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-37gbt2cn",
+    "version": 1,
+    "section": "text-and-encoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`'utf-8' codec can't decode byte 0xe7 in position 14`. What is the likely cause?",
+    "hint": "`0xe7` alone is a letter in an older encoding.",
+    "choices": [
+      {
+        "text": "The file is UTF-16 and needs the `utf-16` codec, which reads two bytes per character",
+        "correct": false,
+        "why": "That fails differently, usually on the very first bytes."
+      },
+      {
+        "text": "The file is corrupt at that byte and cannot be read at all, whatever codec is named",
+        "correct": false,
+        "why": "It reads perfectly under the right encoding."
+      },
+      {
+        "text": "Position 14 is past the end of the file, so there was nothing there to decode at all",
+        "correct": false,
+        "why": "It names where the byte is, so there is a byte there."
+      },
+      {
+        "text": "The file is Latin-1 or cp1252, probably from a spreadsheet",
+        "correct": true,
+        "why": "Right — `0xe7` is `ç` there, and `encoding=\"latin-1\"` reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-65p8q6cb",
+    "version": 1,
+    "section": "text-and-encoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `errors=\"replace\"` cost you?",
+    "hint": "The raise stops. Something else does not survive.",
+    "choices": [
+      {
+        "text": "The data",
+        "correct": true,
+        "why": "Right — fine for a log you are grepping, wrong for anything written back."
+      },
+      {
+        "text": "Nothing; it is the correct default",
+        "correct": false,
+        "why": "It is never a default and it always loses bytes."
+      },
+      {
+        "text": "Speed",
+        "correct": false,
+        "why": "The difference is not measurable."
+      },
+      {
+        "text": "The ability to write the file afterwards",
+        "correct": false,
+        "why": "You can still write it, with the damage in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvr9acrj",
+    "version": 1,
+    "section": "text-and-encoding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A header comes out as `\"\\ufeffname\"` and compares unequal to `\"name\"`. What is it?",
+    "hint": "Three invisible bytes at the start of the file.",
+    "choices": [
+      {
+        "text": "A BOM, from a Windows editor or Excel",
+        "correct": true,
+        "why": "Right — and `encoding=\"utf-8-sig\"` eats it and is harmless when it is absent."
+      },
+      {
+        "text": "A tab character the exporter added",
+        "correct": false,
+        "why": "A tab is visible and is not that escape."
+      },
+      {
+        "text": "A null byte, meaning the file is binary",
+        "correct": false,
+        "why": "A null byte is `\\x00`."
+      },
+      {
+        "text": "A quoting artefact of the CSV module",
+        "correct": false,
+        "why": "The module would have removed its own quotes."
+      }
+    ]
+  },
+  {
+    "id": "ex-47gkrm0w",
+    "version": 1,
+    "section": "text-and-encoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `encoding=\"utf-8-sig\"` the safer choice for a spreadsheet export?",
+    "hint": "It handles both cases.",
+    "choices": [
+      {
+        "text": "It writes a BOM at the front so that other tools can recognise the file as UTF-8",
+        "correct": false,
+        "why": "That is what it does on WRITE, and the question is about reading."
+      },
+      {
+        "text": "It removes a BOM if there is one and changes nothing if there is not",
+        "correct": true,
+        "why": "Right — which is why it costs nothing to use it there."
+      },
+      {
+        "text": "It ignores decoding errors anywhere in the file and substitutes a replacement character",
+        "correct": false,
+        "why": "That is `errors=`, and this is not it."
+      },
+      {
+        "text": "It tries several encodings in turn and picks whichever one reads the whole file",
+        "correct": false,
+        "why": "It is one codec, not a search."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2hfpmgw",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the three reading forms scales to a four-gigabyte file?",
+    "hint": "Two of them put it all in memory.",
+    "choices": [
+      {
+        "text": "`for line in f:`",
+        "correct": true,
+        "why": "Right — one line of memory, however big the file."
+      },
+      {
+        "text": "`f.read()`",
+        "correct": false,
+        "why": "Four gigabytes of string."
+      },
+      {
+        "text": "`f.readlines()`, then a loop over the list",
+        "correct": false,
+        "why": "The same, plus a list."
+      },
+      {
+        "text": "`list(f)`",
+        "correct": false,
+        "why": "That is `readlines` written another way."
+      }
+    ]
+  },
+  {
+    "id": "ex-xedbydgr",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a line from a file keep its `\\n`?",
+    "hint": "Something has to be distinguishable.",
+    "choices": [
+      {
+        "text": "Because `readline` cannot tell where the line ends without it",
+        "correct": false,
+        "why": "It has already found the end; the question is what it hands back."
+      },
+      {
+        "text": "So a blank line differs from the end of the file",
+        "correct": true,
+        "why": "Right — and `rstrip(\"\\n\")` is how you take it off."
+      },
+      {
+        "text": "It does not; Python strips it",
+        "correct": false,
+        "why": "It does not strip it."
+      },
+      {
+        "text": "Because the file is read in binary and never decoded",
+        "correct": false,
+        "why": "It is decoded; the newline is a character in the text."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2cwtr0r",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `f.writelines(lines)` add between the strings?",
+    "hint": "The name is misleading.",
+    "choices": [
+      {
+        "text": "A space",
+        "correct": false,
+        "why": "Nothing is inserted."
+      },
+      {
+        "text": "The platform's line separator",
+        "correct": false,
+        "why": "It adds no separator at all."
+      },
+      {
+        "text": "A newline after each",
+        "correct": false,
+        "why": "That is what the name suggests and not what it does."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right — the newlines have to be in the strings already."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw8dej4m",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`f.read()` and then `for line in f:`. What does the loop give you?",
+    "hint": "A file has a position.",
+    "choices": [
+      {
+        "text": "The last line only",
+        "correct": false,
+        "why": "There is nothing left at all."
+      },
+      {
+        "text": "Nothing, and no error",
+        "correct": true,
+        "why": "Right — the position is already at the end."
+      },
+      {
+        "text": "A `ValueError` about a closed file",
+        "correct": false,
+        "why": "The file is open and simply exhausted."
+      },
+      {
+        "text": "Every line, from the beginning",
+        "correct": false,
+        "why": "That would need `f.seek(0)` first."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wgj72yw",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which writes a string AND a newline?",
+    "hint": "One of them is the familiar function.",
+    "choices": [
+      {
+        "text": "`f.append(text)`",
+        "correct": false,
+        "why": "There is no such method on a file."
+      },
+      {
+        "text": "`f.write(text)`",
+        "correct": false,
+        "why": "It adds nothing at all."
+      },
+      {
+        "text": "`f.writelines([text])`",
+        "correct": false,
+        "why": "Also nothing."
+      },
+      {
+        "text": "`print(text, file=f)`",
+        "correct": true,
+        "why": "Right — and it is a perfectly good way to write a text file."
+      }
+    ]
+  },
+  {
+    "id": "ex-xe8037f3",
+    "version": 1,
+    "section": "paths-again",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`open(\"data/rows.csv\")` is relative to what?",
+    "hint": "Not to the file you wrote it in.",
+    "choices": [
+      {
+        "text": "The directory the terminal was in",
+        "correct": true,
+        "why": "Right — which is why it fails when run from elsewhere."
+      },
+      {
+        "text": "The directory of the script",
+        "correct": false,
+        "why": "That is what `__file__` gives you, deliberately."
+      },
+      {
+        "text": "The user's home directory",
+        "correct": false,
+        "why": "Nothing makes `~` the base."
+      },
+      {
+        "text": "The directory of the Python interpreter",
+        "correct": false,
+        "why": "That is wherever Python is installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-f60zvmes",
+    "version": 1,
+    "section": "paths-again",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The path of the module being run, which is how you find the file beside it: `Path(________)`",
+    "hint": "Eight characters, with two underscores at each end.",
+    "blanks": [
+      {
+        "accept": [
+          "__file__"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rqy8mqxw",
+    "version": 1,
+    "section": "paths-again",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`open(\"~/data.csv\")` does what?",
+    "hint": "Who expands the tilde?",
+    "choices": [
+      {
+        "text": "Creates a directory called `~` in the current directory and opens the file inside it",
+        "correct": false,
+        "why": "Opening for reading creates nothing."
+      },
+      {
+        "text": "Works, because Python expands `~` to the home directory exactly as the shell does",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Fails — the shell expands `~`, and Python does not",
+        "correct": true,
+        "why": "Right — `Path(\"~/data.csv\").expanduser()` is the version that works."
+      },
+      {
+        "text": "Works only on Linux and macOS, where the home directory has a path of its own",
+        "correct": false,
+        "why": "It works nowhere; the character is taken literally."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv62qnbn",
+    "version": 1,
+    "section": "paths-again",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why resolve a path before printing it in an error message?",
+    "hint": "The reader does not know where you were.",
+    "choices": [
+      {
+        "text": "The error class requires an absolute path, and refuses a relative one as its argument",
+        "correct": false,
+        "why": "Nothing requires it."
+      },
+      {
+        "text": "A relative path in an error says nothing about which directory it was relative to",
+        "correct": true,
+        "why": "Right — and the message stops being a puzzle."
+      },
+      {
+        "text": "An unresolved path may contain a symlink loop, which the printing itself would follow",
+        "correct": false,
+        "why": "That is a different problem and it would raise."
+      },
+      {
+        "text": "`print` refuses a `Path` object, so something has to turn it into a string first",
+        "correct": false,
+        "why": "It prints one happily."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb79yrp1",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `s` in `loads` and `dumps` mean?",
+    "hint": "It is the whole of the naming.",
+    "choices": [
+      {
+        "text": "String",
+        "correct": true,
+        "why": "Right — `load` and `dump` take a file instead."
+      },
+      {
+        "text": "Safe",
+        "correct": false,
+        "why": "Nothing about them is safer than the other pair."
+      },
+      {
+        "text": "Serialise",
+        "correct": false,
+        "why": "Both pairs serialise; the `s` distinguishes them by input."
+      },
+      {
+        "text": "Strict",
+        "correct": false,
+        "why": "Neither is stricter than the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6kedgaw",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A JSON `null` becomes what in Python?",
+    "hint": "One of the singletons.",
+    "choices": [
+      {
+        "text": "An empty dictionary",
+        "correct": false,
+        "why": "That would be `{}` in the file."
+      },
+      {
+        "text": "`\"null\"`",
+        "correct": false,
+        "why": "It is not a string."
+      },
+      {
+        "text": "`0`",
+        "correct": false,
+        "why": "Nothing converts it to a number."
+      },
+      {
+        "text": "`None`",
+        "correct": true,
+        "why": "Right — and `true` and `false` become `True` and `False`."
+      }
+    ]
+  },
+  {
+    "id": "ex-85nf5t5s",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`json.dumps` on a value containing a `datetime` does what?",
+    "hint": "There is no date in JSON.",
+    "choices": [
+      {
+        "text": "Writes its `str()` automatically, since every object can be printed somehow",
+        "correct": false,
+        "why": "There is no automatic fallback."
+      },
+      {
+        "text": "Writes `null` for it, since JSON has no way of expressing a date of its own",
+        "correct": false,
+        "why": "Silently losing the value would be worse than raising."
+      },
+      {
+        "text": "Raises a `TypeError` saying it is not JSON serializable",
+        "correct": true,
+        "why": "Right — and `.isoformat()` on the way out is the usual answer."
+      },
+      {
+        "text": "Writes it as the number of seconds since 1970, the way a timestamp is usually stored",
+        "correct": false,
+        "why": "Nothing converts it; you decide."
+      }
+    ]
+  },
+  {
+    "id": "ex-2myc5f99",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do `indent=2`, `ensure_ascii=False` and `sort_keys=True` buy you together?",
+    "hint": "Three different readers.",
+    "choices": [
+      {
+        "text": "A smaller file that parses faster",
+        "correct": false,
+        "why": "It is larger, and parsing is unaffected."
+      },
+      {
+        "text": "Protection against a malformed value reaching the file and breaking the next reader",
+        "correct": false,
+        "why": "None of the three validates anything."
+      },
+      {
+        "text": "Compatibility with older JSON parsers, which reject anything written on one long line",
+        "correct": false,
+        "why": "All three produce ordinary JSON."
+      },
+      {
+        "text": "A file a person reads, with its accents, that two runs produce identically",
+        "correct": true,
+        "why": "Right — and the third is what stops a file looking changed when it is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0kbc3a6",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A JSON file with a trailing comma raises what, and what catches it?",
+    "hint": "The error has a familiar base class.",
+    "choices": [
+      {
+        "text": "Nothing; a trailing comma is allowed",
+        "correct": false,
+        "why": "It is not JSON."
+      },
+      {
+        "text": "`json.JSONDecodeError`, which `except ValueError` catches",
+        "correct": true,
+        "why": "Right — and it names the line and column."
+      },
+      {
+        "text": "`TypeError`, caught by `except TypeError`, because the comma has no value after it",
+        "correct": false,
+        "why": "That is the writing side, not the reading side."
+      },
+      {
+        "text": "`SyntaxError`, which only a bare `except` catches, since it is not under `Exception`",
+        "correct": false,
+        "why": "That is for Python source, not data."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk8043fc",
+    "version": 1,
+    "section": "json-that-is-not-yours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`record.get(\"address\", {}).get(\"city\", \"\")` — what is the middle `{}` for?",
+    "hint": "Something has to be legal to call `.get` on.",
+    "choices": [
+      {
+        "text": "It keeps the second `get` legal when `address` is missing",
+        "correct": true,
+        "why": "Right — lesson 3's shape, one layer down."
+      },
+      {
+        "text": "It is required syntax for a chained `get`",
+        "correct": false,
+        "why": "Nothing requires it; the code just breaks without it."
+      },
+      {
+        "text": "It makes the lookup case-insensitive, so `Address` and `address` both find it",
+        "correct": false,
+        "why": "Nothing changes the case."
+      },
+      {
+        "text": "It is the value stored into the record when the key turns out to be missing",
+        "correct": false,
+        "why": "`get` stores nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-baret75h",
+    "version": 1,
+    "section": "json-that-is-not-yours",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`{\"city\": null}` against `{}`. What does `record.get(\"city\", \"\")` give for each?",
+    "hint": "The default only covers one of the two.",
+    "choices": [
+      {
+        "text": "`\"\"` and `\"\"`",
+        "correct": false,
+        "why": "The first key exists, so its value comes back."
+      },
+      {
+        "text": "`None` and `\"\"`",
+        "correct": true,
+        "why": "Right — `null` is present, so the default is not used."
+      },
+      {
+        "text": "`None` and `None`",
+        "correct": false,
+        "why": "The second has no key, so the default applies."
+      },
+      {
+        "text": "A `KeyError` and `\"\"`",
+        "correct": false,
+        "why": "`get` never raises."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjqws7pb",
+    "version": 1,
+    "section": "json-that-is-not-yours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the trap in `record.get(\"city\") or \"\"`?",
+    "hint": "Two other values are falsy too.",
+    "choices": [
+      {
+        "text": "It raises when the key is missing",
+        "correct": false,
+        "why": "`get` returns `None` instead."
+      },
+      {
+        "text": "It writes the default back into the dictionary",
+        "correct": false,
+        "why": "Nothing is written."
+      },
+      {
+        "text": "It only works on strings",
+        "correct": false,
+        "why": "It works on any value, which is the problem."
+      },
+      {
+        "text": "`0` and `False` become `\"\"` as well",
+        "correct": true,
+        "why": "Right — and an explicit `if value is None` says what it means."
+      }
+    ]
+  },
+  {
+    "id": "ex-27ckscdr",
+    "version": 1,
+    "section": "json-that-is-not-yours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`for row in data: row[\"name\"]` where `data` is a dict. What fails, and where?",
+    "hint": "Iterating a dictionary gives keys.",
+    "choices": [
+      {
+        "text": "Nothing goes wrong; a dictionary iterates its values, so `row` is the inner object",
+        "correct": false,
+        "why": "It iterates its keys."
+      },
+      {
+        "text": "A `KeyError` naming `name`, raised on the very first record of the file",
+        "correct": false,
+        "why": "Nothing is looked up in a dictionary here."
+      },
+      {
+        "text": "A `TypeError` about string indices, three lines from the real problem",
+        "correct": true,
+        "why": "Right — `row` is a key, which is a string."
+      },
+      {
+        "text": "An `AttributeError` on `row`",
+        "correct": false,
+        "why": "A string can be indexed; it is the index type that is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-53et6fez",
+    "version": 1,
+    "section": "json-that-is-not-yours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does one `isinstance` check at the boundary buy you?",
+    "hint": "Every later failure changes what it is about.",
+    "choices": [
+      {
+        "text": "Automatic conversion of the value to the type the check named, before it is used",
+        "correct": false,
+        "why": "Nothing converts."
+      },
+      {
+        "text": "Later failures are about the data rather than about the shape",
+        "correct": true,
+        "why": "Right — and the message can name the file and what arrived."
+      },
+      {
+        "text": "Protection from a missing key later on, since the shape has already been settled",
+        "correct": false,
+        "why": "That is `get`, and a different question."
+      },
+      {
+        "text": "A faster parse",
+        "correct": false,
+        "why": "The parse already happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g771j3b",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Ada,\"Porto, Portugal\",91` split on the comma gives how many pieces?",
+    "hint": "The quotes mean nothing to `split`.",
+    "choices": [
+      {
+        "text": "Three, because the quotes protect the comma",
+        "correct": false,
+        "why": "`split` does not know about quotes."
+      },
+      {
+        "text": "It raises, because the quotes are unbalanced",
+        "correct": false,
+        "why": "`split` raises at nothing."
+      },
+      {
+        "text": "Four",
+        "correct": true,
+        "why": "Right — and the score column then holds `Portugal\"`."
+      },
+      {
+        "text": "Two",
+        "correct": false,
+        "why": "There are three commas in the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3xwn67c",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `csv.DictReader` give you per row?",
+    "hint": "It read the header.",
+    "choices": [
+      {
+        "text": "An object with the columns as attributes",
+        "correct": false,
+        "why": "That would be a dataclass you built yourself."
+      },
+      {
+        "text": "A dictionary keyed by the column names",
+        "correct": true,
+        "why": "Right — so a column inserted in the middle breaks nothing."
+      },
+      {
+        "text": "A tuple in file order",
+        "correct": false,
+        "why": "Neither reader gives tuples."
+      },
+      {
+        "text": "A list of strings",
+        "correct": false,
+        "why": "That is `csv.reader`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcwsqsk2",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does every `open` for `csv` need `newline=\"\"`?",
+    "hint": "A field may contain a newline.",
+    "choices": [
+      {
+        "text": "Because a file cannot be iterated otherwise",
+        "correct": false,
+        "why": "It can, and wrongly."
+      },
+      {
+        "text": "Because the module handles line endings itself, and text mode's translation confuses it",
+        "correct": true,
+        "why": "Right — and the symptom is a blank row between every real one."
+      },
+      {
+        "text": "Because the reader needs to know the separator, and text mode hides it from them",
+        "correct": false,
+        "why": "That is `delimiter=`."
+      },
+      {
+        "text": "Because CSV files always use Windows line endings and Python would translate them twice",
+        "correct": false,
+        "why": "They use several, which is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sx5a1h9",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What type is `row[\"score\"]` from a `DictReader`?",
+    "hint": "There is no type information in the file.",
+    "choices": [
+      {
+        "text": "Whatever the header row declares",
+        "correct": false,
+        "why": "A header row declares names, not types."
+      },
+      {
+        "text": "`int`, when the column holds numbers",
+        "correct": false,
+        "why": "Nothing inspects the values."
+      },
+      {
+        "text": "`str`",
+        "correct": true,
+        "why": "Right — a number, a date and an empty cell all arrive as strings."
+      },
+      {
+        "text": "`None` for an empty cell",
+        "correct": false,
+        "why": "An empty cell is `\"\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xt4wx80p",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should `int(row[\"score\"])` go, and what should the failure say?",
+    "hint": "One place, and it names something.",
+    "choices": [
+      {
+        "text": "At the boundary, in an error naming the file, the row and the value",
+        "correct": true,
+        "why": "Right — because nothing further in knows where the row came from."
+      },
+      {
+        "text": "Nowhere; `sum` converts strings that look like numbers",
+        "correct": false,
+        "why": "It raises on them."
+      },
+      {
+        "text": "Wherever the number is first used, with the `ValueError` left to propagate",
+        "correct": false,
+        "why": "Then the traceback names a line and not a row."
+      },
+      {
+        "text": "Inside the `DictReader`, by passing a converter",
+        "correct": false,
+        "why": "It takes no converter."
+      }
+    ]
+  },
+  {
+    "id": "ex-4st0q4b7",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`csv.Sniffer` on a file you have not looked at is what?",
+    "hint": "It guesses.",
+    "choices": [
+      {
+        "text": "The recommended way to open any CSV, since it saves naming the dialect by hand",
+        "correct": false,
+        "why": "It is a convenience for an unknown file, looked at first."
+      },
+      {
+        "text": "A faster reader for large files, since it decides the dialect once and reuses it",
+        "correct": false,
+        "why": "It reads a sample and decides nothing about speed."
+      },
+      {
+        "text": "A validator for the header row, checking the names against what you expect",
+        "correct": false,
+        "why": "It guesses the dialect, not the columns."
+      },
+      {
+        "text": "How a script decides a semicolon is data",
+        "correct": true,
+        "why": "Right — look at the file, then name the delimiter."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv2khgx5",
+    "version": 1,
+    "section": "writing-data-back",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `DictWriter` do that `\",\".join(...)` does not?",
+    "hint": "One value has a comma in it.",
+    "choices": [
+      {
+        "text": "Open the file for you",
+        "correct": false,
+        "why": "You open it, with `newline=\"\"`."
+      },
+      {
+        "text": "Quote what needs quoting",
+        "correct": true,
+        "why": "Right — and a shifted column on one row in eleven thousand is the alternative."
+      },
+      {
+        "text": "Write the header row automatically",
+        "correct": false,
+        "why": "That is `writeheader`, which you call."
+      },
+      {
+        "text": "Convert numbers to strings",
+        "correct": false,
+        "why": "It does that too, and it is not the argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddybz7vf",
+    "version": 1,
+    "section": "writing-data-back",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a hand-built CSV worse than a hand-built JSON is?",
+    "hint": "Consider what happens when it is read back.",
+    "choices": [
+      {
+        "text": "Neither matters, because both are read by machines",
+        "correct": false,
+        "why": "A machine reading a broken file is the failure being described."
+      },
+      {
+        "text": "Neither is acceptable, and both fail silently rather than loudly",
+        "correct": true,
+        "why": "Right — a shifted column and a broken escape both look like data."
+      },
+      {
+        "text": "CSV has no escaping at all, so a value with a comma in it cannot be written correctly",
+        "correct": false,
+        "why": "It has quoting rules, which is exactly what the library knows."
+      },
+      {
+        "text": "JSON is safe to build by hand because it has no separators to be confused about",
+        "correct": false,
+        "why": "It has quotes, backslashes and control characters to escape."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpc91cyj",
+    "version": 1,
+    "section": "writing-data-back",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Write to a temporary and rename. What does that protect?",
+    "hint": "A crash in the middle.",
+    "choices": [
+      {
+        "text": "The disk from filling up while two copies of the file exist at once",
+        "correct": false,
+        "why": "It uses slightly more space, not less."
+      },
+      {
+        "text": "The file from being read by another process while it is halfway through being written",
+        "correct": false,
+        "why": "Nothing locks it."
+      },
+      {
+        "text": "The encoding from being guessed wrongly by whichever tool opens the file next",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "A reader sees the old file or the new one, never half of one",
+        "correct": true,
+        "why": "Right — `\"w\"` truncates before the first byte is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bfez8xt",
+    "version": 1,
+    "section": "writing-data-back",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Make two dumps of the same data produce the same bytes: `json.dump(d, f, ______=True)`",
+    "hint": "Nine letters, with an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "sort_keys"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ajnx59sk",
+    "version": 1,
+    "section": "writing-data-back",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which argument keeps `ção` out of `\\u00e7\\u00e3o`?",
+    "hint": "It is about what the writer escapes.",
+    "choices": [
+      {
+        "text": "`encoding=\"utf-8\"`",
+        "correct": false,
+        "why": "That is the file, and the escaping happens before it."
+      },
+      {
+        "text": "`indent=2`, which lays the object out over several lines",
+        "correct": false,
+        "why": "That is layout."
+      },
+      {
+        "text": "`ensure_ascii=False`",
+        "correct": true,
+        "why": "Right — and the file is still perfectly valid JSON."
+      },
+      {
+        "text": "`sort_keys=True`",
+        "correct": false,
+        "why": "That is order."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0as4k1d",
+    "version": 1,
+    "section": "binary-and-bytes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`b\"a\" == \"a\"` answers what?",
+    "hint": "Two types that never meet.",
+    "choices": [
+      {
+        "text": "`None`",
+        "correct": false,
+        "why": "A comparison gives a boolean."
+      },
+      {
+        "text": "`True`",
+        "correct": false,
+        "why": "They are different types with different values."
+      },
+      {
+        "text": "`False`",
+        "correct": true,
+        "why": "Right — and they never concatenate either."
+      },
+      {
+        "text": "A `TypeError`",
+        "correct": false,
+        "why": "Equality across types answers rather than raising."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk44q0bv",
+    "version": 1,
+    "section": "binary-and-bytes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a `.decode()` belong?",
+    "hint": "One place, and everything after it is text.",
+    "choices": [
+      {
+        "text": "At the boundary where the bytes arrive",
+        "correct": true,
+        "why": "Right — decode in, encode out, and `str` everywhere between."
+      },
+      {
+        "text": "Nowhere; Python decodes automatically",
+        "correct": false,
+        "why": "It does not, and that is why the two never compare equal."
+      },
+      {
+        "text": "Inside every function that touches the value",
+        "correct": false,
+        "why": "Then the value is bytes throughout."
+      },
+      {
+        "text": "Wherever a comparison against a string fails",
+        "correct": false,
+        "why": "That is where you notice it, and it is too far in."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nhezqh6",
+    "version": 1,
+    "section": "binary-and-bytes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these genuinely needs binary mode?",
+    "hint": "Three of the four are text.",
+    "choices": [
+      {
+        "text": "A JSON configuration",
+        "correct": false,
+        "why": "Also text."
+      },
+      {
+        "text": "A log file",
+        "correct": false,
+        "why": "Text, and usually UTF-8."
+      },
+      {
+        "text": "A zip file",
+        "correct": true,
+        "why": "Right — along with an image, a PDF and anything compressed."
+      },
+      {
+        "text": "A CSV export",
+        "correct": false,
+        "why": "Text, with an encoding."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhny1h6z",
+    "version": 1,
+    "section": "binary-and-bytes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hashlib` wants what, and gives back what?",
+    "hint": "The types on each side differ.",
+    "choices": [
+      {
+        "text": "A `str` in, and bytes out of both `digest()` and `hexdigest()`",
+        "correct": false,
+        "why": "That is both sides reversed."
+      },
+      {
+        "text": "Bytes in and bytes out in every case, so the caller encodes and decodes around it",
+        "correct": false,
+        "why": "`digest()` gives bytes and `hexdigest()` gives a string."
+      },
+      {
+        "text": "Either one, since it decodes a string for you before hashing it",
+        "correct": false,
+        "why": "It refuses a `str` outright."
+      },
+      {
+        "text": "Bytes in, and a `str` from `hexdigest()`",
+        "correct": true,
+        "why": "Right — so `text.encode(\"utf-8\")` on the way in."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jwaw7rc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which line reads a large file without loading it?",
+    "hint": "One line at a time.",
+    "choices": [
+      {
+        "text": "`for line in f:`",
+        "correct": true,
+        "why": "Right — and the memory is one line, whatever the size."
+      },
+      {
+        "text": "`open(path).read().splitlines()`",
+        "correct": false,
+        "why": "The whole file twice over."
+      },
+      {
+        "text": "`f.readlines()`, then a loop over the list",
+        "correct": false,
+        "why": "The whole file, plus a list."
+      },
+      {
+        "text": "`f.read()`",
+        "correct": false,
+        "why": "The whole file as one string."
+      }
+    ]
+  },
+  {
+    "id": "ex-97szah0x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script works here and raises `UnicodeDecodeError` on the server. What is missing?",
+    "hint": "One argument.",
+    "choices": [
+      {
+        "text": "`newline=\"\"` on the `open`",
+        "correct": false,
+        "why": "That is the CSV concern, and it does not decode."
+      },
+      {
+        "text": "`encoding=\"utf-8\"` on the `open`",
+        "correct": true,
+        "why": "Right — the default is the machine's, and the machines differ."
+      },
+      {
+        "text": "`errors=\"strict\"`, which is what makes a bad byte raise instead of being replaced",
+        "correct": false,
+        "why": "That is already the default."
+      },
+      {
+        "text": "Binary mode",
+        "correct": false,
+        "why": "That reads it and leaves you with bytes to decode anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsemdh5e",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Turn a JSON string into Python: `json.______(text)`",
+    "hint": "Five letters, and the last one means string.",
+    "blanks": [
+      {
+        "accept": [
+          "loads"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0gf15dvp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`row[\"score\"]` from a CSV, added with `sum`. What happens?",
+    "hint": "Everything from a CSV is one type.",
+    "choices": [
+      {
+        "text": "The strings are concatenated into one long number",
+        "correct": false,
+        "why": "`sum` starts at 0, so it raises rather than concatenating."
+      },
+      {
+        "text": "It works, because Python converts numeric strings",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The empty cells are skipped and the rest add up",
+        "correct": false,
+        "why": "Nothing is skipped."
+      },
+      {
+        "text": "A `TypeError`, because they are strings",
+        "correct": true,
+        "why": "Right — convert at the boundary."
+      }
+    ]
+  },
+  {
+    "id": "ex-t30qhbbz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which reader survives a column being inserted in the middle of the file?",
+    "hint": "One of them joins by name.",
+    "choices": [
+      {
+        "text": "`csv.reader`",
+        "correct": false,
+        "why": "`row[2]` is now a different column."
+      },
+      {
+        "text": "`line.split(\",\")`",
+        "correct": false,
+        "why": "The same, and it breaks on a quoted comma too."
+      },
+      {
+        "text": "`json.load`",
+        "correct": false,
+        "why": "That is not reading a CSV at all."
+      },
+      {
+        "text": "`csv.DictReader`",
+        "correct": true,
+        "why": "Right — `row[\"score\"]` moves with the header."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwp9ej5t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A JSON file that a person will read and a tool will diff. Which arguments?",
+    "hint": "Three of them, for three reasons.",
+    "choices": [
+      {
+        "text": "`default=str`",
+        "correct": false,
+        "why": "That is for types JSON does not have."
+      },
+      {
+        "text": "`indent=2`, `ensure_ascii=False`, `sort_keys=True`",
+        "correct": true,
+        "why": "Right — readable, accented, and identical between runs."
+      },
+      {
+        "text": "`separators=(\",\", \":\")`, which removes the spaces the writer adds by default",
+        "correct": false,
+        "why": "That is the compact form, which is the opposite."
+      },
+      {
+        "text": "`allow_nan=False`",
+        "correct": false,
+        "why": "That is about infinities, and it is unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zqch9ct",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should the file that ships with your script live, and how is it found?",
+    "hint": "Not relative to the terminal.",
+    "choices": [
+      {
+        "text": "Beside the script, found through `Path(__file__).resolve().parent`",
+        "correct": true,
+        "why": "Right — and then it works from any directory."
+      },
+      {
+        "text": "In the user's home directory, found with a `~` in the path the way a shell would",
+        "correct": false,
+        "why": "Python does not expand `~`."
+      },
+      {
+        "text": "In `/tmp`, found by an absolute path",
+        "correct": false,
+        "why": "Nothing ships to `/tmp`."
+      },
+      {
+        "text": "In the current directory, found by its bare name, which is where a script is usually run",
+        "correct": false,
+        "why": "That depends on where the terminal was."
+      }
+    ]
+  },
+  {
+    "id": "ex-s55mrnjf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `\"w\"` do that `\"a\"` does not?",
+    "hint": "One of them keeps what was there.",
+    "choices": [
+      {
+        "text": "Empties the file",
+        "correct": true,
+        "why": "Right — at the open, before anything is written."
+      },
+      {
+        "text": "Creates the file if it is missing",
+        "correct": false,
+        "why": "Both do."
+      },
+      {
+        "text": "Allows reading as well",
+        "correct": false,
+        "why": "Neither does; that is `\"r+\"`."
+      },
+      {
+        "text": "Writes bytes rather than text",
+        "correct": false,
+        "why": "That is the `b` suffix."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygf9k5v6",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Stop a BOM from becoming part of your first field: `encoding=\"________\"`",
+    "hint": "Eleven characters, and it ends in three letters after a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "utf-8-sig"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rdyzh0rn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dictionary where a list was expected, discovered three functions in. What would have helped?",
+    "hint": "One line, at the edge.",
+    "choices": [
+      {
+        "text": "A `KeyError` handler around the three functions, which names the key that is missing",
+        "correct": false,
+        "why": "The failure is a `TypeError` about the shape."
+      },
+      {
+        "text": "An `isinstance` check where the file was read",
+        "correct": true,
+        "why": "Right — and an error naming the file and what arrived instead."
+      },
+      {
+        "text": "Converting it with `list(data)` before the first of the three functions sees it",
+        "correct": false,
+        "why": "That gives you the keys, which is worse."
+      },
+      {
+        "text": "A `try` around each use of the value, so each one reports its own confusion",
+        "correct": false,
+        "why": "Then each use reports the same confusion separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3cqx4rc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which pair of conversions goes in which direction?",
+    "hint": "One name is on the file side.",
+    "choices": [
+      {
+        "text": "`decode` makes text from bytes; `encode` makes bytes from text",
+        "correct": true,
+        "why": "Right — decode in, encode out."
+      },
+      {
+        "text": "`encode` makes text from bytes; `decode` makes bytes from text",
+        "correct": false,
+        "why": "That is the pair swapped."
+      },
+      {
+        "text": "Both make text, from different sources",
+        "correct": false,
+        "why": "One of them produces bytes."
+      },
+      {
+        "text": "Both make bytes, in different encodings",
+        "correct": false,
+        "why": "One of them produces a string."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvg348tg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What closes the file when the line inside the block raises?",
+    "hint": "It is one keyword.",
+    "choices": [
+      {
+        "text": "`with`",
+        "correct": true,
+        "why": "Right — and there is no case where it is the wrong choice."
+      },
+      {
+        "text": "The garbage collector, immediately",
+        "correct": false,
+        "why": "Eventually, unpredictably, and not on every implementation."
+      },
+      {
+        "text": "`close`",
+        "correct": false,
+        "why": "That is the line that did not run."
+      },
+      {
+        "text": "`try`",
+        "correct": false,
+        "why": "Only with a `finally` written under it."
+      }
+    ]
+  }
+]
