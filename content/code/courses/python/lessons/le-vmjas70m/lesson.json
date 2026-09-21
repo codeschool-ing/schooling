@@ -1,0 +1,88 @@
+{
+  "id": "le-vmjas70m",
+  "title": "Virtual environments (venv), pip and requirements",
+  "sections": [
+    {
+      "id": "se-xev5h3v3",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-0wbkqg8m",
+          "version": 1,
+          "script": "Two projects on one machine. {{comment}} One of them was written three years ago and needs an old version of a library; the other was started this morning and needs the new one. Both are `import requests`, and there is one Python.\n\n{{answer}} The answer is an environment per project. A directory, inside the project, holding its own copy of every library it uses — so the two never meet, and neither of them is the machine's Python.\n\n{{system}} That last part is not a preference. The interpreter at `/usr/bin/python3` belongs to the operating system, and things you did not write import from it. Installing into it is editing somebody else's dependency, and on a modern distribution it now refuses: `error: externally-managed-environment`.\n\n{{venv}} `python -m venv .venv` makes one. It is a directory with a `bin`, a `lib` and a small configuration file, and `activate` puts its `bin` at the front of your `PATH` so that `python` means that one.\n\n{{gitignore}} It is **never committed**. It holds compiled artefacts for one operating system and one processor, and it is rebuilt from a text file in five seconds.\n\n{{pip}} `pip` installs into whichever environment is active — which is where a whole category of confusion comes from, so this lesson writes `python -m pip` throughout. It is the same program, reached in a way that cannot be pointing somewhere else.\n\n{{versions}} Then the version specifiers, which look obvious and are not. `~=2.31.0` and `~=2.31` are different requests, and in a fresh environment this afternoon they resolved to different versions.\n\n{{freeze}} And `pip freeze`, which everybody uses to write `requirements.txt` and which is **not a requirements file**. It is a list of everything installed, direct and transitive, flattened into one list where nothing says which of them you actually asked for.",
+          "seconds": 124,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-v0t7zmbp",
+      "slug": "why-an-environment",
+      "kind": "reading"
+    },
+    {
+      "id": "se-8tgz9r0f",
+      "slug": "venv",
+      "kind": "reading"
+    },
+    {
+      "id": "se-s6rphwcq",
+      "slug": "pip",
+      "kind": "reading"
+    },
+    {
+      "id": "se-h2d68s6e",
+      "slug": "versions",
+      "kind": "reading"
+    },
+    {
+      "id": "se-rz7rphaz",
+      "slug": "requirements",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7149tcb4",
+      "slug": "pinning-and-reproducing",
+      "kind": "reading"
+    },
+    {
+      "id": "se-xq6pastf",
+      "slug": "where-things-went",
+      "kind": "reading"
+    },
+    {
+      "id": "se-1e663t8w",
+      "slug": "two-projects-one-machine",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-je5saa6z",
+          "version": 1,
+          "script": "The same `import requests`, twice, on this machine. {{comment}} Two directories, two environments, two versions.\n\n{{first}} `python -m venv .venv` in the first project, activate it, `python -m pip install requests==2.31.0`. Then `python -c \"import requests; print(requests.__version__)\"` says **2.31.0**, and `requests.__file__` is inside that project's directory.\n\n{{second}} The second project, in a directory beside it. Its own `venv`, `requests==2.26.0`. Same command, and it says **2.26.0**.\n\n{{nothing}} Nothing was configured to make that work. `activate` put one `bin` at the front of the `PATH`, `sys.prefix` moved, and the import found the first `requests` on `sys.path` — which is now that environment's `site-packages` and nothing else.\n\n{{path}} Worth looking at that path, because it explains the other half of this lesson. `sys.path` for the first project is five entries: the empty string, two standard-library directories, the dynamic-load directory, and **one** `site-packages`. The machine's libraries are not on it at all.\n\n{{shadow}} The empty string is the current directory, and it is **first**. A file called `json.py` in the project directory is what `import json` finds, ahead of the standard library — `json.__file__` points at your file and the error you get is about your own code, three imports away from where you are looking.\n\n{{freeze}} One last thing from the first environment. `pip freeze` prints five lines: `requests` and four libraries I never asked for. `requirements.txt` should carry one of those five, and the difference between those two lists is the subject of the two sections before this.",
+          "seconds": 102,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-ycehzfkp",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-mjbpnxt9",
+          "version": 1,
+          "script": "One environment per project, and never the system interpreter.\n\n{{make}} `python -m venv .venv` on the first day, before the first install. Doing it later means unpicking what went into the machine's Python in the meantime, which nobody does.\n\n{{ignore}} `.venv/` in `.gitignore`, and the file that reproduces it committed instead. The directory is a build artefact for one machine; the text file is the fact.\n\n{{pip}} `python -m pip`, not `pip`. The second one is a script with a path baked into it, and when it is the wrong one nothing says so — the install succeeds, into somewhere else.\n\n{{freeze}} `pip freeze` is a snapshot, not a declaration. Write what you asked for into `requirements.txt`, by hand, with the version you tested against; let a lock file carry the rest.\n\n{{pin}} And pin the transitive half somewhere, or an install that worked yesterday fails today because a library you have never heard of released a new version inside a range you did not choose.\n\n{{next}} All of which the next lesson replaces with one file and one tool, and it is still worth knowing — because the repository you join on Monday is on `requirements.txt` and somebody has to read it.",
+          "seconds": 84,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-syvdkj11",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

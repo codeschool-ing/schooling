@@ -1,0 +1,1391 @@
+[
+  {
+    "id": "ex-77yzyy7h",
+    "version": 1,
+    "section": "why-an-environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pip install requests` into the system interpreter answers `error: externally-managed-environment`. What is that protecting?",
+    "hint": "Who else imports from that interpreter?",
+    "choices": [
+      {
+        "text": "The package index itself, which rate-limits installs made outside an environment",
+        "correct": false,
+        "why": "The refusal is local and happens before anything is downloaded."
+      },
+      {
+        "text": "Disk space on `/usr`, which a distribution reserves for its own files",
+        "correct": false,
+        "why": "The check is about ownership of the installation rather than about space."
+      },
+      {
+        "text": "Programs that are part of the operating system and import from the same Python",
+        "correct": true,
+        "why": "Package managers, printer configuration and firewall tools are written in it, and upgrading a library under them changes what they import."
+      },
+      {
+        "text": "Your own project, which would otherwise get a version it did not ask for",
+        "correct": false,
+        "why": "Your project is not installed into the system interpreter at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2r8fzyn",
+    "version": 1,
+    "section": "why-an-environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two projects on one machine need different versions of the same library. Why does a single global installation not work?",
+    "hint": "Count how many versions fit.",
+    "choices": [
+      {
+        "text": "`pip` refuses to install a library that is already present at another version",
+        "correct": false,
+        "why": "`--upgrade` replaces it without complaint, which is how this happens quietly."
+      },
+      {
+        "text": "The two projects would share a `__pycache__`, which is keyed by version",
+        "correct": false,
+        "why": "Bytecode caches sit beside the source and are not what this is about."
+      },
+      {
+        "text": "It holds one version, so one project is broken and which depends on install order",
+        "correct": true,
+        "why": "That is the whole problem an environment per project solves."
+      },
+      {
+        "text": "Imports would be ambiguous, and Python raises at the point of the second import of it",
+        "correct": false,
+        "why": "There is nothing ambiguous: one copy is installed and both projects get it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rke7fwse",
+    "version": 1,
+    "section": "why-an-environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a virtual environment isolate?",
+    "hint": "One thing, and it is narrow.",
+    "choices": [
+      {
+        "text": "Which libraries the `import` statement is able to find, and nothing else",
+        "correct": true,
+        "why": "It is not a sandbox: the filesystem, the network and the processes are the machine's, and that is the only thing this problem is about."
+      },
+      {
+        "text": "The filesystem, so a script cannot read outside the project directory",
+        "correct": false,
+        "why": "A script inside an environment reads anything the user can read."
+      },
+      {
+        "text": "The interpreter, of which it holds its own compiled copy",
+        "correct": false,
+        "why": "It holds a link to one; `pyvenv.cfg` names which."
+      },
+      {
+        "text": "The network, so an install has to be approved before it reaches the index",
+        "correct": false,
+        "why": "Installs go straight out as they always did."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwg2a08z",
+    "version": 1,
+    "section": "why-an-environment",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is `--break-system-packages` defensible?",
+    "hint": "Something you are about to throw away.",
+    "choices": [
+      {
+        "text": "In a container you built yourself and are about to throw away at the end of the build",
+        "correct": true,
+        "why": "On a machine you work on, an environment costs five seconds and this flag costs an afternoon later in the year."
+      },
+      {
+        "text": "When the system package manager has no build of the library in question",
+        "correct": false,
+        "why": "That is the usual reason people reach for it, and an environment answers it better."
+      },
+      {
+        "text": "When you are the only user of the machine and have administrative rights",
+        "correct": false,
+        "why": "Being able to do it is what the flag already assumes."
+      },
+      {
+        "text": "When the library being installed is pure Python with no compiled parts",
+        "correct": false,
+        "why": "Whether it compiles has nothing to do with whose installation it lands in."
+      }
+    ]
+  },
+  {
+    "id": "ex-30s3ae22",
+    "version": 1,
+    "section": "why-an-environment",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The specification behind the `externally-managed-environment` refusal: `PEP ______`",
+    "hint": "Three digits.",
+    "blanks": [
+      {
+        "accept": [
+          "668"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zj105ytm",
+    "version": 1,
+    "section": "venv",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `include-system-site-packages = false` in `pyvenv.cfg` do?",
+    "hint": "It is the line that makes the isolation.",
+    "choices": [
+      {
+        "text": "It prevents the environment from being created inside a system directory",
+        "correct": false,
+        "why": "The location of the directory is decided by the argument you gave."
+      },
+      {
+        "text": "It keeps the machine's own libraries off this environment's `sys.path`",
+        "correct": true,
+        "why": "With `--system-site-packages` it is `true`, which is occasionally what you want and never the default."
+      },
+      {
+        "text": "It stops `pip` from installing into the system interpreter by mistake",
+        "correct": false,
+        "why": "`pip` installs into whichever environment is active regardless of this line."
+      },
+      {
+        "text": "It makes the environment copy the interpreter rather than link to it",
+        "correct": false,
+        "why": "That is `--copies`, and it is a separate choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qpf5jey",
+    "version": 1,
+    "section": "venv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is inside a virtual environment that is NOT there?",
+    "hint": "It borrows something.",
+    "choices": [
+      {
+        "text": "A `site-packages` directory, which is created on the first install",
+        "correct": false,
+        "why": "It is created with the environment, empty."
+      },
+      {
+        "text": "A Python interpreter of its own",
+        "correct": true,
+        "why": "`pyvenv.cfg` records `home` and `executable`, which name the interpreter it borrows."
+      },
+      {
+        "text": "The activation scripts, which are generated by the shell on demand",
+        "correct": false,
+        "why": "`bin/activate` and its variants are written at creation time."
+      },
+      {
+        "text": "A copy of `pip`, which is downloaded when it is first used",
+        "correct": false,
+        "why": "`pip` is installed into the environment as it is created."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvtganfb",
+    "version": 1,
+    "section": "venv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A systemd unit runs a script from a project with a virtual environment. What does it invoke?",
+    "hint": "There is no shell to run `activate`.",
+    "choices": [
+      {
+        "text": "`source .venv/bin/activate && python script.py`, as a single command string",
+        "correct": false,
+        "why": "A unit runs a program rather than a shell unless one is asked for explicitly."
+      },
+      {
+        "text": "`.venv/bin/python script.py`, directly, with no activation",
+        "correct": true,
+        "why": "`activate` is a shell script, and a unit has no shell that ran it."
+      },
+      {
+        "text": "`python -m venv .venv && python script.py` at each start",
+        "correct": false,
+        "why": "Recreating the environment on every start reinstalls nothing and wastes the boot."
+      },
+      {
+        "text": "`python script.py` with `VIRTUAL_ENV` set in the unit's environment",
+        "correct": false,
+        "why": "The variable is a marker; what selects the interpreter is which one runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xe6zw89",
+    "version": 1,
+    "section": "venv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `.venv/` in `.gitignore`?",
+    "hint": "Think about what is inside it.",
+    "choices": [
+      {
+        "text": "Its contents change on every run, so every commit would carry a diff",
+        "correct": false,
+        "why": "It is stable between installs; the objection is its size and its machine-specificity."
+      },
+      {
+        "text": "Git cannot track symbolic links, and the environment is built from them",
+        "correct": false,
+        "why": "Git tracks symbolic links; the objection is what the directory is."
+      },
+      {
+        "text": "It is a build artefact — compiled extensions for one machine, absolute paths, a copy of every library",
+        "correct": true,
+        "why": "It is reproduced in seconds from a text file, and committing it puts hundreds of megabytes into a history that can never lose them."
+      },
+      {
+        "text": "It contains credentials, since `pip` caches index authentication inside it",
+        "correct": false,
+        "why": "Index credentials live in `~/.pip` or in the environment, not in the directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-8768tr5g",
+    "version": 1,
+    "section": "venv",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Something about the environment is wrong and nobody can say what. What is the first thing to try?",
+    "hint": "It is disposable on purpose.",
+    "choices": [
+      {
+        "text": "Delete the whole environment and rebuild it from the requirements file, in one command",
+        "correct": true,
+        "why": "The answer to almost every 'it works on my machine' about dependencies."
+      },
+      {
+        "text": "Recreate it with `--system-site-packages`, so a missing library is found anyway",
+        "correct": false,
+        "why": "That removes the isolation to hide a symptom."
+      },
+      {
+        "text": "Compare `pip list` against a colleague's and install the differences",
+        "correct": false,
+        "why": "It works, by hand, and the rebuild does it in one command."
+      },
+      {
+        "text": "`pip install --upgrade` on every package, to bring the environment to one state",
+        "correct": false,
+        "why": "That produces a state nobody has tested rather than the one the file describes."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcngy4np",
+    "version": 1,
+    "section": "pip",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why write `python -m pip install` rather than `pip install`?",
+    "hint": "Which interpreter does each one install into?",
+    "choices": [
+      {
+        "text": "`python -m pip` installs into the `python` you just ran; `pip` is whichever script `PATH` found",
+        "correct": true,
+        "why": "The failure it prevents is silent: the install reports success and the import fails, because the library went elsewhere."
+      },
+      {
+        "text": "`python -m pip` resolves dependencies before downloading and `pip` does not",
+        "correct": false,
+        "why": "They are the same program and resolve identically."
+      },
+      {
+        "text": "`pip` is deprecated as a command and prints a warning on every run",
+        "correct": false,
+        "why": "It is not deprecated and prints no such warning."
+      },
+      {
+        "text": "`python -m pip` reads the project's configuration and a bare `pip` does not",
+        "correct": false,
+        "why": "Both read the same configuration files."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckx3xyty",
+    "version": 1,
+    "section": "pip",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You install one package and `pip list` shows five. What are the other four?",
+    "hint": "Something asked for them.",
+    "choices": [
+      {
+        "text": "Dependencies of the one you installed",
+        "correct": true,
+        "why": "`pip show` names them under `Requires`, and `Required-by` being empty is how you know which package you chose."
+      },
+      {
+        "text": "Build dependencies, kept so the package can be rebuilt without the network",
+        "correct": false,
+        "why": "Build dependencies are discarded after the wheel is built."
+      },
+      {
+        "text": "Optional extras, installed because the environment had no constraint file",
+        "correct": false,
+        "why": "Extras are installed only when asked for by name in brackets."
+      },
+      {
+        "text": "Packages every environment is created with, such as `pip` and `setuptools`",
+        "correct": false,
+        "why": "Those are there too, and they are not the four in this list."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8wem71j",
+    "version": 1,
+    "section": "pip",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`python -m pip uninstall requests`. What is left behind?",
+    "hint": "It removes one thing.",
+    "choices": [
+      {
+        "text": "The `dist-info` directories, which record what was installed for later cleanup",
+        "correct": false,
+        "why": "Those go with the package they describe."
+      },
+      {
+        "text": "Nothing — `pip` removes a package and the dependencies only it needed",
+        "correct": false,
+        "why": "That behaviour would need a dependency graph `pip` does not keep."
+      },
+      {
+        "text": "`certifi`, `idna`, `charset-normalizer` and `urllib3` — all four of them, untouched",
+        "correct": true,
+        "why": "`pip` has no concept of 'no longer needed', so an environment accumulates a layer of things nothing uses."
+      },
+      {
+        "text": "Only the packages that something else in the environment also requires",
+        "correct": false,
+        "why": "It makes no such check; it removes exactly what was named."
+      }
+    ]
+  },
+  {
+    "id": "ex-be4wz73z",
+    "version": 1,
+    "section": "pip",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which field of `pip show` answers 'is this something I asked for'?",
+    "hint": "Look at the direction of the arrow.",
+    "choices": [
+      {
+        "text": "`Location`, which differs for a direct install and a transitive one",
+        "correct": false,
+        "why": "Everything installed into the environment lands in the same directory."
+      },
+      {
+        "text": "`Requires`, which is empty for a leaf package you installed directly",
+        "correct": false,
+        "why": "`Requires` lists what it needs, and `requests` needs four things."
+      },
+      {
+        "text": "`Required-by`, which stays empty for a package that you installed yourself",
+        "correct": true,
+        "why": "`Requires` is the other direction: what this package needs."
+      },
+      {
+        "text": "`Installer`, which records whether it was a person or a resolver that asked for it",
+        "correct": false,
+        "why": "It records which tool performed the install, not who wanted it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zj076ds2",
+    "version": 1,
+    "section": "pip",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is there no `pip upgrade-everything`?",
+    "hint": "Think about what such a command decides.",
+    "choices": [
+      {
+        "text": "Because the decision is yours — `pip list --outdated` reports, and you choose",
+        "correct": true,
+        "why": "Upgrading everything at once produces a state nobody has tested and a failure with no single cause."
+      },
+      {
+        "text": "Because `pip` cannot resolve a whole environment at once, only one request at a time",
+        "correct": false,
+        "why": "It resolves whatever is requested, including a full requirements file."
+      },
+      {
+        "text": "Because a package index does not expose the newest version of every package at once",
+        "correct": false,
+        "why": "`pip list --outdated` asks it for exactly that."
+      },
+      {
+        "text": "Because upgrading a transitive dependency would break the package above it",
+        "correct": false,
+        "why": "Sometimes it would and often it would not; the objection is that it is a choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwhq89at",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`requests~=2.31.0` and `requests~=2.31`. Do they mean the same thing?",
+    "hint": "Count the components.",
+    "choices": [
+      {
+        "text": "No — the last component is the one allowed to move, so one allows patches and the other allows minors",
+        "correct": true,
+        "why": "In a fresh environment they resolved to 2.31.0 and 2.34.2."
+      },
+      {
+        "text": "Yes — `~=` reads the major version and allows anything under the next one",
+        "correct": false,
+        "why": "Then both would have given the same answer, and they did not."
+      },
+      {
+        "text": "Yes — trailing zeros are dropped before the specifier is compared",
+        "correct": false,
+        "why": "The number of components is exactly what changes the meaning."
+      },
+      {
+        "text": "No — the shorter form is rejected, since `~=` requires three components",
+        "correct": false,
+        "why": "It is accepted and means something different."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg1k0zn5",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `>=2.26` allow that `~=2.26` does not?",
+    "hint": "One of them has an upper bound.",
+    "choices": [
+      {
+        "text": "A version from a different index, which the compatible form restricts",
+        "correct": false,
+        "why": "Neither form says anything about which index is used."
+      },
+      {
+        "text": "Version 2.25 and below, when nothing newer satisfies the rest of the file",
+        "correct": false,
+        "why": "Neither allows anything below 2.26."
+      },
+      {
+        "text": "A pre-release, which the compatible-release form excludes by default",
+        "correct": false,
+        "why": "Both exclude pre-releases unless `--pre` is passed."
+      },
+      {
+        "text": "Version 3 and anything above it, which was allowed to break you",
+        "correct": true,
+        "why": "`~=2.26` is the explicit `>=2.26,<3`, and writing it out is worth preferring because it cannot be misread."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1dr12hh",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`requests==2.31.0` is pinned exactly. How many packages are now pinned?",
+    "hint": "Look at what `requests` itself asks for.",
+    "choices": [
+      {
+        "text": "Two — the package and whatever it declares an exact version of",
+        "correct": false,
+        "why": "It declares no exact versions; its dependencies are all ranges."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "It declares `urllib3 (<3, >=1.21.1)` and `certifi (>=2017.4.17)`, so those may be anything inside a range you did not choose."
+      },
+      {
+        "text": "None, until the environment is rebuilt and the resolution recorded",
+        "correct": false,
+        "why": "The pin applies at the next install, and it applies to one package."
+      },
+      {
+        "text": "Five — the pin propagates to everything the package requires",
+        "correct": false,
+        "why": "A pin applies to the package it names and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-fy1fefw6",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a comma in `requests>=2.26,<3`?",
+    "hint": "It joins two conditions.",
+    "choices": [
+      {
+        "text": "A separator between two packages on one line",
+        "correct": false,
+        "why": "Two packages would be two lines, or two arguments."
+      },
+      {
+        "text": "A preference order, tried left to right until something installs",
+        "correct": false,
+        "why": "There is no preference order inside a specifier."
+      },
+      {
+        "text": "An `and` — both have to hold",
+        "correct": true,
+        "why": "It is the explicit form of `~=2.26`, and the explicitness is the argument for it."
+      },
+      {
+        "text": "An `or` — either may hold, and `pip` prefers the first",
+        "correct": false,
+        "why": "A specifier that could be satisfied two ways would be no constraint at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej9xn4ms",
+    "version": 1,
+    "section": "versions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Pin so that only the patch component may move, in the shortest form: `requests______2.31.0`",
+    "hint": "Two characters.",
+    "blanks": [
+      {
+        "accept": [
+          "~=",
+          "~="
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fgjy8szr",
+    "version": 1,
+    "section": "requirements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `pip freeze > requirements.txt` the wrong way to write one?",
+    "hint": "Look at what the output contains.",
+    "choices": [
+      {
+        "text": "It lists everything installed, with nothing saying which packages the project asked for",
+        "correct": true,
+        "why": "In a year nobody can tell whether `idna` is a dependency of the project or a leftover of something uninstalled."
+      },
+      {
+        "text": "It writes the packages in alphabetical order, losing the install order",
+        "correct": false,
+        "why": "Install order carries no information worth keeping."
+      },
+      {
+        "text": "It omits packages installed with `--editable`, so a local package is missing",
+        "correct": false,
+        "why": "It includes them, in a form naming the path."
+      },
+      {
+        "text": "It pins to the version installed rather than to the one that was tested",
+        "correct": false,
+        "why": "Those are the same version, which is the one thing it gets right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq6ts26j",
+    "version": 1,
+    "section": "requirements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A project removes a library. What does its `pip freeze` output do?",
+    "hint": "Uninstalling removes one thing.",
+    "choices": [
+      {
+        "text": "It shrinks by one line, which is the library that was removed",
+        "correct": false,
+        "why": "The four packages it brought in are still installed and still printed."
+      },
+      {
+        "text": "It marks each orphaned package with a comment naming whatever had required it",
+        "correct": false,
+        "why": "`freeze` writes no annotations at all."
+      },
+      {
+        "text": "It stays unchanged until the environment is rebuilt from that same file again",
+        "correct": false,
+        "why": "It reports the live environment on every run."
+      },
+      {
+        "text": "It keeps printing the library's dependencies, so the file grows and never shrinks",
+        "correct": true,
+        "why": "`pip uninstall` removes exactly what was named, and `freeze` reports what is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tn142fn",
+    "version": 1,
+    "section": "requirements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What belongs in `requirements-dev.txt` rather than `requirements.txt`?",
+    "hint": "Think about what runs in production.",
+    "choices": [
+      {
+        "text": "`pytest` and `ruff`",
+        "correct": true,
+        "why": "Installing them in production ships a test framework and a linter to a server that runs neither."
+      },
+      {
+        "text": "The pinned versions of everything, leaving the main file as ranges",
+        "correct": false,
+        "why": "The split is by what the code needs, not by how tightly anything is pinned."
+      },
+      {
+        "text": "Anything imported only inside a `if TYPE_CHECKING:` block",
+        "correct": false,
+        "why": "Those are needed by the checker and they are not what this split is for."
+      },
+      {
+        "text": "The transitive dependencies, so the main file stays short and readable",
+        "correct": false,
+        "why": "Transitive dependencies belong to a lock file, and they are needed in production."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb519n0y",
+    "version": 1,
+    "section": "requirements",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first line of `requirements-dev.txt`, pulling in the other file: `______ requirements.txt`",
+    "hint": "Two characters.",
+    "blanks": [
+      {
+        "accept": [
+          "-r"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7m0yfefd",
+    "version": 1,
+    "section": "requirements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should a hand-written requirements file carry that a frozen one cannot?",
+    "hint": "Something a person adds.",
+    "choices": [
+      {
+        "text": "The hashes of the downloaded files, which `freeze` omits",
+        "correct": false,
+        "why": "Hashes come from a lock tool and could be added to either file."
+      },
+      {
+        "text": "The exact versions, which `freeze` reports as ranges",
+        "correct": false,
+        "why": "`freeze` reports exact versions; that is the one thing it is good at."
+      },
+      {
+        "text": "A comment saying why a pin is where it is",
+        "correct": true,
+        "why": "One line per direct dependency, with the version you tested against, and a reason where the pin is not obvious."
+      },
+      {
+        "text": "The index the packages came from, which `freeze` does not record",
+        "correct": false,
+        "why": "The index is configuration rather than a property of the requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-t56nkjqc",
+    "version": 1,
+    "section": "pinning-and-reproducing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`requirements.txt` says `requests==2.31.0` and Thursday's install differs from Monday's. How?",
+    "hint": "The pin covers one package.",
+    "choices": [
+      {
+        "text": "`pip` resolved the same requirement differently because its download cache had expired",
+        "correct": false,
+        "why": "The cache changes speed rather than which version is chosen."
+      },
+      {
+        "text": "A transitive dependency released a version inside the range `requests` declares",
+        "correct": true,
+        "why": "`urllib3 (<3, >=1.21.1)` means `pip` takes whatever the index held at the moment you ran it."
+      },
+      {
+        "text": "The build machine was running a newer Python, which changes which wheel is selected",
+        "correct": false,
+        "why": "It would, and nothing about the machine changed between Monday and Thursday."
+      },
+      {
+        "text": "The index served a different file under the same version number",
+        "correct": false,
+        "why": "That is what `--require-hashes` guards against, and it is rare."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdsvraps",
+    "version": 1,
+    "section": "pinning-and-reproducing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is in a lock file that is not in a requirements file?",
+    "hint": "It covers more than what you asked for.",
+    "choices": [
+      {
+        "text": "The packages the project asked for, with a reason beside each",
+        "correct": false,
+        "why": "That is the input file, which a person edits."
+      },
+      {
+        "text": "The index each package came from, so an install can be repeated offline",
+        "correct": false,
+        "why": "The index is configuration; a lock file records versions."
+      },
+      {
+        "text": "Every package, direct and transitive alike, pinned at one exact version, with its hash",
+        "correct": true,
+        "why": "Usually with a hash of the file that was downloaded, and it is generated rather than edited."
+      },
+      {
+        "text": "The order the packages have to be installed in, which the resolver worked out",
+        "correct": false,
+        "why": "Install order is recomputed and is not recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgw327a5",
+    "version": 1,
+    "section": "pinning-and-reproducing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pip-compile` annotates its output with `# via requests` and `# via -r requirements.in`. Why does that matter?",
+    "hint": "Think about the objection to `pip freeze`.",
+    "choices": [
+      {
+        "text": "It marks which lines may be upgraded without recompiling the file",
+        "correct": false,
+        "why": "Any change means recompiling, which is the point of the input file."
+      },
+      {
+        "text": "It records the order the resolver visited the packages in, for debugging a conflict",
+        "correct": false,
+        "why": "The annotation names the requirer rather than an order."
+      },
+      {
+        "text": "It lets `pip-sync` uninstall the annotated packages first",
+        "correct": false,
+        "why": "`pip-sync` makes the environment match the file and uses no annotation."
+      },
+      {
+        "text": "It says which package is yours and which was dragged in, so a line can be deleted safely",
+        "correct": true,
+        "why": "`pip freeze` cannot produce that, and it is the difference between a file a person can read and a list."
+      }
+    ]
+  },
+  {
+    "id": "ex-20993z62",
+    "version": 1,
+    "section": "pinning-and-reproducing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both `requirements.in` and the generated `requirements.txt` are committed. What does the second one buy?",
+    "hint": "Think about two machines.",
+    "choices": [
+      {
+        "text": "Two machines install exactly the same code, transitive packages included",
+        "correct": true,
+        "why": "And a pull request that changes the generated file without changing the input is a transitive upgrade, which is exactly the change you want to see."
+      },
+      {
+        "text": "Protection against a package being removed from the index",
+        "correct": false,
+        "why": "Neither file holds the package itself."
+      },
+      {
+        "text": "A record of when each of the dependencies was added, which the input file loses",
+        "correct": false,
+        "why": "Neither file records a date; that is what the history is for."
+      },
+      {
+        "text": "A faster install, since the resolver has nothing left to work out",
+        "correct": false,
+        "why": "It is faster, and that is a side effect rather than the reason to commit it."
+      }
+    ]
+  },
+  {
+    "id": "ex-56am394f",
+    "version": 1,
+    "section": "pinning-and-reproducing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `--require-hashes` stop?",
+    "hint": "Think about bytes rather than version numbers.",
+    "choices": [
+      {
+        "text": "A dependency moving inside a range you did not choose",
+        "correct": false,
+        "why": "The exact pins in the lock file do that; the hashes are about the bytes."
+      },
+      {
+        "text": "A package being installed from an index the project did not configure",
+        "correct": false,
+        "why": "That is `--index-url` and the trusted-host settings."
+      },
+      {
+        "text": "A version being yanked from the index after you depended on it",
+        "correct": false,
+        "why": "A yanked version is still installable when pinned exactly."
+      },
+      {
+        "text": "A different file being served under the same version number",
+        "correct": true,
+        "why": "With hashes in the file, `pip` refuses anything whose bytes do not match, which is worth turning on for anything that deploys."
+      }
+    ]
+  },
+  {
+    "id": "ex-awnzdf4y",
+    "version": 1,
+    "section": "where-things-went",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sys.path` inside an environment starts with `''`. What is that entry?",
+    "hint": "It is a directory with no name.",
+    "choices": [
+      {
+        "text": "The directory the script is in, or the working directory in the REPL and for `-c`",
+        "correct": true,
+        "why": "It comes before the standard library, which is why a file named after a module shadows it."
+      },
+      {
+        "text": "An empty slot reserved for `PYTHONPATH`, filled when that variable is set",
+        "correct": false,
+        "why": "`PYTHONPATH` entries are inserted as real paths."
+      },
+      {
+        "text": "The environment's `site-packages`, abbreviated because it is the default",
+        "correct": false,
+        "why": "That is spelled out in full, at the end of the list."
+      },
+      {
+        "text": "The root of the filesystem, which is where absolute imports resolve from",
+        "correct": false,
+        "why": "Imports do not resolve from the root."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr3dv9tx",
+    "version": 1,
+    "section": "where-things-went",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A file called `json.py` sits in your project directory. What does `import json` get?",
+    "hint": "The first match wins.",
+    "choices": [
+      {
+        "text": "Your file",
+        "correct": true,
+        "why": "The error usually surfaces three imports away, inside a library that imported `json` and got yours."
+      },
+      {
+        "text": "An `ImportError` naming the ambiguity between the two",
+        "correct": false,
+        "why": "Nothing detects an ambiguity; the search stops at the first match."
+      },
+      {
+        "text": "Whichever was modified most recently, since the bytecode cache decides",
+        "correct": false,
+        "why": "The cache never chooses between two different files."
+      },
+      {
+        "text": "The standard library, since the standard library is searched first",
+        "correct": false,
+        "why": "The current directory is first, which is the whole of this section."
+      }
+    ]
+  },
+  {
+    "id": "ex-txakhtag",
+    "version": 1,
+    "section": "where-things-went",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A library behaves like a different version from the one you installed. What are the first two lines to run?",
+    "hint": "Ask the module itself.",
+    "choices": [
+      {
+        "text": "`print(lib.__version__, lib.__file__)`",
+        "correct": true,
+        "why": "More often than not the file is somewhere unexpected — a user installation under `~/.local`, or the system's copy, because the environment was not active."
+      },
+      {
+        "text": "`pip install --force-reinstall`, which settles it by replacing the copy",
+        "correct": false,
+        "why": "That changes the environment without telling you which copy was being imported."
+      },
+      {
+        "text": "`python -v` and a read of the import trace, which names every file tried",
+        "correct": false,
+        "why": "It works and it is hundreds of lines where two would do."
+      },
+      {
+        "text": "`pip list` and `pip check`, which report the environment's state",
+        "correct": false,
+        "why": "They report what `pip` installed, which is not necessarily what the import found."
+      }
+    ]
+  },
+  {
+    "id": "ex-00ca70nw",
+    "version": 1,
+    "section": "where-things-went",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field of `pip show -f` do you compare against `__file__`?",
+    "hint": "Where it landed.",
+    "choices": [
+      {
+        "text": "`Installer`, which records how the copy got there",
+        "correct": false,
+        "why": "It says `pip`, which does not locate anything."
+      },
+      {
+        "text": "`Files`, which lists every path the package installed",
+        "correct": false,
+        "why": "Those are relative to `Location`, which is the one to compare."
+      },
+      {
+        "text": "`Location`",
+        "correct": true,
+        "why": "Comparing the two settles the argument in one line."
+      },
+      {
+        "text": "`Requires`, which names the dependencies that might have shipped a copy",
+        "correct": false,
+        "why": "A dependency does not ship a second copy of the package itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-deyssvfg",
+    "version": 1,
+    "section": "where-things-went",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is it worth deleting `__pycache__` by hand?",
+    "hint": "Something that should be gone is not.",
+    "choices": [
+      {
+        "text": "When a `.py` file you deleted turns out to still be importable",
+        "correct": true,
+        "why": "Its `.pyc` is still there, and it is the one case where the cache is visible day to day."
+      },
+      {
+        "text": "After every `pip install`, so a stale compile cannot be reused",
+        "correct": false,
+        "why": "The cache is keyed by the source and is invalidated when it changes."
+      },
+      {
+        "text": "When switching between Python versions, since the cache is shared by them",
+        "correct": false,
+        "why": "Cached files are named by interpreter version and coexist."
+      },
+      {
+        "text": "Before committing, since the directory is otherwise tracked",
+        "correct": false,
+        "why": "It belongs in `.gitignore` and is not tracked."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxytv03r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Predict the resolution: a fresh environment, `pip install requests~=2.31`. Which is installed?",
+    "hint": "Which component may move?",
+    "choices": [
+      {
+        "text": "The newest release of any version, since `~=` has no upper bound",
+        "correct": false,
+        "why": "It has one: the component before the last may not move."
+      },
+      {
+        "text": "The newest 2.x, because the minor component is the last one written",
+        "correct": true,
+        "why": "Measured: it resolved to 2.34.2, while `~=2.31.0` resolved to 2.31.0."
+      },
+      {
+        "text": "The oldest release satisfying the specifier, which is the reproducible choice",
+        "correct": false,
+        "why": "`pip` takes the newest thing that fits."
+      },
+      {
+        "text": "Exactly 2.31.0, since `~=` pins what is written and allows only patches",
+        "correct": false,
+        "why": "That is `~=2.31.0`, which has one component more."
+      }
+    ]
+  },
+  {
+    "id": "ex-4a599fph",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pip freeze` printed five lines for a project that installed one package. Which line belongs in `requirements.txt`?",
+    "hint": "One of them was chosen.",
+    "choices": [
+      {
+        "text": "All five, since anything less makes the install unreproducible",
+        "correct": false,
+        "why": "Reproducibility is a lock file's job, and the requirements file says what was asked for."
+      },
+      {
+        "text": "The four transitive ones, since the direct one is implied by the code",
+        "correct": false,
+        "why": "Nothing implies a dependency from the code; the file is how it is declared."
+      },
+      {
+        "text": "The one the project installed",
+        "correct": true,
+        "why": "The other four are transitive, and a lock file is where they belong."
+      },
+      {
+        "text": "None — a requirements file holds ranges and `freeze` emits exact pins",
+        "correct": false,
+        "why": "A requirements file may hold an exact pin, and often should."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcsfw2v3",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Build an environment in the conventional place, from any directory: `python3 -m venv ______`",
+    "hint": "Five characters, and the first is a dot.",
+    "blanks": [
+      {
+        "accept": [
+          ".venv"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yh6rjc95",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An install succeeds and the import fails. The command was `pip install requests`. What is the likely cause?",
+    "hint": "Which `pip` ran?",
+    "choices": [
+      {
+        "text": "The install needed `--upgrade`, and a stale copy was left in place",
+        "correct": false,
+        "why": "A stale copy would import, at the wrong version."
+      },
+      {
+        "text": "The package installed a namespace the import statement spelled differently",
+        "correct": false,
+        "why": "`requests` is imported by the name it installs under."
+      },
+      {
+        "text": "`pip` was a different environment's, so the library landed somewhere else",
+        "correct": true,
+        "why": "`python -m pip` is the version that cannot be pointing somewhere else."
+      },
+      {
+        "text": "The environment was created without `--system-site-packages`",
+        "correct": false,
+        "why": "That would hide the machine's libraries, and nothing was installed there."
+      }
+    ]
+  },
+  {
+    "id": "ex-jx1bynx9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these belongs in git?",
+    "hint": "One of them is a fact and the rest are artefacts.",
+    "choices": [
+      {
+        "text": "`__pycache__/`, so the first import of each module is faster",
+        "correct": false,
+        "why": "Bytecode is regenerated in milliseconds and is keyed to the interpreter."
+      },
+      {
+        "text": "`.venv/`, so a new machine needs no install step at all",
+        "correct": false,
+        "why": "It holds compiled extensions for one machine and hundreds of megabytes of copies."
+      },
+      {
+        "text": "`~/.cache/pip`, so an offline machine can reinstall from it",
+        "correct": false,
+        "why": "It is outside the project and is a cache of downloads."
+      },
+      {
+        "text": "`requirements.txt`",
+        "correct": true,
+        "why": "The directory and the caches are build artefacts; the text file is what reproduces them."
+      }
+    ]
+  },
+  {
+    "id": "ex-bv6agg05",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a lock file guarantee that a pinned `requirements.txt` does not?",
+    "hint": "Count how deep the pins go.",
+    "choices": [
+      {
+        "text": "That the transitive dependencies are the same versions too",
+        "correct": true,
+        "why": "A requirements file pins what you named; the packages those need are ranges you did not choose."
+      },
+      {
+        "text": "That the packages come from the index the project configured",
+        "correct": false,
+        "why": "The index is configuration and either file can be installed from any."
+      },
+      {
+        "text": "That an install works with no network, since the files are recorded in it",
+        "correct": false,
+        "why": "It records versions and hashes; the files still have to be fetched."
+      },
+      {
+        "text": "That no package has been yanked since the file was written",
+        "correct": false,
+        "why": "A yank is not detectable from the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7d0yqgf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cron job runs a project's script. What is wrong with `source .venv/bin/activate && python script.py` in the crontab?",
+    "hint": "Think about the shell cron gives you.",
+    "choices": [
+      {
+        "text": "`source` is a shell builtin that the shell cron starts does not necessarily have",
+        "correct": true,
+        "why": "`.venv/bin/python script.py` needs no shell feature at all, which is why it is what a unit or a crontab should carry."
+      },
+      {
+        "text": "`activate` cannot be sourced from a non-interactive shell",
+        "correct": false,
+        "why": "It can; the problem is which shell cron starts and what builtin it has."
+      },
+      {
+        "text": "The working directory is not the project, so the relative path fails",
+        "correct": false,
+        "why": "That is a separate and real problem, fixed by an absolute path either way."
+      },
+      {
+        "text": "`VIRTUAL_ENV` would be set for every later cron job on the machine",
+        "correct": false,
+        "why": "Each job gets its own process and its own environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-2sd6wy08",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is NOT solved by a virtual environment?",
+    "hint": "Think about what it isolates.",
+    "choices": [
+      {
+        "text": "Two projects needing different versions of one library",
+        "correct": false,
+        "why": "That is the problem it exists for."
+      },
+      {
+        "text": "An install changing the version a system tool imports",
+        "correct": false,
+        "why": "Nothing is installed into the system interpreter."
+      },
+      {
+        "text": "A script reading a file it should not have access to",
+        "correct": true,
+        "why": "An environment isolates which libraries `import` finds, and nothing else."
+      },
+      {
+        "text": "A library upgrade in one project reaching another on the same machine",
+        "correct": false,
+        "why": "Each project reads only its own `site-packages`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz90bgt6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`requirements.in` and `requirements.txt` are both committed. Somebody's pull request changes only the second. What happened?",
+    "hint": "The input did not move.",
+    "choices": [
+      {
+        "text": "The file was regenerated on a machine with a different Python",
+        "correct": false,
+        "why": "That happens and it would change more than one line, with a header to match."
+      },
+      {
+        "text": "A package was removed and its dependencies left behind",
+        "correct": false,
+        "why": "A removal is an edit to the input file."
+      },
+      {
+        "text": "A transitive dependency was upgraded",
+        "correct": true,
+        "why": "Which is exactly the change you want to be able to see in a review."
+      },
+      {
+        "text": "A direct dependency was pinned more tightly than before",
+        "correct": false,
+        "why": "That is an edit to the input, which would appear in the diff."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2djbsz3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An import behaves impossibly and nothing in the code explains it. What do you look for first?",
+    "hint": "Beside you.",
+    "choices": [
+      {
+        "text": "A circular import, which resolves to a module that is only half initialised",
+        "correct": false,
+        "why": "That produces a specific `ImportError` that names the cycle."
+      },
+      {
+        "text": "A file in the project directory named after a standard-library module",
+        "correct": true,
+        "why": "`random.py`, `email.py`, `types.py`, `test.py`, `token.py` and `queue.py` are the ones people write by accident."
+      },
+      {
+        "text": "A stale `.pyc` for a module whose source has changed since",
+        "correct": false,
+        "why": "The cache is invalidated by the source's timestamp and size."
+      },
+      {
+        "text": "A second environment that is active in another terminal",
+        "correct": false,
+        "why": "An environment affects the process it started in."
+      }
+    ]
+  }
+]
