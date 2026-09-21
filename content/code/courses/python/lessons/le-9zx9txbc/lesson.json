@@ -1,0 +1,88 @@
+{
+  "id": "le-9zx9txbc",
+  "title": "Context managers, and writing a `with` block of your own",
+  "sections": [
+    {
+      "id": "se-2fq0y87d",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-maxsrvkm",
+          "version": 1,
+          "script": "Something has to happen even when the thing before it fails. {{shape}} That is the shape this lesson is about, and you have met it three times already without the name.\n\n{{file}} A file has to be closed. A lock has to be released. A transaction has to be committed or rolled back. A temporary directory has to be deleted. A setting has to be put back. In every one of those, the undoing has to happen on the path where everything worked AND on the path where it did not.\n\n{{finally}} Lesson 8 had the machinery: `try` and `finally`. What a context manager adds is a NAME for the pair, so that the undoing lives beside the doing rather than at the bottom of whoever remembered to write it.\n\n{{with}} `with open(path) as f:` is that. The opening is the setup, the block is the body, and the closing happens on the way out however you leave — the end of the block, a `return`, or an exception on its way up.\n\n{{protocol}} Underneath it is two methods, and there is nothing else. `__enter__` runs first and whatever it returns is what `as` binds. `__exit__` runs on the way out, and it is told whether there was an exception, which one, and where it came from. That is the whole interface.\n\n{{yield}} Writing one as a class is fine and writing one as a generator is shorter: `@contextmanager`, a single `yield`, and a `try`/`finally` around it. The lesson is strict about that `try`, because the version without it undoes nothing on the day it matters.\n\n{{swallow}} There is one sharp edge, and it is worth knowing before you write one. If `__exit__` returns something TRUE, the exception is swallowed. Not logged, not re-raised — gone, and the block after the `with` carries on as if nothing had happened. Almost every context manager should return nothing at all.\n\n{{not}} And the last section is what a `with` block is not: not a scope, not a transaction by itself, and not a handler for the exception passing through it.",
+          "seconds": 145,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-prdk2pcw",
+      "slug": "what-with-guarantees",
+      "kind": "reading"
+    },
+    {
+      "id": "se-1fhera7c",
+      "slug": "the-protocol",
+      "kind": "reading"
+    },
+    {
+      "id": "se-3ds77kny",
+      "slug": "contextlib",
+      "kind": "reading"
+    },
+    {
+      "id": "se-wtkghkfk",
+      "slug": "several-at-once",
+      "kind": "reading"
+    },
+    {
+      "id": "se-qpmtw8bt",
+      "slug": "the-ones-already-written",
+      "kind": "reading"
+    },
+    {
+      "id": "se-y2znyygp",
+      "slug": "writing-a-useful-one",
+      "kind": "reading"
+    },
+    {
+      "id": "se-2njdxrvt",
+      "slug": "what-it-is-not",
+      "kind": "reading"
+    },
+    {
+      "id": "se-dgt5nbfn",
+      "slug": "the-file-left-open",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-5k3wkdzg",
+          "version": 1,
+          "script": "The same loop, with and without `with`, and a count of the open descriptors on the right.\n\n{{without}} Without. A loop over ten thousand file names, `f = open(name)`, read the first line, no `close`. The count climbs — ten, a hundred, a thousand. On CPython some of them are collected and the count wobbles down and up. On another implementation it would not.\n\n{{limit}} At around a thousand — the limit on this machine — it stops climbing and the program raises `OSError: [Errno 24] Too many open files`. The message names no file of mine, no line of mine, and nothing about the loop. It is the operating system refusing, several thousand iterations after the mistake.\n\n{{with}} With. The same loop, `with open(name) as f:`. The count is one. Not one at a time on average — one, the whole way through, because the file is given back at the end of each pass.\n\n{{crash}} Now the interesting case. I put a line in the body that raises on the five hundredth file. Without the `with`, the exception leaves five hundred files open and the traceback says nothing about them. With it, the file that was open when the exception happened is closed, and then the exception carries on upwards exactly as it was.\n\n{{write}} And the version that costs the most. The same loop, writing. Without the `with`, the process is killed before the buffer is flushed, and the files on disk are shorter than what the program wrote — some of them empty. **The data was in memory and nobody asked for it to be written.**\n\n{{point}} A `close` you forgot is invisible until a number somewhere runs out, and then it fails somewhere else.",
+          "seconds": 120,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-m260khw0",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-settxe4j",
+          "version": 1,
+          "script": "If it has to be undone, put the undoing in `__exit__`.\n\n{{rule}} That is the rule, and it is what a `with` block is for: the setup and the teardown written next to each other, with the teardown happening on every way out — the end, a `return`, or an exception.\n\n{{protocol}} Two methods. `__enter__` returns what `as` binds; `__exit__` is told the exception and cleans up regardless. Writing one as a class is fine, and `@contextmanager` with one `yield` is shorter.\n\n{{try}} **Put the `try`/`finally` around that `yield`.** Without it, a generator-based manager cleans up only when the body succeeded, which is the one case that did not need it.\n\n{{swallow}} A truthy return from `__exit__` swallows the exception. Return nothing unless suppressing is the whole point of the manager — and when it is, `contextlib.suppress` has already been written.\n\n{{several}} Several managers go in one `with`, separated by commas, and `ExitStack` is for the number you do not know until the program runs.\n\n{{not}} And it is not a scope: a name bound inside a `with` is still there afterwards. It is not a transaction unless something inside it commits. And it does not handle the exception passing through it — it only gets to tidy up first.",
+          "seconds": 87,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-b87b2e34",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
