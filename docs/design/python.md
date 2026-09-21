@@ -52,8 +52,12 @@ order they walk it.
 
 Three videos and a drill in each of the twenty-one: an **opening** that says what the lesson is
 for, one **demonstration** in the middle where the thing is done rather than described, and a
-**closing** that is the sentence to leave with. The drill is the lesson's own `drillable`
-section, and it is the only one that is.
+**closing** that is the sentence to leave with. The drill is the only section of kind
+`practice` — the questions attached to the readings are the lesson's own, and the drill's are the
+ones that put the whole lesson together. `drillable` is a property of a question rather than of a
+section, and in a lesson file it is `true`: what it decides is whether the practice queue may draw
+that card, and the only place it is `false` is an exam pool, which `validate-content` refuses
+otherwise.
 
 The demonstration is the section this course cannot do without. Python is taught by watching
 somebody type it wrong and read the message — `reading-a-traceback` is section 07 for that
