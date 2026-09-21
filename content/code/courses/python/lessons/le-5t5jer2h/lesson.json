@@ -1,0 +1,98 @@
+{
+  "id": "le-5t5jer2h",
+  "title": "Functions: arguments, return values, scope and lambdas",
+  "sections": [
+    {
+      "id": "se-c6404thy",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-khy0n8yp",
+          "version": 1,
+          "script": "You have already written the same three lines twice. Maybe four times. {{again}} That is the moment a function is for — not to be clever, and not because a book said to break things up, but because the third copy is where the bug that is fixed in two of them lives.\n\n{{name}} A function is a name for a piece of work. You give it what it needs, it hands something back, and from then on the work happens in one place. Fix it there and it is fixed everywhere.\n\n{{four}} There are four things to get right, and this lesson is those four. What goes in — the arguments, and there are more kinds of those than you would expect. What comes out — one value, or several, or nothing at all, and the difference between returning something and printing it. What the inside can see — which is scope, and it is the half people learn by being surprised. And what the name says, which is the part nobody checks and everybody reads.\n\n{{scope}} Scope is worth a warning now. Python resolves a name by looking in four places in a fixed order, and it never asks you which one you meant. That is quiet and it is consistent, and the one surprise is that assigning to a name anywhere inside a function makes it local for the whole function — including on the line above the assignment. There is a section on it and a video drawing it.\n\n{{default}} And one trap from lesson 3 comes back with a new face. A default argument is evaluated ONCE, when the `def` line runs. A list as a default is therefore one list, shared by every call that does not bring its own. That is the most common bug in this lesson and it is four words to avoid.\n\n{{last}} By the end you will also have met a function being passed around as a value. That sounds abstract today and it is the whole of lesson 12.",
+          "seconds": 143,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-scnn3rq9",
+      "slug": "defining-and-calling",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7qv2hx0d",
+      "slug": "arguments",
+      "kind": "reading"
+    },
+    {
+      "id": "se-e37cz8ac",
+      "slug": "star-args",
+      "kind": "reading"
+    },
+    {
+      "id": "se-ghz2b419",
+      "slug": "return",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7b5bfbxy",
+      "slug": "scope",
+      "kind": "reading"
+    },
+    {
+      "id": "se-7zn2v5c8",
+      "slug": "global-and-nonlocal",
+      "kind": "reading"
+    },
+    {
+      "id": "se-3y8sccpr",
+      "slug": "docstrings",
+      "kind": "reading"
+    },
+    {
+      "id": "se-rrfd5ea2",
+      "slug": "lambdas",
+      "kind": "reading"
+    },
+    {
+      "id": "se-0tdw9awp",
+      "slug": "functions-as-values",
+      "kind": "reading"
+    },
+    {
+      "id": "se-wzychsv6",
+      "slug": "scope-drawn",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-qxj64gd5",
+          "version": 1,
+          "script": "One name, three levels, and which one each line sees.\n\n{{setup}} I have a module-level `total` set to zero. Inside a function I read `total` and print it — zero, because Python looked locally, found nothing, and went outwards.\n\n{{assign}} Now I add a line: `total = total + 1`. Same function, same read on the same line. And it raises — `UnboundLocalError`, on the line that used to work.\n\n{{why}} Here is why, and it is the whole idea. Python decides whether a name is local by scanning the FUNCTION, not by running it. There is an assignment to `total` somewhere in the body, so `total` is local everywhere in that body — including on the right-hand side of the very line that assigns it. The module-level one is not consulted at all.\n\n{{global}} `global total` at the top of the function says: this name is the module's. Now it works, and now every caller of this function can change something at module level. Which is why the fix is usually not `global` at all.\n\n{{fix}} The fix is to take the value in and hand it back out: `def add_one(total): return total + 1`. Nothing outside changes without somebody assigning the result, and the function can be read on its own.\n\n{{nonlocal}} `nonlocal` is the same idea one level in — a function inside a function, reaching the enclosing one rather than the module's. Rare, and it is the machinery lesson 12 is built from.",
+          "seconds": 103,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-tgqkqvgd",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-6cgvxw2t",
+          "version": 1,
+          "script": "Arguments in, a value out, and a name that says what it does.\n\n{{args}} Positional for what the function is about, keyword for what the caller is choosing. A default evaluated once at the `def` — so `None` for anything mutable, and build it inside. `*args` and `**kwargs` when you genuinely do not know how many, and a bare `*` when a boolean would be unreadable at the call site.\n\n{{return}} A function with no `return` gives you `None`, and that is a value rather than nothing. Returning a tuple is how you return several things. And returning is not printing: a function that prints can be read by a person and cannot be used by a program.\n\n{{scope}} Four scopes in a fixed order — local, enclosing, global, built-in. An assignment anywhere in the body makes the name local for the whole body. Needing `global` is usually a message about the shape rather than a missing keyword.\n\n{{lambda}} A lambda is an expression with parameters, and its home is `key=`. The moment you name one, you wanted a `def`.\n\n{{doc}} And the docstring. One line saying what it does, in the imperative. `help()` reads it, your editor reads it, and lesson 15 turns it into a test.",
+          "seconds": 86,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-t0x9p7te",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
