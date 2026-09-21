@@ -1,0 +1,938 @@
+{
+  "ex-a1t83v5c": {
+    "prompt": "Um formatador reescreveu 22 linhas de um módulo. Quantos dos quatro achados do linter mudaram?",
+    "hint": "Pense no que cada ferramenta olha.",
+    "choices": [
+      {
+        "text": "Nenhum",
+        "why": "Disposição não é evidência. Um achado que se movesse quando o arquivo foi reformatado seria um achado sobre a formatação."
+      },
+      {
+        "text": "Dois — os sobre espaço em branco, que o formatador resolveu de passagem",
+        "why": "Regras de espaço em branco são desligadas justamente para que isso não aconteça."
+      },
+      {
+        "text": "Todos os quatro, já que os números de linha se moveram e cada achado está preso a um",
+        "why": "Os achados são deduzidos de novo do arquivo novo e continuam nomeando as mesmas quatro coisas."
+      },
+      {
+        "text": "Um — o import sem uso, que o formatador removeu enquanto arrumava o bloco",
+        "why": "Um formatador não remove nada; apagar um import muda o que o programa faz."
+      }
+    ]
+  },
+  "ex-p55nb2b9": {
+    "prompt": "Por que desligar o `E501` quando há um formatador em uso?",
+    "hint": "Quem decidiu a largura da linha?",
+    "choices": [
+      {
+        "text": "O `E501` não tem conserto automático, então todo achado precisa de uma pessoa",
+        "why": "O `E722` também não tem, e esse fica ligado."
+      },
+      {
+        "text": "O `E501` conta caracteres e não colunas de exibição, então erra sobre tabulações",
+        "why": "Ele conta caracteres e não é essa a objeção aqui."
+      },
+      {
+        "text": "Um formatador emite linhas mais longas que o limite quando uma string não pode ser quebrada",
+        "why": "Esse é um caso real e estreito, e não o motivo geral."
+      },
+      {
+        "text": "O formatador já escolheu a largura, então um relatório sobre ela é um relatório sobre a decisão dele",
+        "why": "Deixe o formatador ganhar na disposição e fique com as regras do linter que são sobre significado."
+      }
+    ]
+  },
+  "ex-d6p4hhme": {
+    "prompt": "Qual destes é decisão de formatador e não de linter?",
+    "hint": "Um deles não tem resposta certa.",
+    "choices": [
+      {
+        "text": "Se um import no topo do arquivo é usado em algum lugar abaixo",
+        "why": "Isso é um fato sobre o programa e pertence ao linter."
+      },
+      {
+        "text": "Se um argumento padrão é uma lista que sobrevive à chamada",
+        "why": "Isso é um defeito e formatador nenhum toca nele."
+      },
+      {
+        "text": "Se uma chamada longa é escrita numa linha ou em um argumento por linha",
+        "why": "Não há resposta certa para isso, que é exatamente por que entregar a um programa não custa nada."
+      },
+      {
+        "text": "Se um bloco `try` captura toda exceção ou uma nomeada",
+        "why": "Isso tem resposta certa, então é relatado em vez de reescrito."
+      }
+    ]
+  },
+  "ex-mgn08kmb": {
+    "prompt": "O `ruff format` e o `black` foram passados no mesmo módulo. O que saiu?",
+    "hint": "Foi medido com `diff`.",
+    "choices": [
+      {
+        "text": "Os mesmos bytes",
+        "why": "É essa a promessa que o `ruff format` faz, e é uma que você pode conferir no seu próprio código antes de trocar."
+      },
+      {
+        "text": "A mesma disposição com caracteres de aspas diferentes nos literais de string",
+        "why": "Os dois normalizam para aspas duplas."
+      },
+      {
+        "text": "Saídas que diferem em chamadas longas, em que os dois quebram diferente",
+        "why": "Os dois quebraram a chamada longa de forma idêntica aqui."
+      },
+      {
+        "text": "Saídas que diferem nas linhas em branco em volta das definições de topo",
+        "why": "As linhas em branco foram as mesmas."
+      }
+    ]
+  },
+  "ex-exstkkwp": {
+    "prompt": "O que um formatador muda e um linter não?",
+    "hint": "Um dos dois escreve no arquivo.",
+    "choices": [
+      {
+        "text": "Os bytes do arquivo",
+        "why": "Um linter relata e não muda nada a menos que você peça com `--fix`."
+      },
+      {
+        "text": "O significado do programa, nos casos estreitos em que uma reescrita é segura",
+        "why": "Um formatador não pode mudar significado de jeito nenhum."
+      },
+      {
+        "text": "A ordem dos imports, que é uma questão de disposição como outra qualquer",
+        "why": "Ordem de import é a família `I` do `ruff`, do lado do linter."
+      },
+      {
+        "text": "O conjunto de nomes que o módulo exporta, quando um sem uso é removido",
+        "why": "Remover um import é um `--fix` de linter."
+      }
+    ]
+  },
+  "ex-1bjpqm0v": {
+    "prompt": "O `black` reformatou um arquivo e deixou `if result.ok == True:` exatamente como estava. Por quê?",
+    "hint": "Qual das ferramentas tem opinião sobre isso?",
+    "choices": [
+      {
+        "text": "`== True` já está formatado certo, com os espaços que o `black` poria ali",
+        "why": "Ele removeu o espaço antes do `:` nessa mesma linha, então tocou nela sim."
+      },
+      {
+        "text": "Uma comparação com `True` é achado de linter e um formatador não tem opinião a respeito",
+        "why": "O `E712` relata. Reescrever poderia mudar comportamento, coisa que um formatador jamais pode fazer."
+      },
+      {
+        "text": "Está dentro de um `if`, e o `black` deixa condições inteiras em paz para não mudar ramos",
+        "why": "Ele reformata condições à vontade; o que ele não faz é mudar o que uma quer dizer."
+      },
+      {
+        "text": "O `black` pula qualquer linha que uma regra de linter já cubra",
+        "why": "Ele não sabe nada sobre as regras do linter."
+      }
+    ]
+  },
+  "ex-bvfqfvn8": {
+    "prompt": "Qual é o argumento para o `black` quase não ter opções?",
+    "hint": "Pense para que as opções seriam usadas.",
+    "choices": [
+      {
+        "text": "Menos opções quer dizer um programa menor, que é por que ele roda tão rápido",
+        "why": "A velocidade vem da implementação e não do tamanho da lista de opções."
+      },
+      {
+        "text": "Um formatador com ajustes é um sobre o qual uma equipe discute, e remover a discussão é o produto",
+        "why": "`88` é um número estranho e é o padrão, que é a única propriedade dele que importa."
+      },
+      {
+        "text": "Cada opção dobraria o número de disposições que a suíte de testes precisa cobrir",
+        "why": "Isso é um custo para os autores dele e não a razão dada para o projeto."
+      },
+      {
+        "text": "Opções fariam a saída depender de um arquivo de configuração que pode não ser comitado",
+        "why": "Ele lê o `pyproject.toml`, que é comitado como qualquer outra coisa."
+      }
+    ]
+  },
+  "ex-x3y4q10z": {
+    "prompt": "Você deixa uma vírgula final dentro de uma chamada que caberia numa linha. O que o `black` faz?",
+    "hint": "A vírgula é um recado.",
+    "choices": [
+      {
+        "text": "Mantém a vírgula e a linha única, já que os dois são válidos",
+        "why": "A vírgula é lida como um pedido para explodir."
+      },
+      {
+        "text": "Relata a vírgula como redundante e deixa a disposição em paz",
+        "why": "Ele não relata nada; é um formatador."
+      },
+      {
+        "text": "Remove a vírgula e junta a chamada numa linha",
+        "why": "Ele remove a vírgula só quando a chamada já está numa linha."
+      },
+      {
+        "text": "Mantém a chamada explodida, um argumento por linha, com a vírgula ainda ali",
+        "why": "A vírgula final mágica é o único lugar em que você pode contrariá-lo, e é útil para uma lista que vai crescer."
+      }
+    ]
+  },
+  "ex-ccx9nakc": {
+    "prompt": "Reprove o build quando um arquivo não está formatado, sem reescrever nada: `black --______ app/`",
+    "hint": "Cinco letras."
+  },
+  "ex-n4jwwdpb": {
+    "prompt": "A primeira passagem do `black` reescreve o repositório inteiro. O que acompanha esse commit?",
+    "hint": "Pense no `git blame` da semana seguinte.",
+    "choices": [
+      {
+        "text": "O hash dele no `.git-blame-ignore-revs`, com o `blame.ignoreRevsFile` apontado para o arquivo",
+        "why": "Caso contrário o `git blame` responde 'o commit de formatação' para toda linha do projeto."
+      },
+      {
+        "text": "Uma entrada no `.gitattributes` marcando os arquivos reformatados como gerados",
+        "why": "Isso muda como diffs são exibidos e não faz nada pelo `blame`."
+      },
+      {
+        "text": "Um commit de reversão preparado de antemão, caso o reformat quebre alguma coisa",
+        "why": "Um formatador não muda comportamento, então não há o que reverter."
+      },
+      {
+        "text": "Uma tag, para que a versão anterior ao reformat ainda possa ser construída",
+        "why": "O reformat não afeta se um commit mais antigo constrói."
+      }
+    ]
+  },
+  "ex-qjq10h6x": {
+    "prompt": "`[*] 3 fixable with the --fix option (1 hidden fix can be enabled with --unsafe-fixes)`. Qual é o escondido?",
+    "hint": "Pense no que um conserto pode mudar.",
+    "choices": [
+      {
+        "text": "Um conserto que o `ruff` não consegue provar que deixa o comportamento do programa intacto",
+        "why": "`result.ok == True` virar `result.ok` é o exemplo: `1 == True` é verdade e `1` não é `True`."
+      },
+      {
+        "text": "Um conserto de uma regra que não está no conjunto selecionado, que seria aplicado calado",
+        "why": "Uma regra não selecionada não produz achado nenhum para consertar."
+      },
+      {
+        "text": "Um conserto que conflitaria com outro conserto na mesma linha",
+        "why": "Consertos em conflito são aplicados em várias passagens em vez de escondidos."
+      },
+      {
+        "text": "Um conserto que reescreve mais de um arquivo, e precisa da flag para ser permitido",
+        "why": "Todo conserto aqui fica dentro de um arquivo."
+      }
+    ]
+  },
+  "ex-bdvp8ch1": {
+    "prompt": "Qual família guarda a maior parte dos achados que são defeitos de verdade?",
+    "hint": "Tem nome de inseto.",
+    "choices": [
+      {
+        "text": "`B`",
+        "why": "flake8-bugbear: padrões mutáveis, uma variável de laço capturada por um fechamento, um `assert` sobre uma tupla."
+      },
+      {
+        "text": "`E`, que é o pycodestyle e é a maior família em quantidade de regras",
+        "why": "Ela é sobre espaço em branco e disposição, que hoje é do formatador."
+      },
+      {
+        "text": "`SIM`, que acha código que poderia ser escrito mais direto",
+        "why": "Essas são simplificações e o código que elas nomeiam está correto."
+      },
+      {
+        "text": "`UP`, que reescreve sintaxe mais velha que a versão-alvo",
+        "why": "Sintaxe velha continua rodando; é arrumação com prazo."
+      }
+    ]
+  },
+  "ex-509persc": {
+    "prompt": "O que rodar primeiro numa base que nunca passou por um linter?",
+    "hint": "A saída completa tem milhares de linhas.",
+    "choices": [
+      {
+        "text": "`ruff check --diff`, que mostra o que um conserto mudaria sem mudar",
+        "why": "Útil e ainda assim milhares de linhas numa primeira passagem."
+      },
+      {
+        "text": "`ruff check --fix`, para a metade fácil sumir antes de alguém ler a lista",
+        "why": "Uma reescrita grande e não revisada é um primeiro commit ruim mesmo com todo conserto seguro."
+      },
+      {
+        "text": "`ruff check --select ALL`, para o tamanho do problema ficar conhecido",
+        "why": "Isso liga toda família, inclusive as que se contradizem."
+      },
+      {
+        "text": "`ruff check --statistics`",
+        "why": "Uma contagem por regra tem vinte linhas e diz que tipo de problema você tem."
+      }
+    ]
+  },
+  "ex-t934rwm9": {
+    "prompt": "Seis ferramentas são nomeadas como morando dentro do `ruff`. O que ele fez com elas?",
+    "hint": "Não é um embrulho.",
+    "choices": [
+      {
+        "text": "Reimplementou as regras delas, que é por que ele passa por um repositório grande em menos de um segundo",
+        "why": "`flake8`, `isort`, `pyupgrade`, `pydocstyle`, `autoflake` e a maior parte do `pylint`."
+      },
+      {
+        "text": "Empacotou-as, então cada uma ainda roda como um processo próprio atrás de um comando",
+        "why": "Seis processos seriam mais lentos do que as seis ferramentas eram."
+      },
+      {
+        "text": "Embrulhou as interfaces de linha de comando delas atrás de um arquivo de configuração",
+        "why": "Uma configuração compartilhada não o deixaria mais rápido."
+      },
+      {
+        "text": "Traduziu os formatos de configuração delas, deixando as checagens com as originais",
+        "why": "As checagens são dele."
+      }
+    ]
+  },
+  "ex-d0wbm8mp": {
+    "prompt": "O que `[*]` ao lado de um código de regra quer dizer?",
+    "hint": "É sobre o que pode ser feito automaticamente.",
+    "choices": [
+      {
+        "text": "A regra casou mais de uma vez no arquivo sendo relatado",
+        "why": "Cada ocorrência é impressa por conta própria."
+      },
+      {
+        "text": "A regra está no conjunto padrão e não precisa de entrada no `select`",
+        "why": "Pertencer ao padrão não é marcado na saída."
+      },
+      {
+        "text": "A regra foi ligada por um `extend-select` e não por um `select`",
+        "why": "A saída não diz de onde uma regra veio."
+      },
+      {
+        "text": "A regra tem um conserto que o `ruff` considera seguro",
+        "why": "Seguro quer dizer que não pode mudar o que o programa faz — remover um import sem uso, ordenar imports."
+      }
+    ]
+  },
+  "ex-q881p4r0": {
+    "prompt": "Uma configuração diz `select = [\"B\"]`. O que é verificado?",
+    "hint": "Leia o verbo.",
+    "choices": [
+      {
+        "text": "Bugbear, e nada mais — `select` substitui o padrão em vez de somar a ele",
+        "why": "Um import sem uso no mesmo arquivo não é relatado por nada, porque o `F` foi desligado por aquela linha."
+      },
+      {
+        "text": "Bugbear mais o conjunto padrão, já que uma família é somada ao que já estava ligado",
+        "why": "Somar ao padrão é o `extend-select`."
+      },
+      {
+        "text": "Bugbear mais o `F`, já que nomes indefinidos não podem ser desligados",
+        "why": "Toda regra, inclusive o `F`, pode ser desligada."
+      },
+      {
+        "text": "Nada, já que um `select` nomeando uma família é recusado por ser estreito demais",
+        "why": "Ele é aceito e faz exatamente o que diz."
+      }
+    ]
+  },
+  "ex-p2mdwp0q": {
+    "prompt": "O conjunto padrão de regras é `E4, E7, E9, F`. O que ele deixa de fora que mais importa?",
+    "hint": "Uma família guarda os defeitos.",
+    "choices": [
+      {
+        "text": "`I`, então os imports nunca são ordenados e todo diff toca o bloco",
+        "why": "Imports fora de ordem são desarrumação e não defeito."
+      },
+      {
+        "text": "`B`, e com ela o argumento padrão mutável que compartilha estado",
+        "why": "`def load_rates(path, cache={})` passa no conjunto padrão e é um cache compartilhado por toda chamada do processo."
+      },
+      {
+        "text": "`E501`, então um arquivo com linhas muito longas passa sem comentário",
+        "why": "Comprimento de linha pertence ao formatador e fica de fora de propósito."
+      },
+      {
+        "text": "`UP`, então a base mantém sintaxe mais velha que a versão em que roda",
+        "why": "Sintaxe velha continua rodando corretamente."
+      }
+    ]
+  },
+  "ex-d01sbq43": {
+    "prompt": "Por que `\"__init__.py\" = [\"F401\"]` pertence ao `per-file-ignores` e não a um `# noqa` em cada linha?",
+    "hint": "Pense no que está sendo descrito.",
+    "choices": [
+      {
+        "text": "É propriedade daquele tipo de arquivo e não engano numa linha",
+        "why": "O `__init__.py` de um pacote importa nomes para outros importarem de lá, e cada um parece sem uso."
+      },
+      {
+        "text": "`# noqa` não funciona numa instrução de import, então a configuração é o único jeito",
+        "why": "Funciona em qualquer linha, imports inclusive."
+      },
+      {
+        "text": "`F401` não pode ser silenciado numa linha, só num arquivo inteiro",
+        "why": "Pode ser silenciado dos dois jeitos; a questão é qual diz a coisa certa."
+      },
+      {
+        "text": "Um `# noqa` no `__init__.py` é removido pelo `--fix` junto com o import",
+        "why": "O `--fix` deixa em paz um achado que foi suprimido."
+      }
+    ]
+  },
+  "ex-vc9zc7rn": {
+    "prompt": "`import json  # noqa: E501`, onde o achado de verdade naquela linha é `F401`. O que acontece?",
+    "hint": "O código nomeado tem de bater.",
+    "choices": [
+      {
+        "text": "Nada é relatado, já que qualquer comentário `noqa` cobre a linha",
+        "why": "Isso é o que um `# noqa` pelado faz, e este nomeia um código."
+      },
+      {
+        "text": "O `F401` é relatado",
+        "why": "Um `noqa` com código silencia aquele código. Um `# noqa` pelado silencia toda regra da linha, inclusive a do ano que vem."
+      },
+      {
+        "text": "A linha é pulada por inteiro, inclusive pelo formatador",
+        "why": "O formatador não lê comentário `noqa` nenhum."
+      },
+      {
+        "text": "O `ruff` relata que o código nomeado não se aplica a esta linha",
+        "why": "O `RUF100` relata uma diretiva sem uso, e ele precisa ser ligado."
+      }
+    ]
+  },
+  "ex-w6rynvcz": {
+    "prompt": "A regra que relata um comentário de supressão cujo motivo se foi: `______`",
+    "hint": "Três letras e três dígitos."
+  },
+  "ex-ynemjb09": {
+    "prompt": "As duas ferramentas recebem `line-length`. O que dá errado se os dois números diferem?",
+    "hint": "Uma quebra e a outra relata.",
+    "choices": [
+      {
+        "text": "O que rodar por último ganha, então o resultado depende da ordem na CI",
+        "why": "A saída do formatador não depende de o linter ter rodado."
+      },
+      {
+        "text": "O linter requebra as linhas que o formatador escreveu, e os dois brigam a cada salvamento",
+        "why": "O `ruff check` não reescreve nada sobre largura de linha."
+      },
+      {
+        "text": "O formatador se recusa a rodar, já que ele lê a tabela do linter também",
+        "why": "Cada um lê a própria tabela e nenhum confere a do outro."
+      },
+      {
+        "text": "O formatador produz linhas de que o linter reclama, em arquivos que ninguém tocou",
+        "why": "Ponha o mesmo valor nos dois, e aí desligue o `E501` assim mesmo."
+      }
+    ]
+  },
+  "ex-awm1y7vt": {
+    "prompt": "O que o `target-version` decide, para cada uma das duas ferramentas?",
+    "hint": "Duas coisas diferentes a partir de um número.",
+    "choices": [
+      {
+        "text": "Qual sintaxe o formatador tem permissão de emitir, e o que a família `UP` sugere",
+        "why": "Com `py312`, `Optional[int]` vira `int | None` e `typing.List` vira `list`."
+      },
+      {
+        "text": "Sob qual Python as ferramentas rodam, já que cada uma lança o próprio interpretador",
+        "why": "As duas leem arquivos e nenhuma roda o seu código."
+      },
+      {
+        "text": "Quais assinaturas da biblioteca padrão o linter acredita ao conferir chamadas",
+        "why": "Nenhuma das duas confere chamadas contra assinaturas; isso é trabalho de um verificador de tipos."
+      },
+      {
+        "text": "Qual versão de cada uma das duas ferramentas é instalada, resolvida a partir do valor dado",
+        "why": "Versões de ferramenta são fixadas por quem quer que as instale."
+      }
+    ]
+  },
+  "ex-1jszvspe": {
+    "prompt": "`select` está escrito em `[tool.ruff]` e não em `[tool.ruff.lint]`. O que acontece?",
+    "hint": "Não é um erro.",
+    "choices": [
+      {
+        "text": "O `ruff` se recusa a iniciar até que aquela tabela seja corrigida",
+        "why": "Ele inicia e roda."
+      },
+      {
+        "text": "O ajuste passa a valer para o formatador também, que então o recusa",
+        "why": "O formatador tem a própria tabela e não lê nada desta."
+      },
+      {
+        "text": "Um aviso de descontinuação, e o ajuste continua valendo",
+        "why": "Que é como isso passa despercebido: nada falha e a tabela de fora segue funcionando."
+      },
+      {
+        "text": "O ajuste é ignorado em silêncio e o conjunto padrão de regras é usado",
+        "why": "Ele é honrado, com um aviso impresso ao lado."
+      }
+    ]
+  },
+  "ex-1a5xpbkm": {
+    "prompt": "Qual destes pertence ao `exclude`?",
+    "hint": "De quem é o arquivo?",
+    "choices": [
+      {
+        "text": "A suíte de testes, que tem convenções próprias sobre asserts e fixtures",
+        "why": "Essas são uma entrada de `per-file-ignores` e não uma exclusão."
+      },
+      {
+        "text": "Um módulo com uma lista longa de achados, até alguém ter tempo para ele",
+        "why": "Esse é o diretório que deixa de ser verificado e nunca volta."
+      },
+      {
+        "text": "O `__init__.py` de um pacote, cujos imports são todos relatados como sem uso",
+        "why": "Também uma entrada de `per-file-ignores`, nomeando `F401`."
+      },
+      {
+        "text": "Um diretório de arquivos escritos por máquina, como migrações ou clientes gerados",
+        "why": "Todo o resto é seu, e um diretório excluído porque dá trabalho nunca volta."
+      }
+    ]
+  },
+  "ex-rjep4q5c": {
+    "prompt": "Por que a configuração pertence ao `pyproject.toml` e não ao comando?",
+    "hint": "Três lugares rodam estas ferramentas.",
+    "choices": [
+      {
+        "text": "Porque uma flag não consegue exprimir uma família de regras, só um código",
+        "why": "`--select B` funciona na linha de comando."
+      },
+      {
+        "text": "Porque o `pyproject.toml` é o único lugar em que uma tabela por arquivo pode ser escrita",
+        "why": "A tabela por arquivo poderia morar num `ruff.toml`; a razão é a concordância."
+      },
+      {
+        "text": "Porque as duas ferramentas ignoram flags de linha de comando quando existe um arquivo",
+        "why": "Uma flag sobrepõe o arquivo, que é parte do problema."
+      },
+      {
+        "text": "Para que o editor, o terminal e o pipeline todos façam a mesma coisa",
+        "why": "Uma ferramenta configurada na linha de comando de uma máquina é um verde num lugar e um vermelho no outro."
+      }
+    ]
+  },
+  "ex-yb739zyz": {
+    "prompt": "Por que a CI roda `--check` em vez do próprio formatador?",
+    "hint": "Pense no que um pipeline pode fazer com um ramo.",
+    "choices": [
+      {
+        "text": "Formatar na CI é mais lento que conferir, já que os arquivos têm de ser escritos",
+        "why": "Escrever alguns arquivos não é o que deixa um pipeline lento."
+      },
+      {
+        "text": "Um pipeline não tem acesso de escrita ao repositório, então uma reescrita falharia",
+        "why": "Muitos pipelines têm acesso de escrita, que é o que faz da contenção uma escolha."
+      },
+      {
+        "text": "`--check` é o único modo que relata quais arquivos mudariam",
+        "why": "O `--diff` relata isso também, com mais detalhe."
+      },
+      {
+        "text": "Ele relata a discordância e não comita caladamente um conserto no ramo de outra pessoa",
+        "why": "`--check` não reescreve nada e sai diferente de zero, que é o comentário de revisão inteiro que ninguém precisa escrever."
+      }
+    ]
+  },
+  "ex-a58qyjde": {
+    "prompt": "Um gancho de pre-commit roda as duas ferramentas. Por que manter a checagem na CI também?",
+    "hint": "Onde o gancho mora?",
+    "choices": [
+      {
+        "text": "Um gancho roda só sobre arquivos em stage, então um commit com `-a` escapa",
+        "why": "Ele roda sobre os arquivos sendo comitados, o que inclui esses."
+      },
+      {
+        "text": "A versão da ferramenta no gancho é fixada e a da CI não, então elas derivam",
+        "why": "As duas deveriam ser fixadas, e isso é um argumento para fixar e não para manter a checagem."
+      },
+      {
+        "text": "Um gancho mora na máquina de cada pessoa, é fácil de pular, e falta numa máquina nova",
+        "why": "A CI é o que é verdade. O gancho é o que é conveniente."
+      },
+      {
+        "text": "Um gancho não consegue rodar o formatador, só o linter com `--fix`",
+        "why": "Ele roda os dois; a configuração de exemplo tem uma entrada para cada."
+      }
+    ]
+  },
+  "ex-26cakcvk": {
+    "prompt": "Qual é a ordem certa de adotar estas ferramentas?",
+    "hint": "Alguma coisa precisa poder ficar vermelha primeiro.",
+    "choices": [
+      {
+        "text": "O formatador em tudo e o `--check` dele na CI, depois os padrões do linter, depois uma família por vez",
+        "why": "Fazer ao contrário produz quatro mil achados e uma equipe que desliga a ferramenta."
+      },
+      {
+        "text": "O gancho de pre-commit primeiro, já que ele impede problemas novos de chegarem",
+        "why": "Ele os impede nas máquinas que o têm instalado."
+      },
+      {
+        "text": "O linter com toda família ligada, para o tamanho do problema ser conhecido desde o começo",
+        "why": "Esses são os quatro mil achados, e o `--select ALL` também liga regras que se contradizem."
+      },
+      {
+        "text": "A integração com o editor primeiro, para o código melhorar antes de mexer no pipeline",
+        "why": "Aí o repositório fica metade formatado e nada diz isso."
+      }
+    ]
+  },
+  "ex-2m7b4fnk": {
+    "prompt": "Por que pôr a checagem do formatador antes da do linter no pipeline?",
+    "hint": "Pense no que um arquivo sem formatar relata.",
+    "choices": [
+      {
+        "text": "Um arquivo que está apenas sem formatar falha na frase que diz isso",
+        "why": "Em vez de numa lista de achados `E` que são todos consequência da mesma coisa."
+      },
+      {
+        "text": "O linter lê a saída do formatador, então ele tem de rodar depois",
+        "why": "Cada um lê os arquivos do repositório; nenhum lê a saída do outro."
+      },
+      {
+        "text": "Rodar na ordem contrária aplica consertos que o formatador depois desfaz",
+        "why": "Nenhum dos passos muda um arquivo quando se usa `--check`."
+      },
+      {
+        "text": "A checagem do formatador é mais rápida, então um build que falha falha antes",
+        "why": "As duas são rápidas, e o argumento da ordem é sobre qual mensagem é lida."
+      }
+    ]
+  },
+  "ex-tsbk3v1y": {
+    "prompt": "O que formatar ao salvar compra que uma checagem na CI não compra?",
+    "hint": "Pense no arquivo que você está editando agora.",
+    "choices": [
+      {
+        "text": "Ele aplica também os consertos seguros do linter, que a CI não pode aplicar",
+        "why": "Organizar imports ao salvar é um ajuste de editor à parte."
+      },
+      {
+        "text": "O repositório já está formatado, então o pipeline nunca precisa dizer isso",
+        "why": "Um formatador que você precisa lembrar de rodar é um por onde metade do repositório não passou."
+      },
+      {
+        "text": "Ele pega achados antes de serem comitados, diferente de uma checagem que roda depois",
+        "why": "Formatar não produz achados; essa é a metade do linter."
+      },
+      {
+        "text": "Ele formata arquivos que a checagem da CI está configurada para excluir",
+        "why": "Os dois honram a mesma lista de `exclude` do `pyproject.toml`."
+      }
+    ]
+  },
+  "ex-x2hd8h5q": {
+    "prompt": "`def load_rates(path, cache={})`. Quando o dicionário é criado?",
+    "hint": "Pense no que a instrução `def` faz.",
+    "choices": [
+      {
+        "text": "Uma vez, quando o `def` roda",
+        "why": "Ele fica preso ao objeto função e vive enquanto o processo viver, compartilhado por todo chamador, inclusive os testes."
+      },
+      {
+        "text": "Uma vez por chamada, que é por que funciona como cache dentro de uma requisição",
+        "why": "Aí ele esvaziaria entre chamadas e não guardaria nada."
+      },
+      {
+        "text": "Uma vez por import do módulo, então um reimport num teste dá um novo",
+        "why": "Um módulo é importado uma vez por processo e o padrão sobreviveria de qualquer jeito."
+      },
+      {
+        "text": "Preguiçosamente, na primeira chamada que não passa o argumento",
+        "why": "Ele é montado quando o `def` é executado, antes de qualquer chamada."
+      }
+    ]
+  },
+  "ex-7cnw7mam": {
+    "prompt": "Qual é o conserto do `B006` em `cache={}`?",
+    "hint": "O padrão precisa ser algo imutável.",
+    "choices": [
+      {
+        "text": "`cache=None`, e `if cache is None: cache = {}` como primeira linha do corpo",
+        "why": "A sentinela é montada uma vez e o dicionário é montado por chamada, que era o pretendido."
+      },
+      {
+        "text": "`cache=dict()`, que constrói um novo em vez de reaproveitar um literal",
+        "why": "Ele ainda é avaliado uma vez na definição; a chamada acontece lá, não a cada invocação."
+      },
+      {
+        "text": "`cache=frozenset()`, que não pode ser mutado e portanto não acumula",
+        "why": "Um conjunto congelado não guarda o mapeamento de que a função precisa."
+      },
+      {
+        "text": "Mover o argumento para depois de um `*`, para ter de ser passado por nome",
+        "why": "Isso muda como ela é chamada e deixa o objeto compartilhado exatamente onde estava."
+      }
+    ]
+  },
+  "ex-dbb8pb13": {
+    "prompt": "`except:` sem nada depois. O que ele captura que `except Exception:` não captura?",
+    "hint": "Dois deles são como um processo para.",
+    "choices": [
+      {
+        "text": "`SyntaxError`, que é levantado enquanto o módulo está sendo lido",
+        "why": "Um erro de sintaxe no módulo nunca chega a um `try` dentro dele, e é um `Exception` de qualquer forma."
+      },
+      {
+        "text": "Erros levantados dentro de uma extensão em C, que não herdam de `Exception`",
+        "why": "Uma extensão levanta exceções comuns do Python."
+      },
+      {
+        "text": "`GeneratorExit` sozinho, que é a única outra subclasse de `BaseException`",
+        "why": "Há várias, e as duas que importam aqui são as que param um processo."
+      },
+      {
+        "text": "`KeyboardInterrupt` e `SystemExit`",
+        "why": "Então um Ctrl-C dentro daquele bloco é engolido, e o processo não pode ser parado enquanto está lá dentro."
+      }
+    ]
+  },
+  "ex-54rte50a": {
+    "prompt": "`for i in range(3): out.append(lambda: i)` e depois `[f() for f in out]`. O que volta?",
+    "hint": "Os fechamentos compartilham alguma coisa.",
+    "choices": [
+      {
+        "text": "`[2, 2, 2]`",
+        "why": "Eles compartilham a variável e não o valor dela, e o laço terminou com ela em `2`."
+      },
+      {
+        "text": "`[0, 1, 2]`, já que cada lambda foi montada com `i` guardando um valor diferente",
+        "why": "Cada lambda lê `i` quando é chamada, não quando foi montada."
+      },
+      {
+        "text": "`[None, None, None]`, já que `i` sai de escopo quando o laço acaba",
+        "why": "Uma variável de laço no Python sobrevive ao laço."
+      },
+      {
+        "text": "Um `NameError`, já que `i` não está ligado no escopo da própria lambda",
+        "why": "Ele resolve para o escopo de fora, que é o problema inteiro."
+      }
+    ]
+  },
+  "ex-j1t0z2en": {
+    "prompt": "`def summarise(rows, type=None)` e uma linha posterior chama `type(x)`. O que acontece?",
+    "hint": "O nome estava ocupado.",
+    "choices": [
+      {
+        "text": "Um `NameError`, já que o parâmetro escondeu o embutido sem substituí-lo",
+        "why": "O parâmetro está ligado; ligado a `None`."
+      },
+      {
+        "text": "Nada — `type` é procurado no espaço de embutidos antes dos locais",
+        "why": "Locais são procurados primeiro, que é a regra de que este achado trata."
+      },
+      {
+        "text": "`TypeError: 'NoneType' object is not callable`, da linha que o chama",
+        "why": "Dentro daquela função o embutido está inalcançável, numa função que não mudou."
+      },
+      {
+        "text": "O embutido é usado, já que um parâmetro não o sombreia no nível do módulo",
+        "why": "Um parâmetro é um nome local e nomes locais ganham dentro da função."
+      }
+    ]
+  },
+  "ex-qkjzwqjt": {
+    "prompt": "Qual destes quatro achados é arrumação e não defeito?",
+    "hint": "Três deles vão produzir uma resposta errada em tempo de execução.",
+    "choices": [
+      {
+        "text": "`B023` — uma função que não liga a variável de laço",
+        "why": "Todo fechamento da lista faz o trabalho da última iteração."
+      },
+      {
+        "text": "`E722` — um `except` pelado em volta de uma leitura de JSON",
+        "why": "Ele engole Ctrl-C e transforma um `NameError` num dicionário vazio."
+      },
+      {
+        "text": "`B006` — uma estrutura mutável como padrão de argumento",
+        "why": "Isso é um cache compartilhado por toda chamada que o processo fizer."
+      },
+      {
+        "text": "`F401` — um import que ninguém usa",
+        "why": "Alguém apagou o código que o usava. O `--fix` remove a linha e nada mais acontece."
+      }
+    ]
+  },
+  "ex-qqnsk0y6": {
+    "prompt": "Preveja o reformat: `d = {'a':1,'b':2}` numa linha que cabe. O que o `black` produz?",
+    "hint": "Dois tipos de mudança, os dois mecânicos.",
+    "choices": [
+      {
+        "text": "`d = {\"a\": 1, \"b\": 2}`",
+        "why": "Aspas duplas, e um espaço depois de cada dois-pontos. Cabe, então fica numa linha."
+      },
+      {
+        "text": "O mesmo dicionário explodido em uma chave por linha com vírgula final",
+        "why": "Ele explode só o que não cabe, ou o que carrega uma vírgula final mágica."
+      },
+      {
+        "text": "`d = dict(a=1, b=2)`, que é a forma que ele prefere para chaves de texto",
+        "why": "Ele nunca reescreve uma construção em outra."
+      },
+      {
+        "text": "`d = {'a': 1, 'b': 2}`, com o espaçamento corrigido e as aspas em paz",
+        "why": "Ele normaliza para aspas duplas também."
+      }
+    ]
+  },
+  "ex-6kh45p5k": {
+    "prompt": "Transforme o formatador num passo de build que não muda nada e reprova: `ruff format --______ .`",
+    "hint": "Cinco letras."
+  },
+  "ex-j2n5xjha": {
+    "prompt": "Uma equipe liga uma família nova de regras e recebe quatrocentos achados. Qual é o passo seguinte razoável?",
+    "hint": "A família já está ligada.",
+    "choices": [
+      {
+        "text": "Rodar `--fix --unsafe-fixes` e revisar o resultado como um diff só",
+        "why": "Consertos inseguros podem mudar comportamento e quatrocentos deles não é um diff revisável."
+      },
+      {
+        "text": "Rodar `--statistics`, e aí consertar ou ignorar regra a regra, num pull request próprio",
+        "why": "Uma família por pull request é o que mantém o diff revisável e a ferramenta ligada."
+      },
+      {
+        "text": "Acrescentar a família ao `ignore` até alguém ter tempo de trabalhar nela",
+        "why": "Ignorar uma família que você acabou de selecionar deixa a configuração afirmando algo falso."
+      },
+      {
+        "text": "Excluir os diretórios com mais achados e ficar com o resto",
+        "why": "Esses diretórios então deixam de ser verificados e nunca voltam."
+      }
+    ]
+  },
+  "ex-dykhzazm": {
+    "prompt": "Por que `result.ok == True` virar `result.ok` é classificado como conserto inseguro?",
+    "hint": "Os dois não são o mesmo teste.",
+    "choices": [
+      {
+        "text": "Eles diferem para qualquer coisa cujo `__eq__` seja incomum — `1 == True` é verdade e `1` não é `True`",
+        "why": "Leia o diff de um conserto inseguro antes de aceitá-lo; é para isso que a flag serve."
+      },
+      {
+        "text": "`result.ok` pode ser `None`, que é falso onde `== True` levantaria",
+        "why": "Comparar `None` com `True` não levanta nada; é simplesmente falso."
+      },
+      {
+        "text": "A reescrita move a comparação para dentro do `if`, mudando onde uma exceção aparece",
+        "why": "As duas formas avaliam `result.ok` no mesmo lugar."
+      },
+      {
+        "text": "O `ruff` não consegue dizer se `ok` é uma propriedade com efeito colateral",
+        "why": "As duas formas leem o atributo exatamente uma vez."
+      }
+    ]
+  },
+  "ex-wxzctq0s": {
+    "prompt": "Um repositório tem `# noqa` sem código em onze linhas. Qual é o argumento para nomear códigos?",
+    "hint": "Pense no ano que vem.",
+    "choices": [
+      {
+        "text": "Um comentário pelado vale para o bloco inteiro e não para uma linha",
+        "why": "Ele vale para a própria linha."
+      },
+      {
+        "text": "Um comentário pelado é recusado pelo `ruff` a menos que se passe `--preview`",
+        "why": "Ele é aceito e faz o que diz."
+      },
+      {
+        "text": "Um comentário pelado é mais lento de processar, já que toda regra tem de ser conferida",
+        "why": "O custo não é mensurável e não é o argumento."
+      },
+      {
+        "text": "Um comentário pelado também silencia a regra que passar a valer para aquela linha depois",
+        "why": "E o `RUF100` pode então relatar os cujo motivo se foi."
+      }
+    ]
+  },
+  "ex-ewn705a3": {
+    "prompt": "Qual ferramenta acha que uma função devolve o valor errado para uma entrada que ninguém tentou?",
+    "hint": "Nenhuma das duas desta aula.",
+    "choices": [
+      {
+        "text": "Nenhuma das duas — isso é trabalho de um teste, e a aula 16 é onde essa metade mora",
+        "why": "Um linter acha o que uma máquina enxerga no texto, que é um conjunto específico e útil e não este."
+      },
+      {
+        "text": "O linter, se a família `B` e as regras de simplificação estiverem ligadas",
+        "why": "Essas descrevem formas de código e não as respostas que ele produz."
+      },
+      {
+        "text": "O formatador, já que uma reescrita que mudasse a resposta seria relatada",
+        "why": "Um formatador nunca muda a resposta e não relata nada."
+      },
+      {
+        "text": "O linter com `--unsafe-fixes`, que avalia as expressões que reescreve",
+        "why": "Ele não avalia nada; inseguro quer dizer que ele não consegue provar a equivalência."
+      }
+    ]
+  },
+  "ex-th35n001": {
+    "prompt": "`select = [\"E\", \"F\", \"B\", \"SIM\", \"UP\", \"I\", \"A\"]` e `ignore = [\"E501\"]`. Qual é o efeito da segunda linha?",
+    "hint": "Ela subtrai da primeira.",
+    "choices": [
+      {
+        "text": "Achados de comprimento de linha somem e o resto do `E` fica ligado",
+        "why": "O formatador é dono da largura da linha, então um relatório sobre ela é um relatório sobre a decisão dele."
+      },
+      {
+        "text": "A família `E` inteira some, já que um código no `ignore` desliga o prefixo dele",
+        "why": "`ignore` recebe códigos e prefixos, e `E501` é um código."
+      },
+      {
+        "text": "Linhas mais longas que o limite são relatadas como aviso e não como erro",
+        "why": "O `ruff` não tem nível de aviso para uma regra selecionada; ela está ligada ou desligada."
+      },
+      {
+        "text": "O formatador para de quebrar na largura configurada",
+        "why": "O formatador lê os próprios ajustes e ignora a tabela do linter."
+      }
+    ]
+  },
+  "ex-qaetj0gs": {
+    "prompt": "O que vai no `.git-blame-ignore-revs` e por quê?",
+    "hint": "Um commit, e o que ele fez.",
+    "choices": [
+      {
+        "text": "O hash do commit que reformatou tudo, para o `blame` olhar além dele",
+        "why": "Caso contrário o histórico deixa de ser utilizável no dia em que a ferramenta foi adotada."
+      },
+      {
+        "text": "Os hashes de todo commit feito por um conserto automático, para que o blame nomeie uma pessoa",
+        "why": "O arquivo é para commits que tocaram tudo sem mudar nada."
+      },
+      {
+        "text": "Uma lista de ramos cujos commits não devem ser culpados, como ramos de release",
+        "why": "Ele guarda revisões e não ramos."
+      },
+      {
+        "text": "O hash da última release, para o blame parar no ciclo atual",
+        "why": "Aí o blame seria inútil para qualquer coisa mais velha."
+      }
+    ]
+  },
+  "ex-jemytma1": {
+    "prompt": "Duas pessoas discordam sobre onde uma chamada longa deve quebrar. O que esta aula manda fazer?",
+    "hint": "Nenhuma das duas está certa.",
+    "choices": [
+      {
+        "text": "Rodar o formatador no arquivo e parar de ter a conversa de uma vez",
+        "why": "Não há resposta certa para isso, que é exatamente por que entregar a um programa não custa nada."
+      },
+      {
+        "text": "Escrever em um argumento por linha, que é onde a maioria das equipes chega",
+        "why": "Isso é uma preferência, e preferência é o que o formatador remove."
+      },
+      {
+        "text": "Acrescentar uma regra ao linter para o repositório ter uma resposta registrada",
+        "why": "O linter passaria a relatar disposição, que é a metade do formatador."
+      },
+      {
+        "text": "Seguir o que o arquivo em volta faz, para o diff ficar pequeno",
+        "why": "Aí o estilo do arquivo é o que o primeiro autor dele preferia."
+      }
+    ]
+  }
+}
