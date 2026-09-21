@@ -1,0 +1,88 @@
+{
+  "id": "le-50d6sygp",
+  "title": "Errors and exceptions: try, except, else and finally",
+  "sections": [
+    {
+      "id": "se-910spxzf",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-s96tpx7e",
+          "version": 1,
+          "script": "A program that has never failed has never met a real file, a real network or a real person typing. {{normal}} Failure is not the unusual case — it is half of what a program does, and the half most beginners leave to chance.\n\n{{value}} Python's answer is the exception. Something goes wrong, the language stops what it was doing and hands the failure up the stack as an OBJECT: a type that says what kind of wrong, a message that says which one, and a traceback that says where. It is information, delivered.\n\n{{default}} And the default behaviour is right more often than people expect. An uncaught exception stops the program and prints the traceback — the file, the line, the call that led there. **That is a better outcome than most of the code written to avoid it**, because a program that stops has not written half a file or charged somebody twice.\n\n{{catch}} So the question is never \"how do I stop this failing\". It is: **is there something I can DO about this here?** If there is — try another server, use a default, tell the person which row of their file is wrong — catch it. If there is not, let it go up. Somebody above you may know, and if nobody does, the traceback is the right answer.\n\n{{bare}} There is one thing this lesson will ask you never to write, and it is `except:` with nothing after it. It catches everything, including the interrupt you press Ctrl-C for, and it turns a message that named the file and the line into silence. A program that fails loudly is being kind to you; one that fails quietly is not.\n\n{{four}} Four clauses — `try`, `except`, `else`, `finally` — and each has one job. Then raising your own, which is how a library says something useful rather than letting a `KeyError` escape from three layers down with no idea what it meant.\n\n{{eafp}} And a habit that will look strange and is deeply Pythonic: try it and catch the failure, rather than checking first. There is a section on why, and the reason is not style.",
+          "seconds": 151,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-75gqh497",
+      "slug": "the-exception-hierarchy",
+      "kind": "reading"
+    },
+    {
+      "id": "se-m1thfbmc",
+      "slug": "try-and-except",
+      "kind": "reading"
+    },
+    {
+      "id": "se-xcj77bp8",
+      "slug": "else-and-finally",
+      "kind": "reading"
+    },
+    {
+      "id": "se-815mjpjs",
+      "slug": "raising",
+      "kind": "reading"
+    },
+    {
+      "id": "se-8b3pjfx8",
+      "slug": "your-own-exception",
+      "kind": "reading"
+    },
+    {
+      "id": "se-wwh6x0fm",
+      "slug": "easier-to-ask-forgiveness",
+      "kind": "reading"
+    },
+    {
+      "id": "se-c205qmyv",
+      "slug": "the-ones-you-will-meet",
+      "kind": "reading"
+    },
+    {
+      "id": "se-9yd7f89d",
+      "slug": "a-failure-handled-badly",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-rrxbadvj",
+          "version": 1,
+          "script": "The same bug, three ways. A configuration file with a typo in it — a port written as `\"8o80\"`.\n\n{{bare}} First, behind a bare `except`. The code tries to read the port, something goes wrong, and the `except` swallows it and uses the default. The program starts. It listens on the wrong port. Nobody is told anything, and the bug is now a support ticket that says \"the site is down\" three days later.\n\n{{ctrl}} And while I am here — with a bare `except` inside a loop, `Ctrl-C` does not stop this program. The interrupt is an exception too, and the bare clause caught it.\n\n{{broad}} Second, `except Exception`. Better: `Ctrl-C` works again. But it still catches the `AttributeError` from my own typo on the line below, and reports both of them as \"could not read the port\". I spend twenty minutes reading configuration files because the message told me to.\n\n{{narrow}} Third, `except ValueError`. Now `int(\"8o80\")` is caught, and nothing else is. The message names the file, the key and the value: `port: \"8o80\" is not a number`. And the `AttributeError` on the next line is not caught at all — it reaches the traceback, which is where a bug of mine belongs.\n\n{{small}} One more thing to notice. In the third version the `try` holds one line — the `int()` call. In the first it wrapped forty lines, which is why it caught something it was never meant to see.\n\n{{rule}} Catch the narrowest thing you can name, around the smallest block that can raise it, and say something the reader can act on.",
+          "seconds": 111,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-gakjqcge",
+      "slug": "closing",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-jfaxkgjj",
+          "version": 1,
+          "script": "Catch what you can answer, and let the rest reach the traceback.\n\n{{question}} The question at every `try` is not \"could this fail\" — everything could. It is **what would I do here if it did**. A default, another route, a message naming the row. If the honest answer is \"nothing useful\", then not catching it is the correct decision rather than a missing one.\n\n{{narrow}} Catch the narrowest class you can name. `except Exception` is a wide net for the top of a program, where it exists to log and stop. A bare `except:` catches the interrupt and the exit and is never right.\n\n{{clauses}} `try` holds the thing that fails, and as little else as possible. `else` holds what comes after success, so it is not inside the net. `finally` runs either way, which is what closes the file — and `with` in lesson 9 writes that one for you.\n\n{{raise}} Raise your own with a message a person can act on. `ValueError` when a value is wrong, `TypeError` when the type is, your own class when a caller might want to catch exactly your failure. And `raise … from e` when you are translating one into another, because the original is what says what really happened.",
+          "seconds": 87,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-ayj75yqf",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}
