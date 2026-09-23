@@ -1,0 +1,51 @@
+---
+title: O scrum e o sprint
+version: 1
+---
+
+O **scrum** é o jeito mais comum de organizar o tempo de uma equipe de desenvolvimento, e a maior parte do
+vocabulário que você vai ouvir na primeira semana vem dele. A ideia central é o **sprint**: um período fixo,
+em geral de duas semanas, com um objetivo combinado no começo.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"Duas linhas do tempo de quatro semanas. Scrum: dois sprints de duas semanas cada. Cada um começa com a planning e termina com a review e a retro, com uma daily curta em cada dia útil entre elas. Kanban: uma linha contínua com cards entrando e saindo um de cada vez, cada um lançado quando fica pronto, sem fronteiras de sprint.\"><defs><marker id=\"cd-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"20\" y=\"22\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">Scrum: sprints de duas semanas</text><rect x=\"40\" y=\"50\" width=\"325.0\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"202.5\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">sprint 1</text><rect x=\"44\" y=\"56\" width=\"30\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><rect x=\"301.0\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><rect x=\"333.0\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><circle cx=\"90.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"114.375\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"138.75\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"163.125\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"187.5\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"211.875\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"236.25\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"260.625\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"285.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><rect x=\"375.0\" y=\"50\" width=\"325.0\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"537.5\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">sprint 2</text><rect x=\"379.0\" y=\"56\" width=\"30\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><rect x=\"636\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><rect x=\"668\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><circle cx=\"425.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"449.375\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"473.75\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"498.125\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"522.5\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"546.875\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"571.25\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"595.625\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"620.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><text x=\"59\" y=\"40\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">planning</text><text x=\"315.0\" y=\"40\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">review</text><text x=\"349.0\" y=\"40\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">retro</text><text x=\"187.5\" y=\"128\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">uma daily por dia</text><path d=\"M20 150 L700 150\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" stroke-dasharray=\"3 4\"></path><text x=\"20\" y=\"176\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">Kanban: um fluxo contínuo</text><path d=\"M40 214 L700 214\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><rect x=\"73\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"143\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"193\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"283\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"353\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"393\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"463\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"553\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"603\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"653\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><path d=\"M150 205 L150 190\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><path d=\"M400 205 L400 190\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><path d=\"M610 205 L610 190\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><text x=\"420\" y=\"186\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">lançado quando fica pronto</text><text x=\"40\" y=\"244\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">cards entram e saem um de cada vez</text></svg>", "caption": "O scrum põe uma fronteira a cada duas semanas e planeja até ela. O kanban não tem fronteira; em vez disso, limita quanto está em andamento.", "same": ["sprint 1", "sprint 2", "planning", "review", "retro"]}
+```
+
+## As duas listas
+
+- O **product backlog** é todo ticket que alguém quer feito, em ordem de importância. É longo e nunca
+  termina, e o topo dele é mantido pronto para começar.
+- O **sprint backlog** é a parte que a equipe combinou fazer neste sprint, tirada do topo do product
+  backlog no começo.
+
+Entre os dois fica o **objetivo do sprint** (*sprint goal*), uma frase dizendo para que o sprint serve:
+*clientes podem encomendar e buscar num horário escolhido*. É ele que deixa a equipe decidir, no meio do
+caminho, qual ticket largar se nem tudo couber.
+
+## Os eventos
+
+Todo sprint tem as mesmas quatro reuniões, que a aula 18 cobre em detalhe:
+
+| evento | quando | o que decide |
+|---|---|---|
+| **sprint planning** | a primeira manhã | o objetivo, e quais tickets entram |
+| **daily** | todo dia, 15 minutos | o que está atrapalhando hoje |
+| **sprint review** | a última tarde | o que ficou pronto, mostrado para quem pediu |
+| **retrospectiva** | depois da review | o que mudar no jeito de a equipe trabalhar |
+
+## Os três papéis
+
+- O **product owner** (PO) decide o que é mais importante e mantém o backlog nessa ordem. Responde *o quê*
+  e *por quê*, não *como*.
+- O **scrum master** cuida do processo: conduz as reuniões, tira o que está bloqueando as pessoas. Em muitas
+  equipes isso é um chapéu que alguém veste parte do tempo, não uma pessoa separada.
+- Os **desenvolvedores** são todo mundo que constrói a coisa. O Guia do Scrum usa a palavra para qualquer
+  pessoa que faz esse trabalho, não só para quem escreve código. Eles decidem *como*, e quanto cabe num
+  sprint.
+
+## O que um sprint protege
+
+A fronteira é o ponto. **Depois que um sprint começa, o objetivo dele fica protegido**: pedidos novos
+normalmente vão para o product backlog e esperam a próxima planning, no máximo a duas semanas. Isso dá a quem desenvolve
+duas semanas sem o plano mudar debaixo dos pés, e dá a todo mundo uma data para esperar alguma coisa. Um
+bug urgente em produção é a exceção de costume, e as equipes combinam antes o que conta como um.
