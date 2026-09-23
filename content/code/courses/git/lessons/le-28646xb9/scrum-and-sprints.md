@@ -1,0 +1,50 @@
+---
+title: Scrum and the sprint
+version: 1
+---
+
+**Scrum** is the most common way of organising a development team's time, and most of the vocabulary you
+will hear in your first week comes from it. Its central idea is the **sprint**: a fixed stretch of time,
+usually two weeks, with a goal agreed at the start.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"Two timelines of four weeks. Scrum: two sprints of two weeks each. Each begins with planning and ends with a review and a retro, with a short daily stand-up every working day in between. Kanban: one continuous line with cards entering and leaving one at a time, each released when ready, with no sprint boundaries.\"><defs><marker id=\"cd-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"20\" y=\"22\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">Scrum: two-week sprints</text><rect x=\"40\" y=\"50\" width=\"325.0\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"202.5\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">sprint 1</text><rect x=\"44\" y=\"56\" width=\"30\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><rect x=\"301.0\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><rect x=\"333.0\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><circle cx=\"90.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"114.375\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"138.75\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"163.125\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"187.5\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"211.875\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"236.25\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"260.625\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"285.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><rect x=\"375.0\" y=\"50\" width=\"325.0\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"537.5\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">sprint 2</text><rect x=\"379.0\" y=\"56\" width=\"30\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><rect x=\"636\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><rect x=\"668\" y=\"56\" width=\"28\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><circle cx=\"425.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"449.375\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"473.75\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"498.125\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"522.5\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"546.875\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"571.25\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"595.625\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><circle cx=\"620.0\" cy=\"72\" r=\"3.5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.6\"></circle><text x=\"59\" y=\"40\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">planning</text><text x=\"315.0\" y=\"40\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">review</text><text x=\"349.0\" y=\"40\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">retro</text><text x=\"187.5\" y=\"128\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">a daily stand-up</text><path d=\"M20 150 L700 150\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" stroke-dasharray=\"3 4\"></path><text x=\"20\" y=\"176\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">Kanban: a continuous flow</text><path d=\"M40 214 L700 214\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><rect x=\"73\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"143\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"193\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"283\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"353\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"393\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"463\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"553\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"603\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"653\" y=\"207\" width=\"14\" height=\"14\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><path d=\"M150 205 L150 190\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><path d=\"M400 205 L400 190\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><path d=\"M610 205 L610 190\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#cd-ah)\"></path><text x=\"420\" y=\"186\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">released when ready</text><text x=\"40\" y=\"244\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">cards enter and leave one at a time</text></svg>", "caption": "Scrum puts a boundary every two weeks and plans up to it. Kanban has no boundary; it limits how much is in progress instead."}
+```
+
+## The two lists
+
+- The **product backlog** is every ticket anybody wants done, in order of importance. It is long and never
+  finished, and the top of it is kept ready to start.
+- The **sprint backlog** is the part the team has agreed to do in this sprint, taken from the top of the
+  product backlog at the start.
+
+Between the two sits the **sprint goal**, one sentence saying what the sprint is for: *customers can order
+ahead and pick up at a chosen time*. It is what lets the team decide, halfway through, which ticket to drop
+if not everything fits.
+
+## The events
+
+Each sprint has the same four meetings, which lesson 18 covers in detail:
+
+| event | when | what it decides |
+|---|---|---|
+| **sprint planning** | the first morning | the goal, and which tickets go in |
+| **daily stand-up** | every day, 15 minutes | what is in the way today |
+| **sprint review** | the last afternoon | what was finished, shown to the people who asked for it |
+| **retrospective** | after the review | what to change about how the team works |
+
+## The three roles
+
+- The **product owner** decides what is most important and keeps the backlog in that order. They answer
+  *what* and *why*, not *how*.
+- The **scrum master** looks after the process: runs the meetings, removes what is blocking people. On many
+  teams this is a part-time hat somebody wears, not a separate person.
+- The **developers** are everybody who builds the thing. The Scrum Guide uses the word for anyone doing that
+  work, not only the people who write code. They decide *how*, and how much fits in a sprint.
+
+## What a sprint protects
+
+The boundary is the point. **Once a sprint starts, its goal is protected**: new requests normally go to the
+product backlog and wait for the next planning, at most two weeks away. That gives developers two weeks
+without the plan changing under them, and gives everybody else a date to expect something by. An urgent
+bug in production is the usual exception, and teams agree in advance what counts as one.
