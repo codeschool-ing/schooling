@@ -4,14 +4,14 @@ version: 1
 ---
 
 Clonar em `/tmp/fresh` funciona, e ninguém lembra de fazer toda vez. Então as equipes passam o trabalho
-para uma máquina: **integração contínua**, ou **CI**. A cada pull request, um serviço cria uma máquina limpa,
+para uma máquina: **integração contínua**, ou CI. A cada pull request, um serviço cria uma máquina limpa,
 clona o branch exatamente como foi enviado, roda os checks da equipe e marca no pull request um visto verde
 ou um X vermelho.
 
 O check do Bruno é um script de shell curto, e vale ler uma vez:
 
 ```schooling-example
-{"language": "sh", "file": "check-links.sh", "parts": [{"code": "#!/bin/sh\n# Fail if any page links to a file that is not in the repository.\nstatus=0\n", "note": "O script começa supondo que está tudo bem. O status vira 1 no momento em que um link falta."}, {"code": "for f in $(grep -oh '\\(src\\|href\\)=\"[^\":]*\"' *.html | cut -d'\"' -f2 | sort -u); do\n", "note": "Todo src= e href= de toda página, sem as aspas e sem repetição. Endereços com dois-pontos, como https:, ficam de fora: apontam para fora do site."}, {"code": "  [ -e \"$f\" ] || { echo \"missing: $f\"; status=1; }\ndone\n", "note": "Se o arquivo não existe aqui, diz qual é e guarda a falha. Continua, para uma execução listar todos os arquivos que faltam."}, {"code": "exit $status\n", "note": "0 se tudo foi achado, 1 se algo não foi. Esse número é tudo o que a CI lê."}]}
+{"language": "sh", "file": "check-links.sh", "parts": [{"code": "#!/bin/sh\n# Fail if any page links to a file that is not in the repository.\nstatus=0\n", "note": "O script começa supondo que está tudo bem. O status vira 1 no momento em que um link falta."}, {"code": "links=$(grep -oh '\\(src\\|href\\)=\"[^\":]*\"' *.html | cut -d'\"' -f2 | sort -u)\nfor f in $links; do\n", "note": "Todo src= e href= de toda página, sem as aspas e sem repetição. Endereços com dois-pontos, como https:, ficam de fora: apontam para fora do site."}, {"code": "  [ -e \"$f\" ] || { echo \"missing: $f\"; status=1; }\ndone\n", "note": "Se o arquivo não existe aqui, diz qual é e guarda a falha. Continua, para uma execução listar todos os arquivos que faltam."}, {"code": "exit $status\n", "note": "0 se tudo foi achado, 1 se algo não foi. Esse número é tudo o que a CI lê."}]}
 ```
 
 No GitHub, as instruções da CI ficam no próprio repositório, como um arquivo em `.github/workflows/`. O GitLab

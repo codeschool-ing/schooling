@@ -6,9 +6,9 @@ version: 1
 A aula 13 foi o lado da Ana no pull request #31. Esta é a do Bruno. Quatro comentários chegaram na
 mudança dele:
 
-- **blocking:** com o campo vazio, o *Order* ainda envia. Pôr `required` evitaria isso.
-- **question:** dá para escolher 03:00, quando estamos fechados?
-- **nit:** *Place order* diz mais que *Order*.
+- `blocking:` com o campo vazio, o *Order* ainda envia. Pôr `required` evitaria isso.
+- `question:` dá para escolher 03:00, quando estamos fechados?
+- `nit:` *Place order* diz mais que *Order*.
 - A mudança de cor do título afeta todas as páginas. Ela pode ir num pull request próprio?
 
 ## Não responda ainda

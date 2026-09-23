@@ -3,8 +3,8 @@ title: Sprint planning
 version: 1
 ---
 
-**Sprint planning** opens every sprint. It takes a refined backlog in and sends two things out: a **sprint
-goal**, and the **sprint backlog**, the tickets the team agrees it can finish. For a two-week sprint it usually
+**Sprint planning** opens every sprint. It takes a refined backlog in and sends two things out: a sprint
+goal, and the sprint backlog, the tickets the team agrees it can finish. For a two-week sprint it usually
 takes an hour or two.
 
 ## What it needs before it starts

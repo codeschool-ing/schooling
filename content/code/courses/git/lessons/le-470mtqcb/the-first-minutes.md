@@ -5,9 +5,9 @@ version: 1
 
 Lesson 13 was Ana's side of pull request #31. This one is Bruno's. Four comments arrived on his change:
 
-- **blocking:** with the field empty, *Order* still submits. Adding `required` would stop that.
-- **question:** can a customer pick 03:00, when we are closed?
-- **nit:** *Place order* says more than *Order*.
+- `blocking:` with the field empty, *Order* still submits. Adding `required` would stop that.
+- `question:` can a customer pick 03:00, when we are closed?
+- `nit:` *Place order* says more than *Order*.
 - The heading colour change affects every page. Could it go in its own pull request?
 
 ## Do not answer yet

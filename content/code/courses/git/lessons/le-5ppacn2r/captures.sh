@@ -75,7 +75,8 @@ cat > check-links.sh <<'SH'
 #!/bin/sh
 # Fail if any page links to a file that is not in the repository.
 status=0
-for f in $(grep -oh '\(src\|href\)="[^":]*"' *.html | cut -d'"' -f2 | sort -u); do
+links=$(grep -oh '\(src\|href\)="[^":]*"' *.html | cut -d'"' -f2 | sort -u)
+for f in $links; do
   [ -e "$f" ] || { echo "missing: $f"; status=1; }
 done
 exit $status

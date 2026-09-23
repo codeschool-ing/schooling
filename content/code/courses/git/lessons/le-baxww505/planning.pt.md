@@ -3,8 +3,8 @@ title: A sprint planning
 version: 1
 ---
 
-A **sprint planning** abre todo sprint. Ela recebe um backlog refinado e devolve duas coisas: um **objetivo
-do sprint** e o **sprint backlog**, os tickets que a equipe combina que consegue terminar. Para um sprint de
+A **sprint planning** abre todo sprint. Ela recebe um backlog refinado e devolve duas coisas: um objetivo
+do sprint e o sprint backlog, os tickets que a equipe combina que consegue terminar. Para um sprint de
 duas semanas, costuma levar uma ou duas horas.
 
 ## Do que ela precisa antes de começar

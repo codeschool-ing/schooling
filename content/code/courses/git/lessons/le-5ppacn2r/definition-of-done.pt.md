@@ -42,6 +42,6 @@ Também deixa as estimativas honestas: um ticket de 3 pontos inclui o teste e a 
 inclui os dois.
 
 E devolve o custo para onde ele é mais barato. Cada degrau da escada é um lugar onde um problema pode ser
-pego, e **quanto mais embaixo ele é pego, menos custa**: um arquivo esquecido é um comando no notebook da
+pego, e **quanto mais embaixo ele é pego, menos custa**. Um arquivo esquecido é um comando no notebook da
 Ana, vinte minutos do Bruno na revisão, uma hora do Diego nos testes, e a confiança de um cliente em
 produção.

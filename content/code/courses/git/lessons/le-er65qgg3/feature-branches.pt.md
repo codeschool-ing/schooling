@@ -27,8 +27,8 @@ padrão: nada chega ao `main` sem outra pessoa ler.
 
 O ponto fraco é o tempo. Um branch que vive dois dias entra quase sem incidente. **Um branch que vive
 três semanas vira uma segunda versão do projeto.** Enquanto isso o `main` andou por baixo de outros
-vinte merges, e quanto mais os dois se afastam, mais linhas os dois mexeram, então o merge no fim é o
-conflito da aula 6, várias vezes, tudo de uma vez, quando todo mundo já está cansado do trabalho. A
+vinte merges. Quanto mais os dois se afastam, mais linhas os dois mexem, e o merge no fim vira o
+conflito da aula 6 várias vezes, tudo de uma vez, quando todo mundo já está cansado do trabalho. A
 revisão sofre do mesmo jeito: um pull request de duas mil linhas é aprovado, não lido.
 
 Dois hábitos mantêm os feature branches saudáveis, e os dois são sobre tamanho, não sobre Git:

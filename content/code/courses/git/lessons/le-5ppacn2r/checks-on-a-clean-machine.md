@@ -4,14 +4,14 @@ version: 1
 ---
 
 Cloning into `/tmp/fresh` works, and nobody remembers to do it every time. So teams hand the job to a
-machine: **continuous integration**, or **CI**. On every pull request, a service creates a clean machine,
+machine: **continuous integration**, or CI. On every pull request, a service creates a clean machine,
 clones the branch exactly as it was pushed, runs the team's checks, and reports a green tick or a red cross
 on the pull request.
 
 Bruno's check is a short shell script, and it is worth reading once:
 
 ```schooling-example
-{"language": "sh", "file": "check-links.sh", "parts": [{"code": "#!/bin/sh\n# Fail if any page links to a file that is not in the repository.\nstatus=0\n", "note": "The script starts by assuming all is well. status becomes 1 the moment one link is missing."}, {"code": "for f in $(grep -oh '\\(src\\|href\\)=\"[^\":]*\"' *.html | cut -d'\"' -f2 | sort -u); do\n", "note": "Every src= and href= in every page, with the quotes cut off and duplicates removed. Addresses with a colon, like https:, are skipped: they point outside the site."}, {"code": "  [ -e \"$f\" ] || { echo \"missing: $f\"; status=1; }\ndone\n", "note": "If the file does not exist here, say which one and remember the failure. It keeps going, so one run lists every missing file."}, {"code": "exit $status\n", "note": "0 if everything was found, 1 if anything was not. That number is all CI reads."}]}
+{"language": "sh", "file": "check-links.sh", "parts": [{"code": "#!/bin/sh\n# Fail if any page links to a file that is not in the repository.\nstatus=0\n", "note": "The script starts by assuming all is well. status becomes 1 the moment one link is missing."}, {"code": "links=$(grep -oh '\\(src\\|href\\)=\"[^\":]*\"' *.html | cut -d'\"' -f2 | sort -u)\nfor f in $links; do\n", "note": "Every src= and href= in every page, with the quotes cut off and duplicates removed. Addresses with a colon, like https:, are skipped: they point outside the site."}, {"code": "  [ -e \"$f\" ] || { echo \"missing: $f\"; status=1; }\ndone\n", "note": "If the file does not exist here, say which one and remember the failure. It keeps going, so one run lists every missing file."}, {"code": "exit $status\n", "note": "0 if everything was found, 1 if anything was not. That number is all CI reads."}]}
 ```
 
 On GitHub, the instructions for CI live in the repository itself, as a file under `.github/workflows/`.

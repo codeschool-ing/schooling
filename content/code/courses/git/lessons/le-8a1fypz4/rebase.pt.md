@@ -56,7 +56,7 @@ Fast-forward
 ```
 
 Como o `cheese` agora começa onde o `main` termina, o merge dele só desliza o `main` para a frente.
-**Nenhum commit de merge, e um histórico que se lê como uma linha só**, e é por isso que as pessoas
+**Nenhum commit de merge, e um histórico que se lê como uma linha só.** É por isso que as pessoas
 fazem rebase: um log em que cada trabalho aparece em ordem, um depois do outro, é mais fácil de ler do
 que um com uma bifurcação e uma junção para cada branch.
 

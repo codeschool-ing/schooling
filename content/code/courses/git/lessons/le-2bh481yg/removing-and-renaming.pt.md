@@ -52,7 +52,7 @@ parecido com o que era.
 
 A rigor, não. Um `git add` no nome novo mais um `git add` no antigo, que prepara a remoção, dão
 exatamente o mesmo commit, e o Git informa a renomeação de qualquer jeito, porque a detecta pelo
-conteúdo. O `git mv` e o `git rm` são o jeito curto de dizer *faça esta mudança e prepare-a*, e a
+conteúdo. O `git mv` e o `git rm` são o jeito curto de dizer *faça esta mudança e prepare-a*. A
 única coisa a evitar é o `rm` comum seguido de um commit que esquece a remoção: o arquivo sumiu do
 seu disco e continua no próximo commit.
 

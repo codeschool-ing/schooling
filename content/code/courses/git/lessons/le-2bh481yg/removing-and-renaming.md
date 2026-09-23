@@ -51,7 +51,7 @@ by comparing content, and a file that moved without changing is 100% similar to 
 
 Not strictly. `git add` on the new name plus `git add` on the old one, which stages the deletion,
 gives exactly the same commit, and Git reports the rename either way because it detects it from the
-content. `git mv` and `git rm` are the short way to say *make this change and stage it*, and the one
+content. `git mv` and `git rm` are the short way to say *make this change and stage it*. The one
 thing to avoid is the plain `rm` followed by a commit that forgets the deletion: the file is gone
 from your disk and still in the next commit.
 

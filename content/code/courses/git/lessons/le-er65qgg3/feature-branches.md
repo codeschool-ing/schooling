@@ -27,9 +27,8 @@ the default: nothing reaches `main` without somebody else reading it.
 
 The weak point is time. A branch that lives for two days is merged almost without incident. **A branch
 that lives for three weeks becomes a second version of the project.** Meanwhile `main` has moved on
-under twenty other merges, and the longer the two drift, the more lines both of them touched, so the
-merge at the end is lesson 6's conflict, many times over, all at once, when everybody is tired of the
-work. The review suffers the same way: a pull request of two thousand lines gets approved, not read.
+under twenty other merges. The longer the two drift, the more lines both of them touch, and the merge at
+the end becomes lesson 6's conflict many times over, all at once, when everybody is tired of the work. The review suffers the same way: a pull request of two thousand lines gets approved, not read.
 
 Two habits keep feature branches healthy, and both are about size rather than about Git:
 

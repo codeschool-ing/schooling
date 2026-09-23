@@ -56,7 +56,7 @@ Fast-forward
 ```
 
 Because `cheese` now starts where `main` ends, merging it only slides `main` forward. **No merge
-commit, and a history that reads as a single line**, which is the reason people rebase: a log where
+commit, and a history that reads as a single line.** That is the reason people rebase: a log where
 each piece of work appears in order, one after another, is easier to read than one with a fork and a
 join for every branch.
 

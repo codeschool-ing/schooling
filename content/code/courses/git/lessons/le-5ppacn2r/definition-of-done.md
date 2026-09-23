@@ -42,5 +42,5 @@ afterwards. It also makes estimates honest: a 3-point ticket includes the testin
 done includes them.
 
 And it moves the cost back where it is cheapest. Each rung of the ladder is a place a problem can be caught,
-and **the lower it is caught, the less it costs**: a missing file is one command on Ana's laptop, twenty
+and **the lower it is caught, the less it costs**. A missing file is one command on Ana's laptop, twenty
 minutes of Bruno's time in review, an hour of Diego's in testing, and a customer's trust in production.

@@ -31,7 +31,7 @@ Enumerating objects: 27, done.
 Counting objects: 100% (27/27), done.
 Delta compression using up to 4 threads
 Compressing objects: 100% (24/24), done.
-Writing objects: 100% (27/27), 2.78 KiB | 1.39 MiB/s, done.
+Writing objects: 100% (27/27), 2.78 KiB | 711.00 KiB/s, done.
 Total 27 (delta 2), reused 0 (delta 0), pack-reused 0
 To /home/ana/remotes/site.git
  * [new branch]      main -> main
