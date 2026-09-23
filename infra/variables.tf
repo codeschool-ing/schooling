@@ -68,11 +68,18 @@ variable "database_tier" {
    A LITERAL AND NOT A REFERENCE. Defaulting to
    `google_sql_database_instance.main.connection_name` would tie the list to
    the one instance that is about to stop being the only one. It would also
-   stop being writable the day that resource leaves this configuration. The
-   value is what that reference resolves to today, character for character,
-   so introducing the variable changes nothing in a plan. If it did not match,
-   the plan would show an in-place update to the socket on all five
-   resources, and that would be the moment to stop.
+   stop being writable the day that resource leaves this configuration.
+
+   BOTH ARE MOUNTED NOW, and the secret still points at the old one. Adding
+   the shared instance is the one apply the move needs: an in-place update of
+   the socket on all five resources, and a new revision of the service. From
+   here, switching either way is a secret version and a restart. When the old
+   instance is deleted, its entry leaves this list in the same change.
+
+   IN ALPHABETICAL ORDER, which puts the new one first. Nothing says whether
+   Cloud Run hands the list back in the order it was sent or sorted. If it
+   sorts and this does not, every plan would propose putting the order back,
+   forever. Sorted here, both answers agree.
 
    IT IS NOT IN `terraform.tfvars`. That file lives on one machine, and an
    apply from anywhere else would plan the mounts back to this default without
@@ -80,7 +87,10 @@ variable "database_tier" {
 variable "database_instances" {
   description = "Cloud SQL connection names (project:region:instance) mounted at /cloudsql by the service and every job."
   type        = list(string)
-  default     = ["aleogr-schooling:us-central1:schooling"]
+  default = [
+    "aleogr-lab-shared-dacd:us-central1:lab-postgres",
+    "aleogr-schooling:us-central1:schooling",
+  ]
 
   // An empty list mounts nothing, and every process would fail to open the
   // database at start-up with an error about a socket rather than about this.
