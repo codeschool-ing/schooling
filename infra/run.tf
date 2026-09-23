@@ -100,7 +100,7 @@ resource "google_cloud_run_v2_job" "migrate" {
       volumes {
         name = "cloudsql"
         cloud_sql_instance {
-          instances = [google_sql_database_instance.main.connection_name]
+          instances = var.database_instances
         }
       }
     }
@@ -178,7 +178,7 @@ resource "google_cloud_run_v2_job" "load" {
       volumes {
         name = "cloudsql"
         cloud_sql_instance {
-          instances = [google_sql_database_instance.main.connection_name]
+          instances = var.database_instances
         }
       }
     }
@@ -267,7 +267,7 @@ resource "google_cloud_run_v2_job" "analyse" {
       volumes {
         name = "cloudsql"
         cloud_sql_instance {
-          instances = [google_sql_database_instance.main.connection_name]
+          instances = var.database_instances
         }
       }
     }
@@ -340,7 +340,7 @@ resource "google_cloud_run_v2_job" "settle" {
       volumes {
         name = "cloudsql"
         cloud_sql_instance {
-          instances = [google_sql_database_instance.main.connection_name]
+          instances = var.database_instances
         }
       }
     }
@@ -597,7 +597,7 @@ resource "google_cloud_run_v2_service" "api" {
     volumes {
       name = "cloudsql"
       cloud_sql_instance {
-        instances = [google_sql_database_instance.main.connection_name]
+        instances = var.database_instances
       }
     }
   }

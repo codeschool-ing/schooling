@@ -54,6 +54,55 @@ variable "database_tier" {
   default     = "db-f1-micro"
 }
 
+/* WHICH INSTANCES EVERY CLOUD RUN RESOURCE MOUNTS, AS ONE LIST.
+
+   It was written five times in `run.tf`, once per resource, as a reference to
+   the instance this configuration declares. The database is moving to an
+   instance another configuration owns, and for a while BOTH have to be
+   mounted. With both mounted, going from one to the other is a new version of
+   `schooling-database-url` and a restart, with no apply in between. The
+   socket for each instance in this list sits in `/cloudsql/` whichever one
+   the URL names. `infra/README.md`, "A new revision, and nothing else", is
+   that restart.
+
+   A LITERAL AND NOT A REFERENCE. Defaulting to
+   `google_sql_database_instance.main.connection_name` would tie the list to
+   the one instance that is about to stop being the only one. It would also
+   stop being writable the day that resource leaves this configuration. The
+   value is what that reference resolves to today, character for character,
+   so introducing the variable changes nothing in a plan. If it did not match,
+   the plan would show an in-place update to the socket on all five
+   resources, and that would be the moment to stop.
+
+   IT IS NOT IN `terraform.tfvars`. That file lives on one machine, and an
+   apply from anywhere else would plan the mounts back to this default without
+   saying so. The value that is true goes here, in a commit. */
+variable "database_instances" {
+  description = "Cloud SQL connection names (project:region:instance) mounted at /cloudsql by the service and every job."
+  type        = list(string)
+  default     = ["aleogr-schooling:us-central1:schooling"]
+
+  // An empty list mounts nothing, and every process would fail to open the
+  // database at start-up with an error about a socket rather than about this.
+  validation {
+    condition     = length(var.database_instances) > 0
+    error_message = "At least one Cloud SQL instance has to be mounted, or nothing can reach a database."
+  }
+
+  validation {
+    condition = alltrue([
+      for name in var.database_instances :
+      can(regex("^[a-z][a-z0-9-]*:[a-z0-9-]+:[a-z][a-z0-9-]*$", name))
+    ])
+    error_message = "Each entry is a connection name, project:region:instance, as `gcloud sql instances describe <instance> --format='value(connectionName)'` prints it."
+  }
+
+  validation {
+    condition     = length(distinct(var.database_instances)) == length(var.database_instances)
+    error_message = "An instance is listed twice. A duplicate mounts nothing new, and it is most often the second instance mistyped as the first."
+  }
+}
+
 /* Where an alert goes, and what it watches. BOTH are needed before anything is
    created, and that is not fussiness — it is the two halves of a working alarm.
 

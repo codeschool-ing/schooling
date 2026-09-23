@@ -644,6 +644,131 @@ the two constants in `internal/platform/database/database.go` and the ceiling
 is one line in `run.tf`. The test tells whoever raises one whether the other
 has to come down.
 
+## A new revision, and nothing else
+
+**What it is for.** Every secret the service reads is referenced at
+`version = "latest"`, and Cloud Run resolves `latest` **when an instance
+starts**. A running instance keeps the value it started with. So after a new
+version of `schooling-database-url` is added, the service keeps using the old
+address until its instances are replaced, and replacing them means starting a
+new revision.
+
+**The jobs need none of this.** Each execution starts a new container, so the
+next run of `migrate`, `load`, `analyse` or `settle` reads the new version by
+itself.
+
+The database's move uses this twice: once to point the service at the new
+instance, and once more if it has to come back. Both instances are mounted the
+whole time, because `var.database_instances` lists both (`variables.tf`). So
+the switch is a secret version and a restart, and never an apply.
+
+### The command
+
+```sh
+(
+  set -euo pipefail
+  REGION=us-central1
+  SERVICE=schooling
+
+  # The image the service runs now, exactly as the last release left it.
+  IMAGE="$(gcloud run services describe "$SERVICE" --region="$REGION" \
+    --format='value(spec.template.spec.containers[0].image)')"
+  BEFORE="$(gcloud run services describe "$SERVICE" --region="$REGION" \
+    --format='value(status.latestReadyRevisionName)')"
+  test -n "$IMAGE" && test -n "$BEFORE"
+  echo "restarting ${SERVICE} on ${IMAGE}, replacing ${BEFORE}"
+
+  gcloud run deploy "$SERVICE" --region="$REGION" --image="$IMAGE" --quiet
+
+  AFTER="$(gcloud run services describe "$SERVICE" --region="$REGION" \
+    --format='value(status.latestReadyRevisionName)')"
+  if [ "$AFTER" = "$BEFORE" ]; then
+    echo "NO NEW REVISION: ${BEFORE} is still serving, on the secret it started with"
+    exit 1
+  fi
+  echo "${AFTER} is serving; its instances started after the secret changed"
+)
+```
+
+It runs in a subshell so a failure ends that and not your terminal.
+
+**It is the release pipeline's own call.** The step called "The revision" in
+`release.yml`'s `Deploy` job is
+`gcloud run deploy "$SERVICE" --region --image --quiet`, and this is that call
+with the image the service already has. The only difference
+between this and a release is that nothing new is being deployed.
+
+**The check at the end exists because "a new revision" is the whole point.**
+If the deploy returned and the same revision were still serving, nothing
+would have changed, and the service would keep using the old address with
+no error anywhere.
+
+If it ever says `NO NEW REVISION`, deploy the image by its digest instead of
+its tag. That is a different string for the same bytes, so the template
+changes and Cloud Run has to create a revision, and it still writes nothing
+but the image:
+
+```sh
+(
+  set -euo pipefail
+  REGION=us-central1
+  SERVICE=schooling
+  REVISION="$(gcloud run services describe "$SERVICE" --region="$REGION" \
+    --format='value(status.latestReadyRevisionName)')"
+  DIGEST="$(gcloud run revisions describe "$REVISION" --region="$REGION" \
+    --format='value(status.imageDigest)')"
+  test -n "$DIGEST"
+  gcloud run deploy "$SERVICE" --region="$REGION" --image="$DIGEST" --quiet
+)
+```
+
+The next release puts the tag back, as it would have anyway.
+
+Neither command has been run from this repository: it has no credentials for
+the project. The format paths are the ones `gcloud run ... describe` prints.
+The plan below is what confirms the whole thing.
+
+### Why the next plan is empty
+
+The `lifecycle` block of `google_cloud_run_v2_service.api` in `run.tf` is:
+
+```hcl
+ignore_changes = [
+  template[0].containers[0].image,
+  client,
+  client_version,
+]
+```
+
+Everything the command writes is on that list or cannot be planned at all:
+
+| what the command changes | why Terraform proposes nothing |
+| --- | --- |
+| `template.containers[0].image`, written with the value it already holds | ignored: `template[0].containers[0].image` |
+| `client` and `client_version`, which `gcloud` stamps on every deploy | ignored: `client`, `client_version` |
+| a new revision: `latest_ready_revision`, `latest_created_revision`, `generation`, `observed_generation`, `etag`, `update_time`, `conditions` | output-only. They are refreshed into state and never compared against the configuration |
+| a new version of `schooling-database-url` | not in this configuration at all. `secrets.tf` declares the container and never a version, and the reference in `run.tf` is the string `"latest"`, which is the same before and after |
+
+What it does **not** send is everything else in the template: the
+environment, the secret references, the socket's instances, the scaling, the
+service account. Those are what Terraform manages, and `gcloud run deploy`
+without the flags for them leaves them as they are. Traffic stays at 100% on
+the latest revision, which is what every release already does and what the
+plan already expects.
+
+**That is the argument. The confirmation is the plan afterwards**, and it
+costs nothing to get before the move matters:
+
+```sh
+terraform -chdir=infra plan
+```
+
+Run the command once on the instance the project has today, where the secret
+has not changed and the restart swaps one revision for an identical one. The
+plan after it should say `No changes`. Anything else it shows is a field this
+section says the command does not touch, and it should be written here before
+the move relies on it.
+
 ## Nothing here is in Google yet, and that is set here
 
 **`indexable` defaults to `false`, and `code.schooling.lab.aleogr.dev` is a
