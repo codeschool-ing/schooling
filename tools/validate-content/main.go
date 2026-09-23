@@ -18,6 +18,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
@@ -693,20 +694,38 @@ type drawn struct {
 // an OPENING one, and every line after a drawing then looks like code. That is
 // how the first run of this check reported a table row, and it is what the test
 // beside this file holds it to.
+//
+// AN ANNOTATED EXAMPLE IS CODE TOO. `schooling-example` is JSON like the other
+// `schooling-` fences, so its lines are not read as they stand, but its parts
+// are drawn in the same mono face as any other block, and so is its output.
+// Those strings are read out of the JSON and held to the same font. A problem
+// is reported on the line that opens the fence, because the JSON carries no
+// lines of its own.
 func drawnWith(body string, mono coverage) []drawn {
 	var found []drawn
 	fence, drawing := false, false
+	example, opened := []string(nil), 0
 
 	for i, line := range strings.Split(body, "\n") {
 		if strings.HasPrefix(line, "```") {
 			if fence {
-				fence, drawing = false, false
+				if example != nil {
+					found = append(found, drawnInExample(strings.Join(example, "\n"), opened, mono)...)
+				}
+				fence, drawing, example = false, false, nil
 			} else {
 				// A `schooling-` fence is JSON for a block with a reader of its
-				// own, and `checkFigureFonts` is what looks inside that one.
+				// own, and `checkFigureFonts` is what looks inside a figure.
 				fence = true
 				drawing = strings.HasPrefix(line, "```schooling-")
+				if strings.TrimSpace(line) == "```schooling-example" {
+					example, opened = []string{}, i+1
+				}
 			}
+			continue
+		}
+		if example != nil {
+			example = append(example, line)
 			continue
 		}
 		if !fence || drawing {
@@ -715,6 +734,29 @@ func drawnWith(body string, mono coverage) []drawn {
 		for _, r := range line {
 			if !mono.has(r) {
 				found = append(found, drawn{glyph: r, line: i + 1})
+			}
+		}
+	}
+	return found
+}
+
+// drawnInExample reads the code and the output of one annotated example. A
+// block that does not parse is `checkExamples`'s to report, so it adds nothing
+// here rather than a second, vaguer message.
+func drawnInExample(raw string, line int, mono coverage) []drawn {
+	var ex exampleBlock
+	if json.Unmarshal([]byte(raw), &ex) != nil {
+		return nil
+	}
+	var found []drawn
+	texts := []string{ex.Output}
+	for _, p := range ex.Parts {
+		texts = append(texts, p.Code)
+	}
+	for _, text := range texts {
+		for _, r := range text {
+			if r != '\n' && !mono.has(r) {
+				found = append(found, drawn{glyph: r, line: line})
 			}
 		}
 	}
@@ -871,6 +913,7 @@ func check(root string) (problems []error, schools int, err error) {
 		// family: a block can name the right font and still be drawn with a
 		// glyph that font has never had. See `checkFenceGlyphs`.
 		problems = append(problems, checkFenceGlyphs(entry.Name(), school, mono, used)...)
+		problems = append(problems, checkExamples(entry.Name(), school)...)
 	}
 
 	// An exception that outlived what it excused reads as current, and the next
