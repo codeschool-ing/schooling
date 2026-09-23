@@ -35,6 +35,10 @@ files they live in are not called `.md`.
 
 Both are in scope. They are measured apart, below, because they are measurably different.
 
+**And the notes of a `schooling-example` are reading prose too**, written inside a fence as JSON
+strings. A scan that strips fences, as the measurement below does, never sees them. Read them
+with the section they sit in.
+
 ## The floor
 
 Break any of these and the pass has done damage, whatever else it improved.

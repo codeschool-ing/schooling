@@ -1,22 +1,31 @@
 ---
 title: `@contextmanager`, e o `try` que não é opcional
-version: 1
+version: 2
 ---
 
-```python
-from contextlib import contextmanager
-
-@contextmanager
-def cronometro():
-    inicio = time.perf_counter()
-    try:
-        yield                       # o corpo roda aqui
-    finally:
-        print(f"{time.perf_counter() - inicio:.3f}s")
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "from contextlib import contextmanager\n\n@contextmanager\ndef cronometro():",
+      "note": "O `@contextmanager` transforma uma função geradora em algo que um `with` pode usar."
+    },
+    {
+      "code": "    inicio = time.perf_counter()",
+      "note": "**Tudo antes do `yield` é o `__enter__`.** Roda quando a linha do `with` roda."
+    },
+    {
+      "code": "    try:\n        yield",
+      "note": "**O `yield` é onde roda o corpo do `with`.** O que ele produzir é o que o `as` liga, e este não produz nada."
+    },
+    {
+      "code": "    finally:\n        print(f\"{time.perf_counter() - inicio:.3f}s\")",
+      "note": "**Tudo depois dele é o `__exit__`.** Por que ele fica num `finally` é o próximo título."
+    }
+  ]
+}
 ```
-
-Um `yield`. Tudo antes dele é o `__enter__`, tudo depois dele é o `__exit__`, e o que ele produzir
-é o que o `as` liga.
 
 ## O `try`/`finally` é a lição inteira desta seção
 

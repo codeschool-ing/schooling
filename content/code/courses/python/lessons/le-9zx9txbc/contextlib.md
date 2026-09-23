@@ -1,22 +1,31 @@
 ---
 title: `@contextmanager`, and the `try` that is not optional
-version: 1
+version: 2
 ---
 
-```python
-from contextlib import contextmanager
-
-@contextmanager
-def timer():
-    start = time.perf_counter()
-    try:
-        yield                       # the body runs here
-    finally:
-        print(f"{time.perf_counter() - start:.3f}s")
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "from contextlib import contextmanager\n\n@contextmanager\ndef timer():",
+      "note": "`@contextmanager` turns a generator function into something a `with` can use."
+    },
+    {
+      "code": "    start = time.perf_counter()",
+      "note": "**Everything before the `yield` is `__enter__`.** It runs when the `with` line does."
+    },
+    {
+      "code": "    try:\n        yield",
+      "note": "**The `yield` is where the body of the `with` runs.** Whatever it yields is what `as` binds, and this one yields nothing."
+    },
+    {
+      "code": "    finally:\n        print(f\"{time.perf_counter() - start:.3f}s\")",
+      "note": "**Everything after it is `__exit__`.** Why it sits in a `finally` is the next heading."
+    }
+  ]
+}
 ```
-
-One `yield`. Everything before it is `__enter__`, everything after it is `__exit__`, and whatever
-it yields is what `as` binds.
 
 ## The `try`/`finally` is the whole lesson of this section
 

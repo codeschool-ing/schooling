@@ -378,6 +378,17 @@ One averaged table would pass a spoken sentence far outside its own register and
 other, 560 runs across the catalogue, and a check that does not know it calls a signposted section
 bare.
 
+**Wherever a course demonstrates code, the annotated example is considered, in every course.**
+`schooling-example` is Go by Example's shape: the note beside the code it explains, and a copy
+button that hands over the whole program without the notes. It was built, rendered and linted,
+and five courses were written without one. The `python` course instead explains its code with
+trailing comments on 308 lines, and some of those are sentences squeezed into one line of code.
+`docs/TEACHING.md`, "Code that is demonstrated", says when each of the three forms fits: a plain
+fence, a short `# note`, or an example. **`validate-content` holds the block itself**: an unknown
+key, a part with no code, or an example with no note anywhere is refused, and so is a
+translation whose examples differ in number, parts, language or file. The glyph check reads
+inside the block too. Its code is drawn in the mono face like any other.
+
 ## The catalogue is a mirror, and only one thing writes it
 
 `content/` is the truth; the `catalog_*` tables are derived (C-01). **A test scans the source for

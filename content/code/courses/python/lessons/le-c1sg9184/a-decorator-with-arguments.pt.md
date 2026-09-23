@@ -1,6 +1,6 @@
 ---
 title: A terceira camada, e por que todo mundo consulta
-version: 1
+version: 2
 ---
 
 ```python
@@ -18,19 +18,32 @@ buscar = repetir(vezes=3)(buscar)
 **Duas chamadas.** O `repetir(vezes=3)` roda primeiro e precisa devolver um DECORADOR; esse
 decorador é então chamado com `buscar`. Então há três camadas em vez de duas.
 
-```python
-def repetir(vezes):                     # 1. recebe o argumento
-    def decorador(func):                # 2. recebe a função
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):   # 3. recebe a chamada
-            for tentativa in range(vezes):
-                try:
-                    return func(*args, **kwargs)
-                except OSError:
-                    if tentativa == vezes - 1:
-                        raise
-        return wrapper
-    return decorador
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "def repetir(vezes):",
+      "note": "**A primeira camada recebe o argumento.** O `repetir(vezes=3)` roda quando a linha do `@` é lida, antes de existir qualquer função, e tudo o que ele faz é guardar o `vezes`."
+    },
+    {
+      "code": "    def decorador(func):\n        @functools.wraps(func)",
+      "note": "**A segunda recebe a função.** Este é o decorador de fato, o que o `@` aplica ao `buscar`, e o `functools.wraps` mantém o nome e a docstring do `buscar` no que ele devolve."
+    },
+    {
+      "code": "        def wrapper(*args, **kwargs):\n            for tentativa in range(vezes):\n                try:\n                    return func(*args, **kwargs)\n                except OSError:\n                    if tentativa == vezes - 1:\n                        raise",
+      "note": "**A terceira recebe a chamada**, e roda toda vez que `buscar(url)` roda: até `vezes` tentativas, devolvendo a primeira que der certo e levantando o último `OSError` se nenhuma der."
+    },
+    {
+      "code": "        return wrapper",
+      "note": "O decorador devolve o wrapper, e é para ele que o nome `buscar` aponta daí em diante."
+    },
+    {
+      "code": "    return decorador",
+      "note": "E o `repetir` devolve o decorador. Um `return` para cada camada de fora: esqueça qualquer um e fica `None` onde deveria haver uma função."
+    }
+  ]
+}
 ```
 
 Leia de dentro para fora: o `wrapper` faz o trabalho, o `decorador` faz um wrapper para uma função,

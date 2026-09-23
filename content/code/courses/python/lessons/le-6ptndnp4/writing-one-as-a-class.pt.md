@@ -1,6 +1,6 @@
 ---
 title: A mesma coisa, escrita duas vezes
-version: 1
+version: 2
 ---
 
 O gerador, de antes:
@@ -14,29 +14,34 @@ def contagem(n):
 
 A mesma coisa como classe:
 
-```python
-class Contagem:
-    def __init__(self, n):
-        self.n = n
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.n <= 0:
-            raise StopIteration
-        self.n -= 1
-        return self.n + 1
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "class Contagem:\n    def __init__(self, n):\n        self.n = n",
+      "note": "**O `self.n` é o estado.** O gerador guarda o mesmo número na variável local `n`."
+    },
+    {
+      "code": "    def __iter__(self):\n        return self",
+      "note": "O `return self` é o que deixa um laço `for` usar o objeto, e é também por que o objeto, como todo iterador, se esgota depois de uma passada."
+    },
+    {
+      "code": "    def __next__(self):\n        if self.n <= 0:\n            raise StopIteration",
+      "note": "**O fim precisa ser anunciado.** O gerador para ao sair do `while`; a classe levanta o `StopIteration` ela mesma."
+    },
+    {
+      "code": "        self.n -= 1\n        return self.n + 1",
+      "note": "**Primeiro desce um, depois devolve o valor de antes do passo.** Esse é o `+ 1` de que o gerador nunca precisou."
+    }
+  ]
+}
 ```
 
 ## O que a classe mostra
 
-**O `self.n` é o estado, e a versão com `yield` guarda o mesmo estado numa variável local.** Essa é
-a coisa inteira que um gerador faz: o frame da função — os locais dela, a posição dela no corpo —
-é mantido vivo entre as chamadas, e o `__next__` é gerado para você.
-
-O `return self` no `__iter__` é o que torna o objeto usável num laço `for`, e é também por que este
-objeto, como todo iterador, se esgota depois de uma passada.
+**Tudo o que a classe escreve por extenso, o gerador ganha de graça.** O frame dele — os locais,
+a posição no corpo — é mantido vivo entre as chamadas, e o `__next__` é gerado para você.
 
 ## Por que a versão com `yield` vence
 

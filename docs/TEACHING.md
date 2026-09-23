@@ -102,6 +102,56 @@ able to *recognise* the idea and not yet *use* it.
 
 ---
 
+## Code that is demonstrated
+
+**Wherever a section demonstrates code, the annotated example is considered, in every course.**
+There are three ways to put code on the page, and each one fits a different kind of explanation.
+Pick one on purpose. Don't let the ordinary fence win just because it was the first thing typed.
+
+| form | what it is | when it fits |
+| --- | --- | --- |
+| an ordinary fence | the program as a file, or a session with its output | it is read whole, and the paragraph around it is the explanation |
+| a trailing comment, `code  # note` | a label on one line, in the language's own syntax | two to six words naming what the line gives: the value, the type, the error it raises |
+| `schooling-example` | the program cut into parts, each with a note beside it | the section walks through a program piece by piece |
+
+**A trailing comment is part of the program.** The copy button takes it along, the highlighter
+dims it, and it has the width of one line to say what it says. That makes it the right tool for a
+label a working programmer would leave in the file, and the wrong one for a sentence. When
+trailing comments grow into clauses, or a block carries three or more of them, the block is asking
+to become an example.
+
+**The example is the right tool when the explanation belongs to the pieces.** Go by Example's
+shape: the note on the left, at the height of the code it explains. On a narrow screen the note
+comes first and the code follows it. The copy button hands over the whole program without the
+notes, so cutting the file into parts costs the reader nothing. What the program prints goes in
+`output`, below the frame.
+
+Signs a section should use one:
+
+- the prose after a block points at its lines by position: "the first line", "the next two",
+  "then";
+- one program is split across several fences with a paragraph between each, which turns a file
+  into a table of pieces;
+- trailing comments running past a few words.
+
+And when not to:
+
+- a one-liner, or a program with nothing to say about its pieces. `validate-content` refuses an
+  example where no part has a note, because that is a program in a frame built for commentary;
+- a terminal session, where commands and output interleave. That is an ordinary fence, or a
+  capture from `term-capture` when the screen itself is the point.
+
+**The notes are prose**, and everything in "Prose" above applies to them, including the
+`natural-writing` pass. **The translation carries its own block**, with the notes translated. Its
+code follows what the section's other blocks already do, and a captured transcript or `output` is
+never translated: it is evidence of a run, which is `natural-writing`'s floor. The shape
+cannot differ: the same number of examples, each with the same number of parts, the same
+`language` and the same `file`. `validate-content` refuses a translation that drifted, because a
+part added in one language moves every note after it onto the wrong code in the other, and each
+screen reads perfectly on its own.
+
+---
+
 ## Video scripts
 
 `VIDEO.md` decides how a video is made and what it costs. This is what goes in the words.

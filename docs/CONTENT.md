@@ -258,7 +258,7 @@ has written yet, and one `switch` in `api.js` to read them.
 | fence | what it is |
 |---|---|
 | `schooling-figure` | `{"svg": "<svg…>", "caption": "…"}`, or `{"image": "…", "alt": "…", "caption": "…"}`. A TRANSLATED figure may add `"same": ["…"]` — see below |
-| `schooling-example` | annotated code, Go-By-Example style: the program on one side, the commentary beside the line it explains |
+| `schooling-example` | annotated code, Go-By-Example style: `{"language": "python", "file": "greet.py", "parts": [{"code": "…", "note": "…"}, …], "output": "…"}`. `file` and `output` are optional, and so is the note on a single part; at least one part carries a note. `docs/TEACHING.md` says when to use one |
 | `schooling-block` | any other block the renderer knows, passed through as it is |
 
 **A concept diagram is `svg` and is written inline.** It enters the document, so `var(--phosphor)`

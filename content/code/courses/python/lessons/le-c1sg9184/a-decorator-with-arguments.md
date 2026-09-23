@@ -1,6 +1,6 @@
 ---
 title: The third layer, and why everybody looks it up
-version: 1
+version: 2
 ---
 
 ```python
@@ -18,19 +18,32 @@ fetch = retry(times=3)(fetch)
 **Two calls.** `retry(times=3)` runs first and must return a DECORATOR; that decorator is then
 called with `fetch`. So there are three layers rather than two.
 
-```python
-def retry(times):                       # 1. takes the argument
-    def decorator(func):                # 2. takes the function
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):   # 3. takes the call
-            for attempt in range(times):
-                try:
-                    return func(*args, **kwargs)
-                except OSError:
-                    if attempt == times - 1:
-                        raise
-        return wrapper
-    return decorator
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "def retry(times):",
+      "note": "**The first layer takes the argument.** `retry(times=3)` runs when the `@` line is read, before there is any function, and all it does is keep `times`."
+    },
+    {
+      "code": "    def decorator(func):\n        @functools.wraps(func)",
+      "note": "**The second takes the function.** This is the decorator proper, what `@` applies to `fetch`, and `functools.wraps` keeps `fetch`'s name and docstring on what it hands back."
+    },
+    {
+      "code": "        def wrapper(*args, **kwargs):\n            for attempt in range(times):\n                try:\n                    return func(*args, **kwargs)\n                except OSError:\n                    if attempt == times - 1:\n                        raise",
+      "note": "**The third takes the call**, and runs every time `fetch(url)` does: up to `times` attempts, returning the first that succeeds and raising the last `OSError` if none does."
+    },
+    {
+      "code": "        return wrapper",
+      "note": "The decorator hands back the wrapper, and that is what the name `fetch` points at from then on."
+    },
+    {
+      "code": "    return decorator",
+      "note": "And `retry` hands back the decorator. One `return` for each outer layer: leave either out and `None` ends up where a function should be."
+    }
+  ]
+}
 ```
 
 Read it from the inside out: `wrapper` does the work, `decorator` makes a wrapper for one
