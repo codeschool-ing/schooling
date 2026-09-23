@@ -210,6 +210,19 @@ jobs:
       SETTLE_IMAGE: us-central1-docker.pkg.dev/aleogr-schooling/schooling/settle
       DEPLOY_ACCOUNT: schooling-deploy@aleogr-schooling.iam.gserviceaccount.com
       WORKLOAD_IDENTITY_PROVIDER: projects/67869214453/locations/global/workloadIdentityPools/github/providers/github
+      # THE INSTANCE THE DATABASE URL POINTS AT, which is the one the
+      # preflight below asks whether it is awake. It is ONE connection name,
+      # not `var.database_instances`: that list is what every Cloud Run
+      # resource MOUNTS, and during the move it names two instances while the
+      # database lives in one of them. This workflow does not read Terraform
+      # either, so the list could not reach it anyway.
+      #
+      # IT CHANGES TO aleogr-lab-shared-dacd:us-central1:lab-postgres WHEN THE
+      # DATABASE MOVES — in the same change that points
+      # `schooling-database-url` at that instance, and back if the move is
+      # undone. Left behind, the preflight would ask the old instance, which
+      # never sleeps, and wave a release into the window it exists to stop.
+      DATABASE_CONNECTION: aleogr-schooling:us-central1:schooling
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -225,6 +238,67 @@ jobs:
       # on; a deploy that fails with "gcloud: command not found" would fail
       # AFTER the images were pushed, leaving the registry ahead of the service.
       - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+
+      # IS THE DATABASE AWAKE, asked before anything is pushed or updated.
+      #
+      # The instance this project is moving to sleeps four weeknights. A
+      # release cut while it sleeps used to find out at the `migrate` gate,
+      # with the five images already in the registry, and say so as a pgx
+      # or Cloud SQL connection error that reads like a broken schema. This
+      # asks first and answers in a sentence. It is aleogr/marketplace's step
+      # from 2026-09-21 (`.github/workflows/terraform.yml`), made to do the
+      # same job in front of a deploy.
+      #
+      # THE FIRST THING THIS JOB DOES, AFTER THE TWO STEPS THAT GIVE IT
+      # CREDENTIALS. Nothing can be asked of Google before those, and
+      # everything after this is a change: the registry login, the images, the
+      # jobs, the revision.
+      #
+      # A READ THAT FAILS IS NOT AN ANSWER. `policy=$(gcloud ...)` on its own
+      # line would stop the step at the assignment under `-e`, printing
+      # gcloud's error and nothing that says what it means. `if ! policy=$(...)`
+      # tests the read itself, so the sentence below can print. An empty
+      # answer gets the same treatment: nothing read is not the same as ALWAYS.
+      #
+      # IT READS AND NEVER WAKES. Starting an instance is
+      # `cloudsql.instances.update`, which the shared project does not give
+      # this repository, because it is also the permission that would stop an
+      # instance other projects use. The read is `cloudsql.instances.get`:
+      # `deploy_reads_the_database_state` in `infra/iam.tf` here, and
+      # `roles/cloudsql.viewer` granted by the shared project after the move.
+      #
+      # WHAT IT DOES NOT SEE: the policy turns ALWAYS the moment the instance
+      # is told to start at 07:30, and the database accepts connections about
+      # twelve minutes later. A release in those minutes passes this and can
+      # still fail at `migrate`. That is why the message says 07:45 and not
+      # 07:30.
+      - name: The database is awake
+        run: |
+          set -euo pipefail
+
+          IFS=: read -r project region instance extra <<< "$DATABASE_CONNECTION"
+          if [ -z "$project" ] || [ -z "$region" ] || [ -z "$instance" ] || [ -n "$extra" ]; then
+            echo "::error::DATABASE_CONNECTION is '${DATABASE_CONNECTION}', which is not project:region:instance, so there is no instance to ask."
+            exit 1
+          fi
+
+          if ! policy=$(gcloud sql instances describe "$instance" \
+              --project="$project" --format='value(settings.activationPolicy)'); then
+            echo "::error::The instance ${DATABASE_CONNECTION} could not be read, so this deploy cannot tell whether the database is awake. Nothing has been pushed."
+            exit 1
+          fi
+
+          echo "activationPolicy=${policy:-(nothing)} for ${DATABASE_CONNECTION}"
+
+          if [ -z "$policy" ]; then
+            echo "::error::The instance ${DATABASE_CONNECTION} could not be read: gcloud answered with no activationPolicy, which is not the same as the instance being asleep. Nothing has been pushed."
+            exit 1
+          fi
+
+          if [ "$policy" != "ALWAYS" ]; then
+            echo "::error::The shared database sleeps Monday–Thursday 22:00–07:30 (America/Sao_Paulo) and takes about 12 minutes to wake; release after 07:45 or on another day."
+            exit 1
+          fi
 
       - name: The registry, as somewhere docker may push
         run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
