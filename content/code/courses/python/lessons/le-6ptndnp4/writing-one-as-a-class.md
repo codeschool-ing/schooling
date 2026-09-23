@@ -1,6 +1,6 @@
 ---
 title: The same thing, written twice
-version: 1
+version: 2
 ---
 
 The generator, from earlier:
@@ -14,29 +14,34 @@ def countdown(n):
 
 The same thing as a class:
 
-```python
-class Countdown:
-    def __init__(self, n):
-        self.n = n
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.n <= 0:
-            raise StopIteration
-        self.n -= 1
-        return self.n + 1
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "class Countdown:\n    def __init__(self, n):\n        self.n = n",
+      "note": "**`self.n` is the state.** The generator keeps the same number in its local variable `n`."
+    },
+    {
+      "code": "    def __iter__(self):\n        return self",
+      "note": "`return self` is what lets a `for` loop use the object, and it is also why the object, like every iterator, is spent after one pass."
+    },
+    {
+      "code": "    def __next__(self):\n        if self.n <= 0:\n            raise StopIteration",
+      "note": "**The end has to be announced.** The generator stops by leaving its `while`; the class raises `StopIteration` itself."
+    },
+    {
+      "code": "        self.n -= 1\n        return self.n + 1",
+      "note": "**Step down first, then hand back the value from before the step.** That is the `+ 1` the generator never needed."
+    }
+  ]
+}
 ```
 
 ## What the class shows
 
-**`self.n` is the state, and the `yield` version keeps the same state in a local variable.** That
-is the whole of what a generator does: the function's frame — its locals, its position in the
-body — is kept alive between calls, and `__next__` is generated for you.
-
-The `return self` in `__iter__` is what makes the object usable in a `for` loop, and it is also
-why this object, like every iterator, is spent after one pass.
+**Everything the class spells out, the generator gets for free.** Its frame — its locals, its
+position in the body — is kept alive between calls, and `__next__` is generated for you.
 
 ## Why the `yield` version wins
 

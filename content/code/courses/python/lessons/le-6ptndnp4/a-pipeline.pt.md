@@ -1,26 +1,30 @@
 ---
 title: Geradores ponta com ponta
-version: 1
+version: 2
 ---
 
-```python
-def linhas(caminho):
-    with open(caminho, encoding="utf-8") as f:
-        for linha in f:
-            yield linha.rstrip("\n")
-
-def erros(linhas):
-    for linha in linhas:
-        if " ERROR " in linha:
-            yield linha
-
-def duracoes(linhas):
-    for linha in linhas:
-        m = DURACAO.search(linha)
-        if m:
-            yield int(m["ms"])
-
-total = sum(duracoes(erros(linhas(caminho))))
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "def linhas(caminho):\n    with open(caminho, encoding=\"utf-8\") as f:\n        for linha in f:\n            yield linha.rstrip(\"\\n\")",
+      "note": "**O `linhas` produz.** Abre o arquivo e produz uma linha por vez, sem a quebra de linha."
+    },
+    {
+      "code": "def erros(linhas):\n    for linha in linhas:\n        if \" ERROR \" in linha:\n            yield linha",
+      "note": "**O `erros` filtra.** Entram linhas e saem só as linhas de erro."
+    },
+    {
+      "code": "def duracoes(linhas):\n    for linha in linhas:\n        m = DURACAO.search(linha)\n        if m:\n            yield int(m[\"ms\"])",
+      "note": "**O `duracoes` transforma.** Cada linha que o padrão `DURACAO` casa vira um inteiro, os milissegundos que ele capturou, e as linhas que ele não casa ficam de fora."
+    },
+    {
+      "code": "total = sum(duracoes(erros(linhas(caminho))))",
+      "note": "**O `sum` consome**, e é o único estágio que pede alguma coisa."
+    }
+  ]
+}
 ```
 
 Quatro estágios, um valor por vez, do começo ao fim. Nada é construído em lugar nenhum, e a coisa
@@ -32,8 +36,7 @@ toda custa a memória de uma linha, seja qual for o arquivo.
 
 ## Leia de dentro para fora, ou de baixo para cima
 
-O `linhas` produz, o `erros` filtra, o `duracoes` transforma, o `sum` consome. **Cada estágio
-recebe um iterável e produz um iterável**, que é o que os torna componíveis em qualquer ordem que
+**O `erros` e o `duracoes` recebem um iterável e produzem outro**, que é o que os torna componíveis em qualquer ordem que
 faça sentido.
 
 Este é o pipeline do `linux-terminal` num processo só — `grep` e depois `sed` e depois `awk`, com

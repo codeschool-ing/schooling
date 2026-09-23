@@ -1,26 +1,30 @@
 ---
 title: Generators end to end
-version: 1
+version: 2
 ---
 
-```python
-def lines(path):
-    with open(path, encoding="utf-8") as f:
-        for line in f:
-            yield line.rstrip("\n")
-
-def errors(lines):
-    for line in lines:
-        if " ERROR " in line:
-            yield line
-
-def durations(lines):
-    for line in lines:
-        m = DURATION.search(line)
-        if m:
-            yield int(m["ms"])
-
-total = sum(durations(errors(lines(path))))
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "def lines(path):\n    with open(path, encoding=\"utf-8\") as f:\n        for line in f:\n            yield line.rstrip(\"\\n\")",
+      "note": "**`lines` produces.** It opens the file and yields one line at a time, without the newline."
+    },
+    {
+      "code": "def errors(lines):\n    for line in lines:\n        if \" ERROR \" in line:\n            yield line",
+      "note": "**`errors` filters.** Lines go in and only the error lines come out."
+    },
+    {
+      "code": "def durations(lines):\n    for line in lines:\n        m = DURATION.search(line)\n        if m:\n            yield int(m[\"ms\"])",
+      "note": "**`durations` transforms.** Each line the `DURATION` pattern matches becomes an integer, the milliseconds it captured, and the lines it does not match are dropped."
+    },
+    {
+      "code": "total = sum(durations(errors(lines(path))))",
+      "note": "**`sum` consumes**, and it is the only stage that asks for anything."
+    }
+  ]
+}
 ```
 
 Four stages, one value at a time, all the way through. Nothing is built anywhere, and the whole
@@ -32,8 +36,7 @@ thing costs the memory of one line whatever the file is.
 
 ## Read it from the inside out, or from the bottom up
 
-`lines` produces, `errors` filters, `durations` transforms, `sum` consumes. **Each stage takes an
-iterable and yields an iterable**, which is what makes them composable in any order that makes
+**`errors` and `durations` each take an iterable and yield one**, which is what makes them composable in any order that makes
 sense.
 
 This is `linux-terminal`'s pipeline in one process — `grep` then `sed` then `awk`, with the same

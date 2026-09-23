@@ -142,8 +142,9 @@ And when not to:
   capture from `term-capture` when the screen itself is the point.
 
 **The notes are prose**, and everything in "Prose" above applies to them, including the
-`natural-writing` pass. **The translation carries its own block**: notes translated, and the code
-translated wherever the section already translates code (comments, names, strings). The shape
+`natural-writing` pass. **The translation carries its own block**, with the notes translated. Its
+code follows what the section's other blocks already do, and a captured transcript or `output` is
+never translated: it is evidence of a run, which is `natural-writing`'s floor. The shape
 cannot differ: the same number of examples, each with the same number of parts, the same
 `language` and the same `file`. `validate-content` refuses a translation that drifted, because a
 part added in one language moves every note after it onto the wrong code in the other, and each
