@@ -143,12 +143,47 @@ And when not to:
 
 **The notes are prose**, and everything in "Prose" above applies to them, including the
 `natural-writing` pass. **The translation carries its own block**, with the notes translated. Its
-code follows what the section's other blocks already do, and a captured transcript or `output` is
-never translated: it is evidence of a run, which is `natural-writing`'s floor. The shape
-cannot differ: the same number of examples, each with the same number of parts, the same
+code parts and its `output` are the English ones, byte for byte, like every other block in a
+translation (below). The shape cannot differ: the same number of examples, each with the same number of parts, the same
 `language` and the same `file`. `validate-content` refuses a translation that drifted, because a
 part added in one language moves every note after it onto the wrong code in the other, and each
 screen reads perfectly on its own.
+
+### Code in a translation is the English code
+
+**A `.pt.md` translates the prose and never the program.** Names, comments, strings, output, a
+path the interpreter returned: all of it stays as the English file has it, byte for byte.
+`validate-content` compares every fence of a translation with the fence at the same place in the
+source, and the only thing it lets through is the notes of a `schooling-example`.
+
+It used to be free, and `python` shows what that costs. Its Portuguese printed a timing table as
+`vetorizado  0,002 s`, a DataFrame header as `centavos` and a path as `/tmp/projeto/...`, and no
+program ever printed any of those. They were evidence of a run, rewritten by hand, and each
+screen read perfectly on its own. A translated program is also a second program that nobody runs:
+nothing here can check that `repetir(vezes=3)` still does what `retry(times=3)` does. The check
+that CAN be made removes the question.
+
+What a Portuguese reader needs in their own language goes where translation belongs:
+
+- **the prose around the block**, which names what the code does and quotes the English names;
+- **the notes of a `schooling-example`**, which exist for exactly this. A block whose comments
+  were the explanation is the strongest candidate for one;
+- **a Markdown table**, when a fence was a two-column list pretending to be one. Nine were:
+  quantifiers, character classes, SQLSTATE codes. A table's cells are prose and translate.
+
+**One label is exempt: `localised`.** It is written in both files, on a block that is not a
+program: an explanation laid out in mono because the columns matter, like the three parts of a
+comprehension labelled underneath it, or a formula the software spells per locale. `=ARRED(…; 2)`
+is right in a Portuguese spreadsheet and `=ROUND(…, 2)` is refused by it. A `localised` block is
+drawn with no title and no colours, because it is neither a language nor a recording. A pair where
+both sides say `localised` is not compared; one side alone is a difference like any other. And the
+label is refused on anything that looks like a capture, whatever it says: a prompt, a `$ ` or a
+`>>> ` is a machine's output, and a machine's output is never the reader's to reword.
+
+**A figure drawing code draws the English code too.** `check-figures` asks the prose face to be
+translated and leaves the mono face alone, because most mono labels in these drawings are words.
+A figure that draws the section's own program is the exception. Its code labels are the English
+ones, and a code label set in the prose face goes in the figure's `same`.
 
 ---
 
