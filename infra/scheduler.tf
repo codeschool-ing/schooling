@@ -1,4 +1,4 @@
-/* What makes the nightly job nightly.
+/* What makes the daily jobs daily.
 
    # THE CLAIM WAS IN THE CODE AND THE MACHINERY WAS NOWHERE
 
@@ -50,19 +50,43 @@ resource "google_cloud_run_v2_job_iam_member" "scheduler_starts_the_analysis" {
   member   = "serviceAccount:${google_service_account.scheduler.email}"
 }
 
-/* 03:10, IN SÃO PAULO, EVERY NIGHT.
+/* 08:10, IN SÃO PAULO, EVERY DAY.
 
-   THE HOUR IS THE QUIET ONE AND THE MINUTE IS NOT ROUND. Ten past rather than
-   on the hour because every other scheduled thing in the world runs at :00, and
-   a job that shares its minute with a hosting provider's maintenance window is
-   a job that fails on the nights the platform is busiest with somebody else's
-   work.
+   THE HOUR IS THE FIRST ONE THE DATABASE IS SURE TO BE AWAKE. The instance
+   this project is moving to sleeps from 22:00 to 07:30, Monday to Thursday,
+   and when it was timed it took 686 seconds after starting to accept a
+   connection, so it answers from about 07:42. A run inside that window
+   fails, and nothing records the failure. The run's `job_runs` row is written
+   to the database that is off. The scheduler reports success either way,
+   because all it does is start an execution. The old hour was inside the
+   window four nights a week.
 
-   THE ZONE IS THE STUDENTS' AND NOT UTC. It is when the platform is empty that
-   matters, and the platform's population is Brazilian — an analysis at 03:10
-   UTC would run at midnight in São Paulo, which is neither quiet nor the end of
-   a day. It also means the rollup an operator opens in the morning is about the
-   day that just ended, rather than about a day that ended three hours into it.
+   THE MARGIN IS HALF AN HOUR RATHER THAN A FEW MINUTES. That start-up was
+   estimated at a minute or two before anybody timed it, and it was measured
+   once. One measurement is not enough to schedule against to the minute.
+
+   THE SAME HOUR EVERY DAY, although the instance sleeps on only four nights.
+   A schedule that changed with the weekday would be a second calendar to
+   keep in step with the sleeping one. When somebody moves the window, that
+   second calendar is the one nobody would move.
+
+   IT IS NO LONGER THE QUIET HOUR, and that is the price. The old hour was
+   chosen because nobody was studying. At this one somebody may be, and a
+   question the analysis withdraws can disappear from a course a student has
+   open. The trade is a run that happens, against one scheduled for an hour
+   when nobody was studying and the database was asleep too.
+
+   THE MINUTE IS NOT ROUND. Ten past rather than on the hour because every
+   other scheduled thing in the world runs at :00. A job that shares its
+   minute with a hosting provider's maintenance window fails on the days the
+   platform is busiest with somebody else's work.
+
+   THE ZONE IS SÃO PAULO'S AND NOT UTC, for two reasons. The platform's
+   population is Brazilian, so the rollup an operator opens in the morning
+   should be about the day that ended at midnight here. The second reason
+   decides it: the window this has to stay out of is written in São Paulo
+   time, and a schedule in any other zone can drift into it. 08:10 UTC is
+   05:10 in São Paulo, while the database is still asleep.
 
    IT IS NOT A VARIABLE. A second knob for "which hour" is one nobody turns
    twice, and this configuration already carries the argument for why a value
@@ -84,15 +108,15 @@ resource "google_cloud_scheduler_job" "analyse" {
   region      = var.region
   description = "Item analysis: recompute the rollup and withdraw what is broken."
 
-  schedule  = "10 3 * * *"
+  schedule  = "10 8 * * *"
   time_zone = "America/Sao_Paulo"
 
   /* ONE ATTEMPT, AND THEN TOMORROW. The command is idempotent, so a retry
      would be safe — and a retry an hour later writes a second set of numbers
-     for the same night, which is a report that quietly disagrees with itself
-     about when it was made. A night that failed is a night that failed, and the
-     console shows when the rollup was last written precisely so that a missing
-     one is visible rather than inferred. */
+     for the same day, which is a report that quietly disagrees with itself
+     about when it was made. A day whose run failed is a day without a rollup,
+     and the console shows when the rollup was last written precisely so that a
+     missing one is visible rather than inferred. */
   retry_config {
     retry_count = 0
   }
@@ -100,8 +124,8 @@ resource "google_cloud_scheduler_job" "analyse" {
   /* THE DEADLINE IS THE HANDSHAKE'S AND NOT THE JOB'S. This call only STARTS
      an execution and returns; how long the analysis then takes is the job's own
      timeout. Thirty seconds is generous for an API call and short enough that a
-     scheduler hanging on an unreachable endpoint is reported tonight rather
-     than tomorrow. */
+     scheduler hanging on an unreachable endpoint is reported that morning
+     rather than the next. */
   attempt_deadline = "30s"
 
   http_target {
@@ -123,33 +147,39 @@ resource "google_cloud_scheduler_job" "analyse" {
   ]
 }
 
-/* 03:40, THE SAME NIGHT AND HALF AN HOUR LATER.
+/* 08:40, THE SAME MORNING AND HALF AN HOUR LATER.
 
    NOT THE SAME MINUTE AS THE ANALYSIS, which is the only scheduling decision
    here. Two jobs starting together on one small database are two jobs
    contending for it, and the failure would be the flaky kind that appears on
-   the busy nights and not on the quiet ones. Thirty minutes is comfortably
-   longer than the analysis has ever taken and short enough that both are done
-   before anybody is awake.
+   the busy days and not on the quiet ones. Thirty minutes is comfortably
+   longer than the analysis has ever taken.
 
    AFTER IT RATHER THAN BEFORE, though nothing depends on the order. If one has
    to be second it should be this one: the analysis withdraws broken questions
    from in front of students, which is the work that would be worth protecting
    if they ever did contend.
 
-   THE ZONE IS THE STUDENTS' for the reason the analysis gives, and it matters
-   slightly more here: a term that ends "today" ends on a Brazilian calendar,
-   and a sweep at 03:40 UTC would settle it three hours into the wrong day. */
+   OUT OF THE SLEEPING HOURS, for the analysis's reason. A run while the
+   database is off fails and leaves no row to say so.
+
+   THE ZONE IS SÃO PAULO'S for the analysis's reasons, and one more matters
+   here: a term that ends "today" ends on a Brazilian calendar. A lapsed term
+   is now settled eight hours and forty minutes into the next day rather than
+   three hours and forty. No screen can see that difference: the paywall
+   settles a subscription in memory when it is asked, and this job only brings
+   the row up to date. 08:40 UTC would be 05:40 here, while the database is
+   still asleep. */
 resource "google_cloud_scheduler_job" "settle" {
   name        = "schooling-settle-nightly"
   region      = var.region
   description = "Bring lapsed subscriptions up to date and record that they ended."
 
-  schedule  = "40 3 * * *"
+  schedule  = "40 8 * * *"
   time_zone = "America/Sao_Paulo"
 
   /* ONE ATTEMPT, AND THEN TOMORROW. The command is idempotent so a retry would
-     be safe — and a night that failed is a night the table disagrees with the
+     be safe — and a day whose run failed is a day the table disagrees with the
      clock, which the jobs screen shows. A retry that quietly fixed it would
      remove the only signal that anything went wrong. */
   retry_config {
