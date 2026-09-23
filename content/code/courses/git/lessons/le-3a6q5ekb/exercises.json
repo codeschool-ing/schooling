@@ -1,0 +1,554 @@
+[
+  {
+    "id": "ex-gbyqw95b",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "menu.html has an edit that was never staged. Ana runs git restore menu.html. What happens to the edit?",
+    "hint": "Where did Git ever have a copy of it?",
+    "choices": [
+      {
+        "text": "It is gone, with no way back",
+        "correct": true,
+        "why": "Right. It was never staged or committed, so Git never had a copy."
+      },
+      {
+        "text": "It moves into the staging area",
+        "correct": false,
+        "why": "That is the opposite direction. restore without --staged overwrites the working tree."
+      },
+      {
+        "text": "It is saved in the reflog in case you want it back",
+        "correct": false,
+        "why": "The reflog records commits. An edit that was never committed is not in it."
+      },
+      {
+        "text": "It becomes a new commit that can be reverted",
+        "correct": false,
+        "why": "restore creates no commit at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv8e2e79",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After git add menu.html, Ana runs git restore --staged menu.html. What is true afterwards?",
+    "hint": "The M moved from one column to the other.",
+    "choices": [
+      {
+        "text": "The edit is gone from the file",
+        "correct": false,
+        "why": "--staged only touches the staging area. The file keeps the edit."
+      },
+      {
+        "text": "Only the staging area changed",
+        "correct": true,
+        "why": "Right. The edit is still in the file. Only what the next commit would contain changed."
+      },
+      {
+        "text": "The last commit is undone",
+        "correct": false,
+        "why": "No commit is touched by restore."
+      },
+      {
+        "text": "menu.html is no longer tracked",
+        "correct": false,
+        "why": "It is still tracked; its change is simply not staged."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztc9p5s2",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "git show HEAD~3:menu.html and git restore --source=HEAD~3 menu.html both deal with the menu of three commits ago. What is the difference?",
+    "hint": "One of them changes the disk.",
+    "choices": [
+      {
+        "text": "show prints; restore writes the file",
+        "correct": true,
+        "why": "Right. After restore, git status shows menu.html as modified."
+      },
+      {
+        "text": "show changes the file; restore only prints it",
+        "correct": false,
+        "why": "The other way round. show never changes anything."
+      },
+      {
+        "text": "restore also makes a commit of the old version",
+        "correct": false,
+        "why": "It only changes the file. Committing it would be your decision."
+      },
+      {
+        "text": "There is none; they are two names for one command",
+        "correct": false,
+        "why": "One reads and one writes, which is the whole difference."
+      }
+    ]
+  },
+  {
+    "id": "ex-rve3b75c",
+    "version": 1,
+    "section": "restore",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To put menu.html back as it was two commits ago: git restore ___=HEAD~2 menu.html",
+    "hint": "The option names where the old version comes from.",
+    "blanks": [
+      {
+        "accept": [
+          "--source"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f4k58vgh",
+    "version": 1,
+    "section": "revert",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does git revert eadf998 do?",
+    "hint": "It adds.",
+    "choices": [
+      {
+        "text": "Deletes eadf998 from the history",
+        "correct": false,
+        "why": "eadf998 stays in the log. Nothing is deleted."
+      },
+      {
+        "text": "Moves the branch back to before eadf998",
+        "correct": false,
+        "why": "That is reset. revert moves the branch forward, onto a new commit."
+      },
+      {
+        "text": "Adds a commit that does the opposite",
+        "correct": true,
+        "why": "Right. The old commit stays, and the new one undoes its change."
+      },
+      {
+        "text": "Restores the files to how they were at eadf998",
+        "correct": false,
+        "why": "It undoes that one commit's change, and keeps every later one."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6rmkztq",
+    "version": 1,
+    "section": "revert",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bruno's copy already has the commit that took rye bread off. Why is revert safe here when reset would not be?",
+    "hint": "What happens to the ids of commits after a removed one?",
+    "choices": [
+      {
+        "text": "revert asks Bruno's permission first",
+        "correct": false,
+        "why": "Git asks nobody. The difference is in what each does to the history."
+      },
+      {
+        "text": "It adds to the history, so both copies still agree",
+        "correct": true,
+        "why": "Right. Removing a shared commit would give every later commit a new id in one copy and not the other."
+      },
+      {
+        "text": "reset cannot move back past another person's commit",
+        "correct": false,
+        "why": "It can, which is exactly the danger."
+      },
+      {
+        "text": "revert also updates Bruno's copy automatically",
+        "correct": false,
+        "why": "Nothing reaches Bruno until work is shared. That is lesson 7."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp6mkex6",
+    "version": 1,
+    "section": "revert",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "After git revert --no-edit HEAD~1, which of these are in git log? Choose all that apply.",
+    "hint": "Revert removes nothing.",
+    "choices": [
+      {
+        "text": "The commit that was reverted",
+        "correct": true,
+        "why": "Yes. It stays, with its reason."
+      },
+      {
+        "text": "A new commit named Revert \"…\"",
+        "correct": true,
+        "why": "Yes. Git wrote that message because --no-edit accepted it."
+      },
+      {
+        "text": "The commit that came after the reverted one",
+        "correct": true,
+        "why": "Yes. Revert undoes one commit and leaves the rest."
+      },
+      {
+        "text": "Nothing new; the history is left exactly as it was",
+        "correct": false,
+        "why": "A revert is a commit, so the log grows by one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e67qwp7",
+    "version": 1,
+    "section": "reset-and-amend",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana amends her last commit to fix a typo in the message. What happens to its id?",
+    "hint": "The message is part of what the id is computed from.",
+    "choices": [
+      {
+        "text": "It stays the same, since no file changed",
+        "correct": false,
+        "why": "The message goes into the id, so a new message is a new id."
+      },
+      {
+        "text": "It changes: the result is a new commit",
+        "correct": true,
+        "why": "Right. 4edd100 was replaced by 2dcd0dd."
+      },
+      {
+        "text": "It gets a suffix saying it was amended",
+        "correct": false,
+        "why": "Ids are hashes; they have no suffixes."
+      },
+      {
+        "text": "Git refuses, because the commit already exists",
+        "correct": false,
+        "why": "Amending the last commit is allowed and common."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ee42rgn",
+    "version": 1,
+    "section": "reset-and-amend",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each reset mode to what it leaves you with.",
+    "hint": "All three move the branch.",
+    "pairs": [
+      {
+        "left": "--soft",
+        "right": "The undone commit's changes staged, ready to commit"
+      },
+      {
+        "left": "--mixed",
+        "right": "The changes in the working tree, not staged"
+      },
+      {
+        "left": "--hard",
+        "right": "No changes anywhere: the files match the commit"
+      }
+    ],
+    "right_distractors": [
+      "A new commit that undoes the old one"
+    ]
+  },
+  {
+    "id": "ex-ye1kr1gc",
+    "version": 1,
+    "section": "reset-and-amend",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is git reset --hard the dangerous mode, when the commits it steps past can still be found?",
+    "hint": "Think about what was never a commit.",
+    "choices": [
+      {
+        "text": "It deletes the commits permanently",
+        "correct": false,
+        "why": "The commits are still reachable through the reflog."
+      },
+      {
+        "text": "It also deletes the branch",
+        "correct": false,
+        "why": "The branch stays; it only points somewhere else."
+      },
+      {
+        "text": "It sends the change to the shared server",
+        "correct": false,
+        "why": "reset is local, like every command in this lesson."
+      },
+      {
+        "text": "It overwrites uncommitted edits, which nothing kept",
+        "correct": true,
+        "why": "Right. Commits can be found again; unsaved work in the files cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-fn845dae",
+    "version": 1,
+    "section": "reset-and-amend",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no mode given, git reset uses the ___ mode.",
+    "hint": "The one between soft and hard.",
+    "blanks": [
+      {
+        "accept": [
+          "mixed",
+          "--mixed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7xk11s2n",
+    "version": 1,
+    "section": "reset-and-amend",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three commits ago Ana made a commit that is wrong. The branch is shared with the whole team. What should she use?",
+    "hint": "Shared is the word that decides it.",
+    "choices": [
+      {
+        "text": "git reset --hard HEAD~3, then redo the two later commits",
+        "correct": false,
+        "why": "That rewrites commits other people already have, and gives them new ids."
+      },
+      {
+        "text": "git revert on that commit",
+        "correct": true,
+        "why": "Right. A new commit on top undoes it, and everybody's history still agrees."
+      },
+      {
+        "text": "git commit --amend, since the commit is hers",
+        "correct": false,
+        "why": "--amend replaces only the last commit, and this one is three back and shared."
+      },
+      {
+        "text": "git restore, which undoes commits without rewriting them",
+        "correct": false,
+        "why": "restore changes files and never touches commits."
+      }
+    ]
+  },
+  {
+    "id": "ex-b29b0sv7",
+    "version": 1,
+    "section": "the-reflog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the reflog?",
+    "hint": "It is a list about HEAD.",
+    "choices": [
+      {
+        "text": "A list of the places HEAD has been",
+        "correct": true,
+        "why": "Right. Each entry names a commit, so any of them can be gone back to."
+      },
+      {
+        "text": "The shared history of the team",
+        "correct": false,
+        "why": "The reflog is local and never shared."
+      },
+      {
+        "text": "A log of the edits made to each file",
+        "correct": false,
+        "why": "It records where HEAD pointed, not edits."
+      },
+      {
+        "text": "A list of commits that were reverted",
+        "correct": false,
+        "why": "Reverts are ordinary commits in the log. The reflog records moves of HEAD."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3qwwd4d",
+    "version": 1,
+    "section": "the-reflog",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can the reflog not bring back?",
+    "hint": "It keeps commits.",
+    "choices": [
+      {
+        "text": "A commit replaced by --amend",
+        "correct": false,
+        "why": "The amended-away commit is in the reflog, as commit (amend)'s predecessor."
+      },
+      {
+        "text": "A commit that reset --hard stepped past",
+        "correct": false,
+        "why": "That is exactly what the reflog recovered in this section."
+      },
+      {
+        "text": "An edit discarded by git restore, never committed",
+        "correct": true,
+        "why": "Right. Git never had a copy of it, so no list can point at it."
+      },
+      {
+        "text": "The commit a deleted branch pointed at",
+        "correct": false,
+        "why": "Its commits stay findable through the reflog after the branch goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpfp7f30",
+    "version": 1,
+    "section": "the-reflog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bruno lost a commit with reset --hard on his machine. Can Ana find it in her reflog?",
+    "hint": "Where does a reflog live?",
+    "choices": [
+      {
+        "text": "Yes, reflogs are shared with the team",
+        "correct": false,
+        "why": "A reflog is never sent anywhere."
+      },
+      {
+        "text": "No, it lives only on his machine",
+        "correct": true,
+        "why": "Right. Each reflog records its own repository's HEAD. Bruno has to look in his own reflog, where it will be."
+      },
+      {
+        "text": "Yes, if Bruno had already pushed it",
+        "correct": false,
+        "why": "If it had been shared she would have the commit, but her reflog still records only her own HEAD."
+      },
+      {
+        "text": "Only if they are on the same branch",
+        "correct": false,
+        "why": "Branches do not connect reflogs across machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqfs8cvj",
+    "version": 1,
+    "section": "the-reflog",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana ran git reset --hard and lost a commit she wanted. Put the recovery in order.",
+    "hint": "Find, then move, then check.",
+    "items": [
+      "Run git reflog",
+      "Find the entry that names the lost commit",
+      "git reset --hard to that entry",
+      "Check with git log that it is back"
+    ],
+    "trap": "The entry has to be found before anything moves, or the numbers shift under you."
+  },
+  {
+    "id": "ex-zeqwbs8h",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each situation to the command for it.",
+    "hint": "Shared or not decides two of them.",
+    "pairs": [
+      {
+        "left": "An edit you have not committed and do not want",
+        "right": "git restore"
+      },
+      {
+        "left": "A commit the whole team already has",
+        "right": "git revert"
+      },
+      {
+        "left": "A typo in the message of the commit you just made",
+        "right": "git commit --amend"
+      },
+      {
+        "left": "Two local commits you want to take back, keeping the changes",
+        "right": "git reset HEAD~2"
+      }
+    ],
+    "right_distractors": [
+      "git rm"
+    ]
+  },
+  {
+    "id": "ex-rjc29wys",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these from the safest to the most dangerous.",
+    "hint": "One of them only changes what the next commit contains.",
+    "items": [
+      "git restore --staged",
+      "git revert",
+      "git reset --soft",
+      "git reset --hard"
+    ],
+    "trap": "revert changes no existing commit; reset rewrites the branch, and --hard also overwrites files."
+  },
+  {
+    "id": "ex-vy14bh5h",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these are true? Choose all that apply.",
+    "hint": "Two are about what is shared, one about what was never saved.",
+    "choices": [
+      {
+        "text": "Reset on a shared branch gives commits new ids in your copy only",
+        "correct": false,
+        "why": "Reset does not give commits new ids; it removes them from the branch. It is rewriting a later commit that renumbers."
+      },
+      {
+        "text": "Revert is safe on commits other people already have",
+        "correct": true,
+        "why": "Yes. It only adds."
+      },
+      {
+        "text": "An amended commit is a new commit with a new id",
+        "correct": true,
+        "why": "Yes. The old one is gone from the branch and still in the reflog."
+      },
+      {
+        "text": "git restore can undo a git restore",
+        "correct": false,
+        "why": "What restore overwrote was never saved, so nothing can bring it back."
+      },
+      {
+        "text": "The reflog keeps commits nothing else points at",
+        "correct": true,
+        "why": "Yes, for weeks, which is what makes reset recoverable."
+      }
+    ]
+  }
+]
