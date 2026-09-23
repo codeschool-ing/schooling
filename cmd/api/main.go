@@ -115,7 +115,7 @@ func run(log *slog.Logger) error {
 	defer func() { _ = countries.Close() }()
 	log.Info("country database", "built", countries.Built().Format(time.DateOnly))
 
-	pool, err := database.Open(ctx, cfg.DatabaseURL)
+	pool, err := database.Open(ctx, cfg.DatabaseURL, database.APIConnections)
 	if err != nil {
 		return err
 	}

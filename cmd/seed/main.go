@@ -155,7 +155,7 @@ func run(args []string, out io.Writer) error {
 	if err != nil {
 		return err
 	}
-	pool, err := database.Open(ctx, cfg.DatabaseURL)
+	pool, err := database.Open(ctx, cfg.DatabaseURL, database.JobConnections)
 	if err != nil {
 		return err
 	}

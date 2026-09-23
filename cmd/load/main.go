@@ -87,7 +87,7 @@ func run(ctx context.Context, log *slog.Logger, root string) error {
 	info := build.Current()
 	log.Info("loading", "version", info.Version, "commit", info.Commit, "from", root)
 
-	pool, err := database.Open(ctx, cfg.DatabaseURL)
+	pool, err := database.Open(ctx, cfg.DatabaseURL, database.JobConnections)
 	if err != nil {
 		return err
 	}

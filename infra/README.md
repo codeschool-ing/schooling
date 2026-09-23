@@ -479,6 +479,171 @@ The migration and the catalogue load are gates that a deploy waits for; this is
 a thing the clock does, and executing it on every release would put a second set
 of numbers into the same night for no reason but that somebody cut a tag.
 
+## Why the limit is 8
+
+The database will move to a shared instance, `lab-postgres`, and that instance
+accepts 25 connections. Three are reserved for superusers, the other tenant
+holds 14, and this project gets a `CONNECTION LIMIT` of 8. What that limit
+refuses is the connection that goes one over, whichever process happens to
+open it. That could be a new revision on its way up or a request halfway
+through, so it is not something to find out in production.
+
+So the numbers are made to fit **before** the move, on the instance this
+project has today, where nothing refuses at 8 yet. This is every process that
+can hold a connection while another one does:
+
+| process | how many at once | connections each | holds |
+| --- | ---: | ---: | ---: |
+| the API, the revision being replaced | 1 | 2 | 2 |
+| the API, the revision replacing it | 1 | 2 | 2 |
+| a release: `migrate`, then `load` | 1 | 1 | 1 |
+| `analyse` | 1 | 1 | 1 |
+| `settle` | 1 | 1 | 1 |
+| a person at a terminal | 1 | 1 | 1 |
+| **total** | | | **8** |
+
+"Connections each" is `database.APIConnections` or `database.JobConnections`,
+and every command names one when it calls `database.Open`. "How many at once"
+for the API is `max_instance_count` in `run.tf`. `budget_test.go`, beside the
+two numbers in `internal/platform/database`, builds this table from those
+three places and fails if the total goes over 8. It also fails if a command
+opens the database without a row here.
+
+### Why each row is there
+
+- **Both revisions.** `gcloud run deploy` starts the new revision and moves
+  traffic to it before the old one's instances are gone, and the instance
+  ceiling is per revision, so each revision gets all of it. The API costs
+  twice what one revision holds.
+- **One release job, not two.** Inside a deploy, `migrate` and `load` are each
+  `--wait`ed on before the next step starts, so they never overlap. Two tags
+  pushed close together used to be two runs of `Deploy` side by side, and
+  nothing stopped one run's load from starting inside the other's. The
+  `Deploy` job now has a concurrency group that queues the second deploy and
+  never cancels the one in progress. The test checks both halves.
+- **Both nightly jobs, at the same time as a release.** They are thirty minutes
+  apart on the clock, but an operator can start either one from the console
+  at any hour, and a tag can be cut at any hour. The table does not depend on
+  the schedule, so moving the jobs out of the instance's sleeping hours does
+  not change it.
+- **A person.** `cmd/staff`, `cmd/seed`, `cmd/reset`, a `psql` through the Auth
+  Proxy, and the restore drill's read of the live database each hold one
+  connection.
+
+The table overstates by one, and that is deliberate. Within one deploy the
+release job ends before the revision step begins, so the release row and the
+second revision row are never both full. They are counted together anyway, so
+the arithmetic stays true however the pipeline is rearranged.
+
+### The values come from the measurement
+
+Two numbers were read off the live instance on 2026-09-23:
+
+- **The most the `schooling` database held in the last 30 days was 8**, in the
+  hour ending 2026-08-25T17:21Z. That is an hourly maximum of one-minute
+  samples, so a burst shorter than a minute may not show.
+- **The last ten `schooling-load` executions took 1m47s to 4m28s** end to end,
+  container start and validation included. That is an upper bound on how long
+  its one transaction is held.
+
+The first one fixes the ceiling. Under the old configuration the database
+could have been asked for 44 connections (see below), and real use never went
+above 8. So 8 is enough for what this lab actually does. The new configuration
+allows exactly 8, and the rest of the choice is how to split them.
+
+**The jobs get 1 each because 1 is all they ever hold.** `migrate` runs every
+file on one acquired connection, under its advisory lock. `load` writes the
+whole catalogue in one transaction, which is one connection whether it takes
+four seconds or four and a half minutes. It measured 1m47s to 4m28s, so a
+bigger pool would buy it nothing: it would still hold one connection, for the
+same time.
+
+Each job was run end to end against a real Postgres with a pool of one, and
+`pg_stat_activity` was sampled about every 80 ms while it ran:
+
+- `migrate`, `load` and `seed` never went above one client connection. For
+  `seed` that was 1,610 samples over two minutes.
+- `analyse` and `settle` finished inside a single sample, so for them the bound
+  is the pool itself, which never hands out a second connection, and the suite
+  below.
+
+**The API gets what is left: 4 during a rollout, so 2 per revision.** That can
+be one instance with two connections or two instances with one. One instance
+with two is the better split:
+
+- A second instance adds no capacity when the database is the limit.
+- One instance takes 80 concurrent requests by Cloud Run's default, which is
+  far more than a lab receives.
+- A pool of one would queue every query behind the slowest one in flight,
+  including `/readyz`'s ping. A slow report would then look to the uptime
+  check like a dead database.
+
+A pool of two is only safe if no request holds a connection while asking for a
+second one. Two such requests would each wait on the other until they timed
+out. So that was measured too:
+
+- The whole Go suite passes with every test pool capped at one, which is where
+  a nested acquisition cannot finish even on its own.
+- A built API with its pool of two took 920 requests, 60 at a time, across
+  course, lesson, track, sitemap and readiness routes. Every answer was 200 or
+  the paywall's 402, the log had no errors, and it never held more than two
+  connections.
+
+**The cost is waiting.** The peak hour was not a release: all 58 runs of
+`Release` were read, and v0.6.0 finished at 14:34Z while v0.7.0 started at
+17:52Z. It was not a nightly job either, since those run at 06:10Z and 06:40Z,
+and CI never connects to this database. That leaves the API, a person, or both.
+With a pool of four, eight connections take at least two processes, for
+example two instances each with a full pool. If demand like that comes back,
+it now waits in a pool of two instead of opening connections three to eight.
+Waiting is the right way for a lab to fail. What this cannot say is exactly
+what ran in that hour: three pull requests merged during it, and merging
+touches nothing live.
+
+### What it was, counted the same way
+
+With a pool of 4 for every process and a ceiling of 4 instances:
+
+- the API during a rollout: 2 × 4 × 4 = 32
+- one release job: 4
+- `analyse`: 4
+- `settle`: 4
+- **total: 44**, on an instance that accepts 25
+
+Two releases running side by side would add another 4, for 48.
+
+The earlier estimate was 24. It counted `migrate` and `load` together, but they
+never overlapped. It also left out the second revision during a rollout and the
+two nightly jobs, and those can overlap everything.
+
+### What the table does not count
+
+- **Autovacuum.** Its workers connect to the database and appear in
+  `pg_stat_activity`. The local measurement saw them next to `load` and
+  `seed`. A `CONNECTION LIMIT` does not apply to them. If the 30-day figure
+  came from a metric that counts every backend, part of that 8 may have been
+  autovacuum, which would put real demand below the measurement. That has not
+  been checked against how Cloud SQL defines its metric.
+- **A second run of the same nightly job.** The console refuses to start a job
+  whose run is recorded as `running`, but the scheduler checks nothing. A run
+  started from the console a few minutes before the scheduled one would
+  overlap it, and so would a console start that lands between the scheduler's
+  call and the new container writing its `job_runs` row.
+- **An orphaned release execution.** `--wait` waits on the execution, not the
+  runner. If the runner dies, the execution keeps going until it finishes or
+  hits its task timeout, and the concurrency group lets the next deploy start
+  in the meantime.
+- **A second person.** Two people operate this, and one is reserved.
+
+Each of those takes one connection over the limit. The process that asks last
+is refused, and it is refused out loud: a job fails its execution, and a
+request gets an error it can report. What none of them does is fail silently.
+
+If this is ever measured again with more traffic behind it, the pool sizes are
+the two constants in `internal/platform/database/database.go` and the ceiling
+is one line in `run.tf`. The test tells whoever raises one whether the other
+has to come down.
+
 ## Nothing here is in Google yet, and that is set here
 
 **`indexable` defaults to `false`, and `code.schooling.lab.aleogr.dev` is a

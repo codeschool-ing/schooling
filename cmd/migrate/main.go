@@ -64,7 +64,7 @@ func run(log *slog.Logger) error {
 	info := build.Current()
 	log.Info("migrating", "version", info.Version, "commit", info.Commit)
 
-	pool, err := database.Open(ctx, cfg.DatabaseURL)
+	pool, err := database.Open(ctx, cfg.DatabaseURL, database.JobConnections)
 	if err != nil {
 		return err
 	}

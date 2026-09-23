@@ -89,7 +89,7 @@ func run(log *slog.Logger) error {
 
 	info := build.Current()
 
-	pool, err := database.Open(ctx, cfg.DatabaseURL)
+	pool, err := database.Open(ctx, cfg.DatabaseURL, database.JobConnections)
 	if err != nil {
 		return err
 	}

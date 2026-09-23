@@ -379,7 +379,7 @@ resource "google_cloud_run_v2_service" "api" {
 
      Two blocks with the same name at two levels, and they are different
      features. The one below is the REVISION's autoscaler: how many instances
-     of the running revision, between none and four. This one is the SERVICE's,
+     of the running revision, between none and one. This one is the SERVICE's,
      added to the API later — a floor held across revisions, and a manual
      instance count for services that opt out of autoscaling altogether.
 
@@ -409,12 +409,24 @@ resource "google_cloud_run_v2_service" "api" {
     service_account = google_service_account.run.email
 
     /* SCALES TO ZERO, which is what makes an idle deployment cost nothing and
-       is the reason the database is the only standing bill. The ceiling is low
-       on purpose: it is a limit on the damage a loop can do to the invoice,
-       not a capacity plan. */
+       is the reason the database is the only standing bill.
+
+       ONE, AND THE REASON IS THE DATABASE RATHER THAN THE INVOICE. It was four,
+       as a limit on what a loop could spend. What it also was, unwritten, is a
+       multiplier on the pool: every instance opens its own, so this number
+       times `database.APIConnections` is what the API can hold — and during a
+       rollout the old revision and the new one each get this ceiling, so the
+       API costs TWICE that. At four it was 32 on its own against a database
+       that accepts 25.
+
+       A second instance buys no capacity where the bound is the database, and
+       one instance serves a request concurrency of 80 by Cloud Run's default.
+       `infra/README.md`, "Why the limit is 8", is the whole sum;
+       `internal/platform/database/budget_test.go` reads this line and fails
+       if raising it breaks that sum. */
     scaling {
       min_instance_count = 0
-      max_instance_count = 4
+      max_instance_count = 1
     }
 
     containers {
