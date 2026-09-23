@@ -167,6 +167,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    # ONE DEPLOY AT A TIME, AND THE SECOND ONE WAITS RATHER THAN CANCELLING.
+    #
+    # Inside one run the migration and the load are sequential — each is
+    # `--wait`ed on before the next step starts — so one release holds one job's
+    # connection at a time. That was true of a RUN and not of the workflow: two
+    # tags pushed a minute apart are two runs, and nothing stopped the second
+    # one's load from starting while the first one's was still inside its
+    # transaction. `infra/README.md`, "Why the limit is 8", counts a release as
+    # ONE job, and this is what makes that row true.
+    #
+    # `cancel-in-progress: false` because cancelling a deploy halfway is the
+    # state the migrate-then-load-then-revision order exists to avoid. What
+    # GitHub still does is drop a PENDING run when a newer one queues behind it
+    # — three tags in a row deploy the first and the last, and the middle one
+    # ends cancelled. That is the right loss: it was never going to be serving.
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+
     permissions:
       contents: read
       # The OIDC token the exchange is built on. It is the only reason this job
