@@ -1,25 +1,25 @@
 ---
 title: Construir uma busca uma vez, em vez de procurar repetidamente
-version: 1
+version: 2
 ---
 
 ```python
-for pedido in pedidos:                    # 5.000 pedidos
-    for cliente in clientes:              # 5.000 clientes
-        if cliente["id"] == pedido["cliente_id"]:
-            out.append((cliente["nome"], pedido["centavos"]))
+for order in orders:                      # 5,000 orders
+    for customer in customers:            # 5,000 customers
+        if customer["id"] == order["customer_id"]:
+            out.append((customer["name"], order["cents"]))
             break
 ```
 
 ```python
-por_id = {c["id"]: c for c in clientes}   # uma passagem, construída uma vez
-out = [(por_id[p["cliente_id"]]["nome"], p["centavos"]) for p in pedidos]
+by_id = {c["id"]: c for c in customers}   # one pass, built once
+out = [(by_id[o["customer_id"]]["name"], o["cents"]) for o in orders]
 ```
 
 ```sh
-lento    0,5485s   5000 linhas
-rápido   0,0030s   5000 linhas
-mesma resposta: True
+slow     0.5485s   5000 rows
+fast     0.0030s   5000 rows
+same answer: True
 ```
 
 **O(n²) virando O(n), por uma linha.** Medido em cinco mil de cada; em vinte mil a distância é
@@ -36,19 +36,19 @@ Você paga uma passagem e alguma memória. Você economiza uma passagem por linh
 ## As formas que servem
 
 ```python
-por_id = {c["id"]: c for c in clientes}              # um valor por chave
+by_id = {c["id"]: c for c in customers}              # one value per key
 ```
 
 ```python
 from collections import defaultdict
-por_pais = defaultdict(list)
-for c in clientes:
-    por_pais[c["pais"]].append(c)                    # muitos valores por chave
+by_country = defaultdict(list)
+for c in customers:
+    by_country[c["country"]].append(c)               # many values per key
 ```
 
 ```python
 from collections import Counter
-contagens = Counter(p["pais"] for p in pedidos)      # só a contagem
+counts = Counter(o["country"] for o in orders)       # just the count
 ```
 
 O `defaultdict(list)` é o de agrupar e ele aparece o tempo todo — é `sort | uniq` sem o sort, e o
@@ -59,13 +59,13 @@ O `defaultdict(list)` é o de agrupar e ele aparece o tempo todo — é `sort | 
 **Fora de todo laço que o usa**, e uma vez por programa em vez de uma vez por chamada:
 
 ```python
-def relatorio(pedidos, clientes):
-    por_id = {c["id"]: c for c in clientes}    # uma vez
-    for p in pedidos:
+def report(orders, customers):
+    by_id = {c["id"]: c for c in customers}    # once
+    for o in orders:
         ...
 ```
 
-Construí-lo dentro do laço é o mesmo engano do `set(itens)` dentro de uma condição: o índice é
+Construí-lo dentro do laço é o mesmo engano do `set(items)` dentro de uma condição: o índice é
 `O(n)` para construir, então construí-lo `n` vezes é o `O(n²)` que você estava removendo.
 
 ## E o limite honesto

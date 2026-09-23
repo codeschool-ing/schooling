@@ -1,10 +1,10 @@
 ---
 title: Dois num `with`, e a quantidade que você não sabe
-version: 1
+version: 2
 ---
 
 ```python
-with open(orig, encoding="utf-8") as a, open(dest, "w", encoding="utf-8") as b:
+with open(src, encoding="utf-8") as a, open(dst, "w", encoding="utf-8") as b:
     b.write(a.read())
 ```
 
@@ -19,8 +19,8 @@ segundo não entra se o primeiro levantar erro.
 
 ```python
 with (
-    open(orig, encoding="utf-8") as a,
-    open(dest, "w", encoding="utf-8") as b,
+    open(src, encoding="utf-8") as a,
+    open(dst, "w", encoding="utf-8") as b,
 ):
     ...
 ```
@@ -30,8 +30,8 @@ Desde o Python 3.10, o que torna uma linha longa legível sem uma barra invertid
 ## Aninhar é a mesma coisa com mais indentação
 
 ```python
-with open(orig) as a:
-    with open(dest, "w") as b:
+with open(src) as a:
+    with open(dst, "w") as b:
 ```
 
 Comportamento idêntico. Use a forma com vírgula; guarde o aninhamento para quando algo entre as
@@ -42,16 +42,16 @@ duas linhas precisar acontecer.
 ```python
 from contextlib import ExitStack
 
-with ExitStack() as pilha:
-    arquivos = [pilha.enter_context(open(p, encoding="utf-8")) for p in caminhos]
-    juntar(arquivos)
+with ExitStack() as stack:
+    files = [stack.enter_context(open(p, encoding="utf-8")) for p in paths]
+    merge(files)
 ```
 
 Todo arquivo é fechado na saída, em ordem inversa, termine o bloco como terminar. Esta é a
 resposta quando a contagem vem do dado e não do código — e escrever isso com um `try`/`finally` e
 uma lista é a versão que vaza os que foram abertos antes da falha.
 
-O `pilha.callback(func, arg)` registra um desfazer arbitrário, para uma coisa que não tem
+O `stack.callback(func, arg)` registra um desfazer arbitrário, para uma coisa que não tem
 gerenciador próprio.
 
 ## A ordem importa

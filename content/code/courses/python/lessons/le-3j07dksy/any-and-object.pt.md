@@ -1,15 +1,15 @@
 ---
 title: O que desliga, e o que não desliga
-version: 1
+version: 2
 ---
 
 ```python
 from typing import Any
 
-def tratar(carga: Any) -> None:
-    carga.qualquer_coisa()    # nenhuma reclamação
-    carga + 1                 # nenhuma reclamação
-    carga[0]                  # nenhuma reclamação
+def handle(payload: Any) -> None:
+    payload.anything()        # no complaint
+    payload + 1               # no complaint
+    payload[0]                # no complaint
 ```
 
 `Any` quer dizer **pare de conferir este valor**. Tudo é permitido nele, e tudo a que ele é
@@ -18,16 +18,16 @@ passado é permitido.
 ## `object` mantém o verificador ligado
 
 ```python
-def tratar(carga: object) -> None:
-    carga.qualquer_coisa()    # erro: "object" has no attribute "qualquer_coisa"
+def handle(payload: object) -> None:
+    payload.anything()        # error: "object" has no attribute "anything"
 ```
 
 `object` é o topo da hierarquia de classes: todo valor É um, então qualquer coisa dá para passar —
 e quase nada dá para fazer com ele até você estreitar.
 
 ```python
-    if isinstance(carga, dict):
-        carga["chave"]        # aqui tudo bem
+    if isinstance(payload, dict):
+        payload["key"]        # fine here
 ```
 
 **O `object` diz "eu aceito qualquer coisa e vou conferir antes de usar".** O `Any` diz "eu aceito
@@ -36,10 +36,10 @@ qualquer coisa e você faz o que quiser". O primeiro é quase sempre o que algu�
 ## Por que o `Any` se espalha
 
 ```python
-dados: Any = json.load(f)
-linhas = dados["linhas"]      # linhas é Any
-primeira = linhas[0]          # Any
-nome = primeira["nome"]       # Any — e três funções depois, ainda Any
+data: Any = json.load(f)
+rows = data["rows"]           # rows is Any
+first = rows[0]               # Any
+name = first["name"]          # Any — and three functions later, still Any
 ```
 
 Um `Any` escorre por tudo que ele toca, e a conferência para em todo lugar que ele alcança. É por

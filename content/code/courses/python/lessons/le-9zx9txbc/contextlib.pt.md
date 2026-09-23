@@ -8,11 +8,11 @@ version: 2
   "language": "python",
   "parts": [
     {
-      "code": "from contextlib import contextmanager\n\n@contextmanager\ndef cronometro():",
+      "code": "from contextlib import contextmanager\n\n@contextmanager\ndef timer():",
       "note": "O `@contextmanager` transforma uma função geradora em algo que um `with` pode usar."
     },
     {
-      "code": "    inicio = time.perf_counter()",
+      "code": "    start = time.perf_counter()",
       "note": "**Tudo antes do `yield` é o `__enter__`.** Roda quando a linha do `with` roda."
     },
     {
@@ -20,7 +20,7 @@ version: 2
       "note": "**O `yield` é onde roda o corpo do `with`.** O que ele produzir é o que o `as` liga, e este não produz nada."
     },
     {
-      "code": "    finally:\n        print(f\"{time.perf_counter() - inicio:.3f}s\")",
+      "code": "    finally:\n        print(f\"{time.perf_counter() - start:.3f}s\")",
       "note": "**Tudo depois dele é o `__exit__`.** Por que ele fica num `finally` é o próximo título."
     }
   ]
@@ -31,10 +31,10 @@ version: 2
 
 ```python
 @contextmanager
-def cronometro():
-    inicio = time.perf_counter()
+def timer():
+    start = time.perf_counter()
     yield
-    print(...)              # NÃO roda quando o corpo levanta erro
+    print(...)              # NOT run when the body raises
 ```
 
 Sem o `try`, uma exceção no corpo sobe através do `yield` e as linhas depois dele nunca rodam. **O
@@ -45,13 +45,13 @@ nenhum, porque o código parece tratar isso.
 
 ```python
 @contextmanager
-def diretorio(caminho):
-    anterior = Path.cwd()
-    os.chdir(caminho)
+def working_directory(path):
+    previous = Path.cwd()
+    os.chdir(path)
     try:
-        yield caminho           # o `as` liga isto
+        yield path              # `as` binds this
     finally:
-        os.chdir(anterior)
+        os.chdir(previous)
 ```
 
 ## Exatamente um `yield`
@@ -65,9 +65,9 @@ de ouvir isso. Zero deles é "generator didn't yield", no `with`.
     try:
         yield
     except ValueError:
-        log.warning("ignorado")     # isto ENGOLE, como devolver True
+        log.warning("ignored")      # this SWALLOWS it, like returning True
     finally:
-        limpar()
+        cleanup()
 ```
 
 Um `except` em volta do `yield` é o equivalente, no gerador, a um `__exit__` verdadeiro — e um

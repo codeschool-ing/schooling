@@ -1,11 +1,11 @@
 ---
 title: Um comportamento, um nome que diz qual, e a asserção que não prova nada
-version: 1
+version: 2
 ---
 
 ```python
-def test_slugify_funciona():                      # o que quebrou?
-def test_pontuacao_e_removida_de_um_slug():       # este aqui
+def test_slugify_works():                       # what broke?
+def test_punctuation_is_removed_from_a_slug():  # this one
 ```
 
 **O nome é o que você lê às cinco e meia com a CI vermelha.** Um bom nome é uma frase sobre o
@@ -15,7 +15,7 @@ abrir arquivo.
 ## Um comportamento por teste
 
 ```python
-def test_slugify():                             # seis fatos
+def test_slugify():                             # six facts
     assert slugify("Hello World") == "hello-world"
     assert slugify("ALL CAPS") == "all-caps"
     assert slugify("Hello, World") == "hello-world"
@@ -30,9 +30,9 @@ adiante, é como esta tabela vira seis testes com uma função.
 ## A asserção que não prova nada
 
 ```python
-def test_total_roda():
-    resultado = total([(2, 10.0)], 0.1)
-    assert resultado is not None
+def test_total_runs():
+    result = total([(2, 10.0)], 0.1)
+    assert result is not None
 ```
 
 Toda linha do módulo roda. A cobertura relata cem por cento. E `is not None` é verdade sobre quase
@@ -44,15 +44,15 @@ demonstração desta aula acha um imposto dobrado.
 ## Comportamento, não implementação
 
 ```python
-def test_notificar(mocker):
+def test_notify(mocker):
     ...
-    assert mailer.send.called          # que um auxiliar foi chamado
+    assert mailer.send.called          # that a helper was called
 ```
 
 ```python
-def test_notificar():
+def test_notify():
     ...
-    assert enviados == [("a@b.c", "Welcome")]   # o que o sistema fez
+    assert sent == [("a@b.c", "Welcome")]   # what the system did
 ```
 
 O primeiro fica vermelho quando você renomeia o auxiliar e verde quando a mensagem está errada.

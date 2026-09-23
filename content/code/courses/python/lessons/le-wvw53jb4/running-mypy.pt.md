@@ -1,13 +1,13 @@
 ---
 title: Rodando, e lendo um erro direito
-version: 1
+version: 2
 ---
 
 ```sh
 pip install mypy
-mypy app/report.py        # um arquivo
-mypy -p app               # o pacote, pelo nome
-mypy app/                 # o diretório
+mypy app/report.py        # one file
+mypy -p app               # the package, by name
+mypy app/                 # the directory
 ```
 
 ```sh
@@ -53,8 +53,8 @@ verificador sobre o pacote, nunca sobre o arquivo que você por acaso tem aberto
 ## `reveal_type`, quando você quer saber o que ele pensa
 
 ```python
-dados = json.load(f)
-reveal_type(dados)
+data = json.load(f)
+reveal_type(data)
 ```
 
 ```sh

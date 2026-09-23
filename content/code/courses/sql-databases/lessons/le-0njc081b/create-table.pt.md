@@ -1,6 +1,6 @@
 ---
 title: O comando, e os hábitos que vão nele
-version: 1
+version: 2
 ---
 
 Duas aulas de projeto, e agora você escreve.
@@ -94,8 +94,8 @@ Três coisas pertencem a uma tabela e não estão no `CREATE TABLE`, então são
 fáceis de esquecer:
 
 ```sql
-COMMENT ON TABLE invoices IS 'Uma linha por fatura emitida. Nunca apagada; cancelada e um status.';
-COMMENT ON COLUMN invoices.total IS 'Soma das linhas no momento da emissao. Nao recalculado.';
+COMMENT ON TABLE invoices IS 'One row per invoice issued. Never deleted; cancelled is a status.';
+COMMENT ON COLUMN invoices.total IS 'Sum of the lines at the moment of issue. Not recomputed.';
 
 CREATE INDEX invoices_customer_id_idx ON invoices (customer_id);
 

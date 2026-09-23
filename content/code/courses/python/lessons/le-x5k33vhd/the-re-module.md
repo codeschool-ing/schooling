@@ -1,6 +1,6 @@
 ---
 title: Five functions, and what each hands back
-version: 1
+version: 2
 ---
 
 | function | finds | gives back |

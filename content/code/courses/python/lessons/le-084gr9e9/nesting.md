@@ -1,6 +1,6 @@
 ---
 title: A list of dictionaries, which is what every file looks like
-version: 1
+version: 2
 ---
 
 Containers hold anything, including other containers. One shape turns up more than all the others

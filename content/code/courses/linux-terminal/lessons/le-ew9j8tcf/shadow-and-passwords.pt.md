@@ -1,6 +1,6 @@
 ---
 title: `/etc/shadow`, e o que é uma senha guardada
-version: 1
+version: 2
 ---
 
 A conta `demo` foi criada para esta seção, e a senha dela é a string `example-password`. Eis o que
@@ -21,7 +21,7 @@ vermelho sobre o sistema que mandou.
 
 ## Lendo o campo do hash
 
-```
+```localised
 $y$j9T$iladG9xXy9DklFOvrTOFd0$wisSqn5Qt6jQDW3xy9KJLj3qV2CE7IEoUIfRcRg2l.1
  ─┬─ ─┬─ ───────────┬───────── ─────────────────┬──────────────────────
   │   │             │                           └── o hash
@@ -99,10 +99,10 @@ guardando números de dias.
 
 | | |
 |---|---|
-| `chage -l usuario` | ler os ajustes de envelhecimento |
-| `chage -M 90 usuario` | precisa trocar em até 90 dias |
-| `chage -E 2026-12-31 usuario` | a **conta** expira naquela data — para um contratado |
-| `chage -d 0 usuario` | forçar uma troca no próximo login |
+| `chage -l user` | ler os ajustes de envelhecimento |
+| `chage -M 90 user` | precisa trocar em até 90 dias |
+| `chage -E 2026-12-31 user` | a **conta** expira naquela data — para um contratado |
+| `chage -d 0 user` | forçar uma troca no próximo login |
 
 **O `chage -d 0` é o que vale saber.** Ele define "última troca" como a época, então a senha está
 imediatamente vencida e o usuário é obrigado a definir uma nova ao entrar. É assim que se entrega
@@ -138,7 +138,7 @@ por isso que travar é reversível.
 **Travar a senha não impede uma chave ssh de funcionar.** Isso surpreende as pessoas no dia em que
 alguém sai: `passwd -l` e a conta continua entrando por ssh, porque chaves nunca encostaram no
 `/etc/shadow`. A seção 06 é onde isso mora; a versão com cinto e suspensórios é
-`usermod -L -e 1 usuario`, que expira a própria conta.
+`usermod -L -e 1 user`, que expira a própria conta.
 
 Repare também que o `passwd -l` imprime `password changed.` — a única mensagem confusa desta seção,
 e ela está dizendo a verdade de um jeito pouco útil. O campo guardado mudou mesmo.

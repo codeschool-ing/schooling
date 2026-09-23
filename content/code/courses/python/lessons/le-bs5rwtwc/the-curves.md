@@ -1,6 +1,6 @@
 ---
 title: Five shapes, at a thousand and at a million
-version: 1
+version: 2
 ---
 
 | | n = 1,000 | n = 1,000,000 |

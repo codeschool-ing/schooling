@@ -1,11 +1,11 @@
 ---
 title: O desvio que ninguém enxerga
-version: 1
+version: 2
 ---
 
 ```python
-@so_admin
-def apagar_tudo():
+@admin_only
+def delete_everything():
     ...
 ```
 
@@ -28,10 +28,10 @@ encontrá-la.
 ## O argumento que teria sido mais claro
 
 ```python
-@repetir(vezes=3)
-def buscar(url): ...
+@retry(times=3)
+def fetch(url): ...
 
-def buscar(url, vezes=3): ...    # o mesmo comportamento, visível na assinatura
+def fetch(url, times=3): ...    # the same behaviour, visible in the signature
 ```
 
 Quando o envolvimento é pequeno e a função é sua, um parâmetro diz isso onde dá para ler. O

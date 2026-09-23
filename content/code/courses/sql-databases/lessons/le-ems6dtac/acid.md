@@ -1,6 +1,6 @@
 ---
 title: ACID, with the honest version of the C
-version: 1
+version: 2
 ---
 
 Four letters that get recited a great deal. Three of them are promises the database makes, and one
@@ -70,7 +70,7 @@ deliberately.
 `BEGIN` covers one database. Write to a database and send a message to a queue, or write to two
 databases, and there is no `COMMIT` that covers both:
 
-```
+```localised
 BEGIN;
 UPDATE accounts …;
    → send "payment made" to the message queue          ← not in the transaction

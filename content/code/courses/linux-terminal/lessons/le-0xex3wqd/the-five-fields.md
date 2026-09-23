@@ -1,9 +1,9 @@
 ---
 title: The five fields, and the one rule that is an OR
-version: 1
+version: 2
 ---
 
-```
+```localised
 *  *  *  *  *  command
 │  │  │  │  │
 │  │  │  │  └── day of week   0-7   (0 and 7 are both Sunday)

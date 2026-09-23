@@ -1,6 +1,6 @@
 ---
 title: A join pairs rows. It does not merge tables
-version: 1
+version: 2
 ---
 
 One sentence decides whether joins ever feel simple, so it comes before any syntax.

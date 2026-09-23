@@ -1,14 +1,14 @@
 ---
 title: A condição tem de mudar
-version: 1
+version: 2
 ---
 
 ```python
-tentativas = 0
-while tentativas < 3:
-    if tentar_uma_vez():
+attempts = 0
+while attempts < 3:
+    if try_once():
         break
-    tentativas += 1
+    attempts += 1
 ```
 
 O `while` repete enquanto a condição valer. **Algo dentro do laço tem de mudá-la**, ou ele nunca
@@ -29,10 +29,10 @@ removida.
 
 ```python
 while True:
-    linha = input("> ")
-    if linha == "sair":
+    line = input("> ")
+    if line == "quit":
         break
-    tratar(linha)
+    handle(line)
 ```
 
 Isto é Python idiomático e não um cheiro ruim, e muitas vezes é mais claro do que duplicar a leitura
@@ -44,7 +44,7 @@ não enterrado três níveis para dentro.
 ```python
 i = 0
 while i < 10:
-    print(i)          # i nunca muda
+    print(i)          # i never changes
 ```
 
 Sem erro, sem mensagem, e o programa nunca termina. `Ctrl-C` para. Depois procure a linha que deveria
@@ -59,10 +59,10 @@ Mesma utilidade, mesma tendência a ser lido errado.
 
 ```python
 i = 0
-while i < len(itens):
-    print(itens[i])
+while i < len(items):
+    print(items[i])
     i += 1
 ```
 
-Três linhas de contabilidade e duas chances de errar, para algo que `for item in itens` diz numa. Se
+Três linhas de contabilidade e duas chances de errar, para algo que `for item in items` diz numa. Se
 você encontrar isto em código que está lendo, é quase sempre tradução de uma linguagem sem `for … in`.

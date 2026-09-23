@@ -1,6 +1,6 @@
 ---
 title: Names, and four rules that are not the ones you expect
-version: 1
+version: 2
 ---
 
 A filename on Linux is freer than you think and stricter than you think, in different places from

@@ -1,22 +1,22 @@
 ---
 title: Dois métodos, e o valor de retorno que engole
-version: 1
+version: 2
 ---
 
 ```python
-class Cronometro:
+class Timer:
     def __enter__(self):
-        self.inicio = time.perf_counter()
-        return self                      # é isto que o `as` liga
+        self.start = time.perf_counter()
+        return self                      # this is what `as` binds
 
     def __exit__(self, exc_type, exc, tb):
-        self.duracao = time.perf_counter() - self.inicio
+        self.elapsed = time.perf_counter() - self.start
 ```
 
 ```python
-with Cronometro() as c:
-    trabalhar()
-print(c.duracao)
+with Timer() as t:
+    work()
+print(t.elapsed)
 ```
 
 ## O `__enter__`
@@ -43,7 +43,7 @@ os mesmos três que o `sys.exc_info()` dá.
 
 ```python
     def __exit__(self, exc_type, exc, tb):
-        return True          # a exceção SUMIU
+        return True          # the exception is GONE
 ```
 
 Um retorno verdadeiro quer dizer "eu tratei". A exceção para ali: não registrada, não relevantada,

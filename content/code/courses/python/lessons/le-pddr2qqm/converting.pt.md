@@ -1,6 +1,6 @@
 ---
 title: `int()`, `float()`, `str()` — e onde eles recusam
-version: 1
+version: 2
 ---
 
 ```python
@@ -18,8 +18,8 @@ que alterar: números e strings são imutáveis.
 ## Onde o `int()` recusa
 
 ```python
->>> int("quarenta e um")
-ValueError: invalid literal for int() with base 10: 'quarenta e um'
+>>> int("forty-one")
+ValueError: invalid literal for int() with base 10: 'forty-one'
 ```
 
 **Essa recusa é a funcionalidade.** Uma conversão que produzisse `0` em silêncio poria um número
@@ -71,9 +71,9 @@ aula 6 é onde você escreve os dois para as suas próprias classes.
 
 ```python
 try:
-    idade = int(bruto)
+    age = int(raw)
 except ValueError:
-    print(f"{bruto!r} não é um número inteiro")
+    print(f"{raw!r} is not a whole number")
 ```
 
 Isso é matéria da aula 8 por inteiro, e é a forma certa para qualquer coisa que uma pessoa digitou. O

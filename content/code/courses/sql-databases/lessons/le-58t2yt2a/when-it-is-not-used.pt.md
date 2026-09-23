@@ -1,6 +1,6 @@
 ---
 title: Você criou o índice e nada mudou
-version: 1
+version: 2
 ---
 
 Esta é a seção que mais poupa tempo, porque todo item da lista parece um bug do banco e não é. O
@@ -11,9 +11,9 @@ São cerca de sete razões. Seis são coisas que você fez, e a sétima é o pla
 ## Uma função em volta da coluna
 
 ```sql
-WHERE lower(email) = 'ana@example.com'      -- índice em (email): sem uso
-WHERE date(created_at) = DATE '2026-03-01'  -- índice em (created_at): sem uso
-WHERE coalesce(price, 0) > 100              -- índice em (price): sem uso
+WHERE lower(email) = 'ana@example.com'      -- index on (email): unused
+WHERE date(created_at) = DATE '2026-03-01'  -- index on (created_at): unused
+WHERE coalesce(price, 0) > 100              -- index on (price): unused
 ```
 
 O índice guarda `email`, ordenado. Ele não guarda `lower(email)`, e o banco não tem como descobrir
@@ -26,9 +26,9 @@ qualquer coisa e a cópia ordenada daquela coluna deixa de se aplicar.**
 Duas correções, e prefira a segunda onde ela existir:
 
 ```sql
-CREATE INDEX ON customers (lower(email));           -- indexe a expressão
+CREATE INDEX ON customers (lower(email));           -- index the expression instead
 
-WHERE created_at >= DATE '2026-03-01'               -- reescreva como faixa na coluna crua
+WHERE created_at >= DATE '2026-03-01'               -- rewrite as a range on the bare column
   AND created_at <  DATE '2026-03-02';
 ```
 
@@ -38,9 +38,9 @@ entre fusos horários, o que `date(created_at)` caladamente não faz.
 ## `LIKE` com curinga no começo
 
 ```sql
-WHERE name LIKE 'ana%'     -- rápido: um prefixo é uma faixa numa lista ordenada
-WHERE name LIKE '%ana'     -- uma varredura, e índice comum nenhum ajuda
-WHERE name LIKE '%ana%'    -- igual
+WHERE name LIKE 'ana%'     -- fast: a prefix is a range in a sorted list
+WHERE name LIKE '%ana'     -- a scan, and no ordinary index can help
+WHERE name LIKE '%ana%'    -- the same
 ```
 
 A cópia está ordenada a partir do começo da string. Tudo que começa com `ana` fica junto; tudo que
@@ -50,7 +50,7 @@ resposta é outro tipo de índice — um índice de trigramas, que a seção `th
 ## Um tipo que não bate
 
 ```sql
-WHERE phone = 5551234      -- phone é text
+WHERE phone = 5551234      -- phone is text
 ```
 
 O banco precisa fazer os tipos concordarem, e qual lado ele converte decide tudo. Converta o literal
@@ -64,8 +64,8 @@ do outro, que é um erro de esquema que se esconde como mistério de desempenho 
 ## A coluna dentro de uma conta
 
 ```sql
-WHERE price * 1.1 > 100        -- sem uso
-WHERE price > 100 / 1.1        -- a mesma pergunta, e o índice se aplica
+WHERE price * 1.1 > 100        -- unused
+WHERE price > 100 / 1.1        -- the same question, and the index applies
 ```
 
 Mesma regra da função: os valores ordenados são `price`, e não `price * 1.1`. Mova a aritmética para
@@ -88,7 +88,7 @@ tabela, e a maior parte da tabela é uma varredura.
 ## Os valores não são seletivos o bastante
 
 ```sql
-WHERE active        -- 600 000 de um milhão de linhas
+WHERE active        -- 600 000 of a million rows
 ```
 
 Coberto na seção anterior, e está nesta lista porque é o item com que as pessoas discutem. O índice
@@ -106,7 +106,7 @@ fundo. Se essas estatísticas dizem que uma coluna tem três valores distintos e
 milhões, a estimativa está errada e o plano segue a estimativa.
 
 ```sql
-ANALYZE customers;      -- recolha agora
+ANALYZE customers;      -- recollect them now
 ```
 
 É a razão por trás de *"ontem estava rápido"* depois de uma importação em massa: o dado mudou de

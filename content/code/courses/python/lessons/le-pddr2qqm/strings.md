@@ -1,6 +1,6 @@
 ---
 title: Text is a sequence, and it cannot be changed
-version: 1
+version: 2
 ---
 
 ```python

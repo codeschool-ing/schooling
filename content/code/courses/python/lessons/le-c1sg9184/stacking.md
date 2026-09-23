@@ -1,6 +1,6 @@
 ---
 title: Two decorators, and two different orders
-version: 1
+version: 2
 ---
 
 ```python

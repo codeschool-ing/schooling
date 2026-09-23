@@ -1,6 +1,6 @@
 ---
 title: Three jobs a string method already does
-version: 1
+version: 2
 ---
 
 The first question about a regular expression is whether you need one.

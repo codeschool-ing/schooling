@@ -1,6 +1,6 @@
 ---
 title: A directory of modules, and the two kinds of import
-version: 1
+version: 2
 ---
 
 ```

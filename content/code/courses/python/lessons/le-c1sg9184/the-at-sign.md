@@ -1,6 +1,6 @@
 ---
 title: `@d` is `f = d(f)`, written above instead of below
-version: 1
+version: 2
 ---
 
 ```python

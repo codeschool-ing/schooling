@@ -1,15 +1,15 @@
 ---
 title: A chave que estava lá ontem
-version: 1
+version: 2
 ---
 
 A documentação dizia que todo registro tem um `address` com uma `city` dentro. Aí um deles não tem,
-e `registro["address"]["city"]` levanta erro trezentas linhas adiante.
+e `record["address"]["city"]` levanta erro trezentas linhas adiante.
 
 ## O `get`, com um padrão
 
 ```python
-cidade = registro.get("address", {}).get("city", "")
+city = record.get("address", {}).get("city", "")
 ```
 
 A forma da aula 3, e o dicionário vazio do meio é o que mantém o segundo `get` válido. Não é
@@ -22,17 +22,17 @@ você acabou de escrever.
 ## `null` não é ausente
 
 ```python
-{"city": null}      → registro["city"] é None
-{}                  → registro["city"] levanta erro
+{"city": null}      → record["city"] is None
+{}                  → record["city"] raises
 ```
 
-Duas situações diferentes, e o `get` com padrão só pega a segunda. `registro.get("city") or ""` pega
+Duas situações diferentes, e o `get` com padrão só pega a segunda. `record.get("city") or ""` pega
 as duas — e também transforma `0` e `False` em `""`, que é a armadilha daquele idioma.
 
 ```python
-valor = registro.get("city")
-if valor is None:
-    valor = ""
+value = record.get("city")
+if value is None:
+    value = ""
 ```
 
 Mais longo, e quer dizer exatamente o que diz.
@@ -40,17 +40,17 @@ Mais longo, e quer dizer exatamente o que diz.
 ## O tipo que você não esperava
 
 ```python
-dados = json.load(f)
-for linha in dados:       # dados é um dict, e não uma lista
-    linha["name"]         # linha é uma CHAVE — uma string
+data = json.load(f)
+for row in data:          # data is a dict, not a list
+    row["name"]           # row is a KEY — a string
 ```
 
 Iterar um dicionário dá chaves, então isto falha com um `TypeError` sobre índices de string, três
 linhas longe do problema de verdade. **Confira a forma na fronteira:**
 
 ```python
-if not isinstance(dados, list):
-    raise ValueError(f"{caminho}: esperava uma lista de registros, veio {type(dados).__name__}")
+if not isinstance(data, list):
+    raise ValueError(f"{path}: expected a list of records, got {type(data).__name__}")
 ```
 
 Uma linha, na borda, e toda falha posterior é sobre o dado em vez de sobre a forma.

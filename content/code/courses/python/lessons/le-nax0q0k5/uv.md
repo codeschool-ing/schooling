@@ -1,6 +1,6 @@
 ---
 title: `uv`, and the four commands that are most of it
-version: 1
+version: 2
 ---
 
 ```sh

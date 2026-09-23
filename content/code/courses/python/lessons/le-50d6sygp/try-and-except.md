@@ -1,6 +1,6 @@
 ---
 title: The block is as small as the thing that can fail
-version: 1
+version: 2
 ---
 
 ```python

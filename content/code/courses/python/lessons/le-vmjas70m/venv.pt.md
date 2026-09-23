@@ -1,6 +1,6 @@
 ---
 title: `python -m venv`, e o diretório que você nunca comita
-version: 1
+version: 2
 ---
 
 ```sh
@@ -43,9 +43,9 @@ deactivate
 
 ```sh
 $ which python
-/tmp/projeto/.venv/bin/python
+/tmp/project/.venv/bin/python
 $ python -c "import sys; print(sys.prefix)"
-/tmp/projeto/.venv
+/tmp/project/.venv
 ```
 
 `activate` é um script de shell que edita o `PATH` e define `VIRTUAL_ENV`. Não é obrigatório:

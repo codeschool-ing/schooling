@@ -1,6 +1,6 @@
 ---
 title: A program is a file; a process is a file that is happening
-version: 1
+version: 2
 ---
 
 `/usr/bin/sleep` is a file. It sits on a disk, it has a size and an owner, and it does nothing —

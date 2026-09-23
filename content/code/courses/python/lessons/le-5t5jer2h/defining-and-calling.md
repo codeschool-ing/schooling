@@ -1,6 +1,6 @@
 ---
 title: `def`, the body, and what comes back when nothing does
-version: 1
+version: 2
 ---
 
 ```python

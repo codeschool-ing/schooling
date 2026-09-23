@@ -1,6 +1,6 @@
 ---
 title: Mudando uma tabela que ninguém pode parar de usar
-version: 1
+version: 2
 ---
 
 Esta é a seção que separa quem sabe SQL de quem pode ser confiado com um banco, e quase nunca é
@@ -32,19 +32,19 @@ as duas conseguem viver.
 O truque é que o PostgreSQL confia num `CHECK` que ele já validou.
 
 ```sql
--- 1. acrescente a regra, NOT VALID: instantâneo, sem varredura, vale só para linhas novas
+-- 1. add the rule, NOT VALID: instant, no scan, applies to new rows only
 ALTER TABLE invoices
     ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;
 
--- 2. preencha os nulos existentes, em lotes, no seu ritmo
+-- 2. backfill the existing nulls, in batches, at your own pace
 UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;
--- … repita
+-- … repeat
 
--- 3. valide: varre, mas pega só um lock SHARE UPDATE EXCLUSIVE,
---    então leituras e escritas continuam
+-- 3. validate: scans, but takes only a SHARE UPDATE EXCLUSIVE lock,
+--    so reads and writes continue
 ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;
 
--- 4. agora SET NOT NULL é instantâneo, porque a prova já existe
+-- 4. now SET NOT NULL is instant, because the proof already exists
 ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;
 ALTER TABLE invoices DROP CONSTRAINT invoices_status_present;
 ```

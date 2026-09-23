@@ -1,6 +1,6 @@
 ---
 title: The three places a subquery can go
-version: 1
+version: 2
 ---
 
 A subquery is a `SELECT` written inside another statement, in brackets. There are three places one

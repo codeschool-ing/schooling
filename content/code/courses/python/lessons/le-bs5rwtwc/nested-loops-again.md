@@ -1,6 +1,6 @@
 ---
 title: Lesson 4's nested loop, counted
-version: 1
+version: 2
 ---
 
 ```python

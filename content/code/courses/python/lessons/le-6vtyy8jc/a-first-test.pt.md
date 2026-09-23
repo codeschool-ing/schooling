@@ -1,13 +1,13 @@
 ---
 title: Um arquivo, uma função e um `assert` pelado
-version: 1
+version: 2
 ---
 
 ```python
 # test_slug.py
 from app.slug import slugify
 
-def test_espacos_viram_hifens():
+def test_spaces_become_hyphens():
     assert slugify("Hello World") == "hello-world"
 ```
 
@@ -42,11 +42,11 @@ corpo começar, `s` foi pulado. Numa suíte de quatrocentos é uma barra de prog
 ## Rodar menos que tudo
 
 ```sh
-pytest tests/test_slug.py              # um arquivo
-pytest tests/test_slug.py::test_espacos_viram_hifens   # um teste
-pytest -k slug                         # todo teste cujo nome contém "slug"
-pytest -x                              # para na primeira falha
-pytest --lf                            # só os que falharam da última vez
+pytest tests/test_slug.py              # one file
+pytest tests/test_slug.py::test_spaces_become_hyphens   # one test
+pytest -k slug                         # every test whose name contains "slug"
+pytest -x                              # stop at the first failure
+pytest --lf                            # only the ones that failed last time
 ```
 
 `-x` e `--lf` juntos são como uma suíte quebrada é consertada: rode as falhas, pare na primeira,

@@ -1,6 +1,6 @@
 ---
 title: O que é uma transação, e aquela em que você já está
-version: 1
+version: 2
 ---
 
 ```sql
@@ -25,7 +25,7 @@ quando outra pessoa está rodando as duas instruções dela ao mesmo tempo.
 ```sql
 BEGIN;
 DELETE FROM order_lines WHERE order_id = 7;
--- esse era o pedido errado
+-- that was the wrong order
 ROLLBACK;
 ```
 
@@ -38,7 +38,7 @@ rodado dentro de uma transação, é uma instrução que você pode olhar antes 
 ```sql
 BEGIN;
 DELETE FROM contacts WHERE id IN (…);
-SELECT count(*) FROM contacts;     -- 4 812, e você esperava 4 812
+SELECT count(*) FROM contacts;     -- 4 812, and you expected 4 812
 COMMIT;
 ```
 
@@ -87,9 +87,9 @@ chaves estrangeiras, e a próxima seção trata de por que as pessoas esperam ou
 BEGIN;
 INSERT INTO orders …;
 SAVEPOINT before_lines;
-INSERT INTO order_lines …;          -- esta falha
-ROLLBACK TO before_lines;           -- desfaz só isso, mantém o pedido
-INSERT INTO order_lines …;          -- tenta de novo de outro jeito
+INSERT INTO order_lines …;          -- this one fails
+ROLLBACK TO before_lines;           -- undo just that, keep the order
+INSERT INTO order_lines …;          -- try again differently
 COMMIT;
 ```
 

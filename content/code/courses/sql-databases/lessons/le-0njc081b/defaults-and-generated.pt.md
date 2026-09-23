@@ -1,6 +1,6 @@
 ---
 title: Defaults, e colunas que o banco preenche
-version: 1
+version: 2
 ---
 
 Dois jeitos de fazer o banco escrever um valor para ninguém precisar, e não são a mesma coisa.
@@ -18,8 +18,8 @@ Um default se aplica **só quando a coluna é omitida da inserção**, e vale se
 a origem de uma surpresa comum:
 
 ```sql
-INSERT INTO invoices (customer_id) VALUES (1);               -- status é 'draft'
-INSERT INTO invoices (customer_id, status) VALUES (1, NULL); -- status é NULL
+INSERT INTO invoices (customer_id) VALUES (1);              -- status is 'draft'
+INSERT INTO invoices (customer_id, status) VALUES (1, NULL); -- status is NULL
 ```
 
 A segunda não recebe o default. Ela forneceu um valor, e o valor era `NULL` — então numa coluna

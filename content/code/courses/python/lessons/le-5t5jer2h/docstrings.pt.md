@@ -1,19 +1,19 @@
 ---
 title: A primeira instrução do corpo
-version: 1
+version: 2
 ---
 
 ```python
-def separar_linhas(texto, separador=","):
-    """Separa o texto em linhas de campos.
+def split_rows(text, separator=","):
+    """Split text into rows of fields.
 
-    Linhas em branco são puladas. O separador não é escapado — veja a aula 9
-    para qualquer coisa que tenha saído de uma planilha.
+    Blank lines are skipped. The separator is not escaped — see lesson 9 for
+    anything that came out of a spreadsheet.
     """
 ```
 
 Uma literal de string como primeira instrução de uma função é a docstring dela. Não é um comentário:
-ela fica na função como `__doc__`, `help(separar_linhas)` a imprime, e o seu editor a mostra onde a
+ela fica na função como `__doc__`, `help(split_rows)` a imprime, e o seu editor a mostra onde a
 função é chamada.
 
 ## As três linhas que valem escrever

@@ -1,6 +1,6 @@
 ---
 title: `None` is a value, and `is None` is how you ask
-version: 1
+version: 2
 ---
 
 `None` is the value that means *there is no value*. It is a real object, there is exactly one of

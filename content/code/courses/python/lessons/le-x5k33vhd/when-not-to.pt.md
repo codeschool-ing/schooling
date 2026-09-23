@@ -1,6 +1,6 @@
 ---
 title: Três trabalhos que um método de string já faz
-version: 1
+version: 2
 ---
 
 A primeira pergunta sobre uma expressão regular é se você precisa de uma.
@@ -8,9 +8,9 @@ A primeira pergunta sobre uma expressão regular é se você precisa de uma.
 ## Os três
 
 ```python
-"error" in linha                      # e não re.search(r"error", linha)
-linha.startswith("2026-")             # e não re.match(r"2026-", linha)
-linha.split(",")                      # e não re.split(r",", linha)
+"error" in line                       # not re.search(r"error", line)
+line.startswith("2026-")              # not re.match(r"2026-", line)
+line.split(",")                       # not re.split(r",", line)
 ```
 
 Cada padrão acima funciona, é mais lento, e é mais difícil de ler que o método ao lado. O
@@ -34,7 +34,7 @@ faz.
 ## HTML, que é a resposta errada famosa
 
 ```python
-re.findall(r"<div>(.*?)</div>", html)     # não
+re.findall(r"<div>(.*?)</div>", html)     # no
 ```
 
 Funciona no exemplo e falha com um `<div>` dentro de um `<div>`. Estruturas aninhadas não são uma

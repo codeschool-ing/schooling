@@ -1,6 +1,6 @@
 ---
 title: Is a CTE computed once, and is it slower
-version: 1
+version: 2
 ---
 
 Somebody will tell you that `WITH` is slow. Somebody else will tell you it costs nothing. Both are

@@ -1,6 +1,6 @@
 ---
 title: Running it, and reading one error properly
-version: 1
+version: 2
 ---
 
 ```sh

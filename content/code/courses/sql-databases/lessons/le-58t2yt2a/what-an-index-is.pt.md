@@ -1,6 +1,6 @@
 ---
 title: O que um índice de fato é
-version: 1
+version: 2
 ---
 
 ```sql
@@ -31,11 +31,11 @@ lugar.
 Com ela, o banco abre a cópia ordenada no meio, compara, e joga metade fora. Depois metade daquilo.
 Vinte desses passos chegam a uma linha em um milhão, e trinta chegam a uma em um bilhão.
 
-```
-1 000 linhas          ~10 passos
-1 000 000 linhas      ~20 passos
-1 000 000 000 linhas  ~30 passos
-```
+| linhas | passos, mais ou menos |
+|---|---|
+| 1.000 | 10 |
+| 1.000.000 | 20 |
+| 1.000.000.000 | 30 |
 
 Olhe essa tabela por um segundo, porque ela explica o formato de tudo o que vem depois: **mil vezes
 mais dado custa dez passos a mais.** Uma varredura da mesma tabela custa mil vezes mais trabalho.
@@ -64,11 +64,11 @@ qualificar, é dele que está falando.
 Como a cópia está em ordem, ela serve a mais de um formato de pergunta:
 
 ```sql
-WHERE email = 'ana@example.com'      -- achar um valor
-WHERE email > 'm'                    -- achar uma posição e ler para a frente
-WHERE created_at BETWEEN … AND …     -- achar o começo, ler até o fim
-ORDER BY email                        -- ler em ordem, sem precisar ordenar
-WHERE email LIKE 'ana%'               -- um prefixo é uma faixa: de 'ana' até 'anb'
+WHERE email = 'ana@example.com'      -- find one value
+WHERE email > 'm'                    -- find a position, then read forwards
+WHERE created_at BETWEEN … AND …     -- find the start, read until the end
+ORDER BY email                        -- read it in order, no sorting needed
+WHERE email LIKE 'ana%'               -- a prefix is a range: 'ana' up to 'anb'
 ```
 
 Este último vale guardar. `LIKE 'ana%'` é uma varredura de faixa e é rápido; `LIKE '%ana'` não é,

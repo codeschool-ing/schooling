@@ -1,6 +1,6 @@
 ---
 title: Três arranjos, e como saber em qual você está
-version: 1
+version: 2
 ---
 
 **Olhe os arquivos antes de digitar qualquer coisa.** Um repositório diz o que espera num `ls`, e
@@ -18,11 +18,11 @@ usa para configurar o `ruff` também tem.
 ## Lendo com mais precisão
 
 ```toml
-[tool.poetry]              # Poetry, e possivelmente um arquivo do formato antigo
-[tool.uv]                  # ajustes específicos do uv
+[tool.poetry]              # Poetry, and possibly an old-style file
+[tool.uv]                  # uv-specific settings
 [build-system]
-requires = ["poetry-core"] # construído pelo Poetry
-requires = ["hatchling"]   # construído pelo hatch, gerenciado por qualquer coisa
+requires = ["poetry-core"] # built by Poetry
+requires = ["hatchling"]   # built by hatch, managed by anything
 ```
 
 `[build-system]` nomeia o **backend que constrói a wheel**, e é independente da ferramenta que

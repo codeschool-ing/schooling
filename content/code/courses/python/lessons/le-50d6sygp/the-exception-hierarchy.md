@@ -1,6 +1,6 @@
 ---
 title: Classes, and the two you must not catch
-version: 1
+version: 2
 ---
 
 Every exception is a class, and they form a tree:

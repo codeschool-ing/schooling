@@ -1,6 +1,6 @@
 ---
 title: IN, EXISTS, and the one that returns nothing
-version: 1
+version: 2
 ---
 
 Two ways to ask "is this row in that set", and they look interchangeable:
@@ -28,7 +28,7 @@ SELECT * FROM products WHERE category_id NOT IN (1, 2, NULL);
 
 Zero rows, whatever the table holds, for ever. Unfolding it is the whole explanation:
 
-```
+```localised
 category_id NOT IN (1, 2, NULL)
 category_id <> 1  AND  category_id <> 2  AND  category_id <> NULL
                                               └─ unknown, always

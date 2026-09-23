@@ -1,10 +1,10 @@
 ---
 title: Ao salvar, no pipeline, e antes do commit
-version: 1
+version: 2
 ---
 
 ```json
-// o editor
+// the editor
 "editor.formatOnSave": true,
 "editor.codeActionsOnSave": { "source.organizeImports.ruff": "explicit" }
 ```

@@ -1,6 +1,6 @@
 ---
 title: The interpreter that belongs to the operating system
-version: 1
+version: 2
 ---
 
 ```sh
@@ -32,7 +32,7 @@ later, with no connection anybody could see between the two.
 
 ## And the other reason, which is yours
 
-```sh
+```localised
 project-a/   needs requests 2.26
 project-b/   needs requests 2.31
 ```

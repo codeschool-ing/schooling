@@ -1,6 +1,6 @@
 ---
 title: `bytes` against `str`, and when you need neither
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,27 +1,27 @@
 ---
 title: Nunca construa nenhum dos dois formatos à mão
-version: 1
+version: 2
 ---
 
 ```python
 import csv
 
-with open(caminho, "w", newline="", encoding="utf-8") as f:
-    escritor = csv.DictWriter(f, fieldnames=["nome", "cidade", "nota"])
-    escritor.writeheader()
-    for linha in linhas:
-        escritor.writerow(linha)
+with open(path, "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=["name", "city", "score"])
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row)
 ```
 
 O `DictWriter` recebe os nomes dos campos, escreve o cabeçalho, e põe aspas no que precisar. Uma
 cidade chamada `Porto, Portugal` sai com aspas corretamente, e você não precisou pensar nisso.
 
-O `writerows(linhas)` é o laço numa linha.
+O `writerows(rows)` é o laço numa linha.
 
 ## A versão feita à mão, e o que ela custa
 
 ```python
-f.write(",".join([nome, cidade, str(nota)]) + "\n")      # não
+f.write(",".join([name, city, str(score)]) + "\n")      # no
 ```
 
 Isto está correto até um valor conter uma vírgula, uma aspa ou uma quebra de linha — e aí ele produz
@@ -34,8 +34,8 @@ caractere de controle corretamente é para o que serve o `json.dumps`.
 ## Gravar JSON que alguém vai ler
 
 ```python
-with open(caminho, "w", encoding="utf-8") as f:
-    json.dump(dados, f, indent=2, ensure_ascii=False, sort_keys=True)
+with open(path, "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False, sort_keys=True)
     f.write("\n")
 ```
 
@@ -46,9 +46,9 @@ texto.
 ## Gravar com segurança
 
 ```python
-tmp = caminho.with_suffix(".tmp")
-tmp.write_text(texto, encoding="utf-8")
-tmp.replace(caminho)          # atômico no mesmo sistema de arquivos
+tmp = path.with_suffix(".tmp")
+tmp.write_text(text, encoding="utf-8")
+tmp.replace(path)          # atomic on the same filesystem
 ```
 
 Abrir o arquivo de verdade com `"w"` o esvazia antes do primeiro byte ser gravado, então uma queda

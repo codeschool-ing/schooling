@@ -1,21 +1,21 @@
 ---
 title: Funções que recebem a instância
-version: 1
+version: 2
 ---
 
 ```python
-class Aluno:
-    def __init__(self, nome):
-        self.nome = nome
-        self.notas = []
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.grades = []
 
-    def acrescentar_nota(self, nota):
-        self.notas.append(nota)
+    def add_grade(self, score):
+        self.grades.append(score)
 
-    def media(self):
-        if not self.notas:
+    def average(self):
+        if not self.grades:
             return 0
-        return sum(self.notas) / len(self.notas)
+        return sum(self.grades) / len(self.grades)
 ```
 
 Um método é uma função definida no corpo da classe cujo primeiro parâmetro é a instância. Fora
@@ -24,19 +24,19 @@ isso é uma função comum: padrões, `*args`, retorno antecipado, tudo da aula 
 ## Chamar um de dentro de outro
 
 ```python
-    def relatorio(self):
-        return f"{self.nome}: {self.media():.1f}"
+    def report(self):
+        return f"{self.name}: {self.average():.1f}"
 ```
 
-`self.media()` — pela instância, nunca pelo nome puro. Escrever `media()` dentro de `relatorio`
+`self.average()` — pela instância, nunca pelo nome puro. Escrever `average()` dentro de `report`
 procura uma função de nível de módulo e levanta um `NameError`, que são as regras de escopo da
 aula 5 respondendo exatamente como devem.
 
 ## Devolver um objeto novo em vez de alterar este
 
 ```python
-    def com_cidade(self, cidade):
-        return Aluno(self.nome, cidade)      # um aluno novo
+    def with_city(self, city):
+        return Student(self.name, city)      # a new student
 ```
 
 Duas formas, e a escolha vale ser deliberada: um método que ALTERA a instância devolve `None` por
@@ -49,10 +49,10 @@ alteram e outros devolvem cópias precisa que os nomes digam qual é qual.
 ## Um método é uma função na classe
 
 ```python
-Aluno.media            # uma função comum
-ada.media              # um método ligado: a função, com ada presa nela
+Student.average            # a plain function
+ada.average                # a bound method: the function, with ada attached
 ```
 
-`ada.media` é a função com o `self` já preenchido. É por isso que ele dá para passar adiante como
-qualquer outro valor — `sorted(alunos, key=Aluno.media)` funciona, e `map(ada.acrescentar_nota,
+`ada.average` é a função com o `self` já preenchido. É por isso que ele dá para passar adiante como
+qualquer outro valor — `sorted(students, key=Student.average)` funciona, e `map(ada.acrescentar_nota,
 notas)` também.

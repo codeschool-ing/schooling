@@ -1,6 +1,6 @@
 ---
 title: WHERE, and the rule for keeping a row
-version: 1
+version: 2
 ---
 
 `WHERE` keeps a row when the condition is **true**. Not "not false" — true. That distinction is

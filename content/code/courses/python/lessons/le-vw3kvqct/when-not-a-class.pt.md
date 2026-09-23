@@ -1,6 +1,6 @@
 ---
 title: As duas formas que eram outra coisa
-version: 1
+version: 2
 ---
 
 A maior parte deste curso não é classes. Saber quando não recorrer a uma é a metade desta aula que
@@ -9,17 +9,17 @@ poupa mais trabalho.
 ## A classe com um método só
 
 ```python
-class GeradorDeRelatorio:
-    def __init__(self, linhas):
-        self.linhas = linhas
+class ReportGenerator:
+    def __init__(self, rows):
+        self.rows = rows
 
-    def gerar(self):
-        return "\n".join(formatar_linha(l) for l in self.linhas)
+    def generate(self):
+        return "\n".join(format_row(r) for r in self.rows)
 
-GeradorDeRelatorio(linhas).gerar()
+ReportGenerator(rows).generate()
 ```
 
-Duas linhas de cerimônia em volta de uma chamada de função. `gerar_relatorio(linhas)` diz a mesma
+Duas linhas de cerimônia em volta de uma chamada de função. `generate_report(rows)` diz a mesma
 coisa, recebe o mesmo argumento, e dá para testar sem construir nada.
 
 **A pista é uma classe cujo `__init__` recebe exatamente o que o único método dela precisa**, usada
@@ -28,15 +28,15 @@ uma vez e descartada. Isso é uma função com passos a mais.
 ## A classe sem estado
 
 ```python
-class UtilsMatematicos:
+class MathUtils:
     @staticmethod
-    def media(xs): ...
+    def mean(xs): ...
     @staticmethod
-    def mediana(xs): ...
+    def median(xs): ...
 ```
 
 Um espaço de nomes fingindo ser um tipo. Em Python o espaço de nomes já existe e é o módulo: ponha
-as funções em `estatistica.py` e chame `estatistica.media(xs)`. **Nada aqui é instanciado, que é a
+as funções em `estatistica.py` e chame `stats.mean(xs)`. **Nada aqui é instanciado, que é a
 denúncia.**
 
 ## A classe que era uma dataclass

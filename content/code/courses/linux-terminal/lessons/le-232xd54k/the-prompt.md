@@ -1,6 +1,6 @@
 ---
 title: Reading the prompt
-version: 1
+version: 2
 ---
 
 The prompt is the first thing on the screen and the last thing anybody explains. It is not

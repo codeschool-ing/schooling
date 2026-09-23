@@ -1,13 +1,13 @@
 ---
 title: The install that worked yesterday
-version: 1
+version: 2
 ---
 
 ```sh
 requirements.txt:  requests==2.31.0
 ```
 
-```sh
+```localised
 Monday:     urllib3 2.8.0
 Thursday:   urllib3 2.9.0        ← nobody changed anything
 ```
@@ -26,10 +26,10 @@ A second file, generated, listing **every** package — direct and transitive �
 version, usually with a hash of the file that was downloaded. It is not written by hand and it is
 not the file you edit.
 
-```sh
-requirements.in     what you ask for        ← edited by a person
-requirements.txt    what that resolves to   ← generated, committed
-```
+| file | what it holds | written by |
+|---|---|---|
+| `requirements.in` | what you ask for | a person, who edits it |
+| `requirements.txt` | what that resolves to | the tool; it is committed |
 
 ```sh
 pip-compile requirements.in          # writes requirements.txt, fully pinned

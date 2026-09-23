@@ -1,6 +1,6 @@
 ---
 title: Two kinds that repay the trouble
-version: 1
+version: 2
 ---
 
 These two solve problems the ordinary index cannot, they are cheap, and most people have never

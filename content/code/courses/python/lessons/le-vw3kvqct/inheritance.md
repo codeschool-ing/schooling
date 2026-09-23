@@ -1,6 +1,6 @@
 ---
 title: Reusing a class, and what `super()` actually does
-version: 1
+version: 2
 ---
 
 ```python

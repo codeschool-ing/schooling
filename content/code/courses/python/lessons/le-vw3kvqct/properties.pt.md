@@ -1,20 +1,20 @@
 ---
 title: O atributo que é calculado, e o que confere
-version: 1
+version: 2
 ---
 
 ```python
-class Retangulo:
-    def __init__(self, largura, altura):
-        self.largura = largura
-        self.altura = altura
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
 
     @property
     def area(self):
-        return self.largura * self.altura
+        return self.width * self.height
 
-r = Retangulo(3, 4)
-r.area          # 12 — sem parênteses
+r = Rectangle(3, 4)
+r.area          # 12 — no parentheses
 ```
 
 O `@property` faz um método parecer um atributo. `r.area` roda a função e devolve o valor dela.
@@ -22,7 +22,7 @@ O `@property` faz um método parecer um atributo. `r.area` roda a função e dev
 ## Por que não simplesmente um método
 
 Porque `area` não é algo que o retângulo FAZ, é algo que ele É. Quem chama não deveria ter de
-lembrar qual entre `r.largura` e `r.area()` precisa de parênteses quando os dois são só fatos sobre
+lembrar qual entre `r.width` e `r.area()` precisa de parênteses quando os dois são só fatos sobre
 o retângulo.
 
 **E é uma mudança que dá para fazer depois.** Um atributo que começa como dado puro dá para virar
@@ -32,20 +32,20 @@ setters por toda parte: você os acrescenta no dia em que precisa.
 ## O setter, que é onde a validação vai
 
 ```python
-class Aluno:
+class Student:
     @property
-    def nota(self):
-        return self._nota
+    def score(self):
+        return self._score
 
-    @nota.setter
-    def nota(self, valor):
-        if not 0 <= valor <= 100:
-            raise ValueError(f"nota fora da faixa: {valor}")
-        self._nota = valor
+    @score.setter
+    def score(self, value):
+        if not 0 <= value <= 100:
+            raise ValueError(f"score out of range: {value}")
+        self._score = value
 ```
 
-Agora `aluno.nota = 150` levanta erro, no momento em que o valor errado chega em vez de três
-funções depois. O valor de verdade mora em `self._nota` — o sublinhado diz "meu", e a property é a
+Agora `student.score = 150` levanta erro, no momento em que o valor errado chega em vez de três
+funções depois. O valor de verdade mora em `self._score` — o sublinhado diz "meu", e a property é a
 porta.
 
 **Os nomes precisam ser diferentes**, ou o setter chama a si mesmo. Esse é o engano que todo mundo

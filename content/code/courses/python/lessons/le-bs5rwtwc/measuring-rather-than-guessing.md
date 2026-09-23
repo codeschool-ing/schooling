@@ -1,6 +1,6 @@
 ---
 title: `timeit` for the expression, `cProfile` for the program
-version: 1
+version: 2
 ---
 
 ```sh

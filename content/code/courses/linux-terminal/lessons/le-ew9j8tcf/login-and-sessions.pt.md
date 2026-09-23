@@ -1,6 +1,6 @@
 ---
 title: Entrar na máquina, e qual arquivo roda quando
-version: 1
+version: 2
 ---
 
 Uma conta é uma linha num arquivo. Uma **sessão** é o que acontece quando alguém a usa — e as duas
@@ -112,9 +112,9 @@ o que é a seção 08 da aula 4, enunciada como sequência.
 ## Três perguntas e o comando de cada uma
 
 ```
-ana@vm:~$ whoami        # qual conta eu sou
-ana@vm:~$ id            # e que grupos contam para mim
-ana@vm:~$ tty           # qual terminal é este
+ana@vm:~$ whoami        # which account am I
+ana@vm:~$ id            # and which groups count for me
+ana@vm:~$ tty           # which terminal is this
 ```
 
 O `tty` imprime algo como `/dev/pts/1` num terminal e `not a tty` quando a entrada do shell é um

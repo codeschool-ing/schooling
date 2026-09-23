@@ -1,6 +1,6 @@
 ---
 title: O arquivo que substituiu quatro
-version: 1
+version: 2
 ---
 
 ```toml
@@ -65,19 +65,19 @@ projeto, em vez de cinco arquivos ocultos na raiz.
 ## E o TOML, rapidamente
 
 ```toml
-chave = "string"
-numero = 88
+key = "string"
+number = 88
 flag = true
-lista = ["a", "b"]
+list = ["a", "b"]
 
-[tabela]
-aninhado = "valor"
+[table]
+nested = "value"
 
-[[array-de-tabelas]]
-um = 1
+[[array-of-tables]]
+one = 1
 
-[[array-de-tabelas]]
-dois = 2
+[[array-of-tables]]
+two = 2
 ```
 
 É quase tudo. Os colchetes duplos são como se escreve uma lista de tabelas — que você já viu como

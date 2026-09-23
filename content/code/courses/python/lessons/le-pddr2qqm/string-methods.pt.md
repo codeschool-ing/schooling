@@ -1,6 +1,6 @@
 ---
 title: A dúzia que carrega o trabalho
-version: 1
+version: 2
 ---
 
 Cada um destes devolve uma string **nova**. Nenhum altera aquela em que foi chamado.
@@ -46,7 +46,7 @@ também o jeito certo de montar uma string com muitas partes — a seção acima
 ## Perguntando
 
 ```python
->>> "relatorio.csv".endswith(".csv")
+>>> "report.csv".endswith(".csv")
 True
 >>> "ada" in "ada lovelace"
 True
@@ -55,7 +55,7 @@ True
 ```
 
 `startswith` e `endswith` aceitam uma tupla quando você quer vários:
-`nome.endswith((".csv", ".tsv"))`.
+`name.endswith((".csv", ".tsv"))`.
 
 **O `find` devolve `-1` quando não achou** e o `index` levanta erro. Use `in` quando você só quer
 saber.

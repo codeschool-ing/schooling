@@ -1,6 +1,6 @@
 ---
 title: Bytes on disk, text in memory, and the line between
-version: 1
+version: 2
 ---
 
 A file holds bytes. A Python string holds characters. An ENCODING is the table that says which

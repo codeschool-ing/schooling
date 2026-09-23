@@ -1,11 +1,11 @@
 ---
 title: `try`/`finally`, com um nome
-version: 1
+version: 2
 ---
 
 ```python
-with open(caminho, encoding="utf-8") as f:
-    processar(f)
+with open(path, encoding="utf-8") as f:
+    process(f)
 ```
 
 Três coisas acontecem, em ordem: a PREPARAÇÃO (o arquivo é aberto), o CORPO, e o DESFAZER (o
@@ -18,9 +18,9 @@ arquivo é fechado). A terceira acontece termine a segunda como terminar.
 ## A mesma coisa, escrita por extenso
 
 ```python
-f = open(caminho, encoding="utf-8")
+f = open(path, encoding="utf-8")
 try:
-    processar(f)
+    process(f)
 finally:
     f.close()
 ```
@@ -46,9 +46,9 @@ todo caminho de saída de toda função, para sempre; o `with` é uma linha e o 
 ## Onde você já viu isso
 
 ```python
-with open(caminho) as f: ...         # aula 9
-with trava: ...                      # uma trava de thread
-with conn: ...                       # uma transação de banco
+with open(path) as f: ...            # lesson 9
+with lock: ...                       # a threading lock
+with conn: ...                       # a database transaction
 with tempfile.TemporaryDirectory() as d: ...
 ```
 

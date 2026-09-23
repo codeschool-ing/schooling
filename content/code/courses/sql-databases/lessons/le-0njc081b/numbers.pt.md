@@ -1,6 +1,6 @@
 ---
 title: Números, e o que custa dinheiro
-version: 1
+version: 2
 ---
 
 O tipo de uma coluna não é uma caixa que guarda qualquer coisa. É uma promessa sobre todo valor que
@@ -28,8 +28,8 @@ nisso.** Os quatro bytes a mais por linha não são um custo de que alguém já 
 ## Os decimais, e esta é a seção que importa
 
 ```sql
-total numeric(12,2)    -- exato:       12 dígitos, 2 depois da vírgula
-rate  double precision -- aproximado:  cerca de 15 dígitos significativos
+total numeric(12,2)   -- exact:      12 digits, 2 after the point
+rate  double precision -- approximate: about 15 significant digits
 ```
 
 `numeric` guarda dígitos. `real` e `double precision` guardam aproximações binárias, e **um décimo
@@ -82,7 +82,7 @@ Esse chega em produção com regularidade, na forma de um percentual que é semp
 
 ```sql
 SELECT count(*) FILTER (WHERE paid_at IS NOT NULL) / count(*) AS paid_share FROM invoices;
--- 0, sempre, em qualquer tabela onde nem tudo está pago
+-- 0, always, for any table where not everything is paid
 ```
 
 Converta um lado e funciona. Vale saber agora porque o erro é silencioso e a resposta é plausível.
@@ -100,8 +100,8 @@ necessário ao restaurar dados e é uma brecha no resto do tempo.
 Você vai encontrar o antigo `serial` em esquemas existentes:
 
 ```sql
-id serial PRIMARY KEY      -- PostgreSQL mais antigo; ainda funciona
-id bigserial PRIMARY KEY   -- a versão bigint
+id serial PRIMARY KEY      -- older PostgreSQL; still works
+id bigserial PRIMARY KEY   -- the bigint version
 ```
 
 `serial` não é um tipo. É atalho que cria uma coluna `integer`, uma sequência e um default — o que

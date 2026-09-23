@@ -1,14 +1,14 @@
 ---
 title: A f-string, e o que vem depois dos dois pontos
-version: 1
+version: 2
 ---
 
 ```python
-nome = "Ada"
-print(f"Olá, {nome}")
+name = "Ada"
+print(f"Hello, {name}")
 ```
 ```
-Olá, Ada
+Hello, Ada
 ```
 
 Um `f` antes da aspa, e chaves em volta de **qualquer expressão** — não só de um nome:
@@ -16,7 +16,7 @@ Um `f` antes da aspa, e chaves em volta de **qualquer expressão** — não só 
 ```python
 >>> f"{2 + 2}"
 '4'
->>> f"{nome.upper()}"
+>>> f"{name.upper()}"
 'ADA'
 ```
 
@@ -62,7 +62,7 @@ Depois de dois pontos dentro das chaves, você diz **como**:
 | `e` | científica |
 | `b` `o` `x` | binário, octal, hexadecimal |
 
-**A largura pode ser uma variável**: `f"{nome:>{w}}"`.
+**A largura pode ser uma variável**: `f"{name:>{w}}"`.
 
 ## Chaves que você quer manter
 
@@ -73,8 +73,8 @@ Dobre: `f"{{literal}}"` imprime `{literal}`.
 Você vai encontrar os dois em código que não escreveu.
 
 ```python
-"Olá, {}".format(nome)     # .format, do Python 2.6
-"Olá, %s" % nome           # %, desde o começo
+"Hello, {}".format(name)     # .format, from Python 2.6
+"Hello, %s" % name           # %, from the beginning
 ```
 
 Os dois continuam funcionando. Nenhum dos dois vale ser escrito agora, com uma exceção honesta:

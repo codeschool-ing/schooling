@@ -1,6 +1,6 @@
 ---
 title: Two loops, and work that grows with the product
-version: 1
+version: 2
 ---
 
 ```python

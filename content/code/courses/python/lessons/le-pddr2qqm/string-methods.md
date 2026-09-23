@@ -1,6 +1,6 @@
 ---
 title: The dozen that carry the work
-version: 1
+version: 2
 ---
 
 Every one of these returns a **new** string. None of them changes the one you called it on.

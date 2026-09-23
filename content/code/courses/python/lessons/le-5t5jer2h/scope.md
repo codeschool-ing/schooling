@@ -1,6 +1,6 @@
 ---
 title: Four places, in a fixed order
-version: 1
+version: 2
 ---
 
 A name is resolved by looking in four places, always in this order:

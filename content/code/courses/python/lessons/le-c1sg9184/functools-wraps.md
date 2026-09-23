@@ -1,6 +1,6 @@
 ---
 title: The name the wrapper ate
-version: 1
+version: 2
 ---
 
 ```python

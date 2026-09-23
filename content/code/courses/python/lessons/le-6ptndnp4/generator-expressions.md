@@ -1,6 +1,6 @@
 ---
 title: The comprehension with parentheses
-version: 1
+version: 2
 ---
 
 ```python

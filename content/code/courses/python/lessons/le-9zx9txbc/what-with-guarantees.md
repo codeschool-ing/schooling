@@ -1,6 +1,6 @@
 ---
 title: `try`/`finally`, with a name
-version: 1
+version: 2
 ---
 
 ```python

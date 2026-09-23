@@ -1,6 +1,6 @@
 ---
 title: Dois laços, e trabalho que cresce com o produto
-version: 1
+version: 2
 ---
 
 ```python
@@ -17,15 +17,15 @@ na amostra levar quatro minutos no arquivo de verdade.
 ## O que se esconde
 
 ```python
-for nome in nomes:            # 100_000
-    if nome in banidos:       # uma LISTA de 5_000
+for name in names:            # 100_000
+    if name in banned:        # a LIST of 5_000
         ...
 ```
 
 Há um laço visível. O segundo está dentro do `in`, porque o `in` numa lista a percorre. Mesma
 aritmética, mesmo custo, e nada no código diz `for` duas vezes.
 
-**A resposta da aula 3 se aplica:** faça `banidos` um conjunto e o percurso interno vira um passo.
+**A resposta da aula 3 se aplica:** faça `banned` um conjunto e o percurso interno vira um passo.
 
 ## Quando os pares são o objetivo
 
@@ -40,13 +40,13 @@ aninhamento tem três níveis.
 O `break` sai de um laço. Para sair dos dois, as respostas comuns são:
 
 ```python
-achado = None
+found = None
 for a in xs:
     for b in ys:
         if ok(a, b):
-            achado = (a, b)
+            found = (a, b)
             break
-    if achado:
+    if found:
         break
 ```
 

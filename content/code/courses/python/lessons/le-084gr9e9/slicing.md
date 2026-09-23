@@ -1,6 +1,6 @@
 ---
 title: `[start:stop:step]`, and the copy it makes
-version: 1
+version: 2
 ---
 
 ```python

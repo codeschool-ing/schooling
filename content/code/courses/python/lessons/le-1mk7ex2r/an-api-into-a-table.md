@@ -1,6 +1,6 @@
 ---
 title: Two pages of JSON into a DataFrame
-version: 1
+version: 2
 ---
 
 ```python

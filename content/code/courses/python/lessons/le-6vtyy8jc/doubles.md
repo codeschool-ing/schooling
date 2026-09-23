@@ -1,6 +1,6 @@
 ---
 title: `monkeypatch`, `mock`, and the test that proves the mock
-version: 1
+version: 2
 ---
 
 ```python

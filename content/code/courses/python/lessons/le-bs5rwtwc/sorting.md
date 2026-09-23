@@ -1,6 +1,6 @@
 ---
 title: `sort`, `sorted`, `key=`, and what it costs
-version: 1
+version: 2
 ---
 
 ```python

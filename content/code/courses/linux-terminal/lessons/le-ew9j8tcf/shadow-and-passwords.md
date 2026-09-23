@@ -1,6 +1,6 @@
 ---
 title: `/etc/shadow`, and what a stored password is
-version: 1
+version: 2
 ---
 
 The account `demo` was made for this section, and its password is the string
@@ -21,7 +21,7 @@ red flag about the system that sent it.
 
 ## Reading the hash field
 
-```
+```localised
 $y$j9T$iladG9xXy9DklFOvrTOFd0$wisSqn5Qt6jQDW3xy9KJLj3qV2CE7IEoUIfRcRg2l.1
  ─┬─ ─┬─ ───────────┬───────── ─────────────────┬──────────────────────
   │   │             │                           └── the hash

@@ -1,6 +1,6 @@
 ---
 title: `raise`, and the message somebody will read
-version: 1
+version: 2
 ---
 
 ```python

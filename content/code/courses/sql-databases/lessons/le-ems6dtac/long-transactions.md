@@ -1,6 +1,6 @@
 ---
 title: What an open transaction costs while it is open
-version: 1
+version: 2
 ---
 
 A transaction is cheap to start and cheap to finish. It is holding one open that costs, and the
@@ -81,7 +81,7 @@ provider that takes thirty seconds to answer has just held your locks for thirty
 
 The shape that works is to do the slow thing outside, and use the database to record intent:
 
-```
+```localised
 BEGIN; INSERT INTO payments (status) VALUES ('pending') RETURNING id; COMMIT;
    → call the payment provider, however long it takes
 BEGIN; UPDATE payments SET status = 'settled' WHERE id = $1; COMMIT;

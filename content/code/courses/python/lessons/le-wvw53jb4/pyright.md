@@ -1,6 +1,6 @@
 ---
 title: The other one, and where they disagree on purpose
-version: 1
+version: 2
 ---
 
 ```sh

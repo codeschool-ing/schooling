@@ -1,6 +1,6 @@
 ---
 title: The interface the language already knows how to call
-version: 1
+version: 2
 ---
 
 Python calls certain methods by name. Writing one plugs your class into syntax that already

@@ -1,6 +1,6 @@
 ---
 title: Four functions, and the types on each side
-version: 1
+version: 2
 ---
 
 ```python

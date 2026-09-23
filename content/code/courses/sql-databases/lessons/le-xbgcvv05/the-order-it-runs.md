@@ -1,6 +1,6 @@
 ---
 title: The order you write it, and the order it runs
-version: 1
+version: 2
 ---
 
 One idea first, because it explains most of the confusing errors you will meet in the next year.

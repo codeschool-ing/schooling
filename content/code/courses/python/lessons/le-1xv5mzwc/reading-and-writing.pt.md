@@ -1,12 +1,12 @@
 ---
 title: Três jeitos de ler, e o que escala
-version: 1
+version: 2
 ---
 
 ```python
-texto = f.read()         # o arquivo inteiro, como uma string
-linhas = f.readlines()   # o arquivo inteiro, como uma lista de strings
-for linha in f:          # uma linha por vez
+text = f.read()         # the whole file, as one string
+lines = f.readlines()   # the whole file, as a list of strings
+for line in f:          # one line at a time
 ```
 
 Os dois primeiros põem o arquivo inteiro na memória. O terceiro não, e essa é a única diferença que
@@ -15,9 +15,9 @@ importa.
 ## Iterar o objeto de arquivo
 
 ```python
-with open(caminho, encoding="utf-8") as f:
-    for linha in f:
-        processar(linha.rstrip("\n"))
+with open(path, encoding="utf-8") as f:
+    for line in f:
+        process(line.rstrip("\n"))
 ```
 
 Um arquivo de quatro gigabytes custa uma linha de memória. `f.read()` no mesmo arquivo custa quatro
@@ -30,9 +30,9 @@ e de vez em quando esconde uma coluna de strings vazias.
 ## Gravar
 
 ```python
-with open(caminho, "w", encoding="utf-8") as f:
-    f.write("nome,cidade\n")
-    f.writelines(linhas)      # nenhuma quebra de linha é acrescentada
+with open(path, "w", encoding="utf-8") as f:
+    f.write("name,city\n")
+    f.writelines(lines)      # no newlines are added
 ```
 
 O `write` recebe uma string e não acrescenta nada — sem quebra de linha, sem separador. O
@@ -45,12 +45,12 @@ um arquivo de texto.
 ## Ler parte dele
 
 ```python
-f.readline()        # uma linha
-f.read(1024)        # no máximo 1024 caracteres
+f.readline()        # one line
+f.read(1024)        # at most 1024 characters
 ```
 
 Útil para um cabeçalho, uma espiada na primeira linha, ou um formato que não é por linhas. **Um
-arquivo tem uma posição**, e tudo acima a move — que é por que um `for linha in f:` depois de um
+arquivo tem uma posição**, e tudo acima a move — que é por que um `for line in f:` depois de um
 `f.read()` dá nada, sem erro nenhum.
 
 `f.seek(0)` volta ao começo, e precisar dele duas vezes em geral é sinal de que você queria o dado

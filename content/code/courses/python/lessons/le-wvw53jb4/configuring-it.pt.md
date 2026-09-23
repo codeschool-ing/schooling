@@ -1,6 +1,6 @@
 ---
 title: `pyproject.toml`, e a exceção por módulo
-version: 1
+version: 2
 ---
 
 ```toml
@@ -11,7 +11,7 @@ strict = true
 ```
 
 ```sh
-mypy        # sem argumento: lê a configuração e verifica o que ela nomeia
+mypy        # no arguments: it reads the config and checks what it names
 ```
 
 Ajustes num arquivo em vez de numa linha de comando, para que o seu editor, o seu terminal e a CI
@@ -44,7 +44,7 @@ módulo, e `module` recebe uma lista, então um bloco pode nomear vários.
 
 ```toml
 [[tool.mypy.overrides]]
-module = ["algumalibvelha.*"]
+module = ["someoldlib.*"]
 ignore_missing_imports = true
 ```
 

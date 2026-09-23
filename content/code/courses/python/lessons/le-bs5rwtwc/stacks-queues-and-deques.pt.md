@@ -1,12 +1,12 @@
 ---
 title: Uma lista é uma boa pilha e uma fila ruim
-version: 1
+version: 2
 ---
 
 ```python
-pilha = []
-pilha.append(x)      # empilhar    O(1)
-pilha.pop()          # desempilhar O(1)
+stack = []
+stack.append(x)      # push   O(1)
+stack.pop()          # pop    O(1)
 ```
 
 **Uma lista é uma pilha perfeitamente boa.** As duas pontas da operação ficam no fim da lista,
@@ -20,15 +20,15 @@ uma.
 ## E uma fila ruim
 
 ```python
-fila = []
-fila.append(x)      # enfileirar    O(1)
-fila.pop(0)         # desenfileirar O(n)  ← tudo desloca
+queue = []
+queue.append(x)      # enqueue   O(1)
+queue.pop(0)         # dequeue   O(n)  ← everything shifts
 ```
 
 ```sh
-drenando 100.000 itens pela frente
-  list.pop(0):        0,7216s
-  deque.popleft():    0,0048s
+draining 100,000 items from the front
+  list.pop(0):        0.7216s
+  deque.popleft():    0.0048s
 ```
 
 **Cento e cinquenta vezes**, e piora com o tamanho: cada `pop(0)` move a lista restante inteira
@@ -39,25 +39,25 @@ uma posição acima, então a drenagem é `O(n²)` no total.
 ```python
 from collections import deque
 
-f = deque()
-f.append(x)          # O(1)
-f.popleft()          # O(1)
-f.appendleft(x)      # O(1)
-f.pop()              # O(1)
+q = deque()
+q.append(x)          # O(1)
+q.popleft()          # O(1)
+q.appendleft(x)      # O(1)
+q.pop()              # O(1)
 ```
 
 Uma fila de duas pontas: tempo constante nas **duas**, porque ela é uma sequência encadeada de
 blocos em vez de um trecho contíguo.
 
 ```sh
-list.insert(0, x):    33.428 ns
+list.insert(0, x):    33,428 ns
 deque.appendleft(x):      29 ns
 ```
 
 ## O que você abre mão
 
 ```python
-f[len(f) // 2]       # O(n) num deque, O(1) numa lista
+q[len(q) // 2]       # O(n) on a deque, O(1) on a list
 ```
 
 Indexar o meio. Um deque precisa caminhar até lá, então é a estrutura errada para qualquer coisa
@@ -67,8 +67,8 @@ nas pontas e uma lista quando trabalha por posição.**
 ## `maxlen`, que é um presente pequeno
 
 ```python
-recentes = deque(maxlen=100)
-recentes.append(linha)       # quando cheio, o mais velho cai pela outra ponta
+recent = deque(maxlen=100)
+recent.append(line)          # when full, the oldest falls off the other end
 ```
 
 Uma janela de tamanho fixo num argumento — as últimas cem linhas de log, as últimas sessenta
@@ -78,8 +78,8 @@ leituras — sem checagem de comprimento em lugar nenhum.
 
 ```python
 import heapq
-heapq.heappush(h, (prioridade, item))   # O(log n)
-heapq.heappop(h)                        # O(log n), o menor primeiro
+heapq.heappush(h, (priority, item))   # O(log n)
+heapq.heappop(h)                      # O(log n), smallest first
 ```
 
 Uma fila de prioridade. O `heapq` trabalha sobre uma lista comum e a mantém em ordem de heap; o

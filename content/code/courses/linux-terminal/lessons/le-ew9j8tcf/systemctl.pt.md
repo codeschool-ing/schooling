@@ -1,6 +1,6 @@
 ---
 title: Sete verbos, e `enable` não é `start`
-version: 1
+version: 2
 ---
 
 O `systemctl` é a fachada de todo o systemd, e você precisa de sete verbos dele. Eles se dividem em
@@ -15,9 +15,9 @@ dois grupos, e a divisão é a coisa mais importante desta aula.
 | `status` | | `is-enabled` |
 
 ```
-sudo systemctl start nginx        # rode, neste segundo
-sudo systemctl enable nginx       # rode a cada boot daqui em diante
-sudo systemctl enable --now nginx # os dois
+sudo systemctl start nginx        # run it, this second
+sudo systemctl enable nginx       # run it every boot from now on
+sudo systemctl enable --now nginx # both
 ```
 
 **O `enable` não inicia nada. O `start` não sobrevive a um reboot.** Cada um de nós já configurou um
@@ -87,10 +87,10 @@ isso que se testa com um segundo terminal que você não fechou.
 ## `status` e a família `is-*`
 
 ```
-systemctl status nginx        # a resposta para humano — seção 79
+systemctl status nginx        # the human answer — section 79
 systemctl is-active nginx     # active / inactive / failed
 systemctl is-enabled nginx    # enabled / disabled / static / masked
-systemctl is-failed nginx     # para script
+systemctl is-failed nginx     # for a script
 ```
 
 A família `is-*` imprime uma palavra e define um código de saída, o que faz dela a escolha para
@@ -110,10 +110,10 @@ frequentemente um serviço mascarado, e o `is-enabled` é como se descobre isso 
 ## Ver o que existe
 
 ```
-systemctl list-units --type=service              # o que está carregado e rodando
-systemctl list-units --type=service --all        # incluindo os inativos
-systemctl --failed                               # a lista curta que importa
-systemctl list-unit-files --type=service         # todo arquivo de unit, habilitado ou não
+systemctl list-units --type=service              # what is loaded and running
+systemctl list-units --type=service --all        # including the inactive
+systemctl --failed                               # the short list that matters
+systemctl list-unit-files --type=service         # every unit file, enabled or not
 ```
 
 **`systemctl --failed` é o primeiro comando a rodar numa máquina que alguém diz estar quebrada.**
@@ -142,8 +142,8 @@ Então `systemctl start backup.timer` precisa do sufixo, e `systemctl start ngin
 ## Mais dois que você vai querer
 
 ```
-sudo systemctl daemon-reload      # depois de editar um arquivo de unit na mão
-systemctl cat nginx               # imprime o arquivo de unit, e as sobreposições
+sudo systemctl daemon-reload      # after editing a unit file by hand
+systemctl cat nginx               # print the unit file, and any overrides
 ```
 
 **O `daemon-reload` é o que as pessoas esquecem.** Edite um arquivo `.service` e o systemd segue com

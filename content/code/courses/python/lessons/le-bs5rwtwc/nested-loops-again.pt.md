@@ -1,12 +1,12 @@
 ---
 title: O laço aninhado da aula 4, contado
-version: 1
+version: 2
 ---
 
 ```python
-for pedido in pedidos:            # n
-    for cliente in clientes:      # × m
-        if cliente["id"] == pedido["cliente_id"]:
+for order in orders:              # n
+    for customer in customers:    # × m
+        if customer["id"] == order["customer_id"]:
             ...
 ```
 
@@ -19,8 +19,8 @@ que em geral não está.
 ## Os três disfarces
 
 ```python
-for pedido in pedidos:
-    cliente = achar_cliente(pedido.cliente_id)   # um laço, um quadro abaixo
+for order in orders:
+    customer = find_customer(order.customer_id)      # a loop, one frame down
 ```
 
 Uma função auxiliar. O laço continua lá e o ponto de chamada parece uma operação. Era exatamente
@@ -28,14 +28,14 @@ isso o `find_customer` da demonstração, e dividir a função é o que fez o pr
 ele.
 
 ```python
-for pedido in pedidos:
-    if pedido.cliente_id in lista_bloqueada:     # um laço, dentro de um operador
+for order in orders:
+    if order.customer_id in blocked_list:            # a loop, inside an operator
 ```
 
 `in` contra uma lista. Duas seções atrás.
 
 ```python
-casados = [(c, p) for p in pedidos for c in clientes if c.id == p.cliente_id]
+matched = [(c, o) for o in orders for c in customers if c.id == o.customer_id]
 ```
 
 Uma compreensão. Mais curta, e exatamente os mesmos dois laços.
@@ -46,13 +46,13 @@ Uma compreensão. Mais curta, e exatamente os mesmos dois laços.
 esta que se aplica na maior parte das vezes.
 
 ```python
-por_id = {c["id"]: c for c in clientes}
+by_id = {c["id"]: c for c in customers}
 ```
 
 **Um set**, quando o laço de dentro só pergunta se algo está presente.
 
 ```python
-bloqueados = set(ids_bloqueados)
+blocked = set(blocked_ids)
 ```
 
 **Uma ordenação e uma caminhada só**, quando o casamento é por faixa e não por chave exata —
@@ -62,8 +62,8 @@ que um banco chama de merge join, e é a resposta quando uma busca por hash não
 ## Quando deixar em paz
 
 ```python
-for linha in linhas:             # 40 linhas
-    for coluna in colunas:       # 12 colunas
+for row in rows:                 # 40 rows
+    for column in columns:       # 12 columns
 ```
 
 Quatrocentas e oitenta operações. Transformar isso num dicionário custa a atenção de quem lê e não

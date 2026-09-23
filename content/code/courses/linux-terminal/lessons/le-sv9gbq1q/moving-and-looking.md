@@ -1,6 +1,6 @@
 ---
 title: Moving and looking: `pwd`, `cd`, `ls`
-version: 1
+version: 2
 ---
 
 Three commands, and you will type them more than everything else in this course put together.

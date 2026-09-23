@@ -1,15 +1,15 @@
 ---
 title: `print`, e o `input` que sempre devolve uma string
-version: 1
+version: 2
 ---
 
 O `print` recebe quantas coisas você der, põe um espaço entre elas e uma quebra de linha no fim.
 
 ```python
-print("Olá,", "Ada")
+print("Hello,", "Ada")
 ```
 ```
-Olá, Ada
+Hello, Ada
 ```
 
 Não é preciso converter nada. `print(2 + 2)` imprime `4`; o `print` transforma em texto o que quer
@@ -30,26 +30,26 @@ print("2026", "09", "21", sep="-")
 laço:
 
 ```python
-print("trabalhando", end="")
+print("working", end="")
 print("...", end="")
-print(" pronto")
+print(" done")
 ```
 ```
-trabalhando... pronto
+working... done
 ```
 
 ## O `input` lê uma linha, e ela é sempre uma string
 
 ```python
-idade = input("Quantos anos você tem? ")
+age = input("How old are you? ")
 ```
 
 O texto que você passa é o prompt. O que volta é **sempre uma `str`**, mesmo quando a pessoa digitou
 algarismos — que é por que isto não faz o que parece:
 
 ```python
-idade = input("Quantos anos você tem? ")
-print(idade + 1)
+age = input("How old are you? ")
+print(age + 1)
 ```
 ```
 TypeError: can only concatenate str (not "int") to str
@@ -59,7 +59,7 @@ Leia o traceback: `str` e `int` não são coisas que o `+` saiba juntar. O conse
 converter onde dê para ver:
 
 ```python
-idade = int(input("Quantos anos você tem? "))
+age = int(input("How old are you? "))
 ```
 
 **E o `int()` recusa o que não é número**, com um `ValueError` nomeando o que recebeu. Isso é matéria

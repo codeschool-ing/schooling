@@ -1,6 +1,6 @@
 ---
 title: Seven verbs, and `enable` is not `start`
-version: 1
+version: 2
 ---
 
 `systemctl` is the front end to all of systemd, and you need seven of its verbs. They divide into

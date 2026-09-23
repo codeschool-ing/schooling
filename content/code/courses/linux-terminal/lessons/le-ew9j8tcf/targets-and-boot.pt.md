@@ -1,6 +1,6 @@
 ---
 title: Targets, e a máquina que não sobe
-version: 1
+version: 2
 ---
 
 Um **target** é um grupo nomeado de units. Nada mais: ele não roda programa nenhum e não tem
@@ -34,10 +34,10 @@ conseguia expressar *este conjunto específico*. Targets são units com dependê
 compõem, e uma máquina pode ter quantos alguém definir.
 
 ```
-systemctl get-default                       # em que ele dá boot
-sudo systemctl set-default multi-user       # boot sem área de trabalho daqui em diante
-systemctl isolate rescue.target             # vá para lá agora
-systemctl list-units --type=target          # o que está ativo
+systemctl get-default                       # what it boots into
+sudo systemctl set-default multi-user       # boot without a desktop from now on
+systemctl isolate rescue.target             # go there now
+systemctl list-units --type=target          # what is active
 ```
 
 **O `set-default` é um link simbólico**, exatamente como na seção 09: o
@@ -71,9 +71,9 @@ A seção 08 disse que o systemd inicia coisas em paralelo resolvendo dependênc
 lista numerada. Dá para observar o resultado:
 
 ```
-systemd-analyze                     # quanto o boot levou, separado em kernel e espaço de usuário
-systemd-analyze blame               # cada unit, da mais lenta para a mais rápida
-systemd-analyze critical-chain      # a cadeia que de fato determinou o total
+systemd-analyze                     # how long the boot took, split into kernel and userspace
+systemd-analyze blame               # every unit, slowest first
+systemd-analyze critical-chain      # the chain that actually determined the total
 ```
 
 **`blame` e `critical-chain` respondem perguntas diferentes, e as pessoas pegam a errada.** O
@@ -103,9 +103,9 @@ falha, o que está certo para um disco de dados e errado para a raiz.
 Assim que você chegar a um prompt, seja qual for:
 
 ```
-journalctl -b -p err        # o que falhou neste boot
-systemctl --failed          # e o que continua falhando
-systemctl list-jobs         # o que está travado esperando, agora
+journalctl -b -p err        # what failed this boot
+systemctl --failed          # and what is still failing
+systemctl list-jobs         # what is stuck waiting, right now
 ```
 
 O `list-jobs` é o de uma travada: ele imprime as units que o systemd está esperando neste momento,

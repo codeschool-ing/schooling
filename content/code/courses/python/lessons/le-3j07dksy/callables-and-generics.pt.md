@@ -1,13 +1,13 @@
 ---
 title: Uma função como tipo, e receber o mais largo que você aceita
-version: 1
+version: 2
 ---
 
 ```python
 from collections.abc import Callable
 
-def aplicar(itens: list[str], fn: Callable[[str], int]) -> list[int]:
-    return [fn(x) for x in itens]
+def apply(items: list[str], fn: Callable[[str], int]) -> list[int]:
+    return [fn(x) for x in items]
 ```
 
 `Callable[[tipos dos argumentos], tipo de retorno]`. Os colchetes de dentro são a lista de
@@ -17,8 +17,8 @@ int" para quando você não se importa.
 ## Receba o tipo mais largo que você aceita
 
 ```python
-def total(linhas: list[dict]) -> int: ...       # uma lista, e só uma lista
-def total(linhas: Iterable[dict]) -> int: ...   # uma lista, uma tupla, um conjunto, um gerador
+def total(rows: list[dict]) -> int: ...       # a list, and only a list
+def total(rows: Iterable[dict]) -> int: ...   # a list, a tuple, a set, a generator
 ```
 
 Se o corpo só itera, diga `Iterable`. Um chamador com um gerador então funciona — e a aula 11
@@ -37,8 +37,8 @@ gastou uma aula inteira sobre por que o chamador pode ter um.
 ## E devolva o tipo mais específico que você promete
 
 ```python
-def nomes(linhas: Iterable[dict]) -> list[str]:      # sim
-def nomes(linhas: Iterable[dict]) -> Iterable[str]:  # por quê?
+def names(rows: Iterable[dict]) -> list[str]:      # yes
+def names(rows: Iterable[dict]) -> Iterable[str]:  # why?
 ```
 
 Largo na entrada, estreito na saída. Quem chama então sabe que dá para indexar o resultado, e você
@@ -55,7 +55,7 @@ A distinção da aula 11, nas anotações: uma função geradora devolve um `Ite
 para percorrer de novo é um `Iterable[X]`.
 
 ```python
-def linhas(caminho: Path) -> Iterator[str]:
-    with open(caminho, encoding="utf-8") as f:
+def rows(path: Path) -> Iterator[str]:
+    with open(path, encoding="utf-8") as f:
         yield from f
 ```

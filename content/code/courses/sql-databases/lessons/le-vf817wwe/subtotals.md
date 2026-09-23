@@ -1,6 +1,6 @@
 ---
 title: Subtotals and grand totals in one pass
-version: 1
+version: 2
 ---
 
 A report wants revenue per region per month, a line per region, and a grand total at the bottom.

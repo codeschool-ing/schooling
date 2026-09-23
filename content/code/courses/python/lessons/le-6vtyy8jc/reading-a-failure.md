@@ -1,6 +1,6 @@
 ---
 title: The assertion is rewritten, and both values are printed
-version: 1
+version: 2
 ---
 
 ```python

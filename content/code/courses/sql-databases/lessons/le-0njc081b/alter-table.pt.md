@@ -1,6 +1,6 @@
 ---
 title: ALTER TABLE, e o que ele custa
-version: 1
+version: 2
 ---
 
 Criar uma tabela é fácil porque nada depende dela ainda. Mudar uma é o trabalho.
@@ -82,8 +82,8 @@ essa a linha: `DEFAULT 'draft'` é instantâneo, `DEFAULT gen_random_uuid()` é 
 ## Derrubar, e o que vai junto
 
 ```sql
-DROP TABLE invoices;                    -- recusado se algo a referencia
-DROP TABLE invoices CASCADE;            -- derruba as restrições que referenciam também
+DROP TABLE invoices;                    -- refused if anything references it
+DROP TABLE invoices CASCADE;            -- drops the referencing constraints too
 ```
 
 `CASCADE` aqui **não** apaga linhas em outras tabelas. Ele derruba as *restrições* que apontam para

@@ -1,12 +1,12 @@
 ---
 title: O conserto mais comum que existe
-version: 1
+version: 2
 ---
 
 ```python
-bloqueados = carregar_bloqueados()   # uma lista de 3.000 ids
-for pedido in pedidos:               # 20.000 pedidos
-    if pedido.cliente_id in bloqueados:
+blocked = load_blocked_ids()      # a list of 3,000 ids
+for order in orders:              # 20,000 orders
+    if order.customer_id in blocked:
         continue
     ...
 ```
@@ -15,7 +15,7 @@ for pedido in pedidos:               # 20.000 pedidos
 uma checagem que se lê como uma operação.
 
 ```python
-bloqueados = set(carregar_bloqueados())
+blocked = set(load_blocked_ids())
 ```
 
 Uma palavra, uma linha, e o laço agora são vinte mil buscas por hash.
@@ -43,10 +43,10 @@ Procure um `in` contra uma coleção **dentro de um laço**. É esse o padrão i
 coleção é construída uma vez e nunca mudada:
 
 ```python
-codigos_validos = ["BRL", "USD", "EUR", ...]   # construída uma vez
+valid_codes = ["BRL", "USD", "EUR", ...]      # built once
 ...
-for linha in linhas:
-    if linha["codigo"] in codigos_validos:     # buscada n vezes
+for row in rows:
+    if row["code"] in valid_codes:            # searched n times
 ```
 
 Se uma coleção só é perguntada "isto está em você", ela deveria ser um set. Se é perguntada "qual
@@ -55,7 +55,7 @@ Se uma coleção só é perguntada "isto está em você", ela deveria ser um set
 ## Quando não importa
 
 ```python
-if metodo in ("GET", "POST", "HEAD"):
+if method in ("GET", "POST", "HEAD"):
 ```
 
 Três itens, e a tupla ganha em memória e em velocidade porque construir um set custa mais que
@@ -68,7 +68,7 @@ ser grandes antes de isso importar.
 ## E o que não é um conserto
 
 ```python
-if x in set(itens):          # o set é construído toda vez
+if x in set(items):          # the set is built every time
 ```
 
 Construir um set é `O(n)`, então fazê-lo dentro do laço custa exatamente o que a caminhada

@@ -1,6 +1,6 @@
 ---
 title: Operators and motions, which is a grammar
-version: 1
+version: 2
 ---
 
 This is the section that explains why people who use vim will not stop using it.
@@ -29,7 +29,7 @@ a word. The `30` is gone and the cursor is at column 8.
 
 ## The grammar
 
-```
+```localised
 [count] operator [count] motion
 ```
 

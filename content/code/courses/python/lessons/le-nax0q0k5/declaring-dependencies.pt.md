@@ -1,6 +1,6 @@
 ---
 title: `dependencies`, grupos, e `requires-python`
-version: 1
+version: 2
 ---
 
 ```toml
@@ -31,8 +31,8 @@ grupo **não** são dependências do pacote: são o de que se precisa para traba
 projeto em produção instala as `dependencies` e nenhum dos grupos.
 
 ```sh
-uv sync            # dependencies + o grupo dev
-uv sync --no-dev   # só as dependencies
+uv sync            # dependencies + the dev group
+uv sync --no-dev   # dependencies only
 ```
 
 Pode haver mais de um grupo — `docs`, `lint`, `typing` — e um grupo pode incluir outro.

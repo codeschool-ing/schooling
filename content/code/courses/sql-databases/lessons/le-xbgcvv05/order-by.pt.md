@@ -1,6 +1,6 @@
 ---
 title: ORDER BY, e o arranjo que ninguém te prometeu
-version: 1
+version: 2
 ---
 
 Linhas não têm ordem. A aula 1 disse isso como propriedade de uma tabela; aqui está o que significa
@@ -21,8 +21,8 @@ SELECT name, price FROM products ORDER BY price;
 
 ```sql
 ORDER BY price DESC
-ORDER BY category, price DESC        -- categoria crescente, depois preço decrescente dentro dela
-ORDER BY 2                           -- pela segunda coluna da lista do SELECT
+ORDER BY category, price DESC        -- category ascending, then price descending within it
+ORDER BY 2                           -- by the second column of the SELECT list
 ```
 
 `ASC` é o padrão e escrevê-lo é opcional. **Cada chave tem a própria direção** — `ORDER BY a, b DESC`
@@ -35,9 +35,9 @@ este curso não para de recusar.
 ## Para onde vão os nulos
 
 ```sql
-ORDER BY price;                       -- nulos por último, no PostgreSQL, crescente
-ORDER BY price DESC;                  -- nulos primeiro
-ORDER BY price NULLS FIRST;           -- diga e pare de adivinhar
+ORDER BY price;                       -- nulls last, in PostgreSQL, ascending
+ORDER BY price DESC;                  -- nulls first
+ORDER BY price NULLS FIRST;           -- say it and stop guessing
 ```
 
 O PostgreSQL trata nulo como maior que tudo, então ele cai por último no crescente e primeiro no

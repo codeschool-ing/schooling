@@ -1,6 +1,6 @@
 ---
 title: Um módulo é um arquivo, e um import é uma busca
-version: 1
+version: 2
 ---
 
 ```python
@@ -16,8 +16,8 @@ math.sqrt(16)
 ```python
 import math                      # math.sqrt
 from math import sqrt            # sqrt
-from math import sqrt, pi        # os dois nomes
-import numpy as np               # um apelido
+from math import sqrt, pi        # both names
+import numpy as np               # an alias
 ```
 
 **`import modulo` é o padrão**, porque `math.sqrt(x)` diz de onde o `sqrt` veio e `sqrt(x)` não
@@ -31,7 +31,7 @@ novo.**
 ## O `import *`
 
 ```python
-from math import *       # não
+from math import *       # no
 ```
 
 Todo nome público, no seu arquivo, sem nada dizendo isso. Duas coisas acontecem então e nenhuma é
@@ -44,8 +44,8 @@ O único lugar em que ele se defende é uma sessão interativa, onde não existe
 
 ```python
 # config.py
-print("carregando config")
-AJUSTES = ler_ajustes()
+print("loading config")
+SETTINGS = read_settings()
 ```
 
 O primeiro `import config` roda o arquivo. Todo import posterior — de qualquer outro módulo —
@@ -55,7 +55,7 @@ um módulo é um bom lugar para uma constante e um mau lugar para trabalho com e
 ## Importar não copia
 
 ```python
-from config import AJUSTES      # o mesmo dicionário, com outro nome
+from config import SETTINGS      # the same dictionary, by another name
 ```
 
 O `b = a` da aula 3, atravessando a fronteira de um arquivo. Mudá-lo por um nome muda para todo

@@ -1,6 +1,6 @@
 ---
 title: Nomeie suas restrições, antes que o banco as nomeie
-version: 1
+version: 2
 ---
 
 Toda restrição tem um nome. Se você não der um, o PostgreSQL inventa, e o nome inventado é a razão de
@@ -114,7 +114,7 @@ não pode ser aplicado depois com custo baixo.
 
 ```sql
 COMMENT ON CONSTRAINT invoices_total_sane ON invoices IS
-    'Uma guarda contra virgula deslocada, nao um limite de negocio.';
+    'A guard against a misplaced decimal point, not a business limit.';
 ```
 
 Uma restrição diz o que é recusado. Um comentário diz por quê, que é o que alguém precisa quando

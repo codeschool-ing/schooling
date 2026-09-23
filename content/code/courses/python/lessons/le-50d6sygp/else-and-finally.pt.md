@@ -1,17 +1,17 @@
 ---
 title: Duas cláusulas, e um trabalho cada
-version: 1
+version: 2
 ---
 
 ```python
 try:
-    f = open(caminho)
+    f = open(path)
 except FileNotFoundError:
-    print(f"não existe este arquivo: {caminho}")
+    print(f"no such file: {path}")
 else:
-    processar(f)        # só se o open deu certo
+    process(f)          # only if the open succeeded
 finally:
-    print("pronto")     # de um jeito ou de outro
+    print("done")       # either way
 ```
 
 ## O `else`
@@ -25,14 +25,14 @@ nunca foi para ser protegido:
 
 ```python
 try:
-    valor = int(bruto)
+    value = int(raw)
 except ValueError:
     ...
 else:
-    salvar(valor)       # um KeyError dentro do salvar NÃO é capturado acima
+    save(value)         # a KeyError in save() is NOT caught above
 ```
 
-Escrito dentro do `try`, o `salvar(valor)` fica na rede — e no dia em que ele levantar a mesma
+Escrito dentro do `try`, o `save(value)` fica na rede — e no dia em que ele levantar a mesma
 classe, o tratamento responde pela falha errada. **O `else` é como o `try` fica com uma linha.**
 
 ## O `finally`
@@ -42,11 +42,11 @@ e até um `return`. Ele é para a limpeza que precisa acontecer de qualquer jeit
 arquivo, soltar uma trava, apagar um temporário.
 
 ```python
-f = open(caminho)
+f = open(path)
 try:
-    processar(f)
+    process(f)
 finally:
-    f.close()           # acontece mesmo se o processar levantar erro
+    f.close()           # happens even if process() raises
 ```
 
 **Um `try`/`finally` sem `except` é uma coisa perfeitamente comum de escrever.** Ele diz: eu não
@@ -55,8 +55,8 @@ estou tratando isto, e ainda assim estou arrumando.
 ## E o `with` escreve isso por você
 
 ```python
-with open(caminho) as f:
-    processar(f)
+with open(path) as f:
+    process(f)
 ```
 
 Essa é a mesma garantia numa linha — o assunto da aula 9. Qualquer coisa com um `close`, uma trava,
@@ -67,9 +67,9 @@ esquecia o `finally`.
 
 ```python
 try:
-    return calcular()
+    return compute()
 finally:
-    return reserva()         # este return VENCE
+    return fallback()        # this return WINS
 ```
 
 Um `return` no `finally` substitui o que estava a caminho da saída, exceção inclusive. É válido, é

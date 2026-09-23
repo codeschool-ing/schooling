@@ -1,14 +1,14 @@
 ---
 title: Anchors, and the two functions that are not the same
-version: 1
+version: 2
 ---
 
-```
-^      the start of the string (or of a line, with re.MULTILINE)
-$      the end of the string (or of a line)
-\b     a word boundary
-\A \Z  the start and end of the STRING, whatever MULTILINE says
-```
+| anchor | matches |
+|---|---|
+| `^` | the start of the string (or of a line, with `re.MULTILINE`) |
+| `$` | the end of the string (or of a line) |
+| `\b` | a word boundary |
+| `\A` `\Z` | the start and end of the STRING, whatever `MULTILINE` says |
 
 ## `\b`
 

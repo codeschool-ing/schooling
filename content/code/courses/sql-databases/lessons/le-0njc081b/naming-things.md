@@ -1,6 +1,6 @@
 ---
 title: Naming your constraints, before the database names them
-version: 1
+version: 2
 ---
 
 Every constraint has a name. If you do not give it one, PostgreSQL invents one, and the invented

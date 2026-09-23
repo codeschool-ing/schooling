@@ -1,6 +1,6 @@
 ---
 title: The key that was there yesterday
-version: 1
+version: 2
 ---
 
 The documentation said every record has an `address` with a `city` in it. Then one of them does

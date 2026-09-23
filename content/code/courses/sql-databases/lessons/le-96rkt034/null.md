@@ -1,6 +1,6 @@
 ---
 title: NULL is not a value, and this is where people get hurt
-version: 1
+version: 2
 ---
 
 Every column that is not declared `NOT NULL` can hold `NULL`, and `NULL` behaves unlike anything

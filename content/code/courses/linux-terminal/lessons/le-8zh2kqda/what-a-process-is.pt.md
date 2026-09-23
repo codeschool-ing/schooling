@@ -1,6 +1,6 @@
 ---
 title: Um programa é um arquivo; um processo é um arquivo acontecendo
-version: 1
+version: 2
 ---
 
 `/usr/bin/sleep` é um arquivo. Ele fica num disco, tem tamanho e dono, e não faz nada — porque
@@ -85,7 +85,7 @@ endereços. Elas não são processos separados: compartilham memória, arquivos 
 as esconde por padrão.
 
 ```
-ps -eLf          # uma linha por thread
+ps -eLf          # one line per thread
 ```
 
 Java, navegadores e bancos de dados têm muitas. A contagem `Tasks:` do bloco de status da aula 5 e

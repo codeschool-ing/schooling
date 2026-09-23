@@ -1,6 +1,6 @@
 ---
 title: O que tem dentro de uma, e por que ela é comitada
-version: 1
+version: 2
 ---
 
 ```toml
@@ -61,8 +61,8 @@ máquina — a máquina em que o defeito não se reproduz.
 ## Atualizar
 
 ```sh
-uv lock --upgrade-package requests   # um pacote, todo o resto segurado
-uv lock --upgrade                    # tudo, dentro das faixas declaradas
+uv lock --upgrade-package requests   # one package, everything else held
+uv lock --upgrade                    # everything, within the declared ranges
 ```
 
 Atualizar uma coisa é um diff pequeno e revisável. Atualizar tudo é um diff que ninguém lê, e
@@ -71,8 +71,8 @@ pertence a um pull request próprio com os testes rodados contra ele.
 ## Na CI
 
 ```sh
-uv lock --check        # a trava está coerente com o pyproject.toml?
-uv sync --frozen       # instale da trava, não resolva
+uv lock --check        # is the lock consistent with pyproject.toml?
+uv sync --frozen       # install from the lock, do not resolve
 ```
 
 ```sh

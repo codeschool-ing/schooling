@@ -1,6 +1,6 @@
 ---
 title: Um instantâneo não é uma cópia, e esta é a distinção que mais importa
-version: 1
+version: 2
 ---
 
 A aula 1 pôs `unit_price` na linha do pedido enquanto `price` ficava no produto, e prometeu que o
@@ -42,10 +42,10 @@ diferente que por acaso foi igual ao preço num dia.
 
 Diga-os lado a lado e a diferença fica óbvia:
 
-```
-products.price           quanto isto custa
-order_lines.unit_price   quanto isto custou, no dia em que foi comprado
-```
+| coluna | o que diz |
+|---|---|
+| `products.price` | quanto isto custa |
+| `order_lines.unit_price` | quanto isto custou, no dia em que foi comprado |
 
 São fatos independentes sobre coisas diferentes. Um é sobre um produto, agora. O outro é sobre uma
 venda, então. Nada no modelo relacional diz que dois fatos independentes não podem ter o mesmo

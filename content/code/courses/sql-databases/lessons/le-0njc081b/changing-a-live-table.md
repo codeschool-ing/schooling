@@ -1,6 +1,6 @@
 ---
 title: Changing a table nobody can stop using
-version: 1
+version: 2
 ---
 
 This is the section that separates somebody who knows SQL from somebody who can be trusted with a

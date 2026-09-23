@@ -1,6 +1,6 @@
 ---
 title: `ssh`, because every machine is somewhere else
-version: 1
+version: 2
 ---
 
 This is one section in a lesson whose title does not mention it, and it is here because **every

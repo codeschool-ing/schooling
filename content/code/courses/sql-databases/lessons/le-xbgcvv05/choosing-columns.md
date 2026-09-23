@@ -1,6 +1,6 @@
 ---
 title: Choosing columns, and the habit to break early
-version: 1
+version: 2
 ---
 
 ```sql

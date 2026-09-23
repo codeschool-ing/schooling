@@ -1,6 +1,6 @@
 ---
 title: Three ways to read, and the one that scales
-version: 1
+version: 2
 ---
 
 ```python

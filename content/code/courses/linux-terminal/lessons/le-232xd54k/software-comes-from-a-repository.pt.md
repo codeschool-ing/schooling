@@ -1,6 +1,6 @@
 ---
 title: Software que você não baixa
-version: 1
+version: 2
 ---
 
 No Windows e no macOS, instalar algo é achar o site, baixar um arquivo, executar, e confiar em quem
@@ -57,7 +57,7 @@ Tudo acima é verdade **dentro do repositório**. No instante em que você sai d
 de terceiros, um `.deb` de um site, ou a instrução que você vai encontrar com certeza:
 
 ```
-curl -sSL https://exemplo.com/install.sh | sh
+curl -sSL https://example.com/install.sh | sh
 ```
 
 …você está de volta ao modelo do Windows, e pior: essa linha baixa um script e o executa na hora,

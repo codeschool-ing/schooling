@@ -1,6 +1,6 @@
 ---
 title: Mais de uma coluna, e por que a ordem decide tudo
-version: 1
+version: 2
 ---
 
 ```sql
@@ -27,10 +27,10 @@ cliente. Então toda linha do cliente 2 fica junta, e as datas estão em ordem d
 `(customer_id, placed_at)` cobre três destes e não o quarto:
 
 ```sql
-WHERE customer_id = 2                              -- sim
-WHERE customer_id = 2 AND placed_at > DATE '…'     -- sim, e é para isso que ele existe
-WHERE customer_id = 2 ORDER BY placed_at           -- sim, e sem precisar ordenar
-WHERE placed_at > DATE '…'                         -- não
+WHERE customer_id = 2                              -- yes
+WHERE customer_id = 2 AND placed_at > DATE '…'     -- yes, and this is what it is for
+WHERE customer_id = 2 ORDER BY placed_at           -- yes, and no sorting is needed
+WHERE placed_at > DATE '…'                         -- no
 ```
 
 Duas consequências sobre as quais vale agir:

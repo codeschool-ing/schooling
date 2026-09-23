@@ -1,6 +1,6 @@
 ---
 title: The indexes you already have, and the one you are missing
-version: 1
+version: 2
 ---
 
 Some of your indexes were never created by anybody. Declare a key and you get one:

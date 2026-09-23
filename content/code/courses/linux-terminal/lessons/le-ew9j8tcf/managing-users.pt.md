@@ -1,6 +1,6 @@
 ---
 title: Criar, alterar e remover uma conta
-version: 1
+version: 2
 ---
 
 Existem dois comandos para criar um usuário e eles não são a mesma ferramenta.
@@ -140,10 +140,10 @@ de quem saiu passam a pertencer a quem chegou, em silêncio.
 ## Grupos, rapidamente
 
 ```
-groupadd deploy              # criar
-groupdel deploy              # remover
-gpasswd -a bruno deploy      # acrescentar alguém
-gpasswd -d bruno deploy      # remover alguém
+groupadd deploy              # make one
+groupdel deploy              # remove it
+gpasswd -a bruno deploy      # add somebody
+gpasswd -d bruno deploy      # remove somebody
 ```
 
 O `gpasswd -a` é o `usermod -aG` sem o jeito de errar. E o aviso da seção 08 da aula 4 vale para

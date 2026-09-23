@@ -1,6 +1,6 @@
 ---
 title: More than two tables, and a table joined to itself
-version: 1
+version: 2
 ---
 
 Joins chain. Each one pairs what you have so far with one more table.

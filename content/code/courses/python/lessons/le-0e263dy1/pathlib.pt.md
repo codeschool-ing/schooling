@@ -1,28 +1,28 @@
 ---
 title: Um caminho é um objeto, não uma string
-version: 1
+version: 2
 ---
 
 ```python
 from pathlib import Path
 
-dados = Path("dados")
-linhas = dados / "2026" / "linhas.csv"       # dados/2026/linhas.csv
-linhas.exists()
-linhas.read_text(encoding="utf-8")
+data = Path("data")
+rows = data / "2026" / "rows.csv"       # data/2026/rows.csv
+rows.exists()
+rows.read_text(encoding="utf-8")
 ```
 
 O operador `/` junta. Ele usa o separador certo para a máquina em que está, que é a primeira razão
-de isto existir: `"dados" + "/" + nome` é um defeito no Windows e uma linha esquisita em todo lugar.
+de isto existir: `"data" + "/" + name` é um defeito no Windows e uma linha esquisita em todo lugar.
 
 ## As partes
 
 ```python
-linhas.name          # 'linhas.csv'
-linhas.stem          # 'linhas'
-linhas.suffix        # '.csv'
-linhas.parent        # Path('dados/2026')
-linhas.parts         # ('dados', '2026', 'linhas.csv')
+rows.name          # 'rows.csv'
+rows.stem          # 'rows'
+rows.suffix        # '.csv'
+rows.parent        # Path('data/2026')
+rows.parts         # ('data', '2026', 'rows.csv')
 ```
 
 Cada uma delas é uma função que alguém escreveu à mão com `split(".")` e errou para um arquivo
@@ -31,8 +31,8 @@ chamado `arquivo.tar.gz` ou para um sem extensão nenhuma.
 ## Ler e gravar
 
 ```python
-texto = caminho.read_text(encoding="utf-8")
-caminho.write_text(texto, encoding="utf-8")
+text = path.read_text(encoding="utf-8")
+path.write_text(text, encoding="utf-8")
 ```
 
 Para um arquivo pequeno inteiro, essa é a operação toda — sem `open`, sem fechar, sem nada a
@@ -46,8 +46,8 @@ nomeando um byte.
 ## Encontrar arquivos
 
 ```python
-for p in Path("dados").glob("*.csv"):
-for p in Path("dados").rglob("*.csv"):       # todo nível abaixo
+for p in Path("data").glob("*.csv"):
+for p in Path("data").rglob("*.csv"):       # every level below
 ```
 
 O `glob` é um nível, o `rglob` são todos. Os dois dão objetos `Path`, então a linha seguinte
@@ -56,8 +56,8 @@ pergunta `p.stem` sem analisar nada.
 ## Criar e testar
 
 ```python
-caminho.exists()  caminho.is_file()  caminho.is_dir()
-caminho.parent.mkdir(parents=True, exist_ok=True)
+path.exists()  path.is_file()  path.is_dir()
+path.parent.mkdir(parents=True, exist_ok=True)
 ```
 
 O `exist_ok=True` é a diferença entre um script idempotente e um que falha na segunda vez. O
@@ -66,4 +66,4 @@ O `exist_ok=True` é a diferença entre um script idempotente e um que falha na 
 ## A coisa a lembrar
 
 **Um caminho não é uma string, e no momento em que você faz `+` num deles você saiu do `pathlib`.**
-Se uma biblioteca insistir numa string, `str(caminho)` nessa fronteira — e em lugar nenhum mais.
+Se uma biblioteca insistir numa string, `str(path)` nessa fronteira — e em lugar nenhum mais.

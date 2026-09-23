@@ -1,6 +1,6 @@
 ---
 title: O outro, e onde os dois discordam de propósito
-version: 1
+version: 2
 ---
 
 ```sh
@@ -11,7 +11,7 @@ pyright: error: Type "Literal['no']" is not assignable to declared type "int"
 ```
 
 As mesmas duas linhas de código, o mesmo veredito, duas frases. O `pyright` é o verificador da
-Microsoft, é o que roda dentro do editor como Pylance, e relata `linha:coluna` em vez de uma linha
+Microsoft, é o que roda dentro do editor como Pylance, e relata `line:column` em vez de uma linha
 — por isso um erro cai na metade certa de uma linha longa em vez de na linha toda.
 
 ## Os modos dele
@@ -32,7 +32,7 @@ Microsoft, é o que roda dentro do editor como Pylance, e relata `linha:coluna` 
 ## A discordância que importa
 
 ```python
-def total(itens):
+def total(items):
     n: int = "zero"
     return n
 ```

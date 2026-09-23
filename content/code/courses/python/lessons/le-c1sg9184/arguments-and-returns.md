@@ -1,6 +1,6 @@
 ---
 title: `*args, **kwargs`, and the `return` everybody forgets
-version: 1
+version: 2
 ---
 
 ```python

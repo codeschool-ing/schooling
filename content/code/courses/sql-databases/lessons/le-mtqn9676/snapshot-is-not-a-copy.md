@@ -1,6 +1,6 @@
 ---
 title: A snapshot is not a copy, and this is the distinction that matters most
-version: 1
+version: 2
 ---
 
 Lesson 1 put `unit_price` on the order line while `price` sat on the product, and promised the
@@ -42,10 +42,10 @@ different fact that happened to equal the price on one day.
 
 Say them next to each other and the difference is obvious:
 
-```
-products.price        what this costs
-order_lines.unit_price   what this cost, on the day it was bought
-```
+| column | what it says |
+|---|---|
+| `products.price` | what this costs |
+| `order_lines.unit_price` | what this cost, on the day it was bought |
 
 Those are independent facts about different things. One is about a product, now. The other is about
 a sale, then. Nothing about the relational model says two independent facts may not hold the same

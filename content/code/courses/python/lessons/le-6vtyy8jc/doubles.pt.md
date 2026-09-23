@@ -1,11 +1,11 @@
 ---
 title: `monkeypatch`, `mock`, e o teste que prova o mock
-version: 1
+version: 2
 ---
 
 ```python
 def test_total(monkeypatch):
-    monkeypatch.setattr("app.rates.fetch", lambda codigo: 5.0)
+    monkeypatch.setattr("app.rates.fetch", lambda code: 5.0)
     assert total(2, "USD") == 10.0
 ```
 
@@ -21,7 +21,7 @@ Ele também dá conta do resto do mundo ao redor: `monkeypatch.setenv`, `delenv`
 ```python
 from unittest.mock import patch
 
-def test_notificar_envia():
+def test_notify_sends():
     with patch("app.mailer.send") as send:
         mailer.notify({"email": "a@b.c"})
         send.assert_called_once_with("a@b.c", "Welcome")
@@ -33,7 +33,7 @@ definido — `app.mailer.send`, porque é esse o nome que `notify` procura.
 ## Três maneiras de isso dar errado
 
 ```python
-with patch("app.mailer.notify") as m:      # trocando o sujeito
+with patch("app.mailer.notify") as m:      # patching the subject
     m.return_value = True
     assert mailer.notify({"email": "a@b.c"}) is True
 ```
@@ -42,7 +42,7 @@ Verde, para sempre, provando que um `Mock` devolve o que você mandou. Se a fun�
 que está sendo substituída, o teste ficou sem nada dentro.
 
 ```python
-send.called_once_with("nada", "parecido")     # passa em silêncio
+send.called_once_with("nothing", "like it")     # passes silently
 ```
 
 Um `Mock` responde qualquer atributo com outro `Mock`, então um nome que não é uma asserção é uma
@@ -52,7 +52,7 @@ nomes que começam como uma asserção. `called_once_with` começa com `c`, e pa
 
 ```python
 with patch("app.mailer.send") as send:
-    send("um argumento só")                 # aceito
+    send("only one argument")               # accepted
 ```
 
 Um `Mock` pelado aceita qualquer assinatura, então um teste segue passando depois de a função de

@@ -1,18 +1,18 @@
 ---
 title: Três que valem escrever
-version: 1
+version: 2
 ---
 
 ## Um cronômetro
 
 ```python
 @contextmanager
-def cronometrado(rotulo):
-    inicio = time.perf_counter()
+def timed(label):
+    start = time.perf_counter()
     try:
         yield
     finally:
-        log.info("%s levou %.3fs", rotulo, time.perf_counter() - inicio)
+        log.info("%s took %.3fs", label, time.perf_counter() - start)
 ```
 
 O `finally` faz uma chamada que levantou erro ainda ser cronometrada, que é a que você mais quer
@@ -22,13 +22,13 @@ conhecer.
 
 ```python
 @contextmanager
-def em_diretorio(caminho):
-    anterior = Path.cwd()
-    os.chdir(caminho)
+def in_directory(path):
+    previous = Path.cwd()
+    os.chdir(path)
     try:
         yield
     finally:
-        os.chdir(anterior)
+        os.chdir(previous)
 ```
 
 **A restauração precisa estar num `finally`** — o ponto inteiro é que o diretório do processo é
@@ -38,13 +38,13 @@ global, e deixá-lo mudado afeta toda linha posterior do programa, e não só es
 
 ```python
 @contextmanager
-def ajuste(obj, nome, valor):
-    anterior = getattr(obj, nome)
-    setattr(obj, nome, valor)
+def setting(obj, name, value):
+    previous = getattr(obj, name)
+    setattr(obj, name, value)
     try:
         yield
     finally:
-        setattr(obj, nome, anterior)
+        setattr(obj, name, previous)
 ```
 
 Lembrar o valor antigo, definir o novo, devolver. Esta é a forma por trás da maior parte do que um
@@ -60,10 +60,10 @@ descrever um trecho como "e depois devolve como estava", ele é um gerenciador d
 
 ```python
 @contextmanager
-def registrado(nome):
-    log.info("início %s", nome)
+def logged(name):
+    log.info("start %s", name)
     yield
-    log.info("fim %s", nome)
+    log.info("end %s", name)
 ```
 
 Nada está sendo desfeito — a segunda linha não é um desfazer, é outra chamada de log. Isso é um

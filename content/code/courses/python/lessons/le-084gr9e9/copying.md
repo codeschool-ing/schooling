@@ -1,6 +1,6 @@
 ---
 title: Assignment is a second name, and `copy` is shallow
-version: 1
+version: 2
 ---
 
 This is the section the lesson exists for.

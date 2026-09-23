@@ -1,6 +1,6 @@
 ---
 title: Three worth writing
-version: 1
+version: 2
 ---
 
 ## A timer

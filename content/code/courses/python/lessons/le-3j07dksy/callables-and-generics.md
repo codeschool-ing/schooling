@@ -1,6 +1,6 @@
 ---
 title: A function as a type, and taking the widest thing you can
-version: 1
+version: 2
 ---
 
 ```python

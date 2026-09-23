@@ -1,6 +1,6 @@
 ---
 title: WHERE, e a regra para manter uma linha
-version: 1
+version: 2
 ---
 
 `WHERE` mantém uma linha quando a condição é **verdadeira**. Não "não falsa" — verdadeira. Essa
@@ -17,9 +17,9 @@ WHERE  price > 20;
 
 ```sql
 WHERE price = 20
-WHERE price <> 20          -- != também funciona e <> é o do padrão
+WHERE price <> 20          -- != also works and <> is the standard
 WHERE price > 20
-WHERE price BETWEEN 20 AND 50      -- inclusivo nas duas pontas
+WHERE price BETWEEN 20 AND 50      -- inclusive at both ends
 WHERE category IN ('kitchen', 'garden')
 WHERE created_at >= date '2026-01-01'
 ```
@@ -62,8 +62,8 @@ escreveu queria. A segunda é a pretendida.
 Da primeira seção, e é o erro mais comum de iniciante, então vale ver de novo com o conserto:
 
 ```sql
-SELECT price * 1.23 AS gross FROM products WHERE gross > 100;          -- erro
-SELECT price * 1.23 AS gross FROM products WHERE price * 1.23 > 100;   -- funciona
+SELECT price * 1.23 AS gross FROM products WHERE gross > 100;    -- error
+SELECT price * 1.23 AS gross FROM products WHERE price * 1.23 > 100;   -- works
 ```
 
 Se repetir a expressão fica feio — e numa expressão longa fica — as expressões de tabela comuns da
@@ -102,8 +102,8 @@ grande.
 Vale nomear agora para não confundir depois:
 
 ```sql
-WHERE  price > 20        -- descarta LINHAS, antes do agrupamento
-HAVING count(*) > 3      -- descarta GRUPOS, depois do agrupamento
+WHERE  price > 20        -- discards ROWS, before grouping
+HAVING count(*) > 3      -- discards GROUPS, after grouping
 ```
 
 Não são alternativas, rodam em momentos diferentes, e pôr um agregado no `WHERE` é erro e não uma

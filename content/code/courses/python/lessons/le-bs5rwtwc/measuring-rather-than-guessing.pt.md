@@ -1,6 +1,6 @@
 ---
 title: `timeit` para a expressão, `cProfile` para o programa
-version: 1
+version: 2
 ---
 
 ```sh
@@ -30,7 +30,7 @@ pura que você pode repetir.
 ## `cProfile`, para um programa
 
 ```sh
-python -m cProfile -s tottime relatorio.py
+python -m cProfile -s tottime report.py
 ```
 
 ```sh
@@ -71,8 +71,8 @@ ele.
 ## A única regra
 
 ```sh
-primeiro conserto, o óbvio:      9,0s → 8,4s     7%
-segundo conserto, o do profile:  8,4s → 0,0166s  544×
+first fix, the obvious one:   9.0s → 8.4s     7%
+second fix, the profiled one: 8.4s → 0.0166s  544×
 ```
 
 **Faça o profile antes de mudar qualquer coisa.** Na demonstração, a mudança que parecia mais

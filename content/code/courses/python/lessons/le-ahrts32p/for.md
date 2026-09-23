@@ -1,6 +1,6 @@
 ---
 title: Iterate the thing, not the index
-version: 1
+version: 2
 ---
 
 ```python

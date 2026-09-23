@@ -1,6 +1,6 @@
 ---
 title: Lendo o prompt
-version: 1
+version: 2
 ---
 
 O prompt é a primeira coisa na tela e a última que alguém explica. Ele não é enfeite e não é logo:
@@ -36,8 +36,8 @@ ana@vm:~$ pwd
 ana@vm:~$ cd /etc
 ana@vm:/etc$ pwd
 /etc
-ana@vm:/etc$ cd ~/notas
-ana@vm:~/notas$
+ana@vm:/etc$ cd ~/notes
+ana@vm:~/notes$
 ```
 
 Duas coisas para levar daí.
@@ -45,7 +45,7 @@ Duas coisas para levar daí.
 **`~` é o seu diretório pessoal, escrito curto.** O prompt mostrou `~` e o `pwd` respondeu
 `/home/ana`, que é o mesmo lugar dito de dois jeitos. Quando você vai para fora da sua casa, o
 prompt escreve o caminho por extenso — `/etc` — e quando você volta para dentro dela, ele encurta
-de novo: `~/notas` é `/home/ana/notas`.
+de novo: `~/notes` é `/home/ana/notes`.
 
 **`pwd` e o prompt concordam porque estão lendo o mesmo fato.** Se você duvidar do prompt, o `pwd`
 é a pergunta direta. A seção 01 da aula 3 aprofunda o que "diretório atual" significa; aqui basta

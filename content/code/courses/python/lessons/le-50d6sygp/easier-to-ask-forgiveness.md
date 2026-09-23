@@ -1,6 +1,6 @@
 ---
 title: Try it, rather than checking first
-version: 1
+version: 2
 ---
 
 Two ways to write the same thing:

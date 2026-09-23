@@ -1,6 +1,6 @@
 ---
 title: Lookups, which is how two tables become one answer
-version: 1
+version: 2
 ---
 
 The single most useful thing a spreadsheet does: **take a value from one table and find the row
@@ -9,7 +9,7 @@ An order and a customer.
 
 ## `XLOOKUP`, and why it replaced the other two
 
-```
+```localised
 =XLOOKUP(what to find, where to look, what to bring back, what if not found)
 ```
 
@@ -25,7 +25,7 @@ the wrong thing.
 If `XLOOKUP` is not available — an older Excel, some compatibility modes — the robust
 alternative is `INDEX` and `MATCH` together:
 
-```
+```localised
 =INDEX(the column to bring back, MATCH(what to find, the column to search, 0))
 ```
 

@@ -1,13 +1,13 @@
 ---
 title: O `uv`, e os quatro comandos que são quase tudo
-version: 1
+version: 2
 ---
 
 ```sh
-uv init                      # escreve o pyproject.toml
-uv add "requests>=2.31"      # acrescenta, resolve, instala e trava
-uv run main.py               # roda, no ambiente do projeto
-uv sync                      # faz o ambiente bater com a trava
+uv init                      # write pyproject.toml
+uv add "requests>=2.31"      # add a dependency, resolve, install, lock
+uv run main.py               # run, in the project's environment
+uv sync                      # make the environment match the lock
 ```
 
 **Ele faz ambientes, instalações, resolução, trava e execução.** Escrito em Rust, e rápido o
@@ -34,8 +34,8 @@ projeto**, resolveu, instalou, e escreveu a linha no `pyproject.toml`. Não havi
 ativar antes — ele fez um.
 
 ```sh
-uv add --dev pytest          # para dentro de [dependency-groups]
-uv remove requests           # fora do arquivo, do ambiente e da trava
+uv add --dev pytest          # into [dependency-groups]
+uv remove requests           # out of the file, out of the environment, out of the lock
 ```
 
 ## `uv run`
@@ -74,8 +74,8 @@ verbo desses: ele acrescenta, e um ambiente acumula.
 ## As flags que pertencem à CI
 
 ```sh
-uv lock --check     # reprova se a trava não bate com o pyproject.toml
-uv sync --frozen    # instala da trava sem resolver de novo
+uv lock --check     # fail if the lock does not match pyproject.toml
+uv sync --frozen    # install from the lock without re-resolving
 ```
 
 ```sh

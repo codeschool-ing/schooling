@@ -1,6 +1,6 @@
 ---
 title: As teclas que ninguém te conta
-version: 1
+version: 2
 ---
 
 Esta seção não ensina comando nenhum. Ela é sobre uma dúzia de teclas, e é a diferença entre alguém
@@ -16,21 +16,21 @@ Aperte Tab e o shell completa o que você estava digitando. Digite o suficiente 
 dúvida:
 
 ```
-ana@vm:~/notas$ ls le
+ana@vm:~/demo$ ls re
 ```
 
 …aperte Tab, e a linha vira:
 
 ```
-ana@vm:~/notas$ ls leiame.txt
+ana@vm:~/demo$ ls readme.txt
 ```
 
 Se o que você digitou for ambíguo, um Tab não faz nada e um segundo Tab mostra as opções:
 
 ```
-ana@vm:~/notas$ ls 
--estranho       arquivo/        leiame.txt
-.oculto         com espaco.txt
+ana@vm:~/demo$ ls 
+-strange        folder/         with space.txt
+.hidden         readme.txt
 ```
 
 Daí saem três hábitos, e vale construí-los de propósito:
@@ -82,8 +82,8 @@ para o trabalho de verdade dele.
 
 ```
 ana@vm:~$ cat
-ola
-ola
+hello
+hello
 ana@vm:~$
 ```
 

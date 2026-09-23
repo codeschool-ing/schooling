@@ -1,6 +1,6 @@
 ---
 title: Ordered, and it can change
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,6 +1,6 @@
 ---
 title: Two clauses, and one job each
-version: 1
+version: 2
 ---
 
 ```python

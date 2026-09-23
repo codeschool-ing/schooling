@@ -1,6 +1,6 @@
 ---
 title: O primeiro comando em qualquer máquina
-version: 1
+version: 2
 ---
 
 Tudo nesta aula se reduz a um reflexo. Você chega numa máquina que não configurou e, antes de
@@ -81,9 +81,9 @@ Que é a razão prática de o `/etc/os-release` ser o reflexo e o `hostnamectl` 
 ## O hábito, em três linhas
 
 ```
-cat /etc/os-release     # qual distribuição, qual família, qual versão
-uname -a                # qual kernel, qual arquitetura
-whoami                  # e quem eu sou aqui — aula 1, seção 14
+cat /etc/os-release     # which distribution, which family, which version
+uname -a                # which kernel, which architecture
+whoami                  # and who I am here — lesson 1, section 14
 ```
 
 Três comandos, e nenhum deles muda nada. Rode antes do quarto, que muda.

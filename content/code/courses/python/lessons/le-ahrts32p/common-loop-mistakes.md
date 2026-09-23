@@ -1,6 +1,6 @@
 ---
 title: The three that do not raise
-version: 1
+version: 2
 ---
 
 Every one of these produces a wrong answer rather than an error, which is what makes them worth a

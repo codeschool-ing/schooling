@@ -1,6 +1,6 @@
 ---
 title: Cinco formas, em mil e em um milhão
-version: 1
+version: 2
 ---
 
 | | n = 1.000 | n = 1.000.000 |
@@ -23,20 +23,20 @@ relatório.
 ## Como cada uma parece em código
 
 ```python
-d[chave]                        # O(1)     um passo, seja qual for o tamanho
-bisect.bisect(ordenado, x)      # O(log n) dividir, dividir, dividir
-for linha in linhas: ...        # O(n)     uma passagem
-sorted(linhas)                  # O(n log n)
-for a in linhas:
-    for b in linhas: ...        # O(n²)    uma passagem por item
+d[key]                          # O(1)     one step, whatever the size
+bisect.bisect(sorted_data, x)   # O(log n) halve, halve, halve
+for row in rows: ...            # O(n)     one pass
+sorted(rows)                    # O(n log n)
+for a in rows:
+    for b in rows: ...          # O(n²)    a pass per item
 ```
 
 ## `O(log n)` é a que parece errada
 
 ```sh
-n = 1.000             10 passos
-n = 1.000.000         20 passos
-n = 1.000.000.000     30 passos
+n = 1,000        10 steps
+n = 1,000,000    20 steps
+n = 1,000,000,000  30 steps
 ```
 
 Mil vezes mais dados e dez passos a mais. É isso que dividir ao meio faz, e é por isso que todo
@@ -46,9 +46,9 @@ perto o bastante de grátis** para a diferença entre ele e `O(1)` quase nunca d
 ## `O(n log n)` é o que ordenar custa
 
 ```sh
-sorted, n =   1.000    0,088 ms
-sorted, n =  10.000    1,277 ms      ← 10× os dados, 14× o tempo
-sorted, n = 100.000   18,112 ms      ← 10× os dados, 14× o tempo
+sorted, n =   1,000    0.088 ms
+sorted, n =  10,000    1.277 ms      ← 10× the data, 14× the time
+sorted, n = 100,000   18.112 ms      ← 10× the data, 14× the time
 ```
 
 Medido. Dez vezes os dados custam cerca de catorze vezes o trabalho, toda vez — que é exatamente o

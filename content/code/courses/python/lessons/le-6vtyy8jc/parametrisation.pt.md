@@ -1,17 +1,17 @@
 ---
 title: Uma função e uma tabela de linhas
-version: 1
+version: 2
 ---
 
 ```python
-@pytest.mark.parametrize("titulo,esperado", [
+@pytest.mark.parametrize("title,expected", [
     ("Hello World", "hello-world"),
     ("ALL CAPS", "all-caps"),
     ("already-done", "already-done"),
     ("Trailing ", "trailing-"),
 ])
-def test_slugify(titulo, esperado):
-    assert slugify(titulo) == esperado
+def test_slugify(title, expected):
+    assert slugify(title) == expected
 ```
 
 ```sh
@@ -33,8 +33,8 @@ vez da função que a contém.
 
 ```python
 def test_slugify():
-    for titulo, esperado in CASOS:      # um teste
-        assert slugify(titulo) == esperado
+    for title, expected in CASES:      # one test
+        assert slugify(title) == expected
 ```
 
 Um laço para na primeira linha ruim e não conta nada sobre o resto. O decorador é a mesma tabela
@@ -52,9 +52,9 @@ shell caso contrário.
 ## Nomear as linhas
 
 ```python
-@pytest.mark.parametrize("valor,esperado", [
-    pytest.param("", "", id="vazio"),
-    pytest.param("  ", "", id="so-espacos"),
+@pytest.mark.parametrize("value,expected", [
+    pytest.param("", "", id="empty"),
+    pytest.param("  ", "", id="only-spaces"),
 ])
 ```
 
@@ -64,9 +64,9 @@ Uma linha que merece um nome em geral merece um comentário também.
 ## Empilhar
 
 ```python
-@pytest.mark.parametrize("codigo", ["BRL", "USD"])
-@pytest.mark.parametrize("valor", [0, 1, 1000])
-def test_conversao(codigo, valor):
+@pytest.mark.parametrize("code", ["BRL", "USD"])
+@pytest.mark.parametrize("amount", [0, 1, 1000])
+def test_conversion(code, amount):
     ...
 ```
 

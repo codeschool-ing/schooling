@@ -1,12 +1,12 @@
 ---
 title: The shape of a command
-version: 1
+version: 2
 ---
 
 Every command you will type for the rest of this course has the same three parts, in the same
 order:
 
-```
+```localised
 command   [options]   [arguments]
 ```
 

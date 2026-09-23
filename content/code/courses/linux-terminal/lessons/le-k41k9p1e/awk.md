@@ -1,6 +1,6 @@
 ---
 title: `awk`, a programming language you write on one line
-version: 1
+version: 2
 ---
 
 `awk` reads a line, splits it into fields, and runs your code on it. That is the whole model, and it
@@ -24,7 +24,7 @@ And the second command reordered the fields, which section 08 showed `cut` canno
 
 ## The shape of a program
 
-```
+```localised
 awk 'pattern { action }'
 ```
 

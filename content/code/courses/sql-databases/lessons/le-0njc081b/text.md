@@ -1,6 +1,6 @@
 ---
 title: Text, and the length limit that is not an optimisation
-version: 1
+version: 2
 ---
 
 Three types hold characters, and in PostgreSQL the choice between two of them is far less

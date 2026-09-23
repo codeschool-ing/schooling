@@ -1,6 +1,6 @@
 ---
 title: Chained comparisons, and `==` against `is`
-version: 1
+version: 2
 ---
 
 ## The operators

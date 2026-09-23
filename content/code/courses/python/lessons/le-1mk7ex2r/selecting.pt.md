@@ -1,11 +1,11 @@
 ---
 title: Colunas, `loc`, `iloc`, e a máscara booleana
-version: 1
+version: 2
 ---
 
 ```python
-df["centavos"]                # uma coluna → um Series
-df[["cliente", "centavos"]]   # duas colunas → um DataFrame
+df["cents"]                 # one column → a Series
+df[["customer", "cents"]]   # two columns → a DataFrame
 ```
 
 Os colchetes duplos são uma lista de nomes de coluna, não uma sintaxe especial. Passar um nome dá
@@ -14,7 +14,7 @@ um Series; passar uma lista dá uma tabela.
 ## A máscara, que é a ideia
 
 ```python
-df["centavos"] > 10000
+df["cents"] > 10000
 ```
 
 ```sh
@@ -23,22 +23,22 @@ df["centavos"] > 10000
 2    False
 3     True
 ...
-Name: centavos, dtype: bool
+Name: cents, dtype: bool
 ```
 
 Comparar uma coluna dá **outra coluna, de booleanos**. Indexar um DataFrame com uma delas fica com
 as linhas em que ela é `True`:
 
 ```python
-df[df["centavos"] > 10000]
+df[df["cents"] > 10000]
 ```
 
 É esse o mecanismo inteiro, e todo o resto são combinações dele:
 
 ```python
-df[(df["pais"] == "BR") & (df["centavos"] > 5000)]
-df[df["pais"].isin(["BR", "PT"])]
-df[~df["centavos"].isna()]
+df[(df["country"] == "BR") & (df["cents"] > 5000)]
+df[df["country"].isin(["BR", "PT"])]
+df[~df["cents"].isna()]
 ```
 
 **`&`, `|` e `~`, não `and`, `or` e `not`** — as palavras-chave do Python trabalham sobre um valor
@@ -48,10 +48,10 @@ liga mais forte que o `>`.
 ## `loc` e `iloc`
 
 ```python
-df.loc[0, "cliente"]                       # por rótulo
-df.iloc[0, 1]                              # por posição
-df.loc[df["pais"] == "BR", "centavos"]     # uma máscara e uma coluna
-df.iloc[0:2, 1:3]                          # duas linhas, duas colunas, por posição
+df.loc[0, "customer"]                      # by label
+df.iloc[0, 1]                              # by position
+df.loc[df["country"] == "BR", "cents"]     # a mask and a column
+df.iloc[0:2, 1:3]                          # two rows, two columns, by position
 ```
 
 O `loc` recebe **rótulos**: valores de índice e nomes de coluna. O `iloc` recebe **posições**:
@@ -60,17 +60,17 @@ inteiros, como numa lista.
 ## Por que os dois não são a mesma coisa
 
 ```python
-us = df[df["pais"] == "US"]
+us = df[df["country"] == "US"]
 ```
 
 ```sh
-   id cliente pais    centavos
-3   4   diego   US     23000.0
-6   7  gisele   US     15000.0
+   id customer country    cents
+3   4    diego      US  23000.0
+6   7   gisele      US  15000.0
 ```
 
 ```sh
->>> us.iloc[0]["cliente"]
+>>> us.iloc[0]["customer"]
 'diego'
 >>> us.loc[0]
 KeyError: 0
@@ -85,8 +85,8 @@ O `df.reset_index(drop=True)` os renumera quando você quer que os dois concorde
 ## Atribuir
 
 ```python
-df.loc[df["pais"] == "BR", "centavos"] = 0      # certo
-df[df["pais"] == "BR"]["centavos"] = 0          # errado: uma cópia
+df.loc[df["country"] == "BR", "cents"] = 0      # right
+df[df["country"] == "BR"]["cents"] = 0          # wrong: a copy
 ```
 
 O segundo seleciona, recebe uma cópia, e atribui na cópia — então o `df` não muda. Medido no

@@ -1,6 +1,6 @@
 ---
 title: Counting operations, not seconds
-version: 1
+version: 2
 ---
 
 ```python

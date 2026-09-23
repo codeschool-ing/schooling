@@ -1,11 +1,11 @@
 ---
 title: `r""`, e o padrão usado num laço
-version: 1
+version: 2
 ---
 
 ```python
-re.search("\\d+", s)       # o que o Python passa: \d+
-re.search(r"\d+", s)       # o mesmo, sem a duplicação
+re.search("\\d+", s)       # what Python passes: \d+
+re.search(r"\d+", s)       # the same, without the doubling
 ```
 
 Uma barra invertida é um escape para o Python ANTES de o padrão chegar ao `re`. Sem o `r`, toda
@@ -20,10 +20,10 @@ O mesmo vale para a SUBSTITUIÇÃO no `sub`, onde o `\1` tem o mesmo problema.
 ## `re.compile`
 
 ```python
-LINHA = re.compile(r"(?P<ts>\S+) (?P<nivel>\w+) (?P<msg>.*)")
+LINE = re.compile(r"(?P<ts>\S+) (?P<level>\w+) (?P<msg>.*)")
 
-for linha in f:
-    m = LINHA.match(linha)
+for line in f:
+    m = LINE.match(line)
 ```
 
 Um padrão compilado é um objeto com os mesmos métodos — `search`, `match`, `findall`, `sub`. Duas
@@ -38,12 +38,12 @@ compilados, então um laço chamando `re.search` não recompila toda vez. Compil
 ## `re.VERBOSE`, para um padrão que vale explicar
 
 ```python
-LINHA = re.compile(r"""
-    (?P<ts>\d{4}-\d{2}-\d{2})    # a data
+LINE = re.compile(r"""
+    (?P<ts>\d{4}-\d{2}-\d{2})    # the date
     \s+
-    (?P<nivel>\w+)               # ERROR, WARN, INFO
+    (?P<level>\w+)               # ERROR, WARN, INFO
     \s+
-    (?P<msg>.*)                  # todo o resto
+    (?P<msg>.*)                  # everything else
 """, re.VERBOSE)
 ```
 

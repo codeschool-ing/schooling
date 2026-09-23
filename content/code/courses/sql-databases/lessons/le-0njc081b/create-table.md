@@ -1,6 +1,6 @@
 ---
 title: The statement, and the habits that go in it
-version: 1
+version: 2
 ---
 
 Two lessons of design, and now you write it down.

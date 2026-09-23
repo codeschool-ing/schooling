@@ -1,11 +1,11 @@
 ---
 title: Texto é uma sequência, e não pode ser alterado
-version: 1
+version: 2
 ---
 
 ```python
-nome = "Ada"
-nome = 'Ada'
+name = "Ada"
+name = 'Ada'
 ```
 
 Aspas simples e duplas são idênticas. Escolha a que evita escapar: `"it's"` não precisa de barra
@@ -17,18 +17,18 @@ invertida, e `'ele disse "oi"'` também não.
 de aspa.
 
 ```python
-print("primeira\nsegunda")
+print("first\nsecond")
 ```
 ```
-primeira
-segunda
+first
+second
 ```
 
 **Uma string crua desliga tudo isso**, e é por isso que caminhos do Windows e expressões regulares
 se escrevem com um `r` na frente:
 
 ```python
-r"C:\Users\ada"     # nenhuma sequência de escape à vista
+r"C:\Users\ada"     # not an escape sequence in sight
 ```
 
 A aula 10 usa isso em todo padrão.
@@ -42,8 +42,8 @@ segundo trabalho.
 ## Imutável
 
 ```python
->>> nome = "Ada"
->>> nome[0] = "E"
+>>> name = "Ada"
+>>> name[0] = "E"
 TypeError: 'str' object does not support item assignment
 ```
 
@@ -51,13 +51,13 @@ TypeError: 'str' object does not support item assignment
 uma string nova:
 
 ```python
->>> nome.upper()
+>>> name.upper()
 'ADA'
->>> nome
+>>> name
 'Ada'
 ```
 
-`nome` ficou intacto. Para ficar com o resultado é preciso atribuir: `nome = nome.upper()`. Isso pega
+`name` ficou intacto. Para ficar com o resultado é preciso atribuir: `name = name.upper()`. Isso pega
 todo mundo uma vez, e depois nunca mais.
 
 ## Os dois operadores

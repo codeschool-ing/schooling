@@ -1,6 +1,6 @@
 ---
 title: Functions that take the instance
-version: 1
+version: 2
 ---
 
 ```python

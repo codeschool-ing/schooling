@@ -1,6 +1,6 @@
 ---
 title: The file that replaced four
-version: 1
+version: 2
 ---
 
 ```toml

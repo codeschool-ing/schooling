@@ -1,6 +1,6 @@
 ---
 title: Six you will use before you write one
-version: 1
+version: 2
 ---
 
 ## `open`

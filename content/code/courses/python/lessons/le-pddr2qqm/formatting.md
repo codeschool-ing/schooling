@@ -1,6 +1,6 @@
 ---
 title: The f-string, and what goes after the colon
-version: 1
+version: 2
 ---
 
 ```python

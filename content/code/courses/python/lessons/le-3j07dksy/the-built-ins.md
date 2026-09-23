@@ -1,6 +1,6 @@
 ---
 title: Five types and a return that is not a value
-version: 1
+version: 2
 ---
 
 ```python

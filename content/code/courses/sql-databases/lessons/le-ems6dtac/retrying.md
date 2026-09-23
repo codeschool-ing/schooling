@@ -1,6 +1,6 @@
 ---
 title: Retrying, which is the half people leave out
-version: 1
+version: 2
 ---
 
 Two sections of this lesson end with the database refusing a transaction and telling you to run it
@@ -23,12 +23,12 @@ well succeed on a second attempt.
 
 Just as important is what is **not** on the list:
 
-```
-23505  unique violation        the row is genuinely a duplicate — retrying inserts it again
-23503  foreign key violation   the parent is genuinely missing
-23514  check violation         the value is genuinely out of range
-42601  syntax error            the query will be wrong for ever
-```
+| SQLSTATE | error | why another attempt fails the same way |
+|---|---|---|
+| `23505` | unique violation | the row is genuinely a duplicate — retrying inserts it again |
+| `23503` | foreign key violation | the parent is genuinely missing |
+| `23514` | check violation | the value is genuinely out of range |
+| `42601` | syntax error | the query will be wrong for ever |
 
 Retrying a class 23 error is a loop that runs until something gives up. Retrying a `42` is a loop
 that never ends. **Retry on the class, not on the fact that something failed** — an
@@ -39,7 +39,7 @@ happens often the answer is in the previous section rather than in a loop.
 
 ## Retry the transaction, not the statement
 
-```
+```localised
 attempt 1
     BEGIN
     SELECT …            ← the values this attempt read
@@ -68,7 +68,7 @@ write has to sit inside the retryable unit.
 
 ## The shape of the loop
 
-```
+```localised
 for attempt in 1 … 5:
     begin
     run the work, reads and writes

@@ -1,6 +1,6 @@
 ---
 title: `split(",")` is not reading a CSV
-version: 1
+version: 2
 ---
 
 ```python

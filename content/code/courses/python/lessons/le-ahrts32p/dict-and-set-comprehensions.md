@@ -1,6 +1,6 @@
 ---
 title: The same shape with braces, and the one that is neither
-version: 1
+version: 2
 ---
 
 ## Dictionary

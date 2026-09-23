@@ -1,19 +1,19 @@
 ---
 title: O nome que o wrapper comeu
-version: 1
+version: 2
 ---
 
 ```python
-@cronometrado
-def carregar_linhas(caminho):
-    """Lê as linhas de um CSV."""
+@timed
+def load_rows(path):
+    """Read the rows from a CSV."""
 
-carregar_linhas.__name__      # 'wrapper'
-carregar_linhas.__doc__       # None
-help(carregar_linhas)         # descreve o wrapper
+load_rows.__name__      # 'wrapper'
+load_rows.__doc__       # None
+help(load_rows)         # describes the wrapper
 ```
 
-O nome `carregar_linhas` agora se refere ao wrapper, e a identidade do próprio wrapper é o que
+O nome `load_rows` agora se refere ao wrapper, e a identidade do próprio wrapper é o que
 tudo enxerga. **Isso não é cosmético** — é toda linha de log, todo quadro de traceback, e toda
 documentação, para toda função que você decorou.
 
@@ -22,7 +22,7 @@ documentação, para toda função que você decorou.
 ```python
 import functools
 
-def cronometrado(func):
+def timed(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         ...

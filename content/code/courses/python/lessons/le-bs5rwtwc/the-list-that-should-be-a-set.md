@@ -1,6 +1,6 @@
 ---
 title: The single most common fix
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,6 +1,6 @@
 ---
 title: setuid, setgid and the sticky bit
-version: 1
+version: 2
 ---
 
 Three more bits, a fourth octal digit, and each one exists because the nine characters could not

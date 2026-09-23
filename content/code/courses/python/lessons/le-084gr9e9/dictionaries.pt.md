@@ -1,26 +1,26 @@
 ---
 title: Chaves para valores, e a busca que não percorre
-version: 1
+version: 2
 ---
 
 ```python
-pessoa = {"nome": "Ada", "cidade": "Londres"}
+person = {"name": "Ada", "city": "London"}
 ```
 
-Chaves (as do teclado), `chave: valor`, separados por vírgula. As chaves em geral são strings; podem
+Chaves (as do teclado), `key: value`, separados por vírgula. As chaves em geral são strings; podem
 ser qualquer valor **imutável**, que é por que uma tupla serve e uma lista não.
 
 ## Lendo
 
 ```python
->>> pessoa["nome"]
+>>> person["name"]
 'Ada'
->>> pessoa["email"]
+>>> person["email"]
 KeyError: 'email'
->>> pessoa.get("email")
+>>> person.get("email")
 None
->>> pessoa.get("email", "desconhecido")
-'desconhecido'
+>>> person.get("email", "unknown")
+'unknown'
 ```
 
 **O `[]` levanta erro e o `get` não.** Use `[]` quando uma chave ausente é um defeito sobre o qual
@@ -30,10 +30,10 @@ vinda de um arquivo JSON, é a maior parte das vezes.
 ## Escrevendo
 
 ```python
-pessoa["email"] = "ada@example.com"     # acrescenta ou substitui
-pessoa.setdefault("cidade", "Paris")    # só se estiver ausente
-del pessoa["email"]
-valor = pessoa.pop("cidade", None)      # remove e devolve, com um padrão
+person["email"] = "ada@example.com"   # add or replace
+person.setdefault("city", "Paris")    # only if absent
+del person["email"]
+value = person.pop("city", None)      # remove and return, with a fallback
 ```
 
 O `update` funde outro dicionário, e `a | b` faz o mesmo como um dicionário novo.
@@ -41,9 +41,9 @@ O `update` funde outro dicionário, e `a | b` faz o mesmo como um dicionário no
 ## Percorrendo
 
 ```python
-for chave in pessoa:                     # chaves
-for chave, valor in pessoa.items():      # os dois — e é este que você quer
-for valor in pessoa.values():
+for key in person:                    # keys
+for key, value in person.items():     # both — and this is the one you want
+for value in person.values():
 ```
 
 **A ordem de inserção é garantida** desde o Python 3.7. O que entra primeiro sai primeiro, e é uma
@@ -52,7 +52,7 @@ promessa da linguagem em vez de um acaso.
 ## Perguntando
 
 ```python
->>> "nome" in pessoa
+>>> "name" in person
 True
 ```
 
@@ -66,9 +66,9 @@ onde isso transforma um laço O(n²) num O(n).
 ## Contando, o que você vai fazer o tempo todo
 
 ```python
-contagens = {}
-for palavra in palavras:
-    contagens[palavra] = contagens.get(palavra, 0) + 1
+counts = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
 ```
 
 É esse o padrão. O `collections.Counter` da aula 7 faz isso numa linha, e vale escrever à mão uma vez

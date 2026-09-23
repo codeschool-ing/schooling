@@ -1,6 +1,6 @@
 ---
 title: Membership and uniqueness, and no order at all
-version: 1
+version: 2
 ---
 
 ```python

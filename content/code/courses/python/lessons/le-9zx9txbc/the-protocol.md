@@ -1,6 +1,6 @@
 ---
 title: Two methods, and the return value that swallows
-version: 1
+version: 2
 ---
 
 ```python

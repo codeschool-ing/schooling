@@ -1,6 +1,6 @@
 ---
 title: Nomes, e quatro regras que não são as que você espera
-version: 1
+version: 2
 ---
 
 Um nome de arquivo no Linux é mais livre do que você pensa e mais estrito do que você pensa, em
@@ -58,10 +58,10 @@ Um nome que começa com `.` fica de fora de uma listagem comum. É esse o mecani
 existe atributo de oculto em lugar nenhum, só uma convenção que o `ls` respeita:
 
 ```
-ana@vm:~/simples$ ls
-arquivo  leiame.txt
-ana@vm:~/simples$ ls -a
-.  ..  .oculto	arquivo  leiame.txt
+ana@vm:~/plain$ ls
+folder	readme.txt
+ana@vm:~/plain$ ls -a
+.  ..  .hidden	folder	readme.txt
 ```
 
 Não é sigilo e não é proteção. É um jeito de manter configuração fora do seu caminho: o seu
@@ -80,9 +80,9 @@ frente.
 Legal não é sensato, e a seção 07 já mostrou por quê:
 
 ```
-ana@vm:~/notas$ ls com espaco.txt
-ls: cannot access 'com': No such file or directory
-ls: cannot access 'espaco.txt': No such file or directory
+ana@vm:~/demo$ ls with space.txt
+ls: cannot access 'with': No such file or directory
+ls: cannot access 'space.txt': No such file or directory
 ```
 
 O arquivo existe. O shell quebrou a linha antes de o `ls` ver. Um nome com espaço é um nome que

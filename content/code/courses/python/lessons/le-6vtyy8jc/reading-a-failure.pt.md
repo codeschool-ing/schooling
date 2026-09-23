@@ -1,18 +1,18 @@
 ---
 title: A asserção é reescrita, e os dois valores são impressos
-version: 1
+version: 2
 ---
 
 ```python
-def test_mantem_pontuacao():
+def test_keeps_punctuation():
     assert slugify("Hello, World") == "hello-world"
 ```
 
 ```sh
 =================================== FAILURES ===================================
-____________________________ test_mantem_pontuacao _____________________________
+____________________________ test_keeps_punctuation ____________________________
 
-    def test_mantem_pontuacao():
+    def test_keeps_punctuation():
 >       assert slugify("Hello, World") == "hello-world"
 E       AssertionError: assert 'hello,-world' == 'hello-world'
 E
@@ -40,7 +40,7 @@ difere. A última linha é a localização.
 
 ```sh
 =========================== short test summary info ============================
-FAILED test_slug.py::test_mantem_pontuacao - AssertionError: assert 'hello,...
+FAILED test_slug.py::test_keeps_punctuation - AssertionError: assert 'hello,...
 ========================= 1 failed, 1 passed in 0.02s ==========================
 ```
 

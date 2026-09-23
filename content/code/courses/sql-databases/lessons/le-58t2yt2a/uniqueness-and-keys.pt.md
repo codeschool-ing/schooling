@@ -1,14 +1,14 @@
 ---
 title: Os índices que você já tem, e o que está faltando
-version: 1
+version: 2
 ---
 
 Alguns dos seus índices nunca foram criados por ninguém. Declare uma chave e você ganha um:
 
 ```sql
 CREATE TABLE customers (
-    id    integer PRIMARY KEY,          -- um índice único em (id)
-    email text UNIQUE                   -- um índice único em (email)
+    id    integer PRIMARY KEY,          -- a unique index on (id)
+    email text UNIQUE                   -- a unique index on (email)
 );
 ```
 
@@ -21,7 +21,7 @@ seu próprio índice numa coluna de chave primária é desperdício puro.
 
 ```sql
 INSERT INTO customers (id, email) VALUES (1, NULL);
-INSERT INTO customers (id, email) VALUES (2, NULL);   -- aceito
+INSERT INTO customers (id, email) VALUES (2, NULL);   -- accepted
 ```
 
 As duas linhas entram. Um índice único recusa duas linhas que sejam **iguais**, e a aula 1 resolveu
@@ -44,7 +44,7 @@ caro.
 ```sql
 CREATE TABLE orders (
     id          integer PRIMARY KEY,
-    customer_id integer REFERENCES customers (id)      -- sem índice em customer_id
+    customer_id integer REFERENCES customers (id)      -- no index on customer_id
 );
 ```
 
@@ -123,7 +123,7 @@ BEGIN;
 SET CONSTRAINTS items_position_key DEFERRED;
 UPDATE items SET position = 2 WHERE id = 1;
 UPDATE items SET position = 1 WHERE id = 2;
-COMMIT;                                     -- conferido aqui, e passa
+COMMIT;                                     -- checked here, and it passes
 ```
 
 O que é a transação da aula 8 fazendo algo que só ela consegue: tornar o estado intermediário, que é

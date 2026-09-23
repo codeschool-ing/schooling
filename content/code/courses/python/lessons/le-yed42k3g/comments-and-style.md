@@ -1,6 +1,6 @@
 ---
 title: The indentation is the syntax
-version: 1
+version: 2
 ---
 
 ## Comments

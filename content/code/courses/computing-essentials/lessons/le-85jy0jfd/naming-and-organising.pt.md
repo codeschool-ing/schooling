@@ -1,6 +1,6 @@
 ---
 title: Nomear, que é a única parte disto que é trabalho
-version: 1
+version: 2
 ---
 
 Tudo antes desta seção foi como o sistema de arquivos se comporta. Esta é o hábito que decide se
@@ -49,7 +49,7 @@ dos poucos usos honestos de um.
 
 ## As quatro pastas que cobrem quase uma vida
 
-```
+```localised
 documentos/
   2026/           ← coisas que pertencem a um ano
   referencia/     ← coisas que não mudam

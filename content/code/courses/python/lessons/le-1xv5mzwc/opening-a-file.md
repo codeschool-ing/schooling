@@ -1,6 +1,6 @@
 ---
 title: `with`, and the file nobody closed
-version: 1
+version: 2
 ---
 
 ```python

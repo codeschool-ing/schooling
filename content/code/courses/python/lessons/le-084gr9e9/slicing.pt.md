@@ -1,11 +1,11 @@
 ---
-title: `[início:fim:passo]`, e a cópia que ele faz
-version: 1
+title: `[start:stop:step]`, e a cópia que ele faz
+version: 2
 ---
 
 ```python
->>> letras = ["a", "b", "c", "d", "e"]
->>> letras[1:3]
+>>> letters = ["a", "b", "c", "d", "e"]
+>>> letters[1:3]
 ['b', 'c']
 ```
 
@@ -19,20 +19,20 @@ compra: `len(xs[a:b])` é `b - a`, e `xs[:n] + xs[n:]` é a coisa inteira sem so
 ## Deixando partes de fora
 
 ```python
->>> letras[:2]     # do começo
+>>> letters[:2]     # from the beginning
 ['a', 'b']
->>> letras[2:]     # até o fim
+>>> letters[2:]     # to the end
 ['c', 'd', 'e']
->>> letras[:]      # tudo — e uma lista NOVA
+>>> letters[:]      # all of it — and a NEW list
 ['a', 'b', 'c', 'd', 'e']
 ```
 
 ## O passo
 
 ```python
->>> letras[::2]
+>>> letters[::2]
 ['a', 'c', 'e']
->>> letras[::-1]
+>>> letters[::-1]
 ['e', 'd', 'c', 'b', 'a']
 ```
 
@@ -42,11 +42,11 @@ palíndromo numa expressão.
 ## Uma fatia nunca levanta erro
 
 ```python
->>> letras[10:20]
+>>> letters[10:20]
 []
 ```
 
-Onde `letras[10]` levanta `IndexError`, a fatia simplesmente te dá o que existe. É conveniente e é
+Onde `letters[10]` levanta `IndexError`, a fatia simplesmente te dá o que existe. É conveniente e é
 também um lugar onde um defeito se esconde: um resultado vazio pode significar *nada casou* ou *meus
 índices eram absurdos*, e a fatia não vai dizer qual.
 

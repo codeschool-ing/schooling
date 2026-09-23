@@ -4,65 +4,65 @@ version: 2
 ---
 
 ```python
-@repetir(vezes=3)
-def buscar(url):
+@retry(times=3)
+def fetch(url):
     ...
 ```
 
 Escreva o `@` como chamada, como a seção anterior disse:
 
 ```python
-buscar = repetir(vezes=3)(buscar)
+fetch = retry(times=3)(fetch)
 ```
 
-**Duas chamadas.** O `repetir(vezes=3)` roda primeiro e precisa devolver um DECORADOR; esse
-decorador é então chamado com `buscar`. Então há três camadas em vez de duas.
+**Duas chamadas.** O `retry(times=3)` roda primeiro e precisa devolver um DECORADOR; esse
+decorador é então chamado com `fetch`. Então há três camadas em vez de duas.
 
 ```schooling-example
 {
   "language": "python",
   "parts": [
     {
-      "code": "def repetir(vezes):",
-      "note": "**A primeira camada recebe o argumento.** O `repetir(vezes=3)` roda quando a linha do `@` é lida, antes de existir qualquer função, e tudo o que ele faz é guardar o `vezes`."
+      "code": "def retry(times):",
+      "note": "**A primeira camada recebe o argumento.** O `retry(times=3)` roda quando a linha do `@` é lida, antes de existir qualquer função, e tudo o que ele faz é guardar o `times`."
     },
     {
-      "code": "    def decorador(func):\n        @functools.wraps(func)",
-      "note": "**A segunda recebe a função.** Este é o decorador de fato, o que o `@` aplica ao `buscar`, e o `functools.wraps` mantém o nome e a docstring do `buscar` no que ele devolve."
+      "code": "    def decorator(func):\n        @functools.wraps(func)",
+      "note": "**A segunda recebe a função.** Este é o decorador de fato, o que o `@` aplica ao `fetch`, e o `functools.wraps` mantém o nome e a docstring do `fetch` no que ele devolve."
     },
     {
-      "code": "        def wrapper(*args, **kwargs):\n            for tentativa in range(vezes):\n                try:\n                    return func(*args, **kwargs)\n                except OSError:\n                    if tentativa == vezes - 1:\n                        raise",
-      "note": "**A terceira recebe a chamada**, e roda toda vez que `buscar(url)` roda: até `vezes` tentativas, devolvendo a primeira que der certo e levantando o último `OSError` se nenhuma der."
+      "code": "        def wrapper(*args, **kwargs):\n            for attempt in range(times):\n                try:\n                    return func(*args, **kwargs)\n                except OSError:\n                    if attempt == times - 1:\n                        raise",
+      "note": "**A terceira recebe a chamada**, e roda toda vez que `fetch(url)` roda: até `times` tentativas, devolvendo a primeira que der certo e levantando o último `OSError` se nenhuma der."
     },
     {
       "code": "        return wrapper",
-      "note": "O decorador devolve o wrapper, e é para ele que o nome `buscar` aponta daí em diante."
+      "note": "O decorador devolve o wrapper, e é para ele que o nome `fetch` aponta daí em diante."
     },
     {
-      "code": "    return decorador",
-      "note": "E o `repetir` devolve o decorador. Um `return` para cada camada de fora: esqueça qualquer um e fica `None` onde deveria haver uma função."
+      "code": "    return decorator",
+      "note": "E o `retry` devolve o decorador. Um `return` para cada camada de fora: esqueça qualquer um e fica `None` onde deveria haver uma função."
     }
   ]
 }
 ```
 
-Leia de dentro para fora: o `wrapper` faz o trabalho, o `decorador` faz um wrapper para uma função,
-o `repetir` faz um decorador para uma configuração.
+Leia de dentro para fora: o `wrapper` faz o trabalho, o `decorator` faz um wrapper para uma função,
+o `retry` faz um decorador para uma configuração.
 
 ## Por que não dá para ser duas camadas
 
-Porque o `@` aplica o que vem depois dele à função abaixo. Se o `repetir` recebesse a função, ele
-não teria onde pôr o `vezes`. A chamada precisa acontecer antes de o `@` fazer qualquer coisa.
+Porque o `@` aplica o que vem depois dele à função abaixo. Se o `retry` recebesse a função, ele
+não teria onde pôr o `times`. A chamada precisa acontecer antes de o `@` fazer qualquer coisa.
 
 ## O que pega as pessoas
 
 ```python
-@repetir            # sem parênteses
-def buscar(url): ...
+@retry            # no parentheses
+def fetch(url): ...
 ```
 
-Agora o `vezes` é a FUNÇÃO, e o `decorador` é o que o `buscar` vira — então chamar `buscar(url)`
-chama `decorador(url)` e devolve um wrapper em vez de um resultado. Nada levanta erro até muito
+Agora o `times` é a FUNÇÃO, e o `decorator` é o que o `fetch` vira — então chamar `fetch(url)`
+chama `decorator(url)` e devolve um wrapper em vez de um resultado. Nada levanta erro até muito
 depois, e a mensagem é sobre outra coisa.
 
 **Um decorador que recebe argumentos precisa sempre ser escrito com parênteses**, mesmo vazios, a

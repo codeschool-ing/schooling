@@ -1,6 +1,6 @@
 ---
 title: HAVING filters groups, WHERE filters rows
-version: 1
+version: 2
 ---
 
 Two lessons promised this section, so here is the sentence they were promising:

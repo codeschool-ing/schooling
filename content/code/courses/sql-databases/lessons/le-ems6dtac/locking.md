@@ -1,6 +1,6 @@
 ---
 title: Locking, when you want to be explicit about it
-version: 1
+version: 2
 ---
 
 Start with the fact that explains why databases feel as fast as they do:

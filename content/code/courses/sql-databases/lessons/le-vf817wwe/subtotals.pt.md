@@ -1,6 +1,6 @@
 ---
 title: Subtotais e total geral numa passada só
-version: 1
+version: 2
 ---
 
 Um relatório quer receita por região por mês, uma linha por região, e um total geral no rodapé. São
@@ -39,7 +39,7 @@ da direita, depois o total.
 
 ```sql
 GROUP BY ROLLUP (region, month)
--- o mesmo que GROUPING SETS ((region, month), (region), ())
+-- the same as GROUPING SETS ((region, month), (region), ())
 ```
 
 É o formato que quase todo relatório financeiro quer, porque corresponde a como eles são lidos:
@@ -69,9 +69,9 @@ genuinamente desconhecida também tem. Na saída são o mesmo caractere:
 ```
 region   month     sum
 south    2026-03   1400
-south    NULL      3900      <- subtotal do sul
-NULL     2026-03    260      <- vendas de região desconhecida
-NULL     NULL      9100      <- total geral
+south    NULL      3900      <- subtotal for the south
+NULL     2026-03    260      <- sales whose region we do not know
+NULL     NULL      9100      <- grand total
 ```
 
 A linha dois e a linha quatro dizem `NULL` para região e querem dizer coisas completamente
@@ -81,9 +81,9 @@ diferentes. Uma pessoa lendo a tabela não tem como saber, e o programa que a de
 nulo é do próprio dado.
 
 ```sql
-SELECT   CASE WHEN GROUPING(region) = 1 THEN 'todas as regiões' ELSE coalesce(region, 'desconhecida') END
+SELECT   CASE WHEN GROUPING(region) = 1 THEN 'all regions' ELSE coalesce(region, 'unknown') END
            AS region,
-         CASE WHEN GROUPING(month)  = 1 THEN 'todos os meses'   ELSE to_char(month, 'YYYY-MM') END
+         CASE WHEN GROUPING(month)  = 1 THEN 'all months'  ELSE to_char(month, 'YYYY-MM') END
            AS month,
          sum(total)
 FROM     sales

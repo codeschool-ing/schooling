@@ -1,6 +1,6 @@
 ---
 title: Escolhendo colunas, e o hábito a quebrar cedo
-version: 1
+version: 2
 ---
 
 ```sql
@@ -77,7 +77,7 @@ Tudo que você consegue calcular pode ir na lista:
 ```sql
 SELECT name,
        round(price * 1.23, 2)                     AS gross,
-       coalesce(description, 'Sem descricao')     AS description,
+       coalesce(description, 'No description')    AS description,
        price > 100                                AS is_expensive,
        extract(year FROM created_at)              AS created_year
 FROM   products;

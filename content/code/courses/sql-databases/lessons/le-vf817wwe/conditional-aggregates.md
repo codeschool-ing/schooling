@@ -1,6 +1,6 @@
 ---
 title: Counting only some of the rows, in the same pass
-version: 1
+version: 2
 ---
 
 A `WHERE` applies to the whole query. But the question is usually not *"how many paid orders"* —

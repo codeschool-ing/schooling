@@ -1,6 +1,6 @@
 ---
 title: What counts as false, and the `and` that returns a string
-version: 1
+version: 2
 ---
 
 `True` and `False` are the two booleans, and they are **integers underneath**: `True + True` is

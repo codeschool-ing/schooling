@@ -1,6 +1,6 @@
 ---
 title: Fixed, and therefore usable as a key
-version: 1
+version: 2
 ---
 
 ```python

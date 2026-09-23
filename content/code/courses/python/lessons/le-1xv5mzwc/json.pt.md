@@ -1,15 +1,15 @@
 ---
 title: Quatro funções, e os tipos de cada lado
-version: 1
+version: 2
 ---
 
 ```python
 import json
 
-dados = json.loads(texto)        # string  → Python
-dados = json.load(f)             # arquivo → Python
-texto = json.dumps(dados)        # Python  → string
-json.dump(dados, f)              # Python  → arquivo
+data = json.loads(text)          # string  → Python
+data = json.load(f)              # file    → Python
+text = json.dumps(data)          # Python  → string
+json.dump(data, f)               # Python  → file
 ```
 
 **O `s` quer dizer string.** Essa é a nomenclatura inteira, e é a coisa que as pessoas consultam
@@ -33,7 +33,7 @@ Não existe tupla, nem conjunto, nem data. Uma tupla gravada volta como lista, u
 ## Gravar para uma pessoa ler
 
 ```python
-json.dump(dados, f, indent=2, ensure_ascii=False, sort_keys=True)
+json.dump(data, f, indent=2, ensure_ascii=False, sort_keys=True)
 ```
 
 `indent=2` deixa legível e deixa um diff útil. `ensure_ascii=False` mantém `ção` como `ção` em vez
@@ -43,8 +43,8 @@ impede um arquivo de parecer alterado quando não está.
 ## Ler
 
 ```python
-with open(caminho, encoding="utf-8") as f:
-    dados = json.load(f)
+with open(path, encoding="utf-8") as f:
+    data = json.load(f)
 ```
 
 O `json.load` recebe o ARQUIVO, e não o texto — passar `f.read()` para ele funciona e lê o arquivo

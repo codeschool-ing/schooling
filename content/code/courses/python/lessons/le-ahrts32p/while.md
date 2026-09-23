@@ -1,6 +1,6 @@
 ---
 title: The condition has to change
-version: 1
+version: 2
 ---
 
 ```python

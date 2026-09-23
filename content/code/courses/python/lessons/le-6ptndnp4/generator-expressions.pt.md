@@ -1,11 +1,11 @@
 ---
 title: A compreensão com parênteses
-version: 1
+version: 2
 ---
 
 ```python
-[x * 2 for x in xs]       # uma lista, construída agora
-(x * 2 for x in xs)       # um gerador, construído nunca
+[x * 2 for x in xs]       # a list, built now
+(x * 2 for x in xs)       # a generator, built never
 ```
 
 A mesma sintaxe, delimitadores diferentes, comportamento completamente diferente. A primeira
@@ -14,7 +14,7 @@ percorre `xs` e devolve uma lista. A segunda devolve um gerador que não fez nad
 ## Onde isso poupa alguma coisa
 
 ```python
-total = sum(int(linha["valor"]) for linha in linhas)
+total = sum(int(row["amount"]) for row in rows)
 ```
 
 Nenhuma lista de um milhão de números existe em momento nenhum. Quando a chamada já tem
@@ -24,7 +24,7 @@ parênteses próprios, o par extra é desnecessário — `sum(x for x in xs)` em
 ## Onde isso não poupa nada
 
 ```python
-nomes = [p["nome"] for p in pessoas]        # você quer a lista
+names = [p["name"] for p in people]        # you want the list
 ```
 
 Se você vai guardá-la, indexá-la, ou percorrê-la duas vezes, construa a lista. Um gerador no qual
@@ -36,7 +36,7 @@ outro gerador, ou um `for` que roda uma vez — gerador. Qualquer outra coisa �
 ## `any` e `all`
 
 ```python
-if any(l["cidade"] == "Porto" for l in linhas):
+if any(r["city"] == "Porto" for r in rows):
 ```
 
 Os dois fazem curto-circuito, então isto para na primeira coincidência em vez de conferir um
@@ -46,8 +46,8 @@ então pararia no primeiro item — que é a mesma resposta e nenhuma das econom
 ## O que morde
 
 ```python
-g = (x for x in linhas)
-print(len(g))          # TypeError
+gen = (x for x in rows)
+print(len(gen))          # TypeError
 ```
 
 Um gerador não tem comprimento, porque ele não sabe nenhum. `sum(1 for _ in g)` o conta — e o

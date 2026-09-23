@@ -1,6 +1,6 @@
 ---
 title: Three types, and the one with no time zone
-version: 1
+version: 2
 ---
 
 ```python

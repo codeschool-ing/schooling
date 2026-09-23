@@ -1,6 +1,6 @@
 ---
 title: Matching text, and what each way costs
-version: 1
+version: 2
 ---
 
 Exact equality was the last section. This one is the several ways to ask for "something like".

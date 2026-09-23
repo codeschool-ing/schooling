@@ -1,6 +1,6 @@
 ---
 title: Logging in, and which file runs when
-version: 1
+version: 2
 ---
 
 An account is a line in a file. A **session** is what happens when somebody uses it — and the two

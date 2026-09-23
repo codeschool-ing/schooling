@@ -1,6 +1,6 @@
 ---
 title: A path is an object, not a string
-version: 1
+version: 2
 ---
 
 ```python

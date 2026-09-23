@@ -1,6 +1,6 @@
 ---
 title: `int()`, `float()`, `str()` — and where they refuse
-version: 1
+version: 2
 ---
 
 ```python

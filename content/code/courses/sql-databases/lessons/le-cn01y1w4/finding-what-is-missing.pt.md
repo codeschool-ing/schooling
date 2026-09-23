@@ -1,6 +1,6 @@
 ---
 title: Achando o que não está lá
-version: 1
+version: 2
 ---
 
 Algumas das perguntas mais valiosas são sobre ausência:
@@ -92,10 +92,10 @@ O desempenho entre os dois primeiros é próximo o bastante para não ser o fato
 Os mesmos três formatos respondem a pergunta positiva, e o mesmo vence:
 
 ```sql
--- clientes que JÁ pediram
+-- customers who HAVE ordered
 SELECT name FROM customers c WHERE EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id);
 
--- a mesma coisa, mal feita
+-- the same thing, badly
 SELECT DISTINCT c.name FROM customers c JOIN orders o ON o.customer_id = c.id;
 ```
 

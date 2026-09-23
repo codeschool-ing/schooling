@@ -1,6 +1,6 @@
 ---
 title: A list is a good stack and a bad queue
-version: 1
+version: 2
 ---
 
 ```python

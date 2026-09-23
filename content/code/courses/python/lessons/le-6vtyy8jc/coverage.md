@@ -1,6 +1,6 @@
 ---
 title: The number says what ran, not what was checked
-version: 1
+version: 2
 ---
 
 ```sh

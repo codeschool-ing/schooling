@@ -1,6 +1,6 @@
 ---
 title: Achar coisas: `find`
-version: 1
+version: 2
 ---
 
 O `find` tem fama de feio, e ela é merecida por um motivo: a sintaxe dele é mais velha que a de
@@ -9,7 +9,7 @@ quase todo comando que você vai usar, e não segue as regras da seção 07 da a
 
 Aprenda a forma uma vez e ele para de ser estranho:
 
-```
+```localised
 find   ONDE   O-QUE-CASAR   O-QUE-FAZER
 ```
 

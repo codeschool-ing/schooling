@@ -1,15 +1,15 @@
 ---
 title: Subconsultas correlacionadas, que rodam uma vez por linha
-version: 1
+version: 2
 ---
 
 Duas subconsultas que se parecem e não são:
 
 ```sql
--- independente: pode ser rodada sozinha, e é rodada uma vez
+-- independent: it can be run on its own, and it is run once
 WHERE price > (SELECT avg(price) FROM products)
 
--- correlacionada: menciona a consulta de fora, e não pode ser rodada sozinha
+-- correlated: it mentions the outer query, and it cannot be run on its own
 WHERE price > (SELECT avg(price) FROM products p2 WHERE p2.category_id = p.category_id)
 ```
 

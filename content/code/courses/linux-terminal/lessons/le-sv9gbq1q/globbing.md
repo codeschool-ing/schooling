@@ -1,6 +1,6 @@
 ---
 title: Patterns, and who expands them
-version: 1
+version: 2
 ---
 
 **The single most important fact in this section:** the shell expands a pattern *before* the

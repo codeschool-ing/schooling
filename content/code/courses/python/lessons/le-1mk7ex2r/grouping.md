@@ -1,6 +1,6 @@
 ---
 title: `groupby`, which is `uniq -c` with arithmetic
-version: 1
+version: 2
 ---
 
 ```python

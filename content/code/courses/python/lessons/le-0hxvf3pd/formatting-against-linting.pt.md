@@ -1,11 +1,11 @@
 ---
 title: Uma reescreve o arquivo; a outra relata o que achou
-version: 1
+version: 2
 ---
 
 ```sh
-black app/          # muda bytes, quase não fala
-ruff check app/     # fala muito, não muda nada
+black app/          # changes bytes, says almost nothing
+ruff check app/     # says a lot, changes nothing
 ```
 
 **Um formatador decide como o código é disposto.** Onde a linha quebra, qual caractere de aspas,
@@ -18,7 +18,7 @@ relata e deixa o conserto com você.
 
 ## Por que são duas ferramentas e não uma
 
-```sh
+```localised
 o black reescreveu 22 linhas do módulo da demonstração.
 o ruff relatou os mesmos 4 achados antes e depois.
 ```
@@ -42,7 +42,7 @@ de linhas que o formatador escolheu.
 
 ```toml
 [tool.ruff.lint]
-ignore = ["E501"]         # comprimento de linha: trabalho do formatador
+ignore = ["E501"]         # line length: the formatter's job
 ```
 
 A convenção é deixar o formatador ganhar: desligue as regras que são sobre disposição e fique com

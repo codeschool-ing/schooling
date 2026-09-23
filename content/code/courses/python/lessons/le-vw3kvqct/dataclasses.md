@@ -1,6 +1,6 @@
 ---
 title: The class that was a name and three fields
-version: 1
+version: 2
 ---
 
 ```python

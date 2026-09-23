@@ -1,6 +1,6 @@
 ---
 title: Time, and the column that is wrong twice a year
-version: 1
+version: 2
 ---
 
 This section carries one rule that prevents a whole class of bug, and the rule is short:

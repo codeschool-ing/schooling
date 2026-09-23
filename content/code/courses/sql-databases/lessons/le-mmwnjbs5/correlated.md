@@ -1,6 +1,6 @@
 ---
 title: Correlated subqueries, which run once per row
-version: 1
+version: 2
 ---
 
 Two subqueries that look alike and are not:

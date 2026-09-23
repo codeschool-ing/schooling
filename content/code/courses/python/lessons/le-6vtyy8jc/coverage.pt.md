@@ -1,6 +1,6 @@
 ---
 title: O número diz o que rodou, não o que foi conferido
-version: 1
+version: 2
 ---
 
 ```sh
@@ -23,12 +23,12 @@ verdade e a verdade é que nada exercitou a função de verdade.
 ## Cem por cento, com um defeito
 
 ```python
-def tax(valor, taxa):
-    return valor * taxa * 2        # dobrado
+def tax(amount, rate):
+    return amount * rate * 2        # doubled
 
-def test_total_roda():
-    resultado = total([(2, 10.0)], 0.1)
-    assert resultado is not None
+def test_total_runs():
+    result = total([(2, 10.0)], 0.1)
+    assert result is not None
 ```
 
 ```sh
@@ -73,7 +73,7 @@ fail_under = 80
 
 Um piso que impede o número de cair é defensável. Uma meta que alguém precisa alcançar é onde
 testes passam a ser escritos para tocar linhas em vez de conferir comportamento, e
-`assert resultado is not None` é o que isso produz.
+`assert result is not None` é o que isso produz.
 
 **Cobertura não é meta.** Escreva o teste que teria pegado a falha que você acabou de achar, e o
 do modo de falhar que você consegue nomear.

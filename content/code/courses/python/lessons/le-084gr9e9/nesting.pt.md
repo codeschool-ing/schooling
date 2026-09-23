@@ -1,15 +1,15 @@
 ---
 title: Uma lista de dicionários, que é a cara de todo arquivo
-version: 1
+version: 2
 ---
 
 Contêineres guardam qualquer coisa, inclusive outros contêineres. Uma forma aparece mais que todas as
 outras somadas:
 
 ```python
-pessoas = [
-    {"nome": "Ada", "cidade": "Londres", "langs": ["python", "c"]},
-    {"nome": "Bo",  "cidade": "Porto",   "langs": ["go"]},
+people = [
+    {"name": "Ada", "city": "London", "langs": ["python", "c"]},
+    {"name": "Bo",  "city": "Porto",  "langs": ["go"]},
 ]
 ```
 
@@ -19,9 +19,9 @@ que uma API devolve na aula 21. Ficar à vontade com isso agora paga o resto do 
 ## Alcançando
 
 ```python
->>> pessoas[0]["cidade"]
-'Londres'
->>> pessoas[0]["langs"][1]
+>>> people[0]["city"]
+'London'
+>>> people[0]["langs"][1]
 'c'
 ```
 
@@ -30,16 +30,16 @@ Da esquerda para a direita: a primeira pessoa, a cidade dela. Cada `[...]` é um
 ## As três perguntas que você vai fazer a isso
 
 ```python
-# todas as cidades
-cidades = [p["cidade"] for p in pessoas]
+# every city
+cities = [p["city"] for p in people]
 
-# a que tem um certo nome
-ada = next(p for p in pessoas if p["nome"] == "Ada")
+# the one with a given name
+ada = next(p for p in people if p["name"] == "Ada")
 
-# agrupadas por cidade
-por_cidade = {}
-for p in pessoas:
-    por_cidade.setdefault(p["cidade"], []).append(p)
+# grouped by city
+by_city = {}
+for p in people:
+    by_city.setdefault(p["city"], []).append(p)
 ```
 
 A primeira é a compreensão da aula 4. A terceira é o idioma do `setdefault`, e o
@@ -47,11 +47,11 @@ A primeira é a compreensão da aula 4. A terceira é o idioma do `setdefault`, 
 
 ## Onde dá errado
 
-**Uma chave ausente no fundo da estrutura.** `p["endereco"]["cidade"]` levanta `KeyError` na primeira
+**Uma chave ausente no fundo da estrutura.** `p["address"]["city"]` levanta `KeyError` na primeira
 metade, e o traceback diz `'endereco'` — que é a informação de que você precisa, então leia em vez de
 adivinhar.
 
-Para dados que não foram você que produziu, `p.get("endereco", {}).get("cidade")` responde `None` em
+Para dados que não foram você que produziu, `p.get("address", {}).get("city")` responde `None` em
 vez de levantar. A aula 9 tem a seção sobre JSON que não é seu, e a aula 14 tem `TypedDict`, que
 deixa um verificador saber a forma de antemão.
 

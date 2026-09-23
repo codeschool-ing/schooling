@@ -1,12 +1,12 @@
 ---
 title: `raises` com um `match`, e o float que nunca é igual
-version: 1
+version: 2
 ---
 
 ```python
-def test_moeda_desconhecida():
+def test_unknown_currency():
     with pytest.raises(KeyError, match="unknown currency"):
-        taxa("XYZ")
+        rate("XYZ")
 ```
 
 **O bloco afirma que o código levantou.** Sem o `pytest.raises` a exceção escapa e o teste dá
@@ -15,8 +15,8 @@ erro, que parece um teste quebrado em vez de um comportamento provado.
 ## `match` não é opcional na prática
 
 ```python
-with pytest.raises(KeyError):        # QUALQUER KeyError passa
-    taxa("XYZ")
+with pytest.raises(KeyError):        # ANY KeyError passes
+    rate("XYZ")
 ```
 
 Um erro de digitação no próprio teste levanta `KeyError` também, e uma busca em dicionário três
@@ -33,7 +33,7 @@ E         Actual message: "'unknown currency XYZ'"
 
 ```python
 with pytest.raises(ValueError) as e:
-    analisar("besteira")
+    parse("nonsense")
 assert e.value.field == "amount"
 ```
 
@@ -44,7 +44,7 @@ porque dentro dele nada depois da linha que levanta roda.
 
 ```python
 def test_float():
-    assert 0.1 + 0.2 == 0.3          # falha
+    assert 0.1 + 0.2 == 0.3          # fails
 ```
 
 Ponto flutuante binário não consegue guardar `0.1`, então a soma é `0.30000000000000004`. Isso é

@@ -1,6 +1,6 @@
 ---
 title: ORDER BY, and the arrangement nobody promised you
-version: 1
+version: 2
 ---
 
 Rows have no order. Lesson 1 said it as a property of a table; here is what it means for a query.

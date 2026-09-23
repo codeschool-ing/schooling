@@ -1,6 +1,6 @@
 ---
 title: Building a lookup once, instead of searching repeatedly
-version: 1
+version: 2
 ---
 
 ```python

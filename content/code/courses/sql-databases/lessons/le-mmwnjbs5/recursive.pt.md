@@ -1,6 +1,6 @@
 ---
 title: Percorrer uma árvore com WITH RECURSIVE
-version: 1
+version: 2
 ---
 
 A aula 1 lhe deu uma tabela que aponta para si mesma:
@@ -21,13 +21,13 @@ de Cozinha"* não tem resposta no SQL que você tem até aqui.
 WITH RECURSIVE tree AS (
     SELECT id, name, parent_id, 1 AS depth
     FROM   categories
-    WHERE  id = 3                                     -- a âncora: onde começar
+    WHERE  id = 3                                     -- the anchor: where to start
 
     UNION ALL
 
     SELECT c.id, c.name, c.parent_id, t.depth + 1
     FROM   categories c
-    JOIN   tree t ON c.parent_id = t.id               -- o passo: um nível adiante
+    JOIN   tree t ON c.parent_id = t.id               -- the step: one level further
 )
 SELECT * FROM tree ORDER BY depth, name;
 ```
@@ -38,11 +38,11 @@ Toda consulta recursiva tem essas duas metades e o `UNION ALL` entre elas.
 
 A palavra "recursiva" engana — nada chama a si mesmo. Ela itera:
 
-```
-rodada 0   a âncora roda                        → Cozinha                         (nível 1)
-rodada 1   o passo roda contra a rodada 0       → Panelas, Louça                  (nível 2)
-rodada 2   o passo roda contra a rodada 1       → Frigideiras, Facas, Pratos      (nível 3)
-rodada 3   o passo roda contra a rodada 2       → Frigideira antiaderente         (nível 4)
+```localised
+rodada 0   a âncora roda                        → Cozinha                         (depth 1)
+rodada 1   o passo roda contra a rodada 0       → Panelas, Louça                  (depth 2)
+rodada 2   o passo roda contra a rodada 1       → Frigideiras, Facas, Pratos      (depth 3)
+rodada 3   o passo roda contra a rodada 2       → Frigideira antiaderente         (depth 4)
 rodada 4   o passo roda contra a rodada 3       → nada, então para
 ```
 

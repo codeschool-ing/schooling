@@ -1,6 +1,6 @@
 ---
 title: Um nome é um rótulo num valor, não uma caixa
-version: 1
+version: 2
 ---
 
 ```python
@@ -14,7 +14,7 @@ diferença é invisível com números e vira a história inteira na aula 3.
 
 ```python
 x = 5
-x = "cinco"
+x = "five"
 ```
 
 Perfeitamente legal. O nome deixa de se referir ao número e passa a se referir à string. Python tem

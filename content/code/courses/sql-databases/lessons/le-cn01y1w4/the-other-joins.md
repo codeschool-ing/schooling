@@ -1,6 +1,6 @@
 ---
 title: The other joins, and one to avoid
-version: 1
+version: 2
 ---
 
 ## CROSS JOIN

@@ -1,6 +1,6 @@
 ---
 title: Six that are worth the import
-version: 1
+version: 2
 ---
 
 ```python

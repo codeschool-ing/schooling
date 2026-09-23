@@ -1,6 +1,6 @@
 ---
 title: A module is a file, and an import is a lookup
-version: 1
+version: 2
 ---
 
 ```python

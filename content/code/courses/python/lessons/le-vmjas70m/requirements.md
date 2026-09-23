@@ -1,6 +1,6 @@
 ---
 title: `requirements.txt`, and why `pip freeze` does not write one
-version: 1
+version: 2
 ---
 
 ```sh

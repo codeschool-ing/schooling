@@ -1,6 +1,6 @@
 ---
 title: O interpretador que é do sistema operacional
-version: 1
+version: 2
 ---
 
 ```sh
@@ -32,7 +32,7 @@ funcionar uma hora depois, sem nenhuma ligação que alguém enxergasse entre as
 
 ## E a outra razão, que é sua
 
-```sh
+```localised
 projeto-a/   precisa de requests 2.26
 projeto-b/   precisa de requests 2.31
 ```

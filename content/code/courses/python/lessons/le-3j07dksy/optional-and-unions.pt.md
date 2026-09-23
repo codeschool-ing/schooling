@@ -1,10 +1,10 @@
 ---
 title: `X | None`, e a união que é sintoma
-version: 1
+version: 2
 ---
 
 ```python
-def achar(codigo: str) -> Taxa | None:
+def find(code: str) -> Rate | None:
     ...
 ```
 
@@ -12,14 +12,14 @@ def achar(codigo: str) -> Taxa | None:
 então aponta toda chamada que usou o resultado sem perguntar.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 272\" role=\"img\" aria-label=\"Um tipo de retorno Taxa ou None diz que a função tem duas respostas possíveis. Perguntar se é None separa as duas, e dentro de cada braço o verificador sabe qual delas está na mão. Quem chama sem perguntar é onde o verificador aponta.\"> <defs><marker id=\"ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker></defs> <defs><marker id=\"ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs> <rect x=\"150\" y=\"26\" width=\"420\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"360\" y=\"44\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">def achar(codigo: str) -&gt; Taxa | None</text> <text x=\"360\" y=\"78\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">duas respostas possíveis, e só uma tem uma taxa dentro</text> <path d=\"M360 90 L360 104\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-phosphor)\"></path> <rect x=\"210\" y=\"110\" width=\"300\" height=\"32\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"360\" y=\"126\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">if taxa is None:</text> <path d=\"M300 146 L300 166 L180 166 L180 182\" stroke=\"var(--amber)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-amber)\"></path> <path d=\"M420 146 L420 166 L540 166 L540 182\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-phosphor)\"></path> <rect x=\"20\" y=\"186\" width=\"320\" height=\"36\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\"0.2\" stroke=\"var(--amber)\"></rect> <text x=\"180\" y=\"204\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">None — tratado aqui, e em nenhum outro lugar</text> <rect x=\"380\" y=\"186\" width=\"320\" height=\"36\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\"0.2\" stroke=\"var(--phosphor)\"></rect> <text x=\"540\" y=\"204\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">Taxa — e daqui para a frente o verificador sabe disso</text> <text x=\"360\" y=\"240\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">Optional[Taxa] é a mesma coisa na grafia antiga, e o nome dela é a armadilha:</text> <text x=\"360\" y=\"257\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">ela nunca quis dizer que este argumento pode ser omitido.</text> </svg>", "caption": "A anotação não impede a função de não devolver nada. Ela impede quem chama de esquecer que isso pode acontecer."}
+{"svg": "<svg viewBox=\"0 0 720 272\" role=\"img\" aria-label=\"Um tipo de retorno Rate ou None diz que a função tem duas respostas possíveis. Perguntar se é None separa as duas, e dentro de cada braço o verificador sabe qual delas está na mão. Quem chama sem perguntar é onde o verificador aponta.\"> <defs><marker id=\"ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker></defs> <defs><marker id=\"ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs> <rect x=\"150\" y=\"26\" width=\"420\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"360\" y=\"44\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">def find(code: str) -&gt; Rate | None</text> <text x=\"360\" y=\"78\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">duas respostas possíveis, e só uma tem uma taxa dentro</text> <path d=\"M360 90 L360 104\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-phosphor)\"></path> <rect x=\"210\" y=\"110\" width=\"300\" height=\"32\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"360\" y=\"126\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" fill=\"var(--paper)\">if rate is None:</text> <path d=\"M300 146 L300 166 L180 166 L180 182\" stroke=\"var(--amber)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-amber)\"></path> <path d=\"M420 146 L420 166 L540 166 L540 182\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-phosphor)\"></path> <rect x=\"20\" y=\"186\" width=\"320\" height=\"36\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\"0.2\" stroke=\"var(--amber)\"></rect> <text x=\"180\" y=\"204\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">None — tratado aqui, e em nenhum outro lugar</text> <rect x=\"380\" y=\"186\" width=\"320\" height=\"36\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\"0.2\" stroke=\"var(--phosphor)\"></rect> <text x=\"540\" y=\"204\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">Rate — e daqui para a frente o verificador sabe disso</text> <text x=\"360\" y=\"240\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">Optional[Rate] é a mesma coisa na grafia antiga, e o nome dela é a armadilha:</text> <text x=\"360\" y=\"257\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">ela nunca quis dizer que este argumento pode ser omitido.</text> </svg>", "caption": "A anotação não impede a função de não devolver nada. Ela impede quem chama de esquecer que isso pode acontecer."}
 ```
 
 ## A grafia antiga
 
 ```python
-Optional[Taxa]        # do typing — a mesma coisa
-Union[int, str]       # do typing — agora int | str
+Optional[Rate]        # from typing — the same thing
+Union[int, str]       # from typing — now int | str
 ```
 
 `Optional[X]` quer dizer `X | None` e nunca quis dizer "este argumento pode ser omitido", que é o
@@ -28,22 +28,22 @@ que o nome sugere e o que todo mundo supõe uma vez. A forma com `|` é a de esc
 ## Estreitar
 
 ```python
-taxa = achar(codigo)
-if taxa is None:
+rate = find(code)
+if rate is None:
     return 0.0
-return total * taxa          # aqui o verificador sabe que é uma Taxa
+return total * rate          # here the checker knows it is a Rate
 ```
 
-Um verificador segue o `if` e sabe que `taxa` não pode ser `None` abaixo dele. É isso que torna a
+Um verificador segue o `if` e sabe que `rate` não pode ser `None` abaixo dele. É isso que torna a
 anotação útil em vez de irritante: você confere uma vez, e o resto da função fica limpo.
 
-Um `if taxa is not None:` e um `return` antecipado fazem o mesmo, que é a cláusula de guarda da
+Um `if rate is not None:` e um `return` antecipado fazem o mesmo, que é a cláusula de guarda da
 aula 4 se pagando de novo.
 
 ## Um padrão `None`
 
 ```python
-def conectar(timeout: int | None = None) -> None:
+def connect(timeout: int | None = None) -> None:
     if timeout is None:
         timeout = 30
 ```
@@ -54,7 +54,7 @@ comum, e um verificador recusa.
 ## Quando uma união é sintoma de projeto
 
 ```python
-def carregar(fonte: str | Path | bytes | IO) -> list[dict]: ...
+def load(source: str | Path | bytes | IO) -> list[dict]: ...
 ```
 
 Quatro coisas, e o corpo precisa se ramificar sobre qual chegou. **Duas costuma estar bem; quatro

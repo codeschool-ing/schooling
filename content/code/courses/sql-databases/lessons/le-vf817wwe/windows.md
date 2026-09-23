@@ -1,6 +1,6 @@
 ---
 title: Window functions, which summarise without collapsing
-version: 1
+version: 2
 ---
 
 Everything so far destroys the rows it summarises. Group by customer and the orders are gone; you
@@ -69,7 +69,7 @@ it and it stops collapsing.
 
 Extend lesson 4's running order by one step:
 
-```
+```localised
 FROM → WHERE → GROUP BY → HAVING → window functions → SELECT → ORDER BY → LIMIT
 ```
 

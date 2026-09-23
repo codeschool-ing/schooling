@@ -1,6 +1,6 @@
 ---
 title: DISTINCT, which is usually a symptom
-version: 1
+version: 2
 ---
 
 ```sql

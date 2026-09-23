@@ -1,6 +1,6 @@
 ---
 title: The default that passes almost anything
-version: 1
+version: 2
 ---
 
 ```python

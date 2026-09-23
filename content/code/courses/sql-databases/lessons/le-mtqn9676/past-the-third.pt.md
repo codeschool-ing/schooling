@@ -1,6 +1,6 @@
 ---
 title: Além da terceira, brevemente e com honestidade
-version: 1
+version: 2
 ---
 
 Existem formas normais além da terceira. Você vai ouvir os nomes, principalmente de gente tentando
@@ -24,7 +24,7 @@ por que é raro. O exemplo clássico:
 
 com duas regras: um aluno tem um tutor por disciplina, e **cada tutor leciona só uma disciplina**.
 
-```
+```localised
 aluno, disciplina  →  tutor        a chave determina o tutor
 tutor              →  disciplina   e o tutor determina a disciplina
 ```

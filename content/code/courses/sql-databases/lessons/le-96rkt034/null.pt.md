@@ -1,6 +1,6 @@
 ---
 title: NULL não é um valor, e é aqui que as pessoas se machucam
-version: 1
+version: 2
 ---
 
 Toda coluna que não é declarada `NOT NULL` pode guardar `NULL`, e `NULL` se comporta diferente de
@@ -104,7 +104,7 @@ não se sabe que dois desconhecidos são iguais:
 
 ```sql
 CREATE TABLE people (tax_id text UNIQUE);
-INSERT INTO people VALUES (NULL), (NULL), (NULL);   -- as três são aceitas
+INSERT INTO people VALUES (NULL), (NULL), (NULL);   -- all three are accepted
 ```
 
 Correto pela lógica, e surpreendente na primeira vez. Se você precisa de no máximo uma linha sem

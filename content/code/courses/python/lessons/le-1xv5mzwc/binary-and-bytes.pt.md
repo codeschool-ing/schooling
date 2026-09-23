@@ -1,11 +1,11 @@
 ---
 title: `bytes` contra `str`, e quando você não precisa de nenhum dos dois
-version: 1
+version: 2
 ---
 
 ```python
-with open(caminho, "rb") as f:
-    dados = f.read()        # bytes, e não str
+with open(path, "rb") as f:
+    data = f.read()        # bytes, not str
 ```
 
 `"rb"` e `"wb"` pulam a decodificação inteira. Você recebe um objeto `bytes`: uma sequência de
@@ -14,12 +14,12 @@ números de 0 a 255, impressa como `b"..."`.
 ## As duas conversões
 
 ```python
-texto = dados.decode("utf-8")    # bytes → str
-dados = texto.encode("utf-8")    # str   → bytes
+text = data.decode("utf-8")      # bytes → str
+data = text.encode("utf-8")      # str   → bytes
 ```
 
 **Decodifique na entrada, codifique na saída**, e mantenha `str` em todo o meio. Um programa que
-carrega `bytes` pelo meio dele é um que vai comparar um `b"nome"` com um `"nome"` e receber `False`.
+carrega `bytes` pelo meio dele é um que vai comparar um `b"name"` com um `"name"` e receber `False`.
 
 ## Quando você precisa de binário
 
@@ -48,5 +48,5 @@ False
 biblioteca que devolve bytes — `subprocess`, um socket, um hash — e o conserto é um `.decode()`
 naquela fronteira em vez de uma conversão mais adiante.
 
-O `hashlib` é o caso comum: ele quer bytes, então `h.update(texto.encode("utf-8"))`, e ele devolve
+O `hashlib` é o caso comum: ele quer bytes, então `h.update(text.encode("utf-8"))`, e ele devolve
 um `hexdigest()` que é `str` de novo.

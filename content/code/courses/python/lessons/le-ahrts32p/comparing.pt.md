@@ -1,6 +1,6 @@
 ---
 title: Comparações encadeadas, e `==` contra `is`
-version: 1
+version: 2
 ---
 
 ## Os operadores
@@ -14,7 +14,7 @@ geral é o que se queria.
 ## Encadear
 
 ```python
-if 0 <= indice < len(itens):
+if 0 <= index < len(items):
 ```
 
 Isso é uma expressão só e significa o que parece. A maioria das linguagens não faz isso; em Python
@@ -40,11 +40,11 @@ que faz parecer que funciona até o dia em que não funciona.
 ## `in`
 
 ```python
->>> "ada" in "ada lovelace"      # trecho
+>>> "ada" in "ada lovelace"      # substring
 True
->>> 3 in [1, 2, 3]               # pertinência
+>>> 3 in [1, 2, 3]               # membership
 True
->>> "nome" in pessoa             # as CHAVES de um dicionário
+>>> "name" in person             # a dictionary's KEYS
 True
 ```
 

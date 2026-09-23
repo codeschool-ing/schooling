@@ -1,6 +1,6 @@
 ---
 title: DISTINCT, que normalmente é sintoma
-version: 1
+version: 2
 ---
 
 ```sql
@@ -95,8 +95,8 @@ verbosa, e a aula 12 é onde a diferença importa.
 Vale saber agora porque é o mesmo custo num lugar onde as pessoas não esperam:
 
 ```sql
-SELECT name FROM products UNION     SELECT name FROM archived_products;   -- remove duplicatas
-SELECT name FROM products UNION ALL SELECT name FROM archived_products;   -- mantém
+SELECT name FROM products UNION     SELECT name FROM archived_products;   -- removes duplicates
+SELECT name FROM products UNION ALL SELECT name FROM archived_products;   -- keeps them
 ```
 
 **`UNION` deduplica e `UNION ALL` não**, o que significa que a grafia simples é a cara. Quando você

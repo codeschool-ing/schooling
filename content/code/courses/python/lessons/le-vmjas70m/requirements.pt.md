@@ -1,6 +1,6 @@
 ---
 title: `requirements.txt`, e por que o `pip freeze` não escreve um
-version: 1
+version: 2
 ---
 
 ```sh
@@ -49,9 +49,9 @@ leva uma tarde.
 ## Escreva à mão
 
 ```sh
-# requirements.txt — o que este projeto pede
-requests==2.31.0        # HTTP; fixado, o 2.32 mudou o comportamento de retentativa
-pandas~=2.2.0           # tabelas; versões de correção estão bem
+# requirements.txt — what this project asks for
+requests==2.31.0        # HTTP; pinned, 2.32 changed the retry behaviour
+pandas~=2.2.0           # tables; patch releases are fine
 ```
 
 Uma linha por dependência direta, com a versão contra a qual você de fato testou, e um comentário
