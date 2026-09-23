@@ -1,0 +1,44 @@
+---
+title: Before any code: the ticket
+version: 1
+---
+
+**Every change a team makes starts somewhere other than the code.** A customer complains, a manager
+asks for something, a developer notices a bug while fixing another one. Lesson 8 called the place it gets
+written down an issue; most teams call it a **ticket**, and lesson 15 shows the board they live on. This
+lesson follows one ticket from the moment it is written to the moment its change is running.
+
+## What the ticket says
+
+The bakery closes on public holidays and the site never says so. Bruno writes it down:
+
+> **#23 Holidays are missing from the site**
+>
+> Two customers came on 7 September and found the door locked. The home page lists the opening hours
+> but says nothing about holidays.
+>
+> Done when: the home page says we close on public holidays, and the notice is easy to spot.
+
+Three parts, and each one earns its place:
+
+- **The title says what is wrong**, not how to fix it. *"Add a paragraph to index.html"* would decide
+  the answer before anybody had looked at the question.
+- **The description says what happened and why it matters.** Whoever picks this up next week, or next
+  year, needs the reason more than the instructions.
+- **The last line says how everybody will know it is finished.** Teams call these *acceptance criteria*.
+  Without them "done" means whatever the person doing the work decides it means, and lesson 16 is about
+  the tickets that were started without any.
+
+## Picking it up
+
+Ana takes it: she assigns it to herself, so nobody else starts the same work, and moves it to *in progress*.
+From here on, **the number `23` is the thread.** It goes into the branch's name, into every commit, into the
+pull request, and it is still there in the release:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 344\" role=\"img\" aria-label=\"The life of one task, top to bottom. Ticket number 23, holidays are missing from the site: why the work exists. The branch 23-holiday-notice, named after the ticket. Commits carrying Refs #23, each one pointing back. Pull request 24, whose description says Closes #23, so it closes the ticket once merged. The review: comments, then an approval, by somebody else. The merge, Merge pull request #24, where the ticket closes. The release, tag v1.1, where the task is done.\"><defs><marker id=\"jn-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><path d=\"M30 28 L30 304\" stroke=\"var(--wire)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"30\" cy=\"28\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.6\"></circle><text x=\"48\" y=\"28\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">ticket</text><rect x=\"170\" y=\"13\" width=\"280\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"182\" y=\"28\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">#23 Holidays are missing from the site</text><text x=\"466\" y=\"28\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">why the work exists</text><circle cx=\"30\" cy=\"74\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.6\"></circle><text x=\"48\" y=\"74\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">branch</text><rect x=\"170\" y=\"59\" width=\"280\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"182\" y=\"74\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">23-holiday-notice</text><text x=\"466\" y=\"74\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">named after the ticket</text><circle cx=\"30\" cy=\"120\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.6\"></circle><text x=\"48\" y=\"120\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">commits</text><rect x=\"170\" y=\"105\" width=\"280\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"182\" y=\"120\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">Refs #23</text><text x=\"466\" y=\"120\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">each one points back</text><circle cx=\"30\" cy=\"166\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.6\"></circle><text x=\"48\" y=\"166\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">pull request</text><rect x=\"170\" y=\"151\" width=\"280\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"182\" y=\"166\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\" xml:space=\"preserve\">#24  Closes #23</text><text x=\"466\" y=\"166\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">closes #23 once merged</text><circle cx=\"30\" cy=\"212\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.6\"></circle><text x=\"48\" y=\"212\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">review</text><rect x=\"170\" y=\"197\" width=\"280\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"182\" y=\"212\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">comments, then an approval</text><text x=\"466\" y=\"212\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">somebody else reads it</text><circle cx=\"30\" cy=\"258\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></circle><text x=\"48\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">merge</text><rect x=\"170\" y=\"243\" width=\"280\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"182\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">Merge pull request #24</text><text x=\"466\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">the ticket closes here</text><circle cx=\"30\" cy=\"304\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></circle><text x=\"48\" y=\"304\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"var(--paper)\">release</text><rect x=\"170\" y=\"289\" width=\"280\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"182\" y=\"304\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">v1.1</text><text x=\"466\" y=\"304\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">the task is done here</text></svg>", "caption": "The ticket’s number travels through every step, which is how a line of code can still lead back to its reason a year later."}
+```
+
+None of that is enforced by Git. It is a habit, and it pays off the day somebody runs `git blame` on the
+holiday notice (lesson 3), finds the commit, reads `Refs #23`, and lands on the ticket with Bruno's story about
+the locked door. Without the number they find a line of HTML and have to guess why it is there.
