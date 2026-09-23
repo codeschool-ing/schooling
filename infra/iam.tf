@@ -135,3 +135,31 @@ resource "google_service_account_iam_member" "deploy_acts_as_the_service" {
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.deploy.email}"
 }
+
+/* WHETHER THE DATABASE IS AWAKE, read before a release pushes anything.
+
+   The first step of `Deploy` in `release.yml` reads the instance's
+   `activationPolicy` and refuses to go on unless it is ALWAYS. That read is
+   `cloudsql.instances.get`, and nothing above grants it: `roles/run.admin` is
+   Cloud Run's, and whether it happens to carry a Cloud SQL permission is not
+   something to depend on. So it is stated here. If the permission was already
+   there, this repeats it; if it was not, every release after that step would
+   stop with "could not be read".
+
+   `roles/cloudsql.viewer` AND NOT `roles/cloudsql.client`. Both carry
+   `instances.get`; the client role also carries `instances.connect`, which
+   is a socket to the data. The viewer role reads the instance's settings and
+   no row. It is also the role the shared project grants this identity after
+   the move, so the permission does not change shape when the database does.
+
+   ON THE PROJECT, because Cloud SQL has no IAM policy on an instance to grant
+   it on. This project holds one instance.
+
+   APPLY IT BEFORE THE FIRST RELEASE THAT RUNS THE STEP, for the reason
+   `infra/README.md` gives for a new job: the pipeline only uses what an apply
+   has already created. */
+resource "google_project_iam_member" "deploy_reads_the_database_state" {
+  project = var.project
+  role    = "roles/cloudsql.viewer"
+  member  = "serviceAccount:${google_service_account.deploy.email}"
+}
