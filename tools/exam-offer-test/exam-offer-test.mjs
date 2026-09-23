@@ -88,6 +88,32 @@ const named = (text) => {
   return m ? Number(m[1]) : null;
 };
 
+/* ARRIVING IS THE COURSE'S OWN NAME ON THE SCREEN, NOT THE NAVIGATION RETURNING.
+
+   Every course here is reached from the one before it by changing the fragment,
+   and a fragment is not a page load: `goto` answers as soon as the address has
+   changed, and the router paints the new screen after it. Read the card in that
+   gap and it is the PREVIOUS course's — which is how this suite reported
+   `agents-mcp`, a course with no exam, offering one: it was reading `git`'s card
+   under `agents-mcp`'s address. It passed in CI by winning the race on a
+   fixture of a handful of courses and lost it on the real catalogue, which is
+   the shape of a check that is green by luck.
+
+   So a visit waits for the heading to name the course asked for, and a screen
+   that never gets there is said out loud rather than read anyway. */
+async function visit(page, c) {
+  await page.goto(`${BASE}/#/course/${encodeURIComponent(c.slug)}`, { waitUntil: 'networkidle' });
+  const arrived = await page.waitForFunction(
+    (name) => (document.querySelector('main h1')?.innerText || '').trim() === name,
+    c.name, { timeout: 10000 },
+  ).then(() => true, () => false);
+  if (!arrived) {
+    say(`${c.slug}'s screen never showed its own name, "${c.name}", so its card was not read — `
+      + 'whatever the card says there belongs to some other screen.');
+  }
+  return arrived;
+}
+
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/', { waitUntil: 'networkidle' });
@@ -109,7 +135,7 @@ try {
   }
 
   for (const c of withExam) {
-    await page.goto(`${BASE}/#/course/${encodeURIComponent(c.slug)}`, { waitUntil: 'networkidle' });
+    if (!(await visit(page, c))) continue;
     await page.waitForSelector('.exam-card', { timeout: 10000 }).catch(() => {});
     const seen = await card(page);
 
@@ -139,7 +165,7 @@ try {
   }
 
   for (const c of without.slice(0, 3)) {
-    await page.goto(`${BASE}/#/course/${encodeURIComponent(c.slug)}`, { waitUntil: 'networkidle' });
+    if (!(await visit(page, c))) continue;
     await page.waitForSelector('.exam-card', { timeout: 10000 }).catch(() => {});
     const seen = await card(page);
 
