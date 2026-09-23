@@ -662,6 +662,10 @@ instance, and once more if it has to come back. Both instances are mounted the
 whole time, because `var.database_instances` lists both (`variables.tf`). So
 the switch is a secret version and a restart, and never an apply.
 
+`DATABASE_CONNECTION` in `release.yml` was switched to the shared instance
+earlier, in the change that mounted both, so the cutover edits nothing: it is
+a secret version and this restart.
+
 ### The command
 
 ```sh

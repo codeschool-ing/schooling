@@ -66,6 +66,29 @@ resource "google_sql_database_instance" "main" {
      see. */
   deletion_protection = true
 
+  /* `activation_policy` IS LEFT TO WHOEVER STOPS THE INSTANCE, NOT TO THIS FILE.
+
+     After the move this instance is stopped by hand and kept for a week as
+     the way back, and only then deleted. Stopped means `activation_policy =
+     NEVER`, set outside Terraform. Nothing above says ALWAYS, and it does not
+     need to: the provider fills an absent value in as ALWAYS. So the first
+     apply for any reason during that week would propose `NEVER -> ALWAYS`,
+     in place, and restart the instance, billing it again and putting a
+     second writable copy of the data back on the network.
+
+     aleogr/lab found this on the shared instance itself
+     (`gcp/terraform/instance.tf`). It first left the field out on the theory
+     that unset means unmanaged, and a plan against a stopped instance
+     proposed waking it every time. This is the fix it arrived at.
+
+     The trade is the same as there. Terraform never sets this field again in
+     either direction, so an instance somebody stopped and forgot stays
+     stopped. Here that is the point: while this instance exists, only a
+     person decides whether it runs. */
+  lifecycle {
+    ignore_changes = [settings[0].activation_policy]
+  }
+
   depends_on = [google_project_service.enabled]
 }
 
@@ -84,6 +107,42 @@ resource "google_sql_database" "schooling" {
      `ABANDON` makes Terraform stop managing it instead. Losing track of a
      database is a bad afternoon; dropping one is the end of the project's
      data, and the two are one attribute apart. */
+  deletion_policy = "ABANDON"
+}
+
+/* THE DATABASE ON THE SHARED INSTANCE, which is where the data is going.
+
+   `lab-postgres` in `aleogr-lab-shared-dacd` belongs to aleogr/lab, and this
+   configuration never declares it. What is declared here is the one database
+   inside it that is this project's. The shared project lets this project in:
+   `schooling-run` holds `roles/cloudsql.client` there and `schooling-deploy`
+   holds `roles/cloudsql.viewer`, granted from aleogr/lab. This resource is
+   created by whoever applies this configuration, which is the owner's own
+   user, and that user already has the rights on the shared project.
+
+   The project and the instance are literals, like `DATABASE_CONNECTION` in
+   `release.yml`. They are not taken from `var.database_instances`: that is a
+   list of what gets MOUNTED, and picking an entry out of it would be a join by
+   position.
+
+   ABANDON, AND HERE IT IS NOT OPTIONAL AT ALL.
+
+   On this project's own instance, ABANDON was the second fence, because
+   `deletion_protection` guards the instance around it. On the shared
+   instance there is no first fence of ours. The instance's protection is
+   aleogr/lab's to set, and it protects the INSTANCE. Dropping one database
+   inside it deletes no instance, so nothing there would stop it.
+
+   With the default, DELETE, removing this block drops `schooling` and every
+   row in it, on an instance that goes on serving another project as if
+   nothing happened. So would renaming it in a way Terraform reads as a
+   replacement, or moving it to another file carelessly. ABANDON makes all of
+   those Terraform forgetting a database it can import again. */
+resource "google_sql_database" "shared" {
+  project  = "aleogr-lab-shared-dacd"
+  instance = "lab-postgres"
+  name     = "schooling"
+
   deletion_policy = "ABANDON"
 }
 

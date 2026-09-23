@@ -217,12 +217,20 @@ jobs:
       # database lives in one of them. This workflow does not read Terraform
       # either, so the list could not reach it anyway.
       #
-      # IT CHANGES TO aleogr-lab-shared-dacd:us-central1:lab-postgres WHEN THE
-      # DATABASE MOVES — in the same change that points
-      # `schooling-database-url` at that instance, and back if the move is
-      # undone. Left behind, the preflight would ask the old instance, which
-      # never sleeps, and wave a release into the window it exists to stop.
-      DATABASE_CONNECTION: aleogr-schooling:us-central1:schooling
+      # IT ALREADY NAMES THE SHARED INSTANCE, a few days before the data
+      # moves there. It was switched in the same change that mounts both
+      # instances, so the cutover itself is a secret version and a restart and
+      # nothing else — no edit here on the day.
+      #
+      # THE COST IS ACCEPTED: from that merge on, a release is refused while
+      # the shared instance sleeps, even though the data still lives in
+      # `aleogr-schooling:us-central1:schooling`, which never does. The
+      # preflight should already be reading the instance the data is about to
+      # live in, because that is the one a release will meet from the day of
+      # the cutover.
+      #
+      # IF THE MOVE IS UNDONE AND THE DATA GOES BACK, this goes back with it.
+      DATABASE_CONNECTION: aleogr-lab-shared-dacd:us-central1:lab-postgres
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -264,8 +272,9 @@ jobs:
       # `cloudsql.instances.update`, which the shared project does not give
       # this repository, because it is also the permission that would stop an
       # instance other projects use. The read is `cloudsql.instances.get`:
-      # `deploy_reads_the_database_state` in `infra/iam.tf` here, and
-      # `roles/cloudsql.viewer` granted by the shared project after the move.
+      # `roles/cloudsql.viewer`, which aleogr/lab grants `schooling-deploy` on
+      # the shared project. `deploy_reads_the_database_state` in
+      # `infra/iam.tf` is the same role on this project's own instance.
       #
       # WHAT IT DOES NOT SEE: the policy turns ALWAYS the moment the instance
       # is told to start at 07:30, and the database accepts connections about
