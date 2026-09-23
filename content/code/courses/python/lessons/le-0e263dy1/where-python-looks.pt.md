@@ -1,6 +1,6 @@
 ---
 title: O `sys.path`, e o arquivo que você chamou de `random.py`
-version: 1
+version: 2
 ---
 
 ```python
@@ -16,10 +16,10 @@ diretório do script que está rodando — que é esta seção inteira.
 
 ```
 $ ls
-random.py      meu_jogo.py
+random.py      my_game.py
 ```
 
-`meu_jogo.py` diz `import random`. O Python olha o diretório atual primeiro, encontra o SEU
+`my_game.py` diz `import random`. O Python olha o diretório atual primeiro, encontra o SEU
 `random.py`, e importa aquele. Aí `random.choice(...)` levanta `AttributeError: module 'random' has
 no attribute 'choice'` — nomeando uma função que certamente existe, num módulo que certamente está
 instalado.

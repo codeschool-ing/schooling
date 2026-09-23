@@ -1,6 +1,6 @@
 ---
 title: O que dá para percorrer duas vezes, e o que não dá
-version: 1
+version: 2
 ---
 
 **Um ITERÁVEL consegue produzir um iterador.** Uma lista, uma tupla, uma string, um dicionário, um
@@ -12,11 +12,11 @@ o `map` devolvem no Python 3.
 ```python
 xs = [1, 2, 3]
 sum(xs)      # 6
-sum(xs)      # 6 — um iterador novo a cada vez
+sum(xs)      # 6 — a fresh iterator each time
 
 g = (x for x in [1, 2, 3])
 sum(g)       # 6
-sum(g)       # 0 — e nada diz por quê
+sum(g)       # 0 — and nothing says why
 ```
 
 ## Esse zero é a armadilha
@@ -41,7 +41,7 @@ o argumento dela duas vezes é uma que quebra em silêncio com um gerador.
 ## Se você precisa dele duas vezes
 
 ```python
-linhas = list(linhas)        # deliberadamente, e agora cabe na memória ou não cabe
+rows = list(rows)        # deliberately, and now it fits in memory or it does not
 ```
 
 Não existe como rebobinar um iterador. O `itertools.tee` existe e não compra nada quando as duas

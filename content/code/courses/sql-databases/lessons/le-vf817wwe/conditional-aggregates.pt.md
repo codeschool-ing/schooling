@@ -1,6 +1,6 @@
 ---
 title: Contar só algumas linhas, na mesma passada
-version: 1
+version: 2
 ---
 
 Um `WHERE` vale para a consulta inteira. Mas a pergunta em geral não é *"quantos pedidos pagos"* —
@@ -41,7 +41,7 @@ propósito.
 Agora a armadilha, que tem uma palavra:
 
 ```sql
-count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)   -- conta TODAS as linhas
+count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)   -- counts EVERY row
 ```
 
 `0` não é nulo. O `count` conta. Isso devolve o número total de pedidos, seja qual for o status, e é
@@ -51,9 +51,9 @@ por capricho e mudou a resposta.
 `sum` é o hábito mais seguro exatamente por isso, porque com `sum` o zero está certo:
 
 ```sql
-sum(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)     -- correto
-count(CASE WHEN status = 'paid' THEN 1 END)          -- correto
-count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)   -- sempre o número de linhas
+sum(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)     -- correct
+count(CASE WHEN status = 'paid' THEN 1 END)          -- correct
+count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END)   -- always the row count
 ```
 
 Duas dessas três estão certas. Quando encontrar uma no código, confira qual.

@@ -1,6 +1,6 @@
 ---
 title: `sys.path`, and the file you named `random.py`
-version: 1
+version: 2
 ---
 
 ```python

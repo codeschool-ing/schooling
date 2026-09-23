@@ -1,6 +1,6 @@
 ---
 title: Funções de janela, que resumem sem colapsar
-version: 1
+version: 2
 ---
 
 Tudo até aqui destrói as linhas que resume. Agrupe por cliente e os pedidos sumiram; você tem os
@@ -70,7 +70,7 @@ depois e ela para de colapsar.
 
 Estenda a ordem de execução da aula 4 em um passo:
 
-```
+```localised
 FROM → WHERE → GROUP BY → HAVING → funções de janela → SELECT → ORDER BY → LIMIT
 ```
 

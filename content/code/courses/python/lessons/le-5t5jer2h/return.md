@@ -1,6 +1,6 @@
 ---
 title: One value, several values, and the difference from printing
-version: 1
+version: 2
 ---
 
 ```python

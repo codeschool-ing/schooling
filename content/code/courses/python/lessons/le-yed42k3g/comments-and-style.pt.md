@@ -1,6 +1,6 @@
 ---
 title: A indentação é a sintaxe
-version: 1
+version: 2
 ---
 
 ## Comentários
@@ -8,8 +8,8 @@ version: 1
 `#` e o resto da linha é ignorado.
 
 ```python
-# lê o arquivo que a pessoa nomeou, não o que a gente supôs
-caminho = sys.argv[1]
+# read the file the person named, not the one we assumed
+path = sys.argv[1]
 ```
 
 Um comentário que diz *o que* a linha faz é ruído — a linha já diz isso. Um comentário ganha o lugar
@@ -22,12 +22,12 @@ A primeira string de um arquivo, de uma função ou de uma classe é a sua **doc
 parte do objeto em tempo de execução:
 
 ```python
-def normalizar(nome):
-    """Tira espaços e passa para minúsculas, para comparar nomes digitados por pessoas."""
-    return nome.strip().lower()
+def normalise(name):
+    """Strip whitespace and lowercase, for comparing names typed by people."""
+    return name.strip().lower()
 ```
 
-`help(normalizar)` imprime essa frase. Um comentário com `#` acima do `def` não — o `help` não o
+`help(normalise)` imprime essa frase. Um comentário com `#` acima do `def` não — o `help` não o
 enxerga. É essa a diferença inteira, e é por isso que a convenção não é arbitrária.
 
 ## Indentação não é preferência
@@ -36,14 +36,14 @@ Na maioria das linguagens são as chaves que decidem o bloco e a indentação é
 formatador conserta. Em Python **a indentação É o bloco**.
 
 ```python
-if pronto:
-    enviar()
-    registrar()
-terminar()
+if ready:
+    send()
+    log()
+done()
 ```
 
-`enviar` e `registrar` estão dentro do `if`. `terminar` não está. Não há outro marcador; mova
-`terminar` quatro espaços para a direita e o significado muda.
+`send` e `log` estão dentro do `if`. `done` não está. Não há outro marcador; mova
+`done` quatro espaços para a direita e o significado muda.
 
 **Quatro espaços por nível.** Não dois, não uma tabulação — quatro, porque é o que o ecossistema
 inteiro faz e o que todo formatador da aula 17 vai produzir.

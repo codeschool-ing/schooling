@@ -1,6 +1,6 @@
 ---
 title: Conferir o próprio trabalho, que nada mais no arquivo vai fazer
-version: 1
+version: 2
 ---
 
 Todo outro documento deste curso te avisa quando está quebrado. Uma planilha não avisa. Ela
@@ -15,7 +15,7 @@ Ao lado de um total calculado, uma fórmula que calcula a mesma coisa por outro 
 uma da outra. Ao lado de um rateio, uma fórmula que soma as partes e compara com o todo. Ao lado
 de uma consulta, uma contagem de quantas não casaram.
 
-```
+```localised
 =ARRED(total_pelo_detalhe - total_pelo_resumo; 2)
 ```
 

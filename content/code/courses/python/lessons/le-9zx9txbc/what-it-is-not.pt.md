@@ -1,15 +1,15 @@
 ---
 title: Três coisas que um bloco `with` não faz
-version: 1
+version: 2
 ---
 
 ## Ele não é um escopo
 
 ```python
-with open(caminho) as f:
-    linhas = f.readlines()
-print(linhas)        # tudo bem — e o `f` também está aqui
-print(f.closed)      # True: o objeto está aqui, e está fechado
+with open(path) as f:
+    rows = f.readlines()
+print(rows)          # fine — and so is `f`
+print(f.closed)      # True: the object is here, and it is closed
 ```
 
 O Python não tem escopo de bloco, como a aula 5 disse. Um nome ligado dentro de um `with` continua
@@ -29,9 +29,9 @@ transação nenhuma. **"É um `with`" diz que há um desfazer e não diz qual** 
 ## Ele não trata a exceção
 
 ```python
-with cronometrado("carga"):
-    carregar()      # levanta erro
-# nada aqui roda; a exceção continua subindo
+with timed("load"):
+    load()          # raises
+# nothing here runs; the exception is still on its way up
 ```
 
 O gerenciador é avisado da exceção para poder arrumar, e então a exceção continua. A não ser que o

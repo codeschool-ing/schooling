@@ -1,6 +1,6 @@
 ---
 title: LEFT JOIN, and the rows that were disappearing
-version: 1
+version: 2
 ---
 
 Célia has never ordered. An inner join leaves her out, and nothing says so.

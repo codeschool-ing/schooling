@@ -1,6 +1,6 @@
 ---
 title: setuid, setgid e o sticky bit
-version: 1
+version: 2
 ---
 
 Mais três bits, um quarto dígito octal, e cada um existe porque os nove caracteres não conseguiam
@@ -134,10 +134,10 @@ ligue.** `chmod 1777` em vez de `chmod 777`, e a diferença é a segurança inte
 ## Como ligar
 
 ```
-chmod u+s arquivo        # setuid
-chmod g+s diretorio      # setgid
-chmod +t diretorio       # sticky
-chmod 2775 diretorio     # o mesmo que g+s sobre 775
+chmod u+s file          # setuid
+chmod g+s directory     # setgid
+chmod +t directory      # sticky
+chmod 2775 directory    # the same as g+s on 775
 ```
 
 E a armadilha da seção 04, repetida porque é a que morde: **`chmod 755` num arquivo `4755` limpa o

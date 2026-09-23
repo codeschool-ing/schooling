@@ -1,6 +1,6 @@
 ---
 title: O `black`, e as opções que ele não tem
-version: 1
+version: 2
 ---
 
 ```python
@@ -64,9 +64,9 @@ Tire a vírgula e ela volta para uma linha.
 ## Rodando
 
 ```sh
-black app/            # reescreve
-black --check app/    # sai com 1 se algo mudaria, não reescreve nada
-black --diff app/     # imprime o que ele faria
+black app/            # rewrite
+black --check app/    # exit 1 if anything would change, rewrite nothing
+black --diff app/     # print what it would do
 ```
 
 `--check` é o que vai na CI. Ele imprime `would reformat c.py` e sai diferente de zero, e é o

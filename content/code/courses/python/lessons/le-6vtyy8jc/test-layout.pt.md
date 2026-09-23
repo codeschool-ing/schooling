@@ -1,12 +1,12 @@
 ---
 title: `tests/`, `conftest.py`, e o import que falha
-version: 1
+version: 2
 ---
 
 ```sh
-projeto/
+project/
   pyproject.toml
-  conftest.py            <- vazio, e sustentando o prédio
+  conftest.py            <- empty, and load-bearing
   app/
     __init__.py
     rates.py
@@ -44,11 +44,11 @@ importa — o `pytest` o acha pelo nome e o aplica pela posição.
 import pytest
 
 @pytest.fixture
-def taxas():
+def rates():
     return {"BRL": 1.0, "USD": 5.4}
 ```
 
-Todo teste sob `tests/` pode agora receber `taxas` como argumento sem importar nada.
+Todo teste sob `tests/` pode agora receber `rates` como argumento sem importar nada.
 
 ## Testes fora do pacote, e a questão do `__init__.py`
 

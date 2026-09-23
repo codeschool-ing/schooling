@@ -1,6 +1,6 @@
 ---
 title: ON against WHERE, which is the bug of this course
-version: 1
+version: 2
 ---
 
 This section is one bug. It produces no error, it looks like a working query, and it is the most

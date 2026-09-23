@@ -1,6 +1,6 @@
 ---
 title: Finding things: `find`
-version: 1
+version: 2
 ---
 
 `find` has a reputation for being ugly, and it is earned by one thing: its syntax is older than
@@ -10,7 +10,7 @@ happens.
 
 Learn the shape once and it stops being strange:
 
-```
+```localised
 find   WHERE   WHAT-TO-MATCH   WHAT-TO-DO
 ```
 

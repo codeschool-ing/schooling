@@ -1,6 +1,6 @@
 ---
 title: ON contra WHERE, que é o bug deste curso
-version: 1
+version: 2
 ---
 
 Esta seção é um bug. Ele não produz erro, parece uma consulta funcionando, e é o engano mais comum em
@@ -30,7 +30,7 @@ Volte à ordem em que as cláusulas rodam, da aula 4. A junção roda primeiro, 
  Ana Lopes  | 1001
  Ana Lopes  | 1003
  Bruno Sá   | 1002
- Célia Reis | NULL      <- a linha inventada
+ Célia Reis | NULL      <- the invented row
 ```
 
 Aí o `WHERE` roda sobre esse resultado. O `o.ordered_on` da Célia é `NULL`, porque todo o lado
@@ -56,8 +56,8 @@ linha nula inventada, e está na resposta.
 
 ```
  Ana Lopes  | 1004
- Bruno Sá   | NULL      <- pediu, mas não em março
- Célia Reis | NULL      <- nunca pediu
+ Bruno Sá   | NULL      <- ordered, but not in March
+ Célia Reis | NULL      <- never ordered
 ```
 
 Leia essas duas últimas linhas, porque são o ponto: **a consulta já não consegue distinguir uma da

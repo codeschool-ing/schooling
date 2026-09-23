@@ -1,6 +1,6 @@
 ---
 title: What is in one, and why it is committed
-version: 1
+version: 2
 ---
 
 ```toml

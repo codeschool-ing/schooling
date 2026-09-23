@@ -1,6 +1,6 @@
 ---
 title: Creating, finding and removing them without an outage
-version: 1
+version: 2
 ---
 
 ## `CREATE INDEX` takes a lock

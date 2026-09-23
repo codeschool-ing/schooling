@@ -1,6 +1,6 @@
 ---
 title: Os quatro níveis de isolamento, e aquele em que você está
-version: 1
+version: 2
 ---
 
 O padrão define quatro níveis, e os define **por quais anomalias eles proíbem** em vez de por como
@@ -27,8 +27,8 @@ nível que proíbe tudo nesta tabela ainda pode deixar você perder uma atualiza
 
 ```sql
 BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;     -- PostgreSQL
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;          -- antes das instruções, nos dois bancos
-SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;-- para toda transação desta conexão
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;          -- before the statements, both engines
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;-- for every transaction on this connection
 ```
 
 E para descobrir onde você está, que é a instrução mais útil:

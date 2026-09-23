@@ -1,6 +1,6 @@
 ---
 title: Bloqueios, quando você quer ser explícito
-version: 1
+version: 2
 ---
 
 Comece pelo fato que explica por que bancos parecem tão rápidos:
@@ -25,8 +25,8 @@ não bloqueia nada:
 
 ```sql
 BEGIN;
-SELECT stock FROM products WHERE id = 7 FOR UPDATE;   -- 10, e agora está bloqueada
--- a aplicação decide
+SELECT stock FROM products WHERE id = 7 FOR UPDATE;   -- 10, and now it is locked
+-- application decides
 UPDATE products SET stock = 9 WHERE id = 7;
 COMMIT;
 ```
@@ -54,8 +54,8 @@ propósito.
 Esperar é o padrão. Existem outras duas respostas:
 
 ```sql
-SELECT … FOR UPDATE NOWAIT;       -- erro na hora se estiver bloqueada
-SELECT … FOR UPDATE SKIP LOCKED;  -- deixa de fora, em silêncio, as linhas bloqueadas
+SELECT … FOR UPDATE NOWAIT;       -- error immediately if it is locked
+SELECT … FOR UPDATE SKIP LOCKED;  -- silently leave out the rows that are locked
 ```
 
 `NOWAIT` é para trabalho interativo: uma pessoa que clica em editar deve ouvir *"outra pessoa está
@@ -86,7 +86,7 @@ Bloquear é pessimista: você supõe um conflito e o impede. A outra abordagem s
 e o detecta se houver, com uma coluna de versão:
 
 ```sql
-SELECT id, name, version FROM documents WHERE id = 7;   -- versão 4, sem bloqueio
+SELECT id, name, version FROM documents WHERE id = 7;   -- version 4, no lock taken
 
 UPDATE documents SET name = $1, version = 5
 WHERE  id = 7 AND version = 4;

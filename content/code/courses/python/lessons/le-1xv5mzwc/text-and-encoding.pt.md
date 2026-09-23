@@ -1,13 +1,13 @@
 ---
 title: Bytes em disco, texto em memória, e a linha entre os dois
-version: 1
+version: 2
 ---
 
 Um arquivo guarda bytes. Uma string do Python guarda caracteres. Uma CODIFICAÇÃO é a tabela que diz
 quais bytes significam quais caracteres, e o `open` precisa saber qual é.
 
 ```python
-open(caminho, encoding="utf-8")
+open(path, encoding="utf-8")
 ```
 
 **Escreva isso toda vez.** Sem isso o Python usa o padrão da plataforma — UTF-8 na maioria das
@@ -34,7 +34,7 @@ conserto certo em geral é converter o arquivo uma vez em vez de carregar a codi
 ## O que o `errors=` faz, e quando
 
 ```python
-open(caminho, encoding="utf-8", errors="replace")     # bytes ruins viram
+open(path, encoding="utf-8", errors="replace")     # bad bytes become
 ```
 
 Ele impede o erro e perde o dado. Isso está certo para um log que você está filtrando e errado para

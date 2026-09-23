@@ -1,19 +1,19 @@
 ---
 title: O padrão é criado uma vez, na definição
-version: 1
+version: 2
 ---
 
 ```python
-def acrescentar(item, cesta=[]):
-    cesta.append(item)
-    return cesta
+def add(item, basket=[]):
+    basket.append(item)
+    return basket
 ```
 
 ```python
->>> acrescentar("maçã")
-['maçã']
->>> acrescentar("pera")
-['maçã', 'pera']
+>>> add("apple")
+['apple']
+>>> add("pear")
+['apple', 'pear']
 ```
 
 A segunda chamada não começou com uma cesta vazia. **O valor padrão foi criado uma vez, quando a
@@ -25,8 +25,8 @@ Um `def` é um comando que roda. Quando o Python o lê, ele avalia os padrões a
 objeto-função — dá para olhar:
 
 ```python
->>> acrescentar.__defaults__
-(['maçã', 'pera'],)
+>>> add.__defaults__
+(['apple', 'pear'],)
 ```
 
 É a mesma lista, ainda presa, ainda crescendo.
@@ -34,11 +34,11 @@ objeto-função — dá para olhar:
 ## O conserto
 
 ```python
-def acrescentar(item, cesta=None):
-    if cesta is None:
-        cesta = []
-    cesta.append(item)
-    return cesta
+def add(item, basket=None):
+    if basket is None:
+        basket = []
+    basket.append(item)
+    return basket
 ```
 
 O `None` é imutável, então compartilhá-lo é inofensivo, e a lista nova é criada **por chamada**. É

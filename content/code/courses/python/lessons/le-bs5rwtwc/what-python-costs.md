@@ -1,6 +1,6 @@
 ---
 title: The table worth knowing
-version: 1
+version: 2
 ---
 
 | operation | cost | measured at n = 100,000 |

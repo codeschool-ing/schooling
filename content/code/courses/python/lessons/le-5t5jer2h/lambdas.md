@@ -1,6 +1,6 @@
 ---
 title: An expression with parameters
-version: 1
+version: 2
 ---
 
 ```python

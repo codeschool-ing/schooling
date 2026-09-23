@@ -1,6 +1,6 @@
 ---
 title: Write skew, the one snapshot isolation does not stop
-version: 1
+version: 2
 ---
 
 A hospital rule: **at least one doctor must be on call at all times.** Alice and Bob are both on

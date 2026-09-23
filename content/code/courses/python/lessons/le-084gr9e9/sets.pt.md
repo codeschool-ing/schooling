@@ -1,6 +1,6 @@
 ---
 title: Pertinência e unicidade, e ordem nenhuma
-version: 1
+version: 2
 ---
 
 ```python
@@ -15,10 +15,10 @@ peça de sintaxe aqui que precisa ser decorada.
 **Unicidade.** Acrescentar duas vezes deixa um:
 
 ```python
->>> vistos = set()
->>> vistos.add("ada")
->>> vistos.add("ada")
->>> len(vistos)
+>>> seen = set()
+>>> seen.add("ada")
+>>> seen.add("ada")
+>>> len(seen)
 1
 ```
 
@@ -32,13 +32,13 @@ importa, `list(dict.fromkeys(itens))` guarda a primeira ocorrência de cada.
 ```python
 >>> a = {1, 2, 3}
 >>> b = {3, 4}
->>> a | b        # união — em um ou no outro
+>>> a | b        # union — in either
 {1, 2, 3, 4}
->>> a & b        # interseção — nos dois
+>>> a & b        # intersection — in both
 {3}
->>> a - b        # diferença — em a e não em b
+>>> a - b        # difference — in a and not b
 {1, 2}
->>> a ^ b        # diferença simétrica — em um mas não nos dois
+>>> a ^ b        # symmetric difference — in one but not both
 {1, 2, 4}
 ```
 

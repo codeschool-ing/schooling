@@ -1,6 +1,6 @@
 ---
 title: NULL, now that you are writing queries
-version: 1
+version: 2
 ---
 
 Lesson 1 said what `NULL` is: not zero, not empty, **unknown** — and that comparing anything with

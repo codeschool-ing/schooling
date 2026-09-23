@@ -1,6 +1,6 @@
 ---
 title: One behaviour, a name that says it, and the assert that proves nothing
-version: 1
+version: 2
 ---
 
 ```python

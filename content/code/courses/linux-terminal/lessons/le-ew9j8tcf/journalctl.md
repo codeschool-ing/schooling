@@ -1,6 +1,6 @@
 ---
 title: `journalctl`, and a log that survives a reboot
-version: 1
+version: 2
 ---
 
 **The same note as section 10 applies here.** This machine runs a container supervisor as process

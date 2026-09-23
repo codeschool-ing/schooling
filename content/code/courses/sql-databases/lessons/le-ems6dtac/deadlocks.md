@@ -1,11 +1,11 @@
 ---
 title: Deadlocks are normal, and they are your fault
-version: 1
+version: 2
 ---
 
 Two transfers at the same moment, in opposite directions:
 
-```
+```localised
 T1  (100 from Ana to Bruno)           T2  (50 from Bruno to Ana)
 BEGIN                                 BEGIN
 UPDATE accounts … WHERE id = 1        UPDATE accounts … WHERE id = 2

@@ -1,6 +1,6 @@
 ---
 title: Defaults, and columns the database fills in
-version: 1
+version: 2
 ---
 
 Two ways to have the database write a value so nobody has to, and they are not the same thing.

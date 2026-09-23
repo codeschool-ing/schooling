@@ -1,6 +1,6 @@
 ---
 title: The boundary, and the annotation that says nothing
-version: 1
+version: 2
 ---
 
 ## In order

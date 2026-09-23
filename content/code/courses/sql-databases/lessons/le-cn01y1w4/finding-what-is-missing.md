@@ -1,6 +1,6 @@
 ---
 title: Finding what is not there
-version: 1
+version: 2
 ---
 
 Some of the most valuable questions are about absence:

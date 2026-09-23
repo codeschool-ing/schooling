@@ -1,11 +1,11 @@
 ---
 title: Uma classe, e quando ela vale a pena
-version: 1
+version: 2
 ---
 
 ```python
 class ConfigError(Exception):
-    """A configuração não pôde ser usada."""
+    """The configuration file could not be used."""
 ```
 
 Essa é a definição inteira. Ela herda `Exception`, tem uma docstring dizendo o que significa, e não
@@ -26,26 +26,26 @@ capturando.
 ## Uma classe base por pacote
 
 ```python
-class RelatorioError(Exception): ...
-class ConfigError(RelatorioError): ...
-class FonteError(RelatorioError): ...
+class ReportError(Exception): ...
+class ConfigError(ReportError): ...
+class SourceError(ReportError): ...
 ```
 
-Uma base, e as específicas abaixo dela. Agora quem chama escreve `except RelatorioError` para dizer
+Uma base, e as específicas abaixo dela. Agora quem chama escreve `except ReportError` para dizer
 "qualquer coisa que esta biblioteca diga que deu errado", ou nomeia a específica quando pode fazer
 algo diferente a respeito. **Esta é a hierarquia da primeira seção, construída para o seu código.**
 
 ## Carregar dados
 
 ```python
-class LinhaError(Exception):
-    def __init__(self, linha, mensagem):
-        super().__init__(f"linha {linha}: {mensagem}")
-        self.linha = linha
+class RowError(Exception):
+    def __init__(self, row, message):
+        super().__init__(f"row {row}: {message}")
+        self.row = row
 ```
 
 A mensagem é para uma pessoa; o atributo é para um programa. Um tratamento que queira juntar os
-números das linhas ruins precisa de `e.linha`, e analisar isso de volta a partir da mensagem é o que
+números das linhas ruins precisa de `e.row`, e analisar isso de volta a partir da mensagem é o que
 isto evita.
 
 Chame `super().__init__(...)` para a mensagem chegar ao `str(e)` — uma exceção cujo `str` é vazio é

@@ -1,6 +1,6 @@
 ---
 title: Consultas, que é como duas tabelas viram uma resposta
-version: 1
+version: 2
 ---
 
 A coisa mais útil que uma planilha faz: **pegar um valor de uma tabela e achar a linha a que ele
@@ -9,7 +9,7 @@ Um pedido e um cliente.
 
 ## O `PROCX`, e por que ele substituiu os outros dois
 
-```
+```localised
 =PROCX(o que achar; onde procurar; o que trazer de volta; o que fazer se não achar)
 ```
 
@@ -25,7 +25,7 @@ funcionando. Ela devolve a coisa errada.
 Se o `PROCX` não estiver disponível — um Excel mais antigo, alguns modos de compatibilidade — a
 alternativa robusta é `ÍNDICE` com `CORRESP`:
 
-```
+```localised
 =ÍNDICE(a coluna a trazer; CORRESP(o que achar; a coluna a procurar; 0))
 ```
 

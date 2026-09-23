@@ -1,6 +1,6 @@
 ---
 title: The aggregate functions, and the one thing they all do with NULL
-version: 1
+version: 2
 ---
 
 An aggregate function takes many rows and returns one value. That is the whole idea, and the five
@@ -42,7 +42,7 @@ SELECT avg(rating)   FROM reviews;           -- 4.0
 `28 / 10` is 2.8. The average says 4.0. Neither number is wrong — they answer different questions,
 and only one of them was asked out loud.
 
-```
+```localised
 avg(rating)  =  sum(rating) / count(rating)      the average of the ratings that exist
 28 / count(*)                                    the average if a missing rating were a zero
 ```

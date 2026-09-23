@@ -1,6 +1,6 @@
 ---
 title: The two shapes that were something else
-version: 1
+version: 2
 ---
 
 Most of this course is not classes. Knowing when not to reach for one is the half of this lesson

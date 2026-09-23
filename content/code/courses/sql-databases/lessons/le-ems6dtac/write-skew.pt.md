@@ -1,6 +1,6 @@
 ---
 title: Desvio de escrita, o que o isolamento por instantâneo não impede
-version: 1
+version: 2
 ---
 
 Uma regra de hospital: **pelo menos um médico tem que estar de plantão o tempo todo.** Alice e Bruno
@@ -9,7 +9,7 @@ alguém sair.
 
 ```sql
 BEGIN;
-SELECT count(*) FROM doctors WHERE on_call;        -- 2, então um pode sair
+SELECT count(*) FROM doctors WHERE on_call;        -- 2, so one may leave
 UPDATE doctors SET on_call = false WHERE id = 1;
 COMMIT;
 ```

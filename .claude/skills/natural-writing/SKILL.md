@@ -59,6 +59,10 @@ plausible-looking detail.
 
 **A `.pt.md` is prose only.** Its fences, its code comments and its captured output stay in English
 and byte-identical to the `.md` beside it. Translating a transcript breaks the same promise.
+`validate-content` compares them now, so a pass that rewords one fails the build. The exceptions
+are the notes of a `schooling-example`, which are prose, and a block labelled `localised` in both
+files, which is an explanation laid out in mono and never a capture (`docs/TEACHING.md`, "Code in
+a translation is the English code").
 
 **Run the checkers after any rewrite**, because a section is not only prose:
 

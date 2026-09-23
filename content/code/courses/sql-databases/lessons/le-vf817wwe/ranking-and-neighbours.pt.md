@@ -1,6 +1,6 @@
 ---
 title: Ranquear, e olhar a linha anterior a esta
-version: 1
+version: 2
 ---
 
 As funções desta seção só existem como funções de janela — não há versão com `GROUP BY` delas,
@@ -21,7 +21,7 @@ FROM   players;
 name    score   n   r   d
 Ana      90     1   1   1
 Bruno    85     2   2   2
-Célia    85     3   2   2
+Celia    85     3   2   2
 Dario    70     4   4   3
 ```
 
@@ -103,7 +103,7 @@ A primeira linha não tem nada antes dela, então o `lag` é nulo ali e `change`
 padrão se preferir que não seja:
 
 ```sql
-lag(revenue, 1, 0) OVER (ORDER BY month)    -- deslocamento 1, padrão 0 na borda
+lag(revenue, 1, 0) OVER (ORDER BY month)    -- offset 1, default 0 at the edge
 ```
 
 O mesmo par responde "quanto tempo entre estes eventos", que de outro jeito é desajeitado:
@@ -120,8 +120,8 @@ E o `lead` é como você encontra lacunas: uma linha cujo `lead(at)` esteja a ma
 ## `first_value`, `last_value`, e a armadilha da segunda
 
 ```sql
-first_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- o primeiro pedido dele
-last_value (total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- NÃO o último
+first_value(total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- their first order
+last_value (total) OVER (PARTITION BY customer_id ORDER BY ordered_on)   -- NOT their last one
 ```
 
 `last_value` devolve o total da própria linha atual, todas as vezes. É a moldura padrão de novo: com

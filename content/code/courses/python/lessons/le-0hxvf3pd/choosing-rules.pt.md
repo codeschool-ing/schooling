@@ -1,10 +1,10 @@
 ---
 title: O conjunto padrão, e a família que ele deixa de fora
-version: 1
+version: 2
 ---
 
 ```sh
-padrão: E4, E7, E9, F
+default: E4, E7, E9, F
 ```
 
 **O padrão é pequeno de propósito** — é o que quase qualquer base consegue passar na primeira
@@ -20,8 +20,8 @@ def load_rates(path, cache = {}):
 ```
 
 ```sh
-(regras padrão)  Found 0 errors.
-(com B)          B006 Do not use mutable data structures for argument defaults
+(default rules)  Found 0 errors.
+(with B)         B006 Do not use mutable data structures for argument defaults
 ```
 
 Um argumento padrão é avaliado **uma vez, na definição**, então aquele dicionário é compartilhado
@@ -64,9 +64,9 @@ aparecer em quarenta linhas.
 ## `# noqa`, com precisão
 
 ```python
-import os      # noqa: F401     silencia o F401 aqui
-import sys     # noqa           silencia TUDO aqui
-import json    # noqa: E501     não silencia nada: o achado é F401
+import os      # noqa: F401     silences F401 here
+import sys     # noqa           silences EVERYTHING here
+import json    # noqa: E501     silences nothing: the finding is F401
 ```
 
 Nomeie o código. Um `# noqa` pelado também silencia a regra que passar a valer para aquela linha

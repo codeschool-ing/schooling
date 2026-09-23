@@ -1,23 +1,23 @@
 ---
 title: A aula que envelhece mais rápido, e a parte que não envelhece
-version: 1
+version: 2
 ---
 
 **Esta é a única leitura do curso com prazo de validade.** Dizer isso é o ponto: a recomendação
 no topo desta aula está certa hoje, e a equivalente a ela já esteve errada duas vezes nos últimos
 cinco anos.
 
-```sh
-setup.py + requirements.txt    o arranjo de que tudo partiu
-pipenv                         recomendado pelo guia oficial de empacotamento
-poetry                         o que a maior parte dos projetos novos usou depois
-pyproject.toml                 padronizado; o setup.py começa a desaparecer
-pip-tools                      como se travava com o pip sozinho
-[project]                      a tabela de metadados vira especificação
-hatch, pdm                     mais ferramentas, lendo a mesma tabela
-uv                             uma ordem de grandeza mais rápido que todas
-poetry 2                       adota o [project]; os dois convergem
-```
+| ferramenta ou formato | o que significou |
+|---|---|
+| `setup.py` + `requirements.txt` | o arranjo de que tudo partiu |
+| `pipenv` | recomendado pelo guia oficial de empacotamento |
+| `poetry` | o que a maior parte dos projetos novos usou depois |
+| `pyproject.toml` | padronizado; o `setup.py` começa a desaparecer |
+| `pip-tools` | como se travava com o pip sozinho |
+| `[project]` | a tabela de metadados vira especificação |
+| `hatch`, `pdm` | mais ferramentas, lendo a mesma tabela |
+| `uv` | uma ordem de grandeza mais rápido que todas |
+| `poetry` 2 | adota o `[project]`; os dois convergem |
 
 Isso é uma ordenação e não um conjunto de datas, e basta para fazer o ponto: toda linha foi a
 recomendação sensata enquanto durou, e seguir qualquer uma delas deixa você com um repositório

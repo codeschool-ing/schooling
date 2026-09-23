@@ -1,6 +1,6 @@
 ---
 title: A view is a query with a name, not a table
-version: 1
+version: 2
 ---
 
 ```sql

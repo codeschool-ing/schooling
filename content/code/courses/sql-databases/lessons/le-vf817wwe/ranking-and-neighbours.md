@@ -1,6 +1,6 @@
 ---
 title: Ranking, and looking at the row before this one
-version: 1
+version: 2
 ---
 
 The functions in this section exist only as window functions — there is no `GROUP BY` version of

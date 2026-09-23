@@ -1,6 +1,6 @@
 ---
 title: A ordem em que você escreve, e a ordem em que roda
-version: 1
+version: 2
 ---
 
 Uma ideia primeiro, porque ela explica a maior parte dos erros confusos que você vai encontrar no
@@ -9,13 +9,13 @@ próximo ano.
 **Você escreve as cláusulas numa ordem. O banco as roda em outra.**
 
 ```sql
-SELECT   name, price                  -- 5. e finalmente, escolhe as colunas
-FROM     products                     -- 1. primeiro, quais linhas existem
-WHERE    price > 20                   -- 2. joga fora as que falham
-GROUP BY category                     -- 3. aula 6
-HAVING   count(*) > 1                 -- 4. aula 6
-ORDER BY price DESC                   -- 6. arruma o que sobreviveu
-LIMIT    10;                          -- 7. pega as primeiras
+SELECT   name, price                  -- 5. and finally, pick the columns
+FROM     products                     -- 1. first, which rows exist
+WHERE    price > 20                   -- 2. throw away the ones that fail
+GROUP BY category                     -- 3. lesson 6
+HAVING   count(*) > 1                 -- 4. lesson 6
+ORDER BY price DESC                   -- 6. arrange what survived
+LIMIT    10;                          -- 7. take the first few
 ```
 
 Os números são a ordem em que de fato acontece. `FROM` vem primeiro porque nada pode ser filtrado

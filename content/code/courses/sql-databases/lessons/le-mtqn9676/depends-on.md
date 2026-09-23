@@ -1,6 +1,6 @@
 ---
 title: "\"Depends on\": the one tool underneath all three forms"
-version: 1
+version: 2
 ---
 
 Every normal form is stated in terms of one idea, and it is simpler than its name. If you get this
@@ -70,7 +70,7 @@ A **transitive dependency** goes through an ordinary column. The key determines 
 `teacher` determines `teacher_room`, so the key determines the room *by way of* the teacher. That
 is what **3NF** removes.
 
-```
+```localised
 key  →  teacher  →  teacher_room
         └────── the step that makes it transitive
 ```

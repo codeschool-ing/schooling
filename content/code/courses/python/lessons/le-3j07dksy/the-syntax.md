@@ -1,6 +1,6 @@
 ---
 title: A colon, an arrow, and nothing enforced
-version: 1
+version: 2
 ---
 
 ```python

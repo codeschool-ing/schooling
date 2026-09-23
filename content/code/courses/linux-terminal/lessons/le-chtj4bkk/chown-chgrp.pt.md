@@ -1,14 +1,14 @@
 ---
 title: Propriedade, e por que dar um arquivo exige root
-version: 1
+version: 2
 ---
 
 Dois comandos, e uma regra que explica a seção inteira.
 
 ```
-chown ana arquivo          # muda o dono
-chown ana:team arquivo     # muda o dono e o grupo
-chgrp team arquivo         # muda só o grupo
+chown ana file          # change the owner
+chown ana:team file     # change the owner and the group
+chgrp team file         # change only the group
 ```
 
 ## Dono e grupo são números
@@ -58,7 +58,7 @@ root@vm:/srv/perm# ls -l public.txt
 -rw-r--r-- 1 ana team 22 Sep 14 22:45 public.txt
 ```
 
-`chown usuario` muda o dono e deixa o grupo. `chown usuario:grupo` muda os dois. `chown :grupo` —
+`chown usuario` muda o dono e deixa o grupo. `chown user:group` muda os dois. `chown :group` —
 sem nada antes dos dois-pontos — muda só o grupo, que é o `chgrp` escrito de outro jeito.
 
 ## O grupo é a metade que você *pode* mudar
@@ -89,7 +89,7 @@ deploy. Duas opções valem conhecer:
 | `-R` | o diretório e tudo abaixo dele |
 | `--from=antigo:antigo` | muda só as entradas que hoje têm aquele dono — um conserto cirúrgico |
 | `-h` | age no link simbólico em si, e não no alvo |
-| `--reference=arquivo` | copia o dono e o grupo de outro arquivo |
+| `--reference=file` | copia o dono e o grupo de outro arquivo |
 
 **O `-R` entra em sistemas de arquivos montados**, o que já surpreendeu quem rodou no topo de uma
 árvore com um compartilhamento de rede embaixo. `find ... -exec chown` com `-xdev` é a versão
@@ -97,7 +97,7 @@ cuidadosa.
 
 ## Os enganos que vale nomear
 
-**`chown ana.team arquivo`** — um ponto no lugar dos dois-pontos. Funciona em sistemas GNU por
+**`chown ana.team file`** — um ponto no lugar dos dois-pontos. Funciona em sistemas GNU por
 razões históricas e é ambíguo quando um nome de usuário contém ponto. Use os dois-pontos.
 
 **`sudo chown -R $USER /`** — alguém tentando consertar uma permissão no próprio diretório pessoal,

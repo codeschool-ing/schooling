@@ -1,6 +1,6 @@
 ---
 title: Texto, e o limite de tamanho que não é otimização
-version: 1
+version: 2
 ---
 
 Três tipos guardam caracteres, e no PostgreSQL a escolha entre dois deles é bem menos interessante
@@ -54,13 +54,13 @@ aquele nome não batem.
 como `ana@example.com`. Três jeitos de lidar, em ordem crescente de quanto se sustentam:
 
 ```sql
--- 1. rebaixar na consulta: funciona, e não usa índice comum
+-- 1. fold at query time: works, and cannot use an ordinary index
 WHERE lower(email) = lower('Ana@Example.com')
 
--- 2. rebaixar na escrita: a coluna guarda uma forma e comparar é trivial
+-- 2. fold at write time: the column holds one form and comparison is trivial
 email text NOT NULL UNIQUE CHECK (email = lower(email))
 
--- 3. citext, uma extensão cujas comparações ignoram caixa
+-- 3. citext, an extension whose comparisons ignore case
 CREATE EXTENSION citext;
 email citext NOT NULL UNIQUE
 ```
@@ -87,7 +87,7 @@ pode ordenar diferente em produção**, e o conserto é dizer o que você quer:
 A aula 1 fez o ponto e vale repetir onde estão os tipos:
 
 ```sql
-SELECT '' IS NULL;        -- falso
+SELECT '' IS NULL;        -- false
 SELECT length('');        -- 0
 SELECT length(NULL);      -- null
 ```

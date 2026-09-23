@@ -1,11 +1,11 @@
 ---
 title: Deadlocks são normais, e a culpa é sua
-version: 1
+version: 2
 ---
 
 Duas transferências no mesmo instante, em direções opostas:
 
-```
+```localised
 T1  (100 da Ana para o Bruno)         T2  (50 do Bruno para a Ana)
 BEGIN                                 BEGIN
 UPDATE accounts … WHERE id = 1        UPDATE accounts … WHERE id = 2
@@ -86,7 +86,7 @@ costumam fazer sentido em termos do índice.
 Não adivinhe a ordem. Os dois bancos contam:
 
 ```sql
-SHOW ENGINE INNODB STATUS;      -- MySQL: a seção LATEST DETECTED DEADLOCK, com as duas consultas
+SHOW ENGINE INNODB STATUS;      -- MySQL: the LATEST DETECTED DEADLOCK section, with both queries
 ```
 
 O PostgreSQL escreve as duas instruções no log do servidor quando detecta um, e `log_lock_waits =

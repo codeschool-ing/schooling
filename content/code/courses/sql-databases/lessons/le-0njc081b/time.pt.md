@@ -1,6 +1,6 @@
 ---
 title: Tempo, e a coluna que erra duas vezes por ano
-version: 1
+version: 2
 ---
 
 Esta seção carrega uma regra que evita uma classe inteira de bug, e a regra é curta:
@@ -82,10 +82,10 @@ foi truncado?**
 ## `now()` e seus vários significados
 
 ```sql
-SELECT now();                    -- timestamptz, do início da TRANSAÇÃO
-SELECT clock_timestamp();        -- timestamptz, de agora mesmo, andando
-SELECT current_date;             -- date, no fuso da sessão
-SELECT current_timestamp;        -- a grafia padrão de now()
+SELECT now();                    -- timestamptz, of the TRANSACTION's start
+SELECT clock_timestamp();        -- timestamptz, of right now, moving
+SELECT current_date;             -- date, in the session's timezone
+SELECT current_timestamp;        -- the standard spelling of now()
 ```
 
 **`now()` é o instante em que a transação começou e não anda durante ela.** Isso é recurso: toda
@@ -99,7 +99,7 @@ coisa que precise concordar, guarde o momento e derive o dia no ponto em que alg
 ## Intervalos, e a aritmética
 
 ```sql
-SELECT paid_at - issued_on::timestamptz AS took FROM invoices;   -- um interval
+SELECT paid_at - issued_on::timestamptz AS took FROM invoices;   -- an interval
 SELECT now() + interval '30 days';
 SELECT date_trunc('month', issued_on);
 ```

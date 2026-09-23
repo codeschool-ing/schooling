@@ -1,16 +1,16 @@
 ---
 title: Guloso por padrão, e o caractere que conserta
-version: 1
+version: 2
 ---
 
-```
-*        zero ou mais
-+        um ou mais
-?        zero ou um
-{3}      exatamente três
-{2,4}    de dois a quatro
-{2,}     dois ou mais
-```
+| quantificador | quantos |
+|---|---|
+| `*` | zero ou mais |
+| `+` | um ou mais |
+| `?` | zero ou um |
+| `{3}` | exatamente três |
+| `{2,4}` | de dois a quatro |
+| `{2,}` | dois ou mais |
 
 Cada um se aplica à coisa imediatamente antes dele: `ab+` é um `a` e um ou mais `b`; `(ab)+` é um
 ou mais `ab`.
@@ -53,8 +53,8 @@ ajustar a gula**, e é mais rápido também.
 ## O `?` depois de um grupo
 
 ```python
-r"colou?r"          # color ou colour
-r"(\+\d{1,3} )?"    # um código de país opcional, presente ou não
+r"colou?r"          # color or colour
+r"(\+\d{1,3} )?"    # an optional country code, present or not
 ```
 
 O grupo opcional é como um padrão trata "esta parte pode não estar lá" — e quando ela está

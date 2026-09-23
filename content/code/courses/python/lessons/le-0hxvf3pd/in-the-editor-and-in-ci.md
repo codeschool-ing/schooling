@@ -1,6 +1,6 @@
 ---
 title: On save, in the pipeline, and before the commit
-version: 1
+version: 2
 ---
 
 ```json

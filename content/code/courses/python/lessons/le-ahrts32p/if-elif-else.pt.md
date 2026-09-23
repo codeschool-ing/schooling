@@ -1,15 +1,15 @@
 ---
 title: A indentação é o bloco
-version: 1
+version: 2
 ---
 
 ```python
-if nota >= 70:
-    print("aprovado")
-elif nota >= 50:
-    print("limítrofe")
+if score >= 70:
+    print("pass")
+elif score >= 50:
+    print("borderline")
 else:
-    print("reprovado")
+    print("fail")
 ```
 
 Dois pontos encerram cada linha de cabeçalho, e as linhas indentadas embaixo são o bloco. Não há
@@ -18,22 +18,22 @@ Dois pontos encerram cada linha de cabeçalho, e as linhas indentadas embaixo s�
 ## `elif` em vez de um `if` aninhado
 
 ```python
-if nota >= 70:
+if score >= 70:
     ...
 else:
-    if nota >= 50:      # funciona, e deriva para a direita sem fim
+    if score >= 50:      # works, and drifts right forever
         ...
 ```
 
 O `elif` é uma palavra-chave para exatamente isso, e mantém plana uma cadeia de cinco condições.
 
 **Os ramos são tentados em ordem e o primeiro que casa vence.** Então ordene do mais específico ao
-menos: uma cadeia começando em `if nota >= 50` nunca chegaria ao caso do 70.
+menos: uma cadeia começando em `if score >= 50` nunca chegaria ao caso do 70.
 
 ## A expressão condicional
 
 ```python
-rotulo = "aprovado" if nota >= 70 else "reprovado"
+label = "pass" if score >= 70 else "fail"
 ```
 
 Um valor ou o outro, numa expressão. Lê-se do meio para fora, o que exige um instante na primeira
@@ -46,7 +46,7 @@ vez. Use quando os dois lados forem curtos; use um `if` quando algum não for.
 O Python 3.10 acrescentou `match`/`case`, que vale reconhecer:
 
 ```python
-match comando:
+match command:
     case "start":
         ...
     case _:
@@ -59,10 +59,10 @@ resposta comum para comparar um valor com alguns poucos. Este curso não volta a
 ## Aninhamento, e a cláusula de guarda
 
 ```python
-def enviar(usuario):
-    if usuario is None:
+def send(user):
+    if user is None:
         return
-    if not usuario.verificado:
+    if not user.verified:
         return
     ...
 ```

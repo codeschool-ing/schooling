@@ -1,13 +1,13 @@
 ---
 title: O padrão que passa quase tudo
-version: 1
+version: 2
 ---
 
 ```python
-def somar(a, b):
+def add(a, b):
     return a + b
 
-somar("x", 3)
+add("x", 3)
 ```
 
 ```sh
@@ -27,7 +27,7 @@ A reação honesta a uma primeira passagem limpa numa base sem anotações não 
 ## O que ele verifica assim mesmo
 
 ```python
-somar(1, 2, 3)
+add(1, 2, 3)
 ```
 
 ```sh
@@ -68,7 +68,7 @@ As demais são menores: `warn_redundant_casts`, `warn_unused_ignores`, `strict_e
 ## `check_untyped_defs`, que é a interessante
 
 ```python
-def total(itens):
+def total(items):
     n: int = "zero"
     return n
 ```

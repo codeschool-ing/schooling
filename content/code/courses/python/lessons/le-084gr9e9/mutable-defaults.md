@@ -1,6 +1,6 @@
 ---
 title: The default is created once, at definition
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,6 +1,6 @@
 ---
 title: The default set, and the family it leaves out
-version: 1
+version: 2
 ---
 
 ```sh

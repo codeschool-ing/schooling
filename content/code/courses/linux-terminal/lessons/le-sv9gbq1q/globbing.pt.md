@@ -1,6 +1,6 @@
 ---
 title: Padrões, e quem os expande
-version: 1
+version: 2
 ---
 
 **O fato mais importante desta seção:** o shell expande um padrão *antes* de o comando rodar. O
@@ -150,8 +150,8 @@ Listar um diretório é listar o que há dentro dele, e foi o que ele fez. **`ls
 A seção 09 mandou pôr aspas no padrão do `find`, e agora o motivo está à vista:
 
 ```
-find . -name '*.c'      # o find compara — correto
-find . -name *.c        # o shell comparou, e o find recebeu um nome de arquivo
+find . -name '*.c'      # find matches — correct
+find . -name *.c        # the shell matched, and find got a filename
 ```
 
 A segunda forma funciona por acidente quando existe exatamente um arquivo `.c` no diretório atual,

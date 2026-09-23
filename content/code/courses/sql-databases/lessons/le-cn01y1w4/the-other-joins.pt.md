@@ -1,6 +1,6 @@
 ---
 title: As outras junções, e uma a evitar
-version: 1
+version: 2
 ---
 
 ## CROSS JOIN
@@ -42,7 +42,7 @@ vai tentar. Um `CROSS JOIN` escrito de propósito é seguro porque alguém digit
 Atalho para uma igualdade sobre uma coluna de mesmo nome nas duas tabelas:
 
 ```sql
-FROM orders o JOIN customers c USING (customer_id)    -- se as duas chamarem assim
+FROM orders o JOIN customers c USING (customer_id)    -- if both call it that
 FROM orders o JOIN customers c ON c.customer_id = o.customer_id
 ```
 

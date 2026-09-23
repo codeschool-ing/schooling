@@ -6,7 +6,7 @@ version: 2
 O gerador, de antes:
 
 ```python
-def contagem(n):
+def countdown(n):
     while n > 0:
         yield n
         n -= 1
@@ -19,7 +19,7 @@ A mesma coisa como classe:
   "language": "python",
   "parts": [
     {
-      "code": "class Contagem:\n    def __init__(self, n):\n        self.n = n",
+      "code": "class Countdown:\n    def __init__(self, n):\n        self.n = n",
       "note": "**O `self.n` é o estado.** O gerador guarda o mesmo número na variável local `n`."
     },
     {
@@ -57,10 +57,10 @@ no meio, essa reconstrução é a parte difícil.
 ## Quando uma classe ESTÁ certa
 
 ```python
-class Linhas:
-    def __init__(self, caminho): self.caminho = caminho
+class Rows:
+    def __init__(self, path): self.path = path
     def __iter__(self):
-        with open(self.caminho, encoding="utf-8") as f:
+        with open(self.path, encoding="utf-8") as f:
             yield from f
 ```
 

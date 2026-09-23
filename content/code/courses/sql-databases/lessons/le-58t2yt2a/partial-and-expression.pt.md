@@ -1,6 +1,6 @@
 ---
 title: Dois tipos que pagam o trabalho
-version: 1
+version: 2
 ---
 
 Estes dois resolvem problemas que o índice comum não resolve, são baratos, e a maioria das pessoas
@@ -27,13 +27,13 @@ seletivo por construção.
 Os formatos que vale reconhecer:
 
 ```sql
--- o pequeno subconjunto vivo de um arquivo grande
+-- the small live subset of a big archive
 CREATE INDEX ON orders (customer_id) WHERE NOT archived;
 
--- linhas com valor, numa coluna quase toda nula
+-- rows with a value, on a mostly-null column
 CREATE INDEX ON users (deleted_at) WHERE deleted_at IS NOT NULL;
 
--- unicidade que vale só para algumas linhas
+-- uniqueness that applies to some rows only
 CREATE UNIQUE INDEX ON users (email) WHERE deleted_at IS NULL;
 ```
 
@@ -58,7 +58,7 @@ outra saída: indexe a função.
 ```sql
 CREATE INDEX ON customers (lower(email));
 
-SELECT * FROM customers WHERE lower(email) = 'ana@example.com';   -- usa o índice
+SELECT * FROM customers WHERE lower(email) = 'ana@example.com';   -- uses it
 ```
 
 O índice guarda os valores em minúsculas, ordenados. A expressão da consulta bate com a expressão do
@@ -79,9 +79,9 @@ estar sendo chato.
 Formatos úteis:
 
 ```sql
-CREATE INDEX ON customers (lower(email));                        -- busca sem distinguir maiúsculas
-CREATE INDEX ON orders (date_trunc('month', placed_at));         -- o agrupamento mensal da aula 6
-CREATE INDEX ON documents ((payload ->> 'customer_id'));         -- um campo dentro de uma coluna JSON
+CREATE INDEX ON customers (lower(email));                        -- case-insensitive lookup
+CREATE INDEX ON orders (date_trunc('month', placed_at));         -- lesson 6's monthly grouping
+CREATE INDEX ON documents ((payload ->> 'customer_id'));         -- a field inside a JSON column
 ```
 
 O último é como uma coluna JSON fica pesquisável sem ser desmontada em colunas de verdade — o que

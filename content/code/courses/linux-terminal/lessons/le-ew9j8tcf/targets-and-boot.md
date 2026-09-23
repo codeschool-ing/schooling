@@ -1,6 +1,6 @@
 ---
 title: Targets, and the machine that will not come up
-version: 1
+version: 2
 ---
 
 A **target** is a named group of units. Nothing more: it runs no program and has no `ExecStart=`.

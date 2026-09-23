@@ -1,6 +1,6 @@
 ---
 title: Que caractere, e as classes que valem decorar
-version: 1
+version: 2
 ---
 
 A maior parte dos caracteres casa consigo mesma. `cat` casa `cat`. Os interessantes são o resto.
@@ -12,12 +12,12 @@ linha a linha e surpreende quem não trabalha — o `re.DOTALL` a desliga.
 
 ## Classes
 
-```
-[aeiou]      qualquer um desses
-[a-z]        qualquer minúscula
-[a-zA-Z0-9]  uma letra ou um dígito
-[^0-9]       qualquer coisa que NÃO seja dígito
-```
+| classe | casa |
+|---|---|
+| `[aeiou]` | qualquer um desses |
+| `[a-z]` | qualquer minúscula |
+| `[a-zA-Z0-9]` | uma letra ou um dígito |
+| `[^0-9]` | qualquer coisa que NÃO seja dígito |
 
 Colchetes são um conjunto de caracteres, e UM deles casa. O `^` no COMEÇO de uma classe a nega; em
 qualquer outro lugar ele é um `^` literal.
@@ -36,10 +36,10 @@ esperava ASCII. O `re.ASCII` o estreita.
 ## Escapar, dentro e fora
 
 ```python
-r"\."          # um ponto literal
-r"[.]"         # também um ponto literal — dentro de uma classe quase tudo é literal
-r"[\d.]"       # um dígito ou um ponto
-r"[a\-z]"      # a, um hífen, ou z — o escape torna o hífen literal
+r"\."          # a literal dot
+r"[.]"         # also a literal dot — inside a class, most things are literal
+r"[\d.]"       # a digit or a dot
+r"[a\-z]"      # a, a hyphen, or z — the escape makes the hyphen literal
 ```
 
 **Dentro de uma classe quase nada é especial**, e é por isso que `[.]` não precisa de barra. As
@@ -49,7 +49,7 @@ por último evita a questão inteira: `[-a-z]`.
 ## `re.escape`
 
 ```python
-padrao = re.escape(entrada_do_usuario)
+pattern = re.escape(user_input)
 ```
 
 Quando o texto vem de outro lugar, todo caractere nele precisa ser tomado ao pé da letra. O

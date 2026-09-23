@@ -1,6 +1,6 @@
 ---
 title: Os três lugares em que uma subconsulta cabe
-version: 1
+version: 2
 ---
 
 Uma subconsulta é um `SELECT` escrito dentro de outra instrução, entre parênteses. Há três lugares
@@ -12,16 +12,16 @@ parte de ler a consulta de outra pessoa.
 ```
 
 ```sql
--- 1 · na lista do SELECT, como um valor
+-- 1 · in the SELECT list, as one value
 SELECT c.name, (SELECT count(*) FROM orders o WHERE o.customer_id = c.id) AS orders
 FROM   customers c;
 
--- 2 · no FROM, como uma tabela
+-- 2 · in FROM, as a table
 SELECT t.customer_id, t.orders
 FROM   (SELECT customer_id, count(*) AS orders FROM orders GROUP BY customer_id) t
 WHERE  t.orders > 3;
 
--- 3 · no WHERE, como parte de uma condição
+-- 3 · in WHERE, as part of a condition
 SELECT * FROM products
 WHERE  category_id IN (SELECT id FROM categories WHERE archived);
 ```

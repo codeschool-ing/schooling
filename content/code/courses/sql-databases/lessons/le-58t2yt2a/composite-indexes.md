@@ -1,6 +1,6 @@
 ---
 title: More than one column, and why the order decides everything
-version: 1
+version: 2
 ---
 
 ```sql

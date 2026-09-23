@@ -1,6 +1,6 @@
 ---
 title: What is inside it, and the tuple that is two types
-version: 1
+version: 2
 ---
 
 ```python

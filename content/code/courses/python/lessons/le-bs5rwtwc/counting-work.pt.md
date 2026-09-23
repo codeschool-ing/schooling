@@ -1,12 +1,12 @@
 ---
 title: Contar operações, não segundos
-version: 1
+version: 2
 ---
 
 ```python
-def contem(itens, alvo):
-    for item in itens:          # uma vez por item, no pior caso
-        if item == alvo:
+def contains(items, target):
+    for item in items:          # once per item, in the worst case
+        if item == target:
             return True
     return False
 ```
@@ -28,10 +28,10 @@ sobre pedidos — e nomeá-los é a maior parte da análise.
 ## Por que a constante é descartada
 
 ```python
-for item in itens:
+for item in items:
     x = item * 2
     y = x + 1
-    total += y          # três operações por item, não uma
+    total += y          # three operations per item, not one
 ```
 
 Isso é `3n`, e se escreve `O(n)`. A constante é descartada porque ela depende da máquina, do
@@ -44,15 +44,15 @@ termo `n²` é um milhão de vezes maior que o resto junto.
 
 ## Pior caso, e por quê
 
-`O` descreve o **pior caso** a menos que algo diga o contrário. O `contem` volta na hora quando o
+`O` descreve o **pior caso** a menos que algo diga o contrário. O `contains` volta na hora quando o
 alvo é o primeiro da lista, e isso é `O(1)` num dia bom — mas um custo com que você só pode contar
 quando tem sorte não é um custo com que você pode contar.
 
 ## O que ele ignora de propósito
 
 ```python
-dados[i]               # O(1)
-algum_set.add(x)       # O(1)
+data[i]                # O(1)
+some_set.add(x)        # O(1)
 ```
 
 Os dois são `O(1)` e um é várias vezes o outro. O Big-O diz que eles se comportam do mesmo jeito

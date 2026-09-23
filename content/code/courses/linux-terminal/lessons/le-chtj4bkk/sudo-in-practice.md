@@ -1,6 +1,6 @@
 ---
 title: The `sudo` that does not work, and four that do
-version: 1
+version: 2
 ---
 
 This section exists because of one line. Everybody types it, it fails, and every answer to it

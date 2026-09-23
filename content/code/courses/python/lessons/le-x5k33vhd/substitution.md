@@ -1,6 +1,6 @@
 ---
 title: `sub`, and a replacement that is a function
-version: 1
+version: 2
 ---
 
 ```python

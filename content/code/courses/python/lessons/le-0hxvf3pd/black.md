@@ -1,6 +1,6 @@
 ---
 title: `black`, and the options it does not have
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,9 +1,9 @@
 ---
 title: O `OnCalendar`, e o comando que te diz quando ele vai disparar
-version: 1
+version: 2
 ---
 
-```
+```localised
 DiaDaSemana Ano-Mês-Dia Hora:Minuto:Segundo
 ```
 

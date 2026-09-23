@@ -1,6 +1,6 @@
 ---
 title: Um-para-muitos, e onde a chave vai
-version: 1
+version: 2
 ---
 
 A relação entre clientes e pedidos tem um formato, e o formato tem nome. **Um cliente tem muitos
@@ -81,8 +81,8 @@ Se nada disso se aplica, uma tabela é mais simples e mais simples é o certo.
 Existe uma segunda decisão escondida no formato um-para-muitos, e ela é tomada por uma palavra:
 
 ```sql
-customer_id integer NOT NULL REFERENCES customers (id)   -- todo pedido tem um cliente
-customer_id integer          REFERENCES customers (id)   -- um pedido pode não ter nenhum
+customer_id integer NOT NULL REFERENCES customers (id)   -- every order has a customer
+customer_id integer          REFERENCES customers (id)   -- an order may have none
 ```
 
 `NOT NULL` diz que a relação é **obrigatória**: não existe pedido sem cliente. Deixar de fora diz

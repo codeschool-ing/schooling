@@ -389,6 +389,16 @@ key, a part with no code, or an example with no note anywhere is refused, and so
 translation whose examples differ in number, parts, language or file. The glyph check reads
 inside the block too. Its code is drawn in the mono face like any other.
 
+**A translation translates the prose and never the program.** Every fence in a `.pt.md` is the
+English fence at the same place, byte for byte: names, comments, strings and what the program
+printed. The notes of a `schooling-example` are prose and free. The Portuguese of four courses
+had 732 blocks that differed, 562 of them in `python`, and among them were output tables and paths
+that no run ever printed. Each read perfectly, and a translated program is a second program nobody
+runs. `validate-content`
+compares them. The one exception is a block labelled `localised` in BOTH files: an explanation
+laid out in mono, or a formula a spreadsheet spells per locale. It is never allowed on a capture,
+because what a machine printed is not the reader's to reword.
+
 ## The catalogue is a mirror, and only one thing writes it
 
 `content/` is the truth; the `catalog_*` tables are derived (C-01). **A test scans the source for

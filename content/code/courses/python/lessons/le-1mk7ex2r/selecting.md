@@ -1,6 +1,6 @@
 ---
 title: Columns, `loc`, `iloc`, and the boolean mask
-version: 1
+version: 2
 ---
 
 ```python

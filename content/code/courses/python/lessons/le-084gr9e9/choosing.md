@@ -1,6 +1,6 @@
 ---
 title: Four questions that settle it
-version: 1
+version: 2
 ---
 
 | | list | tuple | dict | set |

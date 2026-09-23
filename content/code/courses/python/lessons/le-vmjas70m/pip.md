@@ -1,6 +1,6 @@
 ---
 title: `python -m pip`, and why not `pip`
-version: 1
+version: 2
 ---
 
 ```sh

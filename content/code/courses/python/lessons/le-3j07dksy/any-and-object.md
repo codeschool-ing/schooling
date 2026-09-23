@@ -1,6 +1,6 @@
 ---
 title: The one that turns it off, and the one that does not
-version: 1
+version: 2
 ---
 
 ```python

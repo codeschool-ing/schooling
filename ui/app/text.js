@@ -258,7 +258,7 @@ export function prose(body) {
            and a block you cannot copy because its author left the label out
            would be an odd thing to explain. */
         return '<div class="code-block code-win prose-code">' +
-          codeBar(block.text, block.code, copyButton()) +
+          codeBar(block.text, block.code === LOCALISED ? '' : block.code, copyButton()) +
           '<pre class="code"><code>' + highlight(block.text, block.code) + '</code></pre>' +
         '</div>';
       }
@@ -751,9 +751,22 @@ function sweep(raw, re) {
   return out + esc(raw.slice(last));
 }
 
+/* `localised` IS NOT A LANGUAGE, and it is the one label that says so on
+   purpose. A code block is the same bytes in every language of the catalogue —
+   `validate-content` holds a translation to it — except where the words belong
+   to the reader: an explanation drawn in mono (the five fields of a cron line,
+   two transactions side by side) or a formula the software itself spells per
+   locale (`=ARRED(…; 2)` in a Portuguese spreadsheet, `=ROUND(…, 2)` in an
+   English one). Such a block carries this label in both languages, draws with
+   no colour and no title, and is the only kind a translation may change. A
+   capture never carries it: what a machine printed is evidence of a run, and
+   the validator refuses the label on anything that looks like one. */
+export const LOCALISED = 'localised';
+
 export function highlight(code, language) {
   const raw = String(code ?? '');
   const name = String(language || '').toLowerCase();
+  if (name === LOCALISED) return esc(raw);
   if (!name) return isTranscript(raw) ? transcript(raw) : esc(raw);
   const re = COMPILED[ALIAS[name] || name];
   if (!re) return esc(raw);           // a language we do not know comes out colourless

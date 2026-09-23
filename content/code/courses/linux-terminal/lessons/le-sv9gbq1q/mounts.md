@@ -1,6 +1,6 @@
 ---
 title: Mounting: a disk arrives as a directory
-version: 1
+version: 2
 ---
 
 Lesson 1 section 10 said it: there are no drive letters, there is one tree, and every disk appears

@@ -1,6 +1,6 @@
 ---
 title: Nothing happens until something asks
-version: 1
+version: 2
 ---
 
 ```python

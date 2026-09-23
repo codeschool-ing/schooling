@@ -1,6 +1,6 @@
 ---
 title: Casando texto, e quanto cada jeito custa
-version: 1
+version: 2
 ---
 
 Igualdade exata foi a seção anterior. Esta são os vários jeitos de pedir "algo parecido".
@@ -8,10 +8,10 @@ Igualdade exata foi a seção anterior. Esta são os vários jeitos de pedir "al
 ## `LIKE` e `ILIKE`
 
 ```sql
-WHERE name LIKE 'Kettle%'      -- começa com
-WHERE name LIKE '%kettle%'     -- contém
-WHERE name LIKE '_ettle'       -- um caractere, depois ettle
-WHERE name ILIKE '%kettle%'    -- o mesmo, ignorando caixa
+WHERE name LIKE 'Kettle%'      -- starts with
+WHERE name LIKE '%kettle%'     -- contains
+WHERE name LIKE '_ettle'       -- one character, then ettle
+WHERE name ILIKE '%kettle%'    -- the same, ignoring case
 ```
 
 Dois curingas e é toda a linguagem: `%` é qualquer sequência de caracteres incluindo nenhuma, `_` é
@@ -42,7 +42,7 @@ diferentes.**
 Para procurar um `%` ou `_` literal, diga qual caractere escapa:
 
 ```sql
-WHERE code LIKE '100\%%' ESCAPE '\'    -- começa com o texto 100%
+WHERE code LIKE '100\%%' ESCAPE '\'    -- starts with the text 100%
 ```
 
 Este importa mais onde é menos visível: uma caixa de busca que passa a entrada do usuário direto
@@ -71,9 +71,9 @@ seção é sobre isso.
 Quando dois curingas não bastam:
 
 ```sql
-WHERE sku ~ '^[A-Z]{3}-[0-9]{4}$'     -- casa
-WHERE sku !~ '^[A-Z]{3}'              -- não casa
-WHERE sku ~* 'kettle'                 -- casa, ignorando caixa
+WHERE sku ~ '^[A-Z]{3}-[0-9]{4}$'     -- matches
+WHERE sku !~ '^[A-Z]{3}'              -- does not match
+WHERE sku ~* 'kettle'                 -- matches, ignoring case
 ```
 
 `~` é o operador do PostgreSQL e o do padrão é `SIMILAR TO`, que quase ninguém usa. São poderosas,

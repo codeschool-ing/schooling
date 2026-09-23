@@ -1,6 +1,6 @@
 ---
 title: A table as one object
-version: 1
+version: 2
 ---
 
 ```python

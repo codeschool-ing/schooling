@@ -1,6 +1,6 @@
 ---
 title: Numbers, and the one that costs money
-version: 1
+version: 2
 ---
 
 A column's type is not a box that holds anything. It is a promise about every value that will ever

@@ -914,6 +914,7 @@ func check(root string) (problems []error, schools int, err error) {
 		// glyph that font has never had. See `checkFenceGlyphs`.
 		problems = append(problems, checkFenceGlyphs(entry.Name(), school, mono, used)...)
 		problems = append(problems, checkExamples(entry.Name(), school)...)
+		problems = append(problems, checkTranslatedCode(entry.Name(), school)...)
 	}
 
 	// An exception that outlived what it excused reads as current, and the next

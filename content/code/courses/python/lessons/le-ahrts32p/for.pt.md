@@ -1,6 +1,6 @@
 ---
 title: Itere a coisa, não o índice
-version: 1
+version: 2
 ---
 
 ```python
@@ -29,7 +29,7 @@ pergunta é se você quer `enumerate` ou se queria os itens desde o começo.
 ## Duas coleções juntas
 
 ```python
-for nome, nota in zip(nomes, notas):
+for name, score in zip(names, scores):
 ```
 
 O `zip` para na mais curta, em silêncio. Tudo bem quando você sabe que elas casam e é um buraco
@@ -41,10 +41,10 @@ Listas, tuplas, conjuntos, strings, dicionários, arquivos, e qualquer coisa que
 iterador.
 
 ```python
-for ch in "ada":            # caracteres
-for chave in pessoa:        # as CHAVES de um dicionário
-for k, v in pessoa.items():
-for linha in open("f.txt"): # uma linha por vez
+for ch in "ada":          # characters
+for key in person:        # a dictionary's KEYS
+for k, v in person.items():
+for line in open("f.txt"):  # one line at a time
 ```
 
 **Um dicionário itera as chaves**, o que pega quem esperava pares.
@@ -65,11 +65,11 @@ como jeito de indexar uma lista.
 ## `break`, `continue`, e o `else` que ninguém espera
 
 ```python
-for item in itens:
-    if casa(item):
+for item in items:
+    if matches(item):
         break
 else:
-    print("nada casou")
+    print("nothing matched")
 ```
 
 O `break` sai do laço; o `continue` pula para o próximo item. **O `else` roda quando o laço terminou

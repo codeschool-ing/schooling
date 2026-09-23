@@ -1,6 +1,6 @@
 ---
 title: The first command on any machine
-version: 1
+version: 2
 ---
 
 Everything in this lesson reduces to one reflex. You reach a machine you did not set up, and

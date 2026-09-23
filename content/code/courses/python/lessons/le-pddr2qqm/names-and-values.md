@@ -1,6 +1,6 @@
 ---
 title: A name is a label on a value, not a box
-version: 1
+version: 2
 ---
 
 ```python

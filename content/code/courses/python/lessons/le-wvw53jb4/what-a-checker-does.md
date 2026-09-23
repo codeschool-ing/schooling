@@ -1,6 +1,6 @@
 ---
 title: A checker reads the program and runs none of it
-version: 1
+version: 2
 ---
 
 ```python

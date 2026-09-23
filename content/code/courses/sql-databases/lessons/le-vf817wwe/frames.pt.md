@@ -1,6 +1,6 @@
 ---
 title: A moldura, e por que acrescentar ORDER BY muda a resposta
-version: 1
+version: 2
 ---
 
 Acrescente um `ORDER BY` dentro do `OVER` e o número muda. Não a ordem das linhas — o número:
@@ -49,17 +49,17 @@ da próxima seção, que precisam dela.
 ## Escrever uma moldura
 
 ```sql
-ROWS BETWEEN <início> AND <fim>
+ROWS BETWEEN <start> AND <end>
 ```
 
 onde cada ponta é `UNBOUNDED PRECEDING`, `n PRECEDING`, `CURRENT ROW`, `n FOLLOWING` ou `UNBOUNDED
 FOLLOWING`. As duas que você mais vai escrever:
 
 ```sql
--- um total acumulado, dito em voz alta em vez de herdado de um padrão
+-- a running total, said out loud rather than inherited from a default
 sum(total) OVER (ORDER BY ordered_on ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
 
--- uma média móvel de quatro dias: esta linha e as três anteriores
+-- a four-day moving average: this row and the three before it
 avg(total) OVER (ORDER BY day ROWS BETWEEN 3 PRECEDING AND CURRENT ROW)
 ```
 
@@ -77,11 +77,11 @@ linha com o mesmo valor — os seus pares — entra ou sai junto.
 Dois pedidos feitos no mesmo dia:
 
 ```
-dia      total   ROWS acumulado   RANGE acumulado
-dia 1    10      10               10
-dia 2    20      30               50
-dia 2    30      60               50
-dia 3     5      65               55
+day      total   ROWS running   RANGE running
+day 1    10      10             10
+day 2    20      30             50
+day 2    30      60             50
+day 3     5      65             55
 ```
 
 `ROWS` dá às duas linhas do dia 2 acumulados diferentes, na ordem que o banco quiser. `RANGE` dá o

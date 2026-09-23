@@ -1,6 +1,6 @@
 ---
 title: One copy for everybody, and the trap in it
-version: 1
+version: 2
 ---
 
 ```python

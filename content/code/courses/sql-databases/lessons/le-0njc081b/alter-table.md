@@ -1,6 +1,6 @@
 ---
 title: ALTER TABLE, and what it costs
-version: 1
+version: 2
 ---
 
 Creating a table is easy because nothing depends on it yet. Changing one is the job.

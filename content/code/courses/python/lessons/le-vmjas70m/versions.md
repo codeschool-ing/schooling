@@ -1,9 +1,9 @@
 ---
 title: `==`, `>=`, `~=`, and what a version number promises
-version: 1
+version: 2
 ---
 
-```sh
+```localised
 MAJOR . MINOR . PATCH
   2   .  31   .   0
 ```
@@ -39,10 +39,10 @@ of components you wrote, which is easy to mistype and produces no error.
 
 ## The other two
 
-```sh
-requests>=2.26,<3        a range, written out
-requests!=2.32.0         everything except a release that was broken
-```
+| specifier | means |
+|---|---|
+| `requests>=2.26,<3` | a range, written out |
+| `requests!=2.32.0` | everything except a release that was broken |
 
 A comma is an **and**. `>=2.26,<3` is the explicit form of `~=2.26` and is worth preferring
 precisely because it cannot be misread.

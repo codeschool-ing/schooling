@@ -1,6 +1,6 @@
 ---
 title: Criar, encontrar e remover sem derrubar nada
-version: 1
+version: 2
 ---
 
 ## `CREATE INDEX` toma um bloqueio
@@ -42,14 +42,14 @@ não é suportada para aquela mudança.
 ## Achar os que ninguém usa
 
 ```sql
-SELECT relname AS tabela, indexrelname AS indice,
-       idx_scan AS vezes_usado,
-       pg_size_pretty(pg_relation_size(indexrelid)) AS tamanho
+SELECT relname AS table, indexrelname AS index,
+       idx_scan AS times_used,
+       pg_size_pretty(pg_relation_size(indexrelid)) AS size
 FROM   pg_stat_user_indexes
 ORDER BY idx_scan, pg_relation_size(indexrelid) DESC;
 ```
 
-Uma linha com `vezes_usado` em zero e tamanho em gigabytes é um imposto pago por nada. Três ressalvas
+Uma linha com `times_used` em zero e tamanho em gigabytes é um imposto pago por nada. Três ressalvas
 antes de derrubá-lo, e cada uma já pegou alguém:
 
 **O contador começa na última redefinição de estatísticas**, que pode ter sido no último reinício. Um
@@ -72,7 +72,7 @@ são um índice a mais, pela razão do prefixo à esquerda. Eles se acumulam por
 duas consultas e ninguém as comparou.
 
 ```sql
-SELECT indrelid::regclass AS tabela, array_agg(indexrelid::regclass) AS indices
+SELECT indrelid::regclass AS table, array_agg(indexrelid::regclass) AS indexes
 FROM   pg_index
 GROUP BY indrelid, indkey
 HAVING count(*) > 1;
@@ -88,7 +88,7 @@ qualquer tabela com mais de quatro índices.
 índice que cresce enquanto a contagem de linhas não.
 
 ```sql
-REINDEX INDEX CONCURRENTLY orders_customer_id_idx;      -- PostgreSQL 12 em diante
+REINDEX INDEX CONCURRENTLY orders_customer_id_idx;      -- PostgreSQL 12 and later
 ```
 
 Antes da versão 12 um reindex segurava um bloqueio pela duração, e o contorno usual era construir um

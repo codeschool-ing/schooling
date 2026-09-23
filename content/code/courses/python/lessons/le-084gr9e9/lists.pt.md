@@ -1,6 +1,6 @@
 ---
 title: Ordenada, e pode mudar
-version: 1
+version: 2
 ---
 
 ```python
@@ -26,10 +26,10 @@ um a mais.
 ## Mudando
 
 ```python
-langs[1] = "rust"          # troca no lugar
-langs.append("c")          # um item no fim
-langs.extend(["zig", "r"]) # vários no fim
-langs.insert(0, "bash")    # numa posição; tudo depois desloca
+langs[1] = "rust"          # replace in place
+langs.append("c")          # one item on the end
+langs.extend(["zig", "r"]) # several on the end
+langs.insert(0, "bash")    # at a position; everything after shifts
 ```
 
 **O `append` recebe um item, o `extend` recebe um iterável.** `langs.append(["a", "b"])` põe uma
@@ -38,11 +38,11 @@ langs.insert(0, "bash")    # numa posição; tudo depois desloca
 ## Tirando coisas
 
 ```python
->>> langs.pop()        # o último, e devolve
+>>> langs.pop()        # last, and returns it
 'r'
->>> langs.pop(0)       # por posição
+>>> langs.pop(0)       # by position
 'bash'
->>> langs.remove("go") # por valor, primeira ocorrência, levanta erro se não houver
+>>> langs.remove("go") # by value, first match, raises if absent
 ```
 
 `del langs[2]` também funciona e não devolve nada.
@@ -50,13 +50,13 @@ langs.insert(0, "bash")    # numa posição; tudo depois desloca
 ## Ordenando
 
 ```python
-langs.sort()             # no lugar, devolve None
-melhores = sorted(langs) # uma lista nova, deixa a original em paz
+langs.sort()             # in place, returns None
+best = sorted(langs)     # a new list, leaves the original alone
 langs.sort(reverse=True)
-langs.sort(key=len)      # por um valor calculado
+langs.sort(key=len)      # by a computed value
 ```
 
-**O `sort` devolve `None`**, que é a armadilha `nomes = nomes.sort()` da aula 2. Quando você quer um
+**O `sort` devolve `None`**, que é a armadilha `names = names.sort()` da aula 2. Quando você quer um
 valor de volta, `sorted`.
 
 ## Perguntando

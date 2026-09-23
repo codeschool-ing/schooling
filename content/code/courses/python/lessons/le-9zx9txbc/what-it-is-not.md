@@ -1,6 +1,6 @@
 ---
 title: Three things a `with` block does not do
-version: 1
+version: 2
 ---
 
 ## It is not a scope

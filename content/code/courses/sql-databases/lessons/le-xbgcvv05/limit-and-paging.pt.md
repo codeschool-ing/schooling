@@ -1,6 +1,6 @@
 ---
 title: LIMIT, e por que a paginação de todo mundo está errada
-version: 1
+version: 2
 ---
 
 ```sql
@@ -11,16 +11,16 @@ Dez linhas. O `LIMIT` roda por último, depois da ordenação, então pega as de
 resultado arrumado — que é por que a seção anterior insistiu que o arranjo não pode empatar.
 
 ```sql
-LIMIT 10 OFFSET 20       -- pule 20, pegue 10
-FETCH FIRST 10 ROWS ONLY -- a grafia do padrão, raramente vista
+LIMIT 10 OFFSET 20      -- skip 20, take 10
+FETCH FIRST 10 ROWS ONLY -- the standard spelling, rarely seen
 ```
 
 E é assim que essencialmente toda aplicação do mundo escreve paginação:
 
 ```sql
-SELECT * FROM products ORDER BY id LIMIT 20 OFFSET 0;      -- página 1
-SELECT * FROM products ORDER BY id LIMIT 20 OFFSET 20;     -- página 2
-SELECT * FROM products ORDER BY id LIMIT 20 OFFSET 40;     -- página 3
+SELECT * FROM products ORDER BY id LIMIT 20 OFFSET 0;      -- page 1
+SELECT * FROM products ORDER BY id LIMIT 20 OFFSET 20;     -- page 2
+SELECT * FROM products ORDER BY id LIMIT 20 OFFSET 40;     -- page 3
 ```
 
 Funciona, é óbvio, e tem dois defeitos que só aparecem num tamanho que você não tem enquanto
@@ -57,10 +57,10 @@ Numa tabela movimentada isso não é caso raro. É o que acontece o dia inteiro,
 Em vez de contar linhas para pular, lembre onde a última página **terminou** e peça o que vem depois:
 
 ```sql
--- primeira página
+-- first page
 SELECT * FROM products ORDER BY id LIMIT 20;
 
--- a próxima, dado que a última linha mostrada tinha id 4711
+-- the next page, given that the last row you showed had id 4711
 SELECT * FROM products WHERE id > 4711 ORDER BY id LIMIT 20;
 ```
 
@@ -102,8 +102,8 @@ usa o salto por número além das primeiras páginas, e as páginas fundas eram 
 Mais dois usos, e um deles é armadilha:
 
 ```sql
-SELECT * FROM products ORDER BY price DESC LIMIT 1;    -- o mais caro
-SELECT * FROM products LIMIT 100;                      -- uma olhada na tabela
+SELECT * FROM products ORDER BY price DESC LIMIT 1;    -- the most expensive
+SELECT * FROM products LIMIT 100;                      -- a look at the table
 ```
 
 O primeiro é o jeito comum de pedir a linha de máximo, e é melhor do que parece: com um índice em

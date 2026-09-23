@@ -1,6 +1,6 @@
 ---
 title: The branch nobody can see
-version: 1
+version: 2
 ---
 
 ```python

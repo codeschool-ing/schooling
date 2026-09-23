@@ -1,19 +1,19 @@
 ---
 title: Um valor, vários valores, e a diferença para imprimir
-version: 1
+version: 2
 ---
 
 ```python
-def analisar(linha):
-    nome, _, cidade = linha.partition(",")
-    return nome, cidade        # uma tupla, e os parênteses são opcionais
+def parse(line):
+    name, _, city = line.partition(",")
+    return name, city          # a tuple, and the parentheses are optional
 ```
 
 O `return` encerra a função na hora e devolve um valor. Vários valores são uma tupla, e quem chama
 desempacota do mesmo jeito que a aula 3 desempacotava qualquer outra:
 
 ```python
-nome, cidade = analisar(linha)
+name, city = parse(line)
 ```
 
 **Acima de três, dê nomes.** Uma função que devolve cinco coisas numa tupla é uma função cujo
@@ -23,12 +23,12 @@ campos.
 ## Retorno antecipado
 
 ```python
-def preco_de(plano):
-    if plano == "gratuito":
+def price_for(plan):
+    if plan == "free":
         return 0
-    if plano not in PRECOS:
-        raise ValueError(f"plano desconhecido: {plano}")
-    return PRECOS[plano]
+    if plan not in PRICES:
+        raise ValueError(f"unknown plan: {plan}")
+    return PRICES[plan]
 ```
 
 Vários `return` são Python comum, e não algo de que ter culpa. A forma de guarda da aula 4 é
@@ -37,11 +37,11 @@ construída em cima disso: tire os casos resolvidos no topo e deixe o corpo num 
 ## Devolver contra imprimir
 
 ```python
-def total(linhas):
-    print(sum(l["valor"] for l in linhas))     # dá para ler; não dá para usar
+def total(rows):
+    print(sum(r["amount"] for r in rows))     # can be read; cannot be used
 
-def total(linhas):
-    return sum(l["valor"] for l in linhas)     # dá para usar; quem chama imprime
+def total(rows):
+    return sum(r["amount"] for r in rows)     # can be used; the caller prints
 ```
 
 **Uma função que imprime a resposta a deu a uma pessoa e não ao programa.** Nada consegue somá-la,
@@ -54,7 +54,7 @@ para reaproveitar no script seguinte.
 ## `return` sem nada
 
 ```python
-    if not linhas:
+    if not rows:
         return
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: Reading a refusal
-version: 1
+version: 2
 ---
 
 A terminal tells you more when it refuses than any interface you have used tells you when it
@@ -9,7 +9,7 @@ succeeds. The information is all there; it is just terse, and nobody teaches the
 **Every error you will meet has three parts:** who is speaking, what they were working on, and
 what went wrong.
 
-```
+```localised
 cat: /etc/shadow: Permission denied
 └┬┘  └────┬────┘  └───────┬──────┘
  │        │               └─ what went wrong

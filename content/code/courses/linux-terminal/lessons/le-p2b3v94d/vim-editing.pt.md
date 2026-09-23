@@ -1,6 +1,6 @@
 ---
 title: Operadores e movimentos, que são uma gramática
-version: 1
+version: 2
 ---
 
 Esta é a seção que explica por que quem usa vim não para de usar.
@@ -30,7 +30,7 @@ apagar uma palavra. O `30` sumiu e o cursor está na coluna 8.
 
 ## A gramática
 
-```
+```localised
 [contagem] operador [contagem] movimento
 ```
 

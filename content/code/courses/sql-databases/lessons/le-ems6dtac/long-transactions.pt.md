@@ -1,6 +1,6 @@
 ---
 title: O que uma transação aberta custa enquanto está aberta
-version: 1
+version: 2
 ---
 
 Uma transação é barata de começar e barata de terminar. Segurá-la aberta é que custa, e o custo
@@ -82,7 +82,7 @@ seus bloqueios por trinta segundos.
 
 O formato que funciona é fazer a coisa lenta por fora, e usar o banco para registrar intenção:
 
-```
+```localised
 BEGIN; INSERT INTO payments (status) VALUES ('pending') RETURNING id; COMMIT;
    → chama o provedor de pagamento, pelo tempo que for
 BEGIN; UPDATE payments SET status = 'settled' WHERE id = $1; COMMIT;

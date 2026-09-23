@@ -1,6 +1,6 @@
 ---
 title: Montagem: um disco chega como diretório
-version: 1
+version: 2
 ---
 
 A seção 10 da aula 1 já disse: não existem letras de unidade, existe uma árvore, e todo disco da
@@ -132,8 +132,8 @@ vez de falhar calada.
 ## `mount` e `umount` exigem root, e aceitam duas formas
 
 ```
-sudo mount /dev/sdb1 /mnt/data          # este dispositivo, neste diretório
-sudo umount /mnt/data                   # ou: umount /dev/sdb1
+sudo mount /dev/sdb1 /mnt/data          # this device, on this directory
+sudo umount /mnt/data                   # or: umount /dev/sdb1
 ```
 
 `-o` passa opções — `ro` para somente leitura, `loop` para montar um *arquivo* como se fosse um

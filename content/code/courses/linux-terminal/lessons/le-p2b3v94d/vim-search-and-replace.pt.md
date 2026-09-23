@@ -1,6 +1,6 @@
 ---
 title: Buscar e substituir, que é o `sed` com vista
-version: 1
+version: 2
 ---
 
 ## Buscar
@@ -84,7 +84,7 @@ de aprender uma coisa antes de salvar em vez de depois.
 
 O formato é o mesmo do `sed` da aula 8 seção 13, com um intervalo na frente:
 
-```
+```localised
 :[intervalo]s/padrão/substituição/[flags]
 ```
 

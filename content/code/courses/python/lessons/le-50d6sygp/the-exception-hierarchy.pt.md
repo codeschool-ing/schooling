@@ -1,6 +1,6 @@
 ---
 title: Classes, e as duas que você não deve capturar
-version: 1
+version: 2
 ---
 
 Toda exceção é uma classe, e elas formam uma árvore:
@@ -28,8 +28,8 @@ tudo abaixo dela. Essa é a única regra que você precisa tirar do desenho.
 ```python
 try:
     ...
-except:              # NÃO
-except Exception:    # a rede larga, quando você quer uma
+except:              # NO
+except Exception:    # the wide net, when you want one
 ```
 
 `SystemExit` e `KeyboardInterrupt` ficam FORA de `Exception` de propósito: eles não são erros do
@@ -43,8 +43,8 @@ código que você não leu.
 ## Capturar uma classe captura os filhos dela
 
 ```python
-except OSError:          # inclui FileNotFoundError e PermissionError
-except (ValueError, TypeError):    # duas sem relação, numa tupla
+except OSError:          # includes FileNotFoundError and PermissionError
+except (ValueError, TypeError):    # two unrelated ones, one tuple
 ```
 
 A forma de tupla é para classes sem relação. A forma da classe base diz algo sobre o que você se
@@ -54,8 +54,8 @@ dispõe a tratar, então ela envelhece melhor conforme o código abaixo dela cre
 
 ```python
 except ValueError as e:
-    print(e)             # a mensagem
-    print(type(e))       # a classe
+    print(e)             # the message
+    print(type(e))       # the class
 ```
 
 O objeto tem a mensagem, a classe e o traceback. Num log, imprima os três — a classe sozinha diz

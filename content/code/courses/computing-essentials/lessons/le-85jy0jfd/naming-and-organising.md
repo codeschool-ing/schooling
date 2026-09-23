@@ -1,6 +1,6 @@
 ---
 title: Naming, which is the only part of this that is work
-version: 1
+version: 2
 ---
 
 Everything before this section was how the filesystem behaves. This one is the habit that decides
@@ -49,7 +49,7 @@ the few honest uses of one.
 
 ## The four folders that cover most of a life
 
-```
+```localised
 documents/
   2026/           ← things that belong to a year
   reference/      ← things that do not change

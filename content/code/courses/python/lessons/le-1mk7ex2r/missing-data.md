@@ -1,6 +1,6 @@
 ---
 title: `NaN`, and the mean that quietly skipped it
-version: 1
+version: 2
 ---
 
 ```sh

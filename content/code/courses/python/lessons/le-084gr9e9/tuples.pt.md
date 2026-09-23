@@ -1,16 +1,16 @@
 ---
 title: Fixa, e por isso utilizável como chave
-version: 1
+version: 2
 ---
 
 ```python
-ponto = (3, 4)
+point = (3, 4)
 ```
 
 Parênteses, e tudo que uma lista pode guardar. O que ela não faz é mudar:
 
 ```python
->>> ponto[0] = 5
+>>> point[0] = 5
 TypeError: 'tuple' object does not support item assignment
 ```
 
@@ -33,14 +33,14 @@ Aquela vírgula final pega todo mundo uma vez, em geral numa chamada como `f((x,
 ## Desempacotar
 
 ```python
->>> x, y = ponto
->>> a, b = b, a            # troca, sem variável temporária
->>> primeiro, *resto = [1, 2, 3, 4]
->>> primeiro, resto
+>>> x, y = point
+>>> a, b = b, a            # swap, with no temporary
+>>> first, *rest = [1, 2, 3, 4]
+>>> first, rest
 (1, [2, 3, 4])
 ```
 
-Isto está em toda parte no Python. `for nome, nota in pares:` é desempacotamento; `for i, item in
+Isto está em toda parte no Python. `for name, score in pairs:` é desempacotamento; `for i, item in
 enumerate(itens):` também.
 
 ## Por que ela existe
@@ -49,10 +49,10 @@ enumerate(itens):` também.
 hashável, e hashável significa que ela não pode mudar debaixo dos pés do dicionário:
 
 ```python
->>> grade = {(0, 0): "início", (1, 0): "parede"}
+>>> grid = {(0, 0): "start", (1, 0): "wall"}
 ```
 
-**E ela diz que a forma é fixa.** Uma função que devolve `(nome, nota)` está devolvendo duas coisas
+**E ela diz que a forma é fixa.** Uma função que devolve `(name, score)` está devolvendo duas coisas
 que andam juntas; uma lista sugeriria que quem chamou poderia acrescentar uma terceira.
 
 O `namedtuple` e o `dataclass`, das aulas 7 e 6, são a mesma ideia com nomes nos campos, e são para

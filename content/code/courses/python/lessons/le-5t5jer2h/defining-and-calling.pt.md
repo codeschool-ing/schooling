@@ -1,13 +1,13 @@
 ---
 title: O `def`, o corpo, e o que volta quando nada volta
-version: 1
+version: 2
 ---
 
 ```python
-def saudar(nome):
-    return f"olá, {nome}"
+def greet(name):
+    return f"hello, {name}"
 
-print(saudar("ada"))
+print(greet("ada"))
 ```
 
 `def`, um nome, os parâmetros entre parênteses, dois-pontos, e um corpo indentado — a mesma regra
@@ -17,8 +17,8 @@ espera por uma chamada.
 ## Definir e chamar são momentos diferentes
 
 ```python
-saudar          # a própria função
-saudar("ada")   # a chamada
+greet          # the function itself
+greet("ada")   # the call
 ```
 
 **Os parênteses são a chamada.** Um nome sem parênteses é a função como valor, o que parece um
@@ -27,14 +27,14 @@ engano até a seção que faz isso de propósito.
 ## Uma função sem `return`
 
 ```python
-def gritar(texto):
-    print(texto.upper())
+def shout(text):
+    print(text.upper())
 
-resultado = gritar("ada")     # resultado é None
+result = shout("ada")     # result is None
 ```
 
 Toda função devolve alguma coisa. Um corpo que chega ao fim devolve `None` — que é um valor, e não
-a ausência de um, e por isso `if gritar("ada"):` é um teste que nunca passa.
+a ausência de um, e por isso `if shout("ada"):` é um teste que nunca passa.
 
 **A versão mais comum disto é o `sorted` contra o `sort` da aula 3**, uma camada acima: uma função
 que faz o trabalho imprimindo não tem nada para dar à linha seguinte.
@@ -51,9 +51,9 @@ deixa o teste desconfortável, e a aula 16 é onde essa conta chega.
 
 ```python
 def main():
-    ajudante()        # tudo bem — esta linha roda depois
+    helper()          # fine — this line runs later
 
-def ajudante():
+def helper():
     ...
 
 main()

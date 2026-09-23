@@ -1,6 +1,6 @@
 ---
 title: Quatro perguntas que resolvem
-version: 1
+version: 2
 ---
 
 | | lista | tupla | dict | conjunto |
@@ -14,8 +14,8 @@ version: 1
 
 ## As perguntas, em ordem
 
-**Existe um nome para cada pedaço?** Então um dicionário. `pessoa["cidade"]` diz o que é;
-`pessoa[1]` exige que você lembre. Esta é a resposta na maior parte das vezes, e uma lista de
+**Existe um nome para cada pedaço?** Então um dicionário. `person["city"]` diz o que é;
+`person[1]` exige que você lembre. Esta é a resposta na maior parte das vezes, e uma lista de
 dicionários é no que quase todo arquivo que você ler vai virar.
 
 **Você só precisa saber se algo está lá?** Um conjunto. Sem duplicatas e sem percurso.
@@ -28,12 +28,12 @@ chave.
 ## A que custa tempo de verdade
 
 ```python
-for nome in nomes:            # 100_000 nomes
-    if nome in banidos:       # banidos é uma lista de 5_000
+for name in names:            # 100_000 names
+    if name in banned:        # banned is a list of 5_000
         ...
 ```
 
-São quinhentos milhões de comparações. Troque `banidos` por um conjunto e são cem mil passos, e a
+São quinhentos milhões de comparações. Troque `banned` por um conjunto e são cem mil passos, e a
 linha de código não muda em mais nada. A aula 20 mede exatamente isso e a resposta é onze segundos
 contra quarenta milissegundos.
 
@@ -51,6 +51,6 @@ construídos a partir de outro com `list()`, `tuple()`, `set()` ou `dict()`. Con
 barato e muitas vezes é o jeito mais limpo de dizer alguma coisa:
 
 ```python
->>> sorted(set(palavras))    # únicas, em ordem
->>> dict(pares)              # uma lista de tuplas de dois numa dicionário
+>>> sorted(set(words))       # unique, in order
+>>> dict(pairs)              # a list of two-item tuples into a dictionary
 ```

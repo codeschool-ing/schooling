@@ -1,6 +1,6 @@
 ---
 title: O `sudo` que não funciona, e quatro que funcionam
-version: 1
+version: 2
 ---
 
 Esta seção existe por causa de uma linha. Todo mundo digita, ela falha, e toda resposta a ela na
@@ -40,11 +40,11 @@ ana@vm:~$ sudo ls -l /root/marker.txt
 redirecionamento incluído. As aspas importam: sem elas o redirecionamento volta a ser do shell de
 fora.
 
-**`... | sudo tee arquivo`** — o preferido para escrever um arquivo:
+**`... | sudo tee file`** — o preferido para escrever um arquivo:
 
 ```
 echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/99-forward.conf
-echo 'uma linha' | sudo tee -a /var/log/notes.log        # -a acrescenta
+echo 'a line' | sudo tee -a /var/log/notes.log        # -a appends
 ```
 
 O `tee` lê a entrada dele e escreve num arquivo *e* na tela. Aqui é o `tee` que abre o arquivo, e o

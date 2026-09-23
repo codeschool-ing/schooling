@@ -1,6 +1,6 @@
 ---
 title: Two in one `with`, and the number you do not know
-version: 1
+version: 2
 ---
 
 ```python

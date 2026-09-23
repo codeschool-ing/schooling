@@ -1,6 +1,6 @@
 ---
 title: RIGHT and FULL, briefly and with a recommendation
-version: 1
+version: 2
 ---
 
 ## RIGHT JOIN

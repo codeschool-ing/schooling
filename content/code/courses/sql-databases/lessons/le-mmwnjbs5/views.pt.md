@@ -1,6 +1,6 @@
 ---
 title: Uma view é uma consulta com nome, não uma tabela
-version: 1
+version: 2
 ---
 
 ```sql
@@ -60,7 +60,7 @@ A aula 4 alertou sobre `SELECT *` numa view e prometeu a demonstração aqui:
 CREATE VIEW everything AS SELECT * FROM products;
 ALTER TABLE products ADD COLUMN weight numeric;
 
-SELECT * FROM everything;      -- a coluna nova não está lá
+SELECT * FROM everything;      -- the new column is not there
 ```
 
 O `*` foi expandido numa lista de colunas na criação. A view tem as colunas que a tabela tinha

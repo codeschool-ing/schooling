@@ -1,6 +1,6 @@
 ---
 title: A biblioteca sem anotação, e o silêncio com um motivo
-version: 1
+version: 2
 ---
 
 ```python
@@ -42,7 +42,7 @@ arquivo vazio é o que torna as suas anotações úteis para todo mundo.
 ## O comentário de silenciar, e as duas maneiras de errar nele
 
 ```python
-valor = lib_sem_tipo.buscar()  # type: ignore[no-any-return]  # o stub mente sobre o retorno
+value = untyped_lib.fetch()  # type: ignore[no-any-return]  # the stub lies about the return
 ```
 
 Nomeie o código. Um `# type: ignore` pelado silencia **todo** erro daquela linha, inclusive o que

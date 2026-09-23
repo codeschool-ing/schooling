@@ -1,6 +1,6 @@
 ---
 title: A interface que a linguagem já sabe chamar
-version: 1
+version: 2
 ---
 
 O Python chama certos métodos pelo nome. Escrever um liga a sua classe a uma sintaxe que já existe.
@@ -8,9 +8,9 @@ O Python chama certos métodos pelo nome. Escrever um liga a sua classe a uma si
 ## `__repr__` e `__str__`
 
 ```python
-class Aluno:
+class Student:
     def __repr__(self):
-        return f"Aluno(nome={self.nome!r}, cidade={self.cidade!r})"
+        return f"Student(name={self.name!r}, city={self.city!r})"
 ```
 
 O `__repr__` é para quem desenvolve: o interpretador, uma linha de log, uma lista impressa na
@@ -26,10 +26,10 @@ linha algo que você poderia colar de volta.
 ## O `__eq__`
 
 ```python
-    def __eq__(self, outro):
-        if not isinstance(outro, Aluno):
+    def __eq__(self, other):
+        if not isinstance(other, Student):
             return NotImplemented
-        return (self.nome, self.cidade) == (outro.nome, outro.cidade)
+        return (self.name, self.city) == (other.name, other.city)
 ```
 
 Agora o `==` compara valores em vez de identidade. Devolver `NotImplemented` para um tipo sem
@@ -42,7 +42,7 @@ dicionário em que está. Devolva o `__hash__` só para algo imutável.
 ## `__len__`, `__bool__`, `__contains__`, `__getitem__`
 
 ```python
-    def __len__(self):  return len(self.notas)
+    def __len__(self):  return len(self.grades)
 ```
 
 `len(x)` chama `__len__`. `if x:` chama `__bool__`, e recorre ao `__len__` — então **uma classe com

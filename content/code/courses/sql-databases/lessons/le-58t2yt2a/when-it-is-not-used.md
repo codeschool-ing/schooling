@@ -1,6 +1,6 @@
 ---
 title: You added the index and nothing changed
-version: 1
+version: 2
 ---
 
 This is the section that saves the most time, because every item on the list looks like a bug in

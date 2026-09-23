@@ -1,6 +1,6 @@
 ---
 title: A token, a rate limit, and the loop that follows `next`
-version: 1
+version: 2
 ---
 
 ```python

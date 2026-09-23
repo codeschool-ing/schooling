@@ -1,6 +1,6 @@
 ---
 title: One-to-many, and where the key goes
-version: 1
+version: 2
 ---
 
 The relationship between customers and orders has a shape, and the shape has a name. **One

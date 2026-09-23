@@ -1,6 +1,6 @@
 ---
 title: What an index actually is
-version: 1
+version: 2
 ---
 
 ```sql
@@ -30,11 +30,11 @@ With it, the database opens the sorted copy in the middle, compares, and throws 
 half of that. Twenty of those steps get you to one row out of a million, and thirty get you to one
 out of a billion.
 
-```
-1 000 rows          ~10 steps
-1 000 000 rows      ~20 steps
-1 000 000 000 rows  ~30 steps
-```
+| rows | steps, roughly |
+|---|---|
+| 1,000 | 10 |
+| 1,000,000 | 20 |
+| 1,000,000,000 | 30 |
 
 Look at that table for a second, because it explains the shape of everything that follows: **a
 thousand times more data costs ten more steps.** A scan of the same table costs a thousand times

@@ -1,6 +1,6 @@
 ---
 title: A fixture is asked for by name
-version: 1
+version: 2
 ---
 
 ```python

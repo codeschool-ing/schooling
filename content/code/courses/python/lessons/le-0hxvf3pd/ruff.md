@@ -1,6 +1,6 @@
 ---
 title: `ruff`, the rule families, and what `--fix` may change
-version: 1
+version: 2
 ---
 
 ```sh

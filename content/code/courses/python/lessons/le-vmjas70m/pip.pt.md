@@ -1,6 +1,6 @@
 ---
 title: `python -m pip`, e por que não `pip`
-version: 1
+version: 2
 ---
 
 ```sh
@@ -39,7 +39,7 @@ a primeira aparição da distinção de que as duas próximas seções tratam.
 
 ```sh
 $ python -m pip show requests
-Location: /tmp/projeto/.venv/lib/python3.11/site-packages
+Location: /tmp/project/.venv/lib/python3.11/site-packages
 Requires: certifi, charset-normalizer, idna, urllib3
 Required-by:
 ```

@@ -1,9 +1,9 @@
 ---
 title: `OnCalendar`, and the command that tells you when it will fire
-version: 1
+version: 2
 ---
 
-```
+```localised
 DayOfWeek Year-Month-Day Hour:Minute:Second
 ```
 

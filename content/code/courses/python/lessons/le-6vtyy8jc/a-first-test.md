@@ -1,6 +1,6 @@
 ---
 title: A file, a function, and a bare `assert`
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,6 +1,6 @@
 ---
 title: A class, and when it is worth one
-version: 1
+version: 2
 ---
 
 ```python

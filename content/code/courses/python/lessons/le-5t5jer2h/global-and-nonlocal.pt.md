@@ -1,27 +1,27 @@
 ---
 title: Duas palavras-chave, e o que precisar de uma costuma dizer
-version: 1
+version: 2
 ---
 
 ```python
-contagem = 0
+count = 0
 
-def somar():
-    global contagem
-    contagem += 1
+def bump():
+    global count
+    count += 1
 ```
 
-`global` diz que o nome é do módulo. Sem ela a atribuição tornaria `contagem` local e o valor do
+`global` diz que o nome é do módulo. Sem ela a atribuição tornaria `count` local e o valor do
 módulo nunca se moveria.
 
 ```python
-def contador():
+def counter():
     n = 0
-    def passo():
-        nonlocal n        # o n da função de fora, não o do módulo
+    def step():
+        nonlocal n        # the enclosing function's n, not the module's
         n += 1
         return n
-    return passo
+    return step
 ```
 
 `nonlocal` diz que o nome é da função ENVOLVENTE mais próxima. Ela não alcança o nível do módulo, e
@@ -30,7 +30,7 @@ antes de uma única linha dele rodar. Essa é a falha boa: um erro de digitaçã
 ninguém chamar nada.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 240\" role=\"img\" aria-label=\"Três cópias dos mesmos três escopos aninhados. Sem declaração a escrita cai na função mais interna e o nome do módulo nunca se move. Com global ela cai no módulo. Com nonlocal ela cai na função imediatamente em volta.\"> <text x=\"125\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--amber)\">conta += 1</text> <rect x=\"20\" y=\"36\" width=\"210\" height=\"150\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"32\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">módulo</text> <rect x=\"34\" y=\"76\" width=\"182\" height=\"98\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"46\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">externa()</text> <rect x=\"48\" y=\"112\" width=\"154\" height=\"50\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"60\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">interna()</text> <circle cx=\"140\" cy=\"128\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--amber)\"></circle> <text x=\"154\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--amber)\">conta</text> <text x=\"125\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">um nome próprio, e o módulo nunca se move</text> <text x=\"360\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">global conta</text> <rect x=\"255\" y=\"36\" width=\"210\" height=\"150\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"267\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">módulo</text> <rect x=\"269\" y=\"76\" width=\"182\" height=\"98\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"281\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">externa()</text> <rect x=\"283\" y=\"112\" width=\"154\" height=\"50\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"295\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">interna()</text> <circle cx=\"375\" cy=\"52\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\"></circle> <text x=\"389\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--phosphor)\">conta</text> <text x=\"360\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">o nome do módulo, onde quer que se escreva</text> <text x=\"595\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">nonlocal conta</text> <rect x=\"490\" y=\"36\" width=\"210\" height=\"150\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"502\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">módulo</text> <rect x=\"504\" y=\"76\" width=\"182\" height=\"98\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"516\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">externa()</text> <rect x=\"518\" y=\"112\" width=\"154\" height=\"50\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"530\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">interna()</text> <circle cx=\"620\" cy=\"92\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\"></circle> <text x=\"634\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--phosphor)\">conta</text> <text x=\"595\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">o nome da função imediatamente em volta</text> </svg>", "caption": "A declaração não muda o que é lido. Ela muda em qual caixa a escrita cai."}
+{"svg": "<svg viewBox=\"0 0 720 240\" role=\"img\" aria-label=\"Três cópias dos mesmos três escopos aninhados. Sem declaração a escrita cai na função mais inner e o nome do módulo nunca se move. Com global ela cai no módulo. Com nonlocal ela cai na função imediatamente em volta.\"> <text x=\"125\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--amber)\">count += 1</text> <rect x=\"20\" y=\"36\" width=\"210\" height=\"150\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"32\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">módulo</text> <rect x=\"34\" y=\"76\" width=\"182\" height=\"98\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"46\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">outer()</text> <rect x=\"48\" y=\"112\" width=\"154\" height=\"50\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"60\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">inner()</text> <circle cx=\"140\" cy=\"128\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--amber)\"></circle> <text x=\"154\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--amber)\">count</text> <text x=\"125\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">um nome próprio, e o módulo nunca se move</text> <text x=\"360\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">global count</text> <rect x=\"255\" y=\"36\" width=\"210\" height=\"150\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"267\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">módulo</text> <rect x=\"269\" y=\"76\" width=\"182\" height=\"98\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"281\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">outer()</text> <rect x=\"283\" y=\"112\" width=\"154\" height=\"50\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"295\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">inner()</text> <circle cx=\"375\" cy=\"52\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\"></circle> <text x=\"389\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--phosphor)\">count</text> <text x=\"360\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">o nome do módulo, onde quer que se escreva</text> <text x=\"595\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">nonlocal count</text> <rect x=\"490\" y=\"36\" width=\"210\" height=\"150\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"502\" y=\"52\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">módulo</text> <rect x=\"504\" y=\"76\" width=\"182\" height=\"98\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"516\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">outer()</text> <rect x=\"518\" y=\"112\" width=\"154\" height=\"50\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\"></rect> <text x=\"530\" y=\"128\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">inner()</text> <circle cx=\"620\" cy=\"92\" r=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\"></circle> <text x=\"634\" y=\"92\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--phosphor)\">count</text> <text x=\"595\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">o nome da função imediatamente em volta</text> </svg>", "caption": "A declaração não muda o que é lido. Ela muda em qual caixa a escrita cai.", "same": ["count += 1", "outer()", "inner()", "global count", "nonlocal count"]}
 ```
 
 ## Por que elas são raras
@@ -45,8 +45,8 @@ Duas coisas decorrem disso, e as duas são comuns em vez de teóricas:
 A alternativa de sempre é receber o valor e devolvê-lo:
 
 ```python
-def somar(contagem):
-    return contagem + 1
+def bump(count):
+    return count + 1
 ```
 
 Agora quem chama decide o que acontece com o resultado, e nada na função depende do histórico.

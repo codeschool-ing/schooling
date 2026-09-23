@@ -1,6 +1,6 @@
 ---
 title: RIGHT e FULL, brevemente e com uma recomendação
-version: 1
+version: 2
 ---
 
 ## RIGHT JOIN
@@ -55,8 +55,8 @@ FULL JOIN orders o ON o.customer_id = c.id;
  Ana Lopes  | 1003
  Ana Lopes  | 1004
  Bruno Sá   | 1002
- Célia Reis | NULL    <- um cliente sem pedido
- NULL       | 1005    <- um pedido sem cliente
+ Célia Reis | NULL    <- a customer with no order
+ NULL       | 1005    <- an order with no customer
 ```
 
 Os dois tipos de órfão, num resultado. É genuinamente raro em código de aplicação e genuinamente útil
@@ -68,9 +68,9 @@ SELECT coalesce(a.reference, b.reference) AS reference,
        b.amount AS theirs
 FROM   our_ledger   a
 FULL JOIN their_statement b ON b.reference = a.reference
-WHERE  a.reference IS NULL          -- só eles têm
-   OR  b.reference IS NULL          -- só nós temos
-   OR  a.amount <> b.amount;        -- os dois têm e discordam
+WHERE  a.reference IS NULL          -- only they have it
+   OR  b.reference IS NULL          -- only we have it
+   OR  a.amount <> b.amount;        -- both have it and they disagree
 ```
 
 Essa é a consulta para *"em que estes dois sistemas discordam"*, e ela acha os três tipos de

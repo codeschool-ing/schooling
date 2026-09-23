@@ -1,6 +1,6 @@
 ---
 title: The inner function, and what it remembers
-version: 1
+version: 2
 ---
 
 ```python

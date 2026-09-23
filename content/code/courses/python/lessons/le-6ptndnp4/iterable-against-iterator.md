@@ -1,6 +1,6 @@
 ---
 title: The one you can walk twice, and the one you cannot
-version: 1
+version: 2
 ---
 
 **An ITERABLE can produce an iterator.** A list, a tuple, a string, a dictionary, a set.

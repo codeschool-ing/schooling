@@ -1,6 +1,6 @@
 ---
 title: `chmod`, e o que a recursão faz com diretórios
-version: 1
+version: 2
 ---
 
 O `chmod` aceita o modo de dois jeitos. **Numérico** define os nove bits de uma vez. **Simbólico**
@@ -8,13 +8,13 @@ altera os que você nomear e deixa o resto em paz. Não são intercambiáveis, e
 você quer é a maior parte de usá-lo bem.
 
 ```
-chmod 644 report.txt      # numérico: o modo inteiro vira este
-chmod u+x script.sh       # simbólico: acrescenta um bit, não encosta em mais nada
+chmod 644 report.txt      # numeric: the whole mode becomes this
+chmod u+x script.sh       # symbolic: add one bit, touch nothing else
 ```
 
 ## Simbólico, que tem três partes
 
-```
+```localised
 chmod  [ugoa]  [+-=]  [rwx]  arquivo
 ```
 
@@ -132,7 +132,7 @@ arquivos que já têm execução em algum lugar*. Então os diretórios recupera
 manteve o dele, e o `a.txt` continuou `644` como devia.
 
 ```
-chmod -R u+rwX,go+rX arvore/
+chmod -R u+rwX,go+rX tree/
 ```
 
 Essa linha é o padrão recursivo seguro, e vale guardar num lugar em que você a encontre. A versão

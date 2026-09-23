@@ -1,6 +1,6 @@
 ---
 title: Dois métodos, e o que o `for` está fazendo
-version: 1
+version: 2
 ---
 
 ```python
@@ -21,20 +21,20 @@ iterador. Quando não sobra nada, o `__next__` levanta `StopIteration`.
 ## O que um laço `for` é
 
 ```python
-for item in itens:
-    corpo(item)
+for item in items:
+    body(item)
 ```
 
 é, aproximadamente:
 
 ```python
-it = iter(itens)
+it = iter(items)
 while True:
     try:
         item = next(it)
     except StopIteration:
         break
-    corpo(item)
+    body(item)
 ```
 
 **Toda surpresa desta aula decorre disso.** O laço pede um iterador uma vez e então puxa valores
@@ -48,7 +48,7 @@ capturá-la; o `next(it, padrao)` é a versão que devolve um padrão em vez de 
 você quer ao pedir um valor.
 
 ```python
-primeiro = next(it, None)
+first = next(it, None)
 ```
 
 ## Tudo o que você já usa

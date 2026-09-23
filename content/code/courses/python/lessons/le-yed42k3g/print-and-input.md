@@ -1,6 +1,6 @@
 ---
 title: `print`, and the `input` that always gives you a string
-version: 1
+version: 2
 ---
 
 `print` takes as many things as you give it, puts a space between them and a newline at the end.

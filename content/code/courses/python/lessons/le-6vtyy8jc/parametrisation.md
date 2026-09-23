@@ -1,6 +1,6 @@
 ---
 title: One function and a table of rows
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,11 +1,11 @@
 ---
 title: O formato de um comando
-version: 1
+version: 2
 ---
 
 Todo comando que você vai digitar no resto deste curso tem as mesmas três partes, na mesma ordem:
 
-```
+```localised
 comando   [opções]   [argumentos]
 ```
 
@@ -14,19 +14,19 @@ que ele executa. Aprenda esse formato uma vez e mil comandos desconhecidos passa
 em vez de mágicos.
 
 ```
-ana@vm:~/notas$ ls -l leiame.txt
+ana@vm:~/demo$ ls -l readme.txt
 ```
 
-`ls` é o comando, `-l` é uma opção, `leiame.txt` é o argumento.
+`ls` é o comando, `-l` é uma opção, `readme.txt` é o argumento.
 
 ## Opções vêm em duas grafias
 
 ```
 $ ls
--estranho
-arquivo
-com espaco.txt
-leiame.txt
+-strange
+folder
+readme.txt
+with space.txt
 ```
 
 Puro, sem nada acrescentado, o `ls` te dá nomes. Acrescente uma opção e o mesmo comando responde a
@@ -35,10 +35,10 @@ mesma pergunta com muito mais detalhe:
 ```
 $ ls -l
 total 16
--rw-r--r-- 1 ana ana    2 Sep 14 14:45 -estranho
-drwxr-xr-x 2 ana ana 4096 Sep 14 14:45 arquivo
--rw-r--r-- 1 ana ana    4 Sep 14 14:45 com espaco.txt
--rw-r--r-- 1 ana ana   57 Sep 14 14:45 leiame.txt
+-rw-r--r-- 1 ana ana    2 Sep 14 14:45 -strange
+drwxr-xr-x 2 ana ana 4096 Sep 14 14:45 folder
+-rw-r--r-- 1 ana ana   46 Sep 14 14:45 readme.txt
+-rw-r--r-- 1 ana ana    4 Sep 14 14:45 with space.txt
 ```
 
 **O comando não mudou. O que mudou foi o quanto da resposta ele mostrou.**
@@ -54,16 +54,16 @@ Combinar é comum e você vai ver o tempo todo:
 ```
 $ ls -la
 total 24
--rw-r--r-- 1 ana ana    2 Sep 14 14:45 -estranho
+-rw-r--r-- 1 ana ana    2 Sep 14 14:45 -strange
 drwxr-xr-x 3 ana ana 4096 Sep 14 14:45 .
-drwxr-x--- 3 ana ana 4096 Sep 14 14:45 ..
--rw-r--r-- 1 ana ana    0 Sep 14 14:45 .oculto
-drwxr-xr-x 2 ana ana 4096 Sep 14 14:45 arquivo
--rw-r--r-- 1 ana ana    4 Sep 14 14:45 com espaco.txt
--rw-r--r-- 1 ana ana   57 Sep 14 14:45 leiame.txt
+drwxr-x--- 4 ana ana 4096 Sep 14 14:45 ..
+-rw-r--r-- 1 ana ana    0 Sep 14 14:45 .hidden
+drwxr-xr-x 2 ana ana 4096 Sep 14 14:45 folder
+-rw-r--r-- 1 ana ana   46 Sep 14 14:45 readme.txt
+-rw-r--r-- 1 ana ana    4 Sep 14 14:45 with space.txt
 ```
 
-O `-a` acrescentou `.oculto`, `.` e `..` — três entradas que a listagem simples deixou de fora. A
+O `-a` acrescentou `.hidden`, `.` e `..` — três entradas que a listagem simples deixou de fora. A
 seção 11 explica o ponto que esconde um arquivo; as seções 02 e 12 da aula 3 explicam as outras
 duas.
 
@@ -74,12 +74,12 @@ não tem forma curta que valha a pena. Isso é um fato sobre cada programa, e é
 ## Algumas opções levam um valor próprio
 
 ```
-$ head -n 2 leiame.txt
-primeira linha
-segunda linha
-$ head --lines=2 leiame.txt
-primeira linha
-segunda linha
+$ head -n 2 readme.txt
+first line
+second line
+$ head --lines=2 readme.txt
+first line
+second line
 ```
 
 O `2` pertence à opção, não ao comando: ele diz *quantas* linhas. A forma curta normalmente leva o
@@ -95,17 +95,17 @@ O shell quebra a sua linha nos espaços antes de o comando ver qualquer coisa. E
 arquivo com espaço chega como dois argumentos:
 
 ```
-$ ls com espaco.txt
-ls: cannot access 'com': No such file or directory
-ls: cannot access 'espaco.txt': No such file or directory
+$ ls with space.txt
+ls: cannot access 'with': No such file or directory
+ls: cannot access 'space.txt': No such file or directory
 ```
 
 Dois erros, porque o `ls` recebeu dois nomes e nenhum dos dois existe. Coloque aspas e vira um
 argumento de novo:
 
 ```
-$ ls 'com espaco.txt'
-com espaco.txt
+$ ls 'with space.txt'
+with space.txt
 ```
 
 **Esse é o erro de iniciante mais comum do shell**, e no fundo ele não é sobre nomes de arquivo — é
@@ -115,12 +115,12 @@ até lá é *se tem espaço, ponha aspas em volta.*
 ### Um hífen na frente faz um argumento parecer uma opção
 
 ```
-$ ls -estranho
+$ ls -strange
 ls: invalid option -- 'e'
 Try 'ls --help' for more information.
 ```
 
-Existe um arquivo chamado `-estranho` naquele diretório, e o `ls` nunca o considerou. Tudo que
+Existe um arquivo chamado `-strange` naquele diretório, e o `ls` nunca o considerou. Tudo que
 começa com `-` é lido como opção, então ele pegou as letras uma a uma e parou logo na primeira,
 o `e`, que não é opção nenhuma do `ls`. É por isso que a reclamação nomeia uma letra, e não o
 nome do arquivo.
@@ -129,8 +129,8 @@ A correção é uma convenção que quase todo comando respeita — **`--` signi
 tudo depois disto é argumento"**:
 
 ```
-$ ls -- -estranho
--estranho
+$ ls -- -strange
+-strange
 ```
 
 Você vai encontrar isso na primeira vez que alguém te entregar um arquivo cujo nome começa com
@@ -152,7 +152,7 @@ Isso é a maior parte do trabalho de consertar.
 ## Ordem, e o que é flexível
 
 Opções antes dos argumentos é a convenção e é sempre seguro. A maioria das ferramentas GNU no Linux
-também aceita `ls leiame.txt -l`, e as ferramentas BSD num Mac frequentemente não — então escreva do
+também aceita `ls readme.txt -l`, e as ferramentas BSD num Mac frequentemente não — então escreva do
 jeito convencional e funciona em todo lugar.
 
 Mais duas coisas que vale saber agora:
@@ -160,5 +160,5 @@ Mais duas coisas que vale saber agora:
 - **Maiúscula importa.** `-r` e `-R` costumam ser duas opções diferentes. `ls` e `LS` são dois
   comandos diferentes, e só um deles existe.
 - **Espaços a mais são inofensivos.** `ls   -l` é o mesmo que `ls -l`. O shell junta a sequência de
-  espaços quando quebra a linha — que é o mesmo mecanismo que transformou `com espaco.txt` em dois
+  espaços quando quebra a linha — que é o mesmo mecanismo que transformou `with space.txt` em dois
   argumentos há pouco.

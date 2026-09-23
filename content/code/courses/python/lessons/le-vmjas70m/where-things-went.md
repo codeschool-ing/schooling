@@ -1,6 +1,6 @@
 ---
 title: `site-packages`, `sys.path`, and the import that found the wrong copy
-version: 1
+version: 2
 ---
 
 ```sh

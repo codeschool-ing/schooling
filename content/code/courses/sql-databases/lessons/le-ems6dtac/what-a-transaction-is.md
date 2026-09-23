@@ -1,6 +1,6 @@
 ---
 title: What a transaction is, and the one you are already in
-version: 1
+version: 2
 ---
 
 ```sql

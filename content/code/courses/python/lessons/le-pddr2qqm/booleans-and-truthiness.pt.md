@@ -1,6 +1,6 @@
 ---
 title: O que conta como falso, e o `and` que devolve uma string
-version: 1
+version: 2
 ---
 
 `True` e `False` são os dois booleanos, e por baixo eles são **inteiros**: `True + True` é `2`, e
@@ -26,26 +26,26 @@ vazia.
 Então o idioma é este:
 
 ```python
-if itens:
+if items:
     ...
 ```
 
-em vez de `if len(itens) > 0`. Lê melhor e é a convenção.
+em vez de `if len(items) > 0`. Lê melhor e é a convenção.
 
 **E é uma armadilha exatamente uma vez**, quando zero é um valor de verdade:
 
 ```python
-if contagem:              # pula o caso em que contagem é 0
-if contagem is not None:  # o que você quis dizer
+if count:          # skips the case where count is 0
+if count is not None:   # what you meant
 ```
 
 ## `and` e `or` não devolvem booleanos
 
 ```python
->>> "ada" or "ninguém"
+>>> "ada" or "nobody"
 'ada'
->>> "" or "ninguém"
-'ninguém'
+>>> "" or "nobody"
+'nobody'
 >>> "ada" and "lovelace"
 'lovelace'
 ```
@@ -56,15 +56,15 @@ O `or` devolve o primeiro operando verdadeiro, ou o último. O `and` devolve o p
 É isso que torna isto seguro:
 
 ```python
-if usuario is not None and usuario.nome == "Ada":
+if user is not None and user.name == "Ada":
 ```
 
-O `usuario.nome` nunca é alcançado quando `usuario` é `None`.
+O `user.name` nunca é alcançado quando `user` é `None`.
 
 E é de onde vem o velho idioma de valor padrão:
 
 ```python
-nome = fornecido or "anônimo"
+name = supplied or "anonymous"
 ```
 
 Que é elegante, e silenciosamente errado quando `""` ou `0` é um valor que você queria manter. `if

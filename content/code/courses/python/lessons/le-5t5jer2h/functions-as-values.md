@@ -1,6 +1,6 @@
 ---
 title: A function is an object, like everything else
-version: 1
+version: 2
 ---
 
 ```python

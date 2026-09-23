@@ -1,6 +1,6 @@
 ---
 title: Three arrangements, and how to tell which you are in
-version: 1
+version: 2
 ---
 
 **Look at the files before you type anything.** A repository tells you what it expects in one

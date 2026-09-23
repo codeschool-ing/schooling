@@ -1,6 +1,6 @@
 ---
 title: Quatro lugares, numa ordem fixa
-version: 1
+version: 2
 ---
 
 Um nome é resolvido olhando em quatro lugares, sempre nesta ordem:
@@ -8,20 +8,20 @@ Um nome é resolvido olhando em quatro lugares, sempre nesta ordem:
 **L**ocal → **E**nvolvente → **G**lobal → em**B**utido.
 
 ```python
-total = 0                 # global (nível do módulo)
+total = 0                 # global (module level)
 
-def externa():
-    conta = 1             # envolvente, do ponto de vista da interna
-    def interna():
+def outer():
+    count = 1             # enclosing, from inner's point of view
+    def inner():
         n = 2             # local
-        print(n, conta, total, len)     # um de cada
-    interna()
+        print(n, count, total, len)     # one from each
+    inner()
 ```
 
 O primeiro lugar que tem o nome vence, e o Python nunca pergunta qual deles você queria.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 244\" role=\"img\" aria-label=\"Quatro caixas aninhadas. A mais interna é a função em execução e guarda n; em volta dela a função envolvente guarda conta; em volta dessa o módulo guarda total; e fora de tudo estão os nomes embutidos. Um nome é procurado de dentro para fora e a primeira caixa que o tem vence.\"> <defs><marker id=\"ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs> <rect x=\"20\" y=\"26\" width=\"680\" height=\"164\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\"></rect> <text x=\"34\" y=\"43\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">embutido — len, print, sum</text> <rect x=\"44\" y=\"54\" width=\"632\" height=\"122\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\"></rect> <text x=\"58\" y=\"71\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">global — o módulo, onde vive total</text> <rect x=\"68\" y=\"82\" width=\"584\" height=\"80\" rx=\"3\" fill=\"none\" stroke=\"var(--phosphor)\"></rect> <text x=\"82\" y=\"99\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">envolvente — externa(), onde vive conta</text> <rect x=\"92\" y=\"110\" width=\"536\" height=\"38\" rx=\"3\" fill=\"none\" stroke=\"var(--phosphor)\"></rect> <text x=\"106\" y=\"127\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">local — interna(), onde vive n</text> <path d=\"M334 200 L334 148\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-phosphor)\"></path> <text x=\"348\" y=\"196\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">um nome é procurado neste sentido</text> <text x=\"360\" y=\"214\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">E uma atribuição EM QUALQUER PONTO de uma função torna aquele nome local na função inteira,</text> <text x=\"360\" y=\"231\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">decidido lendo o corpo antes de uma linha dele rodar.</text> </svg>", "caption": "Quatro caixas, sempre olhadas de dentro para fora. A primeira que tem o nome vence, e nada pergunta qual delas você queria."}
+{"svg": "<svg viewBox=\"0 0 720 244\" role=\"img\" aria-label=\"Quatro caixas aninhadas. A mais interna é a função em execução e guarda n; em volta dela a função envolvente guarda conta; em volta dessa o módulo guarda total; e fora de tudo estão os nomes embutidos. Um nome é procurado de dentro para fora e a primeira caixa que o tem vence.\"> <defs><marker id=\"ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs> <rect x=\"20\" y=\"26\" width=\"680\" height=\"164\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\"></rect> <text x=\"34\" y=\"43\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">embutido — len, print, sum</text> <rect x=\"44\" y=\"54\" width=\"632\" height=\"122\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\"></rect> <text x=\"58\" y=\"71\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">global — o módulo, onde vive total</text> <rect x=\"68\" y=\"82\" width=\"584\" height=\"80\" rx=\"3\" fill=\"none\" stroke=\"var(--phosphor)\"></rect> <text x=\"82\" y=\"99\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">envolvente — outer(), onde vive count</text> <rect x=\"92\" y=\"110\" width=\"536\" height=\"38\" rx=\"3\" fill=\"none\" stroke=\"var(--phosphor)\"></rect> <text x=\"106\" y=\"127\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">local — interna(), onde vive n</text> <path d=\"M334 200 L334 148\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#ah-phosphor)\"></path> <text x=\"348\" y=\"196\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">um nome é procurado neste sentido</text> <text x=\"360\" y=\"214\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">E uma atribuição EM QUALQUER PONTO de uma função torna aquele nome local na função inteira,</text> <text x=\"360\" y=\"231\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">decidido lendo o corpo antes de uma linha dele rodar.</text> </svg>", "caption": "Quatro caixas, sempre olhadas de dentro para fora. A primeira que tem o nome vence, e nada pergunta qual delas você queria."}
 ```
 
 ## Atribuir é o que torna um nome local
@@ -29,7 +29,7 @@ O primeiro lugar que tem o nome vence, e o Python nunca pergunta qual deles voc�
 ```python
 total = 0
 
-def somar():
+def bump():
     total = total + 1     # UnboundLocalError
 ```
 
@@ -44,7 +44,7 @@ uma linha ser acrescentada lá embaixo.
 ## Sombrear um embutido
 
 ```python
-list = [1, 2, 3]      # agora `list(...)` está quebrado neste escopo
+list = [1, 2, 3]      # now `list(...)` is broken in this scope
 ```
 
 Sem erro, e nada avisa. `list`, `dict`, `id`, `type`, `sum`, `input` e `str` são os que as pessoas
@@ -54,9 +54,9 @@ o que a colisão estava dizendo.
 ## A variável do laço não é um escopo
 
 ```python
-for linha in linhas:
+for row in rows:
     ...
-print(linha)        # ainda aqui
+print(row)        # still here
 ```
 
 O último engano da aula 4, visto daqui: um `for`, um `if` e um `while` não fazem escopo em Python.

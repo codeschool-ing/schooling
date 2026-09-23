@@ -1,6 +1,6 @@
 ---
 title: IN, EXISTS, e aquele que não devolve nada
-version: 1
+version: 2
 ---
 
 Dois jeitos de perguntar "esta linha está naquele conjunto", e eles parecem intercambiáveis:
@@ -28,7 +28,7 @@ SELECT * FROM products WHERE category_id NOT IN (1, 2, NULL);
 
 Zero linhas, seja lá o que a tabela tenha, para sempre. Desdobrar é a explicação inteira:
 
-```
+```localised
 category_id NOT IN (1, 2, NULL)
 category_id <> 1  AND  category_id <> 2  AND  category_id <> NULL
                                               └─ desconhecido, sempre
@@ -99,8 +99,8 @@ terceira aparece em código antigo e em geradores de consulta que não têm outr
 Dois operadores que quase ninguém escreve e todo mundo acaba lendo:
 
 ```sql
-x = ANY (SELECT …)      -- idêntico a x IN (SELECT …)
-x <> ALL (SELECT …)     -- idêntico a x NOT IN (SELECT …), armadilha do nulo inclusa
+x = ANY (SELECT …)      -- identical to x IN (SELECT …)
+x <> ALL (SELECT …)     -- identical to x NOT IN (SELECT …), null trap and all
 x > ALL (SELECT price FROM products WHERE category_id = 3)
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: `*args`, `**kwargs`, and unpacking in both directions
-version: 1
+version: 2
 ---
 
 ```python

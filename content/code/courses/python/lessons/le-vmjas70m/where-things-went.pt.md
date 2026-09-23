@@ -1,6 +1,6 @@
 ---
 title: `site-packages`, `sys.path`, e o import que achou a cópia errada
-version: 1
+version: 2
 ---
 
 ```sh
@@ -9,7 +9,7 @@ $ python -c "import sys; [print(repr(p)) for p in sys.path]"
 '/usr/lib/python311.zip'
 '/usr/lib/python3.11'
 '/usr/lib/python3.11/lib-dynload'
-'/tmp/projeto/.venv/lib/python3.11/site-packages'
+'/tmp/project/.venv/lib/python3.11/site-packages'
 ```
 
 **O `import` percorre essa lista em ordem e para na primeira que casa.** Tudo o que confunde em
@@ -22,14 +22,14 @@ isolamento.
 ## A string vazia, que é a primeira
 
 ```python
-# json.py, largado no diretório do seu projeto
-print("isto não é a biblioteca padrão")
+# json.py, sitting in your project directory
+print("this is not the standard library")
 ```
 
 ```sh
 $ python -c "import json; print(json.__file__)"
-isto não é a biblioteca padrão
-/tmp/projeto/json.py
+this is not the standard library
+/tmp/project/json.py
 ```
 
 A string vazia quer dizer **o diretório em que o script está** (ou o diretório de trabalho para
@@ -45,7 +45,7 @@ com aquele nome ao seu lado antes de qualquer outra coisa.
 
 ```sh
 $ python -m pip show -f requests
-Location: /tmp/projeto/.venv/lib/python3.11/site-packages
+Location: /tmp/project/.venv/lib/python3.11/site-packages
 Files:
   requests/__init__.py
   requests/api.py

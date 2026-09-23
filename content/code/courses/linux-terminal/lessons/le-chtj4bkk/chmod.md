@@ -1,6 +1,6 @@
 ---
 title: `chmod`, and what recursion does to directories
-version: 1
+version: 2
 ---
 
 `chmod` takes the mode two ways. **Numeric** sets all nine bits at once. **Symbolic** changes the
@@ -14,7 +14,7 @@ chmod u+x script.sh       # symbolic: add one bit, touch nothing else
 
 ## Symbolic, which is three parts
 
-```
+```localised
 chmod  [ugoa]  [+-=]  [rwx]  file
 ```
 

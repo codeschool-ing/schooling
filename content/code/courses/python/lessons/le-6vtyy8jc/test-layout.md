@@ -1,6 +1,6 @@
 ---
 title: `tests/`, `conftest.py`, and the import that fails
-version: 1
+version: 2
 ---
 
 ```sh

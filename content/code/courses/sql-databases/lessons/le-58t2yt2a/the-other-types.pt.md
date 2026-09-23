@@ -1,6 +1,6 @@
 ---
 title: Os outros tipos de índice, e o problema de cada um
-version: 1
+version: 2
 ---
 
 Tudo até aqui foi a árvore B, que é o padrão e é a resposta certa para quase todo índice que você vá
@@ -40,9 +40,9 @@ SELECT * FROM articles WHERE tags @> ARRAY['sql'];
 A mesma estrutura serve a três coisas que você vai encontrar de verdade:
 
 ```sql
-CREATE INDEX ON documents USING gin (payload jsonb_path_ops);  -- chaves dentro de uma coluna JSON
-CREATE INDEX ON articles  USING gin (to_tsvector('english', body));  -- busca em texto completo
-CREATE INDEX ON customers USING gin (name gin_trgm_ops);       -- e a de mais cedo
+CREATE INDEX ON documents USING gin (payload jsonb_path_ops);  -- keys inside a JSON column
+CREATE INDEX ON articles  USING gin (to_tsvector('english', body));  -- full-text search
+CREATE INDEX ON customers USING gin (name gin_trgm_ops);       -- and the one from earlier
 ```
 
 Essa última linha é a correção para `LIKE '%ana%'`. A extensão `pg_trgm` quebra cada string em

@@ -1,6 +1,6 @@
 ---
 title: Ownership, and why giving a file away needs root
-version: 1
+version: 2
 ---
 
 Two commands, and one rule that explains the whole section.

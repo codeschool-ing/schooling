@@ -1,6 +1,6 @@
 ---
 title: INNER JOIN, the one you write most
-version: 1
+version: 2
 ---
 
 ```sql

@@ -1,6 +1,6 @@
 ---
 title: Counting correctly, which is where joins and aggregates collide
-version: 1
+version: 2
 ---
 
 Lesson 5 said a join pairs rows and that the pairing multiplies. Now you have functions that add

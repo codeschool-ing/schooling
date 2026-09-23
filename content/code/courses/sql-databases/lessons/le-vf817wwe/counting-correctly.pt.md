@@ -1,6 +1,6 @@
 ---
 title: Contar direito, que é onde junções e agregações se encontram
-version: 1
+version: 2
 ---
 
 A aula 5 disse que uma junção pareia linhas e que o pareamento multiplica. Agora você tem funções
@@ -71,8 +71,8 @@ consulta lê perfeitamente.
 `count(DISTINCT …)` salva as contagens:
 
 ```sql
-count(DISTINCT l.id)   -- 3, correto
-count(DISTINCT p.id)   -- 2, correto
+count(DISTINCT l.id)   -- 3, correct
+count(DISTINCT p.id)   -- 2, correct
 ```
 
 **Não salva as somas.** Não existe `sum(DISTINCT l.quantity)` que queira dizer alguma coisa:

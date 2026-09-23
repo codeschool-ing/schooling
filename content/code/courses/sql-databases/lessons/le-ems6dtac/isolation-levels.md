@@ -1,6 +1,6 @@
 ---
 title: The four isolation levels, and the one you are on
-version: 1
+version: 2
 ---
 
 The standard defines four levels, and it defines them **by which of the anomalies they forbid**

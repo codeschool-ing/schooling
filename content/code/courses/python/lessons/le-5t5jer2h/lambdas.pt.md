@@ -1,11 +1,11 @@
 ---
 title: Uma expressão com parâmetros
-version: 1
+version: 2
 ---
 
 ```python
-quadrado = lambda x: x * x        # não
-def quadrado(x): return x * x     # sim
+square = lambda x: x * x        # don't
+def square(x): return x * x     # do
 ```
 
 Um `lambda` é uma função escrita como uma expressão só. Ela tem parâmetros, devolve o valor da
@@ -17,9 +17,9 @@ um nome de verdade para o traceback, e permite uma docstring.
 ## Onde ele está certo
 
 ```python
-linhas.sort(key=lambda l: l["cidade"])
-max(pessoas, key=lambda p: p["nota"])
-sorted(palavras, key=lambda p: (len(p), p))
+rows.sort(key=lambda r: r["city"])
+max(people, key=lambda p: p["score"])
+sorted(words, key=lambda w: (len(w), w))
 ```
 
 Passado direto para algo que recebe uma função, usado uma vez, e curto o bastante para ler ali
@@ -36,7 +36,7 @@ um lambda seguro de ler no meio de outra linha.
 
 ```python
 from operator import itemgetter
-linhas.sort(key=itemgetter("cidade"))
+rows.sort(key=itemgetter("city"))
 ```
 
 `itemgetter` e `attrgetter` dizem o que fazem e são um pouco mais rápidos. Qualquer um serve; o

@@ -1,6 +1,6 @@
 ---
 title: Two methods, and what `for` is doing
-version: 1
+version: 2
 ---
 
 ```python

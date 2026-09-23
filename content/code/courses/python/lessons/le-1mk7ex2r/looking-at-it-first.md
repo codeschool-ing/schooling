@@ -1,6 +1,6 @@
 ---
 title: Five minutes before any analysis
-version: 1
+version: 2
 ---
 
 ```python

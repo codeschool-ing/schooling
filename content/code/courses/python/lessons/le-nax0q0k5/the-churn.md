@@ -1,23 +1,23 @@
 ---
 title: The lesson that ages fastest, and the part that does not
-version: 1
+version: 2
 ---
 
 **This is the only reading in the course with a date on it.** Saying so is the point: the
 recommendation at the top of this lesson is right today and has been wrong twice in the last five
 years.
 
-```sh
-setup.py + requirements.txt    the arrangement everything started from
-pipenv                         recommended by the official packaging guide
-poetry                         what most new projects used next
-pyproject.toml                 standardised; setup.py begins to disappear
-pip-tools                      how locking was done with pip alone
-[project]                      the metadata table becomes a specification
-hatch, pdm                     more tools, reading the same table
-uv                             an order of magnitude faster than any of them
-poetry 2                       adopts [project]; the two converge
-```
+| tool or format | what it meant |
+|---|---|
+| `setup.py` + `requirements.txt` | the arrangement everything started from |
+| `pipenv` | recommended by the official packaging guide |
+| `poetry` | what most new projects used next |
+| `pyproject.toml` | standardised; `setup.py` begins to disappear |
+| `pip-tools` | how locking was done with pip alone |
+| `[project]` | the metadata table becomes a specification |
+| `hatch`, `pdm` | more tools, reading the same table |
+| `uv` | an order of magnitude faster than any of them |
+| `poetry` 2 | adopts `[project]`; the two converge |
 
 That is an ordering rather than a set of dates, and it is enough to make the point: every row was
 the sensible recommendation while it lasted, and following any of them leaves you with a

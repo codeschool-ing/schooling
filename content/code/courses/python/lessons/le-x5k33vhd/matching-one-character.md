@@ -1,6 +1,6 @@
 ---
 title: What character, and the classes worth memorising
-version: 1
+version: 2
 ---
 
 Most characters match themselves. `cat` matches `cat`. The interesting ones are the rest.
@@ -12,12 +12,12 @@ line and surprises people who are not — `re.DOTALL` turns it off.
 
 ## Classes
 
-```
-[aeiou]      any one of those
-[a-z]        any lowercase letter
-[a-zA-Z0-9]  a letter or a digit
-[^0-9]       anything that is NOT a digit
-```
+| class | matches |
+|---|---|
+| `[aeiou]` | any one of those |
+| `[a-z]` | any lowercase letter |
+| `[a-zA-Z0-9]` | a letter or a digit |
+| `[^0-9]` | anything that is NOT a digit |
 
 Square brackets are a set of characters, and ONE of them matches. The `^` at the START of a class
 negates it; anywhere else it is a literal `^`.

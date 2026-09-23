@@ -1,6 +1,6 @@
 ---
 title: `r""`, and the pattern used in a loop
-version: 1
+version: 2
 ---
 
 ```python

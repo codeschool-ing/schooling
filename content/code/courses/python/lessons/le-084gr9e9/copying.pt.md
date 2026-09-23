@@ -1,6 +1,6 @@
 ---
 title: Atribuição é um segundo nome, e `copy` é rasa
-version: 1
+version: 2
 ---
 
 Esta é a seção para a qual a aula existe.
@@ -62,18 +62,18 @@ que dá para passar uma string de um lado para o outro por um ano sem nunca enco
 ## Como isso morde de fato
 
 ```python
-def limpar(linhas):
-    for linha in linhas:
-        linha["nome"] = linha["nome"].strip()
-    return linhas
+def clean(rows):
+    for row in rows:
+        row["name"] = row["name"].strip()
+    return rows
 ```
 
 Isto parece devolver linhas limpas e deixar as de quem chamou em paz. Não deixa: os dicionários são
 de quem chamou, e foram editados. Ou diga isso no nome — `limpar_no_lugar` — ou copie antes:
 
 ```python
-def limpar(linhas):
-    return [{**linha, "nome": linha["nome"].strip()} for linha in linhas]
+def clean(rows):
+    return [{**row, "name": row["name"].strip()} for row in rows]
 ```
 
 **Uma função que altera o argumento e também o devolve** é a forma que esconde isso. Faça uma coisa

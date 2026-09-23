@@ -1,6 +1,6 @@
 ---
 title: Walking a tree with WITH RECURSIVE
-version: 1
+version: 2
 ---
 
 Lesson 1 gave you a table that points at itself:
@@ -38,7 +38,7 @@ Every recursive query has those two halves and the `UNION ALL` between them.
 
 The word "recursive" is misleading — nothing calls itself. It iterates:
 
-```
+```localised
 round 0   the anchor runs                   → Kitchen                        (depth 1)
 round 1   the step runs against round 0     → Cookware, Crockery             (depth 2)
 round 2   the step runs against round 1     → Pans, Knives, Plates           (depth 3)

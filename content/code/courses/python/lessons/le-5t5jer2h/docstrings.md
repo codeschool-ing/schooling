@@ -1,6 +1,6 @@
 ---
 title: The first statement of the body
-version: 1
+version: 2
 ---
 
 ```python

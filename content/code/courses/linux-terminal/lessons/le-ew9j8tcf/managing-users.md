@@ -1,6 +1,6 @@
 ---
 title: Making, changing and removing an account
-version: 1
+version: 2
 ---
 
 There are two commands for creating a user and they are not the same tool.

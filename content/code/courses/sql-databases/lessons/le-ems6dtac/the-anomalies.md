@@ -1,6 +1,6 @@
 ---
 title: The five things that go wrong, before any of the rules
-version: 1
+version: 2
 ---
 
 Lesson 2 named the anomalies before it named a normal form, because a rule you cannot see the point
@@ -11,7 +11,7 @@ In each timeline, time runs downwards and the two columns are two connections.
 
 ## Dirty read
 
-```
+```localised
 T1                                    T2
 BEGIN
 UPDATE products SET price = 5
@@ -28,7 +28,7 @@ by default everywhere you will work, and PostgreSQL cannot produce it at all.
 
 ## Non-repeatable read
 
-```
+```localised
 T1                                    T2
 BEGIN
 SELECT price → 10
@@ -47,7 +47,7 @@ reconciles with nothing.
 
 ## Phantom read
 
-```
+```localised
 T1                                    T2
 BEGIN
 SELECT count(*) FROM orders
@@ -65,7 +65,7 @@ the second means locking rows that do not exist yet, which is a harder problem.
 
 ## Lost update
 
-```
+```localised
 T1                                    T2
 BEGIN                                 BEGIN
 SELECT stock → 10
@@ -94,7 +94,7 @@ decision is genuinely made in the application, is the `locking` section.
 
 ## Write skew
 
-```
+```localised
 T1                                    T2
 BEGIN                                 BEGIN
 SELECT count(*) FROM doctors

@@ -1,9 +1,9 @@
 ---
 title: `==`, `>=`, `~=`, e o que um número de versão promete
-version: 1
+version: 2
 ---
 
-```sh
+```localised
 MAIOR . MENOR . CORREÇÃO
   2   .  31   .     0
 ```
@@ -40,10 +40,10 @@ componentes que você escreveu, que é fácil de digitar errado e não produz er
 
 ## Os outros dois
 
-```sh
-requests>=2.26,<3        uma faixa, escrita por extenso
-requests!=2.32.0         tudo menos uma versão que saiu quebrada
-```
+| especificador | significa |
+|---|---|
+| `requests>=2.26,<3` | uma faixa, escrita por extenso |
+| `requests!=2.32.0` | tudo menos uma versão que saiu quebrada |
 
 Uma vírgula é um **e**. `>=2.26,<3` é a forma explícita de `~=2.26` e vale preferir justamente por
 não poder ser mal lida.
@@ -56,7 +56,7 @@ Requires: certifi, charset-normalizer, idna, urllib3
 ```
 
 ```sh
-o requests 2.31.0 pede:
+requests 2.31.0 asks for:
   urllib3 (<3, >=1.21.1)
   charset-normalizer (<4, >=2)
   certifi (>=2017.4.17)

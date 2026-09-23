@@ -1,6 +1,6 @@
 ---
 title: `dependencies`, groups, and `requires-python`
-version: 1
+version: 2
 ---
 
 ```toml

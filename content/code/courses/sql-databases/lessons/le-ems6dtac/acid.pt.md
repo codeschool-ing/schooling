@@ -1,6 +1,6 @@
 ---
 title: ACID, com a versão honesta do C
-version: 1
+version: 2
 ---
 
 Quatro letras que se recitam bastante. Três delas são promessas que o banco faz, e uma é uma
@@ -69,7 +69,7 @@ todo commit, que é uma troca que alguém tem que escolher de propósito.
 O `BEGIN` cobre um banco. Escreva num banco e mande uma mensagem para uma fila, ou escreva em dois
 bancos, e não existe `COMMIT` que cubra os dois:
 
-```
+```localised
 BEGIN;
 UPDATE accounts …;
    → manda "pagamento feito" para a fila de mensagens        ← fora da transação

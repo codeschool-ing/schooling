@@ -1,6 +1,6 @@
 ---
 title: The whole decomposition, in one view
-version: 1
+version: 2
 ---
 
 One table became four, in three steps, each one removing a named kind of repetition. Here is the

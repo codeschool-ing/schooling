@@ -1,6 +1,6 @@
 ---
 title: One rewrites the file; the other reports what it found
-version: 1
+version: 2
 ---
 
 ```sh
@@ -18,7 +18,7 @@ reports them and leaves the fixing to you.
 
 ## Why they are two tools and not one
 
-```sh
+```localised
 black rewrote 22 lines of the demonstration module.
 ruff reported the same 4 findings before and after.
 ```

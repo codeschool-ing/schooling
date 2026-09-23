@@ -1,6 +1,6 @@
 ---
 title: `__name__ == "__main__"`, and the script that ran twice
-version: 1
+version: 2
 ---
 
 ```python

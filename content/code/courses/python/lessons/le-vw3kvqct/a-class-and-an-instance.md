@@ -1,6 +1,6 @@
 ---
 title: `self` is the instance, and nothing else is unusual
-version: 1
+version: 2
 ---
 
 ```python

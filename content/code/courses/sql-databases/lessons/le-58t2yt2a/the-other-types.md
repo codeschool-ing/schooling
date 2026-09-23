@@ -1,6 +1,6 @@
 ---
 title: The other index types, and the problem each one is for
-version: 1
+version: 2
 ---
 
 Everything so far has been the B-tree, which is the default and is the right answer for nearly

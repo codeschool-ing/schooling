@@ -1,6 +1,6 @@
 ---
 title: As funções de agregação, e a única coisa que todas fazem com NULL
-version: 1
+version: 2
 ---
 
 Uma função de agregação recebe muitas linhas e devolve um valor. É a ideia inteira, e as cinco que
@@ -42,7 +42,7 @@ SELECT avg(rating)   FROM reviews;           -- 4.0
 `28 / 10` é 2,8. A média diz 4,0. Nenhum dos dois números está errado — eles respondem perguntas
 diferentes, e só uma delas foi feita em voz alta.
 
-```
+```localised
 avg(rating)  =  sum(rating) / count(rating)      a média das notas que existem
 28 / count(*)                                    a média se uma nota ausente fosse zero
 ```
@@ -114,7 +114,7 @@ converta:
 
 ```sql
 SELECT sum(quantity)::numeric / count(*) FROM order_lines;   -- PostgreSQL
-SELECT sum(quantity) * 1.0  / count(*) FROM order_lines;     -- portável
+SELECT sum(quantity) * 1.0  / count(*) FROM order_lines;     -- portable
 ```
 
 ## As outras, rapidamente
@@ -123,11 +123,11 @@ Vale saber que existem, porque cada uma substitui um laço que alguém escreveri
 aplicação:
 
 ```sql
-string_agg(name, ', ' ORDER BY name)   -- os nomes, juntados numa string só
-array_agg(id)                          -- os ids, como um array
-bool_or(is_paid)                       -- verdadeiro se alguma linha for
-bool_and(is_paid)                      -- verdadeiro só se toda linha for
-stddev(total), variance(total)         -- a dispersão, não só o meio
+string_agg(name, ', ' ORDER BY name)   -- the names, joined into one string
+array_agg(id)                          -- the ids, as one array
+bool_or(is_paid)                       -- true if any row is
+bool_and(is_paid)                      -- true only if every row is
+stddev(total), variance(total)         -- the spread, not just the middle
 ```
 
 `string_agg` é a primeira que você vai querer: "as etiquetas deste artigo, separadas por vírgula" é

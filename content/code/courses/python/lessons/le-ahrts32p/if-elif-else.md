@@ -1,6 +1,6 @@
 ---
 title: The indentation is the block
-version: 1
+version: 2
 ---
 
 ```python

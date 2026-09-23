@@ -1,6 +1,6 @@
 ---
 title: Um token, um limite de taxa, e o laço que segue o `next`
-version: 1
+version: 2
 ---
 
 ```python
@@ -24,7 +24,7 @@ Não na query string. Uma URL é registrada por todo proxy, todo servidor e pelo
 histórico de terminal, e um token numa é um token em todos eles.
 
 ```python
-os.environ["API_TOKEN"]       # do ambiente
+os.environ["API_TOKEN"]       # from the environment
 ```
 
 Nem no arquivo. Isso é o `.env` da aula 18 e o `.gitignore` da aula 17, e o modo de falhar é um
@@ -51,21 +51,21 @@ tempo. Esse cabeçalho é uma instrução, e ignorá-lo é como um bloqueio temp
 ## Paginação
 
 ```json
-{"results": [ … dez linhas … ], "next": "https://api.example.tld/orders?page=2"}
+{"results": [ … ten rows … ], "next": "https://api.example.tld/orders?page=2"}
 ```
 
 ```python
-url, linhas = "https://api.example.tld/orders", []
+url, rows = "https://api.example.tld/orders", []
 while url:
     r = s.get(url, timeout=10)
     r.raise_for_status()
-    pagina = r.json()
-    linhas += pagina["results"]
-    url = pagina["next"]
+    page = r.json()
+    rows += page["results"]
+    url = page["next"]
 ```
 
 ```sh
-seguiu o next: 3 páginas, 25 linhas
+followed next: 3 pages, 25 rows
 ```
 
 **Seis linhas, e as mesmas seis linhas toda vez.** O laço não precisa saber quantas páginas

@@ -1,6 +1,6 @@
 ---
 title: The frame, and why adding ORDER BY changes the answer
-version: 1
+version: 2
 ---
 
 Add an `ORDER BY` inside the `OVER` and the number changes. Not the order of the rows — the

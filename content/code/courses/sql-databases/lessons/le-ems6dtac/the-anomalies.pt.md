@@ -1,6 +1,6 @@
 ---
 title: As cinco coisas que dão errado, antes de qualquer regra
-version: 1
+version: 2
 ---
 
 A aula 2 nomeou as anomalias antes de nomear uma forma normal, porque uma regra cuja graça você não
@@ -12,7 +12,7 @@ Em cada linha do tempo, o tempo corre para baixo e as duas colunas são duas con
 
 ## Leitura suja
 
-```
+```localised
 T1                                    T2
 BEGIN
 UPDATE products SET price = 5
@@ -29,7 +29,7 @@ em todo lugar em que você vá trabalhar, e o PostgreSQL não consegue produzi-l
 
 ## Leitura não repetível
 
-```
+```localised
 T1                                    T2
 BEGIN
 SELECT price → 10
@@ -48,7 +48,7 @@ com nada.
 
 ## Leitura fantasma
 
-```
+```localised
 T1                                    T2
 BEGIN
 SELECT count(*) FROM orders
@@ -66,7 +66,7 @@ a segunda significa bloquear linhas que ainda não existem, o que é um problema
 
 ## Atualização perdida
 
-```
+```localised
 T1                                    T2
 BEGIN                                 BEGIN
 SELECT stock → 10
@@ -95,7 +95,7 @@ decisão é genuinamente tomada na aplicação, é a seção `locking`.
 
 ## Desvio de escrita
 
-```
+```localised
 T1                                    T2
 BEGIN                                 BEGIN
 SELECT count(*) FROM doctors

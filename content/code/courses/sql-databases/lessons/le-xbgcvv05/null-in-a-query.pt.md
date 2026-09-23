@@ -1,6 +1,6 @@
 ---
 title: NULL, agora que você escreve consultas
-version: 1
+version: 2
 ---
 
 A aula 1 disse o que `NULL` é: não zero, não vazio, **desconhecido** — e que comparar qualquer coisa
@@ -38,7 +38,7 @@ SELECT count(*) FROM products WHERE category <> 'kitchen' OR category IS NULL;  
 ## `= NULL` não é erro, o que é pior
 
 ```sql
-SELECT count(*) FROM products WHERE category = NULL;      -- 0, sempre
+SELECT count(*) FROM products WHERE category = NULL;      -- 0, always
 SELECT count(*) FROM products WHERE category IS NULL;     -- 3
 ```
 
@@ -100,9 +100,9 @@ resposta é conhecida.
 ## As ferramentas
 
 ```sql
-coalesce(price, 0)                  -- o primeiro argumento que não é nulo
-nullif(status, '')                  -- NULL quando os dois são iguais, senão o primeiro
-price IS DISTINCT FROM 20           -- como <>, mas trata NULL como valor comparável
+coalesce(price, 0)                  -- the first argument that is not null
+nullif(status, '')                  -- NULL when the two are equal, else the first
+price IS DISTINCT FROM 20           -- like <>, but treats NULL as a comparable value
 ```
 
 **`IS DISTINCT FROM` é o que as pessoas não conhecem e frequentemente querem.** O `<>` comum diz

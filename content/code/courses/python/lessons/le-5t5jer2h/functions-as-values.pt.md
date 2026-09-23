@@ -1,12 +1,12 @@
 ---
 title: Uma função é um objeto, como todo o resto
-version: 1
+version: 2
 ---
 
 ```python
-def gritar(s): return s.upper()
+def shout(s): return s.upper()
 
-f = gritar         # sem parênteses: a própria função
+f = shout          # no parentheses: the function itself
 f("ada")           # 'ADA'
 ```
 
@@ -16,10 +16,10 @@ acontecendo — um `def` liga um nome a um objeto, exatamente como o `=` faz.
 ## Passar uma
 
 ```python
-def aplicar_a_todos(itens, fn):
-    return [fn(x) for x in itens]
+def apply_to_all(items, fn):
+    return [fn(x) for x in items]
 
-aplicar_a_todos(nomes, str.strip)
+apply_to_all(names, str.strip)
 ```
 
 É o que o `key=` vem fazendo desde a aula 3, e o que `sorted`, `max`, `map` e `filter` recebem.
@@ -28,13 +28,13 @@ aplicar_a_todos(nomes, str.strip)
 ## Um dicionário de funções
 
 ```python
-ACOES = {
-    "iniciar": iniciar,
-    "parar":   parar,
-    "estado":  estado,
+ACTIONS = {
+    "start": start,
+    "stop":  stop,
+    "status": status,
 }
 
-ACOES[comando]()          # um KeyError nomeia o comando desconhecido
+ACTIONS[command]()          # KeyError names the unknown command
 ```
 
 Uma tabela de comportamento, e ela substitui uma cadeia de `elif` que cresce um ramo por
@@ -44,16 +44,16 @@ resultado dela — e uma chave ausente é um erro que você trata em vez de um s
 ## Devolver uma
 
 ```python
-def multiplicador(n):
-    def multiplicar(x):
-        return x * n        # o n vem do escopo envolvente
-    return multiplicar
+def multiplier(n):
+    def multiply(x):
+        return x * n        # n comes from the enclosing scope
+    return multiply
 
-dobro = multiplicador(2)
-dobro(5)                    # 10
+double = multiplier(2)
+double(5)                   # 10
 ```
 
-`multiplicar` lembra de `n` depois que `multiplicador` já devolveu. Isso é um FECHAMENTO, é a
+`multiply` lembra de `n` depois que `multiplier` já devolveu. Isso é um FECHAMENTO, é a
 maquinaria do `nonlocal` de duas seções atrás, e é a única ideia com que a aula 12 constrói
 decoradores.
 

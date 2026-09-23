@@ -1,11 +1,11 @@
 ---
 title: Parênteses, e receber algo de volta
-version: 1
+version: 2
 ---
 
 ```python
-m = re.search(r"(\d{4})-(\d{2})-(\d{2})", linha)
-m.group(0)      # a coincidência inteira
+m = re.search(r"(\d{4})-(\d{2})-(\d{2})", line)
+m.group(0)      # the whole match
 m.group(1)      # '2026'
 m.groups()      # ('2026', '09', '21')
 ```
@@ -20,10 +20,10 @@ a direita pelo parêntese que abre.
 ## Grupos com nome
 
 ```python
-m = re.search(r"(?P<ano>\d{4})-(?P<mes>\d{2})", linha)
-m["ano"]               # '2026'
-m.group("mes")         # '09'
-m.groupdict()          # {'ano': '2026', 'mes': '09'}
+m = re.search(r"(?P<year>\d{4})-(?P<month>\d{2})", line)
+m["year"]              # '2026'
+m.group("month")       # '09'
+m.groupdict()          # {'year': '2026', 'month': '09'}
 ```
 
 **Dê nome a eles no momento em que houver mais de dois.** O `m.group(3)` é um número que alguém
@@ -43,7 +43,7 @@ r"(?:https?)://(\S+)"
 
 ```python
 m = re.match(r"(\+\d+ )?(\d+)", "5551234")
-m.group(1)       # None, e não ''
+m.group(1)       # None, not ''
 ```
 
 Um grupo opcional que não estava lá dá `None`. `m.group(1) or ""` é a resposta de sempre, e
@@ -53,7 +53,7 @@ esquecer disso é um `AttributeError` em `None` algumas linhas depois.
 
 ```python
 r"ERROR|WARN|INFO"
-r"(?:ERROR|WARN|INFO)"        # quando é parte de algo maior
+r"(?:ERROR|WARN|INFO)"        # when it is part of something bigger
 ```
 
 O `|` tem a MENOR precedência de tudo na linguagem, então `^ERROR|WARN$` quer dizer "começa com

@@ -1,6 +1,6 @@
 ---
 title: Um CTE é calculado uma vez, e ele é mais lento?
-version: 1
+version: 2
 ---
 
 Alguém vai lhe dizer que `WITH` é lento. Outra pessoa vai lhe dizer que não custa nada. As duas
@@ -43,8 +43,8 @@ recursivo, e não faz nada que modifique dados. Caso contrário é materializado
 que quer:
 
 ```sql
-WITH everything AS NOT MATERIALIZED (SELECT * FROM orders)  -- embuta
-WITH everything AS MATERIALIZED     (SELECT * FROM orders)  -- calcule uma vez, cerque
+WITH everything AS NOT MATERIALIZED (SELECT * FROM orders)  -- inline it
+WITH everything AS MATERIALIZED     (SELECT * FROM orders)  -- compute it once, fence it off
 ```
 
 Duas conclusões decorrem, e elas importam mais que a história:

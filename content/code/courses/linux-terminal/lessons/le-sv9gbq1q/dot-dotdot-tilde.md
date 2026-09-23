@@ -1,6 +1,6 @@
 ---
 title: The shorthands: `.`, `..`, `~` and `-`
-version: 1
+version: 2
 ---
 
 Four pieces of shorthand appear in almost every path you will ever type. Two of them are real

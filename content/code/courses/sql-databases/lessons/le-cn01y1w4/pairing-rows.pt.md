@@ -1,6 +1,6 @@
 ---
 title: Uma junção pareia linhas. Ela não funde tabelas
-version: 1
+version: 2
 ---
 
 Uma frase decide se junções algum dia parecem simples, então ela vem antes de qualquer sintaxe.
@@ -80,9 +80,9 @@ formado torna junções óbvias.
 Não precisa ser:
 
 ```sql
-ON o.customer_id = c.id AND o.total > 50      -- pares, mais restritos
-ON o.created_at BETWEEN c.joined_on AND c.left_on   -- uma faixa, não uma igualdade
-ON true                                        -- todo par, que é um CROSS JOIN
+ON o.customer_id = c.id AND o.total > 50      -- pairs, further restricted
+ON o.created_at BETWEEN c.joined_on AND c.left_on   -- a range, not an equality
+ON true                                        -- every pair, which is a CROSS JOIN
 ```
 
 A diferença entre pôr uma condição no `ON` e pôr no `WHERE` é nenhuma numa junção comum — e é o bug

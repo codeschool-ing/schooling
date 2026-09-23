@@ -1,6 +1,6 @@
 ---
 title: Software you do not download
-version: 1
+version: 2
 ---
 
 On Windows and macOS, installing something means finding its website, downloading a file, running

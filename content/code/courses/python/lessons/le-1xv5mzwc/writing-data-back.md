@@ -1,6 +1,6 @@
 ---
 title: Never build either format by hand
-version: 1
+version: 2
 ---
 
 ```python

@@ -1,6 +1,6 @@
 ---
 title: Andar e olhar: `pwd`, `cd`, `ls`
-version: 1
+version: 2
 ---
 
 Três comandos, e você vai digitá-los mais do que todo o resto deste curso somado. `pwd` diz onde
@@ -10,11 +10,11 @@ vez de num manual.
 ## `cd`, e as quatro coisas que ele aceita
 
 ```
-cd /var/log        # absoluto: lá, a partir da raiz
-cd logs            # relativo: para dentro de logs, daqui
-cd ..              # um acima
-cd                 # para casa — sem argumento nenhum
-cd -               # de volta para onde você estava
+cd /var/log        # absolute: there, from the root
+cd logs            # relative: down into logs, from here
+cd ..              # up one
+cd                 # home — with no argument at all
+cd -               # back to where you just were
 ```
 
 **`cd` sem nada vai para casa.** Vale saber no primeiro dia, porque é o jeito confiável de sair de

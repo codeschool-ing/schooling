@@ -1,6 +1,6 @@
 ---
 title: LEFT JOIN, e as linhas que estavam sumindo
-version: 1
+version: 2
 ---
 
 A Célia nunca pediu. Uma junção interna a deixa de fora, e nada avisa.
@@ -45,8 +45,8 @@ as colunas da direita são preenchidas com `NULL`.
 **Os lados agora significam coisas diferentes**, que é a diferença para a junção interna:
 
 ```sql
-FROM customers c LEFT JOIN orders o ON …    -- todo cliente, pedidos onde houver
-FROM orders o LEFT JOIN customers c ON …    -- todo pedido, clientes onde houver
+FROM customers c LEFT JOIN orders o ON …    -- every customer, orders where there are some
+FROM orders o LEFT JOIN customers c ON …    -- every order, customers where there are some
 ```
 
 São consultas diferentes. A primeira mantém a Célia; a segunda mantém o pedido 1005, a compra sem
@@ -80,8 +80,8 @@ GROUP BY c.name;
 E a contagem precisa de cuidado pelo mesmo motivo:
 
 ```sql
-count(*)        -- 1 para a Célia: existe uma linha, a inventada
-count(o.id)     -- 0 para a Célia: a coluna é nula e count ignora nulos
+count(*)        -- 1 for Célia: there is one row, the invented one
+count(o.id)     -- 0 for Célia: the column is null and count ignores nulls
 ```
 
 **`count(*)` depois de um `LEFT JOIN` quase sempre é o bug.** Ele conta linhas, e a Célia tem uma

@@ -1,6 +1,6 @@
 ---
 title: `[f(x) for x in xs if p(x)]`
-version: 1
+version: 2
 ---
 
 ```python
@@ -13,7 +13,7 @@ Six lines of loop in one, and the first thing it says is **what is being built**
 
 The order it is written in is not the order it runs in:
 
-```
+```localised
 [  price * 0.9        for price in prices       if price > 100  ]
    what to keep       where it comes from       which ones
 ```

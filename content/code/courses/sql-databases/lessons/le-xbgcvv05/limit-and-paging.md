@@ -1,6 +1,6 @@
 ---
 title: LIMIT, and why everybody's paging is wrong
-version: 1
+version: 2
 ---
 
 ```sql

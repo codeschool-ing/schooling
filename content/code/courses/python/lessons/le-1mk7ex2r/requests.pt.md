@@ -1,6 +1,6 @@
 ---
 title: `get`, a query string, `raise_for_status`, `json`, e o timeout
-version: 1
+version: 2
 ---
 
 ```python
@@ -8,13 +8,13 @@ import requests
 
 r = requests.get("https://pypi.org/pypi/requests/json", timeout=10)
 r.raise_for_status()
-dados = r.json()
+data = r.json()
 ```
 
 ```sh
 >>> r.status_code, r.ok
 (200, True)
->>> dados["info"]["version"]
+>>> data["info"]["version"]
 '2.34.2'
 ```
 
@@ -23,8 +23,8 @@ Quatro linhas, e três delas importam. O `timeout` é o que todo mundo deixa de 
 ## O timeout não é opcional
 
 ```python
-requests.get(url)              # espera para sempre, por padrão
-requests.get(url, timeout=10)  # levanta depois de dez segundos
+requests.get(url)              # waits forever, by default
+requests.get(url, timeout=10)  # raises after ten seconds
 ```
 
 ```sh
@@ -37,13 +37,13 @@ vai segurar a chamada aberta até outra coisa desistir — e num trabalho agenda
 ainda sentado ali de manhã.
 
 ```python
-requests.get(url, timeout=(3, 10))   # 3s para conectar, 10s para ler
+requests.get(url, timeout=(3, 10))   # 3s to connect, 10s to read
 ```
 
 ## `raise_for_status`
 
 ```sh
->>> r2 = requests.get("https://pypi.org/pypi/pacote-que-nao-existe-xyzzy/json", timeout=10)
+>>> r2 = requests.get("https://pypi.org/pypi/no-such-package-xyzzy/json", timeout=10)
 >>> r2.status_code, bool(r2)
 (404, False)
 >>> r2.raise_for_status()
@@ -74,9 +74,9 @@ com um `&` dentro caladamente vira dois parâmetros.
 ## `.json()` e `.text`
 
 ```python
-r.json()      # analisado, levanta ValueError se o corpo não for JSON
-r.text        # o corpo como string
-r.content     # o corpo como bytes — para um arquivo, uma imagem, um PDF
+r.json()      # parsed, raises ValueError if the body is not JSON
+r.text        # the body as a string
+r.content     # the body as bytes — for a file, an image, a PDF
 ```
 
 O `r.json()` numa página HTML de erro levanta, que é mais uma razão para o `raise_for_status` vir
@@ -85,8 +85,8 @@ antes.
 ## O resto dos verbos
 
 ```python
-requests.post(url, json={"centavos": 1000}, timeout=10)   # um corpo JSON
-requests.post(url, data={"centavos": 1000}, timeout=10)   # um corpo de formulário
+requests.post(url, json={"cents": 1000}, timeout=10)   # a JSON body
+requests.post(url, data={"cents": 1000}, timeout=10)   # a form body
 requests.put(url, json=…, timeout=10)
 requests.delete(url, timeout=10)
 ```

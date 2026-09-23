@@ -1,9 +1,9 @@
 ---
 title: Os cinco campos, e a única regra que é um OU
-version: 1
+version: 2
 ---
 
-```
+```localised
 *  *  *  *  *  comando
 │  │  │  │  │
 │  │  │  │  └── dia da semana  0-7   (0 e 7 são os dois domingo)

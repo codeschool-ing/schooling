@@ -1,6 +1,6 @@
 ---
 title: O `awk`, uma linguagem de programação que se escreve numa linha
-version: 1
+version: 2
 ---
 
 O `awk` lê uma linha, divide em campos, e roda o seu código nela. É esse o modelo inteiro, e é o que
@@ -24,7 +24,7 @@ E o segundo comando reordenou os campos, o que a seção 08 mostrou que o `cut` 
 
 ## A forma de um programa
 
-```
+```localised
 awk 'padrão { ação }'
 ```
 

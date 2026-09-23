@@ -1,6 +1,6 @@
 ---
 title: Mais de duas tabelas, e uma tabela juntada consigo mesma
-version: 1
+version: 2
 ---
 
 Junções encadeiam. Cada uma pareia o que você tem até agora com mais uma tabela.
@@ -25,7 +25,7 @@ contagem depois de cada uma. A técnica da aula 4, aplicada aqui:
 
 ```sql
 SELECT count(*) FROM orders o;                              -- 5
-SELECT count(*) FROM orders o JOIN customers c ON …;        -- 4, e é o pedido 1005 saindo
+SELECT count(*) FROM orders o JOIN customers c ON …;        -- 4, and that is order 1005 leaving
 SELECT count(*) FROM orders o JOIN customers c ON … JOIN order_lines l ON …;   -- 11
 ```
 
@@ -96,13 +96,13 @@ exatamente uma vez.
 penosa com auto-junção e trivial com as funções de janela da aula 6:
 
 ```sql
--- a versão com auto-junção, que precisa de subconsulta correlacionada para achar "a anterior"
+-- the self-join version, which needs a correlated subquery to find "the previous one"
 SELECT o.id, o.ordered_on,
        (SELECT max(p.ordered_on) FROM orders p
         WHERE p.customer_id = o.customer_id AND p.ordered_on < o.ordered_on) AS previous
 FROM   orders o;
 
--- aula 6
+-- lesson 6
 SELECT id, ordered_on,
        lag(ordered_on) OVER (PARTITION BY customer_id ORDER BY ordered_on) AS previous
 FROM   orders;

@@ -1,6 +1,6 @@
 ---
 title: Lendo uma recusa
-version: 1
+version: 2
 ---
 
 Um terminal te diz mais quando recusa do que qualquer interface que você já usou te diz quando dá
@@ -9,7 +9,7 @@ certo. A informação está toda ali; ela só é seca, e ninguém ensina a gram�
 **Todo erro que você vai encontrar tem três partes:** quem está falando, no que estava trabalhando,
 e o que deu errado.
 
-```
+```localised
 cat: /etc/shadow: Permission denied
 └┬┘  └────┬────┘  └───────┬──────┘
  │        │               └─ o que deu errado
@@ -47,8 +47,8 @@ normalmente não é coisa para resolver com `sudo` antes de você ter entendido 
 **Arquivo ou diretório inexistente.**
 
 ```
-ana@vm:~$ ls /lugarnenhum
-ls: cannot access '/lugarnenhum': No such file or directory
+ana@vm:~$ ls /nowhere
+ls: cannot access '/nowhere': No such file or directory
 ```
 
 O programa rodou, pegou o argumento, e o caminho não existe. Nove em cada dez vezes é erro de
@@ -86,7 +86,7 @@ Veja as quatro falhas acima responderem diferente:
 |---|---|---|
 | `true` | `0` | deu certo |
 | `cat /etc/shadow` | `1` | uma falha geral |
-| `ls /lugarnenhum` | `2` | o `ls` usa 2 para "problema sério" |
+| `ls /nowhere` | `2` | o `ls` usa 2 para "problema sério" |
 | `ls -Z9` | `2` | mesmo programa, mesmo tipo de reclamação |
 | `celar` | `127` | **do shell**: não existe esse comando |
 | `Ctrl+C` em qualquer coisa | `130` | interrompido — seção 08 |

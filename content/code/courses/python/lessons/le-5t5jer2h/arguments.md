@@ -1,6 +1,6 @@
 ---
 title: Positional, keyword, and the default that is built once
-version: 1
+version: 2
 ---
 
 ```python

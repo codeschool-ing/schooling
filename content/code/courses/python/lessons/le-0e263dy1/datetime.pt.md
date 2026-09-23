@@ -1,6 +1,6 @@
 ---
 title: Três tipos, e o que não tem fuso
-version: 1
+version: 2
 ---
 
 ```python
@@ -26,9 +26,9 @@ uma, em produção, em fevereiro.
 ## Analisar e formatar
 
 ```python
-datetime.strptime("2026-09-21", "%Y-%m-%d")      # string   → datetime
+datetime.strptime("2026-09-21", "%Y-%m-%d")      # string  → datetime
 datetime.now().strftime("%d/%m/%Y")              # datetime → string
-date.fromisoformat("2026-09-21")                 # o caso ISO, mais curto
+date.fromisoformat("2026-09-21")                 # the ISO case, shorter
 ```
 
 O `strptime` ANALISA e o `strftime` FORMATA, e todo mundo consulta as letras toda vez. O hábito
@@ -41,8 +41,8 @@ diferentes para duas pessoas.
 ## O datetime ingênuo
 
 ```python
-datetime.now()                    # ingênuo — sem fuso preso a ele
-datetime.now(timezone.utc)        # consciente
+datetime.now()                    # naive — no time zone attached
+datetime.now(timezone.utc)        # aware
 ```
 
 Um `datetime` sem fuso se chama INGÊNUO, e é o padrão. Ele quer dizer "esta hora, em algum lugar" —

@@ -1,6 +1,6 @@
 ---
 title: `raises` with a `match`, and the float that is never equal
-version: 1
+version: 2
 ---
 
 ```python

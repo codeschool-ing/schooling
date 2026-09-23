@@ -1,6 +1,6 @@
 ---
 title: INNER JOIN, o que você mais escreve
-version: 1
+version: 2
 ---
 
 ```sql
@@ -91,7 +91,7 @@ recusaram.
 Quando a condição é outra coisa, vale um comentário:
 
 ```sql
--- um preço válido na época do pedido, não o atual
+-- a price valid at the time of the order, not the current one
 JOIN price_history p
   ON p.product_id = l.product_id
  AND o.ordered_on BETWEEN p.valid_from AND p.valid_to

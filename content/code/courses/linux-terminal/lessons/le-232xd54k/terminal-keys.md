@@ -1,6 +1,6 @@
 ---
 title: The keys nobody tells you about
-version: 1
+version: 2
 ---
 
 This section teaches no command. It is about a dozen keystrokes, and it is the difference between

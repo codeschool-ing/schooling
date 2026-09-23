@@ -1,6 +1,6 @@
 ---
 title: `ssh`, porque toda máquina está em outro lugar
-version: 1
+version: 2
 ---
 
 Esta é uma seção numa aula cujo título não menciona ela, e está aqui porque **toda máquina Linux
@@ -11,8 +11,8 @@ Chaves, o prompt de impressão digital, e onde as coisas moram. Túneis, arquivo
 endurecimento são aula de outra pessoa.
 
 ```
-ssh usuario@host
-ssh -p 2222 ana@localhost       # uma porta que não é a 22
+ssh user@host
+ssh -p 2222 ana@localhost       # a port that is not 22
 ```
 
 É isso. Um shell noutra máquina, e tudo das aulas 1 a 4 funciona lá exatamente como funciona aqui.

@@ -1,6 +1,6 @@
 ---
 title: Checking your own work, which nothing else in the file will do
-version: 1
+version: 2
 ---
 
 Every other document in this course tells you when it is broken. A spreadsheet does not. It
@@ -15,7 +15,7 @@ Beside a calculated total, a formula that computes the same thing a different wa
 one from the other. Beside an allocation, a formula that adds the parts and compares them with
 the whole. Beside a lookup, a count of how many did not match.
 
-```
+```localised
 =ROUND(total_from_the_detail - total_from_the_summary, 2)
 ```
 

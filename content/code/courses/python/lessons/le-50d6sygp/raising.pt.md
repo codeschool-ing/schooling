@@ -1,11 +1,11 @@
 ---
 title: O `raise`, e a mensagem que alguém vai ler
-version: 1
+version: 2
 ---
 
 ```python
-if porta < 1 or porta > 65535:
-    raise ValueError(f"porta fora da faixa: {porta}")
+if port < 1 or port > 65535:
+    raise ValueError(f"port out of range: {port}")
 ```
 
 O `raise` cria a falha e a entrega para cima. Duas coisas são sua escolha: a classe e a mensagem.
@@ -29,8 +29,8 @@ tudo, que é a situação que esta aula inteira tenta evitar.
 Ela é lida por uma pessoa, às três da manhã, num log. Então ela nomeia o valor:
 
 ```python
-raise ValueError("config inválida")                          # inútil
-raise ValueError(f"{caminho}: a porta precisa ser um número, não {bruto!r}")   # acionável
+raise ValueError("invalid config")                       # useless
+raise ValueError(f"{path}: port must be a number, not {raw!r}")   # actionable
 ```
 
 **Qual arquivo, qual campo, o que estava lá, e o que era esperado.** O `!r` mantém as aspas, então
@@ -41,9 +41,9 @@ estar encarando.
 
 ```python
 try:
-    porta = int(bruto)
+    port = int(raw)
 except ValueError as e:
-    raise ConfigError(f"{caminho}: porta ruim {bruto!r}") from e
+    raise ConfigError(f"{path}: bad port {raw!r}") from e
 ```
 
 É assim que se traduz uma falha de baixo nível numa que significa algo para quem chamou, sem perder
@@ -58,8 +58,8 @@ esconde a original inteira, o que de vez em quando está certo e em geral é uma
 
 ```python
 except OSError:
-    log.warning("tentando de novo")
-    raise                     # a mesma exceção, o mesmo traceback
+    log.warning("retrying")
+    raise                     # the same exception, same traceback
 ```
 
 Um `raise` pelado dentro de um tratamento relevanta o que você capturou. É assim que se faz algo de

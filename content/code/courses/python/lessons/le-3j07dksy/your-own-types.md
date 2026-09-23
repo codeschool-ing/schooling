@@ -1,6 +1,6 @@
 ---
 title: Your classes, an alias, and a shape for the JSON
-version: 1
+version: 2
 ---
 
 ## A class is a type

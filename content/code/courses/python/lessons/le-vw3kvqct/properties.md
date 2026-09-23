@@ -1,6 +1,6 @@
 ---
 title: The attribute that is computed, and the one that checks
-version: 1
+version: 2
 ---
 
 ```python

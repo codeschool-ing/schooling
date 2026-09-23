@@ -1,12 +1,12 @@
 ---
 title: O `with`, e o arquivo que ninguém fechou
-version: 1
+version: 2
 ---
 
 ```python
-with open("linhas.csv", encoding="utf-8") as f:
-    texto = f.read()
-# fechado aqui, tenha acontecido o que tiver acontecido lá dentro
+with open("rows.csv", encoding="utf-8") as f:
+    text = f.read()
+# closed here, whatever happened inside
 ```
 
 O `open` dá um objeto de arquivo. O `with` o devolve quando o bloco termina — no sucesso, num
@@ -29,9 +29,9 @@ por que o `"x"` existe, e por que gravar num temporário e renomear é a versão
 ## Por que `with` em vez de `close`
 
 ```python
-f = open(caminho)
-processar(f)        # levanta erro
-f.close()           # nunca roda
+f = open(path)
+process(f)          # raises
+f.close()           # never runs
 ```
 
 O arquivo fica aberto até o processo terminar — ou, num programa de longa duração, até acabarem os
@@ -44,7 +44,7 @@ descritor além de um bloco, você tem uma função que deveria recebê-lo por a
 ## Vários de uma vez
 
 ```python
-with open(orig, encoding="utf-8") as a, open(dest, "w", encoding="utf-8") as b:
+with open(src, encoding="utf-8") as a, open(dst, "w", encoding="utf-8") as b:
     b.write(a.read())
 ```
 
@@ -53,5 +53,5 @@ existe, e qualquer uma das duas é melhor que aninhar.
 
 ## O que é um objeto de arquivo
 
-Ele é um ITERADOR de linhas — que é a seção depois da próxima, e a razão de `for linha in f:` ser a
+Ele é um ITERADOR de linhas — que é a seção depois da próxima, e a razão de `for line in f:` ser a
 forma que escala.

@@ -1,10 +1,10 @@
 ---
 title: Ao lado do script, e não ao lado do terminal
-version: 1
+version: 2
 ---
 
 ```python
-open("dados/linhas.csv")
+open("data/rows.csv")
 ```
 
 Esse caminho é relativo ao **diretório de trabalho atual** — onde o terminal estava quando você
@@ -16,8 +16,8 @@ digitou `python`, e não onde o script está. Rode de outro lugar e ele falha, e
 ```python
 from pathlib import Path
 
-AQUI = Path(__file__).resolve().parent
-linhas = AQUI / "dados" / "linhas.csv"
+HERE = Path(__file__).resolve().parent
+rows = HERE / "data" / "rows.csv"
 ```
 
 `__file__` é o caminho do módulo que está rodando. O `.resolve()` o torna absoluto e remove os
@@ -31,7 +31,7 @@ tabelinha de consulta.
 O dado que o USUÁRIO nomeia pertence à linha de comando, relativo a onde ele está:
 
 ```python
-caminho = Path(sys.argv[1])
+path = Path(sys.argv[1])
 ```
 
 Esse é o caso oposto, e o comportamento relativo ao terminal está certo ali.
@@ -42,17 +42,17 @@ argumento explícito é como a implantação diz onde.
 ## `resolve` e `exists`
 
 ```python
-caminho.resolve()          # absoluto, links seguidos, `..` removidos
-caminho.expanduser()       # o ~ vira o diretório do usuário
+path.resolve()          # absolute, symlinks followed, `..` removed
+path.expanduser()       # ~ becomes the home directory
 ```
 
-`open("~/dados.csv")` NÃO funciona: quem expande o `~` é o shell, e o Python não. `Path("~/
+`open("~/data.csv")` NÃO funciona: quem expande o `~` é o shell, e o Python não. `Path("~/
 dados.csv").expanduser()` é a versão que funciona.
 
 ## Imprimir o caminho no erro
 
 ```python
-raise FileNotFoundError(f"nenhum arquivo de linhas em {linhas.resolve()}")
+raise FileNotFoundError(f"no rows file at {rows.resolve()}")
 ```
 
 Um caminho relativo numa mensagem de erro é a string menos útil da programação, porque quem lê não

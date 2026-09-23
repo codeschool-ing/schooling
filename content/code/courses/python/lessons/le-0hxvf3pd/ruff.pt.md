@@ -1,6 +1,6 @@
 ---
 title: O `ruff`, as famílias de regras, e o que o `--fix` pode mudar
-version: 1
+version: 2
 ---
 
 ```sh
@@ -62,8 +62,8 @@ aceitá-lo.
 ## Mais duas flags que vale conhecer
 
 ```sh
-ruff check --statistics app/    # uma contagem por regra, em vez de toda ocorrência
-ruff check --diff app/          # o que o --fix mudaria, sem mudar
+ruff check --statistics app/    # a count per rule, rather than every instance
+ruff check --diff app/          # what --fix would change, without changing it
 ```
 
 `--statistics` é o que rodar primeiro numa base que nunca passou por um linter, porque a saída

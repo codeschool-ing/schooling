@@ -1,6 +1,6 @@
 ---
 title: `yield`, and the function that pauses
-version: 1
+version: 2
 ---
 
 ```python

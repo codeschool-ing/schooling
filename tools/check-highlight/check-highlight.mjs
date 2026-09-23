@@ -30,7 +30,7 @@
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { highlight, LANGUAGES } from '../../ui/app/text.js';
+import { highlight, LANGUAGES, LOCALISED } from '../../ui/app/text.js';
 
 const ROOT = process.argv[2] || 'content';
 const problems = [];
@@ -110,6 +110,17 @@ if (!all.length) {
 
 for (const f of all) {
   const where = `${f.path}:${f.line}`;
+
+  /* `localised` is words in mono rather than a language, and nothing in it is
+     coloured on purpose — so it is exempt from the label rule and from the
+     colour rule below, and still held to the one that matters most: the text
+     comes back out as the file wrote it. */
+  if (f.lang === LOCALISED) {
+    if (plain(highlight(f.text, f.lang)) !== f.text) {
+      say(where, 'highlighting changed the text of a localised block');
+    }
+    continue;
+  }
 
   if (f.lang && !known.has(f.lang.toLowerCase())) {
     say(where, `the fence is labelled \`${f.lang}\`, which the highlighter has never heard of — `

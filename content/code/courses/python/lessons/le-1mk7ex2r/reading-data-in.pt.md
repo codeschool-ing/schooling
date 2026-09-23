@@ -1,29 +1,29 @@
 ---
 title: `read_csv`, `dtype`, e a coluna que entrou errada
-version: 1
+version: 2
 ---
 
 ```python
 import pandas as pd
-df = pd.read_csv("pedidos.csv")
+df = pd.read_csv("orders.csv")
 ```
 
 ```sh
-id,cliente,pais,centavos,pago_em
+id,customer,country,cents,paid_at
 1,ana,BR,12990,2026-01-04
-2,bruno,BR,,2026-01-05          ← uma célula vazia
+2,bruno,BR,,2026-01-05          ← one empty cell
 ```
 
 ```sh
 >>> df.dtypes
 id            int64
-cliente         str
-pais            str
-centavos    float64      ← não int64
-pago_em         str
+customer        str
+country         str
+cents       float64      ← not int64
+paid_at         str
 ```
 
-**Um valor faltando transformou a coluna inteira num float.** O `centavos` guarda números inteiros
+**Um valor faltando transformou a coluna inteira num float.** O `cents` guarda números inteiros
 de centavos e o pandas o leu como `float64`, porque o tipo inteiro clássico não tem como
 representar uma lacuna.
 
@@ -33,11 +33,11 @@ comparar igual a um inteiro.
 ## `dtype`, na leitura
 
 ```python
-df = pd.read_csv("pedidos.csv", dtype={"centavos": "Int64"})
+df = pd.read_csv("orders.csv", dtype={"cents": "Int64"})
 ```
 
 ```sh
->>> df["centavos"].tolist()
+>>> df["cents"].tolist()
 [12990, <NA>, 4500, 23000, 4500, 7800, 15000, 3200]
 ```
 
@@ -50,11 +50,11 @@ importe — um id só de dígitos vira inteiro e perde os zeros à esquerda de o
 ## Datas
 
 ```python
-df = pd.read_csv("pedidos.csv", parse_dates=["pago_em"])
+df = pd.read_csv("orders.csv", parse_dates=["paid_at"])
 ```
 
 ```sh
->>> df["pago_em"].dtype
+>>> df["paid_at"].dtype
 datetime64[us]
 ```
 
@@ -64,11 +64,11 @@ como texto e nenhum outro formato ordena.
 ## Os argumentos que valem conhecer
 
 ```python
-pd.read_csv(caminho,
-            sep=";",                   # um CSV europeu
-            decimal=",",               # e a vírgula decimal dele
-            usecols=["id","centavos"], # ler duas colunas de quarenta
-            nrows=1000,                # olhar antes de carregar tudo
+pd.read_csv(path,
+            sep=";",                # a European CSV
+            decimal=",",            # and its decimal comma
+            usecols=["id","cents"], # read two columns of forty
+            nrows=1000,             # look before loading all of it
             na_values=["", "N/A", "-"])
 ```
 
@@ -78,10 +78,10 @@ Leia mil linhas primeiro, olhe, e aí decida o que carregar.
 ## E o resto
 
 ```python
-pd.read_json(caminho)       # registros, ou uma estrutura aninhada
-pd.read_excel(caminho)      # precisa do openpyxl
-pd.read_parquet(caminho)    # tipado, comprimido, e muito mais rápido
-pd.read_sql(consulta, conn)
+pd.read_json(path)          # records, or a nested structure
+pd.read_excel(path)         # needs openpyxl
+pd.read_parquet(path)       # typed, compressed, and much faster
+pd.read_sql(query, conn)
 ```
 
 Todos produzem o mesmo DataFrame, e tudo depois desta seção é igual seja qual for o que você usou.

@@ -1,16 +1,16 @@
 ---
 title: Greedy by default, and the character that fixes it
-version: 1
+version: 2
 ---
 
-```
-*        zero or more
-+        one or more
-?        zero or one
-{3}      exactly three
-{2,4}    two to four
-{2,}     two or more
-```
+| quantifier | how many |
+|---|---|
+| `*` | zero or more |
+| `+` | one or more |
+| `?` | zero or one |
+| `{3}` | exactly three |
+| `{2,4}` | two to four |
+| `{2,}` | two or more |
 
 Each applies to the thing immediately before it: `ab+` is an `a` and one or more `b`s;
 `(ab)+` is one or more `ab`s.

@@ -1,6 +1,6 @@
 ---
 title: The library with no annotations, and the ignore with a reason
-version: 1
+version: 2
 ---
 
 ```python

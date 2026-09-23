@@ -1,6 +1,6 @@
 ---
 title: Search and substitute, which is `sed` with a view
-version: 1
+version: 2
 ---
 
 ## Searching
@@ -85,7 +85,7 @@ learned something before you saved rather than after.
 The shape is the same as `sed`'s from lesson 8 section 13, with a range on the
 front:
 
-```
+```localised
 :[range]s/pattern/replacement/[flags]
 ```
 

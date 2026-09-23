@@ -1,6 +1,6 @@
 ---
 title: HAVING filtra grupos, WHERE filtra linhas
-version: 1
+version: 2
 ---
 
 Duas aulas prometeram esta seção, então aqui está a frase que elas prometiam:
@@ -68,7 +68,7 @@ filtro. Mudar onde uma condição fica muda o sentido, não o estilo.
 SELECT   customer_id, count(*)
 FROM     orders
 GROUP BY customer_id
-HAVING   customer_id <> 7;          -- funciona, e pertence ao WHERE
+HAVING   customer_id <> 7;          -- works, and belongs in WHERE
 ```
 
 Dá a resposta certa. Também agrupa cada um dos pedidos do cliente 7, calcula a contagem deles, e
@@ -97,7 +97,7 @@ pode devolver zero linhas, e é um truque útil para "me avise só se importar".
 SELECT   customer_id, count(*) AS orders
 FROM     orders
 GROUP BY customer_id
-HAVING   orders > 3;             -- MySQL e SQLite: sim.  PostgreSQL: erro.
+HAVING   orders > 3;             -- MySQL and SQLite: yes.  PostgreSQL: error.
 ```
 
 MySQL e SQLite deixam você nomear a coluna de saída. O PostgreSQL não, mesmo permitindo exatamente

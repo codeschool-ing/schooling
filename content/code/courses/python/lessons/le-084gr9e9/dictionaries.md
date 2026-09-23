@@ -1,6 +1,6 @@
 ---
 title: Keys to values, and the lookup that does not walk
-version: 1
+version: 2
 ---
 
 ```python

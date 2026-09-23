@@ -1,6 +1,6 @@
 ---
 title: `journalctl`, e um log que sobrevive ao reboot
-version: 1
+version: 2
 ---
 
 **Vale aqui o mesmo aviso da seção 10.** Esta máquina roda um supervisor de contêiner como processo
@@ -39,12 +39,12 @@ As duas metades são verdade. Ele está na sua máquina de qualquer jeito.
 ## As seis flags que fazem o trabalho
 
 ```
-journalctl -u nginx                     # um serviço
-journalctl -u nginx -f                  # e acompanhando, como um tail -f
-journalctl -u nginx -n 50               # as últimas 50 linhas
+journalctl -u nginx                     # one service
+journalctl -u nginx -f                  # and follow it, like tail -f
+journalctl -u nginx -n 50               # the last 50 lines
 journalctl -u nginx --since '1 hour ago'
-journalctl -u nginx -p err              # esta prioridade e piores
-journalctl -b                           # este boot, tudo, em ordem
+journalctl -u nginx -p err              # this priority and worse
+journalctl -b                           # this boot, everything, in order
 ```
 
 **`-u` e `-f` juntos são o par que você mais vai digitar.** Um terminal acompanhando o serviço,
@@ -66,8 +66,8 @@ outro provocando — a mesma forma do `tail -f` da seção 08 da aula 3, o que �
 ## O `-b` é o que as pessoas não conhecem
 
 ```
-journalctl -b        # este boot
-journalctl -b -1     # o boot anterior
+journalctl -b        # this boot
+journalctl -b -1     # the previous boot
 journalctl --list-boots
 ```
 
@@ -114,8 +114,8 @@ sudo systemctl restart systemd-journald
 ## Mais dois que vale ter
 
 ```
-journalctl -k                          # só mensagens do kernel — o dmesg, com horários legíveis
-journalctl -u nginx -o json-pretty     # cada campo de cada entrada
+journalctl -k                          # kernel messages only — dmesg, with timestamps you can read
+journalctl -u nginx -o json-pretty     # every field of every entry
 ```
 
 O `-o json-pretty` é o que prova o argumento do formato binário. Você recebe `_PID`, `_UID`,
@@ -128,8 +128,8 @@ Quatro comandos, nesta ordem, e eles são o diagnóstico comum inteiro:
 
 ```
 systemctl --failed
-systemctl status aquelesservico
-journalctl -u aquelesservico -n 50
+systemctl status thatservice
+journalctl -u thatservice -n 50
 journalctl -b -p err
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: `X | None`, and the union that is a smell
-version: 1
+version: 2
 ---
 
 ```python

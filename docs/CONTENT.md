@@ -219,6 +219,15 @@ A language nobody has taught it yet is a table entry in `RULES`: what starts a c
 quotes a string, and the words. Five hand-written expressions is what makes somebody skip it
 and ship a grey lesson, so the ones that are the same everywhere are not written again.
 
+**`localised` is not a language, and it is the one label a translation may change.** It marks a
+block that is laid out in mono and is not a program: an explanation whose columns matter, or a
+formula the software spells differently per locale. It is written in both files. `highlight()`
+draws it with no colours and its bar with no title, and `check-highlight` knows the name from
+the same constant, `LOCALISED` in `ui/app/text.js`. Every other fence in a `.pt.md` is compared
+with the `.md` byte for byte by `validate-content`, which also refuses `localised` on anything
+that looks like a capture. `docs/TEACHING.md`, "Code in a translation is the English code", says
+why.
+
 **A terminal recording carries no info string, and should not.** A transcript — a prompt, what
 the student typed, what the machine answered — is not written in a language, and calling it
 `sh` would be a claim about the output that is not true. The prompt is what marks it, and the

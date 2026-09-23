@@ -1,6 +1,6 @@
 ---
 title: Os atalhos: `.`, `..`, `~` e `-`
-version: 1
+version: 2
 ---
 
 Quatro atalhos aparecem em quase todo caminho que você vai digitar na vida. Dois deles são entradas
@@ -32,9 +32,9 @@ foram criadas por ninguém.
 "aqui" é um destino:
 
 ```
-cp ~/Downloads/report.csv .        # copie para cá
-tar -xzf backup.tar.gz -C .        # extraia aqui
-find . -name '*.log'               # procure daqui para baixo
+cp ~/Downloads/report.csv .        # copy it here
+tar -xzf backup.tar.gz -C .        # extract here
+find . -name '*.log'               # search from here down
 ```
 
 `..` é como se sobe, e ele se compõe:

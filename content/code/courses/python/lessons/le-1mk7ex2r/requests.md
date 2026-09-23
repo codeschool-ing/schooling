@@ -1,6 +1,6 @@
 ---
 title: `get`, the query string, `raise_for_status`, `json`, and the timeout
-version: 1
+version: 2
 ---
 
 ```python

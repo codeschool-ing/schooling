@@ -1,6 +1,6 @@
 ---
 title: `pyproject.toml`, and the per-module override
-version: 1
+version: 2
 ---
 
 ```toml

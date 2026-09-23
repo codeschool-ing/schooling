@@ -1,25 +1,25 @@
 ---
 title: A classe que era um nome e três campos
-version: 1
+version: 2
 ---
 
 ```python
 from dataclasses import dataclass
 
 @dataclass
-class Aluno:
-    nome: str
-    cidade: str
-    ano: int = 1
+class Student:
+    name: str
+    city: str
+    year: int = 1
 ```
 
 Isso escreve `__init__`, `__repr__` e `__eq__`. Os três, corretamente, a partir das anotações — e
 as anotações são a documentação de que a classe precisava de qualquer jeito.
 
 ```python
-ada = Aluno("Ada", "Porto")
-ada                      # Aluno(nome='Ada', cidade='Porto', ano=1)
-ada == Aluno("Ada", "Porto")     # True
+ada = Student("Ada", "Porto")
+ada                      # Student(name='Ada', city='Porto', year=1)
+ada == Student("Ada", "Porto")     # True
 ```
 
 Compare com as vinte linhas que isso substitui, três das quais são as que as pessoas erram.
@@ -30,12 +30,12 @@ Compare com as vinte linhas que isso substitui, três das quais são as que as p
 from dataclasses import field
 
 @dataclass
-class Aluno:
-    nome: str
-    notas: list = field(default_factory=list)
+class Student:
+    name: str
+    grades: list = field(default_factory=list)
 ```
 
-`notas: list = []` é recusado de saída — a maquinaria da dataclass levanta erro em vez de deixar o
+`grades: list = []` é recusado de saída — a maquinaria da dataclass levanta erro em vez de deixar o
 defeito do padrão compartilhado da aula 5 passar. O `default_factory` é chamado uma vez por
 instância, que é o que você queria.
 
@@ -46,7 +46,7 @@ corpo da classe é lido uma vez, então o engano é visível para o decorador.
 
 ```python
 @dataclass(frozen=True)
-class Ponto:
+class Point:
     x: int
     y: int
 ```
@@ -57,7 +57,7 @@ essa é a declaração inteira.
 
 ## As anotações não são conferidas
 
-`nome: str` é documentação em tempo de execução — nada impede `Aluno(3, 4)`. Um verificador de
+`name: str` é documentação em tempo de execução — nada impede `Student(3, 4)`. Um verificador de
 tipos a lê e reclama, que é a aula 17. A dataclass só usa a anotação para saber que o campo
 EXISTE.
 

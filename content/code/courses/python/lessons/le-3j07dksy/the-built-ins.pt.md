@@ -1,13 +1,13 @@
 ---
 title: Cinco tipos e um retorno que não é um valor
-version: 1
+version: 2
 ---
 
 ```python
-def carregar(caminho: str) -> bytes: ...
-def taxa(codigo: str) -> float: ...
-def valida(linha: dict) -> bool: ...
-def contar(itens: list) -> int: ...
+def load(path: str) -> bytes: ...
+def rate(code: str) -> float: ...
+def valid(row: dict) -> bool: ...
+def count(items: list) -> int: ...
 ```
 
 `int`, `str`, `bool`, `float`, `bytes` — a própria classe é a anotação. Não há o que importar nem
@@ -16,7 +16,7 @@ nada especial a aprender.
 ## `None` como retorno
 
 ```python
-def salvar(linhas: list) -> None:
+def save(rows: list) -> None:
     ...
 ```
 
@@ -29,8 +29,8 @@ Python devolve algo, e esta devolve `None`.
 ## `int` e `float`
 
 ```python
-def metade(n: float) -> float: ...
-metade(4)          # tudo bem
+def half(n: float) -> float: ...
+half(4)            # fine
 ```
 
 Um verificador aceita `int` em todo lugar em que `float` é pedido — um caso especial deliberado do
@@ -49,7 +49,7 @@ recusa `bytes`, que é exatamente o engano de fronteira daquela seção.
 ## E a anotação vazia
 
 ```python
-def f(x):          # sem anotação: o verificador não supõe nada
+def f(x):          # no annotation: the checker assumes nothing
 ```
 
 Um parâmetro sem anotação é `Any` para a maioria dos verificadores no modo padrão — o que quer

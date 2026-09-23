@@ -1,6 +1,6 @@
 ---
 title: "\"Depende de\": a única ferramenta por trás das três formas"
-version: 1
+version: 2
 ---
 
 Toda forma normal é enunciada em termos de uma ideia, e ela é mais simples que o nome dela. Se você
@@ -68,7 +68,7 @@ Uma **dependência transitiva** passa por uma coluna comum. A chave determina `t
 determina `teacher_room`, então a chave determina a sala *por meio da* professora. É isso que a
 **3FN** remove.
 
-```
+```localised
 chave  →  teacher  →  teacher_room
           └────── o passo que a torna transitiva
 ```

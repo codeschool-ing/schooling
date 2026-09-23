@@ -1,6 +1,6 @@
 ---
 title: Repetir, que é a metade que as pessoas deixam de fora
-version: 1
+version: 2
 ---
 
 Duas seções desta aula terminam com o banco recusando uma transação e lhe dizendo para rodá-la de
@@ -24,12 +24,12 @@ transação bem pode dar certo numa segunda tentativa.
 
 Igualmente importante é o que **não** está na lista:
 
-```
-23505  violação de unicidade         a linha é genuinamente duplicada — repetir insere de novo
-23503  violação de chave estrangeira o pai está genuinamente ausente
-23514  violação de check             o valor está genuinamente fora da faixa
-42601  erro de sintaxe               a consulta vai estar errada para sempre
-```
+| SQLSTATE | erro | por que outra tentativa falha igual |
+|---|---|---|
+| `23505` | violação de unicidade | a linha é genuinamente duplicada — repetir insere de novo |
+| `23503` | violação de chave estrangeira | o pai está genuinamente ausente |
+| `23514` | violação de check | o valor está genuinamente fora da faixa |
+| `42601` | erro de sintaxe | a consulta vai estar errada para sempre |
 
 Repetir um erro de classe 23 é um laço que roda até algo desistir. Repetir um `42` é um laço que não
 termina. **Repita pela classe, e não pelo fato de que algo falhou** — um `except: repita` em volta de
@@ -40,7 +40,7 @@ resposta está na seção anterior e não num laço.
 
 ## Repita a transação, não a instrução
 
-```
+```localised
 tentativa 1
     BEGIN
     SELECT …            ← os valores que esta tentativa leu
@@ -69,7 +69,7 @@ decide o que escrever, ele tem que ficar dentro da unidade repetível.
 
 ## O formato do laço
 
-```
+```localised
 para tentativa em 1 … 5:
     começa
     roda o trabalho, leituras e escritas

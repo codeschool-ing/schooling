@@ -1,6 +1,6 @@
 ---
 title: Holding one, rather than being one
-version: 1
+version: 2
 ---
 
 ```python
