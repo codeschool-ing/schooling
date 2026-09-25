@@ -34,8 +34,8 @@ an **8G disk** called `vda`, the overlay file, and a small `vdb`, the seed disk.
 Nothing in that list says "virtual" except the names, and a guest is not meant to be able to tell.
 The one line that does say it is `systemd-detect-virt`, which answered `qemu`: it looks for clues a
 hypervisor leaves, such as the maker's name in the firmware's tables. The `grep` also asked for
-`Hypervisor vendor` and `Virtualization type`, and `lscpu` printed neither, because QEMU's software
-processor did not announce itself. With KVM, lesson 2 shows it does.
+`Hypervisor vendor` and `Virtualization type`, and `lscpu` printed neither: they need the name of a
+hypervisor, and QEMU's software processor gives none. Lesson 2 shows a processor under KVM that does.
 
 **Everything you already know how to do on a Linux machine works here unchanged**: users, packages,
 services, logs, the network. A guest is somewhere to do those things where a

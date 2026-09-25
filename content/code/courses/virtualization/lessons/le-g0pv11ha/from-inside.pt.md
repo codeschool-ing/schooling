@@ -34,8 +34,9 @@ uma placa de rede, `enp1s0`, com o endereço `192.168.122.165`.
 Nada nessa lista diz "virtual", fora os nomes, e um convidado não foi feito para conseguir perceber. A
 única linha que diz é a do `systemd-detect-virt`, que respondeu `qemu`: ele procura pistas que um
 hypervisor deixa, como o nome do fabricante nas tabelas do firmware. O `grep` também pediu `Hypervisor
-vendor` e `Virtualization type`, e o `lscpu` não imprimiu nenhum dos dois, porque o processador em
-software do QEMU não se anunciou. Com KVM, a aula 2 mostra que se anuncia.
+vendor` e `Virtualization type`, e o `lscpu` não imprimiu nenhum dos dois: eles precisam do nome de
+um hypervisor, e o processador em software do QEMU não dá nenhum. A aula 2 mostra um processador sob
+KVM que dá.
 
 **Tudo o que você já sabe fazer numa máquina Linux funciona aqui sem mudança**: usuários, pacotes,
 serviços, logs, a rede. Um convidado é um lugar para fazer essas coisas onde um erro
