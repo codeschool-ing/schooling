@@ -36,12 +36,15 @@ wan      router   eth1 203.0.113.2/24
 wan      isp      eth0 203.0.113.1/24
 backbone isp      eth1 198.51.100.1/24
 backbone resolver eth0 198.51.100.53/24
+backbone home     eth0 198.51.100.77/24
 backbone core     eth0 198.51.100.254/24
 hosting  core     eth1 192.0.2.1/24
 hosting  rootns   eth0 192.0.2.10/24
 hosting  tldns    eth0 192.0.2.20/24
 hosting  ns1      eth0 192.0.2.53/24
 hosting  www      eth0 192.0.2.80/24
+hosting  mail     eth0 192.0.2.25/24
+hosting  netmail  eth0 192.0.2.26/24
 "
 #            host      gateway
 ROUTES="
@@ -49,11 +52,14 @@ laptop   192.168.10.1
 server   192.168.10.1
 router   203.0.113.1
 resolver 198.51.100.1
+home     198.51.100.1
 core     198.51.100.1
 rootns   192.0.2.1
 tldns    192.0.2.1
 ns1      192.0.2.1
 www      192.0.2.1
+mail     192.0.2.1
+netmail  192.0.2.1
 "
 HOSTS=$(echo "$LINKS" | awk 'NF{print $2}' | sort -u)
 ROUTERS="router isp core"
@@ -61,7 +67,8 @@ ROUTERS="router isp core"
 need() {
   local missing=()
   for p in iproute2 bind9 bind9-dnsutils unbound nginx openssl tcpdump traceroute mtr-tiny \
-           netcat-openbsd curl openssh-server nftables; do
+           netcat-openbsd curl openssh-server nftables vsftpd tnftp rsync \
+           postfix dovecot-imapd dovecot-pop3d opendkim opendkim-tools opendmarc swaks; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
@@ -125,7 +132,7 @@ NFT
 # ip netns exec already mounts /etc/netns/HOST/* over /etc/*. The rest of what
 # tells one machine from another lives under /lab/HOST and is mounted over the
 # real path when something runs "on" that host.
-OVERLAY="home etc/bind var/cache/bind run/named etc/unbound etc/nginx var/www var/log/nginx etc/ssh etc/ssl/private"
+OVERLAY="home etc/bind var/cache/bind run/named etc/unbound etc/nginx var/www var/log/nginx etc/ssh var/log/ssh etc/ssl/private etc/vsftpd.conf etc/postfix var/spool/postfix var/lib/postfix etc/dovecot etc/opendkim etc/opendkim.conf etc/opendmarc.conf var/log/mail"
 overlay() {
   local h=$1 p
   for p in $OVERLAY; do
@@ -252,7 +259,15 @@ Z
 @            MX     10 mail.example.net.
 @            TXT    "v=spf1 mx -all"
 mail         A      192.0.2.26
+_dmarc       TXT    "v=DMARC1; p=reject; rua=mailto:dmarc@example.net"
 Z
+  # DKIM: each domain's public key, published under the selector "mail".
+  local d
+  for d in example.com example.net; do
+    mkdir -p "$LAB/dkim/$d"
+    opendkim-genkey -b 2048 -d "$d" -s mail -D "$LAB/dkim/$d"
+    cat "$LAB/dkim/$d/mail.txt" >> "$LAB/ns1/etc/bind/db.$d"
+  done
   zone ns1 2.0.192.in-addr.arpa. <<Z
 \$TTL 3600
 @            SOA    ns1.example.com. hostmaster.example.com. $SERIAL 3600 900 1209600 300
@@ -473,6 +488,181 @@ build_ssh() {
   sshd_conf server 192.168.10.10
   sshd_conf www 192.0.2.80
   echo 'ana:office-2026' | chpasswd
+  # sshd writes its log to a file of each machine's own, because the lab's
+  # machines share one journal; and no welcome banner, to keep sessions short.
+  mkdir -p /var/log/ssh "$LAB/server/var/log/ssh" "$LAB/www/var/log/ssh"
+  sed -i 's/^\(session.*pam_motd.so.*\)$/# \1/' /etc/pam.d/sshd
+  # The web server accepts SSH only from the office's public address.
+  ip netns exec www nft -f - <<'NFT'
+table inet ssh-guard {
+  chain input {
+    type filter hook input priority 0;
+    tcp dport 22 ip saddr != 203.0.113.2 drop
+  }
+}
+NFT
+  # An admin page on the office server that listens only on the server itself.
+  mkdir -p "$LAB/server/var/www/admin"
+  printf '<h1>Office server: backups</h1>\n<p>Last backup: finished.</p>\n' > "$LAB/server/var/www/admin/index.html"
+}
+
+# -------------------------------------------------------------- file transfer
+build_files() {
+  # The hosting account that owns the website: whoever logs in as it by FTP
+  # lands in the site's own directory, and what they upload is what is served.
+  id example >/dev/null 2>&1 || useradd -M -d /var/www/example -s /bin/bash example
+  echo 'example:Sunflower-77' | chpasswd
+  chown -R example:example "$LAB/www/var/www/example"
+  mkdir -p /var/run/vsftpd/empty
+  cat > "$LAB/www/etc/vsftpd.conf" <<'C'
+listen=YES
+listen_address=192.0.2.80
+listen_ipv6=NO
+background=NO
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+chroot_local_user=YES
+allow_writeable_chroot=YES
+pasv_min_port=40000
+pasv_max_port=40009
+secure_chroot_dir=/var/run/vsftpd/empty
+pam_service_name=vsftpd
+seccomp_sandbox=NO
+xferlog_enable=YES
+ssl_enable=YES
+rsa_cert_file=/etc/ssl/private/example.com.crt
+rsa_private_key_file=/etc/ssl/private/example.com.key
+allow_anon_ssl=NO
+force_local_logins_ssl=NO
+force_local_data_ssl=NO
+require_ssl_reuse=NO
+C
+  # The office scanner drops its scans on the server by SFTP, and may do
+  # nothing else: no shell, and no view of anything above its own folder.
+  id scans >/dev/null 2>&1 || useradd -M -d /srv/scans -s /bin/bash scans
+  echo 'scans:scanner-2026' | chpasswd
+  mkdir -p /srv/scans/inbox; chown root:root /srv/scans; chmod 755 /srv/scans
+  chown scans:scans /srv/scans/inbox
+  cat >> "$LAB/server/etc/ssh/sshd_config" <<'C'
+Match User scans
+    ForceCommand internal-sftp
+    ChrootDirectory /srv/scans
+    AllowTcpForwarding no
+C
+}
+
+# ----------------------------------------------------------------------- mail
+# One mail server per domain: Postfix takes mail in on 25 and from the
+# domain's own people on 587; Dovecot hands it to them over IMAP and POP3;
+# OpenDKIM signs what leaves and checks what arrives; OpenDMARC checks SPF
+# and applies the sender's DMARC policy.
+mail_host() {  # mail_host HOST DOMAIN ADDRESS
+  local h=$1 d=$2 a=$3 r="$LAB/$1"
+  mkdir -p "$r/etc/postfix" "$r/var/spool/postfix" "$r/var/lib/postfix" "$r/etc/dovecot" \
+           "$r/etc/opendkim" "$r/var/log/mail" "$r/etc/ssl/private"
+  cp -a /etc/postfix/. "$r/etc/postfix/"
+  cp -a /var/spool/postfix/. "$r/var/spool/postfix/"
+  chown postfix:postfix "$r/var/lib/postfix"
+  cert "mail.$d" 90 "mail.$d"
+  cp "$LAB/ca/mail.$d.chain" "$r/etc/ssl/private/mail.crt"; cp "$LAB/ca/mail.$d.key" "$r/etc/ssl/private/mail.key"
+  chmod 600 "$r/etc/ssl/private/mail.key"
+  cat > "$r/etc/postfix/main.cf" <<C
+compatibility_level = 3.6
+myhostname = mail.$d
+mydomain = $d
+myorigin = \$mydomain
+mydestination = \$mydomain, localhost
+inet_interfaces = $a, 127.0.0.1
+inet_protocols = ipv4
+mynetworks = 127.0.0.0/8
+home_mailbox = Maildir/
+alias_maps =
+alias_database =
+smtpd_banner = \$myhostname ESMTP
+biff = no
+maillog_file = /var/log/mail/postfix.log
+smtpd_tls_cert_file = /etc/ssl/private/mail.crt
+smtpd_tls_key_file = /etc/ssl/private/mail.key
+smtpd_tls_security_level = may
+smtp_tls_security_level = may
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination
+milter_default_action = accept
+smtpd_milters = inet:127.0.0.1:8891, inet:127.0.0.1:8893
+non_smtpd_milters = inet:127.0.0.1:8891
+C
+  postconf -c "$r/etc/postfix" -F '*/*/chroot = n'
+  postconf -c "$r/etc/postfix" -M 'submission/inet=submission inet n - n - - smtpd'
+  postconf -c "$r/etc/postfix" -P 'submission/inet/syslog_name=postfix/submission' \
+    'submission/inet/smtpd_tls_security_level=encrypt' 'submission/inet/smtpd_sasl_auth_enable=yes' \
+    'submission/inet/smtpd_relay_restrictions=permit_sasl_authenticated,reject' \
+    'submission/inet/milter_macro_daemon_name=ORIGINATING'
+  cat > "$r/etc/dovecot/dovecot.conf" <<C
+protocols = imap pop3
+listen = $a
+instance_name = dovecot-$h
+base_dir = /run/dovecot-$h
+log_path = /var/log/mail/dovecot.log
+ssl = required
+ssl_cert = </etc/ssl/private/mail.crt
+ssl_key = </etc/ssl/private/mail.key
+auth_mechanisms = plain login
+mail_location = maildir:~/Maildir
+first_valid_uid = 1000
+passdb {
+  driver = pam
+}
+userdb {
+  driver = passwd
+}
+service auth {
+  unix_listener /var/spool/postfix/private/auth {
+    mode = 0660
+    user = postfix
+    group = postfix
+  }
+}
+C
+  cp "$LAB/dkim/$d/mail.private" "$r/etc/opendkim/mail.private"
+  chown opendkim:opendkim "$r/etc/opendkim/mail.private"; chmod 600 "$r/etc/opendkim/mail.private"
+  cat > "$r/etc/opendkim.conf" <<C
+Syslog yes
+SyslogSuccess yes
+LogWhy yes
+Mode sv
+Domain $d
+Selector mail
+KeyFile /etc/opendkim/mail.private
+Socket inet:8891@127.0.0.1
+PidFile /run/opendkim-$h.pid
+UserID opendkim
+Nameservers 198.51.100.53
+C
+  cat > "$r/etc/opendmarc.conf" <<C
+Syslog false
+Socket inet:8893@127.0.0.1
+PidFile /run/opendmarc-$h.pid
+UserID opendmarc
+AuthservID mail.$d
+TrustedAuthservIDs mail.$d
+RejectFailures true
+SPFSelfValidate true
+SPFIgnoreResults true
+IgnoreAuthenticatedClients true
+C
+}
+build_mail() {
+  mkdir -p /etc/opendkim /var/log/mail
+  id bruno >/dev/null 2>&1 || useradd -M -s /bin/bash bruno
+  echo 'bruno:Oak-leaf-51' | chpasswd
+  mkdir -p "$LAB/netmail/home/bruno"; cp -a /etc/skel/. "$LAB/netmail/home/bruno/"
+  chown -R bruno:bruno "$LAB/netmail/home/bruno"; chmod 750 "$LAB/netmail/home/bruno"
+  mail_host mail example.com 192.0.2.25
+  mail_host netmail example.net 192.0.2.26
 }
 
 # --------------------------------------------------------------------- start
@@ -484,8 +674,16 @@ start() {
   daemon resolver "unbound -c /etc/unbound/unbound.conf"
   daemon www "nginx"
   mkdir -p /run/sshd
-  daemon server "/usr/sbin/sshd -f /etc/ssh/sshd_config"
-  daemon www "/usr/sbin/sshd -f /etc/ssh/sshd_config"
+  daemon server "/usr/sbin/sshd -f /etc/ssh/sshd_config -E /var/log/ssh/sshd.log"
+  daemon www "/usr/sbin/sshd -f /etc/ssh/sshd_config -E /var/log/ssh/sshd.log"
+  daemon server "python3 -m http.server --bind 127.0.0.1 --directory /var/www/admin 8080"
+  daemon www "vsftpd /etc/vsftpd.conf"
+  for h in mail netmail; do
+    daemon "$h" "opendkim -x /etc/opendkim.conf -f"
+    daemon "$h" "opendmarc -c /etc/opendmarc.conf -f"
+    daemon "$h" "dovecot -F -c /etc/dovecot/dovecot.conf"
+    exec_on "$h" root "postfix start" >/dev/null 2>&1
+  done
   # Wait until the resolver can answer, so the first lesson line is not a timeout.
   for _ in $(seq 50); do
     exec_on laptop ana 'dig +short +time=1 +tries=1 www.example.com' 2>/dev/null | grep -q . && break
@@ -518,7 +716,27 @@ up() {
   build_tls
   build_web
   build_ssh
+  build_files
+  build_mail
   start
+}
+
+# A device plugged into a segment of a running lab, with a MAC given by hand
+# rather than derived from its address: lesson 10's printer, which takes an
+# address somebody else already has.
+plug() {  # plug HOST SEGMENT ADDRESS/PREFIX MAC
+  local h=$1 seg=$2 addr=$3 m=$4 peer="${2:0:1}-$1"
+  ip netns add "$h"
+  ip -n "$h" link set lo up
+  ip link add "$peer" type veth peer name lab-plug
+  ip link set lab-plug netns "$h"
+  ip -n "$h" link set lab-plug name eth0
+  ip -n "$h" link set eth0 address "$m"
+  ip -n "$h" addr add "$addr" dev eth0
+  ip -n "$h" link set eth0 up
+  ip link set "$peer" netns wire
+  ip -n wire link set "$peer" master "br-$seg"
+  ip -n wire link set "$peer" up
 }
 
 case "${1:-}" in
@@ -526,5 +744,6 @@ case "${1:-}" in
   down) down ;;
   reset) down; up ;;
   exec) shift; exec_on "$@" ;;
-  *) echo "usage: lab.sh up|down|reset|exec HOST USER COMMAND" >&2; exit 2 ;;
+  plug) shift; plug "$@" ;;
+  *) echo "usage: lab.sh up|down|reset|exec HOST USER COMMAND|plug HOST SEGMENT ADDRESS MAC" >&2; exit 2 ;;
 esac
