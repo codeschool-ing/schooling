@@ -12,6 +12,11 @@
 # starts it), curl, netcat-openbsd and tcpdump. The guests have no internet,
 # so they could not have been installed later.
 #
+# THE BASE DISK IS READ-ONLY (chmod 444), and that is not tidiness. Every guest
+# reads from it, so one write into it changes every guest at once, and there
+# is a command that does exactly that by default: lesson 9 shows it failing
+# against this file, which is the only reason it fails.
+#
 # THE COMPUTER THE LAB WAS RECORDED ON IS ITSELF A VIRTUAL MACHINE, WITH NO
 # NESTED VIRTUALISATION: there is no /dev/kvm, and QEMU emulates the guests'
 # processor in software. Everything works; it is slower, and lesson 2 measures
@@ -38,6 +43,7 @@ need() {
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
   [ -f "$BASE" ] || { echo "no base disk at $BASE" >&2; exit 1; }
+  chmod 444 "$BASE"
 }
 
 up() {
@@ -104,7 +110,8 @@ vm() {  # vm NAME [NETWORK] [MEMORY_MB] [VCPUS]
 rm_vm() {
   virsh destroy "$1" >/dev/null 2>&1 || true
   virsh undefine "$1" --snapshots-metadata >/dev/null 2>&1 || virsh undefine "$1" >/dev/null 2>&1 || true
-  rm -f "$IMAGES/$1.qcow2" "$IMAGES/$1-seed.img"
+  # the disk, the seed, and any external snapshot layered on the disk (NAME.something)
+  rm -f "$IMAGES/$1.qcow2" "$IMAGES/$1-seed.img" "$IMAGES/$1".*
   sed -i "/ $1\$/d" /etc/hosts
 }
 
