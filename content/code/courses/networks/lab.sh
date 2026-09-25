@@ -36,6 +36,7 @@ wan      router   eth1 203.0.113.2/24
 wan      isp      eth0 203.0.113.1/24
 backbone isp      eth1 198.51.100.1/24
 backbone resolver eth0 198.51.100.53/24
+backbone home     eth0 198.51.100.77/24
 backbone core     eth0 198.51.100.254/24
 hosting  core     eth1 192.0.2.1/24
 hosting  rootns   eth0 192.0.2.10/24
@@ -49,6 +50,7 @@ laptop   192.168.10.1
 server   192.168.10.1
 router   203.0.113.1
 resolver 198.51.100.1
+home     198.51.100.1
 core     198.51.100.1
 rootns   192.0.2.1
 tldns    192.0.2.1
@@ -125,7 +127,7 @@ NFT
 # ip netns exec already mounts /etc/netns/HOST/* over /etc/*. The rest of what
 # tells one machine from another lives under /lab/HOST and is mounted over the
 # real path when something runs "on" that host.
-OVERLAY="home etc/bind var/cache/bind run/named etc/unbound etc/nginx var/www var/log/nginx etc/ssh etc/ssl/private"
+OVERLAY="home etc/bind var/cache/bind run/named etc/unbound etc/nginx var/www var/log/nginx etc/ssh var/log/ssh etc/ssl/private"
 overlay() {
   local h=$1 p
   for p in $OVERLAY; do
@@ -473,6 +475,22 @@ build_ssh() {
   sshd_conf server 192.168.10.10
   sshd_conf www 192.0.2.80
   echo 'ana:office-2026' | chpasswd
+  # sshd writes its log to a file of each machine's own, because the lab's
+  # machines share one journal; and no welcome banner, to keep sessions short.
+  mkdir -p /var/log/ssh "$LAB/server/var/log/ssh" "$LAB/www/var/log/ssh"
+  sed -i 's/^\(session.*pam_motd.so.*\)$/# \1/' /etc/pam.d/sshd
+  # The web server accepts SSH only from the office's public address.
+  ip netns exec www nft -f - <<'NFT'
+table inet ssh-guard {
+  chain input {
+    type filter hook input priority 0;
+    tcp dport 22 ip saddr != 203.0.113.2 drop
+  }
+}
+NFT
+  # An admin page on the office server that listens only on the server itself.
+  mkdir -p "$LAB/server/var/www/admin"
+  printf '<h1>Office server: backups</h1>\n<p>Last backup: finished.</p>\n' > "$LAB/server/var/www/admin/index.html"
 }
 
 # --------------------------------------------------------------------- start
@@ -484,8 +502,9 @@ start() {
   daemon resolver "unbound -c /etc/unbound/unbound.conf"
   daemon www "nginx"
   mkdir -p /run/sshd
-  daemon server "/usr/sbin/sshd -f /etc/ssh/sshd_config"
-  daemon www "/usr/sbin/sshd -f /etc/ssh/sshd_config"
+  daemon server "/usr/sbin/sshd -f /etc/ssh/sshd_config -E /var/log/ssh/sshd.log"
+  daemon www "/usr/sbin/sshd -f /etc/ssh/sshd_config -E /var/log/ssh/sshd.log"
+  daemon server "python3 -m http.server --bind 127.0.0.1 --directory /var/www/admin 8080"
   # Wait until the resolver can answer, so the first lesson line is not a timeout.
   for _ in $(seq 50); do
     exec_on laptop ana 'dig +short +time=1 +tries=1 www.example.com' 2>/dev/null | grep -q . && break
