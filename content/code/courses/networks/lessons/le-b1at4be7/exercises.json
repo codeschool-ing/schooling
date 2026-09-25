@@ -1,0 +1,1006 @@
+[
+  {
+    "id": "ex-fc17dj5p",
+    "version": 1,
+    "section": "what-a-certificate-says",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each certificate field to what it says.",
+    "hint": "openssl x509 printed them.",
+    "pairs": [
+      {
+        "left": "subject",
+        "right": "Who it is about"
+      },
+      {
+        "left": "issuer",
+        "right": "Who signed it"
+      },
+      {
+        "left": "notAfter",
+        "right": "When it stops being valid"
+      },
+      {
+        "left": "Subject Alternative Name",
+        "right": "The names it covers"
+      }
+    ],
+    "right_distractors": [
+      "The server's password"
+    ]
+  },
+  {
+    "id": "ex-83tsb3tk",
+    "version": 1,
+    "section": "what-a-certificate-says",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which field do clients actually check the name against?",
+    "hint": "Section 02.",
+    "choices": [
+      {
+        "text": "The common name",
+        "correct": false,
+        "why": "Kept for people to read."
+      },
+      {
+        "text": "The issuer",
+        "correct": false,
+        "why": "That names the signer."
+      },
+      {
+        "text": "The serial number",
+        "correct": false,
+        "why": "That identifies the certificate."
+      },
+      {
+        "text": "Subject Alternative Name",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4afns5z0",
+    "version": 1,
+    "section": "what-a-certificate-says",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many names did www.example.com's certificate cover?",
+    "hint": "Count the DNS: entries.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-cje70kxr",
+    "version": 1,
+    "section": "what-a-certificate-says",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server's private key is copied by an attacker. What is the fix?",
+    "hint": "The certificate is public anyway.",
+    "choices": [
+      {
+        "text": "A new key and a new certificate",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Change the server's password",
+        "correct": false,
+        "why": "The key is what proves ownership."
+      },
+      {
+        "text": "Restart nginx",
+        "correct": false,
+        "why": "It would load the same key."
+      },
+      {
+        "text": "Nothing; the certificate is still valid",
+        "correct": false,
+        "why": "That is exactly the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2p5rxx0",
+    "version": 1,
+    "section": "what-a-certificate-says",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does CA:FALSE in www.example.com's certificate forbid?",
+    "hint": "Basic Constraints.",
+    "choices": [
+      {
+        "text": "Signing other certificates",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Serving HTTPS",
+        "correct": false,
+        "why": "That is what it is for."
+      },
+      {
+        "text": "Being renewed",
+        "correct": false,
+        "why": "Renewal is a new certificate."
+      },
+      {
+        "text": "Covering more than one name",
+        "correct": false,
+        "why": "It covers three."
+      }
+    ]
+  },
+  {
+    "id": "ex-ne0snx0a",
+    "version": 1,
+    "section": "chain-of-trust",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the chain in order, from the certificate the server presents up to the root.",
+    "hint": "depth 0 to depth 2.",
+    "items": [
+      "www.example.com",
+      "Example Issuing CA 1",
+      "Example Root CA"
+    ],
+    "trap": "The root sits at the top, and the client already has it; the server's own certificate is at depth 0."
+  },
+  {
+    "id": "ex-vgm7xas4",
+    "version": 1,
+    "section": "chain-of-trust",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the server not send the root certificate?",
+    "hint": "Where does trust start?",
+    "choices": [
+      {
+        "text": "It is too big to send",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "The root is secret",
+        "correct": false,
+        "why": "Its certificate is public; its key is secret."
+      },
+      {
+        "text": "TLS 1.3 forbids it",
+        "correct": false,
+        "why": "It is pointless, not forbidden."
+      },
+      {
+        "text": "The client must already have it",
+        "correct": true,
+        "why": "Right. A root sent by the server proves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-440n1epf",
+    "version": 1,
+    "section": "chain-of-trust",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do certificate authorities sign sites with an intermediate rather than the root?",
+    "hint": "The root's key.",
+    "choices": [
+      {
+        "text": "Intermediates are faster to check",
+        "correct": false,
+        "why": "Speed is not it."
+      },
+      {
+        "text": "The root's key stays offline",
+        "correct": true,
+        "why": "Right. A bad intermediate can be replaced."
+      },
+      {
+        "text": "Browsers refuse roots",
+        "correct": false,
+        "why": "Roots are what browsers trust."
+      },
+      {
+        "text": "It makes certificates cheaper",
+        "correct": false,
+        "why": "The reason is the root's key."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zrxbk44",
+    "version": 1,
+    "section": "chain-of-trust",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each prefix in openssl s_client's chain to what it names.",
+    "hint": "0 s:, i:.",
+    "pairs": [
+      {
+        "left": "s:",
+        "right": "The certificate's subject"
+      },
+      {
+        "left": "i:",
+        "right": "Who issued it"
+      },
+      {
+        "left": "depth=",
+        "right": "How far from the site"
+      }
+    ],
+    "right_distractors": [
+      "The certificate's price"
+    ]
+  },
+  {
+    "id": "ex-9mwzqzak",
+    "version": 1,
+    "section": "chain-of-trust",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A chain that checks out ends with Verify return code: ___ (ok)",
+    "hint": "The lowest number.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4h4t4cxh",
+    "version": 1,
+    "section": "trust-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes Example Root CA a root?",
+    "hint": "Compare subject and issuer.",
+    "choices": [
+      {
+        "text": "It is the oldest certificate in the store",
+        "correct": false,
+        "why": "Age does not make a root."
+      },
+      {
+        "text": "Its name ends in Root CA",
+        "correct": false,
+        "why": "The name is only a name."
+      },
+      {
+        "text": "It signed itself",
+        "correct": true,
+        "why": "Right. Subject and issuer are the same."
+      },
+      {
+        "text": "It is valid for ten years",
+        "correct": false,
+        "why": "Long validity is common, not defining."
+      }
+    ]
+  },
+  {
+    "id": "ex-bq5pbbqe",
+    "version": 1,
+    "section": "trust-store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A site works in Chrome and fails in a Java program on the same PC. What should Ana compare first?",
+    "hint": "Section 04's last sentence.",
+    "choices": [
+      {
+        "text": "The two programs' DNS",
+        "correct": false,
+        "why": "Both reached the site."
+      },
+      {
+        "text": "The two trust stores",
+        "correct": true,
+        "why": "Right. Java often carries its own."
+      },
+      {
+        "text": "The PC's clock only",
+        "correct": false,
+        "why": "Both would see the same clock."
+      },
+      {
+        "text": "The Wi-Fi",
+        "correct": false,
+        "why": "The network is shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-cf8ywsrv",
+    "version": 1,
+    "section": "trust-store",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Ubuntu, the trusted root certificates live in /etc/ssl/___",
+    "hint": "The folder ls counted.",
+    "blanks": [
+      {
+        "accept": [
+          "certs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mkkfk0t7",
+    "version": 1,
+    "section": "trust-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Ubuntu, how does the list of trusted roots change over time?",
+    "hint": "A package.",
+    "choices": [
+      {
+        "text": "Each site sends its root",
+        "correct": false,
+        "why": "Roots must already be there."
+      },
+      {
+        "text": "It never changes",
+        "correct": false,
+        "why": "It follows Mozilla's list."
+      },
+      {
+        "text": "The router pushes it",
+        "correct": false,
+        "why": "Routers have nothing to do with it."
+      },
+      {
+        "text": "Package updates",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yfjzmg9",
+    "version": 1,
+    "section": "getting-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is sent to a certificate authority to ask for a certificate?",
+    "hint": "Not the key.",
+    "choices": [
+      {
+        "text": "The private key",
+        "correct": false,
+        "why": "It never leaves the server."
+      },
+      {
+        "text": "A CSR",
+        "correct": true,
+        "why": "Right. Public key and names, signed."
+      },
+      {
+        "text": "The server's password",
+        "correct": false,
+        "why": "Nobody needs that."
+      },
+      {
+        "text": "The old certificate",
+        "correct": false,
+        "why": "A new request is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-rx92kcvm",
+    "version": 1,
+    "section": "getting-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "files.key was created -rw-------. Why does that matter?",
+    "hint": "Who may read it.",
+    "choices": [
+      {
+        "text": "It makes the certificate valid",
+        "correct": false,
+        "why": "Permissions do not sign anything."
+      },
+      {
+        "text": "Nobody else reads it",
+        "correct": true,
+        "why": "Right. It is the secret."
+      },
+      {
+        "text": "It lets nginx run faster",
+        "correct": false,
+        "why": "Speed is unrelated."
+      },
+      {
+        "text": "It hides the CSR",
+        "correct": false,
+        "why": "The CSR is -rw-r--r--."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cp1q0t8",
+    "version": 1,
+    "section": "getting-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does an ACME http-01 check prove?",
+    "hint": "A token on the site.",
+    "choices": [
+      {
+        "text": "You are the company named on the invoice",
+        "correct": false,
+        "why": "It checks control, not identity."
+      },
+      {
+        "text": "The server has no viruses",
+        "correct": false,
+        "why": "Not its business."
+      },
+      {
+        "text": "You control the name's server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The site is fast enough",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j5wc5tb",
+    "version": 1,
+    "section": "getting-one",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dns-01 check asks for a TXT record at ___.www.example.com",
+    "hint": "Starts with an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "_acme-challenge"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dhnhyft2",
+    "version": 1,
+    "section": "getting-one",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For how many days does Let's Encrypt issue a certificate, like the lab's?",
+    "hint": "Section 05.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-8s4s6s7h",
+    "version": 1,
+    "section": "getting-one",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of getting a certificate in order.",
+    "hint": "The key first.",
+    "items": [
+      "Make a private key on the server",
+      "Make a CSR from it",
+      "Prove control of the name",
+      "Install the issued certificate with its chain"
+    ],
+    "trap": "The CSR cannot come first: it is signed with the key, so the key has to exist."
+  },
+  {
+    "id": "ex-w29p0t6d",
+    "version": 1,
+    "section": "four-failures",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each curl message to its failure.",
+    "hint": "Section 06's table.",
+    "pairs": [
+      {
+        "left": "certificate has expired",
+        "right": "The dates are past"
+      },
+      {
+        "left": "self-signed certificate",
+        "right": "Nobody vouched for it"
+      },
+      {
+        "left": "no alternative certificate subject name matches",
+        "right": "The name is not in the SAN"
+      },
+      {
+        "left": "unable to get local issuer certificate",
+        "right": "The chain does not reach a trusted root"
+      }
+    ],
+    "right_distractors": [
+      "The port is closed"
+    ]
+  },
+  {
+    "id": "ex-1ykrsjva",
+    "version": 1,
+    "section": "four-failures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A site works in the office's browser and fails in curl and on phones with unable to get local issuer certificate. What is the likely cause?",
+    "hint": "Some browsers fill the gap.",
+    "choices": [
+      {
+        "text": "The certificate expired",
+        "correct": false,
+        "why": "That message would say expired."
+      },
+      {
+        "text": "The server leaves out the intermediate",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Phones use a different DNS server",
+        "correct": false,
+        "why": "They reached the server."
+      },
+      {
+        "text": "curl is out of date",
+        "correct": false,
+        "why": "Phones fail too."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pmwmsa8",
+    "version": 1,
+    "section": "four-failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A log shows Verify return code: 10. What happened?",
+    "hint": "verify-codes.",
+    "choices": [
+      {
+        "text": "It was self-signed",
+        "correct": false,
+        "why": "That is 18."
+      },
+      {
+        "text": "The intermediate was missing",
+        "correct": false,
+        "why": "That is 21."
+      },
+      {
+        "text": "The certificate expired",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Everything checked out",
+        "correct": false,
+        "why": "That is 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-7crdtzmy",
+    "version": 1,
+    "section": "four-failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague suggests curl -k to get past a certificate error. Why not?",
+    "hint": "What does the check protect?",
+    "choices": [
+      {
+        "text": "It disables the impostor check",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It makes the download slower",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "It deletes the certificate",
+        "correct": false,
+        "why": "It only skips checking it."
+      },
+      {
+        "text": "It only works on Windows and old systems",
+        "correct": false,
+        "why": "It works everywhere; that is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhfwg3fz",
+    "version": 1,
+    "section": "four-failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did curl --resolve wrong.example.com:443:192.0.2.80 do?",
+    "hint": "It skipped something.",
+    "choices": [
+      {
+        "text": "Created a DNS record for wrong.example.com",
+        "correct": false,
+        "why": "Nothing was created."
+      },
+      {
+        "text": "Fixed the certificate for that name",
+        "correct": false,
+        "why": "It failed."
+      },
+      {
+        "text": "Turned off checking",
+        "correct": false,
+        "why": "The check is what failed."
+      },
+      {
+        "text": "Skipped DNS for that name",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-w58yj107",
+    "version": 1,
+    "section": "internal-ca",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before installing the office CA, what should be compared with a copy obtained another way?",
+    "hint": "The SHA-256 of the certificate.",
+    "choices": [
+      {
+        "text": "Its fingerprint",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Its file size",
+        "correct": false,
+        "why": "Two certificates can share a size."
+      },
+      {
+        "text": "Its file name",
+        "correct": false,
+        "why": "Anyone can rename a file."
+      },
+      {
+        "text": "The date it was emailed",
+        "correct": false,
+        "why": "Proves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd2trxx7",
+    "version": 1,
+    "section": "internal-ca",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is installing a root certificate a serious decision?",
+    "hint": "What can a root vouch for?",
+    "choices": [
+      {
+        "text": "It slows down every connection",
+        "correct": false,
+        "why": "Speed is unaffected."
+      },
+      {
+        "text": "It makes all the other roots expire",
+        "correct": false,
+        "why": "Others are untouched."
+      },
+      {
+        "text": "It needs a licence",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "It vouches for any name",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqnf63f7",
+    "version": 1,
+    "section": "internal-ca",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After copying a root into the local CA folder, run update-ca-___ to rebuild the bundle.",
+    "hint": "A plural.",
+    "blanks": [
+      {
+        "accept": [
+          "certificates"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r95gmg4c",
+    "version": 1,
+    "section": "internal-ca",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a company proxy that inspects HTTPS avoid certificate errors on its laptops?",
+    "hint": "It makes certificates on the fly.",
+    "choices": [
+      {
+        "text": "Its root is on every laptop",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It has the sites' private keys",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "It turns TLS off for the laptops",
+        "correct": false,
+        "why": "The laptops still use HTTPS."
+      },
+      {
+        "text": "Browsers trust all proxies",
+        "correct": false,
+        "why": "Only in their roots."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5k7mxkb",
+    "version": 1,
+    "section": "expiry",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "-checkend 2592000 asks about how many days from now?",
+    "hint": "Divide by 86400.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-mh4ayxwv",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The renewed certificate is on disk, and the site still shows the old one expiring. Why?",
+    "hint": "What is served.",
+    "choices": [
+      {
+        "text": "The CA revoked it",
+        "correct": false,
+        "why": "Nothing says so."
+      },
+      {
+        "text": "DNS is stale",
+        "correct": false,
+        "why": "The same server answers."
+      },
+      {
+        "text": "The server was not reloaded",
+        "correct": true,
+        "why": "Right. It still holds the old one."
+      },
+      {
+        "text": "The disk is full",
+        "correct": false,
+        "why": "The file was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fry4g12",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is -checkend useful in a scheduled task?",
+    "hint": "It exits with a status.",
+    "choices": [
+      {
+        "text": "Its exit status",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It renews the certificate",
+        "correct": false,
+        "why": "It only checks."
+      },
+      {
+        "text": "It changes the date",
+        "correct": false,
+        "why": "It reads the date."
+      },
+      {
+        "text": "It restarts nginx",
+        "correct": false,
+        "why": "It only checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wb28t9q",
+    "version": 1,
+    "section": "other-systems",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to what it opens.",
+    "hint": "Section 09.",
+    "pairs": [
+      {
+        "left": "certlm.msc",
+        "right": "The Windows computer's stores"
+      },
+      {
+        "left": "certmgr.msc",
+        "right": "The Windows user's stores"
+      },
+      {
+        "left": "Keychain Access",
+        "right": "The Mac's keychains"
+      }
+    ],
+    "right_distractors": [
+      "The router's firmware"
+    ]
+  },
+  {
+    "id": "ex-0n4mve53",
+    "version": 1,
+    "section": "other-systems",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an office with a Windows domain, how does the office CA usually reach every PC?",
+    "hint": "Nobody installs it by hand.",
+    "choices": [
+      {
+        "text": "Windows Update",
+        "correct": false,
+        "why": "That updates Microsoft's list."
+      },
+      {
+        "text": "Each user downloads it",
+        "correct": false,
+        "why": "That is the manual way."
+      },
+      {
+        "text": "Group Policy",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "DNS",
+        "correct": false,
+        "why": "DNS carries no certificates here."
+      }
+    ]
+  },
+  {
+    "id": "ex-9266zbjf",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A site shows a certificate error. Put Ana's checks in order.",
+    "hint": "Read, then look.",
+    "items": [
+      "Read the exact error",
+      "Check the dates",
+      "Check the names in the SAN",
+      "Check the chain the server sends"
+    ],
+    "trap": "Checking the chain before reading the error wastes time: the message already says which of the four it is."
+  },
+  {
+    "id": "ex-29y2fv7g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One PC calls every site's certificate expired or not yet valid. What should Ana check first?",
+    "hint": "Every site at once.",
+    "choices": [
+      {
+        "text": "Each site's certificate",
+        "correct": false,
+        "why": "They cannot all be wrong at once."
+      },
+      {
+        "text": "The PC's date and time",
+        "correct": true,
+        "why": "Right. Validity is judged by the client's clock."
+      },
+      {
+        "text": "The router",
+        "correct": false,
+        "why": "It does not judge certificates."
+      },
+      {
+        "text": "The DNS server",
+        "correct": false,
+        "why": "Names resolve fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-mns866ba",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A certificate covers what its Subject Alternative ___ field lists.",
+    "hint": "Section 02.",
+    "blanks": [
+      {
+        "accept": [
+          "Name"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
