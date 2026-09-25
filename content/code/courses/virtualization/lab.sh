@@ -123,6 +123,12 @@ down() {
     virsh net-destroy "$n" >/dev/null 2>&1 || true; virsh net-undefine "$n" >/dev/null 2>&1 || true
   done
   rm -f /home/ana/.ssh/known_hosts
+  # the default network's DHCP leases, so an old guest's address is not handed
+  # to a new one with the same name, and no lesson reads another's leftovers
+  if virsh net-info default >/dev/null 2>&1; then
+    virsh net-destroy default >/dev/null 2>&1 || true
+    rm -f /var/lib/libvirt/dnsmasq/virbr0.status
+  fi
 }
 
 case "${1:-}" in
