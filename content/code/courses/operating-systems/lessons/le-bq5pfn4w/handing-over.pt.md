@@ -1,0 +1,50 @@
+---
+title: Apagando um Mac para a próxima pessoa
+version: 1
+---
+
+Há três jeitos de restaurar um Mac, e o que parece mais completo é o que dá mais trabalho.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 262\" role=\"img\" aria-label=\"Uma tabela comparando três jeitos de restaurar um Mac pelo que cada um deixa para trás. Reinstalar o macOS, pela Recuperação, mantém seus arquivos, seus apps e seus ajustes, põe uma cópia nova do macOS no lugar e deixa o Bloqueio de Ativação ligado. Apagar Conteúdo e Ajustes remove seus arquivos, apps e ajustes, mantém o macOS como está e desliga o Bloqueio de Ativação. Apagar no Utilitário de Disco e depois reinstalar remove arquivos, apps e ajustes, põe uma cópia nova do macOS no lugar e deixa o Bloqueio de Ativação ligado.\"><defs><marker id=\"rs-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"275.0\" y=\"20\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Reinstalar o macOS</text><text x=\"440.0\" y=\"20\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Apagar Conteúdo</text><text x=\"440.0\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">e Ajustes</text><text x=\"615.0\" y=\"20\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">apagar no Utilitário</text><text x=\"615.0\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">de Disco e reinstalar</text><text x=\"20\" y=\"71\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">seus arquivos</text><rect x=\"208\" y=\"58\" width=\"134\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"275.0\" y=\"71\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ficam</text><rect x=\"368\" y=\"58\" width=\"144\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"440.0\" y=\"71\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">somem</text><rect x=\"538\" y=\"58\" width=\"154\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"615.0\" y=\"71\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">somem</text><text x=\"20\" y=\"111\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">apps que você instalou</text><rect x=\"208\" y=\"98\" width=\"134\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"275.0\" y=\"111\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ficam</text><rect x=\"368\" y=\"98\" width=\"144\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"440.0\" y=\"111\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">somem</text><rect x=\"538\" y=\"98\" width=\"154\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"615.0\" y=\"111\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">somem</text><text x=\"20\" y=\"151\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">ajustes e contas</text><rect x=\"208\" y=\"138\" width=\"134\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"275.0\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ficam</text><rect x=\"368\" y=\"138\" width=\"144\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"440.0\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">somem</text><rect x=\"538\" y=\"138\" width=\"154\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"615.0\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">somem</text><text x=\"20\" y=\"191\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">o próprio macOS</text><rect x=\"208\" y=\"178\" width=\"134\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"275.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">uma cópia nova</text><rect x=\"368\" y=\"178\" width=\"144\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"440.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">fica como está</text><rect x=\"538\" y=\"178\" width=\"154\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"615.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">uma cópia nova</text><text x=\"20\" y=\"231\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">Bloqueio de Ativação</text><rect x=\"208\" y=\"218\" width=\"134\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"275.0\" y=\"231\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">continua ligado</text><rect x=\"368\" y=\"218\" width=\"144\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"440.0\" y=\"231\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">desligado</text><rect x=\"538\" y=\"218\" width=\"154\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"615.0\" y=\"231\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">continua ligado</text></svg>", "caption": "A opção pesada não é a completa. Apagar o disco à mão deixa o Bloqueio de Ativação ligado, e a próxima pessoa não consegue terminar de configurar o Mac."}
+```
+
+## Reinstalar o macOS
+
+Pela Recuperação, **Reinstalar o macOS** põe uma cópia nova do sistema no lugar e **deixa o volume de
+dados em paz**. Arquivos, apps e ajustes continuam lá depois. É a versão do Mac para a atualização no
+lugar da aula 2: a escolha certa quando o próprio macOS está se comportando mal e a pessoa vai ficar com
+o Mac.
+
+## Apagar Conteúdo e Ajustes
+
+No Apple silicon, e nos Macs Intel com chip T2, *Ajustes do Sistema > Geral > Transferir ou Redefinir*
+tem **Apagar Conteúdo e Ajustes**. É o equivalente, no Mac, da restauração de fábrica de um celular. Ele
+destrói a chave de criptografia do volume de dados, então todo arquivo, app, conta e ajuste some em
+segundos; mantém o macOS como está; e **sai da Conta Apple e desliga o Bloqueio de Ativação** no
+caminho. O Mac reinicia no Assistente de Configuração, pronto para a próxima pessoa.
+
+**Este é o certo para um Mac que muda de mãos.** Ele pede a senha do administrador e, quando o Mac está
+numa Conta Apple, a senha dessa conta também. Essa segunda senha é o motivo de a seção 01 perguntar de
+quem ela é.
+
+## O Bloqueio de Ativação, e por que o terceiro jeito falha
+
+Quando um Mac com Apple silicon ou chip T2 está numa Conta Apple com o **Buscar** ligado, os servidores
+da Apple o registram como pertencente a essa conta. Isso é o **Bloqueio de Ativação**, e ele existe para
+que um Mac roubado não valha nada.
+
+Ele mora na Apple, **não no disco**. Apagar o disco no Utilitário de Disco e reinstalar dá um Mac que
+parece novo e depois, no Assistente de Configuração, pede a senha da Conta Apple do dono antigo antes de
+seguir. Num escritório, muitas vezes é uma pessoa que já saiu, e desfazer isso com a Apple pode levar
+dias de comprovação de compra.
+
+Então a regra, em ordem:
+
+1. **Saia da Conta Apple** (*Ajustes do Sistema >* o nome no topo *> Sair*), ou use *Apagar Conteúdo e
+   Ajustes*, que faz isso por você.
+2. Só então apague.
+3. Um Mac comprado usado é conferido quanto ao Bloqueio de Ativação **antes** de ser pago.
+
+O mesmo bloqueio existe nos celulares, e é por isso que um suporte pede às pessoas que saiam da conta
+antes de devolver um aparelho, e não depois.
