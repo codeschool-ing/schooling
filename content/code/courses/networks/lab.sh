@@ -342,7 +342,7 @@ build_web() {
   rm -f "$n/sites-enabled/"*
   cp "$LAB/ca/www.example.com.chain" "$LAB/www/etc/ssl/private/example.com.crt"
   cp "$LAB/ca/www.example.com.key" "$LAB/www/etc/ssl/private/example.com.key"
-  sed -i 's#^pid .*#pid /run/nginx-www.pid;#' "$n/nginx.conf"
+  sed -i 's#^pid .*#pid /run/nginx-www.pid;#; s#^worker_processes .*#worker_processes 1;#' "$n/nginx.conf"
   cat > "$n/sites-enabled/example.com" <<'SITE'
 server {
     listen 80;
