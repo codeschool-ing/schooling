@@ -1,0 +1,988 @@
+[
+  {
+    "id": "ex-j38cm2hx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each word to what it names in this course's lab.",
+    "hint": "Real computer, software computer, and what sits between.",
+    "pairs": [
+      {
+        "left": "host",
+        "right": "The real computer, running Ubuntu"
+      },
+      {
+        "left": "guest",
+        "right": "vm1, the computer made of software"
+      },
+      {
+        "left": "hypervisor",
+        "right": "QEMU, which makes the guest believe it has hardware"
+      },
+      {
+        "left": "libvirt",
+        "right": "The management layer that virsh talks to"
+      }
+    ],
+    "right_distractors": [
+      "The network card inside vm1"
+    ]
+  },
+  {
+    "id": "ex-estr34h6",
+    "version": 1,
+    "section": "a-computer-in-a-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "qemu-img made vm1.qcow2 with a size of 8G. How much of the host's disk did it take right away?",
+    "hint": "qcow2 grows as it is written.",
+    "choices": [
+      {
+        "text": "8 GiB, reserved at once",
+        "correct": false,
+        "why": "That is a raw, fully allocated disk, not this one."
+      },
+      {
+        "text": "318M, a full copy of the base",
+        "correct": false,
+        "why": "An overlay copies nothing."
+      },
+      {
+        "text": "Half of it, 4 GiB",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "Almost nothing",
+        "correct": true,
+        "why": "Right. It grows only when the guest writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-srg2tgvs",
+    "version": 1,
+    "section": "a-computer-in-a-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does -b lab-base.qcow2 make the new disk?",
+    "hint": "It starts from something without copying it.",
+    "choices": [
+      {
+        "text": "An overlay on that base",
+        "correct": true,
+        "why": "Right. It holds only its own changes."
+      },
+      {
+        "text": "A backup of the base, made in the background",
+        "correct": false,
+        "why": "Nothing is copied."
+      },
+      {
+        "text": "A disk that can only be read",
+        "correct": false,
+        "why": "The guest writes to it all the time."
+      },
+      {
+        "text": "A second disk the guest sees as vdb",
+        "correct": false,
+        "why": "vdb was the seed disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6batmpg",
+    "version": 1,
+    "section": "a-computer-in-a-file",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "vm1 writes a file to its disk. Which file on the host changes?",
+    "hint": "The base is shared.",
+    "choices": [
+      {
+        "text": "lab-base.qcow2 only",
+        "correct": false,
+        "why": "Then every guest on that base would see the change."
+      },
+      {
+        "text": "vm1.qcow2 only",
+        "correct": true,
+        "why": "Right. The base is never written."
+      },
+      {
+        "text": "Both, to keep them in step",
+        "correct": false,
+        "why": "The base is never written."
+      },
+      {
+        "text": "Neither; it stays in memory",
+        "correct": false,
+        "why": "A disk write reaches a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-etc9xsar",
+    "version": 1,
+    "section": "a-computer-in-a-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does virt-install do?",
+    "hint": "Memory, processors, disks, network.",
+    "choices": [
+      {
+        "text": "Installs QEMU on the host",
+        "correct": false,
+        "why": "QEMU was already installed."
+      },
+      {
+        "text": "Copies Ubuntu onto a USB stick",
+        "correct": false,
+        "why": "No stick is involved."
+      },
+      {
+        "text": "Describes a guest to libvirt and starts it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lists the guests that are running",
+        "correct": false,
+        "why": "That is virsh list."
+      }
+    ]
+  },
+  {
+    "id": "ex-47djj0j7",
+    "version": 1,
+    "section": "a-computer-in-a-file",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The option that gave vm1 its 1 GiB: virt-install --______ 1024",
+    "hint": "A word, in megabytes.",
+    "blanks": [
+      {
+        "accept": [
+          "memory"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f69x2bfh",
+    "version": 1,
+    "section": "a-computer-in-a-file",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does this course's virt-install say --virt-type qemu?",
+    "hint": "Where it was recorded.",
+    "choices": [
+      {
+        "text": "It runs faster than kvm on every computer",
+        "correct": false,
+        "why": "It is slower."
+      },
+      {
+        "text": "Ubuntu guests require it",
+        "correct": false,
+        "why": "They run under kvm too."
+      },
+      {
+        "text": "libvirt refuses kvm for guests with only 1 GiB of memory",
+        "correct": false,
+        "why": "Memory has nothing to do with it."
+      },
+      {
+        "text": "The recording computer passes no VT-x or AMD-V to it",
+        "correct": true,
+        "why": "Right. So the processor is imitated in software."
+      }
+    ]
+  },
+  {
+    "id": "ex-yk1339m8",
+    "version": 1,
+    "section": "a-computer-in-a-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What was the second disk, vm1-seed.img, for?",
+    "hint": "The first boot.",
+    "choices": [
+      {
+        "text": "The guest's name and ana's login",
+        "correct": true,
+        "why": "Right. Read once, then removed."
+      },
+      {
+        "text": "Extra space for the guest's files",
+        "correct": false,
+        "why": "It was 128K."
+      },
+      {
+        "text": "A copy of the base disk",
+        "correct": false,
+        "why": "The overlay points at the base."
+      },
+      {
+        "text": "The guest's swap",
+        "correct": false,
+        "why": "It carried configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2p522ht",
+    "version": 1,
+    "section": "from-inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which command, run inside vm1, said it was a virtual machine?",
+    "hint": "It answered qemu.",
+    "choices": [
+      {
+        "text": "systemd-detect-virt",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "lsblk -d -o NAME,SIZE,TYPE",
+        "correct": false,
+        "why": "That lists disks."
+      },
+      {
+        "text": "free -h",
+        "correct": false,
+        "why": "That only counts memory."
+      },
+      {
+        "text": "ip -br addr",
+        "correct": false,
+        "why": "That listed addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxjjhn7v",
+    "version": 1,
+    "section": "from-inside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "vm1 was given 1024 MiB and free -h shows 961Mi total. Where did the rest go?",
+    "hint": "Before free starts counting.",
+    "choices": [
+      {
+        "text": "The host took it back",
+        "correct": false,
+        "why": "The guest was given the whole 1024."
+      },
+      {
+        "text": "The kernel kept it for itself",
+        "correct": true,
+        "why": "Right. A real computer shows the same gap."
+      },
+      {
+        "text": "QEMU rounds memory down to 961",
+        "correct": false,
+        "why": "There is no such rounding."
+      },
+      {
+        "text": "It is the seed disk",
+        "correct": false,
+        "why": "A disk is not memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-xs2x1zk8",
+    "version": 1,
+    "section": "from-inside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside vm1, lsblk shows vda, 8G. What is it on the host?",
+    "hint": "A qcow2.",
+    "choices": [
+      {
+        "text": "The file vm1.qcow2",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A partition of the host's disk",
+        "correct": false,
+        "why": "It is a file."
+      },
+      {
+        "text": "The seed disk",
+        "correct": false,
+        "why": "That was vdb."
+      },
+      {
+        "text": "A USB stick",
+        "correct": false,
+        "why": "No stick is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-brpwc7zd",
+    "version": 1,
+    "section": "from-inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "lscpu inside vm1 shows Model name: QEMU Virtual CPU version 2.5+. What is that processor?",
+    "hint": "No factory makes it.",
+    "choices": [
+      {
+        "text": "The host's real processor",
+        "correct": false,
+        "why": "The host's has a maker's name."
+      },
+      {
+        "text": "One that exists only in QEMU",
+        "correct": true,
+        "why": "Right. QEMU imitates it."
+      },
+      {
+        "text": "An old Intel model from 2005",
+        "correct": false,
+        "why": "It is QEMU's own."
+      },
+      {
+        "text": "A graphics card",
+        "correct": false,
+        "why": "lscpu lists processors."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtjmn58n",
+    "version": 1,
+    "section": "from-inside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The grep asked lscpu for Hypervisor vendor and got nothing, yet the guest is a VM. Why?",
+    "hint": "It depends on what the processor says.",
+    "choices": [
+      {
+        "text": "lscpu does not work inside guests",
+        "correct": false,
+        "why": "It printed the model and count."
+      },
+      {
+        "text": "The grep pattern had a mistake in it and matched nothing",
+        "correct": false,
+        "why": "It matched two other lines fine."
+      },
+      {
+        "text": "vm1 is not really virtual",
+        "correct": false,
+        "why": "systemd-detect-virt said qemu."
+      },
+      {
+        "text": "QEMU's software processor did not announce itself",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-g36b4225",
+    "version": 1,
+    "section": "from-inside",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these work inside vm1 as on any Linux machine? Choose all that apply.",
+    "hint": "It is a computer, to itself.",
+    "choices": [
+      {
+        "text": "Installing packages with apt",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Creating users",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reading logs with journalctl",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Running virsh list to see itself",
+        "correct": false,
+        "why": "virsh runs on the host."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjzejq6s",
+    "version": 1,
+    "section": "from-outside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the host, what is a running guest?",
+    "hint": "ps found it.",
+    "choices": [
+      {
+        "text": "A user account",
+        "correct": false,
+        "why": "ps lists processes."
+      },
+      {
+        "text": "A partition",
+        "correct": false,
+        "why": "The disk is a file."
+      },
+      {
+        "text": "A qemu-system-x86 process",
+        "correct": true,
+        "why": "Right. One process per guest."
+      },
+      {
+        "text": "A kernel module",
+        "correct": false,
+        "why": "It is an ordinary process."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4n2reks",
+    "version": 1,
+    "section": "from-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the host, what are vm1's two processors?",
+    "hint": "Inside one process.",
+    "choices": [
+      {
+        "text": "Two of the host's processors, reserved",
+        "correct": false,
+        "why": "Nothing is reserved; they share."
+      },
+      {
+        "text": "Two extra chips QEMU adds",
+        "correct": false,
+        "why": "Software adds no chips."
+      },
+      {
+        "text": "Separate virtual machines",
+        "correct": false,
+        "why": "They are one guest."
+      },
+      {
+        "text": "Threads of the QEMU process",
+        "correct": true,
+        "why": "Right. The host schedules them."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxpy0669",
+    "version": 1,
+    "section": "from-outside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The guest has 1 GiB and the QEMU process's RSS is about 1.5 GiB. What explains the difference?",
+    "hint": "Two things share the process.",
+    "choices": [
+      {
+        "text": "The guest is using swap",
+        "correct": false,
+        "why": "Swap would be inside the guest's disk."
+      },
+      {
+        "text": "ps counts every page twice",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The base disk is loaded into memory",
+        "correct": false,
+        "why": "Disks are read in blocks, as needed."
+      },
+      {
+        "text": "QEMU's own memory, besides the guest's",
+        "correct": true,
+        "why": "Right. Lesson 8 measures it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqjhpbzc",
+    "version": 1,
+    "section": "from-outside",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ps showed RSS 1608536 KiB. Divided by 1024 twice, how many GiB is that, to one decimal place?",
+    "hint": "1608536 / 1048576.",
+    "value": 1.5,
+    "tolerance": 0.05,
+    "unit": "GiB"
+  },
+  {
+    "id": "ex-988xkppj",
+    "version": 1,
+    "section": "from-outside",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a whole boot, how many megabytes did ls -lh show for vm1.qcow2?",
+    "hint": "Section 04.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "M"
+  },
+  {
+    "id": "ex-zkax5c9r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every guest on one host became slow at the same moment. Where should Ana look first?",
+    "hint": "What they all share.",
+    "choices": [
+      {
+        "text": "At the host",
+        "correct": true,
+        "why": "Right. Its memory, disk and processors are shared."
+      },
+      {
+        "text": "Inside each guest, one at a time",
+        "correct": false,
+        "why": "They share one cause more often than not."
+      },
+      {
+        "text": "At the base disk's checksum",
+        "correct": false,
+        "why": "Speed is not about the checksum."
+      },
+      {
+        "text": "At the guests' hostnames",
+        "correct": false,
+        "why": "Names do not slow anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-raw19q9c",
+    "version": 1,
+    "section": "from-outside",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what vm1 sees to what it is on the host.",
+    "hint": "The figure in section 04.",
+    "pairs": [
+      {
+        "left": "Two processors",
+        "right": "Threads of one process"
+      },
+      {
+        "left": "An 8G disk, vda",
+        "right": "A file that grows"
+      },
+      {
+        "left": "A network card",
+        "right": "A port on a virtual switch"
+      },
+      {
+        "left": "961Mi of memory",
+        "right": "Part of the process's memory"
+      }
+    ],
+    "right_distractors": [
+      "A partition of the host's disk"
+    ]
+  },
+  {
+    "id": "ex-1z4z5taa",
+    "version": 1,
+    "section": "switch-off-break-discard",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each virsh command to what it does.",
+    "hint": "Ask, pull, forget, boot.",
+    "pairs": [
+      {
+        "left": "virsh shutdown",
+        "right": "Asks the guest to power off"
+      },
+      {
+        "left": "virsh destroy",
+        "right": "Pulls the plug at once"
+      },
+      {
+        "left": "virsh undefine",
+        "right": "Removes libvirt's description of it"
+      },
+      {
+        "left": "virsh start",
+        "right": "Boots it from its disk"
+      }
+    ],
+    "right_distractors": [
+      "Deletes the disk file"
+    ]
+  },
+  {
+    "id": "ex-2h9p8vr4",
+    "version": 1,
+    "section": "switch-off-break-discard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does virsh shutdown switch a guest off?",
+    "hint": "Like a short press of a power button.",
+    "choices": [
+      {
+        "text": "It kills the QEMU process straight away",
+        "correct": false,
+        "why": "That is destroy."
+      },
+      {
+        "text": "Ubuntu inside is asked and powers off",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It deletes the guest",
+        "correct": false,
+        "why": "The guest came back with start."
+      },
+      {
+        "text": "It pauses the guest where it is, in memory",
+        "correct": false,
+        "why": "It showed shut off, with no process."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb2mxn8w",
+    "version": 1,
+    "section": "switch-off-break-discard",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is virsh destroy the right choice for a guest?",
+    "hint": "It is pulling the plug.",
+    "choices": [
+      {
+        "text": "Every evening at the end of the day, to save time",
+        "correct": false,
+        "why": "A guest with open files can lose data."
+      },
+      {
+        "text": "Before taking a backup copy of its disk file",
+        "correct": false,
+        "why": "Shut it down cleanly for that."
+      },
+      {
+        "text": "To delete its disk file",
+        "correct": false,
+        "why": "destroy stops it; rm deletes the file."
+      },
+      {
+        "text": "When it is about to be deleted anyway",
+        "correct": true,
+        "why": "Right. Or when it no longer answers shutdown."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmfrk2vr",
+    "version": 1,
+    "section": "switch-off-break-discard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After sudo rm -rf --no-preserve-root / inside vm1, ls answered command not found. What happened to the host?",
+    "hint": "Where did the deletes go?",
+    "choices": [
+      {
+        "text": "It lost its own /bin directory as well",
+        "correct": false,
+        "why": "The guest has no access to the host's files."
+      },
+      {
+        "text": "Nothing; only vm1.qcow2 changed",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The shared base disk was emptied as well",
+        "correct": false,
+        "why": "The base is never written."
+      },
+      {
+        "text": "libvirt stopped",
+        "correct": false,
+        "why": "virsh destroy worked right after."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmzh682q",
+    "version": 1,
+    "section": "switch-off-break-discard",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of getting rid of a guest in order.",
+    "hint": "Stop it, forget it, delete the file.",
+    "items": [
+      "virsh destroy vm1",
+      "virsh undefine vm1",
+      "rm vm1.qcow2"
+    ],
+    "trap": "Deleting the file first leaves a running guest whose disk has vanished under it."
+  },
+  {
+    "id": "ex-a5k25bng",
+    "version": 1,
+    "section": "switch-off-break-discard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "vm1 is shut off. What does it still take from the host?",
+    "hint": "No process.",
+    "choices": [
+      {
+        "text": "Its 1 GiB of memory",
+        "correct": false,
+        "why": "There is no process holding it."
+      },
+      {
+        "text": "Two of the host's processors",
+        "correct": false,
+        "why": "Nothing runs."
+      },
+      {
+        "text": "Space on the disk",
+        "correct": true,
+        "why": "Right. Its file stays."
+      },
+      {
+        "text": "An address on the host's network",
+        "correct": false,
+        "why": "Nothing answers on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sghdj1vx",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these are ordinary reasons a support technician keeps virtual machines? Choose all that apply.",
+    "hint": "Section 06.",
+    "choices": [
+      {
+        "text": "To try an update before the customer's computer gets it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To follow a customer's steps on their operating system",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To keep an old program running after its computer is gone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To make the host's own processor faster",
+        "correct": false,
+        "why": "A guest takes processor time; it gives none."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxq4dffc",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the host give up for each running guest?",
+    "hint": "Everything a guest has.",
+    "choices": [
+      {
+        "text": "Nothing until the guest is shut off",
+        "correct": false,
+        "why": "It costs most while it runs."
+      },
+      {
+        "text": "Only disk space",
+        "correct": false,
+        "why": "That is the cost of a guest that is off."
+      },
+      {
+        "text": "Memory, processor time and disk",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Its network address",
+        "correct": false,
+        "why": "The guest has its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdwn44kw",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five busy guests with one processor each run on a host with four. What happens?",
+    "hint": "The scheduler shares out time.",
+    "choices": [
+      {
+        "text": "The fifth refuses to start",
+        "correct": false,
+        "why": "Processors are shared, not reserved."
+      },
+      {
+        "text": "The host adds a fifth processor",
+        "correct": false,
+        "why": "Software adds no chips."
+      },
+      {
+        "text": "They take turns and each runs slower",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing; guests do not use the host's processors",
+        "correct": false,
+        "why": "Their threads run on them."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m210hk4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How much memory should Ana give a guest that only runs a small web server?",
+    "hint": "The rule of thumb.",
+    "choices": [
+      {
+        "text": "Everything the host has free",
+        "correct": false,
+        "why": "Then the next guest has nothing."
+      },
+      {
+        "text": "The same as the host",
+        "correct": false,
+        "why": "The host needs its own."
+      },
+      {
+        "text": "What that job needs",
+        "correct": true,
+        "why": "Right. Not what the host can spare."
+      },
+      {
+        "text": "Exactly 3072 MiB, as virt-install recommends",
+        "correct": false,
+        "why": "That was for a desktop."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tg5qprr",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten overlays share one base on a host. What should Ana keep an eye on?",
+    "hint": "Overlays grow as guests write.",
+    "choices": [
+      {
+        "text": "The base growing",
+        "correct": false,
+        "why": "The base is never written."
+      },
+      {
+        "text": "The host's free disk space",
+        "correct": true,
+        "why": "Right. It fills slowly."
+      },
+      {
+        "text": "The guests' hostnames clashing",
+        "correct": false,
+        "why": "Each has its own."
+      },
+      {
+        "text": "The number of CPUs in the base",
+        "correct": false,
+        "why": "A disk has no CPUs."
+      }
+    ]
+  },
+  {
+    "id": "ex-aad31bz5",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a guest a lot slower than its host, rather than a little?",
+    "hint": "As in this course's recording.",
+    "choices": [
+      {
+        "text": "With no VT-x or AMD-V to help",
+        "correct": true,
+        "why": "Right. The processor is then imitated."
+      },
+      {
+        "text": "When it has two processors",
+        "correct": false,
+        "why": "That is ordinary."
+      },
+      {
+        "text": "When its disk uses the qcow2 format",
+        "correct": false,
+        "why": "qcow2 is QEMU's usual format."
+      },
+      {
+        "text": "When it runs Ubuntu",
+        "correct": false,
+        "why": "The guest's system is not the reason."
+      }
+    ]
+  }
+]

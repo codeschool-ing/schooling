@@ -1,0 +1,38 @@
+---
+title: From outside
+version: 1
+---
+
+Now the same machine from the host's side, while it runs:
+
+```
+ana@host:~$ ps -o pid,rss,etime,comm -C qemu-system-x86_64
+    PID   RSS     ELAPSED COMMAND
+   4340 1608536     02:10 qemu-system-x86
+ana@host:~$ ls -lh /var/lib/libvirt/images/lab-base.qcow2 /var/lib/libvirt/images/vm1.qcow2
+-rw-r--r-- 1 libvirt-qemu kvm 318M Sep 25 18:28 /var/lib/libvirt/images/lab-base.qcow2
+-rw-r--r-- 1 libvirt-qemu kvm  25M Sep 25 18:34 /var/lib/libvirt/images/vm1.qcow2
+ana@host:~$ free -h | head -2
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       2.1Gi        12Gi        12Mi       1.1Gi        13Gi
+ana@host:~$ nproc
+4
+```
+
+**The whole guest is one process**, `qemu-system-x86`, running for `02:10`. Its two processors are
+threads of that process, which the host's scheduler shares out among its own **4** processors like
+any other program's. Its memory is that process's memory: **RSS**, the memory it really occupies, is
+1608536 KiB, about 1.5 GiB. That is more than the 1 GiB the guest was given, because QEMU needs memory
+of its own besides the guest's, and lesson 8 measures where it goes.
+
+The disk is the file `vm1.qcow2`, **25M** after a whole boot, on top of the 318M base it shares.
+And the host still has 15Gi of memory, most of it free.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 290\" role=\"img\" aria-label=\"Two views of the same machine, side by side. From inside, vm1 has 2 processors called QEMU Virtual CPU, 961Mi of memory, a disk vda of 8G, and the address 192.168.122.165. From outside, on host, the processors are threads of one process, qemu-system-x86; the memory is what that process uses, 1.5 GiB, RSS 1608536 kibibytes; the disk is a file, vm1.qcow2, 25M so far; and the network card is a port on a virtual switch, virbr0.\"><defs><marker id=\"vw-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"20\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--phosphor)\">what vm1 sees, from inside</text><text x=\"400\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">what host sees, from outside</text><rect x=\"20\" y=\"40\" width=\"260\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"59\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">processor</text><text x=\"32\" y=\"77\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">2 CPUs, “QEMU Virtual CPU”</text><rect x=\"400\" y=\"40\" width=\"300\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"412\" y=\"59\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">threads of one process</text><text x=\"412\" y=\"77\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">qemu-system-x86</text><path d=\"M282 64 L398 64\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vw-ah)\" stroke-dasharray=\"4 4\"></path><rect x=\"20\" y=\"102\" width=\"260\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"121\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">memory</text><text x=\"32\" y=\"139\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">961Mi total</text><rect x=\"400\" y=\"102\" width=\"300\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"412\" y=\"121\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">the process uses 1.5 GiB</text><text x=\"412\" y=\"139\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">RSS 1608536 KiB</text><path d=\"M282 126 L398 126\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vw-ah)\" stroke-dasharray=\"4 4\"></path><rect x=\"20\" y=\"164\" width=\"260\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"183\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">disk</text><text x=\"32\" y=\"201\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">vda, 8G</text><rect x=\"400\" y=\"164\" width=\"300\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"412\" y=\"183\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a file that grows</text><text x=\"412\" y=\"201\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">vm1.qcow2, 25M</text><path d=\"M282 188 L398 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vw-ah)\" stroke-dasharray=\"4 4\"></path><rect x=\"20\" y=\"226\" width=\"260\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"245\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">network</text><text x=\"32\" y=\"263\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">192.168.122.165</text><rect x=\"400\" y=\"226\" width=\"300\" height=\"48\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"412\" y=\"245\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a port on a virtual switch</text><text x=\"412\" y=\"263\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">virbr0</text><path d=\"M282 250 L398 250\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#vw-ah)\" stroke-dasharray=\"4 4\"></path></svg>", "caption": "Everything vm1 believes is hardware is something ordinary on host: a process, its memory, a file and a port on a switch that is also software."}
+```
+
+The two views are the same machine, and keeping both in mind is most of this course. When a guest is
+slow, the answer is often outside it: the host is short of memory, or its disk is full, or twenty
+guests are sharing four processors. When a guest will not boot, the answer is usually inside it, and
+the tools are the ones from the operating systems course.
