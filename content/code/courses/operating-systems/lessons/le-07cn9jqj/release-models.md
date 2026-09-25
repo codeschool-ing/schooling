@@ -29,8 +29,8 @@ behaviour the week the accountant closes the year.
 
 ## Ubuntu's two kinds
 
-Ubuntu publishes a release every **April and October**, numbered by year and month: 24.04 is April
-2024. Every second April the release is an **LTS**, *long-term support*. The ones between are
+Ubuntu publishes a release every **April and October**, numbered by year and month: 24.04 is
+April 2024. Every second April the release is an **LTS**, *long-term support*. The ones between are
 *interim* releases, supported for *nine months*, and meant for trying what is coming.
 
 Section 04 puts numbers on it, and the server can read them itself.
