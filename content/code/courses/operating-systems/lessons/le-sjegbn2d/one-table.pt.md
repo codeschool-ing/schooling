@@ -1,0 +1,45 @@
+---
+title: A aula inteira numa tabela
+version: 1
+---
+
+O shell que você encontra depende do sistema, e um deles está em todo lugar:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 230\" role=\"img\" aria-label=\"Que shell roda em qual sistema. O bash é o padrão no Linux, instalável no macOS, e no Windows roda dentro do WSL. O zsh é instalável no Linux e o padrão no macOS, e não existe no Windows. O PowerShell 7 é instalável nos três. O Windows PowerShell 5.1 e o Prompt de Comando são os padrões do Windows e não existem nos outros dois.\"><defs><marker id=\"sh-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"300\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">Linux</text><text x=\"440\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">macOS</text><text x=\"580\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">Windows</text><text x=\"20\" y=\"44\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">bash</text><rect x=\"240\" y=\"30\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"300\" y=\"44\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o padrão</text><rect x=\"380\" y=\"30\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"440\" y=\"44\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">instalável</text><rect x=\"520\" y=\"30\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"580\" y=\"44\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">dentro do WSL</text><text x=\"20\" y=\"82\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">zsh</text><rect x=\"240\" y=\"68\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"300\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">instalável</text><rect x=\"380\" y=\"68\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"440\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o padrão</text><rect x=\"520\" y=\"68\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"3 3\"></rect><text x=\"580\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">não existe</text><text x=\"20\" y=\"120\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">PowerShell 7</text><rect x=\"240\" y=\"106\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"300\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">instalável</text><rect x=\"380\" y=\"106\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"440\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">instalável</text><rect x=\"520\" y=\"106\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"580\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">instalável</text><text x=\"20\" y=\"158\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Windows PowerShell 5.1</text><rect x=\"240\" y=\"144\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"3 3\"></rect><text x=\"300\" y=\"158\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">não existe</text><rect x=\"380\" y=\"144\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"3 3\"></rect><text x=\"440\" y=\"158\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">não existe</text><rect x=\"520\" y=\"144\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"580\" y=\"158\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o padrão</text><text x=\"20\" y=\"196\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Prompt de Comando</text><rect x=\"240\" y=\"182\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"3 3\"></rect><text x=\"300\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">não existe</text><rect x=\"380\" y=\"182\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"3 3\"></rect><text x=\"440\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">não existe</text><rect x=\"520\" y=\"182\" width=\"120\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"580\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o padrão</text></svg>", "caption": "O PowerShell 7 é o único shell que roda nos três, e é por isso que este curso o registrou no Linux. O bash e o zsh diferem em detalhes e compartilham quase todo comando desta aula.", "same": ["Linux", "macOS", "Windows", "bash", "zsh", "PowerShell 7", "Windows PowerShell 5.1"]}
+```
+
+Antes de confiar no nome de um comando, pergunte o que ele é:
+
+```
+ana@server:~$ type ls cd grep
+ls is /usr/bin/ls
+cd is a shell builtin
+grep is hashed (/usr/bin/grep)
+PS /home/ana> Get-Command ls, Get-ChildItem, grep | Select-Object CommandType, Name
+
+CommandType Name
+----------- ----
+Application ls
+     Cmdlet Get-ChildItem
+Application grep
+```
+
+O `ls` e o `grep` são programas em `/usr/bin` no Linux, e **o `ls` não é alias do PowerShell aqui**, o
+ponto da aula 8. O `Get-ChildItem` é um cmdlet em todo lugar.
+
+| pergunta | Linux / macOS | PowerShell (os três) | Prompt de Comando |
+|---|---|---|---|
+| nome da máquina | `hostname` | `hostname`, `$env:COMPUTERNAME` | `hostname` |
+| processadores | `nproc` · `sysctl -n hw.ncpu` | `[Environment]::ProcessorCount` | `echo %NUMBER_OF_PROCESSORS%` |
+| listar processos | `ps`, `pgrep` | `Get-Process` | `tasklist` |
+| parar um | `kill` | `Stop-Process` | `taskkill` |
+| quão cheios estão os discos | `df -h` | `Get-PSDrive`, `Get-Volume` | o `wmic`, obsoleto; use o PowerShell |
+| o que enche uma pasta | `du -sh` | `Measure-Object -Sum` | `dir /s` |
+| achar arquivos pelo nome | `find` | `Get-ChildItem -Recurse -Filter` | `dir /s /b` |
+| achar palavras em arquivos | `grep -r` | `Select-String` | `findstr /s` |
+| uma variável | `$HOME` | `$env:HOME` · `$env:USERPROFILE` | `%USERPROFILE%` |
+| o que é este comando | `type` | `Get-Command` | `where` |
+
+O `·` separa a forma do macOS ou do Windows onde ela difere. Guarde a tabela; o vocabulário muda, as
+perguntas nunca.

@@ -1,0 +1,28 @@
+---
+title: Three ways a program arrives
+version: 1
+---
+
+Whatever the system, a program reaches a computer in one of three ways.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 180\" role=\"img\" aria-label=\"Three ways to install a program, compared. An installer downloaded from a website: checked by you, if anyone; updated by the program itself, if it bothers; removed by its own uninstaller. A store, such as the Microsoft Store or the App Store: checked, updated and removed by the store. A package manager, such as apt: checked by the distribution, which signs every package; everything updated with one command; removed cleanly with one command.\"><defs><marker id=\"rt-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"238\" y=\"16\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">who checked it</text><text x=\"398\" y=\"16\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">who updates it</text><text x=\"568\" y=\"16\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">how it leaves</text><rect x=\"20\" y=\"30\" width=\"680\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">an installer from a website</text><text x=\"238\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">you, if anyone</text><text x=\"398\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">the program, if it bothers</text><text x=\"568\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">its own uninstaller</text><rect x=\"20\" y=\"76\" width=\"680\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a store</text><text x=\"238\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">the store</text><text x=\"398\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">the store</text><text x=\"568\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">the store</text><rect x=\"20\" y=\"122\" width=\"680\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a package manager</text><text x=\"238\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">the distribution, signed</text><text x=\"398\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">one command, everything</text><text x=\"568\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">one command, cleanly</text></svg>", "caption": "Going down the table, somebody else takes on more of the work. The top row is the one that leaves a machine with twenty programs, each updating itself or not at all."}
+```
+
+- **An installer from a website.** A `.exe` or `.msi` on Windows, a `.dmg` or `.pkg` on a Mac. It works,
+  and every question in the drawing is left to you: is this the real site, is this the real file, and
+  will this program ever update itself?
+- **A store.** The Microsoft Store and the Mac App Store check what they publish, install it without
+  an administrator on most machines, and update everything they installed.
+- **A package manager.** `apt` on Ubuntu, `winget` on Windows, Homebrew on a Mac. It installs from a
+  list somebody maintains, with dependencies and signatures, by a command that can be written down and
+  repeated on the next machine.
+
+**Prefer them in the order of the table, bottom first.** When a program is only available as an
+installer, get it **from the publisher's own site**, reached by typing its address rather than through
+a search result. Then check it as lesson 3 checked the Ubuntu image: a published checksum, or on
+Windows the *Digital Signatures* tab of the file's properties.
+
+**Installing needs administrator rights** on all three systems, for the reason lesson 10 gave: what one
+person installs for the whole machine runs for everybody. That is why the answer to the accountant is
+Ana installing it, not the accountant being made an administrator.
