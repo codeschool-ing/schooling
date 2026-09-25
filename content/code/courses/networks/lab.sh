@@ -236,6 +236,11 @@ shop         CNAME  www.example.com.
 mail         A      192.0.2.25
 office       A      203.0.113.2
 _dmarc       TXT    "v=DMARC1; p=reject; rua=mailto:dmarc@example.com"
+; names for lesson 6's broken certificates, all on the web server
+expired      A      192.0.2.80
+selfsigned   A      192.0.2.80
+nochain      A      192.0.2.80
+intranet     A      192.0.2.80
 ; a subdomain handed to a server that does not answer for it: a lame delegation
 old          NS     ns2.example.com.
 ns2          A      192.0.2.20
@@ -337,6 +342,68 @@ cert() {  # cert NAME DAYS SAN... -> $LAB/ca/NAME.{key,crt,chain}
     -extfile <(printf 'subjectAltName=%s\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature\nbasicConstraints=critical,CA:FALSE\n' "$san") 2>/dev/null
   cat "$n.crt" issuing.crt > "$n.chain"
 }
+# openssl ca, because it is the one tool here that takes explicit dates: an
+# expired certificate cannot be made by asking for a validity in the past.
+ca_dated() {  # ca_dated NAME START END  (dates as YYYYMMDDHHMMSSZ)
+  cd "$LAB/ca"
+  mkdir -p newcerts; [ -e index.txt ] || : > index.txt; [ -e serial ] || echo 1000 > serial
+  cat > ca.cnf <<CNF
+[ca]
+default_ca = issuing
+[issuing]
+dir = $LAB/ca
+database = \$dir/index.txt
+new_certs_dir = \$dir/newcerts
+certificate = \$dir/issuing.crt
+private_key = \$dir/issuing.key
+serial = \$dir/serial
+default_md = sha256
+policy = anything
+unique_subject = no
+[anything]
+commonName = supplied
+[server]
+subjectAltName = DNS:$1
+extendedKeyUsage = serverAuth
+keyUsage = critical,digitalSignature
+basicConstraints = critical,CA:FALSE
+CNF
+  openssl req -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -subj "/CN=$1" -keyout "$1.key" -out "$1.csr" 2>/dev/null
+  openssl ca -batch -config ca.cnf -extensions server -startdate "$2" -enddate "$3" -in "$1.csr" -out "$1.crt" -notext 2>/dev/null
+  cat "$1.crt" issuing.crt > "$1.chain"
+}
+# The office's own certificate authority, for its intranet. Nobody trusts it
+# until somebody installs it.
+office_ca() {
+  cd "$LAB/ca"
+  openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 3650 \
+    -subj "/O=Example Ltd/CN=Example Ltd Office CA" -keyout office.key -out office.crt \
+    -addext "basicConstraints=critical,CA:TRUE" -addext "keyUsage=critical,keyCertSign,cRLSign" 2>/dev/null
+  openssl req -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -subj "/CN=intranet.example.com" -keyout intranet.example.com.key -out intranet.csr 2>/dev/null
+  openssl x509 -req -in intranet.csr -CA office.crt -CAkey office.key -CAcreateserial -days 365 -out intranet.example.com.crt \
+    -extfile <(printf 'subjectAltName=DNS:intranet.example.com\nextendedKeyUsage=serverAuth\nbasicConstraints=critical,CA:FALSE\n') 2>/dev/null
+  cp intranet.example.com.crt intranet.example.com.chain
+}
+# A certificate the server signed itself.
+self_signed() {
+  cd "$LAB/ca"
+  openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 365 -subj "/CN=$1" \
+    -addext "subjectAltName=DNS:$1" -keyout "$1.key" -out "$1.crt" 2>/dev/null
+  cp "$1.crt" "$1.chain"
+}
+vhost() {  # vhost NAME CHAINFILE-BASENAME  (serves the same pages under another name and certificate)
+  cp "$LAB/ca/$2.chain" "$LAB/www/etc/ssl/private/$1.crt"
+  cp "$LAB/ca/${3:-$2}.key" "$LAB/www/etc/ssl/private/$1.key"
+  cat >> "$LAB/www/etc/nginx/sites-enabled/example.com" <<SITE
+server {
+    listen 443 ssl http2;
+    server_name $1;
+    ssl_certificate     /etc/ssl/private/$1.crt;
+    ssl_certificate_key /etc/ssl/private/$1.key;
+    root /var/www/example;
+}
+SITE
+}
 build_web() {
   cert www.example.com 90 www.example.com example.com shop.example.com
   local n="$LAB/www/etc/nginx"
@@ -371,6 +438,17 @@ SITE
 </html>
 HTML
   chown -R www-data:www-data "$LAB/www/var/log/nginx"
+  # lesson 6's four broken certificates
+  ca_dated expired.example.com 20250601000000Z 20250830000000Z
+  vhost expired.example.com expired.example.com
+  self_signed selfsigned.example.com
+  vhost selfsigned.example.com selfsigned.example.com
+  cert nochain.example.com 90 nochain.example.com
+  cp "$LAB/ca/nochain.example.com.crt" "$LAB/ca/nochain.example.com.leaf"
+  cp "$LAB/ca/nochain.example.com.crt" "$LAB/ca/nochain.example.com.chain"
+  vhost nochain.example.com nochain.example.com
+  office_ca
+  vhost intranet.example.com intranet.example.com
 }
 
 # ------------------------------------------------------------------------ SSH
@@ -425,7 +503,7 @@ down() {
     ip netns del "$h"
   done
   for h in $HOSTS; do rm -rf "/etc/netns/$h"; done
-  rm -f /usr/local/share/ca-certificates/example-root-ca.crt
+  rm -f /usr/local/share/ca-certificates/example-root-ca.crt /usr/local/share/ca-certificates/example-office-ca.crt
   update-ca-certificates --fresh >/dev/null 2>&1 || true
   rm -rf "$LAB"
 }
