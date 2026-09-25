@@ -47,10 +47,8 @@ password.
 ana@server:~$ su - carla
 Password: 
 carla@server:~$ whoami
-
 carla
 carla@server:~$ exit
-
 logout
 ```
 

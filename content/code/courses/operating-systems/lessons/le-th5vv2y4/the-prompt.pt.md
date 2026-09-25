@@ -26,10 +26,8 @@ hora:
 ```
 ana@server:~$ sudo -s
 root@server:/home/ana# whoami
-
 root
 root@server:/home/ana# exit
-
 exit
 ```
 

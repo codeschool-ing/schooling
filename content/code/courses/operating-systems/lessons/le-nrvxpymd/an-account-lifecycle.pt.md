@@ -47,10 +47,8 @@ O **`su`** troca para outro usuário, e pede a senha **desse usuário**:
 ana@server:~$ su - carla
 Password: 
 carla@server:~$ whoami
-
 carla
 carla@server:~$ exit
-
 logout
 ```
 
