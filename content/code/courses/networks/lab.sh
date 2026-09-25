@@ -359,6 +359,8 @@ server {
     ssl_certificate_key /etc/ssl/private/example.com.key;
     root /var/www/example;
     location / { try_files $uri $uri/ =404; }
+    # the booking application, meant to run behind nginx on port 9000
+    location /app/ { proxy_pass http://127.0.0.1:9000; }
 }
 SITE
   cat > "$LAB/www/var/www/example/index.html" <<'HTML'
